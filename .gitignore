@@ -1,0 +1,21 @@
+# Log file
+logs/
+*.log
+*.log.*
+
+# Java file
+*.class
+.classpath
+.project
+
+# Out
+target/
+target-test/
+
+# Idea config
+*.idea
+*.iml
+
+# VsCode config
+*.vscode
+*.code-workspace
