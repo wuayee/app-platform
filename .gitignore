@@ -8,6 +8,9 @@ logs/
 .classpath
 .project
 
+# C++ file
+.clang-format
+
 # Out
 target/
 target-test/
