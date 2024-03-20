@@ -80,8 +80,8 @@ function check_git_mm_environment() {
         return 1
     fi
 
-    OS=$(uname -o | tr 'A-Z' 'a-z')
-    ARCH=$(uname -m | tr 'A-Z' 'a-z')
+    OS=$(uname -o | tr '[:upper:]' '[:lower:]')
+    ARCH=$(uname -m | tr '[:upper:]' '[:lower:]')
     ARCH_NAME=""
     FILE_NAME="git-mm"
     echo "[INFO] verify the package that need to download."
@@ -113,7 +113,7 @@ function check_git_mm_environment() {
     # Check that $HOME/bin is in PATH
     if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
       # Add export to .bashrc
-      echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
+      echo "export PATH=""$HOME"/bin:"$PATH""" >> ~/.bashrc
       # Update the current PATH
       export PATH="$HOME/bin:$PATH"
       echo "[INFO] $HOME/bin has been added to PATH."

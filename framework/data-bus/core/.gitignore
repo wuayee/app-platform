@@ -48,7 +48,7 @@ CTestTestfile.cmake
 *.app
 
 # Third-parties
-third_party/
+third_party/*
 !third_party/third_party.mm.xml
 !third_party/CMakeLists.txt
 

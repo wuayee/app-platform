@@ -25,7 +25,7 @@ function exec_cmake_all() {
 function exec_make_all() {
     dir_build=$1
     cd "${dir_build}"
-    make
+    make -j$(nproc)
 }
 
 # Description: build core
