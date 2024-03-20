@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<manifest>
+    <remote name="code-hub" fetch="https://codehub-y.huawei.com/"/>
+    <remote name="code-hub-open" fetch="https://open.codehub.huawei.com/"/>
+    <default remote="code-hub-open" revision="master"/>
+
+    <project path="googletest" name="OpenSourceCenter/google/googletest.git" revision="refs/tags/v1.13.0"
+             groups="gtest"/>
+    <project path="flatbuffers" name="OpenSourceCenter/google/flatbuffers.git" revision="refs/tags/v23.5.26"
+             groups="gtest"/>
+    <project path="json" name="OpenSourceCenter/nlohmann/json.git" revision="refs/tags/v3.11.2"
+             groups="gtest"/>
+    <project path="spdlog" name="OpenSourceCenter/gabime/spdlog.git" revision="refs/tags/v1.12.0-h1"
+             groups="gtest"/>
+</manifest>
