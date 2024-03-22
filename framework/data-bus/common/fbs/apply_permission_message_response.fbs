@@ -1,0 +1,10 @@
+include "common.fbs";
+
+namespace DataBus.Common;
+
+table ApplyPermissionMessageResponse {
+    error_type: ErrorType;
+    granted: bool;
+}
+
+root_type ApplyPermissionMessageResponse;

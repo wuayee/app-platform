@@ -2,8 +2,6 @@
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
 # Description: databus core source build all script
 
-set -eu
-
 # Description: run cmake for all files
 # Arguments:
 #     $1: build directory
@@ -40,7 +38,7 @@ function exec_build_all() {
         mkdir -p "${dir_build}"
     fi
 
-    if [ "$(exec_cmake_all "$1" "$2")" -ne 0 ]; then
+    if ! exec_cmake_all "$1" "$2" ; then
         return $?
     fi
     exec_make_all "$1"

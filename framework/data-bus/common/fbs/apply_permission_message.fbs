@@ -1,0 +1,11 @@
+include "common.fbs";
+
+namespace DataBus.Common;
+
+table ApplyPermissionMessage {
+    permission: PermissionType;
+    memory_key: int;
+
+}
+
+root_type ApplyPermissionMessage;

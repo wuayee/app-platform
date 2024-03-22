@@ -1,0 +1,15 @@
+namespace DataBus.Common;
+
+enum ErrorType : byte {
+  None = 0,
+  OutOfMemory = 1,
+  NotConnectedToDataBus = 2,
+  PermissionDenied = 3,
+  MemoryNotFound = 4
+}
+
+enum PermissionType : byte {
+  None = 0,
+  Read = 1,
+  Write = 2
+}
