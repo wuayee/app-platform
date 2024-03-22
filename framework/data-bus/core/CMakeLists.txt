@@ -12,8 +12,9 @@ message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic")
 
-set(DATABUS_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/)
+set(DATABUS_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(DATABUS_SRC_PATH ${DATABUS_ROOT_DIR}/src)
+set(DATABUS_SCRIPT_PATH ${DATABUS_ROOT_DIR}/scripts)
 set(DATABUS_THIRD_PARTY_PATH ${DATABUS_ROOT_DIR}/third_party)
 
 # C++11约束
@@ -74,6 +75,7 @@ set(COMPILE_OPTIONS
         -fstack-protector-all
 )
 
+add_subdirectory(third_party)
 add_subdirectory(src)
 
 # todo: clean this

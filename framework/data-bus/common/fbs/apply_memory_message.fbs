@@ -1,0 +1,7 @@
+namespace DataBus.Common;
+
+table ApplyMemoryMessage {
+    memory_size: ulong;
+}
+
+root_type ApplyMemoryMessage;

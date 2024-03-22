@@ -1,0 +1,10 @@
+include "common.fbs";
+
+namespace DataBus.Common;
+
+table ApplyMemoryMessageResponse {
+    error_type: ErrorType;
+    memory_key: int;
+}
+
+root_type ApplyMemoryMessageResponse;
