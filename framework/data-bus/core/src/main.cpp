@@ -10,6 +10,8 @@
 #include <sys/epoll.h>
 
 #include "common/stl/memory.h"
+#include "log/Logger.h"
+#include "config/ConfigParser.h"
 #include "connection_manager/ConnectionManager.h"
 
 #define MAX_EVENTS 10
@@ -79,6 +81,8 @@ void StartDataBusService(int serverFd)
 
 int main()
 {
+    DataBus::Runtime::ConfigParser::Parse();
+    DataBus::logger.Info("Hello, {}", "databus");
     int serverFd;
     int opt = 1;
 
@@ -94,12 +98,12 @@ int main()
         return 0;
     }
 
-    struct sockaddr_in address;
+    sockaddr_in address{};
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(PORT);
 
-    if (bind(serverFd, (struct sockaddr*) &address, sizeof(address)) < 0) {
+    if (bind(serverFd, (sockaddr*)&address, sizeof(address)) < 0) {
         perror("bind failed");
         return 0;
     }

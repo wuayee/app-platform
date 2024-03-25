@@ -20,6 +20,7 @@ set(DATABUS_THIRD_PARTY_PATH ${DATABUS_ROOT_DIR}/third_party)
 # C++11约束
 if (NOT DEFINED CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
 else ()
     if (CMAKE_CXX_STANDARD LESS 11)
         message(FATAL_ERROR "CMAKE_CXX_STANDARD is less than 11, please specify at least SET(CMAKE_CXX_STANDARD 11)")
@@ -29,11 +30,6 @@ endif ()
 # Options
 option(DATABUS_BUILD_TESTS "build tests" OFF)
 option(DATABUS_BUILD_DEPENDENCY "build dependency code" ON)
-
-set(COMMON_INCLUDE
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${DATABUS_THIRD_PARTY_PATH}/
-)
 
 set(COMPILE_OPTIONS
         -Wall -Werror -fexceptions -fPIC
