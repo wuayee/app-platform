@@ -8,6 +8,7 @@ import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.databus.sdk.api.DataBusClient;
 import com.huawei.databus.sdk.api.DataBusResult;
+import com.huawei.databus.sdk.client.jni.SharedMemoryReaderWriter;
 import com.huawei.databus.sdk.message.ApplyMemoryMessage;
 import com.huawei.databus.sdk.message.ErrorType;
 import com.huawei.databus.sdk.message.MessageHeader;
@@ -47,10 +48,12 @@ public class DefaultDataBusClient implements DataBusClient {
     private SocketChannel socketChannel;
     private ResponseDispatcher responseDispatcher;
     private boolean isConnected;
+    private final SharedMemoryReaderWriter sharedMemoryReaderWriter;
     private final Map<Byte, BlockingQueue<DataBusResult>> replyQueues;
 
     private DefaultDataBusClient() {
         this.isConnected = false;
+        this.sharedMemoryReaderWriter = new SharedMemoryReaderWriter();
 
         Map<Byte, BlockingQueue<DataBusResult>> tmpQueues = new HashMap<>();
         tmpQueues.put(MessageType.HeartBeat, new LinkedBlockingQueue<>());
@@ -107,13 +110,37 @@ public class DefaultDataBusClient implements DataBusClient {
     }
 
     @Override
-    public long readOnce(SharedMemoryKey key, long readOffset, long readLength, byte[] bytes) {
-        return 0;
+    public long readOnce(SharedMemoryKey key, long readOffset, long readLength, byte[] bytes) throws IOException {
+        Validation.notNull(bytes, () -> new IllegalArgumentException("Byte array cannot be null."));
+        Validation.greaterThanOrEquals(readOffset, 0,
+                () -> new IllegalArgumentException("Read offset cannot be negative."));
+        Validation.greaterThan(readLength, 0,
+                () -> new IllegalArgumentException("Read length must be positive."));
+        Validation.lessThanOrEquals(readLength, bytes.length,
+                () -> new IndexOutOfBoundsException("Read length cannot exceed the target byte array size."));
+        try {
+            byte[] readBytes = sharedMemoryReaderWriter.read(key.getMemoryId(), readOffset, readLength);
+            System.arraycopy(readBytes, 0, bytes, 0, readBytes.length);
+        } catch (IOException e) {
+            throw new IOException(String.format("Failed to read once for SharedMemoryKey %s", key), e);
+        }
+        return readLength;
     }
 
     @Override
-    public long writeOnce(SharedMemoryKey key, long writeOffset, long writeLength, byte[] bytes) {
-        return 0;
+    public long writeOnce(SharedMemoryKey key, long writeOffset, long writeLength, byte[] bytes) throws IOException {
+        Validation.notNull(bytes, () -> new IllegalArgumentException("Byte array cannot be null."));
+        Validation.greaterThanOrEquals(writeOffset, 0,
+                () -> new IllegalArgumentException("Write offset cannot be negative."));
+        Validation.greaterThan(writeLength, 0,
+                () -> new IllegalArgumentException("Write length must be positive."));
+        Validation.lessThanOrEquals(writeLength, bytes.length,
+                () -> new IndexOutOfBoundsException("Write length cannot exceed the source byte array size."));
+        try {
+            return sharedMemoryReaderWriter.write(key.getMemoryId(), writeOffset, writeLength, bytes);
+        } catch (IOException e) {
+            throw new IOException(String.format("Failed to write once for SharedMemoryKey %s", key), e);
+        }
     }
 
     @Override
