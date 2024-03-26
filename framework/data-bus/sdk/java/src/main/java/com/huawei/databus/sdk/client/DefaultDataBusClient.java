@@ -115,14 +115,12 @@ public class DefaultDataBusClient implements DataBusClient {
         Validation.greaterThanOrEquals(readOffset, 0,
                 () -> new IllegalArgumentException("Read offset cannot be negative."));
         Validation.greaterThan(readLength, 0,
-                () -> new IllegalArgumentException("read length must be positive."));
+                () -> new IllegalArgumentException("Read length must be positive."));
         Validation.lessThanOrEquals(readLength, bytes.length,
                 () -> new IndexOutOfBoundsException("Read length cannot exceed the target byte array size."));
         try {
             byte[] readBytes = sharedMemoryReaderWriter.read(key.getMemoryId(), readOffset, readLength);
-            for (int i = 0; i < readBytes.length; i++) {
-                bytes[i] = readBytes[i];
-            }
+            System.arraycopy(readBytes, 0, bytes, 0, readBytes.length);
         } catch (IOException e) {
             throw new IOException(String.format("Failed to read once for SharedMemoryKey %s", key), e);
         }
