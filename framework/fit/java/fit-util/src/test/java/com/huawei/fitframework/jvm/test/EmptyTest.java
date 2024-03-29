@@ -1,0 +1,13 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
+ */
+
+package com.huawei.fitframework.jvm.test;
+
+/**
+ * 空类常量池长度测试
+ *
+ * @author gwx900499
+ * @since 2023-02-08
+ */
+class EmptyTest {}

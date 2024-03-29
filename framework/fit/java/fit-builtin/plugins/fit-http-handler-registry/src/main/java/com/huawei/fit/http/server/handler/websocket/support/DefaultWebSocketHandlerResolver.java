@@ -1,0 +1,85 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fit.http.server.handler.websocket.support;
+
+import static com.huawei.fitframework.inspection.Validation.notNull;
+
+import com.huawei.fit.http.server.HttpClassicServer;
+import com.huawei.fit.http.server.handler.GlobalPathPatternPrefixResolver;
+import com.huawei.fit.http.server.handler.PropertyValueMapper;
+import com.huawei.fit.http.server.handler.PropertyValueMapperResolver;
+import com.huawei.fit.http.server.handler.websocket.WebSocketHandlerResolver;
+import com.huawei.fit.http.websocket.annotation.OnClose;
+import com.huawei.fit.http.websocket.annotation.OnError;
+import com.huawei.fit.http.websocket.annotation.OnMessage;
+import com.huawei.fit.http.websocket.annotation.OnOpen;
+import com.huawei.fit.http.websocket.annotation.WebSocketEndpoint;
+import com.huawei.fit.http.websocket.server.WebSocketHandler;
+import com.huawei.fit.http.websocket.server.support.ReflectibleWebSocketHandler;
+import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.ioc.BeanFactory;
+import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
+import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
+import com.huawei.fitframework.util.StringUtils;
+import com.huawei.fitframework.util.TypeUtils;
+import com.huawei.fitframework.value.PropertyValue;
+
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+/**
+ * 表示 {@link WebSocketHandlerResolver} 的默认实现。
+ *
+ * @author 季聿阶 j00559309
+ * @since 2023-12-09
+ */
+@Component
+public class DefaultWebSocketHandlerResolver implements WebSocketHandlerResolver {
+    private final HttpClassicServer server;
+
+    public DefaultWebSocketHandlerResolver(HttpClassicServer server) {
+        this.server = notNull(server, "The http classic server cannot be null.");
+    }
+
+    @Override
+    public Optional<WebSocketHandler> resolve(BeanFactory candidate,
+            GlobalPathPatternPrefixResolver pathPatternPrefixResolver, PropertyValueMapperResolver mapperResolver) {
+        boolean isWebSocketEndPoint = candidate.metadata().annotations().isAnnotationPresent(WebSocketEndpoint.class);
+        if (!isWebSocketEndPoint) {
+            return Optional.empty();
+        }
+        String globalPrefix = pathPatternPrefixResolver.resolve().orElse(StringUtils.EMPTY);
+        WebSocketEndpoint endpoint = candidate.metadata().annotations().getAnnotation(WebSocketEndpoint.class);
+        String path = globalPrefix + endpoint.path();
+        WebSocketHandler.Info.Builder infoBuilder =
+                WebSocketHandler.Info.custom().httpServer(this.server).pathPattern(path).target(candidate.get());
+        Method[] methods = TypeUtils.toClass(candidate.metadata().type()).getDeclaredMethods();
+        AnnotationMetadataResolver annotationResolver = candidate.metadata().runtime().resolverOfAnnotations();
+        for (Method method : methods) {
+            AnnotationMetadata annotations = annotationResolver.resolve(method);
+            if (annotations.isAnnotationPresent(OnOpen.class)) {
+                infoBuilder.openMethod(method).openMethodMappers(this.resolveMappers(method, mapperResolver));
+            } else if (annotations.isAnnotationPresent(OnMessage.class)) {
+                infoBuilder.messageMethod(method).messageMethodMappers(this.resolveMappers(method, mapperResolver));
+            } else if (annotations.isAnnotationPresent(OnError.class)) {
+                infoBuilder.errorMethod(method).errorMethodMappers(this.resolveMappers(method, mapperResolver));
+            } else if (annotations.isAnnotationPresent(OnClose.class)) {
+                infoBuilder.closeMethod(method).closeMethodMappers(this.resolveMappers(method, mapperResolver));
+            }
+        }
+        return Optional.of(new ReflectibleWebSocketHandler(infoBuilder.build()));
+    }
+
+    private List<PropertyValueMapper> resolveMappers(Method method, PropertyValueMapperResolver mapperResolver) {
+        return Stream.of(method.getParameters())
+                .map(PropertyValue::createParameterValue)
+                .map(mapperResolver::resolve)
+                .map(optional -> optional.orElse(PropertyValueMapper.empty()))
+                .collect(Collectors.toList());
+    }
+}

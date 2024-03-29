@@ -1,0 +1,83 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
+ */
+
+package com.huawei.fitframework.log;
+
+import static com.huawei.fitframework.inspection.Validation.isTrue;
+import static com.huawei.fitframework.inspection.Validation.notNull;
+
+import com.huawei.fitframework.conf.Config;
+import com.huawei.fitframework.log.support.NoOperationLoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ServiceLoader;
+
+/**
+ * 表示日志系统的帮助类。
+ *
+ * @author 季聿阶 j00559309
+ * @since 2023-06-14
+ */
+public class Loggers {
+    private static volatile LoggerFactory factory;
+
+    /**
+     * 根据应用配置信息初始化日志系统。
+     *
+     * @param config 表示应用配置信息的 {@link Config}。
+     * @param frameworkClassLoader 表示 FIT 框架的类加载器的 {@link ClassLoader}。
+     * @throws IllegalArgumentException 当 {@code config} 为 {@code null} 时。
+     * @throws IllegalArgumentException 当系统中除了默认实现以外，存在多个日志实现时。
+     */
+    public static void initialize(Config config, ClassLoader frameworkClassLoader) {
+        notNull(config, "The config to initialize log system cannot be null.");
+        if (factory != null) {
+            return;
+        }
+        synchronized (Loggers.class) {
+            if (factory == null) {
+                ServiceLoader<LoggerFactory> serviceLoader =
+                        ServiceLoader.load(LoggerFactory.class, frameworkClassLoader);
+                List<LoggerFactory> factories = new ArrayList<>();
+                serviceLoader.forEach(factories::add);
+                isTrue(factories.size() <= 1,
+                        "Too many log implements in class path. Please specify the correct log implement.");
+                if (factories.isEmpty()) {
+                    factory = NoOperationLoggerFactory.INSTANCE;
+                } else {
+                    factory = factories.get(0);
+                }
+                factory.initialize(config, frameworkClassLoader);
+            }
+        }
+    }
+
+    /**
+     * 销毁日志系统。
+     */
+    public static void destroy() {
+        if (factory == null) {
+            return;
+        }
+        synchronized (Loggers.class) {
+            factory = null;
+        }
+    }
+
+    /**
+     * 获取统一日志系统的工厂。
+     *
+     * @return 表示统一日志系统的工厂的 {@link LoggerFactory}。
+     * @throws IllegalStateException 当日志系统的工厂还未初始化时。
+     */
+    public static LoggerFactory getFactory() {
+        if (factory == null) {
+            return NoOperationLoggerFactory.INSTANCE;
+        }
+        synchronized (Loggers.class) {
+            return factory;
+        }
+    }
+}

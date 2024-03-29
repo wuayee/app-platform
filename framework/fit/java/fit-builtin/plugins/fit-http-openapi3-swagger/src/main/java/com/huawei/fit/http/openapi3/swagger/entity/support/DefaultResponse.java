@@ -1,0 +1,78 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fit.http.openapi3.swagger.entity.support;
+
+import com.huawei.fit.http.openapi3.swagger.entity.MediaType;
+import com.huawei.fit.http.openapi3.swagger.entity.Response;
+import com.huawei.fitframework.util.MapBuilder;
+import com.huawei.fitframework.util.MapUtils;
+import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.StringUtils;
+
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * 表示 {@link Response} 的默认实现。
+ *
+ * @author 季聿阶 j00559309
+ * @since 2023-08-27
+ */
+public class DefaultResponse implements Response {
+    private final String description;
+    private final Map<String, MediaType> content;
+
+    public DefaultResponse(String description, Map<String, MediaType> content) {
+        this.description = ObjectUtils.nullIf(description, StringUtils.EMPTY);
+        this.content = content;
+    }
+
+    @Override
+    public String description() {
+        return this.description;
+    }
+
+    @Override
+    public Map<String, MediaType> content() {
+        return this.content;
+    }
+
+    @Override
+    public Map<String, Object> toJson() {
+        MapBuilder<String, Object> builder = MapBuilder.<String, Object>get().put("description", this.description);
+        if (MapUtils.isNotEmpty(this.content)) {
+            builder.put("content",
+                    this.content.entrySet()
+                            .stream()
+                            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toJson())));
+        }
+        return builder.build();
+    }
+
+    /**
+     * 表示 {@link Response.Builder} 的默认实现。
+     */
+    public static class Builder implements Response.Builder {
+        private String description;
+        private Map<String, MediaType> content;
+
+        @Override
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        @Override
+        public Builder content(Map<String, MediaType> content) {
+            this.content = content;
+            return this;
+        }
+
+        @Override
+        public Response build() {
+            return new DefaultResponse(this.description, this.content);
+        }
+    }
+}
