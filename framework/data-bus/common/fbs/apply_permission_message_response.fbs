@@ -5,6 +5,7 @@ namespace DataBus.Common;
 table ApplyPermissionMessageResponse {
     error_type: ErrorType;
     granted: bool;
+    memory_size: ulong;
 }
 
 root_type ApplyPermissionMessageResponse;

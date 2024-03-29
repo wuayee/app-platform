@@ -5,9 +5,12 @@ enum ErrorType : byte {
   OutOfMemory = 1,
   NotConnectedToDataBus = 2,
   PermissionDenied = 3,
-  MemoryNotFound = 4
+  MemoryNotFound = 4,
+  Timeout = 5,
+  DataBusDisconnected = 6
 }
 
+// 修改此 Enum 请务必与 DataBus 开发组人员确认
 enum PermissionType : byte {
   None = 0,
   Read = 1,

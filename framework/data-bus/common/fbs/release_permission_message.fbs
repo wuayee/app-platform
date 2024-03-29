@@ -1,0 +1,9 @@
+include "common.fbs";
+
+namespace DataBus.Common;
+
+table ReleasePermissionMessage {
+    memory_key: int;
+}
+
+root_type ReleasePermissionMessage;

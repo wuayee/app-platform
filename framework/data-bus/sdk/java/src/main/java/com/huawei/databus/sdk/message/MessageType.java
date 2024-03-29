@@ -13,8 +13,10 @@ public final class MessageType {
   public static final byte HeartBeat = 1;
   public static final byte ApplyMemory = 2;
   public static final byte ApplyPermission = 3;
+  public static final byte ReleasePermission = 4;
+  public static final byte ReleaseMemory = 5;
 
-  public static final String[] names = { "Unknown", "HeartBeat", "ApplyMemory", "ApplyPermission", };
+  public static final String[] names = { "Unknown", "HeartBeat", "ApplyMemory", "ApplyPermission", "ReleasePermission", "ReleaseMemory", };
 
   public static String name(int e) { return names[e]; }
 }

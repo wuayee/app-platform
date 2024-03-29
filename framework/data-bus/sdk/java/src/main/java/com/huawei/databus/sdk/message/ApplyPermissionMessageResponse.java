@@ -24,19 +24,23 @@ public final class ApplyPermissionMessageResponse extends Table {
 
   public byte errorType() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
   public boolean granted() { int o = __offset(6); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public long memorySize() { int o = __offset(8); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
 
   public static int createApplyPermissionMessageResponse(FlatBufferBuilder builder,
       byte errorType,
-      boolean granted) {
-    builder.startTable(2);
+      boolean granted,
+      long memorySize) {
+    builder.startTable(3);
+    ApplyPermissionMessageResponse.addMemorySize(builder, memorySize);
     ApplyPermissionMessageResponse.addGranted(builder, granted);
     ApplyPermissionMessageResponse.addErrorType(builder, errorType);
     return ApplyPermissionMessageResponse.endApplyPermissionMessageResponse(builder);
   }
 
-  public static void startApplyPermissionMessageResponse(FlatBufferBuilder builder) { builder.startTable(2); }
+  public static void startApplyPermissionMessageResponse(FlatBufferBuilder builder) { builder.startTable(3); }
   public static void addErrorType(FlatBufferBuilder builder, byte errorType) { builder.addByte(0, errorType, 0); }
   public static void addGranted(FlatBufferBuilder builder, boolean granted) { builder.addBoolean(1, granted, false); }
+  public static void addMemorySize(FlatBufferBuilder builder, long memorySize) { builder.addLong(2, memorySize, 0L); }
   public static int endApplyPermissionMessageResponse(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
