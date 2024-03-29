@@ -1,0 +1,63 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2022-2023. All rights reserved.
+ */
+
+package com.huawei.fitframework.aop.interceptor.cache;
+
+import com.huawei.fitframework.aop.interceptor.MethodInterceptor;
+import com.huawei.fitframework.aop.interceptor.cache.support.CacheableInterceptorFactory;
+import com.huawei.fitframework.aop.interceptor.cache.support.EvictCacheInterceptorFactory;
+import com.huawei.fitframework.aop.interceptor.cache.support.PutCacheInterceptorFactory;
+import com.huawei.fitframework.aop.interceptor.support.AbstractMethodInterceptorResolver;
+import com.huawei.fitframework.ioc.BeanContainer;
+import com.huawei.fitframework.ioc.BeanFactory;
+import com.huawei.fitframework.ioc.BeanMetadata;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * 解析缓存拦截事件提供者的解析器。
+ *
+ * @author 季聿阶 j00559309
+ * @since 2022-12-13
+ */
+public class CacheInterceptorResolver extends AbstractMethodInterceptorResolver {
+    private final List<CacheInterceptorFactory> methodInterceptorFactories;
+
+    public CacheInterceptorResolver(BeanContainer container) {
+        this.methodInterceptorFactories = Arrays.asList(new CacheableInterceptorFactory(container),
+                new PutCacheInterceptorFactory(container),
+                new EvictCacheInterceptorFactory(container));
+    }
+
+    @Override
+    public boolean eliminate(BeanMetadata metadata) {
+        return false;
+    }
+
+    @Override
+    public List<MethodInterceptor> resolve(BeanMetadata beanMetadata, Object bean) {
+        List<MethodInterceptor> methodInterceptors = this.resolveMethodInterceptors(beanMetadata, bean);
+        return this.matchPointcuts(methodInterceptors, bean);
+    }
+
+    private List<MethodInterceptor> resolveMethodInterceptors(BeanMetadata beanMetadata, Object bean) {
+        List<MethodInterceptor> methodInterceptors = new ArrayList<>();
+        Method[] methods = bean.getClass().getDeclaredMethods();
+        for (Method method : methods) {
+            this.methodInterceptorFactories.stream()
+                    .filter(factory -> factory.isInterceptMethod(method))
+                    .findFirst()
+                    .map(factory -> factory.create(this.getBeanFactory(beanMetadata), method))
+                    .ifPresent(methodInterceptors::add);
+        }
+        return methodInterceptors;
+    }
+
+    private BeanFactory getBeanFactory(BeanMetadata beanMetadata) {
+        return beanMetadata.container().factory(beanMetadata.type()).orElse(null);
+    }
+}

@@ -1,0 +1,129 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fitframework.runtime.direct;
+
+import static com.huawei.fitframework.util.ObjectUtils.as;
+
+import com.huawei.fitframework.jvm.ClassDeclaration;
+import com.huawei.fitframework.jvm.classfile.ClassFile;
+import com.huawei.fitframework.resource.ClassPath;
+import com.huawei.fitframework.resource.ResourceTree;
+import com.huawei.fitframework.resource.ResourceTree.FileNode;
+import com.huawei.fitframework.resource.ResourceTree.Node;
+import com.huawei.fitframework.util.StringUtils;
+import com.huawei.fitframework.util.XmlUtils;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * 为直接调用启动场景提供公共包的类加载程序。
+ *
+ * @author 梁济时 l00815032
+ * @since 2023-02-08
+ */
+final class DirectSharedClassLoader extends URLClassLoader {
+    private final ClassLoader frameworkClassLoader;
+    private final Set<String> redirectedClassNames;
+
+    DirectSharedClassLoader(ClassLoader frameworkClassLoader) {
+        super(new URL[0], frameworkClassLoader.getParent());
+        this.frameworkClassLoader = frameworkClassLoader;
+        this.redirectedClassNames = new HashSet<>();
+    }
+
+    public void add(URL url) {
+        super.addURL(url);
+    }
+
+    public void redirect(String className) {
+        this.redirectedClassNames.add(className);
+    }
+
+    @Override
+    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        if (this.redirectedClassNames.contains(name)) {
+            return this.frameworkClassLoader.loadClass(name);
+        } else {
+            return super.loadClass(name, resolve);
+        }
+    }
+
+    static DirectSharedClassLoader create() {
+        ClassLoader currentClassLoader = DirectSharedClassLoader.class.getClassLoader();
+        DirectSharedClassLoader sharedClassLoader = new DirectSharedClassLoader(currentClassLoader);
+        List<ClassPath> classPaths = ClassPath.fromClassLoader(currentClassLoader, false);
+        for (ClassPath classPath : classPaths) {
+            if (isSharedClassPath(classPath)) {
+                try {
+                    sharedClassLoader.add(classPath.url());
+                } catch (MalformedURLException ex) {
+                    throw new IllegalStateException(StringUtils.format(
+                            "Failed to obtain URL of class path. [classpath={0}]",
+                            classPath));
+                }
+                redirectClasses(classPath.resources(), sharedClassLoader);
+            }
+        }
+        return sharedClassLoader;
+    }
+
+    private static boolean isSharedClassPath(ClassPath classPath) {
+        if (isService(classPath)) {
+            return true;
+        }
+        return isFrameworkShared(classPath);
+    }
+
+    private static boolean isService(ClassPath classPath) {
+        Node node = classPath.resources().nodeAt("FIT-INF/service.xml");
+        return node != null;
+    }
+
+    private static boolean isFrameworkShared(ClassPath classPath) {
+        FileNode node = as(classPath.resources().nodeAt("FIT-INF/metadata.xml"), FileNode.class);
+        if (node == null) {
+            return false;
+        }
+        try (InputStream in = node.read()) {
+            String shared = readInputStream(in);
+            return Boolean.parseBoolean(shared);
+        } catch (IOException e) {
+            throw new IllegalStateException(StringUtils.format("Failed to read FIT metadata file. [file={0}]",
+                    classPath), e);
+        }
+    }
+
+    private static String readInputStream(InputStream in) {
+        Document xml = XmlUtils.load(in);
+        Element direct = XmlUtils.child(xml, "metadata/direct");
+        return XmlUtils.content(direct, "shared");
+    }
+
+    private static void redirectClasses(ResourceTree resources, DirectSharedClassLoader loader) {
+        resources.traverse(node -> {
+            if (!StringUtils.endsWithIgnoreCase(node.name(), ClassFile.FILE_EXTENSION)) {
+                return;
+            }
+            ClassFile file;
+            try (InputStream in = node.read()) {
+                file = new ClassFile(in);
+            } catch (IOException ex) {
+                return;
+            }
+            ClassDeclaration declaration = ClassDeclaration.load(file);
+            loader.redirect(declaration.name());
+        });
+    }
+}

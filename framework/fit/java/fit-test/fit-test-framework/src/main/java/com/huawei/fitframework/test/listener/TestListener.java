@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fitframework.test.listener;
+
+import com.huawei.fitframework.test.TestContext;
+
+/**
+ * 测试框架的监听类，用于监听单测类整个生命周期。
+ *
+ * @author 邬涨财 w00575064
+ * @since 2023-01-17
+ */
+public interface TestListener {
+    /**
+     * 预处理器，在执行当前测试类所有的测试用例前调用。
+     *
+     * @param context 表示测试上下文类的 {@link TestContext}。
+     */
+    default void beforeTestClass(TestContext context) {}
+
+    /**
+     * 对测试类实例进行再处理，如注入依赖项。该方法会在测试类实例化后立即调用。
+     *
+     * @param context 表示测试上下文类的 {@link TestContext}。
+     */
+    default void prepareTestInstance(TestContext context) {}
+
+    /**
+     * 在执行底层测试框架的生命周期回调方法（beforeEach方法）之前，进行预处理。
+     *
+     * @param context 表示测试上下文类的 {@link TestContext}。
+     */
+    default void beforeTestMethod(TestContext context) {}
+
+    /**
+     * 在执行测试方法之前，进行预处理。该方法在生命周期回调方法（beforeEach方法）之后。
+     *
+     * @param context 表示测试上下文类的 {@link TestContext}。
+     */
+    default void beforeTestExecution(TestContext context) {}
+
+    /**
+     * 在执行测试方法之后，进行预处理。该方法在生命周期回调方法（afterEach方法）之前。
+     *
+     * @param context 表示测试上下文类的 {@link TestContext}。
+     */
+    default void afterTestExecution(TestContext context) {}
+
+    /**
+     * 在执行底层测试框架的生命周期回调方法（afterEach方法）之后，进行预处理。
+     *
+     * @param context 表示测试上下文类的 {@link TestContext}。
+     */
+    default void afterTestMethod(TestContext context) {}
+
+    /**
+     * 在执行当前测试类所有的测试用例后调用。
+     *
+     * @param context 表示测试上下文类的 {@link TestContext}。
+     */
+    default void afterTestClass(TestContext context) {}
+}

@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2022-2022. All rights reserved.
+ */
+
+package com.huawei.fitframework.ioc.annotation.tree;
+
+import java.util.List;
+
+/**
+ * 为注解树的节点提供属性定义。
+ *
+ * @author 梁济时 l00815032
+ * @since 2022-07-07
+ */
+public interface AnnotationTreeNodeProperty {
+    /**
+     * 获取属性所属的节点。
+     *
+     * @return 表示注解节点的 {@link AnnotationTreeNode}。
+     */
+    AnnotationTreeNode node();
+
+    /**
+     * 获取属性名称。
+     *
+     * @return 表示属性名称的 {@link String}。
+     */
+    String name();
+
+    /**
+     * 获取属性的默认值。
+     *
+     * @return 表示属性默认值的 {@link Object}。
+     */
+    Object defaultValue();
+
+    /**
+     * 获取属性的实际值。
+     *
+     * @return 表示属性实际值的 {@link Object}。
+     */
+    Object value();
+
+    /**
+     * 获取属性的数据来源。
+     *
+     * @return 表示数据来源的列表的 {@link List}{@code <}{@link AnnotationTreeNodeProperty}{@code >}。
+     */
+    List<AnnotationTreeNodeProperty> sources();
+}

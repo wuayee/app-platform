@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.huawei.fit.extension</groupId>
+        <artifactId>fit-test-parent</artifactId>
+        <version>3.3.9-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.huawei.fitframework</groupId>
+    <artifactId>fit-test-framework</artifactId>
+
+    <properties>
+        <!-- Third-party versions -->
+        <junit5.version>5.10.0</junit5.version>
+        <junit4.version>4.13.2</junit4.version>
+    </properties>
+
+    <dependencies>
+        <!-- Fit core -->
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-ioc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-plugin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-util</artifactId>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit5.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit4.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.huawei.fitframework</groupId>
+                <artifactId>fit-dependency-maven-plugin</artifactId>
+                <version>${fit.version}</version>
+                <executions>
+                    <execution>
+                        <id>dependency</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>dependency</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven.jar.version}</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Created-By>FIT lab (Huawei)</Created-By>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

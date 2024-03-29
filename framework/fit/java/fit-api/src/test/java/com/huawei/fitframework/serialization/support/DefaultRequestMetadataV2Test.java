@@ -1,0 +1,147 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fitframework.serialization.support;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.huawei.fitframework.serialization.RequestMetadataV2;
+import com.huawei.fitframework.serialization.TagLengthValues;
+import com.huawei.fitframework.serialization.Version;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+ * {@link DefaultRequestMetadataV2} 的单元测试。
+ *
+ * @author gwx900499
+ * @since 2023-02-17
+ */
+@DisplayName("测试 DefaultRequestMetadataV2 类以及相关类")
+class DefaultRequestMetadataV2Test {
+    private RequestMetadataV2 metadata;
+    private final short version = 4;
+    private final byte dataFormat = 5;
+    private final String genericableId = "9588e5fc63cc4f1fbdcf2567bce0a454";
+    private final Version genericableVersion = new DefaultVersion((byte) 20, (byte) 1, (byte) 1);
+    private final String fitableId = "9588e5fc63cc4f1fbdcf2567bce0a453";
+    private final Version fitableVersion = new DefaultVersion((byte) 10, (byte) 1, (byte) 1);
+    private final TagLengthValues tagLengthValues = this.initTagLengthValues();
+
+    private TagLengthValues initTagLengthValues() {
+        TagLengthValues tlv = new DefaultTagLengthValues();
+        byte[] bytes = {1, 2, 3};
+        tlv.putTag(1, bytes);
+        return tlv;
+    }
+
+    @BeforeEach
+    @DisplayName("初始化 DefaultRequestMetadata 类")
+    void init() {
+        this.metadata = RequestMetadataV2.custom()
+                .version(this.version)
+                .dataFormat(this.dataFormat)
+                .genericableId(this.genericableId)
+                .genericableVersion(this.genericableVersion)
+                .fitableId(this.fitableId)
+                .fitableVersion(this.fitableVersion)
+                .tagValues(this.tagLengthValues)
+                .build();
+    }
+
+    @Test
+    @DisplayName("提供 DefaultRequestMetadata 类，返回正常信息")
+    void givenDefaultRequestMetadataShouldReturnMetadata() {
+        RequestMetadataV2 build = RequestMetadataV2.custom()
+                .version(this.version)
+                .dataFormat(this.dataFormat)
+                .genericableId(this.genericableId)
+                .genericableVersion(this.genericableVersion)
+                .fitableId(this.fitableId)
+                .tagValues(this.tagLengthValues)
+                .build();
+        assertThat(this.metadata).isEqualTo(build);
+    }
+
+    @Test
+    @DisplayName("提供 RequestMetadata 类 copy 方法时，返回正常信息")
+    void givenRequestMetadataWhenCopyThenReturnMetadata() {
+        RequestMetadataV2 build = RequestMetadataV2.custom()
+                .version(this.version)
+                .dataFormat(this.dataFormat)
+                .genericableId(this.genericableId)
+                .genericableVersion(this.genericableVersion)
+                .fitableId(this.fitableId)
+                .tagValues(this.tagLengthValues)
+                .build();
+        RequestMetadataV2 requestMetadata = build.copy().build();
+        assertThat(requestMetadata).isEqualTo(this.metadata);
+    }
+
+    @Test
+    @DisplayName("提供 RequestMetadata 类 deserialize 方法时，返回正常信息")
+    void givenRequestMetadataShouldReturnMetadata() {
+        RequestMetadataV2 build = RequestMetadataV2.custom()
+                .version(this.version)
+                .dataFormat(this.dataFormat)
+                .genericableId(this.genericableId)
+                .genericableVersion(this.genericableVersion)
+                .fitableId(this.fitableId)
+                .tagValues(this.tagLengthValues)
+                .build();
+        RequestMetadataV2 requestMetadata = RequestMetadataV2.deserialize(build.serialize());
+        assertThat(requestMetadata).isEqualTo(build);
+    }
+
+    @SuppressWarnings("EqualsBetweenInconvertibleTypes")
+    @Test
+    @DisplayName("提供 DefaultRequestMetadata 类 equals 方法与不同类型比较时，返回 false")
+    void givenOtherTypeRequestMetadataShouldReturnFalse() {
+        RequestMetadataV2 newBuild = RequestMetadataV2.custom()
+                .version(this.version)
+                .dataFormat(this.dataFormat)
+                .genericableId(this.genericableId)
+                .genericableVersion(this.genericableVersion)
+                .fitableId(this.fitableId)
+                .tagValues(null)
+                .build();
+        DefaultRequestMetadataV2.Builder build = new DefaultRequestMetadataV2.Builder(newBuild);
+        assertThat(this.metadata.equals(build)).isFalse();
+    }
+
+    @Test
+    @DisplayName("提供 DefaultRequestMetadata 类 toString 方法时，返回正常信息")
+    void givenDefaultRequestMetadataShouldReturnStringValue() {
+        String meta = this.metadata.toString();
+        assertThat(meta).contains(this.genericableId);
+    }
+
+    @Test
+    @DisplayName("提供 RequestMetadata 类序列化方法时，返回正常信息")
+    void givenRequestMetadataWhenSerializeThenReturnMetadata() throws IOException {
+        RequestMetadataV2 actualMetadata = RequestMetadataV2.custom()
+                .version(this.version)
+                .dataFormat(this.dataFormat)
+                .genericableId(this.genericableId)
+                .genericableVersion(this.genericableVersion)
+                .fitableId(this.fitableId)
+                .tagValues(null)
+                .build();
+        DefaultRequestMetadataV2.Serializer serializer = DefaultRequestMetadataV2.Serializer.INSTANCE;
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            serializer.serialize(actualMetadata, out);
+            try (InputStream in = new ByteArrayInputStream(out.toByteArray())) {
+                RequestMetadataV2 expected = serializer.deserialize(in);
+                assertThat(actualMetadata).isEqualTo(expected);
+            }
+        }
+    }
+}
