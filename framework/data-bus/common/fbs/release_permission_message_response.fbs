@@ -1,0 +1,9 @@
+include "common.fbs";
+
+namespace DataBus.Common;
+
+table ReleasePermissionMessageResponse {
+    error_type: ErrorType;
+}
+
+root_type ReleasePermissionMessageResponse;

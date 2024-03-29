@@ -14,8 +14,10 @@ public final class ErrorType {
   public static final byte NotConnectedToDataBus = 2;
   public static final byte PermissionDenied = 3;
   public static final byte MemoryNotFound = 4;
+  public static final byte Timeout = 5;
+  public static final byte DataBusDisconnected = 6;
 
-  public static final String[] names = { "None", "OutOfMemory", "NotConnectedToDataBus", "PermissionDenied", "MemoryNotFound", };
+  public static final String[] names = { "None", "OutOfMemory", "NotConnectedToDataBus", "PermissionDenied", "MemoryNotFound", "Timeout", "DataBusDisconnected", };
 
   public static String name(int e) { return names[e]; }
 }

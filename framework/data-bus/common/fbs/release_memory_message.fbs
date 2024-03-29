@@ -1,0 +1,7 @@
+namespace DataBus.Common;
+
+table ReleaseMemoryMessage {
+    memory_key: int;
+}
+
+root_type ReleaseMemoryMessage;

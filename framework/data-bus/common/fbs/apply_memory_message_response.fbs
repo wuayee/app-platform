@@ -5,6 +5,7 @@ namespace DataBus.Common;
 table ApplyMemoryMessageResponse {
     error_type: ErrorType;
     memory_key: int;
+    memory_size: ulong;
 }
 
 root_type ApplyMemoryMessageResponse;
