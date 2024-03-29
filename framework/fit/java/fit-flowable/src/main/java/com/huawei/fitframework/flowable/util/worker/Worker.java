@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fitframework.flowable.util.worker;
+
+import com.huawei.fitframework.flowable.Publisher;
+import com.huawei.fitframework.flowable.Subscriber;
+
+/**
+ * 表示辅助消费响应式流中元素的工具。
+ *
+ * @param <T> 表示响应式流中元素类型的 {@link T}。
+ * @author 何天放 h00679269
+ * @since 2024-02-20
+ */
+public interface Worker<T> extends Subscriber<T> {
+    /**
+     * 启动 {@link Worker}，开始元素消费。
+     */
+    void run();
+
+    /**
+     * 向响应式流中请求一定数量的元素。
+     *
+     * @param count 表示所请求元素数量的 {@code long}。
+     */
+    void request(long count);
+
+    /**
+     * 取消对于该响应式流的订阅。
+     */
+    void cancel();
+
+    /**
+     * 创建具有默认实现的 {@link Worker}。
+     *
+     * @param observer 表示用于处理回调的 {@link WorkerObserver}。
+     * @param publisher 表示需要被辅助消费的响应式流的 {@link Publisher}。
+     * @param id 表示用于区分不同 {@link Worker} 的 {@code long}。
+     * @param onSubscribedRequest 表示在发生订阅时请求元素数量的 {@code long}。
+     * @param <T> 表示响应式流中元素类型的 {@link T}。
+     * @return 表示所创建的用于辅助消费的 {@link Worker}。
+     */
+    static <T> Worker<T> create(WorkerObserver observer, Publisher<T> publisher, long id, long onSubscribedRequest) {
+        return new DefaultWorker<T>(observer, publisher, id, onSubscribedRequest);
+    }
+}

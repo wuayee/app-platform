@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fitframework.aop.interceptor.aspect.interceptor.inject;
+
+import com.huawei.fitframework.aop.interceptor.MethodJoinPoint;
+import com.huawei.fitframework.aop.interceptor.MethodPointcut;
+
+/**
+ * 方法参数的注入信息。
+ *
+ * @author 季聿阶 j00559309
+ * @since 2022-05-19
+ */
+public class ParameterInjection {
+    private final MethodPointcut pointcut;
+    private final MethodJoinPoint joinPoint;
+
+    /**
+     * 使用方法定义的切点集合、运行时的连接点信息实例化 {@link ParameterInjection}。
+     *
+     * @param pointcut 表示方法定义的切点集合的 {@link MethodPointcut}。
+     * @param joinPoint 表示运行时的连接点信息的 {@link MethodJoinPoint}。
+     */
+    public ParameterInjection(MethodPointcut pointcut, MethodJoinPoint joinPoint) {
+        this.pointcut = pointcut;
+        this.joinPoint = joinPoint;
+    }
+
+    /**
+     * 获取方法定义的切点集合。
+     *
+     * @return 表示方法定义的切点集合的 {@link MethodPointcut}。
+     */
+    public MethodPointcut getPointcut() {
+        return this.pointcut;
+    }
+
+    /**
+     * 获取运行时的连接点信息。
+     *
+     * @return 表示运行时的连接点信息的 {@link MethodJoinPoint}。
+     */
+    public MethodJoinPoint getJoinPoint() {
+        return this.joinPoint;
+    }
+}

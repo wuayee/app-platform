@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fit.http.server.handler.support;
+
+import static com.huawei.fitframework.inspection.Validation.notNull;
+
+import com.huawei.fit.http.server.HttpClassicServerRequest;
+import com.huawei.fit.http.server.HttpClassicServerResponse;
+import com.huawei.fit.http.server.handler.PropertyValueMapper;
+
+import java.util.Map;
+
+/**
+ * 表示错误参数的映射器。
+ *
+ * @author 季聿阶 j00559309
+ * @since 2023-12-11
+ */
+public class ErrorMapper implements PropertyValueMapper {
+    /** 表示在自定义上下文中错误的主键。 */
+    public static final String ERROR_KEY = "FIT-Error";
+
+    private final Class<Throwable> errorClass;
+
+    public ErrorMapper(Class<Throwable> errorClass) {
+        this.errorClass = notNull(errorClass, "The error class cannot be null.");
+    }
+
+    @Override
+    public Object map(HttpClassicServerRequest request, HttpClassicServerResponse response,
+            Map<String, Object> context) {
+        if (context == null) {
+            return null;
+        }
+        Object error = context.get(ERROR_KEY);
+        if (error == null) {
+            return null;
+        }
+        if (this.errorClass.isAssignableFrom(error.getClass())) {
+            return error;
+        }
+        return null;
+    }
+}

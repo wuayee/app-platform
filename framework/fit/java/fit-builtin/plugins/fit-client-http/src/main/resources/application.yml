@@ -1,0 +1,8 @@
+secure:
+  ignore-trust: false
+  ignore-hostname: false
+
+fit:
+  beans:
+    packages:
+    - 'com.huawei.fit.client.http'
