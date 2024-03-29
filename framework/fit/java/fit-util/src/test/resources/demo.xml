@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <first-level id="1">first-level-1</first-level>
+    <first-level id="2" class="class1">first-level-2</first-level>
+    <first-level id="3" class="class1">first-level-3</first-level>
+    <parent>
+        <child />
+    </parent>
+</configuration>

@@ -1,0 +1,4 @@
+fit:
+  beans:
+    packages:
+    - 'com.huawei.fitframework.transaction'
