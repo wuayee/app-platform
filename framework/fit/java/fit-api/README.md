@@ -72,24 +72,26 @@ FitException -u-|> RuntimeException
 
 - `0x7F000000`~`0x7F0FFFFF`
 
-| 异常码          |              异常类型               | 说明        |
-|--------------|:-------------------------------:|-----------|
-| `0x7F000000` |          FitException           | 基础异常      |
-| `0x7F000001` |       DegradableException       | 可降级异常     |
-| `0x7F000002` |       RetryableException        | 可重试异常     |
-| `0x7F000010` | RouterRetrievalFailureException | 获取动态路由器失败 |
-| `0x7F000011` |  GenericableNotFoundException   | 无法找到服务    |
+| 异常码          |        异常类型         | 说明    |
+|--------------|:-------------------:|-------|
+| `0x7F000000` |    FitException     | 基础异常  |
+| `0x7F000001` | DegradableException | 可降级异常 |
+| `0x7F000002` | RetryableException  | 可重试异常 |
 
 ### 一般错误码
 
 - `0x7F010000` ~ `0x7F01FFFF`
 
-| 异常码          |              异常类型              | 说明       |
-|--------------|:------------------------------:|----------|
-| `0x7F010007` | AsyncTaskNotAcceptedException  | 异步任务未提交  |
-| `0x7F010008` |   AsyncTaskNotFoundException   | 异步任务未找到  |
-| `0x7F010009` | AsyncTaskNotCompletedException | 异步任务未完成  |
-| `0x7F010010` |  AsyncTaskExecutionException   | 异步任务执行失败 |
+| 异常码          |                 异常类型                 | 说明           |
+|--------------|:------------------------------------:|--------------|
+| `0x7F010000` |   RouterRetrievalFailureException    | 获取动态路由器失败    |
+| `0x7F010001` |     GenericableNotFoundException     | 无法找到服务       |
+| `0x7F010002` | ClientLocalExecutorNotFoundException | 客户端获取本地执行器失败 |
+| `0x7F010003` | ServerLocalExecutorNotFoundException | 服务端获取本地执行器失败 |
+| `0x7F010007` |    AsyncTaskNotAcceptedException     | 异步任务未提交      |
+| `0x7F010008` |      AsyncTaskNotFoundException      | 异步任务未找到      |
+| `0x7F010009` |    AsyncTaskNotCompletedException    | 异步任务未完成      |
+| `0x7F010010` |     AsyncTaskExecutionException      | 异步任务执行失败     |
 
 #### 动态路由异常码
 
@@ -112,9 +114,9 @@ FitException -u-|> RuntimeException
 
 - `0x7F040000` ~ `0x7F04FFFF`
 
-| 异常码          |         异常类型          | 说明                        |
-|--------------|:---------------------:|---------------------------|
-| `0x7F040000` |    ClientException    | 点对点：远程通信客户端发生的异常，导致信息发送失败 |
+| 异常码          |      异常类型       | 说明                        |
+|--------------|:---------------:|---------------------------|
+| `0x7F040000` | ClientException | 点对点：远程通信客户端发生的异常，导致信息发送失败 |
 
 #### 序列化异常
 

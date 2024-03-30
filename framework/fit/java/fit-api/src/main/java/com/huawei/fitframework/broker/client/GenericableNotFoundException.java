@@ -17,7 +17,7 @@ import com.huawei.fitframework.exception.FitException;
 @ErrorCode(GenericableNotFoundException.CODE)
 public class GenericableNotFoundException extends FitException {
     /** 表示没有服务的异常码。 */
-    public static final int CODE = 0x7F000011;
+    public static final int CODE = 0x7F010001;
 
     /**
      * 通过异常信息来实例化 {@link GenericableNotFoundException}。

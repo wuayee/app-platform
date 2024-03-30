@@ -14,6 +14,7 @@ import com.huawei.fitframework.broker.LocalExecutorFactory;
 import com.huawei.fitframework.broker.UniqueFitableId;
 import com.huawei.fitframework.broker.server.Dispatcher;
 import com.huawei.fitframework.broker.server.Response;
+import com.huawei.fitframework.broker.server.ServerLocalExecutorNotFoundException;
 import com.huawei.fitframework.conf.runtime.WorkerConfig;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.exception.MethodInvocationException;
@@ -84,7 +85,7 @@ public class DefaultDispatcher implements Dispatcher {
     private LocalExecutor getLocalExecutor(RequestMetadata reqMetadata) {
         return this.localExecutorFactoryLoader.get()
                 .get(UniqueFitableId.create(reqMetadata.genericableId(), reqMetadata.fitableId()))
-                .orElseThrow(() -> new IllegalStateException("No local executor."));
+                .orElseThrow(() -> new ServerLocalExecutorNotFoundException("No local executor."));
     }
 
     private ResponseMetadata getResponseMetadata(Throwable cause, RequestMetadata metadata) {
