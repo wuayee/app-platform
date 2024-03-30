@@ -20,6 +20,7 @@ import com.huawei.fitframework.broker.LocalExecutorFactory;
 import com.huawei.fitframework.broker.Tags;
 import com.huawei.fitframework.broker.Target;
 import com.huawei.fitframework.broker.UniqueFitableId;
+import com.huawei.fitframework.broker.client.ClientLocalExecutorNotFoundException;
 import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.conf.runtime.SerializationFormat;
 import com.huawei.fitframework.exception.FitException;
@@ -120,7 +121,7 @@ public class DefaultFitable implements ConfigurableFitable {
         if (localTarget.isPresent()) {
             LocalExecutor localExecutor = this.localExecutorFactoryLoader.get()
                     .get(this.toUniqueId())
-                    .orElseThrow(() -> new IllegalStateException(StringUtils.format(
+                    .orElseThrow(() -> new ClientLocalExecutorNotFoundException(StringUtils.format(
                             "No local fitable executor. [id={0}]",
                             this.toUniqueId())));
             if (context.genericableMethod() != null) {
