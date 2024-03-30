@@ -16,7 +16,7 @@ import com.huawei.fitframework.exception.FitException;
 @ErrorCode(RouterRetrievalFailureException.CODE)
 public class RouterRetrievalFailureException extends FitException {
     /** 表示获取动态路由器失败的异常码。 */
-    public static final int CODE = 0x7F000010;
+    public static final int CODE = 0x7F010000;
 
     /**
      * 通过异常信息来实例化 {@link TooManyFitablesException}。
