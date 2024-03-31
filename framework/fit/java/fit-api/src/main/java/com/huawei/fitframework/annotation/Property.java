@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.http.annotation;
+package com.huawei.fitframework.annotation;
 
 import com.huawei.fitframework.util.StringUtils;
 
@@ -23,11 +23,25 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 public @interface Property {
     /**
+     * 获取参数的名字。
+     *
+     * @return 表示参数的名字的 {@link String}。
+     */
+    String name() default StringUtils.EMPTY;
+
+    /**
      * 获取参数的描述信息。
      *
      * @return 表示参数的描述信息的 {@link String}。
      */
     String description() default StringUtils.EMPTY;
+
+    /**
+     * 获取参数是否必须的标志。
+     *
+     * @return 表示参数是否必须的标志的 {@code boolean}。
+     */
+    boolean required() default false;
 
     /**
      * 获取参数的样例值。

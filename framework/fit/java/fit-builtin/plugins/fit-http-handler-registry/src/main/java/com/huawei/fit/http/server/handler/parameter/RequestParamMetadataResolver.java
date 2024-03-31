@@ -4,10 +4,10 @@
 
 package com.huawei.fit.http.server.handler.parameter;
 
-import com.huawei.fit.http.annotation.Property;
 import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fit.http.server.handler.PropertyValueMetadata;
 import com.huawei.fit.http.server.handler.PropertyValueMetadataResolver;
+import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
 import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
 import com.huawei.fitframework.util.StringUtils;
