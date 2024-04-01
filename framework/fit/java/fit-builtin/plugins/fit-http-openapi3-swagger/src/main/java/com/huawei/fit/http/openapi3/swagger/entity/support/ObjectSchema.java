@@ -6,9 +6,9 @@ package com.huawei.fit.http.openapi3.swagger.entity.support;
 
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fit.http.annotation.Property;
 import com.huawei.fit.http.openapi3.swagger.entity.Schema;
 import com.huawei.fit.http.openapi3.swagger.util.SchemaTypeUtils;
+import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.MapUtils;

@@ -6,7 +6,6 @@ package com.huawei.fit.http.openapi3.swagger.builder;
 
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fit.http.annotation.Property;
 import com.huawei.fit.http.openapi3.swagger.EntityBuilder;
 import com.huawei.fit.http.openapi3.swagger.entity.MediaType;
 import com.huawei.fit.http.openapi3.swagger.entity.Operation;
@@ -25,6 +24,7 @@ import com.huawei.fit.http.server.HttpHandler;
 import com.huawei.fit.http.server.ReflectibleMappingHandler;
 import com.huawei.fit.http.server.handler.PropertyValueMetadata;
 import com.huawei.fit.http.server.handler.Source;
+import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.util.AnnotationUtils;
 import com.huawei.fitframework.util.CollectionUtils;
