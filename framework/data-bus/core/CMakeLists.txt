@@ -17,13 +17,13 @@ set(DATABUS_SRC_PATH ${DATABUS_ROOT_DIR}/src)
 set(DATABUS_SCRIPT_PATH ${DATABUS_ROOT_DIR}/scripts)
 set(DATABUS_THIRD_PARTY_PATH ${DATABUS_ROOT_DIR}/third_party)
 
-# C++11约束
+# C++14约束
 if (NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD 14)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
 else ()
-    if (CMAKE_CXX_STANDARD LESS 11)
-        message(FATAL_ERROR "CMAKE_CXX_STANDARD is less than 11, please specify at least SET(CMAKE_CXX_STANDARD 11)")
+    if (CMAKE_CXX_STANDARD LESS 14)
+        message(FATAL_ERROR "CMAKE_CXX_STANDARD is less than 14, please specify at least SET(CMAKE_CXX_STANDARD 14)")
     endif ()
 endif ()
 

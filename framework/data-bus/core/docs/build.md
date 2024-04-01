@@ -4,7 +4,7 @@
 
 ## 总览
 
-DataBus内核为C++项目，使用CMake系统构建，配备有标准的shell脚本作为构建功能的包装以及入口
+DataBus内核为C++ 14项目，使用CMake系统构建，配备有标准的shell脚本作为构建功能的包装以及入口
 
 项目选择[git-mm](https://his.huawei.com/csop/index.html#/ToolInfo?toolId=1615250775275995136&samType=his)自研工具作为三方依赖管理
 
