@@ -9,7 +9,6 @@
 #include <unistd.h>
 #include <sys/epoll.h>
 
-#include "common/stl/memory.h"
 #include "log/Logger.h"
 #include "config/ConfigParser.h"
 #include "connection_manager/ConnectionManager.h"
@@ -22,7 +21,7 @@ using namespace std;
 
 void HandleEvent(struct epoll_event event, int epollFd, int serverFd)
 {
-    unique_ptr<ConnectionManager> managerPtr = DataBus::make_unique<ConnectionManager>();
+    unique_ptr<ConnectionManager> managerPtr = std::make_unique<ConnectionManager>();
     struct epoll_event events[MAX_EVENTS];
     int numEvents = epoll_wait(epollFd, events, MAX_EVENTS, -1);
     for (int i = 0; i < numEvents; ++i) {

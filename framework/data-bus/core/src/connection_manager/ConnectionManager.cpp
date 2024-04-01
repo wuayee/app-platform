@@ -3,16 +3,16 @@
 */
 #include "ConnectionManager.h"
 
-#include <iostream>
-#include <tuple>
 #include <algorithm>
+#include <iostream>
+#include <memory>
+#include <tuple>
 
 #include "flatbuffers/flatbuffers.h"
 
 #include "fbs/apply_memory_message_generated.h"
 #include "fbs/apply_memory_message_response_generated.h"
 #include "fbs/common_generated.h"
-#include "stl/memory.h"
 
 using namespace std;
 using namespace DataBus::Common;
@@ -104,7 +104,7 @@ void ConnectionManager::HandleMessageApplyMemory(const Common::MessageHeader* he
 
     // 组合消息头和消息体
     const size_t respSize = respHeaderSize + respBodySize;
-    auto message = DataBus::make_unique<uint8_t[]>(respSize);
+    auto message = std::make_unique<uint8_t[]>(respSize);
     std::copy(headerBodyBuf, headerBodyBuf + respHeaderSize, message.get());
     std::copy(resBodyBuf, resBodyBuf + respBodySize, message.get() + respHeaderSize);
 

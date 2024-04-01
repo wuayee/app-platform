@@ -15,9 +15,6 @@ foreach (SCHEMA_FILE IN LISTS FLATBUFFERS_SCHEMA_FILES)
     list(APPEND GENERATED_FILES "${ABSOLUTE_PATH}")
 endforeach ()
 
-# extends stl for c++11
-set(DATABUS_STL ${CMAKE_CURRENT_SOURCE_DIR}/stl/memory.h)
-
 # auto generate headers on make stage. let databus_common depends on that
 add_custom_target(databus_common DEPENDS ${GENERATED_FILES} ${DATABUS_STL})
 add_custom_command(
