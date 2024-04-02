@@ -29,7 +29,7 @@ public class SharedMemoryRequest {
     }
 
     /**
-     * SharedMemoryRequest 的构造器
+     * {@link SharedMemoryRequest} 的构造器
      */
     public static class SharedMemoryRequestBuilder {
         private long size;

@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.databus.sdk.support;
+package com.huawei.databus.sdk.memory;
 
 /**
  * 存储已分配的共享内存的句柄

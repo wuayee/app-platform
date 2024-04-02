@@ -4,6 +4,8 @@
 
 package com.huawei.databus.sdk.api;
 
+import com.huawei.databus.sdk.memory.SharedMemory;
+
 /**
  * 为 DataBus 请求提供结果。
  *
@@ -11,6 +13,14 @@ package com.huawei.databus.sdk.api;
  * @since 2024-03-17
  */
 public interface DataBusResult {
+    /**
+     * 返回与本次 IO 相关的内存
+     * <p>仅当 {@link #isSuccess()} 为 {@code true} 时有效。</p>
+     *
+     * @return 表示与本次 IO 请求相关的内存 {@link SharedMemory}
+     */
+    SharedMemory sharedMemory();
+
     /**
      * 获取一个布尔值，该值指示相关请求是否成功。
      *
