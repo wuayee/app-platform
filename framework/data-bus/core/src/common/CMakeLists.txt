@@ -15,11 +15,17 @@ foreach (SCHEMA_FILE IN LISTS FLATBUFFERS_SCHEMA_FILES)
     list(APPEND GENERATED_FILES "${ABSOLUTE_PATH}")
 endforeach ()
 
+set(DATABUS_EXCEPTION ${CMAKE_CURRENT_SOURCE_DIR}/exception/databus_exception.h)
+
 # auto generate headers on make stage. let databus_common depends on that
-add_custom_target(databus_common DEPENDS ${GENERATED_FILES} ${DATABUS_STL})
-add_custom_command(
-        OUTPUT ${GENERATED_FILES}
-        PRE_BUILD
-        COMMAND ${DATABUS_SCRIPT_PATH}/generate_flatbuffers.sh "$<TARGET_FILE:flatc>" "${FLATBUFFERS_SCHEMA_DIR}" "${GENERATED_DIR}"
-        WORKING_DIRECTORY ${GENERATED_DIR}
-)
+add_custom_target(databus_common DEPENDS ${GENERATED_FILES} ${DATABUS_STL} ${DATABUS_EXCEPTION})
+if (GENERATED_FILES)
+    add_custom_command(
+            OUTPUT ${GENERATED_FILES}
+            PRE_BUILD
+            COMMAND ${DATABUS_SCRIPT_PATH}/generate_flatbuffers.sh "$<TARGET_FILE:flatc>" "${FLATBUFFERS_SCHEMA_DIR}" "${GENERATED_DIR}"
+            WORKING_DIRECTORY ${GENERATED_DIR}
+    )
+else()
+    message(WARNING "no fbs files to generate under ${FLATBUFFERS_SCHEMA_DIR}")
+endif()

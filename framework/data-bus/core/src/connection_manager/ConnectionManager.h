@@ -26,7 +26,8 @@ public:
     void AddNewConnection(int socketFd);
 
 private:
-    void HandleMessageApplyMemory(const Common::MessageHeader* header, const char* buffer, ssize_t len, int socketFd);
+    void HandleMessageApplyPermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
+    void HandleMessageApplyMemory(const Common::MessageHeader* header, const char* buffer, int socketFd);
 
     std::unordered_map<int, std::unique_ptr<Connection>> connections_;
 };

@@ -33,6 +33,12 @@ DataBus内核为C++ 14项目，使用CMake系统构建，配备有标准的shell
 
 ## 启动构建
 
-对应命令`./build.sh`或`./build.sh build`或`./build.sh build all`
+对应命令`./build.sh`或`./build.sh build`或`./build.sh build all`，三者等价
 
 调用`scripts/build_all.sh`中的步骤，通过`CMake -> make`流程进行构建
+
+## 进行测试
+
+对应以下两个命令：
+- `./build.sh test` 构建测试并**立即运行测试**
+- `./build.sh build test` 仅构建测试，不会运行
