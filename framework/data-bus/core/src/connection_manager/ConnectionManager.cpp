@@ -6,13 +6,18 @@
 #include <algorithm>
 #include <iostream>
 #include <memory>
+#include <sstream>
 #include <tuple>
 
 #include "flatbuffers/flatbuffers.h"
 
+#include "exception/databus_exception.h"
 #include "fbs/apply_memory_message_generated.h"
 #include "fbs/apply_memory_message_response_generated.h"
+#include "fbs/apply_permission_message_generated.h"
+#include "fbs/apply_permission_message_response_generated.h"
 #include "fbs/common_generated.h"
+#include "ResourceManager.h"
 
 using namespace std;
 using namespace DataBus::Common;
@@ -21,6 +26,39 @@ namespace DataBus {
 namespace Connection {
 
 constexpr int32_t MESSAGE_HEADER_LEN = 24;
+
+/**
+ * 生成消息头，拼接整个消息并发送
+ */
+std::unique_ptr<uint8_t[]> WrapWithHeader(const flatbuffers::FlatBufferBuilder& bodyBuilder, Common::MessageType type)
+{
+    uint8_t* resBodyBuf = bodyBuilder.GetBufferPointer();
+    size_t respBodySize = bodyBuilder.GetSize();
+    flatbuffers::FlatBufferBuilder headerBuilder;
+    flatbuffers::Offset<Common::MessageHeader> respHeader =
+        Common::CreateMessageHeader(headerBuilder, type, respBodySize);
+    headerBuilder.Finish(respHeader);
+
+    uint8_t* headerBodyBuf = headerBuilder.GetBufferPointer();
+
+    if (headerBuilder.GetSize() != MESSAGE_HEADER_LEN) {
+        // TD: format util
+        std::stringstream ss;
+        ss << "Incorrect header size, expected: " << MESSAGE_HEADER_LEN
+           << ", actual: " << headerBuilder.GetSize() << endl;
+        throw IllegalMessageHeaderException(ss.str());
+    }
+    size_t respHeaderSize = headerBuilder.GetSize();
+
+    // 组合消息头和消息体
+    const size_t respSize = respHeaderSize + respBodySize;
+    auto message = std::make_unique<uint8_t[]>(respSize);
+    std::copy(headerBodyBuf, headerBodyBuf + respHeaderSize, message.get());
+    std::copy(resBodyBuf, resBodyBuf + respBodySize, message.get() + respHeaderSize);
+
+    return message;
+}
+
 
 void ConnectionManager::AddNewConnection(int socketFd)
 {
@@ -38,11 +76,16 @@ void ConnectionManager::Handle(const char buffer[], ssize_t len, int socketFd)
     // 验证buf是否包含有效的消息头
     flatbuffers::Verifier verifier(reinterpret_cast<const uint8_t*>(buffer), MESSAGE_HEADER_LEN);
     if (!Common::VerifyMessageHeaderBuffer(verifier)) {
-        cout << "verification header failure." << endl;
-        return;
+        throw IllegalMessageHeaderException("received incorrect header format");
     }
 
     const Common::MessageHeader* header = Common::GetMessageHeader(buffer);
+
+    // TODO: 需要处理半包和粘包
+    uint bodySize = header->size();
+    if (len < bodySize + MESSAGE_HEADER_LEN) {
+        throw IllegalMessageBodyException("received incorrect body format");
+    }
 
     // 读取消息体的大小和类型
     switch (header->type()) {
@@ -51,65 +94,73 @@ void ConnectionManager::Handle(const char buffer[], ssize_t len, int socketFd)
             break;
         }
         case Common::MessageType::ApplyMemory: {
-            HandleMessageApplyMemory(header, buffer, len, socketFd);
+            HandleMessageApplyMemory(header, buffer, socketFd);
+            break;
+        }
+        case Common::MessageType::ApplyPermission: {
+            HandleMessageApplyPermission(header, buffer, socketFd);
             break;
         }
         default:
-            cout << "unknown message" << endl;
+            throw IllegalMessageBodyException("unknown message body type");
             break;
     }
 }
 
 
-void ConnectionManager::HandleMessageApplyMemory(const Common::MessageHeader* header, const char* buffer, ssize_t len,
-                                                 int socketFd)
+void ConnectionManager::HandleMessageApplyMemory(const Common::MessageHeader* header, const char* buffer, int socketFd)
 {
-    // TODO: 需要处理半包和粘包
-    uint bodySize = header->size();
-    if (len < bodySize + MESSAGE_HEADER_LEN) {
-        cout << "Message size not enough" << endl;
-        return;
-    }
-
     // 解析消息体
-    auto startPtr = buffer + bodySize;
-    flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), bodySize);
+    auto startPtr = buffer + header->size();
+    flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), header->size());
     if (!Common::VerifyMessageHeaderBuffer(bodyVerifier)) {
-        cout << "verification ApplyMemory body failure." << endl;
-        return;
+        throw IllegalMessageBodyException("received incorrect apply memory body format");
     }
     const Common::ApplyMemoryMessage* applyMemoryMessage =
             Common::GetApplyMemoryMessage(startPtr);
     cout << "received ApplyMemory, size: " << applyMemoryMessage->memory_size() << endl;
 
-    // TODO: 在这里加入申请内存调用
+    auto& resourceManager = Resource::ResourceManager::Instance();
+    int memoryId = resourceManager.HandleApplyMemory(socketFd, applyMemoryMessage->memory_size());
 
-    // 生成返回信息
+    // 生成返回信息体
     flatbuffers::FlatBufferBuilder bodyBuilder;
-    int fakeRes = 100;
     flatbuffers::Offset<Common::ApplyMemoryMessageResponse> respBody =
-            Common::CreateApplyMemoryMessageResponse(bodyBuilder, Common::ErrorType::None, fakeRes);
+            Common::CreateApplyMemoryMessageResponse(bodyBuilder, Common::ErrorType::None,
+                                                     memoryId, applyMemoryMessage->memory_size());
     bodyBuilder.Finish(respBody);
 
-    uint8_t* resBodyBuf = bodyBuilder.GetBufferPointer();
-    size_t respBodySize = bodyBuilder.GetSize();
+    auto message = WrapWithHeader(bodyBuilder, Common::MessageType::ApplyMemory);
 
-    flatbuffers::FlatBufferBuilder headerBuilder;
-    flatbuffers::Offset<Common::MessageHeader> respHeader =
-            Common::CreateMessageHeader(headerBuilder, Common::MessageType::ApplyMemory, respBodySize);
-    headerBuilder.Finish(respHeader);
+    connections_[socketFd]->Send(message.get(), bodyBuilder.GetSize() + MESSAGE_HEADER_LEN);
+}
 
-    uint8_t* headerBodyBuf = headerBuilder.GetBufferPointer();
-    size_t respHeaderSize = headerBuilder.GetSize();
+void ConnectionManager::HandleMessageApplyPermission(const Common::MessageHeader* header, const char* buffer,
+                                                     int socketFd)
+{
+    // 解析消息体
+    auto startPtr = buffer + header->size();
+    flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), header->size());
+    if (!Common::VerifyApplyPermissionMessageBuffer(bodyVerifier)) {
+        throw IllegalMessageBodyException("received incorrect apply permission body format");
+    }
+    const Common::ApplyPermissionMessage* applyPermissionMessage =
+        Common::GetApplyPermissionMessage(startPtr);
 
-    // 组合消息头和消息体
-    const size_t respSize = respHeaderSize + respBodySize;
-    auto message = std::make_unique<uint8_t[]>(respSize);
-    std::copy(headerBodyBuf, headerBodyBuf + respHeaderSize, message.get());
-    std::copy(resBodyBuf, resBodyBuf + respBodySize, message.get() + respHeaderSize);
+    cout << "received ApplyMemory, permission: " << static_cast<int8_t>(applyPermissionMessage->permission()) << endl;
 
-    cout << "Reply ApplyMemory, header: " << respHeaderSize << ", body: " << respBodySize << endl;
-    connections_[socketFd]->Send(message.get(), respSize);
+    // TD: 在这里加入申请权限调用
+
+    // 生成返回信息体
+    flatbuffers::FlatBufferBuilder bodyBuilder;
+    int fakeRes = 100;
+    flatbuffers::Offset<Common::ApplyPermissionMessageResponse> respBody =
+        Common::CreateApplyPermissionMessageResponse(bodyBuilder, Common::ErrorType::None, true, fakeRes);
+    bodyBuilder.Finish(respBody);
+
+    auto message = WrapWithHeader(bodyBuilder, Common::MessageType::ApplyPermission);
+
+    connections_[socketFd]->Send(message.get(), bodyBuilder.GetSize() + MESSAGE_HEADER_LEN);
 }
 }  // namespace Connection
 }  // namespace DataBus
