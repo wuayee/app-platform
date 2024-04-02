@@ -1,0 +1,9 @@
+heart-beat:
+  client:
+    sceneType: 'fit_registry'
+    interval: 2000
+    aliveTime: 10000
+    initDelay: 3000
+    callbackFitId: ''
+    service_id: 3 #grpc
+
