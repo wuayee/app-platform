@@ -5,7 +5,7 @@
 package com.huawei.databus.sdk.support;
 
 import com.huawei.databus.sdk.api.DataBusResult;
-import com.huawei.databus.sdk.message.ApplyMemoryMessageResponse;
+import com.huawei.databus.sdk.memory.SharedMemory;
 import com.huawei.databus.sdk.message.ErrorType;
 import com.huawei.fitframework.inspection.Validation;
 
@@ -15,24 +15,16 @@ import com.huawei.fitframework.inspection.Validation;
  * @author 王成 w00863339
  * @since 2024-03-17
  */
-public abstract class SharedMemoryResult implements DataBusResult {
-    /**
-     * 获取共享内存的句柄句柄。
-     * <p>仅当 {@link #isSuccess()} 为 {@code true} 时有效。</p>
-     *
-     * @return 表示共享内存句柄的 {@link SharedMemoryKey}。
-     */
-    public abstract SharedMemoryKey sharedMemoryKey();
-
+public interface SharedMemoryResult extends DataBusResult {
     /**
      * 生成一个表示成功的结果。
      *
-     * @param sharedMemoryKey 表示申请内存得到的配置的实例的 {@link SharedMemoryKey}。
+     * @param sharedMemory 表示申请内存得到的配置的实例的 {@link SharedMemory}。
      * @return 表示申请内存成功的结果的 {@link SharedMemoryResult}。
      * @throws IllegalArgumentException {@code config} 为 {@code null}。
      */
-    static SharedMemoryResult success(SharedMemoryKey sharedMemoryKey) {
-        return new SuccessResult(sharedMemoryKey);
+    static SharedMemoryResult success(SharedMemory sharedMemory) {
+        return new SuccessResult(sharedMemory);
     }
 
     /**
@@ -41,23 +33,9 @@ public abstract class SharedMemoryResult implements DataBusResult {
      * @param errorType 表示申请内存得到的错误码 {@code byte}。
      * @return 表示申请内存失败的结果的 {@link SharedMemoryResult}。
      */
-    public static SharedMemoryResult failure(byte errorType) {
+    static SharedMemoryResult failure(byte errorType) {
         return new FailureResult(errorType);
     }
-
-    /**
-     * 获取申请内存结果。
-     *
-     * @param response 表示申请内存得到的服务器回复 {@link ApplyMemoryMessageResponse}。
-     * @return 表示申请内存结果的 {@link SharedMemoryResult}。
-     */
-    public static SharedMemoryResult getResult(ApplyMemoryMessageResponse response) {
-        if (response.errorType() == ErrorType.None) {
-            return success(new SharedMemoryKey(response.memoryKey()));
-        }
-        return failure(response.errorType());
-    }
-
 
     /**
      * 为 {@link SharedMemoryResult} 提供表示申请内存成功的实现。
@@ -65,17 +43,17 @@ public abstract class SharedMemoryResult implements DataBusResult {
      * @author 王成 w00863339
      * @since 2024-03-17
      */
-    private static final class SuccessResult extends SharedMemoryResult {
-        private final SharedMemoryKey sharedMemoryKey;
+    static final class SuccessResult implements SharedMemoryResult {
+        private final SharedMemory sharedMemory;
 
         /**
          * 使用被成功申请内存的配置初始化 {@link SuccessResult} 类的新实例。
          *
-         * @param key 表示被成功申请内存的句柄的 {@link SharedMemoryKey}。
+         * @param key 表示被成功申请内存的句柄的 {@link SharedMemory}。
          * @throws IllegalArgumentException {@code key} 为 {@code null}。
          */
-        private SuccessResult(SharedMemoryKey key) {
-            this.sharedMemoryKey = Validation.notNull(key, "The loaded config cannot be null.");
+        private SuccessResult(SharedMemory key) {
+            this.sharedMemory = Validation.notNull(key, "The shared memory cannot be null.");
         }
 
         @Override
@@ -89,13 +67,13 @@ public abstract class SharedMemoryResult implements DataBusResult {
         }
 
         @Override
-        public SharedMemoryKey sharedMemoryKey() {
-            return this.sharedMemoryKey;
+        public SharedMemory sharedMemory() {
+            return this.sharedMemory;
         }
 
         @Override
         public String toString() {
-            return this.sharedMemoryKey.toString();
+            return this.sharedMemory.toString();
         }
     }
 
@@ -105,7 +83,7 @@ public abstract class SharedMemoryResult implements DataBusResult {
      * @author 王成 w00863339
      * @since 2024-03-17
      */
-    private static final class FailureResult extends SharedMemoryResult {
+    static final class FailureResult implements SharedMemoryResult {
         private final byte errorType;
 
         private FailureResult(byte errorType) {
@@ -123,7 +101,7 @@ public abstract class SharedMemoryResult implements DataBusResult {
         }
 
         @Override
-        public SharedMemoryKey sharedMemoryKey() {
+        public SharedMemory sharedMemory() {
             return null;
         }
 

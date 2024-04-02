@@ -4,11 +4,7 @@
 
 package com.huawei.databus.sdk.client;
 
-import com.huawei.databus.sdk.api.DataBusResult;
-import com.huawei.databus.sdk.message.ApplyMemoryMessageResponse;
 import com.huawei.databus.sdk.message.MessageHeader;
-import com.huawei.databus.sdk.message.MessageType;
-import com.huawei.databus.sdk.support.SharedMemoryResult;
 import com.huawei.databus.sdk.tools.Constant;
 import com.huawei.fitframework.inspection.Validation;
 
@@ -29,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2024-03-17
  */
 class ResponseDispatcher {
-    private final Map<Byte, BlockingQueue<DataBusResult>> replyQueues;
+    private final Map<Byte, BlockingQueue<ByteBuffer>> replyQueues;
     private final SocketChannel socketChannel;
     private boolean isRunning;
 
@@ -43,7 +39,7 @@ class ResponseDispatcher {
             new ArrayBlockingQueue<>(1),
             new ThreadPoolExecutor.AbortPolicy());
 
-    public ResponseDispatcher(Map<Byte, BlockingQueue<DataBusResult>> replyQueues, SocketChannel socketChannel) {
+    public ResponseDispatcher(Map<Byte, BlockingQueue<ByteBuffer>> replyQueues, SocketChannel socketChannel) {
         this.replyQueues = replyQueues;
         this.socketChannel = socketChannel;
         this.isRunning = false;
@@ -85,17 +81,14 @@ class ResponseDispatcher {
 
                 buffer.position(Constant.DATABUS_SERVICE_HEADER_SIZE);
 
-                switch (type) {
-                    case MessageType.HeartBeat:
-                        break;
-                    case MessageType.ApplyMemory:
-                        SharedMemoryResult result = SharedMemoryResult.getResult(
-                                ApplyMemoryMessageResponse.getRootAsApplyMemoryMessageResponse(buffer));
-                        this.replyQueues.get(MessageType.ApplyMemory).offer(result);
-                        break;
-                    default:
-                        break;
+                // 将消息体拷贝到新的ByteBuffer里
+                ByteBuffer messageBody = ByteBuffer.allocate(buffer.remaining());
+
+                while (buffer.hasRemaining()) {
+                    messageBody.put(buffer.get());
                 }
+                messageBody.flip();
+                this.replyQueues.get(type).offer(messageBody);
             }
         });
     }

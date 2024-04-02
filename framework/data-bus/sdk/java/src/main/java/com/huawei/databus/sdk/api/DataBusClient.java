@@ -5,9 +5,11 @@
 package com.huawei.databus.sdk.api;
 
 import com.huawei.databus.sdk.client.DefaultDataBusClient;
-import com.huawei.databus.sdk.support.SharedMemoryKey;
+import com.huawei.databus.sdk.support.MemoryIoRequest;
+import com.huawei.databus.sdk.support.MemoryIoResult;
 import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
+import com.huawei.fitframework.inspection.Nonnull;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -34,7 +36,7 @@ public interface DataBusClient {
      * @param request 表示内存申请请求的 {@link SharedMemoryRequest}
      * @return SharedMemoryResult 表示内存申请结果的 {@link SharedMemoryResult}
      */
-    SharedMemoryResult sharedMalloc(SharedMemoryRequest request);
+    SharedMemoryResult sharedMalloc(@Nonnull SharedMemoryRequest request);
 
     /**
      * 关闭通向指定地址和端口的 DataBus 连接
@@ -44,35 +46,27 @@ public interface DataBusClient {
     void close() throws IOException;
 
     /**
-     * 向指定的内存块中写入数据。
+     * 向指定的内存块中读入数据。
      *
-     * @param key 表示目标内存块的句柄 {@link SharedMemoryKey}
-     * @param readOffset 表示从目标内存块读入地点的偏移量的 {@code long}。
-     * @param readLength 表示待读入数据的数量的 {@code long}。
-     * @param bytes 表示待写入数据所在数组的 {@code byte[]}。
-     * @return 表示读取字节总数的 {@code long}。
+     * @param memoryIORequest 表示读取请求 {@link MemoryIoRequest}
+     * @return 表示 IO 操作结果的 {@link MemoryIoRequest}。
      * @throws IOException 当发生 I/O 异常时。
-     * @throws IllegalArgumentException 当 {@code bytes} 为 {@code null} 或 {@code readOffset}
-     * 或 {@code readLength} 为负数时
-     * @throws IndexOutOfBoundsException 当 {@code readOffset} 或者 {@code readOffset + readLength} 超过了内存块长度时，
-     * 或者 {@code readLength} 超过了 bytes 长度时
+     * @throws IllegalArgumentException 当 offset 的值为非正数时
+     * @throws IndexOutOfBoundsException 当读位置超过了内存块大小时
      */
-    long readOnce(SharedMemoryKey key, long readOffset, long readLength, byte[] bytes) throws IOException;
+    MemoryIoResult readOnce(@Nonnull MemoryIoRequest memoryIORequest) throws IOException;
 
     /**
      * 向指定的内存块中写入数据。
      *
-     * @param key 表示目标内存块的句柄 {@link SharedMemoryKey}
-     * @param writeOffset 表示从目标内存块写入地点的偏移量的 {@code long}。
-     * @param writeLength 表示待写入数据的数量的 {@code long}。
-     * @param bytes 表示待写入数据所在数组的 {@code byte[]}。
-     * @return 表示写入字节总数的 {@code long}。
+     * @param memoryIORequest 表示写入请求 {@link MemoryIoRequest}
+     * @return 表示 IO 操作结果的 {@link MemoryIoRequest}。
      * @throws IOException 当发生 I/O 异常时。
-     * @throws IllegalArgumentException 当 {@code bytes} 为 {@code null} 或 {@code writeOffset}
-     * 或 {@code writeLength} 为负数时
-     * @throws IndexOutOfBoundsException 当 {@code writeOffset} 或者 {@code writeOffset + writeLength} 超过了内存块长度时。
+     * @throws IllegalArgumentException 当 offset 的值为非正数时
+     * @throws IndexOutOfBoundsException 当写位置超过了内存块大小时
      */
-    long writeOnce(SharedMemoryKey key, long writeOffset, long writeLength, byte[] bytes) throws IOException;
+    MemoryIoResult writeOnce(@Nonnull MemoryIoRequest memoryIORequest) throws IOException;
+
 
     /**
      * 获取 DataBus 客户端单例实例
