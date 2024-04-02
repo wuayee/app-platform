@@ -1,0 +1,15 @@
+/user_plugin
+/user_conf
+/shared
+/custom_dynamic_plugins
+/cache_for_custom_dynamic_plugins
+/build
+/dist
+/fit.egg-info
+
+__pycache__
+/plugin
+
+*.tar
+*.zip
+*.pyc
