@@ -5,12 +5,14 @@
 package com.huawei.fitframework.log;
 
 import static com.huawei.fitframework.inspection.Validation.isTrue;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
+import static com.huawei.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fitframework.conf.Config;
 import com.huawei.fitframework.log.support.NoOperationLoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -26,20 +28,29 @@ public class Loggers {
     /**
      * 根据应用配置信息初始化日志系统。
      *
+     * @throws IllegalArgumentException 当系统中除了默认实现以外，存在多个日志实现时。
+     */
+    public static void initialize() {
+        initialize(null, null);
+    }
+
+    /**
+     * 根据应用配置信息初始化日志系统。
+     *
      * @param config 表示应用配置信息的 {@link Config}。
      * @param frameworkClassLoader 表示 FIT 框架的类加载器的 {@link ClassLoader}。
-     * @throws IllegalArgumentException 当 {@code config} 为 {@code null} 时。
      * @throws IllegalArgumentException 当系统中除了默认实现以外，存在多个日志实现时。
      */
     public static void initialize(Config config, ClassLoader frameworkClassLoader) {
-        notNull(config, "The config to initialize log system cannot be null.");
+        ClassLoader classLoader = nullIf(frameworkClassLoader, Thread.currentThread().getContextClassLoader());
+        Config actualConfig =
+                getIfNull(config, () -> Config.fromMap(classLoader.getClass().getName(), new HashMap<>()));
         if (factory != null) {
             return;
         }
         synchronized (Loggers.class) {
             if (factory == null) {
-                ServiceLoader<LoggerFactory> serviceLoader =
-                        ServiceLoader.load(LoggerFactory.class, frameworkClassLoader);
+                ServiceLoader<LoggerFactory> serviceLoader = ServiceLoader.load(LoggerFactory.class, classLoader);
                 List<LoggerFactory> factories = new ArrayList<>();
                 serviceLoader.forEach(factories::add);
                 isTrue(factories.size() <= 1,
@@ -49,7 +60,7 @@ public class Loggers {
                 } else {
                     factory = factories.get(0);
                 }
-                factory.initialize(config, frameworkClassLoader);
+                factory.initialize(actualConfig, classLoader);
             }
         }
     }
