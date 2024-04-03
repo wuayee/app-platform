@@ -1,6 +1,7 @@
 # directories
 build/
 deploy/
+tmp/
 
 # flatbuffers' generated
 *_generated.h

@@ -19,9 +19,8 @@
 using DataBus::Connection::ConnectionManager;
 using namespace std;
 
-void HandleEvent(struct epoll_event event, int epollFd, int serverFd)
+void HandleEvent(struct epoll_event event, int epollFd, int serverFd, const shared_ptr<ConnectionManager> managerPtr)
 {
-    unique_ptr<ConnectionManager> managerPtr = std::make_unique<ConnectionManager>();
     struct epoll_event events[MAX_EVENTS];
     int numEvents = epoll_wait(epollFd, events, MAX_EVENTS, -1);
     for (int i = 0; i < numEvents; ++i) {
@@ -72,9 +71,10 @@ void StartDataBusService(int serverFd)
         perror("epoll_ctl: serverFd");
         return;
     }
+    shared_ptr<ConnectionManager> managerPtr = std::make_unique<ConnectionManager>();
 
     while (true) {
-        HandleEvent(event, epollFd, serverFd);
+        HandleEvent(event, epollFd, serverFd, managerPtr);
     }
 }
 
@@ -111,7 +111,7 @@ int main()
         perror("listen");
         return 0;
     }
-    cout << "Databus service starts up..." << endl;
+    DataBus::logger.Info("Databus service starts up at port {}", PORT);
     StartDataBusService(serverFd);
     close(serverFd);
     return 0;
