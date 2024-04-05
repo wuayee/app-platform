@@ -20,7 +20,6 @@ import com.huawei.fitframework.util.ReflectionUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -65,15 +64,6 @@ public class FitableAnnotationResolver implements LocalExecutorResolver {
         if (StringUtils.isNotBlank(annotation.genericable())) {
             return Optional.of(annotation.genericable());
         }
-        Optional<String> opGenericableId =
-                ReflectionUtils.getInterfaceMethod(method).flatMap(AnnotationUtils::getGenericableId);
-        if (opGenericableId.isPresent()) {
-            return opGenericableId;
-        }
-        Class<?> genericClass = annotation.generic();
-        if (Objects.equals(genericClass, Object.class)) {
-            return Optional.empty();
-        }
-        return AnnotationUtils.getGenericableId(genericClass);
+        return ReflectionUtils.getInterfaceMethod(method).flatMap(AnnotationUtils::getGenericableId);
     }
 }

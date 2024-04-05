@@ -37,4 +37,11 @@ public @interface Genericable {
      * @return 表示该泛服务定义的唯一标识的 {@link String}。
      */
     String id() default StringUtils.EMPTY;
+
+    /**
+     * 获取泛服务定义的描述。
+     *
+     * @return 表示泛服务定义的描述的 {@link String}。
+     */
+    String description() default StringUtils.EMPTY;
 }

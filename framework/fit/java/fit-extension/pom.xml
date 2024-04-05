@@ -14,7 +14,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>fit-json</module>
         <module>fit-retry</module>
         <module>fit-schedule</module>
         <module>fit-transaction</module>
