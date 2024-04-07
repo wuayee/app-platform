@@ -1,3 +1,7 @@
+timeout-seconds: 1800
+scheduler-initial-delay: 1
+scheduler-fixed-delay: 15
+
 fit:
   beans:
     packages:
