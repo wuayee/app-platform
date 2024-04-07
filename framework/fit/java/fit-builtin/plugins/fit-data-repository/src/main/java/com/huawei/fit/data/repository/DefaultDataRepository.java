@@ -49,7 +49,7 @@ public class DefaultDataRepository implements DataRepository {
     public DefaultDataRepository(@Value("${timeout-seconds}") long timeoutSeconds,
             @Value("${scheduler-initial-delay}") long initialDelay,
             @Value("${scheduler-fixed-delay}") long fixedDelay) {
-        this.timeoutSeconds = timeoutSeconds > 0 ? timeoutSeconds : 1800;
+        this.timeoutSeconds = timeoutSeconds > 0 ? timeoutSeconds : 3600;
         log.info("Config timeout-seconds is {}.", this.timeoutSeconds);
         ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
         scheduler.scheduleWithFixedDelay(this::cleanCache, initialDelay, fixedDelay, TimeUnit.SECONDS);
@@ -120,6 +120,11 @@ public class DefaultDataRepository implements DataRepository {
 
     private Object get(String id) {
         notBlank(id, "The cache id to get cannot be blank.");
-        return this.cache.get(id);
+        Object value = this.cache.get(id);
+        if (value != null) {
+            Instant expiredTime = Instant.now().plus(this.timeoutSeconds, ChronoUnit.SECONDS);
+            this.expired.put(id, expiredTime);
+        }
+        return value;
     }
 }
