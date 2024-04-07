@@ -10,7 +10,8 @@
 #include "LoggerWrapper.h"
 
 namespace DataBus {
-static Runtime::LoggerWrapper& logger = Runtime::LoggerWrapper::GetInstance();
+using Logger = Runtime::LoggerWrapper;
+static Logger& logger = Runtime::LoggerWrapper::Instance();
 }
 
 #endif  // DATABUS_LOGGER_H
