@@ -23,6 +23,7 @@ import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolvers;
 import com.huawei.fitframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -57,6 +58,11 @@ public class DefaultGenericableRepository implements GenericableRepository, Loca
         notBlank(version, "The genericable version cannot be blank.");
         UniqueGenericableId uniqueGenericableId = UniqueGenericableId.create(id, version);
         return Optional.ofNullable(this.genericables.get(uniqueGenericableId));
+    }
+
+    @Override
+    public Map<UniqueGenericableId, Genericable> getAll() {
+        return Collections.unmodifiableMap(this.genericables);
     }
 
     @Override

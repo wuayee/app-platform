@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 表示大模型的工具服务。
+ * 表示大模型的工具仓库。
  *
  * @author 季聿阶
  * @since 2024-04-05
  */
-public interface ToolService {
+public interface ToolRepository {
     /**
      * 获取工具服务的数量。
      *

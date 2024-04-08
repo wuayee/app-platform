@@ -14,5 +14,6 @@
 
     <modules>
         <module>service</module>
+        <module>tool-repository-local</module>
     </modules>
 </project>
