@@ -67,7 +67,8 @@ void ConnectionManager::AddNewConnection(int socketFd)
 }
 
 
-void ConnectionManager::Handle(const char buffer[], ssize_t len, int socketFd)
+void ConnectionManager::Handle(const char buffer[], ssize_t len, int socketFd,
+                               const unique_ptr<Resource::ResourceManager>& resourceMgrPtr)
 {
     if (len < MESSAGE_HEADER_LEN) {
         return;
@@ -94,11 +95,11 @@ void ConnectionManager::Handle(const char buffer[], ssize_t len, int socketFd)
             break;
         }
         case Common::MessageType::ApplyMemory: {
-            HandleMessageApplyMemory(header, buffer, socketFd);
+            HandleMessageApplyMemory(header, buffer, socketFd, resourceMgrPtr);
             break;
         }
         case Common::MessageType::ApplyPermission: {
-            HandleMessageApplyPermission(header, buffer, socketFd);
+            HandleMessageApplyPermission(header, buffer, socketFd, resourceMgrPtr);
             break;
         }
         default:
@@ -108,7 +109,8 @@ void ConnectionManager::Handle(const char buffer[], ssize_t len, int socketFd)
 }
 
 
-void ConnectionManager::HandleMessageApplyMemory(const Common::MessageHeader* header, const char* buffer, int socketFd)
+void ConnectionManager::HandleMessageApplyMemory(const Common::MessageHeader* header, const char* buffer, int socketFd,
+                                                 const unique_ptr<Resource::ResourceManager>& resourceMgrPtr)
 {
     // 解析消息体
     auto startPtr = buffer + header->size();
@@ -120,8 +122,7 @@ void ConnectionManager::HandleMessageApplyMemory(const Common::MessageHeader* he
             Common::GetApplyMemoryMessage(startPtr);
     cout << "received ApplyMemory, size: " << applyMemoryMessage->memory_size() << endl;
 
-    auto& resourceManager = Resource::ResourceManager::Instance();
-    int memoryId = resourceManager.HandleApplyMemory(socketFd, applyMemoryMessage->memory_size());
+    int memoryId = resourceMgrPtr->HandleApplyMemory(socketFd, applyMemoryMessage->memory_size());
 
     // 生成返回信息体
     flatbuffers::FlatBufferBuilder bodyBuilder;
@@ -136,7 +137,8 @@ void ConnectionManager::HandleMessageApplyMemory(const Common::MessageHeader* he
 }
 
 void ConnectionManager::HandleMessageApplyPermission(const Common::MessageHeader* header, const char* buffer,
-                                                     int socketFd)
+                                                     int socketFd,
+                                                     const unique_ptr<Resource::ResourceManager>& resourceMgrPtr)
 {
     // 解析消息体
     auto startPtr = buffer + header->size();

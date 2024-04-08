@@ -15,8 +15,7 @@ FtokArgsGenerator& FtokArgsGenerator::Instance()
 
 std::string FtokArgsGenerator::GetFilePath() const
 {
-    std::string filePathPrefix = "./tmp/";
-    return filePathPrefix + std::to_string(cycleCount_);
+    return FILE_PATH_PREFIX + std::to_string(cycleCount_);
 }
 
 int32_t FtokArgsGenerator::GetProjId()

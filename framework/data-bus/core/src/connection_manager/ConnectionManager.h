@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "Connection.h"
+#include "ResourceManager.h"
 #include "fbs/message_header_generated.h"
 
 namespace DataBus {
@@ -21,13 +22,16 @@ public:
 
     ~ConnectionManager() = default;
 
-    void Handle(const char buffer[], ssize_t len, int socketFd);
+    void Handle(const char buffer[], ssize_t len, int socketFd,
+                const std::unique_ptr<Resource::ResourceManager>& resourceMgrPtr);
 
     void AddNewConnection(int socketFd);
 
 private:
-    void HandleMessageApplyPermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
-    void HandleMessageApplyMemory(const Common::MessageHeader* header, const char* buffer, int socketFd);
+    void HandleMessageApplyPermission(const Common::MessageHeader* header, const char* buffer, int socketFd,
+                                      const std::unique_ptr<Resource::ResourceManager>& resourceMgrPtr);
+    void HandleMessageApplyMemory(const Common::MessageHeader* header, const char* buffer, int socketFd,
+                                  const std::unique_ptr<Resource::ResourceManager>& resourceMgrPtr);
 
     std::unordered_map<int, std::unique_ptr<Connection>> connections_;
 };

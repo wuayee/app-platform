@@ -12,14 +12,18 @@
 #include "log/Logger.h"
 #include "config/ConfigParser.h"
 #include "connection_manager/ConnectionManager.h"
+#include "resource_manager/ResourceManager.h"
 
 #define MAX_EVENTS 10
 #define PORT 5284
 
 using DataBus::Connection::ConnectionManager;
+using DataBus::Resource::ResourceManager;
 using namespace std;
 
-void HandleEvent(struct epoll_event event, int epollFd, int serverFd, const shared_ptr<ConnectionManager> managerPtr)
+void HandleEvent(struct epoll_event event, int epollFd, int serverFd,
+                 const unique_ptr<ConnectionManager>& connectionMgrPtr,
+                 const unique_ptr<ResourceManager>& resourceMgrPtr)
 {
     struct epoll_event events[MAX_EVENTS];
     int numEvents = epoll_wait(epollFd, events, MAX_EVENTS, -1);
@@ -38,13 +42,13 @@ void HandleEvent(struct epoll_event event, int epollFd, int serverFd, const shar
                 close(clientFd);
                 continue;
             }
-            managerPtr->AddNewConnection(clientFd);
+            connectionMgrPtr->AddNewConnection(clientFd);
             cout << "Client connected" << endl;
         } else {
             char buffer[1024] = {0};
             ssize_t bytesRead = recv(events[i].data.fd, buffer, sizeof(buffer) - 1, 0);
             if (bytesRead > 0) {
-                managerPtr->Handle(buffer, bytesRead, events[i].data.fd);
+                connectionMgrPtr->Handle(buffer, bytesRead, events[i].data.fd, resourceMgrPtr);
             } else if (bytesRead == 0) {
                 cout << "Client disconnected" << endl;
                 close(events[i].data.fd);
@@ -71,10 +75,10 @@ void StartDataBusService(int serverFd)
         perror("epoll_ctl: serverFd");
         return;
     }
-    shared_ptr<ConnectionManager> managerPtr = std::make_unique<ConnectionManager>();
-
+    const unique_ptr<ConnectionManager> connectionMgrPtr = std::make_unique<ConnectionManager>();
+    const unique_ptr<ResourceManager> resourceMgrPtr = std::make_unique<ResourceManager>();
     while (true) {
-        HandleEvent(event, epollFd, serverFd, managerPtr);
+        HandleEvent(event, epollFd, serverFd, connectionMgrPtr, resourceMgrPtr);
     }
 }
 
