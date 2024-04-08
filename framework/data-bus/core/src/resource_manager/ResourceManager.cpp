@@ -8,9 +8,14 @@
 
 #include <sys/shm.h>
 #include <sys/stat.h>
+#include <cstdio>
+#include <cstring>
+#include <dirent.h>
+#include <unistd.h>
 
 #include "FtokArgsGenerator.h"
 #include "exception/databus_exception.h"
+#include "log/Logger.h"
 
 using namespace std;
 using namespace DataBus::Common;
@@ -18,10 +23,9 @@ using namespace DataBus::Common;
 namespace DataBus {
 namespace Resource {
 
-ResourceManager& ResourceManager::Instance()
+ResourceManager::ResourceManager()
 {
-    static ResourceManager instance;
-    return instance;
+    Init();
 }
 
 int ResourceManager::HandleApplyMemory(int32_t socketFd, uint32_t memorySize)
@@ -36,30 +40,77 @@ int ResourceManager::HandleApplyMemory(int32_t socketFd, uint32_t memorySize)
     }
     const key_t sharedMemoryKey = ftok(pathName.data(), projId);
     if (sharedMemoryKey == -1) {
-        perror("failed to generate a shared memory key");
+        logger.Error("[ResourceManager] Failed to generate a shared memory key: {}", strerror(errno));
         throw MemoryIOException("failed to generate a shared memory key");
     }
 
-    /* IPC_CREAT | IPC_EXCL: 仅创建新的共享内存区域。当sharedMemoryKey存在时，获得共享内存区域会失败。
-     * S_IRUSR: 允许所有者阅读它。
-     * S_IWUSR：允许所有者编写它。
-    */
-    const int32_t sharedMemoryId = shmget(sharedMemoryKey, memorySize, IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR);
+    // IPC_CREAT | IPC_EXCL: 仅创建新的共享内存区域。当sharedMemoryKey存在时，获得共享内存区域会失败。
+    int32_t sharedMemoryId = shmget(sharedMemoryKey, memorySize,
+                                    SHARED_MEMORY_ACCESS_PERMISSION | IPC_CREAT | IPC_EXCL);
     if (sharedMemoryId == -1) {
-        perror("failed to get the shared memory Id");
-        throw MemoryIOException("failed to apply memory");
+        if (errno != EEXIST) {
+            logger.Error("[ResourceManager] Failed to get the shared memory Id: {}", strerror(errno));
+            throw MemoryIOException("failed to apply memory");
+        }
+        logger.Info("[ResourceManager] Start recreating a new sharedMemoryId associated with "
+                    "sharedMemoryKey {}", sharedMemoryKey);
+        sharedMemoryId = recreateSharedMemoryBlock(sharedMemoryKey, memorySize);
+        if (sharedMemoryId == -1) {
+            logger.Error("[ResourceManager] Failed to recreate a shared memory block: {}",
+                         strerror(errno));
+            throw MemoryIOException("failed to apply memory");
+        }
+        logger.Info("[ResourceManager] Recreating a new sharedMemoryId associated with sharedMemoryKey {} "
+                    "succeeded", sharedMemoryKey);
     }
     // 记录共享内存块ID和共享内存块信息的对应关系
-    auto const now = std::chrono::system_clock::now();
+    const auto& now = std::chrono::system_clock::now();
     time_t curTime = std::chrono::system_clock::to_time_t(now);
     if (curTime == -1) {
-        perror("failed to get the current time");
+        logger.Error("[ResourceManager] Failed to get the current time: {}", strerror(errno));
         throw MemoryIOException("failed to get the current time");
     }
-    unique_ptr<SharedMemoryInfo> sharedMemoryInfo = std::make_unique<SharedMemoryInfo>(socketFd, memorySize, curTime);
-    sharedMemoryIdToInfo_[sharedMemoryId] = std::move(sharedMemoryInfo);
+    sharedMemoryIdToInfo_[sharedMemoryId] = std::make_unique<SharedMemoryInfo>(socketFd, memorySize, curTime);
 
     return sharedMemoryId;
+}
+
+void ResourceManager::Init()
+{
+    if (!RemoveDirectory(FILE_PATH_PREFIX)) {
+        logger.Debug("[ResourceManager] Failed to remove the ftok directory during the ResourceManager init "
+                    "phase");
+    }
+}
+
+bool ResourceManager::RemoveDirectory(const std::string &directory)
+{
+    DIR* dp;
+    if ((dp = opendir(directory.data())) != nullptr) {
+        struct dirent* dirp;
+        while ((dirp = readdir(dp)) != nullptr) {
+            // 忽略 "." 和 ".." 目录。
+            if (strcmp(".", dirp->d_name) == 0 || strcmp("..", dirp->d_name) == 0) {
+                continue;
+            }
+            // 如果是目录，则递归调用; 否则，删除文件。
+            if (dirp->d_type == DT_DIR) {
+                const std::string subDirectories = (directory + "/" + dirp->d_name);
+                RemoveDirectory(subDirectories);
+            } else if (remove((directory + "/" + dirp->d_name).data()) != 0) {
+                logger.Debug("[ResourceManager] Failed to remove the file {}: {}",
+                             directory + "/" + dirp->d_name, strerror(errno));
+                return false;
+            }
+        }
+        closedir(dp);
+    }
+    if (rmdir(directory.data()) == -1) {
+        logger.Debug("[ResourceManager] Failed to remove the directory {}: {}", directory,
+                     strerror(errno));
+        return false;
+    }
+    return true;
 }
 
 void ResourceManager::CreateDirectory(const std::string &directory)
@@ -70,12 +121,34 @@ void ResourceManager::CreateDirectory(const std::string &directory)
         dir += "/";
     }
     while ((pos = dir.find_first_of('/', pos + 1)) != std::string::npos) {
-        /* S_IRUSR: 允许所有者阅读它。
-         * S_IWUSR：允许所有者编写它。
+        /* S_IRWXU: 允许文件路径所有者阅读、编写、执行它。
+         * S_IRWXG: 允许文件路径所属组阅读、编写、执行它。
+         * S_IROTH: 允许其他所有用户阅读它。
+         * S_IXOTH: 允许其他所有用户执行它。
         */
-        mkdir(dir.substr(0, pos).c_str(), S_IRUSR | S_IWUSR);
+        if (mkdir(dir.substr(0, pos).c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
+            logger.Debug("[ResourceManager] Failed to create the directory {}: {}",
+                         dir.substr(0, pos), strerror(errno));
+        }
     }
-    mkdir(directory.c_str(), S_IRUSR | S_IWUSR);
+}
+
+int32_t ResourceManager::recreateSharedMemoryBlock(key_t sharedMemoryKey, uint32_t memorySize)
+{
+    // 获取之前创建的共享内存块ID。
+    int32_t sharedMemoryId = shmget(sharedMemoryKey, 0, SHARED_MEMORY_ACCESS_PERMISSION);
+    if (sharedMemoryId == -1) {
+        logger.Error("[ResourceManager] Failed to get the preexisting sharedMemoryId: {}",
+                     strerror(errno));
+        throw MemoryIOException("failed to recreate a shared memory block");
+    }
+    // 删除之前创建的共享内存块。
+    if (shmctl(sharedMemoryId, IPC_RMID, nullptr) == -1) {
+        logger.Error("[ResourceManager] Failed to remove the preexisting shared memory block: {}",
+                     strerror(errno));
+        throw MemoryIOException("failed to recreate a shared memory block");
+    }
+    return shmget(sharedMemoryKey, memorySize, SHARED_MEMORY_ACCESS_PERMISSION | IPC_CREAT | IPC_EXCL);
 }
 
 int32_t ResourceManager::GetMemoryApplicant(int sharedMemoryId)

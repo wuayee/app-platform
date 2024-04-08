@@ -17,9 +17,9 @@ namespace Resource {
 
 class ResourceManager {
 public:
-    static ResourceManager& Instance();
-    ResourceManager() = default;
+    ResourceManager();
     ~ResourceManager() = default;
+    static void Init();
     int HandleApplyMemory(int32_t socketFd, uint32_t memorySize);
 
     // SharedMemoryInfo属性获取方法集合
@@ -30,7 +30,11 @@ public:
     time_t GetLastUsedTime(int32_t  sharedMemoryId);
 
 private:
+    // 0644: 所有者有读写权限，所属组有只读权限，其他用户有只读权限。
+    static constexpr int32_t SHARED_MEMORY_ACCESS_PERMISSION = 0644;
+    static bool RemoveDirectory(const std::string& directory);
     static void CreateDirectory(const std::string& directory);
+    static int32_t recreateSharedMemoryBlock(key_t sharedMemoryKey, uint32_t memorySize);
 
     int32_t IncrementReadingRefCnt(int32_t sharedMemoryId);
     int32_t DecrementReadingRefCnt(int32_t sharedMemoryId);

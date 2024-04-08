@@ -1,8 +1,7 @@
 /**
  * Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
- * Description: test for resource/FtokArgsGenerator
+ * Description: test for resource_manager/FtokArgsGenerator
  */
-#include <memory>
 
 #include <gtest/gtest.h>
 
