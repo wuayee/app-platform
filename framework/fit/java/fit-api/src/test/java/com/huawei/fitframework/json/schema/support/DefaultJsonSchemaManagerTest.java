@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -96,6 +97,8 @@ public class DefaultJsonSchemaManagerTest {
         void shouldReturnCorrectSchemaGivenEnum() {
             JsonSchema actual = DefaultJsonSchemaManagerTest.this.manager.createSchema(TestEnumClass.class);
             assertThat(actual).isInstanceOf(StringSchema.class).returns("TestEnumClass", JsonSchema::name);
+            Map<String, Object> jsonObject = actual.toJsonObject();
+            assertThat(jsonObject).containsEntry("enum", Arrays.asList("E1", "E2"));
         }
 
         @Test

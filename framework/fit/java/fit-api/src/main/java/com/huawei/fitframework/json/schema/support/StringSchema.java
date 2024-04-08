@@ -4,11 +4,16 @@
 
 package com.huawei.fitframework.json.schema.support;
 
+import static com.huawei.fitframework.util.ObjectUtils.cast;
+
+import com.huawei.fitframework.json.schema.util.SchemaTypeUtils;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 表示 {@link com.huawei.fitframework.json.schema.JsonSchema} 的字符串实现。
@@ -26,6 +31,10 @@ public class StringSchema extends AbstractJsonSchema {
         MapBuilder<String, Object> builder = MapBuilder.<String, Object>get().put("type", "string");
         if (StringUtils.isNotBlank(this.description())) {
             builder.put("description", this.description());
+        }
+        if (SchemaTypeUtils.isEnumType(this.type())) {
+            Class<Enum<?>> enumClass = cast(this.type());
+            builder.put("enum", Stream.of(enumClass.getEnumConstants()).map(Enum::name).collect(Collectors.toList()));
         }
         return builder.build();
     }
