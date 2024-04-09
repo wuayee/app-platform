@@ -4,7 +4,7 @@
 
 package com.huawei.fitframework.test.junit5;
 
-import com.huawei.fitframework.test.FitTestManager;
+import com.huawei.fitframework.test.support.FitTestManager;
 
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;

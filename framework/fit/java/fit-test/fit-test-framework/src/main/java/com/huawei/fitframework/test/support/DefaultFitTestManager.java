@@ -1,19 +1,12 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
 package com.huawei.fitframework.test.support;
 
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.test.FitTestManager;
-import com.huawei.fitframework.test.TestClassResolver;
-import com.huawei.fitframework.test.TestContext;
+import com.huawei.fitframework.runtime.FitRuntime;
 import com.huawei.fitframework.test.listener.InjectFieldTestListener;
-import com.huawei.fitframework.test.listener.TestListener;
-import com.huawei.fitframework.test.plugin.TestPlugin;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 默认的测试框架管理类。
@@ -24,14 +17,14 @@ import java.util.List;
  */
 public class DefaultFitTestManager implements FitTestManager {
     private final TestContext testContext;
-    private final List<TestListener> listeners = new ArrayList<>();
 
     public DefaultFitTestManager(Class<?> clazz) {
         Validation.notNull(clazz, "The test class to create fit test manager cannot be null.");
-        TestClassResolver resolver = TestClassResolver.create();
-        TestPlugin testPlugin = resolver.resolve(clazz);
-        this.testContext = new TestContext(clazz, testPlugin);
-        this.listeners.add(new InjectFieldTestListener());
+        FitRuntime runtime = new TestFitRuntime(clazz, TestClassResolver.create());
+        runtime.start();
+
+        this.testContext = new TestContext(clazz, runtime.root());
+        this.testContext.registerListener(new InjectFieldTestListener());
     }
 
     /**
@@ -41,7 +34,6 @@ public class DefaultFitTestManager implements FitTestManager {
      */
     @Override
     public void prepareTestInstance(Object testInstance) {
-        this.testContext.testInstance(testInstance);
-        this.listeners.forEach(listener -> listener.prepareTestInstance(this.testContext));
+        this.testContext.prepareTestInstance(testInstance);
     }
 }
