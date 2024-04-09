@@ -14,68 +14,10 @@ import math
 from itertools import islice
 from typing import Dict, Iterator, Optional, Any
 
-from fitframework.core.network.temp_entity import GlobalContext
-from fitframework.utils.json_serialize_utils import json_serialize, json_deserialize
-
-from fitframework.api.decorators import fit
 from fitframework.const import DEFAULT_CODECS
-from fitframework.utils.context import call_context
-
-_TRACE_ID_KEY = 'FIT_TRACE_ID'
-_TRACE_SPAN_ID_KEY = 'FIT_TRACE_SPAN'
-_TRACE_FITABLE_ID_PRE_KEY = 'FIT_TRACE_FITABLE_ID_PRE'
 
 
-@fit("bc3e4e7d642e4acb8a48fb28cf74376f", alias="py_impl")
-def put_global_context(key: str, value: str) -> bool:
-    pass
-
-
-@fit("3788e36a1faf4fed8c50410ebc9bffa8", alias="py_impl")
-def get_all_global_context() -> GlobalContext:
-    pass
-
-
-@fit("327426d21bda4fe58bc6dc7ef726ffa2", alias="py_impl")
-def restore_global_context(ctx: GlobalContext) -> bool:
-    pass
-
-
-@fit("bfbc3d446c324e0a9ddc2ea55255a168", alias="py_impl")
-def get_global_context(key: str) -> str:
-    pass
-
-
-class TlvData:
-    """ TlvTag字段类实现；目前只有Trace相关功能需要使用 """
-    GLOBAL_CTX = 1010
-
-    @classmethod
-    def default(cls, cur_fitable_id) -> Dict[int, bytes]:
-        trace_id = call_context.get_context_value(call_context.GLOBAL_TRACING_ID_PROP)
-        trace_stack = call_context.get_context_value(call_context.TRACING_STACK_PROP)
-        if not trace_id or not trace_stack:
-            return {}
-        fitable_context = trace_stack[-1]
-        if fitable_context.fit_id != cur_fitable_id:
-            # 如果当前stack当中的fitable trace信息和当前remote invoke的fitable信息不一致，
-            # 则说明当前远程调用服务无需trace维护，故不传。
-            return {}
-
-        put_global_context(_TRACE_ID_KEY, trace_id)
-        put_global_context(_TRACE_SPAN_ID_KEY, fitable_context.span_id)
-        put_global_context(_TRACE_FITABLE_ID_PRE_KEY, fitable_context.from_fit_id)
-        return {cls.GLOBAL_CTX: json_serialize(get_all_global_context())}
-
-    @classmethod
-    def get_value(cls, tlv_data: Dict[int, Any]):
-        ctx = json_deserialize(GlobalContext, tlv_data.get(cls.GLOBAL_CTX, 'null'))
-        if not ctx:
-            return None, None, None
-        restore_global_context(ctx)
-        return get_global_context(_TRACE_ID_KEY), get_global_context(_TRACE_SPAN_ID_KEY), \
-            get_global_context(_TRACE_FITABLE_ID_PRE_KEY)
-
+class TagLengthValuesUtil:
     @classmethod
     def serialize(cls, tlv_data: Dict[int, Any]) -> bytes:
         tlv_data_bytes = b''
@@ -102,8 +44,7 @@ class TlvData:
 
     @classmethod
     def _serialize_tlv_datum(cls, tag: int, value: bytes) -> bytes:
-        return IntEncoder.to_varying_bytes(tag) + \
-            IntEncoder.to_varying_bytes(len(value)) + value
+        return IntEncoder.to_varying_bytes(tag) + IntEncoder.to_varying_bytes(len(value)) + value
 
     @classmethod
     def _deserialize_tlv_datum(cls, bytes_iter: Iterator) -> Optional[Dict[int, Any]]:
