@@ -88,13 +88,13 @@ public class FitMethodFunctionalToolTest {
     @DisplayName("返回正确的参数名字")
     void shouldReturnParameterNames() {
         List<String> parameterNames = this.tool.parameterNames();
-        assertThat(parameterNames).containsExactly("p1");
+        assertThat(parameterNames).containsExactly("P1");
     }
 
     @Test
     @DisplayName("返回正确的参数序号")
     void shouldReturnParameterIndex() {
-        int actual = this.tool.parameterIndex("p1");
+        int actual = this.tool.parameterIndex("P1");
         assertThat(actual).isEqualTo(0);
     }
 
@@ -102,7 +102,7 @@ public class FitMethodFunctionalToolTest {
     @DisplayName("返回正确的必须参数名字列表")
     void shouldReturnRequired() {
         List<String> parameterNames = this.tool.requiredParameterNames();
-        assertThat(parameterNames).containsExactly("p1");
+        assertThat(parameterNames).containsExactly("P1");
     }
 
     @Test
@@ -124,9 +124,9 @@ public class FitMethodFunctionalToolTest {
                                 .put("type", "object")
                                 .put("properties",
                                         MapBuilder.get()
-                                                .put("p1", MapBuilder.get().put("type", "string").build())
+                                                .put("P1", MapBuilder.get().put("type", "string").build())
                                                 .build())
-                                .put("required", Collections.singletonList("p1"))
+                                .put("required", Collections.singletonList("P1"))
                                 .build());
     }
 
@@ -138,6 +138,6 @@ public class FitMethodFunctionalToolTest {
          * @return 表示测试结果的 {@link String}。
          */
         @Genericable(id = "t1", description = "desc")
-        String testMethod(@Property(required = true) String p1);
+        String testMethod(@Property(name = "P1", required = true) String p1);
     }
 }

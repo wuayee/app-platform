@@ -78,7 +78,7 @@ public abstract class AbstractMethodFunctionalTool extends AbstractTool implemen
 
     @Override
     public List<String> parameterNames() {
-        return Stream.of(this.method.getParameters()).map(Parameter::getName).collect(Collectors.toList());
+        return Stream.of(this.method.getParameters()).map(this::parameterName).collect(Collectors.toList());
     }
 
     @Override
@@ -86,7 +86,7 @@ public abstract class AbstractMethodFunctionalTool extends AbstractTool implemen
         List<String> parameterNames = this.parameterNames();
         for (int i = 0; i < parameterNames.size(); i++) {
             String parameterName = parameterNames.get(i);
-            if (StringUtils.equalsIgnoreCase(name, parameterName)) {
+            if (StringUtils.equals(name, parameterName)) {
                 return i;
             }
         }
@@ -104,7 +104,15 @@ public abstract class AbstractMethodFunctionalTool extends AbstractTool implemen
                 return false;
             }
             return annotation.required();
-        }).map(Parameter::getName).collect(Collectors.toList());
+        }).map(this::parameterName).collect(Collectors.toList());
+    }
+
+    private String parameterName(Parameter parameter) {
+        Property annotation = parameter.getDeclaredAnnotation(Property.class);
+        if (annotation != null && StringUtils.isNotBlank(annotation.name())) {
+            return annotation.name();
+        }
+        return parameter.getName();
     }
 
     @Override

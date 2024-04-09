@@ -49,7 +49,7 @@ public class DefaultToolExecuteService implements ToolExecuteService {
         try {
             return this.executeTool0(toolName, jsonArgs);
         } catch (Throwable cause) {
-            log.warn("Failed to execute tool. [toolName={}]", toolName, cause);
+            log.warn("Failed to execute tool. [toolName={}, jsonArgs={}]", toolName, jsonArgs, cause);
             return this.makeErrorMessage(cause);
         }
     }
@@ -68,7 +68,7 @@ public class DefaultToolExecuteService implements ToolExecuteService {
             args[i] = ObjectUtils.toCustomObject(mapArgs.get(params.get(i)), types.get(i));
         }
         Object result = tool.call(args);
-        return new String(this.serializer.serialize(result, UTF_8));
+        return new String(this.serializer.serialize(result, UTF_8), UTF_8);
     }
 
     private String makeErrorMessage(Throwable cause) {
