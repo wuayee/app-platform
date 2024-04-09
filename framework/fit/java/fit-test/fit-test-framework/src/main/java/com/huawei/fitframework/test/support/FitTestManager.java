@@ -1,10 +1,8 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.test;
-
-import com.huawei.fitframework.test.support.DefaultFitTestManager;
+package com.huawei.fitframework.test.support;
 
 /**
  * 测试框架的管理接口。

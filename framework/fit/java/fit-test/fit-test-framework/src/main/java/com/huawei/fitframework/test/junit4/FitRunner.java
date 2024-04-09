@@ -4,7 +4,7 @@
 
 package com.huawei.fitframework.test.junit4;
 
-import com.huawei.fitframework.test.FitTestManager;
+import com.huawei.fitframework.test.support.FitTestManager;
 
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;

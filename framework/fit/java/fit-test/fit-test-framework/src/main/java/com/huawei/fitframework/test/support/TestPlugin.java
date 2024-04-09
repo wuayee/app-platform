@@ -2,9 +2,10 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.test.plugin;
+package com.huawei.fitframework.test.support;
 
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.ioc.BeanFactory;
 import com.huawei.fitframework.ioc.BeanMetadata;
 import com.huawei.fitframework.jvm.scan.PackageScanner;
 import com.huawei.fitframework.model.Version;
@@ -16,11 +17,11 @@ import com.huawei.fitframework.plugin.support.DefaultPluginKey;
 import com.huawei.fitframework.plugin.support.DefaultPluginMetadata;
 import com.huawei.fitframework.runtime.FitRuntime;
 import com.huawei.fitframework.runtime.support.AbstractRootPlugin;
-import com.huawei.fitframework.test.TestContextConfiguration;
+import com.huawei.fitframework.test.mock.MockBean;
 
-import java.util.HashMap;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,19 +35,27 @@ public class TestPlugin extends AbstractRootPlugin implements Plugin {
     private static final String UNKNOWN_GROUP = "test.group";
     private static final String PLUGIN_NAME = "fit-test-framework";
     private static final String UNKNOWN_VERSION = "0.0.0-test";
-    private static final Map<TestContextConfiguration, TestPlugin> PLUGINS = new HashMap<>();
 
     private final FitRuntime runtime;
     private final ClassLoader loader;
     private final PluginMetadata metadata;
 
-    public TestPlugin(FitRuntime runtime) {
-        Validation.notNull(runtime, "The run time to create test plugin cannot be null.");
-        this.runtime = runtime;
+    private TestContextConfiguration configuration;
+
+    /**
+     * 通过运行时对象和 bean 配置来初始化 {@link TestPlugin}。
+     *
+     * @param runtime 运行时对象 {@link FitRuntime}。
+     * @param configuration 待注册bean相关的配置 {@link TestContextConfiguration}。
+     */
+    public TestPlugin(FitRuntime runtime, TestContextConfiguration configuration) {
+        this.runtime = Validation.notNull(runtime, "The runtime to create test plugin cannot be null.");
         this.loader = TestPlugin.class.getClassLoader();
         PluginKey pluginKey = new DefaultPluginKey(UNKNOWN_GROUP, PLUGIN_NAME, Version.parse(UNKNOWN_VERSION));
         this.metadata =
                 new DefaultPluginMetadata(pluginKey, this.runtime.location(), PluginCategory.SYSTEM, Integer.MIN_VALUE);
+        this.configuration =
+                Validation.notNull(configuration, "The configuration to create test plugin cannot be null.");
     }
 
     @Override
@@ -63,6 +72,17 @@ public class TestPlugin extends AbstractRootPlugin implements Plugin {
         scanner.scan(basePackages);
     }
 
+    /**
+     * 依据配置注册 Bean。
+     *
+     * @param configuration 注册 Bean 依赖的配置 {@link TestContextConfiguration}。
+     */
+    public void registerBean(TestContextConfiguration configuration) {
+        this.scan(configuration.scannedPackages());
+        this.registerBean(configuration.classes());
+        this.registerMockedBean(configuration.mockedBeanFields());
+    }
+
     private void onClassDetected(PackageScanner scanner, Class<?> clazz) {
         List<BeanMetadata> beans = this.container().registry().register(clazz);
         for (BeanMetadata bean : beans) {
@@ -71,32 +91,15 @@ public class TestPlugin extends AbstractRootPlugin implements Plugin {
         }
     }
 
-    /**
-     * 获取所有插件对象。
-     *
-     * @return 表示插件对象的 {@link Map}{@code <}{@link TestContextConfiguration}{@code , }{@link TestPlugin}{@code >}。
-     */
-    public static Map<TestContextConfiguration, TestPlugin> allPlugins() {
-        return PLUGINS;
-    }
-
-    /**
-     * 往插件映射添加插件。
-     *
-     * @param configuration 表示测试上下文的配置类的 {@link TestContextConfiguration}。
-     * @param plugin 表示需要添加的插件的 {@link TestPlugin}。
-     */
-    public static void put(TestContextConfiguration configuration, TestPlugin plugin) {
-        PLUGINS.put(configuration, plugin);
-    }
-
     @Override
     public PluginMetadata metadata() {
         return this.metadata;
     }
 
     @Override
-    protected void loadPlugins() {}
+    protected void loadPlugins() {
+        this.registerBean(this.configuration);
+    }
 
     @Override
     public ClassLoader pluginClassLoader() {
@@ -106,5 +109,27 @@ public class TestPlugin extends AbstractRootPlugin implements Plugin {
     @Override
     public FitRuntime runtime() {
         return this.runtime;
+    }
+
+    private void registerBean(Class<?>[] classArray) {
+        Arrays.stream(classArray)
+                .filter(clazz -> !this.container().lookup(clazz).isPresent())
+                .forEach(clazz -> this.container().registry().register(clazz));
+    }
+
+    private void registerMockedBean(Set<Field> mockedBeanFields) {
+        for (Field field : mockedBeanFields) {
+            // 在扫描出的包中，有可能已经包含了和模拟 Bean 相同名称的 Bean，需要删除
+            this.container()
+                    .all(field.getType())
+                    .forEach(beanFactory -> this.container().removeBean(beanFactory.metadata().name()));
+            Object bean = this.container()
+                    .lookup(MockBean.class)
+                    .map(BeanFactory::<MockBean>get)
+                    .orElseThrow(() -> new IllegalStateException(
+                            "Failed to register mock bean: cannot find implements of AbstractMockBean."))
+                    .getBean(field);
+            this.container().registry().register(bean);
+        }
     }
 }

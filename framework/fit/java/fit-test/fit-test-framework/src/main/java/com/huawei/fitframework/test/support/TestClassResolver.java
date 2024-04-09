@@ -1,11 +1,8 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.test;
-
-import com.huawei.fitframework.test.plugin.TestPlugin;
-import com.huawei.fitframework.test.support.DefaultTestClassResolver;
+package com.huawei.fitframework.test.support;
 
 /**
  * 单测类解析器接口。
@@ -18,9 +15,9 @@ public interface TestClassResolver {
      * 对单测类进行解析。
      *
      * @param clazz 表示需要解析的类对象的 {@link Class}{@code <?>}。
-     * @return 表示解析后的插件类对象。
+     * @return 表示解析后的插件类对象 {@link TestContextConfiguration}。
      */
-    TestPlugin resolve(Class<?> clazz);
+    TestContextConfiguration resolve(Class<?> clazz);
 
     /**
      * 创建单测类解析器。

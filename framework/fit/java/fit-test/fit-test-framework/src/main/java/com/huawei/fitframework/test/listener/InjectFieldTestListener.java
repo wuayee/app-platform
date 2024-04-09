@@ -6,7 +6,7 @@ package com.huawei.fitframework.test.listener;
 
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.test.TestContext;
+import com.huawei.fitframework.test.support.TestContext;
 import com.huawei.fitframework.test.util.AnnotationUtils;
 import com.huawei.fitframework.util.ReflectionUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -30,7 +30,7 @@ public class InjectFieldTestListener implements TestListener {
         Object instance = context.testInstance();
         Class<?> clazz = context.testClass();
         Field[] declaredFields = ReflectionUtils.getDeclaredFields(clazz);
-        BeanContainer container = context.testPlugin().container();
+        BeanContainer container = context.plugin().container();
         Arrays.stream(declaredFields)
                 .filter(this::isInjectedFiled)
                 .forEach(field -> ReflectionUtils.setField(instance, field, this.getBean(container, field.getType())));

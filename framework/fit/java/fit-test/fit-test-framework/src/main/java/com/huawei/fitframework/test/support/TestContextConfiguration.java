@@ -1,10 +1,11 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.test;
+package com.huawei.fitframework.test.support;
 
-import com.huawei.fitframework.test.support.DefaultTestContextConfiguration;
+import java.lang.reflect.Field;
+import java.util.Set;
 
 /**
  * 测试上下文的配置类。
@@ -28,6 +29,20 @@ public interface TestContextConfiguration {
     Class<?>[] classes();
 
     /**
+     * 获取测试类依赖的扫描出的包。
+     *
+     * @return 测试类扫描出的依赖包 {@link Set}{@code <}{@link String}{@code >}。
+     */
+    Set<String> scannedPackages();
+
+    /**
+     * 获取测试类扫描出的模拟的 bean 字段集合。
+     *
+     * @return 测试类扫描出的模拟的 bean 字段集合 {@link Set}{@code <}{@link Field}{@code >}。
+     */
+    Set<Field> mockedBeanFields();
+
+    /**
      * {@link TestContextConfiguration} 的构建器。
      */
     interface Builder {
@@ -46,6 +61,22 @@ public interface TestContextConfiguration {
          * @return 表示当前构建程序的 {@link Builder}。
          */
         Builder classes(Class<?>[] classes);
+
+        /**
+         * 设置扫描出的包。
+         *
+         * @param basePackages 设置测试类扫描出的依赖包 {@link Set}{@code <}{@link String}{@code >}。
+         * @return 表示当前构建程序的 {@link Builder}。
+         */
+        Builder scannedPackages(Set<String> basePackages);
+
+        /**
+         * 设置 mocked bean 字段集合。
+         *
+         * @param mockedBeanFields 设置测试类扫描出的 mocked bean 字段集合 {@link Set}{@code <}{@link Field}{@code >}。
+         * @return 表示当前构建程序的 {@link Builder}。
+         */
+        Builder mockedBeanFields(Set<Field> mockedBeanFields);
 
         /**
          * 构建对象。
