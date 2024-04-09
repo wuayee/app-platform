@@ -217,7 +217,7 @@ class ConfigureBasedBrokerTest(FitTestSupport):
     @patch.object(remote_invoker, 'request_response', return_value=b'\x12\x02ok\x1a\x05\n\x03out')
     @patch.object(remote_invoker, 'get_supported_formats', return_value=[0, 1])
     @patch.object(remote_invoker, 'protocol_priors', return_value=remote_invoker.default_priority)
-    @patch.object(fitframework.core.network.metadata.metadata.metadata_utils.TlvData, 'generate_tags')
+    @patch.object(fitframework.core.network.metadata.metadata.metadata_utils.TagLengthValuesUtil, 'generate_tags')
     @patch.object(configure_based_brokerimpl, 'print_trace')
     def test_execute_remote(self, *_):
         address = newAddress("workId", "host1", "8080")

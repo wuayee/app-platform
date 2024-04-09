@@ -19,7 +19,7 @@ tags:
 
 from fitframework.const import DEFAULT_CODECS
 
-from fitframework.core.network.metadata.metadata_utils import IntEncoder, IntDecoder, TlvData
+from fitframework.core.network.metadata.metadata_utils import IntEncoder, IntDecoder, TagLengthValuesUtil
 
 CURRENT_VERSION = 2
 
@@ -88,7 +88,7 @@ class RequestMetadata(object):
         generic_id = data[6:22].hex()
         fitable_id_len = IntDecoder.from_bytes(data[22:24], 'unsigned')
         fitable_id = data[24:24 + fitable_id_len].decode(DEFAULT_CODECS)
-        tlv_data = TlvData.deserialize(data[24 + fitable_id_len:])
+        tlv_data = TagLengthValuesUtil.deserialize(data[24 + fitable_id_len:])
         return RequestMetadata(version, data_format, generic_version, generic_id, fitable_id, tlv_data)
 
     def serialize(self) -> bytes:
@@ -98,7 +98,7 @@ class RequestMetadata(object):
             + self.generic_id.encode(encoding="utf-8") \
             + IntEncoder.to_bytes(len(self.fitable_id), 2, 'unsigned') \
             + bytes(self.fitable_id, DEFAULT_CODECS) \
-            + TlvData.serialize(self.tlv_data)
+            + TagLengthValuesUtil.serialize(self.tlv_data)
 
     def upset_a_tag(self, key: str, value: bytes):
         self.tlv_data[key] = value

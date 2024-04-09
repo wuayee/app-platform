@@ -12,7 +12,6 @@ from fitframework.api.exception import FitBaseException
 from fitframework.core.broker import select_broker
 from fitframework.core.broker.broker_utils import FitableIdentifier, IdType
 from fitframework.core.exception.fit_exception import InternalErrorCode
-from fitframework.core.network.metadata.metadata_utils import TlvData
 from fitframework.core.network import fit_method_serializer
 from fitframework.core.network.fit_response import FitResponse, CODE_UNKNOWN, \
     MSG_UNKNOWN
@@ -30,7 +29,6 @@ def server_response(metadata: RequestMetadata, data: bytes) -> FitResponse:
     :return:
     """
     generic_id, fitable_id, data_format = metadata.generic_id, metadata.fitable_id, metadata.data_format
-    trace_id, span_id, from_fit_id = TlvData.get_value(metadata.tlv_data)
     try:
         fitable_ref = service_repo.get_fitable_ref(generic_id, fitable_id)
         if fitable_ref is None:
@@ -41,7 +39,6 @@ def server_response(metadata: RequestMetadata, data: bytes) -> FitResponse:
         args = _converter.to_request(data_format, data)
         identifier = FitableIdentifier(fitable_id, IdType.id)
         return_ = select_broker.select(generic_id).from_remote() \
-            .trace_id(trace_id).span_id(span_id).from_fit_id(from_fit_id) \
             .fitable_identifier(identifier).fit_ref(fitable_ref).fit_selector_invoke(*tuple(args))
         resp_metadata = ResponseMetadata.success(data_format=data_format)
         return_bytes = _converter.from_return_value(data_format, return_)

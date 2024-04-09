@@ -8,8 +8,7 @@ from typing import Dict
 from fitframework.api.exception import FitBaseException
 from fitframework.const import DEFAULT_CODECS
 from fitframework.core.exception.fit_exception import FitException, InternalErrorCode
-from fitframework.core.network.metadata.metadata_utils import IntEncoder, IntDecoder, BitStream, TlvData
-
+from fitframework.core.network.metadata.metadata_utils import IntEncoder, IntDecoder, TagLengthValuesUtil
 
 CURRENT_VERSION = 2
 RESP_CODE_SUCCESS = 0
@@ -63,8 +62,8 @@ class ResponseMetadata:
         degradable = bool(IntDecoder.from_bytes(data[3: 4], 'unsigned'))
         code = IntDecoder.from_bytes(data[4: 8], 'unsigned')
         msg_len = IntDecoder.from_bytes(data[8: 12], 'unsigned')
-        msg = data[12: 12+msg_len].decode(encoding=DEFAULT_CODECS)
-        tlv_data = TlvData.deserialize(data[12 + msg_len:])
+        msg = data[12: 12 + msg_len].decode(encoding=DEFAULT_CODECS)
+        tlv_data = TagLengthValuesUtil.deserialize(data[12 + msg_len:])
         return ResponseMetadata(data_format, version, degradable, code, msg, tlv_data)
 
     def serialize(self):
@@ -76,7 +75,7 @@ class ResponseMetadata:
                 IntEncoder.to_bytes(self.code, 4, 'unsigned') + \
                 IntEncoder.to_bytes(len(self.msg), 4, 'unsigned') + \
                 bytes(self.msg, encoding=DEFAULT_CODECS) + \
-                TlvData.serialize(self.tlv_data)
+                TagLengthValuesUtil.serialize(self.tlv_data)
         except ValueError:
             raise FitException(InternalErrorCode.INVALID_ARGUMENTS, f'invalid metadata found: {self}') from None
 
