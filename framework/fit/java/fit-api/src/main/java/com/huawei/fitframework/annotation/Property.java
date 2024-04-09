@@ -44,6 +44,13 @@ public @interface Property {
     boolean required() default false;
 
     /**
+     * 获取参数的默认值。
+     *
+     * @return 表示参数的默认值的 {@link String}。
+     */
+    String defaultValue() default StringUtils.EMPTY;
+
+    /**
      * 获取参数的样例值。
      *
      * @return 表示参数的样例值的 {@link String}。

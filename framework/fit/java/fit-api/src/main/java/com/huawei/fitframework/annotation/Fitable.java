@@ -18,7 +18,6 @@ import java.lang.annotation.Target;
  * <ol>
  *     <li>通过 {@link #genericable()} 方法获取一个唯一标识；</li>
  *     <li>通过方法所实现的接口方法上的 {@link Genericable#id()} 获取一个唯一标识；</li>
- *     <li>通过 {@link #generic()} 对应的泛服务接口类上的 {@link Genericable#id()} 获取一个唯一标识。</li>
  * </ol>
  * </p>
  *
@@ -31,14 +30,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Fitable {
-    /**
-     * 获取 FIT 泛服务实现对应的泛服务类型的 {@link Class}{@code <?>}。
-     *
-     * @return 表示该泛服务实现对应的泛服务定义的类型的 {@link Class}{@code <?>}。
-     * @see #genericable()
-     */
-    @Deprecated Class<?> generic() default Object.class;
-
     /**
      * 获取 FIT 泛服务实现对应的泛服务的唯一标识。
      *

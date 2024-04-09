@@ -215,6 +215,11 @@ public class RegisteredGenericableRepository implements GenericableRepository {
         }
     }
 
+    @Override
+    public Map<UniqueGenericableId, Genericable> getAll() {
+        return Collections.unmodifiableMap(this.registeredGenericables);
+    }
+
     private void appendFitable(ConfigurableGenericable configurableGenericable, Fitable fitable) {
         ConfigurableFitable configurableFitable = this.fitableFactory.create(fitable);
         configurableFitable.genericable(configurableGenericable);

@@ -75,4 +75,9 @@ public class RegistryGenericableRepository implements GenericableRepository {
         UniqueGenericableId uniqueId = UniqueGenericableId.create(id, version);
         return Optional.ofNullable(this.registryGenericables.get(uniqueId));
     }
+
+    @Override
+    public Map<UniqueGenericableId, Genericable> getAll() {
+        return Collections.unmodifiableMap(this.registryGenericables);
+    }
 }

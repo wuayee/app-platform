@@ -7,13 +7,16 @@ package com.huawei.fitframework.broker.support;
 import com.huawei.fitframework.annotation.Order;
 import com.huawei.fitframework.broker.Genericable;
 import com.huawei.fitframework.broker.GenericableRepository;
+import com.huawei.fitframework.broker.UniqueGenericableId;
 import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
 import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
 import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolvers;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -50,5 +53,14 @@ public class PriorityGenericableRepository implements GenericableRepository {
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Map<UniqueGenericableId, Genericable> getAll() {
+        Map<UniqueGenericableId, Genericable> genericables = new TreeMap<>();
+        for (GenericableRepository repository : this.repositories) {
+            genericables.putAll(repository.getAll());
+        }
+        return genericables;
     }
 }

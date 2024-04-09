@@ -4,6 +4,7 @@
 
 package com.huawei.fitframework.broker;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -28,4 +29,11 @@ public interface GenericableRepository {
      * @return 表示获取的服务的 {@link Optional}{@code <}{@link Genericable}{@code >}。
      */
     Optional<Genericable> get(String id, String version);
+
+    /**
+     * 获取所有的服务。
+     *
+     * @return 表示所有服务信息的 {@link Map}{@code <}{@link UniqueGenericableId}{@code , }{@link Genericable}{@code >}。
+     */
+    Map<UniqueGenericableId, Genericable> getAll();
 }

@@ -14,6 +14,7 @@ import com.huawei.fitframework.broker.Genericable;
 import com.huawei.fitframework.broker.GenericableFactory;
 import com.huawei.fitframework.broker.GenericableRepository;
 import com.huawei.fitframework.broker.LocalGenericableRepository;
+import com.huawei.fitframework.broker.UniqueGenericableId;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.CollectionUtils;
@@ -22,9 +23,11 @@ import com.huawei.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.TreeMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -67,6 +70,15 @@ public class DefaultLocalGenericableRepository implements LocalGenericableReposi
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .reduce((g1, g2) -> this.mergeGenericables(id, version, g1, g2));
+    }
+
+    @Override
+    public Map<UniqueGenericableId, Genericable> getAll() {
+        Map<UniqueGenericableId, Genericable> genericables = new TreeMap<>(this.rootRepository.getAll());
+        for (GenericableRepository genericableRepository : this.pluginRepositories) {
+            genericables.putAll(genericableRepository.getAll());
+        }
+        return genericables;
     }
 
     private ConfigurableGenericable mergeGenericables(String id, String version, Genericable g1, Genericable g2) {

@@ -52,6 +52,17 @@ public interface BrokerClient {
      * 获取一个服务的自定义动态路由器。
      *
      * @param genericableId 表示服务的唯一标识的 {@link String}。
+     * @param genericableMethod 表示服务的方法的 {@link Method}。
+     * @return 表示服务的自定义动态路由器的 {@link Router}。
+     */
+    default Router getRouter(String genericableId, Method genericableMethod) {
+        return this.getRouter(genericableId, false, genericableMethod);
+    }
+
+    /**
+     * 获取一个服务的自定义动态路由器。
+     *
+     * @param genericableId 表示服务的唯一标识的 {@link String}。
      * @param isMicro 表示服务是否为微观服务的标记的 {@code boolean}。
      * @param genericableMethod 表示服务的方法的 {@link Method}。
      * @return 表示服务的自定义动态路由器的 {@link Router}。
