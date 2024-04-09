@@ -7,7 +7,6 @@
 #include <gmock/gmock.h>
 
 #include "util/DataBusUtil.h"
-#include "fbs/apply_permission_message_response_generated.h"
 #include "fbs/apply_memory_message_response_generated.h"
 
 using namespace DataBus::Common;

@@ -22,8 +22,14 @@ public:
     };
 
     explicit Task(TaskType type, int fd) : taskType_(type), clientFd_(fd), data_(nullptr), size_(0) {}
-    explicit Task(TaskType type, int fd, const void* data, ssize_t size)
-        : taskType_(type), clientFd_(fd), data_((const char*) data), size_(size) {}
+    explicit Task(TaskType type, int fd, const char* data, ssize_t size)
+        : taskType_(type), clientFd_(fd), size_(size)
+    {
+        if (data != nullptr && size > 0) {
+            data_ = std::make_unique<char[]>(size);
+            std::copy(data, data + size, data_.get());
+        }
+    }
     // 禁止Task被复制
     Task(const Task&) = delete;
     Task& operator=(const Task&) = delete;
@@ -50,7 +56,7 @@ public:
 private:
     TaskType taskType_;
     int clientFd_;
-    std::unique_ptr<const char[]> data_;
+    std::unique_ptr<char[]> data_;
     ssize_t size_;
 };
 }  // Task
