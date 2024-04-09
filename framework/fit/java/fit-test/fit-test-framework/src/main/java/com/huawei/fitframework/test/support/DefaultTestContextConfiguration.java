@@ -1,13 +1,15 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
 package com.huawei.fitframework.test.support;
 
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.test.TestContextConfiguration;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * 默认的测试上下文的配置类。
@@ -18,12 +20,15 @@ import java.util.Arrays;
 public class DefaultTestContextConfiguration implements TestContextConfiguration {
     private final Class<?> testClass;
     private final Class<?>[] classes;
+    private final Set<String> scannedPackages;
+    private final Set<Field> mockedBeanFields;
 
-    public DefaultTestContextConfiguration(Class<?> testClass, Class<?>[] classes) {
-        Validation.notNull(testClass, "The test class to create test context configuration cannot be null.");
-        Validation.notNull(classes, "The classes to create test context configuration cannot be null.");
-        this.testClass = testClass;
-        this.classes = classes;
+    public DefaultTestContextConfiguration(Class<?> testClass, Class<?>[] classes, Set<String> scannedPackages,
+            Set<Field> mockedBeanFields) {
+        this.testClass = Validation.notNull(testClass, "The test class cannot be null.");
+        this.classes = Validation.notNull(classes, "The classes cannot be null.");
+        this.scannedPackages = Validation.notNull(scannedPackages, "The scanned packages cannot be null.");
+        this.mockedBeanFields = Validation.notNull(mockedBeanFields, "The mocked bean fields cannot be null.");
     }
 
     @Override
@@ -34,6 +39,16 @@ public class DefaultTestContextConfiguration implements TestContextConfiguration
     @Override
     public Class<?>[] classes() {
         return this.classes;
+    }
+
+    @Override
+    public Set<String> scannedPackages() {
+        return Collections.unmodifiableSet(this.scannedPackages);
+    }
+
+    @Override
+    public Set<Field> mockedBeanFields() {
+        return Collections.unmodifiableSet(this.mockedBeanFields);
     }
 
     @Override
@@ -58,6 +73,8 @@ public class DefaultTestContextConfiguration implements TestContextConfiguration
     public static final class Builder implements TestContextConfiguration.Builder {
         private Class<?> testClass;
         private Class<?>[] classes;
+        private Set<String> scannedPackages;
+        private Set<Field> mockedBeanFields;
 
         @Override
         public TestContextConfiguration.Builder testClass(Class<?> testClass) {
@@ -72,8 +89,23 @@ public class DefaultTestContextConfiguration implements TestContextConfiguration
         }
 
         @Override
+        public TestContextConfiguration.Builder scannedPackages(Set<String> scannedPackages) {
+            this.scannedPackages = scannedPackages;
+            return this;
+        }
+
+        @Override
+        public TestContextConfiguration.Builder mockedBeanFields(Set<Field> mockedBeanFields) {
+            this.mockedBeanFields = mockedBeanFields;
+            return this;
+        }
+
+        @Override
         public TestContextConfiguration build() {
-            return new DefaultTestContextConfiguration(this.testClass, this.classes);
+            return new DefaultTestContextConfiguration(this.testClass,
+                    this.classes,
+                    this.scannedPackages,
+                    this.mockedBeanFields);
         }
     }
 }

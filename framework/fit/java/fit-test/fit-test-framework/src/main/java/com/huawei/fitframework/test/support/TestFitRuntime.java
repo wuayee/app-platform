@@ -1,12 +1,11 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.test.runtime;
+package com.huawei.fitframework.test.support;
 
 import com.huawei.fitframework.plugin.RootPlugin;
 import com.huawei.fitframework.runtime.support.AbstractFitRuntime;
-import com.huawei.fitframework.test.plugin.TestPlugin;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import java.io.File;
@@ -23,8 +22,17 @@ import java.net.URLClassLoader;
 public class TestFitRuntime extends AbstractFitRuntime {
     private static final String USER_DIR_KEY = "user.dir";
 
-    public TestFitRuntime(Class<?> clazz) {
+    private final TestContextConfiguration configuration;
+
+    /**
+     * TestFitRuntime的构造函数。
+     *
+     * @param clazz 测试类 {@link Class}{@code <?>}。
+     * @param resolver 测试类的解析器{@link TestClassResolver}。
+     */
+    public TestFitRuntime(Class<?> clazz, TestClassResolver resolver) {
         super(clazz, null);
+        this.configuration = resolver.resolve(clazz);
     }
 
     @Override
@@ -43,6 +51,6 @@ public class TestFitRuntime extends AbstractFitRuntime {
 
     @Override
     protected RootPlugin createRootPlugin() {
-        return new TestPlugin(this);
+        return new TestPlugin(this, configuration);
     }
 }
