@@ -11,11 +11,17 @@
 
 namespace DataBus {
 namespace Runtime {
-class LoggerWrapper {
+class LoggerWrapper final {
 public:
     using LoggerImpl = spdlog::logger;
 
-    static LoggerWrapper& GetInstance();
+    LoggerWrapper(LoggerWrapper&) = delete;
+    LoggerWrapper(LoggerWrapper&&) = delete;
+
+    LoggerWrapper& operator=(LoggerWrapper&) = delete;
+    LoggerWrapper& operator=(LoggerWrapper&&) = delete;
+
+    static LoggerWrapper& Instance();
 
     void SetLogHandler(std::shared_ptr<LoggerImpl> logger);
 
@@ -56,7 +62,7 @@ public:
     }
 
 private:
-    LoggerWrapper() = default;
+    LoggerWrapper();
     ~LoggerWrapper();
 
     std::shared_ptr<LoggerImpl> logger_{nullptr};

@@ -7,7 +7,11 @@
 
 #include <utility>
 
+#include "spdlog/sinks/stdout_color_sinks.h"
+
 using namespace DataBus::Runtime;
+
+LoggerWrapper::LoggerWrapper() : logger_(spdlog::stdout_color_mt("default")) {}
 
 LoggerWrapper::~LoggerWrapper()
 {
@@ -16,7 +20,7 @@ LoggerWrapper::~LoggerWrapper()
     }
 }
 
-LoggerWrapper& LoggerWrapper::GetInstance()
+LoggerWrapper& LoggerWrapper::Instance()
 {
     static LoggerWrapper l;
     return l;
