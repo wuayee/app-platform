@@ -20,12 +20,14 @@ import java.util.Map;
 public class DecoratedSchema extends AbstractJsonSchema {
     private final String name;
     private final String description;
+    private final String defaultValue;
     private final JsonSchema schema;
 
-    DecoratedSchema(String name, String description, JsonSchema schema) {
+    DecoratedSchema(String name, String description, String defaultValue, JsonSchema schema) {
         super(schema);
         this.name = notBlank(name, "The decorated name cannot be blank.");
         this.description = description;
+        this.defaultValue = defaultValue;
         this.schema = schema;
     }
 
@@ -48,6 +50,9 @@ public class DecoratedSchema extends AbstractJsonSchema {
         Map<String, Object> map = this.schema.toJsonObject();
         if (StringUtils.isNotBlank(this.description())) {
             map.put("description", this.description());
+        }
+        if (StringUtils.isNotBlank(this.defaultValue)) {
+            map.put("default", this.defaultValue);
         }
         return map;
     }

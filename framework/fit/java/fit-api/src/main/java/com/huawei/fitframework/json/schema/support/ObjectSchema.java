@@ -133,8 +133,7 @@ public class ObjectSchema extends AbstractJsonSchema {
             }
             JsonSchema fieldSchema;
             if (MapUtils.isNotEmpty(referencedSchemas) && referencedSchemas.containsKey(actualFieldType)) {
-                fieldSchema = new ReferenceSchema(referencedPrefix,
-                        referencedSchemas.get(actualFieldType));
+                fieldSchema = new ReferenceSchema(referencedPrefix, referencedSchemas.get(actualFieldType));
             } else {
                 fieldSchema = JsonSchema.create(actualFieldType,
                         nullIf(referencedPrefix, StringUtils.EMPTY),
@@ -142,12 +141,14 @@ public class ObjectSchema extends AbstractJsonSchema {
             }
             Property property = field.getDeclaredAnnotation(Property.class);
             String propertyDescription = StringUtils.EMPTY;
+            String defaultValue = StringUtils.EMPTY;
             boolean isRequired = false;
             if (property != null) {
                 propertyDescription = property.description();
+                defaultValue = property.defaultValue();
                 isRequired = property.required();
             }
-            this.addSchema(new DecoratedSchema(field.getName(), propertyDescription, fieldSchema),
+            this.addSchema(new DecoratedSchema(field.getName(), propertyDescription, defaultValue, fieldSchema),
                     isRequired);
         }
     }

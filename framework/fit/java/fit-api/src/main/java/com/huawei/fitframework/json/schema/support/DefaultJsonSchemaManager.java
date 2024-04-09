@@ -82,18 +82,20 @@ public class DefaultJsonSchemaManager implements JsonSchemaManager {
         for (Parameter parameter : method.getParameters()) {
             String name = StringUtils.EMPTY;
             String description = StringUtils.EMPTY;
+            String defaultValue = StringUtils.EMPTY;
             boolean required = false;
             Property property = parameter.getDeclaredAnnotation(Property.class);
             if (property != null) {
                 name = property.name();
                 description = property.description();
+                defaultValue = property.defaultValue();
                 required = property.required();
             }
             if (StringUtils.isBlank(name)) {
                 name = parameter.getName();
             }
             JsonSchema schema = this.createSchema(parameter.getParameterizedType());
-            parameterSchema.addSchema(new DecoratedSchema(name, description, schema), required);
+            parameterSchema.addSchema(new DecoratedSchema(name, description, defaultValue, schema), required);
         }
         return parameterSchema;
     }

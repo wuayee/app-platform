@@ -254,7 +254,12 @@ public class DefaultJsonSchemaManagerTest {
             assertThat(map.get("properties")).isInstanceOf(Map.class);
             Map<String, Object> properties = cast(map.get("properties"));
             assertThat(properties).containsEntry("p1", MapBuilder.get().put("type", "string").build())
-                    .containsEntry("p2", MapBuilder.get().put("type", "integer").put("description", "param2").build());
+                    .containsEntry("p2",
+                            MapBuilder.get()
+                                    .put("type", "integer")
+                                    .put("description", "param2")
+                                    .put("default", "1")
+                                    .build());
         }
 
         @Test
@@ -290,7 +295,7 @@ public class DefaultJsonSchemaManagerTest {
         private String f1;
         private int f2;
 
-        void m1(String p1, @Property(description = "param2", required = true) int p2) {}
+        void m1(String p1, @Property(description = "param2", defaultValue = "1", required = true) int p2) {}
 
         void m2(User p1, User p2) {}
     }
