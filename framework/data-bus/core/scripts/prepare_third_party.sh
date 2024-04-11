@@ -27,9 +27,9 @@ function ensure_git_mm() {
 #     $4: git mm xml filename
 # Returns: 0 for success, other nums for fail
 function prepare_third_party() {
-    working_dir=${1:-$(readlink -f "$(dirname "$0")/../third_party")}
-    tmp_folder=${3:-".dummy_git_mm"}
-    xml_filename=${4:-"third_party.mm.xml"}
+    local working_dir=${1:-$(readlink -f "$(dirname "$0")/../third_party")}
+    local tmp_folder=${3:-".dummy_git_mm"}
+    local xml_filename=${4:-"third_party.mm.xml"}
     ensure_git_mm || return 1
     if [ ! -f "${working_dir}/${xml_filename}" ]; then
         echo "no such file: ${working_dir}/${xml_filename}"
@@ -49,9 +49,9 @@ function prepare_third_party() {
 }
 
 function prepare_dummy_git() {
-    working_dir=$1
-    xml_filename=${2:-"third_party.mm.xml"}
-    tmp_folder=${3:-".dummy_git_mm"}
+    local working_dir=$1
+    local xml_filename=${2:-"third_party.mm.xml"}
+    local tmp_folder=${3:-".dummy_git_mm"}
     # git mm needs a dummy git url for reading manifest files
     cd "$1" || return 1
     rm -rf "${tmp_folder}" && mkdir -p "${tmp_folder}"
@@ -66,6 +66,10 @@ function clean_temp_files() {
     rm -rf "${tmp_folder}"
     # clean git-mm
     rm -rf .mm
+    # remove all .git in subdirectory
+    for subdir in $(find . -maxdepth 1 -mindepth 1 -type d); do
+        rm -rf ${subdir}/.git
+    done
 }
 
 # Description: check environment for git-mm and decide which version to install
