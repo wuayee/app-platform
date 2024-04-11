@@ -1,7 +1,7 @@
 # 打包方式：在 python 目录下执行 python setup.py sdist bdist_wheel
 import setuptools
 
-_FIT_FRAMEWORK_VERSION = "1.0.1.dev"
+_FIT_FRAMEWORK_VERSION = "1.0.2.dev"
 
 setuptools.setup(
     name="fit",
