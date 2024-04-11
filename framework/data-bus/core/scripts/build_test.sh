@@ -8,20 +8,21 @@
 #     $2: source code directory
 # Returns: 0 for success, other nums for fail
 function exec_cmake_test() {
-    dir_src=$2
+    local dir_src=$2
     if [ ! -e "${dir_src}/CMakeLists.txt" ]; then
         echo "no CMakeLists.txt in ${dir_src}"
         return 1
     fi
 
-    dir_build=$1
-    cmake -S "${dir_src}" -B "${dir_build}" -G "Unix Makefiles" -DDATABUS_BUILD_TESTS:BOOL=ON
+    local dir_build=$1
+    # test build mode is fixed to Debug for now.
+    cmake -DCMAKE_BUILD_TYPE="Debug" -DDATABUS_BUILD_TESTS:BOOL=ON -S "${dir_src}" -B "${dir_build}" -G "Unix Makefiles"
 }
 
 # Description: run make for test files
 # Arguments: build directory
 function exec_make_test() {
-    dir_build=$1
+    local dir_build=$1
     cd "${dir_build}"
     make -j$(nproc) databus_test
 }
@@ -33,13 +34,13 @@ function exec_make_test() {
 #     $3: do run if $3 > 0, otherwise build only
 # Returns: 0 for success, other nums for fail
 function exec_build_and_run_test() {
-    dir_build=$1
-    dir_src=$2
+    local dir_build=$1
+    local dir_src=$2
     if [ ! -d "${dir_build}" ]; then
         mkdir -p "${dir_build}"
     fi
 
-    if ! exec_cmake_test "$1" "$2" ; then
+    if ! exec_cmake_test "${dir_build}" "${dir_src}" ; then
         return $?
     fi
     exec_make_test "$1"

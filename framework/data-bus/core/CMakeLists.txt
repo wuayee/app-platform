@@ -4,7 +4,9 @@ set(PACKAGE_NAME "DataBus")
 
 project(${PACKAGE_NAME} LANGUAGES C CXX)
 
-set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_LIST_DIR}/build)
+if (NOT DEFINED CMAKE_BINARY_DIR)
+    set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_LIST_DIR}/build)
+endif ()
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
@@ -35,6 +37,12 @@ option(DATABUS_BUILD_DEPENDENCY "build dependency code" ON)
 
 add_subdirectory(third_party)
 add_subdirectory(src)
+
+set(DATABUS_DOCKERFILE_PATH ${DATABUS_ROOT_DIR}/../common/docker)
+add_custom_target(databus_core_image
+        COMMAND ${DATABUS_SCRIPT_PATH}/pack_core_docker.sh $<TARGET_FILE:databus> ${DATABUS_DOCKERFILE_PATH}/core.dockerfile ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+)
+add_dependencies(databus_core_image databus)
 
 if (DATABUS_BUILD_TESTS)
     enable_testing()
