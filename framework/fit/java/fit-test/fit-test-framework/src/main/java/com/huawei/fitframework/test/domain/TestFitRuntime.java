@@ -2,10 +2,12 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.test.support;
+package com.huawei.fitframework.test.domain;
 
 import com.huawei.fitframework.plugin.RootPlugin;
 import com.huawei.fitframework.runtime.support.AbstractFitRuntime;
+import com.huawei.fitframework.test.domain.resolver.TestClassResolver;
+import com.huawei.fitframework.test.domain.resolver.TestContextConfiguration;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import java.io.File;
@@ -24,14 +26,8 @@ public class TestFitRuntime extends AbstractFitRuntime {
 
     private final TestContextConfiguration configuration;
 
-    /**
-     * TestFitRuntime的构造函数。
-     *
-     * @param clazz 测试类 {@link Class}{@code <?>}。
-     * @param resolver 测试类的解析器{@link TestClassResolver}。
-     */
-    public TestFitRuntime(Class<?> clazz, TestClassResolver resolver) {
-        super(clazz, null);
+    public TestFitRuntime(Class<?> clazz, TestClassResolver resolver, int port) {
+        super(clazz, new String[] {"server.http.port=" + port});
         this.configuration = resolver.resolve(clazz);
     }
 

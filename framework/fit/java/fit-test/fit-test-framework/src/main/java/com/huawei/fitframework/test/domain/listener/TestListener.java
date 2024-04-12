@@ -1,10 +1,10 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.test.listener;
+package com.huawei.fitframework.test.domain.listener;
 
-import com.huawei.fitframework.test.support.TestContext;
+import com.huawei.fitframework.test.domain.TestContext;
 
 /**
  * 测试框架的监听类，用于监听单测类整个生命周期。
