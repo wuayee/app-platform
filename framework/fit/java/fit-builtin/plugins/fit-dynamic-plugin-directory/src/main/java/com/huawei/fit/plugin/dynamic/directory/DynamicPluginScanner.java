@@ -5,7 +5,6 @@
 package com.huawei.fit.plugin.dynamic.directory;
 
 import static com.huawei.fitframework.inspection.Validation.isTrue;
-import static com.huawei.fitframework.inspection.Validation.notBlank;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fitframework.annotation.Component;
@@ -27,6 +26,7 @@ import com.huawei.fitframework.runtime.FitRuntime;
 import com.huawei.fitframework.runtime.FitRuntimeStartedObserver;
 import com.huawei.fitframework.schedule.ExecutePolicy;
 import com.huawei.fitframework.util.FileUtils;
+import com.huawei.fitframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,6 +64,7 @@ public class DynamicPluginScanner
 
     /**
      * 创建动态插件扫描器。
+     * <p>当 {@code directory} 为空白字符串时，动态插件功能自动关闭。</p>
      *
      * @param runtime 表示运行时环境的 {@link FitRuntime}。
      * @param directory 表示扫描的目录的 {@link String}。
@@ -72,8 +73,15 @@ public class DynamicPluginScanner
     public DynamicPluginScanner(FitRuntime runtime, @Value("${directory}") String directory,
             ApplicationConfig applicationConfig) {
         this.runtime = notNull(runtime, "The runtime cannot be null.");
-        File root = new File(notBlank(directory,
-                "The directory to monitor cannot be blank. [config='plugin.fit.dynamic.plugin.directory']"));
+        String actualDirectory = this.getDynamicDirectory(runtime, directory);
+        if (StringUtils.isBlank(actualDirectory)) {
+            log.warn("The config of dynamic directory is blank, the dynamic plugin is disabled. "
+                    + "[config='plugin.fit.dynamic.plugin.directory']");
+            this.monitor = null;
+            this.tempDirectory = null;
+            return;
+        }
+        File root = new File(actualDirectory);
         isTrue(root.isDirectory(), "The directory to monitor must be a directory. [directory={0}]", directory);
         this.monitor = DirectoryMonitor.create(root,
                 Collections.singleton(Jar.FILE_EXTENSION),
@@ -96,9 +104,19 @@ public class DynamicPluginScanner
         }
     }
 
+    private String getDynamicDirectory(FitRuntime runtime, String directory) {
+        String config = runtime.config().get("plugin.fit.dynamic.plugin.directory", String.class);
+        if (StringUtils.isNotBlank(config)) {
+            return config;
+        }
+        return directory;
+    }
+
     @Override
     public void onRuntimeStarted(FitRuntime runtime) {
-        this.monitor.start();
+        if (this.monitor != null) {
+            this.monitor.start();
+        }
     }
 
     @Override
