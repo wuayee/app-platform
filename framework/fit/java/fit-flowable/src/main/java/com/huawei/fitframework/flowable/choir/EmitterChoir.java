@@ -10,9 +10,9 @@ import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.flowable.Emitter;
 import com.huawei.fitframework.flowable.Subscriber;
 import com.huawei.fitframework.flowable.subscription.AbstractSubscription;
-import com.huawei.fitframework.inspection.Validation;
 
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 
 /**
  * 表示 {@link Choir} 的数据发送器实现。
@@ -23,14 +23,19 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class EmitterChoir<T> extends AbstractChoir<T> {
     private final Emitter<T> emitter;
+    private final Consumer<Long> requestHandler;
+    private final Runnable cancelHandler;
 
-    public EmitterChoir(Emitter<T> emitter) {
+    public EmitterChoir(Emitter<T> emitter, Consumer<Long> requestHandler, Runnable cancelHandler) {
         this.emitter = notNull(emitter, "The emitter cannot be null.");
+        this.requestHandler = requestHandler == null ? value -> {} : requestHandler;
+        this.cancelHandler = cancelHandler == null ? () -> {} : cancelHandler;
     }
 
     @Override
     protected void subscribe0(Subscriber<T> subscriber) {
-        EmitterSubscription<T> subscription = new EmitterSubscription<>(subscriber);
+        EmitterSubscription<T> subscription =
+                new EmitterSubscription<>(subscriber, this.requestHandler, this.cancelHandler);
         subscriber.onSubscribed(subscription);
         this.emitter.observe(subscription);
     }
@@ -38,14 +43,24 @@ public class EmitterChoir<T> extends AbstractChoir<T> {
     private static class EmitterSubscription<T> extends AbstractSubscription implements Emitter.Observer<T> {
         private final Subscriber<T> subscriber;
         private final AtomicLong requested = new AtomicLong();
+        private final Consumer<Long> requestHandler;
+        private final Runnable cancelHandler;
 
-        public EmitterSubscription(Subscriber<T> subscriber) {
+        public EmitterSubscription(Subscriber<T> subscriber, Consumer<Long> requestHandler, Runnable cancelHandler) {
             this.subscriber = notNull(subscriber, "The subscriber cannot be null.");
+            this.requestHandler = notNull(requestHandler, "The request handler cannot be null.");
+            this.cancelHandler = notNull(cancelHandler, "The cancel handler cannot be null.");
         }
 
         @Override
         protected void request0(long count) {
             this.requested.addAndGet(count);
+            this.requestHandler.accept(count);
+        }
+
+        @Override
+        protected void cancel0() {
+            this.cancelHandler.run();
         }
 
         @Override
@@ -56,7 +71,7 @@ public class EmitterChoir<T> extends AbstractChoir<T> {
             if (requested.getAndDecrement() > 0) {
                 this.subscriber.consume(data);
             } else {
-                requested.getAndIncrement();
+                this.requested.getAndIncrement();
             }
         }
 
