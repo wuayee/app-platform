@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * 为本地代理提供解析器。
+ * 表示本地执行器的解析器。
  *
  * @author 梁济时 l00815032
  * @since 2020-09-03
@@ -36,6 +36,19 @@ public interface LocalExecutorResolver {
      * @throws IllegalStateException Genericable类型中定义了多个Genericable方法。
      */
     boolean resolve(BeanMetadata metadata, Method method);
+
+    /**
+     * 表示根容器的本地执行器的解析器。
+     */
+    @FunctionalInterface
+    interface RootContainer {
+        /**
+         * 解析指定的 Bean 的元数据，获得所有本地执行器，并添加到 FIT 跟容器中。
+         *
+         * @param metadata 表示指定 Bean 元数据的 {@link BeanMetadata}。
+         */
+        void resolveAll(BeanMetadata metadata);
+    }
 
     /**
      * 获取一个工厂，用以创建本地代理解析工具的实例。

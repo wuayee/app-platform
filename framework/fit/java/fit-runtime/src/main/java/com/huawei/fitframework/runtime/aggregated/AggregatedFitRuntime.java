@@ -6,6 +6,7 @@ package com.huawei.fitframework.runtime.aggregated;
 
 import com.huawei.fitframework.plugin.RootPlugin;
 import com.huawei.fitframework.protocol.jar.JarLocation;
+import com.huawei.fitframework.runtime.FitRuntime;
 import com.huawei.fitframework.runtime.support.AbstractFitRuntime;
 import com.huawei.fitframework.util.ClassUtils;
 import com.huawei.fitframework.util.FileUtils;
@@ -41,7 +42,8 @@ public final class AggregatedFitRuntime extends AbstractFitRuntime {
 
     @Override
     protected URLClassLoader obtainSharedClassLoader() {
-        return ObjectUtils.cast(AggregatedFitRuntime.class.getClassLoader().getParent());
+        // FitRuntime 在 fit-api 包中，因此该类的类加载器可以作为共享的类加载器
+        return ObjectUtils.cast(FitRuntime.class.getClassLoader());
     }
 
     @Override
