@@ -13,9 +13,9 @@ import com.huawei.fitframework.model.MultiValueMap;
 import com.huawei.fitframework.test.domain.mvc.MockMvc;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 为模拟 {@link MockMvc} 中的客户端提供请求的构建者。
@@ -27,9 +27,9 @@ public class MockRequestBuilder implements RequestBuilder {
     private static final String BASE_URL = "http://localhost:";
 
     private final HttpRequestMethod method;
-    private final Map<String, String> params = new ConcurrentHashMap<>();
-    private final Map<String, String> headers = new ConcurrentHashMap<>();
-    private final Map<String, List<String>> headersSet = new ConcurrentHashMap<>();
+    private final Map<String, String> params = new HashMap<>();
+    private final Map<String, String> headers = new HashMap<>();
+    private final Map<String, List<String>> headersMap = new HashMap<>();
     private String url;
     private Type responseType;
     private int port;
@@ -39,8 +39,8 @@ public class MockRequestBuilder implements RequestBuilder {
     private MultiValueMap<String, String> formEntity;
 
     MockRequestBuilder(HttpRequestMethod method, String url) {
-        this.method = method;
-        this.url = Validation.notNull(url, "Url for request is null.");
+        this.method = Validation.notNull(method, "The request method cannot be blank.");
+        this.url = Validation.notNull(url, "The request url cannot be blank.");
     }
 
     /**
@@ -102,7 +102,7 @@ public class MockRequestBuilder implements RequestBuilder {
      */
     @Override
     public MockRequestBuilder header(String name, List<String> headers) {
-        this.headersSet.put(name, headers);
+        this.headersMap.put(name, headers);
         return this;
     }
 
@@ -175,7 +175,7 @@ public class MockRequestBuilder implements RequestBuilder {
             request.headers().set(entry.getKey(), entry.getValue());
         }
 
-        for (Map.Entry<String, List<String>> entry : this.headersSet.entrySet()) {
+        for (Map.Entry<String, List<String>> entry : this.headersMap.entrySet()) {
             request.headers().set(entry.getKey(), entry.getValue());
         }
         if (this.entity != null) {
@@ -185,6 +185,6 @@ public class MockRequestBuilder implements RequestBuilder {
         } else if (this.formEntity != null) {
             request.formEntity(this.formEntity);
         }
-        return new RequestParam(this.method, this.url, this.responseType, request);
+        return new RequestParam(this.responseType, request);
     }
 }

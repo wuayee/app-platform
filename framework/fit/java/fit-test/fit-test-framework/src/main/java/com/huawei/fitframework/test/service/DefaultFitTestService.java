@@ -30,7 +30,7 @@ public class DefaultFitTestService implements FitTestService {
         FitRuntime runtime = new TestFitRuntime(clazz, TestClassResolver.create(), port);
         runtime.start();
 
-        // 每个测试用例都会创建一个 模拟 MVC 实例，只有启用模拟 MVC 测试，才会启动服务端，后续优化 MVC 和端口的申请
+        // TODO 每个测试用例都会创建一个模拟 MVC 实例，只有启用模拟 MVC 测试，才会启动服务端，后续优化 MVC 和端口的申请
         this.mockMvc = new MockMvc(runtime.root(), port);
         runtime.root().container().registry().register(this.mockMvc);
 

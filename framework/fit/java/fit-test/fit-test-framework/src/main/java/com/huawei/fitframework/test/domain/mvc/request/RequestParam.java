@@ -5,7 +5,6 @@
 package com.huawei.fitframework.test.domain.mvc.request;
 
 import com.huawei.fit.http.client.HttpClassicClientRequest;
-import com.huawei.fit.http.protocol.HttpRequestMethod;
 
 import java.lang.reflect.Type;
 
@@ -19,7 +18,7 @@ public class RequestParam {
     private final Type responseType;
     private final HttpClassicClientRequest request;
 
-    public RequestParam(HttpRequestMethod method, String url, Type responseType, HttpClassicClientRequest request) {
+    public RequestParam(Type responseType, HttpClassicClientRequest request) {
         this.responseType = responseType;
         this.request = request;
     }

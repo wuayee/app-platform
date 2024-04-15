@@ -16,14 +16,14 @@ import com.huawei.fitframework.value.ValueFetcher;
 import java.util.Map;
 
 /**
- * 为模拟的 Mvc 所使用的 http 客户端提供工厂。
+ * 为模拟的 MVC 所使用的 http 客户端提供工厂。
  *
  * @author 王攀博 w00561424
  * @since 2024-04-09
  */
 public class HttpClientFactory {
     /**
-     * 为模拟的 Mvc 创建客户端。
+     * 为模拟的 MVC 创建客户端。
      *
      * @return 表示用于模拟测试的 {@link HttpClassicClient}。
      */

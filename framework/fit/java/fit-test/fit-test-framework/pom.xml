@@ -46,6 +46,13 @@
             <version>${fit.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-http-protocol</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+
+        <!-- Plugin -->
+        <dependency>
             <groupId>com.huawei.fit.plugin</groupId>
             <artifactId>fit-value-fastjson</artifactId>
             <version>${fit.version}</version>
@@ -62,12 +69,12 @@
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.plugin</groupId>
-            <artifactId>fit-client-http</artifactId>
+            <artifactId>fit-http-server-netty</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
-            <artifactId>fit-http-protocol</artifactId>
+            <groupId>com.huawei.fit.plugin</groupId>
+            <artifactId>fit-server-http</artifactId>
             <version>${fit.version}</version>
         </dependency>
         <dependency>
@@ -77,12 +84,7 @@
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.plugin</groupId>
-            <artifactId>fit-http-server-netty</artifactId>
-            <version>${fit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
-            <artifactId>fit-server-http</artifactId>
+            <artifactId>fit-client-http</artifactId>
             <version>${fit.version}</version>
         </dependency>
 
@@ -96,19 +98,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit4.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

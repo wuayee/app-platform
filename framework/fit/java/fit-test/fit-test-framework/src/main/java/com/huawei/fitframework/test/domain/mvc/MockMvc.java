@@ -11,13 +11,13 @@ import com.huawei.fitframework.test.domain.mvc.request.MockRequestBuilder;
 import com.huawei.fitframework.test.domain.mvc.request.RequestParam;
 
 /**
- * 为测试提供模拟的 Mvc。
+ * 为测试提供模拟的 MVC。
  *
  * @author 王攀博 w00561424
  * @since 2024-04-09
  */
 public final class MockMvc {
-    private MockMvcHttpServer mockMvcHttpServer;
+    private final MockMvcHttpServer mockMvcHttpServer;
     private final int port;
 
     public MockMvc(RootPlugin plugin, int port) {
@@ -33,8 +33,8 @@ public final class MockMvc {
      * @return 表示 Http 响应的 {@link HttpClassicClientResponse}{@code <}{@link T}{@code >}。
      */
     public <T> HttpClassicClientResponse<T> perform(MockRequestBuilder builder) {
-        if (!this.mockMvcHttpServer.isStart()) {
-            this.mockMvcHttpServer.start();
+        if (!this.mockMvcHttpServer.isStarted()) {
+            this.mockMvcHttpServer.waitServerStart();
         }
 
         HttpClassicClient httpClassicClient = HttpClientFactory.create();

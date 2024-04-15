@@ -17,28 +17,23 @@ import org.junit.runners.model.Statement;
  * @since 2023-01-17
  */
 public class FitRunner extends BlockJUnit4ClassRunner {
-    FitTestService manager;
+    private FitTestService service;
 
     public FitRunner(Class<?> clazz) throws InitializationError {
         super(clazz);
-        this.manager = FitTestService.create(clazz);
+        this.service = FitTestService.create(clazz);
     }
 
     @Override
     protected Object createTest() throws Exception {
         Object testInstance = super.createTest();
-        this.manager.prepareTestInstance(testInstance);
+        this.service.prepareTestInstance(testInstance);
         return testInstance;
     }
 
     @Override
     protected Statement withAfterClasses(Statement statement) {
-        super.withAfterClasses(statement);
-        return new Statement() {
-            @Override
-            public void evaluate() throws Throwable {
-                manager.afterProcess();
-            }
-        };
+        this.service.afterProcess();
+        return super.withAfterClasses(statement);
     }
 }

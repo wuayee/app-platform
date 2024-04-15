@@ -18,20 +18,20 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
  * @since 2023-02-01
  */
 public class FitExtension implements BeforeAllCallback, TestInstancePostProcessor, AfterAllCallback {
-    private FitTestService manager;
+    private FitTestService service;
 
     @Override
     public void beforeAll(ExtensionContext context) {
-        this.manager = FitTestService.create(context.getRequiredTestClass());
+        this.service = FitTestService.create(context.getRequiredTestClass());
     }
 
     @Override
     public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
-        this.manager.prepareTestInstance(testInstance);
+        this.service.prepareTestInstance(testInstance);
     }
 
     @Override
     public void afterAll(ExtensionContext context) {
-        this.manager.afterProcess();
+        this.service.afterProcess();
     }
 }

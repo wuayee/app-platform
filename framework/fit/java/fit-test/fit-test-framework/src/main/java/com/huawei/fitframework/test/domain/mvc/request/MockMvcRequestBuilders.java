@@ -7,7 +7,7 @@ package com.huawei.fitframework.test.domain.mvc.request;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 
 /**
- * 为模拟 Mvc 客户端提供请求的构建集合。
+ * 为模拟 MVC 客户端提供请求的构建集合。
  *
  * @author 王攀博 w00561424
  * @since 2024-04-09
