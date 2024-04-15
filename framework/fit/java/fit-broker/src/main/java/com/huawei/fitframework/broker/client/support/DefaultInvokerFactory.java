@@ -52,14 +52,16 @@ import java.util.stream.Collectors;
  * @author 季聿阶 j00559309
  * @since 2021-10-26
  */
-public class DefaultInvokerFactory implements InvokerFactory, LocalExecutorFactory, BeanContainerInitializedObserver,
-        BeanContainerStoppedObserver {
+public class DefaultInvokerFactory implements InvokerFactory, LocalExecutorFactory, LocalExecutorResolver.RootContainer,
+        BeanContainerInitializedObserver, BeanContainerStoppedObserver {
     private static final Logger log = Logger.get(DefaultInvokerFactory.class);
 
     private final GenericableFactory genericableFactory;
     private final FitableFactory fitableFactory;
     private final Config config;
 
+    private final BeanContainer rootContainer;
+    private final LocalExecutorRepository rootLocalExecutorRepository;
     private final LocalExecutorRepositoryComposite localExecutorRepository;
     private final DefaultLocalGenericableRepository localGenericableRepository;
     private final LazyLoader<GenericableRepository> genericableRepositoryLoader;
@@ -94,12 +96,14 @@ public class DefaultInvokerFactory implements InvokerFactory, LocalExecutorFacto
      */
     public DefaultInvokerFactory(BeanContainer container, GenericableFactory genericableFactory,
             FitableFactory fitableFactory, Config config, WorkerConfig worker) {
+        this.rootContainer = container;
         this.genericableFactory = notNull(genericableFactory, "The genericable factory cannot be null.");
         this.fitableFactory = notNull(fitableFactory, "The fitable factory cannot be null.");
         this.config = notNull(config, "The config cannot be null.");
         this.worker = notNull(worker, "The worker config cannot be null.");
 
         DefaultLocalExecutorRepository rootExecutorRepository = new DefaultLocalExecutorRepository("root");
+        this.rootLocalExecutorRepository = rootExecutorRepository;
         this.localExecutorRepository = new LocalExecutorRepositoryComposite(rootExecutorRepository);
         DefaultGenericableRepository rootGenericableRepository =
                 new DefaultGenericableRepository("root", this.genericableFactory, this.fitableFactory);
@@ -162,8 +166,8 @@ public class DefaultInvokerFactory implements InvokerFactory, LocalExecutorFacto
         this.localGenericableRepository.install(pluginGenericableRepository);
         pluginLocalExecutorRepository.observeLocalExecutorRegistered(pluginGenericableRepository);
         container.factories()
-                .forEach(factory -> this.resolveLocalExecutors(container,
-                        factory.metadata(),
+                .forEach(factory -> this.resolveLocalExecutors(factory.metadata(),
+                        container,
                         pluginLocalExecutorRepository.registry()));
     }
 
@@ -174,7 +178,13 @@ public class DefaultInvokerFactory implements InvokerFactory, LocalExecutorFacto
         this.localExecutorRepository.getChild(pluginName).ifPresent(this.localExecutorRepository::uninstall);
     }
 
-    private void resolveLocalExecutors(BeanContainer container, BeanMetadata metadata,
+    @Override
+    public void resolveAll(BeanMetadata metadata) {
+        notNull(metadata, "The bean metadata cannot be null.");
+        this.resolveLocalExecutors(metadata, this.rootContainer, this.rootLocalExecutorRepository.registry());
+    }
+
+    private void resolveLocalExecutors(BeanMetadata metadata, BeanContainer container,
             LocalExecutorRepository.Registry registry) {
         LocalExecutorResolver resolver = LocalExecutorResolver.factory().create(container, registry);
         this.resolveLocalExecutors(resolver, metadata);
