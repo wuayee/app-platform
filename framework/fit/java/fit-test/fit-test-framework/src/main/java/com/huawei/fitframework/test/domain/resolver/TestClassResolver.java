@@ -2,7 +2,9 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.test.support;
+package com.huawei.fitframework.test.domain.resolver;
+
+import com.huawei.fitframework.test.service.FitTestService;
 
 /**
  * 单测类解析器接口。
@@ -22,7 +24,7 @@ public interface TestClassResolver {
     /**
      * 创建单测类解析器。
      *
-     * @return 表示创建的测试框架的管理类的 {@link FitTestManager}。
+     * @return 表示创建的测试框架的管理类的 {@link FitTestService}。
      */
     static TestClassResolver create() {
         return new DefaultTestClassResolver();
