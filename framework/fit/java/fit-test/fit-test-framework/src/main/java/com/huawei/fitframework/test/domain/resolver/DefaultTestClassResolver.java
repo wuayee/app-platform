@@ -2,12 +2,12 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.test.support;
+package com.huawei.fitframework.test.domain.resolver;
 
 import com.huawei.fitframework.annotation.ScanPackages;
 import com.huawei.fitframework.test.annotation.FitTestWithJunit;
 import com.huawei.fitframework.test.annotation.Mocked;
-import com.huawei.fitframework.test.util.AnnotationUtils;
+import com.huawei.fitframework.test.domain.util.AnnotationUtils;
 import com.huawei.fitframework.util.ReflectionUtils;
 
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +29,11 @@ import java.util.stream.Collectors;
  */
 public class DefaultTestClassResolver implements TestClassResolver {
     private final Set<String> defaultScanPackages = new HashSet<>(Arrays.asList("com.huawei.fitframework.test",
-            "com.huawei.fit.integration.mockito"));
+            "com.huawei.fit.integration.mockito",
+            "com.huawei.fit.server",
+            "com.huawei.fit.http",
+            "com.huawei.fit.value",
+            "com.huawei.fit.serialization"));
 
     @Override
     public TestContextConfiguration resolve(Class<?> clazz) {
@@ -44,7 +48,7 @@ public class DefaultTestClassResolver implements TestClassResolver {
 
     private Class<?>[] resolveClass(AnnotatedElement element) {
         return AnnotationUtils.getAnnotation(element, FitTestWithJunit.class)
-                .map(fitTest -> fitTest.classes())
+                .map(FitTestWithJunit::classes)
                 .orElseGet(() -> new Class<?>[0]);
     }
 

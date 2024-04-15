@@ -2,11 +2,11 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.test.support;
+package com.huawei.fitframework.test.domain;
 
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.plugin.RootPlugin;
-import com.huawei.fitframework.test.listener.TestListener;
+import com.huawei.fitframework.test.domain.listener.TestListener;
 
 import java.util.ArrayList;
 import java.util.List;

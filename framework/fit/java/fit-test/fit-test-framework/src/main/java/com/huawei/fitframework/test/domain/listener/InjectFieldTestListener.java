@@ -1,13 +1,13 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.test.listener;
+package com.huawei.fitframework.test.domain.listener;
 
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.ioc.BeanContainer;
-import com.huawei.fitframework.test.support.TestContext;
-import com.huawei.fitframework.test.util.AnnotationUtils;
+import com.huawei.fitframework.test.domain.TestContext;
+import com.huawei.fitframework.test.domain.util.AnnotationUtils;
 import com.huawei.fitframework.util.ReflectionUtils;
 import com.huawei.fitframework.util.StringUtils;
 

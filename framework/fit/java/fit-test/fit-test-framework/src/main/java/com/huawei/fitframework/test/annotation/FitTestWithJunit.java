@@ -1,10 +1,10 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
 package com.huawei.fitframework.test.annotation;
 
-import com.huawei.fitframework.test.junit5.FitExtension;
+import com.huawei.fitframework.test.adapter.north.junit5.FitExtension;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 
