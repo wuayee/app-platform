@@ -4,10 +4,12 @@
 
 package com.huawei.databus.sdk.support;
 
-import com.huawei.databus.sdk.api.DataBusResult;
+import com.huawei.databus.sdk.api.DataBusIoResult;
 import com.huawei.databus.sdk.memory.SharedMemory;
 import com.huawei.databus.sdk.message.ErrorType;
 import com.huawei.fitframework.inspection.Validation;
+
+import java.util.Optional;
 
 /**
  * 为内存申请提供结果。
@@ -15,13 +17,12 @@ import com.huawei.fitframework.inspection.Validation;
  * @author 王成 w00863339
  * @since 2024-03-17
  */
-public interface SharedMemoryResult extends DataBusResult {
+public interface SharedMemoryResult extends DataBusIoResult {
     /**
      * 生成一个表示成功的结果。
      *
      * @param sharedMemory 表示申请内存得到的配置的实例的 {@link SharedMemory}。
      * @return 表示申请内存成功的结果的 {@link SharedMemoryResult}。
-     * @throws IllegalArgumentException {@code config} 为 {@code null}。
      */
     static SharedMemoryResult success(SharedMemory sharedMemory) {
         return new SuccessResult(sharedMemory);
@@ -31,10 +32,21 @@ public interface SharedMemoryResult extends DataBusResult {
      * 获取表示申请内存失败的结果。
      *
      * @param errorType 表示申请内存得到的错误码 {@code byte}。
-     * @return 表示申请内存失败的结果的 {@link SharedMemoryResult}。
+     * @param throwable 表示 Java 原生异常的 {@link Throwable}
+     * @return 表示内存 IO 失败的结果的 {@link SharedMemoryResult}。
+     */
+    static SharedMemoryResult failure(byte errorType, Throwable throwable) {
+        return new SharedMemoryResult.FailureResult(errorType, throwable);
+    }
+
+    /**
+     * 获取表示申请内存失败的结果。
+     *
+     * @param errorType 表示申请内存得到的错误码 {@code byte}。
+     * @return 表示内存 IO 失败的结果的 {@link SharedMemoryResult}。
      */
     static SharedMemoryResult failure(byte errorType) {
-        return new FailureResult(errorType);
+        return new SharedMemoryResult.FailureResult(errorType, null);
     }
 
     /**
@@ -43,7 +55,7 @@ public interface SharedMemoryResult extends DataBusResult {
      * @author 王成 w00863339
      * @since 2024-03-17
      */
-    static final class SuccessResult implements SharedMemoryResult {
+    final class SuccessResult implements SharedMemoryResult {
         private final SharedMemory sharedMemory;
 
         /**
@@ -67,6 +79,11 @@ public interface SharedMemoryResult extends DataBusResult {
         }
 
         @Override
+        public Optional<Throwable> cause() {
+            return Optional.empty();
+        }
+
+        @Override
         public SharedMemory sharedMemory() {
             return this.sharedMemory;
         }
@@ -83,11 +100,13 @@ public interface SharedMemoryResult extends DataBusResult {
      * @author 王成 w00863339
      * @since 2024-03-17
      */
-    static final class FailureResult implements SharedMemoryResult {
+    final class FailureResult implements SharedMemoryResult {
         private final byte errorType;
+        private final Throwable throwable;
 
-        private FailureResult(byte errorType) {
+        private FailureResult(byte errorType, Throwable throwable) {
             this.errorType = errorType;
+            this.throwable = throwable;
         }
 
         @Override
@@ -101,13 +120,18 @@ public interface SharedMemoryResult extends DataBusResult {
         }
 
         @Override
+        public Optional<Throwable> cause() {
+            return Optional.ofNullable(throwable);
+        }
+
+        @Override
         public SharedMemory sharedMemory() {
             return null;
         }
 
         @Override
         public String toString() {
-            return ErrorType.name(errorType);
+            return "FailureResult{errorType=" + errorType + ", throwable=" + throwable + '}';
         }
     }
 }

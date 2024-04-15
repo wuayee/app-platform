@@ -7,7 +7,7 @@ package com.huawei.databus.sdk.client;
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.databus.sdk.api.DataBusClient;
-import com.huawei.databus.sdk.api.DataBusResult;
+import com.huawei.databus.sdk.api.DataBusIoResult;
 import com.huawei.databus.sdk.client.jni.SharedMemoryReaderWriter;
 import com.huawei.databus.sdk.memory.SharedMemory;
 import com.huawei.databus.sdk.message.ApplyMemoryMessage;
@@ -17,6 +17,7 @@ import com.huawei.databus.sdk.message.MessageType;
 import com.huawei.databus.sdk.message.PermissionType;
 import com.huawei.databus.sdk.support.MemoryIoRequest;
 import com.huawei.databus.sdk.support.MemoryIoResult;
+import com.huawei.databus.sdk.support.OpenConnectionResult;
 import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
 import com.huawei.databus.sdk.tools.DataBusUtils;
@@ -71,20 +72,27 @@ public class DefaultDataBusClient implements DataBusClient {
     }
 
     @Override
-    public void open(InetAddress dataBusAddr, int dataBusPort) throws IOException {
-        this.socketChannel = SocketChannel.open();
-        InetSocketAddress address = new InetSocketAddress(dataBusAddr, dataBusPort);
-        socketChannel.connect(address);
+    public OpenConnectionResult open(InetAddress dataBusAddr, int dataBusPort) {
+        try {
+            this.socketChannel = SocketChannel.open();
+            InetSocketAddress address = new InetSocketAddress(dataBusAddr, dataBusPort);
+            socketChannel.connect(address);
+        } catch (IOException e) {
+            return OpenConnectionResult.failure(ErrorType.NotConnectedToDataBus, e);
+        }
+
         this.responseDispatcher = new ResponseDispatcher(this.replyQueues, socketChannel);
         this.sharedMemoryPool = new SharedMemoryPool(this.replyQueues, socketChannel);
         this.responseDispatcher.start();
         this.isConnected = true;
+
+        return OpenConnectionResult.success();
     }
 
     @Override
     public SharedMemoryResult sharedMalloc(@Nonnull SharedMemoryRequest request) {
         if (!isConnected) {
-            return SharedMemoryResult.failure(ErrorType.NotConnectedToDataBus);
+            return SharedMemoryResult.failure(ErrorType.NotConnectedToDataBus, null);
         }
         DataBusUtils.verifyMemoryRequest(request);
         // 应该全部抽取到 sharedMemoryPool
@@ -114,7 +122,7 @@ public class DefaultDataBusClient implements DataBusClient {
             return SharedMemoryResult.failure(response.errorType());
         } catch (IOException | InterruptedException e) {
             // TODO: 错误码
-            return SharedMemoryResult.failure(ErrorType.None);
+            return SharedMemoryResult.failure(ErrorType.OutOfMemory, e);
         }
     }
 
@@ -126,7 +134,7 @@ public class DefaultDataBusClient implements DataBusClient {
 
     @Override
     public MemoryIoResult readOnce(@Nonnull MemoryIoRequest request) {
-        DataBusResult preResult = ioPreprocess(request, PermissionType.Read);
+        DataBusIoResult preResult = ioPreprocess(request, PermissionType.Read);
         if (!preResult.isSuccess()) {
             return cast(preResult);
         }
@@ -142,8 +150,8 @@ public class DefaultDataBusClient implements DataBusClient {
     }
 
     @Override
-    public MemoryIoResult writeOnce(@Nonnull MemoryIoRequest request) throws IOException {
-        DataBusResult preResult = ioPreprocess(request, PermissionType.Write);
+    public MemoryIoResult writeOnce(@Nonnull MemoryIoRequest request) {
+        DataBusIoResult preResult = ioPreprocess(request, PermissionType.Write);
         if (!preResult.isSuccess()) {
             return cast(preResult);
         }
@@ -173,7 +181,7 @@ public class DefaultDataBusClient implements DataBusClient {
         return INSTANCE;
     }
 
-    private DataBusResult ioPreprocess(MemoryIoRequest request, byte permissionType) {
+    private DataBusIoResult ioPreprocess(MemoryIoRequest request, byte permissionType) {
         if (!isConnected) {
             return MemoryIoResult.failure(ErrorType.NotConnectedToDataBus);
         }

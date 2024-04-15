@@ -4,11 +4,13 @@
 
 package com.huawei.databus.sdk.support;
 
-import com.huawei.databus.sdk.api.DataBusResult;
+import com.huawei.databus.sdk.api.DataBusIoResult;
 import com.huawei.databus.sdk.memory.SharedMemory;
 import com.huawei.databus.sdk.memory.SharedMemoryKey;
 import com.huawei.databus.sdk.message.ErrorType;
 import com.huawei.databus.sdk.message.PermissionType;
+
+import java.util.Optional;
 
 /**
  * 为内存申请提供结果。
@@ -16,7 +18,7 @@ import com.huawei.databus.sdk.message.PermissionType;
  * @author 王成 w00863339
  * @since 2024-03-17
  */
-public interface MemoryIoResult extends DataBusResult {
+public interface MemoryIoResult extends DataBusIoResult {
     /**
      * 返回与本次 IO 相关的字节数组
      *
@@ -47,10 +49,21 @@ public interface MemoryIoResult extends DataBusResult {
      * 获取表示内存 IO 失败的结果。
      *
      * @param errorType 表示申请内存得到的错误码 {@code byte}。
+     * @param throwable 表示 Java 原生异常的 {@link Throwable}
+     * @return 表示内存 IO 失败的结果的 {@link MemoryIoResult}。
+     */
+    static MemoryIoResult failure(byte errorType, Throwable throwable) {
+        return new FailureResult(errorType, throwable);
+    }
+
+    /**
+     * 获取表示内存 IO 失败的结果。
+     *
+     * @param errorType 表示申请内存得到的错误码 {@code byte}。
      * @return 表示内存 IO 失败的结果的 {@link MemoryIoResult}。
      */
     static MemoryIoResult failure(byte errorType) {
-        return new FailureResult(errorType);
+        return new FailureResult(errorType, null);
     }
 
     /**
@@ -78,6 +91,11 @@ public interface MemoryIoResult extends DataBusResult {
         @Override
         public byte errorType() {
             return ErrorType.None;
+        }
+
+        @Override
+        public Optional<Throwable> cause() {
+            return Optional.empty();
         }
 
         @Override
@@ -109,9 +127,11 @@ public interface MemoryIoResult extends DataBusResult {
      */
     final class FailureResult implements MemoryIoResult {
         private final byte errorType;
+        private final Throwable throwable;
 
-        private FailureResult(byte errorType) {
+        private FailureResult(byte errorType, Throwable throwable) {
             this.errorType = errorType;
+            this.throwable = throwable;
         }
 
         @Override
@@ -122,6 +142,11 @@ public interface MemoryIoResult extends DataBusResult {
         @Override
         public byte errorType() {
             return errorType;
+        }
+
+        @Override
+        public Optional<Throwable> cause() {
+            return Optional.ofNullable(throwable);
         }
 
         @Override
@@ -141,7 +166,7 @@ public interface MemoryIoResult extends DataBusResult {
 
         @Override
         public String toString() {
-            return "FailureResult{errorType=" + ErrorType.name(errorType) + '}';
+            return "FailureResult{errorType=" + errorType + ", throwable=" + throwable + '}';
         }
     }
 }
