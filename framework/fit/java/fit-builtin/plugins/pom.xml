@@ -19,7 +19,7 @@
         <module>fit-dynamic-plugin-directory</module>
         <module>fit-dynamic-plugin-mvn</module>
         <module>fit-heartbeat-client</module>
-        <module>fit-http-client-jdk</module>
+        <module>fit-http-client-okhttp</module>
         <module>fit-http-handler-registry</module>
         <module>fit-http-openapi3-swagger</module>
         <module>fit-http-server-netty</module>

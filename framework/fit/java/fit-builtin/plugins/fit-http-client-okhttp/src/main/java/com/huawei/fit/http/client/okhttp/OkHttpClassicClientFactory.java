@@ -1,8 +1,8 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2022-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.http.client.jdk;
+package com.huawei.fit.http.client.okhttp;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
@@ -17,18 +17,18 @@ import com.huawei.fitframework.value.ValueFetcher;
 import java.util.Map;
 
 /**
- * 表示 {@link HttpClassicClientFactory} 的 JDK 实现。
+ * 表示 {@link HttpClassicClientFactory} 的 OkHttp 实现。
  *
- * @author 季聿阶 j00559309
- * @since 2022-12-04
+ * @author 杭潇 h00675922
+ * @since 2024-04-08
  */
 @Order(Order.HIGH)
 @Component
-public class JdkHttpClassicClientFactory implements HttpClassicClientFactory {
+public class OkHttpClassicClientFactory implements HttpClassicClientFactory {
     private final Serializers serializers;
     private final ValueFetcher valueFetcher;
 
-    public JdkHttpClassicClientFactory(Map<String, ObjectSerializer> serializers, ValueFetcher valueFetcher) {
+    public OkHttpClassicClientFactory(Map<String, ObjectSerializer> serializers, ValueFetcher valueFetcher) {
         this.serializers = Serializers.create(serializers);
         this.valueFetcher = notNull(valueFetcher, "The value fetcher cannot be null.");
     }
@@ -40,6 +40,6 @@ public class JdkHttpClassicClientFactory implements HttpClassicClientFactory {
 
     @Override
     public HttpClassicClient create(Config config) {
-        return new JdkHttpClassicClient(this.serializers, this.valueFetcher, config);
+        return new OkHttpClassicClient(this.serializers, this.valueFetcher, config);
     }
 }

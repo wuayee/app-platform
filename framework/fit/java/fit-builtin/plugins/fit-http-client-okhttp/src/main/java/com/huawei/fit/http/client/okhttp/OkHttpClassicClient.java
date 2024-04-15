@@ -1,8 +1,8 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2022-2024. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.http.client.jdk;
+package com.huawei.fit.http.client.okhttp;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
 import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
@@ -14,38 +14,36 @@ import com.huawei.fit.http.client.HttpClassicClientRequest;
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fit.http.client.support.AbstractHttpClassicClient;
 import com.huawei.fit.http.client.support.DefaultHttpClassicClientRequest;
-import com.huawei.fit.http.protocol.ClientRequest;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
 import com.huawei.fitframework.value.ValueFetcher;
 
 import java.lang.reflect.Type;
 
 /**
- * 表示 {@link HttpClassicClient} 的 JDK 实现。
+ * 表示 {@link HttpClassicClient} 的 OkHttp 实现。
  *
- * @author 季聿阶 j00559309
- * @since 2022-11-23
+ * @author 杭潇 h00675922
+ * @since 2024-04-08
  */
-public class JdkHttpClassicClient extends AbstractHttpClassicClient {
+public class OkHttpClassicClient extends AbstractHttpClassicClient {
     private final HttpClassicClientFactory.Config config;
 
     /**
-     * 创建 {@link HttpClassicClient} 的 JDK 实现对象。
+     * 创建 {@link HttpClassicClient} 的 OkHttp 实现对象。
      *
      * @param serializers 表示序列化器集合的 {@link Serializers}。
      * @param valueFetcher 表示值的获取工具的 {@link ValueFetcher}。
-     * @param config 表示配置的 {@link com.huawei.fit.http.client.HttpClassicClientFactory.Config}。
+     * @param config 表示配置的 {@link HttpClassicClientFactory.Config}。
      */
-    public JdkHttpClassicClient(Serializers serializers, ValueFetcher valueFetcher,
+    public OkHttpClassicClient(Serializers serializers, ValueFetcher valueFetcher,
             HttpClassicClientFactory.Config config) {
         super(serializers, valueFetcher);
         this.config = getIfNull(config, () -> HttpClassicClientFactory.Config.builder().build());
-        System.setProperty("http.keepAlive", "false");
     }
 
     @Override
     public HttpClassicClientRequest createRequest(HttpRequestMethod method, String url) {
-        ClientRequest clientRequest = new UrlConnectionClientRequest(method, url, this.config);
+        OkHttpClientRequest clientRequest = new OkHttpClientRequest(method, url, this.config);
         return new DefaultHttpClassicClientRequest(this, clientRequest, this.config);
     }
 
