@@ -7,6 +7,9 @@ package com.huawei.databus.sdk.api;
 import com.huawei.databus.sdk.memory.SharedMemory;
 import com.huawei.databus.sdk.memory.SharedMemoryKey;
 
+import java.time.Duration;
+import java.util.Optional;
+
 /**
  * 为 DataBus 读写请求共有接口。
  *
@@ -48,6 +51,13 @@ public interface DataBusIoRequest {
      * @return 表示许可类型的 {@code byte}
      */
     byte permissionType();
+
+    /**
+     * 返回本次 IO 请求相关的超时时间。如果没有设置超时时限，则返回 {@code Optional.empty()}
+     *
+     * @return 表示超时时限的 {@code Optional<Duration>}
+     */
+    Optional<Duration> timeoutDuration();
 
     /**
      * IORequest 的构造器
@@ -92,6 +102,14 @@ public interface DataBusIoRequest {
          * @return 表示当前构建器的 {@link Builder}。
          */
         Builder sharedMemoryKey(SharedMemoryKey sharedMemoryKey);
+
+        /**
+         * 向当前构建器中设置超时时限
+         *
+         * @param duration 表示被设置的超时时限 {@link Duration}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        Builder timeoutDuration(Duration duration);
 
         /**
          * 构建对象。

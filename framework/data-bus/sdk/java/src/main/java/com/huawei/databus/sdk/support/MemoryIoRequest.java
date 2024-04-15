@@ -7,6 +7,9 @@ package com.huawei.databus.sdk.support;
 import com.huawei.databus.sdk.api.DataBusIoRequest;
 import com.huawei.databus.sdk.memory.SharedMemoryKey;
 
+import java.time.Duration;
+import java.util.Optional;
+
 /**
  * IORequest 的默认内存实现
  *
@@ -19,14 +22,15 @@ public class MemoryIoRequest implements DataBusIoRequest {
     private final long memoryOffset;
     private final int dataLength;
     private final byte permissionType;
+    private final Duration timeoutDuration;
 
-    private MemoryIoRequest(SharedMemoryKey sharedMemoryKey, byte[] bytes, long memoryOffset, int dataLength,
-        byte permissionType) {
-        this.sharedMemoryKey = sharedMemoryKey;
-        this.bytes = bytes;
-        this.memoryOffset = memoryOffset;
-        this.dataLength = dataLength;
-        this.permissionType = permissionType;
+    private MemoryIoRequest(Builder builder) {
+        this.sharedMemoryKey = builder.sharedMemoryKey;
+        this.bytes = builder.bytes;
+        this.memoryOffset = builder.memoryOffset;
+        this.dataLength = builder.dataLength;
+        this.permissionType = builder.permissionType;
+        this.timeoutDuration = builder.timeoutDuration;
     }
 
     @Override
@@ -54,6 +58,11 @@ public class MemoryIoRequest implements DataBusIoRequest {
         return this.permissionType;
     }
 
+    @Override
+    public Optional<Duration> timeoutDuration() {
+        return Optional.ofNullable(this.timeoutDuration);
+    }
+
     /**
      * {@link MemoryIoRequest} 的构造器
      */
@@ -63,6 +72,7 @@ public class MemoryIoRequest implements DataBusIoRequest {
         private long memoryOffset;
         private int dataLength;
         private byte permissionType;
+        private Duration timeoutDuration;
 
         @Override
         public Builder permissionType(byte permissionType) {
@@ -95,12 +105,17 @@ public class MemoryIoRequest implements DataBusIoRequest {
         }
 
         @Override
+        public DataBusIoRequest.Builder timeoutDuration(Duration timeoutDuration) {
+            this.timeoutDuration = timeoutDuration;
+            return this;
+        }
+
+        @Override
         public MemoryIoRequest build() {
             if (this.bytes == null) {
                 this.bytes = new byte[0];
             }
-            return new MemoryIoRequest(this.sharedMemoryKey, this.bytes,
-                    this.memoryOffset, this.dataLength, this.permissionType);
+            return new MemoryIoRequest(this);
         }
     }
 
@@ -108,7 +123,7 @@ public class MemoryIoRequest implements DataBusIoRequest {
     public String toString() {
         return "MemoryIORequest{sharedMemoryKey=" + sharedMemoryKey.toString()
                 + ", memoryOffset=" + memoryOffset + ", dataLength=" + dataLength
-                + ", permissionType=" + permissionType + '}';
+                + ", permissionType=" + permissionType + ", timeoutDuration=" + timeoutDuration + '}';
     }
 
     /**
