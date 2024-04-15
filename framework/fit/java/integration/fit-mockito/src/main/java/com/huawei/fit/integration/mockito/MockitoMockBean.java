@@ -5,7 +5,7 @@
 package com.huawei.fit.integration.mockito;
 
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.test.mock.MockBean;
+import com.huawei.fitframework.test.domain.resolver.MockBean;
 
 import org.mockito.Mockito;
 

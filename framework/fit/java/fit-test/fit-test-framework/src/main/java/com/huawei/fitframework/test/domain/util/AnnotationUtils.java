@@ -1,8 +1,8 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2022-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2022-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.test.util;
+package com.huawei.fitframework.test.domain.util;
 
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;

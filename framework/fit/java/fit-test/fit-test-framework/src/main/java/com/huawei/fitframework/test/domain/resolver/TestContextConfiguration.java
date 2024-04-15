@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.test.support;
+package com.huawei.fitframework.test.domain.resolver;
 
 import java.lang.reflect.Field;
 import java.util.Set;

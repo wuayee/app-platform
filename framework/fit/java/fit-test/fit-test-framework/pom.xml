@@ -40,6 +40,53 @@
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-http-classic</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-http-protocol</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+
+        <!-- Plugin -->
+        <dependency>
+            <groupId>com.huawei.fit.plugin</groupId>
+            <artifactId>fit-value-fastjson</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.plugin</groupId>
+            <artifactId>fit-message-serializer-json-jackson</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.plugin</groupId>
+            <artifactId>fit-http-client-jdk</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.plugin</groupId>
+            <artifactId>fit-http-server-netty</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.plugin</groupId>
+            <artifactId>fit-server-http</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.plugin</groupId>
+            <artifactId>fit-http-handler-registry</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.plugin</groupId>
+            <artifactId>fit-client-http</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
 
         <!-- Test -->
         <dependency>
