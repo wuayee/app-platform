@@ -39,14 +39,29 @@ public interface Choir<T> extends Publisher<T> {
     }
 
     /**
-     * 将一个 {@link Emitter 发送器} 装换成 {@link Choir 响应式流}。
+     * 将一个 {@link Emitter 发送器} 转换成 {@link Choir 响应式流}。
      *
      * @param emitter 表示指定数据发送器的 {@link Emitter}{@code <}{@link T}{@code >}。
      * @param <T> 表示数据发送器和响应式流中数据类型的 {@link T}。
      * @return 表示转换后的响应式流的 {@link Choir}{@code <}{@link T}{@code >}。
      */
     static <T> Choir<T> fromEmitter(Emitter<T> emitter) {
-        return new EmitterChoir<>(emitter);
+        return new EmitterChoir<>(emitter, null, null);
+    }
+
+    /**
+     * 通过一个 {@link Emitter 发送器} 和指定的请求元素时操作以及订阅取消时操作创建 {@link Choir 响应式流}。
+     *
+     * @param emitter 表示指定数据发送器的 {@link Emitter}{@code <}{@link T}{@code >}。
+     * @param requestHandler 表示指定的元素请求时操作的 {@link Consumer}{@code <}{@link T}{@code >}。
+     * @param cancelHandler 表示指定的订阅取消时操作的 {@link Runnable}。
+     * @param <T> 表示数据发送器和响应式流中数据类型的 {@link T}。
+     * @return 表示转换后的响应式流的 {@link Choir}{@code <}{@link T}{@code >}。
+     */
+    static <T> Choir<T> fromEmitter(Emitter<T> emitter, Consumer<Long> requestHandler, Runnable cancelHandler) {
+        return new EmitterChoir<>(emitter,
+                requestHandler == null ? value -> {} : requestHandler,
+                cancelHandler == null ? () -> {} : cancelHandler);
     }
 
     /**
