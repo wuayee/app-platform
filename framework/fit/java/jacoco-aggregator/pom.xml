@@ -154,7 +154,7 @@
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.plugin</groupId>
-            <artifactId>fit-http-client-jdk</artifactId>
+            <artifactId>fit-http-client-okhttp</artifactId>
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.plugin</groupId>

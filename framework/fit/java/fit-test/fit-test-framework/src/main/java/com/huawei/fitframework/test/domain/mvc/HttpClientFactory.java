@@ -6,7 +6,7 @@ package com.huawei.fitframework.test.domain.mvc;
 
 import com.huawei.fit.http.client.HttpClassicClient;
 import com.huawei.fit.http.client.HttpClassicClientFactory;
-import com.huawei.fit.http.client.jdk.JdkHttpClassicClientFactory;
+import com.huawei.fit.http.client.okhttp.OkHttpClassicClientFactory;
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
 import com.huawei.fit.value.fastjson.FastJsonValueHandler;
 import com.huawei.fitframework.serialization.ObjectSerializer;
@@ -32,7 +32,7 @@ public class HttpClientFactory {
         Map<String, ObjectSerializer> serializers =
                 MapBuilder.<String, ObjectSerializer>get().put("json", jsonSerializer).build();
         ValueFetcher valueFetcher = new FastJsonValueHandler();
-        HttpClassicClientFactory jdkFactory = new JdkHttpClassicClientFactory(serializers, valueFetcher);
+        HttpClassicClientFactory jdkFactory = new OkHttpClassicClientFactory(serializers, valueFetcher);
         return jdkFactory.create();
     }
 }
