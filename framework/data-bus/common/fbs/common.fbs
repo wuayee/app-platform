@@ -2,12 +2,19 @@ namespace DataBus.Common;
 
 enum ErrorType : byte {
   None = 0,
-  OutOfMemory = 1,
-  NotConnectedToDataBus = 2,
-  PermissionDenied = 3,
-  MemoryNotFound = 4,
+  NotConnectedToDataBus = 1, // 仅SDK使用
+  DataBusDisconnected = 2, // 仅SDK使用
+  OutOfMemory = 3,
+  PermissionDenied = 4,
   Timeout = 5,
-  DataBusDisconnected = 6
+  IllegalMessageHeader = 6,
+  IllegalMessageBody = 7,
+  MallocFailed = 8,
+  MemoryNotFound = 9,
+  UnknownPermissionType = 10,
+  DuplicatePermitApplication = 11,
+  IllegalStateForPermitRelease = 12,
+  UnknownError = 13
 }
 
 // 修改此 Enum 请务必与 DataBus 开发组人员确认

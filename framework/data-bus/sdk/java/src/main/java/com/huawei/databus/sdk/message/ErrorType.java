@@ -10,14 +10,21 @@ package com.huawei.databus.sdk.message;
 public final class ErrorType {
   private ErrorType() { }
   public static final byte None = 0;
-  public static final byte OutOfMemory = 1;
-  public static final byte NotConnectedToDataBus = 2;
-  public static final byte PermissionDenied = 3;
-  public static final byte MemoryNotFound = 4;
+  public static final byte NotConnectedToDataBus = 1;
+  public static final byte DataBusDisconnected = 2;
+  public static final byte OutOfMemory = 3;
+  public static final byte PermissionDenied = 4;
   public static final byte Timeout = 5;
-  public static final byte DataBusDisconnected = 6;
+  public static final byte IllegalMessageHeader = 6;
+  public static final byte IllegalMessageBody = 7;
+  public static final byte MallocFailed = 8;
+  public static final byte MemoryNotFound = 9;
+  public static final byte UnknownPermissionType = 10;
+  public static final byte DuplicatePermitApplication = 11;
+  public static final byte IllegalStateForPermitRelease = 12;
+  public static final byte UnknownError = 13;
 
-  public static final String[] names = { "None", "OutOfMemory", "NotConnectedToDataBus", "PermissionDenied", "MemoryNotFound", "Timeout", "DataBusDisconnected", };
+  public static final String[] names = { "None", "NotConnectedToDataBus", "DataBusDisconnected", "OutOfMemory", "PermissionDenied", "Timeout", "IllegalMessageHeader", "IllegalMessageBody", "MallocFailed", "MemoryNotFound", "UnknownPermissionType", "DuplicatePermitApplication", "IllegalStateForPermitRelease", "UnknownError", };
 
   public static String name(int e) { return names[e]; }
 }

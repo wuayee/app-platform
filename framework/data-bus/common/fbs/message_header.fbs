@@ -2,11 +2,12 @@ namespace DataBus.Common;
 
 enum MessageType:byte {
     Unknown = 0,
-    HeartBeat = 1,
-    ApplyMemory = 2,
-    ApplyPermission = 3,
-    ReleasePermission = 4,
-    ReleaseMemory = 5
+    Error = 1,
+    HeartBeat = 2,
+    ApplyMemory = 3,
+    ApplyPermission = 4,
+    ReleasePermission = 5,
+    ReleaseMemory = 6
 }
 
 // 修改此 table 请务必与 DataBus 开发组人员确认

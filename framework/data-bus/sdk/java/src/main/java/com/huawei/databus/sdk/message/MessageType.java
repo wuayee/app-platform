@@ -10,13 +10,14 @@ package com.huawei.databus.sdk.message;
 public final class MessageType {
   private MessageType() { }
   public static final byte Unknown = 0;
-  public static final byte HeartBeat = 1;
-  public static final byte ApplyMemory = 2;
-  public static final byte ApplyPermission = 3;
-  public static final byte ReleasePermission = 4;
-  public static final byte ReleaseMemory = 5;
+  public static final byte Error = 1;
+  public static final byte HeartBeat = 2;
+  public static final byte ApplyMemory = 3;
+  public static final byte ApplyPermission = 4;
+  public static final byte ReleasePermission = 5;
+  public static final byte ReleaseMemory = 6;
 
-  public static final String[] names = { "Unknown", "HeartBeat", "ApplyMemory", "ApplyPermission", "ReleasePermission", "ReleaseMemory", };
+  public static final String[] names = { "Unknown", "Error", "HeartBeat", "ApplyMemory", "ApplyPermission", "ReleasePermission", "ReleaseMemory", };
 
   public static String name(int e) { return names[e]; }
 }
