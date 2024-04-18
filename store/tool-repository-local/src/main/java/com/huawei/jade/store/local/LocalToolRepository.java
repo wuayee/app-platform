@@ -5,12 +5,13 @@
 package com.huawei.jade.store.local;
 
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.broker.Genericable;
 import com.huawei.fitframework.broker.LocalGenericableRepository;
 import com.huawei.fitframework.broker.client.BrokerClient;
+import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.store.Tool;
-import com.huawei.jade.store.ToolRepository;
-import com.huawei.jade.store.support.FitMethodFunctionalTool;
+import com.huawei.jade.store.inner.ToolRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +29,13 @@ public class LocalToolRepository implements ToolRepository {
     private final LocalGenericableRepository localGenericableRepository;
     private final BrokerClient client;
 
-    public LocalToolRepository(LocalGenericableRepository localGenericableRepository, BrokerClient client) {
+    private final ObjectSerializer serializer;
+
+    public LocalToolRepository(LocalGenericableRepository localGenericableRepository, BrokerClient client,
+            @Fit(alias = "json") ObjectSerializer serializer) {
         this.localGenericableRepository = localGenericableRepository;
         this.client = client;
+        this.serializer = serializer;
     }
 
     @Override
@@ -51,6 +56,6 @@ public class LocalToolRepository implements ToolRepository {
     }
 
     private Tool convert(Genericable genericable) {
-        return new FitMethodFunctionalTool(this.client, genericable.method().method());
+        return Tool.fit(this.client, serializer, Tool.ConfigurableMetadata.fromMethod(genericable.method().method()));
     }
 }

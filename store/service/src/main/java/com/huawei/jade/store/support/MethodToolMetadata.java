@@ -9,66 +9,47 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 import com.huawei.fitframework.annotation.Genericable;
 import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.json.schema.JsonSchemaManager;
+import com.huawei.fitframework.util.GenericableUtils;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.store.FunctionalTool;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 表示函数工具的带本地方法抽象实现。
+ * 表示基于方法构建的工具元数据。
  *
- * @author 季聿阶
- * @since 2024-04-05
+ * @author 王攀博
+ * @since 2024-04-18
  */
-public abstract class AbstractMethodFunctionalTool extends AbstractTool implements FunctionalTool {
+public class MethodToolMetadata extends AbstractToolMetadata {
     private final Method method;
 
     /**
-     * 通过工具名字和本地方法来初始化 {@link AbstractTool} 的新实例。
+     * 通过本地方法初始化 {@link MethodToolMetadata} 的新实例。
      *
-     * @param name 表示工具名字的 {@link String}。
-     * @param method 表示函数方法的 {@link Method}。
+     * @param method 表示本地方法的 {@link Method}。
      */
-    protected AbstractMethodFunctionalTool(String name, Method method) {
-        super(FunctionalTool.TYPE, name, getDescription(method));
+    public MethodToolMetadata(Method method) {
+        super(GenericableUtils.getGenericableId(method), getDescription(method));
         this.method = notNull(method, "The functional method cannot be null.");
-    }
-
-    private static String getDescription(Method method) {
-        if (method == null) {
-            return StringUtils.EMPTY;
-        }
-        Genericable annotation = method.getDeclaredAnnotation(Genericable.class);
-        if (annotation == null) {
-            return StringUtils.EMPTY;
-        }
-        return annotation.description();
     }
 
     @Override
     public Map<String, Object> schema() {
-        return MapBuilder.<String, Object>get()
-                .put("type", FunctionalTool.TYPE)
+        Map<String, Object> map = MapBuilder.<String, Object>get()
                 .put("name", this.name())
                 .put("description", this.description())
                 .put("parameters", JsonSchemaManager.create().createSchema(this.method).toJsonObject())
                 .build();
-    }
-
-    /**
-     * 获取本地方法。
-     *
-     * @return 表示本地方法的 {@link Method}。
-     */
-    protected Method getMethod() {
-        return this.method;
+        map.putAll(this.extraProperties());
+        return map;
     }
 
     @Override
@@ -107,6 +88,16 @@ public abstract class AbstractMethodFunctionalTool extends AbstractTool implemen
         }).map(this::parameterName).collect(Collectors.toList());
     }
 
+    @Override
+    public Type returnType() {
+        return this.method.getReturnType();
+    }
+
+    @Override
+    public Optional<Method> getMethod() {
+        return Optional.ofNullable(this.method);
+    }
+
     private String parameterName(Parameter parameter) {
         Property annotation = parameter.getDeclaredAnnotation(Property.class);
         if (annotation != null && StringUtils.isNotBlank(annotation.name())) {
@@ -115,8 +106,14 @@ public abstract class AbstractMethodFunctionalTool extends AbstractTool implemen
         return parameter.getName();
     }
 
-    @Override
-    public Type returnType() {
-        return this.method.getReturnType();
+    private static String getDescription(Method method) {
+        if (method == null) {
+            return StringUtils.EMPTY;
+        }
+        Genericable annotation = method.getDeclaredAnnotation(Genericable.class);
+        if (annotation == null) {
+            return StringUtils.EMPTY;
+        }
+        return annotation.description();
     }
 }

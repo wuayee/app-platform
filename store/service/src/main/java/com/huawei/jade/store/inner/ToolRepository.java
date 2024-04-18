@@ -2,7 +2,9 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.store;
+package com.huawei.jade.store.inner;
+
+import com.huawei.jade.store.Tool;
 
 import java.util.List;
 import java.util.Optional;

@@ -13,23 +13,25 @@ import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.store.FunctionalTool;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
- * 表示函数工具的带 Json 规范描述的抽象实现。
+ * 表示基于摘要信息构建的工具元数据。
  *
- * @author 季聿阶
- * @since 2024-04-06
+ * @author 王攀博
+ * @since 2024-04-18
  */
-public abstract class AbstractSchemaFunctionalTool extends AbstractTool implements FunctionalTool {
+public class SchemaToolMetadata extends AbstractToolMetadata {
     private static final Map<String, Type> JSON_SCHEMA_TYPE_TO_JAVA_TYPE = MapBuilder.<String, Type>get()
             .put("string", String.class)
             .put("integer", BigInteger.class)
@@ -44,14 +46,13 @@ public abstract class AbstractSchemaFunctionalTool extends AbstractTool implemen
     private final Map<String, Object> returnSchema;
 
     /**
-     * 通过工具格式规范来初始化 {@link AbstractTool} 的新实例。
+     * 通过工具的格式规范初始化 {@link SchemaToolMetadata} 的新实例。
      *
      * @param toolSchema 表示工具格式规范的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
      */
-    protected AbstractSchemaFunctionalTool(Map<String, Object> toolSchema) {
-        super(FunctionalTool.TYPE, toolSchema);
+    public SchemaToolMetadata(Map<String, Object> toolSchema) {
+        super(toolSchema);
         this.toolSchema = notNull(toolSchema, "The tool schema cannot be null.");
-        this.toolSchema.put("type", FunctionalTool.TYPE);
         this.parametersSchema =
                 notNull(cast(toolSchema.get("parameters")), "The parameters json schema cannot be null.");
         this.returnSchema = getIfNull(cast(toolSchema.get("return")), Collections::emptyMap);
@@ -66,7 +67,9 @@ public abstract class AbstractSchemaFunctionalTool extends AbstractTool implemen
 
     @Override
     public Map<String, Object> schema() {
-        return this.toolSchema;
+        Map<String, Object> map = new HashMap<>(this.toolSchema);
+        map.putAll(this.extraProperties());
+        return map;
     }
 
     @Override
@@ -130,5 +133,10 @@ public abstract class AbstractSchemaFunctionalTool extends AbstractTool implemen
         }
         String returnType = cast(this.returnSchema.get("type"));
         return convertJsonSchemaTypeToJavaType(returnType);
+    }
+
+    @Override
+    public Optional<Method> getMethod() {
+        return Optional.empty();
     }
 }

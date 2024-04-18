@@ -11,13 +11,15 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
 import com.huawei.fitframework.annotation.Genericable;
 import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.broker.client.Router;
+import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.jade.store.FunctionalTool;
+import com.huawei.jade.store.Tool;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,19 +33,23 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 表示 {@link FitMethodFunctionalTool} 的单元测试。
+ * 表示 {@link FitTool} 的单元测试。
  *
  * @author 季聿阶
  * @since 2024-04-05
  */
 @DisplayName("测试 FitMethodFunctionalTool")
-public class FitMethodFunctionalToolTest {
+public class MethodToolMetadataTest {
+    private final ObjectSerializer serializer;
     private final Method testMethod;
 
-    private FunctionalTool tool;
+    private Tool tool;
 
-    FitMethodFunctionalToolTest() throws NoSuchMethodException {
+    private Tool.ConfigurableMetadata toolMetadata;
+
+    MethodToolMetadataTest() throws NoSuchMethodException {
         this.testMethod = TestInterface.class.getDeclaredMethod("testMethod", String.class);
+        this.serializer = new JacksonObjectSerializer(null, null, null);
     }
 
     @BeforeEach
@@ -60,7 +66,8 @@ public class FitMethodFunctionalToolTest {
                 throw new IllegalStateException("Error");
             }
         });
-        this.tool = new FitMethodFunctionalTool(client, this.testMethod);
+        this.toolMetadata = Tool.ConfigurableMetadata.fromMethod(this.testMethod);
+        this.tool = Tool.fit(client, this.serializer, this.toolMetadata);
     }
 
     @Test
@@ -80,45 +87,44 @@ public class FitMethodFunctionalToolTest {
     @Test
     @DisplayName("返回正确的参数类型")
     void shouldReturnParameters() {
-        List<Type> parameters = this.tool.parameters();
+        List<Type> parameters = this.toolMetadata.parameters();
         assertThat(parameters).containsExactly(String.class);
     }
 
     @Test
     @DisplayName("返回正确的参数名字")
     void shouldReturnParameterNames() {
-        List<String> parameterNames = this.tool.parameterNames();
+        List<String> parameterNames = this.toolMetadata.parameterNames();
         assertThat(parameterNames).containsExactly("P1");
     }
 
     @Test
     @DisplayName("返回正确的参数序号")
     void shouldReturnParameterIndex() {
-        int actual = this.tool.parameterIndex("P1");
+        int actual = this.toolMetadata.parameterIndex("P1");
         assertThat(actual).isEqualTo(0);
     }
 
     @Test
     @DisplayName("返回正确的必须参数名字列表")
     void shouldReturnRequired() {
-        List<String> parameterNames = this.tool.requiredParameterNames();
+        List<String> parameterNames = this.toolMetadata.requiredParameterNames();
         assertThat(parameterNames).containsExactly("P1");
     }
 
     @Test
     @DisplayName("返回正确的返回值类型")
     void shouldReturnReturnType() {
-        Type type = this.tool.returnType();
+        Type type = this.toolMetadata.returnType();
         assertThat(type).isEqualTo(String.class);
     }
 
     @Test
     @DisplayName("返回正确的格式规范描述")
     void shouldReturnSchema() {
-        Map<String, Object> schema = this.tool.schema();
+        Map<String, Object> schema = this.tool.metadata().schema();
         assertThat(schema).containsEntry("name", "t1")
                 .containsEntry("description", "desc")
-                .containsEntry("type", "function")
                 .containsEntry("parameters",
                         MapBuilder.get()
                                 .put("type", "object")
