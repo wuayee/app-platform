@@ -5,7 +5,7 @@
 
     <groupId>com.huawei.fitframework</groupId>
     <artifactId>fit-dependency</artifactId>
-    <version>3.3.9-SNAPSHOT</version>
+    <version>3.3.10-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -16,7 +16,7 @@
         <java.version>1.8</java.version>
 
         <!-- FIT version -->
-        <fit.version>3.3.9-SNAPSHOT</fit.version>
+        <fit.version>3.3.10-SNAPSHOT</fit.version>
 
         <!-- Test framework versions -->
         <assertj.version>3.24.2</assertj.version>

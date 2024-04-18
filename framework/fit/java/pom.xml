@@ -5,7 +5,7 @@
 
     <groupId>com.huawei.fitframework</groupId>
     <artifactId>fitframework-parent</artifactId>
-    <version>3.3.9-SNAPSHOT</version>
+    <version>3.3.10-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -38,7 +38,7 @@
         <java.version>1.8</java.version>
 
         <!-- FIT version -->
-        <fit.version>3.3.9-SNAPSHOT</fit.version>
+        <fit.version>3.3.10-SNAPSHOT</fit.version>
 
         <!-- Jacoco version -->
         <jacoco.version>0.8.10</jacoco.version>

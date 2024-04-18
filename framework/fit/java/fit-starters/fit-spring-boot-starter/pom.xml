@@ -12,7 +12,7 @@
 
     <groupId>com.huawei.fitframework</groupId>
     <artifactId>fit-spring-boot-starter</artifactId>
-    <version>3.3.9-SNAPSHOT</version>
+    <version>3.3.10-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -22,7 +22,7 @@
         <java.version>1.8</java.version>
 
         <!-- FIT Version -->
-        <fit.version>3.3.9-SNAPSHOT</fit.version>
+        <fit.version>3.3.10-SNAPSHOT</fit.version>
     </properties>
 
     <dependencies>
