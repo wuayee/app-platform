@@ -7,6 +7,7 @@ from enum import IntEnum
 
 
 class ProtocolEnum(IntEnum):
+    UNKNOWN = -1
     RSOCKET = 0,
     SOCKET = 1,
     HTTP = 2,
@@ -17,6 +18,9 @@ class ProtocolEnum(IntEnum):
 
 
 class SerializingStructureEnum(IntEnum):
+    UNKNOWN = -1
     PROTOBUF = 0
     JSON = 1
     CBOR = 2
+
+

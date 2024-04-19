@@ -8,6 +8,7 @@ import platform
 import socket
 from functools import reduce
 from itertools import groupby
+from threading import Lock
 from typing import Union, Optional
 
 _LOCAL_HOST = '127.0.0.1'
@@ -99,3 +100,21 @@ def get_memory_usage():
             if line.startswith('VmRSS:'):
                 return int(line.split()[1]) * 1024
     raise Exception("cannot get memory usage by pid.")
+
+
+class AtomicInt:
+    def __init__(self, value=0):
+        self._value = value
+        self._lock = Lock()
+
+    def increase(self, value=1):
+        with self._lock:
+            self._value += value
+
+    def decrease(self, value=1):
+        with self._lock:
+            self._value -= value
+
+    def get_value(self):
+        with self._lock:
+            return self._value

@@ -3,85 +3,54 @@
 """
 功 能：http 通信服务端
 """
-import heapq
+import base64
 import ssl
-import sys
-import time
-import traceback
-from http import HTTPStatus
 import threading
-from typing import Dict, List, Tuple, Optional
+import time
+from collections import OrderedDict
+from http import HTTPStatus
+from queue import Queue, Empty
+from typing import Dict, Optional
 from concurrent.futures import ThreadPoolExecutor
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
-from fitframework import const
-from fitframework.api.decorators import fit, fitable
+from fitframework.api.decorators import fitable
 from fitframework.api.exception import FIT_OK
 from fitframework.api.logging import sys_plugin_logger
 from fitframework.core.exception.fit_exception import InternalErrorCode
+from fitframework.core.network.http_header import HttpHeader
 from fitframework.core.network.fit_response import FitResponse
+from fitframework.core.network.metadata.metadata_utils import TagLengthValuesUtil
 from fitframework.core.network.metadata.request_metadata import RequestMetadata, GenericVersion
 from fitframework.core.network.metadata.response_metadata import ResponseMetadata
-from fitframework.utils.tools import b64encode_to_str
-from .http_utils import get_context_path, get_server_thread_count, get_server_key_file_password, get_server_crt_path, \
-    get_server_key_path, get_server_ca_path, get_server_key_file_password_scc_encrypted, get_server_verify_enabled, \
-    get_server_key_file_encrypted, get_server_assert_host_name
-
-_TASK_COUNT_LIMIT = 1000  # 后续解决通过注解读取配置的 bug 后进行优化
-_RESULT_SAVE_TIME = 120
+from fitframework.utils.tools import AtomicInt
+from .http_utils import get_context_path, get_server_thread_count, get_server_crt_path, get_server_key_path, \
+    get_server_ca_path, get_server_verify_enabled, get_server_assert_host_name, get_result_save_duration, \
+    AsyncExecuteResult, WorkerInfo, get_task_count_limit, get_polling_wait_time, get_runtime_instance_id, \
+    get_runtime_worker_id, server_response, get_decrypted_key_file_password
 
 _last_success_time = time.time()
-
-_task_dict = {}
-_finished_task_queue: List[Tuple] = []
-_task_dict_lock = threading.Lock()
 
 _http_server: Optional[tornado.httpserver.HTTPServer] = None
 _https_server: Optional[tornado.httpserver.HTTPServer] = None
 _server_thread: Optional[threading.Thread] = None
 
+# 在执行的异步任务数量
+_running_task_count: AtomicInt = AtomicInt(0)
 
-class AsyncTask:
-    def __init__(self, task_id: str, thread: threading.Thread):
-        self.task_id: str = task_id
-        self.thread: threading.Thread = thread
-        self.result: Optional[FitResponse] = None
+# 以 worker_id 为 key，WorkerInfo 为 value 的字典
+_worker_infos: Dict[str, WorkerInfo] = {}
+_worker_infos_lock = threading.Lock()
 
-
-def build_meta_dict(version: int, data_format: int, degradable: bool, code: int, message: str) -> Dict:
-    meta = ResponseMetadata(data_format, version, degradable, code, message, {})  # 暂时忽略 tlv 字段。
-    return {"FIT-Version": f"{version}",
-            "FIT-Data-Format": f"{data_format}",
-            "FIT-Degradable": f"{degradable}",
-            "FIT-Code": f"{code}",
-            "FIT-Message": f"{message}",
-            "FIT-Metadata": b64encode_to_str(meta.serialize())}
-
-
-@fit(generic_id=const.SERVER_RESPONSE_GEN_ID, alias='python_default_server_response')
-def server_response(metadata: RequestMetadata, data: bytes) -> FitResponse:
-    pass
-
-
-@fit("com.huawei.fit.security.decrypt")
-def decrypt(cipher: str) -> str:
-    """
-    对于加密后内容进行解密。
-    特别注意：
-    1. 该接口的 fitable 实现需要通过本地静态插件的方式给出；
-    2. 必须在 fit.yml 中指定要调用的 fitable id。
-
-    :param cipher: 待解密的内容。
-    :return: 解密后的内容。
-    """
-    pass
+# 以 task_id 为 key，AsyncExecuteResult 为 value 的字典，并且字典中元素顺序按照插入字典顺序排列
+_results: OrderedDict = OrderedDict()
+_results_lock = threading.Lock()
 
 
 @fitable(generic_id="com.huawei.fit.get.running.async.task.count", fitable_id='local-worker')
 def get_running_task_count() -> int:
-    with _task_dict_lock:
-        return len(_task_dict)
+    return _running_task_count.get_value()
 
 
 @fitable(generic_id="com.huawei.fit.get.last.success.time", fitable_id='local-worker')
@@ -89,23 +58,55 @@ def get_last_success_time() -> float:
     return _last_success_time
 
 
-def async_serve_response(metadata: RequestMetadata, data: bytes, task_id: str):
-    try:
-        result: FitResponse = server_response(metadata, data)
-        with _task_dict_lock:
-            task: AsyncTask = _task_dict.get(task_id)
-            if result.metadata.code == FIT_OK:
-                global _last_success_time
-                _last_success_time = time.time()
-            task.result = result
-            heapq.heappush(_finished_task_queue, (time.time(), task.task_id))
-    except:
-        sys_plugin_logger.warning(f"async serve response failed. [task_id={task_id}]")
-        except_type, except_value, except_traceback = sys.exc_info()
-        sys_plugin_logger.warning(f"async serve response error type: {except_type}")
-        sys_plugin_logger.warning(f"async serve response error value: {except_value}")
-        sys_plugin_logger.warning(
-            f"async serve response error trace back:\n{''.join(traceback.format_tb(except_traceback))}")
+def _convert_response_meta_and_task_id_to_headers(metadata: ResponseMetadata, task_id: Optional[str]) -> Dict[str, str]:
+    """
+    构造提交任务请求以及长轮询请求时的响应头，其中 FIT-Async-Task-Id 为可选字段。
+    """
+    tlvs = {
+        TagLengthValuesUtil.INSTANCE_ID: get_runtime_instance_id(),
+        TagLengthValuesUtil.WORKER_ID: get_runtime_worker_id()
+    }
+    if task_id is not None:
+        tlvs[TagLengthValuesUtil.TASK_ID] = task_id
+    return {
+        HttpHeader.FORMAT.value: f"{metadata.data_format}",
+        HttpHeader.DEGRADABLE.value: f"{metadata.degradable}",
+        HttpHeader.CODE.value: f"{metadata.code}",
+        HttpHeader.MESSAGE.value: metadata.msg,
+        HttpHeader.TLV.value: base64.b64encode(TagLengthValuesUtil.serialize(tlvs))
+    }
+
+
+def _build_polling_failed_response_headers(code: int, message: str) -> Dict[str, str]:
+    """
+    构造长轮询请求无法正常返回任务结果时的响应头，只需要错误码和错误信息两个字段。
+    """
+    return {HttpHeader.CODE.value: f"{code}", HttpHeader.MESSAGE.value: f"{message}"}
+
+
+def _create_and_get_result_queue(worker_id: str, instance_id: str) -> Queue:
+    """
+    在有异步任务提交时，根据指定的 worker_id 和 instance_id 获取结果队列，
+    如果当前 worker_id 不存在或者 instance_id 与先前记录的不一致则创建新的结果队列。
+    """
+    with _worker_infos_lock:
+        if worker_id not in _worker_infos:
+            _worker_infos[worker_id] = WorkerInfo(instance_id, Queue())
+        if _worker_infos.get(worker_id).instance_id != instance_id:
+            sys_plugin_logger.info(f"discard old instance. [worker_id={worker_id}, instance_id={instance_id}]")
+            _worker_infos[worker_id] = WorkerInfo(instance_id, Queue())
+        return _worker_infos.get(worker_id).result_queue
+
+
+def _get_result_queue(worker_id: str, instance_id: str) -> Optional[Queue]:
+    """
+    在有异步任务轮询时，根据指定的 worker_id 和 instance_id 获取结果队列，
+    如果当前 worker_id 不存在或者 instance_id 与先前记录的不一致则返回 None。
+    """
+    with _worker_infos_lock:
+        if worker_id not in _worker_infos or _worker_infos.get(worker_id).instance_id != instance_id:
+            return None
+        return _worker_infos.get(worker_id).result_queue
 
 
 class PollingTaskHandler(tornado.web.RequestHandler):
@@ -113,93 +114,112 @@ class PollingTaskHandler(tornado.web.RequestHandler):
         self.executor: ThreadPoolExecutor = executor
 
     @tornado.concurrent.run_on_executor
-    def process_task_submit_request(self):
-        task_id = self.get_argument("tid")
-        response_headers = {
-            "FIT-Data-Format": self.request.headers.get("FIT-Data-Format"),
-            "FIT-Version": self.request.headers.get("FIT-Version")
-        }
-        sys_plugin_logger.info(f"GET {get_context_path()}/fit/async/awaitResponse?tid={task_id}")
-        with _task_dict_lock:
-            if task_id not in _task_dict:
-                response_headers["FIT-Code"] = InternalErrorCode.ASYNC_TASK_NOT_FOUND.value
-                response_headers["FIT-Message"] = f"async task not found. [task_id={task_id}]"
-                return "", HTTPStatus.OK, response_headers
-            task: AsyncTask = _task_dict.get(task_id)
-        task.thread.join(timeout=60)
-        with _task_dict_lock:
-            result = task.result
-        if result is None:
-            if not task.thread.is_alive():
-                sys_plugin_logger.warning(f"thread is not alive, but result is None. [task_id={task_id}]")
-            response_headers["FIT-Code"] = InternalErrorCode.ASYNC_TASK_NOT_COMPLETED.value
-            response_headers["FIT-Message"] = f"async task not completed. [task_id={task_id}]"
+    def process_polling_request(self):
+        tlvs = TagLengthValuesUtil.deserialize(base64.b64decode(self.request.headers.get(HttpHeader.TLV.value)))
+        worker_id = tlvs.get(TagLengthValuesUtil.WORKER_ID)
+        instance_id = tlvs.get(TagLengthValuesUtil.INSTANCE_ID)
+        finished_task_queue = _get_result_queue(worker_id, instance_id)
+        if finished_task_queue is None:
+            code = InternalErrorCode.ASYNC_TASK_NOT_FOUND.value
+            message = "async task not found."
+            response_headers = _build_polling_failed_response_headers(code, message)
             return "", HTTPStatus.OK, response_headers
-        else:
-            with _task_dict_lock:
-                del _task_dict[task_id]
-
-        meta = result.metadata
-        return result.data, HTTPStatus.OK, build_meta_dict(meta.version, meta.data_format, meta.degradable, meta.code,
-                                                           meta.msg)
+        try:
+            finished_task_id: Optional[str] = finished_task_queue.get(block=True, timeout=get_polling_wait_time())
+        except Empty:
+            finished_task_id = None
+        if finished_task_id is None:
+            code = InternalErrorCode.ASYNC_TASK_NOT_COMPLETED.value
+            message = "async task not completed."
+            response_headers = _build_polling_failed_response_headers(code, message)
+            return "", HTTPStatus.OK, response_headers
+        with _results_lock:
+            result: AsyncExecuteResult = _results.pop(finished_task_id)
+        response_headers = _convert_response_meta_and_task_id_to_headers(result.meta, finished_task_id)
+        if result.meta.code == FIT_OK:
+            global _last_success_time
+            _last_success_time = time.time()
+        return result.data, HTTPStatus.OK, response_headers
 
     async def get(self):
-        body, status, headers = await self.process_task_submit_request()
+        body, status, headers = await self.process_polling_request()
         self.set_status(status)
         for key in headers:
             self.set_header(key, headers[key])
         self.write(body)
 
 
-def clear_and_check_task_dict() -> bool:
-    with _task_dict_lock:
-        while len(_task_dict) >= _TASK_COUNT_LIMIT and len(_finished_task_queue) > 0 \
-                and _finished_task_queue[0][0] + _RESULT_SAVE_TIME < time.time():
-            task_id = heapq.heappop(_finished_task_queue)[1]
-            del _task_dict[task_id]
-    return len(_task_dict) < _TASK_COUNT_LIMIT
+def _clear_expired_result():
+    with _results_lock:
+        while len(_results) != 0 and next(
+                iter(_results.values())).finished_time + get_result_save_duration() < time.time():
+            result: AsyncExecuteResult = _results.popitem()[1]
+            sys_plugin_logger.info(f"async task result discard. [task_id={result.task_id}]")
+
+
+def _async_serve_response(metadata: RequestMetadata, data: bytes, task_id: str, finished_task_queue: Queue):
+    response: FitResponse = server_response(metadata, data)
+    with _results_lock:
+        _results[task_id] = AsyncExecuteResult(task_id, response.metadata, response.data, time.time())
+    finished_task_queue.put(task_id)
+    _running_task_count.decrease()
 
 
 class FitHandler(tornado.web.RequestHandler):
+
+    @classmethod
+    def is_sync_request(cls, worker_id: str, instance_id: str, task_id: str):
+        if worker_id is None or len(worker_id) == 0:
+            return True
+        if instance_id is None or len(instance_id) == 0:
+            return True
+        if task_id is None or len(task_id) == 0:
+            return True
+        return False
+
     def initialize(self, executor: ThreadPoolExecutor):
         self.executor: ThreadPoolExecutor = executor
 
+    def convert_request_to_metadata(self, genericable_id: str, fitable_id: str):
+        headers = self.request.headers
+        data_format = int(headers.get(HttpHeader.FORMAT.value))
+        genericable_version = GenericVersion.from_string(headers.get(HttpHeader.GENERICABLE_VERSION.value))
+        tlvs = TagLengthValuesUtil.deserialize(base64.b64decode(headers.get(HttpHeader.TLV.value)))
+        return RequestMetadata(data_format, genericable_version, genericable_id, fitable_id, tlvs)
+
     @tornado.concurrent.run_on_executor
-    def process_polling_request(self, genericable_id: str, fitable_id: str):
+    def process_task_submit_request(self, genericable_id: str, fitable_id: str):
         is_https = self.request.protocol == "https"
         payload = self.request.body
-        headers = self.request.headers
-        task_id = headers.get("FIT-Async-Task-Id")
+        request_meta = self.convert_request_to_metadata(genericable_id, fitable_id)
+        worker_id = request_meta.tlv_data.get(TagLengthValuesUtil.WORKER_ID)
+        instance_id = request_meta.tlv_data.get(TagLengthValuesUtil.INSTANCE_ID)
+        task_id = request_meta.tlv_data.get(TagLengthValuesUtil.TASK_ID)
         sys_plugin_logger.info(f"{'HTTPS' if is_https else 'HTTP'} POST {get_context_path()}/fit/"
-                               f"{genericable_id}/{fitable_id} , task_id={task_id}")
-        request_metadata = RequestMetadata(int(headers.get("FIT-Version")), int(headers.get("FIT-Data-Format")),
-                                           GenericVersion.from_string(headers.get("FIT-Genericable-Version")),
-                                           genericable_id, fitable_id)
-        if task_id is None or len(task_id) == 0:
-            result = server_response(request_metadata, payload)
+                               f"{genericable_id}/{fitable_id} , worker_id={worker_id}, instance_id={instance_id}")
+        if self.is_sync_request(worker_id, instance_id, task_id):
+            result = server_response(request_meta, payload)
+            response_headers = _convert_response_meta_and_task_id_to_headers(result.metadata, None)
             if result.metadata.code == FIT_OK:
                 global _last_success_time
                 _last_success_time = time.time()
-            meta = result.metadata
-            meta_dict = build_meta_dict(meta.version, meta.data_format, meta.degradable, meta.code, meta.msg)
-            return result.data, HTTPStatus.OK, meta_dict
-        if not clear_and_check_task_dict():
-            meta_dict = build_meta_dict(request_metadata.version, request_metadata.data_format, True,
-                                        InternalErrorCode.ASYNC_TASK_NOT_ACCEPTED.value,
-                                        f"async task not accepted. [task_id={task_id}]")
-            return "", HTTPStatus.ACCEPTED, meta_dict
-
-        task_thread = threading.Thread(target=async_serve_response, args=(request_metadata, payload, task_id))
-        task = AsyncTask(task_id, task_thread)
-        with _task_dict_lock:
-            _task_dict[task_id] = task
-        task_thread.start()
-
-        meta_dict = build_meta_dict(request_metadata.version, request_metadata.data_format, False, 0, "")
-        return "", HTTPStatus.ACCEPTED, meta_dict
+            return result.data, HTTPStatus.OK, response_headers
+        if _running_task_count.get_value() >= get_task_count_limit():
+            code = InternalErrorCode.ASYNC_TASK_NOT_ACCEPTED.value
+            message = f"async task not accepted. [task_count_limit={get_task_count_limit()}]"
+            response_meta = ResponseMetadata(request_meta.data_format, True, code, message, {})
+            response_headers = _convert_response_meta_and_task_id_to_headers(response_meta, task_id)
+            return "", HTTPStatus.ACCEPTED, response_headers
+        _clear_expired_result()
+        finished_task_queue = _create_and_get_result_queue(worker_id, instance_id)
+        _running_task_count.increase()
+        _executor.submit(_async_serve_response, request_meta, payload, task_id, finished_task_queue)
+        response_meta = ResponseMetadata(request_meta.data_format, False, FIT_OK, "", {})
+        response_headers = _convert_response_meta_and_task_id_to_headers(response_meta, task_id)
+        return "", HTTPStatus.ACCEPTED, response_headers
 
     async def post(self, genericable_id: str, fitable_id: str):
-        body, status, headers = await self.process_polling_request(genericable_id, fitable_id)
+        body, status, headers = await self.process_task_submit_request(genericable_id, fitable_id)
         self.set_status(status)
         for key in headers:
             self.set_header(key, headers[key])
@@ -228,27 +248,10 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         sys_plugin_logger.info(f"[websocket] closed [close_code={self.close_code}, close_reason={self.close_reason}]")
 
 
-_executor = ThreadPoolExecutor(get_server_thread_count())
-_app = tornado.web.Application(
-    [(get_context_path() + r"/fit/async/awaitResponse", PollingTaskHandler, dict(executor=_executor)),
-     (get_context_path() + r"/fit/([^/]+)/([^/]+)", FitHandler, dict(executor=_executor)),
-     (get_context_path() + r"/fit/websocket/([^/]+)/([^/]+)", WebSocketHandler, dict(executor=_executor))])
-
-
 def init_fit_http_server(port):
     global _http_server
     _http_server = tornado.httpserver.HTTPServer(_app)
     _http_server.listen(port)
-
-
-def get_decrypted_key_file_password():
-    # 对于 https 服务端，不存在不需要客户端验证自身的情况。
-    if not get_server_key_file_encrypted():  # 如果私钥未被加密
-        return None
-    if not get_server_key_file_password_scc_encrypted():  # 如果私钥密码没有被加密
-        return get_server_key_file_password()
-
-    return decrypt(get_server_key_file_password())
 
 
 def init_fit_https_server(port):
@@ -266,6 +269,13 @@ def init_fit_https_server(port):
         raise
     _https_server = tornado.httpserver.HTTPServer(_app, ssl_options=ssl_context)
     _https_server.listen(port)
+
+
+_executor = ThreadPoolExecutor(get_server_thread_count())
+_app = tornado.web.Application(
+    [(get_context_path() + r"/fit/async/await-response", PollingTaskHandler, dict(executor=_executor)),
+     (get_context_path() + r"/fit/([^/]+)/([^/]+)", FitHandler, dict(executor=_executor)),
+     (get_context_path() + r"/fit/websocket/([^/]+)/([^/]+)", WebSocketHandler, dict(executor=_executor))])
 
 
 def start_all_server():

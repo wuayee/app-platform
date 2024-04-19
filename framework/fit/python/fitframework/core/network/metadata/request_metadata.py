@@ -17,10 +17,6 @@ tags:
    tag.value        bytes （目前该value仅支持字符串数据的表达）
 """
 
-from fitframework.const import DEFAULT_CODECS
-
-from fitframework.core.network.metadata.metadata_utils import IntEncoder, IntDecoder, TagLengthValuesUtil
-
 CURRENT_VERSION = 2
 
 # `METADATA_TAG`和`DATA_TAG`用于统一client和server两端的http json body的key使其一致
@@ -56,16 +52,13 @@ class GenericVersion(object):
 
 
 class RequestMetadata(object):
-    def __init__(self, version: int, data_format: int, generic_version: GenericVersion,
-                 generic_id: str, fitable_id: str, tlv_data=None):
-        if tlv_data is None:
-            tlv_data = {}
-        self.version = version
+    def __init__(self, data_format: int, generic_version: GenericVersion, generic_id: str, fitable_id: str,
+                 tlv_data=None):
         self.data_format = data_format
         self.generic_version = generic_version
         self.generic_id = generic_id
         self.fitable_id = fitable_id
-        self.tlv_data = tlv_data
+        self.tlv_data = tlv_data if tlv_data is not None else {}
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
@@ -77,28 +70,8 @@ class RequestMetadata(object):
 
     @classmethod
     def default(cls, generic_id: str, fitable_id: str, data_format: int):
-        return RequestMetadata(CURRENT_VERSION, data_format, GenericVersion(1, 0, 0),
+        return RequestMetadata(data_format, GenericVersion(1, 0, 0),
                                generic_id, fitable_id, {})
-
-    @classmethod
-    def deserialize(cls, data: bytes):
-        version = IntDecoder.from_bytes(data[:2], 'unsigned')
-        data_format = IntDecoder.from_bytes(data[2:3], 'unsigned')
-        generic_version = GenericVersion(*tuple(data[3:6]))
-        generic_id = data[6:22].hex()
-        fitable_id_len = IntDecoder.from_bytes(data[22:24], 'unsigned')
-        fitable_id = data[24:24 + fitable_id_len].decode(DEFAULT_CODECS)
-        tlv_data = TagLengthValuesUtil.deserialize(data[24 + fitable_id_len:])
-        return RequestMetadata(version, data_format, generic_version, generic_id, fitable_id, tlv_data)
-
-    def serialize(self) -> bytes:
-        return IntEncoder.to_bytes(self.version, 2, 'unsigned') \
-            + IntEncoder.to_bytes(self.data_format, 1, 'unsigned') \
-            + self.generic_version.serialize() \
-            + self.generic_id.encode(encoding="utf-8") \
-            + IntEncoder.to_bytes(len(self.fitable_id), 2, 'unsigned') \
-            + bytes(self.fitable_id, DEFAULT_CODECS) \
-            + TagLengthValuesUtil.serialize(self.tlv_data)
 
     def upset_a_tag(self, key: str, value: bytes):
         self.tlv_data[key] = value
