@@ -11,11 +11,13 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.broker.client.Router;
+import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.jade.store.FunctionalTool;
+import com.huawei.jade.store.Tool;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,15 +30,17 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 表示 {@link FitJsonSchemaFunctionalTool} 的单元测试。
+ * 表示 {@link FitTool} 的单元测试。
  *
  * @author 季聿阶
  * @since 2024-04-06
  */
 @DisplayName("测试 FitJsonSchemaFunctionalTool")
-public class FitJsonSchemaFunctionalToolTest {
+public class SchemaToolMetadataTest {
     private Map<String, Object> toolSchema;
-    private FunctionalTool tool;
+    private Tool tool;
+
+    private Tool.ConfigurableMetadata toolMetadata;
 
     @BeforeEach
     void setup() {
@@ -54,9 +58,8 @@ public class FitJsonSchemaFunctionalToolTest {
         });
 
         this.toolSchema = MapBuilder.<String, Object>get()
-                .put("name", "FIT function")
+                .put("name", "t1")
                 .put("description", "This is a demo FIT function.")
-                .put("genericableId", "t1")
                 .put("parameters",
                         MapBuilder.<String, Object>get()
                                 .put("type", "object")
@@ -72,8 +75,11 @@ public class FitJsonSchemaFunctionalToolTest {
                                 .put("required", Collections.singletonList("p1"))
                                 .build())
                 .put("return", MapBuilder.<String, Object>get().put("type", "string").build())
+                .put("toolType", FitTool.class.toString())
                 .build();
-        this.tool = new FitJsonSchemaFunctionalTool(client, this.toolSchema);
+        this.toolMetadata = Tool.ConfigurableMetadata.fromSchema(this.toolSchema);
+        ObjectSerializer serializer = new JacksonObjectSerializer(null, null, null);
+        this.tool = Tool.fit(client, serializer, this.toolMetadata);
     }
 
     @Test
@@ -93,42 +99,42 @@ public class FitJsonSchemaFunctionalToolTest {
     @Test
     @DisplayName("返回正确的参数类型")
     void shouldReturnParameters() {
-        List<Type> parameters = this.tool.parameters();
+        List<Type> parameters = this.toolMetadata.parameters();
         assertThat(parameters).containsExactly(String.class);
     }
 
     @Test
     @DisplayName("返回正确的参数名字")
     void shouldReturnParameterNames() {
-        List<String> parameterNames = this.tool.parameterNames();
+        List<String> parameterNames = this.toolMetadata.parameterNames();
         assertThat(parameterNames).containsExactly("p1");
     }
 
     @Test
     @DisplayName("返回正确的参数序号")
     void shouldReturnParameterIndex() {
-        int actual = this.tool.parameterIndex("p1");
+        int actual = this.toolMetadata.parameterIndex("p1");
         assertThat(actual).isEqualTo(0);
     }
 
     @Test
     @DisplayName("返回正确的必须参数名字列表")
     void shouldReturnRequired() {
-        List<String> parameterNames = this.tool.requiredParameterNames();
+        List<String> parameterNames = this.toolMetadata.requiredParameterNames();
         assertThat(parameterNames).containsExactly("p1");
     }
 
     @Test
     @DisplayName("返回正确的返回值类型")
     void shouldReturnReturnType() {
-        Type type = this.tool.returnType();
+        Type type = this.toolMetadata.returnType();
         assertThat(type).isEqualTo(String.class);
     }
 
     @Test
     @DisplayName("返回正确的格式规范描述")
     void shouldReturnSchema() {
-        Map<String, Object> schema = this.tool.schema();
+        Map<String, Object> schema = this.tool.metadata().schema();
         assertThat(schema).isEqualTo(this.toolSchema);
     }
 }

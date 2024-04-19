@@ -7,8 +7,8 @@ package com.huawei.jade.store.local;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.jade.store.Tool;
-import com.huawei.jade.store.ToolRepository;
 import com.huawei.jade.store.ToolSchemaQueryService;
+import com.huawei.jade.store.inner.ToolRepository;
 
 import java.util.Collections;
 import java.util.Map;
@@ -30,6 +30,9 @@ public class LocalToolSchemaQueryService implements ToolSchemaQueryService {
     @Override
     @Fitable(id = "local")
     public Map<String, Object> search(String toolName) {
-        return this.repository.getTool(toolName).map(Tool::schema).orElseGet(Collections::emptyMap);
+        return this.repository.getTool(toolName)
+                .map(Tool::metadata)
+                .map(Tool.Metadata::schema)
+                .orElseGet(Collections::emptyMap);
     }
 }

@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.jade.store.support;
+
+import static com.huawei.fitframework.inspection.Validation.notNull;
+import static com.huawei.fitframework.util.ObjectUtils.cast;
+
+import com.huawei.jade.store.JsonTool;
+import com.huawei.jade.store.Tool;
+import com.huawei.jade.store.WorkflowTool;
+
+/**
+ * 表示 {@link WorkflowTool} 的默认实现。
+ *
+ * @author 王攀博
+ * @since 2024-04-18
+ */
+public class DefaultWorkflowTool implements WorkflowTool {
+    private static final String MANUAL_INTERVENTION_KEY = "manualIntervention";
+
+    private final JsonTool jsonTool;
+    private final Tool.ConfigurableMetadata metadata;
+    private final boolean isManualIntervention;
+
+    /**
+     * 通过 Json 处理工具和工具元数据来初始化 {@link DefaultWorkflowTool} 的新实例。
+     *
+     * @param jsonTool 表示工作流工具入口调用的真实工具的 {@link JsonTool}。
+     * @param metadata 表示工作流工具的元数据信息的 {@link ConfigurableMetadata}。
+     * @throws IllegalArgumentException 当 {@code jsonTool} 或 {@code metadata} 为 {@code null} 时。
+     */
+    public DefaultWorkflowTool(JsonTool jsonTool, Tool.ConfigurableMetadata metadata) {
+        this.jsonTool = notNull(jsonTool, "The functional tool cannot be null.");
+        this.metadata = notNull(metadata, "The tool metadata cannot be null.");
+        this.isManualIntervention = notNull(cast(metadata.schema().get(MANUAL_INTERVENTION_KEY)),
+                "The intervention json schema cannot be null.");
+        this.metadata.schemaProperty(MANUAL_INTERVENTION_KEY, this.isManualIntervention);
+    }
+
+    @Override
+    public boolean isManualIntervention() {
+        return this.isManualIntervention;
+    }
+
+    @Override
+    public String type() {
+        return "Workflow";
+    }
+
+    @Override
+    public Metadata metadata() {
+        return this.metadata;
+    }
+
+    @Override
+    public Object call(Object... args) {
+        return this.jsonTool.call(args);
+    }
+}

@@ -22,6 +22,11 @@
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.plugin</groupId>
+            <artifactId>fit-message-serializer-json-jackson</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Test -->
         <dependency>
