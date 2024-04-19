@@ -112,7 +112,7 @@ def exception_handler(_execute):
             fit_logger.warning(f"user exception type: {except_type}")
             fit_logger.warning(f"user exception value: {except_value}")
             fit_logger.warning(f"user exception trace back:\n{''.join(traceback.format_tb(except_traceback))}")
-            raise FitException(InternalErrorCode.EXCEPTION_FROM_USER_CODE_OCCURRED,
+            raise FitException(InternalErrorCode.EXCEPTION_FROM_USER_CODE_OCCURRED.value,
                                str(err), degradable=False) from None
 
     return wrapper

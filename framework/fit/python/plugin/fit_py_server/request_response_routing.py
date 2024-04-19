@@ -3,6 +3,8 @@
 """
 功 能：const.REQUEST_RESPONSE_GEN_ID 服务的路由，根据协议转到对应的实现
 """
+from typing import Optional
+
 from fitframework.api.logging import sys_plugin_logger
 
 from fit_common_struct.core import Address
@@ -17,8 +19,8 @@ from fitframework.core.network.temp_entity import RequestContext
 
 @fitable(generic_id=const.REQUEST_RESPONSE_GEN_ID,
          fitable_id=const.REQUEST_RESPONSE_ROUTE_FITABLE_ID)
-def request_response_route(remote_address: Address, context_path: str, metadata: bytes, data: bytes,
-                           req_params: RequestContext) -> str:
+def request_response_route(remote_address: Address, metadata: bytes, data: bytes, req_params: RequestContext) \
+        -> Optional[str]:
     """
     const.REQUEST_RESPONSE_GEN_ID 服务的路由，根据协议转到对应的实现
     Args:

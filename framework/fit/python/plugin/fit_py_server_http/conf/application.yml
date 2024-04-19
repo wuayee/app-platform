@@ -30,3 +30,8 @@ https:
     key_file_encrypted: false  # 私钥是否被加密
     key_file_password: ""  # 私钥的密码，仅当 key_file_encrypted 为 true 时有意义
     key_file_password_scc_encrypted: false  # 私钥的密码是否被加密，仅当 key_file_encrypted 为 true 时有意义
+
+async:
+  task-count-limit: 1000
+  result-save-duration: 120
+  polling-wait-time: 60

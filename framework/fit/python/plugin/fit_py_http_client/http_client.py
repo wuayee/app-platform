@@ -3,30 +3,40 @@
 """
 功 能：HTTP客户端
 """
-import functools
-from typing import Dict
+import base64
+import uuid
+from http import HTTPStatus
+from queue import Queue
+from threading import Lock, Thread
+from typing import List, Dict
 import requests
+from requests import HTTPError, Response
 import urllib3
-from urllib3.connection import HTTPSConnection
 
 from fit_common_struct.core import Address
 from fitframework import const
-from fitframework.api.decorators import fitable, fit, value
+from fitframework.api.decorators import fitable, fit
+from fitframework.api.exception import FIT_OK
 from fitframework.api.logging import sys_plugin_logger
-from fitframework.core.exception.fit_exception import NetworkException
-from fitframework.core.network.enums import ProtocolEnum
+from fitframework.core.exception.fit_exception import NetworkException, InternalErrorCode
+from fitframework.core.network.enums import ProtocolEnum, SerializingStructureEnum
+from fitframework.core.network.http_header import HttpHeader
 from fitframework.core.network.fit_response import FitResponse
+from fitframework.core.network.metadata.metadata_utils import TagLengthValuesUtil
 from fitframework.core.network.metadata.request_metadata import RequestMetadata
 from fitframework.core.network.metadata.response_metadata import ResponseMetadata
 from fitframework.core.network.temp_entity import RequestContext
-from fitframework.utils.tools import b64decode_from_str, to_bool
+from .http_client_utils import TaskStorage, get_polling_timeout, PollingMetadata, get_cert, get_verify
 
-_DEFAULT_HEADERS = {
-    'content-type': 'application/json',
-    'Accept': '*/*',
-}
+# task_id 到任务结果队列的映射
+_result_queues: Dict[str, Queue] = {}
+_result_queues_lock = Lock()
 
-_KEY_FILE_DECRYPTED = False
+# 存放 task_id 的数据结构
+_task_storage = TaskStorage()
+_task_storage_lock = Lock()
+
+_POLLING_FAIL_THRESHOLD = 3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -36,162 +46,187 @@ def register_client(client_protocol_id: int) -> None:
     pass
 
 
-@fit("com.huawei.fit.security.decrypt")
-def decrypt(cipher: str) -> str:
-    """
-    对于加密后内容进行解密。
-    特别注意：
-    1. 该接口的 fitable 实现需要通过本地静态插件的方式给出；
-    2. 必须在 fit.yml 中指定要调用的 fitable id。
-
-    :param cipher: 待解密的内容。
-    :return: 解密后的内容。
-    """
+@fit(const.RUNTIME_GET_WORKER_ID_GEN_ID)
+def get_runtime_worker_id() -> str:
     pass
 
 
-@value('client.timeout', 10 * 60)
-def _get_timeout():
+@fit(const.RUNTIME_GET_WORKER_INSTANCE_ID_GEN_ID)
+def get_runtime_instance_id() -> str:
     pass
 
 
-@value("https.client.verify_enabled", converter=to_bool)
-def get_client_verify_enabled():
-    pass
+def _delete_result_queue(task_id: str):
+    with _result_queues_lock:
+        if task_id in _result_queues:
+            del _result_queues[task_id]
 
 
-@value('https.client.ca_path')
-def get_client_ca_path():
-    pass
+def _broadcast_response(tasks: List, responses: List):
+    result_queues = []
+    with _result_queues_lock:
+        for task in tasks:
+            result_queues.append(_result_queues.get(task))
+    for i in range(len(tasks)):
+        if result_queues[i] is None:
+            sys_plugin_logger.warning(f"result queue cannot found. [task_id={task}]")
+            continue
+        result_queues[i].put(responses[i])
 
 
-@value('https.client.assert_host_name')
-def get_client_assert_host_name():
-    pass
+def _broadcast_fail_for_instance(worker_id: str, instance_id: str, code: int, message: str):
+    with _task_storage_lock:
+        task_ids = _task_storage.remove_instance(worker_id, instance_id)
+    fit_responses = [FitResponse(ResponseMetadata(SerializingStructureEnum.UNKNOWN.value, False,
+                                                  code, message, {}), bytes()) for _ in range(len(task_ids))]
+    _broadcast_response(task_ids, fit_responses)
 
 
-@value("https.client.cert_enabled", converter=to_bool)
-def get_cert_enabled():
-    pass
+def _broadcast_fail_for_worker_except_instance(worker_id: str, instance_id: str, code: int, message: str):
+    with _task_storage_lock:
+        task_ids = _task_storage.remove_tasks_except_instance(worker_id, instance_id)
+    fit_responses = [FitResponse(ResponseMetadata(SerializingStructureEnum.UNKNOWN.value, False,
+                                                  code, message, {}), bytes()) for _ in range(len(task_ids))]
+    _broadcast_response(task_ids, fit_responses)
 
 
-@value('https.client.crt_path')
-def get_client_crt_path():
-    pass
+def _build_polling_headers(data_format):
+    tlvs = {
+        TagLengthValuesUtil.WORKER_ID: get_runtime_worker_id(),
+        TagLengthValuesUtil.INSTANCE_ID: get_runtime_instance_id()
+    }
+    return {
+        HttpHeader.TLV.value: base64.b64encode(TagLengthValuesUtil.serialize(tlvs)),
+        HttpHeader.FORMAT.value: f"{data_format}"
+    }
 
 
-@value('https.client.key_path')
-def get_client_key_path():
-    pass
+def _convert_polling_response_to_fit_response(response: Response) -> FitResponse:
+    meta = ResponseMetadata(int(response.headers.get(HttpHeader.FORMAT.value)),
+                            bool(response.headers.get(HttpHeader.DEGRADABLE.value)),
+                            int(response.headers.get(HttpHeader.CODE.value)),
+                            response.headers.get(HttpHeader.MESSAGE.value),
+                            TagLengthValuesUtil.deserialize(
+                                base64.b64decode(response.headers.get(HttpHeader.TLV.value))))
+    return FitResponse(meta, response.content)
 
 
-@value('https.client.key_file_encrypted')
-def get_client_key_encrypted():
-    pass
+def _polling_task(use_https: bool, polling_meta: PollingMetadata, remote_address: Address, data_format: int):
+    polling_fail_count = 0
+    while True:
+        headers = _build_polling_headers(data_format)
+        url = f"{'https' if use_https else 'http'}://{remote_address.host}:{remote_address.port}" + \
+              f"{remote_address.context_path}/fit/async/await-response"
+        try:
+            response = requests.get(url, headers=headers, timeout=get_polling_timeout(),
+                                    cert=get_cert() if use_https else None,
+                                    verify=get_verify() if use_https else None)
+        except requests.RequestException as err:
+            polling_fail_count += 1
+            if polling_fail_count < _POLLING_FAIL_THRESHOLD:
+                continue
+            sys_plugin_logger.exception(err)
+            _broadcast_fail_for_instance(polling_meta.worker_id, polling_meta.instance_id,
+                                         InternalErrorCode.NETWORK_ERROR.value, "network error.")
+            return
+        polling_fail_count = 0
+        if int(response.headers.get(HttpHeader.CODE.value)) == InternalErrorCode.ASYNC_TASK_NOT_COMPLETED.value:
+            continue
+        if int(response.headers.get(HttpHeader.CODE.value)) == InternalErrorCode.ASYNC_TASK_NOT_FOUND.value:
+            _broadcast_fail_for_instance(polling_meta.worker_id, polling_meta.instance_id,
+                                         InternalErrorCode.ASYNC_TASK_NOT_FOUND.value, "async task not found")
+            return
+        fit_responses = [_convert_polling_response_to_fit_response(response)]
+        task_id = fit_responses[0].metadata.tlv_data.get(TagLengthValuesUtil.TASK_ID)
+        with _task_storage_lock:
+            _task_storage.remove_task(polling_meta.worker_id, polling_meta.instance_id, task_id)
+        _broadcast_response([task_id], fit_responses)
+        with _task_storage_lock:
+            if _task_storage.get_task_count_of_instance(polling_meta.worker_id, polling_meta.instance_id) == 0:
+                return
 
 
-@value('https.client.key_file_password')
-def get_client_key_file_password():
-    pass
-
-
-@value('https.client.key_file_password_scc_encrypted')
-def get_client_key_file_password_scc_encrypted():
-    pass
-
-
-def build_request_headers(metadata: RequestMetadata) -> Dict:
-    return {'FIT-Version': str(metadata.version),
-            'FIT-Data-Format': str(metadata.data_format),
-            'FIT-Genericable-Version': f"{metadata.generic_version.major}.{metadata.generic_version.minor}." +
-                                       f"{metadata.generic_version.revision}"}
-
-
-def convert_http_response_to_fit_response(response: requests.Response) -> FitResponse:
-    if response.headers.get("FIT-Metadata") is not None:
-        response_metadata = ResponseMetadata.deserialize(b64decode_from_str(response.headers.get("FIT-Metadata")))
-    else:
-        if response.status_code != requests.codes.ok:
-            raise requests.HTTPError(response=response)
-        version = int(response.headers.get("FIT-Version"))
-        data_format = int(response.headers.get("FIT-Data-Format"))
-        degradable = bool(response.headers.get("FIT-Degradable"))
-        code = int(response.headers.get("FIT-Code"))
-        message = ""
-        if not response.headers.get("FIT-Message") is None:
-            message = response.headers.get("FIT-Message")
-        response_metadata = ResponseMetadata(data_format, version, degradable, code, message, {})  # 后续完善 TLV 相关逻辑
+def _convert_sync_response_to_fit_response(response: Response) -> FitResponse:
+    data_format = int(response.headers.get(HttpHeader.FORMAT.value))
+    degradable = bool(response.headers.get(HttpHeader.DEGRADABLE.value))
+    code = int(response.headers.get(HttpHeader.CODE.value))
+    message = ""
+    if not response.headers.get(HttpHeader.MESSAGE.value) is None:
+        message = response.headers.get(HttpHeader.MESSAGE.value)
+    tlvs = TagLengthValuesUtil.deserialize(base64.b64decode(response.headers.get(HttpHeader.TLV.value)))
+    response_metadata = ResponseMetadata(data_format, degradable, code, message, tlvs)
     return FitResponse(response_metadata, response.content)
 
 
-@fitable(const.REQUEST_RESPONSE_GEN_ID, const.HTTP_REQUEST_RESPONSE_FITABLE_ID)
-def request_response_http(remote_address: Address, context_path: str, metadata: RequestMetadata, data_bytes: bytes,
-                          context: RequestContext) -> FitResponse:
-    headers = build_request_headers(metadata)
-    url = f"http://{remote_address.host}:{remote_address.port}{context_path}/fit/" + \
-          f"{metadata.generic_id}/{metadata.fitable_id}"
+def _try_to_start_polling(use_https: bool, polling_meta: PollingMetadata, remote_address: Address, data_format: int):
+    with _task_storage_lock:
+        _task_storage.add_task(polling_meta.worker_id, polling_meta.instance_id, polling_meta.task_id)
+        if _task_storage.get_task_count_of_instance(polling_meta.worker_id, polling_meta.instance_id) > 1:
+            return
+    thread = Thread(target=_polling_task, args=(use_https, polling_meta, remote_address, data_format))
+    thread.start()
+
+
+def _build_submit_task_headers(metadata: RequestMetadata, task_id: str) -> Dict:
+    tlvs = {
+        TagLengthValuesUtil.TASK_ID: task_id, TagLengthValuesUtil.INSTANCE_ID: get_runtime_instance_id(),
+        TagLengthValuesUtil.WORKER_ID: get_runtime_worker_id()
+    }
+    return {
+        HttpHeader.FORMAT.value: str(metadata.data_format),
+        HttpHeader.GENERICABLE_VERSION.value: f"{metadata.generic_version.major}.{metadata.generic_version.minor}."
+                                              f"{metadata.generic_version.revision}",
+        HttpHeader.TLV.value: base64.b64encode(TagLengthValuesUtil.serialize(tlvs))
+    }
+
+
+def _request_response_universal(use_https: bool, remote_address: Address, metadata: RequestMetadata,
+                                data_bytes: bytes, context: RequestContext) -> FitResponse:
+    task_id = str(uuid.uuid4())
+    result_queue = Queue()
+    with _result_queues_lock:
+        _result_queues[task_id] = result_queue
+    headers = _build_submit_task_headers(metadata, task_id)
+    url = f"{'https' if use_https else 'http'}://{remote_address.host}:{remote_address.port}" + \
+          f"{remote_address.context_path}/fit/{metadata.generic_id}/{metadata.fitable_id}"
     try:
-        http_response = requests.post(url, headers=headers, data=data_bytes, timeout=context.timeout)
-    except requests.RequestException as err:
-        sys_plugin_logger.exception(err)
-        raise NetworkException(err) from None
-    return convert_http_response_to_fit_response(http_response)
+        try:
+            response: Response = requests.post(url, headers=headers, data=data_bytes, timeout=context.timeout,
+                                               cert=get_cert() if use_https else None,
+                                               verify=get_verify() if use_https else None)
+        except requests.RequestException as err:
+            sys_plugin_logger.exception(err)
+            raise NetworkException(err) from None
+    except:
+        _delete_result_queue(task_id)
+        raise
+    if response.status_code != HTTPStatus.OK and response.status_code != HTTPStatus.ACCEPTED:
+        raise HTTPError(response=response)
+    if (response.status_code == HTTPStatus.ACCEPTED and int(response.headers.get(HttpHeader.CODE.value)) != FIT_OK) or \
+            response.status_code == HTTPStatus.OK:
+        return _convert_sync_response_to_fit_response(response)
+    tlvs = TagLengthValuesUtil.deserialize(base64.b64decode(response.headers.get(HttpHeader.TLV.value)))
+    worker_id = tlvs.get(TagLengthValuesUtil.WORKER_ID)
+    instance_id = tlvs.get(TagLengthValuesUtil.INSTANCE_ID)
+    _broadcast_fail_for_worker_except_instance(worker_id, instance_id, InternalErrorCode.ASYNC_TASK_NOT_FOUND.value,
+                                               "async task not found")
+    polling_meta = PollingMetadata(worker_id, instance_id, task_id)
+    _try_to_start_polling(use_https, polling_meta, remote_address, metadata.data_format)
+    result = result_queue.get()
+    _delete_result_queue(task_id)
+    return result
 
 
-@functools.lru_cache()
-def get_decrypted_key_file_password():
-    if not get_cert_enabled():  # 如果不需要服务端校验自身身份
-        return None
-    if not get_client_key_encrypted():  # 如果私钥未被加密
-        return None
-    if not get_client_key_file_password_scc_encrypted():  # 如果私钥密码未被加密
-        return get_client_key_file_password()
-
-    return decrypt(get_client_key_file_password())
-
-
-@functools.lru_cache()
-def get_cert():
-    if not get_cert_enabled():  # 如果不需要服务端校验自身身份
-        return None
-    crt_file_path = get_client_crt_path()
-    key_file_path = get_client_key_path()
-    return crt_file_path, key_file_path
-
-
-@functools.lru_cache()
-def get_verify():
-    if get_client_verify_enabled():
-        return get_client_ca_path()
-    else:
-        return False
-
-
-def connection_init_wrapper(func):
-    def wrapper(*args, **kwargs):
-        kwargs["assert_hostname"] = get_client_assert_host_name()
-        kwargs["key_password"] = get_decrypted_key_file_password()
-        return func(*args, **kwargs)
-
-    return wrapper
-
-
-HTTPSConnection.__init__ = connection_init_wrapper(HTTPSConnection.__init__)
+@fitable(const.REQUEST_RESPONSE_GEN_ID, const.HTTP_REQUEST_RESPONSE_FITABLE_ID)
+def request_response_http(remote_address: Address, metadata: RequestMetadata, data_bytes: bytes,
+                          context: RequestContext) -> FitResponse:
+    return _request_response_universal(False, remote_address, metadata, data_bytes, context)
 
 
 @fitable(const.REQUEST_RESPONSE_GEN_ID, const.HTTPS_REQUEST_RESPONSE_FITABLE_ID)
-def request_response_https(remote_address: Address, context_path: str, metadata: RequestMetadata, data_bytes: bytes,
+def request_response_https(remote_address: Address, metadata: RequestMetadata, data_bytes: bytes,
                            context: RequestContext) -> FitResponse:
-    headers = build_request_headers(metadata)
-    url = f"https://{remote_address.host}:{remote_address.port}{context_path}/" + \
-          f"fit/{metadata.generic_id}/{metadata.fitable_id}"
-    try:
-        http_response = requests.post(url, headers=headers, data=data_bytes, timeout=context.timeout, cert=get_cert(),
-                                      verify=get_verify())
-    except requests.RequestException as err:
-        sys_plugin_logger.exception(err)
-        raise NetworkException(err) from None
-    return convert_http_response_to_fit_response(http_response)
+    return _request_response_universal(True, remote_address, metadata, data_bytes, context)
 
 
 register_client(ProtocolEnum.HTTP.value)

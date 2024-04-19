@@ -28,15 +28,15 @@ from fitframework.api.logging import bootstrap_logger, sys_plugin_logger
 from fitframework.api.enums import FrameworkState, FrameworkSubState, FrameworkEvent
 from fitframework.utils.eventing import notify
 
-
-_uuid = None
+_random_worker_id = str(uuid.uuid4())  # 在未通过配置指定 worker_id 时才会使用的随即生成的 worker_id
+_worker_instance_id = str(uuid.uuid4())
 
 _runtime_state = FrameworkState.UNKNOWN
 _runtime_sub_state = FrameworkSubState.UNKNOWN
 
 
 @local_context('worker.id')
-def worker_id():
+def get_worker_id_by_config():
     pass
 
 
@@ -82,13 +82,12 @@ def get_runtime_sub_state() -> int32:
 
 @fitable(const.RUNTIME_GET_WORKER_ID_GEN_ID, const.RUNTIME_GET_WORKER_ID_FIT_ID)
 def get_runtime_worker_id() -> str:
-    worker_id_ = worker_id()
-    if worker_id_ is None:
-        worker_id_ = _uuid if _uuid else _load_uuid()
-    return worker_id_
+    worker_id = get_worker_id_by_config()
+    if worker_id is None:
+        worker_id = _random_worker_id
+    return worker_id
 
 
-def _load_uuid() -> str:
-    global _uuid
-    _uuid = str(uuid.uuid4())
-    return _uuid
+@fitable(const.RUNTIME_GET_WORKER_INSTANCE_ID_GEN_ID, const.RUNTIME_GET_WORKER_INSTANCE_ID_FIT_ID)
+def get_runtime_instance_worker_id() -> str:
+    return _worker_instance_id

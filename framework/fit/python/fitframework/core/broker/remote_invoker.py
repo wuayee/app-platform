@@ -45,7 +45,7 @@ def protocol_priors():
 
 
 @fit(const.REQUEST_RESPONSE_GEN_ID)
-def request_response(address: Address, context_path: str, metadata: RequestMetadata, data: bytes,
+def request_response(address: Address, metadata: RequestMetadata, data: bytes,
                      request_context: RequestContext) -> FitResponse:
     pass
 
@@ -98,11 +98,10 @@ def _assemble_parameters(fit_invoke_info, args, remote_endpoint, supported_forma
     generic_id, fitable_id, fit_ref = fit_invoke_info
     call_context.put_context_value(ROUTING_PROTOCOL, remote_endpoint.protocol)
     address = remote_endpoint.address
-    context_path = remote_endpoint.context_path
     metadata = RequestMetadata.default(generic_id, fitable_id, supported_format)
     data_bytes = FitMethodSerializer(fit_ref).from_request(supported_format, list(args))
-    req_params = RequestContext(timeout)
-    return address, context_path, metadata, data_bytes, req_params
+    request_context = RequestContext(timeout)
+    return address, metadata, data_bytes, request_context
 
 
 def _validate_result(resp_metadata: ResponseMetadata):
@@ -121,6 +120,6 @@ def _set_fit_address_invalid(remote_address: Endpoint):
 
 
 def _build_address_from_endpoint(endpoint: Endpoint) -> RegistryAddress:
-    return RegistryAddress(host=endpoint.address.host, port=endpoint.address.port,
-                           id=endpoint.address.workerId, protocol=endpoint.protocol,
-                           formats=endpoint.serializeFormats, environment=endpoint.environment)
+    return RegistryAddress(host=endpoint.address.host, port=endpoint.address.port, id=endpoint.address.workerId,
+                           protocol=endpoint.protocol, formats=endpoint.serializeFormats,
+                           environment=endpoint.environment, context_path=endpoint.context_path)

@@ -613,10 +613,8 @@ def _get_fit_service_address_and_convert(fitable_info: FitableInfo):
 
 
 def _build_endpoint_from_address(address: AddressForRegistryV1):
-    return Endpoint(FitAddress(workerId=address.id, host=address.host, port=address.port),
-                    protocol=address.protocol, serializeFormats=address.formats,
-                    environment=address.environment, weight=_calculate_weight(address),
-                    context_path=address.context_path)
+    return Endpoint(FitAddress(address.id, address.host, address.port, address.context_path), address.protocol,
+                    address.formats, address.environment, _calculate_weight(address))
 
 
 def _calculate_weight(address: AddressForRegistryV1) -> int:

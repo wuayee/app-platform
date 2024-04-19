@@ -18,6 +18,15 @@ from fitframework.const import DEFAULT_CODECS
 
 
 class TagLengthValuesUtil:
+    """ 表示进程唯一标识的标签值 """
+    WORKER_ID = 0x00
+
+    """ 表示进程实例唯一标识的标签值 """
+    INSTANCE_ID = 0x01
+
+    """ 表示 http 异步任务唯一标识的标签值 """
+    TASK_ID = 0x40
+
     @classmethod
     def serialize(cls, tlv_data: Dict[int, Any]) -> bytes:
         tlv_data_bytes = b''

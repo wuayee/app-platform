@@ -7,7 +7,6 @@ import copy
 import unittest
 from fitframework.core.network.metadata import MetaData, GenericVersion
 
-
 _METADATA_OBJECT = MetaData(version=10, data_format=1,
                             generic_version=GenericVersion(major=1, minor=1, revision=0),
                             generic_id='00112233445566778899aabbccddeeff',
@@ -34,14 +33,6 @@ class MetadataTest(unittest.TestCase):
     def test_deserialize_with_tags(self):
         self._attach_tags()
         self._test_deserialize()
-
-    def _test_serialize(self):
-        byte_data = self.test_object.serialize()
-        self.assertEqual(self.test_data, byte_data)
-
-    def _test_deserialize(self):
-        meta_object = MetaData.deserialize(self.test_data)
-        self.assertEqual(self.test_object, meta_object)
 
     def _attach_tags(self):
         self.test_object.upset_a_tag(0x20, b'tag1')

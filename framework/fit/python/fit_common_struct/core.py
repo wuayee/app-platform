@@ -97,7 +97,7 @@ class FitableTrace(object):
 
 class Address(object):
 
-    def __init__(self, workerId: str, host: str, port: int32):
+    def __init__(self, workerId: str, host: str, port: int32, context_path: str):
         """
         地址所在进程唯一标识，正常ip网络下可用host:ip拼接或uuid作为唯一标识.
         心跳时，进程上报给心跳服务时应使用该标识，用于进程下线时更新对应服务的状态.
@@ -105,6 +105,7 @@ class Address(object):
         self.workerId = workerId
         self.host = host
         self.port = port
+        self.context_path = context_path
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
@@ -139,7 +140,7 @@ class FitableInfo(object):
 class Endpoint(object):
 
     def __init__(self, address: Address, protocol: int32, serializeFormats: List[int32], environment: str,
-                 context_path: str, weight: int32):
+                 weight: int32):
         self.address = address
 
         """
@@ -158,7 +159,6 @@ class Endpoint(object):
         """
         self.serializeFormats = serializeFormats
         self.environment = environment
-        self.context_path = context_path
         self.weight = weight
 
     def __eq__(self, other):
