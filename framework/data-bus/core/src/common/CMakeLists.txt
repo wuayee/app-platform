@@ -16,6 +16,7 @@ foreach (SCHEMA_FILE IN LISTS FLATBUFFERS_SCHEMA_FILES)
 endforeach ()
 
 set(DATABUS_EXCEPTION ${CMAKE_CURRENT_SOURCE_DIR}/exception/databus_exception.h)
+set(DATABUS_STL ${CMAKE_CURRENT_SOURCE_DIR}/stl/BlockingQueue.h)
 
 # auto generate headers on make stage. let databus_common depends on that
 add_custom_target(databus_common DEPENDS ${GENERATED_FILES} ${DATABUS_STL} ${DATABUS_EXCEPTION})
