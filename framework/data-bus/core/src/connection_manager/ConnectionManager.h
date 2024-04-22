@@ -12,6 +12,7 @@
 #include "Connection.h"
 #include "ResourceManager.h"
 #include "fbs/message_header_generated.h"
+#include "fbs/common_generated.h"
 
 namespace DataBus {
 namespace Connection {
@@ -32,7 +33,9 @@ private:
                                       const std::unique_ptr<Resource::ResourceManager>& resourceMgrPtr);
     void HandleMessageApplyMemory(const Common::MessageHeader* header, const char* buffer, int socketFd,
                                   const std::unique_ptr<Resource::ResourceManager>& resourceMgrPtr);
-
+    void SendApplyPermissionResponse(int32_t socketFd, bool granted, uint64_t memorySize, Common::ErrorType errorType);
+    void SendApplyMemoryResponse(int32_t socketFd, int32_t memoryId, uint64_t memorySize, Common::ErrorType errorType);
+    std::function<void(const uint8_t*, size_t)> GetSender(int32_t socketFd);
     std::unordered_map<int, std::unique_ptr<Connection>> connections_;
 };
 }
