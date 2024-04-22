@@ -12,6 +12,7 @@ import com.huawei.fit.http.websocket.Session;
 import com.huawei.fit.http.websocket.server.WebSocketHandler;
 import com.huawei.fitframework.log.Logger;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
@@ -61,7 +62,10 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<WebSocket
         if (msg instanceof BinaryWebSocketFrame) {
             BinaryWebSocketFrame frame = (BinaryWebSocketFrame) msg;
             try {
-                this.handler.handleOnMessage(this.session, frame.content().array());
+                ByteBuf byteBuf = frame.content();
+                byte[] binMsg = new byte[byteBuf.readableBytes()];
+                byteBuf.readBytes(binMsg);
+                this.handler.handleOnMessage(this.session, binMsg);
             } catch (Throwable e) {
                 this.handler.handleOnError(this.session, e);
             }
