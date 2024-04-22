@@ -43,14 +43,14 @@ void HandleEvent(struct epoll_event event, int epollFd, int serverFd,
                 continue;
             }
             connectionMgrPtr->AddNewConnection(clientFd);
-            cout << "Client connected" << endl;
+            DataBus::logger.Info("Client {} connected", clientFd);
         } else {
             char buffer[1024] = {0};
             ssize_t bytesRead = recv(events[i].data.fd, buffer, sizeof(buffer) - 1, 0);
             if (bytesRead > 0) {
                 connectionMgrPtr->Handle(buffer, bytesRead, events[i].data.fd, resourceMgrPtr);
             } else if (bytesRead == 0) {
-                cout << "Client disconnected" << endl;
+                DataBus::logger.Info("Client disconnected");
                 close(events[i].data.fd);
                 epoll_ctl(epollFd, EPOLL_CTL_DEL, events[i].data.fd, nullptr);
             }

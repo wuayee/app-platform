@@ -14,7 +14,6 @@
 #include <unistd.h>
 
 #include "FtokArgsGenerator.h"
-#include "exception/databus_exception.h"
 #include "log/Logger.h"
 
 using namespace std;
@@ -28,7 +27,7 @@ ResourceManager::ResourceManager()
     Init();
 }
 
-int ResourceManager::HandleApplyMemory(int32_t socketFd, uint32_t memorySize)
+tuple<int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, uint64_t memorySize)
 {
     lock_guard<mutex> lock(mutex_);
     // 获取ftok函数参数生成器单例
@@ -41,7 +40,7 @@ int ResourceManager::HandleApplyMemory(int32_t socketFd, uint32_t memorySize)
     const key_t sharedMemoryKey = ftok(pathName.data(), projId);
     if (sharedMemoryKey == -1) {
         logger.Error("[ResourceManager] Failed to generate a shared memory key: {}", strerror(errno));
-        throw MemoryIOException("failed to generate a shared memory key");
+        return make_tuple(-1, ErrorType::MallocFailed);
     }
 
     // IPC_CREAT | IPC_EXCL: 仅创建新的共享内存区域。当sharedMemoryKey存在时，获得共享内存区域会失败。
@@ -50,7 +49,7 @@ int ResourceManager::HandleApplyMemory(int32_t socketFd, uint32_t memorySize)
     if (sharedMemoryId == -1) {
         if (errno != EEXIST) {
             logger.Error("[ResourceManager] Failed to get the shared memory Id: {}", strerror(errno));
-            throw MemoryIOException("failed to apply memory");
+            return make_tuple(-1, ErrorType::MallocFailed);
         }
         logger.Info("[ResourceManager] Start recreating a new sharedMemoryId associated with "
                     "sharedMemoryKey {}", sharedMemoryKey);
@@ -58,7 +57,7 @@ int ResourceManager::HandleApplyMemory(int32_t socketFd, uint32_t memorySize)
         if (sharedMemoryId == -1) {
             logger.Error("[ResourceManager] Failed to recreate a shared memory block: {}",
                          strerror(errno));
-            throw MemoryIOException("failed to apply memory");
+            return make_tuple(-1, ErrorType::MallocFailed);
         }
         logger.Info("[ResourceManager] Recreating a new sharedMemoryId associated with sharedMemoryKey {} "
                     "succeeded", sharedMemoryKey);
@@ -66,13 +65,9 @@ int ResourceManager::HandleApplyMemory(int32_t socketFd, uint32_t memorySize)
     // 记录共享内存块ID和共享内存块信息的对应关系
     const auto& now = std::chrono::system_clock::now();
     time_t curTime = std::chrono::system_clock::to_time_t(now);
-    if (curTime == -1) {
-        logger.Error("[ResourceManager] Failed to get the current time: {}", strerror(errno));
-        throw MemoryIOException("failed to get the current time");
-    }
     sharedMemoryIdToInfo_[sharedMemoryId] = std::make_unique<SharedMemoryInfo>(socketFd, memorySize, curTime);
 
-    return sharedMemoryId;
+    return make_tuple(sharedMemoryId, ErrorType::None);
 }
 
 void ResourceManager::Init()
@@ -133,20 +128,20 @@ void ResourceManager::CreateDirectory(const std::string &directory)
     }
 }
 
-int32_t ResourceManager::recreateSharedMemoryBlock(key_t sharedMemoryKey, uint32_t memorySize)
+int32_t ResourceManager::recreateSharedMemoryBlock(key_t sharedMemoryKey, uint64_t memorySize)
 {
     // 获取之前创建的共享内存块ID。
     int32_t sharedMemoryId = shmget(sharedMemoryKey, 0, SHARED_MEMORY_ACCESS_PERMISSION);
     if (sharedMemoryId == -1) {
         logger.Error("[ResourceManager] Failed to get the preexisting sharedMemoryId: {}",
                      strerror(errno));
-        throw MemoryIOException("failed to recreate a shared memory block");
+        return -1;
     }
     // 删除之前创建的共享内存块。
     if (shmctl(sharedMemoryId, IPC_RMID, nullptr) == -1) {
         logger.Error("[ResourceManager] Failed to remove the preexisting shared memory block: {}",
                      strerror(errno));
-        throw MemoryIOException("failed to recreate a shared memory block");
+        return -1;
     }
     return shmget(sharedMemoryKey, memorySize, SHARED_MEMORY_ACCESS_PERMISSION | IPC_CREAT | IPC_EXCL);
 }
@@ -156,7 +151,7 @@ int32_t ResourceManager::GetMemoryApplicant(int sharedMemoryId)
     return sharedMemoryIdToInfo_[sharedMemoryId]->applicant_;
 }
 
-uint32_t ResourceManager::GetMemorySize(int sharedMemoryId)
+uint64_t ResourceManager::GetMemorySize(int sharedMemoryId)
 {
     return sharedMemoryIdToInfo_[sharedMemoryId]->memorySize_;
 }

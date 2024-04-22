@@ -3,6 +3,7 @@ add_executable(databus_test
         ${CMAKE_CURRENT_LIST_DIR}/resource_manager/FtokArgsGeneratorTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/resource_manager/ResourceManagerTest.cpp
         ${CMAKE_CURRENT_LIST_DIR}/common/stl/BlockingQueueTest.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/common/util/DataBusUtilTest.cpp
 )
 add_dependencies(databus_test databus_common)
 target_link_libraries(databus_test databus_resource gtest_main gmock_main)
