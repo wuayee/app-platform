@@ -76,8 +76,6 @@ class Plugin:
 
     @state_broadcast(state_setter, PluginState.STOPPING, PluginState.UNINSTALLED)
     def stop(self):
-        from fitframework import fit
-
         @fit(const.SERVICE_DB_UNREGISTER_PLUGIN_GEN_ID)
         def unregister_plugin(plugin_name: str, plugin_local_path: str) -> None:
             pass

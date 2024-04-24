@@ -8,9 +8,10 @@ import ssl
 import sys
 import time
 import traceback
+from collections import OrderedDict
 from http import HTTPStatus
 import threading
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from flask import Flask, request
 from werkzeug.serving import make_server
@@ -35,8 +36,10 @@ _task_dict = {}
 _finished_task_queue: List[Tuple] = []
 _task_dict_lock = threading.Lock()
 
-_flask_app = Flask(__name__)
 _last_success_time = time.time()
+_start_serve_times = OrderedDict()
+
+_flask_app = Flask(__name__)
 
 
 class AsyncTask:
@@ -76,7 +79,7 @@ def decrypt(cipher: str) -> str:
 
 
 @fitable(generic_id="com.huawei.fit.get.running.async.task.count", fitable_id='local-worker')
-def get_running_task_count() -> int:
+def get_running_async_task_count() -> int:
     with _task_dict_lock:
         return len(_task_dict)
 
@@ -84,6 +87,14 @@ def get_running_task_count() -> int:
 @fitable(generic_id="com.huawei.fit.get.last.success.time", fitable_id='local-worker')
 def get_last_success_time() -> float:
     return _last_success_time
+
+
+@fitable(generic_id="com.huawei.fit.get.earliest.start.time", fitable_id='local-worker')
+def get_earliest_start_time() -> Optional[float]:
+    start_times = list(_start_serve_times.keys())
+    if len(start_times) == 0:
+        return None
+    return start_times[0]
 
 
 def async_serve_response(metadata: RequestMetadata, data: bytes, task_id: str):
@@ -148,6 +159,8 @@ def clear_and_check_task_dict() -> bool:
 
 @_flask_app.route('/fit/<string:genericable_id>/<string:fitable_id>', methods=['POST'])
 def fit_handle(genericable_id, fitable_id):
+    start_serve_time = time.time()
+    _start_serve_times[start_serve_time] = None
     payload = request.get_data()
     task_id = request.headers.get("FIT-Async-Task-Id")
     sys_plugin_logger.info(
@@ -164,11 +177,13 @@ def fit_handle(genericable_id, fitable_id):
             _last_success_time = time.time()
         meta = result.metadata
         meta_dict = build_meta_dict(meta.version, meta.data_format, meta.degradable, meta.code, meta.msg)
+        _start_serve_times.pop(start_serve_time)
         return result.data, HTTPStatus.OK, meta_dict
     if not clear_and_check_task_dict():
         meta_dict = build_meta_dict(request_metadata.version, request_metadata.data_format, True,
                                     InternalErrorCode.ASYNC_TASK_NOT_ACCEPTED.value,
                                     f"async task not accepted. [task_id={task_id}]")
+        _start_serve_times.pop(start_serve_time)
         return "", HTTPStatus.ACCEPTED, meta_dict
 
     task_thread = threading.Thread(target=async_serve_response, args=(request_metadata, payload, task_id))
@@ -179,6 +194,7 @@ def fit_handle(genericable_id, fitable_id):
     task_thread.start()
 
     meta_dict = build_meta_dict(request_metadata.version, request_metadata.data_format, False, 0, "")
+    _start_serve_times.pop(start_serve_time)
     return "", HTTPStatus.ACCEPTED, meta_dict
 
 
