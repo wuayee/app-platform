@@ -180,8 +180,6 @@ def get_should_terminate_main() -> bool:
 
 
 def determine_should_terminate_main() -> bool:
-    if not get_terminate_main_enabled():
-        return False
     try:
         return get_should_terminate_main()
     except:
@@ -206,10 +204,12 @@ def main():
                     runtime_context.get_item(const.CONFIG_FOLDER_ARG_NAME))
     fit_logger.info(_LOGO)
     fit_logger.info(f"fit framework is now available in version {_FIT_FRAMEWORK_VERSION}.")
-    while not determine_should_terminate_main():
-        time.sleep(1)
-    fit_logger.info("main process terminated.")
-    shutdown()
+    if get_terminate_main_enabled():
+        fit_logger.info("terminate main enabled.")
+        while not determine_should_terminate_main():
+            time.sleep(1)
+        fit_logger.info("main process terminated.")
+        shutdown()
 
 
 if __package__ == 'fitframework':  # 避免执行两次main
