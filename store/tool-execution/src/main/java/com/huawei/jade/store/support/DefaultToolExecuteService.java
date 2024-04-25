@@ -10,9 +10,9 @@ import static com.huawei.fitframework.util.ObjectUtils.cast;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.store.JsonTool;
-import com.huawei.jade.store.ToolExecuteService;
-import com.huawei.jade.store.inner.ToolRepository;
+import com.huawei.jade.store.Tool;
+import com.huawei.jade.store.repository.ToolRepository;
+import com.huawei.jade.store.service.ToolExecuteService;
 
 /**
  * 表示 {@link ToolExecuteService} 的默认实现。
@@ -30,9 +30,9 @@ public class DefaultToolExecuteService implements ToolExecuteService {
 
     @Override
     @Fitable(id = "standard")
-    public String executeTool(String toolName, String jsonArgs) {
+    public String executeTool(String group, String toolName, String jsonArgs) {
         notBlank(toolName, "The tool name cannot be blank.");
-        JsonTool tool = cast(this.repository.getTool(toolName)
+        Tool tool = cast(this.repository.getTool(group, toolName)
                 .orElseThrow(() -> new IllegalStateException(StringUtils.format("No tool. [name={0}]", toolName))));
         return tool.callByJson(jsonArgs);
     }

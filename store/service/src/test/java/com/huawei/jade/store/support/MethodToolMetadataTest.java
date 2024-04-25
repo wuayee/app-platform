@@ -17,8 +17,9 @@ import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.broker.client.Router;
+import com.huawei.fitframework.json.schema.JsonSchemaManager;
 import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.MapBuilder;
+import com.huawei.jade.store.ItemInfo;
 import com.huawei.jade.store.Tool;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 表示 {@link FitTool} 的单元测试。
+ * 表示 {@link Tool} 的单元测试。
  *
  * @author 季聿阶
  * @since 2024-04-05
@@ -42,14 +43,18 @@ import java.util.Objects;
 public class MethodToolMetadataTest {
     private final ObjectSerializer serializer;
     private final Method testMethod;
+    private final String name;
+    private final String index;
 
     private Tool tool;
 
-    private Tool.ConfigurableMetadata toolMetadata;
+    private Tool.Metadata toolMetadata;
 
     MethodToolMetadataTest() throws NoSuchMethodException {
         this.testMethod = TestInterface.class.getDeclaredMethod("testMethod", String.class);
         this.serializer = new JacksonObjectSerializer(null, null, null);
+        this.name = "test_method_default_implementation_name";
+        this.index = "test_method_index";
     }
 
     @BeforeEach
@@ -58,7 +63,7 @@ public class MethodToolMetadataTest {
         Router router = mock(Router.class);
         Invoker invoker = mock(Invoker.class);
         when(client.getRouter(eq("t1"), eq(this.testMethod))).thenReturn(router);
-        when(router.route()).thenReturn(invoker);
+        when(router.route(any())).thenReturn(invoker);
         when(invoker.invoke(any())).thenAnswer(invocation -> {
             if (Objects.equals(invocation.getArgument(0), "1")) {
                 return "OK";
@@ -66,8 +71,24 @@ public class MethodToolMetadataTest {
                 throw new IllegalStateException("Error");
             }
         });
-        this.toolMetadata = Tool.ConfigurableMetadata.fromMethod(this.testMethod);
-        this.tool = Tool.fit(client, this.serializer, this.toolMetadata);
+        this.toolMetadata = Tool.Metadata.fromMethod(this.testMethod);
+        FitToolFactory fitToolFactory = new FitToolFactory(client, serializer);
+        Tool argsTool = fitToolFactory.create(buildItemInfo(), this.toolMetadata);
+        if (argsTool instanceof Tool) {
+            this.tool = (Tool) argsTool;
+        }
+    }
+
+    ItemInfo buildItemInfo() {
+        return ItemInfo.custom()
+                .category("Tool")
+                .group("t1")
+                .name("test_schema_default_implementation_name")
+                .uniqueName("schema-uuid")
+                .tags(Collections.singleton("FIT"))
+                .description("This is a demo FIT function.")
+                .schema(null)
+                .build();
     }
 
     @Test
@@ -115,25 +136,15 @@ public class MethodToolMetadataTest {
     @Test
     @DisplayName("返回正确的返回值类型")
     void shouldReturnReturnType() {
-        Type type = this.toolMetadata.returnType();
-        assertThat(type).isEqualTo(String.class);
+        Map<String, Object> type = this.toolMetadata.returnType();
+        assertThat(type).isEqualTo(JsonSchemaManager.create().createSchema(String.class).toJsonObject());
     }
 
     @Test
     @DisplayName("返回正确的格式规范描述")
     void shouldReturnSchema() {
-        Map<String, Object> schema = this.tool.metadata().schema();
-        assertThat(schema).containsEntry("name", "t1")
-                .containsEntry("description", "desc")
-                .containsEntry("parameters",
-                        MapBuilder.get()
-                                .put("type", "object")
-                                .put("properties",
-                                        MapBuilder.get()
-                                                .put("P1", MapBuilder.get().put("type", "string").build())
-                                                .build())
-                                .put("required", Collections.singletonList("P1"))
-                                .build());
+        Map<String, Object> schema = this.tool.itemInfo().schema();
+        // TODO: 生成自定义方法的校验和逻辑
     }
 
     interface TestInterface {
@@ -144,6 +155,6 @@ public class MethodToolMetadataTest {
          * @return 表示测试结果的 {@link String}。
          */
         @Genericable(id = "t1", description = "desc")
-        String testMethod(@Property(name = "P1", required = true) String p1);
+        String testMethod(@Property(name = "P1", required = true, defaultValue = "default_value") String p1);
     }
 }

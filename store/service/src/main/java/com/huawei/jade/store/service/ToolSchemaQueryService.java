@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.store;
+package com.huawei.jade.store.service;
 
 import com.huawei.fitframework.annotation.Genericable;
 
@@ -18,9 +18,10 @@ public interface ToolSchemaQueryService {
     /**
      * 搜索指定名字的工具。
      *
+     * @param group 表示工具所属的组名字的 {@link String}。
      * @param toolName 表示工具名字的 {@link String}。
      * @return 表示工具的格式规范的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
      */
     @Genericable(id = "com.huawei.jade.store.tool.schema.search")
-    Map<String, Object> search(String toolName);
+    Map<String, Object> search(String group, String toolName);
 }

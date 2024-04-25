@@ -6,12 +6,10 @@ package com.huawei.jade.store.support;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.annotation.Genericable;
 import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.json.schema.JsonSchemaManager;
-import com.huawei.fitframework.util.GenericableUtils;
-import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.store.Tool;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -28,7 +26,7 @@ import java.util.stream.Stream;
  * @author 王攀博
  * @since 2024-04-18
  */
-public class MethodToolMetadata extends AbstractToolMetadata {
+public class MethodToolMetadata implements Tool.Metadata {
     private final Method method;
 
     /**
@@ -37,19 +35,7 @@ public class MethodToolMetadata extends AbstractToolMetadata {
      * @param method 表示本地方法的 {@link Method}。
      */
     public MethodToolMetadata(Method method) {
-        super(GenericableUtils.getGenericableId(method), getDescription(method));
         this.method = notNull(method, "The functional method cannot be null.");
-    }
-
-    @Override
-    public Map<String, Object> schema() {
-        Map<String, Object> map = MapBuilder.<String, Object>get()
-                .put("name", this.name())
-                .put("description", this.description())
-                .put("parameters", JsonSchemaManager.create().createSchema(this.method).toJsonObject())
-                .build();
-        map.putAll(this.extraProperties());
-        return map;
     }
 
     @Override
@@ -75,6 +61,20 @@ public class MethodToolMetadata extends AbstractToolMetadata {
     }
 
     @Override
+    public Object parameterDefaultValue(String name) {
+        Parameter[] parameters = this.method.getParameters();
+        for (Parameter parameter : parameters) {
+            if (parameter.getName().equals(name)) {
+                Property property = parameter.getDeclaredAnnotation(Property.class);
+                if (property != null) {
+                    return property.defaultValue();
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public List<String> requiredParameterNames() {
         return Stream.of(this.method.getParameters()).filter(parameter -> {
             if (parameter.getType().isPrimitive()) {
@@ -89,8 +89,8 @@ public class MethodToolMetadata extends AbstractToolMetadata {
     }
 
     @Override
-    public Type returnType() {
-        return this.method.getReturnType();
+    public Map<String, Object> returnType() {
+        return JsonSchemaManager.create().createSchema(this.method.getReturnType()).toJsonObject();
     }
 
     @Override
@@ -104,16 +104,5 @@ public class MethodToolMetadata extends AbstractToolMetadata {
             return annotation.name();
         }
         return parameter.getName();
-    }
-
-    private static String getDescription(Method method) {
-        if (method == null) {
-            return StringUtils.EMPTY;
-        }
-        Genericable annotation = method.getDeclaredAnnotation(Genericable.class);
-        if (annotation == null) {
-            return StringUtils.EMPTY;
-        }
-        return annotation.description();
     }
 }
