@@ -13,6 +13,7 @@ package com.huawei.fitframework.beans;
 public class Object1 {
     private String f1;
     private int f2;
+    private Double f3;
 
     /**
      * 获取第一个属性。
@@ -48,5 +49,23 @@ public class Object1 {
      */
     public void setF2(int f2) {
         this.f2 = f2;
+    }
+
+    /**
+     * 获取第三个属性。
+     *
+     * @return 表示第三个属性的 {@link Double}。
+     */
+    public Double getF3() {
+        return f3;
+    }
+
+    /**
+     * 设置第三个属性。
+     *
+     * @param f3 表示待设置的第三个属性的 {@link Double}。
+     */
+    public void setF3(Double f3) {
+        this.f3 = f3;
     }
 }
