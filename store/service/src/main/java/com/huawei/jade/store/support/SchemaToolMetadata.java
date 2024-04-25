@@ -13,6 +13,7 @@ import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.store.Tool;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -31,7 +32,7 @@ import java.util.Optional;
  * @author 王攀博
  * @since 2024-04-18
  */
-public class SchemaToolMetadata extends AbstractToolMetadata {
+public class SchemaToolMetadata implements Tool.Metadata {
     private static final Map<String, Type> JSON_SCHEMA_TYPE_TO_JAVA_TYPE = MapBuilder.<String, Type>get()
             .put("string", String.class)
             .put("integer", BigInteger.class)
@@ -41,9 +42,9 @@ public class SchemaToolMetadata extends AbstractToolMetadata {
             .put("array", List.class)
             .build();
 
-    private final Map<String, Object> toolSchema;
     private final Map<String, Object> parametersSchema;
     private final Map<String, Object> returnSchema;
+    private final Map<String, Object> defaultParameterValues;
 
     /**
      * 通过工具的格式规范初始化 {@link SchemaToolMetadata} 的新实例。
@@ -51,11 +52,10 @@ public class SchemaToolMetadata extends AbstractToolMetadata {
      * @param toolSchema 表示工具格式规范的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
      */
     public SchemaToolMetadata(Map<String, Object> toolSchema) {
-        super(toolSchema);
-        this.toolSchema = notNull(toolSchema, "The tool schema cannot be null.");
         this.parametersSchema =
                 notNull(cast(toolSchema.get("parameters")), "The parameters json schema cannot be null.");
         this.returnSchema = getIfNull(cast(toolSchema.get("return")), Collections::emptyMap);
+        this.defaultParameterValues = this.defaultParamValue(this.parametersSchema);
     }
 
     private static Type convertJsonSchemaTypeToJavaType(String schemaType) {
@@ -63,13 +63,6 @@ public class SchemaToolMetadata extends AbstractToolMetadata {
         return notNull(javaType,
                 () -> new IllegalStateException(StringUtils.format("Unsupported json schema type. [type={0}]",
                         schemaType)));
-    }
-
-    @Override
-    public Map<String, Object> schema() {
-        Map<String, Object> map = new HashMap<>(this.toolSchema);
-        map.putAll(this.extraProperties());
-        return map;
     }
 
     @Override
@@ -115,6 +108,11 @@ public class SchemaToolMetadata extends AbstractToolMetadata {
     }
 
     @Override
+    public Object parameterDefaultValue(String name) {
+        return defaultParameterValues.get(name);
+    }
+
+    @Override
     public List<String> requiredParameterNames() {
         if (MapUtils.isEmpty(this.parametersSchema)) {
             return Collections.emptyList();
@@ -127,16 +125,28 @@ public class SchemaToolMetadata extends AbstractToolMetadata {
     }
 
     @Override
-    public Type returnType() {
-        if (MapUtils.isEmpty(this.returnSchema)) {
-            return Object.class;
-        }
-        String returnType = cast(this.returnSchema.get("type"));
-        return convertJsonSchemaTypeToJavaType(returnType);
+    public Map<String, Object> returnType() {
+        return this.returnSchema;
     }
 
     @Override
     public Optional<Method> getMethod() {
         return Optional.empty();
+    }
+
+    private Map<String, Object> defaultParamValue(Map<String, Object> parametersSchema) {
+        Map<String, Object> tempParamValue = new HashMap<>();
+        Map<String, Object> properties = cast(parametersSchema.get("properties"));
+        if (properties == null) {
+            return tempParamValue;
+        }
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            Map<String, Object> property = cast(entry.getValue());
+            Object value = property.get("default");
+            if (value != null) {
+                tempParamValue.put(entry.getKey(), value);
+            }
+        }
+        return tempParamValue;
     }
 }

@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>customize-workflow-tool</module>
         <module>service</module>
         <module>tool-execution</module>
         <module>tool-repository-local</module>

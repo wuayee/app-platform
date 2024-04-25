@@ -15,8 +15,10 @@ import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.broker.client.Router;
+import com.huawei.fitframework.json.schema.JsonSchemaManager;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.MapBuilder;
+import com.huawei.jade.store.ItemInfo;
 import com.huawei.jade.store.Tool;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 表示 {@link FitTool} 的单元测试。
+ * 表示 {@link Tool} 的单元测试。
  *
  * @author 季聿阶
  * @since 2024-04-06
@@ -40,15 +42,15 @@ public class SchemaToolMetadataTest {
     private Map<String, Object> toolSchema;
     private Tool tool;
 
-    private Tool.ConfigurableMetadata toolMetadata;
+    private Tool.Metadata toolMetadata;
 
     @BeforeEach
     void setup() {
-        BrokerClient client = mock(BrokerClient.class);
         Router router = mock(Router.class);
         Invoker invoker = mock(Invoker.class);
+        BrokerClient client = mock(BrokerClient.class);
         when(client.getRouter(eq("t1"))).thenReturn(router);
-        when(router.route()).thenReturn(invoker);
+        when(router.route(any())).thenReturn(invoker);
         when(invoker.invoke(any())).thenAnswer(invocation -> {
             if (Objects.equals(invocation.getArgument(0), "1")) {
                 return "OK";
@@ -57,8 +59,32 @@ public class SchemaToolMetadataTest {
             }
         });
 
-        this.toolSchema = MapBuilder.<String, Object>get()
-                .put("name", "t1")
+        this.toolSchema = buildSchema();
+        this.toolMetadata = Tool.Metadata.fromSchema(this.toolSchema);
+        ObjectSerializer serializer = new JacksonObjectSerializer(null, null, null);
+        FitToolFactory fitToolFactory = new FitToolFactory(client, serializer);
+        Tool argsTool = fitToolFactory.create(this.buildItemInfo(), this.toolMetadata);
+        if (argsTool instanceof Tool) {
+            this.tool = argsTool;
+        }
+    }
+    ItemInfo buildItemInfo() {
+        return ItemInfo.custom()
+                .category("Tool")
+                .group("t1")
+                .name("test_schema_default_implementation_name")
+                .uniqueName("schema-uuid")
+                .tags(Collections.singleton("FIT"))
+                .description("This is a demo FIT function.")
+                .schema(buildSchema())
+                .build();
+    }
+
+    Map<String, Object> buildSchema() {
+        return MapBuilder.<String, Object>get()
+                .put("group", "t1")
+                .put("name", "test_schema_default_implementation_name")
+                .put("index", "test_schema_index")
                 .put("description", "This is a demo FIT function.")
                 .put("parameters",
                         MapBuilder.<String, Object>get()
@@ -75,13 +101,9 @@ public class SchemaToolMetadataTest {
                                 .put("required", Collections.singletonList("p1"))
                                 .build())
                 .put("return", MapBuilder.<String, Object>get().put("type", "string").build())
-                .put("toolType", FitTool.class.toString())
+                .put("tags", "FIT")
                 .build();
-        this.toolMetadata = Tool.ConfigurableMetadata.fromSchema(this.toolSchema);
-        ObjectSerializer serializer = new JacksonObjectSerializer(null, null, null);
-        this.tool = Tool.fit(client, serializer, this.toolMetadata);
     }
-
     @Test
     @DisplayName("当 FIT 调用成功，返回正确的结果")
     void shouldReturnCorrectResult() {
@@ -127,14 +149,14 @@ public class SchemaToolMetadataTest {
     @Test
     @DisplayName("返回正确的返回值类型")
     void shouldReturnReturnType() {
-        Type type = this.toolMetadata.returnType();
-        assertThat(type).isEqualTo(String.class);
+        Map<String, Object> type = this.toolMetadata.returnType();
+        assertThat(type).isEqualTo(JsonSchemaManager.create().createSchema(String.class).toJsonObject());
     }
 
     @Test
     @DisplayName("返回正确的格式规范描述")
     void shouldReturnSchema() {
-        Map<String, Object> schema = this.tool.metadata().schema();
+        Map<String, Object> schema = this.tool.itemInfo().schema();
         assertThat(schema).isEqualTo(this.toolSchema);
     }
 }

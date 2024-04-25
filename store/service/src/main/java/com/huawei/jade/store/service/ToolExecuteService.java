@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.store;
+package com.huawei.jade.store.service;
 
 import com.huawei.fitframework.annotation.Genericable;
 
@@ -16,10 +16,11 @@ public interface ToolExecuteService {
     /**
      * 执行指定名字的工具。
      *
+     * @param group 表示指定工具组名字的 {@link String}。
      * @param toolName 表示指定工具名字的 {@link String}。
      * @param jsonArgs 表示执行参数的 Json 字符串的 {@link String}。
      * @return 表示执行结果的 Json 字符串的 {@link String}。
      */
     @Genericable(id = "com.huawei.jade.store.tool.execute")
-    String executeTool(String toolName, String jsonArgs);
+    String executeTool(String group, String toolName, String jsonArgs);
 }
