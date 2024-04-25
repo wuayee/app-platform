@@ -42,6 +42,6 @@ public class HumanMessage extends AbstractChatMessage {
 
     @Override
     public List<Media> medias() {
-        return contents.medias();
+        return this.contents.medias();
     }
 }

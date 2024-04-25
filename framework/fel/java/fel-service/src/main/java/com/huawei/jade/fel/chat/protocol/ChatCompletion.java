@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,12 +35,12 @@ public class ChatCompletion implements Prompt {
     private ChatOptions options;
 
     @Override
-    public List<ChatMessage> messages() {
-        return new ArrayList<>(messages);
+    public List<? extends ChatMessage> messages() {
+        return this.messages;
     }
 
     @Override
     public ChatOptions option() {
-        return options;
+        return this.options;
     }
 }

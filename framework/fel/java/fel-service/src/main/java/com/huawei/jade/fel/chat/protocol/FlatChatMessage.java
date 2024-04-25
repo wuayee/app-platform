@@ -12,7 +12,6 @@ import com.huawei.jade.fel.tool.ToolCall;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,26 +45,26 @@ public class FlatChatMessage implements ChatMessage {
 
     @Override
     public Optional<String> id() {
-        return Optional.ofNullable(id);
+        return Optional.ofNullable(this.id);
     }
 
     @Override
     public MessageType type() {
-        return type;
+        return this.type;
     }
 
     @Override
     public String text() {
-        return text;
+        return this.text;
     }
 
     @Override
     public List<Media> medias() {
-        return medias;
+        return this.medias;
     }
 
     @Override
     public List<ToolCall> toolCalls() {
-        return new ArrayList<>(toolCalls);
+        return this.toolCalls;
     }
 }
