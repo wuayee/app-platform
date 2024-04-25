@@ -1,0 +1,93 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fit.waterflow.domain.stream.nodes;
+
+import com.huawei.fit.waterflow.domain.context.FlowContext;
+import com.huawei.fit.waterflow.domain.context.WindowToken;
+import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextMessenger;
+import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
+import com.huawei.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
+import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
+import com.huawei.fit.waterflow.domain.enums.ParallelMode;
+import com.huawei.fitframework.util.ObjectUtils;
+
+import java.util.List;
+
+/**
+ * 平行节点，也是fork的起始节点
+ * 有两个模式：either只要一个fork就算完成；all所有fork完成才完成
+ * parallel节点覆盖了from的subscribe方法，允许subscribe到多个subscriber
+ * parallel只允许just处理器，并且之后的节点在出现join前都只允许just处理器，否则join不了
+ * 辉子 2019-12-17
+ *
+ * @param <I>传入数据类型
+ * @author g00564732
+ * @since 1.0
+ */
+public class ParallelNode<I> extends Node<I, I> {
+    private final ParallelMode mode;
+
+    /**
+     * 1->1处理节点
+     *
+     * @param streamId stream流程ID
+     * @param mode 并行节点执行模式
+     * @param repo 上下文持久化repo，默认在内存
+     * @param messenger 上下文事件发送器，默认在内存
+     * @param locks 流程锁
+     */
+    public ParallelNode(String streamId, ParallelMode mode, FlowContextRepo repo, FlowContextMessenger messenger,
+            FlowLocks locks) {
+        super(streamId, in -> {
+            in.setWindowToken(new WindowToken(inputs -> {
+                if (inputs.size() <= 0) {
+                    return false;
+                }
+                return inputs.size() == ObjectUtils.<Integer>cast(inputs.get(0));
+            }));
+            return in.getData();
+        }, repo, messenger, locks);
+        this.mode = mode;
+    }
+
+    /**
+     * 1->1处理节点
+     *
+     * @param streamId stream流程ID
+     * @param nodeId stream流程节点ID
+     * @param mode 并行节点的模式
+     * @param repo 上下文持久化repo，默认在内存
+     * @param messenger 上下文事件发送器，默认在内存
+     * @param locks 流程锁
+     * @param nodeType 节点类型
+     */
+    public ParallelNode(String streamId, String nodeId, ParallelMode mode, FlowContextRepo repo,
+            FlowContextMessenger messenger, FlowLocks locks, FlowNodeType nodeType) {
+        this(streamId, mode, repo, messenger, locks);
+        this.id = nodeId;
+        this.nodeType = nodeType;
+    }
+
+    /**
+     * either:只publish给一个subscription
+     * all：publish给所有的subscription
+     *
+     * @param repo 持久化
+     * @param messenger 发送器
+     * @param locks 流程锁
+     * @return From
+     */
+    @Override
+    protected From<I> initFrom(FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
+        ParallelNode<I> self = this;
+        return new From<I>(this.getStreamId(), repo, messenger, locks) {
+            @Override
+            public void offer(List<FlowContext<I>> contexts) {
+                contexts.forEach(c -> c.setParallel(c.getId()).setParallelMode(self.mode.name()));
+                super.offer(contexts);
+            }
+        };
+    }
+}

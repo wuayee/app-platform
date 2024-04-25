@@ -1,0 +1,114 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fit.waterflow.domain.stream.reactive;
+
+import static com.huawei.fit.waterflow.domain.enums.FlowNodeStatus.PENDING;
+import static com.huawei.fit.waterflow.domain.enums.ProcessType.PRE_PROCESS;
+import static com.huawei.fit.waterflow.domain.enums.ProcessType.PROCESS;
+
+import com.huawei.fit.waterflow.domain.context.FlowContext;
+import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextMessenger;
+import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
+import com.huawei.fit.waterflow.domain.stream.operators.Operators;
+import com.huawei.fit.waterflow.domain.utils.IdGenerator;
+import com.huawei.fitframework.util.CollectionUtils;
+
+import lombok.Getter;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * fit中的subscription：简单理解为流程图中的连接线
+ * 辉子 2019-10-31
+ *
+ * @param <I> 来源数据类型
+ * @param <O> 转换后数据
+ * @author g00564732
+ * @since 1.0
+ */
+public class When<I, O> extends IdGenerator implements Subscription<I, O> {
+    /**
+     * 到接收者前的预处理
+     */
+    private final Operators.Map<I, O> converter;
+
+    /**
+     * 满足condition才能进入cache
+     */
+    @Getter
+    private final Operators.Whether<I> whether;
+
+    /**
+     * 要发往的接受者
+     */
+    @Getter
+    private final Subscriber<O, ?> to;
+
+    private final FlowContextRepo repo;
+
+    private final FlowContextMessenger messenger;
+
+    private final String streamId;
+
+    /**
+     * When
+     *
+     * @param streamId streamId
+     * @param to to
+     * @param converter converter
+     * @param whether whether
+     * @param repo contextRepo
+     * @param messenger messenger
+     */
+    public <R> When(String streamId, Subscriber<O, R> to, Operators.Map<I, O> converter, Operators.Whether<I> whether,
+            FlowContextRepo repo, FlowContextMessenger messenger) {
+        this.streamId = streamId;
+        this.converter = converter == null ? input -> (O) input : converter;
+        this.whether = whether == null ? i -> true : whether;
+        this.to = to;
+        this.to.onSubscribe(this);
+        this.repo = repo;
+        this.messenger = messenger;
+    }
+
+    /**
+     * When
+     *
+     * @param streamId streamId
+     * @param eventId eventId
+     * @param to to
+     * @param converter converter
+     * @param whether whether
+     * @param repo contextRepo
+     * @param messenger messenger
+     */
+    public <R> When(String streamId, String eventId, Subscriber<O, R> to, Operators.Map<I, O> converter,
+            Operators.Whether<I> whether, FlowContextRepo repo, FlowContextMessenger messenger) {
+        this(streamId, to, converter, whether, repo, messenger);
+        this.id = eventId;
+    }
+
+    @Override
+    public void cache(List<FlowContext<I>> contexts) {
+        if (CollectionUtils.isEmpty(contexts)) {
+            return;
+        }
+        // 将context发送到节点边上，更新为PENDING状态，等待下一个节点处理
+        // 该过程不产生新的context数据，只更新context的状态
+        List<FlowContext<O>> converted = contexts.stream()
+                .map(c -> c.convertData(this.converter.process(c.getData()), c.getId())
+                        .setPosition(this.getId())
+                        .setStatus(PENDING))
+                .collect(Collectors.toList());
+        repo.updateStatus(converted, converted.get(0).getStatus().toString(), converted.get(0).getPosition());
+        messenger.send(this.to.isAuto() ? PROCESS : PRE_PROCESS, this.to, converted);
+    }
+
+    @Override
+    public String getStreamId() {
+        return this.streamId;
+    }
+}
