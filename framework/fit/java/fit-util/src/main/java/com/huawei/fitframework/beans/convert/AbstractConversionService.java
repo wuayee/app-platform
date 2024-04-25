@@ -49,6 +49,8 @@ public abstract class AbstractConversionService implements ConversionService {
             Short.class,
             Integer.class,
             Long.class,
+            Float.class,
+            Double.class,
             Boolean.class,
             String.class,
             Date.class).collect(Collectors.toSet());

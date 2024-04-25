@@ -8,6 +8,7 @@ import static com.huawei.fitframework.util.ObjectUtils.cast;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
+import static org.assertj.core.api.Assertions.within;
 
 import com.huawei.fitframework.beans.Object1;
 import com.huawei.fitframework.beans.Object2;
@@ -36,19 +37,29 @@ import java.util.function.Supplier;
  */
 @DisplayName("测试 ObjectUtils 工具类")
 public class ObjectUtilsTest {
-    /** 表示作为较小值的可比较对象。 */
+    /**
+     * 表示作为较小值的可比较对象。
+     */
     private static final Integer COMPARABLE_SMALL = -100;
 
-    /** 表示作为较大值的可比较对象。 */
+    /**
+     * 表示作为较大值的可比较对象。
+     */
     private static final Integer COMPARABLE_BIG = 100;
 
-    /** 表示作为空值的可比较对象。 */
+    /**
+     * 表示作为空值的可比较对象。
+     */
     private static final Integer COMPARABLE_NULL = null;
 
-    /** 表示将整数映射称为字符串的方法。 */
+    /**
+     * 表示将整数映射称为字符串的方法。
+     */
     private static final Function<Integer, String> MAPPER = Integer::toHexString;
 
-    /** 表示将 {@link ObjectUtilsTest#COMPARABLE_BIG} 映射成字符串的结果。 */
+    /**
+     * 表示将 {@link ObjectUtilsTest#COMPARABLE_BIG} 映射成字符串的结果。
+     */
     private static final String MAPPED_COMPARABLE_UPPER = "64";
 
     @Nested
@@ -597,9 +608,11 @@ public class ObjectUtilsTest {
         @Test
         @DisplayName("当输入为键值对时，返回键值对对应的类型实例")
         void shouldReturnObject1() {
-            Map<String, Object> map = MapBuilder.<String, Object>get().put("f1", "v1").put("f2", 2).build();
+            Map<String, Object> map =
+                    MapBuilder.<String, Object>get().put("f1", "v1").put("f2", 2).put("f3", 0.8f).build();
             Object1 actual = ObjectUtils.toCustomObject(map, Object1.class);
             assertThat(actual).returns("v1", Object1::getF1).returns(2, Object1::getF2);
+            assertThat(actual.getF3()).isCloseTo(0.8f, within(0.01));
         }
 
         @Test
