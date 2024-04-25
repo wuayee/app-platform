@@ -4,6 +4,9 @@
 
 package com.huawei.jade.fel.chat.content;
 
+import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.StringUtils;
+
 /**
  * 表示携带文本信息的 {@link MessageContent}。
  *
@@ -19,7 +22,7 @@ public class TextContent implements MessageContent {
      * @param text 表示文本信息的 {@link String}。
      */
     public TextContent(String text) {
-        this.data = text;
+        this.data = ObjectUtils.nullIf(text, StringUtils.EMPTY);
     }
 
     @Override

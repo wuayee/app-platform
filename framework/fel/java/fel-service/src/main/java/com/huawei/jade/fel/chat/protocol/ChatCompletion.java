@@ -4,15 +4,16 @@
 
 package com.huawei.jade.fel.chat.protocol;
 
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.Prompt;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 表示聊天模型请求实体类。
@@ -22,7 +23,6 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class ChatCompletion implements Prompt {
     /**
      * 会话消息列表。
@@ -33,6 +33,18 @@ public class ChatCompletion implements Prompt {
      * 模型参数。
      */
     private ChatOptions options;
+
+    /**
+     * 根据 {@link Prompt} 实现类构建 {@link ChatCompletion} 实例。
+     *
+     * @param prompt 表示大模型输入的 {@link Prompt}。
+     */
+    public ChatCompletion(Prompt prompt) {
+        Validation.notNull(prompt, "The prompt cannot be null.");
+        Validation.notEmpty(prompt.messages(), "The messages cannot be empty");
+        this.messages = prompt.messages().stream().map(FlatChatMessage::new).collect(Collectors.toList());
+        this.options = Validation.notNull(prompt.option(), "The option must not be null");
+    }
 
     @Override
     public List<? extends ChatMessage> messages() {

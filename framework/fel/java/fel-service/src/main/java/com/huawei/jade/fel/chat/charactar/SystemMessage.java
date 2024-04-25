@@ -5,6 +5,7 @@
 package com.huawei.jade.fel.chat.charactar;
 
 import com.huawei.jade.fel.chat.MessageType;
+import com.huawei.jade.fel.chat.content.Contents;
 
 /**
  * 表现系统消息的实现。
@@ -20,6 +21,15 @@ public class SystemMessage extends AbstractChatMessage {
      */
     public SystemMessage(String text) {
         super(text);
+    }
+
+    /**
+     * 通过 {@link Contents} 来初始化 {@link SystemMessage} 的新实例。
+     *
+     * @param contents 表示消息内容的 {@link Contents}。
+     */
+    public SystemMessage(Contents contents) {
+        super(contents);
     }
 
     @Override
