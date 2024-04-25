@@ -2,6 +2,7 @@ add_subdirectory(common)
 add_subdirectory(connection_manager)
 add_subdirectory(resource_manager)
 add_subdirectory(runtime_manager)
+add_subdirectory(task_handler)
 
 set(COMPILE_OPTIONS
         -Wall -Werror -fexceptions -fPIC
@@ -44,5 +45,5 @@ set(COMPILE_OPTIONS
 )
 
 add_executable(databus main.cpp)
-target_link_libraries(databus PRIVATE databus_connection databus_resource databus_runtime)
+target_link_libraries(databus PRIVATE databus_connection databus_resource databus_runtime databus_task)
 target_compile_options(databus PUBLIC ${COMPILE_OPTIONS})

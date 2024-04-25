@@ -3,43 +3,52 @@
  */
 #include <unistd.h>
 #include <cstring>
-#include <iostream>
 #include <cerrno>
 #include <sys/socket.h>
 
+#include "log/Logger.h"
 #include "Connection.h"
 
 using namespace std;
+using namespace DataBus::Common;
 
 namespace DataBus {
 namespace Connection {
 
-const int MESSAGE_HEADER_LEN = 24;
-
 void Connection::Close()
 {
-    lock_guard<recursive_mutex> lock(mutex_);
     if (socketFd_ >= 0) {
         if (close(socketFd_) == -1) {
-            cout << "Error closing socket: " << strerror(errno) << endl;
+            DataBus::logger.Error("Failed to close socket {}, reason: {}", socketFd_, strerror(errno));
         }
         socketFd_ = -1;
     }
 }
 
-int Connection::Send(const unsigned char* buf, size_t size)
+ErrorType Connection::Send(const char* buf, size_t size)
 {
-    lock_guard<recursive_mutex> lock(mutex_);
-    if (socketFd_ >= 0) {
-        int bytesSent = send(socketFd_, buf, size, 0);
-        if (bytesSent < 0) {
-            perror("Error sending data");
-            Close();
-        }
-        cout << "Sent " << bytesSent << " bytes to server." << endl;
-        return bytesSent;
+    if (socketFd_ < 0) {
+        return ErrorType::DataBusDisconnected;
     }
-    return -1;
+
+    size_t totalSent = 0;
+    size_t bytesLeft = size;
+    ssize_t bytesSent = 0;
+
+    while (totalSent < size) {
+        bytesSent = send(socketFd_, buf + totalSent, bytesLeft, 0);
+        if (bytesSent < 0) {
+            DataBus::logger.Error("Failed to send messages to {}, reason: {}", socketFd_, strerror(errno));
+            // 应该使用更明确的错误码
+            return ErrorType::UnknownError;
+        }
+
+        totalSent += bytesSent;
+        bytesLeft -= bytesSent;
+    }
+
+    DataBus::logger.Info("Sent {} bytes to server.", size);
+    return ErrorType::None;
 }
 
 }  // namespace Connection

@@ -11,19 +11,21 @@
 
 #include "log/Logger.h"
 #include "config/ConfigParser.h"
-#include "connection_manager/ConnectionManager.h"
-#include "resource_manager/ResourceManager.h"
+#include "task_handler/TaskLoop.h"
+#include "task_handler/TaskHandler.h"
 
-#define MAX_EVENTS 10
-#define PORT 5284
-
-using DataBus::Connection::ConnectionManager;
-using DataBus::Resource::ResourceManager;
+using DataBus::Task::TaskLoop;
+using DataBus::Task::TaskHandler;
 using namespace std;
 
+namespace DataBus {
+
+const int MAX_EVENTS = 10;
+const int PORT = 5284;
+const int MAX_BUFFER_SIZE = 1024;
+
 void HandleEvent(struct epoll_event event, int epollFd, int serverFd,
-                 const unique_ptr<ConnectionManager>& connectionMgrPtr,
-                 const unique_ptr<ResourceManager>& resourceMgrPtr)
+    const shared_ptr<TaskLoop>& taskLoopPtr)
 {
     struct epoll_event events[MAX_EVENTS];
     int numEvents = epoll_wait(epollFd, events, MAX_EVENTS, -1);
@@ -42,16 +44,16 @@ void HandleEvent(struct epoll_event event, int epollFd, int serverFd,
                 close(clientFd);
                 continue;
             }
-            connectionMgrPtr->AddNewConnection(clientFd);
-            DataBus::logger.Info("Client {} connected", clientFd);
+            taskLoopPtr->AddOpenTask(clientFd);
         } else {
-            char buffer[1024] = {0};
-            ssize_t bytesRead = recv(events[i].data.fd, buffer, sizeof(buffer) - 1, 0);
+            // buffer指针由Task类管理
+            char* buffer = new char[MAX_BUFFER_SIZE];
+            size_t bytesRead = recv(events[i].data.fd, buffer, sizeof(buffer) - 1, 0);
             if (bytesRead > 0) {
-                connectionMgrPtr->Handle(buffer, bytesRead, events[i].data.fd, resourceMgrPtr);
+                taskLoopPtr->AddReadTask(events[i].data.fd, buffer, bytesRead);
             } else if (bytesRead == 0) {
                 DataBus::logger.Info("Client disconnected");
-                close(events[i].data.fd);
+                taskLoopPtr->AddCloseTask(events[i].data.fd);
                 epoll_ctl(epollFd, EPOLL_CTL_DEL, events[i].data.fd, nullptr);
             }
         }
@@ -75,11 +77,13 @@ void StartDataBusService(int serverFd)
         perror("epoll_ctl: serverFd");
         return;
     }
-    const unique_ptr<ConnectionManager> connectionMgrPtr = std::make_unique<ConnectionManager>();
-    const unique_ptr<ResourceManager> resourceMgrPtr = std::make_unique<ResourceManager>();
+    shared_ptr<TaskLoop> taskLoopPtr = std::make_shared<TaskLoop>();
+    unique_ptr<TaskHandler> taskHandlerPtr = std::make_unique<TaskHandler>(taskLoopPtr);
+    taskHandlerPtr->Init();
     while (true) {
-        HandleEvent(event, epollFd, serverFd, connectionMgrPtr, resourceMgrPtr);
+        HandleEvent(event, epollFd, serverFd, taskLoopPtr);
     }
+}
 }
 
 int main()
@@ -104,7 +108,7 @@ int main()
     sockaddr_in address{};
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(PORT);
+    address.sin_port = htons(DataBus::PORT);
 
     if (bind(serverFd, (sockaddr*)&address, sizeof(address)) < 0) {
         perror("bind failed");
@@ -115,8 +119,9 @@ int main()
         perror("listen");
         return 0;
     }
-    DataBus::logger.Info("Databus service starts up at port {}", PORT);
-    StartDataBusService(serverFd);
+    DataBus::logger.Info("Databus service starts up at port {}", DataBus::PORT);
+    DataBus::StartDataBusService(serverFd);
     close(serverFd);
     return 0;
 }
+
