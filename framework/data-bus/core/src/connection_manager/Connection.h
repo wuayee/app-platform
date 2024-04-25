@@ -5,7 +5,7 @@
 #ifndef DATABUS_CONNECTION_H
 #define DATABUS_CONNECTION_H
 
-#include <mutex>
+#include "fbs/common_generated.h"
 
 namespace DataBus {
 namespace Connection {
@@ -20,11 +20,9 @@ public:
     explicit Connection(int fd) : socketFd_(fd) {}
 
     void Close();
-    int Send(const unsigned char* data, size_t size);
-
+    Common::ErrorType Send(const char* data, size_t size);
 private:
     int socketFd_;
-    std::recursive_mutex mutex_;
 };
 
 }  // namespace Connection

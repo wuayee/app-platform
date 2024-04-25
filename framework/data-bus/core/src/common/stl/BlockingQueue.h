@@ -19,13 +19,14 @@ class BlockingQueue {
 public:
     explicit BlockingQueue(size_t capacity) : capacity_(capacity) {}
 
-    void enqueue(T item)
+    template <typename U>
+    void enqueue(U&& item)
     {
         std::unique_lock<std::mutex> lock(mutex_);
         condVar_.wait(lock, [this]() {
             return queue_.size() < capacity_;
         });
-        queue_.push(item);
+        queue_.push(std::forward<U>(item));
         condVar_.notify_one();
     }
 
