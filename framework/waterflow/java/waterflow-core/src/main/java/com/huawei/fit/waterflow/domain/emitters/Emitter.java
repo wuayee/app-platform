@@ -42,15 +42,6 @@ public interface Emitter<D, T> {
     }
 
     /**
-     * 发布一个异常
-     *
-     * @param throwable 待发布的异常
-     * @param retryable retryable
-     * @param contexts contexts
-     */
-    default void error(Throwable throwable, Retryable<D> retryable, List<FlowContext<D>> contexts) {}
-
-    /**
      * 将持有的数据逐个发布出去
      *
      * @param token 发布数据时归属的session

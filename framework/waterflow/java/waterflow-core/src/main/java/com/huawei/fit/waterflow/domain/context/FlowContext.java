@@ -306,12 +306,12 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
 
     @Override
     public Object getState(String key) {
-        return this.session.states().get(key);
+        return this.session.getCustomState(key);
     }
 
     @Override
     public void setState(String key, Object value) {
-        this.session.states().put(key, value);
+        this.session.setCustomState(key, value);
     }
 
     public void setAsAccumulator() {

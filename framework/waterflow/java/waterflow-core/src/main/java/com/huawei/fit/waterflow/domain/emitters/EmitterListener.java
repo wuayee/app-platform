@@ -4,11 +4,6 @@
 
 package com.huawei.fit.waterflow.domain.emitters;
 
-import com.huawei.fit.waterflow.domain.context.FlowContext;
-import com.huawei.fit.waterflow.domain.stream.nodes.Retryable;
-
-import java.util.List;
-
 /**
  * 数据发布的监听器
  *
@@ -24,16 +19,6 @@ public interface EmitterListener<D, T> {
      * @param token 数据归属的session
      */
     void handle(D data, T token);
-
-
-    /**
-     * 处理一个异常
-     *
-     * @param throwable 待发布的异常
-     * @param retryable retryable
-     * @param contexts contexts
-     */
-    default void handleError(Throwable throwable, Retryable<D> retryable, List<FlowContext<D>> contexts) {}
 
     /**
      * 订阅一个发布源

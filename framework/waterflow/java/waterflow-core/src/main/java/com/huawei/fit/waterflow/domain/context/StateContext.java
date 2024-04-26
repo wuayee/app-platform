@@ -19,7 +19,7 @@ public interface StateContext {
     Object getState(String key);
 
     /**
-     * 设置key的上下文数据
+     * 设置上下文数据
      *
      * @param key 指定key
      * @param value 待设置的上下文数据

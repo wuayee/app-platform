@@ -193,10 +193,6 @@ public abstract class Flow<D> extends IdGenerator {
     }
 
     private static FlowSession copyFlowSession(FlowSession session) {
-        FlowSession flowSession = (session == null) ? new FlowSession() : new FlowSession(session.getId());
-        if (session != null) {
-            flowSession.states().putAll(session.states());
-        }
-        return flowSession;
+        return (session == null) ? new FlowSession() : new FlowSession(session);
     }
 }

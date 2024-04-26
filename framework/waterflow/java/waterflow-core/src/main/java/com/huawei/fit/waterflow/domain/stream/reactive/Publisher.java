@@ -35,8 +35,7 @@ public interface Publisher<I> extends StreamIdentity, EmitterListener<I, FlowSes
 
     @Override
     default void handle(I data, FlowSession s) {
-        FlowSession session = new FlowSession(s.getId());
-        session.states().putAll(s.states());
+        FlowSession session = new FlowSession(s);
         this.offer(data, session);
     }
 

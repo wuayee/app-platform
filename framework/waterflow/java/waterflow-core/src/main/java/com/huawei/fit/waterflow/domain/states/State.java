@@ -10,7 +10,6 @@ import com.huawei.fit.waterflow.domain.emitters.Emitter;
 import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
 import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fit.waterflow.domain.stream.nodes.BlockToken;
-import com.huawei.fit.waterflow.domain.stream.nodes.Retryable;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.stream.reactive.Callback;
 import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
@@ -55,12 +54,6 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
     @Override
     public void handle(O data, FlowSession trans) {
         this.processor.handle(data, trans);
-    }
-
-    @Override
-    public void handleError(Throwable throwable, Retryable<O> retryable, List<FlowContext<O>> contexts) {
-        List<Operators.ErrorHandler> errorHandlers = this.getFlow().end().getErrorHandlers();
-        errorHandlers.forEach(e -> e.handle(new Exception(throwable), retryable, contexts));
     }
 
     /**

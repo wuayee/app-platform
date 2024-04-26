@@ -20,14 +20,22 @@ import java.util.Map;
  */
 public class FlowSession extends IdGenerator {
     /**
-     * 用户自定义session上下文状态数据
+     * 用户自定义上下文map
      */
-    private final Map<String, Object> states = new HashMap<>();
+    private static final String CUSTOM_STATE = "custom_state";
 
     /**
-     * 内置session上下文状态数据
+     * 流程内置上下文map
      */
-    private final Map<String, Object> interStates = new HashMap<>();
+    private static final String INNER_STATE = "inner_state";
+
+    /**
+     * session上下文状态数据
+     */
+    private final Map<String, Map<String, Object>> states = new HashMap<String, Map<String, Object>>() {{
+        put(CUSTOM_STATE, new HashMap<>());
+        put(INNER_STATE, new HashMap<>());
+    }};
 
     @Setter
     private Object keyBy = null;
@@ -42,6 +50,12 @@ public class FlowSession extends IdGenerator {
         super(id);
     }
 
+    public FlowSession(FlowSession session) {
+        super(session.getId());
+        this.states.putAll(session.states);
+        this.keyBy = session.keyBy;
+    }
+
     /**
      * 两个session是否相同
      *
@@ -53,29 +67,52 @@ public class FlowSession extends IdGenerator {
     }
 
     /**
-     * session的状态数据
-     *
-     * @return map类型的状态数据
-     */
-    public Map<String, Object> states() {
-        return this.states;
-    }
-
-    /**
-     * session的内置状态数据
-     *
-     * @return map类型的状态数据
-     */
-    public Map<String, Object> interStates() {
-        return this.interStates;
-    }
-
-    /**
      * 该session的key
      *
      * @return key
      */
     public Object keyBy() {
         return this.keyBy;
+    }
+
+
+    /**
+     * 获取指定key的自定义上下文数据
+     *
+     * @param key 指定key
+     * @return 上下文数据
+     */
+    public Object getCustomState(String key) {
+        return this.states.get(CUSTOM_STATE).get(key);
+    }
+
+    /**
+     * 设置自定义上下文数据
+     *
+     * @param key 指定key
+     * @param value 待设置的上下文数据
+     */
+    public void setCustomState(String key, Object value) {
+        this.states.get(CUSTOM_STATE).put(key, value);
+    }
+
+    /**
+     * 获取指定key的内置上下文数据
+     *
+     * @param key 指定key
+     * @return 上下文数据
+     */
+    public Object getInnerState(String key) {
+        return this.states.get(INNER_STATE).get(key);
+    }
+
+    /**
+     * 设置内置上下文数据
+     *
+     * @param key 指定key
+     * @param value 待设置的上下文数据
+     */
+    public void setInnerState(String key, Object value) {
+        this.states.get(INNER_STATE).put(key, value);
     }
 }

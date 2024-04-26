@@ -186,7 +186,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
     private Operators.ErrorHandler<I> errorHandler = null;
 
-    private Operators.ErrorHandler globalErrorHandlerHandler = null;
+    private Operators.ErrorHandler globalErrorHandler = null;
 
     private boolean isAuto = true;
 
@@ -484,7 +484,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             log.error("node process exception details: ", ex);
             Retryable<I> retryable = new Retryable<>(this.getRepo(), this);
             Optional.ofNullable(this.errorHandler).ifPresent(handler -> handler.handle(ex, retryable, pre));
-            Optional.ofNullable(this.globalErrorHandlerHandler)
+            Optional.ofNullable(this.globalErrorHandler)
                     .ifPresent(handler -> handler.handle(ex, retryable, pre));
             GlobalFileData.remove(pre.stream().map(IdGenerator::getId).collect(Collectors.toList()));
         } finally {
@@ -600,12 +600,12 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
     @Override
     public void onGlobalError(Operators.ErrorHandler handler) {
-        this.globalErrorHandlerHandler = handler;
+        this.globalErrorHandler = handler;
     }
 
     @Override
     public List<Operators.ErrorHandler> getErrorHandlers() {
-        return Stream.of(this.errorHandler, this.globalErrorHandlerHandler)
+        return Stream.of(this.errorHandler, this.globalErrorHandler)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
@@ -638,11 +638,6 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     @Override
     public void emit(O data, FlowSession trans) {
         this.listeners.forEach(s -> s.handle(data, trans));
-    }
-
-    @Override
-    public void error(Throwable throwable, Retryable<O> retryable, List<FlowContext<O>> contexts) {
-        this.listeners.forEach(s -> s.handleError(throwable, retryable, contexts));
     }
 
     /**
