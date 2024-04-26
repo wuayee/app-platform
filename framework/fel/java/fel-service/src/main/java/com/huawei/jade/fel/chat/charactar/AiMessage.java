@@ -4,6 +4,7 @@
 
 package com.huawei.jade.fel.chat.charactar;
 
+import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.jade.fel.chat.MessageType;
 import com.huawei.jade.fel.chat.content.Media;
 import com.huawei.jade.fel.tool.ToolCall;
@@ -52,7 +53,7 @@ public class AiMessage extends AbstractChatMessage {
 
     @Override
     public List<Media> medias() {
-        return contents.medias();
+        return this.contents.medias();
     }
 
     /**
@@ -61,6 +62,11 @@ public class AiMessage extends AbstractChatMessage {
      * @return 表示是否是调用工具的 {@code boolean}。
      */
     public boolean isToolCall() {
-        return toolCalls != null && !toolCalls.isEmpty();
+        return CollectionUtils.isNotEmpty(this.toolCalls);
+    }
+
+    @Override
+    public String toString() {
+        return this.isToolCall() ? "ai: " + this.toolCalls.toString() : super.toString();
     }
 }

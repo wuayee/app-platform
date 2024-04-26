@@ -53,12 +53,12 @@ public class Contents {
     }
 
     /**
-     * 获取文本内容，如果存在多条消息，则使用{@code \n}进行拼接。
+     * 获取文本内容，如果存在多条内容，则使用{@code \n}进行拼接。
      *
      * @return 返回拼接后文本内容的 {@link String}。
      */
     public String text() {
-        return payload.stream()
+        return this.payload.stream()
                 .filter(c -> c instanceof TextContent)
                 .map(MessageContent::data)
                 .collect(Collectors.joining("\n"));
@@ -70,7 +70,7 @@ public class Contents {
      * @return 返回媒体内容的 {@link List}{@code <}{@link Media}{@code >}。
      */
     public List<Media> medias() {
-        return payload.stream()
+        return this.payload.stream()
                 .filter(c -> c instanceof MediaContent)
                 .map(c -> ((MediaContent) c).media())
                 .collect(Collectors.toList());

@@ -38,7 +38,7 @@ public class Media {
      */
     public boolean isUrl() {
         try {
-            new URL(data);
+            new URL(this.data);
             return true;
         } catch (MalformedURLException e) {
             return false;

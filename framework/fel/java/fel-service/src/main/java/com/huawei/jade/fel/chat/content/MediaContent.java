@@ -43,10 +43,10 @@ public class MediaContent implements MessageContent {
 
     @Override
     public String data() {
-        return media.getData();
+        return this.media.getData();
     }
 
     public Media media() {
-        return media;
+        return this.media;
     }
 }

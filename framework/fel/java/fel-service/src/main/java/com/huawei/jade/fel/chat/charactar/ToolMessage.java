@@ -30,11 +30,16 @@ public class ToolMessage extends AbstractChatMessage {
 
     @Override
     public Optional<String> id() {
-        return Optional.ofNullable(id);
+        return Optional.ofNullable(this.id);
     }
 
     @Override
     public MessageType type() {
         return MessageType.TOOL;
+    }
+
+    @Override
+    public String toString() {
+        return "Tool " + this.id + ": " + this.text();
     }
 }

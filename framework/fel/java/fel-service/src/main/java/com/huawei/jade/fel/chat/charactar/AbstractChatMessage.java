@@ -39,6 +39,11 @@ public abstract class AbstractChatMessage implements ChatMessage {
 
     @Override
     public String text() {
-        return contents.text();
+        return this.contents.text();
+    }
+
+    @Override
+    public String toString() {
+        return this.type().name().toLowerCase() + ": " + this.text();
     }
 }

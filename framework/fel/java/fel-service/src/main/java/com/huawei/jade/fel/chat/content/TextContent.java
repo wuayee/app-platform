@@ -24,6 +24,6 @@ public class TextContent implements MessageContent {
 
     @Override
     public String data() {
-        return data;
+        return this.data;
     }
 }
