@@ -4,6 +4,8 @@
 
 package com.huawei.jade.store.service;
 
+import com.huawei.jade.store.ItemInfo;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -74,63 +76,105 @@ public class ItemDto {
         return this.category;
     }
 
-    public void setCategory(String category) {
+    public ItemDto setCategory(String category) {
         this.category = category;
+        return this;
     }
 
     public String getGroup() {
         return this.group;
     }
 
-    public void setGroup(String group) {
+    public ItemDto setGroup(String group) {
         this.group = group;
+        return this;
     }
 
     public String getName() {
         return this.name;
     }
 
-    public void setName(String name) {
+    public ItemDto setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getDescription() {
         return this.description;
     }
 
-    public void setDescription(String description) {
+    public ItemDto setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     public String getUniqueName() {
         return this.uniqueName;
     }
 
-    public void setUniqueName(String uniqueName) {
+    public ItemDto setUniqueName(String uniqueName) {
         this.uniqueName = uniqueName;
+        return this;
     }
 
     public Map<String, Object> getSchema() {
         return this.schema;
     }
 
-    public void setSchema(Map<String, Object> schema) {
+    public ItemDto setSchema(Map<String, Object> schema) {
         this.schema = schema;
+        return this;
     }
 
     public String getSource() {
         return this.source;
     }
 
-    public void setSource(String source) {
+    public ItemDto setSource(String source) {
         this.source = source;
+        return this;
     }
 
     public Set<String> getTags() {
         return this.tags;
     }
 
-    public void setTags(Set<String> tags) {
+    public ItemDto setTags(Set<String> tags) {
         this.tags = tags;
+        return this;
+    }
+
+    /**
+     * 将商品信息转换为 {@link ItemDto}。
+     *
+     * @param itemInfo 表示商品信息的 {@link ItemInfo}。
+     * @return 表示商品信息的传输对象的 {@link ItemDto}。
+     */
+    public static ItemDto from(ItemInfo itemInfo) {
+        return new ItemDto().setCategory(itemInfo.category())
+                .setGroup(itemInfo.group())
+                .setName(itemInfo.name())
+                .setUniqueName(itemInfo.uniqueName())
+                .setTags(itemInfo.tags())
+                .setSchema(itemInfo.schema())
+                .setDescription(itemInfo.description());
+    }
+
+    /**
+     * 将商品信息的传输对象转换为商品信息。
+     *
+     * @param itemDto 表示商品信息的传输对象的 {@link ItemDto}。
+     * @return 表示商品信息的 {@link ItemInfo}。
+     */
+    public static ItemInfo convertToItemInfo(ItemDto itemDto) {
+        return ItemInfo.custom()
+                .category(itemDto.getCategory())
+                .group(itemDto.getGroup())
+                .name(itemDto.getName())
+                .uniqueName(itemDto.getUniqueName())
+                .tags(itemDto.getTags())
+                .description(itemDto.getDescription())
+                .schema(itemDto.getSchema())
+                .build();
     }
 }
