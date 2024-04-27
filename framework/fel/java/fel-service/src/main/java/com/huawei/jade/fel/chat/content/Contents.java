@@ -4,6 +4,8 @@
 
 package com.huawei.jade.fel.chat.content;
 
+import com.huawei.fitframework.util.StringUtils;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -53,15 +55,20 @@ public class Contents {
     }
 
     /**
-     * 获取文本内容，如果存在多条内容，则使用{@code \n}进行拼接。
+     * 获取文本内容。
+     * <ul>
+     *     <li>如果存在多条内容，则使用第一条。</li>
+     *     <li>如果不存在文本消息，则返回 {@link StringUtils#EMPTY}。</li>
+     * </ul>
      *
      * @return 返回拼接后文本内容的 {@link String}。
      */
     public String text() {
         return this.payload.stream()
                 .filter(c -> c instanceof TextContent)
+                .findFirst()
                 .map(MessageContent::data)
-                .collect(Collectors.joining("\n"));
+                .orElse(StringUtils.EMPTY);
     }
 
     /**

@@ -4,6 +4,7 @@
 
 package com.huawei.jade.fel.chat.protocol;
 
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.MessageType;
 import com.huawei.jade.fel.chat.content.Media;
@@ -36,6 +37,7 @@ public class FlatChatMessage implements ChatMessage {
      * @param chatMessage 提供构造参数的 {@link ChatMessage}。
      */
     public FlatChatMessage(ChatMessage chatMessage) {
+        Validation.notNull(chatMessage, "The chatMessage cannot be null.");
         this.id = chatMessage.id().orElse(null);
         this.type = chatMessage.type();
         this.text = chatMessage.text();

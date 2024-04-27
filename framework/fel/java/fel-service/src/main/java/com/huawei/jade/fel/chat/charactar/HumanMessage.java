@@ -29,7 +29,7 @@ public class HumanMessage extends AbstractChatMessage {
     /**
      * 通过 {@link Contents} 来初始化 {@link HumanMessage} 的新实例。
      *
-     * @param contents 表示文本内容的 {@link Contents}。
+     * @param contents 表示消息内容的 {@link Contents}。
      */
     public HumanMessage(Contents contents) {
         super(contents);
