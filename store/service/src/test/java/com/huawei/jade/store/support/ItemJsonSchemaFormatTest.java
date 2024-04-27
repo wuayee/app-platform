@@ -46,7 +46,7 @@ public class ItemJsonSchemaFormatTest {
         // given
         String expectedValue =
                 "[{\"category\":\"Tool\",\"group\":\"t1\",\"name\":\"test_schema_default_implementation_name\","
-                        + "\"description\":null,\"uniqueName\":\"schema-uuid\","
+                        + "\"description\":\"This is a demo FIT function.\",\"uniqueName\":\"schema-uuid\","
                         + "\"schema\":{\"name\":\"test_schema_default_implementation_name\",\"description\":\"This is"
                         + " a demo FIT function.\",\"parameters\":{\"type\":\"object\","
                         + "\"properties\":{\"p1\":{\"type\":\"string\",\"description\":\"This is the first parameter"
