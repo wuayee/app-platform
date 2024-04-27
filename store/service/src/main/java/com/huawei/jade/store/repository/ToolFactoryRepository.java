@@ -6,6 +6,9 @@ package com.huawei.jade.store.repository;
 
 import com.huawei.jade.store.ToolFactory;
 
+import java.util.Optional;
+import java.util.Set;
+
 /**
  * 表示创建工具的工厂接口。
  *
@@ -23,15 +26,15 @@ public interface ToolFactoryRepository {
     /**
      * 反注册工具工厂。
      *
-     * @param type 表示注册的工具工厂的 {@link String}。
+     * @param factory 表示要反注册的工具工厂的 {@link ToolFactory}。
      */
-    void unregister(String type);
+    void unregister(ToolFactory factory);
 
     /**
-     * 根据类型查询工厂。
+     * 根据标签匹配一个工厂。
      *
-     * @param type 表示工厂的类型的 {@link String}。
-     * @return 表示返回的工厂的 {@link ToolFactory}。
+     * @param tags 表示标签集合的类型的 {@link Set}{@code <}{@link String}{@code >}。
+     * @return 表示返回的工厂的 {@link Optional}{@code <}{@link ToolFactory}{@code >}，否则为 {@link Optional#empty()}。
      */
-    ToolFactory query(String type);
+    Optional<ToolFactory> query(Set<String> tags);
 }
