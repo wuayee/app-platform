@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>customize-workflow-tool</module>
+        <module>app-factory-tool</module>
         <module>service</module>
         <module>tool-execution</module>
     </modules>
