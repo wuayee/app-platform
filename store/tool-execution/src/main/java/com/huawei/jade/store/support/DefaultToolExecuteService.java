@@ -11,19 +11,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.jade.store.ItemInfo;
+import com.huawei.jade.store.Item;
 import com.huawei.jade.store.Tool;
-import com.huawei.jade.store.ToolFactory;
-import com.huawei.jade.store.repository.ToolFactoryRepository;
-import com.huawei.jade.store.service.ItemDto;
-import com.huawei.jade.store.service.ItemService;
+import com.huawei.jade.store.repository.ItemRepository;
 import com.huawei.jade.store.service.ToolExecuteService;
 
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 表示 {@link ToolExecuteService} 的默认实现。
@@ -35,37 +30,36 @@ import java.util.Optional;
 public class DefaultToolExecuteService implements ToolExecuteService {
     private static final String ERROR_MESSAGE_KEY = "errorMessage";
 
-    private final ItemService service;
     private final ObjectSerializer serializer;
-    private final ToolFactoryRepository toolFactoryRepository;
+    private final ItemRepository itemRepository;
 
     /**
      * 通过元素服务、客户端和序列化实例创建 {@link DefaultToolExecuteService} 的新实例。
      *
-     * @param service 表示元素管理服务的 {@link ItemService}。
-     * @param brokerClient 表示运行客户端的 {@link BrokerClient}。
      * @param serializer 表示 Json 序列化实例的 {@link ObjectSerializer}。
-     * @param toolFactoryRepository 表示创建工具工厂的存储库的实例的 {@link ToolFactoryRepository}。
+     * @param itemRepository 表示商品的存储库的 {@link ItemRepository}。
      */
-    public DefaultToolExecuteService(ItemService service, BrokerClient brokerClient,
-            @Fit(alias = "json") ObjectSerializer serializer, ToolFactoryRepository toolFactoryRepository) {
-        this.service = service;
-        this.serializer = serializer;
-        this.toolFactoryRepository = notNull(toolFactoryRepository, "The tool factory repo cannot be null.");
-        this.toolFactoryRepository.register(ToolFactory.fit(brokerClient, this.serializer));
+    public DefaultToolExecuteService(@Fit(alias = "json") ObjectSerializer serializer,
+            ItemRepository itemRepository) {
+        this.serializer = notNull(serializer, "The serializer cannot be null.");
+        this.itemRepository = notNull(itemRepository, "The item repo cannot be null.");
     }
 
     @Override
     @Fitable(id = "standard")
     public String executeTool(String uniqueName, String jsonArgs) {
         notBlank(uniqueName, "The tool name cannot be blank.");
-        ItemDto itemDto = this.service.getItem(uniqueName);
-        Optional<ToolFactory> factory = this.toolFactoryRepository.query(itemDto.getTags());
-        if (!factory.isPresent()) {
+        Item item = itemRepository.getItem(uniqueName);
+        Tool tool = null;
+        if (item instanceof Tool) {
+            tool = (Tool) item;
+        } else {
             return this.makeErrorMessage();
         }
-        ItemInfo itemInfo = ItemDto.convertToItemInfo(itemDto);
-        Tool tool = factory.get().create(itemInfo, Tool.Metadata.fromSchema(itemDto.getSchema()));
+
+        if (tool == null) {
+            return this.makeErrorMessage();
+        }
         return tool.callByJson(jsonArgs);
     }
 
