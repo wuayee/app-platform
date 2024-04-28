@@ -315,7 +315,8 @@ class WaterFlowsTest {
 
         @Test
         @DisplayName("流程实例parallel节点以及fork节点以及join节点either模式流转逻辑")
-        void testFitStreamWithForkJoinEither() {}
+        void testFitStreamWithForkJoinEither() {
+        }
 
         @Test
         @DisplayName("流程实例condition节点以及match节点以及others节点流转逻辑")

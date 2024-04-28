@@ -208,14 +208,16 @@ public final class Constant {
      * flowContext状态互斥map
      */
     public static final Map<String, List<String>> CONTEXT_EXCLUSIVE_STATUS_MAP = unmodifiableMap(
-            new HashMap<String, List<String>>() {{
-                put(FlowNodeStatus.TERMINATE.toString(), CONTEXT_TERMINATE_EXCLUSIVE_STATUS_LIST);
-                put(FlowNodeStatus.ERROR.toString(), CONTEXT_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-                put(FlowNodeStatus.PENDING.toString(), CONTEXT_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-                put(FlowNodeStatus.READY.toString(), CONTEXT_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-                put(FlowNodeStatus.PROCESSING.toString(), CONTEXT_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-                put(FlowNodeStatus.ARCHIVED.toString(), CONTEXT_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-            }});
+            new HashMap<String, List<String>>() {
+                {
+                    put(FlowNodeStatus.TERMINATE.toString(), CONTEXT_TERMINATE_EXCLUSIVE_STATUS_LIST);
+                    put(FlowNodeStatus.ERROR.toString(), CONTEXT_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
+                    put(FlowNodeStatus.PENDING.toString(), CONTEXT_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
+                    put(FlowNodeStatus.READY.toString(), CONTEXT_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
+                    put(FlowNodeStatus.PROCESSING.toString(), CONTEXT_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
+                    put(FlowNodeStatus.ARCHIVED.toString(), CONTEXT_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
+                }
+            });
 
     /**
      * flowTrace 终止状态的互斥状态列表，即如果原始状态为terminate\error\archived，则不能更改为terminate
@@ -234,13 +236,15 @@ public final class Constant {
      * flowTrace状态互斥map
      */
     public static final Map<String, List<String>> TRACE_EXCLUSIVE_STATUS_MAP = unmodifiableMap(
-            new HashMap<String, List<String>>() {{
-                put(FlowTraceStatus.TERMINATE.toString(), TRACE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-                put(FlowTraceStatus.ERROR.toString(), TRACE_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-                put(FlowTraceStatus.RUNNING.toString(), TRACE_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-                put(FlowTraceStatus.READY.toString(), TRACE_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-                put(FlowTraceStatus.ARCHIVED.toString(), TRACE_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-            }});
+            new HashMap<String, List<String>>() {
+                {
+                    put(FlowTraceStatus.TERMINATE.toString(), TRACE_TERMINATE_EXCLUSIVE_STATUS_LIST);
+                    put(FlowTraceStatus.ERROR.toString(), TRACE_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
+                    put(FlowTraceStatus.RUNNING.toString(), TRACE_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
+                    put(FlowTraceStatus.READY.toString(), TRACE_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
+                    put(FlowTraceStatus.ARCHIVED.toString(), TRACE_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
+                }
+            });
 
     /**
      * 流程运行流程元数据信息

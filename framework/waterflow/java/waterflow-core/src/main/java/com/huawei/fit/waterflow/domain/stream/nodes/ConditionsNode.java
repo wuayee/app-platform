@@ -55,14 +55,16 @@ public class ConditionsNode<I> extends Node<I, I> {
 
     /**
      * 只publish给符合条件的subscription
-     * #TODO 允许多个subscription
      *
+     * @param streamId id
      * @param repo 持久化
      * @param messenger 事件发送器
      * @param locks 流程锁
+     * @param <I> 数据类型
      * @return From 数据publisher
      */
-    private static <I> From<I> initFrom(String streamId, FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
+    private static <I> From<I> initFrom(String streamId, FlowContextRepo repo, FlowContextMessenger messenger,
+            FlowLocks locks) {
         return new From<I>(streamId, repo, messenger, locks) {
             @Override
             public void offer(List<FlowContext<I>> contexts) {
