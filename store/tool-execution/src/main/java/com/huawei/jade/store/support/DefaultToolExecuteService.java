@@ -13,7 +13,7 @@ import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.jade.store.Item;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.store.Tool;
 import com.huawei.jade.store.repository.ItemRepository;
 import com.huawei.jade.store.service.ToolExecuteService;
@@ -39,8 +39,7 @@ public class DefaultToolExecuteService implements ToolExecuteService {
      * @param serializer 表示 Json 序列化实例的 {@link ObjectSerializer}。
      * @param itemRepository 表示商品的存储库的 {@link ItemRepository}。
      */
-    public DefaultToolExecuteService(@Fit(alias = "json") ObjectSerializer serializer,
-            ItemRepository itemRepository) {
+    public DefaultToolExecuteService(@Fit(alias = "json") ObjectSerializer serializer, ItemRepository itemRepository) {
         this.serializer = notNull(serializer, "The serializer cannot be null.");
         this.itemRepository = notNull(itemRepository, "The item repo cannot be null.");
     }
@@ -49,22 +48,17 @@ public class DefaultToolExecuteService implements ToolExecuteService {
     @Fitable(id = "standard")
     public String executeTool(String uniqueName, String jsonArgs) {
         notBlank(uniqueName, "The tool name cannot be blank.");
-        Item item = itemRepository.getItem(uniqueName);
-        Tool tool = null;
-        if (item instanceof Tool) {
-            tool = (Tool) item;
-        } else {
-            return this.makeErrorMessage();
-        }
-
-        if (tool == null) {
-            return this.makeErrorMessage();
-        }
-        return tool.callByJson(jsonArgs);
+        return this.itemRepository.getItem(uniqueName)
+                .filter(item -> item instanceof Tool)
+                .map(Tool.class::cast)
+                .map(tool -> tool.callByJson(jsonArgs))
+                .orElseGet(() -> this.makeErrorMessage(uniqueName));
     }
 
-    private String makeErrorMessage() {
-        Map<Object, Object> error = MapBuilder.get().put(ERROR_MESSAGE_KEY, "Tags in invalid.").build();
+    private String makeErrorMessage(String uniqueName) {
+        Map<Object, Object> error = MapBuilder.get()
+                .put(ERROR_MESSAGE_KEY, StringUtils.format("No tool. [toolUniqueName={0}]", uniqueName))
+                .build();
         return new String(this.serializer.serialize(error, UTF_8));
     }
 }

@@ -21,6 +21,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 表示 {@link DefaultToolExecuteService} 的单元测试。
@@ -48,7 +49,7 @@ public class DefaultToolExecuteServiceTest {
     void shouldReturnOK() {
         // given
         String uniqueName = "testUniqueName";
-        when(this.itemRepository.getItem(eq(uniqueName))).thenReturn(this.tool);
+        when(this.itemRepository.getItem(eq(uniqueName))).thenReturn(Optional.of(this.tool));
         when(this.tool.callByJson(any())).thenReturn("OK");
 
         // when
