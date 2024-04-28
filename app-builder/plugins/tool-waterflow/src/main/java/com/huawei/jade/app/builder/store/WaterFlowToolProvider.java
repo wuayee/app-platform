@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.app.factory.store;
+package com.huawei.jade.app.builder.store;
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
@@ -45,13 +45,13 @@ public class WaterFlowToolProvider implements ToolProvider {
     @Fitable(id = "app-factory")
     public FlatChatMessage call(ToolCall toolCall) {
         return new FlatChatMessage(new ToolMessage(toolCall.getId(),
-                executeService.executeTool(toolCall.getName(), toolCall.getParameters())));
+                this.executeService.executeTool(toolCall.getName(), toolCall.getParameters())));
     }
 
     @Override
     @Fitable(id = "app-factory")
     public List<Tool> getTool(List<String> name) {
-        return name.stream().map(itemService::getItem).filter(Objects::nonNull).map(item -> {
+        return name.stream().map(this.itemService::getItem).filter(Objects::nonNull).map(item -> {
             Set<String> tags = item.getTags();
             return new Tool(tags.contains("WaterFlow"), item.getSchema());
         }).collect(Collectors.toList());

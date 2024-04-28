@@ -5,15 +5,13 @@
 
     <parent>
         <groupId>com.huawei.fit.jade</groupId>
-        <artifactId>jade-parent</artifactId>
+        <artifactId>jade-app-builder-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jade-store-parent</artifactId>
+    <artifactId>app-builder-service-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>service</module>
-        <module>tool-execution</module>
     </modules>
 </project>

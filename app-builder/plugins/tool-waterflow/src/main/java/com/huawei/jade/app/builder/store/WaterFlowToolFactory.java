@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.app.factory.store;
+package com.huawei.jade.app.builder.store;
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;

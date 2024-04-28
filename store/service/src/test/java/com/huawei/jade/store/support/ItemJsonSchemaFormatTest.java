@@ -13,7 +13,7 @@ import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.jade.store.ItemInfo;
-import com.huawei.jade.store.service.ItemDto;
+import com.huawei.jade.store.service.ItemData;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 表示验证 {@link ItemDto} 结构的序列化格式。
+ * 表示验证 {@link ItemData} 结构的序列化格式。
  *
  * @author 王攀博
  * @since 2024-04-26
@@ -55,9 +55,9 @@ public class ItemJsonSchemaFormatTest {
 
         // when
         ItemInfo itemInfo = this.buildItemInfo();
-        ItemDto item = ItemDto.from(itemInfo);
+        ItemData item = ItemData.from(itemInfo);
 
-        List<ItemDto> items = new ArrayList<>();
+        List<ItemData> items = new ArrayList<>();
         items.add(item);
         String itemJsonSchema = new String(this.serializer.serialize(items, UTF_8), UTF_8);
 
