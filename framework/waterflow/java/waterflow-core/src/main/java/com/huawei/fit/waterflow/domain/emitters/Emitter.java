@@ -4,11 +4,6 @@
 
 package com.huawei.fit.waterflow.domain.emitters;
 
-import com.huawei.fit.waterflow.domain.context.FlowContext;
-import com.huawei.fit.waterflow.domain.stream.nodes.Retryable;
-
-import java.util.List;
-
 /**
  * 除了waterflow自身的驱动，waterflow允许外部数据实现InterStream接口
  * 给waterflow响应式灌入外部数据

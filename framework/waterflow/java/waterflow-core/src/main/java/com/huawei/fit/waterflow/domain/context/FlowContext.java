@@ -305,13 +305,13 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     }
 
     @Override
-    public Object getState(String key) {
-        return this.session.getCustomState(key);
+    public <R> R getState(String key) {
+        return this.session.getState(key);
     }
 
     @Override
     public void setState(String key, Object value) {
-        this.session.setCustomState(key, value);
+        this.session.setState(key, value);
     }
 
     public void setAsAccumulator() {

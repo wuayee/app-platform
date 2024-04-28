@@ -5,6 +5,8 @@
 package com.huawei.fit.waterflow.domain.context;
 
 import com.huawei.fit.waterflow.domain.utils.IdGenerator;
+import com.huawei.fitframework.util.MapBuilder;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import lombok.Setter;
 
@@ -18,7 +20,7 @@ import java.util.Map;
  * @author y00679285
  * @since 1.0
  */
-public class FlowSession extends IdGenerator {
+public class FlowSession extends IdGenerator implements StateContext {
     /**
      * 用户自定义上下文map
      */
@@ -32,10 +34,10 @@ public class FlowSession extends IdGenerator {
     /**
      * session上下文状态数据
      */
-    private final Map<String, Map<String, Object>> states = new HashMap<String, Map<String, Object>>() {{
-        put(CUSTOM_STATE, new HashMap<>());
-        put(INNER_STATE, new HashMap<>());
-    }};
+    private final Map<String, Map<String, Object>> states = MapBuilder.<String, Map<String, Object>>get()
+            .put(CUSTOM_STATE, new HashMap<>())
+            .put(INNER_STATE, new HashMap<>())
+            .build();
 
     @Setter
     private Object keyBy = null;
@@ -82,8 +84,9 @@ public class FlowSession extends IdGenerator {
      * @param key 指定key
      * @return 上下文数据
      */
-    public Object getCustomState(String key) {
-        return this.states.get(CUSTOM_STATE).get(key);
+    @Override
+    public <R> R getState(String key) {
+        return ObjectUtils.cast(this.states.get(CUSTOM_STATE).get(key));
     }
 
     /**
@@ -92,7 +95,8 @@ public class FlowSession extends IdGenerator {
      * @param key 指定key
      * @param value 待设置的上下文数据
      */
-    public void setCustomState(String key, Object value) {
+    @Override
+    public void setState(String key, Object value) {
         this.states.get(CUSTOM_STATE).put(key, value);
     }
 
@@ -102,8 +106,8 @@ public class FlowSession extends IdGenerator {
      * @param key 指定key
      * @return 上下文数据
      */
-    public Object getInnerState(String key) {
-        return this.states.get(INNER_STATE).get(key);
+    public <R> R getInnerState(String key) {
+        return ObjectUtils.cast(this.states.get(INNER_STATE).get(key));
     }
 
     /**

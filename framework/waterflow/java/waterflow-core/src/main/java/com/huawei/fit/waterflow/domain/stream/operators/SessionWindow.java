@@ -52,7 +52,7 @@ public class SessionWindow<T> implements Operators.Window<T> {
         if (this.key == null) {
             return input.keyBy();
         } else {
-            return input.getSession().getCustomState(this.key);
+            return input.getState(this.key);
         }
     }
 
