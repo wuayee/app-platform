@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
@@ -42,7 +40,10 @@ public abstract class BlockToken<T> extends IdGenerator {
                 iterator.remove();
             }
         }
-        List<FlowContext<T>> cloned = verified.stream().map(f -> f.generate(f.getData(), f.getPosition()).batchId(f.getBatchId())).collect(Collectors.toList());
+        List<FlowContext<T>> cloned = verified.stream()
+                .map(context -> context.generate(context.getData(), context.getPosition())
+                        .batchId(context.getBatchId()))
+                .collect(Collectors.toList());
         this.publisher.getFlowContextRepo().save(cloned);
         this.publisher.offer(cloned);
     }

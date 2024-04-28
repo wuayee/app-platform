@@ -21,6 +21,11 @@ public class ToCallback<O> implements Callback<O> {
         this.products = products;
     }
 
+    /**
+     * 获取所有待回调发送的数据
+     *
+     * @return list类型的数据
+     */
     public List<O> getAll() {
         return this.products;
     }

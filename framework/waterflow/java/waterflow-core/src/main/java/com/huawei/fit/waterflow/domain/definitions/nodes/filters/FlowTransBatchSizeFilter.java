@@ -29,13 +29,13 @@ public class FlowTransBatchSizeFilter extends FlowFilter {
         }
         int threshold = Integer.parseInt(this.getProperties().get(THRESHOLD));
         String batchId = contexts.stream()
-                .filter(c -> StringUtils.isNotEmpty(c.getBatchId()))
+                .filter(context -> StringUtils.isNotEmpty(context.getBatchId()))
                 .findAny()
                 .map(FlowContext::getBatchId)
                 .orElse("");
         return contexts.stream()
-                .filter(c -> StringUtils.isNotEmpty(c.getBatchId()))
-                .filter(c -> c.getBatchId().equals(batchId))
+                .filter(context -> StringUtils.isNotEmpty(context.getBatchId()))
+                .filter(context -> context.getBatchId().equals(batchId))
                 .limit(threshold)
                 .collect(Collectors.toList());
     };

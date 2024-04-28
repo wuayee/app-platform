@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  * @since 1.0
  */
 public class SleepUtil {
-    private static final Logger log = Logger.get(SleepUtil.class);
+    private static final Logger LOG = Logger.get(SleepUtil.class);
 
     /**
      * 公用的时间延迟方法
@@ -24,13 +24,13 @@ public class SleepUtil {
      */
     public static void sleep(long millis) {
         if (millis <= 0) {
-            log.error("Sleep time is invalid.");
+            LOG.error("Sleep time is invalid.");
             return;
         }
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            log.error("Sleep get InterruptedException. Cause by : {}", e);
+            LOG.error("Sleep get InterruptedException. Cause by : {}", e);
         }
     }
 

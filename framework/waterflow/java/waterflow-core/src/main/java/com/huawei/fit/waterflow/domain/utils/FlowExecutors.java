@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 public final class FlowExecutors {
-    private static final Logger log = Logger.get(FlowExecutors.class);
+    private static final Logger LOG = Logger.get(FlowExecutors.class);
 
     private static final Map<String, ThreadPoolExecutor> THREAD_POOLS = new ConcurrentHashMap<>();
 
@@ -46,9 +46,9 @@ public final class FlowExecutors {
                 .workQueueCapacity(10)
                 .keepAliveTime(60L, SECONDS)
                 .exceptionHandler((thread, throwable) -> {
-                    log.error("[node-pool-{}]:  The node pool run failed, error cause: {}, message: {}.", key,
+                    LOG.error("[node-pool-{}]:  The node pool run failed, error cause: {}, message: {}.", key,
                             throwable.getCause(), throwable.getMessage());
-                    log.error("The node pool run failed details: ", throwable);
+                    LOG.error("The node pool run failed details: ", throwable);
                 })
                 .rejectedExecutionHandler(new AbortPolicy())
                 .build();
@@ -71,7 +71,7 @@ public final class FlowExecutors {
             try {
                 THREAD_POOLS.get(k).shutdown();
             } catch (InterruptedException e) {
-                log.error("[node-pool-{}]: The pool shutdown cause InterruptedException, error cause: {}, message: {}.",
+                LOG.error("[node-pool-{}]: The pool shutdown cause InterruptedException, error cause: {}, message: {}.",
                         k, e.getCause(), e.getMessage());
             } finally {
                 THREAD_POOLS.remove(k);

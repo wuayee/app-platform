@@ -85,7 +85,7 @@ public class ParallelNode<I> extends Node<I, I> {
         return new From<I>(this.getStreamId(), repo, messenger, locks) {
             @Override
             public void offer(List<FlowContext<I>> contexts) {
-                contexts.forEach(c -> c.setParallel(c.getId()).setParallelMode(self.mode.name()));
+                contexts.forEach(context -> context.setParallel(context.getId()).setParallelMode(self.mode.name()));
                 super.offer(contexts);
             }
         };

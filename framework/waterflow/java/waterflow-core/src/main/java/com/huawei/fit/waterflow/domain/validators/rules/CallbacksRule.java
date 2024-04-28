@@ -38,9 +38,9 @@ public class CallbacksRule implements FlowRule {
     public void apply(FlowDefinition flowDefinition) {
         flowDefinition.getNodeIdSet().forEach(nodeId -> {
             FlowNode flowNode = flowDefinition.getFlowNode(nodeId);
-            Optional.ofNullable(flowNode.getCallback()).ifPresent(c -> {
+            Optional.ofNullable(flowNode.getCallback()).ifPresent(callback -> {
                 Validation.isFalse(flowNode.belongTo(FlowNodeType.START), exception("flow callback node type"));
-                apply(c);
+                apply(callback);
             });
         });
     }

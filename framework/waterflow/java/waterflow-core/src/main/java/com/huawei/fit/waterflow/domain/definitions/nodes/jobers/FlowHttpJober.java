@@ -19,7 +19,7 @@ import java.util.Map;
  * @since 1.0
  */
 public class FlowHttpJober extends FlowJober {
-    private static final Logger log = Logger.get(FlowHttpJober.class);
+    private static final Logger LOG = Logger.get(FlowHttpJober.class);
 
     private static final String FLOWABLE_HANDLE_TASK_GENERICABLE = "b735c87f5e7e408d852d8440d0b2ecdf";
 
@@ -30,7 +30,7 @@ public class FlowHttpJober extends FlowJober {
         List<Map<String, Object>> contextData = getInputs(inputs);
         List<Map<String, Object>> outputs = this.brokerClient.getRouter(WaterflowTaskHandler.class,
                 FLOWABLE_HANDLE_TASK_GENERICABLE).route(new FitableIdFilter(HTTP_JOBER_FITABLE)).invoke(contextData);
-        log.info("Remote invoke success,nodeId: {}, fitable id is {}.", this.nodeMetaId, HTTP_JOBER_FITABLE);
+        LOG.info("Remote invoke success,nodeId: {}, fitable id is {}.", this.nodeMetaId, HTTP_JOBER_FITABLE);
         return convertToFlowData(outputs, inputs.get(0));
     }
 }

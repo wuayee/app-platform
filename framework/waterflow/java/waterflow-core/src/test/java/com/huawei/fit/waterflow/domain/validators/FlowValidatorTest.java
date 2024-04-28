@@ -130,13 +130,13 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程定义校验成功")
-        public void testValidateSuccess() {
+        void testValidateSuccess() {
             assertDoesNotThrow(() -> flowValidator.validate(flowDefinition));
         }
 
         @Test
         @DisplayName("测试流程定义flowContext配置校验失败")
-        public void testValidateFail() {
+        void testValidateFail() {
             HashMap<String, String> newProperties = new HashMap<>();
             newProperties.put("flowContext", "{{}}");
             flowDefinition.getFlowNode(STATE_ID).setProperties(newProperties);
@@ -149,7 +149,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程定义MetaId校验成功")
-        public void testValidateDefinitionMetaIdNotNullSuccess() {
+        void testValidateDefinitionMetaIdNotNullSuccess() {
             flowDefinition.setMetaId(EMPTY);
             WaterflowParamException nullException = assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
@@ -170,7 +170,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程定义Name校验成功")
-        public void testValidateDefinitionNameSuccess() {
+        void testValidateDefinitionNameSuccess() {
             flowDefinition.setName(EMPTY);
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
@@ -193,7 +193,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程定义Version校验成功")
-        public void testValidateDefinitionVersionSuccess() {
+        void testValidateDefinitionVersionSuccess() {
             flowDefinition.setVersion(EMPTY);
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
@@ -214,7 +214,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程定义Tenant校验成功")
-        public void testValidateDefinitionTenantSuccess() {
+        void testValidateDefinitionTenantSuccess() {
             flowDefinition.setTenant(EMPTY);
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -224,7 +224,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程定义status校验成功")
-        public void testValidateDefinitionStatusSuccess() {
+        void testValidateDefinitionStatusSuccess() {
             flowDefinition.setStatus(null);
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
@@ -233,7 +233,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程定义Nodes校验成功")
-        public void testValidateDefinitionNodesSuccess() {
+        void testValidateDefinitionNodesSuccess() {
             flowDefinition.setNodeMap(new HashMap<>());
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -243,7 +243,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程定义NodeSize校验成功")
-        public void testValidateDefinitionNodeSizeSuccess() {
+        void testValidateDefinitionNodeSizeSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.remove(CONDITION_ID);
             nodeMap.remove(STATE_ID);
@@ -263,7 +263,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程定义StartNodeSize校验成功")
-        public void testValidateDefinitionStartNodeSizeLessThan1Success() {
+        void testValidateDefinitionStartNodeSizeLessThan1Success() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.remove(START_ID);
             flowDefinition.setNodeMap(nodeMap);
@@ -275,7 +275,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程定义StartNodeSize校验成功")
-        public void testValidateDefinitionStartNodeSizeGreatThan1Success() {
+        void testValidateDefinitionStartNodeSizeGreatThan1Success() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.put("temp", getStartNode());
             flowDefinition.setNodeMap(nodeMap);
@@ -287,7 +287,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程定义EndNodeSize校验成功")
-        public void testValidateDefinitionEndNodeSizeLessThan1Success() {
+        void testValidateDefinitionEndNodeSizeLessThan1Success() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.remove(END_ID);
             flowDefinition.setNodeMap(nodeMap);
@@ -299,7 +299,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程定义EndNodeSize校验成功")
-        public void testValidateDefinitionEndNodeSizeGreatThan1Success() {
+        void testValidateDefinitionEndNodeSizeGreatThan1Success() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.put("temp", getEndNode());
             flowDefinition.setNodeMap(nodeMap);
@@ -341,7 +341,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点MetaId校验成功")
-        public void testValidateNodeMetaIdSuccess() {
+        void testValidateNodeMetaIdSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(START_ID).setMetaId(EMPTY);
             flowDefinition.setNodeMap(nodeMap);
@@ -361,7 +361,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点Name校验成功")
-        public void testValidateNodeNameSuccess() {
+        void testValidateNodeNameSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(CONDITION_ID).setName(EMPTY);
             flowDefinition.setNodeMap(nodeMap);
@@ -373,7 +373,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点Type校验成功")
-        public void testValidateNodeVersionSuccess() {
+        void testValidateNodeVersionSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(END_ID).setType(null);
             flowDefinition.setNodeMap(nodeMap);
@@ -385,7 +385,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点TriggerMode校验成功")
-        public void testValidateNodeTriggerModeSuccess() {
+        void testValidateNodeTriggerModeSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(STATE_ID).setTriggerMode(null);
             flowDefinition.setNodeMap(nodeMap);
@@ -397,7 +397,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点手动任务id校验成功")
-        public void testValidateNodeTaskIdSuccess() {
+        void testValidateNodeTaskIdSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(STATE_ID).getTask().setTaskId(null);
             flowDefinition.setNodeMap(nodeMap);
@@ -409,7 +409,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点手动任务类型校验成功")
-        public void testValidateNodeTaskTypeSuccess() {
+        void testValidateNodeTaskTypeSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(STATE_ID).getTask().setTaskType(null);
             flowDefinition.setNodeMap(nodeMap);
@@ -421,7 +421,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点手动任务属性校验成功")
-        public void testValidateNodeTaskPropertiesSuccess() {
+        void testValidateNodeTaskPropertiesSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(STATE_ID).getTask().getProperties().remove("title");
             flowDefinition.setNodeMap(nodeMap);
@@ -433,7 +433,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点自动任务类型校验成功")
-        public void testValidateNodeJoberTypeSuccess() {
+        void testValidateNodeJoberTypeSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get("state2").getJober().setType(null);
             flowDefinition.setNodeMap(nodeMap);
@@ -445,7 +445,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点自动任务fitables校验成功")
-        public void testValidateNodeJoberFitablesSuccess() {
+        void testValidateNodeJoberFitablesSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get("state2").getJober().setFitables(null);
             flowDefinition.setNodeMap(nodeMap);
@@ -463,7 +463,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点自动任务HttpJober校验成功")
-        public void testValidateNodeHttpJoberSuccess() {
+        void testValidateNodeHttpJoberSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get("state3").getJober().setProperties(new HashMap<>());
             flowDefinition.setNodeMap(nodeMap);
@@ -475,7 +475,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点过滤器校验成功")
-        public void testValidateNodeFilterSuccess() {
+        void testValidateNodeFilterSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get("state1").getTaskFilter().getProperties().put("threshold", "a");
             flowDefinition.setNodeMap(nodeMap);
@@ -487,7 +487,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点StartNodeTriggerMode校验成功")
-        public void testValidateStartNodeTriggerModeSuccess() {
+        void testValidateStartNodeTriggerModeSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(START_ID).setTriggerMode(MANUAL);
             flowDefinition.setNodeMap(nodeMap);
@@ -499,7 +499,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点StartNodeTriggerMode校验成功")
-        public void testValidateStartNodeJoberSuccess() {
+        void testValidateStartNodeJoberSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(START_ID).setTriggerMode(AUTO);
             nodeMap.get(START_ID).setJober(new FlowEchoJober());
@@ -512,7 +512,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点StartNodeEventLessThan1校验成功")
-        public void testValidateStartNodeEventLessThan1Success() {
+        void testValidateStartNodeEventLessThan1Success() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(START_ID).setEvents(new ArrayList<>());
             flowDefinition.setNodeMap(nodeMap);
@@ -524,7 +524,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点StartNodeEventGreatThan1校验成功")
-        public void testValidateStartNodeEventGreatThan1Success() {
+        void testValidateStartNodeEventGreatThan1Success() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             List<FlowEvent> events = new ArrayList<>();
             events.add(new FlowEvent());
@@ -539,7 +539,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点StartNodeJobber校验成功")
-        public void testValidateStartNodeJobberSuccess() {
+        void testValidateStartNodeJobberSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             FlowEchoJober flowFitableJobber = new FlowEchoJober();
             nodeMap.get(START_ID).setJober(flowFitableJobber);
@@ -552,7 +552,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点StateNodeEventLessThan1校验成功")
-        public void testValidateStateNodeEventLessThan1Success() {
+        void testValidateStateNodeEventLessThan1Success() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(STATE_ID).setEvents(new ArrayList<>());
             flowDefinition.setNodeMap(nodeMap);
@@ -564,7 +564,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点StateNodeEventGreatThan1校验成功")
-        public void testValidateStateNodeEventGreatThan1Success() {
+        void testValidateStateNodeEventGreatThan1Success() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             List<FlowEvent> events = new ArrayList<>();
             events.add(new FlowEvent());
@@ -579,13 +579,13 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点StateNodeJobber校验成功")
-        public void testValidateStateNodeJobberSuccess() {
+        void testValidateStateNodeJobberSuccess() {
             assertDoesNotThrow(() -> flowNodeValidator.validate(flowDefinition));
         }
 
         @Test
         @DisplayName("测试流程节点ConditionNodeTriggerMode校验成功")
-        public void testValidateConditionNodeTriggerModeSuccess() {
+        void testValidateConditionNodeTriggerModeSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(CONDITION_ID).setTriggerMode(MANUAL);
             flowDefinition.setNodeMap(nodeMap);
@@ -597,7 +597,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点ConditionNodeEventLessThan1校验成功")
-        public void testValidateConditionNodeEventLessThan1Success() {
+        void testValidateConditionNodeEventLessThan1Success() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(CONDITION_ID).setEvents(new ArrayList<>());
             flowDefinition.setNodeMap(nodeMap);
@@ -609,7 +609,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点ConditionNodeEventEqual1校验成功")
-        public void testValidateConditionNodeEventEqual1Success() {
+        void testValidateConditionNodeEventEqual1Success() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             List<FlowEvent> events = new ArrayList<>();
             events.add(new FlowEvent());
@@ -623,13 +623,13 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点ConditionNodeJobber校验成功")
-        public void testValidateConditionNodeJobberSuccess() {
+        void testValidateConditionNodeJobberSuccess() {
             assertDoesNotThrow(() -> flowNodeValidator.validate(flowDefinition));
         }
 
         @Test
         @DisplayName("测试流程节点EndNodeTriggerMode校验成功")
-        public void testValidateEndNodeTriggerModeSuccess() {
+        void testValidateEndNodeTriggerModeSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(END_ID).setTriggerMode(MANUAL);
             flowDefinition.setNodeMap(nodeMap);
@@ -641,7 +641,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点EndNode自动任务校验成功")
-        public void testValidateEndNodeJoberSuccess() {
+        void testValidateEndNodeJoberSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             nodeMap.get(END_ID).setJober(new FlowGeneralJober());
             nodeMap.get(END_ID).setTriggerMode(AUTO);
@@ -654,7 +654,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点EndNodeEventNotEmpty校验成功")
-        public void testValidateEndNodeEventNotEmptySuccess() {
+        void testValidateEndNodeEventNotEmptySuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             List<FlowEvent> events = new ArrayList<>();
             events.add(new FlowEvent());
@@ -668,7 +668,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程节点EndNodeJobber校验成功")
-        public void testValidateEndNodeJobberSuccess() {
+        void testValidateEndNodeJobberSuccess() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
             FlowEchoJober flowFitableJobber = new FlowEchoJober();
             nodeMap.get(END_ID).setJober(flowFitableJobber);
@@ -706,7 +706,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程事件MetaId校验成功")
-        public void testValidateFlowEventMetaIdSuccess() {
+        void testValidateFlowEventMetaIdSuccess() {
             flowDefinition.getNodeMap().get("state1").getEvents().get(0).setMetaId(EMPTY);
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -716,7 +716,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程事件FromMetaId校验成功")
-        public void testValidateFlowEventFromMetaIdSuccess() {
+        void testValidateFlowEventFromMetaIdSuccess() {
             flowDefinition.getNodeMap().get("state1").getEvents().get(0).setFrom(EMPTY);
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -726,7 +726,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程事件FromMetaIdInvalid校验成功")
-        public void testValidateFlowEventFromMetaIdInvalidSuccess() {
+        void testValidateFlowEventFromMetaIdInvalidSuccess() {
             flowDefinition.getNodeMap().get("state1").getEvents().get(0).setFrom("invalid");
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -736,7 +736,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程事件ToMetaId校验成功")
-        public void testValidateFlowEventToMetaIdSuccess() {
+        void testValidateFlowEventToMetaIdSuccess() {
             flowDefinition.getNodeMap().get("state1").getEvents().get(0).setTo(EMPTY);
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -746,7 +746,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程事件ToMetaIdInvalid校验成功")
-        public void testValidateFlowEventToMetaIdInvalidSuccess() {
+        void testValidateFlowEventToMetaIdInvalidSuccess() {
             flowDefinition.getNodeMap().get("state1").getEvents().get(0).setTo("invalid");
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -756,7 +756,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程事件fromEqualTo校验成功")
-        public void testValidateFlowEventFromEqualToSuccess() {
+        void testValidateFlowEventFromEqualToSuccess() {
             FlowEvent flowEvent = flowDefinition.getNodeMap().get("state1").getEvents().get(0);
             flowEvent.setTo(flowEvent.getFrom());
 
@@ -767,7 +767,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程事件StateNodeConditionRule校验成功")
-        public void testValidateFlowEventStateNodeConditionRuleSuccess() {
+        void testValidateFlowEventStateNodeConditionRuleSuccess() {
             flowDefinition.getNodeMap().get("state1").getEvents().get(0).setConditionRule("flow event condition rule");
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -777,7 +777,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程事件ConditionNodeConditionRule校验成功")
-        public void testValidateFlowEventConditionNodeConditionRuleSuccess() {
+        void testValidateFlowEventConditionNodeConditionRuleSuccess() {
             flowDefinition.getNodeMap().get("condi1").getEvents().get(0).setConditionRule(EMPTY);
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -812,7 +812,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程手动任务Type校验成功")
-        public void testValidateFlowJobberTypeSuccess() {
+        void testValidateFlowJobberTypeSuccess() {
             flowDefinition.getNodeMap().get("state2").getJober().setType(null);
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -822,7 +822,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程手动任务Fitables校验成功")
-        public void testValidateFlowJobberFitableSuccess() {
+        void testValidateFlowJobberFitableSuccess() {
             flowDefinition.getNodeMap().get("state2").getJober().getFitables().add("codehub实现2");
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -848,7 +848,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程解析成功")
-        public void testFlowParsingSuccess() {
+        void testFlowParsingSuccess() {
             flowDefinition = getFlowDefinitionFromJson();
             assertEquals(START, flowDefinition.getFlowNode("start1").getType());
             assertEquals(STATE, flowDefinition.getFlowNode("state1").getType());
@@ -887,7 +887,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试智能表单任务type校验成功")
-        public void testValidateSmartFormTaskTypeSuccess() {
+        void testValidateSmartFormTaskTypeSuccess() {
             flowDefinition.getNodeMap().get("state1").getTask().setTaskType(null);
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -897,7 +897,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试智能表单任务ID校验成功")
-        public void testValidateSmartFormTaskIdSuccess() {
+        void testValidateSmartFormTaskIdSuccess() {
             flowDefinition.getNodeMap().get("state1").getTask().setTaskId(null);
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -932,7 +932,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程回调函数NodeType校验成功")
-        public void testValidateFlowCallbackNodeTypeSuccess() {
+        void testValidateFlowCallbackNodeTypeSuccess() {
             flowDefinition.getNodeMap().get("start1").setCallback(new FlowGeneralCallback());
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -942,7 +942,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程回调函数Type校验成功")
-        public void testValidateFlowCallbackTypeSuccess() {
+        void testValidateFlowCallbackTypeSuccess() {
             flowDefinition.getNodeMap().get("state2").getCallback().setType(null);
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,
@@ -952,7 +952,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
 
         @Test
         @DisplayName("测试流程回调函数Fitables校验成功")
-        public void testValidateFlowCallbackFitableSuccess() {
+        void testValidateFlowCallbackFitableSuccess() {
             flowDefinition.getNodeMap().get("state2").getCallback().getFitables().add("通知回调函数实现2");
 
             WaterflowParamException exception = assertThrows(WaterflowParamException.class,

@@ -15,6 +15,7 @@ import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscriber;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import com.googlecode.aviator.AviatorEvaluator;
 
@@ -31,7 +32,7 @@ import java.util.Optional;
  */
 @Getter
 public class FlowConditionNode extends FlowNode {
-    private static final Logger log = Logger.get(FlowConditionNode.class);
+    private static final Logger LOG = Logger.get(FlowConditionNode.class);
 
     /**
      * 获取节点内的processor
@@ -59,14 +60,14 @@ public class FlowConditionNode extends FlowNode {
     }
 
     private Operators.Whether<FlowData> getWhether(String streamId, FlowEvent event) {
-        log.info("[flowEngines] stream {} condition node {} with origin rule {}", streamId, this.metaId,
+        LOG.info("[flowEngines] stream {} condition node {} with origin rule {}", streamId, this.metaId,
                 event.getConditionRule());
 
         return (input) -> {
             String executableRule = event.getExecutableRule(input);
-            log.info("[flowEngines] stream {} condition node {} with executable rule {}", streamId, this.metaId,
+            LOG.info("[flowEngines] stream {} condition node {} with executable rule {}", streamId, this.metaId,
                     executableRule);
-            return (boolean) AviatorEvaluator.execute(executableRule);
+            return ObjectUtils.cast(AviatorEvaluator.execute(executableRule));
         };
     }
 }

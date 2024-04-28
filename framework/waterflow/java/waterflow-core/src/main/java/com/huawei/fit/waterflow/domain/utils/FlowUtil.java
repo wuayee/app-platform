@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * @since 1.0
  */
 public final class FlowUtil {
-    private static final Logger log = Logger.get(FlowUtil.class);
+    private static final Logger LOG = Logger.get(FlowUtil.class);
 
     private static final Pattern PATTERN = Pattern.compile("\\{\\{([^\\}]+)\\}\\}");
 
@@ -54,7 +54,7 @@ public final class FlowUtil {
      * @return 替换后的值
      */
     public static Object replace(String variable, Map<String, Object> valueMap) {
-        log.info("[FlowUtil] replace variables for variable: [{}], value map: [{}]", variable, valueMap);
+        LOG.info("[FlowUtil] replace variables for variable: [{}], value map: [{}]", variable, valueMap);
         if (StringUtils.isEmpty(variable)) {
             return variable;
         }
@@ -78,7 +78,7 @@ public final class FlowUtil {
      * @return 合并后的map
      */
     public static Map<String, Object> mergeMaps(Map<String, Object> input, Map<String, Object> target) {
-        log.info("[FlowUtil] mergeMaps for input: [{}], target: [{}]", input, target);
+        LOG.info("[FlowUtil] mergeMaps for input: [{}], target: [{}]", input, target);
         Map<String, Object> mergedMap = new HashMap<>(input);
         target.forEach((targetKey, targetValue) -> {
             if (!mergedMap.containsKey(targetKey)) {

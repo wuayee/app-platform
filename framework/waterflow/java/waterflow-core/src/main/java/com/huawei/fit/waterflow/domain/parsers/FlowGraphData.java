@@ -315,10 +315,10 @@ public class FlowGraphData {
         Map<String, String> properties = new HashMap<>();
         getNodeJober(index).entrySet()
                 .stream()
-                .filter(e -> !NAME.equals(e.getKey()))
-                .filter(e -> !TYPE.equals(e.getKey()))
-                .filter(e -> !FITABLES.equals(e.getKey()))
-                .forEach(e -> properties.put(e.getKey(), e.getValue().toString()));
+                .filter(entry -> !NAME.equals(entry.getKey()))
+                .filter(entry -> !TYPE.equals(entry.getKey()))
+                .filter(entry -> !FITABLES.equals(entry.getKey()))
+                .forEach(entry -> properties.put(entry.getKey(), entry.getValue().toString()));
         return properties;
     }
 
@@ -355,8 +355,8 @@ public class FlowGraphData {
         Map<String, String> properties = new HashMap<>();
         getNodeFilter(index, filterKey).entrySet()
                 .stream()
-                .filter(e -> !TYPE.equals(e.getKey()))
-                .forEach(e -> properties.put(e.getKey(), e.getValue().toString()));
+                .filter(entry -> !TYPE.equals(entry.getKey()))
+                .forEach(entry -> properties.put(entry.getKey(), entry.getValue().toString()));
         return properties;
     }
 
@@ -400,9 +400,9 @@ public class FlowGraphData {
         Map<String, String> properties = new HashMap<>();
         getNodeTask(index).entrySet()
                 .stream()
-                .filter(e -> !TASK_ID.equals(e.getKey()))
-                .filter(e -> !TYPE.equals(e.getKey()))
-                .forEach(e -> properties.put(e.getKey(), e.getValue().toString()));
+                .filter(entry -> !TASK_ID.equals(entry.getKey()))
+                .filter(entry -> !TYPE.equals(entry.getKey()))
+                .forEach(entry -> properties.put(entry.getKey(), entry.getValue().toString()));
         return properties;
     }
 
@@ -466,10 +466,10 @@ public class FlowGraphData {
         Map<String, String> properties = new HashMap<>();
         getNodeCallback(index).entrySet()
                 .stream()
-                .filter(e -> !NAME.equals(e.getKey()))
-                .filter(e -> !TYPE.equals(e.getKey()))
-                .filter(e -> !FITABLES.equals(e.getKey()))
-                .forEach(e -> properties.put(e.getKey(), e.getValue().toString()));
+                .filter(entry -> !NAME.equals(entry.getKey()))
+                .filter(entry -> !TYPE.equals(entry.getKey()))
+                .filter(entry -> !FITABLES.equals(entry.getKey()))
+                .forEach(entry -> properties.put(entry.getKey(), entry.getValue().toString()));
         return properties;
     }
 
@@ -542,16 +542,16 @@ public class FlowGraphData {
         Map<String, String> properties = new HashMap<>();
         getNode(index).entrySet()
                 .stream()
-                .filter(e -> !NAME.equals(e.getKey()))
-                .filter(e -> !TYPE.equals(e.getKey()))
-                .filter(e -> !META_ID.equals(e.getKey()))
-                .filter(e -> !TRIGGER_MODE.equals(e.getKey()))
-                .filter(e -> !TASK.equals(e.getKey()))
-                .filter(e -> !TASK_FILTER.equals(e.getKey()))
-                .filter(e -> !JOBER.equals(e.getKey()))
-                .filter(e -> !JOBER_FILTER.equals(e.getKey()))
-                .filter(e -> !CALLBACK.equals(e.getKey()))
-                .forEach(e -> properties.put(e.getKey(), e.getValue().toString()));
+                .filter(entry -> !NAME.equals(entry.getKey()))
+                .filter(entry -> !TYPE.equals(entry.getKey()))
+                .filter(entry -> !META_ID.equals(entry.getKey()))
+                .filter(entry -> !TRIGGER_MODE.equals(entry.getKey()))
+                .filter(entry -> !TASK.equals(entry.getKey()))
+                .filter(entry -> !TASK_FILTER.equals(entry.getKey()))
+                .filter(entry -> !JOBER.equals(entry.getKey()))
+                .filter(entry -> !JOBER_FILTER.equals(entry.getKey()))
+                .filter(entry -> !CALLBACK.equals(entry.getKey()))
+                .forEach(entry -> properties.put(entry.getKey(), entry.getValue().toString()));
         return properties;
     }
 

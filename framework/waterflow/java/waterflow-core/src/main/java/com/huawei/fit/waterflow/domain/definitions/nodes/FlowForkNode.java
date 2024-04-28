@@ -29,7 +29,7 @@ import java.util.Optional;
  */
 @Getter
 public class FlowForkNode extends FlowNode {
-    private static final Logger log = Logger.get(FlowForkNode.class);
+    private static final Logger LOG = Logger.get(FlowForkNode.class);
 
     /**
      * 获取节点内的processor

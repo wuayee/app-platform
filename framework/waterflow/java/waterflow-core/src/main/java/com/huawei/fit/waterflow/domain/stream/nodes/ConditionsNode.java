@@ -33,7 +33,7 @@ public class ConditionsNode<I> extends Node<I, I> {
      * @param locks 流程锁
      */
     public ConditionsNode(String streamId, FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
-        super(streamId, (Operators.Map<FlowContext<I>, I>) FlowContext::getData, repo, messenger, locks);
+        super(streamId, FlowContext::getData, repo, messenger, locks);
         super.id = "condition:" + UUIDUtil.uuid();
     }
 
@@ -68,12 +68,12 @@ public class ConditionsNode<I> extends Node<I, I> {
         return new From<I>(this.getStreamId(), repo, messenger, locks) {
             @Override
             public void offer(List<FlowContext<I>> contexts) {
-                this.getSubscriptions().forEach(w -> {
+                this.getSubscriptions().forEach(subscription -> {
                     List<FlowContext<I>> matched = contexts.stream()
-                            .filter(c -> w.getWhether().is(c.getData()))
+                            .filter(context -> subscription.getWhether().is(context.getData()))
                             .collect(Collectors.toList());
                     matched.forEach(contexts::remove);
-                    w.cache(matched);
+                    subscription.cache(matched);
                 });
             }
         };

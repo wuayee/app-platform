@@ -63,13 +63,13 @@ public class MatchToHappen<D, I, F extends Flow<D>> {
      * @return conditions后续的节点
      */
     public <O> State<O, D, I, F> others(Operators.BranchProcessor<O, D, I, F> processor) {
-        State<I, D, I, F> branchStart = new State<>(this.conditions.node.publisher().just(i -> {
+        State<I, D, I, F> branchStart = new State<>(this.conditions.node.publisher().just(any -> {
         }, null, null), this.conditions.node.getFlow());
         return processor.process(branchStart);
     }
 
     private void to(Operators.Whether<I> whether, Operators.BranchToProcessor<D, I, F> processor) {
-        State<I, D, I, F> branchStart = new State<>(this.conditions.node.publisher().just(i -> {
+        State<I, D, I, F> branchStart = new State<>(this.conditions.node.publisher().just(any -> {
         }, null, whether), this.conditions.node.getFlow());
         processor.process(branchStart);
     }

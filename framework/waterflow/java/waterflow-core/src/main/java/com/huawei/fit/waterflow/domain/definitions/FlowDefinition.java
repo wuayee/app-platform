@@ -180,15 +180,15 @@ public class FlowDefinition {
     public FlowNode getFlowNodeByEvent(String eventId) {
         return nodeMap.values()
                 .stream()
-                .map(n -> n.getEvents()
+                .map(node -> node.getEvents()
                         .stream()
-                        .filter(e -> e.getMetaId().equals(eventId))
+                        .filter(event -> event.getMetaId().equals(eventId))
                         .findAny()
                         .map(FlowEvent::getTo)
                         .orElse(""))
                 .filter(StringUtils::isNotEmpty)
                 .findAny()
-                .map(t -> nodeMap.get(t))
+                .map(nodeId -> nodeMap.get(nodeId))
                 .orElseThrow((() -> new WaterflowException(FLOW_FIND_TO_NODE_BY_EVENT_FAILED)));
     }
 
@@ -223,10 +223,10 @@ public class FlowDefinition {
     public Map<String, Set<FlowEvent>> getFromEvents() {
         Map<String, Set<FlowEvent>> fromEvents = new HashMap<>();
 
-        this.getNodeMap().values().forEach(n -> n.getEvents().forEach(e -> {
-            if (StringUtils.isNotEmpty(e.getTo())) {
-                fromEvents.putIfAbsent(e.getTo(), new HashSet<>());
-                fromEvents.get(e.getTo()).add(e);
+        this.getNodeMap().values().forEach(node -> node.getEvents().forEach(event -> {
+            if (StringUtils.isNotEmpty(event.getTo())) {
+                fromEvents.putIfAbsent(event.getTo(), new HashSet<>());
+                fromEvents.get(event.getTo()).add(event);
             }
         }));
         return fromEvents;

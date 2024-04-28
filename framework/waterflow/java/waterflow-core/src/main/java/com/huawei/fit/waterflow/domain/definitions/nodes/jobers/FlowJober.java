@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class FlowJober {
-    private static final Logger log = Logger.get(FlowJober.class);
+    private static final Logger LOG = Logger.get(FlowJober.class);
 
     private static final String EXTRA_JOBER = "extraJober";
 
@@ -114,9 +114,9 @@ public abstract class FlowJober {
                         .invoke(this.nodeMetaId, filterFlowData(inputs), ex.getMessage());
             }
             String fitableString = Optional.ofNullable(fitables).map(Object::toString).orElse("");
-            log.error("Catch throwable when remote invoke, fitables is {}. Caused by {}.", fitableString,
+            LOG.error("Catch throwable when remote invoke, fitables is {}. Caused by {}.", fitableString,
                     ex.getMessage());
-            log.error("Stack: ", ex);
+            LOG.error("Stack: ", ex);
             throw new WaterflowException(FLOW_EXECUTE_FITABLE_TASK_FAILED, this.name, this.type.getCode(),
                     fitableString, ex.getMessage());
         } finally {
@@ -145,7 +145,7 @@ public abstract class FlowJober {
                     .ifPresent(stringList -> this.fitables = new HashSet<>(stringList));
 
             jober.map(joberObject -> joberObject.getString(FlowJoberProperties.ENTITY.getValue()))
-                    .ifPresent(s -> this.properties.put(FlowJoberProperties.ENTITY.getValue(), s));
+                    .ifPresent(entity -> this.properties.put(FlowJoberProperties.ENTITY.getValue(), entity));
         }
 
         Map<String, Object> oldJober = new HashMap<>();
@@ -171,7 +171,8 @@ public abstract class FlowJober {
     protected void restoreJoberConfig(Map<String, Object> originConfigs) {
         this.setFitables(ObjectUtils.cast(originConfigs.get(FlowGraphData.FITABLES)));
         Optional.ofNullable(originConfigs.get(FlowJoberProperties.ENTITY.getValue()))
-                .ifPresent(e -> this.getProperties().put(FlowJoberProperties.ENTITY.getValue(), (String) e));
+                .ifPresent(entity -> this.getProperties()
+                        .put(FlowJoberProperties.ENTITY.getValue(), ObjectUtils.cast(entity)));
     }
 
     /**
@@ -184,8 +185,8 @@ public abstract class FlowJober {
         List<Map<String, Object>> contextData = new ArrayList<>();
         flowDataList.forEach(input -> {
             Optional.ofNullable(this.properties.get(FlowJoberProperties.ENTITY.getValue()))
-                    .ifPresent(e -> input.getBusinessData()
-                            .put(FlowJoberProperties.ENTITY.getValue(), JSON.parseObject(e)));
+                    .ifPresent(entity -> input.getBusinessData()
+                            .put(FlowJoberProperties.ENTITY.getValue(), JSON.parseObject(entity)));
 
             Map<String, String> extraJober = new HashMap<>();
             Set<String> knownProperties = Arrays.stream(FlowJoberProperties.values())
@@ -193,8 +194,8 @@ public abstract class FlowJober {
                     .collect(Collectors.toSet());
             this.properties.keySet()
                     .stream()
-                    .filter(k -> !knownProperties.contains(k))
-                    .forEach(k -> extraJober.put(k, this.properties.get(k)));
+                    .filter(key -> !knownProperties.contains(key))
+                    .forEach(key -> extraJober.put(key, this.properties.get(key)));
             input.getContextData().put(EXTRA_JOBER, extraJober);
 
             Map<String, Object> data = new HashMap<>();
@@ -218,9 +219,9 @@ public abstract class FlowJober {
                 .map(output -> FlowData.builder()
                         .operator(templateData.getOperator())
                         .startTime(templateData.getStartTime())
-                        .businessData((Map<String, Object>) output.get("businessData"))
+                        .businessData(ObjectUtils.cast(output.get("businessData")))
                         .contextData(new HashMap<>(templateData.getContextData()))
-                        .passData((Map<String, Object>) output.get("passData"))
+                        .passData(ObjectUtils.cast(output.get("passData")))
                         .build())
                 .collect(Collectors.toList());
     }

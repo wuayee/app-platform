@@ -71,11 +71,6 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
         this.processor.emit(data, token);
     }
 
-    //        @Override
-    //        public void publish(O data) {
-    //            this.processor.publish(data);
-    //        }
-
     /**
      * 标识一个节点的别名id
      * 设定一个别名id后，通常用于to跳转，或者向一个该节点发射数据
@@ -84,7 +79,7 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
      * @return 返回节点本身，便于后续的链式调用
      */
     public State<O, D, I, F> id(String id) {
-        return (State<O, D, I, F>) super.id(id);
+        return ObjectUtils.cast(super.id(id));
     }
 
     /**
@@ -128,28 +123,6 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
     }
 
     /**
-     * wrap后供cross flow.to引用
-     *
-     * @param wrapper wrapper
-     * @return State
-     */
-    //        public State<O, D, I, F> alias(Processors.Just<StateAlias<I, O>> wrapper) {
-    //            State<O, D, I, F> self = this;
-    //            wrapper.process(new StateAlias<I, O>() {
-    //                @Override
-    //                public State<O, ?, I, ?> getState() {
-    //                    return self;
-    //                }
-    //
-    //                @Override
-    //                public <R> void to(StateAlias<R, ?> next, Processors.Map<O, R> convert) {
-    //                    self.processor.subscribe(next.getState().processor, convert, i -> true);
-    //                }
-    //            });
-    //            return this;
-    //        }
-
-    /**
      * 处理发生错误时的处理方式
      *
      * @param handler 错误处理器
@@ -166,7 +139,7 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
      * @return 返回对应的流对象
      */
     public F close() {
-        return this.close(i -> {});
+        return this.close(data -> {});
     }
 
     /**
@@ -192,16 +165,21 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
         List<Publisher> nodes = this.getFlow()
                 .nodes()
                 .stream()
-                .map(n -> ObjectUtils.<Publisher>cast(n))
+                .map(node -> ObjectUtils.<Publisher>cast(node))
                 .collect(Collectors.toList());
         nodes.add(this.getFlow().start());
-        nodes.stream().filter(n -> !n.subscribed()).forEach(n -> n.subscribe(getFlow().end()));
+        nodes.stream().filter(node -> !node.subscribed()).forEach(node -> node.subscribe(getFlow().end()));
         getFlow().end().onComplete(callback);
-        this.getFlow().nodes().forEach(n -> n.onGlobalError(errHandler));
+        this.getFlow().nodes().forEach(node -> node.onGlobalError(errHandler));
         getFlow().end().onGlobalError(errHandler);
         return this.getFlow();
     }
 
+    /**
+     * 获取该state内部实际的Subscriber
+     *
+     * @return 内部的Subscriber
+     */
     public Subscriber<I, O> subscriber() {
         return this.processor;
     }

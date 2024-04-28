@@ -17,11 +17,16 @@ import java.util.Arrays;
  * @since 1.0
  */
 public enum FlowTraceStatus {
-    READY,          // 未执行
-    RUNNING,        // 执行中
-    ARCHIVED,       // 执行完成
-    ERROR,          // 执行失败
-    TERMINATE;      // 已终止
+    // 未执行
+    READY,
+    // 执行中
+    RUNNING,
+    // 执行完成
+    ARCHIVED,
+    // 执行失败
+    ERROR,
+    // 已终止
+    TERMINATE;
 
     /**
      * 根据字符串获取FlowTraceStatus

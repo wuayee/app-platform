@@ -13,6 +13,7 @@ import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.utils.Tuple;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,16 +59,6 @@ public class Fork<O, D, I, F extends Flow<D>> extends Activity<D, F> {
 
     /**
      * 生成join节点，到这里parallel结束，回到一般节点
-     * 因为没有processor，就是把处理过的数据返回
-     *
-     * @return 回到一般节点
-     */
-    //        public State<O, D, O, F> join() {
-    //            return this.join(null, (acc, i) -> i);
-    //        }
-
-    /**
-     * 生成join节点，到这里parallel结束，回到一般节点
      *
      * @param init 初始值
      * @param processor join后的数据再处理一下
@@ -85,7 +76,7 @@ public class Fork<O, D, I, F extends Flow<D>> extends Activity<D, F> {
                 if (windowToken.fulfilled()) {
                     return null;
                 }
-                Tuple<FlowSession, R> acc = (Tuple<FlowSession, R>) windowToken.accs().get(input.keyBy());
+                Tuple<FlowSession, R> acc = ObjectUtils.cast(windowToken.accs().get(input.keyBy()));
                 if (acc == null) {
                     acc = Tuple.from(input.getSession(), init);
                 }
@@ -97,10 +88,8 @@ public class Fork<O, D, I, F extends Flow<D>> extends Activity<D, F> {
             }
         };
         Processor<O, R> pro = this.forks.get(0).processor.join(wrapper, null, null);
-        processWrapper.set((Publisher<O>) pro);
-        this.forks.stream().skip(1).forEach(fork -> {
-            fork.processor.subscribe(pro);
-        });
+        processWrapper.set(ObjectUtils.cast(pro));
+        this.forks.stream().skip(1).forEach(fork -> fork.processor.subscribe(pro));
         return new State<>(pro, this.node.getFlow());
     }
 }

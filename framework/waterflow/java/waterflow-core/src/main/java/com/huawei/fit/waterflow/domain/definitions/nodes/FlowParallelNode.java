@@ -39,7 +39,7 @@ import java.util.Optional;
  */
 @Getter
 public class FlowParallelNode extends FlowNode {
-    private static final Logger log = Logger.get(FlowParallelNode.class);
+    private static final Logger LOG = Logger.get(FlowParallelNode.class);
 
     private static final String PARALLEL_NODE_ID_SUFFIX = "parallel";
 

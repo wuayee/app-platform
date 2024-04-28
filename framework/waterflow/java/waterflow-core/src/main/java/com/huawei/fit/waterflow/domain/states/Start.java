@@ -13,6 +13,7 @@ import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.utils.Identity;
 import com.huawei.fit.waterflow.domain.utils.Tuple;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      * @return 节点自身
      */
     public Start<O, D, I, F> id(String id) {
-        return (Start<O, D, I, F>) super.id(id);
+        return ObjectUtils.cast(super.id(id));
     }
 
     /**
@@ -165,8 +166,6 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      * @return 新的处理节点
      */
     public <R> State<R, D, O, F> flatMap(Operators.FlatMap<O, R> processor) {
-        //            Processors.FlatMap<FlowContext<O>,R> wrapper = input -> processor.process(input.getData());
-        //            return new State<>(this.from.flatMap(wrapper, null, null), this.getFlow());
         AtomicReference<State<R, D, O, F>> state = new AtomicReference<>();
         Operators.Map<FlowContext<O>, R> wrapper = input -> {
             DataStart<R, R, ?> start = processor.process(input.getData());
@@ -186,11 +185,11 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      * @return buffer后的节点
      */
     public State<List<O>, D, O, F> buffer() {
-        return this.reduce(null, (acc, i) -> {
+        return this.reduce(null, (acc, cur) -> {
             if (acc == null) {
                 acc = new ArrayList<>();
             }
-            acc.add(i);
+            acc.add(cur);
             return acc;
         });
     }
@@ -250,7 +249,6 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
                 acc = processor.process(accs.get(key) == null ? init : accs.get(key).second(), input.getData(), input);
                 accs.put(key, Tuple.from(input.getSession(), acc));
                 if (windowToken == null) {
-
                     return acc;
                 } else {
                     windowToken.setProcessor(stateWrapper.get().from);
@@ -316,6 +314,6 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      * @return 新的处理节点
      */
     public <R> State<List<R>, D, ?, F> produce(Operators.Produce<O, R> processor) {
-        return this.buffer().map(i -> processor.process(i));
+        return this.buffer().map(contexts -> processor.process(contexts));
     }
 }

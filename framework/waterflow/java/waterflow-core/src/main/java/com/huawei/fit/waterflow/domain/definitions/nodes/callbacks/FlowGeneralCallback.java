@@ -24,19 +24,19 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 public class FlowGeneralCallback extends FlowCallback {
-    private static final Logger log = Logger.get(FlowGeneralCallback.class);
+    private static final Logger LOG = Logger.get(FlowGeneralCallback.class);
 
     private static final String GENERAL_CALLBACK_GENERICABLE = "w8onlgq9xsw13jce4wvbcz3kbmjv3tuw";
 
     @Override
     protected void executeCallback(List<FlowContext<FlowData>> inputs) throws Throwable {
-        log.info("[FlowGeneralCallback]: start to execute callback.");
+        LOG.info("[FlowGeneralCallback]: start to execute callback.");
 
         for (String fitableId : fitables) {
             brokerClient.getRouter(WaterflowNodeNotify.class, GENERAL_CALLBACK_GENERICABLE)
                     .route(new FitableIdFilter(fitableId))
                     .invoke(prepareContexts(inputs));
-            log.info("[FlowGeneralCallback]: Remote invocation succeeded, fitable id is {}.", fitableId);
+            LOG.info("[FlowGeneralCallback]: Remote invocation succeeded, fitable id is {}.", fitableId);
         }
     }
 

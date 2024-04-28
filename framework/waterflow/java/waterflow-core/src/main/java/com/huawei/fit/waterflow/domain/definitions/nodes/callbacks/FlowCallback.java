@@ -34,7 +34,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class FlowCallback {
-    private static final Logger log = Logger.get(FlowCallback.class);
+    private static final Logger LOG = Logger.get(FlowCallback.class);
 
     /**
      * 所在节点的metaId
@@ -82,7 +82,7 @@ public abstract class FlowCallback {
             executeCallback(inputs);
         } catch (Throwable ex) {
             String fitableString = Optional.ofNullable(fitables).map(Object::toString).orElse("");
-            log.error("Caught a throwable during a remote invocation, fitables are {}. Caused by {}.", fitableString,
+            LOG.error("Caught a throwable during a remote invocation, fitables are {}. Caused by {}.", fitableString,
                     ex.getMessage());
             throw new WaterflowException(FLOW_EXECUTE_CALLBACK_FITABLES_FAILED, this.name, this.type.getCode(),
                     fitableString, ex.getMessage());

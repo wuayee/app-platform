@@ -67,7 +67,7 @@ public class When<I, O> extends IdGenerator implements Subscription<I, O> {
             FlowContextRepo repo, FlowContextMessenger messenger) {
         this.streamId = streamId;
         this.converter = converter == null ? input -> (O) input : converter;
-        this.whether = whether == null ? i -> true : whether;
+        this.whether = whether == null ? any -> true : whether;
         this.to = to;
         this.to.onSubscribe(this);
         this.repo = repo;
@@ -99,7 +99,7 @@ public class When<I, O> extends IdGenerator implements Subscription<I, O> {
         // 将context发送到节点边上，更新为PENDING状态，等待下一个节点处理
         // 该过程不产生新的context数据，只更新context的状态
         List<FlowContext<O>> converted = contexts.stream()
-                .map(c -> c.convertData(this.converter.process(c.getData()), c.getId())
+                .map(context -> context.convertData(this.converter.process(context.getData()), context.getId())
                         .setPosition(this.getId())
                         .setStatus(PENDING))
                 .collect(Collectors.toList());

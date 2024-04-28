@@ -60,6 +60,5 @@ public class FlowEchoJober extends FlowJober {
 
     @Override
     protected void restoreJoberConfig(Map<String, Object> originConfigs) {
-
     }
 }

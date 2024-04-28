@@ -40,6 +40,7 @@ import com.huawei.fit.waterflow.domain.utils.UUIDUtil;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.schedule.Task;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import lombok.Getter;
@@ -65,7 +66,7 @@ import java.util.stream.Stream;
  * @since 1.0
  */
 public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
-    private static final Logger log = Logger.get(To.class);
+    private static final Logger LOG = Logger.get(To.class);
 
     private static final String PROCESS_T_NAME_PREFIX = "NodeProcessT";
 
@@ -107,13 +108,13 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             return new ArrayList<>();
         }
         String batchId = contexts.stream()
-                .filter(c -> StringUtils.isNotEmpty(c.getBatchId()))
+                .filter(context -> StringUtils.isNotEmpty(context.getBatchId()))
                 .findAny()
                 .map(FlowContext::getBatchId)
                 .orElse("");
         return contexts.stream()
-                .filter(c -> StringUtils.isNotEmpty(c.getBatchId()))
-                .filter(c -> c.getBatchId().equals(batchId))
+                .filter(context -> StringUtils.isNotEmpty(context.getBatchId()))
+                .filter(context -> context.getBatchId().equals(batchId))
                 .collect(Collectors.toList());
     };
 
@@ -123,13 +124,13 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             return new ArrayList<>();
         }
         String toBatch = contexts.stream()
-                .filter(c -> StringUtils.isNotEmpty(c.getToBatch()))
+                .filter(context -> StringUtils.isNotEmpty(context.getToBatch()))
                 .findAny()
                 .map(FlowContext::getToBatch)
                 .orElse("");
         return contexts.stream()
-                .filter(c -> StringUtils.isNotEmpty(c.getToBatch()))
-                .filter(c -> c.getToBatch().equals(toBatch))
+                .filter(context -> StringUtils.isNotEmpty(context.getToBatch()))
+                .filter(context -> context.getToBatch().equals(toBatch))
                 .collect(Collectors.toList());
     };
 
@@ -148,15 +149,6 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      * 该节点只做单数据处理，理解为一条数据一条数据处理，是一个mapping操作
      */
     private Operators.Map<FlowContext<I>, O> map;
-
-    /**
-     * 该节点只做单数据处理，但处理结果为多条输出
-     */
-    //    private Processors.FlatMap<FlowContext<I>, O> flatMap;
-    /**
-     * 该节点把n条数据处理成一条数据
-     */
-    //    private Processors.Reduce<FlowContext<I>, O> reduce;
 
     /**
      * 该节点同时处理最多MAX_TRAFFIC条数据，这种情况适合n条a数据生产出m条b数据，是一个producing操作
@@ -181,7 +173,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     /**
      * 数据处理完后callback函数，用于外界的侦听或者数据处理完后后续操作
      */
-    private Operators.Just<Callback<FlowContext<O>>> callback = i -> {
+    private Operators.Just<Callback<FlowContext<O>>> callback = any -> {
     };
 
     private Operators.ErrorHandler<I> errorHandler = null;
@@ -288,7 +280,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             String threadName = getThreadName(PRE_PROCESS_T_NAME_PREFIX);
             preProcessT = new Thread(this::preProcess, threadName);
             preProcessT.start();
-            log.info("[{}] preprocess main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
+            LOG.info("[{}] preprocess main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
                     this.id);
         }
         if (type == PROCESS && (processT == null || !processRunning)) {
@@ -296,7 +288,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             String threadName = getThreadName(PROCESS_T_NAME_PREFIX);
             processT = new Thread(this::process, threadName);
             processT.start();
-            log.info("[{}] process main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
+            LOG.info("[{}] process main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
                     this.id);
         }
     }
@@ -325,7 +317,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                 ready = requestReady();
                 if (CollectionUtils.isEmpty(ready)) {
                     preProcessRunning = false;
-                    log.info("[{}] preprocess main loop exit for stream-id: {}, node-id: {}",
+                    LOG.info("[{}] preprocess main loop exit for stream-id: {}, node-id: {}",
                             this.getThreadName(PRE_PROCESS_T_NAME_PREFIX), this.streamId, this.id);
                     this.handlePreProcessConcurrentConflict();
                     return;
@@ -333,10 +325,10 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                 messenger.send(this.getId(), ready);
             } catch (Exception ex) {
                 ready.forEach( // 如果是数据库或者redis挂了，会死循环，线程不退出等待数据库或者redis恢复
-                        r -> log.error(
+                        r -> LOG.error(
                                 "preprocess main loop exception stream-id: {}, node-id: {}, context-id: {}, errors: {}",
                                 this.streamId, this.id, r.getId(), ex));
-                log.error("preprocess main loop exception details: ", ex);
+                LOG.error("preprocess main loop exception details: ", ex);
             } finally {
                 SleepUtil.sleep(SLEEP_MILLS);
             }
@@ -354,7 +346,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
         if (CollectionUtils.isEmpty(concurrentConflictContexts) || inParallelMode(concurrentConflictContexts)) {
             return;
         }
-        log.info("[{}] preprocess thread conflict happens for stream-id: {}, node-id: {}",
+        LOG.info("[{}] preprocess thread conflict happens for stream-id: {}, node-id: {}",
                 this.getThreadName(PRE_PROCESS_T_NAME_PREFIX), this.streamId, this.id);
         this.accept(PRE_PROCESS, concurrentConflictContexts);
     }
@@ -461,32 +453,31 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     }
 
     @Override
-    public void onProcess(List<FlowContext<I>> pre) {
+    public void onProcess(List<FlowContext<I>> preList) {
         try {
-            if (CollectionUtils.isEmpty(pre)) {
+            if (CollectionUtils.isEmpty(preList)) {
                 return;
             }
-            if (pre.size() == 1 && pre.get(0).getData() == null) {
-                this.afterProcess(pre, new ArrayList<>());
+            if (preList.size() == 1 && preList.get(0).getData() == null) {
+                this.afterProcess(preList, new ArrayList<>());
                 return;
             }
-            List<FlowContext<O>> after = this.getProcessMode().process(this, pre);
-            this.afterProcess(pre, after);
-            if (CollectionUtils.isNotEmpty(after)) {
-                feedback(after); // 查找一个transaction里的所有数据的都完成了，运行callback给stream外反馈数据
-                this.onNext(after.get(0).getBatchId());
+            List<FlowContext<O>> afterList = this.getProcessMode().process(this, preList);
+            this.afterProcess(preList, afterList);
+            if (CollectionUtils.isNotEmpty(afterList)) {
+                feedback(afterList); // 查找一个transaction里的所有数据的都完成了，运行callback给stream外反馈数据
+                this.onNext(afterList.get(0).getBatchId());
             }
             // 处理好数据后对外送数据，驱动其他flow响应
-            after.forEach(c -> this.emit(c.getData(), c.getSession()));
+            afterList.forEach(context -> this.emit(context.getData(), context.getSession()));
         } catch (Exception ex) {
-            log.error("node process exception stream-id: {}, node-id: {}, position-id: {}, traceId: {}. errors: {}",
-                    this.streamId, this.id, pre.get(0).getPosition(), pre.get(0).getTraceId(), ex);
-            log.error("node process exception details: ", ex);
+            LOG.error("node process exception stream-id: {}, node-id: {}, position-id: {}, traceId: {}. errors: {}",
+                    this.streamId, this.id, preList.get(0).getPosition(), preList.get(0).getTraceId(), ex);
+            LOG.error("node process exception details: ", ex);
             Retryable<I> retryable = new Retryable<>(this.getRepo(), this);
-            Optional.ofNullable(this.errorHandler).ifPresent(handler -> handler.handle(ex, retryable, pre));
-            Optional.ofNullable(this.globalErrorHandler)
-                    .ifPresent(handler -> handler.handle(ex, retryable, pre));
-            GlobalFileData.remove(pre.stream().map(IdGenerator::getId).collect(Collectors.toList()));
+            Optional.ofNullable(this.errorHandler).ifPresent(handler -> handler.handle(ex, retryable, preList));
+            Optional.ofNullable(this.globalErrorHandler).ifPresent(handler -> handler.handle(ex, retryable, preList));
+            GlobalFileData.remove(preList.stream().map(IdGenerator::getId).collect(Collectors.toList()));
         } finally {
             updateConcurrency(-1);
         }
@@ -518,7 +509,6 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
     @Override
     public void onNext(String batchId) {
-
     }
 
     private void feedback(List<FlowContext<O>> contexts) {
@@ -532,26 +522,26 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     /**
      * 节点处理处理完后执行的操作，默认是保存处理之前和之后的对上下文
      *
-     * @param pre 当前节点处理之前的context集合
-     * @param after 当前节点处理之后的新生产的context结合
+     * @param preList 当前节点处理之前的context集合
+     * @param afterList 当前节点处理之后的新生产的context结合
      */
     @Override
-    public void afterProcess(List<FlowContext<I>> pre, List<FlowContext<O>> after) {
-        updateBatch(pre, after);
+    public void afterProcess(List<FlowContext<I>> preList, List<FlowContext<O>> afterList) {
+        updateBatch(preList, afterList);
         Set<String> traces = new HashSet<>();
-        pre.forEach(p -> {
-            traces.addAll(p.getTraceId());
-            p.setStatus(ARCHIVED);
+        preList.forEach(contest -> {
+            traces.addAll(contest.getTraceId());
+            contest.setStatus(ARCHIVED);
         });
-        after.forEach(c -> c.getTraceId().addAll(traces));
+        afterList.forEach(context -> context.getTraceId().addAll(traces));
 
-        if ((Objects.isNull(this.nodeType) || !this.nodeType.equals(END)) && !after.isEmpty()) {
-            this.getRepo().updateContextPool(after, traces);
-            this.getRepo().save(after);
+        if ((Objects.isNull(this.nodeType) || !this.nodeType.equals(END)) && !afterList.isEmpty()) {
+            this.getRepo().updateContextPool(afterList, traces);
+            this.getRepo().save(afterList);
         }
-        this.getRepo().update(pre);
-        this.getRepo().updateStatus(pre, pre.get(0).getStatus().toString(), pre.get(0).getPosition());
-        GlobalFileData.remove(pre.stream().map(IdGenerator::getId).collect(Collectors.toList()));
+        this.getRepo().update(preList);
+        this.getRepo().updateStatus(preList, preList.get(0).getStatus().toString(), preList.get(0).getPosition());
+        GlobalFileData.remove(preList.stream().map(IdGenerator::getId).collect(Collectors.toList()));
     }
 
     /**
@@ -560,20 +550,20 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      * 1、平行节点第一个节点处理完会生成toBatch，后续的平行节点拿到同一批context，需要保证同一批toBatch
      * 2、人工任务恢复执行会先生成toBatch，after直接复用外部生成的toBatch
      *
-     * @param pre 当前节点处理完的contexts
-     * @param after 当前节点新生产的contexts
+     * @param preList 当前节点处理完的contexts
+     * @param afterList 当前节点新生产的contexts
      */
-    private void updateBatch(List<FlowContext<I>> pre, List<FlowContext<O>> after) {
+    private void updateBatch(List<FlowContext<I>> preList, List<FlowContext<O>> afterList) {
         if (!Objects.isNull(this.nodeType) && this.nodeType.equals(END)) {
             return;
         }
-        String toBatch = pre.stream()
-                .filter(c -> StringUtils.isNotEmpty(c.getToBatch()))
+        String toBatch = preList.stream()
+                .filter(context -> StringUtils.isNotEmpty(context.getToBatch()))
                 .findAny()
                 .map(FlowContext::getToBatch)
                 .orElseGet(UUIDUtil::uuid);
-        pre.forEach(c -> c.toBatch(toBatch));
-        after.forEach(c -> c.batchId(toBatch));
+        preList.forEach(context -> context.toBatch(toBatch));
+        afterList.forEach(context -> context.batchId(toBatch));
     }
 
     @Override
@@ -589,8 +579,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
     @Override
     public List<FlowContext<O>> nextContexts(String batchId) {
-        return (List<FlowContext<O>>) this.repo.getContextsByPosition(this.streamId, this.getId(), batchId,
-                NEW.toString());
+        return ObjectUtils.cast(this.repo.getContextsByPosition(this.streamId, this.getId(), batchId,
+                NEW.toString()));
     }
 
     @Override
@@ -613,10 +603,11 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     private <T1> void introduceToProcess(List<FlowContext<T1>> contexts) {
         // parallelMode.EITHER模式下，如果有完成的context，则本context处理退出
         contexts.stream()
-                .filter(c -> !c.getParallelMode().equals(EITHER.name()) || c.isJoined() || !isParallelJoined(c))
-                .forEach(c -> {
-                    c.setPosition(this.getId());
-                    c.setStatus(READY);
+                .filter(context -> !context.getParallelMode().equals(EITHER.name()) || context.isJoined()
+                        || !isParallelJoined(context))
+                .forEach(context -> {
+                    context.setPosition(this.getId());
+                    context.setStatus(READY);
                 });
     }
 
@@ -637,7 +628,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
     @Override
     public void emit(O data, FlowSession trans) {
-        this.listeners.forEach(s -> s.handle(data, trans));
+        this.listeners.forEach(listener -> listener.handle(data, trans));
     }
 
     /**
@@ -661,40 +652,24 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                         to.froms.stream().map(Identity::getId).collect(Collectors.toList()), to.postFilter());
             }
         },
-        //        REDUCING {
-        //            @Override
-        //            public <T1, R1> List<FlowContext<R1>> process(To<T1, R1> to, List<FlowContext<T1>> contexts) {
-        //                List<FlowContext<R1>> result = new ArrayList<>();
-        //                result.add(contexts.get(0)
-        //                    .generate(
-        //                        to.reduce.process(contexts),
-        //                        to.getId()));
-        //                return result;
-        //            }
-        //
-        //            @Override
-        //            protected <T1, R1> List<FlowContext<T1>> requestAll(To<T1, R1> to) {
-        //                return PRODUCING.requestAll(to);
-        //            }
-        //        },
         MAPPING {
             @Override
             public <T1, R1> List<FlowContext<R1>> process(To<T1, R1> to, List<FlowContext<T1>> contexts) {
                 // null数据不处理，用于等待外部处理，或者累积节点等待窗口满足场景
-                return contexts.stream().filter(c -> c.getData() != null).map(c -> {
-                    R1 data = to.map.process(c);
+                return contexts.stream().filter(context -> context.getData() != null).map(context -> {
+                    R1 data = to.map.process(context);
                     // 给window添加没有完成的数据，window符合条件时判断所有数据是否已经在累积节点（reduce)加工结束，否则不能往下流
-                    WindowToken windowToken = c.getWindowToken();
+                    WindowToken windowToken = context.getWindowToken();
                     if (windowToken != null) {
-                        windowToken.removeToDo(c.getData());
-                        if (!c.isAccumulator()) {
+                        windowToken.removeToDo(context.getData());
+                        if (!context.isAccumulator()) {
                             windowToken.addToDo(data);
                         } else {
                             // 累积节点尝试往下流转，fire会判断是否满足window条件
                             windowToken.fire();
                         }
                     }
-                    return c.generate(data, to.getId());
+                    return context.generate(data, to.getId());
                 }).collect(Collectors.toList());
             }
 
@@ -705,20 +680,6 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                         to.validator);
             }
         };
-        //        FLATMAPPING{
-        //            @Override
-        //            public <T1, R1> List<FlowContext<R1>> process(To<T1, R1> to, List<FlowContext<T1>> contexts) {
-        //                return contexts.stream()
-        //                        .parallel()
-        //                        .flatMap(c -> c.generate(to.flatMap.process(c), to.getId()).stream())
-        //                        .collect(Collectors.toList());
-        //            }
-        //
-        //            @Override
-        //            protected <T1, R1> List<FlowContext<T1>> requestAll(To<T1, R1> to) {
-        //                return MAPPING.requestAll(to);
-        //            }
-        //        };
 
         /**
          * 节点处理器
@@ -753,7 +714,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                     ready = requestReady(to);
                     if (CollectionUtils.isEmpty(ready)) {
                         to.processRunning = false;
-                        log.info("[{}] process main loop exit for stream-id: {}, node-id: {}",
+                        LOG.info("[{}] process main loop exit for stream-id: {}, node-id: {}",
                                 to.getThreadName(To.PROCESS_T_NAME_PREFIX), to.streamId, to.id);
                         handleProcessConcurrentConflict(to);
                         return;
@@ -765,10 +726,10 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                     }
                 } catch (Exception ex) {
                     // 如果是数据库或者redis挂了，会死循环，线程不退出等待数据库或者redis恢复
-                    ready.forEach(r -> log.error(
+                    ready.forEach(r -> LOG.error(
                             "process main loop exception " + "stream-id: {}, node-id: {}, context-id: {}, errors: {}",
                             to.streamId, to.id, r.getId(), ex));
-                    log.error("process main loop exception details: ", ex);
+                    LOG.error("process main loop exception details: ", ex);
                 } finally {
                     SleepUtil.sleep(SLEEP_MILLS);
                 }
@@ -816,7 +777,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
          */
         private <T1, R1> List<FlowContext<T1>> filterReady(To<T1, R1> to, List<FlowContext<T1>> pre) {
             to.introduceToProcess(pre);
-            return pre.stream().filter(c -> c.getStatus() == READY).collect(Collectors.toList());
+            return pre.stream().filter(context -> context.getStatus() == READY).collect(Collectors.toList());
         }
 
         private <T1, R1> void submit(To<T1, R1> to, List<FlowContext<T1>> ready) {
@@ -826,12 +787,13 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
         private <T1, R1> void handleProcessConcurrentConflict(To<T1, R1> to) {
             List<FlowContext<T1>> pending = requestAll(to).stream()
-                    .filter(c -> !c.getParallelMode().equals(EITHER.name()) || c.isJoined() || !to.isParallelJoined(c))
+                    .filter(context -> !context.getParallelMode().equals(EITHER.name()) || context.isJoined()
+                            || !to.isParallelJoined(context))
                     .collect(Collectors.toList());
             if (CollectionUtils.isEmpty(pending) || to.inParallelMode(pending)) {
                 return;
             }
-            log.info("[{}] process thread conflict happens for stream-id: {}, node-id: {}",
+            LOG.info("[{}] process thread conflict happens for stream-id: {}, node-id: {}",
                     to.getThreadName(To.PROCESS_T_NAME_PREFIX), to.streamId, to.id);
             to.accept(PROCESS, pending);
         }

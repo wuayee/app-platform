@@ -110,7 +110,7 @@ public abstract class Flow<D> extends IdGenerator {
      * @return 提交后该数据对应的trace
      */
     public String offer(D data, FlowSession session) {
-        D[] array = (D[]) new Object[1];
+        D[] array = ObjectUtils.cast(new Object[1]);
         array[0] = data;
         return this.offer(array, session);
     }

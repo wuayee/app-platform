@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.huawei.fit.waterflow.domain.context.FlowData;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import com.googlecode.aviator.AviatorEvaluator;
 
@@ -38,7 +39,7 @@ class FlowEventTest {
 
             String executableRule = flowEvent.getExecutableRule(flowData);
 
-            assertTrue((boolean) AviatorEvaluator.execute(executableRule));
+            assertTrue(ObjectUtils.<Boolean>cast(AviatorEvaluator.execute(executableRule)));
         }
 
         @Test
@@ -52,7 +53,7 @@ class FlowEventTest {
 
             String executableRule = flowEvent.getExecutableRule(flowData);
 
-            assertFalse((boolean) AviatorEvaluator.execute(executableRule));
+            assertFalse(ObjectUtils.<Boolean>cast(AviatorEvaluator.execute(executableRule)));
         }
 
         @Test
@@ -66,7 +67,7 @@ class FlowEventTest {
 
             String executableRule = flowEvent.getExecutableRule(flowData);
 
-            assertTrue((boolean) AviatorEvaluator.execute(executableRule));
+            assertTrue(ObjectUtils.<Boolean>cast(AviatorEvaluator.execute(executableRule)));
         }
 
         @Test
@@ -81,7 +82,7 @@ class FlowEventTest {
 
             String executableRule = flowEvent.getExecutableRule(flowData);
 
-            assertTrue((boolean) AviatorEvaluator.execute(executableRule));
+            assertTrue(ObjectUtils.<Boolean>cast( AviatorEvaluator.execute(executableRule)));
         }
 
         @Test
@@ -96,7 +97,7 @@ class FlowEventTest {
 
             String executableRule = flowEvent.getExecutableRule(flowData);
 
-            assertFalse((boolean) AviatorEvaluator.execute(executableRule));
+            assertFalse(ObjectUtils.<Boolean>cast(AviatorEvaluator.execute(executableRule)));
         }
 
         @Test
@@ -113,7 +114,7 @@ class FlowEventTest {
 
             String executableRule = flowEvent.getExecutableRule(flowData);
 
-            assertFalse((boolean) AviatorEvaluator.execute(executableRule));
+            assertFalse(ObjectUtils.<Boolean>cast(AviatorEvaluator.execute(executableRule)));
         }
     }
 }

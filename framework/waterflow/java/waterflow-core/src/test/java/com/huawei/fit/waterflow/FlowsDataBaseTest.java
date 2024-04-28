@@ -42,6 +42,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -55,49 +56,88 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 public abstract class FlowsDataBaseTest {
-    protected final String stateError1 = "state-error1";
+    /**
+     * 错误节点1
+     */
+    protected static final String STATE_ERROR_1 = "state-error1";
 
-    protected final String stateError2 = "state-error2";
+    /**
+     * 错误节点2
+     */
+    protected static final String STATE_ERROR_2 = "state-error2";
 
-    protected final String conditionError1 = "condition-error1";
+    /**
+     * 错误条件节点1
+     */
+    protected static final String CONDITION_ERROR_1 = "condition-error1";
 
-    protected final int threadNum = 2;
+    /**
+     * 线程数量
+     */
+    protected static final int THREAD_NUM = 2;
 
     @AfterAll
     static void cleanPublisher() {
         WaterFlows.clear();
     }
 
+    /**
+     * 构造一个通用的等待context的表达式
+     *
+     * @param repo repo
+     * @param streamId streamId
+     * @param traceId traceId
+     * @param metaId metaId
+     * @param status status
+     * @return Supplier
+     */
     protected Supplier<List<FlowContext<FlowData>>> contextSupplier(FlowContextRepo<FlowData> repo, String streamId,
             String traceId, String metaId, FlowNodeStatus status) {
         return () -> {
             List<FlowContext<FlowData>> all = this.getContextsByTraceWrapper(repo, traceId);
             return all.stream()
-                    .filter(c -> c.getStreamId().equals(streamId))
-                    .filter(c -> c.getPosition().equals(metaId))
-                    .filter(c -> c.getStatus() == status)
+                    .filter(context -> context.getStreamId().equals(streamId))
+                    .filter(context -> context.getPosition().equals(metaId))
+                    .filter(context -> context.getStatus() == status)
                     .collect(Collectors.toList());
         };
     }
 
+    /**
+     * 构造一个通用的等待context的表达式
+     *
+     * @param repo repo
+     * @param traceId traceId
+     * @param metaId metaId
+     * @param status status
+     * @return Supplier
+     */
     protected Supplier<List<FlowContext<FlowData>>> contextSupplier(FlowContextRepo<FlowData> repo, String traceId,
             String metaId, FlowNodeStatus status) {
         return () -> {
             List<FlowContext<FlowData>> all = this.getContextsByTraceWrapper(repo, traceId);
             return all.stream()
-                    .filter(c -> c.getPosition().equals(metaId))
-                    .filter(c -> c.getStatus() == status)
+                    .filter(context -> context.getPosition().equals(metaId))
+                    .filter(context -> context.getStatus() == status)
                     .collect(Collectors.toList());
         };
     }
 
+    /**
+     * 根据trace查询
+     *
+     * @param repo repo
+     * @param traceId traceId
+     * @return FlowContext list
+     */
     protected List<FlowContext<FlowData>> getContextsByTraceWrapper(FlowContextRepo<FlowData> repo, String traceId) {
         if (repo instanceof FlowContextMemoRepo) {
             return repo.getContextsByTrace(traceId);
         }
         return repo.getContextsByTrace(traceId)
                 .stream()
-                .map(c -> c.convertData(FlowData.parseFromJson(ObjectUtils.cast(c.getData())), c.getId()))
+                .map(context -> context.convertData(FlowData.parseFromJson(ObjectUtils.cast(context.getData())),
+                        context.getId()))
                 .collect(Collectors.toList());
     }
 
@@ -116,18 +156,27 @@ public abstract class FlowsDataBaseTest {
         }
     }
 
+    /**
+     * 构造一个线程列表，执行指定任务，异常时增加失败次数统计
+     *
+     * @param latch 结束通知
+     * @param failTimes 失败次数
+     * @param runnable 任务
+     * @return 线程列表
+     */
     protected List<Thread> getThreads(CountDownLatch latch, AtomicInteger failTimes, Runnable runnable) {
         List<Thread> threads = new ArrayList<>();
-        for (int i = 0; i < threadNum; i++) {
+        for (int i = 0; i < THREAD_NUM; i++) {
             Thread thread = new Thread(() -> {
                 try {
                     runnable.run();
-                } catch (Throwable e) {
-                    failTimes.getAndIncrement();
-                    fail("Fail executor in thread! fail message: " + e);
                 } finally {
                     latch.countDown();
                 }
+            });
+            thread.setUncaughtExceptionHandler((thread1, throwable) -> {
+                failTimes.getAndIncrement();
+                fail("Fail executor in thread! fail message: " + throwable);
             });
             threads.add(thread);
         }
@@ -151,6 +200,13 @@ public abstract class FlowsDataBaseTest {
      */
     protected abstract String getFilePathPrefix();
 
+    /**
+     * 构造flowData
+     *
+     * @param businessData businessData
+     * @param operator operator
+     * @return FlowData
+     */
     protected FlowData getFlowData(Map<String, Object> businessData, String operator) {
         return FlowData.builder()
                 .operator(operator)
@@ -160,6 +216,11 @@ public abstract class FlowsDataBaseTest {
                 .build();
     }
 
+    /**
+     * 构造测试数据
+     *
+     * @return 测试数据
+     */
     protected Map<String, Object> flowsExecutorWithOnlyStateNode1To1() {
         Map<String, Object> businessData = new HashMap<>();
         businessData.put("cudehub.user", "user");
@@ -171,6 +232,11 @@ public abstract class FlowsDataBaseTest {
         return businessData;
     }
 
+    /**
+     * 构造测试数据
+     *
+     * @return 测试数据
+     */
     protected Map<String, Object> flowsExecutorWithConditionNodeFirstBranchTrue() {
         Map<String, Object> businessData = new HashMap<>();
         businessData.put("cmc.approved", "true");
@@ -180,6 +246,11 @@ public abstract class FlowsDataBaseTest {
         return businessData;
     }
 
+    /**
+     * 构造测试数据
+     *
+     * @return 测试数据
+     */
     protected Map<String, Object> flowsManualExecutorWithConditionNodeFirstBranchTrue() {
         Map<String, Object> businessData = new HashMap<>();
         businessData.put("approved.result", "success");
@@ -187,6 +258,11 @@ public abstract class FlowsDataBaseTest {
         return businessData;
     }
 
+    /**
+     * 构造测试数据
+     *
+     * @return 测试数据
+     */
     protected Map<String, Object> flowsManualExecutorWithConditionNodeCircle() {
         Map<String, Object> businessData = new HashMap<>();
         businessData.put("approved.result", "success");
@@ -194,6 +270,12 @@ public abstract class FlowsDataBaseTest {
         return businessData;
     }
 
+    /**
+     * 构造测试数据
+     *
+     * @param approved approved
+     * @return 测试数据
+     */
     protected Map<String, Object> flowsExecuteProduceFromMToNForOfferOneData(String approved) {
         Map<String, Object> businessData = new HashMap<>();
         businessData.put("approved.result", "success");
@@ -202,6 +284,11 @@ public abstract class FlowsDataBaseTest {
         return businessData;
     }
 
+    /**
+     * 构造测试数据
+     *
+     * @return 测试数据
+     */
     protected Map<String, Object> flowsExecuteFilterFromMToN() {
         Map<String, Object> businessData = new HashMap<>();
         businessData.put("approved.result", "success");
@@ -209,13 +296,27 @@ public abstract class FlowsDataBaseTest {
         return businessData;
     }
 
+    /**
+     * 构造错误
+     *
+     * @param streamId streamId
+     * @param metaId metaId
+     * @param name name
+     * @return String
+     */
     protected String errorMessage(String streamId, String metaId, String name) {
         return MessageFormat.format(FLOW_ENGINE_EXECUTOR_ERROR.getMessage(), streamId, metaId, name,
-                WaterflowException.class.getSimpleName(), String.format(
+                WaterflowException.class.getSimpleName(), String.format(Locale.ROOT,
                         "execute jober failed, jober name: %s, jober type: ECHO_JOBER, fitables: [], errors: null",
                         name));
     }
 
+    /**
+     * 判定单个实例
+     *
+     * @param existInstance existInstance
+     * @param newInstance newInstance
+     */
     protected void assertSingleInstance(Publisher<FlowData> existInstance, Publisher<FlowData> newInstance) {
         assertEquals(System.identityHashCode(existInstance), System.identityHashCode(newInstance));
     }
@@ -232,7 +333,7 @@ public abstract class FlowsDataBaseTest {
         assertEquals(1, contexts.size());
         assertEquals(ARCHIVED, contexts.get(0).getStatus());
         assertEquals(4, allContexts.size());
-        allContexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
+        allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
 
         Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
         assertEquals(flowData.getBusinessData().size(), resultBusinessData.size());
@@ -274,7 +375,7 @@ public abstract class FlowsDataBaseTest {
         assertEquals(1, contexts.size());
         assertEquals(ARCHIVED, contexts.get(0).getStatus());
         assertEquals(6, allContexts.size());
-        allContexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
+        allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
         Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
         assertEquals(resultBusinessData.size(), flowData.getBusinessData().size());
         assertTrue(Boolean.parseBoolean(ObjectUtils.cast(resultBusinessData.get("cmc.approved"))));
@@ -294,7 +395,7 @@ public abstract class FlowsDataBaseTest {
         assertEquals(1, contexts.size());
         assertEquals(ARCHIVED, contexts.get(0).getStatus());
         assertEquals(3, allContexts.size());
-        allContexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
+        allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
         Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
         assertEquals(resultBusinessData.size(), flowData.getBusinessData().size());
         assertFalse(Boolean.parseBoolean(ObjectUtils.cast(resultBusinessData.get("cmc.approved"))));
@@ -314,7 +415,7 @@ public abstract class FlowsDataBaseTest {
         assertEquals(1, contexts.size());
         assertEquals(ARCHIVED, contexts.get(0).getStatus());
         assertEquals(5, allContexts.size());
-        allContexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
+        allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
 
         Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
         assertEquals(resultBusinessData.size(), flowData.getBusinessData().size());
@@ -354,8 +455,8 @@ public abstract class FlowsDataBaseTest {
         assertEquals(PENDING, contexts.get(0).getStatus());
         assertEquals(2, allContexts.size());
         allContexts.stream()
-                .filter(c -> !c.getPosition().equals(metaId))
-                .forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
+                .filter(context -> !context.getPosition().equals(metaId))
+                .forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
         Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
         assertEquals("success", resultBusinessData.get("approved.result"));
     }
@@ -375,8 +476,8 @@ public abstract class FlowsDataBaseTest {
         assertEquals(status, contexts.get(0).getStatus());
         assertEquals(allSize, allContexts.size());
         allContexts.stream()
-                .filter(c -> !c.getPosition().equals(metaId))
-                .forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
+                .filter(context -> !context.getPosition().equals(metaId))
+                .forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
     }
 
     /**
@@ -392,7 +493,7 @@ public abstract class FlowsDataBaseTest {
             int contextSizeExpected, String approvedExpected) {
         assertEquals(1, resumeContexts.size());
         assertEquals(contextSizeExpected, resumeAllContexts.size());
-        resumeAllContexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
+        resumeAllContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
         Map<String, Object> resumeResultBusinessData = resumeContexts.get(0).getData().getBusinessData();
         assertEquals(approvedExpected, resumeResultBusinessData.get("approved.result"));
     }
@@ -408,13 +509,22 @@ public abstract class FlowsDataBaseTest {
         assertEquals(1, contexts.size());
         assertEquals(ARCHIVED, contexts.get(0).getStatus());
         assertEquals(3, allContexts.size());
-        allContexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
+        allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
 
         Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
         assertEquals(6, resultBusinessData.size());
         assertEquals("branch", resultBusinessData.get("cudehub.branch"));
     }
 
+    /**
+     * 断言jober调用错误
+     *
+     * @param invoker invoker
+     * @param flowDefinition flowDefinition
+     * @param metaId metaId
+     * @param contexts contexts
+     * @param allContexts allContexts
+     */
     protected void assertFlowsExecuteGeneralJoberError(Invoker invoker, FlowDefinition flowDefinition, String metaId,
             List<FlowContext<FlowData>> contexts, List<FlowContext<FlowData>> allContexts) {
         FlowNode flowNode = flowDefinition.getFlowNode(metaId);
@@ -441,10 +551,11 @@ public abstract class FlowsDataBaseTest {
     protected void assertFlowsExecuteProduceFromMToNWithMinimumSizeOneInSingleThread(
             List<FlowContext<FlowData>> contexts, List<FlowContext<FlowData>> allContexts) {
         assertEquals(5, contexts.size());
-        contexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
-        contexts.forEach(c -> assertEquals("hello: success", c.getData().getBusinessData().get("approved.result")));
+        contexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
+        contexts.forEach(
+                context -> assertEquals("hello: success", context.getData().getBusinessData().get("approved.result")));
         assertEquals(12, allContexts.size());
-        allContexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
+        allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
     }
 
     /**
@@ -456,9 +567,9 @@ public abstract class FlowsDataBaseTest {
     protected void assertFlowsExecuteProduceFromMToNForOfferMultiData(List<FlowContext<FlowData>> contexts,
             List<FlowContext<FlowData>> allContexts) {
         assertEquals(3, contexts.size());
-        contexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
+        contexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
         assertEquals(14, allContexts.size());
-        allContexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
+        allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
     }
 
     /**
@@ -473,7 +584,7 @@ public abstract class FlowsDataBaseTest {
         List<FlowContext<FlowData>> all = this.getContextsByTraceWrapper(repo, traceId);
         assertEquals(3, endContexts.size());
         assertEquals(10, all.size());
-        all.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
+        all.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
     }
 
     /**
@@ -485,8 +596,8 @@ public abstract class FlowsDataBaseTest {
     protected void assertFlowsExecuteProduceFromMToNForOfferOneData(List<FlowContext<FlowData>> contexts,
             List<FlowContext<FlowData>> allContexts) {
         assertEquals(3, contexts.size());
-        contexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
+        contexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
         assertEquals(10, allContexts.size());
-        allContexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
+        allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
     }
 }

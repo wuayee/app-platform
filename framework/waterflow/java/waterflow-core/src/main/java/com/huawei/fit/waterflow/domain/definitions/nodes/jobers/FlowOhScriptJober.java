@@ -20,7 +20,7 @@ import java.util.Map;
  * @since 1.0
  */
 public class FlowOhScriptJober extends FlowJober {
-    private static final Logger log = Logger.get(FlowOhScriptJober.class);
+    private static final Logger LOG = Logger.get(FlowOhScriptJober.class);
 
     private static final String FLOWABLE_HANDLE_TASK_GENERICABLE = "b735c87f5e7e408d852d8440d0b2ecdf";
 
@@ -35,7 +35,7 @@ public class FlowOhScriptJober extends FlowJober {
                 .route(new FitableIdFilter(OHSCRIPT_FITABLE))
                 .communicationType(CommunicationType.ASYNC)
                 .invoke(inputData);
-        log.info("Remote invoke success,nodeId: {}, fitable id is {}.", this.nodeMetaId, OHSCRIPT_FITABLE);
+        LOG.info("Remote invoke success,nodeId: {}, fitable id is {}.", this.nodeMetaId, OHSCRIPT_FITABLE);
         return convertToFlowData(outputEntities, inputs.get(0));
     }
 }

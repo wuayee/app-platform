@@ -137,8 +137,6 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     @Setter
     private WindowToken windowToken = null;
 
-    //    @Getter
-    //    @Setter
     private Object keyBy = null;
 
     private boolean isAccumulator;
@@ -266,13 +264,13 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
     /**
      * generate是在map，reduce，produce的过程中把大多数上一个context的内容复制给下一个
      *
-     * @param data 处理后的数据
+     * @param dataList 处理后的数据
      * @param position 处理后所处的节点
      * @param <R> 处理后数据类型
      * @return 新的上下文
      */
-    public <R> List<FlowContext<R>> generate(List<R> data, String position) {
-        return data.stream().map(d -> this.generate(d, position)).collect(Collectors.toList());
+    public <R> List<FlowContext<R>> generate(List<R> dataList, String position) {
+        return dataList.stream().map(data -> this.generate(data, position)).collect(Collectors.toList());
     }
 
     /**
@@ -300,6 +298,11 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
         return context;
     }
 
+    /**
+     * join节点，将context的状态设置为joined
+     *
+     * @param joined 是否join
+     */
     public void join(boolean joined) {
         this.joined = joined;
     }
@@ -314,18 +317,36 @@ public final class FlowContext<T> extends IdGenerator implements StateContext {
         this.session.setState(key, value);
     }
 
+    /**
+     * 将本context设置为accumulator
+     */
     public void setAsAccumulator() {
         this.isAccumulator = true;
     }
 
+    /**
+     * 判定是否是accumulator
+     *
+     * @return true/false
+     */
     public boolean isAccumulator() {
         return this.isAccumulator;
     }
 
+    /**
+     * 获取keyBy
+     *
+     * @return keyBy
+     */
     public Object keyBy() {
         return this.keyBy;
     }
 
+    /**
+     * 设置keyBy的key，将会影响session的key
+     *
+     * @param key 目标key
+     */
     public void setKeyBy(Object key) {
         this.keyBy = key;
         this.session.setKeyBy(key);

@@ -88,9 +88,8 @@ public final class Operators {
          * process
          *
          * @param input input
-         * @return List<R>
+         * @return 用于发射的新数据
          */
-        //        List<R> process(T input);
         DataStart<R, R, ?> process(T input);
     }
 

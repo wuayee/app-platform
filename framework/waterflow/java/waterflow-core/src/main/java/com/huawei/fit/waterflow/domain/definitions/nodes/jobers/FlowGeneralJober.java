@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0
  */
 public class FlowGeneralJober extends FlowJober {
-    private static final Logger log = Logger.get(FlowGeneralJober.class);
+    private static final Logger LOG = Logger.get(FlowGeneralJober.class);
 
     private static final String FLOWABLE_HANDLE_TASK_GENERICABLE = "b735c87f5e7e408d852d8440d0b2ecdf";
 
@@ -36,7 +36,7 @@ public class FlowGeneralJober extends FlowJober {
                     .route(new FitableIdFilter(fitableId))
                     .timeout(1000, TimeUnit.MINUTES)
                     .invoke(contextData);
-            log.info("Remote invoke success,nodeId: {}, fitable id is {}.", this.nodeMetaId, fitableId);
+            LOG.info("Remote invoke success,nodeId: {}, fitable id is {}.", this.nodeMetaId, fitableId);
         }
         return convertToFlowData(outputEntities, inputs.get(0));
     }

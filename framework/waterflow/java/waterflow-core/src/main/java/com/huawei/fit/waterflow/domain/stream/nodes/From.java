@@ -8,8 +8,8 @@ import static com.huawei.fit.waterflow.common.ErrorCodes.FLOW_ENGINE_INVALID_MAN
 
 import com.huawei.fit.waterflow.common.exceptions.WaterflowException;
 import com.huawei.fit.waterflow.domain.context.FlowContext;
-import com.huawei.fit.waterflow.domain.context.FlowTrace;
 import com.huawei.fit.waterflow.domain.context.FlowSession;
+import com.huawei.fit.waterflow.domain.context.FlowTrace;
 import com.huawei.fit.waterflow.domain.context.WindowToken;
 import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextMessenger;
 import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
@@ -18,15 +18,16 @@ import com.huawei.fit.waterflow.domain.contextdata.GlobalFileData;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeStatus;
 import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
 import com.huawei.fit.waterflow.domain.enums.ParallelMode;
-import com.huawei.fit.waterflow.domain.utils.IdGenerator;
-import com.huawei.fit.waterflow.domain.stream.reactive.When;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscriber;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscription;
+import com.huawei.fit.waterflow.domain.stream.reactive.When;
+import com.huawei.fit.waterflow.domain.utils.IdGenerator;
 import com.huawei.fit.waterflow.domain.utils.UUIDUtil;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -46,7 +47,6 @@ import java.util.stream.Collectors;
  * @author g00564732
  * @since 2023/08/14
  */
-@SuppressWarnings( {"unchecked", "rawtypes"})
 public class From<I> extends IdGenerator implements Publisher<I> {
     /**
      * contextRepo
@@ -117,7 +117,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public <O> Processor<O, O> parallel(ParallelMode mode, Operators.Map<I, O> convert, Operators.Whether<I> whether) {
-        ParallelNode<O> node = new ParallelNode<>(this.getStreamId(), mode,repo, messenger, locks);
+        ParallelNode<O> node = new ParallelNode<>(this.getStreamId(), mode, repo, messenger, locks);
         this.subscribe(node, convert, whether);
         return node;
     }
@@ -132,10 +132,10 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * @return 新的join processor
      */
     @Override
-    public <M, O> Processor<M, O> join(
-            Operators.Map<FlowContext<M>, O> processor, Operators.Map<I, M> convert, Operators.Whether<I> whether) {
+    public <M, O> Processor<M, O> join(Operators.Map<FlowContext<M>, O> processor, Operators.Map<I, M> convert,
+            Operators.Whether<I> whether) {
         JoinNode<M, O> node = new JoinNode<>(this.getStreamId(), processor, repo, messenger, locks);
-        this.subscribe(node, convert, i -> true);
+        this.subscribe(node, convert, any -> true);
         return node;
     }
 
@@ -148,11 +148,12 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * @return 新的join processor
      */
     @Override
-    public <O> Processor<O, O> just(Operators.Just<FlowContext<O>> processor, Operators.Map<I, O> convert, Operators.Whether<I> whether) {
+    public <O> Processor<O, O> just(Operators.Just<FlowContext<O>> processor, Operators.Map<I, O> convert,
+            Operators.Whether<I> whether) {
         // just的实现就是一个返回自己的map
-        Node<O, O> node = new Node<>(this.getStreamId(), (Operators.Map<FlowContext<O>, O>) i -> {
-            processor.process(i);
-            return i.getData();
+        Node<O, O> node = new Node<>(this.getStreamId(), context -> {
+            processor.process(context);
+            return context.getData();
         }, repo, messenger, locks);
         this.subscribe(node, convert, whether);
         return node;
@@ -167,16 +168,16 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * @return 返回一个node，这个node是接收者，同时可以继续发送数据
      */
     @Override
-    public <M, O> Processor<M, O> map(
-            Operators.Map<FlowContext<M>, O> processor, Operators.Map<I, M> convert, Operators.Whether<I> whether) {
+    public <M, O> Processor<M, O> map(Operators.Map<FlowContext<M>, O> processor, Operators.Map<I, M> convert,
+            Operators.Whether<I> whether) {
         Node<M, O> node = new Node<>(this.getStreamId(), processor, repo, messenger, locks);
         this.subscribe(node, convert, whether);
         return node;
     }
 
     @Override
-    public <M, O> Processor<M, O> process(Operators.Process<FlowContext<M>, O> processor,
-                                          Operators.Map<I, M> convert, Operators.Whether<I> whether) {
+    public <M, O> Processor<M, O> process(Operators.Process<FlowContext<M>, O> processor, Operators.Map<I, M> convert,
+            Operators.Whether<I> whether) {
         AtomicReference<Node<M, O>> processRef = new AtomicReference<>();
         Operators.Map<FlowContext<M>, O> wrapper = input -> {
             processor.process(input, input, data -> processRef.get().offer(data, input.getSession()));
@@ -188,24 +189,36 @@ public class From<I> extends IdGenerator implements Publisher<I> {
         return node;
     }
 
-
-
-    public String offer(I data, FlowSession session){
-        I[] array = (I[]) new Object[1];
+    /**
+     * 指定session来offer数据
+     *
+     * @param data 待offer的数据
+     * @param session 指定的session
+     * @return traceId
+     */
+    public String offer(I data, FlowSession session) {
+        I[] array = ObjectUtils.cast(new Object[1]);
         array[0] = data;
-        return this.offer(array,session);
+        return this.offer(array, session);
     }
 
-    public String offer(I[] data, FlowSession trans){
+    /**
+     * 指定trans来offer数据
+     *
+     * @param data 待offer的数据
+     * @param trans 指定的session
+     * @return traceId
+     */
+    public String offer(I[] data, FlowSession trans) {
         FlowTrace trace = new FlowTrace();
         Set<String> traceId = new HashSet<>();
         traceId.add(trace.getId());
         List<FlowContext<I>> contexts = Arrays.stream(data)
-                .map(d -> new FlowContext<>(this.getStreamId(), this.getId(), d, traceId, this.getId()).inFlowTrans(
-                        trans))
+                .map(context -> new FlowContext<>(this.getStreamId(), this.getId(), context, traceId,
+                        this.getId()).inFlowTrans(trans))
                 .collect(Collectors.toList());
-        WindowToken<I> windowToken = new WindowToken<>(inputs -> inputs.size()==contexts.size());
-        contexts.forEach(context->{
+        WindowToken<I> windowToken = new WindowToken<>(inputs -> inputs.size() == contexts.size());
+        contexts.forEach(context -> {
             context.setWindowToken(windowToken);
             windowToken.addOrigin(context.getData());
             windowToken.addToDo(context.getData());
@@ -213,6 +226,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
         this.offer(startNodeMarkAsHandled(contexts, trace));
         return trace.getId();
     }
+
     /**
      * publish单条数据
      * 外部使用：controller中的start flow有使用，且返回给了前端
@@ -223,7 +237,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public String offer(I data) {
-        return this.offer(data,new FlowSession());
+        return this.offer(data, new FlowSession());
     }
 
     /**
@@ -236,7 +250,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public String offer(I... data) {
-        return this.offer(data,new FlowSession());
+        return this.offer(data, new FlowSession());
     }
 
     /**
@@ -251,27 +265,28 @@ public class From<I> extends IdGenerator implements Publisher<I> {
             return;
         }
         // 每一次offer新数据,atom是不一样的，但是context的streamId是一样的,flowTransId标记是否属于同一次流程运行实例
-        if (contexts.stream().map(c -> c.getSession().getId()).distinct().count() != 1) {
+        if (contexts.stream().map(context -> context.getSession().getId()).distinct().count() != 1) {
             return;
         }
 
-        FlowContext<I> context = contexts.get(0); // 用第一个元素做同源判断
+        FlowContext<I> firstContext = contexts.get(0); // 用第一个元素做同源判断
         List<Subscription<I, ?>> qualifiedWhens = this.getSubscriptions();
 
         // 处理从A流程跳出到B流程,再从B流程调回A流程的指定节点并从该指定节点继续执行A的后续流程
         List<Subscription<I, ?>> sourceWhens = this.getSubscriptions()
-            .stream()
-            .filter(w -> !context.getStreamId().equals(this.getStreamId()) && w.getTo()
-                .getStreamId()
-                .equals(context.getStreamId()))
-            .collect(Collectors.toList());
+                .stream()
+                .filter(when -> !firstContext.getStreamId().equals(this.getStreamId()) && when.getTo()
+                        .getStreamId()
+                        .equals(firstContext.getStreamId()))
+                .collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(sourceWhens)) {
             qualifiedWhens = sourceWhens;
         }
 
         // qualifiedWhens表示的与from节点连接的所有事件，条件节点符合条件的事件在这里筛选，在事件上处理需要下发的context
-        qualifiedWhens.forEach(
-            w -> w.cache(contexts.stream().filter(c -> w.getWhether().is(c.getData())).collect(Collectors.toList())));
+        qualifiedWhens.forEach(when -> when.cache(contexts.stream()
+                .filter(context -> when.getWhether().is(context.getData()))
+                .collect(Collectors.toList())));
     }
 
     /**
@@ -303,7 +318,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public <O> void subscribe(Subscriber<I, O> subscriber) {
-        this.subscribe(subscriber, i -> i, i -> true);
+        this.subscribe(subscriber, any -> any, any -> true);
     }
 
     /**
@@ -315,8 +330,8 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * @param whether whether
      */
     @Override
-    public <M, O> void subscribe(
-            Subscriber<M, O> subscriber, Operators.Map<I, M> convert, Operators.Whether<I> whether) {
+    public <M, O> void subscribe(Subscriber<M, O> subscriber, Operators.Map<I, M> convert,
+            Operators.Whether<I> whether) {
         // 默认只能将数据发给一个subscriber
         this.whens.add(new When<>(this.streamId, subscriber, convert, whether, repo, messenger));
     }
@@ -330,7 +345,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public <O> void subscribe(String eventId, Subscriber<I, O> subscriber) {
-        this.subscribe(eventId, subscriber, i -> i, i -> true);
+        this.subscribe(eventId, subscriber, any -> any, any -> true);
     }
 
     /**
@@ -343,7 +358,8 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * @param whether whether
      */
     @Override
-    public <M, O> void subscribe(String eventId, Subscriber<M, O> subscriber, Operators.Map<I, M> convert, Operators.Whether<I> whether) {
+    public <M, O> void subscribe(String eventId, Subscriber<M, O> subscriber, Operators.Map<I, M> convert,
+            Operators.Whether<I> whether) {
         this.whens.add(new When<>(this.streamId, eventId, subscriber, convert, whether, repo, messenger));
     }
 
@@ -365,19 +381,19 @@ public class From<I> extends IdGenerator implements Publisher<I> {
             nodesQueue.addLast(s.getTo());
             visited.add(s.getTo().getId());
             if (s.getId().equals(eventId)) {
-                return (Blocks.Block<I>) s.getTo().block();
+                return ObjectUtils.cast(s.getTo().block());
             }
         }
 
         while (!nodesQueue.isEmpty()) {
-            Node<?, ?> curNode = (Node<?, ?>) nodesQueue.removeFirst();
+            Node<?, ?> curNode = ObjectUtils.cast(nodesQueue.removeFirst());
             for (Subscription<?, ?> s : curNode.getSubscriptions()) {
                 if (!visited.contains(s.getTo().getId())) {
                     nodesQueue.offer(s.getTo());
                     visited.add(s.getTo().getId());
                 }
                 if (s.getId().equals(eventId)) {
-                    return (Blocks.Block<I>) s.getTo().block();
+                    return ObjectUtils.cast(s.getTo().block());
                 }
             }
         }
@@ -385,28 +401,27 @@ public class From<I> extends IdGenerator implements Publisher<I> {
     }
 
     // 开始节点无需处理直接标记结束
-    private List<FlowContext<I>> startNodeMarkAsHandled(List<FlowContext<I>> pre, FlowTrace trace) {
+    private List<FlowContext<I>> startNodeMarkAsHandled(List<FlowContext<I>> preList, FlowTrace trace) {
         String fromBatchId = UUIDUtil.uuid();
         String toBatchId = UUIDUtil.uuid();
         trace.setStartNode(this.getId());
         trace.setStreamId(this.streamId);
         trace.setStatus(FlowTraceStatus.RUNNING);
-        pre.forEach(c -> {
-            trace.getContextPool().add(c.getId());
-            c.batchId(fromBatchId);
-            c.toBatch(toBatchId);
-            c.setStatus(FlowNodeStatus.ARCHIVED);
-        });
-        List<FlowContext<I>> after = pre.stream().map(c -> {
-            FlowContext<I> context = c.generate(c.getData(), c.getPosition()).batchId(toBatchId);
+        preList.forEach(context -> {
             trace.getContextPool().add(context.getId());
-            return context;
+            context.batchId(fromBatchId);
+            context.toBatch(toBatchId);
+            context.setStatus(FlowNodeStatus.ARCHIVED);
+        });
+        List<FlowContext<I>> afterList = preList.stream().map(pre -> {
+            FlowContext<I> after = pre.generate(pre.getData(), pre.getPosition()).batchId(toBatchId);
+            trace.getContextPool().add(after.getId());
+            return after;
         }).collect(Collectors.toList());
-        repo.save(trace, pre.get(0));
-        repo.save(after);
-        repo.save(pre);
-        GlobalFileData.remove(pre.stream().map(IdGenerator::getId).collect(Collectors.toList()));
-        return after;
+        repo.save(trace, preList.get(0));
+        repo.save(afterList);
+        repo.save(preList);
+        GlobalFileData.remove(preList.stream().map(IdGenerator::getId).collect(Collectors.toList()));
+        return afterList;
     }
-
 }

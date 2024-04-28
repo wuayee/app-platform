@@ -25,7 +25,7 @@ import java.util.Optional;
  */
 @Getter
 public class FlowStartNode extends FlowNode {
-    private static final Logger log = Logger.get(FlowStartNode.class);
+    private static final Logger LOG = Logger.get(FlowStartNode.class);
 
     private Publisher<FlowData> publisher;
 

@@ -54,7 +54,7 @@ class FlowDefinitionParallelTest {
         @Test
         @DisplayName("测试流程实例自动流转1到1只有state节点的并发场景")
         void testFlowsExecutorWithOnlyStateNode1To1Parallel() throws Throwable {
-            CountDownLatch latch = new CountDownLatch(threadNum);
+            CountDownLatch latch = new CountDownLatch(THREAD_NUM);
             AtomicInteger failTimes = new AtomicInteger(0);
             List<Thread> threads = getThreads(latch, failTimes,
                     flowAutoExecutorInMemoryTest::testFlowsExecutorWithOnlyStateNode1To1);
@@ -66,7 +66,7 @@ class FlowDefinitionParallelTest {
         @Test
         @DisplayName("测试流程实例自动流转1到1只有state节点第一个节点错误的并发场景")
         void testFlowsExecutorStateNodeWithErrorForFirstNode1To1Parallel() throws Throwable {
-            CountDownLatch latch = new CountDownLatch(threadNum);
+            CountDownLatch latch = new CountDownLatch(THREAD_NUM);
             AtomicInteger failTimes = new AtomicInteger(0);
             List<Thread> threads = getThreads(latch, failTimes,
                     flowAutoExecutorInMemoryTest::testFlowsExecutorStateNodeWithErrorForFirstNode1To1);
@@ -78,7 +78,7 @@ class FlowDefinitionParallelTest {
         @Test
         @DisplayName("测试流程实例自动流转1到1包含condition节点的分支1通过并发场景")
         void testFlowsExecutorWithConditionNodeFirstBranchTrueParallel() throws Throwable {
-            CountDownLatch latch = new CountDownLatch(threadNum);
+            CountDownLatch latch = new CountDownLatch(THREAD_NUM);
             AtomicInteger failTimes = new AtomicInteger(0);
             List<Thread> threads = getThreads(latch, failTimes,
                     flowAutoExecutorInMemoryTest::testFlowsExecutorWithConditionNodeFirstBranchTrue);
@@ -90,7 +90,7 @@ class FlowDefinitionParallelTest {
         @Test
         @DisplayName("测试流程实例自动流转1到1包含condition节点的分支2驳回并发场景")
         void testFlowsExecutorWithConditionNodeSecondBranchFalseParallel() throws Throwable {
-            CountDownLatch latch = new CountDownLatch(threadNum);
+            CountDownLatch latch = new CountDownLatch(THREAD_NUM);
             AtomicInteger failTimes = new AtomicInteger(0);
             List<Thread> threads = getThreads(latch, failTimes,
                     flowAutoExecutorInMemoryTest::testFlowsExecutorWithConditionNodeSecondBranchFalse);
@@ -102,7 +102,7 @@ class FlowDefinitionParallelTest {
         @Test
         @DisplayName("测试流程实例自动流转1到1包含condition节点异常并发场景")
         void testFlowsExecutorConditionNodeWithErrorParallel() throws Throwable {
-            CountDownLatch latch = new CountDownLatch(threadNum);
+            CountDownLatch latch = new CountDownLatch(THREAD_NUM);
             AtomicInteger failTimes = new AtomicInteger(0);
             List<Thread> threads = getThreads(latch, failTimes,
                     flowAutoExecutorInMemoryTest::testFlowsExecutorConditionNodeWithError);
@@ -114,7 +114,7 @@ class FlowDefinitionParallelTest {
         @Test
         @DisplayName("流程实例1到1包含condition节点人工任务分支1通过的并发场景测试")
         void testFlowsManualExecutorWithConditionNodeFirstBranchTrueParallel() throws Throwable {
-            CountDownLatch latch = new CountDownLatch(threadNum);
+            CountDownLatch latch = new CountDownLatch(THREAD_NUM);
             AtomicInteger failTimes = new AtomicInteger(0);
             List<Thread> threads = getThreads(latch, failTimes,
                     flowManualExecutorInMemoryTest::testFlowsManualExecutorWithConditionNodeFirstBranchTrue);
@@ -126,7 +126,7 @@ class FlowDefinitionParallelTest {
         @Test
         @DisplayName("流程实例1到1包含condition节点人工任务分支1驳回的并发场景测试")
         void testFlowsManualExecutorWithConditionNodeFirstBranchFalseParallel() throws Throwable {
-            CountDownLatch latch = new CountDownLatch(threadNum);
+            CountDownLatch latch = new CountDownLatch(THREAD_NUM);
             AtomicInteger failTimes = new AtomicInteger(0);
             List<Thread> threads = getThreads(latch, failTimes,
                     flowManualExecutorInMemoryTest::testFlowsManualExecutorWithConditionNodeFirstBranchFalse);
@@ -138,7 +138,7 @@ class FlowDefinitionParallelTest {
         @Test
         @DisplayName("流程实例1到1只有state节点的执行GeneralJober任务并发场景测试")
         void testFlowsExecuteGeneralJoberParallel() throws Throwable {
-            CountDownLatch latch = new CountDownLatch(threadNum);
+            CountDownLatch latch = new CountDownLatch(THREAD_NUM);
             AtomicInteger failTimes = new AtomicInteger(0);
             List<Thread> threads = getThreads(latch, failTimes, () -> {
                 try {
@@ -156,7 +156,7 @@ class FlowDefinitionParallelTest {
         @Test
         @DisplayName("流程实例m到n包含condition节点一次只offer一个数据的并发场景测试")
         void testFlowsExecuteProduceFromMToNForOfferOneDataParallel() throws Throwable {
-            CountDownLatch latch = new CountDownLatch(threadNum);
+            CountDownLatch latch = new CountDownLatch(THREAD_NUM);
             AtomicInteger failTimes = new AtomicInteger(0);
             List<Thread> threads = getThreads(latch, failTimes, () -> {
                 try {
@@ -174,7 +174,7 @@ class FlowDefinitionParallelTest {
         @Test
         @DisplayName("流程实例m到n最小SIZE过滤器为多单线程offer的场景测试")
         void testFlowsExecuteProduceFromMToNWithMinimumSizeOneInMultiThread() throws Throwable {
-            CountDownLatch latch = new CountDownLatch(threadNum);
+            CountDownLatch latch = new CountDownLatch(THREAD_NUM);
             AtomicInteger failTimes = new AtomicInteger(0);
             List<Thread> threads = getThreads(latch, failTimes, () -> {
                 try {

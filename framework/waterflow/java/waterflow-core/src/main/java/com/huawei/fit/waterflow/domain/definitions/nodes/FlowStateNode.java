@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 public class FlowStateNode extends FlowNode {
-    private static final Logger log = Logger.get(FlowStateNode.class);
+    private static final Logger LOG = Logger.get(FlowStateNode.class);
 
     private static final String VARIABLE_REGEX = "\\{\\{(.+?)}}";
 
@@ -56,9 +56,9 @@ public class FlowStateNode extends FlowNode {
             this.processor.onError(errorHandler(streamId));
             if (!triggerMode.isAuto()) {
                 this.processor.block(new Blocks.FilterBlock<>());
-                Optional.ofNullable(this.taskFilter).ifPresent(f -> this.processor.preFilter(f.filter()));
+                Optional.ofNullable(this.taskFilter).ifPresent(filter -> this.processor.preFilter(filter.filter()));
             }
-            Optional.ofNullable(this.joberFilter).ifPresent(f -> this.processor.postFilter(f.filter()));
+            Optional.ofNullable(this.joberFilter).ifPresent(filter -> this.processor.postFilter(filter.filter()));
             setCallback(this.processor, messenger);
         }
         return this.processor;
@@ -66,16 +66,17 @@ public class FlowStateNode extends FlowNode {
 
     private List<FlowData> stateProduce(List<FlowContext<FlowData>> inputs) {
         if (!Optional.ofNullable(this.jober).isPresent()) {
-            return setFlowMetaToContextData(inputs.stream().map(i -> i.getData()).collect(Collectors.toList()));
+            return setFlowMetaToContextData(
+                    inputs.stream().map(context -> context.getData()).collect(Collectors.toList()));
         }
         return setFlowMetaToContextData(
-                this.jober.execute(inputs.stream().map(i -> i.getData()).collect(Collectors.toList())));
+                this.jober.execute(inputs.stream().map(context -> context.getData()).collect(Collectors.toList())));
     }
 
     private List<FlowData> setFlowMetaToContextData(List<FlowData> inputs) {
         String output = properties.get("flowContext");
 
-        Optional.ofNullable(output).ifPresent(o -> {
+        Optional.ofNullable(output).ifPresent(flowContextStr -> {
             String outputKey = output.replaceAll(VARIABLE_REGEX, "$1");
             inputs.forEach(input -> {
                 Map<String, String> returnMeta = new HashMap<>();

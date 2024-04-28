@@ -32,21 +32,12 @@ public class TaskCenterTaskRule implements TaskRule {
      */
     @Override
     public void apply(FlowTask flowTask) {
-        if (FlowTaskType.APPROVING_TASK.equals(flowTask.getTaskType())) {
-            Validation.notBlank(flowTask.getTaskId(), exception("flow task id"));
-            Validation.notBlank(flowTask.getProperties().get(Constant.TITLE), exception("flow task title"));
-            Validation.notBlank(flowTask.getProperties().get(Constant.OWNER), exception("flow task owner"));
-            Validation.notBlank(flowTask.getProperties().get(Constant.CREATED_BY), exception("flow task created by"));
+        if (!FlowTaskType.APPROVING_TASK.equals(flowTask.getTaskType())) {
             return;
         }
-        // todo waterflow-refactor 修复taskRule解析问题，需要支持service扩展
-        //        TaskCenterOperator taskCenterOperator = new TaskCenterOperator(brokerClient);
-        //        Task task = taskCenterOperator.getTask(flowTask.getTaskId());
-        //        Validation.notNull(task, exception("task definition"));
-        //        List<TaskProperty> properties = task.getProperties();
-        //        properties.stream()
-        //            .filter(p -> p.isRequired())
-        //            .forEach(p -> Validation.notBlank(flowTask.getProperties().get(p.getName()),
-        //                exception("flow task " + p.getName())));
+        Validation.notBlank(flowTask.getTaskId(), exception("flow task id"));
+        Validation.notBlank(flowTask.getProperties().get(Constant.TITLE), exception("flow task title"));
+        Validation.notBlank(flowTask.getProperties().get(Constant.OWNER), exception("flow task owner"));
+        Validation.notBlank(flowTask.getProperties().get(Constant.CREATED_BY), exception("flow task created by"));
     }
 }

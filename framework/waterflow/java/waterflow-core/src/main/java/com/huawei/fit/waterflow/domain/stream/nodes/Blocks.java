@@ -84,7 +84,7 @@ public class Blocks {
          */
         @Override
         public void process(List<FlowContext<I>> contexts) {
-            this.getTarget().setValidator((i, all) -> validator == null || validator.check(i, all));
+            this.getTarget().setValidator((context, all) -> validator == null || validator.check(context, all));
             super.process(contexts);
         }
     }
@@ -112,7 +112,7 @@ public class Blocks {
          */
         @Override
         public void process(List<FlowContext<I>> contexts) {
-            Optional.ofNullable(this.filter).ifPresent(f -> this.getTarget().postFilter(f));
+            Optional.ofNullable(this.filter).ifPresent(filter -> this.getTarget().postFilter(filter));
             super.process(contexts);
         }
     }

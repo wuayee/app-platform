@@ -216,7 +216,7 @@ public abstract class FlowNode {
      */
     protected void setCallback(Subscriber<FlowData, FlowData> subscriber, FlowContextMessenger messenger) {
         Optional.ofNullable(this.callback)
-                .ifPresent(__ -> subscriber.onComplete(c -> messenger.sendCallback(c.getAll())));
+                .ifPresent(any -> subscriber.onComplete(callback -> messenger.sendCallback(callback.getAll())));
     }
 
     private Publisher<FlowData> getFrom(String streamId, FlowContextRepo<FlowData> repo, FlowContextMessenger messenger,

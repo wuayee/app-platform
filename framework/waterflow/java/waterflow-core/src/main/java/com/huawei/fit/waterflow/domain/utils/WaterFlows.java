@@ -24,9 +24,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.0
  */
 public final class WaterFlows {
-    private static final Logger log = Logger.get(WaterFlows.class);
+    private static final Logger LOG = Logger.get(WaterFlows.class);
 
-    private static final Map<String, Publisher<FlowData>> flows = new ConcurrentHashMap<>();
+    private static final Map<String, Publisher<FlowData>> FLOWS = new ConcurrentHashMap<>();
 
     /**
      * 根据流程版本更新water flow
@@ -36,9 +36,9 @@ public final class WaterFlows {
      * @return {@link Publisher} water flow
      */
     public static Publisher<FlowData> putPublisher(String streamId, Publisher<FlowData> publisher) {
-        Publisher<FlowData> exits = Optional.ofNullable(flows.putIfAbsent(streamId, publisher))
+        Publisher<FlowData> exits = Optional.ofNullable(FLOWS.putIfAbsent(streamId, publisher))
                 .orElseGet(() -> getPublisher(streamId));
-        log.info("[WaterFlows::putPublisher] put new publisher only if not exists, "
+        LOG.info("[WaterFlows::putPublisher] put new publisher only if not exists, "
                         + "streamId: {}, publisher: {}, exits: {}", streamId, identityHashCode(publisher),
                 identityHashCode(exits));
         return exits;
@@ -51,7 +51,7 @@ public final class WaterFlows {
      * @return {@link Publisher} water flow
      */
     public static Publisher<FlowData> getPublisher(String streamId) {
-        return flows.get(streamId);
+        return FLOWS.get(streamId);
     }
 
     /**
@@ -61,13 +61,13 @@ public final class WaterFlows {
      * @param streamId 流程版本
      */
     public static void removePublisher(String streamId) {
-        flows.remove(streamId);
+        FLOWS.remove(streamId);
     }
 
     /**
      * 清除flowable flow缓存
      */
     public static void clear() {
-        flows.clear();
+        FLOWS.clear();
     }
 }

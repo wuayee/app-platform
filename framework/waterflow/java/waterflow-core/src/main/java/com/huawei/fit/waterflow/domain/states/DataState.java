@@ -28,10 +28,11 @@ public class DataState<O, D, I> extends DataStart<O, D, I> {
     /**
      * 完成流程定义，并发射一个数据，提供一个callback用于接受数据
      *
-     * @param callback 回调
+     * @param callback 数据消费方
      */
     public void offer(Consumer<O> callback) {
-        ((State<O, D, I, ProcessFlow<D>>) this.state).close(r -> callback.accept(r.get().getData()));
+        ObjectUtils.<State<O, D, I, ProcessFlow<D>>>cast(this.state).close(
+                dataCallback -> callback.accept(dataCallback.get().getData()));
         this.start.offer();
     }
 
@@ -39,7 +40,7 @@ public class DataState<O, D, I> extends DataStart<O, D, I> {
      * 完成流程定义，并发射一个数据
      */
     public void offer() {
-        ((State<O, D, I, ProcessFlow<D>>) this.state).close();
+        ObjectUtils.<State<O, D, I, ProcessFlow<D>>>cast(this.state).close();
         this.start.offer();
     }
 
@@ -50,7 +51,8 @@ public class DataState<O, D, I> extends DataStart<O, D, I> {
      */
     public O invoke() {
         AtomicReference<O> result = new AtomicReference<>();
-        ((State<O, D, I, ProcessFlow<D>>) this.state).close(r -> result.set(r.get().getData()));
+        ObjectUtils.<State<O, D, I, ProcessFlow<D>>>cast(this.state)
+                .close(callback -> result.set(callback.get().getData()));
         this.start.offer();
         SleepUtil.waitUntil(() -> result.get() != null, 1000);
         return result.get();
@@ -83,6 +85,7 @@ public class DataState<O, D, I> extends DataStart<O, D, I> {
      * @param state 指定的节点
      */
     public void to(DataState<?, D, O> state) {
-        ((State<O, D, I, ProcessFlow<D>>) this.state).to((State<?, D, O, ProcessFlow<D>>) state.state);
+        ObjectUtils.<State<O, D, I, ProcessFlow<D>>>cast(this.state)
+                .to(ObjectUtils.<State<?, D, O, ProcessFlow<D>>>cast(state.state));
     }
 }

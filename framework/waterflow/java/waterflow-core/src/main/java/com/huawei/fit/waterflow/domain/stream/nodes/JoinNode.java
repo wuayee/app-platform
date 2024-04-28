@@ -85,13 +85,13 @@ public class JoinNode<I, O> extends Node<I, O> {
      * join节点做事后处理，从join节点出去后，context就只有一个了
      * join之后的上下文要立刻保存为archived状态，然后在生成一个新的为后续使用
      *
-     * @param pre join节点处理之前的context集合
-     * @param after join节点处理之后的context集合，实际只有一个元素
+     * @param preList join节点处理之前的context集合
+     * @param afterList join节点处理之后的context集合，实际只有一个元素
      */
     @Override
-    public void afterProcess(List<FlowContext<I>> pre, List<FlowContext<O>> after) {
-        pre.forEach(c -> c.join(true));
-        after.forEach(c -> c.setParallel("").setParallelMode(""));
-        super.afterProcess(pre, after);
+    public void afterProcess(List<FlowContext<I>> preList, List<FlowContext<O>> afterList) {
+        preList.forEach(c -> c.join(true));
+        afterList.forEach(c -> c.setParallel("").setParallelMode(""));
+        super.afterProcess(preList, afterList);
     }
 }

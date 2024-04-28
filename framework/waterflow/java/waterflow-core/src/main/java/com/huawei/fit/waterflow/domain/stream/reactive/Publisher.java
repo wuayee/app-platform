@@ -34,9 +34,8 @@ public interface Publisher<I> extends StreamIdentity, EmitterListener<I, FlowSes
     }
 
     @Override
-    default void handle(I data, FlowSession s) {
-        FlowSession session = new FlowSession(s);
-        this.offer(data, session);
+    default void handle(I data, FlowSession flowSession) {
+        this.offer(data, new FlowSession(flowSession));
     }
 
     /**
@@ -67,7 +66,6 @@ public interface Publisher<I> extends StreamIdentity, EmitterListener<I, FlowSes
      * @param whether whether
      * @return Processor<M, O>
      */
-    //        <M, O> Processor<M, O> join(Reduce<FlowContext<M>, O> processor, Map<I, M> convert, Whether<I> whether);
     <M, O> Processor<M, O> join(Operators.Map<FlowContext<M>, O> processor, Operators.Map<I, M> convert,
             Operators.Whether<I> whether);
 
@@ -103,36 +101,6 @@ public interface Publisher<I> extends StreamIdentity, EmitterListener<I, FlowSes
      */
     <M, O> Processor<M, O> process(Operators.Process<FlowContext<M>, O> processor, Operators.Map<I, M> convert,
             Operators.Whether<I> whether);
-
-    /**
-     * flat map 1到m expression，包装一个flatMap processor
-     *
-     * @param processor processor
-     * @param convert   convert
-     * @param whether   whether
-     * @return Processor<M, O>
-     */
-    //        <M, O> Processor<M, O> flatMap(FlatMap<FlowContext<M>, O> processor, Map<I, M> convert, Whether<I> whether);
-
-    /**
-     * reduce
-     *
-     * @param processor processor
-     * @param convert   convert
-     * @param whether   whether
-     * @return Processor<M, O>
-     */
-    //        <M, O> Processor<M, O> reduce(Reduce<FlowContext<M>, O> processor, Map<I, M> convert, Whether<I> whether);
-
-    /**
-     * produce
-     *
-     * @param processor processor
-     * @param convert   convert
-     * @param whether   whether
-     * @return Processor<M, O>
-     */
-    //        <M, O> Processor<M, O> produce(Produce<FlowContext<M>, O> processor, Map<I, M> convert, Whether<I> whether);
 
     /**
      * subscribe

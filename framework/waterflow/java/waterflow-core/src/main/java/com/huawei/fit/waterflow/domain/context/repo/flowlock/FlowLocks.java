@@ -24,7 +24,6 @@ public interface FlowLocks {
      * 本地锁全局静态对象
      */
     Map<String, Lock> locks = new ConcurrentHashMap<>();
-
     /**
      * 节点分布式锁key前缀
      */

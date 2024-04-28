@@ -16,7 +16,7 @@ import java.util.List;
  * @since 1.0
  */
 public class FlowContextMemoMessenger implements FlowContextMessenger {
-    private static final Logger log = Logger.get(FlowContextMemoMessenger.class);
+    private static final Logger LOG = Logger.get(FlowContextMemoMessenger.class);
 
     /**
      * 发送事件到引擎外部
@@ -27,7 +27,7 @@ public class FlowContextMemoMessenger implements FlowContextMessenger {
      */
     @Override
     public <I> void send(String nodeId, List<FlowContext<I>> contexts) {
-        log.warn("FlowEngine memo messenger does not support sending events.");
+        LOG.warn("FlowEngine memo messenger does not support sending events.");
     }
 
     /**
@@ -38,6 +38,6 @@ public class FlowContextMemoMessenger implements FlowContextMessenger {
      */
     @Override
     public <I> void sendCallback(List<FlowContext<I>> contexts) {
-        log.warn("FlowEngine memo messenger does not support sending events.");
+        LOG.warn("FlowEngine memo messenger does not support sending events.");
     }
 }

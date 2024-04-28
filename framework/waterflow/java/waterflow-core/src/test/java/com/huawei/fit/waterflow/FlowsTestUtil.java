@@ -108,9 +108,4 @@ public final class FlowsTestUtil {
     public static void waitUntil(Supplier<Boolean> stop) {
         waitUntil(stop, 500);
     }
-
-    public static void assertSingleInstance(Publisher<FlowData> existInstance, Publisher<FlowData> newInstance) {
-        assertEquals(System.identityHashCode(existInstance), System.identityHashCode(newInstance));
-    }
 }
-

@@ -25,7 +25,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class FlowValidator implements Validator {
-    private static final Logger log = Logger.get(FlowValidator.class);
+    private static final Logger LOG = Logger.get(FlowValidator.class);
 
     private final List<FlowRule> rules;
 
@@ -47,11 +47,11 @@ public class FlowValidator implements Validator {
      */
     public void validatePagination(int offset, int limit) {
         if (offset < 0) {
-            log.error("The offset of pagination out of range. Input offset is {}", offset);
+            LOG.error("The offset of pagination out of range. Input offset is {}", offset);
             throw new BadRequestException(ErrorCodes.PAGINATION_OFFSET_INVALID);
         }
         if (limit < 0 || limit > 200) {
-            log.error("The limit of pagination out of range. Input limit is {}", limit);
+            LOG.error("The limit of pagination out of range. Input limit is {}", limit);
             throw new BadRequestException(ErrorCodes.PAGINATION_LIMIT_INVALID);
         }
     }

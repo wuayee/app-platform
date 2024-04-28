@@ -49,12 +49,6 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
         this.publisher = this.initFrom(repo, messenger, locks);
     }
 
-    //    public Node(String streamId, Processors.FlatMap<FlowContext<T>, R> processor, FlowContextRepo repo, FlowContextMessenger messenger,
-    //                FlowLocks locks) {
-    //        super(streamId, processor, repo, messenger, locks);
-    //        this.publisher = this.initFrom(repo, messenger, locks);
-    //    }
-
     /**
      * 1->1处理节点
      *
@@ -72,21 +66,6 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
         this.publisher = this.initFrom(repo, messenger, locks);
     }
 
-    //    /**
-    //     * m->n处理节点
-    //     *
-    //     * @param streamId stream流程ID
-    //     * @param processor 对应处理器
-    //     * @param repo 上下文持久化repo，默认在内存
-    //     * @param messenger 上下文发送器，默认在内存
-    //     * @param locks 流程锁
-    //     */
-    //    public Node(String streamId, Operators.Produce<FlowContext<T>, R> processor, FlowContextRepo repo, FlowContextMessenger messenger,
-    //                FlowLocks locks) {
-    //        super(streamId, processor, repo, messenger, locks);
-    //        this.publisher = this.initFrom(repo, messenger, locks);
-    //    }
-
     /**
      * m->n处理节点
      *
@@ -103,38 +82,6 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
         super(streamId, nodeId, processor, repo, messenger, locks, nodeType);
         this.publisher = this.initFrom(repo, messenger, locks);
     }
-
-    /**
-     * n->1 处理节点
-     *
-     * @param streamId stream流程ID
-     * @param processor 对应处理器
-     * @param repo 上下文持久化repo，默认在内存
-     * @param messenger 上下文发送器，默认在内存
-     * @param locks 流程锁
-     */
-    //    public Node(String streamId, Processors.Reduce<FlowContext<T>, R> processor, FlowContextRepo repo, FlowContextMessenger messenger,
-    //        FlowLocks locks) {
-    //        super(streamId, processor, repo, messenger, locks);
-    //        this.publisher = this.initFrom(repo, messenger, locks);
-    //    }
-
-    /**
-     * n->1 处理节点
-     *
-     * @param streamId stream流程ID
-     * @param nodeId stream流程节点ID
-     * @param processor 对应处理器
-     * @param repo 上下文持久化repo，默认在内存
-     * @param messenger 上下文发送器，默认在内存
-     * @param locks 流程锁
-     * @param nodeType 节点类型
-     */
-    //    public Node(String streamId, String nodeId, Processors.Reduce<FlowContext<T>, R> processor, FlowContextRepo repo,
-    //        FlowContextMessenger messenger, FlowLocks locks, FlowNodeType nodeType) {
-    //        super(streamId, nodeId, processor, repo, messenger, locks, nodeType);
-    //        this.publisher = this.initFrom(repo, messenger, locks);
-    //    }
 
     /**
      * initFrom
@@ -176,29 +123,11 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
         return this.publisher.map(processor, convert, whether);
     }
 
-    //    @Override
-    //    public <M, O> FlowStream.Processor<M, O> flatMap(
-    //            Processors.FlatMap<FlowContext<M>, O> processor, Processors.Map<R, M> convert, Processors.Whether<R> whether) {
-    //        return this.publisher.flatMap(processor, convert, whether);
-    //    }
-
     @Override
     public <M, O> Processor<M, O> process(Operators.Process<FlowContext<M>, O> processor, Operators.Map<R, M> convert,
             Operators.Whether<R> whether) {
         return this.publisher.process(processor, convert, whether);
     }
-
-    //    @Override
-    //    public <M, O> FlowStream.Processor<M, O> reduce(
-    //            Processors.Reduce<FlowContext<M>, O> processor, Processors.Map<R, M> convert, Processors.Whether<R> whether) {
-    //        return this.publisher.reduce(processor, convert, whether);
-    //    }
-
-    //    @Override
-    //    public <M, O> FlowStream.Processor<M, O> produce(
-    //            Operators.Produce<FlowContext<M>, O> processor, Operators.Map<R, M> convert, Operators.Whether<R> whether) {
-    //        return this.publisher.produce(processor, convert, whether);
-    //    }
 
     @Override
     public <O> void subscribe(Subscriber<R, O> subscriber) {
@@ -280,8 +209,9 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
      */
     @Override
     public Subscriber<R, R> close() {
-        Subscriber<R, R> end = new To<>(this.getStreamId(), null, (Operators.Map<FlowContext<R>, R>) i -> i.getData(),
-                getRepo(), getMessenger(), getLocks(), END);
+        Operators.Map<FlowContext<R>, R> processor = FlowContext::getData;
+        Subscriber<R, R> end = new To<>(this.getStreamId(), null, processor, getRepo(), getMessenger(), getLocks(),
+                END);
         this.subscribe(end);
         return end;
     }

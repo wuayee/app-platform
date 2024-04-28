@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -60,7 +61,7 @@ public class FlowParserTest extends FlowsDataBaseTest {
 
     @Test
     @DisplayName("测试解析流程定义成功")
-    public void testParserFlowDefinitionSuccess() {
+    void testParserFlowDefinitionSuccess() {
         String jsonData = getJsonData(getFilePath("flows_with_empty_nodes.json"));
         JSONObject graphData = JSONObject.parseObject(jsonData);
 
@@ -76,7 +77,7 @@ public class FlowParserTest extends FlowsDataBaseTest {
 
     @Test
     @DisplayName("测试解析Start节点成功")
-    public void testStartNodeParserSuccess() {
+    void testStartNodeParserSuccess() {
         String jsonData = getJsonData(getFilePath("flows_with_start_nodes.json"));
         JSONArray nodes = JSONObject.parseObject(jsonData).getJSONArray("nodes");
         JSONObject startNode = getNode(nodes, START);
@@ -96,7 +97,7 @@ public class FlowParserTest extends FlowsDataBaseTest {
 
     @Test
     @DisplayName("测试解析End节点成功")
-    public void testEndNodeParserSuccess() {
+    void testEndNodeParserSuccess() {
         String jsonData = getJsonData(getFilePath("flows_with_end_nodes.json"));
         JSONObject endNode = getNode(JSONObject.parseObject(jsonData).getJSONArray("nodes"), END);
 
@@ -110,7 +111,7 @@ public class FlowParserTest extends FlowsDataBaseTest {
 
     @Test
     @DisplayName("测试解析Conditional节点成功")
-    public void testConditionalNodeParserSuccess() {
+    void testConditionalNodeParserSuccess() {
         String jsonData = getJsonData(getFilePath("flows_with_conditional_nodes.json"));
         JSONObject conditionNode = getNode(JSONObject.parseObject(jsonData).getJSONArray("nodes"), CONDITION);
 
@@ -124,7 +125,7 @@ public class FlowParserTest extends FlowsDataBaseTest {
 
     @Test
     @DisplayName("测试解析State节点成功")
-    public void testStateNodeParserSuccess() {
+    void testStateNodeParserSuccess() {
         String jsonData = getJsonData(getFilePath("flows_with_state_nodes.json"));
         JSONObject stateNode = getNode(JSONObject.parseObject(jsonData).getJSONArray("nodes"), STATE);
 
@@ -138,7 +139,7 @@ public class FlowParserTest extends FlowsDataBaseTest {
 
     @Test
     @DisplayName("测试general自动任务解析成功")
-    public void testFitableTaskParserSuccess() {
+    void testFitableTaskParserSuccess() {
         String jsonData = getJsonData(getFilePath("flows_with_fitable_task.json"));
         JSONObject stateNode = getNode(JSONObject.parseObject(jsonData).getJSONArray("nodes"), STATE);
 
@@ -156,7 +157,7 @@ public class FlowParserTest extends FlowsDataBaseTest {
 
     @Test
     @DisplayName("测试解析手动任务成功")
-    public void testManualTaskParserSuccess() {
+    void testManualTaskParserSuccess() {
         String jsonData = getJsonData(getFilePath("flows_with_manual_task.json"));
         JSONObject stateNode = getNode(JSONObject.parseObject(jsonData).getJSONArray("nodes"), STATE);
 
@@ -176,7 +177,7 @@ public class FlowParserTest extends FlowsDataBaseTest {
 
     @Test
     @DisplayName("测试解析事件成功")
-    public void testEventParserSuccess() {
+    void testEventParserSuccess() {
         String jsonData = getJsonData(getFilePath("flows_with_event.json"));
 
         FlowGraphData flowGraphData = new FlowGraphData(jsonData);
@@ -196,7 +197,7 @@ public class FlowParserTest extends FlowsDataBaseTest {
 
     @Test
     @DisplayName("测试解析过滤器成功")
-    public void testFilterParserSuccess() {
+    void testFilterParserSuccess() {
         String jsonData = getJsonData(getFilePath("flows_with_filter.json"));
         JSONObject stateNode = getNode(JSONObject.parseObject(jsonData).getJSONArray("nodes"), STATE);
 
@@ -204,18 +205,20 @@ public class FlowParserTest extends FlowsDataBaseTest {
 
         JSONObject joberFilterObj = stateNode.getJSONObject("joberFilter");
         FlowFilter joberFilter = flowDefinition.getFlowNode(stateNode.getString("metaId")).getJoberFilter();
-        Assertions.assertEquals(joberFilterObj.getString("type").toUpperCase(), joberFilter.getFilterType().getCode());
+        Assertions.assertEquals(joberFilterObj.getString("type").toUpperCase(Locale.ROOT),
+                joberFilter.getFilterType().getCode());
         Assertions.assertEquals(joberFilterObj.getString("threshold"), joberFilter.getProperties().get("threshold"));
 
         JSONObject taskFilterObj = stateNode.getJSONObject("taskFilter");
         FlowFilter taskFilter = flowDefinition.getFlowNode(stateNode.getString("metaId")).getTaskFilter();
-        Assertions.assertEquals(taskFilterObj.getString("type").toUpperCase(), taskFilter.getFilterType().getCode());
+        Assertions.assertEquals(taskFilterObj.getString("type").toUpperCase(Locale.ROOT),
+                taskFilter.getFilterType().getCode());
         Assertions.assertEquals(taskFilterObj.getString("threshold"), taskFilter.getProperties().get("threshold"));
     }
 
     @Test
     @DisplayName("测试http自动任务解析成功")
-    public void testHttpTaskParserSuccess() {
+    void testHttpTaskParserSuccess() {
         String jsonData = getJsonData(getFilePath("flows_with_http_task.json"));
         JSONObject stateNode = getNode(JSONObject.parseObject(jsonData).getJSONArray("nodes"), STATE);
 
@@ -233,7 +236,7 @@ public class FlowParserTest extends FlowsDataBaseTest {
 
     @Test
     @DisplayName("测试ohscript自动任务解析成功")
-    public void testOhscriptJoberParserSuccess() {
+    void testOhscriptJoberParserSuccess() {
         String jsonData = getJsonData(getFilePath("flows_with_ohscript_jober.json"));
         JSONObject stateNode = getNode(JSONObject.parseObject(jsonData).getJSONArray("nodes"), STATE);
 

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 public class FlowEndNode extends FlowNode {
-    private static final Logger log = Logger.get(FlowEndNode.class);
+    private static final Logger LOG = Logger.get(FlowEndNode.class);
 
     private Subscriber<FlowData, FlowData> subscriber;
 
@@ -43,6 +43,6 @@ public class FlowEndNode extends FlowNode {
     }
 
     private List<FlowData> endProduce(List<FlowContext<FlowData>> input) {
-        return input.stream().map(i -> i.getData()).collect(Collectors.toList());
+        return input.stream().map(FlowContext::getData).collect(Collectors.toList());
     }
 }

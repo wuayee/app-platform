@@ -45,6 +45,7 @@ import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.broker.client.Router;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import com.google.common.collect.Lists;
 
@@ -100,7 +101,7 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("flows_with_state_node.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
 
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
 
             assertFlowableFlow(flowDefinition, from);
         }
@@ -111,7 +112,7 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("flows_with_conditional_node.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
 
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
 
             assertFlowableFlow(flowDefinition, from);
         }
@@ -137,7 +138,7 @@ class FlowDefinitionTest {
                 if (flowNodes.containsKey(flowNode.getMetaId())) {
                     continue;
                 }
-                Node<?, ?> node = (Node<?, ?>) to;
+                Node<?, ?> node = ObjectUtils.cast(to);
                 assertFlowableNode(node, flowDefinition);
                 assertSubscription(node, flowDefinition, flowableNodes, flowNodes);
             }
@@ -185,7 +186,7 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("flows_auto_echo_state_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
             FlowData flowData = getFlowData(flowsExecutorWithOnlyStateNode1To1(), "gsy");
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
@@ -206,12 +207,12 @@ class FlowDefinitionTest {
         void testFlowsExecutorStateNodeWithErrorForFirstNode1To1() {
             String jsonData = getJsonData(getFilePath("flows_auto_echo_state_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
-            flowDefinition.setMetaId(stateError1);
+            flowDefinition.setMetaId(STATE_ERROR_1);
             FlowData flowData = getFlowData(flowsExecutorWithOnlyStateNode1To1(), "gsy");
             String metaId = "state1";
             FlowNode flowNode = flowDefinition.getFlowNode(metaId);
             flowNode.getJober().setProperties(null);
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
@@ -228,12 +229,12 @@ class FlowDefinitionTest {
         void testFlowsExecutorStateNodeWithErrorForSecondNode1To1() {
             String jsonData = getJsonData(getFilePath("flows_auto_echo_state_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
-            flowDefinition.setMetaId(stateError2);
+            flowDefinition.setMetaId(STATE_ERROR_2);
             FlowData flowData = getFlowData(flowsExecutorWithOnlyStateNode1To1(), "gsy");
             String metaId = "state2";
             FlowNode flowNode = flowDefinition.getFlowNode(metaId);
             flowNode.getJober().setProperties(null);
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
@@ -251,7 +252,7 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("flows_auto_echo_with_condition_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
             FlowData flowData = getFlowData(flowsExecutorWithConditionNodeFirstBranchTrue(), "gsy");
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
@@ -276,7 +277,7 @@ class FlowDefinitionTest {
             Map<String, Object> businessData = flowsExecutorWithConditionNodeFirstBranchTrue();
             businessData.put("cmc.approved", "false");
             FlowData flowData = getFlowData(businessData, "gsy");
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
@@ -297,7 +298,7 @@ class FlowDefinitionTest {
             Map<String, Object> businessData = flowsExecutorWithConditionNodeFirstBranchTrue();
             businessData.put("committer.approved", "false");
             FlowData flowData = getFlowData(businessData, "gsy");
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
@@ -315,12 +316,12 @@ class FlowDefinitionTest {
         void testFlowsExecutorConditionNodeWithError() {
             String jsonData = getJsonData(getFilePath("flows_auto_echo_with_condition_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
-            flowDefinition.setMetaId(conditionError1);
+            flowDefinition.setMetaId(CONDITION_ERROR_1);
             FlowData flowData = getFlowData(flowsExecutorWithConditionNodeFirstBranchTrue(), "gsy");
             String metaId = "state1";
             FlowNode flowNode = flowDefinition.getFlowNode(metaId);
             flowNode.getJober().setProperties(null);
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
@@ -349,7 +350,7 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("flows_manual_echo_with_condition_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
             FlowData flowData = getFlowData(flowsManualExecutorWithConditionNodeFirstBranchTrue(), "gsy");
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
             String metaId = "event1"; // 来自json文件中的配置
@@ -363,7 +364,7 @@ class FlowDefinitionTest {
 
             FlowsTestUtil.waitMillis(Collections::emptyList, 100);
             FlowContext<FlowData> resumeContext = contexts.get(0);
-            From<FlowData> resumeFrom = (From<FlowData>) getPublisher(resumeContext.getStreamId());
+            From<FlowData> resumeFrom = ObjectUtils.cast(getPublisher(resumeContext.getStreamId()));
             Blocks.Block<FlowData> block = resumeFrom.getBlock(resumeContext.getPosition());
             resumeContext.getData().getBusinessData().put("status", "true");
             resumeContext.toBatch(UUIDUtil.uuid());
@@ -384,7 +385,7 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("flows_manual_echo_with_condition_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
             FlowData flowData = getFlowData(flowsManualExecutorWithConditionNodeFirstBranchTrue(), "gsy");
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
             String metaId = "event1"; // 来自json文件中的配置
@@ -398,7 +399,7 @@ class FlowDefinitionTest {
 
             FlowsTestUtil.waitMillis(Collections::emptyList, 100);
             FlowContext<FlowData> resumeContext = contexts.get(0);
-            From<FlowData> resumeFrom = (From<FlowData>) getPublisher(resumeContext.getStreamId());
+            From<FlowData> resumeFrom = ObjectUtils.cast(getPublisher(resumeContext.getStreamId()));
             Blocks.Block<FlowData> block = resumeFrom.getBlock(resumeContext.getPosition());
             resumeContext.getData().getBusinessData().put("status", "false");
             resumeContext.toBatch(UUIDUtil.uuid());
@@ -419,7 +420,7 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("创建联调分支扩展转审场景.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
             FlowData flowData = getFlowData(flowsManualExecutorWithConditionNodeCircle(), "gsy");
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
             String metaId = "event1"; // 来自json文件中的配置
@@ -434,7 +435,7 @@ class FlowDefinitionTest {
 
             FlowsTestUtil.waitMillis(Collections::emptyList, 100);
             FlowContext<FlowData> resumeContext = contexts.get(0);
-            From<FlowData> resumeFrom = (From<FlowData>) getPublisher(resumeContext.getStreamId());
+            From<FlowData> resumeFrom = ObjectUtils.cast(getPublisher(resumeContext.getStreamId()));
             Blocks.Block<FlowData> block = resumeFrom.getBlock(resumeContext.getPosition());
             resumeContext.getData().getBusinessData().put("status", "transferred");
             resumeContext.toBatch(UUIDUtil.uuid());
@@ -449,7 +450,7 @@ class FlowDefinitionTest {
 
             FlowsTestUtil.waitMillis(Collections::emptyList, 100);
             resumeContext = contexts.get(0);
-            resumeFrom = (From<FlowData>) getPublisher(resumeContext.getStreamId());
+            resumeFrom = ObjectUtils.cast(getPublisher(resumeContext.getStreamId()));
             block = resumeFrom.getBlock(resumeContext.getPosition());
             resumeContext.getData().getBusinessData().put("status", "approved");
             resumeContext.toBatch(UUIDUtil.uuid());
@@ -480,7 +481,7 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("flows_auto_general_jober_with_state_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
             FlowData flowData = getFlowData(flowsExecutorWithOnlyStateNode1To1(), "gsy");
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
@@ -511,9 +512,7 @@ class FlowDefinitionTest {
         void testFlowsExecuteGeneralJoberError() throws Throwable {
             String jsonData = getJsonData(getFilePath("flows_auto_general_jober_with_state_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
-            FlowData flowData = getFlowData(flowsExecutorWithOnlyStateNode1To1(), "gsy");
-            String metaId = "state1";
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
@@ -525,8 +524,10 @@ class FlowDefinitionTest {
             when(invoker.invoke(anyList())).thenThrow(new WaterflowException(FLOW_EXECUTE_FITABLE_TASK_FAILED));
             when(invoker.invoke(any(), anyList(), anyString())).thenReturn(null);
 
+            FlowData flowData = getFlowData(flowsExecutorWithOnlyStateNode1To1(), "gsy");
             String traceId = from.offer(flowData);
 
+            String metaId = "state1";
             List<FlowContext<FlowData>> contexts = FlowsTestUtil.waitSingle(
                     contextSupplier(REPO, streamId, traceId, metaId, ERROR));
             List<FlowContext<FlowData>> all = this.getContextsByTraceWrapper(REPO, traceId);
@@ -553,13 +554,13 @@ class FlowDefinitionTest {
             list.add(getFlowData(flowsExecuteProduceFromMToNForOfferOneData("true"), "gsy"));
             list.add(getFlowData(flowsExecuteProduceFromMToNForOfferOneData("true"), "yyk"));
             list.add(getFlowData(flowsExecuteProduceFromMToNForOfferOneData("false"), "yxy"));
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
-            List<Map<String, Object>> outputs = list.stream().map(f -> {
+            List<Map<String, Object>> outputs = list.stream().map(flowData -> {
                 Map<String, Object> result = new HashMap<>();
-                Map<String, Object> businessData = f.getBusinessData();
+                Map<String, Object> businessData = flowData.getBusinessData();
                 result.put("businessData", businessData);
                 return result;
             }).collect(Collectors.toList());
@@ -583,18 +584,18 @@ class FlowDefinitionTest {
         void testFlowsExecuteProduceFromMToNForOfferMultiData() throws Throwable {
             String jsonData = getJsonData(getFilePath("flows_auto_general_jober_with_condition_node_m_to_n.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
-            FlowData[] flowData = {
+            FlowData[] flowDataList = {
                     getFlowData(flowsExecuteProduceFromMToNForOfferOneData("true"), "gsy"),
                     getFlowData(flowsExecuteProduceFromMToNForOfferOneData("true"), "yyk"),
                     getFlowData(flowsExecuteProduceFromMToNForOfferOneData("false"), "yxy")
             };
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
-            List<Map<String, Object>> outputs = Lists.newArrayList(flowData).stream().map(f -> {
+            List<Map<String, Object>> outputs = Lists.newArrayList(flowDataList).stream().map(flowData -> {
                 Map<String, Object> result = new HashMap<>();
-                Map<String, Object> businessData = f.getBusinessData();
+                Map<String, Object> businessData = flowData.getBusinessData();
                 result.put("businessData", businessData);
                 return result;
             }).collect(Collectors.toList());
@@ -603,7 +604,7 @@ class FlowDefinitionTest {
             when(MOCKED.timeout(anyLong(), any())).thenReturn(MOCKED);
             when(MOCKED.invoke(any())).thenReturn(outputs);
 
-            String traceId = from.offer(flowData);
+            String traceId = from.offer(flowDataList);
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             List<FlowContext<FlowData>> contexts = FlowsTestUtil.waitSize(
@@ -619,70 +620,15 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("flows_manual_echo_with_condition_node_m_to_n.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
             FlowData flowData1 = getFlowData(flowsExecuteFilterFromMToN(), "gsy");
-            FlowData flowData2 = getFlowData(flowsExecuteFilterFromMToN(), "yyk");
-            FlowData flowData3 = getFlowData(flowsExecuteFilterFromMToN(), "yxy");
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
-            String eventMetaId = "event1"; // 来自json文件中的配置
-            String stateMetaId = "state1"; // 来自json文件中的配置
+            // 来自json文件中的配置
+            String eventMetaId = "event1";
 
-            String traceId1 = from.offer(flowData1);
-            List<FlowContext<FlowData>> contexts1 = FlowsTestUtil.waitSingle(
-                    contextSupplier(REPO, streamId, traceId1, eventMetaId, PENDING));
-            assertEquals(1, contexts1.size());
-
-            FlowsTestUtil.waitMillis(Collections::emptyList, 100);
-            FlowContext<FlowData> resumeContext1 = contexts1.get(0);
-            From<FlowData> resumeFrom1 = (From<FlowData>) getPublisher(resumeContext1.getStreamId());
-            Blocks.Block<FlowData> block1 = resumeFrom1.getBlock(resumeContext1.getPosition());
-            String toBatch1 = UUIDUtil.uuid();
-            contexts1.forEach(c -> {
-                c.getData().getBusinessData().put("approve.status", "true");
-                c.toBatch(toBatch1);
-            });
-            REPO.save(contexts1);
-            block1.process(contexts1);
-            contexts1 = FlowsTestUtil.waitFortyMillis(contextSupplier(REPO, streamId, traceId1, eventMetaId, PENDING));
-            assertEquals(1, contexts1.size());
-
-            String traceId2 = from.offer(flowData2);
-            List<FlowContext<FlowData>> contexts2 = FlowsTestUtil.waitSingle(
-                    contextSupplier(REPO, streamId, traceId2, eventMetaId, PENDING));
-            assertEquals(1, contexts2.size());
-
-            FlowsTestUtil.waitMillis(Collections::emptyList, 100);
-            FlowContext<FlowData> resumeContext2 = contexts2.get(0);
-            From<FlowData> resumeFrom2 = (From<FlowData>) getPublisher(resumeContext2.getStreamId());
-            Blocks.Block<FlowData> block2 = resumeFrom2.getBlock(resumeContext2.getPosition());
-            String toBatch2 = UUIDUtil.uuid();
-            contexts2.forEach(c -> {
-                c.getData().getBusinessData().put("approve.status", "true");
-                c.toBatch(toBatch2);
-            });
-            REPO.save(contexts2);
-            block2.process(contexts2);
-            contexts2 = FlowsTestUtil.waitFortyMillis(contextSupplier(REPO, streamId, traceId2, eventMetaId, PENDING));
-            assertEquals(1, contexts2.size());
-
-            String traceId3 = from.offer(flowData3);
-            List<FlowContext<FlowData>> contexts3 = FlowsTestUtil.waitSingle(
-                    contextSupplier(REPO, streamId, traceId3, eventMetaId, PENDING));
-            assertEquals(1, contexts3.size());
-
-            FlowsTestUtil.waitMillis(Collections::emptyList, 100);
-            FlowContext<FlowData> resumeContext3 = contexts3.get(0);
-            From<FlowData> resumeFrom3 = (From<FlowData>) getPublisher(resumeContext3.getStreamId());
-            Blocks.Block<FlowData> block3 = resumeFrom3.getBlock(resumeContext3.getPosition());
-            String toBatch3 = UUIDUtil.uuid();
-            contexts3.forEach(c -> {
-                c.getData().getBusinessData().put("approve.status", "false");
-                c.toBatch(toBatch3);
-            });
-            REPO.save(contexts3);
-            block3.process(contexts3);
-            contexts3 = FlowsTestUtil.waitEmpty(contextSupplier(REPO, streamId, traceId3, eventMetaId, PENDING));
-            assertEquals(0, contexts3.size());
+            String traceId1 = runFlow1(flowData1, from, streamId, eventMetaId);
+            String traceId2 = runFlow2(from, streamId, eventMetaId);
+            String traceId3 = runFlow3(from, streamId, eventMetaId);
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             List<FlowContext<FlowData>> endContexts = FlowsTestUtil.waitSize(
@@ -690,6 +636,57 @@ class FlowDefinitionTest {
             assertFlowsExecuteFilterFromMToN(REPO, traceId1, endContexts);
             assertFlowsExecuteFilterFromMToN(REPO, traceId2, endContexts);
             assertFlowsExecuteFilterFromMToN(REPO, traceId3, endContexts);
+        }
+
+        private String runFlow3(From<FlowData> from, String streamId, String eventMetaId) {
+            FlowData flowData3 = getFlowData(flowsExecuteFilterFromMToN(), "yxy");
+            String traceId3 = from.offer(flowData3);
+            List<FlowContext<FlowData>> contexts3 = FlowsTestUtil.waitSingle(
+                    contextSupplier(REPO, streamId, traceId3, eventMetaId, PENDING));
+            assertEquals(1, contexts3.size());
+
+            FlowsTestUtil.waitMillis(Collections::emptyList, 100);
+            FlowContext<FlowData> resumeContext3 = contexts3.get(0);
+            From<FlowData> resumeFrom3 = ObjectUtils.cast(getPublisher(resumeContext3.getStreamId()));
+            Blocks.Block<FlowData> block3 = resumeFrom3.getBlock(resumeContext3.getPosition());
+            String toBatch3 = UUIDUtil.uuid();
+            contexts3.forEach(context -> {
+                context.getData().getBusinessData().put("approve.status", "false");
+                context.toBatch(toBatch3);
+            });
+            REPO.save(contexts3);
+            block3.process(contexts3);
+            contexts3 = FlowsTestUtil.waitEmpty(contextSupplier(REPO, streamId, traceId3, eventMetaId, PENDING));
+            assertEquals(0, contexts3.size());
+            return traceId3;
+        }
+
+        private String runFlow1(FlowData flowData1, From<FlowData> from, String streamId, String eventMetaId) {
+            String traceId1 = from.offer(flowData1);
+            List<FlowContext<FlowData>> contexts1 = FlowsTestUtil.waitSingle(
+                    contextSupplier(REPO, streamId, traceId1, eventMetaId, PENDING));
+            assertEquals(1, contexts1.size());
+
+            FlowsTestUtil.waitMillis(Collections::emptyList, 100);
+            FlowContext<FlowData> resumeContext1 = contexts1.get(0);
+            From<FlowData> resumeFrom1 = ObjectUtils.cast(getPublisher(resumeContext1.getStreamId()));
+            Blocks.Block<FlowData> block1 = resumeFrom1.getBlock(resumeContext1.getPosition());
+            String toBatch1 = UUIDUtil.uuid();
+            contexts1.forEach(context -> {
+                context.getData().getBusinessData().put("approve.status", "true");
+                context.toBatch(toBatch1);
+            });
+            REPO.save(contexts1);
+            block1.process(contexts1);
+            contexts1 = FlowsTestUtil.waitFortyMillis(contextSupplier(REPO, streamId, traceId1, eventMetaId, PENDING));
+            assertEquals(1, contexts1.size());
+            return traceId1;
+        }
+
+        private String runFlow2(From<FlowData> from, String streamId, String eventMetaId) {
+            FlowData flowData2 = getFlowData(flowsExecuteFilterFromMToN(), "yyk");
+            String traceId2 = runFlow1(flowData2, from, streamId, eventMetaId);
+            return traceId2;
         }
 
         @Override
@@ -710,17 +707,17 @@ class FlowDefinitionTest {
                     getFilePath("flows_auto_general_jober_state_node_m_to_n_with_filter_batch_size_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
             List<FlowData> list = new ArrayList<>();
-            int m = 5;
-            for (int j = 0; j < m; j++) {
+            int total = 5;
+            for (int j = 0; j < total; j++) {
                 list.add(getFlowData(flowsExecuteFilterFromMToN(), "gsy"));
             }
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+            From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
-            List<Map<String, Object>> outputs = list.stream().map(f -> {
+            List<Map<String, Object>> outputs = list.stream().map(flowData -> {
                 Map<String, Object> result = new HashMap<>();
-                Map<String, Object> businessData = f.getBusinessData();
+                Map<String, Object> businessData = flowData.getBusinessData();
                 result.put("businessData", businessData);
                 return result;
             }).collect(Collectors.toList());
@@ -733,7 +730,7 @@ class FlowDefinitionTest {
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             List<FlowContext<FlowData>> contexts = FlowsTestUtil.waitSize(
-                    contextSupplier(REPO, streamId, traceId, flowNode.getMetaId(), ARCHIVED), m);
+                    contextSupplier(REPO, streamId, traceId, flowNode.getMetaId(), ARCHIVED), total);
             List<FlowContext<FlowData>> all = this.getContextsByTraceWrapper(REPO, traceId);
 
             assertFlowsExecuteProduceFromMToNWithMinimumSizeOneInSingleThread(contexts, all);

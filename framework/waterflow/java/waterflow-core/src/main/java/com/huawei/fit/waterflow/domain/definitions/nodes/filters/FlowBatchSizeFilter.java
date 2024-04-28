@@ -24,7 +24,6 @@ public class FlowBatchSizeFilter extends FlowFilter {
         int threshold = Integer.parseInt(this.getProperties().get(THRESHOLD));
         return (inputs) -> {
             inputs.forEach(input -> {
-                // TODO: Yangxiangyu 将内存中的passdata数据移到处理数据之前
             });
             if (inputs.size() < threshold) {
                 return new ArrayList<>();

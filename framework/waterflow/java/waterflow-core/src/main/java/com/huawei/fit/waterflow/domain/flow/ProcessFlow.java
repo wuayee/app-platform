@@ -10,10 +10,7 @@ import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import com.huawei.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
 import com.huawei.fit.waterflow.domain.emitters.Emitter;
 import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
-import com.huawei.fit.waterflow.domain.states.Activity;
-import com.huawei.fit.waterflow.domain.states.State;
 import com.huawei.fit.waterflow.domain.stream.nodes.From;
-import com.huawei.fitframework.util.ObjectUtils;
 
 /**
  * 处理数据Flow
