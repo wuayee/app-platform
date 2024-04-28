@@ -315,13 +315,11 @@ class WaterFlowsTest {
 
         @Test
         @DisplayName("流程实例parallel节点以及fork节点以及join节点either模式流转逻辑")
-        void testFitStreamWithForkJoinEither() {
-        }
+        void testFitStreamWithForkJoinEither() {}
 
         @Test
         @DisplayName("流程实例condition节点以及match节点以及others节点流转逻辑")
         void testConditionsMatchTo() {
-            TestData input = new TestData();
             List<TestData> output = new ArrayList<>();
             ProcessFlow<TestData> flow = Flows.<TestData>create(repo, messenger, locks)
                     .just(i -> i.first++)
@@ -333,6 +331,7 @@ class WaterFlowsTest {
                     .matchTo(i -> i.second < 20, node -> node.to("plusS"))
                     .others(i -> i)
                     .close(r -> output.add(r.get().getData()));
+            TestData input = new TestData();
             flow.offer(input.first(11).second(0).third(0));
             waitSingle(() -> output);
             assertEquals(20, output.get(0).first);
@@ -344,7 +343,6 @@ class WaterFlowsTest {
         @Test
         @DisplayName("流程实例condition节点以及match节点以及others节点流转逻辑")
         void testConditionsMatchToAndMatch() {
-            TestData input = new TestData();
             List<TestData> output = new ArrayList<>();
             ProcessFlow<TestData> flow = Flows.<TestData>create(repo, messenger, locks)
                     .just(i -> i.third++)
@@ -360,6 +358,7 @@ class WaterFlowsTest {
                     .matchTo(i -> i.third < 20, node -> node.to("plusT"))
                     .others(i -> i)
                     .close(r -> output.add(r.get().getData()));
+            TestData input = new TestData();
             flow.offer(input.first(11).second(0).third(0));
             waitSingle(() -> output);
             assertEquals(20, output.get(0).first);
@@ -378,7 +377,6 @@ class WaterFlowsTest {
         @Test
         @DisplayName("流程实例condition节点以及match节点以及others节点流转逻辑")
         void testFitStreamWithConditionNewJust() {
-            TestData input = new TestData();
             List<TestData> output = new ArrayList<>();
             // test conditions and others for just
             ProcessFlow<TestData> flow = Flows.<TestData>create(repo, messenger, locks)
@@ -397,6 +395,7 @@ class WaterFlowsTest {
                         return value;
                     }))
                     .close(r -> output.add(r.get().getData()));
+            TestData input = new TestData();
             flow.offer(input.first(11).second(0).third(0));
             waitSingle(() -> output);
             assertEquals(22, output.get(0).first);
@@ -421,7 +420,6 @@ class WaterFlowsTest {
         @Test
         @DisplayName("流程实例condition节点以及match节点以及others节点流转逻辑")
         void testFitStreamWithConditionsTo() {
-            TestData input = new TestData();
             List<Integer> output = new ArrayList<>();
             // test conditions and others for just
             ProcessFlow<TestData> flow = Flows.<TestData>create(repo, messenger, locks)
@@ -443,6 +441,7 @@ class WaterFlowsTest {
                         return ++value.third;
                     }))
                     .close(r -> output.add(r.get().getData()));
+            TestData input = new TestData();
             flow.offer(input.first(11).second(0).third(0));
             waitSingle(() -> output);
             assertEquals(12, output.get(0));
@@ -466,7 +465,6 @@ class WaterFlowsTest {
         @Test
         @DisplayName("流程实例condition节点以及match节点以及others节点流转逻辑")
         void testFitStreamWithConditions() {
-            TestData input = new TestData();
             List<Integer> output = new ArrayList<>();
             // test conditions and others for just
             ProcessFlow<TestData> flow = Flows.<TestData>create(repo, messenger, locks)
@@ -482,6 +480,7 @@ class WaterFlowsTest {
                         return ++value.third;
                     }))
                     .close(r -> output.add(r.get().getData()));
+            TestData input = new TestData();
             flow.offer(input.first(11).second(0).third(0));
             waitSingle(() -> output);
             assertEquals(12, output.get(0));
@@ -642,7 +641,7 @@ class WaterFlowsTest {
             // 单节点错误处理
             Flows.<TestData>create(repo, messenger, locks).just(data -> data.first(100)).just(data -> {
                 if (data.first < 120) {
-                    throw new RuntimeException();
+                    throw new IllegalArgumentException();
                 } else {
                     data.second(100);
                 }
@@ -658,7 +657,7 @@ class WaterFlowsTest {
             // 整体错误处理
             Flows.<TestData>create(repo, messenger, locks).just(data -> data.first(100)).just(data -> {
                 if (data.first < 120) {
-                    throw new RuntimeException();
+                    throw new IllegalArgumentException();
                 } else {
                     data.second(100);
                 }

@@ -48,7 +48,7 @@ public class ParallelNode<I> extends Node<I, I> {
                 return inputs.size() == ObjectUtils.<Integer>cast(inputs.get(0));
             }));
             return in.getData();
-        }, repo, messenger, locks);
+        }, repo, messenger, locks, () -> initFrom(streamId, mode, repo, messenger, locks));
         this.mode = mode;
     }
 
@@ -74,18 +74,19 @@ public class ParallelNode<I> extends Node<I, I> {
      * either:只publish给一个subscription
      * all：publish给所有的subscription
      *
+     * @param streamId id
+     * @param mode mode
      * @param repo 持久化
      * @param messenger 发送器
      * @param locks 流程锁
      * @return From
      */
-    @Override
-    protected From<I> initFrom(FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
-        ParallelNode<I> self = this;
-        return new From<I>(this.getStreamId(), repo, messenger, locks) {
+    private static <I> From<I> initFrom(String streamId, ParallelMode mode,
+            FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
+        return new From<I>(streamId, repo, messenger, locks) {
             @Override
             public void offer(List<FlowContext<I>> contexts) {
-                contexts.forEach(context -> context.setParallel(context.getId()).setParallelMode(self.mode.name()));
+                contexts.forEach(c -> c.setParallel(c.getId()).setParallelMode(mode.name()));
                 super.offer(contexts);
             }
         };

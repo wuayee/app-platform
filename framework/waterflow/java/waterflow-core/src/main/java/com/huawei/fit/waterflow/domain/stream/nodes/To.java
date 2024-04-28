@@ -279,6 +279,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             preProcessRunning = true;
             String threadName = getThreadName(PRE_PROCESS_T_NAME_PREFIX);
             preProcessT = new Thread(this::preProcess, threadName);
+            preProcessT.setUncaughtExceptionHandler((thread, error) ->
+                    LOG.error("run preProcessT error, message:{}", error.getMessage()));
             preProcessT.start();
             LOG.info("[{}] preprocess main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
                     this.id);
@@ -287,6 +289,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             processRunning = true;
             String threadName = getThreadName(PROCESS_T_NAME_PREFIX);
             processT = new Thread(this::process, threadName);
+            processT.setUncaughtExceptionHandler((thread, error) ->
+                    LOG.error("run processT error, message:{}", error.getMessage()));
             processT.start();
             LOG.info("[{}] process main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
                     this.id);

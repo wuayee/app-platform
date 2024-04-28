@@ -227,10 +227,12 @@ public abstract class FlowJober {
     }
 
     private List<Map<String, Object>> filterFlowData(List<FlowData> flowData) {
-        return flowData.stream().map(data -> new HashMap<String, Object>() {{
-            put(Constant.BUSINESS_DATA_KEY, data.getBusinessData());
-            put(Constant.CONTEXT_DATA, data.getContextData());
-            put(Constant.PASS_DATA, data.getPassData());
-        }}).collect(Collectors.toList());
+        return flowData.stream().map(data -> new HashMap<String, Object>() {
+            {
+                put(Constant.BUSINESS_DATA_KEY, data.getBusinessData());
+                put(Constant.CONTEXT_DATA, data.getContextData());
+                put(Constant.PASS_DATA, data.getPassData());
+            }
+        }).collect(Collectors.toList());
     }
 }

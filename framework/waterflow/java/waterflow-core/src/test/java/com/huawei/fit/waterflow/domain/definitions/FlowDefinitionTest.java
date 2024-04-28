@@ -542,7 +542,7 @@ class FlowDefinitionTest {
 
     @Nested
     @DisplayName("流程实例流转M_TO_N在内存持久化的场景测试集合")
-    class FlowAutoExecutorInMemoryMToNTest extends FlowsDataBaseTest {
+    class FlowAutoExecutorInMemoryMtoNtest extends FlowsDataBaseTest {
         private static final String FILE_PATH_PREFIX = "flows/executors/";
 
         @Test
@@ -685,8 +685,7 @@ class FlowDefinitionTest {
 
         private String runFlow2(From<FlowData> from, String streamId, String eventMetaId) {
             FlowData flowData2 = getFlowData(flowsExecuteFilterFromMToN(), "yyk");
-            String traceId2 = runFlow1(flowData2, from, streamId, eventMetaId);
-            return traceId2;
+            return runFlow1(flowData2, from, streamId, eventMetaId);
         }
 
         @Override
@@ -697,7 +696,7 @@ class FlowDefinitionTest {
 
     @Nested
     @DisplayName("流程实例流转M_TO_N添加过滤器后按批次流转在内存持久化的场景测试集合")
-    class FlowAutoExecutorInPersistMToNWithFilterMinimumSizeOne extends FlowsDataBaseTest {
+    class FlowAutoExecutorInPersistMtoNwithFilterMinimumSizeOne extends FlowsDataBaseTest {
         private static final String FILE_PATH_PREFIX = "flows/executors/";
 
         @Test

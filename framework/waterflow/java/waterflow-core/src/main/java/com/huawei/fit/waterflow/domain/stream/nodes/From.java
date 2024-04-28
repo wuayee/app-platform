@@ -73,7 +73,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
     }
 
     public From(String streamId, FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
-        this.streamId = streamId != null && !streamId.trim().equals("") ? streamId : this.id;
+        this.streamId = streamId != null && !"".equals(streamId.trim()) ? streamId : this.id;
         this.repo = repo;
         this.messenger = messenger;
         this.locks = locks;

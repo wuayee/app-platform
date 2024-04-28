@@ -21,6 +21,7 @@ import com.huawei.fit.waterflow.domain.stream.reactive.Subscription;
 import com.huawei.fit.waterflow.domain.utils.Identity;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * 中间节点，既是数据发送者，也是数据接受者
@@ -84,6 +85,22 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
     }
 
     /**
+     * 1->1处理节点
+     *
+     * @param streamId stream流程ID
+     * @param processor 对应处理器
+     * @param repo 上下文持久化repo，默认在内存
+     * @param messenger 上下文事件发送器，默认在内存
+     * @param publisherSupplier 由子类提供构建publisher的方法
+     * @param locks 流程锁
+     */
+    protected Node(String streamId, Operators.Map<FlowContext<T>, R> processor, FlowContextRepo repo,
+            FlowContextMessenger messenger, FlowLocks locks, Supplier<Publisher<R>> publisherSupplier) {
+        super(streamId, processor, repo, messenger, locks);
+        this.publisher = publisherSupplier.get();
+    }
+
+    /**
      * initFrom
      *
      * @param repo contextRepo
@@ -91,7 +108,7 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
      * @param locks 流程锁
      * @return From<R>
      */
-    protected From<R> initFrom(FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
+    private From<R> initFrom(FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
         return new From<>(this.getStreamId(), repo, messenger, locks); // node里的from跟随subscriber的streamId
     }
 

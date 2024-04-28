@@ -9,7 +9,6 @@ import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextMesse
 import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import com.huawei.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
-import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.utils.UUIDUtil;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class ConditionsNode<I> extends Node<I, I> {
      * @param locks 流程锁
      */
     public ConditionsNode(String streamId, FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
-        super(streamId, FlowContext::getData, repo, messenger, locks);
+        super(streamId, FlowContext::getData, repo, messenger, locks, () -> initFrom(streamId, repo, messenger, locks));
         super.id = "condition:" + UUIDUtil.uuid();
     }
 
@@ -63,9 +62,8 @@ public class ConditionsNode<I> extends Node<I, I> {
      * @param locks 流程锁
      * @return From 数据publisher
      */
-    @Override
-    protected From<I> initFrom(FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
-        return new From<I>(this.getStreamId(), repo, messenger, locks) {
+    private static <I> From<I> initFrom(String streamId, FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
+        return new From<I>(streamId, repo, messenger, locks) {
             @Override
             public void offer(List<FlowContext<I>> contexts) {
                 this.getSubscriptions().forEach(subscription -> {

@@ -34,22 +34,22 @@ class FlowDefinitionParallelTest {
 
         private final FlowDefinitionTest flowDefinitionTest = new FlowDefinitionTest();
 
-        private final FlowDefinitionTest.FlowAutoExecutorInMemoryTest flowAutoExecutorInMemoryTest
-                = flowDefinitionTest.new FlowAutoExecutorInMemoryTest();
+        private final FlowDefinitionTest.FlowAutoExecutorInMemoryTest flowAutoExecutorInMemoryTest =
+                flowDefinitionTest.new FlowAutoExecutorInMemoryTest();
 
-        private final FlowDefinitionTest.FlowManualExecutorInMemoryTest flowManualExecutorInMemoryTest
-                = flowDefinitionTest.new FlowManualExecutorInMemoryTest();
+        private final FlowDefinitionTest.FlowManualExecutorInMemoryTest flowManualExecutorInMemoryTest =
+                flowDefinitionTest.new FlowManualExecutorInMemoryTest();
 
         private final FlowDefinitionTest.FlowAutoExecutorInMemoryWithJoberIncludeFitableTest
-                flowAutoExecutorInMemoryWithJoberIncludeFitableTest
-                = flowDefinitionTest.new FlowAutoExecutorInMemoryWithJoberIncludeFitableTest();
+                flowAutoExecutorInMemoryWithJoberIncludeFitableTest =
+                flowDefinitionTest.new FlowAutoExecutorInMemoryWithJoberIncludeFitableTest();
 
-        private final FlowDefinitionTest.FlowAutoExecutorInMemoryMToNTest flowAutoExecutorInMemoryMToNTest
-                = flowDefinitionTest.new FlowAutoExecutorInMemoryMToNTest();
+        private final FlowDefinitionTest.FlowAutoExecutorInMemoryMtoNtest flowAutoExecutorInMemoryMToNTest =
+                flowDefinitionTest.new FlowAutoExecutorInMemoryMtoNtest();
 
-        private final FlowDefinitionTest.FlowAutoExecutorInPersistMToNWithFilterMinimumSizeOne
-                flowAutoExecutorInPersistMToNWithFilterMinimumSizeOne
-                = flowDefinitionTest.new FlowAutoExecutorInPersistMToNWithFilterMinimumSizeOne();
+        private final FlowDefinitionTest.FlowAutoExecutorInPersistMtoNwithFilterMinimumSizeOne
+                flowAutoExecutorInPersistMToNWithFilterMinimumSizeOne =
+                flowDefinitionTest.new FlowAutoExecutorInPersistMtoNwithFilterMinimumSizeOne();
 
         @Test
         @DisplayName("测试流程实例自动流转1到1只有state节点的并发场景")
@@ -178,7 +178,8 @@ class FlowDefinitionParallelTest {
             AtomicInteger failTimes = new AtomicInteger(0);
             List<Thread> threads = getThreads(latch, failTimes, () -> {
                 try {
-                    flowAutoExecutorInPersistMToNWithFilterMinimumSizeOne.testFlowsExecuteProduceFromMToNWithMinimumSizeOneInSingleThread();
+                    flowAutoExecutorInPersistMToNWithFilterMinimumSizeOne
+                            .testFlowsExecuteProduceFromMToNWithMinimumSizeOneInSingleThread();
                 } catch (Throwable e) {
                     failTimes.getAndIncrement();
                     fail("Fail executor in thread! fail message: " + e);

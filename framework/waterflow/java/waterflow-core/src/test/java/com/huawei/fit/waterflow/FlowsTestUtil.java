@@ -4,10 +4,6 @@
 
 package com.huawei.fit.waterflow;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import com.huawei.fit.waterflow.domain.context.FlowData;
-import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.utils.SleepUtil;
 
 import java.util.List;
