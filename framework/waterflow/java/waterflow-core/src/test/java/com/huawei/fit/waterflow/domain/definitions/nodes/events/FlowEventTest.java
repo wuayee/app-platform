@@ -82,7 +82,7 @@ class FlowEventTest {
 
             String executableRule = flowEvent.getExecutableRule(flowData);
 
-            assertTrue(ObjectUtils.<Boolean>cast( AviatorEvaluator.execute(executableRule)));
+            assertTrue(ObjectUtils.<Boolean>cast(AviatorEvaluator.execute(executableRule)));
         }
 
         @Test

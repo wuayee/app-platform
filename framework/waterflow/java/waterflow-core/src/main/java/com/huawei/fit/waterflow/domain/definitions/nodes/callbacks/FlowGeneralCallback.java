@@ -46,12 +46,14 @@ public class FlowGeneralCallback extends FlowCallback {
             if (Optional.ofNullable(filteredKeys).isPresent() && !filteredKeys.isEmpty()) {
                 businessData.keySet().retainAll(filteredKeys);
             }
-            return new HashMap<String, Object>() {{
-                put(Constant.FLOW_CONTEXT_ID_KEY, cxt.getId());
-                put(Constant.TRACE_ID_KEY, cxt.getTraceId());
-                put(Constant.NODE_ID_KEY, cxt.getPosition());
-                put(Constant.BUSINESS_DATA_KEY, businessData);
-            }};
+            return new HashMap<String, Object>() {
+                {
+                    put(Constant.FLOW_CONTEXT_ID_KEY, cxt.getId());
+                    put(Constant.TRACE_ID_KEY, cxt.getTraceId());
+                    put(Constant.NODE_ID_KEY, cxt.getPosition());
+                    put(Constant.BUSINESS_DATA_KEY, businessData);
+                }
+            };
         }).collect(Collectors.toList());
     }
 }
