@@ -9,11 +9,11 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jade-store-parent</artifactId>
+    <artifactId>jade-app-builder-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>service</module>
-        <module>tool-execution</module>
+        <module>plugins</module>
+        <module>services</module>
     </modules>
 </project>

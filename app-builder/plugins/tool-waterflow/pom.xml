@@ -5,14 +5,14 @@
 
     <parent>
         <groupId>com.huawei.fit.jade</groupId>
-        <artifactId>jade-store-parent</artifactId>
+        <artifactId>app-builder-plugin-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>app-factory-tool</artifactId>
+    <artifactId>tool-waterflow</artifactId>
 
     <dependencies>
-        <!-- Fit core -->
+        <!-- FIT core -->
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-api</artifactId>
@@ -118,7 +118,7 @@
                         <configuration>
                             <target>
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
-                                      todir="../../framework/fit/java/target/plugins"/>
+                                      todir="../../../framework/fit/java/target/plugins"/>
                             </target>
                         </configuration>
                         <goals>
