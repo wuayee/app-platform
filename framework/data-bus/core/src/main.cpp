@@ -47,8 +47,8 @@ void HandleEvent(struct epoll_event event, int epollFd, int serverFd,
             taskLoopPtr->AddOpenTask(clientFd);
         } else {
             // buffer指针由Task类管理
-            char* buffer = new char[MAX_BUFFER_SIZE];
-            size_t bytesRead = recv(events[i].data.fd, buffer, sizeof(buffer) - 1, 0);
+            char buffer[MAX_BUFFER_SIZE];
+            size_t bytesRead = recv(events[i].data.fd, buffer, MAX_BUFFER_SIZE - 1, 0);
             if (bytesRead > 0) {
                 taskLoopPtr->AddReadTask(events[i].data.fd, buffer, bytesRead);
             } else if (bytesRead == 0) {

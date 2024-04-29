@@ -30,5 +30,11 @@ int32_t FtokArgsGenerator::GetProjId()
     return projId;
 }
 
+void FtokArgsGenerator::Reset()
+{
+    nextProjId_ = MIN_PROJ_ID;
+    cycleCount_ = MIN_PROJ_ID;
+}
+
 }  // namespace Resource
 }  // namespace DataBus

@@ -18,7 +18,7 @@ struct SharedMemoryInfo {
     SharedMemoryInfo(const SharedMemoryInfo&) = delete;
     SharedMemoryInfo& operator=(const SharedMemoryInfo&) = delete;
 
-    SharedMemoryInfo(int mApplicant, unsigned long mSize, time_t initialUsedTime) : applicant_(mApplicant),
+    SharedMemoryInfo(int32_t mApplicant, unsigned long mSize, time_t initialUsedTime) : applicant_(mApplicant),
         memorySize_(mSize), readingRefCnt_(0), writingRefCnt_(0), lastUsedTime_(initialUsedTime) {}
 
     int32_t applicant_; // 内存块申请客户端

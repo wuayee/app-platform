@@ -23,6 +23,7 @@ public:
 
     std::string GetFilePath() const;
     int GetProjId();
+    void Reset();
 
 private:
     int32_t minProjId_{MIN_PROJ_ID};

@@ -15,6 +15,7 @@
 
 #include "FtokArgsGenerator.h"
 #include "log/Logger.h"
+#include "fbs/apply_permission_message_response_generated.h"
 
 using namespace std;
 using namespace DataBus::Common;
@@ -27,9 +28,16 @@ ResourceManager::ResourceManager()
     Init();
 }
 
+void ResourceManager::Init()
+{
+    if (!RemoveDirectory(FILE_PATH_PREFIX)) {
+        logger.Debug("[ResourceManager] Failed to remove the ftok directory during the ResourceManager init "
+                     "phase");
+    }
+}
+
 tuple<int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, uint64_t memorySize)
 {
-    lock_guard<mutex> lock(mutex_);
     // 获取ftok函数参数生成器单例
     auto& ftokArgsGenerator = FtokArgsGenerator::Instance();
     const std::string& pathName = ftokArgsGenerator.GetFilePath();
@@ -42,7 +50,6 @@ tuple<int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, u
         logger.Error("[ResourceManager] Failed to generate a shared memory key: {}", strerror(errno));
         return make_tuple(-1, ErrorType::MallocFailed);
     }
-
     // IPC_CREAT | IPC_EXCL: 仅创建新的共享内存区域。当sharedMemoryKey存在时，获得共享内存区域会失败。
     int32_t sharedMemoryId = shmget(sharedMemoryKey, memorySize,
                                     SHARED_MEMORY_ACCESS_PERMISSION | IPC_CREAT | IPC_EXCL);
@@ -70,12 +77,70 @@ tuple<int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, u
     return make_tuple(sharedMemoryId, ErrorType::None);
 }
 
-void ResourceManager::Init()
+tuple<bool, uint64_t, ErrorType> ResourceManager::HandleApplyPermission(int32_t socketFd,
+                                                                        DataBus::Common::PermissionType permissionType,
+                                                                        int32_t sharedMemoryId)
 {
-    if (!RemoveDirectory(FILE_PATH_PREFIX)) {
-        logger.Debug("[ResourceManager] Failed to remove the ftok directory during the ResourceManager init "
-                    "phase");
+    ErrorType preCheckRes = PreCheckApplyPermission(socketFd, permissionType, sharedMemoryId);
+    if (preCheckRes != ErrorType::None) {
+        logger.Error("PreChecking for applying the permission failed");
+        return make_tuple(false, 0, preCheckRes);
     }
+    bool shouldGrant = permissionType == PermissionType::Read ? permissionStatus_[sharedMemoryId] >= 0 :
+                                                                permissionStatus_[sharedMemoryId] == 0;
+    if (shouldGrant) {
+        // 当前内存块没有任何阻塞读写操作, 无需等待，直接授权
+        GrantPermission(socketFd, permissionType, sharedMemoryId);
+        return make_tuple(true, GetMemorySize(sharedMemoryId), ErrorType::None);
+    }
+    // 否则，将权限请求加入等待队列
+    waitingPermitRequestQueues_[sharedMemoryId].emplace_back(socketFd, permissionType);
+    return make_tuple(false, GetMemorySize(sharedMemoryId), ErrorType::None);
+}
+
+ErrorType ResourceManager::PreCheckPermissionCommon(DataBus::Common::PermissionType permissionType,
+                                                    int32_t sharedMemoryId)
+{
+    if (permissionType != PermissionType::Read && permissionType != PermissionType::Write) {
+        logger.Error("Unknown permission type");
+        return ErrorType::UnknownPermissionType;
+    }
+    if (sharedMemoryIdToInfo_.find(sharedMemoryId) == sharedMemoryIdToInfo_.end()) {
+        logger.Error("Shared memory block {} has not been created", sharedMemoryId);
+        return ErrorType::MemoryNotFound;
+    }
+    return ErrorType::None;
+}
+
+ErrorType ResourceManager::PreCheckApplyPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
+                                                   int32_t sharedMemoryId)
+{
+    ErrorType commonCheckRes = PreCheckPermissionCommon(permissionType, sharedMemoryId);
+    if (commonCheckRes != ErrorType::None) {
+        return commonCheckRes;
+    }
+    auto& memoryBlocks = permissionType == PermissionType::Read ? readingMemoryBlocks_ :
+                                                                                    writingMemoryBlocks_;
+    // 不允许重复申请许可
+    if (memoryBlocks.find(socketFd) != memoryBlocks.end() &&
+        memoryBlocks[socketFd].find(sharedMemoryId) != memoryBlocks[socketFd].end()) {
+        logger.Error("There is a permission currently held by Client {} for the shared memory block {}",
+                     socketFd, sharedMemoryId);
+        return ErrorType::DuplicatePermitApplication;
+    }
+    return ErrorType::None;
+}
+
+void ResourceManager::GrantPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
+                                      int32_t sharedMemoryId)
+{
+    permissionStatus_[sharedMemoryId] += permissionType == PermissionType::Read ? 1 : -1;
+    UpdateLastUsedTime(sharedMemoryId);
+    permissionType == PermissionType::Read ? IncrementReadingRefCnt(sharedMemoryId) :
+                                             IncrementWritingRefCnt(sharedMemoryId);
+    auto& memoryBlocks = permissionType == PermissionType::Read ? readingMemoryBlocks_ :
+                                                                                    writingMemoryBlocks_;
+    memoryBlocks[socketFd].insert(sharedMemoryId);
 }
 
 bool ResourceManager::RemoveDirectory(const std::string &directory)
@@ -169,6 +234,26 @@ int32_t ResourceManager::GetWritingRefCnt(int sharedMemoryId)
 time_t ResourceManager::GetLastUsedTime(int sharedMemoryId)
 {
     return sharedMemoryIdToInfo_[sharedMemoryId]->lastUsedTime_;
+}
+
+std::unordered_set<int32_t>& ResourceManager::GetReadingMemoryBlocks(int32_t socketFd)
+{
+    return readingMemoryBlocks_[socketFd];
+}
+
+std::unordered_set<int32_t>& ResourceManager::GetWritingMemoryBlocks(int32_t socketFd)
+{
+    return writingMemoryBlocks_[socketFd];
+}
+
+int32_t ResourceManager::GetPermissionStatus(int32_t sharedMemoryId)
+{
+    return permissionStatus_[sharedMemoryId];
+}
+
+deque<WaitingPermitRequest>& ResourceManager::GetWaitingPermitRequests(int32_t sharedMemoryId)
+{
+    return waitingPermitRequestQueues_[sharedMemoryId];
 }
 
 int32_t ResourceManager::IncrementReadingRefCnt(int sharedMemoryId)

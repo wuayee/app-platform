@@ -148,13 +148,20 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
     const Common::ApplyPermissionMessage* applyPermissionMessage =
         Common::GetApplyPermissionMessage(startPtr);
 
-    logger.Info("[TaskHandler] Received ApplyMemory, permission: {}",
+    logger.Info("[TaskHandler] Received ApplyPermission, permission: {}",
         static_cast<int8_t>(applyPermissionMessage->permission()));
 
-    // TD: 在这里加入申请权限调用
-
-    int fakeRes = 100;
-    SendApplyPermissionResponse(socketFd, true, fakeRes, ErrorType::None);
+    tuple<bool, uint64_t, ErrorType> applyPermitRes =
+            resourceMgrPtr_->HandleApplyPermission(socketFd, applyPermissionMessage->permission(),
+                                                   applyPermissionMessage->memory_key());
+    bool granted = get<0>(applyPermitRes);
+    uint64_t memorySize = get<1>(applyPermitRes);
+    ErrorType errorType = get<2>(applyPermitRes);
+    // 权限申请请求进入等待队列，阻塞客户端通知
+    if (!granted && errorType == ErrorType::None) {
+        return;
+    }
+    SendApplyPermissionResponse(socketFd, granted, memorySize, errorType);
 }
 
 void TaskHandler::SendApplyMemoryResponse(int32_t socketFd, int32_t memoryId, uint64_t memorySize,
