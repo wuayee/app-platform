@@ -4,6 +4,9 @@
 
 package com.huawei.databus.sdk.memory;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * 共享内存抽象，在SDK内部使用
  *
@@ -12,13 +15,15 @@ package com.huawei.databus.sdk.memory;
  */
 public class SharedMemoryInternal implements SharedMemory {
     private final SharedMemoryKey key;
-    private final byte permission;
-    private final long size;
+    private byte permission;
+    private long size;
+    private final ReentrantLock lock;
 
     public SharedMemoryInternal(SharedMemoryKey memoryKey, byte permission, long size) {
         this.key = memoryKey;
         this.permission = permission;
         this.size = size;
+        this.lock = new ReentrantLock();
     }
 
     @Override
@@ -34,6 +39,15 @@ public class SharedMemoryInternal implements SharedMemory {
     @Override
     public long size() {
         return size;
+    }
+
+    /**
+     * 获取当前内存锁
+     *
+     * @return 表示内存锁的 {@link ReentrantLock}
+     */
+    public Lock lock() {
+        return lock;
     }
 
     /**
@@ -62,6 +76,11 @@ public class SharedMemoryInternal implements SharedMemory {
         }
 
         @Override
+        public Lock lock() {
+            return this.internal.lock();
+        }
+
+        @Override
         public String toString() {
             return "SharedMemoryView{key=" + key() + ",permission=" + permission() + ",size=" + size() + '}';
         }
@@ -74,5 +93,27 @@ public class SharedMemoryInternal implements SharedMemory {
      */
     public SharedMemory getView() {
         return new SharedMemoryView(this);
+    }
+
+    /**
+     * 修改当前内存块的许可
+     *
+     * @param permission 表示许可的 {@code byte}
+     * @return 方便链式调用的 {@link SharedMemoryInternal}
+     */
+    public SharedMemoryInternal setPermission(byte permission) {
+        this.permission = permission;
+        return this;
+    }
+
+    /**
+     * 修改当前内存块的大小
+     *
+     * @param size 表示许可的 {@code byte}
+     * @return 方便链式调用的 {@link SharedMemoryInternal}
+     */
+    public SharedMemoryInternal setSize(long size) {
+        this.size = size;
+        return this;
     }
 }

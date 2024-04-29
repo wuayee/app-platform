@@ -4,6 +4,8 @@
 
 package com.huawei.databus.sdk.memory;
 
+import java.util.concurrent.locks.Lock;
+
 /**
  * 共享内存抽象
  *
@@ -31,4 +33,11 @@ public interface SharedMemory {
      * @return 表示共享内存长度的 {code long}
      */
     long size();
+
+    /**
+     * 获取此共享内存的内存锁
+     *
+     * @return 表示内存锁的 {@link Lock}
+     */
+    Lock lock();
 }

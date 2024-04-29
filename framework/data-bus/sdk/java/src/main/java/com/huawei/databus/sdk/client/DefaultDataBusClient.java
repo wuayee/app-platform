@@ -4,14 +4,9 @@
 
 package com.huawei.databus.sdk.client;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
-
 import com.huawei.databus.sdk.api.DataBusClient;
-import com.huawei.databus.sdk.api.DataBusIoResult;
 import com.huawei.databus.sdk.client.jni.SharedMemoryReaderWriter;
 import com.huawei.databus.sdk.memory.SharedMemory;
-import com.huawei.databus.sdk.message.ApplyMemoryMessage;
-import com.huawei.databus.sdk.message.ApplyMemoryMessageResponse;
 import com.huawei.databus.sdk.message.ErrorType;
 import com.huawei.databus.sdk.message.MessageType;
 import com.huawei.databus.sdk.message.PermissionType;
@@ -24,8 +19,6 @@ import com.huawei.databus.sdk.tools.DataBusUtils;
 import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.StringUtils;
-
-import com.google.flatbuffers.FlatBufferBuilder;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -67,6 +60,8 @@ public class DefaultDataBusClient implements DataBusClient {
         tmpQueues.put(MessageType.HeartBeat, new LinkedBlockingQueue<>());
         tmpQueues.put(MessageType.ApplyMemory, new LinkedBlockingQueue<>());
         tmpQueues.put(MessageType.ApplyPermission, new LinkedBlockingQueue<>());
+        tmpQueues.put(MessageType.ReleasePermission, new LinkedBlockingQueue<>());
+        tmpQueues.put(MessageType.ReleaseMemory, new LinkedBlockingQueue<>());
 
         this.replyQueues = Collections.unmodifiableMap(tmpQueues);
     }
@@ -91,39 +86,11 @@ public class DefaultDataBusClient implements DataBusClient {
 
     @Override
     public SharedMemoryResult sharedMalloc(@Nonnull SharedMemoryRequest request) {
-        if (!isConnected) {
-            return SharedMemoryResult.failure(ErrorType.NotConnectedToDataBus, null);
+        if (!isConnected()) {
+            return SharedMemoryResult.failure(ErrorType.NotConnectedToDataBus);
         }
         DataBusUtils.verifyMemoryRequest(request);
-        // 应该全部抽取到 sharedMemoryPool
-        // 先建造消息体
-        FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
-        ApplyMemoryMessage.startApplyMemoryMessage(bodyBuilder);
-        ApplyMemoryMessage.addMemorySize(bodyBuilder, request.size());
-        int messageOffset = ApplyMemoryMessage.endApplyMemoryMessage(bodyBuilder);
-        bodyBuilder.finish(messageOffset);
-        ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
-
-        // 建造消息头
-        ByteBuffer messageHeaderBuffer = DataBusUtils.buildMessageHeader(MessageType.ApplyMemory,
-                messageBodyBuffer.remaining());
-
-        try {
-            socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
-            // 阻塞等待回复
-            ByteBuffer resBuffer = this.replyQueues.get(MessageType.ApplyMemory).take();
-            ApplyMemoryMessageResponse response =
-                    ApplyMemoryMessageResponse.getRootAsApplyMemoryMessageResponse(resBuffer);
-            if (response.errorType() == ErrorType.None) {
-                SharedMemory sharedMemory = this.sharedMemoryPool.addNewMemory(response.memoryKey(),
-                        PermissionType.None, response.memorySize());
-                return SharedMemoryResult.success(sharedMemory);
-            }
-            return SharedMemoryResult.failure(response.errorType());
-        } catch (IOException | InterruptedException e) {
-            // TODO: 错误码
-            return SharedMemoryResult.failure(ErrorType.OutOfMemory, e);
-        }
+        return this.sharedMemoryPool.applySharedMemory(request);
     }
 
     @Override
@@ -134,42 +101,12 @@ public class DefaultDataBusClient implements DataBusClient {
 
     @Override
     public MemoryIoResult readOnce(@Nonnull MemoryIoRequest request) {
-        DataBusIoResult preResult = ioPreprocess(request, PermissionType.Read);
-        if (!preResult.isSuccess()) {
-            return cast(preResult);
-        }
-
-        try {
-            byte[] readBytes = sharedMemoryReaderWriter.read(request.sharedMemoryKey().getMemoryId(),
-                    request.memoryOffset(), request.dataLength());
-            return MemoryIoResult.success(preResult.sharedMemory(), readBytes, request.permissionType());
-        } catch (IOException e) {
-            // 日志打印真实错误信息
-            return MemoryIoResult.failure(ErrorType.Timeout);
-        }
+        return this.doIoRequest(request, PermissionType.Read);
     }
 
     @Override
     public MemoryIoResult writeOnce(@Nonnull MemoryIoRequest request) {
-        DataBusIoResult preResult = ioPreprocess(request, PermissionType.Write);
-        if (!preResult.isSuccess()) {
-            return cast(preResult);
-        }
-
-        try {
-            sharedMemoryReaderWriter.write(request.sharedMemoryKey().getMemoryId(), request.memoryOffset(),
-                    request.dataLength(), request.bytes());
-            return MemoryIoResult.success(preResult.sharedMemory(), request.bytes(), request.permissionType());
-        } catch (IOException e) {
-            // 日志打印真实错误信息
-            return MemoryIoResult.failure(ErrorType.Timeout);
-        }
-    }
-
-
-    @Override
-    public String toString() {
-        return super.toString();
+        return this.doIoRequest(request, PermissionType.Write);
     }
 
     /**
@@ -181,12 +118,19 @@ public class DefaultDataBusClient implements DataBusClient {
         return INSTANCE;
     }
 
-    private DataBusIoResult ioPreprocess(MemoryIoRequest request, byte permissionType) {
-        if (!isConnected) {
+    private MemoryIoResult doIoRequest(MemoryIoRequest request, byte permissionType) {
+        // 核验参数有效性以及是否连接到 DataBus 主程序
+        if (!this.isConnected()) {
             return MemoryIoResult.failure(ErrorType.NotConnectedToDataBus);
         }
         DataBusUtils.verifyIoRequest(request, permissionType);
-        SharedMemoryResult result = sharedMemoryPool.applyPermission(request);
+
+        // 当前内存上锁
+        SharedMemory memory = this.sharedMemoryPool.getOrAddMemory(request.sharedMemoryKey());
+        memory.lock().lock();
+
+        // 申请内存许可
+        SharedMemoryResult result = this.sharedMemoryPool.applyPermission(request);
         if (!result.isSuccess()) {
             return MemoryIoResult.failure(result.errorType());
         }
@@ -196,7 +140,31 @@ public class DefaultDataBusClient implements DataBusClient {
                         "You have accessed beyond the legitimate memory range. offset={0}, length={1}, size={2}",
                         request.memoryOffset(), request.dataLength(), result.sharedMemory().size())));
 
-        return result;
+        try {
+            byte[] readBytes;
+            if (permissionType == PermissionType.Read) {
+                readBytes = this.sharedMemoryReaderWriter.read(request.sharedMemoryKey().getMemoryId(),
+                        request.memoryOffset(), request.dataLength());
+            } else {
+                readBytes = request.bytes();
+                this.sharedMemoryReaderWriter.write(request.sharedMemoryKey().getMemoryId(), request.memoryOffset(),
+                        request.dataLength(), readBytes);
+            }
+
+            // 释放内存许可
+            SharedMemoryResult releaseResult = sharedMemoryPool.releasePermission(request);
+            if (!releaseResult.isSuccess()) {
+                return MemoryIoResult.failure(result.errorType());
+            }
+
+            // 返回读写成功结果
+            return MemoryIoResult.success(memory, readBytes, request.permissionType());
+        } catch (IOException e) {
+            // 日志打印真实错误信息
+            return MemoryIoResult.failure(ErrorType.UnknownError, e);
+        } finally {
+            memory.lock().unlock();
+        }
     }
 
     /**

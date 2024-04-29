@@ -47,7 +47,7 @@ public interface DataBusClient {
     void close() throws IOException;
 
     /**
-     * 向指定的内存块中读入数据。
+     * 向指定的内存块中读入数据。同一内存块不可并发读写，不同内存块可以并发读写。
      *
      * @param memoryIORequest 表示读取请求 {@link MemoryIoRequest}
      * @return 表示 IO 操作结果的 {@link MemoryIoRequest}。
@@ -55,7 +55,7 @@ public interface DataBusClient {
     MemoryIoResult readOnce(@Nonnull MemoryIoRequest memoryIORequest);
 
     /**
-     * 向指定的内存块中写入数据。
+     * 向指定的内存块中读入数据。同一内存块不可并发读写，不同内存块可以并发读写。
      *
      * @param memoryIORequest 表示写入请求 {@link MemoryIoRequest}
      * @return 表示 IO 操作结果的 {@link MemoryIoResult}。
