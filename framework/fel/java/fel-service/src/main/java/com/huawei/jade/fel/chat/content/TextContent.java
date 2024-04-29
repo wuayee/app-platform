@@ -10,8 +10,8 @@ import com.huawei.fitframework.util.StringUtils;
 /**
  * 表示携带文本信息的 {@link MessageContent}。
  *
- * @author l00611472
- * @since 2024/4/12
+ * @author 刘信宏
+ * @since 2024-04-12
  */
 public class TextContent implements MessageContent {
     private final String data;

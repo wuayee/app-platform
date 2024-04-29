@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -10,7 +10,16 @@
     </parent>
 
     <groupId>com.huawei.fit.jade.fel</groupId>
-    <artifactId>fel-core</artifactId>
+    <artifactId>fel-flow</artifactId>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- WaterFlow version -->
+        <waterflow.version>1.0.0-SNAPSHOT</waterflow.version>
+    </properties>
 
     <dependencies>
         <!-- FIT -->
@@ -25,20 +34,31 @@
             <artifactId>fel-service</artifactId>
             <version>${fel.version}</version>
         </dependency>
-
-        <!-- Test -->
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
-            <artifactId>fit-message-serializer-json-jackson</artifactId>
-            <scope>test</scope>
+            <groupId>com.huawei.fit.jade.fel</groupId>
+            <artifactId>fel-core</artifactId>
+            <version>${fel.version}</version>
         </dependency>
 
+        <!-- WaterFlow -->
+        <dependency>
+            <groupId>com.huawei.fit.jade.waterflow</groupId>
+            <artifactId>waterflow-core</artifactId>
+            <version>${waterflow.version}</version>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- Test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>

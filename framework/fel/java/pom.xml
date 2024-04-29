@@ -10,16 +10,21 @@
     </parent>
 
     <artifactId>jade-fel-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>fel-core</module>
+        <module>fel-flow</module>
         <module>fel-service</module>
     </modules>
 
     <properties>
         <!-- Lombok version -->
         <lombok.version>1.18.26</lombok.version>
+
+        <!-- fel version -->
+        <fel.version>1.0.0-SNAPSHOT</fel.version>
     </properties>
 
     <dependencyManagement>
