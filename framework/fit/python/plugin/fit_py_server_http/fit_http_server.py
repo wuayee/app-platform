@@ -8,6 +8,7 @@ import ssl
 import sys
 import time
 import traceback
+from collections import OrderedDict
 from http import HTTPStatus
 import threading
 from typing import Dict, List, Tuple, Optional
@@ -32,6 +33,7 @@ _TASK_COUNT_LIMIT = 1000  # 后续解决通过注解读取配置的 bug 后进�
 _RESULT_SAVE_TIME = 120
 
 _last_success_time = time.time()
+_start_serve_times = OrderedDict()
 
 _task_dict = {}
 _finished_task_queue: List[Tuple] = []
@@ -87,6 +89,14 @@ def get_running_task_count() -> int:
 @fitable(generic_id="com.huawei.fit.get.last.success.time", fitable_id='local-worker')
 def get_last_success_time() -> float:
     return _last_success_time
+
+
+@fitable(generic_id="com.huawei.fit.get.earliest.start.time", fitable_id='local-worker')
+def get_earliest_start_time() -> Optional[float]:
+    start_times = list(_start_serve_times.keys())
+    if len(start_times) == 0:
+        return None
+    return start_times[0]
 
 
 def async_serve_response(metadata: RequestMetadata, data: bytes, task_id: str):
@@ -166,6 +176,8 @@ class FitHandler(tornado.web.RequestHandler):
 
     @tornado.concurrent.run_on_executor
     def process_polling_request(self, genericable_id: str, fitable_id: str):
+        start_serve_time = time.time()
+        _start_serve_times[start_serve_time] = None
         is_https = self.request.protocol == "https"
         payload = self.request.body
         headers = self.request.headers
@@ -182,11 +194,13 @@ class FitHandler(tornado.web.RequestHandler):
                 _last_success_time = time.time()
             meta = result.metadata
             meta_dict = build_meta_dict(meta.version, meta.data_format, meta.degradable, meta.code, meta.msg)
+            _start_serve_times.pop(start_serve_time)
             return result.data, HTTPStatus.OK, meta_dict
         if not clear_and_check_task_dict():
             meta_dict = build_meta_dict(request_metadata.version, request_metadata.data_format, True,
                                         InternalErrorCode.ASYNC_TASK_NOT_ACCEPTED.value,
                                         f"async task not accepted. [task_id={task_id}]")
+            _start_serve_times.pop(start_serve_time)
             return "", HTTPStatus.ACCEPTED, meta_dict
 
         task_thread = threading.Thread(target=async_serve_response, args=(request_metadata, payload, task_id))
@@ -196,6 +210,7 @@ class FitHandler(tornado.web.RequestHandler):
         task_thread.start()
 
         meta_dict = build_meta_dict(request_metadata.version, request_metadata.data_format, False, 0, "")
+        _start_serve_times.pop(start_serve_time)
         return "", HTTPStatus.ACCEPTED, meta_dict
 
     async def post(self, genericable_id: str, fitable_id: str):
