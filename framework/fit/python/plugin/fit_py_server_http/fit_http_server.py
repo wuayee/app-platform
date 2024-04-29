@@ -7,6 +7,7 @@ import base64
 import ssl
 import threading
 import time
+import traceback
 from collections import OrderedDict
 from http import HTTPStatus
 from queue import Queue, Empty
@@ -31,6 +32,7 @@ from .http_utils import get_context_path, get_server_thread_count, get_server_cr
     get_runtime_worker_id, server_response, get_decrypted_key_file_password
 
 _last_success_time = time.time()
+_start_serve_times = OrderedDict()
 
 _http_server: Optional[tornado.httpserver.HTTPServer] = None
 _https_server: Optional[tornado.httpserver.HTTPServer] = None
@@ -56,6 +58,14 @@ def get_running_task_count() -> int:
 @fitable(generic_id="com.huawei.fit.get.last.success.time", fitable_id='local-worker')
 def get_last_success_time() -> float:
     return _last_success_time
+
+
+@fitable(generic_id="com.huawei.fit.get.earliest.start.time", fitable_id='local-worker')
+def get_earliest_start_time() -> Optional[float]:
+    start_times = list(_start_serve_times.keys())
+    if len(start_times) == 0:
+        return None
+    return start_times[0]
 
 
 def _convert_response_meta_and_task_id_to_headers(metadata: ResponseMetadata, task_id: Optional[str]) -> Dict[str, str]:
@@ -189,6 +199,8 @@ class FitHandler(tornado.web.RequestHandler):
 
     @tornado.concurrent.run_on_executor
     def process_task_submit_request(self, genericable_id: str, fitable_id: str):
+        start_serve_time = time.time()
+        _start_serve_times[start_serve_time] = None
         is_https = self.request.protocol == "https"
         payload = self.request.body
         request_meta = self.convert_request_to_metadata(genericable_id, fitable_id)
@@ -203,12 +215,14 @@ class FitHandler(tornado.web.RequestHandler):
             if result.metadata.code == FIT_OK:
                 global _last_success_time
                 _last_success_time = time.time()
+            _start_serve_times.pop(start_serve_time)
             return result.data, HTTPStatus.OK, response_headers
         if _running_task_count.get_value() >= get_task_count_limit():
             code = InternalErrorCode.ASYNC_TASK_NOT_ACCEPTED.value
             message = f"async task not accepted. [task_count_limit={get_task_count_limit()}]"
             response_meta = ResponseMetadata(request_meta.data_format, True, code, message, {})
             response_headers = _convert_response_meta_and_task_id_to_headers(response_meta, task_id)
+            _start_serve_times.pop(start_serve_time)
             return "", HTTPStatus.ACCEPTED, response_headers
         _clear_expired_result()
         finished_task_queue = _create_and_get_result_queue(worker_id, instance_id)
@@ -216,6 +230,7 @@ class FitHandler(tornado.web.RequestHandler):
         _executor.submit(_async_serve_response, request_meta, payload, task_id, finished_task_queue)
         response_meta = ResponseMetadata(request_meta.data_format, False, FIT_OK, "", {})
         response_headers = _convert_response_meta_and_task_id_to_headers(response_meta, task_id)
+        _start_serve_times.pop(start_serve_time)
         return "", HTTPStatus.ACCEPTED, response_headers
 
     async def post(self, genericable_id: str, fitable_id: str):
