@@ -17,5 +17,10 @@
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-flowable</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
     </dependencies>
 </project>

@@ -27,10 +27,16 @@ public enum StreamMessageType {
     FAIL(2),
 
     /** 表示请求元素上行消息。 */
-    REQUEST(10),
+    REQUEST_ELEMENT(10),
 
     /** 表示取消订阅上行消息。 */
-    CANCEL(11);
+    CANCEL(11),
+
+    /** 表示客户端向服务端发起调用请求的消息。 */
+    REQUEST(20),
+
+    /** 表示服务端向客户端返回调用结果的消息。 */
+    RESPONSE(21);
 
     private final int code;
 
