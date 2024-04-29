@@ -18,7 +18,6 @@ import com.huawei.databus.sdk.message.ErrorType;
 import com.huawei.databus.sdk.message.MessageType;
 import com.huawei.databus.sdk.message.PermissionType;
 import com.huawei.databus.sdk.message.ReleasePermissionMessage;
-import com.huawei.databus.sdk.message.ReleasePermissionMessageResponse;
 import com.huawei.databus.sdk.support.MemoryIoRequest;
 import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
@@ -166,15 +165,8 @@ class SharedMemoryPool {
      * 根据传入的 {@link MemoryIoRequest} 释放读写许可
      *
      * @param request 传入的 {@link MemoryIoRequest}
-     * @return 表示权限释放结果的 {@link SharedMemoryResult}
      */
-    public SharedMemoryResult releasePermission(MemoryIoRequest request) {
-        // 如果当前权限不匹配，则直接返回错误
-        SharedMemoryInternal internal = this.memoryPool.get(request.sharedMemoryKey());
-        if (internal.permission() != request.permissionType()) {
-            return SharedMemoryResult.failure(ErrorType.IllegalStateForPermitRelease);
-        }
-
+    public void releasePermission(MemoryIoRequest request) {
         // 需要发送消息释放许可
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
         ReleasePermissionMessage.startReleasePermissionMessage(bodyBuilder);
@@ -187,20 +179,14 @@ class SharedMemoryPool {
         ByteBuffer messageHeaderBuffer = DataBusUtils.buildMessageHeader(MessageType.ReleasePermission,
                 messageBodyBuffer.remaining());
         try {
+            // 发出信息后即刻返回，释放许可总是被 DataBus 主服务批准而且没有回复信息
             this.socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
-            // 阻塞等待释放确认，可能需要超时策略
-            ReleasePermissionMessageResponse response =
-                    ReleasePermissionMessageResponse.getRootAsReleasePermissionMessageResponse(
-                            this.replyQueues.get(MessageType.ReleasePermission).take());
-            if (response.errorType() == ErrorType.None) {
-                // 客户端不再持有此内存块的读写许可
-                internal.setPermission(PermissionType.None);
-                return success(internal.getView());
-            }
-            return failure(response.errorType());
-        } catch (IOException | InterruptedException e) {
-            // 错误码
-            return failure(ErrorType.UnknownError, e);
+        } catch (IOException ignored) {
+            // 需要打日志但是无需返回错误
+        } finally {
+            // 客户端不再持有此内存块的读写许可
+            SharedMemoryInternal internal = this.memoryPool.get(request.sharedMemoryKey());
+            internal.setPermission(PermissionType.None);
         }
     }
 }
