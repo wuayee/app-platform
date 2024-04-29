@@ -33,7 +33,7 @@ public class MessageTemplateTest {
     class System {
         @Test
         @DisplayName("渲染系统消息，返回正确结果")
-        void shouldReturnCorrectResult() {
+        void shouldReturnOk() {
             MessageTemplate template = new SystemMessageTemplate("You are a helpful {{character}}.");
             ChatMessage message = template.render(Tip.from("character", "assistant").freeze());
             assertThat(message.type()).isEqualTo(MessageType.SYSTEM);
@@ -42,7 +42,7 @@ public class MessageTemplateTest {
 
         @Test
         @DisplayName("渲染系统消息并携带媒体数据，返回正确结果")
-        void shouldReturnCorrectResultWithMedia() {
+        void shouldReturnOkWithMedia() {
             MessageTemplate template = new SystemMessageTemplate("You are a helpful {{character}}.");
             Contents contents = Contents.from(new TextContent("assistant"), new MediaContent("robot.png"));
             ChatMessage message = template.render(Tip.from("character", contents).freeze());
