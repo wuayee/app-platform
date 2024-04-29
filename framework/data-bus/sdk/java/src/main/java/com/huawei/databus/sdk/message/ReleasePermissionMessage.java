@@ -7,10 +7,19 @@
 package com.huawei.databus.sdk.message;
 
 import com.google.flatbuffers.BaseVector;
+import com.google.flatbuffers.BooleanVector;
+import com.google.flatbuffers.ByteVector;
 import com.google.flatbuffers.Constants;
+import com.google.flatbuffers.DoubleVector;
 import com.google.flatbuffers.FlatBufferBuilder;
+import com.google.flatbuffers.FloatVector;
+import com.google.flatbuffers.IntVector;
+import com.google.flatbuffers.LongVector;
+import com.google.flatbuffers.ShortVector;
+import com.google.flatbuffers.StringVector;
+import com.google.flatbuffers.Struct;
 import com.google.flatbuffers.Table;
-
+import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -22,17 +31,21 @@ public final class ReleasePermissionMessage extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public ReleasePermissionMessage __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public int memoryKey() { int o = __offset(4); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public byte permission() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public int memoryKey() { int o = __offset(6); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
 
   public static int createReleasePermissionMessage(FlatBufferBuilder builder,
+      byte permission,
       int memoryKey) {
-    builder.startTable(1);
+    builder.startTable(2);
     ReleasePermissionMessage.addMemoryKey(builder, memoryKey);
+    ReleasePermissionMessage.addPermission(builder, permission);
     return ReleasePermissionMessage.endReleasePermissionMessage(builder);
   }
 
-  public static void startReleasePermissionMessage(FlatBufferBuilder builder) { builder.startTable(1); }
-  public static void addMemoryKey(FlatBufferBuilder builder, int memoryKey) { builder.addInt(0, memoryKey, 0); }
+  public static void startReleasePermissionMessage(FlatBufferBuilder builder) { builder.startTable(2); }
+  public static void addPermission(FlatBufferBuilder builder, byte permission) { builder.addByte(0, permission, 0); }
+  public static void addMemoryKey(FlatBufferBuilder builder, int memoryKey) { builder.addInt(1, memoryKey, 0); }
   public static int endReleasePermissionMessage(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

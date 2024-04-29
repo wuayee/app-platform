@@ -3,6 +3,7 @@ include "common.fbs";
 namespace DataBus.Common;
 
 table ReleasePermissionMessage {
+    permission: PermissionType;
     memory_key: int;
 }
 

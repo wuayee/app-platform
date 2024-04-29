@@ -11,10 +11,12 @@ enum ErrorType : byte {
   IllegalMessageBody = 7,
   MallocFailed = 8,
   MemoryNotFound = 9,
-  UnknownPermissionType = 10,
-  DuplicatePermitApplication = 11,
-  IllegalStateForPermitRelease = 12,
-  UnknownError = 13
+  MemoryReadError = 10,
+  MemoryWriteError = 11,
+  UnknownPermissionType = 12,
+  DuplicatePermitApplication = 13,
+  IllegalStateForPermitRelease = 14,
+  UnknownError = 15
 }
 
 // 修改此 Enum 请务必与 DataBus 开发组人员确认
