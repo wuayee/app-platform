@@ -171,6 +171,7 @@ class SharedMemoryPool {
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
         ReleasePermissionMessage.startReleasePermissionMessage(bodyBuilder);
         ReleasePermissionMessage.addMemoryKey(bodyBuilder, request.sharedMemoryKey().getMemoryId());
+        ReleasePermissionMessage.addPermission(bodyBuilder, request.permissionType());
         int messageOffset = ReleasePermissionMessage.endReleasePermissionMessage(bodyBuilder);
         bodyBuilder.finish(messageOffset);
         ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
