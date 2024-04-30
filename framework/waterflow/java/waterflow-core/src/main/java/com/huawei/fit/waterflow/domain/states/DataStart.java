@@ -1,0 +1,223 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.waterflow.domain.states;
+
+import com.huawei.fit.waterflow.domain.context.FlowSession;
+import com.huawei.fit.waterflow.domain.emitters.Emitter;
+import com.huawei.fit.waterflow.domain.flow.ProcessFlow;
+import com.huawei.fit.waterflow.domain.stream.operators.Operators;
+import com.huawei.fit.waterflow.domain.utils.Tuple;
+
+import java.util.List;
+
+/**
+ * 数据前置的start节点
+ *
+ * @param <O> 出参数据类型
+ * @param <D> 原始数据类型
+ * @param <I> 入参数据类型
+ * @since 1.0
+ */
+public class DataStart<O, D, I> {
+    /**
+     * 开始节点
+     */
+    protected DataStart<?, D, ?> start;
+
+    final Start<O, D, I, ProcessFlow<D>> state;
+
+    private final D monoData;
+
+    private final D[] fluxData;
+
+    private final Emitter<D, FlowSession> emitter;
+
+    public DataStart(Start<O, D, I, ProcessFlow<D>> state, D data) {
+        this(state, data, null, null);
+    }
+
+    public DataStart(Start<O, D, I, ProcessFlow<D>> state, D[] data) {
+        this(state, null, data, null);
+    }
+
+    public DataStart(Start<O, D, I, ProcessFlow<D>> state, Emitter<D, FlowSession> emitter) {
+        this(state, null, null, emitter);
+    }
+
+    protected DataStart(Start<O, D, I, ProcessFlow<D>> state) {
+        this(state, null, null, null);
+    }
+
+    private DataStart(Start<O, D, I, ProcessFlow<D>> state, D monoData, D[] fluxData, Emitter<D, FlowSession> emitter) {
+        this.state = state;
+        this.monoData = monoData;
+        this.fluxData = fluxData;
+        this.emitter = emitter;
+        this.start = this;
+    }
+
+    /**
+     * 根据不同的数据源类型，触发数据的发射
+     */
+    protected void offer() {
+        // 前2者关闭流
+        if (monoData != null) {
+            this.start.state.getFlow().offer(this.monoData);
+        }
+        if (fluxData != null) {
+            this.start.state.getFlow().offer(this.fluxData);
+        }
+        // 热流 不关闭
+        if (this.emitter != null) {
+            this.start.state.getFlow().offer(this.emitter);
+        }
+    }
+
+    /**
+     * just，只处理，不转换
+     * <p>
+     * {@link Start#just(Operators.Just)}的包装
+     * </p>
+     *
+     * @param processor just转换器
+     * @return 新的处理节点
+     */
+    public DataState<O, D, O> just(Operators.Just<O> processor) {
+        return new DataState(this.state.just(processor), this.start);
+    }
+
+    /**
+     * map,处理，并转换类型
+     *
+     * <p>
+     * {@link Start#map(Operators.Map)}的包装
+     * </p>
+     *
+     * @param processor map处理器
+     * @param <R> 处理完类型
+     * @return 新的处理节点
+     */
+    public <R> DataState<R, D, O> map(Operators.Map<O, R> processor) {
+        return new DataState(this.state.map(processor), this.start);
+    }
+
+    /**
+     * flat map,处理，1变多，并转换类型
+     *
+     * <p>
+     * {@link Start#flatMap(Operators.FlatMap)}的包装
+     * </p>
+     *
+     * @param processor flat map处理器
+     * @param <R> 处理完类型
+     * @return 新的处理节点
+     */
+    public <R> DataState<R, D, O> flatMap(Operators.FlatMap<O, R> processor) {
+        return new DataState(this.state.flatMap(processor), this.start);
+    }
+
+    /**
+     * reduce处理节点：m->1
+     * <p>
+     * 处理后的数据类型是根据初始值来确认
+     * </p>
+     * <p>
+     * {@link Start#reduce(Object, Operators.Reduce)}的包装
+     * </p>
+     *
+     * @param init 初始值
+     * @param processor reduce处理器
+     * @param <R> 通过初始值指定的处理完类型
+     * @return 新的处理节点
+     */
+    public <R> DataState<R, D, O> reduce(R init, Operators.Reduce<O, R> processor) {
+        return new DataState(this.state.reduce(init, processor), this.start);
+    }
+
+    /**
+     * reduce处理节点：m->1
+     * <p>
+     * 不提供初始值，reduce之后的数据类型还是原数据类型
+     * </p>
+     * <p>
+     * {@link Start#reduce(Operators.Reduce)}的包装
+     * </p>
+     *
+     * @param processor reduce处理器
+     * @return 新的处理节点
+     */
+    public DataState<O, D, O> reduce(Operators.Reduce<O, O> processor) {
+        return new DataState(this.state.reduce(processor), this.start);
+    }
+
+    /**
+     * 形成一个window，window中的数据满足条件后，将触发后续的数据聚合处理
+     * <p>
+     * {@link Start#window(Operators.Window)}的包装
+     * </p>
+     *
+     * @param window window的条件
+     * @return window的后续节点
+     */
+    public DataState<O, D, O> window(Operators.Window<O> window) {
+        return new DataState(this.state.window(window), this.start);
+    }
+
+    /**
+     * 缓存流中的数
+     * <p>
+     * 通常出现在window后，当满足window的条件后，为后续节点提供window中缓存的数据列表
+     * </p>
+     * <p>
+     * {@link Start#buffer()}的包装
+     * </p>
+     *
+     * @return buffer后的节点
+     */
+    public DataState<List<O>, D, O> buffer() {
+        return new DataState(this.state.buffer(), this.start);
+    }
+
+    /**
+     * 聚合处理
+     * <p>
+     * {@link Start#keyBy(Operators.Map)}的包装
+     * </p>
+     *
+     * @param keyGetter 提供聚合的key
+     * @return 聚合后的节点，其数据类型为 {@link Tuple}
+     */
+    public DataState<List<O>, D, O> keyBy(Operators.Map<O, ? extends Object> keyGetter) {
+        return new DataState(this.state.keyBy(keyGetter), this.start);
+    }
+
+    /**
+     * produce处理节点：m->n
+     * <p>
+     * {@link Start#produce(Operators.Produce)} (Operators.Process)}的包装
+     * </p>
+     *
+     * @param processor produce处理器
+     * @param <R> 处理完类型
+     * @return 新的处理节点
+     */
+    public <R> DataState<R, D, O> produce(Operators.Produce<O, R> processor) {
+        return new DataState(this.state.produce(processor), this.start);
+    }
+
+    /**
+     * process处理，并往下发射新的数据，支持操作session KV状态数据
+     * <p>
+     * {@link Start#process(Operators.Process)}的包装
+     * </p>
+     *
+     * @param processor 携带数据、KV下文和发射器的处理器
+     * @param <R> 返回值数据类型
+     * @return 新的处理节点
+     */
+    public <R> DataState<R, D, O> process(Operators.Process<O, R> processor) {
+        return new DataState(this.state.process(processor), this.start);
+    }
+}
