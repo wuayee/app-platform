@@ -12,6 +12,8 @@ import com.huawei.fit.http.Serializers;
 import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.entity.TextEntity;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
+import com.huawei.fit.http.websocket.Session;
+import com.huawei.fit.http.websocket.client.WebSocketClassicListener;
 import com.huawei.fitframework.value.ValueFetcher;
 
 import java.lang.reflect.Type;
@@ -41,6 +43,11 @@ public class HttpClassicClientImplement implements HttpClassicClient {
 
     @Override
     public HttpClassicClientRequest createRequest(HttpRequestMethod method, String url) {
+        return null;
+    }
+
+    @Override
+    public Session createWebSocketSession(String url, WebSocketClassicListener listener) {
         return null;
     }
 

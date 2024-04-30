@@ -17,7 +17,6 @@ import com.huawei.fit.http.protocol.MessageHeaderNames;
 import com.huawei.fit.http.protocol.RequestLine;
 import com.huawei.fit.http.protocol.WritableMessageBody;
 import com.huawei.fit.http.protocol.support.ClientRequestBody;
-import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.model.MultiValueMap;
 
 import okhttp3.OkHttpClient;
@@ -38,8 +37,6 @@ import java.util.concurrent.TimeUnit;
  * @since 2024-04-09
  */
 public class OkHttpClientRequest implements ClientRequest {
-    private static final Logger log = Logger.get(OkHttpClientRequest.class);
-
     private final HttpRequestMethod method;
     private final URL url;
     private final ConfigurableMessageHeaders headers;
@@ -126,8 +123,10 @@ public class OkHttpClientRequest implements ClientRequest {
         Response response = client.newCall(this.requestBuilder.build()).execute();
         try {
             if (response.body() != null) {
-                return ClientResponse.create(response.code(), response.message(),
-                        MultiValueMap.create(response.headers().toMultimap()), response.body().byteStream());
+                return ClientResponse.create(response.code(),
+                        response.message(),
+                        MultiValueMap.create(response.headers().toMultimap()),
+                        response.body().byteStream());
             }
             throw new IllegalStateException("The response body is null.");
         } finally {
