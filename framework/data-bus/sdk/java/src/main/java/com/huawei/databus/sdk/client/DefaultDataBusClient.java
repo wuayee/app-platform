@@ -17,8 +17,6 @@ import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
 import com.huawei.databus.sdk.tools.DataBusUtils;
 import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.StringUtils;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -129,18 +127,20 @@ public class DefaultDataBusClient implements DataBusClient {
         SharedMemory memory = this.sharedMemoryPool.getOrAddMemory(request.sharedMemoryKey());
         memory.lock().lock();
 
-        // 申请内存许可
-        SharedMemoryResult result = this.sharedMemoryPool.applyPermission(request);
-        if (!result.isSuccess()) {
-            return MemoryIoResult.failure(result.errorType());
-        }
-        // 检查写操作是否在内存边界内
-        Validation.lessThanOrEquals(request.memoryOffset() + request.dataLength(), result.sharedMemory().size(),
-                () -> new IllegalArgumentException(StringUtils.format(
-                        "You have accessed beyond the legitimate memory range. offset={0}, length={1}, size={2}",
-                        request.memoryOffset(), request.dataLength(), result.sharedMemory().size())));
-
         try {
+            // 申请内存许可
+            SharedMemoryResult result = this.sharedMemoryPool.applyPermission(request);
+            if (!result.isSuccess()) {
+                return MemoryIoResult.failure(result.errorType());
+            }
+
+            // 检查写操作是否在内存边界内
+            if (request.memoryOffset() + request.dataLength() > result.sharedMemory().size()) {
+                // TD: 使用更精确的错误码
+                return MemoryIoResult.failure(ErrorType.PermissionDenied);
+            }
+
+            // 执行读写操作
             byte[] readBytes;
             if (permissionType == PermissionType.Read) {
                 readBytes = this.sharedMemoryReaderWriter.read(request.sharedMemoryKey().getMemoryId(),
@@ -151,18 +151,15 @@ public class DefaultDataBusClient implements DataBusClient {
                         request.dataLength(), readBytes);
             }
 
-            // 释放内存许可
-            SharedMemoryResult releaseResult = sharedMemoryPool.releasePermission(request);
-            if (!releaseResult.isSuccess()) {
-                return MemoryIoResult.failure(result.errorType());
-            }
-
             // 返回读写成功结果
             return MemoryIoResult.success(memory, readBytes, request.permissionType());
         } catch (IOException e) {
             // 日志打印真实错误信息
-            return MemoryIoResult.failure(ErrorType.UnknownError, e);
+            return MemoryIoResult.failure(permissionType == PermissionType.Read ? ErrorType.MemoryReadError
+                    : ErrorType.MemoryWriteError, e);
         } finally {
+            // 释放内存许可
+            this.sharedMemoryPool.releasePermission(request);
             memory.lock().unlock();
         }
     }
