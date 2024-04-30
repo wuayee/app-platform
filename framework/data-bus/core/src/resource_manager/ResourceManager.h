@@ -26,6 +26,9 @@ public:
     std::tuple<bool, uint64_t, Common::ErrorType> HandleApplyPermission(int32_t socketFd,
                                                                         DataBus::Common::PermissionType permissionType,
                                                                         int32_t sharedMemoryId);
+    bool HandleReleasePermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
+                                 int32_t sharedMemoryId);
+    std::vector<std::tuple<int32_t, uint64_t>> ProcessWaitingPermitRequests(int32_t sharedMemoryId);
 
     // SharedMemoryInfo属性获取方法集合
     int32_t GetMemoryApplicant(int32_t sharedMemoryId);
@@ -46,9 +49,12 @@ private:
     static void CreateDirectory(const std::string& directory);
     static int32_t recreateSharedMemoryBlock(key_t sharedMemoryKey, uint64_t memorySize);
     Common::ErrorType PreCheckPermissionCommon(DataBus::Common::PermissionType permissionType, int32_t sharedMemoryId);
-    Common::ErrorType PreCheckApplyPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
+    Common::ErrorType CheckApplyPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
                                               int32_t sharedMemoryId);
     void GrantPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType, int32_t sharedMemoryId);
+    Common::PermissionType CheckPermissionOwnership(int32_t socketFd, DataBus::Common::PermissionType permissionType,
+                                                    int32_t sharedMemoryId);
+    void ReleasePermission(int32_t socketFd, DataBus::Common::PermissionType permissionType, int32_t sharedMemoryId);
 
     int32_t IncrementReadingRefCnt(int32_t sharedMemoryId);
     int32_t DecrementReadingRefCnt(int32_t sharedMemoryId);
