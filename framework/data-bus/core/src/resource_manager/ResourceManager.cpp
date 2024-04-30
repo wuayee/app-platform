@@ -81,9 +81,9 @@ tuple<bool, uint64_t, ErrorType> ResourceManager::HandleApplyPermission(int32_t 
                                                                         DataBus::Common::PermissionType permissionType,
                                                                         int32_t sharedMemoryId)
 {
-    ErrorType preCheckRes = PreCheckApplyPermission(socketFd, permissionType, sharedMemoryId);
+    ErrorType preCheckRes = CheckApplyPermission(socketFd, permissionType, sharedMemoryId);
     if (preCheckRes != ErrorType::None) {
-        logger.Error("PreChecking for applying the permission failed");
+        logger.Error("[ResourceManager] Checking for applying the permission failed");
         return make_tuple(false, 0, preCheckRes);
     }
     bool shouldGrant = permissionType == PermissionType::Read ? permissionStatus_[sharedMemoryId] >= 0 :
@@ -94,29 +94,78 @@ tuple<bool, uint64_t, ErrorType> ResourceManager::HandleApplyPermission(int32_t 
         return make_tuple(true, GetMemorySize(sharedMemoryId), ErrorType::None);
     }
     // 否则，将权限请求加入等待队列
+    logger.Info("[ResourceManager] Client {}'s ApplyPermission request is being queued for "
+                "the shared memory block {}", socketFd, sharedMemoryId);
     waitingPermitRequestQueues_[sharedMemoryId].emplace_back(socketFd, permissionType);
     return make_tuple(false, GetMemorySize(sharedMemoryId), ErrorType::None);
+}
+
+bool ResourceManager::HandleReleasePermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
+                                              int32_t sharedMemoryId)
+{
+    if (PreCheckPermissionCommon(permissionType, sharedMemoryId) != ErrorType::None) {
+        logger.Error("[ResourceManager] PreChecking for releasing the permission failed");
+        return false;
+    }
+    PermissionType actualPermissionType = CheckPermissionOwnership(socketFd, permissionType, sharedMemoryId);
+    if (actualPermissionType == PermissionType::None) {
+        logger.Error("[ResourceManager] Checking the permission ownership for releasing the permission failed");
+        return false;
+    }
+    ReleasePermission(socketFd, actualPermissionType, sharedMemoryId);
+    return true;
+}
+
+vector<tuple<int32_t, uint64_t>> ResourceManager::ProcessWaitingPermitRequests(int32_t sharedMemoryId)
+{
+    // 如果当前内存块不存在，记录错误并返回空的通知队列
+    if (sharedMemoryIdToInfo_.find(sharedMemoryId) == sharedMemoryIdToInfo_.end()) {
+        logger.Error("[ResourceManager] Shared memory block {} is not found", sharedMemoryId);
+        return {};
+    }
+    // 如果当前内存块处于读写状态，直接返回空的通知队列
+    if (permissionStatus_[sharedMemoryId] != 0) {
+        return {};
+    }
+    vector<tuple<int32_t, uint64_t>> notificationQueue;
+    uint64_t memorySize = GetMemorySize(sharedMemoryId);
+    // 依次为等待队列中的多个读权限或位于队头的单个写权限申请颁发许可,并加入通知队列
+    while (!waitingPermitRequestQueues_[sharedMemoryId].empty()) {
+        const WaitingPermitRequest& request = waitingPermitRequestQueues_[sharedMemoryId].front();
+        // 当前内存块已经有互斥读写操作存在，停止颁发新的许可。
+        if ((request.permissionType_ == PermissionType::Read && permissionStatus_[sharedMemoryId] == -1) ||
+            (request.permissionType_ == PermissionType::Write && permissionStatus_[sharedMemoryId] != 0)) {
+            break;
+        }
+        logger.Info("[ResourceManager] Granting a permission for the waiting Client {} for "
+                    "the shared memory block {}", request.applicant_, sharedMemoryId);
+        GrantPermission(request.applicant_, request.permissionType_, sharedMemoryId);
+        notificationQueue.emplace_back(request.applicant_, memorySize);
+        waitingPermitRequestQueues_[sharedMemoryId].pop_front();
+    }
+    return notificationQueue;
 }
 
 ErrorType ResourceManager::PreCheckPermissionCommon(DataBus::Common::PermissionType permissionType,
                                                     int32_t sharedMemoryId)
 {
     if (permissionType != PermissionType::Read && permissionType != PermissionType::Write) {
-        logger.Error("Unknown permission type");
+        logger.Error("[ResourceManager] Unknown permission type");
         return ErrorType::UnknownPermissionType;
     }
     if (sharedMemoryIdToInfo_.find(sharedMemoryId) == sharedMemoryIdToInfo_.end()) {
-        logger.Error("Shared memory block {} has not been created", sharedMemoryId);
+        logger.Error("[ResourceManager] Shared memory block {} is not found", sharedMemoryId);
         return ErrorType::MemoryNotFound;
     }
     return ErrorType::None;
 }
 
-ErrorType ResourceManager::PreCheckApplyPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
-                                                   int32_t sharedMemoryId)
+ErrorType ResourceManager::CheckApplyPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
+                                                int32_t sharedMemoryId)
 {
     ErrorType commonCheckRes = PreCheckPermissionCommon(permissionType, sharedMemoryId);
     if (commonCheckRes != ErrorType::None) {
+        logger.Error("[ResourceManager] PreChecking for applying the permission failed");
         return commonCheckRes;
     }
     auto& memoryBlocks = permissionType == PermissionType::Read ? readingMemoryBlocks_ :
@@ -124,8 +173,8 @@ ErrorType ResourceManager::PreCheckApplyPermission(int32_t socketFd, DataBus::Co
     // 不允许重复申请许可
     if (memoryBlocks.find(socketFd) != memoryBlocks.end() &&
         memoryBlocks[socketFd].find(sharedMemoryId) != memoryBlocks[socketFd].end()) {
-        logger.Error("There is a permission currently held by Client {} for the shared memory block {}",
-                     socketFd, sharedMemoryId);
+        logger.Error("[ResourceManager] There is a permission currently held by Client {} for "
+                     "the shared memory block {}", socketFd, sharedMemoryId);
         return ErrorType::DuplicatePermitApplication;
     }
     return ErrorType::None;
@@ -134,13 +183,56 @@ ErrorType ResourceManager::PreCheckApplyPermission(int32_t socketFd, DataBus::Co
 void ResourceManager::GrantPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
                                       int32_t sharedMemoryId)
 {
-    permissionStatus_[sharedMemoryId] += permissionType == PermissionType::Read ? 1 : -1;
     UpdateLastUsedTime(sharedMemoryId);
-    permissionType == PermissionType::Read ? IncrementReadingRefCnt(sharedMemoryId) :
-                                             IncrementWritingRefCnt(sharedMemoryId);
-    auto& memoryBlocks = permissionType == PermissionType::Read ? readingMemoryBlocks_ :
-                                                                                    writingMemoryBlocks_;
-    memoryBlocks[socketFd].insert(sharedMemoryId);
+    if (permissionType == PermissionType::Read) {
+        permissionStatus_[sharedMemoryId]++;
+        IncrementReadingRefCnt(sharedMemoryId);
+        readingMemoryBlocks_[socketFd].insert(sharedMemoryId);
+    } else {
+        permissionStatus_[sharedMemoryId]--;
+        IncrementWritingRefCnt(sharedMemoryId);
+        writingMemoryBlocks_[socketFd].insert(sharedMemoryId);
+    }
+}
+
+PermissionType ResourceManager::CheckPermissionOwnership(int32_t socketFd,
+                                                         DataBus::Common::PermissionType permissionType,
+                                                         int32_t sharedMemoryId)
+{
+    bool holdReadPermission =
+            readingMemoryBlocks_[socketFd].find(sharedMemoryId) != readingMemoryBlocks_[socketFd].end();
+    bool holdWritePermission =
+            writingMemoryBlocks_[socketFd].find(sharedMemoryId) != writingMemoryBlocks_[socketFd].end();
+    if (!holdReadPermission && !holdWritePermission) {
+        logger.Error("[ResourceManager] Client {} does not hold any permission for the shared memory block {}",
+                     socketFd, sharedMemoryId);
+        return PermissionType::None;
+    }
+    if (permissionType == PermissionType::Read && holdWritePermission) {
+        logger.Warn("[ResourceManager] Client {} tries to release a read permission "
+                    "while holding a write permission for the shared memory block {}", socketFd, sharedMemoryId);
+        return PermissionType::Write;
+    } else if (permissionType == PermissionType::Write && holdReadPermission) {
+        logger.Warn("[ResourceManager] Client {} tries to release a write permission "
+                    "while holding a read permission for the shared memory block {}", socketFd, sharedMemoryId);
+        return PermissionType::Read;
+    }
+    return permissionType;
+}
+
+void ResourceManager::ReleasePermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
+                                        int32_t sharedMemoryId)
+{
+    UpdateLastUsedTime(sharedMemoryId);
+    if (permissionType == PermissionType::Read) {
+        permissionStatus_[sharedMemoryId]--;
+        DecrementReadingRefCnt(sharedMemoryId);
+        readingMemoryBlocks_[socketFd].erase(sharedMemoryId);
+    } else {
+        permissionStatus_[sharedMemoryId]++;
+        DecrementWritingRefCnt(sharedMemoryId);
+        writingMemoryBlocks_[socketFd].erase(sharedMemoryId);
+    }
 }
 
 bool ResourceManager::RemoveDirectory(const std::string &directory)

@@ -35,6 +35,7 @@ private:
     void SendApplyPermissionResponse(int32_t socketFd, bool granted, uint64_t memorySize, Common::ErrorType errorType);
     void SendApplyMemoryResponse(int32_t socketFd, int32_t memoryId, uint64_t memorySize, Common::ErrorType errorType);
     void HandleMessageApplyPermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
+    void HandleMessageReleasePermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleMessageApplyMemory(const Common::MessageHeader* header, const char* buffer, int socketFd);
 
     std::shared_ptr<TaskLoop> taskLoopPtr_;
