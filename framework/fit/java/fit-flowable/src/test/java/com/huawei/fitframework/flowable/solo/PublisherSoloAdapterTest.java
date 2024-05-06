@@ -6,7 +6,9 @@ package com.huawei.fitframework.flowable.solo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.flowable.Solo;
+import com.huawei.fitframework.flowable.subscriber.RecordSubscriber;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,5 +30,14 @@ public class PublisherSoloAdapterTest {
         AtomicInteger count = new AtomicInteger();
         solo.subscribe((subscription, i) -> count.incrementAndGet());
         assertThat(count.get()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("对于一个元素数量超过 1 的 Publisher 进行适配时，消费数据的数量被限定为 1")
+    void shouldReturnOnlyElement() {
+        RecordSubscriber<Integer> subscriber = new RecordSubscriber<>();
+        Solo<Integer> solo = Solo.fromPublisher(Choir.just(1, 2, 3));
+        solo.subscribe(subscriber);
+        assertThat(subscriber.getElements()).contains(1);
     }
 }
