@@ -4,8 +4,6 @@
 
 package com.huawei.fit.http.protocol.support;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
-
 import com.huawei.fit.http.protocol.ClientResponse;
 import com.huawei.fit.http.protocol.ConfigurableMessageHeaders;
 import com.huawei.fit.http.protocol.ConfigurableStatusLine;
@@ -14,7 +12,9 @@ import com.huawei.fit.http.protocol.MessageHeaders;
 import com.huawei.fit.http.protocol.ReadableMessageBody;
 import com.huawei.fit.http.protocol.StatusLine;
 import com.huawei.fitframework.model.MultiValueMap;
+import com.huawei.fitframework.util.ObjectUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -67,7 +67,7 @@ public class DefaultClientResponse implements ClientResponse {
             }
             this.headers.set(entry.getKey(), entry.getValue());
         }
-        this.inputStream = notNull(responseStream, "The response input stream cannot be null.");
+        this.inputStream = ObjectUtils.getIfNull(responseStream, () -> new ByteArrayInputStream(new byte[0]));
         this.body = new ClientResponseBody(this);
         this.shouldCloseStream = shouldCloseResponseStream;
     }

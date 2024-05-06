@@ -4,7 +4,7 @@
 
 package com.huawei.fit.http.websocket;
 
-import com.huawei.fit.http.server.HttpClassicServerRequest;
+import com.huawei.fit.http.HttpMessage;
 
 /**
  * 表示 WebSocket 的会话。
@@ -23,10 +23,12 @@ public interface Session {
 
     /**
      * 获取握手消息的请求。
+     * <p>在客户端时，该请求类型为 {@link com.huawei.fit.http.client.HttpClassicClientResponse}。</p>
+     * <p>在服务端时，该请求类型为 {@link com.huawei.fit.http.server.HttpClassicServerRequest}。</p>
      *
-     * @return 表示握手消息的请求的 {@link HttpClassicServerRequest}。
+     * @return 表示握手消息的请求的 {@link HttpMessage}。
      */
-    HttpClassicServerRequest getHandshakeRequest();
+    HttpMessage getHandshakeMessage();
 
     /**
      * 向会话中以同步的方式发送文本内容。

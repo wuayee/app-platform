@@ -12,9 +12,12 @@ import com.huawei.fit.http.client.HttpClassicClient;
 import com.huawei.fit.http.client.HttpClassicClientFactory;
 import com.huawei.fit.http.client.HttpClassicClientRequest;
 import com.huawei.fit.http.client.HttpClassicClientResponse;
+import com.huawei.fit.http.client.okhttp.websocket.OkHttpWebSocketSession;
 import com.huawei.fit.http.client.support.AbstractHttpClassicClient;
 import com.huawei.fit.http.client.support.DefaultHttpClassicClientRequest;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
+import com.huawei.fit.http.websocket.Session;
+import com.huawei.fit.http.websocket.client.WebSocketClassicListener;
 import com.huawei.fitframework.value.ValueFetcher;
 
 import java.lang.reflect.Type;
@@ -45,6 +48,11 @@ public class OkHttpClassicClient extends AbstractHttpClassicClient {
     public HttpClassicClientRequest createRequest(HttpRequestMethod method, String url) {
         OkHttpClientRequest clientRequest = new OkHttpClientRequest(method, url, this.config);
         return new DefaultHttpClassicClientRequest(this, clientRequest, this.config);
+    }
+
+    @Override
+    public Session createWebSocketSession(String url, WebSocketClassicListener listener) {
+        return new OkHttpWebSocketSession(this, url, listener);
     }
 
     @Override

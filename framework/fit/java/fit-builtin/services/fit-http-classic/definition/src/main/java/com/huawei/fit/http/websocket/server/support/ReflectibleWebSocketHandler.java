@@ -5,6 +5,7 @@
 package com.huawei.fit.http.websocket.server.support;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
+import static com.huawei.fitframework.util.ObjectUtils.cast;
 import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
 
 import com.huawei.fit.http.server.handler.PropertyValueMapper;
@@ -52,26 +53,26 @@ public class ReflectibleWebSocketHandler extends AbstractWebSocketHandler {
     }
 
     @Override
-    public void handleOnOpen(Session session) {
+    public void onOpen(Session session) {
         this.handle(session, this.openMappers, this.openMethod, null);
     }
 
     @Override
-    public void handleOnMessage(Session session, String message) {
+    public void onMessage(Session session, String message) {
         Map<String, Object> context =
                 MapBuilder.<String, Object>get().put(WebSocketTextMessageMapper.KEY, message).build();
         this.handle(session, this.messageMappers, this.messageMethod, context);
     }
 
     @Override
-    public void handleOnMessage(Session session, byte[] message) {
+    public void onMessage(Session session, byte[] message) {
         Map<String, Object> context =
                 MapBuilder.<String, Object>get().put(WebSocketBinaryMessageMapper.KEY, message).build();
         this.handle(session, this.messageMappers, this.messageMethod, context);
     }
 
     @Override
-    public void handleOnClose(Session session) {
+    public void onClose(Session session) {
         this.handle(session, this.closeMappers, this.closeMethod, null);
     }
 
@@ -83,27 +84,27 @@ public class ReflectibleWebSocketHandler extends AbstractWebSocketHandler {
         Object[] args;
         try {
             args = mappers.stream()
-                    .map(httpMapper -> httpMapper.map(session.getHandshakeRequest(), null, context))
+                    .map(httpMapper -> httpMapper.map(cast(session.getHandshakeMessage()), null, context))
                     .toArray();
         } catch (Throwable e) {
-            this.handleOnError(session, e);
+            this.onError(session, e);
             return;
         }
         try {
             ReflectionUtils.invoke(this.target, method, args);
         } catch (MethodInvocationException e) {
-            this.handleOnError(session, e.getCause());
+            this.onError(session, e.getCause());
         }
     }
 
     @Override
-    public void handleOnError(Session session, Throwable cause) {
+    public void onError(Session session, Throwable cause) {
         if (this.errorMethod == null) {
             return;
         }
         Map<String, Object> context = MapBuilder.<String, Object>get().put(ErrorMapper.ERROR_KEY, cause).build();
         Object[] args = this.errorMappers.stream()
-                .map(httpMapper -> httpMapper.map(session.getHandshakeRequest(), null, context))
+                .map(httpMapper -> httpMapper.map(cast(session.getHandshakeMessage()), null, context))
                 .toArray();
         try {
             ReflectionUtils.invoke(this.target, this.errorMethod, args);
