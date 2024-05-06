@@ -41,7 +41,7 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<WebSocket
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         try {
-            this.handler.handleOnError(this.session, cause);
+            this.handler.onError(this.session, cause);
         } catch (Throwable e) {
             log.error("Failed to handle websocket by netty worker.", e);
             this.session.close(CloseReason.UNEXPECTED_CONDITION);
@@ -53,9 +53,9 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<WebSocket
         if (msg instanceof TextWebSocketFrame) {
             TextWebSocketFrame frame = (TextWebSocketFrame) msg;
             try {
-                this.handler.handleOnMessage(this.session, frame.text());
+                this.handler.onMessage(this.session, frame.text());
             } catch (Throwable e) {
-                this.handler.handleOnError(this.session, e);
+                this.handler.onError(this.session, e);
             }
             return;
         }
@@ -65,9 +65,9 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<WebSocket
                 ByteBuf byteBuf = frame.content();
                 byte[] binMsg = new byte[byteBuf.readableBytes()];
                 byteBuf.readBytes(binMsg);
-                this.handler.handleOnMessage(this.session, binMsg);
+                this.handler.onMessage(this.session, binMsg);
             } catch (Throwable e) {
-                this.handler.handleOnError(this.session, e);
+                this.handler.onError(this.session, e);
             }
         }
     }
@@ -75,14 +75,14 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<WebSocket
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
-            this.handler.handleOnOpen(this.session);
+            this.handler.onOpen(this.session);
         }
         super.userEventTriggered(ctx, evt);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        this.handler.handleOnClose(this.session);
+        this.handler.onClose(this.session);
         super.channelInactive(ctx);
     }
 }
