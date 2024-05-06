@@ -11,14 +11,11 @@ public final class MessageType {
   private MessageType() { }
   public static final byte Unknown = 0;
   public static final byte Error = 1;
-  public static final byte HeartBeat = 2;
-  public static final byte ApplyMemory = 3;
-  public static final byte ApplyPermission = 4;
-  public static final byte ReleasePermission = 5;
-  public static final byte ReleaseMemory = 6;
-
-  public static final String[] names = { "Unknown", "Error", "HeartBeat", "ApplyMemory", "ApplyPermission", "ReleasePermission", "ReleaseMemory", };
-
-  public static String name(int e) { return names[e]; }
+  public static final byte HeartBeat = 16;
+  public static final byte RuntimeReport = 17;
+  public static final byte ApplyMemory = 32;
+  public static final byte ApplyPermission = 33;
+  public static final byte ReleasePermission = 48;
+  public static final byte ReleaseMemory = 49;
 }
 
