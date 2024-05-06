@@ -40,7 +40,7 @@ public class FlatMapPublisherDecorator<T, R> implements Publisher<R> {
         this.decorated.subscribe(new FlatMapOperation<>(subscriber, this.flatMapper));
     }
 
-    private static class FlatMapOperation<T, R> extends AbstractOperation<T, R> implements WorkerObserver {
+    private static class FlatMapOperation<T, R> extends AbstractOperation<T, R> implements WorkerObserver<R> {
         private final Function<T, Publisher<R>> flatMapper;
         private Worker<R> worker = null;
 
@@ -87,9 +87,9 @@ public class FlatMapPublisherDecorator<T, R> implements Publisher<R> {
         }
 
         @Override
-        public void onWorkerConsumed(Object data, long id) {
+        public void onWorkerConsumed(R data, long id) {
             this.requested.decrease();
-            this.getNextSubscriber().consume((R) data);
+            this.getNextSubscriber().consume(data);
         }
 
         @Override

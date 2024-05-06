@@ -22,7 +22,7 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
  */
 class DefaultWorker<T> implements Worker<T> {
     private final Publisher<T> publisher;
-    private final WorkerObserver observer;
+    private final WorkerObserver<T> observer;
     private final long id;
     private final long onSubscribedRequest;
     private final AtomicBoolean completed = new AtomicBoolean();
@@ -30,7 +30,7 @@ class DefaultWorker<T> implements Worker<T> {
 
     private Subscription subscription;
 
-    DefaultWorker(WorkerObserver observer, Publisher<T> publisher, long id, long onSubscribedRequest) {
+    DefaultWorker(WorkerObserver<T> observer, Publisher<T> publisher, long id, long onSubscribedRequest) {
         this.observer = notNull(observer, "The observer cannot be null.");
         this.publisher = notNull(publisher, "The publisher cannot be null.");
         this.id = id;
@@ -47,7 +47,7 @@ class DefaultWorker<T> implements Worker<T> {
     }
 
     @Override
-    public void consume(Object data) {
+    public void consume(T data) {
         this.observer.onWorkerConsumed(data, this.id);
     }
 
