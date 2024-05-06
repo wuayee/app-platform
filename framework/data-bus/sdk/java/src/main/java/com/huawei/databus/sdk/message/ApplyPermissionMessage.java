@@ -7,10 +7,19 @@
 package com.huawei.databus.sdk.message;
 
 import com.google.flatbuffers.BaseVector;
+import com.google.flatbuffers.BooleanVector;
+import com.google.flatbuffers.ByteVector;
 import com.google.flatbuffers.Constants;
+import com.google.flatbuffers.DoubleVector;
 import com.google.flatbuffers.FlatBufferBuilder;
+import com.google.flatbuffers.FloatVector;
+import com.google.flatbuffers.IntVector;
+import com.google.flatbuffers.LongVector;
+import com.google.flatbuffers.ShortVector;
+import com.google.flatbuffers.StringVector;
+import com.google.flatbuffers.Struct;
 import com.google.flatbuffers.Table;
-
+import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -23,20 +32,26 @@ public final class ApplyPermissionMessage extends Table {
   public ApplyPermissionMessage __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public byte permission() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
-  public int memoryKey() { int o = __offset(6); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public String objectKey() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer objectKeyAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
+  public ByteBuffer objectKeyInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  public int memoryKey() { int o = __offset(8); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
 
   public static int createApplyPermissionMessage(FlatBufferBuilder builder,
       byte permission,
+      int objectKeyOffset,
       int memoryKey) {
-    builder.startTable(2);
+    builder.startTable(3);
     ApplyPermissionMessage.addMemoryKey(builder, memoryKey);
+    ApplyPermissionMessage.addObjectKey(builder, objectKeyOffset);
     ApplyPermissionMessage.addPermission(builder, permission);
     return ApplyPermissionMessage.endApplyPermissionMessage(builder);
   }
 
-  public static void startApplyPermissionMessage(FlatBufferBuilder builder) { builder.startTable(2); }
+  public static void startApplyPermissionMessage(FlatBufferBuilder builder) { builder.startTable(3); }
   public static void addPermission(FlatBufferBuilder builder, byte permission) { builder.addByte(0, permission, 0); }
-  public static void addMemoryKey(FlatBufferBuilder builder, int memoryKey) { builder.addInt(1, memoryKey, 0); }
+  public static void addObjectKey(FlatBufferBuilder builder, int objectKeyOffset) { builder.addOffset(1, objectKeyOffset, 0); }
+  public static void addMemoryKey(FlatBufferBuilder builder, int memoryKey) { builder.addInt(2, memoryKey, 0); }
   public static int endApplyPermissionMessage(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

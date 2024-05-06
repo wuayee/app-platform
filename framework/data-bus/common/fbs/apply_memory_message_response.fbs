@@ -4,7 +4,7 @@ namespace DataBus.Common;
 
 table ApplyMemoryMessageResponse {
     error_type: ErrorType;
-    memory_key: int;
+    memory_key: int; // System V生成的共享内存ID
     memory_size: ulong;
 }
 
