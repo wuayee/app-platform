@@ -103,7 +103,7 @@
                 <version>${maven.antrun.version}</version>
                 <executions>
                     <execution>
-                        <phase>install</phase>
+                        <phase>package</phase>
                         <configuration>
                             <target>
                                 <copy file="src/main/resources/fitframework.yml"
