@@ -84,10 +84,10 @@ public final class PartialJsonOutputParser<O> implements JsonOutputParser<O> {
         if (isInsideString) {
             dst.append('"');
         }
-        return parseCompleteJson(dst, stack.reverse().toString());
+        return this.parseCompleteJson(dst, stack.reverse().toString());
     }
 
-    private void dealParenthesis(StringBuilder stack, char ch) {
+    private static void dealParenthesis(StringBuilder stack, char ch) {
         if (PARENTHESIS.containsKey(ch)) {
             stack.append(PARENTHESIS.get(ch));
             return;

@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -27,6 +28,11 @@ import java.util.stream.Collectors;
  * @since 2020-07-24
  */
 class DefaultParameterizedString implements ParameterizedString {
+    private static final BiFunction<Map<?, ?>, Long, Boolean> STRICT_CHECK =
+            (map, count) -> MapUtils.count(map) == count;
+    private static final BiFunction<Map<?, ?>, Long, Boolean> RELAXED_CHECK =
+            (map, count) -> MapUtils.count(map) >= count;
+
     private final DefaultParameterizedStringResolver resolver;
     private final String originalString;
     private String escapedString;
@@ -60,10 +66,11 @@ class DefaultParameterizedString implements ParameterizedString {
     }
 
     @Override
-    public String format(Map<?, ?> args) {
+    public String format(Map<?, ?> args, boolean isStrict) {
         Map<?, ?> actualArgs = ObjectUtils.nullIf(args, Collections.EMPTY_MAP);
         long count = this.getParameters().stream().map(ResolvedParameter::getName).distinct().count();
-        if (MapUtils.count(actualArgs) != count) {
+        BiFunction<Map<?, ?>, Long, Boolean> countCheck = isStrict ? STRICT_CHECK : RELAXED_CHECK;
+        if (!countCheck.apply(actualArgs, count)) {
             throw new StringFormatException("The provided args is not match the required args.");
         }
         if (CollectionUtils.isEmpty(this.getParameters())) {
@@ -83,6 +90,11 @@ class DefaultParameterizedString implements ParameterizedString {
             builder.append(this.escapedString.substring(index));
             return builder.toString();
         }
+    }
+
+    @Override
+    public String format(Map<?, ?> args) {
+        return this.format(args, true);
     }
 
     /**

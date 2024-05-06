@@ -5,9 +5,9 @@
 package com.huawei.jade.fel.core.template.support;
 
 import com.huawei.jade.fel.chat.ChatMessage;
-import com.huawei.jade.fel.chat.charactar.HumanMessage;
+import com.huawei.jade.fel.chat.character.HumanMessage;
+import com.huawei.jade.fel.chat.content.Content;
 import com.huawei.jade.fel.chat.content.Contents;
-import com.huawei.jade.fel.chat.content.MessageContent;
 import com.huawei.jade.fel.core.template.StringTemplate;
 
 import java.util.stream.Collectors;
@@ -40,7 +40,7 @@ public class HumanMessageTemplate extends AbstractMessageTemplate {
     }
 
     @Override
-    protected ChatMessage collect(Stream<MessageContent> contentStream) {
+    protected ChatMessage collect(Stream<Content> contentStream) {
         return contentStream.collect(Collectors.collectingAndThen(Collectors.toList(),
                 data -> new HumanMessage(Contents.from(data))));
     }

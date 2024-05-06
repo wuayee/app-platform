@@ -12,9 +12,10 @@ import com.huawei.jade.fel.core.memory.Memory;
 import com.huawei.jade.fel.engine.util.SessionUtils;
 import com.huawei.jade.fel.engine.util.StateKey;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -42,12 +43,9 @@ public class Conversation<D, R> {
     public Conversation(AiProcessFlow<D, R> flow, FlowSession session) {
         this.flow = Validation.notNull(flow, "Flow cannot be null.");
         this.tempListener = new Predictable<>(flow, null);
-        if (session == null) {
-            this.session = new FlowSession();
-            this.session.setInnerState(StateKey.CONVERSE_LISTENER, converseListener);
-        } else {
-            this.session = SessionUtils.copyFlowSession(session);
-        }
+        this.session = (session == null)
+                ? this.setConverseListener(new FlowSession())
+                : this.setSubConverseListener(session);
     }
 
     /**
@@ -66,26 +64,13 @@ public class Conversation<D, R> {
     }
 
     /**
-     * 从一个命名节点注入单个数据，驱动流程流转。
-     *
-     * @param nodeId 表示节点名称的 {@link String}。
-     * @param data 表示单个数据的 {@link Object}。
-     * @return 表示线程同步器的 {@link ConverseLatch}{@code <}{@link R}{@code >}。
-     * @throws IllegalArgumentException 当 {@code nodeId} 为 {@code null} 、空字符串或只有空白字符的字符串时。
-     * @throws IllegalStateException 相同对话的上一次 offer 未完成时。
-     */
-    public ConverseLatch<R> offer(String nodeId, Object data) {
-        return this.offer(nodeId, Collections.singletonList(data));
-    }
-
-    /**
      * 从一个命名节点批量注入数据，驱动流程流转。
      *
      * @param nodeId 表示节点名称的 {@link String}。
      * @param data 表示数据数组的 {@link List}{@code <}{@code ? extends }{@link Object}{@code >}。
      * @return 表示线程同步器的 {@link ConverseLatch}{@code <}{@link R}{@code >}。
      * @throws IllegalArgumentException 当 {@code nodeId} 为 {@code null} 、空字符串或只有空白字符的字符串时。
-     * @throws IllegalStateException 相同对话的上一次 offer 未完成时。
+     * @throws IllegalStateException 相同对话的上一次数据注入未完成时。
      */
     public ConverseLatch<R> offer(String nodeId, List<?> data) {
         Validation.notBlank(nodeId, "invalid nodeId.");
@@ -179,14 +164,30 @@ public class Conversation<D, R> {
     private ConverseLatch<R> setListener() {
         ConverseLatch<R> latch = new ConverseLatch<>();
         Predictable<R> predictable = new Predictable<>(this.tempListener, latch);
-
         ConverseListener<R> listener = this.converseListener.getAndSet(predictable);
         if (listener != null && !listener.isCompleted()) {
             throw new IllegalStateException("conversation is running.");
         }
 
+        AtomicReference<Map<String, AtomicReference<ConverseListener<R>>>> listenerMap =
+                this.session.getInnerState(StateKey.CONVERSE_LISTENER);
+        listenerMap.get().put(this.flow.getId(), converseListener);
+
         // 清空临时 listener，用于同一会话的下一次 offer 数据
         this.tempListener.clear();
         return latch;
+    }
+
+    private FlowSession setSubConverseListener(FlowSession session) {
+        FlowSession flowSession = SessionUtils.copyFlowSession(session);
+        if (flowSession.getInnerState(StateKey.CONVERSE_LISTENER) == null) {
+            this.setConverseListener(flowSession);
+        }
+        return flowSession;
+    }
+
+    private FlowSession setConverseListener(FlowSession session) {
+        session.setInnerState(StateKey.CONVERSE_LISTENER, new AtomicReference<>(new ConcurrentHashMap<>()));
+        return session;
     }
 }

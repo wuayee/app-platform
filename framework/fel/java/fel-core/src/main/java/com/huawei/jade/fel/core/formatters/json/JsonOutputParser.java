@@ -38,6 +38,6 @@ public interface JsonOutputParser<O> extends OutputParser<O> {
      * @return 表示默认片段解析器的 {@link JsonOutputParser}。
      */
     static <E> JsonOutputParser<E> createPartial(ObjectSerializer serializer, Type type) {
-        return new PartialJsonOutputParser<>(new DefaultJsonOutputParser<>(serializer, type, null));
+        return new PartialJsonOutputParser<>(JsonOutputParser.create(serializer, type));
     }
 }

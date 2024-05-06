@@ -10,5 +10,4 @@ package com.huawei.jade.fel.core.template;
  * @author 易文渊
  * @since 2024-04-27
  */
-public interface StringTemplate extends GenericTemplate<String, String> {
-}
+public interface StringTemplate extends GenericTemplate<String, String> {}

@@ -97,7 +97,7 @@ public class Predictable<T> implements ConverseListener<T> {
     }
 
     /**
-     * 清理会话成功回调和异常回调。
+     * 清理对话成功回调和异常回调。
      */
     public void clear() {
         converseSuccessCb = doNothing();
@@ -114,15 +114,14 @@ public class Predictable<T> implements ConverseListener<T> {
     }
 
     @Override
-    public void onError(String flowId, Exception exception, Retryable<Object> retryable,
+    public void onFlowError(Exception exception, Retryable<Object> retryable,
             List<FlowContext<Object>> contexts) {
-        // 会话错误处理
-        this.converseErrorCb.accept(exception);
-        if (Objects.equals(flowId, this.flowId)) {
-            return;
-        }
-        // 父流程错误处理
         this.flowErrorCb.handle(exception, retryable, contexts);
+    }
+
+    @Override
+    public void onConverseError(Exception exception) {
+        this.converseErrorCb.accept(exception);
     }
 
     @Override

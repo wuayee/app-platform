@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
  * @author 刘信宏
  * @since 2024-4-12
  */
-public class Contents {
-    private final List<MessageContent> payload;
+public class Contents implements MessageContent {
+    private final List<Content> payload;
 
-    private Contents(List<MessageContent> payload) {
+    private Contents(List<Content> payload) {
         this.payload = payload;
     }
 
@@ -40,7 +40,7 @@ public class Contents {
      * @param content 表示消息内容列表的 {@link MediaContent}{@code []}。
      * @return 表示创建成功的 {@link Contents}。
      */
-    public static Contents from(MessageContent... content) {
+    public static Contents from(Content... content) {
         return Contents.from(Arrays.asList(content));
     }
 
@@ -50,7 +50,7 @@ public class Contents {
      * @param contentList 表示消息内容列表的 {@link MediaContent}{@code []}。
      * @return 表示创建成功的 {@link Contents}。
      */
-    public static Contents from(List<MessageContent> contentList) {
+    public static Contents from(List<Content> contentList) {
         return new Contents(contentList);
     }
 
@@ -63,19 +63,16 @@ public class Contents {
      *
      * @return 返回拼接后文本内容的 {@link String}。
      */
+    @Override
     public String text() {
         return this.payload.stream()
                 .filter(c -> c instanceof TextContent)
                 .findFirst()
-                .map(MessageContent::data)
+                .map(Content::data)
                 .orElse(StringUtils.EMPTY);
     }
 
-    /**
-     * 获取媒体内容。
-     *
-     * @return 返回媒体内容的 {@link List}{@code <}{@link Media}{@code >}。
-     */
+    @Override
     public List<Media> medias() {
         return this.payload.stream()
                 .filter(c -> c instanceof MediaContent)
