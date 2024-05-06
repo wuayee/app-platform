@@ -1,0 +1,228 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.jade.fel.engine.activities;
+
+import static com.huawei.jade.fel.engine.util.SessionUtils.copyFlowSession;
+
+import com.huawei.fit.waterflow.domain.context.FlowContext;
+import com.huawei.fit.waterflow.domain.context.FlowSession;
+import com.huawei.fit.waterflow.domain.emitters.Emitter;
+import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
+import com.huawei.fit.waterflow.domain.flow.Flow;
+import com.huawei.fit.waterflow.domain.flow.ProcessFlow;
+import com.huawei.fit.waterflow.domain.states.State;
+import com.huawei.fit.waterflow.domain.stream.nodes.BlockToken;
+import com.huawei.fit.waterflow.domain.stream.operators.Operators;
+import com.huawei.fit.waterflow.domain.stream.reactive.Callback;
+import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
+import com.huawei.fit.waterflow.domain.stream.reactive.Subscriber;
+import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.jade.fel.engine.flows.AiFlow;
+import com.huawei.jade.fel.engine.flows.AiProcessFlow;
+import com.huawei.jade.fel.engine.flows.ConverseListener;
+import com.huawei.jade.fel.engine.util.StateKey;
+
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+
+/**
+ * <p>表示 AI 流程中间的一般节点：开始和结束中间的常规节点，条件节点和平行节点这些特殊节点除外。
+ * 该节点既是接收数据者，也是发送数据者。除了开始和结束，其他特殊节点都是这种一般节点的装饰。</p>
+ *
+ * @param <O> 表示当前节点的输出数据类型。
+ * @param <D> 表示当前节点所属流程的初始数据类型。
+ * @param <I> 表示入参数据类型。
+ * @param <RF> 表示内部的数据流程类型，是 {@link Flow}{@code <}{@link D}{@code >} 的扩展。
+ * @param <F> AI 流程类型，是 {@link AiFlow}{@code <}{@link D}{@code , }{@link RF}{@code >} 的扩展。
+ * @author 刘信宏
+ * @since 2024-04-28
+ */
+public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> extends AiStart<O, D, I, RF, F>
+        implements EmitterListener<O, FlowSession>, Emitter<O, FlowSession> {
+    private final State<O, D, I, RF> state;
+
+    /**
+     * AI 流程一般节点的构造方法。
+     *
+     * @param state 表示被装饰的流程一般节点对象的 {@link State}{@code <}{@link O}{@code , }{@link D}{@code ,
+     * }{@link I}{@code , }{@link RF}{@code >}。
+     * @param flow 表示 AI 流程的对象的 {@link F}。
+     * @throws IllegalArgumentException 当 {@code state} 为 {@code null} 时。
+     */
+    public AiState(State<O, D, I, RF> state, F flow) {
+        super(state, flow);
+        this.state = Validation.notNull(state, "State node cannot be null.");
+    }
+
+    /**
+     * 设置节点别名。
+     *
+     * @param id 表示节点名称的 {@link String}。
+     * @return 表示设置好别名的节点的 {@link AiState}{@code <}{@link O}{@code , }{@link D}{@code , }{@link I}{@code ,
+     * }{@link RF}{@code , }{@link F}{@code >}。
+     * @throws IllegalArgumentException 当 {@code id} 为 {@code null} 、空字符串或只有空白字符的字符串时。
+     */
+    public AiState<O, D, I, RF, F> id(String id) {
+        Validation.notBlank(id, "State node id cannot be blank.");
+        this.state.id(id);
+        return this;
+    }
+
+    /**
+     * 获取当前节点的数据订阅者。
+     *
+     * @return 表示数据订阅者的 {@link Subscriber}{@code <}{@link I}{@code , }{@link O}{@code >}。
+     */
+    public Subscriber<I, O> subscriber() {
+        return this.state.subscriber();
+    }
+
+    /**
+     * 获取当前节点的数据发布者。
+     *
+     * @return 表示数据发布者的 {@link Publisher}{@code <}{@link O}{@code >}。
+     */
+    public Publisher<O> publisher() {
+        return this.state.publisher();
+    }
+
+    @Override
+    public void register(EmitterListener<O, FlowSession> handler) {
+        if (handler != null) {
+            this.state.register(handler);
+        }
+    }
+
+    @Override
+    public void emit(O data, FlowSession session) {
+        this.state.emit(data, copyFlowSession(session));
+    }
+
+    @Override
+    public void handle(O data, FlowSession session) {
+        this.state.handle(data, copyFlowSession(session));
+    }
+
+    /**
+     * 生成一个阻塞节点，用于系统或人为介入。
+     *
+     * @param block 表示阻塞节点算子的 {@link BlockToken}{@code <}{@link O}{@code >}。
+     * @return 表示阻塞节点的 {@link AiState}{@code <}{@link O}{@code , }{@link D}{@code , }{@link O}{@code ,
+     * }{@link RF}{@code , }{@link F}{@code >}。
+     * @throws IllegalArgumentException 当 {@code block} 为 {@code null} 时。
+     */
+    public AiState<O, D, O, RF, F> block(BlockToken<O> block) {
+        Validation.notNull(block, "Block operator cannot be null.");
+        return new AiState<>(this.state.block(block), this.getFlow());
+    }
+
+    /**
+     * 设置当前节点发生异常时的响应。
+     *
+     * @param handler 表示异常处理器的 {@link Operators.ErrorHandler}{@code <}{@link I}{@code >}。
+     * @return 表示设置了异常处理的节点的 {@link AiState}{@code <}{@link O}{@code , }{@link D}{@code , }{@link I}{@code ,
+     * }{@link RF}{@code , }{@link F}{@code >}。
+     * @throws IllegalArgumentException 当 {@code handler} 为 {@code null} 时。
+     */
+    public AiState<O, D, I, RF, F> error(Operators.ErrorHandler<I> handler) {
+        Validation.notNull(handler, "Error handler cannot be null.");
+        return new AiState<>(this.state.error(handler), this.getFlow());
+    }
+
+    /**
+     * 设置流程跳转到指定节点，使用节点的别名来标识一个节点。通常在条件分支中使用，用于形成循环。
+     *
+     * @param id 表示跳转目的节点别名的 {@link String}，通常使用 {@link AiState#id(String)} 指定。
+     * @throws IllegalArgumentException 当 {@code id} 为 {@code null} 、空字符串或只有空白字符的字符串时。
+     */
+    public void to(String id) {
+        Validation.notBlank(id, "Node id cannot be blank.");
+        this.state.to(id);
+    }
+
+    /**
+     * 设置流程跳转到指定节点。通常在条件分支中使用，用于形成循环。
+     *
+     * @param next 表示跳转目的节点的 {@link AiState}{@code <?, }{@link D}{@code , }{@link O}{@code ,
+     * }{@link ProcessFlow}{@code <}{@link D}{@code >, ?>}。
+     * @throws IllegalArgumentException 当 {@code next} 为 {@code null} 时。
+     */
+    public void to(AiState<?, D, O, ProcessFlow<D>, ?> next) {
+        Validation.notNull(next, "Node cannot be null.");
+        ObjectUtils.<State<O, D, I, ProcessFlow<D>>>cast(this.state).to(next.state);
+    }
+
+    /**
+     * 在流程最后添加终止节点。
+     *
+     * @return 表示当前流程实例的 {@link ProcessFlow}{@code <}{@link D}{@code , }{@link O}{@code >}。
+     */
+    public AiProcessFlow<D, O> close() {
+        return this.close(input -> {});
+    }
+
+    /**
+     * 在流程最后添加终止节点，并设置成功回调。
+     *
+     * @param callback 表示流程成功结束后操作的 {@link Operators.Just}{@code <}{@link Callback}{@code <}{@link
+     * FlowContext}{@code <}{@link O}{@code >>>}。
+     * @return 表示当前流程实例的 {@link ProcessFlow}{@code <}{@link D}{@code , }{@link O}{@code >}。
+     */
+    public AiProcessFlow<D, O> close(Operators.Just<Callback<FlowContext<O>>> callback) {
+        return this.close(callback, null);
+    }
+
+    /**
+     * 在流程最后添加终止节点，并设置成功回调和异常回调。
+     *
+     * @param callback 表示流程成功结束后操作的 {@link Operators.Just}{@code <}{@link Callback}{@code <}{@link
+     * FlowContext}{@code <}{@link O}{@code >>>}。
+     * @param errHandler 表示流程异常处理器的 {@link Operators.ErrorHandler}{@code <}{@link Object}{@code >}。
+     * @return 表示当前流程实例的 {@link ProcessFlow}{@code <}{@link D}{@code , }{@link O}{@code >}。
+     */
+    public AiProcessFlow<D, O> close(Operators.Just<Callback<FlowContext<O>>> callback,
+            Operators.ErrorHandler<Object> errHandler) {
+        Operators.Just<Callback<FlowContext<O>>> successCb = input -> {
+            Operators.Just<Callback<FlowContext<O>>> actualCallback =
+                    ObjectUtils.nullIf(callback, EmptyCallBack.<O>doNothingOnSuccess());
+            actualCallback.process(input);
+
+            // 对话结束回调由直接起会话的流程触发
+            String flowId = this.getFlow().getId();
+            getConverseListener(input.get()).ifPresent(listener -> listener.onSuccess(flowId, input.get().getData()));
+        };
+
+        Operators.ErrorHandler<Object> errCb = (exception, retryable, flowContexts) -> {
+            Operators.ErrorHandler<Object> actualErrorHandler =
+                    ObjectUtils.nullIf(errHandler, EmptyCallBack.doNothingOnError());
+            actualErrorHandler.handle(exception, retryable, flowContexts);
+
+            // 触发对话异常处理，及父流程异常处理
+            flowContexts.stream()
+                    .map(this::getConverseListener)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .forEach(m -> m.onError(this.getFlow().getId(), exception, retryable, flowContexts));
+        };
+        this.state.close(successCb, errCb);
+        return ObjectUtils.cast(this.getFlow());
+    }
+
+    private Optional<ConverseListener<O>> getConverseListener(FlowContext<?> ctx) {
+        AtomicReference<ConverseListener<O>> listenerRef = ctx.getSession().getInnerState(StateKey.CONVERSE_LISTENER);
+        return Optional.ofNullable(listenerRef).flatMap(listener -> Optional.ofNullable(listener.get()));
+    }
+
+    private static class EmptyCallBack {
+        static <R> Operators.Just<Callback<FlowContext<R>>> doNothingOnSuccess() {
+            return input -> {};
+        }
+
+        static <R> Operators.ErrorHandler<R> doNothingOnError() {
+            return (exception, retryable, flowContexts) -> {};
+        }
+    }
+}
