@@ -1,7 +1,8 @@
 namespace DataBus.Common;
 
 table ReleaseMemoryMessage {
-    memory_key: int;
+    object_key: string; // 客户端生成的存储对象UUID
+    memory_key: int; // System V生成的共享内存ID
 }
 
 root_type ReleaseMemoryMessage;

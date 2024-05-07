@@ -7,10 +7,19 @@
 package com.huawei.databus.sdk.message;
 
 import com.google.flatbuffers.BaseVector;
+import com.google.flatbuffers.BooleanVector;
+import com.google.flatbuffers.ByteVector;
 import com.google.flatbuffers.Constants;
+import com.google.flatbuffers.DoubleVector;
 import com.google.flatbuffers.FlatBufferBuilder;
+import com.google.flatbuffers.FloatVector;
+import com.google.flatbuffers.IntVector;
+import com.google.flatbuffers.LongVector;
+import com.google.flatbuffers.ShortVector;
+import com.google.flatbuffers.StringVector;
+import com.google.flatbuffers.Struct;
 import com.google.flatbuffers.Table;
-
+import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -22,17 +31,23 @@ public final class ApplyMemoryMessage extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public ApplyMemoryMessage __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public long memorySize() { int o = __offset(4); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public String objectKey() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer objectKeyAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
+  public ByteBuffer objectKeyInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  public long memorySize() { int o = __offset(6); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
 
   public static int createApplyMemoryMessage(FlatBufferBuilder builder,
+      int objectKeyOffset,
       long memorySize) {
-    builder.startTable(1);
+    builder.startTable(2);
     ApplyMemoryMessage.addMemorySize(builder, memorySize);
+    ApplyMemoryMessage.addObjectKey(builder, objectKeyOffset);
     return ApplyMemoryMessage.endApplyMemoryMessage(builder);
   }
 
-  public static void startApplyMemoryMessage(FlatBufferBuilder builder) { builder.startTable(1); }
-  public static void addMemorySize(FlatBufferBuilder builder, long memorySize) { builder.addLong(0, memorySize, 0L); }
+  public static void startApplyMemoryMessage(FlatBufferBuilder builder) { builder.startTable(2); }
+  public static void addObjectKey(FlatBufferBuilder builder, int objectKeyOffset) { builder.addOffset(0, objectKeyOffset, 0); }
+  public static void addMemorySize(FlatBufferBuilder builder, long memorySize) { builder.addLong(1, memorySize, 0L); }
   public static int endApplyMemoryMessage(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -18,15 +18,17 @@ public final class ErrorType {
   public static final byte IllegalMessageHeader = 6;
   public static final byte IllegalMessageBody = 7;
   public static final byte MallocFailed = 8;
-  public static final byte MemoryNotFound = 9;
-  public static final byte MemoryReadError = 10;
-  public static final byte MemoryWriteError = 11;
-  public static final byte UnknownPermissionType = 12;
-  public static final byte DuplicatePermitApplication = 13;
-  public static final byte IllegalStateForPermitRelease = 14;
-  public static final byte UnknownError = 15;
+  public static final byte KeyNotFound = 9;
+  public static final byte MemoryNotFound = 10;
+  public static final byte MemoryReadError = 11;
+  public static final byte MemoryWriteError = 12;
+  public static final byte UnknownPermissionType = 13;
+  public static final byte DuplicatePermitApplication = 14;
+  public static final byte IllegalStateForPermitRelease = 15;
+  public static final byte IOOutOfBounds = 16;
+  public static final byte UnknownError = 17;
 
-  public static final String[] names = { "None", "NotConnectedToDataBus", "DataBusDisconnected", "OutOfMemory", "PermissionDenied", "Timeout", "IllegalMessageHeader", "IllegalMessageBody", "MallocFailed", "MemoryNotFound", "MemoryReadError", "MemoryWriteError", "UnknownPermissionType", "DuplicatePermitApplication", "IllegalStateForPermitRelease", "UnknownError", };
+  public static final String[] names = { "None", "NotConnectedToDataBus", "DataBusDisconnected", "OutOfMemory", "PermissionDenied", "Timeout", "IllegalMessageHeader", "IllegalMessageBody", "MallocFailed", "KeyNotFound", "MemoryNotFound", "MemoryReadError", "MemoryWriteError", "UnknownPermissionType", "DuplicatePermitApplication", "IllegalStateForPermitRelease", "IOOutOfBounds", "UnknownError", };
 
   public static String name(int e) { return names[e]; }
 }
