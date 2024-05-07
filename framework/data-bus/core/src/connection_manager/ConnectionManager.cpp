@@ -34,5 +34,10 @@ Common::ErrorType ConnectionManager::Send(int32_t socketFd, const char* buf, siz
     }
     return connections_[socketFd]->Send(buf, s);
 }
+
+void ConnectionManager::GenerateReport(std::stringstream& reportStream) const
+{
+    reportStream << "\"ConnectionCount\":" << connections_.size();
+}
 }  // namespace Connection
 }  // namespace DataBus

@@ -13,6 +13,7 @@
 #include "SharedMemoryInfo.h"
 #include "WaitingPermitRequest.h"
 #include "fbs/common_generated.h"
+#include "report/ReportCollector.h"
 
 namespace DataBus {
 namespace Resource {
@@ -41,7 +42,10 @@ public:
     int32_t GetPermissionStatus(int32_t sharedMemoryId);
     std::deque<WaitingPermitRequest>& GetWaitingPermitRequests(int32_t sharedMemoryId);
 
+    void GenerateReport(std::stringstream& reportStream) const;
 private:
+    Runtime::ReportCollector<ResourceManager> reportCollector_{"ResourceManager", *this};
+
     // 0644: 所有者有读写权限，所属组有只读权限，其他用户有只读权限。
     static constexpr int32_t SHARED_MEMORY_ACCESS_PERMISSION = 0644;
 
