@@ -9,13 +9,16 @@ import com.huawei.fitframework.util.StringUtils;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
@@ -60,6 +63,24 @@ public class SslUtils {
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         keyManagerFactory.init(clientKeyStore, httpsKeyStoreFilePassword.toCharArray());
         return keyManagerFactory.getKeyManagers();
+    }
+
+    /**
+     * 获取 SSL 上下文。
+     *
+     * @param keyManagers 表示密钥管理器数组的 {@link KeyManager}{@code []}。
+     * @param trustManagers 表示信任管理器数组的 {@link TrustManager}{@code []}。
+     * @return 表示获取 SSL 上下文的 {@link SSLContext}。
+     * @throws NoSuchAlgorithmException 当加密算法使用不当时。
+     * @throws KeyManagementException 当密钥的密码不正确或者密钥已经被损坏时。
+     */
+    public static SSLContext getSslContext(KeyManager[] keyManagers, TrustManager[] trustManagers)
+            throws NoSuchAlgorithmException, KeyManagementException {
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        long seed = System.currentTimeMillis();
+        SecureRandom secureRandom = new SecureRandom(Long.toString(seed).getBytes());
+        sslContext.init(keyManagers, trustManagers, secureRandom);
+        return sslContext;
     }
 
     private static KeyStore getKeyStore(String keystoreFile, String password) {
