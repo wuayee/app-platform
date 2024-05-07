@@ -58,8 +58,6 @@ public class DefaultDataBusClient implements DataBusClient {
         tmpQueues.put(MessageType.HeartBeat, new LinkedBlockingQueue<>());
         tmpQueues.put(MessageType.ApplyMemory, new LinkedBlockingQueue<>());
         tmpQueues.put(MessageType.ApplyPermission, new LinkedBlockingQueue<>());
-        tmpQueues.put(MessageType.ReleasePermission, new LinkedBlockingQueue<>());
-        tmpQueues.put(MessageType.ReleaseMemory, new LinkedBlockingQueue<>());
 
         this.replyQueues = Collections.unmodifiableMap(tmpQueues);
     }
@@ -143,11 +141,11 @@ public class DefaultDataBusClient implements DataBusClient {
             // 执行读写操作
             byte[] readBytes;
             if (permissionType == PermissionType.Read) {
-                readBytes = this.sharedMemoryReaderWriter.read(request.sharedMemoryKey().getMemoryId(),
+                readBytes = this.sharedMemoryReaderWriter.read(request.sharedMemoryKey().memoryId(),
                         request.memoryOffset(), request.dataLength());
             } else {
                 readBytes = request.bytes();
-                this.sharedMemoryReaderWriter.write(request.sharedMemoryKey().getMemoryId(), request.memoryOffset(),
+                this.sharedMemoryReaderWriter.write(request.sharedMemoryKey().memoryId(), request.memoryOffset(),
                         request.dataLength(), readBytes);
             }
 

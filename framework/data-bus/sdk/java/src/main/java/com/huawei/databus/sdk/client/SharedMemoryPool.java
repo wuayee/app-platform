@@ -30,6 +30,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -59,6 +60,10 @@ class SharedMemoryPool {
         // 先建造消息体
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
         ApplyMemoryMessage.startApplyMemoryMessage(bodyBuilder);
+        request.getUserKey().ifPresent(userKey -> {
+            int objectKeyOffset = bodyBuilder.createString(userKey);
+            ApplyMemoryMessage.addObjectKey(bodyBuilder, objectKeyOffset);
+        });
         ApplyMemoryMessage.addMemorySize(bodyBuilder, request.size());
         int messageOffset = ApplyMemoryMessage.endApplyMemoryMessage(bodyBuilder);
         bodyBuilder.finish(messageOffset);
@@ -75,7 +80,7 @@ class SharedMemoryPool {
             ApplyMemoryMessageResponse response =
                     ApplyMemoryMessageResponse.getRootAsApplyMemoryMessageResponse(resBuffer);
             if (response.errorType() == ErrorType.None) {
-                SharedMemory sharedMemory = this.addNewMemory(response.memoryKey(),
+                SharedMemory sharedMemory = this.addNewMemory(response.memoryKey(), request.getUserKey(),
                         PermissionType.None, response.memorySize());
                 return SharedMemoryResult.success(sharedMemory);
             }
@@ -101,12 +106,13 @@ class SharedMemoryPool {
      * 将申请到的内存加入内存池，并返回其只读视图
      *
      * @param key 表示内存句柄的 {@code int}
+     * @param userKey 表示用户自定义 key 的 {@code Optional<String>}
      * @param permission 表示内存权限的 {@code byte}
      * @param size 表示内存容量的 {@code long}
      * @return 表示内存的 {@link SharedMemoryInternal}
      */
-    private SharedMemoryInternal addNewMemory(int key, byte permission, long size) {
-        return this.addNewMemory(new SharedMemoryKey(key), permission, size);
+    private SharedMemoryInternal addNewMemory(int key, Optional<String> userKey, byte permission, long size) {
+        return this.addNewMemory(new SharedMemoryKey(key, userKey), permission, size);
     }
 
     /**
@@ -134,7 +140,14 @@ class SharedMemoryPool {
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
         ApplyPermissionMessage.startApplyPermissionMessage(bodyBuilder);
         ApplyPermissionMessage.addPermission(bodyBuilder, request.permissionType());
-        ApplyPermissionMessage.addMemoryKey(bodyBuilder, request.sharedMemoryKey().getMemoryId());
+
+        // 有 memoryID 则优先使用，节省消息长度
+        if (request.sharedMemoryKey().memoryId() != -1) {
+            ApplyPermissionMessage.addMemoryKey(bodyBuilder, request.sharedMemoryKey().memoryId());
+        } else {
+            int objectKeyOffset = bodyBuilder.createString(request.sharedMemoryKey().userKey());
+            ApplyPermissionMessage.addObjectKey(bodyBuilder, objectKeyOffset);
+        }
         int messageOffset = ApplyPermissionMessage.endApplyPermissionMessage(bodyBuilder);
         bodyBuilder.finish(messageOffset);
         ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
@@ -170,7 +183,14 @@ class SharedMemoryPool {
         // 需要发送消息释放许可
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
         ReleasePermissionMessage.startReleasePermissionMessage(bodyBuilder);
-        ReleasePermissionMessage.addMemoryKey(bodyBuilder, request.sharedMemoryKey().getMemoryId());
+
+        // 有 memoryID 则优先使用，节省消息长度
+        if (request.sharedMemoryKey().memoryId() != -1) {
+            ReleasePermissionMessage.addMemoryKey(bodyBuilder, request.sharedMemoryKey().memoryId());
+        } else {
+            int objectKeyOffset = bodyBuilder.createString(request.sharedMemoryKey().userKey());
+            ReleasePermissionMessage.addObjectKey(bodyBuilder, objectKeyOffset);
+        }
         ReleasePermissionMessage.addPermission(bodyBuilder, request.permissionType());
         int messageOffset = ReleasePermissionMessage.endReleasePermissionMessage(bodyBuilder);
         bodyBuilder.finish(messageOffset);
