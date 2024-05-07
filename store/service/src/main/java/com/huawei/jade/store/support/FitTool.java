@@ -9,7 +9,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.Router;
-import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
@@ -18,7 +17,6 @@ import com.huawei.jade.store.ItemInfo;
 import com.huawei.jade.store.Tool;
 
 import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -58,12 +56,13 @@ public class FitTool extends AbstractTool {
     @Override
     public Object call(Object... args) {
         Router router;
+        String[] fitableInfos = this.itemInfo().group().split("#");
         if (this.metadata().getMethod().isPresent()) {
-            router = this.brokerClient.getRouter(this.itemInfo().group(), this.metadata().getMethod().get());
+            router = this.brokerClient.getRouter(fitableInfos[0], this.metadata().getMethod().get());
         } else {
-            router = this.brokerClient.getRouter(this.itemInfo().group());
+            router = this.brokerClient.getRouter(fitableInfos[0]);
         }
-        return router.route(new FitableIdFilter(Collections.singletonList(this.itemInfo().name()))).invoke(args);
+        return router.route().invoke(args);
     }
 
     @Override

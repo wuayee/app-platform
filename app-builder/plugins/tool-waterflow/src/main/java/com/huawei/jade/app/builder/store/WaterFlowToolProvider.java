@@ -14,7 +14,9 @@ import com.huawei.jade.fel.spi.tool.ToolProvider;
 import com.huawei.jade.store.service.ItemService;
 import com.huawei.jade.store.service.ToolExecuteService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,6 +29,9 @@ import java.util.stream.Collectors;
  */
 @Component
 public class WaterFlowToolProvider implements ToolProvider {
+    private static final String SCHEMA_NAME_KEY = "name";
+    private static final String TAG_TYPE_WATER_FLOW = "WaterFlow";
+
     private final ToolExecuteService executeService;
     private final ItemService itemService;
 
@@ -53,7 +58,9 @@ public class WaterFlowToolProvider implements ToolProvider {
     public List<Tool> getTool(List<String> name) {
         return name.stream().map(this.itemService::getItem).filter(Objects::nonNull).map(item -> {
             Set<String> tags = item.getTags();
-            return new Tool(tags.contains("WaterFlow"), item.getSchema());
+            Map<String, Object> schema = new HashMap<>(item.getSchema());
+            schema.put(SCHEMA_NAME_KEY, item.getUniqueName());
+            return new Tool(tags.contains(TAG_TYPE_WATER_FLOW), schema);
         }).collect(Collectors.toList());
     }
 }

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.jade.store.mybatis.ItemMapper">
+    <resultMap id="Item" type="com.huawei.jade.store.mybatis.ItemDo">
+        <result column="id" property="id"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="creator" property="creator"/>
+        <result column="modifier" property="modifier"/>
+        <result column="category" property="category"/>
+        <result column="group" property="group"/>
+        <result column="name" property="name"/>
+        <result column="unique_name" property="uniqueName"/>
+        <result column="schema" property="schema"/>
+        <result column="source" property="source"/>
+    </resultMap>
+    <resultMap id="Tag" type="com.huawei.jade.store.mybatis.Tag">
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="creator" property="creator"/>
+        <result column="modifier" property="modifier"/>
+        <result column="tag" property="tag"/>
+        <result column="item_id" property="itemId"/>
+    </resultMap>
+    <insert id="addItem" parameterType="com.huawei.jade.store.mybatis.ItemDo">
+        insert into "store_item" (created_time, updated_time, unique_name, category, "group", "name", "schema")
+        select CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, #{uniqueName}, a.id, #{group}, #{name}, cast(#{schema} as json)
+        from (select id from store_enum_category where category=#{category}) a
+    </insert>
+    <insert id="addTag">
+        insert into "store_tags" (created_time, updated_time, tag, item_id)
+        select CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, #{tag}, #{itemId}
+            where not exists(select id from store_tags where tag=#{tag} and item_id=#{itemId});
+    </insert>
+    <delete id="deleteItem" parameterType="String">
+        delete
+        from "store_tags"
+        where item_id = (select id from "store_item" where unique_name = #{uniqueName});
+
+        delete
+        from "store_item"
+        where unique_name = #{uniqueName};
+    </delete>
+    <delete id="deleteTag">
+        delete
+        from "store_tags"
+        where item_id = #{itemId}
+        and tag = #{tag}
+    </delete>
+    <select id="getAllGenericableIds">
+        select "group"
+        from "store_item"
+        where category = (select id from store_enum_category where category = #{category})
+          and id in (select item_id from store_tags where tag = #{tag})
+        offset #{offset}
+            limit #{limit}
+    </select>
+    <select id="getAllItems" parameterType="java.util.Map" resultMap="Item">
+        select store_enum_category.category, "group", "name", "unique_name", "schema", "source"
+        from "store_item"
+        join "store_enum_category" on store_item.category = store_enum_category.id
+        where store_item.category = (select id from store_enum_category where category = #{category})
+        <foreach collection="includeTags" item="includeTag" open="" separator="" close="">
+            and store_item.id in (select item_id from store_tags where tag = #{includeTag})
+        </foreach>
+        <foreach collection="excludeTags" item="excludeTag" open="" separator="" close="">
+            and store_item.id not in (select item_id from store_tags where tag = #{excludeTag})
+        </foreach>
+        order by store_item.updated_time desc
+        offset #{offset}
+        limit #{limit}
+    </select>
+    <select id="getFitTools" resultMap="Item">
+        select store_enum_category.category, "group", "name", "unique_name", "schema", "source"
+        from "store_item"
+        join "store_enum_category" on store_item.category = store_enum_category.id
+        where store_item.category = (select id from store_enum_category where category = #{category})
+          and store_item.id in (select item_id from store_tags where tag = #{tag})
+          and store_item.group like concat(#{genericableId}, '#','%')
+        order by store_item.updated_time desc
+        offset #{offset}
+        limit #{limit}
+    </select>
+    <select id="getItem" resultMap="Item">
+        select store_item.id, store_enum_category.category, "group", "name", "unique_name", "schema", "source"
+        from "store_item"
+        join "store_enum_category" on store_item.category = store_enum_category.id
+        where store_item.unique_name = #{uniqueName}
+    </select>
+    <select id="getItemByCategoryGroupNameTags" parameterType="java.util.Map" resultMap="Item">
+        select store_enum_category.category, "group", "name", "unique_name", "schema", "source"
+        from "store_item"
+        join "store_enum_category" on store_item.category = store_enum_category.id
+        where store_item.category = (select id from store_enum_category where category = #{category})
+        and store_item.group = #{group}
+        and store_item.name = #{name}
+        <foreach collection="includeTags" item="includeTag" open="" separator="" close="">
+            and store_item.id in (select item_id from store_tags where tag = #{includeTag})
+        </foreach>
+        <foreach collection="excludeTags" item="excludeTag" open="" separator="" close="">
+            and store_item.id not in (select item_id from store_tags where tag = #{excludeTag})
+        </foreach>
+    </select>
+    <select id="getItemsByGroup" parameterType="java.util.Map" resultMap="Item">
+        select store_enum_category.category, "group", "name", "unique_name", "schema", "source"
+        from "store_item"
+        join "store_enum_category" on store_item.category = store_enum_category.id
+        where store_item.category = (select id from store_enum_category where category = #{category})
+        and store_item.group = #{group}
+        <foreach collection="includeTags" item="includeTag" open="" separator="" close="">
+            and store_item.id in (select item_id from store_tags where tag = #{includeTag})
+        </foreach>
+        <foreach collection="excludeTags" item="excludeTag" open="" separator="" close="">
+            and store_item.id not in (select item_id from store_tags where tag = #{excludeTag})
+        </foreach>
+        order by store_item.updated_time desc
+        offset #{offset}
+        limit #{limit}
+    </select>
+    <select id="getItemByUniqueName" resultMap="Item">
+        select store_enum_category.category, "group", "name", "unique_name", "schema", "source"
+        from "store_item"
+        join "store_enum_category" on store_item.category = store_enum_category.id
+        where store_item.unique_name = #{uniqueName}
+    </select>
+    <select id="getTags" resultMap="Tag">
+        select *
+        from "store_tags"
+        where item_id = (select id from store_item where unique_name = #{uniqueName})
+    </select>
+</mapper>

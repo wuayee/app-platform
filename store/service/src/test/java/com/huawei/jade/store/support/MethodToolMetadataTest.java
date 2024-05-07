@@ -63,7 +63,7 @@ public class MethodToolMetadataTest {
         Router router = mock(Router.class);
         Invoker invoker = mock(Invoker.class);
         when(client.getRouter(eq("t1"), eq(this.testMethod))).thenReturn(router);
-        when(router.route(any())).thenReturn(invoker);
+        when(router.route()).thenReturn(invoker);
         when(invoker.invoke(any())).thenAnswer(invocation -> {
             if (Objects.equals(invocation.getArgument(0), "1")) {
                 return "OK";
@@ -82,7 +82,7 @@ public class MethodToolMetadataTest {
     ItemInfo buildItemInfo() {
         return ItemInfo.custom()
                 .category("Tool")
-                .group("t1")
+                .group("t1#test_schema_default_implementation_name")
                 .name("test_schema_default_implementation_name")
                 .uniqueName("schema-uuid")
                 .tags(Collections.singleton("FIT"))

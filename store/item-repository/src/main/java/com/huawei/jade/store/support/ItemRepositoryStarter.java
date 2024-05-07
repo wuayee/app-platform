@@ -7,10 +7,13 @@ package com.huawei.jade.store.support;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.annotation.Fit;
+import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.ioc.BeanFactory;
 import com.huawei.fitframework.plugin.Plugin;
 import com.huawei.fitframework.plugin.PluginStartedObserver;
 import com.huawei.fitframework.plugin.PluginStoppingObserver;
+import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.store.ToolFactory;
 import com.huawei.jade.store.repository.ToolFactoryRepository;
 
@@ -24,11 +27,13 @@ import java.util.stream.Collectors;
  * @since 2024-04-27
  */
 @Component
-public class ToolExecutionStarter implements PluginStartedObserver, PluginStoppingObserver {
+public class ItemRepositoryStarter implements PluginStartedObserver, PluginStoppingObserver {
     private final ToolFactoryRepository toolFactoryRepository;
 
-    ToolExecutionStarter(ToolFactoryRepository toolFactoryRepository) {
+    ItemRepositoryStarter(BrokerClient brokerClient, @Fit(alias = "json") ObjectSerializer serializer,
+            ToolFactoryRepository toolFactoryRepository) {
         this.toolFactoryRepository = notNull(toolFactoryRepository, "The tool factory repo cannot be null.");
+        this.toolFactoryRepository.register(ToolFactory.fit(brokerClient, serializer));
     }
 
     @Override

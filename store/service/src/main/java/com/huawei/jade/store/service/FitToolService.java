@@ -27,21 +27,21 @@ public interface FitToolService {
     /**
      * 查询所有的 FIT 调用工具的唯一标识列表。
      *
-     * @param offset 表示分页查询偏移量的 {@code int}。
+     * @param pageNum 表示分页查询页数的 {@code int}。
      * @param limit 表示分页查询数量限制的 {@code int}。
      * @return 表示所有满足条件的 FIT 调用工具的唯一标识列表的 {@link List}{@code <}{@link String}{@code >}。
      */
     @Genericable(id = "com.huawei.jade.store.service.getAllGenericableIds")
-    List<String> getAllGenericableIds(int offset, int limit);
+    List<String> getAllGenericableIds(int pageNum, int limit);
 
     /**
      * 查询 FIT 调用工具中指定唯一标识下的所有商品的 {@link ItemData}。
      *
      * @param genericableId 表示指定的 FIT 调用的唯一标识的 {@link String}。
-     * @param offset 表示分页查询偏移量的 {@code int}。
+     * @param pageNum 表示分页查询页数的 {@code int}。
      * @param limit 表示分页查询数量限制的 {@code int}。
      * @return 表示所有满足条件的 FIT 调用工具详细信息列表的 {@link List}{@code <}{@link ItemData}{@code >}。
      */
     @Genericable(id = "com.huawei.jade.store.service.getFitTools")
-    List<ItemData> getFitTools(String genericableId, int offset, int limit);
+    List<ItemData> getFitTools(String genericableId, int pageNum, int limit);
 }
