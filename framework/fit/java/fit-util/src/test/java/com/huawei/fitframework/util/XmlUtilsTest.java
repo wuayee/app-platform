@@ -16,6 +16,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +34,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -51,12 +54,17 @@ import javax.xml.transform.TransformerFactory;
 public class XmlUtilsTest {
     private Document document;
     private Node rootNode;
+    private Map<String, Object> documentMap;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @BeforeEach
     void setup() throws IOException {
         try (InputStream in = XmlUtilsTest.class.getResourceAsStream("/demo.xml")) {
             this.document = XmlUtils.load(in);
             this.rootNode = this.document.getChildNodes().item(0);
+        }
+        try (InputStream in = XmlUtilsTest.class.getResourceAsStream("/demo.json")) {
+            this.documentMap = mapper.readValue(in, Map.class);
         }
     }
 
@@ -273,12 +281,12 @@ public class XmlUtilsTest {
 
             @Test
             @DisplayName("Nodes is root document children, predicate is tagName='first-level', "
-                    + "output is 3 first-level nodes")
+                    + "output is 4 first-level nodes")
             void givenRootDocumentAndTagNameFilterThenReturn3FirstLevelNodes() {
                 Predicate<Node> filter = node -> StringUtils.equals(node.getNodeName(), "first-level");
                 NodeList actual = XmlUtils.filter(XmlUtilsTest.this.rootNode.getChildNodes(), filter);
                 assertThat(actual).isNotNull();
-                assertThat(actual.getLength()).isEqualTo(3);
+                assertThat(actual.getLength()).isEqualTo(4);
             }
         }
 
@@ -304,11 +312,11 @@ public class XmlUtilsTest {
         @DisplayName("Test method: filterByName(NodeList nodes, String name)")
         class TestFilterByNameNotIgnoreCase {
             @Test
-            @DisplayName("Nodes is root document children, name='first-level', output is 3 first-level nodes")
+            @DisplayName("Nodes is root document children, name='first-level', output is 4 first-level nodes")
             void givenRootDocumentAndNameFirstLevelThenReturn3FirstLevelNodes() {
                 NodeList actual = XmlUtils.filterByName(XmlUtilsTest.this.rootNode.getChildNodes(), "first-level");
                 assertThat(actual).isNotNull();
-                assertThat(actual.getLength()).isEqualTo(3);
+                assertThat(actual.getLength()).isEqualTo(4);
             }
         }
     }
@@ -608,6 +616,17 @@ public class XmlUtilsTest {
                 assertThat(children.item(3).getTextContent()).isEqualTo("first-level-2");
                 assertThat(children.item(5).getTextContent()).isEqualTo("first-level-3");
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("测试方法：parseXmlToMap(Document xml)")
+    class TestParseXmlToMap {
+        @Test
+        @DisplayName("给定非空文件，转换成功")
+        void givenNotEmptyDocumentThenParseSuccess() throws Exception {
+            Map<String, Object> actualMap = XmlUtils.toMap(document);
+            assertThat(actualMap).isEqualTo(documentMap);
         }
     }
 

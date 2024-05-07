@@ -20,7 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -44,23 +46,38 @@ import javax.xml.transform.stream.StreamResult;
  * @since 2020-07-24
  */
 public final class XmlUtils {
-    /** 表示允许引用一般性的外部实体。<b>为避免 XXE 漏洞，应禁用该特性。</b> */
+    /**
+     * 表示允许引用一般性的外部实体。<b>为避免 XXE 漏洞，应禁用该特性。</b>
+     */
     private static final String FEATURE_ALLOW_EXTERNAL_GENERAL_ENTITIES =
             "http://xml.org/sax/features/external-general-entities";
 
-    /** 表示允许引用外部参数实体。<b>为避免XXE漏洞，应禁用该特性。</b> */
+    /**
+     * 表示允许引用外部参数实体。<b>为避免XXE漏洞，应禁用该特性。</b>
+     */
     private static final String FEATURE_ALLOW_EXTERNAL_PARAMETER_ENTITIES =
             "http://xml.org/sax/features/external-parameter-entities";
 
-    /** 表示允许加载外部的文档类型定义。<b>为避免 XXE 漏洞，应禁用该特性。</b> */
+    /**
+     * 表示允许加载外部的文档类型定义。<b>为避免 XXE 漏洞，应禁用该特性。</b>
+     */
     private static final String FEATURE_ALLOW_LOAD_EXTERNAL_DTD =
             "http://apache.org/xml/features/nonvalidating/load-external-dtd";
 
-    /** 表示禁用内联的 DOCTYPE 声明，即禁用 DTD。<b>为避免 XXE 漏洞，应启用该特性。</b> */
+    /**
+     * 表示禁用内联的 DOCTYPE 声明，即禁用 DTD。<b>为避免 XXE 漏洞，应启用该特性。</b>
+     */
     private static final String FEATURE_DISALLOW_DOCTYPE_DECL = "http://apache.org/xml/features/disallow-doctype-decl";
 
-    /** 表示用以判定节点为数据节点的校验器。 */
+    /**
+     * 表示用以判定节点为数据节点的校验器。
+     */
     private static final Predicate<Node> PREDICATE_ELEMENT = node -> node instanceof Element;
+
+    /**
+     * 表示文本标签。
+     */
+    private static final String TEXT_TAG = "#text";
 
     /**
      * 隐藏默认构造方法，避免工具类被实例化。
@@ -472,7 +489,8 @@ public final class XmlUtils {
             } catch (TransformerConfigurationException ex) {
                 throw new IllegalStateException(StringUtils.format(
                         "Failed to {0} feature for document builder factory. [feature={1}]",
-                        operation(true), name), ex);
+                        operation(true),
+                        name), ex);
             }
         }
 
@@ -516,6 +534,119 @@ public final class XmlUtils {
                         "Failed to save XML document to output stream. [error={0}]",
                         ex.getMessage()), ex);
             }
+        }
+    }
+
+    /**
+     * 将 XML 文件转换成 Map 格式。
+     *
+     * @param document 表示待转换的 XML 文档的 {@link Document}。
+     * @return xmlMap 表示转换完成的 Map。
+     * @throws IllegalArgumentException 当 {@code document} 为 {@code null} 时。
+     */
+    public static Map<String, Object> toMap(Document document) {
+        notNull(document, "The XML document to parse cannot be null.");
+        Map<String, Object> map = new HashMap<>();
+        if (document.hasChildNodes()) {
+            Node rootNode = document.getChildNodes().item(0);
+            parseNode(rootNode, map);
+            return MapBuilder.<String, Object>get().put(rootNode.getNodeName(), map).build();
+        }
+        return MapBuilder.<String, Object>get().build();
+    }
+
+    /**
+     * 递归将根节点的全部子节点信息添加到 Map。
+     *
+     * @param node 表示待转换的根节点 {@link Node}。
+     * @param map 表示待添加信息的 Map {@link Map}。
+     */
+    private static void parseNode(Node node, Map<String, Object> map) {
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node curNode = nodeList.item(i);
+            if (curNode.getNodeType() != Node.TEXT_NODE) {
+                String tagName = curNode.getNodeName();
+                Map<String, Object> item = new HashMap<>();
+                parseNodeAttributes(curNode, item);
+                parseChild(curNode, item);
+                insertToMap(map, tagName, item);
+            } else {
+                if (StringUtils.isNotBlank(curNode.getTextContent())) {
+                    map.put(TEXT_TAG, curNode.getTextContent());
+                }
+            }
+        }
+    }
+
+    /**
+     * 将指定节点的属性分别添加到 Map 里。
+     * <p>
+     * <ul>
+     *     <li>Key：指定属性的 {@link String}; 格式: @attributeName。</li>
+     *     <li>Value：节点属性。</li>
+     * </ul>
+     * </p>
+     *
+     * @param node 表示指定节点的 {@link Node}。
+     * @param item 表示存入数据的Map {@link Map}。
+     */
+    private static void parseNodeAttributes(Node node, Map<String, Object> item) {
+        if (node.hasAttributes()) {
+            for (int i = 0; i < node.getAttributes().getLength(); i++) {
+                Node attribute = node.getAttributes().item(i);
+                item.put("@" + attribute.getNodeName(), attribute.getNodeValue());
+            }
+        }
+    }
+
+    /**
+     * 将的子节点信息添加到 Map 里。
+     *
+     * @param node 表示提取数据的根节点 {@link Node}。
+     * @param item 表示存入数据的 Map {@link Map}。
+     */
+    private static void parseChild(Node node, Map<String, Object> item) {
+        if (node.hasChildNodes()) {
+            // 检查子节点长度是否为 1 且是文本节点，用于避免子节点是空文本节点
+            if (node.getChildNodes().getLength() == 1 && node.getChildNodes().item(0).getNodeType() == Node.TEXT_NODE) {
+                item.put(TEXT_TAG, node.getChildNodes().item(0).getTextContent());
+            } else {
+                parseNode(node, item);
+            }
+        } else {
+            if (StringUtils.isNotBlank(node.getTextContent())) {
+                item.put(TEXT_TAG, node.getTextContent());
+            }
+        }
+    }
+
+    /**
+     * 将子节点信息存入父节点的信息 Map。
+     * <p>
+     * <ul>
+     *     <li>Key：{@code tagName}。</li>
+     *     <li>Value：Map 数组，若键已经在 Map 里，则直接存入；若否，则构建新数组并存入。</li>
+     * </ul>
+     * </p>
+     *
+     * @param map 表示存入数据的 Map。
+     * @param tagName 表示待放入 {@code map} 里的键。
+     * @param item 表示待放入 {@code map} 里的值。
+     */
+    private static void insertToMap(Map<String, Object> map, String tagName, Map<String, Object> item) {
+        if (map.containsKey(tagName)) {
+            Object existingValue = map.get(tagName);
+            if (existingValue instanceof List) {
+                List<Object> list = cast(existingValue);
+                list.add(item);
+            }
+        } else {
+            List<Object> itemList = new ArrayList<>();
+            if (!item.isEmpty()) {
+                itemList.add(item);
+            }
+            map.put(tagName, itemList);
         }
     }
 
