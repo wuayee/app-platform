@@ -36,7 +36,7 @@ void ResourceManager::Init()
     }
 }
 
-tuple<int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, uint64_t memorySize)
+tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, uint64_t memorySize)
 {
     // 获取ftok函数参数生成器单例
     auto& ftokArgsGenerator = FtokArgsGenerator::Instance();
@@ -87,7 +87,7 @@ tuple<bool, uint64_t, ErrorType> ResourceManager::HandleApplyPermission(int32_t 
         return make_tuple(false, 0, preCheckRes);
     }
     bool shouldGrant = permissionType == PermissionType::Read ? permissionStatus_[sharedMemoryId] >= 0 :
-                                                                permissionStatus_[sharedMemoryId] == 0;
+                       permissionStatus_[sharedMemoryId] == 0;
     if (shouldGrant) {
         // 当前内存块没有任何阻塞读写操作, 无需等待，直接授权
         GrantPermission(socketFd, permissionType, sharedMemoryId);
@@ -116,7 +116,7 @@ bool ResourceManager::HandleReleasePermission(int32_t socketFd, DataBus::Common:
     return true;
 }
 
-vector<tuple<int32_t, uint64_t>> ResourceManager::ProcessWaitingPermitRequests(int32_t sharedMemoryId)
+vector <tuple<int32_t, uint64_t>> ResourceManager::ProcessWaitingPermitRequests(int32_t sharedMemoryId)
 {
     // 如果当前内存块不存在，记录错误并返回空的通知队列
     if (sharedMemoryIdToInfo_.find(sharedMemoryId) == sharedMemoryIdToInfo_.end()) {
@@ -169,7 +169,7 @@ ErrorType ResourceManager::CheckApplyPermission(int32_t socketFd, DataBus::Commo
         return commonCheckRes;
     }
     auto& memoryBlocks = permissionType == PermissionType::Read ? readingMemoryBlocks_ :
-                                                                                    writingMemoryBlocks_;
+                         writingMemoryBlocks_;
     // 不允许重复申请许可
     if (memoryBlocks.find(socketFd) != memoryBlocks.end() &&
         memoryBlocks[socketFd].find(sharedMemoryId) != memoryBlocks[socketFd].end()) {
@@ -200,9 +200,9 @@ PermissionType ResourceManager::CheckPermissionOwnership(int32_t socketFd,
                                                          int32_t sharedMemoryId)
 {
     bool holdReadPermission =
-            readingMemoryBlocks_[socketFd].find(sharedMemoryId) != readingMemoryBlocks_[socketFd].end();
+        readingMemoryBlocks_[socketFd].find(sharedMemoryId) != readingMemoryBlocks_[socketFd].end();
     bool holdWritePermission =
-            writingMemoryBlocks_[socketFd].find(sharedMemoryId) != writingMemoryBlocks_[socketFd].end();
+        writingMemoryBlocks_[socketFd].find(sharedMemoryId) != writingMemoryBlocks_[socketFd].end();
     if (!holdReadPermission && !holdWritePermission) {
         logger.Error("[ResourceManager] Client {} does not hold any permission for the shared memory block {}",
                      socketFd, sharedMemoryId);
@@ -235,7 +235,7 @@ void ResourceManager::ReleasePermission(int32_t socketFd, DataBus::Common::Permi
     }
 }
 
-bool ResourceManager::RemoveDirectory(const std::string &directory)
+bool ResourceManager::RemoveDirectory(const std::string& directory)
 {
     DIR* dp;
     if ((dp = opendir(directory.data())) != nullptr) {
@@ -265,7 +265,7 @@ bool ResourceManager::RemoveDirectory(const std::string &directory)
     return true;
 }
 
-void ResourceManager::CreateDirectory(const std::string &directory)
+void ResourceManager::CreateDirectory(const std::string& directory)
 {
     size_t pos = 0;
     std::string dir = directory;
@@ -343,7 +343,7 @@ int32_t ResourceManager::GetPermissionStatus(int32_t sharedMemoryId)
     return permissionStatus_[sharedMemoryId];
 }
 
-deque<WaitingPermitRequest>& ResourceManager::GetWaitingPermitRequests(int32_t sharedMemoryId)
+deque <WaitingPermitRequest>& ResourceManager::GetWaitingPermitRequests(int32_t sharedMemoryId)
 {
     return waitingPermitRequestQueues_[sharedMemoryId];
 }
@@ -371,6 +371,48 @@ int32_t ResourceManager::DecrementWritingRefCnt(int sharedMemoryId)
 void ResourceManager::UpdateLastUsedTime(int sharedMemoryId)
 {
     sharedMemoryIdToInfo_[sharedMemoryId]->lastUsedTime_ = time(nullptr);
+}
+
+void ResourceManager::GenerateReport(stringstream& reportStream) const
+{
+    uint32_t memoryTotalUsage = 0;
+    reportStream << "\"MemoryBlocks\":[";
+    for (auto memoryIter = sharedMemoryIdToInfo_.cbegin();
+         memoryIter != sharedMemoryIdToInfo_.cend(); ++memoryIter) {
+        if (memoryIter != sharedMemoryIdToInfo_.cbegin()) {
+            reportStream << ",";
+        }
+        // 内存块基本状态
+        const auto memoryId = memoryIter->first;
+        const auto& memoryInfo = memoryIter->second;
+        memoryTotalUsage += memoryInfo->memorySize_;
+        reportStream << "{" <<
+                     "\"MemoryId\":" << memoryId << "," <<
+                     "\"Applicant\":" << memoryInfo->applicant_ << "," <<
+                     "\"Size\":" << memoryInfo->memorySize_ << "," <<
+                     "\"ReadingRefCnt\":" << memoryInfo->readingRefCnt_ << "," <<
+                     "\"WritingRefCnt\":" << memoryInfo->writingRefCnt_ << "," <<
+                     "\"LastUsedTime\":" << memoryInfo->lastUsedTime_;
+        // 内存块当前读写状态
+        if (permissionStatus_.find(memoryId) != permissionStatus_.cend()) {
+            reportStream << ",\"PermissionStatus\":" << permissionStatus_.at(memoryId);
+        }
+        // 内存块当前读写队列
+        if (waitingPermitRequestQueues_.find(memoryId) != waitingPermitRequestQueues_.cend()) {
+            reportStream << ",\"PermissionWaitingQueue\":[";
+            const auto& thisQueue = waitingPermitRequestQueues_.at(memoryId);
+            for (auto queueIter = thisQueue.cbegin(); queueIter != thisQueue.cend(); ++queueIter) {
+                (queueIter != thisQueue.cbegin() ? reportStream << "," : reportStream) <<
+                    "{\"Applicant\":" << queueIter->applicant_ << "," <<
+                    "\"PermissionType\":" << static_cast<int>(queueIter->permissionType_) << "}";
+            }
+            reportStream << "]";
+        }
+        reportStream << "}";
+    }
+    reportStream << "],";
+    reportStream << "\"MemoryBlockCount\":" << sharedMemoryIdToInfo_.size() << ",";
+    reportStream << "\"MemoryBlockTotalSize\":" << memoryTotalUsage;
 }
 
 }  // namespace Resource

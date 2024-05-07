@@ -78,7 +78,7 @@ void TaskHandler::HandleRead(const Task& task)
         DataBusUtil::SendErrorMessage(ErrorType::IllegalMessageHeader, GetSender(socketFd));
         return;
     }
-    
+
     // 验证buf是否包含有效的消息头
     flatbuffers::Verifier verifier(reinterpret_cast<const uint8_t*>(buffer), MESSAGE_HEADER_LEN);
     if (!Common::VerifyMessageHeaderBuffer(verifier)) {
@@ -101,6 +101,10 @@ void TaskHandler::HandleRead(const Task& task)
     switch (header->type()) {
         case Common::MessageType::HeartBeat: {
             logger.Info("[TaskHandler] Received heartbeat");
+            break;
+        }
+        case Common::MessageType::RuntimeReport: {
+            DataBus::Runtime::RuntimeReporter::Instance().Report();
             break;
         }
         case Common::MessageType::ApplyMemory: {
@@ -156,11 +160,11 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
         Common::GetApplyPermissionMessage(startPtr);
 
     logger.Info("[TaskHandler] Received ApplyPermission, permission: {}",
-        static_cast<int8_t>(applyPermissionMessage->permission()));
+                static_cast<int8_t>(applyPermissionMessage->permission()));
 
     tuple<bool, uint64_t, ErrorType> applyPermitRes =
-            resourceMgrPtr_->HandleApplyPermission(socketFd, applyPermissionMessage->permission(),
-                                                   applyPermissionMessage->memory_key());
+        resourceMgrPtr_->HandleApplyPermission(socketFd, applyPermissionMessage->permission(),
+                                               applyPermissionMessage->memory_key());
     bool granted;
     uint64_t memorySize;
     ErrorType errorType;
@@ -181,7 +185,7 @@ void TaskHandler::HandleMessageReleasePermission(const Common::MessageHeader* he
         logger.Error("[TaskHandler] Received incorrect release permission body format");
     }
     const Common::ReleasePermissionMessage* releasePermissionMessage =
-            Common::GetReleasePermissionMessage(startPtr);
+        Common::GetReleasePermissionMessage(startPtr);
     logger.Info("[TaskHandler] Received ReleasePermission, permission: {}",
                 static_cast<int8_t>(releasePermissionMessage->permission()));
     if (!resourceMgrPtr_->HandleReleasePermission(socketFd, releasePermissionMessage->permission(),
@@ -192,8 +196,8 @@ void TaskHandler::HandleMessageReleasePermission(const Common::MessageHeader* he
     }
     // 通知结束等待的客户端权限申请成功
     vector<tuple<int32_t, uint64_t>> notificationQueue =
-            resourceMgrPtr_->ProcessWaitingPermitRequests(releasePermissionMessage->memory_key());
-    for (const auto& notification : notificationQueue) {
+        resourceMgrPtr_->ProcessWaitingPermitRequests(releasePermissionMessage->memory_key());
+    for (const auto& notification: notificationQueue) {
         int32_t clientId;
         uint64_t memorySize;
         tie(clientId, memorySize) = notification;
@@ -202,18 +206,18 @@ void TaskHandler::HandleMessageReleasePermission(const Common::MessageHeader* he
 }
 
 void TaskHandler::SendApplyMemoryResponse(int32_t socketFd, int32_t memoryId, uint64_t memorySize,
-    ErrorType errorType)
+                                          ErrorType errorType)
 {
     flatbuffers::FlatBufferBuilder bodyBuilder;
     flatbuffers::Offset<Common::ApplyMemoryMessageResponse> respBody =
         Common::CreateApplyMemoryMessageResponse(bodyBuilder, errorType, memoryId,
-            memorySize);
+                                                 memorySize);
     bodyBuilder.Finish(respBody);
     DataBusUtil::SendMessage(bodyBuilder, Common::MessageType::ApplyMemory, GetSender(socketFd));
 }
 
 void TaskHandler::SendApplyPermissionResponse(int32_t socketFd, bool granted, uint64_t memorySize,
-    ErrorType errorType)
+                                              ErrorType errorType)
 {
     flatbuffers::FlatBufferBuilder bodyBuilder;
     flatbuffers::Offset<Common::ApplyPermissionMessageResponse> respBody =
