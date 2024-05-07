@@ -4,10 +4,11 @@
 
 package com.huawei.fitframework.io.support;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -34,7 +34,7 @@ class FileRandomAccessorTest {
     @BeforeAll
     static void setup() throws IOException {
         randomAccessorFile = Files.createTempFile(FILE_NAME_PREFIX, FILE_NAME_SUFFIX).toFile();
-        try (OutputStream out = new FileOutputStream(randomAccessorFile)) {
+        try (OutputStream out = Files.newOutputStream(randomAccessorFile.toPath())) {
             for (int i = 0; i < 128; i++) {
                 out.write(i);
             }
@@ -52,21 +52,19 @@ class FileRandomAccessorTest {
         @Test
         @DisplayName("当文件为 null 时抛出异常")
         void should_throw_when_file_is_null() {
-            IllegalArgumentException exception =
-                    assertThrows(IllegalArgumentException.class, () -> new FileRandomAccessor(null));
-            assertEquals("The file to access cannot be null.", exception.getMessage());
+            // noinspection resource
+            IllegalArgumentException cause =
+                    catchThrowableOfType(() -> new FileRandomAccessor(null), IllegalArgumentException.class);
+            assertThat(cause).isNotNull().hasMessage("The file to access cannot be null.");
         }
 
         @Test
         @DisplayName("当文件不能被标准化时抛出异常")
         void should_throw_when_file_is_not_canonical() {
             File file = new File("\u0000");
-            IllegalArgumentException exception =
-                    assertThrows(IllegalArgumentException.class, () -> new FileRandomAccessor(file));
-            String expectedError = "The file to access is not canonical.";
-            String actualError = exception.getMessage();
-            assertTrue(actualError.length() > expectedError.length());
-            assertEquals(expectedError, actualError.substring(0, expectedError.length()));
+            // noinspection resource
+            IOException cause = catchThrowableOfType(() -> new FileRandomAccessor(file), IOException.class);
+            assertThat(cause).isNotNull();
         }
 
         @Test
@@ -77,12 +75,9 @@ class FileRandomAccessorTest {
                 file = new File(UUID.randomUUID().toString());
             }
             File nonExist = file;
-            IllegalArgumentException exception =
-                    assertThrows(IllegalArgumentException.class, () -> new FileRandomAccessor(nonExist));
-            String expectedError = "The file to access does not exist.";
-            String actualError = exception.getMessage();
-            assertTrue(actualError.length() > expectedError.length());
-            assertEquals(expectedError, actualError.substring(0, expectedError.length()));
+            // noinspection resource
+            IOException cause = catchThrowableOfType(() -> new FileRandomAccessor(nonExist), IOException.class);
+            assertThat(cause).isNotNull();
         }
     }
 
@@ -92,7 +87,7 @@ class FileRandomAccessorTest {
         private FileRandomAccessor access;
 
         @BeforeEach
-        void setup() {
+        void setup() throws IOException {
             this.access = new FileRandomAccessor(randomAccessorFile);
         }
 

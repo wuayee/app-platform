@@ -5,6 +5,7 @@
 package com.huawei.fit.http.client.jdk;
 
 import static com.huawei.fit.http.protocol.util.SslUtils.getKeyManagers;
+import static com.huawei.fit.http.protocol.util.SslUtils.getSslContext;
 import static com.huawei.fit.http.protocol.util.SslUtils.getTrustManagers;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 import static com.huawei.fitframework.util.ObjectUtils.cast;
@@ -118,8 +119,7 @@ public class UrlConnectionClientRequest implements ClientRequest {
                 trustManagers = null;
             }
         }
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(keyManagers, trustManagers, null);
+        SSLContext sslContext = getSslContext(keyManagers, trustManagers);
         HttpsURLConnection secureConnection = cast(this.connection);
         secureConnection.setSSLSocketFactory(sslContext.getSocketFactory());
         if (ignoreHostname) {
