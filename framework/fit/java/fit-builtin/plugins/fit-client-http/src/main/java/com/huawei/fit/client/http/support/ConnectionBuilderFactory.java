@@ -6,6 +6,8 @@ package com.huawei.fit.client.http.support;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
+import com.huawei.fit.client.http.websocket.SecureWebSocketConnectionBuilder;
+import com.huawei.fit.client.http.websocket.WebSocketConnectionBuilder;
 import com.huawei.fit.http.protocol.Protocol;
 import com.huawei.fitframework.util.MapBuilder;
 
@@ -23,6 +25,8 @@ public class ConnectionBuilderFactory {
             MapBuilder.<Protocol, ConnectionBuilder>get()
                     .put(Protocol.HTTP, new HttpConnectionBuilder())
                     .put(Protocol.HTTPS, new HttpsConnectionBuilder())
+                    .put(Protocol.WEB_SOCKET, new WebSocketConnectionBuilder())
+                    .put(Protocol.SECURE_WEB_SOCKET, new SecureWebSocketConnectionBuilder())
                     .build();
 
     /**

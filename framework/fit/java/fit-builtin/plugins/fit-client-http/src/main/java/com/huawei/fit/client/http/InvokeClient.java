@@ -8,6 +8,7 @@ import com.huawei.fit.client.Request;
 import com.huawei.fit.client.Response;
 import com.huawei.fit.client.http.async.AsyncInvokeClient;
 import com.huawei.fit.client.http.support.SyncInvokeClient;
+import com.huawei.fit.client.http.websocket.WebSocketInvokeClient;
 import com.huawei.fitframework.broker.CommunicationType;
 import com.huawei.fitframework.conf.runtime.ClientConfig;
 import com.huawei.fitframework.conf.runtime.WorkerConfig;
@@ -58,5 +59,17 @@ public interface InvokeClient {
      */
     static InvokeClient async(BeanContainer container, WorkerConfig workerConfig, ClientConfig clientConfig) {
         return new AsyncInvokeClient(container, workerConfig, clientConfig);
+    }
+
+    /**
+     * 创建一个流式调用的客户端。
+     *
+     * @param container 表示 Bean 容器的 {@link BeanContainer}。
+     * @param workerConfig 表示进程配置信息的 {@link WorkerConfig}。
+     * @param clientConfig 表示 Http 客户端配置的 {@link ClientConfig}。
+     * @return 表示创建出来的流式调用的客户端的 {@link InvokeClient}。
+     */
+    static InvokeClient fluent(BeanContainer container, WorkerConfig workerConfig, ClientConfig clientConfig) {
+        return new WebSocketInvokeClient(container, workerConfig, clientConfig);
     }
 }

@@ -8,7 +8,7 @@ import com.huawei.fit.client.Request;
 import com.huawei.fit.http.protocol.Protocol;
 
 /**
- * 表示 Http/Https 链接的构建器。
+ * 表示通信链接的构建器。
  *
  * @author 季聿阶 j00559309
  * @since 2023-09-10
@@ -21,14 +21,6 @@ public interface ConnectionBuilder {
      * @return 表示构建出来的链接的 {@link String}。
      */
     String buildUrl(Request request);
-
-    /**
-     * 构建长轮询链接。
-     *
-     * @param request 表示请求的 {@link Request}。
-     * @return 表示构建出来的长轮询链接的 {@link String}。
-     */
-    String buildLongPollUrl(Request request);
 
     /**
      * 获取构建器的类型。

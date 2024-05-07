@@ -10,6 +10,7 @@ import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.flowable.Emitter;
 import com.huawei.fitframework.flowable.Subscriber;
 import com.huawei.fitframework.flowable.subscription.AbstractSubscription;
+import com.huawei.fitframework.inspection.Nonnull;
 
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
@@ -33,7 +34,7 @@ public class EmitterChoir<T> extends AbstractChoir<T> {
     }
 
     @Override
-    protected void subscribe0(Subscriber<T> subscriber) {
+    protected void subscribe0(@Nonnull Subscriber<T> subscriber) {
         EmitterSubscription<T> subscription =
                 new EmitterSubscription<>(subscriber, this.requestHandler, this.cancelHandler);
         subscriber.onSubscribed(subscription);

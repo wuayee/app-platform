@@ -9,6 +9,7 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 import com.huawei.fit.client.Client;
 import com.huawei.fit.client.Request;
 import com.huawei.fit.client.Response;
+import com.huawei.fit.client.http.util.HttpClientUtils;
 import com.huawei.fit.http.protocol.Protocol;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.broker.CommunicationType;
@@ -18,6 +19,7 @@ import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.util.MapBuilder;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,6 +36,7 @@ import java.util.stream.Stream;
 @Component
 public class HttpClient implements Client {
     private final Map<CommunicationType, InvokeClient> clients;
+    private final InvokeClient fluentClient;
 
     /**
      * 创建 Http 客户端。
@@ -51,15 +54,28 @@ public class HttpClient implements Client {
                 .put(syncInvokeClient.support(), syncInvokeClient)
                 .put(asyncInvokeClient.support(), asyncInvokeClient)
                 .build();
+        this.fluentClient = InvokeClient.fluent(container, workerConfig, clientConfig);
     }
 
     @Override
     public Response requestResponse(@Nonnull Request request) {
+        if (isFluent(request)) {
+            return this.fluentClient.requestResponse(request);
+        }
         return this.clients.get(request.context().communicationType()).requestResponse(request);
+    }
+
+    private boolean isFluent(Request request) {
+        for (Type type : request.dataTypes()) {
+            if (HttpClientUtils.isReactor(type)) {
+                return true;
+            }
+        }
+        return HttpClientUtils.isReactor(request.returnType());
     }
 
     @Override
     public Set<String> getSupportedProtocols() {
-        return Stream.of(Protocol.HTTP.protocol(), Protocol.HTTPS.protocol()).collect(Collectors.toSet());
+        return Stream.of(Protocol.values()).map(Protocol::protocol).collect(Collectors.toSet());
     }
 }
