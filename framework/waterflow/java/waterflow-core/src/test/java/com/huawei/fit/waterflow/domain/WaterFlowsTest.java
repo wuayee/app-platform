@@ -470,7 +470,7 @@ class WaterFlowsTest {
             // test conditions and others for just
             ProcessFlow<TestData> flow = Flows.<TestData>create(repo, messenger, locks)
                     .conditions()
-                    .match(i -> i.first > 10, flowNode -> flowNode.map(value -> ++value.first))
+                    .match(i -> i.first > 10, flowNode -> flowNode.map(value -> ++value.first).just(i -> {}))
                     .match(i -> i.second > 10,
                             flowNode -> flowNode.conditions().match(i -> i.first > 0, node -> node.just(value -> {
                                 value.third++;

@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Fork<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     private final State<I, D, I, F> node;
 
-    private final List<State<O, D, I, F>> forks = new ArrayList<>();
+    private final List<State<O, D, ?, F>> forks = new ArrayList<>();
 
     /**
      * Fork

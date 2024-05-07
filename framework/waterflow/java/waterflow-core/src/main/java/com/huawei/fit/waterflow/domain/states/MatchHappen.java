@@ -25,7 +25,7 @@ public class MatchHappen<O, D, I, F extends Flow<D>> {
      */
     protected final State<I, D, I, F> node;
 
-    private final List<State<O, D, I, F>> branches = new ArrayList<>();
+    private final List<State<O, D, ?, F>> branches = new ArrayList<>();
 
     MatchHappen(Operators.Whether<I> whether, Operators.BranchProcessor<O, D, I, F> processor,
             Conditions<D, I, F> conditions) {
@@ -45,7 +45,7 @@ public class MatchHappen<O, D, I, F extends Flow<D>> {
             Operators.BranchProcessor<O, D, I, F> processor) {
         State<I, D, I, F> branchStart = new State<>(this.node.publisher().just(any -> {
         }, null, whether), this.node.getFlow());
-        State<O, D, I, F> branch = processor.process(branchStart);
+        State<O, D, ?, F> branch = processor.process(branchStart);
         this.branches.add(branch);
         return this;
     }
