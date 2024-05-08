@@ -34,7 +34,7 @@ public final class ReleaseMemoryMessage extends Table {
   public String objectKey() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer objectKeyAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer objectKeyInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public int memoryKey() { int o = __offset(6); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public int memoryKey() { int o = __offset(6); return o != 0 ? bb.getInt(o + bb_pos) : -1; }
 
   public static int createReleaseMemoryMessage(FlatBufferBuilder builder,
       int objectKeyOffset,
@@ -47,7 +47,7 @@ public final class ReleaseMemoryMessage extends Table {
 
   public static void startReleaseMemoryMessage(FlatBufferBuilder builder) { builder.startTable(2); }
   public static void addObjectKey(FlatBufferBuilder builder, int objectKeyOffset) { builder.addOffset(0, objectKeyOffset, 0); }
-  public static void addMemoryKey(FlatBufferBuilder builder, int memoryKey) { builder.addInt(1, memoryKey, 0); }
+  public static void addMemoryKey(FlatBufferBuilder builder, int memoryKey) { builder.addInt(1, memoryKey, -1); }
   public static int endReleaseMemoryMessage(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
