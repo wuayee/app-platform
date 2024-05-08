@@ -5,9 +5,6 @@
 package com.huawei.fitframework.broker.server.support;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.serialization.TagLengthValues.TLV_WORKER_ID;
-import static com.huawei.fitframework.serialization.TagLengthValues.TLV_WORKER_INSTANCE_ID;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.huawei.fitframework.broker.LocalExecutor;
 import com.huawei.fitframework.broker.LocalExecutorFactory;
@@ -24,8 +21,7 @@ import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.RequestMetadata;
 import com.huawei.fitframework.serialization.ResponseMetadata;
 import com.huawei.fitframework.serialization.TagLengthValues;
-import com.huawei.fitframework.serialization.tlv.ValueSerializer;
-import com.huawei.fitframework.serialization.tlv.support.ExceptionPropertiesValueSerializer;
+import com.huawei.fitframework.serialization.tlv.TlvUtils;
 import com.huawei.fitframework.util.ExceptionUtils;
 import com.huawei.fitframework.util.LazyLoader;
 import com.huawei.fitframework.util.ObjectUtils;
@@ -111,8 +107,7 @@ public class DefaultDispatcher implements Dispatcher {
 
     private TagLengthValues buildTagLengthValues(Map<String, String> properties) {
         TagLengthValues tagLengthValues = TagLengthValues.create();
-        tagLengthValues.putTag(ValueSerializer.TAG_EXCEPTION_PROPERTIES,
-                ExceptionPropertiesValueSerializer.INSTANCE.serialize(properties));
+        TlvUtils.setExceptionProperties(tagLengthValues, properties);
         return tagLengthValues;
     }
 
@@ -123,8 +118,8 @@ public class DefaultDispatcher implements Dispatcher {
     private ResponseMetadata responseMetadataBytes(RequestMetadata metadata, int code, String message,
             TagLengthValues tagLengthValues) {
         TagLengthValues actual = ObjectUtils.getIfNull(tagLengthValues, TagLengthValues::create);
-        actual.putTag(TLV_WORKER_ID, this.workerConfig.id().getBytes(UTF_8));
-        actual.putTag(TLV_WORKER_INSTANCE_ID, this.workerConfig.instanceId().getBytes(UTF_8));
+        TlvUtils.setWorkerId(actual, this.workerConfig.id());
+        TlvUtils.setWorkerInstanceId(actual, this.workerConfig.instanceId());
         return ResponseMetadata.custom()
                 .dataFormat(valueFormat(metadata.dataFormat()))
                 .code(code)

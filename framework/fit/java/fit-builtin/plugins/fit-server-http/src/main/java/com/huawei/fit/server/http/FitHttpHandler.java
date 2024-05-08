@@ -29,6 +29,7 @@ import com.huawei.fitframework.serialization.RequestMetadata;
 import com.huawei.fitframework.serialization.ResponseMetadata;
 import com.huawei.fitframework.serialization.TagLengthValues;
 import com.huawei.fitframework.serialization.Version;
+import com.huawei.fitframework.serialization.tlv.TlvUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.lang.reflect.Method;
@@ -131,8 +132,8 @@ public class FitHttpHandler extends AbstractHttpHandler {
         // 不等待计算任务结束，只返回异步任务提交结果。
         Response result =
                 Response.create(ResponseMetadata.custom().dataFormat(metadata.dataFormat()).code(code).build());
-        HttpUtils.setWorkerId(result.metadata().tagValues(), this.workerConfig.id());
-        HttpUtils.setWorkerInstanceId(result.metadata().tagValues(), this.workerConfig.instanceId());
+        TlvUtils.setWorkerId(result.metadata().tagValues(), this.workerConfig.id());
+        TlvUtils.setWorkerInstanceId(result.metadata().tagValues(), this.workerConfig.instanceId());
         HttpServerUtils.setResponseCode(response, HttpResponseStatus.ACCEPTED);
         HttpServerUtils.setResponseHeaders(response, result);
         HttpServerUtils.setResponseEntity(this.container, metadata.dataFormat(), response, result);

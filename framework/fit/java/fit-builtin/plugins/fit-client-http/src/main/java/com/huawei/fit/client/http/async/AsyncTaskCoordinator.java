@@ -4,7 +4,7 @@
 
 package com.huawei.fit.client.http.async;
 
-import static com.huawei.fit.serialization.http.Constant.FIT_ASYNC_LONG_POLLING_DURATION_MILLIS;
+import static com.huawei.fit.serialization.http.Constants.FIT_ASYNC_LONG_POLLING_DURATION_MILLIS;
 
 import com.huawei.fit.client.Request;
 import com.huawei.fit.client.RequestContext;

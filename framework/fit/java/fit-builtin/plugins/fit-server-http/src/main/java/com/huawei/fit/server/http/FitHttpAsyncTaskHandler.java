@@ -23,6 +23,7 @@ import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.serialization.RequestMetadata;
 import com.huawei.fitframework.serialization.ResponseMetadata;
 import com.huawei.fitframework.serialization.TagLengthValues;
+import com.huawei.fitframework.serialization.tlv.TlvUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.util.Optional;
@@ -49,8 +50,8 @@ public class FitHttpAsyncTaskHandler extends AbstractHttpHandler {
             throws DoHttpHandlerException {
         RequestMetadata metadata = this.getRequestMetadata(request);
         try {
-            String sourceWorkerId = HttpUtils.getWorkerId(metadata.tagValues());
-            String sourceWorkerInstanceId = HttpUtils.getWorkerInstanceId(metadata.tagValues());
+            String sourceWorkerId = TlvUtils.getWorkerId(metadata.tagValues());
+            String sourceWorkerInstanceId = TlvUtils.getWorkerInstanceId(metadata.tagValues());
             Optional<Response> resultOp =
                     AsyncTaskExecutor.INSTANCE.longPolling(sourceWorkerId, sourceWorkerInstanceId);
             if (resultOp.isPresent()) {
@@ -73,8 +74,8 @@ public class FitHttpAsyncTaskHandler extends AbstractHttpHandler {
                 .code(code)
                 .message(message)
                 .build());
-        HttpUtils.setWorkerId(result.metadata().tagValues(), this.worker.id());
-        HttpUtils.setWorkerInstanceId(result.metadata().tagValues(), this.worker.instanceId());
+        TlvUtils.setWorkerId(result.metadata().tagValues(), this.worker.id());
+        TlvUtils.setWorkerInstanceId(result.metadata().tagValues(), this.worker.instanceId());
         HttpServerUtils.setResponseHeaders(response, result);
     }
 

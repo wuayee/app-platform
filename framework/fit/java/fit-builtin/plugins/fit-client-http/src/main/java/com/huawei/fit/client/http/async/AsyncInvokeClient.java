@@ -21,6 +21,7 @@ import com.huawei.fitframework.exception.ClientException;
 import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.ResponseMetadata;
+import com.huawei.fitframework.serialization.tlv.TlvUtils;
 import com.huawei.fitframework.util.UuidUtils;
 
 import java.io.IOException;
@@ -60,8 +61,8 @@ public class AsyncInvokeClient extends AbstractInvokeClient {
                     // 如果返回值不为 OK，则将结果返回给上层。
                     return response;
                 } else {
-                    targetWorkerId = HttpUtils.getWorkerId(response.metadata().tagValues());
-                    targetWorkerInstanceId = HttpUtils.getWorkerInstanceId(response.metadata().tagValues());
+                    targetWorkerId = TlvUtils.getWorkerId(response.metadata().tagValues());
+                    targetWorkerInstanceId = TlvUtils.getWorkerInstanceId(response.metadata().tagValues());
                 }
             }
         } catch (IOException e) {

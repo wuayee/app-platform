@@ -26,6 +26,7 @@ import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.ResponseMetadata;
 import com.huawei.fitframework.serialization.TagLengthValues;
+import com.huawei.fitframework.serialization.tlv.TlvUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 /**
@@ -75,8 +76,8 @@ public class HttpClientUtils {
     public static void FillBaseHeaders(HttpClassicClientRequest clientRequest, Request request,
             WorkerConfig workerConfig) {
         TagLengthValues tagLengthValues = request.metadata().tagValues();
-        HttpUtils.setWorkerId(tagLengthValues, workerConfig.id());
-        HttpUtils.setWorkerInstanceId(tagLengthValues, workerConfig.instanceId());
+        TlvUtils.setWorkerId(tagLengthValues, workerConfig.id());
+        TlvUtils.setWorkerInstanceId(tagLengthValues, workerConfig.instanceId());
         clientRequest.headers()
                 .add(FIT_DATA_FORMAT.value(), String.valueOf(request.metadata().dataFormat()))
                 .add(FIT_GENERICABLE_VERSION.value(), request.metadata().genericableVersion().toString())

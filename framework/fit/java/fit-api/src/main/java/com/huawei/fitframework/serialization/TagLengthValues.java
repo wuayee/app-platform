@@ -16,12 +16,6 @@ import java.util.Set;
  * @since 2021-05-14
  */
 public interface TagLengthValues {
-    /** 表示进程唯一标识的标签值。 */
-    int TLV_WORKER_ID = 0x00;
-
-    /** 表示进程实例唯一标识的标签值。 */
-    int TLV_WORKER_INSTANCE_ID = 0x01;
-
     /**
      * 获取扩展字段中的所有标识集合。
      *
