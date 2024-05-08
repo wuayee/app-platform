@@ -62,7 +62,7 @@ public class MatchToHappen<D, I, F extends Flow<D>> {
      * @param processor 默认的处理逻辑
      * @return conditions后续的节点
      */
-    public <O> State<O, D, I, F> others(Operators.BranchProcessor<O, D, I, F> processor) {
+    public <O> State<O, D, ?, F> others(Operators.BranchProcessor<O, D, I, F> processor) {
         State<I, D, I, F> branchStart = new State<>(this.conditions.node.publisher().just(any -> {
         }, null, null), this.conditions.node.getFlow());
         return processor.process(branchStart);

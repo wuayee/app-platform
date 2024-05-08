@@ -244,7 +244,7 @@ public final class Operators {
          * @param input input
          * @return boolean
          */
-        State<O, D, I, F> process(State<I, D, I, F> input);
+        State<O, D, ?, F> process(State<I, D, I, F> input);
     }
 
     /**
