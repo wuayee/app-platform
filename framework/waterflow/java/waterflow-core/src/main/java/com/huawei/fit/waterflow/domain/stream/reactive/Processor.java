@@ -18,4 +18,19 @@ public interface Processor<T, R> extends Publisher<R>, Subscriber<T, R> {
      * @return Subscriber<R, R>
      */
     Subscriber<R, R> close();
+
+    /**
+     * set processor id for flow display
+     *
+     * @param name processor name
+     * @return 自身
+     */
+    Processor<T, R> displayAs(String name);
+
+    /**
+     * 展示
+     *
+     * @return 返回一个展示的name
+     */
+    String display();
 }

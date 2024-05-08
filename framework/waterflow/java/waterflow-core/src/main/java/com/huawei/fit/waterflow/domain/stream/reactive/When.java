@@ -25,16 +25,10 @@ import java.util.stream.Collectors;
  * 辉子 2019-10-31
  *
  * @param <I> 来源数据类型
- * @param <O> 转换后数据
  * @author g00564732
  * @since 1.0
  */
-public class When<I, O> extends IdGenerator implements Subscription<I, O> {
-    /**
-     * 到接收者前的预处理
-     */
-    private final Operators.Map<I, O> converter;
-
+public class When<I> extends IdGenerator implements Subscription<I> {
     /**
      * 满足condition才能进入cache
      */
@@ -45,7 +39,7 @@ public class When<I, O> extends IdGenerator implements Subscription<I, O> {
      * 要发往的接受者
      */
     @Getter
-    private final Subscriber<O, ?> to;
+    private final Subscriber<I, ?> to;
 
     private final FlowContextRepo repo;
 
@@ -58,15 +52,13 @@ public class When<I, O> extends IdGenerator implements Subscription<I, O> {
      *
      * @param streamId streamId
      * @param to to
-     * @param converter converter
      * @param whether whether
      * @param repo contextRepo
      * @param messenger messenger
      */
-    public <R> When(String streamId, Subscriber<O, R> to, Operators.Map<I, O> converter, Operators.Whether<I> whether,
+    public <R> When(String streamId, Subscriber<I, R> to, Operators.Whether<I> whether,
             FlowContextRepo repo, FlowContextMessenger messenger) {
         this.streamId = streamId;
-        this.converter = converter == null ? input -> (O) input : converter;
         this.whether = whether == null ? any -> true : whether;
         this.to = to;
         this.to.onSubscribe(this);
@@ -80,14 +72,13 @@ public class When<I, O> extends IdGenerator implements Subscription<I, O> {
      * @param streamId streamId
      * @param eventId eventId
      * @param to to
-     * @param converter converter
      * @param whether whether
      * @param repo contextRepo
      * @param messenger messenger
      */
-    public <R> When(String streamId, String eventId, Subscriber<O, R> to, Operators.Map<I, O> converter,
+    public <R> When(String streamId, String eventId, Subscriber<I, R> to,
             Operators.Whether<I> whether, FlowContextRepo repo, FlowContextMessenger messenger) {
-        this(streamId, to, converter, whether, repo, messenger);
+        this(streamId, to, whether, repo, messenger);
         this.id = eventId;
     }
 
@@ -98,8 +89,8 @@ public class When<I, O> extends IdGenerator implements Subscription<I, O> {
         }
         // 将context发送到节点边上，更新为PENDING状态，等待下一个节点处理
         // 该过程不产生新的context数据，只更新context的状态
-        List<FlowContext<O>> converted = contexts.stream()
-                .map(context -> context.convertData(this.converter.process(context.getData()), context.getId())
+        List<FlowContext<I>> converted = contexts.stream()
+                .map(context -> context.convertData(context.getData(), context.getId())
                         .setPosition(this.getId())
                         .setStatus(PENDING))
                 .collect(Collectors.toList());

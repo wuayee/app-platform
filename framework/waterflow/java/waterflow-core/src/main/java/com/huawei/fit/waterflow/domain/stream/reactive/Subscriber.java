@@ -76,7 +76,7 @@ public interface Subscriber<I, O> extends StreamIdentity, Emitter<O, FlowSession
      *
      * @param subscription subscription
      */
-    void onSubscribe(Subscription<?, I> subscription);
+    void onSubscribe(Subscription<I> subscription);
 
     /**
      * 节点真正处理context方法onProcess

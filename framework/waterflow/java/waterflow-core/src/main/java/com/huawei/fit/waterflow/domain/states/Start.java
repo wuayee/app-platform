@@ -9,6 +9,7 @@ import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.context.WindowToken;
 import com.huawei.fit.waterflow.domain.enums.ParallelMode;
 import com.huawei.fit.waterflow.domain.flow.Flow;
+import com.huawei.fit.waterflow.domain.stream.nodes.From;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.utils.Identity;
@@ -47,7 +48,8 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      * @return 节点自身
      */
     public Start<O, D, I, F> id(String id) {
-        return ObjectUtils.cast(super.id(id));
+        ObjectUtils.<From>cast(this.from).setId(id);
+        return ObjectUtils.cast(super.setId(id));
     }
 
     /**
@@ -74,7 +76,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      * @return 条件节点
      */
     public Conditions<D, O, F> conditions() {
-        return new Conditions<>(new State<>(this.from.conditions(null, null), this.getFlow()));
+        return new Conditions<>(new State<>(this.from.conditions(null), this.getFlow()));
     }
 
     /**
@@ -93,7 +95,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      * @return 平行节点
      */
     private Parallel<D, O, F> parallel(ParallelMode mode) {
-        return new Parallel<>(new State<>(this.from.parallel(mode, null, null), this.getFlow()));
+        return new Parallel<>(new State<>(this.from.parallel(mode, null), this.getFlow()));
     }
 
     /**
@@ -104,7 +106,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      */
     public State<O, D, O, F> just(Operators.Just<O> processor) {
         Operators.Just<FlowContext<O>> wrapper = input -> processor.process(input.getData());
-        return new State<>(this.from.just(wrapper, null, null), this.getFlow());
+        return new State<>(this.from.just(wrapper, null), this.getFlow());
     }
 
     /**
@@ -115,7 +117,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      */
     public State<O, D, O, F> just(Operators.ProcessJust<O> processor) {
         Operators.Just<FlowContext<O>> wrapper = input -> processor.process(input.getData(), input);
-        return new State<>(this.from.just(wrapper, null, null), this.getFlow());
+        return new State<>(this.from.just(wrapper, null), this.getFlow());
     }
 
     /**
@@ -127,7 +129,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      */
     public <R> State<R, D, O, F> map(Operators.Map<O, R> processor) {
         Operators.Map<FlowContext<O>, R> wrapper = input -> processor.process(input.getData());
-        return new State<>(this.from.map(wrapper, null, null), this.getFlow());
+        return new State<>(this.from.map(wrapper, null), this.getFlow());
     }
 
     /**
@@ -141,7 +143,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
         State<R, D, O, F> state = new State<>(this.publisher().map(input -> {
             processor.process(input.getData(), input, data -> wrapper.get().from.offer(data, input.getSession()));
             return null;
-        }, null, null), this.getFlow());
+        }, null), this.getFlow());
         wrapper.set(state);
         return state;
     }
@@ -155,7 +157,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      */
     public <R> State<R, D, O, F> map(Operators.ProcessMap<O, R> processor) {
         Operators.Map<FlowContext<O>, R> wrapper = input -> processor.process(input.getData(), input);
-        return new State<>(this.from.map(wrapper, null, null), this.getFlow());
+        return new State<>(this.from.map(wrapper, null), this.getFlow());
     }
 
     /**
@@ -172,7 +174,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
             start.just(ctx -> state.get().from.offer(ctx)).offer();
             return null;
         };
-        state.set(new State<>(this.from.map(wrapper, null, null), this.getFlow()));
+        state.set(new State<>(this.from.map(wrapper, null), this.getFlow()));
         return state.get();
     }
 
@@ -257,7 +259,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
                 }
             }
         };
-        stateWrapper.set(new State<>(this.from.map(wrapper, null, null), this.getFlow()));
+        stateWrapper.set(new State<>(this.from.map(wrapper, null), this.getFlow()));
         return stateWrapper.get();
     }
 
@@ -287,7 +289,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
                 }
             }
         };
-        return new State<>(this.from.just(wrapper, null, null), this.getFlow());
+        return new State<>(this.from.just(wrapper, null), this.getFlow());
     }
 
     /**
@@ -303,7 +305,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
             input.setKeyBy(key);
             return Tuple.from(key, input.getData());
         };
-        return new State<>(this.from.map(wrapper, null, null), this.getFlow());
+        return new State<>(this.from.map(wrapper, null), this.getFlow());
     }
 
     /**

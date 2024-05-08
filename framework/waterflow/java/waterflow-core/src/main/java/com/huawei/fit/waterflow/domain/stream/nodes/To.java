@@ -83,7 +83,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     /**
      * subscriber支持多publisher分发，前提是分发源出来的数据类型需要一致，不然无法统一处理
      */
-    protected final List<Subscription<?, I>> froms = new ArrayList<>();
+    protected final List<Subscription<I>> froms = new ArrayList<>();
 
     /**
      * nodeType
@@ -452,7 +452,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     }
 
     @Override
-    public void onSubscribe(Subscription<?, I> subscription) {
+    public void onSubscribe(Subscription<I> subscription) {
         this.froms.add(subscription); // 将该节点的from的event加入
     }
 

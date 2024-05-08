@@ -30,7 +30,7 @@ public abstract class Activity<D, F extends Flow<D>> {
      * @param id 设置的id
      * @return 节点本身
      */
-    protected Activity<D, F> id(String id) {
+    protected Activity<D, F> setId(String id) {
         this.flow.tagNode(id, this);
         return this;
     }

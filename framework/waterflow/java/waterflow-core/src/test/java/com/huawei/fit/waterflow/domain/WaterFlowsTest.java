@@ -30,6 +30,7 @@ import com.huawei.fit.waterflow.domain.flow.ProcessFlow;
 import com.huawei.fit.waterflow.domain.states.State;
 import com.huawei.fit.waterflow.domain.stream.nodes.BlockToken;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
+import com.huawei.fit.waterflow.domain.utils.Mermaid;
 import com.huawei.fit.waterflow.domain.utils.Tuple;
 import com.huawei.fitframework.util.ObjectUtils;
 
@@ -737,6 +738,35 @@ class WaterFlowsTest {
                     .offer(0);
             waitUntil(() -> counter.get() >= 5);
             assertEquals(5, counter.get());
+        }
+
+        @Test
+        void test_mermaid() {
+            ProcessFlow<Integer> flow = Flows.<Integer>create()
+                    .map(i -> i * 10)
+                    .conditions()
+                    .match(i -> i > 10, p -> p.map(i -> i - 10))
+                    .match(i -> i == 9, p -> p.map(i -> i + 9))
+                    .others()
+                    .parallel()
+                    .fork(p -> p.map(i -> i + 1))
+                    .fork(p -> p.map(i -> i * 2))
+                    .join("", (acc, i) -> acc + i.toString())
+                    .close();
+            assertEquals("st((Start))\n"
+                            + "st-->n0(map)\n"
+                            + "n0-->n1{?}\n"
+                            + "n1-->n2(map)\n"
+                            + "n2-->n3([+])\n"
+                            + "n3-->n4{{=}}\n"
+                            + "n4-->n5(map)\n"
+                            + "n5-->n6([+])\n"
+                            + "n6-->e((End))\n"
+                            + "n4-->n7(map)\n"
+                            + "n7-->n6\n"
+                            + "n1-->n8(map)\n"
+                            + "n8-->n3\n",
+                    new Mermaid(flow).get());
         }
 
         @Test

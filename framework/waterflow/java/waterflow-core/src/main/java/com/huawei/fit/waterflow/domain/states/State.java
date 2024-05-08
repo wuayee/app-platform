@@ -10,6 +10,7 @@ import com.huawei.fit.waterflow.domain.emitters.Emitter;
 import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
 import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fit.waterflow.domain.stream.nodes.BlockToken;
+import com.huawei.fit.waterflow.domain.stream.nodes.Node;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.stream.reactive.Callback;
 import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
@@ -79,7 +80,8 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
      * @return 返回节点本身，便于后续的链式调用
      */
     public State<O, D, I, F> id(String id) {
-        return ObjectUtils.cast(super.id(id));
+        ObjectUtils.<Node>cast(this.processor).setId(id);
+        return ObjectUtils.cast(super.setId(id));
     }
 
     /**
@@ -91,7 +93,7 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
      * @param id 节点的别名id，通常使用 {@link State#id(String)} 指定
      */
     public void to(String id) {
-        this.processor.subscribe(ObjectUtils.<State>cast(this.getFlow().getNode(id)).processor, null, null);
+        this.processor.subscribe(ObjectUtils.<State>cast(this.getFlow().getNode(id)).processor, null);
     }
 
     /**
@@ -101,7 +103,7 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
      * @param state 指定的节点
      */
     public void to(State<?, D, O, F> state) {
-        this.processor.subscribe(state.processor, null, null);
+        this.processor.subscribe(state.processor, null);
     }
 
     /**
@@ -118,7 +120,7 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
                 block.setHost(state.get().from, input);
                 return null;
             }
-        }, null, null), this.getFlow()));
+        }, null), this.getFlow()));
         return state.get();
     }
 

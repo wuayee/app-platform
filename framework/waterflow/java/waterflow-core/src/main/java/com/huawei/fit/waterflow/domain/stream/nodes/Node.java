@@ -35,6 +35,8 @@ import java.util.function.Supplier;
 public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
     private final Publisher<R> publisher;
 
+    private String name = "operation";
+
     /**
      * 1->1处理节点
      *
@@ -113,37 +115,34 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
     }
 
     @Override
-    public <O> Processor<O, O> conditions(Operators.Map<R, O> convert, Operators.Whether<R> whether) {
-        return this.publisher.conditions(convert, whether);
+    public Processor<R, R> conditions(Operators.Whether<R> whether) {
+        return this.publisher.conditions(whether);
     }
 
     @Override
-    public <O> Processor<O, O> parallel(ParallelMode mode, Operators.Map<R, O> convert, Operators.Whether<R> whether) {
-        return this.publisher.parallel(mode, convert, whether);
+    public Processor<R, R> parallel(ParallelMode mode, Operators.Whether<R> whether) {
+        return this.publisher.parallel(mode, whether);
     }
 
     @Override
-    public <M, O> Processor<M, O> join(Operators.Map<FlowContext<M>, O> processor, Operators.Map<R, M> convert,
+    public <O> Processor<R, O> join(Operators.Map<FlowContext<R>, O> processor, Operators.Whether<R> whether) {
+        return this.publisher.join(processor, whether);
+    }
+
+    @Override
+    public Processor<R, R> just(Operators.Just<FlowContext<R>> processor,
             Operators.Whether<R> whether) {
-        return this.publisher.join(processor, convert, whether);
+        return this.publisher.just(processor, whether);
     }
 
     @Override
-    public <O> Processor<O, O> just(Operators.Just<FlowContext<O>> processor, Operators.Map<R, O> convert,
-            Operators.Whether<R> whether) {
-        return this.publisher.just(processor, convert, whether);
+    public <O> Processor<R, O> map(Operators.Map<FlowContext<R>, O> processor, Operators.Whether<R> whether) {
+        return this.publisher.map(processor, whether);
     }
 
     @Override
-    public <M, O> Processor<M, O> map(Operators.Map<FlowContext<M>, O> processor, Operators.Map<R, M> convert,
-            Operators.Whether<R> whether) {
-        return this.publisher.map(processor, convert, whether);
-    }
-
-    @Override
-    public <M, O> Processor<M, O> process(Operators.Process<FlowContext<M>, O> processor, Operators.Map<R, M> convert,
-            Operators.Whether<R> whether) {
-        return this.publisher.process(processor, convert, whether);
+    public <O> Processor<R, O> process(Operators.Process<FlowContext<R>, O> processor, Operators.Whether<R> whether) {
+        return this.publisher.process(processor, whether);
     }
 
     @Override
@@ -152,9 +151,8 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
     }
 
     @Override
-    public <M, O> void subscribe(Subscriber<M, O> subscriber, Operators.Map<R, M> convert,
-            Operators.Whether<R> whether) {
-        this.publisher.subscribe(subscriber, convert, whether);
+    public <O> void subscribe(Subscriber<R, O> subscriber, Operators.Whether<R> whether) {
+        this.publisher.subscribe(subscriber, whether);
     }
 
     @Override
@@ -163,9 +161,8 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
     }
 
     @Override
-    public <M, O> void subscribe(String eventId, Subscriber<M, O> subscriber, Operators.Map<R, M> convert,
-            Operators.Whether<R> whether) {
-        this.publisher.subscribe(eventId, subscriber, convert, whether);
+    public <O> void subscribe(String eventId, Subscriber<R, O> subscriber, Operators.Whether<R> whether) {
+        this.publisher.subscribe(eventId, subscriber, whether);
     }
 
     @Override
@@ -199,7 +196,7 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
     }
 
     @Override
-    public List<Subscription<R, ?>> getSubscriptions() {
+    public List<Subscription<R>> getSubscriptions() {
         return this.publisher.getSubscriptions();
     }
 
@@ -231,5 +228,28 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
                 END);
         this.subscribe(end);
         return end;
+    }
+
+    @Override
+    public Processor<T, R> displayAs(String name) {
+        this.name = name;
+        return this;
+    }
+
+    @Override
+    public String display() {
+        if (this.name.contains("condition")) {
+            return "{?}";
+        }
+        if (this.name.contains("others") || this.name.contains("join")) {
+            return "([+])";
+        }
+        if (this.name.contains("parallel")) {
+            return "{{=}}";
+        }
+        if (this.name.contains("branch")) {
+            return "";
+        }
+        return "(" + this.name + ")";
     }
 }
