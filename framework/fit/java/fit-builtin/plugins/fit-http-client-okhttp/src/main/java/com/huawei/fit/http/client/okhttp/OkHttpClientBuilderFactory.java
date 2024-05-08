@@ -10,6 +10,7 @@ import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.client.http.HttpsConstants;
 import com.huawei.fit.http.client.HttpClassicClientFactory;
+import com.huawei.fit.http.protocol.util.SslUtils;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.LockUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -17,7 +18,6 @@ import com.huawei.fitframework.util.StringUtils;
 import okhttp3.OkHttpClient;
 
 import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.KeyManager;
@@ -79,8 +79,8 @@ public class OkHttpClientBuilderFactory {
         }
 
         TrustManager[] trustManagers;
-        boolean isIgnoreTrust = Boolean.parseBoolean(
-                String.valueOf(config.custom().getOrDefault(HttpsConstants.CLIENT_SECURE_IGNORE_TRUST, false)));
+        boolean isIgnoreTrust = Boolean.parseBoolean(String.valueOf(config.custom()
+                .getOrDefault(HttpsConstants.CLIENT_SECURE_IGNORE_TRUST, false)));
         if (isIgnoreTrust) {
             trustManagers = getIgnoreTrustManagers();
         } else {
@@ -93,15 +93,12 @@ public class OkHttpClientBuilderFactory {
             }
         }
 
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        long seed = System.currentTimeMillis();
-        SecureRandom secureRandom = new SecureRandom(Long.toString(seed).getBytes());
-        sslContext.init(keyManagers, trustManagers, secureRandom);
+        SSLContext sslContext = SslUtils.getSslContext(keyManagers, trustManagers);
         if (trustManagers != null && trustManagers[0] instanceof X509TrustManager) {
             clientBuilder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustManagers[0]);
         }
-        boolean isIgnoreHostname = Boolean.parseBoolean(
-                String.valueOf(config.custom().getOrDefault(HttpsConstants.CLIENT_SECURE_IGNORE_HOSTNAME, false)));
+        boolean isIgnoreHostname = Boolean.parseBoolean(String.valueOf(config.custom()
+                .getOrDefault(HttpsConstants.CLIENT_SECURE_IGNORE_HOSTNAME, false)));
         if (isIgnoreHostname) {
             clientBuilder.hostnameVerifier((hostname, session) -> true);
         }

@@ -10,7 +10,6 @@ import com.huawei.fitframework.io.RandomAccessor;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Objects;
@@ -29,21 +28,12 @@ public class FileRandomAccessor implements RandomAccessor {
      * 使用待访问的文件初始化 {@link FileRandomAccessor} 类的新实例。
      *
      * @param file 表示待访问的文件的 {@link File}。
-     * @throws IllegalArgumentException {@code file} 为 {@code null}、不存在或不标准。
+     * @throws IllegalArgumentException 当 {@code file} 为 {@code null} 时。
+     * @throws IOException 当 {@code file} 不存在或不标准时。
      */
-    public FileRandomAccessor(File file) {
-        try {
-            this.file = notNull(file, "The file to access cannot be null.").getCanonicalFile();
-        } catch (IOException ex) {
-            throw new IllegalArgumentException(StringUtils.format("The file to access is not canonical. [file={0}]",
-                    file));
-        }
-        try {
-            this.access = new RandomAccessFile(file, "r");
-        } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException(StringUtils.format("The file to access does not exist. [file={0}]",
-                    file));
-        }
+    public FileRandomAccessor(File file) throws IOException {
+        this.file = notNull(file, "The file to access cannot be null.").getCanonicalFile();
+        this.access = new RandomAccessFile(file, "r");
     }
 
     @Override
