@@ -64,13 +64,13 @@ public class MatchToHappen<D, I, F extends Flow<D>> {
      */
     public <O> State<O, D, ?, F> others(Operators.BranchProcessor<O, D, I, F> processor) {
         State<I, D, I, F> branchStart = new State<>(this.conditions.node.publisher().just(any -> {
-        }, null, null), this.conditions.node.getFlow());
+        }, null).displayAs("others"), this.conditions.node.getFlow());
         return processor.process(branchStart);
     }
 
     private void to(Operators.Whether<I> whether, Operators.BranchToProcessor<D, I, F> processor) {
         State<I, D, I, F> branchStart = new State<>(this.conditions.node.publisher().just(any -> {
-        }, null, whether), this.conditions.node.getFlow());
+        }, whether).displayAs("branch"), this.conditions.node.getFlow());
         processor.process(branchStart);
     }
 }

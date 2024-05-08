@@ -41,66 +41,55 @@ public interface Publisher<I> extends StreamIdentity, EmitterListener<I, FlowSes
     /**
      * conditions
      *
-     * @param convert 数据转换器
      * @param whether 判定条件
-     * @param <O> 转换的目标类型
      * @return Processor<O, O>
      */
-    <O> Processor<O, O> conditions(Operators.Map<I, O> convert, Operators.Whether<I> whether);
+    Processor<I, I> conditions(Operators.Whether<I> whether);
 
     /**
      * parallel
      *
      * @param mode mode
-     * @param convert convert
      * @param whether whether
      * @return Processor<O, O>
      */
-    <O> Processor<O, O> parallel(ParallelMode mode, Operators.Map<I, O> convert, Operators.Whether<I> whether);
+    Processor<I, I> parallel(ParallelMode mode, Operators.Whether<I> whether);
 
     /**
      * join
      *
      * @param processor processor
-     * @param convert convert
      * @param whether whether
      * @return Processor<M, O>
      */
-    <M, O> Processor<M, O> join(Operators.Map<FlowContext<M>, O> processor, Operators.Map<I, M> convert,
-            Operators.Whether<I> whether);
+    <O> Processor<I, O> join(Operators.Map<FlowContext<I>, O> processor, Operators.Whether<I> whether);
 
     /**
      * just
      *
      * @param processor processor
-     * @param convert convert
      * @param whether whether
      * @return Processor<O, O>
      */
-    <O> Processor<O, O> just(Operators.Just<FlowContext<O>> processor, Operators.Map<I, O> convert,
-            Operators.Whether<I> whether);
+    Processor<I, I> just(Operators.Just<FlowContext<I>> processor, Operators.Whether<I> whether);
 
     /**
      * map
      *
      * @param processor processor
-     * @param convert convert
      * @param whether whether
      * @return Processor<M, O>
      */
-    <M, O> Processor<M, O> map(Operators.Map<FlowContext<M>, O> processor, Operators.Map<I, M> convert,
-            Operators.Whether<I> whether);
+    <O> Processor<I, O> map(Operators.Map<FlowContext<I>, O> processor, Operators.Whether<I> whether);
 
     /**
      * process处理，并往下发射新的数据，支持操作 session KV状态数据
      *
      * @param processor 携带数据、KV下文和发射器的处理器
-     * @param convert convert
      * @param whether whether
      * @return Processor<M, O>
      */
-    <M, O> Processor<M, O> process(Operators.Process<FlowContext<M>, O> processor, Operators.Map<I, M> convert,
-            Operators.Whether<I> whether);
+    <O> Processor<I, O> process(Operators.Process<FlowContext<I>, O> processor, Operators.Whether<I> whether);
 
     /**
      * subscribe
@@ -113,10 +102,9 @@ public interface Publisher<I> extends StreamIdentity, EmitterListener<I, FlowSes
      * subscribe
      *
      * @param subscriber subscriber
-     * @param convert convert
      * @param whether whether
      */
-    <M, O> void subscribe(Subscriber<M, O> subscriber, Operators.Map<I, M> convert, Operators.Whether<I> whether);
+    <O> void subscribe(Subscriber<I, O> subscriber, Operators.Whether<I> whether);
 
     /**
      * subscribe
@@ -131,11 +119,9 @@ public interface Publisher<I> extends StreamIdentity, EmitterListener<I, FlowSes
      *
      * @param eventId eventId
      * @param subscriber subscriber
-     * @param convert convert
      * @param whether whether
      */
-    <M, O> void subscribe(String eventId, Subscriber<M, O> subscriber, Operators.Map<I, M> convert,
-            Operators.Whether<I> whether);
+    <O> void subscribe(String eventId, Subscriber<I, O> subscriber, Operators.Whether<I> whether);
 
     /**
      * offer
@@ -188,9 +174,9 @@ public interface Publisher<I> extends StreamIdentity, EmitterListener<I, FlowSes
     /**
      * getSubscriptions
      *
-     * @return List<Subscription < I, ?>>
+     * @return List<Subscription < I >>
      */
-    List<Subscription<I, ?>> getSubscriptions();
+    List<Subscription<I>> getSubscriptions();
 
     /**
      * 获取context repo

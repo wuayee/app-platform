@@ -15,10 +15,9 @@ import java.util.List;
  * subscriber来不及处理的数据或者block的数据在subscription中缓存
  *
  * @param <I> 接收的数据类型
- * @param <O> 转换后数据类型
  * @since 1.0
  */
-public interface Subscription<I, O> extends StreamIdentity {
+public interface Subscription<I> extends StreamIdentity {
     /**
      * cache
      *
@@ -38,5 +37,5 @@ public interface Subscription<I, O> extends StreamIdentity {
      *
      * @return Subscriber<O, R>
      */
-    <R> Subscriber<O, R> getTo();
+    <R> Subscriber<I, R> getTo();
 }

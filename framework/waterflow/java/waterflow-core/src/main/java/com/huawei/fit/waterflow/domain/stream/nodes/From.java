@@ -63,7 +63,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     protected final FlowLocks locks;
 
-    private final List<Subscription<I, ?>> whens = new ArrayList<>();
+    private final List<Subscription<I>> whens = new ArrayList<>();
 
     private final String streamId;
 
@@ -96,30 +96,28 @@ public class From<I> extends IdGenerator implements Publisher<I> {
     /**
      * 数据发送给条件processor
      *
-     * @param convert convert
      * @param whether whether
      * @return 新的条件processor
      */
     @Override
-    public <O> Processor<O, O> conditions(Operators.Map<I, O> convert, Operators.Whether<I> whether) {
-        ConditionsNode<O> node = new ConditionsNode<>(this.getStreamId(), repo, messenger, locks);
-        this.subscribe(node, convert, whether);
-        return node;
+    public Processor<I, I> conditions(Operators.Whether<I> whether) {
+        ConditionsNode<I> node = new ConditionsNode<>(this.getStreamId(), repo, messenger, locks);
+        this.subscribe(node, whether);
+        return node.displayAs("condition");
     }
 
     /**
      * 数据发送给平行（广播式）processor
      *
      * @param mode either还是all
-     * @param convert convert
      * @param whether whether
      * @return 新的条件processor
      */
     @Override
-    public <O> Processor<O, O> parallel(ParallelMode mode, Operators.Map<I, O> convert, Operators.Whether<I> whether) {
-        ParallelNode<O> node = new ParallelNode<>(this.getStreamId(), mode, repo, messenger, locks);
-        this.subscribe(node, convert, whether);
-        return node;
+    public Processor<I, I> parallel(ParallelMode mode, Operators.Whether<I> whether) {
+        ParallelNode<I> node = new ParallelNode<>(this.getStreamId(), mode, repo, messenger, locks);
+        this.subscribe(node, whether);
+        return node.displayAs("parallel");
     }
 
     /**
@@ -127,65 +125,60 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * 这里的限制不够，要在上层做更多的限制，只有parallel后面的节点才可以join
      *
      * @param processor map处理器
-     * @param convert convert
      * @param whether whether
      * @return 新的join processor
      */
     @Override
-    public <M, O> Processor<M, O> join(Operators.Map<FlowContext<M>, O> processor, Operators.Map<I, M> convert,
-            Operators.Whether<I> whether) {
-        JoinNode<M, O> node = new JoinNode<>(this.getStreamId(), processor, repo, messenger, locks);
-        this.subscribe(node, convert, any -> true);
-        return node;
+    public <O> Processor<I, O> join(
+            Operators.Map<FlowContext<I>, O> processor, Operators.Whether<I> whether) {
+        JoinNode<I, O> node = new JoinNode<>(this.getStreamId(), processor, repo, messenger, locks);
+        this.subscribe(node, i -> true);
+        return node.displayAs("join");
     }
 
     /**
      * 数据发送给 just processor，数据只处理，不转换
      *
      * @param processor just处理器
-     * @param convert convert
      * @param whether whether
      * @return 新的join processor
      */
     @Override
-    public <O> Processor<O, O> just(Operators.Just<FlowContext<O>> processor, Operators.Map<I, O> convert,
-            Operators.Whether<I> whether) {
+    public Processor<I, I> just(Operators.Just<FlowContext<I>> processor, Operators.Whether<I> whether) {
         // just的实现就是一个返回自己的map
-        Node<O, O> node = new Node<>(this.getStreamId(), context -> {
-            processor.process(context);
-            return context.getData();
+        Node<I, I> node = new Node<>(this.getStreamId(), i -> {
+            processor.process(i);
+            return i.getData();
         }, repo, messenger, locks);
-        this.subscribe(node, convert, whether);
-        return node;
+        this.subscribe(node, whether);
+        return node.displayAs("just");
     }
 
     /**
      * 接收者是1:1数据处理：进1条A数据，返回一条B数据
      *
      * @param processor 处理函数
-     * @param convert 处理前when的转换函数
      * @param whether whether
      * @return 返回一个node，这个node是接收者，同时可以继续发送数据
      */
     @Override
-    public <M, O> Processor<M, O> map(Operators.Map<FlowContext<M>, O> processor, Operators.Map<I, M> convert,
-            Operators.Whether<I> whether) {
-        Node<M, O> node = new Node<>(this.getStreamId(), processor, repo, messenger, locks);
-        this.subscribe(node, convert, whether);
-        return node;
+    public <O> Processor<I, O> map(
+            Operators.Map<FlowContext<I>, O> processor, Operators.Whether<I> whether) {
+        Node<I, O> node = new Node<>(this.getStreamId(), processor, repo, messenger, locks);
+        this.subscribe(node, whether);
+        return node.displayAs("map");
     }
 
     @Override
-    public <M, O> Processor<M, O> process(Operators.Process<FlowContext<M>, O> processor, Operators.Map<I, M> convert,
-            Operators.Whether<I> whether) {
-        AtomicReference<Node<M, O>> processRef = new AtomicReference<>();
-        Operators.Map<FlowContext<M>, O> wrapper = input -> {
+    public <O> Processor<I, O> process(Operators.Process<FlowContext<I>, O> processor, Operators.Whether<I> whether) {
+        AtomicReference<Node<I, O>> processRef = new AtomicReference<>();
+        Operators.Map<FlowContext<I>, O> wrapper = input -> {
             processor.process(input, input, data -> processRef.get().offer(data, input.getSession()));
             return null;
         };
-        Node<M, O> node = new Node<>(this.getStreamId(), wrapper, repo, messenger, locks);
+        Node<I, O> node = new Node<>(this.getStreamId(), wrapper, repo, messenger, locks);
         processRef.set(node);
-        this.subscribe(node, convert, whether);
+        this.subscribe(node, whether);
         return node;
     }
 
@@ -270,10 +263,10 @@ public class From<I> extends IdGenerator implements Publisher<I> {
         }
 
         FlowContext<I> firstContext = contexts.get(0); // 用第一个元素做同源判断
-        List<Subscription<I, ?>> qualifiedWhens = this.getSubscriptions();
+        List<Subscription<I>> qualifiedWhens = this.getSubscriptions();
 
         // 处理从A流程跳出到B流程,再从B流程调回A流程的指定节点并从该指定节点继续执行A的后续流程
-        List<Subscription<I, ?>> sourceWhens = this.getSubscriptions()
+        List<Subscription<I>> sourceWhens = this.getSubscriptions()
                 .stream()
                 .filter(when -> !firstContext.getStreamId().equals(this.getStreamId()) && when.getTo()
                         .getStreamId()
@@ -301,7 +294,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
     }
 
     @Override
-    public List<Subscription<I, ?>> getSubscriptions() {
+    public List<Subscription<I>> getSubscriptions() {
         return new ArrayList<>(this.whens);
     }
 
@@ -318,7 +311,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public <O> void subscribe(Subscriber<I, O> subscriber) {
-        this.subscribe(subscriber, any -> any, any -> true);
+        this.subscribe(subscriber, any -> true);
     }
 
     /**
@@ -326,14 +319,12 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * 通过when关联了发送者和接受者
      *
      * @param subscriber 订阅者
-     * @param convert 处理前when的转换函数
      * @param whether whether
      */
     @Override
-    public <M, O> void subscribe(Subscriber<M, O> subscriber, Operators.Map<I, M> convert,
-            Operators.Whether<I> whether) {
+    public <O> void subscribe(Subscriber<I, O> subscriber, Operators.Whether<I> whether) {
         // 默认只能将数据发给一个subscriber
-        this.whens.add(new When<>(this.streamId, subscriber, convert, whether, repo, messenger));
+        this.whens.add(new When<>(this.streamId, subscriber, whether, repo, messenger));
     }
 
     /**
@@ -345,7 +336,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      */
     @Override
     public <O> void subscribe(String eventId, Subscriber<I, O> subscriber) {
-        this.subscribe(eventId, subscriber, any -> any, any -> true);
+        this.subscribe(eventId, subscriber, i -> true);
     }
 
     /**
@@ -354,13 +345,11 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      *
      * @param eventId 事件ID
      * @param subscriber 订阅者
-     * @param convert 处理前when的转换函数
      * @param whether whether
      */
     @Override
-    public <M, O> void subscribe(String eventId, Subscriber<M, O> subscriber, Operators.Map<I, M> convert,
-            Operators.Whether<I> whether) {
-        this.whens.add(new When<>(this.streamId, eventId, subscriber, convert, whether, repo, messenger));
+    public <O> void subscribe(String eventId, Subscriber<I, O> subscriber, Operators.Whether<I> whether) {
+        this.whens.add(new When<>(this.streamId, eventId, subscriber, whether, repo, messenger));
     }
 
     @Override
@@ -377,7 +366,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
     public Blocks.Block<I> getBlock(String eventId) {
         ArrayDeque<Subscriber<?, ?>> nodesQueue = new ArrayDeque<>();
         Set<String> visited = new HashSet<>();
-        for (Subscription<?, ?> s : this.getSubscriptions()) {
+        for (Subscription<?> s : this.getSubscriptions()) {
             nodesQueue.addLast(s.getTo());
             visited.add(s.getTo().getId());
             if (s.getId().equals(eventId)) {
@@ -387,7 +376,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
 
         while (!nodesQueue.isEmpty()) {
             Node<?, ?> curNode = ObjectUtils.cast(nodesQueue.removeFirst());
-            for (Subscription<?, ?> s : curNode.getSubscriptions()) {
+            for (Subscription<?> s : curNode.getSubscriptions()) {
                 if (!visited.contains(s.getTo().getId())) {
                     nodesQueue.offer(s.getTo());
                     visited.add(s.getTo().getId());

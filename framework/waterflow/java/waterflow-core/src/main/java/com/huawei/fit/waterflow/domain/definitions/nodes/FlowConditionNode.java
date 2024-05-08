@@ -56,7 +56,7 @@ public class FlowConditionNode extends FlowNode {
 
     @Override
     protected void subscribe(Publisher<FlowData> from, Subscriber<FlowData, FlowData> to, FlowEvent event) {
-        from.subscribe(event.getMetaId(), to, null, this.getWhether(from.getStreamId(), event));
+        from.subscribe(event.getMetaId(), to, this.getWhether(from.getStreamId(), event));
     }
 
     private Operators.Whether<FlowData> getWhether(String streamId, FlowEvent event) {
