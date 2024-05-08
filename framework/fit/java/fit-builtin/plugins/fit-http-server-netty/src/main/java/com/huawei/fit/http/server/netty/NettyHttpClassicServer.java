@@ -4,13 +4,12 @@
 
 package com.huawei.fit.http.server.netty;
 
-import static com.huawei.fit.http.protocol.util.SslUtils.getKeyManagers;
-import static com.huawei.fit.http.protocol.util.SslUtils.getTrustManagers;
 import static com.huawei.fitframework.inspection.Validation.greaterThan;
 import static com.huawei.fitframework.inspection.Validation.isTrue;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.Serializers;
+import com.huawei.fit.http.protocol.util.SslUtils;
 import com.huawei.fit.http.server.HttpClassicServer;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.http.server.HttpDispatcher;
@@ -283,11 +282,9 @@ public class NettyHttpClassicServer implements HttpClassicServer {
         }
         String trustStoreFile = this.httpsConfig.trustStoreFile().orElse(StringUtils.EMPTY);
         String keyStoreFile = this.httpsConfig.keyStoreFile().orElse(StringUtils.EMPTY);
-        KeyManager[] keyManagers = getKeyManagers(keyStoreFile, keyStorePassword);
-        TrustManager[] trustManagers = getTrustManagers(trustStoreFile, trustStorePassword);
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(keyManagers, trustManagers, null);
-        return sslContext;
+        KeyManager[] keyManagers = SslUtils.getKeyManagers(keyStoreFile, keyStorePassword);
+        TrustManager[] trustManagers = SslUtils.getTrustManagers(trustStoreFile, trustStorePassword);
+        return SslUtils.getSslContext(keyManagers, trustManagers);
     }
 
     @Override
