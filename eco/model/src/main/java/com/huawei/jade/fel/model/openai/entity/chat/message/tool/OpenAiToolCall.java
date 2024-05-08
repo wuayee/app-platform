@@ -18,7 +18,9 @@ import lombok.Data;
  * @since 2024-4-30
  */
 @Data
-public class OpenAiToolCall extends ToolCall {
+public class OpenAiToolCall {
+    private String id;
+
     private String type;
 
     @JsonProperty("function")
@@ -27,7 +29,7 @@ public class OpenAiToolCall extends ToolCall {
     /**
      * 构建一个新的 {@link OpenAiToolCall} 。
      *
-     * @param id 用于设置 {@link ToolCall#id} 工具调用的编码。
+     * @param id 用于设置 {@link OpenAiToolCall#id} 工具调用的编码。
      * @param name 用于设置 {@link OpenAiToolCall#function#name} 函数名。
      * @param arguments 用于设置 {@link OpenAiToolCall#function#arguments} 函数参数。
      * @return {@link OpenAiToolCall} 。
@@ -43,6 +45,18 @@ public class OpenAiToolCall extends ToolCall {
         toolCall.setFunction(functionCall);
 
         return toolCall;
+    }
+
+    /**
+     * 将 OpenAI 工具调用转化为 FEL 工具调用 {@link ToolCall}。
+     *
+     * @param openAiToolCall OpenAI 工具调用。
+     * @return FEL 工具调用。
+     */
+    public static ToolCall buildFelToolCall(OpenAiToolCall openAiToolCall) {
+        return new ToolCall(openAiToolCall.getId(),
+                openAiToolCall.getFunction().getName(),
+                openAiToolCall.getFunction().getArguments());
     }
 
     /**

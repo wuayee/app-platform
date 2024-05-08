@@ -20,6 +20,7 @@ import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionChoice;
 import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
 import com.huawei.jade.fel.model.openai.entity.chat.message.OpenAiChatMessage;
 import com.huawei.jade.fel.model.openai.entity.chat.message.tool.OpenAiTool;
+import com.huawei.jade.fel.model.openai.entity.chat.message.tool.OpenAiToolCall;
 import com.huawei.jade.fel.model.openai.utils.OpenAiMessageUtils;
 import com.huawei.jade.fel.tool.ToolCall;
 
@@ -98,7 +99,7 @@ public class OpenAiChatModelService implements ChatModelService {
             OpenAiChatMessage message = choices.get(0).getMessage();
             toolCalls = message.getToolCalls()
                     .stream()
-                    .map(ToolCall.class::cast)
+                    .map(OpenAiToolCall::buildFelToolCall)
                     .collect(Collectors.toList());
 
             if (message.getContent() instanceof String) {
