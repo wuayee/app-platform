@@ -4,7 +4,6 @@
 
 package com.huawei.fit.serialization.http;
 
-import static com.huawei.fit.serialization.http.HttpTlvConstants.ASYNC_TASK_ID_TAG;
 import static com.huawei.fitframework.inspection.Validation.notBlank;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -28,7 +27,7 @@ public class HttpUtils {
      */
     public static String getAsyncTaskId(TagLengthValues tagValues) {
         notNull(tagValues, "The TLV cannot be null.");
-        return new String(tagValues.getValue(ASYNC_TASK_ID_TAG), UTF_8);
+        return new String(tagValues.getValue(HttpTags.getAsyncTaskIdTag()), UTF_8);
     }
 
     /**
@@ -40,7 +39,7 @@ public class HttpUtils {
     public static void setAsyncTaskId(TagLengthValues tagValues, String asyncTaskId) {
         notNull(tagValues, "The TLV cannot be null.");
         notBlank(asyncTaskId, "The async task id cannot be blank.");
-        tagValues.putTag(ASYNC_TASK_ID_TAG, asyncTaskId.getBytes(UTF_8));
+        tagValues.putTag(HttpTags.getAsyncTaskIdTag(), asyncTaskId.getBytes(UTF_8));
     }
 
     /**

@@ -6,9 +6,6 @@ package com.huawei.fitframework.serialization.tlv;
 
 import static com.huawei.fitframework.inspection.Validation.notBlank;
 import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.serialization.tlv.TlvConstants.EXCEPTION_PROPERTIES_TAG;
-import static com.huawei.fitframework.serialization.tlv.TlvConstants.WORKER_ID_TAG;
-import static com.huawei.fitframework.serialization.tlv.TlvConstants.WORKER_INSTANCE_ID_TAG;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.huawei.fitframework.serialization.TagLengthValues;
@@ -32,7 +29,7 @@ public class TlvUtils {
      */
     public static String getWorkerId(TagLengthValues tagValues) {
         notNull(tagValues, "The TLV cannot be null.");
-        return new String(tagValues.getValue(WORKER_ID_TAG), UTF_8);
+        return new String(tagValues.getValue(Tags.getWorkerIdTag()), UTF_8);
     }
 
     /**
@@ -44,7 +41,7 @@ public class TlvUtils {
     public static void setWorkerId(TagLengthValues tagValues, String workerId) {
         notNull(tagValues, "The TLV cannot be null.");
         notBlank(workerId, "The worker id cannot be blank.");
-        tagValues.putTag(WORKER_ID_TAG, workerId.getBytes(UTF_8));
+        tagValues.putTag(Tags.getWorkerIdTag(), workerId.getBytes(UTF_8));
     }
 
     /**
@@ -55,7 +52,7 @@ public class TlvUtils {
      */
     public static String getWorkerInstanceId(TagLengthValues tagValues) {
         notNull(tagValues, "The TLV cannot be null.");
-        return new String(tagValues.getValue(WORKER_INSTANCE_ID_TAG), UTF_8);
+        return new String(tagValues.getValue(Tags.getWorkerInstanceIdTag()), UTF_8);
     }
 
     /**
@@ -67,7 +64,7 @@ public class TlvUtils {
     public static void setWorkerInstanceId(TagLengthValues tagValues, String workerInstanceId) {
         notNull(tagValues, "The TLV cannot be null.");
         notBlank(workerInstanceId, "The worker instance id cannot be blank.");
-        tagValues.putTag(WORKER_INSTANCE_ID_TAG, workerInstanceId.getBytes(UTF_8));
+        tagValues.putTag(Tags.getWorkerInstanceIdTag(), workerInstanceId.getBytes(UTF_8));
     }
 
     /**
@@ -78,7 +75,8 @@ public class TlvUtils {
      */
     public static Map<String, String> getExceptionProperties(TagLengthValues tagValues) {
         notNull(tagValues, "The TLV cannot be null.");
-        return ExceptionPropertiesValueSerializer.INSTANCE.deserialize(tagValues.getValue(EXCEPTION_PROPERTIES_TAG));
+        int tag = Tags.getExceptionPropertiesTag();
+        return ExceptionPropertiesValueSerializer.INSTANCE.deserialize(tagValues.getValue(tag));
     }
 
     /**
@@ -92,6 +90,7 @@ public class TlvUtils {
             return;
         }
         notNull(tagValues, "The TLV cannot be null.");
-        tagValues.putTag(EXCEPTION_PROPERTIES_TAG, ExceptionPropertiesValueSerializer.INSTANCE.serialize(properties));
+        int tag = Tags.getExceptionPropertiesTag();
+        tagValues.putTag(tag, ExceptionPropertiesValueSerializer.INSTANCE.serialize(properties));
     }
 }

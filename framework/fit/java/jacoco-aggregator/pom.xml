@@ -50,6 +50,10 @@
         </dependency>
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-flowable</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-ioc</artifactId>
         </dependency>
         <dependency>
