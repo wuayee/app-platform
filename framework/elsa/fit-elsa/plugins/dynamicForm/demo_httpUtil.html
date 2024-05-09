@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>dynamicForm-Demo</title>
+    <style>
+        .html-image-container {
+            display: flex;
+            /*gap: 10px;*/
+            /*flex-direction: column;*/
+            justify-content: center;
+            align-items: center;
+            /*height: 200px;*/
+            border-radius: 10px;
+            color: #444;
+            cursor: pointer;
+            /*transition: background .2s ease-in-out, border .2s ease-in-out;*/
+        }
+    </style>
+
+    <script type="module">
+        import {ALIGN, DOCK_MODE} from '../../common/const.js';
+        import {ELSA} from "../../core/elsaEntry.js";
+        import {PAGE_MODE} from "../../common/const.js";
+
+        const graphId = "dynamic-form-demo graph";
+        window.onload = async () => {
+            document.getElementById("loadFormData").addEventListener("click", () => {
+                const graph = window.g;
+                const form = graph.activePage.shapes[0];
+                const json = window.testStore.get();
+                form.loadJSON(json);
+            });
+
+            document.getElementById("serializeForm").addEventListener("click", () => {
+                const graph = window.g;
+                window.persistData = graph.activePage.shapes[0].persist();
+                console.log(window.persistData);
+            });
+
+            document.getElementById("deSerializeForm").addEventListener("click", async () => {
+                const graph = window.g;
+                await graph.activePage.loadForm(window.persistData);
+            });
+
+            document.getElementById("clearPage").addEventListener("click", async () => {
+                const graph = window.g;
+                await graph.activePage.clear();
+            });
+
+            document.getElementById("runtime").addEventListener("click", async () => {
+                const graph = window.g;
+                const runtimePage = graph.addPage("runtimePage");
+                runtimePage.mode = PAGE_MODE.RUNTIME;
+                runtimePage.loadForm(window.persistData);
+            });
+
+            document.getElementById("wantInput").addEventListener("click", async () => {
+                window.agent.want("htmlInput");
+            });
+
+            document.getElementById("wantButton").addEventListener("click", async () => {
+                window.agent.want("htmlButton", {text: "submit"});
+            });
+
+            document.getElementById("wantImage").addEventListener("click", async () => {
+                window.agent.want("htmlImage");
+            });
+
+            const store = () => {
+                const self = {};
+
+                self.get = () => {
+                    return self.json;
+                };
+
+                self.store = (json) => {
+                    self.json = json;
+                };
+
+                return self;
+            };
+
+            window.testStore = store();
+
+            ELSA.newGraph(graphId, "fromGraph", document.getElementById("main"))
+                .then(async agent => {
+                    agent.openCollaboration();
+                    const g = agent._graph;
+                    window.g = g;
+                    window.agent = agent;
+                    g.import('/fit/portal/fit-elsa/plugins/dynamicForm/form.js')
+                        .import('/fit/portal/fit-elsa/plugins/dynamicForm/formPage.js')
+                        .import('/fit/portal/fit-elsa/plugins/dynamicForm/component/htmlImage.js')
+                        .then(shapes => {
+                            const p = g.addPage("dynamic form demo");
+
+                            let form = p.createNew("form", 200, 50);
+                            form.height = 350;
+
+                            const bt2 = p.createNew("htmlButton", 0, 0);
+                            bt2.text = "submit";
+                            bt2.container = form.id;
+                            bt2.componentId = "submit_button";
+
+                            const getScript = "const button = Shape.get(\"submit_button\");\n" + "button.clicked = () => {\n" + "const headers = new Map();\n" + "headers.set(\"Content-Type\", \"application/json\");\n" + "headers.set(\"x-forwarded-host\", \"local.huawei.com\");\n" + "headers.set(\"user\", \"%e9%82%ac%e6%b6%a8%e8%b4%a2%2cw00575064\");\n" + "page.httpUtil.get(\"http://localhost:8001/elsa-backend/graph/get?graphId=8619c9e8a9a045729027f357ea41212f\", (error, ans) => {\n" + "console.log(ans);\n" + "}, headers);\n" + "};"
+
+                            const postScript = "const button = Shape.get(\"submit_button\");\n" + "button.clicked = () => {\n" + "const headers = new Map();\n" + "headers.set(\"Content-Type\", \"application/json\");\n" + "headers.set(\"x-forwarded-host\", \"local.huawei.com\");\n" + "headers.set(\"user\", \"%e9%82%ac%e6%b6%a8%e8%b4%a2%2cw00575064\");\n" + "const data = {\n" + "\"param\": {\n" + "\"parentId\": \"a90ae902e83540b3b69ceeec38ea0468\",\n" + "\"typeList\": [\n" + "\"FLOWABLE\"\n" + "],\n" + "\"createUser\": \"孙怡菲 s00664640\",\n" + "\"orderType\": \"desc\",\n" + "\"orderField\": \"update_time\"\n" + "},\n" + "\"page\": {\n" + "\"pageNo\": 0,\n" + "\"pageSize\": 24\n" + "}\n" + "};\n" + "page.httpUtil.post(\"http://localhost:8001/elsa-backend/documentation/paging\", data, (error, ans) => {\n" + "console.log(ans);\n" + "}, headers);\n" + "};"
+                            bt2.script = postScript;
+
+                            const htmlImage = p.createNew("htmlImage", 0, 0);
+                            htmlImage.container = form.id;
+                            htmlImage.componentId = "html_image";
+                            htmlImage.script = "const htmlImage = Shape.get(\"html_image\");\n" + "htmlImage.getUploader().onFileChange = (file) => {\n" + "const headers = new Map();\n" + "headers.set(\"x-forwarded-host\", \"local.huawei.com\");\n" + "headers.set(\"user\", \"%e9%82%ac%e6%b6%a8%e8%b4%a2%2cw00575064\");\n" + "page.httpUtil.uploadFile(\"http://localhost:8001/elsa-backend/common/upload\", file, (event) => {\n" + "console.log(event);\n" + "}, (error, ans) => {\n" + "console.log(ans);\n" + "}, headers);\n" + "};";
+
+                            const postScriptFunc = (page, Shape) => {
+                                const htmlImage = Shape.get("html_image");
+                                htmlImage.getUploader().uploadImage = (file) => {
+                                    const headers = new Map();
+                                    headers.set("Content-Type", "application/json");
+                                    headers.set("x-forwarded-host", "local.huawei.com");
+                                    headers.set("user", "%e9%82%ac%e6%b6%a8%e8%b4%a2%2cw00575064");
+                                    page.httpUtil.uploadFile("http://localhost:8001/elsa-backend/upload", file, (event) => {
+                                        console.log(event);
+                                    }, (error, ans) => {
+                                        console.log(ans);
+                                    }, headers);
+                                };
+                            };
+
+                            p.reset();
+
+                            const data = p.serialize();
+                            console.log(JSON.stringify(data));
+                        });
+                });
+        };
+    </script>
+</head>
+
+<body>
+<div>
+    <button id="loadFormData">loadFormData</button>
+    <button id="serializeForm">serializeForm</button>
+    <button id="deSerializeForm">deSerializeForm</button>
+    <button id="clearPage">clearPage</button>
+    <button id="runtime">runtime</button>
+    <button id="wantInput">wantInput</button>
+    <button id="wantButton">wantButton</button>
+    <button id="wantImage">wantImage</button>
+</div>
+<div id="main" style="width:1600px; height: 1200px;position: absolute;"></div>
+<div id="point" style="width:6px; height: 6px;position: absolute;left:397px;top:397px;background-color: brown;">
+</div>
+
+</body>
+
+</html>

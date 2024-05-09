@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        .simple-box {
+            padding: 10px;
+            margin: 1em 0;
+
+            background: rgba(0, 0, 0, 0.1);
+            border: solid 1px hsl(0, 0%, 77%);
+            border-radius: 2px;
+        }
+
+        .simple-box-title, .simple-box-description {
+            padding: 10px;
+            margin: 0;
+
+            background: #FFF;
+            border: solid 1px hsl(0, 0%, 77%);
+        }
+
+        .simple-box-title {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <button id="removeMarker" style="width: 100px;height: 100px;background: whitesmoke">removeMarker</button>
+    <button id="insertShape" style="width: 100px;height: 100px;background: whitesmoke">insertShape</button>
+    <button id="undoInsert" style="width: 100px;height: 100px;background: whitesmoke">undoInsert</button>
+    <button id="redoInsert" style="width: 100px;height: 100px;background: whitesmoke">redoInsert</button>
+    <button id="removeShape" style="width: 100px;height: 100px;background: whitesmoke">removeShape</button>
+    <button id="undoRemove" style="width: 100px;height: 100px;background: whitesmoke">undoRemove</button>
+    <button id="redoRemove" style="width: 100px;height: 100px;background: whitesmoke">redoRemove</button>
+    <button id="modifyShape" style="width: 100px;height: 100px;background: whitesmoke">modifyShape</button>
+    <button id="selectShape" style="width: 100px;height: 100px;background: whitesmoke">selectShape</button>
+    <button id="resizeShape" style="width: 100px;height: 100px;background: whitesmoke">resizeShape</button>
+    <button id="printSelection" style="width: 100px;height: 100px;background: whitesmoke">printSelection</button>
+    <button id="deleteContent" style="width: 100px;height: 100px;background: whitesmoke">deleteContent</button>
+    <button id="testSelection" style="width: 100px;height: 100px;background: whitesmoke">testSelection</button>
+    <button id="testReadonly" style="width: 100px;height: 100px;background: whitesmoke">testReadonly</button>
+    <div id="document-toolbar"></div>
+    <div id="container" style="display: flex">
+        <div style="width: 960px; margin: 0 auto; background: white; height: calc(100vh);outline: none"
+             id="document-editable"></div>
+        <div style="width: 960px; margin: 0 auto; background: white; height: calc(100vh);outline: none"
+             id="document-2"></div>
+    </div>
+</div>
+
+<script type="module">
+    import ElsaEditor from "../build/elsa-editor.js";
+
+    const paragraphData = [{
+        name: "paragraph", children: [{data: "111111111111111111111"}]
+    }, {
+        name: "paragraph", children: [{data: "22222222222222222222"}, {
+            "attributes": {
+                "externalid": "shape-11111111", "width": "100px", "height": "100px", "id": "103"
+            }, "name": "shape", "x": 234.19, "y": 170.42, "width": 100, "height": 100
+        }, {data: "22222222222222222222"}]
+    }, {
+        name: "paragraph", children: [{data: "33333333333333333333333333333333333333333"}]
+    }];
+
+    const editorShapeDeleteCommand1 = (id, width, height, editor) => {
+        const self = {};
+
+        self.id = id;
+
+        self.execute = () => {
+            self.modelRange = editor.execute("removeShape", {value: {id: id, isUndoable: false}});
+        };
+
+        self.undo = () => {
+            editor.execute("shape", {
+                value: {
+                    id: id,
+                    externalId: "shape-test-editor-shape-delete",
+                    size: {width: width, height: height},
+                    isUndoable: false,
+                    isUndo: true,
+                    modelRange: self.modelRange
+                }
+            });
+        };
+
+        self.redo = () => {
+            editor.execute("removeShape", {value: {id: self.id, isUndoable: false}});
+        };
+
+        return self;
+    };
+
+    let selection = null;
+    const editorShapeInsertCommand1 = (shape, editor) => {
+        const self = {};
+
+        self.execute = () => {
+            editor.execute("shape", {
+                externalId: "shape-test-editor-shape-delete",
+                size: {width: shape.width, height: shape.height},
+                // isUndoable: false,
+                isUndo: true
+            });
+        };
+
+        self.undo = () => {
+            editor.execute("removeShape", {value: {id: shape.externalId, isUndoable: false, isUndo: true}});
+        };
+
+        self.redo = () => {
+            editor.execute("shape", {
+                value: {
+                    externalId: "shape-test-editor-shape-delete",
+                    size: {width: shape.width, height: shape.height},
+                    isUndoable: false,
+                    isUndo: true,
+                    position: {x: 100, y: 300}
+                }
+            });
+        };
+
+        return self;
+    }
+
+    let count = 0;
+    window.onload = () => {
+        document.getElementById("removeMarker").addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            const dragDrop = window.editor.plugins.get("ElsaDragDrop");
+            dragDrop.removeMarker();
+        });
+
+        let shape = {width: "100px", height: "100px"};
+        let insertCommand = null;
+        document.getElementById("insertShape").addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            insertCommand = editorShapeInsertCommand1(shape, window.editor);
+            insertCommand.execute();
+        });
+
+        document.getElementById("undoInsert").addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            insertCommand.undo();
+        });
+
+        document.getElementById("redoInsert").addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            insertCommand.redo();
+        });
+
+        let deleteCommand = null;
+        document.getElementById("removeShape").addEventListener("mousedown", (e) => {
+            e.preventDefault();
+
+            deleteCommand = editorShapeDeleteCommand1(103, "100px", "100px", window.editor);
+            deleteCommand.execute();
+            // window.editor.execute("removeShape", {value: {id: 103, isUndoable: false}});
+        });
+
+        document.getElementById("undoRemove").addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            deleteCommand.undo();
+        });
+
+        document.getElementById("redoRemove").addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            deleteCommand.redo();
+        });
+
+        document.getElementById("selectShape").addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            window.editor.execute("selectShape", {value: {id: "103"}});
+        });
+
+        document.getElementById("resizeShape").addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            window.editor.execute("resizeShape", {
+                value: {
+                    externalId: 103, width: "200px", height: "200px", isUndoable: false
+                }
+            });
+        });
+
+        document.getElementById("printSelection").addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            console.log(selection);
+        });
+
+        document.getElementById("deleteContent").addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            window.editor.execute("delete");
+        });
+
+        document.getElementById("testSelection").addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            const editor = window.editor;
+            const model = editor.model;
+            const fontSizeCommand = editor.commands.get("fontSize");
+            console.log("before: ", fontSizeCommand.value);
+            const oldSelectionCloned = editor.cloneSelection(model.document.selection);
+
+            const range = model.createRangeIn(model.document.getRoot("test1"));
+            model.change(writer => writer.setSelection(range));
+            console.log("after: ", fontSizeCommand.value);
+
+
+            model.change(writer => writer.setSelection(oldSelectionCloned));
+            console.log("recovery: ", fontSizeCommand.value);
+
+        });
+
+        document.getElementById("testReadonly").addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            const editor = window.editor;
+            editor.enableReadOnlyMode("1");
+
+        });
+
+        let id = 100;
+        const generateId = () => {
+            return id++ + "";
+        }
+        ElsaEditor.create({}, {generateId: generateId})
+            .then(editor => {
+                window.editor = editor;
+                editor.renderToolbar(document.getElementById("document-toolbar"));
+                editor.registerRoot("test1", document.getElementById("document-editable"));
+                editor.registerRoot("test2", document.getElementById("document-2"));
+
+                editor.addDataListener("test1", (prevData, data, isSetManually) => {
+                    console.log("dataListener: ", data);
+                });
+
+                editor.addSelectionListener((arg) => {
+                });
+
+                editor.setData({test1: paragraphData});
+                editor.setData({test2: [{
+                        name: "paragraph", children: [{data: "222222"}]
+                    }]});
+
+                // focus相关.
+                editor.editing.view.focus();
+
+                // editor.editing.downcastDispatcher.on('remove:shape', (eventInfo, data, conversionApi) => {
+                //     console.log(data)
+                // });
+
+                // editor.model.document.on("change:data", (evt, batch) => {
+                //     const changes = editor.model.document.differ.getChanges({includeChangesInGraveyard: true});
+                //     console.log(changes);
+                // });
+
+                // editor.editing.view.document.on("beforeinput", (evt, data) => {
+                //     if (data.isComposing && data.inputType === "insertCompositionText") {
+                //         const textData = editor.getData({rootName: "test1"});
+                //         console.log("beforeinput: ", textData);
+                //     }
+                // }, {priority: "lowest"});
+
+                // editor.commands.get("forwardDelete").on("execute", (eventInfo, args) => {
+                //     const selection = editor.model.document.selection;
+                //     console.log(selection);
+                //     eventInfo.stop();
+                // }, {priority: "high"});
+                //
+                // editor.commands.get("delete").on("execute", (eventInfo, args) => {
+                //     const selection = editor.model.document.selection;
+                //     console.log(selection);
+                //     eventInfo.stop();
+                // }, {priority: "high"});
+                //
+                // editor.model.on("applyOperation", (eventInfo, data) => {
+                //    console.log();
+                // });
+
+                editor.on("test1:shape:remove", (evt, data) => {
+                    console.log("test1:shape:remove========", data);
+                });
+
+                editor.on("test1:shape:add", (eventInfo, data) => {
+                    console.log("test1:shape:add========", data)
+                });
+
+                editor.on("test1:shape:copy", (eventInfo, data) => {
+                    console.log("test1:shape:copy========", data)
+                });
+
+                editor.on("test1:shape:modify", (eventInfo, data) => {
+                    console.log("test1:shape:modify========", data)
+                });
+
+                editor.on("history:undo:event", (eventInfo, data) => {
+                    console.log("history:undo:event======================");
+                });
+            })
+            .catch(error => {
+                console.error('There was a problem initializing the editor.', error);
+            });
+    }
+</script>
+</body>
+</html>

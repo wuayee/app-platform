@@ -1,0 +1,8 @@
+{
+  "collaborationUrl": "//fit-co-test.lab.huawei.com/collaboration",
+  "getGraphUrl": "//fit-elsa-alpha.lab.huawei.com/elsa-backend/graph/get",
+  "saveGraphUrl": "//fit-elsa-alpha.lab.huawei.com/elsa-backend/graph/save",
+  "getUserUrl": "//fit-elsa-alpha.lab.huawei.com/elsa-backend/user/current",
+  "levitationDefault": "//s3-hc-dgg.hics.huawei.com/fit-elsa-alpha-g/levitationDefault.png",
+  "levitationActive": "//s3-hc-dgg.hics.huawei.com/fit-elsa-alpha-g/levitationActive.png"
+}

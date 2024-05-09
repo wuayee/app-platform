@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>dynamicForm-Demo</title>
+
+
+    <script type="module">
+        import {ALIGN, DOCK_MODE, PARENT_DOCK_MODE} from '../../common/const.js';
+        import {ELSA} from "../../core/elsaEntry.js";
+        import {PAGE_MODE} from "../../common/const.js";
+
+        const graphId = "dynamic-form-demo graph";
+        window.onload = async () => {
+            document.getElementById("loadFormData").addEventListener("click", () => {
+                const graph = window.g;
+                const form = graph.activePage.shapes[0];
+                const json = window.testStore.get();
+                form.loadJSON(json);
+            });
+
+            document.getElementById("serializeForm").addEventListener("click", () => {
+                const graph = window.g;
+                window.persistData = graph.activePage.shapes[0].persist();
+                console.log(window.persistData);
+            });
+
+            document.getElementById("deSerializeForm").addEventListener("click", async () => {
+                const graph = window.g;
+                await graph.activePage.loadForm(window.persistData);
+            });
+
+            document.getElementById("clearPage").addEventListener("click", async () => {
+                const graph = window.g;
+                await graph.activePage.clear();
+            });
+
+            document.getElementById("runtime").addEventListener("click", async () => {
+                const graph = window.g;
+                const runtimePage = graph.addPage("runtimePage");
+                runtimePage.mode = PAGE_MODE.RUNTIME;
+                runtimePage.loadForm(window.persistData);
+            });
+
+            document.getElementById("addRectangle").addEventListener("click", async () => {
+                const rectangle = window.g.activePage.createNew("rectangle", 200, 200);
+                rectangle.width = 100;
+                rectangle.height = 100;
+            });
+
+            const store = () => {
+                const self = {};
+
+                self.get = () => {
+                    return self.json;
+                };
+
+                self.store = (json) => {
+                    self.json = json;
+                };
+
+                return self;
+            };
+
+            window.testStore = store();
+
+            ELSA.newGraph(graphId, "graph", document.getElementById("main"))
+                .then(async agent => {
+                    agent.openCollaboration();
+                    const g = agent._graph;
+                    window.g = g;
+                    g.pageType = "formPage";
+                    g.import('/fit/portal/fit-elsa/plugins/dynamicForm/form.js')
+                        .import('/fit/portal/fit-elsa/plugins/dynamicForm/formPage.js')
+                        .then(shapes => {
+                            const p = g.addPage("dynamic form demo");
+
+                            let form = p.createNew("form", 200, 50);
+                            form.height = 300;
+
+                            // 水平布局测试
+                            // p.ignoreReact(() => {
+                            let d0 = p.createNew("htmlDiv", 210, 60);
+                            d0.container = form.id;
+                            d0.height = 70;
+
+                            const rect1 = p.createNew("htmlLabel", 210, 70);
+                            // rect1.width = 100;
+                            rect1.container = d0.id;
+                            rect1.height = 20;
+                            rect1.dockWeight = 1;
+                            rect1.text = "left";
+
+                            const rect2 = p.createNew("htmlLabel", 210, 70);
+                            // rect2.width = 100;
+                            rect1.container = d0.id;
+                            rect2.height = 20;
+                            rect2.dockWeight = 2;
+                            rect2.text = "middle";
+
+                            const rect3 = p.createNew("htmlLabel", 210, 70);
+                            // rect3.width = 100;
+                            rect1.container = d0.id;
+                            rect3.height = 20;
+                            rect3.dockWeight = 2;
+                            rect3.text = "right";
+                            // });
+
+                            // 纵向布局测试.
+                            // p.ignoreReact(() => {
+                            let d1 = p.createNew("htmlDiv", 210, 80);
+                            d1.container = form.id;
+                            d1.height = 200;
+                            d1.dockMode = DOCK_MODE.VERTICAL;
+
+                            const rect4 = p.createNew("htmlLabel", 210, 140);
+                            // rect4.width = 100;
+                            // rect4.height = 20;
+                            rect4.text = "top";
+                            rect4.container = d1.id;
+                            rect4.dockWeight = 1;
+                            // rect1.pDock = PARENT_DOCK_MODE.LEFT;
+
+                            const rect5 = p.createNew("htmlLabel", 210, 140);
+                            // rect5.width = 100;
+                            // rect5.height = 20;
+                            rect5.text = "middle";
+                            rect5.container = d1.id;
+                            rect5.dockWeight = 2;
+
+                            const rect6 = p.createNew("htmlLabel", 210, 140);
+                            // rect5.width = 100;
+                            // rect5.height = 20;
+                            rect6.text = "bottom";
+                            rect6.container = d1.id;
+                            rect6.dockWeight = 1;
+                            // rect2.pDock = PARENT_DOCK_MODE.BOTTOM;
+                            // });
+
+                            p.reset();
+
+                            const data = p.serialize();
+                            console.log(JSON.stringify(data));
+                        });
+
+                });
+        };
+
+    </script>
+</head>
+
+<body>
+<div>
+    <button id="loadFormData">loadFormData</button>
+    <button id="serializeForm">serializeForm</button>
+    <button id="deSerializeForm">deSerializeForm</button>
+    <button id="clearPage">clearPage</button>
+    <button id="runtime">runtime</button>
+    <button id="addRectangle">addRectangle</button>
+</div>
+<div id="main" style="width:1600px; height: 1200px;position: absolute;"></div>
+<div id="point" style="width:6px; height: 6px;position: absolute;left:397px;top:397px;background-color: brown;">
+</div>
+
+</body>
+
+</html>

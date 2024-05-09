@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>2021华为数机年会</title>
+
+    <script type="module">
+        import {ELSA} from '../../build/elsa.js';
+        import {getUrlParam} from "../../common/util.js";
+        import {ENV_CONFIG} from "../../config/envConfig.js";
+
+        let loadGraph = async () => {
+            const start = new Date().getTime();
+            await ELSA.import('./elsa.js', ["presentation"]);
+            let g = ELSA.presentation(document.getElementById("editor"), "HUA WEI - E.L.S.A");
+            g.ignoreHighQuality = true;
+            g.id = "anual-show-game";
+            g.session.id = "game-master"
+            g.baseUrl = ENV_CONFIG.collaborationUrl;
+
+            g.fullScreenCancelled = (id) => {
+                const page = g.edit(g.getPageIndex(id));
+                page.startAnimation();
+                page.invalidate();
+            };
+            g.initialize()
+                .then(async shapes => {
+                    (function createGamePage() {
+                        const RESOURCE_PATH = "../../resources/";
+                        let p1 = g.addPage("Chasing Peter", "CP");
+                        // p1.background = RESOURCE_PATH + "starNight2.webp";
+                        // p1.backColor = "blue";
+                        p1.pad = 0;
+                        p1.borderWidth = 0;
+                        const FRAME = p1.getFrame();
+                        FRAME.focusBackColor = FRAME.backColor = "transparent";
+                        FRAME.id = "CP-frame";
+                        FRAME.width = 2816;
+                        FRAME.height = 1280;
+                        FRAME.background = RESOURCE_PATH + "starNight2.webp";
+
+                        const GAME_MODE_TYPE = getUrlParam("modeType");
+                        let timeKey = "time";
+                        if (GAME_MODE_TYPE && GAME_MODE_TYPE === 'try') {
+                            timeKey = "timeTry";
+                        }
+                        if (!p1.tag) {
+                            p1.tag = {};
+                        }
+                        p1.tag.gameTime = parseFloat(getUrlParam(timeKey)) || 1.5;
+
+                        //p1.onLoading = page => {
+                        const loadCode = page => {
+                            page.getFrame().getVector().contains = () => {
+                                return true;
+                            };
+                            const SELF_ID = getUrlParam("id") || page.graph.session.id;
+                            page.graph.session.name = SELF_ID;
+                            page.history.muting = true;//禁止历史
+                            page.predators = [];
+                            page.scoredShapes = [];
+                            page.geoScale = page.mode === PAGE_MODE.PRESENTATION;
+                            let bgmPlayer;
+                            const FRAME = page.getFrame();
+                            if (page.mode === PAGE_MODE.PRESENTATION && !getUrlParam("noBgm")) {
+                                page.warmupAudio("bgm", "gameBgm.mp3");
+                            }
+
+                            page.ignoreCoEditFields = ["x", "y", "rotateDegree", "borderColor"];
+                            // page.mode === PAGE_MODE.VIEW && page.ignoreCoEditFields.push("visible");
+                            page.coEditingSyncMe = true;
+                            page.status = "pausing";
+                            page.serializedFields.batchAdd("status", "timingValue");
+                            page.addDetection(["status"], (property, value, preValue) => {
+                                if (value === preValue) {
+                                    return;
+                                }
+                                if (value === "pausing") {
+                                    page.count.status = value;
+                                    (bgmPlayer) && bgmPlayer.pause();
+                                } else {
+                                    if (page.mode === PAGE_MODE.PRESENTATION) {
+                                        bgmPlayer = page.playAudio("bgm");
+                                        bgmPlayer.loop = true;
+                                    }
+                                }
+                            });
+                            page.addDetection(["timingValue"], (property, value, preValue) => {
+                                if (page.count.status === "pausing") {
+                                    page.count.nowValue = value;
+                                }
+                                if (value === preValue) {
+                                    return;
+                                }
+                                page.status = value <= 0 ? "pausing" : "running";
+                                if (value <= 0 && bgmPlayer !== undefined) {
+                                    bgmPlayer.pause();
+                                    bgmPlayer.currentTime = 0;
+                                }
+                                if (value <= 0) {
+                                    if (page.mode === PAGE_MODE.PRESENTATION && page.scoredShapes.length > 0) {
+                                        putPrizeBoard(page);
+                                    } else {
+                                        putGameEnd(page);
+                                    }
+                                }
+                            });
+
+                            window.curPage = page;
+                            let coEditingCreateNew = page.coEditingCreateNew;
+
+                            function createFicCoinPool(shapeType) {
+                                return cachePool(1, (x, y, id, values) => {
+                                    const obj = coEditingCreateNew.call(this, shapeType, x, y, id, values);
+                                    let setProperty = obj.setProperty;
+                                    obj.setProperty = (property, value) => {
+                                        if (property === 'container') {
+                                            obj.remove();
+                                            return;
+                                        }
+                                        setProperty.call(this, property, value);
+                                    }
+                                    return obj;
+                                }, (self, x, y, id) => {
+                                    self.page.disableReact = true;
+                                    self.page.isReady = false;
+                                    self.id = id;
+                                    self.x = x;
+                                    self.y = y;
+                                    self.grade = 0;
+                                    self.passed = 0;
+                                    self.page.isReady = true;
+                                    self.page.disableReact = false;
+                                    return self;
+                                }, null, true);
+                            }
+
+                            function createMoneyPool(shapeType) {
+                                return cachePool(15, (x, y, id, values) => {
+                                    const obj = coEditingCreateNew.call(this, shapeType, x, y, id, values);
+                                    let setProperty = obj.setProperty;
+                                    obj.setProperty = (property, value) => {
+                                        if (property === 'container') {
+                                            obj.remove();
+                                            return;
+                                        }
+                                        setProperty.call(this, property, value);
+                                    }
+                                    return obj;
+                                }, (self, x, y, id, values) => {
+                                    self.page.disableReact = true;
+                                    self.page.isReady = false;
+                                    self.id = id;
+                                    self.x = x;
+                                    self.y = y;
+                                    self.grade = 0;
+                                    self.passed = 0;
+                                    self.page.isReady = true;
+                                    self.page.disableReact = false;
+                                    return self;
+                                }, (shape, x, y, id, values) => {
+                                    return shape.grade === values.grade;
+                                }, true);
+                            }
+
+                            page.coEditingCreateNew = (shapeType, x, y, id, values) => {
+                                if (shapeType === 'money') {
+                                    if (!page.moneys) {
+                                        page.moneys = createMoneyPool.call(this, shapeType)
+                                    }
+                                    return page.moneys.show(x, y, id, values);
+                                }
+                                if (shapeType === 'fitCoin') {
+                                    if (!page.fitCoins) {
+                                        page.fitCoins = createFicCoinPool.call(this, shapeType)
+                                    }
+                                    return page.fitCoins.show(x, y, id, values);
+                                }
+                                return coEditingCreateNew.call(this, shapeType, x, y, id, values);
+                            }
+
+                            // page.graph.session.id = "peter";
+                            FRAME.seleackColor = FRAME.backColor = "transparent";
+
+                            // const background = new Image();
+                            // background.src = RESOURCE_PATH + "starNight2.webp";
+                            // background.onload = () => page.drawer.draw();
+                            // page.drawer.drawLogo = (context, canvasWidth, canvasHeight) => {
+                            // context.drawImage(background, FRAME.x + (page.width / page.drawer.pixelRate.ratioX - FRAME.width) / 2, FRAME.y + (page.height / page.drawer.pixelRate.ratioY - FRAME.height) / 2, FRAME.width, FRAME.height);
+                            // context.drawImage(background, FRAME.x + page.x, FRAME.y + page.y, FRAME.width, FRAME.height);
+                            //     drawBackground(context, canvasWidth / (2 * page.drawer.pixelRate.ratioX),
+                            //         canvasHeight / (2 * page.drawer.pixelRate.ratioY));
+                            // };
+
+                            // const drawBackground = (context, x, y) => {
+                            // if (page.countdown) {
+                            //     const frame = page.getFrame();
+                            //     const countdown = page.countdown;
+                            //     countdown.width = 300;
+                            //     countdown.height = 90;
+                            //     countdown.x = frame.x + frame.width / 2 - countdown.width / 2;
+                            //     countdown.y = frame.y + frame.height / 2 - countdown.height / 2;
+
+                            // const rt = page.rotator;
+                            // rt.width = rt.height = 530;
+                            // rt.x = frame.x + frame.width / 2 - rt.width / 2;
+                            // rt.y = frame.y + frame.height / 2 - rt.height / 2;
+
+                            // }
+                            // context.strokeStyle = "whitesmoke";
+                            // context.fillStyle = "whitesmoke";
+
+                            // const drawArc = (angle, context, radius, width = 10, step = 0.01) => {
+                            //     context.beginPath();
+                            //     context.lineWidth = width;
+                            //     context.arc(x, y, radius, angle, angle + step * Math.PI);
+                            //     context.stroke();
+                            // };
+                            // const drawDot = (context, x, y, radius = 7) => {
+                            //     context.beginPath();
+                            //     context.arc(x, y, radius, 0, 2 * Math.PI);
+                            //     context.fill();
+                            // }
+
+                            // let degree = 30;
+                            // for (let i = 0; i < 360; i += 10) {
+                            //     // drawArc((i + degree) / 180 * Math.PI, context, 270, 1);
+                            //     drawArc((i - degree) / 180 * Math.PI, context, 230, 15, 0.005);
+                            //     // drawArc((i + degree) / 180 * Math.PI, context, 190, 1, 0.02);
+                            // }
+
+                            // context.lineWidth = 2;
+                            // const drawCurve = (context, fx, fy, tx, ty) => {
+                            //     drawDot(context, fx, fy);
+                            //     const R = 15;
+                            //     context.beginPath();
+                            //     context.moveTo(fx, fy);
+                            //     const d1 = (tx - fx) / Math.abs(tx - fx);
+                            //     const d2 = (ty - fy) / Math.abs(ty - fy);
+                            //     context.lineTo(tx - R * d1, fy);
+                            //     context.quadraticCurveTo(tx, fy, tx, fy + R * d2);
+                            //     context.lineTo(tx, ty);
+                            //     context.stroke();
+                            //     drawDot(context, tx, ty);
+                            // }
+                            // drawCurve(context, x - 650, y - 300, x - 80, y - 70);
+                            // drawCurve(context, x + 380, y - 410, x + 70, y - 70);
+                            // drawCurve(context, x + 50, y - 140, x, y - 70);
+                            // drawCurve(context, x + 50, y - 140, x + 660, y - 50);
+                            // drawCurve(context, x + 680, y + 190, x + 50, y + 60);
+                            // drawCurve(context, x + 150, y - 10, x + 260, y + 250);
+                            // drawCurve(context, x + 380, y + 450, x - 30, y + 60);
+                            // drawCurve(context, x - 850, y - 70, x - 400, y - 10);
+                            // drawCurve(context, x - 150, y + 10, x - 400, y - 10);
+
+                            // context.roundRect(x - 150, y - 70, 300, 130, 15, "transparent", "white", 2);
+                            // page.mode === PAGE_MODE.PRESENTATION && context.roundRect(x - 1000, y + 100, 400, 500, 15, "rgba(255,255,255,0.25)", "whitesmoke", 2);
+                            // context.roundRect(x - 800, y + 100, 400, 500, 15, "rgba(255,255,255,0.25)", "whitesmoke", 2);
+                            // }
+
+                            const bushit = page => {
+                                page.predator = () => {
+                                    const says = ["是不是有人？", "哥大摇大摆的来了", "有没有人不服？", "请看我的表演！", "别惹我哈！", "我就爱嘚瑟！",
+                                        "啷里格啷.....", "我是如此的孤独...", "姚帅为什么那么帅！我不服", "尔等无法理解我的世界...", "今天我就是来拿一等奖的！"];
+                                    const index = Math.floor(Math.random() * says.length);
+                                    return [says[index], index];
+                                };
+                                page.hi = () => {
+                                    const his = ["起开，别挡道", "别跟我抢Peter！", "要不要波一个？", "敢不敢今晚喝一个？", "你有没有看见孟总？我找他切磋一下",
+                                        "姚帅昨晚是不是喝多了？他为啥一直盯着你看", "你是不是不服？", "唠会嗑不？", "我暗恋项飞"];
+                                    const index = Math.floor(Math.random() * his.length);
+                                    return [his[index], index];
+                                };
+                                page.answer = index => {
+                                    const answers = ["别走，下课后走道见！", "Peter是我的！", "不要脸？", "跟你很熟吗？", "咋地？孟总在我家喝茶呢",
+                                        "我一个大老爷们，他看我干啥！", "我谁都不扶，就扶你", "我是来抽奖的，谁跟你唠嗑", "哥，你有病！"];
+                                    return [answers[index], index];
+                                };
+                                page.rub = () => {
+                                    const his = ["此路是我开，留下分，人滚开！", "Peter抢不到，抢你", "意外收获...", "兄弟够意思，谢了！", "嘿嘿，碰巧路过....",
+                                        "开抢，对不住啦", "好汉不留名，在此别过，谢谢你的爱", "人生要靠机遇的...", "孟总也帮不了你了，哄嘚"];
+                                    const index = Math.floor(Math.random() * his.length);
+                                    return [his[index], index];
+                                };
+                                page.shit = index => {
+                                    const answers = ["我的分呀！", "流氓，禽兽！", "苍天会饶过谁？", "把分还我！", "出来混，你总要还的！", "我的辛苦钱......",
+                                        "我恨你......", "你等着，等我抢回来", "我的一等奖飞了......"];
+                                    return [answers[index], index];
+                                };
+                                page.love = id => {
+                                    const loves = ["带我，我很好带的！", "年终奖能多点不？", "虽然我是男的，能不能亲你一下", "我抓住你了，快来人",
+                                        "我是不是一等奖，不然你别想走！", "签个名呗"];
+                                    const index = Math.floor(Math.random() * loves.length);
+                                    return [(id + "," + loves[index]), index];
+                                };
+                                page.feedback = index => {
+                                    const feedbacks = ["先减点肥，带不动！", "五毛够不？", "你再这样，我可要主动了！", "我数三下...", "你全家都是一等奖！",
+                                        "来，给爷笔墨伺候"];
+                                    return [feedbacks[index], index];
+                                };
+                                page.prey = () => {
+                                    const preys = ["来抓我呀！", "孤独，寂寞，高处不胜寒！", "成功...对我来讲太容易", "追不上了吧!", "大漠孤烟直，谁与我争疯！",
+                                        "不要来追哥，哥只是传说..."];
+                                    const index = Math.floor(Math.random() * preys.length);
+                                    return [preys[index], index];
+                                };
+                            };
+                            bushit(page);
+
+                            const putBoard = (page) => {
+                                const ranking = page.createNew("vector", 405, 740);
+                                ranking.container = FRAME.id;
+                                ranking.serializable = false;
+                                ranking.allowCoEdit = false;
+                                ranking.enableAnimation = true;
+                                ranking.borderColor = "white";
+                                ranking.borderWidth = 2;
+                                ranking.width = ranking.originWidth = 400;
+                                ranking.height = ranking.originHeight = 500;
+                                ranking.cornerRadius = 15;
+                                ranking.backColor = "rgba(255,255,255,0.25)";
+                                page.moveIndexBottom(ranking);
+                                const drawRank = (context, width, height, global, shape) => {
+                                    const boardx = -200, boardy = -250, row = 47;
+                                    shape.page.scoredShapes.forEach((s, i) => {
+                                        // context.fillStyle = "red";
+                                        // context.rect(-100,-100,200,200);
+                                        // context.fill();
+                                        // return;
+                                        if (i > 9) {
+                                            return;
+                                        }
+                                        context.fillStyle = "rgba(255,255,255,0.4)";
+                                        context.strokeStyle = "lightgray";
+                                        if (i === 0) {
+                                            context.fillStyle = "gold";
+                                        }
+                                        if (i === 1) {
+                                            context.fillStyle = "silver";
+                                        }
+                                        if (i === 2) {
+                                            context.fillStyle = "RGB(184,115,51)";
+                                        }
+                                        context.beginPath();
+                                        context.arc(boardx + 30, boardy + 38 + i * row, 14, 0, Math.PI * 2);
+                                        context.fill();
+                                        context.stroke();
+                                        context.fillStyle = "darkorange";
+                                        context.font = "normal bold 25px arial";
+                                        context.fillText(s.id, boardx + 80, boardy + (i + 1) * row);
+                                        context.fillText(s.score, boardx + 300, boardy + (i + 1) * row);
+                                    })
+                                }
+                                ranking.drawDynamicCode = drawRank.toString();
+                            };
+                            page.mode === PAGE_MODE.PRESENTATION && putBoard(page);
+                            //putBoard(page);
+
+                            const putCountdown = page => {
+
+                                page.backLines = page.createNew("backLines", 545, 195);
+                                page.backLines.container = FRAME.id;
+                                page.backLines.serializable = false;
+                                page.moveIndexBottom(page.backLines);
+
+                                page.rotator = page.createNew("rotator", 800, 450);
+                                page.rotator.container = FRAME.id;
+                                page.rotator.serializable = false;
+                                page.rotator.width = page.rotator.height = 530;
+                                page.rotator.x = FRAME.x + FRAME.width / 2 - page.rotator.width / 2;
+                                page.rotator.y = FRAME.y + FRAME.height / 2 - page.rotator.height / 2;
+                                page.moveIndexBottom(page.rotator);
+
+                                page.count = page.createNew("countdown", 800, 450);
+                                page.count.container = FRAME.id;
+                                page.count.serializable = false;
+                                page.count.borderWidth = 0;
+                                page.count.borderColor = "whitesmoke";
+                                page.count.backColor = "transparent";
+                                page.count.fontColor = "whitesmoke";
+                                page.count.initValue = page.count.nowValue = 60 * page.tag.gameTime;
+                                page.count.ticking = () => {
+                                    page.timingValue = page.count.nowValue;
+
+                                    page.shapes.filter(s => s.isType('money') && s.get("enableAnimation")).forEach(s => {
+                                        page.communication.invoke("publish_page_data", [{
+                                            page: page.id,
+                                            shape: s.id,
+                                            skipSelf: false,
+                                            value: {type: s.type, passed: (s.passed + 1)}
+                                        }], page.id);
+                                    });// s.passed++);
+
+                                };
+                                page.count.width = 300;
+                                page.count.height = 90;
+                                page.count.x = FRAME.x + FRAME.width / 2 - page.count.width / 2;
+                                page.count.y = FRAME.y + FRAME.height / 2 - page.count.height / 2;
+                                page.moveIndexBottom(page.count);
+                            }
+                            putCountdown(page);
+
+                            const putMe = () => {
+                                let pr = page.createNew("proton", FRAME.width * Math.random(), FRAME.height * Math.random());
+                                pr.container = FRAME.id;
+                                pr.id = SELF_ID;
+                                pr.text = page.graph.session.name;
+                                page.cache = {x: pr.x, y: pr.y, direction: 0};
+                                page.me = pr;
+
+                            }
+
+                            const putMyData = page => {
+                                const data = page.createNew("rectangle", 10, 10, "my-data");
+                                data.serializable = false;
+                                data.container = FRAME.id;
+                                data.width = 360;
+                                data.pad = 0;
+                                data.height = 58;
+                                data.lineHeight = 2;
+                                data.fontSize = 32;
+                                data.backColor = "rgba(255,255,255,0.3)";
+                                data.fontColor = "white";
+                                data.cornerRadius = 15;
+                                data.text = page.graph.session.id + "得分：0";
+                                page.data = data;
+                            }
+
+                            const putWheel = (page, x, y) => {
+                                let w = page.createNew("wheel", x, y);
+                                const onCommand = (dx, dy, direction, host) => {
+                                    if (host.page.status === "pausing") {
+                                        return;
+                                    }
+                                    //host.page.cache.direction = direction;
+                                    host.page.me.tag = {direction: direction};
+                                };
+                                w.clickCode = onCommand.toString();
+                                w.width = w.originWidth * 2.5;
+                                w.height = w.originHeight * 2.5;
+
+                            };
+
+                            const putFire = (page, x, y) => {
+                                let f = page.createNew("fire", x, y);
+                                const onClick = (page, host) => {
+                                    (page.status === "running") && page.sendKiss(page);
+                                }
+                                f.clickCode = onClick.toString();
+                                f.width = f.originWidth * 2.2;
+                                f.height = f.originHeight * 2.2;
+                            }
+
+                            const putFullScreen = (page, x, y) => {
+                                let f = page.createNew("fullScreen", x, y);
+                                f.width = f.originWidth * 1.5;
+                                f.height = f.originHeight * 1.5;
+                            }
+
+                            const putBaseUrlTip = (page) => {
+                                const text = page.createNew("text", 2150, 10, null);
+                                // text.container = FRAME.id;
+                                text.text = "TEST: " + page.graph.baseUrl;
+                                text.fontSize = 36;
+                                text.width = 800;
+                                text.fontColor = "whitesmoke";
+                            }
+
+                            const putStartOrReplay = (id, page, text, height, click) => {
+                                const btn = page.createNew("rectangle", 2650, height, id);
+                                // btn.container = FRAME.id;
+                                btn.width = 140;
+                                btn.height = 100;
+                                btn.cornerRadius = 15;
+                                btn.text = text;
+                                btn.fontSize = 40;
+                                btn.fontColor = "whitesmoke";
+                                btn.pad = 20;
+                                btn.borderWidth = 2;
+                                btn.borderColor = "whitesmoke";
+                                btn.backColor = "rgba(255,255,255,0.4)";
+                                btn.click = click;
+                                btn.ignorePageMode = true;
+                            }
+
+                            const putQrCode = (page) => {
+                                const qr = page.createNew("image", 0, 0);
+                                qr.id = 'qrCode';
+                                qr.resize(400, 400)
+                                qr.borderWidth = 4;
+                                qr.borderColor = 'steelBlue';
+                                qr.shadow = true;
+                                qr.src = '../../resources/qr.png';
+                                qr.moveTo(FRAME.width / 2 - qr.width / 2, FRAME.height / 2 - qr.height / 2);
+                            }
+
+                            const putPrizeBoard = (page) => {
+                                const pbW = 1440, pbH = 1100;
+                                const pbX = FRAME.width / 2 - pbW / 2;
+                                const pbY = FRAME.height / 2 - pbH / 2;
+
+                                page.count.visible = false;
+
+                                const pbContainer = page.createNew("container", pbX, pbY);
+                                pbContainer.allowCoEdit = false;
+                                // pbContainer.serializable = false;
+                                pbContainer.container = page.id;
+                                pbContainer.serializable = false;
+                                pbContainer.width = pbW;
+                                pbContainer.height = pbH;
+                                pbContainer.borderColor = 'white';
+                                pbContainer.borderWidth = 5;
+                                pbContainer.backColor = 'rgba(85,85,85,0.6)';//'rgba(255,255,255,0.4';
+                                pbContainer.shadow = true;
+                                pbContainer.cornerRadius = 18;
+                                pbContainer.overflowHidden = true;
+                                pbContainer.emphasized = true;
+
+                                const title = page.createNew("text", pbX + 250, pbY + 20);
+                                title.allowCoEdit = false;
+                                title.container = pbContainer.id;
+                                title.text = "恭 喜 以 下 同 学\r\n虎 力 全 开，收 获 满 满 能 量";
+                                title.fontSize = 40;
+                                title.fontColor = "whitesmoke";
+                                title.width = 1000;
+                                title.height = 60;
+
+                                const line = page.createNew("rectangle", pbX + 20, pbY + 160);
+                                line.allowCoEdit = false;
+                                line.container = pbContainer.id;
+                                line.backColor = "white";
+                                line.borderColor = "white";
+                                line.text = "";
+                                line.width = pbW - 40;
+                                line.height = 6;
+
+                                const top = 200, step = 464;
+                                const putList = step => {
+                                    const list = page.createNew("rectangle", pbX + 44 + step, pbY + top);
+                                    list.borderColor = "whitesmoke";
+                                    list.allowCoEdit = false;
+                                    list.container = pbContainer.id;
+                                    list.shadow = true;
+                                    list.borderWidth = 3;
+                                    list.cornerRadius = 13;
+                                    list.backColor = "rgba(255,255,255,0.2)";
+                                    list.width = 420;
+                                    list.height = 850;
+                                    list.fontSize = 24;
+                                    // list.fontWeight = FONT_WEIGHT.LIGHTER;
+                                    list.padLeft = 20;
+                                    list.pad = 0;
+                                    list.fontColor = "white";
+                                    list.hAlign = ALIGN.LEFT;
+                                    list.text = "";
+                                    return list;
+                                }
+                                const list1 = putList(0);
+                                const list2 = putList(step);
+                                const list3 = putList(2 * step);
+
+                                function buildCandidates() {
+                                    let candidates = page.shapes.filter(s => s.role === "predator")
+                                        .map(s => {
+                                            return {
+                                                id: s.id, name: s.text, score: s.score, randomValue: Math.random()
+                                            }
+                                        });
+                                    if (candidates.length < PRIZE_NUM + 10) {
+                                        candidates = candidates.concat(page.tag.backupCandidates.filter(s => candidates.findIndex(c => s.id === c.id) < 0)
+                                            .map(s => {
+                                                return {
+                                                    id: s.id, name: s.name, score: 0, randomValue: Math.random()
+                                                }
+                                            }))
+                                    }
+                                    return candidates;
+                                }
+
+                                const PRIZE_NUM = getUrlParam("prizeNum") || 66;
+
+                                let candidates = buildCandidates();
+                                const names = candidates
+                                    .orderByDesc("randomValue")
+                                    .orderByDesc("score")
+                                    .splice(0, PRIZE_NUM);
+                                // const names = mockNames();//this is for mock
+
+                                const fillList = (list, index) => {
+                                    for (let i = index * 22; i < (index + 1) * 22; i++) {
+                                        if (i > names.length - 1) {
+                                            return;
+                                        }
+                                        // list.text += "\r\n工号: " + names[index].id + " 姓名:" + names[index].name;
+                                        list.text += "\r\n工号: " + names[i].id;
+                                    }
+                                }
+
+                                fillList(list1, 0);
+                                fillList(list2, 1);
+                                fillList(list3, 2);
+
+                                const GAME_MODE_TYPE = getUrlParam("modeType");
+                                if (GAME_MODE_TYPE && GAME_MODE_TYPE === 'try') {
+                                    return;
+                                }
+                                page.communication.invoke("publish_prize", {
+                                    prize: 'game', bingoEmployees: names
+                                }, page.id);
+                            }
+
+                            const putGameEnd = (page) => {
+                                const pb = page.createNew("rectangle", 0, 0);
+                                pb.allowCoEdit = false;
+                                pb.serializable = false;
+                                pb.borderColor = "white";
+                                pb.borderWidth = 5;
+                                pb.shadow = true;
+                                pb.backColor = "rgba(25,25,25,0.2)";
+                                pb.cornerRadius = 15;
+                                pb.container = page.id;
+                                pb.width = 400;
+                                pb.height = 200;
+                                pb.x = FRAME.width / 2 - pb.width / 2;
+                                pb.y = FRAME.height / 2 - pb.height / 2 - 5;
+                                pb.fontSize = 50;
+                                pb.pad = 55;
+                                pb.fontColor = 'white';
+                                pb.text = '游 戏 结 束';
+                                page.count.visible = false;
+                            }
+                            // putBaseUrlTip(page);
+                            if (page.mode !== PAGE_MODE.PRESENTATION) {
+                                putMe();
+                                putMyData(page);
+                                putWheel(page, 200, 620);
+                                putFire(page, 2150, 950);
+                                putFullScreen(page, 2650, 600);
+                            } else {
+                                const time = getUrlParam("time");
+                                const timeTry = getUrlParam("timeTry");
+                                const noBgm = getUrlParam("noBgm");
+                                const PRIZE_NUM = getUrlParam("prizeNum") || 66;
+                                let url = './anualShow-game-present.html?time=' + time + "&timeTry=" + timeTry + "&prizeNum=" + PRIZE_NUM;
+                                if (noBgm) {
+                                    url = url + "&noBgm=" + noBgm;
+                                }
+                                putStartOrReplay("new-round", page, "开局", 60, () => {
+                                    page.communication.invoke("start_game", page.graph.session.id);
+                                    window.location.replace(url);
+                                });
+                                putStartOrReplay("try-ganme", page, "试玩", 200, () => {
+                                    page.communication.invoke("start_game", page.graph.session.id);
+                                    window.location.replace(url + "&modeType=try");
+                                });
+                                putQrCode(page);
+                            }
+
+                            // STEP = 5;
+                            page.kissTime = new Date().getTime()
+                            page.sendKiss = page => {
+                                if (new Date().getTime() - page.kissTime < 1000) {
+                                    return;
+                                }
+                                //page.me.kissed = {};
+                                page.communication.invoke("publish_page_data", [{
+                                    page: page.id,
+                                    shape: page.me.id,
+                                    skipSelf: false,
+                                    value: {kissed: {}, type: "proton"}
+                                }], page.id);
+                                console.log("im kissing....");
+                                page.kissTime = new Date().getTime();
+                            };
+                            const keyPressed = page.keyPressed;
+                            page.keyPressed = e => {
+                                if (e.code === "KeyL" && page.mode === PAGE_MODE.PRESENTATION) {
+                                    const newStatus = page.status === "pausing" ? "running" : "pausing";
+                                    page.status = newStatus;
+                                    page.communication.invoke("publish_page_data", [{
+                                        page: page.id,
+                                        shape: page.id,
+                                        skipSelf: false,
+                                        value: {"status": newStatus, type: page.type}
+                                    }], page.id);
+
+                                    page.count.status = newStatus;
+                                    if (newStatus === "running") {
+                                        const qrCodeShape = page.shapes.find(s => s.id === 'qrCode');
+                                        qrCodeShape && qrCodeShape.remove();
+                                    }
+                                    return false;
+                                }
+
+                                if (page.status === "running" && page.mode !== PAGE_MODE.PRESENTATION) {
+                                    const me = page.me;
+                                    if (!me) {
+                                        return;
+                                    }
+
+                                    if (e.key.indexOf("Left") >= 0) {
+                                        //page.cache.direction = Math.PI;
+                                        me.tag = {direction: Math.PI};
+                                    }
+                                    if (e.key.indexOf("Right") >= 0) {
+                                        //page.cache.direction = 0;
+                                        me.tag = {direction: 0};
+                                    }
+                                    if (e.key.indexOf("Up") >= 0) {
+                                        //page.cache.direction = 3 * Math.PI / 2;
+                                        me.tag = {direction: 3 * Math.PI / 2};
+                                    }
+                                    if (e.key.indexOf("Down") >= 0) {
+                                        //page.cache.direction = Math.PI / 2;
+                                        me.tag = {direction: Math.PI / 2};
+                                    }
+                                    if (e.code === "Space") {
+                                        //me.tag = { direction: page.cache.direction, kissed: true };
+                                        page.sendKiss(page);
+                                    }
+
+                                }
+
+                                // return true;
+                                return keyPressed.call(page, e);
+                            };
+
+                        };
+
+                        // p1.loadingCode = p1.onLoading.toString();
+                        p1.loadCode = loadCode.toString();
+                        const initCities = page => {
+                            let chengdu = page.createNew("image", 400, 500);
+                            chengdu.src = RESOURCE_PATH + '成都.webp';
+                            chengdu.borderColor = "orange";
+                            chengdu.borderWidth = 3;
+                            chengdu.globalAlpha = 0.5;
+                            chengdu.shadow = true;
+                            chengdu.width = chengdu.height = 150;
+
+                            let xian = page.createNew("image", 600, 250);
+                            xian.src = RESOURCE_PATH + '西安.webp';
+                            xian.borderColor = "darkred";
+                            xian.borderWidth = 3;
+                            xian.globalAlpha = 0.5;
+                            xian.shadow = true;
+                            xian.width = 150
+                            xian.height = 150;
+
+                            let hangzhou = page.createNew("image", 2100, 750);
+                            hangzhou.src = RESOURCE_PATH + '杭州.webp';
+                            hangzhou.borderColor = "plum";
+                            hangzhou.borderWidth = 3;
+                            hangzhou.globalAlpha = 0.5;
+                            hangzhou.shadow = true;
+                            hangzhou.width = 250
+                            hangzhou.height = 150;
+
+                            let suzhou = page.createNew("image", 2000, 600);
+                            suzhou.src = RESOURCE_PATH + '苏州.webp';
+                            suzhou.borderColor = "darkgray";
+                            suzhou.borderWidth = 3;
+                            suzhou.globalAlpha = 0.5;
+                            suzhou.shadow = true;
+                            suzhou.width = 150
+                            suzhou.height = 150;
+
+                            let beijing = page.createNew("image", 1800, 150);
+                            beijing.src = RESOURCE_PATH + '北京.webp';
+                            beijing.borderColor = "darkorange";
+                            beijing.borderWidth = 3;
+                            beijing.globalAlpha = 0.5;
+                            beijing.shadow = true;
+                            beijing.width = 150
+                            beijing.height = 150;
+
+                            let shenzhen = page.createNew("image", 1800, 1000);
+                            shenzhen.src = RESOURCE_PATH + '深圳.webp';
+                            shenzhen.borderColor = "darkgreen";
+                            shenzhen.borderWidth = 3;
+                            shenzhen.globalAlpha = 0.5;
+                            shenzhen.shadow = true;
+                            shenzhen.width = 150
+                            shenzhen.height = 150;
+
+                            let dongguan = page.createNew("image", 1600, 900);
+                            dongguan.src = RESOURCE_PATH + '东莞.webp';
+                            dongguan.borderColor = "dimgray";
+                            dongguan.borderWidth = 3;
+                            dongguan.globalAlpha = 0.5;
+                            dongguan.shadow = true;
+                            dongguan.width = 150
+                            dongguan.height = 150;
+                        };
+                        initCities(p1);
+
+                        const putLeaders = (page) => {
+                            let peter = page.shapes.find(s => s.id === "peter");
+                            if (peter !== undefined) {
+                                return;
+                            }
+
+                            const data = [];
+                            const SZ = {x: 1850, y: 1050};
+                            const CD = {x: 450, y: 550};
+                            const HZ = {x: 2200, y: 800};
+                            const SSZ = {x: 2050, y: 650};
+                            const BJ = {x: 1850, y: 200};
+                            const XA = {x: 650, y: 300};
+                            const DG = {x: 1650, y: 950};
+                            const C = {x: FRAME.width / 2 - 50, y: FRAME.height / 2 - 400};
+
+                            const putLeader = (id, name, city, offsetX = 0, offsetY = 0, grade = 3) => {
+                                const lead = page.createNew("proton", city.x + offsetX, city.y + offsetY, id);
+                                // const lead = page.createNew("proton", city.x, city.y, Math.round(Math.random() * 10000));
+                                lead.text = name;
+                                lead.role = "prey";
+                                lead.grade = grade;
+                                lead.width = lead.originWidth * 8;
+                                lead.height = lead.originHeight * 8;
+                                lead.container = FRAME.id;
+                                data.push({
+                                    page: self.id,
+                                    shape: lead.id,
+                                    value: {x: lead.x, y: lead.y, type: "proton", role: "prey"}
+                                });
+
+                            }
+
+                            putLeader("709314", "周跃峰", C, 0, 0, 5);
+                            putLeader("604239", "黄涛", SZ, 0, -100);
+                            putLeader("334559", "王怡东", CD, -20, -20);
+                            putLeader("614861", "段爱国", DG, -20, -20);
+                            putLeader("413026", "孙权", SSZ);
+                            putLeader("630692", "庞鑫", XA, -20, -20);
+                            putLeader("342232", "孟广斌", HZ, -20, -20);
+                            putLeader("340543", "董斐", SZ, 100, 30);
+                            putLeader("364363", "范国平", BJ, -20, -20);
+                            putLeader("340616", "姚习武", SZ, -60, 20);
+                        };
+                        putLeaders(p1);
+
+                        p1.timer = (page, time) => {
+                            const MY_COLOR = "red";
+                            const FRAME = page.getFrame();
+                            const me = page.me;
+                            if (me && me.borderColor !== MY_COLOR) {
+                                me.borderColor = MY_COLOR;
+                                me.enableAnimation = true;
+                                me.invalidate();
+                                page.dirties = {};
+                                page.dirties[me.id] = {};
+                                page.dirties[me.id].x = me.x;
+                                page.dirties[me.id].y = me.y;
+                                page.dirties[me.id].type = me.type;
+                            }
+
+                            (!page.degree) && (page.degree = 0);
+                            (page.mode === PAGE_MODE.PRESENTATION) && page.shapes.filter(s => s.isType('money') && s.x === 0 && s.y === 0).forEach(s => s.remove());
+                            //dynamic money
+                            if (page.status === "running") {
+                                page.degree += 0.1;
+                                const x = Math.random() * (FRAME.width - 150);
+                                const y = Math.random() * (FRAME.height - 150);
+                                if ((Math.round(page.degree * 10) % 120) === 0 && page.count.status === "running") {
+                                    page.communication.invoke("publish_page_data", [{
+                                        page: page.id,
+                                        shape: page.graph.uuid(),
+                                        skipSelf: false,
+                                        value: {x, y, grade: Math.ceil(Math.random() * 3), type: "money"}
+                                    }], page.id);
+                                    // const m = page.createNew("money", x, y);
+                                    // m.grade = Math.ceil(Math.random() * 3);
+                                }
+                                if ((Math.round(page.degree * 10) % 200) === 0 && page.count.status === "running") {
+                                    // const m = page.createNew("magic", x, y);
+                                    const fit = page.shapes.find(s => s.isType('fitCoin') && s.visible);
+                                    if (fit) {
+                                        // fit.remove();
+                                        // page.shapes.remove(s => s.id === fit.id);
+                                        page.communication.invoke("publish_page_data", [{
+                                            page: page.id,
+                                            shape: fit.id,
+                                            skipSelf: false,
+                                            value: {container: "", type: "fitCoin"}
+                                        }], page.id);
+                                    } else {
+
+                                        //page.createNew("fitCoin", Math.random() * (FRAME.width - 150), Math.random() * (FRAME.height - 150)).tag = {};
+                                        page.communication.invoke("publish_page_data", [{
+                                            page: page.id, shape: page.graph.uuid(), skipSelf: false, value: {
+                                                x: Math.random() * (FRAME.width - 150),
+                                                y: Math.random() * (FRAME.height - 150),
+                                                type: "fitCoin"
+                                            }
+                                        }], page.id);
+                                    }
+                                }
+                                if (page.degree > 360) {
+                                    page.degree = 0;
+                                }
+                            }
+
+                            page.predators = [];
+                            page.scoredShapes = [];
+                            page.shapes.filter(s => s.role === "predator").orderByDesc("score").forEach((s, i) => {
+                                page.predators.push(s);
+                                if (s.score > 0) {
+                                    page.scoredShapes.push(s);
+                                }
+                                if (page.mode === PAGE_MODE.PRESENTATION) {
+                                    s.visible = i < 50;
+                                }
+                            })
+                            //page.scoredShapes = page.scoredShapes.orderByDesc("score");
+                            page.data && (page.data.text = page.me.id + " 得分:" + page.me.score);
+
+                            //page.reactCommands();
+                        };
+                        p1.timerCode = p1.timer.toString();
+
+                        p1.reset();
+                        p1.startAnimation();
+                        p1.dispose();
+                    })();
+
+                    g.present().then(page => {
+                        console.log('page:' + page.id + " is presenting");
+                        page.communication.invoke("enter_next", {page: page.id, value: -1}, page.id);
+                        page.communication.invoke("get_backup_candidates", page.id, data => {
+                            page.tag.backupCandidates = data;
+                        });
+                        console.log("loading time: " + (new Date().getTime() - start) + " ms");
+                    });
+
+                })
+            return g;
+        }
+
+        window.onload = () => {
+            loadGraph();
+        }
+    </script>
+
+    <style type=text/css>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            position: absolute;
+            overflow-y: scroll;
+            height: calc(100vh);
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div id='editor' class='container'></div>
+
+</body>
+
+</html>

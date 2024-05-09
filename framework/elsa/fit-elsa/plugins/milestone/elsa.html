@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>elsa</title>
+    <!-- <script src='../../common/util.js'></script>
+      <script src='../../common/html2canvas.js'></script>
+      <script src='../../common/extensions.js'></script>
+      <script src='../../common/const.js'></script>
+      <script src='../../actions/keyActions.js'></script>
+      <script src='../../actions/mouseActions.js'></script>
+      <script src='../../core/drawers/htmlDrawer.js'></script>
+      <script src='../../core/drawers/canvasDrawer.js'></script>
+      <script src='../../core/drawers/lineDrawer.js'></script>
+      <script src='../../core/drawers/rectangleDrawer.js'></script>
+      <script src='../../core/drawers/svgDrawer.js'></script>
+      <script src='../../core/drawers/containerDrawer.js'></script>
+      <script src='../../core/drawers/cursorDrawer.js'></script>
+      <script src='../../core/drawers/pageDrawer.js'></script>
+      <script src='../../core/drawers/interactDrawer.js'></script>
+      <script src='../../core/drawers/animationDrawer.js'></script>
+      <script src='../../core/connector.js'></script>
+      <script src='../../core/shape.js'></script>
+      <script src='../../core/line.js'></script>
+      <script src='../../core/container.js'></script>
+      <script src='../../core/vector.js'></script>
+      <script src='../../core/others.js'></script>
+      <script src='../../core/group.js'></script>
+      <script src='../../core/page.js'></script>
+      <script src='../../core/graph.js'></script>
+      <script src='../../core/atom.js'></script>
+      <script src='../../core/rectangle.js'></script>
+      <script src='../../core/image.js'></script>
+      <script src='../../core/svg.js'></script>
+      <script src='../../core/hitRegion.js '></script>
+      <script src='../../core/history.js '></script>
+      <script src='../../core/thumb.js '></script>
+
+      <script src='timeline.js'></script>
+      <script src='milestone.js'></script>
+      <script src='constants.js'></script> -->
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/canvas2image/0.1/canvas2image.min.js"></script>
+  -->
+    <script type="module">
+        import {graph} from '../../core/graph.js';
+
+        var p = null;
+        window.onload = () => {
+            let g = graph(document.getElementById("main"));
+            g.import('/plugins/milestone/timeline.js')
+                .import('/core/rectangle.js')
+                .import('/core/others.js')
+                .then(() => {
+                    p = g.addPage("timeline");
+                    p.createNew("timeline", 50, 100);//.initialize();
+                    p.createNew("star", 50, 350);
+                    p.reset();
+                    p.startAnimation();
+                });
+
+        }
+    </script>
+    <script>
+        downloadPNG = function () {
+            html2canvas(document.getElementById("main"), {
+                onrendered: function (canvas) {
+                    document.body.appendChild(canvas);
+                }
+            });
+        }
+    </script
+</head>
+
+<body>
+<div id="main" style="width:1200px; height: 1800px;position: absolute;"></div>
+<div id="point" style="width:6px; height: 6px;position: absolute;left:397px;top:397px;background-color: brown;"></div>
+<!-- <button onclick="p.save()">Save as image (tested on PC browser only)</button> -->
+
+</body>
+
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ict大会运维页面</title>
+    <!--    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>-->
+    <!--    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.0-beta1/js/bootstrap.min.js"></script>-->
+    <!--    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.0-beta1/css/bootstrap.min.css" rel="stylesheet">-->
+    <style type="text/css">
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: calc(100vh);
+            width: 400px;
+            margin: 0 auto;
+        }
+
+        .row {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            width: 160px;
+            padding-right: 20px;
+            text-align: right;
+        }
+
+        .list-group-item {
+            margin-right: 20px;
+        }
+
+        .btn-primary {
+            width: 100px;
+            margin: 0 auto;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<script type="text/javascript">
+    function submitInput() {
+        const param1 = getRadioValue("interactivity") === 'on' ? {
+            "comment": getInputVal("comment"), "appreciate": getInputVal("likeAndStep")
+        } : {
+            "comment": 0, "appreciate": 0
+        };
+        const param2 = getRadioValue("onlookers") === 'on' ? {
+            "topic": getInputVal("collaborate"), "graph": getInputVal("joinTheOnlookers")
+        } : {
+            "topic": 0, "graph": 0
+        };
+
+        const params = {...param1, ...param2};
+        request("/collaboration/control", params);
+    }
+
+    function request(url, params) {
+        const httpRequest = new XMLHttpRequest();
+        const fullUrl = `${url}?${obj2strUrl(params)}`
+        httpRequest.open('GET', fullUrl, true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+        httpRequest.send();
+        httpRequest.onreadystatechange = function () {
+            if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                console.log("设置成功");
+            }
+        };
+    }
+
+    function getRadioValue(name) {
+        const radio = document.getElementsByName(name);
+        let val;
+        for (let i = 0; i < radio.length; i++) {
+            if (radio[i].checked) {
+                val = radio[i].value;
+            }
+        }
+        return val;
+    }
+
+    function getInputVal(id) {
+        return document.getElementById(id).value;
+    }
+
+    const obj2strUrl = (obj) => {
+        let str = "";
+        for (let key in obj) {
+            str = `${str}${key}=${obj[key]}&`
+        }
+        ;str = str.substring(0, str.length - 1);
+        return str;
+    }
+
+</script>
+<div id="test" class="container">
+    <div class="mb-3 row">
+        <label class="col-sm-2 form-label">互动</label>
+        <div class="col-sm-10 row">
+            <label class="col-sm-5 list-group-item">
+                开启
+                <input class="form-check-input me-1" type="radio" name="interactivity" value="on" checked>
+            </label>
+            <label class="col-sm-5 list-group-item">
+                关闭
+                <input class="form-check-input me-1" type="radio" name="interactivity" value="off">
+            </label>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label class="col-sm-2 form-label">允许围观</label>
+        <div class="col-sm-10 row">
+            <label class="col-sm-5 list-group-item">
+                开启
+                <input class="form-check-input me-1" type="radio" name="onlookers" value="on" checked>
+            </label>
+            <label class="col-sm-5 list-group-item">
+                关闭
+                <input class="form-check-input me-1" type="radio" name="onlookers" value="off">
+            </label>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="joinTheOnlookers" class="col-sm-2 form-label">加入围观并发数量</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="joinTheOnlookers" placeholder="请输入数值" value="50">
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="collaborate" class="col-sm-2 form-label">演示中协作并发数量</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="collaborate" placeholder="请输入数值" value="1000">
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="likeAndStep" class="col-sm-2 form-label">点赞、点踩并发数量</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="likeAndStep" placeholder="请输入数值" value="100">
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="comment" class="col-sm-2 form-label">评论并发数量</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="comment" placeholder="请输入数值" value="10">
+        </div>
+    </div>
+    <button type="button" class="col-sm-2 btn btn-primary" onclick="submitInput()">提交设置</button>
+</div>
+</body>
+</html>

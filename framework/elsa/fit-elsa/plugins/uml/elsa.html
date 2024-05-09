@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>elsa</title>
+    <script src='../../common/util.js'></script>
+    <script src='../../common/extensions/arrayExtension.js'></script>
+    <script src='../../common/extensions/canvasExtension.js'></script>
+    <script src='../../common/extensions/collectionExtension.js'></script>
+    <script src='../../common/extensions/dateExtension.js'></script>
+    <script src='../../common/extensions/stringExtension.js'></script>
+    <script src='../../common/const.js'></script>
+    <script src='../../actions/keyActions.js'></script>
+    <script src='../../actions/mouseActions.js'></script>
+    <script src='../../core/drawers/htmlDrawer.js'></script>
+    <script src='../../core/drawers/canvasDrawer.js'></script>
+    <script src='../../core/drawers/lineDrawer.js'></script>
+    <script src='../../core/drawers/rectangleDrawer.js'></script>
+    <script src='../../core/drawers/svgDrawer.js'></script>
+    <script src='../../core/drawers/containerDrawer.js'></script>
+    <script src='../../core/drawers/cursorDrawer.js'></script>
+    <script src='../../core/drawers/pageDrawer.js'></script>
+    <script src='../../core/drawers/interactDrawer.js'></script>
+    <script src='../../core/drawers/animationDrawer.js'></script>
+    <script src='../../core/connector.js'></script>
+    <script src='../../core/shape.js'></script>
+    <script src='../../core/line.js'></script>
+    <script src='../../core/container.js'></script>
+    <script src='../../core/vector.js'></script>
+    <script src='../../core/others.js'></script>
+    <script src='../../core/group.js'></script>
+    <script src='../../core/page.js'></script>
+    <script src='../../core/graph.js'></script>
+    <script src='../../core/atom.js'></script>
+    <script src='../../core/rectangle.js'></script>
+    <script src='../../core/table.js'></script>
+    <script src='../../core/image.js'></script>
+    <script src='../../core/svg.js'></script>
+    <script src='../../core/hitRegion.js '></script>
+    <script src='../../core/history.js '></script>
+    <script src='../../core/thumb.js '></script>
+    <script src='../../plugins/flowable/common/const.js'></script>
+    <script src='../../plugins/flowable/hitregions/hitregion.js'></script>
+    <script src='../../plugins/flowable/nodes/node.js'></script>
+    <script src='../../plugins/flowable/nodes/state.js'></script>
+    <script src='../../plugins/flowable/nodes/parallel.js'></script>
+    <script src='../../plugins/flowable/nodes/subflow.js'></script>
+    <script src='../../plugins/flowable/nodes/start&end.js'></script>
+    <script src='../../plugins/flowable/nodes/event.js'></script>
+    <script src='../../plugins/flowable/drawers/drawer.js'></script>
+    <script src='../../plugins/uml/clazz.js'></script>
+    <script src='../../plugins/uml/sequence.js'></script>
+    <script src='../../plugins/uml/component.js'></script>
+    <script src='../../plugins/uml/hitregion.js'></script>
+    <script src='../../plugins/mind/mind.js'></script>
+    <script src='../../plugins/mind/topic.js'></script>
+    <script src='../../plugins/mind/subTopic.js'></script>
+    <script src='../../plugins/mind/constants.js'></script>
+    <script src='../../plugins/mind/hitRegion.js'></script>
+    <script src='../../plugins/milestone/timeline.js'></script>
+    <script src='../../plugins/milestone/milestone.js'></script>
+    <script src='../../plugins/milestone/constants.js'></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/canvas2image/0.1/canvas2image.min.js"></script>
+
+    <script language="javascript">
+        var p = null;
+        window.onload = () => {
+            let g = graph(document.getElementById("main"));
+            p = g.activePage;
+            p.createShape("package", 500, 50);
+            p.createShape("component", 700, 50);
+            p.createShape("interface", 200, 100);
+            p.createShape("clazz", 50, 450);
+            p.createShape("sequence", 200, 350);
+
+            p.reset();
+
+        }
+    </script>
+    <script>
+        downloadPNG = function () {
+            html2canvas(document.getElementById("main"), {
+                onrendered: function (canvas) {
+                    document.body.appendChild(canvas);
+                }
+            });
+        }
+    </script
+</head>
+
+<body>
+<div id="main" style="width:1200px; height: 1800px;position: absolute;"></div>
+<div id="point" style="width:6px; height: 6px;position: absolute;left:397px;top:397px;background-color: brown;"></div>
+<!-- <button onclick="p.save()">Save as image (tested on PC browser only)</button> -->
+
+</body>
+
+</html>

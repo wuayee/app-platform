@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>elsa</title>
+    <!-- <script src='../common/util.js'></script>
+    <script src='../common/communication.js'></script>
+    <script src='../common/dom2image.js'></script>
+    <script src='../common/extensions.js'></script>
+    <script src='../common/const.js'></script>
+    <script src='../actions/keyActions.js'></script>
+    <script src='../actions/mouseActions.js'></script>
+    <script src='../core/drawers/htmlDrawer.js'></script>
+    <script src='../core/drawers/canvasDrawer.js'></script>
+    <script src='../core/drawers/lineDrawer.js'></script>
+    <script src='../core/drawers/rectangleDrawer.js'></script>
+    <script src='../core/drawers/svgDrawer.js'></script>
+    <script src='../core/drawers/containerDrawer.js'></script>
+    <script src='../core/drawers/cursorDrawer.js'></script>
+    <script src='../core/drawers/pageDrawer.js'></script>
+    <script src='../core/drawers/interactDrawer.js'></script>
+    <script src='../core/drawers/animationDrawer.js'></script>
+    <script src='../core/connector.js'></script>
+    <script src='../core/shape.js'></script>
+    <script src='../core/line.js'></script>
+    <script src='../core/container.js'></script>
+    <script src='../core/ellipse.js'></script>
+    <script src='../core/vector.js'></script>
+    <script src='../core/others.js'></script>
+    <script src='../core/group.js'></script>
+    <script src='../core/page.js'></script>
+    <script src='../core/graph.js'></script>
+    <script src='../core/atom.js'></script>
+    <script src='../core/rectangle.js'></script>
+    <script src='../core/table.js'></script>
+    <script src='../core/image.js'></script>
+    <script src='../core/svg.js'></script>
+    <script src='../core/icon.js'></script>
+    <script src='../core/hitRegion.js '></script>
+    <script src='../core/history.js '></script>
+    <script src='../core/thumb.js '></script>
+    <script src='../core/reference.js '></script>
+    <script src='../core/sticker.js '></script>
+    <script src='../plugins/presentation/presentation.js '></script>
+    <script src='../plugins/presentation/frame.js'></script>
+    <script src='../plugins/presentation/textList.js'></script>
+    <script src='../plugins/presentation/presentationActions.js'></script>
+    <script src='../plugins/presentation/caption.js'></script>
+    <script src='../plugins/mind/mind.js'></script>
+    <script src='../plugins/mind/topic.js'></script>
+    <script src='../plugins/mind/subTopic.js'></script>
+    <script src='../plugins/mind/constants.js'></script>
+    <script src='../plugins/mind/hitRegion.js'></script>
+    <script src='../plugins/flowable/hitregions/hitregion.js'></script>
+    <script src='../plugins/flowable/nodes/node.js'></script>
+    <script src='../plugins/flowable/nodes/state.js'></script>
+    <script src='../plugins/flowable/nodes/parallel.js'></script>
+    <script src='../plugins/flowable/nodes/subflow.js'></script>
+    <script src='../plugins/flowable/nodes/startEnd.js'></script>
+    <script src='../plugins/flowable/nodes/event.js'></script>
+    <script src='../plugins/flowable/drawers/drawer.js'></script>
+    <script src='../plugins/flowable/common/const.js'></script>
+    <script src='../plugins/dynamicForm/form.js'></script>
+    <script src='../plugins/dynamicForm/tab.js'></script>
+    <script src='../plugins/dynamicForm/tree.js'></script>
+    <script src='../plugins/uml/clazz.js'></script>
+    <script src='../plugins/uml/hitregion.js'></script>
+    <script src='../plugins/document/docPage.js'></script>
+    <script src='../plugins/document/docDrawer.js'></script>
+    <script src='threelib/three.module.js'></script>
+    <script src='threelib/tween.module.min.js'></script>
+    <script src='threelib/TrackballControls.js'></script>
+    <script src='threelib/CSS3DRenderer.js'></script>
+    <script src='threeDemo.js'></script> -->
+
+    <style>
+        a {
+            color: #8ff;
+        }
+
+        #menu {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .element {
+            width: 120px;
+            height: 160px;
+            box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.5);
+            border: 1px solid rgba(127, 255, 255, 0.25);
+            font-family: Helvetica, sans-serif;
+            text-align: center;
+            line-height: normal;
+            cursor: default;
+        }
+
+        .element:hover {
+            box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.75);
+            border: 1px solid rgba(127, 255, 255, 0.75);
+        }
+
+        .element .number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: rgba(127, 255, 255, 0.75);
+        }
+
+        .element .symbol {
+            position: absolute;
+            top: 40px;
+            left: 0px;
+            right: 0px;
+            font-size: 60px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.75);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
+        }
+
+        .element .details {
+            position: absolute;
+            bottom: 15px;
+            left: 0px;
+            right: 0px;
+            font-size: 12px;
+            color: rgba(127, 255, 255, 0.75);
+        }
+
+        button {
+            color: rgba(127, 255, 255, 0.75);
+            background: transparent;
+            outline: 1px solid rgba(127, 255, 255, 0.75);
+            border: 0px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgba(0, 255, 255, 0.5);
+        }
+
+        button:active {
+            color: #000000;
+            background-color: rgba(0, 255, 255, 0.75);
+        }
+    </style>
+
+    <script src="http://s3-hc-dgg.hics.huawei.com/fit.elsa.bucket/react.development.js" crossorigin></script>
+    <script src="http://s3-hc-dgg.hics.huawei.com/fit.elsa.bucket/react-dom.development.js" crossorigin></script>
+
+    <script type="module">
+        //import { presentation } from '../plugins/presentation/presentation.js';
+        //import { ELSA } from '../../build/elsa.js';
+        import {ELSA} from "../../core/elsaEntry.js";
+        import {
+            ALIGN,
+            ANIMATION_TRIGGER,
+            ANIMIATION_ACTION,
+            DOCUMENT_FORMAT,
+            FLOWABLE_TRIGGER_MODE,
+            FONT_STYLE,
+            PARENT_DOCK_MODE,
+            PROGRESS_STATUS
+        } from '../../common/const.js';
+        import {ENV_CONFIG} from "../../config/envConfig.js";
+
+        let showTemplate = false;
+        let zooms = {};
+        let currentThumb;
+        let currentPage;
+        let currentGraph;
+
+        //显示模板还是显示页面
+        let switchDisplay = () => {
+            showTemplate = !showTemplate;
+            document.getElementById("switchDisplay").innerHTML = showTemplate ? "显示页面" : "显示模板";
+            loadAllPages(currentGraph, showTemplate).then(p => editPage(p));
+        };
+
+        //display shapes icons
+        let displayShapeTool = type => {
+            let el = document.createElement("div");
+            el.onclick = () => {
+                currentPage.wantedShape = el.innerText;
+                console.log("creating shape: " + type);
+            };
+            el.className = "shape";
+            el.innerText = type;
+            document.getElementById("shapeTool").appendChild(el);
+        }
+
+        //编辑某个特定页面
+        let disableDirty = false;
+        let editPage = (thumbPage) => {
+            if (currentThumb === thumbPage) return;
+            if (currentThumb) {
+                currentThumb.div.className = currentThumb.isTemplate ? "tempThumb" : "thumb";
+            }
+            let g = thumbPage.graph;
+            g.collaboration.mute = true;
+            currentThumb = thumbPage;
+            currentThumb.div.className = "focusThumb";
+            disableDirty = true;
+            let pageIndex = g.getPageIndex(thumbPage.id);
+            g.edit(pageIndex).then(page => {
+                currentPage = page;
+                let zoomed = currentPage.zoomed;
+                currentPage.zoomed = () => {
+                    zoomed.call(this);
+                    zooms[currentPage.id] = { scaleX: currentPage.scaleX, scaleY: currentPage.scaleY };
+                };
+
+                let scale = zooms[currentPage.id];
+                if (scale === undefined) {
+                    currentPage.fillScreen();
+                } else {
+                    currentPage.scaleX = scale.scaleX;
+                    currentPage.scaleY = scale.scaleY;
+                };
+                currentPage.dirtied = (dirties) => {
+                    if (disableDirty) {
+                        disableDirty = false;
+                        return;
+                    }
+                    if (dirties === undefined) currentThumb.deSerialize(currentPage.serialize());
+                    else {
+                        dirties.forEach(d => {
+                            let target = currentThumb.shapes.find(s => s.id === d.id);
+                            if (d.container === undefined && target !== undefined) {
+                                target.remove();
+                                return;
+                            }
+                            if (target === undefined) target = currentThumb.createShape(d.type, d.x, d.y);
+                            target.deSerialize(d);
+                            target.invalidate();
+                        })
+                    }
+                    //currentThumb.deSerialize(currentPage.serialize());
+                    currentThumb.fillScreen();
+                    currentThumb.reset();
+                };
+                currentPage.startAnimation();
+            });
+        };
+
+        //在左侧页面栏载入一页
+        let loadPage = async (graph, index, top) => {
+            let pages = document.getElementById("pages");
+            let container = document.createElement("div");
+            container.className = "thumb";
+            container.style.top = top + "px";
+            pages.appendChild(container);
+
+            let p = await graph.display(index, container);
+            container.id = p.id;
+            p.onClick = () => {
+                editPage(p);
+            };
+            p.stopAnimation();
+            return p;
+        };
+
+        let loadAllPages = async (graph, showTemplate, index) => {
+            let pages = document.getElementById("pages");
+            pages.innerHTML = "";
+            let ps = graph.getPagesBrief().filter(p => p.isTemplate === showTemplate);
+            let page;
+            let top = 0;
+            for (const p of ps) {
+                let p1 = await loadPage(graph, p.index, top);
+                if (page === undefined) page = p1;
+                if (index === null || index === undefined) {
+                    index = p.index;
+                }
+                if (index === p.index) page = p1;
+                top += 200;
+
+            }
+            return page;
+        };
+
+        // 2021-11-01 fixed by xiafei 提取函数，优化代码结构
+        function page1(g) {
+            let t1 = g.addPage("封面模板");
+            t1.isTemplate = true;
+            let back = t1.createNew("image", 1, 1);
+            back.pDock = PARENT_DOCK_MODE.TOP;
+            back.height = 600;
+            back.src = 'huaweiBack.jpg';
+            let logo = t1.createNew("image", 1330, 830);
+            logo.backColor = "transparent";
+            logo.width = 250;
+            logo.height = 50;
+            logo.src = 'huaweilogo.png';
+            logo.emphasized = true;
+
+            const rect = t1.createNew("rectangle",700,400,"me");
+            rect.isPlaceHolder = 1;
+            t1.reset();
+            return { t1, logo };
+        }
+
+        function page2(g, logo) {
+            let t2 = g.addPage("内容模板");
+            t2.isTemplate = true;
+            let capid = t2.createNew("caption", 1, 1).id;
+            logo = t2.createNew("image", 1360, 30);
+            logo.backColor = "transparent";
+            logo.width = 200;
+            logo.height = 40;
+            logo.src = 'huaweilogo.png';
+            logo.emphasized = true;
+            t2.reset();
+            return t2;
+        }
+
+        function page3(g, t1) {
+            let p1 = g.addPage("封面");
+            // p1.getFrame().enableSocial = false;
+            p1.basePage = t1.id;
+            let title1 = p1.createNew("elsaLogo", 60, 150);
+            title1.fontSize = 40;
+            title1.yoffset = -9;
+            //title1.fontColor = "darkred";
+            //title1.hAlign = ALIGN.LEFT;
+            title1.originWidth = title1.width = 800;
+            //title1.height = 80;
+            title1.text = "广义FIT：数字化内容管理引擎uuu";
+            let title2 = p1.createNew("text", 90, 250);
+            title2.hAlign = ALIGN.LEFT;
+            title2.fontSize = 18;
+            title2.width = 100;
+            title2.height = 40;
+            title2.text = "张群辉";
+            let title21 = p1.createNew("codeDisplayer", 290, 250);
+            title21.backColor = "red";
+            title21.fontColor = "white";
+            title21.text = "0";
+            title21.height = title21.width = 100;
+            let title3 = p1.createNew("text", 90, 300);
+            
+            title3.hAlign = ALIGN.LEFT;
+            title3.fontSize = 18;
+            title3.width = 200;
+            title3.height = 40;
+            title3.text = "数据存储与机器视觉";
+            let address = p1.createNew("image", 550, 200);
+            address.src = 'address.png';
+            address.borderColor = "teal";
+            address.borderWidth = 6;
+            address.emphasized = true;
+            address.emphasizeType = 0;
+
+            let displayCountdownCode = "let cd = getShape('countdown'); if(!cd) return; if(cd.y>650){cd.y-=3;cd.drawer.move(); return;}" +
+                " return flash(()=>[cd],3,(s, value)=>{s.visible=value;cd.borderColor = cd.fontColor ='darkred';}" +
+                ",()=>{cd.visible = true; cd.borderColor = cd.fontColor = undefined;},20);";
+            p1.createCodeAnimation(ANIMATION_TRIGGER.CLICK, displayCountdownCode, "console.log('countdown showed.....')");
+            p1.createAnimation(address, ANIMIATION_ACTION.IN, "shrink", ANIMATION_TRIGGER.CLICK);
+            p1.createCodeAnimation(ANIMATION_TRIGGER.FOLLOW, "page.fillScreen(); return -1;", "", "pageCode", address.id);
+
+            p1.reset();
+        }
+
+        function page4(g, t2) {
+            let p2 = g.addPage("目录");
+            p2.getFrame().enableSocial = false;
+            p2.basePage = t2.id;
+            let a = p2.createNew("agenda", 350, 220);
+            a.getShapes().forEach(s => s.remove());
+            a.addLine("Beauty Does Matter");
+            a.addLine("星辰大海");
+            a.addLine("Elsa For Presentation");
+            a.addLine("Elsa For Everything");
+            a.addLine("广义FIT");
+            p2.reset();
+        }
+
+        function page5(g, t2) {
+            let pa1 = g.addPage("目录：一叶知秋");
+            pa1.getFrame().enableSocial = false;
+            pa1.basePage = t2.id;
+            let a1 = pa1.createNew("agenda", 350, 220);
+            pa1.reset();
+        }
+
+        function page6(g, t2) {
+            let p3 = g.addPage("一叶知秋");
+            p3.basePage = t2.id;
+            //p3.getFrame().background ="mapletree.jpg";;
+            let maple = p3.createNew("image", 300, 200);
+            maple.src = "mapletree.jpg";
+            // maple.width = maple.height = 200;
+           maple.pDock = PARENT_DOCK_MODE.FILL;
+
+            let word = p3.createNew("rectangle", 945, 540);
+            word.emphasized = true;
+            word.id = "maplemask";
+            word.text = "一叶知秋";
+            word.lineHeight = 1.2;
+            word.width = 100;
+            word.height = 250;
+            word.shadow = true;
+            word.borderColor = "darkred";
+            word.shadowColor = "red";
+            word.fontSize = 48;
+            word.borderWidth = 3;
+            word.backColor = "whitesmoke";
+            word.fontColor = "darkred";
+            word.fontFace = "华文隶书";
+
+            let maskCode = "return flash(()=>['maplemask'],2);"
+
+            p3.createCodeAnimation(ANIMATION_TRIGGER.CLICK, maskCode, "console.log('mask animating ending.....')");
+
+            let createMaplesContainer = "if(context.maples===undefined) {context.maples = [];context.now=new Date().getSeconds();}";
+            let createMaples = "let m =createShape('icon',(frame.width-150)*Math.random(),100+100*Math.random());m.serializable = false;" +
+                "m.targetY = (frame.height-150)+100*Math.random() ;m.iconName='maple';m.width = m.height = 150;m.invalidate();" +
+                " context.maples.push(m);";
+            let dropping = "context.maples.forEach(m=>{m.y+=5; if(dx!==0||dy!==0){let offset=2*Math.sqrt(Math.pow(m.x-mousex,2)+Math.pow(m.y-mousey,2))/frame.width; let deltx=dx-dx*(offset>1?1:offset);m.x+=deltx/2;let delty=dy-dy*(offset>1?1:offset);m.y+=delty/5;}m.drawer.move();";
+
+            let clearDropped = "if(m.y>=m.targetY){m.remove();}});context.maples.remove(m=>m.y>=m.targetY);console.log('maples number:'+context.maples.length);";
+
+            let dropCode = createMaplesContainer + createMaples + dropping + clearDropped;
+            p3.createCodeAnimation(ANIMATION_TRIGGER.CLICK, dropCode, "console.log('maples animating ending.....')", "pageCode");
+            p3.reset();
+        }
+
+        function page7(g, t2) {
+            let pa2 = g.addPage("目录：星辰大海");
+            pa2.basePage = t2.id;
+            pa2.createNew("agenda", 350, 220);
+            pa2.reset();
+        }
+
+        function page8(g) {
+            let p4 = g.addPage("我们的路途是星辰大海");
+            let space = p4.createNew("image", 300, 200);
+            space.src = "space.jpg";
+            space.pDock = PARENT_DOCK_MODE.FILL;
+
+            let starCode = "if(!context.stars){context.stars=true; let number = 50+Math.abs(Math.random()*30);  while(number-->0){" +
+                "let s = createShape('icon',frame.width*Math.random(),300*Math.random());s.enableAnimation = Math.random()>0.5;s.iconName='star'; s.width = s.height = 15*Math.random();s.serializable = false;s.invalidate();}}";
+            let spaceCode = starCode;
+            p4.createCodeAnimation(ANIMATION_TRIGGER.CLICK, spaceCode, "console.log('space animating ending.....')", "pageCode");
+
+            let spaceship = p4.createNew("image", 600, 400);
+            spaceship.x = 1080 * 1.3;
+            spaceship.y = 600 * 1.3;
+            spaceship.src = "spaceship.png";
+            spaceship.id = "spaceShip";
+            spaceship.width = 1000 * 0.6;
+            spaceship.height = 460 * 0.6;
+            spaceship.visible = false;
+
+            let word1 = p4.createNew("text", 560, 220);
+            word1.width = 400;
+            word1.height = 60;
+            word1.text = "我们的征途";
+            word1.fontFace = "方正姚体";
+            word1.fontColor = "whitesmoke";
+            word1.fontSize = 55;
+            word1.letterSpacing = 10;
+
+            let l = p4.createNew("rectangle", 505, 345);
+            l.backColor = "whitesmoke";
+            l.borderColor = "transparent";
+            l.width = 500;
+            l.height = 4;
+            l.text = "";
+
+            let w3 = p4.createNew("text", 460, 353);
+            w3.width = 590;
+            w3.height = 150;
+            w3.text = "星辰大海";
+            w3.fontFace = "方正姚体";
+            w3.fontColor = "whitesmoke";
+            w3.fontSize = 100;
+            w3.letterSpacing = 15;
+            w3.emphasized = true;
+
+            let logo2 = p4.createNew("image", 700, 310);
+            logo2.backColor = "transparent";
+            logo2.width = 100;
+            logo2.height = 20;
+            logo2.src = 'huaweilogo.png';
+
+
+            let shipCode = "let pros=((frame.pros===undefined?0:frame.pros)-(frame.cons===undefined?0:frame.cons))*20;const xflag = 600; const yflag = 400;" +
+                "let ship = getShape('spaceShip');if(ship===undefined) return; if(!ship.enableAnimation){ship.enableAnimation = true; ship.page.moveIndexTop(ship);ship.visible = true; ship.render();}" +
+                "ship.drawer.drawDynamic = (context, x, y)=>{if(ship.x>xflag||ship.y>yflag)return; x=-ship.width/2; y=-ship.height/2; let w=ship.width*0.1; let h=ship.height*0.05;context.rect(x,y,w,h);context.strokeStyle = 'gray';context.stroke();" +
+                "x+=2;y+=2;w-=4;h-=4;let w1=w/4+w*3*pros/400;w1=w1>w?w:w1;w1=w1<0?1:w1;context.beginPath();context.rect(x,y,w1,h); let g=Math.round(255*w1/w); let r=255-g; context.fillStyle='rgb('+r+','+g+',0)';context.fill();console.log('pros:'+frame.pros);};" +
+                "if(ship.width<10&&ship.height<10){ship.remove(); new Promise(r => setTimeout(r, 1000));page.moveNext();return;} " +
+                "let rate=pros>100?10:pros/400; if(ship.x>xflag)ship.x-=1.5;else ship.x-=(0.0075+rate*0.15); if(ship.y>yflag)ship.y-=0.71;else ship.y-=(0.005+rate*0.1);" +
+                "ship.width = 2*ship.x*0.5;ship.height=1.5*ship.y*0.5; " +
+                "ship.drawer.move();ship.drawer.resize()";
+
+            p4.createCodeAnimation(ANIMATION_TRIGGER.CLICK, shipCode, "console.log('space ship animating ending.....')", "pageCode");
+            p4.createAnimation(word1, ANIMIATION_ACTION.IN, "shrink", ANIMATION_TRIGGER.CLICK);
+            p4.createAnimation(l, ANIMIATION_ACTION.IN, "shrink", ANIMATION_TRIGGER.FOLLOW, word1.id);
+            p4.createAnimation(w3, ANIMIATION_ACTION.IN, "shrink", ANIMATION_TRIGGER.FOLLOW, word1.id);
+            p4.createAnimation(logo2, ANIMIATION_ACTION.IN, "fadeIn", ANIMATION_TRIGGER.FOLLOW, word1.id);
+            p4.reset();
+        }
+
+        function page9(g, t2) {
+            let pa3 = g.addPage("目录：elsa for presentation");
+            pa3.basePage = t2.id;
+            pa3.createNew("agenda", 350, 180);
+            pa3.reset();
+        }
+
+        function page10(g, t2) {
+            let p5 = g.addPage("elsa for presentation");
+            p5.basePage = t2.id;
+            p5.inMethod = "shrink";
+            let x1 = 200, y1 = 180;
+            let e1 = p5.createNew("elsaLogo", x1, y1);
+            e1.width = 650;
+            e1.height = 170;
+            let f = p5.createNew("text", x1 + 460, y1 + 72);
+            f.backColor = "steelblue";
+            f.fontColor = "whitesmoke";
+            f.text = "4";
+            f.fontSize = 28;
+            f.cornerRadius = 0;
+            f.hAlign = ALIGN.MIDDLE;
+            f.pad = 0;
+            f.fontFace = "impact";
+            f.width = 30;
+            f.height = 25;
+            f.lineHeight = 1;
+            f.fontStyle = FONT_STYLE.ITALIC;
+            let pre = p5.createNew("text", x1 + 491, y1 + 72);
+            pre.padTop = 0;
+            pre.backColor = "gray";
+            pre.fontColor = "white";
+            pre.text = "PRESENTATION";
+            pre.fontSize = 16;
+            pre.fontFace = "Arial Black";
+            pre.width = 170;
+            pre.height = 25;
+            pre.lineHeight = 1;
+            pre.cornerRadius = 0;
+            pre.fontStyle = FONT_STYLE.ITALIC;
+
+            let list = p5.createNew("frameList", x1 + 38, y1 + 170);
+            list.width = 900;
+            list.style = "textList";
+            list.getShapes()[0].text = "完全技术自主的演讲软件：替代Power Point & Keynote";
+            list.getShapes()[1].text = "完全数字化：所有图形皆为数字化信息，可引用，可解析，可运行";
+            list.getShapes()[2].text = "基于互联网：基于网络，数据共享，协作";
+            list.addLine("可编程：用户可低代码编程，创建无比绚丽的演示稿");
+            list.addLine("可扩展：基于生态的插件扩展，共享编程");
+
+            // list.getShapes().forEach(l => p5.createAnimation(l, ANIMIATION_ACTION.IN, "flyIn", ANIMATION_TRIGGER.CLICK));
+            list.getShapes().forEach(l => p5.createAnimation(l, ANIMIATION_ACTION.IN, "flyIn", ANIMATION_TRIGGER.CLICK));
+            p5.reset();
+        }
+
+        function page11_1(g, t2) {
+            let pa61 = g.addPage("目录：elsa for everything");
+            pa61.basePage = t2.id;
+            pa61.createNew("agenda", 350, 180);
+            pa61.reset();
+        }
+
+        function page11(g, t2) {
+            let p6 = g.addPage("elsa for everything");
+            // p6.getFrame().readOnly = false;
+            // p6.getFrame().referenceData[capid + "#"] = {};
+            // let myproperty = p6.getFrame().referenceData[capid + "#"];
+            // myproperty.agendaIndex = -1;
+            // myproperty.text = "E.L.S.A FOR EVERYTHING";
+            // myproperty.fontColor = "darkred";
+            p6.basePage = t2.id;
+
+            let x2 = 20, y2 = 50
+            let c1 = p6.createNew("container", x2 + 30, y2 + 85);
+            c1.text = "通用绘制-开放图形插件生态";
+            c1.borderWidth = 1;
+            c1.dashWidth = 6;
+            c1.width = 350;
+            c1.height = 330;
+            c1.hideText = false;
+            c1.fontColor = "dimgray";
+            c1.headColor = "transparent";
+            let train = p6.createNew("icon", x2 + 40, y2 + 130);
+            train.iconName = "train";
+            train.headColor = "darkgreen";
+            let car = p6.createNew("icon", x2 + 120, y2 + 160);
+            car.iconName = "car";
+            car.headColor = "darkred";
+            p6.createNew("icon", x2 + 190, y2 + 120).iconName = "bike";
+            let turtle = p6.createNew("icon", x2 + 290, y2 + 140);
+            turtle.iconName = "turtle";
+            turtle.headColor = "#6F4E37";
+            let man = p6.createNew("icon", x2 + 200, y2 + 200);
+            man.iconName = "man";
+            man.headColor = "teal";
+
+            let rect1 = p6.createNew("rectangle", x2 + 70, y2 + 230);
+            rect1.width = rect1.height = 70;
+            rect1.dashWidth = 6;
+            rect1.borderColor = rect1.fontColor = "darkorange";
+            let v1 = p6.createNew("vector", x2 + 170, y2 + 290);
+            v1.enableAnimation = true;
+            v1.width = v1.height = 75;
+            v1.borderColor = v1.fontColor = "Goldenrod";
+            let ellipse1 = p6.createNew("ellipse", x2 + 270, y2 + 240);
+            ellipse1.emphasized = true;
+            ellipse1.dashWidth = 8;
+            ellipse1.borderWidth = 2;
+            ellipse1.width = ellipse1.height = 70;
+            ellipse1.borderColor = "Firebrick";
+
+            let line1 = p6.createNew("line", x2 + 80, y2 + 310);
+            line1.width = line1.height = 70;
+            //c1.rotateDegree = -30;
+            p6.createAnimation(c1, ANIMIATION_ACTION.IN, "fadeIn", ANIMATION_TRIGGER.CLICK);
+
+            let mind1 = p6.createNew("mind", x2 + 550, y2 + 190);
+            mind1.text = "数字化xmind图形";
+            mind1.hideText = false;
+            mind1.hAlign = ALIGN.LEFT;
+            mind1.headColor = "transparent";
+            mind1.backAlpha = 0.5;
+            let topic1 = mind1.getShapes().find(s => s.isType('topic'));
+            topic1.text = "E.L.S.A";
+            let sub1 = topic1.createTopic("subTopic");
+            sub1.parent = topic1.id;
+            sub1.text = "for document";
+            sub1.borderColor = sub1.fontColor = "steelblue";
+            sub1.priority = 2;
+            sub1.progressStatus = PROGRESS_STATUS.DOING;
+            let sub3 = topic1.createTopic("subTopic");
+            sub3.parent = topic1.id;
+            sub3.text = "for presentation";
+            sub3.borderColor = sub3.fontColor = "darkred";
+            sub3.emphasized = true;
+            sub3.priority = 1;
+            sub3.progressStatus = PROGRESS_STATUS.RUNNING;
+            let sub2 = topic1.createTopic("subTopic");
+            sub2.parent = topic1.id;
+            sub2.text = "for data table";
+            sub2.borderColor = sub2.fontColor = "darkgreen";
+            sub2.priority = 3;
+            sub2.progressStatus = PROGRESS_STATUS.UNKNOWN;
+            let sub9 = topic1.createTopic("subTopic");
+            sub9.parent = topic1.id;
+            sub9.text = "for drawing...";
+            sub9.priority = 1;
+            sub9.progressStatus = PROGRESS_STATUS.COMPLETE;
+
+            let sub4 = topic1.createTopic("subTopic");
+            sub4.parent = sub3.id;
+            sub4.text = "数字化";
+            let sub5 = topic1.createTopic("subTopic");
+            sub5.parent = sub3.id;
+            sub5.text = "可引用";
+            let sub6 = topic1.createTopic("subTopic");
+            sub6.parent = sub3.id;
+            sub6.text = "可协作";
+            let sub7 = topic1.createTopic("subTopic");
+            sub7.parent = sub3.id;
+            sub7.text = "可编程";
+            let sub8 = topic1.createTopic("subTopic");
+            sub8.parent = sub3.id;
+            sub8.text = "技术完全自主";
+            sub8.fontColor = sub8.borderColor = "red";
+            p6.createAnimation(mind1, ANIMIATION_ACTION.IN, "shrink", ANIMATION_TRIGGER.CLICK);
+
+            let c2 = p6.createNew("container", x2 + 30, y2 + 460);
+            c2.emphasized = true;
+            c2.text = "flowable图形配置-低代码互动";
+            c2.hideText = false;
+            c2.itemPad = [6, 6, 25, 6];
+            c2.fontColor = "dimGray";
+            c2.headColor = "transparent";
+            c2.backColor = "transparent";
+            c2.hAlign = ALIGN.LEFT;
+            c2.borderWidth = 1;
+            c2.dashWidth = 6;
+            c2.width = 870;
+            c2.height = 150;
+
+            let x11 = 25, y11 = 320;
+            let s1 = p6.createNew("start", x11 + 150, y11 + 250);
+            let s2 = p6.createNew("state", x11 + 250, y11 + 250);
+            let s3 = p6.createNew("parallel", x11 + 370, y11 + 210);
+            let s4 = p6.createNew("crossSender", x11 + 560, y11 + 240);
+            let s5 = p6.createNew("end", x11 + 700, y11 + 250);
+            let l1 = p6.createNew("event", x11 + 10, y11 + 10);
+            s2.triggerMode = FLOWABLE_TRIGGER_MODE.MANUAL;
+            l1.container = c2.id;
+            l1.fromShape = s1.id;
+            l1.toShape = s2.id;
+            let l2 = p6.createNew("event", x11 + 10, y11 + 10);
+            l2.container = c2.id;
+            l2.fromShape = s2.id;
+            l2.toShape = s3.id;
+            let l3 = p6.createNew("event", x11 + 10, y11 + 10);
+            l3.container = c2.id;
+            l3.fromShape = s3.id;
+            l3.toShape = s4.id;
+            let l4 = p6.createNew("event", x11 + 10, y11 + 10);
+            l4.container = c2.id;
+            l4.fromShape = s4.id;
+            l4.toShape = s5.id;
+            p6.createAnimation(c2, ANIMIATION_ACTION.IN, "fadeIn", ANIMATION_TRIGGER.CLICK);
+
+            let svg1 = p6.createNew("svg", x11 + 40, y11 + 350);
+            svg1.width = svg1.height = 250;
+            p6.createAnimation(svg1, ANIMIATION_ACTION.IN, "shrink", ANIMATION_TRIGGER.CLICK);
+
+            let pie1 = p6.createNew("pieChart", x11 + 390, y11 + 340);
+            pie1.width = pie1.height = 180;
+            pie1.container = p6.getFrame().id;
+            p6.createAnimation(pie1, ANIMIATION_ACTION.IN, "shrink", ANIMATION_TRIGGER.CLICK);
+
+            let countdown1 = p6.createNew("timer", x11 + 700, y11 + 420);
+            p6.createAnimation(countdown1, ANIMIATION_ACTION.IN, "shrink", ANIMATION_TRIGGER.CLICK);
+
+            let list2 = p6.createNew("frameList", x2 + 1000, y2 + 85);
+            list2.borderWidth = 1;
+            list2.dashWidth = 6;
+            list2.width = 350;
+            list2.style = "textList";
+            list2.getShapes()[0].text = "Applicationless";
+            list2.getShapes()[1].text = "Compatibless";
+            list2.getShapes()[2].text = "Seamless";
+            list2.addLine("Dynamicable");
+            list2.addLine("Interativable");
+            p6.createAnimation(list2, ANIMIATION_ACTION.IN, "fadeIn", ANIMATION_TRIGGER.CLICK);
+
+            let cal1 = p6.createNew("calculator", x2 + 1020, y2 + 400);
+            p6.createAnimation(cal1, ANIMIATION_ACTION.IN, "shrink", ANIMATION_TRIGGER.CLICK);
+
+            p6.reset();
+            return { p6, c2 };
+        }
+
+        function page12(g, t2) {
+            let p7 = g.addPage("elsa for everything");
+            p7.basePage = t2.id;
+            let x12 = 610, y12 = 260;
+
+            let shapeBase = p7.createNew("umlInterface", x12 + 150, y12);
+            shapeBase.text = "shape";
+            shapeBase.id = "shapeBase";
+            let field1 = p7.createNew("field", 0, 0);
+            field1.container = shapeBase.id;
+            field1.text = "text";
+            let field2 = p7.createNew("field", 0, 0);
+            field2.container = shapeBase.id;
+            field2.text = "drawer";
+
+
+            let line11 = p7.createNew("clazz", x12 + 300, y12 + 120);
+            line11.text = "line";
+
+            let inline1 = p7.createNew("inherit", x12, y12 + 100);
+            inline1.fromShape = shapeBase.id;
+            inline1.toShape = line11.id;
+            inline1.definedFromConnector = "S";
+            inline1.definedToConnector = "N";
+
+            let lineevent = p7.createNew("clazz", x12 + 150, y12 + 220);
+            lineevent.fontSize = 10;
+            lineevent.text = "flowable event";
+            lineevent.width = 120;
+
+            let inline2 = p7.createNew("inherit", x12, y12 + 100);
+            inline2.fromShape = line11.id;
+            inline2.toShape = lineevent.id;
+            inline2.definedFromConnector = "S";
+            inline2.definedToConnector = "N";
+
+            let inherited = p7.createNew("clazz", x12 + 300, y12 + 220);
+            inherited.fontSize = 10;
+            inherited.text = "uml inherited";
+
+            let inline3 = p7.createNew("inherit", x12, y12 + 100);
+            inline3.fromShape = line11.id;
+            inline3.toShape = inherited.id;
+            inline3.definedFromConnector = "S";
+            inline3.definedToConnector = "N";
+
+            let refer1 = p7.createNew("clazz", x12 + 450, y12 + 220);
+            refer1.fontSize = 10;
+            refer1.text = "uml reference";
+
+            let inline4 = p7.createNew("inherit", x12, y12 + 100);
+            inline4.fromShape = line11.id;
+            inline4.toShape = refer1.id;
+            inline4.definedFromConnector = "S";
+            inline4.definedToConnector = "N";
+
+            let rectangle1 = p7.createNew("clazz", x12, y12 + 120);
+            rectangle1.text = "rectangle";
+            rectangle1.id = "shapeRectangle";
+
+            let inherit1 = p7.createNew("inherit", x12, y12 + 100);
+            inherit1.fromShape = shapeBase.id;
+            inherit1.toShape = rectangle1.id;
+            inherit1.definedFromConnector = "S";
+            inherit1.definedToConnector = "N";
+
+            let others1 = p7.createNew("clazz", x12 + 80, y12 + 280);
+            others1.text = "others(100+)";
+            others1.fontSize = 10;
+
+            let inherit9 = p7.createNew("inherit", x12, y12 + 100);
+            inherit9.fromShape = rectangle1.id;
+            inherit9.toShape = others1.id;
+            inherit9.definedFromConnector = "S";
+            inherit9.definedToConnector = "N";
+
+            let container1 = p7.createNew("clazz", x12 - 80, y12 + 280);
+            container1.text = "container";
+
+            let inherit2 = p7.createNew("inherit", x12, y12 + 100);
+            inherit2.fromShape = rectangle1.id;
+            inherit2.toShape = container1.id;
+            inherit2.definedFromConnector = "S";
+            inherit2.definedToConnector = "N";
+
+            let refer5 = p7.createNew("referLine", x12, y12);
+            refer5.fromShape = container1.id;
+            refer5.toShape = shapeBase.id;
+            refer5.definedToConnector = "N";
+            refer5.definedFromConnector = "N";
+            refer5.dashWidth = 10;
+
+            let page1 = p7.createNew("clazz", x12 + 120, y12 + 370);
+            page1.text = "page";
+
+            let inherit10 = p7.createNew("inherit", x12, y12 + 100);
+            inherit10.fromShape = container1.id;
+            inherit10.toShape = page1.id;
+            inherit10.definedFromConnector = "S";
+            inherit10.definedToConnector = "N";
+
+            let graph1 = p7.createNew("clazz", x12 + 300, y12 + 370);
+            graph1.text = "graph";
+            graph1.id = "shapeGraph";
+            let refer6 = p7.createNew("referLine", x12, y12);
+            refer6.fromShape = graph1.id;
+            refer6.toShape = page1.id;
+
+            let document1 = p7.createNew("clazz", x12 + 300, y12 + 450);
+            document1.text = "document";
+            document1.id = "shapeDocument";
+
+            let inherit13 = p7.createNew("inherit", x12, y12 + 100);
+            inherit13.fromShape = graph1.id;
+            inherit13.toShape = document1.id;
+            inherit13.definedFromConnector = "S";
+            inherit13.definedToConnector = "N";
+
+            let presentation1 = p7.createNew("clazz", x12 + 150, y12 + 450);
+            presentation1.text = "presentation";
+            presentation1.width = 120;
+
+            let inherit14 = p7.createNew("inherit", x12, y12 + 100);
+            inherit14.fromShape = graph1.id;
+            inherit14.toShape = presentation1.id;
+            inherit14.definedFromConnector = "S";
+            inherit14.definedToConnector = "N";
+
+            let others3 = p7.createNew("clazz", x12 + 450, y12 + 450);
+            others3.text = "others(10+)";
+
+            let inherit15 = p7.createNew("inherit", x12, y12 + 100);
+            inherit15.fromShape = graph1.id;
+            inherit15.toShape = others3.id;
+            inherit15.definedFromConnector = "S";
+            inherit15.definedToConnector = "N";
+
+
+            let text1 = p7.createNew("clazz", x12 - 140, y12 + 370);
+            text1.text = "text";
+            text1.id = "shapeText";
+
+            let inherit3 = p7.createNew("inherit", x12, y12 + 100);
+            inherit3.fromShape = container1.id;
+            inherit3.toShape = text1.id;
+            inherit3.definedFromConnector = "S";
+            inherit3.definedToConnector = "N";
+
+            let paragragh = p7.createNew("clazz", x12 - 10, y12 + 370);
+            paragragh.text = "paragragh";
+            paragragh.id = "shapeParagraph";
+
+            let inherit12 = p7.createNew("inherit", x12, y12 + 100);
+            inherit12.fromShape = container1.id;
+            inherit12.toShape = paragragh.id;
+            inherit12.definedFromConnector = "S";
+            inherit12.definedToConnector = "N";
+
+            let others2 = p7.createNew("clazz", x12 - 270, y12 + 370);
+            others2.text = "others(100+)";
+            others2.fontSize = 10;
+
+            let inherit11 = p7.createNew("inherit", x12, y12);
+            inherit11.fromShape = container1.id;
+            inherit11.toShape = others2.id;
+            inherit11.definedFromConnector = "S";
+            inherit11.definedToConnector = "N";
+
+            let drawer = p7.createNew("umlInterface", x12 - 300, y12 + 10);
+            drawer.text = "drawer";
+            drawer.id = "shapeDrawer";
+            let field3 = p7.createNew("field", 0, 0);
+            field3.container = drawer.id;
+            field3.text = "draw()";
+
+            let refer = p7.createNew("referLine", x12, y12);
+            refer.fromShape = shapeBase.id;
+            refer.toShape = drawer.id;
+
+            let rectDrawer = p7.createNew("clazz", x12 - 230, y12 + 120);
+            rectDrawer.text = "rect drawer";
+            rectDrawer.fontSize = 10;
+
+            let inherit4 = p7.createNew("inherit", x12, y12);
+            inherit4.fromShape = drawer.id;
+            inherit4.toShape = rectDrawer.id;
+            inherit4.definedToConnector = "N";
+            inherit4.definedFromConnector = "S";
+
+            let hDrawer = p7.createNew("clazz", x12 - 300, y12 + 220);
+            hDrawer.text = "html drawer";
+            hDrawer.fontSize = 10;
+
+            let inherit7 = p7.createNew("inherit", x12, y12);
+            inherit7.fromShape = rectDrawer.id;
+            inherit7.toShape = hDrawer.id;
+            inherit7.definedToConnector = "N";
+            inherit7.definedFromConnector = "S";
+
+            let canvasDrawer = p7.createNew("clazz", x12 - 160, y12 + 220);
+            canvasDrawer.text = "canvas drawer";
+            canvasDrawer.fontSize = 10;
+            canvasDrawer.width = 120;
+
+            let inherit8 = p7.createNew("inherit", x12, y12);
+            inherit8.fromShape = rectDrawer.id;
+            inherit8.toShape = canvasDrawer.id;
+            inherit8.definedToConnector = "N";
+            inherit8.definedFromConnector = "S";
+
+            let cDrawer = p7.createNew("clazz", x12 - 400, y12 + 120);
+            cDrawer.width = 140;
+            cDrawer.text = "container drawer";
+            cDrawer.fontSize = 10;
+
+            let inherit5 = p7.createNew("inherit", x12, y12);
+            inherit5.fromShape = drawer.id;
+            inherit5.toShape = cDrawer.id;
+            inherit5.definedToConnector = "N";
+            inherit5.definedFromConnector = "S";
+
+            let lDrawer = p7.createNew("clazz", x12 - 300, y12 - 70);
+            lDrawer.text = "line drawer";
+            lDrawer.fontSize = 10;
+
+            let inherit6 = p7.createNew("inherit", x12, y12);
+            inherit6.fromShape = drawer.id;
+            inherit6.toShape = lDrawer.id;
+            // inherit6.definedToConnector = "S";
+            // inherit6.definedFromConnector = "N";
+
+            let refer2 = p7.createNew("referLine", x12, y12);
+            refer2.fromShape = rectangle1.id;
+            refer2.toShape = rectDrawer.id;
+
+            let refer3 = p7.createNew("referLine", x12, y12);
+            refer3.fromShape = container1.id;
+            refer3.toShape = cDrawer.id;
+            refer3.definedToConnector = "S";
+
+            let refer4 = p7.createNew("referLine", x12, y12);
+            refer4.fromShape = line11.id;
+            refer4.toShape = lDrawer.id;
+            refer4.definedToConnector = "E";
+            refer4.definedFromConnector = "E";
+
+            let shapebaseFocus = "let shapebase = getShape('shapeBase');shapebase.fontColor=shapebase.borderColor = 'darkred';shapebase.render();"
+            let graphFocus = "let g1 = getShape('shapeGraph');g1.fontColor=g1.borderColor = 'darkred';g1.render();"
+            let drawerFocus = "let d1 = getShape('shapeDrawer');d1.fontColor=d1.borderColor = 'darkred';d1.render();"
+            p7.createCodeAnimation(ANIMATION_TRIGGER.CLICK, shapebaseFocus + graphFocus + drawerFocus + "return -1", "console.log('focus ending....');");
+
+            let docEmphasized = "let doc1 = getShape('shapeDocument');doc1.emphasized = true;"
+            let paragraphEmphasized = "let paragraph1 = getShape('shapeParagraph');paragraph1.emphasized = true;"
+            let textEmphasized = "let t1 = getShape('shapeText');t1.emphasized = true;"
+            p7.createCodeAnimation(ANIMATION_TRIGGER.CLICK, docEmphasized + paragraphEmphasized + textEmphasized + "return -1", "console.log('emphasise ending....')");
+            p7.reset();
+            return page1;
+        }
+
+        function page13(g, t2, p6, c2) {
+            let txt = "this is a document brief. this is a document brief. this is a document brief. this is a document brief. this is a document brief. this is a document brief. this is a document brief. this is a document brief. this is a document brief. this is a document brief. this is a document brief. this is a document brief. "
+            let p8 = g.addPage("elsa for everything");
+            p8.basePage = t2.id;
+            let x = 300, y = 100;
+            let docf1 = p8.createNew("docFrame", x, y);
+            docf1.id = "mydocument";
+            docf1.hideText = false;
+            docf1.text = "Some Feature Requirement"
+            let pa11 = p8.createNew("docSection", x, y);
+            pa11.container = docf1.id;
+            pa11.text = "1. Story-1 Requirement";
+            let body1 = p8.createNew("docSection", x, y);
+            body1.format = DOCUMENT_FORMAT.BODY;
+            body1.container = pa11.id;
+            body1.text = txt;
+            let body4 = p8.createNew("docSection", x, y);
+            body4.format = DOCUMENT_FORMAT.BODY;
+            body4.container = pa11.id;
+            body4.text = txt + txt;
+            body4.id = "task1";
+
+            let pa12 = p8.createNew("docSection", x, y);
+            pa12.container = docf1.id;
+            pa12.text = "2. Story-2 Requirement";
+            let body2 = p8.createNew("docSection", x, y);
+            body2.format = DOCUMENT_FORMAT.BODY;
+            body2.container = pa12.id;
+            body2.text = txt;
+            let ref1 = p8.createNew("reference", x, y);
+            ref1.height = 120;
+            ref1.keepOrigin = false;
+            ref1.referencePage = p6.id;
+            ref1.referenceShape = c2.id;
+            ref1.borderWidth = 0;
+            let body3 = p8.createNew("docSection", x, y);
+            body3.container = pa12.id;
+            body3.text = txt;
+            body3.format = DOCUMENT_FORMAT.BODY;
+
+            p8.createAnimation(docf1, ANIMIATION_ACTION.IN, "shrink", ANIMATION_TRIGGER.CLICK);
+
+            let flashBorder = "return flash(()=>page.shapes.filter(s=>s.type==='docSection'||s.type==='reference'),2,(shape,value)=>{shape.borderWidth = (value?1:0);shape.borderColor='gray'},s=>s.borderWidth=1);"
+            p8.createCodeAnimation(ANIMATION_TRIGGER.CLICK, flashBorder, "console.log('mask animating ending.....')");
+            let movedoc = "return move(()=>['mydocument'],-200,0)";
+            p8.createCodeAnimation(ANIMATION_TRIGGER.CLICK, movedoc, "console.log('mask animating ending.....')");
+            let flashReference = "page.shapes.filter(s=>s.type==='docSection').forEach(s=>{s.borderWidth=0;s.render();});" +
+                "return flash(()=>page.shapes.filter(s=>s.type==='reference'),2,(shape,value)=>{shape.borderWidth = (value?1:0);shape.borderColor='darkred'},s=>s.borderWidth=1);";
+            p8.createCodeAnimation(ANIMATION_TRIGGER.CLICK, flashReference, "console.log('mask animating ending.....')");
+            let flashTask = "return flash(()=>['task1'],2,(shape,value)=>{shape.borderWidth = (value?1:0);shape.borderColor='teal'},s=>s.borderWidth=1);";
+            p8.createCodeAnimation(ANIMATION_TRIGGER.CLICK, flashTask, "console.log('mask animating ending.....')");
+            let showStatus = "let s = getShape('task1'); s.emphasized = true;s.progressStatus=PROGRESS_STATUS.DOING;s.priority=1;s.infoType = INFO_TYPE.WARNING";
+            p8.createCodeAnimation(ANIMATION_TRIGGER.CLICK, showStatus, "console.log('mask animating ending.....')");
+
+            let arrow1 = p8.createNew("line", 730, 320);
+            arrow1.container = p8.getFrame().id;
+            arrow1.height = 1;
+            arrow1.text = "";
+            arrow1.width = 150;
+            arrow1.borderWidth = 3;
+            arrow1.beginArrow = false;
+            arrow1.beginArrowEmpty = false;
+
+            let properties1 = p8.createNew("rectangle", 950, 240);
+            properties1.width = 230;
+            properties1.height = 190;
+            properties1.shadow = true;
+            properties1.pad = 0;
+            properties1.container = p8.getFrame().id;
+            properties1.backColor = "transparent";
+            properties1.text = "<ul><li>任务类型：需求 </li><li>分配人员：张群辉 </li><li> <font color='red'>任务状态：开发中 </font></li><li> 关联服务：SomeFitService</li><li> 任务大小：5 points</li><li> <font color='red'>任务风险：高</font></li><li><font color='red'> 优先级别：1</font></li></ul>";
+            properties1.lineHeight = 2;
+            properties1.hAlign = ALIGN.LEFT;
+
+            p8.createAnimation(arrow1, ANIMIATION_ACTION.IN, "fadeIn", ANIMATION_TRIGGER.CLICK);
+            p8.createAnimation(properties1, ANIMIATION_ACTION.IN, "fadeIn", ANIMATION_TRIGGER.FOLLOW, arrow1.id);
+
+            let arrow2 = p8.createNew("line", 1050, 450);
+            arrow2.container = p8.getFrame().id;
+            arrow2.text = "";
+            arrow2.height = 100;
+            arrow2.width = 1;
+            arrow2.borderWidth = 3;
+            arrow2.beginArrow = false;
+            arrow2.beginArrowEmpty = false;
+
+            let ide = p8.createNew("container", 850, 580);
+            ide.width = 400;
+            ide.height = 300;
+            ide.headColor = "rgba(255,255,255,0.2)";
+            ide.hideText = false;
+            ide.itemPad = [5, 5, 30, 5];
+            ide.shadow = true;
+            ide.container = p8.getFrame().id;
+            ide.backColor = "black";
+            ide.text = "vs code";
+            ide.fontColor = "whitesmoke"
+            ide.lineHeight = 1;
+            ide.hAlign = ALIGN.LEFT;
+
+            let tool1 = p8.createNew("rectangle", 850, 550);
+            tool1.container = ide.id;
+            tool1.backColor = "rgba(255,255,255,0)";
+            tool1.borderColor = "gray";
+            tool1.pDock = PARENT_DOCK_MODE.LEFT;
+            tool1.cornerRadius = 0;
+            tool1.width = 100;
+            tool1.fontSize = 8;
+            tool1.lineHeight = 3;
+            tool1.text = "task1 \n task2 \n task3";
+            tool1.hAlign = ALIGN.LEFT;
+            let dev = p8.createNew("rectangle", 850, 550);
+            dev.container = ide.id;
+            dev.backColor = "rgba(255,255,255,0)";
+            dev.borderColor = "gray";
+            dev.pDock = PARENT_DOCK_MODE.FILL;
+            dev.cornerRadius = 0;
+            dev.fontSize = 8;
+            dev.text = "let demo = ()=>{\n     return move(()=>['mydocument'],-200,0); \n}; \n let helloWorld=()= console.log('hi, world');";
+            dev.hAlign = ALIGN.LEFT;
+
+            p8.createAnimation(arrow2, ANIMIATION_ACTION.IN, "fadeIn", ANIMATION_TRIGGER.CLICK);
+            p8.createAnimation(ide, ANIMIATION_ACTION.IN, "fadeIn", ANIMATION_TRIGGER.FOLLOW, arrow2.id);
+            p8.reset();
+        }
+
+        function page14(g, t2) {
+            let pa5 = g.addPage("目录：广义FIT");
+            pa5.basePage = t2.id;
+            pa5.createNew("agenda", 350, 220);
+            pa5.reset();
+        }
+
+        function page15(g, t2) {
+            let p9 = g.addPage("广义FIT");
+            p9.basePage = t2.id;
+            p9.inMethod = "shrink";
+            let list4 = p9.createNew("frameList", 170, 230);
+            list4.width = 1100;
+            list4.style = "textList";
+            list4.lineHeight = 3;
+            list4.getShapes()[0].text = "ELSA解决广义FIT的一致性管理";
+            list4.getShapes()[1].text = "ELSA不是应用，是一套数字化图形与内容管理的基础引擎";
+            list4.getShapes()[2].text = "ELSA基于shape，一切皆为shape的组合，文字也是一种shape";
+            list4.addLine("ELSA作为底层技术开放给所有团队打造自己的内容PORTAL和一致性管理平台");
+            list4.addLine("ELSA将进入内源，期待所有软件工程师的贡献");
+
+            list4.getShapes().forEach(l => p9.createAnimation(l, ANIMIATION_ACTION.IN, "flyIn", ANIMATION_TRIGGER.CLICK));
+            p9.reset();
+        }
+
+        function page17(g, t2) {
+            let p11 = g.addPage("广义FIT1");
+            p11.basePage = t2.id;
+            let fitlogo = p11.createNew("image", 200, 350);
+            fitlogo.width = 900;
+            fitlogo.height = 200;
+            fitlogo.src = 'fit.png';
+            //fitlogo.emphasized = true;
+            let firecode = "frame.prosRegion.run();"
+            p11.createCodeAnimation(ANIMATION_TRIGGER.FOLLOW, firecode, "console.log('space ship animating ending.....')", "pageCode", p11.id);
+            p11.createAnimation(fitlogo, ANIMIATION_ACTION.IN, "shrink", ANIMATION_TRIGGER.FOLLOW, p11.id);
+            p11.reset();
+        }
+
+        let loadGraph = async () => {
+            await ELSA.import('./../plugins/presentation/presentation.js', ["presentation"]);
+            ELSA.session.id = "presenter";
+            let index = 0;
+            // let g = ELSA.presentation(document.getElementById("editor"), "HUA WEI - E.L.S.A");
+            let agent = await ELSA.newGraph("ict-presentation", "presentation", document.getElementById("editor"));
+            const g = agent._graph;
+            //g.id = "ict-presentation";
+            //g.baseUrl = "http://elsa.fit.lab.huawei.com:8080";
+            g.baseUrl = ENV_CONFIG.collaborationUrl;
+            g.uuid = () => {
+                return "id" + (index++);
+            };
+            g.setting.countdownSeconds = 30 * 60;
+
+            g.fullScreenCancelled = (page) => {
+                editPage(page);
+            }
+            g.coEditing = true;
+            g.initialize()
+                // .import('../../plugins/presentation/frame.js')
+                // .import('../../plugins/mind/mind.js')
+                // .import('../../plugins/mind/topic.js')
+                // .import('../../plugins/mind/subTopic.js')
+                // .import('../../plugins/presentation/presentation.js',['presentationPage'])
+                // .import('../../plugins/presentation/caption.js')
+                // .import('../../plugins/presentation/textList.js')
+                // .import('../../plugins/flowable/nodes/startEnd.js')
+                // .import('../../plugins/flowable/nodes/state.js')
+                // .import('../../plugins/flowable/nodes/parallel.js')
+                // .import('../../plugins/flowable/nodes/subflow.js')
+                // .import('../../plugins/flowable/nodes/event.js')
+                // .import('../../plugins/uml/clazz.js')
+                //.import('../../plugins/document/docPage.js')
+                .then(shapes => {
+
+
+
+                    //-----------------------------templates---------------------------------------
+                    //page 1
+                    let { t1, logo } = page1(g);
+
+                    //page 2
+                    let content = page2(g, logo);
+
+                    //-----------------------------------pages-------------------------------------
+                    // //page 3
+                    page3(g, t1);
+                    //
+                    // //page 4
+                    page4(g, content);
+                    //
+                    // //page 5
+                    page5(g, content);
+                    //
+                    // //page 6
+                    page6(g, content);
+                    //
+                    // //page 7
+                    page7(g, content);
+                    //
+                    // //page 8
+                    page8(g);
+                    //
+                    // //page 9
+                    page9(g, content);
+                    //
+                    // //page 10
+                    page10(g, content);
+                    //
+                    // //page 11.1
+                    page11_1(g, content);
+                    //
+                    // // //page 11
+                    // let {p6, c2} = page11(g, content);
+                    // //
+                    // // //page 12
+                    // let p11111 = page12(g, content);
+                    //
+                    // //page 13
+                    //page13(g, content, p6, c2); todo docpage bug
+                    //
+                    // //page 14
+                    page14(g, content);
+                    //
+                    // //page 15
+                    page15(g, content);
+                    //
+                    //
+                    //page16--3d demo
+                    // let p10 = g.addPage("FIT-3D");
+                    // p10.basePage = t2.id;
+                    // let threeD = p10.createNew("threeDemo", 0, 0);
+                    // //threeD.height = 800;
+                    // threeD.pDock = PARENT_DOCK_MODE.FILL;
+                    // //p10.getFrame().backColor = "blaCK";
+                    // p10.reset();
+                    //
+                    //
+                    //
+                    // //page 17
+                    page17(g, content);
+
+                    //默认编辑第一页
+                    loadAllPages(g, showTemplate).then(p => editPage(p));
+                })
+            return g;
+        }
+
+        window.onload = () => {
+            //init container
+            let alignHeight = id => {
+                let node = document.getElementById(id);
+                node.style.height = node.parentNode.clientHeight + 'px';
+            };
+            alignHeight("pages");
+            alignHeight("editor");
+
+            document.getElementById("switchDisplay").onclick = switchDisplay;
+
+
+            //init shapes tool
+            let shapes = ["rectangle", "ellipse", "line", "table", "frameList", "caption", "agenda"];
+            shapes.forEach(s => displayShapeTool(s));
+
+            //load graph all pages
+            loadGraph().then( g => {
+                currentGraph = g;
+                currentGraph.pageCreated = page => {
+                    page.onClick = () => {
+                        editPage(page);
+                    };
+                    loadAllPages(currentGraph, showTemplate, currentGraph.getPageIndex(page.id)).then(p => editPage(p));
+                };
+            });
+            // currentGraph.setting.fontColor = "dimgray";
+            // currentGraph.setting.borderColor = "gray";
+        }
+    </script>
+
+    <style type=text/css>
+        table {
+            width: 100%;
+        }
+
+        td {
+            border: 1px solid lightgray;
+            vertical-align: top;
+            position: relative;
+        }
+
+        .container {
+            width: 100%;
+            position: absolute;
+            overflow-y: scroll;
+            /* height:800px; */
+        }
+
+        .shape {
+            border: 1px solid lightgray;
+            width: 70px;
+            height: 40px;
+            float: left;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-left: 10px;
+            text-align: center;
+            line-height: 40px;
+        }
+
+        .thumb {
+            border: 2px solid silver;
+            width: 95%;
+            height: 180px;
+            position: absolute;
+        }
+
+        .tempThumb {
+            border: 2px solid red;
+            width: 95%;
+            height: 180px;
+            position: absolute;
+        }
+
+        .pageImage {
+            width: 100%;
+            height: 180px;
+        }
+
+        .focusThumb {
+            border: 4px solid green;
+            width: 95%;
+            height: 180px;
+            position: absolute;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="ict-elsa-page">
+
+        <table>
+            <tr style="height: 64px;">
+                <td colspan="3">
+                    <div id="shapeTool" class='container' style="height: 64px;">
+                    </div>
+                </td>
+            </tr>
+            <tr style="height: 1000px;">
+                <td style="width: 10%;" rowspan="2">
+                    <div id="switchDisplay" onclick="switchDisplay();">显示模板</div>
+                    <div id='pages' class='container'></div>
+                </td>
+                <td>
+                    <div id='editor' class='container'></div>
+                </td>
+                <td style="width: 20%;" rowspan="2">
+                    <div id='property' class='container'></div>
+                </td>
+            </tr>
+            <tr>
+                <td style="height: 200px;">
+
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</body>
+
+</html>
