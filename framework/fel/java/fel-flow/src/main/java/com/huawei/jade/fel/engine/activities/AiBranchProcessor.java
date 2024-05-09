@@ -27,5 +27,5 @@ public interface AiBranchProcessor<O, D, I, RF extends Flow<D>, F extends AiFlow
      * @return 表示分支的终点的 {@link AiState}{@code <}{@link O}{@code , }{@link D}{@code , }{@link I}{@code ,
      * }{@link RF}{@code , }{@link F}{@code >}。
      */
-    AiState<O, D, I, RF, F> process(AiState<I, D, I, RF, F> node);
+    AiState<O, D, ?, RF, F> process(AiState<I, D, I, RF, F> node);
 }
