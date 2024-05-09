@@ -4,8 +4,11 @@
 
 package com.huawei.jade.store.service;
 
+import com.huawei.jade.store.Item;
 import com.huawei.jade.store.ItemInfo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -77,9 +80,11 @@ public class ItemData {
      * 设置商品的分类。
      *
      * @param category 表示待设置的商品分类的 {@link String}。
+     * @return 表示商品信息的 {@link ItemData}。
      */
-    public void setCategory(String category) {
+    public ItemData setCategory(String category) {
         this.category = category;
+        return this;
     }
 
     /**
@@ -95,9 +100,11 @@ public class ItemData {
      * 设置商品的分组。
      *
      * @param group 表示待设置的商品分组的 {@link String}。
+     * @return 表示商品信息的 {@link ItemData}。
      */
-    public void setGroup(String group) {
+    public ItemData setGroup(String group) {
         this.group = group;
+        return this;
     }
 
     /**
@@ -113,9 +120,11 @@ public class ItemData {
      * 设置商品的名字。
      *
      * @param name 表示商品名字的 {@link String}。
+     * @return 表示商品信息的 {@link ItemData}。
      */
-    public void setName(String name) {
+    public ItemData setName(String name) {
         this.name = name;
+        return this;
     }
 
     /**
@@ -131,9 +140,11 @@ public class ItemData {
      * 设置商品的描述。
      *
      * @param description 表示待设置的商品描述的 {@link String}。
+     * @return 表示商品信息的 {@link ItemData}。
      */
-    public void setDescription(String description) {
+    public ItemData setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     /**
@@ -149,9 +160,11 @@ public class ItemData {
      * 设置商品的唯一标识。
      *
      * @param uniqueName 表示待设置的商品唯一标识的 {@link String}。
+     * @return 表示商品信息的 {@link ItemData}。
      */
-    public void setUniqueName(String uniqueName) {
+    public ItemData setUniqueName(String uniqueName) {
         this.uniqueName = uniqueName;
+        return this;
     }
 
     /**
@@ -167,9 +180,11 @@ public class ItemData {
      * 设置商品的格式规范。
      *
      * @param schema 表示待设置的商品格式规范的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     * @return 表示商品信息的 {@link ItemData}。
      */
-    public void setSchema(Map<String, Object> schema) {
+    public ItemData setSchema(Map<String, Object> schema) {
         this.schema = schema;
+        return this;
     }
 
     /**
@@ -185,9 +200,11 @@ public class ItemData {
      * 设置商品的来源。
      *
      * @param source 表示待设置的商品来源的 {@link String}。
+     * @return 表示商品信息的 {@link ItemData}。
      */
-    public void setSource(String source) {
+    public ItemData setSource(String source) {
         this.source = source;
+        return this;
     }
 
     /**
@@ -203,9 +220,11 @@ public class ItemData {
      * 设置商品的标签集合。
      *
      * @param tags 表示待设置的商品标签集合的 {@link Set}{@code <}{@link String}{@code >}。
+     * @return 表示商品信息的 {@link ItemData}。
      */
-    public void setTags(Set<String> tags) {
+    public ItemData setTags(Set<String> tags) {
         this.tags = tags;
+        return this;
     }
 
     /**
@@ -215,15 +234,13 @@ public class ItemData {
      * @return 表示商品信息的数据内容的 {@link ItemData}。
      */
     public static ItemData from(ItemInfo itemInfo) {
-        ItemData itemData = new ItemData();
-        itemData.setCategory(itemInfo.category());
-        itemData.setGroup(itemInfo.group());
-        itemData.setName(itemInfo.name());
-        itemData.setUniqueName(itemInfo.uniqueName());
-        itemData.setTags(itemInfo.tags());
-        itemData.setSchema(itemInfo.schema());
-        itemData.setDescription(itemInfo.description());
-        return itemData;
+        return new ItemData().setCategory(itemInfo.category())
+                .setGroup(itemInfo.group())
+                .setName(itemInfo.name())
+                .setUniqueName(itemInfo.uniqueName())
+                .setTags(itemInfo.tags())
+                .setSchema(itemInfo.schema())
+                .setDescription(itemInfo.description());
     }
 
     /**
@@ -242,5 +259,19 @@ public class ItemData {
                 .description(itemData.getDescription())
                 .schema(itemData.getSchema())
                 .build();
+    }
+
+    /**
+     * 表示将一组商品转换为商品的传输结构。
+     *
+     * @param items 表示要要转化的商品列表 {@link List}{@code <}{@link Item}{@code >}。
+     * @return 表示返回的一组商品传输结构列表 {@link List}{@code <}{@link ItemData}{@code >}。
+     */
+    public static List<ItemData> fromItems(List<Item> items) {
+        List<ItemData> res = new ArrayList<>();
+        for (Item item : items) {
+            res.add(ItemData.from(item.itemInfo()));
+        }
+        return res;
     }
 }

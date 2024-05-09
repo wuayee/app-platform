@@ -50,7 +50,7 @@ public class SchemaToolMetadataTest {
         Invoker invoker = mock(Invoker.class);
         BrokerClient client = mock(BrokerClient.class);
         when(client.getRouter(eq("t1"))).thenReturn(router);
-        when(router.route(any())).thenReturn(invoker);
+        when(router.route()).thenReturn(invoker);
         when(invoker.invoke(any())).thenAnswer(invocation -> {
             if (Objects.equals(invocation.getArgument(0), "1")) {
                 return "OK";
@@ -71,7 +71,7 @@ public class SchemaToolMetadataTest {
     ItemInfo buildItemInfo() {
         return ItemInfo.custom()
                 .category("Tool")
-                .group("t1")
+                .group("t1#test_schema_default_implementation_name")
                 .name("test_schema_default_implementation_name")
                 .uniqueName("schema-uuid")
                 .tags(Collections.singleton("FIT"))
@@ -82,7 +82,6 @@ public class SchemaToolMetadataTest {
 
     Map<String, Object> buildSchema() {
         return MapBuilder.<String, Object>get()
-                .put("group", "t1")
                 .put("name", "test_schema_default_implementation_name")
                 .put("index", "test_schema_index")
                 .put("description", "This is a demo FIT function.")
@@ -101,7 +100,6 @@ public class SchemaToolMetadataTest {
                                 .put("required", Collections.singletonList("p1"))
                                 .build())
                 .put("return", MapBuilder.<String, Object>get().put("type", "string").build())
-                .put("tags", "FIT")
                 .build();
     }
     @Test

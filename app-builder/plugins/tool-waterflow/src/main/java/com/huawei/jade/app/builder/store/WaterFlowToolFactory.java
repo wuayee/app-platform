@@ -28,7 +28,7 @@ public class WaterFlowToolFactory implements ToolFactory {
 
     @Override
     public String type() {
-        return "WaterFlow";
+        return "WATERFLOW";
     }
 
     @Override

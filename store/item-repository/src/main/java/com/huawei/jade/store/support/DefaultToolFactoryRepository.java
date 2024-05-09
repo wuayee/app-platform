@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 @Component
-public class DefaultToolFactoryRepo implements ToolFactoryRepository {
+public class DefaultToolFactoryRepository implements ToolFactoryRepository {
     private Map<String, ToolFactory> toolFactoryMap = new ConcurrentHashMap<>();
 
     @Override

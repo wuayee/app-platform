@@ -5,6 +5,7 @@
 package com.huawei.jade.store.repository;
 
 import com.huawei.jade.store.Item;
+import com.huawei.jade.store.ItemInfo;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +14,7 @@ import java.util.Optional;
  * 存入数据库的工具的实体类。
  *
  * @author 王攀博
- * @since 2024/4/27
+ * @since 2024-04-27
  */
 public interface ItemRepository {
     /**
@@ -35,10 +36,10 @@ public interface ItemRepository {
     /**
      * 添加商品。
      *
-     * @param item 表示待增加的商品信息的 {@link Item}。
+     * @param itemInfo 表示待增加的商品信息的 {@link ItemInfo}。
      * @return 表示商品的唯一标识的 {@link String}。
      */
-    String addItem(Item item);
+    String addItem(ItemInfo itemInfo);
 
     /**
      * 删除商品。
@@ -93,4 +94,27 @@ public interface ItemRepository {
      */
     List<Item> getItems(String category, String group, List<String> includeTags, List<String> excludeTags, int offset,
             int limit);
+
+    /**
+     * 查询所有的组。
+     *
+     * @param category category 表示商品分类的 {@link String}。
+     * @param tag 表示 FitTool 的标签的 {@link String}。
+     * @param offset 表示分页查询的偏移量的 {@code int}。
+     * @param limit 表示分页查询的数量限制的 {@code int}。
+     * @return 所有组列表 {@link List}{@code <}{@link String}{@code >}。
+     */
+    List<String> getAllGroups(String category, String tag, int offset, int limit);
+
+    /**
+     * 根据商品分类、标签和分组查询所有商品信息。
+     *
+     * @param category 表示商品分类的 {@link String}。
+     * @param tag 表示商品的标签的 {@link String}。
+     * @param group 表示商品的分组的 {@link String}。
+     * @param offset 表示分页查询偏移量的 {@code int}。
+     * @param limit 表示分页查询数量限制的 {@code int}。
+     * @return 所有商品详细信息的列表的 {@link List}{@code <}{@link Item}{@code >}。
+     */
+    List<Item> getItemsByGroup(String category, String tag, String group, int offset, int limit);
 }
