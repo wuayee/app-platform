@@ -6,11 +6,11 @@ package com.huawei.jade.app.builder.store;
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.jade.fel.spi.chat.message.FlatChatMessage;
-import com.huawei.jade.fel.spi.chat.message.ToolMessage;
-import com.huawei.jade.fel.spi.tool.Tool;
-import com.huawei.jade.fel.spi.tool.ToolCall;
-import com.huawei.jade.fel.spi.tool.ToolProvider;
+import com.huawei.jade.fel.chat.character.ToolMessage;
+import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
+import com.huawei.jade.fel.tool.Tool;
+import com.huawei.jade.fel.tool.ToolCall;
+import com.huawei.jade.fel.tool.ToolProvider;
 import com.huawei.jade.store.service.ItemService;
 import com.huawei.jade.store.service.ToolExecuteService;
 
