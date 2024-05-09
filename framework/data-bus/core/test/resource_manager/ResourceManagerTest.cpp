@@ -15,8 +15,10 @@ using namespace DataBus::Common;
 
 namespace DataBus {
 namespace Test {
-class ResourceManagerTest : public testing::Test {
 
+const static std::string testObjectKey = "8e20a991c4bbb0fab743ee02604e5ad3";
+
+class ResourceManagerTest : public testing::Test {
 public:
     std::unique_ptr<ResourceManager> resourceManager;
 protected:
@@ -45,7 +47,7 @@ protected:
         int32_t clientId = 1;
         uint64_t memorySize = 100U;
         const tuple<int32_t, ErrorType> applyMemoryRes =
-                resourceManager->HandleApplyMemory(clientId, memorySize);
+                resourceManager->HandleApplyMemory(clientId, testObjectKey, memorySize);
         return get<0>(applyMemoryRes);
     }
 
@@ -73,11 +75,24 @@ TEST_F(ResourceManagerTest, should_clean_up_ftok_file_path_when_init)
     EXPECT_FALSE(IsFolderExist(filePath));
 }
 
+TEST_F(ResourceManagerTest, should_not_malloc_when_key_already_exists)
+{
+    int32_t clientId = 1;
+    uint64_t memorySize = 100U;
+    // 首次申请内存分配
+    resourceManager->HandleApplyMemory(clientId, testObjectKey, memorySize);
+    // 二次申请内存分配
+    tuple<int32_t, ErrorType> applyMemoryRes = resourceManager->HandleApplyMemory(clientId, testObjectKey, memorySize);
+    EXPECT_EQ(-1, get<0>(applyMemoryRes));
+    EXPECT_EQ(ErrorType::KeyAlreadyExists, get<1>(applyMemoryRes));
+}
+
 TEST_F(ResourceManagerTest, should_malloc_and_save_memory_info_when_handle_apply_memory_succeeds)
 {
     int32_t clientId = 1;
     uint64_t memorySize = 100U;
-    const tuple<int32_t, ErrorType> applyMemoryRes = resourceManager->HandleApplyMemory(clientId, memorySize);
+    const tuple<int32_t, ErrorType> applyMemoryRes = resourceManager->HandleApplyMemory(clientId, testObjectKey,
+                                                                                        memorySize);
     int32_t memoryId = get<0>(applyMemoryRes);
     ErrorType errorType = get<1>(applyMemoryRes);
     EXPECT_EQ(ErrorType::None, errorType);
@@ -188,10 +203,7 @@ TEST_F(ResourceManagerTest, should_release_permission_when_permission_type_misma
 
 TEST_F(ResourceManagerTest, should_update_memory_status_when_handle_apply_and_release_permission_succeed)
 {
-    int32_t memoryApplicantId = 1;
-    uint64_t memorySize = 100U;
-    const tuple<int32_t, ErrorType> applyMemoryRes = resourceManager->HandleApplyMemory(memoryApplicantId, memorySize);
-    int32_t memoryId = get<0>(applyMemoryRes);
+    int32_t memoryId = AllocateMemory();
 
     int32_t permissionApplicantId = 2;
     tuple<bool, uint64_t, ErrorType> applyPermitRes = resourceManager->HandleApplyPermission(permissionApplicantId,
