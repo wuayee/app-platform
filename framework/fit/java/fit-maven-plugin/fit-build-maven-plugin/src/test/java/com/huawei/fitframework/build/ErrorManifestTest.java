@@ -4,19 +4,22 @@
 
 package com.huawei.fitframework.build;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fitframework.build.service.ErrorManifest;
-import com.huawei.fitframework.util.IoUtils;
 import com.huawei.fitframework.util.MapBuilder;
+import com.huawei.fitframework.util.XmlUtils;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.io.InputStream;
+import java.util.Map;
 
 /**
  * 表示 {@link ErrorManifest} 的单元测试。
@@ -29,15 +32,21 @@ class ErrorManifestTest {
     @Test
     @DisplayName("将正确的元数据信息写入到输出流中")
     void shouldWriteErrorMetadata() throws IOException, MojoExecutionException {
-        byte[] buffer;
+        Document actualDocument;
+        Document expectedDocument;
         ErrorManifest file =
                 new ErrorManifest(MapBuilder.<String, Integer>get().put("com.huawei.SampleException", 1).build());
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             file.write(out);
-            buffer = out.toByteArray();
+            try (ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray())) {
+                actualDocument = XmlUtils.load(in);
+            }
         }
-        String actual = new String(buffer, StandardCharsets.UTF_8);
-        String expected = IoUtils.content(ErrorManifestTest.class.getClassLoader(), "errors.xml");
-        assertEquals(expected, actual);
+        try (InputStream in = ErrorManifestTest.class.getResourceAsStream("/errors.xml")) {
+            expectedDocument = XmlUtils.load(in);
+        }
+        Map<String, Object> actual = XmlUtils.toMap(actualDocument);
+        Map<String, Object> expected = XmlUtils.toMap(expectedDocument);
+        assertThat(actual).isEqualTo(expected);
     }
 }
