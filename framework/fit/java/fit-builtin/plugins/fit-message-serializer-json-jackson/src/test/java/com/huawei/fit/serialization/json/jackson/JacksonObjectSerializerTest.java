@@ -179,4 +179,13 @@ public class JacksonObjectSerializerTest {
             return new ByteArrayInputStream(serialized);
         }
     }
+
+    @Test
+    @DisplayName("当输入为字符串时，反序列化为字符串")
+    void givenStringThenResultIsString() {
+        String expected = "123";
+        String serialize = JacksonObjectSerializerTest.this.jsonSerializer.serialize(expected);
+        Object actual = JacksonObjectSerializerTest.this.jsonSerializer.deserialize(serialize, String.class);
+        assertThat(actual).isEqualTo(expected);
+    }
 }

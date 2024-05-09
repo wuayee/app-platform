@@ -44,7 +44,7 @@ public interface ObjectSerializer {
             throws SerializationException;
 
     /**
-     * 将指定对象按照指定编码方式序列化到输出字节流中。
+     * 将指定对象按照指定的编码方式序列化到输出字节流中。
      *
      * @param object 表示指定对象的 {@link T}。
      * @param charset 表示指定的编码方式的 {@link Charset}。当 {@code charset} 为 {@code null} 时，默认选择
@@ -72,7 +72,7 @@ public interface ObjectSerializer {
     }
 
     /**
-     * 将指定对象按照 {@link StandardCharsets#UTF_8} 的编码方式序列化为字节数组。
+     * 将指定对象按照指定的编码方式序列化为字节数组。
      *
      * @param object 表示指定对象的 {@link T}。
      * @param charset 表示指定的编码方式的 {@link Charset}。
@@ -87,6 +87,17 @@ public interface ObjectSerializer {
         } catch (IOException e) {
             throw new SerializationException("Failed to serialize object to bytes.", e);
         }
+    }
+
+    /**
+     * 将指定对象按照 {@link StandardCharsets#UTF_8} 的编码方式序列化为字符串。
+     *
+     * @param object 表示指定对象的 {@link T}。
+     * @return 表示序列化后的字符串 {@link String}。
+     * @throws SerializationException 当序列化过程发生异常时。
+     */
+    default <T> String serialize(T object) throws SerializationException {
+        return new String(this.serialize(object, StandardCharsets.UTF_8), StandardCharsets.UTF_8);
     }
 
     /**
@@ -136,7 +147,7 @@ public interface ObjectSerializer {
     }
 
     /**
-     * 将字节数组按照 {@link StandardCharsets#UTF_8} 的编码方式反序列化为指定类型的对象。
+     * 将字节数组按照指定编码方式反序列化为指定类型的对象。
      *
      * @param bytes 表示字节数组的 {@code byte[]}。
      * @param charset 表示指定编码方式的 {@link Charset}。
@@ -151,5 +162,18 @@ public interface ObjectSerializer {
         } catch (IOException e) {
             throw new SerializationException("Failed to deserialize bytes to object.", e);
         }
+    }
+
+    /**
+     * 将指定字符串按照 {@link StandardCharsets#UTF_8} 的编码方式反序列化为指定类型的对象。
+     *
+     * @param s 表示指定字符串。
+     * @param objectType 表示指定对象类型的 {@link Type}。
+     * @param <T> 表示指定对象类型的 {@link T}。
+     * @return 表示反序列化后的对象的 {@link T}。
+     * @throws SerializationException 当反序列化过程发生异常时。
+     */
+    default <T> T deserialize(String s, Type objectType) throws SerializationException {
+        return this.deserialize(s.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8, objectType);
     }
 }
