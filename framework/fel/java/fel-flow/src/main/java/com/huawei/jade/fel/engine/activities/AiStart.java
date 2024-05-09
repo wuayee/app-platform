@@ -263,7 +263,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public AiState<MessageContent, D, O, RF, F> retrieve(Retriever<O> retriever) {
         Validation.notNull(retriever, "Retriever operator cannot be null.");
-        return new AiState<>(new State<>(this.publisher().map(input -> retriever.invoke(input.getData()), null, null),
+        return new AiState<>(new State<>(this.publisher().map(input -> retriever.invoke(input.getData()), null),
                 this.getFlow().origin()), this.getFlow());
     }
 
@@ -322,7 +322,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Processor<O, R> processor = this.publisher().map(input -> {
             pattern.offer(input.getData(), input.getSession());
             return null;
-        }, null, null);
+        }, null);
         AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
         state.offer(pattern);
         return state;
@@ -362,7 +362,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Processor<O, R> processor = this.publisher().map(input -> {
             aiFlow.converse(input.getSession()).offer(input.getData());
             return null;
-        }, null, null);
+        }, null);
         AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
         state.offer(aiFlow);
         return state;
@@ -389,7 +389,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Processor<O, R> processor = this.publisher().map(input -> {
             aiFlow.converse(input.getSession()).offer(nodeId, Collections.singletonList(input.getData()));
             return null;
-        }, null, null);
+        }, null);
         AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
         state.offer(aiFlow);
         return state;
@@ -411,7 +411,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
                 messages.addAll(template.invoke(runnableArg).messages());
             }
             return messages;
-        }, null, null), this.getFlow().origin()), this.getFlow());
+        }, null), this.getFlow().origin()), this.getFlow());
     }
 
     /**
@@ -432,7 +432,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
                             .map(model::bind)
                             .orElse(model);
             return dynamicModel.invoke(new AiRunnableArg<>(ObjectUtils.cast(input.getData()), session));
-        }, null, null), this.getFlow().origin()), this.getFlow());
+        }, null), this.getFlow().origin()), this.getFlow());
     }
 
     /**
@@ -453,8 +453,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         for (SyncPattern<O, Tip> pattern : patterns) {
             AiBranchProcessor<Tip, D, O, RF, F> branchProcessor = node -> {
                 Processor<O, Tip> processor = node.publisher()
-                        .map(input -> pattern.invoke(new AiRunnableArg<>(input.getData(), input.getSession())),
-                                null, null);
+                        .map(input -> pattern.invoke(new AiRunnableArg<>(input.getData(), input.getSession())), null);
                 return new AiState<>(new State<>(processor, mineOrigin), mineFlow);
             };
             aiFork = Optional.ofNullable(aiFork)

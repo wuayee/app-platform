@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * AI 流程基础表达式的测试。
@@ -37,7 +38,7 @@ public class AiFlowBasicExpressionTest {
         @DisplayName("普通会话，map和just节点成功消费数据")
         void shouldOkWhenOfferDataWithNormalConverse() throws InterruptedException {
             AiProcessFlow<AiFlowTestData, String> flow = AiFlows.<AiFlowTestData>create()
-                    .just(input -> input.setFirst(1))
+                    .just(input -> input.getFirst().set(1))
                     .map(input -> String.valueOf(input.total()))
                     .close();
             StringBuilder answer = new StringBuilder();
@@ -49,7 +50,7 @@ public class AiFlowBasicExpressionTest {
         @DisplayName("绑定自定义上下文，map和just节点成功消费自定义信息")
         void shouldOkWhenOfferDataWithBindingCustomContext() throws InterruptedException, TimeoutException {
             AiProcessFlow<AiFlowTestData, String> flow = AiFlows.<AiFlowTestData>create()
-                    .just((input, ctx) -> input.setFirst(input.getFirst() + ctx.<Integer>getState("key0")))
+                    .just((input, ctx) -> input.getFirst().getAndAdd(ctx.<Integer>getState("key0")))
                     .map((input, ctx) -> String.valueOf(input.total()) + ctx.getState("key1"))
                     .<String>process(((input, ctx, collector) -> {
                         collector.collect(input);
@@ -151,6 +152,78 @@ public class AiFlowBasicExpressionTest {
             assertEquals(2, counters.size());
             assertEquals(3, counters.get(0));
             assertEquals(7, counters.get(1));
+        }
+    }
+
+    @Nested
+    @DisplayName("测试条件分支")
+    class ConditionBranchTest {
+        @Test
+        void test_create_ai_flow_conditions() {
+            AtomicInteger result = new AtomicInteger(0);
+            AiFlows.<String>create()
+                    .map(data -> data + "1").id("plus1")
+                    .map(data -> data + "2").id("plus2")
+                    .conditions()
+                    .matchTo(data -> data.length() < 4, node -> node.to("plus1"))
+                    .match(data -> data.length() > 5, node -> node.map(i -> Integer.parseInt(i)))
+                    .matchTo(data -> data.length() < 10, node -> node.just(i -> {}).to("plus2"))
+                    .others()
+                    .close(i -> result.set(i.get().getData()))
+                    .converse()
+                    .offer("3");
+            waitUntil(() -> result.get() != 0);
+            assertEquals(312122, result.get());
+        }
+
+        @Test
+        @DisplayName("流程实例condition节点以及match节点以及others节点流转逻辑")
+        void testConditionsMatchTo() throws InterruptedException {
+            List<AiFlowTestData> output = new ArrayList<>();
+            AiProcessFlow<AiFlowTestData, AiFlowTestData> flow = AiFlows.<AiFlowTestData>create()
+                    .just(data -> data.getFirst().incrementAndGet()).id("plusF")
+                    .just(data -> data.getSecond().incrementAndGet()).id("plusS")
+                    .conditions()
+                    .matchTo(data -> data.getFirst().get() < 20, node -> node.to("plusF"))
+                    .matchTo(data -> data.getSecond().get() < 20, node -> node.to("plusS"))
+                    .others(i -> i)
+                    .close(r -> output.add(r.get().getData()));
+            flow.converse().offer(new AiFlowTestData(11, 0, 0)).await();
+            assertThat(output).hasSize(1);
+            assertThat(output.get(0).getFirst().get()).isEqualTo(20);
+            assertThat(output.get(0).getSecond().get()).isEqualTo(20);
+            assertThat(output.get(0).getThird().get()).isEqualTo(0);
+        }
+
+        @Test
+        @DisplayName("流程实例condition节点以及match节点以及others节点流转逻辑")
+        void testConditionsMatchToAndMatch() throws InterruptedException {
+            List<AiFlowTestData> output = new ArrayList<>();
+            AiProcessFlow<AiFlowTestData, AiFlowTestData> flow = AiFlows.<AiFlowTestData>create()
+                    .just(data -> data.getThird().incrementAndGet()).id("plusT")
+                    .just(data -> data.getFirst().incrementAndGet()).id("plusF")
+                    .just(data -> data.getSecond().incrementAndGet()).id("plusS")
+                    .conditions()
+                    .matchTo(data -> data.getFirst().get() < 20, node -> node.to("plusF"))
+                    .matchTo(data -> data.getSecond().get() < 20, node -> node.to("plusS"))
+                    .match(data -> data.getThird().get() < 5, node -> node.just(data -> data.getThird().getAndAdd(5)))
+                    .matchTo(data -> data.getThird().get() < 20, node -> node.to("plusT"))
+                    .others(i -> i)
+                    .close(r -> output.add(r.get().getData()));
+            flow.converse().offer(new AiFlowTestData(11, 0, 0)).await();
+
+            assertThat(output).hasSize(1);
+            assertThat(output.get(0).getFirst().get()).isEqualTo(20);
+            assertThat(output.get(0).getSecond().get()).isEqualTo(20);
+            assertThat(output.get(0).getThird().get()).isEqualTo(6);
+            output.clear();
+
+            flow.converse().offer(new AiFlowTestData(11, 0, 12)).await();
+            assertThat(output).hasSize(1);
+            assertThat(output.get(0).getFirst().get()).isEqualTo(27);
+            assertThat(output.get(0).getSecond().get()).isEqualTo(27);
+            assertThat(output.get(0).getThird().get()).isEqualTo(20);
+            output.clear();
         }
     }
 }
