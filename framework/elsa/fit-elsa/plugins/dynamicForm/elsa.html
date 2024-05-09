@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>elsa</title>
+
+
+    <script type="module">
+        import { ALIGN, DOCK_MODE, FONT_STYLE, FONT_WEIGHT, PARENT_DOCK_MODE } from '../../common/const.js';
+        import { ELSA } from "../../core/elsaEntry.js";
+
+        const graphId = "huizi-dynamic-form-00056 graph";
+        window.onload = async () => {
+            const g = await ELSA.editGraph(graphId, "graph", document.getElementById("main"));
+            if (g._graph.pages.length > 0) {
+                g._graph.import('/fit/portal/fit-elsa/plugins/dynamicForm/form.js');
+                g.openCollaboration();
+                g._graph.edit(0);
+                return;
+            }
+
+            ELSA.newGraph(graphId, "graph", document.getElementById("main"))
+                .then(async agent => {
+                    agent.openCollaboration();
+                    const g = agent._graph;
+                    g.import('/fit/portal/fit-elsa/plugins/dynamicForm/form.js')
+
+                        .then(shapes => {
+                            const p = g.addPage("dynamic form");
+                            // p.startAnimation();
+
+                            let f = p.createNew("form", 200, 50);
+                            f.height = 1030;
+
+                            let d0 = p.createNew("htmlDiv", 210, 60);
+                            d0.container = f.id;
+                            d0.height = 70;
+                            d0.dockMode = DOCK_MODE.FILL;
+                            let l01 = p.createNew("htmlLabel", 210, 60);
+                            l01.container = d0.id;
+                            l01.hAlign = ALIGN.LEFT;
+                            l01.fontSize = 40;
+                            l01.heigeht = 60;
+                            l01.text = "Elsa Dynamic Form";
+
+                            //=========================================================
+
+                            let h1 = p.createNew("htmlHr", 210, 131);
+                            h1.container = f.id;
+                            //=========================================================
+                            let d1 = p.createNew("htmlDiv", 210, 140);
+                            d1.container = f.id;
+                            d1.dockMode = DOCK_MODE.HORIZONTAL;
+                            d1.dockAlign = ALIGN.LEFT;
+                            d1.division = 2;
+                            d1.height = 160;
+
+                            let h2 = p.createNew("htmlHr", 210, 300);
+                            h2.container = f.id;
+
+                            let d2 = p.createNew("htmlDiv", 210, 150);
+                            d2.pad = 0;
+                            d2.container = d1.id;
+                            d2.dockMode = DOCK_MODE.FILL;
+
+                            let d4 = p.createNew("htmlDiv", 210, 150);
+                            d4.container = d2.id;
+                            d4.pad = 0;
+                            d4.dockMode = DOCK_MODE.HORIZONTAL;
+                            d4.dockAlign = ALIGN.LEFT;
+                            d4.borderColor = "green";
+
+                            let d5 = p.createNew("htmlDiv", 210, 200);
+                            d5.width = 150;
+                            d5.container = d4.id;
+                            d5.dockMode = DOCK_MODE.VERTICAL;
+                            d5.borderColor = "Red";
+
+                            let d6 = p.createNew("htmlDiv", 210, 200);
+                            d6.container = d4.id;
+                            d6.width = 220;
+                            d6.dockMode = DOCK_MODE.VERTICAL;
+
+                            let l1 = p.createNew("htmlLabel", 210, 200);
+                            l1.container = d5.id;
+                            l1.height = 25;
+                            l1.text = "label 1:"
+                            let l2 = p.createNew("htmlLabel", 210, 230);
+                            l2.height = 25;
+                            l2.container = d5.id;
+                            l2.text = "label 2:"
+                            let l3 = p.createNew("htmlLabel", 210, 260);
+                            l3.height = 25;
+                            l3.container = d5.id;
+                            l3.text = "label 3:"
+                            let l4 = p.createNew("htmlLabel", 210, 290);
+                            l4.height = 25;
+                            l4.container = d5.id;
+                            l4.text = "label 4:"
+
+                            let t1 = p.createNew("htmlText", 2100, 80);
+                            t1.container = d6.id;
+                            let t2 = p.createNew("htmlText", 2100, 80);
+                            t2.container = d6.id;
+                            let t3 = p.createNew("htmlText", 2100, 80);
+                            t3.container = d6.id;
+                            let t4 = p.createNew("htmlText", 2100, 80);
+                            t4.container = d6.id;
+                            //t1.borderWidth = 2;
+
+                            let d3 = p.createNew("htmlDiv", 2100, 80);
+                            d3.container = d1.id;
+
+                            d3.dockMode = DOCK_MODE.HORIZONTAL;
+                            d3.dockAlign = ALIGN.LEFT;
+                            let d31 = p.createNew("htmlDiv", 2100, 80);
+                            d31.container = d3.id;
+                            d31.width = 140;
+                            d31.dockMode = DOCK_MODE.VERTICAL;
+                            //d31.backColor = "red";
+
+                            let d32 = p.createNew("htmlDiv", 2100, 80);
+                            d32.container = d3.id;
+                            d32.width = 225;
+                            d32.dockMode = DOCK_MODE.VERTICAL;
+
+                            let l311 = p.createNew("htmlLabel", 2100, 80);
+                            l311.container = d31.id;
+                            let l312 = p.createNew("htmlLabel", 2100, 80);
+                            l312.container = d31.id;
+
+                            let c321 = p.createNew("htmlComobox", 2100, 80, "como");
+                            c321.container = d32.id;
+
+                            let c322 = p.createNew("htmlListBox", 2100, 80, "list");
+                            c322.container = d32.id;
+
+                            let d11 = p.createNew("htmlDiv", 2100, 60);
+                            d11.container = f.id;
+                            d11.dockMode = DOCK_MODE.FILL;
+                            //d11.backColor = "red";
+
+                            let table1 = p.createNew("htmlTable", 10, 60);
+                            table1.container = d11.id;
+
+                            let h3 = p.createNew("htmlHr", 2100, 60);
+                            h3.container = f.id;
+
+                            let d50 = p.createNew("htmlDiv", 2100, 60);
+                            d50.container = f.id;
+                            d50.dockMode = DOCK_MODE.HORIZONTAL;
+                            d50.dockAlign = ALIGN.LEFT;
+
+                            let d51 = p.createNew("htmlDiv", 2100, 60, "g1");
+                            d51.container = d50.id;
+                            d51.dockMode = DOCK_MODE.VERTICAL;
+                            d51.width = 150;
+
+                            let d511 = p.createNew("htmlRadioBox", 2100, 60);
+                            d511.container = d51.id;
+                            let d512 = p.createNew("htmlRadioBox", 2100, 60);
+                            d512.container = d51.id;
+                            let d513 = p.createNew("htmlRadioBox", 2100, 60);
+                            d513.container = d51.id;
+
+                            let d52 = p.createNew("htmlDiv", 2100, 60);
+                            d52.container = d50.id;
+                            d52.dockMode = DOCK_MODE.VERTICAL;
+                            d52.width = 150;
+
+                            let d521 = p.createNew("htmlCheckBox", 2100, 60);
+                            d521.container = d52.id;
+                            let d522 = p.createNew("htmlCheckBox", 2100, 60);
+                            d522.container = d52.id;
+                            let d523 = p.createNew("htmlCheckBox", 2100, 60);
+                            d523.container = d52.id;
+
+                            let d53 = p.createNew("htmlDiv", 2100, 60);
+                            d53.container = d50.id;
+                            d53.dockMode = DOCK_MODE.FILL;
+                            d53.width = 200;
+
+                            let d531 = p.createNew("htmlTree", 2100, 60);
+                            d531.container = d53.id;
+
+                            let h4 = p.createNew("htmlHr", 2100, 60);
+                            h4.container = f.id;
+
+                            let tb1 = p.createNew("tab", 2100, 60);
+                            tb1.container = f.id;
+                            const tps = tb1.getShapes(s => s.type === "tabPage");
+                            tps[0].focusBackColor = tps[0].backColor = "red";
+                            tps[0].focusBorderColor = tps[0].borderColor = "red";
+                            tps[1].focusBackColor = tps[1].backColor = "green";
+                            tps[1].focusBorderColor = tps[1].borderColor = "green";
+
+                            const bts = p.createNew("htmlDiv", 2100, 60);
+                            bts.container = f.id;
+                            bts.height = 34;
+                            bts.dockMode = DOCK_MODE.HORIZONTAL;
+                            bts.hAlign = ALIGN.RIGHT;
+                            // const bt1 = p.createNew("htmlLabel", 0, 0,"btn");
+                            const bt1 = p.createNew("rectangle", 0, 0,"btn");
+                            bt1.fontSize = 18;
+                            bt1.hAlign = ALIGN.MIDDLE;
+                            bt1.text = "try me";
+                            bt1.borderColor = "gray";
+                            bt1.borderWidth = 1;
+                            // bt1.container = bts.id;
+                            bt1.container = p.id;
+                            bt1.width = 80;
+                            bt1.height = 30;
+                            bt1.clickCode = "(p,s)=>{s.emphasized=!s.emphasized}";
+
+                            const bt2 = p.createNew("htmlLabel", 0, 0);
+                            bt2.fontSize = 18;
+                            bt2.hAlign = ALIGN.MIDDLE;
+                            bt2.text = "cancel";
+                            bt2.borderColor = "gray";
+                            bt2.borderWidth = 1;
+                            bt2.container = bts.id;
+
+                            //p.mode = PAGE_MODE.RUNTIME;*/
+                            p.reset();
+
+                            // const data = p.serialize();
+                            // p.deSerialize(data).then(()=>{
+                            //     p.reset();
+                            // });
+                            return;
+                        });
+
+                });
+        };
+
+    </script>
+</head>
+
+<body>
+    <div id="main" style="width:1600px; height: 1200px;position: absolute;"></div>
+    <div id="point" style="width:6px; height: 6px;position: absolute;left:397px;top:397px;background-color: brown;">
+    </div>
+    <!-- <button onclick="p.save()">Save as image (tested on PC browser only)</button> -->
+
+</body>
+
+</html>

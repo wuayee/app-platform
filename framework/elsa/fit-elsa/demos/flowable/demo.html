@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>elsa</title>
+
+
+    <script type="module" language="javascript">
+        import { ELSA } from "../../core/elsaEntry.js";
+        import { pluginMeta } from '../../core/configuration/pluginMeta.js';
+
+        const data1 = {
+            "id": "a00jwh",
+            "title": "",
+            "source": "elsa",
+            "type": "graph",
+            "tenant": "default",
+            "pages": [
+                {
+                    "type": "page",
+                    "id": "elsa-page:qisok0",
+                    "text": "flowable",
+                    "namespace": "elsa",
+                    "x": 0,
+                    "y": 0,
+                    "width": 1272,
+                    "height": 637,
+                    "bold": true,
+                    "italic": false,
+                    "dockAlign": "top",
+                    "itemSpace": 5,
+                    "itemPad": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "itemScroll": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "hideText": true,
+                    "dockMode": "none",
+                    "shapesAs": {},
+                    "borderColor": "white",
+                    "backColor": "white",
+                    "fontSize": 18,
+                    "fontFace": "arial",
+                    "fontColor": "#FF5733",
+                    "fontWeight": "bold",
+                    "fontStyle": "normal",
+                    "hAlign": "left",
+                    "vAlign": "top",
+                    "moveable": true,
+                    "container": "elsa-page:qisok0",
+                    "dirty": false,
+                    "isPage": true,
+                    "shapes": [
+                        {
+                            "type": "start",
+                            "id": "dssj3y",
+                            "text": "开始",
+                            "namespace": "flowable",
+                            "container": "elsa-page:qisok0",
+                            "x": 500,
+                            "y": 200,
+                            "width": 60,
+                            "height": 60,
+                            "bold": true,
+                            "italic": false,
+                            "fontColor": "#000",
+                            "pad": 6,
+                            "rotateAble": false,
+                            "enableAnimation": true,
+                            "autoWidth": false,
+                            "margin": 10,
+                            "borderWidth": 0,
+                            "index": 100,
+                            "fontSize": 14,
+                            "dirty": false
+                        },
+                        {
+                            "type": "event",
+                            "id": "nbw31d",
+                            "text": "",
+                            "namespace": "flowable",
+                            "container": "elsa-page:qisok0",
+                            "x": 130,
+                            "y": 215,
+                            "width": 70,
+                            "height": 0,
+                            "bold": false,
+                            "italic": false,
+                            "pad": 0,
+                            "margin": 20,
+                            "backColor": "white",
+                            "beginArrow": false,
+                            "beginArrowEmpty": false,
+                            "beginArrowSize": 4,
+                            "endArrow": true,
+                            "endArrowEmpty": false,
+                            "endArrowSize": 4,
+                            "hAlign": "center",
+                            "lineWidth": 2,
+                            "fromShape": "dssj3y",
+                            "toShape": "ynl67o",
+                            "definedFromConnector": "E",
+                            "definedToConnector": "W",
+                            "curvePoint1": {
+                                "x": 0,
+                                "y": 0
+                            },
+                            "curvePoint2": {
+                                "x": 0,
+                                "y": 0
+                            },
+                            "endpointOffsetX": 0,
+                            "endpointOffsetY": 0,
+                            "lineMode": {
+                                "type": "broken"
+                            },
+                            "allowLink": false,
+                            "borderWidth": 1,
+                            "index": 110,
+                            "dashWidth": 0,
+                            "dirty": true
+                        },
+                        {
+                            "type": "state",
+                            "id": "ynl67o",
+                            "text": "选择大模型",
+                            "namespace": "flowable",
+                            "container": "elsa-page:qisok0",
+                            "x": 600,
+                            "y": 200,
+                            "width": 120,
+                            "height": 30,
+                            "bold": false,
+                            "italic": false,
+                            "pad": 6,
+                            "rotateAble": false,
+                            "triggerMode": "manual",
+                            "enableAnimation": true,
+                            "index": 102,
+                            "fontSize": 14,
+                            "dirty": true
+                        },
+                        {
+                            "type": "event",
+                            "id": "nbw31e",
+                            "text": "",
+                            "namespace": "flowable",
+                            "container": "elsa-page:qisok0",
+                            "x": 130,
+                            "y": 215,
+                            "width": 70,
+                            "height": 0,
+                            "bold": false,
+                            "italic": false,
+                            "pad": 0,
+                            "margin": 20,
+                            "backColor": "white",
+                            "beginArrow": false,
+                            "beginArrowEmpty": false,
+                            "beginArrowSize": 4,
+                            "endArrow": true,
+                            "endArrowEmpty": false,
+                            "endArrowSize": 4,
+                            "hAlign": "center",
+                            "lineWidth": 2,
+                            "fromShape": "ynl67o",
+                            "toShape": "dssj3z",
+                            "definedFromConnector": "E",
+                            "definedToConnector": "W",
+                            "curvePoint1": {
+                                "x": 0,
+                                "y": 0
+                            },
+                            "curvePoint2": {
+                                "x": 0,
+                                "y": 0
+                            },
+                            "endpointOffsetX": 0,
+                            "endpointOffsetY": 0,
+                            "lineMode": {
+                                "type": "broken"
+                            },
+                            "allowLink": false,
+                            "borderWidth": 1,
+                            "index": 110,
+                            "dashWidth": 0,
+                            "dirty": true
+                        },
+                        {
+                            "type": "end",
+                            "id": "dssj3z",
+                            "text": "结束",
+                            "namespace": "flowable",
+                            "container": "elsa-page:qisok0",
+                            "fontColor": "#000",
+                            "x": 800,
+                            "y": 200,
+                            "width": 30,
+                            "height": 30,
+                            "bold": false,
+                            "italic": false,
+                            "pad": 6,
+                            "rotateAble": false,
+                            "enableAnimation": true,
+                            "autoWidth": false,
+                            "margin": 10,
+                            "borderWidth": 0,
+                            "index": 100,
+                            "dirty": false
+                        }
+                    ],
+                    "index": 0
+                },
+            ]
+        };
+
+        window.onload = async () => {
+
+            const testSession = {name: "testUserSession", id: "testUserSession"};
+            ELSA.newGraph("a00jwh", "graph", document.getElementById("main")).then(
+                agent => {
+                    agent._graph.addPage("New flow");
+
+                    const page = agent._graph.activePage;
+
+                    const start = page.createNew("start", 400, 100, undefined, page.wantedShape.getProperties());
+                    const end = page.createNew("end", 400, 200, undefined, page.wantedShape.getProperties());
+
+                    const ev = page.createNew("event", 0, 0);
+                    ev.enableNodeInsertion().connectFrom(start.id, "S").connectTo(end.id, "N");
+
+                    document.getElementById("addStart").addEventListener("mousedown", (event) => {
+                        agent.want("start");
+                    })
+                    document.getElementById("addState").addEventListener("mousedown", (event) => {
+                        agent.want("state");
+                    })
+                    document.getElementById("addCondition").addEventListener("mousedown", (event) => {
+                        agent.want("condition");
+                    })
+                    document.getElementById("addParallel").addEventListener("mousedown", (event) => {
+                        agent.want("parallel");
+                    })
+                    document.getElementById("addEnd").addEventListener("mousedown", (event) => {
+                        agent.want("end");
+                    })
+
+                    document.getElementById("addEvent").addEventListener("mousedown", (event) => {
+                        agent.want("event");
+                    });
+                }
+            )
+
+
+        };
+    </script>
+
+</head>
+
+<body>
+<div id="main" style="width:100%; height: 100%; position: absolute;background: lightblue"></div>
+<button id="addStart" style="z-index: 999; position:relative">add Start</button>-->
+<button id="addNode" style="z-index: 999; position:relative">add Node</button>-->
+<button id="addState" style="z-index: 999; position:relative">add state</button>
+<button id="addCondition" style="z-index: 999; position:relative">add Condition</button>
+<button id="addParallel" style="z-index: 999; position:relative">add Parallel</button>
+<button id="addEnd" style="z-index: 999; position:relative">add End</button>
+<button id="addEvent" style="z-index: 999; position:relative">add event</button>
+
+</body>
+
+</html>

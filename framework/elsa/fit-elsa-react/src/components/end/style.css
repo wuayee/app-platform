@@ -1,0 +1,49 @@
+.second-col-custom-select .ant-select-selector {
+    width: 100%;
+    border-radius: 8px 0 0 8px;
+}
+
+.third-col-custom-input, .third-col-custom-select .ant-select-selector {
+    width: 100%;
+    border-radius: 0 8px 8px 0;
+}
+
+.switch-container {
+    margin-left: auto; /* 将 Switch 放置在最右侧 */
+}
+
+.ant-switch.ant-switch-checked {
+    background-color: rgba(62, 194, 84, 1);
+}
+
+.ant-switch.ant-switch-checked:hover:not(.ant-switch-disabled) {
+    background-color: rgba(62, 194, 84, 1);
+}
+
+.icon-button {
+    padding: 0;
+    margin: 0;
+}
+
+.custom-collapse .ant-collapse-item .ant-collapse-header {
+    padding-left: 0;
+}
+
+.custom-collapse {
+    background: transparent;
+}
+
+.custom-font-style {
+    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgb(56, 55, 67);
+    line-height: 20px;
+}
+
+.Answer-content-text, .Streaming-output-text {
+    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 4px;
+}

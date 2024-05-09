@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>第六届软件精英编程个人赛RANK榜</title>
+
+    <script type="module">
+        //import { presentation } from '../plugins/presentation/presentation.js';
+
+        import {ELSA} from '../../core/graph.js';
+        import {sleep} from '../../common/util.js';
+        import {FONT_WEIGHT} from '../../common/const.js';
+
+        let loadGraph = async () => {
+            await ELSA.import('../../demos/storageCompetition/competition.js', ["competition"]);
+            let g = ELSA.competition(document.getElementById("editor"), "HUA WEI - E.L.S.A");
+
+            g.id = "code-competition";
+            g.baseUrl = "http://elsa.fit.lab.huawei.com:8080";
+
+            // g.setting.countdownSeconds = undefined;
+            g.fullScreenCancelled = (id) => {
+                const page = g.edit(g.getPageIndex(id));
+                page.startAnimation();
+                page.invalidate();
+            };
+            g.initialize()
+                .import('../../plugins/presentation/frame.js')
+                .import('../../demos/storageCompetition/competition.js', ['competitionPage'])
+                // .import('../../plugins/presentation/presentation.js', ['presentationPage'])
+                .import('../../plugins/presentation/caption.js')
+                .import('../../plugins/presentation/textList.js')
+                .then(shapes => {
+                    let p1 = g.addPage("dashboard");
+                    p1.bulletSpeed = 2;
+                    p1.startAnimation();
+                    const onLoading = page => {
+                        page.subscriptions["rank_board"] = topic => {//rank_board  //session_count
+                            console.log("im receiving data.....");
+                            page.refreshData(topic.value);
+                        }
+                    };
+                    p1.loadingCode = onLoading.toString();
+                    p1.timer = (page, time) => {
+                        page.refreshData = d => {
+                            let data = [];
+                            if (d) {
+                                JSON.parse(d).forEach(score => {
+                                    data.push([score.rank, score.id, score.name, score.department, score.submitTime,
+                                        score.scores[0], score.scores[1], score.total]);
+                                })
+                            } else {
+                                const random = Math.round(Math.random() * 10);
+                                for (let i = 1; i < 37; i++) {
+                                    const r = random === i ? "wow" : 0;
+                                    data.push([i, "y0000" + i + r, "somebody" + i, "my department" + i,
+                                        "2021-10-26 11:33:33", 100 - i, 90 - i, 180 - 2 * i]);
+                                }
+                            }
+                            page.data = data;
+                            page.turntablePage(true);
+                        };
+                        page.turntablePage = ignoreAnimation => {
+                            page.shapes.filter(s => s.isType('cell') && s.emphasized).forEach(c => c.emphasized = false);
+                            if (page.tablePage === undefined) {
+                                page.tablePage = 0;
+                            }
+                            const t = page.shapes.find(s => s.isType('table'));
+                            const ROWS = t.getSeqColumn().getShapes().length;
+                            if (t === undefined) {
+                                return;
+                            }
+
+                            // 绑定数据和表格
+                            for (let r = 0; r < page.data.length; r++) {
+                                // 前三行固定
+                                const row = t.getRow(r < 3 ? r : r % 11 + 3);
+                                row.forEach((c, i) => {
+                                    let col = page.data[r].length - i - 1;
+                                    let dynamicId = page.data[r][1] + '|' + col;
+                                    if (page.dynamicShapes[dynamicId] === undefined) {
+                                        page.dynamicShapes[dynamicId] = c;
+                                    }
+                                });
+                            }
+
+                            const d = [];
+                            for (let i = 0; i < 3; i++) d.push(page.data[i]);
+                            let index = page.tablePage * 11;
+                            if (index >= (page.data.length - 3)) {
+                                page.tablePage = 0;
+                                index = 0;
+                            }
+                            for (let i = 3 + index; i < ROWS + index; i++) {
+                                if (i >= page.data.length) {
+                                    const emptyRow = [];
+                                    page.data[0].forEach(() => emptyRow.push(null));
+                                    d.push(emptyRow);
+                                } else {
+                                    d.push(page.data[i]);
+                                }
+                            }
+                            const setCellText = (cell, value, eid, col) => {
+                                (!cell.tag) && (cell.tag = cell.id);
+                                if (eid) {
+                                    cell.id = eid + '|' + col;
+                                } else {
+                                    cell.id = cell.tag;
+                                }
+                                if (page.comments) {
+                                    (!page.comments[cell.id]) && (page.comments[cell.id] = [])
+                                    cell.comments = page.comments[cell.id];
+                                }
+                                cell.stars = cell.comments ? Math.floor(cell.comments.length / 2) : 0;
+                                cell.stars > 5 ? cell.stars = 5 : cell.stars;
+                                cell.text = value;
+                                if (cell.stars > 0) {
+                                    cell.invalidate();
+                                }
+                            }
+                            const flashCell = async (cell, value, eid, col) => {
+                                let opacity = 1;
+                                while (opacity > 0 && !ignoreAnimation && page.data.length > ROWS) {
+                                    cell.globalAlpha = opacity;
+                                    cell.drawer.parent.style.opacity = opacity;
+                                    await sleep(20);
+                                    opacity -= 0.02;
+                                }
+                                setCellText(cell, value, eid, col);//cell.text = value;
+                                while (opacity < 1 && !ignoreAnimation && page.data.length > ROWS) {
+                                    cell.globalAlpha = opacity;
+                                    cell.drawer.parent.style.opacity = opacity;
+                                    await sleep(20);
+                                    opacity += 0.02;
+                                }
+                                ignoreAnimation && (cell.globalAlpha = 1);
+                            }
+                            d.forEach((d1, index) => {
+                                const row = t.getRow(index);
+                                const changed = d1[1] !== row[row.length - 2].text;
+
+                                row.forEach(async (c, i) => {
+                                    let col = d1.length - i - 1;
+                                    if (index > 2) {
+                                        flashCell(c, d1[col], d1[1], col);
+                                    } else {
+                                        setCellText(c, d1[col], d1[1], col);
+                                    } //c.text = d1[d1.length - i - 1]
+                                })
+                                if ((index === 0 || index === 1 || index === 2) && changed) {
+                                    const ecell1 = row[row.length - 2];
+                                    ecell1.emphasized = true;
+                                }
+                            })
+                        };
+                        // if (page.oneSecond === undefined) page.oneSecond = new Date();
+                        if (page.tenSecond === undefined) {
+                            page.tenSecond = new Date();
+                        }
+                        if (page.data === undefined) {
+                            page.data = [];
+                        }
+                        if (page.tablePage === undefined) {
+                            page.tablePage = 0;
+                            page.refreshData();
+                            page.turntablePage(true);
+                        }
+
+                        // if (time.getTime() - page.oneSecond.getTime() > 1000) {
+                        //     page.oneSecond = time;
+                        //     refreshData();
+                        //             }
+                        if (time.getTime() - page.tenSecond.getTime() > 10000) {
+                            page.tenSecond = time;
+                            page.tablePage++;
+                            page.turntablePage();
+                        }
+
+                    };
+                    p1.timerCode = p1.timer.toString();
+
+                    const myFrame = p1.getFrame();
+                    //myFrame.enableSocial = false;
+                    myFrame.background = 'images/background.png';
+                    myFrame.backColor = "transparent";
+                    myFrame.width = 1920;
+                    myFrame.height = 1080;
+
+                    const t1 = p1.createNew("table", 45, 175);
+                    t1.rowHeight = 55;
+                    t1.borderColor = "#02fcfc";//"steelblue";
+                    t1.enableAnimation = true;
+                    t1.decorate = (shape, context) => {
+                        const self = shape;
+                        const OFFSET = 60, RATE = 1.5;
+                        const MOST = self.width + OFFSET * RATE * 20;
+                        if (self.times === undefined) {
+                            self.times = -150;
+                            self.random1 = Math.random();
+                            self.random2 = Math.random();
+                        }
+                        const drawHeadLine = context => {
+                            const LINEAR = 10;
+                            let g = context.createLinearGradient(0, -self.height / 2 - LINEAR, 0, -self.height / 2 + LINEAR);
+                            g.addColorStop(0, "transparent");
+                            g.addColorStop(0.5, self.get("borderColor"));
+                            g.addColorStop(1, "transparent");
+                            context.beginPath();
+                            context.rect(-self.width / 2, -self.height / 2 - LINEAR, self.width, LINEAR * 2);
+                            context.fillStyle = g;
+                            context.fill();
+                        };
+                        drawHeadLine(context);
+                        const drawLine = (context, g) => {
+                            g.addColorStop(0, "transparent");
+                            g.addColorStop(0.5, "rgba(255,255,255," + (0.6 * (0.6 - Math.abs(MOST / 2 - self.times) / MOST)) + ")");
+                            g.addColorStop(1, "transparent");
+                            context.fillStyle = g;
+                            context.beginPath();
+                            context.rect(-self.width / 2, -self.height / 2, self.width, self.height);
+                            context.fill();
+                        };
+                        const drawBorder = context => {
+                            const step = 20;
+                            context.strokeStyle = self.get("borderColor");
+                            context.lineWidth = 5;
+
+                            context.beginPath();
+
+                            context.moveTo(-self.width / 2, -self.height / 2 + step);
+                            context.lineTo(-self.width / 2, -self.height / 2);
+                            context.lineTo(-self.width / 2 + 2 * step, -self.height / 2);
+                            context.stroke();
+
+                            context.moveTo(self.width / 2, -self.height / 2 + step);
+                            context.lineTo(self.width / 2, -self.height / 2);
+                            context.lineTo(self.width / 2 - 2 * step, -self.height / 2);
+                            context.stroke();
+
+                            context.moveTo(self.width / 2, self.height / 2 - step);
+                            context.lineTo(self.width / 2, self.height / 2);
+                            context.lineTo(self.width / 2 - 2 * step, self.height / 2);
+                            context.stroke();
+
+                            context.moveTo(-self.width / 2, self.height / 2 - step);
+                            context.lineTo(-self.width / 2, self.height / 2);
+                            context.lineTo(-self.width / 2 + 2 * step, self.height / 2);
+                            context.stroke();
+                        }
+                        drawBorder(context);
+
+                        let g1 = context.createLinearGradient(self.times - self.width / 2, -self.height / 2, self.times - self.width / 2 + OFFSET * 2, -self.height / 2 + OFFSET * (3 + 2 * self.random1));
+                        drawLine(context, g1);
+                        let g2 = context.createLinearGradient(self.times - self.width / 2, self.height / 2, self.times - self.width / 2 - OFFSET * 2, self.height / 2 + OFFSET * (3 + 2 * self.random2));
+                        drawLine(context, g2);
+
+                        self.times += 2;
+                        if (self.times > MOST) {
+                            self.times = -OFFSET * RATE * 2;
+                            self.random1 = Math.random();
+                            self.random2 = Math.random();
+                        }
+
+                    };
+                    t1.dynamicCode = "const decorate = " + t1.decorate.toString() + ";decorate(shape,context)";
+                    t1.headColor = t1.backColor = "transparent";
+                    t1.showTitle = false;
+                    t1.showSequence = false;
+                    t1.showLock = t1.showSort = false;
+                    //t1.width = 1820;
+                    t1.height = 800;
+                    t1.pad = 5;
+                    t1.itemPad = [5, 5, 0, 5];
+                    t1.padTop = 20;
+                    t1.borderWidth = 1;
+                    t1.headHeight = 0;
+                    const mockData = [];
+                    for (let i = 1; i <= 14; i++) {
+                        mockData.push([i, "--", "--", "--", "--", "--", "--", "--"]);
+                    }
+                    t1.initialize(mockData);
+                    const cols = t1.getColumns();
+                    cols.forEach(c => {
+                        c.width = 200;
+                        c.padTop = 20;
+                        c.headColor = "rgba(222,222,222,0.4)";
+                    });
+                    cols[7].width = 100;
+                    cols[7].text = "排名";
+                    cols[6].text = "工号";
+                    cols[5].text = "姓名";
+                    cols[4].text = "部门";
+                    cols[3].text = "提交时间";
+                    cols[2].text = "第一题得分(100)";
+                    cols[1].text = "第二题得分(100)";
+                    cols[0].text = "总得分";
+                    cols[4].width = 520;
+
+                    cols[6].getShapes().forEach(c => {
+                        c.clickCode = "console.log('im clicked')";
+                    });
+
+                    const OFF_X = 10;
+                    const OFF_Y = 10;
+                    const ss = cols[7].getShapes();
+                    const cell1 = ss[ss.length - 1];
+                    const cell2 = ss[ss.length - 2];
+                    const cell3 = ss[ss.length - 3];
+                    const rank1 = p1.createNew("image", cell1.x + OFF_X, cell1.y + OFF_Y);
+                    rank1.src = "./images/rank1.png";
+                    rank1.container = cell1.id;
+                    const rank2 = p1.createNew("image", cell2.x + OFF_X, cell2.y + OFF_Y);
+                    rank2.src = "./images/rank2.png";
+                    rank2.container = cell2.id;
+                    const rank3 = p1.createNew("image", cell3.x + OFF_X, cell3.y + OFF_Y);
+                    rank3.src = "./images/rank3.png";
+                    rank3.container = cell3.id;
+
+                    const title1 = p1.createNew("text", 850, 20);
+                    title1.autoWidth = true;
+                    title1.fontSize = 18;
+                    title1.fontWeight = FONT_WEIGHT.LIGHTER;
+                    title1.text = "数据存储与机器视觉产品线";
+                    title1.fontColor = "white";
+
+                    const title2 = p1.createNew("text", 750, 60);
+                    title2.autoWidth = true;
+                    title2.fontSize = 25;
+                    title2.text = "第六届软件精英编程个人赛RANK榜";
+                    title2.fontColor = "white";
+                    title2.emphasized = true;
+                    title2.emphasizeType = 1;
+
+                    const logo1 = p1.createNew("image", 660, 20);
+                    logo1.src = "./images/left.png";
+                    logo1.width = 70;
+                    logo1.height = 100;
+                    const logo2 = p1.createNew("image", 1180, 20);
+                    logo2.src = "./images/right.png";
+                    logo2.width = 70;
+                    logo2.height = 100;
+
+                    const fit = p1.createNew("image", 1670, 1000);
+                    fit.src = "./images/fit.png";
+                    fit.width = 200;
+                    fit.height = 40;
+                    fit.shineColor1 = "rgba(255,255,255,0.4)";
+                    fit.shineColor2 = "rgba(255,255,255,0.3)";
+                    fit.emphasized = true;
+
+                    const ctrlP = p1.createNew("text", 45, 1000);
+                    ctrlP.text = "弹幕: ctrl + p";
+                    ctrlP.fontColor = "silver";
+                    ctrlP.fontWeight = FONT_WEIGHT.LIGHTER;
+                    ctrlP.fontFace = "arial";
+                    ctrlP.fontSize = 14;
+                    ctrlP.autoWidth = true;
+
+                    const ctrlPInfo = p1.createNew("text", 45, 1020);
+                    ctrlPInfo.text = "提示: 选中参赛的团队小伙伴，用弹幕为TA加油吧！";
+                    ctrlPInfo.fontColor = "silver";
+                    ctrlPInfo.fontWeight = FONT_WEIGHT.LIGHTER;
+                    ctrlPInfo.fontFace = "arial";
+                    ctrlPInfo.fontSize = 14;
+                    ctrlPInfo.autoWidth = true;
+
+                    const all = p1.createNew("text", 1735, 135);
+                    all.text = "--点击查看全榜--";
+                    all.fontColor = "silver";
+                    all.fontWeight = FONT_WEIGHT.LIGHTER;
+                    all.fontFace = "arial";
+                    all.fontSize = 16;
+                    all.autoWidth = true;
+                    const click = (page, shape) => {
+                        window.open('http://ittopcoder.inhuawei.com:3000/#/second')
+                    };
+                    all.clickCode = click.toString();
+                    all.ignorePageMode = true;
+
+                    const notice = p1.createNew("text", 700, 1000);
+                    notice.text = "RANK榜单成绩仅供参考，最终晋级名额通过大赛主办部门评审后邮件发出";
+                    notice.fontColor = "silver";
+                    notice.fontWeight = FONT_WEIGHT.LIGHTER;
+                    notice.fontFace = "arial";
+                    notice.fontSize = 16;
+                    notice.autoWidth = true;
+
+                    const powered = p1.createNew("text", 1570, 1010);
+                    powered.text = "powered by";
+                    powered.fontColor = "silver";
+                    powered.fontWeight = FONT_WEIGHT.LIGHTER;
+                    powered.fontFace = "arial";
+                    powered.fontSize = 16;
+
+                    const cd = p1.createNew("countdown", 885, 125);
+                    cd.width = 150;
+                    cd.height = 44;
+                    cd.borderWidth = 0;
+                    cd.fontColor = "lightgray";
+                    cd.fontWeight = FONT_WEIGHT.LIGHTER;
+                    //cd.initValue = Math.round(new Date('October 26, 2021 22:00:00').getTime() / 1000) - Math.round(new Date().getTime() / 1000);
+                    cd.targetTime = 'November 2, 2021 21:30:00';
+                    p1.reset();
+                    g.present().then(page => {
+                        console.log('page:' + page.id + " is presenting");
+                    });
+
+                })
+            return g;
+        }
+
+        window.onload = () => {
+            loadGraph();
+        }
+    </script>
+
+    <style type=text/css>
+        .container {
+            width: 100%;
+            position: absolute;
+            overflow-y: scroll;
+            height: 900px;
+        }
+    </style>
+
+</head>
+
+<body>
+<div id='editor' class='container'></div>
+</body>
+
+</html>

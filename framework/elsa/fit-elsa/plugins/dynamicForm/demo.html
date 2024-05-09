@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>dynamicForm-Demo</title>
+    <style>
+        .html-image-container {
+            display: flex;
+            /*gap: 10px;*/
+            /*flex-direction: column;*/
+            justify-content: center;
+            align-items: center;
+            /*height: 200px;*/
+            border-radius: 10px;
+            color: #444;
+            cursor: pointer;
+            /*transition: background .2s ease-in-out, border .2s ease-in-out;*/
+        }
+    </style>
+
+    <script type="module">
+        import {ALIGN, DOCK_MODE} from '../../common/const.js';
+        import {ELSA} from "../../core/elsaEntry.js";
+        import {PAGE_MODE} from "../../common/const.js";
+
+        const graphId = "dynamic-form-demo graph";
+        window.onload = async () => {
+            document.getElementById("loadFormData").addEventListener("click", () => {
+                const graph = window.g;
+                const form = graph.activePage.shapes[0];
+                const json = window.testStore.get();
+                form.loadJSON(json);
+            });
+
+            document.getElementById("serializeForm").addEventListener("click", () => {
+                const graph = window.g;
+                window.persistData = graph.activePage.shapes[0].persist();
+                console.log(window.persistData);
+            });
+
+            document.getElementById("deSerializeForm").addEventListener("click", async () => {
+                const graph = window.g;
+                await graph.activePage.loadForm(window.persistData);
+            });
+
+            document.getElementById("clearPage").addEventListener("click", async () => {
+                const graph = window.g;
+                await graph.activePage.clear();
+            });
+
+            document.getElementById("runtime").addEventListener("click", async () => {
+                const graph = window.g;
+                const runtimePage = graph.addPage("runtimePage");
+                runtimePage.mode = PAGE_MODE.RUNTIME;
+                runtimePage.loadForm(window.persistData);
+            });
+
+            document.getElementById("wantInput").addEventListener("click", async () => {
+                window.agent.want("htmlInput");
+            });
+
+            document.getElementById("wantButton").addEventListener("click", async () => {
+                window.agent.want("htmlButton", {text: "submit"});
+            });
+
+            document.getElementById("wantImage").addEventListener("click", async () => {
+                window.agent.want("htmlImage");
+            });
+
+            document.getElementById("fillScreen").addEventListener("click", async () => {
+                const main = document.getElementById("main");
+                main.style.width = "1000px";
+                main.style.height = "300px";
+                const page = window.agent._graph.activePage;
+                page.fillScreen();
+            });
+
+            const store = () => {
+                const self = {};
+
+                self.get = () => {
+                    return self.json;
+                };
+
+                self.store = (json) => {
+                    self.json = json;
+                };
+
+                return self;
+            };
+
+            window.testStore = store();
+
+            ELSA.newGraph(graphId, "fromGraph", document.getElementById("main"))
+                .then(async agent => {
+                    agent.openCollaboration();
+                    const g = agent._graph;
+                    window.g = g;
+                    window.agent = agent;
+                    g.import('/fit/portal/fit-elsa/plugins/dynamicForm/form.js')
+                        .import('/fit/portal/fit-elsa/plugins/dynamicForm/formPage.js')
+                        .import('/fit/portal/fit-elsa/plugins/dynamicForm/component/htmlImage.js')
+                        .then(shapes => {
+                            const p = g.addPage("dynamic form demo");
+
+                            const form = p.createNew("form", 0, 0);
+                            // form.height = 350;
+                            //
+                            // let input = p.createNew("htmlInput", 210, 140);
+                            // input.container = form.id;
+                            //
+                            // input.getInputText().dataBinding = "$.info.nickName";
+                            //
+                            //
+                            // const bt2 = p.createNew("htmlButton", 0, 0);
+                            // bt2.text = "submit";
+                            // bt2.container = form.id;
+                            // bt2.componentId = "submit_button"
+                            //
+                            // bt2.script = "const button = Shape.get(\"submit_button\");\n"
+                            //     + "button.clicked = () => {console.trace(\"通过script重写了clicked方法，并点击!\")};"
+
+                            p.reset();
+                            p.fillScreen();
+
+                            const data = p.serialize();
+                            console.log(JSON.stringify(data));
+                        });
+                });
+        };
+    </script>
+</head>
+
+<body>
+<div>
+    <button id="loadFormData">loadFormData</button>
+    <button id="serializeForm">serializeForm</button>
+    <button id="deSerializeForm">deSerializeForm</button>
+    <button id="clearPage">clearPage</button>
+    <button id="runtime">runtime</button>
+    <button id="wantInput">wantInput</button>
+    <button id="wantButton">wantButton</button>
+    <button id="wantImage">wantImage</button>
+    <button id="fillScreen">fillScreen</button>
+</div>
+<div id="main" style="width:1600px; height: 600px;position: absolute;"></div>
+<!--<div id="point" style="width:6px; height: 6px;position: absolute;left:397px;top:397px;background-color: brown;">-->
+</div>
+
+</body>
+
+</html>

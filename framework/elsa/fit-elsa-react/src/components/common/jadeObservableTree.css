@@ -1,0 +1,27 @@
+.jade-observable-tree-node-div {
+    display: flex;
+    align-items: center;
+}
+
+.jade-observable-tree-node-title {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    word-break: keep-all;
+    line-height: 20px;
+}
+
+.jade-observable-tree-node-type-div {
+    margin-left: 8px;
+    background: hsla(210,9%,91%,.76);
+    padding: 0 8px;
+    border-radius: 3px;
+}
+
+.jade-observable-tree-node-type-name {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    color: rgba(28,31,35,.6);
+}

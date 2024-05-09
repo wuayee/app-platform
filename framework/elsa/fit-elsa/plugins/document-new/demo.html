@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test-document</title>
+    <style>
+        p {
+            margin: 0;
+            /*padding: 6px 3px 6px 3px;*/
+            -webkit-margin-after: 0;
+            -webkit-margin-before: 0;
+        }
+
+        h2 {
+            margin: 0;
+            padding: 15px 3px 15px 3px;
+        }
+    </style>
+</head>
+<body>
+<div id="toolbar"></div>
+<div id="document" style="width: 1600px;height: 300px"></div>
+<button id="suspension" style="z-index:999;position: absolute; left: 1800px; top: 10px; background: #88ffff">悬浮</button>
+<button id="insertRectangle" style="z-index:999;position: absolute; left: 900px; top: 10px; background: #88ffff">
+    插入rectangle
+</button>
+<button id="addRectangle" style="z-index:999;position: absolute; left: 1700px; top: 100px; background: #88ffff">
+    添加rectangle
+</button>
+<button id="addEllipse" style="z-index:999;position: absolute; left: 1700px; top: 130px; background: #88ffff">
+    添加ellipse
+</button>
+<button id="addRightArrow" style="z-index:999;position: absolute; left: 1700px; top: 160px; background: #88ffff">
+    添加rightArrow
+</button>
+<button id="addBottomArrow" style="z-index:999;position: absolute; left: 1700px; top: 190px; background: #88ffff">
+    添加bottomArrow
+</button>
+<button id="addTriangle" style="z-index:999;position: absolute; left: 1700px; top: 220px; background: #88ffff">
+    添加triangle
+</button>
+<button id="addDovetailArrow" style="z-index:999;position: absolute; left: 1700px; top: 250px; background: #88ffff">
+    添加dovetailArrow
+</button>
+<button id="addParallelogram" style="z-index:999;position: absolute; left: 1700px; top: 280px; background: #88ffff">
+    添加parallelogram
+</button>
+<button id="addDiamond" style="z-index:999;position: absolute; left: 1700px; top: 310px; background: #88ffff">
+    添加diamond
+</button>
+<button id="addRegularPentagonal" style="z-index:999;position: absolute; left: 1700px; top: 340px; background: #88ffff">
+    添加regularPentagonal
+</button>
+<button id="addPentagram" style="z-index:999;position: absolute; left: 1700px; top: 370px; background: #88ffff">
+    添加pentagram
+</button>
+<button id="addLine" style="z-index:999;position: absolute; left: 1700px; top: 400px; background: #88ffff">
+    添加line
+</button>
+<button id="textAttribute" style="z-index:999;position: absolute; left: 1700px; top: 430px; background: #88ffff">
+    测试文本属性
+</button>
+<button id="pen" style="z-index:999;position: absolute; left: 1700px; top: 460px; background: #88ffff">
+    docPen
+</button>
+</body>
+<script type="module">
+    import {ELSA} from "../../core/elsaEntry.js";
+    import {SHAPE_IN_DOCUMENT_MODE} from "./common/const.js";
+    import {TEXT_ATTRIBUTES} from "../../common/const.js";
+
+    document.addEventListener("selectionchange", () => {
+        console.log(document.getSelection());
+    });
+
+    document.getElementById("addRectangle").addEventListener("mousedown", (event) => {
+        window.agent.want("rectangle");
+    });
+
+    document.getElementById("insertRectangle").addEventListener("mousedown", (event) => {
+        const focusedShape = window.agent._graph.activePage.getFocusedShapes()[0];
+        focusedShape.embed();
+    });
+
+    document.getElementById("suspension").addEventListener("mousedown", (event) => {
+        const focusedShape = window.agent._graph.activePage.getFocusedShapes()[0];
+        focusedShape.suspension();
+    });
+
+    document.getElementById("addEllipse").addEventListener("mousedown", (event) => {
+        window.agent.want("ellipse");
+    });
+
+    document.getElementById("addRightArrow").addEventListener("mousedown", (event) => {
+        window.agent.want("rightArrow");
+    });
+
+    document.getElementById("addBottomArrow").addEventListener("mousedown", (event) => {
+        window.agent.want("bottomArrow");
+    });
+
+    document.getElementById("addTriangle").addEventListener("mousedown", (event) => {
+        window.agent.want("triangle");
+    });
+
+    document.getElementById("addDovetailArrow").addEventListener("mousedown", (event) => {
+        window.agent.want("dovetailArrow");
+    });
+
+    document.getElementById("addDiamond").addEventListener("mousedown", (event) => {
+        window.agent.want("diamond");
+    });
+
+    document.getElementById("addRegularPentagonal").addEventListener("mousedown", (event) => {
+        window.agent.want("regularPentagonal");
+    });
+
+    document.getElementById("addPentagram").addEventListener("mousedown", (event) => {
+        window.agent.want("pentagram");
+    });
+
+    document.getElementById("addLine").addEventListener("mousedown", (event) => {
+        window.agent.want("line");
+    });
+
+    document.getElementById("textAttribute").addEventListener("mousedown", (event) => {
+        const agent = window.agent;
+        agent.change(writer => {
+            const focusedShapes = agent._graph.activePage.getFocusedShapes();
+            focusedShapes.forEach(s => writer.formatText(s, "bold"));
+        });
+    });
+    document.getElementById("pen").addEventListener("mousedown", (event) => {
+        window.agent.want("docPen");
+    });
+
+    window.onload = () => {
+        ELSA.editGraph("document-57", "docGraph", document.getElementById("document")).then(agent => {
+            // agent.closeCollaboration();
+            window.agent = agent;
+            if (agent._graph.pages.length >= 1) {
+                agent.editPage(agent._graph.pages[0].id).then(page => {
+                    agent._graph.activePage.renderToolbar(document.getElementById("toolbar"));
+                });
+                return;
+            }
+            const page = agent._graph.createDocument("firstPage");
+            agent.editPage(agent._graph.pages[0].id).then(() => {
+                window.page = page;
+                // page.fillScreen();
+                page.renderToolbar(document.getElementById("toolbar"));
+                // let docSection = page.createNew("docSection", 30, 30);
+                // docSection.borderWidth = 1;
+                // docSection.width = 600;
+                // docSection.height = 800;
+                // docSection.text = "12345";
+
+                // let container = page.createNew("container", 700, 100);
+                // container.width = 200;
+                // container.height = 200;
+                // container.dockMode = DOCK_MODE.FILL;
+
+                let rectangle = page.createNew("rectangle", 1700, 400);
+                rectangle.width = 100;
+                rectangle.height = 100;
+                rectangle.text = "1111";
+                rectangle.mode = SHAPE_IN_DOCUMENT_MODE.SUSPENSION;
+
+                let rectangle1 = page.createNew("rectangle", 1700, 550);
+                rectangle1.width = 100;
+                rectangle1.height = 100;
+                rectangle1.text = "2222";
+                rectangle1.mode = SHAPE_IN_DOCUMENT_MODE.SUSPENSION;
+                // rectangle.container = container.id;
+                // rectangle.pDock = PARENT_DOCK_MODE.FILL;
+
+                // page.reset();
+            });
+        });
+    }
+</script>
+</html>

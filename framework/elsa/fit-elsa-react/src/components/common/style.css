@@ -1,0 +1,138 @@
+.jade-collapse-custom-background-color {
+    background-color: transparent; /* 设置背景透明 */
+}
+
+.value-custom, .value-custom .ant-select-selector {
+    width: 100%;
+    border-radius: 0 8px 8px 0;
+    border-left: 0 !important;
+}
+
+.value-source-custom, .value-source-custom .ant-select-selector {
+    width: 100%;
+    border-radius: 8px 0 0 8px;
+}
+
+.icon-button {
+    padding: 0;
+    margin: 0;
+}
+
+.jade-panel-header-font {
+    justify-content: flex-start;
+    margin-right: 4px;
+    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.jade-panel-header-popover-content {
+    margin-left: 2px;
+    color: rgba(28,31,35,.35);
+    align-self: flex-start;
+    height: 12px;
+    width: 12px;
+}
+
+.jade-panel {
+    background-color: rgba(247,248,249); /* 设置背景颜色 */
+    margin-bottom: 8px !important;
+    border-radius: 8px !important;
+    width: 100%;
+    padding: 12px;
+}
+
+.jade-panel .ant-collapse-header {
+    padding: 0 !important;
+    align-items: center !important;
+}
+
+.ant-collapse-borderless .ant-collapse-item .ant-collapse-content .ant-collapse-content-box {
+    padding: 0;
+}
+
+.jade-node-custom-header-icon {
+    background-size: cover !important;
+    background-position: center !important;
+    padding: 0 !important;
+    margin: 0 8px 0 0 !important;
+    width: 24px !important;
+    height: 24px !important;
+    border: none !important;
+}
+
+.jade-form-item .ant-form-item-label >label {
+    font-size: 12px;
+    color: rgba(28,31,35,.35);
+}
+
+.jade-font-size, .jade-select .ant-select-selector .ant-select-selection-item, .jade-select .ant-select-item-option,.ant-select-selection-placeholder, .jade-input::placeholder {
+    font-size: 12px;
+}
+
+.jade-font-color {
+    color: rgba(28,31,35,.35);
+}
+
+.jade-select .ant-select-selector {
+    border-color: #edeeef !important;
+}
+
+.jade-input {
+    border-color: #edeeef !important;
+    font-size: 12px;
+    height: 32px;
+}
+
+.ant-form-item-label {
+    padding-left: 4px !important;
+    padding-bottom: 4px !important;
+}
+
+.jade-form {
+    margin-top: 8px
+}
+
+.jade-slider {
+    margin-bottom: 24px !important;
+}
+
+.jade-popover-icon {
+    color: rgba(28,31,35,.35);
+}
+
+.jade-second-title {
+    margin-right: 4px;
+}
+
+.ant-slider-track {
+    background-color: #047BFC !important;
+}
+
+.ant-slider .ant-slider-mark {
+    font-size: 12px;
+}
+
+.jade-top-header-popover-content {
+    margin-left: 2px;
+    margin-top: 6px;
+    color: rgba(28,31,35,.35);
+    align-self: flex-start;
+    height: 12px;
+    width: 12px;
+}
+
+.jade-column {
+    display: flex;
+    align-items: center;
+}
+
+.jade-row {
+    display: flex;
+    align-items: center;
+}
+
+.ant-form-item {
+    margin-top: 1px;
+    margin-bottom: 1px;
+}

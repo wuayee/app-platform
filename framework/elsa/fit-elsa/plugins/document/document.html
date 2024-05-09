@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>document</title>
+    <script type="module">
+        const TARGET_PRESENTATION = 'code-competition';//change presentation id to view different presentation
+
+        import {ELSA} from '../../core/graph.js';
+
+        const loadPresentation = async id => {
+            await ELSA.import('../plugins/document/document.js', ["documentGraph"]);
+            const container = document.getElementById("editor");
+
+            let g = ELSA.documentGraph(container, "HUA WEI - E.L.S.A v- document");
+            g.baseUrl = "http://elsa.fit.lab.huawei.com:8080";
+            const result = {};
+
+            g.initialize()
+                .import('../plugins/document/document.js', ['docPage', 'document', 'docSection'])
+                .then(() => {
+                    const p = g.createDocument("myDocument");
+                    //g.createNew()
+                    p.reset();
+                });
+        };
+
+        window.onload = () => {
+            loadPresentation(TARGET_PRESENTATION);
+        }
+    </script>
+
+    <style type=text/css>
+        .container {
+            width: 100%;
+            position: absolute;
+            overflow-y: scroll;
+            height: 1560px;
+        }
+    </style>
+</head>
+
+<body>
+<div id='editor' class='container'></div>
+</body>
+
+</html>

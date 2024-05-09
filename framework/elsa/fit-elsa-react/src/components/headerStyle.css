@@ -1,0 +1,23 @@
+.react-node-header {
+    margin-bottom: 16px;
+}
+
+.react-node-toolbar {
+    display: flex;
+}
+
+.react-node-toolbar-name {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1;
+    font-size: 14px;
+    height: 24px;
+    justify-content: center;
+}
+
+.react-node-header-description {
+    color: rgba(28, 29, 35, .6);
+    font-size: 14px;
+    line-height: 22px;
+    margin-top: 8px;
+}
