@@ -1,0 +1,9 @@
+{
+  "collaborationUrl": "//fit-co-c.lab.huawei.com/collaboration",
+  "getGraphUrl": "//fit-c.lab.huawei.com/elsa-backend/graph/get",
+  "saveGraphUrl": "//fit-c.lab.huawei.com/elsa-backend/graph/save",
+  "getUserUrl": "//fit-c.lab.huawei.com/elsa-backend/user/current",
+  "levitationDefault": "//s3-hc-dgg.hics.huawei.com/fit.elsa-g.bucket/levitationDefault.png",
+  "levitationActive": "//s3-hc-dgg.hics.huawei.com/fit.elsa-g.bucket/levitationActive.png",
+  "aiUrl": "https://tzaip.rnd.huawei.com/tzaip/api/hisp"
+}
