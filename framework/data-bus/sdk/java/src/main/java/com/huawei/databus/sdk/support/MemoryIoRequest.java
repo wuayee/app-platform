@@ -6,6 +6,7 @@ package com.huawei.databus.sdk.support;
 
 import com.huawei.databus.sdk.api.DataBusIoRequest;
 import com.huawei.databus.sdk.memory.SharedMemoryKey;
+import com.huawei.fitframework.inspection.Validation;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -25,7 +26,13 @@ public class MemoryIoRequest implements DataBusIoRequest {
     private final Duration timeoutDuration;
 
     private MemoryIoRequest(Builder builder) {
-        this.sharedMemoryKey = builder.sharedMemoryKey;
+        if (builder.sharedMemoryKey != null) {
+            this.sharedMemoryKey = builder.sharedMemoryKey;
+        } else {
+            Validation.notNull(builder.userKey,
+                    () -> new IllegalArgumentException("User key cannot be null if sharedMemoryKey is unset."));
+            this.sharedMemoryKey = new SharedMemoryKey(builder.userKey);
+        }
         this.bytes = builder.bytes;
         this.memoryOffset = builder.memoryOffset;
         this.dataLength = builder.dataLength;
@@ -73,6 +80,7 @@ public class MemoryIoRequest implements DataBusIoRequest {
         private int dataLength;
         private byte permissionType;
         private Duration timeoutDuration;
+        private String userKey;
 
         @Override
         public Builder permissionType(byte permissionType) {
@@ -101,6 +109,12 @@ public class MemoryIoRequest implements DataBusIoRequest {
         @Override
         public Builder sharedMemoryKey(SharedMemoryKey sharedMemoryKey) {
             this.sharedMemoryKey = sharedMemoryKey;
+            return this;
+        }
+
+        @Override
+        public DataBusIoRequest.Builder userKey(String userKey) {
+            this.userKey = userKey;
             return this;
         }
 

@@ -96,12 +96,22 @@ public interface DataBusIoRequest {
         Builder memoryOffset(long memoryOffset);
 
         /**
-         * 向当前构建器中设置内存句柄
+         * 向当前构建器中设置已有的内存句柄。此方法的优先级高于 userKey() 方法。因此，同时调用了 sharedMemoryKey() 和 userKey()
+         * 时，以 sharedMemoryKey() 为准。
          *
          * @param sharedMemoryKey 表示被设置的内存句柄 {@code long}。
          * @return 表示当前构建器的 {@link Builder}。
          */
         Builder sharedMemoryKey(SharedMemoryKey sharedMemoryKey);
+
+        /**
+         * 向当前构建器中设置用户自定义 key。此方法的优先级低于 sharedMemoryKey() 方法。因此，同时调用了 sharedMemoryKey()
+         * 和 userKey() 时，以 sharedMemoryKey() 为准。
+         *
+         * @param userKey 表示被设置的内存句柄 {@code long}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        Builder userKey(String userKey);
 
         /**
          * 向当前构建器中设置超时时限
