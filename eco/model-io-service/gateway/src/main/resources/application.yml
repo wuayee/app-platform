@@ -1,0 +1,31 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: gateway,health
+  endpoint:
+    gateway:
+      enabled: true
+
+server:
+  port: 8003
+  servlet:
+    context-path: /model-gateway
+
+spring:
+  application:
+    name: model-gateway-service
+  cloud:
+    gateway:
+      routes:
+      - id: health-check
+        uri: http://localhost:${server.port}
+        predicates:
+          - Path=/model-gateway/health
+        filters:
+          - RewritePath=/model-gateway/health, /actuator/health
+      # 可在下方添加自定义路由配置信息
+
+      httpclient:
+        websocket:
+          max-frame-payload-length: 104857600
