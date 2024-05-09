@@ -390,6 +390,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
             aiFlow.converse(input.getSession()).offer(nodeId, Collections.singletonList(input.getData()));
             return null;
         }, null);
+
         AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
         state.offer(aiFlow);
         return state;
@@ -411,7 +412,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
                 messages.addAll(template.invoke(runnableArg).messages());
             }
             return messages;
-        }, null), this.getFlow().origin()), this.getFlow());
+        },  null), this.getFlow().origin()), this.getFlow());
     }
 
     /**
@@ -453,7 +454,8 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         for (SyncPattern<O, Tip> pattern : patterns) {
             AiBranchProcessor<Tip, D, O, RF, F> branchProcessor = node -> {
                 Processor<O, Tip> processor = node.publisher()
-                        .map(input -> pattern.invoke(new AiRunnableArg<>(input.getData(), input.getSession())), null);
+                        .map(input -> pattern.invoke(new AiRunnableArg<>(input.getData(), input.getSession())),
+                                 null);
                 return new AiState<>(new State<>(processor, mineOrigin), mineFlow);
             };
             aiFork = Optional.ofNullable(aiFork)

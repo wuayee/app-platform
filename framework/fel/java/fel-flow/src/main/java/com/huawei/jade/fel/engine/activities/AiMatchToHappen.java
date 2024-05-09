@@ -82,6 +82,8 @@ public class AiMatchToHappen<D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> 
         Validation.notNull(processor, "Ai branch processor cannot be null.");
         State<O, D, ?, RF> others = this.matchToHappen.others(
                 node -> processor.process(new AiState<>(node, this.flow)).state);
+
         return new AiState<>(others, this.flow);
     }
+
 }
