@@ -72,15 +72,15 @@ public class AiMatchToHappen<D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> 
      * 提供一个默认的处理逻辑，并结束条件节点。
      *
      * @param processor 表示分支处理器的 {@link AiBranchProcessor}{@code <}{@link O}{@code , }{@link D}{@code ,
-     * }{@link I}{@code , }{@link RF}{@code , }{@link F}{@code >}。
+     * }{@link ?}{@code , }{@link RF}{@code , }{@link F}{@code >}。
      * @param <O> 表示第一个条件分支指定的返回类型。
      * @return 表示条件节点的 {@link AiState}{@code <}{@link O}{@code , }{@link D}{@code , }{@link O}{@code ,
      * }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
-    public <O> AiState<O, D, I, RF, F> others(AiBranchProcessor<O, D, I, RF, F> processor) {
+    public <O> AiState<O, D, ?, RF, F> others(AiBranchProcessor<O, D, I, RF, F> processor) {
         Validation.notNull(processor, "Ai branch processor cannot be null.");
-        State<O, D, I, RF> others = this.matchToHappen.others(
+        State<O, D, ?, RF> others = this.matchToHappen.others(
                 node -> processor.process(new AiState<>(node, this.flow)).state);
         return new AiState<>(others, this.flow);
     }
