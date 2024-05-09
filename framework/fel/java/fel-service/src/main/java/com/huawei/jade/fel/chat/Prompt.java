@@ -5,6 +5,7 @@
 package com.huawei.jade.fel.chat;
 
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.content.Media;
 
 import java.util.Collection;
@@ -28,13 +29,6 @@ public interface Prompt {
     List<? extends ChatMessage> messages();
 
     /**
-     * 获取聊天大模型的配置参数。
-     *
-     * @return 表示聊天大模型配置参数的 {@link ChatOptions}。
-     */
-    ChatOptions option();
-
-    /**
      * 获取媒体内容。
      *
      * @return 返回表示媒体内容的 {@link List}{@code <}{@link Media}{@code  >}。
@@ -47,5 +41,16 @@ public interface Prompt {
                         .flatMap(Collection::stream)
                         .collect(Collectors.toList()))
                 .orElseGet(Collections::emptyList);
+    }
+
+    /**
+     * 获取文本内容。
+     *
+     * @return 返回表示文本内容的 {@link String}。
+     */
+    default String text() {
+        return Optional.ofNullable(this.messages())
+                .map(msg -> msg.stream().map(ChatMessage::text).collect(Collectors.joining("\n")))
+                .orElse(StringUtils.EMPTY);
     }
 }

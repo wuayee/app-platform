@@ -4,6 +4,7 @@
 
 package com.huawei.jade.fel.engine.flows;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * {@link Conversation} 的核心机制的测试。
@@ -76,13 +78,23 @@ public class ConversationTest {
         @DisplayName("异步对话设置对话回调")
         void shouldOkWhenASyncFlowWithCustomCallback() throws InterruptedException, TimeoutException {
             StringBuilder callbackAnswer = new StringBuilder();
-            String flowAnswer = flow.converse()
+            Conversation<Integer, String> converse = flow.converse();
+            String flowAnswer = converse
                     .doOnSuccess(data -> callbackAnswer.append("answer ").append(data))
                     .doOnFinally(() -> callbackAnswer.append(" finally"))
                     .offer(5)
                     .await(500, TimeUnit.MILLISECONDS);
-            assertEquals("answer 6 finally", callbackAnswer.toString());
-            assertEquals("6", flowAnswer);
+            String expected = "answer 6 finally";
+            assertThat(callbackAnswer.toString()).isEqualTo(expected);
+            assertThat(flowAnswer).isEqualTo("6");
+
+            // 相同 Conversation 的新请求
+            AtomicBoolean end = new AtomicBoolean(false);
+            flowAnswer = converse.doOnFinally(() -> end.set(true)).offer(6).await();
+            assertThat(end).isTrue();
+            assertThat(flowAnswer).isEqualTo("7");
+            // 不影响相同 Conversation 的上一次请求
+            assertThat(callbackAnswer.toString()).isEqualTo(expected);
         }
     }
 }

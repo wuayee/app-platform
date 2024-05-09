@@ -5,7 +5,7 @@
 package com.huawei.jade.fel.core.template;
 
 import com.huawei.jade.fel.chat.ChatMessage;
-import com.huawei.jade.fel.chat.content.Contents;
+import com.huawei.jade.fel.chat.content.MessageContent;
 
 /**
  * 消息模板接口定义。
@@ -13,5 +13,4 @@ import com.huawei.jade.fel.chat.content.Contents;
  * @author 易文渊
  * @since 2024-04-25
  */
-public interface MessageTemplate extends GenericTemplate<Contents, ChatMessage> {
-}
+public interface MessageTemplate extends GenericTemplate<MessageContent, ChatMessage> {}

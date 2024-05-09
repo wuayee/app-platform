@@ -2,11 +2,11 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.fel.chat.charactar;
+package com.huawei.jade.fel.chat.character;
 
 import com.huawei.jade.fel.chat.MessageType;
-import com.huawei.jade.fel.chat.content.Contents;
 import com.huawei.jade.fel.chat.content.Media;
+import com.huawei.jade.fel.chat.content.MessageContent;
 
 import java.util.List;
 
@@ -27,11 +27,11 @@ public class HumanMessage extends AbstractChatMessage {
     }
 
     /**
-     * 通过 {@link Contents} 来初始化 {@link HumanMessage} 的新实例。
+     * 通过 {@link MessageContent} 来初始化 {@link HumanMessage} 的新实例。
      *
-     * @param contents 表示消息内容的 {@link Contents}。
+     * @param contents 表示消息内容的 {@link MessageContent}。
      */
-    public HumanMessage(Contents contents) {
+    public HumanMessage(MessageContent contents) {
         super(contents);
     }
 

@@ -4,17 +4,26 @@
 
 package com.huawei.jade.fel.chat.content;
 
+import java.util.List;
+
 /**
- * 表示消息内容。
+ * 消息内容集合的接口。
  *
  * @author 刘信宏
- * @since 2024-4-12
+ * @since 2024-05-06
  */
 public interface MessageContent {
     /**
-     * 获取消息内容中的数据。
+     * 获取文本内容。
      *
-     * @return 表示消息数据的 {@link String}。
+     * @return 返回拼接后文本内容的 {@link String}。
      */
-    String data();
+    String text();
+
+    /**
+     * 获取媒体内容。
+     *
+     * @return 返回媒体内容的 {@link List}{@code <}{@link Media}{@code >}。
+     */
+    List<Media> medias();
 }

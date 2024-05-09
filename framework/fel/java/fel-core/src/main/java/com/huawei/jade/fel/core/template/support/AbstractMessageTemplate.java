@@ -6,7 +6,7 @@ package com.huawei.jade.fel.core.template.support;
 
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
-import com.huawei.jade.fel.chat.content.Contents;
+import com.huawei.jade.fel.chat.content.Content;
 import com.huawei.jade.fel.chat.content.MediaContent;
 import com.huawei.jade.fel.chat.content.MessageContent;
 import com.huawei.jade.fel.chat.content.TextContent;
@@ -39,13 +39,13 @@ public abstract class AbstractMessageTemplate implements MessageTemplate {
     }
 
     @Override
-    public ChatMessage render(Map<String, Contents> values) {
-        Map<String, Contents> args = ObjectUtils.nullIf(values, Collections.emptyMap());
-        Stream<MessageContent> textStream = Stream.of(args)
+    public ChatMessage render(Map<String, MessageContent> values) {
+        Map<String, MessageContent> args = ObjectUtils.getIfNull(values, Collections::emptyMap);
+        Stream<Content> textStream = Stream.of(args)
                 .map(v -> v.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().text())))
                 .map(this.template::render)
                 .map(TextContent::new);
-        Stream<MessageContent> mediaStream = this.template.placeholder()
+        Stream<Content> mediaStream = this.template.placeholder()
                 .stream()
                 .map(args::get)
                 .filter(Objects::nonNull)
@@ -61,8 +61,8 @@ public abstract class AbstractMessageTemplate implements MessageTemplate {
     /**
      * 收集消息内容流生成 {@link ChatMessage}。
      *
-     * @param contentStream 表示消息内容流的 {@link Stream}{@code <}{@link MessageContent}{@code >}。
+     * @param contentStream 表示消息内容流的 {@link Stream}{@code <}{@link Content}{@code >}。
      * @return 返回表示聊天消息的 {@link ChatMessage}。
      */
-    protected abstract ChatMessage collect(Stream<MessageContent> contentStream);
+    protected abstract ChatMessage collect(Stream<Content> contentStream);
 }

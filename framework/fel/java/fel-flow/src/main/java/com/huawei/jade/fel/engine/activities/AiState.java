@@ -14,6 +14,7 @@ import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fit.waterflow.domain.flow.ProcessFlow;
 import com.huawei.fit.waterflow.domain.states.State;
 import com.huawei.fit.waterflow.domain.stream.nodes.BlockToken;
+import com.huawei.fit.waterflow.domain.stream.nodes.Retryable;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.stream.reactive.Callback;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
@@ -25,6 +26,9 @@ import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.flows.ConverseListener;
 import com.huawei.jade.fel.engine.util.StateKey;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -42,7 +46,10 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> extends AiStart<O, D, I, RF, F>
         implements EmitterListener<O, FlowSession>, Emitter<O, FlowSession> {
-    private final State<O, D, I, RF> state;
+    /**
+     * 表示被装饰的流程一般节点对象。
+     */
+    protected final State<O, D, I, RF> state;
 
     /**
      * AI 流程一般节点的构造方法。
@@ -127,7 +134,7 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      * }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code handler} 为 {@code null} 时。
      */
-    public AiState<O, D, I, RF, F> error(Operators.ErrorHandler<I> handler) {
+    public AiState<O, D, I, RF, F> doOnError(Operators.ErrorHandler<I> handler) {
         Validation.notNull(handler, "Error handler cannot be null.");
         return new AiState<>(this.state.error(handler), this.getFlow());
     }
@@ -192,7 +199,8 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
 
             // 对话结束回调由直接起会话的流程触发
             String flowId = this.getFlow().getId();
-            getConverseListener(input.get()).ifPresent(listener -> listener.onSuccess(flowId, input.get().getData()));
+            getConverseListener(input.get(), flowId).ifPresent(listener -> listener.onSuccess(flowId,
+                    input.get().getData()));
         };
 
         Operators.ErrorHandler<Object> errCb = (exception, retryable, flowContexts) -> {
@@ -201,19 +209,58 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
             actualErrorHandler.handle(exception, retryable, flowContexts);
 
             // 触发对话异常处理，及父流程异常处理
-            flowContexts.stream()
-                    .map(this::getConverseListener)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .forEach(m -> m.onError(this.getFlow().getId(), exception, retryable, flowContexts));
+            handleConverseAndParentError(exception, retryable, flowContexts);
         };
         this.state.close(successCb, errCb);
         return ObjectUtils.cast(this.getFlow());
     }
 
-    private Optional<ConverseListener<O>> getConverseListener(FlowContext<?> ctx) {
-        AtomicReference<ConverseListener<O>> listenerRef = ctx.getSession().getInnerState(StateKey.CONVERSE_LISTENER);
-        return Optional.ofNullable(listenerRef).flatMap(listener -> Optional.ofNullable(listener.get()));
+    private void handleConverseAndParentError(Exception exception, Retryable<Object> retryable,
+            List<FlowContext<Object>> flowContexts) {
+        String flowId = this.getFlow().getId();
+        flowContexts.stream()
+                .map(this::getAndClearListenerMap)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .flatMap(listenerMap -> {
+                    // 先处理当前流程的对话异常
+                    handleConverseError(listenerMap.get(flowId), exception);
+                    return listenerMap.entrySet().stream().filter(entry -> !Objects.equals(entry.getKey(), flowId));
+                })
+                .forEach(entry -> {
+                    // 处理全部父流程的全局异常和对话异常
+                    handleConverseFlowError(entry.getValue(), exception, retryable, flowContexts);
+                    handleConverseError(entry.getValue(), exception);
+                });
+    }
+
+    private void handleConverseError(AtomicReference<ConverseListener<O>> listenerInput, Exception exception) {
+        Optional.ofNullable(listenerInput)
+                .flatMap(ref -> Optional.ofNullable(ref.get()))
+                .ifPresent(listener -> listener.onConverseError(exception));
+    }
+
+    private void handleConverseFlowError(AtomicReference<ConverseListener<O>> listenerInput, Exception exception,
+            Retryable<Object> retryable, List<FlowContext<Object>> contexts) {
+        Optional.ofNullable(listenerInput)
+                .flatMap(ref -> Optional.ofNullable(ref.get()))
+                .ifPresent(listener -> listener.onFlowError(exception, retryable, contexts));
+    }
+
+    private Optional<Map<String, AtomicReference<ConverseListener<O>>>> getAndClearListenerMap(FlowContext<?> ctx) {
+        AtomicReference<Map<String, AtomicReference<ConverseListener<O>>>> listenerRefMap =
+                ctx.getSession().getInnerState(StateKey.CONVERSE_LISTENER);
+        return Optional.ofNullable(listenerRefMap)
+                .flatMap(mapRef -> Optional.ofNullable(mapRef.getAndSet(null)));
+    }
+
+    private Optional<ConverseListener<O>> getConverseListener(FlowContext<?> ctx, String flowId) {
+        AtomicReference<Map<String, AtomicReference<ConverseListener<O>>>> listenerRefMap =
+                ctx.getSession().getInnerState(StateKey.CONVERSE_LISTENER);
+        return Optional.ofNullable(listenerRefMap)
+                .flatMap(mapRef -> Optional.ofNullable(mapRef.get()))
+                .flatMap(listenerMap -> Optional.ofNullable(listenerMap.get(flowId)))
+                .flatMap(ref -> Optional.ofNullable(ref.get()));
     }
 
     private static class EmptyCallBack {

@@ -5,12 +5,12 @@
 package com.huawei.jade.fel.chat.content;
 
 /**
- * 表示携带媒体数据的 {@link MessageContent}。
+ * 表示携带媒体数据的 {@link Content}。
  *
  * @author 易文渊
  * @since 2024-4-3
  */
-public class MediaContent implements MessageContent {
+public class MediaContent implements Content {
     private final Media media;
 
     /**

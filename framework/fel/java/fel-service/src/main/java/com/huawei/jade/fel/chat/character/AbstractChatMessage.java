@@ -2,10 +2,11 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.fel.chat.charactar;
+package com.huawei.jade.fel.chat.character;
 
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.content.Contents;
+import com.huawei.jade.fel.chat.content.MessageContent;
 
 /**
  * 表示聊天消息的抽象实现。
@@ -17,7 +18,7 @@ public abstract class AbstractChatMessage implements ChatMessage {
     /**
      * 表示聊天消息的内容。
      */
-    protected final Contents contents;
+    protected final MessageContent contents;
 
     /**
      * 通过文本信息来初始化 {@link AbstractChatMessage} 的新实例。
@@ -29,11 +30,11 @@ public abstract class AbstractChatMessage implements ChatMessage {
     }
 
     /**
-     * 通过 {@link Contents} 来初始化 {@link AbstractChatMessage} 的新实例。
+     * 通过 {@link MessageContent} 来初始化 {@link AbstractChatMessage} 的新实例。
      *
-     * @param contents 表示文本内容的 {@link Contents}。
+     * @param contents 表示文本内容的 {@link MessageContent}。
      */
-    protected AbstractChatMessage(Contents contents) {
+    protected AbstractChatMessage(MessageContent contents) {
         this.contents = contents;
     }
 

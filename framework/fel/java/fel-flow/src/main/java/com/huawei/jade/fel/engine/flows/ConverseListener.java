@@ -25,15 +25,20 @@ public interface ConverseListener<T> {
     void onSuccess(String flowId, T data);
 
     /**
-     * 对话异常回调。
+     * 流程异常回调。
      *
-     * @param flowId 表示流程id的 {@link String}。
      * @param exception 表示本次对话异常的 {@link Exception}。
      * @param retryable 表示本次对话重试句柄的 {@link Retryable}{@code <}{@link Object}{@code >}。
-     * @param contexts 表示本次对话上下文的
-     * {@link List }{@code <}{@link FlowContext}{@code <}{@link Object}{@code >>}。
+     * @param contexts 表示本次对话上下文的 {@link List }{@code <}{@link FlowContext}{@code <}{@link Object}{@code >>}。
      */
-    void onError(String flowId, Exception exception, Retryable<Object> retryable, List<FlowContext<Object>> contexts);
+    void onFlowError(Exception exception, Retryable<Object> retryable, List<FlowContext<Object>> contexts);
+
+    /**
+     * 对话异常回调。
+     *
+     * @param exception 表示本次对话异常的 {@link Exception}。
+     */
+    void onConverseError(Exception exception);
 
     /**
      * 判断对话是否结束。

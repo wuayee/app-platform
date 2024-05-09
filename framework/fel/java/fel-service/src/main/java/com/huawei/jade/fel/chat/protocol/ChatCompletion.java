@@ -38,21 +38,17 @@ public class ChatCompletion implements Prompt {
      * 根据 {@link Prompt} 实现类构建 {@link ChatCompletion} 实例。
      *
      * @param prompt 表示大模型输入的 {@link Prompt}。
+     * @param options 表示大模型超参数的 {@link ChatOptions}。
      */
-    public ChatCompletion(Prompt prompt) {
+    public ChatCompletion(Prompt prompt, ChatOptions options) {
         Validation.notNull(prompt, "The prompt cannot be null.");
         Validation.notEmpty(prompt.messages(), "The messages cannot be empty");
         this.messages = prompt.messages().stream().map(FlatChatMessage::new).collect(Collectors.toList());
-        this.options = Validation.notNull(prompt.option(), "The option must not be null");
+        this.options = Validation.notNull(options, "The option must not be null");
     }
 
     @Override
     public List<? extends ChatMessage> messages() {
         return this.messages;
-    }
-
-    @Override
-    public ChatOptions option() {
-        return this.options;
     }
 }
