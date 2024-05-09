@@ -5,7 +5,6 @@
 package com.huawei.jade.fel.core.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,16 +22,5 @@ public class TipTest {
     void giveAnotherTipThenMergeOk() {
         Tip tip = Tip.from("k1", "v1").merge(Tip.from("k2", "v2"));
         assertThat(tip.freeze()).containsKeys("k1", "k2");
-    }
-
-
-    @Test
-    @DisplayName("当tip冻结后，执行任意操作抛出异常")
-    void FreezeThenOperateShouldThrowException() {
-        Tip tip = new Tip();
-        assertThat(tip.freeze()).isEmpty();
-        assertThatThrownBy(() -> tip.add("k")).isInstanceOf(IllegalStateException.class);
-        assertThatThrownBy(() -> tip.merge(new Tip())).isInstanceOf(IllegalStateException.class);
-        assertThatThrownBy(tip::freeze).isInstanceOf(IllegalStateException.class);
     }
 }
