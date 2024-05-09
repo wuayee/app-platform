@@ -6,8 +6,6 @@ package com.huawei.fit.serialization.http;
 
 import static com.huawei.fitframework.inspection.Validation.notBlank;
 import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.serialization.TagLengthValues.TLV_WORKER_ID;
-import static com.huawei.fitframework.serialization.TagLengthValues.TLV_WORKER_INSTANCE_ID;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.huawei.fitframework.serialization.TagLengthValues;
@@ -21,54 +19,6 @@ import java.util.Base64;
  * @since 2024-02-17
  */
 public class HttpUtils {
-    private static final int TLV_ASYNC_TASK_ID = 0x40;
-
-    /**
-     * 从 TLV 中获取进程的唯一标识。
-     *
-     * @param tagValues 表示 TLV 字段的 {@link TagLengthValues}。
-     * @return 表示进程唯一标识的 {@link String}。
-     */
-    public static String getWorkerId(TagLengthValues tagValues) {
-        notNull(tagValues, "The TLV cannot be null.");
-        return new String(tagValues.getValue(TLV_WORKER_ID), UTF_8);
-    }
-
-    /**
-     * 向 TLV 中设置进程的唯一标识。
-     *
-     * @param tagValues 表示 TLV 字段的 {@link TagLengthValues}。
-     * @param workerId 表示进程唯一标识的 {@link String}。
-     */
-    public static void setWorkerId(TagLengthValues tagValues, String workerId) {
-        notNull(tagValues, "The TLV cannot be null.");
-        notBlank(workerId, "The worker id cannot be blank.");
-        tagValues.putTag(TLV_WORKER_ID, workerId.getBytes(UTF_8));
-    }
-
-    /**
-     * 从 TLV 中获取进程实例的唯一标识。
-     *
-     * @param tagValues 表示 TLV 字段的 {@link TagLengthValues}。
-     * @return 表示进程实例唯一标识的 {@link String}。
-     */
-    public static String getWorkerInstanceId(TagLengthValues tagValues) {
-        notNull(tagValues, "The TLV cannot be null.");
-        return new String(tagValues.getValue(TLV_WORKER_INSTANCE_ID), UTF_8);
-    }
-
-    /**
-     * 向 TLV 中设置进程实例的唯一标识。
-     *
-     * @param tagValues 表示 TLV 字段的 {@link TagLengthValues}。
-     * @param workerInstanceId 表示进程实例唯一标识的 {@link String}。
-     */
-    public static void setWorkerInstanceId(TagLengthValues tagValues, String workerInstanceId) {
-        notNull(tagValues, "The TLV cannot be null.");
-        notBlank(workerInstanceId, "The worker instance id cannot be blank.");
-        tagValues.putTag(TLV_WORKER_INSTANCE_ID, workerInstanceId.getBytes(UTF_8));
-    }
-
     /**
      * 从 TLV 中获取异步任务的唯一标识。
      *
@@ -77,7 +27,7 @@ public class HttpUtils {
      */
     public static String getAsyncTaskId(TagLengthValues tagValues) {
         notNull(tagValues, "The TLV cannot be null.");
-        return new String(tagValues.getValue(TLV_ASYNC_TASK_ID), UTF_8);
+        return new String(tagValues.getValue(HttpTags.getAsyncTaskIdTag()), UTF_8);
     }
 
     /**
@@ -89,7 +39,7 @@ public class HttpUtils {
     public static void setAsyncTaskId(TagLengthValues tagValues, String asyncTaskId) {
         notNull(tagValues, "The TLV cannot be null.");
         notBlank(asyncTaskId, "The async task id cannot be blank.");
-        tagValues.putTag(TLV_ASYNC_TASK_ID, asyncTaskId.getBytes(UTF_8));
+        tagValues.putTag(HttpTags.getAsyncTaskIdTag(), asyncTaskId.getBytes(UTF_8));
     }
 
     /**

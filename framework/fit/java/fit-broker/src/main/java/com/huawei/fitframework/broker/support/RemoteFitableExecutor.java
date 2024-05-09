@@ -28,8 +28,7 @@ import com.huawei.fitframework.serialization.RequestMetadata;
 import com.huawei.fitframework.serialization.ResponseMetadata;
 import com.huawei.fitframework.serialization.TagLengthValues;
 import com.huawei.fitframework.serialization.Version;
-import com.huawei.fitframework.serialization.tlv.ValueSerializer;
-import com.huawei.fitframework.serialization.tlv.support.ExceptionPropertiesValueSerializer;
+import com.huawei.fitframework.serialization.tlv.TlvUtils;
 import com.huawei.fitframework.util.LazyLoader;
 import com.huawei.fitframework.util.ReflectionUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -111,8 +110,7 @@ public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {
                 exception = new FitException(responseMetadata.code(), responseMetadata.message());
             }
         }
-        byte[] propertiesBytes = responseMetadata.tagValues().getValue(ValueSerializer.TAG_EXCEPTION_PROPERTIES);
-        Map<String, String> properties = ExceptionPropertiesValueSerializer.INSTANCE.deserialize(propertiesBytes);
+        Map<String, String> properties = TlvUtils.getExceptionProperties(responseMetadata.tagValues());
         exception.setProperties(properties);
         exception.associateFitable(fitable.genericable().id(), fitable.id());
         return exception;

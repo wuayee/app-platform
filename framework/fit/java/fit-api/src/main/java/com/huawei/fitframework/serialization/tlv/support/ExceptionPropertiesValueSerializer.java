@@ -28,11 +28,6 @@ public class ExceptionPropertiesValueSerializer implements ValueSerializer<Map<S
     private ExceptionPropertiesValueSerializer() {}
 
     @Override
-    public int tag() {
-        return ValueSerializer.TAG_EXCEPTION_PROPERTIES;
-    }
-
-    @Override
     public byte[] serialize(@Nonnull Map<String, String> value) {
         TagLengthValues propertiesTlv = TagLengthValues.create();
         int currentTag = 0;

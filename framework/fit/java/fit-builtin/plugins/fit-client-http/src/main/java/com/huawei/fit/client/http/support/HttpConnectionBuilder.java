@@ -4,8 +4,8 @@
 
 package com.huawei.fit.client.http.support;
 
-import static com.huawei.fit.serialization.http.Constant.FIT_ASYNC_TASK_PATH_PATTERN;
-import static com.huawei.fit.serialization.http.Constant.FIT_PATH_PATTERN;
+import static com.huawei.fit.serialization.http.Constants.FIT_ASYNC_TASK_PATH_PATTERN;
+import static com.huawei.fit.serialization.http.Constants.FIT_PATH_PATTERN;
 
 import com.huawei.fit.client.Address;
 import com.huawei.fit.client.Request;

@@ -12,7 +12,7 @@
     <artifactId>fit-message-serializer</artifactId>
 
     <dependencies>
-        <!-- Fit core -->
+        <!-- FIT -->
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-api</artifactId>
@@ -20,7 +20,23 @@
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-flowable</artifactId>
-            <version>${fit.version}</version>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

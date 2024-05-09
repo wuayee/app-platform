@@ -14,6 +14,7 @@ import com.huawei.fitframework.broker.server.Response;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.RequestMetadata;
 import com.huawei.fitframework.serialization.ResponseMetadata;
+import com.huawei.fitframework.serialization.tlv.TlvUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.util.Optional;
@@ -63,8 +64,8 @@ public class AsyncTaskExecutor {
      */
     public int submit(RequestMetadata metadata, Supplier<Response> task) {
         notNull(metadata, "The request metadata cannot be null.");
-        String workerId = HttpUtils.getWorkerId(metadata.tagValues());
-        String workerInstanceId = HttpUtils.getWorkerInstanceId(metadata.tagValues());
+        String workerId = TlvUtils.getWorkerId(metadata.tagValues());
+        String workerInstanceId = TlvUtils.getWorkerInstanceId(metadata.tagValues());
         String asyncTaskId = HttpUtils.getAsyncTaskId(metadata.tagValues());
         if (StringUtils.isBlank(workerId) || StringUtils.isBlank(workerInstanceId)
                 || StringUtils.isBlank(asyncTaskId)) {

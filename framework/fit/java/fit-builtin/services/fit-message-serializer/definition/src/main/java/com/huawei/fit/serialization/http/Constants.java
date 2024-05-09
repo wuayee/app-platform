@@ -10,7 +10,7 @@ package com.huawei.fit.serialization.http;
  * @author 季聿阶 j00559309
  * @since 2024-02-17
  */
-public class Constant {
+public class Constants {
     /** 表示 FIT 通信中同步获取结果的路径。 */
     public static final String FIT_PATH_PATTERN = "/fit/{genericableId}/{fitableId}";
 

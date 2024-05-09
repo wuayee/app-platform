@@ -25,9 +25,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -189,8 +191,30 @@ public final class ReflectionUtils {
      * @see Class#getDeclaredFields()
      */
     public static Field[] getDeclaredFields(Class<?> clazz) {
+        return getDeclaredFields(clazz, false);
+    }
+
+    /**
+     * 获取指定类型中声明的所有字段信息。
+     *
+     * @param clazz 表示指定类型的 {@link Class}{@code <?>}。
+     * @param withInherited 表示是否需要包含父类的标志的 {@code boolean}。
+     * @return 表示指定类型中声明的所有字段信息的 {@link Field}{@code []}。
+     * @throws IllegalArgumentException 当 {@code clazz} 为 {@code null} 时。
+     * @see Class#getDeclaredFields()
+     */
+    public static Field[] getDeclaredFields(Class<?> clazz, boolean withInherited) {
         notNull(clazz, "The class to detect fields cannot be null.");
-        return clazz.getDeclaredFields();
+        if (!withInherited) {
+            return clazz.getDeclaredFields();
+        }
+        List<Field> fields = new ArrayList<>();
+        while (clazz != null) {
+            Field[] currentFields = clazz.getDeclaredFields();
+            fields.addAll(Arrays.asList(currentFields));
+            clazz = clazz.getSuperclass();
+        }
+        return fields.toArray(new Field[0]);
     }
 
     /**
