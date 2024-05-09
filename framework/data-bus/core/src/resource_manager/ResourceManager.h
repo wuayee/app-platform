@@ -23,13 +23,16 @@ public:
     static void Init();
     ResourceManager();
     ~ResourceManager() = default;
-    std::tuple<int32_t, Common::ErrorType> HandleApplyMemory(int32_t socketFd, uint64_t memorySize);
+    std::tuple<int32_t, Common::ErrorType> HandleApplyMemory(int32_t socketFd, const std::string& objectKey,
+                                                             uint64_t memorySize);
     std::tuple<bool, uint64_t, Common::ErrorType> HandleApplyPermission(int32_t socketFd,
                                                                         DataBus::Common::PermissionType permissionType,
                                                                         int32_t sharedMemoryId);
     bool HandleReleasePermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
                                  int32_t sharedMemoryId);
     std::vector<std::tuple<int32_t, uint64_t>> ProcessWaitingPermitRequests(int32_t sharedMemoryId);
+
+    int32_t GetMemoryId(const std::string& objectKey);
 
     // SharedMemoryInfo属性获取方法集合
     int32_t GetMemoryApplicant(int32_t sharedMemoryId);
@@ -69,6 +72,7 @@ private:
     std::unordered_map<int32_t, std::unique_ptr<SharedMemoryInfo>> sharedMemoryIdToInfo_; // 内存块信息记录
     std::unordered_map<int32_t, std::unordered_set<int32_t>> readingMemoryBlocks_; // 客户端正在读取的内存块
     std::unordered_map<int32_t, std::unordered_set<int32_t>> writingMemoryBlocks_; // 客户端正在写入的内存块
+    std::unordered_map<std::string, int32_t> keyToSharedMemoryId_; // 客户端自定义key
 
     /* 内存块当前读写状态。
      * 如果值等于0: 当前没有任何读写操作。

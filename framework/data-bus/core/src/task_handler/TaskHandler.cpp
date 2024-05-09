@@ -136,10 +136,12 @@ void TaskHandler::HandleMessageApplyMemory(const Common::MessageHeader* header, 
     }
     const Common::ApplyMemoryMessage* applyMemoryMessage =
         Common::GetApplyMemoryMessage(startPtr);
-    logger.Info("[TaskHandler] Received ApplyMemory, size: {}", applyMemoryMessage->memory_size());
+    const std::string objectKey = applyMemoryMessage->object_key() ? applyMemoryMessage->object_key()->str() : "";
+    logger.Info("[TaskHandler] Received ApplyMemory, object key:{}, size: {}", objectKey,
+                applyMemoryMessage->memory_size());
 
     const tuple<int32_t, ErrorType> applyMemoryRes =
-        resourceMgrPtr_->HandleApplyMemory(socketFd, applyMemoryMessage->memory_size());
+        resourceMgrPtr_->HandleApplyMemory(socketFd, objectKey, applyMemoryMessage->memory_size());
     int32_t memoryId;
     ErrorType errorType;
     tie(memoryId, errorType) = applyMemoryRes;
@@ -162,9 +164,15 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
     logger.Info("[TaskHandler] Received ApplyPermission, permission: {}",
                 static_cast<int8_t>(applyPermissionMessage->permission()));
 
+    int32_t sharedMemoryId = applyPermissionMessage->memory_key() != -1 ? applyPermissionMessage->memory_key() :
+                resourceMgrPtr_->GetMemoryId(applyPermissionMessage->object_key()->str());
+    if (sharedMemoryId == -1) {
+        logger.Error("[TaskHandler] The object key {} is not found", applyPermissionMessage->object_key()->str());
+        SendApplyPermissionResponse(socketFd, false, 0, ErrorType::KeyNotFound);
+    }
+
     tuple<bool, uint64_t, ErrorType> applyPermitRes =
-        resourceMgrPtr_->HandleApplyPermission(socketFd, applyPermissionMessage->permission(),
-                                               applyPermissionMessage->memory_key());
+        resourceMgrPtr_->HandleApplyPermission(socketFd, applyPermissionMessage->permission(), sharedMemoryId);
     bool granted;
     uint64_t memorySize;
     ErrorType errorType;
@@ -188,15 +196,22 @@ void TaskHandler::HandleMessageReleasePermission(const Common::MessageHeader* he
         Common::GetReleasePermissionMessage(startPtr);
     logger.Info("[TaskHandler] Received ReleasePermission, permission: {}",
                 static_cast<int8_t>(releasePermissionMessage->permission()));
-    if (!resourceMgrPtr_->HandleReleasePermission(socketFd, releasePermissionMessage->permission(),
-                                                  releasePermissionMessage->memory_key())) {
+
+    int32_t sharedMemoryId = releasePermissionMessage->memory_key() != -1 ? releasePermissionMessage->memory_key() :
+                             resourceMgrPtr_->GetMemoryId(releasePermissionMessage->object_key()->str());
+    if (sharedMemoryId == -1) {
+        logger.Error("[TaskHandler] The object key {} is not found", releasePermissionMessage->object_key()->str());
+        return;
+    }
+
+    if (!resourceMgrPtr_->HandleReleasePermission(socketFd, releasePermissionMessage->permission(), sharedMemoryId)) {
         logger.Error("[TaskHandler] Failed to ReleasePermission, client: {}, permission: {}", socketFd,
                      static_cast<int8_t>(releasePermissionMessage->permission()));
         return;
     }
     // 通知结束等待的客户端权限申请成功
     vector<tuple<int32_t, uint64_t>> notificationQueue =
-        resourceMgrPtr_->ProcessWaitingPermitRequests(releasePermissionMessage->memory_key());
+        resourceMgrPtr_->ProcessWaitingPermitRequests(sharedMemoryId);
     for (const auto& notification: notificationQueue) {
         int32_t clientId;
         uint64_t memorySize;

@@ -36,8 +36,14 @@ void ResourceManager::Init()
     }
 }
 
-tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, uint64_t memorySize)
+tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, const std::string& objectKey,
+                                                              uint64_t memorySize)
 {
+    // 检查objectKey是否已经绑定已有内存
+    if (keyToSharedMemoryId_.find(objectKey) != keyToSharedMemoryId_.end()) {
+        logger.Error("[ResourceManager] The object key {} already exists", objectKey);
+        return make_tuple(-1, ErrorType::KeyAlreadyExists);
+    }
     // 获取ftok函数参数生成器单例
     auto& ftokArgsGenerator = FtokArgsGenerator::Instance();
     const std::string& pathName = ftokArgsGenerator.GetFilePath();
@@ -73,6 +79,9 @@ tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, 
     const auto& now = std::chrono::system_clock::now();
     time_t curTime = std::chrono::system_clock::to_time_t(now);
     sharedMemoryIdToInfo_[sharedMemoryId] = std::make_unique<SharedMemoryInfo>(socketFd, memorySize, curTime);
+    if (!objectKey.empty()) {
+        keyToSharedMemoryId_[objectKey] = sharedMemoryId;
+    }
 
     return make_tuple(sharedMemoryId, ErrorType::None);
 }
@@ -269,19 +278,22 @@ void ResourceManager::CreateDirectory(const std::string& directory)
 {
     size_t pos = 0;
     std::string dir = directory;
-    if (dir[dir.size() - 1] != '/') {
-        dir += "/";
+    const char delimiter = '/';
+    if (dir.back() != delimiter) {
+        dir.push_back(delimiter);
     }
-    while ((pos = dir.find_first_of('/', pos + 1)) != std::string::npos) {
+    while ((pos = dir.find_first_of(delimiter, pos + 1)) != std::string::npos) {
+        dir[pos] = '\0';
         /* S_IRWXU: 允许文件路径所有者阅读、编写、执行它。
          * S_IRWXG: 允许文件路径所属组阅读、编写、执行它。
          * S_IROTH: 允许其他所有用户阅读它。
          * S_IXOTH: 允许其他所有用户执行它。
         */
-        if (mkdir(dir.substr(0, pos).c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
+        if (mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
             logger.Debug("[ResourceManager] Failed to create the directory {}: {}",
-                         dir.substr(0, pos), strerror(errno));
+                         dir.c_str(), strerror(errno));
         }
+        dir[pos] = delimiter;
     }
 }
 
@@ -301,6 +313,11 @@ int32_t ResourceManager::recreateSharedMemoryBlock(key_t sharedMemoryKey, uint64
         return -1;
     }
     return shmget(sharedMemoryKey, memorySize, SHARED_MEMORY_ACCESS_PERMISSION | IPC_CREAT | IPC_EXCL);
+}
+
+int32_t ResourceManager::GetMemoryId(const std::string &objectKey)
+{
+    return keyToSharedMemoryId_.find(objectKey) == keyToSharedMemoryId_.end() ? -1 : keyToSharedMemoryId_[objectKey];
 }
 
 int32_t ResourceManager::GetMemoryApplicant(int sharedMemoryId)
