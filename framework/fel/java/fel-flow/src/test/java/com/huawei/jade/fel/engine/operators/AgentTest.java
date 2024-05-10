@@ -43,7 +43,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class AgentTest {
     @Test
-    void shouldOkWhenCreateAiFlowWithAgent() throws InterruptedException {
+    void shouldOkWhenCreateAiFlowWithAgent() {
         AtomicReference<Double> modelPara = new AtomicReference<>();
         ChatModelService model = getChatSyncModel(modelPara);
         Agent<Prompt, Prompt> agent = getAgent(model, false);
@@ -69,7 +69,7 @@ public class AgentTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
-    void shouldOkWhenAgentWithAsyncTools(boolean isAsyncTool) throws InterruptedException {
+    void shouldOkWhenAgentWithAsyncTools(boolean isAsyncTool) {
         AtomicReference<Double> modelPara = new AtomicReference<>();
         ChatModelService model = getChatSyncModel(modelPara);
         Agent<Prompt, Prompt> agent = getAgent(model, isAsyncTool);

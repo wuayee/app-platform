@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
  */
 public class PatternTest {
     @Test
-    void shouldOkWhenAiFlowWithNormalRunnableParallel() throws InterruptedException {
+    void shouldOkWhenAiFlowWithNormalRunnableParallel() {
         Memory memory = getMockMemory();
         final StringBuilder answer = new StringBuilder();
         AiFlows.<String>create()
@@ -52,7 +52,7 @@ public class PatternTest {
     }
 
     @Test
-    void shouldOkWhenAiFlowWithRetriever() throws InterruptedException {
+    void shouldOkWhenAiFlowWithRetriever() {
         Memory memory = getMockMemory();
         Retriever<Prompt> retriever =
                 input -> Contents.from(new TextContent("[context: " + input.text() + "]"), new MediaContent("url"));

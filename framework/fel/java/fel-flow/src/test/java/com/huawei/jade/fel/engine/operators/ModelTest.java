@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class ModelTest {
     @Test
-    void shouldOkWhenBlockModelWithSettingMemoryKey() throws InterruptedException {
+    void shouldOkWhenBlockModelWithSettingMemoryKey() {
         List<ChatMessages> messages = new ArrayList<>();
         ChatBlockModel<ChatMessages> model =
                 new ChatBlockModel<>(prompts -> new FlatChatMessage(new AiMessage("model answer")));
