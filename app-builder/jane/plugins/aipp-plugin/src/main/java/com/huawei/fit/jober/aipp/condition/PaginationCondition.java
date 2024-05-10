@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fit.jober.aipp.condition;
+
+import com.huawei.fit.http.annotation.RequestQuery;
+import com.huawei.fitframework.annotation.Property;
+import com.huawei.fitframework.validation.constraints.Range;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * 分页条件
+ *
+ * @author l00611472
+ * @since 2023-12-08
+ */
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PaginationCondition {
+    @Property(description = "页码(1开始)", example = "1")
+    @RequestQuery(name = "pageNum", required = false, defaultValue = "1")
+    @Range(min = 1, max = Integer.MAX_VALUE, message = "页码从1开始")
+    private int pageNum;
+
+    @Property(description = "每页大小", example = "10")
+    @RequestQuery(name = "pageSize", required = false, defaultValue = "10")
+    @Range(min = 1, max = 300, message = "每页尺寸范围[1, 300]")
+    private int pageSize;
+
+    /**
+     * 获取偏移量
+     *
+     * @return 偏移量
+     */
+    public long getOffset() {
+        return ((pageNum - 1) * (long)pageSize);
+    }
+}

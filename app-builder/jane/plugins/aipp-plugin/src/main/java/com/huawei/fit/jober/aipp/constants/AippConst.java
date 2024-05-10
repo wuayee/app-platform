@@ -1,0 +1,515 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fit.jober.aipp.constants;
+
+import com.huawei.fit.dynamicform.entity.FormMetaItem;
+
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * AIPP Constants
+ *
+ * @author l00611472
+ * @since 2023-12-15
+ */
+public class AippConst {
+
+    // *** normal constant ***
+
+    /**
+     * string length
+     */
+    public static final int STRING_LEN = 1024;
+
+    /**
+     * invalid form id string
+     */
+    public static final String INVALID_FORM_ID = "undefined";
+
+    /**
+     * invalid form version id string
+     */
+    public static final String INVALID_FORM_VERSION_ID = "undefined";
+
+    /**
+     * RETRY_INTERVAL
+     */
+    public static final int RETRY_INTERVAL = 1000;
+
+    /**
+     * RETRY_TIMES
+     */
+    public static final int RETRY_TIMES = 60;
+
+    /**
+     * flow_component_data
+     */
+    public static final String FLOW_COMPONENT_DATA_KEY = "flow_component_data";
+
+    /**
+     * form_component_data
+     */
+    public static final String FORM_COMPONENT_DATA_KEY = "form_component_data";
+
+    // *** business key ***
+    /**
+     * business data
+     */
+    public static final String BS_DATA_KEY = "businessData";
+
+    /**
+     * business data
+     */
+    public static final String CONTEXT_DATA_KEY = "contextData";
+
+    /**
+     * context nodeId
+     */
+    public static final String BS_NODE_ID_KEY = "nodeId";
+
+    /**
+     * business initContext key
+     */
+    public static final String BS_INIT_CONTEXT_KEY = "initContext";
+
+    /**
+     * business llm_model_name key
+     */
+    public static final String BS_MODEL_NAME_KEY = "llmModelName";
+
+    /**
+     * business prompt key
+     */
+    public static final String BS_MODEL_PROMPT_KEY = "prompt";
+
+    /**
+     * business text generate ppt json key
+     */
+    public static final String BS_TEXT_GENERATE_PPT_JSON_KEY = "text";
+
+    /**
+     * business text len limit key
+     */
+    public static final String BS_TEXT_LIMIT_KEY = "resultTextLimit";
+
+    /**
+     * business text generate ppt json result key
+     */
+    public static final String BS_PPT_JSON_RESULT = "text2pptResult";
+
+    /**
+     * business image file path key
+     */
+    public static final String BS_IMAGE_PATH_KEY = "imagePath";
+
+    /**
+     * business pdf file path key
+     */
+    public static final String BS_PDF_PATH_KEY = "pdfPath";
+
+    /**
+     * business file path key
+     */
+    public static final String BS_FILE_PATH_KEY = "filePath";
+
+    /**
+     * business aipp_agent_id_key key
+     */
+    public static final String BS_AGENT_ID_KEY = "aippId";
+
+    /**
+     * business aipp_agent_param_key key
+     */
+    public static final String BS_AGENT_PARAM_KEY = "aipp_agent_param_key";
+
+    /**
+     * business aipp_agent_result_link_key key
+     */
+    public static final String BS_AGENT_RESULT_LINK_KEY = "aipp_agent_result_link_key";
+
+    /**
+     * business aipp_agent_inst_url_key key
+     */
+    public static final String BS_AGENT_INST_URL_LINK_KEY = "aipp_agent_inst_url_key";
+
+    /**
+     * business image description key
+     */
+    public static final String BS_IMAGE_DESCRIPTION_KEY = "llmImage2TextResult";
+
+    /**
+     * business W3搜索内容
+     */
+    public static final String BS_SEARCH_W3_QUERY_CONTENT = "w3QueryContent";
+
+    /**
+     * business W3搜索 TOPK
+     */
+    public static final String BS_SEARCH_W3_QUERY_TOP_K = "w3QueryTopK";
+
+    /**
+     * business W3搜索结果
+     */
+    public static final String BS_SEARCH_W3_QUERY_RESULT = "w3QueryResult";
+
+    /**
+     * business video path 
+     */
+    public static final String BS_VIDEO_PATH = "videoPath";
+
+    /**
+     * business path for video to audio conversion
+     */
+    public static final String BS_VIDEO_TO_AUDIO_RESULT_DIR = "video2AudioResultDir";
+
+    /**
+     * business segSize for video to audio conversion
+     */
+    public static final String BS_VIDEO_TO_AUDIO_SEG_SIZE = "video2AudioSegmentSize";
+
+    /**
+     * business text result for video to text conversion
+     */
+    public static final String BS_VIDEO_TO_TEXT_RESULT = "llmVideo2textResult";
+
+    /**
+     * business audio path
+     */
+    public static final String BS_AUDIO_PATH = "audioPath";
+
+    /**
+     * business w3Task key
+     */
+    public static final String BS_W3_TASK_RESULT = "w3Task";
+
+    /**
+     * business w3Task key
+     */
+    public static final String BS_W3_TASK_DISPLAY_KEY = "w3TaskDisplay";
+
+    /**
+     * business aipp_id key
+     */
+    public static final String BS_AIPP_ID_KEY = "aipp_id";
+
+    /**
+     * business aipp_version key
+     */
+    public static final String BS_AIPP_VERSION_KEY = "aipp_version";
+
+    /**
+     * business meta_version_id key
+     */
+    public static final String BS_META_VERSION_ID_KEY = "meta_version_id";
+
+    /**
+     * business aipp_inst_id key
+     */
+    public static final String BS_AIPP_INST_ID_KEY = "aippInstanceId";
+
+    /**
+     * business http_context key
+     */
+    public static final String BS_HTTP_CONTEXT_KEY = "http_context";
+
+    /**
+     * business aipp_agent_input key
+     */
+    public static final String BS_AGENT_INPUT_KEY = "aipp_agent_input";
+
+    /**
+     * business log enable key
+     */
+    public static final String BS_EXTRA_CONFIG_KEY = "extraJober";
+
+    /**
+     * business log enable key
+     */
+    public static final String BS_LOG_ENABLE_KEY = "isLogEnabled";
+
+    /**
+     * 用于生成doc的原始文本
+     */
+    public static final String BS_TO_DOC_TEXT = "toDocText";
+
+    /**
+     * 使用这个url下载doc
+     */
+    public static final String BS_DOWNLOAD_DOC_FILE_URL = "downloadDocFileUrl";
+
+    // *** flow config key ***
+
+    /**
+     * aipp flow config version key
+     */
+    public static final String FLOW_CONFIG_VERSION_KEY = "version";
+
+    /**
+     * aipp flow config name key
+     */
+    public static final String FLOW_CONFIG_NAME = "name";
+
+    /**
+     * aipp flow config id key
+     */
+    public static final String FLOW_CONFIG_ID_KEY = "id";
+
+    // *** attribute key ***
+
+    /**
+     * aipp meta icon attribute key
+     */
+    public static final String ATTR_META_ICON_KEY = "meta_icon";
+
+    /**
+     * aipp meta status attribute key
+     */
+    public static final String ATTR_META_STATUS_KEY = "meta_status";
+
+    /**
+     * aipp type attribute key
+     */
+    public static final String ATTR_AIPP_TYPE_KEY = "aipp_type";
+
+    /**
+     * aipp version attribute key
+     */
+    public static final String ATTR_VERSION_KEY = "version";
+
+    /**
+     * aipp baseline version attribute key
+     */
+    public static final String ATTR_BASELINE_VERSION_KEY = "baseline_version";
+
+    /**
+     * aipp description attribute key
+     */
+    public static final String ATTR_DESCRIPTION_KEY = "description";
+
+    /**
+     * aipp flow_config_id attribute key
+     */
+    public static final String ATTR_FLOW_CONFIG_ID_KEY = "flow_config_id";
+
+    /**
+     * aipp flow_definition_id attribute key
+     */
+    public static final String ATTR_FLOW_DEF_ID_KEY = "flow_definition_id";
+
+    /**
+     * aipp publish_at attribute key
+     */
+    public static final String ATTR_PUBLISH_TIME_KEY = "publish_at";
+
+    /**
+     * aipp start_form_id attribute key
+     */
+    public static final String ATTR_START_FORM_ID_KEY = "start_form_id";
+
+    /**
+     * aipp start_form_version attribute key
+     */
+    public static final String ATTR_START_FORM_VERSION_KEY = "start_form_version";
+
+    /**
+     * aipp end_form_id attribute key
+     */
+    public static final String ATTR_END_FORM_ID_KEY = "end_form_id";
+
+    /**
+     * aipp end_form_version attribute key
+     */
+    public static final String ATTR_END_FORM_VERSION_KEY = "end_form_version";
+
+    // *** instance key ***
+
+    /**
+     * aipp name instance key
+     */
+    public static final String INST_NAME_KEY = "aipp_instance_name";
+
+    /**
+     * aipp create_by instance key
+     */
+    public static final String INST_CREATOR_KEY = "create_by";
+
+    /**
+     * aipp created_at instance key
+     */
+    public static final String INST_CREATE_TIME_KEY = "created_at";
+
+    /**
+     * aipp modified_by instance key
+     */
+    public static final String INST_MODIFY_BY_KEY = "modified_by";
+
+    /**
+     * aipp modified_at instance key
+     */
+    public static final String INST_MODIFY_TIME_KEY = "modified_at";
+
+    /**
+     * aipp finish_time instance key
+     */
+    public static final String INST_FINISH_TIME_KEY = "finish_at";
+
+    /**
+     * aipp flow_trans_id instance key
+     */
+    public static final String INST_FLOW_INST_ID_KEY = "flow_trans_id";
+
+    /**
+     * aipp curr_form_id instance key
+     */
+    public static final String INST_CURR_FORM_ID_KEY = "curr_form_id";
+
+    /**
+     * aipp curr_form_version instance key
+     */
+    public static final String INST_CURR_FORM_VERSION_KEY = "curr_form_version";
+
+    /**
+     * aipp curr_form_data instance key
+     */
+    public static final String INST_CURR_FORM_DATA_KEY = "curr_form_data";
+
+    /**
+     * aipp inst_status instance key
+     */
+    public static final String INST_STATUS_KEY = "inst_status";
+
+    /**
+     * aipp inst_progress instance key
+     */
+    public static final String INST_PROGRESS_KEY = "progress";
+
+    /**
+     * aipp curr_node_id instance key
+     */
+    public static final String INST_CURR_NODE_ID_KEY = "curr_node_id";
+
+    /**
+     * aipp llmText2TextResult instance key (dynamic_key)
+     */
+    public static final String INST_TEXT2TEXT_KEY = "llmText2TextResult";
+
+    /**
+     * aipp llmPdf2TextResult instance key (dynamic_key)
+     */
+    public static final String INST_PDF2TEXT_KEY = "llmPdf2TextResult";
+
+    /**
+     * aipp llmFile2TextResult instance key (dynamic_key)
+     */
+    public static final String INST_FILE2TEXT_KEY = "llmFile2TextResult";
+
+    /**
+     * aipp llmWord2MindResult data instance key (dynamic_key)
+     */
+    public static final String INST_WORD2MIND_KEY = "llmWord2MindResult";
+
+    /**
+     * aipp inst_result instance key
+     */
+    public static final String INST_AGENT_RESULT_KEY = "agentResult";
+
+    /**
+     * aipp mind agent data instance key (dynamic_key)
+     */
+    public static final String INST_MIND_DATA_KEY = "llmJson2MindResult";
+
+    /**
+     * aipp mind agent url instance key (dynamic_key)
+     */
+    public static final String INST_MIND_URL_KEY = "mindUrl";
+
+    /**
+     * aipp llmRecommendDocResult instance key (dynamic_key)
+     */
+    public static final String INST_RECOMMEND_DOC_KEY = "llmRecommendDocResult";
+
+    /**
+     * aipp elsePptUrl instance key (dynamic_key)
+     */
+    public static final String INST_ELSA_PPT_RESULT_KEY = "elsaPptResult";
+
+    /**
+     * chat history instance key (dynamic_key)
+     */
+    public static final String INST_CHAT_HISTORY_KEY = "aipp$QAlist";
+
+    /**
+     * report result instance key (dynamic_key)
+     */
+    public static final String INST_OPERATION_REPORT_KEY = "reportResult";
+
+    /**
+     * answer type
+     */
+    public static final String ANSWER_TYPE = "ELSA";
+
+    /**
+     * memory
+     */
+    public static final String BS_AIPP_MEMORY_KEY = "memories";
+
+    /**
+     * aipp app attribute key
+     */
+    public static final String ATTR_APP_ID_KEY = "app_id";
+
+    /**
+     * business aipp_parent_inst_id key
+     */
+    public static final String BS_AIPP_PARENT_INST_ID_KEY = "aipp_parent_instance_id";
+
+    /**
+     * business中的question key
+     */
+    public static final String BS_AIPP_QUESTION_KEY = "Question";
+
+    /**
+     * business中的file description key
+     */
+    public static final String BS_AIPP_FILE_DESC_KEY = "$[FileDescription]$";
+
+    /**
+     * business中的用户选择的历史记录的key
+     */
+    public static final String BS_AIPP_SELECTED_LOGS = "selected_logs";
+
+    /**
+     * 表明结束节点的结果
+     */
+    public static final String BS_AIPP_FINAL_OUTPUT = "finalOutput";
+
+    /**
+     * 表明结果是否需要经过模型再加工
+     */
+    public static final String BS_AIPP_OUTPUT_IS_NEEDED_LLM = "isNeededLLM";
+
+    // *** aipp initial static meta items ***
+    /**
+     * aipp initial static meta items
+     */
+    public static final List<FormMetaItem> STATIC_META_ITEMS = Arrays.asList(
+            new FormMetaItem(INST_NAME_KEY, "meta实例名称", "TEXT", STRING_LEN),
+            new FormMetaItem(INST_CREATOR_KEY, "创建人", "TEXT", STRING_LEN),
+            new FormMetaItem(INST_CREATE_TIME_KEY, "创建时间", "DATETIME", null),
+            new FormMetaItem(INST_MODIFY_BY_KEY, "更新人", "TEXT", STRING_LEN),
+            new FormMetaItem(INST_MODIFY_TIME_KEY, "更新时间", "DATETIME", null),
+            new FormMetaItem(INST_FINISH_TIME_KEY, "完成时间", "DATETIME", null),
+            new FormMetaItem(INST_FLOW_INST_ID_KEY, "flow实例id", "TEXT", STRING_LEN),
+            new FormMetaItem(INST_CURR_FORM_ID_KEY, "当前表单id", "TEXT", STRING_LEN),
+            new FormMetaItem(INST_CURR_FORM_VERSION_KEY, "当前表单版本", "TEXT", STRING_LEN),
+            new FormMetaItem(INST_CURR_FORM_DATA_KEY, "当前表单数据", "TEXT",
+                    STRING_LEN * 8),
+            new FormMetaItem(INST_STATUS_KEY, "实例状态", "TEXT", STRING_LEN),
+            new FormMetaItem(INST_PROGRESS_KEY, "实例进度", "TEXT", STRING_LEN),
+            new FormMetaItem(INST_AGENT_RESULT_KEY, "aipp agent结果", "TEXT", STRING_LEN),
+            new FormMetaItem(INST_CURR_NODE_ID_KEY, "当前节点id", "TEXT", STRING_LEN)
+    );
+}

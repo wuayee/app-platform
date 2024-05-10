@@ -1,0 +1,31 @@
+{
+  "status": "active",
+  "nodes": [
+    {
+      "type": "state",
+      "metaId": "xc9ax5",
+      "name": "genericable-Jober",
+      "triggerMode": "auto",
+      "jober": {
+        "type": "genericable_jober",
+        "name": "任务",
+        "fitables": [
+          "helloWorld"
+        ],
+        "entity":{
+          "genericable": {
+            "id": "com.huawei.fit.demo.flow.helloWorld",
+            "params": [
+              {
+                "name": "name"
+              }
+            ],
+            "return": {
+              "type": "String"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

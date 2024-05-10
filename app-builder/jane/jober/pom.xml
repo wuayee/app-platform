@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.huawei.fit.jade</groupId>
+        <artifactId>app-builder-jane-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <name>jober</name>
+    <groupId>com.huawei.fit.jober</groupId>
+    <artifactId>jober</artifactId>
+    <version>0.1.0</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <kmssdk.version>3.0.1.0</kmssdk.version>
+        <huawei-security.version>2.6.10-RELEASE</huawei-security.version>
+        <guava.version>32.0.1-jre</guava.version>
+        <fit.version>3.5.0-SNAPSHOT</fit.version>
+        <hisp.jane.api.version>1.0-SNAPSHOT</hisp.jane.api.version>
+        <ohscript.version>0.0.3.2-SNAPSHOT</ohscript.version>
+    </properties>
+
+    <!--Hdt 增量覆盖率使用-->
+    <scm>
+        <tag>develop</tag>
+        <url>https://codehub-dg-y.huawei.com/fitlab/jane.git</url>
+        <connection>scm:git:https://codehub-dg-y.huawei.com/fitlab/jane.git</connection>
+        <developerConnection>scm:git:https://codehub-dg-y.huawei.com/fitlab/jane.git</developerConnection>
+    </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.huawei.fit.jane</groupId>
+            <artifactId>task</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jane</groupId>
+            <artifactId>flow-graph</artifactId>
+            <version>0.2.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jober</groupId>
+            <artifactId>jober-genericable</artifactId>
+            <version>0.6.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jober</groupId>
+            <artifactId>jober-multiversion-genericable</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.ohscript</groupId>
+            <artifactId>ohscript</artifactId>
+            <version>${ohscript.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.26</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
+        <!-- Framework -->
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-api</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+
+        <!-- Genericables -->
+        <dependency>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-http-classic</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-service-registry-and-discovery</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-data-repository-service</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+
+        <!-- DB -->
+        <dependency>
+            <groupId>com.huawei.fit.integration</groupId>
+            <artifactId>fit-mybatis</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework.extension</groupId>
+            <artifactId>fit-transaction</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework.extension</groupId>
+            <artifactId>fit-schedule</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.13</version>
+        </dependency>
+
+        <!-- Plugin -->
+        <dependency>
+            <groupId>com.huawei.fit.jane</groupId>
+            <artifactId>waterflow-edatamate-genericable</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Serializer -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.83</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.14.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+
+        <!-- Mybatis -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.13</version>
+        </dependency>
+
+        <!-- HTTP -->
+        <dependency>
+            <groupId>com.huawei.fit.integration</groupId>
+            <artifactId>fit-forest</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dtflys.forest</groupId>
+            <artifactId>forest-core</artifactId>
+            <version>1.5.26</version>
+        </dependency>
+
+        <!-- Cache -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>2.9.3</version>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.8.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>4.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>4.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.1.214</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.2.20</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--Hdt 使用离线模式依赖。-->
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <version>0.8.8</version>
+            <classifier>runtime</classifier>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>A3000</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.huawei.fit.service</groupId>
+                    <artifactId>hisp-jane-api</artifactId>
+                    <version>${hisp.jane.api.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.huawei.fitframework</groupId>
+                <artifactId>fit-build-maven-plugin</artifactId>
+                <version>${fit.version}</version>
+                <executions>
+                    <execution>
+                        <id>build-plugin</id>
+                        <goals>
+                            <goal>build-plugin</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>package-plugin</id>
+                        <goals>
+                            <goal>package-plugin</goal>
+                        </goals>
+                        <configuration>
+                            <category>user</category>
+                            <level>2</level>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <parallel>classes</parallel>
+                    <threadCount>8</threadCount>
+                </configuration>
+            </plugin>
+            <!--更多dt4j配置请参考openx dt4j配置说明: https://openx.huawei.com/HDT/overview
+            HDT-JAVA：https://open.codehub.huawei.com/hdt/hdt-java/home （WeLink1群：386567209，WeLink2群：560609894235926566）-->
+            <plugin>
+                <groupId>com.huawei.dt</groupId>
+                <artifactId>dt4j-coverage-maven-plugin</artifactId>
+                <!-- 请参考HDT JAVA动态选择最新发布的版本 -->
+                <version>2.0.5</version>
+                <configuration>
+                    <!-- 不建议配置，否则无法在构建时覆盖，默认为false，可在构建时指定-DactiveCoverage -->
+                    <!--                    <activeCoverage>false</activeCoverage>-->
+                    <!-- 不建议配置，默认包含所有类 -->
+                    <checkoutRelativeDirectory>jober</checkoutRelativeDirectory>
+                    <excludeStats>
+                        <item>/com/huawei/fit/jober/bff/controller/*</item>
+                        <item>/com/huawei/fit/jober/health/*</item>
+                        <item>/com/huawei/fit/jober/common/*</item>
+                        <item>/com/huawei/fit/jober/dataengine/genericable/*</item>
+                        <item>/com/huawei/fit/jober/dataengine/rest/*</item>
+                        <item>/com/huawei/fit/jober/dataengine/persist/po/*</item>
+                        <item>/com/huawei/fit/jober/flowsengine/persist/po/*</item>
+                        <item>/com/huawei/fit/jober/taskcenter/dao/po/*</item>
+                        <item>/com/huawei/fit/jober/taskcenter/declaration/*</item>
+                        <item>/com/huawei/fit/jober/taskcenter/event/*</item>
+                        <item>/com/huawei/fit/jober/taskcenter/filter/*</item>
+                        <item>/com/huawei/fit/jober/taskcenterold/*</item>
+                        <item>/com/huawei/fit/jober/taskcenter/controller/*</item>
+                        <item>/com/huawei/fit/jober/taskcenter/tianzhou/*</item>
+                        <item>/com/huawei/fit/jober/taskcenter/service/impl/instance/InstanceSaver</item>
+                        <item>/com/huawei/fit/jober/flowsengine/controller/*</item>
+                        <item>/com/huawei/fit/jober/bff/controller/*</item>
+                        <item>/com/huawei/fit/jober/taskcenter/fitable/MetaInstanceFitable1</item>
+                        <item>/com/huawei/fit/jober/taskcenter/eventhandler/converter/impl/MetaInstanceConverterImpl</item>
+                    </excludeStats>
+                    <!-- 建议配置，描述报告的名称，默认为最后一个${project.artifactId} -->
+                    <reportName>TestReport</reportName>
+                    <!-- 可选配置，描述报告的用户，默认为${user.name} -->
+                    <reportUser>TestUser</reportUser>
+                </configuration>
+                <executions>
+                    <!-- 必须添加instrument任务，否则无法采集到class的指令执行数据 -->
+                    <execution>
+                        <id>instrument</id>
+                        <goals>
+                            <goal>instrument</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${maven.antrun.version}</version>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <configuration>
+                            <target>
+                                <copy file="${project.build.directory}/${project.build.finalName}.jar"
+                                      todir="../../../framework/fit/java/target/plugins"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,1 @@
+ON CONFLICT ("task_id", "category_id", "fitable_id")

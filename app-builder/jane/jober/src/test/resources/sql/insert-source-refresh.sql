@@ -1,0 +1,1 @@
+INSERT INTO "task_source_refresh_in_time"("id", "metadata", "create_fitable_id", "patch_fitable_id", "delete_fitable_id", "retrieve_fitable_id", "list_fitable_id") VALUES(?, ?::JSON, ?, ?, ?, ?, ?)

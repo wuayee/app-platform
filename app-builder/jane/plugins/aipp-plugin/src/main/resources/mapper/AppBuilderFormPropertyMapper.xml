@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.fit.jober.aipp.mapper.AppBuilderFormPropertyMapper">
+    <resultMap id="BaseResultMap" type="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPO">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="form_id" property="formId"/>
+        <result column="data_type" property="dataType"/>
+        <result column="default_value" property="defaultValue"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, form_id, data_type, default_value
+    </sql>
+
+    <select id="selectWithFormId" resultMap="BaseResultMap"
+            resultType="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPO">
+        select
+        <include refid="Base_Column_List"/>
+        from app_builder_form_property
+        where form_id = #{formId}
+    </select>
+
+    <select id="selectWithId" resultMap="BaseResultMap"
+            resultType="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPO">
+        select
+        <include refid="Base_Column_List"/>
+        from app_builder_form_property
+        where id = #{id}
+    </select>
+
+    <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPO">
+        insert into app_builder_form_property(
+        <include refid="Base_Column_List"/>
+        )
+        values (#{id}, #{name}, #{formId}, #{dataType}, #{defaultValue})
+    </insert>
+
+    <insert id="insertMore" parameterType="java.util.List">
+        insert into app_builder_form_property(
+        <include refid="Base_Column_List"/>
+        )
+        values
+        <foreach collection="jadeFormProperties" item="item" index="index" separator=",">
+            (#{item.id}, #{item.name}, #{item.formId}, #{item.dataType}, #{item.defaultValue})
+        </foreach>
+    </insert>
+
+    <update id="updateOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPO">
+        update app_builder_form_property
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="formId != null">
+                form_id = #{formId},
+            </if>
+            <if test="dataType != null">
+                data_type = #{dataType},
+            </if>
+            <if test="defaultValue != null">
+                default_value = #{defaultValue}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteMore" parameterType="java.util.List">
+        delete from app_builder_form_property
+        where id in
+        <foreach collection="ids" open="(" separator="," close=")" item="id" index="index">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

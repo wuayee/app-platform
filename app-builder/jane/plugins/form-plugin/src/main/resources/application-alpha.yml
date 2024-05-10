@@ -1,0 +1,26 @@
+fit:
+  beans:
+    packages:
+      - 'com.huawei.fit.jober.form'
+  messages:
+    basename: i18n/messages
+mybatis:
+  mapper-locations: mapper/*Mapper.xml
+elsa:
+  accessKey: a90ae902e83540b3b69ceeec38ea0468
+  endpoint: http://fit-elsa-alpha.lab.huawei.com
+druid:
+  driver-class-name: org.postgresql.Driver
+  initialSize: 5
+  minIdle: 5
+  maxActive: 10
+  maxWait: 60000
+  timeBetweenEvictionRunsMillis: 60000
+  minEvictableIdleTimeMillis: 300000
+  validationQuery: SELECT 1
+  testWhileIdle: true
+  testOnBorrow: true
+  testOnReturn: true
+  url: jdbc:postgresql://7.180.146.52:5432/jane_alpha?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true
+  username: jane
+  password: FitLab123

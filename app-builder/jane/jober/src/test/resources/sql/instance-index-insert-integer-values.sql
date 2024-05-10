@@ -1,0 +1,1 @@
+INSERT INTO "index_integer"("id", "instance_id", "property_id", "value") VALUES(?, ?, ?, ?)

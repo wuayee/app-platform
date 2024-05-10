@@ -1,0 +1,89 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fit.jober.form.controller;
+
+import com.huawei.fit.dynamicform.common.PageResponse;
+import com.huawei.fit.dynamicform.condition.FormQueryCondition;
+import com.huawei.fit.dynamicform.condition.PaginationCondition;
+import com.huawei.fit.dynamicform.dto.DynamicFormDto;
+import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
+import com.huawei.fit.dynamicform.entity.DynamicFormEntity;
+import com.huawei.fit.http.annotation.DeleteMapping;
+import com.huawei.fit.http.annotation.GetMapping;
+import com.huawei.fit.http.annotation.PathVariable;
+import com.huawei.fit.http.annotation.PostMapping;
+import com.huawei.fit.http.annotation.RequestBean;
+import com.huawei.fit.http.annotation.RequestBody;
+import com.huawei.fit.http.annotation.RequestMapping;
+import com.huawei.fit.http.annotation.RequestParam;
+import com.huawei.fit.http.server.HttpClassicServerRequest;
+import com.huawei.fit.jane.common.controller.AbstractController;
+import com.huawei.fit.jane.common.response.Rsp;
+import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jober.form.dto.FormDetailDto;
+import com.huawei.fit.jober.form.dto.FormDto;
+import com.huawei.fit.jober.form.exception.FormErrCode;
+import com.huawei.fit.jober.form.service.impl.DynamicFormServiceImpl;
+import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.annotation.Fit;
+
+import java.util.stream.Collectors;
+
+/**
+ * 表单管理接口
+ *
+ * @author x00649642
+ * @since 2023/12/13
+ */
+@Component
+@RequestMapping(path = "/v1/api/{tenant_id}", group = "表单接口")
+public class FormController extends AbstractController {
+    private final DynamicFormServiceImpl formServiceImpl;
+
+    public FormController(@Fit Authenticator authenticator, @Fit DynamicFormServiceImpl formServiceImpl) {
+        super(authenticator);
+        this.formServiceImpl = formServiceImpl;
+    }
+
+    @GetMapping(value = "/form", description = "批量查询表单")
+    public Rsp<PageResponse<FormDto>> queryForm(@PathVariable("tenant_id") String tenantId,
+            @RequestBean FormQueryCondition cond, @RequestBean PaginationCondition page) {
+        PageResponse<DynamicFormEntity> result = formServiceImpl.queryFormWithCondition(tenantId, cond, page);
+        return Rsp.ok(new PageResponse<>(result.getTotal(),
+                result.getItems().stream().map(FormDto::new).collect(Collectors.toList())));
+    }
+
+    @GetMapping(value = "/form/{form_id}", description = "查询单个表单详细数据")
+    public Rsp<FormDetailDto> queryForm(HttpClassicServerRequest httpRequest,
+            @PathVariable("tenant_id") String tenantId, @PathVariable("form_id") String formId,
+            @RequestParam("version") String version) {
+        DynamicFormDetailEntity entity =
+                formServiceImpl.queryFormDetailByPrimaryKey(formId, version, this.contextOf(httpRequest, tenantId));
+        if (entity != null) {
+            return Rsp.ok(new FormDetailDto(entity));
+        }
+        return Rsp.err(FormErrCode.NOT_FOUND);
+    }
+
+    @PostMapping(path = "/form/{form_id}", description = "创建或保存单个表单，返回操作状态：成功/失败")
+    public Rsp<Object> saveForm(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
+            @PathVariable("form_id") String formId, @RequestBody FormDetailDto formDetailDto) {
+        formDetailDto.getMeta().setId(formId);
+        if (formServiceImpl.saveForm(formDetailDto.toEntity(), this.contextOf(httpRequest, tenantId))) {
+            return Rsp.ok();
+        }
+        return Rsp.err(FormErrCode.UNKNOWN);
+    }
+
+    @DeleteMapping(path = "/form/{form_id}", description = "删除单个表单, 返回是否成功")
+    public Rsp<Object> deleteForm(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
+            @PathVariable("form_id") String formId, @RequestParam("version") String version) {
+        if (formServiceImpl.deleteForm(DynamicFormDto.builder().id(formId).version(version).build(),
+                this.contextOf(httpRequest, tenantId))) {
+            return Rsp.ok();
+        }
+        return Rsp.err(FormErrCode.NOT_FOUND);
+    }
+}

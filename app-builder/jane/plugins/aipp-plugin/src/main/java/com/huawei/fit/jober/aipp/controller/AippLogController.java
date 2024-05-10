@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.jober.aipp.controller;
+
+import com.huawei.fit.http.annotation.DeleteMapping;
+import com.huawei.fit.http.annotation.GetMapping;
+import com.huawei.fit.http.annotation.PathVariable;
+import com.huawei.fit.http.annotation.RequestMapping;
+import com.huawei.fit.http.annotation.RequestParam;
+import com.huawei.fit.http.server.HttpClassicServerRequest;
+import com.huawei.fit.jane.common.controller.AbstractController;
+import com.huawei.fit.jane.common.response.Rsp;
+import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
+import com.huawei.fit.jober.aipp.entity.AippInstLog;
+import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fitframework.annotation.Component;
+
+import java.util.List;
+
+/**
+ * aipp实例log管理接口
+ *
+ * @author l00611472
+ * @since 2024-01-08
+ */
+@Component
+@RequestMapping(path = "/v1/api/{tenant_id}/log", group = "aipp实例log管理接口")
+public class AippLogController extends AbstractController {
+    private final AippLogService aippLogService;
+
+    public AippLogController(Authenticator authenticator, AippLogService aippLogService) {
+        super(authenticator);
+        this.aippLogService = aippLogService;
+    }
+
+    @GetMapping(path = "/aipp/{aipp_id}/recent", description = "指定aippId查询实例历史记录（查询最新5个实例）")
+    public Rsp<List<AippInstLogDataDto>> queryRecentInstanceLog(HttpClassicServerRequest httpRequest,
+            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
+            @RequestParam("version") String version) {
+        return Rsp.ok(aippLogService.queryAippRecentInstLog(aippId, version, this.contextOf(httpRequest, tenantId)));
+    }
+
+    @DeleteMapping(path = "/aipp/{aipp_id}", description = "清除aippId查询实例的全部历史记录")
+    public Rsp<Void> deleteInstanceLog(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
+            @PathVariable("aipp_id") String aippId, @RequestParam("version") String version) {
+        this.aippLogService.deleteAippInstLog(aippId, version, this.contextOf(httpRequest, tenantId));
+        return Rsp.ok();
+    }
+
+    @GetMapping(path = "/instance/{instance_id}", description = "指定instanceId条件查询实例记录")
+    public Rsp<List<AippInstLog>> queryInstanceSince(@PathVariable("instance_id") String instanceId,
+            @RequestParam(name = "after_at", required = false) String sinceTime) {
+        return Rsp.ok(aippLogService.queryInstanceLogSince(instanceId, sinceTime));
+    }
+
+    @GetMapping(path = "/streaming/instance/{instance_id}", description = "流式查询指定instanceId条件查询实例记录")
+    public Rsp<List<AippInstLog>> queryInstanceSinceStreaming(@PathVariable("instance_id") String instanceId,
+            @RequestParam(name = "after_at", required = false) String sinceTime) {
+        return Rsp.ok(aippLogService.queryInstanceLogSinceStreaming(instanceId, sinceTime));
+    }
+}

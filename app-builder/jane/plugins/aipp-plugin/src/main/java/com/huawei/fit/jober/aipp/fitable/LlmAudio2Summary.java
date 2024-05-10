@@ -1,0 +1,152 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.jober.aipp.fitable;
+
+import com.huawei.fit.jober.FlowableService;
+import com.huawei.fit.jober.aipp.common.JsonUtils;
+import com.huawei.fit.jober.aipp.common.LLMUtils;
+import com.huawei.fit.jober.aipp.common.Utils;
+import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.dto.audio.SummaryDto;
+import com.huawei.fit.jober.aipp.dto.audio.SummarySection;
+import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fit.jober.common.ErrorCodes;
+import com.huawei.fit.jober.common.exceptions.JobberException;
+import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.annotation.Fitable;
+import com.huawei.fitframework.log.Logger;
+import com.huawei.hllm.HllmClient;
+import com.huawei.hllm.entity.HllmChatEntity;
+import com.huawei.hllm.entity.HllmTranscriptionEntity;
+import com.huawei.hllm.model.LlmModel;
+
+import org.apache.commons.lang3.time.StopWatch;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+/**
+ * LlmAudio2Summary
+ *
+ * @author y00612997
+ * @since 2024/1/8
+ */
+@Component
+public class LlmAudio2Summary implements FlowableService {
+    private static final Logger log = Logger.get(LlmAudio2Summary.class);
+    private static final String PROMPT = "\nPerform the following actions:\n"
+            + "1. - Use chinese summarize the following video delimited by <> limit in 100 words.\n"
+            + "2. - Write a title for the summary.\n"
+            + "3. - Output a json object that contains the following keys: title, text.\n\n" + "EXAMPLE\n"
+            + "Video: <文本摘要旨在将文本或文本集合转换为包含关键信息的简短摘要...>\n" + "Output JSON:\n"
+            + "{\"title\": \"文本摘要简介\", \"text\": \"文本摘要...\"}\n\n" + "--------\n" + "Video: <%s>\n"
+            + "Output JSON:\n";
+    private final static ExecutorService SUMMARY_EXECUTOR = Executors.newFixedThreadPool(8);
+    private final HllmClient hllmClient;
+
+    private final AippLogService aippLogService;
+
+    public LlmAudio2Summary(HllmClient hllmClient, AippLogService aippLogService) {
+        this.hllmClient = hllmClient;
+        this.aippLogService = aippLogService;
+    }
+
+    private SummaryDto batchSummary(List<File> audioList, int segmentSize) throws InterruptedException, IOException {
+        int taskCnt = audioList.size();
+        List<String> output = new ArrayList<>(Collections.nCopies(taskCnt, null));
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        CountDownLatch countDownLatch = new CountDownLatch(taskCnt);
+        for (int i = 0; i < taskCnt; ++i) {
+            int id = i;
+            SUMMARY_EXECUTOR.execute(() -> {
+                try {
+                    String text =
+                            hllmClient.transcribe(HllmTranscriptionEntity.builder().file(audioList.get(id)).build())
+                                    .trim();
+                    String summary = hllmClient.generate(HllmChatEntity.builder()
+                            .prompt(String.format(PROMPT, text))
+                            .tokens(16000)
+                            .build(), LlmModel.QWEN_72B);
+                    output.set(id, summary);
+                } catch (IOException e) {
+                    output.set(id, "");
+                } finally {
+                    countDownLatch.countDown();
+                }
+            });
+        }
+        countDownLatch.await();
+        SummaryDto summaryDto = generateSummary(output, segmentSize);
+        stopWatch.stop();
+        log.info("Summarize {} task use time {} seconds, segment size: {} seconds.",
+                taskCnt,
+                stopWatch.getTime(TimeUnit.SECONDS),
+                segmentSize);
+        return summaryDto;
+    }
+
+    private SummaryDto generateSummary(List<String> output, int segmentSize) {
+        SummaryDto summaryDto = new SummaryDto(output, segmentSize);
+        StringBuilder sb = new StringBuilder();
+        summaryDto.getSectionList().forEach(sec -> sb.append(sec.getText()));
+        try {
+            String llmOutput = hllmClient.generate(HllmChatEntity.builder()
+                    .prompt(String.format(PROMPT, sb))
+                    .tokens(16000)
+                    .build(), LlmModel.QWEN_72B);
+            SummarySection section =
+                    JsonUtils.parseObject(LLMUtils.tryFixLlmJsonString(llmOutput), SummarySection.class);
+            summaryDto.setSummary(section.getText());
+        } catch (Exception e) {
+            log.error("Llm generate unexpect rsp, msg: {}.", e);
+            summaryDto.setSummary("");
+        }
+        return summaryDto;
+    }
+
+    @Fitable("com.huawei.fit.jober.aipp.fitable.LlmAudio2Summary")
+    @Override
+    public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
+        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        log.debug("LlmAudio2Summary businessData {}", businessData);
+        String msg = "好的，我可以帮你分析这个视频并生成对应的摘要，我决定先调用视频解析工具，再生成视频中的摘要";
+        Utils.persistAippMsgLog(aippLogService, msg, flowData);
+        int segSize = (int) businessData.get(AippConst.BS_VIDEO_TO_AUDIO_SEG_SIZE);
+        String audioDir = (String) businessData.get(AippConst.BS_VIDEO_TO_AUDIO_RESULT_DIR);
+        try (Stream<Path> audioPathStream = Files.list(Paths.get(audioDir))) {
+            List<File> audioFiles = audioPathStream.map(Path::toFile).collect(Collectors.toList());
+            SummaryDto summaryDto = batchSummary(audioFiles, segSize);
+            if (summaryDto.getSectionList().isEmpty()) {
+                msg = "很抱歉！无法识别文件中的内容，您可以尝试换个文件";
+                Utils.persistAippErrorLog(aippLogService, msg, flowData);
+                throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "audio summary result is empty.");
+            }
+            businessData.put(AippConst.BS_VIDEO_TO_TEXT_RESULT, JsonUtils.toJsonString(summaryDto));
+        } catch (InterruptedException | IOException e) {
+            throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR,
+                    String.format(Locale.ROOT,
+                            "LlmAudio2Summary failed error=%s, stack: %s",
+                            e.getMessage(),
+                            Arrays.toString(e.getStackTrace())));
+        }
+        return flowData;
+    }
+}

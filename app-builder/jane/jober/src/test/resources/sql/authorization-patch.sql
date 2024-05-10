@@ -1,0 +1,1 @@
+UPDATE "authorization" SET "system" = ?, "user" = ?, "token" = ?, "expiration" = ?, "updated_by" = ?, "updated_at" = ? WHERE "id" = ?

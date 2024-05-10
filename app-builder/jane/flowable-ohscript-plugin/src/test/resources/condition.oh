@@ -1,0 +1,13 @@
+let context1 = entity{
+    .async = true;
+    .id = "com.huawei.eDataMate.operators.directory_scanner_plugin";
+    };
+let f1 = fit::handleTask(context1);
+let ans = ext::context >> f1;
+for(var i=0; i<ans.size(); i++){
+   let filePath = ans.get(i).get("passData").get("meta").get("filePath");
+   let fileName = ans.get(i).get("passData").get("meta").get("fileName");
+   ans.get(i).get("businessData").put("filePath",filePath);
+   ans.get(i).get("businessData").put("fileName",fileName);
+}
+ans
