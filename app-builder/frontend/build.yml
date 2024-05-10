@@ -5,7 +5,7 @@ env:
         type: docker
         image: 'kweecr05.his.huawei.com:80/ecr-build-green202/jade_compile_arm_image:jade_test'
         class: 4U4G
-        pool: eks-build-x86-gz-kunpeng-ondocker-16u-02
+        pool: ''
 params:
     - name: product
       value: cloudbuild2.0
