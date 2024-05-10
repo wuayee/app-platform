@@ -1,0 +1,132 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext;
+
+import static com.huawei.fit.jober.common.Constant.STREAM_ID_SEPARATOR;
+
+import com.huawei.fit.jober.flowsengine.persist.mapper.FlowContextMapper;
+import com.huawei.fit.jober.flowsengine.persist.po.FlowContextPO;
+import com.huawei.fitframework.annotation.Component;
+
+import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * 查询流程上下文核心类
+ *
+ * @author y00679285
+ * @since 2023/10/17
+ */
+@Component
+@RequiredArgsConstructor
+public class QueryFlowContextPersistRepo {
+    private final FlowContextMapper flowContextMapper;
+
+    /**
+     * findByStreamIdList
+     *
+     * @param streamIds streamIds
+     * @return List<FlowContextPO>
+     */
+    public List<FlowContextPO> findByStreamIdList(List<String> streamIds) {
+        return flowContextMapper.findByStreamIdList(streamIds);
+    }
+
+    /**
+     * pageQueryContextByStreamId
+     *
+     * @param streamId streamId
+     * @param limit limit
+     * @param offset offset
+     * @return List<FlowContextPO>
+     */
+    public List<FlowContextPO> pageQueryContextByStreamId(String streamId, int limit, long offset) {
+        return flowContextMapper.pageQueryByStreamId(streamId, limit, offset);
+    }
+
+    /**
+     * getTotalByStreamId
+     *
+     * @param streamId streamId
+     * @return int
+     */
+    public int getTotalByStreamId(String streamId) {
+        return flowContextMapper.getTotalByStreamId(streamId);
+    }
+
+    /**
+     * findByContextIdList
+     *
+     * @param contextIds contextIds
+     * @return List<FlowContextPO>
+     */
+    public List<FlowContextPO> findByContextIdList(List<String> contextIds) {
+        if (contextIds == null || contextIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return flowContextMapper.findByContextIdList(contextIds);
+    }
+
+    /**
+     * findWithFlowDataByContextIdList
+     *
+     * @param contextIds contextIds
+     * @return List<FlowContextPO>
+     */
+    public List<FlowContextPO> findWithFlowDataByContextIdList(List<String> contextIds) {
+        return flowContextMapper.findWithoutFlowDataByContextIdList(contextIds);
+    }
+
+    /**
+     * findByTransIdList
+     *
+     * @param transIds transIds
+     * @return List<FlowContextPO>
+     */
+    public List<FlowContextPO> findByTransIdList(List<String> transIds) {
+        if (transIds.size() == 0) {
+            return Collections.emptyList();
+        }
+        return flowContextMapper.findByTransIdList(transIds);
+    }
+
+    /**
+     * findWithoutFlowDataByTransIdList
+     *
+     * @param transIds transIds
+     * @return List<FlowContextPO>
+     */
+    public List<FlowContextPO> findWithoutFlowDataByTransIdList(List<String> transIds) {
+        if (transIds.size() == 0) {
+            return Collections.emptyList();
+        }
+        return flowContextMapper.findWithoutFlowDataByTransIdList(transIds);
+    }
+
+    /**
+     * 根据traceId查询数据
+     *
+     * @param traceId traceId
+     * @return 返回traceId下的context信息
+     */
+    public List<FlowContextPO> findWithoutFlowDataByTraceId(String traceId) {
+        return flowContextMapper.findWithoutFlowDataByTraceId(traceId);
+    }
+
+    /**
+     * findUnarchivedContextCountByMetaId
+     *
+     * @param metaId metaId
+     * @param version version
+     * @return Integer
+     */
+    public Integer findUnarchivedContextCountByMetaId(String metaId, String version) {
+        String streamId = metaId + STREAM_ID_SEPARATOR + version;
+        return flowContextMapper.findUnarchivedContextCountByMetaId(streamId);
+    }
+}

@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "decomposed_from": 2,
+  "owner": 3,
+  "created_by": 4,
+  "created_date": 5,
+  "modified_by": 6,
+  "modified_date": 7,
+  "status": 8,
+  "target_url": 9,
+  "title": 10,
+  "risk": 11,
+  "tag": 12
+}

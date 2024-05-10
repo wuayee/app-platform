@@ -1,0 +1,252 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.jober.aipp.common;
+
+import static com.huawei.fitframework.util.ObjectUtils.nullIf;
+
+import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fit.jane.common.enums.DirectionEnum;
+import com.huawei.fit.jane.meta.multiversion.MetaService;
+import com.huawei.fit.jane.meta.multiversion.definition.Meta;
+import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
+import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
+import com.huawei.fit.jober.aipp.common.exception.AippException;
+import com.huawei.fit.jober.aipp.common.exception.AippNotFoundException;
+import com.huawei.fit.jober.aipp.common.exception.AippParamException;
+import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.enums.AippMetaStatusEnum;
+import com.huawei.fit.jober.aipp.enums.AippSortKeyEnum;
+import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
+import com.huawei.fit.jober.aipp.enums.JaneCategory;
+import com.huawei.fit.jober.common.RangedResultSet;
+import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.log.Logger;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * Meta操作工具类
+ *
+ * @author l00611472
+ * @since 2024/02/21
+ */
+public class MetaUtils {
+
+    private static final Logger log = Logger.get(MetaUtils.class);
+
+    /**
+     * 查询最近更新的任意{@link Meta}
+     *
+     * @param metaService 使用的{@link MetaService}
+     * @param metaId 指定aipp的id
+     * @param version 指定aipp的版本
+     * @param context 操作人上下文
+     * @return 最近更新的{@link Meta}
+     * @throws AippNotFoundException 没有找到
+     */
+    public static Meta getAnyMeta(MetaService metaService, String metaId, String version, OperationContext context)
+            throws AippNotFoundException {
+        MetaFilter metaFilter = getAnyMetaFilter(metaId, version);
+        return getSingleMetaHandle(metaService, metaId, metaFilter, context);
+    }
+
+    /**
+     * 查询指定aippId最新的非预览{@link Meta}(包括发布和未发布的)
+     *
+     * @param metaService 使用的{@link MetaService}
+     * @param metaId 指定aipp的id
+     * @param context 操作人上下文
+     * @return 最近更新的非预览{@link Meta}
+     * @throws AippNotFoundException 没有找到
+     */
+    public static Meta getLastNormalMeta(MetaService metaService, String metaId, OperationContext context)
+            throws AippException {
+        MetaFilter metaFilter = getNormalMetaFilter(metaId, NormalFilterEnum.DEFAULT);
+        return getSingleMetaHandle(metaService, metaId, metaFilter, context);
+    }
+
+    /**
+     * 查询指定aippId最新的已发布{@link Meta}
+     *
+     * @param metaService 使用的{@link MetaService}
+     * @param metaId 指定aipp的id
+     * @param context 操作人上下文
+     * @return 最近更新的已发布{@link Meta}
+     * @throws AippNotFoundException 没有找到
+     */
+    public static Meta getLastPublishedMeta(MetaService metaService, String metaId, OperationContext context)
+            throws AippException {
+        MetaFilter metaFilter = getNormalMetaFilter(metaId, NormalFilterEnum.PUBLISHED);
+        return getSingleMetaHandle(metaService, metaId, metaFilter, context);
+    }
+
+    /**
+     * 查询指定aippId最新的未发布草稿{@link Meta}
+     *
+     * @param metaService 使用的{@link MetaService}
+     * @param metaId 指定aipp的id
+     * @param context 操作人上下文
+     * @return 最近更新的未发布草稿{@link Meta}
+     * @throws AippNotFoundException 没有找到
+     */
+    public static Meta getLastDraftMeta(MetaService metaService, String metaId, OperationContext context)
+            throws AippException {
+        MetaFilter metaFilter = getNormalMetaFilter(metaId, NormalFilterEnum.DRAFT);
+        return getSingleMetaHandle(metaService, metaId, metaFilter, context);
+    }
+
+    /**
+     * 查询指定aippId所有发布的 {@link Meta}, 按更新时间倒序
+     *
+     * @param metaService 使用的{@link MetaService}
+     * @param metaId 指定aipp的id
+     * @param context 操作人上下文
+     * @return 所有非预览{@link Meta}
+     * @throws AippNotFoundException 没有找到
+     */
+    public static List<Meta> getAllPublishedMeta(MetaService metaService, String metaId, OperationContext context)
+            throws AippException {
+        MetaFilter metaFilter = getNormalMetaFilter(metaId, NormalFilterEnum.PUBLISHED);
+        return getListMetaHandle(metaService, metaId, metaFilter, context);
+    }
+
+    /**
+     * 查询指定aippId所有预览{@link Meta}, 按更新时间倒序
+     *
+     * @param metaService 使用的{@link MetaService}
+     * @param baselineAippId 指定aipp的id
+     * @param context 操作人上下文
+     * @return 所有预览{@link Meta}
+     * @throws AippNotFoundException 没有找到
+     */
+    public static List<Meta> getAllPreviewMeta(MetaService metaService, String baselineAippId, OperationContext context)
+            throws AippException {
+        MetaFilter metaFilter = getPreviewMetaFilter(baselineAippId);
+        return getListMetaHandle(metaService, baselineAippId, metaFilter, context);
+    }
+
+    private static Meta getSingleMetaHandle(MetaService metaService, String metaId, MetaFilter metaFilter,
+            OperationContext context) throws AippException {
+        Validation.notBlank(metaId, () -> new AippParamException(context, AippErrCode.INPUT_PARAM_IS_INVALID, metaId));
+        RangedResultSet<Meta> metaRes =
+                metaService.list(metaFilter, true, 0, 1, context, buildOldDataMetaFilter(metaFilter));
+        if (metaRes.getResults().isEmpty()) {
+            log.warn("meta {} version {} meta status {} not found",
+                    metaId,
+                    metaFilter.getVersions(),
+                    metaFilter.getAttributes().get(AippConst.ATTR_META_STATUS_KEY));
+            return null;
+        }
+        return metaRes.getResults().get(0);
+    }
+
+    private static List<Meta> getListMetaHandle(MetaService metaService, String metaId, MetaFilter metaFilter,
+            OperationContext context) throws AippException {
+        Validation.notBlank(metaId, () -> new AippParamException(context, AippErrCode.INPUT_PARAM_IS_INVALID, metaId));
+        final int limitPerQuery = 10;
+        return Utils.getAllFromRangedResult(limitPerQuery,
+                (offset) -> metaService.list(metaFilter,
+                        false,
+                        offset,
+                        limitPerQuery,
+                        context,
+                        buildOldDataMetaFilter(metaFilter))).collect(Collectors.toList());
+    }
+
+    public static MetaFilter buildOldDataMetaFilter(MetaFilter metaFilter) {
+        MetaFilter oldDataFilter = new MetaFilter(metaFilter.getMetaIds(),
+                metaFilter.getVersionIds(),
+                metaFilter.getNames(),
+                metaFilter.getCategories(),
+                metaFilter.getCreators(),
+                metaFilter.getOrderBys(),
+                metaFilter.getVersions(),
+                metaFilter.getAttributes());
+        oldDataFilter.setVersionIds(metaFilter.getMetaIds());
+        oldDataFilter.setMetaIds(Collections.emptyList());
+        oldDataFilter.setVersions(Collections.emptyList());
+        Map<String, List<String>> attributes = deepCopy(oldDataFilter.getAttributes());
+        attributes.remove(AippConst.ATTR_AIPP_TYPE_KEY);
+        oldDataFilter.setAttributes(attributes);
+        return oldDataFilter;
+    }
+
+    private static Map<String, List<String>> deepCopy(Map<String, List<String>> originalMap) {
+        Map<String, List<String>> copiedMap = new HashMap<>();
+        for (Map.Entry<String, List<String>> entry : originalMap.entrySet()) {
+            String key = entry.getKey();
+            List<String> originalList = entry.getValue();
+            List<String> copiedList = new ArrayList<>(originalList);
+            copiedMap.put(key, copiedList);
+        }
+        return copiedMap;
+    }
+
+    private static MetaFilter getAnyMetaFilter(String metaId, String version) {
+        MetaFilter metaFilter = new MetaFilter();
+        metaFilter.setCategories(Collections.singletonList(JaneCategory.AIPP.name()));
+        metaFilter.setMetaIds(Collections.singletonList(metaId));
+        if (version != null) {
+            metaFilter.setVersions(Collections.singletonList(version));
+        }
+        metaFilter.setOrderBys(Collections.singletonList(formatSorter(null, null)));
+        return metaFilter;
+    }
+
+    private static MetaFilter getNormalMetaFilter(String metaId, NormalFilterEnum normalFilter) {
+        MetaFilter metaFilter = getAnyMetaFilter(metaId, null);
+        Map<String, List<String>> attributes = new HashMap<String, List<String>>() {{
+            // 仅查找普通aipp，不包含预览aipp
+            put(AippConst.ATTR_AIPP_TYPE_KEY, Collections.singletonList(AippTypeEnum.NORMAL.name()));
+        }};
+        if (normalFilter == NormalFilterEnum.PUBLISHED) {
+            attributes.put(AippConst.ATTR_META_STATUS_KEY,
+                    Collections.singletonList(AippMetaStatusEnum.ACTIVE.getCode()));
+        } else if (normalFilter == NormalFilterEnum.DRAFT) {
+            attributes.put(AippConst.ATTR_META_STATUS_KEY,
+                    Collections.singletonList(AippMetaStatusEnum.INACTIVE.getCode()));
+        }
+        metaFilter.setAttributes(attributes);
+        return metaFilter;
+    }
+
+    private static MetaFilter getPreviewMetaFilter(String metaId) {
+        MetaFilter metaFilter = getAnyMetaFilter(metaId, null);
+        metaFilter.setAttributes(new HashMap<String, List<String>>() {{
+            // 仅查找预览aipp
+            put(AippConst.ATTR_AIPP_TYPE_KEY, Collections.singletonList(AippTypeEnum.PREVIEW.name()));
+        }});
+        return metaFilter;
+    }
+
+    /**
+     * 查询指定aippId所有预览{@link Meta}, 按更新时间倒序
+     *
+     * @param sortKey 见{@link AippSortKeyEnum}, 默认update_at
+     * @param direction 排序方向, 见{@link DirectionEnum}, 默认desc
+     * @return {@link MetaFilter}中setOrderBys中的字符串
+     */
+    public static String formatSorter(String sortKey, String direction) {
+        return String.format(Locale.ROOT,
+                "%s(%s)",
+                DirectionEnum.getDirection(nullIf(direction, DirectionEnum.DESCEND.name())).getValue(),
+                AippSortKeyEnum.getSortKey(nullIf(sortKey, AippSortKeyEnum.UPDATE_AT.name())).getKey());
+    }
+
+    public enum NormalFilterEnum {
+        // 已发布
+        PUBLISHED,
+        // 草稿
+        DRAFT,
+        // 默认
+        DEFAULT
+    }
+}

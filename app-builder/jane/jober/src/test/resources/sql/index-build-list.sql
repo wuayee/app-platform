@@ -1,0 +1,1 @@
+INSERT INTO "index_text"("id", "instance_id", "property_id", "value") SELECT generate_uuid_text(), "instance_id", "property_id", "value" FROM "list_text" WHERE "property_id" = ?

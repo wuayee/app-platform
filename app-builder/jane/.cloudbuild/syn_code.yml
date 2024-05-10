@@ -1,0 +1,30 @@
+# build.yml自定义路径参考：https://wiki.huawei.com/domains/933/wiki/8/WIKI2021092200325?title=_28
+---
+version: 2.0
+
+# 构建环境
+# 了解如何进行环境配置：http://cloudbuild-doc.inhuawei.com/chapter3/section24.html
+# 获取构建环境列表：https://wiki.huawei.com/domains/933/wiki/8/WIKI2021092200325?title=_24
+env:
+  resource:
+    type: "docker"
+    image: 'szvecr02.his.huawei.com:80/ecr-build/fit_java1.8u292_build:1.0.0'
+    class: 4U8G
+    pool: ''
+
+# 构建参数
+# 解如何配置构建参数：http://cloudbuild-doc.inhuawei.com/chapter3/section23.html
+params:
+
+# 构建步骤
+# 了解如何配置构建步骤：http://cloudbuild-doc.inhuawei.com/chapter3/section25.html
+steps:
+  PRE_BUILD: # 了解如何配置构建准备阶段：http://cloudbuild-doc.inhuawei.com/chapter3/section26.html
+    - checkout
+  BUILD: # 了解如何配置构建执行步骤：http://cloudbuild-doc.inhuawei.com/chapter3/plugins-in-build-stage.html
+    - build_execute:
+        # ${build_type}、${version}来自全局变量：https://wiki.huawei.com/domains/933/wiki/8/WIKI2022033101320?title=99a4cc30
+        # ${CLOUD_BUILD_REPO_REVISION}、${EDEVOPS_TIMESTAMP}来至：http://cloudbuild-doc.inhuawei.com/chapter3/section46.html
+        command: sh ./syn_code.sh ${y_token} ${g_token}
+        check: false
+  POST_BUILD: #了解如何配置构建后步骤：https://wiki.huawei.com/domains/933/wiki/8/WIKI2021092200325?title=_26

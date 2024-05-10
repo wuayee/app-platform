@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.huawei.fit.jane</groupId>
+    <artifactId>jane-parent</artifactId>
+    <version>0.1.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>jober-genericable</module>
+        <module>dynamic-form-genericable</module>
+        <module>task</module>
+        <module>flow-graph</module>
+        <module>flow-graph-db-driver</module>
+        <module>waterflow-edatamate-genericable</module>
+        <module>jane-common</module>
+        <module>jober</module>
+        <module>plugins/aipp-plugin</module>
+        <module>plugins/form-plugin</module>
+        <module>task-default-driver-jade</module>
+        <module>flowable-ohscript-plugin</module>
+        <module>fit-start</module>
+        <module>jane-common-component</module>
+        <module>jober-multiversion-genericable</module>
+        <module>health-plugin</module>
+    </modules>
+
+</project>

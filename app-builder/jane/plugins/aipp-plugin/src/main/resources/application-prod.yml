@@ -1,0 +1,59 @@
+fit:
+  beans:
+    packages:
+      - 'com.huawei.fit.jober.aipp'
+      - 'com.huawei.hllm'
+  messages:
+    basename: i18n/messages
+jackson:
+  datetime-format: 'yyyy-MM-dd HH:mm:ss'
+aipp:
+  agent_search_aipp: 1ca306c403e242b7955f42289a87d5ce
+  agent_mind_aipp: e1001060e7074744b33c6ecc21579cc3
+jane:
+  endpoint: https://jane.huawei.com
+elsa:
+  endpoint: https://fit-elsa-prod.lab.huawei.com
+  elsaKey: 8dd1c90252b94c24a76018e9b08be2b2
+market:
+  app_market_url: https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/app
+xiaohai:
+  search_w3_url: https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/tool/search?query=%s&topK=%d
+  upload_chat_history_url: https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/app/message/upload
+model:
+  xiaohai:
+    knowledge: http://10.91.159.117:12751/xiaohai/question
+    file: http://10.91.159.117:12751/xiaohai/file
+    read-timeout: 60000
+hllm:
+  client:
+    host: http://51.36.139.24:8000
+    read-timeout: 150000
+mybatis:
+  mapper-locations: mapper/*Mapper.xml
+druid:
+  driver-class-name: org.postgresql.Driver
+  initialSize: 5
+  minIdle: 5
+  maxActive: 80
+  maxWait: 60000
+  timeBetweenEvictionRunsMillis: 60000
+  minEvictableIdleTimeMillis: 300000
+  validationQuery: SELECT 1
+  testWhileIdle: true
+  testOnBorrow: true
+  testOnReturn: true
+  url: jdbc:postgresql://7.194.138.160:5432/jane?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true&options=-c%20statement_timeout=600000
+  username: enc(2X1X2023080321220040PMdwf7HsYlxgCAlHHJpK6ep1qXgwfFSnP5sx5Ejg0MdAADONsAij9onrEOWVSCJtAwxCzfhAh/UZQh4oNYNA88v1xRztt3tHoVrO3XkqfltscD6T7MUo)
+  password: enc(2X1X2023080321220040PMdwf7HsYlxgCAlHHJpK6ep1qXgwfFSnP5sx5Ejg0MdAADONsAij9onrEOWVSCJtAwynIIMlWrYfTXDAoWzpFSbXrPIUicJ9E/gngW7Rs9ilGwjP0j9X9Ht/kGo=)
+tender:
+  url: "aHR0cHM6Ly9zMy1oYy1kZ2cuaGljcy5odWF3ZWkuY29tL2ZpdC1lbHNhLWFscGhhLWcvdGVuZGVyQW5hbHlzZVJlc3VsdC54bHN4"
+w3-task:
+  taskId: 671b1c94d09242d7a37f1a3a35cc297e
+  typeId: ec73581f4fdb4abb9a7be50b15ea1b89
+  taskEndpoint: https://tianzhou.huawei.com
+
+redis:
+  cluster:
+    nodes: 7.221.142.173:6379,7.221.143.136:6379,7.221.143.29:6379,7.221.141.9:6379,7.221.141.15:6379,7.221.143.77:6379
+    password: enc(2X1X2023080321220040PMdwf7HsYlxgCAlHHJpK6ep1qXgwfFSnP5sx5Ejg0MdAADONsAij9onrEOWVSCJtAwx4hBLVlYsxuIqW2M/CaUmvLWLdkvxjhjtQD8uxq9GdvDwkc2+jpEQ=)

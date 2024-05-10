@@ -1,0 +1,61 @@
+fit:
+  beans:
+    packages:
+      - 'com.huawei.fit.jober.aipp'
+      - 'com.huawei.hllm'
+  messages:
+    basename: i18n/messages
+jackson:
+  datetime-format: 'yyyy-MM-dd HH:mm:ss'
+aipp:
+  agent_search_aipp: ef11536dc2384e1dab74b78f51ddade8
+  agent_mind_aipp: e1001060e7074744b33c6ecc21579cc3
+jane:
+  endpoint: https://jane-beta.huawei.com
+elsa:
+  endpoint: https://fit-elsa-beta.lab.huawei.com
+  elsaKey: a90ae902e83540b3b69ceeec38ea0468
+market:
+  app_market_url: http://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app
+xiaohai:
+  search_w3_url: http://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/tool/search?query=%s&topK=%d
+  upload_chat_history_url: https://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/message/upload
+model:
+  xiaohai:
+    knowledge: http://10.91.159.117:12751/xiaohai/question
+    file: http://10.91.159.117:12751/xiaohai/file
+    read-timeout: 60000
+hllm:
+  client:
+    host: http://51.36.139.24:8000
+    read-timeout: 150000
+eDataMate:
+  query_list_url: https://tzaip-beta.paas.huawei.com/tzaip/manage/knowledge-bases/v1/query/list
+mybatis:
+  mapper-locations: mapper/*Mapper.xml
+druid:
+  driver-class-name: org.postgresql.Driver
+  initialSize: 5
+  minIdle: 5
+  maxActive: 80
+  maxWait: 60000
+  timeBetweenEvictionRunsMillis: 60000
+  minEvictableIdleTimeMillis: 300000
+  validationQuery: SELECT 1
+  testWhileIdle: true
+  testOnBorrow: true
+  testOnReturn: true
+  url: jdbc:postgresql://7.180.146.52:5432/jane_beta?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true&options=-c%20statement_timeout=600000
+  username: jane
+  password: FitLab123
+tender:
+  url: "aHR0cHM6Ly9zMy1oYy1kZ2cuaGljcy5odWF3ZWkuY29tL2ZpdC1lbHNhLWFscGhhLWcvdGVuZGVyQW5hbHlzZVJlc3VsdC54bHN4"
+w3-task:
+  taskId: 774665ffb7c24851ae20bd773ca8a7e7
+  typeId: 836714c6ffbb42fcbc8935c53fb31d4c
+  taskEndpoint: https://tianzhou-beta.huawei.com
+
+redis:
+  host: 10.28.40.172
+  password: Test@^116Redis
+  database: 1

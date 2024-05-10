@@ -1,0 +1,86 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
+ */
+
+package com.huawei.fit.jane.flow.graph.repo;
+
+import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fit.jane.flow.graph.entity.FlowGraphDefinition;
+import com.huawei.fit.jane.flow.graph.entity.FlowGraphQueryParam;
+import com.huawei.fit.jane.flow.graph.entity.FlowSaveEntity;
+import com.huawei.fit.jane.flow.graph.entity.elsa.GraphParam;
+import com.huawei.fit.jane.flow.graph.entity.elsa.response.GetPageResponse;
+import com.huawei.fit.jane.flow.graph.entity.elsa.response.SaveFlowsResponse;
+import com.huawei.fitframework.model.RangedResultSet;
+
+/**
+ * 定义所有使用elsaClient的场景,来源a3000和elsa
+ *
+ * @author y00679285
+ * @since 2023/12/13
+ */
+public interface FlowsGraphRepo {
+    /**
+     * elsa分页查询流程定义列表
+     *
+     * @param user 操作人
+     * @param cookie cookie
+     * @param graphData 流程定义图json字符串
+     * @return 分页查询结果
+     */
+    GetPageResponse getPages(String user, String cookie, String graphData);
+
+    /**
+     * elsa保存流程
+     *
+     * @param user 操作人
+     * @param cookie cookie
+     * @param graphData 流程定义图json字符串
+     * @return 保存结果
+     */
+    SaveFlowsResponse saveFlows(String user, String cookie, String graphData);
+
+    /**
+     * elsa保存流程
+     *
+     * @param flowSaveEntity 画布参数
+     * @param context 操作人上下文
+     * @return 返回值.0, -1
+     */
+    int saveFlow(FlowSaveEntity flowSaveEntity, OperationContext context);
+
+    /**
+     * elsa升级流程
+     *
+     * @param param 画布参数
+     * @return 返回值.0, -1
+     */
+    int upgradeFlows(GraphParam param);
+
+    /**
+     * elsa获取流程信息
+     *
+     * @param flowSaveEntity 画布参数
+     * @param context 操作人上下文
+     * @return 流程定义图json字符串
+     */
+    String getFlow(FlowSaveEntity flowSaveEntity, OperationContext context);
+
+    /**
+     * elsa删除流程
+     *
+     * @param flowSaveEntity 画布参数
+     * @param context 操作人上下文
+     * @return 返回值.0, -1
+     */
+    int deleteFlow(FlowSaveEntity flowSaveEntity, OperationContext context);
+
+    /**
+     * getFlowList
+     *
+     * @param queryParam queryParam
+     * @param context context
+     * @return RangedResultSet<FlowGraphDefinition>
+     */
+    RangedResultSet<FlowGraphDefinition> getFlowList(FlowGraphQueryParam queryParam, OperationContext context);
+}

@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS jane_relation (
+    id CHAR(32) PRIMARY KEY,
+    object_id1 CHAR(32) NOT NULL,
+    object_type1 VARCHAR(16) NOT NULL,
+    object_id2 CHAR(32) NOT NULL,
+    object_type2 VARCHAR(16) NOT NULL,
+    relation_type VARCHAR(16) NOT NULL,
+    created_by VARCHAR(127) NOT NULL,
+    created_at TIMESTAMP NOT NULL
+    );
+CREATE INDEX IF NOT EXISTS IDX_JANE_RELATION_OBJECT_ID1 ON jane_relation(object_id1);
+CREATE INDEX IF NOT EXISTS IDX_JANE_RELATION_OBJECT_ID2 ON jane_relation(object_id2);
+CREATE UNIQUE INDEX IF NOT EXISTS UK_IDX_JANE_RELATION_OBJECT_ID1_OBJECT_ID2 ON jane_relation(object_id1,object_id2);

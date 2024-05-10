@@ -1,0 +1,154 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fit.jober.aipp.service;
+
+import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fit.jober.aipp.common.PageResponse;
+import com.huawei.fit.jober.aipp.condition.AippInstanceQueryCondition;
+import com.huawei.fit.jober.aipp.condition.PaginationCondition;
+import com.huawei.fit.jober.aipp.dto.AippInstanceCreateDto;
+import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
+import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
+
+import java.util.Map;
+
+/**
+ * aipp运行时服务层接口
+ *
+ * @author l00611472
+ * @since 2023-12-15
+ */
+public interface AippRunTimeService {
+    /**
+     * 查询aipp id的node节点对应的表单
+     *
+     * @param aippId aipp id
+     * @param version aipp version
+     * @param startOrEnd 开始或结束节点信息
+     * @param context 操作上下文
+     * @return 表单信息
+     */
+    AippFormRsp queryEdgeSheetData(String aippId, String version, String startOrEnd, OperationContext context);
+
+    /**
+     * 指定版本启动一个Aipp
+     *
+     * @param context 操作上下文
+     * @param aippId aippId
+     * @param version aipp 版本
+     * @param initContext 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
+     * @return 实例id
+     */
+    String createAippInstance(String aippId, String version, Map<String, Object> initContext, OperationContext context);
+
+    /**
+     * 启动一个最新版本的Aipp
+     *
+     * @param context 操作上下文
+     * @param aippId aippId
+     * @param initContext 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
+     * @return 实例响应
+     */
+    AippInstanceCreateDto createAippInstanceLatest(String aippId, Map<String, Object> initContext,
+            OperationContext context);
+
+    /**
+     * 删除应用实例
+     *
+     * @param context 操作上下文
+     * @param aippId aippId
+     * @param version aipp 版本
+     * @param instanceId 实例id
+     */
+    void deleteAippInstance(String aippId, String version, String instanceId, OperationContext context);
+
+    /**
+     * 查询单个应用实例信息
+     *
+     * @param context 操作上下文
+     * @param aippId aippId
+     * @param version aipp 版本
+     * @param instanceId 实例id
+     * @return AIPP 实例
+     */
+    AippInstanceDto getInstance(String aippId, String version, String instanceId, OperationContext context);
+
+    /**
+     * 通过versionId唯一标识查询单个应用实例信息
+     *
+     * @param context 操作上下文
+     * @param versionId aipp 版本id
+     * @param instanceId 实例id
+     * @return AIPP 实例
+     */
+    AippInstanceDto getInstanceByVersionId(String versionId, String instanceId, OperationContext context);
+
+    /**
+     * 流式查询单个应用实例信息
+     *
+     * @param context 操作上下文
+     * @param aippId aippId
+     * @param version aipp 版本
+     * @param instanceId 实例id
+     * @return AIPP 实例
+     */
+    AippInstanceDto getInstanceStreaming(String aippId, String version, String instanceId, OperationContext context);
+
+    /**
+     * 查询应用实例信息列表
+     *
+     * @param context 操作上下文
+     * @param aippId aippId
+     * @param version aipp 版本
+     * @param cond 查询条件
+     * @param page 分页条件
+     * @return AIPP 实例列表
+     */
+    PageResponse<AippInstanceDto> listInstance(String aippId, String version, AippInstanceQueryCondition cond,
+            PaginationCondition page, OperationContext context);
+
+    /**
+     * 更新表单数据并上传到小海
+     *
+     * @param context 操作上下文
+     * @param aippId aippId
+     * @param instanceId 实例id
+     * @param formArgs 用于填充表单的数据
+     */
+    void updateAndUploadAippInstance(String aippId, String instanceId, Map<String, Object> formArgs,
+            OperationContext context);
+
+    /**
+     * 更新表单数据，并恢复实例任务执行
+     *
+     * @param context 操作上下文
+     * @param aippId aippId
+     * @param version aipp版本
+     * @param instanceId 实例id
+     * @param formArgs 用于填充表单的数据
+     */
+    void resumeAndUpdateAippInstance(String aippId, String version, String instanceId, Map<String, Object> formArgs,
+            OperationContext context);
+
+    /**
+     * 终止aipp实例
+     *
+     * @param context 操作上下文
+     * @param aippId aippId
+     * @param version aipp版本
+     * @param instanceId 实例id
+     */
+    void terminateInstance(String aippId, String version, String instanceId, OperationContext context);
+
+    /**
+     * 终止aipp全部实例
+     *
+     * @param aippId aipp id
+     * @param versionId versionId
+     * @param deleteLog 是否删除aipp log
+     * @param context 操作上下文
+     */
+    void terminateAllPreviewInstances(String aippId, String versionId, boolean deleteLog, OperationContext context);
+}

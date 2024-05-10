@@ -1,0 +1,1 @@
+INSERT INTO "index"("id", "name", "task_id", "created_by", "created_at", "updated_by", "updated_at") VALUES(?, ?, ?, ?, ?, ?, ?)

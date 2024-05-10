@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.jober.aipp.dto;
+
+import com.huawei.fitframework.annotation.Property;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+/**
+ * Aipp版本信息
+ *
+ * @author l00611472
+ * @since 2024-01-26
+ */
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class AippVersionDto {
+    @Property(description = "aipp 版本", example = "1.0.0")
+    private String version;
+
+    @Property(description = "aipp状态")
+    private String status;
+
+    @Property(description = "创建人")
+    private String creator;
+
+    @Property(description = "创建时间")
+    @JsonProperty("created_at")
+    private LocalDateTime createdAt;
+}

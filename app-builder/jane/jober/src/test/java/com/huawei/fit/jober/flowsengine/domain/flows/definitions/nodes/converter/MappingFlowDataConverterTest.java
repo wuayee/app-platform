@@ -1,0 +1,58 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+/**
+ * 测试FlowData的输入输出转换
+ *
+ * @author s00558940
+ * @since 2024/4/23
+ */
+class MappingFlowDataConverterTest {
+    @Test
+    @DisplayName("将返回值按照配置添加到businessData中的成功场景")
+    void shouldAddResultToBusinessDataWhenConvertOutputGivenOutputNameAndResult() {
+        String customName = "customName";
+        String expectGenericableResult = "helloWorld";
+        MappingFlowDataConverter target = new MappingFlowDataConverter(null, customName);
+
+        FlowData flowData = FlowData.builder().businessData(new HashMap<>()).contextData(new HashMap<>()).build();
+        FlowData result = target.convertOutput(expectGenericableResult, flowData);
+
+        assertTrue(result.getBusinessData().containsKey(customName));
+        Assertions.assertEquals(expectGenericableResult, result.getBusinessData().get(customName));
+    }
+
+    @Test
+    @DisplayName("将入参按照规则生成的成功场景")
+    void shouldGenerateToBusinessDataWhenConvertInputGivenMappingConfig() {
+        List<MappingNode> inputMappingConfig = new ArrayList<>(
+                Arrays.asList(new MappingNode("str", MappingNodeType.STRING, MappingFromType.INPUT, "str1", ""),
+                        new MappingNode("int", MappingNodeType.INTEGER, MappingFromType.INPUT, 666, "")));
+        MappingFlowDataConverter target = new MappingFlowDataConverter(inputMappingConfig, null);
+
+        FlowData flowData = FlowData.builder().businessData(new HashMap<>()).contextData(new HashMap<>()).build();
+        FlowData result = target.convertInput(flowData);
+
+        assertTrue(result.getBusinessData().containsKey("str"));
+        assertTrue(result.getBusinessData().containsKey("int"));
+        assertEquals("str1", result.getBusinessData().get("str"));
+        assertEquals(666, result.getBusinessData().get("int"));
+    }
+}

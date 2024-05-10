@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.huawei.fit.jober</groupId>
+    <artifactId>flow-ohscript-plugin</artifactId>
+    <version>0.1.0</version>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- FIT -->
+        <fit.version>3.5.0-SNAPSHOT</fit.version>
+
+        <!-- Test -->
+        <assertj.version>3.24.2</assertj.version>
+        <junit.version>5.10.0</junit.version>
+        <mockito.version>4.11.0</mockito.version>
+
+        <!-- Maven plugin versions -->
+        <maven.compiler.version>3.11.0</maven.compiler.version>
+        <maven.surefire.version>3.1.2</maven.surefire.version>
+    </properties>
+
+    <dependencies>
+        <!-- FIT core -->
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-api</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-util</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+
+        <!-- FIT Genericables -->
+        <dependency>
+            <groupId>com.huawei.fit.jober</groupId>
+            <artifactId>jober-genericable</artifactId>
+            <version>0.6.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- OhScript -->
+        <dependency>
+            <groupId>com.huawei.fit.ohscript</groupId>
+            <artifactId>ohscript</artifactId>
+            <version>0.0.3.2-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.version}</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.huawei.fitframework</groupId>
+                <artifactId>fit-build-maven-plugin</artifactId>
+                <version>${fit.version}</version>
+                <executions>
+                    <execution>
+                        <id>build-plugin</id>
+                        <goals>
+                            <goal>build-plugin</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>package-plugin</id>
+                        <goals>
+                            <goal>package-plugin</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

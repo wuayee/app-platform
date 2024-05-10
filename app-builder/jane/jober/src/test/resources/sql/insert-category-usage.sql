@@ -1,0 +1,1 @@
+INSERT INTO "category_usage"("id", "object_type", "object_id", "category_group_id", "category_id", "created_by", "created_at", "updated_by", "updated_at") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)

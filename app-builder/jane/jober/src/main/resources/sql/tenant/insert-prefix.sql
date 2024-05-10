@@ -1,0 +1,1 @@
+INSERT INTO tenant(id, name, description, avatar_id, created_by, created_at, updated_by, updated_at, access_level) VALUES

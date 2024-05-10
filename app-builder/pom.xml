@@ -15,5 +15,6 @@
     <modules>
         <module>plugins</module>
         <module>services</module>
+        <module>jane</module>
     </modules>
 </project>

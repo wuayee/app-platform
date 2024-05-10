@@ -1,0 +1,21 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.jober.aipp.mapper;
+
+import com.huawei.fit.jober.aipp.po.AppBuilderConfigPO;
+
+/**
+ * @author 邬涨财 w00575064
+ * @since 2024-04-16
+ */
+public interface AppBuilderConfigMapper {
+    AppBuilderConfigPO selectWithId(String id);
+
+    void insertOne(AppBuilderConfigPO insert);
+
+    void updateOne(AppBuilderConfigPO update);
+
+    AppBuilderConfigPO selectWithAppId(String appId);
+}

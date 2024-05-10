@@ -1,0 +1,28 @@
+/*
+ *  Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fit.jober.flowsengine.domain.flows.parsers.nodes.jobers;
+
+import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowJoberType.OHSCRIPT_JOBER;
+
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.jobers.FlowOhScriptJober;
+import com.huawei.fit.jober.flowsengine.domain.flows.parsers.FlowGraphData;
+
+/**
+ * OhScriptJoberParser
+ *
+ * @author y00679285
+ * @since 2023/10/31
+ */
+public class OhScriptJoberParser implements JoberParser {
+    @Override
+    public FlowJober parseJober(FlowGraphData flowGraphData, int nodeIndex) {
+        FlowJober flowJober = new FlowOhScriptJober();
+        flowJober.setType(OHSCRIPT_JOBER);
+        commonParse(flowJober, flowGraphData, nodeIndex);
+        flowJober.setFitables(flowGraphData.getNodeJoberFitables(nodeIndex));
+        return flowJober;
+    }
+}

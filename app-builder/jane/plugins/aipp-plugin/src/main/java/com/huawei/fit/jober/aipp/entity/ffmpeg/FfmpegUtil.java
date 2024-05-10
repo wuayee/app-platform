@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.jober.aipp.entity.ffmpeg;
+
+/**
+ * FfmpegUtil
+ *
+ * @author y00612997
+ * @since 2024/1/9
+ */
+public class FfmpegUtil {
+    /**
+     * formatTimestamps 格式化输出
+     *
+     * @param time 输入时间，单位s
+     * @return String 格式化字符串 HH::mm::ss
+     * @author y00612997
+     * @since 2024/1/10 9:51
+     */
+    public static String formatTimestamps(int time) {
+        int seconds = time;
+        int hours = seconds / 3600;
+        seconds %= 3600;
+        int minutes = seconds / 60;
+        seconds %= 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    /**
+     * parseDuration 解析格式化字符串
+     *
+     * @param duration 格式化字符串 HH::mm::ss
+     * @return int 输出秒数
+     * @author y00612997
+     * @since 2024/1/10 9:51
+     */
+    public static int parseDuration(String duration) {
+        String[] times = duration.split(":");
+        int seconds = 0;
+        seconds += Integer.parseInt(times[0]) * 60 * 60;
+        seconds += Integer.parseInt(times[1]) * 60;
+        seconds += (int) Double.parseDouble(times[2]);
+        return seconds;
+    }
+}

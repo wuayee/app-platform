@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.fit.jober.taskcenter.dao.TaskPropertyMapper">
+
+    <resultMap type="com.huawei.fit.jober.taskcenter.dao.po.TaskPropertyObject" id="TaskPropertyMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="taskId" column="task_id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="required" column="required" jdbcType="INTEGER"/>
+        <result property="identifiable" column="identifiable"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="scope" column="scope" jdbcType="VARCHAR"/>
+        <result property="dataType" column="data_type" jdbcType="VARCHAR"/>
+        <result property="sequence" column="sequence" jdbcType="INTEGER"/>
+        <result property="appearance" column="appearance" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 主表列-->
+    <sql id="baseColumns">
+        <trim suffixOverrides=",">
+            id,task_id,name,required,identifiable,description,scope,data_type,sequence,appearance,
+        </trim>
+    </sql>
+
+    <!--通过主键查询一条数据-->
+    <select id="queryById" resultMap="TaskPropertyMap">
+        select
+        <include refid="baseColumns"/>
+        from task_property
+        where id = #{id}
+    </select>
+
+    <!--条件查询-->
+    <select id="queryByTaskIds" resultMap="TaskPropertyMap">
+        select
+        <include refid="baseColumns"/>
+        from task_property
+        where task_id IN
+        <foreach item="item" index="index" collection="taskIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!--新增一条数据-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="false">
+        insert into task_property
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            task_id,
+            name,
+            required,
+            identifiable,
+            description,
+            scope,
+            data_type,
+            sequence,
+            appearance,
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{id},
+            #{taskId},
+            #{name},
+            #{required},
+            #{identifiable},
+            #{description},
+            #{scope},
+            #{dataType},
+            (SELECT COALESCE(MAX(sequence), 0) + 1 FROM task_property WHERE task_id = #{taskId} AND data_type =
+            #{dataType}),
+            #{appearance}::json,
+        </trim>
+    </insert>
+
+    <!-- 批量插入多条数据-->
+    <select id="batchInsert" resultType="java.lang.String">
+        insert into task_property
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            task_id,
+            name,
+            required,
+            identifiable,
+            description,
+            scope,
+            data_type,
+            sequence,
+            appearance,
+        </trim>
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{entity.id},
+                #{entity.taskId},
+                #{entity.name},
+                #{entity.required},
+                #{entity.identifiable},
+                #{entity.description},
+                #{entity.scope},
+                #{entity.dataType},
+                #{entity.sequence},
+                #{entity.appearance}::json,
+            </trim>
+        </foreach>
+        ON CONFLICT (task_id, name) DO UPDATE SET required = EXCLUDED.required, description = EXCLUDED.description,
+        scope = EXCLUDED.scope, data_type = EXCLUDED.data_type, sequence = EXCLUDED.sequence, appearance =
+        EXCLUDED.appearance::json RETURNING id
+    </select>
+
+    <delete id="batchDelete">
+        DELETE FROM task_property WHERE task_id IN
+        <foreach collection="taskIds" item="taskId" index="index" separator="," open="(" close=")">
+            #{taskId}
+        </foreach>
+        AND id NOT IN
+        <foreach collection="propertyIds" item="propertyId" index="index" separator="," open="(" close=")">
+            #{propertyId}
+        </foreach>
+    </delete>
+
+    <!--通过主键删除一条数据-->
+    <delete id="deleteById">
+        delete
+        from task_property
+        where id = #{id}
+    </delete>
+
+    <!--通过taskId删除多条数据-->
+    <delete id="deleteByTaskIds">
+        delete
+        from task_property
+        where task_id in
+        <foreach collection="taskIds" item="item" separator="," close=")" open="(">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <!--通过主键集合删除多条数据-->
+    <delete id="deleteByIds">
+        delete from task_property where id in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>
+

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.fit.jober.aipp.mapper.AippLogMapper">
+    <resultMap id="BaseResultMap" type="com.huawei.fit.jober.aipp.entity.AippInstLog">
+        <result column="log_id" property="logId"/>
+        <result column="aipp_id" property="aippId"/>
+        <result column="version" property="version"/>
+        <result column="aipp_type" property="aippType"/>
+        <result column="instance_id" property="instanceId"/>
+        <result column="log_data" property="logData"/>
+        <result column="log_type" property="logType"/>
+        <result column="create_at" property="createAt"/>
+        <result column="create_by" property="createUserAccount"/>
+        <result column="path" property="path"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        log_id, aipp_id, version, aipp_type, instance_id, log_data, log_type, create_at, create_by, path
+    </sql>
+
+    <sql id="Recent_Instance_List">
+        select instance_id
+        from (select instance_id, create_at, row_number() over (partition by instance_id order by create_at desc) rn
+              from aipp_instance_log
+              where create_by = #{createUserAccount}
+                and aipp_id = #{aippId}
+                and aipp_type = #{aippType}) t
+        where t.rn = 1
+        order by t.create_at desc
+    </sql>
+
+    <select id="selectRecentAfterResume" resultType="string">
+        SELECT
+            instance_id
+        FROM
+            (
+                SELECT
+                    instance_id,
+                    create_at,
+                    ROW_NUMBER ( ) OVER ( PARTITION BY instance_id ORDER BY create_at DESC ) rn
+                FROM
+                    aipp_instance_log
+                WHERE
+                    create_by = #{createUserAccount}
+                  AND aipp_id = #{aippId}
+                  AND aipp_type = #{aippType}
+                  AND log_id >=
+                      (
+                          SELECT
+                              log_id
+                          FROM
+                              aipp_instance_log
+                          WHERE
+                              log_data ->> 'form_args' like '%\"fileContent\":%'
+                        AND aipp_id = #{aippId}
+                        AND create_by = #{createUserAccount}
+                        ORDER BY
+                            create_at DESC
+                            LIMIT 1
+                    )
+            ) T
+        WHERE
+        	T.rn = 1
+        ORDER BY
+        	T.create_at DESC
+    </select>
+
+    <select id="selectRecentByAippId" resultMap="BaseResultMap"
+            resultType="com.huawei.fit.jober.aipp.entity.AippInstLog">
+        select
+        <include refid="Base_Column_List"/>
+        from aipp_instance_log
+        where instance_id in (<include refid="Recent_Instance_List"/> limit 5)
+    </select>
+
+    <select id="selectWithCondition" parameterType="com.huawei.fit.jober.aipp.dto.aipplog.AippLogQueryCondition"
+            resultMap="BaseResultMap"
+            resultType="com.huawei.fit.jober.aipp.entity.AippInstLog">
+        select
+        <include refid="Base_Column_List"/>
+        from aipp_instance_log
+        <where>
+            true
+            <if test="aippId!=null">
+                and aipp_id = #{aippId}
+            </if>
+            <if test="instanceId!=null">
+                and instance_id = #{instanceId}
+            </if>
+            <if test="afterAt!=null">
+                and create_at >= #{afterAt}
+            </if>
+        </where>
+        order by log_id
+    </select>
+
+    <select id="selectNormalInstanceIdOrderByTimeDesc">
+        <include refid="Recent_Instance_List"/>
+    </select>
+
+    <select id="selectLastInstanceFormLog" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from aipp_instance_log
+        <where>
+            log_type = 'FORM'
+            <if test="instanceId!=null">
+                and instance_id = #{instanceId}
+            </if>
+        </where>
+        order by create_at desc
+        limit 1
+    </select>
+
+    <delete id="deleteByType">
+        delete
+        from aipp_instance_log
+        where aipp_id = #{aippId}
+        and create_by = #{createUserAccount}
+        and aipp_type = #{aippType}
+        <if test="instanceIdExclude != null">
+            and instance_id != #{instanceIdExclude}
+        </if>
+    </delete>
+
+    <delete id="delete">
+        delete
+        from aipp_instance_log
+        where aipp_id = #{aippId}
+        and create_by = #{createUserAccount}
+        and version = #{version}
+        <if test="instanceIdExclude != null">
+            and instance_id != #{instanceIdExclude}
+        </if>
+    </delete>
+
+    <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto">
+        insert into aipp_instance_log (aipp_id, version, aipp_type, instance_id, log_data, log_type, create_by, path)
+        values (#{aippId}, #{version}, #{aippType}, #{instanceId}, #{logData}::jsonb, #{logType}, #{createUserAccount}, #{path})
+    </insert>
+
+    <update id="updateOne">
+        update aipp_instance_log
+        set log_data = #{newLogData}::jsonb
+        where log_id = #{logId}
+    </update>
+
+
+    <select id="selectRecentInstanceId" resultType="string">
+        <include refid="Recent_Instance_List"/> limit #{number}
+    </select>
+
+    <select id="getLogsByInstanceId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from aipp_instance_log
+        <where>
+            log_type != 'HIDDEN_MSG'
+            <if test="instanceIds != null and instanceIds.size() != 0">
+                AND
+                <foreach collection="instanceIds" item="item" separator="or" close=")" open="(">
+                    path LIKE '%/'||#{item}||'%'
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getParentPath" resultType="string">
+        select
+        path
+        from aipp_instance_log
+        <where>
+            instance_id = #{parentId}
+        </where>
+        LIMIT 1
+    </select>
+</mapper>

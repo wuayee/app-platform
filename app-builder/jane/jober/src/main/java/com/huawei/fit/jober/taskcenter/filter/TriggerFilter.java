@@ -1,0 +1,28 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fit.jober.taskcenter.filter;
+
+import com.huawei.fit.jane.task.util.UndefinableValue;
+
+import lombok.Data;
+
+import java.util.List;
+
+/**
+ * 为任务属性触发器提供过滤器。
+ *
+ * @author 梁济时 l00815032
+ * @since 2023-08-09
+ */
+@Data
+public class TriggerFilter {
+    private UndefinableValue<List<String>> ids;
+
+    private UndefinableValue<List<String>> sourceIds;
+
+    private UndefinableValue<List<String>> propertyIds;
+
+    private UndefinableValue<List<String>> fitableIds;
+}

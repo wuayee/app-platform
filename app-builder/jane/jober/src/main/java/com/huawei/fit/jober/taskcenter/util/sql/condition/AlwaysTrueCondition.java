@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.jober.taskcenter.util.sql.condition;
+
+import com.huawei.fit.jober.taskcenter.util.sql.Condition;
+import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
+
+import java.util.List;
+
+/**
+ * 表示恒为真的查询条件。
+ *
+ * @author 梁济时 l00815032
+ * @since 2024-01-12
+ */
+public class AlwaysTrueCondition implements Condition {
+    /**
+     * 获取当前类型的唯一实例。
+     */
+    public static final AlwaysTrueCondition INSTANCE = new AlwaysTrueCondition();
+
+    private AlwaysTrueCondition() {
+    }
+
+    @Override
+    public void toSql(SqlBuilder sql, List<Object> args) {
+        sql.append("1 = 1");
+    }
+}

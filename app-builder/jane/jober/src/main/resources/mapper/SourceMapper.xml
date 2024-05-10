@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.fit.jober.taskcenter.dao.SourceMapper">
+    <resultMap id="objectMap"
+               type="com.huawei.fit.jober.taskcenter.dao.po.SourceObject">
+        <id column="id" property="id"/>
+        <result column="task_id" property="taskId"/>
+        <result column="name" property="name"/>
+        <result column="app" property="app"/>
+        <result column="type" property="type"/>
+    </resultMap>
+
+    <sql id="table">task_source</sql>
+
+    <sql id="columns">id
+    , task_id, name, app, type</sql>
+
+    <insert id="insert">
+        INSERT INTO<include refid="table"/>(<include refid="columns"/>) VALUES(#{id}, #{taskId}, #{name}, #{app},
+        #{type})
+    </insert>
+
+    <select id="select" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM<include refid="table"/>WHERE id = #{sourceId}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM<include refid="table"/>WHERE id = #{sourceId}
+    </delete>
+
+    <select id="selectByTaskId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM<include refid="table"/>WHERE task_id = #{taskId}
+    </select>
+
+    <select id="selectByTaskIds" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM<include refid="table"/>WHERE task_id IN
+        <foreach item="item" index="index" collection="taskIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectBySourceIds" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM<include refid="table"/>WHERE id IN
+        <foreach item="item" index="index" collection="sourceIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="batchInsert" resultType="java.lang.String">
+        INSERT INTO<include refid="table"/>(<include refid="columns"/>) VALUES
+        <foreach collection="sourceObjects" item="item" index="index" separator=",">
+            (#{item.id},#{item.taskId},#{item.name},#{item.app},#{item.type})
+        </foreach>
+        ON CONFLICT (task_id, app, name) DO UPDATE SET type = EXCLUDED.type RETURNING id
+    </select>
+
+    <select id="batchDelete" resultMap="objectMap">
+        DELETE FROM<include refid="table"/>WHERE task_id IN
+        <foreach collection="taskIds" item="taskId" index="index" separator="," open="(" close=")">
+            #{taskId}
+        </foreach>
+        AND id NOT IN
+        <foreach collection="sourceIds" item="sourceId" index="index" separator="," open="(" close=")">
+            #{sourceId}
+        </foreach>
+        RETURNING id, type
+    </select>
+</mapper>

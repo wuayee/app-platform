@@ -1,0 +1,1 @@
+SELECT "c"."id" AS "id", "c"."name" AS "name", "cg"."id" AS "group_id", "cg"."name" AS "group_name" FROM "category" AS "c" INNER JOIN "category_group" AS "cg" ON "cg"."id" = "c"."category_group_id"

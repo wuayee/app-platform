@@ -1,0 +1,1 @@
+DELETE FROM "authorization" WHERE "id" = ?
