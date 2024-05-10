@@ -2,9 +2,11 @@
 
 set -eu
 
-FIT_PATH="../../../../framework/fit"
-FIT_CPP_PATH="$FIT_PATH/cpp"
+cd ../../../../framework/fit
+FIT_PATH=$(pwd)
+cd -
 
+FIT_CPP_PATH="$FIT_PATH/cpp"
 cd $FIT_CPP_PATH
 sh prepare.sh
 cd -
