@@ -13,6 +13,7 @@ import com.huawei.databus.sdk.message.PermissionType;
 import com.huawei.databus.sdk.support.MemoryIoRequest;
 import com.huawei.databus.sdk.support.MemoryIoResult;
 import com.huawei.databus.sdk.support.OpenConnectionResult;
+import com.huawei.databus.sdk.support.ReleaseMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
 import com.huawei.databus.sdk.tools.DataBusUtils;
@@ -91,6 +92,14 @@ public class DefaultDataBusClient implements DataBusClient {
     }
 
     @Override
+    public void sharedFree(ReleaseMemoryRequest request) {
+        if (!isConnected()) {
+            return;
+        }
+        this.sharedMemoryPool.releaseSharedMemory(request);
+    }
+
+    @Override
     public void close() throws IOException {
         socketChannel.close();
         this.responseDispatcher.stop();
@@ -136,8 +145,7 @@ public class DefaultDataBusClient implements DataBusClient {
 
             // 检查写操作是否在内存边界内
             if (request.memoryOffset() + request.dataLength() > result.sharedMemory().size()) {
-                // TD: 使用更精确的错误码
-                return MemoryIoResult.failure(ErrorType.PermissionDenied);
+                return MemoryIoResult.failure(ErrorType.IOOutOfBounds);
             }
 
             // 执行读写操作

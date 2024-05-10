@@ -17,11 +17,14 @@ import com.huawei.databus.sdk.message.ApplyPermissionMessageResponse;
 import com.huawei.databus.sdk.message.ErrorType;
 import com.huawei.databus.sdk.message.MessageType;
 import com.huawei.databus.sdk.message.PermissionType;
+import com.huawei.databus.sdk.message.ReleaseMemoryMessage;
 import com.huawei.databus.sdk.message.ReleasePermissionMessage;
 import com.huawei.databus.sdk.support.MemoryIoRequest;
+import com.huawei.databus.sdk.support.ReleaseMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
 import com.huawei.databus.sdk.tools.DataBusUtils;
+import com.huawei.fitframework.util.StringUtils;
 
 import com.google.flatbuffers.FlatBufferBuilder;
 
@@ -63,11 +66,9 @@ class SharedMemoryPool {
     public SharedMemoryResult applySharedMemory(SharedMemoryRequest request) {
         // 先建造消息体
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
+        int objectKeyOffset = bodyBuilder.createString(request.getUserKey().orElse(StringUtils.EMPTY));
         ApplyMemoryMessage.startApplyMemoryMessage(bodyBuilder);
-        request.getUserKey().ifPresent(userKey -> {
-            int objectKeyOffset = bodyBuilder.createString(userKey);
-            ApplyMemoryMessage.addObjectKey(bodyBuilder, objectKeyOffset);
-        });
+        ApplyMemoryMessage.addObjectKey(bodyBuilder, objectKeyOffset);
         ApplyMemoryMessage.addMemorySize(bodyBuilder, request.size());
         int messageOffset = ApplyMemoryMessage.endApplyMemoryMessage(bodyBuilder);
         bodyBuilder.finish(messageOffset);
@@ -151,18 +152,12 @@ class SharedMemoryPool {
      * @return 表示权限申请结果的 {@link SharedMemoryResult}
      */
     public SharedMemoryResult applyPermission(MemoryIoRequest request) {
-        // 需要申请权限
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
+        int objectKeyOffset = bodyBuilder.createString(getUserKeyIfIdAbsent(request.sharedMemoryKey()));
         ApplyPermissionMessage.startApplyPermissionMessage(bodyBuilder);
         ApplyPermissionMessage.addPermission(bodyBuilder, request.permissionType());
-
-        // 有 memoryID 则优先使用，节省消息长度
-        if (request.sharedMemoryKey().memoryId() != -1) {
-            ApplyPermissionMessage.addMemoryKey(bodyBuilder, request.sharedMemoryKey().memoryId());
-        } else {
-            int objectKeyOffset = bodyBuilder.createString(request.sharedMemoryKey().userKey());
-            ApplyPermissionMessage.addObjectKey(bodyBuilder, objectKeyOffset);
-        }
+        ApplyPermissionMessage.addObjectKey(bodyBuilder, objectKeyOffset);
+        ApplyPermissionMessage.addMemoryKey(bodyBuilder, request.sharedMemoryKey().memoryId());
         int messageOffset = ApplyPermissionMessage.endApplyPermissionMessage(bodyBuilder);
         bodyBuilder.finish(messageOffset);
         ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
@@ -195,18 +190,12 @@ class SharedMemoryPool {
      * @param request 传入的 {@link MemoryIoRequest}
      */
     public void releasePermission(MemoryIoRequest request) {
-        // 需要发送消息释放许可
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
+        int objectKeyOffset = bodyBuilder.createString(getUserKeyIfIdAbsent(request.sharedMemoryKey()));
         ReleasePermissionMessage.startReleasePermissionMessage(bodyBuilder);
-
-        // 有 memoryID 则优先使用，节省消息长度
-        if (request.sharedMemoryKey().memoryId() != -1) {
-            ReleasePermissionMessage.addMemoryKey(bodyBuilder, request.sharedMemoryKey().memoryId());
-        } else {
-            int objectKeyOffset = bodyBuilder.createString(request.sharedMemoryKey().userKey());
-            ReleasePermissionMessage.addObjectKey(bodyBuilder, objectKeyOffset);
-        }
         ReleasePermissionMessage.addPermission(bodyBuilder, request.permissionType());
+        ReleasePermissionMessage.addObjectKey(bodyBuilder, objectKeyOffset);
+        ReleasePermissionMessage.addMemoryKey(bodyBuilder, request.sharedMemoryKey().memoryId());
         int messageOffset = ReleasePermissionMessage.endReleasePermissionMessage(bodyBuilder);
         bodyBuilder.finish(messageOffset);
         ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
@@ -224,5 +213,40 @@ class SharedMemoryPool {
             SharedMemoryInternal internal = this.memoryPool.get(request.sharedMemoryKey());
             internal.setPermission(PermissionType.None);
         }
+    }
+
+    /**
+     * 根据传入的 {@link ReleaseMemoryRequest} 释放内存
+     *
+     * @param request 传入的 {@link ReleaseMemoryRequest}
+     */
+    public void releaseSharedMemory(ReleaseMemoryRequest request) {
+        // 先建造消息体
+        FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
+        int objectKeyOffset = bodyBuilder.createString(getUserKeyIfIdAbsent(request.sharedMemoryKey()));
+        ReleaseMemoryMessage.startReleaseMemoryMessage(bodyBuilder);
+        ReleaseMemoryMessage.addMemoryKey(bodyBuilder, request.sharedMemoryKey().memoryId());
+        ReleaseMemoryMessage.addObjectKey(bodyBuilder, objectKeyOffset);
+        int messageOffset = ReleaseMemoryMessage.endReleaseMemoryMessage(bodyBuilder);
+        bodyBuilder.finish(messageOffset);
+        ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
+
+        // 建造消息头
+        ByteBuffer messageHeaderBuffer = DataBusUtils.buildMessageHeader(MessageType.ReleaseMemory,
+                messageBodyBuffer.remaining());
+        try {
+            // 发出信息后即刻返回，释放内存没有回复信息
+            this.socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
+        } catch (IOException ignored) {
+            // 需要打日志但是无需返回错误
+        } finally {
+            // 客户端不再持有此内存块
+            this.memoryPool.remove(request.sharedMemoryKey());
+            this.selfAppliedMemory.remove(request.sharedMemoryKey().userKey());
+        }
+    }
+
+    private String getUserKeyIfIdAbsent(SharedMemoryKey sharedMemoryKey) {
+        return sharedMemoryKey.memoryId() == -1 ? sharedMemoryKey.userKey() : StringUtils.EMPTY;
     }
 }

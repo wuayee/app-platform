@@ -8,6 +8,7 @@ import com.huawei.databus.sdk.client.DefaultDataBusClient;
 import com.huawei.databus.sdk.support.MemoryIoRequest;
 import com.huawei.databus.sdk.support.MemoryIoResult;
 import com.huawei.databus.sdk.support.OpenConnectionResult;
+import com.huawei.databus.sdk.support.ReleaseMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
 import com.huawei.fitframework.inspection.Nonnull;
@@ -38,6 +39,13 @@ public interface DataBusClient {
      * @return SharedMemoryResult 表示内存申请结果的 {@link SharedMemoryResult}
      */
     SharedMemoryResult sharedMalloc(@Nonnull SharedMemoryRequest request);
+
+    /**
+     * 向 DataBus 服务发起内存释放请求。内存具体释放的时机由 DataBus 服务确定，因此本 API 不返回结果。
+     *
+     * @param request 表示内存释放请求的 {@link ReleaseMemoryRequest}
+     */
+    void sharedFree(@Nonnull ReleaseMemoryRequest request);
 
     /**
      * 关闭通向指定地址和端口的 DataBus 连接
