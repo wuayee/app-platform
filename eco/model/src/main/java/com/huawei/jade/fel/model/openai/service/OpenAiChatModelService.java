@@ -12,7 +12,7 @@ import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatModelService;
 import com.huawei.jade.fel.chat.ChatOptions;
-import com.huawei.jade.fel.chat.charactar.AiMessage;
+import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.protocol.ChatCompletion;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.model.openai.client.OpenAiClient;
