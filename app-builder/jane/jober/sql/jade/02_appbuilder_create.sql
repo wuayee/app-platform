@@ -18,7 +18,7 @@ create table if not exists aipp_instance_log
     log_type               varchar(64) not null,
     create_at              timestamp default current_timestamp,
     create_by              varchar(64) not null,
-    reserve                json
+    path                   text
     );
 
 create table if not exists form_data(
@@ -55,6 +55,7 @@ create table if not exists app_builder_app
     flow_graph_id varchar(255) not null,
     tenant_id  varchar(255) not null,
     type       varchar(255) not null,
+    version    varchar(255),
     attributes JSON not null DEFAULT '{}',
     state varchar(255) not null
     );

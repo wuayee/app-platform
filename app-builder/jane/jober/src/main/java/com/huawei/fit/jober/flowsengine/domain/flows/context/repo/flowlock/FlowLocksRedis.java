@@ -17,7 +17,7 @@ import java.util.concurrent.locks.Lock;
  * @author g00564732
  * @since 2023/11/07
  */
-@Component
+// @Component
 @Alias("flowLocksRedis")
 public class FlowLocksRedis implements FlowLocks {
     private final DistributedLockProvider distributedLockProvider;

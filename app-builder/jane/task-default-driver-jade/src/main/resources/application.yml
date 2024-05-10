@@ -7,3 +7,27 @@ fit:
 
 forest:
   interface-package: com.huawei.fit.jane.external
+
+mybatis:
+  mapper-locations: mapper/*Mapper.xml
+
+databasedistributedlock:
+  ttl: 90000
+  renewScheduleRate: 20000
+  timeout: 90000
+
+druid:
+  driver-class-name: org.postgresql.Driver
+  initialSize: 5
+  minIdle: 5
+  maxActive: 15
+  maxWait: 60000
+  timeBetweenEvictionRunsMillis: 60000
+  minEvictableIdleTimeMillis: 300000
+  validationQuery: SELECT 1
+  testWhileIdle: true
+  testOnBorrow: true
+  testOnReturn: true
+  url: jdbc:postgresql://10.91.144.110:5433/jane?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true
+  username: jane
+  password: FitLab123

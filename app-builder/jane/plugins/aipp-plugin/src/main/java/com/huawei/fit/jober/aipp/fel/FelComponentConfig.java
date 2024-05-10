@@ -8,6 +8,7 @@ import com.huawei.fitframework.annotation.Bean;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.ChatModelService;
+import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.engine.operators.patterns.Agent;
 import com.huawei.jade.fel.engine.operators.patterns.DefaultAgent;
@@ -30,6 +31,6 @@ public class FelComponentConfig {
      */
     @Bean("defaultAgent")
     public Agent<Prompt, Prompt> getAgent(ToolProvider toolProvider, ChatModelService chatModel) {
-        return new DefaultAgent(toolProvider, chatModel, null);
+        return new DefaultAgent(toolProvider, chatModel, ChatOptions.builder().temperature(0.0D).build());
     }
 }

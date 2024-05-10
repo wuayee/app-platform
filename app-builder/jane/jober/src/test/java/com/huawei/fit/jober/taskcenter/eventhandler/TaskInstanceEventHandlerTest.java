@@ -6,6 +6,7 @@ package com.huawei.fit.jober.taskcenter.eventhandler;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -76,7 +77,7 @@ public class TaskInstanceEventHandlerTest {
     private BrokerClient mockBrokerClient() {
         brokerClient = Mockito.mock(BrokerClient.class);
         router = Mockito.mock(Router.class);
-        when(brokerClient.getRouter(any(), any())).thenReturn(router);
+        when(brokerClient.getRouter(anyString(), any())).thenReturn(router);
         return brokerClient;
     }
 

@@ -6,6 +6,7 @@ package com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowlock;
 
 import com.huawei.fit.jane.task.gateway.DistributedLockProvider;
 import com.huawei.fitframework.annotation.Alias;
+import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 
 import java.util.concurrent.locks.Lock;
@@ -16,6 +17,7 @@ import java.util.concurrent.locks.Lock;
  * @author l00862071
  * @since 2023/11/30
  */
+@Component
 @Alias("flowLocksDatabase")
 public class FlowLocksDatabase implements FlowLocks {
     private final DistributedLockProvider distributedLockProvider;

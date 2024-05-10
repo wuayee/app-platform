@@ -737,17 +737,18 @@ CREATE TABLE IF NOT EXISTS "category_usage" (
     "updated_by" VARCHAR(127) NOT NULL,
     "updated_at" TIMESTAMP NOT NULL
     );
-CREATE UNIQUE INDEX "UK_CATEGORY_USAGE" ON "category_usage"("object_id", "category_group_id", "object_type");
-CREATE INDEX "IDX_CATEGORY_USAGE_OBJECT_ID" ON "category_usage"("object_id");
+CREATE UNIQUE INDEX IF NOT EXISTS "UK_CATEGORY_USAGE" ON "category_usage"("object_id", "category_group_id", "object_type");
+CREATE INDEX IF NOT EXISTS "IDX_CATEGORY_USAGE_OBJECT_ID" ON "category_usage"("object_id");
 
 /* 创建任务模板表 */
 CREATE TABLE IF NOT EXISTS task_template
 (
     id          CHAR(32) PRIMARY KEY,
     name        VARCHAR(64)  NOT NULL,
-    description VARCHAR(512) NOT NULL
+    description VARCHAR(512) NOT NULL,
+    "tenant_id" char(32) NOT NULL DEFAULT '00000000000000000000000000000000'
     );
-CREATE UNIQUE INDEX UK_TASK_TEMPLATE_NAME ON task_template (name);
+CREATE UNIQUE INDEX IF NOT EXISTS UK_TASK_TEMPLATE_NAME ON task_template (name);
 COMMENT on column task_template.id is '主键Id';
 COMMENT on column task_template.name is '任务模板名称';
 COMMENT on column task_template.description is '任务模板描述';
@@ -761,8 +762,8 @@ CREATE TABLE IF NOT EXISTS task_template_property
     data_type        VARCHAR(16) NOT NULL,
     sequence         INTEGER     NOT NULL
     );
-CREATE UNIQUE INDEX UK_TASK_TEMPLATE_PROPERTY_NAME ON task_template_property (task_template_id, name);
-CREATE UNIQUE INDEX UK_TASK_TEMPLATE_PROPERTY_COLUMN ON task_template_property (task_template_id, data_type, sequence);
+CREATE UNIQUE INDEX IF NOT EXISTS UK_TASK_TEMPLATE_PROPERTY_NAME ON task_template_property (task_template_id, name);
+CREATE UNIQUE INDEX IF NOT EXISTS UK_TASK_TEMPLATE_PROPERTY_COLUMN ON task_template_property (task_template_id, data_type, sequence);
 
 COMMENT on column task_template_property.id is '主键Id';
 COMMENT on column task_template_property.task_template_id is '任务模板Id';
@@ -770,7 +771,7 @@ COMMENT on column task_template_property.name is '任务模板属性名称';
 COMMENT on column task_template_property.data_type is '任务模板属性数据类型';
 COMMENT on column task_template_property.sequence is '任务模板属性在当前数据类型中的序号';
 
-CREATE TABLE "index" (
+CREATE TABLE IF NOT EXISTS "index" (
                          "id" CHAR(32) PRIMARY KEY,
                          "task_id" CHAR(32) NOT NULL,
                          "name" VARCHAR(128) NOT NULL,
@@ -780,52 +781,52 @@ CREATE TABLE "index" (
                          "updated_at" TIMESTAMP NOT NULL
 );
 
-CREATE TABLE "index_property" (
+CREATE TABLE IF NOT EXISTS "index_property" (
                                   "id" CHAR(32) PRIMARY KEY,
                                   "index_id" CHAR(32) NOT NULL,
                                   "property_id" CHAR(32) NOT NULL
 );
-CREATE INDEX "idx_index_property_index" ON "index_property"("index_id");
+CREATE INDEX IF NOT EXISTS "idx_index_property_index" ON "index_property"("index_id");
 
-CREATE TABLE "index_text" (
+CREATE TABLE IF NOT EXISTS "index_text" (
                               "id" CHAR(32) PRIMARY KEY,
                               "instance_id" CHAR(32) NOT NULL,
                               "property_id" CHAR(32) NOT NULL,
                               "value" TEXT
 );
-CREATE INDEX "idx_index_text_instance" ON "index_text"("instance_id");
-CREATE INDEX "idx_index_text_property" ON "index_text"("property_id");
-CREATE INDEX "idx_index_text_value" ON "index_text"("value");
+CREATE INDEX IF NOT EXISTS "idx_index_text_instance" ON "index_text"("instance_id");
+CREATE INDEX IF NOT EXISTS "idx_index_text_property" ON "index_text"("property_id");
+CREATE INDEX IF NOT EXISTS "idx_index_text_value" ON "index_text"("value");
 
-CREATE TABLE "index_integer" (
+CREATE TABLE IF NOT EXISTS "index_integer" (
                                  "id" CHAR(32) PRIMARY KEY,
                                  "instance_id" CHAR(32) NOT NULL,
                                  "property_id" CHAR(32) NOT NULL,
                                  "value" BIGINT
 );
-CREATE INDEX "idx_index_integer_instance" ON "index_integer"("instance_id");
-CREATE INDEX "idx_index_integer_property" ON "index_integer"("property_id");
-CREATE INDEX "idx_index_integer_value" ON "index_integer"("value");
+CREATE INDEX IF NOT EXISTS "idx_index_integer_instance" ON "index_integer"("instance_id");
+CREATE INDEX IF NOT EXISTS "idx_index_integer_property" ON "index_integer"("property_id");
+CREATE INDEX IF NOT EXISTS "idx_index_integer_value" ON "index_integer"("value");
 
-CREATE TABLE "index_datetime" (
+CREATE TABLE IF NOT EXISTS "index_datetime" (
                                   "id" CHAR(32) PRIMARY KEY,
                                   "instance_id" CHAR(32) NOT NULL,
                                   "property_id" CHAR(32) NOT NULL,
                                   "value" TIMESTAMP
 );
-CREATE INDEX "idx_index_datetime_instance" ON "index_datetime"("instance_id");
-CREATE INDEX "idx_index_datetime_property" ON "index_datetime"("property_id");
-CREATE INDEX "idx_index_datetime_value" ON "index_datetime"("value");
+CREATE INDEX IF NOT EXISTS "idx_index_datetime_instance" ON "index_datetime"("instance_id");
+CREATE INDEX IF NOT EXISTS "idx_index_datetime_property" ON "index_datetime"("property_id");
+CREATE INDEX IF NOT EXISTS "idx_index_datetime_value" ON "index_datetime"("value");
 
-CREATE TABLE "list_text" (
+CREATE TABLE IF NOT EXISTS "list_text" (
                              "id" CHAR(32) PRIMARY KEY,
                              "instance_id" CHAR(32) NOT NULL,
                              "property_id" CHAR(32) NOT NULL,
                              "index" BIGINT NOT NULL,
                              "value" TEXT
 );
-CREATE INDEX "IDX_LIST_TEXT_INSTANCE" ON "list_text"("instance_id");
-CREATE INDEX "IDX_LIST_TEXT_PROPERTY" ON "list_text"("property_id");
+CREATE INDEX IF NOT EXISTS "IDX_LIST_TEXT_INSTANCE" ON "list_text"("instance_id");
+CREATE INDEX IF NOT EXISTS "IDX_LIST_TEXT_PROPERTY" ON "list_text"("property_id");
 
 -- 任务关联表
 CREATE TABLE IF NOT EXISTS jane_relation (

@@ -3,6 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.huawei.fit.jade</groupId>
+        <artifactId>app-builder-jane-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
     <groupId>com.huawei.fit.jane</groupId>
     <artifactId>task-default-driver-jade</artifactId>
     <version>0.1.0</version>
@@ -29,9 +35,32 @@
             <version>0.1.0</version>
         </dependency>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.26</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-security</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+
+        <!-- DB -->
+        <dependency>
+            <groupId>com.huawei.fit.integration</groupId>
+            <artifactId>fit-mybatis</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework.extension</groupId>
+            <artifactId>fit-transaction</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.5.5</version>
+            <version>42.5.1</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -44,23 +73,28 @@
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
-            <artifactId>fit-security</artifactId>
+            <groupId>com.huawei.fitframework.extension</groupId>
+            <artifactId>fit-schedule</artifactId>
             <version>${fit.version}</version>
         </dependency>
 
-        <!-- Redis -->
+        <!-- Mybatis -->
         <dependency>
-            <groupId>org.redisson</groupId>
-            <artifactId>redisson</artifactId>
-            <version>3.19.3</version>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.13</version>
         </dependency>
 
         <!-- HTTP -->
         <dependency>
-            <groupId>com.huawei.fit.service</groupId>
-            <artifactId>fit-http-classic</artifactId>
+            <groupId>com.huawei.fit.integration</groupId>
+            <artifactId>fit-forest</artifactId>
             <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dtflys.forest</groupId>
+            <artifactId>forest-core</artifactId>
+            <version>1.5.32</version>
         </dependency>
 
         <dependency>
@@ -77,6 +111,32 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.14.1</version>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.8.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>4.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>4.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.1.214</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -140,6 +200,25 @@
                 </execution>
             </executions>
         </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${maven.antrun.version}</version>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <configuration>
+                            <target>
+                                <copy file="${project.build.directory}/${project.build.finalName}.jar"
+                                      todir="../../../framework/fit/java/target/plugins"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

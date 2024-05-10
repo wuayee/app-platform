@@ -45,9 +45,9 @@ druid:
   testWhileIdle: true
   testOnBorrow: true
   testOnReturn: true
-  url: jdbc:postgresql://7.180.146.52:5432/jane_alpha?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true
-  username: enc(2X1X2023062715452540UnHhV4CE5IJHfsfJOWj0mz6VDYS48BmxVKT3hT+jQEpRynHpkOkIobu7l+2CVIRIAwwa8P2t8Jr2BNGB/6o2fDAQ5IqzLejrJGF6zlbL8D6Jyw==)
-  password: enc(2X1X2023062715452540UnHhV4CE5IJHfsfJOWj0mz6VDYS48BmxVKT3hT+jQEpRynHpkOkIobu7l+2CVIRIAwwDrd+U1P3sz3rfW8Ndohqze4ZAvzhNuHOxrQtwuBd3A3xR9y1s)
+  url: jdbc:postgresql://10.91.144.110:5433/jane?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true&options=-c%20statement_timeout=600000
+  username: jane
+  password: FitLab123
 tender:
   url: "aHR0cHM6Ly9zMy1oYy1kZ2cuaGljcy5odWF3ZWkuY29tL2ZpdC1lbHNhLWFscGhhLWcvdGVuZGVyQW5hbHlzZVJlc3VsdC54bHN4"
 w3-task:

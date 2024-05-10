@@ -128,7 +128,7 @@ public class FlowContextsService {
             @Fit(alias = "flowContextPersistRepo") FlowContextRepo repo,
             @Fit(alias = "flowContextPersistMessenger") FlowContextMessenger messenger,
             QueryFlowContextPersistRepo queryRepo, FlowTraceRepo traceRepo, FlowRetryRepo retryRepo,
-            @Fit(alias = "flowLocksRedis") FlowLocks locks, TraceOwnerService traceOwnerService,
+            FlowLocks locks, TraceOwnerService traceOwnerService,
             @Fit List<FlowEventCallback> consumers) {
         this.definitionRepo = definitionRepo;
         this.repo = repo;
