@@ -10,6 +10,9 @@ import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
 import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.TypeUtils;
+import com.huawei.jade.fel.core.formatters.OutputParser;
+import com.huawei.jade.fel.core.formatters.Parser;
+import com.huawei.jade.fel.core.formatters.support.MarkdownParser;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,7 +24,6 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -65,7 +67,7 @@ public class JsonOutputParserTest {
         @Test
         @DisplayName("获取提示词，返回正确结果")
         void getInstructionThenReturnOk() {
-            JsonOutputParser<Joke> outputParser = JsonOutputParser.create(TEST_SERIALIZER, Joke.class);
+            OutputParser<Joke> outputParser = JsonOutputParser.create(TEST_SERIALIZER, Joke.class);
             assertThat(outputParser.instruction()).contains("question to set up a joke")
                     .contains("answer to resolve the joke");
         }
@@ -73,8 +75,18 @@ public class JsonOutputParserTest {
         @Test
         @DisplayName("解析对象成功，返回正确结果")
         void giveJsonThenParseOk() {
-            JsonOutputParser<Joke> outputParser = JsonOutputParser.create(TEST_SERIALIZER, Joke.class);
+            OutputParser<Joke> outputParser = JsonOutputParser.create(TEST_SERIALIZER, Joke.class);
             Joke joke = outputParser.parse("{\"setup\" : \"foo\", \"punchline\": \"bar\"}");
+            assertThat(joke.getSetup()).isEqualTo("foo");
+            assertThat(joke.getPunchline()).isEqualTo("bar");
+        }
+
+        @Test
+        @DisplayName("解析markdown代码块成功，返回正确结果")
+        void giveMdJsonThenParseOk() {
+            Parser<Joke> outputParser =
+                    new MarkdownParser<>(JsonOutputParser.create(TEST_SERIALIZER, Joke.class), "json");
+            Joke joke = outputParser.parse("```json\n{\"setup\" : \"foo\", \"punchline\": \"bar\"}\n```");
             assertThat(joke.getSetup()).isEqualTo("foo");
             assertThat(joke.getPunchline()).isEqualTo("bar");
         }
@@ -92,6 +104,7 @@ public class JsonOutputParserTest {
                     Arguments.of("{\"foo\": \"bar\", \"bar\":", "{\"foo\":\"bar\"}"),
                     Arguments.of("{\"foo\": \"bar\", \"bar\"", "{\"foo\":\"bar\"}"),
                     Arguments.of("{\"foo\": \"bar\", ", "{\"foo\":\"bar\"}"),
+                    Arguments.of("```json\n{\"foo\": \"bar\", ", "{\"foo\":\"bar\"}"),
                     Arguments.of("\"foo\": \"bar\"}", "{}"),
                     Arguments.of("foo", "{}"));
         }
@@ -103,8 +116,8 @@ public class JsonOutputParserTest {
         @Test
         @DisplayName("获取提示词，返回正确结果")
         void getInstructionThenReturnOk() {
-            JsonOutputParser<Joke> outputParser = JsonOutputParser.create(TEST_SERIALIZER, Joke.class);
-            assertThat(new PartialJsonOutputParser<>(outputParser).instruction()).contains("question to set up a joke")
+            OutputParser<Joke> outputParser = JsonOutputParser.createPartial(TEST_SERIALIZER, Joke.class);
+            assertThat(outputParser.instruction()).contains("question to set up a joke")
                     .contains("answer to resolve the joke");
         }
 
@@ -112,10 +125,9 @@ public class JsonOutputParserTest {
         @ArgumentsSource(JsonStringProvider.class)
         @DisplayName("测试各种partial json，返回正确结果")
         void givePartialJsonThenParseOk(String input, String except) {
-            JsonOutputParser<Map<String, Object>> parser = JsonOutputParser.createPartial(TEST_SERIALIZER,
+            OutputParser<Map<String, Object>> outputParser = JsonOutputParser.createPartial(TEST_SERIALIZER,
                     TypeUtils.parameterized(Map.class, new Type[] {String.class, Object.class}));
-            byte[] bytes = TEST_SERIALIZER.serialize(parser.parse(input), StandardCharsets.UTF_8);
-            String output = new String(bytes, StandardCharsets.UTF_8);
+            String output = TEST_SERIALIZER.serialize(outputParser.parse(input));
             assertThat(output).isEqualTo(except);
         }
     }

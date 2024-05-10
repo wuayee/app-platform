@@ -6,6 +6,7 @@ package com.huawei.jade.fel.core.formatters.json;
 
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.fel.core.formatters.OutputParser;
+import com.huawei.jade.fel.core.formatters.support.MarkdownParser;
 
 import java.lang.reflect.Type;
 
@@ -23,10 +24,11 @@ public interface JsonOutputParser<O> extends OutputParser<O> {
      * @param serializer 表示对象序列化器的 {@link ObjectSerializer}。
      * @param type 表示输出类型 {@link E} 的 {@link Type}。
      * @param <E> 表示输出对象类型。
-     * @return 表示默认解析器的 {@link JsonOutputParser}。
+     * @return 表示默认 json 解析器的 {@link OutputParser}。
      */
-    static <E> JsonOutputParser<E> create(ObjectSerializer serializer, Type type) {
-        return new DefaultJsonOutputParser<>(serializer, type, null);
+    static <E> OutputParser<E> create(ObjectSerializer serializer, Type type) {
+        OutputParser<E> outputParser = new DefaultJsonOutputParser<>(serializer, type, null);
+        return new MarkdownParser<>(outputParser, "json");
     }
 
     /**
@@ -35,9 +37,11 @@ public interface JsonOutputParser<O> extends OutputParser<O> {
      * @param serializer 表示对象序列化器的 {@link ObjectSerializer}。
      * @param type 表示输出类型 {@link E} 的 {@link Type}。
      * @param <E> 表示输出对象类型。
-     * @return 表示默认片段解析器的 {@link JsonOutputParser}。
+     * @return 表示默认 json 片段解析器的 {@link OutputParser}。
      */
-    static <E> JsonOutputParser<E> createPartial(ObjectSerializer serializer, Type type) {
-        return new PartialJsonOutputParser<>(JsonOutputParser.create(serializer, type));
+    static <E> OutputParser<E> createPartial(ObjectSerializer serializer, Type type) {
+        OutputParser<E> outputParser =
+                new PartialJsonOutputParser<>(new DefaultJsonOutputParser<>(serializer, type, null));
+        return new MarkdownParser<>(outputParser, "json");
     }
 }

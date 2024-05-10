@@ -8,11 +8,7 @@ import static com.huawei.jade.fel.utils.FlowsTestUtils.waitUntil;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.huawei.fit.waterflow.domain.context.StateContext;
-import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.utils.Mermaid;
-import com.huawei.jade.fel.chat.ChatMessages;
-import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.engine.flows.AiFlows;

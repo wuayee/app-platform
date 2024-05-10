@@ -30,13 +30,13 @@
 
         <!-- FEL -->
         <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
-            <artifactId>fel-service</artifactId>
+            <groupId>com.huawei.fit.jade.fel</groupId>
+            <artifactId>fel-core</artifactId>
             <version>${fel.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.jade.fel</groupId>
-            <artifactId>fel-core</artifactId>
+            <groupId>com.huawei.fit.jade.service</groupId>
+            <artifactId>fel-service</artifactId>
             <version>${fel.version}</version>
         </dependency>
 
