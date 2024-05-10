@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: infer-svc-{{name}}
+  labels:
+    app: {{name}}_inference
+  namespace: model-io
+spec:
+  type: NodePort
+  ports:
+    - port: 9981
+      nodePort: {{nodePort}} # Will be exposed to host
+      targetPort: 9981 # Port of container
+  selector:
+    app: {{name}}_inference
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  {{name}}-inference             # The value of this parameter must be consistent with the name of ConfigMap.
+  labels:
+    app: {{name}}-inference
+  namespace: model-io
+spec:
+  replicas: {{replicas}}                        # The value of replicas is 1 in a single-node scenario and N in an N-node scenario. The number of NPUs in the requests field is 8 in an N-node scenario.
+  selector:
+    matchLabels:
+      app: {{name}}_inference
+  template:
+    metadata:
+      labels:
+        app: {{name}}_inference
+    spec:
+      containers:
+        - image: {{image_name}}
+          imagePullPolicy: Never
+          securityContext:
+            privileged: true
+          name: infer-{{name}}
+          command: ["/bin/bash", "-c", "sh /usr/local/ModelIO/bin/start_mindie.sh"]
+          env:
+          - name: ModelName
+            value: {{name}}
+          - name: ModelWeightPath
+            value: {{model_weight_path}}
+          - name: WorldSize
+            value: "8"
+          - name: Port
+            value: "9981"
+          volumeMounts:
+          - name: ascend-driver
+            mountPath: /usr/local/Ascend/driver
+          - name: localtime
+            mountPath: /etc/localtime
+          - name: remote
+            mountPath: /mnt/remote
+          - name: npu-smi
+            mountPath: /usr/local/bin/npu-smi
+          - name: model-weight-path
+            mountPath: {{model_weight_path}}
+          - name: home
+            mountPath: /home
+          ports:
+            - containerPort: 9981
+              protocol: TCP
+      volumes:
+      - name: ascend-driver
+        hostPath:
+          path: /usr/local/Ascend/driver                              # Configure the NPU driver and mount it to Docker.
+      - name: localtime
+        hostPath:
+          path: /etc/localtime                                        # Configure the Docker time.
+      - name: remote
+        hostPath:
+          path: /mnt/remote
+      - name: npu-smi
+        hostPath:
+          path: /usr/local/bin/npu-smi
+      - name: model-weight-path
+        hostPath:
+          path: {{model_weight_path}}
+      - name: home
+        hostPath:
+          path: /home
