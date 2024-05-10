@@ -25,6 +25,10 @@ public class AiFlow<D, F extends Flow<D>> extends IdGenerator {
         this.flow = Validation.notNull(flow, "Flow cannot be null.");
     }
 
+    public F baseFlow(){
+        return this.flow;
+    }
+
     @Override
     public String getId() {
         return this.flow.getId();

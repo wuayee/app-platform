@@ -263,7 +263,8 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public AiState<MessageContent, D, O, RF, F> retrieve(Retriever<O> retriever) {
         Validation.notNull(retriever, "Retriever operator cannot be null.");
-        return new AiState<>(new State<>(this.publisher().map(input -> retriever.invoke(input.getData()), null),
+        return new AiState<>(new State<>(this.publisher()
+                .map(input -> retriever.invoke(input.getData()), null).displayAs("retrieve"),
                 this.getFlow().origin()), this.getFlow());
     }
 
@@ -278,7 +279,9 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public <R> AiState<R, D, O, RF, F> split(Splitter<O, R> splitter) {
         Validation.notNull(splitter, "Splitter operator cannot be null.");
-        return this.map(splitter::split);
+        AiState<R, D, O, RF, F> state = this.map(splitter::split);
+        ((Processor)state.publisher()).displayAs("splitter");
+        return state;
     }
 
     /**
@@ -291,7 +294,9 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public AiState<O, D, O, RF, F> index(Indexer<O> indexer) {
         Validation.notNull(indexer, "Indexer operator cannot be null.");
-        return this.just(indexer::process);
+        AiState<O, D, O, RF, F> state = this.just(indexer::process);
+        ((Processor)state.publisher()).displayAs("indexer");
+        return state;
     }
 
     /**
@@ -304,7 +309,9 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public <R> AiState<R, D, O, RF, F> format(Parser<R> parser) {
         Validation.notNull(parser, "Parser operator cannot be null.");
-        return this.map(input -> parser.parse(ObjectUtils.cast(input)));
+        AiState<R, D, O, RF, F> state = this.map(input -> parser.parse(ObjectUtils.cast(input)));
+        ((Processor)state.publisher()).displayAs("format");
+        return state;
     }
 
     /**
@@ -321,8 +328,8 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Validation.notNull(pattern, "Pattern operator cannot be null.");
         Processor<O, R> processor = this.publisher().map(input -> {
             pattern.offer(input.getData(), input.getSession());
-            return null;
-        }, null);
+            return (R)null;
+        }, null).displayAs("delegate to pattern");
         AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
         state.offer(pattern);
         return state;
@@ -361,8 +368,8 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Validation.notNull(aiFlow, "Flow cannot be null.");
         Processor<O, R> processor = this.publisher().map(input -> {
             aiFlow.converse(input.getSession()).offer(input.getData());
-            return null;
-        }, null);
+            return (R)null;
+        }, null).displayAs("delegate to flow");
         AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
         state.offer(aiFlow);
         return state;
@@ -388,8 +395,8 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Validation.notBlank(nodeId, "Node id cannot be blank.");
         Processor<O, R> processor = this.publisher().map(input -> {
             aiFlow.converse(input.getSession()).offer(nodeId, Collections.singletonList(input.getData()));
-            return null;
-        }, null);
+            return (R)null;
+        }, null).displayAs("delegate to node");
 
         AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
         state.offer(aiFlow);
@@ -411,8 +418,8 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
             for (PromptTemplate<O> template : templates) {
                 messages.addAll(template.invoke(runnableArg).messages());
             }
-            return messages;
-        },  null), this.getFlow().origin()), this.getFlow());
+            return (Prompt)messages;
+        },  null).displayAs("prompt"), this.getFlow().origin()), this.getFlow());
     }
 
     /**
@@ -433,7 +440,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
                             .map(model::bind)
                             .orElse(model);
             return dynamicModel.invoke(new AiRunnableArg<>(ObjectUtils.cast(input.getData()), session));
-        }, null), this.getFlow().origin()), this.getFlow());
+        }, null).displayAs("generate"), this.getFlow().origin()), this.getFlow());
     }
 
     /**
@@ -463,9 +470,11 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
                     .orElseGet(() -> new AiParallel<>(this.start.parallel(), mineFlow).fork(branchProcessor));
         }
 
-        return aiFork.join(new Tip(), (acc, data) -> {
+        AiState<Tip, D, Tip, RF, F> state = aiFork.join(new Tip(), (acc, data) -> {
             acc.merge(data);
             return acc;
         });
+        ((Processor)state.publisher()).displayAs("runnableParallel");
+        return state;
     }
 }

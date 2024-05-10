@@ -174,7 +174,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
             start.just(ctx -> state.get().from.offer(ctx)).offer();
             return null;
         };
-        state.set(new State<>(this.from.map(wrapper, null), this.getFlow()));
+        state.set(new State<>(this.from.map(wrapper, null).displayAs("flat map"), this.getFlow()));
         return state.get();
     }
 
@@ -187,13 +187,15 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      * @return buffer后的节点
      */
     public State<List<O>, D, O, F> buffer() {
-        return this.reduce(null, (acc, cur) -> {
+        State<List<O>, D, O, F> state = this.reduce(null, (acc, cur) -> {
             if (acc == null) {
                 acc = new ArrayList<>();
             }
             acc.add(cur);
             return acc;
         });
+        state.processor.displayAs("buffer");
+        return state;
     }
 
     /**
@@ -259,7 +261,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
                 }
             }
         };
-        stateWrapper.set(new State<>(this.from.map(wrapper, null), this.getFlow()));
+        stateWrapper.set(new State<>(this.from.map(wrapper, null).displayAs("reduce"), this.getFlow()));
         return stateWrapper.get();
     }
 
@@ -289,7 +291,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
                 }
             }
         };
-        return new State<>(this.from.just(wrapper, null), this.getFlow());
+        return new State<>(this.from.just(wrapper, null).displayAs("window"), this.getFlow());
     }
 
     /**
@@ -305,7 +307,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
             input.setKeyBy(key);
             return Tuple.from(key, input.getData());
         };
-        return new State<>(this.from.map(wrapper, null), this.getFlow());
+        return new State<>(this.from.map(wrapper, null).displayAs("key by"), this.getFlow());
     }
 
     /**

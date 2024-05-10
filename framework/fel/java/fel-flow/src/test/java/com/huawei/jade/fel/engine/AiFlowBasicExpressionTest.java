@@ -8,8 +8,16 @@ import static com.huawei.jade.fel.utils.FlowsTestUtils.waitUntil;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.huawei.fit.waterflow.domain.context.StateContext;
+import com.huawei.fit.waterflow.domain.stream.operators.Operators;
+import com.huawei.fit.waterflow.domain.utils.Mermaid;
+import com.huawei.jade.fel.chat.ChatMessages;
+import com.huawei.jade.fel.chat.Prompt;
+import com.huawei.jade.fel.chat.character.AiMessage;
+import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
+import com.huawei.jade.fel.engine.operators.models.ChatBlockModel;
 import com.huawei.jade.fel.utils.AiFlowTestData;
 
 import org.junit.jupiter.api.DisplayName;
@@ -167,7 +175,8 @@ public class AiFlowBasicExpressionTest {
                     .conditions()
                     .matchTo(data -> data.length() < 4, node -> node.to("plus1"))
                     .match(data -> data.length() > 5, node -> node.map(i -> Integer.parseInt(i)))
-                    .matchTo(data -> data.length() < 10, node -> node.just(i -> {}).to("plus2"))
+                    .matchTo(data -> data.length() < 10, node -> node.just(i -> {
+                    }).to("plus2"))
                     .others()
                     .close(i -> result.set(i.get().getData()))
                     .converse()
@@ -224,6 +233,32 @@ public class AiFlowBasicExpressionTest {
             assertThat(output.get(0).getSecond().get()).isEqualTo(27);
             assertThat(output.get(0).getThird().get()).isEqualTo(20);
             output.clear();
+        }
+
+        @Test
+        @DisplayName("通过mermaid格式图形还原ai flow的流程设计")
+        void testMermaidToCreateChart() {
+            ChatBlockModel model =
+                    new ChatBlockModel<>(prompts -> new FlatChatMessage(new AiMessage("model answer")));
+            AiProcessFlow flow = AiFlows.create()
+                    .prompt(null)
+                    .delegate((input, context) -> null)
+                    .window(inputs -> false)
+                    .keyBy(input -> null)
+                    .generate(model).close();
+
+            assertThat(new Mermaid(flow.baseFlow()).get()).isEqualTo("st((Start))\n" +
+                    "st-->n0(prompt)\n" +
+                    "n0-->n1(delegate to pattern)\n" +
+                    "n1-->n2(window)\n" +
+                    "n2-->n3(key by)\n" +
+                    "n3-->n4(generate)\n" +
+                    "n4-->e((End))\n,");
+
+            //在markdown里使用以下脚本显示mermaid
+            //```mermaid
+            // mermaid.get();//测试用例里的输出
+            // ```
         }
     }
 }
