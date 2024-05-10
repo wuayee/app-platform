@@ -17,7 +17,7 @@ steps:
         - checkout
     BUILD:
         - build_execute:
-              command: sh app-builder/frontend/build.sh ${env} ${ssoApi}
+              command: sh .cloudbuild/app-builder/frontend/build.sh ${env} ${ssoApi}
               accelerate: false
               check:
                   mode: sync
