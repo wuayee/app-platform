@@ -1,8 +1,8 @@
 #！/bin/bash
 #set -x
 set -e
-node -v
-npm -v
+#node -v
+#npm -v
 
 tag=$1
 export SSO_URL=$2
