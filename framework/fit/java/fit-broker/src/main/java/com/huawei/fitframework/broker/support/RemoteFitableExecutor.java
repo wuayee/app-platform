@@ -6,7 +6,6 @@ package com.huawei.fitframework.broker.support;
 
 import static com.huawei.fitframework.inspection.Validation.notBlank;
 import static com.huawei.fitframework.inspection.Validation.notEmpty;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.client.Address;
 import com.huawei.fit.client.Client;
@@ -19,7 +18,6 @@ import com.huawei.fitframework.broker.FitableExecutor;
 import com.huawei.fitframework.broker.Format;
 import com.huawei.fitframework.broker.InvocationContext;
 import com.huawei.fitframework.broker.Target;
-import com.huawei.fitframework.exception.Errors;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.ioc.BeanFactory;
@@ -28,29 +26,14 @@ import com.huawei.fitframework.serialization.RequestMetadata;
 import com.huawei.fitframework.serialization.ResponseMetadata;
 import com.huawei.fitframework.serialization.TagLengthValues;
 import com.huawei.fitframework.serialization.Version;
-import com.huawei.fitframework.serialization.tlv.TlvUtils;
 import com.huawei.fitframework.util.LazyLoader;
-import com.huawei.fitframework.util.ReflectionUtils;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.fitframework.util.XmlUtils;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
-import java.net.URL;
 import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -61,11 +44,9 @@ import java.util.stream.Stream;
  */
 public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {
     private static final Logger log = Logger.get(RemoteFitableExecutor.class);
-    private static final String ERRORS_RESOURCE_FILE = "FIT-INF/errors.xml";
 
     private final BeanContainer container;
-    private final LazyLoader<Map<Integer, Class<? extends FitException>>> errorCodesLoader =
-            new LazyLoader<>(this::getErrorCodes);
+    private final LazyLoader<FitExceptionCreator> exceptionCreatorLoader = new LazyLoader<>(this::getExceptionCreator);
 
     RemoteFitableExecutor(BeanContainer container) {
         this.container = container;
@@ -83,7 +64,9 @@ public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {
             log.debug("Invoke remote fitable successfully. [id={}, target={}]", fitable.toUniqueId(), target);
             return response.data();
         }
-        FitException responseException = this.buildException(fitable, response.metadata());
+        FitExceptionCreator.ExceptionInfo exceptionInfo =
+                FitExceptionCreator.ExceptionInfo.fromFitableAndResponseMetadata(fitable, response.metadata());
+        FitException responseException = this.exceptionCreatorLoader.get().buildException(exceptionInfo);
         log.error("Failed to invoke remote fitable. [id={}, target={}, message={}]",
                 fitable.toUniqueId(),
                 target,
@@ -92,76 +75,10 @@ public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {
         throw responseException;
     }
 
-    private FitException buildException(Fitable fitable, ResponseMetadata responseMetadata) {
-        Optional<Class<? extends FitException>> opClass = Errors.exceptionClass(responseMetadata.code());
-        FitException exception;
-        if (opClass.isPresent()) {
-            Constructor<? extends FitException> declaredConstructor =
-                    ReflectionUtils.getDeclaredConstructor(opClass.get(), String.class);
-            exception = ReflectionUtils.instantiate(declaredConstructor, responseMetadata.message());
-        } else {
-            Map<Integer, Class<? extends FitException>> errorCodes = this.errorCodesLoader.get();
-            if (errorCodes.containsKey(responseMetadata.code())) {
-                Class<? extends FitException> responseExceptionClass = errorCodes.get(responseMetadata.code());
-                Constructor<? extends FitException> declaredConstructor =
-                        ReflectionUtils.getDeclaredConstructor(responseExceptionClass, String.class);
-                exception = ReflectionUtils.instantiate(declaredConstructor, responseMetadata.message());
-            } else {
-                exception = new FitException(responseMetadata.code(), responseMetadata.message());
-            }
-        }
-        Map<String, String> properties = TlvUtils.getExceptionProperties(responseMetadata.tagValues());
-        exception.setProperties(properties);
-        exception.associateFitable(fitable.genericable().id(), fitable.id());
-        return exception;
-    }
-
-    private Map<Integer, Class<? extends FitException>> getErrorCodes() {
-        try {
-            return this.getErrorCodesFromResources();
-        } catch (IOException e) {
-            throw new IllegalStateException(StringUtils.format("Failed to read errors from resources. [file={0}]",
-                    ERRORS_RESOURCE_FILE), e);
-        }
-    }
-
-    private Map<Integer, Class<? extends FitException>> getErrorCodesFromResources() throws IOException {
-        Map<Integer, Class<? extends FitException>> exceptions = new HashMap<>();
-        Enumeration<URL> resources = this.container.runtime().sharedClassLoader().getResources(ERRORS_RESOURCE_FILE);
-        while (resources.hasMoreElements()) {
-            URL url = resources.nextElement();
-            try (InputStream in = url.openStream()) {
-                exceptions.putAll(this.readInputStream(in));
-            }
-        }
-        return exceptions;
-    }
-
-    private Map<Integer, Class<? extends FitException>> readInputStream(InputStream in) {
-        Document xml = XmlUtils.load(in);
-        Map<Integer, Class<? extends FitException>> exceptions = new HashMap<>();
-        Element root = XmlUtils.child(xml, "errors");
-        if (root == null) {
-            return exceptions;
-        }
-        NodeList errorNodes = XmlUtils.filterByName(root.getChildNodes(), "error");
-        for (int i = 0; i < errorNodes.getLength(); i++) {
-            Node errorNode = errorNodes.item(i);
-            Element errorElement = cast(errorNode);
-            int code = Integer.parseInt(errorElement.getAttribute("code"));
-            String className = errorElement.getAttribute("class");
-            Class<? extends FitException> fitExceptionClass;
-            try {
-                fitExceptionClass = cast(this.container.runtime().sharedClassLoader().loadClass(className));
-            } catch (ClassNotFoundException e) {
-                log.warn("Failed to load exception class, use FitException instead. [code={}, class={}]",
-                        code,
-                        className);
-                fitExceptionClass = FitException.class;
-            }
-            exceptions.put(code, fitExceptionClass);
-        }
-        return exceptions;
+    private FitExceptionCreator getExceptionCreator() {
+        return this.container.lookup(FitExceptionCreator.class)
+                .map(BeanFactory::<FitExceptionCreator>get)
+                .orElseThrow(() -> new IllegalStateException("No exception creator."));
     }
 
     private void validateTarget(Fitable fitable, Target target) {
