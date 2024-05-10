@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -44,7 +43,7 @@ public class AiFlowBasicExpressionTest {
     class BasicDataProcess {
         @Test
         @DisplayName("普通会话，map和just节点成功消费数据")
-        void shouldOkWhenOfferDataWithNormalConverse() throws InterruptedException {
+        void shouldOkWhenOfferDataWithNormalConverse() {
             AiProcessFlow<AiFlowTestData, String> flow = AiFlows.<AiFlowTestData>create()
                     .just(input -> input.getFirst().set(1))
                     .map(input -> String.valueOf(input.total()))
@@ -56,7 +55,7 @@ public class AiFlowBasicExpressionTest {
 
         @Test
         @DisplayName("绑定自定义上下文，map和just节点成功消费自定义信息")
-        void shouldOkWhenOfferDataWithBindingCustomContext() throws InterruptedException, TimeoutException {
+        void shouldOkWhenOfferDataWithBindingCustomContext() {
             AiProcessFlow<AiFlowTestData, String> flow = AiFlows.<AiFlowTestData>create()
                     .just((input, ctx) -> input.getFirst().getAndAdd(ctx.<Integer>getState("key0")))
                     .map((input, ctx) -> String.valueOf(input.total()) + ctx.getState("key1"))
@@ -81,7 +80,7 @@ public class AiFlowBasicExpressionTest {
     class GatherData {
         @Test
         @DisplayName("无window的reduce数据聚合")
-        void shouldOkWhenReduceWithoutWindow() throws InterruptedException, TimeoutException {
+        void shouldOkWhenReduceWithoutWindow() {
             AiProcessFlow<Integer, Integer> flow = AiFlows.<Integer>create()
                     .reduce(0, ((acc, input) -> {
                         acc += input;
@@ -129,7 +128,7 @@ public class AiFlowBasicExpressionTest {
 
         @Test
         @DisplayName("带有process节点的buffer数据聚合")
-        void test_process_with_custom_state() throws InterruptedException, TimeoutException {
+        void test_process_with_custom_state() {
             StringBuffer answer = new StringBuffer(512);
 
             AiFlows.<Integer>create()
@@ -187,7 +186,7 @@ public class AiFlowBasicExpressionTest {
 
         @Test
         @DisplayName("流程实例condition节点以及match节点以及others节点流转逻辑")
-        void testConditionsMatchTo() throws InterruptedException {
+        void testConditionsMatchTo() {
             List<AiFlowTestData> output = new ArrayList<>();
             AiProcessFlow<AiFlowTestData, AiFlowTestData> flow = AiFlows.<AiFlowTestData>create()
                     .just(data -> data.getFirst().incrementAndGet()).id("plusF")
@@ -206,7 +205,7 @@ public class AiFlowBasicExpressionTest {
 
         @Test
         @DisplayName("流程实例condition节点以及match节点以及others节点流转逻辑")
-        void testConditionsMatchToAndMatch() throws InterruptedException {
+        void testConditionsMatchToAndMatch() {
             List<AiFlowTestData> output = new ArrayList<>();
             AiProcessFlow<AiFlowTestData, AiFlowTestData> flow = AiFlows.<AiFlowTestData>create()
                     .just(data -> data.getThird().incrementAndGet()).id("plusT")

@@ -64,11 +64,7 @@ public class FlowSupportable<I, O> implements AsyncPattern<I, O> {
     public SyncPattern<I, O> sync() {
         return arg -> {
             AiRunnableArg<I> aiArg = ObjectUtils.cast(arg);
-            try {
-                return this.flow.converse(aiArg.getSession()).offer(aiArg.data()).await();
-            } catch (InterruptedException exception) {
-                throw new IllegalStateException(exception);
-            }
+            return this.flow.converse(aiArg.getSession()).offer(aiArg.data()).await();
         };
     }
 }

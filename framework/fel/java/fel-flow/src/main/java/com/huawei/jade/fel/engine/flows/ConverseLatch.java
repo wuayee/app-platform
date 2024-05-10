@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * 流程调用的同步器。
@@ -39,13 +38,15 @@ public class ConverseLatch<T> {
      * @param timeout 表示等待超时时间的 {@code long}。
      * @param unit 表示等待超时时间单位的 {@link TimeUnit}。
      * @return 表示对话返回数据的 {@link T}。
-     * @throws InterruptedException 如果当前线程在进入此方法时设置了其中断状态，或者在等待时被中断。
-     * @throws TimeoutException 阻塞等待超时。
-     * @throws IllegalStateException 流程流转过程中状态异常。
+     * @throws IllegalStateException 当流程流转过程中状态异常、阻塞等待超时或当前线程在进入此方法时设置了其中断状态，或者在等待时被中断。
      */
-    public T await(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
-        if (!this.countDownLatch.await(timeout, unit)) {
-            throw new TimeoutException("conversation timeout");
+    public T await(long timeout, TimeUnit unit) {
+        try {
+            if (!this.countDownLatch.await(timeout, unit)) {
+                throw new IllegalStateException("conversation timeout");
+            }
+        } catch (InterruptedException exception) {
+            throw new IllegalStateException(exception.getMessage(), exception);
         }
         if (this.throwable != null) {
             throw new IllegalStateException(this.throwable.getMessage(), this.throwable);
@@ -57,11 +58,14 @@ public class ConverseLatch<T> {
      * 阻塞当前线程，直到闩锁计数减为零，除非线程被中断。
      *
      * @return 表示对话返回数据的 {@link T}。
-     * @throws InterruptedException 如果当前线程在进入此方法时设置了其中断状态，或者在等待时被中断。
-     * @throws IllegalStateException 流程流转过程中状态异常。
+     * @throws IllegalStateException 当流程流转过程中状态异常、阻塞等待超时或当前线程在进入此方法时设置了其中断状态，或者在等待时被中断。
      */
-    public T await() throws InterruptedException {
-        this.countDownLatch.await();
+    public T await() {
+        try {
+            this.countDownLatch.await();
+        } catch (InterruptedException exception) {
+            throw new IllegalStateException(exception.getMessage(), exception);
+        }
         if (this.throwable != null) {
             throw new IllegalStateException(this.throwable.getMessage(), this.throwable);
         }

@@ -37,7 +37,7 @@ import java.util.List;
 @DisplayName("测试提示词")
 public class PromptTest {
     @Test
-    void shouldOkWhenPromptWithNamedPlaceholder() throws InterruptedException {
+    void shouldOkWhenPromptWithNamedPlaceholder() {
         final StringBuilder answer = new StringBuilder();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
                 .prompt(Prompts.sys("{{someone}}"), Prompts.human("{{question}}"))
@@ -50,7 +50,7 @@ public class PromptTest {
     }
 
     @Test
-    void shouldOkWhenPromptWithNumberPlaceholder() throws InterruptedException {
+    void shouldOkWhenPromptWithNumberPlaceholder() {
         final StringBuilder answer = new StringBuilder();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
                 .prompt(Prompts.human("introduce me books about {{0}} written by {{1}}"))
@@ -63,7 +63,7 @@ public class PromptTest {
     }
 
     @Test
-    void shouldOkWhenPromptWithHistoryPlaceholder() throws InterruptedException {
+    void shouldOkWhenPromptWithHistoryPlaceholder() {
         StringBuilder sb = new StringBuilder();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
                 .prompt(Prompts.human("{{someone}}"), Prompts.history())
@@ -82,7 +82,7 @@ public class PromptTest {
     }
 
     @Test
-    void shouldOkWhenPromptWithMedia() throws InterruptedException {
+    void shouldOkWhenPromptWithMedia() {
         ChatMessages chatMessages = new ChatMessages();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
                 .prompt(Prompts.human("answer: {{someone}}"))
