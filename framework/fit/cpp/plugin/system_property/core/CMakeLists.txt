@@ -1,0 +1,2 @@
+file(GLOB_RECURSE PLUGIN_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+target_sources(SystemPropertyObj PRIVATE  ${PLUGIN_SRCS})

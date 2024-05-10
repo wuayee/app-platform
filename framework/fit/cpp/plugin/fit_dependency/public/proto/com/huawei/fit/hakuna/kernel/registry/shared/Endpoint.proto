@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package com.huawei.fit.hakuna.kernel.registry.shared;
+
+option optimize_for = LITE_RUNTIME;
+option java_package = "com.huawei.fit.hakuna.kernel.registry.shared.proto";
+option java_outer_classname = "EndpointProto";
+
+
+
+message Endpoint {
+  int32 port = 1;
+  int32 protocol = 2;
+}

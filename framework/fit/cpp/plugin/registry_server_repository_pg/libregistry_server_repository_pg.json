@@ -1,0 +1,13 @@
+{
+  "pg": {
+    "db_name": "database",
+    "host": "0.0.0.0",
+    "port": 5432,
+    "username": "",
+    "password": "",
+    "connections": {
+      "num": 4,
+      "max_retry": 1
+    }
+  }
+}

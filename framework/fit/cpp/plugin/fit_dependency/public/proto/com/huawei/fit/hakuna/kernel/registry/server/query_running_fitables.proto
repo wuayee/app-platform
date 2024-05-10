@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package com.huawei.fit.hakuna.kernel.registry.server;
+
+option optimize_for = LITE_RUNTIME;
+option java_package = "com.huawei.fit.hakuna.kernel.registry.server.proto";
+option java_outer_classname = "Query_running_fitablesProto";
+
+import "com/huawei/fit/hakuna/kernel/registry/shared/FitableMeta.proto";
+
+
+message QueryRunningFitablesParam {
+  optional string genericableId = 1;
+  optional string genericableVersion = 2;
+}
+
+message RunningFitable {
+  com.huawei.fit.hakuna.kernel.registry.shared.FitableMeta meta = 1;
+  repeated string environments = 2;
+}

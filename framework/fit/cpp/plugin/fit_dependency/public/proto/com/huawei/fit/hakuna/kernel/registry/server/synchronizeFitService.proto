@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package com.huawei.fit.hakuna.kernel.registry.server;
+
+option optimize_for = LITE_RUNTIME;
+option java_package = "com.huawei.fit.hakuna.kernel.registry.server.proto";
+option java_outer_classname = "SynchronizeFitServiceProto";
+
+import "com/huawei/fit/hakuna/kernel/registry/shared/FitableInstance.proto";
+
+
+message SyncSeviceAddress {
+  com.huawei.fit.hakuna.kernel.registry.shared.FitableInstance fitableInstance = 1;
+  optional int32 operateType = 2;
+}

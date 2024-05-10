@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package com.huawei.fitframework.broker.serialization;
+
+option optimize_for = LITE_RUNTIME;
+option java_package = "com.huawei.fitframework.broker.serialization.proto";
+option java_outer_classname = "BrokerProto";
+
+message FitRequest {
+  bytes argumentNulls = 1;
+  repeated bytes arguments = 2;
+}
+
+message FitResponse {
+  int32 code = 1;
+  string message = 2;
+  bytes data = 3;
+}
+
+message FitRepeatedArgument {
+  repeated bytes arguments = 1;
+}
+
+message FitMapArgument {
+  repeated MapEntry arguments = 1;
+}
+
+message MapEntry {
+    bytes key = 1;
+    bytes value = 2;
+}
+
+message DoubleMessage {
+  double value = 1;
+}
+
+message FloatMessage {
+  float value = 1;
+}
+
+message IntegerMessage {
+  int32 value = 1;
+}
+
+
+message LongMessage {
+  int64 value = 1;
+}
+
+message BooleanMessage {
+  bool value = 1;
+}
+
+message StringMessage {
+  string value = 1;
+}
+
+message ByteStringMessage {
+  bytes value = 1;
+}

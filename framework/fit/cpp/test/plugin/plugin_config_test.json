@@ -1,0 +1,5 @@
+{
+    "testKey": "testVal",
+    "testIntKey": 6666,
+    "testBoolKey": false
+}

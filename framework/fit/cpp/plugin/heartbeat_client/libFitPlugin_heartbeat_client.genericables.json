@@ -1,0 +1,28 @@
+{
+  "genericables": {
+    "bf2e1029e8844fe9afb698affb95d39c": {
+      "name": "online.heartbeat",
+      "route": {
+        "default": "online_heartbeat_impl"
+      },
+      "tags": "traceIgnored,trustIgnored,localOnly",
+      "genericable-config-sources": "config_file"
+    },
+    "e9226b30e8f54d53aea42f422dcbb54b": {
+      "name": "subscribe_heartbeat_cpp",
+      "route": {
+        "default": "subscribe_heartbeat_cpp"
+      },
+      "tags": "traceIgnored,trustIgnored",
+      "genericable-config-sources": "config_file"
+    },
+    "18e47e184fd44c70af63eec3227bee2e": {
+      "name": "offline.heartbeat",
+      "route": {
+        "default": "offline_heartbeat_impl"
+      },
+      "tags": "traceIgnored,localOnly",
+      "genericable-config-sources": "config_file"
+    }
+  }
+}

@@ -1,0 +1,62 @@
+genericables: []
+fitables: []
+updateGenericableCompleteList: []
+updateFitableCompleteList: []
+genericableCallList:
+# FIT-IDE 配置信息，若冲突请全部保留
+- filePath: plugin/registry_listener/src/a.cpp
+  updateClassName: fit::hakuna::kernel::registry::server::queryFitablesAddresses
+  tag: 928203d2d5aa46e98e494932da7e56ab
+  updateImportContent: '#include <genericable/com_huawei_fit_hakuna_kernel_registry_server_query_fitables_addresses/1.0.0/cplusplus/queryFitablesAddresses.hpp>'
+  version: 1.0.0
+  genericId: 33be4142494e4742aa122555a451d996
+# FIT-IDE 配置信息，若冲突请全部保留
+- filePath: plugin/registry_listener/src/a.cpp
+  updateClassName: fit::hakuna::kernel::registry::server::registerFitables
+  tag: 3c6da2673a074bccaf652e24e55f27a0
+  updateImportContent: '#include <genericable/com_huawei_fit_hakuna_kernel_registry_server_register_fitables/1.0.0/cplusplus/registerFitables.hpp>'
+  version: 1.0.0
+  genericId: 85bdce64cf724589b87cb6b6a950999d
+# FIT-IDE 配置信息，若冲突请全部保留
+- filePath: plugin/registry_listener/src/a.cpp
+  updateClassName: fit::hakuna::kernel::registry::server::unregisterFitables
+  tag: fb6a6abe62fb43b392b80385b7cc7cad
+  updateImportContent: '#include <genericable/com_huawei_fit_hakuna_kernel_registry_server_unregister_fitables/1.0.0/cplusplus/unregisterFitables.hpp>'
+  version: 1.0.0
+  genericId: c02af9dafb5b4a609f8c586a8e884710
+# FIT-IDE 配置信息，若冲突请全部保留
+- filePath: plugin/registry_listener/src/a.cpp
+  updateClassName: fit::hakuna::kernel::registry::server::subscribeFitables
+  tag: 3a02262f8801410daf0ba397e898ac6f
+  updateImportContent: '#include <genericable/com_huawei_fit_hakuna_kernel_registry_server_subscribe_fitables/1.0.0/cplusplus/subscribeFitables.hpp>'
+  version: 1.0.0
+  genericId: c9aa580f3fa845c99c2c6145a0499e45
+# FIT-IDE 配置信息，若冲突请全部保留
+- filePath: plugin/registry_listener/src/a.cpp
+  updateClassName: fit::hakuna::kernel::registry::server::unsubscribeFitables
+  tag: d672638c5262405aa9a3a4244da8b8c7
+  updateImportContent: '#include <genericable/com_huawei_fit_hakuna_kernel_registry_server_unsubscribe_fitables/1.0.0/cplusplus/unsubscribeFitables.hpp>'
+  version: 1.0.0
+  genericId: 087994fc907b4f76b9f9b2a62e07ef2c
+# FIT-IDE 配置信息，若冲突请全部保留
+- filePath: plugin/registry_listener/src/a.cpp
+  updateClassName: fit::hakuna::kernel::registry::server::notifyFitables
+  tag: b95ff934580943848735fa21fdf32fe0
+  updateImportContent: '#include <genericable/com_huawei_fit_hakuna_kernel_registry_server_notify_fitables/1.0.0/cplusplus/notifyFitables.hpp>'
+  version: 1.0.0
+  genericId: b69df5e8cbcd4166aa5029602e7a58cf
+# FIT-IDE 配置信息，若冲突请全部保留
+- filePath: plugin/registry_listener/src/a.cpp
+  updateClassName: fit::hakuna::kernel::registry::listener::getFitableAddresses
+  tag: 3c854fe0918d467eab3653ccae3bafa6
+  updateImportContent: '#include <genericable/com_huawei_fit_hakuna_kernel_registry_listener_get_fitable_addresses/1.0.0/cplusplus/getFitableAddresses.hpp>'
+  version: 1.0.0
+  genericId: bcad5d59d90b4ee88f195cd7356389fc
+# FIT-IDE 配置信息，若冲突请全部保留
+- filePath: plugin/registry_listener/src/a.cpp
+  updateClassName: fit::hakuna::kernel::registry::listener::markFitableAddressStatus
+  tag: b4b116b8f0f94f2584cecf1eeac7d1b7
+  updateImportContent: '#include <genericable/com_huawei_fit_hakuna_kernel_registry_listener_mark_fitable_address_status/1.0.0/cplusplus/markFitableAddressStatus.hpp>'
+  version: 1.0.0
+  genericId: 134459fe5ade47fe9989866598bd77d2
+

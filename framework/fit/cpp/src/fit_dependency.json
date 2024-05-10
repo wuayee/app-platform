@@ -1,0 +1,201 @@
+{
+    "dependency": {
+        "genericables": [
+            {
+                "id": "918fbf55d64b4de8910d08cfcb41d31c",
+                "version": "1.0.0",
+                "local_only": true
+            },
+            {
+                "id": "7a896417dc764a7fbb0381bcf128e9ec",
+                "version": "1.0.0",
+                "local_only": true
+            },
+            {
+                "id": "519a0010b6e943ec9848f9b77b27fd1d",
+                "version": "1.0.0-SNAPSHOT",
+                "local_only": true
+            },
+            {
+                "id": "bd82ccd28c6047afa85818e835a4c3d7",
+                "version": "1.0.0-SNAPSHOT",
+                "local_only": true
+            },
+            {
+                "name": "processV3",
+                "id": "4c43c13d8a314632844e0a1d9f4b1525",
+                "version": "1.0.0-SNAPSHOT",
+                "local_only": true
+            },
+            {
+                "id": "47a8ec8a3d8f46daa1f2d751ad7d6d16",
+                "name": "com.huawei.fit.hakuna.kernel.broker.client.requestResponseV4",
+                "version": "1.0.0",
+                "local_only": true
+            },
+            {
+                "id": "41151994d1e74245ad1416b75c8eff39",
+                "version": "1.0.0"
+            },
+            {
+                "id": "f54d01848ca146d7aa450afe77027ddf",
+                "version": "1.0.0"
+            },
+            {
+                "id": "ae024f34dd7a4dc88e19a1a8cf801f29",
+                "version": "1.0.0"
+            },
+            {
+                "id": "57adc47c358b45bca2ab2e6c26e88e61",
+                "version": "1.0.0-SNAPSHOT",
+                "local_only": true
+            },
+            {
+                "id": "8c53ac89a572405cbe6cec9f6f66a8fc",
+                "version": "1.0.0-SNAPSHOT",
+                "local_only": true
+            },
+            {
+                "name": "Leave",
+                "id": "67e6370725df427ebab9a6a6f1ada60c",
+                "version": "1.0.0"
+            },
+            {
+                "id": "b670eca30b734604bdfd4529b9ce8d7f",
+                "name": "com.huawei.matata.conf.client.get",
+                "version": "1.0.0"
+            },
+            {
+                "id": "ddc8613c04284fb39317cb00ab13aeee",
+                "name": "add fit_service_listener",
+                "version": "1.0.0"
+            },
+            {
+                "id": "564286f7db6349b2b29db49feac3b7da",
+                "name": "get fit service address list",
+                "version": "1.0.0"
+            },
+            {
+                "id": "50b44bc61b674a73882e88fafda7c2f7",
+                "name": "get local addresses",
+                "version": "1.0.0"
+            },
+            {
+                "id": "49612be00e38424cac2e8ea812936cb4",
+                "name": "get registry addresses",
+                "version": "1.0.0"
+            },
+            {
+                "id": "a9e5d506a8b049c7beab14d3a9b40cbf",
+                "name": "get registry matched address",
+                "version": "1.0.0"
+            },
+            {
+                "id": "e12fd1c57fd84f50a673d93d13074082",
+                "name": "heartbeat",
+                "version": "1.0.0"
+            },
+            {
+                "id": "67e6370725df427ebab9a6a6f1ada60c",
+                "name": "leave",
+                "version": "1.0.0"
+            },
+            {
+                "id": "9046fe29c2a947448d86bf8178c745e1",
+                "name": "loadbalance",
+                "version": "1.0.0"
+            },
+            {
+                "id": "d58a444c9cd546b5b284353c0326209c",
+                "name": "loadbalance filter",
+                "version": "1.0.0"
+            },
+            {
+                "id": "e5f5a8809c534d21a6639e0e1ae2ccae",
+                "name": "mark address status",
+                "version": "1.0.0"
+            },
+            {
+                "id": "aad2ec78078047d6992fa68f9d91844d",
+                "name": "set local addresses",
+                "version": "1.0.0"
+            },
+            {
+                "id": "ec06e225a22047a1bb329385d63da086",
+                "name": "set registry matched addresses",
+                "version": "1.0.0"
+            },
+            {
+                "id": "d3af91c10c334f26aaae9c619ce67453",
+                "name": "set system property",
+                "version": "1.0.0"
+            },
+            {
+                "id": "3212c92035dc402fa6e758225546ed6f",
+                "name": "com.huawei.fit.sdk.system.getSystemProperty",
+                "version": "1.0.0"
+            },
+            {
+                "id": "685271b69c81495883f1ca30b1edc1e1",
+                "name": "com.huawei.fit.hakuna.system.exception.handleWebException",
+                "version": "1.0.0"
+            },
+            {
+                "id": "ce35055fd49b4803addddc4a89efab66",
+                "name": "com.huawei.fit.hakuna.kernel.registry.server.synchronizeFitService",
+                "version": "1.0.0-SNAPSHOT"
+            },
+            {
+                "id": "e903c5c50c3a49539d5b9aac90198963",
+                "name": "com.huawei.fit.hakuna.kernel.registry.server.syncSubscriptionFitService",
+                "version": "1.0.0-SNAPSHOT"
+            },
+            {
+                "id": "85bdce64cf724589b87cb6b6a950999d",
+                "name": "com.huawei.fit.hakuna.kernel.registry.server.registerFitables",
+                "version": "1.0.0-SNAPSHOT"
+            },
+            {
+                "id": "c02af9dafb5b4a609f8c586a8e884710",
+                "name": "com.huawei.fit.hakuna.kernel.registry.server.unregisterFitables",
+                "version": "1.0.0-SNAPSHOT"
+            },
+            {
+                "id": "c9aa580f3fa845c99c2c6145a0499e45",
+                "name": "com.huawei.fit.hakuna.kernel.registry.server.subscribeFitables",
+                "version": "1.0.0-SNAPSHOT"
+            },
+            {
+                "id": "087994fc907b4f76b9f9b2a62e07ef2c",
+                "name": "com.huawei.fit.hakuna.kernel.registry.server.unsubscribeFitables",
+                "version": "1.0.0-SNAPSHOT"
+            },
+            {
+                "id": "33be4142494e4742aa122555a451d996",
+                "name": "com.huawei.fit.hakuna.kernel.registry.server.queryFitablesAddresses",
+                "version": "1.0.0-SNAPSHOT"
+            },
+            {
+                "id": "b69df5e8cbcd4166aa5029602e7a58cf",
+                "name": "com.huawei.fit.hakuna.kernel.registry.server.notifyFitables",
+                "version": "1.0.0-SNAPSHOT"
+            },
+            {
+                "id": "134459fe5ade47fe9989866598bd77d2",
+                "name": "com.huawei.fit.hakuna.kernel.registry.listener.markFitableAddressStatus",
+                "version": "1.0.0-SNAPSHOT"
+            },
+            {
+                "id": "bcad5d59d90b4ee88f195cd7356389fc",
+                "name": "com.huawei.fit.hakuna.kernel.registry.listener.getFitableAddresses",
+                "version": "1.0.0-SNAPSHOT"
+            },
+            {
+                "id": "8dd312b496994c38b8629bb25cfc6bc9",
+                "name": "com.huawei.fit.hakuna.kernel.broker.client.genericInvokeV3",
+                "version": "1.0.0-SNAPSHOT"
+            }
+        ],
+        "genericables_c": []
+    }
+}

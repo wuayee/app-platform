@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package com.huawei.fit.hakuna.system.exception;
+
+option optimize_for = LITE_RUNTIME;
+option java_package = "com.huawei.fit.hakuna.system.exception.proto";
+option java_outer_classname = "WebExceptionInfoProto";
+
+
+
+message WebExceptionInfo {
+  string genericableId = 1;
+  string fitableId = 2;
+  int32 code = 3;
+  string detailMessage = 4;
+  map<string, string> properties = 5;
+}

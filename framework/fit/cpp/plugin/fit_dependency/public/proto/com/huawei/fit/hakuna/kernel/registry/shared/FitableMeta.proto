@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package com.huawei.fit.hakuna.kernel.registry.shared;
+
+option optimize_for = LITE_RUNTIME;
+option java_package = "com.huawei.fit.hakuna.kernel.registry.shared.proto";
+option java_outer_classname = "FitableMetaProto";
+
+import "com/huawei/fit/hakuna/kernel/shared/Fitable.proto";
+import "com/huawei/fit/hakuna/kernel/registry/shared/Application.proto";
+
+
+message FitableMeta {
+  com.huawei.fit.hakuna.kernel.shared.Fitable fitable = 1;
+  repeated int32 formats = 2;
+  repeated string aliases = 3;
+  repeated string tags = 4;
+  map<string, string> extensions = 5;
+  string environment = 6;
+  com.huawei.fit.hakuna.kernel.registry.shared.Application application = 7;
+}

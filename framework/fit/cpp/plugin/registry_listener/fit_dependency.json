@@ -1,0 +1,72 @@
+{
+  "dependency": {
+    "genericables": [
+      {
+        "id": "3212c92035dc402fa6e758225546ed6f",
+        "name": "com.huawei.fit.sdk.system.getSystemProperty",
+        "version": "1.0.0"
+      },
+      {
+        "id": "85bdce64cf724589b87cb6b6a950999d",
+        "name": "com.huawei.fit.hakuna.kernel.registry.server.registerFitables",
+        "category": "registry-server",
+        "version": "1.0.0"
+      },
+      {
+        "id": "c02af9dafb5b4a609f8c586a8e884710",
+        "name": "com.huawei.fit.hakuna.kernel.registry.server.unregisterFitables",
+        "category": "registry-server",
+        "version": "1.0.0"
+      },
+      {
+        "id": "33be4142494e4742aa122555a451d996",
+        "name": "com.huawei.fit.hakuna.kernel.registry.server.queryFitablesAddresses",
+        "category": "registry-server",
+        "version": "1.0.0-SNAPSHOT"
+      },
+      {
+        "id": "b69df5e8cbcd4166aa5029602e7a58cf",
+        "name": "com.huawei.fit.hakuna.kernel.registry.server.notifyFitables",
+        "category": "registry-server",
+        "version": "1.0.0-SNAPSHOT"
+      },
+      {
+        "id": "c9aa580f3fa845c99c2c6145a0499e45",
+        "name": "com.huawei.fit.hakuna.kernel.registry.server.subscribeFitables",
+        "category": "registry-server",
+        "version": "1.0.0-SNAPSHOT"
+      },
+      {
+        "id": "087994fc907b4f76b9f9b2a62e07ef2c",
+        "name": "com.huawei.fit.hakuna.kernel.registry.server.unsubscribeFitables",
+        "category": "registry-server",
+        "version": "1.0.0-SNAPSHOT"
+      },
+      {
+        "id": "2ad2cb39e0414774a949f3ddd362604e",
+        "name": "com.huawei.fit.hakuna.kernel.registry.listener.addFitableListener",
+        "category": "registry-listener",
+        "version": "1.0.0-SNAPSHOT"
+      },
+      {
+        "id": "a6f089311b7e48308447fed4006de720",
+        "name": "com.huawei.fit.hakuna.kernel.registry.listener.removeFitableListener",
+        "category": "registry-listener",
+        "version": "1.0.0-SNAPSHOT"
+      },
+      {
+        "id": "134459fe5ade47fe9989866598bd77d2",
+        "name": "com.huawei.fit.hakuna.kernel.registry.listener.markFitableAddressStatus",
+        "category": "registry-listener",
+        "version": "1.0.0-SNAPSHOT"
+      },
+      {
+        "id": "bcad5d59d90b4ee88f195cd7356389fc",
+        "name": "com.huawei.fit.hakuna.kernel.registry.listener.getFitableAddresses",
+        "category": "registry-listener",
+        "version": "1.0.0-SNAPSHOT"
+      }
+    ],
+    "genericables_c": []
+  }
+}

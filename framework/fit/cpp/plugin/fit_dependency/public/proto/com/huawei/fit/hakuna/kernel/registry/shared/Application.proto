@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package com.huawei.fit.hakuna.kernel.registry.shared;
+
+option optimize_for = LITE_RUNTIME;
+option java_package = "com.huawei.fit.hakuna.kernel.registry.shared.proto";
+option java_outer_classname = "ApplicationProto";
+
+
+
+message Application {
+  string name = 1;
+  string nameVersion = 2;
+  map<string, string> extensions = 3;
+}
