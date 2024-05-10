@@ -253,7 +253,7 @@ public class AiFlowBasicExpressionTest {
                     "n1-->n2(window)\n" +
                     "n2-->n3(key by)\n" +
                     "n3-->n4(generate)\n" +
-                    "n4-->e((End))\n,");
+                    "n4-->e((End))\n");
 
             //在markdown里使用以下脚本显示mermaid
             //```mermaid
