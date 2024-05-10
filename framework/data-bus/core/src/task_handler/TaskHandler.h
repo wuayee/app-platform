@@ -30,6 +30,7 @@ public:
 private:
     [[noreturn]] void Loop();
     void HandleRead(const Task&);
+    void HandleMessage(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleWrite(const Task&);
     std::function<void(const uint8_t*, size_t)> GetSender(int32_t socketFd);
     void SendApplyPermissionResponse(int32_t socketFd, bool granted, uint64_t memorySize, Common::ErrorType errorType);
@@ -37,6 +38,7 @@ private:
     void HandleMessageApplyPermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleMessageReleasePermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleMessageApplyMemory(const Common::MessageHeader* header, const char* buffer, int socketFd);
+    void HandleMessageReleaseMemory(const Common::MessageHeader* header, const char* buffer, int socketFd);
 
     std::shared_ptr<TaskLoop> taskLoopPtr_;
     std::unique_ptr<DataBus::Connection::ConnectionManager> connectionMgrPtr_;

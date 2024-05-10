@@ -155,6 +155,70 @@ vector <tuple<int32_t, uint64_t>> ResourceManager::ProcessWaitingPermitRequests(
     return notificationQueue;
 }
 
+bool ResourceManager::HandleReleaseMemory(int32_t sharedMemoryId)
+{
+    if (sharedMemoryIdToInfo_.find(sharedMemoryId) == sharedMemoryIdToInfo_.end()) {
+        logger.Error("[ResourceManager] Shared memory block {} is not found", sharedMemoryId);
+        return false;
+    }
+    if (IsPendingRelease(sharedMemoryId)) {
+        logger.Warn("[ResourceManager] Shared memory block {} is already pending release", sharedMemoryId);
+        return true;
+    }
+    // 如果内存块当前没有任何引用，直接释放
+    if (permissionStatus_[sharedMemoryId] == 0) {
+        return ReleaseMemory(sharedMemoryId);
+    }
+    logger.Info("[ResourceManager] ReleaseMemory request for the shared memory block {} is pending",
+                sharedMemoryId);
+    MarkPendingRelease(sharedMemoryId);
+    return true;
+}
+
+bool ResourceManager::ProcessPendingReleaseMemory(int32_t sharedMemoryId)
+{
+    if (sharedMemoryIdToInfo_.find(sharedMemoryId) == sharedMemoryIdToInfo_.end()) {
+        logger.Error("[ResourceManager] Shared memory block {} is not found", sharedMemoryId);
+        return false;
+    }
+    if (!IsPendingRelease(sharedMemoryId) || GetPermissionStatus(sharedMemoryId) != 0) {
+        return true;
+    }
+    return ReleaseMemory(sharedMemoryId);
+}
+
+void ResourceManager::MarkPendingRelease(int32_t sharedMemoryId)
+{
+    sharedMemoryIdToInfo_[sharedMemoryId]->pendingRelease_ = true;
+}
+
+bool ResourceManager::ReleaseMemory(int32_t sharedMemoryId)
+{
+    // IPC_RMID: 移除共享内存ID
+    if (shmctl(sharedMemoryId, IPC_RMID, nullptr) == -1) {
+        logger.Error("[ResourceManager] Failed to release the shared memory block {}: {}",
+                     sharedMemoryId, strerror(errno));
+        return false;
+    }
+    // 清理资源状态
+    sharedMemoryIdToInfo_.erase(sharedMemoryId);
+    permissionStatus_.erase(sharedMemoryId);
+    waitingPermitRequestQueues_.erase(sharedMemoryId);
+    RemoveObjectKey(sharedMemoryId);
+    return true;
+}
+
+void ResourceManager::RemoveObjectKey(int32_t sharedMemoryId)
+{
+    for (auto it = keyToSharedMemoryId_.begin(); it != keyToSharedMemoryId_.end();) {
+        if (it->second == sharedMemoryId) {
+            it = keyToSharedMemoryId_.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
+
 ErrorType ResourceManager::PreCheckPermissionCommon(DataBus::Common::PermissionType permissionType,
                                                     int32_t sharedMemoryId)
 {
@@ -176,6 +240,12 @@ ErrorType ResourceManager::CheckApplyPermission(int32_t socketFd, DataBus::Commo
     if (commonCheckRes != ErrorType::None) {
         logger.Error("[ResourceManager] PreChecking for applying the permission failed");
         return commonCheckRes;
+    }
+    // 不允许对待释放的内存块发起权限申请
+    if (IsPendingRelease(sharedMemoryId)) {
+        logger.Error("[ResourceManager] Cannot apply permissions for the pending release memory block {}",
+                     sharedMemoryId);
+        return ErrorType::IllegalStateForPermitApplication;
     }
     auto& memoryBlocks = permissionType == PermissionType::Read ? readingMemoryBlocks_ :
                          writingMemoryBlocks_;
@@ -345,12 +415,17 @@ time_t ResourceManager::GetLastUsedTime(int sharedMemoryId)
     return sharedMemoryIdToInfo_[sharedMemoryId]->lastUsedTime_;
 }
 
-std::unordered_set<int32_t>& ResourceManager::GetReadingMemoryBlocks(int32_t socketFd)
+bool ResourceManager::IsPendingRelease(int32_t sharedMemoryId)
+{
+    return sharedMemoryIdToInfo_[sharedMemoryId]->pendingRelease_;
+}
+
+const std::unordered_set<int32_t>& ResourceManager::GetReadingMemoryBlocks(int32_t socketFd)
 {
     return readingMemoryBlocks_[socketFd];
 }
 
-std::unordered_set<int32_t>& ResourceManager::GetWritingMemoryBlocks(int32_t socketFd)
+const std::unordered_set<int32_t>& ResourceManager::GetWritingMemoryBlocks(int32_t socketFd)
 {
     return writingMemoryBlocks_[socketFd];
 }
@@ -360,7 +435,7 @@ int32_t ResourceManager::GetPermissionStatus(int32_t sharedMemoryId)
     return permissionStatus_[sharedMemoryId];
 }
 
-deque <WaitingPermitRequest>& ResourceManager::GetWaitingPermitRequests(int32_t sharedMemoryId)
+const deque <WaitingPermitRequest>& ResourceManager::GetWaitingPermitRequests(int32_t sharedMemoryId)
 {
     return waitingPermitRequestQueues_[sharedMemoryId];
 }

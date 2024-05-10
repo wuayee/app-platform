@@ -31,6 +31,8 @@ public:
     bool HandleReleasePermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
                                  int32_t sharedMemoryId);
     std::vector<std::tuple<int32_t, uint64_t>> ProcessWaitingPermitRequests(int32_t sharedMemoryId);
+    bool HandleReleaseMemory(int32_t sharedMemoryId);
+    bool ProcessPendingReleaseMemory(int32_t sharedMemoryId);
 
     int32_t GetMemoryId(const std::string& objectKey);
 
@@ -40,10 +42,11 @@ public:
     int32_t GetReadingRefCnt(int32_t sharedMemoryId);
     int32_t GetWritingRefCnt(int32_t sharedMemoryId);
     time_t GetLastUsedTime(int32_t  sharedMemoryId);
-    std::unordered_set<int32_t>& GetReadingMemoryBlocks(int32_t socketFd);
-    std::unordered_set<int32_t>& GetWritingMemoryBlocks(int32_t socketFd);
+    bool IsPendingRelease(int32_t sharedMemoryId);
+    const std::unordered_set<int32_t>& GetReadingMemoryBlocks(int32_t socketFd);
+    const std::unordered_set<int32_t>& GetWritingMemoryBlocks(int32_t socketFd);
     int32_t GetPermissionStatus(int32_t sharedMemoryId);
-    std::deque<WaitingPermitRequest>& GetWaitingPermitRequests(int32_t sharedMemoryId);
+    const std::deque<WaitingPermitRequest>& GetWaitingPermitRequests(int32_t sharedMemoryId);
 
     void GenerateReport(std::stringstream& reportStream) const;
 private:
@@ -62,6 +65,9 @@ private:
     Common::PermissionType CheckPermissionOwnership(int32_t socketFd, DataBus::Common::PermissionType permissionType,
                                                     int32_t sharedMemoryId);
     void ReleasePermission(int32_t socketFd, DataBus::Common::PermissionType permissionType, int32_t sharedMemoryId);
+    void MarkPendingRelease(int32_t sharedMemoryId);
+    bool ReleaseMemory(int32_t sharedMemoryId);
+    void RemoveObjectKey(int32_t sharedMemoryId);
 
     int32_t IncrementReadingRefCnt(int32_t sharedMemoryId);
     int32_t DecrementReadingRefCnt(int32_t sharedMemoryId);
