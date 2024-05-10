@@ -16,6 +16,7 @@
 #include "fbs/apply_permission_message_response_generated.h"
 #include "fbs/release_permission_message_generated.h"
 #include "log/Logger.h"
+#include "fbs/release_memory_message_generated.h"
 
 using namespace std;
 using namespace DataBus::Task;
@@ -96,7 +97,11 @@ void TaskHandler::HandleRead(const Task& task)
         DataBusUtil::SendErrorMessage(ErrorType::IllegalMessageBody, GetSender(socketFd));
         return;
     }
+    HandleMessage(header, buffer, socketFd);
+}
 
+void TaskHandler::HandleMessage(const Common::MessageHeader* header, const char* buffer, int socketFd)
+{
     // 读取消息体的大小和类型
     switch (header->type()) {
         case Common::MessageType::HeartBeat: {
@@ -117,6 +122,10 @@ void TaskHandler::HandleRead(const Task& task)
         }
         case Common::MessageType::ReleasePermission: {
             HandleMessageReleasePermission(header, buffer, socketFd);
+            break;
+        }
+        case Common::MessageType::ReleaseMemory: {
+            HandleMessageReleaseMemory(header, buffer, socketFd);
             break;
         }
         default:
@@ -196,27 +205,51 @@ void TaskHandler::HandleMessageReleasePermission(const Common::MessageHeader* he
         Common::GetReleasePermissionMessage(startPtr);
     logger.Info("[TaskHandler] Received ReleasePermission, permission: {}",
                 static_cast<int8_t>(releasePermissionMessage->permission()));
-
     int32_t sharedMemoryId = releasePermissionMessage->memory_key() != -1 ? releasePermissionMessage->memory_key() :
                              resourceMgrPtr_->GetMemoryId(releasePermissionMessage->object_key()->str());
     if (sharedMemoryId == -1) {
         logger.Error("[TaskHandler] The object key {} is not found", releasePermissionMessage->object_key()->str());
         return;
     }
-
     if (!resourceMgrPtr_->HandleReleasePermission(socketFd, releasePermissionMessage->permission(), sharedMemoryId)) {
         logger.Error("[TaskHandler] Failed to ReleasePermission, client: {}, permission: {}", socketFd,
                      static_cast<int8_t>(releasePermissionMessage->permission()));
         return;
     }
     // 通知结束等待的客户端权限申请成功
-    vector<tuple<int32_t, uint64_t>> notificationQueue =
-        resourceMgrPtr_->ProcessWaitingPermitRequests(sharedMemoryId);
+    vector<tuple<int32_t, uint64_t>> notificationQueue = resourceMgrPtr_->ProcessWaitingPermitRequests(sharedMemoryId);
     for (const auto& notification: notificationQueue) {
         int32_t clientId;
         uint64_t memorySize;
         tie(clientId, memorySize) = notification;
         SendApplyPermissionResponse(clientId, true, memorySize, ErrorType::None);
+    }
+    // 处理待释放的内存块
+    if (!resourceMgrPtr_->ProcessPendingReleaseMemory(sharedMemoryId)) {
+        logger.Error("[TaskHandler] Failed to ProcessPendingReleaseMemory for the memory key {}", sharedMemoryId);
+    }
+}
+
+void TaskHandler::HandleMessageReleaseMemory(const Common::MessageHeader *header, const char *buffer, int socketFd)
+{
+    // 解析消息体
+    auto startPtr = buffer + MESSAGE_HEADER_LEN;
+    flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), header->size());
+    if (!Common::VerifyReleaseMemoryMessageBuffer(bodyVerifier)) {
+        logger.Error("[TaskHandler] Received incorrect release memory body format");
+    }
+    const Common::ReleaseMemoryMessage* releaseMemoryMessage = Common::GetReleaseMemoryMessage(startPtr);
+    logger.Info("[TaskHandler] Received ReleaseMemory, object key: {}, memory key: {}",
+                releaseMemoryMessage->object_key()->str(), releaseMemoryMessage->memory_key());
+    int32_t sharedMemoryId = releaseMemoryMessage->memory_key() != -1 ? releaseMemoryMessage->memory_key() :
+                             resourceMgrPtr_->GetMemoryId(releaseMemoryMessage->object_key()->str());
+    if (sharedMemoryId == -1) {
+        logger.Error("[TaskHandler] The object key {} is not found", releaseMemoryMessage->object_key()->str());
+        return;
+    }
+    if (!resourceMgrPtr_->HandleReleaseMemory(sharedMemoryId)) {
+        logger.Error("[TaskHandler] Failed to ReleaseMemory, client: {}, memory key: {}", socketFd, sharedMemoryId);
+        return;
     }
 }
 
