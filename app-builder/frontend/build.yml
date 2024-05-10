@@ -3,7 +3,7 @@ version: 2.0
 env:
     resource:
         type: docker
-        image: 'kweecr04.his.huawei.com:80/ecr-build-arm-gzkunpeng/docker_eulerb590x86_gy202y_builduser:202303211024'
+        image: 'kweecr05.his.huawei.com:80/ecr-build-green202/jade_compile_arm_image:jade_test'
         class: 4U4G
         pool: eks-build-x86-gz-kunpeng-ondocker-16u-02
 params:
@@ -24,8 +24,3 @@ steps:
                   buildcheck: true
                   auto: true
                   dangerouscmd: true
-    POST_BUILD:
-        - upload_cloud_artifact_fuxi: #上传云龙仓的插件
-              component_name: ${FUXI_COMP_NAME}
-              package_type: package
-              file_path: app-builder/frontend/dist.*.zip     #打包后的jar包路径
