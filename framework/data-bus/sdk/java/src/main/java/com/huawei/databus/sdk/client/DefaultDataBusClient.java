@@ -17,6 +17,7 @@ import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
 import com.huawei.databus.sdk.tools.DataBusUtils;
 import com.huawei.fitframework.inspection.Nonnull;
+import com.huawei.fitframework.inspection.Validation;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -120,7 +121,8 @@ public class DefaultDataBusClient implements DataBusClient {
             return MemoryIoResult.failure(ErrorType.NotConnectedToDataBus);
         }
         DataBusUtils.verifyIoRequest(request, permissionType);
-
+        Validation.isFalse(this.sharedMemoryPool.isMemoryIdMissing(request.sharedMemoryKey()),
+                () -> new IllegalArgumentException("Self applied memory should set memory ID."));
         // 当前内存上锁
         SharedMemory memory = this.sharedMemoryPool.getOrAddMemory(request.sharedMemoryKey());
         memory.lock().lock();

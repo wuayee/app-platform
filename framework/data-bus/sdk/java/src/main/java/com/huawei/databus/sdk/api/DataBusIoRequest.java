@@ -98,6 +98,7 @@ public interface DataBusIoRequest {
         /**
          * 向当前构建器中设置已有的内存句柄。此方法的优先级高于 userKey() 方法。因此，同时调用了 sharedMemoryKey() 和 userKey()
          * 时，以 sharedMemoryKey() 为准。
+         * <b>注意：</b>对于内存的申请者，后续请求请勿调用 userKey 方法。
          *
          * @param sharedMemoryKey 表示被设置的内存句柄 {@code long}。
          * @return 表示当前构建器的 {@link Builder}。
@@ -107,6 +108,7 @@ public interface DataBusIoRequest {
         /**
          * 向当前构建器中设置用户自定义 key。此方法的优先级低于 sharedMemoryKey() 方法。因此，同时调用了 sharedMemoryKey()
          * 和 userKey() 时，以 sharedMemoryKey() 为准。
+         * <b>注意：</b>对于内存的申请者，后续请求请勿调用 userKey 方法。
          *
          * @param userKey 表示被设置的内存句柄 {@code long}。
          * @return 表示当前构建器的 {@link Builder}。

@@ -29,8 +29,10 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -41,11 +43,13 @@ import java.util.concurrent.BlockingQueue;
  */
 class SharedMemoryPool {
     private final Map<SharedMemoryKey, SharedMemoryInternal> memoryPool;
+    private final Set<String> selfAppliedMemory;
     private final Map<Byte, BlockingQueue<ByteBuffer>> replyQueues;
     private final SocketChannel socketChannel;
 
     public SharedMemoryPool(Map<Byte, BlockingQueue<ByteBuffer>> replyQueues, SocketChannel socketChannel) {
         this.memoryPool = new HashMap<>();
+        this.selfAppliedMemory = new HashSet<>();
         this.replyQueues = replyQueues;
         this.socketChannel = socketChannel;
     }
@@ -82,6 +86,7 @@ class SharedMemoryPool {
             if (response.errorType() == ErrorType.None) {
                 SharedMemory sharedMemory = this.addNewMemory(response.memoryKey(), request.getUserKey(),
                         PermissionType.None, response.memorySize());
+                request.getUserKey().ifPresent(this.selfAppliedMemory::add);
                 return SharedMemoryResult.success(sharedMemory);
             }
             return SharedMemoryResult.failure(response.errorType());
@@ -100,6 +105,16 @@ class SharedMemoryPool {
         SharedMemoryInternal internal = new SharedMemoryInternal(key, PermissionType.None, 0);
         SharedMemoryInternal memory = this.memoryPool.putIfAbsent(key, internal);
         return memory == null ? internal.getView() : memory.getView();
+    }
+
+    /**
+     * 判断自身申请的共享内存的 memoryID 是否正确设置
+     *
+     * @param key 表示内存句柄的 {@link SharedMemoryKey}
+     * @return 表示是否缺失内存 ID 的 {@code boolean}
+     */
+    public boolean isMemoryIdMissing(SharedMemoryKey key) {
+        return key.memoryId() == -1 && this.selfAppliedMemory.contains(key.userKey());
     }
 
     /**
