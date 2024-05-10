@@ -1,0 +1,16 @@
+[plugin]
+plugin_id=fit.plugin.fit_heartbeat_client_default
+plugin_version=0.0.1.beta
+
+[fitable]
+service_name=onlineHeartbeat
+generic_id=bf2e1029e8844fe9afb698affb95d39c
+generic_version=1.0.0
+fitable_id=fit.heartbeat.Online
+fitable_version=1.0.0
+[fitable]
+service_name=offlineHeartbeat
+generic_id=18e47e184fd44c70af63eec3227bee2e
+generic_version=1.0.0
+fitable_id=fit.heartbeat.Offline
+fitable_version=1.0.0

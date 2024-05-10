@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package com.huawei.fit.registry;
+
+option optimize_for = LITE_RUNTIME;
+option java_package = "com.huawei.fit.registry.proto";
+option java_outer_classname = "RegistryCommonProto";
+
+
+
+message Address {
+  string host = 1;
+  int32 port = 2;
+  string id = 3;
+  int32 protocol = 4;
+  repeated int32 formats = 5;
+  string environment = 6;
+}
+
+message Worker {
+  Address address = 1;
+  string token = 2;
+}
+
+message Fitable {
+  string genericId = 1;
+  string genericVersion = 2;
+  string fitId = 3;
+  string fitVersion = 4;
+}
+
+message ServiceMeta {
+  Fitable fitable = 1;
+  string serviceName = 2;
+  string pluginName = 3;
+}
+
+message ServiceAddress {
+  ServiceMeta serviceMeta = 1;
+  repeated Address addressList = 2;
+}

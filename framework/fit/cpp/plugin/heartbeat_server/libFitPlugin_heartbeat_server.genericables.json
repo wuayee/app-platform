@@ -1,0 +1,58 @@
+{
+    "genericables": {
+        "67e6370725df427ebab9a6a6f1ada60c": {
+            "name": "heartbeatAddress_leave",
+            "route": {
+                "default": "4C6DCDCCDEBC41F5B950D68C2BA50BE4"
+            },
+            "tags": "traceIgnored",
+            "fitables": {
+                "4C6DCDCCDEBC41F5B950D68C2BA50BE4": {}
+            },
+            "genericable-config-sources": "config_file"
+        },
+        "e12fd1c57fd84f50a673d93d13074082": {
+            "name": "heartbeat",
+            "route": {
+                "default": "DBC9E2F7C0E443F1AC986BBC3D58C27B"
+            },
+            "tags": "traceIgnored",
+            "fitables": {
+                "DBC9E2F7C0E443F1AC986BBC3D58C27B": {}
+            },
+            "genericable-config-sources": "config_file"
+        },
+        "2bd87d1847e94811aec5054f374792dc": {
+            "name": "QueryHeartbeatAddressList",
+            "route": {
+              "default": "query_heartbeat_address_list_cpp"
+            },
+            "tags": "traceIgnored",
+            "genericable-config-sources": "config_file"
+          },
+          "e9226b30e8f54d53aea42f422dcbb54b": {
+            "name": "subscribe_heartbeat_cpp",
+            "route": {
+              "default": "subscribe_heartbeat_cpp"
+            },
+            "tags": "traceIgnored",
+            "genericable-config-sources": "config_file"
+          },
+          "b66f4694c3724f849ae94c6c94692327": {
+            "name": "UnsubscribeHeartbeat",
+            "route": {
+              "default": "unsubscribe_heartbeat_cpp"
+            },
+            "tags": "traceIgnored",
+            "genericable-config-sources": "config_file"
+          },
+          "b59cb3fcaee442799cafa2b887013e91": {
+            "name": "com.huawei.fit.heartbeat.get_beat_info",
+            "route": {
+              "default": "default"
+            },
+            "tags": "localOnly",
+            "genericable-config-sources": "config_file"
+          }
+    }
+}

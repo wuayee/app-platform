@@ -1,0 +1,20 @@
+{
+  "genericables": {
+    "5adf2d6cc7fa4f47ba1dd2576f660730": {
+      "name": "com.huawei.fit.hakuna.kernel.loadbalance.filterV3",
+      "route": {
+        "default": "94bb2f1b39514bcb8512eb6d7f020803"
+      },
+      "tags": "traceIgnored,trustIgnored,localOnly",
+      "genericable-config-sources": "config_file"
+    },
+    "ccd9339353aa4802a8f9ae59e1a6ced6": {
+      "name": "com.huawei.fit.hakuna.kernel.loadbalance.loadBalanceV2",
+      "route": {
+        "default": "dad46ea5362647819137135f301360ff"
+      },
+      "tags": "traceIgnored,trustIgnored,localOnly",
+      "genericable-config-sources": "config_file"
+    }
+  }
+}

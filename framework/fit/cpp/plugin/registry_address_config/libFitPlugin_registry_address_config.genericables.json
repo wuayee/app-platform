@@ -1,0 +1,28 @@
+{
+    "genericables": {
+        "49612be00e38424cac2e8ea812936cb4": {
+            "name": "get.registry.addresses",
+            "route": {
+                "default": "get_registry_addresses_impl"
+            },
+            "tags": "traceIgnored,localOnly",
+            "genericable-config-sources": "config_file"
+        },
+        "5dcd7a4dc1f548f4ad4ecb0a845639d2": {
+            "name": "setRegistryAddress",
+            "route": {
+                "default": "b8596df821d14f488adb553db909edcb"
+            },
+            "tags": "traceIgnored,trustIgnored",
+            "genericable-config-sources": "config_file"
+        },
+        "33a95d85e79b44f3afb5075603d5c8fb": {
+            "name": "removeRegistryAddress",
+            "route": {
+                "default": "6cf7ee3ff164422c97bc7b128f2f02e8"
+            },
+            "tags": "traceIgnored,trustIgnored",
+            "genericable-config-sources": "config_file"
+        }
+    }
+}

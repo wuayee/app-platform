@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package com.huawei.fit.hakuna.kernel.broker.client;
+
+option optimize_for = LITE_RUNTIME;
+option java_package = "com.huawei.fit.hakuna.kernel.broker.client.proto";
+option java_outer_classname = "GenericInvokeV3Proto";
+
+
+
+message GenericInvokeOptions {
+  optional string workerId = 1;
+  optional string alias = 2;
+  optional int64 timeout = 3;
+}

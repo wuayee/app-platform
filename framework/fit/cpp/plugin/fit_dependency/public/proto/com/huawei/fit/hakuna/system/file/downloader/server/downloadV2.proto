@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package com.huawei.fit.hakuna.system.file.downloader.server;
+
+option optimize_for = LITE_RUNTIME;
+option java_package = "com.huawei.fit.hakuna.system.file.downloader.server.proto";
+option java_outer_classname = "DownloadV2Proto";
+
+
+
+message DownloadRequestV2 {
+  optional string genericableId = 1;
+  optional string params = 2;
+  optional int64 timeout = 3;
+  optional string srcWorkerId = 4;
+  optional string requestId = 5;
+}

@@ -1,0 +1,36 @@
+genericables:
+# FIT-IDE 配置信息，若冲突请全部保留
+- tag: 6245c6769ff449ca8b4c11b4bc032661
+  version: 1.0.0
+  genericId: ccd9339353aa4802a8f9ae59e1a6ced6
+  name: loadBalanceV2
+# FIT-IDE 配置信息，若冲突请全部保留
+- tag: e2384d908cf5475e9354d436d476e5bb
+  version: 1.0.0
+  genericId: 5adf2d6cc7fa4f47ba1dd2576f660730
+  name: filterV3
+fitables:
+# FIT-IDE 配置信息，若冲突请全部保留
+- funcName: loadBalanceV2
+  fitId: dad46ea5362647819137135f301360ff
+  version: 1.0.0
+  url: ''
+  genericId: ccd9339353aa4802a8f9ae59e1a6ced6
+  name: loadBalanceV2
+# FIT-IDE 配置信息，若冲突请全部保留
+- funcName: filterV3
+  fitId: 94bb2f1b39514bcb8512eb6d7f020803
+  version: 1.0.0
+  url: ''
+  genericId: 5adf2d6cc7fa4f47ba1dd2576f660730
+  name: filterV3
+updateGenericableCompleteList: []
+updateFitableCompleteList:
+# FIT-IDE 配置信息，若冲突请全部保留
+- fitId: dad46ea5362647819137135f301360ff
+  genericId: ccd9339353aa4802a8f9ae59e1a6ced6
+# FIT-IDE 配置信息，若冲突请全部保留
+- fitId: 94bb2f1b39514bcb8512eb6d7f020803
+  genericId: 5adf2d6cc7fa4f47ba1dd2576f660730
+genericableCallList: []
+

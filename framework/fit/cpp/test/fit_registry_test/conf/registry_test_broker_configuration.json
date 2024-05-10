@@ -1,0 +1,246 @@
+{
+  "genericables": {
+    "ddc8613c04284fb39317cb00ab13aeef": {
+      "name": "add",
+      "route": {
+        "default": "fit.add.cpp"
+      }
+    },
+    "9289a2a4322d47d38f33fc32c47f04d2": {
+      "name": "StartServer",
+      "tags": "traceIgnored,localOnly"
+    },
+    "1b9bfc4a2b2141d5b31aa06791d645b4": {
+      "name": "StopServer",
+      "tags": "traceIgnored,localOnly"
+    },
+    "4c43c13d8a314632844e0a1d9f4b1525": {
+      "name": "processV3",
+      "route": {
+        "default": "CppDefaultBrokerServerProcess"
+      },
+      "tags": "traceIgnored,localOnly"
+    },
+    "bd82ccd28c6047afa85818e835a4c3d7": {
+      "name": "new consume",
+      "route": {
+        "default": "consume_cpp"
+      },
+      "tags": "traceIgnored,trustIgnored",
+      "fitables": {
+        "consume_cpp": {}
+      }
+    },
+    "918fbf55d64b4de8910d08cfcb41d31c": {
+      "name": "new client download",
+      "route": {
+        "default": "df67a851a3dd432284d5ef5413464fa8"
+      },
+      "tags": "traceIgnored,trustIgnored,localOnly"
+    },
+    "7a896417dc764a7fbb0381bcf128e9ec": {
+      "name": "new client subscribe",
+      "route": {
+        "default": "333675cf30b543f3a930a1865d0f7aa3"
+      },
+      "tags": "traceIgnored,trustIgnored,localOnly"
+    },
+    "519a0010b6e943ec9848f9b77b27fd1d": {
+      "name": "new client append",
+      "route": {
+        "default": "169f81394e5a46d886c9f93c3f89e977"
+      },
+      "tags": "traceIgnored,trustIgnored,localOnly"
+    },
+    "fd059427d2b742f590533ea95391144a": {
+      "name": "new server append",
+      "route": {
+        "default": "0c3217aa311a405e8a7cff40e9fee60a"
+      },
+      "tags": "traceIgnored,trustIgnored"
+    },
+    "4c0e733d04e94f488c122925052aceb1": {
+      "name": "new server download",
+      "route": {
+        "default": "ef327ef3a9a040bcb223311a70959872"
+      },
+      "tags": "traceIgnored,trustIgnored"
+    },
+    "41151994d1e74245ad1416b75c8eff39": {
+      "name": "com.huawei.fit.matata.tagCenter.tagger.Tag",
+      "route": {
+        "default": "aeb64b5c96cf4e68be4b557bf5cde49a"
+      },
+      "tags": "traceIgnored"
+    },
+    "f54d01848ca146d7aa450afe77027ddf": {
+      "name": "com.huawei.fitLab.matata.ruleEngine.rule.json.Execute",
+      "route": {
+        "default": "f11c6ee7826f4efeab22c0b7675ee1d8"
+      },
+      "tags": "traceIgnored"
+    },
+    "b670eca30b734604bdfd4529b9ce8d7f": {
+      "name": "com.huawei.matata.conf.client.get",
+      "route": {
+        "default": "711e1b704b8e4a8bb7b92013dc74183b"
+      },
+      "tags": "traceIgnored,localOnly"
+    },
+    "aec0bab8606344d6913acc8957fbe81d": {
+      "name": "com.huawei.matata.conf.client.set",
+      "route": {
+        "default": "c7ae33179cb0442b93d848ff912d0037"
+      },
+      "tags": "traceIgnored,localOnly"
+    },
+    "e27e4ca9a3204d5b8452d7c63b710728": {
+      "name": "com.huawei.matata.conf.server.get",
+      "route": {
+        "default": "15772b7455a54f1cbf881eedb39408d7"
+      },
+      "tags": "traceIgnored"
+    },
+    "7f2f22b898294201ba4ad0697febf0e0": {
+      "name": "com.huawei.matata.conf.server.set",
+      "route": {
+        "default": "023f2a130c51480ab88f0a91daaf67e5"
+      },
+      "tags": "traceIgnored"
+    },
+    "6fb95139f2554c29a10af658c6cecbd7": {
+      "name": "com.huawei.matata.notification.server.publish",
+      "route": {
+        "default": "f15a163fa542436b97f7cb1bae954d36"
+      },
+      "tags": "traceIgnored"
+    },
+    "d7dab744dbb54afd9e755c7124b3b77f": {
+      "name": "com.huawei.matata.notification.client.publish",
+      "route": {
+        "default": "b972bb6f4fc14f98b5d746e44c4bc6dd"
+      },
+      "tags": "traceIgnored,localOnly"
+    },
+    "5173e81e7afe498f98a95bf05c4614d8": {
+      "name": "matata::notification::server::subscribe",
+      "route": {
+        "default": "ba7c3ce7b7b44d699ee5d7077f52a745"
+      },
+      "tags": "traceIgnored"
+    },
+    "ae024f34dd7a4dc88e19a1a8cf801f29": {
+      "name": "com.huawei.matata.conf.server.upload",
+      "route": {
+        "default": "2ae9d88f46894f7bb0fcd45cf544cb52"
+      },
+      "tags": "traceIgnored"
+    },
+    "8dd312b496994c38b8629bb25cfc6bc9": {
+      "name": "com.huawei.fit.hakuna.kernel.broker.client.GenericInvokeV3",
+      "fitables": {
+        "c9d2e96403f34ae780bf00106fa952f6": {
+          "aliases": "hakuna_cpp"
+        }
+      },
+      "route": {
+        "default": "c9d2e96403f34ae780bf00106fa952f6"
+      },
+      "type": "API",
+      "tags": "trustIgnored,traceIgnored,localOnly"
+    },
+    "85bdce64cf724589b87cb6b6a950999d": {
+        "name": "com.huawei.fit.hakuna.kernel.registry.server.registerFitables",
+        "fitables": {
+            "dedaa28cfb2742819a9b0271bc34f72a": {
+                "aliases": "registerFitables"
+            }
+        },
+        "route": {
+            "default": "dedaa28cfb2742819a9b0271bc34f72a"
+        },
+        "tags": "traceIgnored,trustIgnored,registry"
+    },
+    "c02af9dafb5b4a609f8c586a8e884710": {
+        "name": "com.huawei.fit.hakuna.kernel.registry.server.unregisterFitables",
+        "fitables": {
+            "0bf2ea00438246a795ad6c1eddf3a77a": {
+                "aliases": "unregisterFitables"
+            }
+        },
+        "route": {
+            "default": "0bf2ea00438246a795ad6c1eddf3a77a"
+        },
+        "tags": "traceIgnored,trustIgnored,registry"
+    },
+    "33be4142494e4742aa122555a451d996": {
+        "name": "com.huawei.fit.hakuna.kernel.registry.server.queryFitablesAddresses",
+        "fitables": {
+            "5807f06a3a704708b264ea3c6cfbbd53": {
+                "aliases": "queryFitablesAddresses"
+            }
+        },
+        "route": {
+            "default": "5807f06a3a704708b264ea3c6cfbbd53"
+        },
+        "tags": "traceIgnored,trustIgnored,registry"
+    },
+    "c9aa580f3fa845c99c2c6145a0499e45": {
+        "name": "com.huawei.fit.hakuna.kernel.registry.server.subscribeFitables",
+        "fitables": {
+            "ee0a8337d3654a22a548d5d5abe1d5f3": {
+                "aliases": "subscribeFitables"
+            }
+        },
+        "route": {
+            "default": "ee0a8337d3654a22a548d5d5abe1d5f3"
+        },
+        "tags": "traceIgnored,trustIgnored,registry"
+    },
+    "087994fc907b4f76b9f9b2a62e07ef2c": {
+        "name": "com.huawei.fit.hakuna.kernel.registry.server.unsubscribeFitables",
+        "fitables": {
+            "cd617ec49bbc4f04ac1a39d4a6ce0e7b": {
+                "aliases": "unsubscribeFitables"
+            }
+        },
+        "route": {
+            "default": "cd617ec49bbc4f04ac1a39d4a6ce0e7b"
+        },
+        "tags": "traceIgnored,trustIgnored,registry"
+    },
+    "ce35055fd49b4803addddc4a89efab66": {
+        "name": "sync_fitable_service",
+        "route": {
+            "default": "202954b6897a4e2da49aa29ac572f5fb"
+        },
+        "fitables": {
+            "202954b6897a4e2da49aa29ac572f5fb": {}
+        },
+        "tags": "traceIgnored,trustIgnored,registry"
+    },
+    "e903c5c50c3a49539d5b9aac90198963": {
+        "name": "sync_subscription_service",
+        "route": {
+            "default": "3e259b5ed7f84aa692e297806b2f0901"
+        },
+        "fitables": {
+            "3e259b5ed7f84aa692e297806b2f0901": {}
+        },
+        "tags": "traceIgnored,trustIgnored,registry"
+    },
+    "b69df5e8cbcd4166aa5029602e7a58cf": {
+        "name": "notify_fitables",
+        "route": {
+            "default": "notify_java"
+        },
+        "tags": "traceIgnored,trustIgnored",
+        "fitables": {
+            "347fd33f3cde4aa891614a9e244ae5e8": {},
+            "7847dac3feac4e549e85670341146b8a": {},
+            "NOTIFY_FIT_SERVICE_V2_FITABLE_ID": {},
+            "testcase_callback": {}
+        }
+    }
+  }
+}

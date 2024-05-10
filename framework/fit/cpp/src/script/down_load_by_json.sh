@@ -1,0 +1,1 @@
+python3 fit_download_generated_code.py -s /mnt/d/work/FitLab/gitlab/fit_code_hub/registry_slim_new_structure/fit/core/cpp/src/ -d ./src --module=json

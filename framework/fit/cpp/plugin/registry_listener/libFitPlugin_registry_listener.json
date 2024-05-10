@@ -1,0 +1,14 @@
+{
+    "registry-listener": {
+        "pull": {
+            "enabled": true,
+            "interval": 20
+        },
+        "push": {
+            "enabled": false
+        },
+        "isolation" : {
+            "expiration": 5
+        }
+    }
+}

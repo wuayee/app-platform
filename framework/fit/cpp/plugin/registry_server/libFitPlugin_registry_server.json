@@ -1,0 +1,15 @@
+{
+    "registry-server": {
+        "process-worker-status-delay-ms": 1000,
+        "thread-wait-internal-ms": 1,
+        "thread-idle-wait-internal-ms": 500,
+        "role": "master",
+        "fitable-memory-to-db-consumer-thread-num": 1,
+        "fitable-node-sync-thread-num": 2,
+        "subscription-memory-to-db-consumer-thread-num": 1,
+        "subscription-node-sync-thread-num": 2,
+        "max-fitable-node-sync-task-num": 2000,
+        "max-subscription-node-sync-task-num": 2000,
+        "fitable-default-expired-time-seconds": 90
+    }
+}

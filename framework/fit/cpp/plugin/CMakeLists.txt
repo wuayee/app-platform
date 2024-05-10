@@ -1,0 +1,16 @@
+add_subdirectory(fit_dependency)
+add_subdirectory(registry_server)
+add_subdirectory(registry_listener)
+add_subdirectory(loadbalance)
+add_subdirectory(system_property)
+add_subdirectory(heartbeat_server_entity)
+
+add_subdirectory(fit_broker_http)
+add_subdirectory(registry_address_config)
+add_subdirectory(heartbeat_client)
+add_subdirectory(heartbeat_server)
+
+add_subdirectory(registry_server_repository_memory)
+add_subdirectory(heartbeat_server_repository_memory)
+add_subdirectory(fit_crypto_scc)
+add_subdirectory(registry_server_repository_pg)

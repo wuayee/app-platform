@@ -1,0 +1,3 @@
+add_subdirectory(fit_application_instance)
+add_subdirectory(fit_fitable_meta)
+add_subdirectory(fit_registry_base)

@@ -1,0 +1,94 @@
+{
+  "worker_id": "127.0.0.1:7777",
+  "environment": "debug",
+  "environment_chain": "debug,alpha,prod",
+  "preload_plugins": [
+    "../lib/libFitPlugin_system_property.so",
+    "../lib/libFitPlugin_registry_address_config.so",
+    "../lib/libFitPlugin_loadbalance.so",
+    "../lib/libFitPlugin_broker_server_grpc.so",
+    "../lib/libFitPlugin_registry_listener.so",
+    "../lib/libFitPlugin_heartbeat_client.so",
+
+    "../lib/libFitConverterGJson_fit_heartbeat_heartbeat.so",
+    "../lib/libFitConverterGJson_fit_heartbeat_heartbeatAddressChange.so",
+    "../lib/libFitConverterGJson_fit_heartbeat_leave.so",
+    "../lib/libFitConverterGJson_fit_heartbeat_queryHeartbeatAddressList.so",
+    "../lib/libFitConverterGJson_fit_heartbeat_subscribeHeartbeat.so",
+    "../lib/libFitConverterGJson_fit_heartbeat_unsubscribeHeartbeat.so",
+    "../lib/libFitConverterGJson_fit_registry_notifyFitService.so",
+    "../lib/libFitConverterGJson_fit_registry_queryFitServiceAddressList.so",
+    "../lib/libFitConverterGJson_fit_registry_registerFitService.so",
+    "../lib/libFitConverterGJson_fit_registry_subscribeFitService.so",
+    "../lib/libFitConverterGJson_fit_registry_unregisterFitService.so",
+    "../lib/libFitConverterGJson_fit_registry_unsubscribeFitService.so",
+    "../lib/libFitConverterGJson_matata_conf_server_download.so",
+    "../lib/libFitConverterGJson_matata_conf_server_get.so",
+    "../lib/libFitConverterGJson_matata_conf_server_set.so",
+    "../lib/libFitConverterGJson_matata_conf_server_subscribe.so",
+    "../lib/libFitConverterGJson_matata_conf_server_unsubscribe.so",
+    "../lib/libFitConverterGJson_matata_conf_server_upload.so",
+    "../lib/libFitConverterGJson_matata_conf_subscription_server_append.so",
+    "../lib/libFitConverterGJson_matata_conf_subscription_server_remove.so",
+    "../lib/libFitConverterGJson_matata_notification_client_consume.so",
+    "../lib/libFitConverterGJson_matata_notification_server_publish.so",
+    "../lib/libFitConverterGJson_matata_notification_server_subscribe.so",
+    "../lib/libFitConverterGJson_fit_matata_tagCenter_tagger_tag.so",
+    "../lib/libFitConverterGJson_fitLab_matata_ruleEngine_rule_json_execute.so",
+
+    "../lib/libFitConverterGPB_fit_heartbeat_heartbeat.so",
+    "../lib/libFitConverterGPB_fit_heartbeat_heartbeatAddressChange.so",
+    "../lib/libFitConverterGPB_fit_heartbeat_leave.so",
+    "../lib/libFitConverterGPB_fit_heartbeat_queryHeartbeatAddressList.so",
+    "../lib/libFitConverterGPB_fit_heartbeat_subscribeHeartbeat.so",
+    "../lib/libFitConverterGPB_fit_heartbeat_unsubscribeHeartbeat.so",
+    "../lib/libFitConverterGPB_fit_registry_notifyFitService.so",
+    "../lib/libFitConverterGPB_fit_registry_queryFitServiceAddressList.so",
+    "../lib/libFitConverterGPB_fit_registry_registerFitService.so",
+    "../lib/libFitConverterGPB_fit_registry_subscribeFitService.so",
+    "../lib/libFitConverterGPB_fit_registry_unregisterFitService.so",
+    "../lib/libFitConverterGPB_fit_registry_unsubscribeFitService.so",
+    "../lib/libFitConverterGPB_matata_conf_server_download.so",
+    "../lib/libFitConverterGPB_matata_conf_server_get.so",
+    "../lib/libFitConverterGPB_matata_conf_server_set.so",
+    "../lib/libFitConverterGPB_matata_conf_server_subscribe.so",
+    "../lib/libFitConverterGPB_matata_conf_server_unsubscribe.so",
+    "../lib/libFitConverterGPB_matata_conf_server_upload.so",
+    "../lib/libFitConverterGPB_matata_conf_subscription_server_append.so",
+    "../lib/libFitConverterGPB_matata_conf_subscription_server_remove.so",
+    "../lib/libFitConverterGPB_matata_notification_client_consume.so",
+    "../lib/libFitConverterGPB_matata_notification_server_publish.so",
+    "../lib/libFitConverterGPB_matata_notification_server_subscribe.so",
+    "../lib/libFitConverterGPB_fit_matata_tagCenter_tagger_tag.so",
+    "../lib/libFitConverterGPB_fitLab_matata_ruleEngine_rule_json_execute.so",
+
+    "../lib/libFitFormatterFitAddNew.so"
+  ],
+  "broker_config_file": "broker_configuration_add.json",
+  "registry_address": [
+    {
+      "host": "10.29.86.75",
+      "port": 7005,
+      "protocol": 3,
+      "id": "10.29.86.75:7005",
+      "formats": [0],
+      "environment": "debug"
+    }
+  ],
+  "register_period": 300000,
+  "message_queue": {
+    "brokers": "10.29.86.75:9092"
+  },
+  "config_environment": {
+    "default": "debug",
+    "candidates": [
+      "debug",
+      "alpha",
+      "beta",
+      "gamma",
+      "prod"
+    ]
+  },
+  "base_plugins": [
+  ]
+}

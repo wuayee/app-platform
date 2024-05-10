@@ -1,0 +1,284 @@
+{
+    "app": {
+        "name": "debug"
+    },
+    "worker": {
+        "id": "test",
+        "directory": "../"
+    },
+    "components": [
+        {
+            "location": "../lib/libdb_info_manager_for_kms.so"
+        },
+        {
+            "location": "../lib/libfit_odbc.so"
+        },
+        {
+            "location": "../lib/libFitRegistryServerRepositoryOdbc.so"
+        },
+        {
+            "location": "../lib/libFitHeartbeatServerEntity.so"
+        },
+        {
+            "location": "../lib/libFitHeartbeatServerRepositoryMemory.so"
+        }
+    ],
+    "plugins": {
+        "system-plugins": [
+            {
+                "name": "system_property",
+                "location": "lib/libFitPlugin_system_property.so",
+                "absolutely": false,
+                "level": 0
+            },
+            {
+                "location": "lib/libFitPlugin_registry_address_config.so"
+            },
+            {
+                "location": "lib/libFitPlugin_loadbalance.so"
+            },
+            {
+                "location": "lib/libFitPlugin_broker_server_grpc.so"
+            },
+            {
+                "location": "lib/libFitPlugin_registry_listener.so"
+            },
+            {
+                "location": "lib/libFitPlugin_heartbeat_client.so"
+            },
+            {
+                "location": "lib/libFitPlugin_heartbeat_server.so"
+            },
+            {
+                "location": "lib/libFitPlugin_registry_server.so"
+            },
+            {
+                "location": "lib/libFitConverterCPB_fit_registry_registryCommon.so"
+            },
+            {
+                "location": "lib/libFitConverterCPB_fit_heartbeat_heartbeatCommon.so"
+            },
+            {
+                "location": "lib/libFitConverterCPB_fit_hakuna_kernel_registry_shared_Address.so"
+            },
+            {
+                "location": "lib/libFitConverterCPB_fit_hakuna_kernel_registry_shared_Application.so"
+            },
+            {
+                "location": "lib/libFitConverterCPB_fit_hakuna_kernel_registry_shared_Endpoint.so"
+            },
+            {
+                "location": "lib/libFitConverterCPB_fit_hakuna_kernel_registry_shared_ApplicationInstance.so"
+            },
+            {
+                "location": "lib/libFitConverterCPB_fit_hakuna_kernel_registry_shared_FitableInstance.so"
+            },
+            {
+                "location": "lib/libFitConverterCPB_fit_hakuna_kernel_registry_shared_FitableMeta.so"
+            },
+            {
+                "location": "lib/libFitConverterCPB_fit_hakuna_kernel_registry_shared_Worker.so"
+            },
+            {
+                "location": "lib/libFitConverterCPB_fit_hakuna_kernel_shared_Fitable.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_heartbeat_heartbeat.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_heartbeat_heartbeatAddressChange.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_heartbeat_leave.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_heartbeat_queryHeartbeatAddressList.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_heartbeat_subscribeHeartbeat.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_heartbeat_unsubscribeHeartbeat.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_matata_conf_server_download.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_matata_conf_server_get.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_matata_conf_server_set.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_matata_conf_server_subscribe.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_matata_conf_server_unsubscribe.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_matata_conf_server_upload.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_matata_conf_subscription_server_append.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_matata_conf_subscription_server_remove.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_matata_notification_client_consume.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_matata_notification_server_publish.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_matata_notification_server_subscribe.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_matata_tagCenter_tagger_tag.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fitLab_matata_ruleEngine_rule_json_execute.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_hakuna_kernel_registry_server_syncSubscriptionFitService.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_hakuna_kernel_registry_server_synchronizeFitService.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_hakuna_kernel_registry_server_notifyFitables.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_hakuna_kernel_registry_server_queryFitablesAddresses.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_hakuna_kernel_registry_server_registerFitables.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_hakuna_kernel_registry_server_subscribeFitables.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_hakuna_kernel_registry_server_unregisterFitables.so"
+            },
+            {
+                "location": "lib/libFitConverterGPB_fit_hakuna_kernel_registry_server_unsubscribeFitables.so"
+            }
+        ],
+        "user-plugins": [
+        ],
+        "converters": {
+            "directory": "converters/",
+            "match": [
+                "libFitConverterG*"
+            ]
+        }
+    },
+    "worker_id": "B",
+    "environment": "debug",
+    "environment_chain": "debug,alpha,prod",
+    "global_open_trace": true,
+    "local_open_trace": true,
+    "broker_config_file": "../conf/registry_test_broker_configuration.json",
+    "registry_address": [
+        {
+            "host": "127.0.0.1",
+            "port": 8888,
+            "protocol": 3,
+            "id": "A",
+            "formats": [
+                0
+            ],
+            "environment": "debug"
+        },
+        {
+            "host": "127.0.0.1",
+            "port": 8889,
+            "protocol": 3,
+            "id": "B",
+            "formats": [
+                0
+            ],
+            "environment": "debug"
+        }
+    ],
+    "register_period": 300000,
+    "renew_period": [
+        {
+            "internal_seconds": 10,
+            "times": 20,
+            "timeout_seconds": 60
+        },
+        {
+            "internal_seconds": 30,
+            "times": -1,
+            "timeout_seconds": 3600
+        }
+    ],
+    "message_queue": {
+        "brokers": "10.29.86.75:9092"
+    },
+    "config_environment": {
+        "default": "debug",
+        "candidates": [
+            "debug",
+            "alpha",
+            "beta",
+            "gamma",
+            "prod"
+        ]
+    },
+    "register_port_mapping": [
+        {
+            "real_port": 8888,
+            "mapping_port": 8888
+        }
+    ],
+    "grpc": {
+        "host": "127.0.0.1",
+        "port": "8889",
+        "protocol": "3"
+    },
+    "trace_switch": {
+        "global_key": {
+            "key": "fit.trace.XX.global.open",
+            "default_value": "false"
+        },
+        "local_key": {
+            "key": "fit.trace.XX.local.open",
+            "default_value": "false"
+        }
+    },
+    "registry-server": {
+        "role": "slave"
+    },
+    "registry-listener": {
+        "push": {
+            "enabled": true
+        }
+    },
+    "log": {
+        "level": "debug",
+        "stdout": false,
+        "dir": "../log",
+        "filename": "registry_test_server_B",
+        "max-file-num": 2
+    },
+    "db_config_info": {
+        "dbs": [
+            {
+                "module": "registry_server",
+                "db_name": "registry",
+                "fit_db_user_name": "root",
+                "fit_db_password": "",
+                "connector_pool_size": 10
+            },
+            {
+                "module": "heartbeat_server",
+                "db_name": "registry",
+                "fit_db_user_name": "root",
+                "fit_db_password": "",
+                "connector_pool_size": 10
+            }
+        ]
+    }
+}
