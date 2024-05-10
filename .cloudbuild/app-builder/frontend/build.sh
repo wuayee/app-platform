@@ -1,12 +1,11 @@
 #！/bin/bash
 #set -x
 set -e
-#node -v
-#npm -v
+node -v
+npm -v
 
 tag=$1
 export SSO_URL=$2
-export NODE_TLS_REJECT_UNAUTHORIZED=0
 echo "tag:"${tag}
 echo "SSO_URL":${SSO_URL}
 
