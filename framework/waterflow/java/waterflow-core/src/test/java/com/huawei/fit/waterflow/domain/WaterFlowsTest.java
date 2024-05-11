@@ -753,20 +753,10 @@ class WaterFlowsTest {
                     .fork(p -> p.map(i -> i * 2))
                     .join("", (acc, i) -> acc + i.toString())
                     .close();
-            assertEquals("st((Start))\n"
-                            + "st-->n0(map)\n"
-                            + "n0-->n1{?}\n"
-                            + "n1-->n2(map)\n"
-                            + "n2-->n3([+])\n"
-                            + "n3-->n4{{=}}\n"
-                            + "n4-->n5(map)\n"
-                            + "n5-->n6([+])\n"
-                            + "n6-->e((End))\n"
-                            + "n4-->n7(map)\n"
-                            + "n7-->n6\n"
-                            + "n1-->n8(map)\n"
-                            + "n8-->n3\n",
-                    new Mermaid(flow).get());
+            assertEquals("start((Start))\n" + "start-->node0(map)\n" + "node9-->node3\n" + "node8-->node6\n"
+                    + "node6-->end7((End))\n" + "node5-->node6([+])\n" + "node4-->node8(map)\n" + "node4-->node5(map)\n"
+                    + "node3-->node4{{=}}\n" + "node2-->node3([+])\n" + "node1-->node9(map)\n" + "node1-->node2(map)\n"
+                    + "node0-->node1{?}", new Mermaid(flow).get());
         }
 
         @Test

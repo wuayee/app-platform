@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -76,7 +75,7 @@ public class ConversationTest {
 
         @Test
         @DisplayName("异步对话设置对话回调")
-        void shouldOkWhenASyncFlowWithCustomCallback() throws InterruptedException, TimeoutException {
+        void shouldOkWhenASyncFlowWithCustomCallback() {
             StringBuilder callbackAnswer = new StringBuilder();
             Conversation<Integer, String> converse = flow.converse();
             String flowAnswer = converse

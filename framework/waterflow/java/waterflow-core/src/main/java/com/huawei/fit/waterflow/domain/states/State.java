@@ -80,7 +80,7 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
      * @return 返回节点本身，便于后续的链式调用
      */
     public State<O, D, I, F> id(String id) {
-        ObjectUtils.<Node>cast(this.processor).setId(id);
+        ObjectUtils.<Node<I, O>>cast(this.processor).setId(id);
         return ObjectUtils.cast(super.setId(id));
     }
 

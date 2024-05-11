@@ -8,6 +8,7 @@ import static com.huawei.jade.fel.engine.util.SessionUtils.copyFlowSession;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
+import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
@@ -66,5 +67,14 @@ public class FlowSupportable<I, O> implements AsyncPattern<I, O> {
             AiRunnableArg<I> aiArg = ObjectUtils.cast(arg);
             return this.flow.converse(aiArg.getSession()).offer(aiArg.data()).await();
         };
+    }
+
+    /**
+     * 获取被装饰的流程对象。
+     *
+     * @return 表示被装饰流程对象的 {@link Flow}{@code <}{@link I}{@code >}。
+     */
+    public Flow<I> origin() {
+        return this.flow.origin();
     }
 }

@@ -4,33 +4,53 @@
 
 package com.huawei.fit.waterflow.domain.stream.reactive;
 
+import com.huawei.fit.waterflow.domain.flow.Flow;
+
 /**
- * 既是发布者，也是接收者：处理完数据后再发给下一个接受者
+ * 数据处理器，既是发布者，也是接收者，处理完数据后再发给下一个接受者。
  *
- * @param <T> 接收的数据类型
- * @param <R> 处理后的数据类型
+ * @param <T> 表示接收的数据类型。
+ * @param <R> 表示处理后的数据类型。
  * @since 1.0
  */
 public interface Processor<T, R> extends Publisher<R>, Subscriber<T, R> {
     /**
-     * close
+     * 关闭流程，生成结束节点。
      *
-     * @return Subscriber<R, R>
+     * @return 表示数据接受者的 {@link Subscriber}{@code <}{@link R}{@code , }{@link R}{@code >}。
      */
     Subscriber<R, R> close();
 
     /**
-     * set processor id for flow display
+     * 设置数据处理器的名称。
      *
-     * @param name processor name
-     * @return 自身
+     * @param name 表示名称的 {@link String}。
+     * @return 表示数据处理器自身的 {@link Processor}{@code <}{@link T}{@code , }{@link R}{@code >}。
+     * @throws IllegalArgumentException 当 {@code name} 为 {@code null} 、空字符串或只有空白字符的字符串时。
      */
     Processor<T, R> displayAs(String name);
 
     /**
-     * 展示
+     * 设置数据处理器的名称，及其需要展示的子数据源。
      *
-     * @return 返回一个展示的name
+     * @param name 表示名称的 {@link String}。
+     * @param displayFlow 表示子流程的 {@link Flow}{@code <}{@link T}{@code >}。
+     * @param nodeId 表示 {@code displayFlow} 流程节点名称的 {@link String}。
+     * @return 表示数据处理器自身的 {@link Processor}{@code <}{@link T}{@code , }{@link R}{@code >}。
+     * @throws IllegalArgumentException
+     * <lu>
+     *     <li>当 {@code displayFlow} 为 {@code null} 时。</li>
+     *     <li>当 {@code name} 为 {@code null} 、空字符串或只有空白字符的字符串时。</li>
+     *     <li>当 {@code nodeId} 为 {@code null} 、空字符串或只有空白字符的字符串时。</li>
+     * </lu>
+     *
      */
-    String display();
+    Processor<T, R> displayAs(String name, Flow<T> displayFlow, String nodeId);
+
+    /**
+     * 获取节点展示信息。
+     *
+     * @return 表示展示信息的 {@link NodeDisplay}。
+     */
+    NodeDisplay display();
 }

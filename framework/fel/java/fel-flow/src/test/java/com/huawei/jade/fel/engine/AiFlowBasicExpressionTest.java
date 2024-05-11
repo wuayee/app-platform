@@ -9,11 +9,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.huawei.fit.waterflow.domain.utils.Mermaid;
+import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
+import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.operators.models.ChatBlockModel;
+import com.huawei.jade.fel.engine.operators.patterns.FlowSupportable;
+import com.huawei.jade.fel.engine.operators.prompts.Prompts;
 import com.huawei.jade.fel.utils.AiFlowTestData;
 
 import org.junit.jupiter.api.DisplayName;
@@ -229,31 +233,91 @@ public class AiFlowBasicExpressionTest {
             assertThat(output.get(0).getThird().get()).isEqualTo(20);
             output.clear();
         }
+    }
+
+    /**
+     * 在 markdown 里使用以下脚本显示 mermaid 流程图。
+     * ```mermaid
+     * graph LR
+     * mermaid.get(); // 测试用例里的输出
+     * ```
+     */
+    @Nested
+    @DisplayName("测试解析mermaid格式的流程结构")
+    class MermaidTest {
+        private final ChatBlockModel<Prompt> model =
+                new ChatBlockModel<>(prompts -> new FlatChatMessage(new AiMessage("model answer")));
+
+        private final AiProcessFlow<Prompt, AiMessage> subFlow = AiFlows.<Prompt>create()
+                .just(((input, context) -> {}))
+                .generate(this.model).id("llm")
+                .delegate((input, session) -> input)
+                .conditions()
+                .match(input -> true, node -> node.map(data -> data))
+                .matchTo(AiMessage::isToolCall, node -> node.map(data -> data).to("llm"))
+                .others()
+                .close();
+
+        private void checkMermaid(String mermaidStr, String expected) {
+            String[] expectedSplit = expected.split("\n");
+            String[] split = mermaidStr.split("\n");
+            assertThat(split).hasSize(expectedSplit.length);
+            for (String str : expectedSplit) {
+                assertThat(str).isIn((Object[]) split);
+            }
+        }
 
         @Test
         @DisplayName("通过mermaid格式图形还原ai flow的流程设计")
         void testMermaidToCreateChart() {
-            ChatBlockModel model =
-                    new ChatBlockModel<>(prompts -> new FlatChatMessage(new AiMessage("model answer")));
-            AiProcessFlow flow = AiFlows.create()
-                    .prompt(null)
+            AiProcessFlow<Object, AiMessage> flow = AiFlows.create()
                     .delegate((input, context) -> null)
                     .window(inputs -> false)
                     .keyBy(input -> null)
-                    .generate(model).close();
+                    .prompt(Prompts.history())
+                    .generate(this.model)
+                    .close();
 
-            assertThat(new Mermaid(flow.baseFlow()).get()).isEqualTo("st((Start))\n" +
-                    "st-->n0(prompt)\n" +
-                    "n0-->n1(delegate to pattern)\n" +
-                    "n1-->n2(window)\n" +
-                    "n2-->n3(key by)\n" +
-                    "n3-->n4(generate)\n" +
-                    "n4-->e((End))\n");
+            String expected = "start((Start))\n" + "start-->node0(delegate to pattern)\n" + "node4-->end5((End))\n"
+                    + "node3-->node4(generate)\n" + "node2-->node3(prompt)\n" + "node1-->node2(key by)\n"
+                    + "node0-->node1(window)";
+            checkMermaid(new Mermaid(flow.origin()).get(), expected);
+        }
 
-            //在markdown里使用以下脚本显示mermaid
-            //```mermaid
-            // mermaid.get();//测试用例里的输出
-            // ```
+        @Test
+        @DisplayName("解析带有委托子流程的流程结构")
+        void shouldOkWhenParseMermaidWithDelegateFlowPattern() {
+            AiProcessFlow<Tip, String> flow = AiFlows.<Tip>create()
+                    .prompt(Prompts.history(), Prompts.human("{{0}}"))
+                    .delegate(new FlowSupportable<>(() -> this.subFlow))
+                    .map(AiMessage::text)
+                    .close();
+
+            String expected = "start((Start))\n" + "sub_start4-->node5(just)\n" + "start-->node0(prompt)\n"
+                    + "node9-->node10([+])\n" + "node8-->node9(map)\n" + "node8-->node12(map)\n" + "node7-->node8{?}\n"
+                    + "node6-->node7(delegate to pattern)\n" + "node5-->node6(llm)\n" + "node2-->end3((End))\n"
+                    + "node12-->node6\n" + "node10-->end11((End))\n" + "node1-. delegate .->sub_start4((Start))\n"
+                    + "node1-->node2(map)\n" + "node0-->node1(delegate to flow)\n"
+                    + "end11-. emit .->node1(delegate to flow)";
+            checkMermaid(new Mermaid(flow.origin()).get(), expected);
+        }
+
+        @Test
+        @DisplayName("解析带有委托子流程指定节点的流程结构")
+        void shouldOkWhenParseMermaidWithDelegateFlowSpecifyNode() {
+            AiProcessFlow<Tip, String> flow = AiFlows.<Tip>create()
+                    .prompt(Prompts.history(), Prompts.human("{{0}}"))
+                    .delegate(this.subFlow, "llm")
+                    .map(AiMessage::text)
+                    .close();
+
+            String expected = "start((Start))\n" + "sub_start4-->node6(just)\n" + "sub_start4((Start))\n"
+                    + "start-->node0(prompt)\n" + "node9-->node10([+])\n" + "node8-->node9(map)\n"
+                    + "node8-->node12(map)\n" + "node7-->node8{?}\n" + "node6-->node5\n"
+                    + "node5-->node7(delegate to pattern)\n" + "node2-->end3((End))\n" + "node12-->node5\n"
+                    + "node10-->end11((End))\n" + "node1-. delegate .->node5(llm)\n" + "node1-->node2(map)\n"
+                    + "node0-->node1(delegate to node)\n" + "end11-. emit .->node1(delegate to node)";
+            checkMermaid(new Mermaid(flow.origin()).get(), expected);
         }
     }
 }
