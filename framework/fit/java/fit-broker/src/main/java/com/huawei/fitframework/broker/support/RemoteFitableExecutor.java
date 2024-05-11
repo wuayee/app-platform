@@ -13,6 +13,8 @@ import com.huawei.fit.client.Request;
 import com.huawei.fit.client.RequestContext;
 import com.huawei.fit.client.Response;
 import com.huawei.fitframework.broker.Endpoint;
+import com.huawei.fitframework.broker.ExceptionInfo;
+import com.huawei.fitframework.broker.FitExceptionCreator;
 import com.huawei.fitframework.broker.Fitable;
 import com.huawei.fitframework.broker.FitableExecutor;
 import com.huawei.fitframework.broker.Format;
@@ -64,8 +66,7 @@ public class RemoteFitableExecutor extends AbstractUnicastFitableExecutor {
             log.debug("Invoke remote fitable successfully. [id={}, target={}]", fitable.toUniqueId(), target);
             return response.data();
         }
-        FitExceptionCreator.ExceptionInfo exceptionInfo =
-                FitExceptionCreator.ExceptionInfo.fromFitableAndResponseMetadata(fitable, response.metadata());
+        ExceptionInfo exceptionInfo = ExceptionInfo.fromFitableAndResponseMetadata(fitable, response.metadata());
         FitException responseException = this.exceptionCreatorLoader.get().buildException(exceptionInfo);
         log.error("Failed to invoke remote fitable. [id={}, target={}, message={}]",
                 fitable.toUniqueId(),
