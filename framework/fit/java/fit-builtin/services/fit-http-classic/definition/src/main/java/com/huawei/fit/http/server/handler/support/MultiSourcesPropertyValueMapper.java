@@ -24,19 +24,19 @@ import java.util.stream.Collectors;
 
 /**
  * 表示多个来源的 {@link PropertyValueMapper}。
- * <p>{@link MultiSourcePropertyValueMapper} 会将多个数据从指定的数据源取出，然后设置到指定的位置，并将多个结果进行合并。</p>
+ * <p>{@link MultiSourcesPropertyValueMapper} 会将多个数据从指定的数据源取出，然后设置到指定的位置，并将多个结果进行合并。</p>
  *
  * @author 邬涨财 w00575064
  * @since 2023-12-17
  */
-public class MultiSourcePropertyValueMapper implements PropertyValueMapper {
+public class MultiSourcesPropertyValueMapper implements PropertyValueMapper {
     private static final String LIST_SOURCE_VALUE_SEPARATOR = ",";
     private static final char DESTINATION_NAME_SEPARATOR = '.';
 
     private final List<SourceFetcherInfo> sourceFetcherInfos;
 
     /**
-     * 通过数据来源获取器信息对象来实例化 {@link MultiSourcePropertyValueMapper}。
+     * 通过数据来源获取器信息对象来实例化 {@link MultiSourcesPropertyValueMapper}。
      * <p>每个数据来源获取器信息对象由数据来源获取器、目标数据名字和目标数据是否为数组的标记三部分组成。</p>
      * <p>目标数据名字 {@code destinationName} 表示来源数据在目标参数中的位置：
      * <ul>
@@ -55,7 +55,7 @@ public class MultiSourcePropertyValueMapper implements PropertyValueMapper {
      *
      * @param sourceFetcherInfos 表示数据来源获取器信息对象列表的 {@link List}{@code <}{@link SourceFetcherInfo}{@code >}。
      */
-    public MultiSourcePropertyValueMapper(List<SourceFetcherInfo> sourceFetcherInfos) {
+    public MultiSourcesPropertyValueMapper(List<SourceFetcherInfo> sourceFetcherInfos) {
         this.sourceFetcherInfos = ObjectUtils.getIfNull(sourceFetcherInfos, Collections::emptyList);
     }
 
@@ -63,13 +63,13 @@ public class MultiSourcePropertyValueMapper implements PropertyValueMapper {
     public Object map(HttpClassicServerRequest request, HttpClassicServerResponse response,
             Map<String, Object> context) {
         return this.sourceFetcherInfos.stream()
-                .map(sourceFetcherInfo -> this.sourceFetcher(request, response, sourceFetcherInfo))
+                .map(sourceFetcherInfo -> this.fetchSource(request, response, sourceFetcherInfo))
                 .filter(Objects::nonNull)
                 .reduce((first, second) -> MapUtils.merge(ObjectUtils.cast(first), ObjectUtils.cast(second)))
                 .orElse(null);
     }
 
-    private Object sourceFetcher(HttpClassicServerRequest request, HttpClassicServerResponse response,
+    private Object fetchSource(HttpClassicServerRequest request, HttpClassicServerResponse response,
             SourceFetcherInfo sourceFetcherInfo) {
         SourceFetcher sourceFetcher = sourceFetcherInfo.sourceFetcher();
         String destinationName = sourceFetcherInfo.destinationName();

@@ -4,11 +4,14 @@
 
 package com.huawei.fitframework.value.support;
 
+import static com.huawei.fitframework.inspection.Validation.notNull;
+
 import com.huawei.fitframework.value.PropertyValue;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 /**
  * 表示参数类型的属性值。
@@ -20,7 +23,7 @@ public class ParameterValue implements PropertyValue {
     private final Parameter parameter;
 
     public ParameterValue(Parameter parameter) {
-        this.parameter = parameter;
+        this.parameter = notNull(parameter, "The parameter cannot be null.");
     }
 
     @Override
@@ -34,8 +37,8 @@ public class ParameterValue implements PropertyValue {
     }
 
     @Override
-    public AnnotatedElement getElement() {
-        return this.parameter;
+    public Optional<AnnotatedElement> getElement() {
+        return Optional.of(this.parameter);
     }
 
     @Override
