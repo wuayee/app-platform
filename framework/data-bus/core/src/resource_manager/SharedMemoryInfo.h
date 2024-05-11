@@ -5,9 +5,6 @@
 #ifndef DATABUS_SHARED_MEMORY_INFO_H
 #define DATABUS_SHARED_MEMORY_INFO_H
 
-#include <atomic>
-#include <ctime>
-
 namespace DataBus {
 namespace Resource {
 

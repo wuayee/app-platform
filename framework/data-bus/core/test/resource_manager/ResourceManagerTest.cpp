@@ -106,25 +106,21 @@ TEST_F(ResourceManagerTest, should_malloc_and_save_memory_info_when_handle_apply
 TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_when_permission_type_unknown)
 {
     int32_t permissionApplicantId = 1;
-    tuple<bool, uint64_t, ErrorType> applyPermitRes = resourceManager->HandleApplyPermission(permissionApplicantId,
-                                                                                             PermissionType::None,
-                                                                                             0);
-    bool granted = get<0>(applyPermitRes);
-    EXPECT_EQ(false, granted);
-    ErrorType errorType = get<2>(applyPermitRes);
-    EXPECT_EQ(ErrorType::UnknownPermissionType, errorType);
+    const ApplyPermissionResponse applyPermitRes = resourceManager->HandleApplyPermission(permissionApplicantId,
+                                                                                          PermissionType::None,
+                                                                                          0);
+    EXPECT_EQ(false, applyPermitRes.granted_);
+    EXPECT_EQ(ErrorType::UnknownPermissionType, applyPermitRes.errorType_);
 }
 
 TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_when_memory_not_found)
 {
     int32_t permissionApplicantId = 1;
-    tuple<bool, uint64_t, ErrorType> applyPermitRes = resourceManager->HandleApplyPermission(permissionApplicantId,
-                                                                                             PermissionType::Write,
-                                                                                             0);
-    bool granted = get<0>(applyPermitRes);
-    EXPECT_EQ(false, granted);
-    ErrorType errorType = get<2>(applyPermitRes);
-    EXPECT_EQ(ErrorType::MemoryNotFound, errorType);
+    const ApplyPermissionResponse applyPermitRes = resourceManager->HandleApplyPermission(permissionApplicantId,
+                                                                                          PermissionType::Write,
+                                                                                          0);
+    EXPECT_EQ(false, applyPermitRes.granted_);
+    EXPECT_EQ(ErrorType::MemoryNotFound, applyPermitRes.errorType_);
 }
 
 TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_when_memory_is_pending_release)
@@ -142,13 +138,11 @@ TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_wh
 
     // 再次申请权限
     int32_t permissionApplicantId2 = 3;
-    tuple<bool, uint64_t, ErrorType> applyPermitRes = resourceManager->HandleApplyPermission(permissionApplicantId2,
-                                                                                             PermissionType::Write,
-                                                                                             memoryId);
-    bool granted = get<0>(applyPermitRes);
-    EXPECT_EQ(false, granted);
-    ErrorType errorType = get<2>(applyPermitRes);
-    EXPECT_EQ(ErrorType::IllegalStateForPermitApplication, errorType);
+    const ApplyPermissionResponse applyPermitRes = resourceManager->HandleApplyPermission(permissionApplicantId2,
+                                                                                          PermissionType::Write,
+                                                                                          memoryId);
+    EXPECT_EQ(false, applyPermitRes.granted_);
+    EXPECT_EQ(ErrorType::IllegalStateForPermitApplication, applyPermitRes.errorType_);
 }
 
 TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_when_duplicate_applying_permission)
@@ -158,24 +152,20 @@ TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_wh
 
     // 首次申请权限
     int32_t permissionApplicantId = 2;
-    tuple<bool, uint64_t, ErrorType> applyPermitRes = resourceManager->HandleApplyPermission(permissionApplicantId,
-                                                                                             PermissionType::Write,
-                                                                                             memoryId);
+    const ApplyPermissionResponse applyPermitRes1 = resourceManager->HandleApplyPermission(permissionApplicantId,
+                                                                                           PermissionType::Write,
+                                                                                           memoryId);
     // 断言首次申请成功
-    bool granted1 = get<0>(applyPermitRes);
-    EXPECT_EQ(true, granted1);
-    ErrorType errorType1 = get<2>(applyPermitRes);
-    EXPECT_EQ(ErrorType::None, errorType1);
+    EXPECT_EQ(true, applyPermitRes1.granted_);
+    EXPECT_EQ(ErrorType::None, applyPermitRes1.errorType_);
 
     // 二次申请权限
-    applyPermitRes = resourceManager->HandleApplyPermission(permissionApplicantId,
-                                                            PermissionType::Write,
-                                                            memoryId);
+    const ApplyPermissionResponse applyPermitRes2 = resourceManager->HandleApplyPermission(permissionApplicantId,
+                                                                                           PermissionType::Write,
+                                                                                           memoryId);
     // 断言二次申请失败
-    bool granted2 = get<0>(applyPermitRes);
-    EXPECT_EQ(false, granted2);
-    ErrorType errorType2 = get<2>(applyPermitRes);
-    EXPECT_EQ(ErrorType::DuplicatePermitApplication, errorType2);
+    EXPECT_EQ(false, applyPermitRes2.granted_);
+    EXPECT_EQ(ErrorType::DuplicatePermitApplication, applyPermitRes2.errorType_);
 }
 
 TEST_F(ResourceManagerTest, should_not_release_permission_when_permission_type_unknown)
@@ -230,14 +220,12 @@ TEST_F(ResourceManagerTest, should_update_memory_status_when_handle_apply_and_re
     int32_t memoryId = AllocateMemory(testObjectKey);
 
     int32_t permissionApplicantId = 2;
-    tuple<bool, uint64_t, ErrorType> applyPermitRes = resourceManager->HandleApplyPermission(permissionApplicantId,
-                                                                                             PermissionType::Write,
-                                                                                             memoryId);
+    const ApplyPermissionResponse applyPermitRes = resourceManager->HandleApplyPermission(permissionApplicantId,
+                                                                                          PermissionType::Write,
+                                                                                          memoryId);
     // 断言权限申请成功
-    bool granted = get<0>(applyPermitRes);
-    EXPECT_EQ(true, granted);
-    ErrorType errorType = get<2>(applyPermitRes);
-    EXPECT_EQ(ErrorType::None, errorType);
+    EXPECT_EQ(true, applyPermitRes.granted_);
+    EXPECT_EQ(ErrorType::None, applyPermitRes.errorType_);
     // 断言内存管理状态修改成功
     EXPECT_EQ(1, resourceManager->GetWritingRefCnt(memoryId));
     const std::unordered_set<int32_t>& writingMemoryBlocks =
@@ -269,7 +257,7 @@ TEST_F(ResourceManagerTest, should_grant_read_permissions_after_release_write_pe
     resourceManager->HandleApplyPermission(lastApplicant, PermissionType::Write, memoryId);
     // 释放写权限
     resourceManager->HandleReleasePermission(firstApplicant, PermissionType::Write, memoryId);
-    vector<tuple<int32_t, uint64_t>> notificationQueue = resourceManager->ProcessWaitingPermitRequests(memoryId);
+    vector<ApplyPermissionResponse> notificationQueue = resourceManager->ProcessWaitingPermitRequests(memoryId);
     // 所有等待的读权限请求得到处理，获取许可；最后加入的写权限请求进入等待队列
     EXPECT_EQ(readCount, notificationQueue.size());
     EXPECT_EQ(readCount, resourceManager->GetReadingRefCnt(memoryId));
@@ -297,7 +285,7 @@ TEST_F(ResourceManagerTest, should_grant_write_permission_after_release_read_per
     CreateApplyPermissionBatch(PermissionType::Write, memoryId, writeStartId, writeCount);
     // 释放读权限
     resourceManager->HandleReleasePermission(firstApplicant, PermissionType::Read, memoryId);
-    vector<tuple<int32_t, uint64_t>> notificationQueue = resourceManager->ProcessWaitingPermitRequests(memoryId);
+    vector<ApplyPermissionResponse> notificationQueue = resourceManager->ProcessWaitingPermitRequests(memoryId);
     // 只有第一个等待的写权限会被处理，获取许可；其他写权限继续在队列中等待
     EXPECT_EQ(1, notificationQueue.size());
     EXPECT_EQ(1, resourceManager->GetWritingRefCnt(memoryId));

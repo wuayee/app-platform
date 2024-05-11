@@ -165,7 +165,7 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
     flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), header->size());
     if (!Common::VerifyApplyPermissionMessageBuffer(bodyVerifier)) {
         logger.Error("[TaskHandler] Received incorrect apply permission body format");
-        SendApplyPermissionResponse(socketFd, false, 0, ErrorType::IllegalMessageBody);
+        SendApplyPermissionResponse({false, socketFd, -1, 0, ErrorType::IllegalMessageBody});
     }
     const Common::ApplyPermissionMessage* applyPermissionMessage =
         Common::GetApplyPermissionMessage(startPtr);
@@ -177,20 +177,17 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
                 resourceMgrPtr_->GetMemoryId(applyPermissionMessage->object_key()->str());
     if (sharedMemoryId == -1) {
         logger.Error("[TaskHandler] The object key {} is not found", applyPermissionMessage->object_key()->str());
-        SendApplyPermissionResponse(socketFd, false, 0, ErrorType::KeyNotFound);
+        SendApplyPermissionResponse({false, socketFd, -1, 0, ErrorType::KeyNotFound});
     }
 
-    tuple<bool, uint64_t, ErrorType> applyPermitRes =
-        resourceMgrPtr_->HandleApplyPermission(socketFd, applyPermissionMessage->permission(), sharedMemoryId);
-    bool granted;
-    uint64_t memorySize;
-    ErrorType errorType;
-    tie(granted, memorySize, errorType) = applyPermitRes;
+    const Resource::ApplyPermissionResponse applyPermitResp =
+            resourceMgrPtr_->HandleApplyPermission(socketFd, applyPermissionMessage->permission(), sharedMemoryId);
     // 权限申请请求进入等待队列，阻塞客户端通知
-    if (!granted && errorType == ErrorType::None) {
+    if (!applyPermitResp.granted_ && applyPermitResp.errorType_ == ErrorType::None) {
         return;
     }
-    SendApplyPermissionResponse(socketFd, granted, memorySize, errorType);
+    SendApplyPermissionResponse({applyPermitResp.granted_, socketFd, applyPermitResp.sharedMemoryId_,
+                                 applyPermitResp.memorySize_, applyPermitResp.errorType_});
 }
 
 void TaskHandler::HandleMessageReleasePermission(const Common::MessageHeader* header, const char* buffer, int socketFd)
@@ -217,12 +214,11 @@ void TaskHandler::HandleMessageReleasePermission(const Common::MessageHeader* he
         return;
     }
     // 通知结束等待的客户端权限申请成功
-    vector<tuple<int32_t, uint64_t>> notificationQueue = resourceMgrPtr_->ProcessWaitingPermitRequests(sharedMemoryId);
+    vector<Resource::ApplyPermissionResponse> notificationQueue =
+            resourceMgrPtr_->ProcessWaitingPermitRequests(sharedMemoryId);
     for (const auto& notification: notificationQueue) {
-        int32_t clientId;
-        uint64_t memorySize;
-        tie(clientId, memorySize) = notification;
-        SendApplyPermissionResponse(clientId, true, memorySize, ErrorType::None);
+        SendApplyPermissionResponse({notification.granted_, notification.applicant_, notification.sharedMemoryId_,
+                                     notification.memorySize_, notification.errorType_});
     }
     // 处理待释放的内存块
     if (!resourceMgrPtr_->ProcessPendingReleaseMemory(sharedMemoryId)) {
@@ -239,10 +235,9 @@ void TaskHandler::HandleMessageReleaseMemory(const Common::MessageHeader *header
         logger.Error("[TaskHandler] Received incorrect release memory body format");
     }
     const Common::ReleaseMemoryMessage* releaseMemoryMessage = Common::GetReleaseMemoryMessage(startPtr);
-    logger.Info("[TaskHandler] Received ReleaseMemory, object key: {}, memory key: {}",
-                releaseMemoryMessage->object_key()->str(), releaseMemoryMessage->memory_key());
     int32_t sharedMemoryId = releaseMemoryMessage->memory_key() != -1 ? releaseMemoryMessage->memory_key() :
                              resourceMgrPtr_->GetMemoryId(releaseMemoryMessage->object_key()->str());
+    logger.Info("[TaskHandler] Received ReleaseMemory, memory key: {}", sharedMemoryId);
     if (sharedMemoryId == -1) {
         logger.Error("[TaskHandler] The object key {} is not found", releaseMemoryMessage->object_key()->str());
         return;
@@ -264,14 +259,14 @@ void TaskHandler::SendApplyMemoryResponse(int32_t socketFd, int32_t memoryId, ui
     DataBusUtil::SendMessage(bodyBuilder, Common::MessageType::ApplyMemory, GetSender(socketFd));
 }
 
-void TaskHandler::SendApplyPermissionResponse(int32_t socketFd, bool granted, uint64_t memorySize,
-                                              ErrorType errorType)
+void TaskHandler::SendApplyPermissionResponse(const Resource::ApplyPermissionResponse& response)
 {
     flatbuffers::FlatBufferBuilder bodyBuilder;
     flatbuffers::Offset<Common::ApplyPermissionMessageResponse> respBody =
-        Common::CreateApplyPermissionMessageResponse(bodyBuilder, errorType, granted, memorySize);
+        Common::CreateApplyPermissionMessageResponse(bodyBuilder, response.errorType_, response.granted_,
+                                                     response.sharedMemoryId_, response.memorySize_);
     bodyBuilder.Finish(respBody);
-    DataBusUtil::SendMessage(bodyBuilder, Common::MessageType::ApplyPermission, GetSender(socketFd));
+    DataBusUtil::SendMessage(bodyBuilder, Common::MessageType::ApplyPermission, GetSender(response.applicant_));
 }
 
 std::function<void(const uint8_t*, size_t)> TaskHandler::GetSender(int32_t socketFd)
