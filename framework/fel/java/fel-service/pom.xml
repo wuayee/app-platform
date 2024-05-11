@@ -18,6 +18,10 @@
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-util</artifactId>
+        </dependency>
 
         <!-- Lombok -->
         <dependency>

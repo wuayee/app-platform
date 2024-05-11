@@ -5,10 +5,8 @@
 package com.huawei.jade.fel.engine.operators;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.huawei.fit.waterflow.domain.utils.Mermaid;
 import com.huawei.jade.fel.chat.ChatModelService;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.Prompt;
