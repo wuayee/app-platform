@@ -52,8 +52,8 @@ public:
 private:
     Runtime::ReportCollector<ResourceManager> reportCollector_{"ResourceManager", *this};
 
-    // 0644: 所有者有读写权限，所属组有只读权限，其他用户有只读权限。
-    static constexpr int32_t SHARED_MEMORY_ACCESS_PERMISSION = 0644;
+    // 0666: 允许所有者、组成员和其他用户拥有读写权限。
+    static constexpr int32_t SHARED_MEMORY_ACCESS_PERMISSION = 0666;
 
     static bool RemoveDirectory(const std::string& directory);
     static void CreateDirectory(const std::string& directory);
