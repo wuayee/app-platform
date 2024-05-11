@@ -39,14 +39,21 @@ class ApplyPermissionMessageResponse(object):
         return False
 
     # ApplyPermissionMessageResponse
-    def MemorySize(self):
+    def MemoryKey(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ApplyPermissionMessageResponse
+    def MemorySize(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
         return 0
 
 def ApplyPermissionMessageResponseStart(builder):
-    builder.StartObject(3)
+    builder.StartObject(4)
 
 def Start(builder):
     ApplyPermissionMessageResponseStart(builder)
@@ -63,8 +70,14 @@ def ApplyPermissionMessageResponseAddGranted(builder, granted):
 def AddGranted(builder, granted):
     ApplyPermissionMessageResponseAddGranted(builder, granted)
 
+def ApplyPermissionMessageResponseAddMemoryKey(builder, memoryKey):
+    builder.PrependInt32Slot(2, memoryKey, 0)
+
+def AddMemoryKey(builder, memoryKey):
+    ApplyPermissionMessageResponseAddMemoryKey(builder, memoryKey)
+
 def ApplyPermissionMessageResponseAddMemorySize(builder, memorySize):
-    builder.PrependUint64Slot(2, memorySize, 0)
+    builder.PrependUint64Slot(3, memorySize, 0)
 
 def AddMemorySize(builder, memorySize):
     ApplyPermissionMessageResponseAddMemorySize(builder, memorySize)

@@ -5,6 +5,7 @@ namespace DataBus.Common;
 table ApplyPermissionMessageResponse {
     error_type: ErrorType;
     granted: bool;
+    memory_key: int; // System V生成的共享内存ID
     memory_size: ulong;
 }
 

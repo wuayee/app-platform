@@ -7,10 +7,19 @@
 package com.huawei.databus.sdk.message;
 
 import com.google.flatbuffers.BaseVector;
+import com.google.flatbuffers.BooleanVector;
+import com.google.flatbuffers.ByteVector;
 import com.google.flatbuffers.Constants;
+import com.google.flatbuffers.DoubleVector;
 import com.google.flatbuffers.FlatBufferBuilder;
+import com.google.flatbuffers.FloatVector;
+import com.google.flatbuffers.IntVector;
+import com.google.flatbuffers.LongVector;
+import com.google.flatbuffers.ShortVector;
+import com.google.flatbuffers.StringVector;
+import com.google.flatbuffers.Struct;
 import com.google.flatbuffers.Table;
-
+import com.google.flatbuffers.UnionVector;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -24,23 +33,27 @@ public final class ApplyPermissionMessageResponse extends Table {
 
   public byte errorType() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
   public boolean granted() { int o = __offset(6); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public long memorySize() { int o = __offset(8); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public int memoryKey() { int o = __offset(8); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public long memorySize() { int o = __offset(10); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
 
   public static int createApplyPermissionMessageResponse(FlatBufferBuilder builder,
       byte errorType,
       boolean granted,
+      int memoryKey,
       long memorySize) {
-    builder.startTable(3);
+    builder.startTable(4);
     ApplyPermissionMessageResponse.addMemorySize(builder, memorySize);
+    ApplyPermissionMessageResponse.addMemoryKey(builder, memoryKey);
     ApplyPermissionMessageResponse.addGranted(builder, granted);
     ApplyPermissionMessageResponse.addErrorType(builder, errorType);
     return ApplyPermissionMessageResponse.endApplyPermissionMessageResponse(builder);
   }
 
-  public static void startApplyPermissionMessageResponse(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startApplyPermissionMessageResponse(FlatBufferBuilder builder) { builder.startTable(4); }
   public static void addErrorType(FlatBufferBuilder builder, byte errorType) { builder.addByte(0, errorType, 0); }
   public static void addGranted(FlatBufferBuilder builder, boolean granted) { builder.addBoolean(1, granted, false); }
-  public static void addMemorySize(FlatBufferBuilder builder, long memorySize) { builder.addLong(2, memorySize, 0L); }
+  public static void addMemoryKey(FlatBufferBuilder builder, int memoryKey) { builder.addInt(2, memoryKey, 0); }
+  public static void addMemorySize(FlatBufferBuilder builder, long memorySize) { builder.addLong(3, memorySize, 0L); }
   public static int endApplyPermissionMessageResponse(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
