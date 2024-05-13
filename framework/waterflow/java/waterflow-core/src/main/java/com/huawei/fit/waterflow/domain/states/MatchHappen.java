@@ -4,6 +4,7 @@
 
 package com.huawei.fit.waterflow.domain.states;
 
+import com.huawei.fit.waterflow.domain.enums.SpecialDisplayNode;
 import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 
@@ -44,7 +45,7 @@ public class MatchHappen<O, D, I, F extends Flow<D>> {
     public MatchHappen<O, D, I, F> match(Operators.Whether<I> whether,
             Operators.BranchProcessor<O, D, I, F> processor) {
         State<I, D, I, F> branchStart = new State<>(this.node.publisher().just(any -> {
-        }, whether).displayAs("branch"), this.node.getFlow());
+        }, whether).displayAs(SpecialDisplayNode.BRANCH.name()), this.node.getFlow());
         State<O, D, ?, F> branch = processor.process(branchStart);
         this.branches.add(branch);
         return this;
@@ -62,7 +63,8 @@ public class MatchHappen<O, D, I, F extends Flow<D>> {
      */
     public MatchHappen<O, D, I, F> matchTo(Operators.Whether<I> whether,
             Operators.BranchToProcessor<D, I, F> processor) {
-        State<I, D, I, F> branchStart = new State<>(this.node.publisher().just(any -> {}, whether).displayAs("branch"),
+        State<I, D, I, F> branchStart = new State<>(
+                this.node.publisher().just(any -> {}, whether).displayAs(SpecialDisplayNode.BRANCH.name()),
                 this.node.getFlow());
         processor.process(branchStart);
         return this;
@@ -86,7 +88,7 @@ public class MatchHappen<O, D, I, F extends Flow<D>> {
      */
     public State<O, D, O, F> others() {
         State<O, D, O, F> joinState = this.branches.get(0).just(any -> {});
-        joinState.processor.displayAs("others");
+        joinState.processor.displayAs(SpecialDisplayNode.OTHERS.name());
         this.branches.stream().skip(1).forEach(branch -> {
             branch.publisher().subscribe(joinState.subscriber());
         });

@@ -18,6 +18,7 @@ import com.huawei.fit.waterflow.domain.contextdata.GlobalFileData;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeStatus;
 import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
 import com.huawei.fit.waterflow.domain.enums.ParallelMode;
+import com.huawei.fit.waterflow.domain.enums.SpecialDisplayNode;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
@@ -103,7 +104,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
     public Processor<I, I> conditions(Operators.Whether<I> whether) {
         ConditionsNode<I> node = new ConditionsNode<>(this.getStreamId(), repo, messenger, locks);
         this.subscribe(node, whether);
-        return node.displayAs("condition");
+        return node.displayAs(SpecialDisplayNode.CONDITION.name());
     }
 
     /**
@@ -117,7 +118,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
     public Processor<I, I> parallel(ParallelMode mode, Operators.Whether<I> whether) {
         ParallelNode<I> node = new ParallelNode<>(this.getStreamId(), mode, repo, messenger, locks);
         this.subscribe(node, whether);
-        return node.displayAs("parallel");
+        return node.displayAs(SpecialDisplayNode.PARALLEL.name());
     }
 
     /**
@@ -133,7 +134,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
             Operators.Map<FlowContext<I>, O> processor, Operators.Whether<I> whether) {
         JoinNode<I, O> node = new JoinNode<>(this.getStreamId(), processor, repo, messenger, locks);
         this.subscribe(node, i -> true);
-        return node.displayAs("join");
+        return node.displayAs(SpecialDisplayNode.JOIN.name());
     }
 
     /**

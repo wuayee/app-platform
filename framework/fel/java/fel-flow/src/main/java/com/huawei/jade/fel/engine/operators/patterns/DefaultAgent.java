@@ -35,20 +35,17 @@ public class DefaultAgent extends Agent<Prompt, Prompt> {
      * 任一个为 {@code null} 时。
      */
     public DefaultAgent(ToolProvider toolProvider, ChatModelService chatModel, ChatOptions options) {
-        super(() -> buildFlow(toolProvider, chatModel, options));
+        super(() -> buildFlow(toolProvider, new ChatBlockModel<>(chatModel, options)));
     }
 
-    private static AiProcessFlow<Prompt, Prompt> buildFlow(ToolProvider toolProvider, ChatModelService chatModel,
-            ChatOptions options) {
+    private static AiProcessFlow<Prompt, Prompt> buildFlow(ToolProvider toolProvider, ChatBlockModel<Prompt> model) {
         Validation.notNull(toolProvider, "Tool provider cannot be null.");
-        Validation.notNull(chatModel, "Chat model cannot be null.");
-        Validation.notNull(options, "Chat options cannot be null.");
 
         return AiFlows.<Prompt>create()
                 .just(((input, context) -> context.setState(AGENT_MSG_KEY, ChatMessages.from(input.messages()))))
-                .generate(new ChatBlockModel<>(chatModel, options)).id("llm")
-                .delegate((input, session) -> {
-                    ChatMessages lastRequest = session.getState(AGENT_MSG_KEY);
+                .generate(model).id("llm")
+                .delegate((input, context) -> {
+                    ChatMessages lastRequest = context.getState(AGENT_MSG_KEY);
                     lastRequest.add(input);
                     lastRequest.addAll(Agent.toolCallHandle(toolProvider, input).messages());
                     return input;

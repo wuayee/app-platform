@@ -53,7 +53,7 @@ public abstract class Agent<I, O> extends FlowSupportable<I, O> {
         Validation.notNull(aiMessage, "AiMessage cannot be null.");
         List<FlatChatMessage> collect = Optional.ofNullable(aiMessage.toolCalls())
                 .map(m -> m.stream().map(toolProvider::call).collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
         return ChatMessages.from(collect);
     }
 

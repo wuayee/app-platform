@@ -4,6 +4,7 @@
 
 package com.huawei.fit.waterflow.domain.states;
 
+import com.huawei.fit.waterflow.domain.enums.SpecialDisplayNode;
 import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 
@@ -64,13 +65,13 @@ public class MatchToHappen<D, I, F extends Flow<D>> {
      */
     public <O> State<O, D, ?, F> others(Operators.BranchProcessor<O, D, I, F> processor) {
         State<I, D, I, F> branchStart = new State<>(this.conditions.node.publisher().just(any -> {
-        }, null).displayAs("others"), this.conditions.node.getFlow());
+        }, null).displayAs(SpecialDisplayNode.OTHERS.name()), this.conditions.node.getFlow());
         return processor.process(branchStart);
     }
 
     private void to(Operators.Whether<I> whether, Operators.BranchToProcessor<D, I, F> processor) {
         State<I, D, I, F> branchStart = new State<>(this.conditions.node.publisher().just(any -> {
-        }, whether).displayAs("branch"), this.conditions.node.getFlow());
+        }, whether).displayAs(SpecialDisplayNode.BRANCH.name()), this.conditions.node.getFlow());
         processor.process(branchStart);
     }
 }

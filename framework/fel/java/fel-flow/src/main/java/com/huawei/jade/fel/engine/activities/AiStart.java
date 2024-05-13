@@ -29,6 +29,7 @@ import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.operators.AiRunnableArg;
 import com.huawei.jade.fel.engine.operators.models.ChatBlockModel;
 import com.huawei.jade.fel.engine.operators.patterns.AsyncPattern;
+import com.huawei.jade.fel.engine.operators.patterns.FlowSupportable;
 import com.huawei.jade.fel.engine.operators.patterns.SimpleAsyncPattern;
 import com.huawei.jade.fel.engine.operators.patterns.SyncPattern;
 import com.huawei.jade.fel.engine.operators.prompts.PromptTemplate;
@@ -280,7 +281,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public <R> AiState<R, D, O, RF, F> split(Splitter<O, R> splitter) {
         Validation.notNull(splitter, "Splitter operator cannot be null.");
         AiState<R, D, O, RF, F> state = this.map(splitter::split);
-        ((Processor)state.publisher()).displayAs("splitter");
+        ((Processor<?, ?>)state.publisher()).displayAs("splitter");
         return state;
     }
 
@@ -295,7 +296,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public AiState<O, D, O, RF, F> index(Indexer<O> indexer) {
         Validation.notNull(indexer, "Indexer operator cannot be null.");
         AiState<O, D, O, RF, F> state = this.just(indexer::process);
-        ((Processor)state.publisher()).displayAs("indexer");
+        ((Processor<?, ?>)state.publisher()).displayAs("indexer");
         return state;
     }
 
@@ -310,7 +311,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public <R> AiState<R, D, O, RF, F> format(Parser<R> parser) {
         Validation.notNull(parser, "Parser operator cannot be null.");
         AiState<R, D, O, RF, F> state = this.map(input -> parser.parse(ObjectUtils.cast(input)));
-        ((Processor)state.publisher()).displayAs("format");
+        ((Processor<?, ?>)state.publisher()).displayAs("format");
         return state;
     }
 
@@ -328,8 +329,14 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Validation.notNull(pattern, "Pattern operator cannot be null.");
         Processor<O, R> processor = this.publisher().map(input -> {
             pattern.offer(input.getData(), input.getSession());
-            return (R)null;
-        }, null).displayAs("delegate to pattern");
+            return null;
+        }, null);
+        if (pattern instanceof FlowSupportable) {
+            Flow<O> originFlow = ObjectUtils.<FlowSupportable<O, R>>cast(pattern).origin();
+            processor.displayAs("delegate to flow", originFlow, originFlow.start().getId());
+        } else {
+            processor.displayAs("delegate to pattern");
+        }
         AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
         state.offer(pattern);
         return state;
@@ -369,7 +376,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Processor<O, R> processor = this.publisher().map(input -> {
             aiFlow.converse(input.getSession()).offer(input.getData());
             return (R)null;
-        }, null).displayAs("delegate to flow");
+        }, null).displayAs("delegate to flow", aiFlow.origin(), aiFlow.origin().start().getId());
         AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
         state.offer(aiFlow);
         return state;
@@ -396,7 +403,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Processor<O, R> processor = this.publisher().map(input -> {
             aiFlow.converse(input.getSession()).offer(nodeId, Collections.singletonList(input.getData()));
             return (R)null;
-        }, null).displayAs("delegate to node");
+        }, null).displayAs("delegate to node", aiFlow.origin(), nodeId);
 
         AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
         state.offer(aiFlow);
@@ -474,7 +481,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
             acc.merge(data);
             return acc;
         });
-        ((Processor)state.publisher()).displayAs("runnableParallel");
+        ((Processor<?, ?>)state.publisher()).displayAs("runnableParallel");
         return state;
     }
 }

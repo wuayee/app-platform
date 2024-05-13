@@ -51,7 +51,7 @@ public class Prompts {
         return arg -> {
             List<ChatMessage> messages = Optional.ofNullable(arg.memory())
                     .map(Memory::messages)
-                    .orElse(Collections.emptyList());
+                    .orElseGet(Collections::emptyList);
             return ChatMessages.from(messages);
         };
     }

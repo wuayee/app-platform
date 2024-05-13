@@ -13,12 +13,15 @@ import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import com.huawei.fit.waterflow.domain.context.repo.flowlock.FlowLocks;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
 import com.huawei.fit.waterflow.domain.enums.ParallelMode;
+import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
+import com.huawei.fit.waterflow.domain.stream.reactive.NodeDisplay;
 import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscriber;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscription;
 import com.huawei.fit.waterflow.domain.utils.Identity;
+import com.huawei.fitframework.inspection.Validation;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -35,7 +38,7 @@ import java.util.function.Supplier;
 public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
     private final Publisher<R> publisher;
 
-    private String name = "operation";
+    private final NodeDisplay display = new NodeDisplay("operation", null, null);
 
     /**
      * 1->1处理节点
@@ -232,24 +235,20 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
 
     @Override
     public Processor<T, R> displayAs(String name) {
-        this.name = name;
+        this.display.setName(Validation.notBlank(name, "Display name can not be blank"));
         return this;
     }
 
     @Override
-    public String display() {
-        if (this.name.contains("condition")) {
-            return "{?}";
-        }
-        if (this.name.contains("others") || this.name.contains("join")) {
-            return "([+])";
-        }
-        if (this.name.contains("parallel")) {
-            return "{{=}}";
-        }
-        if (this.name.contains("branch")) {
-            return "";
-        }
-        return "(" + this.name + ")";
+    public Processor<T, R> displayAs(String name, Flow<T> displayFlow, String nodeId) {
+        this.display.setName(Validation.notBlank(name, "Display name can not be blank"));
+        this.display.setFlow(Validation.notNull(displayFlow, "DisplayFlow can not be null"));
+        this.display.setNodeId(Validation.notBlank(nodeId, "Node id can not be blank"));
+        return this;
+    }
+
+    @Override
+    public NodeDisplay display() {
+        return this.display;
     }
 }
