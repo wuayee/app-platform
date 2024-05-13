@@ -68,6 +68,8 @@ public class DefaultDataBusClient implements DataBusClient {
     public OpenConnectionResult open(InetAddress dataBusAddr, int dataBusPort) {
         try {
             this.socketChannel = SocketChannel.open();
+            // 设置TCP_NODELAY，禁用Nagle算法，以防止粘包问题
+            this.socketChannel.socket().setTcpNoDelay(true);
             InetSocketAddress address = new InetSocketAddress(dataBusAddr, dataBusPort);
             socketChannel.connect(address);
         } catch (IOException e) {
