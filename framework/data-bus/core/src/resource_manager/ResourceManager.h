@@ -10,6 +10,7 @@
 #include <unordered_set>
 #include <memory>
 
+#include "ApplyPermissionResponse.h"
 #include "SharedMemoryInfo.h"
 #include "WaitingPermitRequest.h"
 #include "fbs/common_generated.h"
@@ -25,12 +26,11 @@ public:
     ~ResourceManager() = default;
     std::tuple<int32_t, Common::ErrorType> HandleApplyMemory(int32_t socketFd, const std::string& objectKey,
                                                              uint64_t memorySize);
-    std::tuple<bool, uint64_t, Common::ErrorType> HandleApplyPermission(int32_t socketFd,
-                                                                        DataBus::Common::PermissionType permissionType,
-                                                                        int32_t sharedMemoryId);
+    ApplyPermissionResponse HandleApplyPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
+                                                  int32_t sharedMemoryId);
     bool HandleReleasePermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
                                  int32_t sharedMemoryId);
-    std::vector<std::tuple<int32_t, uint64_t>> ProcessWaitingPermitRequests(int32_t sharedMemoryId);
+    std::vector<ApplyPermissionResponse> ProcessWaitingPermitRequests(int32_t sharedMemoryId);
     bool HandleReleaseMemory(int32_t sharedMemoryId);
     bool ProcessPendingReleaseMemory(int32_t sharedMemoryId);
 
@@ -57,7 +57,7 @@ private:
 
     static bool RemoveDirectory(const std::string& directory);
     static void CreateDirectory(const std::string& directory);
-    static int32_t recreateSharedMemoryBlock(key_t sharedMemoryKey, uint64_t memorySize);
+    static int32_t RecreateSharedMemoryBlock(key_t sharedMemoryKey, uint64_t memorySize);
     Common::ErrorType PreCheckPermissionCommon(DataBus::Common::PermissionType permissionType, int32_t sharedMemoryId);
     Common::ErrorType CheckApplyPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
                                               int32_t sharedMemoryId);

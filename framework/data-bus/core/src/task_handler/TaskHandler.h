@@ -10,6 +10,7 @@
 #include <utility>
 
 #include "TaskLoop.h"
+#include "ApplyPermissionResponse.h"
 #include "ConnectionManager.h"
 #include "ResourceManager.h"
 #include "fbs/common_generated.h"
@@ -33,7 +34,7 @@ private:
     void HandleMessage(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleWrite(const Task&);
     std::function<void(const uint8_t*, size_t)> GetSender(int32_t socketFd);
-    void SendApplyPermissionResponse(int32_t socketFd, bool granted, uint64_t memorySize, Common::ErrorType errorType);
+    void SendApplyPermissionResponse(const Resource::ApplyPermissionResponse&);
     void SendApplyMemoryResponse(int32_t socketFd, int32_t memoryId, uint64_t memorySize, Common::ErrorType errorType);
     void HandleMessageApplyPermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleMessageReleasePermission(const Common::MessageHeader* header, const char* buffer, int socketFd);

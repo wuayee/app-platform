@@ -1,4 +1,4 @@
-/*
+/**
 * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
 */
 
@@ -66,7 +66,7 @@ tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, 
         }
         logger.Info("[ResourceManager] Start recreating a new sharedMemoryId associated with "
                     "sharedMemoryKey {}", sharedMemoryKey);
-        sharedMemoryId = recreateSharedMemoryBlock(sharedMemoryKey, memorySize);
+        sharedMemoryId = RecreateSharedMemoryBlock(sharedMemoryKey, memorySize);
         if (sharedMemoryId == -1) {
             logger.Error("[ResourceManager] Failed to recreate a shared memory block: {}",
                          strerror(errno));
@@ -86,31 +86,29 @@ tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, 
     return make_tuple(sharedMemoryId, ErrorType::None);
 }
 
-tuple<bool, uint64_t, ErrorType> ResourceManager::HandleApplyPermission(int32_t socketFd,
-                                                                        DataBus::Common::PermissionType permissionType,
-                                                                        int32_t sharedMemoryId)
+ApplyPermissionResponse ResourceManager::HandleApplyPermission(int32_t socketFd, PermissionType permissionType,
+                                                               int32_t sharedMemoryId)
 {
     ErrorType preCheckRes = CheckApplyPermission(socketFd, permissionType, sharedMemoryId);
     if (preCheckRes != ErrorType::None) {
         logger.Error("[ResourceManager] Checking for applying the permission failed");
-        return make_tuple(false, 0, preCheckRes);
+        return {false, socketFd, -1, 0, preCheckRes};
     }
     bool shouldGrant = permissionType == PermissionType::Read ? permissionStatus_[sharedMemoryId] >= 0 :
                        permissionStatus_[sharedMemoryId] == 0;
     if (shouldGrant) {
         // 当前内存块没有任何阻塞读写操作, 无需等待，直接授权
         GrantPermission(socketFd, permissionType, sharedMemoryId);
-        return make_tuple(true, GetMemorySize(sharedMemoryId), ErrorType::None);
+        return {true, socketFd, sharedMemoryId, GetMemorySize(sharedMemoryId), ErrorType::None};
     }
     // 否则，将权限请求加入等待队列
     logger.Info("[ResourceManager] Client {}'s ApplyPermission request is being queued for "
                 "the shared memory block {}", socketFd, sharedMemoryId);
     waitingPermitRequestQueues_[sharedMemoryId].emplace_back(socketFd, permissionType);
-    return make_tuple(false, GetMemorySize(sharedMemoryId), ErrorType::None);
+    return {false, socketFd, sharedMemoryId, GetMemorySize(sharedMemoryId), ErrorType::None};
 }
 
-bool ResourceManager::HandleReleasePermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
-                                              int32_t sharedMemoryId)
+bool ResourceManager::HandleReleasePermission(int32_t socketFd, PermissionType permissionType, int32_t sharedMemoryId)
 {
     if (PreCheckPermissionCommon(permissionType, sharedMemoryId) != ErrorType::None) {
         logger.Error("[ResourceManager] PreChecking for releasing the permission failed");
@@ -125,7 +123,7 @@ bool ResourceManager::HandleReleasePermission(int32_t socketFd, DataBus::Common:
     return true;
 }
 
-vector <tuple<int32_t, uint64_t>> ResourceManager::ProcessWaitingPermitRequests(int32_t sharedMemoryId)
+vector <ApplyPermissionResponse> ResourceManager::ProcessWaitingPermitRequests(int32_t sharedMemoryId)
 {
     // 如果当前内存块不存在，记录错误并返回空的通知队列
     if (sharedMemoryIdToInfo_.find(sharedMemoryId) == sharedMemoryIdToInfo_.end()) {
@@ -136,7 +134,7 @@ vector <tuple<int32_t, uint64_t>> ResourceManager::ProcessWaitingPermitRequests(
     if (permissionStatus_[sharedMemoryId] != 0) {
         return {};
     }
-    vector<tuple<int32_t, uint64_t>> notificationQueue;
+    vector<ApplyPermissionResponse> notificationQueue;
     uint64_t memorySize = GetMemorySize(sharedMemoryId);
     // 依次为等待队列中的多个读权限或位于队头的单个写权限申请颁发许可,并加入通知队列
     while (!waitingPermitRequestQueues_[sharedMemoryId].empty()) {
@@ -149,7 +147,7 @@ vector <tuple<int32_t, uint64_t>> ResourceManager::ProcessWaitingPermitRequests(
         logger.Info("[ResourceManager] Granting a permission for the waiting Client {} for "
                     "the shared memory block {}", request.applicant_, sharedMemoryId);
         GrantPermission(request.applicant_, request.permissionType_, sharedMemoryId);
-        notificationQueue.emplace_back(request.applicant_, memorySize);
+        notificationQueue.emplace_back(true, request.applicant_, sharedMemoryId, memorySize, ErrorType::None);
         waitingPermitRequestQueues_[sharedMemoryId].pop_front();
     }
     return notificationQueue;
@@ -367,7 +365,7 @@ void ResourceManager::CreateDirectory(const std::string& directory)
     }
 }
 
-int32_t ResourceManager::recreateSharedMemoryBlock(key_t sharedMemoryKey, uint64_t memorySize)
+int32_t ResourceManager::RecreateSharedMemoryBlock(key_t sharedMemoryKey, uint64_t memorySize)
 {
     // 获取之前创建的共享内存块ID。
     int32_t sharedMemoryId = shmget(sharedMemoryKey, 0, SHARED_MEMORY_ACCESS_PERMISSION);
