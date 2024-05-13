@@ -8,6 +8,7 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fitframework.aop.AopInterceptor;
 import com.huawei.fitframework.broker.DynamicRouter;
+import com.huawei.fitframework.broker.FitExceptionCreator;
 import com.huawei.fitframework.broker.FitableFactory;
 import com.huawei.fitframework.broker.LoadBalancer;
 import com.huawei.fitframework.broker.SerializationService;
@@ -21,6 +22,7 @@ import com.huawei.fitframework.broker.serialization.DefaultSerializationService;
 import com.huawei.fitframework.broker.server.Dispatcher;
 import com.huawei.fitframework.broker.server.support.DefaultDispatcher;
 import com.huawei.fitframework.broker.support.DefaultDynamicRouter;
+import com.huawei.fitframework.broker.support.DefaultFitExceptionCreator;
 import com.huawei.fitframework.broker.support.DefaultFitableFactory;
 import com.huawei.fitframework.broker.support.DefaultGenericableFactory;
 import com.huawei.fitframework.broker.support.DefaultLoadBalancer;
@@ -60,6 +62,7 @@ public abstract class AbstractRootPlugin extends AbstractPlugin implements RootP
     private static final String GENERICABLE_FACTORY_BEAN_NAME = "genericableFactory";
     private static final String TARGET_LOCATOR_BEAN_NAME = "targetLocator";
     private static final String LOAD_BALANCER_BEAN_BANE = "loadBalancer";
+    private static final String FIT_EXCEPTION_CREATOR_BEAN_NAME = "fitExceptionCreator";
     private static final String FITABLE_FACTORY_BEAN_NAME = "fitableFactory";
     private static final String INVOKER_FACTORY_BEAN_NAME = "invokerFactory";
     private static final String LOCAL_GENERICABLE_REPOSITORY_NAME = "localGenericableRepository";
@@ -120,6 +123,8 @@ public abstract class AbstractRootPlugin extends AbstractPlugin implements RootP
         this.container().registry().register(targetLocator, TARGET_LOCATOR_BEAN_NAME);
         LoadBalancer loadBalancer = new DefaultLoadBalancer(this.container(), serializationService, targetLocator);
         this.container().registry().register(loadBalancer, LOAD_BALANCER_BEAN_BANE);
+        FitExceptionCreator exceptionCreator = new DefaultFitExceptionCreator(this.container());
+        this.container().registry().register(exceptionCreator, FIT_EXCEPTION_CREATOR_BEAN_NAME);
         FitableFactory fitableFactory = new DefaultFitableFactory(this.container(), loadBalancer);
         this.container().registry().register(fitableFactory, FITABLE_FACTORY_BEAN_NAME);
         DefaultInvokerFactory invokerFactory = new DefaultInvokerFactory(this.container(),
