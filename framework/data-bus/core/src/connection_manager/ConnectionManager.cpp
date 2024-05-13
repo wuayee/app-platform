@@ -2,8 +2,11 @@
 * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
 */
 
-#include "ConnectionManager.h"
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+
 #include "log/Logger.h"
+#include "ConnectionManager.h"
 
 using namespace std;
 
@@ -12,6 +15,11 @@ namespace Connection {
 
 void ConnectionManager::AddNewConnection(int socketFd)
 {
+    // 设置TCP_NODELAY，禁用Nagle算法，以防止粘包问题
+    int flag = 1;
+    if (setsockopt(socketFd, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(int)) == -1) {
+        DataBus::logger.Error("Failed to disable TCP Nagle Algorithm, reason: {}", strerror(errno));
+    }
     unique_ptr<Connection> connection(new Connection(socketFd));
     connections_[socketFd] = std::move(connection);
 }
