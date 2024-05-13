@@ -12,7 +12,7 @@ using namespace std;
 JNIEXPORT jbyteArray JNICALL Java_com_huawei_databus_sdk_client_jni_SharedMemoryReaderWriter_read(JNIEnv *env,
     jobject obj, jint sharedMemoryId, jlong readOffset, jlong readLength)
 {
-    void* sharedMemoryBuffer = shmat((int) sharedMemoryId, NULL, 0);
+    void* sharedMemoryBuffer = shmat((int) sharedMemoryId, NULL, SHM_RDONLY);
     if (sharedMemoryBuffer == (void*)-1) {
         env -> ThrowNew(env -> FindClass("java/io/IOException"), "Failed to attach the shared memory");
     }
