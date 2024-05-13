@@ -8,18 +8,24 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.huawei.fitframework.serialization.TagLengthValues;
+import com.huawei.fitframework.serialization.tlv.TagValuesChecker;
 
 /**
- * 表示 Websocket 通信过程中通过 TLV 来传输流式调用信息的工具类。
+ * 表示 WebSocket 通信过程中通过 TLV 来传输流式调用信息的工具类。
  * <p>流式调用消息中各字段的标识与 http 调用中请求头位于不同通道，与其不会产生标识的冲突。</p>
  *
  * @author 何天放 h00679269
  * @since 2024-04-15
  */
-public class WebsocketUtils {
+public class WebSocketUtils extends TagValuesChecker {
     private static final int STREAM_MESSAGE_TYPE_TAG = 0x80;
     private static final int STREAM_MESSAGE_INDEX_TAG = 0x81;
     private static final int STREAM_MESSAGE_CONTENT_TAG = 0x82;
+
+    static {
+        // 校验标签值，确保所有标签值不冲突。
+        validate(WebSocketUtils.class);
+    }
 
     /**
      * 从 TLV 中获取类型信息。

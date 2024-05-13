@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.huawei.fit.serialization.http.FailMessageContentUtils;
 import com.huawei.fitframework.serialization.TagLengthValues;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -34,5 +35,11 @@ public class FailMessageContentUtilsTest {
         TagLengthValues tlvs = TagLengthValues.create();
         FailMessageContentUtils.setMessage(tlvs, "test message");
         assertThat(FailMessageContentUtils.getMessage(tlvs)).isEqualTo("test message");
+    }
+
+    @Test
+    @DisplayName("测试当前工具中的标识是否和需复用的工具中的标识产生冲突")
+    void shouldNotThrowException() {
+        Assertions.assertThatNoException().isThrownBy(FailMessageContentUtils::new);
     }
 }
