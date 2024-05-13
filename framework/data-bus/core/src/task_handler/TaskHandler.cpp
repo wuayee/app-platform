@@ -142,11 +142,12 @@ void TaskHandler::HandleMessageApplyMemory(const Common::MessageHeader* header, 
     if (!Common::VerifyMessageHeaderBuffer(bodyVerifier)) {
         logger.Error("[TaskHandler] Received incorrect apply memory body format");
         SendApplyMemoryResponse(socketFd, -1, 0, ErrorType::IllegalMessageBody);
+        return;
     }
     const Common::ApplyMemoryMessage* applyMemoryMessage =
         Common::GetApplyMemoryMessage(startPtr);
     const std::string objectKey = applyMemoryMessage->object_key() ? applyMemoryMessage->object_key()->str() : "";
-    logger.Info("[TaskHandler] Received ApplyMemory, object key:{}, size: {}", objectKey,
+    logger.Info("[TaskHandler] Received ApplyMemory, object key: {}, size: {}", objectKey,
                 applyMemoryMessage->memory_size());
 
     const tuple<int32_t, ErrorType> applyMemoryRes =
@@ -166,6 +167,7 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
     if (!Common::VerifyApplyPermissionMessageBuffer(bodyVerifier)) {
         logger.Error("[TaskHandler] Received incorrect apply permission body format");
         SendApplyPermissionResponse({false, socketFd, -1, 0, ErrorType::IllegalMessageBody});
+        return;
     }
     const Common::ApplyPermissionMessage* applyPermissionMessage =
         Common::GetApplyPermissionMessage(startPtr);
@@ -178,6 +180,7 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
     if (sharedMemoryId == -1) {
         logger.Error("[TaskHandler] The object key {} is not found", applyPermissionMessage->object_key()->str());
         SendApplyPermissionResponse({false, socketFd, -1, 0, ErrorType::KeyNotFound});
+        return;
     }
 
     const Resource::ApplyPermissionResponse applyPermitResp =
@@ -197,6 +200,7 @@ void TaskHandler::HandleMessageReleasePermission(const Common::MessageHeader* he
     flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), header->size());
     if (!Common::VerifyReleasePermissionMessageBuffer(bodyVerifier)) {
         logger.Error("[TaskHandler] Received incorrect release permission body format");
+        return;
     }
     const Common::ReleasePermissionMessage* releasePermissionMessage =
         Common::GetReleasePermissionMessage(startPtr);
@@ -233,6 +237,7 @@ void TaskHandler::HandleMessageReleaseMemory(const Common::MessageHeader *header
     flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), header->size());
     if (!Common::VerifyReleaseMemoryMessageBuffer(bodyVerifier)) {
         logger.Error("[TaskHandler] Received incorrect release memory body format");
+        return;
     }
     const Common::ReleaseMemoryMessage* releaseMemoryMessage = Common::GetReleaseMemoryMessage(startPtr);
     int32_t sharedMemoryId = releaseMemoryMessage->memory_key() != -1 ? releaseMemoryMessage->memory_key() :
@@ -244,7 +249,6 @@ void TaskHandler::HandleMessageReleaseMemory(const Common::MessageHeader *header
     }
     if (!resourceMgrPtr_->HandleReleaseMemory(sharedMemoryId)) {
         logger.Error("[TaskHandler] Failed to ReleaseMemory, client: {}, memory key: {}", socketFd, sharedMemoryId);
-        return;
     }
 }
 
