@@ -85,7 +85,7 @@ public abstract class AbstractInvokeClient implements InvokeClient {
      */
     protected HttpClassicClient buildHttpClient(Request request) {
         Optional<ClientConfig.Secure> secureInfo = this.clientConfig.secure();
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> config = new HashMap<>();
         if (secureInfo.isPresent()) {
             ClientConfig.Secure secure = secureInfo.get();
             boolean isEncrypted = secure.encrypted();
@@ -101,20 +101,21 @@ public abstract class AbstractInvokeClient implements InvokeClient {
                     keyStorePassword = decryptor.decrypt(keyStorePassword);
                 }
             }
-            secure.keyStoreFile().ifPresent(keyStore -> map.put(HttpsConstants.CLIENT_SECURE_KEY_STORE_FILE, keyStore));
+            secure.keyStoreFile()
+                    .ifPresent(keyStore -> config.put(HttpsConstants.CLIENT_SECURE_KEY_STORE_FILE, keyStore));
             secure.trustStoreFile()
-                    .ifPresent(trustStore -> map.put(HttpsConstants.CLIENT_SECURE_TRUST_STORE_FILE, trustStore));
-            map.put(HttpsConstants.CLIENT_SECURE_IGNORE_TRUST, String.valueOf(secure.ignoreTrust()));
-            map.put(HttpsConstants.CLIENT_SECURE_IGNORE_HOSTNAME, String.valueOf(secure.ignoreHostName()));
-            map.put(HttpsConstants.CLIENT_SECURE_KEY_STORE_PASSWORD, keyStorePassword);
-            map.put(HttpsConstants.CLIENT_SECURE_TRUST_STORE_PASSWORD, trustStorePassword);
+                    .ifPresent(trustStore -> config.put(HttpsConstants.CLIENT_SECURE_TRUST_STORE_FILE, trustStore));
+            config.put(HttpsConstants.CLIENT_SECURE_IGNORE_TRUST, String.valueOf(secure.ignoreTrust()));
+            config.put(HttpsConstants.CLIENT_SECURE_IGNORE_HOSTNAME, String.valueOf(secure.ignoreHostName()));
+            config.put(HttpsConstants.CLIENT_SECURE_KEY_STORE_PASSWORD, keyStorePassword);
+            config.put(HttpsConstants.CLIENT_SECURE_TRUST_STORE_PASSWORD, trustStorePassword);
         }
         int timeout = this.getTimeout(request);
         return this.factory.create(HttpClassicClientFactory.Config.builder()
                 .connectTimeout(timeout)
                 .connectionRequestTimeout(timeout)
                 .socketTimeout(timeout)
-                .custom(map)
+                .custom(config)
                 .build());
     }
 

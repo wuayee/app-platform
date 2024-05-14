@@ -9,11 +9,12 @@ import static com.huawei.fit.http.header.HttpHeaderKey.FIT_TLV;
 import static com.huawei.fit.serialization.http.Constants.FIT_ASYNC_LONG_POLLING_DURATION_MILLIS;
 import static com.huawei.fitframework.inspection.Validation.notBlank;
 import static com.huawei.fitframework.inspection.Validation.notNull;
+import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.client.Request;
 import com.huawei.fit.client.Response;
-import com.huawei.fit.client.http.support.ConnectionBuilder;
 import com.huawei.fit.client.http.support.ConnectionBuilderFactory;
+import com.huawei.fit.client.http.support.HttpConnectionBuilder;
 import com.huawei.fit.client.http.util.HttpClientUtils;
 import com.huawei.fit.http.client.HttpClassicClient;
 import com.huawei.fit.http.client.HttpClassicClientRequest;
@@ -206,8 +207,9 @@ class AsyncTaskServer {
 
     private HttpClassicClientRequest buildRequest(HttpClassicClient client, Request request,
             WorkerConfig workerConfig) {
-        ConnectionBuilder builder = ConnectionBuilderFactory.getConnectionBuilder(Protocol.from(request.protocol()));
-        String url = builder.buildLongPollUrl(request);
+        HttpConnectionBuilder builder =
+                cast(ConnectionBuilderFactory.getConnectionBuilder(Protocol.from(request.protocol())));
+        String url = builder.buildLongPollingUrl(request);
         HttpClassicClientRequest clientRequest = client.createRequest(HttpRequestMethod.GET, url);
         TagLengthValues tagLengthValues = request.metadata().tagValues();
         TlvUtils.setWorkerId(tagLengthValues, workerConfig.id());

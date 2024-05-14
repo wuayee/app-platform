@@ -21,6 +21,10 @@
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-flowable</artifactId>
+        </dependency>
 
         <!-- Micro genericables -->
         <dependency>

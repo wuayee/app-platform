@@ -11,6 +11,7 @@ import com.huawei.fit.client.Address;
 import com.huawei.fit.client.Request;
 import com.huawei.fit.client.RequestContext;
 import com.huawei.fitframework.serialization.RequestMetadata;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.lang.reflect.Type;
 
@@ -34,7 +35,7 @@ public class DefaultRequest implements Request {
         this.protocol = notBlank(protocol, "The protocol cannot be blank.");
         this.address = notNull(address, "The address cannot be null.");
         this.metadata = notNull(metadata, "The metadata cannot be null.");
-        this.dataTypes = dataTypes;
+        this.dataTypes = ObjectUtils.getIfNull(dataTypes, () -> new Type[0]);
         this.data = notNull(data, "The data cannot be null.");
         this.returnType = returnType;
         this.context = notNull(context, "The request context cannot be null.");

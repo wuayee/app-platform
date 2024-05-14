@@ -20,7 +20,13 @@ public enum Protocol {
     HTTP("http", 80),
 
     /** 表示 HTTPS 协议。 */
-    HTTPS("https", 443);
+    HTTPS("https", 443),
+
+    /** 表示 WebSocket 协议。 */
+    WEB_SOCKET("ws", 80),
+
+    /** 表示 Secure WebSocket 协议。 */
+    SECURE_WEB_SOCKET("wss", 443);
 
     /** 表示协议名。 */
     private final String protocol;

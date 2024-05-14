@@ -22,12 +22,16 @@ import com.huawei.fit.serialization.http.HttpUtils;
 import com.huawei.fit.serialization.util.MessageSerializerUtils;
 import com.huawei.fitframework.broker.GenericableMetadata;
 import com.huawei.fitframework.conf.runtime.WorkerConfig;
+import com.huawei.fitframework.flowable.Publisher;
 import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.ResponseMetadata;
 import com.huawei.fitframework.serialization.TagLengthValues;
 import com.huawei.fitframework.serialization.tlv.TlvUtils;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.fitframework.util.TypeUtils;
+
+import java.lang.reflect.Type;
 
 /**
  * FIT 调用关于 Http 客户端相关的工具类。
@@ -163,5 +167,19 @@ public class HttpClientUtils {
 
     private static String getResponseMessage(HttpClassicClientResponse<Object> clientResponse) {
         return clientResponse.headers().first(FIT_MESSAGE.value()).orElse(StringUtils.EMPTY);
+    }
+
+    /**
+     * 判断指定类型是否为响应式支持的类型。
+     *
+     * @param type 表示指定类型的 {@link Type}。
+     * @return 如果指定类型为响应式支持的类型，则返回 {@code true}，否则，返回 {@code false}。
+     */
+    public static boolean isReactor(Type type) {
+        if (type == null) {
+            return false;
+        }
+        Class<?> clazz = TypeUtils.toClass(type);
+        return Publisher.class.isAssignableFrom(clazz);
     }
 }

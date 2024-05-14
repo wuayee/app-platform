@@ -6,7 +6,6 @@ package com.huawei.fit.client.http.support;
 
 import com.huawei.fit.client.Request;
 import com.huawei.fit.client.Response;
-import com.huawei.fit.client.http.InvokeClient;
 import com.huawei.fit.client.http.util.HttpClientUtils;
 import com.huawei.fit.http.client.HttpClassicClient;
 import com.huawei.fit.http.client.HttpClassicClientRequest;
@@ -15,12 +14,13 @@ import com.huawei.fitframework.broker.CommunicationType;
 import com.huawei.fitframework.conf.runtime.ClientConfig;
 import com.huawei.fitframework.conf.runtime.WorkerConfig;
 import com.huawei.fitframework.exception.ClientException;
+import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.ioc.BeanContainer;
 
 import java.io.IOException;
 
 /**
- * 表示 {@link InvokeClient} 的同步实现。
+ * 表示 {@link com.huawei.fit.client.http.InvokeClient} 的同步实现。
  *
  * @author 季聿阶 j00559309
  * @since 2024-02-17
@@ -31,7 +31,7 @@ public class SyncInvokeClient extends AbstractInvokeClient {
     }
 
     @Override
-    public Response requestResponse(Request request) {
+    public Response requestResponse(@Nonnull Request request) {
         HttpClassicClient client = this.buildHttpClient(request);
         try (HttpClassicClientRequest clientRequest = this.buildClientRequest(client, request)) {
             clientRequest.entity(this.buildHttpEntity(clientRequest, request));

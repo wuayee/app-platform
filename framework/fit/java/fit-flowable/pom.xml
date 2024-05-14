@@ -12,7 +12,6 @@
     <artifactId>fit-flowable</artifactId>
 
     <dependencies>
-        <!-- Java Protocol Extends -->
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-api</artifactId>
