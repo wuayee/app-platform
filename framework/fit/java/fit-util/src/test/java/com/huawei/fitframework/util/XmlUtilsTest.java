@@ -34,6 +34,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -53,6 +54,8 @@ import javax.xml.transform.TransformerFactory;
  */
 public class XmlUtilsTest {
     private Document document;
+    private Document department;
+    private Document employee;
     private Node rootNode;
     private Map<String, Object> documentMap;
     private final ObjectMapper mapper = new ObjectMapper();
@@ -63,6 +66,15 @@ public class XmlUtilsTest {
             this.document = XmlUtils.load(in);
             this.rootNode = this.document.getChildNodes().item(0);
         }
+
+        try (InputStream in = XmlUtilsTest.class.getResourceAsStream("/employee.xml")) {
+            this.employee = XmlUtils.load(in);
+        }
+
+        try (InputStream in = XmlUtilsTest.class.getResourceAsStream("/department.xml")) {
+            this.department = XmlUtils.load(in);
+        }
+
         try (InputStream in = XmlUtilsTest.class.getResourceAsStream("/demo.json")) {
             this.documentMap = mapper.readValue(in, Map.class);
         }
@@ -620,13 +632,43 @@ public class XmlUtilsTest {
     }
 
     @Nested
-    @DisplayName("测试方法：parseXmlToMap(Document xml)")
+    @DisplayName("测试方法：toMap(Document xml)")
     class TestParseXmlToMap {
         @Test
         @DisplayName("给定非空文件，转换成功")
         void givenNotEmptyDocumentThenParseSuccess() throws Exception {
             Map<String, Object> actualMap = XmlUtils.toMap(document);
             assertThat(actualMap).isEqualTo(documentMap);
+        }
+    }
+
+    @Nested
+    @DisplayName("测试方法：toObject(Document xml, Type type)")
+    class TestParseXmlToObject {
+        @Test
+        @DisplayName("给映射转简单类，转换成功")
+        void givenEntityDocumentThenParseSuccess() throws Exception {
+            Employee actual = XmlUtils.toObject(employee, Employee.class);
+            assertThat(actual).isNotNull()
+                    .returns("John", Employee::getName)
+                    .returns(25, Employee::getAge)
+                    .returns("2023-01-04", Employee::getEntryDate);
+        }
+
+        @Test
+        @DisplayName("给映射转复杂类，转换成功")
+        void givenNestedEntityDocumentThenParseSuccess() throws Exception {
+            Department actual = XmlUtils.toObject(department, Department.class);
+            assertThat(actual).isNotNull().returns("Research", Department::getName);
+            assertThat(actual.getEmployees().get(0)).isNotNull()
+                    .returns(123456L, Employee::getId)
+                    .returns("John", Employee::getName)
+                    .returns(25, Employee::getAge)
+                    .returns("2023-01-04", Employee::getEntryDate);
+            assertThat(actual.getEmployees().get(1)).isNotNull()
+                    .returns(234567L, Employee::getId)
+                    .returns("David", Employee::getName)
+                    .returns(30, Employee::getAge);
         }
     }
 
@@ -638,5 +680,76 @@ public class XmlUtilsTest {
      */
     private Predicate<Node> predicateByClassAttribute(String value) {
         return node -> StringUtils.equals(XmlUtils.getAttributeValue(node, "class"), value);
+    }
+
+    /**
+     * 表示测试的类型。
+     */
+    public static class Employee {
+        private Long id;
+        private String name;
+        private Integer age;
+        private String entryDate;
+
+        public Long getId() {
+            return this.id;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public Integer getAge() {
+            return this.age;
+        }
+
+        public String getEntryDate() {
+            return entryDate;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setAge(Integer age) {
+            this.age = age;
+        }
+
+        public void setEntryDate(String entryDate) {
+            this.entryDate = entryDate;
+        }
+
+        @Override
+        public String toString() {
+            return "Employee{" + "name='" + name + '\'' + ", age=" + age + '}';
+        }
+    }
+
+    /**
+     * 表示测试的类型。
+     */
+    public static class Department {
+        private String name;
+        private List<Employee> employees;
+
+        public String getName() {
+            return name;
+        }
+
+        public List<Employee> getEmployees() {
+            return employees;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setEmployees(List<Employee> employees) {
+            this.employees = employees;
+        }
     }
 }

@@ -19,6 +19,7 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -538,10 +539,11 @@ public final class XmlUtils {
     }
 
     /**
-     * 将 XML 文件转换成 Map 格式。
+     * 将 XML 文件转换成 {@link Map}{@code <}{@link String}, {@link Object}{@code >} 格式。
+     * 返回 {@link Map}{@code <}{@link String}, {@link Object}{@code >} 不包含根节点。
      *
      * @param document 表示待转换的 XML 文档的 {@link Document}。
-     * @return xmlMap 表示转换完成的 Map。
+     * @return 表示转换完成的 {@link Map}{@code <}{@link String}, {@link Object}{@code >}。
      * @throws IllegalArgumentException 当 {@code document} 为 {@code null} 时。
      */
     public static Map<String, Object> toMap(Document document) {
@@ -549,38 +551,50 @@ public final class XmlUtils {
         Map<String, Object> map = new HashMap<>();
         if (document.hasChildNodes()) {
             Node rootNode = document.getChildNodes().item(0);
+            clearBlankTextNodes(rootNode);
             parseNode(rootNode, map);
-            return MapBuilder.<String, Object>get().put(rootNode.getNodeName(), map).build();
+            return map;
         }
         return MapBuilder.<String, Object>get().build();
     }
 
     /**
-     * 递归将根节点的全部子节点信息添加到 Map。
+     * 将当前节点里的全部空文本节点删除。
      *
-     * @param node 表示待转换的根节点 {@link Node}。
-     * @param map 表示待添加信息的 Map {@link Map}。
+     * @param node 表示待删除空文子节点的根节点 {@link Node}。
      */
-    private static void parseNode(Node node, Map<String, Object> map) {
+    private static void clearBlankTextNodes(Node node) {
         NodeList nodeList = node.getChildNodes();
-        for (int i = 0; i < nodeList.getLength(); i++) {
+        for (int i = nodeList.getLength() - 1; i >= 0; i--) {
             Node curNode = nodeList.item(i);
-            if (curNode.getNodeType() != Node.TEXT_NODE) {
-                String tagName = curNode.getNodeName();
-                Map<String, Object> item = new HashMap<>();
-                parseNodeAttributes(curNode, item);
-                parseChild(curNode, item);
-                insertToMap(map, tagName, item);
+            if (curNode.getNodeType() == Node.TEXT_NODE && StringUtils.isBlank(curNode.getNodeValue())) {
+                node.removeChild(curNode);
             } else {
-                if (StringUtils.isNotBlank(curNode.getTextContent())) {
-                    map.put(TEXT_TAG, curNode.getTextContent());
-                }
+                clearBlankTextNodes(curNode);
             }
         }
     }
 
     /**
-     * 将指定节点的属性分别添加到 Map 里。
+     * 将根节点的全部子节点信息添加到 {@link Map}{@code <}{@link String}, {@link Object}{@code >}。
+     *
+     * @param node 表示待转换的根节点 {@link Node}。
+     * @param map 表示待添加信息的 {@link Map}{@code <}{@link String}, {@link Object}{@code >}。
+     */
+    private static void parseNode(Node node, Map<String, Object> map) {
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node curNode = nodeList.item(i);
+            String tagName = curNode.getNodeName();
+            Map<String, Object> item = new HashMap<>();
+            parseNodeAttributes(curNode, item);
+            parseChild(curNode, item);
+            insertToMap(map, tagName, item);
+        }
+    }
+
+    /**
+     * 将指定节点的属性分别添加到 {@link Map}{@code <}{@link String}, {@link Object}{@code >} 里。
      * <p>
      * <ul>
      *     <li>Key：指定属性的 {@link String}; 格式: @attributeName。</li>
@@ -589,7 +603,7 @@ public final class XmlUtils {
      * </p>
      *
      * @param node 表示指定节点的 {@link Node}。
-     * @param item 表示存入数据的Map {@link Map}。
+     * @param item 表示存入数据的 {@link Map}{@code <}{@link String}, {@link Object}{@code >}。
      */
     private static void parseNodeAttributes(Node node, Map<String, Object> item) {
         if (node.hasAttributes()) {
@@ -604,7 +618,7 @@ public final class XmlUtils {
      * 将的子节点信息添加到 Map 里。
      *
      * @param node 表示提取数据的根节点 {@link Node}。
-     * @param item 表示存入数据的 Map {@link Map}。
+     * @param item 表示存入数据的 {@link Map}{@code <}{@link String}, {@link Object}{@code >}。
      */
     private static void parseChild(Node node, Map<String, Object> item) {
         if (node.hasChildNodes()) {
@@ -626,11 +640,12 @@ public final class XmlUtils {
      * <p>
      * <ul>
      *     <li>Key：{@code tagName}。</li>
-     *     <li>Value：Map 数组，若键已经在 Map 里，则直接存入；若否，则构建新数组并存入。</li>
+     *     <li>Value：{@code item}
+     *     若键已经在 {@code map} 里，构建新数组 {@link List}{@code <}{@link Object}{@code >} 并存入；若否，则直接存入。</li>
      * </ul>
      * </p>
      *
-     * @param map 表示存入数据的 Map。
+     * @param map 表示存入数据的 {@link Map}{@code <}{@link String}, {@link Object}{@code >}。
      * @param tagName 表示待放入 {@code map} 里的键。
      * @param item 表示待放入 {@code map} 里的值。
      */
@@ -640,14 +655,64 @@ public final class XmlUtils {
             if (existingValue instanceof List) {
                 List<Object> list = cast(existingValue);
                 list.add(item);
+            } else {
+                List<Object> itemList = new ArrayList<>();
+                itemList.add(existingValue);
+                itemList.add(item);
+                map.put(tagName, itemList);
             }
         } else {
-            List<Object> itemList = new ArrayList<>();
-            if (!item.isEmpty()) {
-                itemList.add(item);
-            }
-            map.put(tagName, itemList);
+            map.put(tagName, item);
         }
+    }
+
+    /**
+     * 将 {@link #toMap(Document)} 输出的 {@code Map} 准备成可以转换成 Java Bean 的 {@code Map} 格式。
+     *
+     * @param map 表示待转换的 {@link Map}{@code <}{@link String}, {@link Object}{@code >}。
+     * @return 表示转换完成的 {@link Map}{@code <}{@link Object}, {@link Object}{@code >}。
+     */
+    private static Map<Object, Object> reformat(Map<String, Object> map) {
+        Map<Object, Object> newMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            Object key = ObjectUtils.toJavaObject(entry.getKey());
+            Object value = ObjectUtils.toJavaObject(entry.getValue());
+            Object text;
+            if (value instanceof Map) {
+                Map<String, Object> innerMap = cast(value);
+                if (innerMap.containsKey(TEXT_TAG)) {
+                    text = innerMap.get(TEXT_TAG);
+                    newMap.put(key, text);
+                } else {
+                    newMap.put(key, reformat(innerMap));
+                }
+            } else if (value instanceof List) {
+                List<Map<String, Object>> innerList = cast(value);
+                List<Map<Object, Object>> resultList = new ArrayList<>();
+                for (Map<String, Object> item : innerList) {
+                    Map<String, Object> innerValue = cast(item);
+                    resultList.add(reformat(innerValue));
+                }
+                newMap.put(key, resultList);
+            } else {
+                newMap.put(key, value);
+            }
+        }
+        return newMap;
+    }
+
+    /**
+     * 将 XML 文件的转换成指定类型的对象。
+     *
+     * @param document 表示待转换的 XML 文档的 {@link Document}。
+     * @param type 表示指定类型的 {@link Type}。
+     * @param <T> 表示转换后的对象的类型的 {@link T}。
+     * @return 表示转换后的对象的 {@link T}。
+     */
+    public static <T> T toObject(Document document, Type type) {
+        Map<String, Object> xmlMap = XmlUtils.toMap(document);
+        Map<Object, Object> map = XmlUtils.reformat(xmlMap);
+        return ObjectUtils.toCustomObject(map, type);
     }
 
     /**

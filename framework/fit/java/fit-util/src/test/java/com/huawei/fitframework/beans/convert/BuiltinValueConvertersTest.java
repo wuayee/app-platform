@@ -9,12 +9,16 @@ import static org.assertj.core.api.Assertions.catchThrowableOfType;
 
 import com.huawei.fitframework.util.StringUtils;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * 表示 {@link BuiltinValueConverters} 的单元测试。
@@ -60,6 +64,23 @@ public class BuiltinValueConvertersTest {
         assertThat(bigDecimal).isEqualTo(BigDecimal.valueOf(186.0));
     }
 
+    @Disabled("当前 Converter 不支持转换部分日期")
+    @Test
+    @DisplayName("给定一个日期格式的 String 值，返回值为日期")
+    void givenDateFormatStringValueThenReturnIsInstanceOfSimpleDateFormat() {
+        String date = "2023-01-04";
+        Date actual = BuiltinValueConverters.toDate(date);
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Calendar.YEAR, 2023);
+        calendar.set(Calendar.MONTH, Calendar.JANUARY);
+        calendar.set(Calendar.DAY_OF_MONTH, 4);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date expected = calendar.getTime();
+        assertThat(actual).isEqualTo(expected);
+    }
     @Test
     @DisplayName("给定一个非日期格式的 String 值，抛出异常")
     void givenNotDateFormatStringValueThenThrowException() {
