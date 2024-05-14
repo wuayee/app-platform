@@ -6,7 +6,7 @@ package com.huawei.fit.serialization;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fit.serialization.http.StreamMessageType;
+import com.huawei.fit.serialization.http.websocket.StreamMessageType;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

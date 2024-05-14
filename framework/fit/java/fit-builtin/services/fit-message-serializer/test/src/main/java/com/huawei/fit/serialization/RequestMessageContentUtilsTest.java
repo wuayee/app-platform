@@ -6,7 +6,7 @@ package com.huawei.fit.serialization;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.fit.serialization.http.RequestMessageContentUtils;
+import com.huawei.fit.serialization.http.websocket.RequestMessageContentUtils;
 import com.huawei.fitframework.serialization.TagLengthValues;
 import com.huawei.fitframework.serialization.Version;
 

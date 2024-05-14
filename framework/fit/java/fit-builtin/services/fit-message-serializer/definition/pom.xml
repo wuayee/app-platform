@@ -21,6 +21,10 @@
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-flowable</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-http-classic</artifactId>
+        </dependency>
 
         <!-- Test -->
         <dependency>

@@ -2,15 +2,12 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.server.http.websocket;
+package com.huawei.fit.serialization.http.websocket;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.websocket.Session;
 import com.huawei.fit.serialization.MessageSerializer;
-import com.huawei.fit.serialization.http.FailMessageContentUtils;
-import com.huawei.fit.serialization.http.StreamMessageType;
-import com.huawei.fit.serialization.http.WebSocketUtils;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.flowable.util.worker.Worker;
 import com.huawei.fitframework.flowable.util.worker.WorkerObserver;

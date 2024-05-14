@@ -59,7 +59,7 @@ public class HttpClient implements Client {
 
     @Override
     public Response requestResponse(@Nonnull Request request) {
-        if (isFluent(request)) {
+        if (this.isFluent(request)) {
             return this.fluentClient.requestResponse(request);
         }
         return this.clients.get(request.context().communicationType()).requestResponse(request);
