@@ -49,7 +49,7 @@ public class ProtocolUpgrader extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof HttpRequest) {
             HttpRequest req = (HttpRequest) msg;
-            if (isWebsocketUpgrade(req)) {
+            if (isWebSocketUpgrade(req)) {
                 String path = req.uri();
                 NettyHttpServerRequest serverRequest =
                         new NettyHttpServerRequest(req, ctx, this.secure, this.largeBodySize);
@@ -70,7 +70,7 @@ public class ProtocolUpgrader extends ChannelInboundHandlerAdapter {
         super.channelRead(ctx, msg);
     }
 
-    private static boolean isWebsocketUpgrade(HttpRequest req) {
+    private static boolean isWebSocketUpgrade(HttpRequest req) {
         return req.method() == HttpMethod.GET && StringUtils.equalsIgnoreCase(req.headers()
                 .get(MessageHeaderNames.CONNECTION), MessageHeaderValues.UPGRADE)
                 && StringUtils.equalsIgnoreCase(req.headers().get(MessageHeaderNames.UPGRADE), WEBSOCKET);

@@ -63,7 +63,7 @@ public class DefaultWebSocketDispatcher implements WebSocketDispatcher {
             preHandler = this.noPathVariableHandlers.put(pathPattern, handler);
         }
         if (preHandler != null) {
-            String message = StringUtils.format("Websocket handler has been registered. [pattern={0}]", pathPattern);
+            String message = StringUtils.format("WebSocket handler has been registered. [pattern={0}]", pathPattern);
             throw new RegisterHttpHandlerException(message);
         }
     }

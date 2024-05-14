@@ -42,7 +42,7 @@ public interface Worker<T> extends Subscriber<T> {
      * @param <T> 表示响应式流中元素类型的 {@link T}。
      * @return 表示所创建的用于辅助消费的 {@link Worker}。
      */
-    static <T> Worker<T> create(WorkerObserver observer, Publisher<T> publisher, long id, long onSubscribedRequest) {
-        return new DefaultWorker<T>(observer, publisher, id, onSubscribedRequest);
+    static <T> Worker<T> create(WorkerObserver<T> observer, Publisher<T> publisher, long id, long onSubscribedRequest) {
+        return new DefaultWorker<>(observer, publisher, id, onSubscribedRequest);
     }
 }
