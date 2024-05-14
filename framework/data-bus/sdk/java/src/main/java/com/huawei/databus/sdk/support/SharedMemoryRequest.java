@@ -6,8 +6,6 @@ package com.huawei.databus.sdk.support;
 
 import com.huawei.fitframework.inspection.Validation;
 
-import java.util.Optional;
-
 /**
  * DataBus 服务申请共享内存请求
  *
@@ -16,11 +14,11 @@ import java.util.Optional;
  */
 public class SharedMemoryRequest {
     private final long size;
-    private final Optional<String> userKey;
+    private final String userKey;
 
-    private SharedMemoryRequest(long size, Optional<String> userKey) {
+    private SharedMemoryRequest(long size, String userKey) {
         this.size = Validation.greaterThan(size, 0, "Applied memory size must be larger than 0");
-        this.userKey = userKey;
+        this.userKey = Validation.notBlank(userKey, "User key could not be empty.");
     }
 
     /**
@@ -33,44 +31,40 @@ public class SharedMemoryRequest {
     }
 
     /**
-     * 返回申请内存的用户可选自定义 Key
+     * 返回申请内存的用户自定义 Key
      *
-     * @return 表示用户自定义 key 的 {@code Optional<String>}
+     * @return 表示用户自定义 key 的 {@code String}
      */
-    public Optional<String> getUserKey() {
+    public String userKey() {
         return userKey;
     }
 
     /**
      * {@link SharedMemoryRequest} 的构造器
      */
-    public static class SharedMemoryRequestBuilder {
+    public static class Builder {
         private long size;
-        private Optional<String> userKey;
-
-        public SharedMemoryRequestBuilder() {
-            this.userKey = Optional.empty();
-        }
+        private String userKey;
 
         /**
          * 向当前构建器中设置申请内存长度。
          *
          * @param size 表示申请内存长度的 {@code long}。
-         * @return 表示当前构建器的 {@link SharedMemoryRequestBuilder}。
+         * @return 表示当前构建器的 {@link Builder}。
          */
-        public SharedMemoryRequestBuilder size(long size) {
+        public Builder size(long size) {
             this.size = size;
             return this;
         }
 
         /**
-         * 向当前构建器中设置内存自定义 key 。
+         * 向当前构建器中设置内存自定义 key 。推荐使用 UUID 作为 key
          *
          * @param userKey 表示申请内存的自定义 key 的 {@code String}。
-         * @return 表示当前构建器的 {@link SharedMemoryRequestBuilder}。
+         * @return 表示当前构建器的 {@link Builder}。
          */
-        public SharedMemoryRequestBuilder userKey(String userKey) {
-            this.userKey = Optional.of(userKey);
+        public Builder userKey(String userKey) {
+            this.userKey = userKey;
             return this;
         }
 
@@ -82,5 +76,14 @@ public class SharedMemoryRequest {
         public SharedMemoryRequest build() {
             return new SharedMemoryRequest(this.size, userKey);
         }
+    }
+
+    /**
+     * 获取 {@link SharedMemoryRequest} 的构建器。
+     *
+     * @return 表示 {@link SharedMemoryRequest} 的构建器的 {@link SharedMemoryRequest.Builder}。
+     */
+    public static Builder custom() {
+        return new SharedMemoryRequest.Builder();
     }
 }

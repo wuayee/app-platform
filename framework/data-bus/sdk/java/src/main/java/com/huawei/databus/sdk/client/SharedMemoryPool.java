@@ -45,7 +45,7 @@ import java.util.concurrent.BlockingQueue;
  * @since 2024/3/25
  */
 class SharedMemoryPool {
-    private final Map<SharedMemoryKey, SharedMemoryInternal> memoryPool;
+    private final Map<String, SharedMemoryInternal> memoryPool;
     private final Set<String> selfAppliedMemory;
     private final Map<Byte, BlockingQueue<ByteBuffer>> replyQueues;
     private final SocketChannel socketChannel;
@@ -66,7 +66,7 @@ class SharedMemoryPool {
     public SharedMemoryResult applySharedMemory(SharedMemoryRequest request) {
         // 先建造消息体
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
-        int objectKeyOffset = bodyBuilder.createString(request.getUserKey().orElse(StringUtils.EMPTY));
+        int objectKeyOffset = bodyBuilder.createString(request.getUserKey());
         ApplyMemoryMessage.startApplyMemoryMessage(bodyBuilder);
         ApplyMemoryMessage.addObjectKey(bodyBuilder, objectKeyOffset);
         ApplyMemoryMessage.addMemorySize(bodyBuilder, request.size());
@@ -87,7 +87,6 @@ class SharedMemoryPool {
             if (response.errorType() == ErrorType.None) {
                 SharedMemory sharedMemory = this.addNewMemory(response.memoryKey(), request.getUserKey(),
                         PermissionType.None, response.memorySize());
-                request.getUserKey().ifPresent(this.selfAppliedMemory::add);
                 return SharedMemoryResult.success(sharedMemory);
             }
             return SharedMemoryResult.failure(response.errorType());
@@ -100,64 +99,54 @@ class SharedMemoryPool {
      * 通过共享内存句柄获取内存信息。如果共享内存不存在，则根据 key 生成新的共享内存
      *
      * @param key 表示内存句柄的 {@link SharedMemoryKey}
-     * @return 表示内存的 {@link SharedMemory}
+     * @return 表示内存的 {@link SharedMemoryInternal}
      */
-    public SharedMemory getOrAddMemory(SharedMemoryKey key) {
-        SharedMemoryInternal internal = new SharedMemoryInternal(key, PermissionType.None, 0);
+    public SharedMemoryInternal getOrAddMemory(String key) {
+        SharedMemoryInternal internal = new SharedMemoryInternal(new SharedMemoryKey(key), PermissionType.None, 0);
         SharedMemoryInternal memory = this.memoryPool.putIfAbsent(key, internal);
-        return memory == null ? internal.getView() : memory.getView();
+        return memory == null ? internal : memory;
     }
 
     /**
-     * 判断自身申请的共享内存的 memoryID 是否正确设置
+     * 通过用户指定 key 获取内存信息
      *
      * @param key 表示内存句柄的 {@link SharedMemoryKey}
-     * @return 表示是否缺失内存 ID 的 {@code boolean}
+     * @return 表示内存的 {@link SharedMemoryInternal}
      */
-    public boolean isMemoryIdMissing(SharedMemoryKey key) {
-        return key.memoryId() == -1 && this.selfAppliedMemory.contains(key.userKey());
+    public Optional<SharedMemoryInternal> getMemory(String key) {
+        return Optional.ofNullable(this.memoryPool.get(key));
     }
 
     /**
-     * 将申请到的内存加入内存池，并返回其只读视图
+     * 将客户端申请到的内存加入内存池，并返回其只读视图
      *
-     * @param key 表示内存句柄的 {@code int}
+     * @param memoryId 表示内存系统级句柄的 {@code int}
      * @param userKey 表示用户自定义 key 的 {@code Optional<String>}
      * @param permission 表示内存权限的 {@code byte}
      * @param size 表示内存容量的 {@code long}
      * @return 表示内存的 {@link SharedMemoryInternal}
      */
-    private SharedMemoryInternal addNewMemory(int key, Optional<String> userKey, byte permission, long size) {
-        return this.addNewMemory(new SharedMemoryKey(key, userKey), permission, size);
-    }
-
-    /**
-     * 将申请到的内存加入内存池，并返回只读视图
-     *
-     * @param key 表示内存句柄的 {@link SharedMemoryKey}
-     * @param permission 表示内存权限的 {@code byte}
-     * @param size 表示内存容量的 {@code long}
-     * @return 表示内存的 {@link SharedMemoryInternal}
-     */
-    private SharedMemoryInternal addNewMemory(SharedMemoryKey key, byte permission, long size) {
-        SharedMemoryInternal internal = new SharedMemoryInternal(key, permission, size);
-        this.memoryPool.put(key, internal);
+    private SharedMemoryInternal addNewMemory(int memoryId, String userKey, byte permission, long size) {
+        SharedMemoryInternal internal = new SharedMemoryInternal(
+                new SharedMemoryKey(memoryId, userKey), permission, size);
+        this.memoryPool.put(userKey, internal);
         return internal;
     }
 
     /**
      * 根据传入的 {@link MemoryIoRequest} 申请读写权限
      *
-     * @param request 传入的 {@link MemoryIoRequest}
+     * @param request 客户端传入 {@link MemoryIoRequest}
+     * @param memory 需要申请权限的内存 {@link SharedMemoryInternal}
      * @return 表示权限申请结果的 {@link SharedMemoryResult}
      */
-    public SharedMemoryResult applyPermission(MemoryIoRequest request) {
+    public SharedMemoryResult applyPermission(MemoryIoRequest request, SharedMemoryInternal memory) {
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
-        int objectKeyOffset = bodyBuilder.createString(getUserKeyIfIdAbsent(request.sharedMemoryKey()));
+        int objectKeyOffset = bodyBuilder.createString(getUserKeyIfIdAbsent(memory.sharedMemoryKey()));
         ApplyPermissionMessage.startApplyPermissionMessage(bodyBuilder);
         ApplyPermissionMessage.addPermission(bodyBuilder, request.permissionType());
         ApplyPermissionMessage.addObjectKey(bodyBuilder, objectKeyOffset);
-        ApplyPermissionMessage.addMemoryKey(bodyBuilder, request.sharedMemoryKey().memoryId());
+        ApplyPermissionMessage.addMemoryKey(bodyBuilder, memory.sharedMemoryKey().memoryId());
         int messageOffset = ApplyPermissionMessage.endApplyPermissionMessage(bodyBuilder);
         bodyBuilder.finish(messageOffset);
         ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
@@ -173,10 +162,10 @@ class SharedMemoryPool {
                             this.replyQueues.get(MessageType.ApplyPermission).take());
 
             // 修改本地内存信息
-            SharedMemoryInternal internal = this.memoryPool.get(request.sharedMemoryKey());
             if (response.errorType() == ErrorType.None) {
-                internal.setPermission(request.permissionType()).setSize(response.memorySize());
-                return success(internal.getView());
+                memory.setPermission(request.permissionType()).setSize(response.memorySize())
+                        .setMemoryId(response.memoryKey());
+                return success(memory.getView());
             }
             return failure(response.errorType());
         } catch (IOException | InterruptedException e) {
@@ -188,14 +177,15 @@ class SharedMemoryPool {
      * 根据传入的 {@link MemoryIoRequest} 释放读写许可
      *
      * @param request 传入的 {@link MemoryIoRequest}
+     * @param memory 需要申请权限的内存 {@link SharedMemoryInternal}
      */
-    public void releasePermission(MemoryIoRequest request) {
+    public void releasePermission(MemoryIoRequest request, SharedMemoryInternal memory) {
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
-        int objectKeyOffset = bodyBuilder.createString(getUserKeyIfIdAbsent(request.sharedMemoryKey()));
+        int objectKeyOffset = bodyBuilder.createString(getUserKeyIfIdAbsent(memory.sharedMemoryKey()));
         ReleasePermissionMessage.startReleasePermissionMessage(bodyBuilder);
         ReleasePermissionMessage.addPermission(bodyBuilder, request.permissionType());
         ReleasePermissionMessage.addObjectKey(bodyBuilder, objectKeyOffset);
-        ReleasePermissionMessage.addMemoryKey(bodyBuilder, request.sharedMemoryKey().memoryId());
+        ReleasePermissionMessage.addMemoryKey(bodyBuilder, memory.sharedMemoryKey().memoryId());
         int messageOffset = ReleasePermissionMessage.endReleasePermissionMessage(bodyBuilder);
         bodyBuilder.finish(messageOffset);
         ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
@@ -210,8 +200,7 @@ class SharedMemoryPool {
             // 需要打日志但是无需返回错误
         } finally {
             // 客户端不再持有此内存块的读写许可
-            SharedMemoryInternal internal = this.memoryPool.get(request.sharedMemoryKey());
-            internal.setPermission(PermissionType.None);
+            memory.setPermission(PermissionType.None);
         }
     }
 
@@ -223,9 +212,13 @@ class SharedMemoryPool {
     public void releaseSharedMemory(ReleaseMemoryRequest request) {
         // 先建造消息体
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
-        int objectKeyOffset = bodyBuilder.createString(getUserKeyIfIdAbsent(request.sharedMemoryKey()));
+
+        Optional<SharedMemoryInternal> memory = this.getMemory(request.userKey());
+        SharedMemoryKey key = memory.map(SharedMemoryInternal::sharedMemoryKey)
+                .orElse(new SharedMemoryKey(request.userKey()));
+        int objectKeyOffset = bodyBuilder.createString(getUserKeyIfIdAbsent(key));
         ReleaseMemoryMessage.startReleaseMemoryMessage(bodyBuilder);
-        ReleaseMemoryMessage.addMemoryKey(bodyBuilder, request.sharedMemoryKey().memoryId());
+        ReleaseMemoryMessage.addMemoryKey(bodyBuilder, key.memoryId());
         ReleaseMemoryMessage.addObjectKey(bodyBuilder, objectKeyOffset);
         int messageOffset = ReleaseMemoryMessage.endReleaseMemoryMessage(bodyBuilder);
         bodyBuilder.finish(messageOffset);
@@ -241,8 +234,7 @@ class SharedMemoryPool {
             // 需要打日志但是无需返回错误
         } finally {
             // 客户端不再持有此内存块
-            this.memoryPool.remove(request.sharedMemoryKey());
-            this.selfAppliedMemory.remove(request.sharedMemoryKey().userKey());
+            this.memoryPool.remove(request.userKey());
         }
     }
 

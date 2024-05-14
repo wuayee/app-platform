@@ -5,7 +5,6 @@
 package com.huawei.databus.sdk.support;
 
 import com.huawei.databus.sdk.api.DataBusIoRequest;
-import com.huawei.databus.sdk.memory.SharedMemoryKey;
 import com.huawei.fitframework.inspection.Validation;
 
 import java.time.Duration;
@@ -18,7 +17,7 @@ import java.util.Optional;
  * @since 2024/3/22
  */
 public class MemoryIoRequest implements DataBusIoRequest {
-    private final SharedMemoryKey sharedMemoryKey;
+    private final String userKey;
     private final byte[] bytes;
     private final long memoryOffset;
     private final int dataLength;
@@ -26,13 +25,7 @@ public class MemoryIoRequest implements DataBusIoRequest {
     private final Duration timeoutDuration;
 
     private MemoryIoRequest(Builder builder) {
-        if (builder.sharedMemoryKey != null) {
-            this.sharedMemoryKey = builder.sharedMemoryKey;
-        } else {
-            Validation.notNull(builder.userKey,
-                    () -> new IllegalArgumentException("User key cannot be null if sharedMemoryKey is unset."));
-            this.sharedMemoryKey = new SharedMemoryKey(builder.userKey);
-        }
+        this.userKey = Validation.notBlank(builder.userKey, "User key could not be empty.");
         this.bytes = builder.bytes;
         this.memoryOffset = builder.memoryOffset;
         this.dataLength = builder.dataLength;
@@ -41,8 +34,8 @@ public class MemoryIoRequest implements DataBusIoRequest {
     }
 
     @Override
-    public SharedMemoryKey sharedMemoryKey() {
-        return this.sharedMemoryKey;
+    public String userKey() {
+        return this.userKey;
     }
 
     @Override
@@ -74,7 +67,6 @@ public class MemoryIoRequest implements DataBusIoRequest {
      * {@link MemoryIoRequest} 的构造器
      */
     public static class Builder implements DataBusIoRequest.Builder {
-        private SharedMemoryKey sharedMemoryKey;
         private byte[] bytes;
         private long memoryOffset;
         private int dataLength;
@@ -107,19 +99,13 @@ public class MemoryIoRequest implements DataBusIoRequest {
         }
 
         @Override
-        public Builder sharedMemoryKey(SharedMemoryKey sharedMemoryKey) {
-            this.sharedMemoryKey = sharedMemoryKey;
-            return this;
-        }
-
-        @Override
-        public DataBusIoRequest.Builder userKey(String userKey) {
+        public Builder userKey(String userKey) {
             this.userKey = userKey;
             return this;
         }
 
         @Override
-        public DataBusIoRequest.Builder timeoutDuration(Duration timeoutDuration) {
+        public Builder timeoutDuration(Duration timeoutDuration) {
             this.timeoutDuration = timeoutDuration;
             return this;
         }
@@ -135,8 +121,7 @@ public class MemoryIoRequest implements DataBusIoRequest {
 
     @Override
     public String toString() {
-        return "MemoryIORequest{sharedMemoryKey=" + sharedMemoryKey.toString()
-                + ", memoryOffset=" + memoryOffset + ", dataLength=" + dataLength
+        return "MemoryIORequest{userKey=" + userKey + ", memoryOffset=" + memoryOffset + ", dataLength=" + dataLength
                 + ", permissionType=" + permissionType + ", timeoutDuration=" + timeoutDuration + '}';
     }
 

@@ -6,7 +6,7 @@ package com.huawei.databus.sdk.client;
 
 import com.huawei.databus.sdk.api.DataBusClient;
 import com.huawei.databus.sdk.client.jni.SharedMemoryReaderWriter;
-import com.huawei.databus.sdk.memory.SharedMemory;
+import com.huawei.databus.sdk.memory.SharedMemoryInternal;
 import com.huawei.databus.sdk.message.ErrorType;
 import com.huawei.databus.sdk.message.MessageType;
 import com.huawei.databus.sdk.message.PermissionType;
@@ -18,7 +18,6 @@ import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
 import com.huawei.databus.sdk.tools.DataBusUtils;
 import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.inspection.Validation;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -65,7 +64,10 @@ public class DefaultDataBusClient implements DataBusClient {
     }
 
     @Override
-    public OpenConnectionResult open(InetAddress dataBusAddr, int dataBusPort) {
+    public synchronized OpenConnectionResult open(InetAddress dataBusAddr, int dataBusPort) {
+        if (this.isConnected) {
+            return OpenConnectionResult.success();
+        }
         try {
             this.socketChannel = SocketChannel.open();
             // 设置TCP_NODELAY，禁用Nagle算法，以防止粘包问题
@@ -85,7 +87,7 @@ public class DefaultDataBusClient implements DataBusClient {
     }
 
     @Override
-    public SharedMemoryResult sharedMalloc(@Nonnull SharedMemoryRequest request) {
+    public synchronized SharedMemoryResult sharedMalloc(@Nonnull SharedMemoryRequest request) {
         if (!isConnected()) {
             return SharedMemoryResult.failure(ErrorType.NotConnectedToDataBus);
         }
@@ -132,44 +134,50 @@ public class DefaultDataBusClient implements DataBusClient {
             return MemoryIoResult.failure(ErrorType.NotConnectedToDataBus);
         }
         DataBusUtils.verifyIoRequest(request, permissionType);
-        Validation.isFalse(this.sharedMemoryPool.isMemoryIdMissing(request.sharedMemoryKey()),
-                () -> new IllegalArgumentException("Self applied memory should set memory ID."));
+
         // 当前内存上锁
-        SharedMemory memory = this.sharedMemoryPool.getOrAddMemory(request.sharedMemoryKey());
+        SharedMemoryInternal memory = this.sharedMemoryPool.getOrAddMemory(request.userKey());
         memory.lock().lock();
 
         try {
             // 申请内存许可
-            SharedMemoryResult result = this.sharedMemoryPool.applyPermission(request);
+            SharedMemoryResult result = this.sharedMemoryPool.applyPermission(request, memory);
             if (!result.isSuccess()) {
                 return MemoryIoResult.failure(result.errorType());
             }
 
-            // 检查写操作是否在内存边界内
+            // 检查读写操作是否在内存边界内
             if (request.memoryOffset() + request.dataLength() > result.sharedMemory().size()) {
                 return MemoryIoResult.failure(ErrorType.IOOutOfBounds);
             }
 
+            // 检查 memoryId 是否被正确设置
+            if (memory.sharedMemoryKey().memoryId() == -1) {
+                return MemoryIoResult.failure(ErrorType.KeyNotFound);
+            }
+
             // 执行读写操作
-            byte[] readBytes;
+            byte[] ioBytes;
             if (permissionType == PermissionType.Read) {
-                readBytes = this.sharedMemoryReaderWriter.read(request.sharedMemoryKey().memoryId(),
-                        request.memoryOffset(), request.dataLength());
+                long readLength = request.dataLength() == 0 ? memory.size() : request.dataLength();
+                ioBytes = this.sharedMemoryReaderWriter.read(memory.sharedMemoryKey().memoryId(),
+                        request.memoryOffset(), readLength);
             } else {
-                readBytes = request.bytes();
-                this.sharedMemoryReaderWriter.write(request.sharedMemoryKey().memoryId(), request.memoryOffset(),
-                        request.dataLength(), readBytes);
+                ioBytes = request.bytes();
+                long writeLength = request.dataLength() == 0 ? ioBytes.length : request.dataLength();
+                this.sharedMemoryReaderWriter.write(memory.sharedMemoryKey().memoryId(), request.memoryOffset(),
+                        writeLength, ioBytes);
             }
 
             // 返回读写成功结果
-            return MemoryIoResult.success(memory, readBytes, request.permissionType());
+            return MemoryIoResult.success(memory, ioBytes, request.permissionType());
         } catch (IOException e) {
             // 日志打印真实错误信息
             return MemoryIoResult.failure(permissionType == PermissionType.Read ? ErrorType.MemoryReadError
                     : ErrorType.MemoryWriteError, e);
         } finally {
             // 释放内存许可
-            this.sharedMemoryPool.releasePermission(request);
+            this.sharedMemoryPool.releasePermission(request, memory);
             memory.lock().unlock();
         }
     }

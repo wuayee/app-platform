@@ -63,7 +63,7 @@ public class DataBusUtils {
      */
     public static void verifyIoRequest(DataBusIoRequest request, byte permissionType) {
         Validation.notNull(request, () -> new IllegalArgumentException("Request cannot be null."));
-        Validation.notNull(request.sharedMemoryKey(),
+        Validation.notNull(request.userKey(),
                 () -> new IllegalArgumentException("Shared memory key cannot be null."));
         Validation.equals(request.permissionType(), permissionType,
                 () -> new IllegalArgumentException("Permission type mismatches with API."));
@@ -74,8 +74,8 @@ public class DataBusUtils {
             Validation.greaterThanOrEquals(request.bytes().length, request.dataLength(),
                     () -> new IllegalArgumentException("The buffer length should not be less than data length."));
         }
-        Validation.greaterThan(request.dataLength(), 0,
-                () -> new IllegalArgumentException("data length must be positive."));
+        Validation.greaterThanOrEquals(request.dataLength(), 0,
+                () -> new IllegalArgumentException("data length must be non-negative."));
         Validation.greaterThanOrEquals(request.memoryOffset(), 0,
                 () -> new IllegalArgumentException("Memory offset must be 0 or positive."));
         Validation.between((int) request.permissionType(), 0, PermissionType.names.length - 1,
@@ -92,5 +92,7 @@ public class DataBusUtils {
         Validation.notNull(request, () -> new IllegalArgumentException("Request cannot be null."));
         Validation.greaterThan(request.size(), 0,
                 () -> new IllegalArgumentException("memory length must be positive."));
+        Validation.notNull(request.userKey(),
+                () -> new IllegalArgumentException("Shared memory key cannot be null."));
     }
 }

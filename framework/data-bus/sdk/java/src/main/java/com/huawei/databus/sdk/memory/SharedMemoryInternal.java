@@ -26,9 +26,18 @@ public class SharedMemoryInternal implements SharedMemory {
         this.lock = new ReentrantLock();
     }
 
-    @Override
-    public SharedMemoryKey key() {
+    /**
+     * 获取当前内存的句柄
+     *
+     * @return 表示内存句柄的 {@link SharedMemoryKey}
+     */
+    public SharedMemoryKey sharedMemoryKey() {
         return key;
+    }
+
+    @Override
+    public String userKey() {
+        return this.key.userKey();
     }
 
     @Override
@@ -61,8 +70,8 @@ public class SharedMemoryInternal implements SharedMemory {
         }
 
         @Override
-        public SharedMemoryKey key() {
-            return this.internal.key();
+        public String userKey() {
+            return internal.userKey();
         }
 
         @Override
@@ -82,7 +91,7 @@ public class SharedMemoryInternal implements SharedMemory {
 
         @Override
         public String toString() {
-            return "SharedMemoryView{key=" + key() + ",permission=" + permission() + ",size=" + size() + '}';
+            return "SharedMemoryView{key=" + userKey() + ",permission=" + permission() + ",size=" + size() + '}';
         }
     }
 
@@ -114,6 +123,17 @@ public class SharedMemoryInternal implements SharedMemory {
      */
     public SharedMemoryInternal setSize(long size) {
         this.size = size;
+        return this;
+    }
+
+    /**
+     * 修改当前内存块的系统级句柄
+     *
+     * @param memoryId 表示许可的 {@code int}
+     * @return 方便链式调用的 {@link SharedMemoryInternal}
+     */
+    public SharedMemoryInternal setMemoryId(int memoryId) {
+        this.key.setMemoryId(memoryId);
         return this;
     }
 }

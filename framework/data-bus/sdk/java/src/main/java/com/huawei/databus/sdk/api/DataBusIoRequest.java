@@ -4,9 +4,6 @@
 
 package com.huawei.databus.sdk.api;
 
-import com.huawei.databus.sdk.memory.SharedMemory;
-import com.huawei.databus.sdk.memory.SharedMemoryKey;
-
 import java.time.Duration;
 import java.util.Optional;
 
@@ -18,11 +15,11 @@ import java.util.Optional;
  */
 public interface DataBusIoRequest {
     /**
-     * 返回与本次 IO 相关的内存
+     * 返回与本次 IO 相关的内存用户 key
      *
-     * @return 表示与本次 IO 请求相关的内存 {@link SharedMemory}
+     * @return 表示与本次 IO 请求相关的内存 {@code String}
      */
-    SharedMemoryKey sharedMemoryKey();
+    String userKey();
 
     /**
      * 返回与本次 IO 相关的字节数组
@@ -39,7 +36,9 @@ public interface DataBusIoRequest {
     long memoryOffset();
 
     /**
-     * 返回本次 IO 请求相关的最大字节数
+     * 返回本次 IO 请求相关的最大字节数。如果客户端未设置此值或者设置为0时，则默认为应尽可能读写最多字节数
+     * 1. 对于读请求，默认读取整块内存的所有内存
+     * 2. 对于写请求，默认写入整个字节数组的所有内容
      *
      * @return 表示最大字节数的 {@code int}
      */
@@ -96,21 +95,9 @@ public interface DataBusIoRequest {
         Builder memoryOffset(long memoryOffset);
 
         /**
-         * 向当前构建器中设置已有的内存句柄。此方法的优先级高于 userKey() 方法。因此，同时调用了 sharedMemoryKey() 和 userKey()
-         * 时，以 sharedMemoryKey() 为准。
-         * <b>注意：</b>对于内存的申请者，后续请求请勿调用 userKey 方法。
+         * 向当前构建器中设置用户自定义 key。
          *
-         * @param sharedMemoryKey 表示被设置的内存句柄 {@code long}。
-         * @return 表示当前构建器的 {@link Builder}。
-         */
-        Builder sharedMemoryKey(SharedMemoryKey sharedMemoryKey);
-
-        /**
-         * 向当前构建器中设置用户自定义 key。此方法的优先级低于 sharedMemoryKey() 方法。因此，同时调用了 sharedMemoryKey()
-         * 和 userKey() 时，以 sharedMemoryKey() 为准。
-         * <b>注意：</b>对于内存的申请者，后续请求请勿调用 userKey 方法。
-         *
-         * @param userKey 表示被设置的内存句柄 {@code long}。
+         * @param userKey 表示被设置的内存句柄 {@code String}。
          * @return 表示当前构建器的 {@link Builder}。
          */
         Builder userKey(String userKey);

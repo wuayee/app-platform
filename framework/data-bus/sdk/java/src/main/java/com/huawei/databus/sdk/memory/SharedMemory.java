@@ -16,9 +16,9 @@ public interface SharedMemory {
     /**
      * 获取此内存块对应的句柄
      *
-     * @return 表示对应的句柄 {@link SharedMemoryKey}
+     * @return 表示对应的句柄 {@code String}
      */
-    SharedMemoryKey key();
+    String userKey();
 
     /**
      * 获取共享内存的当前持有权限

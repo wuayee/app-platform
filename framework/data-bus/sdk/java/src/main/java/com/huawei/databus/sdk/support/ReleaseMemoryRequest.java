@@ -4,7 +4,6 @@
 
 package com.huawei.databus.sdk.support;
 
-import com.huawei.databus.sdk.memory.SharedMemoryKey;
 import com.huawei.fitframework.inspection.Validation;
 
 /**
@@ -14,44 +13,26 @@ import com.huawei.fitframework.inspection.Validation;
  * @since 2024-05-07
  */
 public class ReleaseMemoryRequest {
-    private final SharedMemoryKey sharedMemoryKey;
+    private final String userKey;
 
     private ReleaseMemoryRequest(Builder builder) {
-        if (builder.sharedMemoryKey != null) {
-            this.sharedMemoryKey = builder.sharedMemoryKey;
-        } else {
-            Validation.notNull(builder.userKey,
-                    () -> new IllegalArgumentException("User key cannot be null if sharedMemoryKey is unset."));
-            this.sharedMemoryKey = new SharedMemoryKey(builder.userKey);
-        }
+        this.userKey = Validation.notBlank(builder.userKey, "User key could not be empty.");
     }
 
     /**
      * 获取被释放的内存句柄
      *
-     * @return 表示内存句柄的 {@link SharedMemoryKey}
+     * @return 表示内存句柄的 {@code String}
      */
-    public SharedMemoryKey sharedMemoryKey() {
-        return this.sharedMemoryKey;
+    public String userKey() {
+        return this.userKey;
     }
 
     /**
      * {@link ReleaseMemoryRequest} 的构造器
      */
     public static class Builder {
-        private SharedMemoryKey sharedMemoryKey;
         private String userKey;
-
-        /**
-         * 向当前构建器中设置内存句柄。内存句柄的优先级高于自定义 key
-         *
-         * @param sharedMemoryKey 表示释放内存句柄的的 {@link SharedMemoryKey}。
-         * @return 表示当前构建器的 {@link Builder}。
-         */
-        public Builder sharedMemoryKey(SharedMemoryKey sharedMemoryKey) {
-            this.sharedMemoryKey = sharedMemoryKey;
-            return this;
-        }
 
         /**
          * 向当前构建器中设置内存自定义 key 。
@@ -72,5 +53,14 @@ public class ReleaseMemoryRequest {
         public ReleaseMemoryRequest build() {
             return new ReleaseMemoryRequest(this);
         }
+    }
+
+    /**
+     * 获取 {@link ReleaseMemoryRequest} 的构建器。
+     *
+     * @return 表示 {@link ReleaseMemoryRequest} 的构建器的 {@link ReleaseMemoryRequest.Builder}。
+     */
+    public static ReleaseMemoryRequest.Builder custom() {
+        return new ReleaseMemoryRequest.Builder();
     }
 }
