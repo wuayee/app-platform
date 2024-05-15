@@ -9,8 +9,10 @@ import static com.huawei.fitframework.util.ObjectUtils.cast;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.jade.store.ItemInfo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,6 +41,7 @@ public class DefaultValueFilterItemInfo implements ItemInfo {
         if (MapUtils.isEmpty(properties)) {
             return this.itemInfo.schema();
         }
+        List<String> defaultKeyList = new ArrayList<>();
         Iterator<Map.Entry<String, Object>> iterator = properties.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, Object> entry = iterator.next();
@@ -46,8 +49,15 @@ public class DefaultValueFilterItemInfo implements ItemInfo {
             // 删除有默认值的参数
             if (property.get("default") != null) {
                 iterator.remove();
+                defaultKeyList.add(entry.getKey());
             }
         }
+        // 过滤 required 中拥有默认值的参数。
+        List<String> requiredList = cast(parametersSchema.get("required"));
+        requiredList.removeIf(defaultKeyList::contains);
+        parametersSchema.put("required", requiredList);
+        // 过滤 order 字段
+        parametersSchema.remove("order");
         return schema;
     }
 
