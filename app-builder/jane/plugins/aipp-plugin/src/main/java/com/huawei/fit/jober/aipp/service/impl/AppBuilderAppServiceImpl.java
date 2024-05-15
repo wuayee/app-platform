@@ -10,6 +10,9 @@ import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.util.Entities;
 import com.huawei.fit.jober.aipp.common.ConvertUtils;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
+import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
+import com.huawei.fit.jober.aipp.common.exception.AippException;
+import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfig;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfigProperty;
@@ -34,6 +37,7 @@ import com.huawei.fit.jober.aipp.service.AppBuilderAppService;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
+import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.transaction.Transactional;
@@ -78,9 +82,12 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
     private final AppBuilderAppFactory appFactory;
     private final AippFlowService aippFlowService;
     private final AppBuilderAppRepository appRepository;
+    private final int nameLengthMaximum;
 
     public AppBuilderAppServiceImpl(AppBuilderAppFactory appFactory, AippFlowService aippFlowService,
-            AppBuilderAppRepository appRepository) {
+            AppBuilderAppRepository appRepository,
+            @Value("${validation.task.name.length.maximum:64}") int nameLengthMaximum) {
+        this.nameLengthMaximum = nameLengthMaximum;
         this.appFactory = appFactory;
         this.aippFlowService = aippFlowService;
         this.appRepository = appRepository;
@@ -152,6 +159,9 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
     @Transactional
     @Fitable(id = "b389e19779fcc245b7a6815a46eb5865")
     public Rsp<AppBuilderAppDto> create(String appId, AppBuilderAppCreateDto dto, OperationContext context) {
+        if (dto != null) {
+            this.validateAppName(dto.getName(), context);
+        }
         AppBuilderApp templateApp = this.appFactory.create(appId);
         // 根据模板app复制app，仅需修改所有id
         // 优先copy下层内容，因为上层改变Id后，会影响下层对象的查询
@@ -182,10 +192,20 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
         return Rsp.ok(this.buildFullAppDto(templateApp));
     }
 
-    private boolean isValidApp(AppBuilderAppCreateDto dto, OperationContext context) {
+    private void validateAppName(String name, OperationContext context) {
+        if (StringUtils.isEmpty(name)) {
+            log.error("Create aipp failed: name can not be empty.", name);
+            throw new AippParamException(context, AippErrCode.AIPP_NAME_IS_EMPTY);
+        } else if (name.length() > this.nameLengthMaximum) {
+            log.error("Create aipp failed: the length of task name is out of bounds. [name={}]", name);
+            throw new AippParamException(context, AippErrCode.AIPP_NAME_LENGTH_OUT_OF_BOUNDS);
+        }
         AppQueryCondition queryCondition =
-                AppQueryCondition.builder().tenantId(context.getTenantId()).name(dto.getName()).build();
-        return this.appRepository.selectWithCondition(queryCondition).isEmpty();
+                AppQueryCondition.builder().tenantId(context.getTenantId()).name(name).build();
+        if (!this.appRepository.selectWithCondition(queryCondition).isEmpty()) {
+            log.error("Create aipp failed, [name={}, tenantId={}]", name, context.getTenantId());
+            throw new AippException(context, AippErrCode.AIPP_NAME_IS_DUPLICATE);
+        }
     }
 
     private Map<String, Object> createAppAttributes(AppBuilderAppCreateDto dto) {
@@ -201,6 +221,9 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
     @Transactional
     @Fitable(id = "b389e19779fcc245b7a6826a46eb5865")
     public Rsp<AppBuilderAppDto> updateApp(String appId, AppBuilderAppDto appDto, OperationContext context) {
+        if (appDto != null) {
+            this.validateAppName(appDto.getName(), context);
+        }
         AppBuilderApp update = this.appFactory.create(appId);
         update.setUpdateBy(context.getOperator());
         update.setUpdateAt(LocalDateTime.now());
@@ -797,6 +820,8 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
         } else if (StringUtils.equalsIgnoreCase("endNodeEnd", node.getString("type"))) {
             return null;
         } else if (StringUtils.equalsIgnoreCase("jadeEvent", node.getString("type"))) {
+            return null;
+        } else if (StringUtils.equalsIgnoreCase("conditionNodeCondition", node.getString("type"))) {
             return null;
         } else {
             return node.getJSONObject("flowMeta")

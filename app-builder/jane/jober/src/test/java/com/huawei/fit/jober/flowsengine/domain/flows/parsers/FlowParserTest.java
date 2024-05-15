@@ -9,6 +9,7 @@ import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowJoberType.
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowJoberType.GENERICABLE_JOBER;
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowJoberType.HTTP_JOBER;
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowJoberType.OHSCRIPT_JOBER;
+import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowJoberType.STORE_JOBER;
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeTriggerMode.AUTO;
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeTriggerMode.MANUAL;
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeType.CONDITION;
@@ -26,6 +27,7 @@ import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.events.Fl
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.filters.FlowFilter;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.jobers.FlowGenericableJober;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.jobers.FlowStoreJober;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowDefinitionStatus;
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeType;
@@ -268,6 +270,24 @@ public class FlowParserTest extends FlowsDataBaseTest {
         Assertions.assertEquals("com.huawei.fit.demo.flow.helloWorld", genericableJober.getGenericableConfig().getId());
         Assertions.assertEquals(1, genericableJober.getGenericableConfig().getParams().size());
         Assertions.assertEquals("name", genericableJober.getGenericableConfig().getParams().get(0));
+    }
+
+    @Test
+    @DisplayName("测试store jober自动任务解析成功")
+    public void testStoreJoberParserSuccess() {
+        String jsonData = getJsonData(getFilePath("flows_with_store_jober.json"));
+        JSONObject stateNode = getNode(JSONObject.parseObject(jsonData).getJSONArray("nodes"), STATE);
+
+        FlowDefinition flowDefinition = flowParser.parse(jsonData);
+
+        FlowJober flowJober = flowDefinition.getFlowNode(stateNode.getString("metaId")).getJober();
+
+        Assertions.assertEquals(STORE_JOBER, flowJober.getType());
+        Assertions.assertTrue(flowJober instanceof FlowStoreJober);
+        FlowStoreJober storeJober = (FlowStoreJober) flowJober;
+        Assertions.assertEquals("toolId", storeJober.getServiceMeta().getUniqueName());
+        Assertions.assertEquals(1, storeJober.getServiceMeta().getParams().size());
+        Assertions.assertEquals("name", storeJober.getServiceMeta().getParams().get(0));
     }
 
     @Override

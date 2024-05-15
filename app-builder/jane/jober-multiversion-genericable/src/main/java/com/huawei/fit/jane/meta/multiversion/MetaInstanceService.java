@@ -83,5 +83,5 @@ public interface MetaInstanceService {
      * @return 表示 meta 唯一标识的 {@link String}。
      */
     @Genericable(id = "fcf1745068eb47559af543a037b89ef3")
-    String getMetaId(String id);
+    String getMetaVersionId(String id);
 }

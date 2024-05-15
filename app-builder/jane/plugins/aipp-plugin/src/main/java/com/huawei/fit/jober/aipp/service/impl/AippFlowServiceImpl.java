@@ -1095,7 +1095,6 @@ public class AippFlowServiceImpl implements AippFlowService {
         propertiesMap.put("inputParams",
                 MapBuilder.get()
                         .put("type", "object")
-                        .put("description", "the tenant id of the waterFlow tool")
                         .put("properties", this.buildPropertiesMapOfInputParam(flowInfo))
                         .build());
         return propertiesMap;
@@ -1103,15 +1102,13 @@ public class AippFlowServiceImpl implements AippFlowService {
 
     private Map<String, Object> buildPropertiesMapOfInputParam(FlowInfo flowInfo) {
         Map<String, Object> propertiesMapOfInputParam = MapBuilder.<String, Object>get()
-                .put("parentFlowTraceId",
+                .put(AippConst.TRACE_ID,
                         MapBuilder.get()
                                 .put("type", "string")
-                                .put("description", "the flow trace id of parent flow")
                                 .build())
-                .put("parentCallbackId",
+                .put(AippConst.CALLBACK_ID,
                         MapBuilder.get()
                                 .put("type", "string")
-                                .put("description", "the callback id of parent flow")
                                 .build())
                 .build();
         flowInfo.getInputParamsByName("input").forEach(inputParam -> {

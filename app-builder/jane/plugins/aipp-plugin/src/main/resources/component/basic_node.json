@@ -1,0 +1,22 @@
+[
+  {
+    "type": "retrievalNodeState",
+    "name": "数据检索"
+  },
+  {
+    "type": "llmNodeState",
+    "name": "大模型"
+  },
+  {
+    "type": "manualCheckNodeState",
+    "name": "人工检查"
+  },
+  {
+    "type": "fitInvokeNodeState",
+    "name": "FIT调用"
+  },
+  {
+    "type": "conditionNodeCondition",
+    "name": "条件"
+  }
+]

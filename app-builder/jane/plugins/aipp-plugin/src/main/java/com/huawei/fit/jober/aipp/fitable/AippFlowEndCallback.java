@@ -79,15 +79,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
             Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
         }
 
-        // todo: 表明子流结果是否需要再经过模型加工，当前场景全为false
-        //  正常情况下应该是在结束节点配上该key并放入businessData中，此处模拟该过程
-        //  如果前一个节点是人工检查节点，并在结束节点reference到了表单，那么这里一定会打印消息
-        businessData.put(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM, false);
-        if (isLoggingAllowed(businessData)) {
-            Utils.persistAippMsgLog(aippLogService,
-                    businessData.get(AippConst.BS_AIPP_FINAL_OUTPUT).toString(),
-                    contexts);
-        }
+        this.logFinalOutput(contexts, businessData);
 
         // update all result data
         InstanceDeclarationInfo declarationInfo = InstanceDeclarationInfo.custom()
@@ -109,11 +101,9 @@ public class AippFlowEndCallback implements FlowCallbackService {
         // 删除缓存
         this.distributedMapService.delete(aippInstId);
 
-        // todo: 从businessData里拿，create的时候会塞进去
-        String parentFlowTraceId = ObjectUtils.cast(businessData.get("parentFlowTraceId"));
-        String parentCallbackId = ObjectUtils.cast(businessData.get("parentCallbackId"));
-        if (StringUtils.isNotEmpty(parentFlowTraceId) && StringUtils.isNotEmpty(parentCallbackId)) {
-            // todo: 怎么调父节点的callback fitable
+        String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
+        String parentCallbackId = ObjectUtils.cast(businessData.get(AippConst.PARENT_CALLBACK_ID));
+        if (StringUtils.isNotEmpty(parentInstanceId) && StringUtils.isNotEmpty(parentCallbackId)) {
             this.brokerClient.getRouter(FlowCallbackService.class, "w8onlgq9xsw13jce4wvbcz3kbmjv3tuw")
                     .route(new FitableIdFilter(parentCallbackId))
                     .format(SerializationFormat.CBOR)
@@ -121,8 +111,24 @@ public class AippFlowEndCallback implements FlowCallbackService {
         }
     }
 
-    private static boolean isLoggingAllowed(Map<String, Object> businessData) {
-        return !ObjectUtils.<Boolean>cast(businessData.get(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM))
-                && StringUtils.isNotEmpty(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_FINAL_OUTPUT)));
+    private void logFinalOutput(List<Map<String, Object>> contexts, Map<String, Object> businessData) {
+        // todo: 表明流程结果是否需要再经过模型加工，当前场景全为false。
+        //  正常情况下应该是在结束节点配上该key并放入businessData中，此处模拟该过程。
+        //  如果子流程结束后需要再经过模型加工，子流程结束节点不打印日志；否则子流程结束节点需要打印日志。
+        //  如果前一个节点是人工检查节点，并在结束节点reference到了表单，那么这里一定会打印消息。
+        businessData.put(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM, false);
+        if (ObjectUtils.<Boolean>cast(businessData.get(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM))) {
+            return;
+        }
+        Object finalOutput = businessData.get(AippConst.BS_AIPP_FINAL_OUTPUT);
+        if (businessData.get(AippConst.OUTPUT_IS_FROM_CHILD) != null &&
+                ObjectUtils.<Boolean>cast(businessData.get(AippConst.OUTPUT_IS_FROM_CHILD))) {
+            return;
+        }
+        if (finalOutput == null) {
+            Utils.persistAippMsgLog(aippLogService, "获取到的结果为 null，请检查配置。", contexts);
+        } else {
+            Utils.persistAippMsgLog(aippLogService, ObjectUtils.cast(finalOutput), contexts);
+        }
     }
 }

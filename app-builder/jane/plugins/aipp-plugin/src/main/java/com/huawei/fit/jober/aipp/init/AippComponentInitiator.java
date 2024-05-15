@@ -34,6 +34,8 @@ public class AippComponentInitiator {
 
     private static final String FORM_PATH = "/form.json";
 
+    private static final String BASIC_NODE_PATH = "/basic_node.json";
+
     private final Plugin plugin;
 
     public AippComponentInitiator(Plugin plugin) {
@@ -47,5 +49,7 @@ public class AippComponentInitiator {
                 ResourceLoader.loadFileData(this.plugin, RESOURCE_PATH + FLOW_PATH));
         COMPONENT_DATA.put(AippConst.FORM_COMPONENT_DATA_KEY,
                 ResourceLoader.loadFileData(this.plugin, RESOURCE_PATH + FORM_PATH));
+        COMPONENT_DATA.put(AippConst.BASIC_NODE_COMPONENT_DATA_KEY,
+                ResourceLoader.loadFileData(this.plugin, RESOURCE_PATH + BASIC_NODE_PATH));
     }
 }

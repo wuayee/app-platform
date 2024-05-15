@@ -32,8 +32,9 @@ import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -44,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -94,21 +96,24 @@ public class AippLogServiceImpl implements AippLogService {
     /**
      * 查询指定aipp最近5个的历史记录
      *
-     * @param aippId 指定aipp的id
-     * @param version 指定aipp的版本
+     * @param appId 指定aipp的id
      * @return log数据
      */
     @Override
-    public List<AippInstLogDataDto> queryAippRecentInstLog(String aippId, String version, OperationContext context) {
-        String aippType = this.getAippType(aippId, version, context);
-        if (version == null) {
-            throw new AippParamException(context, AippErrCode.INPUT_PARAM_IS_INVALID, "version is null");
+    public List<AippInstLogDataDto> queryAippRecentInstLog(String appId, String type, OperationContext context) {
+        String aippType = AippTypeEnum.getType(type).type();
+        List<String> metaIds = getMetaIds(appId, context, aippType);
+        if (metaIds.isEmpty()) {
+            return Collections.emptyList();
         }
-        List<AippInstLogDataDto> recentLogData = this.queryAippRecentInstLog(aippId, aippType, 5, context);
+        List<AippInstLogDataDto> recentLogData = this.queryAippRecentInstLog(metaIds, aippType, 5, context);
         // 只对最后一个记录查询状态
         if (!recentLogData.isEmpty()) {
             AippInstLogDataDto lastLogData = recentLogData.get(recentLogData.size() - 1);
-            Meta meta = MetaUtils.getAnyMeta(metaService, aippId, version, context);
+            Meta meta = MetaUtils.getAnyMeta(metaService, lastLogData.getAippId(), lastLogData.getVersion(), context);
+            if (meta == null) {
+                return Collections.emptyList();
+            }
             String versionId = meta.getVersionId();
             RangedResultSet<Instance> instances =
                     Utils.getInstances(versionId, lastLogData.getInstanceId(), context, metaInstanceService);
@@ -124,10 +129,21 @@ public class AippLogServiceImpl implements AippLogService {
         return recentLogData;
     }
 
-    private String getAippType(String aippId, String version, OperationContext context) {
-        Meta meta = MetaUtils.getAnyMeta(metaService, aippId, version, context);
-        return ObjectUtils.cast(meta.getAttributes()
-                .getOrDefault(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.NORMAL.name()));
+    @NotNull
+    private List<String> getMetaIds(String appId, OperationContext context, String aippType) {
+        return MetaUtils.getAllMetasByAppId(this.metaService, appId, aippType, context)
+                .stream()
+                .filter(Objects::nonNull)
+                .map(Meta::getId)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    private List<AippInstLogDataDto> queryAippRecentInstLog(List<String> aippIds, String aippType, Integer count,
+            OperationContext context) {
+        List<String> instanceIds =
+                this.aippLogMapper.selectRecentInstanceIdByAippIds(aippIds, aippType, count, context.getW3Account());
+        return this.queryAndSortLogs(instanceIds, context);
     }
 
     @Override
@@ -135,9 +151,15 @@ public class AippLogServiceImpl implements AippLogService {
             OperationContext context) {
         List<String> instanceIds =
                 aippLogMapper.selectRecentInstanceId(aippId, aippType, count, context.getW3Account());
+        return this.queryAndSortLogs(instanceIds, context);
+    }
+
+    @NotNull
+    private List<AippInstLogDataDto> queryAndSortLogs(List<String> instanceIds, OperationContext context) {
         return queryRecentLogByInstanceIds(instanceIds, context).values()
                 .stream()
                 .map(AippInstLogDataDto::fromAippInstLogList)
+                .filter(dto -> dto.getQuestion() != null)
                 .sorted((d1, d2) -> Math.toIntExact(d1.getQuestion().getLogId() - d2.getQuestion().getLogId()))
                 .collect(Collectors.toList());
     }
@@ -197,9 +219,13 @@ public class AippLogServiceImpl implements AippLogService {
                 AippLogQueryCondition.builder().instanceId(instanceId).afterAt(sinceTime).build();
         return aippLogMapper.selectWithCondition(sqlCondition)
                 .stream()
-                .filter(log1 -> !(AippInstLogType.FORM.name().equals(log1.getLogType())
-                        || AippInstLogType.HIDDEN_MSG.name().equals(log1.getLogType())))
+                .filter(l -> !isHiddenLog(l))
                 .collect(Collectors.toList());
+    }
+
+    private static boolean isHiddenLog(AippInstLog l) {
+        return AippInstLogType.FORM.name().equals(l.getLogType()) || AippInstLogType.HIDDEN_MSG.name()
+                .equals(l.getLogType()) || AippInstLogType.HIDDEN_QUESTION.name().equals(l.getLogType());
     }
 
     /**
@@ -281,19 +307,23 @@ public class AippLogServiceImpl implements AippLogService {
     /**
      * 删除指定aipp的历史记录
      *
-     * @param aippId 指定aipp的id
+     * @param appId 指定aipp的id
      * @param context 登录信息
      */
-    public void deleteAippInstLog(String aippId, String version, OperationContext context) {
-        String aippType = this.getAippType(aippId, version, context);
+    public void deleteAippInstLog(String appId, String type, OperationContext context) {
+        String aippType = AippTypeEnum.getType(type).type();
+        List<String> metaIds = getMetaIds(appId, context, aippType);
+        if (metaIds.isEmpty()) {
+            return;
+        }
         List<String> instanceIdList =
-                aippLogMapper.selectNormalInstanceIdOrderByTimeDesc(aippId, aippType, context.getW3Account());
+                this.aippLogMapper.selectNormalInstanceIdOrderByTimeDesc(metaIds, aippType, context.getW3Account());
         if (!instanceIdList.isEmpty()) {
             // check最后的实例是不是还在运行
-            Meta meta = MetaUtils.getAnyMeta(metaService, aippId, version, context);
-            String versionId = meta.getVersionId();
+            String instanceId = instanceIdList.get(0);
+            String versionId = this.metaInstanceService.getMetaVersionId(instanceId);
             RangedResultSet<Instance> instances =
-                    Utils.getInstances(versionId, instanceIdList.get(0), context, metaInstanceService);
+                    Utils.getInstances(versionId, instanceId, context, this.metaInstanceService);
             if (instances.getRange().getTotal() == 0) {
                 return;
             }
@@ -305,9 +335,9 @@ public class AippLogServiceImpl implements AippLogService {
             if (lastLogStatus.equals(MetaInstStatusEnum.RUNNING.name())) {
                 instanceIdExclude = instanceIdList.get(0);
             } else {
-                this.uploadedFileManageService.cleanAippFiles(aippId, context.getW3Account());
+                this.uploadedFileManageService.cleanAippFiles(metaIds, context.getW3Account());
             }
-            this.aippLogMapper.delete(aippId, version, context.getW3Account(), instanceIdExclude);
+            this.aippLogMapper.delete(metaIds, aippType, context.getW3Account(), instanceIdExclude);
         }
     }
 

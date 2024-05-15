@@ -242,14 +242,21 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
 
         String question = (String) businessData.get(AippConst.BS_AIPP_QUESTION_KEY);
         String fileDesc = (String) businessData.get(AippConst.BS_AIPP_FILE_DESC_KEY);
-
         // 持久化日志
         if (StringUtils.isEmpty(fileDesc)) {
-            // 插入question日志
-            Utils.persistAippLog(aippLogService,
-                    AippInstLogType.QUESTION.name(),
-                    AippLogData.builder().msg(question).build(),
-                    businessData);
+            if (this.isChildInstance(businessData)) {
+                // 如果是子流程，插入 hidden_question
+                Utils.persistAippLog(aippLogService,
+                        AippInstLogType.HIDDEN_QUESTION.name(),
+                        AippLogData.builder().msg(question).build(),
+                        businessData);
+            } else {
+                // 插入question日志
+                Utils.persistAippLog(aippLogService,
+                        AippInstLogType.QUESTION.name(),
+                        AippLogData.builder().msg(question).build(),
+                        businessData);
+            }
         } else {
             // 插入 hidden_question及file日志
             Utils.persistAippLog(aippLogService,
@@ -287,6 +294,12 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
         metaInstanceService.patchMetaInstance(meta.getVersionId(), metaInst.getId(), info, context);
 
         return metaInst.getId();
+    }
+
+    private boolean isChildInstance(Map<String, Object> businessData) {
+        String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
+        String parentCallbackId = ObjectUtils.cast(businessData.get(AippConst.PARENT_CALLBACK_ID));
+        return StringUtils.isNotEmpty(parentInstanceId) && StringUtils.isNotEmpty(parentCallbackId);
     }
 
     private boolean checkInstanceStatus(String aippId, Instance instDetail, Function<String, Boolean> handler) {
@@ -353,6 +366,9 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
         logs.forEach(log -> {
             Map<String, Object> logMap = new HashMap<>();
             AippInstLogDataDto.AippInstanceLogBody question = log.getQuestion();
+            if (question == null) {
+                return;
+            }
             logMap.put("question", getLogData(question.getLogData()));
             List<AippInstLogDataDto.AippInstanceLogBody> answers = log.getInstanceLogBodies()
                     .stream()
@@ -457,8 +473,9 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
      */
     @Override
     public AippInstanceDto getInstance(String aippId, String version, String instanceId, OperationContext context) {
-        String metaId = this.metaInstanceService.getMetaId(instanceId);
-        Meta meta = MetaUtils.getAnyMeta(this.metaService, metaId, version, context);
+        String metaVersionId = this.metaInstanceService.getMetaVersionId(instanceId);
+        Meta meta = this.metaService.retrieve(metaVersionId, null);
+        context.setTenantId(meta.getTenant());
         return getInstanceByVersionId(meta.getVersionId(), instanceId, context);
     }
 
@@ -765,23 +782,24 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
     private void clearFormId(Map<String, Object> info) {
         info.put(AippConst.INST_CURR_FORM_ID_KEY, AippConst.INVALID_FORM_ID);
         info.put(AippConst.INST_CURR_FORM_VERSION_KEY, AippConst.INVALID_FORM_VERSION_ID);
+        info.put(AippConst.INST_CHILD_INSTANCE_ID, AippConst.INVALID_CHILD_INSTANCE_ID);
     }
 
     /**
      * 终止aipp实例
      *
      * @param context 操作上下文
-     * @param aippId aippId
-     * @param version aipp版本
      * @param instanceId 实例id
      */
     @Override
-    public void terminateInstance(String aippId, String version, String instanceId, OperationContext context) {
-        Meta meta = MetaUtils.getAnyMeta(this.metaService, aippId, version, context);
-        String versionId = meta.getVersionId();
+    public void terminateInstance(String instanceId, OperationContext context) {
+        String versionId = this.metaInstanceService.getMetaVersionId(instanceId);
         Instance instDetail = Utils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
         Function<String, Boolean> handler = status -> MetaInstStatusEnum.getMetaInstStatus(status).getValue()
                 == MetaInstStatusEnum.RUNNING.getValue();
+        Meta meta = this.metaService.retrieve(versionId, context);
+        String aippId = meta.getId();
+        String version = meta.getVersion();
         if (!checkInstanceStatus(aippId, instDetail, handler)) {
             log.error("aipp {} inst{}, not allow terminate.", aippId, instanceId);
             throw new AippException(context, AippErrCode.TERMINATE_INSTANCE_FORBIDDEN);

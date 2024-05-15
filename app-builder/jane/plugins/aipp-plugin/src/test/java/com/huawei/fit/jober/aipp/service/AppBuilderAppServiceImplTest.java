@@ -71,7 +71,7 @@ public class AppBuilderAppServiceImplTest {
                 configPropertyRepository,
                 formPropertyRepository,
                 appRepository);
-        appBuilderAppService = new AppBuilderAppServiceImpl(factory, aippFlowService, appRepository);
+        appBuilderAppService = new AppBuilderAppServiceImpl(factory, aippFlowService, appRepository, 64);
     }
 
     private AppBuilderApp mockApp() {

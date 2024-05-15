@@ -296,7 +296,7 @@ public class Utils {
         String aippType = (String) businessData.get(AippConst.ATTR_AIPP_TYPE_KEY);
         String instId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
         String w3Account = getOpContext(businessData).getW3Account();
-        String parentInstId = (String) businessData.get(AippConst.BS_AIPP_PARENT_INST_ID_KEY);
+        String parentInstId = (String) businessData.get(AippConst.PARENT_INSTANCE_ID);
 
         if (!checkFormMsg(logData, logType)) {
             log.warn("invalid logData {}, logType {}, aippId {}, instId {]", logData, logType, aippId, instId);

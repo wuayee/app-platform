@@ -905,3 +905,6 @@ CREATE TABLE IF NOT EXISTS flow_graph
     is_deleted       BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (id, version)
     );
+
+DROP INDEX task_template_name_idx;
+CREATE UNIQUE INDEX IF NOT EXISTS task_template_name_tenant_idx ON task_template ("name","tenant_id");

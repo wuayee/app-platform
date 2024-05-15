@@ -136,11 +136,9 @@ public interface AippRunTimeService {
      * 终止aipp实例
      *
      * @param context 操作上下文
-     * @param aippId aippId
-     * @param version aipp版本
      * @param instanceId 实例id
      */
-    void terminateInstance(String aippId, String version, String instanceId, OperationContext context);
+    void terminateInstance(String instanceId, OperationContext context);
 
     /**
      * 终止aipp全部实例

@@ -186,17 +186,14 @@ public class AppRunTimeController extends AbstractController {
      *
      * @param httpRequest 操作上下文
      * @param tenantId 租户id
-     * @param aippId aippId
      * @param instanceId 实例id
      * @return
      */
-    @PutMapping(path = "/aipp/{aipp_id}/instances/{instance_id}/terminate", description = "终止实例任务")
+    @PutMapping(path = "/instances/{instance_id}/terminate", description = "终止实例任务")
     public Rsp<Void> terminateAippInstance(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId,
-            @PathVariable("aipp_id") String aippId,
-            @PathVariable("instance_id") String instanceId,
-            @RequestParam(value = "version") String version) {
-        this.aippRunTimeService.terminateInstance(aippId, version, instanceId, this.contextOf(httpRequest, tenantId));
+            @PathVariable("instance_id") String instanceId) {
+        this.aippRunTimeService.terminateInstance(instanceId, this.contextOf(httpRequest, tenantId));
         return Rsp.ok();
     }
 
