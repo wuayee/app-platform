@@ -8,6 +8,7 @@ import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.PostMapping;
+import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
@@ -16,6 +17,8 @@ import com.huawei.jade.store.service.ItemData;
 import com.huawei.jade.store.service.ItemService;
 import com.huawei.jade.store.support.ItemRepositoryUtil;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -61,13 +64,18 @@ public class ItemController {
     @PostMapping(path = "/store/platform/{platform}/fit/tool/names/{toolName}")
     public String addFitTool(@PathVariable("platform") String platform, @PathVariable("toolName") String toolName,
             @RequestParam("genericableId") String genericableId, @RequestParam("fitableId") String fitableId,
-            @RequestParam("schema") String schema) {
+            @RequestBody("schema") Map<String, Object> schema) {
+        String toolRealName = toolName;
+        try {
+            toolRealName = URLDecoder.decode(toolRealName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return "error";
+        }
         String group = genericableId + "#" + fitableId;
-        Map<String, Object> schemaObject = ItemRepositoryUtil.json2Obj(schema);
         ItemData item = new ItemData().setCategory("TOOL")
                 .setGroup(group)
-                .setName(toolName)
-                .setSchema(schemaObject)
+                .setName(toolRealName)
+                .setSchema(schema)
                 .setTags(Collections.singleton("FIT"));
         String res = this.fitToolService.addFitTool(item);
         if (Objects.equals(platform, "tianzhou") || Objects.equals(platform, "jade")) {

@@ -32,25 +32,6 @@ public class DefaultItemServiceTest {
     }
 
     @Test
-    @DisplayName("添加 FitTool 应该返回唯一标识。")
-    public void shouldReturnUniqueNameWhenAddFitTool() {
-        // given
-        String platform = "jade";
-        String category = "TOOL";
-        String genericableId = "gid";
-        String fitableId = "fid";
-        String schema = "{\"description\": \"desc\"}";
-        when(this.controller.addFitTool(platform, category, genericableId, fitableId, schema)).thenReturn(
-                "testUniqueName");
-
-        // when
-        String res = this.controller.addFitTool(platform, category, genericableId, fitableId, schema);
-
-        // then
-        assertThat(res).isEqualTo("testUniqueName");
-    }
-
-    @Test
     @DisplayName("添加商品应该返回唯一标识。")
     public void shouldReturnUniqueNameWhenAddItems() {
         // given
