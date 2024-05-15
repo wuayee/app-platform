@@ -66,7 +66,7 @@ class SharedMemoryPool {
     public SharedMemoryResult applySharedMemory(SharedMemoryRequest request) {
         // 先建造消息体
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
-        int objectKeyOffset = bodyBuilder.createString(request.getUserKey());
+        int objectKeyOffset = bodyBuilder.createString(request.userKey());
         ApplyMemoryMessage.startApplyMemoryMessage(bodyBuilder);
         ApplyMemoryMessage.addObjectKey(bodyBuilder, objectKeyOffset);
         ApplyMemoryMessage.addMemorySize(bodyBuilder, request.size());
@@ -85,7 +85,7 @@ class SharedMemoryPool {
             ApplyMemoryMessageResponse response =
                     ApplyMemoryMessageResponse.getRootAsApplyMemoryMessageResponse(resBuffer);
             if (response.errorType() == ErrorType.None) {
-                SharedMemory sharedMemory = this.addNewMemory(response.memoryKey(), request.getUserKey(),
+                SharedMemory sharedMemory = this.addNewMemory(response.memoryKey(), request.userKey(),
                         PermissionType.None, response.memorySize());
                 return SharedMemoryResult.success(sharedMemory);
             }
