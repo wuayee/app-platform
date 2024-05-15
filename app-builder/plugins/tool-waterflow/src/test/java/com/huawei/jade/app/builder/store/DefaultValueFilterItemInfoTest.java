@@ -13,6 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
@@ -67,8 +69,8 @@ public class DefaultValueFilterItemInfoTest {
                                                 .put("p3",
                                                         MapBuilder.<String, Object>get().put("type", "string").build())
                                                 .build())
-                                .put("order", Collections.singletonList("p1"))
-                                .put("required", Collections.singletonList("p1"))
+                                .put("order", new ArrayList<>(Arrays.asList("p1", "p2", "p3")))
+                                .put("required", new ArrayList<>(Arrays.asList("p1", "p2", "p3")))
                                 .build())
                 .put("return", MapBuilder.<String, Object>get().put("type", "string").build())
                 .put("tag", "Customize-Workflow")
@@ -96,8 +98,7 @@ public class DefaultValueFilterItemInfoTest {
                                                 .put("p3",
                                                         MapBuilder.<String, Object>get().put("type", "string").build())
                                                 .build())
-                                .put("order", Collections.singletonList("p1"))
-                                .put("required", Collections.singletonList("p1"))
+                                .put("required", new ArrayList<>(Arrays.asList("p1", "p3")))
                                 .build())
                 .containsEntry("return", MapBuilder.<String, Object>get().put("type", "string").build())
                 .containsEntry("tag", "Customize-Workflow");

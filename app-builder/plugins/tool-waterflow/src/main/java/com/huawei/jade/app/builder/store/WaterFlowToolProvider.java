@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Component
 public class WaterFlowToolProvider implements ToolProvider {
     private static final String SCHEMA_NAME_KEY = "name";
-    private static final String TAG_TYPE_WATER_FLOW = "WaterFlow";
+    private static final String TAG_TYPE_WATER_FLOW = "WATERFLOW";
 
     private final ToolExecuteService executeService;
     private final ItemService itemService;
