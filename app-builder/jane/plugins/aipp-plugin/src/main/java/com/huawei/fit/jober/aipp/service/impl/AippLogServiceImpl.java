@@ -27,7 +27,7 @@ import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
 import com.huawei.fit.jober.aipp.service.AippLogService;
-import com.huawei.fit.jober.aipp.service.DistributedMapService;
+// import com.huawei.fit.jober.aipp.service.DistributedMapService;
 import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
@@ -61,17 +61,15 @@ public class AippLogServiceImpl implements AippLogService {
     private final AippLogMapper aippLogMapper;
     private final DynamicFormService dynamicFormService;
     private final MetaInstanceService metaInstanceService;
-    private final DistributedMapService mapService;
     private final UploadedFileManageService uploadedFileManageService;
     private final MetaService metaService;
 
     public AippLogServiceImpl(AippLogMapper aippLogMapper, DynamicFormService dynamicFormService,
-            MetaInstanceService metaInstanceService, DistributedMapService mapService,
-            UploadedFileManageService uploadedFileManageService, MetaService metaService) {
+            MetaInstanceService metaInstanceService, UploadedFileManageService uploadedFileManageService,
+            MetaService metaService) {
         this.aippLogMapper = aippLogMapper;
         this.dynamicFormService = dynamicFormService;
         this.metaInstanceService = metaInstanceService;
-        this.mapService = mapService;
         this.uploadedFileManageService = uploadedFileManageService;
         this.metaService = metaService;
     }
@@ -228,25 +226,6 @@ public class AippLogServiceImpl implements AippLogService {
                 .equals(l.getLogType()) || AippInstLogType.HIDDEN_QUESTION.name().equals(l.getLogType());
     }
 
-    /**
-     * 流式查询指定aipp instance的历史记录
-     *
-     * @param instanceId 指定aipp instance的id
-     * @param timeString 开始的时间范围, 可能为空
-     * @return log数据
-     */
-    @Override
-    public List<AippInstLog> queryInstanceLogSinceStreaming(String instanceId, String timeString) {
-        List<AippInstLog> aippInstLogs = queryInstanceLogSince(instanceId, timeString);
-        addCacheLog(instanceId, aippInstLogs);
-        return aippInstLogs;
-    }
-
-    private void addCacheLog(String instanceId, List<AippInstLog> aippInstLogs) {
-        String lastLog = getLastLog(aippInstLogs);
-        addCacheLogHandle(instanceId, aippInstLogs, lastLog);
-    }
-
     private boolean checkLogValid(String lastLog, String cacheLog) {
         if (cacheLog == null) {
             return false;
@@ -270,23 +249,6 @@ public class AippLogServiceImpl implements AippLogService {
         }
         AippLogData logData = JsonUtils.parseObject(endLog.getLogData(), AippLogData.class);
         return logData.getMsg();
-    }
-
-    private void addCacheLogHandle(String instanceId, List<AippInstLog> aippInstLogs, String lastLog) {
-        Map<Object, Object> mapCache = mapService.getMapCache(instanceId);
-        mapCache.forEach((key, value) -> {
-            if (!checkLogValid(lastLog, (String) value)) {
-                return;
-            }
-            AippLogData logDataCache = AippLogData.builder().msg((String) value).build();
-            AippInstLog cacheLog = AippInstLog.builder()
-                    .logType(AippInstLogType.MSG.name())
-                    .logData(JsonUtils.toJsonString(logDataCache))
-                    .instanceId(instanceId)
-                    .createAt(LocalDateTime.now())
-                    .build();
-            aippInstLogs.add(cacheLog);
-        });
     }
 
     /**

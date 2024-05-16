@@ -50,15 +50,6 @@ public interface AippLogService {
     List<AippInstLog> queryInstanceLogSince(String instanceId, String timeString);
 
     /**
-     * 流式查询指定aipp instance的历史记录
-     *
-     * @param instanceId 指定aipp instance的id
-     * @param timeString 开始的时间范围, 可能为空
-     * @return log数据
-     */
-    List<AippInstLog> queryInstanceLogSinceStreaming(String instanceId, String timeString);
-
-    /**
      * 查询指定aipp instance的form类型的最新一条历史记录
      *
      * @param instanceId 指定aipp instance的id

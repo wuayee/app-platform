@@ -82,8 +82,6 @@ public class AippLogServiceTest {
     @Mock
     private MetaInstanceService metaInstanceServiceMock;
     @Mock
-    private DistributedMapService mapServiceMock;
-    @Mock
     private UploadedFileManageService uploadedFileManageServiceMock;
     @Mock
     private MetaService metaServiceMock;

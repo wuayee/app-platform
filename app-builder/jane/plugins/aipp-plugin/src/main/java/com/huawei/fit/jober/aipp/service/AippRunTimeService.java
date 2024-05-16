@@ -86,17 +86,6 @@ public interface AippRunTimeService {
     AippInstanceDto getInstanceByVersionId(String versionId, String instanceId, OperationContext context);
 
     /**
-     * 流式查询单个应用实例信息
-     *
-     * @param context 操作上下文
-     * @param aippId aippId
-     * @param version aipp 版本
-     * @param instanceId 实例id
-     * @return AIPP 实例
-     */
-    AippInstanceDto getInstanceStreaming(String aippId, String version, String instanceId, OperationContext context);
-
-    /**
      * 查询应用实例信息列表
      *
      * @param context 操作上下文

@@ -494,25 +494,6 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
         return InstanceToAippInstanceDto(instDetail, instanceLogs, context);
     }
 
-    /**
-     * 流式查询单个应用实例信息
-     *
-     * @param context 操作上下文
-     * @param aippId aippId
-     * @param version aipp 版本
-     * @param instanceId 实例id
-     * @return AIPP 实例
-     */
-    @Override
-    public AippInstanceDto getInstanceStreaming(String aippId, String version, String instanceId,
-            OperationContext context) {
-        Meta meta = MetaUtils.getAnyMeta(metaService, aippId, version, context);
-        Instance instDetail = Utils.getInstanceDetail(meta.getVersionId(), instanceId, context, metaInstanceService);
-        List<AippInstLog> instanceStreamingLogs =
-                aippLogService.queryInstanceLogSinceStreaming(instDetail.getId(), null);
-        return InstanceToAippInstanceDto(instDetail, instanceStreamingLogs, context);
-    }
-
     private MetaInstanceFilter genInstFilter(AippInstanceQueryCondition cond) {
         MetaInstanceFilter filter = new MetaInstanceFilter();
 

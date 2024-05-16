@@ -18,7 +18,6 @@ import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogService;
-import com.huawei.fit.jober.aipp.service.DistributedMapService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
@@ -42,18 +41,16 @@ public class AippFlowEndCallback implements FlowCallbackService {
     private final MetaInstanceService metaInstanceService;
     private final MetaService metaService;
     private final AippLogService aippLogService;
-    private final DistributedMapService distributedMapService;
     private final AppBuilderFormRepository formRepository;
 
     private final BrokerClient brokerClient;
 
     public AippFlowEndCallback(@Fit MetaInstanceService metaInstanceService, @Fit MetaService metaService,
-            @Fit AippLogService aippLogService, DistributedMapService distributedMapService,
-            @Fit AppBuilderFormRepository formRepository, BrokerClient brokerClient) {
+            @Fit AippLogService aippLogService, @Fit AppBuilderFormRepository formRepository,
+            BrokerClient brokerClient) {
         this.metaInstanceService = metaInstanceService;
         this.metaService = metaService;
         this.aippLogService = aippLogService;
-        this.distributedMapService = distributedMapService;
         this.formRepository = formRepository;
         this.brokerClient = brokerClient;
     }
@@ -97,9 +94,6 @@ public class AippFlowEndCallback implements FlowCallbackService {
 
         String aippInstId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
         this.metaInstanceService.patchMetaInstance(versionId, aippInstId, declarationInfo, context);
-
-        // 删除缓存
-        this.distributedMapService.delete(aippInstId);
 
         String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
         String parentCallbackId = ObjectUtils.cast(businessData.get(AippConst.PARENT_CALLBACK_ID));

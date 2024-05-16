@@ -120,24 +120,6 @@ public class AppRunTimeController extends AbstractController {
     }
 
     /**
-     * 流式查询单个应用实例信息
-     *
-     * @param httpRequest 操作上下文
-     * @param tenantId 租户id
-     * @param aippId aippId
-     * @param instanceId 实例id
-     * @return AIPP 实例
-     */
-    @GetMapping(path = "/aipp/{aipp_id}/streaming/instances/{instance_id}", description = "流式查询单个应用实例信息，实例运行期间前端定时调用")
-    public Rsp<AippInstanceDto> getInstanceStreaming(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId,
-            @PathVariable("aipp_id") String aippId,
-            @PathVariable("instance_id") String instanceId,
-            @RequestParam(value = "version") String version) {
-        return Rsp.ok(aippRunTimeService.getInstanceStreaming(aippId, version, instanceId, this.contextOf(httpRequest, tenantId)));
-    }
-
-    /**
      * 更新表单数据并上传到小海
      *
      * @param httpRequest 操作上下文

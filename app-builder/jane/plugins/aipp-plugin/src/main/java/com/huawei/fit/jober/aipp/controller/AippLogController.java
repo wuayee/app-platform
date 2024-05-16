@@ -55,10 +55,4 @@ public class AippLogController extends AbstractController {
             @RequestParam(name = "after_at", required = false) String sinceTime) {
         return Rsp.ok(aippLogService.queryInstanceLogSince(instanceId, sinceTime));
     }
-
-    @GetMapping(path = "/streaming/instance/{instance_id}", description = "流式查询指定instanceId条件查询实例记录")
-    public Rsp<List<AippInstLog>> queryInstanceSinceStreaming(@PathVariable("instance_id") String instanceId,
-            @RequestParam(name = "after_at", required = false) String sinceTime) {
-        return Rsp.ok(aippLogService.queryInstanceLogSinceStreaming(instanceId, sinceTime));
-    }
 }
