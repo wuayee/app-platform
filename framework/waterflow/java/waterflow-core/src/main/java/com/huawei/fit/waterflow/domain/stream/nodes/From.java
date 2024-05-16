@@ -19,6 +19,8 @@ import com.huawei.fit.waterflow.domain.enums.FlowNodeStatus;
 import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
 import com.huawei.fit.waterflow.domain.enums.ParallelMode;
 import com.huawei.fit.waterflow.domain.enums.SpecialDisplayNode;
+import com.huawei.fit.waterflow.domain.states.DataStart;
+import com.huawei.fit.waterflow.domain.states.State;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
@@ -168,6 +170,20 @@ public class From<I> extends IdGenerator implements Publisher<I> {
         Node<I, O> node = new Node<>(this.getStreamId(), processor, repo, messenger, locks);
         this.subscribe(node, whether);
         return node.displayAs("map");
+    }
+
+    @Override
+    public <O> Processor<I, O> flatMap(Operators.FlatMap<FlowContext<I>, O> processor, Operators.Whether<I> whether) {
+        AtomicReference<Node<I, O>> processRef = new AtomicReference<>();
+        Operators.Map<FlowContext<I>, O> wrapper = input -> {
+            DataStart<O, O, ?> start = processor.process(input);
+            start.just(ctx -> processRef.get().offer(ctx, input.getSession())).offer();
+            return null;
+        };
+        Node<I, O> node = new Node<>(this.getStreamId(), wrapper, repo, messenger, locks);
+        processRef.set(node);
+        this.subscribe(node, whether);
+        return node.displayAs("flat map");
     }
 
     @Override

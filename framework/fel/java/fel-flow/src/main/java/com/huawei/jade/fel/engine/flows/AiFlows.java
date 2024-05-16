@@ -64,18 +64,8 @@ public class AiFlows {
      * @param <D> 数据类型
      * @return 以Emitter为数据源的AiDataStart
      */
-    public static <D> AiDataStart<D, D, D> source(Emitter<D, String> emitter) {
+    public static <D> AiDataStart<D, D, D> source(Emitter<D, FlowSession> emitter) {
         AiStart<D, D, D, ProcessFlow<D>, AiProcessFlow<D, ?>> start = AiFlows.create();
-        return new AiDataStart<>(start, new Emitter<D, FlowSession>() {
-            @Override
-            public void register(EmitterListener<D, FlowSession> listener) {
-                emitter.register((data, token) -> listener.handle(data, new FlowSession(token)));
-            }
-
-            @Override
-            public void emit(D data, FlowSession token) {
-                emitter.emit(data, token.getId());
-            }
-        });
+        return new AiDataStart<>(start, emitter);
     }
 }

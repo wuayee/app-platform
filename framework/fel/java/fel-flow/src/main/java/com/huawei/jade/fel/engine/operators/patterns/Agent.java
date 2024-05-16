@@ -68,7 +68,9 @@ public abstract class Agent<I, O> extends FlowSupportable<I, O> {
     protected static boolean containAsyncTool(ToolProvider toolProvider, AiMessage aiMessage) {
         Validation.notNull(toolProvider, "ToolProvider cannot be null.");
         Validation.notNull(aiMessage, "AiMessage cannot be null.");
-        List<String> toolsName = aiMessage.toolCalls().stream().map(ToolCall::getName).collect(Collectors.toList());
+        List<String> toolsName = Optional.ofNullable(aiMessage.toolCalls())
+                .map(m -> m.stream().map(ToolCall::getName).collect(Collectors.toList()))
+                .orElseGet(Collections::emptyList);
         if (toolsName.isEmpty()) {
             return false;
         }

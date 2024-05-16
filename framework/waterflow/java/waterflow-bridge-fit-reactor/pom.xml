@@ -6,7 +6,7 @@
         <artifactId>jade-waterflow-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-    <artifactId>waterflow-bridge-fit-refactor</artifactId>
+    <artifactId>waterflow-bridge-fit-reactor</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,7 +17,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.huawei.fit.waterflow</groupId>
+            <groupId>com.huawei.fit.jade.waterflow</groupId>
             <artifactId>waterflow-core</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>

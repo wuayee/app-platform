@@ -6,9 +6,11 @@ package com.huawei.jade.fel.engine.activities;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.flow.Flow;
+import com.huawei.fit.waterflow.domain.flow.Flows;
 import com.huawei.fit.waterflow.domain.states.Start;
 import com.huawei.fit.waterflow.domain.states.State;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
+import com.huawei.fit.waterflow.domain.stream.operators.SessionWindow;
 import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.utils.Tuple;
@@ -30,6 +32,8 @@ import com.huawei.jade.fel.engine.flows.AiFlow;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.operators.AiRunnableArg;
 import com.huawei.jade.fel.engine.operators.models.ChatBlockModel;
+import com.huawei.jade.fel.engine.operators.models.ChatChunk;
+import com.huawei.jade.fel.engine.operators.models.ChatStreamModel;
 import com.huawei.jade.fel.engine.operators.patterns.AsyncPattern;
 import com.huawei.jade.fel.engine.operators.patterns.FlowSupportable;
 import com.huawei.jade.fel.engine.operators.patterns.SimpleAsyncPattern;
@@ -41,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * AI 流程的开始节点。
@@ -120,7 +125,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     }
 
     /**
-     * 将每个数据通过指定的方式进行转换后继续流转，处理数据，同时可以转换类型。
+     * 将每个数据通过指定的方式进行转换后继续流转，处理数据同时可以转换类型。
      *
      * @param processor 表示数据处理器的 {@link Operators.Map}{@code <}{@link O}{@code , }{@link R}{@code >}。
      * @param <R> 表示新节点的输出数据类型。
@@ -149,7 +154,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     }
 
     /**
-     * 将每个原料数据通过指定的方式进行加工，转换为多个产品数据，同时可以转换类型
+     * 将每个数据通过指定的方式转换为一个数据流，并将数据流的数据往下发射流转。
      *
      * @param processor 表示数据处理器的 {@link AiFlatMap}{@code <}{@link O}{@code , }{@link R}{@code >}。
      * @param <R> 表示新节点的输出数据类型。
@@ -447,7 +452,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     /**
      * 生成大模型阻塞调用节点。
      *
-     * @param model 表示模型算子实现的 {@link ChatBlockModel}{@code <}{@link O}{@code >}。
+     * @param model 表示模型算子实现的 {@link ChatBlockModel}{@code <}{@link M}{@code >}。
      * @param <M> 表示模型节点的输入数据类型。
      * @return 表示大模型阻塞调用节点的 {@link AiState}{@code <}{@link AiMessage}{@code , }{@link D}{@code ,
      * }{@link O}{@code , }{@link RF}{@code , }{@link F}{@code >}。
@@ -463,6 +468,36 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
                             .orElse(model);
             return dynamicModel.invoke(new AiRunnableArg<>(ObjectUtils.cast(input.getData()), session));
         }, null).displayAs("generate"), this.getFlow().origin()), this.getFlow());
+    }
+
+    /**
+     * 生成大模型流式调用节点。
+     *
+     * @param model 表示流式模型算子实现的 {@link ChatStreamModel}{@code <}{@link O}{@code >}。
+     * @param <M> 表示模型节点的输入数据类型。
+     * @return 表示大模型流式调用节点的 {@link AiState}{@code <}{@link ChatChunk}{@code , }{@link D}{@code ,
+     * }{@link ChatChunk}{@code , }{@link RF}{@code , }{@link F}{@code >}。
+     * @throws IllegalArgumentException 当 {@code model} 为 {@code null} 时。
+     */
+    public <M extends O> AiState<ChatChunk, D, ChatChunk, RF, F> generate(ChatStreamModel<M> model) {
+        Validation.notNull(model, "Streaming Model operator cannot be null.");
+
+        AtomicReference<Processor<O, ChatChunk>> processorRef = new AtomicReference<>();
+        Processor<O, ChatChunk> processor = this.publisher().flatMap(input -> {
+            FlowSession session = input.getSession();
+            input.setKeyBy(session.getId());
+            ChatStreamModel<M> dynamicModel =
+                    Optional.ofNullable(session.<ChatOptions>getInnerState(StateKey.CHAT_OPTIONS))
+                            .map(model::bind)
+                            .orElse(model);
+            AiRunnableArg<Prompt> runnableArg = new AiRunnableArg<>(ObjectUtils.cast(input.getData()), session);
+            runnableArg.setInnerState(StateKey.STREAMING_PROCESSOR, processorRef.get());
+            runnableArg.setInnerState(StateKey.STREAMING_FLOW_CONTEXT, input);
+            return Flows.source(dynamicModel.invoke(runnableArg));
+        }, null).displayAs("generate streaming");
+        processorRef.set(processor);
+        return new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow())
+                .window(SessionWindow.from(inputs -> inputs.stream().anyMatch(ChatChunk::isEnd)));
     }
 
     /**
