@@ -262,8 +262,8 @@ public class AiFlowBasicExpressionTest {
             String[] expectedSplit = expected.split("\n");
             String[] split = mermaidStr.split("\n");
             assertThat(split).hasSize(expectedSplit.length);
-            for (String str : expectedSplit) {
-                assertThat(str).isIn((Object[]) split);
+            for (String str : split) {
+                assertThat(str).isIn((Object[]) expectedSplit);
             }
         }
 

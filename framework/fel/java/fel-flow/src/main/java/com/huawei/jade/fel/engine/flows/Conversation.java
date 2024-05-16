@@ -126,6 +126,19 @@ public class Conversation<D, R> {
     }
 
     /**
+     * 绑定自定义参数到对话上下文。用途与 {@link Conversation#bind(String, Object)} 一致。
+     *
+     * @param ctx 表示自定义键值对的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     * @return 表示绑定完自定义参数的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
+     * @throws IllegalArgumentException 当 {@code ctx} 为 {@code null} 时。
+     */
+    public Conversation<D, R> bind(Map<String, Object> ctx) {
+        Validation.notNull(ctx, "Context map cannot be null.");
+        ctx.forEach(this::bind);
+        return this;
+    }
+
+    /**
      * 设置对话成功回调，本轮对话成功触发该回调。
      *
      * @param processor 表示指定的对话成功时操作的 {@link Consumer}{@code <}{@link R}{@code >}。
