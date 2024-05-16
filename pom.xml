@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>app-engine</module>
         <module>app-builder</module>
         <module>framework/fel/java</module>
         <module>framework/fit/java</module>
