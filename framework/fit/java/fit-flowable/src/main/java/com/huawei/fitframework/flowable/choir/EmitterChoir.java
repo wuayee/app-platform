@@ -11,9 +11,11 @@ import com.huawei.fitframework.flowable.Emitter;
 import com.huawei.fitframework.flowable.Subscriber;
 import com.huawei.fitframework.flowable.subscription.AbstractSubscription;
 import com.huawei.fitframework.inspection.Nonnull;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * 表示 {@link Choir} 的数据发送器实现。
@@ -23,14 +25,21 @@ import java.util.function.Consumer;
  * @since 2024-02-14
  */
 public class EmitterChoir<T> extends AbstractChoir<T> {
-    private final Emitter<T> emitter;
+    private static final Consumer<Emitter<?>> EMPTY_EMITTER_CONSUMER = emitter -> {};
+    private static final Consumer<Long> EMPTY_REQUEST_HANDLER = count -> {};
+    private static final Runnable EMPTY_CANCEL_HANDLER = () -> {};
+
+    private final Supplier<Emitter<T>> emitterSupplier;
+    private final Consumer<Emitter<T>> emitterConsumer;
     private final Consumer<Long> requestHandler;
     private final Runnable cancelHandler;
 
-    public EmitterChoir(Emitter<T> emitter, Consumer<Long> requestHandler, Runnable cancelHandler) {
-        this.emitter = notNull(emitter, "The emitter cannot be null.");
-        this.requestHandler = requestHandler == null ? value -> {} : requestHandler;
-        this.cancelHandler = cancelHandler == null ? () -> {} : cancelHandler;
+    public EmitterChoir(Supplier<Emitter<T>> emitterSupplier, Consumer<Emitter<T>> emitterConsumer,
+            Consumer<Long> requestHandler, Runnable cancelHandler) {
+        this.emitterSupplier = notNull(emitterSupplier, "The emitter supplier cannot be null.");
+        this.emitterConsumer = emitterConsumer == null ? ObjectUtils.cast(EMPTY_EMITTER_CONSUMER) : emitterConsumer;
+        this.requestHandler = requestHandler == null ? EMPTY_REQUEST_HANDLER : requestHandler;
+        this.cancelHandler = cancelHandler == null ? EMPTY_CANCEL_HANDLER : cancelHandler;
     }
 
     @Override
@@ -38,7 +47,9 @@ public class EmitterChoir<T> extends AbstractChoir<T> {
         EmitterSubscription<T> subscription =
                 new EmitterSubscription<>(subscriber, this.requestHandler, this.cancelHandler);
         subscriber.onSubscribed(subscription);
-        this.emitter.observe(subscription);
+        Emitter<T> emitter = notNull(this.emitterSupplier.get(), "The result of emitter supplier cannot be null.");
+        emitter.observe(subscription);
+        this.emitterConsumer.accept(emitter);
     }
 
     private static class EmitterSubscription<T> extends AbstractSubscription implements Emitter.Observer<T> {

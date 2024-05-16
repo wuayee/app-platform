@@ -23,6 +23,17 @@ import java.util.function.Predicate;
  */
 public interface Solo<T> extends Publisher<T> {
     /**
+     * 通过指定的 {@link Emitter 发送器} 消费逻辑创建 {@link Solo 响应式流}。
+     *
+     * @param consumer 表示指定消费逻辑的 {@link Consumer}{@code <}{@link Emitter}{@code <}{@link T}{@code >>}。
+     * @param <T> 表示数据发送器和响应式流中数据类型的 {@link T}。
+     * @return 表示所创建的响应式流的 {@link Solo}{@code <}{@link T}{@code >}。
+     */
+    static <T> Solo<T> create(Consumer<Emitter<T>> consumer) {
+        return fromPublisher(new EmitterChoir<>(Emitter::create, consumer, null, null));
+    }
+
+    /**
      * 创建一个空的响应式流。
      *
      * @param <T> 表示响应式流中数据类型的 {@link T}。
@@ -40,7 +51,7 @@ public interface Solo<T> extends Publisher<T> {
      * @return 表示转换后的响应式流的 {@link Solo}{@code <}{@link T}{@code >}。
      */
     static <T> Solo<T> fromEmitter(Emitter<T> emitter) {
-        return fromPublisher(new EmitterChoir<>(emitter, null, null));
+        return fromPublisher(new EmitterChoir<>(() -> emitter, null, null, null));
     }
 
     /**
@@ -53,9 +64,7 @@ public interface Solo<T> extends Publisher<T> {
      * @return 表示转换后的响应式流的 {@link Solo}{@code <}{@link T}{@code >}。
      */
     static <T> Solo<T> fromEmitter(Emitter<T> emitter, Consumer<Long> requestHandler, Runnable cancelHandler) {
-        return fromPublisher(new EmitterChoir<>(emitter,
-                requestHandler == null ? value -> {} : requestHandler,
-                cancelHandler == null ? () -> {} : cancelHandler));
+        return fromPublisher(new EmitterChoir<>(() -> emitter, null, requestHandler, cancelHandler));
     }
 
     /**
