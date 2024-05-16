@@ -4,7 +4,7 @@ do $$
         "id" serial primary key not null,
         "category" varchar(32) unique
     );
-    insert into store_enum_category ("category") values ('APP'), ('TOOL');
+    insert into store_enum_category ("category") values ('APP'), ('TOOL') on conflict ("category") do nothing;
     create table if not exists store_item(
         "id" bigserial primary key not null,
         "created_time" timestamp default current_timestamp not null,

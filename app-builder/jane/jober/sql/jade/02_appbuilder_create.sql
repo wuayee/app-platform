@@ -41,7 +41,7 @@ return NEW;
 end;
 $$ language plpgsql;
 
-create trigger form_data_updater before UPDATE on form_data for each row execute function update_time();
+create or replace trigger form_data_updater before UPDATE on form_data for each row execute function update_time();
 
 create table if not exists app_builder_app
 (
