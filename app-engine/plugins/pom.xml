@@ -14,8 +14,8 @@
 
     <modules>
         <module>app-eval</module>
+        <module>knowledge-base</module>
     </modules>
-
 
     <build>
         <plugins>

@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>knowledge-base</module>
     </modules>
 
     <build>

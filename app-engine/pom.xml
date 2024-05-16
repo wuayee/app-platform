@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
 
     <properties>
+        <lombok.version>1.18.26</lombok.version>
         <mybatis.version>3.5.9</mybatis.version>
         <druid.version>1.2.20</druid.version>
         <postgresql.version>42.6.1</postgresql.version>
@@ -20,6 +21,28 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.huawei.fitframework</groupId>
+                <artifactId>fit-api</artifactId>
+                <version>${fit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.huawei.fitframework</groupId>
+                <artifactId>fit-util</artifactId>
+                <version>${fit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.huawei.fit.starter</groupId>
+                <artifactId>fit-plugins-starter-web</artifactId>
+                <version>${fit.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <scope>provided</scope>
+                <version>${lombok.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis</artifactId>
