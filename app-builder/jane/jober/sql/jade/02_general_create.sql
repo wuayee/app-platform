@@ -906,5 +906,5 @@ CREATE TABLE IF NOT EXISTS flow_graph
     PRIMARY KEY (id, version)
     );
 
-DROP INDEX task_template_name_idx;
+DROP INDEX IF EXISTS task_template_name_idx;
 CREATE UNIQUE INDEX IF NOT EXISTS task_template_name_tenant_idx ON task_template ("name","tenant_id");
