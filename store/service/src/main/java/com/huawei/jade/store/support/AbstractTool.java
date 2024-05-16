@@ -28,7 +28,7 @@ public abstract class AbstractTool implements Tool {
     private final ObjectSerializer serializer;
 
     /**
-     * 通过工具的基本信息和工具元数据来初始化 {@link AbstractTool} 的新实例。
+     * 通过 Json 序列化器、工具的基本信息和工具元数据来初始化 {@link AbstractTool} 的新实例。
      *
      * @param serializer 表示 Json 序列化器的 {@link ObjectSerializer}。
      * @param itemInfo 表示工具的基本信息的 {@link Info}。

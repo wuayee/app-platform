@@ -56,7 +56,6 @@ public interface ToolRepository {
      */
     List<Tool.Info> searchTools(ToolTagQuery toolTagQuery);
 
-
     /**
      * 添加工具标签。
      *
