@@ -2,20 +2,15 @@
 * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
 */
 
-#include "ResourceManager.h"
-
 #include <memory>
-
 #include <sys/shm.h>
-#include <sys/stat.h>
-#include <cstdio>
 #include <cstring>
-#include <dirent.h>
-#include <unistd.h>
 
+#include "fbs/apply_permission_message_response_generated.h"
 #include "FtokArgsGenerator.h"
 #include "log/Logger.h"
-#include "fbs/apply_permission_message_response_generated.h"
+#include "utils/FileUtils.h"
+#include "ResourceManager.h"
 
 using namespace std;
 using namespace DataBus::Common;
@@ -26,14 +21,33 @@ namespace Resource {
 ResourceManager::ResourceManager()
 {
     Init();
+    // 打开内存分配日志文件
+    logStream_.open(LOG_PATH, std::ios::binary | std::ios::app);
+    if (!logStream_.is_open()) {
+        logger.Error("[ResourceManager] Failed to open the malloc log file {}", LOG_PATH);
+    }
+}
+
+ResourceManager::~ResourceManager()
+{
+    // 关闭内存分配日志文件
+    if (logStream_.is_open()) {
+        logStream_.close();
+    }
 }
 
 void ResourceManager::Init()
 {
-    if (!RemoveDirectory(FILE_PATH_PREFIX)) {
+    if (!FileUtils::RemoveDirectory(FILE_PATH_PREFIX)) {
         logger.Debug("[ResourceManager] Failed to remove the ftok directory during the ResourceManager init "
                      "phase");
     }
+
+    FileUtils::CreateFileIfNotExists(LOG_PATH);
+    // 释放之前申请的共享内存
+    CleanupMemory();
+    // 清空内存分配日志文件
+    std::ofstream(LOG_PATH, std::ofstream::out | std::ofstream::trunc).close();
 }
 
 tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, const std::string& objectKey,
@@ -49,7 +63,7 @@ tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, 
     const std::string& pathName = ftokArgsGenerator.GetFilePath();
     const int32_t projId = ftokArgsGenerator.GetProjId();
     if (projId == 0) {
-        CreateDirectory(pathName);
+        FileUtils::CreateDirectory(pathName);
     }
     const key_t sharedMemoryKey = ftok(pathName.data(), projId);
     if (sharedMemoryKey == -1) {
@@ -75,6 +89,9 @@ tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, 
         logger.Info("[ResourceManager] Recreating a new sharedMemoryId associated with sharedMemoryKey {} "
                     "succeeded", sharedMemoryKey);
     }
+    // 更新内存申请日志
+    AppendLog(sharedMemoryId, false);
+
     // 记录共享内存块ID和共享内存块信息的对应关系
     const auto& now = std::chrono::system_clock::now();
     time_t curTime = std::chrono::system_clock::to_time_t(now);
@@ -203,6 +220,8 @@ bool ResourceManager::ReleaseMemory(int32_t sharedMemoryId)
     permissionStatus_.erase(sharedMemoryId);
     waitingPermitRequestQueues_.erase(sharedMemoryId);
     RemoveObjectKey(sharedMemoryId);
+    // 更新内存申请日志
+    AppendLog(sharedMemoryId, true);
     return true;
 }
 
@@ -312,56 +331,55 @@ void ResourceManager::ReleasePermission(int32_t socketFd, DataBus::Common::Permi
     }
 }
 
-bool ResourceManager::RemoveDirectory(const std::string& directory)
+void ResourceManager::AppendLog(int32_t sharedMemoryId, bool released)
 {
-    DIR* dp;
-    if ((dp = opendir(directory.data())) != nullptr) {
-        struct dirent* dirp;
-        while ((dirp = readdir(dp)) != nullptr) {
-            // 忽略 "." 和 ".." 目录。
-            if (strcmp(".", dirp->d_name) == 0 || strcmp("..", dirp->d_name) == 0) {
-                continue;
-            }
-            // 如果是目录，则递归调用; 否则，删除文件。
-            if (dirp->d_type == DT_DIR) {
-                const std::string subDirectories = (directory + "/" + dirp->d_name);
-                RemoveDirectory(subDirectories);
-            } else if (remove((directory + "/" + dirp->d_name).data()) != 0) {
-                logger.Debug("[ResourceManager] Failed to remove the file {}: {}",
-                             directory + "/" + dirp->d_name, strerror(errno));
-                return false;
-            }
-        }
-        closedir(dp);
+    if (logStream_.is_open()) {
+        logStream_.write(reinterpret_cast<const char*>(&sharedMemoryId), sizeof(sharedMemoryId));
+        logStream_.write(reinterpret_cast<const char*>(&released), sizeof(released));
+        logStream_.flush();
     }
-    if (rmdir(directory.data()) == -1) {
-        logger.Debug("[ResourceManager] Failed to remove the directory {}: {}", directory,
-                     strerror(errno));
-        return false;
-    }
-    return true;
 }
 
-void ResourceManager::CreateDirectory(const std::string& directory)
+void ResourceManager::CleanupMemory()
 {
-    size_t pos = 0;
-    std::string dir = directory;
-    const char delimiter = '/';
-    if (dir.back() != delimiter) {
-        dir.push_back(delimiter);
-    }
-    while ((pos = dir.find_first_of(delimiter, pos + 1)) != std::string::npos) {
-        dir[pos] = '\0';
-        /* S_IRWXU: 允许文件路径所有者阅读、编写、执行它。
-         * S_IRWXG: 允许文件路径所属组阅读、编写、执行它。
-         * S_IROTH: 允许其他所有用户阅读它。
-         * S_IXOTH: 允许其他所有用户执行它。
-        */
-        if (mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
-            logger.Debug("[ResourceManager] Failed to create the directory {}: {}",
-                         dir.c_str(), strerror(errno));
+    std::ifstream logStream(LOG_PATH);
+    // 用于记录未释放的共享内存ID
+    std::unordered_set<int32_t> activeSharedMemoryIds;
+    if (logStream.is_open()) {
+        int32_t sharedMemoryId;
+        bool released;
+        std::vector<char> buffer(sizeof(sharedMemoryId) + sizeof(released));
+
+        while (logStream) {
+            buffer.resize(sizeof(sharedMemoryId));
+            logStream.read(&buffer[0], sizeof(sharedMemoryId));
+            if (!logStream) {
+                break;
+            }
+            sharedMemoryId = *reinterpret_cast<int32_t*>(buffer.data());
+            buffer.resize(sizeof(released));
+            logStream.read(&buffer[0], sizeof(released));
+            if (!logStream) {
+                break;
+            }
+            released = *reinterpret_cast<bool*>(buffer.data());
+            if (released) {
+                // 如果是释放操作，移除共享内存ID
+                activeSharedMemoryIds.erase(sharedMemoryId);
+            } else {
+                // 如果是分配操作，添加共享内存ID
+                activeSharedMemoryIds.insert(sharedMemoryId);
+            }
         }
-        dir[pos] = delimiter;
+        logStream.close();
+    }
+
+    // 清理未释放的共享内存
+    for (int32_t sharedMemoryId : activeSharedMemoryIds) {
+        if (shmctl(sharedMemoryId, IPC_RMID, nullptr) == -1) {
+            logger.Error("[ResourceManager] Failed to clean up the shared memory block {}: {}",
+                         sharedMemoryId, strerror(errno));
+        }
     }
 }
 

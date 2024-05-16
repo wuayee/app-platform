@@ -9,7 +9,7 @@
 
 #include "flatbuffers/flatbuffers.h"
 
-#include "util/DataBusUtil.h"
+#include "utils/DataBusUtils.h"
 #include "fbs/apply_memory_message_generated.h"
 #include "fbs/apply_memory_message_response_generated.h"
 #include "fbs/apply_permission_message_generated.h"
@@ -21,6 +21,7 @@
 using namespace std;
 using namespace DataBus::Task;
 using namespace DataBus::Common;
+using namespace DataBus::Common::Utils;
 
 namespace DataBus {
 namespace Task {
@@ -76,7 +77,7 @@ void TaskHandler::HandleRead(const Task& task)
 
     if (len < MESSAGE_HEADER_LEN) {
         logger.Error("[TaskHandler] Incorrect message header length");
-        DataBusUtil::SendErrorMessage(ErrorType::IllegalMessageHeader, GetSender(socketFd));
+        Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, GetSender(socketFd));
         return;
     }
 
@@ -84,7 +85,7 @@ void TaskHandler::HandleRead(const Task& task)
     flatbuffers::Verifier verifier(reinterpret_cast<const uint8_t*>(buffer), MESSAGE_HEADER_LEN);
     if (!Common::VerifyMessageHeaderBuffer(verifier)) {
         logger.Error("[TaskHandler] Incorrect message header format");
-        DataBusUtil::SendErrorMessage(ErrorType::IllegalMessageHeader, GetSender(socketFd));
+        Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, GetSender(socketFd));
         return;
     }
 
@@ -94,7 +95,7 @@ void TaskHandler::HandleRead(const Task& task)
     uint bodySize = header->size();
     if (len < bodySize + MESSAGE_HEADER_LEN) {
         logger.Error("[TaskHandler] Incorrect message body length");
-        DataBusUtil::SendErrorMessage(ErrorType::IllegalMessageBody, GetSender(socketFd));
+        Utils::SendErrorMessage(ErrorType::IllegalMessageBody, GetSender(socketFd));
         return;
     }
     HandleMessage(header, buffer, socketFd);
@@ -130,7 +131,7 @@ void TaskHandler::HandleMessage(const Common::MessageHeader* header, const char*
         }
         default:
             logger.Error("[TaskHandler] Unknown message type");
-            DataBusUtil::SendErrorMessage(ErrorType::IllegalMessageHeader, GetSender(socketFd));
+            Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, GetSender(socketFd));
     }
 }
 
@@ -260,7 +261,7 @@ void TaskHandler::SendApplyMemoryResponse(int32_t socketFd, int32_t memoryId, ui
         Common::CreateApplyMemoryMessageResponse(bodyBuilder, errorType, memoryId,
                                                  memorySize);
     bodyBuilder.Finish(respBody);
-    DataBusUtil::SendMessage(bodyBuilder, Common::MessageType::ApplyMemory, GetSender(socketFd));
+    Utils::SendMessage(bodyBuilder, Common::MessageType::ApplyMemory, GetSender(socketFd));
 }
 
 void TaskHandler::SendApplyPermissionResponse(const Resource::ApplyPermissionResponse& response)
@@ -270,7 +271,7 @@ void TaskHandler::SendApplyPermissionResponse(const Resource::ApplyPermissionRes
         Common::CreateApplyPermissionMessageResponse(bodyBuilder, response.errorType_, response.granted_,
                                                      response.sharedMemoryId_, response.memorySize_);
     bodyBuilder.Finish(respBody);
-    DataBusUtil::SendMessage(bodyBuilder, Common::MessageType::ApplyPermission, GetSender(response.applicant_));
+    Utils::SendMessage(bodyBuilder, Common::MessageType::ApplyPermission, GetSender(response.applicant_));
 }
 
 std::function<void(const uint8_t*, size_t)> TaskHandler::GetSender(int32_t socketFd)
