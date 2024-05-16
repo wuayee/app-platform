@@ -4,7 +4,7 @@ import './index.scss'
 
 const NotFound = () => {
   useEffect(() => {
-    urlLoad();
+    // urlLoad();
   })
   // 页面调转
   function urlLoad(id) {

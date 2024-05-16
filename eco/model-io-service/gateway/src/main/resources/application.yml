@@ -9,8 +9,6 @@ management:
 
 server:
   port: 8003
-  servlet:
-    context-path: /model-gateway
 
 spring:
   application:
@@ -25,6 +23,14 @@ spring:
         filters:
           - RewritePath=/model-gateway/health, /actuator/health
       # 可在下方添加自定义路由配置信息
+      - id: ads-gateway
+        uri: "http://tzaip-beta.paas.huawei.com"
+        predicates:
+          - Path=/**
+        filters:
+          # 添加/model-gateway/到路径头
+          - RewritePath=/(?<segment>/?.*), /model-gateway/$\{segment}
+
 
       httpclient:
         websocket:

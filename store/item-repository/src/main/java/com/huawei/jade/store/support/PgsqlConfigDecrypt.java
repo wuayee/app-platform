@@ -5,7 +5,6 @@
 package com.huawei.jade.store.support;
 
 import com.huawei.fit.security.Decryptor;
-import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.conf.ConfigDecryptor;
 import com.huawei.fitframework.inspection.Validation;
 
@@ -18,7 +17,6 @@ import java.util.Optional;
  * @author 鲁为 l00839724
  * @since 2024-04-29
  */
-@Component
 public class PgsqlConfigDecrypt implements ConfigDecryptor {
     private final Decryptor decryptor;
 

@@ -13,9 +13,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>connector/milvus</module>
-        <module>connector/redis</module>
+<!--        <module>connector/milvus</module>-->
+<!--        <module>connector/redis</module>-->
         <module>model</module>
-        <module>rag</module>
+<!--        <module>rag</module>-->
     </modules>
 </project>
