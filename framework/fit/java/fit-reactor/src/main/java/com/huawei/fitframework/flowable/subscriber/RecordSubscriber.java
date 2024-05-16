@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
 package com.huawei.fitframework.flowable.subscriber;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
@@ -9,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 测试用工具类，可以记录 {@link com.huawei.fitframework.flowable.Subscriber} 的各个方法被调用时的信息，并且能够灵活的进行元素请求和订阅取消。
+ * 测试用工具类，可以记录 {@link com.huawei.fitframework.flowable.Subscriber}
+ * 的各个方法被调用时的信息，并且能够灵活的进行元素请求和订阅取消。
  *
  * @param <T> 表示订阅者订阅的数据类型的 {@link T}。
  * @author 何天放 h00679269
@@ -25,7 +30,7 @@ public class RecordSubscriber<T> extends EmptySubscriber<T> {
     private final long cancelWhen;
 
     private Subscription subscription;
-    private long index = 0;
+    private long index = 0L;
 
     /**
      * 创建测试用工具类实例，在发生订阅时请求 {@code Long.MAX_VALUE} 个元素。
@@ -128,7 +133,9 @@ public class RecordSubscriber<T> extends EmptySubscriber<T> {
         this.index++;
         if (this.cancelWhen >= 0 && this.consumeRecords.size() >= this.cancelWhen) {
             this.subscription.cancel();
-        } else if (this.consumeRequest > 0) {
+            return;
+        }
+        if (this.consumeRequest > 0) {
             this.subscription.request(this.consumeRequest);
         }
     }

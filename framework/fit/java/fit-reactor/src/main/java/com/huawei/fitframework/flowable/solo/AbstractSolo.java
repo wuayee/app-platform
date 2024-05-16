@@ -39,7 +39,6 @@ import java.util.function.Predicate;
  * @since 2024-02-11
  */
 public abstract class AbstractSolo<T> implements Solo<T> {
-
     @Override
     public Solo<T> filter(Predicate<T> filter) {
         return Solo.fromPublisher(new FilterPublisherDecorator<>(this, filter));

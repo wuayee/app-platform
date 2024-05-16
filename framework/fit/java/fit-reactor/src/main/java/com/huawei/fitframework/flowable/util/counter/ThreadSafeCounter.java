@@ -24,10 +24,6 @@ public class ThreadSafeCounter implements Counter {
     private final AtomicLong value;
     private final List<CounterValueChangedObserver> observers = new ArrayList<CounterValueChangedObserver>();
 
-    public ThreadSafeCounter() {
-        this.value = new AtomicLong();
-    }
-
     public ThreadSafeCounter(long initialValue) {
         this.value = new AtomicLong(initialValue);
     }
@@ -85,11 +81,11 @@ public class ThreadSafeCounter implements Counter {
             long from = this.value.get();
             long to = calculateTarget(value, from, from + value);
             if (this.value.compareAndSet(from, to)) {
-                List<CounterValueChangedObserver> observers;
+                List<CounterValueChangedObserver> observersToNotify;
                 synchronized (this.observers) {
-                    observers = new ArrayList<>(this.observers);
+                    observersToNotify = new ArrayList<>(this.observers);
                 }
-                for (CounterValueChangedObserver observer : observers) {
+                for (CounterValueChangedObserver observer : observersToNotify) {
                     try {
                         observer.onValueChanged(this, from, to);
                     } catch (Exception cause) {

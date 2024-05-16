@@ -4,14 +4,14 @@
 
 package com.huawei.fitframework.flowable.publisher;
 
+import static com.huawei.fitframework.inspection.Validation.greaterThan;
+import static com.huawei.fitframework.inspection.Validation.notNull;
+
 import com.huawei.fitframework.flowable.Publisher;
 import com.huawei.fitframework.flowable.Subscriber;
 import com.huawei.fitframework.flowable.Subscription;
 import com.huawei.fitframework.flowable.operation.AbstractOperation;
-import com.huawei.fitframework.flowable.util.counter.ThreadSafeCounter;
-
-import static com.huawei.fitframework.inspection.Validation.greaterThan;
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import com.huawei.fitframework.flowable.util.counter.Counter;
 
 /**
  * 表示 {@link Publisher} 的从开始跳过指定个数元素的过滤的实现。
@@ -35,11 +35,11 @@ public class SkipPublisherDecorator<T> implements Publisher<T> {
     }
 
     private static class SkipOperation<T> extends AbstractOperation<T, T> {
-        private final ThreadSafeCounter skipConsumeCount;
+        private final Counter skipConsumeCount;
 
         SkipOperation(Subscriber<T> subscriber, int count) {
             super(subscriber);
-            this.skipConsumeCount = new ThreadSafeCounter(count);
+            this.skipConsumeCount = Counter.create(count);
         }
 
         @Override

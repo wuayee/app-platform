@@ -46,7 +46,7 @@ class ThreadSafeCounterTest {
 
         @Test
         @DisplayName("先增加至截止再减少到截止，过程中的值变化和最终计数值符合预期")
-        void shouldReturnZeroWhenIncreaseAndDecreaseMaxOfOneOrInt64ThenGetValue() {
+        void shouldReturnZeroWhenIncreaseAndDecreaseMaxThenGetValue() {
             assertThat(counter.increase()).isEqualTo(1);
             assertThat(counter.getValue()).isEqualTo(1);
             assertThat(counter.increase(Long.MAX_VALUE - 1)).isEqualTo(Long.MAX_VALUE - 1);
@@ -67,7 +67,7 @@ class ThreadSafeCounterTest {
         }
     }
 
-    static private class ObserverForTest implements CounterValueChangedObserver {
+    private static class ObserverForTest implements CounterValueChangedObserver {
         public Counter counter;
         public long before;
         public long after;

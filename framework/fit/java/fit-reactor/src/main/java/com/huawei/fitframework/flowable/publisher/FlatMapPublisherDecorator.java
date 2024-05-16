@@ -12,7 +12,6 @@ import com.huawei.fitframework.flowable.Subscriber;
 import com.huawei.fitframework.flowable.Subscription;
 import com.huawei.fitframework.flowable.operation.AbstractOperation;
 import com.huawei.fitframework.flowable.util.counter.Counter;
-import com.huawei.fitframework.flowable.util.counter.ThreadSafeCounter;
 import com.huawei.fitframework.flowable.util.worker.Worker;
 import com.huawei.fitframework.flowable.util.worker.WorkerObserver;
 
@@ -44,7 +43,7 @@ public class FlatMapPublisherDecorator<T, R> implements Publisher<R> {
         private final Function<T, Publisher<R>> flatMapper;
         private Worker<R> worker = null;
 
-        private final Counter requested = new ThreadSafeCounter();
+        private final Counter requested = Counter.create();
 
         FlatMapOperation(Subscriber<R> subscriber, Function<T, Publisher<R>> flatMapper) {
             super(subscriber);

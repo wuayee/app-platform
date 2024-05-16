@@ -70,6 +70,16 @@ public interface Counter {
      * @return 表示所创建计数器的 {@link Counter}。
      */
     static Counter create() {
-        return new ThreadSafeCounter();
+        return new ThreadSafeCounter(0);
+    }
+
+    /**
+     * 创建初始值为指定值的具有默认实现的计数器。
+     *
+     * @param count 表示初始值的 {@code long}。
+     * @return 表示所创建计数器的 {@link Counter}。
+     */
+    static Counter create(long count) {
+        return new ThreadSafeCounter(count);
     }
 }

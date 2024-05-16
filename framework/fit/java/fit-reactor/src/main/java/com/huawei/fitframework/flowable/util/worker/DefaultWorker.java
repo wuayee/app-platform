@@ -4,14 +4,14 @@
 
 package com.huawei.fitframework.flowable.util.worker;
 
+import static com.huawei.fitframework.inspection.Validation.isTrue;
+import static com.huawei.fitframework.inspection.Validation.notNull;
+
 import com.huawei.fitframework.flowable.FlowableException;
 import com.huawei.fitframework.flowable.Publisher;
 import com.huawei.fitframework.flowable.Subscription;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static com.huawei.fitframework.inspection.Validation.isTrue;
-import static com.huawei.fitframework.inspection.Validation.notNull;
 
 /**
  * 表示响应式流辅助消费工具 {@link Worker} 的默认实现。

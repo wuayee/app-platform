@@ -37,7 +37,6 @@ public class ChoirTest {
         @Nested
         @DisplayName("测试使用 just 创建 Choir")
         class TestJust {
-
             @Test
             @DisplayName("当数组不存在数据时，结果符合预期")
             void shouldReturnNothingWhenGiveEmptyAndRequestAll() {
@@ -185,7 +184,7 @@ public class ChoirTest {
 
         @Test
         @DisplayName("使用 flatMap 通过错误的方式展平 Choir 响应式流，请求每一个元素，结果符合预期")
-        void shouldReturnOneNumWithFailWhenFlatMapIncorrectlyAndRequestEveryOne() {
+        void shouldReturnOneNumWithFailWhenFlatMapIncorrectly() {
             RecordSubscriber<Integer> subscriber = new RecordSubscriber<>(1, 1);
             Choir.just(0, 1, 2, 3).flatMap(value -> Choir.just(value / (value - 1))).subscribe(subscriber);
             assertThat(subscriber.getElements()).hasSize(1).containsSequence(0);
@@ -314,9 +313,8 @@ public class ChoirTest {
             @Test
             @DisplayName("使用 skip 方法跳过零个元素，结果符合预期")
             void shouldThrowIllegalArgumentExceptionWhenSkipZero() {
-                assertThatExceptionOfType(IllegalArgumentException.class)
-                        .isThrownBy(() -> Choir.just(1, 2, 3, 4, 5, 6).skip(0))
-                        .withMessage("The count to skip must be positive. [count=0]");
+                assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> Choir.just(1, 2, 3, 4, 5, 6)
+                        .skip(0)).withMessage("The count to skip must be positive. [count=0]");
             }
 
             @Test

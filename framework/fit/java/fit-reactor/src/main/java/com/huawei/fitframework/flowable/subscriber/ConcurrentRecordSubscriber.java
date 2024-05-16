@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
 package com.huawei.fitframework.flowable.subscriber;
 
 import com.huawei.fitframework.flowable.Subscription;
@@ -5,7 +9,8 @@ import com.huawei.fitframework.flowable.Subscription;
 import java.util.List;
 
 /**
- * 并发安全的测试用工具类，可以记录 {@link com.huawei.fitframework.flowable.Subscriber} 的各个方法被调用时的信息，并且能够灵活的进行元素请求和订阅取消。
+ * 并发安全的测试用工具类，可以记录 {@link com.huawei.fitframework.flowable.Subscriber}
+ * 的各个方法被调用时的信息，并且能够灵活的进行元素请求和订阅取消。
  *
  * @param <T> 表示订阅者订阅的数据类型的 {@link T}。
  * @author 何天放 h00679269
