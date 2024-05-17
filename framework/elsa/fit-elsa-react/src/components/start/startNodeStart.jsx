@@ -21,6 +21,7 @@ export const startNodeStart = (id, x, y, width, height, parent, drawer) => {
             setEdit(true);
         }
     }];
+    self.isUnique = true;
     delete self.flowMeta.jober;
 
     /**

@@ -25,6 +25,10 @@ import {manualCheckNodeState} from "@/components/manualCheck/manualCheckNodeStat
 import {manualCheckComponent} from "@/components/manualCheck/manualCheckComponent.jsx";
 import {fitInvokeNodeState} from "@/components/fitInvokeNode/fitInvokeNodeState.jsx";
 import {fitInvokeComponent} from "@/components/fitInvokeNode/fitInvokeComponent.jsx";
+import {toolInvokeComponent} from "@/components/toolInvokeNode/toolInvokeComponent.jsx";
+import {toolInvokeNodeState} from "@/components/toolInvokeNode/toolInvokeNodeState.jsx";
+import {conditionNodeCondition} from "@/components/condition/conditionNodeCondition.jsx";
+import {conditionComponent} from "@/components/condition/conditionComponent.jsx";
 
 /**
  * jadeFlow的专用画布.
@@ -38,7 +42,8 @@ export const jadeFlowGraph = (div, title) => {
     self.pageType = "jadeFlowPage";
     self.enableText = false;
     self.flowMeta = {
-        "exceptionFitables": ["com.huawei.fit.jober.aipp.fitable.AippFlowExceptionHandler"]
+        "exceptionFitables": ["com.huawei.fit.jober.aipp.fitable.AippFlowExceptionHandler"],
+        "enableOutputScope": true
     };
     self.setting.borderColor = "#047bfc";
     self.setting.focusBorderColor = "#047bfc";
@@ -88,7 +93,11 @@ export const jadeFlowGraph = (div, title) => {
         self.registerPlugin("manualCheckNodeState", manualCheckNodeState);
         self.registerPlugin("manualCheckComponent", manualCheckComponent);
         self.registerPlugin("fitInvokeNodeState", fitInvokeNodeState);
+        self.registerPlugin("toolInvokeNodeState", toolInvokeNodeState);
         self.registerPlugin("fitInvokeComponent", fitInvokeComponent);
+        self.registerPlugin("toolInvokeComponent", toolInvokeComponent);
+        self.registerPlugin("conditionNodeCondition", conditionNodeCondition);
+        self.registerPlugin("conditionComponent", conditionComponent);
         return initialize.apply(self);
     };
 

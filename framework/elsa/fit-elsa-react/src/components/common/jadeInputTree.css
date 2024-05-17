@@ -4,7 +4,7 @@
 }
 
 .jade-input-tree-title-child {
-    height: 32px;
+    height: auto;
     display: flex;
 }
 
