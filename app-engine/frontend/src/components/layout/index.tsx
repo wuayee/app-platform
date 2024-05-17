@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme, ConfigProvider,  } from 'antd';
 import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
-import { routeList, flattenRoute, getRouteByKey } from '../../router/route'
+import { routeList, flattenRoute, getRouteByKey, getMenus } from '../../router/route'
 import { Icons } from '../icons/index'
 import KnowledgeBase from '../../pages/knowledge-base';
 
@@ -24,7 +24,7 @@ function getItem(
   } as MenuItem;
 }
 
-const items: MenuItem[] = routeList;
+const items: MenuItem[] = getMenus(routeList);
 const flattenRouteList = flattenRoute(routeList);
 
 
