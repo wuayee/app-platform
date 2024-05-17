@@ -263,4 +263,14 @@ public class MetaUtils {
         // 默认
         DEFAULT
     }
+
+    /**
+     * 根据versionId批量删除meta
+     * @param metaService 使用的{@link MetaService}
+     * @param versionIds 需要删除的versionId列表
+     * @param context 操作人上下文
+     */
+    public static void deleteMetasByVersionIds(MetaService metaService, List<String> versionIds, OperationContext context) {
+        versionIds.forEach(versionId -> metaService.delete(versionId, context));
+    }
 }

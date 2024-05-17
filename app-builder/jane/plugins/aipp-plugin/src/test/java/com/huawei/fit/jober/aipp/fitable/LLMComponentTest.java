@@ -169,9 +169,6 @@ public class LLMComponentTest {
             InstanceDeclarationInfo info = ObjectUtils.cast(invocation.getArgument(2));
             Map<String, Object> value = info.getInfo().getValue();
             String childInstanceId = ObjectUtils.cast(value.get(AippConst.INST_CHILD_INSTANCE_ID));
-            if (Objects.equals(AippConst.INVALID_CHILD_INSTANCE_ID, childInstanceId)) {
-                return null;
-            }
             Assertions.assertEquals("tool_async", childInstanceId);
             Map<String, Object> businessData = new HashMap<>();
             businessData.put(AippConst.PARENT_INSTANCE_ID, TestUtils.DUMMY_FLOW_INSTANCE_ID);
@@ -222,9 +219,6 @@ public class LLMComponentTest {
             InstanceDeclarationInfo info = ObjectUtils.cast(invocation.getArgument(2));
             Map<String, Object> value = info.getInfo().getValue();
             String childInstanceId = ObjectUtils.cast(value.get(AippConst.INST_CHILD_INSTANCE_ID));
-            if (Objects.equals(AippConst.INVALID_CHILD_INSTANCE_ID, childInstanceId)) {
-                return null;
-            }
             if (childInstanceId != null) {
                 Assertions.assertEquals("tool_async", childInstanceId);
                 Map<String, Object> businessData = new HashMap<>();

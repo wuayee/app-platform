@@ -12,6 +12,7 @@ import com.huawei.fit.jober.aipp.dto.AippInstanceCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -138,4 +139,20 @@ public interface AippRunTimeService {
      * @param context 操作上下文
      */
     void terminateAllPreviewInstances(String aippId, String versionId, boolean deleteLog, OperationContext context);
+
+    /**
+     * 分享对话
+     *
+     * @param chats 表示需要分享的对话
+     * @return 表示分享后的结果
+     */
+    Map<String, Object> shared(List<Map<String, Object>> chats);
+
+    /**
+     * 获取分享内容
+     *
+     * @param shareId 分享唯一标识
+     * @return 分享内容
+     */
+    Map<String, Object> getShareData(String shareId);
 }

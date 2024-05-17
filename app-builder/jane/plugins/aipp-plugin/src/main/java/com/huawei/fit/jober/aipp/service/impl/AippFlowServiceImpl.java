@@ -43,6 +43,7 @@ import com.huawei.fit.jober.aipp.enums.AippMetaStatusEnum;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.AppCategory;
 import com.huawei.fit.jober.aipp.enums.JaneCategory;
+import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippFlowService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
@@ -114,10 +115,12 @@ public class AippFlowServiceImpl implements AippFlowService {
 
     private final BrokerClient brokerClient;
 
+    private final AppBuilderAppMapper appBuilderAppMapper;
+
     public AippFlowServiceImpl(@Value("${market.app_market_url}") String appMarketUrl, @Fit FlowsService flowsService,
             @Fit MetaService metaService, @Fit FlowDefinitionService flowDefinitionService,
             @Fit AippRunTimeService aippRunTimeService, @Fit AppBuilderFormRepository formRepository,
-            @Fit BrokerClient brokerClient) {
+            @Fit BrokerClient brokerClient, AppBuilderAppMapper appBuilderAppMapper) {
         this.appMarketUrl = appMarketUrl;
         this.flowsService = flowsService;
         this.metaService = metaService;
@@ -125,6 +128,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         this.aippRunTimeService = aippRunTimeService;
         this.formRepository = formRepository;
         this.brokerClient = brokerClient;
+        this.appBuilderAppMapper = appBuilderAppMapper;
     }
 
     /**
@@ -999,12 +1003,7 @@ public class AippFlowServiceImpl implements AippFlowService {
                     buildPublishMetaDeclaration(aippId, aippNodeForms, flowInfo.getFlowDefinitionId(), meta, aippDto);
             metaService.patch(meta.getVersionId(), declaration, context);
 
-            ItemData itemData = this.buildItemData(aippDto, context, flowInfo);
-
-            // 注册到store
-            String uniqueName = this.brokerClient.getRouter(ItemService.class, "com.huawei.jade.store.service.addItem")
-                    .route(new FitableIdFilter("addItem"))
-                    .invoke(itemData);
+            String uniqueName = this.publishToStore(aippDto, context, flowInfo);
 
             if (Objects.equals(aippDto.getType(), AppCategory.APP.getType())) {
                 this.publishAppMarket(aippId, aippDto, context);
@@ -1015,6 +1014,15 @@ public class AippFlowServiceImpl implements AippFlowService {
             rollbackAipp(meta.getVersionId(), originalDraftVersion, flowInfo.getFlowDefinitionId(), attr, context);
             throw e;
         }
+    }
+
+    private String publishToStore(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
+        ItemData itemData = this.buildItemData(aippDto, context, flowInfo);
+        String uniqueName = this.brokerClient.getRouter(ItemService.class, "com.huawei.jade.store.service.addItem")
+                .route(new FitableIdFilter("addItem"))
+                .invoke(itemData);
+        appBuilderAppMapper.updateAppWithStoreId(uniqueName, aippDto.getAppId(), aippDto.getVersion());
+        return uniqueName;
     }
 
     @NotNull

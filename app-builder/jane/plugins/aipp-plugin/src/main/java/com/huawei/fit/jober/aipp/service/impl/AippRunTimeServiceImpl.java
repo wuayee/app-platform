@@ -70,6 +70,7 @@ import com.alibaba.fastjson.JSON;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -112,13 +113,14 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
     private final AppBuilderFormRepository formRepository;
     private final AppBuilderFormPropertyRepository formPropertyRepository;
     private final FlowsService flowsService;
+    private final String sharedUrl;
 
     public AippRunTimeServiceImpl(@Fit MetaService metaService, @Fit DynamicFormService dynamicFormService,
             @Fit MetaInstanceService metaInstanceService, @Fit FlowInstanceService flowInstanceService,
             @Fit AippLogService aippLogService, @Fit UploadedFileManageService uploadedFileManageService,
             @Value("${xiaohai.upload_chat_history_url}") String uploadChatHistoryUrl, BrokerClient client,
             @Fit AppBuilderFormRepository formRepository, @Fit AppBuilderFormPropertyRepository formPropertyRepository,
-            @Fit FlowsService flowsService) {
+            @Fit FlowsService flowsService, @Value("${xiaohai.share_url}") String sharedUrl) {
         this.metaService = metaService;
         this.dynamicFormService = dynamicFormService;
         this.metaInstanceService = metaInstanceService;
@@ -130,6 +132,7 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
         this.client = client;
         this.formPropertyRepository = formPropertyRepository;
         this.flowsService = flowsService;
+        this.sharedUrl = sharedUrl;
     }
 
     private static void setExtraBusinessData(OperationContext context, Map<String, Object> businessData, Meta meta,
@@ -763,7 +766,6 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
     private void clearFormId(Map<String, Object> info) {
         info.put(AippConst.INST_CURR_FORM_ID_KEY, AippConst.INVALID_FORM_ID);
         info.put(AippConst.INST_CURR_FORM_VERSION_KEY, AippConst.INVALID_FORM_VERSION_ID);
-        info.put(AippConst.INST_CHILD_INSTANCE_ID, AippConst.INVALID_CHILD_INSTANCE_ID);
     }
 
     /**
@@ -843,6 +845,40 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
 
         if (deleteLog) {
             aippLogService.deleteAippPreviewLog(aippId, context);
+        }
+    }
+
+    @Override
+    public Map<String, Object> shared(List<Map<String, Object>> chats) {
+        HttpPost httpPost = new HttpPost(this.sharedUrl);
+        httpPost.setEntity(new StringEntity(JsonUtils.toJsonString(chats), ContentType.APPLICATION_JSON));
+        try (CloseableHttpResponse response = HttpUtils.execute(httpPost)) {
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                log.error("Failed to share.", response.getStatusLine());
+                throw new AippException(AippErrCode.XIAOHAI_SHARED_CHAT_HTTP_ERROR);
+            }
+            String respContent = EntityUtils.toString(response.getEntity());
+            return JsonUtils.parseObject(respContent);
+        } catch (IOException e) {
+            log.error("Failed to share:", e.getMessage());
+            throw new AippException(AippErrCode.XIAOHAI_SHARED_CHAT_HTTP_ERROR);
+        }
+    }
+
+    @Override
+    public Map<String, Object> getShareData(String shareId) {
+        HttpGet httpGet = new HttpGet(this.sharedUrl + "?shareId=" + shareId);
+        try (CloseableHttpResponse response = HttpUtils.execute(httpGet)) {
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                throw new IOException(String.format(Locale.ROOT,
+                        "send http fail. url=%s result=%d",
+                        httpGet.getURI(),
+                        response.getStatusLine().getStatusCode()));
+            }
+            String respContent = EntityUtils.toString(response.getEntity());
+            return JsonUtils.parseObject(respContent);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

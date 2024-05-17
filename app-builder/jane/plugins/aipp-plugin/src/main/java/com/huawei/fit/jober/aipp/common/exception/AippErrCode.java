@@ -135,6 +135,11 @@ public enum AippErrCode implements ErrorCode {
      */
     AIPP_NAME_LENGTH_OUT_OF_BOUNDS(90001018, "The length of name is out of bounds."),
 
+    /**
+     * 通过小海平台分享对话失败
+     */
+    XIAOHAI_SHARED_CHAT_HTTP_ERROR(90001019, "Shared chat history to xiaohai http error."),
+
     /** ------------ aipp runtime Exception. From 90002000 to 90002999 --------------------- */
     /**
      * 上传文件失败

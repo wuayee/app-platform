@@ -393,7 +393,7 @@ public class AippRunTimeServiceTest {
         }
 
         public MetaBuilder addProps(String key, String name, String type) {
-            FormMetaItem item = new FormMetaItem(key, name, type, AippConst.STRING_LEN);
+            FormMetaItem item = new FormMetaItem(key, name, type, AippConst.STRING_LEN, null);
             properties.add(FormMetaConvertor.INSTANCE.toTaskProperty(item));
             return this;
         }

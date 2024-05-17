@@ -267,10 +267,14 @@ public class AippLogServiceTest {
                 && Objects.isNull(cond.getAfterAt())))).thenReturn(Stream.of(AippInstLogType.MSG,
                 AippInstLogType.FORM,
                 AippInstLogType.ERROR,
-                AippInstLogType.MSG).map(generateAippInstLogFunc).collect(Collectors.toList()));
+                AippInstLogType.MSG,
+                AippInstLogType.QUESTION,
+                AippInstLogType.HIDDEN_QUESTION,
+                AippInstLogType.HIDDEN_MSG,
+                AippInstLogType.FILE).map(generateAippInstLogFunc).collect(Collectors.toList()));
         String timeString = datetimeString.isEmpty() ? null : datetimeString;
         List<AippInstLog> result = aippLogService.queryInstanceLogSince(DUMMY_ID, timeString);
-        Assertions.assertEquals(3, result.size());
+        Assertions.assertEquals(5, result.size());
         List<Long> logIdSequence = result.stream().map(AippInstLog::getLogId).collect(Collectors.toList());
         Assertions.assertIterableEquals(logIdSequence.stream().sorted().collect(Collectors.toList()),
                 logIdSequence,
@@ -278,6 +282,8 @@ public class AippLogServiceTest {
         Assertions.assertEquals(AippInstLogType.MSG.name(), result.get(0).getLogType());
         Assertions.assertEquals(AippInstLogType.ERROR.name(), result.get(1).getLogType());
         Assertions.assertEquals(AippInstLogType.MSG.name(), result.get(2).getLogType());
+        Assertions.assertEquals(AippInstLogType.QUESTION.name(), result.get(3).getLogType());
+        Assertions.assertEquals(AippInstLogType.FILE.name(), result.get(4).getLogType());
     }
 
     @Test

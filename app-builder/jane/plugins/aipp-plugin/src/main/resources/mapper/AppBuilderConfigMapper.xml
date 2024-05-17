@@ -64,4 +64,10 @@
         from app_builder_config
         where app_id = #{appId}
     </select>
+
+    <delete id="delete">
+        delete from
+            app_builder_config
+        where id = #{id}
+    </delete>
 </mapper>

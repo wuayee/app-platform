@@ -35,11 +35,6 @@ public class AippConst {
     public static final String INVALID_FORM_VERSION_ID = "undefined";
 
     /**
-     * invalid child instance id string
-     */
-    public static final String INVALID_CHILD_INSTANCE_ID = "undefined";
-
-    /**
      * RETRY_INTERVAL
      */
     public static final int RETRY_INTERVAL = 1000;
@@ -531,21 +526,21 @@ public class AippConst {
      * aipp initial static meta items
      */
     public static final List<FormMetaItem> STATIC_META_ITEMS = Arrays.asList(
-            new FormMetaItem(INST_NAME_KEY, "meta实例名称", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_CREATOR_KEY, "创建人", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_CREATE_TIME_KEY, "创建时间", "DATETIME", null),
-            new FormMetaItem(INST_MODIFY_BY_KEY, "更新人", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_MODIFY_TIME_KEY, "更新时间", "DATETIME", null),
-            new FormMetaItem(INST_FINISH_TIME_KEY, "完成时间", "DATETIME", null),
-            new FormMetaItem(INST_FLOW_INST_ID_KEY, "flow实例id", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_CURR_FORM_ID_KEY, "当前表单id", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_CURR_FORM_VERSION_KEY, "当前表单版本", "TEXT", STRING_LEN),
+            new FormMetaItem(INST_NAME_KEY, "meta实例名称", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_CREATOR_KEY, "创建人", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_CREATE_TIME_KEY, "创建时间", "DATETIME", null, null),
+            new FormMetaItem(INST_MODIFY_BY_KEY, "更新人", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_MODIFY_TIME_KEY, "更新时间", "DATETIME", null, null),
+            new FormMetaItem(INST_FINISH_TIME_KEY, "完成时间", "DATETIME", null, null),
+            new FormMetaItem(INST_FLOW_INST_ID_KEY, "flow实例id", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_CURR_FORM_ID_KEY, "当前表单id", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_CURR_FORM_VERSION_KEY, "当前表单版本", "TEXT", STRING_LEN, null),
             new FormMetaItem(INST_CURR_FORM_DATA_KEY, "当前表单数据", "TEXT",
-                    STRING_LEN * 8),
-            new FormMetaItem(INST_STATUS_KEY, "实例状态", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_PROGRESS_KEY, "实例进度", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_AGENT_RESULT_KEY, "aipp agent结果", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_CHILD_INSTANCE_ID, "aipp子流程instanceId", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_CURR_NODE_ID_KEY, "当前节点id", "TEXT", STRING_LEN)
+                    STRING_LEN * 8, null),
+            new FormMetaItem(INST_STATUS_KEY, "实例状态", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_PROGRESS_KEY, "实例进度", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_AGENT_RESULT_KEY, "aipp agent结果", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_CHILD_INSTANCE_ID, "aipp子流程instanceId", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_CURR_NODE_ID_KEY, "当前节点id", "TEXT", STRING_LEN, null)
     );
 }

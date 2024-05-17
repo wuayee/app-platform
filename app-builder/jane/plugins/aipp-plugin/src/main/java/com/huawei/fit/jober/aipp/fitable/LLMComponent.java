@@ -114,7 +114,6 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         String toolOutput = ObjectUtils.cast(childBusinessData.get(AippConst.BS_AIPP_FINAL_OUTPUT));
         String parentInstanceId = ObjectUtils.cast(childBusinessData.get(AippConst.PARENT_INSTANCE_ID));
         AippLlmMeta llmMeta = llmCache.get(parentInstanceId);
-        this.setChildInstanceId(llmMeta, AippConst.INVALID_CHILD_INSTANCE_ID);
         if (!ObjectUtils.<Boolean>cast(childBusinessData.get(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM))) {
             Map<String, Object> businessData = llmMeta.getBusinessData();
             businessData.putIfAbsent("output", new HashMap<String, Object>());
@@ -265,6 +264,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         skillNameList.addAll(ObjectUtils.cast(businessData.get("workflows")));
         return ChatOptions.builder()
                 .model(ObjectUtils.cast(businessData.get("model")))
+                .maxTokens(18000)
                 .temperature(ObjectUtils.cast(businessData.get("temperature")))
                 .tools(this.toolProvider.getTool(skillNameList))
                 .build();

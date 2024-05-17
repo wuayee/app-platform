@@ -12,11 +12,11 @@
     "name": "人工检查"
   },
   {
-    "type": "fitInvokeNodeState",
-    "name": "FIT调用"
-  },
-  {
     "type": "conditionNodeCondition",
     "name": "条件"
+  },
+  {
+    "type": "endNodeEnd",
+    "name": "结束"
   }
 ]

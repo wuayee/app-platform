@@ -13,6 +13,7 @@ import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.util.StringUtils;
 
 /**
  * @author 邬涨财 w00575064
@@ -63,5 +64,18 @@ public class AppBuilderAppFactory {
 
     public void update(AppBuilderApp appBuilderApp) {
         this.appRepository.updateOne(appBuilderApp);
+    }
+
+    /**
+     * 删除app
+     * @param appBuilderApp app
+     */
+    public void delete(AppBuilderApp appBuilderApp) {
+        if (StringUtils.isEmpty(appBuilderApp.getId())) {
+            return;
+        }
+        this.appRepository.delete(appBuilderApp.getId());
+        this.configRepository.delete(appBuilderApp.getConfigId());
+        this.flowGraphRepository.delete(appBuilderApp.getFlowGraphId());
     }
 }

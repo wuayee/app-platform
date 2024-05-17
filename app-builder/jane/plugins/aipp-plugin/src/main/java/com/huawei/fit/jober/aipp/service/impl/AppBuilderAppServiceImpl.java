@@ -7,9 +7,12 @@ package com.huawei.fit.jober.aipp.service.impl;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.response.Rsp;
+import com.huawei.fit.jane.meta.multiversion.MetaService;
+import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jane.task.util.Entities;
 import com.huawei.fit.jober.aipp.common.ConvertUtils;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
+import com.huawei.fit.jober.aipp.common.MetaUtils;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;
@@ -29,6 +32,7 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormPropertyDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AppQueryCondition;
+import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.AppTypeEnum;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
@@ -83,14 +87,16 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
     private final AippFlowService aippFlowService;
     private final AppBuilderAppRepository appRepository;
     private final int nameLengthMaximum;
+    private final MetaService metaService;
 
     public AppBuilderAppServiceImpl(AppBuilderAppFactory appFactory, AippFlowService aippFlowService,
             AppBuilderAppRepository appRepository,
-            @Value("${validation.task.name.length.maximum:64}") int nameLengthMaximum) {
+            @Value("${validation.task.name.length.maximum:64}") int nameLengthMaximum, MetaService metaService) {
         this.nameLengthMaximum = nameLengthMaximum;
         this.appFactory = appFactory;
         this.aippFlowService = aippFlowService;
         this.appRepository = appRepository;
+        this.metaService = metaService;
     }
 
     @Override
@@ -160,7 +166,7 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
     @Fitable(id = "b389e19779fcc245b7a6815a46eb5865")
     public Rsp<AppBuilderAppDto> create(String appId, AppBuilderAppCreateDto dto, OperationContext context) {
         if (dto != null) {
-            this.validateAppName(dto.getName(), context);
+            this.validateCreateApp(dto.getName(), context);
         }
         AppBuilderApp templateApp = this.appFactory.create(appId);
         // 根据模板app复制app，仅需修改所有id
@@ -192,6 +198,30 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
         return Rsp.ok(this.buildFullAppDto(templateApp));
     }
 
+    private void validateCreateApp(String name, OperationContext context) {
+        this.validateAppName(name, context);
+        AppQueryCondition queryCondition =
+                AppQueryCondition.builder().tenantId(context.getTenantId()).name(name).build();
+        if (!this.appRepository.selectWithCondition(queryCondition).isEmpty()) {
+            log.error("Create aipp failed, [name={}, tenantId={}]", name, context.getTenantId());
+            throw new AippException(context, AippErrCode.AIPP_NAME_IS_DUPLICATE);
+        }
+    }
+
+    private void validateUpdateApp(String appId, String name, OperationContext context) {
+        this.validateAppName(name, context);
+        AppQueryCondition queryCondition =
+                AppQueryCondition.builder().tenantId(context.getTenantId()).name(name).build();
+        List<AppBuilderApp> appBuilderApps = this.appRepository.selectWithCondition(queryCondition);
+        if (appBuilderApps.isEmpty()) {
+            return;
+        }
+        if (appBuilderApps.size() > 1 || !Objects.equals(appBuilderApps.get(0).getId(), appId)) {
+            log.error("update aipp failed, [name={}, tenantId={}]", name, context.getTenantId());
+            throw new AippException(context, AippErrCode.AIPP_NAME_IS_DUPLICATE);
+        }
+    }
+
     private void validateAppName(String name, OperationContext context) {
         if (StringUtils.isEmpty(name)) {
             log.error("Create aipp failed: name can not be empty.", name);
@@ -199,12 +229,6 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
         } else if (name.length() > this.nameLengthMaximum) {
             log.error("Create aipp failed: the length of task name is out of bounds. [name={}]", name);
             throw new AippParamException(context, AippErrCode.AIPP_NAME_LENGTH_OUT_OF_BOUNDS);
-        }
-        AppQueryCondition queryCondition =
-                AppQueryCondition.builder().tenantId(context.getTenantId()).name(name).build();
-        if (!this.appRepository.selectWithCondition(queryCondition).isEmpty()) {
-            log.error("Create aipp failed, [name={}, tenantId={}]", name, context.getTenantId());
-            throw new AippException(context, AippErrCode.AIPP_NAME_IS_DUPLICATE);
         }
     }
 
@@ -222,7 +246,7 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
     @Fitable(id = "b389e19779fcc245b7a6826a46eb5865")
     public Rsp<AppBuilderAppDto> updateApp(String appId, AppBuilderAppDto appDto, OperationContext context) {
         if (appDto != null) {
-            this.validateAppName(appDto.getName(), context);
+            this.validateUpdateApp(appId, appDto.getName(), context);
         }
         AppBuilderApp update = this.appFactory.create(appId);
         update.setUpdateBy(context.getOperator());
@@ -373,6 +397,28 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
         oldApp.setUpdateBy(context.getOperator());
         this.appFactory.update(oldApp);
         return Rsp.ok(this.buildFullAppDto(oldApp));
+    }
+
+    @Override
+    @Transactional
+    @Fitable(id = "67e2c58bf55ac346ad4aa3bebd90dcf5")
+    public void delete(String appId, OperationContext context) {
+        AppBuilderApp appBuilderApp = this.appFactory.create(appId);
+        // step1 删除app相关
+        if (StringUtils.isEmpty(appBuilderApp.getId())) {
+            return;
+        }
+        this.appFactory.delete(appBuilderApp);
+
+        // step2 删除task相关 此处应该是会删除相关的task和tasktemplate 但不会删除taskinstance
+        List<Meta> metaList = MetaUtils.getAllMetasByAppId(metaService, appId, AippTypeEnum.PREVIEW.type(), context);
+        metaList.addAll(MetaUtils.getAllMetasByAppId(metaService, appId, AippTypeEnum.NORMAL.type(), context));
+        List<String> ids = metaList.stream().map(Meta::getVersionId).distinct().collect(Collectors.toList());
+        MetaUtils.deleteMetasByVersionIds(metaService, ids, context);
+
+        // todo step3 删除日志
+        // todo step4 删除流程定义相关
+        // todo step5 删除store相关
     }
 
     @NotNull

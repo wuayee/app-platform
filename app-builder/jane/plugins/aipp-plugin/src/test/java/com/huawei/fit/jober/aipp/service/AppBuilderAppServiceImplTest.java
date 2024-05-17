@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.aipp.service;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfig;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfigProperty;
@@ -58,6 +59,8 @@ public class AppBuilderAppServiceImplTest {
     private AppBuilderConfigPropertyRepository configPropertyRepository;
     @Mock
     private AppBuilderFormPropertyRepository formPropertyRepository;
+    @Mock
+    private MetaService metaService;
 
     private AppBuilderAppServiceImpl appBuilderAppService;
 
@@ -71,7 +74,7 @@ public class AppBuilderAppServiceImplTest {
                 configPropertyRepository,
                 formPropertyRepository,
                 appRepository);
-        appBuilderAppService = new AppBuilderAppServiceImpl(factory, aippFlowService, appRepository, 64);
+        appBuilderAppService = new AppBuilderAppServiceImpl(factory, aippFlowService, appRepository, 64, metaService);
     }
 
     private AppBuilderApp mockApp() {
@@ -139,7 +142,7 @@ public class AppBuilderAppServiceImplTest {
         form.setCreateBy("yaojiang wx1299574");
         form.setUpdateBy("yaojiang wx1299574");
         form.setType("component");
-        form.setAppearance("[{\"key\": \"ke1\", \"name\": \"name1\", \"type\": \"TEXT\"}]");
+        form.setAppearance(null);
         form.setFormProperties(mockFormProperties());
         form.getFormProperties().forEach(fp -> fp.setForm(form));
         return form;

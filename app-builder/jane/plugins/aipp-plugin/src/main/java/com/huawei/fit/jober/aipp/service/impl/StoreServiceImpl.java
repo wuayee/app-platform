@@ -4,13 +4,15 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
-import static com.huawei.fit.jober.aipp.init.AippComponentInitiator.COMPONENT_DATA;
-
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
 import com.huawei.fit.jober.aipp.dto.StoreBasicNodeInfoDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
+import com.huawei.fit.jober.aipp.dto.StoreWaterFlowDto;
 import com.huawei.fit.jober.aipp.enums.AppCategory;
+import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
+import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.StringUtils;
@@ -19,6 +21,11 @@ import com.huawei.jade.store.service.ItemService;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static com.huawei.fit.jober.aipp.init.AippComponentInitiator.COMPONENT_DATA;
 
 /**
  * @author 邬涨财 w00575064
@@ -27,25 +34,49 @@ import java.util.List;
 @Component
 public class StoreServiceImpl implements StoreService {
     private final ItemService itemService;
+    private final AppBuilderAppMapper appBuilderAppMapper;
 
-    public StoreServiceImpl(ItemService itemService) {
+    public StoreServiceImpl(ItemService itemService, AppBuilderAppMapper appBuilderAppMapper) {
         this.itemService = itemService;
+        this.appBuilderAppMapper = appBuilderAppMapper;
     }
 
     @Override
-    public StoreNodeConfigResDto getBasicNodesAndTools() {
-        return StoreNodeConfigResDto.builder().toolList(this.buildToolNodesConfig()).basicList(this.buildBasicNodesConfig()).build();
+    public StoreNodeConfigResDto getBasicNodesAndTools(int pageNum, int pageSize) {
+        return StoreNodeConfigResDto.builder().toolList(this.buildToolNodesConfig(AppCategory.FIT, pageNum, pageSize)).basicList(this.buildBasicNodesConfig()).build();
     }
 
-    private List<ItemData> buildToolNodesConfig() {
-        return this.itemService.getAllItems(AppCategory.FIT.getCategory(),
-                Collections.singletonList(AppCategory.FIT.getTag()),
+    private List<ItemData> buildToolNodesConfig(AppCategory appCategory, int pageNum, int pageSize) {
+        return this.itemService.getAllItems(appCategory.getCategory(),
+                Collections.singletonList(appCategory.getTag()),
                 Collections.singletonList(StringUtils.EMPTY),
-                1,
-                10);
+                pageNum,
+                pageSize);
     }
 
     private List<StoreBasicNodeInfoDto> buildBasicNodesConfig() {
         return JsonUtils.parseObject(COMPONENT_DATA.get(AippConst.BASIC_NODE_COMPONENT_DATA_KEY), List.class);
+    }
+
+    @Override
+    public List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(int pageNum, int pageSize) {
+        List<ItemData> waterFlows = this.buildToolNodesConfig(AppCategory.WATER_FLOW, pageNum, pageSize);
+        List<String> storeIds = waterFlows.stream().map(ItemData::getUniqueName).collect(Collectors.toList());
+        List<AppBuilderAppPO> appInfos = appBuilderAppMapper.selectWithStoreId(storeIds);
+        Map<String, StoreWaterFlowDto> appInfoMap = appInfos.stream().
+                collect(Collectors.toMap(info -> JsonUtils.parseObject(info.getAttributes()).get("store_id").toString(),
+                info -> StoreWaterFlowDto.builder().version(info.getVersion()).id(info.getId()).tenantId(info.getTenantId()).build()));
+        return waterFlows.stream().map(waterFlow -> buildWaterFlowInfo(waterFlow, appInfoMap)).collect(Collectors.toList());
+    }
+
+    private AppBuilderWaterFlowInfoDto buildWaterFlowInfo(ItemData waterFlow, Map<String, StoreWaterFlowDto> appInfoMap) {
+        String uniqueName = waterFlow.getUniqueName();
+        StoreWaterFlowDto appInfo = appInfoMap.get(uniqueName);
+        return AppBuilderWaterFlowInfoDto.builder()
+                .itemData(waterFlow)
+                .appId(appInfo.getId())
+                .version(appInfo.getVersion())
+                .tenantId(appInfo.getTenantId())
+                .build();
     }
 }

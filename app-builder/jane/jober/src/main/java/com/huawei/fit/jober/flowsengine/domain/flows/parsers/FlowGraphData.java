@@ -676,6 +676,8 @@ public class FlowGraphData {
             for (int i = 0; i < branches.size(); i++) {
                 ((JSONObject)relatedEventList.get(i)).put("conditionRule", ConvertConditionToRuleUtils.convert(branches.get(i).toString()));
             }
+            // Todo 临时逻辑为了联调，后续待确认此做法
+            ((JSONObject)relatedEventList.get(branches.size())).put("conditionRule", "true");
         });
     }
 

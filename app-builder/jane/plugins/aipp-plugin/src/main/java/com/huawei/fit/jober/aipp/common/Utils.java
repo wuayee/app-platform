@@ -48,6 +48,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -421,10 +422,30 @@ public class Utils {
 
     private static FormMetaInfo buildFormMetaInfo(FormMetaQueryParameter parameter,
             AppBuilderFormRepository formRepository) {
-        AppBuilderForm form = formRepository.selectWithId(parameter.getFormId());   // todo 之后改成批量
         FormMetaInfo formMetaInfo = new FormMetaInfo(parameter.getFormId(), parameter.getVersion());
-        formMetaInfo.setFormMetaItems(JsonUtils.parseArray(form.getAppearance(), FormMetaItem[].class));
+        formMetaInfo.setFormMetaItems(buildFormMetaItems(parameter, formRepository));
         return formMetaInfo;
+    }
+
+    private static List<FormMetaItem> buildFormMetaItems(FormMetaQueryParameter parameter,
+            AppBuilderFormRepository formRepository) {
+        AppBuilderForm form = formRepository.selectWithId(parameter.getFormId());   // todo 之后改成批量
+        if (form == null) {
+            return new ArrayList<>();
+        }
+        List<AppBuilderFormProperty> formProperties = form.getFormProperties();
+        return formProperties.stream()
+                .map(Utils::buildFormMetaItem)
+                .collect(Collectors.toList());
+    }
+
+    private static FormMetaItem buildFormMetaItem(AppBuilderFormProperty formProperty) {
+        return FormMetaItem.builder()
+                .key(formProperty.getId())
+                .name(formProperty.getName())
+                .type(formProperty.getDataType())
+                .defaultValue(formProperty.getDefaultValue())
+                .build();
     }
 
     public static DynamicFormDetailEntity queryFormDetailByPrimaryKey(String formId, String version,
