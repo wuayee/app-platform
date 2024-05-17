@@ -37,6 +37,16 @@ public interface OpenConnectionResult extends DataBusResult {
     }
 
     /**
+     * 获取表示连接失败的结果，无异常抛出。
+     *
+     * @param errorType 表示连接得到的错误码 {@code byte}。
+     * @return 表示连接失败的结果的 {@link OpenConnectionResult}。
+     */
+    static OpenConnectionResult failure(byte errorType) {
+        return new FailureResult(errorType);
+    }
+
+    /**
      * 为 {@link OpenConnectionResult} 提供表示连接成功的实现。
      *
      * @author 王成 w00863339
@@ -74,6 +84,10 @@ public interface OpenConnectionResult extends DataBusResult {
         private FailureResult(byte errorType, Throwable throwable) {
             this.errorType = errorType;
             this.throwable = throwable;
+        }
+
+        private FailureResult(byte errorType) {
+            this(errorType, null);
         }
 
         @Override
