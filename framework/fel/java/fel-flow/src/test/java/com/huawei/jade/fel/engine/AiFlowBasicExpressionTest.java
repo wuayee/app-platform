@@ -319,5 +319,21 @@ public class AiFlowBasicExpressionTest {
                     + "node0-->node1(delegate to node)\n" + "end11-. emit .->node1(delegate to node)";
             checkMermaid(new Mermaid(flow.origin()).get(), expected);
         }
+
+        @Test
+        @DisplayName("测试AiFlow的flatMap能力")
+        void test_aiFlow_flat_map() {
+            List<String> result = new ArrayList<>();
+            AiProcessFlow<Integer, String> flow = AiFlows.<Integer>create().flatMap(num -> {
+                String[] maps = new String[num];
+                for (int i = 0; i < num; i++) {
+                    maps[i] = "flat map ";
+                }
+                return AiFlows.flux(maps);
+            }).just(value -> result.add(value)).close();
+            flow.converse().offer(4);
+            waitUntil(() -> result.size() == 4);
+            assertEquals(4, result.size());
+        }
     }
 }

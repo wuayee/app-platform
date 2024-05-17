@@ -24,6 +24,8 @@ import com.huawei.jade.fel.core.retriever.Indexer;
 import com.huawei.jade.fel.core.retriever.Retriever;
 import com.huawei.jade.fel.core.retriever.Splitter;
 import com.huawei.jade.fel.core.util.Tip;
+import com.huawei.jade.fel.engine.activities.processors.AiBranchProcessor;
+import com.huawei.jade.fel.engine.activities.processors.AiFlatMap;
 import com.huawei.jade.fel.engine.flows.AiFlow;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.operators.AiRunnableArg;
@@ -144,6 +146,19 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public <R> AiState<R, D, O, RF, F> map(Operators.ProcessMap<O, R> processor) {
         Validation.notNull(processor, "Map processor cannot be null.");
         return new AiState<>(this.start.map(processor), this.getFlow());
+    }
+
+    /**
+     * 将每个原料数据通过指定的方式进行加工，转换为多个产品数据，同时可以转换类型
+     *
+     * @param processor 表示数据处理器的 {@link AiFlatMap}{@code <}{@link O}{@code , }{@link R}{@code >}。
+     * @param <R> 表示新节点的输出数据类型。
+     * @return 表示数据转换节点的 {@link AiState}{@code <}{@link R}{@code , }{@link D}{@code , }{@link O}{@code ,
+     * }{@link RF}{@code , }{@link F}{@code >}。
+     * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
+     */
+    public <R> AiState<R, D, O, RF, F> flatMap(AiFlatMap<O, R> processor) {
+        return new AiState<>(this.start.flatMap(input -> processor.process(input).toDataStart()), this.getFlow());
     }
 
     /**
@@ -281,7 +296,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public <R> AiState<R, D, O, RF, F> split(Splitter<O, R> splitter) {
         Validation.notNull(splitter, "Splitter operator cannot be null.");
         AiState<R, D, O, RF, F> state = this.map(splitter::split);
-        ((Processor<?, ?>)state.publisher()).displayAs("splitter");
+        ((Processor<?, ?>) state.publisher()).displayAs("splitter");
         return state;
     }
 
@@ -296,7 +311,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public AiState<O, D, O, RF, F> index(Indexer<O> indexer) {
         Validation.notNull(indexer, "Indexer operator cannot be null.");
         AiState<O, D, O, RF, F> state = this.just(indexer::process);
-        ((Processor<?, ?>)state.publisher()).displayAs("indexer");
+        ((Processor<?, ?>) state.publisher()).displayAs("indexer");
         return state;
     }
 
@@ -311,7 +326,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public <R> AiState<R, D, O, RF, F> format(Parser<R> parser) {
         Validation.notNull(parser, "Parser operator cannot be null.");
         AiState<R, D, O, RF, F> state = this.map(input -> parser.parse(ObjectUtils.cast(input)));
-        ((Processor<?, ?>)state.publisher()).displayAs("format");
+        ((Processor<?, ?>) state.publisher()).displayAs("format");
         return state;
     }
 
@@ -375,7 +390,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Validation.notNull(aiFlow, "Flow cannot be null.");
         Processor<O, R> processor = this.publisher().map(input -> {
             aiFlow.converse(input.getSession()).offer(input.getData());
-            return (R)null;
+            return (R) null;
         }, null).displayAs("delegate to flow", aiFlow.origin(), aiFlow.origin().start().getId());
         AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
         state.offer(aiFlow);
@@ -402,7 +417,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Validation.notBlank(nodeId, "Node id cannot be blank.");
         Processor<O, R> processor = this.publisher().map(input -> {
             aiFlow.converse(input.getSession()).offer(nodeId, Collections.singletonList(input.getData()));
-            return (R)null;
+            return (R) null;
         }, null).displayAs("delegate to node", aiFlow.origin(), nodeId);
 
         AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
@@ -425,8 +440,8 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
             for (PromptTemplate<O> template : templates) {
                 messages.addAll(template.invoke(runnableArg).messages());
             }
-            return (Prompt)messages;
-        },  null).displayAs("prompt"), this.getFlow().origin()), this.getFlow());
+            return (Prompt) messages;
+        }, null).displayAs("prompt"), this.getFlow().origin()), this.getFlow());
     }
 
     /**
@@ -469,7 +484,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
             AiBranchProcessor<Tip, D, O, RF, F> branchProcessor = node -> {
                 Processor<O, Tip> processor = node.publisher()
                         .map(input -> pattern.invoke(new AiRunnableArg<>(input.getData(), input.getSession())),
-                                 null);
+                                null);
                 return new AiState<>(new State<>(processor, mineOrigin), mineFlow);
             };
             aiFork = Optional.ofNullable(aiFork)
@@ -481,7 +496,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
             acc.merge(data);
             return acc;
         });
-        ((Processor<?, ?>)state.publisher()).displayAs("runnableParallel");
+        ((Processor<?, ?>) state.publisher()).displayAs("runnableParallel");
         return state;
     }
 }

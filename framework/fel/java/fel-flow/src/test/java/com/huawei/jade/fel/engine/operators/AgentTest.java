@@ -114,7 +114,6 @@ public class AgentTest {
         assertThat(err.get()).isEqualTo("model exception");
         // delegate 场景也仅触发一次对话异常回调
         assertThat(converseErrCnt.get()).isEqualTo(1);
-
     }
 
     private static Agent<Prompt, Prompt> getAgent(ChatModelService model, boolean isAsyncTool) {
