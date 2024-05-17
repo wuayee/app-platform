@@ -1,10 +1,11 @@
 import type { MenuProps } from 'antd';
 import { ReactElement } from 'react';
 import { Icons } from '../components/icons/index';
+import AppDetail from '../pages/app-detail';
 import KnowledgeBase from '../pages/knowledge-base';
- 
+
 type MenuItem = Required<MenuProps>['items'][number] & { component?: () => ReactElement, children?: MenuItem[], label: string, key: string};
- 
+
 // key为页面链接不允许相同, 需要子数组就增加children数组
 export const routeList: MenuItem[] = [
   {
@@ -26,6 +27,7 @@ export const routeList: MenuItem[] = [
     key: '/app',
     icon: Icons.app({}),
     label: '应用',
+    component: AppDetail,
   },
   {
     key: '/mode',
@@ -49,8 +51,8 @@ export const routeList: MenuItem[] = [
     label: '团队',
   },
 ];
- 
- 
+
+
 // 将路由展平
 export const flattenRoute = (routeList: MenuItem[]): MenuItem[] => {
   let flattenRouteList: MenuItem[] = [];
@@ -62,7 +64,7 @@ export const flattenRoute = (routeList: MenuItem[]): MenuItem[] => {
   })
   return [...rootLayer, ...flattenRouteList]
 }
- 
+
 // 根据key值返回路由, 传入展平的数组
 export const getRouteByKey = (routeList: MenuItem[], key: string): MenuItem | null => {
   return routeList.find(item=> item.key === key) || null;
