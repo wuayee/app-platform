@@ -6,7 +6,10 @@
   margin-right: 16px;
 }
 
-.tab-content {
-  height: calc(100% - 10px);
-  overflow-y: auto;
+.tab-content{
+    padding: 8px 16px;
+}
+
+.font-size-24 {
+    font-size: 24px;
 }

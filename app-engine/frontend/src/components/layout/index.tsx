@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme, ConfigProvider,  } from 'antd';
 import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
-import { routeList, flattenRoute, getRouteByKey } from '../../router/route'
+import { routeList, flattenRoute, getRouteByKey, getMenus } from '../../router/route'
 import { Icons } from '../icons/index'
 import KnowledgeBase from '../../pages/knowledge-base';
 
@@ -24,7 +24,7 @@ function getItem(
   } as MenuItem;
 }
 
-const items: MenuItem[] = routeList;
+const items: MenuItem[] = getMenus(routeList);
 const flattenRouteList = flattenRoute(routeList);
 
 
@@ -82,7 +82,6 @@ const AppLayout: React.FC = () => {
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer, height: '48px' }} />
         <Content style={{padding: '0 16px', background: colorBgContainer }}>
-          <div className='pageTitle'>{ currentActivedPage }</div>
           {/* <Breadcrumb style={{ margin: '16px 0' }}>
             <Breadcrumb.Item>User</Breadcrumb.Item>
             <Breadcrumb.Item>Bill</Breadcrumb.Item>
