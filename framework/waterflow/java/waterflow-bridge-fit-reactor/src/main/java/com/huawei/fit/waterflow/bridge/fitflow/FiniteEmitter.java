@@ -23,13 +23,11 @@ import java.util.Optional;
  * @author 夏斐
  * @since 2024-05-15
  */
-public class FiniteEmitter<O, D extends FiniteEmitterData> implements Emitter<D, FlowSession> {
+public abstract class FiniteEmitter<O, D extends FiniteEmitterData> implements Emitter<D, FlowSession> {
     private static final String CONSUMER_KEY = "consumer";
 
     private final List<EmitterListener<D, FlowSession>> listeners = new ArrayList<>();
-
     private final List<Tuple> dataDuet = new ArrayList<>();
-
     private final FlowSession token;
 
     /**
@@ -59,12 +57,12 @@ public class FiniteEmitter<O, D extends FiniteEmitterData> implements Emitter<D,
      *
      * @param cause 表示错误异常的 {@link Exception}。
      */
-    protected void errorAction(Exception cause) {}
+    protected abstract void errorAction(Exception cause);
 
     /**
      * 结束扩展响应。
      */
-    protected void completedAction() {}
+    protected abstract void completedAction();
 
     /**
      * 发射数据时的扩展响应。
@@ -72,13 +70,7 @@ public class FiniteEmitter<O, D extends FiniteEmitterData> implements Emitter<D,
      * @param source 表示源数据的 {@link O}。
      * @param target 表示目标数据的 {@link D}。
      */
-    protected void consumeAction(O source, D target) {}
-
-    private void doEmit(D data, Action action) {
-        FlowSession session = new FlowSession(this.token);
-        session.setInnerState(CONSUMER_KEY, action);
-        this.emit(data, session);
-    }
+    protected abstract void consumeAction(O source, D target);
 
     @Override
     public synchronized void emit(D data, FlowSession token) {
@@ -103,8 +95,17 @@ public class FiniteEmitter<O, D extends FiniteEmitterData> implements Emitter<D,
         }
     }
 
+    private void doEmit(D data, Action action) {
+        FlowSession session = new FlowSession(this.token);
+        session.setInnerState(CONSUMER_KEY, action);
+        this.emit(data, session);
+    }
+
     @FunctionalInterface
     private interface Action {
+        /**
+         * 执行响应。
+         */
         void exec();
     }
 

@@ -11,12 +11,9 @@ import com.huawei.fitframework.util.ObjectUtils;
 
 import lombok.Setter;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.swing.text.html.Option;
 
 /**
  * 流程实例运行标识
@@ -60,7 +57,8 @@ public class FlowSession extends IdGenerator implements StateContext {
     public FlowSession(FlowSession session) {
         super(Optional.ofNullable(session).map(IdGenerator::getId).orElseGet(UUIDUtil::uuid));
         if (session != null) {
-            this.states.putAll(session.states);
+            this.states.get(CUSTOM_STATE).putAll(session.states.get(CUSTOM_STATE));
+            this.states.get(INNER_STATE).putAll(session.states.get(INNER_STATE));
             this.keyBy = session.keyBy;
         }
     }

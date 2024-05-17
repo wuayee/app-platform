@@ -5,9 +5,7 @@
 package com.huawei.jade.fel.engine.operators.models;
 
 import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitter;
-import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitterData;
 import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitterDataBuilder;
-import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.ObjectUtils;
@@ -17,7 +15,6 @@ import com.huawei.jade.fel.chat.ChatModelStreamService;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.protocol.ChatCompletion;
-import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.engine.operators.AiRunnableArg;
 import com.huawei.jade.fel.engine.operators.CustomState;
 
@@ -38,20 +35,19 @@ public class ChatStreamModel<M> implements ChatModel<FiniteEmitter<ChatMessage, 
         this(provider, new ChatOptions());
     }
 
-    private ChatStreamModel(ChatModelStreamService provider, ChatOptions options) {
-        this.provider = Validation.notNull(provider, "Model provider cannot be null.");
-        this.options = Validation.notNull(options, "ChatOptions cannot be null.");
+    public ChatStreamModel(ChatModelStreamService provider, ChatOptions options) {
+        this.provider = Validation.notNull(provider, "Model provider can not be null.");
+        this.options = Validation.notNull(options, "Chat options can not be null.");
     }
 
     @Override
     public FiniteEmitter<ChatMessage, ChatChunk> invoke(CustomState<Prompt> arg) {
-        Validation.notNull(arg, "Runnable arg cannot be null.");
+        Validation.notNull(arg, "Runnable arg can not be null.");
         AiRunnableArg<Prompt> aiArg = ObjectUtils.cast(arg);
 
         ChatCompletion completionRequest = new ChatCompletion(aiArg.data(), this.options);
         Choir<ChatMessage> choir = ObjectUtils.cast(provider.generate(completionRequest));
-        FiniteEmitterDataBuilder<ChatMessage, ChatChunk> builder = getEmitterDataBuilder();
-        return new LlmEmitter<>(choir, builder, aiArg);
+        return new LlmEmitter<>(choir, getEmitterDataBuilder(), aiArg);
     }
 
     @Override
@@ -67,7 +63,8 @@ public class ChatStreamModel<M> implements ChatModel<FiniteEmitter<ChatMessage, 
                 ChatChunk>() {
             @Override
             public ChatChunk data(ChatMessage data) {
-                return new ChatChunk(data);
+                Validation.notNull(data, "Chat message can not be null.");
+                return new ChatChunk(data.text(), data.medias(), data.toolCalls());
             }
 
             @Override
@@ -77,7 +74,6 @@ public class ChatStreamModel<M> implements ChatModel<FiniteEmitter<ChatMessage, 
 
             @Override
             public ChatChunk error(String message) {
-                // todo: message 无调用栈
                 return new ChatChunk(new Exception(Optional.ofNullable(message).orElse(StringUtils.EMPTY)));
             }
         };

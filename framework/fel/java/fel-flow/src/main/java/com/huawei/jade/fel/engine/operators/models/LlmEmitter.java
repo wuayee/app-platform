@@ -48,9 +48,17 @@ public class LlmEmitter<O extends ChatMessage> extends FiniteEmitter<O, ChatChun
     private final Processor<Prompt, ChatChunk> processor;
     private final FlowContext<Prompt> context;
 
+    /**
+     * 初始化 {@link LlmEmitter}。
+     *
+     * @param publisher 表示数据发布者的 {@link Publisher}{@code <}{@link O}{@code >}。
+     * @param builder 表示有限流数据构造器的 {@link FiniteEmitterDataBuilder}{@code <}{@link O}{@code ,
+     * }{@link ChatChunk}{@code >}。
+     * @param arg 表示模型节点运行时参数的 {@link AiRunnableArg}{@code <}{@link Prompt}{@code >}。
+     */
     public LlmEmitter(Publisher<O> publisher,
             FiniteEmitterDataBuilder<O, ChatChunk> builder, AiRunnableArg<Prompt> arg) {
-        super(publisher, builder);
+        super(arg.getSession(), publisher, builder);
         this.memory = arg.memory();
         this.question = Validation.notNull(arg.getInnerState(HISTORY_INPUT), "Question cant be null.");
         this.consumer = ObjectUtils.nullIf(arg.getInnerState(STREAMING_CONSUMER), EMPTY_CONSUMER);
@@ -59,7 +67,7 @@ public class LlmEmitter<O extends ChatMessage> extends FiniteEmitter<O, ChatChun
     }
 
     @Override
-    public void consumeAction(O source, ChatChunk target) {
+    protected void consumeAction(O source, ChatChunk target) {
         this.text.append(source.text());
         this.medias.addAll(source.medias());
         this.toolCalls.addAll(Optional.ofNullable(source.toolCalls()).orElseGet(Collections::emptyList));
@@ -67,9 +75,9 @@ public class LlmEmitter<O extends ChatMessage> extends FiniteEmitter<O, ChatChun
     }
 
     @Override
-    public void completedAction() {
+    protected void completedAction() {
         ChatChunk acc = this.buildAccMessage();
-        if (this.memory != null) {
+        if (this.memory != null && !acc.isToolCall()) {
             memory.add(question, acc);
         }
         this.consumer.accept(acc, new ChatChunk(StringUtils.EMPTY).setEnd());

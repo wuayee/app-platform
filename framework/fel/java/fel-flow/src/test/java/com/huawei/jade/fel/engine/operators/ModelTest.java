@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -166,7 +165,7 @@ public class ModelTest {
             result.set(new ArrayList<>());
             AtomicInteger counter = new AtomicInteger();
 
-            AiProcessFlow<Tip, String> flow =
+            AiProcessFlow<Tip, String> currFlow =
                 AiFlows.<Tip>create()
                     .prompt(Prompts.human("{{0}}"))
                     .generate(this.model)
@@ -183,8 +182,8 @@ public class ModelTest {
                     })
                     .close(r -> counter.incrementAndGet());
 
-            flow.converse().offer(Tip.fromArray("test streaming model"));
-            flow.converse().offer(Tip.fromArray("test streaming model2"));
+            currFlow.converse().offer(Tip.fromArray("test streaming model"));
+            currFlow.converse().offer(Tip.fromArray("test streaming model2"));
 
             waitUntil(() -> counter.get() == 2, 1000);
             assertThat(result.get()).hasSize(2).containsSequence("0123", "0123");

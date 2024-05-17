@@ -14,6 +14,7 @@ import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.utils.Identity;
 import com.huawei.fit.waterflow.domain.utils.Tuple;
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -168,6 +169,7 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
      * @return 新的处理节点
      */
     public <R> State<R, D, O, F> flatMap(Operators.FlatMap<O, R> processor) {
+        Validation.notNull(processor, "Flat map processor can not be null.");
         Operators.FlatMap<FlowContext<O>, R> wrapper = input -> processor.process(input.getData());
         return new State<>(this.from.flatMap(wrapper, null).displayAs("flat map"), this.getFlow());
     }

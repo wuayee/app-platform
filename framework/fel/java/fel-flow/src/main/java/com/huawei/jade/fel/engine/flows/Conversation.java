@@ -12,7 +12,6 @@ import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.core.memory.Memory;
 import com.huawei.jade.fel.engine.operators.models.ChatChunk;
 import com.huawei.jade.fel.engine.operators.models.StreamingConsumer;
-import com.huawei.jade.fel.engine.util.SessionUtils;
 import com.huawei.jade.fel.engine.util.StateKey;
 
 import java.util.List;
@@ -60,7 +59,7 @@ public class Conversation<D, R> {
     @SafeVarargs
     public final ConverseLatch<R> offer(D... data) {
         ConverseLatch<R> latch = setListener();
-        FlowSession newSession = SessionUtils.copyFlowSession(this.session);
+        FlowSession newSession = new FlowSession(this.session);
         this.flow.start().offer(data, newSession);
         return latch;
     }
@@ -77,7 +76,7 @@ public class Conversation<D, R> {
     public ConverseLatch<R> offer(String nodeId, List<?> data) {
         Validation.notBlank(nodeId, "invalid nodeId.");
         ConverseLatch<R> latch = setListener();
-        FlowSession newSession = SessionUtils.copyFlowSession(this.session);
+        FlowSession newSession = new FlowSession(this.session);
         this.flow.origin().offer(nodeId, data.toArray(new Object[0]), newSession);
         return latch;
     }
@@ -218,7 +217,7 @@ public class Conversation<D, R> {
     }
 
     private FlowSession setSubConverseListener(FlowSession session) {
-        FlowSession flowSession = SessionUtils.copyFlowSession(session);
+        FlowSession flowSession = new FlowSession(session);
         if (flowSession.getInnerState(StateKey.CONVERSE_LISTENER) == null) {
             this.setConverseListener(flowSession);
         }

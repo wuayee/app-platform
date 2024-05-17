@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
@@ -32,6 +33,36 @@ class FiniteEmitterTest {
         }
     }
 
+    private static class TestFiniteEmitter<O, D extends FiniteEmitterData> extends FiniteEmitter<O, D> {
+        private final AtomicInteger count = new AtomicInteger(0);
+
+        /**
+         * 通过数据发布者和有限流数据构造器初始化 {@link TestFiniteEmitter}{@code <}{@link O}{@code , }{@link D}{@code >}。
+         *
+         * @param publisher 表示数据发布者的 {@link Publisher}{@code <}{@link O}{@code >}。
+         * @param builder 表示有限流数据构造器的 {@link FiniteEmitterDataBuilder}{@code <}{@link O}{@code ,
+         * }{@link D}{@code >}。
+         */
+        public TestFiniteEmitter(Publisher<O> publisher, FiniteEmitterDataBuilder<O, D> builder) {
+            super(publisher, builder);
+        }
+
+        @Override
+        protected void errorAction(Exception cause) {
+            count.incrementAndGet();
+        }
+
+        @Override
+        protected void completedAction() {
+            count.incrementAndGet();
+        }
+
+        @Override
+        protected void consumeAction(O source, D target) {
+            count.incrementAndGet();
+        }
+    }
+
     @Test
     void baseTest() {
         AtomicBoolean end = new AtomicBoolean(false);
@@ -42,7 +73,7 @@ class FiniteEmitterTest {
             subscriber.complete();
         }).start();
         FiniteEmitterDataBuilder<String, TestEmitterData<String>> builder = new TestFiniteEmitterDataBuilder<>();
-        FiniteEmitter<String, TestEmitterData<String>> emitter = new FiniteEmitter<>(publisher, builder);
+        FiniteEmitter<String, TestEmitterData<String>> emitter = new TestFiniteEmitter<>(publisher, builder);
         emitter.register((data, token) -> {
             if (!data.isEnd()) {
                 result.add(data.getData());
@@ -67,7 +98,7 @@ class FiniteEmitterTest {
                     TestFiniteEmitterDataBuilder<Integer, Integer> builder =
                             new TestFiniteEmitterDataBuilder<>();
                     FiniteEmitter<Integer, TestEmitterData<Integer>> emitter =
-                            new FiniteEmitter<>(publisher, builder);
+                            new TestFiniteEmitter<>(publisher, builder);
                     return Flows.source(emitter);
                 })
                 .just(data -> {

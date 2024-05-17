@@ -20,7 +20,6 @@ import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
 import com.huawei.fit.waterflow.domain.enums.ParallelMode;
 import com.huawei.fit.waterflow.domain.enums.SpecialDisplayNode;
 import com.huawei.fit.waterflow.domain.states.DataStart;
-import com.huawei.fit.waterflow.domain.states.State;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
@@ -29,6 +28,7 @@ import com.huawei.fit.waterflow.domain.stream.reactive.Subscription;
 import com.huawei.fit.waterflow.domain.stream.reactive.When;
 import com.huawei.fit.waterflow.domain.utils.IdGenerator;
 import com.huawei.fit.waterflow.domain.utils.UUIDUtil;
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 
@@ -174,6 +174,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
 
     @Override
     public <O> Processor<I, O> flatMap(Operators.FlatMap<FlowContext<I>, O> processor, Operators.Whether<I> whether) {
+        Validation.notNull(processor, "Flat map processor can not be null.");
         AtomicReference<Node<I, O>> processRef = new AtomicReference<>();
         Operators.Map<FlowContext<I>, O> wrapper = input -> {
             DataStart<O, O, ?> start = processor.process(input);
