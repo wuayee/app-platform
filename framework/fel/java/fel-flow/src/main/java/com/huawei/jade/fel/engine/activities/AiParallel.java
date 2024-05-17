@@ -8,6 +8,7 @@ import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fit.waterflow.domain.states.Fork;
 import com.huawei.fit.waterflow.domain.states.Parallel;
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.jade.fel.engine.activities.processors.AiBranchProcessor;
 import com.huawei.jade.fel.engine.flows.AiFlow;
 
 /**

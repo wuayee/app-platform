@@ -5,6 +5,7 @@
 package com.huawei.jade.fel.engine.flows;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
+import com.huawei.fit.waterflow.domain.emitters.Emitter;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.chat.ChatOptions;
@@ -74,11 +75,20 @@ public class Conversation<D, R> {
      */
     public ConverseLatch<R> offer(String nodeId, List<?> data) {
         Validation.notBlank(nodeId, "invalid nodeId.");
-
         ConverseLatch<R> latch = setListener();
         FlowSession newSession = SessionUtils.copyFlowSession(this.session);
         this.flow.origin().offer(nodeId, data.toArray(new Object[0]), newSession);
         return latch;
+    }
+
+    /**
+     * 订阅一个发射源
+     *
+     * @param emitter 发射源
+     */
+    public void offer(Emitter<D, FlowSession> emitter) {
+        setListener();
+        this.flow.offer(emitter);
     }
 
     /**

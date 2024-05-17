@@ -9,12 +9,14 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
+    <groupId>com.huawei.fit.jade.waterflow</groupId>
     <artifactId>jade-waterflow-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
         <module>waterflow-core</module>
         <module>waterflow-genericable</module>
+        <module>waterflow-bridge-fit-refactor</module>
     </modules>
 
     <properties>
