@@ -1,0 +1,32 @@
+.not-found-svg {
+  width: 400px;
+  height: 192px;
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.edit-form-content {
+  .ant-form-item {
+    margin-bottom: 12px;
+    label {
+      font-weight: 700;
+    }
+  }
+}
+.prompt-search {
+  display: flex;
+  align-items: center;
+  .ant-btn {
+    margin: 0;
+    background-color: transparent !important;
+    border: none;
+  }
+}
+.ant-tree-node-selected {
+  color: #0478fc !important;
+  font-weight: 700;
+}
