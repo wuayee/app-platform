@@ -5,6 +5,7 @@ import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
 import Pagination from '../../components/pagination/index';
 import { Icons } from '../../components/icons';
 import KnowledgeCard, { knowledgeBase } from '../../components/knowledge-card';
+import '../../index.scss'
 const KnowledgeBase = () => {
 
   // 路由
@@ -109,14 +110,11 @@ const KnowledgeBase = () => {
     }, 1000)
   }, [])
   return (
-    <>
-      <div style={{
-        width: '100%',
-        height: '100%',
-        background: '#fff',
-        borderRadius: '8px 8px 0px 0px',
-        padding: '24px 24px 0 25px',
-      }}>
+    <div className='aui-fullpage'>
+    <div className='aui-header-1'>
+      <div className='aui-title-1'>header</div>
+    </div>
+    <div className='aui-block'>
         <div className='operatorArea' style={{
           display: 'flex',
           gap: '16px'
@@ -155,8 +153,9 @@ const KnowledgeBase = () => {
 
         </div>
         <Pagination total = {total}/>
-      </div>
-    </>
+    </div>
+  </div>
+     
   )
 }
 export default KnowledgeBase;
