@@ -2,10 +2,11 @@ import type { MenuProps } from 'antd';
 import { ReactElement } from 'react';
 import { Icons } from '../components/icons/index';
 import KnowledgeBase from '../pages/knowledge-base';
+import KnowledgeBaseCreate from '../pages/knowledge-base/create';
  
-type MenuItem = Required<MenuProps>['items'][number] & { component?: () => ReactElement, children?: MenuItem[], label: string, key: string};
+type MenuItem = Required<MenuProps>['items'][number] & { component?: () => ReactElement, children?: MenuItem[] | null, label: string, key: string, hidden?: boolean};
  
-// key为页面链接不允许相同, 需要子数组就增加children数组
+// key为页面链接不允许相同, 需要子数组就增加children数组, 设置hidden则不显示在菜单上
 export const routeList: MenuItem[] = [
   {
     key: '/home',
@@ -37,6 +38,13 @@ export const routeList: MenuItem[] = [
     icon: Icons.app({}),
     label: '知识库',
     component: KnowledgeBase,
+    children: [{
+      key: '/knowledge-base/create',
+      icon: Icons.app({}),
+      label: '创建知识库',
+      component: KnowledgeBaseCreate,
+      hidden: true,
+    }]
   },
   {
     key: '/plugin',
@@ -49,7 +57,28 @@ export const routeList: MenuItem[] = [
     label: '团队',
   },
 ];
- 
+
+// 生成菜单
+export const getMenus = (routeList: MenuItem[]): MenuItem[] => {
+  const menus: MenuItem[] = routeList.map(route=> {
+    let children:MenuItem[] = []
+    if(route.children && route.children.length) {
+      children = getMenus(route.children);
+    }
+    if(children.length) {
+      return {
+        ...route,
+        children,
+      }
+    } else {
+      return {
+        ...route,
+        children: null,
+      }
+    }
+  })
+  return menus.filter(item=> !item?.hidden);
+}
  
 // 将路由展平
 export const flattenRoute = (routeList: MenuItem[]): MenuItem[] => {
