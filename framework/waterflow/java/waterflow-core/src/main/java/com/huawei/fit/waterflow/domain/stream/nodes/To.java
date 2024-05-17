@@ -580,7 +580,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
         });
         afterList.forEach(context -> context.getTraceId().addAll(traces));
 
-        if ((Objects.isNull(this.nodeType) || !this.nodeType.equals(END)) && !afterList.isEmpty()) {
+        if ((Objects.isNull(this.nodeType) || !this.nodeType.equals(FlowNodeType.END)) && !afterList.isEmpty()) {
             this.getFlowContextRepo().updateContextPool(afterList, traces);
             this.getFlowContextRepo().save(afterList);
         }
@@ -600,7 +600,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      * @param afterList 当前节点新生产的contexts
      */
     private void updateBatch(List<FlowContext<I>> preList, List<FlowContext<O>> afterList) {
-        if (!Objects.isNull(this.nodeType) && this.nodeType.equals(END)) {
+        if (!Objects.isNull(this.nodeType) && this.nodeType.equals(FlowNodeType.END)) {
             return;
         }
         String toBatch = preList.stream()

@@ -10,6 +10,7 @@ import com.huawei.fit.waterflow.common.exceptions.WaterflowParamException;
 import com.huawei.fit.waterflow.domain.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.domain.definitions.nodes.FlowNode;
 import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
+import com.huawei.fit.waterflow.domain.enums.FlowNodeTypeParser;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.inspection.Validation;
 
@@ -54,7 +55,8 @@ public class NodesRule implements FlowRule {
         Optional.ofNullable(flowNode.getTaskFilter())
                 .ifPresent(flowFilter -> Optional.ofNullable(flowFilter.getFilterType().getFilterRule())
                         .ifPresent((filterRule) -> filterRule.apply(flowFilter)));
-        Optional.ofNullable(flowNode.getType().getNodeRule()).ifPresent(nodeRule -> nodeRule.apply(flowNode));
+        Optional.ofNullable(flowNode.getType()).map(FlowNodeTypeParser::getType).map(FlowNodeTypeParser::getNodeRule)
+                .ifPresent(nodeRule -> nodeRule.apply(flowNode));
         Optional.ofNullable(flowNode.getProperties().get("flowContext")).ifPresent(this::checkFlowContext);
     }
 

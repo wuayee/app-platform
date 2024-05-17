@@ -35,6 +35,7 @@ import com.huawei.fit.waterflow.domain.validators.rules.JobersRule;
 import com.huawei.fit.waterflow.domain.validators.rules.NodesRule;
 import com.huawei.fit.waterflow.domain.validators.rules.TasksRule;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -131,7 +132,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         @Test
         @DisplayName("测试流程定义校验成功")
         void testValidateSuccess() {
-            assertDoesNotThrow(() -> flowValidator.validate(flowDefinition));
+            Assertions.assertDoesNotThrow(() -> flowValidator.validate(flowDefinition));
         }
 
         @Test
@@ -141,9 +142,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             newProperties.put("flowContext", "{{}}");
             flowDefinition.getFlowNode(STATE_ID).setProperties(newProperties);
 
-            WaterflowParamException nullException = assertThrows(WaterflowParamException.class,
+            WaterflowParamException nullException = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flowContext has been config, but the output key is empty"),
+            Assertions.assertEquals(errorMessage("flowContext has been config, but the output key is empty"),
                     nullException.getMessage());
         }
 
@@ -151,20 +152,20 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         @DisplayName("测试流程定义MetaId校验成功")
         void testValidateDefinitionMetaIdNotNullSuccess() {
             flowDefinition.setMetaId(EMPTY);
-            WaterflowParamException nullException = assertThrows(WaterflowParamException.class,
+            WaterflowParamException nullException = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow definition metaId, metaId can not be blank"), nullException.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition metaId, metaId can not be blank"), nullException.getMessage());
 
             flowDefinition.setMetaId("11");
-            WaterflowParamException lengthException = assertThrows(WaterflowParamException.class,
+            WaterflowParamException lengthException = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow definition metaId, metaId length must be 32"),
+            Assertions.assertEquals(errorMessage("flow definition metaId, metaId length must be 32"),
                     lengthException.getMessage());
 
             flowDefinition.setMetaId("apimckapimckapimckapimckapimcka!");
-            WaterflowParamException specialCharException = assertThrows(WaterflowParamException.class,
+            WaterflowParamException specialCharException = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow definition metaId, metaId contains special characters"),
+            Assertions.assertEquals(errorMessage("flow definition metaId, metaId contains special characters"),
                     specialCharException.getMessage());
         }
 
@@ -172,22 +173,22 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         @DisplayName("测试流程定义Name校验成功")
         void testValidateDefinitionNameSuccess() {
             flowDefinition.setName(EMPTY);
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow definition name, name can not be blank"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition name, name can not be blank"), exception.getMessage());
 
             flowDefinition.setName("apimckapimckapimckapimckapimckapapimckapimckapimckapimckapimckapap"
                     + "imckapimckapimckapimckapimckapapimckapimckapimckapimckapimcka"
                     + "papimckapimckapimckapimckapimckapapimckapimckapimckapimckapim"
                     + "ckapapimckapimckapimckapimckapimckapapimckapimckapimckapimckapimckap1");
-            WaterflowParamException lengthException = assertThrows(WaterflowParamException.class,
+            WaterflowParamException lengthException = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow definition name, name length over 256"), lengthException.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition name, name length over 256"), lengthException.getMessage());
 
             flowDefinition.setName("name@");
-            WaterflowParamException specialCharException = assertThrows(WaterflowParamException.class,
+            WaterflowParamException specialCharException = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow definition name, name contains special characters"),
+            Assertions.assertEquals(errorMessage("flow definition name, name contains special characters"),
                     specialCharException.getMessage());
         }
 
@@ -195,20 +196,20 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         @DisplayName("测试流程定义Version校验成功")
         void testValidateDefinitionVersionSuccess() {
             flowDefinition.setVersion(EMPTY);
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow definition version, version can not be blank"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition version, version can not be blank"), exception.getMessage());
 
             flowDefinition.setVersion("1");
-            WaterflowParamException formatException = assertThrows(WaterflowParamException.class,
+            WaterflowParamException formatException = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow definition version, version format must be X.Y.Z"),
+            Assertions.assertEquals(errorMessage("flow definition version, version format must be X.Y.Z"),
                     formatException.getMessage());
 
             flowDefinition.setVersion("1.0.str");
-            WaterflowParamException stringException = assertThrows(WaterflowParamException.class,
+            WaterflowParamException stringException = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow definition version, version format must be X.Y.Z"),
+            Assertions.assertEquals(errorMessage("flow definition version, version format must be X.Y.Z"),
                     stringException.getMessage());
         }
 
@@ -217,18 +218,18 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateDefinitionTenantSuccess() {
             flowDefinition.setTenant(EMPTY);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow definition tenant, tenant can not be blank"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition tenant, tenant can not be blank"), exception.getMessage());
         }
 
         @Test
         @DisplayName("测试流程定义status校验成功")
         void testValidateDefinitionStatusSuccess() {
             flowDefinition.setStatus(null);
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow definition status, status can not be blank"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition status, status can not be blank"), exception.getMessage());
         }
 
         @Test
@@ -236,9 +237,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateDefinitionNodesSuccess() {
             flowDefinition.setNodeMap(new HashMap<>());
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow definition nodes, nodes can not be empty"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition nodes, nodes can not be empty"), exception.getMessage());
         }
 
         @Test
@@ -251,14 +252,14 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.remove(THIRD_STATE_ID);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("all node number, node number must more than 3"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("all node number, node number must more than 3"), exception.getMessage());
 
             flowDefinition.setNodeMap(new HashMap<>());
-            WaterflowParamException nullException = assertThrows(WaterflowParamException.class,
+            WaterflowParamException nullException = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow definition nodes, nodes can not be empty"), nullException.getMessage());
+            Assertions.assertEquals(errorMessage("flow definition nodes, nodes can not be empty"), nullException.getMessage());
         }
 
         @Test
@@ -268,9 +269,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.remove(START_ID);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("start node number"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("start node number"), exception.getMessage());
         }
 
         @Test
@@ -280,9 +281,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.put("temp", getStartNode());
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("start node number"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("start node number"), exception.getMessage());
         }
 
         @Test
@@ -292,9 +293,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.remove(END_ID);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("end node number"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("end node number"), exception.getMessage());
         }
 
         @Test
@@ -304,9 +305,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.put("temp", getEndNode());
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("end node number"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("end node number"), exception.getMessage());
         }
     }
 
@@ -346,17 +347,17 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(START_ID).setMetaId(EMPTY);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow node metaId, metaId can not be blank"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow node metaId, metaId can not be blank"), exception.getMessage());
 
             nodeMap.get(START_ID).setMetaId("start11");
-            exception = assertThrows(WaterflowParamException.class, () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow node metaId size must be 6"), exception.getMessage());
+            exception = Assertions.assertThrows(WaterflowParamException.class, () -> flowNodeValidator.validate(flowDefinition));
+            Assertions.assertEquals(errorMessage("flow node metaId size must be 6"), exception.getMessage());
 
             nodeMap.get(START_ID).setMetaId("start%");
-            exception = assertThrows(WaterflowParamException.class, () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow node metaId not allow special char"), exception.getMessage());
+            exception = Assertions.assertThrows(WaterflowParamException.class, () -> flowNodeValidator.validate(flowDefinition));
+            Assertions.assertEquals(errorMessage("flow node metaId not allow special char"), exception.getMessage());
         }
 
         @Test
@@ -366,9 +367,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(CONDITION_ID).setName(EMPTY);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow node name, name can not be blank"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow node name, name can not be blank"), exception.getMessage());
         }
 
         @Test
@@ -378,9 +379,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(END_ID).setType(null);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow node type, node type can not be null"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow node type, node type can not be null"), exception.getMessage());
         }
 
         @Test
@@ -390,9 +391,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(STATE_ID).setTriggerMode(null);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow node trigger mode, can not be null"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow node trigger mode, can not be null"), exception.getMessage());
         }
 
         @Test
@@ -402,9 +403,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(STATE_ID).getTask().setTaskId(null);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow APPROVING_TASK task id"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow APPROVING_TASK task id"), exception.getMessage());
         }
 
         @Test
@@ -414,9 +415,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(STATE_ID).getTask().setTaskType(null);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow task type"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow task type"), exception.getMessage());
         }
 
         @Test
@@ -426,9 +427,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(STATE_ID).getTask().getProperties().remove("title");
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow task title"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow task title"), exception.getMessage());
         }
 
         @Test
@@ -438,9 +439,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get("state2").getJober().setType(null);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow jober type"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow jober type"), exception.getMessage());
         }
 
         @Test
@@ -450,15 +451,15 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get("state2").getJober().setFitables(null);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow jober fitables"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow jober fitables"), exception.getMessage());
 
             nodeMap.get("state2").getJober().setFitables(new HashSet<>());
             flowDefinition.setNodeMap(nodeMap);
 
-            exception = assertThrows(WaterflowParamException.class, () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow jober fitables"), exception.getMessage());
+            exception = Assertions.assertThrows(WaterflowParamException.class, () -> flowNodeValidator.validate(flowDefinition));
+            Assertions.assertEquals(errorMessage("flow jober fitables"), exception.getMessage());
         }
 
         @Test
@@ -468,9 +469,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get("state3").getJober().setProperties(new HashMap<>());
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow http jober entity"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow http jober entity"), exception.getMessage());
         }
 
         @Test
@@ -480,9 +481,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get("state1").getTaskFilter().getProperties().put("threshold", "a");
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow filter threshold"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow filter threshold"), exception.getMessage());
         }
 
         @Test
@@ -492,9 +493,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(START_ID).setTriggerMode(MANUAL);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("start node trigger mode"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("start node trigger mode"), exception.getMessage());
         }
 
         @Test
@@ -505,9 +506,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(START_ID).setJober(new FlowEchoJober());
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("start node jober should be null"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("start node jober should be null"), exception.getMessage());
         }
 
         @Test
@@ -517,9 +518,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(START_ID).setEvents(new ArrayList<>());
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("start node event size"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("start node event size"), exception.getMessage());
         }
 
         @Test
@@ -532,9 +533,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(START_ID).setEvents(events);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("start node event size"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("start node event size"), exception.getMessage());
         }
 
         @Test
@@ -545,9 +546,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(START_ID).setJober(flowFitableJobber);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("start node jober should be null"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("start node jober should be null"), exception.getMessage());
         }
 
         @Test
@@ -557,9 +558,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(STATE_ID).setEvents(new ArrayList<>());
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("state node event size"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("state node event size"), exception.getMessage());
         }
 
         @Test
@@ -572,15 +573,15 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(STATE_ID).setEvents(events);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("state node event size"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("state node event size"), exception.getMessage());
         }
 
         @Test
         @DisplayName("测试流程节点StateNodeJobber校验成功")
         void testValidateStateNodeJobberSuccess() {
-            assertDoesNotThrow(() -> flowNodeValidator.validate(flowDefinition));
+            Assertions.assertDoesNotThrow(() -> flowNodeValidator.validate(flowDefinition));
         }
 
         @Test
@@ -590,9 +591,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(CONDITION_ID).setTriggerMode(MANUAL);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("condition node trigger mode"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("condition node trigger mode"), exception.getMessage());
         }
 
         @Test
@@ -602,9 +603,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(CONDITION_ID).setEvents(new ArrayList<>());
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("condition node event size"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("condition node event size"), exception.getMessage());
         }
 
         @Test
@@ -616,15 +617,15 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(CONDITION_ID).setEvents(events);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("condition node event size"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("condition node event size"), exception.getMessage());
         }
 
         @Test
         @DisplayName("测试流程节点ConditionNodeJobber校验成功")
         void testValidateConditionNodeJobberSuccess() {
-            assertDoesNotThrow(() -> flowNodeValidator.validate(flowDefinition));
+            Assertions.assertDoesNotThrow(() -> flowNodeValidator.validate(flowDefinition));
         }
 
         @Test
@@ -634,9 +635,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(END_ID).setTriggerMode(MANUAL);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("end node trigger mode"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("end node trigger mode"), exception.getMessage());
         }
 
         @Test
@@ -647,9 +648,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(END_ID).setTriggerMode(AUTO);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("end node jober can not be null"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("end node jober can not be null"), exception.getMessage());
         }
 
         @Test
@@ -661,9 +662,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(END_ID).setEvents(events);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("end node event size"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("end node event size"), exception.getMessage());
         }
 
         @Test
@@ -674,9 +675,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             nodeMap.get(END_ID).setJober(flowFitableJobber);
             flowDefinition.setNodeMap(nodeMap);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("end node jober can not be null"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("end node jober can not be null"), exception.getMessage());
         }
     }
 
@@ -709,9 +710,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateFlowEventMetaIdSuccess() {
             flowDefinition.getNodeMap().get("state1").getEvents().get(0).setMetaId(EMPTY);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("node event metaId"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("node event metaId"), exception.getMessage());
         }
 
         @Test
@@ -719,9 +720,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateFlowEventFromMetaIdSuccess() {
             flowDefinition.getNodeMap().get("state1").getEvents().get(0).setFrom(EMPTY);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow event from metaId empty"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow event from metaId empty"), exception.getMessage());
         }
 
         @Test
@@ -729,9 +730,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateFlowEventFromMetaIdInvalidSuccess() {
             flowDefinition.getNodeMap().get("state1").getEvents().get(0).setFrom("invalid");
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow event from metaId invalid"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow event from metaId invalid"), exception.getMessage());
         }
 
         @Test
@@ -739,9 +740,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateFlowEventToMetaIdSuccess() {
             flowDefinition.getNodeMap().get("state1").getEvents().get(0).setTo(EMPTY);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow event to metaId empty"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow event to metaId empty"), exception.getMessage());
         }
 
         @Test
@@ -749,9 +750,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateFlowEventToMetaIdInvalidSuccess() {
             flowDefinition.getNodeMap().get("state1").getEvents().get(0).setTo("invalid");
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow event to metaId invalid"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow event to metaId invalid"), exception.getMessage());
         }
 
         @Test
@@ -760,9 +761,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             FlowEvent flowEvent = flowDefinition.getNodeMap().get("state1").getEvents().get(0);
             flowEvent.setTo(flowEvent.getFrom());
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow event from equal to metaId"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow event from equal to metaId"), exception.getMessage());
         }
 
         @Test
@@ -770,9 +771,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateFlowEventStateNodeConditionRuleSuccess() {
             flowDefinition.getNodeMap().get("state1").getEvents().get(0).setConditionRule("flow event condition rule");
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("normal node condition rule"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("normal node condition rule"), exception.getMessage());
         }
 
         @Test
@@ -780,9 +781,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateFlowEventConditionNodeConditionRuleSuccess() {
             flowDefinition.getNodeMap().get("condi1").getEvents().get(0).setConditionRule(EMPTY);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("condition node condition rule"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("condition node condition rule"), exception.getMessage());
         }
     }
 
@@ -815,9 +816,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateFlowJobberTypeSuccess() {
             flowDefinition.getNodeMap().get("state2").getJober().setType(null);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow jober type"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow jober type"), exception.getMessage());
         }
 
         @Test
@@ -825,9 +826,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateFlowJobberFitableSuccess() {
             flowDefinition.getNodeMap().get("state2").getJober().getFitables().add("codehub实现2");
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow jober fitables"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow jober fitables"), exception.getMessage());
         }
     }
 
@@ -853,8 +854,8 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             assertEquals(START, flowDefinition.getFlowNode("start1").getType());
             assertEquals(STATE, flowDefinition.getFlowNode("state1").getType());
             assertEquals(END, flowDefinition.getFlowNode("ender1").getType());
-            assertNull(flowDefinition.getFlowNode("event1"));
-            assertNull(flowDefinition.getFlowNode("event2"));
+            Assertions.assertNull(flowDefinition.getFlowNode("event1"));
+            Assertions.assertNull(flowDefinition.getFlowNode("event2"));
             assertEquals(STATE, flowDefinition.getFlowNodeByEvent("event1").getType());
             assertEquals(END, flowDefinition.getFlowNodeByEvent("event2").getType());
         }
@@ -890,9 +891,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateSmartFormTaskTypeSuccess() {
             flowDefinition.getNodeMap().get("state1").getTask().setTaskType(null);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow task type"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow task type"), exception.getMessage());
         }
 
         @Test
@@ -900,9 +901,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateSmartFormTaskIdSuccess() {
             flowDefinition.getNodeMap().get("state1").getTask().setTaskId(null);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow AIPP_SMART_FORM task id"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow AIPP_SMART_FORM task id"), exception.getMessage());
         }
     }
 
@@ -935,9 +936,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateFlowCallbackNodeTypeSuccess() {
             flowDefinition.getNodeMap().get("start1").setCallback(new FlowGeneralCallback());
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow callback node type"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow callback node type"), exception.getMessage());
         }
 
         @Test
@@ -945,9 +946,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateFlowCallbackTypeSuccess() {
             flowDefinition.getNodeMap().get("state2").getCallback().setType(null);
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow callback type"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow callback type"), exception.getMessage());
         }
 
         @Test
@@ -955,9 +956,9 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         void testValidateFlowCallbackFitableSuccess() {
             flowDefinition.getNodeMap().get("state2").getCallback().getFitables().add("通知回调函数实现2");
 
-            WaterflowParamException exception = assertThrows(WaterflowParamException.class,
+            WaterflowParamException exception = Assertions.assertThrows(WaterflowParamException.class,
                     () -> flowValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow callback fitables"), exception.getMessage());
+            Assertions.assertEquals(errorMessage("flow callback fitables"), exception.getMessage());
         }
     }
 }
