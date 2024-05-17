@@ -27,8 +27,8 @@ export default function ManualCheckFormWrapper() {
         // 发起网络请求获取 options 数据
         httpUtil.get(config.urls.runtimeFormUrl, {}, (jsonData) => setFormOptions(jsonData.data.map(item => {
             return {
-                value: item.name,
-                label: item.name
+                label: item.name,
+                value: `${item.appearance[0]?.name || ''}|${item.id}`
             };
         })))
     }, []); // useEffect 依赖数组为空，表示只在组件挂载时执行一次
@@ -43,10 +43,19 @@ export default function ManualCheckFormWrapper() {
 
     const onChange = (e) => {
         let formOutput = "";
+        let changeFormName = "";
+        let changeformId = "";
         if (e && e.length > 0) {
-            formOutput = shape.graph.plugins[e]().getJadeConfig();
+            const [name, id] = e.split('|'); // 拆分字符串
+            changeFormName = name + "Component";
+            changeformId = id;
+            try {
+                formOutput = shape.graph.plugins[changeFormName]().getJadeConfig();
+            } catch (error) {
+                console.error("Error getting JadeConfig:", error);
+            }
         }
-        dispatch({actionType: "changeFormAndSetOutput", formName: e, formOutput: formOutput});
+        dispatch({actionType: "changeFormAndSetOutput", formName: changeFormName, formId: changeformId, formOutput: formOutput});
     };
 
     const renderOutput = () => {

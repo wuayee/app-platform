@@ -1,6 +1,8 @@
 import {CopyPasteHelpers, DIRECTION, node, rectangleDrawer} from "@fit-elsa/elsa-core";
 import ReactDOM from "react-dom/client";
 import {DefaultRoot} from "@/components/DefaultRoot.jsx";
+import {v4 as uuidv4} from "uuid";
+import {Header} from "@/components/Header.jsx";
 
 /**
  * jadeStream中的流程编排节点.
@@ -42,20 +44,26 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
 
     const observed = [];
 
-    // 默认的配置.
-    self.toolMenus = [{
-        key: '1', label: "复制", action: () => {
-            self.duplicate();
-        }
-    }, {
-        key: '2', label: "删除", action: () => {
-            self.remove();
-        }
-    }, {
-        key: '3', label: "重命名", action: (setEdit) => {
-            setEdit(true);
-        }
-    }];
+    /**
+     * 默认的header配置.
+     *
+     * @return 下拉按钮配置项
+     */
+    self.getToolMenus = () => {
+        return [{
+            key: '1', label: "复制", action: () => {
+                self.duplicate();
+            }
+        }, {
+            key: '2', label: "删除", action: () => {
+                self.remove();
+            }
+        }, {
+            key: '3', label: "重命名", action: (setEdit) => {
+                setEdit(true);
+            }
+        }];
+    };
 
     /**
      * 设置方向为W和N的connector不支持拖出连接线
@@ -66,7 +74,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.initConnectors = () => {
         initConnectors.apply(self);
         self.connectors.remove(c => c.direction.key === DIRECTION.S.key || c.direction.key === DIRECTION.N.key
-            || c.direction.key === "ROTATE");
+                || c.direction.key === "ROTATE");
         self.connectors.forEach(connector => {
             connector.isSolid = true;
             if (connector.direction.key === DIRECTION.W.key) {
@@ -141,6 +149,15 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
 
     /**
+     * 获取Header组件
+     *
+     * @return {JSX.Element}
+     */
+    self.getHeaderComponent = () => {
+        return (<Header shape={self}/>);
+    }
+
+    /**
      * 获取用户自定义组件.
      *
      * @return {*}
@@ -153,17 +170,30 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
      * 监听的值发生变化时触发.
      *
      * @param observableId 监听的id.
-     * @param value 变化的值.
+     * @param value 值.
+     * @param type 类型.
      */
-    self.emit = (observableId, value) => {
+    self.emit = (observableId, {value, type}) => {
         const observable = self.page.getObservable(self.id, observableId);
         if (observable) {
             observable.observers.forEach(o => {
                 if (o.status === "enable") {
-                    o.observe(value ? value : observable.value)
+                    o.observe({
+                        value: value !== null && value !== undefined ? value : observable.value,
+                        type: type !== null && type !== undefined ? type : observable.type
+                    });
                 }
             });
-            value && (observable.value = value);
+
+            // 是空字符串的情况下，需要修改值.
+            if (value !== null && value !== undefined) {
+                observable.value = value;
+            }
+
+            // 是空字符串的情况下，需要修改值.
+            if (type !== null && type !== undefined) {
+                observable.type = type;
+            }
         }
     };
 
@@ -174,8 +204,8 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.remove = (source) => {
         // 如果有连线，需要同时删除连线.
         const events = self.page.shapes
-            .filter(s => s.isTypeof("jadeEvent"))
-            .filter(s => s.fromShape === self.id || s.toShape === self.id);
+                .filter(s => s.isTypeof("jadeEvent"))
+                .filter(s => s.fromShape === self.id || s.toShape === self.id);
         const lineRemoved = events.flatMap(e => e.remove());
 
         // 删除图形本身.
@@ -222,6 +252,43 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     });
 
     /**
+     * 更新粘贴出来的图形的id
+     *
+     * @param entity entity
+     */
+    const updateCopiedNodeIds = entity => {
+        if (typeof entity === 'object' && entity !== null) {
+            if (Array.isArray(entity)) {
+                entity.forEach((item) => {
+                    updateCopiedNodeIds(item);
+                });
+            } else {
+                Object.keys(entity).forEach((key) => {
+                    if (key === 'id') {
+                        entity[key] = uuidv4();
+                    } else {
+                        updateCopiedNodeIds(entity[key]);
+                    }
+                });
+            }
+        }
+    };
+
+    /**
+     * 图形粘贴后的回调
+     */
+    self.pasted = () => {
+        updateCopiedNodeIds(self.getEntity());
+    };
+
+    /**
+     * 获取flowMeta的entity
+     */
+    self.getEntity = () => {
+        return self.flowMeta.jober.converter.entity;
+    };
+
+    /**
      * 有子类重写.
      */
     self.getHeaderIcon = () => {
@@ -245,7 +312,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
 
         // 监听时，主动推送一次数据.
         const observable = self.page.getObservable(nodeId, observableId);
-        observerProxy.observe(observable.value);
+        observerProxy.observe({value: observable.value, type: observable.type});
 
         // 返回取消监听的方法.
         return () => {
@@ -262,7 +329,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         const preNodeInfos = self.getPreNodeInfos();
         const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
         observed.filter(o => o.status === "enable").filter(o => !preNodeIdSet.has(o.nodeId)).forEach(o => {
-            o.observe(null);
+            o.observe({value: null, type: null});
             o.status = "disable";
         });
         const nextNodes = getNextNodes();
@@ -278,7 +345,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         observed.filter(o => o.status === "disable").filter(o => preNodeIdSet.has(o.nodeId)).forEach(o => {
             o.status = "enable";
             const observable = self.page.getObservable(o.nodeId, o.observableId);
-            o.observe(observable.value);
+            o.observe({value: observable.value, type: observable.type});
         });
         const nextNodes = getNextNodes();
         nextNodes.length > 0 && nextNodes.forEach(n => n.onConnect());
@@ -308,19 +375,39 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
 
     /**
      * 校验节点状态是否正常.
+     *
+     * @return Promise 校验结果
      */
     self.validate = () => {
-        const preNodeInfos = self.getPreNodeInfos();
-        const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
-        observed.forEach(o => {
-            const node = self.page.getShapeById(o.nodeId);
-            if (!node) {
-                throw new Error("节点[" + o.nodeId + "]不存在.");
-            }
-            if (!preNodeIdSet.has(o.nodeId)) {
-                throw new Error("节点[" + node.text + "]和节点[" + self.text + "]未连接.");
+        return new Promise((resolve, reject) => {
+            try {
+                const preNodeInfos = self.getPreNodeInfos();
+                const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
+                observed.forEach(o => {
+                    const node = self.page.getShapeById(o.nodeId);
+                    if (!node) {
+                        throw new Error("节点[" + o.nodeId + "]不存在.");
+                    }
+                    if (!preNodeIdSet.has(o.nodeId)) {
+                        throw new Error("节点[" + node.text + "]和节点[" + self.text + "]未连接.");
+                    }
+                });
+
+                // 调用 form 本身的校验能力，校验所有字段
+                self.validateForm().then(resolve).catch(reject);
+            } catch (error) {
+                reject(error);
             }
         });
+    };
+
+    /**
+     * 当节点被取消选中时，校验表单中的数据.
+     */
+    const unSelect = self.unSelect;
+    self.unSelect = () => {
+        unSelect.apply(self);
+        self.validateForm && self.validateForm();
     };
 
     return self;
@@ -390,6 +477,13 @@ const jadeNodeDrawer = (shape, div, x, y) => {
         self.root.unmount();
         self.root = null;
     };
+
+    /**
+     * 处理传递的元数据
+     *
+     * @param metaData 元数据信息
+     */
+    self.processMetaData = (metaData) => {};
 
     /**
      * @override

@@ -13,7 +13,14 @@ export const manualCheckComponent = (jadeConfig) => {
                 {
                     id: uuidv4(),
                     name: "formName",
-                    type: "Object",
+                    type: "String",
+                    from: "Input",
+                    value: ""
+                },
+                {
+                    id: uuidv4(),
+                    name: "formId",
+                    type: "String",
                     from: "Input",
                     value: ""
                 }
@@ -41,6 +48,11 @@ export const manualCheckComponent = (jadeConfig) => {
                         return {
                             ...item,
                             value: action.formName
+                        }
+                    } else if (item.name === "formId") {
+                        return {
+                            ...item,
+                            value: action.formId
                         }
                     } else {
                         return item;

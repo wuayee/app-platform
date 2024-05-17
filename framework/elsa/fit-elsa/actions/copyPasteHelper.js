@@ -290,6 +290,7 @@ export class CopyPasteHelpers {
             if (sdHelper.isExists()) {
                 return;
             }
+            sdHelper.preProcessShapeData(plainText);
             const newShape = sdHelper.applyCreate(offsetX, offsetY, sessions);
             if (!newShape) {
                 return;
@@ -300,7 +301,7 @@ export class CopyPasteHelpers {
                 roots.push(newShape);
             }
             sdHelper.updateAnimations();
-            sdHelper.created(newShape, plainText);
+            sdHelper.created(newShape);
             newShapes.push({shape: newShape});
         });
 
@@ -398,36 +399,28 @@ export const shapeDataHelper = (data, targetPage, shapeDataArray) => {
     self.applyCreate = (offsetX, offsetY, sessions) => {
         self.data.x += offsetX;
         self.data.y += offsetY;
-        return targetPage.createShape(self.data.type, self.data.x, self.data.y, self.data.id, sessions[self.data.pasteSession] !== undefined);
+        return targetPage.createNew(self.data.type, self.data.x, self.data.y, self.data.id, undefined, undefined, sessions[self.data.pasteSession] !== undefined, self.data);
     };
 
     /**
      * 创建之后.
      *
      * @param shape 通过data创建出的图形.
-     * @param plainText 文本.
      */
-    self.created = (shape, plainText) => {
-        self.applyDeserialize(shape, plainText);
+    self.created = (shape) => {
         targetPage.shapeCreated(shape);
         shape.pasted && shape.pasted();
         shape.getContainer().shapeAdded(shape);
-        targetPage.graph.collaboration.invoke({
-            method: "new_shape", page: targetPage.id, shape: shape.id, value: shape.serialize(), mode: targetPage.mode
-        });
     };
 
     /**
      * 在deserialize时做一些处理.
      *
-     * @param shape 通过data创建出的图形.
      * @param plainText 文本.
      */
-    self.applyDeserialize = (shape, plainText) => {
+    self.preProcessShapeData = (plainText) => {
         processLine();
-        self.data.index = shape.index;
         self.data.text = plainText !== "" ? plainText : self.data.text;
-        shape.deSerialize(self.data);
     };
 
     /**

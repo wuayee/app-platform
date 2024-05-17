@@ -17,6 +17,7 @@ export * from "../hitRegion.js";
 export * from "../line.js";
 export {vector} from "../vector.js";
 export * from "../commands.js";
+export {connector} from "../connector.js";
 // export * from "../../plugins/chart/echart.js"
 
 // drawer相关导出.
