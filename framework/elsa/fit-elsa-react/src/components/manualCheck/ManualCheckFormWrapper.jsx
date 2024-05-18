@@ -95,11 +95,6 @@ export default function ManualCheckFormWrapper() {
                         className="jade-panel"
                         style={{marginBottom: 8, borderRadius: "8px", width: "100%"}}
                     >
-                        <Form
-                            name={`manualCheckForm-${shape.id}`}
-                            layout="vertical" // 设置全局的垂直布局
-                            className={"jade-form"}
-                        >
                             <Form.Item>
                                 <JadeStopPropagationSelect
                                     allowClear
@@ -111,7 +106,6 @@ export default function ManualCheckFormWrapper() {
                                 />
                                 {renderComponent()} {/* 渲染对应的组件 */}
                             </Form.Item>
-                        </Form>
                     </Panel>
                 }
             </Collapse>
