@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme, ConfigProvider,  } from 'antd';
-import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
+import { HashRouter, Route, useNavigate, Routes, useLocation } from 'react-router-dom';
 import { routeList, flattenRoute, getRouteByKey, getMenus } from '../../router/route'
 import { Icons } from '../icons/index'
 import KnowledgeBase from '../../pages/knowledge-base';
@@ -30,7 +30,8 @@ const flattenRouteList = flattenRoute(routeList);
 
 const AppLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [currentActivedPage, setCurrentActivedPage] = useState('首页')
+  const [currentActivedPage, setCurrentActivedPage] = useState('首页');
+
   const navigate = useNavigate();
   const menuClick = (e: any) => {
     const route = getRouteByKey(flattenRouteList, e.key);
@@ -82,11 +83,11 @@ const AppLayout: React.FC = () => {
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer, height: '48px' }} />
         <Content style={{padding: '0 16px', background: colorBgContainer }}>
-          <div className='pageTitle'>{ currentActivedPage }</div>
-          {/* <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb> */}
+          <Breadcrumb style={{ margin: '16px 0' }}>
+            {breadcrumb.map(route=> (<>
+              <Breadcrumb.Item key={route.key}>{route.title || route.label}</Breadcrumb.Item>
+            </>))}
+          </Breadcrumb>
 
             <Routes>
               {flattenRouteList.map(route=> {

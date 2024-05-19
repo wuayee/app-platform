@@ -4,9 +4,9 @@ import { Icons } from '../components/icons/index';
 import KnowledgeBase from '../pages/knowledge-base';
 import KnowledgeBaseCreate from '../pages/knowledge-base/create';
  
-type MenuItem = Required<MenuProps>['items'][number] & { component?: () => ReactElement, children?: MenuItem[] | null, label: string, key: string, hidden?: boolean};
+export type MenuItem = Required<MenuProps>['items'][number] & { component?: () => ReactElement, children?: MenuItem[] | null, label: string, key: string, hidden?: boolean, title?: string};
  
-// key为页面链接不允许相同, 需要子数组就增加children数组, 设置hidden则不显示在菜单上
+// key为页面链接不允许相同, 需要子数组就增加children数组, 设置hidden则不显示在菜单上 label为菜单项，title为界面上显示，如果没有title就使用label
 export const routeList: MenuItem[] = [
   {
     key: '/home',
@@ -37,6 +37,7 @@ export const routeList: MenuItem[] = [
     key: '/knowledge-base',
     icon: Icons.app({}),
     label: '知识库',
+    title: '知识库概览',
     component: KnowledgeBase,
     children: [{
       key: '/knowledge-base/create',
