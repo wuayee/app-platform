@@ -3,6 +3,7 @@ import { ReactElement } from 'react';
 import { Icons } from '../components/icons/index';
 import KnowledgeBase from '../pages/knowledge-base';
 import KnowledgeBaseCreate from '../pages/knowledge-base/create';
+import Demo from '../pages/demo';
  
 export type MenuItem = Required<MenuProps>['items'][number] & { component?: () => ReactElement, children?: MenuItem[] | null, label: string, key: string, hidden?: boolean, title?: string};
  
@@ -12,11 +13,13 @@ export const routeList: MenuItem[] = [
     key: '/home',
     icon: Icons.home({}),
     label: '首页',
+    component: Demo,
   },
   {
     key: '/robot-market',
     icon: Icons.app({}),
     label: '机器人市场',
+    component: Demo,
   },
   {
     key: '/plugin-market',
@@ -27,11 +30,13 @@ export const routeList: MenuItem[] = [
     key: '/app',
     icon: Icons.app({}),
     label: '应用',
+    component: Demo,
   },
   {
     key: '/mode',
     icon: Icons.app({}),
     label: '模型',
+    component: Demo,
   },
   {
     key: '/knowledge-base',
@@ -51,11 +56,13 @@ export const routeList: MenuItem[] = [
     key: '/plugin',
     icon: Icons.app({}),
     label: '插件',
+    component: Demo,
   },
   {
     key: '/group',
     icon: Icons.app({}),
     label: '团队',
+    component: Demo,
   },
 ];
 

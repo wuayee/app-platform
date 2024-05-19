@@ -83,11 +83,10 @@ const AppLayout: React.FC = () => {
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer, height: '48px' }} />
         <Content style={{padding: '0 16px', background: colorBgContainer }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            {breadcrumb.map(route=> (<>
-              <Breadcrumb.Item key={route.key}>{route.title || route.label}</Breadcrumb.Item>
-            </>))}
-          </Breadcrumb>
+          {/* <Breadcrumb style={{ margin: '16px 0' }}>
+            <Breadcrumb.Item>User</Breadcrumb.Item>
+            <Breadcrumb.Item>Bill</Breadcrumb.Item>
+          </Breadcrumb> */}
 
             <Routes>
               {flattenRouteList.map(route=> {

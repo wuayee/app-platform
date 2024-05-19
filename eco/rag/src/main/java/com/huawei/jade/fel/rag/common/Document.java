@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,11 +21,13 @@ import java.util.Map;
  */
 @Getter
 public class Document {
-    private String id;
+    private final String id;
     @Setter
     private String content;
     @Setter
     private Map<String, Object> metadata;
+    @Setter
+    private List<List<String>> table;
 
     /**
      *
@@ -37,6 +40,12 @@ public class Document {
     public Document(String id, String content, Map<String, Object> metadata) {
         this.id = id;
         this.content = content;
+        this.metadata = ObjectUtils.nullIf(metadata, new HashMap<>());
+    }
+
+    public Document(String id, List<List<String>> tableContent, Map<String, Object> metadata) {
+        this.id = id;
+        this.table = tableContent;
         this.metadata = ObjectUtils.nullIf(metadata, new HashMap<>());
     }
 }
