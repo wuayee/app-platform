@@ -19,7 +19,7 @@ import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.broker.client.Router;
 import com.huawei.fitframework.json.schema.JsonSchemaManager;
 import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.jade.store.ItemInfo;
+import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.jade.store.Tool;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -73,21 +73,19 @@ public class MethodToolMetadataTest {
         });
         this.toolMetadata = Tool.Metadata.fromMethod(this.testMethod);
         FitToolFactory fitToolFactory = new FitToolFactory(client, serializer);
-        Tool argsTool = fitToolFactory.create(buildItemInfo(), this.toolMetadata);
-        if (argsTool instanceof Tool) {
-            this.tool = (Tool) argsTool;
-        }
+        this.tool = fitToolFactory.create(buildInfo(), this.toolMetadata);
     }
 
-    ItemInfo buildItemInfo() {
-        return ItemInfo.custom()
-                .category("Tool")
-                .group("t1#test_schema_default_implementation_name")
+    Tool.Info buildInfo() {
+        return Tool.Info.custom()
                 .name("test_schema_default_implementation_name")
                 .uniqueName("schema-uuid")
                 .tags(Collections.singleton("FIT"))
                 .description("This is a demo FIT function.")
                 .schema(null)
+                .runnables(MapBuilder.<String, Object>get()
+                        .put("FIT", MapBuilder.<String, Object>get().put("genericableId", "t1").build())
+                        .build())
                 .build();
     }
 
@@ -143,7 +141,7 @@ public class MethodToolMetadataTest {
     @Test
     @DisplayName("返回正确的格式规范描述")
     void shouldReturnSchema() {
-        Map<String, Object> schema = this.tool.itemInfo().schema();
+        Map<String, Object> schema = this.tool.info().schema();
         // TODO: 生成自定义方法的校验和逻辑
     }
 

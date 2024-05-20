@@ -11,8 +11,8 @@ import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.tool.Tool;
 import com.huawei.jade.fel.tool.ToolCall;
 import com.huawei.jade.fel.tool.ToolProvider;
-import com.huawei.jade.store.service.ItemService;
 import com.huawei.jade.store.service.ToolExecuteService;
+import com.huawei.jade.store.service.ToolService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,17 +33,17 @@ public class WaterFlowToolProvider implements ToolProvider {
     private static final String TAG_TYPE_WATER_FLOW = "WATERFLOW";
 
     private final ToolExecuteService executeService;
-    private final ItemService itemService;
+    private final ToolService toolService;
 
     /**
      * 创建默认工具提供者。
      *
      * @param executeService 表示执行服务的 {@link ToolExecuteService}。
-     * @param itemService 表示查询服务的 {@link ItemService}。
+     * @param toolService 表示查询服务的 {@link ToolService}。
      */
-    public WaterFlowToolProvider(ToolExecuteService executeService, ItemService itemService) {
+    public WaterFlowToolProvider(ToolExecuteService executeService, ToolService toolService) {
         this.executeService = executeService;
-        this.itemService = itemService;
+        this.toolService = toolService;
     }
 
     @Override
@@ -56,10 +56,10 @@ public class WaterFlowToolProvider implements ToolProvider {
     @Override
     @Fitable(id = "app-factory")
     public List<Tool> getTool(List<String> name) {
-        return name.stream().map(this.itemService::getItem).filter(Objects::nonNull).map(item -> {
-            Set<String> tags = item.getTags();
-            Map<String, Object> schema = new HashMap<>(item.getSchema());
-            schema.put(SCHEMA_NAME_KEY, item.getUniqueName());
+        return name.stream().map(this.toolService::getTool).filter(Objects::nonNull).map(tool -> {
+            Set<String> tags = tool.getTags();
+            Map<String, Object> schema = new HashMap<>(tool.getSchema());
+            schema.put(SCHEMA_NAME_KEY, tool.getUniqueName());
             return new Tool(tags.contains(TAG_TYPE_WATER_FLOW), schema);
         }).collect(Collectors.toList());
     }

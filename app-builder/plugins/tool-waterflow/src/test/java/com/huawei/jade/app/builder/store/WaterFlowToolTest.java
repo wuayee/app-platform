@@ -17,7 +17,7 @@ import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.broker.client.Router;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.jade.store.ItemInfo;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.store.Tool;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -44,12 +45,12 @@ public class WaterFlowToolTest {
     @BeforeEach
     void setup() {
         this.client = mock(BrokerClient.class);
-        ItemInfo itemInfo = this.buildItemInfo();
-        Tool.Metadata toolMetadata = Tool.Metadata.fromSchema(itemInfo.schema());
+        Tool.Info toolInfo = this.buildToolInfo();
+        Tool.Metadata toolMetadata = Tool.Metadata.fromSchema(toolInfo.schema());
         this.serializer = new JacksonObjectSerializer(null, null, null);
 
         WaterFlowToolFactory waterflowToolFactory = new WaterFlowToolFactory(this.client, this.serializer);
-        Tool waterFlowTool = waterflowToolFactory.create(itemInfo, toolMetadata);
+        Tool waterFlowTool = waterflowToolFactory.create(toolInfo, toolMetadata);
         if (waterFlowTool instanceof WaterFlowTool) {
             this.customizeWorkflowTool = (WaterFlowTool) waterFlowTool;
         }
@@ -64,8 +65,9 @@ public class WaterFlowToolTest {
         when(this.client.getRouter(eq("t1"))).thenReturn(router);
         when(router.route()).thenReturn(invoker);
         when(invoker.invoke(any())).thenAnswer(invocation -> {
-            if (Objects.equals(invocation.getArgument(0), "p1_value") && Objects.equals(invocation.getArgument(1),
-                    "p2_default_value") && Objects.equals(invocation.getArgument(2), "p3_value")) {
+            List<Object> arguments = ObjectUtils.cast(invocation.getArgument(0));
+            if (Objects.equals(arguments.get(0), "p1_value") && Objects.equals(arguments.get(1), "p2_default_value")
+                    && Objects.equals(arguments.get(2), "p3_value")) {
                 return "OK";
             } else {
                 throw new IllegalStateException("Error");
@@ -83,21 +85,23 @@ public class WaterFlowToolTest {
         assertThat(result).isEqualTo(expectedResult);
     }
 
-    ItemInfo buildItemInfo() {
-        return ItemInfo.custom()
-                .category("Tool")
-                .group("t1")
+    private Tool.Info buildToolInfo() {
+        return Tool.Info.custom()
                 .name("test_schema_default_implementation_name")
                 .uniqueName("customize-water-flow-uuid")
                 .tags(Collections.singleton("Customize-Workflow"))
                 .description("This is a demo schema tool.")
                 .schema(this.buildSchema())
+                .runnables(this.buildRunnables())
                 .build();
     }
 
-    Map<String, Object> buildSchema() {
+    private Map<String, Object> buildRunnables() {
+        return MapBuilder.<String, Object>get().put("FIT", MapBuilder.get().put("genericableId", "t1").build()).build();
+    }
+
+    private Map<String, Object> buildSchema() {
         return MapBuilder.<String, Object>get()
-                .put("group", "t1")
                 .put("name", "test_schema_default_implementation_name")
                 .put("index", "test_schema_index")
                 .put("description", "This is a demo schema tool.")
