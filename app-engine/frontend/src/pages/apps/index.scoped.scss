@@ -1,0 +1,11 @@
+.aui-fullpage{
+    .card_list{
+        width: 100%;
+        height: calc(100% - 200px);
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: wrap;
+        padding: 20px 0;
+        
+    }
+}

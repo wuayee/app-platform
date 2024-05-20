@@ -1,0 +1,40 @@
+.app_card_root{
+    box-sizing: border-box;
+    // background-color: pink;
+    width: 380px;
+    height: 260px;
+    padding:20px;
+    margin-right: 16px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    border: 1px solid rgba(105, 105, 105, .2);
+    overflow: hidden;
+    .content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        .app_card_header {
+            display: flex;
+            .infoArea{
+                font-size: 20px;
+                color: rgba(5, 5, 5, .96);
+                margin-left: 10px;
+                .title_info{
+                    display: "flex";
+                    align-items: "center";
+                    .createBy {
+                        font-size: 14px;
+                        color: rgba(105, 105, 105, .9);
+                    }
+                }
+                
+            }
+        }
+
+        .body {}
+
+        .footer {
+            border-top: 1px solid rgb(202, 218, 242);
+        }
+    }
+}

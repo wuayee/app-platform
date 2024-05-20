@@ -10,6 +10,7 @@ import ChatRunning from "../pages/chatEngineHome/index.jsx";
 import AippIndex from "../pages/aippIndex";
 import AddFlow from "../pages/addFlow";
 import AppDetail from "../pages/appDetail";
+import Apps from "../pages/apps";
 
 export type MenuItem = Required<MenuProps>['items'][number] & 
   { 
@@ -39,12 +40,6 @@ export const routeList: MenuItem[] = [
         key: "/plugin-market",
         icon: Icons.app({}),
         label: "插件市场",
-    },
-    {
-        key: "/app",
-        icon: Icons.app({}),
-        label: "应用",
-        component: Demo,
     },
     {
         key: "/mode",
@@ -85,7 +80,7 @@ export const routeList: MenuItem[] = [
       key: "/app",
       icon: Icons.app({}),
       label: "应用",
-      component: Demo,
+      component: Apps,
       children: [
           {
               key: "/app/:tenantId/detail/:appId",
