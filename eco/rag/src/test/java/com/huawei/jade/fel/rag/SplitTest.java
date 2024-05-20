@@ -10,6 +10,7 @@ import com.huawei.jade.fel.rag.common.Chunk;
 import com.huawei.jade.fel.rag.common.Document;
 import com.huawei.jade.fel.rag.split.CharacterTextSplitter;
 
+import com.huawei.jade.fel.rag.split.TokenSplitter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,5 +42,17 @@ public class SplitTest {
         assertEquals("content1", chunks.get(0).getContent());
         assertEquals("content2", chunks.get(1).getContent());
         assertEquals("content3", chunks.get(2).getContent());
+    }
+
+    @Test
+    void test_token_splitter() {
+        TokenSplitter splitter = new TokenSplitter(8, 1);
+        List<Chunk> chunks = splitter.split(docs);
+
+        assertEquals(chunks.size(), 4);
+        assertEquals("content1", chunks.get(0).getContent());
+        assertEquals("1\r\nconte", chunks.get(1).getContent());
+        assertEquals("ent2\r\nco", chunks.get(2).getContent());
+        assertEquals("ontent3", chunks.get(3).getContent());
     }
 }
