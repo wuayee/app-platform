@@ -6,20 +6,21 @@ export const httpUrlMap = {
     AIPP_URL: '/aippApi',
     ICON_URL: 'https://jane-beta.huawei.com/api',
     PUBLISH_URL: 'https://jane-beta.huawei.com/appbuilder/#',
-    WS_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/chat',
+    // WS_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/chat',
+    WS_URL: 'ws://10.169.58.7:8028/api/jober/v1/api/aipp/streamLog',
     WS_AUDIO_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/asr',
     MODEL_URL: '/modelApi'
   },
   'production': {
-    JANE_URL: '/api',
-    ELSA_URL: '',
-    ICON_URL: '/api',
-    AI_URL: '/tzaip/api/hisp',
-    AIPP_URL: '/api/jober/v1/api',
-    PUBLISH_URL: '/appbuilder/#',
-    WS_URL: 'wss://127.0.0.1/tzaip/api/hisp/api/v1/platform/app/chat',
-    WS_AUDIO_URL: 'wss://127.0.0.1/tzaip/api/hisp/api/v1/platform/app/asr',
-    MODEL_URL: '/api'
+    JANE_URL: 'https://jane.huawei.com/api',
+    ELSA_URL: 'https://fit-elsa-prod.lab.huawei.com',
+    ICON_URL: 'https://jane.huawei.com/api',
+    AI_URL: 'https://tzaip.rnd.huawei.com/tzaip/api/hisp',
+    AIPP_URL: 'https://jane.huawei.com/api/jober/v1/api',
+    PUBLISH_URL: 'https://jane.huawei.com/appbuilder/#',
+    WS_URL: 'wss://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/app/chat',
+    WS_AUDIO_URL: 'wss://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/app/asr',
+    MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api'
   },
   'gamma': {
     JANE_URL: 'https://jane-gamma.huawei.com/api',
