@@ -37,3 +37,24 @@
     line-height: 1.5;
     font-weight: normal;
   }
+
+
+  /****************************************** ants ******************************************/
+  #root .ant-table-thead>tr>th{
+    padding:4px 14px;
+    background-color: #f7f7f7;
+    color: #4d4d4d;
+    font-size: 12px;
+    font-weight: 400;
+    border-radius: 0;
+  }
+
+  #root .ant-table-cell{
+    padding:8px 14px;
+    color: #1a1a1a;
+  }
+
+  #root .ant-table-cell::before{
+    background-color: #dadada;
+    height: 16px;
+  }
