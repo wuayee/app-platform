@@ -13,9 +13,11 @@ import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
+import com.huawei.jade.app.engine.knowledge.dto.KGenerateConfigDto;
 import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
 import com.huawei.jade.app.engine.knowledge.dto.KStorageDto;
 import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
+import com.huawei.jade.app.engine.knowledge.service.KGenerateService;
 import com.huawei.jade.app.engine.knowledge.service.KRepoService;
 import com.huawei.jade.app.engine.knowledge.service.KStorageService;
 import com.huawei.jade.app.engine.knowledge.service.KTableService;
@@ -32,10 +34,15 @@ import java.util.List;
 public class KnowledgeBaseController {
     @Fit
     private KTableService kTableService;
+
     @Fit
     private KRepoService kRepoService;
+
     @Fit
     private KStorageService kStorageService;
+
+    @Fit
+    private KGenerateService kGenerateService;
 
     /**
      * 获取所有的知识库。
@@ -90,6 +97,7 @@ public class KnowledgeBaseController {
     }
 
     // tables
+
     /**
      * 获取某个知识库下的所有知识表。
      *
@@ -144,6 +152,7 @@ public class KnowledgeBaseController {
     }
 
     // storages
+
     /**
      * 获取所有存储服务。
      *
@@ -194,5 +203,15 @@ public class KnowledgeBaseController {
     @DeleteMapping("/storages/{id}")
     public void deleteKStorage(@PathVariable("id") Long id) {
         kStorageService.delete(id);
+    }
+
+    /**
+     * 导入文本类型知识接口
+     *
+     * @param fileConfigDto 文件导入配置信息
+     */
+    @PostMapping(path = "/import-knowledge/text")
+    public void importKnowledge(@RequestBody KGenerateConfigDto fileConfigDto) {
+        kGenerateService.importKnowledge(fileConfigDto);
     }
 }
