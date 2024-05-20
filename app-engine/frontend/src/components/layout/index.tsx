@@ -92,7 +92,7 @@ const AppLayout: React.FC = () => {
                 if(route.component) {
                   return (<>
                 
-                    <Route path={route.key} Component={route.component}/>
+                    <Route path={route.key} key={route.key} Component={route.component}/>
                   </>)
                 }
             })}

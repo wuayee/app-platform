@@ -107,11 +107,11 @@ const AppOverview: React.FC = () => {
                   lineHeight: '23px'
                 }}>公开访问URL</div>
                 <Flex align={'center'} gap='middle'>
-                  <Tag color='#EDFFF9' style={{
-                    color: '#50D4AB',
+                  <Tag color='#eee' style={{
+                    color: '#999',
                     borderRadius: '10px',
                     padding: '0 8px'
-                  }}>运行中</Tag>
+                  }}>未运行</Tag>
                   <Switch />
                 </Flex>
               </Flex>
@@ -138,11 +138,11 @@ const AppOverview: React.FC = () => {
                   lineHeight: '23px'
                 }}>API访问凭证</div>
                 <Flex align={'center'} gap='middle'>
-                  <Tag color='#EDFFF9' style={{
-                    color: '#50D4AB',
+                  <Tag color='#eee' style={{
+                    color: '#999',
                     borderRadius: '10px',
                     padding: '0 8px'
-                  }}>运行中</Tag>
+                  }}>未运行</Tag>
                   <Switch />
                 </Flex>
               </Flex>
