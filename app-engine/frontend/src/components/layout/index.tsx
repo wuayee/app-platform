@@ -32,6 +32,7 @@ const AppLayout: React.FC = () => {
   const [currentActivedPage, setCurrentActivedPage] = useState('首页');
 
   const navigate = useNavigate();
+  const location = useLocation();
   const menuClick = (e: any) => {
     const route = getRouteByKey(flattenRouteList, e.key);
     setCurrentActivedPage(route?.label || '')
@@ -39,7 +40,11 @@ const AppLayout: React.FC = () => {
   }
 
   const colorBgContainer = '#F0F2F4';
-  
+  const isHomepage = location.pathname.includes('home');
+  const setClassName = () => {
+    const isHomepage = location.pathname.includes('home');
+    return isHomepage ? 'home-chat' : ''
+  }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -79,7 +84,7 @@ const AppLayout: React.FC = () => {
           <Menu className='menu'  theme="dark" defaultSelectedKeys={['/home']} mode="inline" items={items} onClick={menuClick}/>
         </ConfigProvider>
       </Sider>
-      <Layout>
+      <Layout className={setClassName()}>
         <Header style={{ padding: 0, background: colorBgContainer, height: '48px' }} />
         <Content style={{padding: '0 16px', background: colorBgContainer }}>
           {/* <Breadcrumb style={{ margin: '16px 0' }}>

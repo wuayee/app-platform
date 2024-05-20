@@ -6,6 +6,7 @@ import KnowledgeBaseCreate from "../pages/knowledge-base/create";
 import Home from "../pages/home";
 import KnowledgeBaseDetail from '../pages/knowledge-base/knowledge-detail';
 import Demo from "../pages/demo";
+import ChatRunning from "../pages/chatEngineHome/index.jsx";
 import AppDetail from "../pages/appDetail";
 
 export type MenuItem = Required<MenuProps>['items'][number] & 
@@ -21,10 +22,10 @@ export type MenuItem = Required<MenuProps>['items'][number] &
 // key为页面链接不允许相同, 需要子数组就增加children数组, 设置hidden则不显示在菜单上
 export const routeList: MenuItem[] = [
     {
-        key: "/",
+        key: "/home",
         icon: Icons.home({}),
         label: "首页",
-        component: Home,
+        component: ChatRunning,
     },
     {
         key: "/robot-market",

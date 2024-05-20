@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState, useRef, useContext, useImperativeHandle } from 'react';
-import { Upload, Checkbox} from 'antd';
+import { Upload, Checkbox, Spin } from 'antd';
 import $ from 'jquery';
 import exit from '@assets/images/ai/exit.png';
 import talk from '@assets/images/ai/talk.png';
@@ -24,7 +24,7 @@ const docArr = [
 ]
 const imgArr = ['image/jpeg', 'image/bmp', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
 const SendEditor = (props) => {
-  const { onSend, onClear, onStop, chatType, filterRef } = props;
+  const { onSend, onClear, onStop, chatType, filterRef, requestLoading } = props;
   const [ content, setContent ] = useState('');
   const [ selectItem, setSelectItem ] = useState({});
   const [ selectDom, setSelectDom ] = useState();
@@ -165,7 +165,8 @@ const SendEditor = (props) => {
         onClear={onClear}
         onStop={onStop}
         chatType={chatType}
-        fileSend={fileSend}/>
+        fileSend={fileSend}
+        requestLoading={requestLoading}/>
       <div className='editor-inner' >
         <div className='editor-input' id="drop">
           <div
@@ -194,7 +195,7 @@ const SendEditor = (props) => {
 
 // 编辑器操作按钮
 const EditorBtn = (props) => {
-  const { onClear, onStop, chatType, fileSend } = props;
+  const { onClear, onStop, chatType, fileSend, requestLoading } = props;
   const [ recording, setRecording ] = useState(false);
   const { chatRunning, tenantId, appId }  = useContext(AippContext);
   const { WS_AUDIO_URL } = httpUrlMap[process.env.NODE_ENV];
@@ -281,14 +282,22 @@ const EditorBtn = (props) => {
         }
         {
           !chatRunning ?
-          (<span className="quill-span quill-item-span" onClick={onClear}>
-            <img src={talk} alt="" />
-            <span>全新对话</span>
-          </span>) :
-          (<span className="quill-span quill-item-span" onClick={onStop}>
-            <img src={stop} alt="" />
-            <span>终止对话</span>
-          </span>)
+          (
+            <Spin spinning={requestLoading} size="small">
+              <span className="quill-span quill-item-span" onClick={onClear}>
+                <img src={talk} alt="" />
+                <span>全新对话</span>
+              </span>
+            </Spin>
+          ) :
+          (
+            <Spin spinning={requestLoading} size="small">
+              <span className="quill-span quill-item-span" onClick={onStop}>
+                <img src={stop} alt="" />
+                <span>终止对话</span>
+              </span>
+            </Spin>
+          )
         }
       </div>
       <div className='quill-item-inner'>

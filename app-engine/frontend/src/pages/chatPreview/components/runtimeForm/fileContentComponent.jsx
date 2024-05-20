@@ -1,5 +1,6 @@
 import FileContent from "./FileContent.jsx";
 import {v4 as uuidv4} from "uuid";
+import React from 'react';
 
 export const fileContentComponent = (jadeConfig) => {
     const self = {};

@@ -1,7 +1,7 @@
 import {del, get, post, put} from "./http";
 import { httpUrlMap } from './httpConfig';
 
-const { JANE_URL, MODEL_URL} = httpUrlMap[process.env.NODE_ENV];
+const { JANE_URL, MODEL_URL, AIPP_URL} = httpUrlMap[process.env.NODE_ENV];
 
 // mock获取生成经营报告数据
 const getMockChart = () => {
@@ -28,7 +28,7 @@ const saveContent = (tenant_id, aipp_id, instance_id, value) => {
 // 获取模型列表接口
 const getModels = () => {
     return new Promise((resolve, reject) => {
-        get(`${MODEL_URL}/gateway/v1/models`).then((res) => {
+        get(`${MODEL_URL}/gateway/v1/chat/models`).then((res) => {
             resolve(res);
         }, (error) => {
             reject(error);
@@ -37,7 +37,7 @@ const getModels = () => {
 }
 
 // 获取工具 工具流列表
-const getSkills = (params) => {
+const getTools = (params) => {
     let url = `${JANE_URL}/jober/store/platform/jade/categories/TOOL?pageNum=${params.pageNum}&pageSize=${params.pageSize}`;
     if (params.includeTags) {
         url += `&includeTags=${params.includeTags}`;
@@ -54,6 +54,16 @@ const getSkills = (params) => {
     });
 }
 
+const getWaterFlows = (params) => {
+    let url = `${AIPP_URL}/${params.tenantId}/store/waterflow?pageNum=${params.pageNum}&pageSize=${params.pageSize}`;
+    return new Promise((resolve, reject) => {
+        get(url).then((res) => {
+            resolve(res);
+        }, (error) => {
+            reject(error);
+        });
+    });
+}
 // 获取知识库
 const getKnowledges = (params) => {
     return new Promise((resolve, reject) => {
@@ -76,6 +86,17 @@ const getFitables = () => {
     });
 };
 
+// 获取流程配置面板配置
+const getAddFlowConfig = (tenant_Id) => {
+    return new Promise((resolve, reject) => {
+        get(`${AIPP_URL}/${tenant_Id}/store/nodes`).then((res) => {
+            resolve(res);
+        }, (error) => {
+            reject(error);
+        });
+    });
+}
+
 export {
-    getMockChart, saveContent, getModels, getSkills, getKnowledges, getFitables
+    getMockChart, saveContent, getModels, getTools, getKnowledges, getFitables, getAddFlowConfig, getWaterFlows
 };

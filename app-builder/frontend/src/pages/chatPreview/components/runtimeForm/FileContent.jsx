@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { Input, Button, Typography } from 'antd';
 import { CommentOutlined } from '@ant-design/icons';
 import {AippContext} from "../../../aippIndex/context";
@@ -45,12 +45,16 @@ const FormWrap = styled.div`
         margin: 0 0 10px 0;
     }
 `;
-const FileContent = ({ data, instanceId, mode }) => {
-    const id = "fileContent";
+const FileContent = (props) => {
+    const { data, instanceId, mode } = props;
+    const id = "FileContent";
     const {appId, tenantId} = useContext(AippContext);
-    const [result, setResult] = useState(() => {
-        return data;
-    });
+    const [result, setResult] = useState("");
+
+    useEffect(() => {
+        if (!data) return;
+        setResult(data[id]);
+    }, [data])
 
     const handleChange = (value) => {
         setResult(value);

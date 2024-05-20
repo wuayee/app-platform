@@ -16,12 +16,6 @@ module.exports = merge(common, {
         ...betaConfig
       })
     }),
-    // 此插件允许添加生成的文件顶部生成一段注释或者代码
-    new webpack.BannerPlugin({
-      banner: `console.log(${JSON.stringify({...betaConfig})});`,
-      raw: true,
-      entryOnly: true,
-    })
   ],
   module: {
     rules: [{

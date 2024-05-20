@@ -19,7 +19,9 @@ import ConfigFlow from "./svg/config2.svg";
 import ManualCheck from "./svg/manual-check.svg";
 import DownLoad from "./svg/download.svg";
 import FullScreen from "./svg/full.svg";
-
+import User from "./svg/user.svg";
+import If from "./svg/if.svg";
+import Fit from "./svg/fit.svg";
 
 // 编辑按钮
 const EditIcon = (props) => <Icon component={() => (<Edit/>)} {...props} />;
@@ -33,6 +35,8 @@ const EndIcon = (props) => <Icon component={() => (<End />)} {...props} />;
 const ApiIcon = (props) => <Icon component={() => (<Api />)} {...props} />;
 const LlmIcon = (props) => <Icon component={() => (<Llm />)} {...props} />;
 const ManualCheckIcon = (props) => <Icon component={() => (<ManualCheck />)} {...props} />;
+const IfIcon = (props) => <Icon component={() => (<If />)} {...props} />;
+const FitIcon = (props) => <Icon component={() => (<Fit />)} {...props} />;
 const DataRetrievalIcon = (props) => <Icon component={() => (<DataRetrieval />)} {...props} />;
 const UploadIcon = (props) => <UploadOutlined {...props} />;
 const FlowIcon = (props) => <Icon component={() => (<Flow/>)} {...props} />;
@@ -41,6 +45,7 @@ const TalkFlowIcon = (props) => <Icon component={() => (<TalkFlow/>)} {...props}
 const ConfigFlowIcon = (props) => <Icon component={() => (<ConfigFlow/>)} {...props} />;
 const DownLoadIcon = (props) => <Icon component={() => (<DownLoad/>)} {...props} />;
 const FullScreenIcon = (props) => <Icon component={() => (<FullScreen/>)} {...props} />;
+const UserIcon = (props) => <Icon component={() => (<User/>)} {...props} />;
 export {
   EditIcon,
   ClearIcon,
@@ -60,6 +65,9 @@ export {
   TalkFlowIcon,
   ConfigFlowIcon,
   DownLoadIcon,
-  FullScreenIcon
+  FullScreenIcon,
+  UserIcon,
+  IfIcon,
+  FitIcon
 }
 

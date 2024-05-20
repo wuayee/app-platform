@@ -11,6 +11,7 @@
             {
                 "legacy": true
             }
-        ]
+        ],
+        "dynamic-import-webpack"
     ]
 }

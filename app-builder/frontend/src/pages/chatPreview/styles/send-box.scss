@@ -21,6 +21,10 @@
       margin: 0;
       white-space: pre-wrap;
     }
+    a {
+      color: #e9edfa;
+      text-decoration: underline;
+    }
     &:hover {
       .message-tip-box-send {
         width: max-content;
