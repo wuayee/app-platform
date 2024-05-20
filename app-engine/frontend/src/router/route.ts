@@ -4,16 +4,19 @@ import { Icons } from "../components/icons/index";
 import KnowledgeBase from "../pages/knowledge-base";
 import KnowledgeBaseCreate from "../pages/knowledge-base/create";
 import Home from "../pages/home";
-import Demo from '../pages/demo';
+import KnowledgeBaseDetail from '../pages/knowledge-base/knowledge-detail';
+import Demo from "../pages/demo";
 import AppDetail from "../pages/appDetail";
 
-type MenuItem = Required<MenuProps>["items"][number] & {
-    component?: () => ReactElement;
-    children?: MenuItem[] | null;
-    label: string;
-    key: string;
-    hidden?: boolean;
-};
+export type MenuItem = Required<MenuProps>['items'][number] & 
+  { 
+    component?: (() => ReactElement) | React.FC<any>, 
+    children?: MenuItem[] | null, 
+    label: string, 
+    key: string, 
+    hidden?: boolean, 
+    title?: string
+  };
 
 // key为页面链接不允许相同, 需要子数组就增加children数组, 设置hidden则不显示在菜单上
 export const routeList: MenuItem[] = [
@@ -50,6 +53,7 @@ export const routeList: MenuItem[] = [
         key: "/knowledge-base",
         icon: Icons.app({}),
         label: "知识库",
+        title: '知识库概览',
         component: KnowledgeBase,
         children: [
             {
@@ -58,6 +62,13 @@ export const routeList: MenuItem[] = [
                 label: "创建知识库",
                 component: KnowledgeBaseCreate,
                 hidden: true,
+            },
+            {
+              key: '/knowledge-base/knowledge-detail',
+              icon: Icons.app({}),
+              label: '小魔方知识库',
+              component: KnowledgeBaseDetail,
+              hidden: true,
             },
         ],
     },
