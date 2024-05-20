@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Avatar, Button, Drawer, Input } from "antd";
 import { SearchOutlined, EllipsisOutlined } from "@ant-design/icons";
-import './style.scoped.scss';
+import "./style.scoped.scss";
 
 interface StarAppsProps {
   open: boolean;
