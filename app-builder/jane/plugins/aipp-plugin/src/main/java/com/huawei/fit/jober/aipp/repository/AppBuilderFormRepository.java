@@ -20,4 +20,6 @@ public interface AppBuilderFormRepository {
     void insertOne(AppBuilderForm appBuilderForm);
 
     void updateOne(AppBuilderForm appBuilderForm);
+
+    void delete(String id);
 }

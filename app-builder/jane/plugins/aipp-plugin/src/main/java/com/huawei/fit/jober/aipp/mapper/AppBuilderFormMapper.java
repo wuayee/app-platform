@@ -20,4 +20,6 @@ public interface AppBuilderFormMapper {
     void updateOne(AppBuilderFormPO update);
 
     List<AppBuilderFormPO> selectWithType(String type);
+
+    void delete(String id);
 }

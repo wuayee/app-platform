@@ -1,8 +1,8 @@
 fit:
   beans:
     packages:
-      - 'com.huawei.fit.jober.aipp'
-      - 'com.huawei.hllm'
+    - 'com.huawei.fit.jober.aipp'
+    - 'com.huawei.hllm'
   messages:
     basename: i18n/messages
 jackson:
@@ -20,6 +20,7 @@ market:
 xiaohai:
   search_w3_url: http://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/tool/search?query=%s&topK=%d
   upload_chat_history_url: https://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/message/upload
+  share_url: http://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/message/share
 model:
   xiaohai:
     knowledge: http://10.91.159.117:12751/xiaohai/question

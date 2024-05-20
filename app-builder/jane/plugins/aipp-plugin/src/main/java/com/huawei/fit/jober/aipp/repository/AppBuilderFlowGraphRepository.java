@@ -16,4 +16,6 @@ public interface AppBuilderFlowGraphRepository {
     void insertOne(AppBuilderFlowGraph appBuilderFlowGraph);
 
     void updateOne(AppBuilderFlowGraph appBuilderFlowGraph);
+
+    void delete(String id);
 }

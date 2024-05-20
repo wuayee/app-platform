@@ -13,12 +13,14 @@ import com.huawei.fit.jober.flowsengine.domain.flows.parsers.nodes.jobers.Generi
 import com.huawei.fit.jober.flowsengine.domain.flows.parsers.nodes.jobers.HttpJoberParser;
 import com.huawei.fit.jober.flowsengine.domain.flows.parsers.nodes.jobers.JoberParser;
 import com.huawei.fit.jober.flowsengine.domain.flows.parsers.nodes.jobers.OhScriptJoberParser;
+import com.huawei.fit.jober.flowsengine.domain.flows.parsers.nodes.jobers.StoreJoberParser;
 import com.huawei.fit.jober.flowsengine.domain.flows.validators.rules.jobers.EchoJoberRule;
 import com.huawei.fit.jober.flowsengine.domain.flows.validators.rules.jobers.GeneralJoberRule;
 import com.huawei.fit.jober.flowsengine.domain.flows.validators.rules.jobers.GenericableJoberRule;
 import com.huawei.fit.jober.flowsengine.domain.flows.validators.rules.jobers.HttpJoberRule;
 import com.huawei.fit.jober.flowsengine.domain.flows.validators.rules.jobers.JoberRule;
 import com.huawei.fit.jober.flowsengine.domain.flows.validators.rules.jobers.OhScriptJoberRule;
+import com.huawei.fit.jober.flowsengine.domain.flows.validators.rules.jobers.StoreJoberRule;
 
 import lombok.Getter;
 
@@ -37,7 +39,9 @@ public enum FlowJoberType {
     HTTP_JOBER("HTTP_JOBER", new HttpJoberParser(), new HttpJoberRule()),
     ECHO_JOBER("ECHO_JOBER", new EchoJoberParser(), new EchoJoberRule()),
     OHSCRIPT_JOBER("OHSCRIPT_JOBER", new OhScriptJoberParser(), new OhScriptJoberRule()),
-    GENERICABLE_JOBER("GENERICABLE_JOBER", new GenericableJoberParser(), new GenericableJoberRule());
+    GENERICABLE_JOBER("GENERICABLE_JOBER", new GenericableJoberParser(), new GenericableJoberRule()),
+    STORE_JOBER("STORE_JOBER", new StoreJoberParser(), new StoreJoberRule()),
+    ;
 
     private final String code;
 

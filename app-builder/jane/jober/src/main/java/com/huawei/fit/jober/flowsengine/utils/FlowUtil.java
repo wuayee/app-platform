@@ -153,10 +153,12 @@ public final class FlowUtil {
     }
 
     private static Map<String, Object> extractBusinessDataOutput(Map<String, Object> businessData) {
-        return businessData.entrySet()
+        Map<String, Object> result = new HashMap<>();
+        businessData.entrySet()
                 .stream()
                 .filter(item -> !BUSINESS_DATA_IGNORED_KEYS.contains(item.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .forEach(item -> result.put(item.getKey(), item.getValue()));
+        return result;
     }
 
     private static Object getOrCreateMapChild(Map<String, Object> target, String key) {

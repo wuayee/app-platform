@@ -18,4 +18,6 @@ public interface AppBuilderConfigRepository {
     void updateOne(AppBuilderConfig appBuilderConfig);
 
     AppBuilderConfig selectWithAppId(String appId);
+
+    void delete(String id);
 }

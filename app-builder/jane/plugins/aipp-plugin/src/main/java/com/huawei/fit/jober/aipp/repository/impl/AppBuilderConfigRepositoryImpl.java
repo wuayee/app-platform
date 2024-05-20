@@ -6,7 +6,10 @@ package com.huawei.fit.jober.aipp.repository.impl;
 
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfig;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderConfigMapper;
+import com.huawei.fit.jober.aipp.po.AppBuilderConfigPO;
+import com.huawei.fit.jober.aipp.repository.AppBuilderConfigPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderConfigRepository;
+import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderConfigSerializer;
 import com.huawei.fitframework.annotation.Component;
 
@@ -18,9 +21,15 @@ import com.huawei.fitframework.annotation.Component;
 public class AppBuilderConfigRepositoryImpl implements AppBuilderConfigRepository {
     private final AppBuilderConfigMapper appBuilderConfigMapper;
     private final AppBuilderConfigSerializer serializer;
+    private final AppBuilderConfigPropertyRepository appBuilderConfigPropertyRepository;
+    private final AppBuilderFormRepository appBuilderFormRepository;
 
-    public AppBuilderConfigRepositoryImpl(AppBuilderConfigMapper appBuilderConfigMapper) {
+    public AppBuilderConfigRepositoryImpl(AppBuilderConfigMapper appBuilderConfigMapper,
+            AppBuilderConfigPropertyRepository appBuilderConfigPropertyRepository,
+            AppBuilderFormRepository appBuilderFormRepository) {
         this.appBuilderConfigMapper = appBuilderConfigMapper;
+        this.appBuilderConfigPropertyRepository = appBuilderConfigPropertyRepository;
+        this.appBuilderFormRepository = appBuilderFormRepository;
         this.serializer = new AppBuilderConfigSerializer();
     }
 
@@ -43,5 +52,13 @@ public class AppBuilderConfigRepositoryImpl implements AppBuilderConfigRepositor
     @Override
     public AppBuilderConfig selectWithAppId(String appId) {
         return this.serializer.deserialize(this.appBuilderConfigMapper.selectWithAppId(appId));
+    }
+
+    @Override
+    public void delete(String id) {
+        AppBuilderConfigPO appBuilderConfigPO = this.appBuilderConfigMapper.selectWithId(id);
+        this.appBuilderConfigMapper.delete(id);
+        this.appBuilderConfigPropertyRepository.deleteByConfigId(id);
+        this.appBuilderFormRepository.delete(appBuilderConfigPO.getFormId());
     }
 }

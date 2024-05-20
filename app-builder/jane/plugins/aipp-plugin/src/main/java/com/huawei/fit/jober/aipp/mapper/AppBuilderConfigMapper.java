@@ -18,4 +18,6 @@ public interface AppBuilderConfigMapper {
     void updateOne(AppBuilderConfigPO update);
 
     AppBuilderConfigPO selectWithAppId(String appId);
+
+    void delete(String id);
 }
