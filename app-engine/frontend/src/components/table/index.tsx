@@ -83,9 +83,7 @@ const LiveUiTable: React.FC<{ dataSource; columns; onChange }> = ({
         defaultCurrent: 1,
         showSizeChanger: true,
         showTotal: (total) => <div style={{ position: 'absolute', left: 0 }}>共{total}条</div>,
-        onChange: (pageNo, pageSize) => {
-          console.log('rwqe');
-        },
+        onChange: (pageNo, pageSize) => {},
       }}
     />
   </div>
