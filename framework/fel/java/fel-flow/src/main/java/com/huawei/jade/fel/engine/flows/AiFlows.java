@@ -6,7 +6,6 @@ package com.huawei.jade.fel.engine.flows;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.emitters.Emitter;
-import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
 import com.huawei.fit.waterflow.domain.flow.Flows;
 import com.huawei.fit.waterflow.domain.flow.ProcessFlow;
 import com.huawei.fit.waterflow.domain.states.Start;
@@ -34,11 +33,11 @@ public class AiFlows {
     }
 
     /**
-     * 给定单个数据来构造一个AiDataStart，offer时发射该数据
+     * 通过指定的单条数据来构造一个数据前置流。
      *
-     * @param data 数据
-     * @param <D> 数据类型
-     * @return 以该数据为源的AiDataStart
+     * @param data 表示单个数据的 {@link D}。
+     * @param <D> 表示数据类型。
+     * @return 表示数据前置流的 {@link AiDataStart}{@code <}{@link D}{@code , }{@link D}{@code , }{@link D}{@code >}。
      */
     public static <D> AiDataStart<D, D, D> mono(D data) {
         AiStart<D, D, D, ProcessFlow<D>, AiProcessFlow<D, ?>> start = AiFlows.create();
@@ -46,36 +45,27 @@ public class AiFlows {
     }
 
     /**
-     * 给定的多条数据来构造一个AiDataStart，offer时发射多条数据
+     * 通过指定的数据数组来构造一个数据前置流。
      *
-     * @param data 多条数据
-     * @param <D> 数据类型
-     * @return 以多条数据为数据源的AiDataStart
+     * @param data 表示数据数组的 {@link D}{@code []}。
+     * @param <D> 表示数据类型。
+     * @return 表示数据前置流的 {@link AiDataStart}{@code <}{@link D}{@code , }{@link D}{@code , }{@link D}{@code >}。
      */
+    @SafeVarargs
     public static <D> AiDataStart<D, D, D> flux(D... data) {
         AiStart<D, D, D, ProcessFlow<D>, AiProcessFlow<D, ?>> start = AiFlows.create();
         return new AiDataStart<>(start, data);
     }
 
     /**
-     * 通过指定的 {@link Emitter}来构造一个AiDataStart，offer时将通过该Emitter来发射数据
+     * 通过指定的发射源来构造一个数据前置流。
      *
-     * @param emitter 数据源
-     * @param <D> 数据类型
-     * @return 以Emitter为数据源的AiDataStart
+     * @param emitter 表示数据源的 {@link Emitter}{@code <}{@link D}{@code , }{@link FlowSession}{@code >}。
+     * @param <D> 表示数据类型。
+     * @return 表示数据前置流的 {@link AiDataStart}{@code <}{@link D}{@code , }{@link D}{@code , }{@link D}{@code >}。
      */
-    public static <D> AiDataStart<D, D, D> source(Emitter<D, String> emitter) {
+    public static <D> AiDataStart<D, D, D> source(Emitter<D, FlowSession> emitter) {
         AiStart<D, D, D, ProcessFlow<D>, AiProcessFlow<D, ?>> start = AiFlows.create();
-        return new AiDataStart<>(start, new Emitter<D, FlowSession>() {
-            @Override
-            public void register(EmitterListener<D, FlowSession> listener) {
-                emitter.register((data, token) -> listener.handle(data, new FlowSession(token)));
-            }
-
-            @Override
-            public void emit(D data, FlowSession token) {
-                emitter.emit(data, token.getId());
-            }
-        });
+        return new AiDataStart<>(start, emitter);
     }
 }

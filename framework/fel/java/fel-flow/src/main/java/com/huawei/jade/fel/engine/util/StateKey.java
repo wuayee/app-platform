@@ -30,4 +30,19 @@ public interface StateKey {
      * 表示流程对话监听器的键。
      */
     String CONVERSE_LISTENER = "converse_listener";
+
+    /**
+     * 表示流式响应信息消费者的键。
+     */
+    String STREAMING_CONSUMER = "streaming_consumer";
+
+    /**
+     * 表示流式模型节点处理器。
+     */
+    String STREAMING_PROCESSOR = "streaming_processor";
+
+    /**
+     * 表示流式模型节点处理器。
+     */
+    String STREAMING_FLOW_CONTEXT = "streaming_flow_context";
 }

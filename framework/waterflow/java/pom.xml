@@ -16,7 +16,7 @@
     <modules>
         <module>waterflow-core</module>
         <module>waterflow-genericable</module>
-        <module>waterflow-bridge-fit-refactor</module>
+        <module>waterflow-bridge-fit-reactor</module>
     </modules>
 
     <properties>

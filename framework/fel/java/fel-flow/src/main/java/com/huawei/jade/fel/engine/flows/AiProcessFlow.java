@@ -5,7 +5,6 @@
 package com.huawei.jade.fel.engine.flows;
 
 import static com.huawei.fitframework.inspection.Validation.notBlank;
-import static com.huawei.jade.fel.engine.util.SessionUtils.copyFlowSession;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.emitters.Emitter;
@@ -30,19 +29,19 @@ public class AiProcessFlow<D, R> extends AiFlow<D, ProcessFlow<D>> implements Em
 
     @Override
     public void handle(D data, FlowSession session) {
-        this.origin().offer(data, copyFlowSession(session));
+        this.origin().offer(data, new FlowSession(session));
     }
 
     @Override
     public void register(EmitterListener<R, FlowSession> listener) {
         if (listener != null) {
-            this.origin().register((data, token) -> listener.handle(ObjectUtils.cast(data), copyFlowSession(token)));
+            this.origin().register((data, token) -> listener.handle(ObjectUtils.cast(data), new FlowSession(token)));
         }
     }
 
     @Override
     public void emit(R data, FlowSession session) {
-        this.origin().emit(data, copyFlowSession(session));
+        this.origin().emit(data, new FlowSession(session));
     }
 
     /**

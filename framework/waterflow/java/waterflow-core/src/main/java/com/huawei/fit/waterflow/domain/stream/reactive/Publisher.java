@@ -83,6 +83,17 @@ public interface Publisher<I> extends StreamIdentity, EmitterListener<I, FlowSes
     <O> Processor<I, O> map(Operators.Map<FlowContext<I>, O> processor, Operators.Whether<I> whether);
 
     /**
+     * 将每个数据通过指定的方式转换为一个数据流，并将数据流的数据往下发射流转。
+     *
+     * @param processor 表示数据转换器的 {@link Operators.FlatMap}{@code <}{@link FlowContext}{@code <}{@link I}{@code
+     * >}{@code , }{@link O}{@code >}。
+     * @param whether 表示判定条件的 {@link Operators.Whether}{@code <}{@link I}{@code >}。
+     * @param <O> 表示数据处理器的输出数据类型。
+     * @return 表示数据处理器的 {@link Processor}{@code <}{@link I}{@code , }{@link O}{@code >}。
+     */
+    <O> Processor<I, O> flatMap(Operators.FlatMap<FlowContext<I>, O> processor, Operators.Whether<I> whether);
+
+    /**
      * process处理，并往下发射新的数据，支持操作 session KV状态数据
      *
      * @param processor 携带数据、KV下文和发射器的处理器
