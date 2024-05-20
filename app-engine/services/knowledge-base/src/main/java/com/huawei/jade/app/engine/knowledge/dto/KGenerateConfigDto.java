@@ -4,6 +4,8 @@
 
 package com.huawei.jade.app.engine.knowledge.dto;
 
+import com.huawei.jade.app.engine.knowledge.dto.enums.SplitType;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,7 +38,7 @@ public class KGenerateConfigDto {
     /**
      * 切片模式
      */
-    private String sliceMode;
+    private SplitType splitType;
 
     /**
      * 切片大小
