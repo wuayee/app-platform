@@ -147,7 +147,7 @@ const KnowledgeBase = () => {
         <Pagination total = {total} current={page} onChange={paginationChange} pageSize={pageSize}/>
     </div>
   </div>
-     
+
   )
 }
 export default KnowledgeBase;

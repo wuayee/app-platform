@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import GoBack from '../../components/go-back/GoBack';
 import { Tabs } from 'antd';
 import AppAnalyse from './analyse';
+import AppOverview from './overview';
+import AppEvaluate from './evalute';
 import FeedBack from './feedback';
 
 const onChange = (key: string) => {
@@ -13,7 +15,7 @@ const AppDetail: React.FC = () => {
     {
       key: '1',
       label: '概览',
-      children: 'Content of Tab Pane 1',
+      children: <AppOverview />
     },
     {
       key: '2',
@@ -28,7 +30,7 @@ const AppDetail: React.FC = () => {
     {
       key: '4',
       label: '评估',
-      children: 'Content of Tab Pane 4',
+      children: <AppEvaluate />,
     },
   ];
   return (

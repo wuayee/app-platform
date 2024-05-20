@@ -109,6 +109,12 @@ module.exports = merge(common, {
         secure: false,
         changeOrigin: true,
       },
+      "/app": {
+        target: 'http://80.11.128.66:30216/v1/api',
+        pathRewrite: {"^/app": ""},
+        secure: false,
+        changeOrigin: true,
+      },
     },
   },
 });
