@@ -161,12 +161,7 @@ const SendEditor = (props) => {
   })
   return <>{(
     <div className='send-editor-container'>
-      <EditorBtn
-        onClear={onClear}
-        onStop={onStop}
-        chatType={chatType}
-        fileSend={fileSend}
-        requestLoading={requestLoading}/>
+      
       <div className='editor-inner' >
         <div className='editor-input' id="drop">
           <div
@@ -402,6 +397,23 @@ const EditorSelect = (props) => {
           </div>
         )
       }) }
+    </div>
+  )}</>
+}
+
+// 猜你想问
+const Recommends = (props) => {
+
+
+  return <>{(
+    <div className="recommends-inner">
+      <div className="recommends-top">
+        
+      </div>
+      <div className="recommends-list">
+        <div className="list-left"></div>
+        <div className="list-right"></div>
+      </div>
     </div>
   )}</>
 }
