@@ -9,7 +9,7 @@ import robot from '../../assets/images/ai/robot1.png';
 import './index.scss';
 
 
-const Index = () => {
+const ChatShare = () => {
   const { appId, tenantId, shareId } = useParams();
   const [ aippInfo, setAippInfo ] = useState({});
   const [ spinning, setSpinning] = useState(false);
@@ -78,4 +78,4 @@ const Img = (props) => {
   )}</>
 }
 
-export default Index;
+export default ChatShare;
