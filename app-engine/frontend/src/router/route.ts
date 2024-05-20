@@ -3,7 +3,8 @@ import { ReactElement } from "react";
 import { Icons } from "../components/icons/index";
 import KnowledgeBase from "../pages/knowledge-base";
 import KnowledgeBaseCreate from "../pages/knowledge-base/create";
-import Demo from "../pages/demo";
+import Home from "../pages/home";
+import Demo from '../pages/demo';
 import AppDetail from "../pages/appDetail";
 
 type MenuItem = Required<MenuProps>["items"][number] & {
@@ -17,10 +18,10 @@ type MenuItem = Required<MenuProps>["items"][number] & {
 // key为页面链接不允许相同, 需要子数组就增加children数组, 设置hidden则不显示在菜单上
 export const routeList: MenuItem[] = [
     {
-        key: "/home",
+        key: "/",
         icon: Icons.home({}),
         label: "首页",
-        component: Demo,
+        component: Home,
     },
     {
         key: "/robot-market",
