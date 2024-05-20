@@ -1,0 +1,145 @@
+llms:
+- 
+   name: Qwen-7B-Chat
+   model: Qwen
+   scale: 7B
+   type: "语言模型"
+   orgnization: "Alibaba Cloud"
+   description: "通义千问-7B（Qwen-7B）是阿里云研发的通义千问大模型系列的70亿参数规模的模型。Qwen-7B是基于Transformer的大语言模型, 在超大规模的预训练数据上进行训练得到。预训练数据类型多样，覆盖广泛，包括大量网络文本、专业书籍、代码等。"
+   precision:
+     default: fp16
+     supports:
+       - bf16
+       - fp16
+   gpu:
+     min: 1
+     max: 8
+   npu:
+     min: 1
+     max: 8
+- 
+   name: Qwen-14B-Chat
+   model: Qwen
+   scale: 14B
+   type: "语言模型"
+   orgnization: "Alibaba Cloud"
+   description: "通义千问-14B（Qwen-14B）是阿里云研发的通义千问大模型系列的140亿参数规模的模型。Qwen-14B是基于Transformer的大语言模型, 在超大规模的预训练数据上进行训练得到。预训练数据类型多样，覆盖广泛，包括大量网络文本、专业书籍、代码等。"
+   precision:
+     default: fp16
+     supports:
+       - bf16
+       - fp16
+   gpu:
+     min: 1
+     max: 8
+   npu:
+     min: 1
+     max: 8
+-
+   name: Llama2-7B-Chat
+   model: Llama2
+   scale: 7B
+   type: "语言模型"
+   orgnization: "Meta"
+   description: "Meta developed and publicly released the Llama 2 family of large language models (LLMs), a collection of pretrained and fine-tuned generative text models ranging in scale from 7 billion to 70 billion parameters. Our fine-tuned LLMs, called Llama-2-Chat, are optimized for dialogue use cases. Llama-2-Chat models outperform open-source chat models on most benchmarks we tested, and in our human evaluations for helpfulness and safety, are on par with some popular closed-source models like ChatGPT and PaLM."
+   precision:
+     default: fp16
+     supports:
+       - bf16
+       - fp16
+   gpu:
+     min: 1
+     max: 8
+   npu:
+     min: 1
+     max: 8
+-
+   name: Llama2-14B-Chat
+   model: Qwen
+   scale: 14B
+   type: "语言模型"
+   orgnization: "Meta"
+   description: "Meta developed and publicly released the Llama 2 family of large language models (LLMs), a collection of pretrained and fine-tuned generative text models ranging in scale from 7 billion to 70 billion parameters. Our fine-tuned LLMs, called Llama-2-Chat, are optimized for dialogue use cases. Llama-2-Chat models outperform open-source chat models on most benchmarks we tested, and in our human evaluations for helpfulness and safety, are on par with some popular closed-source models like ChatGPT and PaLM."
+   precision:
+     default: fp16
+     supports:
+       - bf16
+       - fp16
+   gpu:
+     min: 1
+     max: 8
+   npu:
+     min: 1
+     max: 8
+-
+   name: Llama2-70B-Chat
+   model: Llama2
+   scale: 70B
+   type: "语言模型"
+   orgnization: "Meta"
+   description: "Meta developed and publicly released the Llama 2 family of large language models (LLMs), a collection of pretrained and fine-tuned generative text models ranging in scale from 7 billion to 70 billion parameters. Our fine-tuned LLMs, called Llama-2-Chat, are optimized for dialogue use cases. Llama-2-Chat models outperform open-source chat models on most benchmarks we tested, and in our human evaluations for helpfulness and safety, are on par with some popular closed-source models like ChatGPT and PaLM."
+   precision:
+     default: fp16
+     supports:
+       - bf16
+       - fp16
+   gpu:
+     min: 8
+     max: 8
+   npu:
+     min: 8
+     max: 8
+-
+   name: Baichuan2-7B-Chat
+   model: Baichuan2
+   scale: 7B 
+   type: "语言模型"
+   orgnization: "百川"
+   description: "Baichuan 2 是百川智能推出的新一代开源大语言模型，采用 2.6 万亿 Tokens 的高质量语料训练，在权威的中文和英文 benchmark 上均取得同尺寸最好的效果。"
+   precision:
+     default: fp16
+     supports:
+       - bf16
+       - fp16
+   gpu:
+     min: 1
+     max: 8
+   npu:
+     min: 1
+     max: 8
+-
+   name: Baichuan2-13B-Chat
+   model: Baichuan2
+   scale: 13B 
+   type: "语言模型"
+   orgnization: "百川"
+   description: "Baichuan 2 是百川智能推出的新一代开源大语言模型，采用 2.6 万亿 Tokens 的高质量语料训练，在权威的中文和英文 benchmark 上均取得同尺寸最好的效果。"
+   precision:
+     default: fp16
+     supports:
+       - bf16
+       - fp16
+   gpu:
+     min: 1
+     max: 8
+   npu:
+     min: 1
+     max: 8
+-
+   name: ChatGLM2-6B
+   model: ChatGLM2-6B
+   scale:  6B 
+   type: "语言模型"
+   orgnization: "Mistral AI"
+   description: "ChatGLM2-6B 是开源中英双语对话模型 ChatGLM-6B 的第二代版本，在保留了初代模型对话流畅、部署门槛较低等众多优秀特性的基础之上，ChatGLM2-6B 引入了更多新特性。"
+   precision:
+     default: fp16
+     supports:
+       - bf16
+       - fp16
+   gpu:
+     min: 1
+     max: 8
+   npu:
+     min: 1
+     max: 8
