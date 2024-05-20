@@ -4,7 +4,7 @@ import { Icons } from "../components/icons/index";
 import KnowledgeBase from "../pages/knowledge-base";
 import KnowledgeBaseCreate from "../pages/knowledge-base/create";
 import Demo from "../pages/demo";
-import First from "../pages/demo/first";
+import AppDetail from "../pages/appDetail";
 
 type MenuItem = Required<MenuProps>["items"][number] & {
     component?: () => ReactElement;
@@ -32,7 +32,6 @@ export const routeList: MenuItem[] = [
         key: "/plugin-market",
         icon: Icons.app({}),
         label: "插件市场",
-        component: Demo,
     },
     {
         key: "/app",
@@ -74,14 +73,8 @@ export const routeList: MenuItem[] = [
         component: Demo,
     },
     {
-        key: "/demo/first",
-        icon: Icons.app({}),
-        label: "demo",
-        component: First,
-    },
-    {
-        key: "/demo",
-        component: Demo,
+        key: "/app-detail",
+        component: AppDetail,
     },
 ];
 
