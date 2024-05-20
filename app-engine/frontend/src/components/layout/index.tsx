@@ -6,6 +6,7 @@ import { routeList, flattenRoute, getRouteByKey, getMenus } from '../../router/r
 import { Icons } from '../icons/index'
 import { HeaderUser } from '../header-user';
 import { HeaderFolderMenu } from '../header-folder-menu';
+import './style.scoped.scss'
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -72,12 +73,7 @@ const AppLayout: React.FC = () => {
     <Layout style={{ minHeight: '100vh' }}>
       <>
         <Sider collapsible collapsed={false} onCollapse={(value) => setShowMenu(false)}
-          style={{
-            transition:' all .3s ease',
-            visibility: showMenu ? 'visible' : 'hidden',
-            opacity: showMenu ? 1 : 0,
-            flex: showMenu ? '0 0 200px' : '0'
-          }}
+          className={showMenu? 'openMenu' : 'closeMenu'}
         >
         <div style={{
           position: 'static',
