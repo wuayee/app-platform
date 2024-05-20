@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import GoBack from '../../components/go-back/GoBack';
 import { Tabs } from 'antd';
 import AppAnalyse from './analyse';
+import AppOverview from './overview';
+import AppEvaluate from './evalute';
+import FeedBack from './feedback';
 
 const onChange = (key: string) => {
   console.log(key);
@@ -12,34 +15,37 @@ const AppDetail: React.FC = () => {
     {
       key: '1',
       label: '概览',
-      children: 'Content of Tab Pane 1'
+      children: <AppOverview />
     },
     {
       key: '2',
       label: '分析',
-      children: <AppAnalyse></AppAnalyse>,
+      children: <AppAnalyse />,
     },
     {
       key: '3',
       label: '反馈',
-      children: 'Content of Tab Pane 3',
+      children: <FeedBack />,
     },
     {
       key: '4',
       label: '评估',
-      children: 'Content of Tab Pane 4',
+      children: <AppEvaluate />,
     },
   ];
-  return(
-  <div className='aui-fullpage'>
-    <div className='aui-header-1'>
-      <div className='aui-title-1'><GoBack path={'/app'} title='应用详情'/></div>
+  return (
+    <div className='aui-fullpage'>
+      <div className='aui-header-1'>
+        <div className='aui-title-1'>
+          <GoBack path={'/app'} title='应用详情' />
+        </div>
+      </div>
+      <div className='aui-block' style={{ paddingTop: 0 }}>
+        <Tabs defaultActiveKey='1' items={items} onChange={onChange} />
+        <div />
+      </div>
     </div>
-    <div className='aui-block' style={{paddingTop:0}}>
-       <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-      <div />
-    </div>
-  </div>
-)};
+  );
+};
 
 export default AppDetail;

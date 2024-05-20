@@ -84,6 +84,13 @@ body {
   overflow-y: hidden;
 }
 
+:where(.css-dev-only-do-not-override-1drr2mu).buttonDroup.ant-radio-button-wrapper:not(:first-child)::before {
+  display: none;
+}
+:where(.css-dev-only-do-not-override-1drr2mu).buttonDroup.ant-radio-button-wrapper:not(:first-child) {
+  border-left-width: 1px;
+}
+
 a {
   color: #6c92fa;
   text-decoration: none;
