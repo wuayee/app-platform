@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as echarts from 'echarts';
 import './style.scoped.scss';
 import { float } from 'html2canvas/dist/types/css/property-descriptors/float';
@@ -11,6 +11,32 @@ const timeOption=[
   { value: '3', label: '过去1月' },
   { value: '4', label: '过去半年'},
 ]
+
+const top5Option = {
+  xAxis: {
+    type: 'category',
+    axisTick: {
+      show: false, // 是否显示坐标轴刻度
+    },
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  },
+  yAxis: {
+    type: 'value',
+    max: 100, //取100为最大刻度
+    axisLabel: {  
+      show: true,  
+      interval: 'auto',  
+      formatter: '{value} %'  
+      },  
+  },
+  series: [
+    {
+      data: [20, 56, 15, 80, 70, 10, 30],
+      type: 'bar',
+      barWidth: '25%',
+    },
+  ],
+};
 
 const AnalyseCard = ({ info }) => (
   <Card className='card'>
@@ -25,7 +51,7 @@ const AnalyseCard = ({ info }) => (
 );
 const ChartCard = ({ info }) => (
   <Card className='chart-card' style={{ height: info.height + 50 }}>
-    <div className='title'>{}</div>
+    <div className='title'>{info.title}</div>
     <div id={info.id} className='chart' style={{ height: info.height }} />
   </Card>
 );
@@ -33,7 +59,8 @@ const handleSelectTimeChange = (value: string) => {
   console.log(`selected ${value}`);
 };
 const AppAnalyse: React.FC = () => {
-  const tradeData=[820, 932, 901, 934, 1290, 1330, 1320]
+  const tradeData=[820, 932, 901, 934, 1290, 1330, 1320];
+  const [top5User,setTop5User]=useState([]);
   const speedData = [
     { value: 48, name: '500ms以下' },
     { value: 32, name: '500-1000ms' },
@@ -93,25 +120,6 @@ const AppAnalyse: React.FC = () => {
     ],
   };
   
-  const top5Option = {
-    xAxis: {
-      type: 'category',
-      axisTick: {
-        show: false, // 是否显示坐标轴刻度
-      },
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    },
-    yAxis: {
-      type: 'value',
-    },
-    series: [
-      {
-        data: [20, 56, 15, 80, 70, 10, 30],
-        type: 'bar',
-        barWidth: '25%',
-      },
-    ],
-  };
   useEffect(() => {
     const tradeChart = echarts.init(document.getElementById('trade'));
     const speedChart = echarts.init(document.getElementById('speed'));
@@ -127,6 +135,9 @@ const AppAnalyse: React.FC = () => {
       top5UserChart.resize();
       top5DepartmentChart.resize();
     });
+
+    //赋值
+
   }, []);
   return (
     <div>
