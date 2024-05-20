@@ -12,6 +12,8 @@ import AddFlow from "../pages/addFlow";
 import AppDetail from "../pages/appDetail";
 import AippIndex from "../pages/aippIndex";
 import AddFlow from "../pages/addFlow";
+import FlowDetail from "../pages/detailFlow";
+import ChatShare from "../pages/chatShare";
 
 export type MenuItem = Required<MenuProps>['items'][number] &
   {
@@ -30,6 +32,15 @@ export const routeList: MenuItem[] = [
         icon: Icons.home({}),
         label: "首页",
         component: ChatRunning,
+        children: [
+          {
+            key: "/:tenantId/chatShare/:appId/:shareId",
+            icon: Icons.app({}),
+            label: "分享对话",
+            component: ChatShare,
+            hidden: true,
+          }
+        ]
     },
     {
         key: "/robot-market",
@@ -61,7 +72,14 @@ export const routeList: MenuItem[] = [
                 label: "新增工具流",
                 component: AddFlow,
                 hidden: true,
-            }
+            },
+            {
+                key: "/app/:tenantId/flowDetail/:appId",
+                icon: Icons.app({}),
+                label: "工具流",
+                component: FlowDetail,
+                hidden: true
+            },
         ],
     },
     {
