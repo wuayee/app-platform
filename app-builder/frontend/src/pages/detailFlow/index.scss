@@ -1,0 +1,30 @@
+.graph-detail {
+  width: 100%;
+  .header-left {
+    display: flex;
+    align-items: center;
+    .icon-back {
+      margin-right: 8px;
+      svg {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+      }
+    }
+    .header-text {
+      font-weight: 700;
+      font-size: 16px;
+    }
+  }
+  .header-right {
+    color: #333333;
+    .header-text {
+      display: inline-block;
+      margin-left: 20px;
+    }
+  }
+  #stageDetail {
+    height: calc(100vh - 56px);
+    position: relative;
+  }
+}
