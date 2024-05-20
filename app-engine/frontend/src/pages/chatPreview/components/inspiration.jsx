@@ -158,20 +158,8 @@ const Inspiration = (props) => {
           <div className="right-content">
             <div className={showDrop ? 'has-drop title' : 'title'}>
               <span className="title-icon">
-                <span className="inspiration-text">灵感大全</span>
-                {/* <PlusCircleOutlined
-                  style={{ fontSize: '16px', marginLeft: '8px', marginTop: '4px' }}
-                  onClick={addInspiration}
-                /> */}
+                <span className="inspiration-text">创意灵感</span>
               </span>
-              <Search
-                className="prompt-search"
-                size="small"
-                allowClear
-                onSearch={onSearch}
-                variant="borderless"
-                style={{ width: 120 }}
-              />
               { showDrop &&  (
                 <Popover 
                   content={
@@ -193,52 +181,59 @@ const Inspiration = (props) => {
                 </Popover>
               )}
             </div>
-              <div className="prompt-container">
-                <div className="prompt-type">
-                  { promptTypeList.map((item, index) => {
-                    return (
-                      <span
-                        key={index}
-                        title={item.title}
-                        className={
-                          currentPromptType === item.id
-                            ? 'prompt-type-active prompt-type-item'
-                            : 'prompt-type-item'
-                        }
-                        onClick={radioClick.bind(this, item)}
-                      >
-                        {item.title}
-                      </span>
-                    );
-                    })
-                  }
-                </div>
-               { (prompData && prompData.length) ? (
-                 <div className="prompt-list">
-                 { prompData.map((cItem, cIndex) => {
-                   return (
-                     <div
-                       key={cIndex}
-                       className="prompt-item"
-                       onClick={handleClickPrompt.bind(this, cItem)}
-                     >
-                       <div className="title"> {cItem.name}</div>
-                       <div
-                         className="content text-mul-ellipsis"
-                         title={cItem.description}
-                       >
-                         {cItem.description}
-                       </div>
-                     </div>
-                   );
-                 })}
-               </div>
-               ) : (
-               <div className="prompt-empty">
-                  <Empty description="暂无灵感大全数据"/>
-                </div>
-              )}
+            <div className="prompt-search">
+              <Search
+                size="small"
+                allowClear
+                onSearch={onSearch}
+              />
+            </div>
+            <div className="prompt-container">
+              <div className="prompt-type">
+                { promptTypeList.map((item, index) => {
+                  return (
+                    <span
+                      key={index}
+                      title={item.title}
+                      className={
+                        currentPromptType === item.id
+                          ? 'prompt-type-active prompt-type-item'
+                          : 'prompt-type-item'
+                      }
+                      onClick={radioClick.bind(this, item)}
+                    >
+                      {item.title}
+                    </span>
+                  );
+                  })
+                }
               </div>
+              { (prompData && prompData.length) ? (
+                <div className="prompt-list">
+                { prompData.map((cItem, cIndex) => {
+                  return (
+                    <div
+                      key={cIndex}
+                      className="prompt-item"
+                      onClick={handleClickPrompt.bind(this, cItem)}
+                    >
+                      <div className="title"> {cItem.name}</div>
+                      <div
+                        className="content text-mul-ellipsis"
+                        title={cItem.description}
+                      >
+                        {cItem.description}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              ) : (
+              <div className="prompt-empty">
+                <Empty description="暂无灵感大全数据"/>
+              </div>
+            )}
+            </div>
           </div>
         </div>
       }
