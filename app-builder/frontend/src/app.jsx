@@ -27,7 +27,7 @@ const Home = () => {
                   return <Route key= {index} path={path} element={React.createElement(Component)}/>;
               }))}
             </Route>
-            <Route path="/*" element={<Navigate to="/aipp/notfound" />}/>
+            <Route path="/*" element={<Navigate to="/aipp/home" />}/>
           </Routes>
         </Layout>
       </Layout>

@@ -1,10 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
+import { Result } from 'antd';
 import './index.scss'
 
 const NotFound = () => {
   useEffect(() => {
-    urlLoad();
+    // urlLoad();
   })
   // 页面调转
   function urlLoad(id) {
@@ -17,7 +18,7 @@ const NotFound = () => {
     }
     if (mode === 'beta') {
       env = '-beta'
-    }
+    }                                                                                                   
     if (mode === 'gamma') {
       env = '-gamma'
     }
@@ -29,17 +30,11 @@ const NotFound = () => {
   }
   return <>
     <div className="app-test">
-      {/* <div className="inner">
-        <div className="left">
-          <span className="opration">And</span>
-        </div>
-        <div className="right">
-          <div className="item"></div>
-          <div className="item"></div>
-          <div className="item"></div>
-          <div className="item"></div>
-        </div>
-      </div> */}
+      <Result
+        status="404"
+        title="404"
+        subTitle="未找到页面"
+      />
     </div>
   </>
 };

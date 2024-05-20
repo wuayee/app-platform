@@ -255,6 +255,7 @@ const ReportChart = (props) => {
                 <TextArea
                   defaultValue={item.chartSummary.replace(/<br>/g, '\n')}
                   autoSize
+                  style={{ marginTop: '12px' }}
                   disabled={props.disabled}
                   onBlur = {(e) => props.handleSummaryChange(e, index, props.queryIndex)}
                 />

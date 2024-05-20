@@ -35,9 +35,10 @@ const Mock = () => {
     return (
         <>
             <div style={{overflow: "auto", maxHeight: "90vh"}}>
-                {/*<ManageCubeCreateReport data={chartData} mode={"history"}/>*/}
-                {/*<FileContent instanceId={"1"} mode={"runtime"} data={"1111111"}/>*/}
-                <InterviewQuestions data={questions} instanceId={"1"} mode={"history"}/>
+                <ManageCubeCreateReport data={chartData}/>
+                {/*<FileContent />*/}
+                {/*<InterviewQuestions questions={questions} instanceId={"1"} onSubmit={handleSubmit}/>*/}
+                {/*<InterviewQuestions instanceId={"1"} onSubmit={handleSubmit}/>*/}
             </div>
         </>
     );

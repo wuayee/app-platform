@@ -16,8 +16,17 @@ export const pages = {
   "pages/addFlow/index": {
     path: `:tenantId/addFlow/:appId`
   },
+  "pages/detailFlow/index": {
+    path: `:tenantId/flowDetail/:appId`
+  },
   "pages/chatRunning/index": {
     path: `:tenantId/chat/:appId`
+  },
+  "pages/chatShare/index": {
+    path: `:tenantId/chatShare/:appId/:shareId`
+  },
+  "pages/home/index": {
+    path: `home`
   },
 }
 

@@ -3,8 +3,12 @@ import { ReactElement } from "react";
 import { Icons } from "../components/icons/index";
 import KnowledgeBase from "../pages/knowledge-base";
 import KnowledgeBaseCreate from "../pages/knowledge-base/create";
+import Home from "../pages/home";
 import KnowledgeBaseDetail from '../pages/knowledge-base/knowledge-detail';
 import Demo from "../pages/demo";
+import ChatRunning from "../pages/chatEngineHome/index.jsx";
+import AippIndex from "../pages/aippIndex";
+import AddFlow from "../pages/addFlow";
 import AppDetail from "../pages/appDetail";
 
 export type MenuItem = Required<MenuProps>['items'][number] & 
@@ -23,7 +27,7 @@ export const routeList: MenuItem[] = [
         key: "/home",
         icon: Icons.home({}),
         label: "首页",
-        component: Demo,
+        component: ChatRunning,
     },
     {
         key: "/robot-market",
@@ -77,6 +81,28 @@ export const routeList: MenuItem[] = [
         label: "插件",
         component: Demo,
     },
+    {
+      key: "/app",
+      icon: Icons.app({}),
+      label: "应用",
+      component: Demo,
+      children: [
+          {
+              key: "/app/:tenantId/detail/:appId",
+              icon: Icons.app({}),
+              label: "app编排",
+              component: AippIndex,
+              hidden: true,
+          },
+          {
+              key: "/app/:tenantId/addFlow/:appId",
+              icon: Icons.app({}),
+              label: "新增工具流",
+              component: AddFlow,
+              hidden: true,
+          }
+      ],
+  },
     {
         key: "/group",
         icon: Icons.app({}),

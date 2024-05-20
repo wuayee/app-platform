@@ -1,24 +1,21 @@
-import React, {useEffect, useState, useContext, useCallback} from 'react';
-import {DownOutlined, UpOutlined, PlusOutlined, DeleteOutlined, EllipsisOutlined, QuestionCircleOutlined} from '@ant-design/icons';
+import React, {useEffect, useState, useContext, useRef, useCallback} from 'react';
+import {DownOutlined, UpOutlined, PlusOutlined, DeleteOutlined, EllipsisOutlined, QuestionCircleOutlined, EyeOutlined} from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import {Form, Select, Slider, Col, Row, InputNumber, Input, Modal, Switch, Table, Button, TreeSelect, Card, Popover} from 'antd';
-import {workFlowTypes, toolTypes, sourceTypes, multiModal} from "../common/common";
+import {sourceTypes, multiModal} from "../common/common";
 import { ConfigWrap, InspirationWrap } from './styled';
 import { AippContext } from '../../aippIndex/context';
 import TreeComponent from "./tree.jsx";
-import {getModels, getSkills, getKnowledges, getFitables} from "../../../shared/http/appBuilder";
+import {getModels, getTools, getWaterFlows, getKnowledges, getFitables} from "../../../shared/http/appBuilder";
 import {uuid} from "../../../common/utils";
 import {Message} from "../../../shared/utils/message";
+const { Option } = Select;
 
 function LLM(props) {
+    const { updateData } = props;
     const [showControl, setShowControl] = useState(true);
-    const [sliderValue, setSliderValue] = useState(0.5);
     const [models, setModels] = useState([]);
     const {TextArea} = Input;
-
-    const onSliderChange = (value) => {
-        setSliderValue(value);
-    };
 
     const onArrowClick = () => {
         setShowControl(!showControl);
@@ -72,6 +69,7 @@ function LLM(props) {
                                     allowClear
                                     options={models}
                                     onDropdownVisibleChange={(open) => handleGetModels(open)}
+                                    onChange={(value) => {updateData(value, "model")}}
                                     fieldNames={{
                                         label: 'id',
                                         value: 'id'
@@ -104,8 +102,14 @@ function LLM(props) {
                                     controls={true}
                                     changeOnWheel={true}
                                     keyboard={true}
-                                    onChange={onSliderChange}
+                                    onChange={(value) => {updateData(value, "temperature")}}
                                     step={0.1}
+                                    formatter={(value) => {
+                                        if (value === 0.0) {
+                                            return 0;
+                                        }
+                                        return value;
+                                    }}
                                 />
                             </Form.Item>
                         </div>
@@ -126,6 +130,7 @@ function LLM(props) {
                             <TextArea
                                 placeholder="输入一段提示词，可以给应用预设身份"
                                 rows={6}
+                                onBlur={(e) => {updateData(e.target.value, "systemPrompt")}}
                             />
                         </Form.Item>
                     </div>
@@ -136,12 +141,13 @@ function LLM(props) {
 }
 
 function Skill(props) {
+    const { waterflowChange, updateData } = props;
     const [showToolControl, setShowToolControl] = useState(true);
     const [showFlowControl, setShowFlowControl] = useState(true);
     const [showFlowModal, setShowFlowModal] = useState(false);
     const { appId, tenantId } = useContext(AippContext);
     const [tools, setTools] = useState([]);
-    const [workflows, setWorkflows] = useState([]);
+    const [waterFlow, setWaterFlow] = useState(null);
     const navigate = useNavigate();
 
     const filterOption = (input, option) =>
@@ -170,34 +176,36 @@ function Skill(props) {
             pageNum: 0,
             pageSize: 10
         };
-        getSkills(params).then((res) => {
-            if (res.code === 0) {
-                setTools(res.data);
-            } else {
-                Message({ type: 'error', content: '获取工具列表失败' });
-            }
+        getTools(params).then((res) => {
+          if (res.code === 0) {
+            setTools(res.data);
+          }
         })
     }
 
     useEffect(() => {
-        handleGetTools();
-        handleGetWorkflows();
+      handleGetTools();
+      handleGetWaterFlows();
     },[])
 
-    const handleGetWorkflows = () => {
+    const handleGetWaterFlows = () => {
         const params = {
-            includeTags: "WATERFLOW",
-            excludeTags: null,
             pageNum: 0,
-            pageSize: 10
+            pageSize: 10,
+            tenantId: tenantId,
         };
-        getSkills(params).then((res) => {
+        getWaterFlows(params).then(async (res) => {
             if (res.code === 0) {
-                setWorkflows(res.data);
-            } else {
-                Message({ type: 'error', content: '获取工具流列表失败' });
+              await setWaterFlow(res.data);
+              waterflowChange();
             }
         })
+    }
+
+    const handleCheck = (option, event) => {
+        event.stopPropagation();
+        console.log(option);
+        navigate(`/aipp/${option.data.tenantId}/flowDetail/${option.data.appId}`);
     }
 
     return (
@@ -242,6 +250,7 @@ function Skill(props) {
                                 label: "name",
                                 value: "uniqueName"
                             }}
+                            onChange={(value) => {updateData(value, "tool")}}
                         ></Select>
                     </Form.Item>
                 </div>
@@ -271,13 +280,32 @@ function Skill(props) {
                             placeholder="选择合适的工具流"
                             filterOption={filterOption}
                             optionFilterProp="label"
-                            options={workflows}
-                            onFocus={handleGetWorkflows}
-                            fieldNames={{
-                                label: "name",
-                                value: "uniqueName"
-                            }}
-                        ></Select>
+                            optionRender={(option) => (
+                                <div style={{display: "flex", justifyContent: "space-between"}}>
+                                    <span>{option.label}</span>
+                                    <Button
+                                        style={{ height: '16px', padding: '0', fontSize: '12px', lineHeight: '16px' }}
+                                        type="text"
+                                        size="small"
+                                        icon={<EyeOutlined/>}
+                                        onClick={(event) => handleCheck(option, event)} />
+                                </div>
+                            )
+                            }
+                            onFocus={handleGetWaterFlows}
+                            onChange={(value) => {updateData(value, "workflows")}}
+                        >
+                            {waterFlow && waterFlow.map(option => (
+                                <Option key={option.itemData.uniqueName}
+                                        value={option.itemData.uniqueName}
+                                        label={option.itemData.name}
+                                        tenantId={option.tenantId}
+                                        appId={option.appId}
+                                >
+                                    {option.itemData.name}
+                                </Option>
+                            ))}
+                        </Select>
                     </Form.Item>
                 </div>
                 <Modal open={showFlowModal} footer={null} onCancel={closeFlowModal} width="90vw">
@@ -289,24 +317,26 @@ function Skill(props) {
 }
 
 function Knowledge(props) {
-    const {knowledge, updateKnowledge} = props;
+    const {knowledge, updateData} = props;
     const [showKnowControl, setShowKnowControl] = useState(true);
     const [knowledgeOptions, setKnowledgeOptions] = useState(null);
     const [knows, setKnows] = useState(null);
-    const [name, setName] = useState("");
     const { tenantId } = useContext(AippContext);
+    const searchName = useRef('')
     const onArrowClick = (value, func) => {
         func(!value);
     }
 
     const handleSearch = (value) => {
-        setName(value);
+      searchName.current = value;
+      handleGetKnowledgeOptions();
     }
 
     const handleClose = (open) => {
-        if (!open) {
-            setName("");
-        }
+      if (!open) {
+        searchName.current = '';
+        handleGetKnowledgeOptions();
+      }
     }
 
     const handleGetKnowledgeOptions = () => {
@@ -314,29 +344,23 @@ function Knowledge(props) {
             tenantId,
             pageNum: 1,
             pageSize: 10,
-            name
+            name: searchName.current
         };
         getKnowledges(params).then((res) => {
             if (res.code === 0) {
-                setKnowledgeOptions(res.data.items);
-            } else {
-                Message({ type: 'error', content: '获取知识库列表失败' });
+              setKnowledgeOptions(res.data.items);
             }
         })
     }
 
     const handleChange = (value, option) => {
         setKnows(value);
-        updateKnowledge(option, "knowledge");
+        updateData(option, "knowledge");
     }
 
     useEffect(() => {
         handleGetKnowledgeOptions();
     }, [])
-
-    useEffect(() => {
-        handleGetKnowledgeOptions();
-    }, [name]);
 
     useEffect(() => {
         setKnows(knowledge?.map(item => item.id));
@@ -396,7 +420,7 @@ function Knowledge(props) {
 }
 
 function Inspiration(props) {
-    const {updateInspirationValues} = props;
+    const {updateData} = props;
     const [inspirationValues, setInspirationValues] = useState(null);
     const [treeData, setTreeData] = useState(null);
     const [cacheTreeData, setCacheTreeData] = useState(null);
@@ -455,7 +479,7 @@ function Inspiration(props) {
                                                                }}
                                                                defaultValue={sourceInfo}
                                                                onChange={(sourceInfo) => handleTableChange(sourceInfo, record, 'sourceInfo')}/> :
-                        <Input defaultValue={sourceInfo} onBlur={(sourceInfo) => handleTableChange(sourceInfo, record, 'sourceInfo')}/>}
+                        <Input defaultValue={sourceInfo} onBlur={(e) => handleTableChange(e.target.value, record, 'sourceInfo')}/>}
                 </>
             )
         },
@@ -523,10 +547,18 @@ function Inspiration(props) {
     const handleTableChange = (checked, record, key) => {
         const newData = promptVarData.map(item => {
             if (item.var === record.var) {
-                return {
-                    ...item,
-                    [key]: checked,
-                };
+                if (key === "sourceType") {
+                    return {
+                        ...item,
+                        [key]: checked,
+                        sourceInfo: null
+                    }
+                } else {
+                    return {
+                        ...item,
+                        [key]: checked,
+                    };
+                }
             }
             return item;
         });
@@ -555,7 +587,7 @@ function Inspiration(props) {
                     return item;
                 }) : [...inspirationValues.inspirations, {...values, id: uuid()}];
                 const newInspirationValues = {...inspirationValues, inspirations: newvalues};
-                updateInspirationValues(newInspirationValues, "inspiration");
+                updateData(newInspirationValues, "inspiration");
                 setInspirationValues(newInspirationValues);
             })
             .catch((errorInfo) => {
@@ -574,7 +606,7 @@ function Inspiration(props) {
                 id: "root",
                 children: cacheTreeData
             }]};
-        updateInspirationValues(newInspirationValues, "inspiration");
+        updateData(newInspirationValues, "inspiration");
         setInspirationValues(newInspirationValues);
     }
 
@@ -589,9 +621,7 @@ function Inspiration(props) {
     const handleGetFitable = () => {
         getFitables().then(res => {
             if (res.code === 0) {
-                setFitables(res.data);
-            } else {
-                Message({ type: 'error', content: '获取Fitable列表失败' });
+              setFitables(res.data);
             }
         })
     }
@@ -627,7 +657,7 @@ function Inspiration(props) {
     useEffect(() => {
         if (!props.inspirationValues) return;
         setInspirationValues(props.inspirationValues);
-        setTreeData(props.inspirationValues.category[0].children);
+        setTreeData(props.inspirationValues.category[0].children ? props.inspirationValues.category[0].children : []);
     },[props.inspirationValues])
 
     const updateTreeData = (value) => {
@@ -648,7 +678,7 @@ function Inspiration(props) {
     const handleDeleteIns = (id) => {
         const newvalues = inspirationValues.inspirations.filter(item => item.id !== id);
         const newInspirationValues = {...inspirationValues, inspirations: newvalues};
-        updateInspirationValues(newInspirationValues, "inspiration");
+        updateData(newInspirationValues, "inspiration");
         setInspirationValues(newInspirationValues);
     }
 
@@ -856,10 +886,15 @@ function Multimodal() {
 }
 
 function ConfigUI(props) {
-    const {formData, handleConfigDataChange, inspirationChange} = props;
+    const {formData, handleConfigDataChange, inspirationChange, status} = props;
     const [form] = Form.useForm();
     const [inspirationValues, setInspirationValues] = useState(null);
     const [knowledge, setKnowledge] = useState(null);
+    const [isDisabled, setIsDisabled] = useState(false);
+
+    useEffect(() => {
+        setIsDisabled(status === "published");
+    }, [status])
 
     useEffect(() => {
         if (!formData) return;
@@ -901,18 +936,30 @@ function ConfigUI(props) {
         }
     }
 
+    const waterflowChange = () => {
+      let uniqueName = sessionStorage.getItem('uniqueName');
+      if (uniqueName) {
+        let workflows = form?.getFieldValue('workflows');
+        let workflwArr =  Array.from(new Set([...workflows, uniqueName]))
+        form.setFieldValue('workflows', workflwArr);
+        handleValuesChange({ workflows: workflwArr });
+        sessionStorage.removeItem('uniqueName');
+                                            }
+    }
+
     return (
         <>
             <ConfigWrap>
                 <Form
                     form={form}
                     layout="vertical"
-                    onValuesChange={handleValuesChange}
+                    // onValuesChange={handleValuesChange}
+                    disabled={isDisabled}
                 >
-                    <LLM />
-                    <Skill />
-                    <Knowledge knowledge={knowledge} updateKnowledge={updateConfig}/>
-                    <Inspiration inspirationValues={inspirationValues} updateInspirationValues={updateConfig}/>
+                    <LLM updateData={updateConfig}/>
+                    <Skill waterflowChange={waterflowChange} updateData={updateConfig}/>
+                    <Knowledge knowledge={knowledge} updateData={updateConfig}/>
+                    <Inspiration inspirationValues={inspirationValues} updateData={updateConfig}/>
                 </Form>
             </ConfigWrap>
         </>

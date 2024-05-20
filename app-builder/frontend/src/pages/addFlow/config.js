@@ -11,8 +11,12 @@ export const configMap = {
               node: "llmNodeState",
               urls: {
                   llmModelEndpoint: "https://tzaip-beta.paas.huawei.com",
-                  toolListEndpoint: "http://10.91.144.110:8080",
-                  workflowListEndpoint: "http://10.91.144.110:8080"
+                  toolListEndpoint: "https://jane-beta.huawei.com",
+                  workflowListEndpoint: "https://jane-beta.huawei.com"
+              },
+              params: {
+                tenantId: '',
+                appId: '',
               }
           },
           {
@@ -48,6 +52,10 @@ export const configMap = {
                   llmModelEndpoint: "https://tzaip.paas.huawei.com",
                   toolListEndpoint: "http://10.91.144.110:8080",
                   workflowListEndpoint: "http://10.91.144.110:8080"
+              },
+              params: {
+                tenantId: '',
+                appId: '',
               }
           },
           {
@@ -88,6 +96,10 @@ export const configMap = {
                   llmModelEndpoint: "https://tzaip-beta.paas.huawei.com",
                   toolListEndpoint: "http://10.91.144.110:8080",
                   workflowListEndpoint: "http://10.91.144.110:8080"
+              },
+              params: {
+                tenantId: '',
+                appId: '',
               }
           },
           {
@@ -123,6 +135,10 @@ export const configMap = {
                   llmModelEndpoint: "https://tzaip-beta.paas.huawei.com",
                   toolListEndpoint: "http://10.91.144.110:8080",
                   workflowListEndpoint: "http://10.91.144.110:8080"
+              },
+              params: {
+                tenantId: '',
+                appId: '',
               }
           },
           {

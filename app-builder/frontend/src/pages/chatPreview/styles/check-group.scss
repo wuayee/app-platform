@@ -1,5 +1,4 @@
 .message-check-toolbox-wrap {
-  width: 940px;
   margin: auto;
 }
 .message-check-toolbox {
@@ -39,23 +38,5 @@
     font-size: 14px;
     color: #71757f;
     line-height: 20px;
-  }
-}
-@media screen and (max-width: 1700px) {
-  .message-check-toolbox-wrap {
-    width: 840px !important;
-    left: calc(50% - 420px);
-  }
-}
-@media screen and (max-width: 1600px) {
-  .message-check-toolbox-wrap {
-    width: 940px !important;
-    left: calc(50% - 470px);
-  }
-}
-@media screen and (max-width: 1400px) {
-  .message-check-toolbox-wrap {
-    width: 700px !important;
-    left: calc(50% - 350px);
   }
 }

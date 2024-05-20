@@ -6,7 +6,8 @@ export const httpUrlMap = {
     AIPP_URL: '/aippApi',
     ICON_URL: 'https://jane-beta.huawei.com/api',
     PUBLISH_URL: 'https://jane-beta.huawei.com/appbuilder/#',
-    WS_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/chat',
+    // WS_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/chat',
+    WS_URL: 'ws://10.169.58.7:8028/api/jober/v1/api/aipp/streamLog',
     WS_AUDIO_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/asr',
     MODEL_URL: '/modelApi'
   },

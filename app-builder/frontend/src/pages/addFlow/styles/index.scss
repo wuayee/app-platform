@@ -152,4 +152,15 @@
   .content-add {
     height: calc(100vh - 56px);
   }
+    .anticon svg {
+        width: 16px;
+        height: 16px;
+    }
+    .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+        display: flex;
+        align-items: center;
+    }
+    .ant-input-search >.ant-input-group >.ant-input-group-addon:last-child .ant-input-search-button:not(.ant-btn-primary) {
+        margin: 0;
+    }
 }

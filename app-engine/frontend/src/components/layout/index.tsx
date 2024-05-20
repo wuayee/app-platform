@@ -62,7 +62,11 @@ const AppLayout: React.FC = () => {
   }
 
   const colorBgContainer = '#F0F2F4';
-  
+  const isHomepage = location.pathname.includes('home');
+  const setClassName = () => {
+    const isHomepage = location.pathname.includes('home');
+    return isHomepage ? 'home-chat' : ''
+  }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -121,7 +125,7 @@ const AppLayout: React.FC = () => {
           }}/>
       </>
 
-      <Layout>
+      <Layout className={setClassName()}>
         <Header style={{ padding: 0, background: colorBgContainer, height: '48px' }} />
         <HeaderUser/>
         <Content style={{padding: '0 16px', background: colorBgContainer }}>
@@ -130,7 +134,7 @@ const AppLayout: React.FC = () => {
                 if(route.component) {
                   return (<>
                 
-                    <Route path={route.key} Component={route.component}/>
+                    <Route path={route.key} key={route.key} Component={route.component}/>
                   </>)
                 }
             })}

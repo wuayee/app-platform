@@ -12,14 +12,14 @@ import robot from '../../../assets/images/ai/robot1.png';
 import '../styles/recieve-box.scss';
 
 const ReciveBox = (props) => {
-  const { content, recieveType, formConfig, loading, chartConfig } = props.chatItem;
+  const { content, recieveType, formConfig, loading, markdownSyntax, chartConfig } = props.chatItem;
 
   // 设置显示类型
   function setRecieveDom(type) {
     if (type === 'form') {
       return <RuntimeForm  formConfig={formConfig}/>
     }
-    return <MessageBox content={content} chartConfig={chartConfig}/> 
+    return <MessageBox content={content} markdownSyntax={markdownSyntax} chartConfig={chartConfig}/> 
   }
   return <>{(
     <div className='recieve-box'>
@@ -51,19 +51,23 @@ const Img = () => {
 }
 // 消息详情
 const MessageBox = (props) => {
-  const { content, chartConfig } = props;
+  const { content, markdownSyntax, chartConfig } = props;
   const CodeBlock = ({ children = [], className, ...props }) => {
-    const match = /language-(\w+)/.exec(className || '')
-    return (<SyntaxHighlighter
-              language={match?.[1]}
-              showLineNumbers={ false }
-              style={ oneDark }
-              PreTag='div'
-              className='syntax-hight-wrapper'
-              {...props}
-            >
-              {children}
-          </SyntaxHighlighter>)
+    const match = /language-(\w+)/.exec(className || '');
+    if (className) {
+      return (
+        <SyntaxHighlighter
+            language={match?.[1]}
+            showLineNumbers={ false }
+            style={ oneDark }
+            PreTag='div'
+            className='syntax-hight-wrapper'
+            {...props}
+          >
+            {children}
+        </SyntaxHighlighter>)
+    }
+    return (<code>{children}</code>) 
   } 
   return(
     <>{(
@@ -72,10 +76,15 @@ const MessageBox = (props) => {
           chartConfig ? 
           ( <ChartMessage chartConfig={ chartConfig } /> ) : 
           (
-            <Markdown components={{ code: CodeBlock, p: 'div'}}>{ content }</Markdown>
+            markdownSyntax ? (<Markdown
+              components={{ code: CodeBlock, p: 'div'}}>
+              { content }
+            </Markdown>) : <div>{ content }</div>
           ) 
         }
-        <div className="recieve-tips">以上内容为AI生成，不代表开发者立场，请勿删除或修改本标记</div>
+        <div className="recieve-tips">
+          以上内容为AI生成，不代表开发者立场，请勿删除或修改本标记
+        </div>
       </div>
     )}</>
   )
@@ -83,7 +92,7 @@ const MessageBox = (props) => {
 
 // runtime表单渲染
 const RuntimeForm = (props) => {
-  const { formType, formMap } = props.formConfig;
+  const { formType, formMap, reportData } = props.formConfig;
   const questions = [
     {
       question: '分享一下你最近在车联网或者深度学习领域有哪些具有突破性的科研成果。',
@@ -104,7 +113,7 @@ const RuntimeForm = (props) => {
         return <InterviewQuestions questions={questions}/>
         break;
       case 'report':
-        return <ManageCubeCreateReport />
+        return <ManageCubeCreateReport data={reportData}/>
         break;
       default:
         return <div>44444444</div>

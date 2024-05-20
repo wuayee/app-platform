@@ -31,11 +31,11 @@ const toolTypes = [
 const sourceTypes = [
     {
         value: 'fitable',
-        label: 'fitable',
+        label: '选择服务',
     },
     {
         value: 'input',
-        label: 'input',
+        label: '自定义选项',
     },
 ];
 
