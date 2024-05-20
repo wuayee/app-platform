@@ -4,35 +4,61 @@ import type { MenuProps } from 'antd';
 import { Button, Dropdown, Space } from 'antd';
 import { url } from 'inspector';
 import { Icons } from '../icons/index';
+import { useNavigate } from 'react-router-dom';
 export interface knowledgeBase {
   name: string;
-  createDate: string;
-  createBy: string;
+  createAt: string;
+  ownerName: string;
   icon: () => ReactElement;
 
-  desc: string;
+  description: string;
 
   id: string;
+
 }
 
-const App = ({knowledge}: {knowledge: knowledgeBase }) => {
-const operatorItems: MenuProps['items'] = [
+const App = ({knowledge, clickMore}: {knowledge: knowledgeBase, clickMore: (type: 'delete') => void }) => {
+  // 路由
+  const navigate = useNavigate();
+  const operatorItems: MenuProps['items'] = [
+  {
+    key: 'modify',
+    label: <div style={{
+      width: 150,
+    }}>修改</div>
+  },
   {
     key: 'delete',
     label: <div style={{
-      width: 200,
+      width: 150,
     }}>删除</div>
-  }
+  },
 ]
 const clickItem = (info: any) => {
-  console.log(info);
+  clickMore(info.key)
 }
+  // 跳转至详情
+  const jumpDetail = (id: string) => {
+    navigate(`/knowledge-base/knowledge-detail?id=${id}`)
+  }
+
+  // 格式化时间
+  const formateTime = (dateStr: Date)=> {
+    const date = new Date(dateStr);
+    const y = date.getFullYear();
+    const m = date.getMonth() + 1;
+    const d = date.getDate();
+    const hh = date.getHours();
+    const mm = date.getMinutes();
+    const ss = date.getSeconds();
+    return `${y}.${m}.${d}`;
+  }
 return (
   <Card style={{ 
     width: 380, 
     background: 'url(/src/assets/images/knowledge/knowledge-background.png)',
     height: 260
-   }} >
+   }} onClick={()=> {jumpDetail(knowledge.id)}}>
     {/* 头部区域 */}
     <div className='header' style={{
       display: 'flex',
@@ -47,11 +73,11 @@ return (
         }}>
           {knowledge.name}
         </div>
-        <div className='createBy' style={{
+        <div className='ownerName' style={{
           fontSize: 14,
           color: 'rgba(105, 105, 105, .9)'
         }}>
-          {`${knowledge.createBy}创建于${knowledge.createDate}` }
+          {`${knowledge.ownerName}创建于${formateTime(knowledge.createAt as any as Date)}` }
         </div>
       </div>
     </div>
@@ -62,9 +88,10 @@ return (
       marginTop: 16,
       fontSize: '14px',
       lineHeight: '22px',
-      textAlign: 'justify'
+      textAlign: 'justify',
+      minHeight: 100
     }}>
-      {knowledge.desc}
+      {knowledge.description}
     </div>
 
     {/* 底部 */}
@@ -74,10 +101,10 @@ return (
       marginTop: 16,
     }}>
       <div className='operator'>
-        <Dropdown menu={{ items: operatorItems, onClick: (info)=> {clickItem(info)} }} placement="bottomLeft" trigger={['click']} >
+        <Dropdown menu={{ items: operatorItems, onClick: (info)=> {clickItem(info); info.domEvent.stopPropagation()} }} placement="bottomLeft" trigger={['click']} >
           <div style={{
             cursor: 'pointer'
-          }}>
+          }} onClick={(e)=> {e.stopPropagation()}}>
             <Icons.more width={20} />
           </div>
         </Dropdown>
