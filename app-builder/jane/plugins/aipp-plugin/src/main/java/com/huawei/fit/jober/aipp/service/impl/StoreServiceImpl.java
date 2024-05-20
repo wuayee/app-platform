@@ -16,8 +16,9 @@ import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.store.service.ItemData;
-import com.huawei.jade.store.service.ItemService;
+import com.huawei.jade.store.model.query.ToolTagQuery;
+import com.huawei.jade.store.model.transfer.ToolData;
+import com.huawei.jade.store.service.ToolService;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,11 +34,11 @@ import static com.huawei.fit.jober.aipp.init.AippComponentInitiator.COMPONENT_DA
  */
 @Component
 public class StoreServiceImpl implements StoreService {
-    private final ItemService itemService;
+    private final ToolService toolService;
     private final AppBuilderAppMapper appBuilderAppMapper;
 
-    public StoreServiceImpl(ItemService itemService, AppBuilderAppMapper appBuilderAppMapper) {
-        this.itemService = itemService;
+    public StoreServiceImpl(ToolService toolService, AppBuilderAppMapper appBuilderAppMapper) {
+        this.toolService = toolService;
         this.appBuilderAppMapper = appBuilderAppMapper;
     }
 
@@ -46,12 +47,13 @@ public class StoreServiceImpl implements StoreService {
         return StoreNodeConfigResDto.builder().toolList(this.buildToolNodesConfig(AppCategory.FIT, pageNum, pageSize)).basicList(this.buildBasicNodesConfig()).build();
     }
 
-    private List<ItemData> buildToolNodesConfig(AppCategory appCategory, int pageNum, int pageSize) {
-        return this.itemService.getAllItems(appCategory.getCategory(),
+    private List<ToolData> buildToolNodesConfig(AppCategory appCategory, int pageNum, int pageSize) {
+        ToolTagQuery query = new ToolTagQuery(null,
                 Collections.singletonList(appCategory.getTag()),
                 Collections.singletonList(StringUtils.EMPTY),
                 pageNum,
                 pageSize);
+        return this.toolService.searchTools(query);
     }
 
     private List<StoreBasicNodeInfoDto> buildBasicNodesConfig() {
@@ -60,8 +62,8 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(int pageNum, int pageSize) {
-        List<ItemData> waterFlows = this.buildToolNodesConfig(AppCategory.WATER_FLOW, pageNum, pageSize);
-        List<String> storeIds = waterFlows.stream().map(ItemData::getUniqueName).collect(Collectors.toList());
+        List<ToolData> waterFlows = this.buildToolNodesConfig(AppCategory.WATER_FLOW, pageNum, pageSize);
+        List<String> storeIds = waterFlows.stream().map(ToolData::getUniqueName).collect(Collectors.toList());
         List<AppBuilderAppPO> appInfos = appBuilderAppMapper.selectWithStoreId(storeIds);
         Map<String, StoreWaterFlowDto> appInfoMap = appInfos.stream().
                 collect(Collectors.toMap(info -> JsonUtils.parseObject(info.getAttributes()).get("store_id").toString(),
@@ -69,7 +71,7 @@ public class StoreServiceImpl implements StoreService {
         return waterFlows.stream().map(waterFlow -> buildWaterFlowInfo(waterFlow, appInfoMap)).collect(Collectors.toList());
     }
 
-    private AppBuilderWaterFlowInfoDto buildWaterFlowInfo(ItemData waterFlow, Map<String, StoreWaterFlowDto> appInfoMap) {
+    private AppBuilderWaterFlowInfoDto buildWaterFlowInfo(ToolData waterFlow, Map<String, StoreWaterFlowDto> appInfoMap) {
         String uniqueName = waterFlow.getUniqueName();
         StoreWaterFlowDto appInfo = appInfoMap.get(uniqueName);
         return AppBuilderWaterFlowInfoDto.builder()
