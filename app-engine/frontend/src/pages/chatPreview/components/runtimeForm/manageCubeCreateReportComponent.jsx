@@ -1,5 +1,6 @@
 import ManageCubeCreateReport from "./ManageCubeCreateReport.jsx";
 import {v4 as uuidv4} from "uuid";
+import React from 'react';
 
 export const manageCubeCreateReportComponent = (jadeConfig) => {
     const self = {};

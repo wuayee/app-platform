@@ -90,6 +90,11 @@
     display: block;
   }
 }
-.test225 {
-  background-color: #ffffff;
+.home-chat {
+  background-image: url('../assets//images/bg3.png') ;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  .ant-layout-header,.ant-layout-content {
+    background-color: transparent !important;
+  }
 }

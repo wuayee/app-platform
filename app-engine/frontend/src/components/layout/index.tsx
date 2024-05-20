@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme, ConfigProvider,  } from 'antd';
-import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
+import { HashRouter, Route, useNavigate, Routes, useLocation } from 'react-router-dom';
 import { routeList, flattenRoute, getRouteByKey, getMenus } from '../../router/route'
 import { Icons } from '../icons/index'
 import KnowledgeBase from '../../pages/knowledge-base';
@@ -32,6 +32,7 @@ const AppLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [currentActivedPage, setCurrentActivedPage] = useState('首页')
   const navigate = useNavigate();
+  const location = useLocation();
   const menuClick = (e: any) => {
     const route = getRouteByKey(flattenRouteList, e.key);
     setCurrentActivedPage(route?.label || '')
@@ -39,7 +40,11 @@ const AppLayout: React.FC = () => {
   }
 
   const colorBgContainer = '#F0F2F4';
-  
+  const isHomepage = location.pathname.includes('home');
+  const setClassName = () => {
+    const isHomepage = location.pathname.includes('home');
+    return isHomepage ? 'home-chat' : ''
+  }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -79,7 +84,7 @@ const AppLayout: React.FC = () => {
           <Menu className='menu'  theme="dark" defaultSelectedKeys={['/home']} mode="inline" items={items} onClick={menuClick}/>
         </ConfigProvider>
       </Sider>
-      <Layout>
+      <Layout className={setClassName()}>
         <Header style={{ padding: 0, background: colorBgContainer, height: '48px' }} />
         <Content style={{padding: '0 16px', background: colorBgContainer }}>
           {/* <Breadcrumb style={{ margin: '16px 0' }}>
