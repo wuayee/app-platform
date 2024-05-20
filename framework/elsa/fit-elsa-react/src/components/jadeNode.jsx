@@ -66,6 +66,13 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
 
     /**
+     * 处理传递的元数据
+     *
+     * @param metaData 元数据信息
+     */
+    self.processMetaData = (metaData) => {};
+
+    /**
      * 设置方向为W和N的connector不支持拖出连接线
      *
      * @override
@@ -477,13 +484,6 @@ const jadeNodeDrawer = (shape, div, x, y) => {
         self.root.unmount();
         self.root = null;
     };
-
-    /**
-     * 处理传递的元数据
-     *
-     * @param metaData 元数据信息
-     */
-    self.processMetaData = (metaData) => {};
 
     /**
      * @override
