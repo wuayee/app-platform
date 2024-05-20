@@ -9,9 +9,10 @@ const GoBack: React.FC<{path,title}> = ({path,title}) => {
     onClick={(): void => {
       navigate(path);
     }}
+    style={{display:'flex'}}
   >
-    <Icons.Left />
-    <span style={{marginLeft:8}}>{title}</span>
+    <div ><Icons.Left /></div>
+    <span style={{marginLeft:8,marginTop:-3}}>{title}</span>
   </div>
 )};
 
