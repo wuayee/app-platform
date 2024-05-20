@@ -19,6 +19,6 @@ public interface KGenerateService {
      *
      * @param configDto 配置信息
      */
-    @Genericable("com.huawei.jade.app.engine.knowledge.service.KGenerateService.importKnowledge")
+    @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KGenerateService.importKnowledge")
     void importKnowledge(KGenerateConfigDto configDto);
 }
