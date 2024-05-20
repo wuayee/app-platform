@@ -96,6 +96,12 @@ const Icons = {
 			</g>
 		</svg>
 	),
+	Left: (props: IconProps) => (
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" aria-hidden="true" focusable="false">
+			<path d="M10.9 14.1c.2-.2.2-.5.1-.8l-.1-.1L5.7 8l5.2-5.2c.2-.2.3-.6.1-.8l-.1-.1c-.2-.2-.5-.2-.8-.1l-.1.1-5.6 5.7c-.2.2-.2.5 0 .8l.1.1 5.7 5.7c.1.1.5.1.7-.1z">
+			</path>
+		</svg>
+	),
 	user: (props: IconProps)=> {
 		return (
 			<svg width="15.000000" height="15.000000" viewBox="0 0 15 15" fill="none" {...props}>
