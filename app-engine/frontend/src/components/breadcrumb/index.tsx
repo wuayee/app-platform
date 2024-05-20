@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme, ConfigProvider,  } from 'antd';
-import { HashRouter, Route, useNavigate, Routes, useLocation } from 'react-router-dom';
-import { routeList, flattenRoute, getRouteByKey, getMenus, MenuItem } from '../../router/route'
+import { Breadcrumb } from 'antd';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { routeList, flattenRoute, getRouteByKey, MenuItem } from '../../router/route';
 
 
-const flattenRouteList = flattenRoute(routeList);
 
-
-const AppLayout: React.FC = () => {
+const BreadcrumbSelf = ({currentLabel}: {currentLabel?: string}) => {
+  const flattenRouteList = flattenRoute(routeList);
   const [breadcrumb, setBreadcrumb] = useState<MenuItem[]>([])
 
-  const navigate = useNavigate();
   const location = useLocation();
+  const navgate = useNavigate();
 
   useEffect(()=> {
     const { pathname } = location;
@@ -24,15 +22,19 @@ const AppLayout: React.FC = () => {
 
     setBreadcrumb(routeItem);
   }, [location])
+
+  const changeNavgate = (route: string) => {
+    navgate(route)
+  }
   
 
   return (
     <Breadcrumb style={{ margin: '16px 0' }}>
-    {breadcrumb.map((route)=> (<>
-      <Breadcrumb.Item key={route.key}>{route.title || route.label}</Breadcrumb.Item>
+    {breadcrumb.map((route, index)=> (<>
+      <Breadcrumb.Item key={route.key} href={'#'+route.key}>{index === breadcrumb.length -1 ? currentLabel || route.title || route.label : route.title || route.label}</Breadcrumb.Item>
     </>))}
   </Breadcrumb>
   );
 };
 
-export default AppLayout;
+export default BreadcrumbSelf;

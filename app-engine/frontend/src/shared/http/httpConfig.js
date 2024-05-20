@@ -4,6 +4,7 @@ export const httpUrlMap = {
     ELSA_URL: '/else',
     AI_URL: '/aiApi',
     AIPP_URL: '/aippApi',
+    KNOWLEDGE_URL: '/knowledge',
     ICON_URL: 'https://jane-beta.huawei.com/api',
     PUBLISH_URL: 'https://jane-beta.huawei.com/appbuilder/#',
     WS_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/chat',

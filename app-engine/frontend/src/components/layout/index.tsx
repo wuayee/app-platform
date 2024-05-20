@@ -4,7 +4,6 @@ import { Breadcrumb, Layout, Menu, theme, ConfigProvider,  } from 'antd';
 import { HashRouter, Route, useNavigate, Routes, useLocation } from 'react-router-dom';
 import { routeList, flattenRoute, getRouteByKey, getMenus } from '../../router/route'
 import { Icons } from '../icons/index'
-import KnowledgeBase from '../../pages/knowledge-base';
 
 const { Header, Content, Footer, Sider } = Layout;
 

@@ -4,8 +4,9 @@ import { Icons } from '../components/icons/index';
 import KnowledgeBase from '../pages/knowledge-base';
 import KnowledgeBaseCreate from '../pages/knowledge-base/create';
 import Demo from '../pages/demo';
+import KnowledgeBaseDetail from '../pages/knowledge-base/knowledge-detail';
  
-export type MenuItem = Required<MenuProps>['items'][number] & { component?: () => ReactElement, children?: MenuItem[] | null, label: string, key: string, hidden?: boolean, title?: string};
+export type MenuItem = Required<MenuProps>['items'][number] & { component?: (() => ReactElement) | React.FC<any>, children?: MenuItem[] | null, label: string, key: string, hidden?: boolean, title?: string};
  
 // key为页面链接不允许相同, 需要子数组就增加children数组, 设置hidden则不显示在菜单上 label为菜单项，title为界面上显示，如果没有title就使用label
 export const routeList: MenuItem[] = [
@@ -44,13 +45,22 @@ export const routeList: MenuItem[] = [
     label: '知识库',
     title: '知识库概览',
     component: KnowledgeBase,
-    children: [{
-      key: '/knowledge-base/create',
-      icon: Icons.app({}),
-      label: '创建知识库',
-      component: KnowledgeBaseCreate,
-      hidden: true,
-    }]
+    children: [
+      {
+        key: '/knowledge-base/create',
+        icon: Icons.app({}),
+        label: '创建知识库',
+        component: KnowledgeBaseCreate,
+        hidden: true,
+      },
+      {
+        key: '/knowledge-base/knowledge-detail',
+        icon: Icons.app({}),
+        label: '小魔方知识库',
+        component: KnowledgeBaseDetail,
+        hidden: true,
+      }
+    ]
   },
   {
     key: '/plugin',
@@ -86,7 +96,7 @@ export const getMenus = (routeList: MenuItem[]): MenuItem[] => {
     }
   })
   return menus.filter(item=> !item?.hidden);
-}
+};
  
 // 将路由展平
 export const flattenRoute = (routeList: MenuItem[]): MenuItem[] => {
@@ -98,9 +108,9 @@ export const flattenRoute = (routeList: MenuItem[]): MenuItem[] => {
     return (item);
   })
   return [...rootLayer, ...flattenRouteList]
-}
+};
  
 // 根据key值返回路由, 传入展平的数组
 export const getRouteByKey = (routeList: MenuItem[], key: string): MenuItem | null => {
   return routeList.find(item=> item.key === key) || null;
-}
+};
