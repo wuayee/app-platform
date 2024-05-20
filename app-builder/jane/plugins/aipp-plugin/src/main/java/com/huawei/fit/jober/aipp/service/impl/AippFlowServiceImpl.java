@@ -66,8 +66,8 @@ import com.huawei.fitframework.model.Tuple;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.store.service.ItemData;
-import com.huawei.jade.store.service.ItemService;
+import com.huawei.jade.store.model.transfer.ToolData;
+import com.huawei.jade.store.service.ToolService;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -1017,8 +1017,8 @@ public class AippFlowServiceImpl implements AippFlowService {
     }
 
     private String publishToStore(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
-        ItemData itemData = this.buildItemData(aippDto, context, flowInfo);
-        String uniqueName = this.brokerClient.getRouter(ItemService.class, "com.huawei.jade.store.service.addItem")
+        ToolData itemData = this.buildItemData(aippDto, context, flowInfo);
+        String uniqueName = this.brokerClient.getRouter(ToolService.class, "com.huawei.jade.store.service.addItem")
                 .route(new FitableIdFilter("addItem"))
                 .invoke(itemData);
         appBuilderAppMapper.updateAppWithStoreId(uniqueName, aippDto.getAppId(), aippDto.getVersion());
@@ -1026,12 +1026,10 @@ public class AippFlowServiceImpl implements AippFlowService {
     }
 
     @NotNull
-    private ItemData buildItemData(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
+    private ToolData buildItemData(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
         AppCategory appCategory = AppCategory.findByType(aippDto.getType())
                 .orElseThrow(() -> new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID));
-        ItemData itemData = new ItemData();
-        itemData.setCategory(appCategory.getCategory());
-        itemData.setGroup("07b51bd246594c159d403164369ce1db");
+        ToolData itemData = new ToolData();
         itemData.setName(aippDto.getName());
         itemData.setDescription(aippDto.getDescription());
         if (this.isToolCategory(appCategory)) {
@@ -1110,14 +1108,8 @@ public class AippFlowServiceImpl implements AippFlowService {
 
     private Map<String, Object> buildPropertiesMapOfInputParam(FlowInfo flowInfo) {
         Map<String, Object> propertiesMapOfInputParam = MapBuilder.<String, Object>get()
-                .put(AippConst.TRACE_ID,
-                        MapBuilder.get()
-                                .put("type", "string")
-                                .build())
-                .put(AippConst.CALLBACK_ID,
-                        MapBuilder.get()
-                                .put("type", "string")
-                                .build())
+                .put(AippConst.TRACE_ID, MapBuilder.get().put("type", "string").build())
+                .put(AippConst.CALLBACK_ID, MapBuilder.get().put("type", "string").build())
                 .build();
         flowInfo.getInputParamsByName("input").forEach(inputParam -> {
             String name = inputParam.getOrDefault("name", StringUtils.EMPTY).toString();

@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>item-repository</module>
+        <module>tool-repository</module>
         <module>service</module>
         <module>tool-execution</module>
         <module>test-fit-tool</module>
