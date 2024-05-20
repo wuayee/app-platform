@@ -1,0 +1,73 @@
+/****************************************** 通用样式 ******************************************/
+
+.aui-fullpage {
+  padding: 32px 16px 0;
+  background: #f0f2f5;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  min-width: 1400px;
+  .aui-block {
+    flex-grow: 1;
+  }
+  .aui-header-1,
+  h1 {
+    margin-top: -24px;
+    margin-bottom: 8px;
+  }
+}
+
+.aui-header-1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 30px;
+}
+
+.aui-block {
+  padding: 24px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.aui-title-1,
+h1 {
+  font-size: 20px;
+  color: #1a1a1a;
+  line-height: 1.5;
+  font-weight: normal;
+}
+
+/****************************************** ants ******************************************/
+#root .ant-table-thead > tr > th {
+  padding: 4px 14px;
+  background-color: #f7f7f7;
+  color: #4d4d4d;
+  font-size: 12px;
+  font-weight: 400;
+  border-radius: 0;
+}
+
+#root .ant-table-cell {
+  padding: 8px 14px;
+  color: #1a1a1a;
+}
+
+#root .ant-table-cell::before {
+  background-color: #dadada;
+  height: 16px;
+}
+
+#root .ant-btn-primary {
+  background: #2673e5;
+}
+
+#root .ant-btn {
+  min-width: 90px;
+  height: 35px;
+}
+
+#root .ant-btn-sm {
+  min-width: 40px;
+  height: 24px;
+}
