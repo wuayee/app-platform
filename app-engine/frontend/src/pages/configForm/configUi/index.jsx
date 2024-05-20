@@ -1,24 +1,21 @@
-import React, {useEffect, useState, useContext, useCallback} from 'react';
-import {DownOutlined, UpOutlined, PlusOutlined, DeleteOutlined, EllipsisOutlined, QuestionCircleOutlined} from '@ant-design/icons';
+import React, {useEffect, useState, useContext, useRef, useCallback} from 'react';
+import {DownOutlined, UpOutlined, PlusOutlined, DeleteOutlined, EllipsisOutlined, QuestionCircleOutlined, EyeOutlined} from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import {Form, Select, Slider, Col, Row, InputNumber, Input, Modal, Switch, Table, Button, TreeSelect, Card, Popover} from 'antd';
-import {workFlowTypes, toolTypes, sourceTypes, multiModal} from "../common/common";
+import {sourceTypes, multiModal} from "../common/common";
 import { ConfigWrap, InspirationWrap } from './styled';
 import { AippContext } from '../../aippIndex/context';
 import TreeComponent from "./tree.jsx";
-import {getModels, getSkills, getKnowledges, getFitables} from "../../../shared/http/appBuilder";
+import {getModels, getTools, getWaterFlows, getKnowledges, getFitables} from "../../../shared/http/appBuilder";
 import {uuid} from "../../../common/utils";
 import {Message} from "../../../shared/utils/message";
+const { Option } = Select;
 
 function LLM(props) {
+    const { updateData } = props;
     const [showControl, setShowControl] = useState(true);
-    const [sliderValue, setSliderValue] = useState(0.5);
     const [models, setModels] = useState([]);
     const {TextArea} = Input;
-
-    const onSliderChange = (value) => {
-        setSliderValue(value);
-    };
 
     const onArrowClick = () => {
         setShowControl(!showControl);
@@ -72,6 +69,7 @@ function LLM(props) {
                                     allowClear
                                     options={models}
                                     onDropdownVisibleChange={(open) => handleGetModels(open)}
+                                    onChange={(value) => {updateData(value, "model")}}
                                     fieldNames={{
                                         label: 'id',
                                         value: 'id'
@@ -104,8 +102,14 @@ function LLM(props) {
                                     controls={true}
                                     changeOnWheel={true}
                                     keyboard={true}
-                                    onChange={onSliderChange}
+                                    onChange={(value) => {updateData(value, "temperature")}}
                                     step={0.1}
+                                    formatter={(value) => {
+                                        if (value === 0.0) {
+                                            return 0;
+                                        }
+                                        return value;
+                                    }}
                                 />
                             </Form.Item>
                         </div>
@@ -126,6 +130,7 @@ function LLM(props) {
                             <TextArea
                                 placeholder="输入一段提示词，可以给应用预设身份"
                                 rows={6}
+                                onBlur={(e) => {updateData(e.target.value, "systemPrompt")}}
                             />
                         </Form.Item>
                     </div>
@@ -136,12 +141,13 @@ function LLM(props) {
 }
 
 function Skill(props) {
+    const { waterflowChange, updateData } = props;
     const [showToolControl, setShowToolControl] = useState(true);
     const [showFlowControl, setShowFlowControl] = useState(true);
     const [showFlowModal, setShowFlowModal] = useState(false);
     const { appId, tenantId } = useContext(AippContext);
     const [tools, setTools] = useState([]);
-    const [workflows, setWorkflows] = useState([]);
+    const [waterFlow, setWaterFlow] = useState(null);
     const navigate = useNavigate();
 
     const filterOption = (input, option) =>
@@ -152,7 +158,7 @@ function Skill(props) {
     }
 
     const onAddFlowClick = () => {
-      navigate(`/aipp/${tenantId}/addFlow/${appId}`);
+      navigate(`/app/${tenantId}/addFlow/${appId}`);
     };
 
     const onAddToolClick = () => {
@@ -170,34 +176,36 @@ function Skill(props) {
             pageNum: 0,
             pageSize: 10
         };
-        getSkills(params).then((res) => {
-            if (res.code === 0) {
-                setTools(res.data);
-            } else {
-                Message({ type: 'error', content: '获取工具列表失败' });
-            }
+        getTools(params).then((res) => {
+          if (res.code === 0) {
+            setTools(res.data);
+          }
         })
     }
 
     useEffect(() => {
-        handleGetTools();
-        handleGetWorkflows();
+      handleGetTools();
+      handleGetWaterFlows();
     },[])
 
-    const handleGetWorkflows = () => {
+    const handleGetWaterFlows = () => {
         const params = {
-            includeTags: "WATERFLOW",
-            excludeTags: null,
             pageNum: 0,
-            pageSize: 10
+            pageSize: 10,
+            tenantId: tenantId,
         };
-        getSkills(params).then((res) => {
+        getWaterFlows(params).then(async (res) => {
             if (res.code === 0) {
-                setWorkflows(res.data);
-            } else {
-                Message({ type: 'error', content: '获取工具流列表失败' });
+              await setWaterFlow(res.data);
+              waterflowChange();
             }
         })
+    }
+
+    const handleCheck = (option, event) => {
+        event.stopPropagation();
+        console.log(option);
+        navigate(`/app/${option.data.tenantId}/flowDetail/${option.data.appId}`);
     }
 
     return (
@@ -242,6 +250,7 @@ function Skill(props) {
                                 label: "name",
                                 value: "uniqueName"
                             }}
+                            onChange={(value) => {updateData(value, "tool")}}
                         ></Select>
                     </Form.Item>
                 </div>
@@ -271,13 +280,32 @@ function Skill(props) {
                             placeholder="选择合适的工具流"
                             filterOption={filterOption}
                             optionFilterProp="label"
-                            options={workflows}
-                            onFocus={handleGetWorkflows}
-                            fieldNames={{
-                                label: "name",
-                                value: "uniqueName"
-                            }}
-                        ></Select>
+                            optionRender={(option) => (
+                                <div style={{display: "flex", justifyContent: "space-between"}}>
+                                    <span>{option.label}</span>
+                                    <Button
+                                        style={{ height: '16px', padding: '0', fontSize: '12px', lineHeight: '16px' }}
+                                        type="text"
+                                        size="small"
+                                        icon={<EyeOutlined/>}
+                                        onClick={(event) => handleCheck(option, event)} />
+                                </div>
+                            )
+                            }
+                            onFocus={handleGetWaterFlows}
+                            onChange={(value) => {updateData(value, "workflows")}}
+                        >
+                            {waterFlow && waterFlow.map(option => (
+                                <Option key={option.itemData.uniqueName}
+                                        value={option.itemData.uniqueName}
+                                        label={option.itemData.name}
+                                        tenantId={option.tenantId}
+                                        appId={option.appId}
+                                >
+                                    {option.itemData.name}
+                                </Option>
+                            ))}
+                        </Select>
                     </Form.Item>
                 </div>
                 <Modal open={showFlowModal} footer={null} onCancel={closeFlowModal} width="90vw">
@@ -289,24 +317,26 @@ function Skill(props) {
 }
 
 function Knowledge(props) {
-    const {knowledge, updateKnowledge} = props;
+    const {knowledge, updateData} = props;
     const [showKnowControl, setShowKnowControl] = useState(true);
     const [knowledgeOptions, setKnowledgeOptions] = useState(null);
     const [knows, setKnows] = useState(null);
-    const [name, setName] = useState("");
     const { tenantId } = useContext(AippContext);
+    const searchName = useRef('')
     const onArrowClick = (value, func) => {
         func(!value);
     }
 
     const handleSearch = (value) => {
-        setName(value);
+      searchName.current = value;
+      handleGetKnowledgeOptions();
     }
 
     const handleClose = (open) => {
-        if (!open) {
-            setName("");
-        }
+      if (!open) {
+        searchName.current = '';
+        handleGetKnowledgeOptions();
+      }
     }
 
     const handleGetKnowledgeOptions = () => {
@@ -314,29 +344,23 @@ function Knowledge(props) {
             tenantId,
             pageNum: 1,
             pageSize: 10,
-            name
+            name: searchName.current
         };
         getKnowledges(params).then((res) => {
             if (res.code === 0) {
-                setKnowledgeOptions(res.data.items);
-            } else {
-                Message({ type: 'error', content: '获取知识库列表失败' });
+              setKnowledgeOptions(res.data.items);
             }
         })
     }
 
     const handleChange = (value, option) => {
         setKnows(value);
-        updateKnowledge(option, "knowledge");
+        updateData(option, "knowledge");
     }
 
     useEffect(() => {
         handleGetKnowledgeOptions();
     }, [])
-
-    useEffect(() => {
-        handleGetKnowledgeOptions();
-    }, [name]);
 
     useEffect(() => {
         setKnows(knowledge?.map(item => item.id));
@@ -396,7 +420,7 @@ function Knowledge(props) {
 }
 
 function Inspiration(props) {
-    const {updateInspirationValues} = props;
+    const {updateData} = props;
     const [inspirationValues, setInspirationValues] = useState(null);
     const [treeData, setTreeData] = useState(null);
     const [cacheTreeData, setCacheTreeData] = useState(null);
@@ -455,7 +479,7 @@ function Inspiration(props) {
                                                                }}
                                                                defaultValue={sourceInfo}
                                                                onChange={(sourceInfo) => handleTableChange(sourceInfo, record, 'sourceInfo')}/> :
-                        <Input defaultValue={sourceInfo} onBlur={(sourceInfo) => handleTableChange(sourceInfo, record, 'sourceInfo')}/>}
+                        <Input defaultValue={sourceInfo} onBlur={(e) => handleTableChange(e.target.value, record, 'sourceInfo')}/>}
                 </>
             )
         },
@@ -523,10 +547,18 @@ function Inspiration(props) {
     const handleTableChange = (checked, record, key) => {
         const newData = promptVarData.map(item => {
             if (item.var === record.var) {
-                return {
-                    ...item,
-                    [key]: checked,
-                };
+                if (key === "sourceType") {
+                    return {
+                        ...item,
+                        [key]: checked,
+                        sourceInfo: null
+                    }
+                } else {
+                    return {
+                        ...item,
+                        [key]: checked,
+                    };
+                }
             }
             return item;
         });
@@ -555,7 +587,7 @@ function Inspiration(props) {
                     return item;
                 }) : [...inspirationValues.inspirations, {...values, id: uuid()}];
                 const newInspirationValues = {...inspirationValues, inspirations: newvalues};
-                updateInspirationValues(newInspirationValues, "inspiration");
+                updateData(newInspirationValues, "inspiration");
                 setInspirationValues(newInspirationValues);
             })
             .catch((errorInfo) => {
@@ -574,7 +606,7 @@ function Inspiration(props) {
                 id: "root",
                 children: cacheTreeData
             }]};
-        updateInspirationValues(newInspirationValues, "inspiration");
+        updateData(newInspirationValues, "inspiration");
         setInspirationValues(newInspirationValues);
     }
 
@@ -589,9 +621,7 @@ function Inspiration(props) {
     const handleGetFitable = () => {
         getFitables().then(res => {
             if (res.code === 0) {
-                setFitables(res.data);
-            } else {
-                Message({ type: 'error', content: '获取Fitable列表失败' });
+              setFitables(res.data);
             }
         })
     }
@@ -627,7 +657,7 @@ function Inspiration(props) {
     useEffect(() => {
         if (!props.inspirationValues) return;
         setInspirationValues(props.inspirationValues);
-        setTreeData(props.inspirationValues.category[0].children);
+        setTreeData(props.inspirationValues.category[0].children ? props.inspirationValues.category[0].children : []);
     },[props.inspirationValues])
 
     const updateTreeData = (value) => {
@@ -648,7 +678,7 @@ function Inspiration(props) {
     const handleDeleteIns = (id) => {
         const newvalues = inspirationValues.inspirations.filter(item => item.id !== id);
         const newInspirationValues = {...inspirationValues, inspirations: newvalues};
-        updateInspirationValues(newInspirationValues, "inspiration");
+        updateData(newInspirationValues, "inspiration");
         setInspirationValues(newInspirationValues);
     }
 
@@ -671,7 +701,7 @@ function Inspiration(props) {
                 <div className="control-header c-header">
                     <div className="control-title">
                         <span className="title-icon"><svg t="1713604487821" className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1482" width="16" height="16"><path d="M648.533333 674.474667a34.133333 34.133333 0 0 1 34.048 31.607466l0.085334 2.542934v51.2a68.266667 68.266667 0 0 1-64.853334 68.181333l-3.413333 0.085333H409.6a68.266667 68.266667 0 0 1-68.181333-64.853333l-0.085334-3.413333v-51.2a34.133333 34.133333 0 0 1 68.181334-2.56l0.085333 2.56v51.2h204.8v-51.2a34.133333 34.133333 0 0 1 34.133333-34.133334zM597.333333 871.1168a34.133333 34.133333 0 0 1 2.56 68.164267l-2.56 0.1024H426.666667a34.133333 34.133333 0 0 1-2.56-68.181334l2.56-0.085333h170.666666z" fill="#444444" p-id="1483"></path><path d="M512 51.2c197.9392 0 358.4 160.4608 358.4 358.4 0 145.749333-80.554667 272.7936-208.213333 328.567467a34.133333 34.133333 0 0 1-27.306667-62.549334C737.28 630.852267 802.133333 528.5888 802.133333 409.6c0-160.238933-129.8944-290.133333-290.133333-290.133333s-290.133333 129.8944-290.133333 290.133333c0 118.9888 64.836267 221.252267 167.253333 266.018133a34.133333 34.133333 0 0 1-27.306667 62.549334C234.154667 682.3936 153.6 555.349333 153.6 409.6 153.6 211.6608 314.0608 51.2 512 51.2z" fill="#444444" p-id="1484"></path><path d="M490.018133 204.868267L494.933333 204.8v68.266667c-64.477867 0-117.230933 51.421867-119.3984 115.370666L375.466667 392.533333a34.133333 34.133333 0 0 1-68.181334 2.56L307.2 392.533333c0-101.888 81.527467-185.053867 182.818133-187.665066z" fill="#00B386" p-id="1485"></path></svg></span>
-                        <div>灵感大全</div>
+                        <div>创意灵感</div>
                     </div>
                 </div>
                 <div className="control">
@@ -691,7 +721,7 @@ function Inspiration(props) {
                     >
                         <div>
                         {(!inspirationValues || !inspirationValues?.inspirations.length) &&
-                            <div className="empty-container">请创建<Button type="link" onClick={() => setShowModal(true)}>灵感大全</Button></div>
+                            <div className="empty-container">请创建<Button type="link" onClick={() => setShowModal(true)}>创意灵感</Button></div>
                         }
                         <Row gutter={[16, 16]}>
                         {inspirationValues && inspirationValues.inspirations.map((item, index) => (
@@ -856,10 +886,15 @@ function Multimodal() {
 }
 
 function ConfigUI(props) {
-    const {formData, handleConfigDataChange, inspirationChange} = props;
+    const {formData, handleConfigDataChange, inspirationChange, status} = props;
     const [form] = Form.useForm();
     const [inspirationValues, setInspirationValues] = useState(null);
     const [knowledge, setKnowledge] = useState(null);
+    const [isDisabled, setIsDisabled] = useState(false);
+
+    useEffect(() => {
+        setIsDisabled(status === "published");
+    }, [status])
 
     useEffect(() => {
         if (!formData) return;
@@ -901,18 +936,30 @@ function ConfigUI(props) {
         }
     }
 
+    const waterflowChange = () => {
+      let uniqueName = sessionStorage.getItem('uniqueName');
+      if (uniqueName) {
+        let workflows = form?.getFieldValue('workflows');
+        let workflwArr =  Array.from(new Set([...workflows, uniqueName]))
+        form.setFieldValue('workflows', workflwArr);
+        handleValuesChange({ workflows: workflwArr });
+        sessionStorage.removeItem('uniqueName');
+                                            }
+    }
+
     return (
         <>
             <ConfigWrap>
                 <Form
                     form={form}
                     layout="vertical"
-                    onValuesChange={handleValuesChange}
+                    // onValuesChange={handleValuesChange}
+                    disabled={isDisabled}
                 >
-                    <LLM />
-                    <Skill />
-                    <Knowledge knowledge={knowledge} updateKnowledge={updateConfig}/>
-                    <Inspiration inspirationValues={inspirationValues} updateInspirationValues={updateConfig}/>
+                    <LLM updateData={updateConfig}/>
+                    <Skill waterflowChange={waterflowChange} updateData={updateConfig}/>
+                    <Knowledge knowledge={knowledge} updateData={updateConfig}/>
+                    <Inspiration inspirationValues={inspirationValues} updateData={updateConfig}/>
                 </Form>
             </ConfigWrap>
         </>

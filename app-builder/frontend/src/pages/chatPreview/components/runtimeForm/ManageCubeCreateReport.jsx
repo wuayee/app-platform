@@ -23,19 +23,24 @@ const FormWrap = styled.div`
         justify-content: space-between;
         align-items: center;
         padding-right: 10px;
+        margin-bottom:12px;
     }
     .ant-input {
         //border: none !important;
         color: rgb(37, 43, 58)
     }
     .report-query {
-        font-size: 16px;
-        font-weight: 600;
+      font-size: 16px;
+      font-weight: 600;
     }
     .ant-input-disabled {
         border: none !important;
         background-color: white;
         color: rgb(37, 43, 58)
+    }
+    .report-btn {
+      display: flex;
+      justify-content: center;
     }
     .save-button {
         background-color: rgb(4, 123, 252);
@@ -55,7 +60,7 @@ const FormWrap = styled.div`
 const ManageCubeCreateReport = (props) => {
     const id = "reportResult";
     const {data, mode, instanceId} = props;
-    const [chartData, setChartData] = useState(data);
+    const [chartData, setChartData] = useState(null);
     const [title, setTitle] = useState("经营分析报告");
     const [editable, setEditable] = useState(false);
     const [editTime, setEditTime] = useState(0);
@@ -138,8 +143,8 @@ const ManageCubeCreateReport = (props) => {
                     </div>
                     {!chartData &&
                         <>
-                            <img src={chartImg} alt="图表示例图片" style={{width: "300px"}}/>
-                            <img src={tableImg} alt="表格示例图片" style={{width: "600px"}}/>
+                            <img src={chartImg} alt="图表示例图片" style={{width: "100%"}}/>
+                            <img src={tableImg} alt="表格示例图片" style={{width: "100%"}}/>
                         </>
                     }
                     {chartData && chartData.map((item, index) => (
@@ -148,7 +153,9 @@ const ManageCubeCreateReport = (props) => {
                             <ReportChart chartConfig={item.answer} disabled={!editable} handleSummaryChange={handleSummaryChange} queryIndex={index}/>
                         </React.Fragment>
                     ))}
-                    <Button onClick={handleSave} disabled={!canSave} className="save-button">保存</Button>
+                    <div className="report-btn">
+                      <Button onClick={handleSave} disabled={!canSave} className="save-button">保存</Button>
+                    </div>
                 </div>
             </FormWrap>
         </>

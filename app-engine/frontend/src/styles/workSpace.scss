@@ -1,6 +1,5 @@
 /*antd css*/
-.layout {
-  // font-family: PingFangSC, PingFangSC-Medium;
+.ant-layout {
   background: #fafafa;
   font-family: '';
   .header {
@@ -13,7 +12,6 @@
     box-sizing: border-box;
     padding: 0 32px;
     border-bottom: 1px solid #EBEBEB;
-    //box-shadow: 0 4px 10px -5px rgba(0,0,0,.1);
     .logo {
       display: flex;
       justify-content: center;
@@ -90,6 +88,12 @@
     display: block;
   }
 }
-.test225 {
-  background-color: #ffffff;
+.home-chat {
+  background-image: url('../assets//images/bg3.png') ;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  .ant-layout-header,.ant-layout-content {
+    background-color: transparent !important;
+    padding: 0 !important;
+  }
 }

@@ -63,4 +63,9 @@ public class AppBuilderAppRepositoryImpl implements AppBuilderAppRepository {
     public long countByTenantId(String tenantId, String typeFilter) {
         return this.appBuilderAppMapper.countByTenantId(tenantId, typeFilter);
     }
+
+    @Override
+    public void delete(String appId) {
+        this.appBuilderAppMapper.delete(appId);
+    }
 }

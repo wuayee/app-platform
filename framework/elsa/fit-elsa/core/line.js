@@ -88,14 +88,25 @@ let line = (id, x, y, width, height, parent, drawer) => {
         if (self.definedFromConnector === "" || self.fromShape === "") {
             return null;
         }
-        return self.getFromShape().getConnectors().find(c => c.direction.key === self.definedFromConnector);
+
+        const fromShape = self.getFromShape();
+        if (!fromShape) {
+            return null;
+        }
+
+        return fromShape.getConnectors().find(c => c.direction.key === self.definedFromConnector);
     };
 
     self.getDefinedToConnector = () => {
         if (self.definedToConnector === "" || self.toShape === "") {
             return null;
         }
-        return self.getToShape().getConnectors().find(c => c.direction.key === self.definedToConnector);
+
+        const toShape = self.getToShape();
+        if (!toShape) {
+            return null;
+        }
+        return toShape.getConnectors().find(c => c.direction.key === self.definedToConnector);
     };
 
     self.fromConnector = null;//起始connector，是指line的connector
@@ -589,8 +600,9 @@ let line = (id, x, y, width, height, parent, drawer) => {
             return;
         }
 
-        let pair = getPair();
-        if (pair === undefined) {
+        // pair不存在可能是line还没有初始化完成.
+        const pair = getPair();
+        if (!pair) {
             return;
         }
 
@@ -608,6 +620,10 @@ let line = (id, x, y, width, height, parent, drawer) => {
     };
 
     const getPair = () => {
+        if (!self.fromConnector || !self.toConnector) {
+            return null;
+        }
+
         //找到fromShape和toShape间距离最短的connector，如果没有连接的shape，那么就是line自己的from，to connector
         const fromPosition = self.fromConnector.getPosition();
         const toPosition = self.toConnector.getPosition();

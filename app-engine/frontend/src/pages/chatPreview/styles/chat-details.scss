@@ -1,6 +1,5 @@
 .chat-details-content {
   font-family: '苹方-简';
-  width: 900px;
   padding: 0 48px;
   margin: 0 auto;
   margin-top: 50px;
@@ -154,6 +153,69 @@
       line-height: 24px;
       text-align: left;
       font-size: 14px;
+    }
+  }
+  .home-top {
+    .head-inner {
+      display: flex;
+      .inner-left {
+        .title {
+          font-size: 48px;
+          line-height: 72px;
+          font-weight: 700;
+          background: linear-gradient(to right, #3388FF , #00F0FF);
+          -webkit-background-clip: text;
+          color: transparent;
+        }
+        .sub-title {
+          font-size: 32px;
+          color: #1A1A1A;
+          line-height: 48px;
+          font-weight: 500;
+          margin-bottom: 16px;
+          margin-top: 4px;
+        }
+        .desc {
+          font-size: 20px;
+          color: #1A1A1A;
+          line-height: 30px;
+          font-weight: 400;
+        }
+      }
+      .inner-right {
+        margin-left: 130px;
+      }
+    }
+    .head-nav {
+      display: flex;
+      margin-top: 90px;
+      color: #1A1A1A;
+      >div {
+        height: 175px;
+        box-sizing: border-box;
+        padding: 32px;
+        border-radius: 8px;
+        cursor: pointer;
+        .nav-title {
+          font-size: 18px;
+          line-height: 28px;
+          font-weight: 600;
+        }
+        .nav-desc {
+          margin-top: 18px;
+          font-size: 14px;
+          line-height: 22px;
+          font-weight: 400;
+        }
+      }
+      .nav-left {
+        background-image: linear-gradient(180deg, rgba(247,252,255,0.90) 27%, rgba(241,247,255,0.90) 90%);
+      }
+      .nav-right {
+        margin-left: 16px;
+        background-image: linear-gradient(180deg, rgba(247,252,255,0.90) 27%, rgba(241,247,255,0.90) 90%);
+        // opacity: 0.22;
+      }
     }
   }
 }

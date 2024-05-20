@@ -1,0 +1,276 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fitframework.flowable;
+
+import static com.huawei.fitframework.inspection.Validation.greaterThan;
+
+import com.huawei.fitframework.flowable.choir.EmitterChoir;
+import com.huawei.fitframework.flowable.choir.IterableChoir;
+import com.huawei.fitframework.flowable.choir.PublisherChoirAdapter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+/**
+ * 表示拥有 {@code 0 - n} 个数据的数据流的发布者。
+ *
+ * @param <T> 表示数据类型的 {@link T}。
+ * @author 季聿阶 j00559309
+ * @since 2024-02-08
+ */
+public interface Choir<T> extends Publisher<T> {
+    /**
+     * 通过指定的 {@link Emitter 发送器} 消费逻辑创建 {@link Choir 响应式流}。
+     *
+     * @param consumer 表示指定消费逻辑的 {@link Consumer}{@code <}{@link Emitter}{@code <}{@link T}{@code >>}。
+     * @param <T> 表示数据发送器和响应式流中数据类型的 {@link T}。
+     * @return 表示所创建的响应式流的 {@link Choir}{@code <}{@link T}{@code >}。
+     */
+    static <T> Choir<T> create(Consumer<Emitter<T>> consumer) {
+        return new EmitterChoir<>(Emitter::create, consumer, null, null);
+    }
+
+    /**
+     * 创建一个空的响应式流。
+     *
+     * @param <T> 表示响应式流中数据类型的 {@link T}。
+     * @return 表示创建出来的空的响应式流的 {@link Choir}{@code <}{@link T}{@code >}。
+     */
+    static <T> Choir<T> empty() {
+        return fromIterable(Collections.emptyList());
+    }
+
+    /**
+     * 将一个 {@link Emitter 发送器} 转换成 {@link Choir 响应式流}。
+     *
+     * @param emitter 表示指定数据发送器的 {@link Emitter}{@code <}{@link T}{@code >}。
+     * @param <T> 表示数据发送器和响应式流中数据类型的 {@link T}。
+     * @return 表示转换后的响应式流的 {@link Choir}{@code <}{@link T}{@code >}。
+     */
+    static <T> Choir<T> fromEmitter(Emitter<T> emitter) {
+        return new EmitterChoir<>(() -> emitter, null, null, null);
+    }
+
+    /**
+     * 通过一个 {@link Emitter 发送器} 和指定的请求元素时操作以及订阅取消时操作创建 {@link Choir 响应式流}。
+     *
+     * @param emitter 表示指定数据发送器的 {@link Emitter}{@code <}{@link T}{@code >}。
+     * @param requestHandler 表示指定的元素请求时操作的 {@link Consumer}{@code <}{@link T}{@code >}。
+     * @param cancelHandler 表示指定的订阅取消时操作的 {@link Runnable}。
+     * @param <T> 表示数据发送器和响应式流中数据类型的 {@link T}。
+     * @return 表示转换后的响应式流的 {@link Choir}{@code <}{@link T}{@code >}。
+     */
+    static <T> Choir<T> fromEmitter(Emitter<T> emitter, Consumer<Long> requestHandler, Runnable cancelHandler) {
+        return new EmitterChoir<>(() -> emitter, null, requestHandler, cancelHandler);
+    }
+
+    /**
+     * 将一个 {@link Iterable 迭代器} 转换成 {@link Choir 响应式流}。
+     *
+     * @param iterable 表示指定迭代器的 {@link Iterable}{@code <}{@link T}{@code >}。
+     * @param <T> 表示迭代器和响应式流中数据类型的 {@link T}。
+     * @return 表示转换后的响应式流的 {@link Choir}{@code <}{@link T}{@code >}。
+     */
+    static <T> Choir<T> fromIterable(Iterable<T> iterable) {
+        return new IterableChoir<>(iterable);
+    }
+
+    /**
+     * 将一个 {@link Publisher} 适配成 {@link Choir 响应式流}。
+     *
+     * @param publisher 表示指定发布者的 {@link Publisher}{@code <}{@link T}{@code >}。
+     * @param <T> 表示发布者中数据类型的 {@link T}。
+     * @return 表示适配后的响应式流的 {@link Choir}{@code <}{@link T}{@code >}。
+     */
+    static <T> Choir<T> fromPublisher(Publisher<T> publisher) {
+        return new PublisherChoirAdapter<>(publisher);
+    }
+
+    /**
+     * 将指定的数组转换成 {@link Choir 响应式流}。
+     *
+     * @param array 表示指定的数组的 {@link T}{@code []}。
+     * @param <T> 表示发布者中数据类型的 {@link T}。
+     * @return 表示转换后的响应式流的 {@link Choir}{@code <}{@link T}{@code >}。
+     */
+    @SafeVarargs
+    static <T> Choir<T> just(T... array) {
+        if (array == null) {
+            return empty();
+        }
+        return fromIterable(Arrays.asList(array));
+    }
+
+    /**
+     * 从 1 开始，到指定的终止值（不包含）结束，间隔步长为 1，将所有整数转换成响应式流。
+     *
+     * @param stop 表示指定的终止值（<b>不包含</b>）的 {@code int}。
+     * @return 表示指定范围数据组成的响应式流的 {@link Choir}{@code <}{@link Integer}{@code >}。
+     */
+    static Choir<Integer> range(int stop) {
+        return range(1, stop, 1);
+    }
+
+    /**
+     * 从指定的起始值开始，到指定的终止值（不包含）结束，间隔步长为 1，将所有整数转换成响应式流。
+     *
+     * @param start 表示指定的起始值的 {@code int}。
+     * @param stop 表示指定的终止值（<b>不包含</b>）的 {@code int}。
+     * @return 表示指定范围数据组成的响应式流的 {@link Choir}{@code <}{@link Integer}{@code >}。
+     */
+    static Choir<Integer> range(int start, int stop) {
+        return range(start, stop, 1);
+    }
+
+    /**
+     * 从指定的起始值开始，到指定的终止值（不包含）结束，间隔指定的步长，将所有整数转换成响应式流。
+     *
+     * @param start 表示指定的起始值的 {@code int}。
+     * @param stop 表示指定的终止值（<b>不包含</b>）的 {@code int}。
+     * @param step 表示指定的步长的 {@code int}。
+     * @return 表示指定范围数据组成的响应式流的 {@link Choir}{@code <}{@link Integer}{@code >}。
+     * @throws IllegalArgumentException 当 {@code step} 小于等于 {@code 0} 时。
+     */
+    static Choir<Integer> range(int start, int stop, int step) {
+        greaterThan(step, 0, "The step must be positive. [step={0}]", step);
+        int capacity = (int) Math.ceil((double) Math.abs(start - stop) / step);
+        List<Integer> list = new ArrayList<>(capacity);
+        if (start < stop) {
+            for (int i = start; i < stop; i += step) {
+                list.add(i);
+            }
+        } else if (start > stop) {
+            for (int i = start; i > stop; i -= step) {
+                list.add(i);
+            }
+        } else {
+            return empty();
+        }
+        return Choir.fromIterable(list);
+    }
+
+    /**
+     * 将数据按照指定大小进行分组，转换成列表数据后继续发送。
+     *
+     * @param size 表示分组大小的 {@code int}。
+     * @return 表示按照指定大小进行分组后的列表数据的新的响应式流的 {@link Choir}{@code <}{@link List}{@code <}{@link T}{@code >>}。
+     */
+    Choir<List<T>> buffer(int size);
+
+    /**
+     * 计算响应式流中的元素数量后，将元素数量发送。
+     *
+     * @return 表示计算元素数量后形成的新的响应式流的 {@link Solo}{@code <}{@link Long}{@code >}。
+     */
+    Solo<Long> count();
+
+    /**
+     * 将上游元素去重后传递给下游。
+     *
+     * @return 表示包含无重复元素的新响应式流的 {@link Choir}{@code <}{@link T}{@code >}。
+     */
+    Choir<T> distinct();
+
+    /**
+     * 将每个数据按照指定方式判断是否符合要求，并将符合要求的数据继续发送。
+     *
+     * @param filter 表示指定判断方式的 {@link Predicate}{@code <}{@link T}{@code >}。
+     * @return 表示包含符合要求数据的新的响应式流的 {@link Choir}{@code <}{@link T}{@code >}。
+     */
+    Choir<T> filter(Predicate<T> filter);
+
+    /**
+     * 仅保留第一个元素，并继续发送。
+     *
+     * @return 表示仅保留第一个元素的新的响应式流的 {@link Solo}{@code <}{@link T}{@code >}。
+     */
+    Solo<T> first();
+
+    /**
+     * 获取满足条件的第一个元素，并继续发送。
+     *
+     * @param filter 表示指定的过滤方式的 {@link Predicate}{@code <}{@link T}{@code >}。
+     * @return 表示保留满足条件的第一个元素的新的响应式流的 {@link Solo}{@code <}{@link T}{@code >}。
+     */
+    Solo<T> first(Predicate<T> filter);
+
+    /**
+     * 将每个数据通过指定的方式转换为一个响应式流，并将各响应式流中的每个元素依次发送给下游。
+     *
+     * @param flatMapper 表示指定元素转换为响应式流方式的
+     * {@link Function}{@code <}{@link T}{@code , }{@link Publisher}{@code <}{@link R}{@code >>}。
+     * @param <R> 表示元素按指定方式转换后的响应式流的元素数据类型的 {@link R}。
+     * @return 表示包含当前各数据转换为响应式流并依次发送元素的新响应式流的 {@link Choir}{@code <}{@link R}{@code >}。
+     */
+    <R> Choir<R> flatMap(Function<T, Publisher<R>> flatMapper);
+
+    /**
+     * 将每个数据通过指定的方式进行转换后继续发送。
+     *
+     * @param mapper 表示指定的转换方式的 {@link Function}{@code <}{@link T}{@code , }{@link R}{@code >}。
+     * @param <R> 表示转换后的数据类型的 {@link R}。
+     * @return 表示包含当前数据转换操作的新的响应式流的 {@link Choir}{@code <}{@link R}{@code >}。
+     */
+    <R> Choir<R> map(Function<T, R> mapper);
+
+    /**
+     * 将每个数据通过指定的方式进行合并后，形成一个新的数据，并继续发送。
+     *
+     * @param reducer 表示指定的合并方式的 {@link BinaryOperator}{@code <}{@link T}{@code >}。
+     * @return 表示合并所有数据后转换成的新的响应式流的 {@link Solo}{@code <}{@link T}{@code >}。
+     */
+    Solo<T> reduce(BinaryOperator<T> reducer);
+
+    /**
+     * 从响应式流的开始跳过指定数量个元素，并继续发送。
+     *
+     * @param count 表示跳过元素的数量的 {@code int}。
+     * @return 表示跳过指定元素转换成的新的响应式流的 {@link Choir}{@code <}{@link T}{@code >}。
+     */
+    Choir<T> skip(int count);
+
+    /**
+     * 直接使用 {@link com.huawei.fitframework.flowable.subscriber.EmptySubscriber} 订阅响应式流。
+     */
+    void subscribe();
+
+    /**
+     * 使用 Lambda 表达式订阅响应式流，指定 {@link Consumer 响应式流中的数据消费时的行为}，并开始消费响应式流中的数据。
+     * <p>默认响应式流被订阅时，将向当前数据发布者请求无限量的数据。</p>
+     *
+     * @param consumeAction 表示响应式流中的数据消费时的行为的
+     * {@link BiConsumer}{@code <}{@link Subscription}{@code , }{@link T}{@code >}。
+     */
+    void subscribe(BiConsumer<Subscription, T> consumeAction);
+
+    /**
+     * 使用 Lambda 表达式订阅响应式流，指定 {@link Consumer 响应式流被订阅时的行为}，{@link Consumer
+     * 响应式流中的数据消费时的行为}，{@link Runnable 响应式流正常终结时的行为} 和 {@link Consumer
+     * 响应式流异常终结时的行为}，并开始消费响应式流中的数据。
+     *
+     * @param onSubscribedAction 表示响应式流被订阅时的行为的 {@link Consumer}{@code <}{@link Subscription}{@code >}。
+     * @param consumeAction 表示响应式流中的数据消费时的行为的
+     * {@link BiConsumer}{@code <}{@link Subscription}{@code , }{@link T}{@code >}。
+     * @param completeAction 表示响应式流正常终结时的行为的 {@link Consumer}{@code <}{@link Subscription}{@code >}。
+     * @param failAction 表示响应式流异常终结时的行为的
+     * {@link BiConsumer}{@code <}{@link Subscription}{@code , }{@link Exception}{@code >}。
+     */
+    void subscribe(Consumer<Subscription> onSubscribedAction, BiConsumer<Subscription, T> consumeAction,
+            Consumer<Subscription> completeAction, BiConsumer<Subscription, Exception> failAction);
+
+    /**
+     * 订阅响应式流，并阻塞等待所有结果。
+     *
+     * @return 表示阻塞等待得到的所有结果列表的 {@link List}{@code <}{@link T}{@code >}。
+     */
+    List<T> blockAll();
+}

@@ -4,6 +4,8 @@
 
 package com.huawei.databus.sdk.client.jni;
 
+import com.huawei.databus.sdk.tools.DataBusUtils;
+
 import java.io.IOException;
 
 /**
@@ -19,7 +21,9 @@ public class SharedMemoryReaderWriter {
     public static final String NATIVE_LIBRARY_NAME = "native";
 
     static {
-        System.loadLibrary(NATIVE_LIBRARY_NAME);
+        if (DataBusUtils.isSupportedPlatform()) {
+            System.loadLibrary(NATIVE_LIBRARY_NAME);
+        }
     }
 
     /**

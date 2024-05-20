@@ -1,7 +1,6 @@
 .send-editor-container {
   margin: 0 auto;
   margin-top: 30px;
-  width: 900px;
   .editor-inner {
     display: flex;
     align-items: center;
@@ -197,7 +196,7 @@
 .chat-select-content {
   position: fixed;
   z-index: 999;
-  width: 200px;
+  width: 400px;
   max-height: 200px;
   overflow-y: auto;
   border-radius: 8px;

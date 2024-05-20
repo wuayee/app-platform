@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { Input, Button, Typography } from 'antd';
 import { CommentOutlined } from '@ant-design/icons';
 import {saveContent} from "../../../../shared/http/appBuilder";
@@ -63,18 +63,23 @@ const FormWrap = styled.div`
         }
     }
 `;
-const InterviewQuestions = ({ data, instanceId, mode }) => {
+const InterviewQuestions = (props) => {
+    const { data, instanceId, mode } = props;
     const id = "interviewResult";
-    const {appId, tenantId, showElsa, agent, chatRunning} = useContext(AippContext);
-    const [qa, setQA] = useState(() => {
-      let qa = data ? [...data] : [];
-      data && data.forEach((item, index) => {
-        qa[index].answer = '';
-        qa[index].text = item.question;
-        qa[index].uuid = uuid();
-      });
-      return qa;
-    });
+    const {appId, tenantId} = useContext(AippContext);
+    const [qa, setQA] = useState([]);
+
+    useEffect(() => {
+        if (!data) return;
+        const result = data[id];
+        let newQa = [...result];
+        result && result.forEach((item, index) => {
+            newQa[index].answer = '';
+            newQa[index].text = item.question;
+            newQa[index].uuid = uuid();
+        });
+        setQA(newQa);
+    }, [data])
 
     const [expandedQuestionIds, setExpandedQuestionIds] = useState([]);
 

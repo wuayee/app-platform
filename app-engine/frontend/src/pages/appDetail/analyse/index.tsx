@@ -143,7 +143,7 @@ const AppAnalyse: React.FC = () => {
     <div>
       <div className='select'>
       <Select
-      className='select-time'
+        className='select-time'
         defaultValue='2'
         style={{ width: 120 }}
         onChange={handleSelectTimeChange}

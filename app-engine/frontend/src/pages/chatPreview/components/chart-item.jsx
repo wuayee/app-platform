@@ -5,7 +5,7 @@ import { DownOutlined } from '@ant-design/icons';
 import screenfull from 'screenfull';
 import * as echarts from 'echarts';
 import { DownLoadIcon, FullScreenIcon } from '../../../assets/icon';
-import '../styles/chart-item.scss'
+import '../styles/chart-item.scss';
 
 const ChatItem = (props) => {
   const { chartAnswer, chatItem } = props;
@@ -175,14 +175,11 @@ const ChartGraphs = (props) => {
   };
   const legendConfig = {
     type: 'scroll',
-    orient: 'vertical',
-    right: 0,
-    top: 40,
-    bottom: 0,
     textStyle: {
       width: 120,
       overflow: 'break',
     },
+    bottom: '0',
     tooltip: {
       show: true,
       trigger: 'item',
@@ -195,6 +192,7 @@ const ChartGraphs = (props) => {
     myChart.current = echarts.init(chartRef.current);
     const option = getOptions(seriesMap[currentChartType], currentChartType);
     myChart?.current.setOption(option, true);
+    resizeObserver.observe(chartRef.current);
   }
   // 全屏
   function fullScreenTable() {
@@ -215,9 +213,14 @@ const ChartGraphs = (props) => {
         show: !type.includes('pie'),
         axisTick: {
           alignWithLabel: true,
+          show: false
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#575d6c'
+          }
         },
         axisLabel: {
-          /* eslint-disable */
           formatter: function (params) {
             let newParamsName = ''
             const paramsNameNumber = params.length
@@ -252,10 +255,10 @@ const ChartGraphs = (props) => {
           type: 'slider',
           xAxisIndex: 0,
           width: '80%',
-          height: 20,
+          height: 10,
           showDataShadow: false,
           left: '20',
-          bottom: 10,
+          bottom: 40,
         },
       ],
       grid: gridMap[chartType],
@@ -334,7 +337,7 @@ const ChartGraphs = (props) => {
         seriesData.forEach((item) => {
           item.type = type === 'circlepie' ? 'pie' : type;
           if (type === 'bar') {
-            item.barMaxWidth = 30;
+            item.barMaxWidth = 20;
             item.barMinWidth = 10;
           }
           type === 'line' ? (item.smooth = true) : delete item.smooth;
@@ -352,6 +355,9 @@ const ChartGraphs = (props) => {
     myChart?.current.clear();
     myChart?.current.setOption(options, true);
   }
+  const resizeObserver = new ResizeObserver(entries => {
+    myChart?.current.resize();
+  })
   return <>{(
     <div className="chart-dom-parent">
       <div className='chart-dom' ref={chartRef}></div>

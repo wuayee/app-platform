@@ -24,4 +24,6 @@ public interface AppBuilderFormPropertyMapper {
     void updateOne(AppBuilderFormPropertyPO update);
 
     int deleteMore(List<String> ids);
+
+    void deleteByFormId(String formId);
 }

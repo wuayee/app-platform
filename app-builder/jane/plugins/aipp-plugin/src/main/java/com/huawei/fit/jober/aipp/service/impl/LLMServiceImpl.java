@@ -12,8 +12,6 @@ import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.dto.xiaohai.FileDto;
 import com.huawei.fit.jober.aipp.dto.xiaohai.FileListDto;
 import com.huawei.fit.jober.aipp.dto.xiaohai.RespMsgDto;
-import com.huawei.fit.jober.aipp.entity.LlmEventListener;
-import com.huawei.fit.jober.aipp.service.DistributedMapService;
 import com.huawei.fit.jober.aipp.service.LLMService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
@@ -55,17 +53,14 @@ public class LLMServiceImpl implements LLMService {
     private final String xiaoHaiFileUrl;
     private final int xiaoHaiReadTimeout;
     private final HllmClient hllmClient;
-    private final DistributedMapService mapService;
 
     public LLMServiceImpl(@Value("${model.xiaohai.knowledge}") String xiaoHaiKnowledgeUrl,
             @Value("${model.xiaohai.file}") String xiaoHaiFileUrl,
-            @Value("${model.xiaohai.read-timeout}") int xiaoHaiReadTimeout, @Fit HllmClient hllmClient,
-            @Fit DistributedMapService mapService) {
+            @Value("${model.xiaohai.read-timeout}") int xiaoHaiReadTimeout, @Fit HllmClient hllmClient) {
         this.xiaoHaiKnowledgeUrl = xiaoHaiKnowledgeUrl;
         this.xiaoHaiFileUrl = xiaoHaiFileUrl;
         this.xiaoHaiReadTimeout = xiaoHaiReadTimeout;
         this.hllmClient = hllmClient;
-        this.mapService = mapService;
     }
 
 
@@ -103,15 +98,6 @@ public class LLMServiceImpl implements LLMService {
         HllmChatEntity hllmChatEntity =
                 HllmChatEntity.builder().prompt(prompt).temperature(temperature).tokens(maxTokens).build();
         return askModel(hllmChatEntity, model);
-    }
-
-    @Override
-    public LlmEventListener askModelStreaming(String prompt, int maxTokens, LlmModel model, String instanceId,
-            String modelResultKey) {
-        HllmChatEntity hllmChatEntity = HllmChatEntity.builder().prompt(prompt).tokens(maxTokens).build();
-        LlmEventListener listener = new LlmEventListener(instanceId, modelResultKey, mapService);
-        hllmClient.chat(hllmChatEntity, listener, model);
-        return listener;
     }
 
     private String askModel(HllmChatEntity entity, LlmModel model) throws IOException {

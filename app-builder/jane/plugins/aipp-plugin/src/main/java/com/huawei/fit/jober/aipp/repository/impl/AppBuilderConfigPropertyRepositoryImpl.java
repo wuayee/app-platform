@@ -67,4 +67,9 @@ public class AppBuilderConfigPropertyRepositoryImpl implements AppBuilderConfigP
     public int deleteMore(List<String> ids) {
         return CollectionUtils.isEmpty(ids) ? 0 : this.appBuilderConfigPropertyMapper.deleteMore(ids);
     }
+
+    @Override
+    public void deleteByConfigId(String id) {
+        this.appBuilderConfigPropertyMapper.deleteByConfigId(id);
+    }
 }

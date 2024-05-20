@@ -2,7 +2,8 @@ import {jadeNode} from "@/components/jadeNode.jsx";
 import "./style.css";
 import {Button} from "antd";
 import {DIRECTION} from "@fit-elsa/elsa-core";
-import EndIcon from '../asserts/icon-end.svg?react'; // 导入背景图片
+import EndIcon from '../asserts/icon-end.svg?react';
+import {EndNodeHeader} from "@/components/end/EndNodeHeader.jsx"; // 导入背景图片
 
 /**
  * 结束节点shape
@@ -16,7 +17,6 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
     self.pointerEvents = "auto";
     self.text = "结束";
     self.componentName = "endComponent";
-    self.deletable = false;
     self.flowMeta = {
         "triggerMode": "auto",
         "callback": {
@@ -28,11 +28,47 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
             },
         }
     };
-    self.toolMenus = [{
-        key: '1', label: "重命名", action: (setEdit) => {
-            setEdit(true);
+
+    /**
+     * @override
+     */
+    const getToolMenus = self.getToolMenus;
+    self.getToolMenus = () => {
+        if (self.page.shapes.filter(s => s.type === self.type).length === 1) {
+            return [{
+                key: '1', label: "复制", action: () => {
+                    self.duplicate();
+                }
+            }, {
+                key: '2', label: "重命名", action: (setEdit) => {
+                    setEdit(true);
+                }
+            }];
         }
-    }];
+        return getToolMenus.apply(self);
+    };
+
+    /**
+     * @override
+     */
+    const remove = self.remove;
+    self.remove = (source) => {
+        // 保证页面最少一个结束节点
+        let beforeCount = self.page.shapes.filter(s => s.type === "endNodeEnd").length;
+        if (beforeCount <= 1 && self.type === "endNodeEnd") {
+            return [];
+        }
+        const removed = remove.apply(self, [source]);
+        const curCount = self.page.shapes.filter(s => s.type === "endNodeEnd").length;
+        // 当从两个结束节点删除为一个的时候，需要通知最后一个结束节点刷新
+        if (curCount === 1) {
+            self.page.triggerEvent({
+                type: "TOOL_MENU_CHANGE",
+                value: [1]
+            });
+        }
+        return removed;
+    };
 
     /**
      * 设置E方向没有连接点
@@ -63,15 +99,46 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
         return self.graph.plugins[self.componentName](self.flowMeta.callback.converter.entity);
     };
 
+    /**
+     * 获取组件自定义entity对象
+     *
+     * @override
+     */
+    self.getEntity = () => {
+        return self.flowMeta.callback.converter.entity;
+    };
+
+    /**
+     * 获取Header组件
+     *
+     * @override
+     */
+    self.getHeaderComponent = () => {
+        return (<EndNodeHeader shape={self}/>);
+    }
+
     self.getHeaderIcon = () => {
-        return (
-            <Button
-                disabled={true}
-                className="jade-node-custom-header-icon"
-            >
+        return (<>
+            <Button disabled={true} className="jade-node-custom-header-icon">
                 <EndIcon/>
             </Button>
-        );
+        </>);
+    };
+
+    /**
+     * @override
+     */
+    const created = self.created;
+    self.created = () => {
+        created.apply(self);
+        const endNodes = self.page.shapes.filter(s => s.type === self.type);
+        // 当从一个结束节点变为两个结束节点的时候，需要通知结束节点的header刷新
+        if (endNodes.length === 2) {
+            self.page.triggerEvent({
+                type: "TOOL_MENU_CHANGE",
+                value: [self.page.shapes.filter(s => s.type === "endNodeEnd").length]
+            });
+        }
     };
 
     return self;

@@ -14,10 +14,15 @@
 
     <modules>
         <module>flow-graph-db-driver</module>
+        <module>flow-graph</module>
         <module>jober</module>
-        <module>plugins/aipp-plugin</module>
-        <module>plugins/form-plugin</module>
+        <module>plugins</module>
         <module>task-default-driver-jade</module>
+        <module>jober-multiversion-genericable</module>
+        <module>jober-genericable</module>
+        <module>task</module>
+        <module>dynamic-form-genericable</module>
+        <module>jane-common-component</module>
     </modules>
 
 </project>

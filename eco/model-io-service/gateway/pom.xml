@@ -60,6 +60,7 @@
     </dependencies>
 
     <build>
+        <finalName>model-gateway</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

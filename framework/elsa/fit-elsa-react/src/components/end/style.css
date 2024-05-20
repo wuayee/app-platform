@@ -47,3 +47,19 @@
     font-weight: 600;
     margin-right: 4px;
 }
+
+.end-starred-text {
+    position: relative;
+    display: inline-block;
+    padding-left: 10px;
+}
+
+.end-starred-text::after {
+    padding-left: 12px;
+    content: "*";
+    position: absolute;
+    left: -20%;
+    color: red;
+    bottom: auto;
+    font-size: 1.2em;
+}

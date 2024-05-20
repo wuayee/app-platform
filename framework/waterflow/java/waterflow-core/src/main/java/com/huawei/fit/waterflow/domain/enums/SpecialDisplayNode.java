@@ -56,7 +56,7 @@ public enum SpecialDisplayNode {
      * @param name 表示节点名称的 {@link String}。
      * @return 表示特殊节点展示名称的 {@link SpecialDisplayNode}。
      */
-    public static Optional<SpecialDisplayNode> getNode(String name) {
+    public static Optional<SpecialDisplayNode> fromName(String name) {
         return Arrays.stream(values())
                 .filter(item -> item.name().equalsIgnoreCase(name))
                 .findFirst();

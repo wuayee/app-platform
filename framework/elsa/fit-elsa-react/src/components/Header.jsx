@@ -12,12 +12,22 @@ import "./headerStyle.css";
 export const Header = ({shape}) => {
     const [edit, setEdit] = useState(false);
     const inputRef = useRef(null);
+    const [endNodeCount, setEndNodeCount] = useState(0);
 
     useEffect(() => {
         inputRef.current && inputRef.current.focus({
             cursor: 'end'
         });
     });
+
+    useEffect(() => {
+        // 节点数量变化
+        shape.page.addEventListener("TOOL_MENU_CHANGE", (value) => {
+            if (shape.type === "endNodeEnd") {
+                setEndNodeCount(value[0])
+            }
+        });
+    }, []);
 
     const onInputBlur = () => {
         if (inputRef.current.input.value === "") {
@@ -33,7 +43,7 @@ export const Header = ({shape}) => {
      * @param e 事件对象.
      */
     const onMenuClick = (e) => {
-        const m = shape.toolMenus.find(t => t.key === e.key);
+        const m = shape.getToolMenus().find(t => t.key === e.key);
         m.action(setEdit);
     };
 
@@ -45,15 +55,12 @@ export const Header = ({shape}) => {
     const getTitle = () => {
         if (edit) {
             return (<>
-                <Form initialValues={{title: shape.text}}>
-                    <Form.Item name="title" rules={[{required: true, message: "请输入名称"}]}>
-                        <Input onBlur={(e) => onInputBlur(e)}
-                               ref={inputRef}
-                               // defaultValue={shape.text}
-                               placeholder="请输入名称"
-                               style={{height: "24px", borderColor: shape.focusBorderColor}}/>
-                    </Form.Item>
-                </Form>
+                <Form.Item name="title" rules={[{required: true, message: "请输入名称"}]} initialValue={shape.text}>
+                    <Input onBlur={(e) => onInputBlur(e)}
+                           ref={inputRef}
+                           placeholder="请输入名称"
+                           style={{height: "24px", borderColor: shape.focusBorderColor}}/>
+                </Form.Item>
             </>);
         } else {
             return <p style={{margin: 0}}><span>{shape.text}</span></p>;
@@ -66,8 +73,8 @@ export const Header = ({shape}) => {
      * @return {JSX.Element}
      */
     const showMenus = () => {
-        if (shape.toolMenus && shape.toolMenus.length > 0) {
-            const menus = shape.toolMenus.map(t => {
+        if (shape.getToolMenus().length > 0) {
+            const menus = shape.getToolMenus().map(t => {
                 return {key: t.key, label: t.label};
             });
             return (<>

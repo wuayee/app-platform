@@ -11,6 +11,7 @@
 #include <fit/external/util/string_utils.hpp>
 #include <fit/external/util/base64.h>
 #include <fit/fit_log.h>
+#include <fit/internal/util/protocol/fit_response_meta_data.h>
 
 #include "http_util.hpp"
 #include "httplib_util.hpp"
@@ -75,6 +76,16 @@ FitCode HttpServer::Start(Handler handler)
                 HTTP_CONTENT_TYPE_JSON);
             return;
         }
+        fit_response_meta_data metadata;
+        if (!metadata.from_bytes(handlerRes.metadata)) {
+            return ;
+        }
+        res.set_header(HEADER_FIT_DATA_FORMAT, std::to_string(metadata.get_payload_format()));
+        res.set_header(HEADER_FIT_CODE, std::to_string(metadata.get_code()));
+        res.set_header(HEADER_FIT_MESSAGE, to_std_string(metadata.get_message()));
+        string tlv;
+        metadata.Serialize(tlv);
+        res.set_header(HEADER_FIT_TLV, tlv);
         res.set_header(HEADER_FIT_META, to_std_string(Base64Encode(handlerRes.metadata)));
         res.set_content(handlerRes.payload.data(), handlerRes.payload.size(), HTTP_CONTENT_TYPE_JSON);
     });
