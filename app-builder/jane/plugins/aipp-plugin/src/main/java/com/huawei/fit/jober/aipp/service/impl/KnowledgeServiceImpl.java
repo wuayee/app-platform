@@ -25,7 +25,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +37,7 @@ import java.util.stream.Collectors;
  * @author h00804153
  * @since 2024-04-23
  */
+@Component
 public class KnowledgeServiceImpl implements KnowledgeService {
     private static final Logger log = Logger.get(KnowledgeServiceImpl.class);
     private final String queryListUrl;

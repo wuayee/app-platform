@@ -17,6 +17,7 @@
         <module>fel-core</module>
         <module>fel-flow</module>
         <module>fel-service</module>
+        <module>rag-service</module>
     </modules>
 
     <properties>
