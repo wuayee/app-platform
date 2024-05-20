@@ -1,15 +1,11 @@
 
 import React, { useEffect, useState, useImperativeHandle } from 'react';
-import { useParams } from 'react-router-dom';
 import { Input, Modal, Form, Button } from 'antd';
-import { updateFlowInfo } from '../../shared/http/aipp';
-import { Message } from '../../shared/utils/message';
 import './styles/edit-modal.scss';
 
 const EditTitleModal = (props) => {
-  const { modalRef, onFlowNameChange, modalInfo } = props;
+  const { modalRef, onFlowNameChange, modalInfo, waterFlowName } = props;
   const [ form ] = Form.useForm();
-  const { appId, tenantId } = useParams();
   const [ isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const showModal = () => {
@@ -17,23 +13,27 @@ const EditTitleModal = (props) => {
   };
   useEffect(() => {
     form.setFieldsValue({
-      name: modalInfo.name,
+      name: waterFlowName === '无标题' ? '' : waterFlowName,
       description: modalInfo.attributes.description,
     })
   }, [isModalOpen])
   const handleOk = async () => {
-    setLoading(true);
     const formParams = await form.validateFields();
+    setLoading(true);
     onFlowNameChange(formParams);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
     setLoading(false);
   };
+  const handleLoading = () => {
+    setLoading(false);
+  }
   useImperativeHandle(modalRef, () => {
     return {
       'showModal': showModal,
-      'handleCancel': handleCancel
+      'handleCancel': handleCancel,
+      'handleLoading': handleLoading
     }
   })
   return <>

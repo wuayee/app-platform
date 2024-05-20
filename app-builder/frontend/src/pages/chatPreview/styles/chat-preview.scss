@@ -87,18 +87,6 @@
     height: 100vh;
     position: relative;
     overflow-x: auto;
-    .chat-message-container {
-      .chat-details-content {
-        width: 1000px;
-      }
-      .message-box {
-        width: 1000px;
-      }
-    }
-    .send-editor-container {
-      width: 1000px;
-    }
-
   }
   .chat-inner-right {
     height: 100vh;
@@ -124,16 +112,14 @@
     box-shadow: 0px 10px 24px 0px rgba(37, 43, 58, 0.24);
 }
 .chat-preview-elsa {
-  width: 540px;
+  width: 700px;
   transition: margin-right .2s;
   position: relative;
   .chat-details-content,
   .message-box {
-    width: 520px !important;
     padding: 0 24px;
   }
   .send-editor-container {
-    width: 520px !important;
     >div {
       padding: 0 24px;
     }
@@ -157,16 +143,6 @@
   margin-right: 300px;
 }
 .chat-preview-inner {
-  .chat-left-close {
-    .chat-details-content,
-    .message-box,
-    .send-editor-container {
-      width: 720px;
-    }
-    .message-check-toolbox-wrap {
-      width: 720px;
-    }
-  }
   .chat-right-close {
     .inspiration-conyainer {
       border-left: 1px solid #dedee1;
@@ -177,24 +153,6 @@
         font-weight: 600 !important;
         font-size: 13px;
       }
-    }
-  }
-}
-@media screen and (max-width: 1600px) {
-  .chat-inner {
-    .chat-details-content,
-    .send-editor-container,
-    .message-box {
-      width: 800px;
-    }
-  }
-}
-@media screen and (max-width: 1400px) {
-  .chat-inner {
-    .chat-details-content,
-    .send-editor-container,
-    .message-box {
-      width: 600px;
     }
   }
 }
@@ -220,3 +178,333 @@
     border-radius: 50%;
     z-index: 5;
 }
+@media screen and (max-width: 5000px) {
+  .chat-inner {
+    .chat-details-content,
+    .send-editor-container,
+    .message-check-toolbox-wrap,
+    .message-box {
+      width: 1600px;
+    }
+  }
+  .chat-page-inner {
+    .chat-details-content,
+    .message-box,
+    .message-check-toolbox-wrap,
+    .send-editor-container {
+      width: 2000px;
+    }
+  }
+  .chat-preview-elsa {
+    width: 1600px;
+    .chat-details-content,
+    .message-box,
+    .send-editor-container {
+      width: 1400px;
+    }
+    .chat-inner{
+      .message-check-toolbox-wrap {
+        width: 1400px;
+      }
+    }
+  }
+}
+@media screen and (max-width: 3200px) {
+  .chat-inner {
+    .chat-details-content,
+    .send-editor-container,
+    .message-check-toolbox-wrap,
+    .message-box {
+      width: 1350px;
+    }
+  }
+  .chat-page-inner {
+    .chat-details-content,
+    .message-box,
+    .message-check-toolbox-wrap,
+    .send-editor-container {
+      width: 1800px;
+    }
+  }
+  .chat-preview-elsa {
+    width: 1400px;
+    .chat-details-content,
+    .message-box,
+    .send-editor-container {
+      width: 1200px;
+    }
+    .chat-inner{
+      .message-check-toolbox-wrap {
+        width: 1200px;
+      }
+    }
+  }
+}
+@media screen and (max-width: 2800px) {
+  .chat-inner {
+    .chat-details-content,
+    .send-editor-container,
+    .message-check-toolbox-wrap,
+    .message-box {
+      width: 1200px;
+    }
+    .chat-left-close {
+      .message-box, 
+      .send-editor-container,
+      .message-check-toolbox-wrap {
+        width: 1100px;
+      }
+    }
+  }
+  .chat-page-inner {
+    .chat-details-content,
+    .message-box,
+    .send-editor-container {
+      width: 1500px !important;
+    }
+    .chat-left-close {
+      .message-box, 
+      .send-editor-container,
+      .message-check-toolbox-wrap {
+        width: 1400px !important;
+      }
+    }
+  }
+  .chat-preview-elsa {
+    width: 1200px;
+    .chat-details-content,
+    .message-box,
+    .send-editor-container {
+      width: 1000px;
+    }
+    .chat-inner{
+      .message-check-toolbox-wrap {
+        width: 1000px;
+      }
+    }
+  }
+}
+@media screen and (max-width: 2400px) {
+  .chat-inner {
+    .chat-details-content,
+    .send-editor-container,
+    .message-check-toolbox-wrap,
+    .message-box {
+      width: 1000px;
+    }
+    .chat-left-close {
+      .message-box, 
+      .send-editor-container,
+      .message-check-toolbox-wrap {
+        width: 900px;
+      }
+    }
+  }
+  .chat-page-inner {
+    .chat-details-content,
+    .message-box,
+    .send-editor-container {
+      width: 1300px !important;
+    }
+    .chat-left-close {
+      .message-box, 
+      .send-editor-container,
+      .message-check-toolbox-wrap {
+        width: 1200px !important;
+      }
+    }
+  }
+  .chat-preview-elsa {
+    width: 1000px;
+    .chat-details-content,
+    .message-box,
+    .send-editor-container {
+      width: 800px;
+    }
+    .chat-inner{
+      .message-check-toolbox-wrap {
+        width: 800px;
+      }
+    }
+  }
+}
+@media screen and (max-width: 2000px) {
+  .chat-inner {
+    .chat-details-content,
+    .send-editor-container,
+    .message-check-toolbox-wrap,
+    .message-box {
+      width: 900px;
+    }
+    .chat-left-close {
+      .message-box, 
+      .send-editor-container,
+      .message-check-toolbox-wrap {
+        width: 800px;
+      }
+    }
+  }
+  .chat-page-inner {
+    .chat-details-content,
+    .message-box,
+    .message-check-toolbox-wrap
+    .send-editor-container {
+      width: 1100px !important;
+    }
+    .chat-left-close {
+      .message-box, 
+      .send-editor-container,
+      .message-check-toolbox-wrap {
+        width: 1000px !important;
+      }
+    }
+  }
+  .chat-preview-elsa {
+    width: 800px;
+    .chat-details-content,
+    .message-box,
+    .send-editor-container {
+      width: 700px;
+    }
+    .chat-inner{
+      .message-check-toolbox-wrap {
+        width: 700px;
+      }
+    }
+  }
+}
+@media screen and (max-width: 1800px) {
+  .chat-inner {
+    .chat-details-content,
+    .send-editor-container,
+    .message-check-toolbox-wrap,
+    .message-box {
+      width: 800px;
+    }
+    .chat-left-close {
+      .message-box, 
+      .send-editor-container,
+      .message-check-toolbox-wrap {
+        width: 700px;
+      }
+    }
+  }
+  .chat-page-inner {
+    .chat-details-content,
+    .message-box,
+    .message-check-toolbox-wrap,
+    .send-editor-container {
+      width: 1100px !important;
+    }
+    .chat-left-close {
+      .message-box, 
+      .send-editor-container,
+      .message-check-toolbox-wrap {
+        width: 1000px !important;
+      }
+    }
+  }
+  .chat-preview-elsa {
+    width: 700px;
+    .chat-details-content,
+    .message-box,
+    .send-editor-container {
+      width: 600px;
+    }
+    .chat-inner{
+      .message-check-toolbox-wrap {
+        width: 600px;
+      }
+    }
+  }
+}
+@media screen and (max-width: 1600px) {
+  .chat-inner {
+    .chat-details-content,
+    .send-editor-container,
+    .message-check-toolbox-wrap,
+    .message-box {
+      width: 700px;
+    }
+    .chat-left-close {
+      .message-box,
+      .send-editor-container,
+      .message-check-toolbox-wrap {
+        width: 600px;
+      }
+    }
+  }
+  .chat-page-inner {
+    .chat-details-content,
+    .message-box,
+    .message-check-toolbox-wrap,
+    .send-editor-container {
+      width: 900px !important;
+    }
+    .chat-left-close {
+      .message-box, 
+      .send-editor-container,
+      .message-check-toolbox-wrap {
+        width: 800px !important;
+      }
+    }
+  }
+  .chat-preview-elsa {
+    width: 600px;
+    .chat-details-content,
+    .message-box,
+    .send-editor-container {
+      width: 500px;
+    }
+    .chat-inner{
+      .message-check-toolbox-wrap {
+        width: 500px;
+      }
+    }
+  }
+}
+@media screen and (max-width: 1400px) {
+  .chat-inner {
+    .chat-details-content,
+    .send-editor-container,
+    .message-check-toolbox-wrap,
+    .message-box {
+      width: 600px;
+    }
+    .chat-left-close {
+      .message-box, 
+      .send-editor-container,
+      .message-check-toolbox-wrap {
+        width: 500px;
+      }
+    }
+  }
+  .chat-page-inner {
+    .chat-details-content,
+    .message-box,
+    .message-check-toolbox-wrap,
+    .send-editor-container {
+      width: 800px !important;
+    }
+    .chat-left-close {
+      .message-box, 
+      .send-editor-container,
+      .message-check-toolbox-wrap {
+        width: 700px !important;
+      }
+    }
+  }
+  .chat-preview-elsa {
+    width: 500px;
+    .chat-details-content,
+    .message-box,
+    .send-editor-container {
+      width: 400px;
+    }
+    .chat-inner{
+      .message-check-toolbox-wrap {
+        width: 400px;
+      }
+    }
+  }
+} 

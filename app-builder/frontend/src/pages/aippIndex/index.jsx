@@ -71,7 +71,6 @@ const AippIndex = () => {
   }
   // 保存配置
   const saveConfig = (data) => {
-
     updateFormInfo(tenantId, appId, data).then((res) => {
       if (res.code === 0) {
         Message({type: "success", content: "保存配置成功"});
@@ -81,7 +80,7 @@ const AippIndex = () => {
           let key = getUiD();
           setReloadInspiration(key);
         }
-      }              
+      }
     })
   }
 
@@ -94,7 +93,7 @@ const AippIndex = () => {
     setShowChat(!showChat)
   }
 
-  const handleSearch = useCallback(debounce((data) => saveConfig(data), 3000), []);
+  const handleSearch = useCallback(debounce((data) => saveConfig(data), 1000), []);
   const handleConfigDataChange = (data) => {
     handleSearch(data);
   };
@@ -121,7 +120,9 @@ const AippIndex = () => {
             aippInfo={aippInfo}
             showElsa={showElsa}
             updateAippCallBack={updateAippCallBack}
-            mashupClick={elsaChange}/>
+            mashupClick={elsaChange}
+            chatRunning={chatRunning}
+          />
           <div className={[
             "layout-content",
             showElsa ? "layout-elsa-content" : null,

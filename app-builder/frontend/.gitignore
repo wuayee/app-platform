@@ -1,2 +1,4 @@
 package-lock.json
 src/index.html
+node_modules
+build

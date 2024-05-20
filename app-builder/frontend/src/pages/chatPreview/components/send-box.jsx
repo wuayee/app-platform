@@ -32,9 +32,9 @@ const SendBox = (props) => {
         <div className='message-tip-box-send'>
           <div className='inner'>
             {  sendType === 'text' && <div onClick={handleCopyQuestion}>复制</div> }
-            {/* <div>删除</div>
+            {/* <div>删除</div> */}
             <div onClick={setShareClass}>分享问答</div>
-            <div onClick={setInspiration}>添加为灵感</div> */}
+            {/* <div onClick={setInspiration}>添加为灵感</div> */}
           </div>
         </div>
       </div>

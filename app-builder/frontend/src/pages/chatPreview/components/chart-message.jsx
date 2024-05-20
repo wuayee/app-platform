@@ -59,27 +59,33 @@ const ChartMessage = (props) => {
     let data = [];
     switch (chartType) {
       case 'TABLE':
-        chartItem.headers = chartData.columns?.map((field, index) => {
-          return {
-            key: field + index,
-            title: field,
-            dataIndex: field + index,
-            align: 'center',
-            resizable: true,
-            width: getColumnWidthFromField(field, index, chartData.rows),
-            showHeadOverflowTooltip: true,
-            showOverflowTooltip: true,
-          };
-        });
-        list = chartData.rows?.map((item, index) => {
-          let obj = {};
-          item.forEach((a, b) => {
-            obj[chartItem.headers[b].key] = a;
+        try {
+          chartItem.headers = chartData.columns?.map((field, index) => {
+            return {
+              key: field + index,
+              title: field,
+              dataIndex: field + index,
+              align: 'center',
+              resizable: true,
+              width: getColumnWidthFromField(field, index, chartData.rows),
+              showHeadOverflowTooltip: true,
+              showOverflowTooltip: true,
+            };
           });
-          obj.rowIndex = index;
-          return obj;
-        });
-        chartItem.tableData = list;
+          list = chartData.rows?.map((item, index) => {
+            let obj = {};
+            item.forEach((a, b) => {
+              obj[chartItem.headers[b].key] = a;
+            });
+            obj.rowIndex = index;
+            return obj;
+          });
+          chartItem.tableData = list;
+        } catch {
+          chartItem.headers = [];
+          chartData.rows = [];
+          chartItem.tableData = [];
+        }
         break;
       case 'PIE':
         chartItem.xAxisData = chartData.labels;
