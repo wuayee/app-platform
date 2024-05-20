@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.dto;
 
-import com.huawei.jade.store.service.ItemData;
+import com.huawei.jade.store.model.transfer.ToolData;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -29,5 +29,5 @@ public class StoreNodeConfigResDto {
     @JsonProperty("basic")
     private List<StoreBasicNodeInfoDto> basicList;
     @JsonProperty("tool")
-    private List<ItemData> toolList;
+    private List<ToolData> toolList;
 }

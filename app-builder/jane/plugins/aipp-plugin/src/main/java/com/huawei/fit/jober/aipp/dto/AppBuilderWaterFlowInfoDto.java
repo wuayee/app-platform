@@ -3,7 +3,7 @@
  */
 package com.huawei.fit.jober.aipp.dto;
 
-import com.huawei.jade.store.service.ItemData;
+import com.huawei.jade.store.model.transfer.ToolData;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +25,7 @@ public class AppBuilderWaterFlowInfoDto {
     /**
      * itemData store里waterFlow的元数据
      */
-    private ItemData itemData;
+    private ToolData itemData;
 
     /**
      * tenantId 租户id
