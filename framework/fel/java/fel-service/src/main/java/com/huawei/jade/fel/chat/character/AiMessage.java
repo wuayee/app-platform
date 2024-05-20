@@ -7,6 +7,7 @@ package com.huawei.jade.fel.chat.character;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.jade.fel.chat.MessageType;
 import com.huawei.jade.fel.chat.content.Media;
+import com.huawei.jade.fel.chat.content.MessageContent;
 import com.huawei.jade.fel.tool.ToolCall;
 
 import java.util.ArrayList;
@@ -38,6 +39,17 @@ public class AiMessage extends AbstractChatMessage {
      */
     public AiMessage(String text, List<ToolCall> toolCalls) {
         super(text);
+        this.toolCalls = toolCalls;
+    }
+
+    /**
+     * 通过消息内容集合和工具调用来初始化 {@link AiMessage} 的新实例。
+     *
+     * @param contents 表示息内容集合的 {@link MessageContent}。
+     * @param toolCalls 表示工具调用列表的 {@link List}{@code <}{@link ToolCall}{@code >}。
+     */
+    public AiMessage(MessageContent contents, List<ToolCall> toolCalls) {
+        super(contents);
         this.toolCalls = toolCalls;
     }
 

@@ -21,6 +21,9 @@ public interface AippLogMapper {
 
     List<String> selectRecentInstanceId(String aippId, String aippType, Integer number, String createUserAccount);
 
+    List<String> selectRecentInstanceIdByAippIds(List<String> aippIds, String aippType, Integer number,
+            String createUserAccount);
+
     List<String> selectRecentAfterResume(String aippId, String aippType, String createUserAccount);
 
     List<AippInstLog> getLogsByInstanceId(List<String> instanceIds);
@@ -29,11 +32,11 @@ public interface AippLogMapper {
 
     AippInstLog selectLastInstanceFormLog(String instanceId);
 
-    List<String> selectNormalInstanceIdOrderByTimeDesc(String aippId, String aippType, String createUserAccount);
+    List<String> selectNormalInstanceIdOrderByTimeDesc(List<String> aippIds, String aippType, String createUserAccount);
 
     void deleteByType(String aippId, String aippType, String createUserAccount, String instanceIdExclude);
 
-    void delete(String aippId, String version, String createUserAccount, String instanceIdExclude);
+    void delete(List<String> aippIds, String aippType, String createUserAccount, String instanceIdExclude);
 
     void insertOne(AippLogCreateDto data);
 

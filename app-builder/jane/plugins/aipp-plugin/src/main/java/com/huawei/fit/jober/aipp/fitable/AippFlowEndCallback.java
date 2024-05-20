@@ -18,7 +18,6 @@ import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogService;
-import com.huawei.fit.jober.aipp.service.DistributedMapService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
@@ -42,18 +41,16 @@ public class AippFlowEndCallback implements FlowCallbackService {
     private final MetaInstanceService metaInstanceService;
     private final MetaService metaService;
     private final AippLogService aippLogService;
-    private final DistributedMapService distributedMapService;
     private final AppBuilderFormRepository formRepository;
 
     private final BrokerClient brokerClient;
 
     public AippFlowEndCallback(@Fit MetaInstanceService metaInstanceService, @Fit MetaService metaService,
-            @Fit AippLogService aippLogService, DistributedMapService distributedMapService,
-            @Fit AppBuilderFormRepository formRepository, BrokerClient brokerClient) {
+            @Fit AippLogService aippLogService, @Fit AppBuilderFormRepository formRepository,
+            BrokerClient brokerClient) {
         this.metaInstanceService = metaInstanceService;
         this.metaService = metaService;
         this.aippLogService = aippLogService;
-        this.distributedMapService = distributedMapService;
         this.formRepository = formRepository;
         this.brokerClient = brokerClient;
     }
@@ -72,23 +69,6 @@ public class AippFlowEndCallback implements FlowCallbackService {
         String endFormId = (String) attr.get(AippConst.ATTR_END_FORM_ID_KEY);
         String endFormVersion = (String) attr.get(AippConst.ATTR_END_FORM_VERSION_KEY);
 
-        // 持久化aipp实例表单记录
-        if (StringUtils.isNotEmpty(endFormId) && StringUtils.isNotEmpty(endFormVersion)) {
-            AippLogData logData =
-                    Utils.buildLogDataWithFormData(this.formRepository, endFormId, endFormVersion, businessData);
-            Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
-        }
-
-        // todo: 表明子流结果是否需要再经过模型加工，当前场景全为false
-        //  正常情况下应该是在结束节点配上该key并放入businessData中，此处模拟该过程
-        //  如果前一个节点是人工检查节点，并在结束节点reference到了表单，那么这里一定会打印消息
-        businessData.put(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM, false);
-        if (isLoggingAllowed(businessData)) {
-            Utils.persistAippMsgLog(aippLogService,
-                    businessData.get(AippConst.BS_AIPP_FINAL_OUTPUT).toString(),
-                    contexts);
-        }
-
         // update all result data
         InstanceDeclarationInfo declarationInfo = InstanceDeclarationInfo.custom()
                 .putInfo(AippConst.INST_CURR_FORM_ID_KEY, endFormId)
@@ -106,23 +86,43 @@ public class AippFlowEndCallback implements FlowCallbackService {
         String aippInstId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
         this.metaInstanceService.patchMetaInstance(versionId, aippInstId, declarationInfo, context);
 
-        // 删除缓存
-        this.distributedMapService.delete(aippInstId);
-
-        // todo: 从businessData里拿，create的时候会塞进去
-        String parentFlowTraceId = ObjectUtils.cast(businessData.get("parentFlowTraceId"));
-        String parentCallbackId = ObjectUtils.cast(businessData.get("parentCallbackId"));
-        if (StringUtils.isNotEmpty(parentFlowTraceId) && StringUtils.isNotEmpty(parentCallbackId)) {
-            // todo: 怎么调父节点的callback fitable
+        String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
+        String parentCallbackId = ObjectUtils.cast(businessData.get(AippConst.PARENT_CALLBACK_ID));
+        if (StringUtils.isNotEmpty(parentInstanceId) && StringUtils.isNotEmpty(parentCallbackId)) {
             this.brokerClient.getRouter(FlowCallbackService.class, "w8onlgq9xsw13jce4wvbcz3kbmjv3tuw")
                     .route(new FitableIdFilter(parentCallbackId))
                     .format(SerializationFormat.CBOR)
                     .invoke(contexts);
         }
+
+        // 持久化aipp实例表单记录
+        if (StringUtils.isNotEmpty(endFormId) && StringUtils.isNotEmpty(endFormVersion)) {
+            AippLogData logData =
+                    Utils.buildLogDataWithFormData(this.formRepository, endFormId, endFormVersion, businessData);
+            Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
+        }
+
+        this.logFinalOutput(contexts, businessData);
     }
 
-    private static boolean isLoggingAllowed(Map<String, Object> businessData) {
-        return !ObjectUtils.<Boolean>cast(businessData.get(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM))
-                && StringUtils.isNotEmpty(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_FINAL_OUTPUT)));
+    private void logFinalOutput(List<Map<String, Object>> contexts, Map<String, Object> businessData) {
+        // todo: 表明流程结果是否需要再经过模型加工，当前场景全为false。
+        //  正常情况下应该是在结束节点配上该key并放入businessData中，此处模拟该过程。
+        //  如果子流程结束后需要再经过模型加工，子流程结束节点不打印日志；否则子流程结束节点需要打印日志。
+        //  如果前一个节点是人工检查节点，并在结束节点reference到了表单，那么这里一定会打印消息。
+        businessData.put(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM, false);
+        if (ObjectUtils.<Boolean>cast(businessData.get(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM))) {
+            return;
+        }
+        Object finalOutput = businessData.get(AippConst.BS_AIPP_FINAL_OUTPUT);
+        if (businessData.get(AippConst.OUTPUT_IS_FROM_CHILD) != null &&
+                ObjectUtils.<Boolean>cast(businessData.get(AippConst.OUTPUT_IS_FROM_CHILD))) {
+            return;
+        }
+        if (finalOutput == null) {
+            Utils.persistAippMsgLog(aippLogService, "获取到的结果为 null，请检查配置。", contexts);
+        } else {
+            Utils.persistAippMsgLog(aippLogService, ObjectUtils.cast(finalOutput), contexts);
+        }
     }
 }

@@ -149,7 +149,7 @@ export const graphData = {
                 {
                     "type": "startNodeStart",
                     "container": "elsa-page:tvp1s6",
-                    "id": "6qm5eg",
+                    "id": "jade6qm5eg",
                     "text": "开始",
                     "namespace": "flowable",
                     "x": -170.8928571428571,
@@ -186,14 +186,16 @@ export const graphData = {
                                 "name": "input",
                                 "type": "Object",
                                 "from": "Expand",
+                                "config": [{"allowAdd":true}],
                                 "value": [
                                     {
                                         "id": "input_ae2ffd6e-2b9e-4e73-9d7f-0e661ec3dbdb",
                                         "name": "Question",
                                         "type": "String",
                                         "from": "Input",
-                                        "description": "Question",
-                                        "value": ""
+                                        "description": "这是用户输入的问题",
+                                        "value": "",
+                                        "disableModifiable": true,
                                     }
                                 ]
                             },
@@ -228,7 +230,7 @@ export const graphData = {
                 {
                     "type": "retrievalNodeState",
                     "container": "elsa-page:tvp1s6",
-                    "id": "0pg2ag",
+                    "id": "jade0pg2ag",
                     "text": "普通检索",
                     "namespace": "flowable",
                     "x": 275.7499999999999,
@@ -273,7 +275,7 @@ export const graphData = {
                                             "name": "query",
                                             "type": "String",
                                             "from": "Reference",
-                                            "referenceNode": "6qm5eg",
+                                            "referenceNode": "jade6qm5eg",
                                             "referenceId": "input_ae2ffd6e-2b9e-4e73-9d7f-0e661ec3dbdb",
                                             "referenceKey": "Question",
                                             "value": [
@@ -330,7 +332,7 @@ export const graphData = {
                 {
                     "type": "llmNodeState",
                     "container": "elsa-page:tvp1s6",
-                    "id": "wdnjbq",
+                    "id": "jadewdnjbq",
                     "text": "大模型",
                     "namespace": "flowable",
                     "x": 719.1428571428571,
@@ -375,7 +377,7 @@ export const graphData = {
                                             "name": "model",
                                             "type": "String",
                                             "from": "Input",
-                                            "value": "Qwen-72B"
+                                            "value": "Qwen1.5-32B-Chat"
                                         },
                                         {
                                             "id": "db5fdafa-4cbf-44ba-9cca-8a98f1f771f4",
@@ -395,7 +397,7 @@ export const graphData = {
                                                     "name": "template",
                                                     "type": "String",
                                                     "from": "Input",
-                                                    "value": "用户的问题是{{query}}，相关的资料是{{knowledge}}"
+                                                    "value": "请按照以下步骤生成您的回复：\n1. 递归地将问题分解为更小的问题。\n2. 对于每个原子问题，从上下文和对话历史记录中选择最相关的信息。\n3. 使用所选信息生成回复草稿。\n4. 删除回复草稿中的重复内容。\n5. 在调整后生成最终答案，以提高准确性和相关性。\n6. 请注意，只需要回复最终答案。\n-------------------------------------\n上下文信息：\n\n{{knowledge}}\n\n问题：{{query}}"
                                                 },
                                                 {
                                                     "id": "38fb27a1-71f4-4fcc-87d5-9d8a880bc04d",
@@ -412,7 +414,7 @@ export const graphData = {
                                                                 "output",
                                                                 "retrievalOutput"
                                                             ],
-                                                            "referenceNode": "0pg2ag",
+                                                            "referenceNode": "jade0pg2ag",
                                                             "referenceId": "5c9c6535-c127-445a-862a-966cf1083929",
                                                             "referenceKey": "retrievalOutput"
                                                         },
@@ -425,7 +427,7 @@ export const graphData = {
                                                                 "Question"
                                                             ],
                                                             "referenceKey": "Question",
-                                                            "referenceNode": "6qm5eg",
+                                                            "referenceNode": "jade6qm5eg",
                                                             "referenceId": "input_ae2ffd6e-2b9e-4e73-9d7f-0e661ec3dbdb"
                                                         }
                                                     ]
@@ -484,7 +486,7 @@ export const graphData = {
                 {
                     "type": "endNodeEnd",
                     "container": "elsa-page:tvp1s6",
-                    "id": "soux5i",
+                    "id": "jadesoux5i",
                     "text": "结束",
                     "namespace": "flowable",
                     "x": 1169.4642857142849,
@@ -493,7 +495,7 @@ export const graphData = {
                     "height": 212,
                     "bold": false,
                     "italic": false,
-                    "deletable": false,
+                    "deletable": true,
                     "pad": 6,
                     "rotateAble": false,
                     "triggerMode": "auto",
@@ -530,7 +532,7 @@ export const graphData = {
                                             "name": "finalOutput",
                                             "type": "String",
                                             "from": "Reference",
-                                            "referenceNode": "wdnjbq",
+                                            "referenceNode": "jadewdnjbq",
                                             "referenceId": "272c927a-9e25-48b6-a921-6a8ab20267a4",
                                             "referenceKey": "llmOutput",
                                             "value": [
@@ -553,7 +555,7 @@ export const graphData = {
                 {
                     "type": "jadeEvent",
                     "container": "elsa-page:tvp1s6",
-                    "id": "2zanyx",
+                    "id": "jade2zanyx",
                     "text": "",
                     "namespace": "flowable",
                     "x": 189.1071428571429,
@@ -576,8 +578,8 @@ export const graphData = {
                     "textY": 0,
                     "hAlign": "center",
                     "lineWidth": 2,
-                    "fromShape": "6qm5eg",
-                    "toShape": "0pg2ag",
+                    "fromShape": "jade6qm5eg",
+                    "toShape": "jade0pg2ag",
                     "definedFromConnector": "E",
                     "definedToConnector": "W",
                     "arrowBeginPoint": {
@@ -636,7 +638,7 @@ export const graphData = {
                 {
                     "type": "jadeEvent",
                     "container": "elsa-page:tvp1s6",
-                    "id": "5c5urs",
+                    "id": "jade5c5urs",
                     "text": "",
                     "namespace": "flowable",
                     "x": 635.7499999999999,
@@ -659,8 +661,8 @@ export const graphData = {
                     "textY": 0,
                     "hAlign": "center",
                     "lineWidth": 2,
-                    "fromShape": "0pg2ag",
-                    "toShape": "wdnjbq",
+                    "fromShape": "jade0pg2ag",
+                    "toShape": "jadewdnjbq",
                     "definedFromConnector": "E",
                     "definedToConnector": "W",
                     "arrowBeginPoint": {
@@ -719,7 +721,7 @@ export const graphData = {
                 {
                     "type": "jadeEvent",
                     "container": "elsa-page:tvp1s6",
-                    "id": "1p0cdu",
+                    "id": "jade1p0cdu",
                     "text": "",
                     "namespace": "flowable",
                     "x": 1079.142857142857,
@@ -742,8 +744,8 @@ export const graphData = {
                     "textY": 0,
                     "hAlign": "center",
                     "lineWidth": 2,
-                    "fromShape": "wdnjbq",
-                    "toShape": "soux5i",
+                    "fromShape": "jadewdnjbq",
+                    "toShape": "jadesoux5i",
                     "definedFromConnector": "E",
                     "definedToConnector": "W",
                     "arrowBeginPoint": {

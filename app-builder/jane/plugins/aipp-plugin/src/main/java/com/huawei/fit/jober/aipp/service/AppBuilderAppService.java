@@ -51,4 +51,7 @@ public interface AppBuilderAppService {
     @Genericable(id = "a389e19779fcc245b7a6135a46eb5850")
     Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(HttpClassicServerRequest httpRequest, String tenantId,
             long offset, int limit);
+
+    @Genericable(id = "aebcb2ec94a6bb4180a1f460e6b90ccd")
+    void delete(String appId, OperationContext context);
 }

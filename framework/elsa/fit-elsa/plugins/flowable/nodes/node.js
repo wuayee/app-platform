@@ -59,6 +59,9 @@ const node = (id, x, y, width, height, parent, isContainer, drawer) => {
         self.effectLines();
     }
 
+    /**
+     * @override
+     */
     const resize = self.resize;
     self.resize = (width, height) => {
         if (width === 1 && height === 1) {
@@ -67,6 +70,9 @@ const node = (id, x, y, width, height, parent, isContainer, drawer) => {
         resize.apply(self, [width, height]);
     };
 
+    /**
+     * @override
+     */
     const initConnectors = self.initConnectors;
     self.initConnectors = () => {
         initConnectors.apply(self);
@@ -74,39 +80,53 @@ const node = (id, x, y, width, height, parent, isContainer, drawer) => {
         self.connectors.remove(c => c.type === "connection");
         self.connectors.remove(c => c.direction.key === DIRECTION.NE.key || c.direction.key === DIRECTION.NW.key || c.direction.key === DIRECTION.SW.key || c.direction.key === DIRECTION.SE.key);
         self.connectors.forEach(c => {
-            let getDirection = c.getDirection;
-            c.radius = 4;
-            c.getDirection = () => {
-                let d = getDirection.apply(c);
-                let nd = {};
-                for (let f in d) {
-                    nd[f] = d[f];
-                }
-                nd.cursor = "crosshair";
-                return nd;
-            };
-            c.getEnable = () => true;
-            let getVisibility = c.getVisibility;
-            c.getVisibility = () => getVisibility.apply(c) && self.getContainer().type !== "parallel";
-            c.moving = (deltaX, deltaY, x, y) => {
-                if (!self.allowFromLink || !c.allowFromLink) {
-                    return;
-                }
-                pluginMeta.import(self.eventType, self.page.graph).then(() => {
-                    let e = self.page.createNew(self.eventType, x, y);
-                    e.fromShape = self.id;
-                    e.definedFromConnector = c.direction.key;
-                    self.unSelect();
-                    self.initEvent(e);
-                    e.namespace = self.namespace;
-                    e.container = self.container;
-                    e.isFocused = true;
-                    e.mousedownConnector = e.toConnector;
-                    self.page.mousedownShape = e;
-                    e.reset();
-                });
-            };
+            self.activeConnector(c);
         });
+    };
+
+    /**
+     * 将connector变为主动可拖动出线的connector.
+     *
+     * @param conn connector对象.
+     */
+    self.activeConnector = (conn) => {
+        conn.radius = 4;
+
+        // 重写getDirection方法.
+        const getDirection = conn.getDirection;
+        conn.getDirection = () => {
+            let d = getDirection.apply(conn);
+            let nd = {};
+            for (let f in d) {
+                nd[f] = d[f];
+            }
+            nd.cursor = "crosshair";
+            return nd;
+        };
+
+        conn.getEnable = () => true;
+
+        // 重写getVisibility方法.
+        const getVisibility = conn.getVisibility;
+        conn.getVisibility = () => getVisibility.apply(conn) && self.getContainer().type !== "parallel";
+
+        // 拖动时，能拖出线.
+        conn.moving = (deltaX, deltaY, x, y) => {
+            if (!conn.allowFromLink) {
+                return;
+            }
+            let e = self.page.createNew(self.eventType, x, y);
+            e.fromShape = self.id;
+            e.definedFromConnector = conn.direction.key;
+            self.unSelect();
+            self.initEvent(e);
+            e.namespace = self.namespace;
+            e.container = self.container;
+            e.isFocused = true;
+            e.mousedownConnector = e.toConnector;
+            self.page.mousedownShape = e;
+            e.reset();
+        };
     };
 
     /**

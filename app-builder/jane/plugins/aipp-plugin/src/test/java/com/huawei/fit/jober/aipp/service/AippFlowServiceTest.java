@@ -425,7 +425,7 @@ class AippFlowServiceTest {
         getFlowsMockRetry();
         publishFlowsMock(buildFlowNodeFormInfo());
 
-        FormMetaItem expectedFormMetaItem = new FormMetaItem("testKey", "testName", "TEXT", null);
+        FormMetaItem expectedFormMetaItem = new FormMetaItem("testKey", "testName", "TEXT", null, null);
         formMetaServiceQueryMock(Collections.singletonList(expectedFormMetaItem));
 
         when(metaServiceMock.create(any(), any())).thenAnswer(var -> {
@@ -482,7 +482,7 @@ class AippFlowServiceTest {
         Meta expectMeta = GenTestMeta();
         publishBasicMock(expectMeta);
 
-        FormMetaItem expectedFormMetaItem = new FormMetaItem("testKey", "testName", "TEXT", null);
+        FormMetaItem expectedFormMetaItem = new FormMetaItem("testKey", "testName", "TEXT", null, null);
         formMetaServiceQueryMock(Collections.singletonList(expectedFormMetaItem));
         doAnswer((Answer<Object>) invocation -> {
             MetaDeclarationInfo declaration = invocation.getArgument(1);

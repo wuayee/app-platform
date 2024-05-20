@@ -12,6 +12,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.util.MapBuilder;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.util.Map;
@@ -52,6 +53,15 @@ public class WaterFlowInvoke implements WaterFlowService {
     }
 
     private Map<String, Object> buildInitContext(Map<String, Object> inputParams) {
-        return MapBuilder.<String, Object>get().put(AippConst.BS_INIT_CONTEXT_KEY, inputParams).build();
+        Map<String, Object> initContext =
+                MapBuilder.<String, Object>get().put(AippConst.BS_INIT_CONTEXT_KEY, inputParams).build();
+        Map<String, Object> businessData = (Map<String, Object>) initContext.get(AippConst.BS_INIT_CONTEXT_KEY);
+        if (businessData.containsKey(AippConst.TRACE_ID) && businessData.containsKey(AippConst.CALLBACK_ID)) {
+            String traceId = ObjectUtils.cast(businessData.remove(AippConst.TRACE_ID));
+            businessData.put(AippConst.PARENT_INSTANCE_ID, traceId);
+            String callbackId = ObjectUtils.cast(businessData.remove(AippConst.CALLBACK_ID));
+            businessData.put(AippConst.PARENT_CALLBACK_ID, callbackId);
+        }
+        return initContext;
     }
 }

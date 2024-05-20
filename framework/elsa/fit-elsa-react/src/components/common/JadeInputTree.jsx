@@ -1,4 +1,4 @@
-import {Col, ConfigProvider, Input, Tree, Row} from 'antd';
+import {Col, ConfigProvider, Form, Input, Row, Tree} from 'antd';
 import "./jadeInputTree.css";
 import PropTypes from "prop-types";
 import {JadeStopPropagationSelect} from "./JadeStopPropagationSelect.jsx";
@@ -34,9 +34,11 @@ const convert = (nodeData, level) => {
             referenceKey: nodeData.referenceKey,
             referenceNode: nodeData.referenceNode,
             referenceId: nodeData.referenceId,
-            isLeaf: true
+            isLeaf: true,
         };
-
+        if (nodeData.generic) {
+            ans.generic = nodeData.generic
+        }
         if (nodeData.type === "Object") {
             ans.props = nodeData.props;
         }
@@ -109,6 +111,7 @@ export default function JadeInputTree({data, updateItem}) {
                           onChange={(e) => onInputChange(node.id, "value", e)}/>;
         } else if (node.from === "Reference") {
             return <JadeReferenceTreeSelect className="jade-input-tree-title-tree-select jade-select"
+                                            rules={[{required: true, message: "字段值不能为空"}]}
                                             reference={node}
                                             onReferencedKeyChange={(e) => onReferenceKeyChange(node.id, e)}
                                             onReferencedValueChange={(v) => onReferenceValueChange(node.id, v)}/>;
@@ -126,7 +129,11 @@ export default function JadeInputTree({data, updateItem}) {
     const getOptions = (node) => {
         switch (node.type) {
             case "Object":
-                return [{value: "Reference", label: "引用"}, {value: "Expand", label: "展开"}];
+                if (node.hasOwnProperty("generic")) {
+                    return [{value: "Reference", label: "引用"}];
+                } else {
+                    return [{value: "Reference", label: "引用"}, {value: "Expand", label: "展开"}];
+                }
             case "Array":
                 return [{value: "Reference", label: "引用"}];
             default:
@@ -147,17 +154,25 @@ export default function JadeInputTree({data, updateItem}) {
             <div className="jade-input-tree-title">
                 <Row wrap={false}>
                     <Col flex={"0 0 " + inputWidth + "px"}>
-                        <div className="jade-input-tree-title-child"
-                             style={{display: "flex", alignItems: "center"}}>
-                            <span>{node.title}</span>
-                        </div>
+                        <Form.Item
+                                name={`property-${node.id}`}
+                        >
+                            <div className="jade-input-tree-title-child"
+                                 style={{display: "flex", alignItems: "center"}}>
+                                <span>{node.title}</span>
+                            </div>
+                        </Form.Item>
                     </Col>
                     <Col flex="0 0 70px" style={{paddingRight: 0}}>
+                        <Form.Item
+                                name={`value-select-${node.id}`}
+                        >
                         <div className="jade-input-tree-title-child">
                             <JadeInputTreeSelect node={node} options={getOptions(node)} updateItem={updateItem}/>
                         </div>
+                        </Form.Item>
                     </Col>
-                    <Col flex={"1 1 auto"}>
+                    <Col >
                         <div className="jade-input-tree-title-child">
                             {getValueInput(node)}
                         </div>
@@ -212,12 +227,12 @@ const JadeInputTreeSelect = ({node, options, updateItem}) => {
 
     return (<>
         <JadeStopPropagationSelect
-            style={{background: "#f7f7f7", width: "100%"}}
-            placeholder={"请选择"}
-            defaultValue={node.from}
-            className={"jade-input-tree-title-select jade-select"}
-            onChange={handleItemChange}
-            options={options}
+                style={{background: "#f7f7f7", width: "100%"}}
+                placeholder={"请选择"}
+                defaultValue={node.from}
+                className={"jade-input-tree-title-select jade-select"}
+                onChange={handleItemChange}
+                options={options}
         />
     </>);
 };

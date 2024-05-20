@@ -5,6 +5,7 @@
 package com.huawei.fit.dynamicform.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class FormMetaItem {
     /**
      * 字段的key
@@ -39,4 +41,9 @@ public class FormMetaItem {
      * 其他类型通常为null
      */
     private Integer length;
+
+    /**
+     * 默认值
+     */
+    private Object defaultValue;
 }

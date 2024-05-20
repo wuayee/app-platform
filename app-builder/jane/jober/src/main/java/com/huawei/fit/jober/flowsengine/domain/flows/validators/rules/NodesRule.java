@@ -27,8 +27,6 @@ import java.util.regex.Pattern;
  */
 @Component
 public class NodesRule implements FlowRule {
-    private static final int META_ID_SIZE = 6;
-
     private static final String SPECIAL_CHAR_REG = "[^a-zA-Z0-9 ]";
 
     private static final Pattern BRACES_PATTERN = Pattern.compile("^\\{\\{(.+?)\\}\\}$");
@@ -74,7 +72,6 @@ public class NodesRule implements FlowRule {
 
     private void validateMetaId(String metaId) {
         Validation.notBlank(metaId, exception("flow node metaId, metaId can not be blank"));
-        Validation.same(metaId.length(), META_ID_SIZE, exception("flow node metaId size must be 6"));
         Pattern pattern = Pattern.compile(SPECIAL_CHAR_REG);
         Validation.isFalse(pattern.matcher(metaId).find(), exception("flow node metaId not allow special char"));
     }

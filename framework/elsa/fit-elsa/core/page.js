@@ -10,7 +10,6 @@ import {
     PAGE_OPERATION_MODE,
     PARENT_DOCK_MODE,
     SELECTION_STRATEGY,
-    SHAPE_HIT_TYPE,
     Z_INDEX_OFFSET
 } from '../common/const.js';
 import {sleep, uuid} from '../common/util.js';
@@ -557,16 +556,20 @@ let page = (div, graph, name, id, iDrawer = interactDrawer, pDrawer = pageDrawer
      * 新建图形，会调用初始化代码，为图形第一次生成用
      * todo  待确认，增加了一个isCoEditing的参数，确保在协同情况下，被动创建的图形创建完成就处于协同状态
      */
-    self.createNew = (shapeType, x, y, id, properties, parent, ignoreLimit) => {
+    self.createNew = (shapeType, x, y, id, properties, parent, ignoreLimit, data) => {
         let s = self.createShape(shapeType, x, y, id, ignoreLimit, parent);
         if (s === null) {
             return null;
         }
 
         self.ignoreReact(() => {
+            if (data) {
+                data.index = s.index;
+                !data.container && (data.container = s.container);
+                s.deSerialize(data)
+            }
             setNewShapeInitProperties(properties, s);
             s.load();//move coediting detection here
-
             s.serializable && self.graph.collaboration.invoke({
                 method: "new_shape", page: self.id, shape: s.id, value: s.serialize(), mode: self.mode
             });
@@ -1664,7 +1667,7 @@ let page = (div, graph, name, id, iDrawer = interactDrawer, pDrawer = pageDrawer
      * @return {{y1: number, x1: number, y2: number, x2: number}} 坐标范围
      */
     self.getShapeFrame = () => {
-        const frame = {x1:Number.MAX_VALUE, y1:Number.MAX_VALUE, x2:Number.MIN_VALUE, y2:Number.MIN_VALUE};
+        const frame = {x1: Number.MAX_VALUE, y1: Number.MAX_VALUE, x2: Number.MIN_VALUE, y2: Number.MIN_VALUE};
         self.shapes.forEach(shape => {
             let shapeFrame = shape.getShapeFrame();
             frame.x1 = Math.min(frame.x1, shapeFrame.x1);
@@ -1868,7 +1871,7 @@ let setCopyPaste = page => {
             console.log("pasteShape", "data old id", data.oldId);
 
             //开始paste shape
-            newShape = pastePage.createShape(data.type, data.x, data.y, data.id);
+            newShape = pastePage.createNew(data.type, data.x, data.y, data.id);
             newShape.oldId = data.oldId;
             data.x = calcX(data);
             data.y = calcY(data);
@@ -1879,10 +1882,6 @@ let setCopyPaste = page => {
                 pastePage.moveToContainer(newShape);
                 topShapes.push(newShape);
             }
-            pastePage.shapeCreated(newShape);
-            pastePage.graph.collaboration.invoke({
-                method: "new_shape", page: pastePage.id, shape: newShape.id, value: newShape.serialize()
-            });
             newShapes.push({shape: newShape});
         });
         topShapes.forEach(s => {

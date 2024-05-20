@@ -89,7 +89,7 @@ public class DynamicFormMetaServiceIml implements DynamicFormMetaService {
                     return new FormMetaItem(meta.getKey(),
                             meta.getName(),
                             ShapesMetaType.getShapesMetaType(meta.getType()).getValue(),
-                            length);
+                            length, null);
                 });
             }).collect(Collectors.toList());
         } catch (JsonProcessingException e) {
@@ -102,6 +102,7 @@ public class DynamicFormMetaServiceIml implements DynamicFormMetaService {
     private String queryMeta(DynamicFormEntity formEntity) {
         GraphParam elsaParam = buildGraphParam(formEntity.getId(), formEntity.getVersion());
         OperationContext context = new OperationContext();
+        // todo 暂时用不到，可去掉；后期应该改为调用appBuilder的查询表单的渲染数据json的接口
         return elsaClient.get(elsaParam, context);
     }
 }

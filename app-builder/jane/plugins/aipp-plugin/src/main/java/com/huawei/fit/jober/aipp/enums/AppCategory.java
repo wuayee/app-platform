@@ -19,7 +19,8 @@ import java.util.Optional;
 @Getter
 public enum AppCategory {
     APP("应用", "app", "APP", "APP", "huawei", "AIPP"),
-    WATER_FLOW("工具流", "waterFlow", "TOOL", "WATERFLOW", "huawei", "AIPP");
+    WATER_FLOW("工具流", "waterFlow", "TOOL", "WATERFLOW", "huawei", "AIPP"),
+    FIT("工具", "fit", "TOOL", "FIT", "huawei", "AIPP");
 
     private final String description;
     private final String type;

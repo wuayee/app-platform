@@ -29,8 +29,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jober.FlowsDataBaseTest;
+import com.huawei.fit.jober.bff.util.FlowDefinitionParseUtils;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
+import com.huawei.fit.jober.common.utils.SleepUtil;
 import com.huawei.fit.jober.common.utils.UUIDUtil;
 import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
@@ -51,11 +53,13 @@ import com.huawei.fit.jober.flowsengine.domain.flows.streams.FitStream.Subscribe
 import com.huawei.fit.jober.flowsengine.domain.flows.streams.From;
 import com.huawei.fit.jober.flowsengine.domain.flows.streams.nodes.Blocks;
 import com.huawei.fit.jober.flowsengine.domain.flows.streams.nodes.Node;
+import com.huawei.fit.jober.flowsengine.utils.FlowUtil;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.broker.client.Router;
 import com.huawei.fitframework.util.CollectionUtils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 
 import org.junit.jupiter.api.Disabled;
@@ -114,6 +118,27 @@ class FlowDefinitionTest {
             From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
 
             assertFlowableFlow(flowDefinition, from);
+        }
+
+        @Test
+        @Disabled
+        @DisplayName("测试解析Elsa条件事件成功")
+        public void testElsaConditionParserSuccess() {
+            String jsonData = getJsonData(getFilePath("flows_with_elsa_condition.json"));
+
+            FlowDefinition flowDefinition = PARSER.parse(
+                    FlowDefinitionParseUtils.getParsedGraphData(JSONObject.parseObject(jsonData), "1.0"));
+            From<FlowData> from = (From<FlowData>)flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+
+            HashMap<String, Object> businessData = new HashMap<String, Object>() {{
+                put("Operator", "crx");
+                put("bool1", false);
+                put("bool2", false);
+            }};
+            FlowUtil.cacheResultToNode(businessData, from.getId());
+            from.offer(getFlowData(businessData, "crx"));
+            // 这里只有sleep才会走到 com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowConditionNode.getWhether 的异步方法中 查看ohScript执行结果
+            SleepUtil.sleep(10000);
         }
 
         @Test

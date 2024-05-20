@@ -10,6 +10,8 @@ import com.huawei.fit.waterflow.domain.states.MatchToHappen;
 import com.huawei.fit.waterflow.domain.states.State;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.jade.fel.engine.activities.processors.AiBranchProcessor;
+import com.huawei.jade.fel.engine.activities.processors.AiBranchToProcessor;
 import com.huawei.jade.fel.engine.flows.AiFlow;
 
 /**
@@ -85,5 +87,4 @@ public class AiMatchToHappen<D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> 
 
         return new AiState<>(others, this.flow);
     }
-
 }
