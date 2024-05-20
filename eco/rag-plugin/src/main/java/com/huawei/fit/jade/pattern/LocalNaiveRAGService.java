@@ -27,10 +27,10 @@ public class LocalNaiveRAGService implements NaiveRAGService {
         MilvusVectorConnector milvusConn;
         JdbcSqlConnector jdbcConn;
         ConnectorProperties properties =
-                new ConnectorProperties("51.36.139.24", 5433, "postgres", "postgres");
+                new ConnectorProperties("80.11.128.66", 5433, "postgres", "postgres");
 
         try {
-            milvusConn = new MilvusVectorConnector("51.36.139.24", 19530, null, null, null);
+            milvusConn = new MilvusVectorConnector("80.11.128.62", 19530, null, null, null);
             jdbcConn = new JdbcSqlConnector(POSTGRESQL, properties, "ai_edm_backend");
         } catch (IllegalArgumentException e) {
             System.out.println(e.toString());
