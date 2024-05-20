@@ -7,8 +7,6 @@ import Home from "../pages/home";
 import KnowledgeBaseDetail from '../pages/knowledge-base/knowledge-detail';
 import Demo from "../pages/demo";
 import ChatRunning from "../pages/chatEngineHome/index.jsx";
-import AippIndex from "../pages/aippIndex";
-import AddFlow from "../pages/addFlow";
 import AppDetail from "../pages/appDetail";
 import AippIndex from "../pages/aippIndex";
 import AddFlow from "../pages/addFlow";
