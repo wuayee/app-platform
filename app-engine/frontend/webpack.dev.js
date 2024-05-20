@@ -75,12 +75,6 @@ module.exports = merge(common, {
             secure: false,
             changeOrigin: true,
           },
-          "/knowledge/repos": {
-            target: 'http://10.85.112.74:8080',
-            pathRewrite: {"^/modelApi": ""},
-            secure: false,
-            changeOrigin: true,
-          },
           "/knowledge": {
             target: 'http://10.85.112.75:8080',
             pathRewrite: {"^/modelApi": ""},

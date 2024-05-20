@@ -102,7 +102,9 @@ const KnowledgeBaseCreate = () => {
 
   return (
     <>
-    <div className='aui-fullpage'>
+    <div className='aui-fullpage' style={{
+      height: 'calc(100vh - 100px)'
+    }}>
     <div className='aui-header-1'>
       <div className='aui-title-1'>
         <BreadcrumbSelf currentLabel={id ? '修改知识库': '创建知识库'}></BreadcrumbSelf>
@@ -113,6 +115,7 @@ const KnowledgeBaseCreate = () => {
         flexDirection: 'column',
         justifyContent: 'space-between'
       }}>
+        <div></div>
         <div style={{
           width: '100%',
           flex:1,

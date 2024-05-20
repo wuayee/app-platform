@@ -4,11 +4,12 @@ import { Breadcrumb, Layout, Menu, theme, ConfigProvider,  } from 'antd';
 import { HashRouter, Route, useNavigate, Routes, useLocation } from 'react-router-dom';
 import { routeList, flattenRoute, getRouteByKey, getMenus } from '../../router/route'
 import { Icons } from '../icons/index'
+import { HeaderUser } from '../header-user';
+import { HeaderFolderMenu } from '../header-folder-menu';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
-
 function getItem(
   label: React.ReactNode,
   key: React.Key,
@@ -31,7 +32,29 @@ const AppLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [currentActivedPage, setCurrentActivedPage] = useState('首页');
 
+  // 控制面板的显示与隐藏
+  const [showMenu, setShowMenu] = useState(false);
+
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  useEffect(()=> {
+    const { pathname } = location;
+    const route = getRouteByKey(flattenRouteList, pathname)
+
+    if(!route?.hidden) {
+      setShowMenu(true)
+    } else {
+      setShowMenu(false)
+    }
+  }, [location]);
+
+  const menuFolder = ()=> {
+    setShowMenu(!showMenu)
+  }
+
+
   const menuClick = (e: any) => {
     const route = getRouteByKey(flattenRouteList, e.key);
     setCurrentActivedPage(route?.label || '')
@@ -43,31 +66,39 @@ const AppLayout: React.FC = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+      <>
+        <Sider collapsible collapsed={false} onCollapse={(value) => setShowMenu(false)}
+          style={{
+            transition:' all .3s ease',
+            visibility: showMenu ? 'visible' : 'hidden',
+            opacity: showMenu ? 1 : 0,
+            flex: showMenu ? '0 0 200px' : '0'
+          }}
+        >
         <div style={{
           position: 'static',
           width: '100%',
           height: '48px',
           'display': 'flex',
-          'flex-direction': 'row',
-          'justify-content': 'flex-start',
-          'align-items': 'center',
+          'flexDirection': 'row',
+          'justifyContent': 'flex-start',
+          'alignItems': 'center',
           padding: '0px 24px 0px 24px',
           flex: 'none',
           order: 0,
-          'align-self': 'stretch',
-          'flex-grow': 0,
+          'alignSelf': 'stretch',
+          'flexGrow': 0,
           margin: '8px 0px',
         }}>
           <Icons.logo/> <span style = {
             {
               color: 'rgb(255, 255, 255)',
-              'font-size': '20px',
-              'font-weight': '400',
-              'line-height': '24px',
-              'letter-spacing': '0px',
-              'text-align': 'left',
-              'margin-left': '8px',
+              'fontSize': '20px',
+              'fontWeight': '400',
+              'lineHeight': '24px',
+              'letterSpacing': '0px',
+              'textAlign': 'left',
+              'marginLeft': '8px',
             }
           }>APP Engine</span>
         </div>
@@ -79,14 +110,21 @@ const AppLayout: React.FC = () => {
           <Menu className='menu'  theme="dark" defaultSelectedKeys={['/home']} mode="inline" items={items} onClick={menuClick}/>
         </ConfigProvider>
       </Sider>
+      </>
+      <>
+        <HeaderFolderMenu openMenuFunc={menuFolder} style={{
+            transition:' all .3s ease',
+            width: !showMenu ? '100%' : '0',
+            overflow: 'hidden',
+            visibility: !showMenu ? 'visible' : 'hidden',
+            opacity: !showMenu ? 1 : 0,
+          }}/>
+      </>
+
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer, height: '48px' }} />
+        <HeaderUser/>
         <Content style={{padding: '0 16px', background: colorBgContainer }}>
-          {/* <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb> */}
-
             <Routes>
               {flattenRouteList.map(route=> {
                 if(route.component) {
