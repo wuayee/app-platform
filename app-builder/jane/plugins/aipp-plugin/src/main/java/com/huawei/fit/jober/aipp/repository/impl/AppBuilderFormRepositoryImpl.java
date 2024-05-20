@@ -12,7 +12,7 @@ import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderFormSerializer;
 import com.huawei.fitframework.annotation.Component;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -35,7 +35,10 @@ public class AppBuilderFormRepositoryImpl implements AppBuilderFormRepository {
     @Override
     public AppBuilderForm selectWithId(String id) {
         AppBuilderForm appBuilderForm = this.serializer.deserialize(this.appBuilderFormMapper.selectWithId(id));
-        Optional.ofNullable(appBuilderForm).ifPresent(f -> f.setFormPropertyRepository(this.formPropertyRepository));
+        if (appBuilderForm == null) {
+            return null;
+        }
+        appBuilderForm.setFormPropertyRepository(this.formPropertyRepository);
         return appBuilderForm;
     }
 
@@ -43,6 +46,7 @@ public class AppBuilderFormRepositoryImpl implements AppBuilderFormRepository {
     public List<AppBuilderForm> selectWithType(String type) {
         return this.appBuilderFormMapper.selectWithType(type)
                 .stream()
+                .filter(Objects::nonNull)
                 .map(appBuilderFormPO -> {
                     AppBuilderForm appBuilderForm = this.serializer.deserialize(appBuilderFormPO);
                     appBuilderForm.setFormPropertyRepository(this.formPropertyRepository);

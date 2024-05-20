@@ -11,6 +11,7 @@ import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
+import com.huawei.fit.jober.aipp.aop.AippLogInsert;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.common.MetaUtils;
 import com.huawei.fit.jober.aipp.common.Utils;
@@ -27,7 +28,6 @@ import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
 import com.huawei.fit.jober.aipp.service.AippLogService;
-// import com.huawei.fit.jober.aipp.service.DistributedMapService;
 import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
@@ -322,6 +322,7 @@ public class AippLogServiceImpl implements AippLogService {
      * @param logDto 插入数据
      */
     @Override
+    @AippLogInsert
     public void insertLog(AippLogCreateDto logDto) throws IllegalArgumentException {
         if (logDto.allFieldsNotNull()) {
             aippLogMapper.insertOne(logDto);

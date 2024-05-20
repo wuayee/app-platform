@@ -227,7 +227,6 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         // todo: 临时逻辑，如果出错则停止前端轮询并主动终止流程；待流程支持异步调用抛异常后再修改
         log.error("versionId {} errorMessage {}", llmMeta.getVersionId(), errorMessage);
         String msg = "很抱歉，模型节点遇到了问题，请稍后重试。";
-        Utils.persistAippErrorLog(this.aippLogService, msg, llmMeta.getFlowData());
         InstanceDeclarationInfo declarationInfo = InstanceDeclarationInfo.custom()
                 .putInfo(AippConst.INST_FINISH_TIME_KEY, LocalDateTime.now())
                 .putInfo(AippConst.INST_STATUS_KEY, MetaInstStatusEnum.ERROR.name())
@@ -240,6 +239,9 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
                 llmMeta.getFlowTraceId(),
                 Collections.emptyMap(),
                 llmMeta.getContext());
+
+        // todo@zhangyue 待确认，最后状态是变成ERROR还是TERMINAL.
+        Utils.persistAippErrorLog(this.aippLogService, msg, llmMeta.getFlowData());
     }
 
     /**

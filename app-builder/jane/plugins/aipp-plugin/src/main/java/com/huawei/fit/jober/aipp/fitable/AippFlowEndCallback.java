@@ -69,15 +69,6 @@ public class AippFlowEndCallback implements FlowCallbackService {
         String endFormId = (String) attr.get(AippConst.ATTR_END_FORM_ID_KEY);
         String endFormVersion = (String) attr.get(AippConst.ATTR_END_FORM_VERSION_KEY);
 
-        // 持久化aipp实例表单记录
-        if (StringUtils.isNotEmpty(endFormId) && StringUtils.isNotEmpty(endFormVersion)) {
-            AippLogData logData =
-                    Utils.buildLogDataWithFormData(this.formRepository, endFormId, endFormVersion, businessData);
-            Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
-        }
-
-        this.logFinalOutput(contexts, businessData);
-
         // update all result data
         InstanceDeclarationInfo declarationInfo = InstanceDeclarationInfo.custom()
                 .putInfo(AippConst.INST_CURR_FORM_ID_KEY, endFormId)
@@ -103,6 +94,15 @@ public class AippFlowEndCallback implements FlowCallbackService {
                     .format(SerializationFormat.CBOR)
                     .invoke(contexts);
         }
+
+        // 持久化aipp实例表单记录
+        if (StringUtils.isNotEmpty(endFormId) && StringUtils.isNotEmpty(endFormVersion)) {
+            AippLogData logData =
+                    Utils.buildLogDataWithFormData(this.formRepository, endFormId, endFormVersion, businessData);
+            Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
+        }
+
+        this.logFinalOutput(contexts, businessData);
     }
 
     private void logFinalOutput(List<Map<String, Object>> contexts, Map<String, Object> businessData) {

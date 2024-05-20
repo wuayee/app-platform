@@ -68,13 +68,12 @@ public class AippFlowExceptionHandle implements FlowExceptionService {
                 businessData);
 
         String aippInstId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
-        addErrorLog(aippInstId, contexts, errorMessage);
-
         InstanceDeclarationInfo declarationInfo = InstanceDeclarationInfo.custom()
                 .putInfo(AippConst.INST_FINISH_TIME_KEY, LocalDateTime.now())
                 .putInfo(AippConst.INST_STATUS_KEY, MetaInstStatusEnum.ERROR.name())
                 .build();
         OperationContext context = Utils.getOpContext(businessData);
         metaInstanceService.patchMetaInstance(versionId, aippInstId, declarationInfo, context);
+        addErrorLog(aippInstId, contexts, errorMessage);
     }
 }
