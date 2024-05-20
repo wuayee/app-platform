@@ -1,13 +1,10 @@
-import { Button } from 'antd';
 import React, { useState } from 'react';
-import type { PaginationProps } from 'antd';
 import { Tabs } from 'antd';
-import './style.scss';
 import TestSet from './testSet';
 
 const { TabPane } = Tabs;
 
-const Evaluate: React.FC = () => {
+const AppEvaluate: React.FC = () => {
 
   return (
     <div className='aui-tab'>
@@ -23,4 +20,4 @@ const Evaluate: React.FC = () => {
 }
 
 
-export default Evaluate;
+export default AppEvaluate;

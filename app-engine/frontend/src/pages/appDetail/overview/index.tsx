@@ -1,26 +1,44 @@
 import { Button, Divider, Flex, Input, Switch, Tag } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.scss';
+import { queryAppDetail } from '../../../shared/http/app';
+import { Message } from '../../../shared/utils/message';
 
 const AppOverview: React.FC = () => {
 
-  const tags = ['财经', '金融', '投资'];
+  const [detail, setDetail] = useState({});
+  const appId = '9455a208e1564cb592f084b851fa46d2';
+  const [appIcon, setAppIcon] = useState('/src/assets/svg/app-default.svg');
+
+  useEffect(() => {
+    queryAppDetail(appId).then(res => {
+      if (res.code === 0) {
+        setDetail({ ...res.data });
+        if (res.data?.attributes?.icon) {
+          setAppIcon(res.data?.attributes?.icon);
+        }
+      } else {
+        Message({ type: 'error', content: res.message || '获取详情数据失败' })
+      }
+    });
+  }, [])
 
   return (
     <div className='tab-content'>
       <Flex vertical gap={20}>
         <Flex justify={'space-between'}>
           <Flex gap='middle'>
-            <img width={100} height={100} />
+            <img width={100} height={100} src={appIcon} />
             <Flex vertical gap='middle'>
-              <h3>经营小魔方</h3>
+              <h3>{detail?.name}</h3>
               <Flex gap={20}>
-                <Flex gap='small'>
-                  <span>张晓明 00123456</span>
+                <Flex gap='small' align='center'>
+                  <img width={16} height={16} src='/src/assets/images/avatar-default.png' />
+                  <span>{detail?.createBy}</span>
                 </Flex>
                 <Flex gap='small'>
                   <span>发布于</span>
-                  <span>2024-01-31 17:46:41</span>
+                  <span>{detail?.createAt}</span>
                 </Flex>
               </Flex>
               <Flex gap={20}>
@@ -57,7 +75,7 @@ const AppOverview: React.FC = () => {
           </Flex>
         </Flex>
         <div>
-          微软的笔记插件，可以帮助用户整理和记录灵感和想法，提高工作和学习效率。这些插件可以根据用户的需求和工作习惯进行选择，提高办公效率。
+          {detail?.attributes?.description}
         </div>
         <Button type='primary' style={{
           width: '96px',
@@ -68,22 +86,9 @@ const AppOverview: React.FC = () => {
           <Flex gap='large'>
             <Flex vertical gap={20}>
               <span>对话开场白</span>
-              <span>分类</span>
             </Flex>
             <Flex vertical gap={20}>
-              <span>你好，请输入你的需求询问我。我会帮你提供预算制定、储蓄计划、退休规划、教育基金规划等功能。</span>
-              <span>
-                {tags.map(item => (
-                  <Tag style={{
-                    padding: '4px 16px',
-                    background: 'rgb(230, 241, 253)',
-                    fontSize: '14px',
-                    border: 'none',
-                    borderRadius: '4px',
-                    marginRight: '16px'
-                  }}>{item}</Tag>
-                ))}
-              </span>
+              <span>{detail?.attributes?.greeting}</span>
             </Flex>
           </Flex>
         </div>
@@ -107,7 +112,7 @@ const AppOverview: React.FC = () => {
                     borderRadius: '10px',
                     padding: '0 8px'
                   }}>运行中</Tag>
-                  <Switch defaultChecked />
+                  <Switch />
                 </Flex>
               </Flex>
               <Input placeholder='https://octo-cd.hdesign.huawei.com/app/editor/UcmfDrFl0JHBFRBeGgfj2Q?' />
@@ -138,7 +143,7 @@ const AppOverview: React.FC = () => {
                     borderRadius: '10px',
                     padding: '0 8px'
                   }}>运行中</Tag>
-                  <Switch defaultChecked />
+                  <Switch />
                 </Flex>
               </Flex>
               <Input placeholder='https://octo-cd.hdesign.huawei.com/app/editor/UcmfDrFl0JHBFRBeGgfj2Q?' />
@@ -154,6 +159,5 @@ const AppOverview: React.FC = () => {
     </div>
   )
 }
-
 
 export default AppOverview;

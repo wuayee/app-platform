@@ -8,7 +8,8 @@ export const httpUrlMap = {
     PUBLISH_URL: 'https://jane-beta.huawei.com/appbuilder/#',
     WS_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/chat',
     WS_AUDIO_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/asr',
-    MODEL_URL: '/modelApi'
+    MODEL_URL: '/modelApi',
+    APP_URL: '/app',
   },
   'production': {
     JANE_URL: 'https://jane.huawei.com/api',

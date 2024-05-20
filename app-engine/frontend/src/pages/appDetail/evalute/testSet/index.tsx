@@ -8,6 +8,8 @@ const showTotal: PaginationProps['showTotal'] = (total) => `共 ${total} 条`;
 
 const TestSet: React.FC = () => {
 
+  const [open, setOpen] = useState(false);
+
   const dataSource = Array.from({ length: 30 }).fill(null).map((_, index) => ({
     key: index,
     id: index,
@@ -61,6 +63,10 @@ const TestSet: React.FC = () => {
       ),
     }
   ];
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
 
   return (
     <div className='tab-content'>
