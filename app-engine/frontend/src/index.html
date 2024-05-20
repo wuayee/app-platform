@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>App Enging</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://s3-hc-dgg.hics.huawei.com/fit.elsa.bucket/resources/favorite.png"
+    />
+    <!-- <link rel="stylesheet" href="/src/styles/common.css"/> -->
+  </head>
+  <style>
+    div[id*="nginx_"]{
+      display: none;
+    }
+    img[id*="nginx_"]{
+      display: none;
+    }
+    #Loading {
+      top: 50%;
+      left: 50%;
+      position: absolute;
+      -webkit-transform: translateY(-50%) translateX(-50%);
+      transform: translateY(-50%) translateX(-50%);
+      z-index: 100;
+    }
+
+    /* #maskLayer {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgb(85 73 73 / 6%);
+      pointer-events: none;
+      top: 0;
+      left: 0;
+      z-index: 999;
+    } */
+  </style>
+  <body>
+    <!-- <div id="maskLayer"></div> -->
+    <div id="root"></div>
+  </body>
+</html>

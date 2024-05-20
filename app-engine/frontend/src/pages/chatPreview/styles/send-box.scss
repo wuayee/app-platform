@@ -1,0 +1,101 @@
+.send-box {
+  display: flex;
+  align-self: flex-end;
+  justify-content: flex-end;
+  padding-right: 16px;
+  padding-left: 45px;
+  position: relative;
+  .send-info {
+    padding: 10px 16px;
+    font-size: 14px;
+    line-height: 25px;
+    border-radius: 10px;
+    font-family: '苹方-简';
+    margin-right: 16px;
+    margin-bottom: 15px;
+    background-color: #047BFC;
+    word-break: break-all;
+    color: #ffffff;
+    position: relative;
+    p {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+    a {
+      color: #e9edfa;
+      text-decoration: underline;
+    }
+    &:hover {
+      .message-tip-box-send {
+        width: max-content;
+        display: flex;
+        align-items: center;
+      }
+    }
+    .img-send-box {
+      .img-send-item {
+        width: 240px;
+        height: 160px;
+      }
+      .file-div-item {
+        display: flex;
+        align-items: center;
+        height: 60px;
+        background-color: #252b3a33;
+        border-radius: 4px;
+        padding: 8px;
+        box-sizing: border-box;
+        .file-item {
+          width: 36px;
+          height: 36px;
+          margin-right: 8px;
+        }
+        .file-text {
+          width: 100px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .file-close {
+          cursor: pointer;
+          width: 16px;
+          height: 16px;
+          margin-left: 6px;
+          margin-top: 4px;
+        }
+      }
+    }
+  }
+  .user-image {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
+  }
+  .message-tip-box-send {
+    position: absolute;
+    right: 0;
+    bottom: -30px;
+    color: #888888;
+    font-size: 12px;
+    display: none;
+    .inner {
+      width: 300px;
+      display: flex;
+      padding-top: 10px;
+      justify-content: flex-end;
+      & > div {
+        cursor: pointer;
+        margin: 0 6px;
+      }
+    }
+  }
+  .check-box {
+    position: absolute;
+    left: 15px;
+  }
+}
