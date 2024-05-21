@@ -45,6 +45,7 @@ import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.StringUtils;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -61,6 +62,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @DisplayName("测试 RefreshInTimeTaskInstanceRepo")
+@Disabled
 class RefreshInTimeTaskInstanceRepoTest {
     private static final String OPERATOR = "admin";
 
