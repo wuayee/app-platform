@@ -37,13 +37,14 @@ public class AppBuilderAppToolImpl implements AppBuilderAppTool {
     private final AppBuilderAppService appService;
     private static final String DEFAULT_TEMPLATE_ID = "df87073b9bc85a48a9b01eccc9afccc4";
     private static final String INDEX_URL_FORMAT =
-            "应用创建成功，链接为：{0}//appbuilder//#//aipp//31f20efc7e0848deab6a6bc10fc3021e//detail//{1}";
-    private final String janeUrl;
+            "应用创建成功！ \n访问地址：{0}//#//app//31f20efc7e0848deab6a6bc10fc3021e//detail//{1}";
+    private final String appEngineUrl;
     private static final Logger log = Logger.get(AppBuilderAppToolImpl.class);
 
-    public AppBuilderAppToolImpl(AppBuilderAppService appService, @Value("${jane.endpoint}") String janeUrl) {
+    public AppBuilderAppToolImpl(AppBuilderAppService appService,
+            @Value("${app-engine.endpoint}") String appEngineUrl) {
         this.appService = appService;
-        this.janeUrl = janeUrl;
+        this.appEngineUrl = appEngineUrl;
     }
 
     @Override
@@ -54,7 +55,15 @@ public class AppBuilderAppToolImpl implements AppBuilderAppTool {
             dto = JsonUtils.parseObject(appInfo, AppCreateToolDto.class);
         } catch (Exception exception) {
             log.error("Failed to create app, parse json str error: {}", appInfo, exception);
-            return "创建应用失败，请重试";
+            log.info("use default app attributes.");
+            dto = AppCreateToolDto.builder()
+                    .name("defaultApplicationCreatedAt" + System.currentTimeMillis())
+                    .description("this is a default application.")
+                    .icon("")
+                    .greeting("hello world!")
+                    .appType("")
+                    .type(AppTypeEnum.APP.code())
+                    .build();
         }
         dto.setAppType(StringUtils.isEmpty(dto.getAppType()) ? StringUtils.EMPTY : dto.getAppType());
         dto.setName(StringUtils.isEmpty(dto.getName()) ? StringUtils.EMPTY : dto.getName());
@@ -74,7 +83,7 @@ public class AppBuilderAppToolImpl implements AppBuilderAppTool {
             this.updateConfig(dto, context, appDto, appDto.getConfig());
         }
         String appId = appDto.getId();
-        return StringUtils.format(INDEX_URL_FORMAT, this.janeUrl, appId);
+        return StringUtils.format(INDEX_URL_FORMAT, this.appEngineUrl, appId);
     }
 
     private void updateConfig(AppCreateToolDto dto, OperationContext context, AppBuilderAppDto appDto,
@@ -95,7 +104,7 @@ public class AppBuilderAppToolImpl implements AppBuilderAppTool {
             return;
         }
         AppBuilderConfigFormPropertyDto systemPrompt = systemPromptOptional.get();
-        systemPrompt.setName(dto.getSystemPrompt());
+        systemPrompt.setDefaultValue(dto.getSystemPrompt());
         this.appService.updateConfig(appDto.getId(), configDto, context);
     }
 
