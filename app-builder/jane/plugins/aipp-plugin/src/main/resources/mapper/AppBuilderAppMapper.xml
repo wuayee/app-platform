@@ -53,7 +53,7 @@
 
     <sql id="order">
         <choose>
-            <when test="cond.sort != null and cond.order != null">
+            <when test="cond != null and cond.sort != null and cond.order != null">
                 order by ${cond.sort}
                 <choose>
                     <when test="cond.order == 'descend'">
