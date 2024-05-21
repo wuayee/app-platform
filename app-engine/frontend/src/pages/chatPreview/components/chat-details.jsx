@@ -28,6 +28,9 @@ const ChatDetail = () => {
             <div className="inner-right">
               <div className=""><img src={robot2}/></div>
             </div>
+            <div className="inner-right-chat">
+              Hi~我是APP Engine的超级应用小海，我可以呼唤其他应用协同工作，也可以解答存储领域相关任何问题，试试向我提问吧~
+            </div>
           </div>
           <div className="head-nav">
             <div className="nav-left">
