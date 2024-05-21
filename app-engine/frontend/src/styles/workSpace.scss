@@ -61,8 +61,9 @@
   .layout-content {
     display: flex;
     height: calc(100vh - 56px);
+    position: relative;
     .chat-icon {
-      position: fixed;
+      position: absolute;
       background-color: #ffffff;
       right: 30px;
       top: 90px;
@@ -92,6 +93,19 @@
   background-image: url('../assets//images/bg3.png') ;
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  .ant-layout-header,.ant-layout-content {
+    background-color: transparent !important;
+    padding: 0 !important;
+  }
+}
+
+.home-app {
+  background-image: url('../assets//images/bg3.png') ;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  .ant-layout-header {
+    height: 0 !important;
+  }
   .ant-layout-header,.ant-layout-content {
     background-color: transparent !important;
     padding: 0 !important;
