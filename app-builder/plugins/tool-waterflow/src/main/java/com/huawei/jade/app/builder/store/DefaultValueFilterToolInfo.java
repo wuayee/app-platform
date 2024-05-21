@@ -35,13 +35,17 @@ public class DefaultValueFilterToolInfo implements Tool.Info {
     public Map<String, Object> schema() {
         // 过滤掉摘要信息中拥有默认值的参数。
         Map<String, Object> schema = new HashMap<>(this.toolInfo.schema());
+        return getFilterSchema(schema);
+    }
+
+    static Map<String, Object> getFilterSchema(Map<String, Object> schema) {
         Map<String, Object> parametersSchema = cast(schema.get("parameters"));
         if (MapUtils.isEmpty(parametersSchema)) {
-            return this.toolInfo.schema();
+            return schema;
         }
         Map<String, Object> properties = cast(parametersSchema.get("properties"));
         if (MapUtils.isEmpty(properties)) {
-            return this.toolInfo.schema();
+            return schema;
         }
         List<String> defaultKeyList = new ArrayList<>();
         Iterator<Map.Entry<String, Object>> iterator = properties.entrySet().iterator();
