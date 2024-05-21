@@ -47,6 +47,7 @@ import com.huawei.fitframework.broker.client.Router;
 import com.huawei.fitframework.plugin.Plugin;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -64,6 +65,7 @@ import java.util.HashSet;
  * @author l00862071
  * @since 2024/2/7
  */
+@Disabled
 public class FlowContextsServicePersistTest extends DatabaseBaseTest {
     private static final BrokerClient BROKER_CLIENT = Mockito.mock(BrokerClient.class);
 

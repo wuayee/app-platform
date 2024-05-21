@@ -66,16 +66,13 @@ export const getColumnSearchProps = (
   },
 });
 
-const LiveUiTable: React.FC<{ dataSource; columns; onChange }> = ({
-  dataSource,
-  columns,
-  onChange,
-}) => (
+const LiveUiTable: React.FC<params> = (
+  params,
+) => {
+  return(
   <div>
     <Table
-      dataSource={dataSource}
-      columns={columns}
-      onChange={onChange}
+      {...params}
       pagination={{
         position: ['bottomRight'],
         size: 'small',
@@ -87,6 +84,6 @@ const LiveUiTable: React.FC<{ dataSource; columns; onChange }> = ({
       }}
     />
   </div>
-);
+)};
 
 export default LiveUiTable;

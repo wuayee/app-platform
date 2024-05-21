@@ -31,7 +31,7 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderConfigDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormPropertyDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
-import com.huawei.fit.jober.aipp.dto.aipplog.AppQueryCondition;
+import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.AppTypeEnum;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
@@ -108,11 +108,16 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
 
     @Override
     @Fitable(id = "b389e19779fcc245b7a6135a46eb5866")
+    @Transactional
     public Rsp<AippCreateDto> publish(AppBuilderAppDto appDto, OperationContext contextOf) {
         // todo 要加个save appDto到数据的逻辑
         AippDto aippDto = ConvertUtils.toAppDto(appDto);
         AippCreateDto aippCreateDto = this.aippFlowService.create(aippDto, contextOf);
         aippDto.setId(aippCreateDto.getAippId());
+        String id = appDto.getId();
+        AppBuilderApp appBuilderApp = this.appFactory.create(id);
+        appBuilderApp.setState("RUNNING");
+        this.appFactory.update(appBuilderApp);
         return this.aippFlowService.publish(aippDto, contextOf);
     }
 
@@ -135,10 +140,10 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
 
     @Override
     @Fitable(id = "b389e19779fcc245b7a6135a46eb5850")
-    public Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(HttpClassicServerRequest httpRequest, String tenantId,
-            long offset, int limit) {
+    public Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(AppQueryCondition cond,
+            HttpClassicServerRequest httpRequest, String tenantId, long offset, int limit) {
         List<AppBuilderAppMetadataDto> result =
-                this.appRepository.selectByTenantIdWithPage(tenantId, AppTypeEnum.APP.code(), offset, limit)
+                this.appRepository.selectByTenantIdWithPage(cond, tenantId, AppTypeEnum.APP.code(), offset, limit)
                         .stream()
                         .map(this::buildAppMetaData)
                         .collect(Collectors.toList());
@@ -164,7 +169,7 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
     @Override
     @Transactional
     @Fitable(id = "b389e19779fcc245b7a6815a46eb5865")
-    public Rsp<AppBuilderAppDto> create(String appId, AppBuilderAppCreateDto dto, OperationContext context) {
+    public AppBuilderAppDto create(String appId, AppBuilderAppCreateDto dto, OperationContext context) {
         if (dto != null) {
             this.validateCreateApp(dto.getName(), context);
         }
@@ -195,7 +200,7 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
 
         resetOperatorAndTime(templateApp, LocalDateTime.now(), context.getOperator());
         this.saveNewAppBuilderApp(templateApp);
-        return Rsp.ok(this.buildFullAppDto(templateApp));
+        return this.buildFullAppDto(templateApp);
     }
 
     private void validateCreateApp(String name, OperationContext context) {

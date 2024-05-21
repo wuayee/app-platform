@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.aipp.repository.impl;
 
 import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
-import com.huawei.fit.jober.aipp.dto.aipplog.AppQueryCondition;
+import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderAppSerializer;
@@ -44,8 +44,8 @@ public class AppBuilderAppRepositoryImpl implements AppBuilderAppRepository {
     }
 
     @Override
-    public List<AppBuilderApp> selectByTenantIdWithPage(String tenantId, String typeFilter, long offset, int limit) {
-        return this.appBuilderAppMapper.selectByTenantIdWithPage(tenantId, typeFilter, offset, limit)
+    public List<AppBuilderApp> selectByTenantIdWithPage(AppQueryCondition cond, String tenantId, String typeFilter, long offset, int limit) {
+        return this.appBuilderAppMapper.selectByTenantIdWithPage(cond, tenantId, typeFilter, offset, limit)
                 .stream()
                 .map(this.serializer::deserialize)
                 .collect(Collectors.toList());

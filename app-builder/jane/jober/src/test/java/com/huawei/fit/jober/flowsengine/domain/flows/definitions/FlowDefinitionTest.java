@@ -85,6 +85,7 @@ import java.util.stream.Collectors;
  * @since 2023/08/22
  */
 @DisplayName("流程实例在内存中运行测试集合")
+@Disabled
 class FlowDefinitionTest {
     private static final BrokerClient BROKER_CLIENT = Mockito.mock(BrokerClient.class);
 

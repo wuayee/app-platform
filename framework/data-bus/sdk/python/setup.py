@@ -4,6 +4,11 @@
 
 from setuptools import setup, find_packages, Extension
 
+raw_memory_extension = Extension("databus.memory_io", [
+    "src/extensions/memory_io.c",
+    "src/extensions/memory_write.cpp",
+])
+
 
 def main():
     setup(
@@ -13,7 +18,7 @@ def main():
         url="https://openx.huawei.com/Jade/overview",
         packages=find_packages("src"),
         package_dir={"": "src"},
-        ext_modules=[Extension("databus.memory", ["src/extensions/memory.c"])],
+        ext_modules=[raw_memory_extension],
         python_requires=">=3")
 
 

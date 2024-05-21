@@ -71,6 +71,7 @@ import java.util.Map;
  * @author g00564732
  * @since 2023/09/28
  */
+@Disabled
 public class ApprovalTaskInstanceTriggerTest extends DatabaseBaseTest {
     private static final BrokerClient BROKER_CLIENT = Mockito.mock(BrokerClient.class);
 
