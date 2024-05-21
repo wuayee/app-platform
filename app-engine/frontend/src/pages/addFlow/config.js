@@ -43,15 +43,15 @@ export const configMap = {
           {
               node: "startNodeStart",
               urls: {
-                  customHistoryUrl: "https://jane.huawei.com/api/jober/v1/api/public/genericables/68dc66a6185cf64c801e55c97fc500e4?limit=10&offset=0"
+                  customHistoryUrl: "http://80.11.128.66:31111/api/jober/v1/api/public/genericables/68dc66a6185cf64c801e55c97fc500e4?limit=10&offset=0"
               }
           },
           {
               node: "llmNodeState",
               urls: {
-                  llmModelEndpoint: "https://tzaip.paas.huawei.com",
-                  toolListEndpoint: "http://10.91.144.110:8080",
-                  workflowListEndpoint: "http://10.91.144.110:8080"
+                  llmModelEndpoint: "http://80.11.128.66:31111/api",
+                  toolListEndpoint: "http://80.11.128.66:31111",
+                  workflowListEndpoint: "http://80.11.128.66:31111"
               },
               params: {
                 tenantId: '',
@@ -61,20 +61,20 @@ export const configMap = {
           {
               node: "manualCheckNodeState",
               urls: {
-                  runtimeFormUrl: "https://jane.huawei.com/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/form/type/runtime"
+                  runtimeFormUrl: "http://80.11.128.66:31111/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/form/type/runtime"
               }
           },
           {
               node: "knowledgeState",
               urls: {
-                  knowledgeUrl: "10.91.144.92:8028/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/knowledge?pageNum=1&pageSize=10"
+                  knowledgeUrl: "http://80.11.128.66:31111/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/knowledge?pageNum=1&pageSize=10"
               }
           },
           {
               node: "fitInvokeState",
               urls: {
-                  serviceListEndpoint: "https://tzaip.paas.huawei.com",
-                  fitableMetaInfoUrl: "http://10.91.144.110:8080"
+                  serviceListEndpoint: "http://80.11.128.66:31111",
+                  fitableMetaInfoUrl: "http://80.11.128.66:31111"
               }
           }
       ]
