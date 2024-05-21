@@ -59,7 +59,7 @@ const EditModal = (props) => {
         name: formParams.name,
         greeting: formParams.greeting,
         description: formParams.description,
-        icon: type === 'add' ? `${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}` : formParams.icon,
+        icon: type === 'add' && filePath ? `${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}` : formParams.icon,
         app_type: formParams.app_type,
         type: 'app'
       }
@@ -85,8 +85,6 @@ const EditModal = (props) => {
         type: aippInfo.type,
         version: aippInfo.version
       }
-      console.log(process.env.NODE_ENV);
-      console.log(AIPP_URL);
       filePath ? params.attributes.icon = `${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}` : params.attributes.icon = aippInfo.attributes?.icon;
       const res = await updateAippInfo(tenantId, appId, params);
       if (res.code === 0) {
