@@ -68,12 +68,12 @@ const AppOverview: React.FC = () => {
               <span className='font-size-24'>4</span>
               <span>知识库</span>
             </Flex>
-            <Divider type='vertical' style={{ backgroundColor: '#D7D8DA' }} />
+            <Divider type='vertical' style={{ backgroundColor: '#D7D8DA', height: '60px' }} />
             <Flex vertical align={'center'}>
               <span className='font-size-24'>2</span>
               <span>插件</span>
             </Flex>
-            <Divider type='vertical' />
+            <Divider type='vertical' style={{ backgroundColor: '#D7D8DA', height: '60px' }} />
             <Flex vertical align={'center'}>
               <span className='font-size-24'>5</span>
               <span>创意灵感</span>
