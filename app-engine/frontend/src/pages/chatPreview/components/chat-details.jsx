@@ -7,6 +7,7 @@ import robot from '../../../assets/images/ai/robot1.png';
 import robot2 from '../../../assets/images/ai/xiaohai.png';
 import '../styles/chat-details.scss';
 import StarApps from "./star-apps";
+import { AppBoxIcon, CreateAppIcon } from '../../../assets/icon';
 
 const ChatDetail = () => {
   const { aippInfo, tenantId }  = useContext(AippContext);
@@ -55,7 +56,9 @@ const ChatDetail = () => {
           </div>
           <div className="head-nav">
             <div className="nav-left" onClick={addApp}>
-              <div className="tag"></div>
+              <div className="tag">
+                <CreateAppIcon />
+              </div>
               <div className="nav-title">创建应用</div>
               <div className="nav-desc">
                 通过跟小海聊天轻松定制你的专属应用 -
@@ -66,7 +69,9 @@ const ChatDetail = () => {
               className={`nav-right ${openStar ? "nav-item-active" : ""}`}
               onClick={() => setOpenStar(true)}
             >
-              <div className="tag"></div>
+              <div className="tag">
+                <AppBoxIcon />
+              </div>
               <div className="nav-title">应用百宝箱</div>
               <div className="nav-desc">
                 我们拥有海量的应用，让您可以轻松获取和部署各种专业的应用,涵盖不同领域和功能，马上开启你的探索应用市场之旅。

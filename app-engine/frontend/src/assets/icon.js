@@ -26,6 +26,8 @@ import Link from './images/ai/link.svg';
 import At from './images/ai/at.svg';
 import Panle from './images/ai/panel.svg';
 import PanleClose from './images/ai/panel-active.svg';
+import AppBox from './svg/app-box.svg';
+import CreateApp from './svg/create-app.svg';
 
 // 编辑按钮
 const EditIcon = (props) => <Icon component={() => (<Edit/>)} {...props} />;
@@ -54,6 +56,8 @@ const LinkIcon = (props) => <Icon component={() => (<Link/>)} {...props} />;
 const AtIcon = (props) => <Icon component={() => (<At/>)} {...props} />;
 const PanleIcon = (props) => <Icon component={() => (<Panle/>)} {...props} />;
 const PanleCloseIcon = (props) => <Icon component={() => (<PanleClose/>)} {...props} />;
+const AppBoxIcon = (props) => <Icon component={() => (<AppBox/>)} {...props} />;
+const CreateAppIcon = (props) => <Icon component={() => (<CreateApp/>)} {...props} />;
 export {
   EditIcon,
   ClearIcon,
@@ -80,6 +84,8 @@ export {
   LinkIcon,
   AtIcon,
   PanleIcon,
-  PanleCloseIcon
+  PanleCloseIcon,
+  AppBoxIcon,
+  CreateAppIcon,
 }
 
