@@ -13,6 +13,7 @@ import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
+import com.huawei.jade.app.engine.knowledge.dto.KbChunkQueryDto;
 import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
 import com.huawei.jade.app.engine.knowledge.dto.KStorageDto;
 import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
@@ -232,5 +233,13 @@ public class KnowledgeBaseController {
     @PostMapping(path = "/import-knowledge/text")
     public void importKnowledge(@RequestBody KbGenerateConfigDto fileConfigDto) {
         kbGenerateService.importKnowledge(fileConfigDto);
+    }
+
+    /**
+     * 获取向量知识信息
+     */
+    @PostMapping(path = "/chunks")
+    public PageResultVo<String> getChunk(@RequestBody KbChunkQueryDto chunkQueryDto) {
+        return kbGenerateService.getChunks(chunkQueryDto);
     }
 }
