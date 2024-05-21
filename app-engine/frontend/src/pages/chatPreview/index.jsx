@@ -54,7 +54,6 @@ const ChatPreview = (props) => {
   let childBackInstanceIdArr = useRef([]);
   let childInstanceStop = useRef(false);
   let isChatRunning = useRef(false);
-  let wsCurrent = useRef();
 
   // 灵感大全点击
   useEffect(() => {
@@ -276,13 +275,14 @@ const ChatPreview = (props) => {
     runningInstanceId.current = instanceId;
     runningVersion.current = version;
     runningAppid.current = aipp_id;
-    wsCurrent.current ? '' : wsCurrent.current = new WebSocket(`ws://80.11.128.66:31111/api/jober/v1/api/aipp/streamLog?aippId=${aipp_id}?version=${version}`);
-    wsCurrent.current.onerror = () => {
+    const ws = new WebSocket(`ws://80.11.128.66:31111/api/jober/v1/api/aipp/streamLog?aippId=${aipp_id}?version=${version}`);
+    ws.onerror = () => {
       onStop('对话失败');
     }
-    wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));
-    chatStatusChange(true);
-    wsCurrent.current.onmessage = ({ data }) => {
+    ws.onopen = () => {
+      ws.send(JSON.stringify({'aippInstanceId': instanceId}));
+    }
+    ws.onmessage = ({ data }) => {
       let messageData = {};
       try {
         messageData = JSON.parse(data);
@@ -315,15 +315,14 @@ const ChatPreview = (props) => {
           }
         })
         if (['ERROR', 'ARCHIVED'].includes(messageData.status)) {
-          chatStatusChange(false);
-          wsCurrent.current.close();
+          ws.close();
         }
       } catch (err){
         onStop('数据解析异常');
-        wsCurrent.current.close();
+        ws.close();
       }
     }
-    wsCurrent.current.onclose = () => {
+    ws.onclose = () => {
       chatStatusChange(false);
       isChatRunning.current = false;
     }
