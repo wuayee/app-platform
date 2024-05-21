@@ -230,7 +230,6 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
         Map<String, Object> businessData = (Map<String, Object>) initContext.get(AippConst.BS_INIT_CONTEXT_KEY);
         String aippType = ObjectUtils.cast(meta.getAttributes()
                 .getOrDefault(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.NORMAL.name()));
-        String appId = ObjectUtils.cast(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
         String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
 
         // 创建meta实例

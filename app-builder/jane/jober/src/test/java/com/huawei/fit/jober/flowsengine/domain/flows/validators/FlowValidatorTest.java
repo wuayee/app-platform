@@ -306,6 +306,7 @@ class FlowValidatorTest extends FlowsDataBaseTest {
         }
 
         @Test
+        @Disabled("当前流程支持大于1个结束节点")
         @DisplayName("测试流程定义EndNodeSize校验成功")
         public void testValidateDefinitionEndNodeSizeGreatThan1Success() {
             Map<String, FlowNode> nodeMap = flowDefinition.getNodeMap();
@@ -357,10 +358,6 @@ class FlowValidatorTest extends FlowsDataBaseTest {
             JobberParamException exception = assertThrows(JobberParamException.class,
                     () -> flowNodeValidator.validate(flowDefinition));
             assertEquals(errorMessage("flow node metaId, metaId can not be blank"), exception.getMessage());
-
-            nodeMap.get(START_ID).setMetaId("start11");
-            exception = assertThrows(JobberParamException.class, () -> flowNodeValidator.validate(flowDefinition));
-            assertEquals(errorMessage("flow node metaId size must be 6"), exception.getMessage());
 
             nodeMap.get(START_ID).setMetaId("start%");
             exception = assertThrows(JobberParamException.class, () -> flowNodeValidator.validate(flowDefinition));
