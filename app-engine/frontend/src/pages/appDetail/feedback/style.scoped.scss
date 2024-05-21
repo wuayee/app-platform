@@ -1,4 +1,17 @@
-.time{
+.time {
   width: 200px;
   background-color: antiquewhite;
+}
+.question-card {
+  background-color: #f0f2f4;
+  height: 40px;
+  padding: 10px;
+  border-radius: 6px;
+}
+.answer-card {
+  background-color: #f0f2f4;
+  height: 120px;
+  padding: 10px;
+  border-radius: 6px;
+  overflow-y: scroll;
 }

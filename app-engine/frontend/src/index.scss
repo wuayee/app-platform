@@ -60,14 +60,23 @@ h1 {
 
 #root .ant-btn-primary {
   background: #2673e5;
-}
-
-#root .ant-btn {
-  min-width: 90px;
-  height: 35px;
+  width: 85px;
+  height: 32px;
 }
 
 #root .ant-btn-sm {
   min-width: 40px;
   height: 24px;
+}
+
+#root .ant-drawer-body {
+  padding: 0px 24px;
+}
+
+#root .ant-drawer-header {
+  border-bottom: 0px;
+}
+
+#root .ant-drawer-content {
+  background-color: #2673e5;
 }
