@@ -108,12 +108,12 @@ public enum AippErrCode implements ErrorCode {
     /**
      * 名称为空
      */
-    AIPP_NAME_IS_EMPTY(90001013, "Name is empty."),
+    AIPP_NAME_IS_EMPTY(90001013, "名称为空。"),
 
     /**
      * 名称已存在
      */
-    AIPP_NAME_IS_DUPLICATE(90001014, "The name already exists."),
+    AIPP_NAME_IS_DUPLICATE(90001014, "名称已存在。"),
 
     /**
      * 实例历史记录不存在
