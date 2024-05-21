@@ -5,13 +5,15 @@
 package com.huawei.fit.waterflow.domain.context;
 
 import com.huawei.fit.waterflow.domain.utils.IdGenerator;
+import com.huawei.fit.waterflow.domain.utils.UUIDUtil;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import lombok.Setter;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 流程实例运行标识
@@ -35,8 +37,8 @@ public class FlowSession extends IdGenerator implements StateContext {
      * session上下文状态数据
      */
     private final Map<String, Map<String, Object>> states = MapBuilder.<String, Map<String, Object>>get()
-            .put(CUSTOM_STATE, new HashMap<>())
-            .put(INNER_STATE, new HashMap<>())
+            .put(CUSTOM_STATE, new ConcurrentHashMap<>())
+            .put(INNER_STATE, new ConcurrentHashMap<>())
             .build();
 
     @Setter
@@ -53,9 +55,12 @@ public class FlowSession extends IdGenerator implements StateContext {
     }
 
     public FlowSession(FlowSession session) {
-        super(session.getId());
-        this.states.putAll(session.states);
-        this.keyBy = session.keyBy;
+        super(Optional.ofNullable(session).map(IdGenerator::getId).orElseGet(UUIDUtil::uuid));
+        if (session != null) {
+            this.states.get(CUSTOM_STATE).putAll(session.states.get(CUSTOM_STATE));
+            this.states.get(INNER_STATE).putAll(session.states.get(INNER_STATE));
+            this.keyBy = session.keyBy;
+        }
     }
 
     /**

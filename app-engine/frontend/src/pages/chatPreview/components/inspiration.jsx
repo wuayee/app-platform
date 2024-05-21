@@ -1,15 +1,24 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
-import { Input, Button, Popover, Tree, Empty  } from 'antd';
-import { useParams } from 'react-router-dom';
-import { SwapOutlined } from '@ant-design/icons';
-import { Message } from '../../../shared/utils/message';
-import { queryDepartMent, queryInspiration } from '../../../shared/http/aipp';
-import { getUiD } from '../../../shared/utils/common';
-import { inspirationMock } from '../common/config';
-import { AippContext } from '../../aippIndex/context';
-import { getDepth, delNodeChild, filterArr, arrayToTree, getDeepNode } from '../utils/inspiration-utils';
-import '../styles/inspiration.scss';
-
+import React, { useEffect, useRef, useState, useContext } from "react";
+import { Input, Button, Popover, Tree, Empty, Dropdown } from "antd";
+import { useParams } from "react-router-dom";
+import {
+  SwapOutlined,
+  EllipsisOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { Message } from "../../../shared/utils/message";
+import { queryDepartMent, queryInspiration } from "../../../shared/http/aipp";
+import { getUiD } from "../../../shared/utils/common";
+import { inspirationMock } from "../common/config";
+import { AippContext } from "../../aippIndex/context";
+import {
+  getDepth,
+  delNodeChild,
+  filterArr,
+  arrayToTree,
+  getDeepNode,
+} from "../utils/inspiration-utils";
+import "../styles/inspiration.scss";
 
 const Inspiration = (props) => {
   const { chatType } = props;
@@ -23,25 +32,25 @@ const Inspiration = (props) => {
     setRefreshPrompValue,
   } = useContext(AippContext);
   const { Search } = Input;
-  const [ showDrop, setShowDrop ] = useState(false);
-  const [ promptTypeList, setPromptTypeList ] = useState([]);
-  const [ dropList, setDropList ] = useState([]);
-  const [ popoverOpen, setPopoverOpen ] = useState(false);
-  const [ allPromptData, setAllPromptData ] = useState([]);
-  const [ prompData, setPrompData ] = useState([]);
-  const [ currentNodeId, setCurrentNodeId ] = useState('');
-  const [ currentPromptType, setCurrentPromptType ] = useState('-1');
-  const [ currentPromptName, setCurrentPromptName ] = useState('');
-  const [ searchValue, setSearchValue ] = useState('');
+  const [showDrop, setShowDrop] = useState(false);
+  const [promptTypeList, setPromptTypeList] = useState([]);
+  const [dropList, setDropList] = useState([]);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [allPromptData, setAllPromptData] = useState([]);
+  const [prompData, setPrompData] = useState([]);
+  const [currentNodeId, setCurrentNodeId] = useState("");
+  const [currentPromptType, setCurrentPromptType] = useState("-1");
+  const [currentPromptName, setCurrentPromptName] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const treeNormalData = useRef();
   const treeChildData = useRef([]);
-  
+
   useEffect(() => {
     getList();
-  }, [])
+  }, []);
   useEffect(() => {
     currentNodeId && getList();
-  }, [ reloadInspiration ])
+  }, [reloadInspiration]);
   // 获取灵感大全列表
   async function getList() {
     const res = await queryDepartMent(tenantId, appId);
@@ -52,37 +61,42 @@ const Inspiration = (props) => {
   // 灵感大全数据处理
   function inspirationProcess(data) {
     let childNodes = data.children;
-    treeNormalData.current = JSON.parse(JSON.stringify(childNodes))
+    treeNormalData.current = JSON.parse(JSON.stringify(childNodes));
     if (childNodes.length) {
       let h = getDepth(childNodes);
       if (h === 1) {
-        let arr = [{ title: '全部', id: 'root' }];
-        let arr1 =  arr.concat(childNodes);
-        arr1.push({ title: '其他', id: 'others' });
+        let arr = [{ title: "全部", id: "root" }];
+        let arr1 = arr.concat(childNodes);
+        arr1.push({ title: "其他", id: "others" });
         setPromptTypeList(arr1);
-        setCurrentPromptType('root');
-        getPromptList('root');
+        setCurrentPromptType("root");
+        getPromptList("root");
       } else {
         setShowDrop(true);
-        let arr = JSON.parse(JSON.stringify(childNodes))
+        let arr = JSON.parse(JSON.stringify(childNodes));
         let list = delNodeChild(arr);
-        list.forEach(item => {
-          delete item.childrenEmpty
-        })
+        list.forEach((item) => {
+          delete item.childrenEmpty;
+        });
         let setArr = filterArr(list);
-        setArr.forEach(item => delete item.children);
-        setArr = setArr.filter(item => item.childrenEmpty === undefined);
+        setArr.forEach((item) => delete item.children);
+        setArr = setArr.filter((item) => item.childrenEmpty === undefined);
         setArr = arrayToTree(setArr);
-        setArr.push({ children: [], title: '其他', id: 'others', parent: 'root:others' });
+        setArr.push({
+          children: [],
+          title: "其他",
+          id: "others",
+          parent: "root:others",
+        });
         setDropList(setArr);
         let obj = getDeepNode(setArr, (node) => {
-          return !node.children.length
+          return !node.children.length;
         });
-        let parentId = obj.parent.split(':')[1];
+        let parentId = obj.parent.split(":")[1];
         nodeClick(obj.id, obj.title, parentId);
       }
     } else {
-      getPromptList('root');
+      getPromptList("root");
     }
   }
   // 根据节点获取灵感大全数据
@@ -116,7 +130,7 @@ const Inspiration = (props) => {
   // 灵感大全点击
   function handleClickPrompt(item) {
     if (messageChecked) {
-      Message.warning('问答组勾选中, 请取消后再试');
+      Message.warning("问答组勾选中, 请取消后再试");
       return;
     }
     item.key = getUiD();
@@ -131,114 +145,131 @@ const Inspiration = (props) => {
   function nodeClick(id, name, parentId) {
     setCurrentPromptName(name);
     deepGetChild(treeNormalData.current, id);
-    let arr = [{ title: '全部', id: parentId }];
-    let arr1 =  treeChildData.current.length ? arr.concat(treeChildData.current) : [];
+    let arr = [{ title: "全部", id: parentId }];
+    let arr1 = treeChildData.current.length
+      ? arr.concat(treeChildData.current)
+      : [];
     setCurrentPromptType(parentId);
     setCurrentNodeId(id);
-    setPromptTypeList(parentId === 'others' ? [] : arr1);
+    setPromptTypeList(parentId === "others" ? [] : arr1);
     getPromptList(parentId);
   }
   // 递归获取点击节点
   function deepGetChild(list, id) {
-    list.forEach(item => {
+    list.forEach((item) => {
       if (item.id === id) {
         treeChildData.current = item.children;
       } else if (item.children?.length) {
-        deepGetChild(item.children, id)
+        deepGetChild(item.children, id);
       }
-    })
+    });
   }
   function handleOpenChange(newOpen) {
     setPopoverOpen(newOpen);
-  };
+  }
+  const items = [
+    {
+      key: "1",
+      label: "编辑灵感",
+    },
+    {
+      key: "2",
+      label: "添加新灵感",
+    },
+  ];
   return (
     <>
       {
-        <div className={["inspiration-conyainer", !chatType ? 'inspiration-active' : null].join(' ')}>
+        <div
+          className={[
+            "inspiration-conyainer",
+            !chatType ? "inspiration-active" : null,
+          ].join(" ")}
+        >
           <div className="right-content">
-            <div className={showDrop ? 'has-drop title' : 'title'}>
-              <span className="title-icon">
-                <span className="inspiration-text">灵感大全</span>
-                {/* <PlusCircleOutlined
-                  style={{ fontSize: '16px', marginLeft: '8px', marginTop: '4px' }}
-                  onClick={addInspiration}
-                /> */}
-              </span>
-              <Search
-                className="prompt-search"
-                size="small"
-                allowClear
-                onSearch={onSearch}
-                variant="borderless"
-                style={{ width: 120 }}
-              />
-              { showDrop &&  (
-                <Popover 
+            <div className={showDrop ? "has-drop title" : "title"}>
+              <div className="title-icon">
+                <span className="inspiration-text">创意灵感</span>
+                <Dropdown menu={{ items }} trigger={["click"]}>
+                  <EllipsisOutlined className="app-item-footer-more" />
+                </Dropdown>
+              </div>
+              {showDrop && (
+                <Popover
                   content={
-                    <DropMenu 
-                      treeList={dropList} 
+                    <DropMenu
+                      treeList={dropList}
                       hide={hide}
                       nodeId={currentNodeId}
-                      nodeClick={nodeClick} />
-                    } 
-                  open={popoverOpen} 
+                      nodeClick={nodeClick}
+                    />
+                  }
+                  open={popoverOpen}
                   onOpenChange={handleOpenChange}
-                  arrow={false} 
-                  trigger="click" 
+                  arrow={false}
+                  trigger="click"
                   placement="bottomRight"
                 >
-                  <Button size="small" icon={<SwapOutlined />} >
-                    <span className="btn-text" title={currentPromptName}>{ currentPromptName }</span>
+                  <Button size="small" icon={<SwapOutlined />}>
+                    <span className="btn-text" title={currentPromptName}>
+                      {currentPromptName}
+                    </span>
                   </Button>
                 </Popover>
               )}
             </div>
-              <div className="prompt-container">
-                <div className="prompt-type">
-                  { promptTypeList.map((item, index) => {
+            <div className="prompt-search">
+              <Input
+                prefix={<SearchOutlined />}
+                allowClear
+                onSearch={onSearch}
+              />
+            </div>
+            <div className="prompt-container">
+              <div className="prompt-type">
+                {promptTypeList.map((item, index) => {
+                  return (
+                    <span
+                      key={index}
+                      title={item.title}
+                      className={
+                        currentPromptType === item.id
+                          ? "prompt-type-active prompt-type-item"
+                          : "prompt-type-item"
+                      }
+                      onClick={radioClick.bind(this, item)}
+                    >
+                      {item.title}
+                    </span>
+                  );
+                })}
+              </div>
+              {prompData && prompData.length ? (
+                <div className="prompt-list">
+                  {prompData.map((cItem, cIndex) => {
                     return (
-                      <span
-                        key={index}
-                        title={item.title}
-                        className={
-                          currentPromptType === item.id
-                            ? 'prompt-type-active prompt-type-item'
-                            : 'prompt-type-item'
-                        }
-                        onClick={radioClick.bind(this, item)}
+                      <div
+                        key={cIndex}
+                        className="prompt-item"
+                        onClick={handleClickPrompt.bind(this, cItem)}
                       >
-                        {item.title}
-                      </span>
+                        <div className="title"> {cItem.name}</div>
+                        <div
+                          className="content text-mul-ellipsis"
+                          title={cItem.description}
+                        >
+                          {cItem.description}
+                        </div>
+                      </div>
                     );
-                    })
-                  }
+                  })}
                 </div>
-               { (prompData && prompData.length) ? (
-                 <div className="prompt-list">
-                 { prompData.map((cItem, cIndex) => {
-                   return (
-                     <div
-                       key={cIndex}
-                       className="prompt-item"
-                       onClick={handleClickPrompt.bind(this, cItem)}
-                     >
-                       <div className="title"> {cItem.name}</div>
-                       <div
-                         className="content text-mul-ellipsis"
-                         title={cItem.description}
-                       >
-                         {cItem.description}
-                       </div>
-                     </div>
-                   );
-                 })}
-               </div>
-               ) : (
-               <div className="prompt-empty">
-                  <Empty description="暂无灵感大全数据"/>
+              ) : (
+                <div className="prompt-empty">
+                  <Empty description="暂无灵感大全数据" />
                 </div>
               )}
-              </div>
+            </div>
           </div>
         </div>
       }
@@ -252,26 +283,30 @@ const DropMenu = (props) => {
   // 树选中回调
   function onSelect(k, v) {
     if (v.node.children.length) {
-      return
+      return;
     }
     let currentId = v.node.id;
     let nodeName = v.node.title;
-    let parentId = v.node.parent.split(':')[1];
+    let parentId = v.node.parent.split(":")[1];
     nodeId !== currentId && nodeClick(currentId, nodeName, parentId);
     hide();
   }
-  return <>{(
-    <div className="drop-tree-menu">
-      <Tree
-        className="tree-inner"
-        defaultExpandAll
-        treeData={treeList}
-        defaultSelectedKeys={[nodeId]}
-        onSelect={onSelect}
-        fieldNames={{ title: 'title', key: 'id', children: 'children' }}
-      />
-    </div>
-  )}</>
-}
+  return (
+    <>
+      {
+        <div className="drop-tree-menu">
+          <Tree
+            className="tree-inner"
+            defaultExpandAll
+            treeData={treeList}
+            defaultSelectedKeys={[nodeId]}
+            onSelect={onSelect}
+            fieldNames={{ title: "title", key: "id", children: "children" }}
+          />
+        </div>
+      }
+    </>
+  );
+};
 
 export default Inspiration;

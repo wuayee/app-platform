@@ -4,6 +4,7 @@ import { Button } from 'antd';
 import '../styles/check-group.scss'
 import { shareDialog } from "../../../shared/http/aipp";
 import { useNavigate } from "react-router-dom";
+import { toClipboard } from "../../../shared/utils/common"
 
 const CheckGroup = (props) => {
   const {
@@ -50,7 +51,7 @@ const CheckGroup = (props) => {
         })
         shareDialog(tenantId, result).then(res => {
             if (res.code === 0) {
-                navigate(`/aipp/${tenantId}/chatShare/${appId}/${res.data}`);
+              toClipboard(window.location.href.split('#')[0] + `#/${tenantId}/chatShare/${appId}/${res.data}`);
             }
         })
     }

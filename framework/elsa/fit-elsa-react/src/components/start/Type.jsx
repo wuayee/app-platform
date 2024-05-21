@@ -3,18 +3,22 @@ import {Form} from "antd";
 import {JadeStopPropagationSelect} from "../common/JadeStopPropagationSelect.jsx";
 
 Type.propTypes = {
+    itemId: PropTypes.string.isRequired, // 确保 itemId 是一个必需的字符串
     propValue: PropTypes.string.isRequired, // 确保 propValue 是一个必需的字符串
+    disableModifiable: PropTypes.bool.isRequired, // 确保 disableModifiable 是一个必需的bool值
     onChange: PropTypes.func.isRequired, // 确保 onChange 是一个必需的函数
 };
 
 /**
  * 开始节点关于入参的类型
  *
+ * @param itemId 名称所属Item的唯一标识
  * @param propValue 类型的初始值
+ * @param disableModifiable 该字段是否禁止修改
  * @param onChange 值被修改时调用的函数
  * @returns {JSX.Element} 开始节点关于入参类型的Dom
  */
-export default function Type({propValue, onChange}) {
+export default function Type({itemId, propValue, disableModifiable, onChange}) {
     const handleSelectClick = (event) => {
         event.stopPropagation(); // 阻止事件冒泡
     };
@@ -27,12 +31,13 @@ export default function Type({propValue, onChange}) {
     return (<Form.Item
         className="jade-form-item"
         label="字段类型"
-        name="type"
+        name={`type-${itemId}`}
         initialValue={propValue}
     >
         <JadeStopPropagationSelect
             className="jade-select"
             value={propValue}
+            disabled={disableModifiable}
             style={{width: "100%"}}
             onClick={handleSelectClick} // 点击下拉框时阻止事件冒泡
             onChange={handleChange}

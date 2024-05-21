@@ -33,7 +33,7 @@ export const llmComponent = (jadeConfig) => {
                         {id: uuidv4(), name: "template", type: "String", from: "Input", value: ""},
                         {
                             id: uuidv4(), name: "variables", type: "Object", from: "Expand", value: [
-                                {id: uuidv4(), name: "", type: "String", from: "Reference", value: "", referenceNode: "", referenceId: "", referenceKey: ""}
+                                {id: uuidv4(), name: undefined, type: "String", from: "Reference", value: "", referenceNode: "", referenceId: "", referenceKey: ""}
                             ]
                         }
                     ]
@@ -79,7 +79,7 @@ export const llmComponent = (jadeConfig) => {
                                         return {
                                             ...promptItem, value: [...promptItem.value, {
                                                 id: action.id,
-                                                name: "",
+                                                name: undefined,
                                                 type: "String",
                                                 from: "Reference",
                                                 value: ""

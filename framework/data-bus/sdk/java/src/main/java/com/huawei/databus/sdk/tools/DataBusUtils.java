@@ -14,6 +14,8 @@ import com.huawei.fitframework.inspection.Validation;
 import com.google.flatbuffers.FlatBufferBuilder;
 
 import java.nio.ByteBuffer;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * DataBus 工具类
@@ -22,6 +24,13 @@ import java.nio.ByteBuffer;
  * @since 2024/3/25
  */
 public class DataBusUtils {
+    private static final Set<String> SUPPORTED_PLATFORM = new HashSet<>();
+
+    static {
+        // DataBus 只能在Linux下运行
+        SUPPORTED_PLATFORM.add("linux");
+    }
+
     /**
      * 根据消息体类型和长度生成消息头
      *
@@ -94,5 +103,14 @@ public class DataBusUtils {
                 () -> new IllegalArgumentException("memory length must be positive."));
         Validation.notNull(request.userKey(),
                 () -> new IllegalArgumentException("Shared memory key cannot be null."));
+    }
+
+    /**
+     * 验证当前平台是否支持 DataBus
+     *
+     * @return 表示平台是否支持的 {code boolean}
+     */
+    public static boolean isSupportedPlatform() {
+        return SUPPORTED_PLATFORM.stream().anyMatch(p -> System.getProperty("os.name").toLowerCase().contains(p));
     }
 }

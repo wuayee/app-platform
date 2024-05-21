@@ -54,11 +54,13 @@ const jadeFlowAgent = (graph) => {
      *
      * @param type 节点类型.
      * @param e 鼠标事件.
+     * @param metaData 元数据
      */
-    self.createNode = (type, e) => {
+    self.createNode = (type, e, metaData) => {
         console.log("call createNode...");
         const position = graph.activePage.calculatePosition(e);
-        graph.activePage.createNew(type, position.x, position.y);
+        const shape = graph.activePage.createNew(type, position.x, position.y);
+        shape.processMetaData(metaData);
     };
 
     /**
@@ -66,10 +68,12 @@ const jadeFlowAgent = (graph) => {
      *
      * @param type 节点类型.
      * @param position 坐标.
+     * @param metaData 元数据
      */
-    self.createNodeByPosition = (type, position) => {
+    self.createNodeByPosition = (type, position, metaData) => {
         console.log("call createNodeByPosition...");
-        graph.activePage.createNew(type, position.x, position.y);
+        const shape = graph.activePage.createNew(type, position.x, position.y);
+        shape.processMetaData(metaData);
     };
 
     /**
@@ -98,10 +102,21 @@ const jadeFlowAgent = (graph) => {
     };
 
     /**
-     * 校验数据是否合法.
+     * 校验所有节点数据是否合法.
+     *
+     * @return Promise 校验结果
      */
-    self.validate = () => {
-        graph.activePage.shapes.filter(s => s.isTypeof("jadeNode")).forEach(s => s.validate());
+    self.validate = async () => {
+        const nodes = graph.activePage.shapes.filter(s => s.isTypeof("jadeNode"));
+        const validationPromises = nodes.map(s => s.validate().catch(error => error));
+        const results = await Promise.all(validationPromises);
+        // 获取所有校验失败的信息
+        const errors = results.filter(result => result.errorFields);
+        if (errors.length > 0) {
+            return Promise.reject(errors);
+        }
+        // 可选：.then()中可以获取校验的所有节点信息 Promise.resolve(results.filter(result => !errors.includes(result)))
+        return Promise.resolve();
     };
 
     return self;
@@ -128,7 +143,7 @@ export const JadeFlow = (() => {
 
         // 新建的默认创建出start、end和一个连线
         const start = page.createShape("startNodeStart", 100, 100);
-        const end = page.createShape("endNodeEnd", start.x + start.width + 200 , 100);
+        const end = page.createShape("endNodeEnd", start.x + start.width + 200, 100);
         const jadeEvent = page.createNew("jadeEvent", 0, 0);
         page.reset();
 
@@ -145,13 +160,18 @@ export const JadeFlow = (() => {
      * @param div 待渲染的dom元素.
      * @param flowConfigData 流程元数据.
      * @param configs 传入的其他参数列表.
+     * @param importStatements 传入的需要加载的语句.
      */
-    self.edit = async (div, flowConfigData, configs) => {
+    self.edit = async (div, flowConfigData, configs, importStatements = []) => {
         const g = jadeFlowGraph(div, "jadeFlow");
         g.configs = configs;
         g.collaboration.mute = true;
+        for (let i = 0; i < importStatements.length; i++) {
+            await g.dynamicImportStatement(importStatements[i]);
+        }
         await g.initialize();
-        g.addPage("newFlowPage");
+        // todo 不需要重新添加页面
+        // g.addPage("newFlowPage");
         g.deSerialize(flowConfigData);
         const pageData = g.getPageData(0);
         await g.edit(0, div, pageData.id);

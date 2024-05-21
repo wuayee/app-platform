@@ -27,6 +27,7 @@ public class EventHandler extends ShapeHandler {
         Map<String, Object> result = new HashMap<>();
         result.put("to", shape.get("toShape"));
         result.put("from", shape.get("fromShape"));
+        result.put("fromConnector", shape.get("definedFromConnector"));
         result.put("conditionRule", meta.get("conditionRule"));
         return result;
     }

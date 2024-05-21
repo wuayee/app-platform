@@ -24,6 +24,6 @@ public class KRepoDto {
     private Long ownerId;
     private String ownerName;
     private String description;
-    private Date createAt;
-    private Date updateAt;
+    private Date createdAt;
+    private Date updatedAt;
 }

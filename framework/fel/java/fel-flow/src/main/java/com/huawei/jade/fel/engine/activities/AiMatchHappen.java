@@ -8,6 +8,8 @@ import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fit.waterflow.domain.states.MatchHappen;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.jade.fel.engine.activities.processors.AiBranchProcessor;
+import com.huawei.jade.fel.engine.activities.processors.AiBranchToProcessor;
 import com.huawei.jade.fel.engine.flows.AiFlow;
 
 /**
@@ -23,6 +25,7 @@ import com.huawei.jade.fel.engine.flows.AiFlow;
  */
 public class AiMatchHappen<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> {
     private final MatchHappen<O, D, I, RF> matchHappen;
+
     private final F flow;
 
     public AiMatchHappen(MatchHappen<O, D, I, RF> matchHappen, F flow) {

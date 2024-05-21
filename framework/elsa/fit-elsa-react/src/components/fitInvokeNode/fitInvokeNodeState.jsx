@@ -1,7 +1,7 @@
 import {jadeNode} from "@/components/jadeNode.jsx";
 import "./style.css";
 import {Button} from "antd";
-import ApiInvokeIcon from '../asserts/icon-api-invoke.svg?react';
+import ApiInvokeIcon from '../asserts/icon-fit-invoke.svg?react';
 
 /**
  * FIT调用节点shape

@@ -35,6 +35,26 @@ export default function StartFormWrapper() {
         dispatch({actionType: "addInputParam", id: newItemId});
     };
 
+    const renderAddInputIcon = () => {
+        const configObject = data.find(item => item.name === "input")?.config?.find(configItem => configItem.hasOwnProperty("allowAdd")); // 查找具有 "allowAdd" 属性的对象
+        if (configObject ? configObject.allowAdd : false) {
+            return <Button type="text" className="icon-button" onClick={addItem}
+                           style={{"height": "32px", marginLeft: "auto", marginRight: "12px"}}>
+                <PlusOutlined/>
+            </Button>;
+        }
+    };
+
+    const renderDeleteIcon = (item) => {
+        if (!item.disableModifiable) {
+            return <Button type="text" className="icon-button"
+                           style={{"height": "22px", "marginLeft": "auto"}}
+                           onClick={() => handleDelete(item.id)}>
+                <DeleteOutlined/>
+            </Button>
+        }
+    };
+
     const handleDelete = (itemId) => {
         const updatedOpenItems = openItems.filter((key) => key !== itemId);
         setOpenItems(updatedOpenItems);
@@ -49,37 +69,33 @@ export default function StartFormWrapper() {
 
     return (<div>
             <div style={{
-                display: "flex", alignItems: "center", marginBottom: "8px", paddingLeft: "8px", paddingRight: "4px"
+                display: "flex", alignItems: "center", marginBottom: "8px", paddingLeft: "8px", paddingRight: "4px", height: "32px"
             }}>
                 <div className="jade-panel-header-font">输入</div>
                 <Popover content={content}>
                     <InfoCircleOutlined className="jade-top-header-popover-content"/>
                 </Popover>
-                <Button type="text" className="icon-button" onClick={addItem}
-                        style={{"height": "32px", marginLeft: "76%"}}>
-                    <PlusOutlined/>
-                </Button>
+                {renderAddInputIcon()}
             </div>
             <Collapse bordered={false} activeKey={openItems} onChange={(keys) => setOpenItems(keys)}
                       className="jade-collapse-custom-background-color">
-                {items.map((item) => (<Panel
-                        key={item.id}
-                        header={<div className="panel-header">
-                            <span className="jade-panel-header-font">{item.name}</span> {/* 显示Name值的元素 */}
-                            <Button type="text" className="icon-button"
-                                    style={{"height": "22px", "marginLeft": "auto"}}
-                                    onClick={() => handleDelete(item.id)}>
-                                <DeleteOutlined/>
-                            </Button>
-                        </div>}
-                        className="jade-panel"
-                        style={{marginBottom: 8, borderRadius: "8px", width: "100%"}}
-                    >
-                        <StartInputForm
-                            item={item}
-                            formName={"startForm" + item.id}
-                        />
-                </Panel>))}
+                {
+                    items.map((item) => (
+                            <Panel
+                                key={item.id}
+                                header={
+                                    <div className="panel-header">
+                                        <span className="jade-panel-header-font">{item.name}</span> {/* 显示Name值的元素 */}
+                                        {renderDeleteIcon(item)}
+                                    </div>
+                                }
+                                className="jade-panel"
+                                style={{marginBottom: 8, borderRadius: "8px", width: "100%"}}
+                            >
+                                <StartInputForm item={item}/>
+                            </Panel>
+                    ))
+                }
             </Collapse>
             <Collapse bordered={false} className="jade-collapse-custom-background-color" defaultActiveKey={["historicalRecordsPanel"]}>
                 {
@@ -100,4 +116,4 @@ export default function StartFormWrapper() {
             </Collapse>
         </div>
     );
-}
+};

@@ -4,10 +4,17 @@
 
 package com.huawei.jade.fel.model.openai.utils;
 
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.fel.chat.ChatOptions;
+import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.content.Media;
+import com.huawei.jade.fel.chat.protocol.ChatCompletion;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
+import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
+import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
 import com.huawei.jade.fel.model.openai.entity.chat.message.OpenAiChatMessage;
 import com.huawei.jade.fel.model.openai.entity.chat.message.Role;
 import com.huawei.jade.fel.model.openai.entity.chat.message.content.UserContent;
@@ -142,5 +149,61 @@ public class OpenAiMessageUtils {
         }
 
         return tools;
+    }
+
+    /**
+     * 将 FEL 格式的请求转化为 OpenAI 格式的文本补全请求。
+     *
+     * @param request FEL 格式的请求。
+     * @return OpenAI 格式的文本补全请求。
+     */
+    public static OpenAiChatCompletionRequest buildChatCompletionRequest(ChatCompletion request) {
+        Validation.notNull(request, "Failed to generate OpenAiChatCompletionRequest: request is null.");
+        ChatOptions options = ObjectUtils.getIfNull(request.getOptions(), ChatOptions::new);
+        String model = Validation.notBlank(options.getModel(), "The model name in request is empty.");
+
+        List<OpenAiChatMessage> messages = OpenAiMessageUtils.buildPrompts(request.getMessages());
+        List<OpenAiTool> tools = OpenAiMessageUtils.buildTools(options.getTools());
+        return OpenAiChatCompletionRequest.builder()
+                .model(model)
+                .messages(messages)
+                .frequencyPenalty(options.getFrequencyPenalty())
+                .maxTokens(options.getMaxTokens())
+                .presencePenalty(options.getPresencePenalty())
+                .stop(options.getStop())
+                .temperature(options.getTemperature())
+                .tools(tools)
+                .toolChoice(CollectionUtils.isEmpty(tools) ? null : "auto")
+                .build();
+    }
+
+    /**
+     * 将 OpenAI 格式的模型响应转化为 FEL 格式的人工智能消息。
+     *
+     * @param response OpenAI 格式的模型响应。
+     * @return FEL 格式的人工智能消息。
+     */
+    public static FlatChatMessage buildFelAiMessage(OpenAiChatCompletionResponse response) {
+        FlatChatMessage emptyMessage = new FlatChatMessage(new AiMessage(""));
+        if (response == null || CollectionUtils.isEmpty(response.getChoices())) {
+            return emptyMessage;
+        }
+
+        OpenAiChatMessage openAiChatMessage = response.getChoices().get(0).getMessage();
+        if (openAiChatMessage == null) {
+            return emptyMessage;
+        }
+
+        List<ToolCall> toolCalls = openAiChatMessage.getToolCalls()
+                .stream()
+                .map(OpenAiToolCall::buildFelToolCall)
+                .collect(Collectors.toList());
+
+        String text = "";
+        if (openAiChatMessage.getContent() instanceof String) {
+            text = (String) openAiChatMessage.getContent();
+        }
+
+        return new FlatChatMessage(new AiMessage(text, toolCalls));
     }
 }

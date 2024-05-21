@@ -73,6 +73,22 @@ public class AiFlowBasicExpressionTest {
                     .await(500, TimeUnit.MILLISECONDS);
             assertEquals("2value1", answer.toString());
         }
+
+        @Test
+        @DisplayName("测试AiFlow的flatMap能力")
+        void shouldOkWhenCreateAiFlowWithFlatMap() {
+            List<String> result = new ArrayList<>();
+            AiProcessFlow<Integer, String> flow = AiFlows.<Integer>create().flatMap(num -> {
+                String[] maps = new String[num];
+                for (int i = 0; i < num; i++) {
+                    maps[i] = String.valueOf(i);
+                }
+                return AiFlows.flux(maps);
+            }).just(value -> result.add(value)).close(data -> {}, (r, x, y) -> {});
+            flow.converse().offer(4);
+            waitUntil(() -> result.size() == 4, 1000);
+            assertThat(result).hasSize(4).containsSequence("0", "1", "2", "3");
+        }
     }
 
     @Nested
@@ -93,7 +109,7 @@ public class AiFlowBasicExpressionTest {
                 flow.converse().doOnSuccess(counters::add).offer(i + 1);
             }
             waitUntil(() -> counters.size() == 4, 1000);
-            assertEquals(4, counters.size());
+            assertThat(counters).hasSize(4).containsSequence(1, 2, 3, 4);
 
             counters.clear();
             // 批量注入会将同一批次的聚合为一个
@@ -262,8 +278,8 @@ public class AiFlowBasicExpressionTest {
             String[] expectedSplit = expected.split("\n");
             String[] split = mermaidStr.split("\n");
             assertThat(split).hasSize(expectedSplit.length);
-            for (String str : expectedSplit) {
-                assertThat(str).isIn((Object[]) split);
+            for (String str : split) {
+                assertThat(str).isIn((Object[]) expectedSplit);
             }
         }
 

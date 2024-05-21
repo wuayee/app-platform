@@ -4,8 +4,6 @@
 
 package com.huawei.jade.fel.engine.operators.patterns;
 
-import static com.huawei.jade.fel.engine.util.SessionUtils.copyFlowSession;
-
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
 import com.huawei.fit.waterflow.domain.flow.Flow;
@@ -47,7 +45,7 @@ public class FlowSupportable<I, O> implements AsyncPattern<I, O> {
 
     @Override
     public void emit(O data, FlowSession session) {
-        FlowSession flowSession = copyFlowSession(session);
+        FlowSession flowSession = new FlowSession(session);
         this.flow.emit(data, flowSession);
     }
 

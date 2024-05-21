@@ -6,6 +6,7 @@ package com.huawei.jade.app.engine.knowledge.service;
 
 import com.huawei.fitframework.annotation.Genericable;
 import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
+import com.huawei.jade.app.engine.knowledge.params.RepoQueryParam;
 
 import java.util.List;
 
@@ -15,6 +16,24 @@ import java.util.List;
  * @since 2024-05-18
  */
 public interface KRepoService {
+    /**
+     * 根据名称查找知识库
+     *
+     * @param param 知识库查询参数
+     * @return 知识库列表
+     */
+    @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KRepoService.queryReposByName")
+    List<KRepoDto> queryReposByName(RepoQueryParam param);
+
+    /**
+     * 根据名称查找知识库数量
+     *
+     * @param param 知识库查询参数
+     * @return 知识库数量
+     */
+    @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KRepoService.queryReposCount")
+    int queryReposCount(RepoQueryParam param);
+
     /**
      * 获取所有知识库。
      *
@@ -51,9 +70,8 @@ public interface KRepoService {
     /**
      * 更新知识库
      *
-     * @param id 表示知识库ID的 {@link Long}。
      * @param kRepoDto 表示知识库记录的 {@link KRepoDto}。
      */
     @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KRepoService.update")
-    void update(Long id, KRepoDto kRepoDto);
+    void update(KRepoDto kRepoDto);
 }

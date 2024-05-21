@@ -51,6 +51,12 @@ public class AppBuilderPromptServiceImpl implements AppBuilderPromptService {
         List<AppBuilderPromptDto.AppBuilderInspirationDto> inspirations = jsonObject.getObject("inspirations",
                 new TypeReference<List<AppBuilderPromptDto.AppBuilderInspirationDto>>() {});
         List<AppBuilderPromptDto.AppBuilderInspirationDto> result = inspirations.stream().filter(dto -> {
+            if (categoryId.equals("others")) {
+                return Objects.isNull(dto.getCategory());
+            }
+            if (Objects.isNull(dto.getCategory())) {
+                return categoryId.equals("root");
+            }
             String[] category = dto.getCategory().split(":");
             // 如果目标节点是叶子节点，那么匹配id为后面部分否则为父节点id
             return categoryId.equals(category[this.ifLeaf(flagCategory) ? 1 : 0]);
@@ -115,15 +121,7 @@ public class AppBuilderPromptServiceImpl implements AppBuilderPromptService {
         JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(defaultValue));
         List<AppBuilderPromptCategoryDto> categories =
                 jsonObject.getObject("category", new TypeReference<List<AppBuilderPromptCategoryDto>>() {});
-        AppBuilderPromptCategoryDto root = categories.get(0);
-        List<AppBuilderPromptCategoryDto> seconds = root.getChildren();
-        Validation.notNull(seconds, () -> new IllegalStateException("The root category no child."));
-        // 针对第二层节点做特殊处理——第二层节点全部返回
-        List<AppBuilderPromptCategoryDto> newSeconds = seconds.stream().map(second -> {
-            AppBuilderPromptCategoryDto noLeaf = this.removeLeaf(second);
-            return Objects.isNull(noLeaf) ? second : noLeaf;
-        }).collect(Collectors.toList());
-        return Rsp.ok(newSeconds);
+        return Rsp.ok(categories);
     }
 
     private AppBuilderPromptCategoryDto removeLeaf(AppBuilderPromptCategoryDto root) {

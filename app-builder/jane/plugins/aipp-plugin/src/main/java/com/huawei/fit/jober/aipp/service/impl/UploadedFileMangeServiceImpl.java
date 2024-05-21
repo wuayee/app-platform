@@ -10,6 +10,7 @@ import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.schedule.annotation.Scheduled;
+import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.FileUtils;
 
 import java.io.File;
@@ -55,16 +56,19 @@ public class UploadedFileMangeServiceImpl implements UploadedFileManageService {
     /**
      * 根据aipp和用户删除相关的文件
      *
-     * @param aippId aipp id
+     * @param aippIds aipp id
      * @param createUserAccount 创建用户
      */
     @Override
-    public void cleanAippFiles(String aippId, String createUserAccount) {
-        log.debug("clean files for aipp: {}, user: {}.", aippId, createUserAccount);
-        if (aippId == null || createUserAccount == null) {
+    public void cleanAippFiles(List<String> aippIds, String createUserAccount) {
+        log.debug("clean files for aipp: {}, user: {}.", aippIds, createUserAccount);
+        if (CollectionUtils.isEmpty(aippIds) || createUserAccount == null) {
             return;
         }
+        aippIds.forEach(aippId -> this.delete(aippId, createUserAccount));
+    }
 
+    private void delete(String aippId, String createUserAccount) {
         List<String> filesToDelete = aippUploadedFileMapper.queryFilesByUserAipp(aippId, createUserAccount);
         List<String> filesDeleted = batchDeleteFiles(filesToDelete);
         if (!filesDeleted.isEmpty()) {

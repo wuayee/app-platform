@@ -118,7 +118,7 @@ public class MetaInstanceFitable implements MetaInstanceService {
 
     @Override
     @Fitable(id = "47631a35ba1d49cba6502412a5bf3972")
-    public String getMetaId(String id) {
+    public String getMetaVersionId(String id) {
         return this.repo.getMetaId(id);
     }
 

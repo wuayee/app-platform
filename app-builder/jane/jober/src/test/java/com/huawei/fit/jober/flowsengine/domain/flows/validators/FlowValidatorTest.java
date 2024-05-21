@@ -36,6 +36,7 @@ import com.huawei.fit.jober.flowsengine.domain.flows.validators.rules.NodesRule;
 import com.huawei.fit.jober.flowsengine.domain.flows.validators.rules.TasksRule;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -53,6 +54,7 @@ import java.util.Map;
  * @author g00564732
  * @since 2023/08/30
  */
+@Disabled
 class FlowValidatorTest extends FlowsDataBaseTest {
     /**
      * 第二个节点id

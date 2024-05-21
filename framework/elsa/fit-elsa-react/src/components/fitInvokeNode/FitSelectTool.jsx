@@ -14,9 +14,9 @@ export default function FitSelectTool() {
     const shape = useShapeContext();
 
     // 当前被选中的genericable，调接口需要用到这个数据
-    const selectGenericable = data && data.genericable.value;
+    const selectGenericable = data && data.genericable.value.find(item => item.name === "id").value;
     const baseUrl = shape.graph.configs.find(config => config.node === "fitInvokeState").urls.fitableMetaInfoUrl;
-    const selectDisabled = selectGenericable.find(item => item.name === 'id').value === '';
+    const selectDisabled = selectGenericable === '';
 
     /**
      * 构造当前组件的url
@@ -25,7 +25,7 @@ export default function FitSelectTool() {
      * @return {string}
      */
     const buildUrl = (page) => {
-        return baseUrl + selectGenericable + '?pageNum=' + page + 'pageSize=10';
+        return baseUrl + selectGenericable + '?pageNum=' + page + '&' + 'pageSize=10';
     }
 
     /**
@@ -51,7 +51,7 @@ export default function FitSelectTool() {
 
     return (
         <Form.Item
-            name="必选"
+            name={`select-fitable-${shape.id}`}
             label={<span style={{color: 'red'}}/>}
             rules={[{required: true, message: '请选择一个服务，再选择实现'}]}
             colon={false}

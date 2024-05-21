@@ -7,7 +7,6 @@ import OutputVariable from "@/components/end/OutputVariable.jsx";
  * @constructor
  */
 export default function EndNodeWrapper() {
-
     return (<div style={{backgroundColor: 'white'}}>
         <OutputVariable/>
     </div>)

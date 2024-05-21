@@ -1,4 +1,4 @@
-import {page} from "@fit-elsa/elsa-core";
+import {page, uuid} from "@fit-elsa/elsa-core";
 
 /**
  * jadeFlow的page.
@@ -19,7 +19,7 @@ export const jadeFlowPage = (div, graph, name, id) => {
     self.backgroundGridMargin = 16;
     self.backColor = "#fbfbfc";
     self.focusBackColor = "#fbfbfc";
-    self.gridColor= "#e1e1e3";
+    self.gridColor = "#e1e1e3";
     self.disableContextMenu = true;
     self.moveAble = true;
     self.observableStore = ObservableStore();
@@ -34,15 +34,27 @@ export const jadeFlowPage = (div, graph, name, id) => {
     };
 
     /**
+     * 具有唯一性的图形以及线都无法拷贝.
+     *
+     * @override
+     */
+    const onCopy = self.onCopy;
+    self.onCopy = (shapes) => {
+        const copiableShapes = shapes.filter(s => !s.isUnique && !s.isTypeof("jadeEvent"));
+        return onCopy.apply(self, [copiableShapes]);
+    };
+
+    /**
      * 注册可被监听的id.
      *
      * @param nodeId 节点id.
      * @param observableId 可被监听的id.
      * @param value 当前的值.
+     * @param type 值的类型.
      * @param parentId 父组件id.
      */
-    self.registerObservable = (nodeId, observableId, value, parentId) => {
-        self.observableStore.add(nodeId, observableId, value, parentId);
+    self.registerObservable = (nodeId, observableId, value, type, parentId) => {
+        self.observableStore.add(nodeId, observableId, value, type, parentId);
     };
 
     /**
@@ -109,16 +121,27 @@ export const jadeFlowPage = (div, graph, name, id) => {
         self.observableStore.clear();
     };
 
+    const initJadeId = (id) => {
+        if (id === null || id === undefined || id === "") {
+            // 变量为空，使用 uuid 创建
+            id = "jade" + uuid();
+        } else if (!id.startsWith("jade")) {
+            // 如果 id 不以 "jade" 开头，则在前面添加 "jade"
+            id = "jade" + id;
+        }
+        return id;
+    };
+
     /**
      * 添加对图形创建的前后处理.
      *
      * @override
      */
     const createNew = self.createNew;
-    self.createNew = (shapeType, x, y, id, properties, parent, ignoreLimit) => {
+    self.createNew = (shapeType, x, y, id, properties, parent, ignoreLimit, data) => {
         shapeCreationHandler.filter(v => v.type === "before")
                 .forEach(v => v.handle(self, shapeType, x, y, properties, parent));
-        const shape = createNew.apply(self, [shapeType, x, y, id, properties, parent, ignoreLimit]);
+        const shape = createNew.apply(self, [shapeType, x, y, id, properties, parent, ignoreLimit, data]);
         shapeCreationHandler.filter(v => v.type === "after")
                 .forEach(v => v.handle(self, shape));
         return shape;
@@ -140,10 +163,50 @@ export const jadeFlowPage = (div, graph, name, id) => {
     self.registerShapeCreationHandler({
         type: "before",
         handle: (page, shapeType) => {
-            if (shapeType === "startNodeStart" || shapeType === "endNodeEnd") {
+            if (shapeType === "startNodeStart") {
                 if (page.shapes.find(s => s.type === shapeType)) {
                     throw new Error("最多只能有一个开始或结束节点.");
                 }
+            }
+        }
+    });
+
+    self.registerShapeCreationHandler({
+        type: "after",
+        handle: (page, shape) => {
+            const jadeNodes = page.shapes.filter(s => s.isTypeof("jadeNode"));
+            // 找到所有节点text
+            const textArray = jadeNodes.map(s => s.text);
+            if (!textArray.find(text => text === shape.text)) {
+                return;
+            }
+            const separator = "_";
+            if (jadeNodes.filter(s => s.type === shape.type).length <= 1) {
+                return;
+            }
+            let index = 1;
+            while (true) {
+                const lastSeparatorIndex = shape.text.lastIndexOf(separator);
+                const last = shape.text.substring(lastSeparatorIndex + 1, shape.text.length);
+                // 如果是数字，把数字+1  如果不是数字，拼接_1
+                if (!isNaN(parseInt(last))) {
+                    shape.text = shape.text.substring(0, lastSeparatorIndex) + separator + index;
+                } else {
+                    shape.text = shape.text + separator + index;
+                }
+                if (!textArray.includes(shape.text)) {
+                    return;
+                }
+                index++;
+            }
+        }
+    });
+
+    self.registerShapeCreationHandler({
+        type: "after",
+        handle: (page, shape) => {
+            if (shape.type !== "jadeEvent") {
+                shape.id = initJadeId(shape.id);
             }
         }
     });
@@ -167,17 +230,22 @@ const ObservableStore = () => {
      * @param nodeId 节点id.
      * @param observableId 可被监听的id.
      * @param value 当前的值.
+     * @param type 值的类型.
      * @param parentId 父组件id.
      */
-    self.add = (nodeId, observableId, value, parentId) => {
+    self.add = (nodeId, observableId, value, type, parentId) => {
         const observableMap = getOrCreate(self.store, nodeId, () => new Map());
         const observable = getOrCreate(observableMap, observableId, () => {
             return {
-                observableId, value: null, observers: [], parentId
+                observableId, value: null, type: null, observers: [], parentId
             }
         });
         observable.value = value;
+        observable.type = type;
         observable.parentId = parentId;
+        if (observable.observers.length > 0) {
+            observable.observers.forEach(observe => observe.observe({value: value, type: type}));
+        }
     };
 
     /**
@@ -263,7 +331,7 @@ const ObservableStore = () => {
         }
 
         return Array.from(observableMap.values()).map(o => {
-            return {nodeId, observableId: o.observableId, parentId: o.parentId, value: o.value};
+            return {nodeId, observableId: o.observableId, parentId: o.parentId, value: o.value, type: o.type};
         });
     };
 

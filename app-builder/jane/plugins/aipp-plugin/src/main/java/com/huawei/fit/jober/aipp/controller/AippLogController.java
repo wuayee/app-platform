@@ -36,17 +36,17 @@ public class AippLogController extends AbstractController {
         this.aippLogService = aippLogService;
     }
 
-    @GetMapping(path = "/aipp/{aipp_id}/recent", description = "指定aippId查询实例历史记录（查询最新5个实例）")
+    @GetMapping(path = "/app/{app_id}/recent", description = "指定appId查询实例历史记录（查询最新5个实例）")
     public Rsp<List<AippInstLogDataDto>> queryRecentInstanceLog(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
-            @RequestParam("version") String version) {
-        return Rsp.ok(aippLogService.queryAippRecentInstLog(aippId, version, this.contextOf(httpRequest, tenantId)));
+            @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId,
+            @RequestParam("type") String type) {
+        return Rsp.ok(this.aippLogService.queryAippRecentInstLog(appId, type, this.contextOf(httpRequest, tenantId)));
     }
 
-    @DeleteMapping(path = "/aipp/{aipp_id}", description = "清除aippId查询实例的全部历史记录")
+    @DeleteMapping(path = "/app/{app_id}", description = "清除appId查询实例的全部历史记录")
     public Rsp<Void> deleteInstanceLog(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
-            @PathVariable("aipp_id") String aippId, @RequestParam("version") String version) {
-        this.aippLogService.deleteAippInstLog(aippId, version, this.contextOf(httpRequest, tenantId));
+            @PathVariable("app_id") String appId, @RequestParam("type") String type) {
+        this.aippLogService.deleteAippInstLog(appId, type, this.contextOf(httpRequest, tenantId));
         return Rsp.ok();
     }
 
@@ -54,11 +54,5 @@ public class AippLogController extends AbstractController {
     public Rsp<List<AippInstLog>> queryInstanceSince(@PathVariable("instance_id") String instanceId,
             @RequestParam(name = "after_at", required = false) String sinceTime) {
         return Rsp.ok(aippLogService.queryInstanceLogSince(instanceId, sinceTime));
-    }
-
-    @GetMapping(path = "/streaming/instance/{instance_id}", description = "流式查询指定instanceId条件查询实例记录")
-    public Rsp<List<AippInstLog>> queryInstanceSinceStreaming(@PathVariable("instance_id") String instanceId,
-            @RequestParam(name = "after_at", required = false) String sinceTime) {
-        return Rsp.ok(aippLogService.queryInstanceLogSinceStreaming(instanceId, sinceTime));
     }
 }

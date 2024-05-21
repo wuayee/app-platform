@@ -1138,6 +1138,11 @@ let graph = (div, title) => {
         setShapes(shapes);
     };
 
+    self.dynamicImportStatement = async (importStatement) => {
+        const shapes = await importStatement();
+        setShapes(shapes);
+    };
+
     let eventHandlers = {};
 
     self.fireEvent = async (event) => {
@@ -1148,7 +1153,7 @@ let graph = (div, title) => {
                 await handler(event.value);
             }
         }
-    }
+    };
 
     /**
      * 添加事件监听器.

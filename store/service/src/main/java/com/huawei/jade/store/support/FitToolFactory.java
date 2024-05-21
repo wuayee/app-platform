@@ -8,7 +8,6 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.jade.store.ItemInfo;
 import com.huawei.jade.store.Tool;
 import com.huawei.jade.store.ToolFactory;
 
@@ -33,7 +32,7 @@ public class FitToolFactory implements ToolFactory {
     }
 
     @Override
-    public Tool create(ItemInfo itemInfo, Tool.Metadata metadata) {
+    public Tool create(Tool.Info itemInfo, Tool.Metadata metadata) {
         return new FitTool(this.brokerClient, this.serializer, itemInfo, metadata);
     }
 }

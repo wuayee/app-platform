@@ -22,8 +22,6 @@ import java.util.regex.Pattern;
  */
 @Component
 public class EventsRule implements FlowRule {
-    private static final int META_ID_SIZE = 6;
-
     private static final Pattern SPECIAL_CHAR_PATTERN = Pattern.compile("[^a-zA-Z0-9 ]");
 
     /**
@@ -62,7 +60,6 @@ public class EventsRule implements FlowRule {
 
     private void validateMetaId(String metaId) {
         Validation.notBlank(metaId, exception("node event metaId"));
-        Validation.same(metaId.length(), META_ID_SIZE, exception("node event metaId"));
         Validation.isFalse(SPECIAL_CHAR_PATTERN.matcher(metaId).find(), exception("node event metaId"));
     }
 }
