@@ -91,7 +91,7 @@ const Home = () => {
     })
   }
   function addAippCallBack(appId) {
-    navigate(`/aipp/${tenantId}/detail/${appId}`);
+    navigate(`/app/${tenantId}/detail/${appId}`);
   }
   return <>{(
     <div className="home-content">
@@ -133,7 +133,7 @@ const AppItem = (props) => {
   const tenantId = '727d7157b3d24209aefd59eb7d1c49ff';
 
   function itemClick() {
-    navigate(`/aipp/${tenantId}/detail/${id}`);
+    navigate(`/app/${tenantId}/detail/${id}`);
   }
   return <>{(
     <div className="app-item" onClick={itemClick}>

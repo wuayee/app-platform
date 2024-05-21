@@ -187,33 +187,27 @@ const Inspiration = (props) => {
           ].join(" ")}
         >
           <div className="right-content">
-            <div className={showDrop ? "has-drop title" : "title"}>
-              <div className="title-icon">
+            <div className={showDrop ? 'has-drop title' : 'title'}>
+              <span className="title-icon">
                 <span className="inspiration-text">创意灵感</span>
-                <Dropdown menu={{ items }} trigger={["click"]}>
-                  <EllipsisOutlined className="app-item-footer-more" />
-                </Dropdown>
-              </div>
-              {showDrop && (
-                <Popover
+              </span>
+              { showDrop &&  (
+                <Popover 
                   content={
-                    <DropMenu
-                      treeList={dropList}
+                    <DropMenu 
+                      treeList={dropList} 
                       hide={hide}
                       nodeId={currentNodeId}
-                      nodeClick={nodeClick}
-                    />
-                  }
-                  open={popoverOpen}
+                      nodeClick={nodeClick} />
+                    } 
+                  open={popoverOpen} 
                   onOpenChange={handleOpenChange}
-                  arrow={false}
-                  trigger="click"
+                  arrow={false} 
+                  trigger="click" 
                   placement="bottomRight"
                 >
-                  <Button size="small" icon={<SwapOutlined />}>
-                    <span className="btn-text" title={currentPromptName}>
-                      {currentPromptName}
-                    </span>
+                  <Button size="small" icon={<SwapOutlined />} >
+                    <span className="btn-text" title={currentPromptName}>{ currentPromptName }</span>
                   </Button>
                 </Popover>
               )}

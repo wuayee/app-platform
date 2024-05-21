@@ -56,7 +56,7 @@ const EditModal = (props) => {
         name: formParams.name,
         greeting: formParams.greeting,
         description: formParams.description,
-        icon: formParams.icon,
+        icon: type === 'add' ? `${ICON_URL}/jober/v1/files/${avatarId}` : formParams.icon,
         app_type: formParams.app_type,
         type: 'app'
       }
@@ -182,7 +182,6 @@ const EditModal = (props) => {
             >
               <div className='avatar'>
                 {  avatarId ? (<img src={`${ICON_URL}/jober/v1/files/${avatarId}`} />) : (<Img icon={aippInfo.attributes?.icon}/>)}
-                {/* <Button icon={<ToTopOutlined />}> 自动生成</Button> */}
                 <Upload 
                   beforeUpload={beforeUpload} 
                   onChange={onChange} 
