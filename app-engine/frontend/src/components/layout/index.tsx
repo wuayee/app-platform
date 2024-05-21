@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import type { MenuProps } from "antd";
-import { Breadcrumb, Layout, Menu, theme, ConfigProvider } from "antd";
+import { Layout, Menu } from "antd";
+import { MenuFoldOutlined } from "@ant-design/icons";
 import {
-  HashRouter,
   Route,
   useNavigate,
   Routes,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 import {
   routeList,
@@ -14,11 +15,9 @@ import {
   getRouteByKey,
   getMenus,
 } from "../../router/route";
-import { Icons } from "../icons/index";
+import { Icons, KnowledgeIcons } from "../icons/index";
 import { HeaderUser } from "../header-user";
-import { HeaderFolderMenu } from "../header-folder-menu";
 import "./style.scoped.scss";
-import ChatRunning from "../../pages/chatEngineHome";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -41,9 +40,6 @@ const items: MenuItem[] = getMenus(routeList);
 const flattenRouteList = flattenRoute(routeList);
 
 const AppLayout: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [currentActivedPage, setCurrentActivedPage] = useState("首页");
-
   // 控制面板的显示与隐藏
   const [showMenu, setShowMenu] = useState(false);
 
@@ -62,13 +58,8 @@ const AppLayout: React.FC = () => {
     }
   }, [location]);
 
-  const menuFolder = () => {
-    setShowMenu(!showMenu);
-  };
-
   const menuClick = (e: any) => {
     const route = getRouteByKey(flattenRouteList, e.key);
-    setCurrentActivedPage(route?.label || "");
     navigate(e.key);
   };
 
@@ -84,82 +75,46 @@ const AppLayout: React.FC = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <>
-        <Sider
-          collapsible
-          collapsed={false}
-          onCollapse={(value) => setShowMenu(false)}
-          className={showMenu ? "openMenu" : "closeMenu"}
-        >
-          <div
-            style={{
-              position: "static",
-              width: "100%",
-              height: "48px",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              padding: "0px 24px 0px 24px",
-              flex: "none",
-              order: 0,
-              alignSelf: "stretch",
-              flexGrow: 0,
-              margin: "8px 0px",
-            }}
-          >
-            <Icons.logo />{" "}
-            <span
-              style={{
-                color: "rgb(255, 255, 255)",
-                fontSize: "20px",
-                fontWeight: "400",
-                lineHeight: "24px",
-                letterSpacing: "0px",
-                textAlign: "left",
-                marginLeft: "8px",
-              }}
-            >
-              APP Engine
-            </span>
+      <Sider
+        collapsible
+        collapsed={false}
+        onCollapse={() => setShowMenu(false)}
+        trigger={null}
+        width={showMenu ? 220 : 0}
+        className="layout-sider"
+      >
+        <div className="layout-sider-header">
+          <div className="layout-sider-content">
+            <Icons.logo />
+            <span className="layout-sider-title">APP Engine</span>
           </div>
-          <ConfigProvider
-            theme={{
-              components: {},
-            }}
-          >
-            <Menu
-              className="menu"
-              theme="dark"
-              defaultSelectedKeys={["/home"]}
-              mode="inline"
-              items={items}
-              onClick={menuClick}
-            />
-          </ConfigProvider>
-        </Sider>
-      </>
-      <>
-        <HeaderFolderMenu
-          openMenuFunc={menuFolder}
-          style={{
-            transition: " all .3s ease",
-            width: !showMenu ? "100%" : "0",
-            overflow: "hidden",
-            visibility: !showMenu ? "visible" : "hidden",
-            opacity: !showMenu ? 1 : 0,
-          }}
+          <MenuFoldOutlined
+            style={{ color: "#6d6e72" }}
+            onClick={() => setShowMenu(false)}
+          />
+        </div>
+        <Menu
+          className="menu"
+          theme="dark"
+          defaultSelectedKeys={["/home"]}
+          mode="inline"
+          items={items}
+          onClick={menuClick}
         />
-      </>
+      </Sider>
+      <div className="layout-sider-folder">
+        <KnowledgeIcons.menuFolder onClick={() => setShowMenu(true)} />
+      </div>
 
       <Layout className={setClassName()}>
         <Header
           style={{ padding: 0, background: colorBgContainer, height: "48px" }}
-        />
-        <HeaderUser />
+        >
+          <HeaderUser />
+        </Header>
         <Content style={{ padding: "0 16px", background: colorBgContainer }}>
           <Routes>
-            <Route path="/" Component={ChatRunning} />
+            <Route path="/" element={<Navigate to="/home" replace />} />
             {flattenRouteList.map((route) => (
               <Route
                 path={route.key}
@@ -169,8 +124,6 @@ const AppLayout: React.FC = () => {
             ))}
           </Routes>
         </Content>
-        {/* <Footer style={{ textAlign: 'center' }}>
-        </Footer> */}
       </Layout>
     </Layout>
   );

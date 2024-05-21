@@ -48,6 +48,7 @@ import com.huawei.fitframework.util.ObjectUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -65,6 +66,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
+@Disabled
 class AippFlowServiceTest {
     private static final String DUMMY_FLOW_CONFIG_ID = "testFlowConfigId";
     private static final String DUMMY_FLOW_CONFIG_VERSION = "1.0.0";

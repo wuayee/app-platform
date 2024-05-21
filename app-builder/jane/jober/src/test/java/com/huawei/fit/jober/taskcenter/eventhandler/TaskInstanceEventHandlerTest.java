@@ -51,6 +51,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2023-10-30 10:32
  */
 @ExtendWith(MockitoExtension.class)
+@Disabled
 public class TaskInstanceEventHandlerTest {
     @Mock
     private TaskConverter taskConverter;

@@ -76,6 +76,7 @@ const LiveUiTable: React.FC<{ dataSource; columns; onChange }> = ({
       dataSource={dataSource}
       columns={columns}
       onChange={onChange}
+      virtual
       pagination={{
         position: ['bottomRight'],
         size: 'small',

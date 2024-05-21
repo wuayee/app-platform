@@ -1,21 +1,39 @@
-
-import React, { useEffect, useState, useRef, useContext, useImperativeHandle } from 'react';
-import { Upload, Checkbox, Spin, Switch } from 'antd';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useContext,
+  useImperativeHandle,
+} from "react";
+import { Upload, Checkbox, Spin, Dropdown, Space, Avatar } from "antd";
 import { LinkIcon, AtIcon, PanleCloseIcon, PanleIcon } from '../../../assets/icon';
-import $ from 'jquery';
-import exit from '@assets/images/ai/exit.png';
-import talk from '@assets/images/ai/talk.png';
-import file from '@assets/images/ai/file.png';
-import image from '@assets/images/ai/image.png';
-import audio from '@assets/images/ai/audio.png';
-import stop from '@assets/images/ai/play.png';
+import {
+  DownOutlined,
+  GlobalOutlined,
+  HistoryOutlined,
+  LinkOutlined,
+  ShareAltOutlined,
+  ReloadOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  AudioOutlined,
+} from "@ant-design/icons";
+import $ from "jquery";
+import exit from "@assets/images/ai/exit.png";
+import talk from "@assets/images/ai/talk.png";
+import file from "@assets/images/ai/file.png";
+import image from "@assets/images/ai/image.png";
+import audio from "@assets/images/ai/audio.png";
+import stop from "@assets/images/ai/play.png";
+import { Message } from "../../../shared/utils/message";
+import { httpUrlMap } from "../../../shared/http/httpConfig";
+import { uploadChatFile } from "../../../shared/http/aipp";
+import { AippContext } from "../../aippIndex/context";
+import "../../../shared/utils/rendos";
+import robot2 from "../../../assets/images/ai/xiaohai.png";
 import xiaohai from '@assets/images/ai/xiaohai2.png';
-import { Message } from '../../../shared/utils/message';
-import { httpUrlMap } from '../../../shared/http/httpConfig';
-import { uploadChatFile } from '../../../shared/http/aipp';
-import { AippContext } from '../../aippIndex/context';
-import '../../../shared/utils/rendos'
-import '../styles/send-editor.scss';
+import "../styles/send-editor.scss";
+import HistoryChat from "./history-chat";
 
 const docArr = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

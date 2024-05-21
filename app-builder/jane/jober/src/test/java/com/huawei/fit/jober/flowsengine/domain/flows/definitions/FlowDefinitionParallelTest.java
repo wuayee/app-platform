@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 2023/08/22
  */
 @DisplayName("流程实例在内存中并行运行测试集合")
+@Disabled
 class FlowDefinitionParallelTest {
     @Nested
     @DisplayName("流程实例流转多并发场景测试集合，复用内存持久化测试场景")

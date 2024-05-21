@@ -38,6 +38,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen }) => {
   return (
     <Drawer
       destroyOnClose
+      mask={false}
       title={
         <div className="app-title">
           <div className="app-title-left">

@@ -127,8 +127,8 @@ const ChatPreview = (props) => {
       const res = await getRecentInstances(tenantId, appId, type);
       if (res.data && res.data.length) {
         let chatArr = [];
-        res.data.forEach(item => {
-          let questionObj = { type: 'send', sendType: 'text' };
+        res.data.forEach((item) => {
+          let questionObj = { type: "send", sendType: "text" };
           let { msg } = JSON.parse(item.question.logData);
           questionObj.logId = item.question.logId;
           questionObj.content = msg;
@@ -469,10 +469,10 @@ const ChatPreview = (props) => {
       if (typeof JSON.parse(str) === "object") {
         return true;
       }
-    } catch (e){
-      return false
+    } catch (e) {
+      return false;
     }
-    return false
+    return false;
   }
   // 清除历史对话记录
   async function clearChat() {

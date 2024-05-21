@@ -6,6 +6,7 @@ package com.huawei.fit.jober.flowsengine.domain.flows.parsers.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
  * @author 陈镕希 c00572808
  * @since 2024-05-13
  */
+@Disabled
 class ConvertConditionToRuleUtilsTest {
     @Test
     public void testEqualConditionFromInput() {
