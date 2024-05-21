@@ -7,6 +7,8 @@ import {
   CloseOutlined,
 } from "@ant-design/icons";
 import "./style.scoped.scss";
+import {httpUrlMap} from "../../../../shared/http/httpConfig";
+const { ICON_URL } = process.env.NODE_ENV === 'dev' ? 'https://jane-beta.huawei.com/api' : httpUrlMap[process.env.NODE_ENV];
 
 interface StarAppsProps {
   open: boolean;
@@ -27,7 +29,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen }) => {
       desc: "超级应用助手，存储领域高级专家",
       author: "APP Engine",
       appAvatar:
-        "https://jane-beta.huawei.com/api/jober/v1/files/17e9ee28e8914b48aa54e084b67bf878",
+        `${ICON_URL}/jober/v1/files/17e9ee28e8914b48aa54e084b67bf878`,
       authorAvatar: "https://api.dicebear.com/7.x/miniavs/svg?seed=1",
     }))
   );

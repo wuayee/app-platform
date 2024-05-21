@@ -6,7 +6,7 @@ import {
   ToTopOutlined
 } from '@ant-design/icons';
 import { Message } from '../../shared/utils/message';
-import { uploadFile, updateAippInfo, createAipp } from '../../shared/http/aipp';
+import { uploadChatFile, updateAippInfo, createAipp } from '../../shared/http/aipp';
 import { httpUrlMap } from '../../shared/http/httpConfig';
 import robot from '../../assets/images/ai/robot1.png';
 import './styles/edit-modal.scss';
@@ -104,21 +104,26 @@ const EditModal = (props) => {
   }
   // 上传图片
   async function pictureUpload(file) {
-    fileHeaders.fileName = encodeURI(file.name || '');
-    fileHeaders.fileSize = file.size || '';
+    // fileHeaders.fileName = encodeURI(file.name || '');
+    // fileHeaders.fileSize = file.size || '';
     let render = new FileReader();
     render.readAsArrayBuffer(file);
+    let headers = {
+      "attachment-filename": encodeURI(file.name || ""),
+    };
     render.onload = async (e) => {
       try {
         let targetFile = e.target?.result;
-        let res = await uploadFile(targetFile, fileHeaders);
+        const formData = new FormData();
+        formData.append("file", targetFile);
+        let res = await uploadChatFile(tenantId, appId, formData, headers);
         if (res.code === 0 && res.data.id) {
           setAvatarId(res.data.id);
         }
       } catch (err) {
         Message({ type: 'error',  content: err.message || '上传图片失败'})
       }
-    } 
+    }
   }
   useImperativeHandle(modalRef, () => {
     return {
@@ -127,13 +132,13 @@ const EditModal = (props) => {
   })
   return <>
     {(
-      <Modal 
+      <Modal
         title={ type ? '添加应用' : '修改基础信息' }
         width='600px'
         keyboard={false}
         maskClosable={false}
         forceRender={true}
-        open={isModalOpen} 
+        open={isModalOpen}
         onCancel={handleCancel}
         footer={[
           <Button key="back" onClick={handleCancel}>
@@ -182,9 +187,9 @@ const EditModal = (props) => {
             >
               <div className='avatar'>
                 {  avatarId ? (<img src={`${ICON_URL}/jober/v1/files/${avatarId}`} />) : (<Img icon={aippInfo.attributes?.icon}/>)}
-                <Upload 
-                  beforeUpload={beforeUpload} 
-                  onChange={onChange} 
+                <Upload
+                  beforeUpload={beforeUpload}
+                  onChange={onChange}
                   showUploadList={false}
                   accept='.jpg,.png'>
                   <Button icon={<ToTopOutlined />}>手动上传</Button>

@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.jober.aipp.dto.aipplog;
+package com.huawei.fit.jober.aipp.condition;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

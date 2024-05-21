@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.model.service.gateway;
+package com.huawei.jade.model.service.gateway.filter;
 
 import reactor.core.publisher.Mono;
 
@@ -24,7 +24,7 @@ import org.springframework.web.server.WebFilterChain;
  * @since 2024-05-09
  */
 @Configuration
-public class GlobalCorsConfig {
+public class GlobalCorsConfigFilter {
     /**
      * 向响应头中添加跨域信息。
      *

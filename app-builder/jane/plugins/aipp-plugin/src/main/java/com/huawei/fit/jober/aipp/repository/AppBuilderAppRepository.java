@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jober.aipp.repository;
 
+import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
 import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
-import com.huawei.fit.jober.aipp.dto.aipplog.AppQueryCondition;
 
 import java.util.List;
 
@@ -16,7 +16,8 @@ import java.util.List;
 public interface AppBuilderAppRepository {
     AppBuilderApp selectWithId(String id);
 
-    List<AppBuilderApp> selectByTenantIdWithPage(String tenantId, String typeFilter, long offset, int limit);
+    List<AppBuilderApp> selectByTenantIdWithPage(AppQueryCondition cond, String tenantId, String typeFilter,
+            long offset, int limit);
 
     List<AppBuilderApp> selectWithCondition(AppQueryCondition cond);
 

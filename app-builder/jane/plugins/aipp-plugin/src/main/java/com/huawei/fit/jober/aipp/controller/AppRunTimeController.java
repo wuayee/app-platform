@@ -138,11 +138,12 @@ public class AppRunTimeController extends AbstractController {
      */
     @GetMapping(path = "/aipp/{aipp_id}/instances/{instance_id}", description = "查询单个应用实例信息，实例运行期间前端定时调用")
     public Rsp<AippInstanceDto> getInstance(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId,
-            @PathVariable("aipp_id") String aippId,
-            @PathVariable("instance_id") String instanceId,
-            @RequestParam(value = "version") String version) {
-        return Rsp.ok(aippRunTimeService.getInstance(aippId, version, instanceId, this.contextOf(httpRequest, tenantId)));
+            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
+            @PathVariable("instance_id") String instanceId, @RequestParam(value = "version") String version) {
+        return Rsp.ok(aippRunTimeService.getInstance(aippId,
+                version,
+                instanceId,
+                this.contextOf(httpRequest, tenantId)));
     }
 
     /**
