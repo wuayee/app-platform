@@ -4,6 +4,7 @@ import './style.scoped.scss';
 import { getAippInfo } from '../../../shared/http/aipp';
 import { Message } from '../../../shared/utils/message';
 import { useNavigate, useParams } from 'react-router';
+import { AppIcons } from '../../../components/icons/app';
 
 const AppOverview: React.FC = () => {
 
@@ -48,16 +49,16 @@ const AppOverview: React.FC = () => {
                 </Flex>
               </Flex>
               <Flex gap={20}>
-                <Flex gap={4}>
-                  <img src='/src/assets/svg/user.svg' />
+                <Flex gap={4} align='center'>
+                  <AppIcons.UserIcon />
                   <span>2.36k</span>
                 </Flex>
-                <Flex gap={4}>
-                  <img src='/src/assets/svg/star.svg' />
+                <Flex gap={4} align='center'>
+                  <AppIcons.StarIcon />
                   <span>123</span>
                 </Flex>
-                <Flex gap={4}>
-                  <img src='/src/assets/svg/like.svg' />
+                <Flex gap={4} align='center'>
+                  <AppIcons.AppLikeIcon />
                   <span>123</span>
                 </Flex>
               </Flex>
@@ -123,8 +124,8 @@ const AppOverview: React.FC = () => {
               </Flex>
               <Input placeholder='https://octo-cd.hdesign.huawei.com/app/editor/UcmfDrFl0JHBFRBeGgfj2Q?' />
               <Flex gap='small'>
-                <Button type='primary' size='small'><Flex align={'center'}><img src='/src/assets/svg/preview.svg' />预览</Flex></Button>
-                <Button size='small'><Flex align={'center'}><img src='/src/assets/svg/flip.svg' />自动生成</Flex></Button>
+                <Button type='primary' size='small'><Flex align={'center'}><AppIcons.PreviewIcon />预览</Flex></Button>
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button>
               </Flex>
             </Flex>
           </div>
@@ -154,9 +155,9 @@ const AppOverview: React.FC = () => {
               </Flex>
               <Input placeholder='https://octo-cd.hdesign.huawei.com/app/editor/UcmfDrFl0JHBFRBeGgfj2Q?' />
               <Flex gap='small'>
-                <Button size='small'><Flex align={'center'}><img src='/src/assets/svg/flip.svg' />API秘钥</Flex></Button>
-                <Button size='small'><Flex align={'center'}><img src='/src/assets/svg/flip.svg' />查阅API文档</Flex></Button>
-                <Button size='small'><Flex align={'center'}><img src='/src/assets/svg/flip.svg' />自动生成</Flex></Button>
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />API秘钥</Flex></Button>
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />查阅API文档</Flex></Button>
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button>
               </Flex>
             </Flex>
           </div>
