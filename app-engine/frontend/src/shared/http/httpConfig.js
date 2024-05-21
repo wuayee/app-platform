@@ -20,7 +20,7 @@ export const httpUrlMap = {
     AI_URL: 'https://tzaip.rnd.huawei.com/tzaip/api/hisp',
     AIPP_URL: 'https://jane.huawei.com/api/jober/v1/api',
     PUBLISH_URL: 'https://jane.huawei.com/appbuilder/#',
-    WS_URL: 'wss://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/app/chat',
+    WS_URL: '/v1/api/aipp/streamLog',
     WS_AUDIO_URL: 'wss://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/app/asr',
     MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api'
   },
