@@ -6,6 +6,7 @@
   margin: 0 auto;
   overflow: hidden;
   position: relative;
+  border-top-right-radius: 8px;
 
   .chat-preview-title {
     font-weight: 700;
@@ -137,7 +138,7 @@
 }
 
 .chat-preview-elsa {
-  width: 800px;
+  width: 60%;
   transition: margin-right .2s;
   position: relative;
 
@@ -191,7 +192,7 @@
   .send-editor-container,
   .message-check-toolbox-wrap,
   .message-box {
-    width: calc(100% - 460px);
+    width: calc(100% - 260px);
     max-width: 1400px;
   }
   .chat-left-close {
@@ -213,7 +214,7 @@
   }
   .chat-left-close {
     .chat-details-content,
-    .message-box, 
+    .message-box,
     .send-editor-container,
     .message-check-toolbox-wrap {
       width: calc(100% - 60px);

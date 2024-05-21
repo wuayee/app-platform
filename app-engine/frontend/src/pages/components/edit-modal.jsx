@@ -12,8 +12,7 @@ import robot from '../../assets/images/ai/robot1.png';
 import './styles/edit-modal.scss';
 
 const { TextArea } = Input;
-const { ICON_URL } = process.env.NODE_ENV === 'dev' ? 'http://80.11.128.66:31111/api' : httpUrlMap[process.env.NODE_ENV];
-const { AIPP_URL } = process.env.NODE_ENV === 'dev' ? 'http://80.11.128.66:31111/api/jober/v1/api' : httpUrlMap[process.env.NODE_ENV];
+const { AIPP_URL } = process.env.NODE_ENV === 'development' ? {AIPP_URL: 'http://80.11.128.66:31111/api/jober/v1/api'} : httpUrlMap[process.env.NODE_ENV];
 const EditModal = (props) => {
   const { modalRef, aippInfo, updateAippCallBack, type, addAippCallBack } = props;
   const [ form ] = Form.useForm();
@@ -85,6 +84,8 @@ const EditModal = (props) => {
         type: aippInfo.type,
         version: aippInfo.version
       }
+      console.log(process.env.NODE_ENV);
+      console.log(AIPP_URL);
       filePath ? params.attributes.icon = `${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}` : params.attributes.icon = aippInfo.attributes?.icon;
       const res = await updateAippInfo(tenantId, appId, params);
       if (res.code === 0) {

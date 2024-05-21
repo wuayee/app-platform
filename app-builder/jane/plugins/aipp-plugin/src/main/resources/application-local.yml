@@ -11,7 +11,9 @@ aipp:
   agent_search_aipp: e51a4544fe814123817d720188c6463a
   agent_mind_aipp: e1001060e7074744b33c6ecc21579cc3
 jane:
-  endpoint: https://jane-alpha.huawei.com
+  endpoint: https://jane.huawei.com
+app-engine:
+  endpoint: http://80.11.128.66:31111
 elsa:
   endpoint: https://fit-elsa-alpha.lab.huawei.com
   elsaKey: a90ae902e83540b3b69ceeec38ea0468
@@ -46,9 +48,9 @@ druid:
   testWhileIdle: true
   testOnBorrow: true
   testOnReturn: true
-  url: jdbc:postgresql://10.91.144.110:5433/jane?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true&options=-c%20statement_timeout=600000
-  username: jane
-  password: FitLab123
+  url: jdbc:postgresql://80.11.128.66:30547/app_builder?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true&options=-c%20statement_timeout=600000
+  username: postgres
+  password: Huawei@123
 tender:
   url: "aHR0cHM6Ly9zMy1oYy1kZ2cuaGljcy5odWF3ZWkuY29tL2ZpdC1lbHNhLWFscGhhLWcvdGVuZGVyQW5hbHlzZVJlc3VsdC54bHN4"
 w3-task:
