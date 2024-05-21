@@ -11,10 +11,11 @@ import {
   GlobalOutlined,
   HistoryOutlined,
   LinkOutlined,
-  MehOutlined,
+  ShareAltOutlined,
   ReloadOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
+  AudioOutlined,
 } from "@ant-design/icons";
 import $ from "jquery";
 import exit from "@assets/images/ai/exit.png";
@@ -294,6 +295,7 @@ const SendEditor = (props) => {
                 <span className="editor-action-item">@</span>
               </Space>
               <Space>
+                <ShareAltOutlined className="editor-action-item" />
                 <GlobalOutlined className="editor-action-item" />
                 <Dropdown menu={{ items }} className="editor-action-dropdown">
                   <Space>
@@ -312,20 +314,11 @@ const SendEditor = (props) => {
                 className={[
                   "quill-span",
                   "quill-item-span quill-last",
-                  "editor-recording",
                   recording ? "recording" : null,
                 ].join(" ")}
                 onClick={onRecord}
               >
-                <img
-                  src={audio}
-                  alt=""
-                  style={{
-                    width: 20,
-                    background: "#blue",
-                    borderRadius: "50%",
-                  }}
-                />
+                <Avatar icon={<AudioOutlined />} className="editor-recording" />
               </div>
               <div
                 className="chat-promet-editor"
