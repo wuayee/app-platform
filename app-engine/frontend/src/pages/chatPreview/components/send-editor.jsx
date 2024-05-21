@@ -6,7 +6,7 @@ import React, {
   useImperativeHandle,
 } from "react";
 import { Upload, Checkbox, Spin, Dropdown, Space, Avatar } from "antd";
-import { LinkIcon, AtIcon, PanleCloseIcon, PanleIcon } from '../../../assets/icon';
+import { LinkIcon, AtIcon, PanleCloseIcon, PanleIcon, AudioIcon } from '../../../assets/icon';
 import {
   DownOutlined,
   GlobalOutlined,
@@ -181,7 +181,9 @@ const SendEditor = (props) => {
       setFilterHtml: setFilterHtml,
     };
   });
-
+  function recommendSend(item) {
+    onSend(item);
+  }
   const [recording, setRecording] = useState(false);
 
   // 语音实时转文字
@@ -227,7 +229,7 @@ const SendEditor = (props) => {
   const [openHistory, setOpenHistory] = useState(false);
   return <>{(
     <div className='send-editor-container'>
-      <Recommends openClick={openClick} inspirationOpen={inspirationOpen}/>
+      <Recommends openClick={openClick} inspirationOpen={inspirationOpen} send={recommendSend}/>
       <div className='editor-inner'>
         <EditorBtnHome aippInfo={aippInfo} setOpen={setOpenHistory}/>
         <div className='editor-input' id="drop">
@@ -241,7 +243,7 @@ const SendEditor = (props) => {
             onPaste={messagePaste}
           ></div>
           <div className='send-icon' onClick={ sendMessage }></div>
-          <div className='audio-icon' onClick={ sendMessage }><LinkIcon /></div>
+          <div className='audio-icon'><AudioIcon /></div>
         </div>
       </div>
       <div className='chat-tips'>
@@ -500,12 +502,15 @@ const EditorSelect = (props) => {
 
 // 猜你想问
 const Recommends = (props) => {
-  const { openClick, inspirationOpen } = props;
+  const { openClick, inspirationOpen, send } = props;
   const [ guessQuestions, setGuessQuestions ] = useState([
     "如何构建知识库",
     "我想创建一个应用",
     "推荐几个常用的应用机器人",
   ]);
+  const recommendClick = (item) => {
+    send(item);
+  }
   return <>{(
     <div className="recommends-inner">
       <div className="recommends-top">
@@ -515,11 +520,12 @@ const Recommends = (props) => {
       <div className="recommends-list">
         <div className="list-left">
           {
-            
+            guessQuestions.map(item => {
+              return (
+                <div className="recommends-item" onClick={recommendClick.bind(this, item)}>{item}</div>
+              )
+            })
           }
-          <div className="recommends-item">如何构建知识库</div>
-          <div className="recommends-item">我想创建一个应用</div>
-          <div className="recommends-item">推荐几个常用的应用机器人</div>
         </div>
         <div className="list-right" onClick={openClick}>
           { inspirationOpen ? <PanleCloseIcon /> : <PanleIcon /> }
