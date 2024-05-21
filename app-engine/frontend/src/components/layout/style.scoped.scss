@@ -12,6 +12,7 @@
   0% {
     opacity: 1;
   }
+
   30% {
     opacity: .5;
   }
@@ -19,6 +20,7 @@
   50% {
     opacity: .3;
   }
+
   100% {
     opacity: 0;
     display: none;
@@ -30,6 +32,7 @@
     opacity: 0;
     display: none;
   }
+
   30% {
     opacity: .3;
   }
@@ -37,9 +40,37 @@
   50% {
     opacity: .5;
   }
+
   100% {
     opacity: 1;
     display: block;
   }
 }
 
+.layout-sider {
+  z-index: 1;
+
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+  }
+
+  &-title {
+    color: #fff;
+    font-size: 18px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0px;
+    text-align: left;
+    margin-left: 8px;
+  }
+
+  &-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}

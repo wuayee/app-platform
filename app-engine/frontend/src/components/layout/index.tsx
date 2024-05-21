@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { MenuProps } from "antd";
-import { Layout, Menu, ConfigProvider } from "antd";
+import { Layout, Menu } from "antd";
 import {
   Route,
   useNavigate,
@@ -14,11 +14,10 @@ import {
   getRouteByKey,
   getMenus,
 } from "../../router/route";
-import { Icons } from "../icons/index";
+import { Icons, KnowledgeIcons } from "../icons/index";
 import { HeaderUser } from "../header-user";
-import { HeaderFolderMenu } from "../header-folder-menu";
 import "./style.scoped.scss";
-import ChatRunning from "../../pages/chatEngineHome";
+import { MenuOutlined } from "@ant-design/icons";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -74,77 +73,48 @@ const AppLayout: React.FC = () => {
 
   const colorBgContainer = "#F0F2F4";
   const isHomepage = location.pathname.includes("home");
+  useEffect(() => {
+    console.log(showMenu);
+  }, [showMenu]);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <>
-        <Sider
-          collapsible
-          collapsed={false}
-          onCollapse={(value) => setShowMenu(false)}
-          className={showMenu ? "openMenu" : "closeMenu"}
-        >
-          <div
-            style={{
-              position: "static",
-              width: "100%",
-              height: "48px",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              padding: "0px 24px 0px 24px",
-              flex: "none",
-              order: 0,
-              alignSelf: "stretch",
-              flexGrow: 0,
-              margin: "8px 0px",
-            }}
-          >
+      <Sider
+        collapsible
+        collapsed={false}
+        onCollapse={(value) => setShowMenu(false)}
+        trigger={null}
+        width={showMenu ? 220 : 0}
+        className="layout-sider"
+      >
+        <div className="layout-sider-header">
+          <div className="layout-sider-content">
             <Icons.logo />
-            <span
-              style={{
-                color: "rgb(255, 255, 255)",
-                fontSize: "20px",
-                fontWeight: "400",
-                lineHeight: "24px",
-                letterSpacing: "0px",
-                textAlign: "left",
-                marginLeft: "8px",
-              }}
-            >
-              APP Engine
-            </span>
+            <span className="layout-sider-title">APP Engine</span>
           </div>
-          <ConfigProvider
-            theme={{
-              components: {},
-            }}
-          >
-            <Menu
-              className="menu"
-              theme="dark"
-              defaultSelectedKeys={["/home"]}
-              mode="inline"
-              items={items}
-              onClick={menuClick}
-            />
-          </ConfigProvider>
-        </Sider>
-      </>
-      <>
-        <HeaderFolderMenu
-          openMenuFunc={menuFolder}
-          style={{
-            transition: " all .3s ease",
-            width: !showMenu ? "100%" : "0",
-            overflow: "hidden",
-            visibility: !showMenu ? "visible" : "hidden",
-            opacity: !showMenu ? 1 : 0,
-          }}
+          <MenuOutlined
+            style={{ color: "#6d6e72", fontSize: 10 }}
+            onClick={() => setShowMenu(false)}
+          />
+        </div>
+        <Menu
+          className="menu"
+          theme="dark"
+          defaultSelectedKeys={["/home"]}
+          mode="inline"
+          items={items}
+          onClick={menuClick}
         />
-      </>
-
+      </Sider>
+      <KnowledgeIcons.menuFolder
+        style={{
+          position: "absolute",
+          left: 20,
+          top: 20,
+          cursor: "pointer",
+        }}
+        onClick={() => setShowMenu(true)}
+      />
       <Layout className={isHomepage ? "home-chat" : ""}>
         <Header
           style={{ padding: 0, background: colorBgContainer, height: "48px" }}
