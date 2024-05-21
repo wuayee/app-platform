@@ -1,37 +1,70 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Space, DatePicker, Drawer } from 'antd';
 import './style.scoped.scss';
+import { CloseOutlined } from '@ant-design/icons';
 import LiveUiTable, { getColumnSearchProps } from '../../../components/table';
 import { feedbackType } from './model';
-import { CloseOutlined } from '@ant-design/icons';
 import { AppIcons } from '../../../components/icons/app';
 
- const feedbackIcon = {
-  0: <AppIcons.UnFeedbackIcon style={{verticalAlign:'text-bottom'}}/>,
-  1: <AppIcons.LikeIcon style={{verticalAlign:'text-bottom'}}/>,
-  2: <AppIcons.DisLikeIcon style={{verticalAlign:'text-bottom'}}/>,
+const feedbackIcon = {
+  0: <AppIcons.UnFeedbackIcon style={{ verticalAlign: 'text-bottom' }} />,
+  1: <AppIcons.LikeIcon style={{ verticalAlign: 'text-bottom' }} />,
+  2: <AppIcons.DisLikeIcon style={{ verticalAlign: 'text-bottom' }} />,
 };
 
-
-const dataSource = [];
-
-for (let i = 0; i < 100; i++) {
-  dataSource.push({
-    id: i,
-    question: '这是一个很长长长长长长长长长长长长长长长长长长长长的问题',
-    answer: '回答',
-    time: '2024-03-04 14:33:23',
-    speed: '20ms',
-    user: `用户${i}`,
-    department: '部门',
-    feedback: i%3,
-  },);
-}
+const basicInfoCols = [
+  {
+    key: 'time',
+    label: '时间',
+  },
+  {
+    key: 'speed',
+    label: '相应速度',
+  },
+  {
+    key: 'user',
+    label: '用户',
+  },
+  {
+    key: 'department',
+    label: '部门',
+  },
+  {
+    key: 'feedback',
+    label: '用户反馈',
+    render: (value) => (
+      <div>
+        <span>{feedbackType[value]}</span> {feedbackIcon[value]}
+      </div>
+    ),
+  },
+];
 
 const FeedBack = () => {
   const [open, setOpen] = useState(false);
+  const [data, setData] = useState([]);
+  const [searchParams,setSearchParams]=useState({});
   const currentRow = useRef(null);
+  const refreshData = () => {
+    const dataSource = new Array(100).fill(1).map((i) => {
+     return {
+      id: i,
+      question: '这是一个很长长长长长长长长长长长长长长长长长长长长的问题',
+      answer: '回答',
+      time: '2024-03-04 14:33:23',
+      speed: '20ms',
+      user: `用户${i}`,
+      department: '部门',
+      feedback: i % 3,
+      }
+    });
+    setData(dataSource);
+  };
+  useEffect(() => {
+    refreshData();
+  }, [searchParams]);
   const handleChange: void = (pagination, filters, sorter) => {
+    setSearchParams({...searchParams,pagination,filters,sorter})
     console.log('Various parameters', pagination, filters, sorter);
   };
   const columns = [
@@ -77,7 +110,11 @@ const FeedBack = () => {
       title: '用户反馈',
       dataIndex: 'feedback',
       key: 'feedback',
-      render: (value, record) => <div>{feedbackIcon[value]} <span>{feedbackType[value]}</span> </div>,
+      render: (value, record) => (
+        <div>
+          {feedbackIcon[value]} <span>{feedbackType[value]}</span>{' '}
+        </div>
+      ),
     },
     {
       title: '操作',
@@ -96,42 +133,19 @@ const FeedBack = () => {
     },
   ];
 
-  const basicInfoCols = [
-    {
-      key: 'time',
-      label: '时间',
-    },
-    {
-      key: 'speed',
-      label: '相应速度',
-    },
-    {
-      key: 'user',
-      label: '用户',
-    },
-    {
-      key: 'department',
-      label: '部门',
-    },
-    {
-      key: 'feedback',
-      label: '用户反馈',
-      render: (value) => <div><span>{feedbackType[value]}</span> {feedbackIcon[value]}</div>,
-    },
-  ];
-
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 14 }}>
         <DatePicker.RangePicker
           showTime
           onChange={(_date, dateString) => {
+            setSearchParams({...searchParams,date:dateString})
             console.log(dateString);
           }}
         />
         <Button type='primary'>导出</Button>
       </div>
-      <LiveUiTable dataSource={dataSource} columns={columns} onChange={handleChange} />
+      <LiveUiTable dataSource={data} columns={columns} onChange={handleChange} scroll={{ y: 'calc(100vh - 320px)' }}/>
       <Drawer
         title='反馈详情'
         placement='right'
@@ -164,19 +178,17 @@ const FeedBack = () => {
             flexWrap: 'wrap',
             whiteSpace: 'normal',
             wordBreak: 'break-all',
-            marginTop:'10px'
+            marginTop: '10px',
           }}
         >
-          {basicInfoCols.map((item) => {
-            return (
-              <div style={{ width: 'calc((100%) / 3)', marginBottom: 10 }}>
-                <div style={{ color: '#4d4d4d', fontSize: 12 }}>{item.label}</div>
-                <div style={{marginTop:'5px',fontSize:'14px'}}>
-                  {item.render?.(currentRow.current?.[item.key]) || currentRow.current?.[item.key]}
-                </div>
+          {basicInfoCols.map((item) => (
+            <div style={{ width: 'calc((100%) / 3)', marginBottom: 10 }}>
+              <div style={{ color: '#4d4d4d', fontSize: 12 }}>{item.label}</div>
+              <div style={{ marginTop: '5px', fontSize: '14px' }}>
+                {item.render?.(currentRow.current?.[item.key]) || currentRow.current?.[item.key]}
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
         <div className='drawer-title'>问答详情</div>
         <div className='drawer-sub-title'>用户提问</div>
