@@ -230,7 +230,7 @@ function Skill(props) {
                         {/*<PlusOutlined className="icon plus-icon" onClick={onAddToolClick}/>*/}
                     </div>
                     <Form.Item
-                        name="tool"
+                        name="tools"
                         label=""
                         style={{
                             marginTop: "10px",
@@ -251,7 +251,7 @@ function Skill(props) {
                                 label: "name",
                                 value: "uniqueName"
                             }}
-                            onChange={(value) => {updateData(value, "tool")}}
+                            onChange={(value) => {updateData(value, "tools")}}
                         ></Select>
                     </Form.Item>
                 </div>
