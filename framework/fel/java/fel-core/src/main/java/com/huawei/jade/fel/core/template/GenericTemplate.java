@@ -4,7 +4,6 @@
 
 package com.huawei.jade.fel.core.template;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -19,10 +18,10 @@ public interface GenericTemplate<I, O> {
     /**
      * 根据输入参数渲染模板，生成结果。
      *
-     * @param values 表示输入参数的 {@link Map}{@code <}{@link String}{@code ,} {@link Object}{@code >}。
+     * @param values 表示输入参数的 {@link Object}。
      * @return 返回表示渲染结果的 {@link Object}。
      */
-    O render(Map<String, I> values);
+    O render(I values);
 
     /**
      * 获取模板占位符集合。
