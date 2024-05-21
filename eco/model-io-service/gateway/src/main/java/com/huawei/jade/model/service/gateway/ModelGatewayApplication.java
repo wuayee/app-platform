@@ -4,8 +4,8 @@
 
 package com.huawei.jade.model.service.gateway;
 
-import com.huawei.jade.model.service.gateway.controller.RouteUpdateController;
-import com.huawei.jade.model.service.gateway.route.RouteInfoList;
+import com.huawei.jade.model.service.gateway.controller.GatewayController;
+import com.huawei.jade.model.service.gateway.entity.RouteInfoList;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,8 +48,8 @@ public class ModelGatewayApplication {
             return;
         }
 
-        if (context.getBean("routeUpdateController") instanceof RouteUpdateController) {
-            RouteUpdateController controller = (RouteUpdateController) context.getBean("routeUpdateController");
+        if (context.getBean("gatewayController") instanceof GatewayController) {
+            GatewayController controller = (GatewayController) context.getBean("gatewayController");
             ResponseEntity<String> response = controller.updateRoutes(routeList);
             if (!response.getStatusCode().is2xxSuccessful()) {
                 log.error("Failed to add initial routes, err: " + response);
