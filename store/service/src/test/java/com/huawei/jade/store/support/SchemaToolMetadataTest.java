@@ -18,7 +18,6 @@ import com.huawei.fitframework.broker.client.Router;
 import com.huawei.fitframework.json.schema.JsonSchemaManager;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.jade.store.ItemInfo;
 import com.huawei.jade.store.Tool;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -63,20 +62,18 @@ public class SchemaToolMetadataTest {
         this.toolMetadata = Tool.Metadata.fromSchema(this.toolSchema);
         ObjectSerializer serializer = new JacksonObjectSerializer(null, null, null);
         FitToolFactory fitToolFactory = new FitToolFactory(client, serializer);
-        Tool argsTool = fitToolFactory.create(this.buildItemInfo(), this.toolMetadata);
-        if (argsTool instanceof Tool) {
-            this.tool = argsTool;
-        }
+        this.tool = fitToolFactory.create(this.buildInfo(), this.toolMetadata);
     }
-    ItemInfo buildItemInfo() {
-        return ItemInfo.custom()
-                .category("Tool")
-                .group("t1#test_schema_default_implementation_name")
+
+    Tool.Info buildInfo() {
+        return Tool.Info.custom()
                 .name("test_schema_default_implementation_name")
                 .uniqueName("schema-uuid")
                 .tags(Collections.singleton("FIT"))
                 .description("This is a demo FIT function.")
                 .schema(buildSchema())
+                .runnables(MapBuilder.<String, Object>get().put("FIT",
+                        MapBuilder.<String, Object>get().put("genericableId", "t1").build()).build())
                 .build();
     }
 
@@ -102,6 +99,7 @@ public class SchemaToolMetadataTest {
                 .put("return", MapBuilder.<String, Object>get().put("type", "string").build())
                 .build();
     }
+
     @Test
     @DisplayName("当 FIT 调用成功，返回正确的结果")
     void shouldReturnCorrectResult() {
@@ -112,7 +110,8 @@ public class SchemaToolMetadataTest {
     @Test
     @DisplayName("当 FIT 调用失败，返回错误的结果")
     void shouldReturnIncorrectResult() {
-        IllegalStateException cause = catchThrowableOfType(() -> this.tool.call("2"), IllegalStateException.class);
+        IllegalStateException cause = catchThrowableOfType(() ->
+                this.tool.call("2"), IllegalStateException.class);
         assertThat(cause).hasMessage("Error");
     }
 
@@ -154,7 +153,7 @@ public class SchemaToolMetadataTest {
     @Test
     @DisplayName("返回正确的格式规范描述")
     void shouldReturnSchema() {
-        Map<String, Object> schema = this.tool.itemInfo().schema();
+        Map<String, Object> schema = this.tool.info().schema();
         assertThat(schema).isEqualTo(this.toolSchema);
     }
 }

@@ -17,6 +17,7 @@ public enum NodeTypes {
     START("START", "开始节点"),
     END("END", "结束节点"),
     STATE("STATE", "运行节点"),
+    CONDITION("CONDITION", "条件节点"),
     ;
 
     private String type;

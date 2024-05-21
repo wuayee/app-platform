@@ -11,15 +11,23 @@ import com.huawei.fit.http.annotation.PostMapping;
 import com.huawei.fit.http.annotation.PutMapping;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
+import com.huawei.fit.http.protocol.HttpResponseStatus;
+import com.huawei.fit.http.server.HttpServerResponseException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
 import com.huawei.jade.app.engine.knowledge.dto.KStorageDto;
 import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
+import com.huawei.jade.app.engine.knowledge.dto.KbGenerateConfigDto;
+import com.huawei.jade.app.engine.knowledge.params.RepoQueryParam;
 import com.huawei.jade.app.engine.knowledge.service.KRepoService;
 import com.huawei.jade.app.engine.knowledge.service.KStorageService;
 import com.huawei.jade.app.engine.knowledge.service.KTableService;
+import com.huawei.jade.app.engine.knowledge.service.KbGenerateService;
+import com.huawei.jade.app.engine.knowledge.service.param.PageQueryParam;
+import com.huawei.jade.app.engine.knowledge.vo.PageResultVo;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,10 +40,30 @@ import java.util.List;
 public class KnowledgeBaseController {
     @Fit
     private KTableService kTableService;
+
     @Fit
     private KRepoService kRepoService;
+
     @Fit
     private KStorageService kStorageService;
+
+    @Fit
+    private KbGenerateService kbGenerateService;
+
+    /**
+     * 通过名称查找知识库列表
+     *
+     * @param param 查询参数
+     * @return 知识库列表
+     */
+    @PostMapping("/repos/list")
+    public PageResultVo<KRepoDto> getReposByName(@RequestBody RepoQueryParam param) {
+        return new PageResultVo<>(getReposCount(param), kRepoService.queryReposByName(param));
+    }
+
+    private int getReposCount(RepoQueryParam param) {
+        return kRepoService.queryReposCount(param);
+    }
 
     /**
      * 获取所有的知识库。
@@ -65,18 +93,20 @@ public class KnowledgeBaseController {
      */
     @PostMapping("/repos")
     public void createRepo(@RequestBody KRepoDto kRepoDto) {
+        // 用户后端设置固定值
+        kRepoDto.setOwnerId(1L);
         kRepoService.create(kRepoDto);
     }
 
     /**
      * 更新知识库
      *
-     * @param id 表示知识库ID的 {@link Long}。
      * @param kRepoDto 表示知识库记录的 {@link KRepoDto}。
      */
-    @PutMapping("/repos/{id}")
-    public void updateRepo(@PathVariable("id") Long id, @RequestBody KRepoDto kRepoDto) {
-        kRepoService.update(id, kRepoDto);
+    @PostMapping("/repos/update")
+    public void updateRepo(@RequestBody KRepoDto kRepoDto) {
+        kRepoDto.setUpdatedAt(new Date(System.currentTimeMillis()));
+        kRepoService.update(kRepoDto);
     }
 
     /**
@@ -89,25 +119,28 @@ public class KnowledgeBaseController {
         kRepoService.delete(id);
     }
 
-    // tables
     /**
-     * 获取某个知识库下的所有知识表。
+     * 分页查询某个知识库下的知识表。
      *
      * @param repoId 表示知识库ID的 {@link Long}。
+     * @param pageQueryParam 分页查询参数
      * @return 返回知识表列表。
      */
-    @GetMapping("/repos/{repo_id}/tables")
-    public List<KTableDto> getKnowledgeTables(@PathVariable("repo_id") Long repoId) {
-        return kTableService.getByRepoId(repoId);
+    @PostMapping("/repos/{repo_id}/tables/query")
+    public PageResultVo getKnowledgeTables(@PathVariable("repo_id") Long repoId,
+        @RequestBody PageQueryParam pageQueryParam) {
+        Integer tableCount = kTableService.getTableCountByRepoId(repoId);
+        List<KTableDto> kTableDtos = kTableService.getByRepoId(repoId, pageQueryParam);
+        return new PageResultVo(tableCount, kTableDtos);
     }
 
     /**
-     * 获取知识表。
+     * 获取单个知识表
      *
      * @param id 表示知识表ID的 {@link Long}。
      * @return 返回知识表。
      */
-    @GetMapping("/tables/{id}")
+    @PostMapping("/tables/{id}")
     public KTableDto getTable(@PathVariable("id") Long id) {
         return kTableService.getById(id);
     }
@@ -116,21 +149,21 @@ public class KnowledgeBaseController {
      * 创建知识表。
      *
      * @param kTableDto 表示知识表的 {@link KTableDto}
+     * @return 新创建的知识表id
      */
     @PostMapping("/repos/{repo_id}/tables")
-    public void createTable(@RequestBody KTableDto kTableDto) {
-        kTableService.create(kTableDto);
+    public Long createTable(@RequestBody KTableDto kTableDto) {
+        return kTableService.create(kTableDto);
     }
 
     /**
      * 更新知识表。
      *
-     * @param id 表示知识表ID的 {@link Long}。
      * @param kTableDto 表示知识表的 {@link KTableDto}。
      */
-    @PutMapping("/tables/{id}")
-    public void updateTable(@PathVariable("id") Long id, @RequestBody KTableDto kTableDto) {
-        kTableService.update(id, kTableDto);
+    @PostMapping("/tables/update/")
+    public void updateTable(@RequestBody KTableDto kTableDto) {
+        kTableService.update(kTableDto);
     }
 
     /**
@@ -140,10 +173,14 @@ public class KnowledgeBaseController {
      */
     @DeleteMapping("/tables/{id}")
     public void deleteTable(@PathVariable("id") Long id) {
+        if (kTableService.getById(id).getStatus() != 0) {
+            throw new HttpServerResponseException(HttpResponseStatus.OK, "There are unfinished uploading tasks.");
+        }
         kTableService.delete(id);
     }
 
     // storages
+
     /**
      * 获取所有存储服务。
      *
@@ -194,5 +231,16 @@ public class KnowledgeBaseController {
     @DeleteMapping("/storages/{id}")
     public void deleteKStorage(@PathVariable("id") Long id) {
         kStorageService.delete(id);
+    }
+
+
+    /**
+     * 导入文本类型知识接口
+     *
+     * @param fileConfigDto 文件导入配置信息
+     */
+    @PostMapping(path = "/import-knowledge/text")
+    public void importKnowledge(@RequestBody KbGenerateConfigDto fileConfigDto) {
+        kbGenerateService.importKnowledge(fileConfigDto);
     }
 }

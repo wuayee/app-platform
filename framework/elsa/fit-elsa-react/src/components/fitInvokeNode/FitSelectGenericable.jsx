@@ -46,7 +46,7 @@ export default function FitSelectGenericable() {
 
     return (
         <Form.Item
-            name="必选"
+            name={`select-genericable-${shape.id}`}
             label={<span style={{color: 'red'}}/>}
             rules={[{required: true, message: '请选择一个服务'}]}
             colon={false}

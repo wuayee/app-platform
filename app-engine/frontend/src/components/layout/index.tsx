@@ -1,19 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme, ConfigProvider,  } from 'antd';
-import { HashRouter, Route, useNavigate, Routes, useLocation } from 'react-router-dom';
-import { routeList, flattenRoute, getRouteByKey, getMenus } from '../../router/route'
-import { Icons } from '../icons/index'
+import React, { useState, useEffect } from "react";
+import type { MenuProps } from "antd";
+import { Layout, Menu } from "antd";
+import { MenuFoldOutlined } from "@ant-design/icons";
+import {
+  Route,
+  useNavigate,
+  Routes,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
+import {
+  routeList,
+  flattenRoute,
+  getRouteByKey,
+  getMenus,
+} from "../../router/route";
+import { Icons, KnowledgeIcons } from "../icons/index";
+import { HeaderUser } from "../header-user";
+import "./style.scoped.scss";
 
 const { Header, Content, Footer, Sider } = Layout;
 
-type MenuItem = Required<MenuProps>['items'][number];
-
+type MenuItem = Required<MenuProps>["items"][number];
 function getItem(
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
-  children?: MenuItem[],
+  children?: MenuItem[]
 ): MenuItem {
   return {
     key,
@@ -26,86 +39,91 @@ function getItem(
 const items: MenuItem[] = getMenus(routeList);
 const flattenRouteList = flattenRoute(routeList);
 
-
 const AppLayout: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [currentActivedPage, setCurrentActivedPage] = useState('首页');
+  // 控制面板的显示与隐藏
+  const [showMenu, setShowMenu] = useState(false);
 
   const navigate = useNavigate();
+
   const location = useLocation();
+
+  useEffect(() => {
+    const { pathname } = location;
+    const route = getRouteByKey(flattenRouteList, pathname);
+
+    if (!route?.hidden) {
+      setShowMenu(true);
+    } else {
+      setShowMenu(false);
+    }
+  }, [location]);
+
   const menuClick = (e: any) => {
     const route = getRouteByKey(flattenRouteList, e.key);
-    setCurrentActivedPage(route?.label || '')
-    navigate(e.key)
-  }
+    navigate(e.key);
+  };
 
   const colorBgContainer = '#F0F2F4';
-  const isHomepage = location.pathname.includes('home');
   const setClassName = () => {
-    const isHomepage = location.pathname.includes('home');
-    return isHomepage ? 'home-chat' : ''
+    if ( location.pathname.includes('home')) {
+      return 'home-chat'
+    } else if (location.pathname.includes('app')) {
+      return 'home-app'
+    }
+    return ''
   }
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div style={{
-          position: 'static',
-          width: '100%',
-          height: '48px',
-          'display': 'flex',
-          'flex-direction': 'row',
-          'justify-content': 'flex-start',
-          'align-items': 'center',
-          padding: '0px 24px 0px 24px',
-          flex: 'none',
-          order: 0,
-          'align-self': 'stretch',
-          'flex-grow': 0,
-          margin: '8px 0px',
-        }}>
-          <Icons.logo/> <span style = {
-            {
-              color: 'rgb(255, 255, 255)',
-              'font-size': '20px',
-              'font-weight': '400',
-              'line-height': '24px',
-              'letter-spacing': '0px',
-              'text-align': 'left',
-              'margin-left': '8px',
-            }
-          }>APP Engine</span>
+    <Layout style={{ minHeight: "100vh" }}>
+      <Sider
+        collapsible
+        collapsed={false}
+        onCollapse={() => setShowMenu(false)}
+        trigger={null}
+        width={showMenu ? 220 : 0}
+        className="layout-sider"
+      >
+        <div className="layout-sider-header">
+          <div className="layout-sider-content">
+            <Icons.logo />
+            <span className="layout-sider-title">APP Engine</span>
+          </div>
+          <MenuFoldOutlined
+            style={{ color: "#6d6e72" }}
+            onClick={() => setShowMenu(false)}
+          />
         </div>
-        <ConfigProvider theme={{
-          components: {
-
-          }
-        }}>
-          <Menu className='menu'  theme="dark" defaultSelectedKeys={['/home']} mode="inline" items={items} onClick={menuClick}/>
-        </ConfigProvider>
+        <Menu
+          className="menu"
+          theme="dark"
+          defaultSelectedKeys={["/home"]}
+          mode="inline"
+          items={items}
+          onClick={menuClick}
+        />
       </Sider>
-      <Layout className={setClassName()}>
-        <Header style={{ padding: 0, background: colorBgContainer, height: '48px' }} />
-        <Content style={{padding: '0 16px', background: colorBgContainer }}>
-          {/* <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb> */}
+      <div className="layout-sider-folder">
+        <KnowledgeIcons.menuFolder onClick={() => setShowMenu(true)} />
+      </div>
 
-            <Routes>
-              {flattenRouteList.map(route=> {
-                if(route.component) {
-                  return (<>
-                
-                    <Route path={route.key} key={route.key} Component={route.component}/>
-                  </>)
-                }
-            })}
-              
-            </Routes>
+      <Layout className={setClassName()}>
+        <Header
+          style={{ padding: 0, background: colorBgContainer, height: "48px" }}
+        >
+          <HeaderUser />
+        </Header>
+        <Content style={{ padding: "0 16px", background: colorBgContainer }}>
+          <Routes>
+            <Route path="/" element={<Navigate to="/home" replace />} />
+            {flattenRouteList.map((route) => (
+              <Route
+                path={route.key}
+                key={route.key}
+                Component={route.component}
+              />
+            ))}
+          </Routes>
         </Content>
-        {/* <Footer style={{ textAlign: 'center' }}>
-        </Footer> */}
       </Layout>
     </Layout>
   );

@@ -33,7 +33,7 @@ export default function SkillForm({toolOptions, workflowOptions, config}) {
             console.error('Cannot get config.params.tenantId or config.params.appId.');
         } else {
             // 使用 window.open() 打开一个新页面
-            window.open('/aipp/' + config.params.tenantId + '/addFlow/' + config.params.appId, '_blank');
+            window.open('/appbuilder/#/aipp/' + config.params.tenantId + '/addFlow/' + config.params.appId, '_blank');
             event.stopPropagation(); // 阻止事件冒泡
         }
     };
@@ -92,12 +92,7 @@ export default function SkillForm({toolOptions, workflowOptions, config}) {
                                 value={tool.value}
                                 onMouseDown={(e) => e.stopPropagation()}
                                 onChange={(e) => handleSkillChange(tool.id, e)}
-                                options={[
-                                    // Todo 获取对应值
-                                    {value: 'tool1', label: '查天气'},
-                                    {value: 'tool2', label: '查新闻'},
-                                    {value: 'tool3', label: '查电影'},
-                                ]}
+                                options={toolOptions}
                             />
                         </Form.Item>
                         <Row gutter={16} style={{marginBottom: "6px", marginRight: 0, marginLeft: "-3%"}}>
@@ -126,14 +121,7 @@ export default function SkillForm({toolOptions, workflowOptions, config}) {
                                 optionFilterProp="label"
                                 value={workflow.value}
                                 onChange={(e) => handleSkillChange(workflow.id, e)}
-                                options={[
-                                    // Todo 获取对应值
-                                    {value: 'flow1', label: '撰写经营分析报告'},
-                                    {value: 'flow2', label: '发送邮件'},
-                                    {value: 'flow3', label: '面试问题'},
-                                    {value: 'flow4', label: '面试总结'},
-                                    {value: 'flow5', label: '文件提取'}
-                                ]}
+                                options={workflowOptions}
                             />
                         </Form.Item>
                     </Form>

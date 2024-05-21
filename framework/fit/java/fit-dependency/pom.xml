@@ -98,7 +98,7 @@
             </dependency>
             <dependency>
                 <groupId>com.huawei.fitframework</groupId>
-                <artifactId>fit-flowable</artifactId>
+                <artifactId>fit-reactor</artifactId>
                 <version>${fit.version}</version>
             </dependency>
             <dependency>

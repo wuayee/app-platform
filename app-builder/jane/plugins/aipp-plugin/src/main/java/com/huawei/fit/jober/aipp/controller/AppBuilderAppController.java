@@ -4,6 +4,7 @@
 
 package com.huawei.fit.jober.aipp.controller;
 
+import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.PostMapping;
@@ -96,5 +97,11 @@ public class AppBuilderAppController extends AbstractController {
     public Rsp<AippCreateDto> inspirations(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @RequestBody @Validated AppBuilderAppDto appDto) {
         throw new UnsupportedOperationException();
+    }
+
+    @DeleteMapping(path = "/{app_id}", description = "删除 app")
+    public Rsp<Void> delete(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId) {
+        this.appService.delete(appId, this.contextOf(httpRequest, tenantId));
+        return Rsp.ok();
     }
 }

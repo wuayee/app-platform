@@ -33,7 +33,7 @@ import java.util.concurrent.CountDownLatch;
 public class TestUtils {
     private static final String DUMMY_FLOW_CONFIG_ID = "testFlowConfigId";
     private static final String DUMMY_FLOW_DEF_ID = "testFlowDefId";
-    public static final String DUMMY_FLOW_TRACE_ID = "testFlowTraceId";
+    public static final String DUMMY_FLOW_INSTANCE_ID = "testInstanceId";
     private static final String DUMMY_FLOW_CONFIG_VERSION = "1.0.0";
 
     public static List<Map<String, Object>> buildFlowDataWithExtraConfig(Map<String, Object> businessData,
@@ -89,7 +89,7 @@ public class TestUtils {
     public static void mockReturnFlowTraceId(MetaInstanceService instanceServiceMock) {
         Instance instance = new Instance();
         instance.setInfo(new HashMap<String, String>() {{
-            put(AippConst.INST_FLOW_INST_ID_KEY, DUMMY_FLOW_TRACE_ID);
+            put(AippConst.INST_FLOW_INST_ID_KEY, DUMMY_FLOW_INSTANCE_ID);
         }});
         RangedResultSet<Instance> resultSet =
                 new RangedResultSet<>(Collections.singletonList(instance), new RangeResult(0, 1, 1));

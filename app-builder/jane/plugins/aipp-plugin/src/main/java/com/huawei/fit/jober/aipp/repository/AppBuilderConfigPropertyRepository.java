@@ -24,4 +24,6 @@ public interface AppBuilderConfigPropertyRepository {
     void updateOne(AppBuilderConfigProperty appBuilderConfigProperty);
 
     int deleteMore(List<String> ids);
+
+    void deleteByConfigId(String id);
 }

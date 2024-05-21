@@ -3,4 +3,4 @@ fit:
     packages: 'com.huawei.jade.fel.model.openai'
 
 url-path-splicing: false
-openai-url: 'https://api.openai.com/'
+openai-url: 'http://model-io-gateway:8009/'

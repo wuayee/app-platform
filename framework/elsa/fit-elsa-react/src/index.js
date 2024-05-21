@@ -1,1 +1,3 @@
-export {JadeFlow} from "./flow/jadeFlowEntry.jsx";
+import {JadeFlow} from "@/flow/jadeFlowEntry.jsx";
+
+export {JadeFlow};

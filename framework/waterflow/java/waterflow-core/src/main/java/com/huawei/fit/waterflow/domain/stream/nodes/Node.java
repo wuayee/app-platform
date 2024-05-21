@@ -144,6 +144,11 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
     }
 
     @Override
+    public <O> Processor<R, O> flatMap(Operators.FlatMap<FlowContext<R>, O> processor, Operators.Whether<R> whether) {
+        return this.publisher.flatMap(processor, whether);
+    }
+
+    @Override
     public <O> Processor<R, O> process(Operators.Process<FlowContext<R>, O> processor, Operators.Whether<R> whether) {
         return this.publisher.process(processor, whether);
     }

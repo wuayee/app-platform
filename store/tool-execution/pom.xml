@@ -12,7 +12,7 @@
     <artifactId>store-tool-execution</artifactId>
 
     <dependencies>
-        <!-- Fit core -->
+        <!-- FIT core -->
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-api</artifactId>
@@ -21,12 +21,13 @@
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
+
+        <!-- Services -->
         <dependency>
             <groupId>com.huawei.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
             <version>${fit.version}</version>
         </dependency>
-        <!-- Services -->
         <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>
             <artifactId>store-service</artifactId>

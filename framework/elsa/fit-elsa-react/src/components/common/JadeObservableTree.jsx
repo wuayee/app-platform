@@ -48,7 +48,7 @@ export const JadeObservableTree = ({data}) => {
      * @return {{title, isLeaf: boolean, key}|{children: *, title, key}} 树节点.
      */
     const buildNode = (nodeData, parent) => {
-        shape.page.registerObservable(shape.id, nodeData.id, nodeData.name, parent ? parent.id : null);
+        shape.page.registerObservable(shape.id, nodeData.id, nodeData.name, nodeData.type, parent ? parent.id : null);
         if (nodeData.type === "Object") {
             return {
                 title: nodeData.name,

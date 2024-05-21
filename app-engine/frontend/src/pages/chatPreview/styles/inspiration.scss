@@ -2,11 +2,12 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  padding: 10px 20px;
+  padding: 24px;
   position: relative;
   transition: width .2s;
   font-family: '苹方-简';
   border-radius: 8px;
+
   .inspiratio-tag {
     width: 16px;
     height: 42px;
@@ -20,53 +21,65 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
     img {
       width: 18px;
       height: 18px;
       transform: rotate(180deg);
       transition: .1s;
     }
+
     .img-trans {
       transform: rotate(0deg);
     }
   }
+
   .right-content {
     height: 100%;
+
     .title {
       font-weight: 600;
-      color:#252B3A;
+      color: #252B3A;
       font-size: 20px;
       margin-bottom: 8px;
       line-height: 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+
       .title-icon {
         display: flex;
         align-items: center;
+        justify-content: space-between;
+        flex: 1;
+
         img {
           width: 16px;
           height: 16px;
           margin-left: 8px;
           cursor: pointer;
         }
+
         .inspiration-text {
           width: 100px;
           font-size: 16px;
           font-weight: 700;
         }
       }
+
       .drop-tree-menu {
         font-weight: normal;
         font-size: 12px;
       }
     }
+
     .has-drop {
       button {
         border-radius: 4px;
         border: none;
       }
     }
+
     .prompt-empty {
       text-align: center;
       color: #71757F;
@@ -76,11 +89,13 @@
       flex-wrap: wrap;
       height: 80%;
       margin-top: 0;
+
       .empty-text {
         width: 100%;
         margin-top: 20px;
       }
     }
+
     .btn-text {
       font-size: 12px;
       max-width: 60px;
@@ -90,13 +105,16 @@
       vertical-align: middle;
     }
   }
+
   .prompt-container {
     height: calc(100% - 30px);
   }
+
   .prompt-type {
     display: flex;
     flex-wrap: wrap;
     margin-top: 8px;
+
     .prompt-type-item {
       margin-right: 8px;
       padding: 0 12px;
@@ -110,10 +128,12 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
     .prompt-type-active {
       color: #0478fc;
     }
   }
+
   .prompt-list {
     display: flex;
     flex-wrap: wrap;
@@ -121,6 +141,7 @@
     height: calc(100% - 100px);
     overflow: auto;
     margin-top: 4px;
+
     .prompt-item {
       width: 150px;
       margin-bottom: 8px;
@@ -131,12 +152,13 @@
       border-radius: 6px;
       cursor: pointer;
       position: relative;
+
       .title {
         display: -webkit-box;
         font-weight: normal;
         font-size: 14px;
         line-height: 22px;
-        color:#252B3A;
+        color: #252B3A;
         margin-bottom: 8px;
         word-break: break-all;
         overflow: hidden;
@@ -144,6 +166,7 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
       }
+
       .content {
         display: -webkit-box;
         overflow: hidden;
@@ -155,6 +178,7 @@
         line-height: 20px;
         word-break: break-all;
       }
+
       .prompt-opation {
         position: absolute;
         top: 2px;
@@ -165,44 +189,53 @@
         align-items: center;
         justify-content: center;
         border-radius: 4px;
+
         &:hover {
           background-color: #ebebeb;
         }
+
         img {
           width: 16px;
           height: 16px;
         }
       }
+
       &:hover {
         border-color: #5e7ce0;
       }
+
       &:nth-child(odd) {
         margin-right: 8px;
       }
     }
+
     .prompt-active {
       color: #fff;
       background-color: #5e7ce0;
     }
+
     &::-webkit-scrollbar {
       width: 0 !important;
     }
   }
 }
+
 .inspiration-active {
-  // background-color: #252b3a0d;
-  background-color: #ffffff;
+  background-color: #f4f9fd;
 }
+
 .form-item-btn {
   display: flex;
   justify-content: center;
 }
+
 .form-tip {
   margin-bottom: 12px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
+
 .list-menu {
   padding: 12px;
   margin: 0;
@@ -210,6 +243,7 @@
   list-style: disc;
   background: #fff;
   box-shadow: 0 2px 12px 0 rgba(37, 43, 58, .24);
+
   .menu-item {
     display: flex;
     justify-content: space-between;
@@ -217,27 +251,32 @@
     padding: 4px;
     cursor: pointer;
     color: #252b3a;
+
     &:hover {
       background-color: #f2f2f3;
     }
   }
 }
+
 .list-item {
   padding-bottom: 10px;
   max-width: 240px;
   min-width: 180px;
   max-height: 600px;
   overflow: auto;
+
   .title {
     padding: 0 12px;
     margin: 6px 0;
     font-weight: 600;
   }
 }
+
 .list-pdu-menu {
   padding: 0;
   margin: 0;
   list-style: disc;
+
   .menu-item {
     display: flex;
     justify-content: space-between;
@@ -249,14 +288,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
     &:hover {
       background-color: #f2f2f3;
     }
   }
+
   .menu-active {
     color: #0478fc;
   }
 }
+
 .chat-promet-list {
   box-sizing: border-box;
   line-height: 1.42;
@@ -272,26 +314,32 @@
   white-space: pre-wrap;
   word-wrap: break-word;
   border: 1px solid #cccccc;
+
   .block-text {
     display: block;
   }
+
   .important-text {
     padding: 2px 8px;
     background-color: #e9edfa;
     border-radius: 5px;
+
     &:hover {
       background-color: #fff;
       border: 1px solid #0478fc;
     }
+
     &:focus {
       background-color: #fff;
       border: 1px solid #0478fc;
     }
   }
+
   .important-text.focus-text {
     background-color: #fff;
     border: 1px solid #0478fc;
   }
+
   .chat-inspiration-modal {
     display: inline-block !important;
     min-height: 22px;
@@ -305,6 +353,7 @@
     outline: none;
     position: relative;
     cursor: pointer;
+
     ul {
       max-width: 200px;
       max-height: 165px;
@@ -316,22 +365,27 @@
       text-decoration: none;
       line-height: 30px;
     }
+
     &::-webkit-scrollbar {
       width: 2px !important;
       height: 12px !important;
     }
+
     li {
       border-bottom: 1px solid #eee;
       color: #222;
       list-style: none;
       padding-left: 0 !important;
     }
+
     li:last-child {
       border: none;
     }
   }
+
   .chat-inspiration-modal {
     user-select: none;
+
     .chat-focus-delete {
       position: absolute;
       width: 8px;
@@ -345,6 +399,7 @@
     }
   }
 }
+
 .drop-list {
   position: absolute;
   z-index: 3500;
@@ -356,39 +411,47 @@
   box-sizing: border-box;
   box-shadow: 0 2px 12px 0 rgba(37, 43, 58, .24);
   color: #252B3A;
+
   .drop-list-content {
     max-height: 160px;
     overflow: auto;
+
     &::-webkit-scrollbar {
       width: 0;
     }
+
     .drop-list-item {
       height: 34px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid #ebebeb;
+
       .item-left {
         width: 160px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+
       .item-right {
         flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
+
         img {
           cursor: pointer;
           margin: 0 4px;
         }
       }
+
       &:last-child {
         border-bottom: none;
       }
     }
   }
+
   .drop-add {
     text-align: center;
     height: 34px;
@@ -396,26 +459,31 @@
     border-top: 1px solid #ebebeb;
     border-bottom: 1px solid #ebebeb;
     color: #0478fc;
+
     span {
       cursor: pointer;
     }
   }
+
   .drop-btn {
     display: flex;
     justify-content: center;
     margin-top: 12px;
   }
 }
+
 .modal-head {
   font-weight: 700;
   font-size: 16px;
 }
+
 .modal-text {
   padding: 16px 0;
   font-size: 14px;
   line-height: 25px;
   word-break: break-all;
 }
+
 .modal-btn {
   display: flex;
   justify-content: center;

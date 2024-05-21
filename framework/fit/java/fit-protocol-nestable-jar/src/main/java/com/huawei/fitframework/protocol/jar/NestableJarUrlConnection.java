@@ -171,6 +171,9 @@ public class NestableJarUrlConnection extends JarURLConnection {
 
     @Override
     public long getContentLengthLong() {
+        if (this.entry == null) {
+            return -1;
+        }
         return this.entry.getSize();
     }
 
@@ -197,6 +200,9 @@ public class NestableJarUrlConnection extends JarURLConnection {
 
     @Override
     public long getLastModified() {
+        if (this.entry == null || this.entry.getLastModifiedTime() == null) {
+            return 0;
+        }
         return this.entry.getLastModifiedTime().toMillis();
     }
 }

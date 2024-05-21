@@ -6,6 +6,7 @@ package com.huawei.jade.fel.model.openai.service;
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.embed.EmbedModelService;
@@ -46,10 +47,7 @@ public class OpenAiEmbedModelService implements EmbedModelService {
     @Override
     @Fitable(id = "com.huawei.fit.jade.model.client.openai.embed.generate")
     public EmbedResponse generate(EmbedRequest request) {
-        if (request == null) {
-            throw new IllegalArgumentException("Failed to generate embedding response: request is null.");
-        }
-
+        Validation.notNull(request, "Failed to generate embedding response: request is null.");
         String model = "";
         if (request.getOptions() != null && StringUtils.isNotBlank(request.getOptions().getModel())) {
             model = request.getOptions().getModel();

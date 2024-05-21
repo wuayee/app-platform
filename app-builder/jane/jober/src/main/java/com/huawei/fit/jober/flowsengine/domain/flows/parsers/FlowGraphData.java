@@ -11,6 +11,8 @@ import static java.util.Locale.ROOT;
 
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
+import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeType;
+import com.huawei.fit.jober.flowsengine.domain.flows.parsers.util.ConvertConditionToRuleUtils;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.ObjectUtils;
 
@@ -27,6 +29,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -176,7 +180,16 @@ public class FlowGraphData {
                         .getString(TYPE)
                         .toUpperCase(ROOT)
                         .endsWith(EVENT.getCode()))
+                .sorted((event1, event2) -> {
+                    String fromConnector1 = ((JSONObject) event1).get("fromConnector").toString();
+                    String fromConnector2 = ((JSONObject) event2).get("fromConnector").toString();
+                    return Integer.compare(extractNumberFromFromConnector(fromConnector1),
+                            extractNumberFromFromConnector(fromConnector2));
+                })
                 .forEach(events::add);
+        extraConditionRules2Events(nodes.stream()
+                .filter(node -> FlowNodeType.CONDITION == FlowNodeType.getNodeType(ObjectUtils.<JSONObject>cast(node).getString(TYPE).toUpperCase(ROOT)))
+                .collect(Collectors.toList()), events);
     }
 
     /**
@@ -650,5 +663,36 @@ public class FlowGraphData {
         Optional.ofNullable(jsonArray)
                 .ifPresent(variablesJSON -> variablesJSON.forEach(variable -> variables.add(variable.toString())));
         return variables;
+    }
+
+    private void extraConditionRules2Events(List<Object> conditions, JSONArray events) {
+        conditions.forEach(condition -> {
+            String conditionMetaId = ((JSONObject) condition).get("metaId").toString();
+            List<Object> relatedEventList = events.stream()
+                    .filter(event -> conditionMetaId.equals(((JSONObject) event).get("from").toString()))
+                    .collect(Collectors.toList());
+            JSONArray branches = ((JSONObject) condition).getJSONObject("conditionParams")
+                    .getJSONArray("branches");
+            for (int i = 0; i < branches.size(); i++) {
+                ((JSONObject)relatedEventList.get(i)).put("conditionRule", ConvertConditionToRuleUtils.convert(branches.get(i).toString()));
+            }
+            // Todo 临时逻辑为了联调，后续待确认此做法
+            ((JSONObject)relatedEventList.get(branches.size())).put("conditionRule", "true");
+        });
+    }
+
+    /**
+     * 辅助方法，使用正则表达式提取FromConnector字符串中的数字，未找到匹配数字返回-1。
+     *
+     * @param str 需要提取数字的字符串的 {@link String}。
+     * @return 字符串中提取出的数字。
+     */
+    private int extractNumberFromFromConnector(String str) {
+        Pattern pattern = Pattern.compile("dynamic-(\\d+)");
+        Matcher matcher = pattern.matcher(str);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        return -1; // 如果未找到匹配的数字，则返回 -1
     }
 }

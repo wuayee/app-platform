@@ -4,6 +4,7 @@
  */
 
 #include <gtest/gtest.h>
+#include <fstream>
 
 #include "ResourceManager.h"
 #include "FtokArgsGenerator.h"
@@ -16,7 +17,13 @@ using namespace DataBus::Common;
 namespace DataBus {
 namespace Test {
 
-const static std::string testObjectKey = "8e20a991c4bbb0fab743ee02604e5ad3";
+const static std::string TEST_OBJECT_KEY = "8e20a991c4bbb0fab743ee02604e5ad3";
+
+// 内存分配日志中的记录
+struct MallocRecord {
+    int32_t sharedMemoryId;
+    bool released;
+};
 
 class ResourceManagerTest : public testing::Test {
 public:
@@ -58,9 +65,38 @@ protected:
             resourceManager->HandleApplyPermission(permitApplicant, permissionType, memoryId);
         }
     }
+
+    static vector<MallocRecord> ReadMallocLog()
+    {
+        vector<MallocRecord> mallocRecords;
+        ifstream logStream(LOG_PATH, std::ios::binary);
+        if (logStream.is_open()) {
+            int32_t sharedMemoryId;
+            bool released;
+            std::vector<char> buffer(sizeof(sharedMemoryId) + sizeof(released));
+            while (logStream) {
+                buffer.resize(sizeof(sharedMemoryId));
+                logStream.read(&buffer[0], sizeof(sharedMemoryId));
+                if (!logStream) {
+                    break;
+                }
+                sharedMemoryId = *reinterpret_cast<int32_t*>(buffer.data());
+                buffer.resize(sizeof(released));
+                logStream.read(&buffer[0], sizeof(released));
+                if (!logStream) {
+                    break;
+                }
+                released = *reinterpret_cast<bool*>(buffer.data());
+
+                mallocRecords.push_back({sharedMemoryId, released});
+            }
+            logStream.close();
+        }
+        return mallocRecords;
+    }
 };
 
-TEST_F(ResourceManagerTest, should_clean_up_ftok_file_path_when_init)
+TEST_F(ResourceManagerTest, should_clean_up_ftok_file_path_and_shm_log_file_when_init)
 {
     std::string rootDir = "./tmp/";
     std::string filePath = rootDir + "test";
@@ -73,6 +109,8 @@ TEST_F(ResourceManagerTest, should_clean_up_ftok_file_path_when_init)
     EXPECT_TRUE(IsFolderExist(filePath));
     resourceManager->Init();
     EXPECT_FALSE(IsFolderExist(filePath));
+    std::ifstream fileCheck(LOG_PATH, std::ios::binary | std::ios::ate);
+    EXPECT_TRUE(fileCheck.good() && fileCheck.tellg() == 0);
 }
 
 TEST_F(ResourceManagerTest, should_not_malloc_when_key_already_exists)
@@ -80,9 +118,10 @@ TEST_F(ResourceManagerTest, should_not_malloc_when_key_already_exists)
     int32_t clientId = 1;
     uint64_t memorySize = 100U;
     // 首次申请内存分配
-    resourceManager->HandleApplyMemory(clientId, testObjectKey, memorySize);
+    resourceManager->HandleApplyMemory(clientId, TEST_OBJECT_KEY, memorySize);
     // 二次申请内存分配
-    tuple<int32_t, ErrorType> applyMemoryRes = resourceManager->HandleApplyMemory(clientId, testObjectKey, memorySize);
+    tuple<int32_t, ErrorType> applyMemoryRes = resourceManager->HandleApplyMemory(clientId, TEST_OBJECT_KEY,
+                                                                                  memorySize);
     EXPECT_EQ(-1, get<0>(applyMemoryRes));
     EXPECT_EQ(ErrorType::KeyAlreadyExists, get<1>(applyMemoryRes));
 }
@@ -91,7 +130,7 @@ TEST_F(ResourceManagerTest, should_malloc_and_save_memory_info_when_handle_apply
 {
     int32_t clientId = 1;
     uint64_t memorySize = 100U;
-    const tuple<int32_t, ErrorType> applyMemoryRes = resourceManager->HandleApplyMemory(clientId, testObjectKey,
+    const tuple<int32_t, ErrorType> applyMemoryRes = resourceManager->HandleApplyMemory(clientId, TEST_OBJECT_KEY,
                                                                                         memorySize);
     int32_t memoryId = get<0>(applyMemoryRes);
     ErrorType errorType = get<1>(applyMemoryRes);
@@ -101,6 +140,15 @@ TEST_F(ResourceManagerTest, should_malloc_and_save_memory_info_when_handle_apply
     EXPECT_EQ(0, resourceManager->GetReadingRefCnt(memoryId));
     EXPECT_EQ(0, resourceManager->GetWritingRefCnt(memoryId));
     EXPECT_TRUE(resourceManager->GetLastUsedTime(memoryId) > 0);
+}
+
+TEST_F(ResourceManagerTest, should_log_malloc_when_handle_apply_memory_succeeds)
+{
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
+    vector<MallocRecord> mallocRecords = ReadMallocLog();
+    EXPECT_EQ(1, mallocRecords.size());
+    EXPECT_EQ(memoryId, mallocRecords[0].sharedMemoryId);
+    EXPECT_FALSE(mallocRecords[0].released);
 }
 
 TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_when_permission_type_unknown)
@@ -126,7 +174,7 @@ TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_wh
 TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_when_memory_is_pending_release)
 {
     // 分配内存
-    int32_t memoryId = AllocateMemory(testObjectKey);
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
 
     // 首次申请权限
     int32_t permissionApplicantId1 = 2;
@@ -148,7 +196,7 @@ TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_wh
 TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_when_duplicate_applying_permission)
 {
     // 分配内存
-    int32_t memoryId = AllocateMemory(testObjectKey);
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
 
     // 首次申请权限
     int32_t permissionApplicantId = 2;
@@ -185,7 +233,7 @@ TEST_F(ResourceManagerTest, should_not_release_permission_when_memory_not_found)
 TEST_F(ResourceManagerTest, should_not_release_permission_when_client_not_holding_any_permission)
 {
     // 分配内存
-    int32_t memoryId = AllocateMemory(testObjectKey);
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
     // Client 2 申请权限
     int32_t permissionApplicantId = 2;
     resourceManager->HandleApplyPermission(permissionApplicantId, PermissionType::Write, memoryId);
@@ -203,7 +251,7 @@ TEST_F(ResourceManagerTest, should_not_release_permission_when_client_not_holdin
 TEST_F(ResourceManagerTest, should_release_permission_when_permission_type_mismatched)
 {
     // 分配内存
-    int32_t memoryId = AllocateMemory(testObjectKey);
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
     // 申请写权限
     int32_t permissionApplicantId = 2;
     resourceManager->HandleApplyPermission(permissionApplicantId, PermissionType::Write, memoryId);
@@ -217,7 +265,7 @@ TEST_F(ResourceManagerTest, should_release_permission_when_permission_type_misma
 
 TEST_F(ResourceManagerTest, should_update_memory_status_when_handle_apply_and_release_permission_succeed)
 {
-    int32_t memoryId = AllocateMemory(testObjectKey);
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
 
     int32_t permissionApplicantId = 2;
     const ApplyPermissionResponse applyPermitRes = resourceManager->HandleApplyPermission(permissionApplicantId,
@@ -244,7 +292,7 @@ TEST_F(ResourceManagerTest, should_update_memory_status_when_handle_apply_and_re
 TEST_F(ResourceManagerTest, should_grant_read_permissions_after_release_write_permission)
 {
     // 分配内存
-    int32_t memoryId = AllocateMemory(testObjectKey);
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
     // 抢先申请写权限
     int32_t firstApplicant = 2;
     resourceManager->HandleApplyPermission(firstApplicant, PermissionType::Write, memoryId);
@@ -275,7 +323,7 @@ TEST_F(ResourceManagerTest, should_grant_read_permissions_after_release_write_pe
 TEST_F(ResourceManagerTest, should_grant_write_permission_after_release_read_permission)
 {
     // 分配内存
-    int32_t memoryId = AllocateMemory(testObjectKey);
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
     // 抢先申请读权限
     int32_t firstApplicant = 2;
     resourceManager->HandleApplyPermission(firstApplicant, PermissionType::Read, memoryId);
@@ -310,13 +358,13 @@ TEST_F(ResourceManagerTest, should_not_release_memory_when_memory_not_found)
 TEST_F(ResourceManagerTest, should_keep_pending_when_memory_pending_release)
 {
     // 分配内存
-    int32_t memoryId = AllocateMemory(testObjectKey);
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
     // 申请权限
     int32_t permissionApplicantId = 2;
     resourceManager->HandleApplyPermission(permissionApplicantId, PermissionType::Write, memoryId);
     // 释放内存，请求进入等待状态
     EXPECT_TRUE(resourceManager->HandleReleaseMemory(memoryId));
-    EXPECT_EQ(memoryId, resourceManager->GetMemoryId(testObjectKey));
+    EXPECT_EQ(memoryId, resourceManager->GetMemoryId(TEST_OBJECT_KEY));
     // 再次释放内存失败
     EXPECT_TRUE(resourceManager->HandleReleaseMemory(memoryId));
     EXPECT_TRUE(resourceManager->IsPendingRelease(memoryId));
@@ -325,7 +373,7 @@ TEST_F(ResourceManagerTest, should_keep_pending_when_memory_pending_release)
 TEST_F(ResourceManagerTest, should_release_memory_when_memory_idles)
 {
     // 分配内存
-    int32_t memoryId = AllocateMemory(testObjectKey);
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
     // 申请权限
     int32_t permissionApplicantId = 2;
     resourceManager->HandleApplyPermission(permissionApplicantId, PermissionType::Write, memoryId);
@@ -333,20 +381,31 @@ TEST_F(ResourceManagerTest, should_release_memory_when_memory_idles)
     resourceManager->HandleReleasePermission(permissionApplicantId, PermissionType::Write, memoryId);
     // 释放内存成功
     EXPECT_TRUE(resourceManager->HandleReleaseMemory(memoryId));
-    EXPECT_EQ(-1, resourceManager->GetMemoryId(testObjectKey));
+    EXPECT_EQ(-1, resourceManager->GetMemoryId(TEST_OBJECT_KEY));
+}
+
+TEST_F(ResourceManagerTest, should_update_malloc_log_when_relesae_memory_succeeds)
+{
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
+    EXPECT_TRUE(resourceManager->HandleReleaseMemory(memoryId));
+    vector<MallocRecord> mallocRecords = ReadMallocLog();
+    int32_t expectedLogCount = 2;
+    EXPECT_EQ(expectedLogCount, mallocRecords.size());
+    EXPECT_EQ(memoryId, mallocRecords[1].sharedMemoryId);
+    EXPECT_TRUE(mallocRecords[1].released);
 }
 
 TEST_F(ResourceManagerTest, should_not_process_pending_release_memory_when_memory_not_pending_release)
 {
-    int32_t memoryId = AllocateMemory(testObjectKey);
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
     EXPECT_TRUE(resourceManager->ProcessPendingReleaseMemory(memoryId));
-    EXPECT_EQ(memoryId, resourceManager->GetMemoryId(testObjectKey));
+    EXPECT_EQ(memoryId, resourceManager->GetMemoryId(TEST_OBJECT_KEY));
 }
 
 TEST_F(ResourceManagerTest, should_not_process_pending_release_memory_when_memory_not_idles)
 {
     // 分配内存
-    int32_t memoryId = AllocateMemory(testObjectKey);
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
     // 申请权限
     int32_t permissionApplicantId = 2;
     resourceManager->HandleApplyPermission(permissionApplicantId, PermissionType::Write, memoryId);
@@ -355,13 +414,13 @@ TEST_F(ResourceManagerTest, should_not_process_pending_release_memory_when_memor
     EXPECT_TRUE(resourceManager->IsPendingRelease(memoryId));
     // 不处理待释放内存
     EXPECT_TRUE(resourceManager->ProcessPendingReleaseMemory(memoryId));
-    EXPECT_EQ(memoryId, resourceManager->GetMemoryId(testObjectKey));
+    EXPECT_EQ(memoryId, resourceManager->GetMemoryId(TEST_OBJECT_KEY));
 }
 
 TEST_F(ResourceManagerTest, should_process_pending_release_memory_when_memory_pending_release_and_idles)
 {
     // 分配内存
-    int32_t memoryId = AllocateMemory(testObjectKey);
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
     // 申请权限
     int32_t permissionApplicantId = 2;
     resourceManager->HandleApplyPermission(permissionApplicantId, PermissionType::Write, memoryId);
@@ -372,7 +431,7 @@ TEST_F(ResourceManagerTest, should_process_pending_release_memory_when_memory_pe
     resourceManager->HandleReleasePermission(permissionApplicantId, PermissionType::Write, memoryId);
     // 成功处理待释放内存
     EXPECT_TRUE(resourceManager->ProcessPendingReleaseMemory(memoryId));
-    EXPECT_EQ(-1, resourceManager->GetMemoryId(testObjectKey));
+    EXPECT_EQ(-1, resourceManager->GetMemoryId(TEST_OBJECT_KEY));
 }
 
 class ApplyPermissionParamTest : public ResourceManagerTest,
@@ -420,7 +479,7 @@ TEST_P(ApplyPermissionParamTest, should_handle_apply_permission_correctly_before
     PermissionType secondPermission = get<1>(permissions);
 
     // 分配内存
-    int32_t memoryId = AllocateMemory(testObjectKey);
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
     // 抢先申请权限
     int32_t firstApplicant = 2;
     resourceManager->HandleApplyPermission(firstApplicant, firstPermission, memoryId);

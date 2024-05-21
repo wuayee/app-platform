@@ -115,7 +115,7 @@ public class MetaUtils {
     public static List<Meta> getAllPublishedMeta(MetaService metaService, String metaId, OperationContext context)
             throws AippException {
         MetaFilter metaFilter = getNormalMetaFilter(metaId, NormalFilterEnum.PUBLISHED);
-        return getListMetaHandle(metaService, metaId, metaFilter, context);
+        return getListMetaHandle(metaService, metaFilter, context);
     }
 
     /**
@@ -130,7 +130,7 @@ public class MetaUtils {
     public static List<Meta> getAllPreviewMeta(MetaService metaService, String baselineAippId, OperationContext context)
             throws AippException {
         MetaFilter metaFilter = getPreviewMetaFilter(baselineAippId);
-        return getListMetaHandle(metaService, baselineAippId, metaFilter, context);
+        return getListMetaHandle(metaService, metaFilter, context);
     }
 
     private static Meta getSingleMetaHandle(MetaService metaService, String metaId, MetaFilter metaFilter,
@@ -148,9 +148,8 @@ public class MetaUtils {
         return metaRes.getResults().get(0);
     }
 
-    private static List<Meta> getListMetaHandle(MetaService metaService, String metaId, MetaFilter metaFilter,
+    private static List<Meta> getListMetaHandle(MetaService metaService, MetaFilter metaFilter,
             OperationContext context) throws AippException {
-        Validation.notBlank(metaId, () -> new AippParamException(context, AippErrCode.INPUT_PARAM_IS_INVALID, metaId));
         final int limitPerQuery = 10;
         return Utils.getAllFromRangedResult(limitPerQuery,
                 (offset) -> metaService.list(metaFilter,
@@ -218,6 +217,21 @@ public class MetaUtils {
         return metaFilter;
     }
 
+    public static List<Meta> getAllMetasByAppId(MetaService metaService, String appId, String aippType,
+            OperationContext context) throws AippException {
+        MetaFilter metaFilter = getMetaFilter(appId, aippType);
+        return getListMetaHandle(metaService, metaFilter, context);
+    }
+
+    private static MetaFilter getMetaFilter(String appId, String aippType) {
+        MetaFilter metaFilter = new MetaFilter();
+        Map<String, List<String>> attributes = new HashMap<>();
+        attributes.put(AippConst.ATTR_APP_ID_KEY, Collections.singletonList(appId));
+        attributes.put(AippConst.ATTR_AIPP_TYPE_KEY, Collections.singletonList(AippTypeEnum.getType(aippType).type()));
+        metaFilter.setAttributes(attributes);
+        return metaFilter;
+    }
+
     private static MetaFilter getPreviewMetaFilter(String metaId) {
         MetaFilter metaFilter = getAnyMetaFilter(metaId, null);
         metaFilter.setAttributes(new HashMap<String, List<String>>() {{
@@ -248,5 +262,15 @@ public class MetaUtils {
         DRAFT,
         // 默认
         DEFAULT
+    }
+
+    /**
+     * 根据versionId批量删除meta
+     * @param metaService 使用的{@link MetaService}
+     * @param versionIds 需要删除的versionId列表
+     * @param context 操作人上下文
+     */
+    public static void deleteMetasByVersionIds(MetaService metaService, List<String> versionIds, OperationContext context) {
+        versionIds.forEach(versionId -> metaService.delete(versionId, context));
     }
 }
