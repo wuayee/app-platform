@@ -24,6 +24,7 @@ export default function ModelForm({shapeId, modelOptions}) {
     const dispatch = useDispatch();
     const model = data.inputParams.find(item => item.name === "model");
     const temperature = data.inputParams.find(item => item.name === "temperature");
+    const systemPrompt = data.inputParams.find(item => item.name === "systemPrompt");
     const prompt = data.inputParams.filter(item => item.name === "prompt").flatMap(item => item.value).find(item => item.name === "template");
 
     const handleSelectClick = (event) => {
@@ -57,26 +58,14 @@ export default function ModelForm({shapeId, modelOptions}) {
         return value;
     };
 
-    // 失焦时才设置inputNumber的值.若为空，则不设置.
-    const onInputNumberBlur = (e) => {
+    // 失焦时才设置值.若为空，则不设置.
+    const changeOnBlur = (e, actionType, id) => {
         if (e.target.value === "") {
             return;
         }
         dispatch({
-            actionType: "changeConfig",
-            id: temperature.id,
-            value: e.target.value
-        });
-    };
-
-    // 失焦时才设置prompt的值.若为空，则不设置.
-    const onTextareaBlur = (e) => {
-        if (e.target.value === "") {
-            return;
-        }
-        dispatch({
-            actionType: "changePrompt",
-            id: prompt.id,
+            actionType: actionType,
+            id: id,
             value: e.target.value
         })
     };
@@ -132,7 +121,7 @@ export default function ModelForm({shapeId, modelOptions}) {
                                         min={0}
                                         max={1}
                                         step={0.1}
-                                        onBlur={onInputNumberBlur}
+                                        onBlur={(e) => changeOnBlur(e, "changeConfig", temperature.id)}
                                         stringMode
                                 />
                             </Form.Item>
@@ -154,9 +143,28 @@ export default function ModelForm({shapeId, modelOptions}) {
                                     validateTrigger="onBlur"
                             >
                                 <TextArea
-                                        className="jade-textarea-input jade-font-size"
-                                        onBlur={(e) => onTextareaBlur(e)}
-                                        placeholder="你可以用{{variable name}}来关联输入中的变量名"
+                                    className="jade-textarea-input jade-font-size"
+                                    onBlur={(e) => changeOnBlur(e, "changePrompt", prompt.id)}
+                                    placeholder="你可以用{{variable name}}来关联输入中的变量名"
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col span={24}>
+                            <Form.Item
+                                className="jade-form-item"
+                                name={`system-prompt-${shapeId}`}
+                                label={<div style={{display: 'flex', alignItems: 'center'}}>
+                                    <span className="jade-second-title">提示词</span>
+                                </div>}
+                                initialValue={systemPrompt.value}
+                                validateTrigger="onBlur"
+                            >
+                                <TextArea
+                                    className="jade-textarea-input jade-font-size"
+                                    onBlur={(e) => changeOnBlur(e, "changeConfig", systemPrompt.id)}
+                                    placeholder="输入一段提示词，可以给应用预设身份"
                                 />
                             </Form.Item>
                         </Col>
