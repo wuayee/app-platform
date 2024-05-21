@@ -2,7 +2,7 @@
   width: 100%;
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  background-image: url('../../../assets/images/bg.png');
+  background-image: url('../../../assets/images/bg3.png');
   margin: 0 auto;
   overflow: hidden;
   position: relative;
@@ -37,11 +37,6 @@
     }
   }
 }
-
-.chat-preview-inner {
-  background-image: unset;
-}
-
 .chat-inner {
   height: 100%;
   overflow-y: auto;
