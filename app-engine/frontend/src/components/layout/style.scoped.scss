@@ -73,4 +73,11 @@
     align-items: center;
     gap: 8px;
   }
+
+  &-folder {
+    position: "absolute";
+    left: 20;
+    top: 20;
+    cursor: "pointer";
+  }
 }

@@ -40,9 +40,6 @@ const items: MenuItem[] = getMenus(routeList);
 const flattenRouteList = flattenRoute(routeList);
 
 const AppLayout: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [currentActivedPage, setCurrentActivedPage] = useState("首页");
-
   // 控制面板的显示与隐藏
   const [showMenu, setShowMenu] = useState(false);
 
@@ -61,28 +58,20 @@ const AppLayout: React.FC = () => {
     }
   }, [location]);
 
-  const menuFolder = () => {
-    setShowMenu(!showMenu);
-  };
-
   const menuClick = (e: any) => {
     const route = getRouteByKey(flattenRouteList, e.key);
-    setCurrentActivedPage(route?.label || "");
     navigate(e.key);
   };
 
   const colorBgContainer = "#F0F2F4";
   const isHomepage = location.pathname.includes("home");
-  useEffect(() => {
-    console.log(showMenu);
-  }, [showMenu]);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
         collapsible
         collapsed={false}
-        onCollapse={(value) => setShowMenu(false)}
+        onCollapse={() => setShowMenu(false)}
         trigger={null}
         width={showMenu ? 220 : 0}
         className="layout-sider"
@@ -107,12 +96,7 @@ const AppLayout: React.FC = () => {
         />
       </Sider>
       <KnowledgeIcons.menuFolder
-        style={{
-          position: "absolute",
-          left: 20,
-          top: 20,
-          cursor: "pointer",
-        }}
+        className="layout-sider-folder"
         onClick={() => setShowMenu(true)}
       />
       <Layout className={isHomepage ? "home-chat" : ""}>
