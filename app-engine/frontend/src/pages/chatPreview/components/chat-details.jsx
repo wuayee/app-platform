@@ -11,6 +11,7 @@ const ChatDetail = () => {
   const { aippInfo, tenantId }  = useContext(AippContext);
   const [ modalInfo, setModalInfo ] = useState({});
   const location = useLocation();
+  const navigate = useNavigate();
   let modalRef = useRef();
 
   const isHomepage = location.pathname.includes('home');
@@ -33,7 +34,7 @@ const ChatDetail = () => {
     })
   }
   function addAippCallBack(appId) {
-    navigate(`/aipp/${tenantId}/detail/${appId}`);
+    navigate(`/app/${tenantId}/detail/${appId}`);
   }
   return <>{(
     <div className='chat-details-content'>

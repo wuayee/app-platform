@@ -116,28 +116,6 @@ export const routeList: MenuItem[] = [
         component: Demo,
     },
     {
-      key: "/app",
-      icon: Icons.app({}),
-      label: "应用",
-      component: Demo,
-      children: [
-          {
-              key: "/app/:tenantId/detail/:appId",
-              icon: Icons.app({}),
-              label: "app编排",
-              component: AippIndex,
-              hidden: true,
-          },
-          {
-              key: "/app/:tenantId/addFlow/:appId",
-              icon: Icons.app({}),
-              label: "新增工具流",
-              component: AddFlow,
-              hidden: true,
-          }
-      ],
-  },
-    {
         key: "/group",
         icon: Icons.app({}),
         label: "团队",

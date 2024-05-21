@@ -40,10 +40,13 @@ const AppLayout: React.FC = () => {
   }
 
   const colorBgContainer = '#F0F2F4';
-  const isHomepage = location.pathname.includes('home');
   const setClassName = () => {
-    const isHomepage = location.pathname.includes('home');
-    return isHomepage ? 'home-chat' : ''
+    if ( location.pathname.includes('home')) {
+      return 'home-chat'
+    } else if (location.pathname.includes('app')) {
+      return 'home-app'
+    }
+    return ''
   }
 
   return (
