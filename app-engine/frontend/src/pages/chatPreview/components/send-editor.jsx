@@ -229,10 +229,10 @@ const SendEditor = (props) => {
         </div>
       </div>
       <div className='chat-tips'>
-        <div className="switch-item">
+        {/* <div className="switch-item">
           <Switch onChange={onSwitchChange} />
           <span>联网</span>
-        </div>
+        </div> */}
           - 所有内容均由人工智能大模型生成，存储产品内容准确性参照存储产品文档 - 
       </div>
      { showSelect &&  (
@@ -488,7 +488,7 @@ const Recommends = (props) => {
     <div className="recommends-inner">
       <div className="recommends-top">
         <span className="title">猜你想问</span>
-        <span className="refresh">换一批</span>
+        {/* <span className="refresh">换一批</span> */}
       </div>
       <div className="recommends-list">
         <div className="list-left">
@@ -507,23 +507,15 @@ const Recommends = (props) => {
 // 操作按钮
 const EditorBtnHome = (props) => {
   const { aippInfo } = props;
-
   return <>{(
     <div className="btn-inner">
       <div className="inner-left">
         <div className="inner-item">
-          <img src={xiaohai} alt="" />
+          <img src={aippInfo.attributes?.icon} alt="" />
           <span className="item-name">{aippInfo.name || ''}</span>
-          <LinkIcon />
-          <AtIcon />
         </div>
       </div>
       <div className="inner-right">
-        <div className="inner-item">
-          <LinkIcon />
-          <span className="item-name">自动</span>
-          <AtIcon />
-        </div>
       </div>
     </div>
   )}</>

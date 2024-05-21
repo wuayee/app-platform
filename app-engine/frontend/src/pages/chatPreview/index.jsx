@@ -275,71 +275,22 @@ const ChatPreview = (props) => {
     runningInstanceId.current = instanceId;
     runningVersion.current = version;
     runningAppid.current = aipp_id;
-    const ws = new WebSocket(`${WS_URL}?aippId=${aipp_id}?version=${version}`);
-    ws.onerror = () => {
-      onStop('对话失败');
-    }
-    ws.onopen = () => {
-      ws.send(JSON.stringify({'aippInstanceId': instanceId}));
-    }
-    ws.onmessage = ({ data }) => {
-      let messageData = {};
-      try {
-        messageData = JSON.parse(data);
-        const logDataList = messageData.aippInstanceLogs || [];
-        logDataList.forEach(log => {
-          const regex = /```markdown(.*?)```/g;
-          const replacedArr = log.logData.match(regex);
-          let markdowned = log.logData.indexOf('```');
-          if (replacedArr && replacedArr.length) {
-            replacedArr.forEach(item => {
-              let str = item.substring(11, item.length - 3);
-              log.logData = log.logData.replace(item, str);
-            });
-          }
-          let { msg } = JSON.parse(log.logData);
-          let initObj = {
-            content: msg,
-            loading: false,
-            openLoading: false,
-            logId: log.msgId || -1,
-            markdownSyntax: markdowned !== -1,
-            type: 'recieve',
-          }
-          if (log.msgId !== null) {
-            socketChat2(log, msg, initObj);
-          } else {
-            socketChat(msg, initObj);
-          }
-        })
-        if (['ERROR', 'ARCHIVED'].includes(messageData.status)) {
-          ws.close();
-        }
-      } catch {
-        ws.close();
-        onStop('数据解析异常');
+    timerRef.current = setInterval(async () => {
+      const res = await reGetInstance(tenantId, aipp_id, instanceId, version);
+      if (res.code !== 0) {
+        onStop( res.msg || '对话失败');
       }
-    }
-    ws.onclose = () => {
-      clearAgentEffects();
-      isChatRunning.current = false;
-    }
-    // timerRef.current = setInterval(async () => {
-    //   const res = await reGetInstance(tenantId, aipp_id, instanceId, version);
-    //   if (res.code !== 0) {
-    //     onStop( res.msg || '对话失败');
-    //   }
-    //   const formData = JSON.parse(res.data.form_metadata);
-    //   const formArgs = res.data.form_args;
-    //   if (formArgs.childInstanceId && !childInstanceStop.current) {
-    //     clearInterval(timerRef.current);
-    //     childInstanceIdArr.current.push(formArgs.childInstanceId);
-    //     childBackInstanceIdArr.current.push(formArgs.childInstanceId);
-    //     childTest(aipp_id, version);
-    //   } else {
-    //     callback(res, formData);
-    //   }
-    // }, 3000);
+      const formData = JSON.parse(res.data.form_metadata);
+      const formArgs = res.data.form_args;
+      if (formArgs.childInstanceId && !childInstanceStop.current) {
+        clearInterval(timerRef.current);
+        childInstanceIdArr.current.push(formArgs.childInstanceId);
+        childBackInstanceIdArr.current.push(formArgs.childInstanceId);
+        childTest(aipp_id, version);
+      } else {
+        callback(res, formData);
+      }
+    }, 3000);
   }
   // 主流程轮训回调
   function callback(res, formData) {

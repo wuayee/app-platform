@@ -7,7 +7,7 @@ import './index.scss'
 
 const ChatRunning = () => {
   const appId = '3a617d8aeb1d41a9ad7453f2f0f70d61';
-  const tenantId = '727d7157b3d24209aefd59eb7d1c49ff';
+  const tenantId = '31f20efc7e0848deab6a6bc10fc3021e ';
   const [ aippInfo, setAippInfo ] = useState({});
   const [ prompValue, setPrompValue ] = useState({});
   const [ chatRunning, setChatRunning ] = useState(false);
