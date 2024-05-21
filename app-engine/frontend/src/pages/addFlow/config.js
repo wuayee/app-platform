@@ -69,13 +69,6 @@ export const configMap = {
               urls: {
                   knowledgeUrl: "http://80.11.128.66:31111/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/knowledge?pageNum=1&pageSize=10"
               }
-          },
-          {
-              node: "fitInvokeState",
-              urls: {
-                  serviceListEndpoint: "http://80.11.128.66:31111",
-                  fitableMetaInfoUrl: "http://80.11.128.66:31111"
-              }
           }
       ]
   },
