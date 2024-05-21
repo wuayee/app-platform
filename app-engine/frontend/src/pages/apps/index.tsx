@@ -8,14 +8,17 @@ import { debounce } from "../../shared/utils/common";
 import { HashRouter, Route, useNavigate, Routes } from "react-router-dom";
 
 const Apps: React.FC = () => {
+    const tenantId = "31f20efc7e0848deab6a6bc10fc3021e";
     // 数据初始化
     const [appData, setAppData] = useState([]);
     const [oriData, setOriData] = useState([]);
-    const queryApps = async () => {
-        const res: any = await queryAppsApi();
-        setAppData(res.data);
-        setOriData(res.data);
-        console.log("res", res.data,oriData);
+    async function queryApps(){
+      const res: any = await queryAppsApi(tenantId);
+      if(res.code === 0){
+        const {results}=res.data
+        setAppData(results);
+        setOriData(results);
+      }
     };
     useEffect(() => {
       queryApps();
@@ -24,7 +27,7 @@ const Apps: React.FC = () => {
     // 创建
     const navigate = useNavigate();
     const create = () => {
-      navigate("/knowledge-base/create");
+      // navigate(`/app/${tenantId}/detail/${item.id}`);
     };
 
     // 搜索
@@ -34,7 +37,7 @@ const Apps: React.FC = () => {
     }
     const handleSearch = debounce(onSearchValueChange, 500);
     function clickCard(item:any){
-        console.log('item',item)
+      navigate(`/app/${tenantId}/appDetail/${item.id}`);
     }
 
     return (
@@ -54,16 +57,17 @@ const Apps: React.FC = () => {
               onChange={(e) => handleSearch(e.target.value)}
             />
           </div>
-    
           {appData.length > 0 ? (
             <div className="card_list">
               {appData.map((item: any) => (
-                <div onClick={() => clickCard(item)}>
-                  <AppCard key={item.id} cardInfo={item} />
+                <div key={item.id} onClick={() => clickCard(item)}>
+                  <AppCard cardInfo={item} />
                 </div>
               ))}
             </div>
-          ): <div>暂无数据</div>}
+          ) : (
+            <div>暂无数据</div>
+          )}
         </div>
       </div>
     );

@@ -7,7 +7,7 @@ import { Icons } from "../../../../components/icons";
 import "./style.scoped.scss";
 
 function Avatar(){
-  const employeeNumber ="60032692"
+  const employeeNumber ="123"
   return (
     <div
       style={{
@@ -44,11 +44,17 @@ const AppCard = ({ cardInfo }: any) => {
       >
         {/* 头部区域 */}
         <div className="app_card_header">
-          <img src="/src/assets/images/knowledge/knowledge-base.png" />
+          {cardInfo.icon && <img src={cardInfo.icon} alt="" />}
+          {!cardInfo.icon && (
+            <img src="/src/assets/images/knowledge/knowledge-base.png" alt="" />
+          )}
           <div className="infoArea">
             <div className="headerTitle">{cardInfo.name}</div>
-            <div className="title_info" style={{display:'flex',alignItems:'center'}}>
-              <Avatar/>
+            <div
+              className="title_info"
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              <Avatar />
               <div className="createBy">{cardInfo.createBy}</div>
             </div>
           </div>

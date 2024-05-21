@@ -95,6 +95,13 @@ export const routeList: MenuItem[] = [
               label: "新增工具流",
               component: AddFlow,
               hidden: true,
+          },
+          {
+              key: "/app/:tenantId/appDetail/:appId",
+              icon: Icons.app({}),
+              label: "",
+              component: AppDetail,
+              hidden: true,
           }
       ],
   },
@@ -103,10 +110,6 @@ export const routeList: MenuItem[] = [
         icon: Icons.app({}),
         label: "团队",
         component: Demo,
-    },
-    {
-        key: "/app-detail",
-        component: AppDetail,
     },
 ];
 
