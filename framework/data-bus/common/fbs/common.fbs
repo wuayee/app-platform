@@ -20,7 +20,8 @@ enum ErrorType : byte {
   IllegalStateForPermitApplication = 16,
   IllegalStateForPermitRelease = 17,
   IOOutOfBounds = 18,
-  UnknownError = 19
+  PlatformNotSupported = 19,
+  UnknownError = 127
 }
 
 // 修改此 Enum 请务必与 DataBus 开发组人员确认

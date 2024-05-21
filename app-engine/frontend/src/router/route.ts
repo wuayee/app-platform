@@ -3,7 +3,6 @@ import { ReactElement } from "react";
 import { Icons } from "../components/icons/index";
 import KnowledgeBase from "../pages/knowledge-base";
 import KnowledgeBaseCreate from "../pages/knowledge-base/create";
-import Home from "../pages/home";
 import KnowledgeBaseDetail from "../pages/knowledge-base/knowledge-detail";
 import Demo from "../pages/demo";
 import ChatRunning from "../pages/chatEngineHome/index.jsx";
@@ -12,6 +11,9 @@ import AippIndex from "../pages/aippIndex";
 import AddFlow from "../pages/addFlow";
 import FlowDetail from "../pages/detailFlow";
 import ChatShare from "../pages/chatShare";
+import Apps from "../pages/apps";
+import KnowledgeBaseDetailCreateTable from "../pages/knowledge-base/knowledge-detail/create-table";
+import KnowledgeBaseDetailImportData from "../pages/knowledge-base/knowledge-detail/import-data";
 
 export type MenuItem = Required<MenuProps>["items"][number] & {
   component?: (() => ReactElement) | React.FC<any>;
@@ -54,7 +56,7 @@ export const routeList: MenuItem[] = [
     key: "/app",
     icon: Icons.app({}),
     label: "应用",
-    component: Demo,
+    component: Apps,
     children: [
       {
         key: "/app/:tenantId/detail/:appId",
@@ -77,6 +79,13 @@ export const routeList: MenuItem[] = [
         component: FlowDetail,
         hidden: true,
       },
+      {
+        key: "/app/:tenantId/appDetail/:appId",
+        icon: Icons.app({}),
+        label: "",
+        component: AppDetail,
+        hidden: true,
+      }
     ],
   },
   {
@@ -105,6 +114,22 @@ export const routeList: MenuItem[] = [
         label: "小魔方知识库",
         component: KnowledgeBaseDetail,
         hidden: true,
+        children: [
+          {
+            key: "/knowledge-base/knowledge-detail/create-table",
+            icon: Icons.app({}),
+            label: "添加知识表",
+            component: KnowledgeBaseDetailCreateTable,
+            hidden: true,
+          },
+          {
+            key: "/knowledge-base/knowledge-detail/import-data",
+            icon: Icons.app({}),
+            label: "导入数据",
+            component: KnowledgeBaseDetailImportData,
+            hidden: true,
+          },
+        ]
       },
     ],
   },
@@ -119,10 +144,6 @@ export const routeList: MenuItem[] = [
     icon: Icons.app({}),
     label: "团队",
     component: Demo,
-  },
-  {
-    key: "/app-detail",
-    component: AppDetail,
   },
 ];
 

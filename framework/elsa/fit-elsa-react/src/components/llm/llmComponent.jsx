@@ -38,8 +38,8 @@ export const llmComponent = (jadeConfig) => {
                         }
                     ]
                 },
-                {id: uuidv4(), name: "tools", type: "Array", from: "Input", value: []},
-                {id: uuidv4(), name: "workflows", type: "Array", from: "Input", value: []},
+                {id: uuidv4(), name: "tools", type: "Array", from: "Expand", value: []},
+                {id: uuidv4(), name: "workflows", type: "Array", from: "Expand", value: []},
                 {id: uuidv4(), name: "systemPrompt", type: "String", from: "Input", value: ""},
             ],
             outputParams: [

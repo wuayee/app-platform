@@ -39,3 +39,27 @@ export function getKnowledgeDetailById(id: string, data: {pageNum: number, pageS
   const url = `${KNOWLEDGE_URL}/repos/${id}/tables/query`;
   return post(url, data);
 }
+
+// 创建知识库，知识表
+export function createKnowledgeTableRow(id: string, data: {name: string, serviceType: string, format: 'TEXT' | 'TABLE', serviceId: string, repositoryId: string}) {
+  const url = `${KNOWLEDGE_URL}/repos/${id}/tables`;
+  return post(url, data);
+}
+
+// 获取知识表类型和服务
+export function getKnowledgeTableType() {
+  const url = `${KNOWLEDGE_URL}/storages`;
+  return get(url);
+}
+
+// 删除知识表
+export function deleteKnowledgeTableType(id: string) {
+  const url = `${KNOWLEDGE_URL}/tables/${id}`;
+  return del(url);
+}
+
+// 更新知识表
+export function updateKnowledgeTable(data: {name: string, id: string}) {
+  const url = `${KNOWLEDGE_URL}/tables/update`;
+  return post(url, data);
+}

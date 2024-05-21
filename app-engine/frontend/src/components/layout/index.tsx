@@ -63,8 +63,15 @@ const AppLayout: React.FC = () => {
     navigate(e.key);
   };
 
-  const colorBgContainer = "#F0F2F4";
-  const isHomepage = location.pathname.includes("home");
+  const colorBgContainer = '#F0F2F4';
+  const setClassName = () => {
+    if ( location.pathname.includes('home')) {
+      return 'home-chat'
+    } else if (location.pathname.includes('app')) {
+      return 'home-app'
+    }
+    return ''
+  }
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -99,7 +106,7 @@ const AppLayout: React.FC = () => {
         <KnowledgeIcons.menuFolder onClick={() => setShowMenu(true)} />
       </div>
 
-      <Layout className={isHomepage ? "home-chat" : ""}>
+      <Layout className={setClassName()}>
         <Header
           style={{ padding: 0, background: colorBgContainer, height: "48px" }}
         >

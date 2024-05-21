@@ -1,0 +1,7 @@
+namespace DataBus.Common;
+
+table GetUserDataMessageResponse {
+    user_data: [byte]; // 客户端最后一次写入的用户数据
+}
+
+root_type GetUserDataMessageResponse;

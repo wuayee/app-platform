@@ -181,8 +181,12 @@ public class FlowGraphData {
                         .toUpperCase(ROOT)
                         .endsWith(EVENT.getCode()))
                 .sorted((event1, event2) -> {
-                    String fromConnector1 = ((JSONObject) event1).get("fromConnector").toString();
-                    String fromConnector2 = ((JSONObject) event2).get("fromConnector").toString();
+                    String fromConnector1 = Optional.ofNullable(((JSONObject) event1).get("fromConnector"))
+                            .orElse("-1")
+                            .toString();
+                    String fromConnector2 = Optional.ofNullable(((JSONObject) event2).get("fromConnector"))
+                            .orElse("-1")
+                            .toString();
                     return Integer.compare(extractNumberFromFromConnector(fromConnector1),
                             extractNumberFromFromConnector(fromConnector2));
                 })
@@ -671,6 +675,9 @@ public class FlowGraphData {
             List<Object> relatedEventList = events.stream()
                     .filter(event -> conditionMetaId.equals(((JSONObject) event).get("from").toString()))
                     .collect(Collectors.toList());
+            if (((JSONObject) condition).getJSONObject("conditionParams") == null) {
+                return;
+            }
             JSONArray branches = ((JSONObject) condition).getJSONObject("conditionParams")
                     .getJSONArray("branches");
             for (int i = 0; i < branches.size(); i++) {

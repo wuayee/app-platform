@@ -77,8 +77,8 @@ const ChatPreview = (props) => {
     !chatType && setOpen(true);
   }, []);
   useEffect(() => {
-    aippInfo.name && initChatHistory();
-  }, [aippInfo]);
+    (aippInfo.name && !aippInfo.notShowHistory) && initChatHistory();
+  }, [aippInfo])
   // 灵感大全设置下拉列表
   function setEditorSelect(data, prompItem) {
     let { prompt, promptVarData } = prompItem;
@@ -206,10 +206,7 @@ const ChatPreview = (props) => {
     const reciveInitObj = JSON.parse(JSON.stringify(initChat));
     reciveInitObj.type = "recieve";
     reciveInitObj.loading = true;
-    reciveInitObj.content = "回答生成中";
-    // reciveInitObj.chartConfig = chatMock;
-    // reciveInitObj.recieveType = 'form';
-    // reciveInitObj.formConfig = formMock;
+    reciveInitObj.content = '回答生成中';
     isChatRunning.current = false;
     setChatList(() => {
       let arr = [...listRef.current, reciveInitObj];
@@ -278,72 +275,58 @@ const ChatPreview = (props) => {
     runningInstanceId.current = instanceId;
     runningVersion.current = version;
     runningAppid.current = aipp_id;
-    // const ws = new WebSocket(`${WS_URL}?aippId=${aipp_id}&version=${version}`);
-    // ws.onerror = () => {
-    //   onStop('对话失败');
-    // }
-    // ws.onopen = () => {
-    //   ws.send(JSON.stringify({'aippInstanceId': instanceId}));
-    // }
-    // ws.onmessage = ({ data }) => {
-    //   let messageData = {};
-    //   try {
-    //     messageData = JSON.parse(data);
-    //     const logDataList = messageData.aippInstanceLogs || [];
-    //     logDataList.forEach(log => {
-    //       const regex = /```markdown(.*?)```/g;
-    //       const replacedArr = log.logData.match(regex);
-    //       let markdowned = log.logData.indexOf('```');
-    //       if (replacedArr && replacedArr.length) {
-    //         replacedArr.forEach(item => {
-    //           let str = item.substring(11, item.length - 3);
-    //           log.logData = log.logData.replace(item, str);
-    //         });
-    //       }
-    //       let { msg } = JSON.parse(log.logData);
-    //       let initObj = {
-    //         content: msg,
-    //         loading: false,
-    //         openLoading: false,
-    //         logId: log.msgId || -1,
-    //         markdownSyntax: markdowned !== -1,
-    //         type: 'recieve',
-    //       }
-    //       if (log.msgId !== null) {
-    //         socketChat2(log, msg, initObj);
-    //       } else {
-    //         socketChat(msg, initObj);
-    //       }
-    //     })
-    //     if (['ERROR', 'ARCHIVED'].includes(messageData.status)) {
-    //       ws.close();
-    //     }
-    //   } catch {
-    //     ws.close();
-    //     onStop('数据解析异常');
-    //   }
-    // }
-    // ws.onclose = () => {
-    //   clearAgentEffects();
-    //   isChatRunning.current = false;
-    // }
-    timerRef.current = setInterval(async () => {
-      const res = await reGetInstance(tenantId, aipp_id, instanceId, version);
-      if (res.code !== 0) {
-        onStop(res.msg || "对话失败");
+    const ws = new WebSocket(`${WS_URL}?aippId=${aipp_id}?version=${version}`);
+    ws.onerror = () => {
+      onStop('对话失败');
+    }
+    ws.onopen = () => {
+      ws.send(JSON.stringify({'aippInstanceId': instanceId}));
+    }
+    ws.onmessage = ({ data }) => {
+      let messageData = {};
+      try {
+        messageData = JSON.parse(data);
+        const logDataList = messageData.aippInstanceLogs || [];
+        logDataList.forEach(log => {
+          if (log.logData && log.logData.length) {
+            const regex = /```markdown(.*?)```/g;
+            const replacedArr = log.logData.match(regex);
+            let markdowned = log.logData.indexOf('```');
+            if (replacedArr && replacedArr.length) {
+              replacedArr.forEach(item => {
+                let str = item.substring(11, item.length - 3);
+                log.logData = log.logData.replace(item, str);
+              });
+            }
+            let { msg } = JSON.parse(log.logData);
+            let initObj = {
+              content: msg,
+              loading: false,
+              openLoading: false,
+              logId: log.msgId || -1,
+              markdownSyntax: markdowned !== -1,
+              type: 'recieve',
+            }
+            if (log.msgId !== null) {
+              socketChat2(log, msg, initObj);
+            } else {
+              socketChat(msg, initObj);
+            }
+          }
+        })
+        if (['ERROR', 'ARCHIVED'].includes(messageData.status)) {
+          ws.close();
+        }
+      } catch (err){
+        onStop('数据解析异常');
+        ws.close();
       }
-      const formData = JSON.parse(res.data.form_metadata);
-      const formArgs = res.data.form_args;
-      if (formArgs.childInstanceId && !childInstanceStop.current) {
-        clearInterval(timerRef.current);
-        childInstanceIdArr.current.push(formArgs.childInstanceId);
-        childBackInstanceIdArr.current.push(formArgs.childInstanceId);
-        childTest(aipp_id, version);
-      } else {
-        callback(res, formData);
-      }
-    }, 3000);
-  };
+    }
+    ws.onclose = () => {
+      chatStatusChange(false);
+      isChatRunning.current = false;
+    }
+  }
   // 主流程轮训回调
   function callback(res, formData) {
     printLogs(res.data.instance_log);
@@ -363,8 +346,9 @@ const ChatPreview = (props) => {
         initObj.chartConfig = msgObj;
       }
     }
+    initObj.loading = false;
     const idx = listRef.current.length - 1;
-    listRef.current.splice(idx, 0, initObj);
+    listRef.current.splice(idx, 1, initObj);
     setChatList(() => {
       let arr = [...listRef.current];
       listRef.current = arr;
@@ -471,7 +455,7 @@ const ChatPreview = (props) => {
           }
         }
         const idx = listRef.current.length - 1;
-        listRef.current.splice(idx, 0, initObj);
+        listRef.current.splice(idx, 1, initObj);
         setChatList(() => {
           let arr = [...listRef.current];
           listRef.current = arr;
@@ -567,85 +551,63 @@ const ChatPreview = (props) => {
       setRequestLoading(false);
     }
   }
-  return (
-    <div
-      className={[
-        "chat-preview",
-        showElsa ? "chat-preview-elsa chat-preview-shadow" : null,
-        location.pathname.indexOf("chat") === -1 ? "chat-preview-inner" : null,
-        showElsa && open ? "chat-preview-mr" : null,
-      ].join(" ")}
-    >
-      <Spin spinning={loading}>
-        {showElsa && (
-          <span className="icon-back" onClick={previewBack}>
-            <LeftArrowIcon />
-          </span>
-        )}
-        <div
-          className={[
-            "chat-inner",
-            location.pathname.indexOf("chat") !== -1 ? "chat-page-inner" : null,
-          ].join(" ")}
-        >
-          <div
-            className={[
-              "chat-inner-left",
-              open ? "chat-left-close" : "no-border",
-            ].join(" ")}
-          >
-            <ChatMessage
-              chatList={chatList}
-              setEditorShow={setEditorShow}
-              setCheckedList={setCheckedList}
-              showCheck={showCheck}
-            />
-            {showCheck ? (
-              <CheckGroup
-                appId={appId}
-                tenantId={tenantId}
-                chatList={chatList}
-                setEditorShow={setEditorShow}
-                checkedList={checkedList}
-                totalNum={chatList.length}
-                selectAllClick={selectAllClick}
-                type={groupType}
-              />
-            ) : (
-              <SendEditor
-                filterRef={editorRef}
-                onSend={onSend}
-                onClear={clearChat}
-                onStop={chatRunningStop}
-                chatType={chatType}
-                requestLoading={requestLoading}
-                open={open}
-                openInspiration={openClick}
-              />
-            )}
-            <div className="chat-tips">
-              {" "}
-              -
-              所有内容均由人工智能大模型生成，存储产品内容准确性参照存储产品文档
-              -{" "}
+  return <>{(
+      <div className={[
+        'chat-preview',
+        showElsa ? 'chat-preview-elsa chat-preview-shadow' : null,
+        location.pathname.indexOf('chat') === -1 ? 'chat-preview-inner' : null,
+        (showElsa && open) ? 'chat-preview-mr' : null
+        ].join(' ')}>
+          <Spin spinning={loading}>
+            { showElsa && (<span className="icon-back" onClick={previewBack}>
+              <LeftArrowIcon />
+            </span>) }
+            <div className={['chat-inner', location.pathname.indexOf('chat') !== -1 ? 'chat-page-inner' : null].join(' ')}>
+              <div className={['chat-inner-left', open ? 'chat-left-close' : 'no-border'].join(' ')}>
+                <ChatMessage
+                  chatList={chatList}
+                  setEditorShow={setEditorShow}
+                  setCheckedList={setCheckedList}
+                  showCheck={showCheck}/>
+                { showCheck ?
+                  ( <CheckGroup
+                      appId={appId}
+                      tenantId={tenantId}
+                      chatList={chatList}
+                      setEditorShow={setEditorShow}
+                      checkedList={checkedList}
+                      totalNum={chatList.length}
+                      selectAllClick={selectAllClick}
+                      type={groupType}
+                    />
+                  ) : (
+                    <SendEditor
+                      filterRef={editorRef}
+                      onSend={onSend}
+                      onClear={clearChat}
+                      openClick={openClick}
+                      onStop={chatRunningStop}
+                      chatType={chatType}
+                      inspirationOpen={open}
+                      requestLoading={requestLoading}
+                      open={open}
+                      openInspiration={openClick}
+                    />
+                  )
+                }
+              </div>
+              <div className={['chat-inner-right', open ? 'chat-right-close' : null].join(' ')}>
+                <Inspiration
+                  open={open}
+                  sessionName={sessionName}
+                  chatType={chatType}>
+                </Inspiration>
+              </div>
             </div>
-          </div>
-          <div
-            className={[
-              "chat-inner-right",
-              open ? "chat-right-close" : null,
-            ].join(" ")}
-          >
-            <Inspiration
-              open={open}
-              sessionName={sessionName}
-              chatType={chatType}
-            ></Inspiration>
-          </div>
-        </div>
-      </Spin>
-    </div>
-  );
+          </Spin>
+      </div>
+      )}
+    </>
 };
 
 export default ChatPreview;
