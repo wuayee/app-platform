@@ -13,7 +13,6 @@ import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.store.Tool;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -58,15 +57,15 @@ public abstract class AbstractTool implements Tool {
                 TypeUtils.parameterized(Map.class, new Type[] {String.class, Object.class}));
         List<String> params = this.metadata().parameterNames();
         List<Type> types = this.metadata().parameters();
-        ArrayList<Object> args = new ArrayList<>();
-        for (int i = 0; i < params.size(); ++i) {
+        Object[] args = new Object[params.size()];
+        for (int i = 0; i < args.length; ++i) {
             Object value = mapArgs.get(params.get(i));
             if (value == null) {
                 value = this.metadata().parameterDefaultValue(params.get(i));
             }
-            args.add(ObjectUtils.toCustomObject(value, types.get(i)));
+            args[i] = ObjectUtils.toCustomObject(value, types.get(i));
         }
-        Object result = this.call(args);
+        Object result = call(args);
         return new String(this.serializer.serialize(result, UTF_8), UTF_8);
     }
 }
