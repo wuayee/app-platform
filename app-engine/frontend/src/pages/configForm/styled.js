@@ -5,6 +5,7 @@ export const ConfigFormWrap = styled.div`
   border-right: 1px solid #e4e4e7;
   width: 35%;
   .config-form {
+    height: 100%;
     max-height: 100%;
     overflow: auto;
     width: 100%;
