@@ -38,7 +38,22 @@ public class KbChunkQueryDto {
     /**
      * 查询关键字
      */
-    private String queryKeyWord;
+    private String content;
+
+    /**
+     * topK
+     */
+    private Integer topK;
+
+    /**
+     * 阈值
+     */
+    private Integer threshold;
+
+    /**
+     * 列
+     */
+    private Integer columnId;
 
     /**
      * embedding服务
