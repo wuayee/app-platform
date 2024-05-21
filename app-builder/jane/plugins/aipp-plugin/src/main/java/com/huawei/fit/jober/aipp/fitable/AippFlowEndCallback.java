@@ -92,7 +92,6 @@ public class AippFlowEndCallback implements FlowCallbackService {
                     Utils.buildLogDataWithFormData(this.formRepository, endFormId, endFormVersion, businessData);
             Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
         }
-
         this.logFinalOutput(contexts, businessData);
 
         // 子流程 callback 主流程
