@@ -116,6 +116,12 @@ const KnowledgeBaseDetailImportData = () => {
         // 校验成功
         setCurrentSteps(currentSteps + 1)
       }
+
+      if (currentSteps === 1) {
+        await formStepSecond.validateFields();
+        // 校验成功
+        setCurrentSteps(currentSteps + 1)
+      }
     } catch (error) {
     }
     setLoading(false)

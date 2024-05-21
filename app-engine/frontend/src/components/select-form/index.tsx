@@ -1,6 +1,7 @@
 import { FormInstance} from 'antd';
 import React, { useEffect, useState } from 'react';
 import { SelectDataSource } from './select-data-source';
+import { TextSplitClear } from './text-split-clear';
 
 interface inputProps {
   currentSteps: number;
@@ -21,7 +22,9 @@ const SelectForm = ({currentSteps, type, formDataSource, formStepSecond }: input
   return (
   <>
     {currentSteps === 0 && <SelectDataSource type={type} form={formDataSource}/>}
-    {currentSteps === 1 && 111}
+    { currentSteps === 1 && 
+      (type === 'text' ? <TextSplitClear form={formStepSecond}/> : 1111)
+    }
     {currentSteps === 2 && 111}
     {currentSteps === 3 && 111}
   </>)
