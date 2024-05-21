@@ -1,35 +1,39 @@
-import React from 'react';
-import { KnowledgeIcons } from '../icons';
+import React from "react";
+import { KnowledgeIcons } from "../icons";
 
-const HeaderUser = ()=> {
+const HeaderUser = () => {
   return (
-    <>
-      <div style={{
-        position: 'fixed',
-        right: 30,
-        top: 20,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 23
-      }}>
-        <KnowledgeIcons.dark/>
-        <KnowledgeIcons.alarm/>
-        <KnowledgeIcons.info/>
-        <div style={{
+    <div
+      style={{
+        display: "flex",
+        gap: 16,
+        justifyContent: "end",
+        alignItems: "center",
+        marginRight: 24,
+        height: 48,
+      }}
+    >
+      <KnowledgeIcons.dark />
+      <KnowledgeIcons.alarm />
+      <KnowledgeIcons.info />
+      <div
+        style={{
           fontSize: 16,
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <KnowledgeIcons.user/>
-          <span style={{
-            marginLeft: 8
-          }}>Jasper</span>
-        </div>
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <KnowledgeIcons.user />
+        <span
+          style={{
+            marginLeft: 8,
+          }}
+        >
+          Jasper
+        </span>
       </div>
-    </>
-  )
-}
-
-export {
-  HeaderUser
+    </div>
+  );
 };
+
+export { HeaderUser };

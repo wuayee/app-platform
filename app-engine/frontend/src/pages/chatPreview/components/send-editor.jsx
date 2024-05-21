@@ -30,7 +30,6 @@ import { AippContext } from "../../aippIndex/context";
 import "../../../shared/utils/rendos";
 import robot2 from "../../../assets/images/ai/xiaohai.png";
 import "../styles/send-editor.scss";
-import StarApps from "./star-apps";
 import HistoryChat from "./history-chat";
 
 const docArr = [
@@ -246,7 +245,6 @@ const SendEditor = (props) => {
     }
   };
 
-  const [openStar, setOpenStar] = useState(false);
   const [openHistory, setOpenHistory] = useState(false);
 
   return (
@@ -267,11 +265,15 @@ const SendEditor = (props) => {
                   <div className="editor-guess-question-item">{question}</div>
                 ))}
               </div>
-              <div className="editor-open-inspiration" onClick={openInspiration}>
+              <div
+                className="editor-open-inspiration"
+                onClick={openInspiration}
+              >
                 <Avatar
                   size="large"
                   className="editor-open-inspiration-avatar"
-                  icon={open ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  style={{ color: open ? "#0478fc" : "#808080" }}
+                  icon={open ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
                 />
               </div>
             </div>
@@ -289,7 +291,7 @@ const SendEditor = (props) => {
                   </Space>
                 </Dropdown>
                 <LinkOutlined className="editor-action-item" />
-                <MehOutlined className="editor-action-item" />
+                <span className="editor-action-item">@</span>
               </Space>
               <Space>
                 <GlobalOutlined className="editor-action-item" />
@@ -346,7 +348,6 @@ const SendEditor = (props) => {
               clearMove={clearMove}
             />
           )}
-          <StarApps open={openStar} setOpen={setOpenStar} />
           <HistoryChat open={openHistory} setOpen={setOpenHistory} />
         </div>
       }

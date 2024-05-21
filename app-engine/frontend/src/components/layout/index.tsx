@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import type { MenuProps } from "antd";
-import { Breadcrumb, Layout, Menu, theme, ConfigProvider } from "antd";
+import { Layout, Menu, ConfigProvider } from "antd";
 import {
-  HashRouter,
   Route,
   useNavigate,
   Routes,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 import {
   routeList,
@@ -74,10 +74,6 @@ const AppLayout: React.FC = () => {
 
   const colorBgContainer = "#F0F2F4";
   const isHomepage = location.pathname.includes("home");
-  const setClassName = () => {
-    const isHomepage = location.pathname.includes("home");
-    return isHomepage ? "home-chat" : "";
-  };
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -105,7 +101,7 @@ const AppLayout: React.FC = () => {
               margin: "8px 0px",
             }}
           >
-            <Icons.logo />{" "}
+            <Icons.logo />
             <span
               style={{
                 color: "rgb(255, 255, 255)",
@@ -149,14 +145,15 @@ const AppLayout: React.FC = () => {
         />
       </>
 
-      <Layout className={setClassName()}>
+      <Layout className={isHomepage ? "home-chat" : ""}>
         <Header
           style={{ padding: 0, background: colorBgContainer, height: "48px" }}
-        />
-        <HeaderUser />
+        >
+          <HeaderUser />
+        </Header>
         <Content style={{ padding: "0 16px", background: colorBgContainer }}>
           <Routes>
-            <Route path="/" Component={ChatRunning} />
+            <Route path="/" element={<Navigate to="/home" replace />} />
             {flattenRouteList.map((route) => (
               <Route
                 path={route.key}
@@ -166,8 +163,6 @@ const AppLayout: React.FC = () => {
             ))}
           </Routes>
         </Content>
-        {/* <Footer style={{ textAlign: 'center' }}>
-        </Footer> */}
       </Layout>
     </Layout>
   );
