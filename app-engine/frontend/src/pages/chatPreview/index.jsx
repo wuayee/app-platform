@@ -127,8 +127,8 @@ const ChatPreview = (props) => {
       const res = await getRecentInstances(tenantId, appId, type);
       if (res.data && res.data.length) {
         let chatArr = [];
-        res.data.forEach(item => {
-          let questionObj = { type: 'send', sendType: 'text' };
+        res.data.forEach((item) => {
+          let questionObj = { type: "send", sendType: "text" };
           let { msg } = JSON.parse(item.question.logData);
           questionObj.logId = item.question.logId;
           questionObj.content = msg;
@@ -486,10 +486,10 @@ const ChatPreview = (props) => {
       if (typeof JSON.parse(str) === "object") {
         return true;
       }
-    } catch (e){
-      return false
+    } catch (e) {
+      return false;
     }
-    return false
+    return false;
   }
   // 清除历史对话记录
   async function clearChat() {
@@ -567,71 +567,84 @@ const ChatPreview = (props) => {
       setRequestLoading(false);
     }
   }
-  return <>{(
-      <div className={[
-        'chat-preview',
-        showElsa ? 'chat-preview-elsa chat-preview-shadow' : null,
-        location.pathname.indexOf('chat') === -1 ? 'chat-preview-inner' : null,
-        (showElsa && open) ? 'chat-preview-mr' : null
-        ].join(' ')}>
-        <Spin spinning={loading}>
-          { showElsa && (<span className="icon-back" onClick={previewBack}>
+  return (
+    <div
+      className={[
+        "chat-preview",
+        showElsa ? "chat-preview-elsa chat-preview-shadow" : null,
+        location.pathname.indexOf("chat") === -1 ? "chat-preview-inner" : null,
+        showElsa && open ? "chat-preview-mr" : null,
+      ].join(" ")}
+    >
+      <Spin spinning={loading}>
+        {showElsa && (
+          <span className="icon-back" onClick={previewBack}>
             <LeftArrowIcon />
-          </span>) }
-          <div className={['chat-inner', location.pathname.indexOf('chat') !== -1 ? 'chat-page-inner' : null].join(' ')}>
-            <div className={['chat-inner-left', open ? 'chat-left-close' : 'no-border'].join(' ')}>
-              <ChatMessage
+          </span>
+        )}
+        <div
+          className={[
+            "chat-inner",
+            location.pathname.indexOf("chat") !== -1 ? "chat-page-inner" : null,
+          ].join(" ")}
+        >
+          <div
+            className={[
+              "chat-inner-left",
+              open ? "chat-left-close" : "no-border",
+            ].join(" ")}
+          >
+            <ChatMessage
+              chatList={chatList}
+              setEditorShow={setEditorShow}
+              setCheckedList={setCheckedList}
+              showCheck={showCheck}
+            />
+            {showCheck ? (
+              <CheckGroup
+                appId={appId}
+                tenantId={tenantId}
                 chatList={chatList}
                 setEditorShow={setEditorShow}
-                setCheckedList={setCheckedList}
-                showCheck={showCheck}/>
-              { showCheck ?
-                ( <CheckGroup
-                    appId={appId}
-                    tenantId={tenantId}
-                    chatList={chatList}
-                    setEditorShow={setEditorShow}
-                    checkedList={checkedList}
-                    totalNum={chatList.length}
-                    selectAllClick={selectAllClick}
-                    type={groupType}
-                  />
-                ) : (
-                  <SendEditor
-                    filterRef={editorRef}
-                    onSend={onSend}
-                    onClear={clearChat}
-                    onStop={chatRunningStop}
-                    chatType={chatType}
-                    requestLoading={requestLoading}
-                    open={open}
-                    openInspiration={openClick}
-                  />
-                )}
-                <div className="chat-tips">
-                  {" "}
-                  -
-                  所有内容均由人工智能大模型生成，存储产品内容准确性参照存储产品文档
-                  -{" "}
-                </div>
-              </div>
-              <div
-                className={[
-                  "chat-inner-right",
-                  open ? "chat-right-close" : null,
-                ].join(" ")}
-              >
-                <Inspiration
-                  open={open}
-                  sessionName={sessionName}
-                  chatType={chatType}
-                ></Inspiration>
-              </div>
+                checkedList={checkedList}
+                totalNum={chatList.length}
+                selectAllClick={selectAllClick}
+                type={groupType}
+              />
+            ) : (
+              <SendEditor
+                filterRef={editorRef}
+                onSend={onSend}
+                onClear={clearChat}
+                onStop={chatRunningStop}
+                chatType={chatType}
+                requestLoading={requestLoading}
+                open={open}
+                openInspiration={openClick}
+              />
+            )}
+            <div className="chat-tips">
+              {" "}
+              -
+              所有内容均由人工智能大模型生成，存储产品内容准确性参照存储产品文档
+              -{" "}
             </div>
-          </Spin>
+          </div>
+          <div
+            className={[
+              "chat-inner-right",
+              open ? "chat-right-close" : null,
+            ].join(" ")}
+          >
+            <Inspiration
+              open={open}
+              sessionName={sessionName}
+              chatType={chatType}
+            ></Inspiration>
+          </div>
         </div>
-      }
-    </>
+      </Spin>
+    </div>
   );
 };
 

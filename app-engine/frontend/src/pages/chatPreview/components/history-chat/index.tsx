@@ -33,6 +33,7 @@ const HistoryChat: React.FC<HistoryChatProps> = ({ open, setOpen }) => {
   return (
     <Drawer
       destroyOnClose
+      mask={false}
       title={
         <div className="history-title">
           <div className="history-title-left">
