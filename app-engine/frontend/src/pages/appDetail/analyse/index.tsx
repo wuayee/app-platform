@@ -41,11 +41,17 @@ const top5Option = {
 const AnalyseCard = ({ info }) => (
   <Card className='card'>
     <div className='title'>总请求数</div>
+    <div style={{display:'flex',justifyContent:'space-between'}}>
+      <div>
     <span className='number'>2523</span>
     <span className='number-unit'>次</span>
     <div className='number-tip'>
       <span>相比昨日下降</span>
       <span style={{ color: '#c63939' }}> 2%</span>
+    </div>
+    </div>
+    <img width={60} height={65} src='/src/assets/images/knowledge/knowledge-base.png'/>
+    
     </div>
   </Card>
 );

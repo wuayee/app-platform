@@ -71,7 +71,7 @@ const TestSet: React.FC = () => {
   return (
     <div className='tab-content'>
       <div className='margin-bottom-standard test'>
-        <Button className='margin-right-standard' type='primary'>创建</Button>
+        <Button className='margin-right-standard' type='primary' style={{width:'88px'}}>创建</Button>
         <Button>应用评估</Button>
       </div>
       <Table
