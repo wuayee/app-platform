@@ -6,6 +6,7 @@ import React, {
   useImperativeHandle,
 } from "react";
 import { Upload, Checkbox, Spin, Dropdown, Space, Avatar } from "antd";
+import { LinkIcon, AtIcon, PanleCloseIcon, PanleIcon } from '../../../assets/icon';
 import {
   DownOutlined,
   GlobalOutlined,
@@ -30,7 +31,9 @@ import { uploadChatFile } from "../../../shared/http/aipp";
 import { AippContext } from "../../aippIndex/context";
 import "../../../shared/utils/rendos";
 import robot2 from "../../../assets/images/ai/xiaohai.png";
+import xiaohai from '@assets/images/ai/xiaohai2.png';
 import "../styles/send-editor.scss";
+import StarApps from "./star-apps";
 import HistoryChat from "./history-chat";
 
 const docArr = [
@@ -49,22 +52,21 @@ const imgArr = [
   "image/svg+xml",
 ];
 const SendEditor = (props) => {
-  const {
-    onSend,
-    onClear,
-    onStop,
-    chatType,
-    filterRef,
-    requestLoading,
-    openInspiration,
-    open,
-  } = props;
-  const [content, setContent] = useState("");
-  const [selectItem, setSelectItem] = useState({});
-  const [selectDom, setSelectDom] = useState();
-  const [showSelect, setShowSelect] = useState(false);
-  const [positionConfig, setPositionConfig] = useState({});
-  const { chatRunning } = useContext(AippContext);
+  const { 
+    onSend, 
+    onClear, 
+    onStop, 
+    chatType, 
+    filterRef, 
+    requestLoading, 
+    openClick,
+    inspirationOpen } = props;
+  const [ content, setContent ] = useState('');
+  const [ selectItem, setSelectItem ] = useState({});
+  const [ selectDom, setSelectDom ] = useState();
+  const [ showSelect, setShowSelect ] = useState(false);
+  const [ positionConfig, setPositionConfig ] = useState({});
+  const { aippInfo ,chatRunning }  = useContext(AippContext);
   const editorRef = useRef(null);
   useEffect(() => {
     const dropBox = document.querySelector("#drop");
@@ -137,10 +139,7 @@ const SendEditor = (props) => {
       dragUpload(files[0], "doc");
     }
   }
-  function dragUpload(file, type) {
-    console.log(file);
-    console.log(type);
-  }
+  function dragUpload(file, type) {}
   // 设置灵感大全下拉
   function setFilterHtml(prompt, promptMap) {
     const editorDom = document.getElementById("ctrl-promet");
@@ -149,19 +148,9 @@ const SendEditor = (props) => {
   }
   // 绑定下拉事件
   function bindEvents(promptMap) {
-    $("body").on("click", ".chat-focus", ($event) => {
-      // clearMove();
-      let filterType = $($event.target).attr("data-type");
-      let selectItem = promptMap.filter((item) => item.var === filterType)[0];
-      // if (!selectItem.multiple) {
-      //   $('.chat-promet-list').attr('contenteditable', false);
-      //   $('.chat-focus').attr('contenteditable', true);
-      //   $event.target.classList.add('dom-chat');
-      //   $event.target.classList.remove('clear-chat');
-      // } else {
-      //   $('.chat-promet-list').attr('contenteditable', true);
-      //   $('.chat-focus').attr('contenteditable', false);
-      // }
+    $('body').on('click', '.chat-focus', ($event) => {
+      let filterType = $($event.target).attr('data-type');
+      let selectItem =  promptMap.filter(item => item.var === filterType)[0];
       setPositionConfig($event.target.getBoundingClientRect());
       setSelectItem(selectItem);
       setSelectDom($event.target);
@@ -169,12 +158,11 @@ const SendEditor = (props) => {
     });
     $("body").on("click", (event) => {
       let clickTarget = $(event.target);
-      let chatPopup = $(".chat-focus");
-      if (!clickTarget.closest(chatPopup).length) {
-        // $('.chat-promet-editor').attr('contenteditable', true);
-        // $('.chat-focus').attr('contenteditable', false);
+      let chatPopup = $('.chat-focus');
+      if (
+        !clickTarget.closest(chatPopup).length
+      ) {
         setShowSelect(false);
-        // clearMove();
       }
     });
   }
@@ -186,18 +174,13 @@ const SendEditor = (props) => {
   function fileSend(fileResult, fileType) {
     onSend(fileResult, fileType);
   }
+  // 是否联网
+  const onSwitchChange = (checked) => {}
   useImperativeHandle(filterRef, () => {
     return {
       setFilterHtml: setFilterHtml,
     };
   });
-
-  const items = [
-    {
-      key: "1",
-      label: "delete",
-    },
-  ];
 
   const [guessQuestions, setGuessQuestions] = useState([
     "如何构建知识库",
@@ -244,108 +227,46 @@ const SendEditor = (props) => {
         clearInterval(intervalData);
       };
     }
-  };
-
+  }
+  const [openStar, setOpenStar] = useState(false);
   const [openHistory, setOpenHistory] = useState(false);
-
-  return (
-    <>
-      {
-        <div className="send-editor-container">
-          <div className="editor-inner">
-            <div className="editor-guess">
-              <div className="editor-guess-header">
-                <div className="editor-guess-title">猜你想问</div>
-                <Space className="editor-guess-change">
-                  <ReloadOutlined />
-                  <span>换一批</span>
-                </Space>
-              </div>
-              <div className="editor-guess-questions">
-                {guessQuestions.map((question) => (
-                  <div className="editor-guess-question-item">{question}</div>
-                ))}
-              </div>
-              <div
-                className="editor-open-inspiration"
-                onClick={openInspiration}
-              >
-                <Avatar
-                  size="large"
-                  className="editor-open-inspiration-avatar"
-                  style={{ color: open ? "#0478fc" : "#808080" }}
-                  icon={open ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
-                />
-              </div>
-            </div>
-            <div className="editor-actions">
-              <Space>
-                <Dropdown menu={{ items }} className="editor-action-dropdown">
-                  <Space>
-                    <Avatar
-                      src={robot2}
-                      size={48}
-                      style={{ background: "#adbfdd" }}
-                    />
-                    小海
-                    <DownOutlined />
-                  </Space>
-                </Dropdown>
-                <LinkOutlined className="editor-action-item" />
-                <span className="editor-action-item">@</span>
-              </Space>
-              <Space>
-                <ShareAltOutlined className="editor-action-item" />
-                <GlobalOutlined className="editor-action-item" />
-                <Dropdown menu={{ items }} className="editor-action-dropdown">
-                  <Space>
-                    <span>自动</span>
-                    <DownOutlined />
-                  </Space>
-                </Dropdown>
-                <HistoryOutlined
-                  className="editor-action-item"
-                  onClick={() => setOpenHistory(true)}
-                />
-              </Space>
-            </div>
-            <div className="editor-input" id="drop">
-              <div
-                className={[
-                  "quill-span",
-                  "quill-item-span quill-last",
-                  recording ? "recording" : null,
-                ].join(" ")}
-                onClick={onRecord}
-              >
-                <Avatar icon={<AudioOutlined />} className="editor-recording" />
-              </div>
-              <div
-                className="chat-promet-editor"
-                id="ctrl-promet"
-                ref={editorRef}
-                contentEditable={true}
-                placeholder="Enter快捷发送，Ctrl+Enter换行"
-                onInput={messageChange}
-                onKeyDown={messageKeyDown}
-                onPaste={messagePaste}
-              ></div>
-              <div className="send-icon" onClick={sendMessage}></div>
-            </div>
-          </div>
-          {showSelect && (
-            <EditorSelect
-              chatSelectDom={selectDom}
-              chatSelectItem={selectItem}
-              positionConfig={positionConfig}
-              clearMove={clearMove}
-            />
-          )}
-          <HistoryChat open={openHistory} setOpen={setOpenHistory} />
+  return <>{(
+    <div className='send-editor-container'>
+      <Recommends openClick={openClick} inspirationOpen={inspirationOpen}/>
+      <div className='editor-inner'>
+        <EditorBtnHome aippInfo={aippInfo} setOpen={setOpenHistory}/>
+        <div className='editor-input' id="drop">
+          <div
+            className="chat-promet-editor"
+            id="ctrl-promet"
+            ref={ editorRef }
+            contentEditable={ true }
+            onInput={messageChange}
+            onKeyDown={messageKeyDown}
+            onPaste={messagePaste}
+          ></div>
+          <div className='send-icon' onClick={ sendMessage }></div>
+          <div className='audio-icon' onClick={ sendMessage }><LinkIcon /></div>
         </div>
-      }
-    </>
-  );
+      </div>
+      <div className='chat-tips'>
+        {/* <div className="switch-item">
+          <Switch onChange={onSwitchChange} />
+          <span>联网</span>
+        </div> */}
+          - 所有内容均由人工智能大模型生成，存储产品内容准确性参照存储产品文档 - 
+      </div>
+     { showSelect &&  (
+      <EditorSelect
+        chatSelectDom={selectDom}
+        chatSelectItem={selectItem}
+        positionConfig={positionConfig}
+        clearMove={clearMove} />
+     )}
+     <StarApps open={openStar} setOpen={setOpenStar} />
+     <HistoryChat open={openHistory} setOpen={setOpenHistory} />
+    </div>
+  )}</>
 };
 
 // 编辑器操作按钮
@@ -584,19 +505,51 @@ const EditorSelect = (props) => {
 
 // 猜你想问
 const Recommends = (props) => {
-  return (
-    <>
-      {
-        <div className="recommends-inner">
-          <div className="recommends-top"></div>
-          <div className="recommends-list">
-            <div className="list-left"></div>
-            <div className="list-right"></div>
-          </div>
+  const { openClick, inspirationOpen } = props;
+
+  return <>{(
+    <div className="recommends-inner">
+      <div className="recommends-top">
+        <span className="title">猜你想问</span>
+        {/* <span className="refresh">换一批</span> */}
+      </div>
+      <div className="recommends-list">
+        <div className="list-left">
+          <div className="recommends-item">如何构建知识库</div>
+          <div className="recommends-item">我想创建一个应用</div>
+          <div className="recommends-item">推荐几个常用的应用机器人</div>
         </div>
-      }
-    </>
-  );
-};
+        <div className="list-right" onClick={openClick}>
+          { inspirationOpen ? <PanleCloseIcon /> : <PanleIcon /> }
+        </div>
+      </div>
+    </div>
+  )}</>
+}
+
+// 操作按钮
+const EditorBtnHome = (props) => {
+  const { aippInfo, setOpen } = props;
+  return <>{(
+    <div className="btn-inner">
+      <div className="inner-left">
+        <div className="inner-item">
+          <img src={aippInfo.attributes?.icon} alt="" />
+          <span className="item-name">{aippInfo.name || ''}</span>
+          <LinkIcon />
+          <AtIcon />
+        </div>
+      </div>
+      <div className="inner-right">
+        <div className="inner-item">
+          <LinkIcon />
+          <span className="item-name">自动</span>
+          <HistoryOutlined onClick={() => setOpen(true)}/>
+        </div>
+      </div>
+    </div>
+  )}</>
+}
+
 
 export default SendEditor;

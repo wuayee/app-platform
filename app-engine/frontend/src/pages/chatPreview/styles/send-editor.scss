@@ -3,13 +3,11 @@
   margin-top: 30px;
 
   .editor-inner {
-    display: flex;
-    flex-direction: column;
     width: 100%;
-    height: 100%;
+    height: 136px;
     margin: 0 auto;
     padding: 0 48px;
-
+    border-radius: 8px;
     .editor-icon {
       cursor: pointer;
       margin-right: 12px;
@@ -119,9 +117,8 @@
       width: 100%;
       height: 80px;
       background-color: #fff;
-      position: relative;
       border: 1px solid transparent;
-
+      position: relative;
       .chat-promet-editor {
         margin-left: 35px;
         box-sizing: border-box;
@@ -129,7 +126,7 @@
         height: 100%;
         outline: none;
         overflow-y: auto;
-        padding: 12px 15px;
+        padding: 20px 15px;
         tab-size: 4;
         -moz-tab-size: 4;
         text-align: left;
@@ -137,8 +134,8 @@
         word-wrap: break-word;
         border-radius: 16px;
         padding-right: 36px;
-        line-height: 22px;
-
+        padding-left: 60px;
+        line-height: 36px;
         &:focus {
           border-color: #0478fc;
         }
@@ -191,7 +188,7 @@
       .send-icon {
         position: absolute;
         right: 10px;
-        bottom: 10px;
+        bottom: 20px;
         height: 40px;
         width: 40px;
         background-image: url('../../../assets/images/send-normal.png');
@@ -206,10 +203,18 @@
           background-image: url('../../../assets/images/send-active.png');
         }
       }
-    }
-
-    .editor-input:hover {
-      border: 1.5px solid #047bfc;
+      .audio-icon {
+        position: absolute;
+        left: 24px;
+        bottom: 20px;
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        background: #F2F6FC;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     }
   }
 
@@ -380,4 +385,89 @@
 .dom-chat {
   border: 1px solid rgba(19, 112, 255, 1) !important;
   background: #ffffff !important;
+}
+.recommends-inner {
+  padding: 0 48px;
+  color: #1A1A1A;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  .recommends-top {
+    display: flex;
+    align-items: center;
+    .title {
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .refresh {
+      margin-left: 15px;
+      cursor: pointer;
+    }
+  }
+  .recommends-list {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .list-left {
+      display: flex;
+      flex-wrap: wrap;
+      padding-right: 48px;
+    }
+    .list-right {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #ffffff;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+    .recommends-item {
+      margin: 10px 0;
+      background: rgba(255,255,255,0.41);
+      border: 1px solid rgba(38,115,229,1);
+      border-radius: 100px;
+      box-sizing: border-box;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #2673E5;
+      text-align: center;
+      font-weight: 400;
+      margin-right: 16px;
+    }
+  }
+}
+.btn-inner {
+  height: 56px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 0 24px;
+  >div {
+    display: flex;
+    align-items: center;
+  }
+  .inner-item {
+    display: flex;
+    align-items: center;
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+    .item-name {
+      padding: 0 8px ;
+      cursor: pointer;
+    }
+    svg {
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      margin-left: 16px;
+    }
+  }
 }
