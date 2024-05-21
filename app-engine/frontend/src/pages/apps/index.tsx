@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button, Divider, Input } from "antd";
 import { Icons } from "../../components/icons";
 import { queryAppsApi } from "../../shared/http/apps.js";
 import AppCard from "./components/appCard";
 import './index.scoped.scss'
 import { debounce } from "../../shared/utils/common";
+import EditModal from "../components/edit-modal";
 import { HashRouter, Route, useNavigate, Routes } from "react-router-dom";
 
 const Apps: React.FC = () => {
     const tenantId = "31f20efc7e0848deab6a6bc10fc3021e";
+    const navigate = useNavigate();
+
     // 数据初始化
     const [appData, setAppData] = useState([]);
     const [oriData, setOriData] = useState([]);
@@ -25,10 +28,25 @@ const Apps: React.FC = () => {
     }, []);
 
     // 创建
-    const navigate = useNavigate();
+    let modalRef:any = useRef();
+    const [modalInfo, setModalInfo] = useState({});
     const create = () => {
-      // navigate(`/app/${tenantId}/detail/${item.id}`);
+      setModalInfo(() => {
+        modalRef.current.showModal();
+        return {
+          name: "",
+          attributes: {
+            description: "",
+            greeting: "",
+            icon: "",
+            app_type: "编程开发",
+          },
+        };
+      });
     };
+    function addAippCallBack(appId:string) {
+      navigate(`/app/${tenantId}/detail/${appId}`);
+    }
 
     // 搜索
     function onSearchValueChange(value: string) {
@@ -36,6 +54,8 @@ const Apps: React.FC = () => {
       setAppData(arr);
     }
     const handleSearch = debounce(onSearchValueChange, 500);
+
+    // 点击卡片
     function clickCard(item:any){
       navigate(`/app/${tenantId}/appDetail/${item.id}`);
     }
@@ -69,6 +89,12 @@ const Apps: React.FC = () => {
             <div>暂无数据</div>
           )}
         </div>
+        <EditModal
+          type="add"
+          modalRef={modalRef}
+          aippInfo={modalInfo}
+          addAippCallBack={addAippCallBack}
+        />
       </div>
     );
 };
