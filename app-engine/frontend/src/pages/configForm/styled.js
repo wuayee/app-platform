@@ -5,12 +5,13 @@ export const ConfigFormWrap = styled.div`
   border-right: 1px solid #e4e4e7;
   width: 35%;
   .config-form {
-    height: 100%;
+    max-height: 100%;
     overflow: auto;
     width: 100%;
     background-color: #ffffff;
     box-sizing: border-box;
     padding: 15px 25px;
+    border-top-left-radius: 8px;
     .config-title {
       display: flex;
       justify-content: space-between;

@@ -2,10 +2,11 @@
   width: 100%;
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  background-image: url('../../../assets/images/bg.png');
+  background-image: url('../../../assets/images/bg3.png');
   margin: 0 auto;
   overflow: hidden;
   position: relative;
+  border-top-right-radius: 8px;
 
   .chat-preview-title {
     font-weight: 700;
@@ -22,7 +23,7 @@
 }
 
 .chat-preview-inner {
-  background-image: unset;
+  //background-image: unset;
 }
 
 .chat-inner {
@@ -206,7 +207,7 @@
   .send-editor-container,
   .message-check-toolbox-wrap,
   .message-box {
-    width: calc(100% - 460px);
+    width: calc(100% - 360px);
     max-width: 1400px;
   }
 
