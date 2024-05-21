@@ -1,13 +1,17 @@
-import type { MenuProps } from 'antd';
-import { ReactElement } from 'react';
-import { Icons } from '../components/icons/index';
-import KnowledgeBase from '../pages/knowledge-base';
-import KnowledgeBaseCreate from '../pages/knowledge-base/create';
-import KnowledgeBaseDetail from '../pages/knowledge-base/knowledge-detail';
-import Demo from '../pages/demo';
-import AppDetail from '../pages/appDetail';
-import AippIndex from '../pages/aippIndex';
-import AddFlow from '../pages/addFlow';
+import type { MenuProps } from "antd";
+import { ReactElement } from "react";
+import { Icons } from "../components/icons/index";
+import KnowledgeBase from "../pages/knowledge-base";
+import KnowledgeBaseCreate from "../pages/knowledge-base/create";
+import KnowledgeBaseDetail from "../pages/knowledge-base/knowledge-detail";
+import Demo from "../pages/demo";
+import ChatRunning from "../pages/chatEngineHome/index.jsx";
+import AppDetail from "../pages/appDetail";
+import AippIndex from "../pages/aippIndex";
+import AddFlow from "../pages/addFlow";
+import FlowDetail from "../pages/detailFlow";
+import ChatShare from "../pages/chatShare";
+import Apps from "../pages/apps";
 import KnowledgeBaseDetailCreateTable from "../pages/knowledge-base/knowledge-detail/create-table";
 import KnowledgeBaseDetailImportData from "../pages/knowledge-base/knowledge-detail/import-data";
 
@@ -31,7 +35,48 @@ export const routeList: MenuItem[] = [
   {
     key: '/robot-market',
     icon: Icons.app({}),
-    label: '机器人市场',
+    label: "插件市场",
+  },
+  {
+    key: "/app",
+    icon: Icons.app({}),
+    label: "应用",
+    component: Apps,
+    children: [
+      {
+        key: "/app/:tenantId/detail/:appId",
+        icon: Icons.app({}),
+        label: "app编排",
+        component: AippIndex,
+        hidden: true,
+      },
+      {
+        key: "/app/:tenantId/addFlow/:appId",
+        icon: Icons.app({}),
+        label: "新增工具流",
+        component: AddFlow,
+        hidden: true,
+      },
+      {
+        key: "/app/:tenantId/flowDetail/:appId",
+        icon: Icons.app({}),
+        label: "工具流",
+        component: FlowDetail,
+        hidden: true,
+      },
+      {
+        key: "/app/:tenantId/appDetail/:appId",
+        icon: Icons.app({}),
+        label: "",
+        component: AppDetail,
+        hidden: true,
+      }
+    ],
+  },
+  {
+    key: "/mode",
+    icon: Icons.app({}),
+    label: "模型",
     component: Demo,
   },
   {
@@ -67,42 +112,20 @@ export const routeList: MenuItem[] = [
         hidden: true,
         children: [
           {
-            key: '/knowledge-base/knowledge-detail/create-table',
+            key: "/knowledge-base/knowledge-detail/create-table",
             icon: Icons.app({}),
-            label: '添加知识表',
+            label: "添加知识表",
             component: KnowledgeBaseDetailCreateTable,
             hidden: true,
           },
           {
-            key: '/knowledge-base/knowledge-detail/import-data',
+            key: "/knowledge-base/knowledge-detail/import-data",
             icon: Icons.app({}),
-            label: '导入数据',
+            label: "导入数据",
             component: KnowledgeBaseDetailImportData,
             hidden: true,
           },
-        ],
-      },
-    ],
-  },
-  {
-    key: '/app',
-    icon: Icons.app({}),
-    label: '应用',
-    component: Demo,
-    children: [
-      {
-        key: '/app/:tenantId/detail/:appId',
-        icon: Icons.app({}),
-        label: 'app编排',
-        component: AippIndex,
-        hidden: true,
-      },
-      {
-        key: '/app/:tenantId/addFlow/:appId',
-        icon: Icons.app({}),
-        label: '新增工具流',
-        component: AddFlow,
-        hidden: true,
+        ]
       },
     ],
   },
@@ -117,10 +140,6 @@ export const routeList: MenuItem[] = [
     icon: Icons.app({}),
     label: '团队',
     component: Demo,
-  },
-  {
-    key: '/app-detail',
-    component: AppDetail,
   },
 ];
 

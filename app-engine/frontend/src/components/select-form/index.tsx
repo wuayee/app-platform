@@ -1,8 +1,9 @@
 import { FormInstance, Progress } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { SelectDataSource } from './select-data-source';
+import SelectDataSource from './select-data-source';
 import TableConfig from './table-config';
 import Preview from './preview';
+import { TextSplitClear } from './text-split-clear';
 
 interface inputProps {
   currentSteps: number;
@@ -21,7 +22,7 @@ const SelectForm = ({ currentSteps, type, formDataSource, formStepSecond }: inpu
   return (
     <>
       {currentSteps === 0 && <SelectDataSource type={type} form={formDataSource} />}
-      {currentSteps === 1 && <TableConfig />}
+      {currentSteps === 1 && (type === 'text' ? <TextSplitClear form={formStepSecond} /> : 1111)}
       {currentSteps === 2 && <Preview />}
       {currentSteps === 3 && <Progress percent={30} />}
     </>

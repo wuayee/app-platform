@@ -59,72 +59,65 @@ export default function SkillForm({toolOptions, workflowOptions, config}) {
                     }
                     className="jade-panel"
                 >
-                    <Form
-                        name={`skillForm-${shape.id}`}
-                        layout="vertical" // 设置全局的垂直布局
-                        className={"jade-form"}
-                    >
-                        <Row gutter={16} style={{marginBottom: "6px", marginRight: 0, marginLeft: "-3%"}}>
-                            <Col span={21}>
-                                <span className="jade-font-size jade-font-color" style={{marginLeft: "6px"}}>工具</span>
-                            </Col>
-                            {/*430演示工具不需要+号跳转，暂时屏蔽*/}
-                            {/*<Col span={3}>*/}
-                            {/*    <Button type="text" className="icon-button"*/}
-                            {/*            style={{height: "22px", marginLeft: "4px"}}*/}
-                            {/*            onClick={(event) => {*/}
-                            {/*                // Todo 打开一个页面*/}
-                            {/*                handleClick(event);*/}
-                            {/*            }}>*/}
-                            {/*        <PlusOutlined/>*/}
-                            {/*    </Button>*/}
-                            {/*</Col>*/}
-                        </Row>
-                        <Form.Item>
-                            <JadeStopPropagationSelect
-                                mode="multiple"
-                                showSearch
-                                allowClear
-                                className="jade-select"
-                                placeholder="选择合适的工具"
-                                filterOption={filterOption}
-                                optionFilterProp="label"
-                                value={tool.value}
-                                onMouseDown={(e) => e.stopPropagation()}
-                                onChange={(e) => handleSkillChange(tool.id, e)}
-                                options={toolOptions}
-                            />
-                        </Form.Item>
-                        <Row gutter={16} style={{marginBottom: "6px", marginRight: 0, marginLeft: "-3%"}}>
-                            <Col span={22}>
-                                <span className="jade-font-size jade-font-color" style={{marginLeft: "6px"}}>工具流</span>
-                            </Col>
-                            <Col span={2} style={{paddingLeft: "3%"}}>
-                                <Button type="text" className="icon-button"
-                                        style={{height: "22px"}}
-                                        onClick={(event) => {
-                                            handleClick(event);
-                                        }}>
-                                    <PlusOutlined/>
-                                </Button>
-                            </Col>
-                        </Row>
+                    <Row gutter={16} style={{marginBottom: "6px", marginRight: 0, marginLeft: "-3%"}}>
+                        <Col span={21}>
+                            <span className="jade-font-size jade-font-color" style={{marginLeft: "6px"}}>工具</span>
+                        </Col>
+                        {/*430演示工具不需要+号跳转，暂时屏蔽*/}
+                        {/*<Col span={3}>*/}
+                        {/*    <Button type="text" className="icon-button"*/}
+                        {/*            style={{height: "22px", marginLeft: "4px"}}*/}
+                        {/*            onClick={(event) => {*/}
+                        {/*                handleClick(event);*/}
+                        {/*            }}>*/}
+                        {/*        <PlusOutlined/>*/}
+                        {/*    </Button>*/}
+                        {/*</Col>*/}
+                    </Row>
+                    <Form.Item>
+                        <JadeStopPropagationSelect
+                            mode="multiple"
+                            showSearch
+                            allowClear
+                            className="jade-select"
+                            placeholder="选择合适的工具"
+                            filterOption={filterOption}
+                            optionFilterProp="label"
+                            value={tool.value}
+                            onMouseDown={(e) => e.stopPropagation()}
+                            onChange={(e) => handleSkillChange(tool.id, e)}
+                            options={toolOptions}
+                        />
+                    </Form.Item>
+                    <Row gutter={16} style={{marginBottom: "6px", marginRight: 0, marginLeft: "-3%"}}>
+                        <Col span={22}>
+                            <span className="jade-font-size jade-font-color" style={{marginLeft: "6px"}}>工具流</span>
+                        </Col>
+                        <Col span={2} style={{paddingLeft: "3%"}}>
+                            <Button type="text" className="icon-button"
+                                    style={{height: "22px"}}
+                                    onClick={(event) => {
+                                        handleClick(event);
+                                    }}>
+                                <PlusOutlined/>
+                            </Button>
+                        </Col>
+                    </Row>
 
-                        <Form.Item>
-                            <JadeStopPropagationSelect
-                                mode="multiple"
-                                showSearch
-                                allowClear
-                                className="jade-select"
-                                placeholder="选择合适的工具流"
-                                filterOption={filterOption}
-                                optionFilterProp="label"
-                                value={workflow.value}
-                                onChange={(e) => handleSkillChange(workflow.id, e)}
-                                options={workflowOptions}
-                            />
-                        </Form.Item>
-                    </Form>
+                    <Form.Item>
+                        <JadeStopPropagationSelect
+                            mode="multiple"
+                            showSearch
+                            allowClear
+                            className="jade-select"
+                            placeholder="选择合适的工具流"
+                            filterOption={filterOption}
+                            optionFilterProp="label"
+                            value={workflow.value}
+                            onChange={(e) => handleSkillChange(workflow.id, e)}
+                            options={workflowOptions}
+                        />
+                    </Form.Item>
                 </Panel>
             }
         </Collapse>

@@ -1,17 +1,20 @@
 import { Button, Divider, Flex, Input, Switch, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import './style.scoped.scss';
-import { queryAppDetail } from '../../../shared/http/app';
+import { getAippInfo } from '../../../shared/http/aipp';
 import { Message } from '../../../shared/utils/message';
+import { useNavigate, useParams } from 'react-router';
+import { AppIcons } from '../../../components/icons/app';
 
 const AppOverview: React.FC = () => {
 
+  const navigate = useNavigate();
+  const { appId, tenantId } = useParams();
   const [detail, setDetail] = useState({});
-  const appId = '9455a208e1564cb592f084b851fa46d2';
   const [appIcon, setAppIcon] = useState('/src/assets/svg/app-default.svg');
 
   useEffect(() => {
-    queryAppDetail(appId).then(res => {
+    getAippInfo(tenantId, appId).then(res => {
       if (res.code === 0) {
         setDetail({ ...res.data });
         if (res.data?.attributes?.icon) {
@@ -23,6 +26,10 @@ const AppOverview: React.FC = () => {
     });
   }, [])
 
+  const gotoArrange = () => {
+    navigate(`/app/${tenantId}/detail/${appId}`)
+  }
+
   return (
     <div className='tab-content'>
       <Flex vertical gap={20}>
@@ -30,11 +37,11 @@ const AppOverview: React.FC = () => {
           <Flex gap='middle'>
             <img width={100} height={100} src={appIcon} />
             <Flex vertical gap='middle'>
-              <h3>{detail?.name}</h3>
+              <h3>{detail?.name || 'Test AppName'}</h3>
               <Flex gap={20}>
                 <Flex gap='small' align='center'>
                   <img width={16} height={16} src='/src/assets/images/avatar-default.png' />
-                  <span>{detail?.createBy}</span>
+                  <span>{detail?.createBy || 'Admin'}</span>
                 </Flex>
                 <Flex gap='small'>
                   <span>发布于</span>
@@ -42,16 +49,16 @@ const AppOverview: React.FC = () => {
                 </Flex>
               </Flex>
               <Flex gap={20}>
-                <Flex gap={4}>
-                  <img src='/src/assets/svg/user.svg' />
+                <Flex gap={4} align='center'>
+                  <AppIcons.UserIcon />
                   <span>2.36k</span>
                 </Flex>
-                <Flex gap={4}>
-                  <img src='/src/assets/svg/star.svg' />
+                <Flex gap={4} align='center'>
+                  <AppIcons.StarIcon />
                   <span>123</span>
                 </Flex>
-                <Flex gap={4}>
-                  <img src='/src/assets/svg/like.svg' />
+                <Flex gap={4} align='center'>
+                  <AppIcons.AppLikeIcon />
                   <span>123</span>
                 </Flex>
               </Flex>
@@ -62,12 +69,12 @@ const AppOverview: React.FC = () => {
               <span className='font-size-24'>4</span>
               <span>知识库</span>
             </Flex>
-            <Divider type='vertical' style={{ backgroundColor: '#D7D8DA' }} />
+            <Divider type='vertical' style={{ backgroundColor: '#D7D8DA', height: '60px' }} />
             <Flex vertical align={'center'}>
               <span className='font-size-24'>2</span>
               <span>插件</span>
             </Flex>
-            <Divider type='vertical' />
+            <Divider type='vertical' style={{ backgroundColor: '#D7D8DA', height: '60px' }} />
             <Flex vertical align={'center'}>
               <span className='font-size-24'>5</span>
               <span>创意灵感</span>
@@ -75,9 +82,9 @@ const AppOverview: React.FC = () => {
           </Flex>
         </Flex>
         <div>
-          {detail?.attributes?.description}
+          {detail?.attributes?.description || 'Test Desc'}
         </div>
-        <Button type='primary' style={{
+        <Button type='primary' onClick={gotoArrange} style={{
           width: '96px',
           height: '32px',
         }}>去编排</Button>
@@ -88,7 +95,7 @@ const AppOverview: React.FC = () => {
               <span>对话开场白</span>
             </Flex>
             <Flex vertical gap={20}>
-              <span>{detail?.attributes?.greeting}</span>
+              <span>{detail?.attributes?.greeting || 'Test Greeting'}</span>
             </Flex>
           </Flex>
         </div>
@@ -117,8 +124,8 @@ const AppOverview: React.FC = () => {
               </Flex>
               <Input placeholder='https://octo-cd.hdesign.huawei.com/app/editor/UcmfDrFl0JHBFRBeGgfj2Q?' />
               <Flex gap='small'>
-                <Button type='primary' size='small'><Flex align={'center'}><img src='/src/assets/svg/preview.svg' />预览</Flex></Button>
-                <Button size='small'><Flex align={'center'}><img src='/src/assets/svg/flip.svg' />自动生成</Flex></Button>
+                <Button type='primary' size='small'><Flex align={'center'}><AppIcons.PreviewIcon />预览</Flex></Button>
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button>
               </Flex>
             </Flex>
           </div>
@@ -148,9 +155,9 @@ const AppOverview: React.FC = () => {
               </Flex>
               <Input placeholder='https://octo-cd.hdesign.huawei.com/app/editor/UcmfDrFl0JHBFRBeGgfj2Q?' />
               <Flex gap='small'>
-                <Button size='small'><Flex align={'center'}><img src='/src/assets/svg/flip.svg' />API秘钥</Flex></Button>
-                <Button size='small'><Flex align={'center'}><img src='/src/assets/svg/flip.svg' />查阅API文档</Flex></Button>
-                <Button size='small'><Flex align={'center'}><img src='/src/assets/svg/flip.svg' />自动生成</Flex></Button>
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />API秘钥</Flex></Button>
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />查阅API文档</Flex></Button>
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button>
               </Flex>
             </Flex>
           </div>

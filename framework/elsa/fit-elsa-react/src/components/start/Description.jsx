@@ -27,12 +27,11 @@ export default function Description({itemId, propValue, disableModifiable, onCha
         initialValue={propValue}
     >
         <TextArea
-            className="jade-input"
+            className="jade-textarea-input jade-font-size"
             value={propValue}
             disabled={disableModifiable}
             onChange={e => onChange("description", e.target.value)} // 当文本输入框的值发生变化时调用父组件传递的回调函数
             placeholder="请输入字段描述"
-            autoSize={{minRows: 4, maxRows: 4}} // 设置最小和最大行数，当内容小于或大于行数时，文本框大小不会变化
         />
     </Form.Item>);
 }

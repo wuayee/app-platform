@@ -227,4 +227,4 @@ const SelectDataSource = ({ type, form }: props) => {
   );
 };
 
-export { SelectDataSource };
+export default SelectDataSource;
