@@ -50,12 +50,12 @@ export const columns: TableProps<DataType>['columns'] = [
     dataIndex: 'operator',
     key: 'operator',
     width: 200,
-    render(value, record, index) {
+    render(_, record, index) {
       return (
       <>
         <div>
-          <Button type="link">修改</Button>
-          <Button type="link">删除</Button>
+          <Button type="link" size="small">修改</Button>
+          <Button type="link" size="small">删除</Button>
         </div>
       </>)
     },

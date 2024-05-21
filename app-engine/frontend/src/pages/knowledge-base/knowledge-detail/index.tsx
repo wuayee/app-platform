@@ -54,7 +54,7 @@ const KnowledgeBaseDetail = () => {
 
   // 新增
   const onAdd = () => {
-
+    navigate(`/knowledge-base/knowledge-detail/create-table?id=${id}`)
   }
 
   // 分页变化

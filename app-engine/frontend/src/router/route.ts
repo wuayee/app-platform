@@ -1,19 +1,17 @@
-import type { MenuProps } from "antd";
-import { ReactElement } from "react";
-import { Icons } from "../components/icons/index";
-import KnowledgeBase from "../pages/knowledge-base";
-import KnowledgeBaseCreate from "../pages/knowledge-base/create";
-import Home from "../pages/home";
-import KnowledgeBaseDetail from "../pages/knowledge-base/knowledge-detail";
-import Demo from "../pages/demo";
-import ChatRunning from "../pages/chatEngineHome/index.jsx";
-import AppDetail from "../pages/appDetail";
-import AippIndex from "../pages/aippIndex";
-import AddFlow from "../pages/addFlow";
-import FlowDetail from "../pages/detailFlow";
-import ChatShare from "../pages/chatShare";
+import type { MenuProps } from 'antd';
+import { ReactElement } from 'react';
+import { Icons } from '../components/icons/index';
+import KnowledgeBase from '../pages/knowledge-base';
+import KnowledgeBaseCreate from '../pages/knowledge-base/create';
+import KnowledgeBaseDetail from '../pages/knowledge-base/knowledge-detail';
+import Demo from '../pages/demo';
+import AppDetail from '../pages/appDetail';
+import AippIndex from '../pages/aippIndex';
+import AddFlow from '../pages/addFlow';
+import KnowledgeBaseDetailCreateTable from "../pages/knowledge-base/knowledge-detail/create-table";
+import KnowledgeBaseDetailImportData from "../pages/knowledge-base/knowledge-detail/import-data";
 
-export type MenuItem = Required<MenuProps>["items"][number] & {
+export type MenuItem = Required<MenuProps>['items'][number] & {
   component?: (() => ReactElement) | React.FC<any>;
   children?: MenuItem[] | null;
   label: string;
@@ -25,103 +23,103 @@ export type MenuItem = Required<MenuProps>["items"][number] & {
 // key为页面链接不允许相同, 需要子数组就增加children数组, 设置hidden则不显示在菜单上
 export const routeList: MenuItem[] = [
   {
-    key: "/home",
+    key: '/home',
     icon: Icons.home({}),
-    label: "首页",
-    component: ChatRunning,
-    children: [
-      {
-        key: "/:tenantId/chatShare/:appId/:shareId",
-        icon: Icons.app({}),
-        label: "分享对话",
-        component: ChatShare,
-        hidden: true,
-      },
-    ],
-  },
-  {
-    key: "/robot-market",
-    icon: Icons.app({}),
-    label: "机器人市场",
+    label: '首页',
     component: Demo,
   },
   {
-    key: "/plugin-market",
+    key: '/robot-market',
     icon: Icons.app({}),
-    label: "插件市场",
-  },
-  {
-    key: "/app",
-    icon: Icons.app({}),
-    label: "应用",
-    component: Demo,
-    children: [
-      {
-        key: "/app/:tenantId/detail/:appId",
-        icon: Icons.app({}),
-        label: "app编排",
-        component: AippIndex,
-        hidden: true,
-      },
-      {
-        key: "/app/:tenantId/addFlow/:appId",
-        icon: Icons.app({}),
-        label: "新增工具流",
-        component: AddFlow,
-        hidden: true,
-      },
-      {
-        key: "/app/:tenantId/flowDetail/:appId",
-        icon: Icons.app({}),
-        label: "工具流",
-        component: FlowDetail,
-        hidden: true,
-      },
-    ],
-  },
-  {
-    key: "/mode",
-    icon: Icons.app({}),
-    label: "模型",
+    label: '机器人市场',
     component: Demo,
   },
   {
-    key: "/knowledge-base",
+    key: '/plugin-market',
     icon: Icons.app({}),
-    label: "知识库",
-    title: "知识库概览",
+    label: '插件市场',
+  },
+  {
+    key: '/mode',
+    icon: Icons.app({}),
+    label: '模型',
+    component: Demo,
+  },
+  {
+    key: '/knowledge-base',
+    icon: Icons.app({}),
+    label: '知识库',
+    title: '知识库概览',
     component: KnowledgeBase,
     children: [
       {
-        key: "/knowledge-base/create",
+        key: '/knowledge-base/create',
         icon: Icons.app({}),
-        label: "创建知识库",
+        label: '创建知识库',
         component: KnowledgeBaseCreate,
         hidden: true,
       },
       {
-        key: "/knowledge-base/knowledge-detail",
+        key: '/knowledge-base/knowledge-detail',
         icon: Icons.app({}),
-        label: "小魔方知识库",
+        label: '小魔方知识库',
         component: KnowledgeBaseDetail,
+        hidden: true,
+        children: [
+          {
+            key: '/knowledge-base/knowledge-detail/create-table',
+            icon: Icons.app({}),
+            label: '添加知识表',
+            component: KnowledgeBaseDetailCreateTable,
+            hidden: true,
+          },
+          {
+            key: '/knowledge-base/knowledge-detail/import-data',
+            icon: Icons.app({}),
+            label: '导入数据',
+            component: KnowledgeBaseDetailImportData,
+            hidden: true,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    key: '/app',
+    icon: Icons.app({}),
+    label: '应用',
+    component: Demo,
+    children: [
+      {
+        key: '/app/:tenantId/detail/:appId',
+        icon: Icons.app({}),
+        label: 'app编排',
+        component: AippIndex,
+        hidden: true,
+      },
+      {
+        key: '/app/:tenantId/addFlow/:appId',
+        icon: Icons.app({}),
+        label: '新增工具流',
+        component: AddFlow,
         hidden: true,
       },
     ],
   },
   {
-    key: "/plugin",
+    key: '/plugin',
     icon: Icons.app({}),
-    label: "插件",
+    label: '插件',
     component: Demo,
   },
   {
-    key: "/group",
+    key: '/group',
     icon: Icons.app({}),
-    label: "团队",
+    label: '团队',
     component: Demo,
   },
   {
-    key: "/app-detail",
+    key: '/app-detail',
     component: AppDetail,
   },
 ];
@@ -161,9 +159,6 @@ export const flattenRoute = (routeList: MenuItem[]): MenuItem[] => {
 };
 
 // 根据key值返回路由, 传入展平的数组
-export const getRouteByKey = (
-  routeList: MenuItem[],
-  key: string
-): MenuItem | null => {
+export const getRouteByKey = (routeList: MenuItem[], key: string): MenuItem | null => {
   return routeList.find((item) => item.key === key) || null;
 };
