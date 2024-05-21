@@ -14,7 +14,7 @@ export const startComponent = (jadeConfig) => {
                 name: "input",
                 type: "Object",
                 from: "Expand",
-                value: [{id: "input_" + uuidv4(), name: "Question", type: "String", from: "Input", description: "", value: ""}]
+                value: [{id: "input_" + uuidv4(), name: "Question", type: "String", from: "Input", description: "这是用户输入的问题", value: "", disableModifiable: true}]
             },
             {
                 id: uuidv4(),
@@ -53,7 +53,7 @@ export const startComponent = (jadeConfig) => {
             return data.map(item => {
                 if (item.name === "input") {
                     return {
-                        ...item, value: [...item.value, {id: action.id, name: "", type: "string", from: "init", description: "", value: ""}]
+                        ...item, value: [...item.value, {id: action.id, name: "", type: "String", from: "Input", description: "", value: "", disableModifiable: false}]
                     }
                 } else {
                     return item;

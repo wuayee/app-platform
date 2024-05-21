@@ -5,16 +5,17 @@
 package com.huawei.jade.fel.engine.flows;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
+import com.huawei.fit.waterflow.domain.emitters.Emitter;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.core.memory.Memory;
-import com.huawei.jade.fel.engine.util.SessionUtils;
+import com.huawei.jade.fel.engine.operators.models.ChatChunk;
+import com.huawei.jade.fel.engine.operators.models.StreamingConsumer;
 import com.huawei.jade.fel.engine.util.StateKey;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -58,7 +59,7 @@ public class Conversation<D, R> {
     @SafeVarargs
     public final ConverseLatch<R> offer(D... data) {
         ConverseLatch<R> latch = setListener();
-        FlowSession newSession = SessionUtils.copyFlowSession(this.session);
+        FlowSession newSession = new FlowSession(this.session);
         this.flow.start().offer(data, newSession);
         return latch;
     }
@@ -74,18 +75,27 @@ public class Conversation<D, R> {
      */
     public ConverseLatch<R> offer(String nodeId, List<?> data) {
         Validation.notBlank(nodeId, "invalid nodeId.");
-
         ConverseLatch<R> latch = setListener();
-        FlowSession newSession = SessionUtils.copyFlowSession(this.session);
+        FlowSession newSession = new FlowSession(this.session);
         this.flow.origin().offer(nodeId, data.toArray(new Object[0]), newSession);
         return latch;
+    }
+
+    /**
+     * 订阅一个发射源
+     *
+     * @param emitter 发射源
+     */
+    public void offer(Emitter<D, FlowSession> emitter) {
+        setListener();
+        this.flow.offer(emitter);
     }
 
     /**
      * 绑定大模型超参数到对话上下文，用于流程后续的大模型节点。
      *
      * @param options 表示大模型超参数的 {@link ChatOptions}。
-     * @return 表示绑定完大模型超参数的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
+     * @return 表示绑定了大模型超参数的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
      * @throws IllegalArgumentException 当 {@code options} 为 {@code null} 时。
      */
     public Conversation<D, R> bind(ChatOptions options) {
@@ -98,10 +108,25 @@ public class Conversation<D, R> {
      * 绑定历史记录句柄到对话上下文，只有绑定了历史记录句柄，该对话才会保存历史记录。
      *
      * @param memory 表示历史记录句柄的 {@link Memory}。
-     * @return 表示绑定完历史记录句柄的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
+     * @return 表示绑定了历史记录句柄的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
+     * @throws IllegalArgumentException 当 {@code memory} 为 {@code null} 时。
      */
     public Conversation<D, R> bind(Memory memory) {
-        Optional.ofNullable(memory).ifPresent(obj -> this.session.setInnerState(StateKey.HISTORY_OBJ, obj));
+        Validation.notNull(memory, "Memory cannot be null.");
+        this.session.setInnerState(StateKey.HISTORY_OBJ, memory);
+        return this;
+    }
+
+    /**
+     * 绑定流式响应信息消费者到对话上下文，用于消费流程流转过程中的流式信息。
+     *
+     * @param consumer 表示流式响应信息消费者的 {@link StreamingConsumer}。
+     * @return 表示绑定了流式响应信息消费者的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
+     * @throws IllegalArgumentException 当 {@code consumer} 为 {@code null} 时。
+     */
+    public Conversation<D, R> bind(StreamingConsumer<ChatChunk, ChatChunk> consumer) {
+        Validation.notNull(consumer, "Streaming consumer cannot be null.");
+        this.session.setInnerState(StateKey.STREAMING_CONSUMER, consumer);
         return this;
     }
 
@@ -116,12 +141,25 @@ public class Conversation<D, R> {
      *
      * @param key 表示自定义键的 {@link String}。
      * @param value 表示自定义值的 {@link Object}。
-     * @return 表示绑定完自定义参数的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
+     * @return 表示绑定了自定义参数的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
      */
     public Conversation<D, R> bind(String key, Object value) {
         if (value != null) {
             this.session.setState(key, value);
         }
+        return this;
+    }
+
+    /**
+     * 绑定自定义参数到对话上下文。用途与 {@link Conversation#bind(String, Object)} 一致。
+     *
+     * @param ctx 表示自定义键值对的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     * @return 表示绑定了自定义参数的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
+     * @throws IllegalArgumentException 当 {@code ctx} 为 {@code null} 时。
+     */
+    public Conversation<D, R> bind(Map<String, Object> ctx) {
+        Validation.notNull(ctx, "Context map cannot be null.");
+        ctx.forEach(this::bind);
         return this;
     }
 
@@ -179,7 +217,7 @@ public class Conversation<D, R> {
     }
 
     private FlowSession setSubConverseListener(FlowSession session) {
-        FlowSession flowSession = SessionUtils.copyFlowSession(session);
+        FlowSession flowSession = new FlowSession(session);
         if (flowSession.getInnerState(StateKey.CONVERSE_LISTENER) == null) {
             this.setConverseListener(flowSession);
         }

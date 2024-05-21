@@ -17,7 +17,11 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.dynamicform.DynamicFormService;
 import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
+import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
+import com.huawei.fit.jane.meta.multiversion.MetaService;
+import com.huawei.fit.jane.meta.multiversion.definition.Meta;
+import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;
@@ -48,7 +52,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +71,8 @@ public class AippLogServiceTest {
     private static final String DUMMY_VERSION = "1.0.0";
     private static final String DUMMY_LOG_MSG = "some random log message";
     private static final String DUMMY_W3ACCOUNT = "z00000001";
+    private static final String DUMMY_META_VERSION_NEW = "1.0.1";
+
     @InjectMocks
     private AippLogServiceImpl aippLogService;
     @Mock
@@ -77,9 +82,9 @@ public class AippLogServiceTest {
     @Mock
     private MetaInstanceService metaInstanceServiceMock;
     @Mock
-    private DistributedMapService mapServiceMock;
-    @Mock
     private UploadedFileManageService uploadedFileManageServiceMock;
+    @Mock
+    private MetaService metaServiceMock;
 
     private AtomicLong logId;
     private Function<AippInstLogType, AippInstLog> generateAippInstLogFunc;
@@ -134,6 +139,19 @@ public class AippLogServiceTest {
         };
     }
 
+    private void mockMta() {
+        Meta expectMeta = GenerateInactiveMeta();
+        when(this.metaServiceMock.list(any(MetaFilter.class),
+                eq(false),
+                eq(0L),
+                eq(10),
+                any(OperationContext.class),
+                any(MetaFilter.class))).thenReturn(RangedResultSet.create(Collections.singletonList(expectMeta),
+                0L,
+                10,
+                1L));
+    }
+
     @Test
     void shouldInsertIntoDbWhenCallInsertLog() {
         AippLogCreateDto dummyCreateDto = AippLogCreateDto.builder()
@@ -153,15 +171,17 @@ public class AippLogServiceTest {
     void shouldDeleteWhenCallDeleteLogWithLastNotRunning() {
         final String dummyAippInstanceStatus = MetaInstStatusEnum.ARCHIVED.name();
         final String dummyInstId = DUMMY_LOG_MSG;
+        this.mockMta();
         RangedResultSet<Instance> metaInstanceResult = new RangedResultSet<>();
         metaInstanceResult.setRange(new RangeResult(0, 1, 1));
         metaInstanceResult.setResults(Collections.singletonList(new Instance(dummyInstId,
                 Collections.singletonMap(AippConst.INST_STATUS_KEY, dummyAippInstanceStatus),
                 null)));
-        when(aippLogMapperMock.selectNormalInstanceIdOrderByTimeDesc(eq(DUMMY_ID),
-                eq(DUMMY_AIPP_TYPE),
+        when(this.aippLogMapperMock.selectNormalInstanceIdOrderByTimeDesc(eq(Collections.singletonList(DUMMY_ID)),
+                eq(AippTypeEnum.getType(DUMMY_AIPP_TYPE).type()),
                 eq(OperationContextDummy.DUMMY_W3_ACCOUNT))).thenReturn(Collections.singletonList(dummyInstId));
-        when(metaInstanceServiceMock.list(eq(DUMMY_ID),
+        when(this.metaInstanceServiceMock.getMetaVersionId(any())).thenReturn(DUMMY_ID);
+        when(this.metaInstanceServiceMock.list(eq(DUMMY_ID),
                 argThat(filter -> filter.getIds().size() == 1 && filter.getIds().get(0).equals(dummyInstId)),
                 eq(0L),
                 eq(1),
@@ -170,25 +190,44 @@ public class AippLogServiceTest {
         verify(aippLogMapperMock, times(1)).selectNormalInstanceIdOrderByTimeDesc(any(), any(), any());
         verify(metaInstanceServiceMock, times(1)).list(any(), any(), anyLong(), anyInt(), any());
         verify(uploadedFileManageServiceMock, times(1)).cleanAippFiles(any(), any());
-        verify(aippLogMapperMock, times(1)).delete(eq(DUMMY_ID),
-                eq(AippTypeEnum.NORMAL.name()),
+        verify(aippLogMapperMock, times(1)).delete(eq(Collections.singletonList(DUMMY_ID)),
+                eq(AippTypeEnum.getType(AippTypeEnum.NORMAL.name()).type()),
                 eq(OperationContextDummy.DUMMY_W3_ACCOUNT),
                 isNull());
+    }
+
+    Meta GenerateInactiveMeta() {
+        LocalDateTime createTime = LocalDateTime.now();
+        LocalDateTime modifyTime = LocalDateTime.now();
+        Meta expectMeta = new Meta();
+        expectMeta.setName("testName");
+        expectMeta.setId(DUMMY_ID);
+        expectMeta.setVersion(DUMMY_META_VERSION_NEW);
+        expectMeta.setCreator("testUser");
+        expectMeta.setCreationTime(createTime);
+        expectMeta.setLastModificationTime(modifyTime);
+        Map<String, Object> attribute = new HashMap<>();
+        attribute.put(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.getType(DUMMY_AIPP_TYPE).type());
+        attribute.put(AippConst.ATTR_APP_ID_KEY, DUMMY_ID);
+        expectMeta.setAttributes(attribute);
+        return expectMeta;
     }
 
     @Test
     void shouldNotDeleteWhenCallDeleteLogWithLastRunning() {
         final String dummyAippInstanceStatus = MetaInstStatusEnum.RUNNING.name();
         final String dummyInstId = DUMMY_LOG_MSG;
+        this.mockMta();
         RangedResultSet<Instance> metaInstanceResult = new RangedResultSet<>();
         metaInstanceResult.setRange(new RangeResult(0, 1, 1));
         metaInstanceResult.setResults(Collections.singletonList(new Instance(dummyInstId,
                 Collections.singletonMap(AippConst.INST_STATUS_KEY, dummyAippInstanceStatus),
                 null)));
-        when(aippLogMapperMock.selectNormalInstanceIdOrderByTimeDesc(eq(DUMMY_ID),
-                eq(DUMMY_AIPP_TYPE),
+        when(this.aippLogMapperMock.selectNormalInstanceIdOrderByTimeDesc(eq(Collections.singletonList(DUMMY_ID)),
+                eq(AippTypeEnum.getType(DUMMY_AIPP_TYPE).type()),
                 eq(OperationContextDummy.DUMMY_W3_ACCOUNT))).thenReturn(Collections.singletonList(dummyInstId));
-        when(metaInstanceServiceMock.list(eq(DUMMY_ID),
+        when(this.metaInstanceServiceMock.getMetaVersionId(any())).thenReturn(DUMMY_ID);
+        when(this.metaInstanceServiceMock.list(eq(DUMMY_ID),
                 argThat(filter -> filter.getIds().size() == 1 && filter.getIds().get(0).equals(dummyInstId)),
                 eq(0L),
                 eq(1),
@@ -196,7 +235,7 @@ public class AippLogServiceTest {
         aippLogService.deleteAippInstLog(DUMMY_ID, DUMMY_AIPP_TYPE, OperationContextDummy.getDummy());
         verify(aippLogMapperMock, times(1)).selectNormalInstanceIdOrderByTimeDesc(any(), any(), any());
         verify(metaInstanceServiceMock, times(1)).list(any(), any(), anyLong(), anyInt(), any());
-        verify(aippLogMapperMock, times(1)).delete(eq(DUMMY_ID),
+        verify(aippLogMapperMock, times(1)).delete(eq(Collections.singletonList(DUMMY_ID)),
                 eq(AippTypeEnum.NORMAL.name()),
                 eq(OperationContextDummy.DUMMY_W3_ACCOUNT),
                 eq(dummyInstId));
@@ -205,8 +244,9 @@ public class AippLogServiceTest {
 
     @Test
     void shouldDoNothingWhenCallDeleteLogWithNoInstId() {
-        when(aippLogMapperMock.selectNormalInstanceIdOrderByTimeDesc(eq(DUMMY_ID),
-                eq(DUMMY_AIPP_TYPE),
+        this.mockMta();
+        when(aippLogMapperMock.selectNormalInstanceIdOrderByTimeDesc(eq(Collections.singletonList(DUMMY_ID)),
+                eq(AippTypeEnum.getType(DUMMY_AIPP_TYPE).type()),
                 eq(OperationContextDummy.DUMMY_W3_ACCOUNT))).thenReturn(Collections.emptyList());
         aippLogService.deleteAippInstLog(DUMMY_ID, DUMMY_AIPP_TYPE, OperationContextDummy.getDummy());
         verify(aippLogMapperMock, times(1)).selectNormalInstanceIdOrderByTimeDesc(any(), any(), any());
@@ -227,10 +267,14 @@ public class AippLogServiceTest {
                 && Objects.isNull(cond.getAfterAt())))).thenReturn(Stream.of(AippInstLogType.MSG,
                 AippInstLogType.FORM,
                 AippInstLogType.ERROR,
-                AippInstLogType.MSG).map(generateAippInstLogFunc).collect(Collectors.toList()));
+                AippInstLogType.MSG,
+                AippInstLogType.QUESTION,
+                AippInstLogType.HIDDEN_QUESTION,
+                AippInstLogType.HIDDEN_MSG,
+                AippInstLogType.FILE).map(generateAippInstLogFunc).collect(Collectors.toList()));
         String timeString = datetimeString.isEmpty() ? null : datetimeString;
         List<AippInstLog> result = aippLogService.queryInstanceLogSince(DUMMY_ID, timeString);
-        Assertions.assertEquals(3, result.size());
+        Assertions.assertEquals(5, result.size());
         List<Long> logIdSequence = result.stream().map(AippInstLog::getLogId).collect(Collectors.toList());
         Assertions.assertIterableEquals(logIdSequence.stream().sorted().collect(Collectors.toList()),
                 logIdSequence,
@@ -238,6 +282,8 @@ public class AippLogServiceTest {
         Assertions.assertEquals(AippInstLogType.MSG.name(), result.get(0).getLogType());
         Assertions.assertEquals(AippInstLogType.ERROR.name(), result.get(1).getLogType());
         Assertions.assertEquals(AippInstLogType.MSG.name(), result.get(2).getLogType());
+        Assertions.assertEquals(AippInstLogType.QUESTION.name(), result.get(3).getLogType());
+        Assertions.assertEquals(AippInstLogType.FILE.name(), result.get(4).getLogType());
     }
 
     @Test
@@ -333,16 +379,10 @@ public class AippLogServiceTest {
 
     @Test
     void shouldReturnEmptyListWhenQueryAippRecentInstLogWithDbReturnNull() {
-        when(aippLogMapperMock.selectRecentByAippId(eq(DUMMY_ID),
-                eq(DUMMY_AIPP_TYPE),
-                eq(OperationContextDummy.DUMMY_W3_ACCOUNT))).thenReturn(new ArrayList<>());
-
+        this.mockMta();
         Assertions.assertTrue(aippLogService.queryAippRecentInstLog(DUMMY_ID,
                 DUMMY_AIPP_TYPE,
                 OperationContextDummy.getDummy()).isEmpty());
-        verify(aippLogMapperMock, times(1)).selectRecentByAippId(eq(DUMMY_ID),
-                eq(DUMMY_AIPP_TYPE),
-                eq(OperationContextDummy.DUMMY_W3_ACCOUNT));
         verify(dynamicFormServiceMock, never()).queryFormDetailByPrimaryKey(any(), any(), any());
         verify(metaInstanceServiceMock, never()).list(any(), any(), anyLong(), anyInt(), any());
     }
@@ -378,10 +418,11 @@ public class AippLogServiceTest {
                 eq(0L),
                 eq(1),
                 argThat(OperationContextDummy::operationContextDummyMatcher))).thenReturn(metaInstanceResult);
-
-        List<AippInstLogDataDto> result = aippLogService.queryAippRecentInstLog(DUMMY_ID,
-                DUMMY_AIPP_TYPE,
-                OperationContextDummy.getDummy());
+        this.mockMta();
+        when(this.aippLogMapperMock.selectRecentInstanceIdByAippIds(any(), any(), anyInt(), any())).thenReturn(
+                dummyInstIdList);
+        List<AippInstLogDataDto> result =
+                aippLogService.queryAippRecentInstLog(DUMMY_ID, DUMMY_AIPP_TYPE, OperationContextDummy.getDummy());
         Assertions.assertEquals(instanceCount, result.size());
         Assertions.assertIterableEquals(dummyInstIdList,
                 result.stream().map(AippInstLogDataDto::getInstanceId).collect(Collectors.toList()));

@@ -73,7 +73,8 @@ public class CorsFilter implements HttpServerFilter {
             response.headers().add("Access-Control-Allow-Origin", allowOrigin);
             response.headers().add("Access-Control-Allow-Credentials", "true");
             response.headers().add("Access-Control-Allow-Methods", "PUT,GET,POST,DELETE,OPTIONS,PATCH");
-            response.headers().add("Access-Control-Allow-Headers", "content-type,attachment-filename");
+            response.headers()
+                    .add("Access-Control-Allow-Headers", "content-type,attachment-filename,filesize,filename");
         }
         // 允许Options请求直接返回，避免SSOFilter对Options请求进行处理随后发生401报错
         if (HttpRequestMethod.OPTIONS.equals(request.method())) {

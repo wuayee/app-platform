@@ -6,9 +6,10 @@
 #define DATABUS_RESOURCE_MANAGER_H
 
 #include <deque>
+#include <fstream>
+#include <memory>
 #include <unordered_map>
 #include <unordered_set>
-#include <memory>
 
 #include "ApplyPermissionResponse.h"
 #include "SharedMemoryInfo.h"
@@ -19,11 +20,13 @@
 namespace DataBus {
 namespace Resource {
 
+const std::string LOG_PATH = "./malloc_log.bin";
+
 class ResourceManager {
 public:
     static void Init();
     ResourceManager();
-    ~ResourceManager() = default;
+    ~ResourceManager();
     std::tuple<int32_t, Common::ErrorType> HandleApplyMemory(int32_t socketFd, const std::string& objectKey,
                                                              uint64_t memorySize);
     ApplyPermissionResponse HandleApplyPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
@@ -55,8 +58,8 @@ private:
     // 0666: 允许所有者、组成员和其他用户拥有读写权限。
     static constexpr int32_t SHARED_MEMORY_ACCESS_PERMISSION = 0666;
 
-    static bool RemoveDirectory(const std::string& directory);
-    static void CreateDirectory(const std::string& directory);
+    void AppendLog(int32_t sharedMemoryId, bool released);
+    static void CleanupMemory();
     static int32_t RecreateSharedMemoryBlock(key_t sharedMemoryKey, uint64_t memorySize);
     Common::ErrorType PreCheckPermissionCommon(DataBus::Common::PermissionType permissionType, int32_t sharedMemoryId);
     Common::ErrorType CheckApplyPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
@@ -74,6 +77,8 @@ private:
     int32_t IncrementWritingRefCnt(int32_t sharedMemoryId);
     int32_t DecrementWritingRefCnt(int32_t sharedMemoryId);
     void UpdateLastUsedTime(int32_t sharedMemoryId);
+
+    std::ofstream logStream_;
 
     std::unordered_map<int32_t, std::unique_ptr<SharedMemoryInfo>> sharedMemoryIdToInfo_; // 内存块信息记录
     std::unordered_map<int32_t, std::unordered_set<int32_t>> readingMemoryBlocks_; // 客户端正在读取的内存块

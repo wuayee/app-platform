@@ -68,4 +68,9 @@ public class AppBuilderFormPropertyRepositoryImpl implements AppBuilderFormPrope
         return CollectionUtils.isEmpty(ids) ? 0 : this.appBuilderFormPropertyMapper.deleteMore(ids);
     }
 
+    @Override
+    public void deleteByFormId(String formId) {
+        this.appBuilderFormPropertyMapper.deleteByFormId(formId);
+    }
+
 }

@@ -116,7 +116,7 @@ const ChatPreview = (props) => {
         let chatArr = [];
         res.data.forEach(item => {
           let questionObj = { type: 'send', sendType: 'text' };
-          let { msg } = JSON.parse(item.question.logData); 
+          let { msg } = JSON.parse(item.question.logData);
           questionObj.logId = item.question.logId;
           questionObj.content = msg;
           chatArr.push(questionObj);
@@ -145,7 +145,7 @@ const ChatPreview = (props) => {
                 if (msgObj.chartData && msgObj.chartType) {
                   answerObj.chartConfig = msgObj;
                 }
-              } 
+              }
               chatArr.push(answerObj);
             })
           } else {
@@ -441,7 +441,7 @@ const ChatPreview = (props) => {
           if (msgObj.chartData && msgObj.chartType) {
             initObj.chartConfig = msgObj;
           }
-        } 
+        }
         const idx = listRef.current.length - 1;
         listRef.current.splice(idx, 0, initObj);
         setChatList(() => {
@@ -460,7 +460,7 @@ const ChatPreview = (props) => {
       }
     } catch (e){
       return false
-    } 
+    }
     return false
   }
   // 清除历史对话记录
@@ -553,6 +553,9 @@ const ChatPreview = (props) => {
                 showCheck={showCheck}/>
               { showCheck ?
                 ( <CheckGroup
+                    appId={appId}
+                    tenantId={tenantId}
+                    chatList={chatList}
                     setEditorShow={setEditorShow}
                     checkedList={checkedList}
                     totalNum={chatList.length}

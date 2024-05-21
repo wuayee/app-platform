@@ -16,10 +16,11 @@ foreach (SCHEMA_FILE IN LISTS FLATBUFFERS_SCHEMA_FILES)
 endforeach ()
 
 set(DATABUS_STL ${CMAKE_CURRENT_SOURCE_DIR}/stl/BlockingQueue.h)
-set(DATABUS_UTIL ${CMAKE_CURRENT_SOURCE_DIR}/util/DataBusUtil.h)
+set(DATABUS_UTILS ${CMAKE_CURRENT_SOURCE_DIR}/utils/DataBusUtils.h)
+set(FILE_UTILS ${CMAKE_CURRENT_SOURCE_DIR}/utils/FileUtils.h)
 
 # auto generate headers on make stage. let databus_common depends on that
-add_custom_target(databus_common DEPENDS ${GENERATED_FILES} ${DATABUS_STL} ${DATABUS_UTIL})
+add_custom_target(databus_common DEPENDS ${GENERATED_FILES} ${DATABUS_STL} ${DATABUS_UTILS} ${FILE_UTILS})
 if (GENERATED_FILES)
     add_custom_command(
             OUTPUT ${GENERATED_FILES}

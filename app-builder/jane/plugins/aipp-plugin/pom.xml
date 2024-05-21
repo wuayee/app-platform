@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fit.jade</groupId>
-        <artifactId>app-builder-jane-parent</artifactId>
+        <groupId>com.huawei.fit.jane</groupId>
+        <artifactId>plugins</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 

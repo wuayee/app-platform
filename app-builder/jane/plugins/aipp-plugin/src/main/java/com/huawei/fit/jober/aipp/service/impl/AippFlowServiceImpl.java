@@ -43,6 +43,7 @@ import com.huawei.fit.jober.aipp.enums.AippMetaStatusEnum;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.AppCategory;
 import com.huawei.fit.jober.aipp.enums.JaneCategory;
+import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippFlowService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
@@ -65,8 +66,8 @@ import com.huawei.fitframework.model.Tuple;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.store.service.ItemData;
-import com.huawei.jade.store.service.ItemService;
+import com.huawei.jade.store.model.transfer.ToolData;
+import com.huawei.jade.store.service.ToolService;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -114,10 +115,12 @@ public class AippFlowServiceImpl implements AippFlowService {
 
     private final BrokerClient brokerClient;
 
+    private final AppBuilderAppMapper appBuilderAppMapper;
+
     public AippFlowServiceImpl(@Value("${market.app_market_url}") String appMarketUrl, @Fit FlowsService flowsService,
             @Fit MetaService metaService, @Fit FlowDefinitionService flowDefinitionService,
             @Fit AippRunTimeService aippRunTimeService, @Fit AppBuilderFormRepository formRepository,
-            @Fit BrokerClient brokerClient) {
+            @Fit BrokerClient brokerClient, AppBuilderAppMapper appBuilderAppMapper) {
         this.appMarketUrl = appMarketUrl;
         this.flowsService = flowsService;
         this.metaService = metaService;
@@ -125,6 +128,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         this.aippRunTimeService = aippRunTimeService;
         this.formRepository = formRepository;
         this.brokerClient = brokerClient;
+        this.appBuilderAppMapper = appBuilderAppMapper;
     }
 
     /**
@@ -999,12 +1003,7 @@ public class AippFlowServiceImpl implements AippFlowService {
                     buildPublishMetaDeclaration(aippId, aippNodeForms, flowInfo.getFlowDefinitionId(), meta, aippDto);
             metaService.patch(meta.getVersionId(), declaration, context);
 
-            ItemData itemData = this.buildItemData(aippDto, context, flowInfo);
-
-            // 注册到store
-            String uniqueName = this.brokerClient.getRouter(ItemService.class, "com.huawei.jade.store.service.addItem")
-                    .route(new FitableIdFilter("addItem"))
-                    .invoke(itemData);
+            String uniqueName = this.publishToStore(aippDto, context, flowInfo);
 
             if (Objects.equals(aippDto.getType(), AppCategory.APP.getType())) {
                 this.publishAppMarket(aippId, aippDto, context);
@@ -1017,13 +1016,20 @@ public class AippFlowServiceImpl implements AippFlowService {
         }
     }
 
+    private String publishToStore(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
+        ToolData itemData = this.buildItemData(aippDto, context, flowInfo);
+        String uniqueName = this.brokerClient.getRouter(ToolService.class, "com.huawei.jade.store.service.addItem")
+                .route(new FitableIdFilter("addItem"))
+                .invoke(itemData);
+        appBuilderAppMapper.updateAppWithStoreId(uniqueName, aippDto.getAppId(), aippDto.getVersion());
+        return uniqueName;
+    }
+
     @NotNull
-    private ItemData buildItemData(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
+    private ToolData buildItemData(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
         AppCategory appCategory = AppCategory.findByType(aippDto.getType())
                 .orElseThrow(() -> new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID));
-        ItemData itemData = new ItemData();
-        itemData.setCategory(appCategory.getCategory());
-        itemData.setGroup("07b51bd246594c159d403164369ce1db");
+        ToolData itemData = new ToolData();
         itemData.setName(aippDto.getName());
         itemData.setDescription(aippDto.getDescription());
         if (this.isToolCategory(appCategory)) {
@@ -1095,7 +1101,6 @@ public class AippFlowServiceImpl implements AippFlowService {
         propertiesMap.put("inputParams",
                 MapBuilder.get()
                         .put("type", "object")
-                        .put("description", "the tenant id of the waterFlow tool")
                         .put("properties", this.buildPropertiesMapOfInputParam(flowInfo))
                         .build());
         return propertiesMap;
@@ -1103,16 +1108,8 @@ public class AippFlowServiceImpl implements AippFlowService {
 
     private Map<String, Object> buildPropertiesMapOfInputParam(FlowInfo flowInfo) {
         Map<String, Object> propertiesMapOfInputParam = MapBuilder.<String, Object>get()
-                .put("parentFlowTraceId",
-                        MapBuilder.get()
-                                .put("type", "string")
-                                .put("description", "the flow trace id of parent flow")
-                                .build())
-                .put("parentCallbackId",
-                        MapBuilder.get()
-                                .put("type", "string")
-                                .put("description", "the callback id of parent flow")
-                                .build())
+                .put(AippConst.TRACE_ID, MapBuilder.get().put("type", "string").build())
+                .put(AippConst.CALLBACK_ID, MapBuilder.get().put("type", "string").build())
                 .build();
         flowInfo.getInputParamsByName("input").forEach(inputParam -> {
             String name = inputParam.getOrDefault("name", StringUtils.EMPTY).toString();

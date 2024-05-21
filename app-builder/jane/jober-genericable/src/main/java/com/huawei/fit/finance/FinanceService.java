@@ -18,4 +18,7 @@ public interface FinanceService {
 
     @Genericable(id = "com.huawei.fit.finance.autoGraph")
     String autoGraph(String sql, String query);
+
+    @Genericable(id = "com.huawei.fit.finance.generate.report")
+    String generateOperationReport(String chatHistory);
 }

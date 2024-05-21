@@ -27,4 +27,10 @@ public interface AppBuilderAppMapper {
     void insertOne(AppBuilderAppPO insert);
 
     void updateOne(AppBuilderAppPO update);
+
+    List<AppBuilderAppPO> selectWithStoreId(List<String> storeIds);
+
+    void updateAppWithStoreId(String uniqueName, String id, String version);
+
+    void delete(String appId);
 }

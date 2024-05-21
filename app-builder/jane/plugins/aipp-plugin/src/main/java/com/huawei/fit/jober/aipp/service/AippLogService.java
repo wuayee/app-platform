@@ -19,14 +19,14 @@ import java.util.List;
  */
 public interface AippLogService {
     /**
-     * 查询指定aipp最近5个的历史记录
+     * 查询指定app最近5个的历史记录
      *
-     * @param aippId 指定aipp的id
-     * @param version aipp版本, 可选
+     * @param appId 指定app的id
+     * @param type app的类型
      * @param context 登录信息
      * @return log数据
      */
-    List<AippInstLogDataDto> queryAippRecentInstLog(String aippId, String version, OperationContext context);
+    List<AippInstLogDataDto> queryAippRecentInstLog(String appId, String type, OperationContext context);
 
     /**
      * 查询指定aipp最近轮次的历史记录
@@ -50,15 +50,6 @@ public interface AippLogService {
     List<AippInstLog> queryInstanceLogSince(String instanceId, String timeString);
 
     /**
-     * 流式查询指定aipp instance的历史记录
-     *
-     * @param instanceId 指定aipp instance的id
-     * @param timeString 开始的时间范围, 可能为空
-     * @return log数据
-     */
-    List<AippInstLog> queryInstanceLogSinceStreaming(String instanceId, String timeString);
-
-    /**
      * 查询指定aipp instance的form类型的最新一条历史记录
      *
      * @param instanceId 指定aipp instance的id
@@ -67,13 +58,13 @@ public interface AippLogService {
     AippInstLog queryLastInstanceFormLog(String instanceId);
 
     /**
-     * 删除指定aipp的历史记录
+     * 删除指定app的历史记录
      *
-     * @param aippId 指定aipp的id
-     * @param version 指定aipp的版本
+     * @param appId 指定app的id
+     * @param type 指定app的类型
      * @param context 登录信息
      */
-    void deleteAippInstLog(String aippId, String version, OperationContext context);
+    void deleteAippInstLog(String appId, String type, OperationContext context);
 
     /**
      * 删除指定aipp预览的历史记录

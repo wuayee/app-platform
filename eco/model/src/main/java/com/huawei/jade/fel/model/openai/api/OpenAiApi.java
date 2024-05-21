@@ -9,9 +9,11 @@ import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionResponse
 import com.huawei.jade.fel.model.openai.entity.embed.OpenAiEmbeddingRequest;
 import com.huawei.jade.fel.model.openai.entity.embed.OpenAiEmbeddingResponse;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
+import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
 /**
@@ -69,4 +71,25 @@ public interface OpenAiApi {
      */
     @POST
     Call<OpenAiEmbeddingResponse> createEmbeddings(@Url String url, @Body OpenAiEmbeddingRequest request);
+
+    /**
+     * 发送文本补全请求（流式响应）。
+     *
+     * @param request OpenAI API格式的会话补全请求。
+     * @return OpenAI API格式的流式响应。
+     */
+    @Streaming
+    @POST(CHAT_ENDPOINT)
+    Call<ResponseBody> createChatCompletionStream(@Body OpenAiChatCompletionRequest request);
+
+    /**
+     * 发送文本补全请求（流式响应），支持动态配置url。
+     *
+     * @param url 模型地址。
+     * @param request OpenAI API格式的会话补全请求。
+     * @return OpenAI API格式的流式响应。
+     */
+    @Streaming
+    @POST
+    Call<ResponseBody> createChatCompletionStream(@Url String url, @Body OpenAiChatCompletionRequest request);
 }

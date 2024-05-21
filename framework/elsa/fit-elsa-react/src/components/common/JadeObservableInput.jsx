@@ -10,7 +10,7 @@ import {useShapeContext} from "@/components/DefaultRoot.jsx";
  * @constructor
  */
 export const JadeObservableInput = (props) => {
-    const {onChange, ...rest} = props;
+    const {onChange, onBlur, ...rest} = props;
     if (!rest.id) {
         throw new Error("JadeObservableInput requires an id property.");
     }
@@ -30,12 +30,22 @@ export const JadeObservableInput = (props) => {
         onChange && onChange(e);
 
         // 触发节点的emit事件.
-        shape.emit(rest.id, e.target.value);
+        shape.emit(rest.id, {value: e.target.value});
+    };
+
+    /**
+     * 有些场景下value是在blur时触发修改的，所以这里透出blur事件.
+     *
+     * @param e 事件对象.
+     * @private
+     */
+    const _onBlur = (e) => {
+        onBlur && onBlur(e);
     };
 
     // 组件初始化时注册observable.
     useEffect(() => {
-        shape.page.registerObservable(shape.id, rest.id, rest.value, rest.parent);
+        shape.page.registerObservable(shape.id, rest.id, rest.value, rest.type, rest.parent);
 
         // 组件unmount时，删除observable.
         return () => {
@@ -43,5 +53,10 @@ export const JadeObservableInput = (props) => {
         };
     }, []);
 
-    return <><Input {...rest} onChange={(e) => _onChange(e)} /></>
+    // 如果类型发生了变化，重新注册，修改observable中的type值.
+    useEffect(() => {
+        shape.emit(rest.id, {type: rest.type});
+    }, [rest.type]);
+
+    return <><Input {...rest} onChange={(e) => _onChange(e)} onBlur={_onBlur} /></>
 };

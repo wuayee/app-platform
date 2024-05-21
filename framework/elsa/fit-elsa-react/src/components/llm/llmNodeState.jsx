@@ -2,6 +2,7 @@ import {jadeNode} from "@/components/jadeNode.jsx";
 import LlmIcon from '../asserts/icon-llm.svg?react'; // 导入背景图片
 import {Button} from "antd";
 import "./style.css";
+import {v4 as uuidv4} from "uuid";
 
 /**
  * jadeStream中的大模型节点.

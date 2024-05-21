@@ -14,7 +14,8 @@
         <result column="path" property="path"/>
     </resultMap>
     <sql id="Base_Column_List">
-        log_id, aipp_id, version, aipp_type, instance_id, log_data, log_type, create_at, create_by, path
+        log_id
+        , aipp_id, version, aipp_type, instance_id, log_data, log_type, create_at, create_by, path
     </sql>
 
     <sql id="Recent_Instance_List">
@@ -29,39 +30,30 @@
     </sql>
 
     <select id="selectRecentAfterResume" resultType="string">
-        SELECT
-            instance_id
-        FROM
-            (
-                SELECT
-                    instance_id,
-                    create_at,
-                    ROW_NUMBER ( ) OVER ( PARTITION BY instance_id ORDER BY create_at DESC ) rn
-                FROM
-                    aipp_instance_log
-                WHERE
-                    create_by = #{createUserAccount}
-                  AND aipp_id = #{aippId}
-                  AND aipp_type = #{aippType}
-                  AND log_id >=
-                      (
-                          SELECT
-                              log_id
-                          FROM
-                              aipp_instance_log
-                          WHERE
-                              log_data ->> 'form_args' like '%\"fileContent\":%'
-                        AND aipp_id = #{aippId}
-                        AND create_by = #{createUserAccount}
-                        ORDER BY
-                            create_at DESC
-                            LIMIT 1
-                    )
-            ) T
+        SELECT instance_id
+        FROM (
+                 SELECT instance_id,
+                        create_at,
+                        ROW_NUMBER() OVER ( PARTITION BY instance_id ORDER BY create_at DESC ) rn
+                 FROM aipp_instance_log
+                 WHERE create_by = #{createUserAccount}
+                   AND aipp_id = #{aippId}
+                   AND aipp_type = #{aippType}
+                   AND log_id >=
+                       (
+                           SELECT log_id
+                           FROM aipp_instance_log
+                           WHERE log_data ->> 'form_args' like '%\"fileContent\":%'
+                   AND aipp_id = #{aippId}
+                   AND create_by = #{createUserAccount}
+                 ORDER BY
+                     create_at DESC
+                     LIMIT 1
+             ) ) T
         WHERE
-        	T.rn = 1
+            T.rn = 1
         ORDER BY
-        	T.create_at DESC
+            T.create_at DESC
     </select>
 
     <select id="selectRecentByAippId" resultMap="BaseResultMap"
@@ -69,7 +61,9 @@
         select
         <include refid="Base_Column_List"/>
         from aipp_instance_log
-        where instance_id in (<include refid="Recent_Instance_List"/> limit 5)
+        where instance_id in (
+        <include refid="Recent_Instance_List"/>
+        limit 5)
     </select>
 
     <select id="selectWithCondition" parameterType="com.huawei.fit.jober.aipp.dto.aipplog.AippLogQueryCondition"
@@ -94,7 +88,7 @@
     </select>
 
     <select id="selectNormalInstanceIdOrderByTimeDesc">
-        <include refid="Recent_Instance_List"/>
+        <include refid="Recent_Instance_List_By_AippIds"/>
     </select>
 
     <select id="selectLastInstanceFormLog" resultMap="BaseResultMap">
@@ -125,9 +119,12 @@
     <delete id="delete">
         delete
         from aipp_instance_log
-        where aipp_id = #{aippId}
+        where aipp_id in
+        <foreach collection="aippIds" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
         and create_by = #{createUserAccount}
-        and version = #{version}
+        and aipp_type = #{aippType}
         <if test="instanceIdExclude != null">
             and instance_id != #{instanceIdExclude}
         </if>
@@ -135,7 +132,8 @@
 
     <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto">
         insert into aipp_instance_log (aipp_id, version, aipp_type, instance_id, log_data, log_type, create_by, path)
-        values (#{aippId}, #{version}, #{aippType}, #{instanceId}, #{logData}::jsonb, #{logType}, #{createUserAccount}, #{path})
+        values (#{aippId}, #{version}, #{aippType}, #{instanceId}, #{logData}::jsonb, #{logType}, #{createUserAccount},
+                #{path})
     </insert>
 
     <update id="updateOne">
@@ -146,8 +144,28 @@
 
 
     <select id="selectRecentInstanceId" resultType="string">
-        <include refid="Recent_Instance_List"/> limit #{number}
+        <include refid="Recent_Instance_List"/>
+        limit #{number}
     </select>
+
+    <select id="selectRecentInstanceIdByAippIds" resultType="string">
+        <include refid="Recent_Instance_List_By_AippIds"/>
+        limit #{number}
+    </select>
+
+    <sql id="Recent_Instance_List_By_AippIds">
+        select instance_id
+        from (select instance_id, create_at, row_number() over (partition by instance_id order by create_at desc) rn
+        from aipp_instance_log
+        where create_by = #{createUserAccount}
+        and aipp_id in
+        <foreach collection="aippIds" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        and aipp_type = #{aippType}) t
+        where t.rn = 1
+        order by t.create_at desc
+    </sql>
 
     <select id="getLogsByInstanceId" resultMap="BaseResultMap">
         select

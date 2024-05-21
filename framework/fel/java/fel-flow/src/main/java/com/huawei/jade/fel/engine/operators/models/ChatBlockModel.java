@@ -33,12 +33,13 @@ public class ChatBlockModel<M> implements ChatModel<AiMessage> {
     }
 
     public ChatBlockModel(ChatModelService provider, ChatOptions options) {
-        this.provider = Validation.notNull(provider, "ToolProvider cannot be null.");
+        this.provider = Validation.notNull(provider, "Model provider cannot be null.");
         this.options = Validation.notNull(options, "ChatOptions cannot be null.");
     }
 
     @Override
     public AiMessage invoke(CustomState<Prompt> arg) {
+        Validation.notNull(arg, "Runnable arg cannot be null.");
         AiRunnableArg<Prompt> aiArg = ObjectUtils.cast(arg);
         ChatCompletion completionRequest = new ChatCompletion(aiArg.data(), this.options);
 

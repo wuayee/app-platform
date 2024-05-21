@@ -1,5 +1,5 @@
-import {TreeSelect} from "antd";
-import {useShapeContext} from "@/components/DefaultRoot.jsx";
+import {TreeSelect, Form} from "antd";
+import {useFormContext, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {useEffect, useRef, useState} from "react";
 
 /**
@@ -8,14 +8,21 @@ import {useEffect, useRef, useState} from "react";
  * @param reference 引用数据.
  * @param onReferencedValueChange 当引用组件的值发生变化时触发.
  * @param onReferencedKeyChange 当引用的key发生变化时触发.
+ * @param rules 校验规则.
+ * @param className 组件使用的类名称.
  * @param rest 其他参数.
  * @return {JSX.Element}
  * @constructor
  */
-export const JadeReferenceTreeSelect = ({reference, onReferencedValueChange, onReferencedKeyChange, ...rest}) => {
+export const JadeReferenceTreeSelect = ({reference, onReferencedValueChange, onReferencedKeyChange, rules, className, ...rest}) => {
     const shape = useShapeContext();
+    const form = useFormContext();
     const stopObserve = useRef(null);
     const [treeData, setTreeData] = useState([]);
+    const name = `reference-${reference.id}`;
+    // 合并外部传入的 className 和内部定义的 className
+    const combinedClassName = `jade-tree-select ${className || ''}`.trim();
+
 
     /**
      * 当选择发生变化时，触发.监听不同的组件.
@@ -35,7 +42,7 @@ export const JadeReferenceTreeSelect = ({reference, onReferencedValueChange, onR
         const treeMap = new Map(treeData.map(d => [d.id, d]));
         const treeNode = treeMap.get(selected);
         const value = buildValue(treeMap, treeNode);
-        stopObserve.current = shape.observeTo(treeNode.nId, treeNode.value, onReferencedValueChange);
+        stopObserve.current = shape.observeTo(treeNode.nId, treeNode.value, (args) => _onReferenceValueChange(args.value, args.type));
         onReferencedKeyChange({referenceNode: treeNode.nId, referenceId: treeNode.value, value});
     };
 
@@ -88,7 +95,7 @@ export const JadeReferenceTreeSelect = ({reference, onReferencedValueChange, onR
     // 组件初始化后，若存在引用关系，则进行监听.
     useEffect(() => {
         if (reference.referenceNode && reference.referenceId) {
-            stopObserve.current = shape.observeTo(reference.referenceNode, reference.referenceId, onReferencedValueChange);
+            stopObserve.current = shape.observeTo(reference.referenceNode, reference.referenceId, (args) => _onReferenceValueChange(args.value, args.type));
         }
 
         // 当组件unmount时，停止监听.
@@ -97,18 +104,34 @@ export const JadeReferenceTreeSelect = ({reference, onReferencedValueChange, onR
         };
     }, []);
 
+    /*
+     * 当Form.Item设置了name之后，只能通过form.setFieldValue设置value的值.
+     */
+    const _onReferenceValueChange = (v, t) => {
+        form.setFieldsValue({[name]: v});
+        onReferencedValueChange(v, t);
+    };
+
     return (<>
-        <TreeSelect
-                {...rest}
-                treeDataSimpleMode
-                style={{fontSize: "12px", width: '100%'}}
-                value={reference.referenceKey}
-                dropdownStyle={{maxHeight: 400, overflow: 'auto', minWidth: 250}}
-                placeholder="请选择"
-                onChange={onChange}
-                treeData={treeData}
-                onDropdownVisibleChange={onDropdownVisibleChange}
-                treeDefaultExpandAll={false}
-        />
+        <Form.Item
+                id={`reference-id-${reference.id}`}
+                name={[name]}
+                initialValue={reference.referenceKey}
+                rules={rules}
+                validateTrigger="onBlur"
+        >
+            <TreeSelect
+                    {...rest}
+                    className={combinedClassName}
+                    treeDataSimpleMode
+                    dropdownStyle={{maxHeight: 400, overflow: 'auto', minWidth: 250}}
+                    placeholder="请选择"
+                    onChange={onChange}
+                    treeData={treeData}
+                    onDropdownVisibleChange={onDropdownVisibleChange}
+                    treeDefaultExpandAll={false}
+                    onMouseDown={(e) => e.stopPropagation()}
+            />
+        </Form.Item>
     </>);
 };

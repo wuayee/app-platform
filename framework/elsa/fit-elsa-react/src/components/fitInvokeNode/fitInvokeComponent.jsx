@@ -1,7 +1,9 @@
-import FitInvokeInput from "@/components/fitInvokeNode/FitInvokeInput.jsx";
+import InvokeInput from "@/components/common/InvokeInput.jsx";
 import FitInvokeService from "@/components/fitInvokeNode/FitInvokeService.jsx";
-import FitInvokeOutput from "@/components/fitInvokeNode/FitInvokeOutput.jsx";
+import InvokeOutput from "@/components/common/InvokeOutput.jsx";
 import {v4 as uuidv4} from "uuid";
+import {convertParameter, convertReturnFormat} from "@/components/util/MethodMetaDataParser.js";
+import {toolInvokeComponent} from "@/components/toolInvokeNode/toolInvokeComponent.jsx";
 
 /**
  * FIT调用节点组件
@@ -9,7 +11,7 @@ import {v4 as uuidv4} from "uuid";
  * @param jadeConfig
  */
 export const fitInvokeComponent = (jadeConfig) => {
-    const self = {};
+    const self = toolInvokeComponent(jadeConfig);
 
     /**
      * 必填
@@ -46,114 +48,17 @@ export const fitInvokeComponent = (jadeConfig) => {
      */
     self.getReactComponents = () => {
         return (<>
-            <FitInvokeInput/>
+            <InvokeInput/>
             <FitInvokeService/>
-            <FitInvokeOutput/>
+            <InvokeOutput/>
         </>);
-    };
-
-    const convertReturnFormat = input => {
-        const output = {
-            id: "output_" + uuidv4(),
-            name: "output",
-            type: "",
-            value: []
-        };
-
-        if (input.return.type === "object") {
-            output.type = "Object";
-            const properties = input.return.properties;
-            for (const prop in properties) {
-                const property = properties[prop];
-                if (property.type === "object") {
-                    output.value.push(...processObjectProperty(prop, property));
-                } else {
-                    output.value.push({
-                        id: uuidv4(),
-                        name: prop,
-                        type: property.type.capitalize(),
-                        value: property.type.capitalize()
-                    });
-                }
-            }
-        } else {
-            output.type = input.return.type.capitalize();
-        }
-
-        return output;
-    };
-
-    function processObjectProperty(name, obj) {
-        const result = [];
-        if (obj.type === "object") {
-            for (const prop in obj.properties) {
-                const property = obj.properties[prop];
-                if (property.type === "object") {
-                    result.push(...processObjectProperty(prop, property));
-                } else {
-                    result.push({
-                        id: uuidv4(),
-                        name: prop,
-                        type: property.type.capitalize(),
-                        value: property.type.capitalize()
-                    });
-                }
-            }
-        }
-        return [{
-            id: 'output_' + uuidv4(),
-            name: name,
-            type: "Object",
-            value: result
-        }];
-    }
-
-    const convertParameter = param => {
-        const result = {
-            id: param.name + "_" + uuidv4(),
-            name: param.name,
-            type: param.parameter.type === 'object' ? 'Object' : param.parameter.type.capitalize(),
-            // 对象默认展开
-            from: param.parameter.type === 'object' ? 'Expand' : 'Reference',
-            referenceNode: "",
-            referenceId: "",
-            referenceKey: "",
-            value: []
-        };
-
-        // todo 数组不展开数组直接是引用，所以可以按照普通数据类型处理？
-        if (param.parameter.type === 'object') {
-            const properties = param.parameter.properties;
-            result.value = Object.keys(properties).map(key => {
-                return convertParameter({
-                    name: key,
-                    parameter: properties[key]
-                });
-            });
-            result.props = [...result.value];
-        }
-        return result;
     };
 
     /**
      * @override
      */
+    const reducers = self.reducers;
     self.reducers = (config, action) => {
-        const _updateInput = (data, id, changes) => data.map(d => {
-            const newD = {...d};
-            if (d.id === id) {
-                changes.forEach(change => {
-                    newD[change.key] = change.value;
-                });
-                return newD;
-            }
-            if (newD.type === "Object" && Array.isArray(newD.value) && newD.from !== "Reference") {
-                newD.value = _updateInput(newD.value, id, changes);
-            }
-
-            return newD;
-        });
-
         const _selectGenericable = () => {
             newConfig.genericable.value.find(item => item.name === "id").value = action.value;
             // 切换服务选择后，把选则的fitable置空
@@ -166,17 +71,17 @@ export const fitInvokeComponent = (jadeConfig) => {
 
         const _generateOutput = () => {
             const inputJson = action.value;
-            const newOutputParams = convertReturnFormat(inputJson.schema);
-            delete newConfig.outputParams;
-            newConfig.outputParams = newOutputParams;
+            const newOutputParams = convertReturnFormat(inputJson.schema.return);
+            // 这里可能有问题 生成的不是数组，需要改为数组
+            newConfig.outputParams.push(newOutputParams);
         }
 
         const _generateInput = () => {
             const inputJson = action.value;
             const convertedParameters = Object.keys(inputJson.schema.parameters.properties).map(key => {
                 return convertParameter({
-                    name: key,
-                    parameter: inputJson.schema.parameters.properties[key]
+                    propertyName: key,
+                    property: inputJson.schema.parameters.properties[key]
                 });
             });
             delete newConfig.inputParams;
@@ -197,13 +102,8 @@ export const fitInvokeComponent = (jadeConfig) => {
                 _generateInput();
                 _generateOutput();
                 return newConfig;
-            case "update":
-                newConfig.inputParams = _updateInput(config.inputParams, action.id, action.changes);
-                return newConfig;
-            default: {
-                throw Error('Unknown action: ' + action.type);
-            }
         }
+        return reducers.apply(self, [config, action]);
     };
 
     return self;
