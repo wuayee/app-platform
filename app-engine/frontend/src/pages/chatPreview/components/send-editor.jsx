@@ -33,6 +33,7 @@ import "../../../shared/utils/rendos";
 import robot2 from "../../../assets/images/ai/xiaohai.png";
 import xiaohai from '@assets/images/ai/xiaohai2.png';
 import "../styles/send-editor.scss";
+import StarApps from "./star-apps";
 import HistoryChat from "./history-chat";
 
 const docArr = [
@@ -227,11 +228,13 @@ const SendEditor = (props) => {
       };
     }
   }
+  const [openStar, setOpenStar] = useState(false);
+  const [openHistory, setOpenHistory] = useState(false);
   return <>{(
     <div className='send-editor-container'>
       <Recommends openClick={openClick} inspirationOpen={inspirationOpen}/>
       <div className='editor-inner'>
-        <EditorBtnHome aippInfo={aippInfo}/>
+        <EditorBtnHome aippInfo={aippInfo} setOpen={setOpenHistory}/>
         <div className='editor-input' id="drop">
           <div
             className="chat-promet-editor"
@@ -259,7 +262,9 @@ const SendEditor = (props) => {
         chatSelectItem={selectItem}
         positionConfig={positionConfig}
         clearMove={clearMove} />
-     ) }
+     )}
+     <StarApps open={openStar} setOpen={setOpenStar} />
+     <HistoryChat open={openHistory} setOpen={setOpenHistory} />
     </div>
   )}</>
 };
@@ -524,7 +529,7 @@ const Recommends = (props) => {
 
 // 操作按钮
 const EditorBtnHome = (props) => {
-  const { aippInfo } = props;
+  const { aippInfo, setOpen } = props;
   return <>{(
     <div className="btn-inner">
       <div className="inner-left">
@@ -539,7 +544,7 @@ const EditorBtnHome = (props) => {
         <div className="inner-item">
           <LinkIcon />
           <span className="item-name">自动</span>
-          <AtIcon />
+          <HistoryOutlined onClick={() => setOpen(true)}/>
         </div>
       </div>
     </div>

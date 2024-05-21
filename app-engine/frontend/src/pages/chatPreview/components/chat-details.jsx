@@ -11,9 +11,11 @@ import StarApps from "./star-apps";
 const ChatDetail = () => {
   const { aippInfo, tenantId }  = useContext(AippContext);
   const [ modalInfo, setModalInfo ] = useState({});
+  const [ openStar, setOpenStar ] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   let modalRef = useRef();
-
+  const isHomepage = location.pathname.includes("home") || location.pathname === "/";
   const addApp = () => {
     setModalInfo(() => {
       modalRef.current.showModal();

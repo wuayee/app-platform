@@ -257,7 +257,7 @@ const ChatPreview = (props) => {
       params = { initContext: { Question: value } };
     }
     try {
-      const startes = await aippStart(tenantId, aipp_id, version, params);
+      const startes = await aippStart('5bf019b819e54a5cbed523642dd5cd42', '0859641ce493422da0f3b3bdba66f7b4', '1.0.0-a756fb', params);
       if (startes.code === 0 && startes.data) {
         isChatRunning.current = true;
         childInstanceStop.current = false;
@@ -275,57 +275,22 @@ const ChatPreview = (props) => {
     runningInstanceId.current = instanceId;
     runningVersion.current = version;
     runningAppid.current = aipp_id;
-    const ws = new WebSocket(`${WS_URL}?aippId=${aipp_id}?version=${version}`);
-    ws.onerror = () => {
-      onStop('对话失败');
-    }
-    ws.onopen = () => {
-      ws.send(JSON.stringify({'aippInstanceId': instanceId}));
-    }
-    ws.onmessage = ({ data }) => {
-      let messageData = {};
-      try {
-        messageData = JSON.parse(data);
-        const logDataList = messageData.aippInstanceLogs || [];
-        logDataList.forEach(log => {
-          if (log.logData && log.logData.length) {
-            const regex = /```markdown(.*?)```/g;
-            const replacedArr = log.logData.match(regex);
-            let markdowned = log.logData.indexOf('```');
-            if (replacedArr && replacedArr.length) {
-              replacedArr.forEach(item => {
-                let str = item.substring(11, item.length - 3);
-                log.logData = log.logData.replace(item, str);
-              });
-            }
-            let { msg } = JSON.parse(log.logData);
-            let initObj = {
-              content: msg,
-              loading: false,
-              openLoading: false,
-              logId: log.msgId || -1,
-              markdownSyntax: markdowned !== -1,
-              type: 'recieve',
-            }
-            if (log.msgId !== null) {
-              socketChat2(log, msg, initObj);
-            } else {
-              socketChat(msg, initObj);
-            }
-          }
-        })
-        if (['ERROR', 'ARCHIVED'].includes(messageData.status)) {
-          ws.close();
-        }
-      } catch (err){
-        onStop('数据解析异常');
-        ws.close();
+    timerRef.current = setInterval(async () => {
+      const res = await reGetInstance(tenantId, aipp_id, instanceId, version);
+      if (res.code !== 0) {
+        onStop( res.msg || '对话失败');
       }
-    }
-    ws.onclose = () => {
-      clearAgentEffects();
-      isChatRunning.current = false;
-    }
+      const formData = JSON.parse(res.data.form_metadata);
+      const formArgs = res.data.form_args;
+      if (formArgs.childInstanceId && !childInstanceStop.current) {
+        clearInterval(timerRef.current);
+        childInstanceIdArr.current.push(formArgs.childInstanceId);
+        childBackInstanceIdArr.current.push(formArgs.childInstanceId);
+        childTest(aipp_id, version);
+      } else {
+        callback(res, formData);
+      }
+    }, 3000);
   }
   // 主流程轮训回调
   function callback(res, formData) {
@@ -346,8 +311,9 @@ const ChatPreview = (props) => {
         initObj.chartConfig = msgObj;
       }
     }
+    initObj.loading = false;
     const idx = listRef.current.length - 1;
-    listRef.current.splice(idx, 0, initObj);
+    listRef.current.splice(idx, 1, initObj);
     setChatList(() => {
       let arr = [...listRef.current];
       listRef.current = arr;
@@ -454,7 +420,7 @@ const ChatPreview = (props) => {
           }
         }
         const idx = listRef.current.length - 1;
-        listRef.current.splice(idx, 0, initObj);
+        listRef.current.splice(idx, 1, initObj);
         setChatList(() => {
           let arr = [...listRef.current];
           listRef.current = arr;
