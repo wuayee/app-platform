@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import type { MenuProps } from "antd";
 import { Layout, Menu } from "antd";
+import { MenuOutlined } from "@ant-design/icons";
 import {
   Route,
   useNavigate,
@@ -17,7 +18,6 @@ import {
 import { Icons, KnowledgeIcons } from "../icons/index";
 import { HeaderUser } from "../header-user";
 import "./style.scoped.scss";
-import { MenuOutlined } from "@ant-design/icons";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -95,10 +95,10 @@ const AppLayout: React.FC = () => {
           onClick={menuClick}
         />
       </Sider>
-      <KnowledgeIcons.menuFolder
-        className="layout-sider-folder"
-        onClick={() => setShowMenu(true)}
-      />
+      <div className="layout-sider-folder">
+        <KnowledgeIcons.menuFolder onClick={() => setShowMenu(true)} />
+      </div>
+
       <Layout className={isHomepage ? "home-chat" : ""}>
         <Header
           style={{ padding: 0, background: colorBgContainer, height: "48px" }}
