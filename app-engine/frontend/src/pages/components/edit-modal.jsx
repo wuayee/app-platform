@@ -13,7 +13,7 @@ import './styles/edit-modal.scss';
 
 const { TextArea } = Input;
 const { ICON_URL } = process.env.NODE_ENV === 'dev' ? 'http://80.11.128.66:31111/api' : httpUrlMap[process.env.NODE_ENV];
-const { AIPP_URL } = httpUrlMap[process.env.NODE_ENV];
+const { AIPP_URL } = process.env.NODE_ENV === 'dev' ? 'http://80.11.128.66:31111/api/jober/v1/api' : httpUrlMap[process.env.NODE_ENV];
 const EditModal = (props) => {
   const { modalRef, aippInfo, updateAippCallBack, type, addAippCallBack } = props;
   const [ form ] = Form.useForm();
