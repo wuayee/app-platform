@@ -54,7 +54,7 @@ module.exports = merge(common, {
     hot: true,
     open: true,
     inline: true,
-    https: true,
+    https: false,
     proxy: {
       "/api": {
         target: "https://jane-beta.huawei.com/api",
@@ -76,9 +76,9 @@ module.exports = merge(common, {
       },
       "/aippApi": {
         // target: 'http://10.91.144.92:8028/api/jober/v1/api',
-        // target: 'http://10.169.58.7:8028/api/jober/v1/api',
+        target: 'http://10.169.58.7:8080/v1/api',
         // target: 'http://10.91.144.79:8028/api/jober/v1/api',
-        target: 'https://jane-beta.huawei.com/api/jober/v1/api',
+        // target: 'https://jane-beta.huawei.com/api/jober/v1/api',
         // target: 'http://10.91.144.226:8028/api/jober/v1/api',
         pathRewrite: {"^/aippApi": ""},
         secure: false,
