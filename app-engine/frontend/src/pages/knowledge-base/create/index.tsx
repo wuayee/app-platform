@@ -115,7 +115,6 @@ const KnowledgeBaseCreate = () => {
         flexDirection: 'column',
         justifyContent: 'space-between'
       }}>
-        <div></div>
         <div style={{
           width: '100%',
           flex:1,
@@ -170,7 +169,7 @@ const KnowledgeBaseCreate = () => {
           justifyContent: 'end',
           gap: 16,
         }}>
-          <Button  loading={loading} onClick={onCancle} style={{
+          <Button onClick={onCancle} style={{
             borderRadius: 4,
           }}>取消</Button>
           <Button type="primary" loading={loading} onClick={submit} style={{
