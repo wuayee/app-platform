@@ -25,6 +25,6 @@ public class KStorageDto {
     private String name;
     private KStorageType type;
     private String url;
-    private Date createAt;
-    private Date updateAt;
+    private Date createdAt;
+    private Date updatedAt;
 }

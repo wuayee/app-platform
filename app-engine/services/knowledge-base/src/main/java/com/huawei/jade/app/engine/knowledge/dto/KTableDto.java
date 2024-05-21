@@ -5,6 +5,7 @@
 package com.huawei.jade.app.engine.knowledge.dto;
 
 import com.huawei.jade.app.engine.knowledge.dto.enums.KStorageType;
+import com.huawei.jade.app.engine.knowledge.dto.enums.TableFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,10 +23,22 @@ import java.util.Date;
 @AllArgsConstructor
 public class KTableDto {
     private Long id;
+
     private String name;
+
     private Long repositoryId;
+
     private KStorageType serviceType;
+
     private Long serviceId;
-    private Date createAt;
-    private Date updateAt;
+
+    private TableFormat format;
+
+    private Long recordNum;
+
+    private Integer status;
+
+    private Date createdAt;
+
+    private Date updatedAt;
 }
