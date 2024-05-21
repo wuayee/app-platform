@@ -43,6 +43,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
     private final String queryListUrl;
 
     public KnowledgeServiceImpl(@Value("${eDataMate.query_list_url}") String queryListUrl) {
+        // todo: 独立环境的 eDataMate.query_list_url 暂时由外部环境注入，之后统一整改到配置文件中
         this.queryListUrl = queryListUrl;
     }
 

@@ -1,12 +1,24 @@
 import React, { useState } from "react";
-import { Avatar, Button, Drawer, Input } from "antd";
-import { SearchOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { Avatar, Button, Drawer, Input, Dropdown } from "antd";
+import type { MenuProps } from "antd";
+import {
+  SearchOutlined,
+  EllipsisOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
 import "./style.scoped.scss";
 
 interface StarAppsProps {
   open: boolean;
   setOpen: (val: boolean) => void;
 }
+
+const items: MenuProps["items"] = [
+  {
+    key: "1",
+    label: "删除",
+  },
+];
 
 const StarApps: React.FC<StarAppsProps> = ({ open, setOpen }) => {
   const [apps, setApps] = useState(
@@ -15,7 +27,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen }) => {
       desc: "超级应用助手，存储领域高级专家",
       author: "APP Engine",
       appAvatar:
-        "https://dthezntil550i.cloudfront.net/p4/latest/p42102052243097410008650553/1280_960/12bc8bc0-2186-48fb-b432-6c011a559ec0.png",
+        "https://jane-beta.huawei.com/api/jober/v1/files/17e9ee28e8914b48aa54e084b67bf878",
       authorAvatar: "https://api.dicebear.com/7.x/miniavs/svg?seed=1",
     }))
   );
@@ -24,7 +36,24 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen }) => {
     console.log("at someone");
   };
   return (
-    <Drawer title="选择收藏的应用" onClose={() => setOpen(false)} open={open}>
+    <Drawer
+      destroyOnClose
+      mask={false}
+      title={
+        <div className="app-title">
+          <div className="app-title-left">
+            <span>选择收藏的应用</span>
+          </div>
+          <CloseOutlined
+            style={{ fontSize: 20 }}
+            onClick={() => setOpen(false)}
+          />
+        </div>
+      }
+      closeIcon={false}
+      onClose={() => setOpen(false)}
+      open={open}
+    >
       <Input placeholder="搜索应用" prefix={<SearchOutlined />} />
       <div className="app-wrapper">
         {apps.map((app) => (
@@ -35,10 +64,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen }) => {
                 <div className="app-item-text-header">
                   <div className="app-item-title">{app.name}</div>
                   <div className="app-item-title-actions">
-                    <span
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleAt}
-                    >
+                    <span style={{ cursor: "pointer" }} onClick={handleAt}>
                       @Ta
                     </span>
                     <span
@@ -57,13 +83,17 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen }) => {
                 <Avatar size={32} src={app.authorAvatar} />
                 <span>由{app.author}创建</span>
               </div>
-              <EllipsisOutlined style={{ fontSize: 24 }} />
+              <Dropdown menu={{ items }} trigger={["click"]}>
+                <EllipsisOutlined className="app-item-footer-more" />
+              </Dropdown>
             </div>
           </div>
         ))}
       </div>
       <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
-        <Button onClick={() => setOpen(false)}>关闭</Button>
+        <Button onClick={() => setOpen(false)} className="close-button">
+          关闭
+        </Button>
       </div>
     </Drawer>
   );

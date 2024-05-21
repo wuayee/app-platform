@@ -1,4 +1,9 @@
 .app {
+  &-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
   &-wrapper {
     margin-top: 24px;
     height: calc(100vh - 200px);
@@ -29,7 +34,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
+      margin-bottom: 16px;
     }
 
     &-title {
@@ -50,7 +55,22 @@
       gap: 8px;
       font-size: 12px;
       padding: 8px 16px;
+      color: #808080;
+    }
+
+    &-footer-more {
+      font-size: 24px;
+      cursor: pointer;
+      &:hover {
+        color: #1677ff;
+      }
     }
   }
 
+}
+
+
+.close-button {
+  padding: 5px 34px;
+  border-radius: 4px;
 }

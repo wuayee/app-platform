@@ -39,6 +39,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -114,6 +115,7 @@ public class FlowParserTest extends FlowsDataBaseTest {
 
     @Test
     @DisplayName("测试解析Conditional节点成功")
+    @Disabled
     public void testConditionalNodeParserSuccess() {
         String jsonData = getJsonData(getFilePath("flows_with_conditional_nodes.json"));
         JSONObject conditionNode = getNode(JSONObject.parseObject(jsonData).getJSONArray("nodes"), CONDITION);

@@ -1018,8 +1018,8 @@ public class AippFlowServiceImpl implements AippFlowService {
 
     private String publishToStore(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
         ToolData itemData = this.buildItemData(aippDto, context, flowInfo);
-        String uniqueName = this.brokerClient.getRouter(ToolService.class, "com.huawei.jade.store.service.addItem")
-                .route(new FitableIdFilter("addItem"))
+        String uniqueName = this.brokerClient.getRouter(ToolService.class, "com.huawei.jade.store.service.addTool")
+                .route(new FitableIdFilter("addTool"))
                 .invoke(itemData);
         appBuilderAppMapper.updateAppWithStoreId(uniqueName, aippDto.getAppId(), aippDto.getVersion());
         return uniqueName;
@@ -1044,6 +1044,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         itemData.setTags(new HashSet<String>() {{
             add(appCategory.getTag());
         }});
+        itemData.setRunnables(this.buildRunnables());
         return itemData;
     }
 
@@ -1075,6 +1076,12 @@ public class AippFlowServiceImpl implements AippFlowService {
         parameterMap.put("order", Arrays.asList("tenantId", "aippId", "version", "inputParams"));
         parameterMap.put("required", Arrays.asList("tenantId", "aippId", "version", "inputParams"));
         return parameterMap;
+    }
+
+    private Map<String, Object> buildRunnables() {
+        return MapBuilder.<String, Object>get()
+                .put("FIT", MapBuilder.get().put("genericableId", "07b51bd246594c159d403164369ce1db").build())
+                .build();
     }
 
     private Map<String, Object> buildPropertiesMap(AippDto aippDto, OperationContext context, AppCategory appCategory,

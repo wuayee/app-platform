@@ -11,6 +11,8 @@ import com.huawei.fit.http.annotation.PostMapping;
 import com.huawei.fit.http.annotation.PutMapping;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
+import com.huawei.fit.http.protocol.HttpResponseStatus;
+import com.huawei.fit.http.server.HttpServerResponseException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.jade.app.engine.knowledge.dto.KbChunkQueryDto;
@@ -22,6 +24,8 @@ import com.huawei.jade.app.engine.knowledge.params.RepoQueryParam;
 import com.huawei.jade.app.engine.knowledge.service.KRepoService;
 import com.huawei.jade.app.engine.knowledge.service.KStorageService;
 import com.huawei.jade.app.engine.knowledge.service.KTableService;
+import com.huawei.jade.app.engine.knowledge.service.KbGenerateService;
+import com.huawei.jade.app.engine.knowledge.service.param.PageQueryParam;
 import com.huawei.jade.app.engine.knowledge.service.KbGenerateService;
 import com.huawei.jade.app.engine.knowledge.vo.PageResultVo;
 
@@ -118,23 +122,27 @@ public class KnowledgeBaseController {
     }
 
     /**
-     * 获取某个知识库下的所有知识表。
+     * 分页查询某个知识库下的知识表。
      *
      * @param repoId 表示知识库ID的 {@link Long}。
+     * @param pageQueryParam 分页查询参数
      * @return 返回知识表列表。
      */
-    @GetMapping("/repos/{repo_id}/tables")
-    public List<KTableDto> getKnowledgeTables(@PathVariable("repo_id") Long repoId) {
-        return kTableService.getByRepoId(repoId);
+    @PostMapping("/repos/{repo_id}/tables/query")
+    public PageResultVo getKnowledgeTables(@PathVariable("repo_id") Long repoId,
+        @RequestBody PageQueryParam pageQueryParam) {
+        Integer tableCount = kTableService.getTableCountByRepoId(repoId);
+        List<KTableDto> kTableDtos = kTableService.getByRepoId(repoId, pageQueryParam);
+        return new PageResultVo(tableCount, kTableDtos);
     }
 
     /**
-     * 获取知识表。
+     * 获取单个知识表
      *
      * @param id 表示知识表ID的 {@link Long}。
      * @return 返回知识表。
      */
-    @GetMapping("/tables/{id}")
+    @PostMapping("/tables/{id}")
     public KTableDto getTable(@PathVariable("id") Long id) {
         return kTableService.getById(id);
     }
@@ -143,21 +151,21 @@ public class KnowledgeBaseController {
      * 创建知识表。
      *
      * @param kTableDto 表示知识表的 {@link KTableDto}
+     * @return 新创建的知识表id
      */
     @PostMapping("/repos/{repo_id}/tables")
-    public void createTable(@RequestBody KTableDto kTableDto) {
-        kTableService.create(kTableDto);
+    public Long createTable(@RequestBody KTableDto kTableDto) {
+        return kTableService.create(kTableDto);
     }
 
     /**
      * 更新知识表。
      *
-     * @param id 表示知识表ID的 {@link Long}。
      * @param kTableDto 表示知识表的 {@link KTableDto}。
      */
-    @PutMapping("/tables/{id}")
-    public void updateTable(@PathVariable("id") Long id, @RequestBody KTableDto kTableDto) {
-        kTableService.update(id, kTableDto);
+    @PostMapping("/tables/update/")
+    public void updateTable(@RequestBody KTableDto kTableDto) {
+        kTableService.update(kTableDto);
     }
 
     /**
@@ -167,6 +175,9 @@ public class KnowledgeBaseController {
      */
     @DeleteMapping("/tables/{id}")
     public void deleteTable(@PathVariable("id") Long id) {
+        if (kTableService.getById(id).getStatus() != 0) {
+            throw new HttpServerResponseException(HttpResponseStatus.OK, "There are unfinished uploading tasks.");
+        }
         kTableService.delete(id);
     }
 
