@@ -1,28 +1,14 @@
 import React from "react";
 import { KnowledgeIcons } from "../icons";
+import './style.scoped.scss';
 
 const HeaderUser = () => {
   return (
-    <div
-      style={{
-        display: "flex",
-        gap: 16,
-        justifyContent: "end",
-        alignItems: "center",
-        marginRight: 24,
-        height: 48,
-      }}
-    >
+    <div className="header-user-wrapper">
       <KnowledgeIcons.dark />
       <KnowledgeIcons.alarm />
       <KnowledgeIcons.info />
-      <div
-        style={{
-          fontSize: 16,
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
+      <div className="header-user-author">
         <KnowledgeIcons.user />
         <span
           style={{
