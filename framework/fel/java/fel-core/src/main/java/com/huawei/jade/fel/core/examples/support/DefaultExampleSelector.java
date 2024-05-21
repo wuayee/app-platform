@@ -8,14 +8,18 @@ import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.jade.fel.core.examples.Example;
 import com.huawei.jade.fel.core.examples.ExampleSelector;
+import com.huawei.jade.fel.core.template.BulkStringTemplate;
 import com.huawei.jade.fel.core.template.StringTemplate;
+import com.huawei.jade.fel.core.template.support.DefaultBulkStringTemplate;
 import com.huawei.jade.fel.core.template.support.DefaultStringTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -25,30 +29,29 @@ import java.util.stream.Collectors;
  * @since 2024-04-25
  */
 public class DefaultExampleSelector implements ExampleSelector {
-    private final StringTemplate template;
-    private final List<String> input;
+    private final BulkStringTemplate bulkTemplate;
     private final List<Example> examples;
     private final BiFunction<List<Example>, String, List<Example>> filter;
-    private final String delimiter;
+    private final Function<Example, Map<String, String>> processor;
 
-    private DefaultExampleSelector(Builder builder) {
-        this.template = builder.template;
-        this.input = builder.input;
-        this.examples = builder.examples;
+    public DefaultExampleSelector(DefaultExampleSelector.Builder builder) {
+        this.bulkTemplate = new DefaultBulkStringTemplate(builder.template, builder.delimiter);
         this.filter = builder.filter;
-        this.delimiter = builder.delimiter;
+        this.examples = builder.examples;
+        this.processor = e -> MapBuilder.<String, String>get()
+                        .put(builder.input.get(0), e.question())
+                        .put(builder.input.get(1), e.answer())
+                        .build();
     }
 
     @Override
     public String select(String question) {
         return this.filter.apply(this.examples, question)
                 .stream()
-                .map(e -> MapBuilder.<String, String>get()
-                        .put(this.input.get(0), e.question())
-                        .put(this.input.get(1), e.answer())
-                        .build())
-                .map(this.template::render)
-                .collect(Collectors.joining(this.delimiter));
+                .map(this.processor)
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toList(),
+                        this.bulkTemplate::render));
     }
 
     /**
@@ -56,8 +59,9 @@ public class DefaultExampleSelector implements ExampleSelector {
      */
     public static class Builder {
         private final List<Example> examples = new ArrayList<>();
+
         private StringTemplate template;
-        private List<String> input;
+        private List<String> input = new ArrayList<>();
         private BiFunction<List<Example>, String, List<Example>> filter = (examples, ignore) -> examples;
         private String delimiter = "\n\n";
 
@@ -85,17 +89,16 @@ public class DefaultExampleSelector implements ExampleSelector {
          * @throws IllegalArgumentException 当模板和输入占位符不匹配时。
          */
         public Builder template(StringTemplate template, String questionKey, String answerKey) {
-            Set<String> placeholder = template.placeholder();
-            Validation.isTrue(placeholder.contains(questionKey),
-                    "Template '{0}' not match question key '{1}'.",
-                    template,
-                    questionKey);
-            Validation.isTrue(placeholder.contains(answerKey),
-                    "Template '{0}' not match answer key '{1}'.",
-                    template,
-                    answerKey);
-            this.template = template;
             this.input = Arrays.asList(questionKey, answerKey);
+            Validation.notNull(template, "The template cannot be null.");
+            Set<String> placeholder = template.placeholder();
+            for (String arg : input) {
+                Validation.isTrue(placeholder.contains(arg),
+                        "Template '{0}' not match question key '{1}'.",
+                        template,
+                        arg);
+            }
+            this.template = template;
             return this;
         }
 
@@ -127,7 +130,7 @@ public class DefaultExampleSelector implements ExampleSelector {
          * @return 表示当前构建器的 {@link Builder}。
          */
         public Builder filter(BiFunction<List<Example>, String, List<Example>> filter) {
-            this.filter = filter;
+            this.filter = Validation.notNull(filter, "The filter cannot be null.");
             return this;
         }
 
@@ -149,7 +152,6 @@ public class DefaultExampleSelector implements ExampleSelector {
          * @throws IllegalArgumentException 当模板为空时。
          */
         public DefaultExampleSelector build() {
-            Validation.notNull(template, "The template cannot be null.");
             return new DefaultExampleSelector(this);
         }
     }

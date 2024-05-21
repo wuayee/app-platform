@@ -1,19 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme, ConfigProvider,  } from 'antd';
-import { HashRouter, Route, useNavigate, Routes, useLocation } from 'react-router-dom';
-import { routeList, flattenRoute, getRouteByKey, getMenus } from '../../router/route'
-import { Icons } from '../icons/index'
+import React, { useState, useEffect } from "react";
+import type { MenuProps } from "antd";
+import { Breadcrumb, Layout, Menu, theme, ConfigProvider } from "antd";
+import {
+  HashRouter,
+  Route,
+  useNavigate,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+import {
+  routeList,
+  flattenRoute,
+  getRouteByKey,
+  getMenus,
+} from "../../router/route";
+import { Icons } from "../icons/index";
+import { HeaderUser } from "../header-user";
+import { HeaderFolderMenu } from "../header-folder-menu";
+import "./style.scoped.scss";
+import ChatRunning from "../../pages/chatEngineHome";
 
 const { Header, Content, Footer, Sider } = Layout;
 
-type MenuItem = Required<MenuProps>['items'][number];
-
+type MenuItem = Required<MenuProps>["items"][number];
 function getItem(
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
-  children?: MenuItem[],
+  children?: MenuItem[]
 ): MenuItem {
   return {
     key,
@@ -26,18 +40,37 @@ function getItem(
 const items: MenuItem[] = getMenus(routeList);
 const flattenRouteList = flattenRoute(routeList);
 
-
 const AppLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [currentActivedPage, setCurrentActivedPage] = useState('首页');
+  const [currentActivedPage, setCurrentActivedPage] = useState("首页");
+
+  // 控制面板的显示与隐藏
+  const [showMenu, setShowMenu] = useState(false);
 
   const navigate = useNavigate();
+
   const location = useLocation();
+
+  useEffect(() => {
+    const { pathname } = location;
+    const route = getRouteByKey(flattenRouteList, pathname);
+
+    if (!route?.hidden) {
+      setShowMenu(true);
+    } else {
+      setShowMenu(false);
+    }
+  }, [location]);
+
+  const menuFolder = () => {
+    setShowMenu(!showMenu);
+  };
+
   const menuClick = (e: any) => {
     const route = getRouteByKey(flattenRouteList, e.key);
-    setCurrentActivedPage(route?.label || '')
-    navigate(e.key)
-  }
+    setCurrentActivedPage(route?.label || "");
+    navigate(e.key);
+  };
 
   const colorBgContainer = '#F0F2F4';
   const setClassName = () => {
@@ -50,62 +83,91 @@ const AppLayout: React.FC = () => {
   }
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div style={{
-          position: 'static',
-          width: '100%',
-          height: '48px',
-          'display': 'flex',
-          'flex-direction': 'row',
-          'justify-content': 'flex-start',
-          'align-items': 'center',
-          padding: '0px 24px 0px 24px',
-          flex: 'none',
-          order: 0,
-          'align-self': 'stretch',
-          'flex-grow': 0,
-          margin: '8px 0px',
-        }}>
-          <Icons.logo/> <span style = {
-            {
-              color: 'rgb(255, 255, 255)',
-              'font-size': '20px',
-              'font-weight': '400',
-              'line-height': '24px',
-              'letter-spacing': '0px',
-              'text-align': 'left',
-              'margin-left': '8px',
-            }
-          }>APP Engine</span>
-        </div>
-        <ConfigProvider theme={{
-          components: {
+    <Layout style={{ minHeight: "100vh" }}>
+      <>
+        <Sider
+          collapsible
+          collapsed={false}
+          onCollapse={(value) => setShowMenu(false)}
+          className={showMenu ? "openMenu" : "closeMenu"}
+        >
+          <div
+            style={{
+              position: "static",
+              width: "100%",
+              height: "48px",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              padding: "0px 24px 0px 24px",
+              flex: "none",
+              order: 0,
+              alignSelf: "stretch",
+              flexGrow: 0,
+              margin: "8px 0px",
+            }}
+          >
+            <Icons.logo />{" "}
+            <span
+              style={{
+                color: "rgb(255, 255, 255)",
+                fontSize: "20px",
+                fontWeight: "400",
+                lineHeight: "24px",
+                letterSpacing: "0px",
+                textAlign: "left",
+                marginLeft: "8px",
+              }}
+            >
+              APP Engine
+            </span>
+          </div>
+          <ConfigProvider
+            theme={{
+              components: {},
+            }}
+          >
+            <Menu
+              className="menu"
+              theme="dark"
+              defaultSelectedKeys={["/home"]}
+              mode="inline"
+              items={items}
+              onClick={menuClick}
+            />
+          </ConfigProvider>
+        </Sider>
+      </>
+      <>
+        <HeaderFolderMenu
+          openMenuFunc={menuFolder}
+          style={{
+            transition: " all .3s ease",
+            width: !showMenu ? "100%" : "0",
+            overflow: "hidden",
+            visibility: !showMenu ? "visible" : "hidden",
+            opacity: !showMenu ? 1 : 0,
+          }}
+        />
+      </>
 
-          }
-        }}>
-          <Menu className='menu'  theme="dark" defaultSelectedKeys={['/home']} mode="inline" items={items} onClick={menuClick}/>
-        </ConfigProvider>
-      </Sider>
       <Layout className={setClassName()}>
-        <Header style={{ padding: 0, background: colorBgContainer, height: '48px' }} />
-        <Content style={{padding: '0 16px', background: colorBgContainer }}>
-          {/* <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb> */}
-
-            <Routes>
-              {flattenRouteList.map(route=> {
-                if(route.component) {
-                  return (<>
-                
-                    <Route path={route.key} key={route.key} Component={route.component}/>
-                  </>)
-                }
-            })}
-              
-            </Routes>
+        <Header
+          style={{ padding: 0, background: colorBgContainer, height: "48px" }}
+        />
+        <HeaderUser />
+        <Content style={{ padding: "0 16px", background: colorBgContainer }}>
+          <Routes>
+            <Route path="/" Component={ChatRunning} />
+            {flattenRouteList.map((route) => (
+              <Route
+                path={route.key}
+                key={route.key}
+                Component={route.component}
+              />
+            ))}
+          </Routes>
         </Content>
         {/* <Footer style={{ textAlign: 'center' }}>
         </Footer> */}
