@@ -40,13 +40,7 @@ export default function OutputForm() {
                 className="jade-panel"
                 key='Output'
             >
-                <Form
-                    name={`outputForm-${shape.id}`}
-                    layout="vertical" // 设置全局的垂直布局
-                    className={"jade-form"}
-                >
-                    <JadeObservableTree data={outputData}/>
-                </Form>
+                <JadeObservableTree data={outputData}/>
             </Panel>
         </Collapse>
     )

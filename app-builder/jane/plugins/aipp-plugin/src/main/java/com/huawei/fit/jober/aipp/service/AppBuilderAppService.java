@@ -14,6 +14,7 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderAppMetadataDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormPropertyDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
+import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Genericable;
 
@@ -28,7 +29,7 @@ public interface AppBuilderAppService {
     Rsp<AppBuilderAppDto> query(HttpClassicServerRequest httpRequest, String appId);
 
     @Genericable(id = "a389e20209fcc245b7a6135a46eb5864")
-    Rsp<AppBuilderAppDto> create(String appId, AppBuilderAppCreateDto dto, OperationContext context);
+    AppBuilderAppDto create(String appId, AppBuilderAppCreateDto dto, OperationContext context);
 
     @Genericable(id = "a389e20219fcc245b7a6135a46eb5864")
     Rsp<AppBuilderAppDto> updateApp(String appId, AppBuilderAppDto appDto, OperationContext context);
@@ -49,6 +50,9 @@ public interface AppBuilderAppService {
     Optional<AppBuilderConfigFormPropertyDto> getPropertyByName(String appId, String name);
 
     @Genericable(id = "a389e19779fcc245b7a6135a46eb5850")
-    Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(HttpClassicServerRequest httpRequest, String tenantId,
+    Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(AppQueryCondition cond, HttpClassicServerRequest httpRequest, String tenantId,
             long offset, int limit);
+
+    @Genericable(id = "aebcb2ec94a6bb4180a1f460e6b90ccd")
+    void delete(String appId, OperationContext context);
 }

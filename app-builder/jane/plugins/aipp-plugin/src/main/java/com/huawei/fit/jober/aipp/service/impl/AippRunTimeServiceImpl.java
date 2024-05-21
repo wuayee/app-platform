@@ -70,6 +70,7 @@ import com.alibaba.fastjson.JSON;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -112,13 +113,14 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
     private final AppBuilderFormRepository formRepository;
     private final AppBuilderFormPropertyRepository formPropertyRepository;
     private final FlowsService flowsService;
+    private final String sharedUrl;
 
     public AippRunTimeServiceImpl(@Fit MetaService metaService, @Fit DynamicFormService dynamicFormService,
             @Fit MetaInstanceService metaInstanceService, @Fit FlowInstanceService flowInstanceService,
             @Fit AippLogService aippLogService, @Fit UploadedFileManageService uploadedFileManageService,
             @Value("${xiaohai.upload_chat_history_url}") String uploadChatHistoryUrl, BrokerClient client,
             @Fit AppBuilderFormRepository formRepository, @Fit AppBuilderFormPropertyRepository formPropertyRepository,
-            @Fit FlowsService flowsService) {
+            @Fit FlowsService flowsService, @Value("${xiaohai.share_url}") String sharedUrl) {
         this.metaService = metaService;
         this.dynamicFormService = dynamicFormService;
         this.metaInstanceService = metaInstanceService;
@@ -130,6 +132,7 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
         this.client = client;
         this.formPropertyRepository = formPropertyRepository;
         this.flowsService = flowsService;
+        this.sharedUrl = sharedUrl;
     }
 
     private static void setExtraBusinessData(OperationContext context, Map<String, Object> businessData, Meta meta,
@@ -227,7 +230,6 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
         Map<String, Object> businessData = (Map<String, Object>) initContext.get(AippConst.BS_INIT_CONTEXT_KEY);
         String aippType = ObjectUtils.cast(meta.getAttributes()
                 .getOrDefault(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.NORMAL.name()));
-        String appId = ObjectUtils.cast(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
         String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
 
         // 创建meta实例
@@ -242,14 +244,21 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
 
         String question = (String) businessData.get(AippConst.BS_AIPP_QUESTION_KEY);
         String fileDesc = (String) businessData.get(AippConst.BS_AIPP_FILE_DESC_KEY);
-
         // 持久化日志
         if (StringUtils.isEmpty(fileDesc)) {
-            // 插入question日志
-            Utils.persistAippLog(aippLogService,
-                    AippInstLogType.QUESTION.name(),
-                    AippLogData.builder().msg(question).build(),
-                    businessData);
+            if (this.isChildInstance(businessData)) {
+                // 如果是子流程，插入 hidden_question
+                Utils.persistAippLog(aippLogService,
+                        AippInstLogType.HIDDEN_QUESTION.name(),
+                        AippLogData.builder().msg(question).build(),
+                        businessData);
+            } else {
+                // 插入question日志
+                Utils.persistAippLog(aippLogService,
+                        AippInstLogType.QUESTION.name(),
+                        AippLogData.builder().msg(question).build(),
+                        businessData);
+            }
         } else {
             // 插入 hidden_question及file日志
             Utils.persistAippLog(aippLogService,
@@ -287,6 +296,12 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
         metaInstanceService.patchMetaInstance(meta.getVersionId(), metaInst.getId(), info, context);
 
         return metaInst.getId();
+    }
+
+    private boolean isChildInstance(Map<String, Object> businessData) {
+        String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
+        String parentCallbackId = ObjectUtils.cast(businessData.get(AippConst.PARENT_CALLBACK_ID));
+        return StringUtils.isNotEmpty(parentInstanceId) && StringUtils.isNotEmpty(parentCallbackId);
     }
 
     private boolean checkInstanceStatus(String aippId, Instance instDetail, Function<String, Boolean> handler) {
@@ -353,6 +368,9 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
         logs.forEach(log -> {
             Map<String, Object> logMap = new HashMap<>();
             AippInstLogDataDto.AippInstanceLogBody question = log.getQuestion();
+            if (question == null) {
+                return;
+            }
             logMap.put("question", getLogData(question.getLogData()));
             List<AippInstLogDataDto.AippInstanceLogBody> answers = log.getInstanceLogBodies()
                     .stream()
@@ -457,8 +475,9 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
      */
     @Override
     public AippInstanceDto getInstance(String aippId, String version, String instanceId, OperationContext context) {
-        String metaId = this.metaInstanceService.getMetaId(instanceId);
-        Meta meta = MetaUtils.getAnyMeta(this.metaService, metaId, version, context);
+        String metaVersionId = this.metaInstanceService.getMetaVersionId(instanceId);
+        Meta meta = this.metaService.retrieve(metaVersionId, null);
+        context.setTenantId(meta.getTenant());
         return getInstanceByVersionId(meta.getVersionId(), instanceId, context);
     }
 
@@ -475,25 +494,6 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
         Instance instDetail = Utils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
         List<AippInstLog> instanceLogs = aippLogService.queryInstanceLogSince(instDetail.getId(), null);
         return InstanceToAippInstanceDto(instDetail, instanceLogs, context);
-    }
-
-    /**
-     * 流式查询单个应用实例信息
-     *
-     * @param context 操作上下文
-     * @param aippId aippId
-     * @param version aipp 版本
-     * @param instanceId 实例id
-     * @return AIPP 实例
-     */
-    @Override
-    public AippInstanceDto getInstanceStreaming(String aippId, String version, String instanceId,
-            OperationContext context) {
-        Meta meta = MetaUtils.getAnyMeta(metaService, aippId, version, context);
-        Instance instDetail = Utils.getInstanceDetail(meta.getVersionId(), instanceId, context, metaInstanceService);
-        List<AippInstLog> instanceStreamingLogs =
-                aippLogService.queryInstanceLogSinceStreaming(instDetail.getId(), null);
-        return InstanceToAippInstanceDto(instDetail, instanceStreamingLogs, context);
     }
 
     private MetaInstanceFilter genInstFilter(AippInstanceQueryCondition cond) {
@@ -771,17 +771,17 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
      * 终止aipp实例
      *
      * @param context 操作上下文
-     * @param aippId aippId
-     * @param version aipp版本
      * @param instanceId 实例id
      */
     @Override
-    public void terminateInstance(String aippId, String version, String instanceId, OperationContext context) {
-        Meta meta = MetaUtils.getAnyMeta(this.metaService, aippId, version, context);
-        String versionId = meta.getVersionId();
+    public void terminateInstance(String instanceId, OperationContext context) {
+        String versionId = this.metaInstanceService.getMetaVersionId(instanceId);
         Instance instDetail = Utils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
         Function<String, Boolean> handler = status -> MetaInstStatusEnum.getMetaInstStatus(status).getValue()
                 == MetaInstStatusEnum.RUNNING.getValue();
+        Meta meta = this.metaService.retrieve(versionId, context);
+        String aippId = meta.getId();
+        String version = meta.getVersion();
         if (!checkInstanceStatus(aippId, instDetail, handler)) {
             log.error("aipp {} inst{}, not allow terminate.", aippId, instanceId);
             throw new AippException(context, AippErrCode.TERMINATE_INSTANCE_FORBIDDEN);
@@ -844,6 +844,40 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
 
         if (deleteLog) {
             aippLogService.deleteAippPreviewLog(aippId, context);
+        }
+    }
+
+    @Override
+    public Map<String, Object> shared(List<Map<String, Object>> chats) {
+        HttpPost httpPost = new HttpPost(this.sharedUrl);
+        httpPost.setEntity(new StringEntity(JsonUtils.toJsonString(chats), ContentType.APPLICATION_JSON));
+        try (CloseableHttpResponse response = HttpUtils.execute(httpPost)) {
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                log.error("Failed to share.", response.getStatusLine());
+                throw new AippException(AippErrCode.XIAOHAI_SHARED_CHAT_HTTP_ERROR);
+            }
+            String respContent = EntityUtils.toString(response.getEntity());
+            return JsonUtils.parseObject(respContent);
+        } catch (IOException e) {
+            log.error("Failed to share:", e.getMessage());
+            throw new AippException(AippErrCode.XIAOHAI_SHARED_CHAT_HTTP_ERROR);
+        }
+    }
+
+    @Override
+    public Map<String, Object> getShareData(String shareId) {
+        HttpGet httpGet = new HttpGet(this.sharedUrl + "?shareId=" + shareId);
+        try (CloseableHttpResponse response = HttpUtils.execute(httpGet)) {
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                throw new IOException(String.format(Locale.ROOT,
+                        "send http fail. url=%s result=%d",
+                        httpGet.getURI(),
+                        response.getStatusLine().getStatusCode()));
+            }
+            String respContent = EntityUtils.toString(response.getEntity());
+            return JsonUtils.parseObject(respContent);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

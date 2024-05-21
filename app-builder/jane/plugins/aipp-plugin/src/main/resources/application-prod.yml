@@ -20,6 +20,7 @@ market:
 xiaohai:
   search_w3_url: https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/tool/search?query=%s&topK=%d
   upload_chat_history_url: https://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/app/message/upload
+  share_url: http://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/app/message/share
 model:
   xiaohai:
     knowledge: http://10.91.159.117:12751/xiaohai/question

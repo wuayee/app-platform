@@ -1,0 +1,21 @@
+fit:
+  beans:
+    packages:
+    - 'com.huawei.jade.store'
+druid:
+  driver-class-name: org.postgresql.Driver
+  initialSize: 5
+  minIdle: 5
+  maxActive: 10
+  maxWait: 60000
+  timeBetweenEvictionRunsMillis: 60000
+  minEvictableIdleTimeMillis: 300000
+  validationQuery: SELECT 1
+  testWhileIdle: true
+  testOnBorrow: false
+  testOnReturn: false
+  url:
+  username:
+  password:
+mybatis:
+  mapper-locations: 'mapper/*Mapper.xml'

@@ -43,7 +43,6 @@ public enum AippErrCode implements ErrorCode {
      */
     FORBIDDEN(90000003, "Prohibited operation."),
 
-
     /** ------------ Configuration Exception. From 90001000 to 90001999 --------------------- */
 
     /**
@@ -72,64 +71,74 @@ public enum AippErrCode implements ErrorCode {
     FLOW_ALREADY_EXIST(90001005, "Flow already exist, please check flow name and version."),
 
     /**
-     * 发布aipp到小海平台内部错误
+     * 发布到小海平台内部错误
      */
     XIAOHAI_APP_PUBLISH_INNER_ERROR(90001006, "Publish aipp to xiaohai inner error."),
 
     /**
-     * 发布aipp到小海平台http请求失败
+     * 发布到小海平台http请求失败
      */
     XIAOHAI_APP_PUBLISH_HTTP_ERROR(90001007, "Publish aipp to xiaohai http error."),
 
     /**
-     * 不允许删除已发布的aipp
+     * 不允许删除已发布的应用或工具流
      */
     DELETE_AIPP_FORBIDDEN(90001008, "Not allow to delete an active aipp."),
 
     /**
-     * 不允许更新已发布的aipp
+     * 不允许更新已发布的应用或工具流
      */
     UPDATE_AIPP_FORBIDDEN(90001009, "Not allow to update an active aipp."),
 
     /**
-     * 预览aipp的临时版本已存在
+     * 预览的临时版本已存在
      */
     PREVIEW_AIPP_FORBIDDEN(90001010, "Preview aipp version already exist."),
 
     /**
-     * 预览aipp失败
+     * 调试失败
      */
     PREVIEW_AIPP_FAILED(90001011, "Preview aipp failed, please retry later."),
 
     /**
-     * aipp 属性key重复
+     * 属性key重复
      */
     AIPP_PROPS_KEY_DUPLICATE(90001012, "Duplicate property key are not allow."),
 
     /**
-     * aipp 名称为空
+     * 名称为空
      */
-    AIPP_NAME_IS_EMPTY(90001013, "AIPP name is empty."),
+    AIPP_NAME_IS_EMPTY(90001013, "名称为空。"),
 
     /**
-     * aipp 名称已存在
+     * 名称已存在
      */
-    AIPP_NAME_IS_DUPLICATE(90001014, "The AIPP name already exists."),
+    AIPP_NAME_IS_DUPLICATE(90001014, "名称已存在。"),
 
     /**
-     * aipp 实例历史记录不存在
+     * 实例历史记录不存在
      */
     AIPP_INSTANCE_LOG_IS_NULL(90001015, "Aipp instance log is null."),
 
     /**
-     * 上传aipp历史记录到小海平台http请求失败
+     * 上传历史记录到小海平台http请求失败
      */
     XIAOHAI_UPLOAD_CHAT_HISTORY_HTTP_ERROR(90001016, "Upload chat history to xiaohai http error."),
 
     /**
-     * 上传aipp历史记录到小海平台内部错误
+     * 上传历史记录到小海平台内部错误
      */
     XIAOHAI_UPLOAD_CHAT_HISTORY_INNER_ERROR(90001017, "Upload chat history to xiaohai inner error."),
+
+    /**
+     * APP 长度超过最大值
+     */
+    AIPP_NAME_LENGTH_OUT_OF_BOUNDS(90001018, "The length of name is out of bounds."),
+
+    /**
+     * 通过小海平台分享对话失败
+     */
+    XIAOHAI_SHARED_CHAT_HTTP_ERROR(90001019, "Shared chat history to xiaohai http error."),
 
     /** ------------ aipp runtime Exception. From 90002000 to 90002999 --------------------- */
     /**
@@ -171,6 +180,11 @@ public enum AippErrCode implements ErrorCode {
      * 解析历史记录配置失败
      */
     PARSE_MEMORY_CONFIG_FAILED(90002905, "Parse memory config failed."),
+
+    /**
+     * 模型节点模板解析失败
+     */
+    LLM_COMPONENT_TEMPLATE_RENDER_FAILED(90002906, "请检查提示词模板中的变量。"),
 
     /**
      * 错误码截止值

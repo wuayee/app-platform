@@ -68,4 +68,9 @@
             #{id}
         </foreach>
     </delete>
+
+    <delete id="deleteByConfigId" parameterType="java.util.List">
+        delete from app_builder_config_property
+        where config_id = #{id}
+    </delete>
 </mapper>

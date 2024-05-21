@@ -6,6 +6,10 @@
   .card {
     width: 33%;
     height: 140px;
+    background-repeat: no-repeat;
+    background-position-y: 100%;
+    background-size: cover;
+    background-image: url(/src/assets/images/knowledge/knowledge-background.png);
     .title {
       color: #808080;
       margin-bottom: 12px;
@@ -58,4 +62,5 @@
       float: right;
     }
   }
+  
   

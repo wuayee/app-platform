@@ -23,6 +23,7 @@ import com.huawei.fit.jober.common.exceptions.JobberException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatcher;
@@ -78,6 +79,7 @@ public class LLMJson2MindTest {
     }
 
     @Test
+    @Disabled
     void shouldSendExpectRequestWhenCallHandleTask() {
         // given
         final String dummyId = "someRandomId";

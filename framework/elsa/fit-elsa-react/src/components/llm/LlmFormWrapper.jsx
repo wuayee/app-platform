@@ -64,9 +64,9 @@ export default function LlmFormWrapper() {
             if(!config.urls.toolListEndpoint) {
                 console.error('Cannot get config.urls.toolListEndpoint.');
             } else {
-                httpUtil.get(config.urls.toolListEndpoint + '/queryToolGroupsInfo?category=App&tag=Tool&offset=0&limit=10', {}, (jsonData) => setToolOptions(jsonData.map(item => {
+                httpUtil.get(config.urls.toolListEndpoint + '/api/jober/store/platform/jade/categories/TOOL?pageNum=0&pageSize=10&includeTags=FIT', {}, (jsonData) => setToolOptions(jsonData.data.map(item => {
                     return {
-                        value: item.hash,
+                        value: item.uniqueName,
                         label: item.name
                     };
                 })));
@@ -74,9 +74,9 @@ export default function LlmFormWrapper() {
             if (!config.urls.workflowListEndpoint) {
                 console.error('Cannot get config.urls.workflowListEndpoint.');
             } else {
-                httpUtil.get(config.urls.workflowListEndpoint + '/queryToolGroupsInfo?category=App&tag=Workflow&offset=0&limit=10', {}, (jsonData) => setWorkflowOptions(jsonData.map(item => {
+                httpUtil.get(config.urls.workflowListEndpoint + '/api/jober/store/platform/jade/categories/TOOL?pageNum=0&pageSize=10&includeTags=WATERFLOW', {}, (jsonData) => setWorkflowOptions(jsonData.data.map(item => {
                     return {
-                        value: item.hash,
+                        value: item.uniqueName,
                         label: item.name
                     };
                 })));
@@ -87,8 +87,7 @@ export default function LlmFormWrapper() {
     return (
         <div>
             <JadeInput items={initItems()} addItem={addItem} updateItem={updateItem} deleteItem={deleteItem}/>
-            <ModelForm modelOptions={modelOptions}/>
-            {/*<PromptForm/>*/}
+            <ModelForm shapeId={shape.id} modelOptions={modelOptions}/>
             <SkillForm toolOptions={toolOptions} workflowOptions={workflowOptions} config={config}/>
             <LlmOutput/>
         </div>

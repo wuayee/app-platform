@@ -476,7 +476,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             afterList.forEach(context -> this.emit(context.getData(), context.getSession()));
         } catch (Exception ex) {
             LOG.error("node process exception stream-id: {}, node-id: {}, position-id: {}, traceId: {}. errors: {}",
-                    this.streamId, this.id, preList.get(0).getPosition(), preList.get(0).getTraceId(), ex);
+                    this.streamId, this.id, preList.get(0).getPosition(), preList.get(0).getTraceId(), ex.getMessage());
             LOG.error("node process exception details: ", ex);
             Retryable<I> retryable = new Retryable<>(this.getRepo(), this);
             Optional.ofNullable(this.errorHandler).ifPresent(handler -> handler.handle(ex, retryable, preList));

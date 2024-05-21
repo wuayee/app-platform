@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.mapper;
 
-import com.huawei.fit.jober.aipp.dto.aipplog.AppQueryCondition;
+import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
 import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 
 import java.util.List;
@@ -18,7 +18,8 @@ public interface AppBuilderAppMapper {
 
     List<AppBuilderAppPO> selectWithTenantId(String tenantId);
 
-    List<AppBuilderAppPO> selectByTenantIdWithPage(String tenantId, String typeFilter, long offset, int limit);
+    List<AppBuilderAppPO> selectByTenantIdWithPage(AppQueryCondition cond, String tenantId, String typeFilter,
+            long offset, int limit);
 
     List<AppBuilderAppPO> selectWithCondition(AppQueryCondition cond);
 
@@ -27,4 +28,10 @@ public interface AppBuilderAppMapper {
     void insertOne(AppBuilderAppPO insert);
 
     void updateOne(AppBuilderAppPO update);
+
+    List<AppBuilderAppPO> selectWithStoreId(List<String> storeIds);
+
+    void updateAppWithStoreId(String uniqueName, String id, String version);
+
+    void delete(String appId);
 }

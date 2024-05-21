@@ -25,13 +25,13 @@
     margin: 0;
 }
 
-.starred-text {
+.retrieval-starred-text {
     position: relative;
     display: inline-block;
     padding-left: 10px;
 }
 
-.starred-text::after {
+.retrieval-starred-text::after {
     padding-left: 12px;
     content: "*";
     position: absolute;

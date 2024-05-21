@@ -16,11 +16,7 @@ export const startNodeStart = (id, x, y, width, height, parent, drawer) => {
     self.pointerEvents = "auto";
     self.componentName = "startComponent";
     self.deletable = false;
-    self.toolMenus = [{
-        key: '1', label: "重命名", action: (setEdit) => {
-            setEdit(true);
-        }
-    }];
+    self.isUnique = true;
     delete self.flowMeta.jober;
 
     /**
@@ -32,6 +28,19 @@ export const startNodeStart = (id, x, y, width, height, parent, drawer) => {
     self.initConnectors = () => {
         initConnectors.apply(self);
         self.connectors.remove(c => c.direction.key === DIRECTION.W.key);
+    };
+
+    /**
+     * 开始节点header只显示重命名选项
+     *
+     * @override
+     */
+    self.getToolMenus = () => {
+        return [{
+            key: '1', label: "重命名", action: (setEdit) => {
+                setEdit(true);
+            }
+        }];
     };
 
     /**

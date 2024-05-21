@@ -19,16 +19,18 @@ export default function ManualCheckFormWrapper() {
     const dispatch = useDispatch();
     const data = useDataContext();
     const config = useShapeContext().graph.configs.find(node => node.node === "manualCheckNodeState");
-    const formName = data.inputParams.find(item => item.name === "formName").value;
+    const formName = data.formName;
+    const taskId = data.taskId;
     const output = data.outputParams;
     const [formOptions, setFormOptions] = useState([]);
+    const selectedFormDefaultValue = (formName === null || formName === undefined) ? undefined : `${formName.replace(/Component$/, '')} | ${taskId}`;
 
     useEffect(() => {
         // 发起网络请求获取 options 数据
         httpUtil.get(config.urls.runtimeFormUrl, {}, (jsonData) => setFormOptions(jsonData.data.map(item => {
             return {
-                value: item.name,
-                label: item.name
+                label: item.name,
+                value: `${item.appearance[0]?.name || ''}|${item.id}`
             };
         })))
     }, []); // useEffect 依赖数组为空，表示只在组件挂载时执行一次
@@ -43,10 +45,19 @@ export default function ManualCheckFormWrapper() {
 
     const onChange = (e) => {
         let formOutput = "";
+        let changeFormName = "";
+        let changeFormId = "";
         if (e && e.length > 0) {
-            formOutput = shape.graph.plugins[e]().getJadeConfig();
+            const [name, id] = e.split('|'); // 拆分字符串
+            changeFormName = name + "Component";
+            changeFormId = id;
+            try {
+                formOutput = shape.graph.plugins[changeFormName]().getJadeConfig();
+            } catch (error) {
+                console.error("Error getting JadeConfig:", error);
+            }
         }
-        dispatch({actionType: "changeFormAndSetOutput", formName: e, formOutput: formOutput});
+        dispatch({actionType: "changeFormAndSetOutput", formName: changeFormName, formId: changeFormId, formOutput: formOutput});
     };
 
     const renderOutput = () => {
@@ -86,23 +97,17 @@ export default function ManualCheckFormWrapper() {
                         className="jade-panel"
                         style={{marginBottom: 8, borderRadius: "8px", width: "100%"}}
                     >
-                        <Form
-                            name={`manualCheckForm-${shape.id}`}
-                            layout="vertical" // 设置全局的垂直布局
-                            className={"jade-form"}
-                        >
                             <Form.Item>
                                 <JadeStopPropagationSelect
                                     allowClear
                                     className="jade-select"
-                                    defaultValue={formName}
+                                    defaultValue={selectedFormDefaultValue}
                                     style={{width: "100%", marginBottom: "8px"}}
                                     onChange={e => onChange(e)}
                                     options={formOptions}
                                 />
                                 {renderComponent()} {/* 渲染对应的组件 */}
                             </Form.Item>
-                        </Form>
                     </Panel>
                 }
             </Collapse>

@@ -1,11 +1,11 @@
 import {Button, Col, Collapse, Form, Input, Popover, Row} from 'antd';
 import {InfoCircleOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
-import {useShapeContext} from "@/components/DefaultRoot.jsx";
 import "./style.css";
 import PropTypes from "prop-types";
 import {v4 as uuidv4} from "uuid";
 import {JadeStopPropagationSelect} from "./JadeStopPropagationSelect.jsx";
 import {JadeReferenceTreeSelect} from "./JadeReferenceTreeSelect.jsx";
+import {useFormContext} from "@/components/DefaultRoot.jsx";
 
 const {Panel} = Collapse;
 
@@ -41,7 +41,8 @@ export default function JadeInput({items, addItem, updateItem, deleteItem}) {
      *    {id: uuidv4(), name: '', type: "String", from: 'Reference', value: '', referenceNode: "", referenceId: "", referenceKey: ""}
      * ]
      */
-    const shape = useShapeContext();
+
+    const form = useFormContext();
 
     const handleAdd = () => {
         addItem(uuidv4());
@@ -56,6 +57,8 @@ export default function JadeInput({items, addItem, updateItem, deleteItem}) {
             changes.push({key: "referenceId", value: ""});
             changes.push({key: "referenceKey", value: ""});
             document.activeElement.blur();// 在选择后取消焦点
+            form.setFieldsValue({[`value-${itemId}`]: undefined});
+            form.setFieldsValue({[`reference-${itemId}`]: undefined});
         }
         updateItem(itemId, changes);
     };
@@ -102,22 +105,22 @@ export default function JadeInput({items, addItem, updateItem, deleteItem}) {
     const renderComponent = (item) => {
         switch (item.from) {
             case 'Reference':
-                return <Form.Item
-                    id={`value-${item.id}`}
-                >
+                return (<>
                     <JadeReferenceTreeSelect
-                        className="value-custom jade-select"
-                        reference={item}
-                        onReferencedValueChange={(e) => handleReferenceValueChange(item, e)}
-                        onReferencedKeyChange={(e) => handleReferenceKeyChange(item, e)}
+                            rules={[{required: true, message: "字段值不能为空"}]}
+                            className="value-custom jade-select"
+                            reference={item}
+                            onReferencedValueChange={(e) => handleReferenceValueChange(item, e)}
+                            onReferencedKeyChange={(e) => handleReferenceKeyChange(item, e)}
                     />
-                </Form.Item>
+                </>);
             case 'Input':
                 return <Form.Item
                     id={`value-${item.id}`}
                     name={`value-${item.id}`}
-                    rules={[{required: true, message: "字段值不能为空"}, {pattern: /^[^\s]*$/, message: "禁止输入空格"},]}
+                    rules={[{required: true, message: "字段值不能为空"}, {pattern: /^[^\s]*$/, message: "禁止输入空格"}]}
                     initialValue={item.value}
+                    validateTrigger="onBlur"
                 >
                     <Input
                         className="value-custom jade-input"
@@ -132,103 +135,85 @@ export default function JadeInput({items, addItem, updateItem, deleteItem}) {
 
     return (
         <Collapse bordered={false} className="jade-collapse-custom-background-color" defaultActiveKey={["inputPanel"]}>
-            {
-                <Panel
+            {<Panel
                     key={"inputPanel"}
-                    header={
-                        <div className="panel-header">
-                            <span className="jade-panel-header-font">输入</span>
-                            <Popover content={content}>
-                                <InfoCircleOutlined className="jade-panel-header-popover-content"/>
-                            </Popover>
-                            <Button type="text" className="icon-button"
-                                    style={{height: "22px", marginLeft: "76%", marginRight: "0"}}
-                                    onClick={(event) => {
-                                        handleAdd();
-                                        handleSelectClick(event);
-                                    }}>
-                                <PlusOutlined/>
-                            </Button>
-                        </div>
-                    }
+                    header={<div className="panel-header">
+                        <span className="jade-panel-header-font">输入</span>
+                        <Popover content={content}>
+                            <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                        </Popover>
+                        <Button type="text" className="icon-button jade-panel-header-icon-position"
+                                onClick={(event) => {
+                                    handleAdd();
+                                    handleSelectClick(event);
+                                }}>
+                            <PlusOutlined/>
+                        </Button>
+                    </div>}
                     className="jade-panel"
-                >
-                    <Form
-                        name={`inputForm-${shape.id}`}
-                        layout="vertical" // 设置全局的垂直布局
-                        className={"jade-form"}
-                    >
-                        <Row gutter={16}>
-                            <Col span={8}>
-                                <Form.Item>
-                                    <span className="jade-font-size jade-font-color">字段名称</span>
-                                </Form.Item>
-                            </Col>
-                            <Col span={16}>
-                                <Form.Item>
-                                    <span className="jade-font-size jade-font-color">字段值</span>
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                        {items.map((item) => (
-                            <Row
+            >
+                <Row gutter={16}>
+                    <Col span={8}>
+                        <Form.Item>
+                            <span className="jade-font-size jade-font-color">字段名称</span>
+                        </Form.Item>
+                    </Col>
+                    <Col span={16}>
+                        <Form.Item>
+                            <span className="jade-font-size jade-font-color">字段值</span>
+                        </Form.Item>
+                    </Col>
+                </Row>
+                {items.map((item) => (<Row
                                 key={item.id}
                                 gutter={16}
-                            >
-                                <Col span={8}>
-                                    <Form.Item
+                        >
+                            <Col span={8}>
+                                <Form.Item
                                         id={`name-${item.id}`}
                                         name={`name-${item.id}`}
-                                        rules={[
-                                            {
-                                                pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/,
-                                                message: '只能包含字母、数字或下划线，且必须以字母或下划线开头'
-                                            }
-                                        ]}
+                                        rules={[{required: true, message: "字段值不能为空"}, {pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: '只能包含字母、数字或下划线，且必须以字母或下划线开头'}]}
                                         initialValue={item.name}
-                                    >
-                                        <Input
+                                >
+                                    <Input
                                             className="jade-input"
+                                            placeholder="请输入字段名称"
                                             style={{paddingRight: "12px"}}
                                             value={item.name}
                                             onChange={(e) => handleItemChange('name', e.target.value, item.id)}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={6} style={{paddingRight: 0}}>
-                                    <Form.Item
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col span={6} style={{paddingRight: 0}}>
+                                <Form.Item
                                         id={`from-${item.id}`}
-                                        initialValue='Reference'
-                                    >
-                                        <JadeStopPropagationSelect
+                                        initialValue="Reference"
+                                >
+                                    <JadeStopPropagationSelect
                                             id={`from-select-${item.id}`}
                                             className="value-source-custom jade-select"
                                             style={{width: "100%"}}
                                             onChange={(value) => handleItemChange('from', value, item.id)}
-                                            options={[
-                                                {value: 'Reference', label: '引用'},
-                                                {value: 'Input', label: '输入'},
-                                            ]}
+                                            options={[{value: 'Reference', label: '引用'},
+                                                {value: 'Input', label: '输入'}]}
                                             value={item.from}
-                                        />
-                                    </Form.Item>
-                                </Col>
-                                <Col span={8} style={{paddingLeft: 0}}>
-                                        {renderComponent(item)} {/* 渲染对应的组件 */}
-                                </Col>
-                                <Col span={2} style={{paddingLeft: 0}}>
-                                    <Form.Item>
-                                        <Button type="text" className="icon-button"
-                                                style={{height: "100%"}}
-                                                onClick={() => handleDelete(item.id)}>
-                                            <MinusCircleOutlined/>
-                                        </Button>
-                                    </Form.Item>
-                                </Col>
-                            </Row>
-                        ))}
-                    </Form>
-                </Panel>
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col span={8} style={{paddingLeft: 0}}>
+                                {renderComponent(item)} {/* 渲染对应的组件 */}
+                            </Col>
+                            <Col span={2} style={{paddingLeft: 0}}>
+                                <Form.Item>
+                                    <Button type="text" className="icon-button"
+                                            style={{height: "100%"}}
+                                            onClick={() => handleDelete(item.id)}>
+                                        <MinusCircleOutlined/>
+                                    </Button>
+                                </Form.Item>
+                            </Col>
+                        </Row>))}
+            </Panel>
             }
         </Collapse>
     );

@@ -16,4 +16,6 @@ public interface AppBuilderFlowGraphMapper {
     void insertOne(AppBuilderFlowGraphPO insert);
 
     void updateOne(AppBuilderFlowGraphPO update);
+
+    void delete(String id);
 }

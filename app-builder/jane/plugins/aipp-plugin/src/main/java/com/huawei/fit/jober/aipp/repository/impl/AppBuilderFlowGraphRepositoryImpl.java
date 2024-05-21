@@ -38,4 +38,9 @@ public class AppBuilderFlowGraphRepositoryImpl implements AppBuilderFlowGraphRep
     public void updateOne(AppBuilderFlowGraph appBuilderFlowGraph) {
         this.appBuilderFlowGraphMapper.updateOne(this.serializer.serialize(appBuilderFlowGraph));
     }
+
+    @Override
+    public void delete(String id) {
+        this.appBuilderFlowGraphMapper.delete(id);
+    }
 }

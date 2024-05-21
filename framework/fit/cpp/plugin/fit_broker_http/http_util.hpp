@@ -21,6 +21,8 @@ constexpr const char* HEADER_FIT_VERSION = "FIT-Version";
 constexpr const char* HEADER_FIT_DATA_FORMAT = "FIT-Data-Format";
 constexpr const char* HEADER_FIT_GENERICABLE_VERSION = "FIT-Genericable-Version";
 constexpr const char* HEADER_FIT_TLV = "FIT-TLV";
+constexpr const char* HEADER_FIT_CODE = "FIT-Code";
+constexpr const char* HEADER_FIT_MESSAGE = "FIT-Message";
 constexpr const char* DEFAULT_GENERICABLE_VERSION = "1.0.0";
 
 constexpr const char* HTTP_CONTENT_TYPE_JSON = "application/json";

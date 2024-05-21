@@ -45,9 +45,11 @@ public class NestableJarUrlConnectionTest {
         @Test
         @DisplayName("当 URL 的 file 字段不包含 '!/' 时，抛出异常")
         void whenFileNotContainsSeparatorThenThrowException() {
-            MalformedURLException malformedURLException = catchThrowableOfType(
-                    () -> new NestableJarUrlConnection(new URL("jar", null, -1, "file:newJar.class")),
-                    MalformedURLException.class);
+            MalformedURLException malformedURLException =
+                    catchThrowableOfType(() -> new NestableJarUrlConnection(new URL("jar",
+                            null,
+                            -1,
+                            "file:newJar.class")), MalformedURLException.class);
             assertThat(malformedURLException).hasMessageStartingWith("The URL does not specify a entry in JAR.");
         }
     }
@@ -90,15 +92,6 @@ public class NestableJarUrlConnectionTest {
         void invokeTheMethodThenReturnTheEntryName() {
             String expectEntryName = this.nestableJarUrlConnection.getEntryName();
             assertThat(expectEntryName).isEqualTo(entryName);
-        }
-
-        @Test
-        @DisplayName("调用 getLastModified() 方法，返回上次修改时间的毫秒值为空")
-        void invokeGetLastModifiedMethodThenThrowException() {
-            NullPointerException nullPointerException =
-                    catchThrowableOfType(() -> this.nestableJarUrlConnection.getLastModified(),
-                            NullPointerException.class);
-            assertThat(nullPointerException).isNotNull();
         }
 
         @Test
@@ -240,12 +233,10 @@ public class NestableJarUrlConnectionTest {
         }
 
         @Test
-        @DisplayName("未修改条目值，调用获取上次调用时间，抛出异常")
-        void getLastModifiedTimeWhenNotChangedEntryThenThrowException() {
-            NullPointerException nullPointerException =
-                    catchThrowableOfType(() -> this.nestableJarUrlConnection.getLastModified(),
-                            NullPointerException.class);
-            assertThat(nullPointerException).isNotNull();
+        @DisplayName("未修改条目值，调用获取上次调用时间，返回 0")
+        void getLastModifiedTimeWhenNotChangedEntryThenReturn0() {
+            long lastModified = this.nestableJarUrlConnection.getLastModified();
+            assertThat(lastModified).isEqualTo(0);
         }
     }
 }

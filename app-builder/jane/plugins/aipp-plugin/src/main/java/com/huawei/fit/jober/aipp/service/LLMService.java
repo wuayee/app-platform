@@ -5,7 +5,6 @@
 package com.huawei.fit.jober.aipp.service;
 
 import com.huawei.fit.jober.aipp.dto.xiaohai.FileDto;
-import com.huawei.fit.jober.aipp.entity.LlmEventListener;
 import com.huawei.hllm.model.LlmModel;
 
 import java.io.File;
@@ -20,12 +19,6 @@ public interface LLMService {
     String askModelWithText(String prompt, LlmModel model) throws IOException;
 
     String askModelWithText(String prompt, int maxTokens, double temperature, LlmModel model) throws IOException;
-
-    /**
-     * 流式调用大模型文本对话
-     */
-    LlmEventListener askModelStreaming(String prompt, int maxTokens, LlmModel model, String instanceId,
-            String modelResultKey);
 
     String askXiaoHaiKnowledge(String w3Id, String question) throws IOException;
 

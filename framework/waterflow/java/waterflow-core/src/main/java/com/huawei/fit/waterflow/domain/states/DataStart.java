@@ -6,6 +6,7 @@ package com.huawei.fit.waterflow.domain.states;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.emitters.Emitter;
+import com.huawei.fit.waterflow.domain.emitters.FlowEmitter;
 import com.huawei.fit.waterflow.domain.flow.ProcessFlow;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.utils.Tuple;
@@ -22,56 +23,42 @@ import java.util.List;
  */
 public class DataStart<O, D, I> {
     /**
-     * 开始节点
+     * 数据前置开始节点。
      */
     protected DataStart<?, D, ?> start;
 
-    final Start<O, D, I, ProcessFlow<D>> state;
-
-    private final D monoData;
-
-    private final D[] fluxData;
+    /**
+     * 流程开始节点。
+     */
+    protected final Start<O, D, I, ProcessFlow<D>> state;
 
     private final Emitter<D, FlowSession> emitter;
 
     public DataStart(Start<O, D, I, ProcessFlow<D>> state, D data) {
-        this(state, data, null, null);
+        this(state, FlowEmitter.mono(data));
     }
 
     public DataStart(Start<O, D, I, ProcessFlow<D>> state, D[] data) {
-        this(state, null, data, null);
+        this(state, FlowEmitter.flux(data));
     }
 
     public DataStart(Start<O, D, I, ProcessFlow<D>> state, Emitter<D, FlowSession> emitter) {
-        this(state, null, null, emitter);
-    }
-
-    protected DataStart(Start<O, D, I, ProcessFlow<D>> state) {
-        this(state, null, null, null);
-    }
-
-    private DataStart(Start<O, D, I, ProcessFlow<D>> state, D monoData, D[] fluxData, Emitter<D, FlowSession> emitter) {
         this.state = state;
-        this.monoData = monoData;
-        this.fluxData = fluxData;
         this.emitter = emitter;
         this.start = this;
     }
 
+    protected DataStart(Start<O, D, I, ProcessFlow<D>> state) {
+        this(state, (Emitter<D, FlowSession>) null);
+    }
+
     /**
-     * 根据不同的数据源类型，触发数据的发射
+     * 触发数据的发射。
      */
     protected void offer() {
-        // 前2者关闭流
-        if (monoData != null) {
-            this.start.state.getFlow().offer(this.monoData);
-        }
-        if (fluxData != null) {
-            this.start.state.getFlow().offer(this.fluxData);
-        }
-        // 热流 不关闭
         if (this.emitter != null) {
             this.start.state.getFlow().offer(this.emitter);
+            this.emitter.start(null);
         }
     }
 

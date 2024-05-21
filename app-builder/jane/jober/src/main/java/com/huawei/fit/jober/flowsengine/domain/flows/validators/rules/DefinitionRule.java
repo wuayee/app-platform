@@ -93,6 +93,6 @@ public class DefinitionRule implements FlowRule {
         Validation.greaterThanOrEquals(flowDefinition.getNodeIdSet().size(), MINIMUM_NODE_SIZE,
                 exception("all node number, node number must more than 3"));
         Validation.same(getNodeCount(flowDefinition, START), EXPECT_NODE_NUMBER, exception("start node number"));
-        Validation.same(getNodeCount(flowDefinition, END), EXPECT_NODE_NUMBER, exception("end node number"));
+        Validation.greaterThanOrEquals(getNodeCount(flowDefinition, END), EXPECT_NODE_NUMBER, exception("end node number"));
     }
 }

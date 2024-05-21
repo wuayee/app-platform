@@ -115,7 +115,7 @@ public class MetaConverterImpl implements MetaConverter {
         meta.setCreator(task.getCreator());
         meta.setLastModifier(task.getLastModifier());
         meta.setLastModificationTime(task.getLastModificationTime());
-        meta.setTenant(context.tenantId());
+        meta.setTenant(task.getTenantId());
         meta.setAttributes(task.getAttributes());
         meta.setName(task.getName());
         meta.setVersion("1.0.0"); // FIXME: 2024/4/2 0002 兼容逻辑，如果不存在|则认为是旧数据，默认1.0.0版本

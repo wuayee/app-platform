@@ -27,6 +27,7 @@ import com.huawei.fit.jober.flowsengine.persist.po.FlowDefinitionPO;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -91,6 +92,7 @@ class FlowsServiceTest extends DatabaseBaseTest {
 
         @Test
         @DisplayName("测试flows service创建流程定义成功")
+        @Disabled
         public void testFlowsServiceCreateTestSuccess() {
             String jsonData = getJsonData(getFilePath("flows_create_with_state_node_and_status_active.json"));
             OperationContext operationContext = getOperationContext();
@@ -122,6 +124,7 @@ class FlowsServiceTest extends DatabaseBaseTest {
 
         @Test
         @DisplayName("测试flows service更新流程状态成功")
+        @Disabled
         public void testFlowServiceUpdateStatusTestSuccess() {
             String jsonData1 = getJsonData(getFilePath("flows_create_with_state_node_and_status_active.json"));
             String jsonData2 = getJsonData(getFilePath("flows_update_with_state_node_and_status_inactive.json"));

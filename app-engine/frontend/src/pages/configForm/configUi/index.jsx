@@ -131,6 +131,7 @@ function LLM(props) {
                                 placeholder="输入一段提示词，可以给应用预设身份"
                                 rows={6}
                                 onBlur={(e) => {updateData(e.target.value, "systemPrompt")}}
+                                autoSize
                             />
                         </Form.Item>
                     </div>
@@ -158,7 +159,7 @@ function Skill(props) {
     }
 
     const onAddFlowClick = () => {
-      navigate(`/aipp/${tenantId}/addFlow/${appId}`);
+      navigate(`/app/${tenantId}/addFlow/${appId}`);
     };
 
     const onAddToolClick = () => {
@@ -205,7 +206,7 @@ function Skill(props) {
     const handleCheck = (option, event) => {
         event.stopPropagation();
         console.log(option);
-        navigate(`/aipp/${option.data.tenantId}/flowDetail/${option.data.appId}`);
+        navigate(`/app/${option.data.tenantId}/flowDetail/${option.data.appId}`);
     }
 
     return (

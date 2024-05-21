@@ -1,4 +1,3 @@
-import {v4 as uuidv4} from "uuid";
 import ManualCheckFormWrapper from "@/components/manualCheck/ManualCheckFormWrapper.jsx";
 
 export const manualCheckComponent = (jadeConfig) => {
@@ -9,16 +8,11 @@ export const manualCheckComponent = (jadeConfig) => {
      */
     self.getJadeConfig = () => {
         return jadeConfig ? jadeConfig : {
-            inputParams: [
-                {
-                    id: uuidv4(),
-                    name: "formName",
-                    type: "Object",
-                    from: "Input",
-                    value: ""
-                }
-            ],
-            outputParams: []
+            "converter": {},
+            "taskId": "",
+            "type": "AIPP_SMART_FORM",
+            "formName": "",
+            "outputParams": ""
         };
     };
 
@@ -36,17 +30,9 @@ export const manualCheckComponent = (jadeConfig) => {
         function changeFormAndSetOutput() {
             return {
                 ...data,
-                inputParams: data.inputParams.map(item => {
-                    if (item.name === "formName") {
-                        return {
-                            ...item,
-                            value: action.formName
-                        }
-                    } else {
-                        return item;
-                    }
-                }),
-                outputParams: action.formOutput
+                taskId: action.formId,
+                formName: action.formName,
+                output: action.formOutput,
             }
         }
 

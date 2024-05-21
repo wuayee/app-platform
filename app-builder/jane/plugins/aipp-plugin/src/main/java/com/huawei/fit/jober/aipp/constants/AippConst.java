@@ -54,6 +54,11 @@ public class AippConst {
      */
     public static final String FORM_COMPONENT_DATA_KEY = "form_component_data";
 
+    /**
+     * basic_node_component_data
+     */
+    public static final String BASIC_NODE_COMPONENT_DATA_KEY = "basic_node_component_data";
+
     // *** business key ***
     /**
      * business data
@@ -156,7 +161,7 @@ public class AippConst {
     public static final String BS_SEARCH_W3_QUERY_RESULT = "w3QueryResult";
 
     /**
-     * business video path 
+     * business video path
      */
     public static final String BS_VIDEO_PATH = "videoPath";
 
@@ -417,6 +422,11 @@ public class AippConst {
     public static final String INST_AGENT_RESULT_KEY = "agentResult";
 
     /**
+     * aipp child instance key
+     */
+    public static final String INST_CHILD_INSTANCE_ID = "childInstanceId";
+
+    /**
      * aipp mind agent data instance key (dynamic_key)
      */
     public static final String INST_MIND_DATA_KEY = "llmJson2MindResult";
@@ -462,11 +472,6 @@ public class AippConst {
     public static final String ATTR_APP_ID_KEY = "app_id";
 
     /**
-     * business aipp_parent_inst_id key
-     */
-    public static final String BS_AIPP_PARENT_INST_ID_KEY = "aipp_parent_instance_id";
-
-    /**
      * business中的question key
      */
     public static final String BS_AIPP_QUESTION_KEY = "Question";
@@ -491,25 +496,51 @@ public class AippConst {
      */
     public static final String BS_AIPP_OUTPUT_IS_NEEDED_LLM = "isNeededLLM";
 
+    /**
+     * 模型使用的 parent trace id
+     */
+    public static final String TRACE_ID = "traceId";
+
+    /**
+     * 模型使用的 parent callback id
+     */
+    public static final String CALLBACK_ID = "callbackId";
+
+    /**
+     * parent flow trace id
+     */
+    public static final String PARENT_INSTANCE_ID = "parentInstanceId";
+
+    /**
+     * parent callback id
+     */
+    public static final String PARENT_CALLBACK_ID = "parentCallbackId";
+
+    /**
+     * 表明结果是否来自子流程
+     */
+    public static final String OUTPUT_IS_FROM_CHILD = "outputIsFromChild";
+
     // *** aipp initial static meta items ***
     /**
      * aipp initial static meta items
      */
     public static final List<FormMetaItem> STATIC_META_ITEMS = Arrays.asList(
-            new FormMetaItem(INST_NAME_KEY, "meta实例名称", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_CREATOR_KEY, "创建人", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_CREATE_TIME_KEY, "创建时间", "DATETIME", null),
-            new FormMetaItem(INST_MODIFY_BY_KEY, "更新人", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_MODIFY_TIME_KEY, "更新时间", "DATETIME", null),
-            new FormMetaItem(INST_FINISH_TIME_KEY, "完成时间", "DATETIME", null),
-            new FormMetaItem(INST_FLOW_INST_ID_KEY, "flow实例id", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_CURR_FORM_ID_KEY, "当前表单id", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_CURR_FORM_VERSION_KEY, "当前表单版本", "TEXT", STRING_LEN),
+            new FormMetaItem(INST_NAME_KEY, "meta实例名称", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_CREATOR_KEY, "创建人", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_CREATE_TIME_KEY, "创建时间", "DATETIME", null, null),
+            new FormMetaItem(INST_MODIFY_BY_KEY, "更新人", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_MODIFY_TIME_KEY, "更新时间", "DATETIME", null, null),
+            new FormMetaItem(INST_FINISH_TIME_KEY, "完成时间", "DATETIME", null, null),
+            new FormMetaItem(INST_FLOW_INST_ID_KEY, "flow实例id", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_CURR_FORM_ID_KEY, "当前表单id", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_CURR_FORM_VERSION_KEY, "当前表单版本", "TEXT", STRING_LEN, null),
             new FormMetaItem(INST_CURR_FORM_DATA_KEY, "当前表单数据", "TEXT",
-                    STRING_LEN * 8),
-            new FormMetaItem(INST_STATUS_KEY, "实例状态", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_PROGRESS_KEY, "实例进度", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_AGENT_RESULT_KEY, "aipp agent结果", "TEXT", STRING_LEN),
-            new FormMetaItem(INST_CURR_NODE_ID_KEY, "当前节点id", "TEXT", STRING_LEN)
+                    STRING_LEN * 8, null),
+            new FormMetaItem(INST_STATUS_KEY, "实例状态", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_PROGRESS_KEY, "实例进度", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_AGENT_RESULT_KEY, "aipp agent结果", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_CHILD_INSTANCE_ID, "aipp子流程instanceId", "TEXT", STRING_LEN, null),
+            new FormMetaItem(INST_CURR_NODE_ID_KEY, "当前节点id", "TEXT", STRING_LEN, null)
     );
 }

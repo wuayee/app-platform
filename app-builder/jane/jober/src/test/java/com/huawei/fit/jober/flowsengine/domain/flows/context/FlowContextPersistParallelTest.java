@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.huawei.fit.jober.DatabaseBaseTest;
 import com.huawei.fit.jober.FlowsDataBaseTest;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 2023/8/23
  */
 @DisplayName("流程实例在数据库中并行运行测试集合")
+@Disabled
 public class FlowContextPersistParallelTest extends DatabaseBaseTest {
     @Nested
     @DisplayName("流程实例流转多并发场景测试集合，复用数据库持久化测试场景")

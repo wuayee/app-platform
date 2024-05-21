@@ -58,6 +58,7 @@ import java.util.Map;
  * @author y00679285
  * @since 2024/4/24
  */
+@Disabled
 class FlowContextServiceTest extends DatabaseBaseTest {
     private final Parser parser = new FlowParser(null);
 

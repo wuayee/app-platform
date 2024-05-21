@@ -46,6 +46,11 @@
             <artifactId>waterflow-core</artifactId>
             <version>${waterflow.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jade.waterflow</groupId>
+            <artifactId>waterflow-bridge-fit-reactor</artifactId>
+            <version>${waterflow.version}</version>
+        </dependency>
 
         <!-- Lombok -->
         <dependency>

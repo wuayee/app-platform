@@ -33,7 +33,7 @@ export default function SkillForm({toolOptions, workflowOptions, config}) {
             console.error('Cannot get config.params.tenantId or config.params.appId.');
         } else {
             // 使用 window.open() 打开一个新页面
-            window.open('/aipp/' + config.params.tenantId + '/addFlow/' + config.params.appId, '_blank');
+            window.open('/appbuilder/#/aipp/' + config.params.tenantId + '/addFlow/' + config.params.appId, '_blank');
             event.stopPropagation(); // 阻止事件冒泡
         }
     };
@@ -59,84 +59,65 @@ export default function SkillForm({toolOptions, workflowOptions, config}) {
                     }
                     className="jade-panel"
                 >
-                    <Form
-                        name={`skillForm-${shape.id}`}
-                        layout="vertical" // 设置全局的垂直布局
-                        className={"jade-form"}
-                    >
-                        <Row gutter={16} style={{marginBottom: "6px", marginRight: 0, marginLeft: "-3%"}}>
-                            <Col span={21}>
-                                <span className="jade-font-size jade-font-color" style={{marginLeft: "6px"}}>工具</span>
-                            </Col>
-                            {/*430演示工具不需要+号跳转，暂时屏蔽*/}
-                            {/*<Col span={3}>*/}
-                            {/*    <Button type="text" className="icon-button"*/}
-                            {/*            style={{height: "22px", marginLeft: "4px"}}*/}
-                            {/*            onClick={(event) => {*/}
-                            {/*                // Todo 打开一个页面*/}
-                            {/*                handleClick(event);*/}
-                            {/*            }}>*/}
-                            {/*        <PlusOutlined/>*/}
-                            {/*    </Button>*/}
-                            {/*</Col>*/}
-                        </Row>
-                        <Form.Item>
-                            <JadeStopPropagationSelect
-                                mode="multiple"
-                                showSearch
-                                allowClear
-                                className="jade-select"
-                                placeholder="选择合适的工具"
-                                filterOption={filterOption}
-                                optionFilterProp="label"
-                                value={tool.value}
-                                onMouseDown={(e) => e.stopPropagation()}
-                                onChange={(e) => handleSkillChange(tool.id, e)}
-                                options={[
-                                    // Todo 获取对应值
-                                    {value: 'tool1', label: '查天气'},
-                                    {value: 'tool2', label: '查新闻'},
-                                    {value: 'tool3', label: '查电影'},
-                                ]}
-                            />
-                        </Form.Item>
-                        <Row gutter={16} style={{marginBottom: "6px", marginRight: 0, marginLeft: "-3%"}}>
-                            <Col span={22}>
-                                <span className="jade-font-size jade-font-color" style={{marginLeft: "6px"}}>工具流</span>
-                            </Col>
-                            <Col span={2} style={{paddingLeft: "3%"}}>
-                                <Button type="text" className="icon-button"
-                                        style={{height: "22px"}}
-                                        onClick={(event) => {
-                                            handleClick(event);
-                                        }}>
-                                    <PlusOutlined/>
-                                </Button>
-                            </Col>
-                        </Row>
+                    <Row gutter={16} style={{marginBottom: "6px", marginRight: 0, marginLeft: "-3%"}}>
+                        <Col span={21}>
+                            <span className="jade-font-size jade-font-color" style={{marginLeft: "6px"}}>工具</span>
+                        </Col>
+                        {/*430演示工具不需要+号跳转，暂时屏蔽*/}
+                        {/*<Col span={3}>*/}
+                        {/*    <Button type="text" className="icon-button"*/}
+                        {/*            style={{height: "22px", marginLeft: "4px"}}*/}
+                        {/*            onClick={(event) => {*/}
+                        {/*                handleClick(event);*/}
+                        {/*            }}>*/}
+                        {/*        <PlusOutlined/>*/}
+                        {/*    </Button>*/}
+                        {/*</Col>*/}
+                    </Row>
+                    <Form.Item>
+                        <JadeStopPropagationSelect
+                            mode="multiple"
+                            showSearch
+                            allowClear
+                            className="jade-select"
+                            placeholder="选择合适的工具"
+                            filterOption={filterOption}
+                            optionFilterProp="label"
+                            value={tool.value}
+                            onMouseDown={(e) => e.stopPropagation()}
+                            onChange={(e) => handleSkillChange(tool.id, e)}
+                            options={toolOptions}
+                        />
+                    </Form.Item>
+                    <Row gutter={16} style={{marginBottom: "6px", marginRight: 0, marginLeft: "-3%"}}>
+                        <Col span={22}>
+                            <span className="jade-font-size jade-font-color" style={{marginLeft: "6px"}}>工具流</span>
+                        </Col>
+                        <Col span={2} style={{paddingLeft: "3%"}}>
+                            <Button type="text" className="icon-button"
+                                    style={{height: "22px"}}
+                                    onClick={(event) => {
+                                        handleClick(event);
+                                    }}>
+                                <PlusOutlined/>
+                            </Button>
+                        </Col>
+                    </Row>
 
-                        <Form.Item>
-                            <JadeStopPropagationSelect
-                                mode="multiple"
-                                showSearch
-                                allowClear
-                                className="jade-select"
-                                placeholder="选择合适的工具流"
-                                filterOption={filterOption}
-                                optionFilterProp="label"
-                                value={workflow.value}
-                                onChange={(e) => handleSkillChange(workflow.id, e)}
-                                options={[
-                                    // Todo 获取对应值
-                                    {value: 'flow1', label: '撰写经营分析报告'},
-                                    {value: 'flow2', label: '发送邮件'},
-                                    {value: 'flow3', label: '面试问题'},
-                                    {value: 'flow4', label: '面试总结'},
-                                    {value: 'flow5', label: '文件提取'}
-                                ]}
-                            />
-                        </Form.Item>
-                    </Form>
+                    <Form.Item>
+                        <JadeStopPropagationSelect
+                            mode="multiple"
+                            showSearch
+                            allowClear
+                            className="jade-select"
+                            placeholder="选择合适的工具流"
+                            filterOption={filterOption}
+                            optionFilterProp="label"
+                            value={workflow.value}
+                            onChange={(e) => handleSkillChange(workflow.id, e)}
+                            options={workflowOptions}
+                        />
+                    </Form.Item>
                 </Panel>
             }
         </Collapse>
