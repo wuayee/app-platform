@@ -10,6 +10,8 @@ import ChatRunning from "../pages/chatEngineHome/index.jsx";
 import AippIndex from "../pages/aippIndex";
 import AddFlow from "../pages/addFlow";
 import AppDetail from "../pages/appDetail";
+import KnowledgeBaseDetailCreateTable from "../pages/knowledge-base/knowledge-detail/create-table";
+import KnowledgeBaseDetailImportData from "../pages/knowledge-base/knowledge-detail/import-data";
 
 export type MenuItem = Required<MenuProps>['items'][number] & 
   { 
@@ -72,6 +74,22 @@ export const routeList: MenuItem[] = [
               label: '小魔方知识库',
               component: KnowledgeBaseDetail,
               hidden: true,
+              children: [
+                {
+                  key: "/knowledge-base/knowledge-detail/create-table",
+                  icon: Icons.app({}),
+                  label: "添加知识表",
+                  component: KnowledgeBaseDetailCreateTable,
+                  hidden: true,
+                },
+                {
+                  key: "/knowledge-base/knowledge-detail/import-data",
+                  icon: Icons.app({}),
+                  label: "导入数据",
+                  component: KnowledgeBaseDetailImportData,
+                  hidden: true,
+                },
+              ]
             },
         ],
     },
