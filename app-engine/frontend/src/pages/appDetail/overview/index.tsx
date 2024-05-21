@@ -1,6 +1,6 @@
 import { Button, Divider, Flex, Input, Switch, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
-import './style.scss';
+import './style.scoped.scss';
 import { queryAppDetail } from '../../../shared/http/app';
 import { Message } from '../../../shared/utils/message';
 
