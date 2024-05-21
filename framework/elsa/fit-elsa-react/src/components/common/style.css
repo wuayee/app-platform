@@ -84,6 +84,13 @@
     height: 32px;
 }
 
+.jade-textarea-input {
+    border-color: #edeeef !important;
+    font-size: 12px;
+    height: 86.5px !important;
+    resize: none !important;
+}
+
 .ant-form-item-label {
     padding-left: 4px !important;
     padding-bottom: 4px !important;

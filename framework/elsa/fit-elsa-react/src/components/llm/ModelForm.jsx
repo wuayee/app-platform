@@ -1,6 +1,6 @@
 import {Col, Collapse, Form, Input, InputNumber, Popover, Row} from 'antd';
 import {InfoCircleOutlined} from '@ant-design/icons';
-import {useDataContext, useDispatch, useFormContext} from "@/components/DefaultRoot.jsx";
+import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
 import {JadeStopPropagationSelect} from "../common/JadeStopPropagationSelect.jsx";
 import PropTypes from "prop-types";
 
@@ -8,6 +8,7 @@ const {TextArea} = Input;
 const {Panel} = Collapse;
 
 ModelForm.propTypes = {
+    shapeId: PropTypes.string.isRequired, // 确保 shapeId 是一个必需的string类型
     modelOptions: PropTypes.array.isRequired, // 确保 modelOptions 是一个必需的array类型
 };
 
@@ -21,7 +22,6 @@ ModelForm.propTypes = {
 export default function ModelForm({shapeId, modelOptions}) {
     const data = useDataContext();
     const dispatch = useDispatch();
-    const form = useFormContext();
     const model = data.inputParams.find(item => item.name === "model");
     const temperature = data.inputParams.find(item => item.name === "temperature");
     const prompt = data.inputParams.filter(item => item.name === "prompt").flatMap(item => item.value).find(item => item.name === "template");
@@ -101,13 +101,13 @@ export default function ModelForm({shapeId, modelOptions}) {
                                     label="模型"
                                     rules={[{required: true, message: '请选择使用的模型'}]}
                                     initialValue={model.value} // 当组件套在Form.Item中的时候，内部组件的初始值使用Form.Item的initialValue进行赋值
+                                    validateTrigger="onBlur"
                             >
                                 <JadeStopPropagationSelect
                                         className="jade-select"
                                         onClick={handleSelectClick} // 点击下拉框时阻止事件冒泡
                                         onChange={(e) => dispatch({actionType: "changeConfig", id: model.id, value: e})}
                                         options={modelOptions}
-                                        validateTrigger="onBlur"
                                 />
                             </Form.Item>
                         </Col>
@@ -154,10 +154,9 @@ export default function ModelForm({shapeId, modelOptions}) {
                                     validateTrigger="onBlur"
                             >
                                 <TextArea
-                                        className="jade-input jade-font-size"
+                                        className="jade-textarea-input jade-font-size"
                                         onBlur={(e) => onTextareaBlur(e)}
                                         placeholder="你可以用{{variable name}}来关联输入中的变量名"
-                                        autoSize={{minRows: 4, maxRows: 4}}
                                 />
                             </Form.Item>
                         </Col>
