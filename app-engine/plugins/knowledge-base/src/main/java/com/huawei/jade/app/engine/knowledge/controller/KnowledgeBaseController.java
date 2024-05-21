@@ -16,10 +16,12 @@ import com.huawei.fitframework.annotation.Fit;
 import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
 import com.huawei.jade.app.engine.knowledge.dto.KStorageDto;
 import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
+import com.huawei.jade.app.engine.knowledge.dto.KbGenerateConfigDto;
 import com.huawei.jade.app.engine.knowledge.params.RepoQueryParam;
 import com.huawei.jade.app.engine.knowledge.service.KRepoService;
 import com.huawei.jade.app.engine.knowledge.service.KStorageService;
 import com.huawei.jade.app.engine.knowledge.service.KTableService;
+import com.huawei.jade.app.engine.knowledge.service.KbGenerateService;
 import com.huawei.jade.app.engine.knowledge.vo.PageResultVo;
 
 import java.util.Date;
@@ -41,6 +43,9 @@ public class KnowledgeBaseController {
 
     @Fit
     private KStorageService kStorageService;
+
+    @Fit
+    private KbGenerateService kbGenerateService;
 
     /**
      * 通过名称查找知识库列表
@@ -216,5 +221,16 @@ public class KnowledgeBaseController {
     @DeleteMapping("/storages/{id}")
     public void deleteKStorage(@PathVariable("id") Long id) {
         kStorageService.delete(id);
+    }
+
+
+    /**
+     * 导入文本类型知识接口
+     *
+     * @param fileConfigDto 文件导入配置信息
+     */
+    @PostMapping(path = "/import-knowledge/text")
+    public void importKnowledge(@RequestBody KbGenerateConfigDto fileConfigDto) {
+        kbGenerateService.importKnowledge(fileConfigDto);
     }
 }
