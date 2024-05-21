@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState, useRef, useContext, useImperativeHandle } from 'react';
-import { Upload, Checkbox, Spin } from 'antd';
+import { Upload, Checkbox, Spin, Switch } from 'antd';
+import { LinkIcon, AtIcon, PanleCloseIcon, PanleIcon } from '../../../assets/icon';
 import $ from 'jquery';
 import exit from '@assets/images/ai/exit.png';
 import talk from '@assets/images/ai/talk.png';
@@ -8,6 +9,7 @@ import file from '@assets/images/ai/file.png';
 import image from '@assets/images/ai/image.png';
 import audio from '@assets/images/ai/audio.png';
 import stop from '@assets/images/ai/play.png';
+import xiaohai from '@assets/images/ai/xiaohai2.png';
 import { Message } from '../../../shared/utils/message';
 import { httpUrlMap } from '../../../shared/http/httpConfig';
 import { uploadChatFile } from '../../../shared/http/aipp';
@@ -24,13 +26,21 @@ const docArr = [
 ]
 const imgArr = ['image/jpeg', 'image/bmp', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
 const SendEditor = (props) => {
-  const { onSend, onClear, onStop, chatType, filterRef, requestLoading } = props;
+  const { 
+    onSend, 
+    onClear, 
+    onStop, 
+    chatType, 
+    filterRef, 
+    requestLoading, 
+    openClick,
+    inspirationOpen } = props;
   const [ content, setContent ] = useState('');
   const [ selectItem, setSelectItem ] = useState({});
   const [ selectDom, setSelectDom ] = useState();
   const [ showSelect, setShowSelect ] = useState(false);
   const [ positionConfig, setPositionConfig ] = useState({});
-  const { chatRunning }  = useContext(AippContext);
+  const { aippInfo ,chatRunning }  = useContext(AippContext);
   const editorRef = useRef(null);
   useEffect(() => {
     const dropBox = document.querySelector("#drop");
@@ -103,10 +113,7 @@ const SendEditor = (props) => {
       dragUpload(files[0], 'doc');
     }
   }
-  function dragUpload(file, type) {
-    console.log(file);
-    console.log(type);
-  }
+  function dragUpload(file, type) {}
   // 设置灵感大全下拉
   function setFilterHtml(prompt, promptMap) {
     const editorDom = document.getElementById('ctrl-promet');
@@ -116,18 +123,8 @@ const SendEditor = (props) => {
   // 绑定下拉事件
   function bindEvents(promptMap) {
     $('body').on('click', '.chat-focus', ($event) => {
-      // clearMove();
       let filterType = $($event.target).attr('data-type');
       let selectItem =  promptMap.filter(item => item.var === filterType)[0];
-      // if (!selectItem.multiple) {
-      //   $('.chat-promet-list').attr('contenteditable', false);
-      //   $('.chat-focus').attr('contenteditable', true);
-      //   $event.target.classList.add('dom-chat');
-      //   $event.target.classList.remove('clear-chat');
-      // } else {
-      //   $('.chat-promet-list').attr('contenteditable', true);
-      //   $('.chat-focus').attr('contenteditable', false);
-      // }
       setPositionConfig($event.target.getBoundingClientRect());
       setSelectItem(selectItem);
       setSelectDom($event.target);
@@ -139,10 +136,7 @@ const SendEditor = (props) => {
       if (
         !clickTarget.closest(chatPopup).length
       ) {
-        // $('.chat-promet-editor').attr('contenteditable', true);
-        // $('.chat-focus').attr('contenteditable', false);
         setShowSelect(false);
-        // clearMove();
       }
     });
   }
@@ -154,6 +148,8 @@ const SendEditor = (props) => {
   function fileSend(fileResult, fileType) {
     onSend(fileResult, fileType);
   }
+  // 是否联网
+  const onSwitchChange = (checked) => {}
   useImperativeHandle(filterRef, () => {
     return {
       'setFilterHtml': setFilterHtml
@@ -161,21 +157,29 @@ const SendEditor = (props) => {
   })
   return <>{(
     <div className='send-editor-container'>
-      
-      <div className='editor-inner' >
+      <Recommends openClick={openClick} inspirationOpen={inspirationOpen}/>
+      <div className='editor-inner'>
+        <EditorBtnHome aippInfo={aippInfo}/>
         <div className='editor-input' id="drop">
           <div
             className="chat-promet-editor"
             id="ctrl-promet"
             ref={ editorRef }
             contentEditable={ true }
-            placeholder="Enter快捷发送，Ctrl+Enter换行"
             onInput={messageChange}
             onKeyDown={messageKeyDown}
             onPaste={messagePaste}
           ></div>
           <div className='send-icon' onClick={ sendMessage }></div>
+          <div className='audio-icon' onClick={ sendMessage }><LinkIcon /></div>
         </div>
+      </div>
+      <div className='chat-tips'>
+        <div className="switch-item">
+          <Switch onChange={onSwitchChange} />
+          <span>联网</span>
+        </div>
+          - 所有内容均由人工智能大模型生成，存储产品内容准确性参照存储产品文档 - 
       </div>
      { showSelect &&  (
       <EditorSelect
@@ -403,16 +407,48 @@ const EditorSelect = (props) => {
 
 // 猜你想问
 const Recommends = (props) => {
-
+  const { openClick, inspirationOpen } = props;
 
   return <>{(
     <div className="recommends-inner">
       <div className="recommends-top">
-        
+        <span className="title">猜你想问</span>
+        <span className="refresh">换一批</span>
       </div>
       <div className="recommends-list">
-        <div className="list-left"></div>
-        <div className="list-right"></div>
+        <div className="list-left">
+          <div className="recommends-item">如何构建知识库</div>
+          <div className="recommends-item">我想创建一个应用</div>
+          <div className="recommends-item">推荐几个常用的应用机器人</div>
+        </div>
+        <div className="list-right" onClick={openClick}>
+          { inspirationOpen ? <PanleCloseIcon /> : <PanleIcon /> }
+        </div>
+      </div>
+    </div>
+  )}</>
+}
+
+// 操作按钮
+const EditorBtnHome = (props) => {
+  const { aippInfo } = props;
+
+  return <>{(
+    <div className="btn-inner">
+      <div className="inner-left">
+        <div className="inner-item">
+          <img src={xiaohai} alt="" />
+          <span className="item-name">{aippInfo.name || ''}</span>
+          <LinkIcon />
+          <AtIcon />
+        </div>
+      </div>
+      <div className="inner-right">
+        <div className="inner-item">
+          <LinkIcon />
+          <span className="item-name">自动</span>
+          <AtIcon />
+        </div>
       </div>
     </div>
   )}</>

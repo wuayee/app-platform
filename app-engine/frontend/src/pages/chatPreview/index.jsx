@@ -73,7 +73,7 @@ const ChatPreview = (props) => {
     !chatType && setOpen(true);
   }, []);
   useEffect(() => {
-    aippInfo.name && initChatHistory();
+    (aippInfo.name && !aippInfo.notShowHistory) && initChatHistory();
   }, [aippInfo])
   // 灵感大全设置下拉列表
   function setEditorSelect(data, prompItem) {
@@ -194,9 +194,6 @@ const ChatPreview = (props) => {
     reciveInitObj.type = 'recieve';
     reciveInitObj.loading = true;
     reciveInitObj.content = '回答生成中';
-    // reciveInitObj.chartConfig = chatMock;
-    // reciveInitObj.recieveType = 'form';
-    // reciveInitObj.formConfig = formMock;
     isChatRunning.current = false;
     setChatList(() => {
       let arr = [ ...listRef.current, reciveInitObj ];
@@ -566,18 +563,16 @@ const ChatPreview = (props) => {
                     filterRef={editorRef}
                     onSend={onSend}
                     onClear={clearChat}
+                    openClick={openClick}
                     onStop={chatRunningStop}
                     chatType={chatType}
+                    inspirationOpen={open}
                     requestLoading={requestLoading}
                   />
                 )
               }
-              <div className='chat-tips'> - 所有内容均由人工智能大模型生成，存储产品内容准确性参照存储产品文档 - </div>
             </div>
             <div className={['chat-inner-right', open ? 'chat-right-close' : null].join(' ')}>
-              <div className='inspiratio-tag' onClick={openClick}>
-                <img src={left} className={ !open ? 'img-trans' : null }  alt="" />
-              </div>
               <Inspiration
                 open={open}
                 sessionName={sessionName}

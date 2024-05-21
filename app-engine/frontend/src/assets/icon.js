@@ -22,6 +22,10 @@ import FullScreen from "./svg/full.svg";
 import User from "./svg/user.svg";
 import If from "./svg/if.svg";
 import Fit from "./svg/fit.svg";
+import Link from "./images/ai/link.svg";
+import At from "./images/ai/at.svg";
+import Panle from "./images/ai/panel.svg";
+import PanleClose from "./images/ai/panel-active.svg";
 
 // 编辑按钮
 const EditIcon = (props) => <Icon component={() => (<Edit/>)} {...props} />;
@@ -46,6 +50,10 @@ const ConfigFlowIcon = (props) => <Icon component={() => (<ConfigFlow/>)} {...pr
 const DownLoadIcon = (props) => <Icon component={() => (<DownLoad/>)} {...props} />;
 const FullScreenIcon = (props) => <Icon component={() => (<FullScreen/>)} {...props} />;
 const UserIcon = (props) => <Icon component={() => (<User/>)} {...props} />;
+const LinkIcon = (props) => <Icon component={() => (<Link/>)} {...props} />;
+const AtIcon = (props) => <Icon component={() => (<At/>)} {...props} />;
+const PanleIcon = (props) => <Icon component={() => (<Panle/>)} {...props} />;
+const PanleCloseIcon = (props) => <Icon component={() => (<PanleClose/>)} {...props} />;
 export {
   EditIcon,
   ClearIcon,
@@ -68,6 +76,10 @@ export {
   FullScreenIcon,
   UserIcon,
   IfIcon,
-  FitIcon
+  FitIcon,
+  LinkIcon,
+  AtIcon,
+  PanleIcon,
+  PanleCloseIcon
 }
 

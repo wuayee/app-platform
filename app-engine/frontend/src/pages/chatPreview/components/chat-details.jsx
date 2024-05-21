@@ -1,19 +1,39 @@
 
-import React, { useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useContext, useState, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AippContext } from '../../aippIndex/context';
+import EditModal from '../../components/edit-modal';
 import robot from '../../../assets/images/ai/robot1.png';
 import robot2 from '../../../assets/images/ai/xiaohai.png';
 import '../styles/chat-details.scss';
 
 const ChatDetail = () => {
-  const { aippInfo }  = useContext(AippContext);
+  const { aippInfo, tenantId }  = useContext(AippContext);
+  const [ modalInfo, setModalInfo ] = useState({});
   const location = useLocation();
+  let modalRef = useRef();
 
   const isHomepage = location.pathname.includes('home');
   const setClassName = () => {
     const isHomepage = location.pathname.includes('home');
     return isHomepage ? 'home-chat' : ''
+  }
+  const addApp = () => {
+    setModalInfo(() => {
+      modalRef.current.showModal();
+      return {
+        name: '',
+        attributes: {
+          description: '',
+          greeting: '',
+          icon: '',
+          app_type: '编程开发',
+        }
+      }
+    })
+  }
+  function addAippCallBack(appId) {
+    navigate(`/aipp/${tenantId}/detail/${appId}`);
   }
   return <>{(
     <div className='chat-details-content'>
@@ -30,7 +50,7 @@ const ChatDetail = () => {
             </div>
           </div>
           <div className="head-nav">
-            <div className="nav-left">
+            <div className="nav-left" onClick={addApp}>
               <div className="tag"></div>
               <div className="nav-title">创建应用</div>
               <div className="nav-desc">通过跟小海聊天轻松定制你的专属应用 - 上传自有数据，知识库模型训练，为业务带来更多价值。立即开始创建应用吧!</div>
@@ -59,6 +79,7 @@ const ChatDetail = () => {
           </div>
         </div>
       ) }
+       <EditModal type="add" modalRef={modalRef} aippInfo={modalInfo} addAippCallBack={addAippCallBack}/>
     </div>
   )}</>
 };
