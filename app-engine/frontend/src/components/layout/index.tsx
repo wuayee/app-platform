@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import type { MenuProps } from "antd";
 import { Layout, Menu } from "antd";
-import { MenuOutlined } from "@ant-design/icons";
+import { MenuFoldOutlined } from "@ant-design/icons";
 import {
   Route,
   useNavigate,
@@ -81,8 +81,8 @@ const AppLayout: React.FC = () => {
             <Icons.logo />
             <span className="layout-sider-title">APP Engine</span>
           </div>
-          <MenuOutlined
-            style={{ color: "#6d6e72", fontSize: 10 }}
+          <MenuFoldOutlined
+            style={{ color: "#6d6e72" }}
             onClick={() => setShowMenu(false)}
           />
         </div>
