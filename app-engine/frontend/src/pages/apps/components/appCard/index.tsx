@@ -31,9 +31,7 @@ const AppCard = ({ cardInfo }: any) => {
             label: <div style={{ width: 200 }}>删除</div>,
         },
     ];
-    const clickItem = (info: any) => {
-        console.log("info", info);
-    };
+    const clickItem = (info: any) => {};
     return (
       <div
         className="app_card_root"
