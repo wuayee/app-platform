@@ -182,11 +182,6 @@ const SendEditor = (props) => {
     };
   });
 
-  const [guessQuestions, setGuessQuestions] = useState([
-    "如何构建知识库",
-    "我想创建一个应用",
-    "推荐几个常用的应用机器人",
-  ]);
   const [recording, setRecording] = useState(false);
 
   // 语音实时转文字
@@ -506,7 +501,11 @@ const EditorSelect = (props) => {
 // 猜你想问
 const Recommends = (props) => {
   const { openClick, inspirationOpen } = props;
-
+  const [ guessQuestions, setGuessQuestions ] = useState([
+    "如何构建知识库",
+    "我想创建一个应用",
+    "推荐几个常用的应用机器人",
+  ]);
   return <>{(
     <div className="recommends-inner">
       <div className="recommends-top">
@@ -515,6 +514,9 @@ const Recommends = (props) => {
       </div>
       <div className="recommends-list">
         <div className="list-left">
+          {
+            
+          }
           <div className="recommends-item">如何构建知识库</div>
           <div className="recommends-item">我想创建一个应用</div>
           <div className="recommends-item">推荐几个常用的应用机器人</div>
@@ -542,9 +544,9 @@ const EditorBtnHome = (props) => {
       </div>
       <div className="inner-right">
         <div className="inner-item">
-          <LinkIcon />
+          {/* <LinkIcon />
           <span className="item-name">自动</span>
-          <HistoryOutlined onClick={() => setOpen(true)}/>
+          <HistoryOutlined onClick={() => setOpen(true)}/> */}
         </div>
       </div>
     </div>

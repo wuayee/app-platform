@@ -4,8 +4,8 @@
 
 package com.huawei.jade.model.service.gateway;
 
-import com.huawei.jade.model.service.gateway.controller.RouteUpdateController;
-import com.huawei.jade.model.service.gateway.route.RouteInfoList;
+import com.huawei.jade.model.service.gateway.controller.GatewayController;
+import com.huawei.jade.model.service.gateway.entity.RouteInfoList;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,6 +13,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -32,6 +33,7 @@ public class ModelGatewayApplication {
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(ModelGatewayApplication.class, args);
         initRoutes(context);
+        log.info("Model Gateway started");
     }
 
     private static void initRoutes(ApplicationContext context) {
@@ -42,14 +44,21 @@ public class ModelGatewayApplication {
         }
 
         RestTemplate restTemplate = new RestTemplate();
-        RouteInfoList routeList = restTemplate.getForObject(managerUrl, RouteInfoList.class);
-        if (routeList == null) {
-            log.error("Failed to get initial routes.");
+        RouteInfoList routeList;
+        try {
+            routeList = restTemplate.getForObject(managerUrl, RouteInfoList.class);
+        } catch (RestClientException e) {
+            log.error("Failed to get initial routes: " + e);
             return;
         }
 
-        if (context.getBean("routeUpdateController") instanceof RouteUpdateController) {
-            RouteUpdateController controller = (RouteUpdateController) context.getBean("routeUpdateController");
+        if (routeList == null) {
+            log.error("The route list is null.");
+            return;
+        }
+
+        if (context.getBean("gatewayController") instanceof GatewayController) {
+            GatewayController controller = (GatewayController) context.getBean("gatewayController");
             ResponseEntity<String> response = controller.updateRoutes(routeList);
             if (!response.getStatusCode().is2xxSuccessful()) {
                 log.error("Failed to add initial routes, err: " + response);

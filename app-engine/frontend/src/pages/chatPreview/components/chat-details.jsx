@@ -2,6 +2,7 @@
 import React, { useContext, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AippContext } from '../../aippIndex/context';
+import { TabLeftIcon, TabRightIcon } from '../../../assets/icon';
 import EditModal from '../../components/edit-modal';
 import robot from '../../../assets/images/ai/robot1.png';
 import robot2 from '../../../assets/images/ai/xiaohai.png';
