@@ -513,9 +513,16 @@ const EditorBtnHome = (props) => {
         <div className="inner-item">
           <img src={aippInfo.attributes?.icon} alt="" />
           <span className="item-name">{aippInfo.name || ''}</span>
+          <LinkIcon />
+          <AtIcon />
         </div>
       </div>
       <div className="inner-right">
+        <div className="inner-item">
+          <LinkIcon />
+          <span className="item-name">自动</span>
+          <AtIcon />
+        </div>
       </div>
     </div>
   )}</>
