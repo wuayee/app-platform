@@ -200,10 +200,7 @@ public class NestableJarUrlConnection extends JarURLConnection {
 
     @Override
     public long getLastModified() {
-        if (this.entry == null) {
-            return 0;
-        }
-        if (this.entry.getLastModifiedTime() == null) {
+        if (this.entry == null || this.entry.getLastModifiedTime() == null) {
             return 0;
         }
         return this.entry.getLastModifiedTime().toMillis();

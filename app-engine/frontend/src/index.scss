@@ -61,10 +61,10 @@ h1 {
 }
 
 :where(.css-dev-only-do-not-override-1okl62o).ant-drawer .ant-drawer-header {
-  border-bottom:0px
+  border-bottom: 0px
 }
 
-:where(.css-dev-only-do-not-override-1okl62o).ant-drawer .ant-drawer-footer{
+:where(.css-dev-only-do-not-override-1okl62o).ant-drawer .ant-drawer-footer {
   border-top: 0px;
   padding: 16px;
 }
@@ -77,8 +77,12 @@ h1 {
   margin-right: 16px;
 }
 
-.ant-form-vertical .ant-form-item-label {
-  padding: 0;
+.ant-form-vertical .ant-form-item {
+  margin-bottom: 8px;
+
+  .ant-form-item-label {
+    padding: 0;
+  }
 
   label {
     font-size: 12px;
@@ -87,4 +91,16 @@ h1 {
 
 .ant-form-item .ant-upload-wrapper div.ant-upload-select {
   width: 100%;
+}
+
+#root .ant-pagination-item-link {
+  margin: 0;
+}
+
+:where(.css-dev-only-do-not-override-1okl62o).ant-picker-outlined {
+  height: 32px;
+}
+
+#root .ant-tabs-nav-wrap {
+  height: 32px;
 }

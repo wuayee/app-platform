@@ -9,6 +9,7 @@ import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.PostMapping;
 import com.huawei.fit.http.annotation.PutMapping;
+import com.huawei.fit.http.annotation.RequestBean;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestParam;
@@ -16,6 +17,7 @@ import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.controller.AbstractController;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
 import com.huawei.fit.jober.aipp.dto.AippCreateDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppCreateDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
@@ -44,8 +46,8 @@ public class AppBuilderAppController extends AbstractController {
     @GetMapping(description = "查询 app 列表")
     public Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @RequestParam(value = "offset", defaultValue = "0") long offset,
-            @RequestParam(value = "limit", defaultValue = "10") int limit) {
-        return this.appService.list(httpRequest, tenantId, offset, limit);
+            @RequestParam(value = "limit", defaultValue = "10") int limit, @RequestBean AppQueryCondition cond) {
+        return this.appService.list(cond, httpRequest, tenantId, offset, limit);
     }
 
     @GetMapping(value = "/{app_id}", description = "查询 app ")
@@ -56,7 +58,7 @@ public class AppBuilderAppController extends AbstractController {
     @PostMapping(value = "/{app_id}", description = "根据模板创建aipp")
     public Rsp<AppBuilderAppDto> create(HttpClassicServerRequest request, @PathVariable("app_id") String appId,
             @PathVariable("tenant_id") String tenantId, @RequestBody @Validated AppBuilderAppCreateDto dto) {
-        return this.appService.create(appId, dto, this.contextOf(request, tenantId));
+        return Rsp.ok(this.appService.create(appId, dto, this.contextOf(request, tenantId)));
     }
 
     @PutMapping(value = "/{app_id}/config", description = "通过config更新aipp")
@@ -100,7 +102,8 @@ public class AppBuilderAppController extends AbstractController {
     }
 
     @DeleteMapping(path = "/{app_id}", description = "删除 app")
-    public Rsp<Void> delete(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId) {
+    public Rsp<Void> delete(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
+            @PathVariable("app_id") String appId) {
         this.appService.delete(appId, this.contextOf(httpRequest, tenantId));
         return Rsp.ok();
     }

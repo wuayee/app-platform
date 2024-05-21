@@ -47,8 +47,31 @@
         <if test="typeFilter != null">
             and type = #{typeFilter}
         </if>
+        <include refid="order"/>
         offset #{offset} limit #{limit}
     </select>
+
+    <sql id="order">
+        <choose>
+            <when test="cond.sort != null and cond.order != null">
+                order by ${cond.sort}
+                <choose>
+                    <when test="cond.order == 'descend'">
+                        desc
+                    </when>
+                    <when test="cond.order == 'ascend'">
+                        asc
+                    </when>
+                    <otherwise>
+                        desc
+                    </otherwise>
+                </choose>
+            </when>
+            <otherwise>
+                order by create_at desc
+            </otherwise>
+        </choose>
+    </sql>
 
     <select id="selectWithCondition" resultMap="BaseResultMap"
             resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">

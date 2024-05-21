@@ -30,6 +30,7 @@ const ChatRunning = () => {
     const res = await getAippInfo(tenantId, appId);
     if (res.code === 0) {
       setAippInfo(() => {
+        res.data.notShowHistory = true;
         aippRef.current = JSON.parse(JSON.stringify(res.data));
         return res.data
       });
