@@ -16,10 +16,13 @@ import com.huawei.fitframework.annotation.Fit;
 import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
 import com.huawei.jade.app.engine.knowledge.dto.KStorageDto;
 import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
+import com.huawei.jade.app.engine.knowledge.params.RepoQueryParam;
 import com.huawei.jade.app.engine.knowledge.service.KRepoService;
 import com.huawei.jade.app.engine.knowledge.service.KStorageService;
 import com.huawei.jade.app.engine.knowledge.service.KTableService;
+import com.huawei.jade.app.engine.knowledge.vo.PageResultVo;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,10 +35,27 @@ import java.util.List;
 public class KnowledgeBaseController {
     @Fit
     private KTableService kTableService;
+
     @Fit
     private KRepoService kRepoService;
+
     @Fit
     private KStorageService kStorageService;
+
+    /**
+     * 通过名称查找知识库列表
+     *
+     * @param param 查询参数
+     * @return 知识库列表
+     */
+    @PostMapping("/repos/list")
+    public PageResultVo<KRepoDto> getReposByName(@RequestBody RepoQueryParam param) {
+        return new PageResultVo<>(getReposCount(param), kRepoService.queryReposByName(param));
+    }
+
+    private int getReposCount(RepoQueryParam param) {
+        return kRepoService.queryReposCount(param);
+    }
 
     /**
      * 获取所有的知识库。
@@ -65,18 +85,20 @@ public class KnowledgeBaseController {
      */
     @PostMapping("/repos")
     public void createRepo(@RequestBody KRepoDto kRepoDto) {
+        // 用户后端设置固定值
+        kRepoDto.setOwnerId(1L);
         kRepoService.create(kRepoDto);
     }
 
     /**
      * 更新知识库
      *
-     * @param id 表示知识库ID的 {@link Long}。
      * @param kRepoDto 表示知识库记录的 {@link KRepoDto}。
      */
-    @PutMapping("/repos/{id}")
-    public void updateRepo(@PathVariable("id") Long id, @RequestBody KRepoDto kRepoDto) {
-        kRepoService.update(id, kRepoDto);
+    @PostMapping("/repos/update")
+    public void updateRepo(@RequestBody KRepoDto kRepoDto) {
+        kRepoDto.setUpdatedAt(new Date(System.currentTimeMillis()));
+        kRepoService.update(kRepoDto);
     }
 
     /**
@@ -89,7 +111,6 @@ public class KnowledgeBaseController {
         kRepoService.delete(id);
     }
 
-    // tables
     /**
      * 获取某个知识库下的所有知识表。
      *
@@ -144,6 +165,7 @@ public class KnowledgeBaseController {
     }
 
     // storages
+
     /**
      * 获取所有存储服务。
      *

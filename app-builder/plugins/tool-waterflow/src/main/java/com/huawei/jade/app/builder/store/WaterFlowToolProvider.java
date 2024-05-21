@@ -59,6 +59,9 @@ public class WaterFlowToolProvider implements ToolProvider {
         return name.stream().map(this.toolService::getTool).filter(Objects::nonNull).map(tool -> {
             Set<String> tags = tool.getTags();
             Map<String, Object> schema = new HashMap<>(tool.getSchema());
+            if (tags.contains(TAG_TYPE_WATER_FLOW)) {
+                schema = DefaultValueFilterToolInfo.getFilterSchema(schema);
+            }
             schema.put(SCHEMA_NAME_KEY, tool.getUniqueName());
             return new Tool(tags.contains(TAG_TYPE_WATER_FLOW), schema);
         }).collect(Collectors.toList());
