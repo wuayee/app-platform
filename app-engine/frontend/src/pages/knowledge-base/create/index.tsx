@@ -102,7 +102,9 @@ const KnowledgeBaseCreate = () => {
 
   return (
     <>
-    <div className='aui-fullpage'>
+    <div className='aui-fullpage' style={{
+      height: 'calc(100vh - 100px)'
+    }}>
     <div className='aui-header-1'>
       <div className='aui-title-1'>
         <BreadcrumbSelf currentLabel={id ? '修改知识库': '创建知识库'}></BreadcrumbSelf>
@@ -167,7 +169,7 @@ const KnowledgeBaseCreate = () => {
           justifyContent: 'end',
           gap: 16,
         }}>
-          <Button  loading={loading} onClick={onCancle} style={{
+          <Button onClick={onCancle} style={{
             borderRadius: 4,
           }}>取消</Button>
           <Button type="primary" loading={loading} onClick={submit} style={{
