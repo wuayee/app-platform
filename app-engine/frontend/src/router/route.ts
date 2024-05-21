@@ -12,6 +12,8 @@ import AippIndex from "../pages/aippIndex";
 import AddFlow from "../pages/addFlow";
 import FlowDetail from "../pages/detailFlow";
 import ChatShare from "../pages/chatShare";
+import Model from "../pages/model";
+import ModelDetail from "../pages/model/model-detail";
 
 export type MenuItem = Required<MenuProps>['items'][number] &
   {
@@ -81,10 +83,19 @@ export const routeList: MenuItem[] = [
         ],
     },
     {
-        key: "/mode",
+        key: "/model",
         icon: Icons.app({}),
         label: "模型",
-        component: Demo,
+        component: Model,
+        children: [
+            {
+                key: "/model/detail",
+                icon: Icons.app({}),
+                label: "创建知识库",
+                component: ModelDetail,
+                hidden: true,
+            },
+        ],
     },
     {
         key: "/knowledge-base",
