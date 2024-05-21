@@ -54,7 +54,8 @@ public class DefaultFinanceService implements FinanceService {
     @Fitable("default")
     @Override
     public NLRouter nlRouter(String query) {
-        HttpPost httpPost = new HttpPost("http://51.36.52.241:7861/v1/emodelchain/router");
+        // todo: 临时方案，暂时走模型网关转发，待整改
+        HttpPost httpPost = new HttpPost("http://tzaip-beta.paas.huawei.com/model-gateway/v1/emodelchain/router");
         String body = JsonUtils.toJsonString(MapBuilder.<String, String>get().put("query", query).build());
         httpPost.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
         NLRouter nlRouter = new NLRouter();
@@ -72,7 +73,7 @@ public class DefaultFinanceService implements FinanceService {
     @Fitable("default")
     @Override
     public String autoGraph(String condition, String query) {
-        HttpPost httpPost = new HttpPost("http://51.36.52.241:7861/v1/emodelchain/autograph");
+        HttpPost httpPost = new HttpPost("http://tzaip-beta.paas.huawei.com/model-gateway/v1/emodelchain/autograph");
         String body = JsonUtils.toJsonString(MapBuilder.<String, String>get()
                 .put("sql", condition)
                 .put("query", query)
