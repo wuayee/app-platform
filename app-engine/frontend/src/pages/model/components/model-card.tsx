@@ -2,22 +2,11 @@ import React, { ReactElement } from "react";
 import { Card } from "antd";
 import type { MenuProps } from "antd";
 import { Button, Dropdown, Space } from "antd";
-import { HashRouter, Route, useNavigate, Routes } from "react-router-dom";
-import { url } from "inspector";
+import { useNavigate } from "react-router-dom";
 import { Icons } from "../../../components/icons";
+import { ModelItem } from "../cards-tab";
 
-export interface knowledgeBase {
-  name: string;
-  createDate: string;
-  createBy: string;
-  icon: () => ReactElement;
-
-  desc: string;
-
-  id: string;
-}
-
-const ModelCard = ({ knowledge }: { knowledge: knowledgeBase }) => {
+const ModelCard = ({ modelItem }: { modelItem: ModelItem }) => {
   const operatorItems: MenuProps["items"] = [
     {
       key: "delete",
@@ -35,8 +24,8 @@ const ModelCard = ({ knowledge }: { knowledge: knowledgeBase }) => {
   // 路由
   const navigate = useNavigate();
   // 创建知识库
-  const toModelDetail = () => {
-    navigate("/model/detail");
+  const toModelDetail = (id:string) => {
+    navigate('/model/detail');
   };
   return (
     <Card
@@ -44,7 +33,7 @@ const ModelCard = ({ knowledge }: { knowledge: knowledgeBase }) => {
         width: 376,
         background:
           "url(/src/assets/images/knowledge/knowledge-background.png)",
-        height: 250,
+        height: 210,
       }}
     >
       {/* 头部区域 */}
@@ -61,18 +50,16 @@ const ModelCard = ({ knowledge }: { knowledge: knowledgeBase }) => {
               color: "rgba(5, 5, 5, .96)",
               cursor: "pointer",
             }}
-            onClick={() => toModelDetail()}
+            onClick={() => toModelDetail(modelItem.name)}
           >
-            {knowledge.name}
+            {modelItem.name}
           </div>
         </div>
         <div
           style={{
             marginLeft: 150,
           }}
-        >
-          <knowledge.icon />
-        </div>
+        ></div>
         <div
           style={{
             fontSize: 14,
@@ -80,7 +67,7 @@ const ModelCard = ({ knowledge }: { knowledge: knowledgeBase }) => {
             marginTop: 5,
           }}
         >
-          {knowledge.name}
+          {modelItem.name}
         </div>
       </div>
       <div
@@ -102,7 +89,7 @@ const ModelCard = ({ knowledge }: { knowledge: knowledgeBase }) => {
             padding: "1px 8px 1px 8px",
           }}
         >
-          {knowledge.createBy}
+          {modelItem.orgnization}
         </div>
         <div
           style={{
@@ -116,7 +103,7 @@ const ModelCard = ({ knowledge }: { knowledge: knowledgeBase }) => {
             padding: "1px 8px 1px 8px",
           }}
         >
-          {knowledge.createBy}
+          {modelItem.model}
         </div>
       </div>
 
@@ -130,7 +117,7 @@ const ModelCard = ({ knowledge }: { knowledge: knowledgeBase }) => {
           marginTop: 16,
         }}
       >
-        {knowledge.desc}
+        {modelItem.description}
       </div>
       <div
         style={{
@@ -151,9 +138,6 @@ const ModelCard = ({ knowledge }: { knowledge: knowledgeBase }) => {
           <Dropdown
             menu={{
               items: operatorItems,
-              onClick: (info) => {
-                clickItem(info);
-              },
             }}
             placement="bottomLeft"
             trigger={["click"]}

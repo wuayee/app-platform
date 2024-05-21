@@ -1,11 +1,11 @@
 import type { TableProps } from "antd";
 import { Button } from "antd";
 import React from "react";
-// 数据类型
-interface DataType {}
+import { ModelItem } from "../cards-tab";
+import { useNavigate } from "react-router-dom";
 
 // 列配置
-export const columns: TableProps<DataType>["columns"] = [
+export const columns: TableProps<ModelItem>["columns"] = [
   {
     title: "模型",
     dataIndex: "name",
@@ -13,75 +13,73 @@ export const columns: TableProps<DataType>["columns"] = [
   },
   {
     title: "描述",
-    dataIndex: "recordNum",
-    key: "recordNum",
+    dataIndex: "description",
+    key: "description",
   },
   {
     title: "机构",
-    dataIndex: "serviceType",
-    key: "serviceType",
+    dataIndex: "orgnization",
+    key: "orgnization",
   },
   {
     title: "类型",
-    dataIndex: "serviceType",
-    key: "serviceType",
+    dataIndex: "type",
+    key: "type",
   },
   {
     title: "健康状态",
-    dataIndex: "serviceType",
-    key: "serviceType",
+    dataIndex: "status",
+    key: "status",
   },
   {
     title: "请求数",
-    dataIndex: "serviceType",
-    key: "serviceType",
+    dataIndex: "requests",
+    key: "requests",
   },
   {
     title: "回答数",
-    dataIndex: "serviceType",
-    key: "serviceType",
+    dataIndex: "responses",
+    key: "responses",
   },
   {
     title: "异常数",
-    dataIndex: "serviceType",
-    key: "serviceType",
+    dataIndex: "exceptions",
+    key: "exceptions",
   },
   {
     title: "吞吐量",
-    dataIndex: "serviceType",
-    key: "serviceType",
+    dataIndex: "throughput",
+    key: "throughput",
   },
   {
     title: "输入token",
-    dataIndex: "serviceType",
-    key: "serviceType",
+    dataIndex: "total_input_tokens",
+    key: "total_input_tokens",
   },
   {
     title: "输出token",
-    dataIndex: "serviceType",
-    key: "serviceType",
+    dataIndex: "total_output_tokens",
+    key: "total_output_tokens",
   },
   {
     title: "时延",
-    dataIndex: "serviceType",
-    key: "serviceType",
+    dataIndex: "latency",
+    key: "latency",
   },
   {
     title: "速度",
-    dataIndex: "serviceType",
-    key: "serviceType",
+    dataIndex: "speed",
+    key: "speed",
   },
   {
     title: "操作",
     dataIndex: "operator",
     key: "operator",
-    render(value, record, index) {
+    render() {
       return (
-        <>
-          <div>
-            <Button type="link">删除</Button>
-          </div>
-        </>
+        <div>
+          <Button type="link">删除</Button>
+        </div>
       );
     },
   },

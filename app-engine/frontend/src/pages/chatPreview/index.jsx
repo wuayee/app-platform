@@ -630,9 +630,8 @@ const ChatPreview = (props) => {
             </div>
           </Spin>
         </div>
-      }
+      )}
     </>
-  );
 };
 
 export default ChatPreview;

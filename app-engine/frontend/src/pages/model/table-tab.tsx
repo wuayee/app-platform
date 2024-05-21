@@ -6,16 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 
 import { columns } from "./components/columns";
-import Pagination from "../../components/pagination/index";
+import { ModelItem } from "./cards-tab";
 
-const TableTab = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const id = searchParams.get("id");
-
-  const [knowledgeDetail, setKnowledgeDetail] = useState<any>(null);
-  const [data, setData] = useState<any>([]);
-
+const TableTab = ({modelList}: {modelList: ModelItem[]}) => {
   return (
     <div
       className="aui-block"
@@ -28,7 +21,7 @@ const TableTab = () => {
       <div className="knowledge-detail-table">
         <Table
           columns={columns}
-          dataSource={data}
+          dataSource={modelList}
           size="small"
           pagination={false}
         />

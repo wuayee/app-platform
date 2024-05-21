@@ -10,11 +10,8 @@ import TableTab from "./table-tab";
 
 import "../../index.scss";
 const ModelList = () => {
-  // 路由
-  const navigate = useNavigate();
-
   // 总条数
-  const [total, setTotal] = useState(100);
+  const [total, setTotal] = useState(2);
 
   const [modelTab, setModelTab] = useState(1);
 
@@ -23,6 +20,8 @@ const ModelList = () => {
 
   // 分页数
   const [pageSize, setPageSize] = useState(10);
+
+  const [modelList, setModelList] = useState([]);
 
   // 分页变化
   const paginationChange = (curPage: number, curPageSize: number) => {
@@ -41,7 +40,7 @@ const ModelList = () => {
       size: pageSize,
     }).then((res) => {
       if (res) {
-        console.log(res);
+        setModelList(res.llms);
       }
     });
   };
@@ -98,8 +97,8 @@ const ModelList = () => {
             marginLeft: -20,
           }}
         >
-          {modelTab === 1 && <CardsTab />}
-          {modelTab === 2 && <TableTab />}
+          {modelTab === 1 && <CardsTab modelList={modelList} />}
+          {modelTab === 2 && <TableTab modelList={modelList} />}
         </div>
         <Pagination
           total={total}

@@ -1,125 +1,32 @@
 import React, { useState, useEffect, ReactElement } from "react";
 import { Button, Input } from "antd";
-import { HashRouter, Route, useNavigate, Routes } from "react-router-dom";
-
-import { Icons } from "../../components/icons";
-import { knowledgeBase } from "../../components/knowledge-card";
 import ModelCard from "./components/model-card";
 
 import "../../index.scss";
-const CardsTab = () => {
+export interface ModelItem {
+  id: string;
+  name: string;
+  model: string;
+  scale: string;
+  type:string;
+  orgnization: string;
+  description: string;
+  precision: object;
+  gpu: object;
+  npu: object;
+  supported_images: Array<string>;
+  status: string;
+  latency: number;
+  speed: number;
+  requests: number;
+  responses: number;
+  exceptions: number;
+  throughput: number;
+  total_input_tokens: number;
+  total_output_tokens: number;
+}
+const CardsTab = ({modelList}: {modelList: ModelItem[]}) => {
   // 路由
-  const navigate = useNavigate();
-
-  // 总条数
-  const [total, setTotal] = useState(100);
-
-  // 数据
-  const [knowledgeData, setKnowledgeData] = useState<knowledgeBase[]>([
-    {
-      name: "testName",
-      createDate: "2024-05-17",
-      createBy: "hzw_test",
-      icon: () => (
-        <>
-          <img src="/src/assets/images/knowledge/knowledge-base.png" />
-        </>
-      ),
-      desc: "管理储存数据，抽取1111dtydtyuftytbyusdcftbuyiyhudfgyhubdfrgbhuidfcgbyuierfdgbyuieyhugierdfhujierhujriefgheiryujdfwgyhuedfirwedrfgbhiuyedrfgyhiugyhu",
-      id: "etgyjdvghsfvgyh",
-    },
-    {
-      name: "testName",
-      createDate: "2024-05-17",
-      createBy: "hzw_test",
-      icon: () => (
-        <>
-          <img src="/src/assets/images/knowledge/knowledge-base.png" />
-        </>
-      ),
-      desc: "管理储存数据，抽取1111dtydtyuftytbyusdcftbuyiyhudfgyhubdfrgbhuidfcgbyuierfdgbyuieyhugierdfhujierhujriefgheiryujdfwgyhuedfirwedrfgbhiuyedrfgyhiugyhu",
-      id: "etgyjdvghsfvgyh",
-    },
-    {
-      name: "testName",
-      createDate: "2024-05-17",
-      createBy: "hzw_test",
-      icon: () => (
-        <>
-          <img src="/src/assets/images/knowledge/knowledge-base.png" />
-        </>
-      ),
-      desc: "管理储存数据，抽取1111dtydtyuftytbyusdcftbuyiyhudfgyhubdfrgbhuidfcgbyuierfdgbyuieyhugierdfhujierhujriefgheiryujdfwgyhuedfirwedrfgbhiuyedrfgyhiugyhu",
-      id: "etgyjdvghsfvgyh",
-    },
-    {
-      name: "testName",
-      createDate: "2024-05-17",
-      createBy: "hzw_test",
-      icon: () => (
-        <>
-          <img src="/src/assets/images/knowledge/knowledge-base.png" />
-        </>
-      ),
-      desc: "管理储存数据，抽取1111dtydtyuftytbyusdcftbuyiyhudfgyhubdfrgbhuidfcgbyuierfdgbyuieyhugierdfhujierhujriefgheiryujdfwgyhuedfirwedrfgbhiuyedrfgyhiugyhu",
-      id: "etgyjdvghsfvgyh",
-    },
-    {
-      name: "testName",
-      createDate: "2024-05-17",
-      createBy: "hzw_test",
-      icon: () => (
-        <>
-          <img src="/src/assets/images/knowledge/knowledge-base.png" />
-        </>
-      ),
-      desc: "管理储存数据，抽取1111dtydtyuftytbyusdcftbuyiyhudfgyhubdfrgbhuidfcgbyuierfdgbyuieyhugierdfhujierhujriefgheiryujdfwgyhuedfirwedrfgbhiuyedrfgyhiugyhu",
-      id: "etgyjdvghsfvgyh",
-    },
-    {
-      name: "testName",
-      createDate: "2024-05-17",
-      createBy: "hzw_test",
-      icon: () => (
-        <>
-          <img src="/src/assets/images/knowledge/knowledge-base.png" />
-        </>
-      ),
-      desc: "管理储存数据，抽取1111dtydtyuftytbyusdcftbuyiyhudfgyhubdfrgbhuidfcgbyuierfdgbyuieyhugierdfhujierhujriefgheiryujdfwgyhuedfirwedrfgbhiuyedrfgyhiugyhu",
-      id: "etgyjdvghsfvgyh",
-    },
-    {
-      name: "testName",
-      createDate: "2024-05-17",
-      createBy: "hzw_test",
-      icon: () => (
-        <>
-          <img src="/src/assets/images/knowledge/knowledge-base.png" />
-        </>
-      ),
-      desc: "管理储存数据，抽取1111dtydtyuftytbyusdcftbuyiyhudfgyhubdfrgbhuidfcgbyuierfdgbyuieyhugierdfhujierhujriefgheiryujdfwgyhuedfirwedrfgbhiuyedrfgyhiugyhu",
-      id: "etgyjdvghsfvgyh",
-    },
-    {
-      name: "testName",
-      createDate: "2024-05-17",
-      createBy: "hzw_test",
-      icon: () => (
-        <>
-          <img src="/src/assets/images/knowledge/knowledge-base.png" />
-        </>
-      ),
-      desc: "管理储存数据，抽取1111dtydtyuftytbyusdcftbuyiyhudfgyhubdfrgbhuidfcgbyuierfdgbyuieyhugierdfhujierhujriefgheiryujdfwgyhuedfirwedrfgbhiuyedrfgyhiugyhu",
-      id: "etgyjdvghsfvgyh",
-    },
-  ]);
-
-  useEffect(() => {
-    const index = 1;
-    setInterval(() => {
-      setTotal(Math.floor(Math.random() * 1000));
-    }, 1000);
-  }, []);
   return (
     <div className="aui-block">
       <div
@@ -136,11 +43,10 @@ const CardsTab = () => {
           flexWrap: "wrap",
         }}
       >
-        {knowledgeData.map((knowledge) => (
+        {modelList.map((modelItem) => (
           <>
             <ModelCard
-              key={knowledge.id}
-              knowledge={knowledge}
+              modelItem={modelItem}
               style={{
                 flex: "0",
               }}

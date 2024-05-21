@@ -5,19 +5,12 @@ import { Button, Dropdown, Space } from "antd";
 import { HashRouter, Route, useNavigate, Routes } from "react-router-dom";
 import { url } from "inspector";
 import { Icons } from "../../../../components/icons";
-
-export interface knowledgeBase {
-  name: string;
-  createDate: string;
-  createBy: string;
-  icon: () => ReactElement;
-
-  desc: string;
-
-  id: string;
+interface DetailItem {
+  title: string;
+  content: number;
 }
 
-const DetailCard = ({ knowledge }: { knowledge: knowledgeBase }) => {
+const DetailCard = ({ data }: { data: DetailItem }) => {
   return (
     <Card
       style={{
@@ -40,7 +33,7 @@ const DetailCard = ({ knowledge }: { knowledge: knowledgeBase }) => {
               cursor: "pointer",
             }}
           >
-            {knowledge.name}
+            {data.title}
           </div>
         </div>
         <div
@@ -48,7 +41,6 @@ const DetailCard = ({ knowledge }: { knowledge: knowledgeBase }) => {
             textAlign: "right",
           }}
         >
-          <knowledge.icon />
         </div>
       </div>{" "}
       {/* 描述 */}
@@ -61,7 +53,7 @@ const DetailCard = ({ knowledge }: { knowledge: knowledgeBase }) => {
           marginTop: 16,
         }}
       >
-        {knowledge.createBy}
+        {data.content}
       </div>
     </Card>
   );
