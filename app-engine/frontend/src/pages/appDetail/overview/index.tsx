@@ -1,6 +1,6 @@
 import { Button, Divider, Flex, Input, Switch, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
-import './style.scss';
+import './style.scoped.scss';
 import { queryAppDetail } from '../../../shared/http/app';
 import { Message } from '../../../shared/utils/message';
 
@@ -30,11 +30,11 @@ const AppOverview: React.FC = () => {
           <Flex gap='middle'>
             <img width={100} height={100} src={appIcon} />
             <Flex vertical gap='middle'>
-              <h3>{detail?.name}</h3>
+              <h3>{detail?.name || 'Test Name'}</h3>
               <Flex gap={20}>
                 <Flex gap='small' align='center'>
                   <img width={16} height={16} src='/src/assets/images/avatar-default.png' />
-                  <span>{detail?.createBy}</span>
+                  <span>{detail?.createBy || 'Test User'}</span>
                 </Flex>
                 <Flex gap='small'>
                   <span>发布于</span>
@@ -75,7 +75,7 @@ const AppOverview: React.FC = () => {
           </Flex>
         </Flex>
         <div>
-          {detail?.attributes?.description}
+          {detail?.attributes?.description || 'Test Description'}
         </div>
         <Button type='primary' style={{
           width: '96px',
@@ -88,7 +88,7 @@ const AppOverview: React.FC = () => {
               <span>对话开场白</span>
             </Flex>
             <Flex vertical gap={20}>
-              <span>{detail?.attributes?.greeting}</span>
+              <span>{detail?.attributes?.greeting || 'Test Greeting'}</span>
             </Flex>
           </Flex>
         </div>

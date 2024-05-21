@@ -7,9 +7,11 @@
   flex-direction: column;
   min-height: 100%;
   min-width: 1400px;
+
   .aui-block {
     flex-grow: 1;
   }
+
   .aui-header-1,
   h1 {
     margin-top: -24px;
@@ -62,12 +64,33 @@ h1 {
   background: #2673e5;
 }
 
-#root .ant-btn {
-  min-width: 90px;
-  height: 35px;
+#root .ant-btn, .ant-btn {
+  min-width: 96px;
+  height: 32px;
 }
+
 
 #root .ant-btn-sm {
   min-width: 40px;
   height: 24px;
+}
+
+.margin-bottom-standard {
+  margin-bottom: 16px;
+}
+
+.margin-right-standard {
+  margin-right: 16px;
+}
+
+.ant-form-vertical .ant-form-item-label {
+  padding: 0;
+
+  label {
+    font-size: 12px;
+  }
+}
+
+.ant-form-item .ant-upload-wrapper div.ant-upload-select {
+  width: 100%;
 }

@@ -1,8 +1,9 @@
-import { Button } from 'antd';
+import { Button, Drawer } from 'antd';
 import React, { useState } from 'react';
 import type { PaginationProps } from 'antd';
 import { Table, Space } from 'antd';
 import { formatDateTime } from '../../../../shared/utils/function';
+import CreateSet from './createTestSet';
 
 const showTotal: PaginationProps['showTotal'] = (total) => `共 ${total} 条`;
 
@@ -69,14 +70,18 @@ const TestSet: React.FC = () => {
   };
 
   return (
-    <div className='tab-content'>
+    <div>
       <div className='margin-bottom-standard test'>
-        <Button className='margin-right-standard' type='primary'>创建</Button>
+        <Button className='margin-right-standard' type='primary' onClick={showDrawer}>创建</Button>
         <Button>应用评估</Button>
       </div>
       <Table
         dataSource={dataSource}
         columns={columns}
+        rowSelection={{
+          type: 'checkbox',
+          columnWidth: 60
+        }}
         virtual
         scroll={{ y: 800 }}
         pagination={{
@@ -87,7 +92,24 @@ const TestSet: React.FC = () => {
           showTotal,
         }}
       />
+      <Drawer
+        title='新建测试集'
+        width={800}
+        open={open}
+        onClose={() => { setOpen(false) }}
+        footer={
+          <div style={{display:'flex',justifyContent:'flex-end'}}>
+            <Space>
+              <Button>取消</Button>
+              <Button type='primary'>确定</Button>
+            </Space>
+          </div>
+        }
+      >
+        <CreateSet />
+      </Drawer>
     </div>
+
   )
 }
 
