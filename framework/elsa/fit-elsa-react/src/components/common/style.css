@@ -66,7 +66,7 @@
     color: rgba(28,31,35,.35);
 }
 
-.jade-font-size, .jade-select .ant-select-selector .ant-select-selection-item, .jade-select .ant-select-item-option,.ant-select-selection-placeholder, .jade-input::placeholder {
+.jade-font-size, .jade-select .ant-select-selector .ant-select-selection-item, .jade-select .ant-select-item-option,.ant-select-selection-placeholder, .jade-input::placeholder, .ant-select-dropdown .ant-select-item, .ant-tree-select-dropdown .ant-select-tree{
     font-size: 12px;
 }
 
@@ -135,4 +135,23 @@
 .ant-form-item {
     margin-top: 1px;
     margin-bottom: 1px;
+}
+
+.title {
+    font-family: SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 4px;
+    justify-content: flex-start;
+}
+
+.jade-panel-header-icon-position {
+    margin-left: auto !important; /* 将 button 放置在最右侧 */
+    margin-right: 1% !important;
+    height: 22px;
+}
+
+.jade-tree-select {
+    font-size: 12px;
+    width: 100%;
 }

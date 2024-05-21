@@ -4,7 +4,9 @@
 
 package com.huawei.fit.jober.aipp.service;
 
+import java.util.List;
+
 public interface UploadedFileManageService {
-    void cleanAippFiles(String aippId, String createUserAccount);
+    void cleanAippFiles(List<String> aippId, String createUserAccount);
     void addFileRecord(String aipp, String createUserAccount, String filename);
 }

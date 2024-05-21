@@ -8,7 +8,6 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.jade.store.ItemInfo;
 import com.huawei.jade.store.Tool;
 import com.huawei.jade.store.ToolFactory;
 
@@ -32,8 +31,8 @@ public class WaterFlowToolFactory implements ToolFactory {
     }
 
     @Override
-    public Tool create(ItemInfo itemInfo, Tool.Metadata metadata) {
-        Tool tool = this.fitToolFactory.create(itemInfo, metadata);
-        return new WaterFlowTool(tool, itemInfo, metadata);
+    public Tool create(Tool.Info toolInfo, Tool.Metadata metadata) {
+        Tool tool = this.fitToolFactory.create(toolInfo, metadata);
+        return new WaterFlowTool(tool, toolInfo, metadata);
     }
 }

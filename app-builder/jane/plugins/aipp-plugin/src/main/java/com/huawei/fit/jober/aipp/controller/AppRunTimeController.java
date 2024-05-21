@@ -27,6 +27,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Property;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -60,7 +61,32 @@ public class AppRunTimeController extends AbstractController {
             @RequestParam(value = "version", required = false) String version,
             @Property(description = "edge表示端侧节点，取值为start或者end", example = "start") @PathVariable("edge")
                     String startOrEnd) {
-        return Rsp.ok(aippRunTimeService.queryEdgeSheetData(aippId, version, startOrEnd, this.contextOf(httpRequest, tenantId)));
+        return Rsp.ok(aippRunTimeService.queryEdgeSheetData(aippId,
+                version,
+                startOrEnd,
+                this.contextOf(httpRequest, tenantId)));
+    }
+
+    /**
+     * 创建分享
+     *
+     * @param queries 问答对
+     * @return 分享唯一标识
+     */
+    @PostMapping(value = "/share", description = "分享对话")
+    public Map<String, Object> shared(@RequestBody List<Map<String, Object>> queries) {
+        return this.aippRunTimeService.shared(queries);
+    }
+
+    /**
+     * 获取分享内容
+     *
+     * @param shareId 分享唯一标识
+     * @return 分享内容
+     */
+    @GetMapping(value = "/share/{id}", description = "分享对话")
+    public Map<String, Object> get(@PathVariable("id") String shareId) {
+        return this.aippRunTimeService.getShareData(shareId);
     }
 
     /**
@@ -76,11 +102,12 @@ public class AppRunTimeController extends AbstractController {
     @PostMapping(path = "/aipp/{aipp_id}", description = "启动一个Aipp")
     public Rsp<String> createAippInstance(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
-            @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData",
-                    example = "图片url, 文本输入, prompt")
-            @RequestBody Map<String, Object> initContext,
-            @RequestParam(value = "version") String version) {
-        return Rsp.ok(aippRunTimeService.createAippInstance(aippId, version, initContext, this.contextOf(httpRequest, tenantId)));
+            @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData", example = "图片url, 文本输入, prompt")
+            @RequestBody Map<String, Object> initContext, @RequestParam(value = "version") String version) {
+        return Rsp.ok(aippRunTimeService.createAippInstance(aippId,
+                version,
+                initContext,
+                this.contextOf(httpRequest, tenantId)));
     }
 
     /**
@@ -94,8 +121,7 @@ public class AppRunTimeController extends AbstractController {
      */
     @DeleteMapping(path = "/aipp/{aipp_id}/instances/{instance_id}", description = "删除应用实例")
     public Rsp<Void> deleteInstance(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
-            @PathVariable("aipp_id") String aippId,
-            @PathVariable("instance_id") String instanceId,
+            @PathVariable("aipp_id") String aippId, @PathVariable("instance_id") String instanceId,
             @RequestParam(value = "version") String version) {
         aippRunTimeService.deleteAippInstance(aippId, version, instanceId, this.contextOf(httpRequest, tenantId));
         return Rsp.ok();
@@ -120,24 +146,6 @@ public class AppRunTimeController extends AbstractController {
     }
 
     /**
-     * 流式查询单个应用实例信息
-     *
-     * @param httpRequest 操作上下文
-     * @param tenantId 租户id
-     * @param aippId aippId
-     * @param instanceId 实例id
-     * @return AIPP 实例
-     */
-    @GetMapping(path = "/aipp/{aipp_id}/streaming/instances/{instance_id}", description = "流式查询单个应用实例信息，实例运行期间前端定时调用")
-    public Rsp<AippInstanceDto> getInstanceStreaming(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId,
-            @PathVariable("aipp_id") String aippId,
-            @PathVariable("instance_id") String instanceId,
-            @RequestParam(value = "version") String version) {
-        return Rsp.ok(aippRunTimeService.getInstanceStreaming(aippId, version, instanceId, this.contextOf(httpRequest, tenantId)));
-    }
-
-    /**
      * 更新表单数据并上传到小海
      *
      * @param httpRequest 操作上下文
@@ -149,12 +157,13 @@ public class AppRunTimeController extends AbstractController {
      */
     @PutMapping(path = "/aipp/{aipp_id}/instances/{instance_id}/form", description = "更新表单数据并上传到小海")
     public Rsp<Void> updateAndUploadAippInstance(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId,
-            @PathVariable("aipp_id") String aippId,
+            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
             @PathVariable("instance_id") String instanceId,
-            @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息")
-            @RequestBody Map<String, Object> formArgs) {
-        aippRunTimeService.updateAndUploadAippInstance(aippId, instanceId, formArgs, this.contextOf(httpRequest, tenantId));
+            @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息") @RequestBody Map<String, Object> formArgs) {
+        aippRunTimeService.updateAndUploadAippInstance(aippId,
+                instanceId,
+                formArgs,
+                this.contextOf(httpRequest, tenantId));
         return Rsp.ok();
     }
 
@@ -170,13 +179,14 @@ public class AppRunTimeController extends AbstractController {
      */
     @PutMapping(path = "/aipp/{aipp_id}/instances/{instance_id}", description = "更新表单数据，并恢复实例任务执行")
     public Rsp<Void> resumeAndUpdateAippInstance(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId,
-            @PathVariable("aipp_id") String aippId,
+            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
             @PathVariable("instance_id") String instanceId,
-            @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息")
-            @RequestBody Map<String, Object> formArgs,
+            @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息") @RequestBody Map<String, Object> formArgs,
             @RequestParam(value = "version") String version) {
-        aippRunTimeService.resumeAndUpdateAippInstance(aippId, version, instanceId, formArgs,
+        aippRunTimeService.resumeAndUpdateAippInstance(aippId,
+                version,
+                instanceId,
+                formArgs,
                 this.contextOf(httpRequest, tenantId));
         return Rsp.ok();
     }
@@ -186,17 +196,13 @@ public class AppRunTimeController extends AbstractController {
      *
      * @param httpRequest 操作上下文
      * @param tenantId 租户id
-     * @param aippId aippId
      * @param instanceId 实例id
      * @return
      */
-    @PutMapping(path = "/aipp/{aipp_id}/instances/{instance_id}/terminate", description = "终止实例任务")
+    @PutMapping(path = "/instances/{instance_id}/terminate", description = "终止实例任务")
     public Rsp<Void> terminateAippInstance(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId,
-            @PathVariable("aipp_id") String aippId,
-            @PathVariable("instance_id") String instanceId,
-            @RequestParam(value = "version") String version) {
-        this.aippRunTimeService.terminateInstance(aippId, version, instanceId, this.contextOf(httpRequest, tenantId));
+            @PathVariable("tenant_id") String tenantId, @PathVariable("instance_id") String instanceId) {
+        this.aippRunTimeService.terminateInstance(instanceId, this.contextOf(httpRequest, tenantId));
         return Rsp.ok();
     }
 
@@ -211,11 +217,13 @@ public class AppRunTimeController extends AbstractController {
      */
     @GetMapping(path = "/aipp/{aipp_id}/instances", description = "批量查询实例列表")
     public Rsp<PageResponse<AippInstanceDto>> getInstanceList(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId,
-            @PathVariable("aipp_id") String aippId,
-            @RequestBean AippInstanceQueryCondition cond,
-            @RequestBean PaginationCondition page,
+            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
+            @RequestBean AippInstanceQueryCondition cond, @RequestBean PaginationCondition page,
             @RequestParam(value = "version") String version) {
-        return Rsp.ok(aippRunTimeService.listInstance(aippId, version, cond, page, this.contextOf(httpRequest, tenantId)));
+        return Rsp.ok(aippRunTimeService.listInstance(aippId,
+                version,
+                cond,
+                page,
+                this.contextOf(httpRequest, tenantId)));
     }
 }

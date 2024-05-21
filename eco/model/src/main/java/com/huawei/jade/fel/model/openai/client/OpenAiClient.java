@@ -16,6 +16,8 @@ import com.huawei.jade.fel.model.openai.entity.embed.OpenAiEmbeddingResponse;
 import com.huawei.jade.fel.model.openai.utils.OpenAiMessageUtils;
 
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -89,7 +91,7 @@ public class OpenAiClient {
      */
     public OpenAiChatCompletionResponse createChatCompletion(String url, OpenAiChatCompletionRequest request)
             throws IOException {
-        LOGGER.debug(url);
+        Validation.notNull(request, "The request cannot be null");
         request.setStream(false);
         Response<OpenAiChatCompletionResponse> response =
                 api.createChatCompletion(url, request).execute();
@@ -121,7 +123,7 @@ public class OpenAiClient {
      * @throws IOException 响应未成功。
      */
     public OpenAiEmbeddingResponse createEmbeddings(String url, OpenAiEmbeddingRequest request) throws IOException {
-        LOGGER.debug(url);
+        Validation.notNull(request, "The request cannot be null");
         Response<OpenAiEmbeddingResponse> response =
                 api.createEmbeddings(url, request).execute();
         if (!response.isSuccessful()) {
@@ -129,6 +131,30 @@ public class OpenAiClient {
             throw new IOException(response.message());
         }
         return response.body();
+    }
+
+    /**
+     * 发送会话补全请求至大模型（流式响应）。
+     *
+     * @param request OpenAI API 格式的会话补全请求。
+     * @return OpenAI API 格式的会话补全流式响应。
+     */
+    public Call<ResponseBody> createChatCompletionStream(OpenAiChatCompletionRequest request) {
+        Validation.notNull(request, "The request cannot be null");
+        return createChatCompletionStream(getUrl(request.getModel(), OpenAiApi.CHAT_ENDPOINT), request);
+    }
+
+    /**
+     * 发送会话补全请求至大模型（流式响应）。
+     *
+     * @param url 用户指定的模型地址。
+     * @param request OpenAI API 格式的会话补全请求。
+     * @return OpenAI API 格式的会话补全流式响应。
+     */
+    public Call<ResponseBody> createChatCompletionStream(String url, OpenAiChatCompletionRequest request) {
+        Validation.notNull(request, "The request cannot be null");
+        request.setStream(true);
+        return api.createChatCompletionStream(url, request);
     }
 
     private String getUrl(String modelName, String endpoint) {

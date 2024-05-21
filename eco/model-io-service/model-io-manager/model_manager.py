@@ -53,14 +53,14 @@ async def health(item: NodePortItem) -> Response:
 
 
 @app.post("/delete")
-def delete_model(item: Item):
+async def delete_model(item: Item):
     cmd = 'kubectl delete -f ' + f'{item.name}_{item.inference_accuracy}.yaml'
     res = os.popen(cmd, 'r', 1)
     logger.info(res.read())
 
 
 @app.post("/start_up")
-def start_up(item: Item):
+async def start_up(item: Item):
     templates = get_template()
     model_weight_path = model_weight_dir + f'/{item.name}'
     render_data = {

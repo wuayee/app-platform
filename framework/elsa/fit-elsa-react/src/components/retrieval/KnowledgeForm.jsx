@@ -139,56 +139,42 @@ export default function KnowledgeForm() {
             className="jade-panel"
             key='Knowledge'
         >
-            <Form
-                name={`knowledgeForm-${shape.id}`}
-                layout="vertical"
-                className={"jade-form"}
+            {getKnowledge.map((item) => (<Row
+                    key={`knowledgeRow-${item.id}`}
+                    gutter={16}
             >
-                {getKnowledge.map((item) => (
-                    <Row
-                        key={`knowledgeRow-${item.id}`}
-                        gutter={16}
+                <Col span={22}>
+                    <Form.Item
+                            key={`knowledge-${item.id}`}
+                            style={{marginBottom: '8px'}}
+                            id={`knowledge-${item.id}`}
                     >
-                        <Col span={22}>
-                            <Form.Item
-                                key={`from-${item.id}`}
-                                style={{marginBottom: '8px'}}
-                                id={`from-${item.id}`}
-                                initialValue='Reference'
-                            >
-                                <JadeScrollSelect
-                                    allowClear
-                                    placeholder='选择知识库'
-                                    id={`valueSource-select-${item.id}`}
-                                    onClear={() => handleKnowledgeClear(item.id)}
-                                    onChange={(value, options) => handleKnowledgeChange(item.id, 'value', value, options)}
-                                    buildUrl={buildUrl}
-                                    disabled={false}
-                                    getOptions={getOptions}
-                                    dealResponse={dealResponse}
-                                    value={getValue(item)}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={2} style={{paddingLeft: "2px"}}>
-                            <Form.Item
-                                key={`button-${item.id}`}
-                                style={{marginBottom: '8px'}}>
-                                <Button
-                                    disabled={getButtonDisable()}
-                                    type="text" className="icon-button"
-                                    style={{
-                                        alignItems: "center",
-                                        marginLeft: "auto"
-                                    }}
-                                    onClick={() => handleDelete(item.id)}>
-                                    <MinusCircleOutlined/>
-                                </Button>
-                            </Form.Item>
-                        </Col>
-                    </Row>))}
-                <KnowledgeConfig/>
-            </Form>
+                        <JadeScrollSelect
+                                allowClear
+                                placeholder="选择知识库"
+                                id={`valueSource-select-${item.id}`}
+                                onClear={() => handleKnowledgeClear(item.id)}
+                                onChange={(value, options) => handleKnowledgeChange(item.id, 'value', value, options)}
+                                buildUrl={buildUrl}
+                                disabled={false}
+                                getOptions={getOptions}
+                                dealResponse={dealResponse}
+                                value={getValue(item)}
+                        />
+                    </Form.Item>
+                </Col>
+                <Col span={2} style={{paddingLeft: "2px"}}>
+                    <Form.Item key={`button-${item.id}`} style={{marginBottom: '8px'}}>
+                        <Button disabled={getButtonDisable()}
+                                type="text" className="icon-button"
+                                style={{alignItems: "center", marginLeft: "auto"}}
+                                onClick={() => handleDelete(item.id)}>
+                            <MinusCircleOutlined/>
+                        </Button>
+                    </Form.Item>
+                </Col>
+            </Row>))}
+            <KnowledgeConfig/>
         </Panel>
     </Collapse>);
 }

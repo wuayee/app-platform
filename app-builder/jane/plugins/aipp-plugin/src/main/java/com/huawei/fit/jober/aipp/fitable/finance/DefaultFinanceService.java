@@ -11,10 +11,18 @@ import com.huawei.fit.finance.ChartType;
 import com.huawei.fit.finance.FinanceService;
 import com.huawei.fit.finance.NLRouter;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
+import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.dto.xiaohai.QADto;
+import com.huawei.fit.jober.aipp.service.LLMService;
+import com.huawei.fit.jober.common.ErrorCodes;
+import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
+import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.hllm.model.LlmModel;
 
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -37,6 +45,12 @@ import java.util.stream.Collectors;
  */
 @Component
 public class DefaultFinanceService implements FinanceService {
+    private static final Logger log = Logger.get(DefaultFinanceService.class);
+
+    private final LLMService llmService;
+
+    public DefaultFinanceService(LLMService llmService) {this.llmService = llmService;}
+
     @Fitable("default")
     @Override
     public NLRouter nlRouter(String query) {
@@ -58,7 +72,7 @@ public class DefaultFinanceService implements FinanceService {
     @Fitable("default")
     @Override
     public String autoGraph(String condition, String query) {
-        HttpPost httpPost = new HttpPost("http://51.36.52.241:31502/v1/emodelchain/autograph");
+        HttpPost httpPost = new HttpPost("http://51.36.52.241:7861/v1/emodelchain/autograph");
         String body = JsonUtils.toJsonString(MapBuilder.<String, String>get()
                 .put("sql", condition)
                 .put("query", query)
@@ -93,6 +107,45 @@ public class DefaultFinanceService implements FinanceService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Fitable("default")
+    @Override
+    public String generateOperationReport(String chatHistory) {
+        List<QADto> histories = JsonUtils.parseArray(chatHistory, QADto[].class);
+        List<QADto> filteredHistories = histories.stream()
+                .filter(h -> this.isLegalAnswer(h.getAnswer()))
+                .collect(Collectors.toList());
+        filteredHistories.stream().map(QADto::getAnswer).forEach(a -> {
+            a.setType(AippConst.ANSWER_TYPE);
+            a.setChartSummary(this.buildChartSummaryList(a.getChartData(), a.getChartAnswer()));
+        });
+        return JsonUtils.toJsonString(filteredHistories);
+    }
+
+    private boolean isLegalAnswer(QADto.Answer answer) {
+        return CollectionUtils.isNotEmpty(answer.getChartData()) && CollectionUtils.isNotEmpty(answer.getChartAnswer());
+    }
+
+    private List<String> buildChartSummaryList(List<Map<String, Object>> chartDataList, List<String> chartAnswerList) {
+        List<String> chartSummaryList = new ArrayList<>();
+        String promptPrefix = "给下面的问题和答案做个总结：\n\n";
+        for (int i = chartAnswerList.size(); i < chartDataList.size(); ++i) {
+            chartAnswerList.add(chartAnswerList.get(i - 1));
+        }
+        for (int i = 0; i < chartDataList.size(); i++) {
+            String charJsonString = JsonUtils.toJsonString(chartDataList.get(i));
+            String answer = chartAnswerList.get(i);
+            String prompt = promptPrefix + answer + "\n" + charJsonString;
+            try {
+                String chartSummary = this.llmService.askModelWithText(prompt, 20000, 0.0, LlmModel.QWEN_72B);
+                chartSummaryList.add(chartSummary);
+            } catch (IOException e) {
+                log.error("ask model failed.", e);
+                throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "ask model failed.");
+            }
+        }
+        return chartSummaryList;
     }
 
     private void formatChartAnswer(List<String> chartAnswer) {

@@ -13,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 邬涨财 w00575064
@@ -27,7 +28,7 @@ public class AppBuilderForm extends BaseDomain {
     private String id;
     private String name;
     private String tenantId;
-    private String appearance;
+    private List<Map<String, Object>> appearance;
     private String type;
     private List<AppBuilderFormProperty> formProperties;
     private AppBuilderFormPropertyRepository formPropertyRepository;

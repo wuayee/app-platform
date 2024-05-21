@@ -4,8 +4,6 @@
 
 package com.huawei.jade.fel.engine.activities;
 
-import static com.huawei.jade.fel.engine.util.SessionUtils.copyFlowSession;
-
 import com.huawei.fit.waterflow.domain.context.FlowContext;
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.emitters.Emitter;
@@ -105,12 +103,12 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
 
     @Override
     public void emit(O data, FlowSession session) {
-        this.state.emit(data, copyFlowSession(session));
+        this.state.emit(data, new FlowSession(session));
     }
 
     @Override
     public void handle(O data, FlowSession session) {
-        this.state.handle(data, copyFlowSession(session));
+        this.state.handle(data, new FlowSession(session));
     }
 
     /**

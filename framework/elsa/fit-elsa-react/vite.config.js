@@ -23,12 +23,10 @@ export default defineConfig({
             output: {
                 globals: {
                     react: 'react',
-                    'react-dom': 'ReactDOM',
-                    '@fit-elsa/elsa-core': '@fit-elsa/elsa-core'
+                    'react-dom': 'ReactDOM'
                 }
             }
-        },
-        outDir: "build"
+        }
   },
     resolve: {
         alias: {

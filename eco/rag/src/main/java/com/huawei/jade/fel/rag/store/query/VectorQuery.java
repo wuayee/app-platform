@@ -4,6 +4,7 @@
 
 package com.huawei.jade.fel.rag.store.query;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
 public class VectorQuery {
     private List<Float> embedding;
     private int topK = 2;

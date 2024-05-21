@@ -34,12 +34,12 @@ export const retrievalNodeState = (id, x, y, width, height, parent, drawer) => {
 
     self.getHeaderIcon = () => {
         return (
-            <Button
-                disabled={true}
-                className="jade-node-custom-header-icon"
-            >
-                <RetrievalIcon/>
-            </Button>
+                <Button
+                        disabled={true}
+                        className="jade-node-custom-header-icon"
+                >
+                    <RetrievalIcon/>
+                </Button>
         );
     };
 

@@ -72,4 +72,9 @@
             #{id}
         </foreach>
     </delete>
+
+    <delete id="deleteByFormId">
+        delete from app_builder_form_property
+        where form_id = #{formId}
+    </delete>
 </mapper>

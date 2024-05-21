@@ -129,4 +129,27 @@
         </set>
         where id = #{id}
     </update>
+
+    <select id="selectWithStoreId" resultMap="BaseResultMap"
+            resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
+        select
+        <include refid="Base_Column_List"/>
+        from app_builder_app
+        where attributes ->> 'store_id' in
+        <foreach collection="storeIds" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <update id="updateAppWithStoreId" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
+        update app_builder_app
+        set attributes = jsonb_set(attributes::jsonb, '{store_id}',to_jsonb(#{uniqueName}), true)
+        where id = #{id} and version = #{version}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM
+            app_builder_app
+        where id = #{appId}
+    </delete>
 </mapper>

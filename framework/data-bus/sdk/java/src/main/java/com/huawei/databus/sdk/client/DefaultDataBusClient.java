@@ -68,6 +68,9 @@ public class DefaultDataBusClient implements DataBusClient {
         if (this.isConnected) {
             return OpenConnectionResult.success();
         }
+        if (!DataBusUtils.isSupportedPlatform()) {
+            return OpenConnectionResult.failure(ErrorType.UnknownError);
+        }
         try {
             this.socketChannel = SocketChannel.open();
             // 设置TCP_NODELAY，禁用Nagle算法，以防止粘包问题

@@ -358,7 +358,7 @@ public class AippRunTimeServiceTest {
                 .when(aippLogServiceMock)
                 .insertLog(argThat(dto -> AippInstLogType.MSG.name().equals(dto.getLogType())));
 
-        runTimeService.terminateInstance(DUMMY_AIPP_ID, DUMMY_AIPP_VERSION, DUMMY_INST_ID, genTestOpContext());
+        runTimeService.terminateInstance(DUMMY_INST_ID, genTestOpContext());
         verify(flowInstanceServiceMock, times(1)).terminateFlows(any(), eq(DUMMY_FLOW_INST_ID), any(), any());
     }
 
@@ -393,7 +393,7 @@ public class AippRunTimeServiceTest {
         }
 
         public MetaBuilder addProps(String key, String name, String type) {
-            FormMetaItem item = new FormMetaItem(key, name, type, AippConst.STRING_LEN);
+            FormMetaItem item = new FormMetaItem(key, name, type, AippConst.STRING_LEN, null);
             properties.add(FormMetaConvertor.INSTANCE.toTaskProperty(item));
             return this;
         }

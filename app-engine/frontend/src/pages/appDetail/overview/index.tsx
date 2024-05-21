@@ -70,7 +70,7 @@ const AppOverview: React.FC = () => {
             <Divider type='vertical' />
             <Flex vertical align={'center'}>
               <span className='font-size-24'>5</span>
-              <span>灵感大全</span>
+              <span>创意灵感</span>
             </Flex>
           </Flex>
         </Flex>

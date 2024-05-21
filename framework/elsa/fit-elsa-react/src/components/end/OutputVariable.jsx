@@ -3,7 +3,7 @@ import React from "react";
 import {InfoCircleOutlined} from '@ant-design/icons';
 import "./style.css";
 import OutputVariableRow from "@/components/end/OutputVariableRow.jsx";
-import {useDataContext, useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
+import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
 
 const {Panel} = Collapse;
 
@@ -16,7 +16,6 @@ const {Panel} = Collapse;
 export default function OutputVariable() {
     const dispatch = useDispatch();
     const data = useDataContext();
-    const shape = useShapeContext();
 
     /**
      * 初始化数据
@@ -62,27 +61,19 @@ export default function OutputVariable() {
                     className="jade-panel"
                     key='Output variable'
                 >
-                    <Form
-                        name={`Output variable_${shape.id}`}
-                        layout="vertical"
-                        className={"jade-form"}
-                    >
-                        <Row gutter={16}>
-                            <Col span={8}>
-                                <Form.Item style={{marginBottom: "8px"}}>
-                                    <span className="jade-font-size jade-font-color">字段名称</span>
-                                </Form.Item>
-                            </Col>
-                            <Col span={16}>
-                                <Form.Item style={{marginBottom: "8px"}}>
-                                    <span className="jade-font-size jade-font-color">字段值</span>
-                                </Form.Item>
-                            </Col>
-                        </Row>
-
-                        <OutputVariableRow item={initData()[0]}
-                                           handleItemChange={handleItemChange}/>
-                    </Form>
+                    <Row gutter={16}>
+                        <Col span={8}>
+                            <Form.Item style={{marginBottom: "8px"}}>
+                                <span className="jade-font-size jade-font-color">字段名称</span>
+                            </Form.Item>
+                        </Col>
+                        <Col span={16}>
+                            <Form.Item style={{marginBottom: "8px"}}>
+                                <span className="jade-font-size jade-font-color">字段值</span>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <OutputVariableRow item={initData()[0]} handleItemChange={handleItemChange}/>
                 </Panel>
             </Collapse>
         </div>

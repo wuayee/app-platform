@@ -25,4 +25,6 @@ public interface AppBuilderAppRepository {
     void insertOne(AppBuilderApp appBuilderApp);
 
     void updateOne(AppBuilderApp appBuilderApp);
+
+    void delete(String appId);
 }

@@ -4,25 +4,16 @@
 
 package com.huawei.fit.jober.aipp.fitable;
 
+import com.huawei.fit.finance.FinanceService;
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
-import com.huawei.fit.jober.aipp.dto.xiaohai.QADto;
-import com.huawei.fit.jober.aipp.service.LLMService;
-import com.huawei.fit.jober.common.ErrorCodes;
-import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.hllm.model.LlmModel;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 生成经营报告
@@ -34,10 +25,10 @@ import java.util.stream.Collectors;
 public class LLMGenerateOperationReport implements FlowableService {
     private static final Logger log = Logger.get(LLMGenerateOperationReport.class);
 
-    private final LLMService llmService;
+    private final FinanceService financeService;
 
-    public LLMGenerateOperationReport(LLMService llmService) {
-        this.llmService = llmService;
+    public LLMGenerateOperationReport(FinanceService financeService) {
+        this.financeService = financeService;
     }
 
     /**
@@ -53,40 +44,8 @@ public class LLMGenerateOperationReport implements FlowableService {
         log.debug("LLMGenerateOperationReport businessData {}", businessData);
 
         String chatHistory = businessData.get(AippConst.INST_CHAT_HISTORY_KEY).toString();
-        List<QADto> histories = JsonUtils.parseArray(chatHistory, QADto[].class);
-        List<QADto> filteredHistories = histories.stream()
-                .filter(history -> this.isLegalAnswer(history.getAnswer()))
-                .collect(Collectors.toList());
-        filteredHistories.stream().map(QADto::getAnswer).forEach(a -> {
-            a.setType(AippConst.ANSWER_TYPE);
-            a.setChartSummary(this.buildChartSummaryList(a.getChartData(), a.getChartAnswer()));
-        });
-        businessData.put(AippConst.INST_OPERATION_REPORT_KEY, JsonUtils.toJsonString(filteredHistories));
+        String operationReport = this.financeService.generateOperationReport(chatHistory);
+        businessData.put(AippConst.INST_OPERATION_REPORT_KEY, operationReport);
         return flowData;
-    }
-
-    private boolean isLegalAnswer(QADto.Answer answer) {
-        return CollectionUtils.isNotEmpty(answer.getChartData()) && CollectionUtils.isNotEmpty(answer.getChartAnswer());
-    }
-
-    private List<String> buildChartSummaryList(List<Map<String, Object>> chartDataList, List<String> chartAnswerList) {
-        List<String> chartSummaryList = new ArrayList<>();
-        String promptPrefix = "给下面的问题和答案做个总结：\n\n";
-        for (int i = chartAnswerList.size(); i < chartDataList.size(); ++i) {
-            chartAnswerList.add(chartAnswerList.get(i - 1));
-        }
-        for (int i = 0; i < chartDataList.size(); i++) {
-            String charJsonString = JsonUtils.toJsonString(chartDataList.get(i));
-            String answer = chartAnswerList.get(i);
-            String prompt = promptPrefix + answer + "\n" + charJsonString;
-            try {
-                String chartSummary = this.llmService.askModelWithText(prompt, 20000, 0.0, LlmModel.QWEN_72B);
-                chartSummaryList.add(chartSummary);
-            } catch (IOException e) {
-                log.error("ask model failed.", e);
-                throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "ask model failed.");
-            }
-        }
-        return chartSummaryList;
     }
 }

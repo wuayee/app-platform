@@ -52,7 +52,7 @@ public class NodeDisplay {
 
     private String buildDisplayName(String name) {
         Validation.notBlank(name, "Node name can not be blank.");
-        return SpecialDisplayNode.getNode(name)
+        return SpecialDisplayNode.fromName(name)
                 .map(SpecialDisplayNode::getDisplayName)
                 .orElseGet(() -> StringUtils.format("({0})", name));
     }

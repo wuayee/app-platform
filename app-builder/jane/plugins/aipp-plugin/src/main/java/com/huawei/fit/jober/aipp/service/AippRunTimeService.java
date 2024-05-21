@@ -12,6 +12,7 @@ import com.huawei.fit.jober.aipp.dto.AippInstanceCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -86,17 +87,6 @@ public interface AippRunTimeService {
     AippInstanceDto getInstanceByVersionId(String versionId, String instanceId, OperationContext context);
 
     /**
-     * 流式查询单个应用实例信息
-     *
-     * @param context 操作上下文
-     * @param aippId aippId
-     * @param version aipp 版本
-     * @param instanceId 实例id
-     * @return AIPP 实例
-     */
-    AippInstanceDto getInstanceStreaming(String aippId, String version, String instanceId, OperationContext context);
-
-    /**
      * 查询应用实例信息列表
      *
      * @param context 操作上下文
@@ -136,11 +126,9 @@ public interface AippRunTimeService {
      * 终止aipp实例
      *
      * @param context 操作上下文
-     * @param aippId aippId
-     * @param version aipp版本
      * @param instanceId 实例id
      */
-    void terminateInstance(String aippId, String version, String instanceId, OperationContext context);
+    void terminateInstance(String instanceId, OperationContext context);
 
     /**
      * 终止aipp全部实例
@@ -151,4 +139,20 @@ public interface AippRunTimeService {
      * @param context 操作上下文
      */
     void terminateAllPreviewInstances(String aippId, String versionId, boolean deleteLog, OperationContext context);
+
+    /**
+     * 分享对话
+     *
+     * @param chats 表示需要分享的对话
+     * @return 表示分享后的结果
+     */
+    Map<String, Object> shared(List<Map<String, Object>> chats);
+
+    /**
+     * 获取分享内容
+     *
+     * @param shareId 分享唯一标识
+     * @return 分享内容
+     */
+    Map<String, Object> getShareData(String shareId);
 }

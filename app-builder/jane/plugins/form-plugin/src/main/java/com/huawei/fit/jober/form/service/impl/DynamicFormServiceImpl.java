@@ -90,6 +90,8 @@ public class DynamicFormServiceImpl implements DynamicFormService {
             return null;
         }
         GraphParam elsaParam = buildGraphParam(formId, version, "");
+
+        // todo 暂时用不到，可去掉；后期应该改为调用appBuilder的查询表单的渲染数据json的接口
         String data = elsaClient.get(elsaParam, context);
         return new DynamicFormDetailEntity(entity, data);
     }
@@ -105,6 +107,7 @@ public class DynamicFormServiceImpl implements DynamicFormService {
                 .filter(Objects::nonNull)
                 .map(item -> this.buildGraphParam(item.getId(), item.getVersion(), StringUtils.EMPTY))
                 .collect(Collectors.toList());
+        // todo 暂时用不到，可去掉；后期应该改为调用appBuilder的批量查询表单的渲染数据json的接口
         List<Graph> elsaGraphs = this.elsaClient.list(elsaParams, context);
         return parameters.stream()
                 .map(item -> this.buildDynamicFormDetailEntityMap(item, this.getDynamicFormEntityFromList(item, entities),
@@ -158,6 +161,7 @@ public class DynamicFormServiceImpl implements DynamicFormService {
             throw new FormParamException(context, FormErrCode.FORM_NAME_IS_EMPTY);
         }
 
+        // todo 要去掉，暂时没有用到
         if (elsaClient.save(elsaParam, context) == 0) {
             // only update if elsa successfully saved
             formMapper.insertOrUpdateByPrimaryKey(DynamicFormEntity.builder()
@@ -182,6 +186,7 @@ public class DynamicFormServiceImpl implements DynamicFormService {
                 formDto.getVersion());
 
         GraphParam elsaParam = buildGraphParam(formDto.getId(), formDto.getVersion(), "");
+        // todo 暂时用不到，可去掉；后期应该改为调用appBuilder删除表单的渲染数据json的接口
         if (elsaClient.delete(elsaParam, context) == 0) {
             // only delete if elsa successfully deleted
             formMapper.deleteByPrimaryKey(formDto.getId(), formDto.getVersion());

@@ -43,6 +43,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -95,6 +96,7 @@ public class LLMComponentTest {
         businessData.put("systemPrompt", "");
         businessData.put(AippConst.BS_HTTP_CONTEXT_KEY, JsonUtils.toJsonString(new OperationContext()));
         businessData.put(AippConst.BS_AIPP_ID_KEY, "LLMComponentTest");
+        businessData.put(AippConst.BS_AIPP_INST_ID_KEY, TestUtils.DUMMY_FLOW_INSTANCE_ID);
         return businessData;
     }
 
@@ -155,7 +157,7 @@ public class LLMComponentTest {
         // stub
         AiProcessFlow<Prompt, Prompt> testAgent = AiFlows.<Prompt>create()
                 .just(m -> Assertions.assertEquals(4, m.messages().size()))
-                .map(m -> (Prompt) ChatMessages.from(new ToolMessage("", "tool_async")))
+                .map(m -> (Prompt) ChatMessages.from(new ToolMessage("", "\"tool_async\"")))
                 .close();
         Agent<Prompt, Prompt> agent = new Agent<Prompt, Prompt>(()->testAgent) {};
         LLMComponent llmComponent =
@@ -166,9 +168,10 @@ public class LLMComponentTest {
         Mockito.doAnswer((Answer<Void>) invocation -> {
             InstanceDeclarationInfo info = ObjectUtils.cast(invocation.getArgument(2));
             Map<String, Object> value = info.getInfo().getValue();
-            Assertions.assertEquals("tool_async", ObjectUtils.cast(value.get("childInstanceId")));
+            String childInstanceId = ObjectUtils.cast(value.get(AippConst.INST_CHILD_INSTANCE_ID));
+            Assertions.assertEquals("tool_async", childInstanceId);
             Map<String, Object> businessData = new HashMap<>();
-            businessData.put("parentFlowTraceId", TestUtils.DUMMY_FLOW_TRACE_ID);
+            businessData.put(AippConst.PARENT_INSTANCE_ID, TestUtils.DUMMY_FLOW_INSTANCE_ID);
             businessData.put(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM, false);
             llmComponent.callback(TestUtils.buildFlowDataWithExtraConfig(businessData, null));
             return null;
@@ -199,7 +202,7 @@ public class LLMComponentTest {
                         chatMessages.add(new AiMessage("bad"));
                     } else {
                         chatMessages.add(new AiMessage("", Collections.singletonList(new ToolCall())));
-                        chatMessages.add(new ToolMessage("", "tool_async"));
+                        chatMessages.add(new ToolMessage("", "\"tool_async\""));
                     }
                     return (Prompt) chatMessages;
                 })
@@ -215,12 +218,12 @@ public class LLMComponentTest {
         Mockito.doAnswer((Answer<Void>) invocation -> {
             InstanceDeclarationInfo info = ObjectUtils.cast(invocation.getArgument(2));
             Map<String, Object> value = info.getInfo().getValue();
-            String childInstanceId = ObjectUtils.cast(value.get("childInstanceId"));
+            String childInstanceId = ObjectUtils.cast(value.get(AippConst.INST_CHILD_INSTANCE_ID));
             if (childInstanceId != null) {
                 Assertions.assertEquals("tool_async", childInstanceId);
                 Map<String, Object> businessData = new HashMap<>();
                 businessData.put(AippConst.BS_AIPP_FINAL_OUTPUT, "tool_data");
-                businessData.put("parentFlowTraceId", TestUtils.DUMMY_FLOW_TRACE_ID);
+                businessData.put(AippConst.PARENT_INSTANCE_ID, TestUtils.DUMMY_FLOW_INSTANCE_ID);
                 businessData.put(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM, true);
                 llmComponent.callback(TestUtils.buildFlowDataWithExtraConfig(businessData, null));
             } else {
