@@ -15,6 +15,7 @@ export const manualCheckNodeState = (id, x, y, width, height, parent, drawer) =>
     self.pointerEvents = "auto";
     self.componentName = "manualCheckComponent";
     self.flowMeta.triggerMode = "manual";
+    delete self.flowMeta.jober;
 
     /**
      * @override
@@ -28,6 +29,22 @@ export const manualCheckNodeState = (id, x, y, width, height, parent, drawer) =>
                 <ManualCheckIcon/>
             </Button>
         );
+    };
+
+    /**
+     * 获取用户自定义组件.
+     *
+     * @return {*}
+     */
+    self.getComponent = () => {
+        return self.graph.plugins[self.componentName](self.flowMeta.task);
+    };
+
+    /**
+     * @override
+     */
+    self.serializerJadeConfig = () => {
+        self.flowMeta.task = self.getLatestJadeConfig();
     };
 
     return self;

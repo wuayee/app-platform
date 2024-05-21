@@ -19,9 +19,11 @@ export default function ManualCheckFormWrapper() {
     const dispatch = useDispatch();
     const data = useDataContext();
     const config = useShapeContext().graph.configs.find(node => node.node === "manualCheckNodeState");
-    const formName = data.inputParams.find(item => item.name === "formName").value;
+    const formName = data.formName;
+    const taskId = data.taskId;
     const output = data.outputParams;
     const [formOptions, setFormOptions] = useState([]);
+    const selectedFormDefaultValue = (formName === null || formName === undefined) ? undefined : `${formName.replace(/Component$/, '')} | ${taskId}`;
 
     useEffect(() => {
         // 发起网络请求获取 options 数据
@@ -44,18 +46,18 @@ export default function ManualCheckFormWrapper() {
     const onChange = (e) => {
         let formOutput = "";
         let changeFormName = "";
-        let changeformId = "";
+        let changeFormId = "";
         if (e && e.length > 0) {
             const [name, id] = e.split('|'); // 拆分字符串
             changeFormName = name + "Component";
-            changeformId = id;
+            changeFormId = id;
             try {
                 formOutput = shape.graph.plugins[changeFormName]().getJadeConfig();
             } catch (error) {
                 console.error("Error getting JadeConfig:", error);
             }
         }
-        dispatch({actionType: "changeFormAndSetOutput", formName: changeFormName, formId: changeformId, formOutput: formOutput});
+        dispatch({actionType: "changeFormAndSetOutput", formName: changeFormName, formId: changeFormId, formOutput: formOutput});
     };
 
     const renderOutput = () => {
@@ -104,7 +106,7 @@ export default function ManualCheckFormWrapper() {
                                 <JadeStopPropagationSelect
                                     allowClear
                                     className="jade-select"
-                                    defaultValue={formName}
+                                    defaultValue={selectedFormDefaultValue}
                                     style={{width: "100%", marginBottom: "8px"}}
                                     onChange={e => onChange(e)}
                                     options={formOptions}
