@@ -22,13 +22,7 @@
 }
 
 .chat-preview-inner {
-  // width: 65%;
-  // background-color: #fcfcfd;
   background-image: unset;
-  // background-image: url('../../../assets/images/bg2.png');
-  // .chat-inner-right {
-  //   background-color: #252b3a05;
-  // }
 }
 
 .chat-inner {
@@ -170,9 +164,6 @@
 
 .chat-preview-inner {
   .chat-right-close {
-    .inspiration-conyainer {
-      // border-left: 1px solid #dedee1;
-    }
 
     .prompt-item {
       width: 120px !important;
@@ -231,31 +222,3 @@
   }
 }
 
-// .chat-page-inner {
-//   .chat-details-content,
-//   .message-box,
-//   .message-check-toolbox-wrap,
-//   .send-editor-container {
-//     width: 800px !important;
-//   }
-//   .chat-left-close {
-//     .message-box, 
-//     .send-editor-container,
-//     .message-check-toolbox-wrap {
-//       width: 700px !important;
-//     }
-//   }
-// }
-// .chat-preview-elsa {
-//   width: 500px;
-//   .chat-details-content,
-//   .message-box,
-//   .send-editor-container {
-//     width: 400px;
-//   }
-//   .chat-inner{
-//     .message-check-toolbox-wrap {
-//       width: 400px;
-//     }
-//   }
-// }
