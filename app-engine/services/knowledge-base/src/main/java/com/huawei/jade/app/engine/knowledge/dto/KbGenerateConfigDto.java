@@ -12,14 +12,14 @@ import lombok.Setter;
 import java.util.List;
 
 /**
- * KGenerateConfigDto 导入文件的配置信息参数
+ * KbGenerateConfigDto 导入文件的配置信息参数
  *
  * @author YangPeng
  * @since 2024-05-17 16:16
  */
 @Getter
 @Setter
-public class KGenerateConfigDto {
+public class KbGenerateConfigDto {
     /**
      * 知识库id
      */

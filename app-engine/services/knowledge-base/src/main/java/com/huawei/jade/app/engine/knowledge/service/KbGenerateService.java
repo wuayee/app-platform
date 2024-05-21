@@ -5,20 +5,20 @@
 package com.huawei.jade.app.engine.knowledge.service;
 
 import com.huawei.fitframework.annotation.Genericable;
-import com.huawei.jade.app.engine.knowledge.dto.KGenerateConfigDto;
+import com.huawei.jade.app.engine.knowledge.dto.KbGenerateConfigDto;
 
 /**
- * KGenerateService 知识生成
+ * KbGenerateService 知识生成
  *
  * @author YangPeng
  * @since 2024-05-20 11:10
  */
-public interface KGenerateService {
+public interface KbGenerateService {
     /**
      * 导入知识
      *
      * @param configDto 配置信息
      */
-    @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KGenerateService.importKnowledge")
-    void importKnowledge(KGenerateConfigDto configDto);
+    @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KbGenerateService.importKnowledge")
+    void importKnowledge(KbGenerateConfigDto configDto);
 }

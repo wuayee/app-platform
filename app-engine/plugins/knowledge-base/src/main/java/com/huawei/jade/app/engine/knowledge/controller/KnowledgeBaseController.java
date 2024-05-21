@@ -13,14 +13,14 @@ import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
-import com.huawei.jade.app.engine.knowledge.dto.KGenerateConfigDto;
 import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
 import com.huawei.jade.app.engine.knowledge.dto.KStorageDto;
 import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
-import com.huawei.jade.app.engine.knowledge.service.KGenerateService;
+import com.huawei.jade.app.engine.knowledge.dto.KbGenerateConfigDto;
 import com.huawei.jade.app.engine.knowledge.service.KRepoService;
 import com.huawei.jade.app.engine.knowledge.service.KStorageService;
 import com.huawei.jade.app.engine.knowledge.service.KTableService;
+import com.huawei.jade.app.engine.knowledge.service.KbGenerateService;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class KnowledgeBaseController {
     private KStorageService kStorageService;
 
     @Fit
-    private KGenerateService kGenerateService;
+    private KbGenerateService kbGenerateService;
 
     /**
      * 获取所有的知识库。
@@ -211,7 +211,7 @@ public class KnowledgeBaseController {
      * @param fileConfigDto 文件导入配置信息
      */
     @PostMapping(path = "/import-knowledge/text")
-    public void importKnowledge(@RequestBody KGenerateConfigDto fileConfigDto) {
-        kGenerateService.importKnowledge(fileConfigDto);
+    public void importKnowledge(@RequestBody KbGenerateConfigDto fileConfigDto) {
+        kbGenerateService.importKnowledge(fileConfigDto);
     }
 }
