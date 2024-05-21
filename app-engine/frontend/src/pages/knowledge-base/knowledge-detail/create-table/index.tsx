@@ -125,7 +125,8 @@ const KnowledgeBaseDetailCreateTable = () => {
 
     if(value.importData && res) {
       // 创建成功保存id，跳转至导入数据表单
-      navigate(`/knowledge-base/knowledge-detail/import-data?id=${id}&tableid=${res}&tabletype=${value.knowledgeBaseFormat}`, { replace: true })
+      navigate(`/knowledge-base/knowledge-detail/import-data?id=${id}&tableid=${res}&tabletype=${value.knowledgeBaseFormat}`, { replace: true });
+      return;
     }
 
     if(res) {
