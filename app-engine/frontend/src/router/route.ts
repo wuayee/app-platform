@@ -42,20 +42,67 @@ export const routeList: MenuItem[] = [
     ],
   },
   {
+    key: "/app-develop",
+    icon: Icons.app({}),
+    label: "应用开发",
+    component: Demo,
+    children: [
+      {
+        key: "/app-develop/create",
+        label: "应用创建",
+        component: Demo,
+      },
+      {
+        key: "/app-develop/test",
+        label: "应用调测",
+        component: Demo,
+      },
+      {
+        key: "/app-develop/estimate",
+        label: "应用评估",
+        component: Demo,
+      },
+      {
+        key: "/app-develop/evalute",
+        label: "应用优化",
+        component: Demo,
+      },
+    ]
+  },  {
+    key: "/app-developement",
+    icon: Icons.app({}),
+    label: "应用运维",
+    component: Demo,
+    children: [
+      {
+        key: "/app-developement/Deploying",
+        label: "应用部署",
+        component: Demo,
+      },
+      {
+        key: "/app-developement/monitor",
+        label: "应用监控",
+        component: Demo,
+      },
+      {
+        key: "/app-developement/Recovering",
+        label: "故障恢复",
+        component: Demo,
+      },
+    ]
+  },
+  {
     key: "/robot-market",
     icon: Icons.app({}),
     label: "机器人市场",
     component: Demo,
+    hidden: true,
   },
-  {
-    key: "/plugin-market",
-    icon: Icons.app({}),
-    label: "插件市场",
-  },
+
   {
     key: "/app",
     icon: Icons.app({}),
-    label: "应用",
+    label: "应用市场",
     component: Apps,
     children: [
       {
@@ -89,10 +136,17 @@ export const routeList: MenuItem[] = [
     ],
   },
   {
+    key: "/plugin-market",
+    icon: Icons.app({}),
+    label: "插件市场",
+    component: Demo,
+  },
+  {
     key: "/mode",
     icon: Icons.app({}),
     label: "模型",
     component: Demo,
+    hidden: true,
   },
   {
     key: "/knowledge-base",
@@ -100,6 +154,7 @@ export const routeList: MenuItem[] = [
     label: "知识库",
     title: "知识库概览",
     component: KnowledgeBase,
+    hidden: true,
     children: [
       {
         key: "/knowledge-base/create",
@@ -138,12 +193,20 @@ export const routeList: MenuItem[] = [
     icon: Icons.app({}),
     label: "插件",
     component: Demo,
+    hidden: true,
+  },
+  {
+    key: "/system",
+    icon: Icons.app({}),
+    label: "系统管理",
+    component: Demo,
   },
   {
     key: "/group",
     icon: Icons.app({}),
     label: "团队",
     component: Demo,
+    hidden: true,
   },
 ];
 
