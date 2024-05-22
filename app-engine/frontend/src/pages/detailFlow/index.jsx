@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { LeftArrowIcon } from '@assets/icon';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getAippInfo } from '../../shared/http/aipp';
-import { JadeFlow } from '../../shared/elsa-react/fit-elsa-react';
+import { JadeFlow } from '@fit-elsa/elsa-react';
 import { configMap } from "../addFlow/config";
 import './index.scss'
 

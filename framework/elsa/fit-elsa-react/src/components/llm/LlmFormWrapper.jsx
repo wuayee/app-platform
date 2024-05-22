@@ -54,7 +54,7 @@ export default function LlmFormWrapper() {
                 console.error('Cannot get config.urls.llmModelEndpoint.');
             } else {
                 // 发起网络请求获取 options 数据
-                httpUtil.get(config.urls.llmModelEndpoint + '/model-gateway/v1/models', {}, (jsonData) => setModelOptions(jsonData.data.map(item => {
+                httpUtil.get(config.urls.llmModelEndpoint + '/gateway/v1/models', {}, (jsonData) => setModelOptions(jsonData.data.map(item => {
                     return {
                         value: item.id,
                         label: item.id

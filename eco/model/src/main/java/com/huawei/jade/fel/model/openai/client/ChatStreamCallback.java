@@ -59,7 +59,10 @@ public class ChatStreamCallback implements Callback<ResponseBody> {
                 emitter.emit(OpenAiMessageUtils.buildFelAiMessage(response));
                 data = null;
             } else {
-                throw new IllegalArgumentException("Unrecognized line format: " + line);
+                OpenAiChatCompletionResponse response =
+                        OpenAiMessageUtils.OBJECT_MAPPER.readValue(line, OpenAiChatCompletionResponse.class);
+                emitter.emit(OpenAiMessageUtils.buildFelAiMessage(response));
+                return;
             }
         }
     }

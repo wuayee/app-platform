@@ -20,6 +20,6 @@ druid:
   testWhileIdle: true
   testOnBorrow: true
   testOnReturn: true
-  url: jdbc:postgresql://10.91.144.110:5433/jane?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true&options=-c%20statement_timeout=600000
-  username: jane
-  password: FitLab123
+  url: jdbc:postgresql://80.11.128.66:30547/app_builder?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true&options=-c%20statement_timeout=600000
+  username: postgres
+  password: Huawei@123

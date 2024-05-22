@@ -17,7 +17,7 @@ import {
   FitIcon
 } from '@assets/icon';
 import { AippContext } from '../aippIndex/context';
-import { JadeFlow } from '../../shared/elsa-react/fit-elsa-react';
+import { JadeFlow } from '@fit-elsa/elsa-react';
 import { debounce } from '../../shared/utils/common';
 import { Message } from '../../shared/utils/message';
 import { createAipp, updateAippInfo, updateFlowInfo } from '../../shared/http/aipp';

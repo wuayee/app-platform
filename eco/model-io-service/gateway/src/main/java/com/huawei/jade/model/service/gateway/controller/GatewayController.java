@@ -4,15 +4,19 @@
 
 package com.huawei.jade.model.service.gateway.controller;
 
-import com.huawei.jade.model.service.gateway.route.RouteInfo;
-import com.huawei.jade.model.service.gateway.route.RouteInfoList;
-import com.huawei.jade.model.service.gateway.route.RouteUpdateRequest;
+import com.huawei.jade.model.service.gateway.entity.ModelInfo;
+import com.huawei.jade.model.service.gateway.entity.RouteInfo;
+import com.huawei.jade.model.service.gateway.entity.RouteInfoList;
+import com.huawei.jade.model.service.gateway.entity.RouteUpdateRequest;
+import com.huawei.jade.model.service.gateway.service.ModelStatisticsService;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.HttpClientErrorException;
@@ -29,7 +33,7 @@ import java.util.List;
  */
 @Controller
 @Slf4j
-public class RouteUpdateController {
+public class GatewayController {
     private static final String LOCAL_HOST = "http://localhost:";
 
     private static final String ROUTES_ENDPOINT = "/actuator/gateway/routes/";
@@ -38,8 +42,14 @@ public class RouteUpdateController {
 
     private static List<RouteInfo> routes = new ArrayList<>();
 
+    private ModelStatisticsService modelRouteService;
+
     @Value("${server.port}")
     private int port;
+
+    public GatewayController(ModelStatisticsService service) {
+        this.modelRouteService = service;
+    }
 
     /**
      * 更新路由信息接口。
@@ -62,8 +72,16 @@ public class RouteUpdateController {
                 ResponseEntity<String> response = restTemplate.postForEntity(
                         LOCAL_HOST + port + ROUTES_ENDPOINT + routeInfo.getId(),
                         request, String.class);
+
                 if (!response.getStatusCode().is2xxSuccessful()) {
                     log.error("Update route failed: " + routeInfo);
+                }
+
+                // 如有新的模型路由信息，需要添加到统计信息
+                if (!modelRouteService.getModels().containsKey(routeInfo.getModel())) {
+                    ModelInfo modelInfo = new ModelInfo();
+                    modelInfo.setModel(routeInfo.getModel());
+                    modelRouteService.getModels().put(routeInfo.getModel(), modelInfo);
                 }
             } catch (HttpClientErrorException e) {
                 return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
@@ -77,5 +95,19 @@ public class RouteUpdateController {
         } catch (HttpClientErrorException e) {
             return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
         }
+    }
+
+    /**
+     * 获取模型统计信息。
+     *
+     * @return 模型统计信息。
+     */
+    @GetMapping("/v1/statistics")
+    public ResponseEntity<List<ModelInfo>> getStatistics() {
+        List<ModelInfo> list = new ArrayList<>();
+        for (String name : modelRouteService.getModels().keySet()) {
+            list.add(modelRouteService.getModels().get(name));
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }

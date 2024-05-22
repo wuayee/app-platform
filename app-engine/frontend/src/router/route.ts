@@ -12,6 +12,10 @@ import AddFlow from "../pages/addFlow";
 import FlowDetail from "../pages/detailFlow";
 import ChatShare from "../pages/chatShare";
 import Apps from "../pages/apps";
+import KnowledgeBaseDetailCreateTable from "../pages/knowledge-base/knowledge-detail/create-table";
+import KnowledgeBaseDetailImportData from "../pages/knowledge-base/knowledge-detail/import-data";
+import Model from "../pages/model";
+import ModelDetail from "../pages/model/model-detail";
 
 export type MenuItem = Required<MenuProps>["items"][number] & {
   component?: (() => ReactElement) | React.FC<any>;
@@ -87,10 +91,19 @@ export const routeList: MenuItem[] = [
     ],
   },
   {
-    key: "/mode",
+    key: "/model",
     icon: Icons.app({}),
     label: "模型",
-    component: Demo,
+    component: Model,
+    children: [
+      {
+        key: "/model/detail",
+        icon: Icons.app({}),
+        label: "模型详情",
+        component: ModelDetail,
+        hidden: true,
+      },
+    ],
   },
   {
     key: "/knowledge-base",
@@ -112,6 +125,22 @@ export const routeList: MenuItem[] = [
         label: "小魔方知识库",
         component: KnowledgeBaseDetail,
         hidden: true,
+        children: [
+          {
+            key: "/knowledge-base/knowledge-detail/create-table",
+            icon: Icons.app({}),
+            label: "添加知识表",
+            component: KnowledgeBaseDetailCreateTable,
+            hidden: true,
+          },
+          {
+            key: "/knowledge-base/knowledge-detail/import-data",
+            icon: Icons.app({}),
+            label: "导入数据",
+            component: KnowledgeBaseDetailImportData,
+            hidden: true,
+          },
+        ]
       },
     ],
   },
