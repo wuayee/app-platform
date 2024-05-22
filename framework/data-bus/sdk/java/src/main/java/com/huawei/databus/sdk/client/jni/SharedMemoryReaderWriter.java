@@ -18,11 +18,15 @@ public class SharedMemoryReaderWriter {
     /**
      *  动态链接库名称
      */
-    public static final String NATIVE_LIBRARY_NAME = "native";
+    public static final String DATABUS_JNI_NATIVE_LIBRARY_NAME = "libdatabus";
 
     static {
         if (DataBusUtils.isSupportedPlatform()) {
-            System.loadLibrary(NATIVE_LIBRARY_NAME);
+            try {
+                NativeLibraryLoader.loadLibrary(DATABUS_JNI_NATIVE_LIBRARY_NAME);
+            } catch (IOException ignored) {
+                // 需要打日志但是无需返回错误
+            }
         }
     }
 

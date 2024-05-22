@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
 package com.huawei.jade.fel.rag.source;
 
 import com.huawei.fitframework.log.Logger;
@@ -53,25 +57,26 @@ public class ExcelSource extends Source<List<Document>> {
 
             sheet.getRow(headRow).forEach((cell) -> {
                 titleName.add(cell.getStringCellValue());
-                contents.add(new ArrayList<>());
             });
 
             for (Integer rowNo = dataRow; rowNo < rowNum; rowNo++) {
-                Row row = sheet.getRow(rowNo);
+                List<String> rowContent = new ArrayList<>();
 
+                Row row = sheet.getRow(rowNo);
                 for (int col = 0; col < colNum; col++) {
                     Cell cell = row.getCell(col);
                     switch(cell.getCellType()) {
                         case NUMERIC:
-                            contents.get(col).add(Double.toString(cell.getNumericCellValue()));
+                            rowContent.add(Double.toString(cell.getNumericCellValue()));
                             break;
                         case STRING:
-                            contents.get(col).add(cell.getStringCellValue());
+                            rowContent.add(cell.getStringCellValue());
                             break;
                         default:
                             logger.error("Unsupported datatype:", cell.getCellType());
                     }
                 }
+                contents.add(rowContent);
             }
         } catch (IOException e) {
             logger.debug("Error when extracting from excel, msg:", e.getMessage());

@@ -4,6 +4,7 @@
 
 package com.huawei.jade.fel.rag.store.connector;
 
+import com.huawei.jade.fel.rag.store.connector.schema.RdbColumn;
 import com.huawei.jade.fel.rag.store.query.Expression;
 
 import java.util.List;
@@ -51,14 +52,18 @@ public interface SqlConnector {
     /**
      * 创建表。
      *
+     * @param tableName 表名称
+     * @param columns 列信息
+     *
      */
-    void createTable();
+    void createTable(String tableName, List<RdbColumn> columns);
 
     /**
      * 删除表。
      *
+     * @param tableName 表名称
      */
-    void dropTable();
+    void dropTable(String tableName);
 
     /**
      * 关闭数据库连接。
