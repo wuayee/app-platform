@@ -17,7 +17,6 @@ import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.broker.client.Router;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.store.Tool;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +25,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -65,9 +63,8 @@ public class WaterFlowToolTest {
         when(this.client.getRouter(eq("t1"))).thenReturn(router);
         when(router.route()).thenReturn(invoker);
         when(invoker.invoke(any())).thenAnswer(invocation -> {
-            List<Object> arguments = ObjectUtils.cast(invocation.getArgument(0));
-            if (Objects.equals(arguments.get(0), "p1_value") && Objects.equals(arguments.get(1), "p2_default_value")
-                    && Objects.equals(arguments.get(2), "p3_value")) {
+            if (Objects.equals(invocation.getArgument(0), "p1_value") && Objects.equals(invocation.getArgument(1),
+                    "p2_default_value") && Objects.equals(invocation.getArgument(2), "p3_value")) {
                 return "OK";
             } else {
                 throw new IllegalStateException("Error");

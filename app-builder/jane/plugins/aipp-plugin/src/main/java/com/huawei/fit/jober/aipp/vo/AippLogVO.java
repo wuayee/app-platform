@@ -3,16 +3,14 @@ package com.huawei.fit.jober.aipp.vo;
 import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
-import com.huawei.fitframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * aipp展示类.
@@ -76,9 +74,6 @@ public class AippLogVO {
      * @return 祖先实例的id列表.
      */
     public List<String> getAncestors() {
-        return Arrays.stream(this.path.split(Utils.PATH_DELIMITER))
-                .filter(StringUtils::isNotEmpty)
-                .filter(p -> p.equals(this.instanceId))
-                .collect(Collectors.toList());
+        return Collections.singletonList(this.path.split(Utils.PATH_DELIMITER)[1]);
     }
 }

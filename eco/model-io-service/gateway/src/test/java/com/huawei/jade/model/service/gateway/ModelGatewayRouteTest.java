@@ -6,8 +6,9 @@ package com.huawei.jade.model.service.gateway;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.huawei.jade.model.service.gateway.route.RouteInfo;
-import com.huawei.jade.model.service.gateway.route.RouteInfoList;
+import com.huawei.jade.model.service.gateway.entity.ModelInfo;
+import com.huawei.jade.model.service.gateway.entity.RouteInfo;
+import com.huawei.jade.model.service.gateway.entity.RouteInfoList;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,5 +64,33 @@ public class ModelGatewayRouteTest {
                 .expectStatus().isOk()
                 .expectBody(String.class)
                 .value(response -> assertThat(response).contains("test_id"));
+    }
+
+    @Test
+    void testUpdateStatistics() {
+        String testModel = "test_model";
+        RouteInfo routeInfo = new RouteInfo();
+        routeInfo.setId("test_id");
+        routeInfo.setModel(testModel);
+        routeInfo.setPath("/test");
+        routeInfo.setUrl("http://localhost/test_url");
+
+        List<RouteInfo> routes = new ArrayList<>();
+        routes.add(routeInfo);
+        RouteInfoList requestBody = new RouteInfoList();
+        requestBody.setRoutes(routes);
+
+        webTestClient.post()
+                .uri("/v1/routes")
+                .bodyValue(requestBody)
+                .exchange().expectStatus().isOk();
+
+        ModelInfo expectedResponse = new ModelInfo();
+        expectedResponse.setModel(testModel);
+        webTestClient.get()
+                .uri("/v1/statistics")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ModelInfo.class).hasSize(1).contains(expectedResponse);
     }
 }

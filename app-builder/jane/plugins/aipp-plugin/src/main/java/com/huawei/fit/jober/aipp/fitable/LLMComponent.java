@@ -16,14 +16,21 @@ import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.entity.AippLogData;
+import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.fel.AippLlmMeta;
 import com.huawei.fit.jober.aipp.fel.AippMemory;
 import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fit.jober.aipp.service.AippLogStreamService;
+import com.huawei.fit.jober.aipp.vo.AippLogVO;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.StringUtils;
+import com.huawei.fitframework.util.UuidUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.ChatOptions;
@@ -75,6 +82,8 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     private final AiProcessFlow<Tip, Prompt> agentFlow;
     private final AippLogService aippLogService;
 
+    private final AippLogStreamService aippLogStreamService;
+
     /**
      * 大模型节点构造器，内部通过提供的agent和tool构建智能体工作流。
      *
@@ -84,14 +93,19 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
      * @param toolProvider 表示具提供者功能的 {@link ToolProvider}。
      * @param agent 表示提供智能体功能的 {@link Agent}{@code <}{@link ChatMessages}{@code ,} {@link ChatMessages}{@code >}。
      */
-    public LLMComponent(FlowInstanceService flowInstanceService, MetaInstanceService metaInstanceService,
-            MetaService metaService, ToolProvider toolProvider, Agent<Prompt, Prompt> agent,
-            AippLogService aippLogService) {
+    public LLMComponent(FlowInstanceService flowInstanceService,
+            MetaInstanceService metaInstanceService,
+            MetaService metaService,
+            ToolProvider toolProvider,
+            @Fit(alias = "defaultStreamAgent") Agent<Prompt, Prompt> agent,
+            AippLogService aippLogService,
+            AippLogStreamService aippLogStreamService) {
         this.flowInstanceService = flowInstanceService;
         this.metaService = metaService;
         this.metaInstanceService = metaInstanceService;
         this.toolProvider = toolProvider;
         this.aippLogService = aippLogService;
+        this.aippLogStreamService = aippLogStreamService;
 
         // handleTask从入口开始处理，callback从agent node开始处理
         this.agentFlow = AiFlows.<Tip>create()
@@ -131,7 +145,10 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         ChatMessage lastMessage = chatMessages.messages().remove(chatMessages.messages().size() - 1);
         chatMessages.add(new ToolMessage(lastMessage.id().orElse(null), toolOutput));
         llmMeta.setTrace(chatMessages);
+        String msgId = UuidUtils.randomUuidString();
+        String path = this.aippLogService.getParentPath(parentInstanceId);
         agentFlow.converse()
+                .bind((acc, chunk) -> this.sendLog(chunk, path, msgId, parentInstanceId))
                 .doOnSuccess(msg -> llmOutputConsumer(llmMeta, ObjectUtils.cast(msg)))
                 .doOnError(throwable -> doOnAgentError(llmMeta, throwable.getMessage()))
                 .offer("agent", Collections.singletonList(chatMessages));
@@ -147,24 +164,42 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
         Map<String, Object> businessData = Utils.getBusiness(flowData);
+        String instId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
+        String parentInstId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
+        String path = Utils.buildPath(this.aippLogService, instId, parentInstId);
         log.debug("LLMComponent business data {}", businessData);
 
         AippLlmMeta llmMeta = AippLlmMeta.parse(flowData, metaService, metaInstanceService);
         llmCache.put(llmMeta.getInstId(), llmMeta);
 
         String systemPrompt = ObjectUtils.cast(businessData.get("systemPrompt"));
+        String msgId = UuidUtils.randomUuidString();
+
         // todo: 待add多模态，期望使用image的url，当前传入的历史记录里面没有image
         agentFlow.converse()
+                .bind((acc, chunk) -> this.sendLog(chunk, path, msgId, instId))
                 .bind(new AippMemory(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_MEMORY_KEY))))
-                .doOnSuccess(msg -> {
-                    llmOutputConsumer(llmMeta, msg);
-                })
-                .doOnError(throwable -> {
-                    doOnAgentError(llmMeta, throwable.getMessage());
-                })
+                .doOnSuccess(msg -> llmOutputConsumer(llmMeta, msg))
+                .doOnError(throwable -> doOnAgentError(llmMeta, throwable.getMessage()))
                 .bind(buildChatOptions(businessData))
                 .offer(Tip.fromArray(llmMeta.getInstId(), buildInputText(businessData), systemPrompt));
         return flowData;
+    }
+
+    private void sendLog(ChatMessage chunk, String path, String msgId, String instId) {
+        String msg = chunk.text();
+        if (StringUtils.isBlank(msg)) {
+            return;
+        }
+        AippLogData logData = AippLogData.builder().msg(chunk.text()).build();
+        AippLogVO logVO = AippLogVO.builder()
+                .logData(JsonUtils.toJsonString(logData))
+                .logType(AippInstLogType.MSG.name())
+                .path(path)
+                .msgId(msgId)
+                .instanceId(instId)
+                .build();
+        this.aippLogStreamService.send(logVO);
     }
 
     /**
@@ -227,6 +262,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         // todo: 临时逻辑，如果出错则停止前端轮询并主动终止流程；待流程支持异步调用抛异常后再修改
         log.error("versionId {} errorMessage {}", llmMeta.getVersionId(), errorMessage);
         String msg = "很抱歉，模型节点遇到了问题，请稍后重试。";
+        Utils.persistAippErrorLog(this.aippLogService, msg, llmMeta.getFlowData());
         InstanceDeclarationInfo declarationInfo = InstanceDeclarationInfo.custom()
                 .putInfo(AippConst.INST_FINISH_TIME_KEY, LocalDateTime.now())
                 .putInfo(AippConst.INST_STATUS_KEY, MetaInstStatusEnum.ERROR.name())
@@ -239,9 +275,6 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
                 llmMeta.getFlowTraceId(),
                 Collections.emptyMap(),
                 llmMeta.getContext());
-
-        // todo@zhangyue 待确认，最后状态是变成ERROR还是TERMINAL.
-        Utils.persistAippErrorLog(this.aippLogService, msg, llmMeta.getFlowData());
     }
 
     /**

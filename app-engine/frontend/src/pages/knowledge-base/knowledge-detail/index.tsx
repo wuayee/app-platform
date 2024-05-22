@@ -8,8 +8,9 @@ import { useSearchParams } from "react-router-dom";
 import BreadcrumbSelf from '../../../components/breadcrumb';
 import { KnowledgeIcons } from '../../../components/icons';
 import { getKnowledgeBaseById, getKnowledgeDetailById } from '../../../shared/http/knowledge';
-import { columns } from './table-config';
+import { columnsFunc } from './table-config';
 import Pagination from '../../../components/pagination/index';
+import { ModifyTable } from './modify-table';
 
 const KnowledgeBaseDetail = () => {
   const [searchParams] = useSearchParams();
@@ -18,6 +19,12 @@ const KnowledgeBaseDetail = () => {
 
   const [knowledgeDetail, setKnowledgeDetail] = useState<any>(null)
   const [data, setData] = useState<any>([]);
+
+  // 修改弹窗开关
+  const [open, setOpen] = useState(false);
+
+  // 当前修改的值
+  const [currentData, setCurrentData] = useState<any>(null);
 
     // 总条数
   const [total, setTotal] = useState(0);
@@ -35,7 +42,7 @@ const KnowledgeBaseDetail = () => {
     } catch (error) {
       
     }
-  }
+  };
 
   // 格式化时间
   const formateTime = (dateStr: Date)=> {
@@ -50,11 +57,11 @@ const KnowledgeBaseDetail = () => {
   // 返回知识库
   const goBack = ()=> {
     navigate('/knowledge-base')
-  }
+  };
 
   // 新增
   const onAdd = () => {
-
+    navigate(`/knowledge-base/knowledge-detail/create-table?id=${id}`)
   }
 
   // 分页变化
@@ -83,6 +90,20 @@ const KnowledgeBaseDetail = () => {
 
   }
 
+  // operator操作
+  const operator = (type: 'delete' | 'modify', data: any) => {
+    if(type === 'delete') {
+      setPage(1);
+    } else if(type === 'modify') {
+      setCurrentData({...data});
+      setOpen(true);
+    }
+
+    refresh();
+  }
+
+  const columns = columnsFunc(operator);
+
   useEffect(()=> {
     if(id) {
       getKnowledgeBase(id);
@@ -95,7 +116,7 @@ const KnowledgeBaseDetail = () => {
       refresh();
     }
   }, [page, pageSize]);
-
+  
 
   return (
     <>
@@ -154,7 +175,7 @@ const KnowledgeBaseDetail = () => {
       <div />
     </div>
     </div>
-
+    <ModifyTable open={open} setOpen={setOpen} refresh={refresh} data={currentData}/>
     </>
   )
 }

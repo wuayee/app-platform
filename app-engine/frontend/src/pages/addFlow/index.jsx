@@ -17,7 +17,7 @@ import {
   FitIcon
 } from '@assets/icon';
 import { AippContext } from '../aippIndex/context';
-import { JadeFlow } from '../../shared/elsa-react/fit-elsa-react';
+import { JadeFlow } from '@fit-elsa/elsa-react';
 import { debounce } from '../../shared/utils/common';
 import { Message } from '../../shared/utils/message';
 import { createAipp, updateAippInfo, updateFlowInfo } from '../../shared/http/aipp';
@@ -147,7 +147,7 @@ const AddFlow = (props) => {
     editRef.current.showModal();
   }
   const handleBackClick = () => {
-    navigate(`/aipp/${tenantId}/detail/${appId}`);
+    navigate(`/app/${tenantId}/detail/${appId}`);
   }
   const formatTimeStamp = (now) => {
     let hours = now.getHours().toString().padStart(2, '0');
