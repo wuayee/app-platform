@@ -287,6 +287,8 @@ const ChatPreview = (props) => {
     
     wsCurrent.current.onerror = () => {
       onStop('对话失败');
+      chatStatusChange(false);
+      isChatRunning.current = false;
     }
     
     wsCurrent.current.onmessage = ({ data }) => {
