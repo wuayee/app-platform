@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组</title>
+    <defs>
+        <linearGradient x1="-4.0298897%" y1="0.370991313%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#49B4FF" offset="0%"></stop>
+            <stop stop-color="#0E69F6" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#2BA9FF" offset="0%"></stop>
+            <stop stop-color="#2673E5" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="67.7964819%" y1="-6.64587246%" x2="38.9590172%" y2="75.7540063%" id="linearGradient-3">
+            <stop stop-color="#FFFFFF" stop-opacity="0.508444939" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-2备份" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="首页Chat" transform="translate(-441.000000, -410.000000)" fill-rule="nonzero">
+            <g id="编组-16备份" transform="translate(409.000000, 410.000000)">
+                <g id="编组" transform="translate(32.000000, 0.000000)">
+                    <path d="M0,30 C0,40.7179675 5.7179675,50.6217782 15,55.9807621 C24.2820322,61.339746 35.7179678,61.339746 45,55.9807621 C54.2820325,50.6217782 60,40.7179675 60,30 C60,13.4314574 46.5685425,0 30,0 C13.4314575,0 0,13.4314574 0,30 Z" id="路径" fill="#DFEDFF"></path>
+                    <g id="编组-15" transform="translate(9.000000, 11.000000)">
+                        <path d="M21.6678181,5.69434849 L37.6678181,4.36101516 C39.8693262,4.17755615 41.802724,5.81350817 41.986183,8.01501627 C41.9953904,8.12550424 42,8.23632725 42,8.34719819 L42,29.2781583 C42,31.4872973 40.209139,33.2781583 38,33.2781583 C37.7796766,33.2781583 37.5597298,33.259955 37.3424041,33.223734 L21.3424041,30.5570673 C19.4136522,30.2356087 18,28.5668483 18,26.6114916 L18,9.68053153 C18,7.60017698 19.5946496,5.86711253 21.6678181,5.69434849 Z" id="矩形备份-11" fill="url(#linearGradient-1)"></path>
+                        <path d="M25.537427,1.0994346 C26.4954471,0.971698589 27.4145467,1.2443697 28.1260754,1.78847984 C28.837604,2.33258998 29.3415616,3.14813914 29.4692977,4.10615923 L29.5,33.4312677 C29.5,34.3977661 29.1082492,35.2727661 28.4748737,35.9061415 C27.8414983,36.5395169 26.9664983,36.9312677 26,36.9312677 L3.53742698,33.9672321 C2.66801645,33.8513107 1.9086597,33.4225385 1.36665559,32.8034706 C0.824651478,32.1844027 0.5,31.375039 0.5,30.4979344 L0.5,7.50206559 C0.5,6.624961 0.824651478,5.81559729 1.36665559,5.19652938 C1.9086597,4.57746146 2.66801645,4.14868934 3.53742698,4.03276793 Z" id="矩形" stroke="url(#linearGradient-3)" fill-opacity="0.25" fill="url(#linearGradient-2)"></path>
+                        <text id="Bot" fill="#FFFFFF" opacity="0.841288249" font-family="FZLTZHJW--GB1-0, FZLanTingHeiS-DB-GB" font-size="12" font-weight="normal">
+                            <tspan x="4.03125" y="23">Bot</tspan>
+                        </text>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

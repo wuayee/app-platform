@@ -5,13 +5,15 @@ import { getAippInfo } from '../../../shared/http/aipp';
 import { Message } from '../../../shared/utils/message';
 import { useNavigate, useParams } from 'react-router';
 import { AppIcons } from '../../../components/icons/app';
+import { AvatarIcon } from '../../../assets/icon';
+import { AppDefaultIcon } from '../../../assets/icon';
 
 const AppOverview: React.FC = () => {
 
   const navigate = useNavigate();
   const { appId, tenantId } = useParams();
   const [detail, setDetail] = useState({});
-  const [appIcon, setAppIcon] = useState('/src/assets/svg/app-default.svg');
+  const [appIcon, setAppIcon] = useState('');
 
   useEffect(() => {
     getAippInfo(tenantId, appId).then(res => {
@@ -35,12 +37,17 @@ const AppOverview: React.FC = () => {
       <Flex vertical gap={20}>
         <Flex justify={'space-between'}>
           <Flex gap='middle'>
-            <img width={100} height={100} src={appIcon} />
+            {appIcon ?
+              <img width={100} height={100} src={appIcon} />
+              :
+              <AppDefaultIcon />
+          }
+
             <Flex vertical gap='middle'>
               <h3>{detail?.name || 'Test AppName'}</h3>
               <Flex gap={20}>
                 <Flex gap='small' align='center'>
-                  <img width={16} height={16} src='/src/assets/images/avatar-default.png' />
+                  <AvatarIcon />
                   <span>{detail?.createBy || 'Admin'}</span>
                 </Flex>
                 <Flex gap='small'>
