@@ -4,6 +4,7 @@
 
 package com.huawei.jade.fel.rag.store.query;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ import java.util.List;
  */
 @Setter
 @Getter
+@Builder
 public class QueryParams {
     private List<String> outFields;
 
