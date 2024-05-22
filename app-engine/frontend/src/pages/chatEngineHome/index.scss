@@ -2,4 +2,12 @@
   .chat-preview-inner {
     width: 100%;
   }
+  .chat-inner {
+    margin: 0;
+    border-radius: 0;
+    width: 100%;
+    .chat-inner-left {
+      height: calc(100vh - 46px);
+    }
+  }
 }

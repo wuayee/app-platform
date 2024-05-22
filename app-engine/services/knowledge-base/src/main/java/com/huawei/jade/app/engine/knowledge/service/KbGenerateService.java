@@ -15,10 +15,18 @@ import com.huawei.jade.app.engine.knowledge.dto.KbGenerateConfigDto;
  */
 public interface KbGenerateService {
     /**
-     * 导入知识
+     * 导入文本类型知识
      *
      * @param configDto 配置信息
      */
     @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KbGenerateService.importKnowledge")
     void importKnowledge(KbGenerateConfigDto configDto);
+
+    /**
+     * 导入表格类型知识
+     *
+     * @param configDto 配置信息
+     */
+    @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KbGenerateService.importTableKnowledge")
+    void importTableKnowledge(KbGenerateConfigDto configDto);
 }

@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -25,6 +26,9 @@ public class Chunk {
     private String id;
     @Setter
     private String content;
+
+    @Setter
+    private List<String> rowContent;
 
     /**
      * 待业务逻辑清晰后进行抽象
@@ -56,6 +60,12 @@ public class Chunk {
     public Chunk(@Nonnull String id, @Nonnull String content, Map<String, Object> metadata, @Nonnull String sourceId) {
         this(id, content, metadata);
         this.metadata.put("sourceId", sourceId);
+    }
+
+    public Chunk(@Nonnull String id, @Nonnull List<String> rowContent, Map<String, Object> metadata) {
+        this.id = id;
+        this.rowContent = rowContent;
+        this.metadata = ObjectUtils.getIfNull(metadata, HashMap::new);
     }
 
     /**

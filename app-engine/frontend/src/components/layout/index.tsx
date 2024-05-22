@@ -48,11 +48,9 @@ const AppLayout: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.log(location);
-    
     const { pathname } = location;
     const route = getRouteByKey(flattenRouteList, pathname);
-    if (pathname.includes('/app/')) {
+    if (pathname.includes('/app/') && !pathname.includes('/appDetail/')) {
       setShowMenu(false);
     } else if (!route?.hidden) {
       setShowMenu(true);

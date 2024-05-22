@@ -8,7 +8,7 @@ const HeaderUser = () => {
       <KnowledgeIcons.dark />
       <KnowledgeIcons.alarm />
       <KnowledgeIcons.info />
-      <div className="header-user-author">
+      {/* <div className="header-user-author">
         <KnowledgeIcons.user />
         <span
           style={{
@@ -17,7 +17,7 @@ const HeaderUser = () => {
         >
           Jasper
         </span>
-      </div>
+      </div> */}
     </div>
   );
 };
