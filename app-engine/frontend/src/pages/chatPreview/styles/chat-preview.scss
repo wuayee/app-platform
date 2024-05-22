@@ -146,6 +146,9 @@
     width: 100%;
     border-radius: 0;
     height: calc(100vh - 110px);
+    .chat-inner-left {
+      height: 100%;
+    }
   }
   .chat-details-content,
   .message-box {
