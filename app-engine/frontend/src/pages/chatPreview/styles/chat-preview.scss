@@ -1,9 +1,6 @@
 .chat-preview {
   width: 100%;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  background-image: url('../../../assets/images/bg3.png');
-  margin: 0 auto;
+  background-color: #ffffff;
   overflow: hidden;
   position: relative;
   border-top-right-radius: 8px;
@@ -42,13 +39,17 @@
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  width: 100%;
+  width: calc(100% - 44px);
   display: flex;
+  margin: 20px 20px 0 20px;
+  border-radius: 6px;
   position: relative;
-
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-image: url('../../../assets/images/bg3.png');
   .chat-inner-left {
     width: 100%;
-    height: calc(100vh - 56px);
+    height: calc(100vh - 125px);
     transition: width .2s;
     overflow-x: auto;
   }
@@ -102,7 +103,6 @@
 
 .chat-page-inner {
   background-color: #ffffffbf;
-
   .chat-inner-left {
     height: 100vh;
     position: relative;
@@ -138,10 +138,18 @@
 }
 
 .chat-preview-elsa {
-  width: 60%;
+  width: 900px;
   transition: margin-right .2s;
   position: relative;
-
+  .chat-inner {
+    margin: 0;
+    width: 100%;
+    border-radius: 0;
+    height: calc(100vh - 100px);
+    .chat-inner-left {
+      height: 100%;
+    }
+  }
   .chat-details-content,
   .message-box {
     padding: 0 24px;

@@ -16,6 +16,8 @@ import KnowledgeBaseDetailCreateTable from "../pages/knowledge-base/knowledge-de
 import KnowledgeBaseDetailImportData from "../pages/knowledge-base/knowledge-detail/import-data";
 import Model from "../pages/model";
 import ModelDetail from "../pages/model/model-detail";
+import Apps2 from "../pages/apps/index2";
+import PluginMarket from '../pages/plugin-market';
 
 export type MenuItem = Required<MenuProps>["items"][number] & {
   component?: (() => ReactElement) | React.FC<any>;
@@ -44,20 +46,9 @@ export const routeList: MenuItem[] = [
     ],
   },
   {
-    key: "/robot-market",
-    icon: Icons.app({}),
-    label: "机器人市场",
-    component: Demo,
-  },
-  {
-    key: "/plugin-market",
-    icon: Icons.app({}),
-    label: "插件市场",
-  },
-  {
     key: "/app",
     icon: Icons.app({}),
-    label: "应用",
+    label: "应用市场",
     component: Apps,
     children: [
       {
@@ -91,19 +82,60 @@ export const routeList: MenuItem[] = [
     ],
   },
   {
-    key: "/model",
+    key: "/app-develop",
     icon: Icons.app({}),
-    label: "模型",
-    component: Model,
+    label: "应用开发",
+    component: Apps2,
     children: [
       {
-        key: "/model/detail",
+        key: "/app/:tenantId/detail/:appId",
         icon: Icons.app({}),
-        label: "模型详情",
-        component: ModelDetail,
+        label: "app编排",
+        component: AippIndex,
         hidden: true,
       },
+      {
+        key: "/app/:tenantId/addFlow/:appId",
+        icon: Icons.app({}),
+        label: "新增工具流",
+        component: AddFlow,
+        hidden: true,
+      },
+      {
+        key: "/app/:tenantId/flowDetail/:appId",
+        icon: Icons.app({}),
+        label: "工具流",
+        component: FlowDetail,
+        hidden: true,
+      },
+      {
+        key: "/app/:tenantId/appDetail/:appId",
+        icon: Icons.app({}),
+        label: "",
+        component: AppDetail,
+        hidden: true,
+      }
     ],
+  },
+  {
+    key: "/robot-market",
+    icon: Icons.app({}),
+    label: "机器人市场",
+    component: Demo,
+    hidden: true,
+  },
+  {
+    key: "/plugin-market",
+    icon: Icons.app({}),
+    label: "插件市场",
+    component: PluginMarket,
+  },
+  {
+    key: "/mode",
+    icon: Icons.app({}),
+    label: "模型",
+    component: Demo,
+    hidden: true,
   },
   {
     key: "/knowledge-base",
@@ -111,6 +143,7 @@ export const routeList: MenuItem[] = [
     label: "知识库",
     title: "知识库概览",
     component: KnowledgeBase,
+    hidden: true,
     children: [
       {
         key: "/knowledge-base/create",
@@ -149,12 +182,14 @@ export const routeList: MenuItem[] = [
     icon: Icons.app({}),
     label: "插件",
     component: Demo,
+    hidden: true,
   },
   {
     key: "/group",
     icon: Icons.app({}),
     label: "团队",
     component: Demo,
+    hidden: true,
   },
 ];
 

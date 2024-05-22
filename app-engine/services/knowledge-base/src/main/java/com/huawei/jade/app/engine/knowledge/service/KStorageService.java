@@ -56,4 +56,13 @@ public interface KStorageService {
      */
     @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KStorageService.update")
     void update(Long id, KStorageDto kStorageDto);
+
+    /**
+     * 根据tableId获取存储服务。
+     *
+     * @param tableId 知识表的主键 {@link Long}。
+     * @return 返回存储服务。
+     */
+    @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KStorageService.getByTableId")
+    KStorageDto getByTableId(Long tableId);
 }
