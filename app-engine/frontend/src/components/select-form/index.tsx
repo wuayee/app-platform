@@ -4,6 +4,7 @@ import SelectDataSource from './select-data-source';
 import TableConfig from './table-config';
 import Preview from './preview';
 import { TextSplitClear } from './text-split-clear';
+import SegmentPreview from './segment-preview';
 
 interface inputProps {
   currentSteps: number;
@@ -16,9 +17,20 @@ interface inputProps {
 
   // 第二步的表单
   formStepSecond: FormInstance;
+
+  segmentData: {
+    title: string;
+    content: string;
+    chars: string;
+  }[];
 }
 
-const SelectForm = ({ currentSteps, type, formDataSource, formStepSecond }: inputProps) => {
+const SelectForm = ({
+  currentSteps,
+  type,
+  formDataSource,
+  formStepSecond,
+}: inputProps) => {
   return (
     <>
       {currentSteps === 0 && <SelectDataSource type={type} form={formDataSource} />}
