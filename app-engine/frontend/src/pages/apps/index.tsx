@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Button, Divider, Input, Pagination } from "antd";
-import { Icons } from "../../components/icons";
-import { deleteAppApi, queryAppsApi } from "../../shared/http/apps.js";
-import AppCard from "./components/appCard";
-import "./index.scoped.scss";
-import { debounce } from "../../shared/utils/common";
-import EditModal from "../components/edit-modal";
-import { HashRouter, Route, useNavigate, Routes } from "react-router-dom";
+import React, { useState, useEffect, useRef } from 'react';
+import { Button, Divider, Input, Pagination, Tabs } from 'antd';
+import { Icons } from '../../components/icons';
+import { deleteAppApi, queryAppsApi } from '../../shared/http/apps.js';
+import AppCard from './components/appCard';
+import './index.scoped.scss';
+import { debounce } from '../../shared/utils/common';
+import EditModal from '../components/edit-modal';
+import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
 
 const Apps: React.FC = () => {
-  const tenantId = "31f20efc7e0848deab6a6bc10fc3021e";
+  const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   const navigate = useNavigate();
 
   // 数据初始化
@@ -30,6 +30,12 @@ const Apps: React.FC = () => {
     queryApps();
   }, []);
 
+  // tab栏
+  const [activkey, setActiveKey] = useState('1');
+  function tabChange(key: string) {
+    setActiveKey(key);
+  }
+
   // 分页
   const pageNo = useRef(1);
   const [total, setTotal] = useState(1);
@@ -49,12 +55,12 @@ const Apps: React.FC = () => {
     setModalInfo(() => {
       modalRef.current.showModal();
       return {
-        name: "",
+        name: '',
         attributes: {
-          description: "",
-          greeting: "",
-          icon: "",
-          app_type: "编程开发",
+          description: '',
+          greeting: '',
+          icon: '',
+          app_type: '编程开发',
         },
       };
     });
@@ -74,7 +80,7 @@ const Apps: React.FC = () => {
 
   // 点击更多操作选项
   function clickMore(type: string, appId: string) {
-    if (type === "delete") {
+    if (type === 'delete') {
       deleteApp(appId);
     }
   }
@@ -95,30 +101,49 @@ const Apps: React.FC = () => {
   }
 
   return (
-    <div className=" apps_root">
-      <div className="apps_header">
-        <div className="apps_title">应用市场</div>
+    <div className=' apps_root'>
+      <div className='apps_header'>
+        <div className='apps_title'>应用市场</div>
       </div>
-      <div className="apps_main">
-        <div className="operatorArea">
-          <Button type="primary" onClick={create}>
+      <div className='apps_main'>
+        <div className='tabs'>
+          <Tabs
+            onChange={tabChange}
+            defaultActiveKey={activkey}
+            items={[
+              {
+                label: '我的应用',
+                key: '1',
+                children: '',
+              },
+              {
+                label: '团队应用',
+                key: '2',
+                children: '',
+                disabled: true,
+              },
+            ]}
+          />
+        </div>
+        <div className='operatorArea'>
+          <Button type='primary' onClick={create}>
             创建
           </Button>
           <Input
-            placeholder="搜索"
-            style={{ width: "200px", height: "35px", marginLeft: "16px" }}
-            prefix={<Icons.search color={"rgb(230, 230, 230)"} />}
+            placeholder='搜索'
+            style={{ width: '200px', height: '35px', marginLeft: '16px' }}
+            prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
             onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
-        <div className="card_list">
+        <div className='card_list'>
           {appData.map((item: any) => (
             <div key={item.id} onClick={(e) => clickCard(item, e)}>
               <AppCard cardInfo={item} clickMore={clickMore} />
             </div>
           ))}
         </div>
-        <div className="page_box">
+        <div className='page_box'>
           <Pagination
             current={current}
             pageSize={10}
@@ -129,9 +154,9 @@ const Apps: React.FC = () => {
           />
         </div>
       </div>
-
+      {/*创建弹窗*/}
       <EditModal
-        type="add"
+        type='add'
         modalRef={modalRef}
         aippInfo={modalInfo}
         addAippCallBack={addAippCallBack}

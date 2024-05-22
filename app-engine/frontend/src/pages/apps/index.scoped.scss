@@ -18,21 +18,20 @@
         }
     }
     .apps_main{
-        height: 100%;
-        position: relative;
+        height: calc(100% - 30px);
         padding: 24px;
         background: #fff;
         border-radius: 8px;
         flex: 1;
         display: flex;
         flex-direction: column;
+        .tabs{}
         .operatorArea{
             display: flex;
             align-items: center;
         }
         .card_list {
             flex: 1;
-            height: 100%;
             overflow-y: auto;
             box-sizing: border-box;
             display: flex;
@@ -41,8 +40,8 @@
         }
         .page_box{
             padding-top: 10px;
-            height: 68px;
-            line-height: 60px;
+            height: 40px;
+            line-height: 40px;
             width: 100%;
         }
     }
