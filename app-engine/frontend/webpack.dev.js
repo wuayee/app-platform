@@ -115,6 +115,14 @@ module.exports = merge(common, {
         secure: false,
         changeOrigin: true,
       },
+      "/v1": {
+        target: 'http://80.11.128.66:8000',
+        pathRewrite: {
+          "^/modelApi": ""
+        },
+        secure: false,
+        changeOrigin: true,
+      },
     },
   },
 });
