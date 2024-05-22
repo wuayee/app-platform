@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const ConfigFormWrap = styled.div`
   height: 100%;
-  border-right: 1px solid #e4e4e7;
+  //border-right: 1px solid #e4e4e7;
   width: 35%;
   .config-form {
     height: 100%;
