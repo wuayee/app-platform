@@ -7,7 +7,7 @@ import { Icons } from '../icons/index';
 import { useNavigate } from 'react-router-dom';
 export interface knowledgeBase {
   name: string;
-  createAt: string;
+  createdAt: string;
   ownerName: string;
   icon: () => ReactElement;
 
@@ -77,7 +77,7 @@ return (
           fontSize: 14,
           color: 'rgba(105, 105, 105, .9)'
         }}>
-          {`${knowledge.ownerName}创建于${formateTime(knowledge.createAt as any as Date)}` }
+          {`${knowledge.ownerName}创建于${formateTime(knowledge.createdAt as any as Date)}` }
         </div>
       </div>
     </div>

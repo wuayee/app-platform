@@ -3,13 +3,16 @@ import React, { useState } from 'react';
 import type { PaginationProps } from 'antd';
 import { Table, Space } from 'antd';
 import { formatDateTime } from '../../../../shared/utils/function';
-import CreateSet from './createTestSet';
+import CreateSet from './createTestset/createTestSet';
+import SetDetail from './detail';
 
 const showTotal: PaginationProps['showTotal'] = (total) => `共 ${total} 条`;
 
 const TestSet: React.FC = () => {
 
   const [open, setOpen] = useState(false);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [detailInfo, setDetailInfo] = useState({});
 
   const dataSource = Array.from({ length: 30 }).fill(null).map((_, index) => ({
     key: index,
@@ -55,13 +58,19 @@ const TestSet: React.FC = () => {
     },
     {
       key: 'action',
-      title: 'Action',
-      render: () => (
-        <Space size="middle">
-          <a>查看</a>
-          <a>删除</a>
-        </Space>
-      ),
+      title: '操作',
+      render(_: any, record: any) {
+        const viewDetail = () => {
+          setDetailInfo(record);
+          setDetailOpen(true);
+        }
+        return (
+          <Space size='middle'>
+            <a onClick={viewDetail}>查看</a>
+            <a>删除</a>
+          </Space>
+        )
+      },
     }
   ];
 
@@ -69,10 +78,18 @@ const TestSet: React.FC = () => {
     setOpen(true);
   };
 
+  const callback = (type: string, data: any) => {
+    setOpen(false);
+  }
+
+  const detailCallback = () => {
+    setDetailOpen(false);
+  }
+
   return (
     <div>
       <div className='margin-bottom-standard test'>
-        <Button className='margin-right-standard' type='primary' style={{width:'88px'}} onClick={showDrawer}>创建</Button>
+        <Button className='margin-right-standard' type='primary' style={{ width: '88px' }} onClick={showDrawer}>创建</Button>
         <Button>应用评估</Button>
       </div>
       <Table
@@ -92,24 +109,9 @@ const TestSet: React.FC = () => {
           showTotal,
         }}
       />
-      <Drawer
-        title='新建测试集'
-        width={800}
-        open={open}
-        onClose={() => { setOpen(false) }}
-        footer={
-          <div style={{display:'flex',justifyContent:'flex-end'}}>
-            <Space>
-              <Button>取消</Button>
-              <Button type='primary'>确定</Button>
-            </Space>
-          </div>
-        }
-      >
-        <CreateSet />
-      </Drawer>
+      <CreateSet visible={open} createCallback={callback} />
+      <SetDetail visible={detailOpen} params={detailInfo} detailCallback={detailCallback} />
     </div>
-
   )
 }
 

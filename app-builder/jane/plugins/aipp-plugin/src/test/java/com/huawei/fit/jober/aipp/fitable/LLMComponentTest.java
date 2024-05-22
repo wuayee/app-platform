@@ -108,8 +108,8 @@ public class LLMComponentTest {
                 .map(m -> (Prompt) ChatMessages.from(new AiMessage("bad")))
                 .close();
         Agent<Prompt, Prompt> agent = new Agent<Prompt, Prompt>(()->testAgent) {};
-        LLMComponent llmComponent =
-                new LLMComponent(flowInstanceService, metaInstanceService, metaService, toolProvider, agent, null);
+        LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
+                toolProvider, agent, null, null);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
@@ -138,7 +138,8 @@ public class LLMComponentTest {
                 metaService,
                 toolProvider,
                 agent,
-                aippLogService);
+                aippLogService,
+                null);
 
         // mock
         CountDownLatch countDownLatch = mockTerminateFlow(flowInstanceService, metaService, aippLogService);
@@ -162,8 +163,8 @@ public class LLMComponentTest {
                 .map(m -> (Prompt) ChatMessages.from(new ToolMessage("", "\"tool_async\"")))
                 .close();
         Agent<Prompt, Prompt> agent = new Agent<Prompt, Prompt>(()->testAgent) {};
-        LLMComponent llmComponent =
-                new LLMComponent(flowInstanceService, metaInstanceService, metaService, toolProvider, agent, null);
+        LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
+                toolProvider, agent, this.aippLogService, null);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
@@ -211,8 +212,8 @@ public class LLMComponentTest {
                 .just(m -> flag.set(true))
                 .close();
         Agent<Prompt, Prompt> agent = new Agent<Prompt, Prompt>(()->testAgent) {};
-        LLMComponent llmComponent =
-                new LLMComponent(flowInstanceService, metaInstanceService, metaService, toolProvider, agent, null);
+        LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
+                toolProvider, agent, this.aippLogService, null);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);

@@ -69,6 +69,10 @@ h1 {
   padding: 16px;
 }
 
+:where(.css-dev-only-do-not-override-1okl62o).ant-drawer .ant-drawer-body {
+  padding: 0px 24px;
+}
+
 .margin-bottom-standard {
   margin-bottom: 16px;
 }

@@ -6,6 +6,8 @@ package com.huawei.jade.model.service.gateway;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.huawei.jade.model.service.gateway.predicate.ModelPredicateFactory;
+
 import reactor.core.publisher.Mono;
 
 import org.junit.jupiter.api.Test;
