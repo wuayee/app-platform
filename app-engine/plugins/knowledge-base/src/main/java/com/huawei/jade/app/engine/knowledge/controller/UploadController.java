@@ -25,6 +25,15 @@ public class UploadController {
     @Fit
     private FileService fileService;
 
+    /**
+     * 上传文件
+     *
+     * @param fileName 文件名
+     * @param knowledgeId 知识库id
+     * @param knowledgeTableId 表id
+     * @param file 文件
+     * @throws IOException 异常
+     */
     @PostMapping("/{knowledge_id}/table/{knowledge_table_id}/files")
     public void upload(@RequestHeader(value = "attachment-filename", defaultValue = "blank") String fileName,
         @PathVariable("knowledge_id") Long knowledgeId, @PathVariable("knowledge_table_id") Long knowledgeTableId,
@@ -33,6 +42,13 @@ public class UploadController {
             new FileUploadRequest(file.getInputStream(), fileName));
     }
 
+    /**
+     * 删除文件接口
+     *
+     * @param knowledgeId 知识库id
+     * @param knowledgeTableId 表id
+     * @param fileNames 文件名
+     */
     @DeleteMapping("/{knowledge_id}/table/{knowledge_table_id}/files")
     public void delete(@PathVariable("knowledge_id") Long knowledgeId,
         @PathVariable("knowledge_table_id") Long knowledgeTableId, @RequestBody List<String> fileNames) {

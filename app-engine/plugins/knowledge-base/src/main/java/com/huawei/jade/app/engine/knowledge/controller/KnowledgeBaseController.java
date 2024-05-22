@@ -15,10 +15,10 @@ import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.http.server.HttpServerResponseException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
-import com.huawei.jade.app.engine.knowledge.dto.KbChunkQueryDto;
 import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
 import com.huawei.jade.app.engine.knowledge.dto.KStorageDto;
 import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
+import com.huawei.jade.app.engine.knowledge.dto.KbChunkQueryDto;
 import com.huawei.jade.app.engine.knowledge.dto.KbGenerateConfigDto;
 import com.huawei.jade.app.engine.knowledge.params.RepoQueryParam;
 import com.huawei.jade.app.engine.knowledge.service.KRepoService;
@@ -26,7 +26,6 @@ import com.huawei.jade.app.engine.knowledge.service.KStorageService;
 import com.huawei.jade.app.engine.knowledge.service.KTableService;
 import com.huawei.jade.app.engine.knowledge.service.KbGenerateService;
 import com.huawei.jade.app.engine.knowledge.service.param.PageQueryParam;
-import com.huawei.jade.app.engine.knowledge.service.KbGenerateService;
 import com.huawei.jade.app.engine.knowledge.vo.PageResultVo;
 
 import java.util.Date;
@@ -235,7 +234,6 @@ public class KnowledgeBaseController {
         kStorageService.delete(id);
     }
 
-
     /**
      * 导入文本类型知识接口
      *
@@ -248,12 +246,14 @@ public class KnowledgeBaseController {
 
     /**
      * 获取向量知识信息
+     *
+     * @param chunkQueryDto 查询参数
+     * @return 查询结果
      */
     @PostMapping(path = "/chunks")
     public PageResultVo<String> getChunk(@RequestBody KbChunkQueryDto chunkQueryDto) {
         return kbGenerateService.getChunks(chunkQueryDto);
     }
-
 
     /**
      * 导入表格类型知识接口
