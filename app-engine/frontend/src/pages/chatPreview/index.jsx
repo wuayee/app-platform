@@ -485,10 +485,9 @@ const ChatPreview = (props) => {
     if (!chatList.length) {
       return;
     }
-    let type = location.pathname.indexOf("chat") === -1 ? "preview" : "normal";
     try {
       setRequestLoading(true);
-      const res = await clearInstance(tenantId, appId, type);
+      const res = await clearInstance(tenantId, appId, 'preview');
       if (res.code === 0) {
         setChatList([]);
         clearInterval(timerRef.current);
