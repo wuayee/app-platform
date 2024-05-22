@@ -164,7 +164,7 @@ public class LLMComponentTest {
                 .close();
         Agent<Prompt, Prompt> agent = new Agent<Prompt, Prompt>(()->testAgent) {};
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, null, null);
+                toolProvider, agent, this.aippLogService, null);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
@@ -213,7 +213,7 @@ public class LLMComponentTest {
                 .close();
         Agent<Prompt, Prompt> agent = new Agent<Prompt, Prompt>(()->testAgent) {};
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, null, null);
+                toolProvider, agent, this.aippLogService, null);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);

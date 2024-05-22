@@ -16,11 +16,13 @@ import com.huawei.fit.jane.meta.multiversion.instance.Instance;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogStreamService;
 import com.huawei.fit.jober.aipp.vo.AippInstanceVO;
 import com.huawei.fit.jober.aipp.vo.AippLogVO;
+import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
 import com.huawei.fitframework.annotation.Component;
 
 import java.util.Collections;
@@ -94,13 +96,18 @@ public class AippLogStreamLocalService implements AippLogStreamService {
                 this.formRepository,
                 this.formPropertyRepository);
 
+        // 在当前某些情况下，会出现插入log日志，但是不修改instance状态的情况.
+        // 参考com.huawei.fit.jober.aipp.fitable.agent.AippFlowAgent.fetchAgentErrorMsgToMain
+        String status = log.getLogType().equals(AippInstLogType.ERROR.name())
+                ? FlowTraceStatus.ERROR.name() : info.get(AippConst.INST_STATUS_KEY);
+
         // 构建instanceVO，和之前返回给前端的数据结构保持一致.
         return AippInstanceVO.builder()
                 .ancestors(log.getAncestors())
                 .aippInstanceId(instanceId)
                 .tenantId(meta.getTenant())
                 .aippInstanceName(info.get(INST_NAME_KEY))
-                .status(info.get(AippConst.INST_STATUS_KEY))
+                .status(status)
                 .formMetadata(entity == null ? null : entity.getData())
                 .formArgs(info)
                 .startTime(info.get(INST_CREATE_TIME_KEY))
