@@ -18,7 +18,7 @@
         <module>fel-flow</module>
         <module>fel-service</module>
         <module>rag-service</module>
-        <module>tool-execution-ai-flow</module>
+        <module>tool-aiflow</module>
     </modules>
 
     <properties>

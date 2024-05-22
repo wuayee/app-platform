@@ -1,9 +1,10 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
+
 package com.huawei.fit.jober.aipp.dto;
 
-import com.huawei.jade.store.model.transfer.ToolData;
+import com.huawei.jade.carver.tool.model.transfer.ToolData;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

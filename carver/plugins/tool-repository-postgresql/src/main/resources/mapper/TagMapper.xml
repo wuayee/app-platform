@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.huawei.jade.store.mapper.TagMapper">
-    <resultMap id="Tag" type="com.huawei.jade.store.model.entity.TagDo">
+<mapper namespace="com.huawei.jade.carver.tool.repository.pgsql.mapper.TagMapper">
+    <resultMap id="Tag" type="com.huawei.jade.carver.tool.repository.pgsql.model.entity.TagDo">
         <result column="created_time" property="createdTime"/>
         <result column="updated_time" property="updatedTime"/>
         <result column="creator" property="creator"/>

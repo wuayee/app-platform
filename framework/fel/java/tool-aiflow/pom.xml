@@ -5,12 +5,12 @@
 
     <parent>
         <groupId>com.huawei.fit.jade</groupId>
-        <artifactId>app-builder-plugin-parent</artifactId>
+        <artifactId>jade-fel-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <groupId>com.huawei.fit.jade.plugin</groupId>
-    <artifactId>tool-waterflow</artifactId>
+    <artifactId>tool-aiflow</artifactId>
 
     <dependencies>
         <!-- FIT core -->
@@ -49,11 +49,6 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
-            <artifactId>fit-message-serializer-json-jackson</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -119,7 +114,7 @@
                         <configuration>
                             <target>
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
-                                      todir="../../../framework/fit/java/target/plugins"/>
+                                      todir="../../../fit/java/target/plugins"/>
                             </target>
                         </configuration>
                         <goals>

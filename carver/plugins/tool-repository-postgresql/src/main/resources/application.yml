@@ -1,7 +1,7 @@
 fit:
   beans:
     packages:
-    - 'com.huawei.jade.store'
+    - 'com.huawei.jade.carver.tool.repository.pgsql'
 druid:
   driver-class-name: org.postgresql.Driver
   initialSize: 5
