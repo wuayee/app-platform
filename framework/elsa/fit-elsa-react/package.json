@@ -1,8 +1,19 @@
 {
-  "name": "fit-elsa-react",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@fit-elsa/elsa-react",
+  "private": false,
+  "version": "1.0.0-alpha.9",
   "type": "module",
+  "main": "./build/elsa-react.js",
+  "module": "./build/elsa-react.js",
+  "files": [
+    "build"
+  ],
+  "exports": {
+    ".": {
+      "import": "./build/elsa-react.js",
+      "require": "./build/elsa-react.umd.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -29,5 +40,9 @@
     "vite": "^5.2.0",
     "vite-plugin-libcss": "^1.1.1",
     "vite-plugin-svgr": "^4.2.0"
+  },
+  "publishConfig": {
+    "registry": "https://cmc.centralrepo.rnd.huawei.com/artifactory/api/npm/product_npm/",
+    "_auth": "Zml0bGFiX25wbTpucG1fRml0IzAxMjM0NTY3ODk"
   }
 }

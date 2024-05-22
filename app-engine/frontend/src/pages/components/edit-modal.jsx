@@ -12,14 +12,17 @@ import robot from '../../assets/images/ai/robot1.png';
 import './styles/edit-modal.scss';
 
 const { TextArea } = Input;
-const { ICON_URL } = process.env.NODE_ENV === 'dev' ? 'https://jane-beta.huawei.com/api' : httpUrlMap[process.env.NODE_ENV];
+const { AIPP_URL } = process.env.NODE_ENV === 'development' ? {AIPP_URL: 'http://80.11.128.66:31111/api/jober/v1/api'} : httpUrlMap[process.env.NODE_ENV];
 const EditModal = (props) => {
   const { modalRef, aippInfo, updateAippCallBack, type, addAippCallBack } = props;
   const [ form ] = Form.useForm();
-  const { appId, tenantId } = useParams();
+  const { appId } = useParams();
+  const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   const [ isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [ avatarId, setAvatarId ] = useState('');
+  const [filePath, setFilePath] = useState('');
+  const [fileName, setFileName] = useState('');
   let fileHeaders = {
     'Content-Type' :'application/octet-stream'
   };
@@ -56,7 +59,7 @@ const EditModal = (props) => {
         name: formParams.name,
         greeting: formParams.greeting,
         description: formParams.description,
-        icon: type === 'add' ? `${ICON_URL}/jober/v1/files/${avatarId}` : formParams.icon,
+        icon: type === 'add' && filePath ? `${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}` : formParams.icon,
         app_type: formParams.app_type,
         type: 'app'
       }
@@ -82,7 +85,7 @@ const EditModal = (props) => {
         type: aippInfo.type,
         version: aippInfo.version
       }
-      avatarId ? params.attributes.icon = `${ICON_URL}/jober/v1/files/${avatarId}` : params.attributes.icon = aippInfo.attributes?.icon;
+      filePath ? params.attributes.icon = `${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}` : params.attributes.icon = aippInfo.attributes?.icon;
       const res = await updateAippInfo(tenantId, appId, params);
       if (res.code === 0) {
         updateAippCallBack(res.data);
@@ -103,26 +106,20 @@ const EditModal = (props) => {
     pictureUpload(file);
   }
   // 上传图片
-  async function pictureUpload(file) {
-    // fileHeaders.fileName = encodeURI(file.name || '');
-    // fileHeaders.fileSize = file.size || '';
-    let render = new FileReader();
-    render.readAsArrayBuffer(file);
+  async function pictureUpload( file ) {
     let headers = {
       "attachment-filename": encodeURI(file.name || ""),
     };
-    render.onload = async (e) => {
-      try {
-        let targetFile = e.target?.result;
-        const formData = new FormData();
-        formData.append("file", targetFile);
-        let res = await uploadChatFile(tenantId, appId, formData, headers);
-        if (res.code === 0 && res.data.id) {
-          setAvatarId(res.data.id);
-        }
-      } catch (err) {
-        Message({ type: 'error',  content: err.message || '上传图片失败'})
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      let res = await uploadChatFile(tenantId, appId, formData, headers);
+      if (res.code === 0) {
+        setFileName(res.data.file_name);
+        setFilePath(res.data.file_path);
       }
+    } catch (err) {
+      Message({ type: 'error',  content: err.message || '上传图片失败'})
     }
   }
   useImperativeHandle(modalRef, () => {
@@ -186,7 +183,9 @@ const EditModal = (props) => {
               name="icon"
             >
               <div className='avatar'>
-                {  avatarId ? (<img src={`${ICON_URL}/jober/v1/files/${avatarId}`} />) : (<Img icon={aippInfo.attributes?.icon}/>)}
+                {  filePath ?
+                  (<img className="img-send-item" src={`${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`}/>)
+                  : (<Img icon={aippInfo.attributes?.icon}/>)}
                 <Upload
                   beforeUpload={beforeUpload}
                   onChange={onChange}

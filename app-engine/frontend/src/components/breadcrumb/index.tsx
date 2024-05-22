@@ -5,15 +5,21 @@ import { routeList, flattenRoute, getRouteByKey, MenuItem } from '../../router/r
 
 
 
-const BreadcrumbSelf = ({currentLabel}: {currentLabel?: string}) => {
+const BreadcrumbSelf = ({currentLabel, searchFlag = false}: {currentLabel?: string, searchFlag?: boolean}) => {
   const flattenRouteList = flattenRoute(routeList);
   const [breadcrumb, setBreadcrumb] = useState<MenuItem[]>([])
+  const [searchData, setSearchData] = useState('');
 
   const location = useLocation();
   const navgate = useNavigate();
 
+
   useEffect(()=> {
-    const { pathname } = location;
+    const { pathname, search } = location;
+
+    if(searchFlag) {
+      setSearchData(search ?? '')
+    }
     const pathGroup = pathname.split('/').filter(item=> item);
 
     const breadcrumbKeyList = pathGroup.map((item, index)=> '/'+pathGroup.slice(0, index+ 1).join('/'));
@@ -31,7 +37,7 @@ const BreadcrumbSelf = ({currentLabel}: {currentLabel?: string}) => {
   return (
     <Breadcrumb style={{ margin: '16px 0' }}>
     {breadcrumb.map((route, index)=> (<>
-      <Breadcrumb.Item key={route.key} href={'#'+route.key}>{index === breadcrumb.length -1 ? currentLabel || route.title || route.label : route.title || route.label}</Breadcrumb.Item>
+      <Breadcrumb.Item key={route.key} href={'#'+route.key + searchData}>{index === breadcrumb.length -1 ? currentLabel || route.title || route.label : route.title || route.label}</Breadcrumb.Item>
     </>))}
   </Breadcrumb>
   );

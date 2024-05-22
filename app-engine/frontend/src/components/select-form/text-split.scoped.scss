@@ -1,0 +1,24 @@
+::v-deep .checkbox-custom  .ant-checkbox {
+  display: none;
+}
+::v-deep .checkbox-custom span {
+  padding-inline-start: 0!important;
+  padding-inline-end: 0!important;
+}
+::v-deep .checkbox-custom::after {
+  display: none;
+}
+
+.operator-card {
+  display: flex;
+  gap: 8px;
+}
+
+.negative-card {
+  border-color: rgb(217, 217, 217);
+}
+
+.active-card {
+  border-color: rgb(22, 119, 225);
+  color: rgb(22, 119, 225)
+}

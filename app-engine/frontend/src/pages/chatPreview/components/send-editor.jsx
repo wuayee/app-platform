@@ -6,7 +6,7 @@ import React, {
   useImperativeHandle,
 } from "react";
 import { Upload, Checkbox, Spin, Dropdown, Space, Avatar } from "antd";
-import { LinkIcon, AtIcon, PanleCloseIcon, PanleIcon } from '../../../assets/icon';
+import { LinkIcon, AtIcon, PanleCloseIcon, PanleIcon, AudioIcon } from '../../../assets/icon';
 import {
   DownOutlined,
   GlobalOutlined,
@@ -25,6 +25,7 @@ import file from "@assets/images/ai/file.png";
 import image from "@assets/images/ai/image.png";
 import audio from "@assets/images/ai/audio.png";
 import stop from "@assets/images/ai/play.png";
+import robot from "@assets/images/ai/robot1.png";
 import { Message } from "../../../shared/utils/message";
 import { httpUrlMap } from "../../../shared/http/httpConfig";
 import { uploadChatFile } from "../../../shared/http/aipp";
@@ -52,13 +53,13 @@ const imgArr = [
   "image/svg+xml",
 ];
 const SendEditor = (props) => {
-  const { 
-    onSend, 
-    onClear, 
-    onStop, 
-    chatType, 
-    filterRef, 
-    requestLoading, 
+  const {
+    onSend,
+    onClear,
+    onStop,
+    chatType,
+    filterRef,
+    requestLoading,
     openClick,
     inspirationOpen } = props;
   const [ content, setContent ] = useState('');
@@ -181,12 +182,9 @@ const SendEditor = (props) => {
       setFilterHtml: setFilterHtml,
     };
   });
-
-  const [guessQuestions, setGuessQuestions] = useState([
-    "如何构建知识库",
-    "我想创建一个应用",
-    "推荐几个常用的应用机器人",
-  ]);
+  function recommendSend(item) {
+    onSend(item);
+  }
   const [recording, setRecording] = useState(false);
 
   // 语音实时转文字
@@ -232,7 +230,7 @@ const SendEditor = (props) => {
   const [openHistory, setOpenHistory] = useState(false);
   return <>{(
     <div className='send-editor-container'>
-      <Recommends openClick={openClick} inspirationOpen={inspirationOpen}/>
+      <Recommends openClick={openClick} inspirationOpen={inspirationOpen} send={recommendSend}/>
       <div className='editor-inner'>
         <EditorBtnHome aippInfo={aippInfo} setOpen={setOpenHistory}/>
         <div className='editor-input' id="drop">
@@ -246,7 +244,7 @@ const SendEditor = (props) => {
             onPaste={messagePaste}
           ></div>
           <div className='send-icon' onClick={ sendMessage }></div>
-          <div className='audio-icon' onClick={ sendMessage }><LinkIcon /></div>
+          <div className='audio-icon'><AudioIcon /></div>
         </div>
       </div>
       <div className='chat-tips'>
@@ -254,7 +252,7 @@ const SendEditor = (props) => {
           <Switch onChange={onSwitchChange} />
           <span>联网</span>
         </div> */}
-          - 所有内容均由人工智能大模型生成，存储产品内容准确性参照存储产品文档 - 
+          - 所有内容均由人工智能大模型生成，存储产品内容准确性参照存储产品文档 -
       </div>
      { showSelect &&  (
       <EditorSelect
@@ -505,8 +503,15 @@ const EditorSelect = (props) => {
 
 // 猜你想问
 const Recommends = (props) => {
-  const { openClick, inspirationOpen } = props;
-
+  const { openClick, inspirationOpen, send } = props;
+  const [ guessQuestions, setGuessQuestions ] = useState([
+    "如何构建知识库",
+    "我想创建一个应用",
+    "推荐几个常用的应用机器人",
+  ]);
+  const recommendClick = (item) => {
+    send(item);
+  }
   return <>{(
     <div className="recommends-inner">
       <div className="recommends-top">
@@ -515,9 +520,13 @@ const Recommends = (props) => {
       </div>
       <div className="recommends-list">
         <div className="list-left">
-          <div className="recommends-item">如何构建知识库</div>
-          <div className="recommends-item">我想创建一个应用</div>
-          <div className="recommends-item">推荐几个常用的应用机器人</div>
+          {
+            guessQuestions.map(item => {
+              return (
+                <div className="recommends-item" onClick={recommendClick.bind(this, item)}>{item}</div>
+              )
+            })
+          }
         </div>
         <div className="list-right" onClick={openClick}>
           { inspirationOpen ? <PanleCloseIcon /> : <PanleIcon /> }
@@ -534,7 +543,7 @@ const EditorBtnHome = (props) => {
     <div className="btn-inner">
       <div className="inner-left">
         <div className="inner-item">
-          <img src={aippInfo.attributes?.icon} alt="" />
+          <img src={aippInfo.attributes?.icon !== '' ? aippInfo.attributes?.icon : robot} alt="" />
           <span className="item-name">{aippInfo.name || ''}</span>
           <LinkIcon />
           <AtIcon />
@@ -542,9 +551,9 @@ const EditorBtnHome = (props) => {
       </div>
       <div className="inner-right">
         <div className="inner-item">
-          <LinkIcon />
+          {/* <LinkIcon />
           <span className="item-name">自动</span>
-          <HistoryOutlined onClick={() => setOpen(true)}/>
+          <HistoryOutlined onClick={() => setOpen(true)}/> */}
         </div>
       </div>
     </div>
