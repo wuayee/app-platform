@@ -78,19 +78,28 @@ const Apps: React.FC = () => {
       deleteApp(appId);
     }
   }
+  // 删除
   async function deleteApp(appId: string) {
     const res: any = await deleteAppApi(tenantId, appId);
     if (res.code === 0) {
+      if (appData.length === 1) {
+        setCurrent(() => {
+          pageNo.current = 1;
+          queryApps();
+          return 1;
+        });
+        return;
+      }
       queryApps();
     }
   }
 
   return (
-    <div className="aui-fullpage">
-      <div className="aui-header-1">
-        <div className="aui-title-1">应用市场</div>
+    <div className=" apps_root">
+      <div className="apps_header">
+        <div className="apps_title">应用市场</div>
       </div>
-      <div className="aui-block">
+      <div className="apps_main">
         <div className="operatorArea">
           <Button type="primary" onClick={create}>
             创建
