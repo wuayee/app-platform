@@ -1,6 +1,7 @@
 import type { TableProps } from 'antd';
 import { Button } from 'antd';
 import React from 'react';
+import { KnowledgeIcons } from '../../../components/icons';
 import { deleteKnowledgeTableType } from '../../../shared/http/knowledge';
 
 
@@ -10,6 +11,21 @@ export const columnsFunc = (refresh = (type: 'delete' | 'modify', data:any)=> {}
       title: '名称',
       dataIndex: 'name',
       key: 'name',
+      render(value, record) {
+        
+        return (<>
+          <div style={{
+            display: 'flex',
+            gap: 8,
+          }}>
+            {record?.format === 'TABLE' ? (<KnowledgeIcons.tableXlsx/>) : (<KnowledgeIcons.tableText/>)}
+            <span style={{
+              color: '#2673E5',
+              fontSize: 14
+            }}>{value}</span>
+          </div>
+        </>)
+      }
     },
     {
       title: '条数',

@@ -168,7 +168,7 @@ const KnowledgeBaseDetailCreateTable = () => {
     <div className='aui-fullpage'>
     <div className='aui-header-1'>
       <div className='aui-title-1'>
-        <BreadcrumbSelf currentLabel={table_id ? '修改知识表': '添加知识表'}></BreadcrumbSelf>
+        <BreadcrumbSelf currentLabel={table_id ? '修改知识表': '添加知识表'} searchFlag={true}></BreadcrumbSelf>
       </div>
     </div>
       <div className='aui-block' style={{
