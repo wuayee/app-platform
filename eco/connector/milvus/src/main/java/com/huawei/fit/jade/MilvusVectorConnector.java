@@ -170,7 +170,7 @@ public class MilvusVectorConnector implements VectorConnector {
      * @return 返回查询到的数量。
      */
     @Override
-    public Integer getCount(VectorConfig conf) {
+    public Long getCount(VectorConfig conf) {
         Validation.notNull(conf, "The vector conf cannot be null.");
 
         GetCollectionStatisticsParam param = GetCollectionStatisticsParam.newBuilder()
@@ -185,7 +185,7 @@ public class MilvusVectorConnector implements VectorConnector {
             throw new IllegalResponseException(response.getMessage());
         }
 
-        return Integer.parseInt(response.getData().getStatsList().get(0).getValue());
+        return Long.parseLong(response.getData().getStatsList().get(0).getValue());
     }
 
     /**

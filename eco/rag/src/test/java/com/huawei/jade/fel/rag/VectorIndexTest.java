@@ -43,7 +43,7 @@ public class VectorIndexTest {
         }
 
         @Override
-        public Integer getCount(VectorConfig conf) {
+        public Long getCount(VectorConfig conf) {
             return null;
         }
 

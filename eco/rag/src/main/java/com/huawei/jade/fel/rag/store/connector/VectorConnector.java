@@ -35,7 +35,7 @@ public interface VectorConnector {
      * @param conf 表示配置信息的 {@link VectorConfig}。
      * @return 返回查询到的数量。
      */
-    Integer getCount(VectorConfig conf);
+    Long getCount(VectorConfig conf);
 
     /**
      * 按照指定的config，对数据库插入input中的内容。
