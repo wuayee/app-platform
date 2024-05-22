@@ -25,6 +25,7 @@ import file from "@assets/images/ai/file.png";
 import image from "@assets/images/ai/image.png";
 import audio from "@assets/images/ai/audio.png";
 import stop from "@assets/images/ai/play.png";
+import robot from "@assets/images/ai/robot1.png";
 import { Message } from "../../../shared/utils/message";
 import { httpUrlMap } from "../../../shared/http/httpConfig";
 import { uploadChatFile } from "../../../shared/http/aipp";
@@ -52,13 +53,13 @@ const imgArr = [
   "image/svg+xml",
 ];
 const SendEditor = (props) => {
-  const { 
-    onSend, 
-    onClear, 
-    onStop, 
-    chatType, 
-    filterRef, 
-    requestLoading, 
+  const {
+    onSend,
+    onClear,
+    onStop,
+    chatType,
+    filterRef,
+    requestLoading,
     openClick,
     inspirationOpen } = props;
   const [ content, setContent ] = useState('');
@@ -251,7 +252,7 @@ const SendEditor = (props) => {
           <Switch onChange={onSwitchChange} />
           <span>联网</span>
         </div> */}
-          - 所有内容均由人工智能大模型生成，存储产品内容准确性参照存储产品文档 - 
+          - 所有内容均由人工智能大模型生成，存储产品内容准确性参照存储产品文档 -
       </div>
      { showSelect &&  (
       <EditorSelect

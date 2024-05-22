@@ -1,6 +1,8 @@
-import { FormInstance} from 'antd';
+import { FormInstance, Progress } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { SelectDataSource } from './select-data-source';
+import SelectDataSource from './select-data-source';
+import TableConfig from './table-config';
+import Preview from './preview';
 import { TextSplitClear } from './text-split-clear';
 
 interface inputProps {
@@ -14,22 +16,18 @@ interface inputProps {
 
   // 第二步的表单
   formStepSecond: FormInstance;
-
-
 }
 
-const SelectForm = ({currentSteps, type, formDataSource, formStepSecond }: inputProps)=> {
+const SelectForm = ({ currentSteps, type, formDataSource, formStepSecond }: inputProps) => {
   return (
-  <>
-    {currentSteps === 0 && <SelectDataSource type={type} form={formDataSource}/>}
-    { currentSteps === 1 && 
-      (type === 'text' ? <TextSplitClear form={formStepSecond}/> : 1111)
-    }
-    {currentSteps === 2 && 111}
-    {currentSteps === 3 && 111}
-  </>)
-}
+    <>
+      {currentSteps === 0 && <SelectDataSource type={type} form={formDataSource} />}
+      {currentSteps === 1 &&
+        (type === 'text' ? <TextSplitClear form={formStepSecond} /> : <TableConfig />)}
+      {currentSteps === 2 && (type === 'text' ? 111 : <Preview />)}
+      {currentSteps === 3 && <Progress percent={30} />}
+    </>
+  );
+};
 
-export {
-  SelectForm
-}
+export { SelectForm };

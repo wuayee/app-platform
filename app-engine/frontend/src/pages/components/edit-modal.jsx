@@ -16,7 +16,8 @@ const { AIPP_URL } = process.env.NODE_ENV === 'development' ? {AIPP_URL: 'http:/
 const EditModal = (props) => {
   const { modalRef, aippInfo, updateAippCallBack, type, addAippCallBack } = props;
   const [ form ] = Form.useForm();
-  const { appId, tenantId } = useParams();
+  const { appId } = useParams();
+  const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   const [ isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [ avatarId, setAvatarId ] = useState('');
@@ -58,7 +59,7 @@ const EditModal = (props) => {
         name: formParams.name,
         greeting: formParams.greeting,
         description: formParams.description,
-        icon: type === 'add' ? `${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}` : formParams.icon,
+        icon: type === 'add' && filePath ? `${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}` : formParams.icon,
         app_type: formParams.app_type,
         type: 'app'
       }
@@ -84,8 +85,6 @@ const EditModal = (props) => {
         type: aippInfo.type,
         version: aippInfo.version
       }
-      console.log(process.env.NODE_ENV);
-      console.log(AIPP_URL);
       filePath ? params.attributes.icon = `${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}` : params.attributes.icon = aippInfo.attributes?.icon;
       const res = await updateAippInfo(tenantId, appId, params);
       if (res.code === 0) {
