@@ -5,7 +5,7 @@ import { UploadFile } from 'antd/lib';
 
 const { Dragger } = Upload;
 
-const LocalUpload = () => {
+const LocalUpload: React.FC<{ form: any }> = ({ form }) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const filesKeys = useRef<Map<string, any>>(new Map());
 
@@ -14,6 +14,7 @@ const LocalUpload = () => {
   const setFiles = (): void => {
     const files = [...filesKeys.current.values()];
     setFileList(files);
+    form.setFieldValue('selectedFile', files);
   };
 
   const isFilesUnique = (file: UploadFile): boolean => {
