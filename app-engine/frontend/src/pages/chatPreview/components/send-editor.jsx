@@ -232,7 +232,7 @@ const SendEditor = (props) => {
     <div className='send-editor-container'>
       <Recommends openClick={openClick} inspirationOpen={inspirationOpen} send={recommendSend}/>
       <div className='editor-inner'>
-        <EditorBtnHome aippInfo={aippInfo} setOpen={setOpenHistory}/>
+        <EditorBtnHome aippInfo={aippInfo} setOpen={setOpenHistory} onClear={onClear}/>
         <div className='editor-input' id="drop">
           <div
             className="chat-promet-editor"
@@ -538,22 +538,22 @@ const Recommends = (props) => {
 
 // 操作按钮
 const EditorBtnHome = (props) => {
-  const { aippInfo, setOpen } = props;
+  const { aippInfo, setOpen, onClear } = props;
   return <>{(
     <div className="btn-inner">
       <div className="inner-left">
         <div className="inner-item">
-          <img src={aippInfo.attributes?.icon !== '' ? aippInfo.attributes?.icon : robot} alt="" />
-          <span className="item-name">{aippInfo.name || ''}</span>
+          <img src={aippInfo.attributes?.icon} alt="" />
+          <span className="item-name" title={aippInfo.name || ''}>{aippInfo.name || ''}</span>
           <LinkIcon />
           <AtIcon />
         </div>
       </div>
       <div className="inner-right">
         <div className="inner-item">
-          {/* <LinkIcon />
-          <span className="item-name">自动</span>
-          <HistoryOutlined onClick={() => setOpen(true)}/> */}
+          {/* <LinkIcon /> */}
+          <span className="item-clear" onClick={onClear}>全新对话</span>
+          {/* <HistoryOutlined onClick={() => setOpen(true)}/> */}
         </div>
       </div>
     </div>

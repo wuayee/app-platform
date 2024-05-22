@@ -54,6 +54,7 @@ const ChatPreview = (props) => {
   let childBackInstanceIdArr = useRef([]);
   let childInstanceStop = useRef(false);
   let isChatRunning = useRef(false);
+  let wsCurrent = useRef(null);
 
   // 灵感大全点击
   useEffect(() => {
@@ -275,14 +276,22 @@ const ChatPreview = (props) => {
     runningInstanceId.current = instanceId;
     runningVersion.current = version;
     runningAppid.current = aipp_id;
-    const ws = new WebSocket(`ws://80.11.128.66:31111/api/jober/v1/api/aipp/streamLog?aippId=${aipp_id}&version=${version}`);
-    ws.onerror = () => {
+    if (!wsCurrent.current) {
+      wsCurrent.current = new WebSocket(`ws://80.11.128.66:31111/api/jober/v1/api/aipp/streamLog?aippId=${aipp_id}&version=${version}`);
+      wsCurrent.current.onopen = () => {
+        wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));
+      }
+    } else {
+      wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));
+    }
+    
+    wsCurrent.current.onerror = () => {
       onStop('对话失败');
+      chatStatusChange(false);
+      isChatRunning.current = false;
     }
-    ws.onopen = () => {
-      ws.send(JSON.stringify({'aippInstanceId': instanceId}));
-    }
-    ws.onmessage = ({ data }) => {
+    
+    wsCurrent.current.onmessage = ({ data }) => {
       let messageData = {};
       try {
         messageData = JSON.parse(data);
@@ -315,16 +324,14 @@ const ChatPreview = (props) => {
           }
         })
         if (['ERROR', 'ARCHIVED'].includes(messageData.status)) {
-          ws.close();
+          chatStatusChange(false);
+          isChatRunning.current = false;
         }
       } catch (err){
         onStop('数据解析异常');
-        ws.close();
+        chatStatusChange(false);
+        isChatRunning.current = false;
       }
-    }
-    ws.onclose = () => {
-      chatStatusChange(false);
-      isChatRunning.current = false;
     }
   }
   // 主流程轮训回调
@@ -484,10 +491,9 @@ const ChatPreview = (props) => {
     if (!chatList.length) {
       return;
     }
-    let type = location.pathname.indexOf("chat") === -1 ? "preview" : "normal";
     try {
       setRequestLoading(true);
-      const res = await clearInstance(tenantId, appId, type);
+      const res = await clearInstance(tenantId, appId, 'preview');
       if (res.code === 0) {
         setChatList([]);
         clearInterval(timerRef.current);
