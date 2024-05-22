@@ -64,6 +64,9 @@ public class StoreServiceImpl implements StoreService {
     public List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(int pageNum, int pageSize) {
         List<ToolData> waterFlows = this.buildToolNodesConfig(AppCategory.WATER_FLOW, pageNum, pageSize);
         List<String> storeIds = waterFlows.stream().map(ToolData::getUniqueName).collect(Collectors.toList());
+        if (storeIds.isEmpty()) {
+            return Collections.emptyList();
+        }
         List<AppBuilderAppPO> appInfos = appBuilderAppMapper.selectWithStoreId(storeIds);
         Map<String, StoreWaterFlowDto> appInfoMap = appInfos.stream().
                 collect(Collectors.toMap(info -> JsonUtils.parseObject(info.getAttributes()).get("store_id").toString(),

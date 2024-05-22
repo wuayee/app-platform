@@ -275,7 +275,7 @@ const ChatPreview = (props) => {
     runningInstanceId.current = instanceId;
     runningVersion.current = version;
     runningAppid.current = aipp_id;
-    const ws = new WebSocket(`${WS_URL}?aippId=${aipp_id}?version=${version}`);
+    const ws = new WebSocket(`ws://80.11.128.66:31111/api/jober/v1/api/aipp/streamLog?aippId=${aipp_id}&version=${version}`);
     ws.onerror = () => {
       onStop('对话失败');
     }

@@ -133,7 +133,7 @@ export default function ModelForm({shapeId, modelOptions}) {
                                     className="jade-form-item"
                                     name={`propmt-${shapeId}`}
                                     label={<div style={{display: 'flex', alignItems: 'center'}}>
-                                        <span className="jade-second-title">提示词模板</span>
+                                        <span className="jade-second-title">用户提示词模板</span>
                                         <Popover content={[promptContent]}>
                                             <InfoCircleOutlined className="jade-panel-header-popover-content"/>
                                         </Popover>
@@ -156,7 +156,7 @@ export default function ModelForm({shapeId, modelOptions}) {
                                 className="jade-form-item"
                                 name={`system-prompt-${shapeId}`}
                                 label={<div style={{display: 'flex', alignItems: 'center'}}>
-                                    <span className="jade-second-title">提示词</span>
+                                    <span className="jade-second-title">系统提示词</span>
                                 </div>}
                                 initialValue={systemPrompt.value}
                                 validateTrigger="onBlur"

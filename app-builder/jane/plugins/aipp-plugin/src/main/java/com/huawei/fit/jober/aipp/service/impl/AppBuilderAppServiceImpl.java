@@ -16,6 +16,7 @@ import com.huawei.fit.jober.aipp.common.MetaUtils;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;
+import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
 import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfig;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfigProperty;
@@ -31,7 +32,6 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderConfigDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormPropertyDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
-import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.AppTypeEnum;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
@@ -45,7 +45,6 @@ import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -893,9 +892,7 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
             } else if (StringUtils.equalsIgnoreCase("Expand", jsonObject.getString("from"))) {
                 if (StringUtils.equalsIgnoreCase("Array", jsonObject.getString("type"))) {
                     List<Object> array = this.extractingExpandArray(jsonObject.getJSONArray("value"));
-                    if (CollectionUtils.isNotEmpty(array)) {
-                        result.add(array);
-                    }
+                    result.add(array);
                 } else if (StringUtils.equalsIgnoreCase("Object", jsonObject.getString("type"))) {
                     Map<String, Object> map = this.extractingExpandObject(jsonObject.getJSONArray("value"));
                     if (MapUtils.isNotEmpty(map)) {
@@ -917,9 +914,7 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
             } else if (StringUtils.equalsIgnoreCase("Expand", jsonObject.getString("from"))) {
                 if (StringUtils.equalsIgnoreCase("Array", jsonObject.getString("type"))) {
                     List<Object> array = this.extractingExpandArray(jsonObject.getJSONArray("value"));
-                    if (CollectionUtils.isNotEmpty(array)) {
-                        result.put(jsonObject.getString("name"), array);
-                    }
+                    result.put(jsonObject.getString("name"), array);
                 } else if (StringUtils.equalsIgnoreCase("Object", jsonObject.getString("type"))) {
                     Map<String, Object> map = this.extractingExpandObject(jsonObject.getJSONArray("value"));
                     if (MapUtils.isNotEmpty(map)) {
@@ -930,7 +925,9 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
         }
         if (result.containsKey("knowledge")) {
             List<Map<String, Object>> knowledge = ObjectUtils.cast(result.get("knowledge"));
-            knowledge.forEach(o1 -> o1.put("id", Long.parseLong(o1.get("id").toString())));
+            knowledge.stream()
+                    .filter(k -> Objects.nonNull(k.get("id")))
+                    .forEach(o1 -> o1.put("id", Long.parseLong(o1.get("id").toString())));
         }
         return result;
     }

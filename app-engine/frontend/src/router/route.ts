@@ -14,6 +14,8 @@ import ChatShare from "../pages/chatShare";
 import Apps from "../pages/apps";
 import KnowledgeBaseDetailCreateTable from "../pages/knowledge-base/knowledge-detail/create-table";
 import KnowledgeBaseDetailImportData from "../pages/knowledge-base/knowledge-detail/import-data";
+import Model from "../pages/model";
+import ModelDetail from "../pages/model/model-detail";
 
 export type MenuItem = Required<MenuProps>["items"][number] & {
   component?: (() => ReactElement) | React.FC<any>;

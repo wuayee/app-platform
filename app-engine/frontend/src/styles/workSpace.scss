@@ -6,7 +6,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    background: #ffffff;
+    background: rgb(240, 242, 244);
     height: 40px;
     justify-content: space-between;
     box-sizing: border-box;
@@ -17,14 +17,15 @@
       justify-content: center;
       align-items: center;
       img {
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         border-radius: 4px;
         cursor: pointer;
       }
       .header-text {
-        margin: 0 16px;
-        color: #71757f;
+        margin: 0 8px;
+        color: #000000;
+        font-size: 20px;
       }
       svg {
         width: 16px;
@@ -103,10 +104,10 @@
   background-size: 100% 100%;
   background-repeat: no-repeat;
   .ant-layout-header {
-    height: 0 !important;
+    //height: 0 !important;
   }
   .ant-layout-header,.ant-layout-content {
-    background-color: transparent !important;
-    padding: 0 !important;
+    //background-color: transparent !important;
+    //padding: 0 !important;
   }
 }
