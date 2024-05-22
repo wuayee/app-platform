@@ -26,6 +26,8 @@ import Link from './images/ai/link.svg';
 import At from './images/ai/at.svg';
 import Panle from './images/ai/panel.svg';
 import PanleClose from './images/ai/panel-active.svg';
+import AppBox from './svg/app-box.svg';
+import CreateApp from './svg/create-app.svg';
 import TabLeft from './images/ai/icon1.svg';
 import TabRight from './images/ai/icon2.svg';
 import Audio from './images/ai/audio.svg';
@@ -57,6 +59,8 @@ const LinkIcon = (props) => <Icon component={() => (<Link/>)} {...props} />;
 const AtIcon = (props) => <Icon component={() => (<At/>)} {...props} />;
 const PanleIcon = (props) => <Icon component={() => (<Panle/>)} {...props} />;
 const PanleCloseIcon = (props) => <Icon component={() => (<PanleClose/>)} {...props} />;
+const AppBoxIcon = (props) => <Icon component={() => (<AppBox/>)} {...props} />;
+const CreateAppIcon = (props) => <Icon component={() => (<CreateApp/>)} {...props} />;
 const TabLeftIcon = (props) => <Icon component={() => (<TabLeft/>)} {...props} />;
 const TabRightIcon = (props) => <Icon component={() => (<TabRight/>)} {...props} />;
 const AudioIcon = (props) => <Icon component={() => (<Audio/>)} {...props} />;
@@ -87,6 +91,8 @@ export {
   AtIcon,
   PanleIcon,
   PanleCloseIcon,
+  AppBoxIcon,
+  CreateAppIcon,
   TabLeftIcon,
   TabRightIcon,
   AudioIcon
