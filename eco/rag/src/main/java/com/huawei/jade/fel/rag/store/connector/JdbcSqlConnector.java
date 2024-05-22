@@ -5,6 +5,7 @@
 package com.huawei.jade.fel.rag.store.connector;
 
 import com.huawei.fitframework.log.Logger;
+import com.huawei.jade.fel.rag.store.connector.schema.RdbColumn;
 import com.huawei.jade.fel.rag.store.query.Expression;
 
 import lombok.NonNull;
@@ -28,6 +29,7 @@ import java.util.Map;
  */
 public class JdbcSqlConnector implements SqlConnector {
     private static final Logger logger = Logger.get(JdbcSqlConnector.class);
+
     private Connection connection = null;
 
     /**
@@ -135,6 +137,7 @@ public class JdbcSqlConnector implements SqlConnector {
         }
         return rows;
     }
+
     private void close(Statement stmt) {
         try {
             if (stmt != null) {
@@ -157,15 +160,61 @@ public class JdbcSqlConnector implements SqlConnector {
 
     /**
      * 创建表。
+     *
+     * @param tableName 表名称
+     * @param columns 列信息
      */
     @Override
-    public void createTable() {}
+    public void createTable(String tableName, List<RdbColumn> columns) {
+        List<String> commentSqls = new ArrayList<>();
+        StringBuilder sb = new StringBuilder(String.format("CREATE TABLE IF NOT EXISTS %s (", tableName));
+        if (columns != null && !columns.isEmpty()) {
+            for (int i = 0; i < columns.size(); i++) {
+                RdbColumn column = columns.get(i);
+                sb.append(column.toSqlString());
+                sb.append(i == columns.size() - 1 ? "" : ",");
+                commentSqls.add(
+                    String.format("COMMENT ON COLUMN %s.%s is '%s';", tableName, column.getName(), column.getDesc()));
+            }
+            sb.append(");");
+        }
+        String createSql = sb.toString();
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            stmt.addBatch(createSql);
+            for (String commentSql : commentSqls) {
+                stmt.addBatch(commentSql);
+            }
+            stmt.executeBatch();
+            connection.commit();
+            logger.info(String.format("Succeed to create table knowledge: %s", tableName));
+        } catch (SQLException e) {
+            logger.error(String.format("Failed to create table knowledge: %s", tableName));
+        } finally {
+            close(stmt);
+        }
+    }
 
     /**
      * 删除表。
+     *
+     * @param tableName 表名称
      */
     @Override
-    public void dropTable() {}
+    public void dropTable(String tableName) {
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            String sql = String.format("DROP TABLE %S;", tableName);
+            stmt.executeUpdate(sql);
+            logger.info(String.format("Succeed to drop table: %s", tableName));
+        } catch (SQLException e) {
+            logger.error(String.format("Failed to drop table: %s", tableName));
+        } finally {
+            close(stmt);
+        }
+    }
 
     /**
      * 关闭数据库连接。
