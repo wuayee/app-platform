@@ -23,9 +23,9 @@ const ModelCard = ({ modelItem }: { modelItem: ModelItem }) => {
   ];
   // 路由
   const navigate = useNavigate();
-  // 创建知识库
-  const toModelDetail = (id:string) => {
-    navigate('/model/detail');
+
+  const toModelDetail = (id: string) => {
+    navigate("/model/detail", { state: { modelId: id } });
   };
   return (
     <Card
@@ -33,13 +33,12 @@ const ModelCard = ({ modelItem }: { modelItem: ModelItem }) => {
         width: 376,
         background:
           "url(/src/assets/images/knowledge/knowledge-background.png)",
-        height: 210,
+        height: 240,
       }}
     >
       {/* 头部区域 */}
       <div
         style={{
-          display: "flex",
           height: 40,
         }}
       >
@@ -49,8 +48,9 @@ const ModelCard = ({ modelItem }: { modelItem: ModelItem }) => {
               fontSize: 20,
               color: "rgba(5, 5, 5, .96)",
               cursor: "pointer",
+              width: 200,
             }}
-            onClick={() => toModelDetail(modelItem.name)}
+            onClick={() => toModelDetail(modelItem.id)}
           >
             {modelItem.name}
           </div>
@@ -62,12 +62,30 @@ const ModelCard = ({ modelItem }: { modelItem: ModelItem }) => {
         ></div>
         <div
           style={{
-            fontSize: 14,
-            color: "rgba(5, 5, 5, .96)",
-            marginTop: 5,
+            display: "flex",
+            flexDirection: "row-reverse",
           }}
         >
-          {modelItem.name}
+          <div
+            style={{
+              fontSize: 14,
+              color: "rgba(5, 5, 5, .96)",
+              marginTop: -28,
+            }}
+          >
+            {modelItem.status}
+          </div>
+          <div style={{ marginTop: -25 }}>
+            {modelItem.status === "healthy" && (
+              <img src="/src/assets/images/model/healthy.svg" />
+            )}
+            {modelItem.status === "unhealthy" && (
+              <img src="/src/assets/images/model/unhealthy.svg" />
+            )}
+            {modelItem.status === "undeployed" && (
+              <img src="/src/assets/images/model/undeployed.svg" />
+            )}
+          </div>
         </div>
       </div>
       <div
@@ -109,8 +127,14 @@ const ModelCard = ({ modelItem }: { modelItem: ModelItem }) => {
 
       {/* 描述 */}
       <div
+        title={modelItem.description}
         style={{
+          display: "-webkit-box",
           wordBreak: "break-all",
+          textOverflow: "ellipsis",
+          overflow: "hidden",
+          WebkitLineClamp: 3,
+          webkitBoxOrient: "vertical",
           fontSize: "14px",
           lineHeight: "22px",
           textAlign: "justify",

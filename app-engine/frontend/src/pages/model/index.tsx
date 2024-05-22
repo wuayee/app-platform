@@ -3,7 +3,6 @@ import { Button, Input } from "antd";
 import { HashRouter, Route, useNavigate, Routes } from "react-router-dom";
 
 import Pagination from "../../components/pagination/index";
-import { Icons } from "../../components/icons";
 import { getModelList } from "../../shared/http/model";
 import CardsTab from "./cards-tab";
 import TableTab from "./table-tab";
@@ -11,7 +10,7 @@ import TableTab from "./table-tab";
 import "../../index.scss";
 const ModelList = () => {
   // 总条数
-  const [total, setTotal] = useState(2);
+  const [total, setTotal] = useState(0);
 
   const [modelTab, setModelTab] = useState(1);
 
@@ -41,6 +40,7 @@ const ModelList = () => {
     }).then((res) => {
       if (res) {
         setModelList(res.llms);
+        setTotal(res.llms.length);
       }
     });
   };
@@ -66,8 +66,30 @@ const ModelList = () => {
             textAlign: "right",
           }}
         >
-          <Button onClick={() => setModelTab(1)}>1</Button>
-          <Button onClick={() => setModelTab(2)}>2</Button>
+          {modelTab === 1 && (
+            <img
+              src="/src/assets/images/model/card-active.svg"
+              onClick={() => setModelTab(1)}
+            />
+          )}
+          {modelTab === 2 && (
+            <img
+              src="/src/assets/images/model/card.svg"
+              onClick={() => setModelTab(1)}
+            />
+          )}
+          {modelTab === 1 && (
+            <img
+              src="/src/assets/images/model/table.svg"
+              onClick={() => setModelTab(2)}
+            />
+          )}
+          {modelTab === 2 && (
+            <img
+              src="/src/assets/images/model/table-active.svg"
+              onClick={() => setModelTab(2)}
+            />
+          )}
         </div>
       </div>
       <div className="aui-block">

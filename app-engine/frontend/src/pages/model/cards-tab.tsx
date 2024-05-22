@@ -24,6 +24,10 @@ export interface ModelItem {
   throughput: number;
   total_input_tokens: number;
   total_output_tokens: number;
+  replicas: number;
+  npu_flag: boolean;
+  xpu_consume: number;
+  port: number;
 }
 const CardsTab = ({modelList}: {modelList: ModelItem[]}) => {
   // 路由
