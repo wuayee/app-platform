@@ -30,6 +30,14 @@ public interface VectorConnector {
     List<Pair<Map<String, Object>, Float>> get(VectorQuery query, VectorConfig conf);
 
     /**
+     * 根据传入的配置信息进行数量统计。
+     *
+     * @param conf 表示配置信息的 {@link VectorConfig}。
+     * @return 返回查询到的数量。
+     */
+    Integer getCount(VectorConfig conf);
+
+    /**
      * 按照指定的config，对数据库插入input中的内容。
      *
      * @param records 表示数据库输入的

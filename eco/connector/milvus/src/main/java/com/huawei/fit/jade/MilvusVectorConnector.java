@@ -28,6 +28,7 @@ import io.milvus.exception.IllegalResponseException;
 import io.milvus.grpc.CheckHealthResponse;
 import io.milvus.grpc.DataType;
 import io.milvus.grpc.DescribeCollectionResponse;
+import io.milvus.grpc.GetCollectionStatisticsResponse;
 import io.milvus.grpc.MutationResult;
 import io.milvus.grpc.QueryResults;
 import io.milvus.grpc.SearchResults;
@@ -40,6 +41,7 @@ import io.milvus.param.collection.CreateCollectionParam;
 import io.milvus.param.collection.DescribeCollectionParam;
 import io.milvus.param.collection.DropCollectionParam;
 import io.milvus.param.collection.FieldType;
+import io.milvus.param.collection.GetCollectionStatisticsParam;
 import io.milvus.param.collection.HasCollectionParam;
 import io.milvus.param.collection.LoadCollectionParam;
 import io.milvus.param.dml.InsertParam;
@@ -159,6 +161,31 @@ public class MilvusVectorConnector implements VectorConnector {
                     ScoreNormalizer.process(s.getScore(), conf.getMetricType(), conf.isShouldNormalizeScore())));
         }
         return result;
+    }
+
+    /**
+     * 根据传入的配置信息进行数量统计。
+     *
+     * @param conf 表示配置信息的 {@link VectorConfig}。
+     * @return 返回查询到的数量。
+     */
+    @Override
+    public Integer getCount(VectorConfig conf) {
+        Validation.notNull(conf, "The vector conf cannot be null.");
+
+        GetCollectionStatisticsParam param = GetCollectionStatisticsParam.newBuilder()
+            .withDatabaseName(conf.getDatabaseName())
+            .withCollectionName(conf.getCollectionName())
+            .build();
+
+        R<GetCollectionStatisticsResponse> response = milvusClient.getCollectionStatistics(param);
+
+        if (response.getStatus() != R.Status.Success.getCode()) {
+            logger.error("get count err");
+            throw new IllegalResponseException(response.getMessage());
+        }
+
+        return Integer.parseInt(response.getData().getStatsList().get(0).getValue());
     }
 
     /**
