@@ -38,8 +38,7 @@ public class UploadController {
     public void upload(@RequestHeader(value = "attachment-filename", defaultValue = "blank") String fileName,
         @PathVariable("knowledge_id") Long knowledgeId, @PathVariable("knowledge_table_id") Long knowledgeTableId,
         ReadableBinaryEntity file) throws IOException {
-        fileService.importFiles(knowledgeId, knowledgeTableId,
-            new FileUploadRequest(file.getInputStream(), fileName));
+        fileService.importFiles(knowledgeId, knowledgeTableId, new FileUploadRequest(file.getInputStream(), fileName));
     }
 
     /**
@@ -52,6 +51,6 @@ public class UploadController {
     @DeleteMapping("/{knowledge_id}/table/{knowledge_table_id}/files")
     public void delete(@PathVariable("knowledge_id") Long knowledgeId,
         @PathVariable("knowledge_table_id") Long knowledgeTableId, @RequestBody List<String> fileNames) {
-        fileNames.forEach(fileName ->  fileService.deleteFiles(knowledgeId, knowledgeTableId, fileName));
+        fileNames.forEach(fileName -> fileService.deleteFiles(knowledgeId, knowledgeTableId, fileName));
     }
 }
