@@ -10,6 +10,7 @@ import com.huawei.jade.fel.rag.store.query.QueryParams;
 import com.huawei.jade.fel.rag.store.query.VectorQuery;
 
 import javafx.util.Pair;
+
 import java.util.List;
 import java.util.Map;
 

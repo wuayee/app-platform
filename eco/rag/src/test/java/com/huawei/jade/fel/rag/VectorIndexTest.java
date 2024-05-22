@@ -18,6 +18,7 @@ import com.huawei.jade.fel.rag.store.query.VectorQuery;
 import org.junit.jupiter.api.Test;
 
 import javafx.util.Pair;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;

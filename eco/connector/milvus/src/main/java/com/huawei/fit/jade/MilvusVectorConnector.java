@@ -51,8 +51,8 @@ import io.milvus.param.index.CreateIndexParam;
 import io.milvus.response.DescCollResponseWrapper;
 import io.milvus.response.QueryResultsWrapper;
 import io.milvus.response.SearchResultsWrapper;
-
 import javafx.util.Pair;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
