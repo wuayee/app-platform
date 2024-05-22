@@ -12,9 +12,12 @@ import com.huawei.fit.http.annotation.PutMapping;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
+import com.huawei.fit.http.server.HttpServerException;
 import com.huawei.fit.http.server.HttpServerResponseException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
+import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
 import com.huawei.jade.app.engine.knowledge.dto.KStorageDto;
 import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
@@ -30,6 +33,7 @@ import com.huawei.jade.app.engine.knowledge.vo.PageResultVo;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 处理知识库相关的HTTP请求。
@@ -39,6 +43,8 @@ import java.util.List;
 @Component
 @RequestMapping("/knowledge")
 public class KnowledgeBaseController {
+    private static final Logger LOGGER = Logger.get(KnowledgeBaseController.class);
+
     @Fit
     private KTableService kTableService;
 
@@ -117,6 +123,15 @@ public class KnowledgeBaseController {
      */
     @DeleteMapping("/repos/{id}")
     public void deleteRepo(@PathVariable("id") Long id) {
+        List<KTableDto> tableDtos = kTableService.getByRepoId(id, new PageQueryParam());
+        // 判断知识表是否有在任务中，如果有，则直接返回数据处理中，请稍后再试
+        List<KTableDto> updatingTables = tableDtos.stream()
+            .filter(kTable -> kTable.getStatus() != 0)
+            .collect(Collectors.toList());
+        if (CollectionUtils.isNotEmpty(updatingTables)) {
+            LOGGER.warn("record updating, cannot delete.");
+            throw new HttpServerException("Data updating, please delete later.");
+        }
         kRepoService.delete(id);
     }
 

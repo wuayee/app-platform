@@ -31,8 +31,6 @@ import { httpUrlMap } from "../../../shared/http/httpConfig";
 import { uploadChatFile } from "../../../shared/http/aipp";
 import { AippContext } from "../../aippIndex/context";
 import "../../../shared/utils/rendos";
-import robot2 from "../../../assets/images/ai/xiaohai.png";
-import xiaohai from '@assets/images/ai/xiaohai2.png';
 import "../styles/send-editor.scss";
 import StarApps from "./star-apps";
 import HistoryChat from "./history-chat";
@@ -543,7 +541,7 @@ const EditorBtnHome = (props) => {
     <div className="btn-inner">
       <div className="inner-left">
         <div className="inner-item">
-          <img src={aippInfo.attributes?.icon} alt="" />
+          <img src={aippInfo.attributes?.icon ? aippInfo.attributes?.icon : robot} alt="" />
           <span className="item-name" title={aippInfo.name || ''}>{aippInfo.name || ''}</span>
           <LinkIcon />
           <AtIcon />
