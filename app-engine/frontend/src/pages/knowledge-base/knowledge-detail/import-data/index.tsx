@@ -10,7 +10,6 @@ import { SelectForm } from '../../../../components/select-form';
 
 type LayoutType = Parameters<typeof Form>[0]['layout'];
 
-
 // 创建知识库配置
 type FieldType = {
   // 知识表名称
