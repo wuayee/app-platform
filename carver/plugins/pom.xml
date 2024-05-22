@@ -9,10 +9,12 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
+    <groupId>com.huawei.fit.jade.plugin</groupId>
     <artifactId>carver-plugin-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>tool-ai-flow</module>
+        <module>tool-execution</module>
+        <module>tool-repository-postgresql</module>
     </modules>
 </project>

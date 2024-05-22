@@ -9,9 +9,11 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
+    <groupId>com.huawei.fit.jade.service</groupId>
     <artifactId>carver-service-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
+        <module>tool-service</module>
     </modules>
 </project>
