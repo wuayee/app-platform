@@ -39,9 +39,9 @@
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  width: calc(100% - 30px);
+  width: calc(100% - 44px);
   display: flex;
-  margin: 15px;
+  margin: 20px 20px 0 20px;
   border-radius: 6px;
   position: relative;
   background-repeat: no-repeat;
@@ -49,7 +49,7 @@
   background-image: url('../../../assets/images/bg3.png');
   .chat-inner-left {
     width: 100%;
-    height: calc(100vh - 140px);
+    height: calc(100vh - 125px);
     transition: width .2s;
     overflow-x: auto;
   }
@@ -145,7 +145,7 @@
     margin: 0;
     width: 100%;
     border-radius: 0;
-    height: calc(100vh - 110px);
+    height: calc(100vh - 100px);
     .chat-inner-left {
       height: 100%;
     }

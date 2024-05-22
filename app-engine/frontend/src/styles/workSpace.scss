@@ -10,7 +10,7 @@
     height: 40px;
     justify-content: space-between;
     box-sizing: border-box;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     .logo {
       display: flex;
       justify-content: center;
@@ -60,7 +60,7 @@
   }
   .layout-content {
     display: flex;
-    height: calc(100vh - 110px);
+    height: calc(100vh - 100px);
     position: relative;
     .chat-icon {
       position: absolute;
