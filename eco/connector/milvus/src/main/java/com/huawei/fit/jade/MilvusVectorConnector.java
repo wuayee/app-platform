@@ -18,6 +18,7 @@ import com.huawei.jade.fel.rag.store.connector.schema.VectorField;
 import com.huawei.jade.fel.rag.store.connector.schema.VectorFieldDataType;
 import com.huawei.jade.fel.rag.store.connector.schema.VectorSchema;
 import com.huawei.jade.fel.rag.store.query.Expression;
+import com.huawei.jade.fel.rag.store.query.QueryParams;
 import com.huawei.jade.fel.rag.store.query.VectorQuery;
 
 import io.milvus.client.MilvusClient;
@@ -28,6 +29,7 @@ import io.milvus.grpc.CheckHealthResponse;
 import io.milvus.grpc.DataType;
 import io.milvus.grpc.DescribeCollectionResponse;
 import io.milvus.grpc.MutationResult;
+import io.milvus.grpc.QueryResults;
 import io.milvus.grpc.SearchResults;
 import io.milvus.param.ConnectParam;
 import io.milvus.param.IndexType;
@@ -41,10 +43,13 @@ import io.milvus.param.collection.FieldType;
 import io.milvus.param.collection.HasCollectionParam;
 import io.milvus.param.collection.LoadCollectionParam;
 import io.milvus.param.dml.InsertParam;
+import io.milvus.param.dml.QueryParam;
 import io.milvus.param.dml.SearchParam;
 import io.milvus.param.index.CreateIndexParam;
 import io.milvus.response.DescCollResponseWrapper;
+import io.milvus.response.QueryResultsWrapper;
 import io.milvus.response.SearchResultsWrapper;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,8 +60,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import javafx.util.Pair;
 
 /**
  * MIlvus数据库连接器。
@@ -307,6 +310,25 @@ public class MilvusVectorConnector implements VectorConnector {
             logger.error("drop collection " + conf.getCollectionName() + "err");
             throw new IllegalResponseException(response.getMessage());
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> scalarQuery(QueryParams query, VectorConfig conf) {
+        R<QueryResults> response = milvusClient.query(QueryParam.newBuilder()
+            .withCollectionName(conf.getCollectionName())
+            .withOutFields(query.getOutFields())
+            .withLimit(query.getLimit())
+            .withOffset(query.getOffset())
+            .build());
+
+        if (response.getStatus() != R.Status.Success.getCode()) {
+            logger.error("Scalar query " + conf.getCollectionName() + "err");
+            throw new IllegalResponseException(response.getMessage());
+        }
+        return new QueryResultsWrapper(response.getData()).getRowRecords()
+            .stream()
+            .map(QueryResultsWrapper.RowRecord::getFieldValues)
+            .collect(Collectors.toList());
     }
 
     @Nullable
