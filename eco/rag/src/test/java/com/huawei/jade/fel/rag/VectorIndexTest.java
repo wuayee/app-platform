@@ -15,10 +15,9 @@ import com.huawei.jade.fel.rag.store.query.Expression;
 import com.huawei.jade.fel.rag.store.query.QueryParams;
 import com.huawei.jade.fel.rag.store.query.VectorQuery;
 
-import javafx.util.Pair;
-
 import org.junit.jupiter.api.Test;
 
+import javafx.util.Pair;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +39,11 @@ public class VectorIndexTest {
             mp.put("content", "content1");
             mp.put("metadata", "{\"sourceId\":\"0\"}");
             return Arrays.asList(new Pair<>(mp, 0.9f));
+        }
+
+        @Override
+        public Integer getCount(VectorConfig conf) {
+            return null;
         }
 
         @Override

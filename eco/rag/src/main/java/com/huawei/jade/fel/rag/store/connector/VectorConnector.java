@@ -10,7 +10,6 @@ import com.huawei.jade.fel.rag.store.query.QueryParams;
 import com.huawei.jade.fel.rag.store.query.VectorQuery;
 
 import javafx.util.Pair;
-
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +27,14 @@ public interface VectorConnector {
      * @return 返回查询到的值及其相关性得分。
      */
     List<Pair<Map<String, Object>, Float>> get(VectorQuery query, VectorConfig conf);
+
+    /**
+     * 根据传入的配置信息进行数量统计。
+     *
+     * @param conf 表示配置信息的 {@link VectorConfig}。
+     * @return 返回查询到的数量。
+     */
+    Integer getCount(VectorConfig conf);
 
     /**
      * 按照指定的config，对数据库插入input中的内容。
