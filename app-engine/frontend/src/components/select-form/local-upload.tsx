@@ -5,7 +5,7 @@ import { UploadFile } from 'antd/lib';
 
 const { Dragger } = Upload;
 
-const UploadFile = () => {
+const LocalUpload = () => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const filesKeys = useRef<Map<string, any>>(new Map());
 
@@ -66,4 +66,4 @@ const UploadFile = () => {
   );
 };
 
-export default UploadFile;
+export default LocalUpload;

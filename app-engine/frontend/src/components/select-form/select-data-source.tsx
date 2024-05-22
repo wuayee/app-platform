@@ -4,7 +4,7 @@ import { KnowledgeIcons } from '../icons';
 
 import './style.scoped.scss';
 import CustomTable from './custom-table';
-import UploadFile from './upload';
+import LocalUpload from './local-upload';
 
 interface props {
   type: 'text' | 'table';
@@ -121,7 +121,7 @@ const SelectDataSource = ({ type, form }: props) => {
                 width: 800,
               }}
             >
-              <UploadFile />
+              <LocalUpload />
             </Form.Item>
           )}
 

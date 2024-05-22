@@ -142,12 +142,16 @@ const CustomTable: React.FC = () => {
     {
       title: '操作',
       dataIndex: 'operation',
+      width: '10%',
       render: (_: any, record: Item) => {
         const editable = isEditing(record);
         return editable ? (
-          <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
-            保存
-          </Typography.Link>
+          <Space>
+            <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
+              保存
+            </Typography.Link>
+            <a onClick={() => setEditingKey('')}>取消</a>
+          </Space>
         ) : (
           <Space>
             <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
@@ -168,7 +172,8 @@ const CustomTable: React.FC = () => {
       ...col,
       onCell: (record: Item) => ({
         record,
-        inputType: col.dataIndex === 'colName' ? 'input' : 'select',
+        inputType:
+          col.dataIndex === 'colName' || col.dataIndex === 'description' ? 'input' : 'select',
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
