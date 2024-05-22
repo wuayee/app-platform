@@ -8,6 +8,9 @@ import { StarFilled, UserOutlined } from '@ant-design/icons';
 const PluginMarket = () => {
   return (
     <div className='aui-fullpage'>
+      <div className='aui-header-1'>
+        <div className='aui-title-1'>插件市场</div>
+      </div>
       <div className='aui-block plugin-market'>
         <Tabs
           defaultActiveKey='1'
@@ -48,10 +51,10 @@ const PluginMarket = () => {
               <div className='plugin-item-footer'>
                 <div className='plugin-item-footer-left'>
                   <Space className='plugin-item-footer-icons'>
-                    <UserOutlined /> 2.3k
+                    <UserOutlined /> 2.36k
                   </Space>
                   <Space className='plugin-item-footer-icons'>
-                    <StarFilled /> 2.3k
+                    <StarFilled /> 126
                   </Space>
                 </div>
                 <div className='plugin-item-footer-right'></div>

@@ -1,7 +1,7 @@
 const data = [
   {
-    name: '小魔方测试-2',
-    description: '创建应用 v0.1，根据用户需求智能生成应用配置，并自动创建应用，支持创建各类助手、数字人、智能体等',
+    name: 'word抽取算子',
+    description: '抽取Word中的文本',
     uniqueName: 'abe840fb-251f-4bc2-a05e-90e943807f66',
     schema: {
       name: '小魔方测试-2',
@@ -16,9 +16,9 @@ const data = [
     tags: ['APP'],
   },
   {
-    name: '创建应用 v0.1',
+    name: 'Nas扫盘算子',
     description:
-      '创建应用 v0.1，根据用户需求智能生成应用配置，并自动创建应用，支持创建各类助手、数字人、智能体等',
+      'Nas扫盘算子',
     uniqueName: '1ec86f6d-c748-4221-854b-265c1ebfa1ff',
     schema: {
       fitableId: 'water.flow.invoke',
@@ -76,8 +76,8 @@ const data = [
     tags: ['WATERFLOW'],
   },
   {
-    name: '创建应用',
-    description: '创建应用工具流，根据用户问题智能生成应用配置信息，并自动创建应用',
+    name: 'obs连通性检测算子',
+    description: 'obs连通性检测算子',
     uniqueName: 'ff70d6c1-c5c4-4e88-ab4b-179d686584a3',
     schema: {
       fitableId: 'water.flow.invoke',
@@ -134,8 +134,8 @@ const data = [
     tags: ['WATERFLOW'],
   },
   {
-    name: '应用创建工具',
-    description: '这是一个用于应用创建的工具。',
+    name: '文本质量评估算子',
+    description: '文本质量评估算子',
     uniqueName: '1afdab63-62e3-4965-ac91-a7a66099f068',
     schema: {
       name: '应用创建工具',
@@ -165,8 +165,8 @@ const data = [
     tags: ['FIT'],
   },
   {
-    name: '财经问题结果生成',
-    description: '这是一个用于生成财经类问题结果的工具。',
+    name: 'pdf提取算子',
+    description: 'pdf提取算子',
     uniqueName: '24474301-937a-4335-a155-1e86d1a48de0',
     schema: {
       name: '财经问题结果生成',
@@ -200,8 +200,8 @@ const data = [
     tags: ['FIT'],
   },
   {
-    name: '财经问题路由',
-    description: '这是一个用于路由财经类问题的工具。',
+    name: 'img调整大小算子',
+    description: 'img调整大小算子',
     uniqueName: 'c6c2d272-90e5-4c06-b8fa-5d94930b7532',
     schema: {
       name: '财经问题路由',
