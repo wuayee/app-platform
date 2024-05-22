@@ -29,6 +29,8 @@ import PanleClose from './images/ai/panel-active.svg';
 import TabLeft from './images/ai/icon1.svg';
 import TabRight from './images/ai/icon2.svg';
 import Audio from './images/ai/audio.svg';
+import Avatar from './images/avatar-default.svg';
+import AppDefault from './svg/app-default.svg';
 
 // 编辑按钮
 const EditIcon = (props) => <Icon component={() => (<Edit/>)} {...props} />;
@@ -60,6 +62,9 @@ const PanleCloseIcon = (props) => <Icon component={() => (<PanleClose/>)} {...pr
 const TabLeftIcon = (props) => <Icon component={() => (<TabLeft/>)} {...props} />;
 const TabRightIcon = (props) => <Icon component={() => (<TabRight/>)} {...props} />;
 const AudioIcon = (props) => <Icon component={() => (<Audio/>)} {...props} />;
+const AvatarIcon = (props) => <Icon component={() => (<Avatar />)} {...props} />;
+const AppDefaultIcon = (props) => <Icon component={() => (<AppDefault />)} {...props} />;
+
 export {
   EditIcon,
   ClearIcon,
@@ -89,6 +94,8 @@ export {
   PanleCloseIcon,
   TabLeftIcon,
   TabRightIcon,
-  AudioIcon
+  AudioIcon,
+  AvatarIcon,
+  AppDefaultIcon
 }
 
