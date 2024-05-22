@@ -16,6 +16,7 @@ import KnowledgeBaseDetailCreateTable from "../pages/knowledge-base/knowledge-de
 import KnowledgeBaseDetailImportData from "../pages/knowledge-base/knowledge-detail/import-data";
 import Model from "../pages/model";
 import ModelDetail from "../pages/model/model-detail";
+import Apps2 from "../pages/apps/index2";
 
 export type MenuItem = Required<MenuProps>["items"][number] & {
   component?: (() => ReactElement) | React.FC<any>;
@@ -43,64 +44,6 @@ export const routeList: MenuItem[] = [
       },
     ],
   },
-  {
-    key: "/app-develop",
-    icon: Icons.app({}),
-    label: "应用开发",
-    component: Demo,
-    children: [
-      {
-        key: "/app-develop/create",
-        label: "应用创建",
-        component: Demo,
-      },
-      {
-        key: "/app-develop/test",
-        label: "应用调测",
-        component: Demo,
-      },
-      {
-        key: "/app-develop/estimate",
-        label: "应用评估",
-        component: Demo,
-      },
-      {
-        key: "/app-develop/evalute",
-        label: "应用优化",
-        component: Demo,
-      },
-    ]
-  },  {
-    key: "/app-developement",
-    icon: Icons.app({}),
-    label: "应用运维",
-    component: Demo,
-    children: [
-      {
-        key: "/app-developement/Deploying",
-        label: "应用部署",
-        component: Demo,
-      },
-      {
-        key: "/app-developement/monitor",
-        label: "应用监控",
-        component: Demo,
-      },
-      {
-        key: "/app-developement/Recovering",
-        label: "故障恢复",
-        component: Demo,
-      },
-    ]
-  },
-  {
-    key: "/robot-market",
-    icon: Icons.app({}),
-    label: "机器人市场",
-    component: Demo,
-    hidden: true,
-  },
-
   {
     key: "/app",
     icon: Icons.app({}),
@@ -136,6 +79,49 @@ export const routeList: MenuItem[] = [
         hidden: true,
       }
     ],
+  },
+  {
+    key: "/app-develop",
+    icon: Icons.app({}),
+    label: "应用开发",
+    component: Apps2,
+    children: [
+      {
+        key: "/app/:tenantId/detail/:appId",
+        icon: Icons.app({}),
+        label: "app编排",
+        component: AippIndex,
+        hidden: true,
+      },
+      {
+        key: "/app/:tenantId/addFlow/:appId",
+        icon: Icons.app({}),
+        label: "新增工具流",
+        component: AddFlow,
+        hidden: true,
+      },
+      {
+        key: "/app/:tenantId/flowDetail/:appId",
+        icon: Icons.app({}),
+        label: "工具流",
+        component: FlowDetail,
+        hidden: true,
+      },
+      {
+        key: "/app/:tenantId/appDetail/:appId",
+        icon: Icons.app({}),
+        label: "",
+        component: AppDetail,
+        hidden: true,
+      }
+    ],
+  },
+  {
+    key: "/robot-market",
+    icon: Icons.app({}),
+    label: "机器人市场",
+    component: Demo,
+    hidden: true,
   },
   {
     key: "/plugin-market",
@@ -196,12 +182,6 @@ export const routeList: MenuItem[] = [
     label: "插件",
     component: Demo,
     hidden: true,
-  },
-  {
-    key: "/system",
-    icon: Icons.app({}),
-    label: "系统管理",
-    component: Demo,
   },
   {
     key: "/group",
