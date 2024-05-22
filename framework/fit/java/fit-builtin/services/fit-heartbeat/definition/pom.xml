@@ -12,7 +12,7 @@
     <artifactId>fit-heartbeat</artifactId>
 
     <dependencies>
-        <!-- Fit core -->
+        <!-- FIT core -->
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-api</artifactId>

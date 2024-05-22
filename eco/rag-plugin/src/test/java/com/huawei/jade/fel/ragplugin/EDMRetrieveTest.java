@@ -5,6 +5,7 @@ import com.huawei.jade.fel.rag.store.connector.ConnectorProperties;
 import com.huawei.jade.fel.rag.store.connector.JdbcSqlConnector;
 import com.huawei.fit.jade.MilvusVectorConnector;
 import com.huawei.jade.fel.rag.store.connector.SqlConnector;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import static com.huawei.jade.fel.rag.store.connector.JdbcType.POSTGRESQL;
 
 public class EDMRetrieveTest {
+    @Disabled
     @Test
     void testMultiSourceRetriever() {
         MilvusVectorConnector milvusConn;

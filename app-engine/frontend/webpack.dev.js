@@ -54,7 +54,7 @@ module.exports = merge(common, {
     hot: true,
     open: true,
     inline: true,
-    https: true,
+    https: false,
     proxy: {
       "/api": {
         target: "https://jane-beta.huawei.com/api",
@@ -76,9 +76,10 @@ module.exports = merge(common, {
       },
       "/aippApi": {
         // target: 'http://10.91.144.92:8028/api/jober/v1/api',
-        // target: 'http://10.169.58.7:8028/api/jober/v1/api',
+        // target: 'http://10.169.58.7:8080/v1/api',
+        target: 'http://80.11.128.66:31111/api/jober/v1/api',
         // target: 'http://10.91.144.79:8028/api/jober/v1/api',
-        target: 'https://jane-beta.huawei.com/api/jober/v1/api',
+        // target: 'https://jane-beta.huawei.com/api/jober/v1/api',
         // target: 'http://10.91.144.226:8028/api/jober/v1/api',
         pathRewrite: {"^/aippApi": ""},
         secure: false,
@@ -101,7 +102,7 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       "/knowledge": {
-        target: 'http://10.85.112.75:8080',
+        target: 'http://10.85.112.74:8080',
         pathRewrite: {
           "^/modelApi": ""
         },
@@ -111,6 +112,14 @@ module.exports = merge(common, {
       "/app": {
         target: 'http://80.11.128.66:30216/v1/api',
         pathRewrite: {"^/app": ""},
+        secure: false,
+        changeOrigin: true,
+      },
+      "/v1": {
+        target: 'http://80.11.128.66:8000',
+        pathRewrite: {
+          "^/modelApi": ""
+        },
         secure: false,
         changeOrigin: true,
       },

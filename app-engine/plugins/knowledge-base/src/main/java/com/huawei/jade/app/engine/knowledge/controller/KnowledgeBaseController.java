@@ -253,4 +253,15 @@ public class KnowledgeBaseController {
     public PageResultVo<String> getChunk(@RequestBody KbChunkQueryDto chunkQueryDto) {
         return kbGenerateService.getChunks(chunkQueryDto);
     }
+
+
+    /**
+     * 导入表格类型知识接口
+     *
+     * @param tableConfigDto 文件导入配置信息
+     */
+    @PostMapping(path = "/import-knowledge/table")
+    public void importTableKnowledge(@RequestBody KbGenerateConfigDto tableConfigDto) {
+        kbGenerateService.importTableKnowledge(tableConfigDto);
+    }
 }

@@ -23,11 +23,13 @@ export default defineConfig({
             output: {
                 globals: {
                     react: 'react',
-                    'react-dom': 'ReactDOM'
+                    'react-dom': 'ReactDOM',
+                    '@fit-elsa/elsa-core': '@fit-elsa/elsa-core'
                 }
             }
-        }
-  },
+        },
+        outDir: "build"
+    },
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url))

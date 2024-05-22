@@ -6,25 +6,25 @@
     position: relative;
     display: flex;
     align-items: center;
-    background: 	#ffffff;
-    height: 56px;
+    background: rgb(240, 242, 244);
+    height: 40px;
     justify-content: space-between;
     box-sizing: border-box;
-    padding: 0 32px;
-    border-bottom: 1px solid #EBEBEB;
+    margin-bottom: 12px;
     .logo {
       display: flex;
       justify-content: center;
       align-items: center;
       img {
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         border-radius: 4px;
         cursor: pointer;
       }
       .header-text {
-        margin: 0 16px;
-        color: #71757f;
+        margin: 0 8px;
+        color: #000000;
+        font-size: 20px;
       }
       svg {
         width: 16px;
@@ -60,9 +60,10 @@
   }
   .layout-content {
     display: flex;
-    height: calc(100vh - 56px);
+    height: calc(100vh - 110px);
+    position: relative;
     .chat-icon {
-      position: fixed;
+      position: absolute;
       background-color: #ffffff;
       right: 30px;
       top: 90px;
@@ -95,5 +96,17 @@
   .ant-layout-header,.ant-layout-content {
     background-color: transparent !important;
     padding: 0 !important;
+  }
+}
+.home-app {
+  background-image: url('../assets//images/bg3.png') ;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  .ant-layout-header {
+    //height: 0 !important;
+  }
+  .ant-layout-header,.ant-layout-content {
+    //background-color: transparent !important;
+    //padding: 0 !important;
   }
 }

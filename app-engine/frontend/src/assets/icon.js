@@ -1,27 +1,38 @@
 
-import Icon, {UploadOutlined} from "@ant-design/icons";
-import React from "react";
-import Edit from "./svg/edit.svg";
-import Clear from "./svg/clear.svg";
-import Send from "./svg/send.svg";
-import SendActive from "./svg/send-active.svg";
-import AddFlow from "./svg/add-flow.svg";
-import LeftArrow from "./svg/left-arrow.svg";
-import Start from "./svg/start.svg";
-import DataRetrieval from "./svg/data-retrieval.svg";
-import Llm from "./svg/llm.svg";
-import End from "./svg/end.svg";
-import Api from "./svg/api.svg";
-import Flow from "./svg/flow.svg";
-import Talk from "./svg/talk.svg";
-import TalkFlow from "./svg/talk2.svg";
-import ConfigFlow from "./svg/config2.svg";
-import ManualCheck from "./svg/manual-check.svg";
-import DownLoad from "./svg/download.svg";
-import FullScreen from "./svg/full.svg";
-import User from "./svg/user.svg";
-import If from "./svg/if.svg";
-import Fit from "./svg/fit.svg";
+import Icon, {UploadOutlined} from '@ant-design/icons';
+import React from 'react';
+import Edit from './svg/edit.svg';
+import Clear from './svg/clear.svg';
+import Send from './svg/send.svg';
+import SendActive from './svg/send-active.svg';
+import AddFlow from './svg/add-flow.svg';
+import LeftArrow from './svg/left-arrow.svg';
+import Start from './svg/start.svg';
+import DataRetrieval from './svg/data-retrieval.svg';
+import Llm from './svg/llm.svg';
+import End from './svg/end.svg';
+import Api from './svg/api.svg';
+import Flow from './svg/flow.svg';
+import Talk from './svg/talk.svg';
+import TalkFlow from './svg/talk2.svg';
+import ConfigFlow from './svg/config2.svg';
+import ManualCheck from './svg/manual-check.svg';
+import DownLoad from './svg/download.svg';
+import FullScreen from './svg/full.svg';
+import User from './svg/user.svg';
+import If from './svg/if.svg';
+import Fit from './svg/fit.svg';
+import Link from './images/ai/link.svg';
+import At from './images/ai/at.svg';
+import Panle from './images/ai/panel.svg';
+import PanleClose from './images/ai/panel-active.svg';
+import AppBox from './svg/app-box.svg';
+import CreateApp from './svg/create-app.svg';
+import TabLeft from './images/ai/icon1.svg';
+import TabRight from './images/ai/icon2.svg';
+import Audio from './images/ai/audio.svg';
+import Avatar from './images/avatar-default.svg';
+import AppDefault from './svg/app-default.svg';
 
 // 编辑按钮
 const EditIcon = (props) => <Icon component={() => (<Edit/>)} {...props} />;
@@ -46,6 +57,18 @@ const ConfigFlowIcon = (props) => <Icon component={() => (<ConfigFlow/>)} {...pr
 const DownLoadIcon = (props) => <Icon component={() => (<DownLoad/>)} {...props} />;
 const FullScreenIcon = (props) => <Icon component={() => (<FullScreen/>)} {...props} />;
 const UserIcon = (props) => <Icon component={() => (<User/>)} {...props} />;
+const LinkIcon = (props) => <Icon component={() => (<Link/>)} {...props} />;
+const AtIcon = (props) => <Icon component={() => (<At/>)} {...props} />;
+const PanleIcon = (props) => <Icon component={() => (<Panle/>)} {...props} />;
+const PanleCloseIcon = (props) => <Icon component={() => (<PanleClose/>)} {...props} />;
+const AppBoxIcon = (props) => <Icon component={() => (<AppBox/>)} {...props} />;
+const CreateAppIcon = (props) => <Icon component={() => (<CreateApp/>)} {...props} />;
+const TabLeftIcon = (props) => <Icon component={() => (<TabLeft/>)} {...props} />;
+const TabRightIcon = (props) => <Icon component={() => (<TabRight/>)} {...props} />;
+const AudioIcon = (props) => <Icon component={() => (<Audio/>)} {...props} />;
+const AvatarIcon = (props) => <Icon component={() => (<Avatar />)} {...props} />;
+const AppDefaultIcon = (props) => <Icon component={() => (<AppDefault />)} {...props} />;
+
 export {
   EditIcon,
   ClearIcon,
@@ -68,6 +91,17 @@ export {
   FullScreenIcon,
   UserIcon,
   IfIcon,
-  FitIcon
+  FitIcon,
+  LinkIcon,
+  AtIcon,
+  PanleIcon,
+  PanleCloseIcon,
+  AppBoxIcon,
+  CreateAppIcon,
+  TabLeftIcon,
+  TabRightIcon,
+  AudioIcon,
+  AvatarIcon,
+  AppDefaultIcon
 }
 

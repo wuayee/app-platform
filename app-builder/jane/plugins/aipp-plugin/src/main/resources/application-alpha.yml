@@ -12,6 +12,8 @@ aipp:
   agent_mind_aipp: e1001060e7074744b33c6ecc21579cc3
 jane:
   endpoint: https://jane-alpha.huawei.com
+app-engine:
+  endpoint: http://80.11.128.66:31111
 elsa:
   endpoint: https://fit-elsa-alpha.lab.huawei.com
   elsaKey: a90ae902e83540b3b69ceeec38ea0468

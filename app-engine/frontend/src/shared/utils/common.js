@@ -51,7 +51,7 @@ export const useMergeState = (initialState) => {
 
 // 内容格式转换
 export const trans = (text) => {
-  if (text.trim().length) {
+  if (text?.trim().length) {
     return DOMPurify.sanitize(marked.parse(text.replaceAll('<br>', '')));
   }
   return '';
@@ -104,7 +104,6 @@ export const toClipboard = (val) => {
 export const debounce = (fn, wait) => {
   let timer
   return (...args) => {
-    // @ts-ignore
     const context = this
     if (timer) clearTimeout(timer)
     timer = setTimeout(() => {

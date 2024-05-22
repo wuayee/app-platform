@@ -86,6 +86,15 @@ public class AippFlowEndCallback implements FlowCallbackService {
         String aippInstId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
         this.metaInstanceService.patchMetaInstance(versionId, aippInstId, declarationInfo, context);
 
+        // 持久化aipp实例表单记录
+        if (StringUtils.isNotEmpty(endFormId) && StringUtils.isNotEmpty(endFormVersion)) {
+            AippLogData logData =
+                    Utils.buildLogDataWithFormData(this.formRepository, endFormId, endFormVersion, businessData);
+            Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
+        }
+        this.logFinalOutput(contexts, businessData);
+
+        // 子流程 callback 主流程
         String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
         String parentCallbackId = ObjectUtils.cast(businessData.get(AippConst.PARENT_CALLBACK_ID));
         if (StringUtils.isNotEmpty(parentInstanceId) && StringUtils.isNotEmpty(parentCallbackId)) {
@@ -94,15 +103,6 @@ public class AippFlowEndCallback implements FlowCallbackService {
                     .format(SerializationFormat.CBOR)
                     .invoke(contexts);
         }
-
-        // 持久化aipp实例表单记录
-        if (StringUtils.isNotEmpty(endFormId) && StringUtils.isNotEmpty(endFormVersion)) {
-            AippLogData logData =
-                    Utils.buildLogDataWithFormData(this.formRepository, endFormId, endFormVersion, businessData);
-            Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
-        }
-
-        this.logFinalOutput(contexts, businessData);
     }
 
     private void logFinalOutput(List<Map<String, Object>> contexts, Map<String, Object> businessData) {
