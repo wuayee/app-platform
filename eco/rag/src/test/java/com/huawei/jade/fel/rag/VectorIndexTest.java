@@ -12,17 +12,19 @@ import com.huawei.jade.fel.rag.store.ChunkVectorStore;
 import com.huawei.jade.fel.rag.store.config.VectorConfig;
 import com.huawei.jade.fel.rag.store.connector.VectorConnector;
 import com.huawei.jade.fel.rag.store.query.Expression;
+import com.huawei.jade.fel.rag.store.query.QueryParams;
 import com.huawei.jade.fel.rag.store.query.VectorQuery;
 
 import org.junit.jupiter.api.Test;
 
+import javafx.util.Pair;
+
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import javafx.util.Pair;
 
 /**
  * VectorIndex模块测试。
@@ -41,6 +43,11 @@ public class VectorIndexTest {
         }
 
         @Override
+        public Long getCount(VectorConfig conf) {
+            return null;
+        }
+
+        @Override
         public void put(List<Map<String, Object>> records, VectorConfig conf) {
         }
 
@@ -55,6 +62,11 @@ public class VectorIndexTest {
 
         @Override
         public void dropCollection(VectorConfig conf) {
+        }
+
+        @Override
+        public List<Map<String, Object>> scalarQuery(QueryParams queryParam, VectorConfig conf) {
+            return Collections.emptyList();
         }
 
         @Override

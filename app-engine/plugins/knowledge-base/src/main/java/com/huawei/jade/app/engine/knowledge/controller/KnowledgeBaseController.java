@@ -21,6 +21,7 @@ import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
 import com.huawei.jade.app.engine.knowledge.dto.KStorageDto;
 import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
+import com.huawei.jade.app.engine.knowledge.dto.KbChunkQueryDto;
 import com.huawei.jade.app.engine.knowledge.dto.KbGenerateConfigDto;
 import com.huawei.jade.app.engine.knowledge.params.RepoQueryParam;
 import com.huawei.jade.app.engine.knowledge.service.KRepoService;
@@ -258,6 +259,16 @@ public class KnowledgeBaseController {
         kbGenerateService.importKnowledge(fileConfigDto);
     }
 
+    /**
+     * 获取向量知识信息
+     *
+     * @param chunkQueryDto 查询参数
+     * @return 查询结果
+     */
+    @PostMapping(path = "/chunks")
+    public PageResultVo<String> getChunk(@RequestBody KbChunkQueryDto chunkQueryDto) {
+        return kbGenerateService.getChunks(chunkQueryDto);
+    }
 
     /**
      * 导入表格类型知识接口
