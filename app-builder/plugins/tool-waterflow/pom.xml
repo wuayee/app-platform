@@ -9,6 +9,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
+    <groupId>com.huawei.fit.jade.plugin</groupId>
     <artifactId>tool-waterflow</artifactId>
 
     <dependencies>
@@ -25,7 +26,7 @@
         <!-- Services -->
         <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>
-            <artifactId>store-service</artifactId>
+            <artifactId>tool-service</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>

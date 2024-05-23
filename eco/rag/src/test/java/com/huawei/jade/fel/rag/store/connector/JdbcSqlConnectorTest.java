@@ -38,6 +38,7 @@ class JdbcSqlConnectorTest {
 
     @Test
     @DisplayName("给定表名与列信息在RDB表中创建索引")
+    @Disabled
     public void given_tableName_and_column_index_info_should_create_index() {
         ConnectorProperties prop = new ConnectorProperties("51.36.139.24", 5433, "postgres", "postgres");
         JdbcSqlConnector conn = new JdbcSqlConnector(JdbcType.POSTGRESQL, prop, "wqtest");

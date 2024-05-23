@@ -4,6 +4,8 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
+import static com.huawei.fit.jober.aipp.init.AippComponentInitiator.COMPONENT_DATA;
+
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
@@ -16,17 +18,14 @@ import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.store.model.query.ToolTagQuery;
-import com.huawei.jade.store.model.transfer.ToolData;
-import com.huawei.jade.store.service.ToolService;
+import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
+import com.huawei.jade.carver.tool.model.transfer.ToolData;
+import com.huawei.jade.carver.tool.service.ToolService;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static com.huawei.fit.jober.aipp.init.AippComponentInitiator.COMPONENT_DATA;
 
 /**
  * @author 邬涨财 w00575064
@@ -44,7 +43,10 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public StoreNodeConfigResDto getBasicNodesAndTools(int pageNum, int pageSize) {
-        return StoreNodeConfigResDto.builder().toolList(this.buildToolNodesConfig(AppCategory.FIT, pageNum, pageSize)).basicList(this.buildBasicNodesConfig()).build();
+        return StoreNodeConfigResDto.builder()
+                .toolList(this.buildToolNodesConfig(AppCategory.FIT, pageNum, pageSize))
+                .basicList(this.buildBasicNodesConfig())
+                .build();
     }
 
     private List<ToolData> buildToolNodesConfig(AppCategory appCategory, int pageNum, int pageSize) {
@@ -68,13 +70,22 @@ public class StoreServiceImpl implements StoreService {
             return Collections.emptyList();
         }
         List<AppBuilderAppPO> appInfos = appBuilderAppMapper.selectWithStoreId(storeIds);
-        Map<String, StoreWaterFlowDto> appInfoMap = appInfos.stream().
-                collect(Collectors.toMap(info -> JsonUtils.parseObject(info.getAttributes()).get("store_id").toString(),
-                info -> StoreWaterFlowDto.builder().version(info.getVersion()).id(info.getId()).tenantId(info.getTenantId()).build()));
-        return waterFlows.stream().map(waterFlow -> buildWaterFlowInfo(waterFlow, appInfoMap)).collect(Collectors.toList());
+        Map<String, StoreWaterFlowDto> appInfoMap = appInfos.stream()
+                .collect(Collectors.toMap(info -> JsonUtils.parseObject(info.getAttributes())
+                                .get("store_id")
+                                .toString(),
+                        info -> StoreWaterFlowDto.builder()
+                                .version(info.getVersion())
+                                .id(info.getId())
+                                .tenantId(info.getTenantId())
+                                .build()));
+        return waterFlows.stream()
+                .map(waterFlow -> buildWaterFlowInfo(waterFlow, appInfoMap))
+                .collect(Collectors.toList());
     }
 
-    private AppBuilderWaterFlowInfoDto buildWaterFlowInfo(ToolData waterFlow, Map<String, StoreWaterFlowDto> appInfoMap) {
+    private AppBuilderWaterFlowInfoDto buildWaterFlowInfo(ToolData waterFlow,
+            Map<String, StoreWaterFlowDto> appInfoMap) {
         String uniqueName = waterFlow.getUniqueName();
         StoreWaterFlowDto appInfo = appInfoMap.get(uniqueName);
         return AppBuilderWaterFlowInfoDto.builder()
