@@ -29,7 +29,7 @@ const TableSecondForm = ({ form }: props) => {
 
         for (let j = 0; j < keys.length; j++) {
           const key = keys[index];
-          if(!item[key]) {
+          if(!item[key] &&key !=='description' && key !=='indexType' && key !== 'vectorService') {
             return Promise.reject(new Error('值不能为空'));
           }
         }

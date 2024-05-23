@@ -65,7 +65,7 @@ const IndustryTerminology = () => {
         }}>
             <div className='detail-header-return' style={{
               cursor: 'pointer'
-            }} >
+            }} onClick={()=> navigate(-1)}>
               {<KnowledgeIcons.leftArrow/>}
             </div>
             <div className='detail-header-info' style={{

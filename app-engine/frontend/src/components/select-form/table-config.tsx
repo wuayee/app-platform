@@ -3,12 +3,14 @@ import type { TableProps } from 'antd';
 import { Button, Form, Input, InputNumber, Select, Space, Table, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import './style.scoped.scss';
+import { getKnowledgeTableType } from '../../shared/http/knowledge';
 
 interface Item {
   key: string;
   colName: string;
   dataType: string;
   vectorService?: string;
+  description?: string;
   indexType: string;
 }
 
@@ -19,37 +21,20 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   inputType: 'select' | 'input';
   record: Item;
   index: number;
+
+  options?: {value: string, label: string}[];
 }
 
 const options=[
-  { value: 'other', label: '其他索引' },
-  { value: 'vector', label: '向量索引' },
+  { value: 'NORMAL', label: '其他索引' },
+  { value: 'VECTOR', label: '向量索引' },
+  { value: 'NONE', label: '无' },
 ];
 
 const dataOptions=[
   { value: 'VARCHAR', label: '字符' },
   { value: 'NUMBER', label: '数字' },
 ];
-
-const vertorServiceOptions = [
-  { value: 'bce-zh', label: 'bce-zh' },
-];
-
-// 根据列id获取option
-const getOptionsByColId = (id: 'dataType' | 'indexType' | 'vectorService') =>  {
-  if(id === 'dataType'){
-    return dataOptions;
-  }
-
-  if(id === 'indexType'){
-    return options;
-  }
-
-  if(id === 'vectorService') {
-    return vertorServiceOptions;
-  }
-}
-
 
 const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
   editing,
@@ -59,6 +44,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
   record,
   index,
   children,
+  options,
   ...restProps
 }) => {
   const form = Form.useFormInstance();
@@ -72,18 +58,18 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
   const inputNode =
     inputType === 'select' ? (
       <Select
-      disabled={dataIndex==='vectorService' && indexTypeChange ==='other' ? true: false}
-        options={getOptionsByColId(dataIndex as any)}
+        disabled={dataIndex!=='vectorService'? false : indexTypeChange ==='VECTOR' ? false: true }
+        options={options}
       />
     ) : (
       <Input />
     );
-  const reuired = dataIndex !== 'vectorService' ? [
+  const reuired = dataIndex === 'vectorService' || dataIndex === 'description'  ? [] : [
     {
       required: true,
       message: `Please Input ${title}!`,
     },
-  ] : []
+  ] 
   return (
     <td {...restProps}>
       {editing ? (
@@ -113,6 +99,25 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
   const [data, setData] = useState(value);
   const [editingKey, setEditingKey] = useState('');
 
+  const [serviceOptions, setServiceOptions] = useState([]);
+
+  const getOptionsByColId = (id: 'dataType' | 'indexType' | 'vectorService' | string) =>  {
+    if(id === 'dataType'){
+      return dataOptions;
+    }
+  
+    if(id === 'indexType'){
+      return options;
+    }
+  
+    if(id === 'vectorService') {
+      return serviceOptions;
+    }
+
+    return []
+  }
+
+  // 根据列id获取option
   const triggerChange = (changedValue: Item[]) => {
     onChange?.([...changedValue]);
   };
@@ -205,7 +210,7 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
       editable: true,
       render: (_: any, record: Item) => {
         return (<>
-          {vertorServiceOptions.find(item=> item.value === _)?.label || ''}
+          {serviceOptions.find(item=> item.value === _)?.label || ''}
         </>)
       }
     },
@@ -251,9 +256,31 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
+        options: getOptionsByColId(col.dataIndex),
       }),
     };
   });
+
+  // 获取向量化服务类型
+  const getTableType = async()=> {
+    try {
+      let typeList = await getKnowledgeTableType();
+      if(typeList && typeList.length) {
+        setServiceOptions(typeList.filter(item => item.type === 'EMBEDDING').map(type=> ({
+          value: type.id,
+          label: type.name
+        })))
+
+      }
+      }
+     catch (error) {
+      
+    }
+  }
+
+  useEffect(() => {
+    getTableType()
+  }, []);
 
   return (
     <Form form={form} component={false}>

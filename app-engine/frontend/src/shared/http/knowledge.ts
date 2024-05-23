@@ -78,6 +78,56 @@ export function getKnowledgeTableById(id: string) {
   return post(url, {});
 }
 
+// 根据知识表id 知识库id 文件名查询列
+export function getTableColums(data: {
+  repositoryId: string,
+  knowledgeTableId: string,
+  fileName?: string,
+}) {
+  const url = '/knowledge/table-knowledge/columns';
+  return post(url, data)
+}
+
+// 创建表格逻辑
+export function createTableColumns(data: {
+  repositoryId: string,
+  knowledgeTableId: string,
+  fileName?: string,
+  columns: {
+    name: string,
+    dataType: string,
+    indexType: string,
+    embedServiceId: string,
+    desc: string,
+  }[]
+}) {
+  const url = '/knowledge/table-knowledge/construct';
+  return post(url, data)
+}
+
+// 查询文本chunks
+export function getTextList(filterConfig: {
+  // 知识库id
+  knowledgeId: string,
+
+  // 知识表id
+  tableId: string,
+
+  // 分页
+  pageNo: number,
+
+  // 分页大小
+  pageSize: number,
+
+  // 查询关键字
+  content: string,
+
+  // topK
+  topK: number,
+}) {
+  // 如果有content 就设置topk为12
+}
+
 export function uploadLocalFile(
   knowledgeId: number | string,
   tableId: number | string,

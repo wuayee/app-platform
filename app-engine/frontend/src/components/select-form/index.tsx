@@ -33,7 +33,7 @@ const SelectForm = ({ currentSteps, type, formDataSource, formStepSecond }: inpu
       {currentSteps === 1 &&
         (type === 'text' ? <TextSplitClear form={formStepSecond} /> : <TableSecondForm form={formStepSecond}/>)}
       {currentSteps === 2 &&
-        (type === 'text' ? (
+        ( true ? (
           <Empty
             image='https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg'
             imageStyle={{ height: 60 }}
@@ -46,7 +46,6 @@ const SelectForm = ({ currentSteps, type, formDataSource, formStepSecond }: inpu
         ) : (
           <Progress percent={30} />
         ))}
-      {currentSteps === 3 && <Progress percent={30} />}
     </>
   );
 };
