@@ -43,9 +43,16 @@
     .app_card_footer {
         border-top: 1px solid rgb(202, 218, 242);
         display: flex;
-        justify-content: flex-end;
-        .operator{
-            padding-top: 10px;
+        align-items: center;
+        padding-top: 10px;
+        .left{
+            display: flex;
+            align-items: center;
+            .icon_box {
+                margin-right: 40px;
+                color: rgb(94, 103, 116);
+            }
         }
+        .operator{}
     }
 }

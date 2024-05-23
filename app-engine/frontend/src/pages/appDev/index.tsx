@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Divider, Input, Pagination, Tabs } from 'antd';
 import { Icons } from '../../components/icons';
-import { queryAppsApi } from '../../shared/http/apps.js';
+import { deleteAppApi, queryAppDevApi } from '../../shared/http/appDev.js';
 import AppCard from '../../components/appCard';
 import './index.scoped.scss';
 import { debounce } from '../../shared/utils/common';
+import EditModal from '../components/edit-modal';
 import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
 
-const Apps: React.FC = () => {
+const AppDev: React.FC = () => {
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   const navigate = useNavigate();
 
@@ -15,15 +16,22 @@ const Apps: React.FC = () => {
   const [appData, setAppData] = useState([]);
   async function queryApps() {
     const params = {
-      pageNum: pageNo.current,
-      pageSize: 10,
-      includeTags: 'APP',
+      offset: (pageNo.current - 1) * 10,
+      limit: 10,
     };
-    const res: any = await queryAppsApi(tenantId, params);
+    const res: any = await queryAppDevApi(tenantId, params);
     if (res.code === 0) {
-      const { data, total } = res;
-      setAppData(data);
-      setTotal(total);
+      const { results, range } = res.data;
+      const arr = results.map((v: any) => {
+        const { description, icon } = v.attributes;
+        return {
+          ...v,
+          description,
+          icon,
+        };
+      });
+      setAppData(arr);
+      setTotal(range.total);
     }
   }
   useEffect(() => {
@@ -46,6 +54,27 @@ const Apps: React.FC = () => {
       queryApps();
       return page;
     });
+  }
+
+  // 创建
+  let modalRef: any = useRef();
+  const [modalInfo, setModalInfo] = useState({});
+  const create = () => {
+    setModalInfo(() => {
+      modalRef.current.showModal();
+      return {
+        name: '',
+        attributes: {
+          description: '',
+          greeting: '',
+          icon: '',
+          app_type: '编程开发',
+        },
+      };
+    });
+  };
+  function addAippCallBack(appId: string) {
+    navigate(`/app/${tenantId}/detail/${appId}`);
   }
 
   // 搜索
@@ -82,13 +111,35 @@ const Apps: React.FC = () => {
   return (
     <div className=' apps_root'>
       <div className='apps_header'>
-        <div className='apps_title'>应用市场</div>
+        <div className='apps_title'>应用开发</div>
       </div>
       <div className='apps_main'>
+        <div className='tabs'>
+          <Tabs
+            onChange={tabChange}
+            defaultActiveKey={activkey}
+            items={[
+              {
+                label: '我的应用',
+                key: '1',
+                children: '',
+              },
+              {
+                label: '团队应用',
+                key: '2',
+                children: '',
+                disabled: true,
+              },
+            ]}
+          />
+        </div>
         <div className='operatorArea'>
+          <Button type='primary' onClick={create}>
+            创建
+          </Button>
           <Input
             placeholder='搜索'
-            style={{ width: '200px', height: '35px' }}
+            style={{ width: '200px', height: '35px', marginLeft: '16px' }}
             prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
             onChange={(e) => handleSearch(e.target.value)}
           />
@@ -96,7 +147,7 @@ const Apps: React.FC = () => {
         <div className='card_list'>
           {appData.map((item: any) => (
             <div key={item.id} onClick={(e) => clickCard(item, e)}>
-              <AppCard cardInfo={item} clickMore={clickMore} showOptions={false} />
+              <AppCard cardInfo={item} clickMore={clickMore} />
             </div>
           ))}
         </div>
@@ -111,7 +162,14 @@ const Apps: React.FC = () => {
           />
         </div>
       </div>
+      {/*创建弹窗*/}
+      <EditModal
+        type='add'
+        modalRef={modalRef}
+        aippInfo={modalInfo}
+        addAippCallBack={addAippCallBack}
+      />
     </div>
   );
 };
-export default Apps;
+export default AppDev;
