@@ -100,8 +100,12 @@ def _heart_beat_task(queue: multiprocessing.Queue):
     while True:
         try:
             queue.get(timeout=_interval() / 1000)
+            sys_plugin_logger.info("heart beat task will terminated gracefully.")
             break
         except Empty:
+            if platform.system() != 'Windows' and not multiprocessing.parent_process().is_alive():
+                sys_plugin_logger.info("heart beat task will terminated due to parent process died.")
+                break
             _try_heart_beat_once()
     sys_plugin_logger.info("heart beat task exit.")
 
