@@ -18,6 +18,7 @@ import Model from "../pages/model";
 import ModelDetail from "../pages/model/model-detail";
 import Apps2 from "../pages/apps/index2";
 import PluginMarket from '../pages/plugin-market';
+import IndustryTerminology from "../pages/knowledge-base/knowledge-detail/industry-terminology";
 
 export type MenuItem = Required<MenuProps>["items"][number] & {
   component?: (() => ReactElement) | React.FC<any>;
@@ -171,6 +172,13 @@ export const routeList: MenuItem[] = [
             icon: Icons.app({}),
             label: "导入数据",
             component: KnowledgeBaseDetailImportData,
+            hidden: true,
+          },
+          {
+            key: "/knowledge-base/knowledge-detail/industry-terminology",
+            icon: Icons.app({}),
+            label: "详情",
+            component: IndustryTerminology,
             hidden: true,
           },
         ]

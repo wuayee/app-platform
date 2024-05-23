@@ -72,6 +72,12 @@ export function updateKnowledgeTable(data: { name: string; id: string }) {
   return post(url, data);
 }
 
+// 根据知识表id 查询知识表
+export function getKnowledgeTableById(id: string) {
+  const url = `${KNOWLEDGE_URL}/tables/${id}`;
+  return post(url, {});
+}
+
 export function uploadLocalFile(
   knowledgeId: number | string,
   tableId: number | string,
