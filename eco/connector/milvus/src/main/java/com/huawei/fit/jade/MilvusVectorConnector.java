@@ -49,6 +49,7 @@ import io.milvus.param.dml.QueryParam;
 import io.milvus.param.dml.SearchParam;
 import io.milvus.param.index.CreateIndexParam;
 import io.milvus.response.DescCollResponseWrapper;
+import io.milvus.response.GetCollStatResponseWrapper;
 import io.milvus.response.QueryResultsWrapper;
 import io.milvus.response.SearchResultsWrapper;
 import javafx.util.Pair;
@@ -185,7 +186,8 @@ public class MilvusVectorConnector implements VectorConnector {
             throw new IllegalResponseException(response.getMessage());
         }
 
-        return Long.parseLong(response.getData().getStatsList().get(0).getValue());
+        GetCollStatResponseWrapper wrapperCollectionStatistics = new GetCollStatResponseWrapper(response.getData());
+        return wrapperCollectionStatistics.getRowCount();
     }
 
     /**
