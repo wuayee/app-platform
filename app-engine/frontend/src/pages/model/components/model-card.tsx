@@ -13,7 +13,7 @@ const ModelCard = ({ modelItem }: { modelItem: ModelItem }) => {
       label: (
         <div
           style={{
-            width: 200,
+            width: 40,
           }}
         >
           删除

@@ -4,6 +4,7 @@ import { HashRouter, Route, useLocation, Routes } from "react-router-dom";
 import GoBack from "../../../components/go-back/GoBack";
 
 import DetailCard from "./components/detail-card";
+import BarCard from "./components/bar-card";
 import { ModelItem } from "../cards-tab";
 import { getModelList } from "../../../shared/http/model";
 
@@ -33,6 +34,7 @@ const ModelDetail = () => {
     replicas: 0,
     npu_flag: true,
     xpu_consume: 0,
+    port: 0
   };
   const [modelItem, setModelItem] = useState<ModelItem>(obj);
   const location = useLocation();
@@ -198,6 +200,27 @@ const ModelDetail = () => {
           />
           <DetailCard
             data={{ title: "速度", content: modelItem.speed, unit: "token/s" }}
+            style={{
+              borderRadius: "4px",
+            }}
+          />
+        </div>
+        <div
+          className="operatorArea"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: 10,
+          }}
+        >
+          <BarCard
+            data={{ title: "数据表现", content: modelItem }}
+            style={{
+              borderRadius: "4px",
+            }}
+          />
+          <BarCard
+            data={{ title: "Token", content: modelItem }}
             style={{
               borderRadius: "4px",
             }}
