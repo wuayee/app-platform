@@ -87,6 +87,15 @@ export function uploadLocalFile(
   });
 }
 
+export function deleteLocalFile(
+  knowledgeId: number | string,
+  tableId: number | string,
+  filename: string
+) {
+  const url = `${KNOWLEDGE_URL}/${knowledgeId}/table/${tableId}/file-delete`;
+  return post(url, { filename });
+}
+
 export function textSegmentWash(data: {
   knowledgeId: number;
   tableId: number;
@@ -98,4 +107,11 @@ export function textSegmentWash(data: {
 }) {
   const url = `${KNOWLEDGE_URL}/knowledge/import-knowledge/text`;
   return post(url, data);
+}
+
+const { PLUGIN_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
+
+export function getPlugins() {
+  const url = `${PLUGIN_URL}/tools`;
+  return get(url);
 }

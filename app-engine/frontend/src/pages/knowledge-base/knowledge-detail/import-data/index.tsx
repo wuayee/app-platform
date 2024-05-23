@@ -128,17 +128,24 @@ const KnowledgeBaseDetailImportData = () => {
         }
         formValue.current.dataSource = { ...res };
 
-        // for (let i = 0; i < res.selectedFile; ++i) {
-          const file = res.selectedFile[0];
-          await uploadLocalFile(id, table_id, file, file.name);
-        // }
-
         setCurrentSteps(currentSteps + 1);
       }
 
       if (currentSteps === 1) {
         const res = await formStepSecond.validateFields();
         formValue.current.second = { ...res };
+        if (table_type === 'text') {
+          // 文本分段清洗
+          const fileNames = formValue.current.dataSource?.selectedFile?.map((file) => file.name);
+          const secondRes = formValue.current.second;
+          await textSegmentWash({
+            knowledgeId: id,
+            tableId: table_id,
+            fileNames,
+            ...secondRes,
+          });
+        }
+
         setCurrentSteps(currentSteps + 1);
       }
     } catch (error) {}
@@ -150,21 +157,7 @@ const KnowledgeBaseDetailImportData = () => {
     }
   }, []);
 
-  const handleSubmit = async () => {
-    if(table_type === 'text') {
-      const fileNames = formValue.current.dataSource?.selectedFile?.map(file=>file.name);
-
-      // await textSegmentWash({
-      //   knowledgeId: id,
-      //   tableId: table_id,
-      //   fileNames,
-      //   splitType: string;
-      //   chunkSize: number;
-      //   chunkOverlap: number;
-      //   operatorIds: string[];
-      // })
-    }
-  };
+  const handleSubmit = async () => {};
 
   return (
     <>
@@ -177,89 +170,89 @@ const KnowledgeBaseDetailImportData = () => {
             ></BreadcrumbSelf>
           </div>
         </div>
-        {/* <div className='import-data-wrapper'> */}
-        <div
-          className='aui-block'
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 8,
-          }}
-        >
+        <div className='import-data-wrapper'>
           <div
-            style={{
-              width: '100%',
-              flex: 1,
-              background: '#fff',
-              borderRadius: '8px 8px 0px 0px',
-              padding: '24px 24px 0 25px',
-            }}
-          >
-            <Steps current={currentSteps} items={steps} />
-            <SelectForm
-              currentSteps={currentSteps}
-              type={table_type}
-              formDataSource={formDataSource}
-              formStepSecond={formStepSecond}
-              segmentData={segmentData}
-            />
-          </div>
-          <div
+            className='aui-block'
             style={{
               display: 'flex',
-              justifyContent: 'end',
-              gap: 16,
+              flexDirection: 'column',
+              gap: 8,
             }}
           >
-            {currentSteps === 0 && (
-              <Button
-                onClick={onCancle}
-                style={{
-                  borderRadius: 4,
-                }}
-              >
-                取消
-              </Button>
-            )}
+            <div
+              style={{
+                width: '100%',
+                flex: 1,
+                background: '#fff',
+                borderRadius: '8px 8px 0px 0px',
+                padding: '24px 24px 0 25px',
+              }}
+            >
+              <Steps current={currentSteps} items={steps} />
+              <SelectForm
+                currentSteps={currentSteps}
+                type={table_type}
+                formDataSource={formDataSource}
+                formStepSecond={formStepSecond}
+                segmentData={segmentData}
+              />
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'end',
+                gap: 16,
+              }}
+            >
+              {currentSteps === 0 && (
+                <Button
+                  onClick={onCancle}
+                  style={{
+                    borderRadius: 4,
+                  }}
+                >
+                  取消
+                </Button>
+              )}
 
-            {currentSteps > 0 && (
-              <Button
-                onClick={prevStep}
-                style={{
-                  borderRadius: 4,
-                }}
-              >
-                上一步
-              </Button>
-            )}
+              {currentSteps > 0 && (
+                <Button
+                  onClick={prevStep}
+                  style={{
+                    borderRadius: 4,
+                  }}
+                >
+                  上一步
+                </Button>
+              )}
 
-            {currentSteps < steps.length - 1 && (
-              <Button
-                onClick={nextStep}
-                loading={loading}
-                type='primary'
-                style={{
-                  borderRadius: 4,
-                }}
-              >
-                下一步
-              </Button>
-            )}
+              {currentSteps < steps.length - 1 && (
+                <Button
+                  onClick={nextStep}
+                  loading={loading}
+                  type='primary'
+                  style={{
+                    borderRadius: 4,
+                  }}
+                >
+                  下一步
+                </Button>
+              )}
 
-            {currentSteps === steps.length - 1 && (
-              <Button
-                onClick={handleSubmit}
-                type='primary'
-                style={{
-                  borderRadius: 4,
-                }}
-              >
-                确定
-              </Button>
-            )}
+              {currentSteps === steps.length - 1 && (
+                <Button
+                  onClick={handleSubmit}
+                  type='primary'
+                  style={{
+                    borderRadius: 4,
+                  }}
+                >
+                  确定
+                </Button>
+              )}
+            </div>
           </div>
-          {/* </div> */}
-          {/* <SegmentPreview data={segmentData} /> */}
+          {currentSteps === 1 && table_type === 'text' && <SegmentPreview data={segmentData} />}
         </div>
       </div>
     </>

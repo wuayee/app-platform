@@ -12,36 +12,75 @@ interface props {
 // 选择数据源表单配置
 type FieldType = {
   // 选择清洗类型
-  clearType: 'paragraphed' | 'sentences' | 'token';
+  splitType: 'PARAGRAPH' | 'SENTENCE' | 'TOKEN';
 
   // 文本清洗算子
-  textCleanOperator?: string[];
+  operatorIds?: string[];
 
   // 设置分段数
-  splitCount?: number;
+  chunkSize?: number;
 
   // 设置重叠度
-  repeatNumber?: number;
+  chunkOverlap?: number;
 };
 
 const TextSplitClear = ({ form }: props) => {
   const initialValues: FieldType = {
-    clearType: 'paragraphed',
+    splitType: 'PARAGRAPH',
   };
 
   // 监听文本清洗算子
-  const textCleanOperatorChange = Form.useWatch('textCleanOperator', form);
+  const textCleanOperatorChange = Form.useWatch('operatorIds', form);
 
   // 监听文本分段
-  const textSplit = Form.useWatch('clearType', form);
+  const textSplit = Form.useWatch('splitType', form);
 
-  const options = [
-    { label: '文本清洗算子1', value: 'op1' },
-    { label: '文本清洗算子2', value: 'op2' },
-    { label: '文本清洗算子3', value: 'op3' },
-    { label: '文本清洗算子4', value: 'op4' },
-    { label: '文本清洗算子5', value: 'op5' },
-    { label: '文本清洗算子6', value: 'op6' },
+  const operatorOptions = [
+    {
+      label: '文档目录去除',
+      value: 'com.huawei.eDataMate.operators.content_cleaner_plugin',
+      icon: <KnowledgeIcons.operator />,
+    },
+    {
+      label: '文档表情去除',
+      value: 'com.huawei.eDataMate.operators.emoji_cleaner_plugin',
+      icon: <KnowledgeIcons.operator />,
+    },
+    {
+      label: '多余空格去除',
+      value: 'com.huawei.eDataMate.operators.extra_space_cleaner_plugin',
+      icon: <KnowledgeIcons.operator />,
+    },
+    {
+      label: '全角转半角',
+      value: 'com.huawei.eDataMate.operators.full_width_characters_cleaner_plugin',
+      icon: <KnowledgeIcons.operator />,
+    },
+    {
+      label: 'HTML标签去除',
+      value: 'com.huawei.eDataMate.operators.garble_characters_cleaner_plugin',
+      icon: <KnowledgeIcons.operator />,
+    },
+    {
+      label: '不可见字符去除',
+      value: 'com.huawei.eDataMate.operators.invisible_characters_cleaner_plugin',
+      icon: <KnowledgeIcons.operator />,
+    },
+    {
+      label: '图注表注去除',
+      value: 'com.huawei.eDataMate.operators.legend_cleaner_plugin',
+      icon: <KnowledgeIcons.operator />,
+    },
+    {
+      label: '繁体转简体',
+      value: 'com.huawei.eDataMate.operators.traditional_chinese_plugin',
+      icon: <KnowledgeIcons.operator />,
+    },
+    {
+      label: '文档乱码去除',
+      value: 'com.huawei.eDataMate.operators.unicode_space_cleaner_plugin',
+      icon: <KnowledgeIcons.operator />,
+    },
   ];
 
   const docSegmentOptions = [
@@ -92,12 +131,12 @@ const TextSplitClear = ({ form }: props) => {
           </Radio.Group>
         </Form.Item>
 
-        {textSplit === 'token' ? (
+        {textSplit === 'TOKEN' ? (
           <>
             <Form.Item
               label='设置分段数'
               rules={[{ required: true, message: '输入不能为空' }]}
-              name='splitCount'
+              name='chunkSize'
               style={{
                 marginTop: 16,
               }}
@@ -107,7 +146,7 @@ const TextSplitClear = ({ form }: props) => {
             <Form.Item
               label='重叠度'
               rules={[{ required: true, message: '输入不能为空' }]}
-              name='repeatNumber'
+              name='chunkOverlap'
               style={{
                 marginTop: 16,
               }}
@@ -120,37 +159,26 @@ const TextSplitClear = ({ form }: props) => {
             <Form.Item
               label='选择清洗算子'
               rules={[{ required: true, message: '选择不能为空' }]}
-              name='textCleanOperator'
+              name='operatorIds'
               style={{
                 marginTop: 16,
               }}
             >
-              <Checkbox.Group
-                style={{
-                  display: 'flex',
-                  gap: 14,
-                }}
-              >
-                {options.map((item) => (
-                  <div>
-                    <Checkbox value={item.value} className='checkbox-custom'>
-                      <Card
-                        style={{ width: 257, height: 78, boxSizing: 'border-box' }}
-                        className={
-                          (textCleanOperatorChange || []).includes(item.value)
-                            ? 'active-card'
-                            : 'negative-card'
-                        }
-                      >
-                        <div className='operator-card'>
-                          <div className='operator-card-icon'>
-                            <KnowledgeIcons.operator></KnowledgeIcons.operator>
-                          </div>
-                          <div className='operator-card-label'>{item.label}</div>
-                        </div>
-                      </Card>
-                    </Checkbox>
-                  </div>
+              <Checkbox.Group className='radio-card-group'>
+                {operatorOptions.map((operator) => (
+                  <Checkbox
+                    value={operator.value}
+                    style={{
+                      borderColor: (textCleanOperatorChange || []).includes(operator.value)
+                        ? '#1677ff'
+                        : '',
+                    }}
+                  >
+                    <div className='radio-card-item'>
+                      {operator.icon}
+                      <span>{operator.label}</span>
+                    </div>
+                  </Checkbox>
                 ))}
               </Checkbox.Group>
             </Form.Item>

@@ -5,6 +5,7 @@ import { KnowledgeIcons } from '../icons';
 import './style.scoped.scss';
 import CustomTable from './custom-table';
 import LocalUpload from './local-upload';
+import { getPlugins } from '../../shared/http/knowledge';
 
 interface props {
   type: 'text' | 'table';
@@ -34,7 +35,7 @@ type FieldType = {
   tableCustom?: any[];
 };
 
-const DataSourceStyle = {
+const DataSourceStyle: { [key: string]: React.CSSProperties } = {
   FormItem: {
     marginTop: 16,
     width: 800,
@@ -81,7 +82,7 @@ const SelectDataSource = ({ type, form }: props) => {
   return (
     <>
       <div>
-        <Form<FieldType> layout={'vertical'} form={form} initialValues={initialValues}>
+        <Form<FieldType> layout='vertical' form={form} initialValues={initialValues}>
           <Form.Item name='datasourceType' style={DataSourceStyle.FormItem}>
             <Radio.Group className='radio-card-group'>
               {dataSourceOptions.map((option) => (
