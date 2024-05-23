@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import type { InputRef, TableColumnsType, TableColumnType } from 'antd';
-import { Button, Input, Pagination, Space, Table } from 'antd';
+import { Button, Input, Pagination, Space, Table} from 'antd';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 
 const handleSearch = (
@@ -66,13 +66,13 @@ export const getColumnSearchProps = (
   },
 });
 
-const LiveUiTable: React.FC<params> = (
+const TableHW: React.FC<params> = (
   params,
 ) => {
   return(
-  <div>
     <Table
       {...params}
+        virtual
       pagination={{
         position: ['bottomRight'],
         size: 'small',
@@ -83,7 +83,6 @@ const LiveUiTable: React.FC<params> = (
         onChange: (pageNo, pageSize) => {},
       }}
     />
-  </div>
 )};
 
-export default LiveUiTable;
+export default TableHW;

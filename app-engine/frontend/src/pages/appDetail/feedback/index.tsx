@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Space, DatePicker, Drawer } from 'antd';
 import './style.scoped.scss';
 import { CloseOutlined } from '@ant-design/icons';
-import LiveUiTable, { getColumnSearchProps } from '../../../components/table';
+import TableHW, { getColumnSearchProps } from '../../../components/table';
 import { feedbackType } from './model';
 import { AppIcons } from '../../../components/icons/app';
 
@@ -145,7 +145,7 @@ const FeedBack = () => {
         />
         <Button type='primary'>导出</Button>
       </div>
-      <LiveUiTable dataSource={data} columns={columns} onChange={handleChange} scroll={{ y: 'calc(100vh - 320px)' }}/>
+      <TableHW dataSource={data} columns={columns} onChange={handleChange} scroll={{ y: 'calc(100vh - 320px)' }}/>
       <Drawer
         title='反馈详情'
         placement='right'
