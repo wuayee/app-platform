@@ -13,6 +13,7 @@ export const httpUrlMap = {
     MODEL_URL: '/modelApi',
     APP_URL: '/app',
     MODEL_LIST_URL: '/v1',
+    PLUGIN_URL: '/store',
   },
   'production': {
     JANE_URL: 'https://jane.huawei.com/api',
@@ -23,7 +24,8 @@ export const httpUrlMap = {
     PUBLISH_URL: 'https://jane.huawei.com/appbuilder/#',
     WS_URL: '/v1/api/aipp/streamLog',
     WS_AUDIO_URL: 'wss://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/app/asr',
-    MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api'
+    MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
+    PLUGIN_URL: '/store',
   },
   'gamma': {
     JANE_URL: 'https://jane-gamma.huawei.com/api',
