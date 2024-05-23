@@ -4,8 +4,8 @@
 
 package com.huawei.jade.carver.tool.repository.pgsql.mapper;
 
-import com.huawei.jade.carver.tool.repository.pgsql.model.entity.ToolDo;
 import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
+import com.huawei.jade.carver.tool.repository.pgsql.model.entity.ToolDo;
 
 import java.util.List;
 

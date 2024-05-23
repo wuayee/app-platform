@@ -9,7 +9,7 @@ import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.ToolFactory;
 
 /**
- * TODO
+ * 表示 {@link ToolFactory} 的 AI Flow 的实现。
  *
  * @author 季聿阶
  * @since 2024-05-15

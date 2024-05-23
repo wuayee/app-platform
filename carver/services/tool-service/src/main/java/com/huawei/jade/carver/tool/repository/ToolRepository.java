@@ -4,8 +4,8 @@
 
 package com.huawei.jade.carver.tool.repository;
 
-import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
 import com.huawei.jade.carver.tool.Tool;
+import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
 
 import java.util.List;
 import java.util.Optional;

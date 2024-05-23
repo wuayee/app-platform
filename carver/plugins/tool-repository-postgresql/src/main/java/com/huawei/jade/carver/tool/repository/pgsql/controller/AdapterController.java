@@ -16,12 +16,10 @@ import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
-import com.huawei.jade.carver.tool.repository.pgsql.model.reponse.Result;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
+import com.huawei.jade.carver.tool.repository.pgsql.model.reponse.Result;
 import com.huawei.jade.carver.tool.service.ToolService;
 
 import java.io.UnsupportedEncodingException;
@@ -48,17 +46,14 @@ public class AdapterController {
     private static final String DECODE_EX = "[异常]: 解析中文异常";
 
     private final ToolService toolService;
-    private final ObjectSerializer serializer;
 
     /**
      * 适配 ToolController 的 {@link AdapterController} 的新实例。
      *
      * @param toolService 表示商品通用服务的 {@link ToolService}。
-     * @param serializer 表示序列化的 {@link ObjectSerializer}。
      */
-    public AdapterController(ToolService toolService, @Fit(alias = "json") ObjectSerializer serializer) {
+    public AdapterController(ToolService toolService) {
         this.toolService = notNull(toolService, "The tool service cannot be null.");
-        this.serializer = notNull(serializer, "The serializer cannot be null.");
     }
 
     /**
