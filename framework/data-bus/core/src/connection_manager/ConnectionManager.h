@@ -9,6 +9,7 @@
 #include <memory>
 #include <unordered_map>
 
+#include "config/DataBusConfig.h"
 #include "Connection.h"
 #include "fbs/common_generated.h"
 #include "report/ReportCollector.h"
@@ -18,7 +19,7 @@ namespace Connection {
 
 class ConnectionManager {
 public:
-    ConnectionManager() = default;
+    explicit ConnectionManager(const Runtime::Config& config) : config_(config) {};
     ~ConnectionManager() = default;
 
     void CloseConnection(int socketFd);
@@ -29,6 +30,7 @@ public:
 private:
     Runtime::ReportCollector<ConnectionManager> reportCollector_{"ConnectionManager", *this};
 
+    const Runtime::Config& config_;
     std::unordered_map<int, std::unique_ptr<Connection>> connections_;
 };
 }

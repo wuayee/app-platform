@@ -12,6 +12,7 @@
 #include <unordered_set>
 
 #include "ApplyPermissionResponse.h"
+#include "config/DataBusConfig.h"
 #include "SharedMemoryInfo.h"
 #include "WaitingPermitRequest.h"
 #include "fbs/common_generated.h"
@@ -25,7 +26,7 @@ const std::string LOG_PATH = "./malloc_log.bin";
 class ResourceManager {
 public:
     static void Init();
-    ResourceManager();
+    explicit ResourceManager(const Runtime::Config& config);
     ~ResourceManager();
     std::tuple<int32_t, Common::ErrorType> HandleApplyMemory(int32_t socketFd, const std::string& objectKey,
                                                              uint64_t memorySize);
@@ -37,6 +38,7 @@ public:
     bool HandleReleaseMemory(int32_t sharedMemoryId);
     bool ProcessPendingReleaseMemory(int32_t sharedMemoryId);
 
+    uint64_t GetCurMallocSize() const;
     int32_t GetMemoryId(const std::string& objectKey);
 
     // SharedMemoryInfo属性获取方法集合
@@ -79,7 +81,8 @@ private:
     void UpdateLastUsedTime(int32_t sharedMemoryId);
 
     std::ofstream logStream_;
-
+    uint64_t mallocSizeLimit_; // 内存分配上限
+    uint64_t curMallocSize_; // 当前已分配内存大小
     std::unordered_map<int32_t, std::unique_ptr<SharedMemoryInfo>> sharedMemoryIdToInfo_; // 内存块信息记录
     std::unordered_map<int32_t, std::unordered_set<int32_t>> readingMemoryBlocks_; // 客户端正在读取的内存块
     std::unordered_map<int32_t, std::unordered_set<int32_t>> writingMemoryBlocks_; // 客户端正在写入的内存块
