@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
-import { Upload } from 'antd';
+import { Form, Upload } from 'antd';
 import { UploadFile } from 'antd/lib';
 import useSearchParams from '../../shared/hooks/useSearchParams';
 import { deleteLocalFile, uploadLocalFile } from '../../shared/http/knowledge';
@@ -11,6 +11,11 @@ const LocalUpload: React.FC<{ form: any }> = ({ form }) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const filesKeys = useRef<Map<string, any>>(new Map());
   const { id, tableid } = useSearchParams();
+  const selectedFile = Form.useWatch('selectedFile', form);
+
+  useEffect(() => {
+    setFileList(selectedFile);
+  }, [selectedFile]);
 
   const handleFileChange = () => {};
 
@@ -33,7 +38,7 @@ const LocalUpload: React.FC<{ form: any }> = ({ form }) => {
   };
 
   const handleUpload = async ({ file }: any) => {
-    await uploadLocalFile(id, tableid, file.file, file.name);
+    await uploadLocalFile(id, tableid, file, file.uid);
   };
 
   function makeFileKey(file: UploadFile): string {
@@ -45,7 +50,7 @@ const LocalUpload: React.FC<{ form: any }> = ({ form }) => {
     if (!filesKeys.current.has(key)) {
       return;
     }
-    await deleteLocalFile(id, tableid, file.name);
+    await deleteLocalFile(id, tableid, [file.uid]);
     filesKeys.current.delete(key);
     setFiles();
   };

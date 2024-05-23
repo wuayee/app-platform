@@ -90,10 +90,10 @@ export function uploadLocalFile(
 export function deleteLocalFile(
   knowledgeId: number | string,
   tableId: number | string,
-  filename: string
+  filename: string[]
 ) {
-  const url = `${KNOWLEDGE_URL}/${knowledgeId}/table/${tableId}/file-delete`;
-  return post(url, { filename });
+  const url = `${KNOWLEDGE_URL}/${knowledgeId}/table/${tableId}/files/delete`;
+  return del(url, filename);
 }
 
 export function textSegmentWash(data: {
@@ -105,13 +105,6 @@ export function textSegmentWash(data: {
   chunkOverlap: number;
   operatorIds: string[];
 }) {
-  const url = `${KNOWLEDGE_URL}/knowledge/import-knowledge/text`;
+  const url = `${KNOWLEDGE_URL}/import-knowledge/text`;
   return post(url, data);
-}
-
-const { PLUGIN_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
-
-export function getPlugins() {
-  const url = `${PLUGIN_URL}/tools`;
-  return get(url);
 }

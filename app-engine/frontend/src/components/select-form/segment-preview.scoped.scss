@@ -19,10 +19,15 @@
   gap: 8px;
   background-image: url(/src/assets/images/knowledge/knowledge-background.png);
   background-size: cover;
-
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border: 1px solid #f2f2f2;
+  border-top: none;
   &-title {
     border: 1px solid #f2f2f2;
-    padding: 4px 8px;
+    padding: 0px 8px;
+    border-radius: 4px;
+    background-color: #fff;
   }
 
   &-content {

@@ -1,15 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Form } from 'antd';
-import { Button, Input, Radio, Select, Steps } from 'antd';
-import type { TableProps } from 'antd';
+import { Button, Steps } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import BreadcrumbSelf from '../../../../components/breadcrumb';
-import { KnowledgeIcons } from '../../../../components/icons';
 import { SelectForm } from '../../../../components/select-form';
 import SegmentPreview from '../../../../components/select-form/segment-preview';
 import './style.scoped.scss';
-import { textSegmentWash, uploadLocalFile } from '../../../../shared/http/knowledge';
+import {
+  deleteLocalFile,
+  textSegmentWash,
+} from '../../../../shared/http/knowledge';
 
 type LayoutType = Parameters<typeof Form>[0]['layout'];
 
@@ -98,8 +99,11 @@ const KnowledgeBaseDetailImportData = () => {
   // 创建知识表
   const createKnowledgeTable = async () => {};
 
-  const onCancle = () => {
+  const onCancle = async () => {
     navigate(-1);
+    const fileIds = formDataSource.getFieldValue('selectedFile').map((file) => file.uid);
+    await deleteLocalFile(id, table_id, fileIds);
+    formDataSource.setFieldValue('selectedFile', []);
   };
 
   // 上一步
@@ -124,7 +128,6 @@ const KnowledgeBaseDetailImportData = () => {
           return;
         }
         formValue.current.dataSource = { ...res };
-
         setCurrentSteps(currentSteps + 1);
       }
 
@@ -133,7 +136,7 @@ const KnowledgeBaseDetailImportData = () => {
         formValue.current.second = { ...res };
         if (table_type === 'text') {
           // 文本分段清洗
-          const fileNames = formValue.current.dataSource?.selectedFile?.map((file) => file.name);
+          const fileNames = formValue.current.dataSource?.selectedFile?.map((file) => file.uid);
           const secondRes = formValue.current.second;
           await textSegmentWash({
             knowledgeId: id,
