@@ -38,7 +38,13 @@ public class ModelInfo {
     @JsonProperty(value = "total_output_tokens")
     private int totalOutputTokens;
 
-    private int latency;
+    /**
+     * 单位：秒（ s ）。
+     */
+    private double latency;
 
-    private int speed;
+    /**
+     * 单位：提示词个数/秒（ token/s ）。
+     */
+    private double speed;
 }
