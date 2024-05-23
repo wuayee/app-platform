@@ -60,7 +60,7 @@ return (
     height: 260
    }} onClick={()=> {jumpDetail(knowledge.id)}}>
     {/* 头部区域 */}
-    <div className='header' style={{
+    <div style={{
       display: 'flex',
       gap: '16px',
       height: 57,

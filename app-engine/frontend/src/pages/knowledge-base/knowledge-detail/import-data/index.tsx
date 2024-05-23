@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Form } from 'antd';
+import { Form, Space } from 'antd';
 import { Button, Steps } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
@@ -7,10 +7,8 @@ import BreadcrumbSelf from '../../../../components/breadcrumb';
 import { SelectForm } from '../../../../components/select-form';
 import SegmentPreview from '../../../../components/select-form/segment-preview';
 import './style.scoped.scss';
-import {
-  deleteLocalFile,
-  textSegmentWash,
-} from '../../../../shared/http/knowledge';
+import { deleteLocalFile, textSegmentWash } from '../../../../shared/http/knowledge';
+import { CheckCircleFilled } from '@ant-design/icons';
 
 type LayoutType = Parameters<typeof Form>[0]['layout'];
 
@@ -171,24 +169,19 @@ const KnowledgeBaseDetailImportData = () => {
           </div>
         </div>
         <div className='import-data-wrapper'>
-          <div
-            className='aui-block'
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 8,
-            }}
-          >
-            <div
-              style={{
-                width: '100%',
-                flex: 1,
-                background: '#fff',
-                borderRadius: '8px 8px 0px 0px',
-                padding: '24px 24px 0 25px',
-              }}
-            >
-              <Steps current={currentSteps} items={steps} />
+          <div className='aui-block import-data-content'>
+            <Steps
+              current={currentSteps}
+              items={steps}
+              progressDot={(dot, { status, index }) => (
+                <div className={`progress-dot progress-dot-${status}`}>
+                  {status === 'finish' && (
+                    <CheckCircleFilled style={{ color: '#1677ff', fontSize: 20 }} />
+                  )}
+                </div>
+              )}
+            />
+            <div className='import-data-content-form'>
               <SelectForm
                 currentSteps={currentSteps}
                 type={table_type}
@@ -197,13 +190,7 @@ const KnowledgeBaseDetailImportData = () => {
                 segmentData={segmentData}
               />
             </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'end',
-                gap: 16,
-              }}
-            >
+            <div className='import-data-content-footer'>
               {currentSteps === 0 && (
                 <Button
                   onClick={onCancle}
