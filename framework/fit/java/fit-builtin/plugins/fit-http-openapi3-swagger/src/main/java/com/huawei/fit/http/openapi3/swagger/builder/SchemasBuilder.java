@@ -81,6 +81,9 @@ public class SchemasBuilder extends AbstractBuilder implements EntityBuilder<Map
         if (SchemaTypeUtils.isObjectType(handler.method().getGenericReturnType())) {
             schemaTypes.addAll(SchemaTypeUtils.getObjectTypes(handler.method().getGenericReturnType()));
         }
+        if (SchemaTypeUtils.isArrayType(handler.method().getGenericReturnType())) {
+            schemaTypes.addAll(SchemaTypeUtils.getObjectTypes(handler.method().getGenericReturnType()));
+        }
         return schemaTypes;
     }
 

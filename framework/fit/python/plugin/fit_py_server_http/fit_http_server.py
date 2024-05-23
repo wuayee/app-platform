@@ -7,7 +7,6 @@ import base64
 import ssl
 import threading
 import time
-import traceback
 from collections import OrderedDict
 from http import HTTPStatus
 from queue import Queue, Empty
@@ -192,9 +191,15 @@ class FitHandler(tornado.web.RequestHandler):
 
     def convert_request_to_metadata(self, genericable_id: str, fitable_id: str):
         headers = self.request.headers
-        data_format = int(headers.get(HttpHeader.FORMAT.value))
-        genericable_version = GenericVersion.from_string(headers.get(HttpHeader.GENERICABLE_VERSION.value))
-        tlvs = TagLengthValuesUtil.deserialize(base64.b64decode(headers.get(HttpHeader.TLV.value)))
+        try:
+            data_format = int(headers.get(HttpHeader.FORMAT.value))
+        except KeyError as cause:
+            raise Exception("cannot find the data format field in headers.") from cause
+        try:
+            genericable_version = GenericVersion.from_string(headers[HttpHeader.GENERICABLE_VERSION.value])
+        except KeyError as cause:
+            raise Exception("cannot find the genericable version field in headers.") from cause
+        tlvs = TagLengthValuesUtil.deserialize(base64.b64decode(headers.get(HttpHeader.TLV.value, b"")))
         return RequestMetadata(data_format, genericable_version, genericable_id, fitable_id, tlvs)
 
     @tornado.concurrent.run_on_executor

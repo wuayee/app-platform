@@ -32,7 +32,10 @@ protected:
     void SetUp() override
     {
         FtokArgsGenerator::Instance().Reset();
-        resourceManager = std::make_unique<ResourceManager>();
+        int port = 1234;
+        uint64_t mallocSizeLimit = 100U;
+        Runtime::Config config(port, mallocSizeLimit);
+        resourceManager = std::make_unique<ResourceManager>(config);
     }
 
     void TearDown() override
@@ -126,6 +129,16 @@ TEST_F(ResourceManagerTest, should_not_malloc_when_key_already_exists)
     EXPECT_EQ(ErrorType::KeyAlreadyExists, get<1>(applyMemoryRes));
 }
 
+TEST_F(ResourceManagerTest, should_not_malloc_when_malloc_size_limit_exceeded)
+{
+    int32_t clientId = 1;
+    uint64_t memorySize = 200U;
+    tuple<int32_t, ErrorType> applyMemoryRes = resourceManager->HandleApplyMemory(clientId, TEST_OBJECT_KEY,
+                                                                                  memorySize);
+    EXPECT_EQ(-1, get<0>(applyMemoryRes));
+    EXPECT_EQ(ErrorType::OutOfMemory, get<1>(applyMemoryRes));
+}
+
 TEST_F(ResourceManagerTest, should_malloc_and_save_memory_info_when_handle_apply_memory_succeeds)
 {
     int32_t clientId = 1;
@@ -135,6 +148,7 @@ TEST_F(ResourceManagerTest, should_malloc_and_save_memory_info_when_handle_apply
     int32_t memoryId = get<0>(applyMemoryRes);
     ErrorType errorType = get<1>(applyMemoryRes);
     EXPECT_EQ(ErrorType::None, errorType);
+    EXPECT_EQ(100U, resourceManager->GetCurMallocSize());
     EXPECT_EQ(clientId, resourceManager->GetMemoryApplicant(memoryId));
     EXPECT_EQ(memorySize, resourceManager->GetMemorySize(memoryId));
     EXPECT_EQ(0, resourceManager->GetReadingRefCnt(memoryId));
@@ -381,6 +395,7 @@ TEST_F(ResourceManagerTest, should_release_memory_when_memory_idles)
     resourceManager->HandleReleasePermission(permissionApplicantId, PermissionType::Write, memoryId);
     // 释放内存成功
     EXPECT_TRUE(resourceManager->HandleReleaseMemory(memoryId));
+    EXPECT_EQ(0U, resourceManager->GetCurMallocSize());
     EXPECT_EQ(-1, resourceManager->GetMemoryId(TEST_OBJECT_KEY));
 }
 

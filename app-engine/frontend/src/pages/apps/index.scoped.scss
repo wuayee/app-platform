@@ -1,17 +1,48 @@
-.aui-fullpage{
-    .aui-block{
+.apps_root{
+    * {
+        box-sizing: border-box;
+    }
+    height: calc(100vh - 50px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    .apps_header{
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        .apps_title{
+            font-size: 20px;
+            color: #1a1a1a;
+            line-height: 1.5;
+            font-weight: normal;
+        }
+    }
+    .apps_main{
+        height: calc(100% - 30px);
+        padding: 24px;
+        background: #fff;
+        border-radius: 8px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        .tabs{}
         .operatorArea{
             display: flex;
             align-items: center;
         }
         .card_list {
-            width: 100%;
+            flex: 1;
             overflow-y: auto;
             box-sizing: border-box;
             display: flex;
             flex-wrap: wrap;
-            padding: 20px 0;
+            margin: 20px 0;
+        }
+        .page_box{
+            padding-top: 10px;
+            height: 40px;
+            line-height: 40px;
+            width: 100%;
         }
     }
-    
 }

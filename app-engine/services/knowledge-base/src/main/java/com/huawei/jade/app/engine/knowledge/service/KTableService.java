@@ -6,6 +6,7 @@ package com.huawei.jade.app.engine.knowledge.service;
 
 import com.huawei.fitframework.annotation.Genericable;
 import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
+import com.huawei.jade.app.engine.knowledge.params.TableKnowledgeParam;
 import com.huawei.jade.app.engine.knowledge.service.param.PageQueryParam;
 
 import java.util.List;
@@ -68,4 +69,12 @@ public interface KTableService {
      */
     @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KTableService.getTableCountByRepoId")
     Integer getTableCountByRepoId(Long repositoryId);
+
+    /**
+     * 表格场景 知识表表格创建
+     *
+     * @param param 创建参数
+     */
+    @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KTableService.createTableKnowledge")
+    void createTableKnowledge(TableKnowledgeParam param);
 }

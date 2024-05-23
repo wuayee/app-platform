@@ -24,6 +24,7 @@ import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
 import com.huawei.jade.app.engine.knowledge.dto.KbChunkQueryDto;
 import com.huawei.jade.app.engine.knowledge.dto.KbGenerateConfigDto;
 import com.huawei.jade.app.engine.knowledge.params.RepoQueryParam;
+import com.huawei.jade.app.engine.knowledge.params.TableKnowledgeParam;
 import com.huawei.jade.app.engine.knowledge.service.KRepoService;
 import com.huawei.jade.app.engine.knowledge.service.KStorageService;
 import com.huawei.jade.app.engine.knowledge.service.KTableService;
@@ -278,5 +279,15 @@ public class KnowledgeBaseController {
     @PostMapping(path = "/import-knowledge/table")
     public void importTableKnowledge(@RequestBody KbGenerateConfigDto tableConfigDto) {
         kbGenerateService.importTableKnowledge(tableConfigDto);
+    }
+
+    /**
+     * 表格场景 知识表表格创建
+     *
+     * @param param 表格型知识表创建参数
+     */
+    @PostMapping(path = "/table-knowledge/construct")
+    public void createTableKnowledge(@RequestBody TableKnowledgeParam param) {
+        kTableService.createTableKnowledge(param);
     }
 }
