@@ -81,6 +81,26 @@ const SelectDataSource = ({ type, form }: props) => {
     }
   }, [type]);
 
+  const checkTableRead = (_: any, value: any[]) => {
+
+    if (value.length) {
+      for (let index = 0; index < value.length; index++) {
+        const item = value[index];
+
+        const keys = Object.keys(item);
+
+        for (let j = 0; j < keys.length; j++) {
+          const key = keys[index];
+          if(!item[key]) {
+            return Promise.reject(new Error('值不能为空'));
+          }
+        }
+      }
+    }
+
+    return Promise.resolve();
+  };
+
   return (
     <>
       <div>
@@ -164,7 +184,18 @@ const SelectDataSource = ({ type, form }: props) => {
             </Form.Item>
           )}
 
-          {datasourceType === 'custom' && type === 'table' && <CustomTable />}
+          {datasourceType === 'custom' && type === 'table' && (
+            <Form.Item
+              label='自定义知识表'
+              rules={[{ required: true, message: '输入不能为空' }, {validator: checkTableRead, message: '输入的值不能为空'}]}
+              name='tableCustom'
+              style={{
+                marginTop: 16,
+              }}
+            >
+              <CustomTable />
+            </Form.Item>
+          )}
         </Form>
       </div>
     </>

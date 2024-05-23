@@ -72,9 +72,6 @@ const KnowledgeBaseDetailImportData = () => {
       title: '表格配置'
     });
     steps.push({
-      title: '预览'
-    });
-    steps.push({
       title: '创建'
     })
   }
@@ -112,12 +109,14 @@ const KnowledgeBaseDetailImportData = () => {
     try {
       if (currentSteps === 0) {
         await formDataSource.validateFields();
+        console.log(formDataSource.getFieldsValue())
         // 校验成功
         setCurrentSteps(currentSteps + 1)
       }
 
       if (currentSteps === 1) {
         await formStepSecond.validateFields();
+        console.log(formStepSecond.getFieldsValue())
         // 校验成功
         setCurrentSteps(currentSteps + 1)
       }
