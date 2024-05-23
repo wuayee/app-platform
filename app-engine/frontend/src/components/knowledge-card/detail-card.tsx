@@ -60,20 +60,20 @@ return (
     height: 260
    }} onClick={()=> {jumpDetail(knowledge.id)}}>
     {/* 头部区域 */}
-    <div className='header' style={{
+    <div  style={{
       display: 'flex',
       gap: '16px',
       height: 57,
     }}>
-      <div className='iconArea'><knowledge.icon/></div>
-      <div className='infoArea'>
+      <div ><knowledge.icon/></div>
+      <div >
         <div className='headerTitle' style={{
           fontSize: 20,
           color: 'rgba(5, 5, 5, .96)'
         }}>
           {knowledge.name}
         </div>
-        <div className='ownerName' style={{
+        <div  style={{
           fontSize: 14,
           color: 'rgba(105, 105, 105, .9)'
         }}>
@@ -83,7 +83,7 @@ return (
     </div>
 
     {/* 描述 */}
-    <div className='content' style={{
+    <div  style={{
       wordBreak: 'break-all',
       marginTop: 16,
       fontSize: '14px',
@@ -95,12 +95,12 @@ return (
     </div>
 
     {/* 底部 */}
-    <div className='footer' style={{
+    <div  style={{
       display: 'flex',
       justifyContent: 'flex-end',
       marginTop: 16,
     }}>
-      <div className='operator'>
+      <div >
         <Dropdown menu={{ items: operatorItems, onClick: (info)=> {clickItem(info); info.domEvent.stopPropagation()} }} placement="bottomLeft" trigger={['click']} >
           <div style={{
             cursor: 'pointer'

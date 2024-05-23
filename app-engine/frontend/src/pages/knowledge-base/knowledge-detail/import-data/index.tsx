@@ -7,8 +7,13 @@ import BreadcrumbSelf from '../../../../components/breadcrumb';
 import { SelectForm } from '../../../../components/select-form';
 import SegmentPreview from '../../../../components/select-form/segment-preview';
 import './style.scoped.scss';
-import { deleteLocalFile, textSegmentWash } from '../../../../shared/http/knowledge';
 import { CheckCircleFilled } from '@ant-design/icons';
+import {
+  deleteLocalFile,
+  textSegmentWash,
+  getTableColums,
+  createTableColumns,
+} from '../../../../shared/http/knowledge';
 
 type LayoutType = Parameters<typeof Form>[0]['layout'];
 
@@ -99,7 +104,7 @@ const KnowledgeBaseDetailImportData = () => {
 
   const onCancle = async () => {
     navigate(-1);
-    const fileIds = formDataSource.getFieldValue('selectedFile').map((file) => file.uid);
+    const fileIds = formDataSource.getFieldValue('selectedFile').map((file) => `${file.uid}${file.name}`);
     await deleteLocalFile(id, table_id, fileIds);
     formDataSource.setFieldValue('selectedFile', []);
   };
@@ -126,6 +131,26 @@ const KnowledgeBaseDetailImportData = () => {
           return;
         }
         formValue.current.dataSource = { ...res };
+
+        if(table_type === 'table') {
+          // 获取表格列
+          const result = await getTableColums({
+            repositoryId: id as string,
+            knowledgeTableId: table_id as string,
+            fileName: formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}${file.name}`)?.[0] || ''
+          });
+
+          if(result && result?.length) {
+            formStepSecond.setFieldValue('tableCustom', result.map((item, index)=> ({
+              description: item.desc,
+              vectorService: item.embedServiceId,
+              dataType: item.dataType,
+              colName: item.name,
+              indexType: item.indexType,
+              key: `${index + 1}`
+            })));
+          }
+        }
         setCurrentSteps(currentSteps + 1);
       }
 
@@ -134,7 +159,7 @@ const KnowledgeBaseDetailImportData = () => {
         formValue.current.second = { ...res };
         if (table_type === 'text') {
           // 文本分段清洗
-          const fileNames = formValue.current.dataSource?.selectedFile?.map((file) => file.uid);
+          const fileNames = formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}${file.name}`);
           const secondRes = formValue.current.second;
           await textSegmentWash({
             knowledgeId: id,
@@ -144,6 +169,27 @@ const KnowledgeBaseDetailImportData = () => {
           });
         }
 
+        // 表格创建逻辑
+        if(table_type === 'table') {
+          const fileName = formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}${file.name}`)?.[0] || '';
+
+          console.log(res);
+          const data = (res?.tableCustom || []).map(item => ({
+            name: item.colName,
+            dataType: item.dataType,
+            indexType: item.indexType,
+            embedServiceId: item.vectorService ?? null,
+            desc: item.description ?? null,
+          }));
+          console.log(data);
+          createTableColumns({
+            repositoryId: id as string,
+            knowledgeTableId: table_id as string,
+            fileName,
+            columns:data
+          })
+        }
+
         setCurrentSteps(currentSteps + 1);
       }
     } catch (error) {}
@@ -151,8 +197,6 @@ const KnowledgeBaseDetailImportData = () => {
   };
 
   useEffect(() => {
-    if (table_id) {
-    }
   }, []);
 
   const handleSubmit = async () => {};

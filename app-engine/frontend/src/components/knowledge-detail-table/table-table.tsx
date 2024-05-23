@@ -36,7 +36,7 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
   const [page, setPage] = useState(1);
 
   // 分页数
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(type == 'text' ? 12 : 10);
 
   // 分页变化
   const paginationChange = (curPage: number, curPageSize: number) => {
@@ -47,6 +47,8 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
       setPageSize(curPageSize);
     }
   }
+
+  const pageSizeOptions = type == 'text' ? [12] : [10, 20, 50, 100]
 
   // 获取列表
   const refresh = ()=> {
@@ -161,7 +163,7 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
 
         </div>
       </>)}
-      <Pagination total = {total} current={page} onChange={paginationChange} pageSize={pageSize}/>
+      <Pagination total = {total} current={page} onChange={paginationChange} pageSizeOptions={pageSizeOptions} pageSize={pageSize}/>
     </>
   )
 }

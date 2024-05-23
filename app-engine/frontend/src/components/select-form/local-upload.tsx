@@ -38,7 +38,7 @@ const LocalUpload: React.FC<{ form: any }> = ({ form }) => {
   };
 
   const handleUpload = async ({ file }: any) => {
-    await uploadLocalFile(id, tableid, file, file.uid);
+    await uploadLocalFile(id, tableid, file, `${file.uid}${file.name}`);
   };
 
   function makeFileKey(file: UploadFile): string {
@@ -50,7 +50,7 @@ const LocalUpload: React.FC<{ form: any }> = ({ form }) => {
     if (!filesKeys.current.has(key)) {
       return;
     }
-    await deleteLocalFile(id, tableid, [file.uid]);
+    await deleteLocalFile(id, tableid, [`${file.uid}${file.name}`]);
     filesKeys.current.delete(key);
     setFiles();
   };
