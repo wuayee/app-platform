@@ -5,14 +5,14 @@
 package com.huawei.jade.app.engine.knowledge.dto.enums;
 
 /**
- * 存储服务类型。
+ * 索引类型
  *
- * @since 2024-05-18
+ * @author l30025118
+ * @version eService 24.0.0
+ * @since 2024/5/23
  */
-public enum KStorageType {
-    RDB,
-    KV,
+public enum IndexType {
+    NORMAL,
     VECTOR,
-    KG,
-    EMBEDDING
+    NONE
 }
