@@ -14,7 +14,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class KbChunkQueryDto {
+public class KbChunkSearchDto {
     /**
      * 知识库id
      */
@@ -24,16 +24,6 @@ public class KbChunkQueryDto {
      * 知识表id
      */
     private Long tableId;
-
-    /**
-     * 页数
-     */
-    private Integer pageNo;
-
-    /**
-     * 页面大小
-     */
-    private Integer pageSize;
 
     /**
      * 查询关键字
@@ -54,14 +44,4 @@ public class KbChunkQueryDto {
      * 列
      */
     private Integer columnId;
-
-    /**
-     * embedding服务
-     */
-    private String embeddingUrl;
-
-    /**
-     * 向量数据库服务
-     */
-    private String vectorUrl;
 }
