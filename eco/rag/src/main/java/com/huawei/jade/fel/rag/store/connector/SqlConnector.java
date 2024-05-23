@@ -54,7 +54,6 @@ public interface SqlConnector {
      *
      * @param tableName 表名称
      * @param columns 列信息
-     *
      */
     void createTable(String tableName, List<RdbColumn> columns);
 
@@ -67,7 +66,14 @@ public interface SqlConnector {
 
     /**
      * 关闭数据库连接。
-     *
      */
     void close();
+
+    /**
+     * 创建索引
+     *
+     * @param tableName 表名称
+     * @param columns 列信息
+     */
+    void createIndex(String tableName, List<RdbColumn> columns);
 }
