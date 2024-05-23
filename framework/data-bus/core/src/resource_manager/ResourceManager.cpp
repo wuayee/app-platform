@@ -18,7 +18,8 @@ using namespace DataBus::Common;
 namespace DataBus {
 namespace Resource {
 
-ResourceManager::ResourceManager()
+ResourceManager::ResourceManager(const Runtime::Config& config)
+    : mallocSizeLimit_(config.GetMemorySizeLimit()), curMallocSize_(0)
 {
     Init();
     // 打开内存分配日志文件
@@ -57,6 +58,12 @@ tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, 
     if (keyToSharedMemoryId_.find(objectKey) != keyToSharedMemoryId_.end()) {
         logger.Error("[ResourceManager] The object key {} already exists", objectKey);
         return make_tuple(-1, ErrorType::KeyAlreadyExists);
+    }
+    // 检查剩余内存分配空间是否充足
+    if (curMallocSize_ + memorySize > mallocSizeLimit_) {
+        logger.Error("[ResourceManager] Failed to allocate the memory block for {} due to insufficient memory "
+                     "space. requested: {}, remaining: {}", objectKey, memorySize, mallocSizeLimit_ - curMallocSize_);
+        return make_tuple(-1, ErrorType::OutOfMemory);
     }
     // 获取ftok函数参数生成器单例
     auto& ftokArgsGenerator = FtokArgsGenerator::Instance();
@@ -99,6 +106,7 @@ tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, 
     if (!objectKey.empty()) {
         keyToSharedMemoryId_[objectKey] = sharedMemoryId;
     }
+    curMallocSize_ += memorySize;
 
     return make_tuple(sharedMemoryId, ErrorType::None);
 }
@@ -216,6 +224,7 @@ bool ResourceManager::ReleaseMemory(int32_t sharedMemoryId)
         return false;
     }
     // 清理资源状态
+    curMallocSize_ -= GetMemorySize(sharedMemoryId);
     sharedMemoryIdToInfo_.erase(sharedMemoryId);
     permissionStatus_.erase(sharedMemoryId);
     waitingPermitRequestQueues_.erase(sharedMemoryId);
@@ -401,6 +410,11 @@ int32_t ResourceManager::RecreateSharedMemoryBlock(key_t sharedMemoryKey, uint64
     return shmget(sharedMemoryKey, memorySize, SHARED_MEMORY_ACCESS_PERMISSION | IPC_CREAT | IPC_EXCL);
 }
 
+uint64_t ResourceManager::GetCurMallocSize() const
+{
+    return curMallocSize_;
+}
+
 int32_t ResourceManager::GetMemoryId(const std::string &objectKey)
 {
     return keyToSharedMemoryId_.find(objectKey) == keyToSharedMemoryId_.end() ? -1 : keyToSharedMemoryId_[objectKey];
@@ -483,7 +497,6 @@ void ResourceManager::UpdateLastUsedTime(int sharedMemoryId)
 
 void ResourceManager::GenerateReport(stringstream& reportStream) const
 {
-    uint32_t memoryTotalUsage = 0;
     reportStream << "\"MemoryBlocks\":[";
     for (auto memoryIter = sharedMemoryIdToInfo_.cbegin();
          memoryIter != sharedMemoryIdToInfo_.cend(); ++memoryIter) {
@@ -493,7 +506,6 @@ void ResourceManager::GenerateReport(stringstream& reportStream) const
         // 内存块基本状态
         const auto memoryId = memoryIter->first;
         const auto& memoryInfo = memoryIter->second;
-        memoryTotalUsage += memoryInfo->memorySize_;
         reportStream << "{" <<
                      "\"MemoryId\":" << memoryId << "," <<
                      "\"Applicant\":" << memoryInfo->applicant_ << "," <<
@@ -520,7 +532,7 @@ void ResourceManager::GenerateReport(stringstream& reportStream) const
     }
     reportStream << "],";
     reportStream << "\"MemoryBlockCount\":" << sharedMemoryIdToInfo_.size() << ",";
-    reportStream << "\"MemoryBlockTotalSize\":" << memoryTotalUsage;
+    reportStream << "\"MemoryBlockTotalSize\":" << curMallocSize_;
 }
 
 }  // namespace Resource

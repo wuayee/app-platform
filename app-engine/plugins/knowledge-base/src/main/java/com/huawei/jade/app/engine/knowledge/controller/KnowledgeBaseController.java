@@ -23,6 +23,7 @@ import com.huawei.jade.app.engine.knowledge.dto.KStorageDto;
 import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
 import com.huawei.jade.app.engine.knowledge.dto.KbChunkQueryDto;
 import com.huawei.jade.app.engine.knowledge.dto.KbGenerateConfigDto;
+import com.huawei.jade.app.engine.knowledge.dto.TableKnowledgeColDto;
 import com.huawei.jade.app.engine.knowledge.params.RepoQueryParam;
 import com.huawei.jade.app.engine.knowledge.params.TableKnowledgeParam;
 import com.huawei.jade.app.engine.knowledge.service.KRepoService;
@@ -274,11 +275,12 @@ public class KnowledgeBaseController {
     /**
      * 导入表格类型知识接口
      *
-     * @param tableConfigDto 文件导入配置信息
+     * @param param 表格型知识表创建参数
+     * @return 表格列信息
      */
-    @PostMapping(path = "/import-knowledge/table")
-    public void importTableKnowledge(@RequestBody KbGenerateConfigDto tableConfigDto) {
-        kbGenerateService.importTableKnowledge(tableConfigDto);
+    @PostMapping(path = "/table-knowledge/columns")
+    public List<TableKnowledgeColDto> getTableKnowledgeColumns(@RequestBody TableKnowledgeParam param) {
+        return kbGenerateService.getTableKnowledgeColumns(param);
     }
 
     /**
@@ -288,6 +290,6 @@ public class KnowledgeBaseController {
      */
     @PostMapping(path = "/table-knowledge/construct")
     public void createTableKnowledge(@RequestBody TableKnowledgeParam param) {
-        kTableService.createTableKnowledge(param);
+        kbGenerateService.createTableKnowledge(param);
     }
 }

@@ -7,7 +7,6 @@ package com.huawei.jade.app.engine.knowledge.service;
 import com.huawei.fitframework.annotation.Genericable;
 import com.huawei.jade.app.engine.knowledge.dto.FileUploadRequest;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
@@ -26,20 +25,6 @@ public interface FileService {
      */
     @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.file.import")
     void importFiles(Long knowledgeId, Long knowledgeTableId, FileUploadRequest fileUploadRequest) throws IOException;
-
-    /**
-     * 读取文件接口
-     *
-     * @param knowledgeId 知识库id
-     * @param knowledgeTableId 知识表id
-     * @param filename 文件名称
-     * @return 文件流
-     * @throws IOException IO异常
-     * @throws IllegalArgumentException 参数异常
-     */
-    @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.file.read")
-    ByteArrayInputStream read(Long knowledgeId, Long knowledgeTableId, String filename)
-        throws IOException, IllegalArgumentException;
 
     /**
      * 删除特定知识表文件接口
