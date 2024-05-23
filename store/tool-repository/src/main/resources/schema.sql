@@ -13,7 +13,8 @@ create table if not exists store_tool
     "schema"         json        default '{}'::json        not null,
     "runnables"      json        default '{}'::json        not null,
     "source"         varchar(16) default 'Builtin'         not null,
-    "unique_name"    char(36)                              not null
+    "unique_name"    char(36)                              not null,
+    unique("unique_name")
     );
 comment on column store_tool.id is '工具的自增主键';
         comment on column store_tool.created_time is '工具的创建时间';
