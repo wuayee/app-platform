@@ -7,7 +7,11 @@ package com.huawei.jade.app.engine.knowledge.service;
 import com.huawei.fitframework.annotation.Genericable;
 import com.huawei.jade.app.engine.knowledge.dto.KbChunkQueryDto;
 import com.huawei.jade.app.engine.knowledge.dto.KbGenerateConfigDto;
+import com.huawei.jade.app.engine.knowledge.dto.TableKnowledgeColDto;
+import com.huawei.jade.app.engine.knowledge.params.TableKnowledgeParam;
 import com.huawei.jade.app.engine.knowledge.vo.PageResultVo;
+
+import java.util.List;
 
 /**
  * KbGenerateService 知识生成
@@ -36,8 +40,17 @@ public interface KbGenerateService {
     /**
      * 导入表格类型知识
      *
-     * @param configDto 配置信息
+     * @param param 配置信息
      */
-    @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KbGenerateService.importTableKnowledge")
-    void importTableKnowledge(KbGenerateConfigDto configDto);
+    @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KbGenerateService.createTableKnowledge")
+    void createTableKnowledge(TableKnowledgeParam param);
+
+    /**
+     * 查询列信息
+     *
+     * @param param 配置信息
+     * @return 列信息
+     */
+    @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KbGenerateService.getTableKnowledgeColumns")
+    List<TableKnowledgeColDto> getTableKnowledgeColumns(TableKnowledgeParam param);
 }
