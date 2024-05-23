@@ -49,7 +49,7 @@ const Inspiration = (props) => {
     getList();
   }, []);
   useEffect(() => {
-    currentNodeId && getList();
+    getList();
   }, [reloadInspiration]);
   // 获取灵感大全列表
   async function getList() {
