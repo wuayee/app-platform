@@ -104,7 +104,6 @@ export const toClipboard = (val) => {
 export const debounce = (fn, wait) => {
   let timer
   return (...args) => {
-    // @ts-ignore
     const context = this
     if (timer) clearTimeout(timer)
     timer = setTimeout(() => {

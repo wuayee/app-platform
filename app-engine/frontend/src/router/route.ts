@@ -17,6 +17,7 @@ import KnowledgeBaseDetailImportData from "../pages/knowledge-base/knowledge-det
 import Model from "../pages/model";
 import ModelDetail from "../pages/model/model-detail";
 import Apps2 from "../pages/apps/index2";
+import PluginMarket from '../pages/plugin-market';
 
 export type MenuItem = Required<MenuProps>["items"][number] & {
   component?: (() => ReactElement) | React.FC<any>;
@@ -127,7 +128,7 @@ export const routeList: MenuItem[] = [
     key: "/plugin-market",
     icon: Icons.app({}),
     label: "插件市场",
-    component: Demo,
+    component: PluginMarket,
   },
   {
     key: "/mode",

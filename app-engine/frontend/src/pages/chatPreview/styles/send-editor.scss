@@ -462,6 +462,19 @@
     .item-name {
       padding: 0 8px ;
       cursor: pointer;
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .item-clear {
+      padding: 0 8px ;
+      cursor: pointer;
+      border: 1px solid #0478fc;
+      border-radius: 8px;
+      color: #0478fc;
+      font-size: 12px;
+      padding: 6px 18px;
     }
     svg {
       cursor: pointer;
