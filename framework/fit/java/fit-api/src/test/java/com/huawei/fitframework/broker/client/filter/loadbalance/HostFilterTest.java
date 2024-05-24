@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -61,8 +62,7 @@ public class HostFilterTest {
         void throwIllegalArgumentException() {
             IllegalArgumentException exception = catchThrowableOfType(() -> HostFilterTest.this.filter.filter(
                     HostFilterTest.this.fitable,
-                    this.workerId,
-                    null), IllegalArgumentException.class);
+                    this.workerId, null, new HashMap<>()), IllegalArgumentException.class);
             assertThat(exception).isNotNull()
                     .hasMessage("The targets to balance load cannot be null. [genericableId=gid, fitableId=fid]");
         }
@@ -79,8 +79,7 @@ public class HostFilterTest {
             void throwIllegalArgumentException() {
                 IllegalArgumentException exception = catchThrowableOfType(() -> HostFilterTest.this.filter.filter(
                         HostFilterTest.this.fitable,
-                        null,
-                        null), IllegalArgumentException.class);
+                        null, null, new HashMap<>()), IllegalArgumentException.class);
                 assertThat(exception).isNotNull()
                         .hasMessage("The local worker id to balance load cannot be blank. [genericableId=gid, "
                                 + "fitableId=fid]");
@@ -97,8 +96,7 @@ public class HostFilterTest {
             void givenToFilterTargetsIsNullThenThrowIllegalArgumentException() {
                 IllegalArgumentException exception = catchThrowableOfType(() -> HostFilterTest.this.filter.filter(
                         HostFilterTest.this.fitable,
-                        this.workerId,
-                        null), IllegalArgumentException.class);
+                        this.workerId, null, new HashMap<>()), IllegalArgumentException.class);
                 assertThat(exception).isNotNull()
                         .hasMessage("The targets to balance load cannot be null. [genericableId=gid, fitableId=fid]");
             }
@@ -108,8 +106,10 @@ public class HostFilterTest {
             void givenToFilterTargetsContainsSpecifiedHostThenReturnTheTargetsWithSpecifiedHost() {
                 List<Target> expected = Arrays.asList(Target.custom().workerId("w1").host("host").build(),
                         Target.custom().workerId("w2").host("h2").build());
-                List<Target> actual =
-                        HostFilterTest.this.filter.filter(HostFilterTest.this.fitable, this.workerId, expected);
+                List<Target> actual = HostFilterTest.this.filter.filter(HostFilterTest.this.fitable,
+                        this.workerId,
+                        expected,
+                        new HashMap<>());
                 assertThat(actual).isNotNull().hasSize(1);
                 assertThat(actual.get(0).workerId()).isEqualTo("w1");
                 assertThat(actual.get(0).host()).isEqualTo("host");
@@ -119,8 +119,10 @@ public class HostFilterTest {
             @DisplayName("当待过滤的服务地址列表不包含特定主机地址时，返回空的地址列表")
             void givenToFilterTargetsNotContainsSpecifiedHostThenReturnEmpty() {
                 List<Target> expected = Collections.emptyList();
-                List<Target> actual =
-                        HostFilterTest.this.filter.filter(HostFilterTest.this.fitable, this.workerId, expected);
+                List<Target> actual = HostFilterTest.this.filter.filter(HostFilterTest.this.fitable,
+                        this.workerId,
+                        expected,
+                        new HashMap<>());
                 assertThat(actual).isEmpty();
             }
         }

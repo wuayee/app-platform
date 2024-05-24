@@ -9,6 +9,7 @@ import com.huawei.fitframework.broker.Target;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -33,12 +34,13 @@ public class FirstMatchedEnvironmentFilter extends AbstractFilter {
     }
 
     @Override
-    protected List<Target> loadbalance(FitableMetadata fitable, String localWorkerId, List<Target> toFilterTargets) {
+    protected List<Target> loadbalance(FitableMetadata fitable, String localWorkerId, List<Target> toFilterTargets,
+            Map<String, Object> extensions) {
         Optional<String> first = this.environmentPrioritySequence.stream()
                 .filter(environment -> this.containEnvironment(toFilterTargets, environment))
                 .findFirst();
         if (first.isPresent()) {
-            return new EnvironmentFilter(first.get()).filter(fitable, localWorkerId, toFilterTargets);
+            return new EnvironmentFilter(first.get()).filter(fitable, localWorkerId, toFilterTargets, extensions);
         }
         return Collections.emptyList();
     }

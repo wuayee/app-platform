@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2021-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2024. All rights reserved.
  */
 
 package com.huawei.fitframework.broker.client;
@@ -11,6 +11,7 @@ import com.huawei.fitframework.broker.client.filter.route.DefaultFilter;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 寻找调用的具体服务实现的路由器。
@@ -56,6 +57,7 @@ public interface Router {
          * @param toFilterFitables 表示待过滤的泛服务实现元数据列表的 {@link List}{@code <}{@link
          * FitableMetadata}{@code >}。
          * @param args 表示实际调用参数的 {@link Object}{@code []}。
+         * @param extensions 表示动态路由所需扩展信息的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
          * @return 表示过滤后的泛服务实现列表的 {@link List}{@code <}{@link FitableMetadata}{@code >}。
          * @throws IllegalArgumentException 当 {@code genericable} 为 {@code null} 时。
          * @throws IllegalArgumentException 当 {@code toFilterFitables} 为 {@code null} 时。
@@ -64,7 +66,7 @@ public interface Router {
          * {@code genericable} 不一致时。
          */
         List<? extends FitableMetadata> filter(GenericableMetadata genericable,
-                List<? extends FitableMetadata> toFilterFitables, Object[] args);
+                List<? extends FitableMetadata> toFilterFitables, Object[] args, Map<String, Object> extensions);
 
         /**
          * 将当前路由过滤器与另一个路由过滤器合并。
@@ -89,10 +91,10 @@ public interface Router {
             } else if (second == null) {
                 return first;
             } else {
-                return (genericable, toFilterFitables, args) -> {
+                return (genericable, toFilterFitables, args, extensions) -> {
                     List<? extends FitableMetadata> filteredFitables =
-                            first.filter(genericable, toFilterFitables, args);
-                    return second.filter(genericable, filteredFitables, args);
+                            first.filter(genericable, toFilterFitables, args, extensions);
+                    return second.filter(genericable, filteredFitables, args, extensions);
                 };
             }
         }
