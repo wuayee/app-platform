@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import "./style.scoped.scss";
 import {httpUrlMap} from "../../../../shared/http/httpConfig";
-const { ICON_URL } = process.env.NODE_ENV === 'development' ? { ICON_URL: 'http://80.11.128.66:31111/api'} : httpUrlMap[process.env.NODE_ENV];
+const { ICON_URL } = process.env.NODE_ENV === 'development' ? { ICON_URL: `${window.location.origin}/api`} : httpUrlMap[process.env.NODE_ENV];
 
 interface StarAppsProps {
   open: boolean;

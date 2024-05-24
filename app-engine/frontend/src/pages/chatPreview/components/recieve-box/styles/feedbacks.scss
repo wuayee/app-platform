@@ -1,0 +1,12 @@
+.feed-inner {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  .feed-right {
+    display: none;
+    svg {
+      margin-left: 16px;
+      cursor: pointer;
+    }
+  }
+}

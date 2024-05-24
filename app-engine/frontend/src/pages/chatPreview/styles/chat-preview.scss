@@ -50,6 +50,8 @@
   .chat-inner-left {
     width: 100%;
     height: calc(100vh - 125px);
+    display: flex;
+    flex-direction: column;
     transition: width .2s;
     overflow-x: auto;
   }
@@ -107,6 +109,8 @@
     height: 100vh;
     position: relative;
     overflow-x: auto;
+    display: flex;
+    flex-direction: column;
   }
 
   .chat-inner-right {
@@ -148,6 +152,8 @@
     height: calc(100vh - 100px);
     .chat-inner-left {
       height: 100%;
+      display: flex;
+      flex-direction: column;
     }
   }
   .chat-details-content,

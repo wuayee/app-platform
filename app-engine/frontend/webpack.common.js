@@ -82,7 +82,7 @@ module.exports = {
       __constants: path.join(__dirname, "src/constants"),
       __support: path.join(__dirname, "src/support"),
       __components: path.join(__dirname, "src/components"),
-      __shared: path.join(__dirname, "src/shared"),
+      '@shared': path.join(__dirname, "src/shared"),
       '@assets': path.join(__dirname, "src/assets"),
       __store: path.join(__dirname, "src/store"),
       '@': path.resolve(__dirname, 'src')
