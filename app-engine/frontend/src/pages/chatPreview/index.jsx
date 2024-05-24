@@ -280,7 +280,7 @@ const ChatPreview = (props) => {
     runningVersion.current = version;
     runningAppid.current = aipp_id;
     if (!wsCurrent.current) {
-      const prefix = window.location.protocol === 'http' ? 'ws' : 'wss';
+      const prefix = window.location.protocol === 'http:' ? 'ws' : 'wss';
       wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/streamLog?aippId=${aipp_id}&version=${version}`);
       wsCurrent.current.onopen = () => {
         wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));
