@@ -167,7 +167,8 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
     flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), header->size());
     if (!Common::VerifyApplyPermissionMessageBuffer(bodyVerifier)) {
         logger.Error("[TaskHandler] Received incorrect apply permission body format");
-        SendApplyPermissionResponse({false, socketFd, -1, 0, ErrorType::IllegalMessageBody});
+        SendApplyPermissionResponse({false, socketFd, -1, 0,
+                                     make_shared<Resource::UserData>(), ErrorType::IllegalMessageBody});
         return;
     }
     const Common::ApplyPermissionMessage* applyPermissionMessage =
@@ -180,18 +181,27 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
                 resourceMgrPtr_->GetMemoryId(applyPermissionMessage->object_key()->str());
     if (sharedMemoryId == -1) {
         logger.Error("[TaskHandler] The object key {} is not found", applyPermissionMessage->object_key()->str());
-        SendApplyPermissionResponse({false, socketFd, -1, 0, ErrorType::KeyNotFound});
+        SendApplyPermissionResponse({false, socketFd, -1, 0,
+                                     make_shared<Resource::UserData>(), ErrorType::KeyNotFound});
         return;
     }
 
+    const int8_t* userData = nullptr;
+    size_t dataSize = 0;
+    if (applyPermissionMessage->user_data()) {
+        userData = applyPermissionMessage->user_data()->data();
+        dataSize = applyPermissionMessage->user_data()->size();
+    }
+    shared_ptr<Resource::UserData> userDataPtr = make_shared<Resource::UserData>(userData, dataSize);
     const Resource::ApplyPermissionResponse applyPermitResp =
-            resourceMgrPtr_->HandleApplyPermission(socketFd, applyPermissionMessage->permission(), sharedMemoryId);
+            resourceMgrPtr_->HandleApplyPermission({socketFd, applyPermissionMessage->permission(),
+                                                    sharedMemoryId, applyPermissionMessage->is_operating_user_data(),
+                                                    userDataPtr});
     // 权限申请请求进入等待队列，阻塞客户端通知
     if (!applyPermitResp.granted_ && applyPermitResp.errorType_ == ErrorType::None) {
         return;
     }
-    SendApplyPermissionResponse({applyPermitResp.granted_, socketFd, applyPermitResp.sharedMemoryId_,
-                                 applyPermitResp.memorySize_, applyPermitResp.errorType_});
+    SendApplyPermissionResponse(applyPermitResp);
 }
 
 void TaskHandler::HandleMessageReleasePermission(const Common::MessageHeader* header, const char* buffer, int socketFd)
@@ -222,8 +232,7 @@ void TaskHandler::HandleMessageReleasePermission(const Common::MessageHeader* he
     vector<Resource::ApplyPermissionResponse> notificationQueue =
             resourceMgrPtr_->ProcessWaitingPermitRequests(sharedMemoryId);
     for (const auto& notification: notificationQueue) {
-        SendApplyPermissionResponse({notification.granted_, notification.applicant_, notification.sharedMemoryId_,
-                                     notification.memorySize_, notification.errorType_});
+        SendApplyPermissionResponse(notification);
     }
     // 处理待释放的内存块
     if (!resourceMgrPtr_->ProcessPendingReleaseMemory(sharedMemoryId)) {
@@ -267,9 +276,15 @@ void TaskHandler::SendApplyMemoryResponse(int32_t socketFd, int32_t memoryId, ui
 void TaskHandler::SendApplyPermissionResponse(const Resource::ApplyPermissionResponse& response)
 {
     flatbuffers::FlatBufferBuilder bodyBuilder;
+    flatbuffers::Offset<::flatbuffers::Vector<int8_t>> userDataOffset = 0;
+    if (response.userData_ && response.userData_->userDataPtr_) {
+        userDataOffset =
+                bodyBuilder.CreateVector(response.userData_->userDataPtr_.get(), response.userData_->dataSize_);
+    }
     flatbuffers::Offset<Common::ApplyPermissionMessageResponse> respBody =
         Common::CreateApplyPermissionMessageResponse(bodyBuilder, response.errorType_, response.granted_,
-                                                     response.sharedMemoryId_, response.memorySize_);
+                                                     response.sharedMemoryId_, response.memorySize_, userDataOffset);
+
     bodyBuilder.Finish(respBody);
     Utils::SendMessage(bodyBuilder, Common::MessageType::ApplyPermission, GetSender(response.applicant_));
 }
