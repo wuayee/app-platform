@@ -35,8 +35,8 @@ const CreateSet = ({ visible, createCallback, data, title }: props) => {
     if (data) {
       setShowType(false);
       form.setFieldsValue({
-        name: data?.name,
-        desc: data?.desc
+        datasetName: data?.name,
+        description: data?.desc
       })
       setManualData(data?.data);
     }
@@ -93,7 +93,9 @@ const CreateSet = ({ visible, createCallback, data, title }: props) => {
   }
 
   const onFinish = (value: any) => {
-    createCallback('submit', value);
+    const data = !showType || type === CreateType.MANUAL ? manualData : uploadData;
+
+    createCallback('submit', { ...value, data });
   }
 
   const columns = [
@@ -161,10 +163,10 @@ const CreateSet = ({ visible, createCallback, data, title }: props) => {
             </Radio.Group>
           </Form.Item>
         )}
-        <Form.Item label='测试集名称' name='name' required rules={[{ required: true, message: '输入不能为空' }]}>
+        <Form.Item label='测试集名称' name='datasetName' required rules={[{ required: true, message: '输入不能为空' }]}>
           <Input />
         </Form.Item>
-        <Form.Item label='测试集描述' name='desc' required rules={[{ required: true, message: '输入不能为空' }]}>
+        <Form.Item label='测试集描述' name='description' required rules={[{ required: true, message: '输入不能为空' }]}>
           <Input />
         </Form.Item>
         {(showType && type === CreateType.UPLOAD) ?

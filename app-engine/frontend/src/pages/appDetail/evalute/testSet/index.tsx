@@ -1,20 +1,30 @@
 import { Button } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { PaginationProps } from 'antd';
 import { Table, Space } from 'antd';
 import { formatDateTime } from '../../../../shared/utils/function';
 import CreateSet from './createTestset/createTestSet';
 import SetDetail from './detail';
+import { useParams } from 'react-router';
 import TableTextSearch from '../../../../components/table-text-search';
 import TableCalendarSearch from '../../../../components/table-calendar-search';
+import { createEvalDataset, getEvalDatasetList } from '../../../../shared/http/apps';
+import { Message } from '../../../../shared/utils/message';
 
 const showTotal: PaginationProps['showTotal'] = (total) => `共 ${total} 条`;
 
 const TestSet: React.FC = () => {
 
+  const { appId } = useParams();
   const [open, setOpen] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailInfo, setDetailInfo] = useState({});
+
+  useEffect(() => {
+    getEvalDatasetList({ appId, pageNum: 1, pageSize: 10 }).then(res => {
+      console.log(res);
+    });
+  })
 
   const dataSource = Array.from({ length: 30 }).fill(null).map((_, index) => ({
     key: index,
@@ -25,11 +35,6 @@ const TestSet: React.FC = () => {
     createTime: formatDateTime(new Date()),
     modifyTime: formatDateTime(new Date())
   }));
-
-  const searchCallback = (key: string, value: string) => {
-    console.log(`key:${key}\nvalue:${value}`);
-    //处理搜索参数，组织数据调用接口
-  }
 
   const columns = [
     {
@@ -91,6 +96,17 @@ const TestSet: React.FC = () => {
   const callback = (type: string, data: any) => {
     //创建&编辑面板的回调，根据type进行业务处理
     //submit：提交后请求接口处理逻辑；cancel：关闭面板（可添加二次确认
+    if (type === 'submit') {
+      const requestBody = {
+        author: 'test',
+        appId,
+        ...data
+      };
+      console.log(requestBody);
+      createEvalDataset(requestBody).then(res => {
+        console.log(res);
+      });
+    }
     setOpen(false);
   }
 
