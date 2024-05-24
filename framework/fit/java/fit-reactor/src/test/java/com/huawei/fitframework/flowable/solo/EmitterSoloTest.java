@@ -14,7 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * 表示通过 {@link Emitter} 创建的 {@link Solo} 的单元测试。
+ * 表示 {@link Solo#fromEmitter(Emitter)} 的单元测试。
  *
  * @author 何天放 h00679269
  * @since 2024-05-06

@@ -9,6 +9,7 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 import com.huawei.fit.http.websocket.Session;
 import com.huawei.fit.serialization.MessageSerializer;
 import com.huawei.fitframework.exception.FitException;
+import com.huawei.fitframework.flowable.Subscription;
 import com.huawei.fitframework.flowable.util.worker.Worker;
 import com.huawei.fitframework.flowable.util.worker.WorkerObserver;
 import com.huawei.fitframework.serialization.TagLengthValues;
@@ -36,6 +37,11 @@ public class WebSocketWorkerObserver implements WorkerObserver<Object> {
         this.type = notNull(type, "The type cannot be null.");
         this.index = index;
         this.tryCloseFunction = notNull(tryCloseFunction, "The try close function cannot be null.");
+    }
+
+    @Override
+    public void onWorkerSubscribed(Subscription subscription) {
+
     }
 
     @Override

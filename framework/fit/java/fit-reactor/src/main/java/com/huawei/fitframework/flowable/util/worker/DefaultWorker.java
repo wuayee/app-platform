@@ -24,26 +24,22 @@ class DefaultWorker<T> implements Worker<T> {
     private final Publisher<T> publisher;
     private final WorkerObserver<T> observer;
     private final long id;
-    private final long onSubscribedRequest;
     private final AtomicBoolean completed = new AtomicBoolean();
     private final AtomicBoolean failed = new AtomicBoolean();
 
     private Subscription subscription;
 
-    DefaultWorker(WorkerObserver<T> observer, Publisher<T> publisher, long id, long onSubscribedRequest) {
+    DefaultWorker(WorkerObserver<T> observer, Publisher<T> publisher, long id) {
         this.observer = notNull(observer, "The observer cannot be null.");
         this.publisher = notNull(publisher, "The publisher cannot be null.");
         this.id = id;
-        this.onSubscribedRequest = onSubscribedRequest;
     }
 
     @Override
     public void onSubscribed(Subscription subscription) {
         isTrue(this.subscription == null, () -> new FlowableException("The subscriber cannot be subscribed twice."));
         this.subscription = subscription;
-        if (this.onSubscribedRequest > 0) {
-            this.subscription.request(this.onSubscribedRequest);
-        }
+        this.observer.onWorkerSubscribed(subscription);
     }
 
     @Override
