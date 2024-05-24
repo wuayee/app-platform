@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Space, DatePicker, Drawer } from 'antd';
+import { Button, Space, DatePicker, Drawer, Table } from 'antd';
 import './style.scoped.scss';
 import { CloseOutlined } from '@ant-design/icons';
-import TableHW, { getColumnSearchProps } from '../../../components/table';
+import { getColumnSearchProps } from '../../../components/table';
 import { feedbackType } from './model';
 import { AppIcons } from '../../../components/icons/app';
+import TableTextSearch from '../../../components/table-text-search';
 
 const feedbackIcon = {
   0: <AppIcons.UnFeedbackIcon style={{ verticalAlign: 'text-bottom' }} />,
@@ -46,13 +47,13 @@ const FeedBack = () => {
   const [searchParams,setSearchParams]=useState({});
   const currentRow = useRef(null);
   const refreshData = () => {
-    const dataSource = new Array(100).fill(1).map((i) => {
+    const dataSource = new Array(100).fill(1).map((_,i) => {
      return {
       id: i,
       question: '这是一个很长长长长长长长长长长长长长长长长长长长长的问题',
       answer: '回答',
       time: '2024-03-04 14:33:23',
-      speed: '20ms',
+      speed: `${i}ms`,
       user: `用户${i}`,
       department: '部门',
       feedback: i % 3,
@@ -74,7 +75,7 @@ const FeedBack = () => {
       key: 'question',
       width: 300,
       ellipsis: true,
-      ...getColumnSearchProps('question'),
+      ...TableTextSearch('question'),
     },
     {
       title: '应用问答',
@@ -82,7 +83,7 @@ const FeedBack = () => {
       key: 'answer',
       width: 300,
       ellipsis: true,
-      ...getColumnSearchProps('answer'),
+      ...TableTextSearch('answer'),
     },
     {
       title: '时间',
@@ -94,7 +95,7 @@ const FeedBack = () => {
       title: '相应速度',
       dataIndex: 'speed',
       key: 'speed',
-      sorter: (a, b) => a.speed - b.speed,
+      sorter: (a, b) => false,
     },
     {
       title: '用户',
@@ -145,7 +146,22 @@ const FeedBack = () => {
         />
         <Button type='primary'>导出</Button>
       </div>
-      <TableHW dataSource={data} columns={columns} onChange={handleChange} scroll={{ y: 'calc(100vh - 320px)' }}/>
+      <Table
+        dataSource={data}
+        columns={columns}
+        onChange={handleChange}
+        virtual
+        scroll={{ y: 'calc(100vh - 320px)' }}
+        pagination={{
+          position: ['bottomRight'],
+          size: 'small',
+          showQuickJumper: true,
+          defaultCurrent: 1,
+          showSizeChanger: true,
+          showTotal: (total) => <div>共{total}条</div>,
+          onChange: (pageNo, pageSize) => {},
+        }}
+      />
       <Drawer
         title='反馈详情'
         placement='right'

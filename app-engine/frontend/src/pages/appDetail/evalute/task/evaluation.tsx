@@ -3,7 +3,6 @@ import { Button, Card, ConfigProvider, Drawer, Table } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { AppIcons } from '../../../../components/icons/app';
 import './index.scss';
-import TableHW from '../../../../components/table';
 import {
   compareColumns,
   compareData,

@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Space, DatePicker, Progress, notification } from 'antd';
-import TableHW, { getColumnSearchProps } from '../../../../components/table';
+import { Button, Space, DatePicker, Progress, notification, Table } from 'antd';
+import { getColumnSearchProps } from '../../../../components/table';
 import { AppIcons } from '../../../../components/icons/app';
 import EvaluationDrawer from './evaluation';
 import './index.scss';
+import TableTextSearch from '../../../../components/table-text-search';
 
 const taskStatusMap = {
   complete: (
@@ -58,7 +59,7 @@ const EvaluateTask = () => {
       dataIndex: 'question',
       key: 'question',
       ellipsis: true,
-      ...getColumnSearchProps('question'),
+      ...TableTextSearch('question'),
     },
     {
       title: '评估测试集',
@@ -71,14 +72,14 @@ const EvaluateTask = () => {
       dataIndex: 'time',
       key: 'time',
       width: 200,
-      ...getColumnSearchProps('time'),
+      ...TableTextSearch('time'),
     },
     {
       title: '时间',
       dataIndex: 'speed',
       key: 'speed',
       width:100,
-      sorter: (a, b) => a.speed - b.speed,
+      sorter: (a, b) => false,
     },
     {
       title: '是否完成',
@@ -145,11 +146,21 @@ const EvaluateTask = () => {
         />
         <Button type='primary'>导出</Button>
       </div>
-      <TableHW
+      <Table
         dataSource={data}
         columns={columns}
         onChange={handleChange}
+        virtual
         scroll={{ y: 'calc(100vh - 340px)' }}
+        pagination={{
+          position: ['bottomRight'],
+          size: 'small',
+          showQuickJumper: true,
+          defaultCurrent: 1,
+          showSizeChanger: true,
+          showTotal: (total) => <div>共{total}条</div>,
+          onChange: (pageNo, pageSize) => {},
+        }}
       />
       <EvaluationDrawer openSignal={openSignal} />
     </div>

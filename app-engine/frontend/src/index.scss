@@ -122,3 +122,8 @@ padding: 8.5px 14px;
     font-size: 12px;
   }
 }
+
+:where(.css-dev-only-do-not-override-1okl62o).ant-pagination.ant-pagination-mini .ant-pagination-total-text{
+  position: absolute;
+  left: 0;
+}
