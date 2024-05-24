@@ -21,14 +21,16 @@ import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
 import com.huawei.jade.app.engine.knowledge.dto.KStorageDto;
 import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
-import com.huawei.jade.app.engine.knowledge.dto.KbChunkQueryDto;
+import com.huawei.jade.app.engine.knowledge.dto.KbChunkSearchDto;
 import com.huawei.jade.app.engine.knowledge.dto.KbGenerateConfigDto;
+import com.huawei.jade.app.engine.knowledge.dto.KbTextQueryDto;
+import com.huawei.jade.app.engine.knowledge.dto.TableKnowledgeColDto;
 import com.huawei.jade.app.engine.knowledge.params.RepoQueryParam;
 import com.huawei.jade.app.engine.knowledge.params.TableKnowledgeParam;
 import com.huawei.jade.app.engine.knowledge.service.KRepoService;
 import com.huawei.jade.app.engine.knowledge.service.KStorageService;
 import com.huawei.jade.app.engine.knowledge.service.KTableService;
-import com.huawei.jade.app.engine.knowledge.service.KbGenerateService;
+import com.huawei.jade.app.engine.knowledge.service.KnowledgeBaseService;
 import com.huawei.jade.app.engine.knowledge.service.param.PageQueryParam;
 import com.huawei.jade.app.engine.knowledge.vo.PageResultVo;
 
@@ -56,7 +58,7 @@ public class KnowledgeBaseController {
     private KStorageService kStorageService;
 
     @Fit
-    private KbGenerateService kbGenerateService;
+    private KnowledgeBaseService knowledgeBaseService;
 
     /**
      * 通过名称查找知识库列表
@@ -257,7 +259,20 @@ public class KnowledgeBaseController {
      */
     @PostMapping(path = "/import-knowledge/text")
     public void importKnowledge(@RequestBody KbGenerateConfigDto fileConfigDto) {
-        kbGenerateService.importKnowledge(fileConfigDto);
+        knowledgeBaseService.importTextKnowledge(fileConfigDto);
+    }
+
+    /**
+     * 查询text知识表
+     *
+     * @param queryDto 查询参数
+     * @return {@link PageResultVo}
+     */
+    @PostMapping(path = "/table/text/chunk-list")
+    public PageResultVo<String> queryTextChunkList(@RequestBody KbTextQueryDto queryDto) {
+        KTableDto tableDto = kTableService.getById(queryDto.getTableId());
+        return new PageResultVo<>(Math.toIntExact(tableDto.getRecordNum()),
+            knowledgeBaseService.queryTextChunkList(queryDto));
     }
 
     /**
@@ -266,19 +281,21 @@ public class KnowledgeBaseController {
      * @param chunkQueryDto 查询参数
      * @return 查询结果
      */
-    @PostMapping(path = "/chunks")
-    public PageResultVo<String> getChunk(@RequestBody KbChunkQueryDto chunkQueryDto) {
-        return kbGenerateService.getChunks(chunkQueryDto);
+    @PostMapping(path = "/table/chunks")
+    public PageResultVo<String> getChunks(@RequestBody KbChunkSearchDto chunkQueryDto) {
+        KTableDto tableDto = kTableService.getById(chunkQueryDto.getTableId());
+        return new PageResultVo<>(chunkQueryDto.getTopK(), knowledgeBaseService.searchKnowledgeTable(chunkQueryDto));
     }
 
     /**
      * 导入表格类型知识接口
      *
-     * @param tableConfigDto 文件导入配置信息
+     * @param param 表格型知识表创建参数
+     * @return 表格列信息
      */
-    @PostMapping(path = "/import-knowledge/table")
-    public void importTableKnowledge(@RequestBody KbGenerateConfigDto tableConfigDto) {
-        kbGenerateService.importTableKnowledge(tableConfigDto);
+    @PostMapping(path = "/table-knowledge/columns")
+    public List<TableKnowledgeColDto> getTableKnowledgeColumns(@RequestBody TableKnowledgeParam param) {
+        return knowledgeBaseService.getTableKnowledgeColumns(param);
     }
 
     /**
@@ -288,6 +305,6 @@ public class KnowledgeBaseController {
      */
     @PostMapping(path = "/table-knowledge/construct")
     public void createTableKnowledge(@RequestBody TableKnowledgeParam param) {
-        kTableService.createTableKnowledge(param);
+        knowledgeBaseService.createTableKnowledge(param);
     }
 }

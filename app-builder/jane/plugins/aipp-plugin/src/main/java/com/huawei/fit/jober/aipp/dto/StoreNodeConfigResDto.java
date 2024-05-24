@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.dto;
 
-import com.huawei.jade.store.model.transfer.ToolData;
+import com.huawei.jade.carver.tool.model.transfer.ToolData;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

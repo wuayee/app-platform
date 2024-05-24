@@ -1,4 +1,4 @@
 fit:
   beans:
     packages:
-    - 'com.huawei.jade.app.builder.store'
+    - 'com.huawei.jade.carver.tool.waterflow'

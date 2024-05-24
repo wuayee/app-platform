@@ -8,8 +8,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 9981
-      nodePort: {{nodePort}} # Will be exposed to host
+    - port: {{node_port}} # Will be exposed by the service
       targetPort: 9981 # Port of container
   selector:
     app: {{name}}_inference
@@ -37,14 +36,15 @@ spec:
           securityContext:
             privileged: true
           name: infer-{{name}}
-          command: ["/bin/bash", "-c", "sh /usr/local/ModelIO/bin/start_mindie.sh"]
+          command: ["/bin/bash"]
+          args: ["/root/mindie/start_mindie.sh"]
           env:
           - name: ModelName
             value: {{name}}
           - name: ModelWeightPath
             value: {{model_weight_path}}
           - name: WorldSize
-            value: "8"
+            value: "1"
           - name: Port
             value: "9981"
           volumeMounts:
@@ -52,14 +52,10 @@ spec:
             mountPath: /usr/local/Ascend/driver
           - name: localtime
             mountPath: /etc/localtime
-          - name: remote
-            mountPath: /mnt/remote
           - name: npu-smi
             mountPath: /usr/local/bin/npu-smi
           - name: model-weight-path
             mountPath: {{model_weight_path}}
-          - name: home
-            mountPath: /home
           ports:
             - containerPort: 9981
               protocol: TCP
@@ -79,6 +75,3 @@ spec:
       - name: model-weight-path
         hostPath:
           path: {{model_weight_path}}
-      - name: home
-        hostPath:
-          path: /home

@@ -18,19 +18,48 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class ExcelSourceTest {
     @Test
     void test_excel07_extract() {
         ExcelSource source = new ExcelSource();
-        source.load("src/test/testfiles/test.xlsx", 0, 1, 0);
+        source.parseContent("src/test/testfiles/test.xlsx", 0, 1, 0);
+
+        List<List<String>> contents = source.getContents();
+        assertEquals(contents.size(), 1);
+        assertEquals(contents.get(0).size(), 3);
     }
 
     @Test
     void test_excel03_extract() {
         ExcelSource source = new ExcelSource();
-        source.load("src/test/testfiles/test03.xls", 0, 1, 0);
+        source.parseContent("src/test/testfiles/test03.xls", 0, 1, 0);
+
+        List<List<String>> contents = source.getContents();
+        assertEquals(contents.size(), 1);
+        assertEquals(contents.get(0).size(), 3);
+    }
+
+    @Test
+    void test_extract_synonyms() {
+        ExcelSource source = new ExcelSource();
+        source.parseContent("src/test/testfiles/近义词test.xlsx", 0, 0, 0);
+
+        List<List<String>> contents = source.getContents();
+        assertEquals(contents.size(), 5);
+        assertEquals(contents.get(0).size(), 2);
+    }
+
+    @Test
+    void test_extract_relation_enums() {
+        ExcelSource source = new ExcelSource();
+        source.parseContent("src/test/testfiles/从属枚举test.xlsx", 0, 0, 0);
+
+        List<List<String>> contents = source.getContents();
+        assertEquals(contents.size(), 7);
+        assertEquals(contents.get(0).size(), 2);
     }
 
     @Disabled
