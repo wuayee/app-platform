@@ -44,6 +44,7 @@ const clickItem = (info: any) => {
 
   // 格式化时间
   const formateTime = (dateStr: Date)=> {
+    if(!dateStr) return ''
     const date = new Date(dateStr);
     const y = date.getFullYear();
     const m = date.getMonth() + 1;
@@ -60,7 +61,7 @@ return (
     height: 260
    }} onClick={()=> {jumpDetail(knowledge.id)}}>
     {/* 头部区域 */}
-    <div style={{
+    <div  style={{
       display: 'flex',
       gap: '16px',
       height: 57,

@@ -4,40 +4,40 @@ import { Button, Table, Input } from 'antd';
 import type { TableProps } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useSearchParams } from "react-router-dom";
-
+ 
 import Pagination from '../../components/pagination/index';
-
+ 
 import './index.scoped.scss';
 import { Icons, KnowledgeIcons } from '../icons';
 import DetailCard from '../knowledge-card/detail-card';
-
+ 
 interface props {
-
+ 
   // 知识表类型
   type: 'text' | 'table',
-
+ 
   // 知识库id
   reposId: string,
-
+ 
   // 知识表id
   id: string,
 }
-
+ 
 const KnowLedgeTable = ({ type, reposId, id }: props) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
+ 
   // 展示的数据
   const [data, setData] = useState<any[]>([])
-
+ 
     // 总条数
   const [total, setTotal] = useState(0);
   // 分页
   const [page, setPage] = useState(1);
-
+ 
   // 分页数
   const [pageSize, setPageSize] = useState(type == 'text' ? 12 : 10);
-
+ 
   // 分页变化
   const paginationChange = (curPage: number, curPageSize: number) => {
     if(page!==curPage) {
@@ -47,27 +47,27 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
       setPageSize(curPageSize);
     }
   }
-
+ 
   const pageSizeOptions = type == 'text' ? [12] : [10, 20, 50, 100]
-
+ 
   // 获取列表
   const refresh = ()=> {
-
+ 
   }
-
+ 
   // 点击更多操作
   const clickOpera = (type, data) => {
-
+ 
   }
-
+ 
   // 添加行
   const onAdd = () => {}
-
+ 
   // 搜索值变更
   const onSearchValueChange = (val: string) => {
-
+ 
   }
-
+ 
   const columns: TableProps<any>['columns'] = [
     {
       title: 'key',
@@ -92,7 +92,7 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
       render(_, record, index) {
         const deleteFunc =async () => {
         };
-
+ 
         const modifyFunc = async ()=> {
         }
         return (
@@ -105,12 +105,12 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
       },
     },
   ]
-
+ 
   useEffect(()=> {
     if(id) {
     }
   }, []);
-
+ 
   useEffect(()=> {
     if(id) {
       // getKnowledgeBase(id);
@@ -118,7 +118,7 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
     }
   }, [page, pageSize]);
   
-
+ 
   return (
     <>
       <div className='filter-area' >
@@ -160,7 +160,7 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
                 flex: '0'
               }} clickMore={(e)=> clickOpera(e, knowledge.id)}/>
             </>))}
-
+ 
         </div>
       </>)}
       <Pagination total = {total} current={page} onChange={paginationChange} pageSizeOptions={pageSizeOptions} pageSize={pageSize}/>

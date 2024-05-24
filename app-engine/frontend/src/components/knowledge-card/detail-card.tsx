@@ -44,6 +44,7 @@ const clickItem = (info: any) => {
 
   // 格式化时间
   const formateTime = (dateStr: Date)=> {
+    if(!dateStr) return ''
     const date = new Date(dateStr);
     const y = date.getFullYear();
     const m = date.getMonth() + 1;
@@ -67,7 +68,7 @@ return (
     }}>
       <div ><knowledge.icon/></div>
       <div >
-        <div className='headerTitle' style={{
+        <div style={{
           fontSize: 20,
           color: 'rgba(5, 5, 5, .96)'
         }}>

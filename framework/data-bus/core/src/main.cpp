@@ -11,6 +11,7 @@
 
 #include "log/Logger.h"
 #include "config/ConfigParser.h"
+#include "config/DataBusConfig.h"
 #include "task_handler/TaskLoop.h"
 #include "task_handler/TaskHandler.h"
 
@@ -21,8 +22,12 @@ using namespace std;
 namespace DataBus {
 
 const int MAX_EVENTS = 10;
+// TD: 从runtime config读取
 const int PORT = 5284;
 const int MAX_BUFFER_SIZE = 1024;
+// 内存分配上限40G
+// TD: 从runtime config读取
+constexpr uint64_t MALLOC_SIZE_LIMIT = 42949672960;
 
 void HandleEvent(struct epoll_event event, int epollFd, int serverFd,
     const shared_ptr<TaskLoop>& taskLoopPtr)
@@ -78,7 +83,9 @@ void StartDataBusService(int serverFd)
         return;
     }
     shared_ptr<TaskLoop> taskLoopPtr = std::make_shared<TaskLoop>();
-    unique_ptr<TaskHandler> taskHandlerPtr = std::make_unique<TaskHandler>(taskLoopPtr);
+    // TD: configParser从配置文件解析
+    const Runtime::Config config(PORT, MALLOC_SIZE_LIMIT);
+    unique_ptr<TaskHandler> taskHandlerPtr = std::make_unique<TaskHandler>(taskLoopPtr, config);
     taskHandlerPtr->Init();
     while (true) {
         HandleEvent(event, epollFd, serverFd, taskLoopPtr);

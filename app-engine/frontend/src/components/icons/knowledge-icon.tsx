@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-type IconProps = React.HTMLAttributes<SVGElement> & any
+type IconProps = React.HTMLAttributes<SVGElement> & any;
 
 export const KnowledgeIcons = {
   leftArrow: (props: IconProps) => (

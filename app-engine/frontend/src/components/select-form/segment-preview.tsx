@@ -1,12 +1,12 @@
 import React from 'react';
 import './segment-preview.scoped.scss';
-
+ 
 interface PreviewItem {
   title: string;
   content: string;
   chars: string;
 }
-
+ 
 const SegmentPreview: React.FC<{ data: PreviewItem[] }> = ({ data }) => {
   return (
     <div className='segment-preview'>
@@ -23,5 +23,5 @@ const SegmentPreview: React.FC<{ data: PreviewItem[] }> = ({ data }) => {
     </div>
   );
 };
-
+ 
 export default SegmentPreview;

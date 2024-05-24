@@ -101,7 +101,7 @@ class WaterFlowsTest {
 
         @BeforeEach
         void setUp() {
-            repo = new FlowContextMemoRepo();
+            repo = new FlowContextMemoRepo(true);
             messenger = new FlowContextMemoMessenger();
             locks = new FlowLocksMemo();
         }

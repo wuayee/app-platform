@@ -66,8 +66,8 @@ import com.huawei.fitframework.model.Tuple;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.store.model.transfer.ToolData;
-import com.huawei.jade.store.service.ToolService;
+import com.huawei.jade.carver.tool.model.transfer.ToolData;
+import com.huawei.jade.carver.tool.service.ToolService;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;

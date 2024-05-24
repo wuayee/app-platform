@@ -3,13 +3,13 @@
   padding: 24px;
   background-color: #fff;
   width: 400px;
-
+ 
   &-header {
     font-size: 16px;
     margin-bottom: 16px;
   }
 }
-
+ 
 .preview-item {
   padding: 16px;
   display: flex;
@@ -29,10 +29,10 @@
     border-radius: 4px;
     background-color: #fff;
   }
-
+ 
   &-content {
     word-break: break-all;
   }
-
-
+ 
+ 
 }

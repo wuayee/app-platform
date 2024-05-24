@@ -11,6 +11,7 @@
 
 #include "TaskLoop.h"
 #include "ApplyPermissionResponse.h"
+#include "config/DataBusConfig.h"
 #include "ConnectionManager.h"
 #include "ResourceManager.h"
 #include "fbs/common_generated.h"
@@ -21,10 +22,11 @@ namespace Task {
 
 class TaskHandler {
 public:
-    explicit TaskHandler(std::shared_ptr<TaskLoop> taskLoopPtr) : taskLoopPtr_(std::move(taskLoopPtr))
+    explicit TaskHandler(std::shared_ptr<TaskLoop> taskLoopPtr, const Runtime::Config& config)
+        : taskLoopPtr_(std::move(taskLoopPtr))
     {
-        connectionMgrPtr_ = std::make_unique<DataBus::Connection::ConnectionManager>();
-        resourceMgrPtr_ = std::make_unique<DataBus::Resource::ResourceManager>();
+        connectionMgrPtr_ = std::make_unique<DataBus::Connection::ConnectionManager>(config);
+        resourceMgrPtr_ = std::make_unique<DataBus::Resource::ResourceManager>(config);
     }
 
     void Init();

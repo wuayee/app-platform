@@ -1,7 +1,7 @@
 import { del, get, post, put } from './http';
 import { httpUrlMap } from './httpConfig';
 
-const { KNOWLEDGE_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
+const { KNOWLEDGE_URL = '/api/jober/knowledge' } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
 
 // 获取知识库 传参name offset size
 export function queryKnowledgeBase(data: { offset: number; size: number; name?: string }) {

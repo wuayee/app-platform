@@ -4,8 +4,10 @@
 
 package com.huawei.jade.fel.rag.store.connector;
 
+import com.huawei.jade.fel.rag.store.connector.schema.RdbColumn;
 import com.huawei.jade.fel.rag.store.query.Expression;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -51,18 +53,31 @@ public interface SqlConnector {
     /**
      * 创建表。
      *
+     * @param tableName 表名称
+     * @param columns 列信息
+     * @throws SQLException sql异常
      */
-    void createTable();
+    void createTable(String tableName, List<RdbColumn> columns) throws SQLException;
 
     /**
      * 删除表。
      *
+     * @param tableName 表名称
+     * @throws SQLException sql异常
      */
-    void dropTable();
+    void dropTable(String tableName) throws SQLException;
 
     /**
      * 关闭数据库连接。
-     *
      */
     void close();
+
+    /**
+     * 创建索引
+     *
+     * @param tableName 表名称
+     * @param columns 列信息
+     * @throws SQLException sql异常
+     */
+    void createIndex(String tableName, List<RdbColumn> columns) throws SQLException;
 }
