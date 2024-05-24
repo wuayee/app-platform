@@ -40,8 +40,8 @@ public class JdbcSqlConnector implements SqlConnector {
      * @param database database
      */
     public JdbcSqlConnector(@NonNull JdbcType dbType, ConnectorProperties properties, String database) {
-        String connStr = "jdbc:" + dbType.getName()
-                + "://" + properties.getHost() + ":" + properties.getPort() + "/" + database;
+        String connStr = "jdbc:" + dbType.getName() + "://" + properties.getHost() + ":" + properties.getPort() + "/"
+            + database;
         try {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(connStr, properties.getUsername(), properties.getPassword());
@@ -81,7 +81,8 @@ public class JdbcSqlConnector implements SqlConnector {
      * @param value 表示要插入的键值数据的 {@link Map}{@code <}{@link String},{@link Object}{@code >}。
      */
     @Override
-    public void put(String tableName, Map<String, Object> value) {}
+    public void put(String tableName, Map<String, Object> value) {
+    }
 
     /**
      * 根据传入的表名和删除语句进行删除。
@@ -90,7 +91,8 @@ public class JdbcSqlConnector implements SqlConnector {
      * @param expr 表示删除语句的 {@link Expression}。
      */
     @Override
-    public void delete(String tableName, Expression expr) {}
+    public void delete(String tableName, Expression expr) {
+    }
 
     /**
      * 执行sql语句。
@@ -110,7 +112,6 @@ public class JdbcSqlConnector implements SqlConnector {
                 rs = stmt.getResultSet();
                 rows = processRows(rs);
             }
-            connection.commit();
         } catch (SQLException e) {
             logger.error("Failed to execute sql");
         } finally {
@@ -163,35 +164,41 @@ public class JdbcSqlConnector implements SqlConnector {
      *
      * @param tableName 表名称
      * @param columns 列信息
+     * @throws SQLException sql异常
      */
     @Override
-    public void createTable(String tableName, List<RdbColumn> columns) {
+    public void createTable(String tableName, List<RdbColumn> columns) throws SQLException {
         List<String> commentSqls = new ArrayList<>();
-        StringBuilder sb = new StringBuilder(String.format("CREATE TABLE IF NOT EXISTS %s (", tableName));
+        StringBuilder sb = new StringBuilder(
+            String.format("CREATE TABLE IF NOT EXISTS %s (inner_id SERIAL PRIMARY KEY, ", tableName));
         if (columns != null && !columns.isEmpty()) {
             for (int i = 0; i < columns.size(); i++) {
                 RdbColumn column = columns.get(i);
                 sb.append(column.toSqlString());
                 sb.append(i == columns.size() - 1 ? "" : ",");
-                commentSqls.add(
-                    String.format("COMMENT ON COLUMN %s.%s is '%s';", tableName, column.getName(), column.getDesc()));
+                commentSqls.add(String.format("COMMENT ON COLUMN %s.user_%s is '%s';", tableName, column.getName(),
+                    column.getDesc()));
             }
             sb.append(");");
         }
         String createSql = sb.toString();
         Statement stmt = null;
         try {
+            disableAutoCommit();
             stmt = connection.createStatement();
             stmt.addBatch(createSql);
             for (String commentSql : commentSqls) {
                 stmt.addBatch(commentSql);
             }
-            stmt.executeBatch();
+            int[] result = stmt.executeBatch();
             connection.commit();
             logger.info(String.format("Succeed to create table knowledge: %s", tableName));
         } catch (SQLException e) {
-            logger.error(String.format("Failed to create table knowledge: %s", tableName));
+            rollBack();
+            logger.error(String.format("Failed to create table knowledge: %s, rolled back", tableName));
+            throw new SQLException(String.format("Failed to create table knowledge: %s, rolled back", tableName));
         } finally {
+            enableAutoCommit();
             close(stmt);
         }
     }
@@ -200,9 +207,10 @@ public class JdbcSqlConnector implements SqlConnector {
      * 删除表。
      *
      * @param tableName 表名称
+     * @throws SQLException sql异常
      */
     @Override
-    public void dropTable(String tableName) {
+    public void dropTable(String tableName) throws SQLException {
         Statement stmt = null;
         try {
             stmt = connection.createStatement();
@@ -211,6 +219,7 @@ public class JdbcSqlConnector implements SqlConnector {
             logger.info(String.format("Succeed to drop table: %s", tableName));
         } catch (SQLException e) {
             logger.error(String.format("Failed to drop table: %s", tableName));
+            throw new SQLException(String.format("Failed to drop table: %s", tableName));
         } finally {
             close(stmt);
         }
@@ -225,6 +234,63 @@ public class JdbcSqlConnector implements SqlConnector {
             connection.close();
         } catch (SQLException e) {
             logger.error("Open config file err");
+        }
+    }
+
+    @Override
+    public void createIndex(String tableName, List<RdbColumn> columns) throws SQLException {
+        if (columns == null || columns.isEmpty()) {
+            return;
+        }
+        List<String> indexSqls = new ArrayList<>();
+        for (RdbColumn column : columns) {
+            String colName = column.getName();
+            if (column.isIndex()) {
+                indexSqls.add(
+                    String.format("CREATE INDEX %s_idx_user_%s ON %s(user_%s);", tableName, colName, tableName,
+                        colName));
+            }
+        }
+        Statement stmt = null;
+        try {
+            disableAutoCommit();
+            stmt = connection.createStatement();
+            for (String indexSql : indexSqls) {
+                stmt.addBatch(indexSql);
+            }
+            int[] result = stmt.executeBatch();
+            connection.commit();
+        } catch (SQLException e) {
+            rollBack();
+            logger.error(String.format("Fail to create index on table %s", tableName));
+            throw new SQLException(String.format("Fail to create index on table %s", tableName));
+        } finally {
+            enableAutoCommit();
+            close(stmt);
+        }
+    }
+
+    private void disableAutoCommit() {
+        try {
+            connection.setAutoCommit(false);
+        } catch (SQLException e) {
+            logger.error("Failed to disable auto commit.");
+        }
+    }
+
+    private void enableAutoCommit() {
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            logger.error("Failed to enable auto commit.");
+        }
+    }
+
+    private void rollBack() {
+        try {
+            connection.rollback();
+        } catch (SQLException e) {
+            logger.error("Failed to rollback.");
         }
     }
 }

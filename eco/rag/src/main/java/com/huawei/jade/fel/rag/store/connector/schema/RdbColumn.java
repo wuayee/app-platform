@@ -28,14 +28,20 @@ public class RdbColumn {
     /** 描述 */
     private String desc;
 
+    /** 是否为索引列 */
+    private boolean isIndex;
+
     /**
      * 转换为关系型数据库创表语句
+     * <p>
+     * 用户填写的表名均会加上 user_ 前缀
+     * </p>
      *
      * @return 创表sql语句
-     * */
+     */
     public String toSqlString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.name);
+        sb.append("user_").append(this.name);
         switch (this.type) {
             case VARCHAR:
                 sb.append(" VARCHAR(400)");

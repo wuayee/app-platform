@@ -48,7 +48,7 @@ public class UploadController {
      * @param knowledgeTableId 表id
      * @param fileNames 文件名
      */
-    @DeleteMapping("/{knowledge_id}/table/{knowledge_table_id}/files")
+    @DeleteMapping("/{knowledge_id}/table/{knowledge_table_id}/files/delete")
     public void delete(@PathVariable("knowledge_id") Long knowledgeId,
         @PathVariable("knowledge_table_id") Long knowledgeTableId, @RequestBody List<String> fileNames) {
         fileNames.forEach(fileName -> fileService.deleteFiles(knowledgeId, knowledgeTableId, fileName));

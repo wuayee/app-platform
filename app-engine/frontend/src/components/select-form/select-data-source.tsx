@@ -1,10 +1,11 @@
-import { FormInstance, Input, Radio, Form, Upload, Table, TableColumnsType } from 'antd';
-import React, { ReactElement, useEffect, useRef, useState } from 'react';
+import { FormInstance, Input, Radio, Form } from 'antd';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { KnowledgeIcons } from '../icons';
 
 import './style.scoped.scss';
 import CustomTable from './custom-table';
 import LocalUpload from './local-upload';
+import { getPlugins } from '../../shared/http/knowledge';
 
 interface props {
   type: 'text' | 'table';
@@ -34,7 +35,12 @@ type FieldType = {
   tableCustom?: any[];
 };
 
-const { Dragger } = Upload;
+const DataSourceStyle: { [key: string]: React.CSSProperties } = {
+  FormItem: {
+    marginTop: 16,
+    width: 800,
+  },
+};
 
 const SelectDataSource = ({ type, form }: props) => {
   const initialValues: FieldType = {
@@ -43,14 +49,6 @@ const SelectDataSource = ({ type, form }: props) => {
 
   // 监听类型变化
   const datasourceType = Form.useWatch('datasourceType', form);
-
-  const submit = () => {
-    form.submit();
-  };
-  const onFinish = async (value: FieldType) => {
-    // loading状态点击不触发，禁止多次触发提交
-  };
-
   interface DataSourceOption {
     label: string;
     value: string;
@@ -81,22 +79,31 @@ const SelectDataSource = ({ type, form }: props) => {
     }
   }, [type]);
 
+  const checkTableRead = (_: any, value: any[]) => {
+
+    if (value.length) {
+      for (let index = 0; index < value.length; index++) {
+        const item = value[index];
+
+        const keys = Object.keys(item);
+
+        for (let j = 0; j < keys.length; j++) {
+          const key = keys[index];
+          if(!item[key]) {
+            return Promise.reject(new Error('值不能为空'));
+          }
+        }
+      }
+    }
+
+    return Promise.resolve();
+  };
+
   return (
     <>
       <div>
-        <Form<FieldType>
-          layout={'vertical'}
-          form={form}
-          initialValues={initialValues}
-          onFinish={onFinish}
-        >
-          <Form.Item
-            name='datasourceType'
-            style={{
-              marginTop: 16,
-              width: 800,
-            }}
-          >
+        <Form<FieldType> layout='vertical' form={form} initialValues={initialValues}>
+          <Form.Item name='datasourceType' style={DataSourceStyle.FormItem}>
             <Radio.Group className='radio-card-group'>
               {dataSourceOptions.map((option) => (
                 <Radio.Button
@@ -116,12 +123,22 @@ const SelectDataSource = ({ type, form }: props) => {
             <Form.Item
               label='上传文本文件'
               name='selectedFile'
-              style={{
-                marginTop: 16,
-                width: 800,
-              }}
+              style={DataSourceStyle.FormItem}
+              required
+              validateStatus={'error'}
+              rules={[
+                {
+                  required: true,
+                  message: '文件不能为空',
+                  validator: (_, value) => {
+                    return value && value.length
+                      ? Promise.resolve()
+                      : Promise.reject(new Error('无文件'));
+                  },
+                },
+              ]}
             >
-              <LocalUpload />
+              <LocalUpload form={form} />
             </Form.Item>
           )}
 
@@ -131,9 +148,7 @@ const SelectDataSource = ({ type, form }: props) => {
                 label='NAS地址'
                 rules={[{ required: true, message: '输入不能为空' }]}
                 name='nasUrl'
-                style={{
-                  marginTop: 16,
-                }}
+                style={DataSourceStyle.FormItem}
               >
                 <Input placeholder='请输入NAS地址' />
               </Form.Item>
@@ -142,9 +157,7 @@ const SelectDataSource = ({ type, form }: props) => {
                 label='文本路径'
                 rules={[{ required: true, message: '输入不能为空' }]}
                 name='nasFileUrl'
-                style={{
-                  marginTop: 16,
-                }}
+                style={DataSourceStyle.FormItem}
               >
                 <Input placeholder='请输入文本路径' />
               </Form.Item>
@@ -156,15 +169,24 @@ const SelectDataSource = ({ type, form }: props) => {
               label='添加内容'
               rules={[{ required: true, message: '输入不能为空' }]}
               name='textCustom'
-              style={{
-                marginTop: 16,
-              }}
+              style={DataSourceStyle.FormItem}
             >
               <Input placeholder='请输入要添加的内容' />
             </Form.Item>
           )}
 
-          {datasourceType === 'custom' && type === 'table' && <CustomTable />}
+          {datasourceType === 'custom' && type === 'table' && (
+            <Form.Item
+              label='自定义知识表'
+              rules={[{ required: true, message: '输入不能为空' }, {validator: checkTableRead, message: '输入的值不能为空'}]}
+              name='tableCustom'
+              style={{
+                marginTop: 16,
+              }}
+            >
+              <CustomTable />
+            </Form.Item>
+          )}
         </Form>
       </div>
     </>
