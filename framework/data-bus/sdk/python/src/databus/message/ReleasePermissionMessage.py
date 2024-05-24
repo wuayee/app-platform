@@ -43,7 +43,7 @@ class ReleasePermissionMessage(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+        return -1
 
 def ReleasePermissionMessageStart(builder):
     builder.StartObject(3)
@@ -64,7 +64,7 @@ def AddObjectKey(builder, objectKey):
     ReleasePermissionMessageAddObjectKey(builder, objectKey)
 
 def ReleasePermissionMessageAddMemoryKey(builder, memoryKey):
-    builder.PrependInt32Slot(2, memoryKey, 0)
+    builder.PrependInt32Slot(2, memoryKey, -1)
 
 def AddMemoryKey(builder, memoryKey):
     ReleasePermissionMessageAddMemoryKey(builder, memoryKey)
