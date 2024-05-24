@@ -13,6 +13,7 @@ export const httpUrlMap = {
     MODEL_URL: '/modelApi',
     APP_URL: '/app',
     MODEL_LIST_URL: '/v1',
+    APP_EVALUATE_URL: '/evaluate',
   },
   'production': {
     JANE_URL: 'https://jane.huawei.com/api',

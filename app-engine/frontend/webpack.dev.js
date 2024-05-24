@@ -123,6 +123,12 @@ module.exports = merge(common, {
         secure: false,
         changeOrigin: true,
       },
+      "/evaluate": {
+        target: 'http://10.108.218.151:8088',
+        pathRewrite: {"^/evaluate": ""},
+        secure: false,
+        changeOrigin: true,
+      },
     },
   },
 });
