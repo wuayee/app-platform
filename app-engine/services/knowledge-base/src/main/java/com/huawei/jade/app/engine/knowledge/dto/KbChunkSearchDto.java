@@ -43,5 +43,5 @@ public class KbChunkSearchDto {
     /**
      * 列
      */
-    private Integer columnId;
+    private String columnName;
 }
