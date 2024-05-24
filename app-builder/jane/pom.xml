@@ -17,6 +17,7 @@
         <module>flow-graph</module>
         <module>jober</module>
         <module>plugins</module>
+        <module>services</module>
         <module>task-default-driver-jade</module>
         <module>jober-multiversion-genericable</module>
         <module>jober-genericable</module>

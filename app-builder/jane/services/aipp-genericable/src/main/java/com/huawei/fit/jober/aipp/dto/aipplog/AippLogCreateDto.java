@@ -49,6 +49,11 @@ public class AippLogCreateDto {
     @Property(description = "log path")
     private String path;
 
+    /**
+     * 判断所有字段是否为空。
+     *
+     * @return 表示所有字段是否为空的 {@code boolean}。
+     */
     public boolean allFieldsNotNull() {
         return Stream.of(aippId, version, aippType, instanceId, logData, logType, createUserAccount, path)
                 .allMatch(Objects::nonNull);

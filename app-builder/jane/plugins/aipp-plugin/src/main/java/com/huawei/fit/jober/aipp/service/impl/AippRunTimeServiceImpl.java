@@ -99,7 +99,8 @@ import java.util.stream.Stream;
  * @since 2023-12-15
  */
 @Component
-public class AippRunTimeServiceImpl implements AippRunTimeService {
+public class AippRunTimeServiceImpl
+        implements AippRunTimeService, com.huawei.fit.jober.aipp.genericable.AippRunTimeService {
     private static final String DEFAULT_QUESTION = "请解析以下文件。";
     private static final Logger log = Logger.get(AippRunTimeServiceImpl.class);
     private final MetaService metaService;
@@ -354,7 +355,6 @@ public class AippRunTimeServiceImpl implements AippRunTimeService {
             default:
                 return getConversationTurns(aippId, aippType, 5, context);
         }
-
     }
 
     private List<Map<String, Object>> getConversationTurns(String aippId, String aippType, Integer count,

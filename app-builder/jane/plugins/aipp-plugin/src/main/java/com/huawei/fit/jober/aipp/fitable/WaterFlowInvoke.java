@@ -7,7 +7,7 @@ package com.huawei.fit.jober.aipp.fitable;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.WaterFlowService;
 import com.huawei.fit.jober.aipp.constants.AippConst;
-import com.huawei.fit.jober.aipp.service.AippRunTimeService;
+import com.huawei.fit.jober.aipp.genericable.AippRunTimeService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;

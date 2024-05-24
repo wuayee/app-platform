@@ -25,34 +25,28 @@ import java.util.Optional;
  * @since 2024-04-17
  */
 public interface AppBuilderAppService {
-    @Genericable(id = "a389e19779fcc245b7a6135a46eb5864")
-    Rsp<AppBuilderAppDto> query(HttpClassicServerRequest httpRequest, String appId);
-
-    @Genericable(id = "a389e20209fcc245b7a6135a46eb5864")
+    @Genericable(id = "com.huawei.fit.jober.aipp.service.app.create")
     AppBuilderAppDto create(String appId, AppBuilderAppCreateDto dto, OperationContext context);
 
-    @Genericable(id = "a389e20219fcc245b7a6135a46eb5864")
+    @Genericable(id = "com.huawei.fit.jober.aipp.service.app.update")
     Rsp<AppBuilderAppDto> updateApp(String appId, AppBuilderAppDto appDto, OperationContext context);
 
-    @Genericable(id = "a389e20229fcc245b7a6135a46eb5864")
+    @Genericable(id = "com.huawei.fit.jober.aipp.service.config.update")
     Rsp<AppBuilderAppDto> updateConfig(String appId, AppBuilderConfigDto configDto, OperationContext context);
 
-    @Genericable(id = "a389e20239fcc245b7a6135a46eb5864")
+    @Genericable(id = "com.huawei.fit.jober.aipp.service.flow.graph.update")
     Rsp<AppBuilderAppDto> updateFlowGraph(String appId, AppBuilderFlowGraphDto graphDto, OperationContext context);
 
-    @Genericable(id = "a389e19779fcc245b7a6135a46eb5865")
+    @Genericable(id = "com.huawei.fit.jober.aipp.service.app.publish")
     Rsp<AippCreateDto> publish(AppBuilderAppDto appDto, OperationContext contextOf);
 
-    @Genericable(id = "a389e19779fcc245b7a6135a46eb5863")
-    Rsp<AippCreateDto> debug(AppBuilderAppDto appDto, OperationContext contextOf);
-
-    @Genericable(id = "a389e19779fcc245b7a6135a46eb5866")
+    @Genericable(id = "com.huawei.fit.jober.aipp.service.get.property.by.name")
     Optional<AppBuilderConfigFormPropertyDto> getPropertyByName(String appId, String name);
 
-    @Genericable(id = "a389e19779fcc245b7a6135a46eb5850")
+    @Genericable(id = "com.huawei.fit.jober.aipp.service.app.list")
     Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(AppQueryCondition cond, HttpClassicServerRequest httpRequest, String tenantId,
             long offset, int limit);
 
-    @Genericable(id = "aebcb2ec94a6bb4180a1f460e6b90ccd")
+    @Genericable(id = "com.huawei.fit.jober.aipp.service.app.delete")
     void delete(String appId, OperationContext context);
 }
