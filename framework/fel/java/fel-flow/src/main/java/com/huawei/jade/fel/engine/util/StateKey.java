@@ -45,4 +45,9 @@ public interface StateKey {
      * 表示流式模型节点处理器。
      */
     String STREAMING_FLOW_CONTEXT = "streaming_flow_context";
+
+    /**
+     * 表示工具调用的上下文。
+     */
+    String TOOL_CONTEXT = "tool_context";
 }

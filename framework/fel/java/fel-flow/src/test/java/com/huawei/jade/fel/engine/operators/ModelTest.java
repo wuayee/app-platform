@@ -8,13 +8,21 @@ import static com.huawei.jade.fel.utils.FlowsTestUtils.waitUntil;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
+import com.huawei.fit.waterflow.domain.utils.SleepUtil;
+import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.flowable.Choir;
+import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatMessages;
+import com.huawei.jade.fel.chat.ChatOptions;
+import com.huawei.jade.fel.chat.character.AbstractChatMessage;
 import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.content.Contents;
 import com.huawei.jade.fel.chat.content.MediaContent;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
+import com.huawei.jade.fel.core.formatters.OutputParser;
+import com.huawei.jade.fel.core.formatters.json.JsonOutputParser;
 import com.huawei.jade.fel.core.memory.CacheMemory;
 import com.huawei.jade.fel.core.memory.Memory;
 import com.huawei.jade.fel.core.util.Tip;
@@ -24,6 +32,8 @@ import com.huawei.jade.fel.engine.flows.Conversation;
 import com.huawei.jade.fel.engine.operators.models.ChatBlockModel;
 import com.huawei.jade.fel.engine.operators.models.ChatStreamModel;
 import com.huawei.jade.fel.engine.operators.prompts.Prompts;
+
+import lombok.Data;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -42,6 +52,14 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 2024-05-08
  */
 public class ModelTest {
+    private static final ObjectSerializer TEST_SERIALIZER = new JacksonObjectSerializer(null, null, null);
+
+    @Data
+    private static class ModelOutput {
+        @Property(description = "model answer")
+        private String ans;
+    }
+
     @Test
     void shouldOkWhenBlockModelWithSettingMemoryKey() {
         List<ChatMessages> messages = new ArrayList<>();
@@ -56,10 +74,33 @@ public class ModelTest {
         Conversation<Tip, AiMessage> session = flow.converse().bind(memory);
         session.doOnSuccess(data -> messages.add(ChatMessages.from(data))).offer(Tip.fromArray("question 1")).await();
 
-        assertThat(messages).hasSize(1);
+        assertThat(messages).hasSize(1).map(m -> m.messages().size()).containsSequence(1);
         // 仅保存用户指定的内容
-        assertThat(messages.get(0).messages()).hasSize(1);
         assertThat(memory.text()).isEqualTo("human:question 1\n" + "ai:model answer");
+    }
+
+    @Test
+    void shouldOkWhenBlockModelWithFormatter() {
+        OutputParser<ModelOutput> parser =
+                JsonOutputParser.create(TEST_SERIALIZER, ModelOutput.class);
+
+        ChatBlockModel<ChatMessages> model =
+                new ChatBlockModel<>(prompts -> new FlatChatMessage(new AiMessage("{\"ans\":\"model answer\"}")));
+        AiProcessFlow<Tip, ModelOutput> flow = AiFlows.<Tip>create()
+                .prompt(Prompts.human("{{question}}"))
+                .generate(model.bind(new ChatOptions()))
+                .map(AbstractChatMessage::text)
+                .format(parser)
+                .close();
+
+        AtomicReference<ModelOutput> modelOutput = new AtomicReference<>();
+        Memory memory = new CacheMemory();
+        Conversation<Tip, ModelOutput> session = flow.converse().bind(memory);
+        session.doOnSuccess(modelOutput::set).offer(Tip.from("question", "question 1")).await();
+
+        assertThat(modelOutput.get()).isNotEqualTo(null);
+        assertThat(modelOutput.get().getAns()).isEqualTo("model answer");
+        assertThat(memory.text()).isEqualTo("human:question 1\n" + "ai:{\"ans\":\"model answer\"}");
     }
 
     @Nested
@@ -68,6 +109,7 @@ public class ModelTest {
         private final ChatStreamModel<ChatMessages> model = new ChatStreamModel<>(input -> Choir.create(emitter -> {
             for (int i = 0; i < 4; i++) {
                 emitter.emit(new FlatChatMessage(new AiMessage(String.valueOf(i))));
+                SleepUtil.sleep(10);
             }
             emitter.complete();
         }));

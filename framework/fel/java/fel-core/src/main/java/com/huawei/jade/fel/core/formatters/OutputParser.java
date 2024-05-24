@@ -13,4 +13,4 @@ package com.huawei.jade.fel.core.formatters;
  * @see Parser
  * @since 2024-04-28
  */
-public interface OutputParser<O> extends Formatter, Parser<O> {}
+public interface OutputParser<O> extends Formatter, Parser<String, O> {}
