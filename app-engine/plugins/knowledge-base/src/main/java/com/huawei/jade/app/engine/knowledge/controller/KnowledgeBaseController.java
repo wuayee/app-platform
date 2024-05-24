@@ -36,6 +36,7 @@ import com.huawei.jade.app.engine.knowledge.vo.PageResultVo;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -294,7 +295,7 @@ public class KnowledgeBaseController {
      */
     @PostMapping(path = "/table-knowledge/columns")
     public List<TableKnowledgeColDto> getTableKnowledgeColumns(@RequestBody TableKnowledgeParam param) {
-        return knowledgeBaseService.getTableKnowledgeColumns(param);
+        return knowledgeBaseService.getTableKnowledgePreviewColumns(param);
     }
 
     /**
@@ -305,5 +306,29 @@ public class KnowledgeBaseController {
     @PostMapping(path = "/table-knowledge/construct")
     public void createTableKnowledge(@RequestBody TableKnowledgeParam param) {
         knowledgeBaseService.createTableKnowledge(param);
+    }
+
+    /**
+     * 表格型知识检索接口
+     *
+     * @param param 表格型知识检索参数
+     * @return 表格型知识
+     */
+    @PostMapping(path = "/table-knowledge/rows")
+    public PageResultVo<Map<String, Object>> getTableKnowledge(@RequestBody TableKnowledgeParam param) {
+        return knowledgeBaseService.getTableKnowledgeDbRows(param);
+    }
+
+    /**
+     * 表格型知识数据库列信息检索接口
+     *
+     * @param repoId 知识库id
+     * @param tableId 知识表id
+     * @return 表格型知识列信息
+     */
+    @GetMapping(path = "/table-knowledge/column/{repo-id}/{table-id}")
+    public List<TableKnowledgeColDto> getTableKnowledgeDbColumns(@PathVariable("repo-id") Long repoId,
+        @PathVariable("table-id") Long tableId) {
+        return knowledgeBaseService.getTableKnowledgeDbColumns(repoId, tableId);
     }
 }
