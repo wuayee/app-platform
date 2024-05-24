@@ -22,8 +22,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AppQueryCondition {
     private String tenantId;
-    private String name;
     private String type;
+
+    @RequestQuery(name = "name", required = false)
+    private String name;
 
     @Property(description = "排序条件,支持字段:create_at/update_at", example = "create_at")
     @RequestQuery(name = "sort", required = false, defaultValue = "update_at")
