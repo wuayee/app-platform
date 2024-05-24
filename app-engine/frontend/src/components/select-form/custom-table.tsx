@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { TableProps } from 'antd';
 import { Button, Form, Input, Select, Space, Table, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import './style.scoped.scss';
+import { Recoverable } from 'repl';
 
 interface Item {
   key: string;
@@ -11,15 +12,17 @@ interface Item {
   indexType: string;
 }
 
-const originData: Item[] = [];
-for (let i = 0; i < 100; i++) {
-  originData.push({
-    key: i.toString(),
-    colName: `Edward ${i}`,
-    dataType: '',
-    indexType: ` ${i}`,
-  });
-}
+const options=[
+  { value: 'other', label: '其他索引' },
+  { value: 'vector', label: '向量索引' },
+];
+
+const dataOptions=[
+  { value: 'VARCHAR', label: '字符' },
+  { value: 'NUMBER', label: '数字' },
+];
+
+
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -28,6 +31,27 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   record: Item;
   index: number;
 }
+
+// 选择数据源表单配置
+type FieldType = {
+  // 选择文档类型
+  datasourceType: 'local' | 'nas' | 'custom';
+
+  // 上传文本文件 local类型
+  selectedFile?: FileList;
+
+  // NAS 类型
+  nasUrl?: string;
+
+  // nas文件路径
+  nasFileUrl?: string;
+
+  // 文本自定义内容 custom
+  textCustom?: string;
+
+  // 表格自定义内容 custom
+  tableCustom?: any[];
+};
 
 const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
   editing,
@@ -42,10 +66,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
   const inputNode =
     inputType === 'select' ? (
       <Select
-        options={[
-          { value: 'other', label: '其他索引' },
-          { value: 'vector', label: '向量索引' },
-        ]}
+        options={dataIndex === 'dataType' ? dataOptions: options}
       />
     ) : (
       <Input />
@@ -73,10 +94,22 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
   );
 };
 
-const CustomTable: React.FC = () => {
+interface PriceInputProps {
+  id?: string;
+  value?: Item[];
+  onChange?: (value: Item[]) => void;
+}
+
+const CustomTable: React.FC<PriceInputProps> = (props) => {
+  const { id, value = [], onChange } = props;
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
+  const [data, setData] = useState(value);
   const [editingKey, setEditingKey] = useState('');
+
+
+  const triggerChange = (changedValue: Item[]) => {
+    onChange?.([...changedValue]);
+  };
 
   const isEditing = (record: Item) => record.key === editingKey;
 
@@ -84,6 +117,17 @@ const CustomTable: React.FC = () => {
     form.setFieldsValue({ colName: '', dataType: '', indexType: '', ...record });
     setEditingKey(record.key);
   };
+
+  // 移除数据
+  const removeData = (record: Partial<Item> & { key: React.Key }) => {
+    const index = data.findIndex(item=> record.key === item.key);
+    if(index !== -1) {
+      const newData = [...data]
+      newData.splice(index, 1);
+      setData([...newData]);
+      triggerChange(newData);
+    }
+  }
 
   const cancel = () => {
     setEditingKey('');
@@ -108,6 +152,8 @@ const CustomTable: React.FC = () => {
         setData(newData);
         setEditingKey('');
       }
+      form.setFieldsValue({});
+      triggerChange([...newData])
     } catch (errInfo) {
       console.log('Validate Failed:', errInfo);
     }
@@ -125,12 +171,22 @@ const CustomTable: React.FC = () => {
       dataIndex: 'dataType',
       width: '30%',
       editable: true,
+      render: (_: any, record: Item) => {
+        return (<>
+          {dataOptions.find(item=> item.value === _)?.label || ''}
+        </>)
+      }
     },
     {
       title: '索引类型',
       dataIndex: 'indexType',
       width: '30%',
       editable: true,
+      render: (_: any, record: Item) => {
+        return (<>
+          {options.find(item=> item.value === _)?.label || ''}
+        </>)
+      }
     },
     {
       title: '操作',
@@ -143,14 +199,13 @@ const CustomTable: React.FC = () => {
             <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
               保存
             </Typography.Link>
-            <a onClick={() => setEditingKey('')}>取消</a>
           </Space>
         ) : (
           <Space>
             <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
               编辑
             </Typography.Link>
-            <a>删除</a>
+            <a onClick={()=> {removeData(record)}}>删除</a>
           </Space>
         );
       },
@@ -174,16 +229,17 @@ const CustomTable: React.FC = () => {
   });
 
   const handleAddColumn = () => {
-    const key = data.length.toString();
+    const key = (data.length + 1).toString();
     setData([{ colName: '', dataType: '', indexType: '', key }, ...data]);
+    form.setFieldsValue({ colName: '', dataType: '', indexType: '', key });
+    triggerChange([{ colName: '', dataType: '', indexType: '', key }, ...data])
     setEditingKey(key);
   };
 
   return (
-    <Form form={form} component={false}>
+    <Form<FieldType> form={form} component={false}>
       <div className='custom-table-header'>
-        <span>自定义知识表</span>
-        <Button type='primary' icon={<PlusOutlined />} onClick={handleAddColumn}>
+        <Button type='primary' icon={<PlusOutlined />} onClick={handleAddColumn} disabled={ editingKey ? true : false }>
           添加列
         </Button>
       </div>
@@ -199,6 +255,7 @@ const CustomTable: React.FC = () => {
         rowClassName='editable-row'
         pagination={{
           onChange: cancel,
+          disabled: editingKey ? true : false,
         }}
       />
     </Form>
