@@ -25,6 +25,7 @@ import com.huawei.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BinaryOperator;
 
@@ -129,6 +130,12 @@ public class DefaultInvoker implements Invoker {
     @Override
     public Invoker ignoreDegradation() {
         this.contextBuilder.withDegradation(false);
+        return this;
+    }
+
+    @Override
+    public Invoker filterExtensions(Map<String, Object> filterExtensions) {
+        this.contextBuilder.filterExtensions(filterExtensions);
         return this;
     }
 
