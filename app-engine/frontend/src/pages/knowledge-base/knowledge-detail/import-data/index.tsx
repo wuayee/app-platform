@@ -199,7 +199,9 @@ const KnowledgeBaseDetailImportData = () => {
   useEffect(() => {
   }, []);
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    navigate(-1);
+  };
 
   return (
     <>

@@ -1,23 +1,12 @@
 import React, { ReactElement } from 'react';
-import { Card } from 'antd';
+import { Card, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import { Button, Dropdown, Space } from 'antd';
 import { url } from 'inspector';
-import { Icons } from '../icons/index';
+import { Icons, KnowledgeIcons } from '../icons/index';
 import { useNavigate } from 'react-router-dom';
-export interface knowledgeBase {
-  name: string;
-  createdAt: string;
-  ownerName: string;
-  icon: () => ReactElement;
 
-  description: string;
-
-  id: string;
-
-}
-
-const DetailCard = ({knowledge, clickMore}: {knowledge: knowledgeBase, clickMore: (type: 'delete') => void }) => {
+const DetailCard = ({knowledge, clickMore, currentIndex}: {knowledge: string, currentIndex: number, clickMore: (type: 'delete') => void }) => {
   // 路由
   const navigate = useNavigate();
   const operatorItems: MenuProps['items'] = [
@@ -37,50 +26,32 @@ const DetailCard = ({knowledge, clickMore}: {knowledge: knowledgeBase, clickMore
 const clickItem = (info: any) => {
   clickMore(info.key)
 }
-  // 跳转至详情
-  const jumpDetail = (id: string) => {
-    navigate(`/knowledge-base/knowledge-detail?id=${id}`)
-  }
 
-  // 格式化时间
-  const formateTime = (dateStr: Date)=> {
-    if(!dateStr) return ''
-    const date = new Date(dateStr);
-    const y = date.getFullYear();
-    const m = date.getMonth() + 1;
-    const d = date.getDate();
-    const hh = date.getHours();
-    const mm = date.getMinutes();
-    const ss = date.getSeconds();
-    return `${y}.${m}.${d}`;
-  }
 return (
   <Card style={{ 
-    width: 380, 
+    width: 440, 
     background: 'url(/src/assets/images/knowledge/knowledge-background.png)',
-    height: 260
-   }} onClick={()=> {jumpDetail(knowledge.id)}}>
+    height: 230,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover'
+   }} >
     {/* 头部区域 */}
     <div  style={{
       display: 'flex',
       gap: '16px',
-      height: 57,
+      height: 22,
     }}>
-      <div ><knowledge.icon/></div>
-      <div >
-        <div style={{
-          fontSize: 20,
-          color: 'rgba(5, 5, 5, .96)'
-        }}>
-          {knowledge.name}
-        </div>
-        <div  style={{
-          fontSize: 14,
-          color: 'rgba(105, 105, 105, .9)'
-        }}>
-          {`${knowledge.ownerName}创建于${formateTime(knowledge.createdAt as any as Date)}` }
-        </div>
-      </div>
+      <span style={
+        {
+          border: '1px solid #e6e6e6',
+          borderRadius: 5,
+          height: 22,
+          width: 'auto',
+          padding: '0 4px',
+          backgroundColor: '#fff'
+        }
+      }>#{currentIndex.toString().padStart(3, '0')}</span>
+
     </div>
 
     {/* 描述 */}
@@ -92,15 +63,31 @@ return (
       textAlign: 'justify',
       minHeight: 100
     }}>
-      {knowledge.description}
+      <Tooltip placement="top" title={knowledge} >
+          {knowledge?.substring(0, 100)}{knowledge?.length>=100 ? '...': ''}
+      </Tooltip>
     </div>
 
     {/* 底部 */}
     <div  style={{
       display: 'flex',
-      justifyContent: 'flex-end',
+      justifyContent: 'space-between',
       marginTop: 16,
     }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        <KnowledgeIcons.t/> 
+        
+        <span style={{
+          marginLeft: 2,
+          fontSize: 12,
+          color: '#444'
+        }}>
+          {`${knowledge.length ?? 0} 字符`}
+        </span>
+      </div>
       <div >
         <Dropdown menu={{ items: operatorItems, onClick: (info)=> {clickItem(info); info.domEvent.stopPropagation()} }} placement="bottomLeft" trigger={['click']} >
           <div style={{
