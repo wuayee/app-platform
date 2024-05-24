@@ -17,7 +17,7 @@ export interface knowledgeBase {
 
 }
 
-const App = ({knowledge, clickMore}: {knowledge: knowledgeBase, clickMore: (type: 'delete') => void }) => {
+const DetailCard = ({knowledge, clickMore}: {knowledge: knowledgeBase, clickMore: (type: 'delete') => void }) => {
   // 路由
   const navigate = useNavigate();
   const operatorItems: MenuProps['items'] = [
@@ -68,7 +68,7 @@ return (
     }}>
       <div ><knowledge.icon/></div>
       <div >
-        <div  style={{
+        <div style={{
           fontSize: 20,
           color: 'rgba(5, 5, 5, .96)'
         }}>
@@ -114,4 +114,4 @@ return (
   </Card>
 );}
 
-export default App;
+export default DetailCard;

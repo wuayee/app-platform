@@ -115,3 +115,10 @@ h1 {
 :where(.css-dev-only-do-not-override-1okl62o).ant-table-wrapper .ant-table-tbody>tr>td{
 padding: 8.5px 14px;
 }
+:where(.css-dev-only-do-not-override-1okl62o).ant-descriptions .ant-descriptions-row > th {
+  padding-bottom: 0;
+
+  .ant-descriptions-item-label {
+    font-size: 12px;
+  }
+}

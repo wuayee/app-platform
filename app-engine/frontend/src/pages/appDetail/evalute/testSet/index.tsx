@@ -1,10 +1,12 @@
-import { Button, Drawer } from 'antd';
+import { Button } from 'antd';
 import React, { useState } from 'react';
 import type { PaginationProps } from 'antd';
 import { Table, Space } from 'antd';
 import { formatDateTime } from '../../../../shared/utils/function';
 import CreateSet from './createTestset/createTestSet';
 import SetDetail from './detail';
+import TableTextSearch from '../../../../components/table-text-search';
+import TableCalendarSearch from '../../../../components/table-calendar-search';
 
 const showTotal: PaginationProps['showTotal'] = (total) => `共 ${total} 条`;
 
@@ -19,10 +21,15 @@ const TestSet: React.FC = () => {
     id: index,
     name: `数据集${index}`,
     desc: `描述${index}`,
-    creator: 'admin',
+    creator: `admin${index}`,
     createTime: formatDateTime(new Date()),
     modifyTime: formatDateTime(new Date())
   }));
+
+  const searchCallback = (key: string, value: string) => {
+    console.log(`key:${key}\nvalue:${value}`);
+    //处理搜索参数，组织数据调用接口
+  }
 
   const columns = [
     {
@@ -34,22 +41,25 @@ const TestSet: React.FC = () => {
       key: 'name',
       dataIndex: 'name',
       title: '测试集名称',
-
+      ...TableTextSearch('name', false),
     },
     {
       key: 'desc',
       dataIndex: 'desc',
-      title: '测试集描述'
+      title: '测试集描述',
+      ...TableTextSearch('desc'),
     },
     {
       key: 'creator',
       dataIndex: 'creator',
-      title: '创建人'
+      title: '创建人',
+      ...TableTextSearch('creator'),
     },
     {
       key: 'createTime',
       dataIndex: 'createTime',
-      title: '创建时间'
+      title: '创建时间',
+      ...TableCalendarSearch('createTime')
     },
     {
       key: 'modifyTime',
@@ -79,13 +89,17 @@ const TestSet: React.FC = () => {
   };
 
   const callback = (type: string, data: any) => {
+    //创建&编辑面板的回调，根据type进行业务处理
+    //submit：提交后请求接口处理逻辑；cancel：关闭面板（可添加二次确认
     setOpen(false);
   }
 
   const detailCallback = () => {
     setDetailOpen(false);
   }
-
+  const handleChange = (pagination: any, filters: any) => {
+    console.log('Various parameters', pagination, filters);
+  };
   return (
     <div>
       <div className='margin-bottom-standard test'>
@@ -95,6 +109,7 @@ const TestSet: React.FC = () => {
       <Table
         dataSource={dataSource}
         columns={columns}
+        onChange={handleChange}
         rowSelection={{
           type: 'checkbox',
           columnWidth: 60
@@ -114,6 +129,5 @@ const TestSet: React.FC = () => {
     </div>
   )
 }
-
 
 export default TestSet;

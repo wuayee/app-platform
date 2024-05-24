@@ -2,7 +2,7 @@ import React from 'react';
 import { Avatar, Space, Tabs, Tag } from 'antd';
 import data from './data';
 import './style.scoped.scss';
-import { AppDefaultIcon } from '../../assets/icon';
+import { AvatarIcon, AppDefaultIcon } from '../../assets/icon';
 import { StarFilled, UserOutlined } from '@ant-design/icons';
 
 const PluginMarket = () => {
@@ -35,7 +35,7 @@ const PluginMarket = () => {
                 <div className='plugin-item-header-title'>
                   <div className='plugin-item-title-1'>{item.name}</div>
                   <div className='plugin-item-title-2'>
-                    <Avatar size={16} src='https://api.dicebear.com/7.x/miniavs/svg?seed=1' />
+                    <Avatar size={24} icon={<UserOutlined />} />
                     <Space>
                       张小明
                       <div className='plugin-item-tags'>

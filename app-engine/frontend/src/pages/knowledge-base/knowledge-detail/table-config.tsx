@@ -5,19 +5,22 @@ import { KnowledgeIcons } from '../../../components/icons';
 import { deleteKnowledgeTableType } from '../../../shared/http/knowledge';
 
 
-export const columnsFunc = (refresh = (type: 'delete' | 'modify', data:any)=> {}): TableProps<any>['columns'] => {
+export const columnsFunc = (refresh = (type: 'delete' | 'modify' | 'clickHeader', data:any)=> {}): TableProps<any>['columns'] => {
   return [
     {
       title: '名称',
       dataIndex: 'name',
       key: 'name',
       render(value, record) {
-        
+        const onClick = ()=> {
+          refresh('clickHeader', record)
+        }
         return (<>
           <div style={{
             display: 'flex',
             gap: 8,
-          }}>
+            cursor: 'pointer'
+          }} onClick={onClick}>
             {record?.format === 'TABLE' ? (<KnowledgeIcons.tableXlsx/>) : (<KnowledgeIcons.tableText/>)}
             <span style={{
               color: '#2673E5',
