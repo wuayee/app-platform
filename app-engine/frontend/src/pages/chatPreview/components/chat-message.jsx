@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useImperativeHandle } from 'react';
-import SendBox from './send-box.jsx';
-import ReciveBox from './recieve-box.jsx';
+import SendBox from './send-box/send-box.jsx';
+import ReciveBox from './recieve-box/recieve-box.jsx';
 import ChatDetail from './chat-details.jsx';
 import { ChatContext } from '../../aippIndex/context';
 import '../styles/chat-message-style.scss';
@@ -36,14 +36,14 @@ const ChatMessaga = (props) => {
   return <>{(
     <div className={['chat-message-container', showCheck ? 'group-active' : null].join(' ')} id="chat-list-dom">
       { !chatList.length && <ChatDetail /> }
-      <ChatContext.Provider value={{ setShareClass, setInspiration, checkCallBack }}>
+      <ChatContext.Provider value={{ setShareClass, setInspiration, checkCallBack, showCheck}}>
         <div className='message-box'>
           {
             chatList.map((item, index) => {
               return (
                 item.type === 'send' ?  
-                <SendBox chatItem={item} key={index} showCheck={showCheck}/> : 
-                <ReciveBox chatItem={item} key={index}/>
+                <SendBox chatItem={item} key={index} /> : 
+                <ReciveBox chatItem={item} key={index}  />
               )
             })
           }

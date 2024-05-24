@@ -1,3 +1,5 @@
+const { origin } = window.location;
+
 export const configMap = {
   'development': {
       CONFIGS: [
@@ -43,15 +45,15 @@ export const configMap = {
           {
               node: "startNodeStart",
               urls: {
-                  customHistoryUrl: "http://80.11.128.66:31111/api/jober/v1/api/public/genericables/68dc66a6185cf64c801e55c97fc500e4?limit=10&offset=0"
+                  customHistoryUrl: `${origin}/api/jober/v1/api/public/genericables/68dc66a6185cf64c801e55c97fc500e4?limit=10&offset=0`
               }
           },
           {
               node: "llmNodeState",
               urls: {
-                  llmModelEndpoint: "http://80.11.128.66:31111/api",
-                  toolListEndpoint: "http://80.11.128.66:31111",
-                  workflowListEndpoint: "http://80.11.128.66:31111"
+                  llmModelEndpoint: `${origin}/api`,
+                  toolListEndpoint: origin,
+                  workflowListEndpoint: origin
               },
               params: {
                 tenantId: '',
@@ -61,13 +63,13 @@ export const configMap = {
           {
               node: "manualCheckNodeState",
               urls: {
-                  runtimeFormUrl: "http://80.11.128.66:31111/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/form/type/runtime"
+                  runtimeFormUrl: `${origin}/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/form/type/runtime`
               }
           },
           {
               node: "knowledgeState",
               urls: {
-                  knowledgeUrl: "http://80.11.128.66:31111/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/knowledge?pageNum=1&pageSize=10"
+                  knowledgeUrl: `${origin}/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/knowledge?pageNum=1&pageSize=10`
               }
           }
       ]
