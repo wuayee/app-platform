@@ -283,7 +283,6 @@ public class KnowledgeBaseController {
      */
     @PostMapping(path = "/table/chunks")
     public PageResultVo<String> getChunks(@RequestBody KbChunkSearchDto chunkQueryDto) {
-        KTableDto tableDto = kTableService.getById(chunkQueryDto.getTableId());
         return new PageResultVo<>(chunkQueryDto.getTopK(), knowledgeBaseService.searchKnowledgeTable(chunkQueryDto));
     }
 
