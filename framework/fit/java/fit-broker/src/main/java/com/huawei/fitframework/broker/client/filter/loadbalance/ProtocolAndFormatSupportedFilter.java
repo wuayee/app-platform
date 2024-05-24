@@ -20,6 +20,7 @@ import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,7 +48,8 @@ public class ProtocolAndFormatSupportedFilter extends AbstractFilter {
     }
 
     @Override
-    protected List<Target> loadbalance(FitableMetadata fitable, String localWorkerId, List<Target> toFilterTargets) {
+    protected List<Target> loadbalance(FitableMetadata fitable, String localWorkerId, List<Target> toFilterTargets,
+            Map<String, Object> extensions) {
         return toFilterTargets.stream()
                 .map(target -> this.getSupportedTarget(fitable, target, localWorkerId))
                 .filter(Objects::nonNull)
