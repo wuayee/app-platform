@@ -63,7 +63,7 @@ public class FlatMapPublisherDecorator<T, R> implements Publisher<R> {
                 this.getNextSubscriber().fail(cause);
                 return;
             }
-            this.worker = Worker.create(this, publisher, Long.MAX_VALUE, this.requested.getValue());
+            this.worker = Worker.create(this, publisher, Long.MAX_VALUE);
             this.worker.run();
         }
 
@@ -83,6 +83,11 @@ public class FlatMapPublisherDecorator<T, R> implements Publisher<R> {
             } else {
                 this.worker.request(count);
             }
+        }
+
+        @Override
+        public void onWorkerSubscribed(Subscription subscription) {
+            subscription.request(this.requested.getValue());
         }
 
         @Override

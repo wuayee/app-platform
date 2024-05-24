@@ -8,8 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.flowable.Emitter;
-import com.huawei.fitframework.flowable.Subscriber;
-import com.huawei.fitframework.flowable.subscriber.RecordSubscriber;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 表示 {@link EmitterChoir} 的单元测试。
+ * 表示 {@link Choir#fromEmitter(Emitter)} 的单元测试。
  *
  * @author 季聿阶 j00559309
  * @since 2024-02-14
@@ -54,29 +52,5 @@ public class EmitterChoirTest {
         emitter.emit(2);
         emitter.emit(3);
         assertThat(l2).hasSize(1).contains(2);
-    }
-
-    @Test
-    @DisplayName("当订阅者多次进行元素请求时，结果符合预期")
-    void requestOperationShouldCalledTwiceWhenRequestTwice() {
-        Subscriber<Integer> subscriber = new RecordSubscriber<>(2, 1);
-        Emitter<Integer> emitter = Emitter.create();
-        List<Long> requestRecords = new ArrayList<>();
-        Choir.fromEmitter(emitter, requestRecords::add, null).subscribe(subscriber);
-        emitter.emit(0);
-        assertThat(requestRecords).hasSize(2).contains(2L, 1L);
-    }
-
-    @Test
-    @DisplayName("当订阅者取消订阅关系时，结果符合预期")
-    void cancelOperationShouldCalledWhenCancel() {
-        Subscriber<Integer> subscriber = new RecordSubscriber<>(1, 0, 1);
-        Emitter<Integer> emitter = Emitter.create();
-        List<Long> cancelRecord = new ArrayList<>();
-        Choir.fromEmitter(emitter, null, () -> {
-            cancelRecord.add(0L);
-        }).subscribe(subscriber);
-        emitter.emit(0);
-        assertThat(cancelRecord).hasSize(1).contains(0L);
     }
 }

@@ -4,6 +4,8 @@
 
 package com.huawei.fitframework.flowable.util.worker;
 
+import com.huawei.fitframework.flowable.Subscription;
+
 /**
  * 表示 {@link Worker} 接收到待消费元素、异常终结信号或正常终结信号时的观察者。
  *
@@ -12,6 +14,13 @@ package com.huawei.fitframework.flowable.util.worker;
  * @since 2024-02-20
  */
 public interface WorkerObserver<T> {
+    /**
+     * 表示 {@link Worker} 在订阅关系发生时调用的接口。
+     *
+     * @param subscription 表示订阅关系 {@link Subscription}。
+     */
+    void onWorkerSubscribed(Subscription subscription);
+
     /**
      * 表示 {@link Worker} 接收到应消费数据时回传应消费数据的接口。
      *
