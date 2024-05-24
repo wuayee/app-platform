@@ -84,7 +84,7 @@ export function getTableColums(data: {
   knowledgeTableId: string,
   fileName?: string,
 }) {
-  const url = '/knowledge/table-knowledge/columns';
+  const url = `${KNOWLEDGE_URL}/table-knowledge/columns`;
   return post(url, data)
 }
 
@@ -101,7 +101,7 @@ export function createTableColumns(data: {
     desc: string,
   }[]
 }) {
-  const url = '/knowledge/table-knowledge/construct';
+  const url = `${KNOWLEDGE_URL}/table-knowledge/construct`;
   return post(url, data)
 }
 
@@ -120,12 +120,57 @@ export function getTextList(filterConfig: {
   pageSize: number,
 
   // 查询关键字
-  content: string,
+  content?: string,
 
   // topK
-  topK: number,
+  topK?: number,
+
+  // 阈值
+  threshold?: number,
+
+  // 列
+  columnId?: number,
 }) {
   // 如果有content 就设置topk为12
+
+  if(!filterConfig.content) {
+    const url = `${KNOWLEDGE_URL}/table/text/chunk-list`;
+    return post(url, filterConfig);
+  } else {
+    const url = `${KNOWLEDGE_URL}/table/chunks`;
+    filterConfig.topK = 12;
+    return post(url, filterConfig);
+  }
+}
+
+// 查询表格列
+export function getTableColumns(reposId: string, tableId: string) {
+  const url =`${KNOWLEDGE_URL}/table-knowledge/column/${reposId}/${tableId}`
+  return get(url);
+}
+
+// 查询表格
+export function getTableList(filterConfig: {
+  // 仓库id
+  repositoryId: string,
+
+  // 表格id,
+  knowledgeTableId: string,
+
+  // 当前页
+  pageNum: number,
+
+  // 页码
+  pageSize: number
+}): Promise<{
+  count: number;
+  result: any[][];
+}> {
+  const url =  `${KNOWLEDGE_URL}/table-knowledge/rows`;
+
+  filterConfig.pageNum--;
+
+  return post(url, filterConfig)
 }
 
 export function uploadLocalFile(
