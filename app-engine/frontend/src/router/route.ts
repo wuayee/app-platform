@@ -16,7 +16,7 @@ import KnowledgeBaseDetailCreateTable from "../pages/knowledge-base/knowledge-de
 import KnowledgeBaseDetailImportData from "../pages/knowledge-base/knowledge-detail/import-data";
 import Model from "../pages/model";
 import ModelDetail from "../pages/model/model-detail";
-import Apps2 from "../pages/apps/index2";
+import AppDev from "../pages/appDev/index";
 import PluginMarket from '../pages/plugin-market';
 
 export type MenuItem = Required<MenuProps>["items"][number] & {
@@ -85,7 +85,7 @@ export const routeList: MenuItem[] = [
     key: "/app-develop",
     icon: Icons.app({}),
     label: "应用开发",
-    component: Apps2,
+    component: AppDev,
     children: [
       {
         key: "/app/:tenantId/detail/:appId",
