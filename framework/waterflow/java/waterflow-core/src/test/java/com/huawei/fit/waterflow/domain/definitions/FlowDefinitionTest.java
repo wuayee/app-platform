@@ -80,7 +80,7 @@ class FlowDefinitionTest {
 
     private static final Parser PARSER = new FlowParser(BROKER_CLIENT);
 
-    private static final FlowContextRepo<FlowData> REPO = new FlowContextMemoRepo<>();
+    private static final FlowContextRepo<FlowData> REPO = new FlowContextMemoRepo<>(true);
 
     private static final FlowContextMessenger MESSENGER = new FlowContextMemoMessenger();
 
