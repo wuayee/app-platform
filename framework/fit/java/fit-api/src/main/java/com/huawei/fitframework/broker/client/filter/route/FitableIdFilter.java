@@ -13,6 +13,7 @@ import com.huawei.fitframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -46,7 +47,7 @@ public class FitableIdFilter extends AbstractFilter {
 
     @Override
     protected List<? extends FitableMetadata> route(GenericableMetadata genericable,
-            List<? extends FitableMetadata> toFilterFitables, Object[] args) {
+            List<? extends FitableMetadata> toFilterFitables, Object[] args, Map<String, Object> extensions) {
         return toFilterFitables.stream()
                 .filter(toFilterFitable -> this.containsAnyFitableId(toFilterFitable, this.fitableIds))
                 .collect(Collectors.toList());

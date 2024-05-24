@@ -10,8 +10,11 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 import com.huawei.fitframework.broker.FitableMetadata;
 import com.huawei.fitframework.broker.Target;
 import com.huawei.fitframework.broker.client.Invoker;
+import com.huawei.fitframework.util.ObjectUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * {@link Invoker.Filter} 的抽象实现。
@@ -21,7 +24,8 @@ import java.util.List;
  */
 public abstract class AbstractFilter implements Invoker.Filter {
     @Override
-    public List<Target> filter(FitableMetadata fitable, String localWorkerId, List<Target> toFilterTargets) {
+    public List<Target> filter(FitableMetadata fitable, String localWorkerId, List<Target> toFilterTargets,
+            Map<String, Object> extensions) {
         notNull(fitable, "The fitable metadata to balance load cannot be null.");
         notBlank(localWorkerId,
                 "The local worker id to balance load cannot be blank. [genericableId={0}, fitableId={1}]",
@@ -37,7 +41,10 @@ public abstract class AbstractFilter implements Invoker.Filter {
                     fitable.genericable().id(),
                     fitable.id());
         }
-        return this.loadbalance(fitable, localWorkerId, toFilterTargets);
+        return this.loadbalance(fitable,
+                localWorkerId,
+                toFilterTargets,
+                ObjectUtils.getIfNull(extensions, HashMap::new));
     }
 
     /**
@@ -49,8 +56,10 @@ public abstract class AbstractFilter implements Invoker.Filter {
      * <p><b>该参数一定不为 {@code null} 且一定不为空白字符串。</b></p>
      * @param toFilterTargets 表示待过滤服务地址列表的 {@link List}{@code <}{@link Target}{@code >}。
      * <p><b>该参数一定不为 {@code null}，且不包含为 {@code null} 的元素。</b></p>
+     * @param extensions 表示负载均衡所需扩展信息的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
+     * <p><b>该参数一定不为 {@code null}，且不包含键或值为 {@code null} 的元素。</b></p>
      * @return 表示过滤后的服务地址列表的 {@link List}{@code <}{@link Target}{@code >}。
      */
     protected abstract List<Target> loadbalance(FitableMetadata fitable, String localWorkerId,
-            List<Target> toFilterTargets);
+            List<Target> toFilterTargets, Map<String, Object> extensions);
 }

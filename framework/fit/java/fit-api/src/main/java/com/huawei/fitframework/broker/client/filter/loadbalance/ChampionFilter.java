@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2021-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2021-2024. All rights reserved.
  */
 
 package com.huawei.fitframework.broker.client.filter.loadbalance;
@@ -9,6 +9,7 @@ import com.huawei.fitframework.broker.Target;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -19,7 +20,8 @@ import java.util.Optional;
  */
 public abstract class ChampionFilter extends AbstractFilter {
     @Override
-    public List<Target> loadbalance(FitableMetadata fitable, String localWorkerId, List<Target> toFilterTargets) {
+    public List<Target> loadbalance(FitableMetadata fitable, String localWorkerId, List<Target> toFilterTargets,
+            Map<String, Object> extensions) {
         if (toFilterTargets.isEmpty()) {
             return Collections.emptyList();
         }
