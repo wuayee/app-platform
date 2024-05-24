@@ -1,25 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { TableProps } from 'antd';
 import { Button, Form, Input, InputNumber, Select, Space, Table, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import './style.scoped.scss';
+import { getKnowledgeTableType } from '../../shared/http/knowledge';
 
 interface Item {
   key: string;
   colName: string;
   dataType: string;
+  vectorService?: string;
+  description?: string;
   indexType: string;
 }
 
-const originData: Item[] = [];
-for (let i = 0; i < 100; i++) {
-  originData.push({
-    key: i.toString(),
-    colName: `Edward ${i}`,
-    dataType: 'x',
-    indexType: ` ${i}`,
-  });
-}
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
@@ -27,7 +21,20 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   inputType: 'select' | 'input';
   record: Item;
   index: number;
+
+  options?: {value: string, label: string}[];
 }
+
+const options=[
+  { value: 'NORMAL', label: '其他索引' },
+  { value: 'VECTOR', label: '向量索引' },
+  { value: 'NONE', label: '无' },
+];
+
+const dataOptions=[
+  { value: 'VARCHAR', label: '字符' },
+  { value: 'NUMBER', label: '数字' },
+];
 
 const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
   editing,
@@ -37,32 +44,39 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
   record,
   index,
   children,
+  options,
   ...restProps
 }) => {
+  const form = Form.useFormInstance();
+  const indexTypeChange = Form.useWatch('indexType', form);
+
+  useEffect(()=> {
+    if(dataIndex === 'indexType') {
+      form.setFieldValue('vectorService', '');
+    }
+  }, [indexTypeChange])
   const inputNode =
     inputType === 'select' ? (
       <Select
-        options={[
-          { value: 'other', label: '其他索引' },
-          { value: 'vector', label: '向量索引' },
-        ]}
+        disabled={dataIndex!=='vectorService'? false : indexTypeChange ==='VECTOR' ? false: true }
+        options={options}
       />
     ) : (
       <Input />
     );
-
+  const reuired = dataIndex === 'vectorService' || dataIndex === 'description'  ? [] : [
+    {
+      required: true,
+      message: `Please Input ${title}!`,
+    },
+  ] 
   return (
     <td {...restProps}>
       {editing ? (
         <Form.Item
           name={dataIndex}
           style={{ margin: 0 }}
-          rules={[
-            {
-              required: true,
-              message: `Please Input ${title}!`,
-            },
-          ]}
+          rules={reuired}
         >
           {inputNode}
         </Form.Item>
@@ -73,10 +87,40 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
   );
 };
 
-const CustomTable: React.FC = () => {
+interface PriceInputProps {
+  id?: string;
+  value?: Item[];
+  onChange?: (value: Item[]) => void;
+}
+
+const CustomTable: React.FC<PriceInputProps> = (props) => {
+  const { id, value = [], onChange } = props;
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
+  const [data, setData] = useState(value);
   const [editingKey, setEditingKey] = useState('');
+
+  const [serviceOptions, setServiceOptions] = useState([]);
+
+  const getOptionsByColId = (id: 'dataType' | 'indexType' | 'vectorService' | string) =>  {
+    if(id === 'dataType'){
+      return dataOptions;
+    }
+  
+    if(id === 'indexType'){
+      return options;
+    }
+  
+    if(id === 'vectorService') {
+      return serviceOptions;
+    }
+
+    return []
+  }
+
+  // 根据列id获取option
+  const triggerChange = (changedValue: Item[]) => {
+    onChange?.([...changedValue]);
+  };
 
   const isEditing = (record: Item) => record.key === editingKey;
 
@@ -88,6 +132,25 @@ const CustomTable: React.FC = () => {
   const cancel = () => {
     setEditingKey('');
   };
+
+  const handleAddColumn = () => {
+    const key = (data.length + 1).toString();
+    setData([{ colName: '', dataType: '', indexType: '', key, vectorService: '' }, ...data]);
+    form.setFieldsValue({ colName: '', dataType: '', indexType: '', key, vectorService: '' });
+    triggerChange([{ colName: '', dataType: '', indexType: '', key, vectorService: '' }, ...data])
+    setEditingKey(key);
+  };
+
+    // 移除数据
+    const removeData = (record: Partial<Item> & { key: React.Key }) => {
+      const index = data.findIndex(item=> record.key === item.key);
+      if(index !== -1) {
+        const newData = [...data]
+        newData.splice(index, 1);
+        setData([...newData]);
+        triggerChange(newData);
+      }
+    }
 
   const save = async (key: React.Key) => {
     try {
@@ -108,6 +171,8 @@ const CustomTable: React.FC = () => {
         setData(newData);
         setEditingKey('');
       }
+      form.setFieldsValue({});
+      triggerChange([...newData])
     } catch (errInfo) {
       console.log('Validate Failed:', errInfo);
     }
@@ -123,16 +188,31 @@ const CustomTable: React.FC = () => {
       title: '数据类型',
       dataIndex: 'dataType',
       editable: true,
+      render: (_: any, record: Item) => {
+        return (<>
+          {dataOptions.find(item=> item.value === _)?.label || ''}
+        </>)
+      }
     },
     {
       title: '索引类型',
       dataIndex: 'indexType',
       editable: true,
+      render: (_: any, record: Item) => {
+        return (<>
+          {options.find(item=> item.value === _)?.label || ''}
+        </>)
+      }
     },
     {
       title: '向量化服务',
       dataIndex: 'vectorService',
       editable: true,
+      render: (_: any, record: Item) => {
+        return (<>
+          {serviceOptions.find(item=> item.value === _)?.label || ''}
+        </>)
+      }
     },
     {
       title: '描述',
@@ -150,14 +230,13 @@ const CustomTable: React.FC = () => {
             <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
               保存
             </Typography.Link>
-            <a onClick={() => setEditingKey('')}>取消</a>
           </Space>
         ) : (
           <Space>
             <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
               编辑
             </Typography.Link>
-            <a>删除</a>
+            <a onClick={()=> {removeData(record)}}>删除</a>
           </Space>
         );
       },
@@ -177,29 +256,36 @@ const CustomTable: React.FC = () => {
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
+        options: getOptionsByColId(col.dataIndex),
       }),
     };
   });
 
+  // 获取向量化服务类型
+  const getTableType = async()=> {
+    try {
+      let typeList = await getKnowledgeTableType();
+      if(typeList && typeList.length) {
+        setServiceOptions(typeList.filter(item => item.type === 'EMBEDDING').map(type=> ({
+          value: type.id,
+          label: type.name
+        })))
+
+      }
+      }
+     catch (error) {
+      
+    }
+  }
+
+  useEffect(() => {
+    getTableType()
+  }, []);
+
   return (
     <Form form={form} component={false}>
-      <Space size={24} className='table-config-item'>
-        <div className='table-config-number'>
-          <span>表头</span>
-          <InputNumber min={1} max={10} defaultValue={3} />
-        </div>
-        <div className='table-config-number'>
-          <span>数据起始位置</span>
-          <InputNumber min={1} max={10} defaultValue={3} />
-        </div>
-        <div className='table-config-number'>
-          <span>工资表</span>
-          <InputNumber min={1} max={10} defaultValue={3} />
-        </div>
-      </Space>
       <div className='custom-table-header'>
-        <span>表结构</span>
-        <Button type='primary' icon={<PlusOutlined />}>
+        <Button type='primary' icon={<PlusOutlined />} onClick={handleAddColumn} disabled={ editingKey ? true : false }>
           添加列
         </Button>
       </div>

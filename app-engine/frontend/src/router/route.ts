@@ -18,6 +18,7 @@ import Model from "../pages/model";
 import ModelDetail from "../pages/model/model-detail";
 import AppDev from "../pages/appDev/index";
 import PluginMarket from '../pages/plugin-market';
+import IndustryTerminology from "../pages/knowledge-base/knowledge-detail/industry-terminology";
 
 export type MenuItem = Required<MenuProps>["items"][number] & {
   component?: (() => ReactElement) | React.FC<any>;
@@ -133,9 +134,8 @@ export const routeList: MenuItem[] = [
   {
     key: "/mode",
     icon: Icons.app({}),
-    label: "模型",
+    label: "模型服务",
     component: Demo,
-    hidden: true,
   },
   {
     key: "/knowledge-base",
@@ -143,7 +143,6 @@ export const routeList: MenuItem[] = [
     label: "知识库",
     title: "知识库概览",
     component: KnowledgeBase,
-    hidden: true,
     children: [
       {
         key: "/knowledge-base/create",
@@ -173,6 +172,13 @@ export const routeList: MenuItem[] = [
             component: KnowledgeBaseDetailImportData,
             hidden: true,
           },
+          {
+            key: "/knowledge-base/knowledge-detail/industry-terminology",
+            icon: Icons.app({}),
+            label: "详情",
+            component: IndustryTerminology,
+            hidden: true,
+          },
         ]
       },
     ],
@@ -185,11 +191,22 @@ export const routeList: MenuItem[] = [
     hidden: true,
   },
   {
+    key: "/Tooling",
+    icon: Icons.app({}),
+    label: "工具",
+    component: Demo,
+  },
+  {
+    key: "/WorkStream",
+    icon: Icons.app({}),
+    label: "工作流",
+    component: Demo,
+  },
+  {
     key: "/group",
     icon: Icons.app({}),
     label: "团队",
     component: Demo,
-    hidden: true,
   },
 ];
 
