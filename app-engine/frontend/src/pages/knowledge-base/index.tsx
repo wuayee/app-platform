@@ -128,7 +128,6 @@ const KnowledgeBase = () => {
         </div>
         <div className='containerArea' style={{
           width: '100%',
-          minHeight: '800px',
           maxHeight: 'calc(100% - 200px)',
           boxSizing: 'border-box',
           paddingTop: '20px',

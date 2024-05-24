@@ -180,8 +180,6 @@ const KnowledgeBaseDetailCreateTable = () => {
           width: '100%',
           flex:1,
           background: '#fff',
-          borderRadius: '8px 8px 0px 0px',
-          padding: '24px 24px 0 25px',
         }}>
            <Form<FieldType>
             {...formItemLayout}
