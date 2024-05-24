@@ -68,9 +68,13 @@ public class ExcelSource extends Source<List<Document>> {
         return FileType.NORMAL_FILE;
     }
 
-    private void normalExtract(Integer dataRow, Sheet sheet) {
+    private void normalExtract(Integer headRow, Integer dataRow, Sheet sheet) {
         Integer rowNum = sheet.getPhysicalNumberOfRows();
         int colNum = sheet.getRow(0).getPhysicalNumberOfCells();
+
+        sheet.getRow(headRow).forEach((cell) -> {
+            titleName.add(cell.getStringCellValue());
+        });
         for (Integer rowNo = dataRow; rowNo < rowNum; rowNo++) {
             List<String> rowContent = new ArrayList<>();
 
@@ -93,6 +97,8 @@ public class ExcelSource extends Source<List<Document>> {
     }
 
     private void synonymsExtract(Sheet sheet) {
+        titleName.add("近义词");
+        titleName.add("标准词");
         for (int i = 0; i < sheet.getPhysicalNumberOfRows(); i++) {
             Row row = sheet.getRow(i);
             for (int j = 1; j < row.getPhysicalNumberOfCells(); j++) {
@@ -105,6 +111,9 @@ public class ExcelSource extends Source<List<Document>> {
     private void relationalEnumExtract(Sheet sheet) {
         Map<String, List<Integer>> relations = new HashMap<>();
         List<String> tags = new ArrayList<>();
+
+        titleName.add("从属主体");
+        titleName.add("关系");
 
         sheet.getRow(0).forEach(cell -> {
             tags.add(cell.getStringCellValue());
@@ -161,13 +170,10 @@ public class ExcelSource extends Source<List<Document>> {
                 wb = new XSSFWorkbook(fs);
             }
             Sheet sheet = wb.getSheetAt(sheetId);
-            sheet.getRow(headRow).forEach((cell) -> {
-                titleName.add(cell.getStringCellValue());
-            });
 
             switch (getFileType(path)) {
                 case NORMAL_FILE:
-                    normalExtract(dataRow, sheet);
+                    normalExtract(headRow, dataRow, sheet);
                     break;
                 case RELATIONAL_ENUM_FILE:
                     relationalEnumExtract(sheet);
