@@ -5,6 +5,7 @@
 package com.huawei.jade.app.engine.knowledge.params;
 
 import com.huawei.jade.app.engine.knowledge.dto.TableKnowledgeColDto;
+import com.huawei.jade.app.engine.knowledge.service.param.PageQueryParam;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +23,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TableKnowledgeParam {
+public class TableKnowledgeParam extends PageQueryParam {
     /** 知识库Id */
     private Long repositoryId;
 
