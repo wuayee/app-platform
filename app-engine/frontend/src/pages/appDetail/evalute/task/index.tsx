@@ -74,6 +74,7 @@ const EvaluateTask = () => {
       appId: searchParams.appId,
       pageSize: pagination.pageSize,
       version: filters?.version?.[0],
+      statusList:filters?.status,
     };
 
     setSearchParams(paramBody);
@@ -118,9 +119,18 @@ const EvaluateTask = () => {
           value: TaskStatusE.FINISH,
         },
         {
-          text: '未完成',
+          text: '执行中',
           value: TaskStatusE.IN_PROGRESS,
         },
+        {
+          text: '失败',
+          value: TaskStatusE.FAILURE,
+        },
+        {
+          text: '未开始',
+          value: TaskStatusE.NOT_START,
+        },
+        
       ],
       render: (value, record) => taskStatusMap[value],
     },
