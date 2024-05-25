@@ -10,6 +10,7 @@ import com.huawei.fitframework.broker.FitableMetadata;
 import com.huawei.fitframework.broker.Target;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,8 @@ public class EnvironmentFilter extends AbstractFilter {
     }
 
     @Override
-    protected List<Target> loadbalance(FitableMetadata fitable, String localWorkerId, List<Target> toFilterTargets) {
+    protected List<Target> loadbalance(FitableMetadata fitable, String localWorkerId, List<Target> toFilterTargets,
+            Map<String, Object> extensions) {
         return toFilterTargets.stream()
                 .filter(target -> Objects.equals(target.environment(), this.environment))
                 .collect(Collectors.toList());

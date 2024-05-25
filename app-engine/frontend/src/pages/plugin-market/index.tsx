@@ -35,8 +35,8 @@ const PluginMarket = () => {
                 <div className='plugin-item-header-title'>
                   <div className='plugin-item-title-1'>{item.name}</div>
                   <div className='plugin-item-title-2'>
-                    <Avatar size={24} icon={<UserOutlined />} />
                     <Space>
+                      <Avatar size={24} icon={<UserOutlined />} />
                       张小明
                       <div className='plugin-item-tags'>
                         {item.tags.map((item) => (

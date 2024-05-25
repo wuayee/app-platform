@@ -2,7 +2,7 @@ import {useLocation} from "react-router-dom";
 import {useCallback, useMemo, useState} from "react";
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
-import { Message } from '__shared/utils/message';
+import { Message } from '@shared/utils/message';
 
 /**
  * 获取url中status的类型

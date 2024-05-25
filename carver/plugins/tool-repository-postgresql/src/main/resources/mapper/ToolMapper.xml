@@ -15,13 +15,18 @@
         <result column="source" property="source"/>
     </resultMap>
     <insert id="addTool" parameterType="com.huawei.jade.carver.tool.repository.pgsql.model.entity.ToolDo">
-        insert into store_tool ("name", <if test="description != null">"description",</if> "unique_name", "schema",
-        "runnables"
-        <if test="source != null">,"source"</if>
-        )
-        values (#{name}, <if test="description != null">#{description},</if> #{uniqueName}, cast(#{schema} as json),
-        cast(#{runnables} as
-        json) <if test="source != null">,#{source}</if>)
+        insert into store_tool
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            "name", <if test="description != null">"description",</if> "unique_name", "schema", "runnables",
+            <if test="source != null">"source",</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{name}, <if test="description != null">#{description},</if> #{uniqueName}, cast(#{schema} as json),
+            cast(#{runnables} as
+            json),
+            <if test="source != null">#{source},</if>
+        </trim>
     </insert>
     <delete id="deleteTool" parameterType="String">
         delete
@@ -33,18 +38,14 @@
         from "store_tool"
         where unique_name = #{uniqueName}
     </select>
-    <select id="getTools" parameterType="com.huawei.jade.carver.tool.model.query.ToolTagQuery" resultMap="Tool">
-        select i."name", i."unique_name", i."description", i."schema", i."runnables"
+    <sql id="getOrSearchSelect">
+        select i."name", i."unique_name", i."description", i."schema", i."runnables", i."source"
         from "store_tool" i
-        left join (
-        select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags
-        from "store_tag" t
-        group by t."tool_unique_name"
-        ) tg on i."unique_name" = tg."tool_unique_name"
-        where 1 = 1
-        <if test="toolName != null and toolName != ''">
-            and i."name" = #{toolName}
-        </if>
+                 left join (select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags
+                            from "store_tag" t
+                            group by t."tool_unique_name") tg on i."unique_name" = tg."tool_unique_name"
+    </sql>
+    <sql id="getOrSearchConditions">
         <if test="includeTags != null and includeTags.size() > 0">
             and tg.tags is not null
             and (
@@ -54,13 +55,16 @@
             )
         </if>
         <if test="excludeTags != null and excludeTags.size() > 0">
-            and tg.tags is not null
-            and not (
+            and ( tg.tags is null
+            or not (
             <foreach collection="excludeTags" item="tag" open="" close="" separator=" or ">
                 tg.tags ~ ('(^|,)' || #{tag} || '($|,)')
             </foreach>
             )
+            )
         </if>
+    </sql>
+    <sql id="sortAndLimit">
         order by i.updated_time desc
         <if test="offset != null and offset >= 0">
             offset #{offset}
@@ -68,41 +72,25 @@
         <if test="limit != null and limit > 0">
             limit #{limit}
         </if>
+    </sql>
+    <select id="getTools" parameterType="com.huawei.jade.carver.tool.model.query.ToolTagQuery" resultMap="Tool">
+        <include refid="getOrSearchSelect"/>
+        <where>
+            <include refid="getOrSearchConditions"/>
+            <if test="toolName != null and toolName != ''">
+                and i."name" = #{toolName}
+            </if>
+        </where>
+        <include refid="sortAndLimit"/>
     </select>
     <select id="searchTools" parameterType="com.huawei.jade.carver.tool.model.query.ToolTagQuery" resultMap="Tool">
-        select i."name", i."unique_name", i."description", i."schema", i."runnables"
-        from "store_tool" i
-        left join (
-        select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags
-        from "store_tag" t
-        group by t."tool_unique_name"
-        ) tg on i."unique_name" = tg."tool_unique_name"
-        where 1 = 1
-        <if test="toolName != null and toolName != ''">
-            and i."name" like '%' || #{toolName} || '%'
-        </if>
-        <if test="includeTags != null and includeTags.size() > 0">
-            and tg.tags is not null
-            and (
-            <foreach collection="includeTags" item="tag" open="" close="" separator=" and ">
-                tg.tags ~ ('(^|,)' || #{tag} || '($|,)')
-            </foreach>
-            )
-        </if>
-        <if test="excludeTags != null and excludeTags.size() > 0">
-            and tg.tags is not null
-            and not (
-            <foreach collection="excludeTags" item="tag" open="" close="" separator=" or ">
-                tg.tags ~ ('(^|,)' || #{tag} || '($|,)')
-            </foreach>
-            )
-        </if>
-        order by i.updated_time desc
-        <if test="offset != null and offset >= 0">
-            offset #{offset}
-        </if>
-        <if test="limit != null and limit > 0">
-            limit #{limit}
-        </if>
+        <include refid="getOrSearchSelect"/>
+        <where>
+            <include refid="getOrSearchConditions"/>
+            <if test="toolName != null and toolName != ''">
+                and i."name" like '%' || #{toolName} || '%'
+            </if>
+        </where>
+        <include refid="sortAndLimit"/>
     </select>
 </mapper>

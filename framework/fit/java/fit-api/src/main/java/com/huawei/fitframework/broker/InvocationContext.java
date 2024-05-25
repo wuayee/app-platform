@@ -12,6 +12,7 @@ import com.huawei.fitframework.conf.runtime.SerializationFormat;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BinaryOperator;
 
@@ -163,6 +164,13 @@ public interface InvocationContext {
      * @return 表示多播调用的结果累加器的 {@link BinaryOperator}{@code <}{@link Object}{@code >}。
      */
     BinaryOperator<Object> accumulator();
+
+    /**
+     * 获取动态路由或负载均衡所需的扩展信息。
+     *
+     * @return 表示扩展信息的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
+     */
+    Map<String, Object> filterExtensions();
 
     /**
      * {@link InvocationContext} 的构建器。
@@ -328,6 +336,14 @@ public interface InvocationContext {
          * @return 表示当前构建器的 {@link Builder}。
          */
         Builder accumulator(BinaryOperator<Object> accumulator);
+
+        /**
+         * 向当前构建器中设置动态路由或负载均衡所需的扩展信息。
+         *
+         * @param filterExtensions 表示扩展信息的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        Builder filterExtensions(Map<String, Object> filterExtensions);
 
         /**
          * 构建对象。

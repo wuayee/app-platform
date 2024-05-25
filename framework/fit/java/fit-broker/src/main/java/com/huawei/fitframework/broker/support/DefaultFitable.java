@@ -141,7 +141,8 @@ public class DefaultFitable implements ConfigurableFitable {
             }
         }
         Invoker.Filter roundRobinFilter = Invoker.Filter.roundRobin();
-        List<Target> actualTargets = roundRobinFilter.filter(this, context.localWorkerId(), balancedTargets);
+        List<Target> actualTargets =
+                roundRobinFilter.filter(this, context.localWorkerId(), balancedTargets, context.filterExtensions());
         if (context.genericableMethod() != null) {
             return execute(this.remoteExecutor, this, actualTargets, context, args);
         } else {

@@ -15,6 +15,7 @@ import com.huawei.fitframework.conf.runtime.CommunicationProtocol;
 import com.huawei.fitframework.conf.runtime.SerializationFormat;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BinaryOperator;
 
@@ -120,6 +121,14 @@ public interface Invoker {
     Invoker ignoreDegradation();
 
     /**
+     * 设置动态路由或负载均衡所需的扩展信息。
+     *
+     * @param filterExtensions 表示扩展信息的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
+     * @return 表示当前的服务调用器的 {@link Invoker}。
+     */
+    Invoker filterExtensions(Map<String, Object> filterExtensions);
+
+    /**
      * 进行服务调用。
      *
      * @param args 表示服务调用的参数列表的 {@link Object}{@code []}。
@@ -150,13 +159,15 @@ public interface Invoker {
          * @param fitable 表示待过滤服务地址所属服务实现的元数据的 {@link FitableMetadata}。
          * @param localWorkerId 表示本地进程的唯一标识的 {@link String}。
          * @param toFilterTargets 表示待过滤服务地址列表的 {@link List}{@code <}{@link Target}{@code >}。
+         * @param extensions 表示负载均衡所需扩展信息的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
          * @return 表示过滤后的服务地址列表的 {@link List}{@code <}{@link Target}{@code >}。
          * @throws IllegalArgumentException 当 {@code fitable} 为 {@code null} 时。
          * @throws IllegalArgumentException 当 {@code workerId} 为 {@code null} 或空白字符串时。
          * @throws IllegalArgumentException 当 {@code toFilterTargets} 为 {@code null} 时。
          * @throws IllegalArgumentException 当 {@code toFilterTargets} 中包含 {@code null} 时。
          */
-        List<Target> filter(FitableMetadata fitable, String localWorkerId, List<Target> toFilterTargets);
+        List<Target> filter(FitableMetadata fitable, String localWorkerId, List<Target> toFilterTargets,
+                Map<String, Object> extensions);
 
         /**
          * 将当前负载均衡过滤器与另一个负载均衡过滤器合并。
@@ -182,9 +193,9 @@ public interface Invoker {
             } else if (second == null) {
                 return first;
             } else {
-                return (metadata, localWorkerId, toFilterTargets) -> {
-                    List<Target> filteredTargets = first.filter(metadata, localWorkerId, toFilterTargets);
-                    return second.filter(metadata, localWorkerId, filteredTargets);
+                return (metadata, localWorkerId, toFilterTargets, extensions) -> {
+                    List<Target> filteredTargets = first.filter(metadata, localWorkerId, toFilterTargets, extensions);
+                    return second.filter(metadata, localWorkerId, filteredTargets, extensions);
                 };
             }
         }

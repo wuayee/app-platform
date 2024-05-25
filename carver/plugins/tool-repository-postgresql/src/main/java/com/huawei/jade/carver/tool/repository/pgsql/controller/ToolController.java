@@ -14,7 +14,7 @@ import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.PostMapping;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
-import com.huawei.fit.http.annotation.RequestParam;
+import com.huawei.fit.http.annotation.RequestQuery;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
@@ -25,7 +25,6 @@ import com.huawei.jade.carver.tool.service.ToolService;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 处理 HTTP 请求的控制器。
@@ -36,8 +35,6 @@ import java.util.Objects;
 @Component
 @RequestMapping("/tools")
 public class ToolController {
-    private static final String DECODE_EX = "[异常]: 解析中文异常";
-
     private final ToolService toolService;
 
     /**
@@ -57,8 +54,12 @@ public class ToolController {
      */
     @PostMapping
     public Result<String> addTool(@RequestBody ToolData tool) {
-        notBlank(tool.getName(), "the tool name cannot be blank");
-        notNull(tool.getSchema(), "the tool schema cannot be null");
+        notNull(tool.getSchema(), "The tool schema cannot be null.");
+        Object name = tool.getSchema().get("name");
+        notNull(name, "The tool name cannot be null.");
+        if ((name instanceof String) && StringUtils.isBlank((String) name)) {
+            throw new IllegalArgumentException("The tool name cannot be blank.");
+        }
         return Result.createResult(this.toolService.addTool(tool), 0);
     }
 
@@ -70,17 +71,14 @@ public class ToolController {
      */
     @GetMapping("/{uniqueName}")
     public Result<ToolData> getToolByUniqueName(@PathVariable("uniqueName") String uniqueName) {
-        notBlank(uniqueName, "the tool unique name cannot be blank");
-        if (Objects.equals(this.decodeChinese(uniqueName), DECODE_EX)) {
-            return Result.createResult(null, 0);
-        }
+        notBlank(uniqueName, "The tool unique name cannot be blank.");
         return Result.createResult(this.toolService.getTool(this.decodeChinese(uniqueName)), 0);
     }
 
     /**
      * 根据动态查询条件准确获取工具列表。
      *
-     * @param toolName 表示工具名的 {@link String}。
+     * @param name 表示工具名的 {@link String}。
      * @param includeTags 表示包含标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param pageNum 表示页码的 {@link Integer}。
@@ -88,33 +86,26 @@ public class ToolController {
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link ToolData}{@code >}{@code >}。
      */
     @GetMapping
-    public Result<List<ToolData>> getTools(@RequestParam(value = "name", required = false) String toolName,
-            @RequestParam(value = "includeTags", required = false) List<String> includeTags,
-            @RequestParam(value = "excludeTags", required = false) List<String> excludeTags,
-            @RequestParam(value = "pageNum", required = false) Integer pageNum,
-            @RequestParam(value = "pageSize", required = false) Integer limit) {
-        String decodeToolName = StringUtils.EMPTY;
-        if (toolName != null) {
-            try {
-                decodeToolName = URLDecoder.decode(toolName, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                return Result.createResult(null, 0);
-            }
-        }
+    public Result<List<ToolData>> getTools(@RequestQuery(value = "name", required = false) String name,
+            @RequestQuery(value = "includeTags", required = false) List<String> includeTags,
+            @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
+            @RequestQuery(value = "pageNum", required = false) Integer pageNum,
+            @RequestQuery(value = "pageSize", required = false) Integer limit) {
         if (pageNum != null) {
-            notNegative(pageNum, "the page num cannot be negative");
+            notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
         }
         if (limit != null) {
-            notNegative(limit, "the limit cannot be negative");
+            notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         }
-        ToolTagQuery toolTagQuery = new ToolTagQuery(decodeToolName, includeTags, excludeTags, pageNum, limit);
+        ToolTagQuery toolTagQuery =
+                new ToolTagQuery(this.decodeChinese(name), includeTags, excludeTags, pageNum, limit);
         return Result.createResult(this.toolService.getTools(toolTagQuery), 0);
     }
 
     /**
      * 根据动态查询条件模糊获取工具列表。
      *
-     * @param toolName 表示工具名的 {@link String}。
+     * @param name 表示工具名的 {@link String}。
      * @param includeTags 表示包含标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param pageNum 表示页码的 {@link Integer}。
@@ -122,26 +113,19 @@ public class ToolController {
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link ToolData}{@code >}{@code >}。
      */
     @GetMapping("/search")
-    public Result<List<ToolData>> searchTools(@RequestParam(value = "toolName", required = false) String toolName,
-            @RequestParam(value = "includeTags", required = false) List<String> includeTags,
-            @RequestParam(value = "excludeTags", required = false) List<String> excludeTags,
-            @RequestParam(value = "pageNum", required = false) Integer pageNum,
-            @RequestParam(value = "pageSize", required = false) Integer limit) {
-        String decodeToolName = StringUtils.EMPTY;
-        if (toolName != null) {
-            try {
-                decodeToolName = URLDecoder.decode(toolName, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                return Result.createResult(null, 0);
-            }
-        }
+    public Result<List<ToolData>> searchTools(@RequestQuery(value = "name", required = false) String name,
+            @RequestQuery(value = "includeTags", required = false) List<String> includeTags,
+            @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
+            @RequestQuery(value = "pageNum", required = false) Integer pageNum,
+            @RequestQuery(value = "pageSize", required = false) Integer limit) {
         if (pageNum != null) {
-            notNegative(pageNum, "the page num cannot be negative");
+            notNegative(pageNum, "The page num cannot be negative.");
         }
         if (limit != null) {
-            notNegative(limit, "the limit cannot be negative");
+            notNegative(limit, "The limit cannot be negative.");
         }
-        ToolTagQuery toolTagQuery = new ToolTagQuery(decodeToolName, includeTags, excludeTags, pageNum, limit);
+        ToolTagQuery toolTagQuery =
+                new ToolTagQuery(this.decodeChinese(name), includeTags, excludeTags, pageNum, limit);
         return Result.createResult(this.toolService.searchTools(toolTagQuery), 0);
     }
 
@@ -153,18 +137,18 @@ public class ToolController {
      */
     @DeleteMapping("/{uniqueName}")
     public Result<String> deleteTool(@PathVariable("uniqueName") String uniqueName) {
-        notBlank(uniqueName, "the unique name cannot be blank");
-        if (Objects.equals(this.decodeChinese(uniqueName), DECODE_EX)) {
-            return Result.createResult(DECODE_EX, 0);
-        }
+        notBlank(uniqueName, "The unique name cannot be blank.");
         return Result.createResult(this.toolService.deleteTool(this.decodeChinese(uniqueName)), 0);
     }
 
     private String decodeChinese(String input) {
+        if (StringUtils.isBlank(input)) {
+            return input;
+        }
         try {
             return URLDecoder.decode(input, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            return DECODE_EX;
+            return input;
         }
     }
 }

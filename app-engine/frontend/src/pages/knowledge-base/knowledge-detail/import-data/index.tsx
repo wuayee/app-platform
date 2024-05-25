@@ -7,6 +7,7 @@ import BreadcrumbSelf from '../../../../components/breadcrumb';
 import { SelectForm } from '../../../../components/select-form';
 import SegmentPreview from '../../../../components/select-form/segment-preview';
 import './style.scoped.scss';
+import { CheckCircleFilled } from '@ant-design/icons';
 import {
   deleteLocalFile,
   textSegmentWash,
@@ -103,7 +104,7 @@ const KnowledgeBaseDetailImportData = () => {
 
   const onCancle = async () => {
     navigate(-1);
-    const fileIds = formDataSource.getFieldValue('selectedFile').map((file) => `${file.uid}${file.name}`);
+    const fileIds = formDataSource.getFieldValue('selectedFile').map((file) => `${file.uid}_${file.name}`);
     await deleteLocalFile(id, table_id, fileIds);
     formDataSource.setFieldValue('selectedFile', []);
   };
@@ -136,7 +137,7 @@ const KnowledgeBaseDetailImportData = () => {
           const result = await getTableColums({
             repositoryId: id as string,
             knowledgeTableId: table_id as string,
-            fileName: formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}${file.name}`)?.[0] || ''
+            fileName: formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}_${file.name}`)?.[0] || ''
           });
 
           if(result && result?.length) {
@@ -158,7 +159,7 @@ const KnowledgeBaseDetailImportData = () => {
         formValue.current.second = { ...res };
         if (table_type === 'text') {
           // 文本分段清洗
-          const fileNames = formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}${file.name}`);
+          const fileNames = formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}_${file.name}`);
           const secondRes = formValue.current.second;
           await textSegmentWash({
             knowledgeId: id,
@@ -170,7 +171,7 @@ const KnowledgeBaseDetailImportData = () => {
 
         // 表格创建逻辑
         if(table_type === 'table') {
-          const fileName = formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}${file.name}`)?.[0] || '';
+          const fileName = formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}_${file.name}`)?.[0] || '';
 
           console.log(res);
           const data = (res?.tableCustom || []).map(item => ({
@@ -180,7 +181,6 @@ const KnowledgeBaseDetailImportData = () => {
             embedServiceId: item.vectorService ?? null,
             desc: item.description ?? null,
           }));
-          console.log(data);
           createTableColumns({
             repositoryId: id as string,
             knowledgeTableId: table_id as string,
@@ -198,7 +198,9 @@ const KnowledgeBaseDetailImportData = () => {
   useEffect(() => {
   }, []);
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    navigate(-1);
+  };
 
   return (
     <>
@@ -212,24 +214,19 @@ const KnowledgeBaseDetailImportData = () => {
           </div>
         </div>
         <div className='import-data-wrapper'>
-          <div
-            className='aui-block'
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 8,
-            }}
-          >
-            <div
-              style={{
-                width: '100%',
-                flex: 1,
-                background: '#fff',
-                borderRadius: '8px 8px 0px 0px',
-                padding: '24px 24px 0 25px',
-              }}
-            >
-              <Steps current={currentSteps} items={steps} />
+          <div className='aui-block import-data-content'>
+            <Steps
+              current={currentSteps}
+              items={steps}
+              progressDot={(dot, { status, index }) => (
+                <div className={`progress-dot progress-dot-${status}`}>
+                  {status === 'finish' && (
+                    <CheckCircleFilled style={{ color: '#1677ff', fontSize: 20 }} />
+                  )}
+                </div>
+              )}
+            />
+            <div className='import-data-content-form'>
               <SelectForm
                 currentSteps={currentSteps}
                 type={table_type}
@@ -238,13 +235,7 @@ const KnowledgeBaseDetailImportData = () => {
                 segmentData={segmentData}
               />
             </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'end',
-                gap: 16,
-              }}
-            >
+            <div className='import-data-content-footer'>
               {currentSteps === 0 && (
                 <Button
                   onClick={onCancle}

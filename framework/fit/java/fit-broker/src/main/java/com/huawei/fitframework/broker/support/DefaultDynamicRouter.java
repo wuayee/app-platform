@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
 package com.huawei.fitframework.broker.support;
@@ -28,8 +28,7 @@ public class DefaultDynamicRouter implements DynamicRouter {
         if (context.routingFilter() == null) {
             return genericable.fitables();
         }
-        return context.routingFilter()
-                .filter(genericable, genericable.fitables(), args)
+        return context.routingFilter().filter(genericable, genericable.fitables(), args, context.filterExtensions())
                 .stream()
                 .filter(Objects::nonNull)
                 .map(metadata -> this.cast(metadata, genericable.fitables()))

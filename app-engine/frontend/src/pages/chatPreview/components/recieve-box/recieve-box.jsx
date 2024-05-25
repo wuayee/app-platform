@@ -1,19 +1,38 @@
 
 import React, { useEffect, useState, useContext } from 'react';
 import Markdown from 'react-markdown';
+import { useParams, useLocation } from 'react-router-dom';
+import { Tooltip, Checkbox } from "antd";
+import { LinkIcon } from '@/assets/icon';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { AippContext } from '../../aippIndex/context';
-import ChartMessage from './chart-message.jsx';
-import FileContent from '../components/runtimeForm/FileContent.jsx';
-import InterviewQuestions from '../components/runtimeForm/InterviewQuestions.jsx';
-import ManageCubeCreateReport from '../components/runtimeForm/ManageCubeCreateReport.jsx';
-import robot from '../../../assets/images/ai/robot1.png';
-import '../styles/recieve-box.scss';
+import { AippContext } from '../../../aippIndex/context';
+import { ChatContext } from '../../../aippIndex/context';
+import ChartMessage from '../chart-message.jsx';
+import FileContent from '../runtimeForm/FileContent.jsx';
+import Feedbacks from './feedbacks';
+import InterviewQuestions from '../runtimeForm/InterviewQuestions.jsx';
+import ManageCubeCreateReport from '../runtimeForm/ManageCubeCreateReport.jsx';
+import robot from '@/assets/images/ai/robot1.png';
+import '../../styles/recieve-box.scss';
 
 const ReciveBox = (props) => {
-  const { content, recieveType, formConfig, loading, markdownSyntax, chartConfig } = props.chatItem;
+  const { aippInfo }  = useContext(AippContext);
+  const { checkCallBack, showCheck }  = useContext(ChatContext);
+  const { content, recieveType, formConfig, loading, checked, markdownSyntax, chartConfig } = props.chatItem;
+  const [ showIcon, setShowIcon ] = useState(true);
+  const location = useLocation();
 
+  useEffect(() => {
+    const { pathname } = location;
+    if (pathname.includes('/chatShare/')) {
+      setShowIcon(false);
+    } 
+  }, [location])
+  function onChange(e) {
+    props.chatItem.checked = e.target.checked;
+    checkCallBack();
+  }
   // 设置显示类型
   function setRecieveDom(type) {
     if (type === 'form') {
@@ -23,10 +42,34 @@ const ReciveBox = (props) => {
   }
   return <>{(
     <div className='recieve-box'>
+      { showCheck && <Checkbox className='check-box' checked={checked} onChange={onChange}></Checkbox>}
       <div className='user-image'>
         <Img />
+        <span>{ aippInfo?.name || 'xxx' }</span>
       </div>
-      { loading ? <Loading /> : setRecieveDom(recieveType) }
+      <span className="recieve-info-inner">
+        { loading ? <Loading /> : setRecieveDom(recieveType) }
+        { showIcon && <div className='message-tip-box-send'>
+          <div className='inner'>
+            <Tooltip title="分享" color="white" overlayInnerStyle={{color: '#212121' }}>
+              <div>
+                <LinkIcon/>
+              </div>
+            </Tooltip>
+            <Tooltip title="复制" color="white" overlayInnerStyle={{color: '#212121' }}>
+              <div>
+                <LinkIcon/>
+              </div> 
+            </Tooltip>
+            <Tooltip title="删除" color="white" overlayInnerStyle={{color: '#212121' }}>
+            <div>
+              <LinkIcon/>
+            </div>
+            </Tooltip>
+          </div>
+        </div> }
+        {/* { showIcon && <Feedbacks /> } */}
+      </span>
     </div>
   )}</>
 }
@@ -34,10 +77,11 @@ const ReciveBox = (props) => {
 const Loading = () => {
   return(
    <>
-    <div className='recieve-info recieve-loading'>
-      <span>回答生成中</span>
-      <span className="loading-span"></span>
-    </div> 
+    <div class="recieve-loading">
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
+    </div>
    </>
   )
 }

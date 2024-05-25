@@ -37,7 +37,7 @@ public abstract class AbstractTool implements Tool {
     protected AbstractTool(ObjectSerializer serializer, Info itemInfo, Metadata metadata) {
         this.info = notNull(itemInfo, "The item info cannot be null.");
         this.metadata = notNull(metadata, "The tool metadata cannot be null.");
-        this.serializer = notNull(serializer, "The serializer cannot be null");
+        this.serializer = notNull(serializer, "The serializer cannot be null.");
     }
 
     @Override

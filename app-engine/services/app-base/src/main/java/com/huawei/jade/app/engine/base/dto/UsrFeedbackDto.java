@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.jade.app.engine.base.dto;
+
+import com.huawei.fitframework.annotation.Property;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * 用户反馈信息传输类
+ *
+ * @since 2024-5-24
+ *
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UsrFeedbackDto {
+    @Property(description = "反馈记录 id")
+    private Long id;
+
+    @Property(description = "日志id")
+    private Long logId;
+
+    @Property(description = "应用id")
+    private String aippId;
+
+    @Property(description = "用户反馈 -1 未反馈 0 点赞 1 点踩")
+    private Integer usrFeedback;
+
+    @Property(description = "用户反馈文本")
+    private String usrFeedbackText;
+}

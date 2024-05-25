@@ -52,8 +52,35 @@ class ApplyPermissionMessageResponse(object):
             return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
         return 0
 
+    # ApplyPermissionMessageResponse
+    def UserData(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # ApplyPermissionMessageResponse
+    def UserDataAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int8Flags, o)
+        return 0
+
+    # ApplyPermissionMessageResponse
+    def UserDataLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ApplyPermissionMessageResponse
+    def UserDataIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
 def ApplyPermissionMessageResponseStart(builder):
-    builder.StartObject(4)
+    builder.StartObject(5)
 
 def Start(builder):
     ApplyPermissionMessageResponseStart(builder)
@@ -81,6 +108,18 @@ def ApplyPermissionMessageResponseAddMemorySize(builder, memorySize):
 
 def AddMemorySize(builder, memorySize):
     ApplyPermissionMessageResponseAddMemorySize(builder, memorySize)
+
+def ApplyPermissionMessageResponseAddUserData(builder, userData):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(userData), 0)
+
+def AddUserData(builder, userData):
+    ApplyPermissionMessageResponseAddUserData(builder, userData)
+
+def ApplyPermissionMessageResponseStartUserDataVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartUserDataVector(builder, numElems: int) -> int:
+    return ApplyPermissionMessageResponseStartUserDataVector(builder, numElems)
 
 def ApplyPermissionMessageResponseEnd(builder):
     return builder.EndObject()

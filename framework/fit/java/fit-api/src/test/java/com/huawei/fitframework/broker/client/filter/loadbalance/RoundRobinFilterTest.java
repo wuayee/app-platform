@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -59,9 +60,8 @@ public class RoundRobinFilterTest {
         @DisplayName("抛出参数异常")
         void throwIllegalArgumentException() {
             IllegalArgumentException exception = catchThrowableOfType(() -> RoundRobinFilterTest.this.filter.filter(
-                    RoundRobinFilterTest.this.fitable,
-                    this.workerId,
-                    null), IllegalArgumentException.class);
+                    RoundRobinFilterTest.this.fitable, this.workerId, null, new HashMap<>()),
+                    IllegalArgumentException.class);
             assertThat(exception).isNotNull()
                     .hasMessage("The targets to balance load cannot be null. [genericableId=gid, fitableId=fid]");
         }
@@ -77,9 +77,8 @@ public class RoundRobinFilterTest {
             @DisplayName("抛出参数异常")
             void throwIllegalArgumentException() {
                 IllegalArgumentException exception = catchThrowableOfType(() -> RoundRobinFilterTest.this.filter.filter(
-                        RoundRobinFilterTest.this.fitable,
-                        null,
-                        null), IllegalArgumentException.class);
+                        RoundRobinFilterTest.this.fitable, null, null, new HashMap<>()),
+                        IllegalArgumentException.class);
                 assertThat(exception).isNotNull()
                         .hasMessage("The local worker id to balance load cannot be blank. [genericableId=gid, "
                                 + "fitableId=fid]");
@@ -95,9 +94,8 @@ public class RoundRobinFilterTest {
             @DisplayName("当待过滤的服务地址列表为 Null 时，抛出参数异常")
             void givenToFilterTargetsIsNullThenThrowIllegalArgumentException() {
                 IllegalArgumentException exception = catchThrowableOfType(() -> RoundRobinFilterTest.this.filter.filter(
-                        RoundRobinFilterTest.this.fitable,
-                        this.workerId,
-                        null), IllegalArgumentException.class);
+                        RoundRobinFilterTest.this.fitable, this.workerId, null, new HashMap<>()),
+                        IllegalArgumentException.class);
                 assertThat(exception).isNotNull()
                         .hasMessage("The targets to balance load cannot be null. [genericableId=gid, fitableId=fid]");
             }
@@ -108,15 +106,13 @@ public class RoundRobinFilterTest {
                 List<Target> expected = Arrays.asList(Target.custom().workerId("w1").host("h1").build(),
                         Target.custom().workerId("w2").host("h2").build());
                 List<Target> actual = RoundRobinFilterTest.this.filter.filter(RoundRobinFilterTest.this.fitable,
-                        this.workerId,
-                        expected);
+                        this.workerId, expected, new HashMap<>());
                 assertThat(actual).isNotNull().hasSize(1);
                 assertThat(actual.get(0).workerId()).isEqualTo("w1");
                 assertThat(actual.get(0).host()).isEqualTo("h1");
 
                 actual = RoundRobinFilterTest.this.filter.filter(RoundRobinFilterTest.this.fitable,
-                        this.workerId,
-                        expected);
+                        this.workerId, expected, new HashMap<>());
                 assertThat(actual).isNotNull().hasSize(1);
                 assertThat(actual.get(0).workerId()).isEqualTo("w2");
                 assertThat(actual.get(0).host()).isEqualTo("h2");

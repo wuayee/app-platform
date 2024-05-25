@@ -10,6 +10,7 @@ import Pagination from '../../components/pagination/index';
 import './index.scoped.scss';
 import { Icons, KnowledgeIcons } from '../icons';
 import DetailCard from '../knowledge-card/detail-card';
+import { getTableColumns, getTableList, getTextList } from '../../shared/http/knowledge';
  
 interface props {
  
@@ -24,7 +25,6 @@ interface props {
 }
  
 const KnowLedgeTable = ({ type, reposId, id }: props) => {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
  
   // 展示的数据
@@ -34,10 +34,14 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
   const [total, setTotal] = useState(0);
   // 分页
   const [page, setPage] = useState(1);
+
+  // 查询参数
+  const [search, setSearch] = useState('');
  
   // 分页数
   const [pageSize, setPageSize] = useState(type == 'text' ? 12 : 10);
- 
+  const [columns, setColumns] = useState<any[]>([]);
+
   // 分页变化
   const paginationChange = (curPage: number, curPageSize: number) => {
     if(page!==curPage) {
@@ -47,16 +51,103 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
       setPageSize(curPageSize);
     }
   }
+
+  // 获取
  
-  const pageSizeOptions = type == 'text' ? [12] : [10, 20, 50, 100]
- 
+  const pageSizeOptions = type == 'text' ? [12] : [10, 20, 50, 100];
+
+  // 获取文本列表
+  const getText = async () => {
+    try {
+
+      const res = await getTextList({
+        knowledgeId: reposId,
+        tableId: id,
+        pageNo: page,
+        pageSize: pageSize,
+        content: search,
+      });
+      setData(res?.result || [])
+      setTotal(res?.count || 0)
+    } catch (error) {
+      
+    }
+  }
+
+  // 获取表格列
+  const getTableCol = async () => {
+    try {
+    if(type !== 'table') {
+      return;
+    }
+    let res: any[] = await getTableColumns(reposId, id);
+
+    const newCol: any[] = res.filter(item=> !item.hidden).map(item=> ({
+      title: item.name,
+      dataIndex: item.name,
+      key: item.name,
+    }));
+
+    newCol.push({
+      title: '操作',
+      width: 200,
+      render(_, record: any, index: any) {
+            const deleteFunc =async () => {
+            };
+     
+            const modifyFunc = async ()=> {
+            }
+            return (
+            <>
+              <div>
+                <Button type="link" size="small" onClick={modifyFunc}>修改</Button>
+                <Button type="link" size="small" onClick={deleteFunc}>删除</Button>
+              </div>
+            </>)
+      }
+    });
+
+    setColumns([...newCol]);
+    } catch (error) {
+      
+    }
+  }
+
+  // 获取表格列表
+  const getTable = async () => {
+    try {
+      if(!columns.length) {
+        await getTableCol();
+      }
+      const {count =0, result = []} = await getTableList({
+        repositoryId: reposId,
+        knowledgeTableId: id,
+        pageNum: page,
+        pageSize: pageSize,
+      });
+      // setData(res?.result || [])
+      
+      setTotal(count || 0);
+      
+      setData([...result]);
+    } catch (error) {
+      
+    }
+  }
+
   // 获取列表
-  const refresh = ()=> {
- 
+  const refresh = async () => {
+    if(type ==='text') {
+      getText()
+    }
+
+    if(type === 'table' ) {
+      getTable()
+    }
   }
  
   // 点击更多操作
-  const clickOpera = (type, data) => {
+  const clickOpera = (type: string, data: any) => {
  
   }
  
@@ -65,58 +156,16 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
  
   // 搜索值变更
   const onSearchValueChange = (val: string) => {
- 
+    setPage(1)
+    setSearch(val)
   }
- 
-  const columns: TableProps<any>['columns'] = [
-    {
-      title: 'key',
-      dataIndex: 'key',
-      key: 'key',
-    },
-    {
-      title: 'val',
-      dataIndex: 'val',
-      key: 'val',
-    },
-    {
-      title: '详细信息',
-      dataIndex: 'desc',
-      key: 'desc',
-    },
-    {
-      title: '操作',
-      dataIndex: 'operator',
-      key: 'operator',
-      width: 200,
-      render(_, record, index) {
-        const deleteFunc =async () => {
-        };
- 
-        const modifyFunc = async ()=> {
-        }
-        return (
-        <>
-          <div>
-            <Button type="link" size="small" onClick={modifyFunc}>修改</Button>
-            <Button type="link" size="small" onClick={deleteFunc}>删除</Button>
-          </div>
-        </>)
-      },
-    },
-  ]
- 
-  useEffect(()=> {
-    if(id) {
-    }
-  }, []);
- 
+
   useEffect(()=> {
     if(id) {
       // getKnowledgeBase(id);
       refresh();
     }
-  }, [page, pageSize]);
+  }, [page, pageSize, search]);
   
  
   return (
@@ -151,19 +200,23 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
           boxSizing: 'border-box',
           paddingTop: '20px',
           paddingBottom: '20px',
-          display:'flex',
-          gap: '17px',
-          flexWrap: 'wrap'
+          display:'Grid',
+          justifyContent: 'space-between',
+          gridGap: 17,
+          gridTemplateColumns: 'repeat(auto-fill, 440px)'
         }}>
-            {data.map(knowledge=> (<>
-              <DetailCard key={knowledge.id} knowledge={knowledge} style = {{
+            {data.map((knowledge, index)=> (<>
+              <DetailCard key={index} knowledge={knowledge} currentIndex={(page - 1) * pageSize + index + 1} style = {{
                 flex: '0'
-              }} clickMore={(e)=> clickOpera(e, knowledge.id)}/>
+              }} clickMore={(e)=> clickOpera(e, knowledge)}/>
             </>))}
  
         </div>
       </>)}
-      <Pagination total = {total} current={page} onChange={paginationChange} pageSizeOptions={pageSizeOptions} pageSize={pageSize}/>
+      <div style={{
+        height: 20
+      }}></div>
+      <Pagination showTotalFunc = {false} total = {total} current={page} onChange={paginationChange} pageSizeOptions={pageSizeOptions} pageSize={pageSize}/>
     </>
   )
 }
