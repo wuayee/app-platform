@@ -37,6 +37,9 @@ interface paginationProps {
   // 页码或pagesize改变的回调
   onChange?: (page: number, pageSize: number) => any;
 
+  // 展示total
+  showTotalFunc?: boolean;
+
 }
 
 // 默认参数
@@ -47,6 +50,7 @@ const defaultConfig: paginationProps = {
   showSizeChanger: true,
   showQuickJumper: true,
   hideOnSinglePage: false,
+  showTotalFunc: true,
   total: 0,
 }
 
@@ -61,7 +65,8 @@ return (
       fontSize: '12px'
 
     }}>
-      <span>Total:{props.total}</span>
+      { config.showTotalFunc ? (<span>Total:{props.total}</span>) : <span></span>}
+      
       <Pagination {...config} />
     </div>
   </>

@@ -9,6 +9,7 @@ import com.huawei.fitframework.broker.GenericableMetadata;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class DefaultFilter extends AbstractFilter {
 
     @Override
     protected List<? extends FitableMetadata> route(GenericableMetadata genericable,
-            List<? extends FitableMetadata> toFilterFitables, Object[] args) {
+            List<? extends FitableMetadata> toFilterFitables, Object[] args, Map<String, Object> extensions) {
         List<? extends FitableMetadata> filteredFitables;
         String defaultId = genericable.route().defaultFitable();
         if (StringUtils.isNotBlank(defaultId)) {

@@ -36,7 +36,7 @@ class ReleaseMemoryMessage(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+        return -1
 
 def ReleaseMemoryMessageStart(builder):
     builder.StartObject(2)
@@ -51,7 +51,7 @@ def AddObjectKey(builder, objectKey):
     ReleaseMemoryMessageAddObjectKey(builder, objectKey)
 
 def ReleaseMemoryMessageAddMemoryKey(builder, memoryKey):
-    builder.PrependInt32Slot(1, memoryKey, 0)
+    builder.PrependInt32Slot(1, memoryKey, -1)
 
 def AddMemoryKey(builder, memoryKey):
     ReleaseMemoryMessageAddMemoryKey(builder, memoryKey)

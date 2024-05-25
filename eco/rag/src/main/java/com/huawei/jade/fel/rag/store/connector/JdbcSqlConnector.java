@@ -117,7 +117,6 @@ public class JdbcSqlConnector implements SqlConnector {
         } finally {
             close(rs);
             close(stmt);
-            this.close();
         }
         return rows;
     }

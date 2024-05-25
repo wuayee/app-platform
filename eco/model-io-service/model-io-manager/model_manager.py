@@ -1,5 +1,6 @@
 # Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
 
+import asyncio
 import os
 import stat
 import argparse
@@ -21,11 +22,16 @@ from kubernetes import client, config
 from kubernetes.client import ApiClient, Configuration
 from fastapi.middleware.cors import CORSMiddleware
 from urllib3.exceptions import MaxRetryError
+from uvicorn.config import LOGGING_CONFIG
 
-logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s',
+logging.basicConfig(format='%(asctime)s - %(levelname)s:  -  %(filename)s - %(lineno)s:  %(message)s',
                     level=logging.INFO)
+LOGGING_CONFIG["formatters"]["default"]["fmt"] = "%(asctime)s - %(levelprefix)s %(message)s"
+LOGGING_CONFIG["formatters"]["access"]["fmt"] = "%(asctime)s - %(levelprefix)s %(client_addr)s -" \
+                                                "'%(request_line)s' %(status_code)s"
 
 KUBE_CONFIG = "/root/.kube/config"
+NAMESPACE_FILE = "/var/run/secrets/kubernetes.io/serviceaccount/namespace"
 
 
 def set_cross_header(response, request):
@@ -39,7 +45,8 @@ def set_cross_header(response, request):
 def load_kube_config():
     with open(KUBE_CONFIG) as f:
         config_dict = yaml.safe_load(f)
-        config_dict["clusters"][0]["cluster"]["server"] = "https://kubernetes.default.svc:443"
+        if os.path.exists(NAMESPACE_FILE):
+            config_dict["clusters"][0]["cluster"]["server"] = "https://kubernetes.default.svc:443"
         config.load_kube_config_from_dict(config_dict)
 
 load_kube_config()
@@ -91,6 +98,15 @@ def get_template():
     return templates
 
 
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(run_tasks())
+
+
+async def run_tasks():
+    _notify_model_io_gateways()
+
+
 @app.options("/")
 def options_response(request : Request):
     res = {"status": "ok"}
@@ -115,6 +131,13 @@ def get_model_services():
     return services
 
 
+def get_self_namespace():
+    namespace = ""
+    with open(NAMESPACE_FILE) as f:
+        return f.read()
+    return namespace
+
+
 def get_model_io_gateways():
     endpoints = []
 
@@ -131,7 +154,12 @@ def get_model_io_gateways():
         return endpoints
 
     try:
-        k8s_endpoints = api_instance.read_namespaced_endpoints("model-io-gateway", "jade-first-blood")
+        namespace = get_self_namespace()
+        if not namespace:
+            return endpoints
+        k8s_endpoints = api_instance.read_namespaced_endpoints("model-io-gateway", namespace)
+        if not k8s_endpoints or not k8s_endpoints.subsets:
+            return endpoints
         for subset in k8s_endpoints.subsets:
             endpoints.append(
                              {"address": subset.addresses[0].ip,
@@ -225,12 +253,24 @@ async def health(item: NodePortItem) -> Response:
     return Response(status_code=200)
 
 
-@app.post("/v1/delete")
+@app.delete("/v1/delete")
 async def delete_model(llm: Llm):
-    cmd = 'kubectl delete -f ' + f'{llm.name.strip()}.yaml'
-    res = os.popen(cmd, 'r', 1)
-    logger.info(res.read())
-    _notify_model_io_gateways()
+    model_name = llm.name.strip()
+    model_services = get_cached_model_services()
+    if model_name.lower() in model_services:
+        cmd = 'kubectl delete -f ' + f'{llm.name.strip()}.yaml'
+        res = os.popen(cmd, 'r', 1)
+        logger.info(res.read())
+        _notify_model_io_gateways()
+        return Response(status_code=200)
+    else:
+        error_code = 521
+        error_args = [f"The Model {model_name} is not deployed"]
+        error_info = {
+            "code": error_code,
+            "detail": f"Failed to delete Model: {model_name}. Failure cause:{error_args}"
+        }
+        return JSONResponse(status_code=error_code, content=jsonable_encoder(error_info))
 
 
 def _notify_model_io_gateways():
@@ -251,7 +291,7 @@ def _notify_model_io_gateways():
 
 
 def get_supported_images():
-    supported_images = ["mindie:latest", "mindie:v5"]
+    supported_images = ["mindie:latest"]
     return supported_images
 
 models_meta_singleton = {}
@@ -322,7 +362,7 @@ def update_model_statistics(model, agg_statistics):
         logger.error("KeyError:%s", e)
 
 
-def get_supported_models_template():
+def get_supported_models_template(meta=False):
     global supported_models_singleton
     models = supported_models_singleton
 
@@ -331,6 +371,9 @@ def get_supported_models_template():
     llms_key = "llms"
     if models_meta.get(llms_key):
         models[llms_key] = models_meta.get(llms_key)
+
+    if meta:
+        return models_meta.get(llms_key, {llms_key:[]})
 
     agg_statistics = get_models_statistics_from_gateway()
 
@@ -359,6 +402,7 @@ def get_supported_models_template():
             logger.error("KeyError:%s", e)
         model["npu_flag"] = True
 
+
     return models
 
 
@@ -386,6 +430,7 @@ def get_models_statistics_from_gateway():
     for endpoint in endpoints:
         url = f"http://{endpoint['address']}:{endpoint['port']}/v1/statistics"
         response = requests.get(url)
+
         if response.status_code == 200:
             endpoint_statistics = json.loads(response.content)
             for model_statistics in endpoint_statistics:
@@ -408,6 +453,14 @@ async def list_supported_models(request : Request):
     return response
 
 
+@app.get("/v1/list_supported_models_meta")
+async def list_supported_models(request : Request):
+    models = get_supported_models_template(meta=True)
+    response = JSONResponse(content=jsonable_encoder(models))
+    set_cross_header(response, request)
+    return response
+
+
 @app.get("/v1/notify_model_io_gateways")
 async def notify_model_io_gateways():
     _notify_model_io_gateways()
@@ -420,7 +473,7 @@ model_weight_model_dir = {
 }
 
 
-@app.post("/start_up")
+@app.post("/v1/start_up")
 async def start_up(item: Item):
     templates = get_template()
     model_name = item.name.strip()
@@ -463,7 +516,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     model_weight_dir = args.model_weight_dir
     logger.info("Configured model weight dir: %s", model_weight_dir)
-    _notify_model_io_gateways()
     uvicorn.run('model_manager:app',
                 host="0.0.0.0",
                 port=args.port,

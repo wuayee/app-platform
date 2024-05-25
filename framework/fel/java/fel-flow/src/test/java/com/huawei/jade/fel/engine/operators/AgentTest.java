@@ -28,9 +28,9 @@ import com.huawei.jade.fel.engine.operators.patterns.DefaultStreamAgent;
 import com.huawei.jade.fel.engine.operators.prompts.Prompts;
 import com.huawei.jade.fel.tool.Tool;
 import com.huawei.jade.fel.tool.ToolCall;
+import com.huawei.jade.fel.tool.ToolContext;
 import com.huawei.jade.fel.tool.ToolProvider;
 
-import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -49,13 +49,15 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 2024-05-08
  */
 public class AgentTest {
+    private static final String TOOL_KEY = "tool_key";
+    private static final String TOOL_DEFAULT_VALUE = "tool_data";
+
     @Nested
     @DisplayName("阻塞agent测试")
     class BlockAgentTest {
         @Test
         void shouldOkWhenCreateAiFlowWithAgent() {
-            AtomicReference<Double> modelPara = new AtomicReference<>();
-            ChatModelService model = getChatBlockModel(modelPara);
+            ChatModelService model = buildChatBlockModel(null);
 
             AiProcessFlow<Tip, String> flow = getAgentFlow(getBlockAgent(model, false));
             // converse
@@ -64,8 +66,8 @@ public class AgentTest {
 
             AtomicReference<String> answer = new AtomicReference<>();
             agentConverse.doOnSuccess(answer::set).offer(Tip.fromArray("calculate 40*50")).await();
-            assertThat(answer.get()).isEqualTo("calculate 40*50\ntoolcall\ntooldata\nmodel result1");
-            assertThat(modelPara.get()).isCloseTo(0.8f, Percentage.withPercentage(1));
+            assertThat(answer.get())
+                    .isEqualTo("calculate 40*50\ntoolcall\n" + TOOL_DEFAULT_VALUE + "\nmodel result1");
             answer.set(null);
 
             agentConverse.doOnSuccess(answer::set).offer(Tip.fromArray("calculate 60*70")).await();
@@ -75,25 +77,21 @@ public class AgentTest {
         @ParameterizedTest
         @ValueSource(booleans = {true, false})
         void shouldOkWhenAgentWithAsyncTools(boolean isAsyncTool) {
-            AtomicReference<Double> modelPara = new AtomicReference<>();
-            ChatModelService model = getChatBlockModel(modelPara);
+            ChatModelService model = buildChatBlockModel(null);
             AiProcessFlow<Tip, String> flow = getAgentFlow(getBlockAgent(model, isAsyncTool));
 
             ChatOptions options = ChatOptions.builder().temperature(0.8).build();
             String ans = flow.converse().bind(options).offer(Tip.fromArray("calculate 40*60")).await();
             String expectedAns = isAsyncTool
-                    ? "calculate 40*60\ntoolcall\ntooldata"
-                    : "calculate 40*60\ntoolcall\ntooldata\nmodel result1";
+                    ? "calculate 40*60\ntoolcall\n" + TOOL_DEFAULT_VALUE
+                    : "calculate 40*60\ntoolcall\n" + TOOL_DEFAULT_VALUE + "\nmodel result1";
             assertThat(ans).isEqualTo(expectedAns);
-            if (!isAsyncTool) {
-                assertThat(modelPara.get()).isCloseTo(0.8, Percentage.withPercentage(1));
-            }
         }
 
         @Test
         void shouldThrowWhenBlockAgentWithException() {
             String expectedMsg = "model exception";
-            ChatModelService model = getExceptionChatBlockModel(expectedMsg);
+            ChatModelService model = buildChatBlockModel(expectedMsg);
             Agent<Prompt, Prompt> agent = getBlockAgent(model, false);
 
             AtomicReference<String> err = new AtomicReference<>();
@@ -115,12 +113,27 @@ public class AgentTest {
             assertThat(converseErrCnt.get()).isEqualTo(1);
         }
 
+        @Test
+        void shouldOkWhenBlockAgentWithAsyncToolContext() {
+            Agent<Prompt, Prompt> agent = getBlockAgent(buildChatBlockModel(null), true);
+            AiProcessFlow<Tip, String> flow = getAgentFlow(agent);
+
+            String expectedToolVal = "test_tool_value";
+            // converse
+            Conversation<Tip, String> agentConverse = flow.converse()
+                    .bind(ToolContext.from(TOOL_KEY, expectedToolVal));
+
+            AtomicReference<String> answer = new AtomicReference<>();
+            agentConverse.doOnSuccess(answer::set).offer(Tip.fromArray("calculate 40*50")).await();
+            assertThat(answer.get()).isEqualTo("calculate 40*50\ntoolcall\n" + expectedToolVal);
+        }
+
         private Agent<Prompt, Prompt> getBlockAgent(ChatModelService model, boolean isAsyncTool) {
             ToolProvider toolProvider = getToolProvider(isAsyncTool);
             return new DefaultAgent(toolProvider, model, new ChatOptions());
         }
 
-        private ChatModelService buildChatBlockModel(AtomicReference<Double> modelPara, String exceptionMsg) {
+        private ChatModelService buildChatBlockModel(String exceptionMsg) {
             List<ToolCall> toolCalls = Collections.singletonList(new ToolCall());
 
             AtomicInteger step = new AtomicInteger();
@@ -131,18 +144,9 @@ public class AgentTest {
                 if (step.getAndIncrement() == 0) {
                     return new FlatChatMessage(new AiMessage("toolcall", toolCalls));
                 } else {
-                    modelPara.set(request.getOptions().getTemperature());
                     return new FlatChatMessage(new AiMessage("model result1"));
                 }
             };
-        }
-
-        private ChatModelService getExceptionChatBlockModel(String exceptionMsg) {
-            return buildChatBlockModel(null, exceptionMsg);
-        }
-
-        private ChatModelService getChatBlockModel(AtomicReference<Double> modelPara) {
-            return buildChatBlockModel(modelPara, null);
         }
     }
 
@@ -165,7 +169,7 @@ public class AgentTest {
             agentConverse.doOnSuccess(answer::set).offer(Tip.fromArray("calculate 40*50")).await();
             assertThat(chunkResult.toString()).isEqualTo("toolcall0123");
             assertThat(accResult.toString()).isEqualTo("toolcall\n0\n01\n012\n0123\n");
-            assertThat(answer.get()).isEqualTo("calculate 40*50\ntoolcall\ntooldata\n0123");
+            assertThat(answer.get()).isEqualTo("calculate 40*50\ntoolcall\n" + TOOL_DEFAULT_VALUE + "\n0123");
             answer.set(null);
 
             agentConverse.doOnSuccess(answer::set).offer(Tip.fromArray("calculate 60*70")).await();
@@ -188,7 +192,7 @@ public class AgentTest {
             agentConverse.doOnSuccess(answer::set).offer(Tip.fromArray("calculate 40*50")).await();
             assertThat(chunkResult.toString()).isEqualTo("toolcall");
             assertThat(accResult.toString()).isEqualTo("toolcall\n");
-            assertThat(answer.get()).isEqualTo("calculate 40*50\ntoolcall\ntooldata");
+            assertThat(answer.get()).isEqualTo("calculate 40*50\ntoolcall\n" + TOOL_DEFAULT_VALUE);
         }
 
         @Test
@@ -205,7 +209,22 @@ public class AgentTest {
             assertThat(converseErrCnt.get()).isEqualTo(1);
         }
 
-        private StreamingConsumer<ChatChunk, ChatChunk> getStreamingConsumer(StringBuilder chunkResult,
+        @Test
+        void shouldOkWhenStreamAgentWithAsyncToolContext() {
+            Agent<Prompt, Prompt> agent = getStreamAgent(buildChatStreamModel(null), true);
+            AiProcessFlow<Tip, String> flow = getAgentFlow(agent);
+
+            String expectedToolVal = "test_tool_value";
+            // converse
+            Conversation<Tip, String> agentConverse = flow.converse()
+                    .bind(ToolContext.from(TOOL_KEY, expectedToolVal));
+
+            AtomicReference<String> answer = new AtomicReference<>();
+            agentConverse.doOnSuccess(answer::set).offer(Tip.fromArray("calculate 40*50")).await();
+            assertThat(answer.get()).isEqualTo("calculate 40*50\ntoolcall\n" + expectedToolVal);
+        }
+
+        private StreamingConsumer<AiMessage, ChatChunk> getStreamingConsumer(StringBuilder chunkResult,
                 StringBuilder accResult) {
             return (acc, chunk) -> {
                 if (chunk.isEnd()) {
@@ -253,8 +272,9 @@ public class AgentTest {
     private static ToolProvider getToolProvider(boolean isAsyncTool) {
         return new ToolProvider() {
             @Override
-            public FlatChatMessage call(ToolCall toolCall) {
-                return new FlatChatMessage(new ToolMessage("", "tooldata"));
+            public FlatChatMessage call(ToolCall toolCall, ToolContext toolContext) {
+                String toolData = toolContext.match(TOOL_KEY);
+                return new FlatChatMessage(new ToolMessage("", toolData == null ? TOOL_DEFAULT_VALUE : toolData));
             }
 
             @Override

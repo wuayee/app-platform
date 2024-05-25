@@ -128,14 +128,14 @@ const KnowledgeBase = () => {
         </div>
         <div className='containerArea' style={{
           width: '100%',
-          minHeight: '800px',
           maxHeight: 'calc(100% - 200px)',
           boxSizing: 'border-box',
           paddingTop: '20px',
           paddingBottom: '20px',
-          display:'flex',
-          gap: '17px',
-          flexWrap: 'wrap'
+          display:'Grid',
+          justifyContent: 'space-between',
+          gridGap: 17,
+          gridTemplateColumns: 'repeat(auto-fill, 380px)'
         }}>
             {knowledgeData.map(knowledge=> (<>
               <KnowledgeCard key={knowledge.id} knowledge={knowledge} style={{

@@ -25,6 +25,10 @@
         <!-- FIT -->
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-reactor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
 
@@ -67,6 +71,11 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.plugin</groupId>
+            <artifactId>fit-message-serializer-json-jackson</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

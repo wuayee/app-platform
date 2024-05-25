@@ -7,6 +7,7 @@ package com.huawei.jade.fel.model.openai.entity.chat;
 import com.huawei.jade.fel.model.openai.entity.chat.message.OpenAiChatMessage;
 import com.huawei.jade.fel.model.openai.entity.chat.message.tool.OpenAiTool;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -95,4 +96,10 @@ public class OpenAiChatCompletionRequest {
      */
     @JsonProperty("tool_choice")
     private String toolChoice;
+
+    /**
+     * @see <a href="https://platform.openai.com/docs/api-reference/authentication">OpenAI API</a>
+     */
+    @JsonIgnore
+    private String apiKey;
 }

@@ -94,7 +94,7 @@ public class OpenAiClient {
         Validation.notNull(request, "The request cannot be null");
         request.setStream(false);
         Response<OpenAiChatCompletionResponse> response =
-                api.createChatCompletion(url, request).execute();
+                api.createChatCompletion(url, getApiKey(request.getApiKey()), request).execute();
         if (!response.isSuccessful()) {
             LOGGER.error(response.message());
             throw new IOException(response.message());
@@ -125,7 +125,7 @@ public class OpenAiClient {
     public OpenAiEmbeddingResponse createEmbeddings(String url, OpenAiEmbeddingRequest request) throws IOException {
         Validation.notNull(request, "The request cannot be null");
         Response<OpenAiEmbeddingResponse> response =
-                api.createEmbeddings(url, request).execute();
+                api.createEmbeddings(url, getApiKey(request.getApiKey()), request).execute();
         if (!response.isSuccessful()) {
             LOGGER.error(response.message());
             throw new IOException(response.message());
@@ -154,7 +154,7 @@ public class OpenAiClient {
     public Call<ResponseBody> createChatCompletionStream(String url, OpenAiChatCompletionRequest request) {
         Validation.notNull(request, "The request cannot be null");
         request.setStream(true);
-        return api.createChatCompletionStream(url, request);
+        return api.createChatCompletionStream(url, getApiKey(request.getApiKey()), request);
     }
 
     private String getUrl(String modelName, String endpoint) {
@@ -163,5 +163,9 @@ public class OpenAiClient {
         String url = shouldSplicePath ? openAiBaseUrl + modelName + "/" : openAiBaseUrl;
         url += endpoint;
         return url;
+    }
+
+    private String getApiKey(String apiKey) {
+        return "Bearer " + apiKey;
     }
 }

@@ -20,10 +20,11 @@ public interface ToolProvider {
      * 调用指定工具。
      *
      * @param toolCall 表示拥有工具调用参数的 {@link ToolCall}。
+     * @param toolContext 表示自定义工具上下文的 {@link ToolContext}。
      * @return 表示工具调用结果的 {@link FlatChatMessage}。
      */
     @Genericable("com.huawei.jade.fel.spi.tool.call")
-    FlatChatMessage call(ToolCall toolCall);
+    FlatChatMessage call(ToolCall toolCall, ToolContext toolContext);
 
     /**
      * 根据工具名列表获取工具对象列表。

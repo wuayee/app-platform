@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -59,9 +60,8 @@ public class WorkerFilterTest {
         @DisplayName("抛出参数异常")
         void throwIllegalArgumentException() {
             IllegalArgumentException exception = catchThrowableOfType(() -> WorkerFilterTest.this.filter.filter(
-                    WorkerFilterTest.this.fitable,
-                    this.workerId,
-                    null), IllegalArgumentException.class);
+                    WorkerFilterTest.this.fitable, this.workerId, null, new HashMap<>()),
+                    IllegalArgumentException.class);
             assertThat(exception).isNotNull()
                     .hasMessage("The targets to balance load cannot be null. [genericableId=gid, fitableId=fid]");
         }
@@ -79,7 +79,8 @@ public class WorkerFilterTest {
                 IllegalArgumentException exception = catchThrowableOfType(() -> WorkerFilterTest.this.filter.filter(
                         WorkerFilterTest.this.fitable,
                         null,
-                        null), IllegalArgumentException.class);
+                        null,
+                        new HashMap<>()), IllegalArgumentException.class);
                 assertThat(exception).isNotNull()
                         .hasMessage("The local worker id to balance load cannot be blank. [genericableId=gid, "
                                 + "fitableId=fid]");
@@ -95,9 +96,8 @@ public class WorkerFilterTest {
             @DisplayName("当待过滤的服务地址列表为 Null 时，抛出参数异常")
             void givenToFilterTargetsIsNullThenThrowIllegalArgumentException() {
                 IllegalArgumentException exception = catchThrowableOfType(() -> WorkerFilterTest.this.filter.filter(
-                        WorkerFilterTest.this.fitable,
-                        this.workerId,
-                        null), IllegalArgumentException.class);
+                        WorkerFilterTest.this.fitable, this.workerId, null, new HashMap<>()),
+                        IllegalArgumentException.class);
                 assertThat(exception).isNotNull()
                         .hasMessage("The targets to balance load cannot be null. [genericableId=gid, fitableId=fid]");
             }
@@ -107,8 +107,10 @@ public class WorkerFilterTest {
             void givenToFilterTargetsContainsSpecifiedWorkerIdThenReturnTheTargetsWithSpecifiedWorkerId() {
                 List<Target> expected = Arrays.asList(Target.custom().workerId("workerId").host("h1").build(),
                         Target.custom().workerId("w2").host("h2").build());
-                List<Target> actual =
-                        WorkerFilterTest.this.filter.filter(WorkerFilterTest.this.fitable, this.workerId, expected);
+                List<Target> actual = WorkerFilterTest.this.filter.filter(WorkerFilterTest.this.fitable,
+                        this.workerId,
+                        expected,
+                        new HashMap<>());
                 assertThat(actual).isNotNull().hasSize(1);
                 assertThat(actual.get(0).workerId()).isEqualTo("workerId");
                 assertThat(actual.get(0).host()).isEqualTo("h1");

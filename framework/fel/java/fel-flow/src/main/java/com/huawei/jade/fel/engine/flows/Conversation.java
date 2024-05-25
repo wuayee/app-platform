@@ -9,10 +9,12 @@ import com.huawei.fit.waterflow.domain.emitters.Emitter;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.chat.ChatOptions;
+import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.core.memory.Memory;
 import com.huawei.jade.fel.engine.operators.models.ChatChunk;
 import com.huawei.jade.fel.engine.operators.models.StreamingConsumer;
 import com.huawei.jade.fel.engine.util.StateKey;
+import com.huawei.jade.fel.tool.ToolContext;
 
 import java.util.List;
 import java.util.Map;
@@ -120,11 +122,12 @@ public class Conversation<D, R> {
     /**
      * 绑定流式响应信息消费者到对话上下文，用于消费流程流转过程中的流式信息。
      *
-     * @param consumer 表示流式响应信息消费者的 {@link StreamingConsumer}。
+     * @param consumer 表示流式响应信息消费者的 {@link StreamingConsumer}{@code <}{@link AiMessage}{@code ,
+     * }{@link ChatChunk}{@code >}。
      * @return 表示绑定了流式响应信息消费者的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
      * @throws IllegalArgumentException 当 {@code consumer} 为 {@code null} 时。
      */
-    public Conversation<D, R> bind(StreamingConsumer<ChatChunk, ChatChunk> consumer) {
+    public Conversation<D, R> bind(StreamingConsumer<AiMessage, ChatChunk> consumer) {
         Validation.notNull(consumer, "Streaming consumer cannot be null.");
         this.session.setInnerState(StateKey.STREAMING_CONSUMER, consumer);
         return this;
@@ -160,6 +163,19 @@ public class Conversation<D, R> {
     public Conversation<D, R> bind(Map<String, Object> ctx) {
         Validation.notNull(ctx, "Context map cannot be null.");
         ctx.forEach(this::bind);
+        return this;
+    }
+
+    /**
+     * 绑定自定义工具参数到对话上下文，用于工具调用。
+     *
+     * @param toolContext 表示自定义工具上下文参数的 {@link ToolContext}。
+     * @return 表示绑定了工具上下文参数的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
+     * @throws IllegalArgumentException 当 {@code ctx} 为 {@code null} 时。
+     */
+    public Conversation<D, R> bind(ToolContext toolContext) {
+        Validation.notNull(toolContext, "Tool context cannot be null.");
+        this.session.setInnerState(StateKey.TOOL_CONTEXT, toolContext);
         return this;
     }
 

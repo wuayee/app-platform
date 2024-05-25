@@ -93,6 +93,18 @@ const IndustryTerminology = () => {
                       <div className='tag' style={{
                         backgroundColor: '#E6F3FA'
                       }}>{rowInfo?.recordNum ?? 0 }</div>
+                      { rowInfo?.status ? <div className='tag' style={{
+                        backgroundColor: '#FFF5E5'
+                      }}>
+                        <KnowledgeIcons.loading/>
+                        <span style={{
+                          marginLeft: '4px'
+                        }}>
+                          {`${rowInfo?.status}个导入任务正在进行中`}
+                        </span>
+                        
+                      </div>: ''}
+                      
                   </div>
               </div>
               

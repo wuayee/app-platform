@@ -178,7 +178,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
         AtomicReference<Node<I, O>> processRef = new AtomicReference<>();
         Operators.Map<FlowContext<I>, O> wrapper = input -> {
             DataStart<O, O, ?> start = processor.process(input);
-            start.just(ctx -> processRef.get().offer(ctx, input.getSession())).offer();
+            start.just(data -> processRef.get().offer(data, input.getSession())).offer();
             return null;
         };
         Node<I, O> node = new Node<>(this.getStreamId(), wrapper, repo, messenger, locks);

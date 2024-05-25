@@ -23,12 +23,13 @@ import com.huawei.fit.serialization.util.PublisherCategory;
 import com.huawei.fitframework.broker.ExceptionInfo;
 import com.huawei.fitframework.broker.FitExceptionCreator;
 import com.huawei.fitframework.exception.ClientException;
-import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.flowable.Emitter;
 import com.huawei.fitframework.flowable.Publisher;
-import com.huawei.fitframework.flowable.Solo;
+import com.huawei.fitframework.flowable.choir.FlexibleEmitterChoir;
+import com.huawei.fitframework.flowable.solo.FlexibleEmitterSolo;
 import com.huawei.fitframework.flowable.util.worker.Worker;
 import com.huawei.fitframework.flowable.util.worker.WorkerObserver;
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.ioc.BeanFactory;
 import com.huawei.fitframework.log.Logger;
@@ -205,7 +206,12 @@ public class WebsocketInvoker implements WebSocketClassicListener, WebSocketInvo
                     argumentElementType,
                     index,
                     (argumentSession, argumentIndex) -> {});
-            Worker<Object> worker = Worker.create(observer, convertToPublisher(arguments[index]), index, 0);
+            Publisher<Object> publisher = ObjectUtils.cast(Validation.isInstanceOf(arguments[index],
+                    Publisher.class,
+                    StringUtils.format("The argument type is not Publisher. [index={0}, type={1}]",
+                            index,
+                            arguments[index].getClass())));
+            Worker<Object> worker = Worker.create(observer, publisher, index);
             this.workers.put(index, worker);
             worker.run();
             convertedArguments[index] = null;
@@ -227,9 +233,10 @@ public class WebsocketInvoker implements WebSocketClassicListener, WebSocketInvo
                     this.sendCancelMessage(session);
                 };
                 if (category == PublisherCategory.CHOIR) {
-                    result = Choir.fromEmitter(emitter, requestElementHandler, cancelHandler);
+                    result =
+                            new FlexibleEmitterChoir<>(() -> emitter, null, null, requestElementHandler, cancelHandler);
                 } else {
-                    result = Solo.fromEmitter(emitter, requestElementHandler, cancelHandler);
+                    result = new FlexibleEmitterSolo<>(() -> emitter, null, null, requestElementHandler, cancelHandler);
                 }
             }
         }
@@ -270,13 +277,6 @@ public class WebsocketInvoker implements WebSocketClassicListener, WebSocketInvo
             throw new IllegalArgumentException("Cannot get data type which type is not parameterized type.");
         }
         return ((ParameterizedType) type).getActualTypeArguments()[0];
-    }
-
-    private static <T> T convertToPublisher(Object obj) {
-        if (!(obj instanceof Publisher)) {
-            throw new IllegalArgumentException("Cannot convert object which type is not publisher type.");
-        }
-        return ObjectUtils.cast(obj);
     }
 
     private FitExceptionCreator loadExceptionCreator() {

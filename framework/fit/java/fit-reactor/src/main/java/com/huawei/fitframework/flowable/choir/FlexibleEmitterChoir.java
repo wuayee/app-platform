@@ -10,7 +10,7 @@ import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.flowable.Emitter;
 import com.huawei.fitframework.flowable.Subscriber;
 import com.huawei.fitframework.flowable.subscription.AbstractSubscription;
-import com.huawei.fitframework.inspection.Nonnull;
+import com.huawei.fitframework.flowable.util.OnSubscribedObserver;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -18,47 +18,69 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * 表示 {@link Choir} 的数据发送器实现。
+ * 表示 {@link Choir} 的可配置订阅、元素请求、取消行为的数据发送器实现。
  *
  * @param <T> 表示响应式流中数据类型的 {@link T}。
- * @author 季聿阶 j00559309
- * @since 2024-02-14
+ * @author 何天放 h00679269
+ * @since 2024-05-22
  */
-public class EmitterChoir<T> extends AbstractChoir<T> {
+public class FlexibleEmitterChoir<T> extends AbstractChoir<T> implements OnSubscribedObserver {
+    private static final Runnable EMPTY_RUNNABLE = () -> {};
+    private static final Consumer<OnSubscribedObserver> EMPTY_ON_SUBSCRIBED_OBSERVER_CONSUMER = count -> {};
+    private static final Consumer<Long> EMPTY_LONG_CONSUMER = count -> {};
     private static final Consumer<Emitter<?>> EMPTY_EMITTER_CONSUMER = emitter -> {};
-    private static final Consumer<Long> EMPTY_REQUEST_HANDLER = count -> {};
-    private static final Runnable EMPTY_CANCEL_HANDLER = () -> {};
 
     private final Supplier<Emitter<T>> emitterSupplier;
     private final Consumer<Emitter<T>> emitterConsumer;
+    private final Consumer<OnSubscribedObserver> subscribeHandler;
     private final Consumer<Long> requestHandler;
     private final Runnable cancelHandler;
+    private Subscriber<T> subscriber;
+    private FlexibleEmitterChoirSubscription<T> subscription;
 
-    public EmitterChoir(Supplier<Emitter<T>> emitterSupplier, Consumer<Emitter<T>> emitterConsumer,
-            Consumer<Long> requestHandler, Runnable cancelHandler) {
+    /**
+     * 构建一个可配置订阅、元素请求、取消行为并且订阅关系发生通知时机可控的 {@link Choir} 数据发送器实现。
+     *
+     * @param emitterSupplier 表示数据发送器供应方式的 {@link Supplier}{@code <}{@link T}{@code >}。
+     * @param emitterConsumer 表示数据发送器消费方式的 {@link Consumer}{@code <}{@link T}{@code >}。
+     * @param subscribeHandler 表示订阅行为的 {@link Runnable}。
+     * @param requestHandler 表示元素请求行为的 {@link Consumer}{@code <}{@link Long}{@code >}。
+     * @param cancelHandler 表示取消行为的 {@link Runnable}。
+     */
+    public FlexibleEmitterChoir(Supplier<Emitter<T>> emitterSupplier, Consumer<Emitter<T>> emitterConsumer,
+            Consumer<OnSubscribedObserver> subscribeHandler, Consumer<Long> requestHandler, Runnable cancelHandler) {
         this.emitterSupplier = notNull(emitterSupplier, "The emitter supplier cannot be null.");
         this.emitterConsumer = emitterConsumer == null ? ObjectUtils.cast(EMPTY_EMITTER_CONSUMER) : emitterConsumer;
-        this.requestHandler = requestHandler == null ? EMPTY_REQUEST_HANDLER : requestHandler;
-        this.cancelHandler = cancelHandler == null ? EMPTY_CANCEL_HANDLER : cancelHandler;
+        this.subscribeHandler =
+                subscribeHandler == null ? ObjectUtils.cast(EMPTY_ON_SUBSCRIBED_OBSERVER_CONSUMER) : subscribeHandler;
+        this.requestHandler = requestHandler == null ? EMPTY_LONG_CONSUMER : requestHandler;
+        this.cancelHandler = cancelHandler == null ? EMPTY_RUNNABLE : cancelHandler;
     }
 
     @Override
-    protected void subscribe0(@Nonnull Subscriber<T> subscriber) {
-        EmitterSubscription<T> subscription =
-                new EmitterSubscription<>(subscriber, this.requestHandler, this.cancelHandler);
-        subscriber.onSubscribed(subscription);
+    protected void subscribe0(Subscriber<T> subscriber) {
+        this.subscriber = subscriber;
+        this.subscription = new FlexibleEmitterChoirSubscription<>(subscriber, this.requestHandler, this.cancelHandler);
+        this.subscribeHandler.accept(this);
+    }
+
+    @Override
+    public void notifyOnSubscribed() {
         Emitter<T> emitter = notNull(this.emitterSupplier.get(), "The result of emitter supplier cannot be null.");
-        emitter.observe(subscription);
+        emitter.observe(this.subscription);
+        this.subscriber.onSubscribed(this.subscription);
         this.emitterConsumer.accept(emitter);
     }
 
-    private static class EmitterSubscription<T> extends AbstractSubscription implements Emitter.Observer<T> {
+    private static class FlexibleEmitterChoirSubscription<T> extends AbstractSubscription
+            implements Emitter.Observer<T> {
         private final Subscriber<T> subscriber;
         private final AtomicLong requested = new AtomicLong();
         private final Consumer<Long> requestHandler;
         private final Runnable cancelHandler;
 
-        public EmitterSubscription(Subscriber<T> subscriber, Consumer<Long> requestHandler, Runnable cancelHandler) {
+        public FlexibleEmitterChoirSubscription(Subscriber<T> subscriber, Consumer<Long> requestHandler,
+                Runnable cancelHandler) {
             this.subscriber = notNull(subscriber, "The subscriber cannot be null.");
             this.requestHandler = notNull(requestHandler, "The request handler cannot be null.");
             this.cancelHandler = notNull(cancelHandler, "The cancel handler cannot be null.");

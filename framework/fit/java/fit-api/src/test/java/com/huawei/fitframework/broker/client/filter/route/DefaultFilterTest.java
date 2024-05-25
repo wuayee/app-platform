@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -56,7 +57,8 @@ public class DefaultFilterTest {
             FitableMetadata fitableMetadata1 = this.mockFitableMetadata("fid1");
             FitableMetadata fitableMetadata2 = this.mockFitableMetadata("fid2");
             List<? extends FitableMetadata> toFilter = Arrays.asList(fitableMetadata1, fitableMetadata2);
-            List<? extends FitableMetadata> actual = this.filter.filter(this.genericable, toFilter, null);
+            List<? extends FitableMetadata> actual =
+                    this.filter.filter(this.genericable, toFilter, null, new HashMap<>());
             assertThat(actual).isEmpty();
         }
 
@@ -67,7 +69,8 @@ public class DefaultFilterTest {
             FitableMetadata fitableMetadata1 = this.mockFitableMetadata("fid1");
             FitableMetadata fitableMetadata2 = this.mockFitableMetadata("fid2");
             List<? extends FitableMetadata> toFilter = Arrays.asList(fitableMetadata1, fitableMetadata2);
-            List<? extends FitableMetadata> actual = this.filter.filter(this.genericable, toFilter, null);
+            List<? extends FitableMetadata> actual =
+                    this.filter.filter(this.genericable, toFilter, null, new HashMap<>());
             assertThat(actual).hasSize(1).element(0).isEqualTo(fitableMetadata1);
         }
 
@@ -88,7 +91,7 @@ public class DefaultFilterTest {
         @DisplayName("当待过滤的泛服务实现列表为 Null 时，抛出参数异常")
         void givenToFilterFitablesNullThenThrowIllegalArgumentException() {
             IllegalArgumentException exception =
-                    catchThrowableOfType(() -> this.filter.filter(this.genericable, null, null),
+                    catchThrowableOfType(() -> this.filter.filter(this.genericable, null, null, new HashMap<>()),
                             IllegalArgumentException.class);
             assertThat(exception).isNotNull().hasMessage("The metadata of fitables to filter cannot be null.");
         }
