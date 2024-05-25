@@ -15,8 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 /**
  * 网关路由基础测试。
@@ -47,11 +46,58 @@ public class ModelGatewayRouteTest {
         routeInfo.setPath("/test");
         routeInfo.setUrl("http://localhost/test_url");
 
-        List<RouteInfo> routes = new ArrayList<>();
-        routes.add(routeInfo);
         RouteInfoList requestBody = new RouteInfoList();
-        requestBody.setRoutes(routes);
+        requestBody.setRoutes(Collections.singletonList(routeInfo));
+        webTestClient.post()
+                .uri("/v1/routes")
+                .bodyValue(requestBody)
+                .exchange().expectStatus().isOk();
 
+        // 使用actuator API校验路由信息是否更新。
+        webTestClient.get()
+                .uri("/actuator/gateway/routes")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .value(response -> assertThat(response).contains("test_id"));
+
+        RouteInfo newRouteInfo = new RouteInfo();
+        newRouteInfo.setId("new_id");
+        newRouteInfo.setModel("test_model");
+        newRouteInfo.setPath("/test");
+        newRouteInfo.setUrl("http://localhost/test_url");
+        requestBody.setRoutes(Collections.singletonList(newRouteInfo));
+        webTestClient.post()
+                .uri("/v1/routes")
+                .bodyValue(requestBody)
+                .exchange().expectStatus().isOk();
+
+        // 使用actuator API校验路由信息是否更新。
+        webTestClient.get()
+                .uri("/actuator/gateway/routes")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .value(response -> assertThat(response).contains("new_id"));
+
+        // 由于第二次/v1/routes请求体未携带test_id路由，所以test_id路由应该被删除。
+        webTestClient.get()
+                .uri("/actuator/gateway/routes")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .value(response -> assertThat(response).doesNotContain("test_id"));
+    }
+
+    @Test
+    void testUpdateRoutesWithoutModel() {
+        RouteInfo routeInfo = new RouteInfo();
+        routeInfo.setId("test_id");
+        routeInfo.setPath("/test");
+        routeInfo.setUrl("http://localhost/test_url");
+
+        RouteInfoList requestBody = new RouteInfoList();
+        requestBody.setRoutes(Collections.singletonList(routeInfo));
         webTestClient.post()
                 .uri("/v1/routes")
                 .bodyValue(requestBody)
@@ -75,11 +121,8 @@ public class ModelGatewayRouteTest {
         routeInfo.setPath("/test");
         routeInfo.setUrl("http://localhost/test_url");
 
-        List<RouteInfo> routes = new ArrayList<>();
-        routes.add(routeInfo);
         RouteInfoList requestBody = new RouteInfoList();
-        requestBody.setRoutes(routes);
-
+        requestBody.setRoutes(Collections.singletonList(routeInfo));
         webTestClient.post()
                 .uri("/v1/routes")
                 .bodyValue(requestBody)
