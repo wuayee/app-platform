@@ -43,9 +43,43 @@ const AppLayout: React.FC = () => {
   // 控制面板的显示与隐藏
   const [showMenu, setShowMenu] = useState(false);
 
+  // 默认的选中的菜单
+  const [defaultActive, setDefaultActive] = useState<string[]>([])
+
   const navigate = useNavigate();
 
   const location = useLocation();
+
+  /**
+   * @description 从后往前遍历路由 父子路由，子路由前缀需要是父路由
+   * @pathname 当前路径
+   * */ 
+  const getCurrentRoute = (pathname: string) => {
+
+    // 拆开路由
+    const pathGroup = pathname.split('/').filter(item=> item!=='');
+
+    if(pathGroup?.length) {
+
+      let len = pathGroup?.length - 1;
+
+      while(len >= 0) {
+
+        const key = '/' + pathGroup.slice(0, len + 1).join('/');
+        let route = getRouteByKey(flattenRouteList, key);
+
+        if(route?.hidden) {
+          len--;
+        } else {
+          setDefaultActive([key]);
+          break;
+        }
+      } 
+    } else {
+      // 默认路由为home
+      setDefaultActive(['/home']);
+    }
+  }
 
   useEffect(() => {
     const { pathname } = location;
@@ -57,6 +91,9 @@ const AppLayout: React.FC = () => {
     } else {
       setShowMenu(false);
     }
+
+    getCurrentRoute(pathname);
+
   }, [location]);
 
   const menuClick = (e: any) => {
@@ -97,7 +134,7 @@ const AppLayout: React.FC = () => {
         <Menu
           className="menu"
           theme="dark"
-          defaultSelectedKeys={["/home"]}
+          selectedKeys={defaultActive}
           mode="inline"
           items={items}
           onClick={menuClick}
