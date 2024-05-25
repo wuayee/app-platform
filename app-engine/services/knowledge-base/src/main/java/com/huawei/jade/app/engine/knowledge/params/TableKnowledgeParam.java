@@ -5,7 +5,10 @@
 package com.huawei.jade.app.engine.knowledge.params;
 
 import com.huawei.jade.app.engine.knowledge.dto.TableKnowledgeColDto;
+import com.huawei.jade.app.engine.knowledge.service.param.PageQueryParam;
+import com.huawei.jade.app.engine.knowledge.utils.DecodeUtil;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +23,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TableKnowledgeParam {
+@AllArgsConstructor
+public class TableKnowledgeParam extends PageQueryParam {
     /** 知识库Id */
     private Long repositoryId;
 
@@ -28,14 +32,26 @@ public class TableKnowledgeParam {
     private Long knowledgeTableId;
 
     /** 表头行 */
-    private Integer headerLine;
+    private Integer headerLine = 0;
 
     /** 数据起始行 */
-    private Integer startRow;
+    private Integer startRow = 1;
 
     /** 工作表ID */
-    private Integer sheetId;
+    private Integer sheetId = 0;
 
     /** 列 */
     private List<TableKnowledgeColDto> columns;
+
+    /** 文件名 */
+    private String fileName;
+
+    /**
+     * 获取文件名称
+     *
+     * @return 解码后的文件名称
+     */
+    public String getFileName() {
+        return DecodeUtil.decodeStr(fileName);
+    }
 }

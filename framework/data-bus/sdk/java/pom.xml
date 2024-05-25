@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
-  -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -10,7 +6,7 @@
 
     <groupId>com.huawei.fit.databus</groupId>
     <artifactId>java-sdk</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -89,4 +85,17 @@
             </build>
         </profile>
     </profiles>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>fit-snapshots</id>
+            <name>Fit Snapshots</name>
+            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
+        </snapshotRepository>
+        <repository>
+            <id>fit-releases</id>
+            <name>Fit Releases</name>
+            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
+        </repository>
+    </distributionManagement>
 </project>

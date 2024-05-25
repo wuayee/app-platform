@@ -1,6 +1,6 @@
 .chat-message-container {
   width: 100%;
-  height: calc(100% - 350px);
+  flex-grow: 1;
   margin: 15px auto;
   overflow-y: auto;
   overflow-x: hidden;
@@ -15,7 +15,6 @@
   }
 }
 .group-active {
-  height: calc(100% - 190px);
   .message-box {
     margin-top: 60px;
     width: 940px;
@@ -24,21 +23,27 @@
       padding-top: 16px;
       border-top-left-radius: 6px;
       border-top-right-radius: 6px;
+      padding-right: 16px;
       .send-info {
         pointer-events: none;
         cursor: not-allowed;
+        padding-bottom: 12px;
       }
     }
     .recieve-box {
       margin-bottom: 12px;
       background-color: #252b3a0d;
-      padding-left: 24px;
+      padding-left: 50px;
+      padding-right: 16px;
+      padding-top: 12px;
       margin-top: 0;
       padding-bottom: 20px;
       border-bottom-left-radius: 6px;
       border-bottom-right-radius: 6px;
-      pointer-events: none;
-      cursor: not-allowed;
+      .recieve-info-inner {
+        pointer-events: none;
+        cursor: not-allowed;
+      }
     }
   }
 }

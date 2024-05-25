@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.jade.carver.tool.repository.pgsql.mapper.ToolMapper">
+    <resultMap id="Tool" type="com.huawei.jade.carver.tool.repository.pgsql.model.entity.ToolDo">
+        <result column="id" property="id"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="creator" property="creator"/>
+        <result column="modifier" property="modifier"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="unique_name" property="uniqueName"/>
+        <result column="schema" property="schema"/>
+        <result column="runnables" property="runnables"/>
+        <result column="source" property="source"/>
+    </resultMap>
+    <insert id="addTool" parameterType="com.huawei.jade.carver.tool.repository.pgsql.model.entity.ToolDo">
+        insert into store_tool
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            "name", <if test="description != null">"description",</if> "unique_name", "schema", "runnables",
+            <if test="source != null">"source",</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{name}, <if test="description != null">#{description},</if> #{uniqueName}, cast(#{schema} as json),
+            cast(#{runnables} as
+            json),
+            <if test="source != null">#{source},</if>
+        </trim>
+    </insert>
+    <delete id="deleteTool" parameterType="String">
+        delete
+        from "store_tool"
+        where unique_name = #{uniqueName};
+    </delete>
+    <select id="getToolByUniqueName" resultMap="Tool">
+        select "name", "description", "unique_name", "schema", "runnables", "source"
+        from "store_tool"
+        where unique_name = #{uniqueName}
+    </select>
+    <sql id="getOrSearchSelect">
+        select i."name", i."unique_name", i."description", i."schema", i."runnables", i."source"
+        from "store_tool" i
+                 left join (select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags
+                            from "store_tag" t
+                            group by t."tool_unique_name") tg on i."unique_name" = tg."tool_unique_name"
+    </sql>
+    <sql id="getOrSearchConditions">
+        <if test="includeTags != null and includeTags.size() > 0">
+            and tg.tags is not null
+            and (
+            <foreach collection="includeTags" item="tag" open="" close="" separator=" and ">
+                tg.tags ~ ('(^|,)' || #{tag} || '($|,)')
+            </foreach>
+            )
+        </if>
+        <if test="excludeTags != null and excludeTags.size() > 0">
+            and ( tg.tags is null
+            or not (
+            <foreach collection="excludeTags" item="tag" open="" close="" separator=" or ">
+                tg.tags ~ ('(^|,)' || #{tag} || '($|,)')
+            </foreach>
+            )
+            )
+        </if>
+    </sql>
+    <sql id="sortAndLimit">
+        order by i.updated_time desc
+        <if test="offset != null and offset >= 0">
+            offset #{offset}
+        </if>
+        <if test="limit != null and limit > 0">
+            limit #{limit}
+        </if>
+    </sql>
+    <select id="getTools" parameterType="com.huawei.jade.carver.tool.model.query.ToolTagQuery" resultMap="Tool">
+        <include refid="getOrSearchSelect"/>
+        <where>
+            <include refid="getOrSearchConditions"/>
+            <if test="toolName != null and toolName != ''">
+                and i."name" = #{toolName}
+            </if>
+        </where>
+        <include refid="sortAndLimit"/>
+    </select>
+    <select id="searchTools" parameterType="com.huawei.jade.carver.tool.model.query.ToolTagQuery" resultMap="Tool">
+        <include refid="getOrSearchSelect"/>
+        <where>
+            <include refid="getOrSearchConditions"/>
+            <if test="toolName != null and toolName != ''">
+                and i."name" like '%' || #{toolName} || '%'
+            </if>
+        </where>
+        <include refid="sortAndLimit"/>
+    </select>
+</mapper>

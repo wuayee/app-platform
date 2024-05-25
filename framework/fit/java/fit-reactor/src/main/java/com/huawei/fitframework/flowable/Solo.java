@@ -4,9 +4,10 @@
 
 package com.huawei.fitframework.flowable;
 
-import com.huawei.fitframework.flowable.choir.EmitterChoir;
+import com.huawei.fitframework.flowable.choir.FlexibleEmitterChoir;
 import com.huawei.fitframework.flowable.solo.AnySolo;
 import com.huawei.fitframework.flowable.solo.PublisherSoloAdapter;
+import com.huawei.fitframework.flowable.util.OnSubscribedObserver;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -30,7 +31,11 @@ public interface Solo<T> extends Publisher<T> {
      * @return 表示所创建的响应式流的 {@link Solo}{@code <}{@link T}{@code >}。
      */
     static <T> Solo<T> create(Consumer<Emitter<T>> consumer) {
-        return fromPublisher(new EmitterChoir<>(Emitter::create, consumer, null, null));
+        return fromPublisher(new FlexibleEmitterChoir<>(Emitter::create,
+                consumer,
+                OnSubscribedObserver::notifyOnSubscribed,
+                null,
+                null));
     }
 
     /**
@@ -44,27 +49,18 @@ public interface Solo<T> extends Publisher<T> {
     }
 
     /**
-     * 通过一个 {@link Emitter 发送器} 创建 {@link Solo 响应式流}。
+     * 通过一个 {@link Emitter 发送器} 和指定的请求元素时操作以及订阅取消时操作创建 {@link Solo 响应式流}。
      *
      * @param emitter 表示指定数据发送器的 {@link Emitter}{@code <}{@link T}{@code >}。
      * @param <T> 表示数据发送器和响应式流中数据类型的 {@link T}。
      * @return 表示转换后的响应式流的 {@link Solo}{@code <}{@link T}{@code >}。
      */
     static <T> Solo<T> fromEmitter(Emitter<T> emitter) {
-        return fromPublisher(new EmitterChoir<>(() -> emitter, null, null, null));
-    }
-
-    /**
-     * 通过一个 {@link Emitter 发送器} 和指定的请求元素时操作以及订阅取消时操作创建 {@link Solo 响应式流}。
-     *
-     * @param emitter 表示指定数据发送器的 {@link Emitter}{@code <}{@link T}{@code >}。
-     * @param requestHandler 表示指定的元素请求时操作的 {@link Consumer}{@code <}{@link T}{@code >}。
-     * @param cancelHandler 表示指定的订阅取消时操作的 {@link Runnable}。
-     * @param <T> 表示数据发送器和响应式流中数据类型的 {@link T}。
-     * @return 表示转换后的响应式流的 {@link Solo}{@code <}{@link T}{@code >}。
-     */
-    static <T> Solo<T> fromEmitter(Emitter<T> emitter, Consumer<Long> requestHandler, Runnable cancelHandler) {
-        return fromPublisher(new EmitterChoir<>(() -> emitter, null, requestHandler, cancelHandler));
+        return fromPublisher(new FlexibleEmitterChoir<>(() -> emitter,
+                null,
+                OnSubscribedObserver::notifyOnSubscribed,
+                null,
+                null));
     }
 
     /**

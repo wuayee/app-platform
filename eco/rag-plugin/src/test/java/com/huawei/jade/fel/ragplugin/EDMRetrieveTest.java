@@ -5,6 +5,7 @@ import com.huawei.jade.fel.rag.store.connector.ConnectorProperties;
 import com.huawei.jade.fel.rag.store.connector.JdbcSqlConnector;
 import com.huawei.fit.jade.MilvusVectorConnector;
 import com.huawei.jade.fel.rag.store.connector.SqlConnector;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +14,8 @@ import java.util.Arrays;
 import static com.huawei.jade.fel.rag.store.connector.JdbcType.POSTGRESQL;
 
 public class EDMRetrieveTest {
-    @Disabled
     @Test
+    @Disabled("环境强依赖，不可以放在单测中")
     void testMultiSourceRetriever() {
         MilvusVectorConnector milvusConn;
         SqlConnector jdbcConn;

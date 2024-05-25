@@ -30,12 +30,13 @@ import com.huawei.fitframework.broker.Genericable;
 import com.huawei.fitframework.broker.LocalGenericableRepository;
 import com.huawei.fitframework.broker.server.Dispatcher;
 import com.huawei.fitframework.broker.server.Response;
-import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.flowable.Emitter;
 import com.huawei.fitframework.flowable.Publisher;
-import com.huawei.fitframework.flowable.Solo;
+import com.huawei.fitframework.flowable.choir.FlexibleEmitterChoir;
+import com.huawei.fitframework.flowable.solo.FlexibleEmitterSolo;
 import com.huawei.fitframework.flowable.util.worker.Worker;
 import com.huawei.fitframework.flowable.util.worker.WorkerObserver;
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.ioc.BeanContainer;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.RequestMetadata;
@@ -227,9 +228,11 @@ public class FitWebSocketController {
                 this.tryCloseConnection(session, finalIndex);
             };
             if (category == PublisherCategory.CHOIR) {
-                arguments[index] = Choir.fromEmitter(emitter, requestElementHandler, cancelHandler);
+                arguments[index] =
+                        new FlexibleEmitterChoir<>(() -> emitter, null, null, requestElementHandler, cancelHandler);
             } else {
-                arguments[index] = Solo.fromEmitter(emitter, requestElementHandler, cancelHandler);
+                arguments[index] =
+                        new FlexibleEmitterSolo<>(() -> emitter, null, null, requestElementHandler, cancelHandler);
             }
         }
     }
@@ -261,7 +264,10 @@ public class FitWebSocketController {
                 returnElementType,
                 RETURN_INDEX,
                 this::tryCloseConnection);
-        context.worker(Worker.create(observer, convertToPublisher(response.data()), RETURN_INDEX, 0));
+        Publisher<Object> publisher = ObjectUtils.cast(Validation.isInstanceOf(response.data(),
+                Publisher.class,
+                StringUtils.format("The return value type is not Publisher. [type={0}]", response.data().getClass())));
+        context.worker(Worker.create(observer, publisher, RETURN_INDEX));
         context.worker().run();
         return null;
     }
@@ -329,12 +335,5 @@ public class FitWebSocketController {
             throw new IllegalArgumentException("Cannot get data type which type is not parameterized type.");
         }
         return ((ParameterizedType) type).getActualTypeArguments()[0];
-    }
-
-    private static <T> T convertToPublisher(Object obj) {
-        if (!(obj instanceof Publisher)) {
-            throw new IllegalArgumentException("Cannot convert object which type is not publisher type.");
-        }
-        return ObjectUtils.cast(obj);
     }
 }

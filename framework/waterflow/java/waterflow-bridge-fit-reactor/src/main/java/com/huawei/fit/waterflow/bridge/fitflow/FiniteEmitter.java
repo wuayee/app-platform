@@ -28,7 +28,7 @@ public abstract class FiniteEmitter<O, D extends FiniteEmitterData> implements E
 
     private final List<EmitterListener<D, FlowSession>> listeners = new ArrayList<>();
     private final List<Tuple> dataDuet = new ArrayList<>();
-    private final FlowSession token;
+    private final FlowSession flowSession;
 
     /**
      * 通过数据发布者和有限流数据构造器初始化 {@link FiniteEmitter}{@code <}{@link O}{@code , }{@link D}{@code >}。
@@ -43,12 +43,12 @@ public abstract class FiniteEmitter<O, D extends FiniteEmitterData> implements E
     /**
      * 指定 {@link FlowSession} 构造 {@link FiniteEmitter}{@code <}{@link O}{@code , }{@link D}{@code >}。
      *
-     * @param token 表示流程实例运行标识的 {@link FlowSession}。
+     * @param flowSession 表示流程实例运行标识的 {@link FlowSession}。
      * @param publisher 表示数据发布者的 {@link Publisher}{@code <}{@link O}{@code >}。
      * @param builder 表示有限流数据构造器的 {@link FiniteEmitterDataBuilder}{@code <}{@link O}{@code , }{@link D}{@code >}。
      */
-    public FiniteEmitter(FlowSession token, Publisher<O> publisher, FiniteEmitterDataBuilder<O, D> builder) {
-        this.token = token;
+    public FiniteEmitter(FlowSession flowSession, Publisher<O> publisher, FiniteEmitterDataBuilder<O, D> builder) {
+        this.flowSession = flowSession;
         publisher.subscribe(new EmitterSubscriber<>(this, builder));
     }
 
@@ -73,13 +73,13 @@ public abstract class FiniteEmitter<O, D extends FiniteEmitterData> implements E
     protected abstract void consumeAction(O source, D target);
 
     @Override
-    public synchronized void emit(D data, FlowSession token) {
+    public synchronized void emit(D data, FlowSession session) {
         if (this.listeners.isEmpty()) {
-            this.dataDuet.add(Tuple.duet(data, token));
+            this.dataDuet.add(Tuple.duet(data, session));
             return;
         }
-        token.<Action>getInnerState(CONSUMER_KEY).exec();
-        this.listeners.forEach(listener -> listener.handle(data, token));
+        session.<Action>getInnerState(CONSUMER_KEY).exec();
+        this.listeners.forEach(listener -> listener.handle(data, session));
     }
 
     @Override
@@ -96,9 +96,9 @@ public abstract class FiniteEmitter<O, D extends FiniteEmitterData> implements E
     }
 
     private void doEmit(D data, Action action) {
-        FlowSession session = new FlowSession(this.token);
-        session.setInnerState(CONSUMER_KEY, action);
-        this.emit(data, session);
+        FlowSession newSession = new FlowSession(this.flowSession);
+        newSession.setInnerState(CONSUMER_KEY, action);
+        this.emit(data, newSession);
     }
 
     @FunctionalInterface

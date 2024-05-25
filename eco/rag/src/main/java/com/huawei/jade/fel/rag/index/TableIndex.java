@@ -26,7 +26,7 @@ public class TableIndex implements Indexer<List<Chunk>> {
      * 根据传入连接器及表格相关信息构造 {@link TableIndex} 的实例。
      *
      * @param conn 表示向量数据库的 {@link JdbcSqlConnector}。
-     * @param columnTypes 数据表中每列的类型 {@link List< DbFieldType >}
+     * @param columnTypes 数据表中每列的类型 {@link List<DbFieldType>}
      * @param tableName 待写入表的名称 {@link String}
      */
     public TableIndex(JdbcSqlConnector conn, List<DbFieldType> columnTypes, String tableName) {
@@ -47,11 +47,9 @@ public class TableIndex implements Indexer<List<Chunk>> {
         List<String> row = chunk.getRowContent();
         StringBuilder sb = new StringBuilder("insert into ");
         sb.append(tableName);
-        sb.append(" values (");
+        sb.append(" values (DEFAULT");
         for (int i = 0; i < row.size(); i++) {
-            if (i != 0) {
-                sb.append(", ");
-            }
+            sb.append(", ");
             switch (columnTypes.get(i)) {
                 case VARCHAR:
                     sb.append("'");

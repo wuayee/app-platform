@@ -9,6 +9,7 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 import com.huawei.fitframework.flowable.Publisher;
 import com.huawei.fitframework.flowable.Solo;
 import com.huawei.fitframework.flowable.Subscriber;
+import com.huawei.fitframework.flowable.Subscription;
 import com.huawei.fitframework.flowable.subscription.AbstractSubscription;
 import com.huawei.fitframework.flowable.util.worker.Worker;
 import com.huawei.fitframework.flowable.util.worker.WorkerObserver;
@@ -33,7 +34,7 @@ public class PublisherSoloAdapter<T> extends AbstractSolo<T> {
     @Override
     protected void subscribe0(@Nonnull Subscriber<T> subscriber) {
         // 需要将原先的 Publisher 封装为一个新的 Subscription 从而达到控制元素发送数量和正常终结信号发送时机的目的。
-        subscriber.onSubscribed(new PublisherAdapterSubscription<>(subscriber, this.publisher));
+        new PublisherAdapterSubscription<>(subscriber, this.publisher);
     }
 
     /**
@@ -60,7 +61,7 @@ public class PublisherSoloAdapter<T> extends AbstractSolo<T> {
          */
         public PublisherAdapterSubscription(Subscriber<T> subscriber, Publisher<T> publisher) {
             this.subscriber = notNull(subscriber, "The subscriber cannot be null.");
-            this.worker = Worker.create(this, notNull(publisher, "The publisher cannot be null."), 0, 0);
+            this.worker = Worker.create(this, notNull(publisher, "The publisher cannot be null."), 0);
             worker.run();
         }
 
@@ -74,6 +75,11 @@ public class PublisherSoloAdapter<T> extends AbstractSolo<T> {
         @Override
         public void cancel0() {
             this.worker.cancel();
+        }
+
+        @Override
+        public void onWorkerSubscribed(Subscription subscription) {
+            this.subscriber.onSubscribed(this);
         }
 
         @Override

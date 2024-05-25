@@ -91,15 +91,20 @@ const KnowledgeBaseDetail = () => {
   }
 
   // operator操作
-  const operator = (type: 'delete' | 'modify', data: any) => {
+  const operator = (type: 'delete' | 'modify' | 'clickHeader', data: any) => {
     if(type === 'delete') {
       setPage(1);
+      refresh();
     } else if(type === 'modify') {
       setCurrentData({...data});
       setOpen(true);
+      refresh();
+    } else if (type === 'clickHeader') {
+      if (data?.id) {
+        navigate(`/knowledge-base/knowledge-detail/industry-terminology?id=${id}&rowid=${data.id}`)
+      }
     }
 
-    refresh();
   }
 
   const columns = columnsFunc(operator);
@@ -156,7 +161,7 @@ const KnowledgeBaseDetail = () => {
                 fontSize: 14,
                 color: 'rgba(105, 105, 105, .96)'
               }}>
-                {`${knowledgeDetail?.ownerName ?? ''}创建于${formateTime(knowledgeDetail?.createAt as any as Date)}` }
+                {`${knowledgeDetail?.ownerName ?? ''}创建于${formateTime(knowledgeDetail?.createdAt as any as Date)}` }
               </div>
             </div>
             <div className='detail-header-add'>

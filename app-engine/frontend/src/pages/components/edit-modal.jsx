@@ -12,7 +12,7 @@ import robot from '../../assets/images/ai/robot1.png';
 import './styles/edit-modal.scss';
 
 const { TextArea } = Input;
-const { AIPP_URL } = process.env.NODE_ENV === 'development' ? {AIPP_URL: 'http://80.11.128.66:31111/api/jober/v1/api'} : httpUrlMap[process.env.NODE_ENV];
+const { AIPP_URL } = process.env.NODE_ENV === 'development' ? {AIPP_URL: `${window.location.origin}/api/jober/v1/api`} : httpUrlMap[process.env.NODE_ENV];
 const EditModal = (props) => {
   const { modalRef, aippInfo, updateAippCallBack, type, addAippCallBack } = props;
   const [ form ] = Form.useForm();

@@ -19,6 +19,7 @@ public class BaseAuthenticator implements Authenticator {
     @Override
     public User authenticate(HttpClassicServerRequest request) {
         String key = "com.huawei.jade";
-        return User.custom().account(key).name(key).fqn(key).build();
+        String fqn = "Jade";
+        return User.custom().account(key).name(key).fqn(fqn).build();
     }
 }

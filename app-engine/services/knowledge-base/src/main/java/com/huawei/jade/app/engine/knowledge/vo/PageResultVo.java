@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PageResultVo<T> {
     /** 总数 */
-    private int count;
+    private long count;
 
     /** 查询结果列表 */
     private List<T> result;

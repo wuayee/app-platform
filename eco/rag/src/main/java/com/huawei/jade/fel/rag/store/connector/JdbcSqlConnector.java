@@ -112,13 +112,11 @@ public class JdbcSqlConnector implements SqlConnector {
                 rs = stmt.getResultSet();
                 rows = processRows(rs);
             }
-            connection.commit();
         } catch (SQLException e) {
             logger.error("Failed to execute sql");
         } finally {
             close(rs);
             close(stmt);
-            this.close();
         }
         return rows;
     }
@@ -165,9 +163,10 @@ public class JdbcSqlConnector implements SqlConnector {
      *
      * @param tableName 表名称
      * @param columns 列信息
+     * @throws SQLException sql异常
      */
     @Override
-    public void createTable(String tableName, List<RdbColumn> columns) {
+    public void createTable(String tableName, List<RdbColumn> columns) throws SQLException {
         List<String> commentSqls = new ArrayList<>();
         StringBuilder sb = new StringBuilder(
             String.format("CREATE TABLE IF NOT EXISTS %s (inner_id SERIAL PRIMARY KEY, ", tableName));
@@ -196,6 +195,7 @@ public class JdbcSqlConnector implements SqlConnector {
         } catch (SQLException e) {
             rollBack();
             logger.error(String.format("Failed to create table knowledge: %s, rolled back", tableName));
+            throw new SQLException(String.format("Failed to create table knowledge: %s, rolled back", tableName));
         } finally {
             enableAutoCommit();
             close(stmt);
@@ -206,9 +206,10 @@ public class JdbcSqlConnector implements SqlConnector {
      * 删除表。
      *
      * @param tableName 表名称
+     * @throws SQLException sql异常
      */
     @Override
-    public void dropTable(String tableName) {
+    public void dropTable(String tableName) throws SQLException {
         Statement stmt = null;
         try {
             stmt = connection.createStatement();
@@ -217,6 +218,7 @@ public class JdbcSqlConnector implements SqlConnector {
             logger.info(String.format("Succeed to drop table: %s", tableName));
         } catch (SQLException e) {
             logger.error(String.format("Failed to drop table: %s", tableName));
+            throw new SQLException(String.format("Failed to drop table: %s", tableName));
         } finally {
             close(stmt);
         }
@@ -235,7 +237,7 @@ public class JdbcSqlConnector implements SqlConnector {
     }
 
     @Override
-    public void createIndex(String tableName, List<RdbColumn> columns) {
+    public void createIndex(String tableName, List<RdbColumn> columns) throws SQLException {
         if (columns == null || columns.isEmpty()) {
             return;
         }
@@ -260,6 +262,7 @@ public class JdbcSqlConnector implements SqlConnector {
         } catch (SQLException e) {
             rollBack();
             logger.error(String.format("Fail to create index on table %s", tableName));
+            throw new SQLException(String.format("Fail to create index on table %s", tableName));
         } finally {
             enableAutoCommit();
             close(stmt);

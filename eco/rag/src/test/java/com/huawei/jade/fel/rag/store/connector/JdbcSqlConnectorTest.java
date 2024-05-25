@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +21,12 @@ import java.util.List;
  * @since 2024-05-22
  */
 class JdbcSqlConnectorTest {
-    private static final String TEST_TABLE_NAME = "testKnowledge_1_2";
+    private static final String TEST_TABLE_NAME = "tableKnowledge_1_101";
 
     @Test
     @DisplayName("给定表名与列信息在RDB中创表")
     @Disabled
-    public void given_tableName_and_column_info_should_createTable() {
+    public void given_tableName_and_column_info_should_createTable() throws SQLException {
         ConnectorProperties prop = new ConnectorProperties("51.36.139.24", 5433, "postgres", "postgres");
         JdbcSqlConnector conn = new JdbcSqlConnector(JdbcType.POSTGRESQL, prop, "wqtest");
         List<RdbColumn> columns = new ArrayList<>();
@@ -38,7 +39,8 @@ class JdbcSqlConnectorTest {
 
     @Test
     @DisplayName("给定表名与列信息在RDB表中创建索引")
-    public void given_tableName_and_column_index_info_should_create_index() {
+    @Disabled
+    public void given_tableName_and_column_index_info_should_create_index() throws SQLException {
         ConnectorProperties prop = new ConnectorProperties("51.36.139.24", 5433, "postgres", "postgres");
         JdbcSqlConnector conn = new JdbcSqlConnector(JdbcType.POSTGRESQL, prop, "wqtest");
         List<RdbColumn> columns = new ArrayList<>();
@@ -52,7 +54,7 @@ class JdbcSqlConnectorTest {
     @Test
     @DisplayName("在RDB中删除给定名称的表")
     @Disabled
-    public void given_tableName_should_drop_table() {
+    public void given_tableName_should_drop_table() throws SQLException {
         ConnectorProperties prop = new ConnectorProperties("51.36.139.24", 5433, "postgres", "postgres");
         JdbcSqlConnector conn = new JdbcSqlConnector(JdbcType.POSTGRESQL, prop, "wqtest");
         conn.dropTable(TEST_TABLE_NAME);

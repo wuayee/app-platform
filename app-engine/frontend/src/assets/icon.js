@@ -33,6 +33,12 @@ import TabRight from './images/ai/icon2.svg';
 import Audio from './images/ai/audio.svg';
 import Avatar from './images/avatar-default.svg';
 import AppDefault from './svg/app-default.svg';
+import History from './svg/history.svg';
+import ArrowDown from './svg/arrow_down_normal.svg';
+import Languages from './svg/setting.svg';
+import Rebot from './svg/rebot.svg';
+import Like from './svg/like.svg';
+import Unlike from './svg/unlike.svg';
 
 // 编辑按钮
 const EditIcon = (props) => <Icon component={() => (<Edit/>)} {...props} />;
@@ -68,6 +74,12 @@ const TabRightIcon = (props) => <Icon component={() => (<TabRight/>)} {...props}
 const AudioIcon = (props) => <Icon component={() => (<Audio/>)} {...props} />;
 const AvatarIcon = (props) => <Icon component={() => (<Avatar />)} {...props} />;
 const AppDefaultIcon = (props) => <Icon component={() => (<AppDefault />)} {...props} />;
+const HistoryIcon = (props) => <Icon component={() => (<History />)} {...props} />;
+const ArrowDownIcon = (props) => <Icon component={() => (<ArrowDown />)} {...props} />;
+const LanguagesIcon = (props) => <Icon component={() => (<Languages />)} {...props} />;
+const RebotIcon = (props) => <Icon component={() => (<Rebot />)} {...props} />;
+const LikeIcon = (props) => <Icon component={() => (<Like />)} {...props} />;
+const UnlikeIcon = (props) => <Icon component={() => (<Unlike />)} {...props} />;
 
 export {
   EditIcon,
@@ -102,6 +114,12 @@ export {
   TabRightIcon,
   AudioIcon,
   AvatarIcon,
-  AppDefaultIcon
+  AppDefaultIcon,
+  HistoryIcon,
+  ArrowDownIcon,
+  LanguagesIcon,
+  RebotIcon,
+  LikeIcon,
+  UnlikeIcon
 }
 

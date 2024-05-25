@@ -4,6 +4,8 @@
 
 package com.huawei.jade.fel.engine.flows;
 
+import com.huawei.fitframework.log.Logger;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +23,8 @@ import java.util.concurrent.TimeUnit;
 @NoArgsConstructor
 @Data
 public class ConverseLatch<T> {
+    private static final Logger log = Logger.get(ConverseLatch.class);
+
     private T data = null;
     private Throwable throwable = null;
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -49,6 +53,7 @@ public class ConverseLatch<T> {
             throw new IllegalStateException(exception.getMessage(), exception);
         }
         if (this.throwable != null) {
+            log.error("Conversation latch await throws: ", this.throwable);
             throw new IllegalStateException(this.throwable.getMessage(), this.throwable);
         }
         return this.data;
@@ -67,6 +72,7 @@ public class ConverseLatch<T> {
             throw new IllegalStateException(exception.getMessage(), exception);
         }
         if (this.throwable != null) {
+            log.error("Conversation latch await throws: ", this.throwable);
             throw new IllegalStateException(this.throwable.getMessage(), this.throwable);
         }
         return this.data;

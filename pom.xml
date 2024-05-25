@@ -11,11 +11,9 @@
     <modules>
         <module>app-engine</module>
         <module>app-builder</module>
-        <module>framework/fel/java</module>
-        <module>framework/fit/java</module>
-        <module>framework/waterflow/java</module>
-        <module>store</module>
+        <module>carver</module>
         <module>eco</module>
+        <module>framework</module>
     </modules>
 
     <properties>

@@ -13,5 +13,6 @@ public enum KStorageType {
     RDB,
     KV,
     VECTOR,
-    KG
+    KG,
+    EMBEDDING
 }
