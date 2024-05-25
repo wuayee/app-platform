@@ -31,6 +31,11 @@ public class ChatOptions implements ModelOptions {
     private String model;
 
     /**
+     * 模型接口秘钥。
+     */
+    private String apiKey;
+
+    /**
      * 生成文本的最大长度。
      */
     private Integer maxTokens;

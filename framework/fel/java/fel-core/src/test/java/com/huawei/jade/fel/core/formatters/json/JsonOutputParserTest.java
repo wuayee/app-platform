@@ -84,7 +84,7 @@ public class JsonOutputParserTest {
         @Test
         @DisplayName("解析markdown代码块成功，返回正确结果")
         void giveMdJsonThenParseOk() {
-            Parser<Joke> outputParser =
+            Parser<String, Joke> outputParser =
                     new MarkdownParser<>(JsonOutputParser.create(TEST_SERIALIZER, Joke.class), "json");
             Joke joke = outputParser.parse("```json\n{\"setup\" : \"foo\", \"punchline\": \"bar\"}\n```");
             assertThat(joke.getSetup()).isEqualTo("foo");

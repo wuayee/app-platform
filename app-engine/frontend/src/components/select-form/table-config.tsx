@@ -26,7 +26,7 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const options=[
-  { value: 'NORMAL', label: '其他索引' },
+  { value: 'NORMAL', label: '普通索引' },
   { value: 'VECTOR', label: '向量索引' },
   { value: 'NONE', label: '无' },
 ];

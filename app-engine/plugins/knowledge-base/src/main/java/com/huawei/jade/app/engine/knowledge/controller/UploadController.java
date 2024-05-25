@@ -15,6 +15,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.jade.app.engine.knowledge.dto.FileUploadRequest;
 import com.huawei.jade.app.engine.knowledge.service.FileService;
+import com.huawei.jade.app.engine.knowledge.utils.DecodeUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -51,6 +52,7 @@ public class UploadController {
     @DeleteMapping("/{knowledge_id}/table/{knowledge_table_id}/files/delete")
     public void delete(@PathVariable("knowledge_id") Long knowledgeId,
         @PathVariable("knowledge_table_id") Long knowledgeTableId, @RequestBody List<String> fileNames) {
-        fileNames.forEach(fileName -> fileService.deleteFiles(knowledgeId, knowledgeTableId, fileName));
+        fileNames.forEach(
+            fileName -> fileService.deleteFiles(knowledgeId, knowledgeTableId, DecodeUtil.decodeStr(fileName)));
     }
 }

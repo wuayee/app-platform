@@ -11,11 +11,15 @@ import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.broker.client.Router;
 import com.huawei.fitframework.conf.runtime.CommunicationProtocol;
 import com.huawei.fitframework.conf.runtime.SerializationFormat;
+import com.huawei.fitframework.util.MapUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BinaryOperator;
@@ -47,13 +51,14 @@ public class DefaultInvocationContext implements InvocationContext {
     private final CommunicationType communicationType;
     private final boolean withDegradation;
     private final BinaryOperator<Object> accumulator;
+    private final Map<String, Object> extensions;
 
     private DefaultInvocationContext(String genericableId, boolean isMicro, Method genericableMethod,
             Router.Filter routingFilter, Invoker.Filter loadBalanceFilter, List<UniqueFitableId> loadBalanceWith,
             String localWorkerId, String appName, List<String> environmentPrioritySequence, String specifiedEnvironment,
             int retry, long timeout, TimeUnit timeoutUnit, CommunicationProtocol protocol, SerializationFormat format,
             boolean isGeneric, boolean isMulticast, CommunicationType communicationType, boolean withDegradation,
-            BinaryOperator<Object> accumulator) {
+            BinaryOperator<Object> accumulator, Map<String, Object> extensions) {
         this.genericableId = genericableId;
         this.isMicro = isMicro;
         this.genericableMethod = genericableMethod;
@@ -74,6 +79,7 @@ public class DefaultInvocationContext implements InvocationContext {
         this.communicationType = communicationType;
         this.withDegradation = withDegradation;
         this.accumulator = accumulator;
+        this.extensions = extensions;
     }
 
     @Override
@@ -176,6 +182,11 @@ public class DefaultInvocationContext implements InvocationContext {
         return this.accumulator;
     }
 
+    @Override
+    public Map<String, Object> filterExtensions() {
+        return this.extensions;
+    }
+
     /**
      * 表示 {@link InvocationContext.Builder} 的默认实现。
      */
@@ -200,6 +211,7 @@ public class DefaultInvocationContext implements InvocationContext {
         private boolean withDegradation;
         private BinaryOperator<Object> accumulator;
         private CommunicationType communicationType = CommunicationType.DEFAULT;
+        private Map<String, Object> filterExtensions = new HashMap<>();
 
         /**
          * 使用已知的调用上下文初始化 {@link DefaultInvocationContext.Builder} 类的新实例。
@@ -318,13 +330,13 @@ public class DefaultInvocationContext implements InvocationContext {
 
         @Override
         public InvocationContext.Builder protocol(CommunicationProtocol protocol) {
-            this.protocol = protocol;
+            this.protocol = ObjectUtils.nullIf(protocol, CommunicationProtocol.UNKNOWN);
             return this;
         }
 
         @Override
         public InvocationContext.Builder format(SerializationFormat format) {
-            this.format = format;
+            this.format = ObjectUtils.nullIf(format, SerializationFormat.UNKNOWN);
             return this;
         }
 
@@ -342,7 +354,7 @@ public class DefaultInvocationContext implements InvocationContext {
 
         @Override
         public InvocationContext.Builder communicationType(CommunicationType communicationType) {
-            this.communicationType = communicationType;
+            this.communicationType = ObjectUtils.nullIf(communicationType, CommunicationType.DEFAULT);
             return this;
         }
 
@@ -355,6 +367,16 @@ public class DefaultInvocationContext implements InvocationContext {
         @Override
         public InvocationContext.Builder accumulator(BinaryOperator<Object> accumulator) {
             this.accumulator = accumulator;
+            return this;
+        }
+
+        @Override
+        public InvocationContext.Builder filterExtensions(Map<String, Object> filterExtensions) {
+            if (MapUtils.isEmpty(filterExtensions)) {
+                this.filterExtensions = new HashMap<>();
+            } else {
+                this.filterExtensions = filterExtensions;
+            }
             return this;
         }
 
@@ -379,7 +401,8 @@ public class DefaultInvocationContext implements InvocationContext {
                     this.isMulticast,
                     this.communicationType,
                     this.withDegradation,
-                    this.accumulator);
+                    this.accumulator,
+                    this.filterExtensions);
         }
     }
 }

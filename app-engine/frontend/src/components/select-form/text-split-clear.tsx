@@ -158,7 +158,7 @@ const TextSplitClear = ({ form }: props) => {
           <>
             <Form.Item
               label='选择清洗算子'
-              rules={[{ required: true, message: '选择不能为空' }]}
+              
               name='operatorIds'
               style={{
                 marginTop: 16,

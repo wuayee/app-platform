@@ -7,6 +7,8 @@ package com.huawei.jade.fel.engine.operators.prompts;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.core.memory.Memory;
+import com.huawei.jade.fel.core.template.StringTemplate;
+import com.huawei.jade.fel.core.template.support.DefaultStringTemplate;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +29,17 @@ public class Prompts {
      * @throws IllegalArgumentException 当 {@code template} 为 {@code null} 、空字符串或只有空白字符的字符串时。
      */
     public static HumanTemplate human(String template) {
+        return human(new DefaultStringTemplate(template));
+    }
+
+    /**
+     * 构造人类提示词模板。
+     *
+     * @param template 表示字符串模板的 {@link StringTemplate}。
+     * @return 表示人类提示词模板的 {@link HumanTemplate}。
+     * @throws IllegalArgumentException 当 {@code template} 为 {@code null} 、空字符串或只有空白字符的字符串时。
+     */
+    public static HumanTemplate human(StringTemplate template) {
         return new HumanTemplate(template);
     }
 
@@ -38,6 +51,17 @@ public class Prompts {
      * @throws IllegalArgumentException 当 {@code template} 为 {@code null} 、空字符串或只有空白字符的字符串时。
      */
     public static SystemTemplate sys(String template) {
+        return sys(new DefaultStringTemplate(template));
+    }
+
+    /**
+     * 构造系统提示词模板。
+     *
+     * @param template 表示字符串模板的 {@link StringTemplate}。
+     * @return 表示系统提示词模板的 {@link SystemTemplate}。
+     * @throws IllegalArgumentException 当 {@code template} 为 {@code null} 、空字符串或只有空白字符的字符串时。
+     */
+    public static SystemTemplate sys(StringTemplate template) {
         return new SystemTemplate(template);
     }
 

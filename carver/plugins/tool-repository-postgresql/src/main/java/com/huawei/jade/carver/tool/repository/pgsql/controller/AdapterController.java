@@ -17,6 +17,7 @@ import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.repository.pgsql.model.reponse.Result;
@@ -70,9 +71,6 @@ public class AdapterController {
     public Result<String> addFitTool(@PathVariable("platform") String platform,
             @PathVariable("toolName") String toolName, @RequestParam("genericableId") String genericableId,
             @RequestParam("fitableId") String fitableId, @RequestBody Map<String, Object> schema) {
-        if (this.decodeChinese(toolName).equals(DECODE_EX)) {
-            return Result.createResult(DECODE_EX, 0);
-        }
         Map<String, Object> runnables = new HashMap<>();
         runnables.put("FIT", this.setFitRunnable(genericableId, fitableId));
         HashSet<String> tags = new HashSet<>();
@@ -99,9 +97,6 @@ public class AdapterController {
     public Result<String> addItem(@PathVariable("platform") String platform, @PathVariable("category") String category,
             @PathVariable("genericableId") String genericableId, @PathVariable("itemName") String itemName,
             @RequestParam("tags") List<String> tags, @RequestBody Map<String, Object> schema) {
-        if (this.decodeChinese(genericableId).equals(DECODE_EX) || this.decodeChinese(itemName).equals(DECODE_EX)) {
-            return Result.createResult(DECODE_EX, 0);
-        }
         ToolData tool = this.convertToolData(this.decodeChinese(itemName), schema, null, new HashSet<>(tags));
         return Result.createResult(this.toolService.addTool(tool), 0);
     }
@@ -122,8 +117,8 @@ public class AdapterController {
             @PathVariable("category") String category, @RequestParam("includeTags") List<String> includeTags,
             @RequestParam("excludeTags") List<String> excludeTags, @RequestParam("pageNum") int pageNum,
             @RequestParam("pageSize") int limit) {
-        notNegative(pageNum, "the page num cannot be negative. [pageNum={0}]", pageNum);
-        notNegative(limit, "the page size cannot be negative. [pageSize={0}]", limit);
+        notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
+        notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         ToolTagQuery toolTagQuery = new ToolTagQuery(null, includeTags, excludeTags, pageNum, limit);
         return Result.createResult(this.toolService.getTools(toolTagQuery), 0);
     }
@@ -139,8 +134,8 @@ public class AdapterController {
     @GetMapping(path = "/{platform}/fit/tool/genericables")
     public Result<Set<String>> getAllGenericableIds(@PathVariable("platform") String platform,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int limit) {
-        notNegative(pageNum, "the page num cannot be negative. [pageNum={0}]", pageNum);
-        notNegative(limit, "the page size cannot be negative. [pageSize={0}]", limit);
+        notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
+        notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         ToolTagQuery toolTagQuery =
                 new ToolTagQuery(null, new HashSet<>(Collections.singleton("FIT")), null, null, pageNum, limit);
         List<ToolData> tools = this.toolService.getTools(toolTagQuery);
@@ -171,8 +166,8 @@ public class AdapterController {
             @RequestParam("includeTags") List<String> includeTags,
             @RequestParam("excludeTags") List<String> excludeTags, @RequestParam("pageNum") int pageNum,
             @RequestParam("pageSize") int limit) {
-        notNegative(pageNum, "the page num cannot be negative. [pageNum={0}]", pageNum);
-        notNegative(limit, "the page size cannot be negative. [pageSize={0}]", limit);
+        notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
+        notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         if (this.decodeChinese(genericableId).equals(DECODE_EX)) {
             return Result.createResult(null, 0);
         }
@@ -193,8 +188,8 @@ public class AdapterController {
     public Result<List<ToolData>> getFitTools(@PathVariable("platform") String platform,
             @PathVariable("genericableId") String genericableId, @RequestParam("pageNum") int pageNum,
             @RequestParam("pageSize") int limit) {
-        notNegative(pageNum, "the page num cannot be negative. [pageNum={0}]", pageNum);
-        notNegative(limit, "the page size cannot be negative. [pageSize={0}]", limit);
+        notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
+        notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         if (this.decodeChinese(genericableId).equals(DECODE_EX)) {
             return Result.createResult(null, 0);
         }
@@ -213,7 +208,7 @@ public class AdapterController {
     @GetMapping(path = "/{platform}")
     public Result<ToolData> getItemByUniqueName(@PathVariable("platform") String platform,
             @RequestParam("uniqueName") String uniqueName) {
-        notBlank(uniqueName, "the tool unique name cannot be blank");
+        notBlank(uniqueName, "The tool unique name cannot be blank.");
         return Result.createResult(this.toolService.getTool(uniqueName), 0);
     }
 
@@ -247,9 +242,6 @@ public class AdapterController {
             @PathVariable("category") String category, @PathVariable("genericableId") String genericableId,
             @PathVariable("itemName") String itemName, @RequestParam("includeTags") List<String> includeTags,
             @RequestParam("excludeTags") List<String> excludeTags) {
-        if (this.decodeChinese(genericableId).equals(DECODE_EX) || this.decodeChinese(itemName).equals(DECODE_EX)) {
-            return Result.createResult(null, 0);
-        }
         ToolTagQuery toolTagQuery =
                 new ToolTagQuery(this.decodeChinese(itemName), includeTags, excludeTags, null, null);
         return Result.createResult(this.toolService.getTools(toolTagQuery), 0);
@@ -274,12 +266,13 @@ public class AdapterController {
     }
 
     private String decodeChinese(String input) {
-        String res;
-        try {
-            res = URLDecoder.decode(input, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            return DECODE_EX;
+        if (StringUtils.isBlank(input)) {
+            return input;
         }
-        return res;
+        try {
+            return URLDecoder.decode(input, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return input;
+        }
     }
 }

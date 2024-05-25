@@ -8,6 +8,7 @@ import com.huawei.fitframework.broker.FitableMetadata;
 import com.huawei.fitframework.broker.Target;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 为 {@link com.huawei.fitframework.broker.client.Invoker.Filter} 提供空的实现。
@@ -26,7 +27,8 @@ public class EmptyFilter extends AbstractFilter {
     private EmptyFilter() {}
 
     @Override
-    protected List<Target> loadbalance(FitableMetadata fitable, String localWorkerId, List<Target> toFilterTargets) {
+    protected List<Target> loadbalance(FitableMetadata fitable, String localWorkerId, List<Target> toFilterTargets,
+            Map<String, Object> extensions) {
         return toFilterTargets;
     }
 }

@@ -118,7 +118,7 @@ DataBus_MemoryIo_Write(PyObject* self, PyObject* args, PyObject* keywords)
         &sharedMemoryId, &contents, &contentLength, &readOffset)) {
         return PyErr_Format(PyExc_ValueError, "invalid input parameter");
     }
-    printf("[databus.memory_io.write] id=%d Offset=%ld writeLength=%ld", sharedMemoryId, readOffset, contentLength);
+    printf("[databus.memory_io.write] id=%d Offset=%ld writeLength=%ld\n", sharedMemoryId, readOffset, contentLength);
     // 获取共享内存指针
     void* sharedMemoryBuffer = shmat(sharedMemoryId, NULL, 0);
     if (sharedMemoryBuffer == (void*) -1) {

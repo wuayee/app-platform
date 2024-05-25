@@ -132,10 +132,18 @@ export const routeList: MenuItem[] = [
     component: PluginMarket,
   },
   {
-    key: "/mode",
+    key: "/model",
     icon: Icons.app({}),
     label: "模型服务",
-    component: Demo,
+    component: Model,
+    children: [
+      {
+        key: "model/detail",
+        icon: Icons.app({}),
+        label: "app编排",
+        component: ModelDetail,
+        hidden: true,
+      },]
   },
   {
     key: "/knowledge-base",

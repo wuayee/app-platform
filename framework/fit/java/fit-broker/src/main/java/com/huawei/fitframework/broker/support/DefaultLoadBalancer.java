@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
 package com.huawei.fitframework.broker.support;
@@ -80,7 +80,8 @@ public class DefaultLoadBalancer implements LoadBalancer {
 
     private List<Target> filterCandidateTargets(Invoker.Filter filter, Fitable fitable, InvocationContext context,
             List<Target> toFilterTargets) {
-        List<Target> filteredTargets = filter.filter(fitable, context.localWorkerId(), toFilterTargets);
+        List<Target> filteredTargets =
+                filter.filter(fitable, context.localWorkerId(), toFilterTargets, context.filterExtensions());
         filteredTargets = this.filterWithOtherFitables(context, filteredTargets);
         if (CollectionUtils.isEmpty(filteredTargets)) {
             String message = StringUtils.format("No matched fitable targets left after loadbalance. [id={0}]",

@@ -12,6 +12,7 @@ import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.character.HumanMessage;
+import com.huawei.jade.fel.core.template.StringTemplate;
 import com.huawei.jade.fel.core.template.support.HumanMessageTemplate;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.operators.AiRunnableArg;
@@ -35,8 +36,8 @@ public class HumanTemplate implements PromptTemplate<Tip> {
      * @param template 表示使用 mustache 模板语法的 {@link String}。
      * @throws IllegalArgumentException 当 {@code template} 为 {@code null}、空字符串或只有空白字符的字符串时。
      */
-    public HumanTemplate(String template) {
-        Validation.notBlank(template, "Template cannot be blank.");
+    public HumanTemplate(StringTemplate template) {
+        Validation.notNull(template, "Template cannot be null.");
         messageTemplate = new HumanMessageTemplate(template);
     }
 
