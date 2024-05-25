@@ -128,7 +128,7 @@ const KnowledgeBaseDetail = () => {
     <div className='aui-fullpage'>
     <div className='aui-header-1'>
       <div className='aui-title-1'>
-        <BreadcrumbSelf></BreadcrumbSelf>
+        <BreadcrumbSelf searchFlag={true}></BreadcrumbSelf>
       </div>
     </div>
       <div className='aui-block' style={{
