@@ -1,20 +1,32 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Space, DatePicker, Progress, notification, Table } from 'antd';
-import { getColumnSearchProps } from '../../../../components/table';
+import { Button, Space, Progress, notification, Table } from 'antd';
 import { AppIcons } from '../../../../components/icons/app';
 import EvaluationDrawer from './evaluation';
 import './index.scss';
 import TableTextSearch from '../../../../components/table-text-search';
+import { copyEvalTask, getEvalReport, getEvalTaskList } from '../../../../shared/http/apps';
+import { TaskStatusE, traceColumns, type evalTaskI, type getEvalTaskListParamsI } from './model';
+import TableCalendarSearch from '../../../../components/table-calendar-search';
 
 const taskStatusMap = {
-  complete: (
+  [TaskStatusE.FINISH]: (
     <div>
       <AppIcons.CompleteIcon /> 已完成
     </div>
   ),
-  uncomplete: (
+  [TaskStatusE.NOT_START]: (
     <div>
-      <AppIcons.PowerOffIcon /> 未完成
+      <AppIcons.PowerOffIcon /> 未开始
+    </div>
+  ),
+  [TaskStatusE.FAILURE]: (
+    <div>
+      <AppIcons.PowerOffIcon />  失败
+    </div>
+  ),
+  [TaskStatusE.IN_PROGRESS]: (
+    <div>
+      <AppIcons.PowerOffIcon />  执行中
     </div>
   ),
 };
@@ -23,8 +35,13 @@ type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 const EvaluateTask = () => {
   const [openSignal, setOpenSignal] = useState(-1);
-  const [data, setData] = useState([]);
-  const [searchParams, setSearchParams] = useState({});
+  const [data, setData] = useState<Array<evalTaskI>>([]);
+  const [total, setTotal] = useState(0);
+  const [searchParams, setSearchParams] = useState<getEvalTaskListParamsI>({
+    pageIndex: 1,
+    appId: '84b3dfd4d0814618a46680f3b38ac2fb',
+    pageSize: 10,
+  });
   const currentRow = useRef(null);
   const [api, contextHolder] = notification.useNotification();
   const openNotificationWithIcon = (type: NotificationType) => {
@@ -33,88 +50,95 @@ const EvaluateTask = () => {
     });
   };
 
-  const refreshData = () => {
-    const dataSource = new Array(100).fill(1).map((_, i) => ({
-      id: i,
-      question: '这是一个很长长长长长长长长长长长长长长长长长长长长的问题',
-      answer: '回答',
-      time: '2024-03-04 14:33:23',
-      speed: '20ms',
-      execute: i % 3 === 1 ? 'complete' : 'uncomplete',
-      department: '部门',
-      feedback: i % 3,
-    }));
-    setData(dataSource);
+  const onCopyTask = async (record) => {
+    await copyEvalTask(record?.id, record?.author);
+    openNotificationWithIcon('success');
+    refreshData();
+  };
+
+  const refreshData = async () => {
+    const dataSource = await getEvalTaskList(searchParams);
+    setTotal(dataSource?.total);
+    setData(dataSource?.data);
   };
   useEffect(() => {
     refreshData();
   }, [searchParams]);
+
   const handleChange: void = (pagination, filters, sorter) => {
-    setSearchParams({ ...searchParams, pagination, filters, sorter });
-    console.log('Various parameters', pagination, filters, sorter);
+    const paramBody = {
+      pageIndex: pagination.current,
+      createTimeTo: filters?.createTime?.[1] !== '' ? filters?.createTime?.[1] : undefined,
+      author: filters?.author?.[0],
+      createTimeFrom: filters?.createTime?.[0] !== '' ? filters?.createTime?.[0] : undefined,
+      appId: searchParams.appId,
+      pageSize: pagination.pageSize,
+      version: filters?.version?.[0],
+    };
+
+    setSearchParams(paramBody);
   };
   const columns = [
     {
       title: '应用版本',
-      dataIndex: 'question',
-      key: 'question',
+      dataIndex: 'version',
+      key: 'version',
       ellipsis: true,
-      ...TableTextSearch('question'),
+      ...TableTextSearch('version'),
     },
     {
       title: '评估测试集',
-      dataIndex: 'answer',
-      key: 'answer',
+      dataIndex: 'datasets',
+      key: 'datasets',
       ellipsis: true,
+      render: (value: [], record) => {
+        const str = value?.map((item: string) => item.slice(0, item.indexOf('('))).join(',');
+        return str;
+      },
     },
     {
       title: '评估人员',
-      dataIndex: 'time',
-      key: 'time',
-      width: 200,
-      ...TableTextSearch('time'),
+      dataIndex: 'author',
+      key: 'author',
+      ...TableTextSearch('author'),
     },
     {
-      title: '时间',
-      dataIndex: 'speed',
-      key: 'speed',
-      width:100,
-      sorter: (a, b) => false,
+      title: '创建时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
+      ...TableCalendarSearch('createTime'),
     },
     {
       title: '是否完成',
-      dataIndex: 'execute',
-      key: 'execute',
-      width:150,
+      dataIndex: 'status',
+      key: 'status',
       filters: [
         {
           text: '已完成',
-          value: 'done',
+          value: TaskStatusE.FINISH,
         },
         {
           text: '未完成',
-          value: 'unfinished',
+          value: TaskStatusE.IN_PROGRESS,
         },
       ],
       render: (value, record) => taskStatusMap[value],
     },
     {
-      title: '结果预览',
-      dataIndex: 'department',
-      key: 'department',
-      render: (value, record) => <Progress percent={30} size='small' />,
+      title: '任务进度',
+      dataIndex: 'passRate',
+      key: 'passRate',
+      render: (value, record) => <Progress percent={value} size='small' />,
     },
     {
       title: '操作',
       dataIndex: 'operate',
       key: 'operate',
-      width:180,
       render: (value, record) => (
         <Space size='middle'>
           <a
             onClick={() => {
-              currentRow.current = record;
-              openNotificationWithIcon('success');
+              onCopyTask(record);
             }}
           >
             复制任务
@@ -122,7 +146,7 @@ const EvaluateTask = () => {
 
           <a
             onClick={(e) => {
-              currentRow.current = record;
+              currentRow.current=record;
               setOpenSignal(e.timeStamp);
             }}
           >
@@ -136,16 +160,6 @@ const EvaluateTask = () => {
   return (
     <div>
       {contextHolder}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 14 }}>
-        <DatePicker.RangePicker
-          showTime
-          onChange={(_date, dateString) => {
-            setSearchParams({ ...searchParams, date: dateString });
-            console.log(dateString);
-          }}
-        />
-        <Button type='primary'>导出</Button>
-      </div>
       <Table
         dataSource={data}
         columns={columns}
@@ -153,16 +167,17 @@ const EvaluateTask = () => {
         virtual
         scroll={{ y: 'calc(100vh - 340px)' }}
         pagination={{
+          total,
           position: ['bottomRight'],
           size: 'small',
           showQuickJumper: true,
           defaultCurrent: 1,
           showSizeChanger: true,
-          showTotal: (total) => <div>共{total}条</div>,
+          showTotal: () => <div>共{total}条</div>,
           onChange: (pageNo, pageSize) => {},
         }}
       />
-      <EvaluationDrawer openSignal={openSignal} />
+      <EvaluationDrawer openSignal={openSignal} taskRecord={currentRow.current}/>
     </div>
   );
 };

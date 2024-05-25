@@ -12,51 +12,60 @@ import {
   traceColumns,
   traceData,
 } from './model';
+import { getEvalReport, getEvalReportTrace, getEvalTaskReport } from '../../../../shared/http/apps';
 
 const numOriginInfos = {
-  all: { id: 'all', num: 0, des: '全部用例', icon: <AppIcons.EvalueateAllIcon />, selected: true },
+  all: { id: 'allInput', num: 0, des: '全部用例', icon: <AppIcons.EvalueateAllIcon /> },
   success: {
-    id: 'success',
+    id: 'passInput',
     num: 0,
     des: '成功用例',
     icon: <AppIcons.EvalueateSuccessIcon />,
-    selected: false,
   },
   fail: {
-    id: 'fail',
+    id: 'failureInput',
     num: 0,
     des: '失败用例',
-    icon: <AppIcons.EvalueateFailIcon />,
-    selected: false,
+    icon: <AppIcons.EvalueateFailIcon />, 
   },
 };
 
-const NumCard: React.FC<{ info: any }> = ({ info }) => (
-  <div
-    id={info.id}
-    className='evaluateCard'
-    onClick={() => {
-      ['all', 'fail', 'success'].forEach((key) => {
-        document.getElementById(key).style.borderColor = key === info.id ? '#2673e5' : '#f0f2f4';
-      });
-    }}
-  >
-    {info.icon}
-    <div className='info'>
-      <div className='num'>{info.num}</div>
-      <div>{info.des}</div>
-    </div>
-  </div>
-);
-
-const EvaluationDrawer: React.FC<{ openSignal: number }> = ({ openSignal }) => {
+const EvaluationDrawer: React.FC<{ openSignal: number; taskRecord: object }> = ({
+  openSignal,
+  taskRecord,
+}) => {
   const [open, setOpen] = useState(false);
   const [traceDrawer, setTraceDrawer] = useState(false);
   const [numInfos, setNumInfos] = useState(numOriginInfos);
   const [row, setRow] = useState(null);
+  const [selectCard, setSelectCard] = useState('allInput');
+  const [reportData,setReportData]=useState(null);
+  const [inputList,setInputList]=useState([]);
+  const [traceData,setTraceData]=useState([]);
+
+  const onGetReport = async () => {
+    const reportRes = await getEvalTaskReport(taskRecord?.id);
+
+    // header的三张卡片
+    numInfos.all.num = reportRes?.failureInput?.length + reportRes?.passInput?.length;
+    numInfos.fail.num = reportRes?.failureInput?.length;
+    numInfos.success.num = reportRes?.passInput?.length;
+    setNumInfos({ ...numInfos });
+
+    const allInput=[...reportRes.failureInput,...reportRes.passInput]
+    setReportData({...reportRes,allInput});
+    setInputList(allInput);
+    setRow(allInput?.[0]);
+  };
+
+  const onGetTrace=async(id)=>{
+  const traceRes=  await getEvalReportTrace(id);
+  setTraceData(traceRes?.trace);
+  }
   useEffect(() => {
     if (openSignal > 0) {
       setOpen(true);
+      onGetReport();
     }
   }, [openSignal]);
 
@@ -89,17 +98,37 @@ const EvaluationDrawer: React.FC<{ openSignal: number }> = ({ openSignal }) => {
         }
       >
         <div className='evaluateCards'>
-          <NumCard info={numInfos.all} />
-          <NumCard info={numInfos.success} />
-          <NumCard info={numInfos.fail} />
+          {Object.values(numInfos).map((info) => (
+            <div
+              id={info.id}
+              className='evaluateCard'
+              style={{ borderColor: selectCard === info.id ? '#2673e5' : '#f0f2f4' }}
+              onClick={() => {
+                setSelectCard(info.id);
+                setInputList(reportData?.[info.id]);
+                setRow(reportData?.[info.id]?.[0]);
+                ['allInput','passInput','failureInput'].forEach((key) => {
+                  document.getElementById(key).style.borderColor =
+                    key === info.id ? '#2673e5' : '#f0f2f4';
+                });
+              }}
+            >
+              {info.icon}
+              <div className='info'>
+                <div className='num'>{info.num}</div>
+                <div>{info.des}</div>
+              </div>
+            </div>
+          ))}
         </div>
-        <div>算法评估</div>
-        <div>xxxxxxxxxxxxxxxxxxx</div>
+
+        <div style={{marginTop:'18px'}}>算法评估</div>
+        <div>{reportData?.algorithm}</div>
         <div style={{ display: 'flex', marginTop: '14px', width: '100%' }}>
           <Table
             virtual
             style={{ width: 300, overflow: 'auto', overflowY: 'hidden' }}
-            dataSource={listData}
+            dataSource={inputList}
             columns={listColumns}
             pagination={false}
             scroll={{ y: 'calc(100vh - 280px)' }}
@@ -116,6 +145,7 @@ const EvaluationDrawer: React.FC<{ openSignal: number }> = ({ openSignal }) => {
                 className='call-track-button'
                 onClick={() => {
                   setTraceDrawer(true);
+                  onGetTrace(row?.id);
                 }}
               >
                 调用轨迹
@@ -124,24 +154,24 @@ const EvaluationDrawer: React.FC<{ openSignal: number }> = ({ openSignal }) => {
             <div style={{ display: 'flex' }} className='block'>
               <div style={{ width: '50%' }}>
                 <div className='block-title'>得分</div>
-                <div className='block-num'>20分</div>
+                <div className='block-num'>{row?.score}</div>
               </div>
               <div style={{ width: '50%' }}>
                 <div className='block-title'>耗时</div>
-                <div className='block-num'>200ms</div>
+                <div className='block-num'>{`${row?.latency}ms`}</div>
               </div>
             </div>
             <div className='block'>
               <div className='block-title'>输入</div>
               <div className='block-num'>
-                啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
+              {row?.input}
               </div>
             </div>
             <Table
               rowHoverable={false}
               style={{ marginTop: '20px', height: '200px' }}
               virtual
-              dataSource={compareData}
+              dataSource={[{output:row?.output,expectedOutput:row?.expectedOutput}]}
               columns={compareColumns}
               pagination={false}
             />
@@ -174,7 +204,7 @@ const EvaluationDrawer: React.FC<{ openSignal: number }> = ({ openSignal }) => {
         }
       >
         <Table
-          rowKey='name'
+          rowKey='time'
           columns={traceColumns}
           expandable={{
             expandedRowRender: (record) => (
@@ -190,7 +220,7 @@ const EvaluationDrawer: React.FC<{ openSignal: number }> = ({ openSignal }) => {
                 <Table
                   rowHoverable={false}
                   style={{ margin: '20px 0px', width: '640px' }}
-                  dataSource={compareData}
+                  dataSource={[record] }
                   columns={inOutColumns}
                   pagination={false}
                 />
@@ -198,6 +228,7 @@ const EvaluationDrawer: React.FC<{ openSignal: number }> = ({ openSignal }) => {
             ),
           }}
           dataSource={traceData}
+          pagination={false}
         />
       </Drawer>
     </div>
