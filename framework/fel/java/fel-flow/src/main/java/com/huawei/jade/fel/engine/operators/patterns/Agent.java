@@ -10,9 +10,11 @@ import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
+import com.huawei.jade.fel.engine.activities.processors.AiToolProcessMap;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.tool.Tool;
 import com.huawei.jade.fel.tool.ToolCall;
+import com.huawei.jade.fel.tool.ToolContext;
 import com.huawei.jade.fel.tool.ToolProvider;
 
 import java.util.Collections;
@@ -42,42 +44,25 @@ public abstract class Agent<I, O> extends FlowSupportable<I, O> {
     }
 
     /**
-     * 执行工具。
+     * 获取工具执行器。
      *
-     * @param aiMessage 表示大模型响应的 {@link AiMessage}。
      * @param toolProvider 表示工具提供者的 {@link ToolProvider}。
-     * @return 表示工具执行结果的 {@link Prompt}。
-     * @throws IllegalArgumentException 当 {@code toolProvider} 或 {@code aiMessage} 为 {@code null} 时。
-     */
-    protected static Prompt toolCallHandle(ToolProvider toolProvider, AiMessage aiMessage) {
-        Validation.notNull(toolProvider, "ToolProvider cannot be null.");
-        Validation.notNull(aiMessage, "AiMessage cannot be null.");
-        List<FlatChatMessage> collect = Optional.ofNullable(aiMessage.toolCalls())
-                .map(m -> m.stream().map(toolProvider::call).collect(Collectors.toList()))
-                .orElseGet(Collections::emptyList);
-        return ChatMessages.from(collect);
-    }
-
-    /**
-     * 获取工具执行节点。
-     *
      * @param agentMsgKey 表示 Agent 响应的所在键的 {@link String}。
-     * @param toolProvider 表示工具提供者的 {@link ToolProvider}。
-     * @return 表示工具执行结果的 {@link Prompt}。
+     * @return 表示工具执行器 {@link AiToolProcessMap}{@code <}{@link AiMessage}{@code , }{@link AiMessage}{@code >}。
      * @throws IllegalArgumentException
      * <ln>
      *     <li>当 {@code toolProvider} 为 {@code null} 时。</li>
      *     <li>当 {@code agentMsgKey} 为 {@code null} 、空字符串或只有空白字符的字符串时。</li>
      * </ln>
      */
-    protected static Operators.ProcessMap<AiMessage, AiMessage> getToolProcessMap(ToolProvider toolProvider,
+    protected static AiToolProcessMap<AiMessage, AiMessage> getToolProcessMap(ToolProvider toolProvider,
             String agentMsgKey) {
         Validation.notNull(toolProvider, "ToolProvider cannot be null.");
         Validation.notBlank(agentMsgKey, "Agent message key cannot be blank.");
-        return (input, context) -> {
+        return (input, context, toolContext) -> {
             ChatMessages lastRequest = context.getState(agentMsgKey);
             lastRequest.add(input);
-            lastRequest.addAll(Agent.toolCallHandle(toolProvider, input).messages());
+            lastRequest.addAll(Agent.toolCallHandle(toolProvider, input, toolContext).messages());
             return input;
         };
     }
@@ -139,5 +124,14 @@ public abstract class Agent<I, O> extends FlowSupportable<I, O> {
         Validation.notNull(toolProvider, "ToolProvider cannot be null.");
         Validation.notNull(aiMessage, "AiMessage cannot be null.");
         return !aiMessage.isToolCall() || Agent.containAsyncTool(toolProvider, aiMessage);
+    }
+
+    private static Prompt toolCallHandle(ToolProvider toolProvider, AiMessage aiMessage, ToolContext toolContext) {
+        List<FlatChatMessage> collect = Optional.ofNullable(aiMessage.toolCalls())
+                .map(m -> m.stream()
+                        .map(toolCall -> toolProvider.call(toolCall, toolContext))
+                        .collect(Collectors.toList()))
+                .orElseGet(Collections::emptyList);
+        return ChatMessages.from(collect);
     }
 }

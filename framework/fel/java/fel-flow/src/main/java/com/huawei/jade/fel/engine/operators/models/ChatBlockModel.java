@@ -44,6 +44,7 @@ public class ChatBlockModel<M> implements ChatModel<AiMessage> {
         ChatCompletion completionRequest = new ChatCompletion(aiArg.data(), this.options);
 
         ChatMessage message = provider.generate(completionRequest);
+        Validation.notNull(message, "Model chat message can not be null.");
         Validation.equals(message.type(), MessageType.AI, "message type must be ai");
         AiMessage answer = new AiMessage(message.text(), message.toolCalls());
         if (answer.isToolCall() || aiArg.memory() == null) {

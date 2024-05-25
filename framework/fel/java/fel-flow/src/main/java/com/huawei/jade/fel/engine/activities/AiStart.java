@@ -28,6 +28,7 @@ import com.huawei.jade.fel.core.retriever.Splitter;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.activities.processors.AiBranchProcessor;
 import com.huawei.jade.fel.engine.activities.processors.AiFlatMap;
+import com.huawei.jade.fel.engine.activities.processors.AiToolProcessMap;
 import com.huawei.jade.fel.engine.flows.AiFlow;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.operators.AiRunnableArg;
@@ -40,6 +41,7 @@ import com.huawei.jade.fel.engine.operators.patterns.SimpleAsyncPattern;
 import com.huawei.jade.fel.engine.operators.patterns.SyncPattern;
 import com.huawei.jade.fel.engine.operators.prompts.PromptTemplate;
 import com.huawei.jade.fel.engine.util.StateKey;
+import com.huawei.jade.fel.tool.ToolContext;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -328,9 +330,9 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      * }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code parser} 为 {@code null} 时。
      */
-    public <R> AiState<R, D, O, RF, F> format(Parser<R> parser) {
+    public <R> AiState<R, D, O, RF, F> format(Parser<O, R> parser) {
         Validation.notNull(parser, "Parser operator cannot be null.");
-        AiState<R, D, O, RF, F> state = this.map(input -> parser.parse(ObjectUtils.cast(input)));
+        AiState<R, D, O, RF, F> state = this.map(parser::parse);
         ((Processor<?, ?>) state.publisher()).displayAs("format");
         return state;
     }
@@ -379,6 +381,27 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public <R> AiState<R, D, O, RF, F> delegate(Operators.ProcessMap<O, R> operator) {
         Validation.notNull(operator, "Pattern operator cannot be null.");
         return this.delegate(new SimpleAsyncPattern<>(operator));
+    }
+
+    /**
+     * 将数据委托给 {@link AiToolProcessMap}{@code <}{@link O}{@code , }{@link R}{@code >}
+     * 处理。用途与 {@link AiStart#delegate(Operators.ProcessMap)} 一致。
+     *
+     * @param toolOperator 表示数据接收方的 {@link AiToolProcessMap}{@code <}{@link O}{@code , }{@link R}{@code >}。
+     * @param <R> 表示委托节点的输出数据类型。
+     * @return 表示委托节点的 {@link AiState}{@code <}{@link R}{@code , }{@link D}{@code , }{@link O}{@code ,
+     * }{@link RF}{@code , }{@link F}{@code >}。
+     * @throws IllegalArgumentException 当 {@code toolOperator} 为 {@code null} 时。
+     */
+    public <R> AiState<R, D, O, RF, F> delegate(AiToolProcessMap<O, R> toolOperator) {
+        Validation.notNull(toolOperator, "Pattern operator cannot be null.");
+        Operators.ProcessMap<O, R> operatorWrapper = (input, context) -> {
+            FlowSession session = ObjectUtils.cast(context);
+            ToolContext toolContext = Optional.ofNullable(session.<ToolContext>getInnerState(StateKey.TOOL_CONTEXT))
+                    .orElseGet(ToolContext::new);
+            return toolOperator.process(input, context, toolContext);
+        };
+        return this.delegate(operatorWrapper);
     }
 
     /**
