@@ -48,8 +48,9 @@ public class OpenAiEmbedModelService implements EmbedModelService {
     @Fitable(id = "com.huawei.fit.jade.model.client.openai.embed.generate")
     public EmbedResponse generate(EmbedRequest request) {
         Validation.notNull(request, "Failed to generate embedding response: request is null.");
+        Validation.notNull(request.getOptions(), "Failed to generate embedding response: request option is null.");
         String model = "";
-        if (request.getOptions() != null && StringUtils.isNotBlank(request.getOptions().getModel())) {
+        if (StringUtils.isNotBlank(request.getOptions().getModel())) {
             model = request.getOptions().getModel();
         } else {
             LOGGER.warn("Empty model name");
@@ -58,6 +59,7 @@ public class OpenAiEmbedModelService implements EmbedModelService {
         OpenAiEmbeddingRequest r = OpenAiEmbeddingRequest.builder()
                 .model(model)
                 .input(request.getInputs())
+                .apiKey(request.getOptions().getApiKey())
                 .build();
 
         try {
