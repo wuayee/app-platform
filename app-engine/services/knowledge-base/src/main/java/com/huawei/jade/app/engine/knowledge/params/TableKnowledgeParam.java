@@ -6,6 +6,7 @@ package com.huawei.jade.app.engine.knowledge.params;
 
 import com.huawei.jade.app.engine.knowledge.dto.TableKnowledgeColDto;
 import com.huawei.jade.app.engine.knowledge.service.param.PageQueryParam;
+import com.huawei.jade.app.engine.knowledge.utils.DecodeUtil;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -44,4 +45,13 @@ public class TableKnowledgeParam extends PageQueryParam {
 
     /** 文件名 */
     private String fileName;
+
+    /**
+     * 获取文件名称
+     *
+     * @return 解码后的文件名称
+     */
+    public String getFileName() {
+        return DecodeUtil.decodeStr(fileName);
+    }
 }
