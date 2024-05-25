@@ -174,6 +174,7 @@ public class OpenAiMessageUtils {
                 .temperature(options.getTemperature())
                 .tools(tools)
                 .toolChoice(CollectionUtils.isEmpty(tools) ? null : "auto")
+                .apiKey(options.getApiKey())
                 .build();
     }
 

@@ -4,6 +4,8 @@
 
 package com.huawei.jade.fel.model.openai.entity.embed;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
@@ -33,4 +35,10 @@ public class OpenAiEmbeddingRequest {
      */
     @NonNull
     private List<String> input;
+
+    /**
+     * @see <a href="https://platform.openai.com/docs/api-reference/authentication">OpenAI API</a>
+     */
+    @JsonIgnore
+    private String apiKey;
 }
