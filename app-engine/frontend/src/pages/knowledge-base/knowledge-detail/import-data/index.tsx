@@ -103,7 +103,7 @@ const KnowledgeBaseDetailImportData = () => {
 
   const onCancle = async () => {
     navigate(-1);
-    const fileIds = formDataSource.getFieldValue('selectedFile').map((file) => `${file.uid}${file.name}`);
+    const fileIds = formDataSource.getFieldValue('selectedFile').map((file) => `${file.uid}_${file.name}`);
     await deleteLocalFile(id, table_id, fileIds);
     formDataSource.setFieldValue('selectedFile', []);
   };
@@ -136,7 +136,7 @@ const KnowledgeBaseDetailImportData = () => {
           const result = await getTableColums({
             repositoryId: id as string,
             knowledgeTableId: table_id as string,
-            fileName: formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}${file.name}`)?.[0] || ''
+            fileName: formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}_${file.name}`)?.[0] || ''
           });
 
           if(result && result?.length) {
@@ -158,7 +158,7 @@ const KnowledgeBaseDetailImportData = () => {
         formValue.current.second = { ...res };
         if (table_type === 'text') {
           // 文本分段清洗
-          const fileNames = formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}${file.name}`);
+          const fileNames = formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}_${file.name}`);
           const secondRes = formValue.current.second;
           await textSegmentWash({
             knowledgeId: id,
@@ -170,7 +170,7 @@ const KnowledgeBaseDetailImportData = () => {
 
         // 表格创建逻辑
         if(table_type === 'table') {
-          const fileName = formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}${file.name}`)?.[0] || '';
+          const fileName = formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}_${file.name}`)?.[0] || '';
 
           console.log(res);
           const data = (res?.tableCustom || []).map(item => ({
@@ -180,7 +180,6 @@ const KnowledgeBaseDetailImportData = () => {
             embedServiceId: item.vectorService ?? null,
             desc: item.description ?? null,
           }));
-          console.log(data);
           createTableColumns({
             repositoryId: id as string,
             knowledgeTableId: table_id as string,
