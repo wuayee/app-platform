@@ -7,6 +7,7 @@ package com.huawei.jade.fel.engine.operators.prompts;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.Prompt;
+import com.huawei.jade.fel.core.template.StringTemplate;
 import com.huawei.jade.fel.core.template.support.SystemMessageTemplate;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.operators.CustomState;
@@ -26,8 +27,8 @@ public class SystemTemplate implements PromptTemplate<Tip> {
      * @param template 表示使用 mustache 模板语法的 {@link String}。
      * @throws IllegalArgumentException 当 {@code template} 为 {@code null}、空字符串或只有空白字符的字符串时。
      */
-    public SystemTemplate(String template) {
-        Validation.notBlank(template, "Template cannot be blank.");
+    public SystemTemplate(StringTemplate template) {
+        Validation.notNull(template, "Template cannot be null.");
         messageTemplate = new SystemMessageTemplate(template);
     }
 

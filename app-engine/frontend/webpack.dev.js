@@ -116,7 +116,7 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       "/v1": {
-        target: 'http://80.11.128.66:8000',
+        target: 'http://model-io-manager:8010',
         pathRewrite: {
           "^/modelApi": ""
         },

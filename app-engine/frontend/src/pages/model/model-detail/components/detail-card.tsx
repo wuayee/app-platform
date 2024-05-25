@@ -4,20 +4,23 @@ import type { MenuProps } from "antd";
 import { Button, Dropdown, Space } from "antd";
 import { HashRouter, Route, useNavigate, Routes } from "react-router-dom";
 import { url } from "inspector";
-import { Icons } from "../../../../components/icons";
 interface DetailItem {
   title: string;
   content: number;
+  unit: string;
 }
 
 const DetailCard = ({ data }: { data: DetailItem }) => {
   return (
     <Card
       style={{
-        width: 900,
+        width: "49%",
         background:
           "url(/src/assets/images/knowledge/knowledge-background.png)",
         height: 126,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "100% 126px",
+        padding: 0,
       }}
     >
       <div
@@ -39,21 +42,39 @@ const DetailCard = ({ data }: { data: DetailItem }) => {
         <div
           style={{
             textAlign: "right",
+            marginTop: -10,
           }}
         >
+          <img
+            width={55}
+            height={64}
+            src="/src/assets/images/knowledge/knowledge-base.png"
+          />
         </div>
-      </div>{" "}
+      </div>
       {/* 描述 */}
       <div
         style={{
-          wordBreak: "break-all",
-          fontSize: "14px",
-          lineHeight: "22px",
-          textAlign: "justify",
-          marginTop: 16,
+          display: "flex",
+          gap: 4
         }}
       >
-        {data.content}
+        <div
+          style={{
+            fontSize: "20px",
+            marginTop: 10,
+          }}
+        >
+          {data.content}
+        </div>
+        <div
+          style={{
+            fontSize: "14px",
+            marginTop: 16,
+          }}
+        >
+          {data.unit}
+        </div>
       </div>
     </Card>
   );
