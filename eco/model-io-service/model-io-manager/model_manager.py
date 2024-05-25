@@ -18,8 +18,9 @@ from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 from jinja2 import Template
 
-from kubernetes import client, config
+from kubernetes import client, config, utils
 from kubernetes.client import ApiClient, Configuration
+from kubernetes.client.rest import ApiException
 from fastapi.middleware.cors import CORSMiddleware
 from urllib3.exceptions import MaxRetryError
 from uvicorn.config import LOGGING_CONFIG
@@ -50,6 +51,7 @@ def load_kube_config():
         config.load_kube_config_from_dict(config_dict)
 
 load_kube_config()
+k8s_client = client.AppsV1Api()
 
 # Create CoreV1Api instance
 api_instance = client.CoreV1Api()
@@ -83,9 +85,6 @@ class Llm(BaseModel):
 class NodePortItem(BaseModel):
     node_port: int
 
-
-class GateWayAddr(BaseModel):
-    addr: str
 
 gateways = []
 
@@ -133,6 +132,8 @@ def get_model_services():
 
 def get_self_namespace():
     namespace = ""
+    if not os.path.exists(NAMESPACE_FILE):
+        return namespace
     with open(NAMESPACE_FILE) as f:
         return f.read()
     return namespace
@@ -257,20 +258,49 @@ async def health(item: NodePortItem) -> Response:
 async def delete_model(llm: Llm):
     model_name = llm.name.strip()
     model_services = get_cached_model_services()
+    logger.info(model_services)
     if model_name.lower() in model_services:
-        cmd = 'kubectl delete -f ' + f'{llm.name.strip()}.yaml'
-        res = os.popen(cmd, 'r', 1)
-        logger.info(res.read())
+        service_name = model_services[model_name.lower()]["service_name"]
+        model_name = get_model_name(model_services[model_name.lower()]["model_name"])
+        deployment_name = model_name + "-inference"
+        code = "code"
+        detail = "detail"
+        try:
+            response = api_instance.delete_namespaced_service(service_name, MODEL_IO_NAMESPACE)
+            logger.info("Delete service {%s} successful", service_name)
+        except ApiException as e:
+            error_info = {
+               code: e.status,
+               detail: e.reason
+            }
+            logger.warning(e)
+            return JSONResponse(status_code=522, content=jsonable_encoder(error_info))
+        try:
+            response = k8s_client.delete_namespaced_deployment(deployment_name, MODEL_IO_NAMESPACE)
+            logger.info("Delete deployment {%s} successful", deployment_name)
+        except ApiException as e:
+            error_info = {
+               code: e.status,
+               detail: e.reason
+            }
+            logger.warning(e)
+            return JSONResponse(status_code=522, content=jsonable_encoder(error_info))
         _notify_model_io_gateways()
-        return Response(status_code=200)
+        status_code = 200
+        error_info = {
+            code: status_code,
+            detail: "ok"
+        }
+        return JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))
     else:
         error_code = 521
         error_args = [f"The Model {model_name} is not deployed"]
         error_info = {
-            "code": error_code,
-            "detail": f"Failed to delete Model: {model_name}. Failure cause:{error_args}"
+            code: error_code,
+            detail: f"Failed to delete Model: {model_name}. Failure cause:{error_args}"
         }
         return JSONResponse(status_code=error_code, content=jsonable_encoder(error_info))
+    pass
 
 
 def _notify_model_io_gateways():
@@ -283,7 +313,7 @@ def _notify_model_io_gateways():
             data = get_routes()
             routes = {"routes": data}
 
-            response = requests.post(url, json=routes)
+            response = requests.post(url, json=routes, timeout=10)
             logger.info("Notify_Model_IO_Gateways %s : %s", url, str(routes))
             logger.info(response)
     except requests.exceptions.RequestException as e:
@@ -429,7 +459,7 @@ def get_models_statistics_from_gateway():
 
     for endpoint in endpoints:
         url = f"http://{endpoint['address']}:{endpoint['port']}/v1/statistics"
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
 
         if response.status_code == 200:
             endpoint_statistics = json.loads(response.content)
@@ -494,20 +524,37 @@ async def start_up(item: Item):
     }
 
     fill_template = [template.render(render_data) for template in templates]
-    yaml_obj = [yaml.safe_load(fill) for fill in fill_template]
+    yaml_objs = [yaml.safe_load(fill) for fill in fill_template]
+
+    service_manifest = yaml_objs[0]
+    deployment_manifest = yaml_objs[1]
 
     flags = os.O_WRONLY | os.O_CREAT
     modes = stat.S_IRUSR
 
     with os.fdopen(os.open(f'{item.name}.yaml', flags, modes), 'w') as f:
-        for obj in yaml_obj:
+        for obj in yaml_objs:
             yaml.dump(obj, f)
             f.write('---\n')
 
-    cmd = 'kubectl apply -f ' + f'{item.name}.yaml'
-    res = os.popen(cmd, 'r', 1)
-    logger.info(res.read())
+    try:
+        response = api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, service_manifest)
+    except ApiException as e:
+        logger.warning(e)
+    try:
+        response = k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, deployment_manifest)
+    except ApiException as e:
+        logger.warning(e)
+
     _notify_model_io_gateways()
+
+    status_code = 200
+    error_info = {
+        "code": status_code,
+        "detail": "ok"
+    }
+
+    return JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
