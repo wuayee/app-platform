@@ -68,12 +68,12 @@ const AppLayout: React.FC = () => {
         const key = '/' + pathGroup.slice(0, len + 1).join('/');
         let route = getRouteByKey(flattenRouteList, key);
 
-        if(route?.hidden) {
-          len--;
-        } else {
+        if(route && !route?.hidden) {
+      
           setDefaultActive([key]);
           break;
         }
+        len--;
       } 
     } else {
       // 默认路由为home

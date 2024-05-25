@@ -83,7 +83,7 @@ const KnowledgeBaseDetailImportData = () => {
       title: '表格配置',
     });
     steps.push({
-      title: '创建',
+      title: '开始导入',
     });
   }
 

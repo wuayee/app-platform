@@ -7,6 +7,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const HappyPack = require("happypack");
 const PUBLIC_PATH = "/appbuilder/";
 const webpack = require("webpack");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -106,6 +107,17 @@ module.exports = {
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env.SSO_URL': JSON.stringify(process.env.SSO_URL)
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/assets', // 静态资源目录
+          to: 'src/assets', // 打包后的静态资源目录
+          globOptions: {
+            ignore: ['**/*.js'] // 忽略的文件
+          }
+        }
+      ]
     })
   ],
   optimization: {
