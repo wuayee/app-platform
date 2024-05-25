@@ -284,7 +284,8 @@ public class KnowledgeBaseController {
      */
     @PostMapping(path = "/table/chunks")
     public PageResultVo<String> getChunks(@RequestBody KbChunkSearchDto chunkQueryDto) {
-        return new PageResultVo<>(chunkQueryDto.getTopK(), knowledgeBaseService.searchKnowledgeTable(chunkQueryDto));
+        List<String> chunks = knowledgeBaseService.searchKnowledgeTable(chunkQueryDto);
+        return new PageResultVo<>(chunks.size(), chunks);
     }
 
     /**
