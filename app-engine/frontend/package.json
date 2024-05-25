@@ -48,6 +48,7 @@
         "webpack-merge": "^5.7.3"
     },
     "dependencies": {
+        "@ant-design/charts": "^1.4.2",
         "@babel/plugin-proposal-decorators": "^7.20.13",
         "@babel/plugin-transform-async-to-generator": "^7.16.0",
         "@babel/runtime": "^7.20.13",

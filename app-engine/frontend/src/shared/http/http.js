@@ -17,7 +17,8 @@ baseAxios.interceptors.request.use(
 
 baseAxios.interceptors.response.use(
   (response) => {
-    if (response.data.code === undefined || response.data.code === 0) {
+    console.log(response,123)
+    if (response.data.code === undefined || response.data.code === 0 || response.data.code === 200) {
       return Promise.resolve(response.data);
     }
     console.warn(response.config?.url);
