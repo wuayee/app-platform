@@ -27,12 +27,6 @@ const ModelList = () => {
 
   const [createItems, setCreateItems] = useState([]);
 
-  interface createItem {
-    name: string;
-    image: Array<string>;
-    precision: Array<string>;
-  }
-
   // 分页变化
   const paginationChange = (curPage: number, curPageSize: number) => {
     if (page !== curPage) {
@@ -142,12 +136,19 @@ const ModelList = () => {
             marginLeft: -20,
           }}
         >
-          {modelTab === 1 && <CardsTab modelList={modelList} />}
-          {modelTab === 2 && <TableTab modelList={modelList} setOpen={setOpenStar}/>}
+          {modelTab === 1 && <CardsTab modelList={modelList} setModels={setModelList} />}
+          {modelTab === 2 && (
+            <TableTab modelList={modelList} setOpen={setOpenStar} setModels={setModelList} />
+          )}
         </div>
         <Pagination total={total} current={page} onChange={paginationChange} pageSize={pageSize} />
       </div>
-      <ModelCreate open={openStar} setOpen={setOpenStar} createItems={createItems} />
+      <ModelCreate
+        open={openStar}
+        setOpen={setOpenStar}
+        createItems={createItems}
+        setModels={setModelList}
+      />
     </div>
   );
 };

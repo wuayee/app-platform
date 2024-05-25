@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Select, Button, Drawer, Input, Form, message } from 'antd';
 import { SearchOutlined, EllipsisOutlined, CloseOutlined } from '@ant-design/icons';
 
-import { createModel, getModelListMeta } from '../../shared/http/model';
+import { createModel, getModelList } from '../../shared/http/model';
 
 interface createItem {
   name: string;
@@ -14,9 +14,10 @@ interface StarAppsProps {
   open: boolean;
   setOpen: (val: boolean) => void;
   createItems: Array<createItem>;
+  setModels: (val: Array<any>) => void;
 }
 
-const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems }) => {
+const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setModels }) => {
   const [form] = Form.useForm();
 
   const nameOptions: any[] = [];
@@ -51,9 +52,14 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems }) =>
         npus: parseInt(npus),
       };
       createModel(modelParams).then((res) => {
-        if (res.code === 200) {
+        if (res && res.code === 200) {
           message.success('模型部署成功');
-          getModelListMeta();
+          getModelList().then((res) => {
+            if (res) {
+              setModels(res.llms);
+            }
+          });
+          form.resetFields();
         } else {
           message.error('模型部署失败');
         }

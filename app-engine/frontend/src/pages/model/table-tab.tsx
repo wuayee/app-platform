@@ -4,14 +4,15 @@ import type { TableProps } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 import { ModelItem } from './cards-tab';
-import { deleteModelByName, getModelListMeta } from '../../shared/http/model';
+import { deleteModelByName, getModelList } from '../../shared/http/model';
 
 interface TableTabProps {
   modelList: Array<ModelItem>;
   setOpen: (val: boolean) => void;
+  setModels: (val: Array<any>) => void;
 }
 
-const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen }) => {
+const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels }) => {
   const navigate = useNavigate();
   const toModelDetail = (id: string) => {
     navigate('/model/detail', { state: { modelId: id } });
@@ -35,9 +36,13 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen }) => {
       },
     };
     deleteModelByName(deleteParams).then((res) => {
-      if (res.code === 200) {
+      if (res && res.code === 200) {
         message.success('模型删除成功');
-        getModelListMeta();
+        getModelList().then((res) => {
+          if (res) {
+            setModels(res.llms);
+          }
+        });
       } else {
         message.error('模型删除失败');
       }

@@ -5,9 +5,9 @@ import { Button, Dropdown, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../../components/icons';
 import { ModelItem } from '../cards-tab';
-import { deleteModelByName, getModelListMeta } from '../../../shared/http/model';
+import { deleteModelByName, getModelList } from '../../../shared/http/model';
 
-const ModelCard = ({ modelItem }: { modelItem: ModelItem }) => {
+const ModelCard = ({ modelItem, setModelItems }: { modelItem: ModelItem, setModelItems: (val: Array<any>) => void }) => {
   const operatorItems: MenuProps['items'] = [
     {
       key: 'delete',
@@ -36,9 +36,13 @@ const ModelCard = ({ modelItem }: { modelItem: ModelItem }) => {
       },
     };
     deleteModelByName(deleteParams).then((res) => {
-      if (res.code === 200) {
+      if (res && res.code === 200) {
         message.success('模型删除成功');
-        getModelListMeta();
+        getModelList().then((res) => {
+          if (res) {
+            setModelItems(res.llms);
+          }
+        });
       } else {
         message.error('模型删除失败');
       }

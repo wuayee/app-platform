@@ -29,7 +29,7 @@ export interface ModelItem {
   xpu_consume: number;
   port: number;
 }
-const CardsTab = ({modelList}: {modelList: ModelItem[]}) => {
+const CardsTab = ({modelList, setModels}: {modelList: ModelItem[], setModels: (val: Array<any>) => void}) => {
   // 路由
   return (
     <div className="aui-block">
@@ -54,6 +54,7 @@ const CardsTab = ({modelList}: {modelList: ModelItem[]}) => {
               style={{
                 flex: "0",
               }}
+              setModelItems={setModels}
             />
           </>
         ))}
