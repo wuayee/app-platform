@@ -34,9 +34,9 @@ public class FlowNodePublishInfo {
     private Map<String, Object> businessData;
 
     /**
-     * 表示操作上下文的 {@link FlowContext}。
+     * 表示操作上下文的 {@link FlowPublishContext}。
      */
-    private FlowContext flowContext;
+    private FlowPublishContext flowContext;
 
     /**
      * 流程节点信息推送对象的无参构造方法。
@@ -51,10 +51,10 @@ public class FlowNodePublishInfo {
      * @param nodeId 流程节点唯一标识的 {@link String}。
      * @param nodeType 流程节点类型的 {@link String}。
      * @param businessData 流程执行所需的业务参数的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
-     * @param flowContext 流程节点上下文信息对象的 {@link FlowContext}。
+     * @param flowContext 流程节点上下文信息对象的 {@link FlowPublishContext}。
      */
     public FlowNodePublishInfo(String flowDefinitionId, String nodeId, String nodeType,
-            Map<String, Object> businessData, FlowContext flowContext) {
+            Map<String, Object> businessData, FlowPublishContext flowContext) {
         this.flowDefinitionId = flowDefinitionId;
         this.nodeId = nodeId;
         this.nodeType = nodeType;
@@ -94,11 +94,11 @@ public class FlowNodePublishInfo {
         this.businessData = businessData;
     }
 
-    public FlowContext getFlowContext() {
+    public FlowPublishContext getFlowContext() {
         return flowContext;
     }
 
-    public void setFlowContext(FlowContext flowContext) {
+    public void setFlowContext(FlowPublishContext flowContext) {
         this.flowContext = flowContext;
     }
 }

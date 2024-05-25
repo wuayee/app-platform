@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author 陈镕希 c00572808
  * @since 2024-05-21
  */
-public class FlowContext {
+public class FlowPublishContext {
     /**
      * 表示流程实例trace id的 {@link String}。
      */
@@ -41,22 +41,33 @@ public class FlowContext {
     /**
      * 流程节点上下文信息对象的无参构造方法。
      */
-    public FlowContext() {
+    public FlowPublishContext() {
     }
 
     /**
      * 流程节点上下文信息对象的全参构造方法。
      *
+     * @param traceId 流程节点所属实例唯一标识的 {@link String}。
      * @param status 流程节点状态信息的 {@link String}。
      * @param createAt 流程节点创建时间信息的 {@link LocalDateTime}。
      * @param updateAt 流程节点最后更新时间信息的 {@link LocalDateTime}。
      * @param archivedAt 流程节点结束时间信息的 {@link LocalDateTime}。
      */
-    public FlowContext(String status, LocalDateTime createAt, LocalDateTime updateAt, LocalDateTime archivedAt) {
+    public FlowPublishContext(String traceId, String status, LocalDateTime createAt, LocalDateTime updateAt,
+            LocalDateTime archivedAt) {
+        this.traceId = traceId;
         this.status = status;
         this.createAt = createAt;
         this.updateAt = updateAt;
         this.archivedAt = archivedAt;
+    }
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
     }
 
     public String getStatus() {
