@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Form } from 'antd';
-import { Button, Table } from 'antd';
+import { Button, Table, message } from 'antd';
 import type { TableProps } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useSearchParams } from 'react-router-dom';
 
 import { ModelItem } from './cards-tab';
+import { deleteModelByName, getModelListMeta } from '../../shared/http/model';
 
-const TableTab = ({ modelList }: { modelList: ModelItem[] }) => {
+interface TableTabProps {
+  modelList: Array<ModelItem>;
+  setOpen: (val: boolean) => void;
+}
+
+const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen }) => {
   const navigate = useNavigate();
   const toModelDetail = (id: string) => {
     navigate('/model/detail', { state: { modelId: id } });
   };
-  const typeFilters = [];
-  const typeList = [];
+  const typeFilters: any[] = [];
+  const typeList: any[] = [];
+
   modelList.forEach((item) => {
     if (!typeList.includes(item.type)) {
       typeList.push(item.type);
@@ -23,6 +28,22 @@ const TableTab = ({ modelList }: { modelList: ModelItem[] }) => {
       typeFilters.push(typeItem);
     }
   });
+  const deleteModel = (name: string) => {
+    const deleteParams = {
+      data: {
+        name,
+      },
+    };
+    deleteModelByName(deleteParams).then((res) => {
+      if (res.code === 200) {
+        message.success('模型删除成功');
+        getModelListMeta();
+      } else {
+        message.error('模型删除失败');
+      }
+    });
+  };
+
   const columns: TableProps<ModelItem>['columns'] = [
     {
       title: '模型',
@@ -140,10 +161,29 @@ const TableTab = ({ modelList }: { modelList: ModelItem[] }) => {
       title: '操作',
       dataIndex: 'operator',
       key: 'operator',
-      render() {
+      render(value, record) {
         return (
           <div>
-            <Button type='link'>删除</Button>
+            {record.status === 'undeployed' && (
+              <Button
+                type='link'
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
+                部署
+              </Button>
+            )}
+            {record.status !== 'undeployed' && (
+              <Button
+                type='link'
+                onClick={() => {
+                  deleteModel(record.name);
+                }}
+              >
+                删除
+              </Button>
+            )}
           </div>
         );
       },
