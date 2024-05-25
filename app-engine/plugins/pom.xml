@@ -15,6 +15,7 @@
     <modules>
         <module>app-eval</module>
         <module>knowledge-base</module>
+        <module>app-base</module>
     </modules>
 
     <build>
