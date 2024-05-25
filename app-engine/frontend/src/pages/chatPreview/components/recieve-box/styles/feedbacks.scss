@@ -5,8 +5,11 @@
   .feed-right {
     display: none;
     svg {
-      margin-left: 16px;
+      margin-left: 26px;
       cursor: pointer;
+      &:hover {
+        path{ stroke:#2673e5}
+      }
     }
   }
 }

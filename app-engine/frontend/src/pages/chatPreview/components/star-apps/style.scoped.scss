@@ -66,9 +66,17 @@
       }
     }
   }
-
 }
 
+.app-item-footer {
+  div {
+    display: flex;
+    align-items: center;
+    .text {
+      margin-left: 8px;
+    }
+  }
+}
 
 .close-button {
   padding: 5px 34px;
