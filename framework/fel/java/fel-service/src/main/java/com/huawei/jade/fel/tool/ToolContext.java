@@ -6,6 +6,7 @@ package com.huawei.jade.fel.tool;
 
 import com.huawei.fitframework.inspection.Validation;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,5 +67,14 @@ public class ToolContext {
     public String match(String key) {
         Validation.notNull(key, "The key cannot be null");
         return this.context.get(key);
+    }
+
+    /**
+     * 获取工具上下文。
+     *
+     * @return 返回不可修改的 {@link Map}{@code <}{@link String}{@code , }{@link String}{@code >}。
+     */
+    public Map<String, String> toMap() {
+        return Collections.unmodifiableMap(this.context);
     }
 }

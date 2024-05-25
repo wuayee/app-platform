@@ -24,6 +24,12 @@ import java.util.Set;
  * @since 2024-04-22
  */
 public class DefaultValueFilterToolInfo implements Tool.Info {
+    private static final String PARAMETERS_KEY = "parameters";
+    private static final String PARAMETERS_PROPERTIES_KEY = "properties";
+    private static final String PARAMETERS_REQUIRED_KEY = "required";
+    private static final String PARAMETERS_ORDER_KEY = "order";
+    private static final String DEFAULT_PARAMETER_KEY = "default";
+
     private final Tool.Info toolInfo;
 
     public DefaultValueFilterToolInfo(Tool.Info toolInfo) {
@@ -39,32 +45,46 @@ public class DefaultValueFilterToolInfo implements Tool.Info {
     }
 
     static Map<String, Object> getFilterSchema(Map<String, Object> schema) {
-        Map<String, Object> parametersSchema = cast(schema.get("parameters"));
+        Map<String, Object> parametersSchema = cast(schema.get(PARAMETERS_KEY));
         if (MapUtils.isEmpty(parametersSchema)) {
             return schema;
         }
-        Map<String, Object> properties = cast(parametersSchema.get("properties"));
+        Map<String, Object> properties = cast(parametersSchema.get(PARAMETERS_PROPERTIES_KEY));
         if (MapUtils.isEmpty(properties)) {
             return schema;
         }
+        filterDefaultParams(properties, parametersSchema);
+        parametersSchema.remove(PARAMETERS_ORDER_KEY);
+        filterDynamicParams(properties);
+        return schema;
+    }
+
+    private static void filterDefaultParams(Map<String, Object> properties, Map<String, Object> parametersSchema) {
         List<String> defaultKeyList = new ArrayList<>();
         Iterator<Map.Entry<String, Object>> iterator = properties.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, Object> entry = iterator.next();
             Map<String, Object> property = cast(entry.getValue());
             // 删除有默认值的参数
-            if (property.get("default") != null) {
+            if (property.get(DEFAULT_PARAMETER_KEY) != null) {
                 iterator.remove();
                 defaultKeyList.add(entry.getKey());
             }
         }
         // 过滤 required 中拥有默认值的参数。
-        List<String> requiredList = cast(parametersSchema.get("required"));
+        List<String> requiredList = cast(parametersSchema.get(PARAMETERS_REQUIRED_KEY));
         requiredList.removeIf(defaultKeyList::contains);
-        parametersSchema.put("required", requiredList);
-        // 过滤 order 字段
-        parametersSchema.remove("order");
-        return schema;
+        parametersSchema.put(PARAMETERS_REQUIRED_KEY, requiredList);
+    }
+
+    private static void filterDynamicParams(Map<String, Object> properties) {
+        if (!properties.containsKey(WaterFlowToolConst.INPUT_PARAMS_KEY)) {
+            return;
+        }
+        Map<String, Object> inputParams = cast(properties.get(WaterFlowToolConst.INPUT_PARAMS_KEY));
+        Map<String, Object> inputParamsProperties = cast(inputParams.get(PARAMETERS_PROPERTIES_KEY));
+        inputParamsProperties.remove(WaterFlowToolConst.TRACE_ID);
+        inputParamsProperties.remove(WaterFlowToolConst.CALLBACK_ID);
     }
 
     @Override
