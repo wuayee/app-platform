@@ -57,6 +57,7 @@ import com.huawei.fit.jober.entity.FlowStartParameter;
 import com.huawei.fit.jober.entity.task.TaskProperty;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
+import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
@@ -201,6 +202,7 @@ public class AippRunTimeServiceImpl
      * @return 实例id
      */
     @Override
+    @Fitable("default")
     public String createAippInstance(String aippId, String version, Map<String, Object> initContext,
             OperationContext context) {
         Meta meta = MetaUtils.getAnyMeta(metaService, aippId, version, context);

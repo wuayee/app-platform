@@ -32,6 +32,7 @@ import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -99,7 +100,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
                     Utils.buildLogDataWithFormData(this.formRepository, endFormId, endFormVersion, businessData);
             Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
         }
-        this.logFinalOutput(contexts, businessData);
+        this.logFinalOutput(contexts, businessData, aippInstId);
 
         // 子流程 callback 主流程
         String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
@@ -112,7 +113,8 @@ public class AippFlowEndCallback implements FlowCallbackService {
         }
     }
 
-    private void logFinalOutput(List<Map<String, Object>> contexts, Map<String, Object> businessData) {
+    private void logFinalOutput(List<Map<String, Object>> contexts, Map<String, Object> businessData,
+            String aippInstId) {
         // todo: 表明流程结果是否需要再经过模型加工，当前场景全为false。
         //  正常情况下应该是在结束节点配上该key并放入businessData中，此处模拟该过程。
         //  如果子流程结束后需要再经过模型加工，子流程结束节点不打印日志；否则子流程结束节点需要打印日志。
@@ -131,6 +133,12 @@ public class AippFlowEndCallback implements FlowCallbackService {
         this.beanContainer.all(AppFlowFinishObserver.class)
                 .stream()
                 .<AppFlowFinishObserver>map(BeanFactory::get)
-                .forEach(finishObserver -> finishObserver.onFinished(logMsg));
+                .forEach(finishObserver -> finishObserver.onFinished(logMsg, this.buildAttributes(aippInstId)));
+    }
+
+    private Map<String, Object> buildAttributes(String aippInstId) {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put(AippConst.BS_AIPP_INST_ID_KEY, aippInstId);
+        return attributes;
     }
 }

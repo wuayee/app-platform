@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.aipp.genericable;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fitframework.annotation.Genericable;
 
 import java.util.Map;
 
@@ -24,5 +25,6 @@ public interface AippRunTimeService {
      * @param initContext 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
      * @return 实例id
      */
+    @Genericable(id = "com.huawei.fit.jober.aipp.service.start.app")
     String createAippInstance(String aippId, String version, Map<String, Object> initContext, OperationContext context);
 }

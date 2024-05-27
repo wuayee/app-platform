@@ -6,6 +6,8 @@ package com.huawei.fit.jober.aipp.genericable;
 
 import com.huawei.fitframework.annotation.Genericable;
 
+import java.util.Map;
+
 /**
  * 表示 App 流程停止完成的观察者。
  *
@@ -17,7 +19,8 @@ public interface AppFlowFinishObserver {
      * 获取流程结束的数据。
      *
      * @param data 表示流程结束的数据的 {@link String}。
+     * @param attributes 表示流程的属性 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
      */
     @Genericable(id = "com.huawei.fit.jober.aipp.service.app.finished")
-    void onFinished(String data);
+    void onFinished(String data, Map<String, Object> attributes);
 }
