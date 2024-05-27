@@ -172,7 +172,6 @@ const KnowledgeBaseDetailImportData = () => {
         if(table_type === 'table') {
           const fileName = formValue.current.dataSource?.selectedFile?.map((file) => `${file.uid}_${file.name}`)?.[0] || '';
 
-          console.log(res);
           const data = (res?.tableCustom || []).map(item => ({
             name: item.colName,
             dataType: item.dataType,

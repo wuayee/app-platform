@@ -24,7 +24,7 @@ interface props {
   id: string,
 }
  
-const KnowLedgeTable = ({ type, reposId, id }: props) => {
+const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
   const navigate = useNavigate();
  
   // 展示的数据
@@ -53,7 +53,6 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
   }
 
   // 获取
- 
   const pageSizeOptions = type == 'text' ? [12] : [10, 20, 50, 100];
 
   // 获取文本列表
@@ -88,24 +87,26 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
       key: item.name,
     }));
 
-    newCol.push({
-      title: '操作',
-      width: 200,
-      render(_, record: any, index: any) {
-            const deleteFunc =async () => {
-            };
-     
-            const modifyFunc = async ()=> {
-            }
-            return (
-            <>
-              <div>
-                <Button type="link" size="small" onClick={modifyFunc}>修改</Button>
-                <Button type="link" size="small" onClick={deleteFunc}>删除</Button>
-              </div>
-            </>)
-      }
-    });
+    if(newCol.length) {
+      newCol.push({
+        title: '操作',
+        width: 200,
+        render(_, record: any, index: any) {
+              const deleteFunc =async () => {
+              };
+       
+              const modifyFunc = async ()=> {
+              }
+              return (
+              <>
+                <div>
+                  <Button type="link" size="small" onClick={modifyFunc}>修改</Button>
+                  <Button type="link" size="small" onClick={deleteFunc}>删除</Button>
+                </div>
+              </>)
+        }
+      });
+    }
 
     setColumns([...newCol]);
     } catch (error) {
@@ -166,6 +167,13 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
       refresh();
     }
   }, [page, pageSize, search]);
+
+  // 返回子组件数据
+  React.useImperativeHandle(ref, () => ({
+    getColumns: () => {
+      return columns || [];
+    }
+  }));
   
  
   return (
@@ -219,5 +227,5 @@ const KnowLedgeTable = ({ type, reposId, id }: props) => {
       <Pagination showTotalFunc = {false} total = {total} current={page} onChange={paginationChange} pageSizeOptions={pageSizeOptions} pageSize={pageSize}/>
     </>
   )
-}
+})
 export default KnowLedgeTable;
