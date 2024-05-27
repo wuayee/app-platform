@@ -77,10 +77,15 @@ public class ExcelSource extends Source<List<Document>> {
         });
         for (Integer rowNo = dataRow; rowNo < rowNum; rowNo++) {
             List<String> rowContent = new ArrayList<>();
-
             Row row = sheet.getRow(rowNo);
+            if (row == null) {
+                continue;
+            }
             for (int col = 0; col < colNum; col++) {
                 Cell cell = row.getCell(col);
+                if (cell == null) {
+                    continue;
+                }
                 switch(cell.getCellType()) {
                     case NUMERIC:
                         rowContent.add(Double.toString(cell.getNumericCellValue()));
