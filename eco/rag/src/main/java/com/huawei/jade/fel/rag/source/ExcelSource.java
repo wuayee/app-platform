@@ -84,9 +84,10 @@ public class ExcelSource extends Source<List<Document>> {
             for (int col = 0; col < colNum; col++) {
                 Cell cell = row.getCell(col);
                 if (cell == null) {
+                    rowContent.add("");
                     continue;
                 }
-                switch(cell.getCellType()) {
+                switch (cell.getCellType()) {
                     case NUMERIC:
                         rowContent.add(Double.toString(cell.getNumericCellValue()));
                         break;
