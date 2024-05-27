@@ -26,12 +26,12 @@ const Plugin = () => {
   const [total, setTotal] = useState(0);
   const [pageNum, setPageNum] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [pluginName, setPluginSearch] = useState('');
+  const [toolName, setToolName] = useState('');
   const [pluginCategory, setPluginCategory] = useState(categoryItems[0].key);
   const [pluginData, setPluginData] = useState([]);
 
   const getPluginList = (category = pluginCategory)=> {
-    getPlugins({ pageNum: pageNum - 1, pageSize, includeTags: pluginCategory })
+    getPlugins({ pageNum: pageNum - 1, pageSize, includeTags: pluginCategory, toolName })
       .then(({ data, total }) => {
         setTotal(total);
         setPluginData(data);
@@ -40,7 +40,7 @@ const Plugin = () => {
 
   useEffect(()=> {
     getPluginList();
-  }, [pluginCategory, pluginName, pageNum, pageSize]);
+  }, [pluginCategory, toolName, pageNum, pageSize]);
 
   const selectCategory = (category: string) => {
     if (category !== pluginCategory) {
@@ -58,8 +58,8 @@ const Plugin = () => {
   }
 
   const filterByName = (value: string) => {
-    if(value !== pluginName) {
-      setPluginSearch(value);
+    if(value !== toolName) {
+      setToolName(value);
     }
   }
 
@@ -88,8 +88,7 @@ const Plugin = () => {
         }}
         onChange={(e) => filterByName(e.target.value)}
         prefix={<Icons.search color={'rgb(230, 230, 230)'}/>}
-        defaultValue={pluginName}
-        disabled
+        defaultValue={toolName}
       />
       <div style={{
         overflowY: 'auto',
