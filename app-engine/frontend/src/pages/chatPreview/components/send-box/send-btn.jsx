@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { Tooltip } from "antd";
 import { toClipboard } from '@shared/utils/common';
 import { ChatContext } from '../../../aippIndex/context';
-import { LinkIcon } from '@/assets/icon';
+import { ShareIcon, CopyIcon, DeleteIcon } from '@/assets/icon';
 
 const SendBtn = (props) => {
   const { content, sendType } = props;
@@ -28,19 +28,19 @@ const SendBtn = (props) => {
       <div className='inner'>
         <Tooltip title="分享" color="white" overlayInnerStyle={{color: '#212121' }} destroyTooltipOnHide>
           <div onClick={ hideTooltip }>
-            <LinkIcon/>
+            <ShareIcon />
           </div>
         </Tooltip>
         {  sendType === 'text' && 
         <Tooltip title="复制" color="white" overlayInnerStyle={{color: '#212121' }}>
           <div onClick={ handleCopyQuestion }>
-            <LinkIcon/>
+            <CopyIcon />
           </div> 
         </Tooltip>
         }
         <Tooltip title="删除" color="white" overlayInnerStyle={{color: '#212121' }}>
           <div>
-            <LinkIcon/>
+            <DeleteIcon />
           </div>
         </Tooltip>
       </div>

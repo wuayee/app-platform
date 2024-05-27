@@ -8,3 +8,8 @@ export function queryAppDetail(id) {
   const url = `${AI_URL}/hisp/api/v1/platform/app/${id}`;
   return get(url);
 }
+
+export function feedbacksRq(params) {
+  const url = `${AI_URL}/usr/feedback`;
+  return post(url, params);
+}

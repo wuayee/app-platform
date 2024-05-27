@@ -5,7 +5,8 @@ import KnowledgeBase from "../pages/knowledge-base";
 import KnowledgeBaseCreate from "../pages/knowledge-base/create";
 import KnowledgeBaseDetail from "../pages/knowledge-base/knowledge-detail";
 import Demo from "../pages/demo";
-import ChatRunning from "../pages/chatEngineHome/index.jsx";
+import ChatHome from "../pages/chatEngineHome/index.jsx";
+import ChatRunning from "../pages/chatRunning/index";
 import AppDetail from "../pages/appDetail";
 import AippIndex from "../pages/aippIndex";
 import AddFlow from "../pages/addFlow";
@@ -35,7 +36,7 @@ export const routeList: MenuItem[] = [
     key: "/home",
     icon: Icons.home({}),
     label: "首页",
-    component: ChatRunning,
+    component: ChatHome,
     children: [
       {
         key: "/:tenantId/chatShare/:appId/:shareId",
@@ -114,6 +115,13 @@ export const routeList: MenuItem[] = [
         icon: Icons.app({}),
         label: "",
         component: AppDetail,
+        hidden: true,
+      },
+      {
+        key: "/app/:tenantId/chat/:appId",
+        icon: Icons.app({}),
+        label: "",
+        component: ChatRunning,
         hidden: true,
       }
     ],
@@ -203,12 +211,14 @@ export const routeList: MenuItem[] = [
     icon: Icons.app({}),
     label: "工具",
     component: Demo,
+    hidden: true,
   },
   {
     key: "/WorkStream",
     icon: Icons.app({}),
     label: "工作流",
     component: Demo,
+    hidden: true,
   },
   {
     key: "/group",

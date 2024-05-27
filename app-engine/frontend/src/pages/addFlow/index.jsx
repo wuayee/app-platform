@@ -18,15 +18,15 @@ import {
 } from '@assets/icon';
 import { AippContext } from '../aippIndex/context';
 import { JadeFlow } from '@fit-elsa/elsa-react';
-import { debounce } from '../../shared/utils/common';
-import { Message } from '../../shared/utils/message';
-import { createAipp, updateAippInfo, updateFlowInfo } from '../../shared/http/aipp';
+import { debounce } from '@shared/utils/common';
+import { Message } from '@shared/utils/message';
+import { createAipp, updateAippInfo, updateFlowInfo } from '@shared/http/aipp';
 import { graphData } from '../components/common/testFlowData';
 import EditTitleModal from "../components/edit-title-modal.jsx";
 import PublishModal from '../components/publish-modal.jsx';
 import './styles/index.scss';
 import { configMap } from "./config";
-import { getAddFlowConfig } from "../../shared/http/appBuilder";
+import { getAddFlowConfig } from "@shared/http/appBuilder";
 const { Search } = Input;
 
 const AddFlow = (props) => {

@@ -105,9 +105,9 @@ export function picturePreview(tenantId, params) {
 }
 // 分享对话
 export function shareDialog(tenantId, data) {
-    return post(`${AIPP_URL}/${tenantId}/share`, data)
+  return post(`${AIPP_URL}/${tenantId}/share`, data)
 }
 // 获取分享对话内容
 export function getSharedDialog(tenantId, shareId) {
-    return get(`${AIPP_URL}/${tenantId}/share/${shareId}`)
+  return get(`${AIPP_URL}/${tenantId}/share/${shareId}`)
 }
