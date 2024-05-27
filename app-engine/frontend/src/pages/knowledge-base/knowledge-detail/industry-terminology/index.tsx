@@ -10,6 +10,7 @@ import { KnowledgeIcons } from '../../../../components/icons';
 import { getKnowledgeTableById } from '../../../../shared/http/knowledge';
 import './index.scoped.scss';
 import KnowLedgeTable from '../../../../components/knowledge-detail-table/table-table';
+import { ImportTable } from '../../../../components/knowledge-detail-table/import-table';
 
 
 const IndustryTerminology = () => {
@@ -18,8 +19,16 @@ const IndustryTerminology = () => {
   const rowid = searchParams.get("rowid");
   const id = searchParams.get("id");
 
+  // 获取子组件
+  const tableRef = React.useRef<any>(null);
+
   // 行信息
-  const [rowInfo, setRowInfo] = useState<any>(null)
+  const [rowInfo, setRowInfo] = useState<any>(null);
+
+  // 上传文件弹窗开启关闭
+  const [open, setOpen] = useState<boolean>(false);
+
+
 
   // 获取知识表信息
   const getTableInfo = async ()=> {
@@ -30,7 +39,7 @@ const IndustryTerminology = () => {
     } catch (error) {
       
     }
-  }
+  };
 
   useEffect(()=> {
     if(rowid) {
@@ -39,6 +48,19 @@ const IndustryTerminology = () => {
   }, []);
 
   const importClick = () => {
+    if(rowInfo?.format?.toLowerCase() === 'table') {
+
+      const num = rowInfo?.recordNum ?? 0;
+      const col = tableRef?.current?.getColumns();
+
+      // 当导入数量为0且没有列时，跳转导入页面，否则弹出导入弹窗，简化流程
+      if(num === 0 && !col?.length) {
+        navigate(`/knowledge-base/knowledge-detail/import-data?id=${id}&tableid=${rowid}&tabletype=${(rowInfo?.format || '').toLowerCase()}`);
+      }
+      setOpen(true);
+
+      return;
+    }
     navigate(`/knowledge-base/knowledge-detail/import-data?id=${id}&tableid=${rowid}&tabletype=${(rowInfo?.format || '').toLowerCase()}`);
   }
 
@@ -115,15 +137,16 @@ const IndustryTerminology = () => {
                 backgroundColor: '#2673E5',
                 display: 'flex',
                 alignItems: 'center'
-              }}>{<KnowledgeIcons.import/>} 导入</Button>
+              }} disabled={rowInfo ? false: true}>{<KnowledgeIcons.import/>} 导入</Button>
             </div>
         </div>
         <div className='knowledge-table'>
-            {rowInfo && <KnowLedgeTable type={(rowInfo?.format || '').toLowerCase()} reposId={rowInfo.repositoryId} id={rowInfo.id}/>}
+            {rowInfo && <KnowLedgeTable ref={tableRef} type={(rowInfo?.format || '').toLowerCase()} reposId={rowInfo.repositoryId} id={rowInfo.id}/>}
             
         </div>
       <div />
     </div>
+        <ImportTable open={open} setOpen={setOpen} repositoryId={id} knowledgeTableId={rowid}/>
     </div>
     </>
   )

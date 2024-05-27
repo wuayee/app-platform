@@ -4,6 +4,7 @@
 
 package com.huawei.fit.jober.aipp.domain;
 
+import com.huawei.fit.jober.aipp.enums.AppState;
 import com.huawei.fit.jober.aipp.repository.AppBuilderConfigPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderConfigRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFlowGraphRepository;
@@ -75,5 +76,14 @@ public class AppBuilderApp extends BaseDomain {
         appBuilderConfig.setFormPropertyRepository(this.formPropertyRepository);
         appBuilderConfig.setConfigPropertyRepository(this.configPropertyRepository);
         return appBuilderConfig;
+    }
+
+    /**
+     * app是否已经发布.
+     *
+     * @return true/false, true表示已发布; 否则, 未发布.
+     */
+    public boolean isPublished() {
+        return AppState.PUBLISHED.getName().equals(this.state);
     }
 }

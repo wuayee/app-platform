@@ -14,11 +14,11 @@ namespace Task {
 class Task {
 public:
     // 在类内部定义TaskType枚举
-    enum class TaskType {
-        OPEN,
-        READ,
-        WRITE,
-        CLOSE
+    enum class TaskType : int8_t {
+        OPEN = 1,
+        READ = 2,
+        WRITE = 3,
+        CLOSE = 4
     };
 
     explicit Task(TaskType type, int fd) : taskType_(type), clientFd_(fd), data_(nullptr), size_(0) {}

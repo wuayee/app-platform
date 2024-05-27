@@ -102,6 +102,9 @@ public class ExcelSource extends Source<List<Document>> {
         for (int i = 0; i < sheet.getPhysicalNumberOfRows(); i++) {
             Row row = sheet.getRow(i);
             for (int j = 1; j < row.getPhysicalNumberOfCells(); j++) {
+                if (row.getCell(j) == null || row.getCell(j).getStringCellValue().isEmpty()) {
+                    continue;
+                }
                 contents.add(
                         Arrays.asList(row.getCell(j).getStringCellValue(), row.getCell(0).getStringCellValue()));
             }
@@ -121,7 +124,7 @@ public class ExcelSource extends Source<List<Document>> {
 
         for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
             Row row = sheet.getRow(i);
-            for (int j = 0; j < row.getPhysicalNumberOfCells(); j++) {
+            for (int j = 0; j < tags.size(); j++) {
                 Cell cell = row.getCell(j);
                 if (cell == null) {
                     continue;

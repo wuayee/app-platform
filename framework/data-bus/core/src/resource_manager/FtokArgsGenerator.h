@@ -10,7 +10,7 @@
 namespace DataBus {
 namespace Resource {
 
-const std::string FILE_PATH_PREFIX = "./tmp/";
+const std::string FILE_PATH_PREFIX = "/tmp/databus/ftok/";
 constexpr int MIN_PROJ_ID = 0;
 constexpr int MAX_PROJ_ID = 255;
 
