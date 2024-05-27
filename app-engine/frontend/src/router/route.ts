@@ -211,12 +211,14 @@ export const routeList: MenuItem[] = [
     icon: Icons.app({}),
     label: "工具",
     component: Demo,
+    hidden: true,
   },
   {
     key: "/WorkStream",
     icon: Icons.app({}),
     label: "工作流",
     component: Demo,
+    hidden: true,
   },
   {
     key: "/group",
