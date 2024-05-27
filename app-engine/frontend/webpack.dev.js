@@ -124,6 +124,14 @@ module.exports = merge(common, {
         secure: false,
         changeOrigin: true,
       },
+      "/store": {
+        target: 'http://10.91.144.110:8080',
+        pathRewrite: {
+          "^/modelApi": ""
+        },
+        secure: false,
+        changeOrigin: true,
+      },
     },
   },
 });
