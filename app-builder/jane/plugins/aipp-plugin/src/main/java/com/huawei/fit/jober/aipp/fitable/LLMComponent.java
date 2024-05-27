@@ -169,7 +169,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         String path = Utils.buildPath(this.aippLogService, instId, parentInstId);
         log.debug("LLMComponent business data {}", businessData);
 
-        AippLlmMeta llmMeta = AippLlmMeta.parse(flowData, metaService, metaInstanceService);
+        AippLlmMeta llmMeta = AippLlmMeta.parse(flowData, metaService);
         llmCache.put(llmMeta.getInstId(), llmMeta);
 
         String systemPrompt = ObjectUtils.cast(businessData.get("systemPrompt"));

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
 package com.huawei.fit.jober.aipp.controller;
 
 import com.huawei.fit.http.annotation.PathVariable;
@@ -9,7 +13,7 @@ import com.huawei.fit.http.websocket.annotation.TextMessage;
 import com.huawei.fit.http.websocket.annotation.WebSocketEndpoint;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.entity.StreamLogParam;
-import com.huawei.fit.jober.aipp.service.AippLogStreamService;
+import com.huawei.fit.jober.aipp.service.AippStreamService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
@@ -20,14 +24,15 @@ import com.huawei.fitframework.util.StringUtils;
  * @author z00559346 张越
  * @since 2024-005-14
  */
-@WebSocketEndpoint(path = "/v1/api/aipp/streamLog")
+@WebSocketEndpoint(path = "/v1/api/aipp/wsStream")
 @Component
-public class AippStreamLogController {
-    private static final Logger log = Logger.get(AippStreamLogController.class);
-    private final AippLogStreamService aippLogStreamService;
+public class AippStreamController {
+    private static final Logger log = Logger.get(AippStreamController.class);
 
-    public AippStreamLogController(AippLogStreamService aippLogStreamService) {
-        this.aippLogStreamService = aippLogStreamService;
+    private final AippStreamService aippStreamService;
+
+    public AippStreamController(AippStreamService aippStreamService) {
+        this.aippStreamService = aippStreamService;
     }
 
     /**
@@ -52,7 +57,7 @@ public class AippStreamLogController {
     @OnMessage
     public void onMessage(Session session, @TextMessage String message) {
         StreamLogParam param = JsonUtils.parseObject(message, StreamLogParam.class);
-        this.aippLogStreamService.addSession(param.getAippInstanceId(), session);
+        this.aippStreamService.addSession(param.getAippInstanceId(), session);
     }
 
     /**
@@ -65,6 +70,6 @@ public class AippStreamLogController {
         log.warn(StringUtils.format("WebSocket connection closed by client. [code={0}, reason={1}]",
                 session.getCloseCode(),
                 session.getCloseReason()));
-        this.aippLogStreamService.removeSession(session);
+        this.aippStreamService.removeSession(session);
     }
 }
