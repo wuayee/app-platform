@@ -5,27 +5,16 @@ import React, {
   useContext,
   useImperativeHandle,
 } from "react";
-import { AudioIcon } from '../../../../assets/icon';
-import {
-  DownOutlined,
-  GlobalOutlined,
-  HistoryOutlined,
-  LinkOutlined,
-  ShareAltOutlined,
-  ReloadOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  AudioOutlined,
-} from "@ant-design/icons";
+import { AudioIcon, SendIcon } from '@/assets/icon';
 import $ from "jquery";
-import { Message } from "../../../../shared/utils/message";
+import { Message } from "@shared/utils/message";
 import { AippContext } from "../../../aippIndex/context";
 import { docArr, imgArr } from './common/config';
-import StarApps from "../star-apps";
 import HistoryChat from "../history-chat";
 import Recommends from './components/recommends';
 import EditorBtnHome from './components/editor-btn-home';
-import "../../../../shared/utils/rendos";
+import FilePreview from './components/file-preview';
+import "@shared/utils/rendos";
 import "../../styles/send-editor.scss";
 
 const SendEditor = (props) => {
@@ -42,6 +31,7 @@ const SendEditor = (props) => {
   const [ selectItem, setSelectItem ] = useState({});
   const [ selectDom, setSelectDom ] = useState();
   const [ showSelect, setShowSelect ] = useState(false);
+  const [ showPreview, setShowPreview ] = useState(false);
   const [ positionConfig, setPositionConfig ] = useState({});
   const { aippInfo ,chatRunning }  = useContext(AippContext);
   const editorRef = useRef(null);
@@ -75,10 +65,6 @@ const SendEditor = (props) => {
         item.getAsString(function (str) {
           document.execCommand("insertText", true, str);
         });
-      } else if (item.kind === "file" && item.type.indexOf("image") !== -1) {
-        const pasteFile = item.getAsFile();
-      } else if (item.kind === "file") {
-        const pasteFile = item.getAsFile();
       }
     }
   }
@@ -149,7 +135,12 @@ const SendEditor = (props) => {
   }
   // 文件自动发送
   function fileSend(fileResult, fileType) {
-    onSend(fileResult, fileType);
+    console.log(fileResult, fileType);
+    setShowPreview(true);
+  }
+  // 取消文件
+  const cancleFile = () => {
+    setShowPreview(false);
   }
   // 是否联网
   const onSwitchChange = (checked) => {}
@@ -202,13 +193,22 @@ const SendEditor = (props) => {
       };
     }
   }
-  const [openStar, setOpenStar] = useState(false);
   const [openHistory, setOpenHistory] = useState(false);
   return <>{(
     <div className='send-editor-container'>
-      <Recommends openClick={openClick} inspirationOpen={inspirationOpen} send={recommendSend}/>
+      <Recommends 
+        openClick={openClick} 
+        inspirationOpen={inspirationOpen} 
+        send={recommendSend}
+      />
       <div className='editor-inner'>
-        <EditorBtnHome aippInfo={aippInfo} setOpen={setOpenHistory} onClear={onClear}/>
+        <EditorBtnHome 
+          aippInfo={aippInfo} 
+          setOpen={setOpenHistory} 
+          clear={onClear}
+          fileCallBack={fileSend}
+        />
+        { showPreview && <FilePreview cancleFile={cancleFile} /> }
         <div className='editor-input' id="drop">
           <div
             className="chat-promet-editor"
@@ -219,7 +219,9 @@ const SendEditor = (props) => {
             onKeyDown={messageKeyDown}
             onPaste={messagePaste}
           ></div>
-          <div className='send-icon' onClick={ sendMessage }></div>
+          <div className='send-icon' onClick={ sendMessage }>
+            <SendIcon />
+          </div>
           <div className='audio-icon'><AudioIcon /></div>
         </div>
       </div>
@@ -237,7 +239,6 @@ const SendEditor = (props) => {
         positionConfig={positionConfig}
         clearMove={clearMove} />
      )}
-     <StarApps open={openStar} setOpen={setOpenStar} />
      <HistoryChat open={openHistory} setOpen={setOpenHistory} />
     </div>
   )}</>

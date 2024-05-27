@@ -1,0 +1,12 @@
+.chat-running-container {
+  position: relative;
+  .chat-running-chat {
+    position: absolute;
+    left: 20px;
+    top: -36px;
+    z-index: 999;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+  }
+}

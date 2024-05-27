@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext, useRef } from "react";
 import { useLocation } from "react-router";
 import { Spin } from "antd";
 import { LeftArrowIcon } from "@assets/icon";
-import { Message } from "../../shared/utils/message";
+import { Message } from "@shared/utils/message";
 import ChatMessage from "./components/chat-message.jsx";
 import SendEditor from "./components/send-editor/send-editor.jsx";
 import CheckGroup from "./components/check-group.jsx";
@@ -125,7 +125,7 @@ const ChatPreview = (props) => {
     try {
       let type =
         location.pathname.indexOf("chat") === -1 ? "preview" : "normal";
-      const res = await getRecentInstances(tenantId, appId, type);
+      const res = await getRecentInstances(tenantId, appId, 'preview');
       if (res.data && res.data.length) {
         let chatArr = [];
         res.data.forEach((item) => {
@@ -487,13 +487,17 @@ const ChatPreview = (props) => {
     return false;
   }
   // 清除历史对话记录
-  async function clearChat() {
+  async function clearChat(val) {
     if (chatRunning) {
       Message({ type: "warning", content: "对话进行中, 请稍后再试" });
       return;
     }
     if (!chatList.length) {
       return;
+    }
+    if (!val) {
+      setChatList([]);
+      return
     }
     try {
       setRequestLoading(true);

@@ -6,9 +6,9 @@ import {sourceTypes, multiModal} from "../common/common";
 import { ConfigWrap, InspirationWrap } from './styled';
 import { AippContext } from '../../aippIndex/context';
 import TreeComponent from "./tree.jsx";
-import {getModels, getTools, getWaterFlows, getKnowledges, getFitables} from "../../../shared/http/appBuilder";
+import {getModels, getTools, getWaterFlows, getKnowledges, getFitables} from "@shared/http/appBuilder";
 import {uuid} from "../../../common/utils";
-import {Message} from "../../../shared/utils/message";
+import {Message} from "@shared/utils/message";
 const { Option } = Select;
 
 function LLM(props) {
