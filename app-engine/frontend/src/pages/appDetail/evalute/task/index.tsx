@@ -7,6 +7,7 @@ import TableTextSearch from '../../../../components/table-text-search';
 import { copyEvalTask, getEvalReport, getEvalTaskList } from '../../../../shared/http/apps';
 import { TaskStatusE, traceColumns, type evalTaskI, type getEvalTaskListParamsI } from './model';
 import TableCalendarSearch from '../../../../components/table-calendar-search';
+import { useLocation } from 'react-router';
 
 const taskStatusMap = {
   [TaskStatusE.FINISH]: (
@@ -34,12 +35,13 @@ const taskStatusMap = {
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 
 const EvaluateTask = () => {
+  const location = useLocation();
   const [openSignal, setOpenSignal] = useState(-1);
   const [data, setData] = useState<Array<evalTaskI>>([]);
   const [total, setTotal] = useState(0);
   const [searchParams, setSearchParams] = useState<getEvalTaskListParamsI>({
     pageIndex: 1,
-    appId: '84b3dfd4d0814618a46680f3b38ac2fb',
+    appId: location.pathname.split('/')?.[4],
     pageSize: 10,
   });
   const currentRow = useRef(null);
@@ -62,6 +64,7 @@ const EvaluateTask = () => {
     setData(dataSource?.data);
   };
   useEffect(() => {
+    console.log(location.pathname.split('/')?.[4])
     refreshData();
   }, [searchParams]);
 
