@@ -190,7 +190,6 @@ const TestSet: React.FC = () => {
       <Table
         dataSource={data}
         columns={columns}
-        onChange={handleChange}
         rowSelection={{
           type: 'checkbox',
           columnWidth: 60
