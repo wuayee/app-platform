@@ -1,6 +1,9 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
 package com.huawei.fit.jober.aipp.aop;
 
-import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.service.AippLogStreamService;
 import com.huawei.fit.jober.aipp.vo.AippLogVO;
@@ -10,7 +13,6 @@ import com.huawei.fitframework.aop.annotation.Around;
 import com.huawei.fitframework.aop.annotation.Aspect;
 import com.huawei.fitframework.aop.annotation.Pointcut;
 import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
 

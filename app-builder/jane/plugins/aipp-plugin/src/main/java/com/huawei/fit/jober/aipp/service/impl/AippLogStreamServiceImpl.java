@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
 package com.huawei.fit.jober.aipp.service.impl;
 
 import static com.huawei.fit.jober.aipp.constants.AippConst.INST_CREATE_TIME_KEY;
@@ -7,19 +11,18 @@ import static com.huawei.fit.jober.aipp.constants.AippConst.INST_FINISH_TIME_KEY
 import static com.huawei.fit.jober.aipp.constants.AippConst.INST_NAME_KEY;
 
 import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
-import com.huawei.fit.http.websocket.Session;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogStreamService;
+import com.huawei.fit.jober.aipp.service.AippStreamService;
 import com.huawei.fit.jober.aipp.vo.AippInstanceVO;
 import com.huawei.fit.jober.aipp.vo.AippLogVO;
 import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
@@ -29,43 +32,31 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * AippLog流式服务实现，单进程实现方案.
+ * log流式服务实现，单进程实现方案.
  *
  * @author z00559346 张越
- * @since 2024-05-14
+ * @since 2024-05-23
  */
 @Component
-public class AippLogStreamLocalService implements AippLogStreamService {
-    private final Map<String, Session> sessions = new ConcurrentHashMap<>();
+public class AippLogStreamServiceImpl implements AippLogStreamService {
     private final MetaService metaService;
     private final MetaInstanceService metaInstanceService;
     private final AppBuilderFormRepository formRepository;
     private final AppBuilderFormPropertyRepository formPropertyRepository;
+    private final AippStreamService aippStreamService;
 
-    public AippLogStreamLocalService(MetaService metaService, MetaInstanceService metaInstanceService,
-            AppBuilderFormRepository formRepository, AppBuilderFormPropertyRepository formPropertyRepository) {
+    public AippLogStreamServiceImpl(MetaService metaService,
+            MetaInstanceService metaInstanceService,
+            AppBuilderFormRepository formRepository,
+            AppBuilderFormPropertyRepository formPropertyRepository,
+            AippStreamService aippStreamService) {
         this.metaService = metaService;
         this.metaInstanceService = metaInstanceService;
         this.formRepository = formRepository;
         this.formPropertyRepository = formPropertyRepository;
-    }
-
-    @Override
-    public void addSession(String instanceId, Session session) {
-        this.sessions.put(instanceId, session);
-    }
-
-    @Override
-    public void removeSession(Session session) {
-        this.sessions.values().removeIf(s -> s.getId().equals(session.getId()));
-    }
-
-    @Override
-    public Optional<Session> getSession(String instanceId) {
-        return Optional.ofNullable(this.sessions.get(instanceId));
+        this.aippStreamService = aippStreamService;
     }
 
     @Override
@@ -75,12 +66,10 @@ public class AippLogStreamLocalService implements AippLogStreamService {
         }
         List<String> ancestors = log.getAncestors();
         Collections.reverse(ancestors);
-        Optional<Session> sessionOptional = ancestors.stream()
-                .map(this::getSession)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+        Optional<String> ancestorOpt = ancestors.stream()
+                .filter(anc -> this.aippStreamService.getSession(anc).isPresent())
                 .findFirst();
-        sessionOptional.ifPresent(session -> session.send(JsonUtils.toJsonString(this.buildData(log))));
+        ancestorOpt.ifPresent(id -> this.aippStreamService.send(id, this.buildData(log)));
     }
 
     private AippInstanceVO buildData(AippLogVO log) {
