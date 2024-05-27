@@ -17,19 +17,19 @@ export function getEvalDatasetList(requestBody) {
 }
 
 export function getEvalTaskList(requestBody) {
-  return post(`${AIPP_URL}/evalTask/getEvalTaskList`, requestBody);
+  return post(`${AIPP_URL}/evalTask/list`, requestBody);
 }
 
 export function copyEvalTask(id, author) {
-  return post(`${AIPP_URL}/evalTask/copyEvalTask?id=${id}&author=${author}`, {});
+  return post(`${AIPP_URL}/evalTask/copy?id=${id}&author=${author}`, {});
 }
 
 //应用测评=查看报告-根据报告ID查看调用轨迹
 export function getEvalReportTrace(id) {
-  return get(`${AIPP_URL}/evalTask/getEvalReport?reportId=${id}`, {});
+  return get(`${AIPP_URL}/evalTask/report?reportId=${id}`, {});
 }
 
 //应用测评=查看报告-根据任务ID查看报告详情
 export function getEvalTaskReport(id) {
-  return get(`${AIPP_URL}/evalTask/getEvalReportSummary?evalTaskId=${id}`, {});
+  return get(`${AIPP_URL}/evalTask/reportSummary?evalTaskId=${id}`, {});
 }
