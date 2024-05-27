@@ -50,8 +50,12 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
     >
       {/* 头部区域 */}
       <div className='app_card_header'>
-        {cardInfo.icon && <img src={cardInfo.icon} alt='' />}
-        {!cardInfo.icon && <img src='/src/assets/images/knowledge/knowledge-base.png' alt='' />}
+        <div className='img_box'>
+          {cardInfo.icon && <img width={'100%'} src={cardInfo.icon} alt='' />}
+          {!cardInfo.icon && (
+            <img width={'100%'} src='/src/assets/images/knowledge/knowledge-base.png' alt='' />
+          )}
+        </div>
         <div className='infoArea'>
           <div className='headerTitle'>{cardInfo.name}</div>
           <div className='title_info' style={{ display: 'flex', alignItems: 'center' }}>

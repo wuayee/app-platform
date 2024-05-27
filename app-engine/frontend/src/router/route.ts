@@ -110,7 +110,7 @@ export const routeList: MenuItem[] = [
         hidden: true,
       },
       {
-        key: "/app/:tenantId/appDetail/:appId",
+        key: "/app-develop/:tenantId/appDetail/:appId",
         icon: Icons.app({}),
         label: "",
         component: AppDetail,
