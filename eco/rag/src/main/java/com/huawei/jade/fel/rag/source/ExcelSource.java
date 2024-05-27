@@ -121,7 +121,7 @@ public class ExcelSource extends Source<List<Document>> {
 
         for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
             Row row = sheet.getRow(i);
-            for (int j = 0; j < row.getPhysicalNumberOfCells(); j++) {
+            for (int j = 0; j < tags.size(); j++) {
                 Cell cell = row.getCell(j);
                 if (cell == null) {
                     continue;
