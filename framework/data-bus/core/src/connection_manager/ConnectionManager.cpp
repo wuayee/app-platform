@@ -22,6 +22,7 @@ void ConnectionManager::AddNewConnection(int socketFd)
     }
     unique_ptr<Connection> connection(new Connection(socketFd));
     connections_[socketFd] = std::move(connection);
+    DataBus::logger.Info("Connection {} has been created.", socketFd);
 }
 
 void ConnectionManager::CloseConnection(int socketFd)
