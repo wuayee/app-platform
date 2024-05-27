@@ -306,6 +306,7 @@ TEST_F(ResourceManagerTest, should_update_memory_status_when_handle_apply_and_re
     EXPECT_TRUE(writingMemoryBlocks.find(memoryId) != writingMemoryBlocks.end());
     EXPECT_EQ(-1, resourceManager->GetPermissionStatus(memoryId));
     EXPECT_TRUE(resourceManager->GetWaitingPermitRequests(memoryId).empty());
+    EXPECT_TRUE(resourceManager->GetWaitingPermitMemoryBlocks(permissionApplicantId).empty());
 
     resourceManager->HandleReleasePermission(permissionApplicantId, PermissionType::Write, memoryId);
     // 断言内存管理状态修改成功
@@ -345,6 +346,7 @@ TEST_F(ResourceManagerTest, should_grant_read_permissions_after_release_write_pe
     EXPECT_TRUE(resourceManager->GetWritingMemoryBlocks(lastApplicant).empty());
     EXPECT_EQ(readCount, resourceManager->GetPermissionStatus(memoryId));
     EXPECT_EQ(1, resourceManager->GetWaitingPermitRequests(memoryId).size());
+    EXPECT_EQ(1, resourceManager->GetWaitingPermitMemoryBlocks(lastApplicant).size());
 }
 
 TEST_F(ResourceManagerTest, should_grant_write_permission_after_release_read_permission)

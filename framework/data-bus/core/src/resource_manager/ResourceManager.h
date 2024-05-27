@@ -53,6 +53,7 @@ public:
     const std::unordered_set<int32_t>& GetWritingMemoryBlocks(int32_t socketFd);
     int32_t GetPermissionStatus(int32_t sharedMemoryId);
     const std::deque<WaitingPermitRequest>& GetWaitingPermitRequests(int32_t sharedMemoryId);
+    const std::unordered_set<int32_t>& GetWaitingPermitMemoryBlocks(int32_t socketFd);
 
     void GenerateReport(std::stringstream& reportStream) const;
 private:
@@ -73,6 +74,7 @@ private:
     void ReleasePermission(int32_t socketFd, DataBus::Common::PermissionType permissionType, int32_t sharedMemoryId);
     void MarkPendingRelease(int32_t sharedMemoryId);
     bool ReleaseMemory(int32_t sharedMemoryId);
+    void CleanupWaitingPermitRequests(int32_t sharedMemoryId);
     void RemoveObjectKey(int32_t sharedMemoryId);
 
     int32_t IncrementReadingRefCnt(int32_t sharedMemoryId);
@@ -89,13 +91,25 @@ private:
     std::unordered_map<int32_t, std::unordered_set<int32_t>> writingMemoryBlocks_; // 客户端正在写入的内存块
     std::unordered_map<std::string, int32_t> keyToSharedMemoryId_; // 客户端自定义key
 
-    /* 内存块当前读写状态。
+    /*
+     * 内存块当前读写状态。
      * 如果值等于0: 当前没有任何读写操作。
      * 如果值大于0：当前仅存在读操作。值代表多读操作的计数。
      * 如果值等于-1：当前仅存在唯一的写操作。
-    */
+     */
     std::unordered_map<int32_t, int32_t> permissionStatus_;
-    std::unordered_map<int32_t, std::deque<WaitingPermitRequest>> waitingPermitRequestQueues_; // 权限申请等待队列
+    /*
+     * 权限申请等待队列
+     * 键：共享内存块ID
+     * 值：内存块等待的授权请求
+     */
+    std::unordered_map<int32_t, std::deque<WaitingPermitRequest>> waitingPermitRequestQueues_;
+    /*
+     * 客户端正在等待授权的共享内存块
+     * 键：客户端ID
+     * 值：客户端等待授权的共享内存块ID集合
+     */
+    std::unordered_map<int32_t, std::unordered_set<int32_t>> waitingPermitMemoryBlocks_;
 };
 }  // namespace Resource
 }  // namespace DataBus
