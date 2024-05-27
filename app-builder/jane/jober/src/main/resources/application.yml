@@ -18,3 +18,4 @@ jane:
     retry:
       scheduleRate: 60000
 
+distributed-lock-provider: databaseDistributedLockProvider
