@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "ApplyPermissionRequest.h"
 #include "ApplyPermissionResponse.h"
 #include "config/DataBusConfig.h"
 #include "SharedMemoryInfo.h"
@@ -30,8 +31,7 @@ public:
     ~ResourceManager();
     std::tuple<int32_t, Common::ErrorType> HandleApplyMemory(int32_t socketFd, const std::string& objectKey,
                                                              uint64_t memorySize);
-    ApplyPermissionResponse HandleApplyPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
-                                                  int32_t sharedMemoryId);
+    ApplyPermissionResponse HandleApplyPermission(const ApplyPermissionRequest& request);
     bool HandleReleasePermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
                                  int32_t sharedMemoryId);
     std::vector<ApplyPermissionResponse> ProcessWaitingPermitRequests(int32_t sharedMemoryId);
@@ -47,6 +47,7 @@ public:
     int32_t GetReadingRefCnt(int32_t sharedMemoryId);
     int32_t GetWritingRefCnt(int32_t sharedMemoryId);
     time_t GetLastUsedTime(int32_t  sharedMemoryId);
+    const std::shared_ptr<UserData>& GetUserData(int32_t sharedMemoryId);
     bool IsPendingRelease(int32_t sharedMemoryId);
     const std::unordered_set<int32_t>& GetReadingMemoryBlocks(int32_t socketFd);
     const std::unordered_set<int32_t>& GetWritingMemoryBlocks(int32_t socketFd);
@@ -66,7 +67,7 @@ private:
     Common::ErrorType PreCheckPermissionCommon(DataBus::Common::PermissionType permissionType, int32_t sharedMemoryId);
     Common::ErrorType CheckApplyPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType,
                                               int32_t sharedMemoryId);
-    void GrantPermission(int32_t socketFd, DataBus::Common::PermissionType permissionType, int32_t sharedMemoryId);
+    void GrantPermission(const ApplyPermissionRequest& request);
     Common::PermissionType CheckPermissionOwnership(int32_t socketFd, DataBus::Common::PermissionType permissionType,
                                                     int32_t sharedMemoryId);
     void ReleasePermission(int32_t socketFd, DataBus::Common::PermissionType permissionType, int32_t sharedMemoryId);
