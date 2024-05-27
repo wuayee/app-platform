@@ -65,10 +65,6 @@ const SendEditor = (props) => {
         item.getAsString(function (str) {
           document.execCommand("insertText", true, str);
         });
-      } else if (item.kind === "file" && item.type.indexOf("image") !== -1) {
-        const pasteFile = item.getAsFile();
-      } else if (item.kind === "file") {
-        const pasteFile = item.getAsFile();
       }
     }
   }

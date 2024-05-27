@@ -84,7 +84,7 @@ const AppLayout: React.FC = () => {
   useEffect(() => {
     const { pathname } = location;
     const route = getRouteByKey(flattenRouteList, pathname);
-    if (pathname.includes('/app/') && !pathname.includes('/appDetail/')) {
+    if (pathname.includes('/app/') && !pathname.includes('/appDetail/') && !pathname.includes('/chat/')) {
       setShowMenu(false);
     } else if (!route?.hidden) {
       setShowMenu(true);

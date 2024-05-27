@@ -47,9 +47,6 @@ const Inspiration = (props) => {
 
   useEffect(() => {
     getList();
-  }, []);
-  useEffect(() => {
-    getList();
   }, [reloadInspiration]);
   // 获取灵感大全列表
   async function getList() {
