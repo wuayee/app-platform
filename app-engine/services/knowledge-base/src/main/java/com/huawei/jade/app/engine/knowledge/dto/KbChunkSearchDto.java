@@ -21,9 +21,24 @@ public class KbChunkSearchDto {
     private Long knowledgeId;
 
     /**
+     * 拥有者id
+     */
+    private Long ownerId;
+
+    /**
+     * 知识库名称
+     */
+    private String knowledgeName;
+
+    /**
      * 知识表id
      */
     private Long tableId;
+
+    /**
+     * 知识表名
+     */
+    private String tableName;
 
     /**
      * 查询关键字
