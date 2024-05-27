@@ -5,6 +5,8 @@
 #ifndef DATABUS_SHARED_MEMORY_INFO_H
 #define DATABUS_SHARED_MEMORY_INFO_H
 
+#include "UserData.h"
+
 namespace DataBus {
 namespace Resource {
 
@@ -16,7 +18,7 @@ struct SharedMemoryInfo {
     SharedMemoryInfo& operator=(const SharedMemoryInfo&) = delete;
 
     SharedMemoryInfo(int32_t mApplicant, unsigned long mSize, time_t initialUsedTime) : applicant_(mApplicant),
-        memorySize_(mSize), readingRefCnt_(0), writingRefCnt_(0), lastUsedTime_(initialUsedTime),
+        memorySize_(mSize), readingRefCnt_(0), writingRefCnt_(0), lastUsedTime_(initialUsedTime), userData_(),
         pendingRelease_(false) {}
 
     int32_t applicant_; // 内存块申请客户端
@@ -24,6 +26,7 @@ struct SharedMemoryInfo {
     int32_t readingRefCnt_; // 内存块读取引用计数
     int32_t writingRefCnt_; // 内存块写入引用计数
     time_t lastUsedTime_; // 内存块最后使用时间戳
+    std::shared_ptr<UserData> userData_; // 用户自定义元数据
     bool pendingRelease_; // 内存块待释放状态
 };
 

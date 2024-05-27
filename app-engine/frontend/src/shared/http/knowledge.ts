@@ -93,7 +93,7 @@ export function createTableColumns(data: {
   repositoryId: string,
   knowledgeTableId: string,
   fileName?: string,
-  columns: {
+  columns?: {
     name: string,
     dataType: string,
     indexType: string,

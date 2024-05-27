@@ -30,6 +30,11 @@ public class AippConst {
     public static final String INVALID_FORM_ID = "undefined";
 
     /**
+     * aipp flowTraceIds instance key
+     */
+    public static final String INST_FLOW_TRACE_IDS = "flowTraceIds";
+
+    /**
      * invalid form version id string
      */
     public static final String INVALID_FORM_VERSION_ID = "undefined";

@@ -105,8 +105,9 @@
 
 .chat-page-inner {
   background-color: #ffffffbf;
+  margin: 0;
   .chat-inner-left {
-    height: 100vh;
+    height: calc(100vh - 46px);
     position: relative;
     overflow-x: auto;
     display: flex;
@@ -114,7 +115,6 @@
   }
 
   .chat-inner-right {
-    height: 100vh;
     width: 360px;
     position: fixed;
     background-color: unset;
@@ -128,7 +128,7 @@
 
   .chat-right-close {
     width: 360px;
-    right: 0;
+    right: 16px;
   }
 
   .chat-left-close {
@@ -208,6 +208,7 @@
   .message-box {
     width: calc(100% - 260px);
     max-width: 1400px;
+    min-width: 700px;
   }
   .chat-left-close {
     .chat-details-content,
@@ -216,6 +217,7 @@
     .message-check-toolbox-wrap {
       width: calc(100% - 260px);
       max-width: 1200px;
+      min-width: 700px;
     }
   }
 }
@@ -225,6 +227,7 @@
   .message-check-toolbox-wrap,
   .message-box {
     width: calc(100% - 60px);
+    min-width: 700px;
   }
   .chat-left-close {
     .chat-details-content,
@@ -232,6 +235,7 @@
     .send-editor-container,
     .message-check-toolbox-wrap {
       width: calc(100% - 60px);
+      min-width: 700px;
     }
   }
 }

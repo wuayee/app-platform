@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { AippContext } from '../aippIndex/context';
 import { getCurUser, getAippInfo } from '../../shared/http/aipp';
 import ChatPreview from '__pages/chatPreview/index.jsx';
+import './index.scss';
 
 const ChatRunning = () => {
   const { appId, tenantId } = useParams();
@@ -52,6 +53,7 @@ const ChatRunning = () => {
     <>
       {
         <div className="chat-running-container">
+          <div className="chat-running-chat">{ aippInfo.name }</div>
            <AippContext.Provider value={provider}>
               <ChatPreview chatStatusChange={chatStatusChange}/>
            </AippContext.Provider>

@@ -444,32 +444,6 @@
                           "referenceId": "input_abc1791d-6b8f-432f-9b2e-a503a60a5979"
                         }
                       ]
-                    },
-                    {
-                      "id": "c88117fd-b8d0-442c-9f7e-9b06e5e5604f",
-                      "condition": "is false",
-                      "value": [
-                        {
-                          "id": "ac8eff26-dce8-4e2b-be9b-c86208edb296",
-                          "name": "left",
-                          "type": "Boolean",
-                          "from": "Reference",
-                          "value": [
-                            "bool1"
-                          ],
-                          "referenceNode": "elsaShape6qm5eg",
-                          "referenceKey": "bool1",
-                          "referenceId": "input_493c631d-bf0e-445a-b7ea-ba9f163f4200"
-                        },
-                        {
-                          "id": "c4380236-c30f-4c52-9dd5-ddd0aaed7e59",
-                          "name": "right",
-                          "type": "String",
-                          "from": "Reference",
-                          "value": [],
-                          "referenceNode": ""
-                        }
-                      ]
                     }
                   ]
                 }

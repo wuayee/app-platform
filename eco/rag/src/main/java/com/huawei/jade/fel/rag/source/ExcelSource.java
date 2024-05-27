@@ -77,10 +77,15 @@ public class ExcelSource extends Source<List<Document>> {
         });
         for (Integer rowNo = dataRow; rowNo < rowNum; rowNo++) {
             List<String> rowContent = new ArrayList<>();
-
             Row row = sheet.getRow(rowNo);
+            if (row == null) {
+                continue;
+            }
             for (int col = 0; col < colNum; col++) {
                 Cell cell = row.getCell(col);
+                if (cell == null) {
+                    continue;
+                }
                 switch(cell.getCellType()) {
                     case NUMERIC:
                         rowContent.add(Double.toString(cell.getNumericCellValue()));
@@ -102,6 +107,9 @@ public class ExcelSource extends Source<List<Document>> {
         for (int i = 0; i < sheet.getPhysicalNumberOfRows(); i++) {
             Row row = sheet.getRow(i);
             for (int j = 1; j < row.getPhysicalNumberOfCells(); j++) {
+                if (row.getCell(j) == null || row.getCell(j).getStringCellValue().isEmpty()) {
+                    continue;
+                }
                 contents.add(
                         Arrays.asList(row.getCell(j).getStringCellValue(), row.getCell(0).getStringCellValue()));
             }
@@ -121,7 +129,7 @@ public class ExcelSource extends Source<List<Document>> {
 
         for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
             Row row = sheet.getRow(i);
-            for (int j = 0; j < row.getPhysicalNumberOfCells(); j++) {
+            for (int j = 0; j < tags.size(); j++) {
                 Cell cell = row.getCell(j);
                 if (cell == null) {
                     continue;

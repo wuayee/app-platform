@@ -21,7 +21,7 @@
       &:hover {
         .message-tip-box-send {
           width: max-content;
-          display: none;
+          display: flex;
           align-items: center;
         }
       }
@@ -107,6 +107,11 @@
         cursor: pointer;
         padding: 0 12px;
       }
+      // svg {
+      //   &:hover {
+      //     path{ stroke:#2673e5}
+      //   }
+      // }
     }
   }
   .check-box {

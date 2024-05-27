@@ -3,11 +3,11 @@ import {Input, Button} from "antd";
 import {EditOutlined} from '@ant-design/icons';
 import styled from 'styled-components';
 import ReportChart from "./ReportChart.jsx";
-import {saveContent} from "../../../../shared/http/appBuilder";
+import {saveContent} from "@shared/http/appBuilder";
 import {AippContext} from "../../../aippIndex/context";
-import chartImg from "../../../../../src/assets/images/chart.png";
-import tableImg from "../../../../../src/assets/images/table.png";
-import {Message} from "../../../../shared/utils/message";
+import chartImg from "@/assets/images/chart.png";
+import tableImg from "@/assets/images/table.png";
+import {Message} from "@shared/utils/message";
 
 const FormWrap = styled.div`
     width: 100%;

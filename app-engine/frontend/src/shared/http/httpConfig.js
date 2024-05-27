@@ -24,7 +24,8 @@ export const httpUrlMap = {
     PUBLISH_URL: 'https://jane.huawei.com/appbuilder/#',
     WS_URL: '/v1/api/aipp/streamLog',
     WS_AUDIO_URL: 'wss://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/app/asr',
-    MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api'
+    MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
+    MODEL_LIST_URL: 'http://model-io-manager:8010/v1',
   },
   'gamma': {
     JANE_URL: 'https://jane-gamma.huawei.com/api',
@@ -35,7 +36,8 @@ export const httpUrlMap = {
     PUBLISH_URL: 'https://jane-gamma.huawei.com/appbuilder/#',
     WS_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/chat',
     WS_AUDIO_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/asr',
-    MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api'
+    MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
+    MODEL_LIST_URL: '/v1',
   },
   'beta': {
     JANE_URL: 'https://jane-beta.huawei.com/api',
@@ -46,7 +48,8 @@ export const httpUrlMap = {
     PUBLISH_URL: 'https://jane-beta.huawei.com/appbuilder/#',
     WS_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/chat',
     WS_AUDIO_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/asr',
-    MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api'
+    MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
+    MODEL_LIST_URL: '/v1',
   },
   'alpha': {
     JANE_URL: 'https://jane-alpha.huawei.com/api',
@@ -57,6 +60,7 @@ export const httpUrlMap = {
     AIPP_URL: 'https://jane-alpha.huawei.com/api/jober/v1/api',
     WS_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/chat',
     WS_AUDIO_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/asr',
-    MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api'
+    MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
+    MODEL_LIST_URL: '/v1',
   },
 }

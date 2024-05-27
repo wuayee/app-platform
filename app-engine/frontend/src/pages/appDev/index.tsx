@@ -83,7 +83,7 @@ const AppDev: React.FC = () => {
 
   // 点击卡片
   function clickCard(item: any, e: any) {
-    navigate(`/app/${tenantId}/appDetail/${item.id}`);
+    navigate(`/app-develop/${tenantId}/appDetail/${item.id}`);
   }
 
   // 点击更多操作选项

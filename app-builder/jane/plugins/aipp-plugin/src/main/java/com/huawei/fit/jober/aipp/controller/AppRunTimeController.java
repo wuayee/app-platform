@@ -15,6 +15,7 @@ import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.controller.AbstractController;
+import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.common.PageResponse;
@@ -22,7 +23,9 @@ import com.huawei.fit.jober.aipp.condition.AippInstanceQueryCondition;
 import com.huawei.fit.jober.aipp.condition.PaginationCondition;
 import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
+import com.huawei.fit.jober.aipp.service.AippFlowRuntimeInfoService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
+import com.huawei.fit.runtime.entity.RuntimeData;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Property;
@@ -40,10 +43,13 @@ import java.util.Map;
 @RequestMapping(path = "/v1/api/{tenant_id}", group = "aipp运行时管理接口")
 public class AppRunTimeController extends AbstractController {
     private final AippRunTimeService aippRunTimeService;
+    private final AippFlowRuntimeInfoService aippFlowRuntimeInfoService;
 
-    public AppRunTimeController(Authenticator authenticator, @Fit AippRunTimeService aippRunTimeService) {
+    public AppRunTimeController(Authenticator authenticator, @Fit AippRunTimeService aippRunTimeService,
+            @Fit AippFlowRuntimeInfoService aippFlowRuntimeInfoService) {
         super(authenticator);
         this.aippRunTimeService = aippRunTimeService;
+        this.aippFlowRuntimeInfoService = aippFlowRuntimeInfoService;
     }
 
     /**
@@ -226,5 +232,23 @@ public class AppRunTimeController extends AbstractController {
                 cond,
                 page,
                 this.contextOf(httpRequest, tenantId)));
+    }
+
+    /**
+     * 查询流程运行时数据.
+     *
+     * @param httpRequest 操作上下文
+     * @param aippId 应用id.
+     * @param instanceId 实例id.
+     * @return {@link Rsp}{@code <}{@link List}{@code <}{@link RuntimeData}{@code >}{@code >} 运行时数据.
+     */
+    @GetMapping(value = "/{aipp_id}/instances/{instance_id}/runtime", description = "查询流程运行时信息")
+    public Rsp<RuntimeData> getRuntimeInfo(HttpClassicServerRequest httpRequest,
+            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
+            @PathVariable("instance_id") String instanceId, @RequestParam(value = "version") String version) {
+        OperationContext ctx = this.contextOf(httpRequest, tenantId);
+        RuntimeData runtimeData = this.aippFlowRuntimeInfoService.getRuntimeData(aippId, version, instanceId, ctx)
+                .orElse(null);
+        return Rsp.ok(runtimeData);
     }
 }

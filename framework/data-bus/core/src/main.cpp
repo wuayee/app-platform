@@ -55,9 +55,10 @@ void HandleEvent(struct epoll_event event, int epollFd, int serverFd,
             char buffer[MAX_BUFFER_SIZE];
             size_t bytesRead = recv(events[i].data.fd, buffer, MAX_BUFFER_SIZE - 1, 0);
             if (bytesRead > 0) {
+                DataBus::logger.Info("Receiving {} bytes from client {}", bytesRead,
+                    static_cast<int>(events[i].data.fd));
                 taskLoopPtr->AddReadTask(events[i].data.fd, buffer, bytesRead);
             } else if (bytesRead == 0) {
-                DataBus::logger.Info("Client disconnected");
                 taskLoopPtr->AddCloseTask(events[i].data.fd);
                 epoll_ctl(epollFd, EPOLL_CTL_DEL, events[i].data.fd, nullptr);
             }

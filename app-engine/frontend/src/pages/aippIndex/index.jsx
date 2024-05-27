@@ -8,10 +8,10 @@ import AddFlow from '__pages/addFlow/index.jsx';
 import { TalkFlowIcon  } from '@assets/icon';
 import { AippContext } from './context';
 import { templateJson } from './template';
-import { getCurUser, getAippInfo } from '../../shared/http/aipp';
-import { updateFormInfo } from '../../shared/http/aipp';
-import { debounce, getUiD } from "../../shared/utils/common";
-import { Message } from "../../shared/utils/message";
+import { getCurUser, getAippInfo } from '@shared/http/aipp';
+import { updateFormInfo } from '@shared/http/aipp';
+import { debounce, getUiD } from "@shared/utils/common";
+import { Message } from "@shared/utils/message";
 
 const AippIndex = () => {
   const { appId, tenantId } = useParams();
