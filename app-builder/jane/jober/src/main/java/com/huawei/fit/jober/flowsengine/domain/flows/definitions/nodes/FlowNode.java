@@ -199,8 +199,7 @@ public abstract class FlowNode {
      */
     public void subscribe(String streamId, FlowEnv flowEnv, FlowNode toNode, FlowEvent event) {
         this.subscribe(getFrom(streamId, flowEnv.getRepo(), flowEnv.getMessenger(), flowEnv.getLocks()), getTo(streamId,
-                        flowEnv.getRepo(), flowEnv.getMessenger(), flowEnv.getLocks(), toNode),
-                event);
+                        flowEnv.getRepo(), flowEnv.getMessenger(), flowEnv.getLocks(), toNode), event);
     }
 
     /**

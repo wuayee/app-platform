@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Optional;
+
 /**
  * 流程定义节点事件关键类
  * 流程实例流转时需要构建该对象
@@ -47,4 +49,18 @@ public class FlowEvent {
      * 节点事件中条件属性
      */
     private String conditionRule;
+
+    /**
+     * 节点事件执行的优先级，数字越小越早执行
+     */
+    private Integer priority;
+
+    /**
+     * 获取优先级，对于未设置优先级的节点，默认优先级为-1
+     *
+     * @return 优先级对应的数字的 {@link Integer}。
+     */
+    public Integer getPriority() {
+        return Optional.ofNullable(priority).orElse(-1);
+    }
 }

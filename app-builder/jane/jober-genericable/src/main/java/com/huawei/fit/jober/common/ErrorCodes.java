@@ -733,6 +733,12 @@ public enum ErrorCodes {
      * 流程执行过程中不支持处理该类型
      */
     CONTEXT_TYPE_NOT_SUPPORT(10007505, "Error code: 10007505, Not support this type."),
+
+    /**
+     * 节点对应的event个数不合法
+     */
+    INVALID_EVENT_SIZE(10007506, "Error code: 10007505, Invalid event size."),
+
     /*
      * 租户错误码：10008xxx
      */
