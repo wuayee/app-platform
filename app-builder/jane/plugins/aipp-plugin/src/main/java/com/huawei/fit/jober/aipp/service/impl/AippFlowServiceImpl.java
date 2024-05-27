@@ -16,7 +16,6 @@ import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jane.meta.property.MetaPropertyDeclarationInfo;
 import com.huawei.fit.jober.FlowDefinitionService;
 import com.huawei.fit.jober.FlowsService;
-import com.huawei.fit.jober.aipp.common.HttpUtils;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.common.MetaUtils;
 import com.huawei.fit.jober.aipp.common.PageResponse;
@@ -34,7 +33,6 @@ import com.huawei.fit.jober.aipp.convertor.TaskPropertyConvertor;
 import com.huawei.fit.jober.aipp.dto.AippCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippDetailDto;
 import com.huawei.fit.jober.aipp.dto.AippDto;
-import com.huawei.fit.jober.aipp.dto.AippMarketDto;
 import com.huawei.fit.jober.aipp.dto.AippNodeForms;
 import com.huawei.fit.jober.aipp.dto.AippOverviewDto;
 import com.huawei.fit.jober.aipp.dto.AippOverviewRspDto;
@@ -57,7 +55,6 @@ import com.huawei.fit.jober.entity.FlowNodeFormInfo;
 import com.huawei.fit.jober.entity.consts.NodeTypes;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
 import com.huawei.fitframework.inspection.Validation;
@@ -69,15 +66,8 @@ import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.service.ToolService;
 
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.util.EntityUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -111,17 +101,15 @@ public class AippFlowServiceImpl implements AippFlowService {
     private final MetaService metaService;
     private final FlowDefinitionService flowDefinitionService;
     private final AippRunTimeService aippRunTimeService;
-    private final String appMarketUrl;
 
     private final BrokerClient brokerClient;
 
     private final AppBuilderAppMapper appBuilderAppMapper;
 
-    public AippFlowServiceImpl(@Value("${market.app_market_url}") String appMarketUrl, @Fit FlowsService flowsService,
-            @Fit MetaService metaService, @Fit FlowDefinitionService flowDefinitionService,
-            @Fit AippRunTimeService aippRunTimeService, @Fit AppBuilderFormRepository formRepository,
-            @Fit BrokerClient brokerClient, AppBuilderAppMapper appBuilderAppMapper) {
-        this.appMarketUrl = appMarketUrl;
+    public AippFlowServiceImpl(@Fit FlowsService flowsService, @Fit MetaService metaService,
+            @Fit FlowDefinitionService flowDefinitionService, @Fit AippRunTimeService aippRunTimeService,
+            @Fit AppBuilderFormRepository formRepository, @Fit BrokerClient brokerClient,
+            AppBuilderAppMapper appBuilderAppMapper) {
         this.flowsService = flowsService;
         this.metaService = metaService;
         this.flowDefinitionService = flowDefinitionService;
@@ -869,50 +857,6 @@ public class AippFlowServiceImpl implements AippFlowService {
         return declaration;
     }
 
-    private String createPublishHttpBody(String aippId, AippDto aippDto, String creator) {
-        AppCategory appCategory = AppCategory.findByType(aippDto.getType())
-                .orElseThrow(() -> new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID));
-        AippMarketDto dto = AippMarketDto.builder()
-                .createUser(creator)
-                .name(aippDto.getName())
-                .description(aippDto.getDescription())
-                .site(aippDto.getPublishUrl())
-                .type(appCategory.getXiaohaiType())
-                .l1Classification("助手")
-                .l2Classification(aippDto.getXiaohaiClassification())
-                .appid(aippId)
-                .icon(aippDto.getIcon())
-                .build();
-
-        return JsonUtils.toJsonString(dto);
-    }
-
-    private void publishAppMarket(String aippId, AippDto aippDto, OperationContext context) {
-        log.info("publishAppMarket url:{}", aippDto.getPublishUrl() == null ? "null" : aippDto.getPublishUrl());
-        if (StringUtils.isBlank(aippDto.getPublishUrl())) {
-            return;
-        }
-        HttpPost httpPost = new HttpPost(appMarketUrl);
-        httpPost.setEntity(new StringEntity(this.createPublishHttpBody(aippId, aippDto, context.getW3Account()),
-                ContentType.APPLICATION_JSON));
-        try (CloseableHttpResponse response = HttpUtils.execute(httpPost)) {
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                log.error("aipp {} publishAppMarket fail:{}", aippId, response.getStatusLine());
-                throw new AippException(context, AippErrCode.XIAOHAI_APP_PUBLISH_HTTP_ERROR);
-            }
-            String respContent = EntityUtils.toString(response.getEntity());
-            Map<String, Object> respObj = JsonUtils.parseObject(respContent);
-            int code = (int) respObj.get("code");
-            if (code != 0) {
-                log.error("aipp {} publishAppMarket fail: code {} msg {}", aippId, code, respObj.get("msg"));
-                throw new AippException(context, AippErrCode.XIAOHAI_APP_PUBLISH_INNER_ERROR);
-            }
-        } catch (IOException e) {
-            log.error("aipp {} publishAppMarket fail", aippId, e.getMessage());
-            throw new AippException(context, AippErrCode.XIAOHAI_APP_PUBLISH_HTTP_ERROR);
-        }
-    }
-
     private List<AippNodeForms> buildAippNodeForms(FlowInfo flowInfo) {
         if (flowInfo.getFlowNodes() == null) {
             return Collections.emptyList();
@@ -1004,10 +948,6 @@ public class AippFlowServiceImpl implements AippFlowService {
             metaService.patch(meta.getVersionId(), declaration, context);
 
             String uniqueName = this.publishToStore(aippDto, context, flowInfo);
-
-            if (Objects.equals(aippDto.getType(), AppCategory.APP.getType())) {
-                this.publishAppMarket(aippId, aippDto, context);
-            }
             return Rsp.ok(new AippCreateDto(aippId, meta.getVersion(), uniqueName));
         } catch (Exception e) {
             log.error("publish aipp {} failed, e = {}", aippId, e);

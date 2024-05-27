@@ -4,15 +4,22 @@
 
 package com.huawei.fit.waterflow.domain.context.repo.flowcontext;
 
+import static com.huawei.fit.waterflow.domain.enums.FlowNodeStatus.ARCHIVED;
+import static com.huawei.fit.waterflow.domain.enums.FlowNodeStatus.ERROR;
 import static com.huawei.fit.waterflow.domain.enums.FlowNodeStatus.PENDING;
 
 import com.huawei.fit.waterflow.domain.context.FlowContext;
 import com.huawei.fit.waterflow.domain.context.FlowTrace;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 
+import java.util.Deque;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 持久化{@link FlowContext}对象到内存中核心类
@@ -21,11 +28,29 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
-    private final List<FlowContext<T>> contexts = new CopyOnWriteArrayList<>();
+    private final ConcurrentLinkedHashMap<String, FlowContext<T>> contextsMap = new ConcurrentLinkedHashMap<>();
+
+    private final boolean isReserveTerminal;
+
+    /**
+     * 构造方法
+     */
+    public FlowContextMemoRepo() {
+        this(false);
+    }
+
+    /**
+     * 构造方法
+     *
+     * @param isReserveTerminal 是否保留结束的数据，一般只有测试才保留
+     */
+    public FlowContextMemoRepo(boolean isReserveTerminal) {
+        this.isReserveTerminal = isReserveTerminal;
+    }
 
     @Override
     public List<FlowContext<T>> getContextsByPosition(String streamId, List<String> posIds, String status) {
-        return this.contexts.stream()
+        return this.contextsMap.stream()
                 .filter(context -> context.getStreamId().equals(streamId))
                 .filter(context -> posIds.contains(context.getPosition()))
                 .filter(context -> context.getStatus().toString().equals(status))
@@ -35,7 +60,7 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
 
     @Override
     public List<FlowContext<T>> getContextsByPosition(String streamId, String posId, String batchId, String status) {
-        return this.contexts.stream()
+        return this.contextsMap.stream()
                 .filter(context -> context.getStreamId().equals(streamId))
                 .filter(context -> context.getPosition().equals(posId))
                 .filter(context -> context.getBatchId().equals(batchId))
@@ -45,15 +70,24 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
 
     @Override
     public List<FlowContext<T>> getContextsByTrace(String traceId) {
-        return this.contexts.stream()
+        return this.contextsMap.stream()
                 .filter(context -> context.getTraceId().contains(traceId))
                 .collect(Collectors.toList());
     }
 
     @Override
     public synchronized void save(List<FlowContext<T>> contexts) {
-        this.contexts.removeIf(context -> contexts.stream().anyMatch(c1 -> context.getId().equals(c1.getId())));
-        this.contexts.addAll(contexts);
+        contexts.forEach(context -> {
+            if (this.isReserveTerminal) {
+                this.contextsMap.put(context.getId(), context);
+                return;
+            }
+            if (context.getStatus() == ARCHIVED || context.getStatus() == ERROR) {
+                this.contextsMap.remove(context.getId());
+            } else {
+                this.contextsMap.put(context.getId(), context);
+            }
+        });
     }
 
     @Override
@@ -63,19 +97,19 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
 
     @Override
     public List<FlowContext<T>> getContextsByParallel(String parallelId) {
-        return this.contexts.stream()
+        return this.contextsMap.stream()
                 .filter(context -> context.getParallel().equals(parallelId))
                 .collect(Collectors.toList());
     }
 
     @Override
     public FlowContext<T> getById(String id) {
-        return contexts.stream().filter(context -> context.getId().equals(id)).findFirst().orElse(null);
+        return this.contextsMap.stream().filter(context -> context.getId().equals(id)).findFirst().orElse(null);
     }
 
     @Override
     public List<FlowContext<T>> getPendingAndSentByIds(List<String> ids) {
-        return contexts.stream()
+        return this.contextsMap.stream()
                 .filter(context -> context.getStatus().equals(PENDING))
                 .filter(FlowContext::isSent)
                 .filter(context -> ids.contains(context.getId()))
@@ -84,13 +118,13 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
 
     @Override
     public List<FlowContext<T>> getByIds(List<String> ids) {
-        return contexts.stream().filter(context -> ids.contains(context.getId())).collect(Collectors.toList());
+        return ids.stream().map(contextsMap::get).collect(Collectors.toList());
     }
 
     @Override
     public List<FlowContext<T>> requestMappingContext(String streamId, List<String> subscriptions,
             Operators.Filter<T> filter, Operators.Validator<T> validator) {
-        List<FlowContext<T>> all = this.contexts.stream()
+        List<FlowContext<T>> all = this.contextsMap.stream()
                 .filter(context -> context.getStreamId().equals(streamId))
                 .filter(context -> subscriptions.contains(context.getPosition()))
                 .filter(context -> context.getStatus() == PENDING)
@@ -104,7 +138,7 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
     @Override
     public List<FlowContext<T>> requestProducingContext(String streamId, List<String> subscriptions,
             Operators.Filter<T> filter) {
-        List<FlowContext<T>> all = this.contexts.stream()
+        List<FlowContext<T>> all = this.contextsMap.stream()
                 .filter(context -> context.getStreamId().equals(streamId))
                 .filter(context -> subscriptions.contains(context.getPosition()))
                 .filter(context -> context.getStatus() == PENDING)
@@ -119,5 +153,60 @@ public class FlowContextMemoRepo<T> implements FlowContextRepo<T> {
     @Override
     public void updateFlowData(List<FlowContext<T>> contexts) {
         save(contexts);
+    }
+
+    /**
+     * 构造一个支持并发且可以保障元素顺序的map
+     *
+     * @param <K> map的key类型
+     * @param <V> map的value类型
+     */
+    private static class ConcurrentLinkedHashMap<K, V> {
+        private final Map<K, V> map = new ConcurrentHashMap<>();
+
+        private final Deque<K> order = new ConcurrentLinkedDeque<>();
+
+        /**
+         * put一个键值对
+         *
+         * @param key key
+         * @param value value
+         */
+        public void put(K key, V value) {
+            if (!map.containsKey(key)) {
+                order.add(key);
+            }
+            map.put(key, value);
+        }
+
+        /**
+         * 根据key获取结果
+         *
+         * @param key key
+         * @return 对应的value，可能为null
+         */
+        public V get(K key) {
+            return map.get(key);
+        }
+
+        /**
+         * 删除一个key
+         *
+         * @param key key
+         * @return 被删除的值
+         */
+        public V remove(K key) {
+            order.remove(key);
+            return map.remove(key);
+        }
+
+        /**
+         * 获取流式的元素
+         *
+         * @return 流式元素
+         */
+        public Stream<V> stream() {
+            return order.stream().map(map::get).filter(obj -> !Objects.isNull(obj));
+        }
     }
 }

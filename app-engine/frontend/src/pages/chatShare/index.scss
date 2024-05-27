@@ -12,6 +12,8 @@
     height: 100%;
     background-color: #ffffffbf;
     padding-top: 24px;
+    display: flex;
+    flex-direction: column;
     .top {
       width: 900px;
       margin: 0 auto;
@@ -38,6 +40,9 @@
             line-height: 26px;
             color: #71757F;
         }
+    }
+    .message-box {
+      padding-bottom: 70px;
     }
   }
   .chat-preview-title {

@@ -6,7 +6,7 @@ import {
   EllipsisOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Message } from "../../../shared/utils/message";
+import { Message } from "@shared/utils/message";
 import { queryDepartMent, queryInspiration } from "../../../shared/http/aipp";
 import { getUiD } from "../../../shared/utils/common";
 import { inspirationMock } from "../common/config";
@@ -45,9 +45,6 @@ const Inspiration = (props) => {
   const treeNormalData = useRef();
   const treeChildData = useRef([]);
 
-  useEffect(() => {
-    getList();
-  }, []);
   useEffect(() => {
     getList();
   }, [reloadInspiration]);

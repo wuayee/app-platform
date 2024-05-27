@@ -12,6 +12,7 @@ import com.huawei.jade.fel.chat.character.ToolMessage;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.tool.Tool;
 import com.huawei.jade.fel.tool.ToolCall;
+import com.huawei.jade.fel.tool.ToolContext;
 import com.huawei.jade.fel.tool.ToolProvider;
 
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class WaterFlowToolProvider implements ToolProvider {
 
     @Override
     @Fitable(id = "app-factory")
-    public FlatChatMessage call(ToolCall toolCall) {
+    public FlatChatMessage call(ToolCall toolCall, ToolContext toolContext) {
         return new FlatChatMessage(new ToolMessage(toolCall.getId(),
                 this.executeService.executeTool(toolCall.getName(), toolCall.getParameters())));
     }

@@ -1,17 +1,17 @@
-import React, { useState, useEffect, ReactElement } from "react";
-import { Button, Input } from "antd";
-import { HashRouter, Route, useNavigate, Routes } from "react-router-dom";
+import React, { useState, useEffect, ReactElement } from 'react';
+import { Button, Input } from 'antd';
 
-import Pagination from "../../components/pagination/index";
-import { Icons } from "../../components/icons";
-import { getModelList } from "../../shared/http/model";
-import CardsTab from "./cards-tab";
-import TableTab from "./table-tab";
+import Pagination from '../../components/pagination/index';
+import { getModelList } from '../../shared/http/model';
+import CardsTab from './cards-tab';
+import TableTab from './table-tab';
+import ModelCreate from './model-create';
 
-import "../../index.scss";
+import '../../index.scss';
+
 const ModelList = () => {
   // 总条数
-  const [total, setTotal] = useState(2);
+  const [total, setTotal] = useState(0);
 
   const [modelTab, setModelTab] = useState(1);
 
@@ -22,6 +22,10 @@ const ModelList = () => {
   const [pageSize, setPageSize] = useState(10);
 
   const [modelList, setModelList] = useState([]);
+
+  const [openStar, setOpenStar] = useState(false);
+
+  const [createItems, setCreateItems] = useState([]);
 
   // 分页变化
   const paginationChange = (curPage: number, curPageSize: number) => {
@@ -41,6 +45,15 @@ const ModelList = () => {
     }).then((res) => {
       if (res) {
         setModelList(res.llms);
+        setTotal(res.llms.length);
+        res.llms.forEach((item: any) => {
+          const createItem = { name: '', image: [], precision: [] };
+          createItem.name = item.name;
+          createItem.image = item.supported_images;
+          createItem.precision = item.precision.supports;
+          createItems.push(createItem);
+        });
+        setCreateItems(createItems);
       }
     });
   };
@@ -50,43 +63,69 @@ const ModelList = () => {
   }, [page, pageSize]);
 
   return (
-    <div className="aui-fullpage">
+    <div className='aui-fullpage'>
       <div
-        className="aui-header-1"
+        className='aui-header-1'
         style={{
-          display: "flex",
-          gap: "1000px",
+          display: 'flex',
+          gap: '1000px',
         }}
       >
-        <div className="aui-title-1">模型服务</div>
+        <div className='aui-title-1'>模型服务</div>
         <div
-          className="aui-block"
+          className='aui-block'
           style={{
-            background: "transparent",
-            textAlign: "right",
+            background: 'transparent',
+            textAlign: 'right',
           }}
         >
-          <Button onClick={() => setModelTab(1)}>1</Button>
-          <Button onClick={() => setModelTab(2)}>2</Button>
+          {modelTab === 1 && (
+            <img src='/src/assets/images/model/card-active.svg' onClick={() => setModelTab(1)} />
+          )}
+          {modelTab === 2 && (
+            <img
+              src='/src/assets/images/model/card.svg'
+              onClick={() => setModelTab(1)}
+              style={{
+                cursor: 'pointer',
+              }}
+            />
+          )}
+          {modelTab === 1 && (
+            <img
+              src='/src/assets/images/model/table.svg'
+              onClick={() => setModelTab(2)}
+              style={{
+                cursor: 'pointer',
+              }}
+            />
+          )}
+          {modelTab === 2 && (
+            <img src='/src/assets/images/model/table-active.svg' onClick={() => setModelTab(2)} />
+          )}
         </div>
       </div>
-      <div className="aui-block">
+      <div className='aui-block'>
         <div
-          className="operatorArea"
+          className='operatorArea'
           style={{
-            display: "flex",
-            gap: "16px",
+            display: 'flex',
+            gap: '16px',
           }}
         >
           <Button
-            type="primary"
+            type='primary'
             style={{
-              background: "#2673E5",
-              width: "96px",
-              height: "32px",
-              fontSize: "14px",
-              borderRadius: "4px",
-              letterSpacing: "0",
+              background: '#2673E5',
+              width: '96px',
+              height: '32px',
+              fontSize: '14px',
+              borderRadius: '4px',
+              letterSpacing: '0',
+            }}
+            onClick={() => {
+              setOpenStar(true);
+              setCreateItems(createItems);
             }}
           >
             创建
@@ -97,16 +136,19 @@ const ModelList = () => {
             marginLeft: -20,
           }}
         >
-          {modelTab === 1 && <CardsTab modelList={modelList} />}
-          {modelTab === 2 && <TableTab modelList={modelList} />}
+          {modelTab === 1 && <CardsTab modelList={modelList} setModels={setModelList} />}
+          {modelTab === 2 && (
+            <TableTab modelList={modelList} setOpen={setOpenStar} setModels={setModelList} />
+          )}
         </div>
-        <Pagination
-          total={total}
-          current={page}
-          onChange={paginationChange}
-          pageSize={pageSize}
-        />
+        <Pagination total={total} current={page} onChange={paginationChange} pageSize={pageSize} />
       </div>
+      <ModelCreate
+        open={openStar}
+        setOpen={setOpenStar}
+        createItems={createItems}
+        setModels={setModelList}
+      />
     </div>
   );
 };

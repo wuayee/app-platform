@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 /**
  * 表格场景 知识表列信息
  *
@@ -34,7 +36,29 @@ public class TableKnowledgeColDto {
     /** 描述 */
     private String desc;
 
+    /** 是否隐藏 */
+    private boolean hidden;
+
+    /**
+     * 构造方法
+     *
+     * @param name 列名
+     */
     public TableKnowledgeColDto(String name) {
         this.name = name;
+        if (Objects.equals(name, "inner_id")) {
+            this.hidden = true;
+        }
+    }
+
+    /**
+     * 构造方法
+     *
+     * @param name 列名
+     * @param indexType 索引类型
+     */
+    public TableKnowledgeColDto(String name, IndexType indexType) {
+        this(name);
+        this.indexType = indexType;
     }
 }

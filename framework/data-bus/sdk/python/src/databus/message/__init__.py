@@ -1,31 +1,26 @@
 # coding: utf-8
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
-# 限制模块内文件级的函数导出, 避免冲突
+from typing import Union
+from . import (
+    ApplyMemoryMessage,
+    ApplyMemoryMessageResponse,
+    ApplyPermissionMessage,
+    ApplyPermissionMessageResponse,
+    ErrorMessageResponse,
+    MessageHeader,
+    ReleaseMemoryMessage,
+    ReleasePermissionMessage
+)
 
-__all__ = [
-    "ApplyMemoryMessage",
-    "ApplyMemoryMessageResponse",
-    "ApplyPermissionMessage",
-    "ApplyPermissionMessageResponse",
-    "ErrorMessageResponse",
-    "ErrorType",
-    "Heartbeat",
-    "MessageHeader",
-    "MessageType",
-    "PermissionType",
-    "ReleaseMemoryMessage",
-    "ReleasePermissionMessage"
+from .ErrorType import ErrorType as CoreErrorType
+from .MessageType import MessageType as CoreMessageType
+from .PermissionType import PermissionType as CorePermissionType
+
+CoreMessageResponseTypeHint = Union[
+    ApplyMemoryMessageResponse.ApplyMemoryMessageResponse,
+    ApplyPermissionMessageResponse.ApplyPermissionMessageResponse,
+    ErrorMessageResponse.ErrorMessageResponse
 ]
 
-from .ApplyMemoryMessage import ApplyMemoryMessage
-from .ApplyMemoryMessageResponse import ApplyMemoryMessageResponse
-from .ApplyPermissionMessage import ApplyPermissionMessage
-from .ApplyPermissionMessageResponse import ApplyPermissionMessageResponse
-from .ErrorMessageResponse import ErrorMessageResponse
-from .ErrorType import ErrorType
-from .Heartbeat import Heartbeat
-from .MessageHeader import MessageHeader
-from .MessageType import MessageType
-from .PermissionType import PermissionType
-from .ReleaseMemoryMessage import ReleaseMemoryMessage
-from .ReleasePermissionMessage import ReleasePermissionMessage
+# 默认给flatbuffers message的Builder预留的空间
+DEFAULT_FLATBUFFERS_BUILDER_SIZE = 128

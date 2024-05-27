@@ -7,12 +7,15 @@ import {
   CloseOutlined,
 } from "@ant-design/icons";
 import "./style.scoped.scss";
-import {httpUrlMap} from "../../../../shared/http/httpConfig";
-const { ICON_URL } = process.env.NODE_ENV === 'development' ? { ICON_URL: 'http://80.11.128.66:31111/api'} : httpUrlMap[process.env.NODE_ENV];
+import { httpUrlMap } from "../../../../shared/http/httpConfig";
+
+const { ICON_URL } = process.env.NODE_ENV === 'development' ? { ICON_URL: `${window.location.origin}/api`} : httpUrlMap[process.env.NODE_ENV];
 
 interface StarAppsProps {
   open: boolean;
   setOpen: (val: boolean) => void;
+  handleAt: (val: any) => void;
+  chatClick: (val: any) => void;
 }
 
 const items: MenuProps["items"] = [
@@ -22,21 +25,16 @@ const items: MenuProps["items"] = [
   },
 ];
 
-const StarApps: React.FC<StarAppsProps> = ({ open, setOpen }) => {
+const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick }) => {
   const [apps, setApps] = useState(
     new Array(10).fill(0).map((_, index) => ({
       name: `小海-${index}`,
       desc: "超级应用助手，存储领域高级专家",
       author: "APP Engine",
-      appAvatar:
-        `${ICON_URL}/jober/v1/files/17e9ee28e8914b48aa54e084b67bf878`,
+      appAvatar: `${ICON_URL}/jober/v1/files/17e9ee28e8914b48aa54e084b67bf878`,
       authorAvatar: "https://api.dicebear.com/7.x/miniavs/svg?seed=1",
     }))
   );
-
-  const handleAt = () => {
-    console.log("at someone");
-  };
   return (
     <Drawer
       destroyOnClose
@@ -66,14 +64,14 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen }) => {
                 <div className="app-item-text-header">
                   <div className="app-item-title">{app.name}</div>
                   <div className="app-item-title-actions">
-                    <span style={{ cursor: "pointer" }} onClick={handleAt}>
+                    <span style={{ cursor: "pointer" }} onClick={() => handleAt(app)}>
                       @Ta
                     </span>
                     <span
                       style={{ color: "#1677ff", cursor: "pointer" }}
-                      onClick={() => setOpen(false)}
+                      onClick={() => chatClick(app)}
                     >
-                      返回聊天
+                      开始聊天
                     </span>
                   </div>
                 </div>
@@ -83,7 +81,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen }) => {
             <div className="app-item-footer">
               <div>
                 <Avatar size={32} src={app.authorAvatar} />
-                <span>由{app.author}创建</span>
+                <span className="text">由{app.author}创建</span>
               </div>
               <Dropdown menu={{ items }} trigger={["click"]}>
                 <EllipsisOutlined className="app-item-footer-more" />

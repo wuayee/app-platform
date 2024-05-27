@@ -6,7 +6,8 @@ import KnowledgeBaseCreate from "../pages/knowledge-base/create";
 import KnowledgeBaseDetail from "../pages/knowledge-base/knowledge-detail";
 import Plugin from "../pages/plugin";
 import Demo from "../pages/demo";
-import ChatRunning from "../pages/chatEngineHome/index.jsx";
+import ChatHome from "../pages/chatEngineHome/index.jsx";
+import ChatRunning from "../pages/chatRunning/index";
 import AppDetail from "../pages/appDetail";
 import AippIndex from "../pages/aippIndex";
 import AddFlow from "../pages/addFlow";
@@ -17,8 +18,9 @@ import KnowledgeBaseDetailCreateTable from "../pages/knowledge-base/knowledge-de
 import KnowledgeBaseDetailImportData from "../pages/knowledge-base/knowledge-detail/import-data";
 import Model from "../pages/model";
 import ModelDetail from "../pages/model/model-detail";
-import Apps2 from "../pages/apps/index2";
+import AppDev from "../pages/appDev/index";
 import PluginMarket from '../pages/plugin-market';
+import IndustryTerminology from "../pages/knowledge-base/knowledge-detail/industry-terminology";
 
 export type MenuItem = Required<MenuProps>["items"][number] & {
   component?: (() => ReactElement) | React.FC<any>;
@@ -35,7 +37,7 @@ export const routeList: MenuItem[] = [
     key: "/home",
     icon: Icons.home({}),
     label: "首页",
-    component: ChatRunning,
+    component: ChatHome,
     children: [
       {
         key: "/:tenantId/chatShare/:appId/:shareId",
@@ -86,7 +88,7 @@ export const routeList: MenuItem[] = [
     key: "/app-develop",
     icon: Icons.app({}),
     label: "应用开发",
-    component: Apps2,
+    component: AppDev,
     children: [
       {
         key: "/app/:tenantId/detail/:appId",
@@ -110,10 +112,17 @@ export const routeList: MenuItem[] = [
         hidden: true,
       },
       {
-        key: "/app/:tenantId/appDetail/:appId",
+        key: "/app-develop/:tenantId/appDetail/:appId",
         icon: Icons.app({}),
         label: "",
         component: AppDetail,
+        hidden: true,
+      },
+      {
+        key: "/app/:tenantId/chat/:appId",
+        icon: Icons.app({}),
+        label: "",
+        component: ChatRunning,
         hidden: true,
       }
     ],
@@ -132,11 +141,18 @@ export const routeList: MenuItem[] = [
     component: PluginMarket,
   },
   {
-    key: "/mode",
+    key: "/model",
     icon: Icons.app({}),
-    label: "模型",
-    component: Demo,
-    hidden: true,
+    label: "模型服务",
+    component: Model,
+    children: [
+      {
+        key: "model/detail",
+        icon: Icons.app({}),
+        label: "app编排",
+        component: ModelDetail,
+        hidden: true,
+      },]
   },
   {
     key: "/knowledge-base",
@@ -144,7 +160,6 @@ export const routeList: MenuItem[] = [
     label: "知识库",
     title: "知识库概览",
     component: KnowledgeBase,
-    hidden: true,
     children: [
       {
         key: "/knowledge-base/create",
@@ -174,6 +189,13 @@ export const routeList: MenuItem[] = [
             component: KnowledgeBaseDetailImportData,
             hidden: true,
           },
+          {
+            key: "/knowledge-base/knowledge-detail/industry-terminology",
+            icon: Icons.app({}),
+            label: "详情",
+            component: IndustryTerminology,
+            hidden: true,
+          },
         ]
       },
     ],
@@ -185,11 +207,24 @@ export const routeList: MenuItem[] = [
     component: Plugin,
   },
   {
+    key: "/Tooling",
+    icon: Icons.app({}),
+    label: "工具",
+    component: Demo,
+    hidden: true,
+  },
+  {
+    key: "/WorkStream",
+    icon: Icons.app({}),
+    label: "工作流",
+    component: Demo,
+    hidden: true,
+  },
+  {
     key: "/group",
     icon: Icons.app({}),
     label: "团队",
     component: Demo,
-    hidden: true,
   },
 ];
 

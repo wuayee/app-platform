@@ -21,20 +21,22 @@ import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
 import com.huawei.jade.app.engine.knowledge.dto.KStorageDto;
 import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
-import com.huawei.jade.app.engine.knowledge.dto.KbChunkQueryDto;
+import com.huawei.jade.app.engine.knowledge.dto.KbChunkSearchDto;
 import com.huawei.jade.app.engine.knowledge.dto.KbGenerateConfigDto;
+import com.huawei.jade.app.engine.knowledge.dto.KbTextQueryDto;
 import com.huawei.jade.app.engine.knowledge.dto.TableKnowledgeColDto;
 import com.huawei.jade.app.engine.knowledge.params.RepoQueryParam;
 import com.huawei.jade.app.engine.knowledge.params.TableKnowledgeParam;
 import com.huawei.jade.app.engine.knowledge.service.KRepoService;
 import com.huawei.jade.app.engine.knowledge.service.KStorageService;
 import com.huawei.jade.app.engine.knowledge.service.KTableService;
-import com.huawei.jade.app.engine.knowledge.service.KbGenerateService;
+import com.huawei.jade.app.engine.knowledge.service.KnowledgeBaseService;
 import com.huawei.jade.app.engine.knowledge.service.param.PageQueryParam;
 import com.huawei.jade.app.engine.knowledge.vo.PageResultVo;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -57,7 +59,7 @@ public class KnowledgeBaseController {
     private KStorageService kStorageService;
 
     @Fit
-    private KbGenerateService kbGenerateService;
+    private KnowledgeBaseService knowledgeBaseService;
 
     /**
      * 通过名称查找知识库列表
@@ -258,7 +260,20 @@ public class KnowledgeBaseController {
      */
     @PostMapping(path = "/import-knowledge/text")
     public void importKnowledge(@RequestBody KbGenerateConfigDto fileConfigDto) {
-        kbGenerateService.importKnowledge(fileConfigDto);
+        knowledgeBaseService.importTextKnowledge(fileConfigDto);
+    }
+
+    /**
+     * 查询text知识表
+     *
+     * @param queryDto 查询参数
+     * @return {@link PageResultVo}
+     */
+    @PostMapping(path = "/table/text/chunk-list")
+    public PageResultVo<String> queryTextChunkList(@RequestBody KbTextQueryDto queryDto) {
+        KTableDto tableDto = kTableService.getById(queryDto.getTableId());
+        return new PageResultVo<>(Math.toIntExact(tableDto.getRecordNum()),
+            knowledgeBaseService.queryTextChunkList(queryDto));
     }
 
     /**
@@ -267,9 +282,10 @@ public class KnowledgeBaseController {
      * @param chunkQueryDto 查询参数
      * @return 查询结果
      */
-    @PostMapping(path = "/chunks")
-    public PageResultVo<String> getChunk(@RequestBody KbChunkQueryDto chunkQueryDto) {
-        return kbGenerateService.getChunks(chunkQueryDto);
+    @PostMapping(path = "/table/chunks")
+    public PageResultVo<String> getChunks(@RequestBody KbChunkSearchDto chunkQueryDto) {
+        List<String> chunks = knowledgeBaseService.searchKnowledgeTable(chunkQueryDto);
+        return new PageResultVo<>(chunks.size(), chunks);
     }
 
     /**
@@ -280,7 +296,7 @@ public class KnowledgeBaseController {
      */
     @PostMapping(path = "/table-knowledge/columns")
     public List<TableKnowledgeColDto> getTableKnowledgeColumns(@RequestBody TableKnowledgeParam param) {
-        return kbGenerateService.getTableKnowledgeColumns(param);
+        return knowledgeBaseService.getTableKnowledgePreviewColumns(param);
     }
 
     /**
@@ -290,6 +306,30 @@ public class KnowledgeBaseController {
      */
     @PostMapping(path = "/table-knowledge/construct")
     public void createTableKnowledge(@RequestBody TableKnowledgeParam param) {
-        kbGenerateService.createTableKnowledge(param);
+        knowledgeBaseService.createTableKnowledge(param);
+    }
+
+    /**
+     * 表格型知识检索接口
+     *
+     * @param param 表格型知识检索参数
+     * @return 表格型知识
+     */
+    @PostMapping(path = "/table-knowledge/rows")
+    public PageResultVo<Map<String, Object>> getTableKnowledge(@RequestBody TableKnowledgeParam param) {
+        return knowledgeBaseService.getTableKnowledgeDbRows(param);
+    }
+
+    /**
+     * 表格型知识数据库列信息检索接口
+     *
+     * @param repoId 知识库id
+     * @param tableId 知识表id
+     * @return 表格型知识列信息
+     */
+    @GetMapping(path = "/table-knowledge/column/{repo-id}/{table-id}")
+    public List<TableKnowledgeColDto> getTableKnowledgeDbColumns(@PathVariable("repo-id") Long repoId,
+        @PathVariable("table-id") Long tableId) {
+        return knowledgeBaseService.getTableKnowledgeDbColumns(repoId, tableId);
     }
 }

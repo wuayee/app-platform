@@ -17,18 +17,37 @@ import com.alibaba.fastjson.JSONObject;
  * @since 2024-05-13
  */
 public class ConvertConditionToRuleUtils {
+    private static final String CONDITION_KEY = "condition";
+
+    private static final String VALUE_KEY = "value";
+
+    private static final String CONDITIONS_KEY = "conditions";
+
+    private static final String CONDITION_RELATION_KEY = "conditionRelation";
+
+    private static final String FROM_KEY = "from";
+
+    private static final String REFERENCE_FROM_TYPE = "Reference";
+
+    private static final String INPUT_FROM_TYPE = "Input";
+
+    private static final String UNDEFINED_EXPRESSION = "undefined";
+
+    private static final String INPUT_TYPE_KEY = "type";
+
+    private static final String VALUE_REFERENCE_NODE_KEY = "referenceNode";
+
+    private static final String VALUE_VALUE_ARRAY_KEY = "value";
+
+    private static final String BUSINESS_DATA_PREFIX = "businessData.";
+
     public static String convert(String jsonData) {
         JSONObject jsonObject = JSON.parseObject(jsonData);
-        JSONArray conditions = jsonObject.getJSONArray("conditions");
-        String conditionRelation = getLogicalOperator(jsonObject.getString("conditionRelation"));
+        JSONArray conditions = jsonObject.getJSONArray(CONDITIONS_KEY);
+        String conditionRelation = OperatorInfo.getByCode(jsonObject.getString(CONDITION_RELATION_KEY)).getOperator();
         StringBuilder expressionBuilder = buildExpression(conditions, conditionRelation);
 
         return expressionBuilder.toString();
-    }
-
-
-    private static String getLogicalOperator(String relation) {
-        return "and".equals(relation) ? " && " : " || ";
     }
 
     private static StringBuilder buildExpression(JSONArray conditions, String conditionRelation) {
@@ -43,67 +62,46 @@ public class ConvertConditionToRuleUtils {
     }
 
     private static String buildIndividualCondition(JSONObject condition) {
-        JSONArray values = condition.getJSONArray("value");
-        JSONObject left = values.getJSONObject(0);
-        OperatorInfo operator = getOperator(condition.getString("condition"));
+        OperatorInfo operator = OperatorInfo.getByCode(condition.getString(CONDITION_KEY));
+        JSONArray values = condition.getJSONArray(VALUE_KEY);
 
-        String leftExpression = generateExpression(left);
+        String leftExpression = generateLeftExpression(values, operator);
         String rightExpression = generateRightExpression(values, operator);
 
-        return "(" + leftExpression + operator.operator + rightExpression + ")";
+        return "(" + leftExpression + operator.getOperator() + rightExpression + ")";
+    }
+
+    private static String generateLeftExpression(JSONArray values, OperatorInfo operator) {
+        if (OperatorInfo.UNARY_TYPE.equalsIgnoreCase(operator.getType()) || OperatorInfo.BINARY_TYPE.equalsIgnoreCase(
+                operator.getType())) {
+            JSONObject left = values.getJSONObject(0);
+            return generateExpression(left);
+        }
+        return ""; // Unary operators do not require a right expression
     }
 
     private static String generateRightExpression(JSONArray values, OperatorInfo operator) {
-        if ("binary".equals(operator.type)) {
+        if (OperatorInfo.BINARY_TYPE.equalsIgnoreCase(operator.getType())) {
             JSONObject right = values.getJSONObject(1);
             return generateExpression(right);
         }
         return ""; // Unary operators do not require a right expression
     }
 
-
-    private static class OperatorInfo {
-        String type; // "unary" or "binary"
-        String operator; // such as " == " or ".isEmpty()"
-
-        public OperatorInfo(String type, String operator) {
-            this.type = type;
-            this.operator = operator;
-        }
-    }
-
-    private static OperatorInfo getOperator(String condition) {
-        switch (condition) {
-            case "not equal":
-                return new OperatorInfo("binary", " != ");
-            case "is true":
-                return new OperatorInfo("unary", ""); // Unary operator, no right operand needed
-            case "is empty":
-                return new OperatorInfo("unary", ".isEmpty()"); // Unary operator, applies to left operand
-            case "is not empty":
-                return new OperatorInfo("unary", ".isNotEmpty()"); // Unary operator, applies to left operand
-            case "is false":
-                return new OperatorInfo("unary", " == false"); // Unary operator, applies to left operand
-            case "equal":
-            default:
-                return new OperatorInfo("binary", " == "); // Default binary equality check
-        }
-    }
-
     private static String generateExpression(JSONObject valueObj) {
-        String from = valueObj.getString("from");
-        if ("Reference".equals(from)) {
+        String from = valueObj.getString(FROM_KEY);
+        if (REFERENCE_FROM_TYPE.equals(from)) {
             return buildReferenceExpression(valueObj);
-        } else if ("Input".equals(from)) {
+        } else if (INPUT_FROM_TYPE.equals(from)) {
             return formatInputValue(valueObj);
         }
-        return "undefined";
+        return UNDEFINED_EXPRESSION;
     }
 
     private static String buildReferenceExpression(JSONObject valueObj) {
-        String referenceNode = valueObj.getString("referenceNode");
-        JSONArray valueArray = valueObj.getJSONArray("value");
-        StringBuilder valueBuilder = new StringBuilder("businessData." + Constant.BUSINESS_DATA_INTERNAL_KEY + "."
+        String referenceNode = valueObj.getString(VALUE_REFERENCE_NODE_KEY);
+        JSONArray valueArray = valueObj.getJSONArray(VALUE_VALUE_ARRAY_KEY);
+        StringBuilder valueBuilder = new StringBuilder(BUSINESS_DATA_PREFIX + Constant.BUSINESS_DATA_INTERNAL_KEY + "."
                 + Constant.INTERNAL_OUTPUT_SCOPE_KEY + ".").append(referenceNode);
         for (Object val : valueArray) {
             valueBuilder.append(".").append(val.toString());
@@ -112,10 +110,11 @@ public class ConvertConditionToRuleUtils {
     }
 
     private static String formatInputValue(JSONObject inputObj) {
-        String type = inputObj.getString("type");
+        String type = inputObj.getString(INPUT_TYPE_KEY);
         switch (type) {
             case "Boolean":
             case "Number":
+            case "Integer":
                 return inputObj.getString("value");
             case "String":
                 return "\"" + inputObj.getString("value") + "\"";

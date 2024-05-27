@@ -9,9 +9,11 @@ import { CallbackMethod, CreateType } from './model';
 interface props {
   visible: boolean;
   createCallback: Function;
+  data?: any;
+  title?: string;
 }
 
-const CreateSet = ({ visible, createCallback }: props) => {
+const CreateSet = ({ visible, createCallback, data, title }: props) => {
 
   const defaultItemData = {
     input: '',
@@ -19,6 +21,7 @@ const CreateSet = ({ visible, createCallback }: props) => {
     index: -1
   }
 
+  const [showType, setShowType] = useState(true);
   const [params, setParams] = useState(defaultItemData);
   const [createOpen, setCreateOpen] = useState(false);
   const [type, setType] = useState(CreateType.MANUAL);
@@ -29,8 +32,16 @@ const CreateSet = ({ visible, createCallback }: props) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
+    if (data) {
+      setShowType(false);
+      form.setFieldsValue({
+        name: data?.name,
+        desc: data?.desc
+      })
+      setManualData(data?.data);
+    }
     setCreateOpen(visible);
-  })
+  }, [data, visible])
 
 
   const changeType = (e: RadioChangeEvent) => {
@@ -124,7 +135,7 @@ const CreateSet = ({ visible, createCallback }: props) => {
 
   return (
     <Drawer
-      title='新建测试集'
+      title={title || '新建测试集'}
       width={800}
       open={createOpen}
       onClose={closeDrawer}
@@ -140,21 +151,23 @@ const CreateSet = ({ visible, createCallback }: props) => {
       }
     >
       <Form form={form} layout='vertical' onFinish={onFinish}>
-        <Form.Item label='新建方式' required>
-          <Radio.Group value={type} onChange={changeType}>
-            <Space size='large'>
-              <Radio value='upload'>上传</Radio>
-              <Radio value='manual'>手动</Radio>
-            </Space>
-          </Radio.Group>
-        </Form.Item>
+        {(showType) && (
+          <Form.Item label='新建方式' required>
+            <Radio.Group value={type} onChange={changeType}>
+              <Space size='large'>
+                <Radio value='upload'>上传</Radio>
+                <Radio value='manual'>手动</Radio>
+              </Space>
+            </Radio.Group>
+          </Form.Item>
+        )}
         <Form.Item label='测试集名称' name='name' required rules={[{ required: true, message: '输入不能为空' }]}>
           <Input />
         </Form.Item>
         <Form.Item label='测试集描述' name='desc' required rules={[{ required: true, message: '输入不能为空' }]}>
           <Input />
         </Form.Item>
-        {(type === CreateType.UPLOAD) ?
+        {(showType && type === CreateType.UPLOAD) ?
           <Form.Item label='上传' required>
             <LiveUpload />
           </Form.Item>
@@ -166,7 +179,7 @@ const CreateSet = ({ visible, createCallback }: props) => {
           >创建</Button>
         }
         <Table
-          dataSource={type === CreateType.MANUAL ? manualData : uploadData}
+          dataSource={!showType || type === CreateType.MANUAL ? manualData : uploadData}
           columns={columns}
           pagination={{
             simple: true,

@@ -17,7 +17,7 @@ baseAxios.interceptors.request.use(
 
 baseAxios.interceptors.response.use(
   (response) => {
-    if (response.data.code === undefined || response.data.code === 0) {
+    if (response.data.code === undefined || response.data.code === 0 || response.data.code === 200) {
       return Promise.resolve(response.data);
     }
     console.warn(response.config?.url);
@@ -123,13 +123,13 @@ export const put = (url, data = {}, _object = {}) => {
 /**
  * 封装delete请求
  * @param url
- * @param params
+ * @param data
  * @returns {Promise}
  */
 
-export const del = (url, params = {}, _object = {}) => {
+export const del = (url, data = {}, _object = {}) => {
   return new Promise((resolve, reject) => {
-    baseAxios.delete(url, { params, ..._object}).then(
+    baseAxios.delete(url, { data, ..._object}).then(
       (response) => {
         resolve(response);
       },

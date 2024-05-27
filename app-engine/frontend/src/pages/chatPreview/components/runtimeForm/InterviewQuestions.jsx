@@ -4,11 +4,11 @@
 import React, {useContext, useEffect, useState} from 'react';
 import { Input, Button, Typography } from 'antd';
 import { CommentOutlined } from '@ant-design/icons';
-import {saveContent} from "../../../../shared/http/appBuilder";
-import {Message} from "../../../../shared/utils/message";
+import {saveContent} from "@shared/http/appBuilder";
+import {Message} from "@shared/utils/message";
 import styled from "styled-components";
 import { AippContext } from "../../../aippIndex/context";
-import { saveReport } from "../../../../shared/http/appBuilder";
+import { saveReport } from "@shared/http/appBuilder";
 import { uuid } from "../../../../common/utils";
 
 

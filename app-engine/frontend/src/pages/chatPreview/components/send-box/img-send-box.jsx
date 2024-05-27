@@ -1,0 +1,26 @@
+
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { httpUrlMap } from '@shared/http/httpConfig';
+import fileImg from '@assets/images/ai/file2.png';
+
+const { AIPP_URL } = httpUrlMap[process.env.NODE_ENV];
+const ImgSendBox = (props) => {
+  const { content, sendType } = props;
+  const { tenantId } = useParams();
+  let { file_name, file_path } = JSON.parse(content);
+  return <>{(
+    <div className="img-send-box">
+      { sendType === 'img' ? (
+        <img className="img-send-item" src={`${AIPP_URL}/${tenantId}/file?filePath=${file_path}&fileName=${file_name}`}/>
+      ) : (
+        <div className="file-div-item">
+          <img className="file-item" src={fileImg}/>
+          <span className="file-text" title={file_name}>{file_name}</span>
+        </div>
+      ) }
+    </div>
+  )}</>
+}
+
+export default ImgSendBox;

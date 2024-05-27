@@ -2,9 +2,9 @@ import React, { useEffect, useState, useContext, useRef } from "react";
 import { useLocation } from "react-router";
 import { Spin } from "antd";
 import { LeftArrowIcon } from "@assets/icon";
-import { Message } from "../../shared/utils/message";
+import { Message } from "@shared/utils/message";
 import ChatMessage from "./components/chat-message.jsx";
-import SendEditor from "./components/send-editor.jsx";
+import SendEditor from "./components/send-editor/send-editor.jsx";
 import CheckGroup from "./components/check-group.jsx";
 import Inspiration from "./components/inspiration.jsx";
 import {
@@ -125,7 +125,7 @@ const ChatPreview = (props) => {
     try {
       let type =
         location.pathname.indexOf("chat") === -1 ? "preview" : "normal";
-      const res = await getRecentInstances(tenantId, appId, type);
+      const res = await getRecentInstances(tenantId, appId, 'preview');
       if (res.data && res.data.length) {
         let chatArr = [];
         res.data.forEach((item) => {
@@ -207,13 +207,16 @@ const ChatPreview = (props) => {
     const reciveInitObj = JSON.parse(JSON.stringify(initChat));
     reciveInitObj.type = "recieve";
     reciveInitObj.loading = true;
-    reciveInitObj.content = '回答生成中';
+    reciveInitObj.loading = false;
+    // reciveInitObj.chartConfig = chatMock;
     isChatRunning.current = false;
     setChatList(() => {
       let arr = [...listRef.current, reciveInitObj];
       listRef.current = arr;
       return arr;
     });
+    // printLogs(codeMock.instance_log);
+    // return
     chatStatusChange(true);
     if (showElsa) {
       let params = aippInfo.flowGraph;
@@ -277,7 +280,8 @@ const ChatPreview = (props) => {
     runningVersion.current = version;
     runningAppid.current = aipp_id;
     if (!wsCurrent.current) {
-      wsCurrent.current = new WebSocket(`ws://80.11.128.66:31111/api/jober/v1/api/aipp/streamLog?aippId=${aipp_id}&version=${version}`);
+      const prefix = window.location.protocol === 'http:' ? 'ws' : 'wss';
+      wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
       wsCurrent.current.onopen = () => {
         wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));
       }
@@ -483,13 +487,17 @@ const ChatPreview = (props) => {
     return false;
   }
   // 清除历史对话记录
-  async function clearChat() {
+  async function clearChat(val) {
     if (chatRunning) {
       Message({ type: "warning", content: "对话进行中, 请稍后再试" });
       return;
     }
     if (!chatList.length) {
       return;
+    }
+    if (!val) {
+      setChatList([]);
+      return
     }
     try {
       setRequestLoading(true);

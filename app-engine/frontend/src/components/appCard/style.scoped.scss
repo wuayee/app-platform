@@ -1,0 +1,62 @@
+.app_card_root{
+    *{
+        box-sizing: border-box;
+    }
+    width: 380px;
+    height: 260px;
+    padding:20px;
+    margin-right: 16px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(105, 105, 105, .2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    .app_card_header {
+        display: flex;
+        .img_box{
+            width: 50px;
+            height: 50px;
+        }
+        .infoArea{
+            font-size: 20px;
+            color: rgba(5, 5, 5, .96);
+            margin-left: 10px;
+            .title_info{
+                display: "flex";
+                align-items: "center";
+                .createBy {
+                    font-size: 14px;
+                    color: rgba(105, 105, 105, .9);
+                    margin-left: 10px;
+                }
+            }
+            
+        }
+    }
+    .app_card_body{
+        word-break: break-all;
+        font-size: 14px;
+        line-height: 22px;
+        text-align: justify;
+        flex: 1;
+        margin: 16px 0;
+        overflow: hidden;
+    }
+
+    .app_card_footer {
+        border-top: 1px solid rgb(202, 218, 242);
+        display: flex;
+        align-items: center;
+        padding-top: 10px;
+        .left{
+            display: flex;
+            align-items: center;
+            .icon_box {
+                margin-right: 40px;
+                color: rgb(94, 103, 116);
+            }
+        }
+        .operator{}
+    }
+}

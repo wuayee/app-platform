@@ -1,28 +1,34 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
-import { Upload } from 'antd';
+import { Form, Upload } from 'antd';
 import { UploadFile } from 'antd/lib';
+import useSearchParams from '../../shared/hooks/useSearchParams';
+import { deleteLocalFile, uploadLocalFile } from '../../shared/http/knowledge';
 
 const { Dragger } = Upload;
 
-const LocalUpload = () => {
+const LocalUpload: React.FC<{ form: any, respId?: any, tableId?: any }> = ({ form, respId, tableId }) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const filesKeys = useRef<Map<string, any>>(new Map());
+  let { id, tableid } = useSearchParams();
+  const selectedFile = Form.useWatch('selectedFile', form);
+  
+  id = id || respId;
+  tableid = tableid || tableId;
+  useEffect(() => {
+    setFileList(selectedFile);
+  }, [selectedFile]);
 
   const handleFileChange = () => {};
 
   const setFiles = (): void => {
     const files = [...filesKeys.current.values()];
     setFileList(files);
+    form.setFieldValue('selectedFile', files);
+    form.validateFields(['selectedFile']);
   };
 
-  const isFilesUnique = (file: UploadFile): boolean => {
-    if (filesKeys.current.has(makeFileKey(file))) {
-      return false;
-    }
-
-    return true;
-  };
+  const isFilesUnique = (file: UploadFile): boolean => !filesKeys.current.has(makeFileKey(file));
 
   const handleBeforeUpload = (file: UploadFile): boolean => {
     if (isFilesUnique(file)) {
@@ -33,17 +39,20 @@ const LocalUpload = () => {
     return false;
   };
 
-  const handleUpload = () => {};
+  const handleUpload = async ({ file }: any) => {
+    await uploadLocalFile(id, tableid, file, `${file.uid}_${file.name}`);
+  };
 
   function makeFileKey(file: UploadFile): string {
     return `${file.name}:(${file.size})`;
   }
 
-  const handleRemoveFile = (file: UploadFile): void => {
+  const handleRemoveFile = async (file: UploadFile) => {
     const key = makeFileKey(file);
     if (!filesKeys.current.has(key)) {
       return;
     }
+    await deleteLocalFile(id, tableid, [`${file.uid}_${file.name}`]);
     filesKeys.current.delete(key);
     setFiles();
   };

@@ -11,6 +11,7 @@ import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowNode;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.events.FlowEvent;
 import com.huawei.fit.jober.flowsengine.domain.flows.parsers.FlowGraphData;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -34,17 +35,21 @@ public class EventParser {
      * @param allNodeMap 流程中Node集合
      */
     public void parse(FlowGraphData flowGraphData, Map<String, FlowNode> allNodeMap) {
-        IntStream.range(0, flowGraphData.getEvents()).forEach(eventIndex -> {
-            FlowEvent flowEvent = FlowEvent.builder()
-                    .metaId(flowGraphData.getEventMetaId(eventIndex))
-                    .name(flowGraphData.getEventName(eventIndex))
-                    .from(flowGraphData.getEventFromNode(eventIndex))
-                    .to(flowGraphData.getEventToNode(eventIndex))
-                    .conditionRule(flowGraphData.getEventConditionRule(eventIndex))
-                    .build();
-            Optional.ofNullable(allNodeMap.get(flowEvent.getFrom()))
-                    .orElseThrow(() -> new JobberException(INPUT_PARAM_IS_INVALID, "Event toId is null"));
-            allNodeMap.get(flowEvent.getFrom()).getEvents().add(flowEvent);
-        });
+        IntStream.range(0, flowGraphData.getEvents())
+                .mapToObj(eventIndex -> {
+                    FlowEvent flowEvent = FlowEvent.builder()
+                            .metaId(flowGraphData.getEventMetaId(eventIndex))
+                            .name(flowGraphData.getEventName(eventIndex))
+                            .from(flowGraphData.getEventFromNode(eventIndex))
+                            .to(flowGraphData.getEventToNode(eventIndex))
+                            .conditionRule(flowGraphData.getEventConditionRule(eventIndex))
+                            .priority(flowGraphData.getEventPriority(eventIndex))
+                            .build();
+                    Optional.ofNullable(allNodeMap.get(flowEvent.getFrom()))
+                            .orElseThrow(() -> new JobberException(INPUT_PARAM_IS_INVALID, "Event toId is null"));
+                    return flowEvent;
+                })
+                .sorted(Comparator.comparingInt(FlowEvent::getPriority))
+                .forEach(flowEvent -> allNodeMap.get(flowEvent.getFrom()).getEvents().add(flowEvent));
     }
 }

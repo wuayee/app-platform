@@ -20,6 +20,7 @@ import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.Prompt;
+import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.content.Media;
 import com.huawei.jade.fel.core.memory.Memory;
 import com.huawei.jade.fel.engine.operators.AiRunnableArg;
@@ -37,14 +38,14 @@ import java.util.Optional;
  * @since 2024-05-16
  */
 public class LlmEmitter<O extends ChatMessage> extends FiniteEmitter<O, ChatChunk> {
-    private static final StreamingConsumer<ChatChunk, ChatChunk> EMPTY_CONSUMER = (acc, chunk) -> {};
+    private static final StreamingConsumer<AiMessage, ChatChunk> EMPTY_CONSUMER = (acc, chunk) -> {};
 
     private final Memory memory;
     private final StringBuilder text = new StringBuilder();
     private final List<Media> medias = new ArrayList<>();
     private final List<ToolCall> toolCalls = new ArrayList<>();
     private final ChatMessage question;
-    private final StreamingConsumer<ChatChunk, ChatChunk> consumer;
+    private final StreamingConsumer<AiMessage, ChatChunk> consumer;
     private final Processor<Prompt, ChatChunk> processor;
     private final FlowContext<Prompt> context;
 

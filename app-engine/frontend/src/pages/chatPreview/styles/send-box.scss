@@ -1,22 +1,31 @@
 .send-box {
-  display: flex;
-  align-self: flex-end;
-  justify-content: flex-end;
-  padding-right: 16px;
-  padding-left: 45px;
   position: relative;
   .send-info {
-    padding: 10px 16px;
-    font-size: 14px;
-    line-height: 25px;
-    border-radius: 10px;
-    font-family: '苹方-简';
-    margin-right: 16px;
-    margin-bottom: 15px;
-    background-color: #047BFC;
-    word-break: break-all;
     color: #ffffff;
     position: relative;
+    margin: 12px 0;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    .send-info-inner {
+      display: inline-block;
+      max-width: 100%;
+      background-color: #047BFC;
+      padding: 10px 16px;
+      font-size: 14px;
+      line-height: 25px;
+      border-radius: 10px;
+      font-family: '苹方-简';
+      word-break: break-all;
+      position: relative;
+      &:hover {
+        .message-tip-box-send {
+          width: max-content;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
     p {
       margin: 0;
       white-space: pre-wrap;
@@ -25,13 +34,7 @@
       color: #e9edfa;
       text-decoration: underline;
     }
-    &:hover {
-      .message-tip-box-send {
-        width: max-content;
-        display: flex;
-        align-items: center;
-      }
-    }
+    
     .img-send-box {
       .img-send-item {
         width: 240px;
@@ -67,31 +70,48 @@
     }
   }
   .user-image {
-    width: 32px;
-    height: 32px;
-    flex-shrink: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    span {
+      font-size: 14px;
+      color: #1a1a1a;
+      font-weight: 600;
+    }
     img {
-      width: 100%;
-      height: 100%;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
+      margin-right: 16px;
     }
   }
   .message-tip-box-send {
     position: absolute;
     right: 0;
-    bottom: -30px;
+    bottom: -40px;
     color: #888888;
     font-size: 12px;
     display: none;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 7px 0px rgba(56,89,149,0.2);
+    border-radius: 8px;
+    z-index: 999;
     .inner {
-      width: 300px;
+      width: 170px;
       display: flex;
-      padding-top: 10px;
-      justify-content: flex-end;
+      align-items: center;
+      justify-content: center;
+      line-height: unset;
+      height: 48px;
       & > div {
         cursor: pointer;
-        margin: 0 6px;
+        padding: 0 12px;
       }
+      // svg {
+      //   &:hover {
+      //     path{ stroke:#2673e5}
+      //   }
+      // }
     }
   }
   .check-box {

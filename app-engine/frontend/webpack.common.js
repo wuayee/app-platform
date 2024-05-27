@@ -7,6 +7,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const HappyPack = require("happypack");
 const PUBLIC_PATH = "/appbuilder/";
 const webpack = require("webpack");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -82,7 +83,7 @@ module.exports = {
       __constants: path.join(__dirname, "src/constants"),
       __support: path.join(__dirname, "src/support"),
       __components: path.join(__dirname, "src/components"),
-      __shared: path.join(__dirname, "src/shared"),
+      '@shared': path.join(__dirname, "src/shared"),
       '@assets': path.join(__dirname, "src/assets"),
       __store: path.join(__dirname, "src/store"),
       '@': path.resolve(__dirname, 'src')
@@ -106,6 +107,17 @@ module.exports = {
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env.SSO_URL': JSON.stringify(process.env.SSO_URL)
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/assets', // 静态资源目录
+          to: 'src/assets', // 打包后的静态资源目录
+          globOptions: {
+            ignore: ['**/*.js'] // 忽略的文件
+          }
+        }
+      ]
     })
   ],
   optimization: {
