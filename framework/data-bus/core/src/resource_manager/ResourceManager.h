@@ -21,7 +21,7 @@
 namespace DataBus {
 namespace Resource {
 
-const std::string LOG_PATH = "./malloc_log.bin";
+const std::string LOG_PATH = "/tmp/databus/logs/malloc_log.bin";
 
 class ResourceManager {
 public:

@@ -8,6 +8,7 @@
 
 #include "ResourceManager.h"
 #include "FtokArgsGenerator.h"
+#include "utils/FileUtils.h"
 
 using namespace std;
 using namespace DataBus::Resource;
@@ -101,14 +102,8 @@ protected:
 
 TEST_F(ResourceManagerTest, should_clean_up_ftok_file_path_and_shm_log_file_when_init)
 {
-    std::string rootDir = "./tmp/";
-    std::string filePath = rootDir + "test";
-    if (mkdir(rootDir.data(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
-        perror("failed to create the tmp root directory");
-    }
-    if (mkdir(filePath.data(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
-        perror("failed to create the test subdirectory");
-    }
+    std::string filePath = FILE_PATH_PREFIX + "test";
+    FileUtils::CreateDirectory(filePath);
     EXPECT_TRUE(IsFolderExist(filePath));
     resourceManager->Init();
     EXPECT_FALSE(IsFolderExist(filePath));
