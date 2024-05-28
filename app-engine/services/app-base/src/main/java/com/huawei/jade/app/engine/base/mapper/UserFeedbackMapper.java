@@ -5,7 +5,6 @@
 package com.huawei.jade.app.engine.base.mapper;
 
 import com.huawei.jade.app.engine.base.dto.UsrFeedbackDto;
-import com.huawei.jade.app.engine.base.po.UsrFeedbackPo;
 
 import java.util.List;
 
@@ -44,7 +43,7 @@ public interface UserFeedbackMapper {
      *
      * @return 用户反馈列表
      */
-    List<UsrFeedbackPo> getAllUsrFeedbacks();
+    List<UsrFeedbackDto> getAllUsrFeedbacks();
 
     /**
      * 通过日志Id获取用户反馈信息
@@ -52,5 +51,5 @@ public interface UserFeedbackMapper {
      * @param logId 日志Id
      * @return 用户反馈信息
      */
-    UsrFeedbackPo getUsrFeedbackByLogId(Long logId);
+    UsrFeedbackDto getUsrFeedbackByLogId(Long logId);
 }

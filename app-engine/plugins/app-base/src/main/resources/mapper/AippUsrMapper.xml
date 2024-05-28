@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huawei.jade.app.engine.base.mapper.UserFeedbackMapper">
-    <resultMap id="BaseResultMap" type="com.huawei.jade.app.engine.base.po.UsrFeedbackPo">
+    <resultMap id="BaseResultMap" type="com.huawei.jade.app.engine.base.dto.UsrFeedbackDto">
         <result column="id" property="id"/>
         <result column="log_id" property="logId"/>
-        <result column="aipp_id" property="aippId"/>
+        <result column="instance_id" property="instanceId"/>
         <result column="usr_feedback" property="usrFeedback"/>
         <result column="usr_feedback_text" property="usrFeedbackText"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, log_id, aipp_id, usr_feedback, usr_feedback_text
+        id, log_id, instance_id, usr_feedback, usr_feedback_text
     </sql>
 
     <insert id="insert" parameterType="com.huawei.jade.app.engine.base.dto.UsrFeedbackDto">
-        insert into usr_feedback_info (log_id, aipp_id, usr_feedback, usr_feedback_text)
-        values (#{logId}, #{aippId}, #{usrFeedback}, #{usrFeedbackText})
+        insert into usr_feedback_info (log_id, instance_id, usr_feedback, usr_feedback_text)
+        values (#{logId}, #{instanceId}, #{usrFeedback}, #{usrFeedbackText})
     </insert>
 
     <update id="updateOne" parameterType="com.huawei.jade.app.engine.base.dto.UsrFeedbackDto">
@@ -36,13 +36,13 @@
         where log_id = #{logId}
     </delete>
 
-    <select id="getAllUsrFeedbacks" resultMap="BaseResultMap" resultType="com.huawei.jade.app.engine.base.po.UsrFeedbackPo">
+    <select id="getAllUsrFeedbacks" resultMap="BaseResultMap" resultType="com.huawei.jade.app.engine.base.dto.UsrFeedbackDto">
         select
         <include refid="Base_Column_List"/>
         from usr_feedback_info
     </select>
 
-    <select id="getUsrFeedbackByLogId" resultMap="BaseResultMap" resultType="com.huawei.jade.app.engine.base.po.UsrFeedbackPo">
+    <select id="getUsrFeedbackByLogId" resultMap="BaseResultMap" resultType="com.huawei.jade.app.engine.base.dto.UsrFeedbackDto">
         select
         <include refid="Base_Column_List"/>
         from usr_feedback_info
