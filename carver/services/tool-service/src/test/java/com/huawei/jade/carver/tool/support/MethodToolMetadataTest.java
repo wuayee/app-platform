@@ -63,7 +63,7 @@ public class MethodToolMetadataTest {
         Router router = mock(Router.class);
         Invoker invoker = mock(Invoker.class);
         when(client.getRouter(eq("t1"), eq(this.testMethod))).thenReturn(router);
-        when(router.route()).thenReturn(invoker);
+        when(router.route(any())).thenReturn(invoker);
         when(invoker.invoke(any())).thenAnswer(invocation -> {
             if (Objects.equals(invocation.getArgument(0), "1")) {
                 return "OK";

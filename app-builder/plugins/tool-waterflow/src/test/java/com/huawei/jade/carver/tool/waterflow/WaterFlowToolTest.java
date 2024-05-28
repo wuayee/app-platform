@@ -61,7 +61,7 @@ public class WaterFlowToolTest {
         Router router = mock(Router.class);
         Invoker invoker = mock(Invoker.class);
         when(this.client.getRouter(eq("t1"))).thenReturn(router);
-        when(router.route()).thenReturn(invoker);
+        when(router.route(any())).thenReturn(invoker);
         when(invoker.invoke(any())).thenAnswer(invocation -> {
             if (Objects.equals(invocation.getArgument(0), "p1_value") && Objects.equals(invocation.getArgument(1),
                     "p2_default_value") && Objects.equals(invocation.getArgument(2), "p3_value")) {
