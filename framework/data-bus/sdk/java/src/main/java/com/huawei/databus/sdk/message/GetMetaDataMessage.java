@@ -20,38 +20,38 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 @SuppressWarnings("unused")
-public final class GetUserDataMessage extends Table {
+public final class GetMetaDataMessage extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_5_26(); }
-  public static GetUserDataMessage getRootAsGetUserDataMessage(ByteBuffer _bb) { return getRootAsGetUserDataMessage(_bb, new GetUserDataMessage()); }
-  public static GetUserDataMessage getRootAsGetUserDataMessage(ByteBuffer _bb, GetUserDataMessage obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static GetMetaDataMessage getRootAsGetMetaDataMessage(ByteBuffer _bb) { return getRootAsGetMetaDataMessage(_bb, new GetMetaDataMessage()); }
+  public static GetMetaDataMessage getRootAsGetMetaDataMessage(ByteBuffer _bb, GetMetaDataMessage obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
-  public GetUserDataMessage __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public GetMetaDataMessage __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public String objectKey() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer objectKeyAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer objectKeyInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
 
-  public static int createGetUserDataMessage(FlatBufferBuilder builder,
+  public static int createGetMetaDataMessage(FlatBufferBuilder builder,
       int objectKeyOffset) {
     builder.startTable(1);
-    GetUserDataMessage.addObjectKey(builder, objectKeyOffset);
-    return GetUserDataMessage.endGetUserDataMessage(builder);
+    GetMetaDataMessage.addObjectKey(builder, objectKeyOffset);
+    return GetMetaDataMessage.endGetMetaDataMessage(builder);
   }
 
-  public static void startGetUserDataMessage(FlatBufferBuilder builder) { builder.startTable(1); }
+  public static void startGetMetaDataMessage(FlatBufferBuilder builder) { builder.startTable(1); }
   public static void addObjectKey(FlatBufferBuilder builder, int objectKeyOffset) { builder.addOffset(0, objectKeyOffset, 0); }
-  public static int endGetUserDataMessage(FlatBufferBuilder builder) {
+  public static int endGetMetaDataMessage(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
   }
-  public static void finishGetUserDataMessageBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset); }
-  public static void finishSizePrefixedGetUserDataMessageBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset); }
+  public static void finishGetMetaDataMessageBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset); }
+  public static void finishSizePrefixedGetMetaDataMessageBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }
 
-    public GetUserDataMessage get(int j) { return get(new GetUserDataMessage(), j); }
-    public GetUserDataMessage get(GetUserDataMessage obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
+    public GetMetaDataMessage get(int j) { return get(new GetMetaDataMessage(), j); }
+    public GetMetaDataMessage get(GetMetaDataMessage obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
 

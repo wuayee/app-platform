@@ -17,6 +17,6 @@ public final class MessageType {
   public static final byte ApplyPermission = 33;
   public static final byte ReleasePermission = 48;
   public static final byte ReleaseMemory = 49;
-  public static final byte GetUserData = 65;
+  public static final byte GetMetaData = 65;
 }
 
