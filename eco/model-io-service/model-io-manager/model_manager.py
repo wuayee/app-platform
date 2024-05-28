@@ -37,7 +37,7 @@ NAMESPACE_FILE = "/var/run/secrets/kubernetes.io/serviceaccount/namespace"
 
 def set_cross_header(response, request):
     response.headers["access-control-allow-headers"] = "content-type"
-    response.headers["access-control-allow-methods"] = "*"
+    response.headers["access-control-allow-methods"] = "GET,POST,PUT,DELETE,OPTIONS"
     response.headers["access-control-allow-credentials"] = "true"
     if request.headers.get("origin"):
         response.headers["access-control-allow-origin"] = request.headers["origin"]
@@ -106,11 +106,14 @@ async def run_tasks():
     _notify_model_io_gateways()
 
 
-@app.options("/")
+@app.options("/v1/delete")
+@app.options("/v1/start_up")
+@app.options("/v1/list_supported_models")
+@app.options("/v1/list_supported_models_meta")
 def options_response(request : Request):
     res = {"status": "ok"}
     response = JSONResponse(content=jsonable_encoder(res))
-    set_cross_header(JSONResponse, request)
+    set_cross_header(response, request)
     return response
 
 
@@ -254,8 +257,16 @@ async def health(item: NodePortItem) -> Response:
     return Response(status_code=200)
 
 
+def gen_error_info(code, detail):
+    error_info = {
+       "code": code,
+       "detail": detail
+    }
+    return error_info
+
+
 @app.delete("/v1/delete")
-async def delete_model(llm: Llm):
+async def delete_model(llm: Llm, request : Request):
     model_name = llm.name.strip()
     model_services = get_cached_model_services()
     logger.info(model_services)
@@ -269,37 +280,34 @@ async def delete_model(llm: Llm):
             response = api_instance.delete_namespaced_service(service_name, MODEL_IO_NAMESPACE)
             logger.info("Delete service {%s} successful", service_name)
         except ApiException as e:
-            error_info = {
-               code: e.status,
-               detail: e.reason
-            }
             logger.warning(e)
-            return JSONResponse(status_code=522, content=jsonable_encoder(error_info))
+            error_info = gen_error_info(e.status, e.reason)
+            response = JSONResponse(status_code=522, content=jsonable_encoder(error_info))
+            set_cross_header(response, request)
+            return response
         try:
             response = k8s_client.delete_namespaced_deployment(deployment_name, MODEL_IO_NAMESPACE)
             logger.info("Delete deployment {%s} successful", deployment_name)
         except ApiException as e:
-            error_info = {
-               code: e.status,
-               detail: e.reason
-            }
+            error_info = gen_error_info(e.status, e.reason)
             logger.warning(e)
-            return JSONResponse(status_code=522, content=jsonable_encoder(error_info))
+            response = JSONResponse(status_code=522, content=jsonable_encoder(error_info))
+            set_cross_header(response, request)
+            return response
         _notify_model_io_gateways()
-        status_code = 200
-        error_info = {
-            code: status_code,
-            detail: "ok"
-        }
-        return JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))
+        status_ok = 200
+        error_info = gen_error_info(status_ok, "ok")
+        response = JSONResponse(status_code=status_ok, content=jsonable_encoder(error_info))
+        set_cross_header(response, request)
+        return response
     else:
         error_code = 521
         error_args = [f"The Model {model_name} is not deployed"]
-        error_info = {
-            code: error_code,
-            detail: f"Failed to delete Model: {model_name}. Failure cause:{error_args}"
-        }
-        return JSONResponse(status_code=error_code, content=jsonable_encoder(error_info))
+        detail = f"Failed to delete Model: {model_name}. Failure cause:{error_args}"
+        error_info = gen_error_info(521, detail)
+        response = JSONResponse(status_code=error_code, content=jsonable_encoder(error_info))
+        set_cross_header(response, request)
+        return response
     pass
 
 
@@ -504,7 +512,7 @@ model_weight_model_dir = {
 
 
 @app.post("/v1/start_up")
-async def start_up(item: Item):
+async def start_up(item: Item, request : Request):
     templates = get_template()
     model_name = item.name.strip()
     model_base_dir = model_name
@@ -554,7 +562,9 @@ async def start_up(item: Item):
         "detail": "ok"
     }
 
-    return JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))
+    response = JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))
+    set_cross_header(response, request)
+    return response
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
