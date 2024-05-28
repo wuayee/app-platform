@@ -126,14 +126,6 @@ module.exports = merge(common, {
         secure: false,
         changeOrigin: true,
       },
-      '/plugin/api/jober': {
-        target: 'http://80.11.128.66:31111',
-        pathRewrite: {
-          '^/plugin/api/jober': '/api/jober',
-        },
-        secure: false,
-        changeOrigin: true,
-      },
     },
   },
 });
