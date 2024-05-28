@@ -4,21 +4,20 @@
 
 package com.huawei.fit.jober.aipp.fitable;
 
-import com.huawei.fit.jade.NaiveRAGService;
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.aipp.common.Utils;
-import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
-import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.app.engine.knowledge.dto.KbVectorSearchDto;
+import com.huawei.jade.app.engine.knowledge.service.KnowledgeBaseService;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,10 +32,9 @@ import java.util.stream.Collectors;
 @Component
 public class NaiveRAGComponent implements FlowableService {
     private static final Logger log = Logger.get(NaiveRAGComponent.class);
-    private static final String KNOWLEDGE_NAME_PREFIX = "KnowledgeBase_";
-    private final NaiveRAGService naiveRAGService;
-    public NaiveRAGComponent(NaiveRAGService naiveRAGService) {
-        this.naiveRAGService = naiveRAGService;
+    private final KnowledgeBaseService knowledgeBaseService;
+    public NaiveRAGComponent(KnowledgeBaseService knowledgeBaseService) {
+        this.knowledgeBaseService = knowledgeBaseService;
     }
 
     /**
@@ -52,25 +50,31 @@ public class NaiveRAGComponent implements FlowableService {
         log.debug("NaiveRAGComponent business data {}", businessData);
         String ragOutput = StringUtils.EMPTY;
         List<Map<String, Object>> knowledgeList = ObjectUtils.cast(businessData.get("knowledge"));
-        List<String> collectionNameList = Collections.emptyList();
+        List<Long> tableIdList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(knowledgeList)) {
-            collectionNameList = knowledgeList.stream()
+            tableIdList = knowledgeList.stream()
                     .filter(MapUtils::isNotEmpty)
-                    .map(map -> KNOWLEDGE_NAME_PREFIX + map.get("id"))
+                    .filter(map -> "VECTOR".equals(map.get("serviceType")))
+                    .map(map -> Long.valueOf(ObjectUtils.cast(map.get("tableId"))))
                     .collect(Collectors.toList());
         }
-        if (CollectionUtils.isNotEmpty(collectionNameList)) {
-            String query = ObjectUtils.cast(businessData.get("query"));
-            Integer maximum = ObjectUtils.cast(businessData.get("maximum"));
-            ragOutput = this.naiveRAGService.process(maximum, collectionNameList, query);
-        }
-        if (ragOutput == null) {
-            log.error("Connect naiveRAGService failed!");
-            throw new AippException(Utils.getOpContext(businessData), AippErrCode.UNKNOWN);
+        if (CollectionUtils.isNotEmpty(tableIdList)) {
+            KbVectorSearchDto kbVectorSearchCondition = this.buildKbVectorSearchDto(tableIdList, businessData);
+            List<String> chunksList = this.knowledgeBaseService.vectorSearchKnowledgeTable(kbVectorSearchCondition);
+            ragOutput = String.join("; ", chunksList);
         }
         businessData.putIfAbsent("output", new HashMap<String, Object>());
         Map<String, Object> output = ObjectUtils.cast(businessData.get("output"));
         output.put("retrievalOutput", ragOutput);
         return flowData;
+    }
+
+    private KbVectorSearchDto buildKbVectorSearchDto(List<Long> tableIdList, Map<String, Object> businessData) {
+        KbVectorSearchDto kbVectorSearchCondition = new KbVectorSearchDto();
+        kbVectorSearchCondition.setTableId(tableIdList);
+        kbVectorSearchCondition.setContent(ObjectUtils.cast(businessData.get("query")));
+        kbVectorSearchCondition.setTopK(ObjectUtils.cast(businessData.get("maximum")));
+        kbVectorSearchCondition.setThreshold(0.5);
+        return kbVectorSearchCondition;
     }
 }
