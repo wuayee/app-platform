@@ -7,7 +7,7 @@ import CreateSet from './createTestset/createTestSet';
 import SetDetail from './detail';
 import { getColumnSearchProps } from '../../../../components/table-filter/input';
 import { getColumnTimePickerProps } from '../../../../components/table-filter/time-picker';
-import { getEvalDataList } from '../../../../shared/http/apps';
+import { deleteDataSetData, getEvalDataList } from '../../../../shared/http/apps';
 import { useParams } from 'react-router-dom';
 import Pagination from '../../../../components/pagination';
 
@@ -154,10 +154,18 @@ const TestSet: React.FC = () => {
           setDetailInfo(record);
           setDetailOpen(true);
         }
+        const deleteData = async ()=> {
+          try {
+            await deleteDataSetData(record?.id)
+            refresh();
+          } catch (error) {
+            
+          }
+        }
         return (
           <Space size='middle'>
             <a onClick={viewDetail}>查看</a>
-            <a>删除</a>
+            <a onClick={deleteData}>删除</a>
           </Space>
         )
       },
@@ -175,6 +183,7 @@ const TestSet: React.FC = () => {
 
   const detailCallback = () => {
     setDetailOpen(false);
+    refresh();
   }
 
   useEffect(()=> {
@@ -200,7 +209,7 @@ const TestSet: React.FC = () => {
       />
       <Pagination total = {total} current={page} onChange={paginationChange} pageSize={pageSize}/>
       <CreateSet visible={open} createCallback={callback} />
-      <SetDetail visible={detailOpen} params={detailInfo} detailCallback={detailCallback} />
+      {detailOpen && <SetDetail visible={detailOpen} params={detailInfo} detailCallback={detailCallback} />}
     </div>
   )
 }

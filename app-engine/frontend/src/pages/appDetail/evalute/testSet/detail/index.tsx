@@ -1,8 +1,9 @@
-import { Button, Space, Table, Drawer, Descriptions } from 'antd';
+import { Button, Space, Table, Drawer, Descriptions, Input } from 'antd';
 import React, { useEffect, useState } from 'react';
 import type { DescriptionsProps, PaginationProps } from 'antd';
-import { formatDateTime } from '../../../../../shared/utils/function';
-import CreateSet from '../createTestset/createTestSet';
+import DetailTable from './detail-table';
+import ModifyBaseInfo from './modify-base-info';
+import { modifyDataSetBaseInfo } from '../../../../../shared/http/apps';
 
 interface props {
   visible: boolean;
@@ -10,39 +11,49 @@ interface props {
   detailCallback: Function;
 }
 
-const showTotal: PaginationProps['showTotal'] = (total) => `共 ${total} 条`;
-
 const SetDetail = ({ params, visible, detailCallback }: props) => {
 
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailInfo, setDetailInfo] = useState<any[]>([]);
-  const [modifyData, setModifyData] = useState<any>({});
-  const [items, setItems] = useState<any[]>([]);
-  const [modifyOpen, setModifyOpen] = useState(false);
-
+  const [detailData, setDetailData] = useState(params);
   useEffect(() => {
-    generateListData(params);
+    generateListData(detailData);
     setDetailOpen(visible);
-    getItems();
-    //获取测试集输入输出数据TODO
-  }, [params, visible])
+  }, [params, visible]);
+
+  const modifyBaseInfo = async (key: string, data: any) => {
+    try {
+      await modifyDataSetBaseInfo({
+        id: params.id,
+        datasetName: params.datasetName,
+        description: params.description,
+        [key]: data.data
+      } as any)
+      setDetailData({...detailData, [key]: data.data});
+      generateListData({...detailData, [key]: data.data});
+      
+    } catch (error) {
+      
+    }
+  }
+
 
   const generateListData = (params: any) => {
     const items: DescriptionsProps['items'] = [
       {
-        key: 'name',
+        key: 'datasetName',
         label: '测试集名称',
-        children: params?.name
+        children: <ModifyBaseInfo data={params.datasetName} dataKey={'datasetName'} saveCallback={modifyBaseInfo}/>
       },
       {
-        key: 'desc',
+        key: 'description',
         label: '测试集描述',
-        children: params?.desc
+        children: <ModifyBaseInfo data={params.description} dataKey={'description'} saveCallback={modifyBaseInfo}/>
       },
       {
-        key: 'creator',
+        key: 'author',
         label: '创建人',
-        children: params?.creator
+        children: params?.author
       },
       {
         key: 'createTime',
@@ -58,65 +69,8 @@ const SetDetail = ({ params, visible, detailCallback }: props) => {
     setDetailInfo(items);
   }
 
-  const columns = [
-    {
-      key: 'input',
-      dataIndex: 'input',
-      title: '输入',
-      ellipsis: true
-    },
-    {
-      key: 'output',
-      dataIndex: 'output',
-      title: '输出',
-      ellipsis: true
-    },
-    {
-      key: 'createTime',
-      dataIndex: 'createTime',
-      title: '创建时间',
-      ellipsis: true
-    },
-    {
-      key: 'modifyTime',
-      dataIndex: 'modifyTime',
-      title: '修改时间',
-      ellipsis: true
-    },
-  ];
-
-  const getItems = () => {
-    const dataSource = Array.from({ length: 20 }).fill(null).map((_, index) => ({
-      key: index,
-      input: `数据集${index}`,
-      output: `描述${index}`,
-      createTime: formatDateTime(new Date()),
-      modifyTime: formatDateTime(new Date())
-    }));
-    setItems(dataSource);
-  }
-
   const closeDrawer = () => {
     detailCallback();
-  }
-
-  const modifyCallback = (type: string, data: any) => {
-    setModifyOpen(false);
-  }
-
-  const setModifyDrawer = () => {
-    let tempData: any = {};
-    detailInfo.forEach(item => {
-      if (item?.key === 'name' || item?.key === 'desc') {
-        tempData[item?.key] = item?.children;
-      }
-    });
-    tempData.data = [...items.map(item => ({
-      input: item?.input,
-      output: item?.output,
-    }))];
-    setModifyData(tempData);
-    setModifyOpen(true);
   }
 
   return (
@@ -131,23 +85,12 @@ const SetDetail = ({ params, visible, detailCallback }: props) => {
         footer={
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Space>
-              <Button style={{ minWidth: 96 }} onClick={closeDrawer}>取消</Button>
-              <Button type='primary' style={{ minWidth: 96 }} onClick={setModifyDrawer}>编辑</Button>
+              <Button style={{ minWidth: 96 }} onClick={closeDrawer}>关闭</Button>
             </Space>
           </div>
         }>
         <Descriptions layout='vertical' items={detailInfo} column={2} />
-        <Table
-          dataSource={items}
-          columns={columns}
-          pagination={{
-            total: 20,
-            simple: true,
-            size: 'small',
-            showTotal,
-          }}
-        />
-        <CreateSet visible={modifyOpen} createCallback={modifyCallback} data={modifyData} title='编辑测试集' />
+        <DetailTable rawData ={params}/>
       </Drawer>
     </>
   )
