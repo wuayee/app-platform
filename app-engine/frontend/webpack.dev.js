@@ -64,6 +64,7 @@ module.exports = merge(common, {
         secure: false,
         changeOrigin: true,
         pathRewrite: {
+          '^/api/jober': '/api/jober',
           '^/api': '',
         },
       },
@@ -95,18 +96,18 @@ module.exports = merge(common, {
         secure: false,
         changeOrigin: true,
       },
-      '/knowledge/repos': {
-        target: 'http://10.85.112.74:8080',
-        pathRewrite: {
-          '^/modelApi': '',
-        },
-        secure: false,
-        changeOrigin: true,
-      },
+      // '/knowledge/repos': {
+      //   target: 'http://10.85.112.74:8080',
+      //   pathRewrite: {
+      //     '^/modelApi': '',
+      //   },
+      //   secure: false,
+      //   changeOrigin: true,
+      // },
       '/knowledge': {
-        target: 'http://10.85.112.159:8080',
+        target: 'http://80.11.128.66:31111',
         pathRewrite: {
-          '^/modelApi': '',
+          '^/knowledge': '',
         },
         secure: false,
         changeOrigin: true,
@@ -122,20 +123,6 @@ module.exports = merge(common, {
         pathRewrite: {
           '^/modelApi': '',
         },
-        secure: false,
-        changeOrigin: true,
-      },
-      '/api/api/jober': {
-        target: 'http://80.11.128.66:31111',
-        pathRewrite: {
-          '^/api/api/jober': '',
-        },
-        secure: false,
-        changeOrigin: true,
-      },
-      "/evaluate": {
-        target: 'http://10.108.218.151:8088',
-        pathRewrite: {"^/evaluate": ""},
         secure: false,
         changeOrigin: true,
       },

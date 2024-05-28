@@ -27,7 +27,7 @@ const PluginCard = ({ pluginData }: any) => (
         <div style={{ fontSize: 20, marginBottom: 8 }}>
           {pluginData.name}
         </div>
-        <div hidden={pluginData.tags.includes('workflow')} style={{alignContent:'center',marginLeft:'12px'}}>
+        <div hidden={!pluginData.tags.includes('workflow')} style={{alignContent:'center',marginLeft:'12px'}}>
         <PluginIcons.ButterFlydate/>
         </div>
         </div>
