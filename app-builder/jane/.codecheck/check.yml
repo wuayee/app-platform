@@ -1,5 +1,0 @@
-version: 2.0
-#工具参数
-tool_params:
-  secsolar:
-    compile_script: mvn install -U -s .ci/settings.xml -gs .ci/settings.xml -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true -DarchetypeCatalog=internal;
