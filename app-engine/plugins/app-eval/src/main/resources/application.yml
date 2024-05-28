@@ -1,3 +1,8 @@
+server:
+  http:
+    resources:
+      file-locations:
+        - 'static'
 fit:
   beans:
     packages:
@@ -14,8 +19,11 @@ druid:
   testWhileIdle: true
   testOnBorrow: false
   testOnReturn: false
-  url: jdbc:postgresql://localhost:5432/app_engine_eval?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true
-  username: root
-  password: 123456
+  url: jdbc:postgresql://7.180.146.52:5432/jane_beta?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true&options=-c%20statement_timeout=600000
+  username: jane
+  password: FitLab123
 mybatis:
   mapper-locations: 'mapper/*Mapper.xml'
+eval:
+  task-thread-num: 4
+  tenant-id: 727d7157b3d24209aefd59eb7d1c49ff

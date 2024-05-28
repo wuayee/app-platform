@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.jade.app.engine.eval.mapper.EvalReportMapper" >
+    <resultMap id="EvalReport" type="com.huawei.jade.app.engine.eval.po.EvalReportPo" >
+        <result column="id" property="id"/>
+        <result column="instance_id" property="instanceId"/>
+        <result column="score" property="score"/>
+        <result column="meta" property="meta"/>
+        <result column="eval_task_id" property="evalTaskId"/>
+        <result column="input" property="input"/>
+        <result column="output" property="output"/>
+        <result column="expected_output" property="expectedOutput"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.huawei.jade.app.engine.eval.po.EvalReportPo" useGeneratedKeys="true" keyProperty="id">
+        insert into eval_report (instance_id, "score", "meta", "input", "output", "expected_output", "eval_task_id", "start_time", "end_time")
+        values (#{instanceId}, #{score}, #{meta}, #{input}, #{output}, #{expectedOutput}, #{evalTaskId}, #{startTime}, #{endTime})
+    </insert>
+
+    <update id="updateById" parameterType="com.huawei.jade.app.engine.eval.po.EvalReportPo">
+        update eval_report
+        set instance_id = #{instanceId}, score = #{score}, meta = #{meta}, output = #{output}, start_time = #{startTime}, end_time = #{endTime}
+        where id = #{id}
+    </update>
+
+    <update id="setFinishByInstanceId" parameterType="com.huawei.jade.app.engine.eval.po.EvalReportPo">
+        update eval_report
+        set output = #{output}, end_time = #{endTime}, score = #{score}
+        where instance_id = #{instanceId}
+    </update>
+
+    <select id="getById" resultMap="EvalReport">
+        select "id", "instance_id", "score", "meta", "input", "output", "expected_output", "eval_task_id", "start_time", "end_time"
+        from eval_report
+        where id = #{id}
+    </select>
+
+    <select id="getByEvalTaskId" resultMap="EvalReport">
+        select "id", "instance_id", "score", "meta", "input", "output", "expected_output", "eval_task_id", "start_time", "end_time"
+        from eval_report
+        where eval_task_id = #{evalTaskId}
+    </select>
+
+    <select id="getByInstanceId" resultMap="EvalReport">
+        select "id", "instance_id", "score", "meta", "input", "output", "expected_output", "eval_task_id", "start_time", "end_time"
+        from eval_report
+        where instance_id = #{instanceId}
+    </select>
+
+
+</mapper>
