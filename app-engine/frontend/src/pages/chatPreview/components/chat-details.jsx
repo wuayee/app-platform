@@ -33,7 +33,7 @@ const ChatDetail = () => {
     })
   }
   function addAippCallBack(appId) {
-    navigate(`/app/${tenantId}/detail/${appId}`);
+    navigate(`/app-develop/${tenantId}/detail/${appId}`);
   }
   return <>{(
     <div className='chat-details-content'>

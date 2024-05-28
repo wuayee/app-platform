@@ -159,7 +159,7 @@ function Skill(props) {
     }
 
     const onAddFlowClick = () => {
-      navigate(`/app/${tenantId}/addFlow/${appId}`);
+      navigate(`/app-develop/${tenantId}/addFlow/${appId}`);
     };
 
     const onAddToolClick = () => {

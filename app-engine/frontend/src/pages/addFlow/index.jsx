@@ -147,7 +147,7 @@ const AddFlow = (props) => {
     editRef.current.showModal();
   }
   const handleBackClick = () => {
-    navigate(`/app/${tenantId}/detail/${appId}`);
+    navigate(`/app-develop/${tenantId}/detail/${appId}`);
   }
   const formatTimeStamp = (now) => {
     let hours = now.getHours().toString().padStart(2, '0');

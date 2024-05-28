@@ -18,6 +18,7 @@ const AppDev: React.FC = () => {
     const params = {
       offset: (pageNo.current - 1) * 10,
       limit: 10,
+      name:search || undefined,
     };
     const res: any = await queryAppDevApi(tenantId, params);
     if (res.code === 0) {
@@ -34,9 +35,6 @@ const AppDev: React.FC = () => {
       setTotal(range.total);
     }
   }
-  useEffect(() => {
-    queryApps();
-  }, []);
 
   // tab栏
   const [activkey, setActiveKey] = useState('1');
@@ -48,12 +46,12 @@ const AppDev: React.FC = () => {
   const pageNo = useRef(1);
   const [total, setTotal] = useState(1);
   const [current, setCurrent] = useState(1);
+  const [search, setSearch] = useState('')
   function currentPageChange(page: number, pageSize: number) {
-    setCurrent(() => {
-      pageNo.current = page;
-      queryApps();
-      return page;
-    });
+     setCurrent(() => {
+       pageNo.current = page;
+       return page;
+     });
   }
 
   // 创建
@@ -74,11 +72,17 @@ const AppDev: React.FC = () => {
     });
   };
   function addAippCallBack(appId: string) {
-    navigate(`/app/${tenantId}/detail/${appId}`);
+    navigate(`/app-develop/${tenantId}/detail/${appId}`);
   }
 
   // 搜索
-  function onSearchValueChange(value: string) {}
+  function onSearchValueChange(value: string) {
+    setSearch(value);
+    setCurrent(() => {
+      pageNo.current = 1;
+      return 1;
+    });
+  }
   const handleSearch = debounce(onSearchValueChange, 500);
 
   // 点击卡片
@@ -107,6 +111,10 @@ const AppDev: React.FC = () => {
       queryApps();
     }
   }
+
+  useEffect(() => {
+    queryApps();
+  }, [current, search]);
 
   return (
     <div className=' apps_root'>
@@ -146,7 +154,7 @@ const AppDev: React.FC = () => {
         </div>
         <div className='card_list'>
           {appData.map((item: any) => (
-            <div key={item.id} onClick={(e) => clickCard(item, e)}>
+            <div className='card_box' key={item.id} onClick={(e) => clickCard(item, e)}>
               <AppCard cardInfo={item} clickMore={clickMore} />
             </div>
           ))}
