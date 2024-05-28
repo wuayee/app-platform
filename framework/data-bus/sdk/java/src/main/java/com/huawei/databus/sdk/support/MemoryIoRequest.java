@@ -19,6 +19,8 @@ import java.util.Optional;
 public class MemoryIoRequest implements DataBusIoRequest {
     private final String userKey;
     private final byte[] bytes;
+    private final byte[] userData;
+    private final boolean isOperatingUserData;
     private final long memoryOffset;
     private final int dataLength;
     private final byte permissionType;
@@ -31,6 +33,8 @@ public class MemoryIoRequest implements DataBusIoRequest {
         this.dataLength = builder.dataLength;
         this.permissionType = builder.permissionType;
         this.timeoutDuration = builder.timeoutDuration;
+        this.userData = builder.userData;
+        this.isOperatingUserData = builder.isOperatingUserData;
     }
 
     @Override
@@ -59,6 +63,16 @@ public class MemoryIoRequest implements DataBusIoRequest {
     }
 
     @Override
+    public byte[] userData() {
+        return this.userData;
+    }
+
+    @Override
+    public boolean isOperatingUserData() {
+        return this.isOperatingUserData;
+    }
+
+    @Override
     public Optional<Duration> timeoutDuration() {
         return Optional.ofNullable(this.timeoutDuration);
     }
@@ -73,6 +87,13 @@ public class MemoryIoRequest implements DataBusIoRequest {
         private byte permissionType;
         private Duration timeoutDuration;
         private String userKey;
+        private byte[] userData;
+        private boolean isOperatingUserData;
+
+        public Builder() {
+            this.isOperatingUserData = false;
+            this.userData = null;
+        }
 
         @Override
         public Builder permissionType(byte permissionType) {
@@ -105,6 +126,18 @@ public class MemoryIoRequest implements DataBusIoRequest {
         }
 
         @Override
+        public Builder isOperatingUserData(boolean isOperatingUserData) {
+            this.isOperatingUserData = isOperatingUserData;
+            return this;
+        }
+
+        @Override
+        public Builder userData(byte[] data) {
+            this.userData = data;
+            return this;
+        }
+
+        @Override
         public Builder timeoutDuration(Duration timeoutDuration) {
             this.timeoutDuration = timeoutDuration;
             return this;
@@ -121,7 +154,8 @@ public class MemoryIoRequest implements DataBusIoRequest {
 
     @Override
     public String toString() {
-        return "MemoryIORequest{userKey=" + userKey + ", memoryOffset=" + memoryOffset + ", dataLength=" + dataLength
+        return "MemoryIORequest{isOperatingUserData=" + isOperatingUserData + ", userKey=" + userKey
+                + ", memoryOffset=" + memoryOffset + ", dataLength=" + dataLength
                 + ", permissionType=" + permissionType + ", timeoutDuration=" + timeoutDuration + '}';
     }
 

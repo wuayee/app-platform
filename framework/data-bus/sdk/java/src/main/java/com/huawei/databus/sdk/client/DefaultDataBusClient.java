@@ -12,6 +12,7 @@ import com.huawei.databus.sdk.message.MessageType;
 import com.huawei.databus.sdk.message.PermissionType;
 import com.huawei.databus.sdk.support.MemoryIoRequest;
 import com.huawei.databus.sdk.support.MemoryIoResult;
+import com.huawei.databus.sdk.support.MemoryPermissionResult;
 import com.huawei.databus.sdk.support.OpenConnectionResult;
 import com.huawei.databus.sdk.support.ReleaseMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryRequest;
@@ -69,7 +70,7 @@ public class DefaultDataBusClient implements DataBusClient {
             return OpenConnectionResult.success();
         }
         if (!DataBusUtils.isSupportedPlatform()) {
-            return OpenConnectionResult.failure(ErrorType.UnknownError);
+            return OpenConnectionResult.failure(ErrorType.PlatformNotSupported);
         }
         try {
             this.socketChannel = SocketChannel.open();
@@ -144,7 +145,7 @@ public class DefaultDataBusClient implements DataBusClient {
 
         try {
             // 申请内存许可
-            SharedMemoryResult result = this.sharedMemoryPool.applyPermission(request, memory);
+            MemoryPermissionResult result = this.sharedMemoryPool.applyPermission(request, memory);
             if (!result.isSuccess()) {
                 return MemoryIoResult.failure(result.errorType());
             }
@@ -173,7 +174,7 @@ public class DefaultDataBusClient implements DataBusClient {
             }
 
             // 返回读写成功结果
-            return MemoryIoResult.success(memory, ioBytes, request.permissionType());
+            return MemoryIoResult.success(memory, ioBytes, result.userData(), request.permissionType());
         } catch (IOException e) {
             // 日志打印真实错误信息
             return MemoryIoResult.failure(permissionType == PermissionType.Read ? ErrorType.MemoryReadError
