@@ -1,5 +1,5 @@
 export const httpUrlMap = {
-  'development': {
+  development: {
     JANE_URL: '/api',
     ELSA_URL: '/else',
     AI_URL: '/aiApi',
@@ -13,9 +13,9 @@ export const httpUrlMap = {
     MODEL_URL: '/modelApi',
     APP_URL: '/app',
     MODEL_LIST_URL: '/v1',
-    PLUGIN_URL: '/store',
+    PLUGIN_URL: '/api/api/jober',
   },
-  'production': {
+  production: {
     JANE_URL: 'https://jane.huawei.com/api',
     ELSA_URL: 'https://fit-elsa-prod.lab.huawei.com',
     ICON_URL: 'https://jane.huawei.com/api',
@@ -26,9 +26,9 @@ export const httpUrlMap = {
     WS_AUDIO_URL: 'wss://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/app/asr',
     MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
     MODEL_LIST_URL: 'http://model-io-manager:8010/v1',
-    PLUGIN_URL: '/store',
+    PLUGIN_URL: '/api/api/jober',
   },
-  'gamma': {
+  gamma: {
     JANE_URL: 'https://jane-gamma.huawei.com/api',
     ICON_URL: 'https://jane-gamma.huawei.com/api',
     ELSA_URL: 'https://fit-elsa-gamma.lab.huawei.com',
@@ -40,7 +40,7 @@ export const httpUrlMap = {
     MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
     MODEL_LIST_URL: '/v1',
   },
-  'beta': {
+  beta: {
     JANE_URL: 'https://jane-beta.huawei.com/api',
     ICON_URL: 'https://jane-beta.huawei.com/api',
     ELSA_URL: 'https://fit-elsa-alpha.lab.huawei.com',
@@ -52,7 +52,7 @@ export const httpUrlMap = {
     MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
     MODEL_LIST_URL: '/v1',
   },
-  'alpha': {
+  alpha: {
     JANE_URL: 'https://jane-alpha.huawei.com/api',
     ICON_URL: 'https://jane-alpha.huawei.com/api',
     ELSA_URL: 'https://fit-elsa-alpha.lab.huawei.com',
@@ -64,4 +64,4 @@ export const httpUrlMap = {
     MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
     MODEL_LIST_URL: '/v1',
   },
-}
+};
