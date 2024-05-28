@@ -146,7 +146,7 @@ const AppDev: React.FC = () => {
         </div>
         <div className='card_list'>
           {appData.map((item: any) => (
-            <div key={item.id} onClick={(e) => clickCard(item, e)}>
+            <div className='card_box' key={item.id} onClick={(e) => clickCard(item, e)}>
               <AppCard cardInfo={item} clickMore={clickMore} />
             </div>
           ))}
