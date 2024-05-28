@@ -175,6 +175,7 @@ const TestSet: React.FC = () => {
 
   const detailCallback = () => {
     setDetailOpen(false);
+    refresh();
   }
 
   useEffect(()=> {
@@ -200,7 +201,7 @@ const TestSet: React.FC = () => {
       />
       <Pagination total = {total} current={page} onChange={paginationChange} pageSize={pageSize}/>
       <CreateSet visible={open} createCallback={callback} />
-      <SetDetail visible={detailOpen} params={detailInfo} detailCallback={detailCallback} />
+      {detailOpen && <SetDetail visible={detailOpen} params={detailInfo} detailCallback={detailCallback} />}
     </div>
   )
 }

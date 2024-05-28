@@ -3,9 +3,10 @@ import { Button, Form, Input, Radio, Space, Table, Drawer } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { createEvalData } from '../../../../../shared/http/apps';
+import { createEvalData, modifyDataSetBaseInfo } from '../../../../../shared/http/apps';
 import CreateTable from './createTable';
 import { CreateType } from './model';
+
 
 interface props {
   visible: boolean;
@@ -49,7 +50,7 @@ const CreateSet = ({ visible, createCallback }: props) => {
 
   const [form] = Form.useForm<FieldType>();
 
-  const { tenantId, appId} = useParams()
+  const { tenantId, appId} = useParams();
 
   useEffect(() => {
     setCreateOpen(visible);
@@ -67,7 +68,7 @@ const CreateSet = ({ visible, createCallback }: props) => {
 
   const submit = () => {
     // form.submit();
-    create();
+    // create();
   }
 
   const onFinish = (value: any) => {
@@ -92,15 +93,17 @@ const CreateSet = ({ visible, createCallback }: props) => {
     return data
   }
 
-  const create = async () => {
+  // 点击确认按钮
+  const clickSubmit = async () => {
     try {
       const res = await form.validateFields();
-
       await createEvalData(buildData(res));
-      closeDrawer();
+      
+      closeDrawer(); 
     } catch (error) {
       
     }
+
   }
 
   return (
@@ -115,7 +118,7 @@ const CreateSet = ({ visible, createCallback }: props) => {
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Space>
             <Button style={{ minWidth: 96 }} onClick={closeDrawer}>取消</Button>
-            <Button type='primary' style={{ minWidth: 96 }} onClick={submit}>确定</Button>
+            <Button type='primary' style={{ minWidth: 96 }} onClick={clickSubmit}>确定</Button>
           </Space>
         </div>
       }
