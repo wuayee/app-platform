@@ -9,8 +9,11 @@ import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.Router;
+import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.MapUtils;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.Tool;
 
 import java.util.Map;
@@ -48,15 +51,21 @@ public class FitTool extends AbstractTool {
     public Object call(Object... args) {
         Map<String, Object> runnable = cast(this.info().runnables().get("FIT"));
         if (MapUtils.isEmpty(runnable)) {
-            throw new IllegalStateException("No runnable info in schema. [type=FIT]");
+            throw new IllegalStateException("No runnable info. [type=FIT]");
         }
         String genericableId = cast(runnable.get("genericableId"));
+        Validation.notBlank(genericableId, "No genericable id in runnable info.");
         Router router;
         if (this.metadata().getMethod().isPresent()) {
             router = this.brokerClient.getRouter(genericableId, this.metadata().getMethod().get());
         } else {
             router = this.brokerClient.getRouter(genericableId);
         }
-        return router.route().invoke(args);
+        String fitableId = cast(runnable.get("fitableId"));
+        Router.Filter filter = null;
+        if (StringUtils.isNotBlank(fitableId)) {
+            filter = new FitableIdFilter(fitableId);
+        }
+        return router.route(filter).invoke(args);
     }
 }
