@@ -49,7 +49,7 @@ public class ExcelSource extends Source<List<Document>> {
     private boolean isExcelXLS(String path) throws IllegalArgumentException{
         int dotIdx = path.indexOf(".");
         if (dotIdx == -1) {
-            logger.error("illegal file path: ", path);
+            logger.error("illegal file path: {}", path);
             throw new IllegalArgumentException();
         }
         String fileExtension = path.substring(dotIdx + 1);
@@ -99,7 +99,7 @@ public class ExcelSource extends Source<List<Document>> {
                         rowContent.add(naiveStringClean(cell.getStringCellValue()));
                         break;
                     default:
-                        logger.error("Unsupported datatype:", cell.getCellType());
+                        logger.error("Unsupported datatype: {}", cell.getCellType());
                 }
             }
             contents.add(rowContent);
@@ -198,7 +198,7 @@ public class ExcelSource extends Source<List<Document>> {
                     break;
             }
         } catch (IOException e) {
-            logger.debug("Error when extracting from excel, msg:", e.getMessage());
+            logger.debug("Error when extracting from excel, msg: {}", e.getMessage());
             throw new IllegalArgumentException(e.getMessage());
         }
     }
