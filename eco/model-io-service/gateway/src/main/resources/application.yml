@@ -16,21 +16,7 @@ spring:
   cloud:
     gateway:
       routes:
-      - id: health-check
-        uri: http://localhost:${server.port}
-        predicates:
-          - Path=/model-gateway/health
-        filters:
-          - RewritePath=/model-gateway/health, /actuator/health
       # 可在下方添加自定义静态路由信息
-      - id: ads-gateway
-        uri: "http://tzaip-beta.paas.huawei.com"
-        predicates:
-          - Path=/**
-        filters:
-          # 添加/model-gateway/到路径头
-          - RewritePath=/(?<segment>/?.*), /model-gateway/$\{segment}
-        order: 1 # 设置为低优先级，其余路由无法匹配情况下才转发至ADS
 
       httpclient:
         websocket:

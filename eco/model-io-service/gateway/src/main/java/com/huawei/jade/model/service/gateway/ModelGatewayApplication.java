@@ -28,7 +28,7 @@ public class ModelGatewayApplication {
     /**
      * 获取初始模型路由信息的地址对应的环境变量名。
      */
-    public static final String MODEL_ROUTES_URL = "MODEL_ROUTES_URL";
+    public static final String MODEL_MANAGER_URL = "MODEL_MANAGER_URL";
 
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(ModelGatewayApplication.class, args);
@@ -37,16 +37,16 @@ public class ModelGatewayApplication {
     }
 
     private static void initRoutes(ApplicationContext context) {
-        String managerUrl = System.getenv(MODEL_ROUTES_URL);
+        String managerUrl = System.getenv(MODEL_MANAGER_URL);
         if (managerUrl == null || managerUrl.isEmpty()) {
-            log.error("The environment variable " + MODEL_ROUTES_URL + " is empty.");
+            log.error("The environment variable " + MODEL_MANAGER_URL + " is empty.");
             return;
         }
 
         RestTemplate restTemplate = new RestTemplate();
         RouteInfoList routeList;
         try {
-            routeList = restTemplate.getForObject(managerUrl, RouteInfoList.class);
+            routeList = restTemplate.getForObject(managerUrl + "/v1/routes", RouteInfoList.class);
         } catch (RestClientException e) {
             log.error("Failed to get initial routes: " + e);
             return;

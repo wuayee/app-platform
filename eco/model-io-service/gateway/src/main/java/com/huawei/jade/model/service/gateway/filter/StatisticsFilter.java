@@ -202,7 +202,7 @@ public class StatisticsFilter implements GlobalFilter, Ordered {
                 modelRouteService.updateModelWithResponseBody(
                         OBJECT_MAPPER.readValue(responseBody, ModelStatistics.class));
             } catch (JsonProcessingException e) {
-                log.error("Failed to update stats, read request body error: " + e);
+                log.error("Failed to update stats, read response body error: " + e);
             }
         }
 
