@@ -25,6 +25,7 @@
         <jackson.version>2.15.2</jackson.version>
         <jober-genericable.version>0.6.0-SNAPSHOT</jober-genericable.version>
         <jober-multiversion-genericable.version>0.1.0-SNAPSHOT</jober-multiversion-genericable.version>
+        <aipp-genericable.version>1.0.0-SNAPSHOT</aipp-genericable.version>
         <slf4j.version>1.7.35</slf4j.version>
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
         <mockito.version>4.0.0</mockito.version>
@@ -105,6 +106,12 @@
             <groupId>com.huawei.fit.jober</groupId>
             <artifactId>jober-multiversion-genericable</artifactId>
             <version>${jober-multiversion-genericable.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.huawei.fit.jane</groupId>
+            <artifactId>aipp-genericable</artifactId>
+            <version>${aipp-genericable.version}</version>
         </dependency>
 
         <dependency>

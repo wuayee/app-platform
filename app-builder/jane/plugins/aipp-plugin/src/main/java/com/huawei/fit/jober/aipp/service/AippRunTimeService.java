@@ -34,17 +34,6 @@ public interface AippRunTimeService {
     AippFormRsp queryEdgeSheetData(String aippId, String version, String startOrEnd, OperationContext context);
 
     /**
-     * 指定版本启动一个Aipp
-     *
-     * @param context 操作上下文
-     * @param aippId aippId
-     * @param version aipp 版本
-     * @param initContext 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
-     * @return 实例id
-     */
-    String createAippInstance(String aippId, String version, Map<String, Object> initContext, OperationContext context);
-
-    /**
      * 启动一个最新版本的Aipp
      *
      * @param context 操作上下文

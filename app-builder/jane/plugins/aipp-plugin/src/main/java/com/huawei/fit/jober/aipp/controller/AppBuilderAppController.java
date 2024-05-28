@@ -17,6 +17,7 @@ import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.controller.AbstractController;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jober.aipp.common.ConvertUtils;
 import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
 import com.huawei.fit.jober.aipp.dto.AippCreateDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppCreateDto;
@@ -37,10 +38,13 @@ import com.huawei.fitframework.validation.Validated;
 @RequestMapping(path = "/v1/api/{tenant_id}/app")
 public class AppBuilderAppController extends AbstractController {
     private final AppBuilderAppService appService;
+    private final com.huawei.fit.jober.aipp.genericable.AppBuilderAppService appGenericable;
 
-    public AppBuilderAppController(Authenticator authenticator, AppBuilderAppService appService) {
+    public AppBuilderAppController(Authenticator authenticator, AppBuilderAppService appService,
+            com.huawei.fit.jober.aipp.genericable.AppBuilderAppService appGenericable) {
         super(authenticator);
         this.appService = appService;
+        this.appGenericable = appGenericable;
     }
 
     @GetMapping(description = "查询 app 列表")
@@ -51,8 +55,8 @@ public class AppBuilderAppController extends AbstractController {
     }
 
     @GetMapping(value = "/{app_id}", description = "查询 app ")
-    public Rsp<AppBuilderAppDto> query(HttpClassicServerRequest httpRequest, @PathVariable("app_id") String appId) {
-        return this.appService.query(httpRequest, appId);
+    public Rsp<AppBuilderAppDto> query(@PathVariable("app_id") String appId) {
+        return Rsp.ok(this.appGenericable.query(appId));
     }
 
     @PostMapping(value = "/{app_id}", description = "根据模板创建aipp")
@@ -92,7 +96,8 @@ public class AppBuilderAppController extends AbstractController {
     @PostMapping(path = "/{app_id}/debug", description = "调试 app ")
     public Rsp<AippCreateDto> debug(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
             @RequestBody @Validated AppBuilderAppDto appDto) {
-        return this.appService.debug(appDto, this.contextOf(httpRequest, tenantId));
+        return Rsp.ok(ConvertUtils.toAippCreateDto(this.appGenericable.debug(appDto,
+                this.contextOf(httpRequest, tenantId))));
     }
 
     @PostMapping(path = "/{app_id}/inspiration/department", description = "获取灵感大全的部门信息")

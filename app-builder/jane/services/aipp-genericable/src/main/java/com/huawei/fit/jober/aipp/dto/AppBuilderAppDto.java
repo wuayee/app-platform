@@ -4,6 +4,8 @@
 
 package com.huawei.fit.jober.aipp.dto;
 
+import com.huawei.fitframework.annotation.Property;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +15,8 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
+ * 表示 app 应用的 dto 对象。
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */
@@ -20,12 +24,20 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppBuilderFlowGraphDto {
-    private String id;
+public class AppBuilderAppDto {
     private String name;
-    private Map<String, Object> appearance;
+    private String type;
     private String createBy;
     private String updateBy;
+    private String version;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
+    private AppBuilderConfigDto config;
+    private AppBuilderFlowGraphDto flowGraph;
+    private String id;
+    private Map<String, Object> attributes;
+    private String state;
+
+    @Property(description = "aipp 发布链接")
+    private String publishUrl;
 }

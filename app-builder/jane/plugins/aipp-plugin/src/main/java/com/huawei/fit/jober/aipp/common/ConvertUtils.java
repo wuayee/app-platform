@@ -4,8 +4,10 @@
 
 package com.huawei.fit.jober.aipp.common;
 
+import com.huawei.fit.jober.aipp.dto.AippCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
+import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.util.Map;
@@ -31,6 +33,34 @@ public class ConvertUtils {
                 .version(appDto.getVersion())
                 .type(appDto.getType())
                 .xiaohaiClassification(classification)
+                .build();
+    }
+
+    /**
+     * 将 {@link AippCreateDto} 类转化成 {@link AippCreate}。
+     *
+     * @param aippCreateDto 表示创建 Aipp 响应体的 {@link AippCreateDto}。
+     * @return 表示转化后的创建 Aipp 响应体实体类对象的 {@link AippCreate}。
+     */
+    public static AippCreate toAippCreate(AippCreateDto aippCreateDto) {
+        return AippCreate.builder()
+                .aippId(aippCreateDto.getAippId())
+                .toolUniqueName(aippCreateDto.getToolUniqueName())
+                .version(aippCreateDto.getVersion())
+                .build();
+    }
+
+    /**
+     * 将 {@link AippCreate} 类转化成 {@link AippCreateDto}。
+     *
+     * @param aippCreate 表示创建 Aipp 响应体的 {@link AippCreate}。
+     * @return 表示转化后的创建 Aipp 响应体实体类对象的 {@link AippCreateDto}。
+     */
+    public static AippCreateDto toAippCreateDto(AippCreate aippCreate) {
+        return AippCreateDto.builder()
+                .aippId(aippCreate.getAippId())
+                .toolUniqueName(aippCreate.getToolUniqueName())
+                .version(aippCreate.getVersion())
                 .build();
     }
 }
