@@ -6,19 +6,19 @@ package com.huawei.jade.fel.engine.operators.models;
 
 import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitterData;
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
-import com.huawei.jade.fel.chat.character.AiMessage;
-import com.huawei.jade.fel.chat.content.Content;
-import com.huawei.jade.fel.chat.content.Contents;
+import com.huawei.jade.fel.chat.MessageType;
 import com.huawei.jade.fel.chat.content.Media;
-import com.huawei.jade.fel.chat.content.MediaContent;
-import com.huawei.jade.fel.chat.content.TextContent;
 import com.huawei.jade.fel.tool.ToolCall;
 
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 大模型流式响应内容片段。
@@ -26,18 +26,13 @@ import java.util.stream.Collectors;
  * @author 刘信宏
  * @since 2024-05-16
  */
-public class ChatChunk extends AiMessage implements ChatMessage, FiniteEmitterData {
+@NoArgsConstructor
+public class ChatChunk implements ChatMessage, FiniteEmitterData {
     private boolean isEnd = false;
     private Throwable throwable = null;
-
-    /**
-     * 使用文本初始化 {@link ChatChunk}。
-     *
-     * @param text 表示文本数据的 {@link String}。
-     */
-    public ChatChunk(String text) {
-        super(text);
-    }
+    private final StringBuilder text = new StringBuilder();
+    private final List<Media> medias = new ArrayList<>();
+    private final List<ToolCall> toolCalls = new ArrayList<>();
 
     /**
      * 使用文本数据、媒体数据和工具请求初始化 {@link ChatChunk}。
@@ -47,7 +42,7 @@ public class ChatChunk extends AiMessage implements ChatMessage, FiniteEmitterDa
      * @param toolCalls 表示工具请求的 {@link List}{@code <}{@link ToolCall}{@code >}。
      */
     public ChatChunk(String text, List<Media> medias, List<ToolCall> toolCalls) {
-        super(ChatChunk.buildMessageContent(text, medias), toolCalls);
+        this.merge(text, medias, toolCalls);
     }
 
     /**
@@ -56,8 +51,30 @@ public class ChatChunk extends AiMessage implements ChatMessage, FiniteEmitterDa
      * @param throwable 表示异常句柄的 {@link Throwable}。
      */
     public ChatChunk(Throwable throwable) {
-        super(StringUtils.EMPTY);
         this.throwable = Validation.notNull(throwable, "Throwable cannot be null.");
+    }
+
+    /**
+     * 合并文本数据、媒体数据和工具请求 。
+     *
+     * @param text 表示字符串数据的 {@link String}。
+     * @param medias 表示媒体数据的 {@link List}{@code <}{@link Media}{@code >}。
+     * @param toolCalls 表示工具请求的 {@link List}{@code <}{@link ToolCall}{@code >}。
+     */
+    public void merge(String text, List<Media> medias, List<ToolCall> toolCalls) {
+        this.text.append(ObjectUtils.nullIf(text, StringUtils.EMPTY));
+        this.medias.addAll(ObjectUtils.getIfNull(medias, Collections::emptyList));
+        this.toolCalls.addAll(ObjectUtils.getIfNull(toolCalls, Collections::emptyList));
+    }
+
+    /**
+     * 聚合流式响应内容片段。
+     *
+     * @param message 表示大模型流式响应内容片段的 {@link ChatMessage}。
+     */
+    public void merge(ChatMessage message) {
+        Validation.notNull(message, "Chat message can not be null.");
+        this.merge(message.text(), message.medias(), message.toolCalls());
     }
 
     /**
@@ -85,10 +102,33 @@ public class ChatChunk extends AiMessage implements ChatMessage, FiniteEmitterDa
         return Optional.ofNullable(this.throwable).map(Throwable::getLocalizedMessage).orElse(StringUtils.EMPTY);
     }
 
-    private static Contents buildMessageContent(String text, List<Media> medias) {
-        Validation.notNull(medias, "Medias cannot be null.");
-        List<Content> contentList = medias.stream().map(MediaContent::new).collect(Collectors.toList());
-        contentList.add(new TextContent(text));
-        return Contents.from(contentList);
+    @Override
+    public MessageType type() {
+        return MessageType.AI;
+    }
+
+    @Override
+    public String text() {
+        return this.text.toString();
+    }
+
+    @Override
+    public List<Media> medias() {
+        return this.medias;
+    }
+
+    @Override
+    public List<ToolCall> toolCalls() {
+        return this.toolCalls;
+    }
+
+    @Override
+    public String toString() {
+        String textVal = this.toolCalls.isEmpty() ? this.text() : this.toolCalls.toString();
+        return this.displayText(textVal);
+    }
+
+    private String displayText(String textVal) {
+        return this.type().name().toLowerCase() + ": " + textVal;
     }
 }

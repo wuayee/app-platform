@@ -8,8 +8,8 @@ import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.emitters.Emitter;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatOptions;
-import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.core.memory.Memory;
 import com.huawei.jade.fel.engine.operators.models.ChatChunk;
 import com.huawei.jade.fel.engine.operators.models.StreamingConsumer;
@@ -122,12 +122,12 @@ public class Conversation<D, R> {
     /**
      * 绑定流式响应信息消费者到对话上下文，用于消费流程流转过程中的流式信息。
      *
-     * @param consumer 表示流式响应信息消费者的 {@link StreamingConsumer}{@code <}{@link AiMessage}{@code ,
+     * @param consumer 表示流式响应信息消费者的 {@link StreamingConsumer}{@code <}{@link ChatMessage}{@code ,
      * }{@link ChatChunk}{@code >}。
      * @return 表示绑定了流式响应信息消费者的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
      * @throws IllegalArgumentException 当 {@code consumer} 为 {@code null} 时。
      */
-    public Conversation<D, R> bind(StreamingConsumer<AiMessage, ChatChunk> consumer) {
+    public Conversation<D, R> bind(StreamingConsumer<ChatMessage, ChatChunk> consumer) {
         Validation.notNull(consumer, "Streaming consumer cannot be null.");
         this.session.setInnerState(StateKey.STREAMING_CONSUMER, consumer);
         return this;
@@ -139,7 +139,8 @@ public class Conversation<D, R> {
      *     <li>{@link com.huawei.jade.fel.engine.activities.AiStart#map(Operators.ProcessMap)}</li>
      *     <li>{@link com.huawei.jade.fel.engine.activities.AiStart#just(Operators.ProcessJust)}</li>
      *     <li>{@link com.huawei.jade.fel.engine.activities.AiStart#process(Operators.Process)}</li>
-     *     <li>{@link com.huawei.jade.fel.engine.activities.AiStart#reduce(Object, Operators.ProcessReduce)}</li>
+     *     <li>{@link com.huawei.jade.fel.engine.activities.AiStart#reduce(java.util.function.Supplier,
+     *     Operators.ProcessReduce)}</li>
      * </ul>
      *
      * @param key 表示自定义键的 {@link String}。

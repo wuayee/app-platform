@@ -6,23 +6,16 @@ package com.huawei.jade.fel.engine.operators.patterns;
 
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.StringUtils;
+import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatModelStreamService;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.Prompt;
-import com.huawei.jade.fel.chat.character.AiMessage;
-import com.huawei.jade.fel.chat.content.Media;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.operators.models.ChatChunk;
 import com.huawei.jade.fel.engine.operators.models.ChatStreamModel;
-import com.huawei.jade.fel.tool.ToolCall;
 import com.huawei.jade.fel.tool.ToolProvider;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * {@link Agent} 的默认流式实现。
@@ -73,26 +66,21 @@ public class DefaultStreamAgent extends Agent<Prompt, Prompt> {
         return AiFlows.<Prompt>create()
                 .just(Agent.putAgentMsg(agentMsgKey)).id("aheadLlm")
                 .generate(model)
-                .reduce(new ChatChunk(StringUtils.EMPTY), getReduceProcessor())
+                .reduce(ChatChunk::new, getReduceProcessor())
                 .delegate(Agent.getToolProcessMap(toolProvider, agentMsgKey))
                 .conditions()
                 .match(input -> Agent.isFinish(toolProvider, input), node -> node.map(Agent.getAgentMsg(agentMsgKey)))
-                .matchTo(AiMessage::isToolCall, node -> node.map(Agent.getAgentMsg(agentMsgKey)).to("aheadLlm"))
+                .matchTo(Agent::isToolCall, node -> node.map(Agent.getAgentMsg(agentMsgKey)).to("aheadLlm"))
                 .others()
                 .close();
     }
 
-    private static Operators.Reduce<ChatChunk, AiMessage> getReduceProcessor() {
+    private static Operators.Reduce<ChatChunk, ChatMessage> getReduceProcessor() {
         return (acc, input) -> {
             if (input.isEnd()) {
                 return acc;
             }
-            String text = acc.text() + input.text();
-            List<Media> medias = Stream.concat(acc.medias().stream(), input.medias().stream())
-                    .collect(Collectors.toList());
-            List<ToolCall> toolCalls = new ArrayList<>(acc.toolCalls());
-            toolCalls.addAll(input.toolCalls());
-            acc = new ChatChunk(text, medias, toolCalls);
+            ObjectUtils.<ChatChunk>cast(acc).merge(input);
             return acc;
         };
     }

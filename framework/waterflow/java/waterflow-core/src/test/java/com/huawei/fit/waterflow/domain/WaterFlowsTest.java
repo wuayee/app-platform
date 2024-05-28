@@ -224,7 +224,7 @@ class WaterFlowsTest {
             AtomicInteger counter = new AtomicInteger();
             ProcessFlow<Integer> flow = Flows.<Integer>create(repo, messenger, locks)
                     .map(i -> i * 2)
-                    .reduce(0, (acc, i) -> acc + i)
+                    .reduce(() -> 0, Integer::sum)
                     .just(i -> counter.set(counter.get() + 1))
                     .close();
             // 数据发送为一个window
@@ -248,7 +248,7 @@ class WaterFlowsTest {
 
             ProcessFlow<Integer> flow = Flows.<Integer>create(repo, messenger, locks)
                     .window(window)
-                    .reduce("", (acc, value) -> acc + value.toString())
+                    .reduce(() -> "", (acc, value) -> acc + value.toString())
                     .just(i -> counter.set(counter.get() + 1))
                     .close();
             for (int i = 0; i < 6; i++) {
@@ -264,9 +264,9 @@ class WaterFlowsTest {
             AtomicInteger counter = new AtomicInteger();
             Operators.Window<Tuple<String, Tuple<String, Integer>>> window = inputs -> inputs.size() == 3;
             Flows.<Tuple<String, Integer>>create(repo, messenger, locks)
-                    .keyBy(tuple -> tuple.first())
+                    .keyBy(Tuple::first)
                     .window(window)
-                    .reduce(ObjectUtils.<Tuple<String, Integer>>cast(Tuple.from("", 0)),
+                    .reduce(() -> ObjectUtils.<Tuple<String, Integer>>cast(Tuple.from("", 0)),
                             (acc, data) -> Tuple.from(data.first(), acc.second() + data.second().second()))
                     .just(data -> counter.set(counter.get() + 1))
                     .close()

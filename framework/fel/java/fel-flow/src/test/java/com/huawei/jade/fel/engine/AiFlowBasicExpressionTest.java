@@ -9,12 +9,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.huawei.fit.waterflow.domain.utils.Mermaid;
+import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
+import com.huawei.jade.fel.engine.flows.Conversation;
 import com.huawei.jade.fel.engine.operators.models.ChatBlockModel;
 import com.huawei.jade.fel.engine.operators.patterns.FlowSupportable;
 import com.huawei.jade.fel.engine.operators.prompts.Prompts;
@@ -29,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * AI 流程基础表达式的测试。
@@ -98,7 +101,7 @@ public class AiFlowBasicExpressionTest {
         @DisplayName("无window的reduce数据聚合")
         void shouldOkWhenReduceWithoutWindow() {
             AiProcessFlow<Integer, Integer> flow = AiFlows.<Integer>create()
-                    .reduce(0, ((acc, input) -> {
+                    .reduce(() -> 0, ((acc, input) -> {
                         acc += input;
                         return acc;
                     })).close();
@@ -123,7 +126,7 @@ public class AiFlowBasicExpressionTest {
         void shouldOkWhenReduceWithWindow() {
             AiProcessFlow<Integer, Integer> flow = AiFlows.<Integer>create()
                     .window(inputs -> inputs.size() == 2)
-                    .reduce(0, ((acc, input) -> {
+                    .reduce(() -> 0, ((acc, input) -> {
                         acc += input;
                         return acc;
                     })).close();
@@ -163,6 +166,33 @@ public class AiFlowBasicExpressionTest {
                     .await(500, TimeUnit.MILLISECONDS);
 
             assertEquals("5value0value1\n6value0value1", answer.toString());
+        }
+
+        @Test
+        void GivingInitStringBuilderWhenRepeatedOfferWithReducingThenOk() {
+            Conversation<Integer, String> converse =
+                    AiFlows.<Integer>create()
+                            .<Integer>process((data, ctx, collector) -> {
+                                collector.collect(data);
+                                collector.collect(data + 1);
+                            })
+                            .window(inputs -> inputs.size() == 2)
+                            .reduce(StringBuilder::new, (acc, input) -> {
+                                acc.append(input);
+                                return acc;
+                            })
+                            .map(StringBuilder::toString)
+                            .close()
+                            .converse();
+
+            AtomicReference<String> result = new AtomicReference<>();
+            converse.doOnSuccess(result::set).offer(0).await();
+            assertThat(result.get()).isEqualTo("01");
+
+            // 验证reduce初始值重新获取，不影响后续的请求。
+            result.set(null);
+            converse.doOnSuccess(result::set).offer(0).await();
+            assertThat(result.get()).isEqualTo("01");
         }
 
         private void checkInjectDataOneByOne(AiProcessFlow<Integer, Integer> flow) {
@@ -264,13 +294,13 @@ public class AiFlowBasicExpressionTest {
         private final ChatBlockModel<Prompt> model =
                 new ChatBlockModel<>(prompts -> new FlatChatMessage(new AiMessage("model answer")));
 
-        private final AiProcessFlow<Prompt, AiMessage> subFlow = AiFlows.<Prompt>create()
-                .just(((input, context) -> {}))
+        private final AiProcessFlow<Prompt, ChatMessage> subFlow = AiFlows.<Prompt>create()
+                .just((input, context) -> {})
                 .generate(this.model).id("llm")
                 .delegate((input, session) -> input)
                 .conditions()
                 .match(input -> true, node -> node.map(data -> data))
-                .matchTo(AiMessage::isToolCall, node -> node.map(data -> data).to("llm"))
+                .matchTo(m -> !m.toolCalls().isEmpty(), node -> node.map(data -> data).to("llm"))
                 .others()
                 .close();
 
@@ -286,7 +316,7 @@ public class AiFlowBasicExpressionTest {
         @Test
         @DisplayName("通过mermaid格式图形还原ai flow的流程设计")
         void testMermaidToCreateChart() {
-            AiProcessFlow<Object, AiMessage> flow = AiFlows.create()
+            AiProcessFlow<Object, ChatMessage> flow = AiFlows.create()
                     .delegate((input, context) -> null)
                     .window(inputs -> false)
                     .keyBy(input -> null)
@@ -306,7 +336,7 @@ public class AiFlowBasicExpressionTest {
             AiProcessFlow<Tip, String> flow = AiFlows.<Tip>create()
                     .prompt(Prompts.history(), Prompts.human("{{0}}"))
                     .delegate(new FlowSupportable<>(() -> this.subFlow))
-                    .map(AiMessage::text)
+                    .map(ChatMessage::text)
                     .close();
 
             String expected = "start((Start))\n" + "sub_start4-->node5(just)\n" + "start-->node0(prompt)\n"
@@ -324,7 +354,7 @@ public class AiFlowBasicExpressionTest {
             AiProcessFlow<Tip, String> flow = AiFlows.<Tip>create()
                     .prompt(Prompts.history(), Prompts.human("{{0}}"))
                     .delegate(this.subFlow, "llm")
-                    .map(AiMessage::text)
+                    .map(ChatMessage::text)
                     .close();
 
             String expected = "start((Start))\n" + "sub_start4-->node6(just)\n" + "sub_start4((Start))\n"

@@ -8,7 +8,6 @@ import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.chat.ChatModelService;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.Prompt;
-import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.operators.models.ChatBlockModel;
@@ -65,7 +64,7 @@ public class DefaultAgent extends Agent<Prompt, Prompt> {
                 .delegate(Agent.getToolProcessMap(toolProvider, agentMsgKey))
                 .conditions()
                 .match(input -> Agent.isFinish(toolProvider, input), node -> node.map(Agent.getAgentMsg(agentMsgKey)))
-                .matchTo(AiMessage::isToolCall, node -> node.map(Agent.getAgentMsg(agentMsgKey)).to("llm"))
+                .matchTo(Agent::isToolCall, node -> node.map(Agent.getAgentMsg(agentMsgKey)).to("llm"))
                 .others()
                 .close();
     }
