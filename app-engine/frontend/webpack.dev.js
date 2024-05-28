@@ -68,7 +68,8 @@ module.exports = merge(common, {
       },
       "/aiApi": {
         // target: 'https://tzaip-beta.paas.huawei.com/tzaip/api',
-        target: 'http://10.169.63.12:8080/aipp',
+        // target: 'http://10.169.63.12:8080/aipp',
+        target: 'http://80.11.128.86:31111/api/jober',
         pathRewrite: {
           "^/aiApi": ""
         },
@@ -78,9 +79,9 @@ module.exports = merge(common, {
       "/aippApi": {
         // target: 'http://10.91.144.92:8028/api/jober/v1/api',
         // target: 'http://10.169.63.12:8080/api/jober/v1/api',
-        // target: 'http://80.11.128.66:31111/api/jober/v1/api',
+        target: 'http://80.11.128.86:31111/api/jober/v1/api',
         // target: 'http://10.91.144.79:8028/api/jober/v1/api',
-        target: 'https://jane-beta.huawei.com/api/jober/v1/api',
+        // target: 'https://jane-beta.huawei.com/api/jober/v1/api',
         // target: 'http://10.91.144.226:8028/api/jober/v1/api',
         pathRewrite: {"^/aippApi": ""},
         secure: false,

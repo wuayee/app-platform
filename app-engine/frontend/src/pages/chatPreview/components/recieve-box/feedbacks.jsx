@@ -6,7 +6,7 @@ import { feedbacksRq } from '@shared/http/chat';
 import './styles/feedbacks.scss';
 const { TextArea } = Input;
 
-const Feedbacks = ({ logId, appId }) => {
+const Feedbacks = ({ logId, instanceId }) => {
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ textValue, setTextValue ] = useState('');
   const handleOk = () => {
@@ -17,9 +17,8 @@ const Feedbacks = ({ logId, appId }) => {
   };
   // 点赞
   const likeClick = async () => {
-    let params = {"logId": logId, "usrFeedback":"1", "usrFeedbackText":"xxx", aippId: appId}
+    let params = {"logId": logId, "usrFeedback":"1", "usrFeedbackText":"xxx", "instanceId": instanceId}
     const res = await feedbacksRq(params);
-    console.log(res);
   }
   // 点踩
   const onLikeClick = () => {

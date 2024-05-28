@@ -22,7 +22,8 @@ const ReciveBox = (props) => {
     checked, 
     markdownSyntax, 
     chartConfig,
-    logId } = props.chatItem;
+    logId,
+    instanceId } = props.chatItem;
   const [ showIcon, setShowIcon ] = useState(true);
   const location = useLocation();
 
@@ -53,7 +54,7 @@ const ReciveBox = (props) => {
       <span className="recieve-info-inner">
         { loading ? <Loading /> : setRecieveDom(recieveType) }
         { showIcon && <SendBtn content={content} sendType="text" /> }
-        { showIcon && <Feedbacks logId={logId} appId={appId} /> }
+        { showIcon && <Feedbacks logId={logId} instanceId={instanceId} /> }
       </span>
     </div>
   )}</>

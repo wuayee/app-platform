@@ -26,7 +26,6 @@ const ChatMessaga = (props) => {
   }
   // 添加灵感
   function setInspiration() {
-    console.log(3333333);
   }
   // 选中回调
   function checkCallBack() {

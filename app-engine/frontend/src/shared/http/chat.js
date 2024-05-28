@@ -10,6 +10,6 @@ export function queryAppDetail(id) {
 }
 
 export function feedbacksRq(params) {
-  const url = `${AI_URL}/usr/feedback`;
+  const url = `${AI_URL}/aipp/usr/feedback`;
   return post(url, params);
 }
