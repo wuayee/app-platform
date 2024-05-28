@@ -50,6 +50,10 @@ public class TableIndex implements Indexer<List<Chunk>> {
         sb.append(" values (DEFAULT");
         for (int i = 0; i < row.size(); i++) {
             sb.append(", ");
+            if (row.get(i).isEmpty()) {
+                sb.append("null");
+                continue;
+            }
             switch (columnTypes.get(i)) {
                 case VARCHAR:
                     sb.append("'");

@@ -4,6 +4,7 @@ import { Icons } from '../components/icons/index';
 import KnowledgeBase from '../pages/knowledge-base';
 import KnowledgeBaseCreate from '../pages/knowledge-base/create';
 import KnowledgeBaseDetail from '../pages/knowledge-base/knowledge-detail';
+import Plugin from '../pages/plugin';
 import Demo from '../pages/demo';
 import ChatHome from '../pages/chatEngineHome/index.jsx';
 import ChatRunning from '../pages/chatRunning/index';
@@ -18,7 +19,6 @@ import KnowledgeBaseDetailImportData from '../pages/knowledge-base/knowledge-det
 import Model from '../pages/model';
 import ModelDetail from '../pages/model/model-detail';
 import AppDev from '../pages/appDev/index';
-import PluginMarket from '../pages/plugin-market';
 import IndustryTerminology from '../pages/knowledge-base/knowledge-detail/industry-terminology';
 
 export type MenuItem = Required<MenuProps>['items'][number] & {
@@ -134,10 +134,10 @@ export const routeList: MenuItem[] = [
     hidden: true,
   },
   {
-    key: '/plugin-market',
+    key: '/plugin',
     icon: Icons.app({}),
     label: '插件市场',
-    component: PluginMarket,
+    component: Plugin,
   },
   {
     key: '/model',
@@ -199,13 +199,6 @@ export const routeList: MenuItem[] = [
         ],
       },
     ],
-  },
-  {
-    key: '/plugin',
-    icon: Icons.app({}),
-    label: '插件',
-    component: Demo,
-    hidden: true,
   },
   {
     key: '/Tooling',

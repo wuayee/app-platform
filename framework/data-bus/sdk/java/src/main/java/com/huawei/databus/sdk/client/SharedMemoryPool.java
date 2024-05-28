@@ -4,9 +4,6 @@
 
 package com.huawei.databus.sdk.client;
 
-import static com.huawei.databus.sdk.support.SharedMemoryResult.failure;
-import static com.huawei.databus.sdk.support.SharedMemoryResult.success;
-
 import com.huawei.databus.sdk.memory.SharedMemory;
 import com.huawei.databus.sdk.memory.SharedMemoryInternal;
 import com.huawei.databus.sdk.memory.SharedMemoryKey;
@@ -20,6 +17,7 @@ import com.huawei.databus.sdk.message.PermissionType;
 import com.huawei.databus.sdk.message.ReleaseMemoryMessage;
 import com.huawei.databus.sdk.message.ReleasePermissionMessage;
 import com.huawei.databus.sdk.support.MemoryIoRequest;
+import com.huawei.databus.sdk.support.MemoryPermissionResult;
 import com.huawei.databus.sdk.support.ReleaseMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
@@ -32,36 +30,32 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * 内存池，管理当前所有内存块的生命周期，包括内存申请、许可管理和释放
+ * 内存池，管理当前所有内存块的生命周期，包括内存申请、许可管理和释放。
  *
  * @author 王成 w00863339
  * @since 2024/3/25
  */
 class SharedMemoryPool {
     private final Map<String, SharedMemoryInternal> memoryPool;
-    private final Set<String> selfAppliedMemory;
     private final Map<Byte, BlockingQueue<ByteBuffer>> replyQueues;
     private final SocketChannel socketChannel;
 
     public SharedMemoryPool(Map<Byte, BlockingQueue<ByteBuffer>> replyQueues, SocketChannel socketChannel) {
         this.memoryPool = new HashMap<>();
-        this.selfAppliedMemory = new HashSet<>();
         this.replyQueues = replyQueues;
         this.socketChannel = socketChannel;
     }
 
     /**
-     * 根据传入的 {@link MemoryIoRequest} 申请新的共享内存
+     * 根据传入的 {@link MemoryIoRequest} 申请新的共享内存。
      *
-     * @param request 传入的 {@link SharedMemoryRequest}
-     * @return 表示共享内存结果的 {@link SharedMemoryResult}
+     * @param request 传入的 {@link SharedMemoryRequest}。
+     * @return 表示共享内存结果的 {@link SharedMemoryResult}。
      */
     public SharedMemoryResult applySharedMemory(SharedMemoryRequest request) {
         // 先建造消息体
@@ -96,10 +90,10 @@ class SharedMemoryPool {
     }
 
     /**
-     * 通过共享内存句柄获取内存信息。如果共享内存不存在，则根据 key 生成新的共享内存
+     * 通过共享内存句柄获取内存信息。如果共享内存不存在，则根据 key 生成新的共享内存。
      *
-     * @param key 表示内存句柄的 {@link SharedMemoryKey}
-     * @return 表示内存的 {@link SharedMemoryInternal}
+     * @param key 表示内存句柄的 {@link SharedMemoryKey}。
+     * @return 表示内存的 {@link SharedMemoryInternal}。
      */
     public SharedMemoryInternal getOrAddMemory(String key) {
         SharedMemoryInternal internal = new SharedMemoryInternal(new SharedMemoryKey(key), PermissionType.None, 0);
@@ -108,23 +102,23 @@ class SharedMemoryPool {
     }
 
     /**
-     * 通过用户指定 key 获取内存信息
+     * 通过用户指定 key 获取内存信息。
      *
-     * @param key 表示内存句柄的 {@link SharedMemoryKey}
-     * @return 表示内存的 {@link SharedMemoryInternal}
+     * @param key 表示内存句柄的 {@link SharedMemoryKey}。
+     * @return 表示内存的 {@link SharedMemoryInternal}。
      */
     public Optional<SharedMemoryInternal> getMemory(String key) {
         return Optional.ofNullable(this.memoryPool.get(key));
     }
 
     /**
-     * 将客户端申请到的内存加入内存池，并返回其只读视图
+     * 将客户端申请到的内存加入内存池，并返回其只读视图。
      *
-     * @param memoryId 表示内存系统级句柄的 {@code int}
-     * @param userKey 表示用户自定义 key 的 {@code Optional<String>}
-     * @param permission 表示内存权限的 {@code byte}
-     * @param size 表示内存容量的 {@code long}
-     * @return 表示内存的 {@link SharedMemoryInternal}
+     * @param memoryId 表示内存系统级句柄的 {@code int}。
+     * @param userKey 表示用户自定义 key 的 {@code Optional<String>}。
+     * @param permission 表示内存权限的 {@code byte}。
+     * @param size 表示内存容量的 {@code long}。
+     * @return 表示内存的 {@link SharedMemoryInternal}。
      */
     private SharedMemoryInternal addNewMemory(int memoryId, String userKey, byte permission, long size) {
         SharedMemoryInternal internal = new SharedMemoryInternal(
@@ -134,50 +128,60 @@ class SharedMemoryPool {
     }
 
     /**
-     * 根据传入的 {@link MemoryIoRequest} 申请读写权限
+     * 根据传入的 {@link MemoryIoRequest} 申请读写权限。
      *
-     * @param request 客户端传入 {@link MemoryIoRequest}
-     * @param memory 需要申请权限的内存 {@link SharedMemoryInternal}
-     * @return 表示权限申请结果的 {@link SharedMemoryResult}
+     * @param request 客户端传入 {@link MemoryIoRequest}。
+     * @param memory 需要申请权限的内存 {@link SharedMemoryInternal}。
+     * @return 表示权限申请结果的 {@link MemoryPermissionResult}。
      */
-    public SharedMemoryResult applyPermission(MemoryIoRequest request, SharedMemoryInternal memory) {
+    public MemoryPermissionResult applyPermission(MemoryIoRequest request, SharedMemoryInternal memory) {
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
         int objectKeyOffset = bodyBuilder.createString(getUserKeyIfIdAbsent(memory.sharedMemoryKey()));
+        byte[] userData = request.isOperatingUserData() && request.permissionType() == PermissionType.Write
+                ? request.userData() : new byte[0];
+        int userDataOffset = ApplyPermissionMessage.createUserDataVector(bodyBuilder, userData);
+
         ApplyPermissionMessage.startApplyPermissionMessage(bodyBuilder);
         ApplyPermissionMessage.addPermission(bodyBuilder, request.permissionType());
         ApplyPermissionMessage.addObjectKey(bodyBuilder, objectKeyOffset);
         ApplyPermissionMessage.addMemoryKey(bodyBuilder, memory.sharedMemoryKey().memoryId());
+        ApplyPermissionMessage.addIsOperatingUserData(bodyBuilder, request.isOperatingUserData());
+        ApplyPermissionMessage.addUserData(bodyBuilder, userDataOffset);
         int messageOffset = ApplyPermissionMessage.endApplyPermissionMessage(bodyBuilder);
         bodyBuilder.finish(messageOffset);
         ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
 
-        // 建造消息头
+        // 建造消息头。
         ByteBuffer messageHeaderBuffer = DataBusUtils.buildMessageHeader(MessageType.ApplyPermission,
                 messageBodyBuffer.remaining());
         try {
             this.socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
-            // 阻塞等待回复
+            // 阻塞等待回复。
             ApplyPermissionMessageResponse response =
                     ApplyPermissionMessageResponse.getRootAsApplyPermissionMessageResponse(
                             this.replyQueues.get(MessageType.ApplyPermission).take());
 
-            // 修改本地内存信息
+            // 修改本地内存信息。
             if (response.errorType() == ErrorType.None) {
                 memory.setPermission(request.permissionType()).setSize(response.memorySize())
                         .setMemoryId(response.memoryKey());
-                return success(memory.getView());
+                if (request.isOperatingUserData() && request.permissionType() == PermissionType.Read) {
+                    byte[] resData = getUserData(response.userDataAsByteBuffer());
+                    return MemoryPermissionResult.success(memory.getView(), resData);
+                }
+                return MemoryPermissionResult.success(memory.getView(), null);
             }
-            return failure(response.errorType());
+            return MemoryPermissionResult.failure(response.errorType());
         } catch (IOException | InterruptedException e) {
-            return SharedMemoryResult.failure(ErrorType.UnknownError, e);
+            return MemoryPermissionResult.failure(ErrorType.UnknownError, e);
         }
     }
 
     /**
-     * 根据传入的 {@link MemoryIoRequest} 释放读写许可
+     * 根据传入的 {@link MemoryIoRequest} 释放读写许可。
      *
-     * @param request 传入的 {@link MemoryIoRequest}
-     * @param memory 需要申请权限的内存 {@link SharedMemoryInternal}
+     * @param request 传入的 {@link MemoryIoRequest}。
+     * @param memory 需要申请权限的内存 {@link SharedMemoryInternal}。
      */
     public void releasePermission(MemoryIoRequest request, SharedMemoryInternal memory) {
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
@@ -190,27 +194,27 @@ class SharedMemoryPool {
         bodyBuilder.finish(messageOffset);
         ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
 
-        // 建造消息头
+        // 建造消息头。
         ByteBuffer messageHeaderBuffer = DataBusUtils.buildMessageHeader(MessageType.ReleasePermission,
                 messageBodyBuffer.remaining());
         try {
-            // 发出信息后即刻返回，释放许可总是被 DataBus 主服务批准而且没有回复信息
+            // 发出信息后即刻返回，释放许可总是被 DataBus 主服务批准而且没有回复信息。
             this.socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
         } catch (IOException ignored) {
-            // 需要打日志但是无需返回错误
+            // 需要打日志但是无需返回错误。
         } finally {
-            // 客户端不再持有此内存块的读写许可
+            // 客户端不再持有此内存块的读写许可。
             memory.setPermission(PermissionType.None);
         }
     }
 
     /**
-     * 根据传入的 {@link ReleaseMemoryRequest} 释放内存
+     * 根据传入的 {@link ReleaseMemoryRequest} 释放内存。
      *
-     * @param request 传入的 {@link ReleaseMemoryRequest}
+     * @param request 传入的 {@link ReleaseMemoryRequest}。
      */
     public void releaseSharedMemory(ReleaseMemoryRequest request) {
-        // 先建造消息体
+        // 先建造消息体。
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
 
         Optional<SharedMemoryInternal> memory = this.getMemory(request.userKey());
@@ -224,21 +228,30 @@ class SharedMemoryPool {
         bodyBuilder.finish(messageOffset);
         ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
 
-        // 建造消息头
+        // 建造消息头。
         ByteBuffer messageHeaderBuffer = DataBusUtils.buildMessageHeader(MessageType.ReleaseMemory,
                 messageBodyBuffer.remaining());
         try {
-            // 发出信息后即刻返回，释放内存没有回复信息
+            // 发出信息后即刻返回，释放内存没有回复信息。
             this.socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
         } catch (IOException ignored) {
-            // 需要打日志但是无需返回错误
+            // 需要打日志但是无需返回错误。
         } finally {
-            // 客户端不再持有此内存块
+            // 客户端不再持有此内存块。
             this.memoryPool.remove(request.userKey());
         }
     }
 
     private String getUserKeyIfIdAbsent(SharedMemoryKey sharedMemoryKey) {
         return sharedMemoryKey.memoryId() == -1 ? sharedMemoryKey.userKey() : StringUtils.EMPTY;
+    }
+
+    private byte[] getUserData(ByteBuffer buffer) {
+        if (buffer != null) {
+            byte[] resData = new byte[buffer.remaining()];
+            buffer.get(resData);
+            return resData;
+        }
+        return new byte[0];
     }
 }

@@ -44,7 +44,7 @@ public class RdbColumn {
         sb.append("user_").append(this.name);
         switch (this.type) {
             case VARCHAR:
-                sb.append(" VARCHAR(400)");
+                sb.append(" VARCHAR");
                 break;
             case NUMBER:
                 sb.append(" BIGINT");

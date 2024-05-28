@@ -32,7 +32,6 @@ import com.huawei.jade.fel.tool.ToolProvider;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -44,7 +43,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -126,7 +124,6 @@ public class LLMComponentTest {
     }
 
     @Test
-    @Disabled
     void shouldFailedWhenNoTool() throws InterruptedException {
         // stub
         AiProcessFlow<Prompt, Prompt> testAgent = AiFlows.<Prompt>create().just(m -> {
@@ -186,7 +183,6 @@ public class LLMComponentTest {
     }
 
     @Test
-    @Disabled("运行卡住")
     void shouldOkWhenUseWorkflowNormalReturn() throws InterruptedException {
         // stub
         AtomicBoolean flag = new AtomicBoolean(false);

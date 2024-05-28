@@ -10,15 +10,22 @@ interface props {
   callback: any;
 }
 
+interface DataSetInterface {
+  ouput: string;
+  input: string;
+  datasetId: string;
+}
+
 const CreateItem = ({ params, visible, callback }: props) => {
 
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<DataSetInterface>();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setOpen(visible);
     form.setFieldValue('input', params.input);
     form.setFieldValue('output', params.output);
+    form.setFieldValue('datasetId', params.datasetId ?? '');
   });
 
 
@@ -51,7 +58,7 @@ const CreateItem = ({ params, visible, callback }: props) => {
         </div>
       }
     >
-      <Form
+      <Form<DataSetInterface>
         form={form}
         layout='vertical'
         onFinish={onFinish}

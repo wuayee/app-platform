@@ -140,6 +140,7 @@ ApplyPermissionResponse ResourceManager::HandleApplyPermission(const ApplyPermis
                 "the shared memory block {}", socketFd, sharedMemoryId);
     waitingPermitRequestQueues_[sharedMemoryId].emplace_back(socketFd, permissionType,
                                                              request.isOperatingUserData_, request.userData_);
+    waitingPermitMemoryBlocks_[socketFd].insert(sharedMemoryId);
     return {false, socketFd, sharedMemoryId, memorySize, userDataPtr, ErrorType::None};
 }
 
@@ -191,6 +192,7 @@ vector <ApplyPermissionResponse> ResourceManager::ProcessWaitingPermitRequests(i
         notificationQueue.emplace_back(true, request.applicant_, sharedMemoryId, memorySize,
                                        userDataPtr, ErrorType::None);
         waitingPermitRequestQueues_[sharedMemoryId].pop_front();
+        waitingPermitMemoryBlocks_[request.applicant_].erase(sharedMemoryId);
     }
     return notificationQueue;
 }
@@ -244,11 +246,19 @@ bool ResourceManager::ReleaseMemory(int32_t sharedMemoryId)
     curMallocSize_ -= GetMemorySize(sharedMemoryId);
     sharedMemoryIdToInfo_.erase(sharedMemoryId);
     permissionStatus_.erase(sharedMemoryId);
-    waitingPermitRequestQueues_.erase(sharedMemoryId);
+    CleanupWaitingPermitRequests(sharedMemoryId);
     RemoveObjectKey(sharedMemoryId);
     // 更新内存申请日志
     AppendLog(sharedMemoryId, true);
     return true;
+}
+
+void ResourceManager::CleanupWaitingPermitRequests(int32_t sharedMemoryId)
+{
+    for (const auto& request : waitingPermitRequestQueues_[sharedMemoryId]) {
+        waitingPermitMemoryBlocks_[request.applicant_].erase(sharedMemoryId);
+    }
+    waitingPermitRequestQueues_.erase(sharedMemoryId);
 }
 
 void ResourceManager::RemoveObjectKey(int32_t sharedMemoryId)
@@ -496,6 +506,11 @@ int32_t ResourceManager::GetPermissionStatus(int32_t sharedMemoryId)
 const deque <WaitingPermitRequest>& ResourceManager::GetWaitingPermitRequests(int32_t sharedMemoryId)
 {
     return waitingPermitRequestQueues_[sharedMemoryId];
+}
+
+const unordered_set<int32_t>& ResourceManager::GetWaitingPermitMemoryBlocks(int32_t socketFd)
+{
+    return waitingPermitMemoryBlocks_[socketFd];
 }
 
 int32_t ResourceManager::IncrementReadingRefCnt(int sharedMemoryId)

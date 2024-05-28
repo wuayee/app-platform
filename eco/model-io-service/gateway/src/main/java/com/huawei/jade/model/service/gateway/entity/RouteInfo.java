@@ -5,7 +5,13 @@
 package com.huawei.jade.model.service.gateway.entity;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
+import org.springframework.cloud.gateway.route.RouteDefinition;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +24,7 @@ import java.util.Map;
  * @since 2024-05-16
  */
 @Data
+@Slf4j
 public class RouteInfo {
     private String id;
 
@@ -28,36 +35,44 @@ public class RouteInfo {
     private String path;
 
     /**
-     * 使用路由信息构造路由更新请求体。
+     * 构造网关路由定义。
      *
-     * @return 路由更新请求体。
+     * @return {@link RouteDefinition}
      */
-    public RouteUpdateRequest buildRouteConfigRequest() {
-        String p = this.path == null ? "/**" : this.path;
-        Map<String, Object> pathArgs = new HashMap<>();
-        pathArgs.put("_genkey_0", p);
+    public RouteDefinition buildRouteDefinition() {
+        URI uri = null;
+        try {
+            uri = new URI(this.url);
+        } catch (URISyntaxException e) {
+            log.error("Failed to parse uri=" + this.url + ", error: " + e);
+        }
 
-        Predicate pathPredicate = new Predicate();
+        RouteDefinition routeDefinition = new RouteDefinition();
+        routeDefinition.setUri(uri);
+        routeDefinition.setId(this.id);
+        routeDefinition.setPredicates(getPredicateDefinitions());
+        return routeDefinition;
+    }
+
+    private List<PredicateDefinition> getPredicateDefinitions() {
+        Map<String, String> pathArgs = new HashMap<>();
+        pathArgs.put("_genkey_0", this.path == null ? "/**" : this.path);
+
+        PredicateDefinition pathPredicate = new PredicateDefinition();
         pathPredicate.setName("Path");
         pathPredicate.setArgs(pathArgs);
 
-        List<Predicate> predicates = new ArrayList<>();
+        List<PredicateDefinition> predicates = new ArrayList<>();
         predicates.add(pathPredicate);
         if (this.model != null && !this.model.isEmpty()) {
-            Map<String, Object> modelArgs = new HashMap<>();
+            Map<String, String> modelArgs = new HashMap<>();
             modelArgs.put("model", this.model);
 
-            Predicate modelPredicate = new Predicate();
+            PredicateDefinition modelPredicate = new PredicateDefinition();
             modelPredicate.setName("ModelPredicateFactory");
             modelPredicate.setArgs(modelArgs);
-
             predicates.add(modelPredicate);
         }
-
-        return RouteUpdateRequest.builder()
-                .id(this.id)
-                .uri(this.url)
-                .predicates(predicates)
-                .build();
+        return predicates;
     }
 }

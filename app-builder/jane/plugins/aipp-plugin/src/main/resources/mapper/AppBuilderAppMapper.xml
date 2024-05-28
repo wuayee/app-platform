@@ -47,6 +47,9 @@
         <if test="typeFilter != null">
             and type = #{typeFilter}
         </if>
+        <if test="cond != null and cond.name != null and cond.name != ''">
+            and name like '%' || #{cond.name} || '%'
+        </if>
         <include refid="order"/>
         offset #{offset} limit #{limit}
     </select>
