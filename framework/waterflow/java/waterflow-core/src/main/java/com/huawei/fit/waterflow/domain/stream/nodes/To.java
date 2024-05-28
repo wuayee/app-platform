@@ -282,7 +282,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             preProcessT.setUncaughtExceptionHandler((thread, error) ->
                     LOG.error("run preProcessT error, message:{}", error.getMessage()));
             preProcessT.start();
-            LOG.info("[{}] preprocess main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
+            LOG.debug("[{}] preprocess main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
                     this.id);
         }
         if (type == PROCESS && (processT == null || !processRunning)) {
@@ -292,7 +292,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             processT.setUncaughtExceptionHandler((thread, error) ->
                     LOG.error("run processT error, message:{}", error.getMessage()));
             processT.start();
-            LOG.info("[{}] process main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
+            LOG.debug("[{}] process main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
                     this.id);
         }
     }
@@ -321,7 +321,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                 ready = requestReady();
                 if (CollectionUtils.isEmpty(ready)) {
                     preProcessRunning = false;
-                    LOG.info("[{}] preprocess main loop exit for stream-id: {}, node-id: {}",
+                    LOG.debug("[{}] preprocess main loop exit for stream-id: {}, node-id: {}",
                             this.getThreadName(PRE_PROCESS_T_NAME_PREFIX), this.streamId, this.id);
                     this.handlePreProcessConcurrentConflict();
                     return;
@@ -718,7 +718,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                     ready = requestReady(to);
                     if (CollectionUtils.isEmpty(ready)) {
                         to.processRunning = false;
-                        LOG.info("[{}] process main loop exit for stream-id: {}, node-id: {}",
+                        LOG.debug("[{}] process main loop exit for stream-id: {}, node-id: {}",
                                 to.getThreadName(To.PROCESS_T_NAME_PREFIX), to.streamId, to.id);
                         handleProcessConcurrentConflict(to);
                         return;
