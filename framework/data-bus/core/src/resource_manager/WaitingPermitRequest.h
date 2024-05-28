@@ -13,10 +13,10 @@ namespace Resource {
 
 // 共享内存块信息结构体
 struct WaitingPermitRequest {
-    // 禁用默认构造器和运算符重载
+    // 禁用默认构造器
     WaitingPermitRequest() = delete;
     WaitingPermitRequest(const WaitingPermitRequest&) = delete;
-    WaitingPermitRequest& operator=(const WaitingPermitRequest&) = delete;
+    WaitingPermitRequest& operator=(const WaitingPermitRequest&) = default;
     WaitingPermitRequest(int32_t pApplicant, DataBus::Common::PermissionType pType, bool isOperatingUserData,
                          const std::shared_ptr<UserData>& userData) : applicant_(pApplicant), permissionType_(pType),
                          isOperatingUserData_(isOperatingUserData), userData_(userData) {}

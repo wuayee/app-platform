@@ -14,6 +14,7 @@
 #include "ApplyPermissionRequest.h"
 #include "ApplyPermissionResponse.h"
 #include "config/DataBusConfig.h"
+#include "PermissionHeld.h"
 #include "SharedMemoryInfo.h"
 #include "WaitingPermitRequest.h"
 #include "fbs/common_generated.h"
@@ -37,6 +38,8 @@ public:
     std::vector<ApplyPermissionResponse> ProcessWaitingPermitRequests(int32_t sharedMemoryId);
     bool HandleReleaseMemory(int32_t sharedMemoryId);
     bool ProcessPendingReleaseMemory(int32_t sharedMemoryId);
+    std::vector<PermissionHeld> GetPermissionsHeld(int32_t socketFd);
+    void RemoveClientFromWaitingQueue(int32_t socketFd);
 
     uint64_t GetCurMallocSize() const;
     int32_t GetMemoryId(const std::string& objectKey);

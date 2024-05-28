@@ -35,11 +35,13 @@ private:
     void HandleRead(const Task&);
     void HandleMessage(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleWrite(const Task&);
+    void HandleClose(int socketFd);
     std::function<void(const uint8_t*, size_t)> GetSender(int32_t socketFd);
     void SendApplyPermissionResponse(const Resource::ApplyPermissionResponse&);
     void SendApplyMemoryResponse(int32_t socketFd, int32_t memoryId, uint64_t memorySize, Common::ErrorType errorType);
     void HandleMessageApplyPermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleMessageReleasePermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
+    void ReleasePermission(int32_t socketFd, int32_t sharedMemoryId, Common::PermissionType permissionType);
     void HandleMessageApplyMemory(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleMessageReleaseMemory(const Common::MessageHeader* header, const char* buffer, int socketFd);
 

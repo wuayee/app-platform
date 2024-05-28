@@ -52,7 +52,7 @@ void TaskHandler::Init()
                 break;
             }
             case Task::TaskType::CLOSE: {
-                connectionMgrPtr_->CloseConnection(task->ClientFd());
+                HandleClose(task->ClientFd());
                 break;
             }
             default:
@@ -101,6 +101,26 @@ void TaskHandler::HandleRead(const Task& task)
         return;
     }
     HandleMessage(header, buffer, socketFd);
+}
+
+void TaskHandler::HandleClose(int socketFd)
+{
+    // 关闭连接
+    connectionMgrPtr_->CloseConnection(socketFd);
+
+    auto permissionsHeld = resourceMgrPtr_->GetPermissionsHeld(socketFd);
+    // 释放关闭连接的客户端当前所持有的权限
+    if (!permissionsHeld.empty()) {
+        logger.Info("[TaskHandler] Releasing permissions currently held by client {}", socketFd);
+        for (auto& permissionHeld : permissionsHeld) {
+            ReleasePermission(socketFd, permissionHeld.sharedMemoryId_, permissionHeld.permissionType_);
+        }
+    }
+    // 把客户端从授权等待队列中移除
+    if (!resourceMgrPtr_->GetWaitingPermitMemoryBlocks(socketFd).empty()) {
+        logger.Info("[TaskHandler] Removing client {} from waiting permit queues", socketFd);
+        resourceMgrPtr_->RemoveClientFromWaitingQueue(socketFd);
+    }
 }
 
 void TaskHandler::HandleMessage(const Common::MessageHeader* header, const char* buffer, int socketFd)
@@ -224,9 +244,14 @@ void TaskHandler::HandleMessageReleasePermission(const Common::MessageHeader* he
         logger.Error("[TaskHandler] The object key {} is not found", releasePermissionMessage->object_key()->str());
         return;
     }
-    if (!resourceMgrPtr_->HandleReleasePermission(socketFd, releasePermissionMessage->permission(), sharedMemoryId)) {
+    ReleasePermission(socketFd, sharedMemoryId, releasePermissionMessage->permission());
+}
+
+void TaskHandler::ReleasePermission(int32_t socketFd, int32_t sharedMemoryId, Common::PermissionType permissionType)
+{
+    if (!resourceMgrPtr_->HandleReleasePermission(socketFd, permissionType, sharedMemoryId)) {
         logger.Error("[TaskHandler] Failed to ReleasePermission, client: {}, permission: {}", socketFd,
-                     static_cast<int8_t>(releasePermissionMessage->permission()));
+                     static_cast<int8_t>(permissionType));
         return;
     }
     // 通知结束等待的客户端权限申请成功
