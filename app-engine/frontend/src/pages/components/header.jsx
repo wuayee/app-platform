@@ -32,11 +32,11 @@ const Head = (props) => {
         { showElsa && <LeftArrowIcon className="back-icon" onClick={backClick}/> }
         { aippInfo?.attributes?.icon ? <img src={aippInfo.attributes.icon} onClick={backClick} /> : <img src={robot} onClick={backClick}/> }
         <span className="header-text">{ aippInfo?.name }</span>
-        {
-          !status && <EditIcon onClick={ handleEditClick } />
-        }
+        { !status && <EditIcon onClick={ handleEditClick } /> }
+        { !status ? <span style={{ paddingLeft: '16px' }}>未发布</span> : <span style={{ paddingLeft: '16px' }}>已发布</span>}
       </div>
       <div className="header-user">
+        { aippInfo?.updateAt && <span style={{ paddingRight: '16px' }}>更新时间：{ aippInfo.updateAt }</span> }
         { !status && <span className="header-btn" onClick={modalClick}><UploadIcon />发布</span>  }
       </div>
       <PublishModal modalRef={modalRef} aippInfo={aippInfo} publishType="app" />

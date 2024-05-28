@@ -2,9 +2,9 @@
 import React, {  useState, useImperativeHandle } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Modal, Button } from 'antd';
-import { Message } from '../../shared/utils/message';
-import { httpUrlMap } from '../../shared/http/httpConfig';
-import { appPublish, updateFlowInfo } from '../../shared/http/aipp'
+import { Message } from '@shared/utils/message';
+import { httpUrlMap } from '@shared/http/httpConfig';
+import { appPublish, updateFlowInfo } from '@shared/http/aipp'
 
 const PublishModal = (props) => {
   const { modalRef, aippInfo, publishType, modalInfo, waterFlowName, addId } = props;

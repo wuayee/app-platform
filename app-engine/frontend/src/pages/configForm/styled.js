@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 export const ConfigFormWrap = styled.div`
   height: 100%;
-  //border-right: 1px solid #e4e4e7;
-  width: 35%;
+  width: 500px;
+  flex-shrink: 0;
   .config-form {
     height: 100%;
     max-height: 100%;
@@ -17,14 +17,28 @@ export const ConfigFormWrap = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: center;
-      .config-name {
-        font-size: .875rem;
-        font-weight: 700;
+      margin-bottom: 12px;
+      .config-left {
+        span {
+          font-size: 14px;
+          font-weight: 400;
+          color: rgb(77, 77, 77);
+          cursor: pointer;
+          margin-right: 24px;
+        }
+        .active {
+          color: #2673E5;
+        }
       }
       .config-btn {
         cursor: pointer;
         font-size: 12px;
-        color: #252B3A;
+        color: #2673e5;
+        display: flex;
+        align-item: center;
+        svg {
+          margin-right: 6px;
+        }
       }
     }
   }

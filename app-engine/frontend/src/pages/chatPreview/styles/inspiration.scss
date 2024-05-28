@@ -114,23 +114,43 @@
     display: flex;
     flex-wrap: wrap;
     margin-top: 8px;
-
+    margin-bottom: 16px;
     .prompt-type-item {
-      margin-right: 8px;
-      padding: 0 12px;
+      margin-right: 16px;
       height: 32px;
       line-height: 30px;
       color: #666666;
       font-size: 12px;
       cursor: pointer;
-      max-width: 100px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      .text {
+        display: inline-block;
+        max-width: 90px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        border-bottom: 1px solid transparent;
+      }
+      .line {
+        display: inline-block;
+        width: 1px;
+        height: 10px;
+        background: #D9D9D9;
+        margin-left: 16px;
+      }
+      &:last-child {
+        .line {
+          width: 0;
+        }
+      }
     }
-
     .prompt-type-active {
-      color: #0478fc;
+      .text {
+        color: #0478fc;
+        border-bottom-color: #2675e5;
+      }
     }
   }
 

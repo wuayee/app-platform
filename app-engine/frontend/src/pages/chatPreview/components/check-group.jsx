@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'antd';
 import '../styles/check-group.scss'
-import { shareDialog } from "../../../shared/http/aipp";
+import { shareDialog } from "@shared/http/aipp";
 import { useNavigate } from "react-router-dom";
-import { toClipboard } from "../../../shared/utils/common"
+import { toClipboard } from "@shared/utils/common"
 
 const CheckGroup = (props) => {
   const {

@@ -46,6 +46,7 @@ import Delete from './svg/delete.svg';
 import DeleteContent from './svg/deleteContent.svg';
 import More from './svg/more.svg';
 import ClearFile from './svg/clear-file.svg';
+import WorkFlow from './svg/work-flow.svg';
 
 // 编辑按钮
 const EditIcon = (props) => <Icon component={() => (<Edit/>)} {...props} />;
@@ -94,6 +95,7 @@ const DeleteIcon = (props) => <Icon component={() => (<Delete />)} {...props} />
 const DeleteContentIcon = (props) => <Icon component={() => (<DeleteContent />)} {...props} />;
 const MoreIcon = (props) => <Icon component={() => (<More />)} {...props} />;
 const ClearFileIcon = (props) => <Icon component={() => (<ClearFile />)} {...props} />;
+const WorkFlowIcon = (props) => <Icon component={() => (<WorkFlow />)} {...props} />;
 
 export {
   EditIcon,
@@ -141,6 +143,7 @@ export {
   DeleteIcon,
   DeleteContentIcon,
   MoreIcon,
-  ClearFileIcon
+  ClearFileIcon,
+  WorkFlowIcon
 }
 

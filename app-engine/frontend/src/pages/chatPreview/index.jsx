@@ -24,16 +24,18 @@ import {
   clearInstance,
   stopInstance,
   queryInspirationSelect,
-} from "../../shared/http/aipp";
-import { httpUrlMap } from "../../shared/http/httpConfig";
-import left from "../../assets/images/left.png";
+} from "@shared/http/aipp";
 import "./styles/chat-preview.scss";
 
-const { WS_URL } = httpUrlMap[process.env.NODE_ENV];
 const ChatPreview = (props) => {
   const { chatStatusChange, chatType, previewBack } = props;
-  const { showElsa, chatRunning, prompValue, aippInfo, appId, tenantId } =
-    useContext(AippContext);
+  const { 
+    showElsa, 
+    chatRunning, 
+    prompValue, 
+    aippInfo, 
+    appId, 
+    tenantId } = useContext(AippContext);
   const [chatList, setChatList] = useState([]);
   const [checkedList, setCheckedList] = useState([]);
   const [open, setOpen] = useState(false);
@@ -58,6 +60,10 @@ const ChatPreview = (props) => {
 
   // 灵感大全点击
   useEffect(() => {
+    if (chatRunning) {
+      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      return;
+    }
     if (prompValue.name && prompValue.auto) {
       onSend(prompValue.prompt);
       return;
@@ -208,15 +214,12 @@ const ChatPreview = (props) => {
     reciveInitObj.type = "recieve";
     reciveInitObj.loading = true;
     reciveInitObj.loading = false;
-    // reciveInitObj.chartConfig = chatMock;
     isChatRunning.current = false;
     setChatList(() => {
       let arr = [...listRef.current, reciveInitObj];
       listRef.current = arr;
       return arr;
     });
-    // printLogs(codeMock.instance_log);
-    // return
     chatStatusChange(true);
     if (showElsa) {
       let params = aippInfo.flowGraph;
@@ -283,7 +286,7 @@ const ChatPreview = (props) => {
       const prefix = window.location.protocol === 'http:' ? 'ws' : 'wss';
       wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
       wsCurrent.current.onopen = () => {
-        wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));
+        wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));   
       }
     } else {
       wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));
