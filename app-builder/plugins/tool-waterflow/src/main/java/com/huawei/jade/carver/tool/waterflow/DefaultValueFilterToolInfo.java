@@ -93,6 +93,21 @@ public class DefaultValueFilterToolInfo implements Tool.Info {
     }
 
     @Override
+    public String icon() {
+        return this.toolInfo.icon();
+    }
+
+    @Override
+    public String creator() {
+        return this.toolInfo.creator();
+    }
+
+    @Override
+    public String modifier() {
+        return this.toolInfo.modifier();
+    }
+
+    @Override
     public String name() {
         return this.toolInfo.name();
     }
