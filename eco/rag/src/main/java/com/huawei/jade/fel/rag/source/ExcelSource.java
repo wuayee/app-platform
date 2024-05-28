@@ -68,6 +68,10 @@ public class ExcelSource extends Source<List<Document>> {
         return FileType.NORMAL_FILE;
     }
 
+    private String naiveStringClean(String inStr) {
+        return inStr.replace("'", "");
+    }
+
     private void normalExtract(Integer headRow, Integer dataRow, Sheet sheet) {
         Integer rowNum = sheet.getPhysicalNumberOfRows();
         int colNum = sheet.getRow(0).getPhysicalNumberOfCells();
@@ -92,7 +96,7 @@ public class ExcelSource extends Source<List<Document>> {
                         rowContent.add(Double.toString(cell.getNumericCellValue()));
                         break;
                     case STRING:
-                        rowContent.add(cell.getStringCellValue());
+                        rowContent.add(naiveStringClean(cell.getStringCellValue()));
                         break;
                     default:
                         logger.error("Unsupported datatype:", cell.getCellType());
@@ -112,7 +116,8 @@ public class ExcelSource extends Source<List<Document>> {
                     continue;
                 }
                 contents.add(
-                        Arrays.asList(row.getCell(j).getStringCellValue(), row.getCell(0).getStringCellValue()));
+                        Arrays.asList(naiveStringClean(row.getCell(j).getStringCellValue()),
+                                naiveStringClean(row.getCell(0).getStringCellValue())));
             }
         }
     }
@@ -139,6 +144,7 @@ public class ExcelSource extends Source<List<Document>> {
                 if (cellVal == null) {
                     continue;
                 }
+                cellVal = naiveStringClean(cellVal);
                 if (relations.get(cellVal) == null) {
                     List<Integer> list = new ArrayList<>();
                     list.add(j);
