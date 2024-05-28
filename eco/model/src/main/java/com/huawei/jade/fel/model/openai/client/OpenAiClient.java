@@ -8,6 +8,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.model.openai.api.OpenAiApi;
 import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
 import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
@@ -166,6 +167,6 @@ public class OpenAiClient {
     }
 
     private String getApiKey(String apiKey) {
-        return "Bearer " + apiKey;
+        return "Bearer " + (StringUtils.isBlank(apiKey) ? System.getenv("OPENAI_API_KEY") : apiKey);
     }
 }

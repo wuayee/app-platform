@@ -31,7 +31,7 @@ public class ModelGatewayRouteTest {
     @Test
     public void testHealthRoute() {
         webTestClient.get()
-                .uri("/model-gateway/health") // 对应application.yml中health-check路由的路径
+                .uri("/actuator/health")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(String.class)
