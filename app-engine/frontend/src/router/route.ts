@@ -53,36 +53,7 @@ export const routeList: MenuItem[] = [
     icon: Icons.app({}),
     label: "应用市场",
     component: Apps,
-    children: [
-      {
-        key: "/app/:tenantId/detail/:appId",
-        icon: Icons.app({}),
-        label: "app编排",
-        component: AippIndex,
-        hidden: true,
-      },
-      {
-        key: "/app/:tenantId/addFlow/:appId",
-        icon: Icons.app({}),
-        label: "新增工具流",
-        component: AddFlow,
-        hidden: true,
-      },
-      {
-        key: "/app/:tenantId/flowDetail/:appId",
-        icon: Icons.app({}),
-        label: "工具流",
-        component: FlowDetail,
-        hidden: true,
-      },
-      {
-        key: "/app/:tenantId/appDetail/:appId",
-        icon: Icons.app({}),
-        label: "",
-        component: AppDetail,
-        hidden: true,
-      }
-    ],
+    children: [],
   },
   {
     key: "/app-develop",
@@ -91,21 +62,21 @@ export const routeList: MenuItem[] = [
     component: AppDev,
     children: [
       {
-        key: "/app/:tenantId/detail/:appId",
+        key: "/app-develop/:tenantId/detail/:appId",
         icon: Icons.app({}),
         label: "app编排",
         component: AippIndex,
         hidden: true,
       },
       {
-        key: "/app/:tenantId/addFlow/:appId",
+        key: "/app-develop/:tenantId/addFlow/:appId",
         icon: Icons.app({}),
         label: "新增工具流",
         component: AddFlow,
         hidden: true,
       },
       {
-        key: "/app/:tenantId/flowDetail/:appId",
+        key: "/app-develop/:tenantId/flowDetail/:appId",
         icon: Icons.app({}),
         label: "工具流",
         component: FlowDetail,
@@ -119,7 +90,7 @@ export const routeList: MenuItem[] = [
         hidden: true,
       },
       {
-        key: "/app/:tenantId/chat/:appId",
+        key: "/app-develop/:tenantId/chat/:appId",
         icon: Icons.app({}),
         label: "",
         component: ChatRunning,
