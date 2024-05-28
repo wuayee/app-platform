@@ -431,8 +431,10 @@ def get_supported_models_template(meta=False):
                 status = "status"
                 model[status] = model_services[model[name].lower()][status]
                 model["port"] = model_services[model[name].lower()]["node_port"]
+                model["image"] = get_supported_images()[0]
             else:
                 model["status"] = "undeployed"
+                model["image"] = "unset"
 
             update_model_statistics(model, agg_statistics)
 

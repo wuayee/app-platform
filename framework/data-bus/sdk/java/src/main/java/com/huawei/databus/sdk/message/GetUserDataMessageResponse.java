@@ -27,22 +27,26 @@ public final class GetUserDataMessageResponse extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public GetUserDataMessageResponse __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public byte userData(int j) { int o = __offset(4); return o != 0 ? bb.get(__vector(o) + j * 1) : 0; }
-  public int userDataLength() { int o = __offset(4); return o != 0 ? __vector_len(o) : 0; }
+  public byte errorType() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  public byte userData(int j) { int o = __offset(6); return o != 0 ? bb.get(__vector(o) + j * 1) : 0; }
+  public int userDataLength() { int o = __offset(6); return o != 0 ? __vector_len(o) : 0; }
   public ByteVector userDataVector() { return userDataVector(new ByteVector()); }
-  public ByteVector userDataVector(ByteVector obj) { int o = __offset(4); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer userDataAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
-  public ByteBuffer userDataInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  public ByteVector userDataVector(ByteVector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer userDataAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
+  public ByteBuffer userDataInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
 
   public static int createGetUserDataMessageResponse(FlatBufferBuilder builder,
+      byte errorType,
       int userDataOffset) {
-    builder.startTable(1);
+    builder.startTable(2);
     GetUserDataMessageResponse.addUserData(builder, userDataOffset);
+    GetUserDataMessageResponse.addErrorType(builder, errorType);
     return GetUserDataMessageResponse.endGetUserDataMessageResponse(builder);
   }
 
-  public static void startGetUserDataMessageResponse(FlatBufferBuilder builder) { builder.startTable(1); }
-  public static void addUserData(FlatBufferBuilder builder, int userDataOffset) { builder.addOffset(0, userDataOffset, 0); }
+  public static void startGetUserDataMessageResponse(FlatBufferBuilder builder) { builder.startTable(2); }
+  public static void addErrorType(FlatBufferBuilder builder, byte errorType) { builder.addByte(0, errorType, 0); }
+  public static void addUserData(FlatBufferBuilder builder, int userDataOffset) { builder.addOffset(1, userDataOffset, 0); }
   public static int createUserDataVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createUserDataVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startUserDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }

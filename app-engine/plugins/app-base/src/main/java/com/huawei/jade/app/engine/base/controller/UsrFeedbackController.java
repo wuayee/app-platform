@@ -13,7 +13,6 @@ import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.base.dto.UsrFeedbackDto;
-import com.huawei.jade.app.engine.base.po.UsrFeedbackPo;
 import com.huawei.jade.app.engine.base.service.UsrFeedbackService;
 
 import java.util.List;
@@ -26,10 +25,10 @@ import java.util.List;
  */
 @Component
 @RequestMapping("/aipp/usr")
-public class AippUsrController {
+public class UsrFeedbackController {
     private final UsrFeedbackService usrFeedbackService;
 
-    public AippUsrController(UsrFeedbackService usrFeedbackService) {
+    public UsrFeedbackController(UsrFeedbackService usrFeedbackService) {
         this.usrFeedbackService = usrFeedbackService;
     }
 
@@ -70,7 +69,7 @@ public class AippUsrController {
      * @return 用户反馈信息列表
      */
     @GetMapping("/feedbacks")
-    public List<UsrFeedbackPo> getAllUsrFeedbacks() {
+    public List<UsrFeedbackDto> getAllUsrFeedbacks() {
         return usrFeedbackService.getAllUsrFeedbacks();
     }
 
@@ -81,7 +80,7 @@ public class AippUsrController {
      * @return 对话信息
      */
     @GetMapping("/feedback/{logId}")
-    public UsrFeedbackPo getAllAnswerByLogId(@PathVariable("logId") Long logId) {
+    public UsrFeedbackDto getAllAnswerByLogId(@PathVariable("logId") Long logId) {
         return usrFeedbackService.getUsrFeedbackByLogId(logId);
     }
 }
