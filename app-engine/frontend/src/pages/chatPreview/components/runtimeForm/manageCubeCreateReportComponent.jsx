@@ -12,12 +12,10 @@ export const manageCubeCreateReportComponent = (jadeConfig) => {
         return jadeConfig ? jadeConfig : [
             {
                 id: uuidv4(),
-                name: "output",
-                type: "Object",
-                from: "value",
-                value: [
-                    {id: uuidv4(), type: "Array", from: "value", value: "reportResult"},
-                ]
+                name: "reportResult",
+                type: "String",
+                from: "Reference",
+                value: ["output"]
             }
         ]
     };
