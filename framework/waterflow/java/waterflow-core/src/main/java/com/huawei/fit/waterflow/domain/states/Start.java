@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -195,43 +197,51 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
     }
 
     /**
-     * reduce处理节点：m->1
+     * 生成一个数据聚合节点，将每个数据通过指定的方式进行合并后，形成一个新的数据，并继续发送。
      * <p>
-     * 不提供初始值，reduce之后的数据类型还是原数据类型
+     * 不提供初始值，聚合之后的数据类型还是原数据类型。
      * </p>
      *
-     * @param processor reduce处理器
-     * @return 新的处理节点
+     * @param processor 表示数据聚合器的 {@link Operators.ProcessReduce}{@code <}{@link O}{@code , }{@link O}{@code >}。
+     * @return 表示数据聚合节点的 {@link State}{@code <}{@link O}{@code , }{@link D}{@code , }{@link O}{@code ,
+     * }{@link F}{@code >}。
      */
     public State<O, D, O, F> reduce(Operators.Reduce<O, O> processor) {
         return this.reduce(null, processor);
     }
 
     /**
-     * reduce处理节点：m->1
+     * 生成一个数据聚合节点，将每个数据通过指定的方式进行合并后，形成一个新的数据，并继续发送。
      * <p>
-     * 处理后的数据类型是根据初始值来确认
+     * 处理后的数据类型是根据初始值来确认。
      * </p>
      *
-     * @param init 初始值
-     * @param processor reduce处理器
-     * @param <R> 通过初始值指定的处理完类型
-     * @return 新的处理节点
+     * @param init 表示聚合操作初始值提供者的 {@link Supplier}{@code <}{@link R}{@code >}。
+     * @param processor 表示数据聚合器的 {@link Operators.ProcessReduce}{@code <}{@link O}{@code , }{@link R}{@code >}。
+     * @param <R> 表示输出数据类型。
+     * @return 表示数据聚合节点的 {@link State}{@code <}{@link R}{@code , }{@link D}{@code , }{@link O}{@code ,
+     * }{@link F}{@code >}。
+     * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
-    public <R> State<R, D, O, F> reduce(R init, Operators.Reduce<O, R> processor) {
+    public <R> State<R, D, O, F> reduce(Supplier<R> init, Operators.Reduce<O, R> processor) {
         Operators.ProcessReduce<O, R> wrapper = (acc, input, context) -> processor.process(acc, input);
         return this.reduce(init, wrapper);
     }
 
     /**
-     * reduce处理节点：m->1, 支持操作session KV状态数据
+     * 生成一个数据聚合节点，将每个数据通过指定的方式进行合并后，形成一个新的数据，并继续发送。支持操作会话的自定义状态数据。
      *
-     * @param init 初始值
-     * @param processor reduce处理器
-     * @param <R> 处理完类型
-     * @return 新的处理节点
+     * @param init 表示初始值提供者的 {@link Supplier}{@code <}{@link R}{@code >}。
+     * @param processor 表示数据聚合器的 {@link Operators.ProcessReduce}{@code <}{@link O}{@code , }{@link R}{@code >}。
+     * @param <R> 表示输出数据类型。
+     * @return 表示数据聚合节点的 {@link State}{@code <}{@link R}{@code , }{@link D}{@code , }{@link O}{@code ,
+     * }{@link F}{@code >}。
+     * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
-    public <R> State<R, D, O, F> reduce(R init, Operators.ProcessReduce<O, R> processor) {
+    public <R> State<R, D, O, F> reduce(Supplier<R> init, Operators.ProcessReduce<O, R> processor) {
+        Validation.notNull(processor, "Reduce processor can not be null.");
+        Supplier<R> actualInit = ObjectUtils.nullIf(init, () -> null);
+
         // 有keyby的情况下，累加器按照key分开计算
         Map<Object, Tuple<FlowSession, R>> globalAccs = new HashMap<>();
         AtomicReference<State<R, D, O, F>> stateWrapper = new AtomicReference<>();
@@ -245,8 +255,8 @@ public class Start<O, D, I, F extends Flow<D>> extends Activity<D, F> {
                 if (windowToken != null) {
                     accs = windowToken.accs();
                 }
-                R acc;
-                acc = processor.process(accs.get(key) == null ? init : accs.get(key).second(), input.getData(), input);
+                R acc = Optional.ofNullable(accs.get(key)).map(Tuple::second).orElseGet(actualInit);
+                acc = processor.process(acc, input.getData(), input);
                 accs.put(key, Tuple.from(input.getSession(), acc));
                 if (windowToken == null) {
                     return acc;

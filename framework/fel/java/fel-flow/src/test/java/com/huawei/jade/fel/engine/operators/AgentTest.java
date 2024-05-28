@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.huawei.fitframework.flowable.Choir;
+import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatModelService;
 import com.huawei.jade.fel.chat.ChatModelStreamService;
 import com.huawei.jade.fel.chat.ChatOptions;
@@ -224,7 +225,7 @@ public class AgentTest {
             assertThat(answer.get()).isEqualTo("calculate 40*50\ntoolcall\n" + expectedToolVal);
         }
 
-        private StreamingConsumer<AiMessage, ChatChunk> getStreamingConsumer(StringBuilder chunkResult,
+        private StreamingConsumer<ChatMessage, ChatChunk> getStreamingConsumer(StringBuilder chunkResult,
                 StringBuilder accResult) {
             return (acc, chunk) -> {
                 if (chunk.isEnd()) {

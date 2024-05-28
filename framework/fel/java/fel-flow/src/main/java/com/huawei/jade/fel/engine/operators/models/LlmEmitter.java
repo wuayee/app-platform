@@ -17,19 +17,12 @@ import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fitframework.flowable.Publisher;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.Prompt;
-import com.huawei.jade.fel.chat.character.AiMessage;
-import com.huawei.jade.fel.chat.content.Media;
 import com.huawei.jade.fel.core.memory.Memory;
 import com.huawei.jade.fel.engine.operators.AiRunnableArg;
-import com.huawei.jade.fel.tool.ToolCall;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * 流式模型发射器。
@@ -38,14 +31,12 @@ import java.util.Optional;
  * @since 2024-05-16
  */
 public class LlmEmitter<O extends ChatMessage> extends FiniteEmitter<O, ChatChunk> {
-    private static final StreamingConsumer<AiMessage, ChatChunk> EMPTY_CONSUMER = (acc, chunk) -> {};
+    private static final StreamingConsumer<ChatMessage, ChatChunk> EMPTY_CONSUMER = (acc, chunk) -> {};
 
+    private final ChatChunk chunkAcc = new ChatChunk();
     private final Memory memory;
-    private final StringBuilder text = new StringBuilder();
-    private final List<Media> medias = new ArrayList<>();
-    private final List<ToolCall> toolCalls = new ArrayList<>();
     private final ChatMessage question;
-    private final StreamingConsumer<AiMessage, ChatChunk> consumer;
+    private final StreamingConsumer<ChatMessage, ChatChunk> consumer;
     private final Processor<Prompt, ChatChunk> processor;
     private final FlowContext<Prompt> context;
 
@@ -69,19 +60,16 @@ public class LlmEmitter<O extends ChatMessage> extends FiniteEmitter<O, ChatChun
 
     @Override
     protected void consumeAction(O source, ChatChunk target) {
-        this.text.append(source.text());
-        this.medias.addAll(source.medias());
-        this.toolCalls.addAll(Optional.ofNullable(source.toolCalls()).orElseGet(Collections::emptyList));
-        this.consumer.accept(this.buildAccMessage(), target);
+        this.chunkAcc.merge(source);
+        this.consumer.accept(this.chunkAcc, target);
     }
 
     @Override
     protected void completedAction() {
-        ChatChunk acc = this.buildAccMessage();
-        if (this.memory != null && !acc.isToolCall()) {
-            memory.add(question, acc);
+        if (this.memory != null && this.chunkAcc.toolCalls().isEmpty()) {
+            memory.add(question, this.chunkAcc);
         }
-        this.consumer.accept(acc, new ChatChunk(StringUtils.EMPTY).setEnd());
+        this.consumer.accept(this.chunkAcc, new ChatChunk().setEnd());
     }
 
     @Override
@@ -89,9 +77,5 @@ public class LlmEmitter<O extends ChatMessage> extends FiniteEmitter<O, ChatChun
         Retryable<Prompt> retryable = new Retryable<Prompt>(this.processor.getFlowContextRepo(), processor);
         processor.getErrorHandlers()
                 .forEach(error -> error.handle(cause, retryable, Collections.singletonList(context)));
-    }
-
-    private ChatChunk buildAccMessage() {
-        return new ChatChunk(this.text.toString(), this.medias, this.toolCalls);
     }
 }
