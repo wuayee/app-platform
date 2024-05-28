@@ -4,6 +4,7 @@
 
 package com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.tasks;
 
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter.FlowDataConverter;
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowTaskType;
 
 import lombok.AllArgsConstructor;
@@ -45,4 +46,9 @@ public class FlowTask {
      * key为属性的键值，value为属性具体的值
      */
     private Map<String, String> properties;
+
+    /**
+     * 任务数据转换器
+     */
+    protected FlowDataConverter converter;
 }

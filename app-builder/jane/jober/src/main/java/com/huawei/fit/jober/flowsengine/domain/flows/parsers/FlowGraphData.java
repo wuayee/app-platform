@@ -484,6 +484,16 @@ public class FlowGraphData {
     }
 
     /**
+     * 获取task上的converter配置
+     *
+     * @param index 节点索引
+     * @return converter
+     */
+    public Map<String, Object> getNodeTaskConverter(int index) {
+        return getNodeTask(index).getJSONObject(CONVERTER);
+    }
+
+    /**
      * 获取流程定义的节点回调函数
      *
      * @param index 节点索引

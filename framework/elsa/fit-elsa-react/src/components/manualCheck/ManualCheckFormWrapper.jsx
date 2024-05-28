@@ -3,7 +3,6 @@ import "./style.css";
 import {useDataContext, useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {Collapse, Form} from "antd";
 import {JadeStopPropagationSelect} from "@/components/common/JadeStopPropagationSelect.jsx";
-import {JadeObservableTree} from "@/components/common/JadeObservableTree.jsx";
 import {useEffect, useState} from "react";
 import httpUtil from "@/components/util/httpUtil.jsx";
 
@@ -21,7 +20,6 @@ export default function ManualCheckFormWrapper() {
     const config = useShapeContext().graph.configs.find(node => node.node === "manualCheckNodeState");
     const formName = data.formName;
     const taskId = data.taskId;
-    const output = data.outputParams;
     const [formOptions, setFormOptions] = useState([]);
     const selectedFormDefaultValue = (formName === null || formName === undefined) ? undefined : `${formName.replace(/Component$/, '')} | ${taskId}`;
 
@@ -44,7 +42,7 @@ export default function ManualCheckFormWrapper() {
     };
 
     const onChange = (e) => {
-        let formOutput = "";
+        let formEntity = "";
         let changeFormName = "";
         let changeFormId = "";
         if (e && e.length > 0) {
@@ -52,34 +50,12 @@ export default function ManualCheckFormWrapper() {
             changeFormName = name + "Component";
             changeFormId = id;
             try {
-                formOutput = shape.graph.plugins[changeFormName]().getJadeConfig();
+                formEntity = shape.graph.plugins[changeFormName]().getJadeConfig();
             } catch (error) {
                 console.error("Error getting JadeConfig:", error);
             }
         }
-        dispatch({actionType: "changeFormAndSetOutput", formName: changeFormName, formId: changeFormId, formOutput: formOutput});
-    };
-
-    const renderOutput = () => {
-        if (!output || !Array.isArray(output) || !output.length > 0) {
-            return null;
-        }
-        return <Collapse bordered={false} className="jade-collapse-custom-background-color" defaultActiveKey={["manualCheckOutputPanel"]}>
-            {
-                <Panel
-                    key={"manualCheckOutputPanel"}
-                    header={
-                        <div className="panel-header"
-                             style={{display: 'flex', alignItems: 'center', justifyContent: "flex-start"}}>
-                            <span className="jade-panel-header-font">输出</span>
-                        </div>
-                    }
-                    className="jade-panel"
-                >
-                    <JadeObservableTree data={output}/>
-                </Panel>
-            }
-        </Collapse>;
+        dispatch({actionType: "changeFormAndSetOutput", formName: changeFormName, formId: changeFormId, entity: formEntity});
     };
 
     return (
@@ -111,7 +87,6 @@ export default function ManualCheckFormWrapper() {
                     </Panel>
                 }
             </Collapse>
-            {renderOutput()}
         </div>
     );
 }

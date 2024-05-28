@@ -9,15 +9,13 @@ export const manageCubeCreateReportComponent = (jadeConfig) => {
      * 必须.
      */
     self.getJadeConfig = () => {
-        return jadeConfig ? jadeConfig : [
-            {
-                id: uuidv4(),
-                name: "reportResult",
-                type: "String",
-                from: "Reference",
-                value: ["output"]
-            }
-        ]
+        return jadeConfig ? jadeConfig : {
+            "inputParams": [{
+                id: uuidv4(), name: "reportResult", type: "String", from: "Reference", value: ["output"]
+            }], "outputParams": [{
+                id: uuidv4(), name: "reportResult", type: "String", from: "Input", value: ""
+            }]
+        }
     };
 
     /**

@@ -15,6 +15,7 @@ import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
 import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext.FlowContextPersistRepo;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.FlowDefinition;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter.FlowDataConverter;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
 import com.huawei.fit.jober.flowsengine.domain.flows.events.FlowTaskCreatedEvent;
@@ -31,6 +32,7 @@ import com.huawei.fitframework.log.Logger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -77,18 +79,30 @@ public class FlowTaskCreatedEventHandler implements EventHandler<FlowTaskCreated
         FlowTask task = flowDefinition.getFlowNode(eventData.getNodeId()).getTask();
         String type = task.getTaskType().getSource();
 
+        List<FlowContext<FlowData>> convertedContexts = this.convertFlowContext(contexts, task);
         Operator operator = OperatorFactory.getOperator(type, brokerClient);
         try {
-            operator.operate(contexts, task);
+            operator.operate(convertedContexts, task);
         } catch (FitException e) {
             for (String fitableId : task.getExceptionFitables()) {
                 this.brokerClient.getRouter(FlowExceptionService.class, HANDLE_EXCEPTION_GENERICABLE)
                         .route(new FitableIdFilter(fitableId))
-                        .invoke(eventData.getNodeId(), getFlowData(contexts), e.getMessage());
+                        .invoke(eventData.getNodeId(), getFlowData(convertedContexts), e.getMessage());
             }
             log.error("Caught a throwable during the task handling. TaskId is {}. Caused by {}", task.getTaskId(),
                     e.getMessage());
         }
+    }
+
+    private List<FlowContext<FlowData>> convertFlowContext(List<FlowContext<FlowData>> contexts, FlowTask task) {
+        FlowDataConverter taskConverter = task.getConverter();
+        if (Objects.isNull(taskConverter)) {
+            return contexts;
+        }
+        contexts.forEach(context -> {
+            taskConverter.convertInput(context.getData());
+        });
+        return contexts;
     }
 
     private List<Map<String, Object>> getFlowData(List<FlowContext<FlowData>> flowContexts) {
