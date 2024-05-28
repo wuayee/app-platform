@@ -89,5 +89,14 @@ export function deleteDataSetListData(id) {
   return del(url)
 }
 
+/**
+ * @description 删除测试集
+ * @property {string} id - 数据集id.
+ * */
+export function deleteDataSetData(id) {
+  const url = `${AIPP_URL}/evalDataset/${id}`;
+  return del(url)
+}
+
 // 下载模板链接
 export const downTemplateUrl = `${AIPP_URL}/eval_dataset_template.xlsx`;

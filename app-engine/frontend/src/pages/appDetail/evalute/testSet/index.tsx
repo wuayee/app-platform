@@ -7,7 +7,7 @@ import CreateSet from './createTestset/createTestSet';
 import SetDetail from './detail';
 import { getColumnSearchProps } from '../../../../components/table-filter/input';
 import { getColumnTimePickerProps } from '../../../../components/table-filter/time-picker';
-import { getEvalDataList } from '../../../../shared/http/apps';
+import { deleteDataSetData, getEvalDataList } from '../../../../shared/http/apps';
 import { useParams } from 'react-router-dom';
 import Pagination from '../../../../components/pagination';
 
@@ -154,10 +154,18 @@ const TestSet: React.FC = () => {
           setDetailInfo(record);
           setDetailOpen(true);
         }
+        const deleteData = async ()=> {
+          try {
+            await deleteDataSetData(record?.id)
+            refresh();
+          } catch (error) {
+            
+          }
+        }
         return (
           <Space size='middle'>
             <a onClick={viewDetail}>查看</a>
-            <a>删除</a>
+            <a onClick={deleteData}>删除</a>
           </Space>
         )
       },
