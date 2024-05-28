@@ -41,7 +41,7 @@ public class PromptTest {
         final StringBuilder answer = new StringBuilder();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
                 .prompt(Prompts.sys("{{someone}}"), Prompts.human("{{question}}"))
-                .close(r -> answer.append(r.get().getData().text()));
+                .close(r -> answer.append(r.text()));
 
         Conversation<Tip, Prompt> conversation = flow.converse();
         conversation.offer(new Tip().add("someone", "will").add("question", "my question")).await();
@@ -54,7 +54,7 @@ public class PromptTest {
         final StringBuilder answer = new StringBuilder();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
                 .prompt(Prompts.human("introduce me books about {{0}} written by {{1}}"))
-                .close(r -> answer.append(r.get().getData().text()));
+                .close(r -> answer.append(r.text()));
 
         Conversation<Tip, Prompt> conversation = flow.converse();
         conversation.offer(Tip.fromArray("javascript", "will")).await();

@@ -4,6 +4,8 @@
 
 package com.huawei.jade.fel.engine.operators;
 
+import static com.huawei.jade.fel.engine.operators.patterns.SyncTipper.format;
+import static com.huawei.jade.fel.engine.operators.patterns.SyncTipper.passThrough;
 import static com.huawei.jade.fel.utils.FlowsTestUtils.waitUntil;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -87,7 +89,8 @@ public class ModelTest {
         ChatBlockModel<ChatMessages> model =
                 new ChatBlockModel<>(prompts -> new FlatChatMessage(new AiMessage("{\"ans\":\"model answer\"}")));
         AiProcessFlow<Tip, ModelOutput> flow = AiFlows.<Tip>create()
-                .prompt(Prompts.human("{{question}}"))
+                .runnableParallel(format("format", parser), passThrough())
+                .prompt(Prompts.human("{{question}} {{format}}").memory("question"))
                 .generate(model.bind(new ChatOptions()))
                 .map(ChatMessage::text)
                 .format(parser)

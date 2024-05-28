@@ -28,7 +28,7 @@ public class SourceTest {
         final StringBuilder answer = new StringBuilder();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
                 .prompt(Prompts.sys("{{someone}}"), Prompts.human("{{question}}"))
-                .close(r -> answer.append(r.get().getData().text()));
+                .close(r -> answer.append(r.text()));
 
         Source<Tip> tipSource = new Source<>();
         flow.offer(tipSource);

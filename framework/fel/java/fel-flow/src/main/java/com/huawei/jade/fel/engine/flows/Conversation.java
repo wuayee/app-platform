@@ -11,6 +11,7 @@ import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.core.memory.Memory;
+import com.huawei.jade.fel.engine.activities.FlowCallBack;
 import com.huawei.jade.fel.engine.operators.models.ChatChunk;
 import com.huawei.jade.fel.engine.operators.models.StreamingConsumer;
 import com.huawei.jade.fel.engine.util.StateKey;
@@ -34,7 +35,7 @@ public class Conversation<D, R> {
     private final AiProcessFlow<D, R> flow;
     private final FlowSession session;
     private final AtomicReference<ConverseListener<R>> converseListener = new AtomicReference<>(null);
-    private final Predictable<R> tempListener;
+    private FlowCallBack.Builder<R> callBackBuilder;
 
     /**
      * AI 数据处理流程对话的构造方法。
@@ -45,10 +46,10 @@ public class Conversation<D, R> {
      */
     public Conversation(AiProcessFlow<D, R> flow, FlowSession session) {
         this.flow = Validation.notNull(flow, "Flow cannot be null.");
-        this.tempListener = new Predictable<>(flow, null);
         this.session = (session == null)
                 ? this.setConverseListener(new FlowSession())
                 : this.setSubConverseListener(session);
+        this.callBackBuilder = FlowCallBack.builder();
     }
 
     /**
@@ -188,7 +189,7 @@ public class Conversation<D, R> {
      * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
     public Conversation<D, R> doOnSuccess(Consumer<R> processor) {
-        this.tempListener.setSuccessCb(processor);
+        this.callBackBuilder.doOnSuccess(processor);
         return this;
     }
 
@@ -200,7 +201,7 @@ public class Conversation<D, R> {
      * @throws IllegalArgumentException 当 {@code errorHandler} 为 {@code null} 时。
      */
     public Conversation<D, R> doOnError(Consumer<Throwable> errorHandler) {
-        this.tempListener.setErrorCb(errorHandler);
+        this.callBackBuilder.doOnError(errorHandler);
         return this;
     }
 
@@ -212,13 +213,13 @@ public class Conversation<D, R> {
      * @throws IllegalArgumentException 当 {@code finallyAction} 为 {@code null} 时。
      */
     public Conversation<D, R> doOnFinally(Action finallyAction) {
-        this.tempListener.setFinallyCb(finallyAction);
+        this.callBackBuilder.doOnFinally(finallyAction);
         return this;
     }
 
     private ConverseLatch<R> setListener() {
         ConverseLatch<R> latch = new ConverseLatch<>();
-        Predictable<R> predictable = new Predictable<>(this.tempListener, latch);
+        Predictable<R> predictable = new Predictable<>(this.flow, this.callBackBuilder.build(), latch);
         ConverseListener<R> listener = this.converseListener.getAndSet(predictable);
         if (listener != null && !listener.isCompleted()) {
             throw new IllegalStateException("conversation is running.");
@@ -228,8 +229,8 @@ public class Conversation<D, R> {
                 this.session.getInnerState(StateKey.CONVERSE_LISTENER);
         listenerMap.get().put(this.flow.getId(), converseListener);
 
-        // 清空临时 listener，用于同一会话的下一次 offer 数据
-        this.tempListener.clear();
+        // 清空临时 builder，用于同一会话的下一次 offer 数据
+        this.callBackBuilder = FlowCallBack.builder();
         return latch;
     }
 

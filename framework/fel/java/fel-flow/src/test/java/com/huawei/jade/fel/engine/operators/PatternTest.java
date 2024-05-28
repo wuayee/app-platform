@@ -43,7 +43,7 @@ public class PatternTest {
                         value("context", (arg -> Contents.from("context"))),
                         value("key", "val"))
                 .prompt(Prompts.human("answer {{question}} from {{context}} with {{history}}"))
-                .close(r -> answer.append(r.get().getData().text()))
+                .close(r -> answer.append(r.text()))
                 .converse()
                 .bind(memory)
                 .offer("question")
@@ -61,13 +61,13 @@ public class PatternTest {
                 .runnableParallel(history(), passThrough())
                 .prompt(Prompts.human("enhance {{q1}} with {{history}}"))
                 .retrieve(retriever)
-                .close(r -> answer.append(r.get().getData().text()));
+                .close(r -> answer.append(r.text()));
 
         ChatMessages messages = new ChatMessages();
         AiFlows.<Tip>create()
                 .runnableParallel(value("context", ragFlow), history("history"), passThrough())
                 .prompt(Prompts.human("answer {{q1}} and {{q2}} from {{context}} with {{history}}"))
-                .close(r -> messages.addAll(r.get().getData().messages()))
+                .close(r -> messages.addAll(r.messages()))
                 .converse()
                 .bind(memory)
                 .offer(Tip.from("q1", "my question1").add("q2", "my question2"))
