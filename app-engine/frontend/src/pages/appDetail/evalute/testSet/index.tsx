@@ -1,35 +1,111 @@
-import { Button } from 'antd';
-import React, { useState } from 'react';
-import type { PaginationProps } from 'antd';
+import { Button, Drawer, Input } from 'antd';
+import React, { Ref, useState, useEffect } from 'react';
+import type { PaginationProps, TableProps, TableColumnType } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import { Table, Space } from 'antd';
-import { formatDateTime } from '../../../../shared/utils/function';
 import CreateSet from './createTestset/createTestSet';
 import SetDetail from './detail';
-import TableTextSearch from '../../../../components/table-text-search';
-import TableCalendarSearch from '../../../../components/table-calendar-search';
+import { getColumnSearchProps } from '../../../../components/table-filter/input';
+import { getColumnTimePickerProps } from '../../../../components/table-filter/time-picker';
+import { getEvalDataList } from '../../../../shared/http/apps';
+import { useParams } from 'react-router-dom';
+import Pagination from '../../../../components/pagination';
 
 const showTotal: PaginationProps['showTotal'] = (total) => `共 ${total} 条`;
 
-const TestSet: React.FC = () => {
+interface DataType {
+  key: string;
+  name: string;
+  age: number;
+  address: string;
+  desc: string;
+}
 
+type DataIndex = keyof DataType;
+type OnChange = NonNullable<TableProps<DataType>['onChange']>;
+type Filters = Parameters<OnChange>[1];
+
+
+const TestSet: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailInfo, setDetailInfo] = useState({});
+  const [filteredInfo, setFilteredInfo] = useState<Filters>({});
 
-  const dataSource = Array.from({ length: 30 }).fill(null).map((_, index) => ({
-    key: index,
-    id: index,
-    name: `数据集${index}`,
-    desc: `描述${index}`,
-    creator: `admin${index}`,
-    createTime: formatDateTime(new Date()),
-    modifyTime: formatDateTime(new Date())
-  }));
+  const [data, setData] = useState([])
+  // 总条数
+  const [total, setTotal] = useState(0);
 
-  const searchCallback = (key: string, value: string) => {
-    console.log(`key:${key}\nvalue:${value}`);
-    //处理搜索参数，组织数据调用接口
+  // 分页
+  const [page, setPage] = useState(1);
+
+  // 分页数
+  const [pageSize, setPageSize] = useState(10);
+
+  // 分页变化
+  const paginationChange = (curPage: number, curPageSize: number) => {
+    if(page!==curPage) {
+      setPage(curPage);
+    }
+    if(pageSize!=curPageSize) {
+      setPageSize(curPageSize);
+    }
   }
+
+   
+  const { tenantId, appId} = useParams()
+
+  // 搜索值变更
+  const filterChange = (...rest: any[]) => {
+    rest[1]();
+    setFilteredInfo({...filteredInfo, [rest[2]]: rest[0]});
+    setPage(1);
+  };
+
+  // 时间转换
+  const formateDate = (str: Date) => {
+    if(!str) return '';
+    const date = new Date(str)
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hour = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    return `${year}-${month.toString().padStart(2)}-${day} ${hour}:${minutes}:${seconds}`
+  }
+
+  // 构建搜索参数
+  const buildQuery = ()=> {
+    let query: any = {
+      appId,
+      pageIndex: page,
+      pageSize: pageSize
+    };
+    
+    Object.keys(filteredInfo).forEach((key)=> {
+      const item: any = filteredInfo[key];
+      if (key==='createTime' || key === 'modifyTime') {
+        query[`${key}To`] = formateDate(item[1]);
+        query[`${key}From`] = formateDate(item[0]);
+      } else {
+        query[key] = item[0];
+      }
+    })
+    return query;
+  }
+
+  // 获取评估测试集列表
+  const refresh = async () => {
+    try {
+      let res = await getEvalDataList(buildQuery());
+
+      setTotal(res?.total || 0);
+      setData(res?.data || []);
+    } catch (error) {
+      
+    }
+  };
 
   const columns = [
     {
@@ -38,33 +114,37 @@ const TestSet: React.FC = () => {
       title: 'ID'
     },
     {
-      key: 'name',
-      dataIndex: 'name',
+      key: 'datasetName',
+      dataIndex: 'datasetName',
       title: '测试集名称',
-      ...TableTextSearch('name', false),
     },
     {
-      key: 'desc',
-      dataIndex: 'desc',
+      key: 'description',
+      dataIndex: 'description',
       title: '测试集描述',
-      ...TableTextSearch('desc'),
+      filteredValue: filteredInfo.description || null,
+      ...getColumnSearchProps('description', filterChange)
     },
     {
-      key: 'creator',
-      dataIndex: 'creator',
+      key: 'author',
+      dataIndex: 'author',
       title: '创建人',
-      ...TableTextSearch('creator'),
+      filteredValue: filteredInfo.author || null,
+      ...getColumnSearchProps('author', filterChange)
     },
     {
       key: 'createTime',
       dataIndex: 'createTime',
       title: '创建时间',
-      ...TableCalendarSearch('createTime')
+      filteredValue: filteredInfo.createTime || null,
+      ...getColumnTimePickerProps('createTime', filterChange)
     },
     {
       key: 'modifyTime',
       dataIndex: 'modifyTime',
-      title: '修改时间'
+      title: '修改时间',
+      filteredValue: filteredInfo.modifyTime || null,
+      ...getColumnTimePickerProps('modifyTime', filterChange)
     },
     {
       key: 'action',
@@ -89,17 +169,18 @@ const TestSet: React.FC = () => {
   };
 
   const callback = (type: string, data: any) => {
-    //创建&编辑面板的回调，根据type进行业务处理
-    //submit：提交后请求接口处理逻辑；cancel：关闭面板（可添加二次确认
     setOpen(false);
+    refresh();
   }
 
   const detailCallback = () => {
     setDetailOpen(false);
   }
-  const handleChange = (pagination: any, filters: any) => {
-    console.log('Various parameters', pagination, filters);
-  };
+
+  useEffect(()=> {
+    refresh();
+  }, [page, pageSize, filteredInfo]);
+
   return (
     <div>
       <div className='margin-bottom-standard test'>
@@ -107,23 +188,17 @@ const TestSet: React.FC = () => {
         <Button>应用评估</Button>
       </div>
       <Table
-        dataSource={dataSource}
+        dataSource={data}
         columns={columns}
-        onChange={handleChange}
         rowSelection={{
           type: 'checkbox',
           columnWidth: 60
         }}
         virtual
         scroll={{ y: 800 }}
-        pagination={{
-          size: 'small',
-          total: 50,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          showTotal,
-        }}
+        pagination={false}
       />
+      <Pagination total = {total} current={page} onChange={paginationChange} pageSize={pageSize}/>
       <CreateSet visible={open} createCallback={callback} />
       <SetDetail visible={detailOpen} params={detailInfo} detailCallback={detailCallback} />
     </div>
