@@ -49,7 +49,7 @@ public class SchemaToolMetadataTest {
         Invoker invoker = mock(Invoker.class);
         BrokerClient client = mock(BrokerClient.class);
         when(client.getRouter(eq("t1"))).thenReturn(router);
-        when(router.route()).thenReturn(invoker);
+        when(router.route(any())).thenReturn(invoker);
         when(invoker.invoke(any())).thenAnswer(invocation -> {
             if (Objects.equals(invocation.getArgument(0), "1")) {
                 return "OK";
@@ -72,8 +72,9 @@ public class SchemaToolMetadataTest {
                 .tags(Collections.singleton("FIT"))
                 .description("This is a demo FIT function.")
                 .schema(buildSchema())
-                .runnables(MapBuilder.<String, Object>get().put("FIT",
-                        MapBuilder.<String, Object>get().put("genericableId", "t1").build()).build())
+                .runnables(MapBuilder.<String, Object>get()
+                        .put("FIT", MapBuilder.<String, Object>get().put("genericableId", "t1").build())
+                        .build())
                 .build();
     }
 
@@ -110,8 +111,7 @@ public class SchemaToolMetadataTest {
     @Test
     @DisplayName("当 FIT 调用失败，返回错误的结果")
     void shouldReturnIncorrectResult() {
-        IllegalStateException cause = catchThrowableOfType(() ->
-                this.tool.call("2"), IllegalStateException.class);
+        IllegalStateException cause = catchThrowableOfType(() -> this.tool.call("2"), IllegalStateException.class);
         assertThat(cause).hasMessage("Error");
     }
 

@@ -113,7 +113,7 @@ public class JdbcSqlConnector implements SqlConnector {
                 rows = processRows(rs);
             }
         } catch (SQLException e) {
-            logger.error("Failed to execute sql");
+            logger.error("Failed to execute sql, err msg: ", e.getMessage());
         } finally {
             close(rs);
             close(stmt);

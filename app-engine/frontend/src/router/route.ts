@@ -4,6 +4,7 @@ import { Icons } from "../components/icons/index";
 import KnowledgeBase from "../pages/knowledge-base";
 import KnowledgeBaseCreate from "../pages/knowledge-base/create";
 import KnowledgeBaseDetail from "../pages/knowledge-base/knowledge-detail";
+import Plugin from "../pages/plugin";
 import Demo from "../pages/demo";
 import ChatHome from "../pages/chatEngineHome/index.jsx";
 import ChatRunning from "../pages/chatRunning/index";
@@ -203,8 +204,7 @@ export const routeList: MenuItem[] = [
     key: "/plugin",
     icon: Icons.app({}),
     label: "插件",
-    component: Demo,
-    hidden: true,
+    component: Plugin,
   },
   {
     key: "/Tooling",

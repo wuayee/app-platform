@@ -65,7 +65,7 @@ public abstract class AbstractTool implements Tool {
             }
             args[i] = ObjectUtils.toCustomObject(value, types.get(i));
         }
-        Object result = call(args);
+        Object result = this.call(args);
         return new String(this.serializer.serialize(result, UTF_8), UTF_8);
     }
 }
