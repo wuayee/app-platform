@@ -27,6 +27,14 @@ public interface MemoryIoResult extends DataBusIoResult {
     byte[] bytes();
 
     /**
+     * 如果本次为读取，且用户设置了同时操作返回用户数据，则返回用户元数据。如果此内存块未设置用户元数据，返回0长度字节数组。
+     * 其他情况，返回 null。
+     *
+     * @return 表示与本次 IO 请求相关的用户元数据 {@code byte[]}
+     */
+    byte[] userData();
+
+    /**
      * 返回本次 IO 请求相关的许可类型
      *
      * @return 表示许可类型的 {@code byte}
@@ -38,11 +46,12 @@ public interface MemoryIoResult extends DataBusIoResult {
      *
      * @param sharedMemory 表示此 IO 操作涉及到的内存实例的 {@link SharedMemoryKey}。
      * @param bytes 表示此 IO 操作涉及到字节缓冲区的 {@code byte[]}。
+     * @param userData 表示此 IO 操作附带的用户元数据的 {@code byte[]}。
      * @param permissionType 表示此 IO 操作涉及到权限的 {@code byte}。
      * @return 表示内存 IO 操作成功的结果的 {@link MemoryIoResult}。
      */
-    static MemoryIoResult success(SharedMemory sharedMemory, byte[] bytes, byte permissionType) {
-        return new SuccessResult(sharedMemory, bytes, permissionType);
+    static MemoryIoResult success(SharedMemory sharedMemory, byte[] bytes, byte[] userData, byte permissionType) {
+        return new SuccessResult(sharedMemory, bytes, userData, permissionType);
     }
 
     /**
@@ -75,11 +84,13 @@ public interface MemoryIoResult extends DataBusIoResult {
     final class SuccessResult implements MemoryIoResult {
         private final SharedMemory sharedMemory;
         private final byte[] bytes;
+        private final byte[] userData;
         private final byte permissionType;
 
-        private SuccessResult(SharedMemory sharedMemory, byte[] bytes, byte permissionType) {
+        private SuccessResult(SharedMemory sharedMemory, byte[] bytes, byte[] userData, byte permissionType) {
             this.sharedMemory = sharedMemory;
             this.bytes = bytes;
+            this.userData = userData;
             this.permissionType = permissionType;
         }
 
@@ -101,6 +112,11 @@ public interface MemoryIoResult extends DataBusIoResult {
         @Override
         public SharedMemory sharedMemory() {
             return this.sharedMemory;
+        }
+
+        @Override
+        public byte[] userData() {
+            return this.userData;
         }
 
         @Override
@@ -152,6 +168,11 @@ public interface MemoryIoResult extends DataBusIoResult {
         @Override
         public SharedMemory sharedMemory() {
             return null;
+        }
+
+        @Override
+        public byte[] userData() {
+            return new byte[0];
         }
 
         @Override
