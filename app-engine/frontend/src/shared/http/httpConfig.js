@@ -4,7 +4,7 @@ export const httpUrlMap = {
     ELSA_URL: '/else',
     AI_URL: '/aiApi',
     AIPP_URL: '/aippApi',
-    KNOWLEDGE_URL: '/knowledge',
+    KNOWLEDGE_URL: '/api/jober/knowledge',
     ICON_URL: 'https://jane-beta.huawei.com/api',
     PUBLISH_URL: 'https://jane-beta.huawei.com/appbuilder/#',
     // WS_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/chat',
@@ -13,7 +13,7 @@ export const httpUrlMap = {
     MODEL_URL: '/modelApi',
     APP_URL: '/app',
     MODEL_LIST_URL: '/v1',
-    PLUGIN_URL: '/plugin/api/jober',
+    PLUGIN_URL: '/api/jober',
   },
   production: {
     JANE_URL: 'https://jane.huawei.com/api',
@@ -26,7 +26,7 @@ export const httpUrlMap = {
     WS_AUDIO_URL: 'wss://tzaip.rnd.huawei.com/tzaip/api/hisp/api/v1/platform/app/asr',
     MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
     MODEL_LIST_URL: 'http://model-io-manager:8010/v1',
-    PLUGIN_URL: '/plugin/api/jober',
+    PLUGIN_URL: '/api/jober',
   },
   gamma: {
     JANE_URL: 'https://jane-gamma.huawei.com/api',
