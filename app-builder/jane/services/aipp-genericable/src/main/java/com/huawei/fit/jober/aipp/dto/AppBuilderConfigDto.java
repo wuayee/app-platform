@@ -9,7 +9,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
+ * 表示 config 的 dto 对象。
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */
@@ -17,10 +21,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppBuilderConfigFormPropertyDto {
+public class AppBuilderConfigDto {
     private String id;
-    private String name;
-    private String dataType;
-    private Object defaultValue;
-    private String nodeId;
+    private String tenantId;
+    private String createBy;
+    private String updateBy;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
+    private AppBuilderConfigFormDto form;
 }

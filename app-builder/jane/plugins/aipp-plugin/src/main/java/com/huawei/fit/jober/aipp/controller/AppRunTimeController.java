@@ -27,7 +27,6 @@ import com.huawei.fit.jober.aipp.service.AippFlowRuntimeInfoService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
 import com.huawei.fit.runtime.entity.RuntimeData;
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Property;
 
 import java.util.List;
@@ -43,12 +42,15 @@ import java.util.Map;
 @RequestMapping(path = "/v1/api/{tenant_id}", group = "aipp运行时管理接口")
 public class AppRunTimeController extends AbstractController {
     private final AippRunTimeService aippRunTimeService;
+    private final com.huawei.fit.jober.aipp.genericable.AippRunTimeService aippRunTimeGenericable;
     private final AippFlowRuntimeInfoService aippFlowRuntimeInfoService;
 
-    public AppRunTimeController(Authenticator authenticator, @Fit AippRunTimeService aippRunTimeService,
-            @Fit AippFlowRuntimeInfoService aippFlowRuntimeInfoService) {
+    public AppRunTimeController(Authenticator authenticator, AippRunTimeService aippRunTimeService,
+            com.huawei.fit.jober.aipp.genericable.AippRunTimeService aippRunTimeGenericable,
+            AippFlowRuntimeInfoService aippFlowRuntimeInfoService) {
         super(authenticator);
         this.aippRunTimeService = aippRunTimeService;
+        this.aippRunTimeGenericable = aippRunTimeGenericable;
         this.aippFlowRuntimeInfoService = aippFlowRuntimeInfoService;
     }
 
@@ -110,7 +112,7 @@ public class AppRunTimeController extends AbstractController {
             @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
             @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData", example = "图片url, 文本输入, prompt")
             @RequestBody Map<String, Object> initContext, @RequestParam(value = "version") String version) {
-        return Rsp.ok(aippRunTimeService.createAippInstance(aippId,
+        return Rsp.ok(this.aippRunTimeGenericable.createAippInstance(aippId,
                 version,
                 initContext,
                 this.contextOf(httpRequest, tenantId)));
