@@ -21,8 +21,8 @@ const TableCalendarSearch = (searchKeyName: string, async: boolean = true): Tabl
       <div style={{ padding: 8, width: 360 }} onKeyDown={(e) => e.stopPropagation()}>
         <Space direction="vertical" size={12}>
           <RangePicker
-            showTime={{ format: 'HH:mm' }}
-            format="YYYY-MM-DD HH:mm"
+            showTime={{ format: 'HH:mm:ss' }}
+            format="YYYY-MM-DD HH:mm:ss"
             onChange={(_, dateString) => {
               setSelectedKeys(dateString);
             }}
