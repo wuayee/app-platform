@@ -125,10 +125,10 @@ module.exports = merge(common, {
         secure: false,
         changeOrigin: true,
       },
-      '/api/api/jober': {
+      '/plugin/api/jober': {
         target: 'http://80.11.128.66:31111',
         pathRewrite: {
-          '^/api/api/jober': '',
+          '^/plugin/api/jober': '/api/jober',
         },
         secure: false,
         changeOrigin: true,
