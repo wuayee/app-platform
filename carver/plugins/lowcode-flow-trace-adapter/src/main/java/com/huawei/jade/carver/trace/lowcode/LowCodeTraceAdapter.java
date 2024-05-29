@@ -11,7 +11,10 @@ import com.huawei.fit.runtime.entity.RuntimeData;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.ioc.BeanContainer;
+import com.huawei.fitframework.ioc.BeanFactory;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.LazyLoader;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.app.engine.eval.po.EvalReportTracePo;
 import com.huawei.jade.app.engine.eval.service.EvalTaskReportTraceService;
@@ -34,10 +37,13 @@ import java.util.stream.Collectors;
 public class LowCodeTraceAdapter implements NodeRuntimeDataPublisher {
     private static final Logger log = Logger.get(LowCodeTraceAdapter.class);
 
-    private final EvalTaskReportTraceService evalService;
+    private final LazyLoader<EvalTaskReportTraceService> evalServiceLoader;
+    private final BeanContainer container;
 
-    public LowCodeTraceAdapter(EvalTaskReportTraceService evalService) {
-        this.evalService = Validation.notNull(evalService, "Evaluate service can not be null.");
+    public LowCodeTraceAdapter(BeanContainer container) {
+        this.container = Validation.notNull(container, "Container can not be null.");
+        this.evalServiceLoader = new LazyLoader<>(() -> this.container.lookup(EvalTaskReportTraceService.class).map(
+                BeanFactory::<EvalTaskReportTraceService>get).orElse(null));
     }
 
     @Override
@@ -49,6 +55,9 @@ public class LowCodeTraceAdapter implements NodeRuntimeDataPublisher {
     @Fitable("com.huawei.jade.carver.trace.lowcode.LowCodeTraceAdapter")
     @Override
     public void onPublish(RuntimeData runtimeData) {
+        if (this.evalServiceLoader.get() == null) {
+            return;
+        }
         Validation.notNull(runtimeData, "Runtime data can not be null.");
         String instanceId = runtimeData.getAippInstanceId();
         if (instanceId == null) {
@@ -63,7 +72,7 @@ public class LowCodeTraceAdapter implements NodeRuntimeDataPublisher {
         }
         List<EvalReportTracePo> reportTraces =
                 nodeInfos.stream().map(node -> buildEvalReportTracePo(instanceId, node)).collect(Collectors.toList());
-        evalService.insertAllTrace(reportTraces);
+        this.evalServiceLoader.get().insertAllTrace(reportTraces);
     }
 
     private static EvalReportTracePo buildEvalReportTracePo(String instanceId, NodeInfo nodeInfo) {
