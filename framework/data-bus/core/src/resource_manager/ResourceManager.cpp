@@ -9,7 +9,6 @@
 #include "fbs/apply_permission_message_response_generated.h"
 #include "FtokArgsGenerator.h"
 #include "log/Logger.h"
-#include "utils/FileUtils.h"
 #include "ResourceManager.h"
 
 using namespace std;

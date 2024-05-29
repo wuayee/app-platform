@@ -20,7 +20,7 @@ constexpr int32_t MESSAGE_HEADER_LEN = 24;
 /**
  * 生成消息头，拼接整个消息并发送
  */
-static void SendMessage(flatbuffers::FlatBufferBuilder &builder, Common::MessageType type,
+inline void SendMessage(flatbuffers::FlatBufferBuilder &builder, Common::MessageType type,
                         const std::function<void(const uint8_t *, size_t)> &sender)
 {
     const size_t respBodySize = builder.GetSize();
@@ -33,7 +33,7 @@ static void SendMessage(flatbuffers::FlatBufferBuilder &builder, Common::Message
     sender(builder.GetBufferPointer(), builder.GetSize());
 }
 
-static void SendErrorMessage(ErrorType errorType, const std::function<void(const uint8_t *, size_t)> &sender)
+inline void SendErrorMessage(ErrorType errorType, const std::function<void(const uint8_t *, size_t)> &sender)
 {
     flatbuffers::FlatBufferBuilder bodyBuilder;
     flatbuffers::Offset<ErrorMessageResponse> respBody =
