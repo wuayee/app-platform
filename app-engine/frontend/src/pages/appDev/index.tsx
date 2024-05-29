@@ -142,8 +142,10 @@ const AppDev: React.FC = () => {
 
   useEffect(()=> {
     getUserCollectionList();
+  }, []);
+  useEffect(() => {
     queryApps();
-  }, [])
+  }, [current, search]);
 
   return (
     <div className=' apps_root'>
