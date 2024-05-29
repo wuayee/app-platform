@@ -153,7 +153,8 @@ const ChatPreview = (props) => {
                 logId: aItem.logId,
                 markdownSyntax: markdowned !== -1,
                 type: "recieve",
-                instanceId: item.instanceId
+                instanceId: item.instanceId,
+                feedbackStatus: -1
               };
               if (isJsonString(msg)) {
                 let msgObj = JSON.parse(msg);
@@ -584,6 +585,7 @@ const ChatPreview = (props) => {
                   chatList={chatList}
                   setEditorShow={setEditorShow}
                   setCheckedList={setCheckedList}
+                  setChatList={setChatList}
                   showCheck={showCheck}/>
                 { showCheck ?
                   ( <CheckGroup

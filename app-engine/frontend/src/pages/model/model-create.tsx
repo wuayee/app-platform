@@ -8,6 +8,7 @@ interface createItem {
   name: string;
   image: Array<string>;
   precision: Array<string>;
+  gpu: Array<number>;
 }
 
 interface StarAppsProps {
@@ -25,13 +26,16 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
   const [nameOption, setNameOption] = useState(null);
   const [precisionOption, setPrecisionOption] = useState(null);
   const [imageOption, setImageOption] = useState(null);
+  const [gpuOption, setGpuOption] = useState(null);
   const handleNameChange = (value: any) => {
     setNameOption(value);
     setPrecisionOption(null);
     setImageOption(null);
+    setGpuOption(null);
   };
   const filteredPrecisionOption = createItems.find((item) => item.name === nameOption)?.precision;
   const filteredImageOption = createItems.find((item) => item.name === nameOption)?.image;
+  const filteredGpuOption = createItems.find((item) => item.name === nameOption)?.gpu;
 
   if (createItems.length) {
     createItems.forEach((item) => {
@@ -41,14 +45,14 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
 
   const deployModel = () => {
     form.validateFields().then((values) => {
-      const { name, inference_accuracy, image_name, des, npus, node_port, replicas } = values;
+      const { name, inference_accuracy, image_name, des, npus, replicas } = values;
       const modelParams = {
         name,
         des,
         image_name,
         inference_accuracy,
-        replicas: parseInt(replicas),
-        node_port: parseInt(node_port),
+        replicas,
+        node_port: 80,
         npus: parseInt(npus),
       };
       createModel(modelParams).then((res) => {
@@ -127,50 +131,20 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           label='大模型实例数'
           name='replicas'
           rules={[
-            { required: true, message: '请输入大模型实例数' },
-            {
-              whitespace: true,
-              type: 'number',
-              transform(value) {
-                if (value) {
-                  return Number(value);
-                }
-              },
-              message: '模型服务端口号仅支持数字',
-            },
-            { pattern: /^[^\s]*$/, message: '禁止输入空格' },
+            { required: true, message: '请输入大模型实例数' }
           ]}
         >
-          <Input />
+           <Select
+            options={filteredGpuOption?.map((option) => ({ label: option, value: option }))}
+            value={gpuOption}
+            onChange={setGpuOption}
+          />
         </Form.Item>
         <Form.Item
           label='单实例消耗的NPU数'
           name='npus'
           rules={[
             { required: true, message: '请输入单实例消耗的NPU数' },
-            {
-              whitespace: true,
-              type: 'number',
-              transform(value) {
-                if (value) {
-                  return Number(value);
-                }
-              },
-              message: '模型服务端口号仅支持数字',
-            },
-            { pattern: /^[^\s]*$/, message: '禁止输入空格' },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label='模型服务端口号'
-          name='node_port'
-          rules={[
-            {
-              required: true,
-              message: '请输入模型服务端口号',
-            },
             {
               whitespace: true,
               type: 'number',

@@ -40,6 +40,8 @@ import Languages from './svg/setting.svg';
 import Rebot from './svg/rebot.svg';
 import Like from './svg/like.svg';
 import Unlike from './svg/unlike.svg';
+import LikeSelect from './svg/likeSelect.svg';
+import UnlikeSelect from './svg/unlikeSelect.svg';
 import Share from './svg/share.svg';
 import Copy from './svg/copy.svg';
 import Delete from './svg/delete.svg';
@@ -88,6 +90,8 @@ const LanguagesIcon = (props) => <Icon component={() => (<Languages />)} {...pro
 const RebotIcon = (props) => <Icon component={() => (<Rebot />)} {...props} />;
 const LikeIcon = (props) => <Icon component={() => (<Like />)} {...props} />;
 const UnlikeIcon = (props) => <Icon component={() => (<Unlike />)} {...props} />;
+const LikeSelectIcon = (props) => <Icon component={() => (<LikeSelect />)} {...props} />;
+const UnlikeSelectIcon = (props) => <Icon component={() => (<UnlikeSelect />)} {...props} />;
 const ShareIcon = (props) => <Icon component={() => (<Share />)} {...props} />;
 const CopyIcon = (props) => <Icon component={() => (<Copy />)} {...props} />;
 const DeleteIcon = (props) => <Icon component={() => (<Delete />)} {...props} />;
@@ -136,6 +140,8 @@ export {
   RebotIcon,
   LikeIcon,
   UnlikeIcon,
+  LikeSelectIcon,
+  UnlikeSelectIcon,
   ShareIcon,
   CopyIcon,
   DeleteIcon,
