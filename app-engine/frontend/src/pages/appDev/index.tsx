@@ -141,7 +141,8 @@ const AppDev: React.FC = () => {
   }
 
   useEffect(()=> {
-    getUserCollectionList()
+    getUserCollectionList();
+    queryApps();
   }, [])
 
   return (
