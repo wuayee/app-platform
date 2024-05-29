@@ -7,9 +7,11 @@ import CreateSet from './createTestset/createTestSet';
 import SetDetail from './detail';
 import { getColumnSearchProps } from '../../../../components/table-filter/input';
 import { getColumnTimePickerProps } from '../../../../components/table-filter/time-picker';
-import { deleteDataSetData, getEvalDataList } from '../../../../shared/http/apps';
+import { createAssessmentTasks, deleteDataSetData, getEvalDataList } from '../../../../shared/http/apps';
 import { useParams } from 'react-router-dom';
 import Pagination from '../../../../components/pagination';
+import AppEvalute from './app-evalute/app-evalute';
+import { getAippInfo } from '../../../../shared/http/aipp';
 
 const showTotal: PaginationProps['showTotal'] = (total) => `共 ${total} 条`;
 
@@ -29,6 +31,9 @@ type Filters = Parameters<OnChange>[1];
 const TestSet: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
+
+  // 评估弹窗开关
+  const [evaluteFlag, setEvaluteFlag] = useState(false);
   const [detailInfo, setDetailInfo] = useState({});
   const [filteredInfo, setFilteredInfo] = useState<Filters>({});
 
@@ -101,7 +106,10 @@ const TestSet: React.FC = () => {
       let res = await getEvalDataList(buildQuery());
 
       setTotal(res?.total || 0);
-      setData(res?.data || []);
+      setData((res?.data || []).map((item: any)=> ({
+        ...item,
+        key: item.id
+      })));
     } catch (error) {
       
     }
@@ -186,6 +194,57 @@ const TestSet: React.FC = () => {
     refresh();
   }
 
+  const [appInfo, setAppInfo] = useState<any>({});
+
+  // 获取应用信息
+  const getAppInfo = async () => {
+    try {
+      const res = await getAippInfo(tenantId, appId);
+      setAppInfo(res?.data || {});
+    } catch (error) {
+      
+    }
+  }
+
+  const [selectedList, setSelectedList] = useState<any[]>([]);
+
+  // 获取当前登录用户名
+  const getLoaclUser = () => {
+    return localStorage.getItem('currentUserIdComplete') ?? '';
+  }
+
+  // 评估回调参数
+  const evalCallback = async (type: string, data: any) => {
+    if(type === 'submit') {
+      try {
+        await createAssessmentTasks({
+          endNodeId: 'end',
+          startNodeId: 'start',
+          datasetIds: selectedList,
+          evalAlgorithmId: data.algorithms,
+          passScore: data.scope,
+          author: getLoaclUser(),
+          appId: appId,
+          version: appInfo.version
+        });
+        setEvaluteFlag(false)
+      } catch (error) {
+        
+      }
+    } else {
+      setEvaluteFlag(false)
+    }
+  }
+
+
+  const selectChange = (selectedRowKeys: React.Key[], selectedRows: DataType[], d) => {
+    setSelectedList([...selectedRowKeys])
+  }
+
+  useEffect(()=> {
+    getAppInfo();
+  }, [])
+
   useEffect(()=> {
     refresh();
   }, [page, pageSize, filteredInfo]);
@@ -194,14 +253,21 @@ const TestSet: React.FC = () => {
     <div>
       <div className='margin-bottom-standard test'>
         <Button className='margin-right-standard' type='primary' style={{ width: '88px' }} onClick={showDrawer}>创建</Button>
-        <Button>应用评估</Button>
+        <Button onClick={()=> {
+          setEvaluteFlag(true);
+        }} 
+        disabled={selectedList.length? false: true}
+        >应用评估</Button>
       </div>
       <Table
         dataSource={data}
         columns={columns}
         rowSelection={{
           type: 'checkbox',
-          columnWidth: 60
+          columnWidth: 60,
+          onChange: (k, r, d) => {
+            selectChange(k, r, d)
+          },
         }}
         virtual
         scroll={{ y: 800 }}
@@ -210,6 +276,7 @@ const TestSet: React.FC = () => {
       <Pagination total = {total} current={page} onChange={paginationChange} pageSize={pageSize}/>
       <CreateSet visible={open} createCallback={callback} />
       {detailOpen && <SetDetail visible={detailOpen} params={detailInfo} detailCallback={detailCallback} />}
+      {evaluteFlag && <AppEvalute visible={evaluteFlag}  callback={evalCallback} />}
     </div>
   )
 }
