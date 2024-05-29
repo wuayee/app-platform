@@ -18,6 +18,8 @@ import {
 import { Icons, KnowledgeIcons } from "../icons/index";
 import { HeaderUser } from "../header-user";
 import "./style.scoped.scss";
+import { Provider } from "react-redux";
+import { store } from "../../store";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -150,6 +152,7 @@ const AppLayout: React.FC = () => {
         >
           <HeaderUser />
         </Header>
+        <Provider store={store}>
         <Content style={{ padding: "0 16px", background: colorBgContainer }}>
           <Routes>
             <Route path="/" element={<Navigate to="/home" replace />} />
@@ -162,6 +165,8 @@ const AppLayout: React.FC = () => {
             ))}
           </Routes>
         </Content>
+        </Provider>
+
       </Layout>
     </Layout>
   );

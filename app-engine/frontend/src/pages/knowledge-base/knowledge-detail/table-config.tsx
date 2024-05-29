@@ -36,7 +36,7 @@ export const columnsFunc = (refresh = (type: 'delete' | 'modify' | 'clickHeader'
       key: 'recordNum',
     },
     {
-      title: '后缀类型',
+      title: '后端服务',
       dataIndex: 'serviceType',
       key: 'serviceType',
     },

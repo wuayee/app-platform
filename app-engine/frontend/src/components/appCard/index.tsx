@@ -1,11 +1,14 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { Card } from 'antd';
 import type { MenuProps } from 'antd';
 import { Button, Dropdown, Space } from 'antd';
-import { StarFilled, UserOutlined } from '@ant-design/icons';
+import { StarFilled, UserOutlined, StarOutlined } from '@ant-design/icons';
 import { url } from 'inspector';
 import { Icons } from '../icons';
 import './style.scoped.scss';
+import { cancleUserCollection, collectionApp, getCollectionCountApp, getUserCollection } from '../../shared/http/appDev';
+import { useAppDispatch, useAppSelector } from '../../store/hook';
+import { addCollectionApp, removeCollectionApp } from '../../store/collection/collection';
 
 function Avatar() {
   const employeeNumber = '123';
@@ -32,6 +35,15 @@ export interface CardInfoType {
 }
 
 const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
+
+  const [count, setCount] = useState(0);
+
+  const [loading, setLoading] = useState(false);
+
+  const collectionStore = useAppSelector((state: any) => state.collectionStore.value);
+
+  const dispatch = useAppDispatch();
+
   const operatorItems: MenuProps['items'] = [
     {
       key: 'delete',
@@ -41,6 +53,68 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
   const clickItem = (info: any) => {
     clickMore(info.key, cardInfo.id);
   };
+
+  // 获取当前登录用户名
+  const getLoaclUser = () => {
+    return localStorage.getItem('currentUserId') ?? '';
+  }
+
+  // 点击收藏
+  const collectionClick = async () => {
+    setLoading(true);
+    await collectionApp({
+      aippId: cardInfo.id,
+      usrInfo: getLoaclUser(),
+      isDefault: false,
+    });
+    // 刷新收藏数
+    await getAppCollectionCount();
+    dispatch(addCollectionApp(cardInfo.id));
+    setLoading(false);
+  }
+
+  // 取消收藏
+  const cancleCollection = async () => {
+    setLoading(true);
+    await cancleUserCollection({
+      usrInfo: getLoaclUser(),
+      aippId: cardInfo.id,
+    })
+    // 刷新收藏数
+    await getAppCollectionCount();
+    dispatch(removeCollectionApp(cardInfo.id));
+    setLoading(false);
+  }
+
+  // 
+  const clickCollection = (e: Event) => {
+    if(loading) {
+      // 处于请求状态不允许点击
+    } else {
+      if(collectionStore[cardInfo.id]) {
+        cancleCollection()
+      } else {
+        collectionClick();
+      }
+    }
+    e.stopPropagation();
+  }
+
+
+  // 查询当前应用的收藏数量
+  const getAppCollectionCount = async () => {
+    try {
+      if(cardInfo?.id) {
+        const res = await getCollectionCountApp(cardInfo?.id);
+        setCount(res?.data ?? 0)
+      }
+    } catch (error) {
+      
+    }
+  }
+  useEffect(()=> {
+    getAppCollectionCount();
+  }, [cardInfo])
   return (
     <div
       className='app_card_root'
@@ -74,8 +148,10 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
           <div className='icon_box'>
             <UserOutlined /> 2.36k
           </div>
-          <div className='icon_box'>
-            <StarFilled /> 126
+          <div className='icon_box' onClick={(e)=> {clickCollection(e)}} style={{
+            cursor: loading ? 'not-allowed' :'pointer'
+          }}>
+            { collectionStore[cardInfo.id] ? <StarFilled />: <StarOutlined/>  } {count}
           </div>
         </div>
         <div style={{ flex: 1 }}></div>

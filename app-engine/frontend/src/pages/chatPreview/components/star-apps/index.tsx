@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, Button, Drawer, Input, Dropdown } from "antd";
 import type { MenuProps } from "antd";
 import {
@@ -8,6 +8,10 @@ import {
 } from "@ant-design/icons";
 import "./style.scoped.scss";
 import { httpUrlMap } from "../../../../shared/http/httpConfig";
+import { cancleUserCollection, collectionApp, getUserCollection, updateCollectionApp } from "../../../../shared/http/appDev";
+import { setCollectionValue } from "../../../../store/collection/collection";
+import { useAppSelector, useAppDispatch } from "../../../../store/hook";
+import { AnyAction } from "redux";
 
 const { ICON_URL } = process.env.NODE_ENV === 'development' ? { ICON_URL: `${window.location.origin}/api`} : httpUrlMap[process.env.NODE_ENV];
 
@@ -18,23 +22,120 @@ interface StarAppsProps {
   chatClick: (val: any) => void;
 }
 
-const items: MenuProps["items"] = [
-  {
-    key: "1",
-    label: "删除",
-  },
-];
+
 
 const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick }) => {
-  const [apps, setApps] = useState(
-    new Array(10).fill(0).map((_, index) => ({
-      name: `小海-${index}`,
-      desc: "超级应用助手，存储领域高级专家",
-      author: "APP Engine",
-      appAvatar: `${ICON_URL}/jober/v1/files/17e9ee28e8914b48aa54e084b67bf878`,
-      authorAvatar: "https://api.dicebear.com/7.x/miniavs/svg?seed=1",
-    }))
-  );
+  const [apps, setApps] = useState<any[]>([]);
+  const clickMap: any = {
+    2: async (item: AnyAction) => {
+      try {
+        if(item?.id) {
+          console.log(item)
+          await updateCollectionApp(item.id, {
+            isDefault: true
+          })
+        } else {
+          await collectionApp({
+            aippId: item.aippId,
+            usrInfo: getLoaclUser(),
+            isDefault: true,
+          });
+        }
+        getUserCollectionList();
+      } catch (error) {
+        
+      }
+    },
+    3: async (item: AnyAction) => {
+      try {
+        if(item?.id) {
+          await updateCollectionApp(item.id, {
+            isDefault: false
+          })
+        } 
+        getUserCollectionList();
+      } catch (error) {
+        
+      }
+    },
+    1: async (item: AnyAction) => {
+      try {
+        if(item?.id) {
+          await cancleUserCollection({
+            usrInfo: getLoaclUser(),
+            aippId: item.aippId,
+          })
+        }
+        getUserCollectionList();
+      } catch (error) {
+        
+      }
+    }
+  }
+  const items: any[] = [
+    {
+      key: "2",
+      label: "设为默认",
+    },
+    {
+      key: "3",
+      label: "取消默认",
+    },
+    {
+      key: "1",
+      label: "取消收藏",
+    },
+  ];
+
+  const count = useAppSelector((state: any) => state.collectionStore.value);
+
+  // 获取当前登录用户名
+  const getLoaclUser = () => {
+    return localStorage.getItem('currentUserId') ?? '';
+  }
+
+  const dispatch = useAppDispatch();
+
+  // 数据转换
+  const translateData = (remoteData: any): any[] => {
+    
+    const defaultData = remoteData?.data?.defaultApp || null;
+    const collectionList: any[] = remoteData?.data?.collectionPoList || [];
+    collectionList.unshift(defaultData);
+    const data = collectionList.filter(item=> item);
+    const res = data.map(item => {
+      const attr = JSON.parse((item?.attributes ?? JSON.stringify({})))
+      return ({
+        ...item,
+        rawData: item,
+        name: item.name,
+        author: item.createBy,
+        desc: attr.description,
+        appAvatar: attr.icon,
+        authorAvatar: "https://api.dicebear.com/7.x/miniavs/svg?seed=1",
+      })
+    })
+    return res.filter(item=> item);
+  }
+
+  // 获取用户收藏列表
+  const getUserCollectionList = async () => {
+    try {
+      const res = await getUserCollection(getLoaclUser());
+      setApps([...translateData(res)]);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // 点击操作
+  const clickOpera = (btn: any, item: any) => {
+    clickMap[btn.key](item)
+  }
+
+  useEffect(()=> {
+    getUserCollectionList()
+  }, [])
   return (
     <Drawer
       destroyOnClose
@@ -56,8 +157,10 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
     >
       <Input placeholder="搜索应用" prefix={<SearchOutlined />} />
       <div className="app-wrapper">
-        {apps.map((app) => (
+        {apps.map((app, index) => (
           <div className="app-item" key={app.name}>
+            {index=== 0 ? <div className="app-item-default">默认应用</div> : ''}
+            
             <div className="app-item-content">
               <Avatar size={48} src={app.appAvatar} />
               <div className="app-item-text">
@@ -83,7 +186,9 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
                 <Avatar size={32} src={app.authorAvatar} />
                 <span className="text">由{app.author}创建</span>
               </div>
-              <Dropdown menu={{ items }} trigger={["click"]}>
+              <Dropdown menu={{ items, onClick: (info)=> {
+                clickOpera(info, app)
+              } }} trigger={["click"]} >
                 <EllipsisOutlined className="app-item-footer-more" />
               </Dropdown>
             </div>
