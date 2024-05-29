@@ -57,6 +57,20 @@ public interface Tool {
      */
     interface Info {
         /**
+         * 获取工具的创建者
+         *
+         * @return 表示工具的创建者的 {@link String}。
+         */
+        String creator();
+
+        /**
+         * 获取工具的修改者。
+         *
+         * @return 表示工具的修改者的 {@link String}。
+         */
+        String modifier();
+
+        /**
          * 获取工具的名字。
          *
          * @return 表示工具的名字的 {@link String}。
@@ -85,6 +99,13 @@ public interface Tool {
         String source();
 
         /**
+         * 获取工具的图标。
+         *
+         * @return 表示工具的描述的 {@link String}。
+         */
+        String icon();
+
+        /**
          * 获取工具的标签集合。
          *
          * @return 表示工具的标签集合的 {@link Set}{@code <}{@link String}{@code >}。
@@ -109,6 +130,22 @@ public interface Tool {
          * {@link Info} 的构建器。
          */
         interface Builder {
+            /**
+             * 向当前构建器中设置工具的创建者。
+             *
+             * @param creator 表示待设置的工具创建者的 {@link String}。
+             * @return 表示当前构建器的 {@link Builder}。
+             */
+            Builder creator(String creator);
+
+            /**
+             * 向当前构建器中设置工具的修改者。
+             *
+             * @param modifier 表示待设置的工具修改者的 {@link String}。
+             * @return 表示当前构建器的 {@link Builder}。
+             */
+            Builder modifier(String modifier);
+
             /**
              * 向当前构建器中设置工具的名字。
              *
@@ -164,6 +201,14 @@ public interface Tool {
              * @return 表示当前构建器的 {@link Builder}。
              */
             Builder source(String source);
+
+            /**
+             * 向当前构建器中设置工具的图标。
+             *
+             * @param icon 表示待设置的工具图标的 {@link String}。
+             * @return 表示当前构建器的 {@link Builder}。
+             */
+            Builder icon(String icon);
 
             /**
              * 构建对象。

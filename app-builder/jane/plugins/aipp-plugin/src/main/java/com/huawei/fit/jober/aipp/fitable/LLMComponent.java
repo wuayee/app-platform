@@ -44,6 +44,7 @@ import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.operators.patterns.Agent;
 import com.huawei.jade.fel.engine.operators.prompts.Prompts;
+import com.huawei.jade.fel.tool.ToolContext;
 import com.huawei.jade.fel.tool.ToolProvider;
 
 import java.time.LocalDateTime;
@@ -64,13 +65,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LLMComponent implements FlowableService, FlowCallbackService {
     private static final Logger log = Logger.get(LLMComponent.class);
 
-    private static final String SYSTEM_PROMPT = "# 工具参数\n\n"
-            + "在调用工具时尽可能使用以下参数：\n"
-            + "- 参数 " + AippConst.TRACE_ID + "，值 {{0}}\n"
-            + "- 参数 " + AippConst.CALLBACK_ID + "，值 com.huawei.fit.jober.aipp.fitable.LLMComponentCallback\n\n"
-            + "# 人设与回复逻辑\n\n{{2}}";
-
+    private static final String SYSTEM_PROMPT = "# 人设与回复逻辑\n\n{{0}}";
     private static final String PROMPT_TEMPLATE = "{{1}}";
+    private static final String CALLBACK_ID = "com.huawei.fit.jober.aipp.fitable.LLMComponentCallback";
 
     // todo: 暂时使用ConcurrentHashMap存储父节点的元数据
     private final ConcurrentHashMap<String, AippLlmMeta> llmCache = new ConcurrentHashMap<>();
@@ -169,7 +166,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         String path = Utils.buildPath(this.aippLogService, instId, parentInstId);
         log.debug("LLMComponent business data {}", businessData);
 
-        AippLlmMeta llmMeta = AippLlmMeta.parse(flowData, metaService, metaInstanceService);
+        AippLlmMeta llmMeta = AippLlmMeta.parse(flowData, metaService, this.metaInstanceService);
         llmCache.put(llmMeta.getInstId(), llmMeta);
 
         String systemPrompt = ObjectUtils.cast(businessData.get("systemPrompt"));
@@ -179,10 +176,11 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         agentFlow.converse()
                 .bind((acc, chunk) -> this.sendLog(chunk, path, msgId, instId))
                 .bind(new AippMemory(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_MEMORY_KEY))))
+                .bind(ToolContext.from(AippConst.TRACE_ID, llmMeta.getInstId()).add(AippConst.CALLBACK_ID, CALLBACK_ID))
                 .doOnSuccess(msg -> llmOutputConsumer(llmMeta, msg))
                 .doOnError(throwable -> doOnAgentError(llmMeta, throwable.getMessage()))
                 .bind(buildChatOptions(businessData))
-                .offer(Tip.fromArray(llmMeta.getInstId(), buildInputText(businessData), systemPrompt));
+                .offer(Tip.fromArray(systemPrompt, buildInputText(businessData)));
         return flowData;
     }
 
@@ -238,7 +236,10 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     private void setChildInstanceId(AippLlmMeta llmMeta, String childInstanceId) {
         InstanceDeclarationInfo info =
                 InstanceDeclarationInfo.custom().putInfo(AippConst.INST_CHILD_INSTANCE_ID, childInstanceId).build();
-        this.metaInstanceService.patchMetaInstance(llmMeta.getVersionId(), llmMeta.getInstId(), info, llmMeta.getContext());
+        this.metaInstanceService.patchMetaInstance(llmMeta.getVersionId(),
+                llmMeta.getInstId(),
+                info,
+                llmMeta.getContext());
     }
 
     /**

@@ -12,6 +12,7 @@ import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.utils.Tuple;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * 数据前置的start节点
@@ -106,34 +107,33 @@ public class DataStart<O, D, I> {
     }
 
     /**
-     * reduce处理节点：m->1
+     * 生成一个数据聚合节点，将每个数据通过指定的方式进行合并后，形成一个新的数据，并继续发送。
      * <p>
-     * 处理后的数据类型是根据初始值来确认
-     * </p>
-     * <p>
-     * {@link Start#reduce(Object, Operators.Reduce)}的包装
+     * 处理后的数据类型是根据初始值来确认。
      * </p>
      *
-     * @param init 初始值
-     * @param processor reduce处理器
-     * @param <R> 通过初始值指定的处理完类型
-     * @return 新的处理节点
+     * @param init 表示聚合操作初始值提供者的 {@link Supplier}{@code <}{@link R}{@code >}。
+     * @param processor 表示数据聚合器的 {@link Operators.ProcessReduce}{@code <}{@link O}{@code , }{@link R}{@code >}。
+     * @param <R> 表示输出数据类型。
+     * @return 表示数据聚合节点的 {@link DataState}{@code <}{@link R}{@code , }{@link D}{@code , }{@link O}{@code ,
+     * }{@code >}。
      */
-    public <R> DataState<R, D, O> reduce(R init, Operators.Reduce<O, R> processor) {
+    public <R> DataState<R, D, O> reduce(Supplier<R> init, Operators.Reduce<O, R> processor) {
         return new DataState(this.state.reduce(init, processor), this.start);
     }
 
     /**
-     * reduce处理节点：m->1
+     * 生成一个数据聚合节点，将每个数据通过指定的方式进行合并后，形成一个新的数据，并继续发送。
      * <p>
-     * 不提供初始值，reduce之后的数据类型还是原数据类型
+     * 不提供初始值，聚合之后的数据类型还是原数据类型。
      * </p>
      * <p>
-     * {@link Start#reduce(Operators.Reduce)}的包装
+     * {@link Start#reduce(Operators.Reduce)}的包装。
      * </p>
      *
-     * @param processor reduce处理器
-     * @return 新的处理节点
+     * @param processor 表示数据聚合器的 {@link Operators.ProcessReduce}{@code <}{@link O}{@code , }{@link O}{@code >}。
+     * @return 表示数据聚合节点的 {@link State}{@code <}{@link O}{@code , }{@link D}{@code , }{@link O}{@code ,
+     * }{@code >}。
      */
     public DataState<O, D, O> reduce(Operators.Reduce<O, O> processor) {
         return new DataState(this.state.reduce(processor), this.start);

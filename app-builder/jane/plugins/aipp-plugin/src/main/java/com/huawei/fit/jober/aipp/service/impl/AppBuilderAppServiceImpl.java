@@ -35,6 +35,7 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.AppTypeEnum;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
+import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
 import com.huawei.fit.jober.aipp.service.AippFlowService;
 import com.huawei.fit.jober.aipp.service.AppBuilderAppService;
@@ -80,7 +81,8 @@ import java.util.stream.Collectors;
  * @since 2024-04-17
  */
 @Component
-public class AppBuilderAppServiceImpl implements AppBuilderAppService {
+public class AppBuilderAppServiceImpl
+        implements AppBuilderAppService, com.huawei.fit.jober.aipp.genericable.AppBuilderAppService {
     private static final Logger log = Logger.get(AppBuilderAppServiceImpl.class);
     private final AppBuilderAppFactory appFactory;
     private final AippFlowService aippFlowService;
@@ -99,14 +101,14 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
     }
 
     @Override
-    @Fitable(id = "b389e19779fcc245b7a6135a46eb5865")
-    public Rsp<AppBuilderAppDto> query(HttpClassicServerRequest httpRequest, String appId) {
+    @Fitable(id = "default")
+    public AppBuilderAppDto query(String appId) {
         AppBuilderApp appBuilderApp = this.appFactory.create(appId);
-        return Rsp.ok(this.buildFullAppDto(appBuilderApp));
+        return this.buildFullAppDto(appBuilderApp);
     }
 
     @Override
-    @Fitable(id = "b389e19779fcc245b7a6135a46eb5866")
+    @Fitable(id = "default")
     @Transactional
     public Rsp<AippCreateDto> publish(AppBuilderAppDto appDto, OperationContext contextOf) {
         // todo 要加个save appDto到数据的逻辑
@@ -121,15 +123,15 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
     }
 
     @Override
-    @Fitable(id = "b389e19779fcc245b7a6135a46eb5864")
-    public Rsp<AippCreateDto> debug(AppBuilderAppDto appDto, OperationContext contextOf) {
+    @Fitable(id = "default")
+    public AippCreate debug(AppBuilderAppDto appDto, OperationContext contextOf) {
         AippDto aippDto = ConvertUtils.toAppDto(appDto);
         // todo Rsp 得统一整改下
-        return Rsp.ok(this.aippFlowService.previewAipp(appDto.getVersion(), aippDto, contextOf));
+        return ConvertUtils.toAippCreate(this.aippFlowService.previewAipp(appDto.getVersion(), aippDto, contextOf));
     }
 
     @Override
-    @Fitable(id = "b389e19779fcc245b7a6135a46eb5867")
+    @Fitable(id = "default")
     public Optional<AppBuilderConfigFormPropertyDto> getPropertyByName(String appId, String name) {
         AppBuilderApp appBuilderApp = this.appFactory.create(appId);
         List<AppBuilderConfigFormPropertyDto> configFormPropertyDtos =
@@ -138,7 +140,7 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
     }
 
     @Override
-    @Fitable(id = "b389e19779fcc245b7a6135a46eb5850")
+    @Fitable(id = "default")
     public Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(AppQueryCondition cond,
             HttpClassicServerRequest httpRequest, String tenantId, long offset, int limit) {
         List<AppBuilderAppMetadataDto> result =
@@ -167,7 +169,7 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
 
     @Override
     @Transactional
-    @Fitable(id = "b389e19779fcc245b7a6815a46eb5865")
+    @Fitable(id = "default")
     public AppBuilderAppDto create(String appId, AppBuilderAppCreateDto dto, OperationContext context) {
         if (dto != null) {
             this.validateCreateApp(dto.getName(), context);
@@ -247,7 +249,7 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
 
     @Override
     @Transactional
-    @Fitable(id = "b389e19779fcc245b7a6826a46eb5865")
+    @Fitable(id = "default")
     public Rsp<AppBuilderAppDto> updateApp(String appId, AppBuilderAppDto appDto, OperationContext context) {
         if (appDto != null) {
             this.validateUpdateApp(appId, appDto.getName(), context);
@@ -340,7 +342,7 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
 
     @Override
     @Transactional
-    @Fitable(id = "b389e19779fcc245b7a6837a46eb5865")
+    @Fitable(id = "default")
     public Rsp<AppBuilderAppDto> updateConfig(String appId, AppBuilderConfigDto configDto, OperationContext context) {
         LocalDateTime operateTime = LocalDateTime.now();
         AppBuilderApp oldApp = this.appFactory.create(appId);
@@ -376,7 +378,7 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
 
     @Override
     @Transactional
-    @Fitable(id = "b389e19779fcc245b7a6848a46eb5865")
+    @Fitable(id = "default")
     public Rsp<AppBuilderAppDto> updateFlowGraph(String appId, AppBuilderFlowGraphDto graphDto,
             OperationContext context) {
         LocalDateTime operateTime = LocalDateTime.now();
@@ -405,7 +407,7 @@ public class AppBuilderAppServiceImpl implements AppBuilderAppService {
 
     @Override
     @Transactional
-    @Fitable(id = "67e2c58bf55ac346ad4aa3bebd90dcf5")
+    @Fitable(id = "default")
     public void delete(String appId, OperationContext context) {
         AppBuilderApp appBuilderApp = this.appFactory.create(appId);
         // step1 删除app相关

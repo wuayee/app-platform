@@ -9,6 +9,7 @@ enum MessageType:byte {
     ApplyPermission = 0x21,
     ReleasePermission = 0x30,
     ReleaseMemory = 0x31,
+    GetMetaData = 0x41,
 }
 
 // 修改此 table 请务必与 DataBus 开发组人员确认

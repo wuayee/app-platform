@@ -6,7 +6,6 @@ package com.huawei.jade.app.engine.base.service;
 
 import com.huawei.fitframework.annotation.Genericable;
 import com.huawei.jade.app.engine.base.dto.UsrFeedbackDto;
-import com.huawei.jade.app.engine.base.po.UsrFeedbackPo;
 
 import java.util.List;
 
@@ -49,7 +48,7 @@ public interface UsrFeedbackService {
      * @return 用户反馈列表
      */
     @Genericable(id = "com.huawei.jade.app.engine.base.service.UsrFeedbackService.getAllUsrFeedbacks")
-    List<UsrFeedbackPo> getAllUsrFeedbacks();
+    List<UsrFeedbackDto> getAllUsrFeedbacks();
 
     /**
      * 通过logId查询用户反馈记录
@@ -58,5 +57,5 @@ public interface UsrFeedbackService {
      * @return 用户反馈信息
      */
     @Genericable(id = "com.huawei.jade.app.engine.base.service.UsrFeedbackService.getUsrFeedbackByLogId")
-    UsrFeedbackPo getUsrFeedbackByLogId(Long logId);
+    UsrFeedbackDto getUsrFeedbackByLogId(Long logId);
 }

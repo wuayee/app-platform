@@ -49,7 +49,7 @@ public class ExcelSource extends Source<List<Document>> {
     private boolean isExcelXLS(String path) throws IllegalArgumentException{
         int dotIdx = path.indexOf(".");
         if (dotIdx == -1) {
-            logger.error("illegal file path: ", path);
+            logger.error("illegal file path: {}", path);
             throw new IllegalArgumentException();
         }
         String fileExtension = path.substring(dotIdx + 1);
@@ -68,6 +68,10 @@ public class ExcelSource extends Source<List<Document>> {
         return FileType.NORMAL_FILE;
     }
 
+    private String naiveStringClean(String inStr) {
+        return inStr.replace("'", "");
+    }
+
     private void normalExtract(Integer headRow, Integer dataRow, Sheet sheet) {
         Integer rowNum = sheet.getPhysicalNumberOfRows();
         int colNum = sheet.getRow(0).getPhysicalNumberOfCells();
@@ -77,19 +81,25 @@ public class ExcelSource extends Source<List<Document>> {
         });
         for (Integer rowNo = dataRow; rowNo < rowNum; rowNo++) {
             List<String> rowContent = new ArrayList<>();
-
             Row row = sheet.getRow(rowNo);
+            if (row == null) {
+                continue;
+            }
             for (int col = 0; col < colNum; col++) {
                 Cell cell = row.getCell(col);
-                switch(cell.getCellType()) {
+                if (cell == null) {
+                    rowContent.add("");
+                    continue;
+                }
+                switch (cell.getCellType()) {
                     case NUMERIC:
                         rowContent.add(Double.toString(cell.getNumericCellValue()));
                         break;
                     case STRING:
-                        rowContent.add(cell.getStringCellValue());
+                        rowContent.add(naiveStringClean(cell.getStringCellValue()));
                         break;
                     default:
-                        logger.error("Unsupported datatype:", cell.getCellType());
+                        logger.error("Unsupported datatype: {}", cell.getCellType());
                 }
             }
             contents.add(rowContent);
@@ -102,8 +112,12 @@ public class ExcelSource extends Source<List<Document>> {
         for (int i = 0; i < sheet.getPhysicalNumberOfRows(); i++) {
             Row row = sheet.getRow(i);
             for (int j = 1; j < row.getPhysicalNumberOfCells(); j++) {
+                if (row.getCell(j) == null || row.getCell(j).getStringCellValue().isEmpty()) {
+                    continue;
+                }
                 contents.add(
-                        Arrays.asList(row.getCell(j).getStringCellValue(), row.getCell(0).getStringCellValue()));
+                        Arrays.asList(naiveStringClean(row.getCell(j).getStringCellValue()),
+                                naiveStringClean(row.getCell(0).getStringCellValue())));
             }
         }
     }
@@ -121,7 +135,7 @@ public class ExcelSource extends Source<List<Document>> {
 
         for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
             Row row = sheet.getRow(i);
-            for (int j = 0; j < row.getPhysicalNumberOfCells(); j++) {
+            for (int j = 0; j < tags.size(); j++) {
                 Cell cell = row.getCell(j);
                 if (cell == null) {
                     continue;
@@ -130,6 +144,7 @@ public class ExcelSource extends Source<List<Document>> {
                 if (cellVal == null) {
                     continue;
                 }
+                cellVal = naiveStringClean(cellVal);
                 if (relations.get(cellVal) == null) {
                     List<Integer> list = new ArrayList<>();
                     list.add(j);
@@ -183,7 +198,7 @@ public class ExcelSource extends Source<List<Document>> {
                     break;
             }
         } catch (IOException e) {
-            logger.debug("Error when extracting from excel, msg:", e.getMessage());
+            logger.debug("Error when extracting from excel, msg: {}", e.getMessage());
             throw new IllegalArgumentException(e.getMessage());
         }
     }

@@ -7,12 +7,14 @@ import { deleteLocalFile, uploadLocalFile } from '../../shared/http/knowledge';
 
 const { Dragger } = Upload;
 
-const LocalUpload: React.FC<{ form: any }> = ({ form }) => {
+const LocalUpload: React.FC<{ form: any, respId?: any, tableId?: any }> = ({ form, respId, tableId }) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const filesKeys = useRef<Map<string, any>>(new Map());
-  const { id, tableid } = useSearchParams();
+  let { id, tableid } = useSearchParams();
   const selectedFile = Form.useWatch('selectedFile', form);
-
+  
+  id = id || respId;
+  tableid = tableid || tableId;
   useEffect(() => {
     setFileList(selectedFile);
   }, [selectedFile]);

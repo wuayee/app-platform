@@ -6,6 +6,9 @@ import AppCard from '../../components/appCard';
 import './index.scoped.scss';
 import { debounce } from '../../shared/utils/common';
 import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
+import { deleteAppApi, getUserCollection } from '../../shared/http/appDev';
+import { setCollectionValue } from '../../store/collection/collection';
+import { useAppDispatch, useAppSelector } from '../../store/hook';
 
 const Apps: React.FC = () => {
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
@@ -54,7 +57,7 @@ const Apps: React.FC = () => {
 
   // 点击卡片
   function clickCard(item: any, e: any) {
-    navigate(`/app/${tenantId}/appDetail/${item.id}`);
+    navigate(`/app-develop/${tenantId}/chat/${item.id}`);
   }
 
   // 点击更多操作选项
@@ -79,6 +82,34 @@ const Apps: React.FC = () => {
     }
   }
 
+  const count = useAppSelector((state: any) => state.collectionStore.value);
+
+  // 获取当前登录用户名
+  const getLoaclUser = () => {
+    return localStorage.getItem('currentUserId') ?? '';
+  }
+
+  const dispatch = useAppDispatch();
+
+  // 获取用户收藏列表
+  const getUserCollectionList = async () => {
+    const res = await getUserCollection(getLoaclUser());
+    const defaultData = res?.data?.defaultApp || null;
+    const collectionList: any[] = res?.data?.collectionPoList || [];
+    collectionList.unshift(defaultData);
+    const collectMap = (collectionList ?? []).reduce((prev: any, next: any)=> {
+      if(next?.id) {
+        prev[next.aippId] = true;
+      }
+      return prev
+    }, {})
+    dispatch(setCollectionValue(collectMap))
+  }
+
+  useEffect(()=> {
+    getUserCollectionList()
+  }, [])
+
   return (
     <div className=' apps_root'>
       <div className='apps_header'>
@@ -95,7 +126,11 @@ const Apps: React.FC = () => {
         </div>
         <div className='card_list'>
           {appData.map((item: any) => (
-            <div key={item.id} onClick={(e) => clickCard(item, e)}>
+            <div
+              className='card_box'
+              key={item.id}
+              onClick={(e) => clickCard(item, e)}
+            >
               <AppCard cardInfo={item} clickMore={clickMore} showOptions={false} />
             </div>
           ))}

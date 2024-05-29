@@ -16,6 +16,7 @@ import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.entity.AippLogData;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
+import com.huawei.fit.jober.aipp.genericable.AppFlowFinishObserver;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fitframework.annotation.Component;
@@ -24,16 +25,22 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
 import com.huawei.fitframework.conf.runtime.SerializationFormat;
+import com.huawei.fitframework.ioc.BeanContainer;
+import com.huawei.fitframework.ioc.BeanFactory;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 流程结束回调节点
+ *
+ * @author 邬涨财 w00575064
+ * @since 2024-05-24
  */
 @Component
 public class AippFlowEndCallback implements FlowCallbackService {
@@ -42,17 +49,18 @@ public class AippFlowEndCallback implements FlowCallbackService {
     private final MetaService metaService;
     private final AippLogService aippLogService;
     private final AppBuilderFormRepository formRepository;
-
     private final BrokerClient brokerClient;
+    private final BeanContainer beanContainer;
 
     public AippFlowEndCallback(@Fit MetaInstanceService metaInstanceService, @Fit MetaService metaService,
             @Fit AippLogService aippLogService, @Fit AppBuilderFormRepository formRepository,
-            BrokerClient brokerClient) {
+            @Fit BrokerClient brokerClient, @Fit BeanContainer beanContainer) {
         this.metaInstanceService = metaInstanceService;
         this.metaService = metaService;
         this.aippLogService = aippLogService;
         this.formRepository = formRepository;
         this.brokerClient = brokerClient;
+        this.beanContainer = beanContainer;
     }
 
     @Fitable("com.huawei.fit.jober.aipp.fitable.AippFlowEndCallback")
@@ -92,7 +100,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
                     Utils.buildLogDataWithFormData(this.formRepository, endFormId, endFormVersion, businessData);
             Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
         }
-        this.logFinalOutput(contexts, businessData);
+        this.logFinalOutput(contexts, businessData, aippInstId);
 
         // 子流程 callback 主流程
         String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
@@ -105,7 +113,8 @@ public class AippFlowEndCallback implements FlowCallbackService {
         }
     }
 
-    private void logFinalOutput(List<Map<String, Object>> contexts, Map<String, Object> businessData) {
+    private void logFinalOutput(List<Map<String, Object>> contexts, Map<String, Object> businessData,
+            String aippInstId) {
         // todo: 表明流程结果是否需要再经过模型加工，当前场景全为false。
         //  正常情况下应该是在结束节点配上该key并放入businessData中，此处模拟该过程。
         //  如果子流程结束后需要再经过模型加工，子流程结束节点不打印日志；否则子流程结束节点需要打印日志。
@@ -115,14 +124,21 @@ public class AippFlowEndCallback implements FlowCallbackService {
             return;
         }
         Object finalOutput = businessData.get(AippConst.BS_AIPP_FINAL_OUTPUT);
-        if (businessData.get(AippConst.OUTPUT_IS_FROM_CHILD) != null &&
-                ObjectUtils.<Boolean>cast(businessData.get(AippConst.OUTPUT_IS_FROM_CHILD))) {
+        if (businessData.get(AippConst.OUTPUT_IS_FROM_CHILD) != null && ObjectUtils.<Boolean>cast(businessData.get(
+                AippConst.OUTPUT_IS_FROM_CHILD))) {
             return;
         }
-        if (finalOutput == null) {
-            Utils.persistAippMsgLog(aippLogService, "获取到的结果为 null，请检查配置。", contexts);
-        } else {
-            Utils.persistAippMsgLog(aippLogService, ObjectUtils.cast(finalOutput), contexts);
-        }
+        String logMsg = finalOutput == null ? "获取到的结果为 null，请检查配置。" : ObjectUtils.cast(finalOutput);
+        Utils.persistAippMsgLog(this.aippLogService, logMsg, contexts);
+        this.beanContainer.all(AppFlowFinishObserver.class)
+                .stream()
+                .<AppFlowFinishObserver>map(BeanFactory::get)
+                .forEach(finishObserver -> finishObserver.onFinished(logMsg, this.buildAttributes(aippInstId)));
+    }
+
+    private Map<String, Object> buildAttributes(String aippInstId) {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put(AippConst.BS_AIPP_INST_ID_KEY, aippInstId);
+        return attributes;
     }
 }

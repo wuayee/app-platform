@@ -14,12 +14,25 @@
     background-color: #f8fbff;
     border-radius: 8px;
     margin-bottom: 16px;
-
+    position: relative;
+    &-default {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: #E1EFF8;
+      width: 68px;
+      border-radius: 5px;
+      text-align: center;
+      font-weight: 700;
+      height: 24px;
+      line-height: 24px;
+    }
     &-content {
       display: flex;
       gap: 8px;
       border-bottom: 1px solid #f2f2f2;
       padding: 12px;
+      padding-top: 26px;
     }
 
     &-avatar {

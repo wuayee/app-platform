@@ -47,6 +47,18 @@ spec:
             value: "1"
           - name: Port
             value: "9981"
+          readinessProbe:
+            httpGet:
+              path: /v2/health/ready
+              port: 9981
+            initialDelaySeconds: 60
+            periodSeconds: 60
+          livenessProbe:
+            httpGet:
+              path: /v2/health/live
+              port: 9981
+            initialDelaySeconds: 60
+            periodSeconds: 60
           volumeMounts:
           - name: ascend-driver
             mountPath: /usr/local/Ascend/driver

@@ -37,7 +37,7 @@ const AppDetail: React.FC = () => {
     <div className='aui-fullpage'>
       <div className='aui-header-1'>
         <div className='aui-title-1'>
-          <GoBack path={'/app'} title='应用详情' />
+          <GoBack path={'/app-develop'} title='应用详情' />
         </div>
       </div>
       <div className='aui-block' style={{ paddingTop: 0 }}>

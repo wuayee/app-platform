@@ -10,7 +10,6 @@ import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.Prompt;
 
 import lombok.Getter;

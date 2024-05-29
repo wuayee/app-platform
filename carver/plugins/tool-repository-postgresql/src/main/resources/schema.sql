@@ -6,13 +6,14 @@ create table if not exists store_tool
     "id"             bigserial primary key                 not null,
     "created_time"   timestamp   default current_timestamp not null,
     "updated_time"   timestamp   default current_timestamp not null,
-    "creator"        char(10)    default 'system'          not null,
-    "modifier"       char(10)    default 'system'          not null,
+    "creator"        varchar(10)    default 'system'          not null,
+    "modifier"       varchar(10)    default 'system'          not null,
     "name"           varchar(64)                           not null,
     "description"    text        default 'no desc'         not null,
     "schema"         json        default '{}'::json        not null,
     "runnables"      json        default '{}'::json        not null,
     "source"         varchar(16) default 'Builtin'         not null,
+    "icon"           text,
     "unique_name"    char(36)                              not null,
     unique("unique_name")
     );
@@ -26,6 +27,7 @@ comment on column store_tool.id is '工具的自增主键';
         comment on column store_tool.schema is '工具的格式';
         comment on column store_tool.runnables is '工具的运行描述';
         comment on column store_tool.source is '工具的来源';
+        comment on column store_tool.icon is '工具的图标';
         comment on column store_tool.unique_name is '工具的唯一标识';
 create table if not exists store_tag
 (

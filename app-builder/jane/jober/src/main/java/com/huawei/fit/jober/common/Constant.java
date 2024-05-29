@@ -138,6 +138,11 @@ public final class Constant {
     public static final String CONDITION_RULE_PROPERTY_KEY = "conditionRule";
 
     /**
+     * 流程节点事件中条件优先级的KEY值
+     */
+    public static final String PRIORITY_PROPERTY_KEY = "priority";
+
+    /**
      * 任务定义status字段
      */
     public static final String STATUS = "status";

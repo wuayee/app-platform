@@ -1,7 +1,0 @@
-namespace DataBus.Common;
-
-table GetUserDataMessage {
-    object_key: string; // 客户端生成的存储对象UUID
-}
-
-root_type GetUserDataMessage;

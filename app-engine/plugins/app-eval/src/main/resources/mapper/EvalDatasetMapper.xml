@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.jade.app.engine.eval.mapper.EvalDatasetMapper" >
+    <resultMap id="EvalDataset" type="com.huawei.jade.app.engine.eval.po.EvalDatasetPo" >
+        <result column="id" property="id"/>
+        <result column="dataset_name" property="datasetName"/>
+        <result column="description" property="description"/>
+        <result column="author" property="author"/>
+        <result column="app_id" property="appId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.huawei.jade.app.engine.eval.po.EvalDatasetPo" useGeneratedKeys="true" keyProperty="id">
+        insert into eval_dataset ("dataset_name", "description", "author", "app_id", "create_time", "modify_time")
+        values (#{datasetName}, #{description}, #{author}, #{appId}, #{createTime}, #{modifyTime})
+    </insert>
+
+    <update id="updateById" parameterType="com.huawei.jade.app.engine.eval.po.EvalDatasetPo">
+        update eval_dataset
+        set dataset_name = #{datasetName}, description = #{description}, modify_time = #{modifyTime}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from eval_dataset
+        where id = #{id}
+    </delete>
+
+    <select id="getById" resultMap="EvalDataset">
+        select "id", "dataset_name", "description", "author", "app_id", "create_time", "modify_time"
+        from eval_dataset
+        where id = #{id}
+        order by modify_time desc, create_time desc
+    </select>
+
+    <select id="getByConditions" resultMap="EvalDataset" parameterType="com.huawei.jade.app.engine.eval.query.EvalDatasetListQuery">
+        select "id", "dataset_name", "description", "author", "app_id", "create_time", "modify_time"
+        from eval_dataset
+        where
+        app_id = #{appId}
+        <if test="datasetName != null">
+            and dataset_name like '%${datasetName}%'
+        </if>
+        <if test="description != null">
+            and description like '%${description}%'
+        </if>
+        <if test="author != null">
+            and author like '%${author}%'
+        </if>
+        <if test="createTimeFrom != null">
+            and create_time >= #{createTimeFrom}
+        </if>
+        <if test="createTimeTo != null">
+            and #{createTimeTo} >= create_time
+        </if>
+        <if test="modifyTimeFrom != null">
+            and modify_time >= #{modifyTimeFrom}
+        </if>
+        <if test="modifyTimeTo != null">
+            and #{modifyTimeTo} >= modify_time
+        </if>
+        order by modify_time desc, create_time desc
+    </select>
+
+    <select id="getCountByConditions" resultType="java.lang.Long" parameterType="com.huawei.jade.app.engine.eval.query.EvalDatasetListQuery">
+        select count(*)
+        from eval_dataset
+        where
+        app_id = #{appId}
+        <if test="datasetName != null">
+            and dataset_name like '%${datasetName}%'
+        </if>
+        <if test="description != null">
+            and description like '%${description}%'
+        </if>
+        <if test="author != null">
+            and author like '%${author}%'
+        </if>
+        <if test="createTimeFrom != null">
+            and create_time >= #{createTimeFrom}
+        </if>
+        <if test="createTimeTo != null">
+            and #{createTimeTo} >= create_time
+        </if>
+        <if test="modifyTimeFrom != null">
+            and modify_time >= #{modifyTimeFrom}
+        </if>
+        <if test="modifyTimeTo != null">
+            and #{modifyTimeTo} >= modify_time
+        </if>
+    </select>
+
+</mapper>

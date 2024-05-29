@@ -26,8 +26,8 @@ public class UsrFeedbackDto {
     @Property(description = "日志id")
     private Long logId;
 
-    @Property(description = "应用id")
-    private String aippId;
+    @Property(description = "实例id")
+    private String instanceId;
 
     @Property(description = "用户反馈 -1 未反馈 0 点赞 1 点踩")
     private Integer usrFeedback;

@@ -5,7 +5,9 @@
 package com.huawei.fit.jober.flowsengine.domain.flows.parsers;
 
 import static com.huawei.fit.jober.common.Constant.CONDITION_RULE_PROPERTY_KEY;
+import static com.huawei.fit.jober.common.Constant.PRIORITY_PROPERTY_KEY;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
+import static com.huawei.fit.jober.common.ErrorCodes.INVALID_EVENT_SIZE;
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeType.EVENT;
 import static java.util.Locale.ROOT;
 
@@ -15,6 +17,7 @@ import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeType;
 import com.huawei.fit.jober.flowsengine.domain.flows.parsers.util.ConvertConditionToRuleUtils;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -151,8 +154,10 @@ public class FlowGraphData {
      */
     public static final String TO = "to";
 
-    private static final Set<String> flowInternalKeys = new HashSet<>(
+    private static final Set<String> FLOW_INTERNAL_KEYS = new HashSet<>(
             Arrays.asList(NAME, STATUS, META_ID, VERSION, DESCRIPTION, NODES));
+
+    private static final Pattern FROM_CONNECTOR_PATTERN = Pattern.compile("dynamic-(\\d+)");
 
     private final JSONObject definitions;
 
@@ -168,7 +173,7 @@ public class FlowGraphData {
     public FlowGraphData(String flowGraph) {
         definitions = JSONObject.parseObject(flowGraph);
         nodes = new JSONArray();
-        events = new JSONArray();
+        JSONArray initEvents = new JSONArray();
         getAllNodes().stream()
                 .filter(node -> !ObjectUtils.<JSONObject>cast(node)
                         .getString(TYPE)
@@ -180,20 +185,11 @@ public class FlowGraphData {
                         .getString(TYPE)
                         .toUpperCase(ROOT)
                         .endsWith(EVENT.getCode()))
-                .sorted((event1, event2) -> {
-                    String fromConnector1 = Optional.ofNullable(((JSONObject) event1).get("fromConnector"))
-                            .orElse("-1")
-                            .toString();
-                    String fromConnector2 = Optional.ofNullable(((JSONObject) event2).get("fromConnector"))
-                            .orElse("-1")
-                            .toString();
-                    return Integer.compare(extractNumberFromFromConnector(fromConnector1),
-                            extractNumberFromFromConnector(fromConnector2));
-                })
-                .forEach(events::add);
-        extraConditionRules2Events(nodes.stream()
-                .filter(node -> FlowNodeType.CONDITION == FlowNodeType.getNodeType(ObjectUtils.<JSONObject>cast(node).getString(TYPE).toUpperCase(ROOT)))
-                .collect(Collectors.toList()), events);
+                .forEach(initEvents::add);
+        events = extraConditionRules2Events(nodes.stream()
+                .filter(node -> FlowNodeType.CONDITION == FlowNodeType.getNodeType(
+                        ObjectUtils.<JSONObject>cast(node).getString(TYPE).toUpperCase(ROOT)))
+                .collect(Collectors.toList()), initEvents);
     }
 
     /**
@@ -259,7 +255,7 @@ public class FlowGraphData {
         Map<String, Object> properties = new HashMap<>();
         definitions.entrySet()
                 .stream()
-                .filter(item -> !flowInternalKeys.contains(item.getKey()))
+                .filter(item -> !FLOW_INTERNAL_KEYS.contains(item.getKey()))
                 .forEach(item -> properties.put(item.getKey(), item.getValue()));
         return properties;
     }
@@ -627,6 +623,16 @@ public class FlowGraphData {
     }
 
     /**
+     * 获取流程定义的事件优先级
+     *
+     * @param eventIndex 事件索引
+     * @return 流程定义的事件优先级
+     */
+    public Integer getEventPriority(int eventIndex) {
+        return getEvent(eventIndex).getInteger(PRIORITY_PROPERTY_KEY);
+    }
+
+    /**
      * getNodeProperties
      *
      * @param index index
@@ -669,23 +675,50 @@ public class FlowGraphData {
         return variables;
     }
 
-    private void extraConditionRules2Events(List<Object> conditions, JSONArray events) {
+    private JSONArray extraConditionRules2Events(List<Object> conditions, JSONArray events) {
+        JSONArray sortEvents = new JSONArray();
+        events.stream()
+                .sorted((event1, event2) -> sortByFromConnector((JSONObject) event1, (JSONObject) event2))
+                .forEach(sortEvents::add);
         conditions.forEach(condition -> {
-            String conditionMetaId = ((JSONObject) condition).get("metaId").toString();
-            List<Object> relatedEventList = events.stream()
-                    .filter(event -> conditionMetaId.equals(((JSONObject) event).get("from").toString()))
-                    .collect(Collectors.toList());
-            if (((JSONObject) condition).getJSONObject("conditionParams") == null) {
+            JSONObject jsonCondition = (JSONObject) condition;
+            if (jsonCondition.getJSONObject("conditionParams") == null) {
                 return;
             }
-            JSONArray branches = ((JSONObject) condition).getJSONObject("conditionParams")
-                    .getJSONArray("branches");
-            for (int i = 0; i < branches.size(); i++) {
-                ((JSONObject)relatedEventList.get(i)).put("conditionRule", ConvertConditionToRuleUtils.convert(branches.get(i).toString()));
+            String conditionMetaId = jsonCondition.get("metaId").toString();
+            List<Object> relatedEventList = sortEvents.stream()
+                    .filter(event -> conditionMetaId.equals(((JSONObject) event).get("from").toString()))
+                    .collect(Collectors.toList());
+            JSONArray branches = jsonCondition.getJSONObject("conditionParams").getJSONArray("branches");
+            if (branches.size() != relatedEventList.size() && branches.size() + 1 != relatedEventList.size()) {
+                throw new JobberException(INVALID_EVENT_SIZE);
             }
-            // Todo 临时逻辑为了联调，后续待确认此做法
-            ((JSONObject)relatedEventList.get(branches.size())).put("conditionRule", "true");
+            for (int i = 0; i < branches.size(); i++) {
+                JSONObject relatedEvent = (JSONObject) relatedEventList.get(i);
+                relatedEvent.put("conditionRule", ConvertConditionToRuleUtils.convert(branches.get(i).toString()));
+                relatedEvent.put("priority", i);
+            }
+            // 以下是对老数据的兼容逻辑，老数据中branch中没有else分支的信息，手动补充
+            if (relatedEventList.size() > branches.size()) {
+                JSONObject elseEvent = (JSONObject) relatedEventList.get(branches.size());
+                if (StringUtils.isBlank(elseEvent.getString("conditionRule"))) {
+                    elseEvent.put("conditionRule", "true");
+                    elseEvent.put("priority", branches.size());
+                }
+            }
         });
+        return sortEvents;
+    }
+
+    private int sortByFromConnector(JSONObject event1, JSONObject event2) {
+        String fromConnector1 = Optional.ofNullable(event1.get("fromConnector"))
+                .orElse("-1")
+                .toString();
+        String fromConnector2 = Optional.ofNullable(event2.get("fromConnector"))
+                .orElse("-1")
+                .toString();
+        return Integer.compare(extractNumberFromFromConnector(fromConnector1),
+                extractNumberFromFromConnector(fromConnector2));
     }
 
     /**
@@ -695,8 +728,7 @@ public class FlowGraphData {
      * @return 字符串中提取出的数字。
      */
     private int extractNumberFromFromConnector(String str) {
-        Pattern pattern = Pattern.compile("dynamic-(\\d+)");
-        Matcher matcher = pattern.matcher(str);
+        Matcher matcher = FROM_CONNECTOR_PATTERN.matcher(str);
         if (matcher.find()) {
             return Integer.parseInt(matcher.group(1));
         }

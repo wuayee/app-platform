@@ -2,140 +2,115 @@
 import { Button, Form, Input, Radio, Space, Table, Drawer } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
 import React, { useEffect, useState } from 'react';
-import LiveUpload from '../../../../../components/upload';
-import CreateItem from './createItem';
-import { CallbackMethod, CreateType } from './model';
+import { useParams } from 'react-router-dom';
+import { createEvalData, modifyDataSetBaseInfo } from '../../../../../shared/http/apps';
+import CreateTable from './createTable';
+import { CreateType } from './model';
+
 
 interface props {
   visible: boolean;
   createCallback: Function;
-  data?: any;
-  title?: string;
 }
 
-const CreateSet = ({ visible, createCallback, data, title }: props) => {
+interface DataSetInterface {
+  ouput: string;
+  input: string;
+  datasetId: string | null;
+}
 
-  const defaultItemData = {
-    input: '',
-    output: '',
-    index: -1
-  }
+// 创建参数
+interface CreateData {
+  data: DataSetInterface[];
 
-  const [showType, setShowType] = useState(true);
-  const [params, setParams] = useState(defaultItemData);
+  // 作者写死传test
+  author: string;
+
+  appId: string;
+
+  datasetName: string;
+
+  description: string;
+}
+
+// 创建数据集
+type FieldType = {
+  datasetName: string;
+
+  description: string;
+
+  data: DataSetInterface[]
+};
+
+const CreateSet = ({ visible, createCallback }: props) => {
+
   const [createOpen, setCreateOpen] = useState(false);
   const [type, setType] = useState(CreateType.MANUAL);
-  const [manualData, setManualData] = useState<any[]>([]);
-  const [uploadData, setUploadData] = useState<any[]>([]);
-  const [itemOpen, setItemOpen] = useState(false);
 
-  const [form] = Form.useForm();
+
+  const [form] = Form.useForm<FieldType>();
+
+  const { tenantId, appId} = useParams();
 
   useEffect(() => {
-    if (data) {
-      setShowType(false);
-      form.setFieldsValue({
-        name: data?.name,
-        desc: data?.desc
-      })
-      setManualData(data?.data);
-    }
     setCreateOpen(visible);
-  }, [data, visible])
+  })
 
 
   const changeType = (e: RadioChangeEvent) => {
     setType(e.target.value);
   }
 
-  const showItemDrawer = () => {
-    const tempParams = {
-      index: -1,
-      input: '',
-      output: ''
-    }
-    setParams(tempParams);
-    setItemOpen(true);
-  };
-
-  const editItemDrawer = (data: any, index: number) => {
-    if (data) {
-      const tempParams = {
-        input: data?.input,
-        output: data?.output,
-        index
-      }
-      setParams(tempParams);
-    }
-    setItemOpen(true);
-  };
-
-  const callback = (operate: string, data: any, index: number) => {
-    switch (operate) {
-      case CallbackMethod.SUBMIT:
-        const updateData = [...manualData];
-        if (index >= 0) {
-          updateData[index] = data;
-        } else {
-          updateData.push(data);
-        }
-        setManualData(updateData);
-    }
-    setItemOpen(false);
-  }
-
   const closeDrawer = () => {
+    form.resetFields();
     createCallback('cancel', {});
   }
 
   const submit = () => {
-    form.submit();
+    // form.submit();
+    // create();
   }
 
   const onFinish = (value: any) => {
-    createCallback('submit', value);
+    const data = !showType || type === CreateType.MANUAL ? manualData : uploadData;
+
+    createCallback('submit', { ...value, data });
   }
 
-  const columns = [
-    {
-      key: 'input',
-      dataIndex: 'input',
-      title: '输入',
-      ellipsis: true
-    },
-    {
-      key: 'output',
-      dataIndex: 'output',
-      title: '输出',
-      ellipsis: true
-    },
-    {
-      key: 'action',
-      title: '操作',
-      render(_: any, record: any, index: any) {
-        const edit = () => {
-          editItemDrawer(record, index);
-        }
-        const delItem = () => {
-          const updateData = [...manualData];
-          updateData.splice(index, 1);
-          setManualData(updateData);
-        }
-        return (
-          <Space size='middle'>
-            <a onClick={edit}>编辑</a>
-            <a onClick={delItem}>删除</a>
-          </Space>
-        )
-      },
-      hidden: type !== CreateType.MANUAL,
-      width: 120
-    },
-  ];
+  // 构建参数
+  const buildData = (res: FieldType): CreateData => {
+
+    let data: CreateData = {
+      data: res.data.map(item=> ({
+        ...item,
+        datasetId: item?.datasetId ?? '',
+      })),
+
+      // 暂时写死test
+      author: 'test',
+      appId: appId as string,
+      datasetName: res.datasetName,
+      description: res.description,
+    }
+    return data
+  }
+
+  // 点击确认按钮
+  const clickSubmit = async () => {
+    try {
+      const res = await form.validateFields();
+      await createEvalData(buildData(res));
+      
+      closeDrawer(); 
+    } catch (error) {
+      
+    }
+
+  }
 
   return (
     <Drawer
-      title={title || '新建测试集'}
+      title={'新建测试集'}
       width={800}
       open={createOpen}
       onClose={closeDrawer}
@@ -145,48 +120,29 @@ const CreateSet = ({ visible, createCallback, data, title }: props) => {
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Space>
             <Button style={{ minWidth: 96 }} onClick={closeDrawer}>取消</Button>
-            <Button type='primary' style={{ minWidth: 96 }} onClick={submit}>确定</Button>
+            <Button type='primary' style={{ minWidth: 96 }} onClick={clickSubmit}>确定</Button>
           </Space>
         </div>
       }
     >
-      <Form form={form} layout='vertical' onFinish={onFinish}>
-        {(showType) && (
-          <Form.Item label='新建方式' required>
-            <Radio.Group value={type} onChange={changeType}>
-              <Space size='large'>
-                <Radio value='upload'>上传</Radio>
-                <Radio value='manual'>手动</Radio>
-              </Space>
-            </Radio.Group>
-          </Form.Item>
-        )}
-        <Form.Item label='测试集名称' name='name' required rules={[{ required: true, message: '输入不能为空' }]}>
+      <Form<FieldType> form={form} layout='vertical' onFinish={onFinish}>
+        <Form.Item label='新建方式' required>
+          <Radio.Group value={type} onChange={changeType}>
+            <Space size='large'>
+              <Radio value='upload'>上传</Radio>
+              <Radio value='manual'>手动</Radio>
+            </Space>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item label='测试集名称' name='datasetName' required rules={[{ required: true, message: '输入不能为空' }]}>
           <Input />
         </Form.Item>
-        <Form.Item label='测试集描述' name='desc' required rules={[{ required: true, message: '输入不能为空' }]}>
+        <Form.Item label='测试集描述' name='description' required rules={[{ required: true, message: '输入不能为空' }]}>
           <Input />
         </Form.Item>
-        {(showType && type === CreateType.UPLOAD) ?
-          <Form.Item label='上传' required>
-            <LiveUpload />
-          </Form.Item>
-          :
-          <Button
-            type='primary'
-            style={{ minWidth: '96px', margin: '8px 0 16px' }}
-            onClick={showItemDrawer}
-          >创建</Button>
-        }
-        <Table
-          dataSource={!showType || type === CreateType.MANUAL ? manualData : uploadData}
-          columns={columns}
-          pagination={{
-            simple: true,
-            size: 'small'
-          }}
-        />
-        <CreateItem params={params} visible={itemOpen} callback={callback} />
+        <Form.Item name='data' required rules={[{ required: true, message: '至少创建一个数据集' }]}>
+          <CreateTable type={type}/>
+        </Form.Item>
       </Form>
     </Drawer>
   )

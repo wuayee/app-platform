@@ -2,11 +2,9 @@
     *{
         box-sizing: border-box;
     }
-    width: 380px;
-    height: 260px;
+    width: 100%;
+    height: 100%;
     padding:20px;
-    margin-right: 16px;
-    margin-bottom: 16px;
     border-radius: 8px;
     border: 1px solid rgba(105, 105, 105, .2);
     overflow: hidden;
@@ -14,6 +12,10 @@
     flex-direction: column;
     .app_card_header {
         display: flex;
+        .img_box{
+            width: 50px;
+            height: 50px;
+        }
         .infoArea{
             font-size: 20px;
             color: rgba(5, 5, 5, .96);
@@ -50,6 +52,7 @@
             align-items: center;
             .icon_box {
                 margin-right: 40px;
+                cursor: pointer;
                 color: rgb(94, 103, 116);
             }
         }

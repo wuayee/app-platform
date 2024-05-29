@@ -123,4 +123,62 @@ export const AppIcons = {
       </g>
     </svg>
   ),
+  CompleteIcon:(props: IconProps) => (
+    <svg width="16.000000" height="16.000000" viewBox="0 0 16 16" fill="none" {...props}>
+      <defs/>
+      <rect id="ICON/16/Complete" width="16.000000" height="16.000000" fill="#FFFFFF" fill-opacity="0"/>
+      <path id="路径" d="M8.5 1C4.34 1 1 4.34 1 8.5C1 12.65 4.34 16 8.5 16C12.65 16 16 12.65 16 8.5C16 4.34 12.65 1 8.5 1Z" fill="#53AB6B" fill-opacity="1.000000" fill-rule="evenodd"/>
+      <path id="路径 8" d="M4.97 8.91L4.94 8.91C4.74 8.71 4.74 8.4 4.94 8.2C5.14 8 5.45 8 5.65 8.2L5.65 8.23L5.34 8.54L11.64 6.44L11.31 6.11L11.31 6.08C11.5 5.88 11.81 5.88 12.01 6.08C12.21 6.28 12.21 6.59 12.01 6.79L11.98 6.79L11.64 6.45L7.42 10.68L5.31 8.57L4.97 8.91Z" fill="#D8D8D8" fill-opacity="0" fill-rule="evenodd"/>
+      <path id="路径 8" d="M5.3 8.56L7.42 10.68L11.66 6.43" stroke="#FFFFFF" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+  ),
+  PowerOffIcon:(props:IconProps)=>(
+    <svg width="16.000000" height="16.000000" viewBox="0 0 16 16" fill="none" {...props}>
+      <defs/>
+      <rect id="ICON/16/Poweroff" width="16.000000" height="16.000000" fill="#FFFFFF" fill-opacity="0"/>
+      <mask id="mask_1171_1324" fill="white">
+      	<path id="形状结合" d="M9.1084 2.06348L15.9021 13.9526C16.1689 14.4194 15.832 15 15.2944 15L1.70679 15C1.16943 15 0.83252 14.4194 1.09912 13.9526L7.89282 2.06348C8.16162 1.59326 8.8396 1.59326 9.1084 2.06348ZM8.00073 5.5C8.00073 5.22412 8.22461 5 8.50073 5C8.77686 5 9.00073 5.22412 9.00073 5.5L9.00073 10.5C9.00073 10.7764 8.77686 11 8.50073 11C8.22461 11 8.00073 10.7764 8.00073 10.5L8.00073 5.5ZM8.15063 12.1499C7.95068 12.3501 7.95068 12.6499 8.15063 12.8501C8.35059 13.0498 8.65063 13.0498 8.85059 12.8501C9.05078 12.6499 9.05078 12.3501 8.85059 12.1499C8.65063 11.9502 8.35059 11.9502 8.15063 12.1499Z" clip-rule="evenodd" fill="" fill-opacity="1.000000" fill-rule="evenodd"/>
+      </mask>
+      <path id="形状结合" d="M9.1084 2.06348L15.9021 13.9526C16.1689 14.4194 15.832 15 15.2944 15L1.70679 15C1.16943 15 0.83252 14.4194 1.09912 13.9526L7.89282 2.06348C8.16162 1.59326 8.8396 1.59326 9.1084 2.06348ZM8.00073 5.5C8.00073 5.22412 8.22461 5 8.50073 5C8.77686 5 9.00073 5.22412 9.00073 5.5L9.00073 10.5C9.00073 10.7764 8.77686 11 8.50073 11C8.22461 11 8.00073 10.7764 8.00073 10.5L8.00073 5.5ZM8.15063 12.1499C7.95068 12.3501 7.95068 12.6499 8.15063 12.8501C8.35059 13.0498 8.65063 13.0498 8.85059 12.8501C9.05078 12.6499 9.05078 12.3501 8.85059 12.1499C8.65063 11.9502 8.35059 11.9502 8.15063 12.1499Z" clip-rule="evenodd" fill="#F0C442" fill-opacity="1.000000" fill-rule="evenodd" mask="url(#mask_1171_1324)"/>
+      <path id="形状结合" d="" clip-rule="evenodd" fill="#979797" fill-opacity="0.000000" fill-rule="evenodd"/>
+    </svg>
+  ),
+  EvalueateAllIcon:(props:IconProps)=>(
+<svg width="48.000000" height="48.000000" viewBox="0 0 48 48" fill="none" {...props}>
+	<defs>
+		<clipPath id="clip671_224007">
+			<rect id="文档类型图标" width="32.000000" height="32.000000" transform="translate(8.000000 8.000000)" fill="white" fill-opacity="0"/>
+		</clipPath>
+	</defs>
+	<rect id="画板 789" rx="4.000000" width="48.000000" height="48.000000" fill="#E6F2FF" fill-opacity="1.000000"/>
+	<g clip-path="url(#clip671_224007)">
+		<path id="path" d="M24 9.33L36.66 16.66L36.66 31.33L23.99 38.66L11.33 31.33L11.33 16.66L24 9.33ZM16.66 21.29L22.66 24.77L22.66 31.5L25.33 31.5L25.33 24.77L31.33 21.29L30 18.98L24 22.46L18 18.98L16.66 21.29Z" fill="#1370FF" fill-opacity="1.000000" fill-rule="nonzero"/>
+	</g>
+</svg>
+  ),
+  EvalueateSuccessIcon:(props:IconProps)=>(
+<svg width="48.000000" height="48.000000" viewBox="0 0 48 48" fill="none" {...props}>
+	<defs/>
+	<rect id="画板 789" rx="4.000000" width="48.000000" height="48.000000" fill="#EDFFF9" fill-opacity="1.000000"/>
+	<rect id="画板 785" width="32.000000" height="32.000000" transform="translate(8.000000 8.000000)" fill="#FFFFFF" fill-opacity="0"/>
+	<rect id="图标/16/状态/成功 Success" width="28.000000" height="28.000000" transform="translate(10.000000 10.000000)" fill="#FFFFFF" fill-opacity="0"/>
+	<circle id="Oval 4 Copy 5" cx="24.000000" cy="24.000000" r="14.000000" fill="#3AC295" fill-opacity="1.000000"/>
+	<circle id="Oval 4 Copy 5" cx="24.000000" cy="24.000000" r="13.124778" stroke="#3DCCA6" stroke-opacity="0" stroke-width="1.750445"/>
+	<path id="Mask" d="M31.33 17.21L33.81 19.68L21.43 32.06L15.25 25.87L17.72 23.39L21.43 27.11L31.33 17.21Z" fill="#FFFFFF" fill-opacity="1.000000" fill-rule="evenodd"/>
+	<path id="Mask" d="" fill="#979797" fill-opacity="0" fill-rule="evenodd"/>
+</svg>
+
+  ),
+  EvalueateFailIcon:(props:IconProps)=>(
+<svg width="48.000000" height="48.000000" viewBox="0 0 48 48" fill="none" {...props}>
+	<defs/>
+	<rect id="画板 789" rx="4.000000" width="48.000000" height="48.000000" fill="#FFEEED" fill-opacity="1.000000"/>
+	<rect id="画板 786" width="32.000000" height="32.000000" transform="translate(8.000000 8.000000)" fill="#FFFFFF" fill-opacity="0"/>
+	<rect id="图标/16/状态/错误 Error" width="28.000000" height="28.000000" transform="translate(10.000000 10.000000)" fill="#FFFFFF" fill-opacity="0"/>
+	<circle id="Oval 4 Copy 4" cx="24.000000" cy="24.000000" r="14.000000" fill="#F66F6A" fill-opacity="1.000000"/>
+	<circle id="Oval 4 Copy 4" cx="24.000000" cy="24.000000" r="13.124778" stroke="#F66F6A" stroke-opacity="0" stroke-width="1.750445"/>
+	<path id="Mask" d="M24.12 21.64L29.07 16.69L31.54 19.17L26.59 24.12L31.54 29.07L29.07 31.54L24.12 26.59L19.17 31.54L16.7 29.07L21.64 24.12L16.7 19.17L19.17 16.69L24.12 21.64Z" fill="#FFFFFF" fill-opacity="1.000000" fill-rule="evenodd"/>
+	<path id="Mask" d="" fill="#979797" fill-opacity="0" fill-rule="evenodd"/>
+</svg>
+    ),
 }

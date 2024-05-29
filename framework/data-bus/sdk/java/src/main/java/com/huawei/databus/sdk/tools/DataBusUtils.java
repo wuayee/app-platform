@@ -82,6 +82,13 @@ public class DataBusUtils {
                     () -> new IllegalArgumentException("Byte array length cannot be 0."));
             Validation.greaterThanOrEquals(request.bytes().length, request.dataLength(),
                     () -> new IllegalArgumentException("The buffer length should not be less than data length."));
+            if (request.isOperatingUserData()) {
+                Validation.notNull(request.userData(),
+                        () -> new IllegalArgumentException("User data cannot be null when specifying user operation"
+                                + " in a write request."));
+                Validation.lessThanOrEquals(request.userData().length, 1024,
+                        () -> new IllegalArgumentException("User data size cannot be larger than 1024 bytes"));
+            }
         }
         Validation.greaterThanOrEquals(request.dataLength(), 0,
                 () -> new IllegalArgumentException("data length must be non-negative."));

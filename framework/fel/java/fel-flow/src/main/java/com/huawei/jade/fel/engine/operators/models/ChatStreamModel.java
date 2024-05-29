@@ -69,7 +69,7 @@ public class ChatStreamModel<M> implements ChatModel<FiniteEmitter<ChatMessage, 
 
             @Override
             public ChatChunk end() {
-                return new ChatChunk(StringUtils.EMPTY).setEnd();
+                return new ChatChunk().setEnd();
             }
 
             @Override
