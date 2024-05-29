@@ -7,6 +7,11 @@ jane:
       id:
   useDataEngine: false
 
+corsfilter:
+  priority:
+  patterns:
+  origin: jade.huawei.com
+
 a3000:
   tenantId:
   ownTrace: false

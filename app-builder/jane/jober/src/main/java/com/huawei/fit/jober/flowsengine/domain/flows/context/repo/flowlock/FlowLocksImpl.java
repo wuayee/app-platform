@@ -23,10 +23,10 @@ import java.util.concurrent.locks.Lock;
 public class FlowLocksImpl implements FlowLocks {
     private final DistributedLockProvider distributedLockProvider;
 
-    public FlowLocksImpl(
-            @Value("${distributed-lock-provider}") String providerAlias, BeanContainer beanContainer)
+    public FlowLocksImpl(@Value("${distributed-lock-provider}") String providerAlias, BeanContainer beanContainer)
             throws IllegalAccessException {
-        this.distributedLockProvider = beanContainer.lookup(providerAlias).orElseThrow(IllegalAccessException::new).get();
+        this.distributedLockProvider =
+                beanContainer.lookup(providerAlias).orElseThrow(IllegalAccessException::new).get();
     }
 
     /**
