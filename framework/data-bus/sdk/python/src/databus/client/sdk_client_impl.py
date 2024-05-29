@@ -69,7 +69,7 @@ class SdkClientImpl:
         self._pre_access_check(user_key)
         if size <= 0:
             raise ValueError("Invalid input parameter: size is {size}")
-        response = self._socket.send_shared_malloc_message(size)
+        response = self._socket.send_shared_malloc_message(user_key, size)
         CoreError.check_core_response("Allocation failed with error code %u", response.ErrorType())
         self._mem_manager.add_memory_block(user_key=user_key, memory_id=response.MemoryKey(),
                                            memory_size=response.MemorySize())

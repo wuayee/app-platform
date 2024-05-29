@@ -66,14 +66,17 @@ class SocketClient:
             self._socket.close()
             self._socket = None
 
-    def send_shared_malloc_message(self, size: int) -> ApplyMemoryMessageResponse:
+    def send_shared_malloc_message(self, user_key: str, size: int) -> ApplyMemoryMessageResponse:
         """向DataBus内核发送申请内存块消息
 
-        :param size: 要释放的内存块大小
+        :param user_key: 要申请的内存块名
+        :param size: 要申请的内存块大小
         :return: 内核返回的ApplyMemoryMessageResponse
         """
         builder = flatbuffers.Builder(DEFAULT_FLATBUFFERS_BUILDER_SIZE)
+        user_key_str = builder.CreateString(user_key)
         ApplyMemoryMessage.ApplyMemoryMessageStart(builder)
+        ApplyMemoryMessage.AddObjectKey(builder, user_key_str)
         ApplyMemoryMessage.AddMemorySize(builder, size)
         builder.Finish(ApplyMemoryMessage.ApplyMemoryMessageEnd(builder))
         logging.info("Sending allocation request for %u bytes.", size)
