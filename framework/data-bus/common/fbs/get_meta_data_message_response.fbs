@@ -1,0 +1,12 @@
+include "common.fbs";
+
+namespace DataBus.Common;
+
+table GetMetaDataMessageResponse {
+    error_type: ErrorType;
+    user_data: [byte]; // 客户端最后一次写入的用户数据
+    memory_key: int; // System V生成的共享内存ID
+    memory_size: ulong; // 共享内存的大小
+}
+
+root_type GetMetaDataMessageResponse;

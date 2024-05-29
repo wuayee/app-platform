@@ -20,12 +20,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 @SuppressWarnings("unused")
-public final class GetUserDataMessageResponse extends Table {
+public final class GetMetaDataMessageResponse extends Table {
   public static void ValidateVersion() { Constants.FLATBUFFERS_23_5_26(); }
-  public static GetUserDataMessageResponse getRootAsGetUserDataMessageResponse(ByteBuffer _bb) { return getRootAsGetUserDataMessageResponse(_bb, new GetUserDataMessageResponse()); }
-  public static GetUserDataMessageResponse getRootAsGetUserDataMessageResponse(ByteBuffer _bb, GetUserDataMessageResponse obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
+  public static GetMetaDataMessageResponse getRootAsGetMetaDataMessageResponse(ByteBuffer _bb) { return getRootAsGetMetaDataMessageResponse(_bb, new GetMetaDataMessageResponse()); }
+  public static GetMetaDataMessageResponse getRootAsGetMetaDataMessageResponse(ByteBuffer _bb, GetMetaDataMessageResponse obj) { _bb.order(ByteOrder.LITTLE_ENDIAN); return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
-  public GetUserDataMessageResponse __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public GetMetaDataMessageResponse __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public byte errorType() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
   public byte userData(int j) { int o = __offset(6); return o != 0 ? bb.get(__vector(o) + j * 1) : 0; }
@@ -34,34 +34,42 @@ public final class GetUserDataMessageResponse extends Table {
   public ByteVector userDataVector(ByteVector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer userDataAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer userDataInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  public int memoryKey() { int o = __offset(8); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  public long memorySize() { int o = __offset(10); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
 
-  public static int createGetUserDataMessageResponse(FlatBufferBuilder builder,
+  public static int createGetMetaDataMessageResponse(FlatBufferBuilder builder,
       byte errorType,
-      int userDataOffset) {
-    builder.startTable(2);
-    GetUserDataMessageResponse.addUserData(builder, userDataOffset);
-    GetUserDataMessageResponse.addErrorType(builder, errorType);
-    return GetUserDataMessageResponse.endGetUserDataMessageResponse(builder);
+      int userDataOffset,
+      int memoryKey,
+      long memorySize) {
+    builder.startTable(4);
+    GetMetaDataMessageResponse.addMemorySize(builder, memorySize);
+    GetMetaDataMessageResponse.addMemoryKey(builder, memoryKey);
+    GetMetaDataMessageResponse.addUserData(builder, userDataOffset);
+    GetMetaDataMessageResponse.addErrorType(builder, errorType);
+    return GetMetaDataMessageResponse.endGetMetaDataMessageResponse(builder);
   }
 
-  public static void startGetUserDataMessageResponse(FlatBufferBuilder builder) { builder.startTable(2); }
+  public static void startGetMetaDataMessageResponse(FlatBufferBuilder builder) { builder.startTable(4); }
   public static void addErrorType(FlatBufferBuilder builder, byte errorType) { builder.addByte(0, errorType, 0); }
   public static void addUserData(FlatBufferBuilder builder, int userDataOffset) { builder.addOffset(1, userDataOffset, 0); }
   public static int createUserDataVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createUserDataVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startUserDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
-  public static int endGetUserDataMessageResponse(FlatBufferBuilder builder) {
+  public static void addMemoryKey(FlatBufferBuilder builder, int memoryKey) { builder.addInt(2, memoryKey, 0); }
+  public static void addMemorySize(FlatBufferBuilder builder, long memorySize) { builder.addLong(3, memorySize, 0L); }
+  public static int endGetMetaDataMessageResponse(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
   }
-  public static void finishGetUserDataMessageResponseBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset); }
-  public static void finishSizePrefixedGetUserDataMessageResponseBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset); }
+  public static void finishGetMetaDataMessageResponseBuffer(FlatBufferBuilder builder, int offset) { builder.finish(offset); }
+  public static void finishSizePrefixedGetMetaDataMessageResponseBuffer(FlatBufferBuilder builder, int offset) { builder.finishSizePrefixed(offset); }
 
   public static final class Vector extends BaseVector {
     public Vector __assign(int _vector, int _element_size, ByteBuffer _bb) { __reset(_vector, _element_size, _bb); return this; }
 
-    public GetUserDataMessageResponse get(int j) { return get(new GetUserDataMessageResponse(), j); }
-    public GetUserDataMessageResponse get(GetUserDataMessageResponse obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
+    public GetMetaDataMessageResponse get(int j) { return get(new GetMetaDataMessageResponse(), j); }
+    public GetMetaDataMessageResponse get(GetMetaDataMessageResponse obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
 
