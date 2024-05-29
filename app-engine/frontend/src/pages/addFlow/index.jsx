@@ -160,7 +160,7 @@ const AddFlow = (props) => {
     editRef.current.showModal();
   }
   const handleBackClick = () => {
-    navigate(`/app-develop/${tenantId}/detail/${appId}`);
+    navigate(`/app-develop/${tenantId}/app-detail/${appId}`);
   }
   // 测试
   const handleDebugClick = () => {

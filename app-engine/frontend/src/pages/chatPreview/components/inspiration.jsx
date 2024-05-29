@@ -213,6 +213,7 @@ const Inspiration = (props) => {
               <Input
                 prefix={<SearchOutlined />}
                 allowClear
+                placeholder="搜索"
                 onSearch={onSearch}
               />
             </div>
@@ -230,8 +231,10 @@ const Inspiration = (props) => {
                       }
                       onClick={radioClick.bind(this, item)}
                     >
-                      {item.title}
+                      <span className="text"> {item.title}</span>
+                      <span className="line"></span>
                     </span>
+                    
                   );
                 })}
               </div>

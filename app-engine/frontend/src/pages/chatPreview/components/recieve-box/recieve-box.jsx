@@ -2,8 +2,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Checkbox } from "antd";
-import { AippContext } from '../../../aippIndex/context';
-import { ChatContext } from '../../../aippIndex/context';
+import { AippContext, ChatContext } from '@/pages/aippIndex/context';
 import Feedbacks from './feedbacks';
 import MessageDetail from './message-detail';
 import RuntimeForm from './runtime-form';

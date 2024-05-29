@@ -5,11 +5,12 @@ import React, {
   useContext,
   useImperativeHandle,
 } from "react";
-import { AudioIcon, SendIcon } from '@/assets/icon';
+import { AudioIcon, SendIcon, DeleteContentIcon } from '@/assets/icon';
 import $ from "jquery";
 import { Message } from "@shared/utils/message";
 import { AippContext } from "../../../aippIndex/context";
 import { docArr, imgArr } from './common/config';
+import { httpUrlMap } from "@shared/http/httpConfig";
 import HistoryChat from "../history-chat";
 import Recommends from './components/recommends';
 import EditorBtnHome from './components/editor-btn-home';
@@ -26,24 +27,31 @@ const SendEditor = (props) => {
     filterRef,
     requestLoading,
     openClick,
-    inspirationOpen } = props;
+    inspirationOpen,
+    recommendList } = props;
   const [ content, setContent ] = useState('');
   const [ selectItem, setSelectItem ] = useState({});
   const [ selectDom, setSelectDom ] = useState();
   const [ showSelect, setShowSelect ] = useState(false);
   const [ showPreview, setShowPreview ] = useState(false);
+  const [ showClear, setShowClear ] = useState(false);
   const [ positionConfig, setPositionConfig ] = useState({});
   const { aippInfo ,chatRunning }  = useContext(AippContext);
+  const { WS_AUDIO_URL } = httpUrlMap[process.env.NODE_ENV];
   const editorRef = useRef(null);
-  useEffect(() => {
-    const dropBox = document.querySelector("#drop");
-    dropBox?.addEventListener("dragenter", dragEnter, false);
-    dropBox?.addEventListener("dragover", dragOver, false);
-    dropBox?.addEventListener("drop", drop, false);
-  }, []);
+  const recording = useRef(false);
   // 编辑器change事件
   function messageChange() {
-    setContent(editorRef.current.innerText);
+    setShowClear(() => {
+      return editorRef.current.innerText.trim().length > 0
+    })
+    setContent(editorRef.current.innerText.trim());
+  }
+  // 清除内容
+  function clearContent() {
+    setContent("");
+    editorRef.current.innerText = "";
+    setShowClear(false);
   }
   // 快捷发送
   function messageKeyDown(e) {
@@ -78,31 +86,8 @@ const SendEditor = (props) => {
     onSend(chatContent);
     setContent("");
     editorRef.current.innerText = "";
+    setShowClear(false);
   }
-  // 拖拽上传功能
-  function dragEnter(e) {
-    e.stopPropagation();
-    e.preventDefault();
-  }
-  function dragOver(e) {
-    e.stopPropagation();
-    e.preventDefault();
-  }
-  // 图片拖拽回调
-  function drop(e) {
-    if (chatRunning) {
-      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
-      return;
-    }
-    e.preventDefault();
-    const { files } = e.dataTransfer;
-    if (files.length && imgArr.includes(files[0].type)) {
-      dragUpload(files[0], "img");
-    } else if (files.length && docArr.includes(files[0].type)) {
-      dragUpload(files[0], "doc");
-    }
-  }
-  function dragUpload(file, type) {}
   // 设置灵感大全下拉
   function setFilterHtml(prompt, promptMap) {
     const editorDom = document.getElementById("ctrl-promet");
@@ -152,8 +137,7 @@ const SendEditor = (props) => {
   function recommendSend(item) {
     onSend(item);
   }
-  const [recording, setRecording] = useState(false);
-
+  
   // 语音实时转文字
   let recorderHome = null;
   let intervalData = null;
@@ -162,12 +146,12 @@ const SendEditor = (props) => {
       Message({ type: "warning", content: "对话进行中, 请稍后再试" });
       return;
     }
-    if (!recording) {
+    if (!recording.current) {
       window.HZRecorder.get((rec) => {
         recorderHome = rec;
         recorderHome.start();
       });
-      setRecording(true);
+      recording.current = true;
       let conn = new WebSocket(WS_AUDIO_URL);
       conn.onopen = (evt) => {
         if (conn.readyState === 1) {
@@ -188,7 +172,7 @@ const SendEditor = (props) => {
       };
       conn.onclose = (err) => {
         recorderHome.stop();
-        setRecording(false);
+        recording.current = false;
         clearInterval(intervalData);
       };
     }
@@ -200,6 +184,7 @@ const SendEditor = (props) => {
         openClick={openClick} 
         inspirationOpen={inspirationOpen} 
         send={recommendSend}
+        recommendList={recommendList}
       />
       <div className='editor-inner'>
         <EditorBtnHome 
@@ -222,14 +207,11 @@ const SendEditor = (props) => {
           <div className='send-icon' onClick={ sendMessage }>
             <SendIcon />
           </div>
-          <div className='audio-icon'><AudioIcon /></div>
+          <div className='audio-icon' onClick={onRecord}><AudioIcon /></div>
+          { showClear && <div className='send-icon clear-icon' onClick={clearContent}><DeleteContentIcon /></div> }
         </div>
       </div>
       <div className='chat-tips'>
-        {/* <div className="switch-item">
-          <Switch onChange={onSwitchChange} />
-          <span>联网</span>
-        </div> */}
           - 所有内容均由人工智能大模型生成，存储产品内容准确性参照存储产品文档 -
       </div>
      { showSelect &&  (

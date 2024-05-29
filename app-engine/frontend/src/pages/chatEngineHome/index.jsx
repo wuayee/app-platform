@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { AippContext } from '../aippIndex/context';
-import { getCurUser, getAippInfo } from '../../shared/http/aipp';
+import { getCurUser, getAippInfo } from '@shared/http/aipp';
 import ChatPreview from '__pages/chatPreview/index.jsx';
 import './index.scss'
 

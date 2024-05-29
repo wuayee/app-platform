@@ -24,16 +24,20 @@ import {
   clearInstance,
   stopInstance,
   queryInspirationSelect,
-} from "../../shared/http/aipp";
-import { httpUrlMap } from "../../shared/http/httpConfig";
-import left from "../../assets/images/left.png";
+  getReportInstance
+} from "@shared/http/aipp";
+import { getRecommends } from '@shared/http/chat';
 import "./styles/chat-preview.scss";
 
-const { WS_URL } = httpUrlMap[process.env.NODE_ENV];
 const ChatPreview = (props) => {
   const { chatStatusChange, chatType, previewBack } = props;
-  const { showElsa, chatRunning, prompValue, aippInfo, appId, tenantId } =
-    useContext(AippContext);
+  const { 
+    showElsa, 
+    chatRunning, 
+    prompValue, 
+    aippInfo, 
+    appId, 
+    tenantId } = useContext(AippContext);
   const [chatList, setChatList] = useState([]);
   const [checkedList, setCheckedList] = useState([]);
   const [open, setOpen] = useState(false);
@@ -42,6 +46,7 @@ const ChatPreview = (props) => {
   const [sessionName, setSessionName] = useState(["default"]);
   const [showCheck, setShowCheck] = useState(false);
   const [requestLoading, setRequestLoading] = useState(false);
+  const [recommendList, setRecommendList] = useState([]);
   const location = useLocation();
   const chatInitObj = JSON.parse(JSON.stringify(initChat));
   let editorRef = React.createRef();
@@ -53,11 +58,16 @@ const ChatPreview = (props) => {
   let childInstanceIdArr = useRef([]);
   let childBackInstanceIdArr = useRef([]);
   let childInstanceStop = useRef(false);
-  let isChatRunning = useRef(false);
   let wsCurrent = useRef(null);
+  let reportInstance = useRef('');
+  let reportIContext = useRef(null);
 
   // 灵感大全点击
   useEffect(() => {
+    if (chatRunning) {
+      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      return;
+    }
     if (prompValue.name && prompValue.auto) {
       onSend(prompValue.prompt);
       return;
@@ -79,7 +89,8 @@ const ChatPreview = (props) => {
   }, []);
   useEffect(() => {
     (aippInfo.name && !aippInfo.notShowHistory) && initChatHistory();
-  }, [aippInfo])
+    setRecommend();
+  }, [aippInfo]);
   // 灵感大全设置下拉列表
   function setEditorSelect(data, prompItem) {
     let { prompt, promptVarData } = prompItem;
@@ -209,16 +220,11 @@ const ChatPreview = (props) => {
     const reciveInitObj = JSON.parse(JSON.stringify(initChat));
     reciveInitObj.type = "recieve";
     reciveInitObj.loading = true;
-    reciveInitObj.loading = false;
-    // reciveInitObj.chartConfig = chatMock;
-    isChatRunning.current = false;
     setChatList(() => {
       let arr = [...listRef.current, reciveInitObj];
       listRef.current = arr;
       return arr;
     });
-    // printLogs(codeMock.instance_log);
-    // return
     chatStatusChange(true);
     if (showElsa) {
       let params = aippInfo.flowGraph;
@@ -247,10 +253,10 @@ const ChatPreview = (props) => {
       if (debugRes.code === 0) {
         chatMissionStart(debugRes.data, value, type);
       } else {
-        onStop("对话失败");
+        onStop(debugRes.msg || "获取aippId失败");
       }
     } catch {
-      onStop("对话失败");
+      onStop("获取aippId失败");
     }
   }
   // 启动任务
@@ -265,15 +271,14 @@ const ChatPreview = (props) => {
     try {
       const startes = await aippStart(tenantId, aipp_id, version, params);
       if (startes.code === 0 && startes.data) {
-        isChatRunning.current = true;
         childInstanceStop.current = false;
         let instanceId = startes.data;
         queryInstance(aipp_id, version, instanceId);
       } else {
-        onStop("对话失败");
+        onStop("启动任务失败");
       }
     } catch {
-      onStop("对话失败");
+      onStop("启动任务失败");
     }
   };
   // 开始对话(循环主流程)
@@ -283,24 +288,28 @@ const ChatPreview = (props) => {
     runningAppid.current = aipp_id;
     if (!wsCurrent.current) {
       const prefix = window.location.protocol === 'http:' ? 'ws' : 'wss';
-      wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
+      // wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
+      wsCurrent.current = new WebSocket(`ws://10.91.144.226:8080/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
       wsCurrent.current.onopen = () => {
-        wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));
+        wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));   
       }
     } else {
       wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));
     }
     
     wsCurrent.current.onerror = () => {
-      onStop('对话失败');
+      onStop('socket对话失败');
       chatStatusChange(false);
-      isChatRunning.current = false;
     }
     
     wsCurrent.current.onmessage = ({ data }) => {
       let messageData = {};
       try {
         messageData = JSON.parse(data);
+        if (messageData.memory === 'UserSelect') {
+          selfSelect(messageData.instanceId, messageData.initContext);
+          return
+        }
         const logDataList = messageData.aippInstanceLogs || [];
         logDataList.forEach(log => {
           if (log.logData && log.logData.length) {
@@ -332,13 +341,47 @@ const ChatPreview = (props) => {
         })
         if (['ERROR', 'ARCHIVED'].includes(messageData.status)) {
           chatStatusChange(false);
-          isChatRunning.current = false;
         }
       } catch (err){
         onStop('数据解析异常');
         chatStatusChange(false);
-        isChatRunning.current = false;
       }
+    }
+  }
+  // 用户自勾选
+  function selfSelect(instanceId, initContext) {
+    reportInstance.current = instanceId;
+    reportIContext.current = initContext;
+    onStop("请勾选对话");
+    setEditorShow(true, 'report');
+  }
+  // 用户自勾选确定回调
+  async function reportClick(list) {
+    let arr = [];
+    let params = {
+      "initContext": {
+        "Question": "帮我创建个极限运动的应用",
+        ...reportIContext.current.initContext,
+        "memories": [
+          {
+            "question": "你好",
+            "msg": "你好"
+          }
+        ]
+      }
+    }
+    try {
+      const startes = await getReportInstance(tenantId, reportInstance.current, params);
+      if (startes.code === 0 && startes.data) {
+        let instanceId = startes.data;
+        queryInstance(runningAppid.current, runningVersion.current, instanceId);
+      } else {
+        onStop("启动任务失败");
+      }
+    } catch {
+      onStop("启动任务失败");
+    } finally {
+      setEditorShow(false);
     }
   }
   // 主流程轮训回调
@@ -519,11 +562,11 @@ const ChatPreview = (props) => {
     setOpen(!open);
   }
   // 显示问答组
-  function setEditorShow(val) {
+  function setEditorShow(val, type='share') {
     !val && setCheckedList([]);
     setShowCheck(val);
     selectAllClick(false);
-    val && setGroupType("share");
+    val && setGroupType(type);
   }
   // 设置全选取消全选
   function selectAllClick(val) {
@@ -568,6 +611,23 @@ const ChatPreview = (props) => {
       setRequestLoading(false);
     }
   }
+  // 设置推荐列表
+  function setRecommend() {
+    let arr = aippInfo.config?.form?.properties || [];
+    let recommendItem = arr.filter(item => item.name === 'recommend')[0];
+    if (recommendItem) {
+      setRecommendList(recommendItem.defaultValue);
+    }
+  }
+  // 获取推荐列表
+  async function getRecommendList(params) {
+    const res = await getRecommends(params);
+    if (res.code === 0) {
+      setRecommendList(res.data);
+    } else {
+      setRecommendList([]);
+    }
+  }
   return <>{(
       <div className={[
         'chat-preview',
@@ -596,6 +656,7 @@ const ChatPreview = (props) => {
                       checkedList={checkedList}
                       totalNum={chatList.length}
                       selectAllClick={selectAllClick}
+                      reportClick={reportClick}
                       type={groupType}
                     />
                   ) : (
@@ -610,6 +671,7 @@ const ChatPreview = (props) => {
                       requestLoading={requestLoading}
                       open={open}
                       openInspiration={openClick}
+                      recommendList={recommendList}
                     />
                   )
                 }
@@ -622,10 +684,10 @@ const ChatPreview = (props) => {
                 </Inspiration>
               </div>
             </div>
-          </Spin>
-      </div>
-      )}
-    </>
+        </Spin>
+    </div>
+    )}
+  </>
 };
 
 export default ChatPreview;

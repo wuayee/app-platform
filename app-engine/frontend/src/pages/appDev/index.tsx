@@ -74,7 +74,7 @@ const AppDev: React.FC = () => {
     });
   };
   function addAippCallBack(appId: string) {
-    navigate(`/app-develop/${tenantId}/detail/${appId}`);
+    navigate(`/app-develop/${tenantId}/app-detail/${appId}`);
   }
 
   // 搜索
@@ -127,7 +127,6 @@ const AppDev: React.FC = () => {
   // 获取用户收藏列表
   const getUserCollectionList = async () => {
     const res = await getUserCollection(getLoaclUser());
-
     const defaultData = res?.data?.defaultApp || null;
     const collectionList: any[] = res?.data?.collectionPoList || [];
     collectionList.unshift(defaultData);

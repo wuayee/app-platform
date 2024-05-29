@@ -2,13 +2,13 @@
 import React, { useContext, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AippContext } from '../../aippIndex/context';
-import { TabLeftIcon, TabRightIcon } from '../../../assets/icon';
+import { TabLeftIcon, TabRightIcon } from '@assets/icon';
 import EditModal from '../../components/edit-modal';
-import robot from '../../../assets/images/ai/robot1.png';
-import robot2 from '../../../assets/images/ai/xiaohai.png';
+import robot from '@assets/images/ai/robot1.png';
+import robot2 from '@assets/images/ai/xiaohai.png';
 import '../styles/chat-details.scss';
 import StarApps from "./star-apps";
-import { AppBoxIcon, CreateAppIcon } from '../../../assets/icon';
+import { AppBoxIcon, CreateAppIcon } from '@assets/icon';
 
 const ChatDetail = () => {
   const { aippInfo, tenantId }  = useContext(AippContext);
@@ -33,7 +33,7 @@ const ChatDetail = () => {
     })
   }
   function addAippCallBack(appId) {
-    navigate(`/app-develop/${tenantId}/detail/${appId}`);
+    navigate(`/app-develop/${tenantId}/app-detail/${appId}`);
   }
   return <>{(
     <div className='chat-details-content'>
@@ -43,7 +43,7 @@ const ChatDetail = () => {
             <div className="inner-left">
               <div className="title">APP Engine</div>
               <div className="sub-title">你的专属AI智能编排研发平台</div>
-              <div className="desc">助力研发，开始创建专属应用吧～</div>
+              <div className="desc">AI助力研发，开始创建专属应用吧～</div>
             </div>
             <div className="inner-right">
               <div className="">
@@ -52,7 +52,7 @@ const ChatDetail = () => {
             </div>
             <div className="inner-right-chat">
               Hi~我是APP
-              Engine的超级应用小海，我可以呼唤其他应用协同工作，也可以解答存储领域相关任何问题，试试向我提问吧~
+              Engine的超级应用 <strong>小海</strong>，我可以<strong>呼唤其他应用</strong>协同工作，也可以<strong>解答存储领域相关任何问题</strong>，试试向我提问吧~
             </div>
           </div>
           <div className="head-nav">
