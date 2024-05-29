@@ -56,7 +56,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
 
   // 获取当前登录用户名
   const getLoaclUser = () => {
-    return localStorage.getItem('currentUserId') ?? '';
+    return localStorage.getItem('currentUserIdComplete') ?? '';
   }
 
   // 点击收藏
