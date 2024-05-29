@@ -28,6 +28,7 @@ export interface ModelItem {
   npu_flag: boolean;
   xpu_consume: number;
   port: number;
+  image: string;
 }
 const CardsTab = ({modelList, setModels}: {modelList: ModelItem[], setModels: (val: Array<any>) => void}) => {
   // 路由
