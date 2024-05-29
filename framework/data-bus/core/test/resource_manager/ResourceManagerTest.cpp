@@ -34,7 +34,7 @@ protected:
     {
         FtokArgsGenerator::Instance().Reset();
         int port = 1234;
-        uint64_t mallocSizeLimit = 100U;
+        uint64_t mallocSizeLimit = 200U;
         Runtime::Config config(port, mallocSizeLimit);
         resourceManager = std::make_unique<ResourceManager>(config);
     }
@@ -128,7 +128,7 @@ TEST_F(ResourceManagerTest, should_not_malloc_when_key_already_exists)
 TEST_F(ResourceManagerTest, should_not_malloc_when_malloc_size_limit_exceeded)
 {
     int32_t clientId = 1;
-    uint64_t memorySize = 200U;
+    uint64_t memorySize = 300U;
     tuple<int32_t, ErrorType> applyMemoryRes = resourceManager->HandleApplyMemory(clientId, TEST_OBJECT_KEY,
                                                                                   memorySize);
     EXPECT_EQ(-1, get<0>(applyMemoryRes));
@@ -497,6 +497,54 @@ TEST_F(ResourceManagerTest, should_process_pending_release_memory_when_memory_pe
     // 成功处理待释放内存
     EXPECT_TRUE(resourceManager->ProcessPendingReleaseMemory(memoryId));
     EXPECT_EQ(-1, resourceManager->GetMemoryId(TEST_OBJECT_KEY));
+}
+
+TEST_F(ResourceManagerTest, should_return_permissions_held_before_client_releases_permission)
+{
+    // 分配内存
+    std::string objectKey1 = "key1";
+    int32_t memoryId1 = AllocateMemory(objectKey1);
+    // 申请读权限
+    int32_t permissionApplicantId = 2;
+    resourceManager->HandleApplyPermission({permissionApplicantId, PermissionType::Read, memoryId1, false,
+                                            make_shared<UserData>()});
+    // 分配新内存
+    std::string objectKey2 = "key2";
+    int32_t memoryId2 = AllocateMemory(objectKey2);
+    // 对新内存申请写权限
+    resourceManager->HandleApplyPermission({permissionApplicantId, PermissionType::Write, memoryId2, false,
+                                            make_shared<UserData>()});
+
+    vector<PermissionHeld> permissionsHeld = resourceManager->GetPermissionsHeld(permissionApplicantId);
+    int32_t expectedCount = 2;
+    EXPECT_EQ(expectedCount, permissionsHeld.size());
+    EXPECT_EQ(memoryId1, permissionsHeld[0].sharedMemoryId_);
+    EXPECT_EQ(PermissionType::Read, permissionsHeld[0].permissionType_);
+    EXPECT_EQ(memoryId2, permissionsHeld[1].sharedMemoryId_);
+    EXPECT_EQ(PermissionType::Write, permissionsHeld[1].permissionType_);
+}
+
+TEST_F(ResourceManagerTest, should_remove_client_from_waiting_permit_request_queue_when_connection_closed)
+{
+    // 分配内存
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
+    // 抢先申请写权限
+    int32_t firstApplicant = 2;
+    resourceManager->HandleApplyPermission({firstApplicant, PermissionType::Write, memoryId, false,
+                                            make_shared<UserData>()});
+    // 批量申请读权限
+    int32_t readStartId = 3;
+    int32_t readCount = 10;
+    CreateApplyPermissionBatch(PermissionType::Read, memoryId, readStartId, readCount);
+
+    EXPECT_EQ(readCount, resourceManager->GetWaitingPermitRequests(memoryId).size());
+    EXPECT_EQ(1, resourceManager->GetWaitingPermitMemoryBlocks(readStartId).size());
+
+    // 将readStartId对应的客户端从权限等待队列中移除
+    resourceManager->RemoveClientFromWaitingQueue(readStartId);
+
+    EXPECT_EQ(readCount - 1, resourceManager->GetWaitingPermitRequests(memoryId).size());
+    EXPECT_TRUE(resourceManager->GetWaitingPermitMemoryBlocks(readStartId).empty());
 }
 
 class ApplyPermissionParamTest : public ResourceManagerTest,

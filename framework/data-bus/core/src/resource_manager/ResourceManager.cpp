@@ -229,6 +229,35 @@ bool ResourceManager::ProcessPendingReleaseMemory(int32_t sharedMemoryId)
     return ReleaseMemory(sharedMemoryId);
 }
 
+vector<PermissionHeld> ResourceManager::GetPermissionsHeld(int32_t socketFd)
+{
+    vector<PermissionHeld> permissionsHeld;
+    for (int32_t sharedMemoryId : readingMemoryBlocks_[socketFd]) {
+        permissionsHeld.emplace_back(sharedMemoryId, PermissionType::Read);
+    }
+    for (int32_t sharedMemoryId : writingMemoryBlocks_[socketFd]) {
+        permissionsHeld.emplace_back(sharedMemoryId, PermissionType::Write);
+    }
+    return permissionsHeld;
+}
+
+void ResourceManager::RemoveClientFromWaitingQueue(int32_t socketFd)
+{
+    for (int32_t sharedMemoryId : waitingPermitMemoryBlocks_[socketFd]) {
+        if (waitingPermitRequestQueues_.find(sharedMemoryId) == waitingPermitRequestQueues_.end()) {
+            logger.Error("[ResourceManager] SharedMemoryId {} is not found in the waitingPermitRequestQueues");
+            continue;
+        }
+        auto& requestQueue = waitingPermitRequestQueues_[sharedMemoryId];
+        // 将指定客户端的权限申请请求从等待队列中移除
+        auto matchFn = [socketFd](const WaitingPermitRequest& request) {
+            return request.applicant_ == socketFd;
+        };
+        requestQueue.erase(std::remove_if(requestQueue.begin(), requestQueue.end(), matchFn), requestQueue.end());
+    }
+    waitingPermitMemoryBlocks_.erase(socketFd);
+}
+
 void ResourceManager::MarkPendingRelease(int32_t sharedMemoryId)
 {
     sharedMemoryIdToInfo_[sharedMemoryId]->pendingRelease_ = true;
