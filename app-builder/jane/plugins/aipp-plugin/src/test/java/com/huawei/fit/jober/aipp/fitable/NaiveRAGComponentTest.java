@@ -5,16 +5,14 @@
 package com.huawei.fit.jober.aipp.fitable;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.jade.NaiveRAGService;
 import com.huawei.fit.jober.aipp.TestUtils;
-import com.huawei.fit.jober.aipp.common.exception.AippException;
-import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.common.Utils;
+import com.huawei.jade.app.engine.knowledge.service.KnowledgeBaseService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -48,13 +46,13 @@ public class NaiveRAGComponentTest {
     private static final Integer DUMMY_MAXIMUM = 3;
 
     @Mock
-    private NaiveRAGService naiveRAGServiceMock;
+    private KnowledgeBaseService knowledgeBaseServiceMock;
 
     private NaiveRAGComponent naiveRAGComponent;
 
     @BeforeEach
     void setUp() {
-        this.naiveRAGComponent = new NaiveRAGComponent(naiveRAGServiceMock);
+        this.naiveRAGComponent = new NaiveRAGComponent(knowledgeBaseServiceMock);
     }
 
     private Map<String, Object> genBusinessData() {
@@ -73,7 +71,7 @@ public class NaiveRAGComponentTest {
         }};
         businessData.put("output", exceptResult);
         this.naiveRAGComponent.handleTask(flowData);
-        verify(this.naiveRAGServiceMock, never()).process(any(), any(), any());
+        verify(this.knowledgeBaseServiceMock, never()).vectorSearchKnowledgeTable(any());
         Assertions.assertEquals(businessData.get("output"), exceptResult);
     }
 
@@ -88,7 +86,7 @@ public class NaiveRAGComponentTest {
         }};
         businessData.put("output", exceptResult);
         this.naiveRAGComponent.handleTask(flowData);
-        verify(this.naiveRAGServiceMock, never()).process(any(), any(), any());
+        verify(this.knowledgeBaseServiceMock, never()).vectorSearchKnowledgeTable(any());
         Assertions.assertEquals(businessData.get("output"), exceptResult);
     }
 
@@ -96,46 +94,33 @@ public class NaiveRAGComponentTest {
     void shouldOkWhenUseKnowledge() {
         Map<String, Object> businessData = genBusinessData();
         List<Map<String, Object>> knowldegeList = this.getDummyKnowledgeList();
-        List<String> collectionNameList = this.getDummyCollectionNameList();
         businessData.put(NAIVE_RAG_KNOWLEDGE_KEY, knowldegeList);
         String exceptNaiveRAGOutput = "This is naiveRAG result.";
         Map<String, Object> exceptResult = new HashMap<String, Object>() {{
             put("retrievalOutput", exceptNaiveRAGOutput);
         }};
-        when(this.naiveRAGServiceMock.process(eq(DUMMY_MAXIMUM), eq(collectionNameList), eq(DUMMY_QUERY)))
-                .thenReturn(exceptNaiveRAGOutput);
+        when(this.knowledgeBaseServiceMock.vectorSearchKnowledgeTable(any()))
+                .thenReturn(Arrays.asList(exceptNaiveRAGOutput));
         List<Map<String, Object>> flowData = TestUtils.buildFlowDataWithExtraConfig(businessData, null);
-        this.naiveRAGComponent.handleTask(flowData);
-        verify(this.naiveRAGServiceMock, times(1)).process(DUMMY_MAXIMUM, collectionNameList, DUMMY_QUERY);
-        Assertions.assertEquals(businessData.get("output"), exceptResult);
-    }
-
-    @Test
-    void shouldThrowWhenConnectNaiveRAGServiceFailed() {
-        Map<String, Object> businessData = genBusinessData();
-        List<Map<String, Object>> knowldegeList = this.getDummyKnowledgeList();
-        businessData.put(NAIVE_RAG_KNOWLEDGE_KEY, knowldegeList);
-        businessData.put(AippConst.BS_HTTP_CONTEXT_KEY, "");
-        List<String> collectionNameList = this.getDummyCollectionNameList();
-        when(this.naiveRAGServiceMock.process(eq(DUMMY_MAXIMUM), eq(collectionNameList), eq(DUMMY_QUERY)))
-                .thenReturn(null);
-        List<Map<String, Object>> flowData = TestUtils.buildFlowDataWithExtraConfig(businessData, null);
-        Assertions.assertThrows(AippException.class, () -> this.naiveRAGComponent.handleTask(flowData));
+        List<Map<String, Object>> resultFlowData = this.naiveRAGComponent.handleTask(flowData);
+        Map<String, Object> resultBusinessData = Utils.getBusiness(resultFlowData);
+        verify(this.knowledgeBaseServiceMock, times(1)).vectorSearchKnowledgeTable(any());
+        Assertions.assertEquals(resultBusinessData.get("output"), exceptResult);
     }
 
     @NotNull
-    private List<String> getDummyCollectionNameList() {
-        return new ArrayList<>(Arrays.asList("KnowledgeBase_1", "KnowledgeBase_2"));
+    private List<Long> getDummyTableIdList() {
+        return new ArrayList<>(Arrays.asList(2L));
     }
 
     @NotNull
     private List<Map<String, Object>> getDummyKnowledgeList() {
         return new ArrayList<>(Arrays.asList(new HashMap<String, Object>() {{
-            put("id", 1);
-            put("name", "knowledge1");
+            put("tableId", "1");
+            put("serviceType", "RDB");
         }}, new HashMap<String, Object>() {{
-            put("id", 2);
-            put("name", "knowledge2");
+            put("tableId", "2");
+            put("serviceType", "VECTOR");
         }}));
     }
 }
