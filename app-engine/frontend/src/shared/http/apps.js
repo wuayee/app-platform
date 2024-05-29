@@ -116,6 +116,18 @@ export function deleteDataSetData(id) {
   return del(url);
 }
 
+// 查询评估算法列表
+export function getAlgorithmsList() {
+  const url = `${appurl}/evalTask/evalAlgorithmList`;
+  return get(url);
+}
+
+// 创建评估任务
+export function createAssessmentTasks(data) {
+  const url =`${appurl}/evalTask`;
+  return post(url, data);
+}
+
 // 下载模板链接
 export const downTemplateUrl = `${appurl}/eval_dataset_template.xlsx`;
 
