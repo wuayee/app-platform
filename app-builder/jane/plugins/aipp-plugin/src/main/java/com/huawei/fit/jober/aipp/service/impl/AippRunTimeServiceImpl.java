@@ -33,6 +33,7 @@ import com.huawei.fit.jober.aipp.condition.PaginationCondition;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.AippInstanceCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
+import com.huawei.fit.jober.aipp.dto.MemoryConfigDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
@@ -49,6 +50,7 @@ import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
+import com.huawei.fit.jober.aipp.service.AippStreamService;
 import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.entity.FlowInfo;
@@ -116,13 +118,15 @@ public class AippRunTimeServiceImpl
     private final AppBuilderFormPropertyRepository formPropertyRepository;
     private final FlowsService flowsService;
     private final String sharedUrl;
+    private final AippStreamService aippStreamService;
 
     public AippRunTimeServiceImpl(@Fit MetaService metaService, @Fit DynamicFormService dynamicFormService,
             @Fit MetaInstanceService metaInstanceService, @Fit FlowInstanceService flowInstanceService,
             @Fit AippLogService aippLogService, @Fit UploadedFileManageService uploadedFileManageService,
             @Value("${xiaohai.upload_chat_history_url}") String uploadChatHistoryUrl, BrokerClient client,
             @Fit AppBuilderFormRepository formRepository, @Fit AppBuilderFormPropertyRepository formPropertyRepository,
-            @Fit FlowsService flowsService, @Value("${xiaohai.share_url}") String sharedUrl) {
+            @Fit FlowsService flowsService, @Value("${xiaohai.share_url}") String sharedUrl,
+            @Fit AippStreamService aippStreamService) {
         this.metaService = metaService;
         this.dynamicFormService = dynamicFormService;
         this.metaInstanceService = metaInstanceService;
@@ -135,6 +139,7 @@ public class AippRunTimeServiceImpl
         this.formPropertyRepository = formPropertyRepository;
         this.flowsService = flowsService;
         this.sharedUrl = sharedUrl;
+        this.aippStreamService = aippStreamService;
     }
 
     private static void setExtraBusinessData(OperationContext context, Map<String, Object> businessData, Meta meta,
@@ -209,6 +214,16 @@ public class AippRunTimeServiceImpl
         return createInstanceHandle(initContext, context, meta);
     }
 
+    @Override
+    public String startFlowWithUserSelectMemory(String appId, String version, String metaInstId,
+            Map<String, Object> initContext, OperationContext context) {
+        Meta meta = MetaUtils.getAnyMeta(this.metaService, appId, version, context);
+        Map<String, Object> businessData = (Map<String, Object>) initContext.get(AippConst.BS_INIT_CONTEXT_KEY);
+        String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
+        this.startFlow(meta.getVersionId(), flowDefinitionId, metaInstId, businessData, context);
+        return metaInstId;
+    }
+
     /**
      * 启动一个最新版本的Aipp
      *
@@ -236,18 +251,78 @@ public class AippRunTimeServiceImpl
         String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
 
         // 创建meta实例
-        Instance metaInst = metaInstanceService.createMetaInstance(meta.getVersionId(),
+        String metaVersionId = meta.getVersionId();
+        Instance metaInst = this.metaInstanceService.createMetaInstance(metaVersionId,
                 genMetaInstInitialInfo(businessData, context.getOperator()),
                 context);
-        setExtraBusinessData(context, businessData, meta, metaInst.getId());
+        String metaInstId = metaInst.getId();
+        setExtraBusinessData(context, businessData, meta, metaInstId);
+
+        // 持久化日志
+        this.persistAippLog(businessData);
+
+        // 添加文件记录标记, 使用aippId
+        uploadedFileManageService.addFileRecord(meta.getId(),
+                context.getW3Account(),
+                Paths.get(Utils.NAS_SHARE_DIR, metaInstId).toAbsolutePath().toString());
+
+        // 持久化aipp实例表单记录
+        String formId = (String) meta.getAttributes().get(AippConst.ATTR_START_FORM_ID_KEY);
+        String formVersion = (String) meta.getAttributes().get(AippConst.ATTR_START_FORM_VERSION_KEY);
+        if (StringUtils.isNotEmpty(formId) && StringUtils.isNotEmpty(formVersion)) {
+            AippLogData logData =
+                    Utils.buildLogDataWithFormData(this.formRepository, formId, formVersion, businessData);
+            Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
+        }
 
         // 添加memory
-        businessData.put(AippConst.BS_AIPP_MEMORY_KEY,
-                this.getMemories(meta.getId(), flowDefinitionId, meta.getVersionId(), aippType, businessData, context));
+        List<Map<String, Object>> memoryConfigs = this.getMemoryConfigs(flowDefinitionId, context);
+        String memoryType = this.getMemoryType(memoryConfigs);
+        if (!StringUtils.equalsIgnoreCase("UserSelect", memoryType)) {
+            businessData.put(AippConst.BS_AIPP_MEMORIES_KEY,
+                    this.getMemories(meta.getId(), memoryType, memoryConfigs, aippType, context));
+            this.startFlow(metaVersionId, flowDefinitionId, metaInstId, businessData, context);
+        } else {
+            this.aippStreamService.send(metaInstId, this.buildMemoryConfigDto(initContext, metaInstId, "UserSelect"));
+        }
+        return metaInstId;
+    }
 
+    private String getMemoryType(List<Map<String, Object>> memoryConfigs) {
+        if (memoryConfigs == null || memoryConfigs.isEmpty()) {
+            return StringUtils.EMPTY;
+        }
+        Map<String, Object> typeConfig = memoryConfigs.stream()
+                .filter(config -> StringUtils.equals((String) config.get("name"), "type"))
+                .findFirst()
+                .orElseThrow(() -> new AippException(AippErrCode.PARSE_MEMORY_CONFIG_FAILED));
+        return ObjectUtils.cast(typeConfig.get("value"));
+    }
+
+    private List<Map<String, Object>> getMemoryConfigs(String flowDefinitionId, OperationContext context) {
+        FlowInfo flowInfo = this.flowsService.getFlows(flowDefinitionId, context);
+        return flowInfo.getInputParamsByName(AippConst.MEMORY_CONFIG_KEY);
+    }
+
+    private MemoryConfigDto buildMemoryConfigDto(Map<String, Object> initContext, String instanceId, String memory) {
+        return MemoryConfigDto.builder().initContext(initContext).instanceId(instanceId).memory(memory).build();
+    }
+
+    private void startFlow(String metaVersionId, String flowDefinitionId, String metaInstId,
+            Map<String, Object> businessData, OperationContext context) {
+        FlowStartParameter parameter = new FlowStartParameter(context.getOperator(), businessData);
+        FlowInstanceResult flowInst = flowInstanceService.startFlow(flowDefinitionId, parameter, context);
+
+        InstanceDeclarationInfo info = InstanceDeclarationInfo.custom()
+                .putInfo(AippConst.INST_FLOW_INST_ID_KEY, flowInst.getTraceId())
+                .build();
+        // 记录流程实例id到meta实例
+        this.metaInstanceService.patchMetaInstance(metaVersionId, metaInstId, info, context);
+    }
+
+    private void persistAippLog(Map<String, Object> businessData) {
         String question = (String) businessData.get(AippConst.BS_AIPP_QUESTION_KEY);
         String fileDesc = (String) businessData.get(AippConst.BS_AIPP_FILE_DESC_KEY);
-        // 持久化日志
         if (StringUtils.isEmpty(fileDesc)) {
             if (this.isChildInstance(businessData)) {
                 // 如果是子流程，插入 hidden_question
@@ -273,32 +348,6 @@ public class AippRunTimeServiceImpl
                     AippLogData.builder().msg(fileDesc).build(),
                     businessData);
         }
-
-        // 添加文件记录标记, 使用aippId
-        uploadedFileManageService.addFileRecord(meta.getId(),
-                context.getW3Account(),
-                Paths.get(Utils.NAS_SHARE_DIR, metaInst.getId()).toAbsolutePath().toString());
-
-        // 持久化aipp实例表单记录
-        String formId = (String) meta.getAttributes().get(AippConst.ATTR_START_FORM_ID_KEY);
-        String formVersion = (String) meta.getAttributes().get(AippConst.ATTR_START_FORM_VERSION_KEY);
-        if (StringUtils.isNotEmpty(formId) && StringUtils.isNotEmpty(formVersion)) {
-            AippLogData logData =
-                    Utils.buildLogDataWithFormData(this.formRepository, formId, formVersion, businessData);
-            Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
-        }
-
-        // 启动流程
-        FlowStartParameter parameter = new FlowStartParameter(context.getOperator(), businessData);
-        FlowInstanceResult flowInst = flowInstanceService.startFlow(flowDefinitionId, parameter, context);
-
-        InstanceDeclarationInfo info = InstanceDeclarationInfo.custom()
-                .putInfo(AippConst.INST_FLOW_INST_ID_KEY, flowInst.getTraceId())
-                .build();
-        // 记录流程实例id到meta实例
-        metaInstanceService.patchMetaInstance(meta.getVersionId(), metaInst.getId(), info, context);
-
-        return metaInst.getId();
     }
 
     private boolean isChildInstance(Map<String, Object> businessData) {
@@ -321,28 +370,16 @@ public class AippRunTimeServiceImpl
         return true;
     }
 
-    private List<Map<String, Object>> getMemories(String aippId, String flowDefinitionId, String version,
-            String aippType, Map<String, Object> businessData, OperationContext context) {
-        FlowInfo flowInfo = flowsService.getFlows(flowDefinitionId, context);
-        List<Map<String, Object>> memoryConfig = flowInfo.getInputParamsByName("memory");
-
-        if (memoryConfig == null || memoryConfig.isEmpty()) {
-            return getConversationTurns(aippId, aippType, 5, context);
+    private List<Map<String, Object>> getMemories(String aippId, String memoryType,
+            List<Map<String, Object>> memoryConfigs, String aippType, OperationContext context) {
+        if (memoryConfigs == null || memoryConfigs.isEmpty()) {
+            return this.getConversationTurns(aippId, aippType, 5, context);
         }
-
-        Map<String, Object> typeConfig = memoryConfig.stream()
-                .filter(config -> StringUtils.equals((String) config.get("name"), "type"))
-                .findFirst()
-                .orElseThrow(() -> new AippException(AippErrCode.PARSE_MEMORY_CONFIG_FAILED));
-        Map<String, Object> valueConfig = memoryConfig.stream()
+        Map<String, Object> valueConfig = memoryConfigs.stream()
                 .filter(config -> StringUtils.equals((String) config.get("name"), "value"))
                 .findFirst()
                 .orElseThrow(() -> new AippException(AippErrCode.PARSE_MEMORY_CONFIG_FAILED));
-
-        String memoryType = (String) typeConfig.get("value");
         switch (memoryType) {
-            case "UserSelect":
-                return (List<Map<String, Object>>) businessData.get(AippConst.INST_CHAT_HISTORY_KEY);
             case "ByConversationTurn":
                 Integer turnNum = Integer.parseInt((String) valueConfig.get("value"));
                 return getConversationTurns(aippId, aippType, turnNum, context);

@@ -175,7 +175,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         // todo: 待add多模态，期望使用image的url，当前传入的历史记录里面没有image
         agentFlow.converse()
                 .bind((acc, chunk) -> this.sendLog(chunk, path, msgId, instId))
-                .bind(new AippMemory(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_MEMORY_KEY))))
+                .bind(new AippMemory(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_MEMORIES_KEY))))
                 .bind(ToolContext.from(AippConst.TRACE_ID, llmMeta.getInstId()).add(AippConst.CALLBACK_ID, CALLBACK_ID))
                 .doOnSuccess(msg -> llmOutputConsumer(llmMeta, msg))
                 .doOnError(throwable -> doOnAgentError(llmMeta, throwable.getMessage()))

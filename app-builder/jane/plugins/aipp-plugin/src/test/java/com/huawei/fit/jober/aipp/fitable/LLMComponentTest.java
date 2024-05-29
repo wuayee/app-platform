@@ -84,7 +84,7 @@ public class LLMComponentTest {
             put("input", "good");
         }});
         businessData.put("prompt", prompt);
-        businessData.put(AippConst.BS_AIPP_MEMORY_KEY, Collections.singletonList(new HashMap<String, String>() {{
+        businessData.put(AippConst.BS_AIPP_MEMORIES_KEY, Collections.singletonList(new HashMap<String, String>() {{
             put("question", "q1");
             put("answer", "a1");
         }}));
