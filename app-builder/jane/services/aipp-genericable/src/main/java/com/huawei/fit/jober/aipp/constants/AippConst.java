@@ -526,6 +526,16 @@ public class AippConst {
      */
     public static final String OUTPUT_IS_FROM_CHILD = "outputIsFromChild";
 
+    /**
+     * 标识是否是评估模块调用接口
+     */
+    public static final String IS_EVAL_INVOCATION = "_isEvalInvocation";
+
+    /**
+     * 记录实例启动时间
+     */
+    public static final String INSTANCE_START_TIME = "_instanceStartTime";
+
     // *** aipp initial static meta items ***
     /**
      * aipp initial static meta items

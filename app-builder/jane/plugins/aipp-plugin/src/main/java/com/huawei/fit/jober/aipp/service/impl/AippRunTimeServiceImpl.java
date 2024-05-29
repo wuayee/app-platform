@@ -231,6 +231,9 @@ public class AippRunTimeServiceImpl
 
     private String createInstanceHandle(Map<String, Object> initContext, OperationContext context, Meta meta) {
         Map<String, Object> businessData = (Map<String, Object>) initContext.get(AippConst.BS_INIT_CONTEXT_KEY);
+        // 记录启动时间
+        businessData.put(AippConst.INSTANCE_START_TIME, LocalDateTime.now());
+
         String aippType = ObjectUtils.cast(meta.getAttributes()
                 .getOrDefault(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.NORMAL.name()));
         String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
