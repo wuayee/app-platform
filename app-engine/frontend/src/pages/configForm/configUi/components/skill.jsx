@@ -25,7 +25,7 @@ const Skill = (props) => {
   }
 
   const onAddFlowClick = () => {
-    navigate(`/app/${tenantId}/addFlow/${appId}`);
+    navigate(`/app-develop/${tenantId}/app-detail/add-flow/${appId}`);
   };
 
   const onAddToolClick = () => {
@@ -71,7 +71,7 @@ const Skill = (props) => {
 
   const handleCheck = (option, event) => {
     event.stopPropagation();
-    navigate(`/app/${option.data.tenantId}/flowDetail/${option.data.appId}`);
+    navigate(`/app-develop/${option.data.tenantId}/app-detail/flow-detail/${option.data.appId}`);
   }
 
   return (

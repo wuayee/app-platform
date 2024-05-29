@@ -573,16 +573,10 @@ const ChatPreview = (props) => {
   }
   // 设置推荐列表
   function setRecommend() {
-    let arr = aippInfo.config?.properties || [];
+    let arr = aippInfo.config?.form?.properties || [];
     let recommendItem = arr.filter(item => item.name === 'recommend')[0];
     if (recommendItem) {
       setRecommendList(recommendItem.defaultValue);
-    } else {
-      setRecommendList([
-        "如何构建知识库",
-        "我想创建一个应用",
-        "推荐几个常用的应用机器人"
-      ])
     }
   }
   // 获取推荐列表

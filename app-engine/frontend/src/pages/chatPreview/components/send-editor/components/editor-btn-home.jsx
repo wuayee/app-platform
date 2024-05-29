@@ -82,7 +82,7 @@ const EditorBtnHome = (props) => {
   // 开始聊天
   const chatClick = (item) => {
     console.log(item);
-    navigate(`/app/${tenantId}/chat/28be0a14e1504e218917f31db1396122`)
+    navigate(`/app-develop/${tenantId}/chat/28be0a14e1504e218917f31db1396122`)
     setOpenStar(false);
   }
   // 多模态上传文件

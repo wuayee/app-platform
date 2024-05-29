@@ -42,7 +42,7 @@ const PublishModal = (props) => {
       if (res.code === 0) {
         Message({ type: 'success', content: `发布工具流成功` });
         sessionStorage.setItem('uniqueName', res.data.tool_unique_name);
-        navigate(`/app-develop/${tenantId}/detail/${appId}`);
+        navigate(`/app-develop/${tenantId}/app-detail/${appId}`);
       }
     } finally {
       setLoading(false)

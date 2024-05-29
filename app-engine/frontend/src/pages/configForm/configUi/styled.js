@@ -2,11 +2,11 @@ import styled from 'styled-components';
 
 export const ConfigWrap = styled.div`
     width: 100%;
+    height: calc(100% - 50px);
+    overflow: auto;
     font-size: 12px;
-    margin-bottom: 20px;
-    border-radius: 8px;
     .ant-form-item-control {
-        width: 100%;
+      width: 100%;
     }
     .ant-collapse .ant-collapse-item .ant-collapse-header {
       padding-left: 0;
@@ -81,7 +81,18 @@ export const ConfigWrap = styled.div`
         padding: 0 10px 0 5px;
       }
     }
-
+    .control-inner {
+      .item {
+        display: flex;
+        height: 40px;
+        align-items: center;
+        padding: 0 16px;
+        border-radius: 4px;
+        border: 1px solid rgb(230, 230, 230);
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+    }
     .plus-icon {
       position:relative;
       margin-top:2px;
