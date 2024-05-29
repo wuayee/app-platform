@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 向量化知识内容检索参数类
+ * 混合检索类，根据表具体类型执行标量/向量检索
  *
  * @since 2024-05-21
  */
