@@ -239,6 +239,11 @@ public final class Constant {
     public static final String INTERNAL_OUTPUT_SCOPE_KEY = "outputScope";
 
     /**
+     * 不同节点输入输出数据的缓存区
+     */
+    public static final String INTERNAL_EXECUTE_INFO_KEY = "executeInfo";
+
+    /**
      * 提取用户输出数据需要忽略的key
      */
     public static final Set<String> BUSINESS_DATA_IGNORED_KEYS = new HashSet<>(

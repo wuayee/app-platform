@@ -3,7 +3,8 @@ import "./style.css";
 import {Button} from "antd";
 import {DIRECTION} from "@fit-elsa/elsa-core";
 import EndIcon from '../asserts/icon-end.svg?react';
-import {EndNodeHeader} from "@/components/end/EndNodeHeader.jsx"; // 导入背景图片
+import {EndNodeHeader} from "@/components/end/EndNodeHeader.jsx";
+import {NODE_STATUS, SECTION_TYPE} from "@/common/Consts.js";
 
 /**
  * 结束节点shape
@@ -123,6 +124,18 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
                 <EndIcon/>
             </Button>
         </>);
+    };
+
+    /**
+     * 结束节点的测试报告章节
+     */
+    self.getRunReportSections = () => {
+        return [{
+            no: "1",
+            name: "输出",
+            type: SECTION_TYPE.DEFAULT,
+            data: self.getOutputData(self.input)
+        }];
     };
 
     /**

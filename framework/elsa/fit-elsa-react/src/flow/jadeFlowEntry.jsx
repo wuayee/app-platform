@@ -1,4 +1,5 @@
 import {jadeFlowGraph} from "./jadeFlowGraph.js";
+import {NODE_STATUS} from "@/common/Consts.js";
 
 /**
  * react流程代码，对外暴露接口，以便对流程进行操作以及获取数据.
@@ -35,6 +36,50 @@ const jadeFlowAgent = (graph) => {
     self.serialize = () => {
         graph.activePage.serialize();
         return graph.serialize();
+    };
+
+    /**
+     * 获取流程试运行入参元数据
+     */
+    self.getFlowRunInputMetaData = () => {
+        return graph.activePage.shapes.find(s => s.type === "startNodeStart").getRunInputParams();
+    };
+
+    /**
+     * 设置流程运行的数据，用于前端数据展示
+     *
+     * @param dataList 数据列表
+     */
+    self.setFlowRunData = dataList => {
+        const nodeIds = dataList.map(d => d.nodeId);
+        graph.activePage.shapes.filter(s => s.isTypeof("jadeNode")).forEach(s => {
+            const data = dataList.find(d => d.nodeId === s.id);
+            if (data) {
+                s.setRunStatus(data.status === "ERROR" ? NODE_STATUS.ERROR : NODE_STATUS.SUCCESS);
+                s.setRunReportSections(data);
+            } else {
+                // todo 直接前继节点中，如果包括了条件节点或者有失败的节点，状态就不能是running
+                const preNodes = s.getDirectPreNodeIds();
+                if (preNodes.some(s => s.type === "conditionNodeCondition" || s.runStatus === NODE_STATUS.ERROR)) {
+                    return;
+                }
+                if (preNodes.every(preNode => nodeIds.includes(preNode))) {
+                    s.setRunStatus(NODE_STATUS.RUNNING);
+                }
+            }
+        });
+    };
+
+    /**
+     * 重置所有节点状态节点数据
+     */
+    self.resetStatus = () => {
+        graph.activePage.shapes.filter(s => s.isTypeof("jadeNode")).forEach(s => {
+            s.setRunStatus(NODE_STATUS.DEFAULT);
+            delete s.output;
+            delete s.input;
+            delete s.cost;
+        });
     };
 
     /**

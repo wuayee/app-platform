@@ -9,13 +9,18 @@ import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.FlowDefinition;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowNode;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.callbacks.FlowCallback;
+import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowCallbackType;
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowDefinitionStatus;
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeType;
 import com.huawei.fit.jober.flowsengine.domain.flows.parsers.nodes.NodeParser;
+import com.huawei.fit.jober.flowsengine.domain.flows.parsers.nodes.callbacks.CallbackParser;
 import com.huawei.fit.jober.flowsengine.domain.flows.parsers.nodes.events.EventParser;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.inspection.Validation;
+
+import com.alibaba.fastjson.JSONObject;
 
 import lombok.RequiredArgsConstructor;
 
@@ -51,6 +56,8 @@ public class FlowParser implements Parser {
                 .status(FlowDefinitionStatus.getFlowDefinitionStatus(flowGraphData.getFlowStatus()))
                 .description(flowGraphData.getFlowDescription())
                 .properties(flowGraphData.getFlowProperties())
+                .callback(this.parseFlowCallback(flowGraphData).orElse(null))
+                .exceptionFitables(flowGraphData.getFlowExceptionFitables())
                 .nodeMap(allNodeMap)
                 .build();
     }
@@ -63,6 +70,7 @@ public class FlowParser implements Parser {
             Validation.notNull(nodeParser,
                     () -> new JobberParamException(INPUT_PARAM_IS_INVALID, "flow node type " + nodeType.getCode()));
             FlowNode flowNode = nodeParser.parseNode(flowGraphData, nodeIndex);
+            flowNode.setBrokerClient(brokerClient);
             if (Optional.ofNullable(flowNode.getJober()).isPresent()) {
                 flowNode.getJober().setBrokerClient(brokerClient);
             }
@@ -75,5 +83,24 @@ public class FlowParser implements Parser {
             allNodeMap.put(flowNode.getMetaId(), flowNode);
         });
         return allNodeMap;
+    }
+
+    private Optional<FlowCallback> parseFlowCallback(FlowGraphData flowGraphData) {
+        JSONObject flowCallback = flowGraphData.getFlowCallback();
+        if (flowCallback == null) {
+            return Optional.empty();
+        }
+
+        Optional<String> flowCallbackTypeOption = flowGraphData.getFlowCallbackType();
+        if (!flowCallbackTypeOption.isPresent()) {
+            return Optional.empty();
+        }
+        FlowCallbackType callbackType = FlowCallbackType.getCallbackType(flowCallbackTypeOption.get());
+        CallbackParser callbackParser = callbackType.getCallbackParser();
+        Validation.notNull(callbackParser,
+                () -> new JobberParamException(INPUT_PARAM_IS_INVALID, "flow callback type " + callbackType.getCode()));
+        FlowCallback result = callbackParser.parseCallback(flowGraphData);
+        result.setBrokerClient(this.brokerClient);
+        return Optional.of(result);
     }
 }

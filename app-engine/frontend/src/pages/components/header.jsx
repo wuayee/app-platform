@@ -4,9 +4,12 @@ import { Message } from "../../shared/utils/message";
 import PublishModal from './publish-modal.jsx';
 import EditModal from './edit-modal.jsx';
 import robot from '../../assets/images/ai/robot1.png';
+import TestStatus from "./test-status";
 
 const Head = (props) => {
-  const { showElsa, aippInfo, updateAippCallBack, mashupClick, status, chatRunning } = props;
+  const { showElsa, aippInfo, updateAippCallBack,
+    mashupClick, status, chatRunning, openDebug,
+    isTested, isTesting, testTime, testStatus } = props;
   let modalRef = React.createRef();
   let editRef = React.createRef();
   // 编辑名称
@@ -25,6 +28,10 @@ const Head = (props) => {
     }
     showElsa && mashupClick();
   }
+  // 打开调试抽屉
+  const handleOpenDebug = () => {
+    openDebug();
+  }
 
   return <>{(
     <div className="header">
@@ -32,11 +39,14 @@ const Head = (props) => {
         { showElsa && <LeftArrowIcon className="back-icon" onClick={backClick}/> }
         { aippInfo?.attributes?.icon ? <img src={aippInfo.attributes.icon} onClick={backClick} /> : <img src={robot} onClick={backClick}/> }
         <span className="header-text">{ aippInfo?.name }</span>
-        { !status && <EditIcon onClick={ handleEditClick } /> }
-        { !status ? <span style={{ paddingLeft: '16px' }}>未发布</span> : <span style={{ paddingLeft: '16px' }}>已发布</span>}
+        {
+          !status && <EditIcon onClick={ handleEditClick } />
+        }
+        {showElsa && <TestStatus isTested={isTested} isTesting={isTesting} testTime={testTime} testStatus={testStatus}/>}
       </div>
-      <div className="header-user">
-        { aippInfo?.updateAt && <span style={{ paddingRight: '16px' }}>自动保存：{ aippInfo.updateAt }</span> }
+      <div className="header-grid">
+        {/*{ showElsa && <span className="header-btn last-run-btn" onClick={modalClick}>展示上一次运行</span> }*/}
+        { showElsa && <span className="header-btn test-btn" onClick={handleOpenDebug}>调试</span> }
         { !status && <span className="header-btn" onClick={modalClick}><UploadIcon />发布</span>  }
       </div>
       <PublishModal modalRef={modalRef} aippInfo={aippInfo} publishType="app" />

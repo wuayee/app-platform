@@ -115,3 +115,11 @@ export function getSharedDialog(tenantId, shareId) {
 export function getReportInstance(tenantId, instanceId, data) {
   return post(`${AIPP_URL}/${tenantId}/start/instances/${instanceId}`,data)
 }
+// 启动对话实例
+export function startInstance(tenantId, appId, params) {
+  return post(`${AIPP_URL}/${tenantId}/aipp/${appId}/start`, params);
+}
+// 调试轮询
+export function reTestInstance(tenantId, aippId, instanceId, version) {
+  return get(`${AIPP_URL}/${tenantId}/aipp/${aippId}/instances/${instanceId}/runtime?version=${version}`)
+}

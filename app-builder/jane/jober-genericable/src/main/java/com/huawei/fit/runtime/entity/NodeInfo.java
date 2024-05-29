@@ -31,6 +31,8 @@ public class NodeInfo {
 
     private String status;
 
+    private String errorMsg;
+
     /**
      * 获取参数列表.
      * 正常情况下只会有一个参数(一个input和一个output).
@@ -129,5 +131,13 @@ public class NodeInfo {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 }

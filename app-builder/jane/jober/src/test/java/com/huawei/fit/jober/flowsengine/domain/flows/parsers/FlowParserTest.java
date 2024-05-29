@@ -23,12 +23,14 @@ import com.huawei.fit.jober.FlowsDataBaseTest;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.FlowDefinition;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowConditionNode;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowNode;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.callbacks.FlowCallback;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.events.FlowEvent;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.filters.FlowFilter;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.jobers.FlowGenericableJober;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.jobers.FlowStoreJober;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
+import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowCallbackType;
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowDefinitionStatus;
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeType;
 import com.huawei.fit.jober.flowsengine.domain.flows.parsers.nodes.events.EventParser;
@@ -290,6 +292,24 @@ public class FlowParserTest extends FlowsDataBaseTest {
         Assertions.assertEquals("toolId", storeJober.getServiceMeta().getUniqueName());
         Assertions.assertEquals(1, storeJober.getServiceMeta().getParams().size());
         Assertions.assertEquals("name", storeJober.getServiceMeta().getParams().get(0));
+    }
+
+    @Test
+    @DisplayName("测试callback解析成功")
+    public void testFlowCallbackParserSuccess() {
+        String jsonData = getJsonData(getFilePath("flows_with_callback.json"));
+
+        FlowDefinition flowDefinition = flowParser.parse(jsonData);
+
+        FlowCallback callback = flowDefinition.getCallback();
+
+        Assertions.assertNull(callback.getNodeMetaId());
+        Assertions.assertEquals("通知回调", callback.getName());
+        Assertions.assertEquals(FlowCallbackType.GENERAL_CALLBACK, callback.getType());
+        Assertions.assertTrue(callback.getFilteredKeys().isEmpty());
+        Assertions.assertEquals(1, callback.getFitables().size());
+        Assertions.assertEquals("com.huawei.fit.jober.fitable.FlowInfoCallback", callback.getFitables().toArray()[0]);
+        Assertions.assertTrue(callback.getProperties().isEmpty());
     }
 
     @Override

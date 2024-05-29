@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter;
 
-import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
+import java.util.Map;
 
 /**
  * 节点间传递参数的转换器
@@ -14,19 +14,18 @@ import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
  */
 public interface FlowDataConverter {
     /**
-     * 根据输入生成调用节点服务的入参
+     * 根据输入生成调用节点服务的入参。
      *
-     * @param input 当前输入
-     * @return 调用节点服务的入参
+     * @param input 当前输入的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
+     * @return 转换后的参数的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
      */
-    FlowData convertInput(FlowData input);
+    Map<String, Object> convertInput(Map<String, Object> input);
 
     /**
-     * 根据输出配置将结果放到FlowData中
+     * 根据输出生产调用节点服务的出参。
      *
-     * @param result
-     * @param output
-     * @return
+     * @param result 节点输出的 {@link Object}。
+     * @return 根据节点输出生成的调用节点服务出参 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
      */
-    FlowData convertOutput(Object result, FlowData output);
+    Map<String, Object> convertOutput(Object result);
 }

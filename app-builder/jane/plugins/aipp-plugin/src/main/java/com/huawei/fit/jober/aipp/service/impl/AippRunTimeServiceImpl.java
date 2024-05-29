@@ -11,6 +11,7 @@ import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
 import com.huawei.fit.dynamicform.entity.FormMetaQueryParameter;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.enums.DirectionEnum;
+import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
@@ -31,8 +32,11 @@ import com.huawei.fit.jober.aipp.common.exception.AippNotFoundException;
 import com.huawei.fit.jober.aipp.condition.AippInstanceQueryCondition;
 import com.huawei.fit.jober.aipp.condition.PaginationCondition;
 import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.dto.AippCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippInstanceCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
+import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
+import com.huawei.fit.jober.aipp.dto.AppBuilderAppStartDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
@@ -61,6 +65,7 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.CollectionUtils;
@@ -68,6 +73,7 @@ import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -118,11 +124,16 @@ public class AippRunTimeServiceImpl
     private final String sharedUrl;
 
     public AippRunTimeServiceImpl(@Fit MetaService metaService, @Fit DynamicFormService dynamicFormService,
-            @Fit MetaInstanceService metaInstanceService, @Fit FlowInstanceService flowInstanceService,
-            @Fit AippLogService aippLogService, @Fit UploadedFileManageService uploadedFileManageService,
-            @Value("${xiaohai.upload_chat_history_url}") String uploadChatHistoryUrl, BrokerClient client,
-            @Fit AppBuilderFormRepository formRepository, @Fit AppBuilderFormPropertyRepository formPropertyRepository,
-            @Fit FlowsService flowsService, @Value("${xiaohai.share_url}") String sharedUrl) {
+                                  @Fit MetaInstanceService metaInstanceService,
+                                  @Fit FlowInstanceService flowInstanceService,
+                                  @Fit AippLogService aippLogService,
+                                  @Fit UploadedFileManageService uploadedFileManageService,
+                                  @Value("${xiaohai.upload_chat_history_url}") String uploadChatHistoryUrl,
+                                  BrokerClient client,
+                                  @Fit AppBuilderFormRepository formRepository,
+                                  @Fit AppBuilderFormPropertyRepository formPropertyRepository,
+                                  @Fit FlowsService flowsService,
+                                  @Value("${xiaohai.share_url}") String sharedUrl) {
         this.metaService = metaService;
         this.dynamicFormService = dynamicFormService;
         this.metaInstanceService = metaInstanceService;
@@ -219,7 +230,7 @@ public class AippRunTimeServiceImpl
      */
     @Override
     public AippInstanceCreateDto createAippInstanceLatest(String aippId, Map<String, Object> initContext,
-            OperationContext context) {
+                                                          OperationContext context) {
         Meta meta = MetaUtils.getLastPublishedMeta(metaService, aippId, context);
         String instId = createInstanceHandle(initContext, context, meta);
         return AippInstanceCreateDto.builder()
@@ -231,6 +242,10 @@ public class AippRunTimeServiceImpl
 
     private String createInstanceHandle(Map<String, Object> initContext, OperationContext context, Meta meta) {
         Map<String, Object> businessData = (Map<String, Object>) initContext.get(AippConst.BS_INIT_CONTEXT_KEY);
+        businessData.put("startNodeInputParams",
+                JSONObject.parse(JSONObject.toJSONString(initContext.get(AippConst.BS_INIT_CONTEXT_KEY))));
+        // 记录启动时间
+        businessData.put(AippConst.INSTANCE_START_TIME, LocalDateTime.now());
         String aippType = ObjectUtils.cast(meta.getAttributes()
                 .getOrDefault(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.NORMAL.name()));
         String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
@@ -446,7 +461,7 @@ public class AippRunTimeServiceImpl
     }
 
     private AippInstanceDto InstanceToAippInstanceDto(Instance instance, List<AippInstLog> instanceLogs,
-            OperationContext context) {
+                                                      OperationContext context) {
         Map<String, String> info = instance.getInfo();
         DynamicFormDetailEntity entity = Utils.queryFormDetailByPrimaryKey(info.get(AippConst.INST_CURR_FORM_ID_KEY),
                 info.get(AippConst.INST_CURR_FORM_VERSION_KEY),
@@ -881,5 +896,26 @@ public class AippRunTimeServiceImpl
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public AppBuilderAppStartDto startInstance(AppBuilderAppDto appDto, Map<String, Object> initContext,
+                                               OperationContext context) {
+        Rsp<AippCreateDto> aippCreateDtoRsp;
+        final String genericableId = "a389e19779fcc245b7a6135a46eb5863";
+        final String fitableId = "b389e19779fcc245b7a6135a46eb5864";
+        try {
+            aippCreateDtoRsp = this.client.getRouter(genericableId)
+                    .route(new FitableIdFilter(fitableId))
+                    .invoke(appDto, context);
+        } catch (FitException t) {
+            log.error("Error occurred when create debug aipp, error: {}", t.getMessage());
+            throw new AippException(AippErrCode.CREATE_DEBUG_AIPP_FAILED);
+        }
+        AippCreateDto aippCreateDto = aippCreateDtoRsp.getData();
+        String instanceId = createAippInstance(aippCreateDto.getAippId(),
+                aippCreateDto.getVersion(),
+                initContext, context);
+        return AppBuilderAppStartDto.builder().instanceId(instanceId).aippCreateDto(aippCreateDto).build();
     }
 }

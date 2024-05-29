@@ -36,6 +36,7 @@ const Apps: React.FC = () => {
       pageNum: pageNo.current,
       pageSize: 10,
       includeTags: 'APP',
+      name: search
     };
     const res: any = await queryAppsApi(tenantId, params);
     if (res.code === 0) {
@@ -44,9 +45,6 @@ const Apps: React.FC = () => {
       setTotal(total);
     }
   }
-  useEffect(() => {
-    queryApps();
-  }, []);
 
   // tab栏
   const [activkey, setActiveKey] = useState('1');
@@ -58,6 +56,11 @@ const Apps: React.FC = () => {
   const pageNo = useRef(1);
   const [total, setTotal] = useState(1);
   const [current, setCurrent] = useState(1);
+  const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    queryApps();
+  }, [search]);
   function currentPageChange(page: number, pageSize: number) {
     setCurrent(() => {
       pageNo.current = page;
@@ -67,12 +70,14 @@ const Apps: React.FC = () => {
   }
 
   // 搜索
-  function onSearchValueChange(value: string) {}
+  function onSearchValueChange(value: string) {
+    setSearch(value);
+  }
   const handleSearch = debounce(onSearchValueChange, 500);
 
   // 点击卡片
   function clickCard(item: any, e: any) {
-    navigate(`/home/app-develop/${tenantId}/chat/${item.id}`);
+    navigate(`/app/${tenantId}/chat/${item.id}`);
   }
 
   // 点击更多操作选项

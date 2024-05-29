@@ -125,6 +125,7 @@ public class EvalTaskServiceImpl implements EvalTaskService {
         Map<String, Object> initContext = new HashMap<>();
         Map<String, Object> cont = new HashMap<>();
         cont.put(AippConst.BS_AIPP_QUESTION_KEY, data.getInput());
+        cont.put(AippConst.IS_EVAL_INVOCATION, true);
         initContext.put(AippConst.BS_INIT_CONTEXT_KEY, cont);
 
         String aippInstance =
