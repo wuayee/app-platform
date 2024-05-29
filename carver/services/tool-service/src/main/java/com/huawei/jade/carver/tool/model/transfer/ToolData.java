@@ -19,6 +19,28 @@ import java.util.Set;
  */
 public class ToolData {
     /**
+     * 表示工具的创建者。
+     * <p>
+     *     <ul>
+     *         <li>添加工具时可选。</li>
+     *         <li>查询工具时会返回。</li>
+     *     </ul>
+     * </p>
+     */
+    private String creator;
+
+    /**
+     * 表示工具的修改者。
+     * <p>
+     *     <ul>
+     *         <li>添加工具时可选。</li>
+     *         <li>查询工具时会返回。</li>
+     *     </ul>
+     * </p>
+     */
+    private String modifier;
+
+    /**
      * 表示工具的名字。
      * <p>
      *     <ul>
@@ -85,6 +107,17 @@ public class ToolData {
     private String source;
 
     /**
+     * 表示工具的图标。
+     * <p>
+     *     <ul>
+     *         <li>添加工具时可不传入。</li>
+     *         <li>查询工具时会返回。</li>
+     *     </ul>
+     * </p>
+     */
+    private String icon;
+
+    /**
      * 表示工具的标签集合。
      * <p>
      *     <ul>
@@ -94,6 +127,42 @@ public class ToolData {
      * </p>
      */
     private Set<String> tags;
+
+    /**
+     * 获取工具的创建者。
+     *
+     * @return 表示工具创建者的 {@link String}。
+     */
+    public String getCreator() {
+        return creator;
+    }
+
+    /**
+     * 设置工具的创建者。
+     *
+     * @param creator 表示工具创建者的 {@link String}。
+     */
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    /**
+     * 获取工具的修改者。
+     *
+     * @return 表示工具修改者的 {@link String}。
+     */
+    public String getModifier() {
+        return modifier;
+    }
+
+    /**
+     * 设置工具的修改者。
+     *
+     * @param modifier 表示工具修改者的 {@link String}。
+     */
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
+    }
 
     /**
      * 获取工具的名字。
@@ -204,6 +273,24 @@ public class ToolData {
     }
 
     /**
+     * 设置工具的来源。
+     *
+     * @return icon 表示待设置的工具图标的 {@link String}。
+     */
+    public String getIcon() {
+        return this.icon;
+    }
+
+    /**
+     * 设置工具的来源。
+     *
+     * @param icon 表示待设置的工具来源的 {@link String}。
+     */
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    /**
      * 获取工具的标签集合。
      *
      * @return 表示工具的标签集合的 {@link Set}{@code <}{@link String}{@code >}。
@@ -229,6 +316,8 @@ public class ToolData {
      */
     public static ToolData from(Tool.Info info) {
         ToolData toolData = new ToolData();
+        toolData.setCreator(info.creator());
+        toolData.setModifier(info.modifier());
         toolData.setName(info.name());
         toolData.setUniqueName(info.uniqueName());
         toolData.setDescription(info.description());
@@ -236,6 +325,7 @@ public class ToolData {
         toolData.setSchema(info.schema());
         toolData.setRunnables(info.runnables());
         toolData.setSource(info.source());
+        toolData.setIcon(info.icon());
         return toolData;
     }
 
@@ -247,6 +337,8 @@ public class ToolData {
      */
     public static Tool.Info convertToInfo(ToolData toolData) {
         return Tool.Info.custom()
+                .creator(toolData.getCreator())
+                .modifier(toolData.getModifier())
                 .name(toolData.getName())
                 .uniqueName(toolData.getUniqueName())
                 .description(toolData.getDescription())
@@ -254,6 +346,7 @@ public class ToolData {
                 .schema(toolData.getSchema())
                 .runnables(toolData.getRunnables())
                 .source(toolData.getSource())
+                .icon(toolData.getIcon())
                 .build();
     }
 

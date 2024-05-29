@@ -31,6 +31,16 @@ public class ToolDo {
     private Long id;
 
     /**
+     * 表示工具的创建者。
+     */
+    private String creator;
+
+    /**
+     * 表示工具的修改者。
+     */
+    private String modifier;
+
+    /**
      * 表示工具的名字。
      */
     private String name;
@@ -56,6 +66,11 @@ public class ToolDo {
     private String source;
 
     /**
+     * 表示工具的图标。
+     */
+    private String icon;
+
+    /**
      * 表示工具的唯一标识。
      */
     private String uniqueName;
@@ -69,10 +84,13 @@ public class ToolDo {
      */
     public static ToolDo info2Do(Tool.Info info, ObjectSerializer serializer) {
         ToolDo toolDo = new ToolDo();
+        toolDo.setCreator(info.creator());
+        toolDo.setModifier(info.modifier());
         toolDo.setName(info.name());
         toolDo.setSchema(serializer.serialize(info.schema()));
         toolDo.setRunnables(serializer.serialize(info.runnables()));
         toolDo.setSource(info.source());
+        toolDo.setIcon(info.icon());
         toolDo.setUniqueName(info.uniqueName());
         toolDo.setDescription(info.description());
         return toolDo;
@@ -87,10 +105,13 @@ public class ToolDo {
      */
     public static Tool.Info do2Info(ToolDo toolDo, ObjectSerializer serializer) {
         return Tool.Info.custom()
+                .creator(toolDo.getCreator())
+                .modifier(toolDo.getModifier())
                 .name(toolDo.getName())
                 .schema(json2obj(toolDo.getSchema(), serializer))
                 .runnables(json2obj(toolDo.getRunnables(), serializer))
                 .source(toolDo.getSource())
+                .icon(toolDo.getIcon())
                 .uniqueName(toolDo.getUniqueName())
                 .description(toolDo.getDescription())
                 .build();
