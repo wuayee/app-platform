@@ -121,7 +121,7 @@ const AppDev: React.FC = () => {
 
   // 获取当前登录用户名
   const getLoaclUser = () => {
-    return localStorage.getItem('currentUserId') ?? '';
+    return localStorage.getItem('currentUserIdComplete') ?? '';
   }
 
   // 获取用户收藏列表
@@ -141,8 +141,11 @@ const AppDev: React.FC = () => {
   }
 
   useEffect(()=> {
-    getUserCollectionList()
-  }, [])
+    getUserCollectionList();
+  }, []);
+  useEffect(() => {
+    queryApps();
+  }, [current, search]);
 
   return (
     <div className=' apps_root'>

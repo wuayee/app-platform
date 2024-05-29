@@ -84,7 +84,9 @@ const EditorBtnHome = (props) => {
             { isAt && <span style={{ marginLeft: '6px' }}>对话</span> }
           </div>
           <LinkIcon onClick={uploadClick} />
-          { !isAt && <AtIcon onClick={atClick} /> }
+
+          {/* 暂时隐藏@图标 */}
+          {/* { !isAt && <AtIcon onClick={atClick} /> } */}
         </div>
       </div>
       <div className="inner-right">
