@@ -9,17 +9,32 @@ import '../styles/chat-message-style.scss';
 
 const ChatMessaga = (props) => {
   const { chatList, setEditorShow, showCheck, setCheckedList, setChatList } = props;
-  const initFeedbackStatus = async() => {
-    for (let i=0;i<chatList.length;i++) {
-      let item = chatList[i]
-      if (item.type === 'recieve' && item.logId) {
-        await queryFeedback(item.logId).then((res) => {
-          if (!res) {
-            item.feedbackStatus = -1;
-          } else {
-            item.feedbackStatus = res.usrFeedback;
-          }
-        });
+  const initFeedbackStatus = async (id) => {
+    if (id === -1) {
+      for (let i = 0; i < chatList.length; i++) {
+        let item = chatList[i]
+        if (item.type === 'recieve' && item.logId) {
+          await queryFeedback(item.logId).then((res) => {
+            if (!res) {
+              item.feedbackStatus = -1;
+            } else {
+              item.feedbackStatus = res.usrFeedback;
+            }
+          });
+        }
+      }
+    } else {
+      for (let i = 0; i < chatList.length; i++) {
+        let item = chatList[i]
+        if (item.type === 'recieve' && item.logId && item.logId === id) {
+          await queryFeedback(item.logId).then((res) => {
+            if (!res) {
+              item.feedbackStatus = -1;
+            } else {
+              item.feedbackStatus = res.usrFeedback;
+            }
+          });
+        }
       }
     }
     setChatList([...chatList]);
@@ -28,7 +43,7 @@ const ChatMessaga = (props) => {
     scrollBottom();
   }, [chatList])
   useEffect(() => {
-    initFeedbackStatus();
+    initFeedbackStatus(-1);
   }, [chatList.length])
   const scrollBottom = () => {
     setTimeout(() => {

@@ -27,7 +27,7 @@ const Feedbacks = ({ logId, instanceId, feedbackStatus, refreshFeedbackStatus })
       let data = { "usrFeedback": "0", "usrFeedbackText": textValue }
       await updateFeedback(logId, data);
     }
-    refreshFeedbackStatus();
+    refreshFeedbackStatus(logId);
   }
   // 点赞
   const likeClick = async () => {
@@ -41,7 +41,7 @@ const Feedbacks = ({ logId, instanceId, feedbackStatus, refreshFeedbackStatus })
       let data = { "usrFeedback": "1", "usrFeedbackText": "" }
       await updateFeedback(logId, data);
     }
-    refreshFeedbackStatus();
+    refreshFeedbackStatus(logId);
   }
   // 点踩
   const unLikeClick = () => {
