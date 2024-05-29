@@ -138,7 +138,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
 
   // 开始聊天
   const startChat = (item: any) => {
-    navigate(`/home/app-develop/${tenantId}/chat/${item.appId}`);
+    navigate(`/home/app-develop/${tenantId}/chat/${item.aippId}`);
   }
 
   useEffect(()=> {
