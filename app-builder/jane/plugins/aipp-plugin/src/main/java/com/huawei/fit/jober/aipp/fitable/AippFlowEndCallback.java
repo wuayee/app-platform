@@ -30,6 +30,8 @@ import com.huawei.fitframework.ioc.BeanFactory;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.app.engine.metrics.po.ConversationRecordPo;
+import com.huawei.jade.app.engine.metrics.service.ConversationRecordService;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -51,16 +53,23 @@ public class AippFlowEndCallback implements FlowCallbackService {
     private final AppBuilderFormRepository formRepository;
     private final BrokerClient brokerClient;
     private final BeanContainer beanContainer;
+    private final ConversationRecordService conversationRecordService;
 
-    public AippFlowEndCallback(@Fit MetaInstanceService metaInstanceService, @Fit MetaService metaService,
-            @Fit AippLogService aippLogService, @Fit AppBuilderFormRepository formRepository,
-            @Fit BrokerClient brokerClient, @Fit BeanContainer beanContainer) {
+    public AippFlowEndCallback(
+            @Fit MetaInstanceService metaInstanceService,
+            @Fit MetaService metaService,
+            @Fit AippLogService aippLogService,
+            @Fit AppBuilderFormRepository formRepository,
+            @Fit BrokerClient brokerClient,
+            @Fit BeanContainer beanContainer,
+            @Fit ConversationRecordService conversationRecordService) {
         this.metaInstanceService = metaInstanceService;
         this.metaService = metaService;
         this.aippLogService = aippLogService;
         this.formRepository = formRepository;
         this.brokerClient = brokerClient;
         this.beanContainer = beanContainer;
+        this.conversationRecordService = conversationRecordService;
     }
 
     @Fitable("com.huawei.fit.jober.aipp.fitable.AippFlowEndCallback")
@@ -78,18 +87,20 @@ public class AippFlowEndCallback implements FlowCallbackService {
         String endFormVersion = (String) attr.get(AippConst.ATTR_END_FORM_VERSION_KEY);
 
         // update all result data
-        InstanceDeclarationInfo declarationInfo = InstanceDeclarationInfo.custom()
-                .putInfo(AippConst.INST_CURR_FORM_ID_KEY, endFormId)
-                .putInfo(AippConst.INST_CURR_FORM_VERSION_KEY, endFormVersion)
-                .putInfo(AippConst.INST_FINISH_TIME_KEY, LocalDateTime.now())
-                .putInfo(AippConst.INST_STATUS_KEY, MetaInstStatusEnum.ARCHIVED.name())
-                .putInfo(AippConst.INST_AGENT_RESULT_KEY, "") // 结果表单的参数作为agent结果
-                .build();
-        businessData.forEach((key, value) -> {
-            if (meta.getProperties().stream().anyMatch(item -> item.getName().equals(key))) {
-                declarationInfo.getInfo().getValue().put(key, value);
-            }
-        });
+        InstanceDeclarationInfo declarationInfo =
+                InstanceDeclarationInfo.custom()
+                        .putInfo(AippConst.INST_CURR_FORM_ID_KEY, endFormId)
+                        .putInfo(AippConst.INST_CURR_FORM_VERSION_KEY, endFormVersion)
+                        .putInfo(AippConst.INST_FINISH_TIME_KEY, LocalDateTime.now())
+                        .putInfo(AippConst.INST_STATUS_KEY, MetaInstStatusEnum.ARCHIVED.name())
+                        .putInfo(AippConst.INST_AGENT_RESULT_KEY, "") // 结果表单的参数作为agent结果
+                        .build();
+        businessData.forEach(
+                (key, value) -> {
+                    if (meta.getProperties().stream().anyMatch(item -> item.getName().equals(key))) {
+                        declarationInfo.getInfo().getValue().put(key, value);
+                    }
+                });
 
         String aippInstId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
         this.metaInstanceService.patchMetaInstance(versionId, aippInstId, declarationInfo, context);
@@ -106,15 +117,16 @@ public class AippFlowEndCallback implements FlowCallbackService {
         String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
         String parentCallbackId = ObjectUtils.cast(businessData.get(AippConst.PARENT_CALLBACK_ID));
         if (StringUtils.isNotEmpty(parentInstanceId) && StringUtils.isNotEmpty(parentCallbackId)) {
-            this.brokerClient.getRouter(FlowCallbackService.class, "w8onlgq9xsw13jce4wvbcz3kbmjv3tuw")
+            this.brokerClient
+                    .getRouter(FlowCallbackService.class, "w8onlgq9xsw13jce4wvbcz3kbmjv3tuw")
                     .route(new FitableIdFilter(parentCallbackId))
                     .format(SerializationFormat.CBOR)
                     .invoke(contexts);
         }
     }
 
-    private void logFinalOutput(List<Map<String, Object>> contexts, Map<String, Object> businessData,
-            String aippInstId) {
+    private void logFinalOutput(
+            List<Map<String, Object>> contexts, Map<String, Object> businessData, String aippInstId) {
         // todo: 表明流程结果是否需要再经过模型加工，当前场景全为false。
         //  正常情况下应该是在结束节点配上该key并放入businessData中，此处模拟该过程。
         //  如果子流程结束后需要再经过模型加工，子流程结束节点不打印日志；否则子流程结束节点需要打印日志。
@@ -124,16 +136,32 @@ public class AippFlowEndCallback implements FlowCallbackService {
             return;
         }
         Object finalOutput = businessData.get(AippConst.BS_AIPP_FINAL_OUTPUT);
-        if (businessData.get(AippConst.OUTPUT_IS_FROM_CHILD) != null && ObjectUtils.<Boolean>cast(businessData.get(
-                AippConst.OUTPUT_IS_FROM_CHILD))) {
+        if (businessData.get(AippConst.OUTPUT_IS_FROM_CHILD) != null
+                && ObjectUtils.<Boolean>cast(businessData.get(AippConst.OUTPUT_IS_FROM_CHILD))) {
             return;
         }
         String logMsg = finalOutput == null ? "获取到的结果为 null，请检查配置。" : ObjectUtils.cast(finalOutput);
         Utils.persistAippMsgLog(this.aippLogService, logMsg, contexts);
-        this.beanContainer.all(AppFlowFinishObserver.class)
-                .stream()
+        this.beanContainer.all(AppFlowFinishObserver.class).stream()
                 .<AppFlowFinishObserver>map(BeanFactory::get)
                 .forEach(finishObserver -> finishObserver.onFinished(logMsg, this.buildAttributes(aippInstId)));
+
+        // 评估调用接口时不记录历史会话
+        Object isEval = businessData.get(AippConst.IS_EVAL_INVOCATION);
+        if (isEval == null || !ObjectUtils.<Boolean>cast(isEval)) {
+            // 构造用户历史对话记录并插表
+            ConversationRecordPo conversationRecordPo =
+                    ConversationRecordPo.builder()
+                            .appId(ObjectUtils.cast(businessData.get(AippConst.ATTR_APP_ID_KEY)))
+                            .question(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_QUESTION_KEY)))
+                            .answer(logMsg)
+                            .createUser(ObjectUtils.cast(businessData.get(AippConst.INST_CREATOR_KEY)))
+                            .createTime(ObjectUtils.cast(businessData.get(AippConst.INSTANCE_START_TIME)))
+                            .finishTime(LocalDateTime.now())
+                            .instanceId(aippInstId)
+                            .build();
+            conversationRecordService.insertConversationRecord(conversationRecordPo);
+        }
     }
 
     private Map<String, Object> buildAttributes(String aippInstId) {
