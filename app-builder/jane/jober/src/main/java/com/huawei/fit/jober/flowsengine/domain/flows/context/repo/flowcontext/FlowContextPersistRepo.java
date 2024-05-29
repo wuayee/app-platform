@@ -376,6 +376,8 @@ public class FlowContextPersistRepo implements FlowContextRepo<FlowData> {
         context.getData().getContextData().put("metaId", context.getId());
         context.getData().getBusinessData().put(PASS_DATA, context.getData().getPassData());
         context.getData().getContextData().put("contextId", context.getId());
+        context.getData().getContextData().put("nodeMetaId", context.getPosition());
+        context.getData().getContextData().put("flowTraceIds", new ArrayList<>(context.getTraceId()));
         return FlowContextPO.builder()
                 .contextId(context.getId())
                 .traceId(traceId)
@@ -400,7 +402,7 @@ public class FlowContextPersistRepo implements FlowContextRepo<FlowData> {
     private FlowContext<FlowData> serializer(FlowContextPO po) {
         Set<String> traceId = convertTextToSet(po.getTraceId());
         FlowContext<FlowData> context = new FlowContext<>(po.getStreamId(), po.getRootId(), getFlowData(po), traceId,
-                po.getPositionId(), po.getParallel(), po.getParallelMode());
+                po.getPositionId(), po.getParallel(), po.getParallelMode(), LocalDateTime.now());
         convertOthers(po, context);
         return context;
     }
@@ -408,7 +410,7 @@ public class FlowContextPersistRepo implements FlowContextRepo<FlowData> {
     private FlowContext<String> serializerAsString(FlowContextPO po) {
         Set<String> traceIds = convertTraceIds(po);
         FlowContext<String> context = new FlowContext<>(po.getStreamId(), po.getRootId(), po.getFlowData(), traceIds,
-                po.getPositionId(), po.getParallel(), po.getParallelMode());
+                po.getPositionId(), po.getParallel(), po.getParallelMode(), LocalDateTime.now());
         convertOthers(po, context);
         return context;
     }

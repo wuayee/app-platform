@@ -65,6 +65,7 @@ public interface NodeParser {
         flowNode.setTask(parseTask(flowGraphData, index));
         flowNode.setTaskFilter(parseFilter(flowGraphData, index, TASK_FILTER));
         flowNode.setCallback(parseCallback(flowGraphData, index));
+        flowNode.setExceptionFitables(flowGraphData.getFlowExceptionFitables());
     }
 
     /**
@@ -157,6 +158,6 @@ public interface NodeParser {
         CallbackParser callbackParser = callbackType.getCallbackParser();
         Validation.notNull(callbackParser,
                 () -> new JobberParamException(INPUT_PARAM_IS_INVALID, "flow callback type " + callbackType.getCode()));
-        return callbackParser.parseCallback(flowGraphData, nodeIndex);
+        return callbackParser.parseNodeCallback(flowGraphData, nodeIndex);
     }
 }

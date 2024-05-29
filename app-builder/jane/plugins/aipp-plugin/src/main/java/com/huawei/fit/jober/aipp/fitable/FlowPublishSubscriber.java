@@ -7,6 +7,7 @@ package com.huawei.fit.jober.aipp.fitable;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jober.FlowPublishService;
+import com.huawei.fit.jober.aipp.aop.AippLogInsertAspect;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.common.MetaUtils;
 import com.huawei.fit.jober.aipp.common.Utils;
@@ -24,6 +25,8 @@ import com.huawei.fit.runtime.entity.Parameter;
 import com.huawei.fit.runtime.entity.RuntimeData;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
+import com.huawei.fitframework.exception.FitException;
+import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
@@ -32,6 +35,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +55,8 @@ import javafx.util.Pair;
  */
 @Component
 public class FlowPublishSubscriber implements FlowPublishService {
+    private static final Logger log = Logger.get(AippLogInsertAspect.class);
+
     private final NodeRuntimeDataPublisher nodeRuntimeDataPublisher;
     private final MetaService metaService;
     private final AppBuilderAppFactory appFactory;
@@ -83,7 +89,7 @@ public class FlowPublishSubscriber implements FlowPublishService {
         String traceId = context.getTraceId();
         String nodeType = flowNodePublishInfo.getNodeType();
 
-        CacheInfo cacheInfo = this.getResult(context, traceId, nodeType);
+        CacheInfo cacheInfo = this.getCacheInfo(context, traceId, nodeType);
         RuntimeData runtimeData = new RuntimeData();
         runtimeData.setStartTime(cacheInfo.startTime);
         runtimeData.setEndTime(this.getEndTime(context));
@@ -91,9 +97,15 @@ public class FlowPublishSubscriber implements FlowPublishService {
         runtimeData.setExtraParams(this.getExtraParams(cacheInfo.keys, businessData));
         runtimeData.setPublished(this.isPublished(businessData));
         runtimeData.setTraceId(traceId);
+        runtimeData.setExecuteTime(runtimeData.getEndTime() - runtimeData.getStartTime());
         runtimeData.setAippInstanceId(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY)));
         runtimeData.setNodeInfos(Collections.singletonList(this.convert(flowNodePublishInfo, context)));
-        this.nodeRuntimeDataPublisher.onPublish(runtimeData);
+
+        try {
+            this.nodeRuntimeDataPublisher.onPublish(runtimeData);
+        } catch (FitException e) {
+            log.error("Call NodeRuntimeDataPublisher#publish failed: {}.", e.getMessage(), e);
+        }
         this.aippFlowRuntimeInfoService.cache(runtimeData);
 
         // 遇到结束节点或异常时删除缓存.
@@ -107,17 +119,26 @@ public class FlowPublishSubscriber implements FlowPublishService {
         return this.toLong(time);
     }
 
-    private CacheInfo getResult(FlowPublishContext context, String traceId, String nodeType) {
+    private CacheInfo getCacheInfo(FlowPublishContext context, String traceId, String nodeType) {
         if (NodeTypes.START.name().equals(nodeType)) {
             long startTime = this.toLong(context.getCreateAt());
-            List<String> keys = this.nodeRuntimeDataPublisher.getExtraParamKeys();
+            List<String> keys = this.getExtraParamKeys();
             CacheInfo cacheInfo = new CacheInfo(keys, startTime);
             this.cache.put(traceId, cacheInfo);
             return cacheInfo;
         }
         return Optional.ofNullable(this.cache.get(traceId))
                 .orElseThrow(() -> new IllegalStateException(
-                        StringUtils.format("node sequence if trace[{0}] disorder", traceId)));
+                        StringUtils.format("node sequence of trace[{0}] disorder", traceId)));
+    }
+
+    private List<String> getExtraParamKeys() {
+        try {
+            return this.nodeRuntimeDataPublisher.getExtraParamKeys();
+        } catch (FitException e) {
+            log.error("Call NodeRuntimeDataPublisher#getExtraParamKeys failed: {}.", e.getMessage(), e);
+            return new ArrayList<>();
+        }
     }
 
     private boolean isPublished(Map<String, Object> businessData) {
@@ -135,6 +156,7 @@ public class FlowPublishSubscriber implements FlowPublishService {
         info.setNodeId(publishInfo.getNodeId());
         info.setNodeType(publishInfo.getNodeType());
         info.setStartTime(this.toLong(context.getCreateAt()));
+        info.setErrorMsg(publishInfo.getErrorMsg());
         info.setRunCost(this.getEndTime(context) - info.getStartTime());
         info.setParameters(this.buildParameters(businessData, publishInfo.getNodeId()));
         info.setStatus(context.getStatus());

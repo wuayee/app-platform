@@ -128,7 +128,7 @@ public class ApprovalTaskInstanceTriggerTest extends DatabaseBaseTest {
         FITABLE_USAGE_MAPPER = sqlSessionManager.getMapper(FitableUsageMapper.class);
         DEFINITION_REPO = new DefaultFlowDefinitionRepo(FLOW_DEFINITION_MAPPER, FITABLE_USAGE_MAPPER, PARSER);
         FLOW_CONTEXTS_SERVICE = new FlowContextsService(DEFINITION_REPO, FLOW_CONTEXT_REPO, MESSENGER, null, TRACE_REPO,
-                FLOW_RETRY_REPO, LOCKS, TRACE_OWNER_SERVICE, null);
+                FLOW_RETRY_REPO, LOCKS, TRACE_OWNER_SERVICE, null, null);
         TRIGGER = new ApprovalTaskInstanceTrigger(FLOW_CONTEXT_REPO, DEFINITION_REPO, FLOW_CONTEXTS_SERVICE);
     }
 

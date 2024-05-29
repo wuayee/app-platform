@@ -8,7 +8,7 @@ import { AippContext } from '../../aippIndex/context';
 import TreeComponent from "./tree.jsx";
 import {getModels, getTools, getWaterFlows, getKnowledges, getFitables} from "@shared/http/appBuilder";
 import {uuid} from "../../../common/utils";
-import {Message} from "@shared/utils/message";
+import {createAipp} from "@shared/http/aipp";
 const { Option } = Select;
 
 function LLM(props) {
@@ -129,9 +129,10 @@ function LLM(props) {
                         >
                             <TextArea
                                 placeholder="输入一段提示词，可以给应用预设身份"
-                                rows={6}
                                 onBlur={(e) => {updateData(e.target.value, "systemPrompt")}}
-                                autoSize
+                                autoSize={{
+                                  minRows: 6
+                                }}
                             />
                         </Form.Item>
                     </div>
@@ -157,10 +158,6 @@ function Skill(props) {
     const onArrowClick = (value, func) => {
         func(!value);
     }
-
-    const onAddFlowClick = () => {
-      navigate(`/app-develop/${tenantId}/addFlow/${appId}`);
-    };
 
     const onAddToolClick = () => {
         setShowFlowModal(true);
@@ -205,8 +202,17 @@ function Skill(props) {
 
     const handleCheck = (option, event) => {
         event.stopPropagation();
-        console.log(option);
         navigate(`/app/${option.data.tenantId}/flowDetail/${option.data.appId}`);
+    }
+
+    // 新增工具流
+    const handleAddWaterFlow = async () => {
+      const timeStr = new Date().getTime().toString();
+      const res = await createAipp(tenantId, 'df87073b9bc85a48a9b01eccc9afccc3', { type: 'waterFlow', name: timeStr });
+      if (res.code === 0) {
+        const aippId = res.data.id;
+        navigate(`/app/${tenantId}/addFlow/${aippId}`);
+      }
     }
 
     return (
@@ -264,7 +270,7 @@ function Skill(props) {
                             }
                             <div style={{marginLeft: "10px"}}>工具流</div>
                         </div>
-                        <PlusOutlined className="icon plus-icon" onClick={onAddFlowClick}/>
+                        <PlusOutlined className="icon plus-icon" onClick={handleAddWaterFlow}/>
                     </div>
                     <Form.Item
                         name="workflows"

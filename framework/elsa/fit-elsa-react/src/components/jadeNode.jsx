@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import {DefaultRoot} from "@/components/DefaultRoot.jsx";
 import {v4 as uuidv4} from "uuid";
 import {Header} from "@/components/Header.jsx";
+import {NODE_STATUS, SECTION_TYPE} from "@/common/Consts.js";
 
 /**
  * jadeStream中的流程编排节点.
@@ -30,6 +31,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.cornerRadius = 8;
     self.enableAnimation = false;
     self.modeRegion.visible = false;
+    self.runStatus = NODE_STATUS.DEFAULT;
     self.flowMeta = {
         "triggerMode": "auto",
         "jober": {
@@ -66,11 +68,51 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
 
     /**
+     * 获取节点默认的测试报告章节
+     */
+    self.getRunReportSections = () => {
+        // 这里的data是每个节点的每个章节需要展示的数据，比如工具节点展示为输入、输出的数据
+        return [{no: "1", name: "输入", type: SECTION_TYPE.DEFAULT, data: self.input ? self.input : {}}, {
+            no: "2",
+            name: "输出",
+            type: SECTION_TYPE.DEFAULT,
+            data: self.getOutputData(self.output)
+        }];
+    };
+
+    /**
+     * 获取输出的数据
+     *
+     * @param source 数据源
+     * @return {*|{}}
+     */
+    self.getOutputData = (source) => {
+        if (self.runStatus === NODE_STATUS.ERROR) {
+            return self.errorMsg;
+        } else {
+            return source ? source : {};
+        }
+    }
+
+    /**
+     * 获取节点默认的测试报告章节 todo 这里是否需要是先到DefaultRoot中，用来进行组件刷新操作，现目前状态可以刷新
+     */
+    self.setRunReportSections = (data) => {
+        // 把节点推送来的的data处理成Section
+        // 开始节点只有输入，结束节点只有输出，普通节点输入输出，条件节点有条件1...n和输出
+        self.output = JSON.parse(data.parameters[0].output);
+        self.input = JSON.parse(data.parameters[0].input);
+        self.errorMsg = data.errorMsg;
+        self.cost = data.runCost;
+    };
+
+    /**
      * 处理传递的元数据
      *
      * @param metaData 元数据信息
      */
-    self.processMetaData = (metaData) => {};
+    self.processMetaData = (metaData) => {
+    };
 
     /**
      * 设置方向为W和N的connector不支持拖出连接线
@@ -146,6 +188,18 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         explorePreShapesRecursive(self.id);
         formerNodesInfo.shift();
         return formerNodesInfo;
+    };
+
+    /**
+     * 获取直接前继节点信息
+     */
+    self.getDirectPreNodeIds = () => {
+        if (!self.allowToLink) {
+            return [];
+        }
+        return self.page.shapes.filter(s => s.type === "jadeEvent")
+                .filter(s => s.toShape === self.id)
+                .map(line => self.page.getShapeById(line.fromShape));
     };
 
     /**

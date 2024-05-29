@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.flowsengine.domain.flows.events;
 
 import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowContext;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.callbacks.FlowCallback;
 import com.huawei.fitframework.event.Event;
 
 import lombok.Getter;
@@ -21,10 +22,13 @@ import java.util.List;
 public class FlowCallbackEvent<O> implements Event {
     private final List<FlowContext<O>> flowContexts;
 
+    private final FlowCallback callback;
+
     private final Object publisher;
 
-    public FlowCallbackEvent(List<FlowContext<O>> flowContexts, Object publisher) {
+    public FlowCallbackEvent(List<FlowContext<O>> flowContexts, FlowCallback callback, Object publisher) {
         this.flowContexts = flowContexts;
+        this.callback = callback;
         this.publisher = publisher;
     }
 

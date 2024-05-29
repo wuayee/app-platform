@@ -506,12 +506,11 @@ public class Utils {
         return metaInstanceService.list(versionId, filter, 0, 1, context);
     }
 
-    public static String getFlowTraceId(Map<String, Object> businessData, MetaInstanceService metaInstanceService) {
-        OperationContext context = getOpContext(businessData);
-        String versionId = ObjectUtils.cast(businessData.get(AippConst.BS_META_VERSION_ID_KEY));
-        String instanceId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
-        Instance instDetail = Utils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
-        return instDetail.getInfo().get(AippConst.INST_FLOW_INST_ID_KEY);
+    public static String getFlowTraceId(List<Map<String, Object>> flowData) {
+        List<String> traces = ObjectUtils.cast(Utils.getContextData(flowData).get(AippConst.INST_FLOW_TRACE_IDS));
+        Validation.isFalse(traces.isEmpty(),
+                () -> new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "Flow trace id can not be empty."));
+        return traces.get(0);
     }
 
     public static String getFlowDefinitionId(Map<String, Object> businessData, MetaService metaService) {

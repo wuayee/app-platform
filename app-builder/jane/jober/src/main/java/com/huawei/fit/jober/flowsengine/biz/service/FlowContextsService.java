@@ -27,6 +27,9 @@ import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.jober.common.utils.UUIDUtil;
+import com.huawei.fit.jober.entity.FlowNodePublishInfo;
+import com.huawei.fit.jober.entity.FlowPublishContext;
+import com.huawei.fit.jober.entity.consts.NodeTypes;
 import com.huawei.fit.jober.flowsengine.biz.service.entity.FlowTransCompletionInfo;
 import com.huawei.fit.jober.flowsengine.biz.service.entity.FlowsErrorInfo;
 import com.huawei.fit.jober.flowsengine.domain.flows.InterStream;
@@ -55,6 +58,8 @@ import com.huawei.fit.jober.flowsengine.domain.flows.streams.IdGenerator;
 import com.huawei.fit.jober.flowsengine.domain.flows.streams.To;
 import com.huawei.fit.jober.flowsengine.domain.flows.streams.nodes.Blocks;
 import com.huawei.fit.jober.flowsengine.domain.flows.streams.nodes.Node;
+import com.huawei.fit.jober.flowsengine.domain.flows.utils.FlowExecuteInfoUtil;
+import com.huawei.fit.jober.flowsengine.fitable.TraceServiceImpl;
 import com.huawei.fit.jober.flowsengine.persist.po.FlowContextPO;
 import com.huawei.fit.jober.flowsengine.utils.FlowExecutors;
 import com.huawei.fit.jober.flowsengine.utils.FlowUtil;
@@ -124,12 +129,14 @@ public class FlowContextsService {
 
     private final List<FlowEventCallback> consumers;
 
+    private final TraceServiceImpl traceService;
+
     public FlowContextsService(FlowDefinitionRepo definitionRepo,
             @Fit(alias = "flowContextPersistRepo") FlowContextRepo repo,
             @Fit(alias = "flowContextPersistMessenger") FlowContextMessenger messenger,
-            QueryFlowContextPersistRepo queryRepo, FlowTraceRepo traceRepo, FlowRetryRepo retryRepo,
-            FlowLocks locks, TraceOwnerService traceOwnerService,
-            @Fit List<FlowEventCallback> consumers) {
+            QueryFlowContextPersistRepo queryRepo, FlowTraceRepo traceRepo, FlowRetryRepo retryRepo, FlowLocks locks,
+            TraceOwnerService traceOwnerService, @Fit List<FlowEventCallback> consumers,
+            TraceServiceImpl traceService) {
         this.definitionRepo = definitionRepo;
         this.repo = repo;
         this.messenger = messenger;
@@ -139,6 +146,7 @@ public class FlowContextsService {
         this.locks = locks;
         this.traceOwnerService = traceOwnerService;
         this.consumers = consumers;
+        this.traceService = traceService;
     }
 
     private static boolean isContextRunning(FlowContextPO flowContextPO) {
@@ -180,7 +188,11 @@ public class FlowContextsService {
         if (flowDefinition.isEnableOutputScope()) {
             FlowUtil.cacheResultToNode(flowData.getBusinessData(), from.getId());
         }
-        return from.offer(flowData);
+        contextData.put("flowDefinitionId", flowId);
+        contextData.put("nodeType", FlowNodeType.START.getCode());
+        FlowOfferId offerId = from.offer(flowData);
+        this.publishStartNodeData(flowId, offerId.getTraceId(), from.getId(), flowData);
+        return offerId;
     }
 
     /**
@@ -511,6 +523,28 @@ public class FlowContextsService {
         }).collect(Collectors.toList());
     }
 
+    @SuppressWarnings("unchecked")
+    private void publishStartNodeData(String flowDefinitionId, String traceId, String nodeId, FlowData flowData) {
+        Map<String, Object> businessData = flowData.getBusinessData();
+        Map<String, Object> inputData = (Map<String, Object>) businessData.getOrDefault("startNodeInputParams",
+                new HashMap<String, Object>());
+        if (!inputData.isEmpty()) {
+            FlowExecuteInfoUtil.addInputMap2ExecuteInfoMap(flowData, inputData, nodeId, "start");
+            FlowExecuteInfoUtil.addOutputMap2ExecuteInfoMap(flowData, inputData, nodeId, "start");
+        }
+        LocalDateTime now = LocalDateTime.now();
+        FlowPublishContext startContext = new FlowPublishContext(traceId, FlowNodeStatus.ARCHIVED.name(), now, now,
+                now);
+        FlowNodePublishInfo flowNodePublishInfo = new FlowNodePublishInfo();
+        flowNodePublishInfo.setFlowDefinitionId(flowDefinitionId);
+        flowNodePublishInfo.setNodeId(nodeId);
+        flowNodePublishInfo.setNodeType(NodeTypes.START.getType());
+        flowNodePublishInfo.setBusinessData(businessData);
+        flowNodePublishInfo.setFlowContext(startContext);
+        flowNodePublishInfo.setErrorMsg(StringUtils.EMPTY);
+        traceService.publishNodeInfo(flowNodePublishInfo);
+    }
+
     private List<String> getErrorNode(FlowDefinition flowDefinition, List<FlowContextPO> contexts) {
         if (flowDefinition == null) {
             return new ArrayList<>();
@@ -578,8 +612,8 @@ public class FlowContextsService {
                 .collect(Collectors.toList()));
         result.addAll(contextPos.stream()
                 .filter(context -> !"NEW".equals(context.getStatus()))
-                .filter(context -> (context.getPositionId().equals(node.getMetaId()))
-                        || eventIds.contains(context.getPositionId()))
+                .filter(context -> (context.getPositionId().equals(node.getMetaId())) || eventIds.contains(
+                        context.getPositionId()))
                 .collect(Collectors.toList()));
 
         return result;
@@ -700,8 +734,8 @@ public class FlowContextsService {
         repo.updateStatus(contextList, FlowNodeStatus.TERMINATE.toString(), contextList.get(0).getPosition());
     }
 
-    public void resumeAsyncJob(List<FlowContext<FlowData>> pre,
-            List<Map<String, Object>> newContexts, OperationContext operationContext) {
+    public void resumeAsyncJob(List<FlowContext<FlowData>> pre, List<Map<String, Object>> newContexts,
+            OperationContext operationContext) {
         LOG.info("resumeAsyncJob preContextId: {}",
                 pre.stream().map(FlowContext::getId).collect(Collectors.joining(",")));
         LocalDateTime currentTime = LocalDateTime.now();
@@ -714,25 +748,55 @@ public class FlowContextsService {
         From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(repo, messenger, this.locks);
         Node<FlowData, FlowData> node = from.findNodeFromFlow(from, preContext.getPosition());
 
-        List<FlowContext<FlowData>> after = newContexts.stream()
-                .map(data -> {
-                    if (enableOutputScope) {
-                        FlowUtil.cacheResultToNode(data, node.getId());
-                    }
-                    FlowData flowData = FlowData.builder()
-                            .operator(operator)
-                            .startTime(currentTime)
-                            .businessData(data)
-                            .contextData(preContext.getData().getContextData())
-                            .passData(Collections.emptyMap())
-                            .build();
-                    return preContext.generate(flowData, preContext.getPosition());
-                })
-                .collect(Collectors.toList());
+        FlowNode currentFlowNode = flowDefinition.getFlowNode(preContext.getPosition());
+        List<FlowContext<FlowData>> after = newContexts.stream().map(data -> {
+            Map<String, Object> newOutputMap = currentFlowNode.getJober().getConverter().convertOutput(null);
+            updateMap(newOutputMap, data);
+            if (enableOutputScope) {
+                FlowUtil.cacheResultToNode(data, node.getId());
+            }
+            FlowData flowData = FlowData.builder()
+                    .operator(operator)
+                    .startTime(currentTime)
+                    .businessData(data)
+                    .contextData(preContext.getData().getContextData())
+                    .passData(Collections.emptyMap())
+                    .build();
+            FlowExecuteInfoUtil.addOutputMap2ExecuteInfoMap(flowData, newOutputMap, currentFlowNode.getMetaId(),
+                    "jober");
+            return preContext.generate(flowData, preContext.getPosition(), preContext.getCreateAt());
+        }).collect(Collectors.toList());
 
         LOG.info("resumeAsyncJob afterContextId: {}",
                 after.stream().map(FlowContext::getId).collect(Collectors.joining(",")));
         node.afterProcess(pre, after);
+    }
+
+    private static void updateMap(Map<String, Object> newOutputMap, Map<String, Object> businessData) {
+        for (Map.Entry<String, Object> entry : newOutputMap.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            if (value == null) {
+                updateValueFromBusinessData(newOutputMap, businessData, key);
+            } else if (value instanceof Map) {
+                updateNestedMap(businessData, key, value);
+            }
+        }
+    }
+
+    private static void updateValueFromBusinessData(Map<String, Object> newOutputMap, Map<String, Object> businessData,
+            String key) {
+        if (businessData.containsKey(key)) {
+            newOutputMap.put(key, businessData.get(key));
+        }
+    }
+
+    private static void updateNestedMap(Map<String, Object> businessData, String key, Object value) {
+        Object businessDataValue = businessData.get(key);
+        if (businessDataValue instanceof Map) {
+            updateMap((Map<String, Object>) value, (Map<String, Object>) businessDataValue);
+        }
     }
 
     /**
@@ -751,9 +815,7 @@ public class FlowContextsService {
         From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(this.repo, this.messenger, this.locks);
         Node<FlowData, FlowData> node = cast(from.findNodeFromFlow(from, preContext.getPosition()));
         FlowNode flowNode = flowDefinition.getFlowNode(node.getId());
-        flowNode.getJober()
-                .notifyException(exception,
-                        pre.stream().map(context -> context.getData()).collect(Collectors.toList()));
+        flowNode.notifyException(exception, pre);
         node.setFailed(pre, exception);
     }
 
@@ -975,8 +1037,8 @@ public class FlowContextsService {
     }
 
     private void updateTraceStatus(FlowTrace trace, List<FlowContextPO> flowContextPOList, String status) {
-        LOG.info("The trace is completed, traceId={}, status={}, contextCount={}.", trace.getId(),
-                status, flowContextPOList.size());
+        LOG.info("The trace is completed, traceId={}, status={}, contextCount={}.", trace.getId(), status,
+                flowContextPOList.size());
         traceRepo.updateStatus(Collections.singletonList(trace.getId()), status);
         String transId = flowContextPOList.get(0).getTransId();
         Lock transIdLock = locks.getDistributedLock(transId);
@@ -992,8 +1054,7 @@ public class FlowContextsService {
         }
         LOG.info("Start release trace lock, traceId={}.", trace.getId());
         this.traceOwnerService.release(trace.getId());
-        LOG.info("Finish processing the trace, transId={}, traceId={}, status={}.", transId,
-                trace.getId(), status);
+        LOG.info("Finish processing the trace, transId={}, traceId={}, status={}.", transId, trace.getId(), status);
     }
 
     private void transFinishedCallback(String transId, FlowTraceStatus transStatus) {

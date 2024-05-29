@@ -116,7 +116,7 @@ public class FlowContextsServicePersistTest extends DatabaseBaseTest {
         DEFINITION_REPO = new DefaultFlowDefinitionRepo(FLOW_DEFINITION_MAPPER, fitableUsageMapper, PARSER);
         traceOwnerService = Mockito.mock(TraceOwnerService.class);
         FLOW_CONTEXTS_SERVICE = new FlowContextsService(DEFINITION_REPO, REPO, MESSENGER, QUERY_REPO, TRACE_REPO,
-                FLOW_RETRY_REPO, LOCKS, traceOwnerService, null);
+                FLOW_RETRY_REPO, LOCKS, traceOwnerService, null, null);
     }
 
     @Override

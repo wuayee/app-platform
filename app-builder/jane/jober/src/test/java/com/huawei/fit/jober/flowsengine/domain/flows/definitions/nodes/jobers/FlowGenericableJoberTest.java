@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 任意genericable调用的测试
@@ -71,9 +72,10 @@ class FlowGenericableJoberTest {
         when(router.route(argThat(filter -> filter instanceof FitableIdFilter))).thenReturn(invoker);
         String expectGenericableResult = "helloWorld";
         when(invoker.invoke(any())).thenReturn(expectGenericableResult);
-        when(converter.convertOutput(any(), any())).thenAnswer(invocation -> {
-            ((FlowData) invocation.getArgument(1)).getBusinessData().put("_result", invocation.getArgument(0));
-            return invocation.getArgument(1);
+        when(converter.convertOutput(any())).thenAnswer(invocation -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("_result", invocation.getArgument(0));
+            return map;
         });
 
         FlowData flowData = FlowData.builder().businessData(new HashMap<>()).contextData(new HashMap<>()).build();

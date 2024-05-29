@@ -4,6 +4,11 @@
 
 package com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes;
 
+import static com.huawei.fit.jober.FlowExceptionService.HANDLE_EXCEPTION_GENERICABLE;
+import static com.huawei.fit.jober.common.Constant.BUSINESS_DATA_KEY;
+import static com.huawei.fit.jober.common.Constant.CONTEXT_DATA;
+import static com.huawei.fit.jober.common.Constant.PASS_DATA;
+import static com.huawei.fit.jober.common.Constant.TRACE_ID_KEY;
 import static com.huawei.fit.jober.common.ErrorCodes.CONTEXT_TYPE_NOT_SUPPORT;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_ENGINE_EXECUTOR_ERROR;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_NODE_OPERATOR_NOT_SUPPORT;
@@ -14,6 +19,7 @@ import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeType.E
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeType.START;
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 
+import com.huawei.fit.jober.FlowExceptionService;
 import com.huawei.fit.jober.common.OhscriptExecuteException;
 import com.huawei.fit.jober.common.TypeNotSupportException;
 import com.huawei.fit.jober.common.exceptions.JobberException;
@@ -37,6 +43,9 @@ import com.huawei.fit.jober.flowsengine.domain.flows.streams.FitStream.Publisher
 import com.huawei.fit.jober.flowsengine.domain.flows.streams.FitStream.Subscriber;
 import com.huawei.fit.jober.flowsengine.domain.flows.streams.Processors;
 import com.huawei.fit.jober.flowsengine.domain.flows.streams.nodes.Retryable;
+import com.huawei.fitframework.broker.client.BrokerClient;
+import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
@@ -45,10 +54,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 流程定义节点核心类
@@ -126,6 +138,16 @@ public abstract class FlowNode {
      * 所属的flow definition， 后续需要提取WaterFlow结构替换，node有归属的WaterFlow
      */
     protected FlowDefinition parentFlow;
+
+    /**
+     * 调用 fitable客户端
+     */
+    protected BrokerClient brokerClient;
+
+    /**
+     * 节点任务异常处理fitables集合
+     */
+    protected Set<String> exceptionFitables;
 
     public void setJober(FlowJober jober) {
         if (!Objects.isNull(jober)) {
@@ -239,6 +261,9 @@ public abstract class FlowNode {
                         .orElseGet(UUIDUtil::uuid);
                 flowContexts.forEach(context -> context.setStatus(RETRYABLE).toBatch(toBatch));
             } else {
+                if (exception instanceof FitException) {
+                    notifyException(exception, flowContexts);
+                }
                 String errorMessage = MessageFormat.format(FLOW_ENGINE_EXECUTOR_ERROR.getMessage(), streamId,
                         this.metaId, this.name, exception.getClass().getSimpleName(),
                         Optional.ofNullable(exception.getMessage()).orElse("internal error"));
@@ -276,14 +301,47 @@ public abstract class FlowNode {
     }
 
     /**
+     * 提醒异常处理.
+     *
+     * @param ex 异常对象.
+     * @param inputs 上下文对象列表.
+     */
+    public void notifyException(Throwable ex, List<FlowContext<FlowData>> inputs) {
+        for (String fitableId : exceptionFitables) {
+            this.brokerClient.getRouter(FlowExceptionService.class, HANDLE_EXCEPTION_GENERICABLE)
+                    .route(new FitableIdFilter(fitableId))
+                    .invoke(this.metaId, filterFlowData(inputs), ex.getMessage());
+        }
+    }
+
+    private List<Map<String, Object>> filterFlowData(List<FlowContext<FlowData>> inputs) {
+        return inputs.stream().map(cxt -> new HashMap<String, Object>() {
+            {
+                put(TRACE_ID_KEY, cxt.getTraceId());
+                put(BUSINESS_DATA_KEY, cxt.getData().getBusinessData());
+                put(CONTEXT_DATA, cxt.getData().getContextData());
+                put(PASS_DATA, cxt.getData().getPassData());
+                put("status", cxt.getStatus().name());
+                put("createAt", cxt.getCreateAt());
+                put("updateAt", cxt.getUpdateAt());
+                put("archivedAt", cxt.getArchivedAt());
+            }
+        }).collect(Collectors.toList());
+    }
+
+    /**
      * 当用户给流程节点配置回调函数时，设置回调函数处理机制
      *
      * @param subscriber {@link Subscriber} 表示流程节点内的subscriber
      * @param messenger {@link FlowContextMessenger} 表示stream流程事件发送器
      */
     protected void setCallback(Subscriber<FlowData, FlowData> subscriber, FlowContextMessenger messenger) {
-        Optional.ofNullable(this.callback)
-                .ifPresent(__ -> subscriber.onComplete(c -> messenger.sendCallback(c.getAll())));
+        subscriber.onComplete(c -> {
+            Optional.ofNullable(this.callback).ifPresent(callback -> messenger.sendCallback(callback, c.getAll()));
+
+            Optional.ofNullable(parentFlow.getCallback())
+                    .ifPresent(callback -> messenger.sendCallback(callback, c.getAll()));
+        });
     }
 
     /**

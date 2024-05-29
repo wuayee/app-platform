@@ -3,6 +3,7 @@ import {Button} from "antd";
 import {DIRECTION} from "@fit-elsa/elsa-core";
 import StartIcon from '../asserts/icon-start.svg?react'; // 导入背景图片
 import "./style.css";
+import {NODE_STATUS, SECTION_TYPE} from "@/common/Consts.js";
 
 /**
  * jadeStream中的流程启动节点.
@@ -57,19 +58,38 @@ export const startNodeStart = (id, x, y, width, height, parent, drawer) => {
      */
     self.serializerJadeConfig = () => {
         self.flowMeta.inputParams = self.getLatestJadeConfig();
-    }
+    };
+
+    /**
+     * 获取试运行入参
+     */
+    self.getRunInputParams = () => {
+        return self.getLatestJadeConfig().find(config => config.name === "input").value;
+    };
+
+    /**
+     * 开始节点的测试报告章节
+     */
+    self.getRunReportSections = () => {
+        return [{
+            no: "1",
+            name: "输入",
+            type: SECTION_TYPE.DEFAULT,
+            data: self.getOutputData(self.input)
+        }];
+    };
 
     /**
      * @override
      */
     self.getHeaderIcon = () => {
         return (
-            <Button
-                disabled={true}
-                className="jade-node-custom-header-icon"
-            >
-                <StartIcon/>
-            </Button>
+                <Button
+                        disabled={true}
+                        className="jade-node-custom-header-icon"
+                >
+                    <StartIcon/>
+                </Button>
         );
     };
 

@@ -108,7 +108,7 @@ class FlowContextsServiceTest {
             flowLocks = Mockito.mock(FlowLocks.class);
 
             flowContextsService = new FlowContextsService(flowDefinitionRepo, flowContextRepo, flowContextMessenger,
-                    queryFlowContextPersistRepo, flowTraceRepo, flowRetryRepo, flowLocks, null, null);
+                    queryFlowContextPersistRepo, flowTraceRepo, flowRetryRepo, flowLocks, null, null, null);
         }
 
         @Test

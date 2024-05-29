@@ -11,6 +11,8 @@ import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter.FlowDataConverter;
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowCallbackType;
+import com.huawei.fit.jober.flowsengine.domain.flows.utils.FlowExecuteInfoUtil;
+import com.huawei.fit.jober.flowsengine.utils.FlowUtil;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
@@ -28,7 +30,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 流程定义节点回调函数类
+ * 流程定义回调函数类
  *
  * @author l00862071
  * @since 2023/12/11
@@ -40,8 +42,10 @@ import java.util.stream.Collectors;
 public abstract class FlowCallback {
     private static final Logger log = Logger.get(FlowCallback.class);
 
+    private static final String CALLBACK_EXECUTE_INFO_TYPE = "callback";
+
     /**
-     * 所在节点的metaId
+     * 所在节点的metaId，如果为null则说明是整个流程的callback，每个可以callback的节点都会调用
      */
     protected String nodeMetaId;
 
@@ -109,8 +113,17 @@ public abstract class FlowCallback {
         if (Objects.isNull(converter)) {
             return inputs;
         }
-        return inputs.stream()
-                .map(input -> input.convertData(this.converter.convertInput(input.getData()), input.getId()))
+        return inputs.stream().map(input -> input.convertData(this.convertFlowData(input.getData()), input.getId()))
                 .collect(Collectors.toList());
+    }
+
+    private FlowData convertFlowData(FlowData flowData) {
+        Map<String, Object> newInputMap = converter.convertInput(flowData.getBusinessData());
+        if (this.nodeMetaId != null) {
+            FlowExecuteInfoUtil.addInputMap2ExecuteInfoMap(flowData, newInputMap, this.nodeMetaId,
+                    CALLBACK_EXECUTE_INFO_TYPE);
+        }
+        flowData.setBusinessData(FlowUtil.mergeMaps(flowData.getBusinessData(), newInputMap));
+        return flowData;
     }
 }

@@ -7,6 +7,7 @@ package com.huawei.fit.jober.flowsengine.biz.service.handlers;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,16 +15,14 @@ import static org.mockito.Mockito.when;
 import com.huawei.fit.jober.FlowCallbackService;
 import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowtrace.FlowTraceRepo;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.FlowDefinition;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowNode;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowStateNode;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.callbacks.FlowCallback;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.callbacks.FlowGeneralCallback;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowCallbackType;
+import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeType;
 import com.huawei.fit.jober.flowsengine.domain.flows.events.FlowCallbackEvent;
-import com.huawei.fit.jober.flowsengine.persist.mapper.FlowContextMapper;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.broker.client.Router;
@@ -37,7 +36,6 @@ import org.mockito.Mockito;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * {@link FlowCallbackEventHandler} 测试类
@@ -50,25 +48,12 @@ public class FlowCallbackEventHandlerTest {
 
     private FlowCallbackEventHandler handler;
 
-    private FlowContextMapper flowContextMapper;
-
-    private FlowTraceRepo flowTraceRepo;
+    private BrokerClient brokerClient;
 
     private FlowDefinitionRepo flowDefinitionRepo;
 
-    private BrokerClient brokerClient;
-
-    private FlowDefinition generateFlowDefinition() {
-        Map<String, FlowNode> nodeMap = new HashMap<>();
-        FlowNode flowNode = new FlowStateNode();
-        flowNode.setCallback(generateFlowCallback());
-        nodeMap.put("nodeId", flowNode);
-        return FlowDefinition.builder().nodeMap(nodeMap).build();
-    }
-
     private FlowCallback generateFlowCallback() {
         FlowCallback flowCallback = new FlowGeneralCallback();
-        flowCallback.setNodeMetaId("nodeId");
         flowCallback.setName("通知回调");
         flowCallback.setType(FlowCallbackType.GENERAL_CALLBACK);
         flowCallback.setFilteredKeys(Collections.singleton("application"));
@@ -100,8 +85,8 @@ public class FlowCallbackEventHandlerTest {
     class TestFlowCallbackEventHandler {
         @BeforeEach
         void setUp() {
-            flowDefinitionRepo = Mockito.mock(FlowDefinitionRepo.class);
             brokerClient = Mockito.mock(BrokerClient.class);
+            flowDefinitionRepo = Mockito.mock(FlowDefinitionRepo.class);
             handler = new FlowCallbackEventHandler(flowDefinitionRepo);
         }
 
@@ -109,12 +94,16 @@ public class FlowCallbackEventHandlerTest {
         @DisplayName("流程回调函数事件处理成功")
         void givenFlowCallbackCreatedEventThenHandleSuccessfully() throws Throwable {
             FlowCallbackEvent event = new FlowCallbackEvent(Collections.singletonList(generateFlowContext()),
-                    "publisher");
-            when(flowDefinitionRepo.findByStreamId(anyString())).thenReturn(generateFlowDefinition());
+                    generateFlowCallback(), "publisher");
 
             Invoker callbackInvoker = Mockito.mock(Invoker.class);
             setupRouterMock(brokerClient, FlowCallbackService.class, GENERAL_CALLBACK_GENERICABLE, callbackInvoker,
                     null);
+            FlowDefinition mockFlowDefinition = mock(FlowDefinition.class);
+            FlowNode mockFlowNode = mock(FlowNode.class);
+            when(mockFlowNode.getType()).thenReturn(FlowNodeType.STATE);
+            when(mockFlowDefinition.getFlowNode(anyString())).thenReturn(mockFlowNode);
+            when(flowDefinitionRepo.findByStreamId(any())).thenReturn(mockFlowDefinition);
             handler.handleEvent(event);
             verify(callbackInvoker, times(1)).invoke(anyList());
         }

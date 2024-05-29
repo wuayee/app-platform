@@ -187,6 +187,11 @@ public enum AippErrCode implements ErrorCode {
     LLM_COMPONENT_TEMPLATE_RENDER_FAILED(90002906, "请检查提示词模板中的变量。"),
 
     /**
+     * 创建调试aipp失败
+     */
+    CREATE_DEBUG_AIPP_FAILED(90002907, "创建调试用aipp失败。"),
+
+    /**
      * 错误码截止值
      */
     ERROR_CODE_BUTT(99999999, "Error code butt.");

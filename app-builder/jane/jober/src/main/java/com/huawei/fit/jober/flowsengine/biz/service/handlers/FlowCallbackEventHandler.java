@@ -9,7 +9,7 @@ import static com.huawei.fit.jober.common.Constant.FLOWS_EVENT_HANDLER_EXECUTOR;
 import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.FlowDefinition;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.callbacks.FlowCallback;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowNode;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
 import com.huawei.fit.jober.flowsengine.domain.flows.events.FlowCallbackEvent;
 import com.huawei.fitframework.annotation.Asynchronous;
@@ -47,9 +47,11 @@ public class FlowCallbackEventHandler implements EventHandler<FlowCallbackEvent>
         List<FlowContext<FlowData>> flowContexts = eventData.getFlowContexts();
         // 当回调函数执行时，所有FlowContext的streamId和nodeId的值都相同。
         FlowDefinition flowDefinition = flowDefinitionRepo.findByStreamId(flowContexts.get(0).getStreamId());
-        FlowCallback flowCallback = flowDefinition.getFlowNode(flowContexts.get(0).getPosition()).getCallback();
+        FlowNode flowNode = flowDefinition.getFlowNode(flowContexts.get(0).getPosition());
+        flowContexts.forEach(
+                flowContext -> flowContext.getData().getContextData().put("nodeType", flowNode.getType().getCode()));
 
-        flowCallback.execute(flowContexts);
+        eventData.getCallback().execute(flowContexts);
 
         log.info("[FlowCallbackEventHandler]: FlowCallbackEvent handling succeeded.");
     }
