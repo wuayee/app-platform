@@ -47,15 +47,12 @@ public interface AippRunTimeService {
     /**
      * 指定版本，启动一个流程
      *
-     * @param appId
-     * @param version
      * @param metaInstId
      * @param initContext
      * @param context
      * @return
      */
-    String startFlowWithUserSelectMemory(String appId, String version, String metaInstId,
-            Map<String, Object> initContext, OperationContext context);
+    String startFlowWithUserSelectMemory(String metaInstId, Map<String, Object> initContext, OperationContext context);
 
     /**
      * 启动一个最新版本的Aipp

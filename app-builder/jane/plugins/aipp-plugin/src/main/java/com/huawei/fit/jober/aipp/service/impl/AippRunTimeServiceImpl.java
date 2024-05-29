@@ -215,12 +215,12 @@ public class AippRunTimeServiceImpl
     }
 
     @Override
-    public String startFlowWithUserSelectMemory(String appId, String version, String metaInstId,
-            Map<String, Object> initContext, OperationContext context) {
-        Meta meta = MetaUtils.getAnyMeta(this.metaService, appId, version, context);
+    public String startFlowWithUserSelectMemory(String metaInstId, Map<String, Object> initContext, OperationContext context) {
+        String versionId = this.metaInstanceService.getMetaVersionId(metaInstId);
+        Meta meta = this.metaService.retrieve(versionId, context);
         Map<String, Object> businessData = (Map<String, Object>) initContext.get(AippConst.BS_INIT_CONTEXT_KEY);
         String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
-        this.startFlow(meta.getVersionId(), flowDefinitionId, metaInstId, businessData, context);
+        this.startFlow(versionId, flowDefinitionId, metaInstId, businessData, context);
         return metaInstId;
     }
 
@@ -283,7 +283,9 @@ public class AippRunTimeServiceImpl
                     this.getMemories(meta.getId(), memoryType, memoryConfigs, aippType, context));
             this.startFlow(metaVersionId, flowDefinitionId, metaInstId, businessData, context);
         } else {
-            this.aippStreamService.send(metaInstId, this.buildMemoryConfigDto(initContext, metaInstId, "UserSelect"));
+            String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
+            this.aippStreamService.send(parentInstanceId,
+                    this.buildMemoryConfigDto(initContext, metaInstId, "UserSelect"));
         }
         return metaInstId;
     }

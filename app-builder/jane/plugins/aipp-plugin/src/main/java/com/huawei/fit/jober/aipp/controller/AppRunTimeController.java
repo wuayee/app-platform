@@ -118,17 +118,13 @@ public class AppRunTimeController extends AbstractController {
                 this.contextOf(httpRequest, tenantId)));
     }
 
-    @PostMapping(path = "/aipp/{aipp_id}/instances/{instance_id}", description = "用户选择历史后启动流程")
+    @PostMapping(path = "/start/instances/{instance_id}", description = "用户选择历史后启动流程")
     public Rsp<String> startFlowByUserSelectMemory(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
-            @PathVariable("instance_id") String metaInstId,
-            @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData",
-                    example = "图片url, 文本输入, prompt")
-            @RequestBody Map<String, Object> initContext,
-            @RequestParam(value = "version") String version) {
+            @PathVariable("tenant_id") String tenantId, @PathVariable("instance_id") String metaInstId,
+            @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData", example = "图片url, 文本输入, prompt")
+            @RequestBody Map<String, Object> initContext) {
         OperationContext context = this.contextOf(httpRequest, tenantId);
-        return Rsp.ok(aippRunTimeService.startFlowWithUserSelectMemory(aippId, version, metaInstId, initContext,
-                context));
+        return Rsp.ok(aippRunTimeService.startFlowWithUserSelectMemory(metaInstId, initContext, context));
     }
 
     /**
@@ -262,8 +258,8 @@ public class AppRunTimeController extends AbstractController {
             @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
             @PathVariable("instance_id") String instanceId, @RequestParam(value = "version") String version) {
         OperationContext ctx = this.contextOf(httpRequest, tenantId);
-        RuntimeData runtimeData = this.aippFlowRuntimeInfoService.getRuntimeData(aippId, version, instanceId, ctx)
-                .orElse(null);
+        RuntimeData runtimeData =
+                this.aippFlowRuntimeInfoService.getRuntimeData(aippId, version, instanceId, ctx).orElse(null);
         return Rsp.ok(runtimeData);
     }
 }
