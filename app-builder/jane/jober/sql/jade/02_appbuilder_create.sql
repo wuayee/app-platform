@@ -57,7 +57,8 @@ create table if not exists app_builder_app
     type       varchar(255) not null,
     version    varchar(255),
     attributes JSON not null DEFAULT '{}',
-    state varchar(255) not null
+    state varchar(255) not null,
+    collection_usr_cnt bigint NOT NULL DEFAULT 0
     );
 
 create table if not exists app_builder_component
