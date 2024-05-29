@@ -23,10 +23,14 @@ import com.huawei.fit.jober.dataengine.genericable.StaticDataEngine;
 import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDTO;
 import com.huawei.fitframework.annotation.Alias;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.annotation.Conditional;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Initialize;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.ioc.BeanContainer;
+import com.huawei.fitframework.ioc.Condition;
+import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.schedule.ExecutePolicy;
 import com.huawei.fitframework.schedule.Task;
@@ -46,8 +50,9 @@ import java.util.concurrent.ScheduledFuture;
  * @author 00693950
  * @since 2023/6/12
  */
-@Component
 @Alias("scheduler")
+@Conditional(DataEngineCondition.class)
+@Component
 public class TimeSchedulerDataEngine implements StaticDataEngine {
     private static final Logger log = Logger.get(TimeSchedulerDataEngine.class);
 
@@ -101,7 +106,7 @@ public class TimeSchedulerDataEngine implements StaticDataEngine {
     /**
      * timeSchedulerRunner
      */
-    // @Scheduled(strategy = Scheduled.Strategy.FIXED_RATE, value = "5000")
+    @Scheduled(strategy = Scheduled.Strategy.FIXED_RATE, value = "5000")
     public void timeSchedulerRunner() {
         executeSchedulerWithDistributedLock();
     }
@@ -165,7 +170,7 @@ public class TimeSchedulerDataEngine implements StaticDataEngine {
         log.info("[dataEngine]: Delete timeScheduler task success, the taskSourceId is {}.", taskSourceId);
     }
 
-    // @Initialize
+    @Initialize
     private void breakRecovery() {
         log.info("[dataEngine]: Start to recovery all scheduled tasks.");
         executeSchedulerWithDistributedLock();

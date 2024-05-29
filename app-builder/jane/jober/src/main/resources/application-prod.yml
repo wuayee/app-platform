@@ -5,6 +5,7 @@ jane:
   default:
     template:
       id:
+  useDataEngine: false
 
 a3000:
   tenantId:
