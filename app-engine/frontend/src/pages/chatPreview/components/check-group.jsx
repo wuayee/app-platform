@@ -17,7 +17,8 @@ const CheckGroup = (props) => {
     selectAllClick,
     chatList,
     tenantId,
-    appId
+    appId,
+    reportClick
   } = props;
   const navigate = useNavigate();
   const [ checkAll, setCheckAll ] = useState(false);
@@ -44,12 +45,16 @@ const CheckGroup = (props) => {
   function copyLink() {
     toClipboard(shareUrl);
   }
-  // 处理点击分享
+  // 处理点击
   const handleShare = (e) => {
     const result = [];
     checkedList.map((item,index) => {
       result.push({query: JSON.stringify(item)});
     })
+    type === 'share' ? shareConfirm(result) : reportClick(result);
+  }
+  // 分享
+  function shareConfirm(result) {
     shareDialog(tenantId, result).then(res => {
       if (res.code === 0) {
         setIsModalOpen(true);
@@ -66,7 +71,12 @@ const CheckGroup = (props) => {
         <div className="message-check-toolbox-right">
           {/* <Button style={btnStyle} type="primary" onClick={checkAllClick}>{ checkAll ? '取消全选' : '全选' }</Button> */}
           <Button onClick={cancle}>取消</Button>
-          <Button type={ checkedList.length === 0 ? 'default' : 'primary' } disabled={checkedList.length === 0} onClick={(e) => handleShare(e)}>确认分享</Button>
+          <Button 
+            type={ checkedList.length === 0 ? 'default' : 'primary' } 
+            disabled={checkedList.length === 0} 
+            onClick={(e) => handleShare(e)}>
+              确认{ type === 'share' ? '分享' : ''}
+            </Button>
           {/*{ <Button  type={ checkedList.length === 0 ? 'default' : 'primary' } disabled={checkedList.length === 0}>分享到weLink</Button> }*/}
         </div>
       </div>

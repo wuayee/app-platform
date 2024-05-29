@@ -24,6 +24,7 @@ import {
   clearInstance,
   stopInstance,
   queryInspirationSelect,
+  getReportInstance
 } from "@shared/http/aipp";
 import { getRecommends } from '@shared/http/chat';
 import "./styles/chat-preview.scss";
@@ -58,6 +59,8 @@ const ChatPreview = (props) => {
   let childBackInstanceIdArr = useRef([]);
   let childInstanceStop = useRef(false);
   let wsCurrent = useRef(null);
+  let reportInstance = useRef('');
+  let reportIContext = useRef(null);
 
   // 灵感大全点击
   useEffect(() => {
@@ -303,6 +306,10 @@ const ChatPreview = (props) => {
       let messageData = {};
       try {
         messageData = JSON.parse(data);
+        if (messageData.memory === 'UserSelect') {
+          selfSelect(messageData.instanceId, messageData.initContext);
+          return
+        }
         const logDataList = messageData.aippInstanceLogs || [];
         logDataList.forEach(log => {
           if (log.logData && log.logData.length) {
@@ -339,6 +346,42 @@ const ChatPreview = (props) => {
         onStop('数据解析异常');
         chatStatusChange(false);
       }
+    }
+  }
+  // 用户自勾选
+  function selfSelect(instanceId, initContext) {
+    reportInstance.current = instanceId;
+    reportIContext.current = initContext;
+    onStop("请勾选对话");
+    setEditorShow(true, 'report');
+  }
+  // 用户自勾选确定回调
+  async function reportClick(list) {
+    let arr = [];
+    let params = {
+      "initContext": {
+        "Question": "帮我创建个极限运动的应用",
+        ...reportIContext.current.initContext,
+        "memories": [
+          {
+            "question": "你好",
+            "msg": "你好"
+          }
+        ]
+      }
+    }
+    try {
+      const startes = await getReportInstance(tenantId, reportInstance.current, params);
+      if (startes.code === 0 && startes.data) {
+        let instanceId = startes.data;
+        queryInstance(runningAppid.current, runningVersion.current, instanceId);
+      } else {
+        onStop("启动任务失败");
+      }
+    } catch {
+      onStop("启动任务失败");
+    } finally {
+      setEditorShow(false);
     }
   }
   // 主流程轮训回调
@@ -519,11 +562,11 @@ const ChatPreview = (props) => {
     setOpen(!open);
   }
   // 显示问答组
-  function setEditorShow(val) {
+  function setEditorShow(val, type='share') {
     !val && setCheckedList([]);
     setShowCheck(val);
     selectAllClick(false);
-    val && setGroupType("share");
+    val && setGroupType(type);
   }
   // 设置全选取消全选
   function selectAllClick(val) {
@@ -613,6 +656,7 @@ const ChatPreview = (props) => {
                       checkedList={checkedList}
                       totalNum={chatList.length}
                       selectAllClick={selectAllClick}
+                      reportClick={reportClick}
                       type={groupType}
                     />
                   ) : (
