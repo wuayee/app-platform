@@ -16,6 +16,7 @@
 #include "config/DataBusConfig.h"
 #include "PermissionHeld.h"
 #include "SharedMemoryInfo.h"
+#include "utils/FileUtils.h"
 #include "WaitingPermitRequest.h"
 #include "fbs/common_generated.h"
 #include "report/ReportCollector.h"
@@ -23,7 +24,7 @@
 namespace DataBus {
 namespace Resource {
 
-const std::string LOG_PATH = "/tmp/databus/logs/malloc_log.bin";
+const std::string LOG_PATH = DataBus::Common::FileUtils::GetDataBusDirectory() + "logs/malloc_log.bin";
 
 class ResourceManager {
 public:
