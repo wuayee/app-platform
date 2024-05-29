@@ -14,9 +14,9 @@ import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.ChatOptions;
-import com.huawei.jade.fel.chat.character.AbstractChatMessage;
 import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.content.Contents;
 import com.huawei.jade.fel.chat.content.MediaContent;
@@ -65,13 +65,13 @@ public class ModelTest {
         List<ChatMessages> messages = new ArrayList<>();
         ChatBlockModel<ChatMessages> model =
                 new ChatBlockModel<>(prompts -> new FlatChatMessage(new AiMessage("model answer")));
-        AiProcessFlow<Tip, AiMessage> flow = AiFlows.<Tip>create()
+        AiProcessFlow<Tip, ChatMessage> flow = AiFlows.<Tip>create()
                 .prompt(Prompts.sys("sys msg"), Prompts.human("answer {{0}}").memory("0"))
                 .generate(model)
                 .close();
 
         Memory memory = new CacheMemory();
-        Conversation<Tip, AiMessage> session = flow.converse().bind(memory);
+        Conversation<Tip, ChatMessage> session = flow.converse().bind(memory);
         session.doOnSuccess(data -> messages.add(ChatMessages.from(data))).offer(Tip.fromArray("question 1")).await();
 
         assertThat(messages).hasSize(1).map(m -> m.messages().size()).containsSequence(1);
@@ -89,7 +89,7 @@ public class ModelTest {
         AiProcessFlow<Tip, ModelOutput> flow = AiFlows.<Tip>create()
                 .prompt(Prompts.human("{{question}}"))
                 .generate(model.bind(new ChatOptions()))
-                .map(AbstractChatMessage::text)
+                .map(ChatMessage::text)
                 .format(parser)
                 .close();
 
@@ -117,7 +117,7 @@ public class ModelTest {
         private final AiProcessFlow<Tip, String> flow = AiFlows.<Tip>create()
                 .prompt(Prompts.human("answer: {{0}}"))
                 .generate(this.model)
-                .reduce("", (acc, input) -> {
+                .reduce(() -> "", (acc, input) -> {
                     acc += input.text();
                     return acc;
                 })
@@ -147,7 +147,7 @@ public class ModelTest {
             result.set(null);
             AiFlows.<Tip>create().prompt(Prompts.human("answer: {{0}}").memory("0"))
                     .generate(this.model)
-                    .reduce("", (acc, input) -> {
+                    .reduce(() -> "", (acc, input) -> {
                         acc += input.text();
                         return acc;
                     }).close()
@@ -163,13 +163,13 @@ public class ModelTest {
             StringBuilder accResult = new StringBuilder();
             StringBuilder chunkResult = new StringBuilder();
             this.flow.converse()
-                    .bind(((acc, chunk) -> {
+                    .bind((acc, chunk) -> {
                         if (chunk.isEnd()) {
                             return;
                         }
                         chunkResult.append(chunk.text());
                         accResult.append(acc.text()).append("\n");
-                    }))
+                    })
                     .offer(Tip.fromArray("test streaming model")).await();
             assertThat(chunkResult.toString()).isEqualTo("0123");
             assertThat(accResult.toString()).isEqualTo("0\n01\n012\n0123\n");
@@ -190,7 +190,7 @@ public class ModelTest {
             AiFlows.<Tip>create()
                     .prompt(Prompts.human("answer: {{0}}").memory("0"))
                     .generate(mediasModel)
-                    .reduce("", (acc, input) -> {
+                    .reduce(() -> "", (acc, input) -> {
                         acc += input.text();
                         return acc;
                     })
@@ -211,7 +211,7 @@ public class ModelTest {
                 AiFlows.<Tip>create()
                     .prompt(Prompts.human("{{0}}"))
                     .generate(this.model)
-                    .reduce("", (acc, input) -> {
+                    .reduce(() -> "", (acc, input) -> {
                         acc += input.text();
                         return acc;
                     })
@@ -241,7 +241,7 @@ public class ModelTest {
             Conversation<Tip, String> exceptionConverse = AiFlows.<Tip>create()
                     .prompt(Prompts.human("{{0}}"))
                     .generate(exceptionModel)
-                    .reduce("", (acc, input) -> {
+                    .reduce(() -> "", (acc, input) -> {
                         acc += input.text();
                         return acc;
                     })

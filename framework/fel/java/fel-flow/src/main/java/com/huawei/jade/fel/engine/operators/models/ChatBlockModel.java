@@ -24,7 +24,7 @@ import com.huawei.jade.fel.engine.util.StateKey;
  * @author 刘信宏
  * @since 2024-04-16
  */
-public class ChatBlockModel<M> implements ChatModel<AiMessage> {
+public class ChatBlockModel<M> implements ChatModel<ChatMessage> {
     private final ChatModelService provider;
     private final ChatOptions options;
 
@@ -38,7 +38,7 @@ public class ChatBlockModel<M> implements ChatModel<AiMessage> {
     }
 
     @Override
-    public AiMessage invoke(CustomState<Prompt> arg) {
+    public ChatMessage invoke(CustomState<Prompt> arg) {
         Validation.notNull(arg, "Runnable arg cannot be null.");
         AiRunnableArg<Prompt> aiArg = ObjectUtils.cast(arg);
         ChatCompletion completionRequest = new ChatCompletion(aiArg.data(), this.options);

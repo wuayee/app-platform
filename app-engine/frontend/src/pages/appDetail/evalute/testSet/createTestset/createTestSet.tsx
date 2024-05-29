@@ -72,7 +72,9 @@ const CreateSet = ({ visible, createCallback }: props) => {
   }
 
   const onFinish = (value: any) => {
-    createCallback('submit', value);
+    const data = !showType || type === CreateType.MANUAL ? manualData : uploadData;
+
+    createCallback('submit', { ...value, data });
   }
 
   // 构建参数

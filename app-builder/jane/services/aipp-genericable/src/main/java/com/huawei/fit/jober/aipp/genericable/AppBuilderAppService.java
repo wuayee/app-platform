@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.jober.aipp.genericable;
+
+import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
+import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
+import com.huawei.fitframework.annotation.Genericable;
+
+/**
+ * 表示 app 应用相关的 Genericable 接口。
+ *
+ * @author 邬涨财 w00575064
+ * @since 2024-05-24
+ */
+public interface AppBuilderAppService {
+    /**
+     * 查询 app 详情。
+     *
+     * @param appId 表示 app 唯一标识的 {@link String}。
+     * @return 表示 app 应用详情的 dto 对象的 {@link AppBuilderAppDto}。
+     */
+    @Genericable(id = "com.huawei.fit.jober.aipp.service.app.query")
+    AppBuilderAppDto query(String appId);
+
+    /**
+     * 调试 app。
+     *
+     * @param appDto 表示 app 应用详情的 dto 对象的 {@link AppBuilderAppDto}。
+     * @param contextOf 表示操作者上下文的 {@link OperationContext}。
+     * @return 表示创建的 Aipp 响应体实体类对象的 {@link AippCreate}。
+     */
+    @Genericable(id = "com.huawei.fit.jober.aipp.service.app.debug")
+    AippCreate debug(AppBuilderAppDto appDto, OperationContext contextOf);
+}

@@ -14,6 +14,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>lowcode-flow-trace-adapter</module>
         <module>tool-execution</module>
         <module>tool-repository-postgresql</module>
     </modules>

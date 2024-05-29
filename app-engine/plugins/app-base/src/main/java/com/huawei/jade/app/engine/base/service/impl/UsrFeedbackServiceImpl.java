@@ -9,7 +9,6 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.jade.app.engine.base.dto.UsrFeedbackDto;
 import com.huawei.jade.app.engine.base.mapper.UserFeedbackMapper;
-import com.huawei.jade.app.engine.base.po.UsrFeedbackPo;
 import com.huawei.jade.app.engine.base.service.UsrFeedbackService;
 
 import java.util.List;
@@ -50,13 +49,13 @@ public class UsrFeedbackServiceImpl implements UsrFeedbackService {
 
     @Override
     @Fitable(id = "UsrGetAllUsrFeedbacks")
-    public List<UsrFeedbackPo> getAllUsrFeedbacks() {
+    public List<UsrFeedbackDto> getAllUsrFeedbacks() {
         return usrFeedbackMapper.getAllUsrFeedbacks();
     }
 
     @Override
     @Fitable(id = "UsrGetUsrFeedbackByLogId")
-    public UsrFeedbackPo getUsrFeedbackByLogId(Long logId) {
+    public UsrFeedbackDto getUsrFeedbackByLogId(Long logId) {
         return usrFeedbackMapper.getUsrFeedbackByLogId(logId);
     }
 }

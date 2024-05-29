@@ -37,6 +37,12 @@
             display: flex;
             flex-wrap: wrap;
             margin: 20px 0;
+            .card_box{
+                width: 380px;
+                height: 260px;
+                margin-right: 16px;
+                margin-bottom: 16px;
+            }
         }
         .page_box{
             padding-top: 10px;

@@ -5,8 +5,8 @@
 package com.huawei.jade.fel.rag.rerank;
 
 import com.huawei.fitframework.log.Logger;
+import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatModelService;
-import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
@@ -35,7 +35,7 @@ public class LlmRerank extends ModelRerank {
             + "Output MUST contain the {{num}} identifiers listed above, Do not give any additional message\\n"
             + "For example, \\\"[1, 2, 3]\\\" is a well-formed output and 1. [1] \\n 2.[2] \\n 3.[3] is a bad output";
 
-    private AiProcessFlow<Tip, AiMessage> rerankFlow;
+    private AiProcessFlow<Tip, ChatMessage> rerankFlow;
 
     /**
      * 利用传入的重排序模型创建 {@link LlmRerank} 实例。

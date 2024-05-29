@@ -54,7 +54,7 @@ const Apps: React.FC = () => {
 
   // 点击卡片
   function clickCard(item: any, e: any) {
-    navigate(`/app/${tenantId}/chat/${item.id}`);
+    navigate(`/app-develop/${tenantId}/chat/${item.id}`);
   }
 
   // 点击更多操作选项
@@ -95,7 +95,11 @@ const Apps: React.FC = () => {
         </div>
         <div className='card_list'>
           {appData.map((item: any) => (
-            <div key={item.id} onClick={(e) => clickCard(item, e)}>
+            <div
+              className='card_box'
+              key={item.id}
+              onClick={(e) => clickCard(item, e)}
+            >
               <AppCard cardInfo={item} clickMore={clickMore} showOptions={false} />
             </div>
           ))}

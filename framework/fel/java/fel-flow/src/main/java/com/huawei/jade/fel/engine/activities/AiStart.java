@@ -16,10 +16,10 @@ import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.utils.Tuple;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.Prompt;
-import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.content.MessageContent;
 import com.huawei.jade.fel.core.formatters.Parser;
 import com.huawei.jade.fel.core.retriever.Indexer;
@@ -48,6 +48,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 /**
  * AI 流程的开始节点。
@@ -173,14 +174,15 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      * <p>如果流程是批量注入数据，那么聚合节点会将同一批次的数据聚合。</p>
      * <p>如果流程是逐个注入数据，那么需要配合 {@link AiStart#window(Operators.Window)} 表达式使用，才会聚合数据。</p>
      *
-     * @param init 表示聚合操作的初始值的 {@link R}，当 {@code init} 为 {@code null} 时，表示聚合之后的数据类型还是原数据类型。
+     * @param init 表示聚合操作初始值提供者的 {@link Supplier}{@code <}{@link R}{@code >}，当 {@code init} 为 {@code null}
+     * 时，表示聚合之后的数据类型还是原数据类型。
      * @param processor 表示数据聚合器的 {@link Operators.Reduce}{@code <}{@link O}{@code , }{@link R}{@code >}。
      * @param <R> 表示新节点的输出数据类型。
      * @return 表示数据聚合节点的 {@link AiState}{@code <}{@link R}{@code , }{@link D}{@code , }{@link O}{@code ,
      * }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
-    public <R> AiState<R, D, O, RF, F> reduce(R init, Operators.Reduce<O, R> processor) {
+    public <R> AiState<R, D, O, RF, F> reduce(Supplier<R> init, Operators.Reduce<O, R> processor) {
         Validation.notNull(processor, "Reduce processor cannot be null.");
         return new AiState<>(this.start.reduce(init, processor), this.getFlow());
     }
@@ -190,7 +192,8 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      * <p>如果流程是批量注入数据，那么聚合节点会将同一批次的数据聚合。</p>
      * <p>如果流程是逐个注入数据，那么需要配合 {@link AiStart#window(Operators.Window)} 表达式使用，才会聚合数据。</p>
      *
-     * @param init 表示聚合操作的初始值的 {@link R}，当 {@code init} 为 {@code null} 时，表示聚合之后的数据类型还是原数据类型。
+     * @param init 表示聚合操作初始值提供者的 {@link Supplier}{@code <}{@link R}{@code >}，当 {@code init} 为 {@code null}
+     * 时，表示聚合之后的数据类型还是原数据类型。
      * @param processor 表示数据聚合器的 {@link Operators.Reduce}{@code <}{@link O}{@code , }{@link R}{@code >}，
      * 捕获了从 {@link com.huawei.jade.fel.engine.flows.Conversation#bind(String, Object)} 绑定的自定义上下文。
      * @param <R> 表示新节点的输出数据类型。
@@ -198,7 +201,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      * }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
-    public <R> AiState<R, D, O, RF, F> reduce(R init, Operators.ProcessReduce<O, R> processor) {
+    public <R> AiState<R, D, O, RF, F> reduce(Supplier<R> init, Operators.ProcessReduce<O, R> processor) {
         Validation.notNull(processor, "Reduce processor cannot be null.");
         return new AiState<>(this.start.reduce(init, processor), this.getFlow());
     }
@@ -219,8 +222,8 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
 
     /**
      * 设置分组聚合的键，需要配合 {@link AiStart#window(Operators.Window)}、
-     * {@link AiStart#reduce(Object, Operators.Reduce)} 和 {@link AiStart#reduce(Object, Operators.ProcessReduce)} 使用，
-     * 后续的聚合操作按指定的键分组处理。
+     * {@link AiStart#reduce(Supplier, Operators.Reduce)} 和 {@link AiStart#reduce(Supplier, Operators.ProcessReduce)}
+     * 使用，后续的聚合操作按指定的键分组处理。
      *
      * @param keyBy 表示分组配置器的 {@link Operators.Map}{@code <}{@link O}{@code , }{@link R}{@code >}，提供分组聚合的键。
      * @param <R> 表示新节点的输出数据类型。
@@ -477,11 +480,11 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      *
      * @param model 表示模型算子实现的 {@link ChatBlockModel}{@code <}{@link M}{@code >}。
      * @param <M> 表示模型节点的输入数据类型。
-     * @return 表示大模型阻塞调用节点的 {@link AiState}{@code <}{@link AiMessage}{@code , }{@link D}{@code ,
+     * @return 表示大模型阻塞调用节点的 {@link AiState}{@code <}{@link ChatMessage}{@code , }{@link D}{@code ,
      * }{@link O}{@code , }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code model} 为 {@code null} 时。
      */
-    public <M extends O> AiState<AiMessage, D, O, RF, F> generate(ChatBlockModel<M> model) {
+    public <M extends O> AiState<ChatMessage, D, O, RF, F> generate(ChatBlockModel<M> model) {
         Validation.notNull(model, "Model operator cannot be null.");
         return new AiState<>(new State<>(this.publisher().map(input -> {
             FlowSession session = input.getSession();
