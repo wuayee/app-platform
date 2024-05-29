@@ -162,6 +162,8 @@ const ChatPreview = (props) => {
                 logId: aItem.logId,
                 markdownSyntax: markdowned !== -1,
                 type: "recieve",
+                instanceId: item.instanceId,
+                feedbackStatus: -1
               };
               if (isJsonString(msg)) {
                 let msgObj = JSON.parse(msg);
@@ -325,6 +327,7 @@ const ChatPreview = (props) => {
               logId: log.msgId || -1,
               markdownSyntax: markdowned !== -1,
               type: 'recieve',
+              instanceId,
             }
             if (log.msgId !== null) {
               socketChat2(log, msg, initObj);
@@ -589,57 +592,58 @@ const ChatPreview = (props) => {
     }
   }
   return <>{(
-    <div className={[
-      'chat-preview',
-      showElsa ? 'chat-preview-elsa chat-preview-shadow' : null,
-      location.pathname.indexOf('chat') === -1 ? 'chat-preview-inner' : null,
-      (showElsa && open) ? 'chat-preview-mr' : null
-      ].join(' ')}>
-        <Spin spinning={loading}>
-          { showElsa && (<span className="icon-back" onClick={previewBack}>
-            <LeftArrowIcon />
-          </span>) }
-          <div className={['chat-inner', location.pathname.indexOf('chat') !== -1 ? 'chat-page-inner' : null].join(' ')}>
-            <div className={['chat-inner-left', open ? 'chat-left-close' : 'no-border'].join(' ')}>
-              <ChatMessage
-                chatList={chatList}
-                setEditorShow={setEditorShow}
-                setCheckedList={setCheckedList}
-                showCheck={showCheck}/>
-              { showCheck ?
-                ( <CheckGroup
-                    appId={appId}
-                    tenantId={tenantId}
-                    chatList={chatList}
-                    setEditorShow={setEditorShow}
-                    checkedList={checkedList}
-                    totalNum={chatList.length}
-                    selectAllClick={selectAllClick}
-                    type={groupType}
-                  />
-                ) : (
-                  <SendEditor
-                    filterRef={editorRef}
-                    onSend={onSend}
-                    onClear={clearChat}
-                    openClick={openClick}
-                    onStop={chatRunningStop}
-                    chatType={chatType}
-                    inspirationOpen={open}
-                    requestLoading={requestLoading}
-                    open={open}
-                    openInspiration={openClick}
-                    recommendList={recommendList}
-                  />
-                )
-              }
-            </div>
-            <div className={['chat-inner-right', open ? 'chat-right-close' : null].join(' ')}>
-              <Inspiration
-                open={open}
-                sessionName={sessionName}
-                chatType={chatType}>
-              </Inspiration>
+      <div className={[
+        'chat-preview',
+        showElsa ? 'chat-preview-elsa chat-preview-shadow' : null,
+        location.pathname.indexOf('chat') === -1 ? 'chat-preview-inner' : null,
+        (showElsa && open) ? 'chat-preview-mr' : null
+        ].join(' ')}>
+          <Spin spinning={loading}>
+            { showElsa && (<span className="icon-back" onClick={previewBack}>
+              <LeftArrowIcon />
+            </span>) }
+            <div className={['chat-inner', location.pathname.indexOf('chat') !== -1 ? 'chat-page-inner' : null].join(' ')}>
+              <div className={['chat-inner-left', open ? 'chat-left-close' : 'no-border'].join(' ')}>
+                <ChatMessage
+                  chatList={chatList}
+                  setEditorShow={setEditorShow}
+                  setCheckedList={setCheckedList}
+                  setChatList={setChatList}
+                  showCheck={showCheck}/>
+                { showCheck ?
+                  ( <CheckGroup
+                      appId={appId}
+                      tenantId={tenantId}
+                      chatList={chatList}
+                      setEditorShow={setEditorShow}
+                      checkedList={checkedList}
+                      totalNum={chatList.length}
+                      selectAllClick={selectAllClick}
+                      type={groupType}
+                    />
+                  ) : (
+                    <SendEditor
+                      filterRef={editorRef}
+                      onSend={onSend}
+                      onClear={clearChat}
+                      openClick={openClick}
+                      onStop={chatRunningStop}
+                      chatType={chatType}
+                      inspirationOpen={open}
+                      requestLoading={requestLoading}
+                      open={open}
+                      openInspiration={openClick}
+                    />
+                  )
+                }
+              </div>
+              <div className={['chat-inner-right', open ? 'chat-right-close' : null].join(' ')}>
+                <Inspiration
+                  open={open}
+                  sessionName={sessionName}
+                  chatType={chatType}>
+                </Inspiration>
+              </div>
             </div>
           </div>
         </Spin>

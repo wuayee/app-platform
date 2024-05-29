@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.jade.app.engine.metrics.mapper.MetricsAccessMapper">
+    <resultMap id="MetricAccess" type="com.huawei.jade.app.engine.metrics.po.MetricsAccessPo" >
+        <result column="id" property="id"/>
+        <result column="app_id" property="appId"/>
+        <result column="total_access" property="totalAccess"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    <!-- 插入metric_access -->
+    <insert id="insertMetricAccess" parameterType="com.huawei.jade.app.engine.metrics.po.MetricsAccessPo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO metrics_access (app_id, total_access)
+        VALUES (#{appId}, #{totalAccess})
+    </insert>
+
+    <select id="getHourlyAccessData" resultType="map">
+        SELECT
+            TO_CHAR(DATE_TRUNC('hour', create_time), 'YYYY-MM-DD HH24:MI') AS time_unit,
+            SUM(total_access) AS access_count
+        FROM
+            metrics_access
+        WHERE
+            app_id = #{appId} AND create_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY
+            DATE_TRUNC('hour', create_time)
+        ORDER BY
+            DATE_TRUNC('hour', create_time)
+    </select>
+
+    <select id="getDailyAccessData" resultType="map">
+        SELECT
+            TO_CHAR(DATE_TRUNC('day', create_time), 'YYYY-MM-DD') AS time_unit,
+            SUM(total_access) AS access_count
+        FROM
+            metrics_access
+        WHERE
+            app_id = #{appId} AND create_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY
+            DATE_TRUNC('day', create_time)
+        ORDER BY
+            DATE_TRUNC('day', create_time)
+    </select>
+
+
+</mapper>

@@ -8,7 +8,7 @@
 /*整个滚动条*/
 ::-webkit-scrollbar {
   height: 6px;
-  background-color: transparent;
+  // background-color: transparent;
 }
 
 /*水平的整个滚动条*/
@@ -31,7 +31,7 @@
 /*垂直的滑块*/
 ::-webkit-scrollbar-thumb:vertical {
   border-radius: 4px;
-  background: transparent;
+  background: #cccccc;
   cursor: pointer;
 }
 #chat-list-dom::-webkit-scrollbar-thumb:vertical {
@@ -79,9 +79,6 @@ body {
   color: #070709;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  overscroll-behavior-x: none;
-  overflow-y: hidden;
 }
 
 :where(.css-dev-only-do-not-override-1drr2mu).buttonDroup.ant-radio-button-wrapper:not(:first-child)::before {

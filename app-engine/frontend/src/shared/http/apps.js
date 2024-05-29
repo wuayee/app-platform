@@ -1,11 +1,12 @@
 import { del, get, post, put } from './http';
 import { httpUrlMap } from './httpConfig';
 
+const appurl = '/api/jober'
 const { JANE_URL, AIPP_URL, APP_URL } = httpUrlMap[process.env.NODE_ENV];
 
 // 获取应用市场列表
 export function queryAppsApi(tenantId, params) {
-  return get(`${AIPP_URL}/tools`, params);
+  return get(`${appurl}/tools`, params);
 }
 
 export function getEvalTaskList(requestBody) {
@@ -117,3 +118,9 @@ export function deleteDataSetData(id) {
 
 // 下载模板链接
 export const downTemplateUrl = `${AIPP_URL}/eval_dataset_template.xlsx`;
+
+// 查询分析数据 appId ,  timeType 
+export function getAnalysisData(data) {
+  const url = `${AIPP_URL}/metrics/analysis`;
+  return get(url, data);
+}

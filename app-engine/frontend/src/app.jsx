@@ -24,6 +24,7 @@ import '__styles/global.scss';
 
 localStorage.getItem("currentUser") || localStorage.setItem('currentUser', '');
 localStorage.getItem("currentUserId") || localStorage.setItem('currentUserId', '');
+localStorage.getItem("currentUserIdComplete") || localStorage.setItem('currentUserIdComplete', '');
 
 const Home = () => {
     return (<Router hashType="hash">

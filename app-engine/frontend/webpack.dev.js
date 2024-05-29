@@ -80,7 +80,7 @@ module.exports = merge(common, {
       '/aippApi': {
         target: 'http://10.91.144.92:8080/v1/api',
         // target: 'http://10.169.63.12:8080/api/jober/v1/api',
-        // target: 'http://80.11.128.66:31111/api/jober/v1/api',
+        target: 'http://80.11.128.66:31111/api/jober/v1/api',
         // target: 'http://10.91.144.79:8028/api/jober/v1/api',
         // target: 'https://jane-beta.huawei.com/api/jober/v1/api',
         // target: 'http://10.91.144.226:8028/api/jober/v1/api',
@@ -119,7 +119,7 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/v1': {
-        target: 'http://model-io-manager:8010',
+        target: 'http://80.11.128.66:31110',
         pathRewrite: {
           '^/modelApi': '',
         },

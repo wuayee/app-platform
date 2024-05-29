@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.jade.app.engine.base.mapper.UsrAppCollectionMapper">
+    <resultMap id="BaseResultMap" type="com.huawei.jade.app.engine.base.po.UsrAppCollectionPo">
+        <result column="id" property="id"/>
+        <result column="aipp_id" property="aippId"/>
+        <result column="usr_info" property="usrInfo"/>
+        <result column="is_default" property="isDefault"/>
+    </resultMap>
+    <resultMap id="AppBuilderAndCollectionResultMap" type="com.huawei.jade.app.engine.base.po.UsrAppInfoAndCollectionPo">
+        <result column="id" property="id"/>
+        <result column="usr_info" property="usrInfo"/>
+        <result column="is_default" property="isDefault"/>
+        <result column="aipp_id" property="aippId"/>
+        <result column="name" property="name"/>
+        <result column="config_id" property="configId"/>
+        <result column="flow_graph_id" property="flowGraphId"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="type" property="type"/>
+        <result column="version" property="version"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_at" property="createAt"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_at" property="updateAt"/>
+        <result column="attributes" property="attributes"/>
+        <result column="state" property="state"/>
+    </resultMap>
+
+    <resultMap id="AppBuilderResultMap" type="com.huawei.jade.app.engine.base.po.UsrAppInfoAndCollectionPo">
+        <result column="id" property="aippId"/>
+        <result column="name" property="name"/>
+        <result column="config_id" property="configId"/>
+        <result column="flow_graph_id" property="flowGraphId"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="type" property="type"/>
+        <result column="version" property="version"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_at" property="createAt"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_at" property="updateAt"/>
+        <result column="attributes" property="attributes"/>
+        <result column="state" property="state"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, aipp_id, usr_info, is_default
+    </sql>
+
+    <sql id="App_Column_List">
+        id
+        , name, config_id, flow_graph_id, tenant_id, type, version, attributes, state, create_by, create_at, update_by, update_at
+    </sql>
+
+    <insert id="insert" parameterType="com.huawei.jade.app.engine.base.dto.UsrAppCollectionDto" useGeneratedKeys="true" keyProperty="id">
+        insert into usr_collection_info (aipp_id, usr_info, is_default)
+        values (#{aippId}, #{usrInfo}, #{isDefault})
+    </insert>
+
+    <update id="updateOne" parameterType="com.huawei.jade.app.engine.base.dto.UsrAppCollectionDto">
+        update usr_collection_info
+        <set>
+            is_default = #{isDefault}
+        </set>
+        where id = #{collectionId}
+    </update>
+
+    <delete id="deleteByUsrInfoAndAippId">
+        delete
+        from usr_collection_info
+        where usr_info = #{usrInfo}
+        and aipp_id = #{aippId}
+    </delete>
+
+    <select id="getCollectionsByUsrInfo" resultMap="BaseResultMap" resultType="com.huawei.jade.app.engine.base.po.UsrAppCollectionPo">
+        select
+        <include refid="Base_Column_List"/>
+        from usr_collection_info
+        where usr_info = #{usrInfo}
+    </select>
+
+    <update id="updateCollectionUsrCntByAippId">
+        update app_builder_app
+        <set>
+            collection_usr_cnt = collection_usr_cnt + #{collectionNum}
+        </set>
+        where id = #{aippId}
+    </update>
+
+    <select id="getCollectionUsrCntByAippId" resultType="Integer">
+        select collection_usr_cnt
+        from app_builder_app
+        where id = #{aippId}
+    </select>
+
+    <select id="getAppInfoByUsrInfo" resultMap="AppBuilderAndCollectionResultMap" resultType="com.huawei.jade.app.engine.base.po.UsrAppInfoAndCollectionPo">
+        select
+        usr.id, usr.usr_info, usr.is_default, usr.aipp_id,
+        app.name, app.config_id, app.flow_graph_id, app.tenant_id,
+        app.type, app.version, app.create_by, app.create_at, app.update_by,
+        app.update_at, app.attributes, app.state
+        from usr_collection_info as usr
+        left join app_builder_app as app
+        on app.id = usr.aipp_id
+        where usr.usr_info = #{usrInfo}
+    </select>
+
+    <select id="getDefaultAppInfo" resultMap="AppBuilderResultMap" resultType="com.huawei.jade.app.engine.base.po.UsrAppInfoAndCollectionPo">
+        select
+        <include refid="App_Column_List"/>
+        from app_builder_app
+        where id = #{aippId}
+    </select>
+</mapper>

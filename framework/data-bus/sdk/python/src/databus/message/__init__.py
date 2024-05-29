@@ -7,6 +7,8 @@ from . import (
     ApplyPermissionMessage,
     ApplyPermissionMessageResponse,
     ErrorMessageResponse,
+    GetMetaDataMessage,
+    GetMetaDataMessageResponse,
     MessageHeader,
     ReleaseMemoryMessage,
     ReleasePermissionMessage

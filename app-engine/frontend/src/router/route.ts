@@ -89,7 +89,7 @@ export const routeList: MenuItem[] = [
         hidden: true,
       },
       {
-        key: "/app-develop/:tenantId/chat/:appId",
+        key: "/home/app-develop/:tenantId/chat/:appId",
         icon: Icons.app({}),
         label: '',
         component: ChatRunning,

@@ -14,7 +14,7 @@ import java.util.List;
  * @since 2024-5-24
  *
  */
-public interface UserFeedbackMapper {
+public interface UsrFeedbackMapper {
     /**
      * 用户反馈创建接口
      *

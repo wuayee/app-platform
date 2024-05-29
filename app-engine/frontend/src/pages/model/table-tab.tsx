@@ -209,7 +209,7 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels }) =>
           dataSource={modelList}
           size='small'
           pagination={false}
-          scroll={{ y: 600 }}
+          scroll={{ x: 2000, y: 600 }}
         />
       </div>
       <div />

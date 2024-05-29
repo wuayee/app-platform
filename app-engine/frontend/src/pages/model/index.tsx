@@ -47,10 +47,15 @@ const ModelList = () => {
         setModelList(res.llms);
         setTotal(res.llms.length);
         res.llms.forEach((item: any) => {
-          const createItem = { name: '', image: [], precision: [] };
+          const createItem = { name: '', image: [], precision: [], gpu: [] };
           createItem.name = item.name;
           createItem.image = item.supported_images;
           createItem.precision = item.precision.supports;
+          let gpuList = [];
+          for (let gpu = item.gpu.min; gpu <= item.gpu.max; gpu++) {
+            gpuList.push(gpu);
+          }
+          createItem.gpu = gpuList;
           createItems.push(createItem);
         });
         setCreateItems(createItems);
