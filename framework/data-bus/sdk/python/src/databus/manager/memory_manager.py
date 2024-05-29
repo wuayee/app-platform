@@ -16,7 +16,8 @@ class MemoryManager:
         self._memory_registry[user_key] = (memory_id, memory_size)
 
     def del_memory_block(self, user_key: str):
-        del self._memory_registry[user_key]
+        if user_key in self._memory_registry:
+            del self._memory_registry[user_key]
 
     def get_memory_info(self, user_key: str) -> Tuple[Optional[int], Optional[int]]:
         return self._memory_registry.get(user_key, (None, None))
