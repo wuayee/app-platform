@@ -29,6 +29,10 @@ import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowtrace.Flow
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.FlowDefinition;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowNode;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowStateNode;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter.MappingFlowDataConverter;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter.MappingFromType;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter.MappingNode;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter.MappingNodeType;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowTaskType;
@@ -48,6 +52,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -75,8 +81,13 @@ class ManualOperationCreatedEventHandlerTest extends DatabaseBaseTest {
         propertiesMap.put("title", "PM审批");
         propertiesMap.put("created_by", "{{creator}}");
         propertiesMap.put("owner", "{{owner1}}");
+        List<MappingNode> inputMappingConfig = new ArrayList<>(Arrays.asList(
+                new MappingNode("taskKey1", MappingNodeType.STRING, MappingFromType.REFERENCE, Arrays.asList("statue"),
+                        ""), new MappingNode("int", MappingNodeType.INTEGER, MappingFromType.INPUT, 666, "")));
+        MappingFlowDataConverter flowDataConverter = new MappingFlowDataConverter(inputMappingConfig, null);
 
-        FlowTask task = new FlowTask("taskId", taskType, Collections.singleton("exceptionFitable"), propertiesMap);
+        FlowTask task = new FlowTask("taskId", taskType, Collections.singleton("exceptionFitable"), propertiesMap,
+                flowDataConverter);
         flowNode.setTask(task);
         nodeMap.put("nodeId", flowNode);
         return FlowDefinition.builder().nodeMap(nodeMap).build();
