@@ -33,7 +33,7 @@ const Recommends = (props) => {
   return <>{(
     <div className="recommends-inner">
       {
-        recommendList && (
+        (recommendList.length > 0) && (
           <div className="recommends-top">
             <span className="title">猜你想问</span>
             <RebotIcon />
@@ -44,9 +44,9 @@ const Recommends = (props) => {
       <div className="recommends-list">
         <div className="list-left">
           {
-            recommendList?.map(item => {
+            recommendList?.map((item, index) => {
               return (
-                <div className="recommends-item" onClick={recommendClick.bind(this, item)}>{item}</div>
+                <div className="recommends-item" onClick={recommendClick.bind(this, item)} key={index}>{item}</div>
               )
             })
           }

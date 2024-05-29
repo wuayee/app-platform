@@ -11,16 +11,17 @@ const Recommend = (props) => {
   const listCrrent = useRef([]);
 
   useEffect(() => {
-    if (recommendValues && recommendValues.length) {
+    if (recommendValues) {
       setList(() => {
         listCrrent.current = JSON.parse(JSON.stringify(recommendValues));
         return listCrrent.current;
       });
     };
-  }, [props]);
+  }, [props.recommendValues]);
   const handleDeleteIns = (index) => {
     listCrrent.current.splice(index, 1);
     setList([ ...listCrrent.current ]);
+    saveRecommend();
   }
   const addRecommend = () => {
     if (listCrrent.current.length > 2) return;
@@ -33,10 +34,7 @@ const Recommend = (props) => {
   }
   const saveRecommend = () => {
     let arr = listCrrent.current.filter(item => item.length);
-    if (arr.length) {
-      console.log(arr);
-    }
-    // updateData(e.target.value, "systemPrompt");
+    updateData(arr, "recommend");
   }
   return <>{(
     <div className="control-container">

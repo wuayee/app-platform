@@ -34,7 +34,8 @@ const ConfigForm = (props) => {
             { tab.map(item => {
               return (
                 <span className={ activeKey === item.key ? 'active' : null } key={item.key} onClick={() => handleClick(item.key)}>
-                  { item.name }
+                  <span className="text">{ item.name }</span> 
+                  <span className="line"></span>
                 </span>
               )
             })}

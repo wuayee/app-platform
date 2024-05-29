@@ -6,8 +6,6 @@ export const ConfigFormWrap = styled.div`
   flex-shrink: 0;
   .config-form {
     height: 100%;
-    max-height: 100%;
-    overflow: auto;
     width: 100%;
     background-color: #ffffff;
     box-sizing: border-box;
@@ -17,17 +15,35 @@ export const ConfigFormWrap = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 20px;
       .config-left {
-        span {
+        >span {
+          &:last-child {
+            .line {
+              width: 0;
+            }
+          }
+        }
+        .text {
           font-size: 14px;
           font-weight: 400;
           color: rgb(77, 77, 77);
           cursor: pointer;
-          margin-right: 24px;
+          border-bottom: 1px solid transparent;
+          padding-bottom: 4px;
+        }
+        .line {
+          display: inline-block;
+          width: 1px;
+          height: 10px;
+          background: #D9D9D9;
+          margin: 0 16px
         }
         .active {
-          color: #2673E5;
+          .text {
+            color: #2673E5;
+            border-bottom-color: #2675e5;
+          }
         }
       }
       .config-btn {

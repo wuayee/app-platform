@@ -29,7 +29,7 @@ const AppOverview: React.FC = () => {
   }, [])
 
   const gotoArrange = () => {
-    navigate(`/app-develop/${tenantId}/detail/${appId}`);
+    navigate(`/app-develop/${tenantId}/app-detail/${appId}`);
   }
 
   return (

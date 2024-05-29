@@ -8,7 +8,7 @@ import React from 'react';
  */
 export const pages = {
   "pages/aippIndex/index": {
-    path: `:tenantId/detail/:appId`
+    path: `:tenantId/app-detail/:appId`
   },
   "pages/notFound/index": {
     path: `notfound`

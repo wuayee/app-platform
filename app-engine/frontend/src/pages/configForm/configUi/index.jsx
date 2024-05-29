@@ -72,6 +72,15 @@ function ConfigUI(props) {
           prop.defaultValue = value;
         }
       }
+      if (key === 'recommend') {
+        let item = saveData.properties.filter(item => item.name === key);
+        item.length ? item[0].defaultValue = value :saveData.properties.push({
+          "id": "prop9",
+          "name": "recommend",
+          "dataType": "List<String>",
+          "defaultValue": value
+        })
+      }
     }
 
     const handleValuesChange = (changedValues, allValues) => {
@@ -86,6 +95,7 @@ function ConfigUI(props) {
     useEffect(() => {
       setInspirationValues(form.getFieldValue("inspiration"));
       setKnowledge(form.getFieldValue("knowledge"));
+      setRecommendValues(form.getFieldValue("recommend"));
     }, [form.getFieldsValue()])
 
     const updateConfig = (value, key) => {
