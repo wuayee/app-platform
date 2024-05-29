@@ -42,6 +42,7 @@ class SocketClient:
         :param core_socket: 连接DataBus core的socket(可选)
         """
         super().__init__()
+        self._executor, self._socket = None, None
         if core_socket is not None:
             self._socket = core_socket
         elif core_address is not None:
@@ -57,9 +58,13 @@ class SocketClient:
         self._mailbox = {msg_type: queue.Queue() for msg_type in self.MESSAGE_RESPONSE_MAPPING}
 
     def __del__(self):
-        self._executor.shutdown()
-        self._socket.shutdown(socket.SHUT_RDWR)
-        self._socket.close()
+        if self._executor:
+            self._executor.shutdown()
+            self._executor = None
+        if self._socket:
+            self._socket.shutdown(socket.SHUT_RDWR)
+            self._socket.close()
+            self._socket = None
 
     def send_shared_malloc_message(self, size: int) -> ApplyMemoryMessageResponse:
         """向DataBus内核发送申请内存块消息
