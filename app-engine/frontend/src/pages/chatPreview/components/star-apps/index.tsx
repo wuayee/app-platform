@@ -138,7 +138,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
 
   // 开始聊天
   const startChat = (item: any) => {
-    navigate(`/home/app-develop/${tenantId}/chat/${item.aippId}`);
+    navigate(`/app/${tenantId}/chat/${item.aippId}`);
   }
 
   useEffect(()=> {
@@ -175,9 +175,9 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
                 <div className="app-item-text-header">
                   <div className="app-item-title">{app.name}</div>
                   <div className="app-item-title-actions">
-                    <span style={{ cursor: "pointer" }} onClick={() => handleAt(app)}>
+                    {/* <span style={{ cursor: "pointer" }} onClick={() => handleAt(app)}>
                       @Ta
-                    </span>
+                    </span> */}
                     <span
                       style={{ color: "#1677ff", cursor: "pointer" }}
                       onClick={() => startChat(app)}

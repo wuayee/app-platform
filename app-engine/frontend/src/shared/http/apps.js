@@ -6,7 +6,7 @@ const { JANE_URL, AIPP_URL, APP_URL } = httpUrlMap[process.env.NODE_ENV];
 
 // 获取应用市场列表
 export function queryAppsApi(tenantId, params) {
-  return get(`${appurl}/tools`, params);
+  return get(`${appurl}/tools/search`, params);
 }
 
 export function getEvalTaskList(requestBody) {
