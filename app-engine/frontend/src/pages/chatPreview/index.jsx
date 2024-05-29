@@ -57,7 +57,6 @@ const ChatPreview = (props) => {
   let childInstanceIdArr = useRef([]);
   let childBackInstanceIdArr = useRef([]);
   let childInstanceStop = useRef(false);
-  let isChatRunning = useRef(false);
   let wsCurrent = useRef(null);
 
   // 灵感大全点击
@@ -218,8 +217,6 @@ const ChatPreview = (props) => {
     const reciveInitObj = JSON.parse(JSON.stringify(initChat));
     reciveInitObj.type = "recieve";
     reciveInitObj.loading = true;
-    reciveInitObj.loading = false;
-    isChatRunning.current = false;
     setChatList(() => {
       let arr = [...listRef.current, reciveInitObj];
       listRef.current = arr;
@@ -271,7 +268,6 @@ const ChatPreview = (props) => {
     try {
       const startes = await aippStart(tenantId, aipp_id, version, params);
       if (startes.code === 0 && startes.data) {
-        isChatRunning.current = true;
         childInstanceStop.current = false;
         let instanceId = startes.data;
         queryInstance(aipp_id, version, instanceId);
@@ -289,7 +285,8 @@ const ChatPreview = (props) => {
     runningAppid.current = aipp_id;
     if (!wsCurrent.current) {
       const prefix = window.location.protocol === 'http:' ? 'ws' : 'wss';
-      wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
+      // wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
+      wsCurrent.current = new WebSocket(`ws://10.91.144.226:8080/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
       wsCurrent.current.onopen = () => {
         wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));   
       }
@@ -300,7 +297,6 @@ const ChatPreview = (props) => {
     wsCurrent.current.onerror = () => {
       onStop('socket对话失败');
       chatStatusChange(false);
-      isChatRunning.current = false;
     }
     
     wsCurrent.current.onmessage = ({ data }) => {
@@ -338,12 +334,10 @@ const ChatPreview = (props) => {
         })
         if (['ERROR', 'ARCHIVED'].includes(messageData.status)) {
           chatStatusChange(false);
-          isChatRunning.current = false;
         }
       } catch (err){
         onStop('数据解析异常');
         chatStatusChange(false);
-        isChatRunning.current = false;
       }
     }
   }
@@ -633,6 +627,7 @@ const ChatPreview = (props) => {
                       requestLoading={requestLoading}
                       open={open}
                       openInspiration={openClick}
+                      recommendList={recommendList}
                     />
                   )
                 }
@@ -645,7 +640,6 @@ const ChatPreview = (props) => {
                 </Inspiration>
               </div>
             </div>
-          </div>
         </Spin>
     </div>
     )}

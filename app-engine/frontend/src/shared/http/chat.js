@@ -14,6 +14,11 @@ export function feedbacksRq(params) {
   const url = `${AI_URL}/aipp/usr/feedback`;
   return post(url, params);
 }
+// 猜你想问
+export function getRecommends(params) {
+  const url = `${AI_URL}/recommend`;
+  return post(url, params);
+}
 
 // 获取点赞点灭详情
 export function queryFeedback(id) {

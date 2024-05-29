@@ -8,17 +8,110 @@ import '../styles/add-knowledge.scss'
 const AddKnowledge = (props) => {
   const { modalRef, tenantId, handleDataChange, checkData } = props;
   const [ open, setOpen] = useState(false);
-  const [ knowledgeOptions, setKnowledgeOptions ] = useState([]);
-  const [ knowledgeTable, setKnowledgeTable ] = useState([]);
+  const [ knowledgeOptions, setKnowledgeOptions ] = useState([
+    {
+        "id": 2,
+        "name": "测试01",
+        "ownerId": 1,
+        "ownerName": "Jasper",
+        "description": "测试01",
+        "createdAt": 1716954512881,
+        "updatedAt": 1716954512881
+    },
+    {
+        "id": 1,
+        "name": "测试",
+        "ownerId": 1,
+        "ownerName": "Jasper",
+        "description": "方法",
+        "createdAt": 1716951096026,
+        "updatedAt": 1716951096026
+    }
+]);
+  const [ knowledgeTable, setKnowledgeTable ] = useState( [
+    {
+        "id": 8,
+        "name": "规则",
+        "repositoryId": 1,
+        "serviceType": "RDB",
+        "serviceId": 1,
+        "format": "TABLE",
+        "recordNum": 2,
+        "status": 0,
+        "createdAt": 1716790301468,
+        "updatedAt": 1716790315411
+    },
+    {
+        "id": 4,
+        "name": "textTest",
+        "repositoryId": 1,
+        "serviceType": "VECTOR",
+        "serviceId": 2,
+        "format": "TEXT",
+        "recordNum": 0,
+        "status": 2,
+        "createdAt": 1716630409236,
+        "updatedAt": 1716776245191
+    }
+]);
   const [ knowledgeItem, setKnowledgeItem ] = useState(null);
   const [ selectedRowKeys, setSelectedRowKeys ] = useState([]);
   const searchName = useRef('');
-  const knowledgeCurrent = useRef();
+  const knowledgeCurrent = useRef([
+    {
+        "id": 2,
+        "name": "测试01",
+        "ownerId": 1,
+        "ownerName": "Jasper",
+        "description": "测试01",
+        "createdAt": 1716954512881,
+        "updatedAt": 1716954512881,
+        list: [
+          {
+              "id": 8,
+              "name": "规则",
+              "repositoryId": 1,
+              "serviceType": "RDB",
+              "serviceId": 1,
+              "format": "TABLE",
+              "recordNum": 2,
+              "status": 0,
+              "createdAt": 1716790301468,
+              "updatedAt": 1716790315411
+          },
+          {
+              "id": 4,
+              "name": "textTest",
+              "repositoryId": 1,
+              "serviceType": "VECTOR",
+              "serviceId": 2,
+              "format": "TEXT",
+              "recordNum": 0,
+              "status": 2,
+              "createdAt": 1716630409236,
+              "updatedAt": 1716776245191
+          }
+      ]
+    },
+    {
+        "id": 1,
+        "name": "测试",
+        "ownerId": 1,
+        "ownerName": "Jasper",
+        "description": "方法",
+        "createdAt": 1716951096026,
+        "updatedAt": 1716951096026
+    }
+]);
   const columns = [
     {
       title: '名称',
       dataIndex: 'name',
       key: 'name',
+      render: (text) => <span style={{ display: 'flex', alignItems: 'center' }}>
+                          <img src='/src/assets/images/ai/iconx.png' style={{ marginRight: '6px' }} />
+                          {text}
+                        </span>,
     },
     {
       title: '条数',
@@ -36,8 +129,8 @@ const AddKnowledge = (props) => {
   }
   const showModal = () => {
     setOpen(true);
-    handleGetKnowledgeOptions();
-    setCheck();
+    // handleGetKnowledgeOptions();
+    // setCheck();
   }
   // 设置选中
   const setCheck = () => {
@@ -80,7 +173,23 @@ const AddKnowledge = (props) => {
   }
   // 表格选中
   const onSelectChange = (newSelectedRowKeys) => {
+    let arr = [];
     setSelectedRowKeys(newSelectedRowKeys);
+    knowledgeCurrent.current.forEach(item => {
+      let obj = {};
+      obj.name = item.name;
+      obj.id = item.id;
+      obj.show = false;
+      obj.child = [];
+      item.list?.forEach(lItem => {
+        if (newSelectedRowKeys.includes(lItem.id)) {
+          obj.child.push(lItem);
+          obj.show = true;
+        }
+      });
+      arr.push(obj);
+    });
+    console.log(arr);
   };
   const rowSelection = {
     selectedRowKeys,
@@ -134,13 +243,12 @@ const AddKnowledge = (props) => {
         <div className="knowledge-drawer">
           <div className="knowledge-check-list">
             <div className="knowledge-left">
+              <div className="item">知识库</div>
               {
                 knowledgeOptions?.map((item, index) => {
                   return (
                     <div className="item" key={index} onClick={() => getTableList(item)}>
-                      {/* <Checkbox onChange={(e) => onChange(e, item)} key={index}></Checkbox> */}
                       <span>{item.name}</span>
-                      <span>已选择：{2}</span>
                     </div>
                   )
                 })

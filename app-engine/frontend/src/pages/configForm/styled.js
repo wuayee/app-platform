@@ -9,12 +9,13 @@ export const ConfigFormWrap = styled.div`
     width: 100%;
     background-color: #ffffff;
     box-sizing: border-box;
-    padding: 15px 25px;
     border-top-left-radius: 8px;
     .config-title {
+      padding: 15px 25px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding-bottom: 0;
       margin-bottom: 20px;
       .config-left {
         >span {

@@ -33,7 +33,7 @@ const Recommends = (props) => {
   return <>{(
     <div className="recommends-inner">
       {
-        (recommendList.length > 0) && (
+        (recommendList?.length > 0) && (
           <div className="recommends-top">
             <span className="title">猜你想问</span>
             <RebotIcon />

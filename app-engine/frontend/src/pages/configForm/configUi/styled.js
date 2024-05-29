@@ -2,9 +2,11 @@ import styled from 'styled-components';
 
 export const ConfigWrap = styled.div`
     width: 100%;
-    height: calc(100% - 50px);
+    height: calc(100% - 70px);
     overflow: auto;
     font-size: 12px;
+    padding: 15px 25px;
+    padding-top: 0;
     .ant-form-item-control {
       width: 100%;
     }
