@@ -10,40 +10,42 @@ export const ConfigWrap = styled.div`
     }
     .ant-collapse .ant-collapse-item .ant-collapse-header {
       padding-left: 0;
+      padding-bottom: 8px;
+      padding-top: 0;
     }
     .ant-select {
       font-size: 12px;
       color: #252B3A;
     }
     .ant-input-number .ant-input-number-input {
-        color: #252B3A;
+      color: #252B3A;
     }
 
     .ant-select-single .ant-select-selector {
-        font-size: 12px;
-        color: #252B3A;
+      font-size: 12px;
+      color: #252B3A;
     }
 
     .ant-select-outlined.ant-select-multiple .ant-select-selection-item {
-        background-color: rgb(248 248 248);
+      background-color: rgb(248 248 248);
     }
 
     .ant-input {
-        font-size: 12px;
-        color: #252B3A;
+      font-size: 12px;
+      color: #252B3A;
     }
 
     .ant-card {
-        background: #fcfcfd;
-        color: #252B3A;
+      background: #fcfcfd;
+      color: #252B3A;
     }
 
     .ant-form-item-label > label {
-        font-size: 12px;
+      font-size: 12px;
     }
 
     .ant-form-item .ant-form-item-explain {
-        font-size: 12px;
+      font-size: 12px;
     }
     .ant-collapse-header {
       padding-left: 0;
@@ -59,45 +61,44 @@ export const ConfigWrap = styled.div`
     }
 
     .control-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      margin-top: 5px;
+      font-size: 12px;
+      .control-title {
         display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        margin-top: 5px;
+        align-items: center;
         font-size: 12px;
-        .control-title {
-          display: flex;
-          align-items: center;
-          font-size: 12px;
-          color: #808080;
-        }
+        color: #808080;
+      }
 
-        &.c-header {
-            position: absolute;
-            left: 8px;
-            top: -16px;
-            background: white;
-            padding: 0 10px 0 5px;
-        }
+      &.c-header {
+        position: absolute;
+        left: 8px;
+        top: -16px;
+        background: white;
+        padding: 0 10px 0 5px;
+      }
     }
 
     .plus-icon {
-        position:relative;
-        margin-top:2px;
-        color: #047bfc;
-        vertical-align: 0rem ;
+      position:relative;
+      margin-top:2px;
+      color: #047bfc;
+      vertical-align: 0rem ;
     }
 
     .title-icon {
-        margin-right:6px;
+      margin-right:6px;
     }
 
     .ant-select:not(.ant-select-customize-input) .ant-select-selector {
       position: relative;
       background-color: #fff;
       border: 1px solid #e4e4e7;
-      border-radius: 0px;
+      border-radius: 4px;
       transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-      border-width: 0 0 1px 0;
     }
     .full-border .ant-select-selector{
       border-width: 1px !important;
@@ -142,23 +143,23 @@ export const ConfigWrap = styled.div`
 `;
 
 export const InspirationWrap = styled.div`
-    .plus-icon {
-        position:relative;
-        color: #047bfc;
-        vertical-align: 0rem ;
-        margin: 0 0 0 10px;
-        font-size: 20px;
-    }
-    .ant-input {
-        font-size: 12px;
-    }
-    .ant-select-single .ant-select-selector {
-        font-size: 12px;
-    }
-    .ant-table-wrapper .ant-table {
-        font-size: 12px;
-    }
-    .ant-btn-primary {
-        background-color: #047bfc;
-    }
+  .plus-icon {
+    position:relative;
+    color: #047bfc;
+    vertical-align: 0rem ;
+    margin: 0 0 0 10px;
+    font-size: 20px;
+  }
+  .ant-input {
+    font-size: 12px;
+  }
+  .ant-select-single .ant-select-selector {
+    font-size: 12px;
+  }
+  .ant-table-wrapper .ant-table {
+    font-size: 12px;
+  }
+  .ant-btn-primary {
+    background-color: #047bfc;
+  }
 `;

@@ -36,7 +36,7 @@ const Head = (props) => {
         { !status ? <span style={{ paddingLeft: '16px' }}>未发布</span> : <span style={{ paddingLeft: '16px' }}>已发布</span>}
       </div>
       <div className="header-user">
-        { aippInfo?.updateAt && <span style={{ paddingRight: '16px' }}>更新时间：{ aippInfo.updateAt }</span> }
+        { aippInfo?.updateAt && <span style={{ paddingRight: '16px' }}>自动保存：{ aippInfo.updateAt }</span> }
         { !status && <span className="header-btn" onClick={modalClick}><UploadIcon />发布</span>  }
       </div>
       <PublishModal modalRef={modalRef} aippInfo={aippInfo} publishType="app" />

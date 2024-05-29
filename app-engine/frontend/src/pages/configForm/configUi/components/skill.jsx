@@ -80,11 +80,7 @@ const Skill = (props) => {
         <div className="control">
           <div className="control-header">
             <div className="control-title">
-              {
-                showToolControl ? <DownOutlined onClick={() => onArrowClick(showToolControl, setShowToolControl)}/>
-                  : <UpOutlined onClick={() => onArrowClick(showToolControl, setShowToolControl)}/>
-              }
-              <div style={{marginLeft: "10px"}}>工具</div>
+              工具
             </div>
           </div>
           <Form.Item
@@ -116,11 +112,7 @@ const Skill = (props) => {
         <div className="control">
           <div className="control-header">
             <div className="control-title">
-              {
-                showFlowControl ? <DownOutlined onClick={() => onArrowClick(showFlowControl, setShowFlowControl)}/>
-                  : <UpOutlined onClick={() => onArrowClick(showFlowControl, setShowFlowControl)}/>
-              }
-              <div style={{marginLeft: "10px"}}>工具流</div>
+              工具流
             </div>
             <PlusOutlined className="icon plus-icon" onClick={onAddFlowClick}/>
           </div>

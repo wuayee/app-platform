@@ -1,5 +1,5 @@
 
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Tooltip } from "antd";
 import { AippContext } from '@/pages/aippIndex/context';
 import { Message } from "@shared/utils/message";
@@ -7,13 +7,8 @@ import { PanleCloseIcon, PanleIcon, RebotIcon } from '@assets/icon';
 
 // 猜你想问
 const Recommends = (props) => {
-  const { openClick, inspirationOpen, send } = props;
+  const { openClick, inspirationOpen, send, recommendList } = props;
   const { chatRunning } = useContext(AippContext);
-  const [ guessQuestions, setGuessQuestions ] = useState([
-    "如何构建知识库",
-    "我想创建一个应用",
-    "推荐几个常用的应用机器人",
-  ]);
   const [ visible, setVisible ] = useState(false);
   // 猜你想问
   const recommendClick = (item) => {
@@ -37,15 +32,19 @@ const Recommends = (props) => {
   }
   return <>{(
     <div className="recommends-inner">
-      <div className="recommends-top">
-        <span className="title">猜你想问</span>
-        <RebotIcon />
-        <span className="refresh" onClick={refreshClick}>换一批</span>
-      </div>
+      {
+        recommendList && (
+          <div className="recommends-top">
+            <span className="title">猜你想问</span>
+            <RebotIcon />
+            <span className="refresh" onClick={refreshClick}>换一批</span>
+          </div>
+        )
+      }
       <div className="recommends-list">
         <div className="list-left">
           {
-            guessQuestions.map(item => {
+            recommendList?.map(item => {
               return (
                 <div className="recommends-item" onClick={recommendClick.bind(this, item)}>{item}</div>
               )

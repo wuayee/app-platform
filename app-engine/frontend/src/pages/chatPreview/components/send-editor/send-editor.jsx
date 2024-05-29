@@ -27,7 +27,8 @@ const SendEditor = (props) => {
     filterRef,
     requestLoading,
     openClick,
-    inspirationOpen } = props;
+    inspirationOpen,
+    recommendList } = props;
   const [ content, setContent ] = useState('');
   const [ selectItem, setSelectItem ] = useState({});
   const [ selectDom, setSelectDom ] = useState();
@@ -183,6 +184,7 @@ const SendEditor = (props) => {
         openClick={openClick} 
         inspirationOpen={inspirationOpen} 
         send={recommendSend}
+        recommendList={recommendList}
       />
       <div className='editor-inner'>
         <EditorBtnHome 

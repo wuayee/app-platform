@@ -1,15 +1,16 @@
 
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import { getKnowledges } from "@shared/http/appBuilder";
-import { Form, Select } from 'antd';
-import { DownOutlined, UpOutlined } from '@ant-design/icons';
+import { Form, Select, Button } from 'antd';
 import { AippContext } from '../../../aippIndex/context';
+import AddKnowledge from  './add-knowledge'
 
 const Knowledge = (props) => {
   const { knowledge, updateData } = props;
   const [ showKnowControl, setShowKnowControl ] = useState(true);
   const [ knowledgeOptions, setKnowledgeOptions ] = useState(null);
   const [ knows, setKnows] = useState(null);
+  const [ open, setOpen] = useState(false);
   const { tenantId } = useContext(AippContext);
   const searchName = useRef('')
   const onArrowClick = (value, func) => {
@@ -61,11 +62,7 @@ const Knowledge = (props) => {
         <div className="control">
           <div className="control-header">
             <div className="control-title">
-              {
-                showKnowControl ? <DownOutlined onClick={() => onArrowClick(showKnowControl, setShowKnowControl)}/>
-                  : <UpOutlined onClick={() => onArrowClick(showKnowControl, setShowKnowControl)}/>
-              }
-              <div style={{marginLeft: "10px"}}>知识库</div>
+              <Button onClick={ () => setOpen(true) }>添加</Button>
             </div>
           </div>
             <Form.Item
@@ -98,6 +95,7 @@ const Knowledge = (props) => {
             </Form.Item>
         </div>
       </div>
+      <AddKnowledge open={open} setOpen={setOpen} />
     </>
   )
 };

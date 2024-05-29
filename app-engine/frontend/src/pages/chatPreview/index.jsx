@@ -25,6 +25,7 @@ import {
   stopInstance,
   queryInspirationSelect,
 } from "@shared/http/aipp";
+import { getRecommends } from '@shared/http/chat';
 import "./styles/chat-preview.scss";
 
 const ChatPreview = (props) => {
@@ -44,6 +45,7 @@ const ChatPreview = (props) => {
   const [sessionName, setSessionName] = useState(["default"]);
   const [showCheck, setShowCheck] = useState(false);
   const [requestLoading, setRequestLoading] = useState(false);
+  const [recommendList, setRecommendList] = useState([]);
   const location = useLocation();
   const chatInitObj = JSON.parse(JSON.stringify(initChat));
   let editorRef = React.createRef();
@@ -85,7 +87,8 @@ const ChatPreview = (props) => {
   }, []);
   useEffect(() => {
     (aippInfo.name && !aippInfo.notShowHistory) && initChatHistory();
-  }, [aippInfo])
+    setRecommend();
+  }, [aippInfo]);
   // 灵感大全设置下拉列表
   function setEditorSelect(data, prompItem) {
     let { prompt, promptVarData } = prompItem;
@@ -248,10 +251,10 @@ const ChatPreview = (props) => {
       if (debugRes.code === 0) {
         chatMissionStart(debugRes.data, value, type);
       } else {
-        onStop("对话失败");
+        onStop(debugRes.msg || "获取aippId失败");
       }
     } catch {
-      onStop("对话失败");
+      onStop("获取aippId失败");
     }
   }
   // 启动任务
@@ -271,10 +274,10 @@ const ChatPreview = (props) => {
         let instanceId = startes.data;
         queryInstance(aipp_id, version, instanceId);
       } else {
-        onStop("对话失败");
+        onStop("启动任务失败");
       }
     } catch {
-      onStop("对话失败");
+      onStop("启动任务失败");
     }
   };
   // 开始对话(循环主流程)
@@ -293,7 +296,7 @@ const ChatPreview = (props) => {
     }
     
     wsCurrent.current.onerror = () => {
-      onStop('对话失败');
+      onStop('socket对话失败');
       chatStatusChange(false);
       isChatRunning.current = false;
     }
@@ -568,63 +571,87 @@ const ChatPreview = (props) => {
       setRequestLoading(false);
     }
   }
+  // 设置推荐列表
+  function setRecommend() {
+    let arr = aippInfo.config?.properties || [];
+    let recommendItem = arr.filter(item => item.name === 'recommend')[0];
+    if (recommendItem) {
+      setRecommendList(recommendItem.defaultValue);
+    } else {
+      setRecommendList([
+        "如何构建知识库",
+        "我想创建一个应用",
+        "推荐几个常用的应用机器人"
+      ])
+    }
+  }
+  // 获取推荐列表
+  async function getRecommendList(params) {
+    const res = await getRecommends(params);
+    if (res.code === 0) {
+      setRecommendList(res.data);
+    } else {
+      setRecommendList([]);
+    }
+  }
   return <>{(
-      <div className={[
-        'chat-preview',
-        showElsa ? 'chat-preview-elsa chat-preview-shadow' : null,
-        location.pathname.indexOf('chat') === -1 ? 'chat-preview-inner' : null,
-        (showElsa && open) ? 'chat-preview-mr' : null
-        ].join(' ')}>
-          <Spin spinning={loading}>
-            { showElsa && (<span className="icon-back" onClick={previewBack}>
-              <LeftArrowIcon />
-            </span>) }
-            <div className={['chat-inner', location.pathname.indexOf('chat') !== -1 ? 'chat-page-inner' : null].join(' ')}>
-              <div className={['chat-inner-left', open ? 'chat-left-close' : 'no-border'].join(' ')}>
-                <ChatMessage
-                  chatList={chatList}
-                  setEditorShow={setEditorShow}
-                  setCheckedList={setCheckedList}
-                  showCheck={showCheck}/>
-                { showCheck ?
-                  ( <CheckGroup
-                      appId={appId}
-                      tenantId={tenantId}
-                      chatList={chatList}
-                      setEditorShow={setEditorShow}
-                      checkedList={checkedList}
-                      totalNum={chatList.length}
-                      selectAllClick={selectAllClick}
-                      type={groupType}
-                    />
-                  ) : (
-                    <SendEditor
-                      filterRef={editorRef}
-                      onSend={onSend}
-                      onClear={clearChat}
-                      openClick={openClick}
-                      onStop={chatRunningStop}
-                      chatType={chatType}
-                      inspirationOpen={open}
-                      requestLoading={requestLoading}
-                      open={open}
-                      openInspiration={openClick}
-                    />
-                  )
-                }
-              </div>
-              <div className={['chat-inner-right', open ? 'chat-right-close' : null].join(' ')}>
-                <Inspiration
-                  open={open}
-                  sessionName={sessionName}
-                  chatType={chatType}>
-                </Inspiration>
-              </div>
+    <div className={[
+      'chat-preview',
+      showElsa ? 'chat-preview-elsa chat-preview-shadow' : null,
+      location.pathname.indexOf('chat') === -1 ? 'chat-preview-inner' : null,
+      (showElsa && open) ? 'chat-preview-mr' : null
+      ].join(' ')}>
+        <Spin spinning={loading}>
+          { showElsa && (<span className="icon-back" onClick={previewBack}>
+            <LeftArrowIcon />
+          </span>) }
+          <div className={['chat-inner', location.pathname.indexOf('chat') !== -1 ? 'chat-page-inner' : null].join(' ')}>
+            <div className={['chat-inner-left', open ? 'chat-left-close' : 'no-border'].join(' ')}>
+              <ChatMessage
+                chatList={chatList}
+                setEditorShow={setEditorShow}
+                setCheckedList={setCheckedList}
+                showCheck={showCheck}/>
+              { showCheck ?
+                ( <CheckGroup
+                    appId={appId}
+                    tenantId={tenantId}
+                    chatList={chatList}
+                    setEditorShow={setEditorShow}
+                    checkedList={checkedList}
+                    totalNum={chatList.length}
+                    selectAllClick={selectAllClick}
+                    type={groupType}
+                  />
+                ) : (
+                  <SendEditor
+                    filterRef={editorRef}
+                    onSend={onSend}
+                    onClear={clearChat}
+                    openClick={openClick}
+                    onStop={chatRunningStop}
+                    chatType={chatType}
+                    inspirationOpen={open}
+                    requestLoading={requestLoading}
+                    open={open}
+                    openInspiration={openClick}
+                    recommendList={recommendList}
+                  />
+                )
+              }
             </div>
-          </Spin>
-      </div>
-      )}
-    </>
+            <div className={['chat-inner-right', open ? 'chat-right-close' : null].join(' ')}>
+              <Inspiration
+                open={open}
+                sessionName={sessionName}
+                chatType={chatType}>
+              </Inspiration>
+            </div>
+          </div>
+        </Spin>
+    </div>
+    )}
+  </>
 };
 
 export default ChatPreview;
