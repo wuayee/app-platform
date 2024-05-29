@@ -111,3 +111,7 @@ export function shareDialog(tenantId, data) {
 export function getSharedDialog(tenantId, shareId) {
   return get(`${AIPP_URL}/${tenantId}/share/${shareId}`)
 }
+// 用户自勾选
+export function getReportInstance(tenantId, instanceId, data) {
+  return post(`${AIPP_URL}/${tenantId}/start/instances/${instanceId}`,data)
+}

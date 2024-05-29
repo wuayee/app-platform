@@ -9,7 +9,7 @@ const AddKnowledge = (props) => {
   const { modalRef, tenantId, handleDataChange, checkData } = props;
   const [ open, setOpen] = useState(false);
   const [ knowledgeOptions, setKnowledgeOptions ] = useState([]);
-  const [ knowledgeTable, setKnowledgeTable ] = useState( []);
+  const [ knowledgeTable, setKnowledgeTable ] = useState([]);
   const [ knowledgeItem, setKnowledgeItem ] = useState(null);
   const [ selectedRowKeys, setSelectedRowKeys ] = useState([]);
   const searchName = useRef('');
