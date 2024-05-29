@@ -104,8 +104,24 @@ async def startup_event():
     asyncio.create_task(run_tasks())
 
 
+def create_namespace_if_needed():
+    namespace = client.V1Namespace(metadata=client.V1ObjectMeta(name=MODEL_IO_NAMESPACE))
+    try:
+        response = api_instance.read_namespace(MODEL_IO_NAMESPACE)
+        return
+    except ApiException as e:
+        logger.warning(e)
+
+    try:
+        response = api_instance.create_namespace(MODEL_IO_NAMESPACE)
+    except ApiException as e:
+        logger.warning(e)
+    return
+
+
 async def run_tasks():
     _notify_model_io_gateways()
+    create_namespace_if_needed()
 
 
 @app.options("/v1/delete")
