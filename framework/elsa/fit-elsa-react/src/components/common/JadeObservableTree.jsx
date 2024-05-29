@@ -2,6 +2,7 @@ import {Tree} from "antd";
 import {useShapeContext} from "../DefaultRoot.jsx";
 import {useEffect, useState} from "react";
 import "./jadeObservableTree.css";
+import TreeSwitcherIcon from "@/components/common/TreeSwitcherIcon.jsx";
 
 /**
  * 可被观察的树装结构.
@@ -34,8 +35,8 @@ export const JadeObservableTree = ({data}) => {
 
     const traverseTree = (nodes, action) => {
         nodes.forEach(n => {
-           n.children && traverseTree(n.children, action);
-           action(n);
+            n.children && traverseTree(n.children, action);
+            action(n);
         });
     };
 
@@ -82,9 +83,10 @@ export const JadeObservableTree = ({data}) => {
         </>);
     };
 
-    return (<>
+    return <>
         <Tree treeData={treeData} titleRender={(nodeData) => displayTitle(nodeData)}
+              switcherIcon={({expanded}) => <TreeSwitcherIcon expanded={expanded}/>}
               showLine={true}
               selectable={false}/>
-    </>);
+    </>;
 };

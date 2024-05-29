@@ -12,7 +12,7 @@ export const configMap = {
           {
               node: "llmNodeState",
               urls: {
-                  llmModelEndpoint: "https://tzaip-beta.paas.huawei.com",
+                  llmModelEndpoint: "https://tzaip-beta.paas.huawei.com/api",
                   toolListEndpoint: "https://jane-beta.huawei.com",
                   workflowListEndpoint: "https://jane-beta.huawei.com"
               },

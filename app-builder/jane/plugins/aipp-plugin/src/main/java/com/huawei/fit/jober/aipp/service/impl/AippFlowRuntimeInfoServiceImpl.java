@@ -62,6 +62,7 @@ public class AippFlowRuntimeInfoServiceImpl implements AippFlowRuntimeInfoServic
         runtimeData.setPublished(end.isPublished());
         runtimeData.setTraceId(traceId);
         runtimeData.setAippInstanceId(end.getAippInstanceId());
+        runtimeData.setExecuteTime(end.getEndTime() - end.getStartTime());
         runtimeData.setNodeInfos(
                 dataList.stream().flatMap(d -> d.getNodeInfos().stream()).collect(Collectors.toList()));
         return Optional.of(runtimeData);

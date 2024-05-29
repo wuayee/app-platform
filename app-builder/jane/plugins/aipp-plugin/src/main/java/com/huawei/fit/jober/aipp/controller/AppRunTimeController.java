@@ -22,12 +22,15 @@ import com.huawei.fit.jober.aipp.common.PageResponse;
 import com.huawei.fit.jober.aipp.condition.AippInstanceQueryCondition;
 import com.huawei.fit.jober.aipp.condition.PaginationCondition;
 import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
+import com.huawei.fit.jober.aipp.dto.AppBuilderAippCreateDto;
+import com.huawei.fit.jober.aipp.dto.AppBuilderAppStartDto;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
 import com.huawei.fit.jober.aipp.service.AippFlowRuntimeInfoService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
 import com.huawei.fit.runtime.entity.RuntimeData;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Property;
+import com.huawei.fitframework.validation.Validated;
 
 import java.util.List;
 import java.util.Map;
@@ -237,6 +240,26 @@ public class AppRunTimeController extends AbstractController {
     }
 
     /**
+     * 启动对话实例
+     *
+     * @param httpRequest 操作上下文
+     * @param tenantId    租户id
+     * @param appBuilderAippCreateDto 启动对话结构体
+     * @return 实例id
+     */
+    @PostMapping(path = "/aipp/{app_id}/start", description = "启动一个对话实例")
+    public Rsp<AppBuilderAppStartDto> startInstance(HttpClassicServerRequest httpRequest,
+            @PathVariable("tenant_id") String tenantId,
+            @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData",
+                    example = "图片url, 文本输入, prompt")
+            @RequestBody @Validated AppBuilderAippCreateDto appBuilderAippCreateDto) {
+        return Rsp.ok(aippRunTimeService.startInstance(
+                appBuilderAippCreateDto.getAppDto(),
+                appBuilderAippCreateDto.getContext(),
+                this.contextOf(httpRequest, tenantId)));
+    }
+
+    /**
      * 查询流程运行时数据.
      *
      * @param httpRequest 操作上下文
@@ -244,7 +267,7 @@ public class AppRunTimeController extends AbstractController {
      * @param instanceId 实例id.
      * @return {@link Rsp}{@code <}{@link List}{@code <}{@link RuntimeData}{@code >}{@code >} 运行时数据.
      */
-    @GetMapping(value = "/{aipp_id}/instances/{instance_id}/runtime", description = "查询流程运行时信息")
+    @GetMapping(value = "/aipp/{aipp_id}/instances/{instance_id}/runtime", description = "查询流程运行时信息")
     public Rsp<RuntimeData> getRuntimeInfo(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
             @PathVariable("instance_id") String instanceId, @RequestParam(value = "version") String version) {

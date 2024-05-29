@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.callbacks;
 
 import static com.huawei.fit.jober.common.Constant.BUSINESS_DATA_KEY;
+import static com.huawei.fit.jober.common.Constant.CONTEXT_DATA;
 import static com.huawei.fit.jober.common.Constant.FLOW_CONTEXT_ID_KEY;
 import static com.huawei.fit.jober.common.Constant.NODE_ID_KEY;
 import static com.huawei.fit.jober.common.Constant.TRACE_ID_KEY;
@@ -56,6 +57,11 @@ public class FlowGeneralCallback extends FlowCallback {
                     put(TRACE_ID_KEY, cxt.getTraceId());
                     put(NODE_ID_KEY, cxt.getPosition());
                     put(BUSINESS_DATA_KEY, businessData);
+                    put(CONTEXT_DATA, cxt.getData().getContextData());
+                    put("status", cxt.getStatus().name());
+                    put("createAt", cxt.getCreateAt());
+                    put("updateAt", cxt.getUpdateAt());
+                    put("archivedAt", cxt.getArchivedAt());
                 }
             };
         }).collect(Collectors.toList());

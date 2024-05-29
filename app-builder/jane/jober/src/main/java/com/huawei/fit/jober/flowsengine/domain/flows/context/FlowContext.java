@@ -134,11 +134,11 @@ public final class FlowContext<T> extends IdGenerator {
     private LocalDateTime archivedAt;
 
     public FlowContext(String streamId, String rootId, T data, Set<String> traceId, String position) {
-        this(streamId, rootId, data, traceId, position, "", "");
+        this(streamId, rootId, data, traceId, position, "", "", LocalDateTime.now());
     }
 
     public FlowContext(String streamId, String rootId, T data, Set<String> traceId, String position, String parallel,
-            String parallelMode) {
+            String parallelMode, LocalDateTime createAt) {
         this.streamId = streamId;
         this.rootId = rootId;
         this.data = data;
@@ -148,7 +148,7 @@ public final class FlowContext<T> extends IdGenerator {
         this.parallel = parallel;
         this.parallelMode = parallelMode;
         this.trans = new FlowTrans();
-        this.createAt = LocalDateTime.now();
+        this.createAt = createAt;
     }
 
     /**
@@ -233,12 +233,13 @@ public final class FlowContext<T> extends IdGenerator {
      *
      * @param data 处理后的数据
      * @param position 处理后所处的节点
+     * @param createAt 创建时间.
      * @param <R> 处理后数据类型
      * @return 新的上下文
      */
-    public <R> FlowContext<R> generate(R data, String position) {
+    public <R> FlowContext<R> generate(R data, String position, LocalDateTime createAt) {
         FlowContext<R> context = new FlowContext<>(this.streamId, this.rootId, data, this.traceId, this.position,
-                this.parallel, this.parallelMode);
+                this.parallel, this.parallelMode, createAt);
         context.position = position;
         context.previous = this.id;
         context.trans = this.trans;
@@ -253,7 +254,7 @@ public final class FlowContext<T> extends IdGenerator {
      * @return List<FlowContext < R>>
      */
     public <R> List<FlowContext<R>> generate(List<R> data, String position) {
-        return data.stream().map(d -> this.generate(d, position)).collect(Collectors.toList());
+        return data.stream().map(d -> this.generate(d, position, LocalDateTime.now())).collect(Collectors.toList());
     }
 
     /**
@@ -266,7 +267,7 @@ public final class FlowContext<T> extends IdGenerator {
      */
     public <R> FlowContext<R> convertData(R data, String id) {
         FlowContext<R> context = new FlowContext<>(this.streamId, this.rootId, data, this.traceId, this.position,
-                this.parallel, this.parallelMode);
+                this.parallel, this.parallelMode, LocalDateTime.now());
         context.previous = this.previous;
         context.status = this.status;
         context.trans = this.trans;

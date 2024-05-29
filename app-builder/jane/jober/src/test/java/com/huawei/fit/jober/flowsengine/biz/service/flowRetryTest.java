@@ -109,7 +109,8 @@ class flowRetryTest extends DatabaseBaseTest {
             traceOwnerService = Mockito.mock(TraceOwnerService.class);
 
             flowContextsService = new FlowContextsService(flowDefinitionRepo, flowContextRepo, flowContextMessenger,
-                    queryFlowContextPersistRepo, flowTraceRepo, flowRetryRepo, flowLocks, traceOwnerService, null);
+                    queryFlowContextPersistRepo, flowTraceRepo, flowRetryRepo, flowLocks, traceOwnerService, null,
+                    null);
         }
 
         @Test

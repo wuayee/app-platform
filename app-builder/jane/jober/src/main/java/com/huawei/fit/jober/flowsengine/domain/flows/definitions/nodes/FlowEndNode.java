@@ -16,6 +16,7 @@ import com.huawei.fitframework.log.Logger;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,11 @@ public class FlowEndNode extends FlowNode {
     }
 
     private List<FlowData> endProduce(List<FlowContext<FlowData>> input) {
-        return input.stream().map(i -> i.getData()).collect(Collectors.toList());
+        return input.stream().map(i -> {
+            Map<String, Object> contextData = i.getData().getContextData();
+            contextData.put("nodeMetaId", getMetaId());
+            contextData.put("nodeType", getType().getCode());
+            return i.getData();
+        }).collect(Collectors.toList());
     }
 }

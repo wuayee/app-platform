@@ -38,29 +38,12 @@ public class FlowNodePublishInfo {
      */
     private FlowPublishContext flowContext;
 
+    private String errorMsg;
+
     /**
      * 流程节点信息推送对象的无参构造方法。
      */
-    public FlowNodePublishInfo() {
-    }
-
-    /**
-     * 流程节点信息推送对象的全参构造方法。
-     *
-     * @param flowDefinitionId 流程定义唯一标识的 {@link String}。
-     * @param nodeId 流程节点唯一标识的 {@link String}。
-     * @param nodeType 流程节点类型的 {@link String}。
-     * @param businessData 流程执行所需的业务参数的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
-     * @param flowContext 流程节点上下文信息对象的 {@link FlowPublishContext}。
-     */
-    public FlowNodePublishInfo(String flowDefinitionId, String nodeId, String nodeType,
-            Map<String, Object> businessData, FlowPublishContext flowContext) {
-        this.flowDefinitionId = flowDefinitionId;
-        this.nodeId = nodeId;
-        this.nodeType = nodeType;
-        this.businessData = businessData;
-        this.flowContext = flowContext;
-    }
+    public FlowNodePublishInfo() {}
 
     public String getFlowDefinitionId() {
         return flowDefinitionId;
@@ -100,5 +83,13 @@ public class FlowNodePublishInfo {
 
     public void setFlowContext(FlowPublishContext flowContext) {
         this.flowContext = flowContext;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 }

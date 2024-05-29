@@ -35,6 +35,8 @@ public class RuntimeData {
     // 结束时间.
     private long endTime;
 
+    private long executeTime;
+
     /**
      * 流程自定义参数.
      */
@@ -49,7 +51,7 @@ public class RuntimeData {
      * @return {@link List}{@code <}{@link String}{@code >} 节点列表.
      */
     public List<NodeInfo> getNodeInfos() {
-        return nodeInfos;
+        return this.nodeInfos;
     }
 
     /**
@@ -67,7 +69,7 @@ public class RuntimeData {
      * @return 追溯id.
      */
     public String getTraceId() {
-        return traceId;
+        return this.traceId;
     }
 
     /**
@@ -85,7 +87,7 @@ public class RuntimeData {
      * @return {@link String} 实例id.
      */
     public String getAippInstanceId() {
-        return aippInstanceId;
+        return this.aippInstanceId;
     }
 
     /**
@@ -103,7 +105,7 @@ public class RuntimeData {
      * @return {@link String} 流程定义id.
      */
     public String getFlowDefinitionId() {
-        return flowDefinitionId;
+        return this.flowDefinitionId;
     }
 
     /**
@@ -121,7 +123,7 @@ public class RuntimeData {
      * @return 开始时间.
      */
     public long getStartTime() {
-        return startTime;
+        return this.startTime;
     }
 
     /**
@@ -139,7 +141,7 @@ public class RuntimeData {
      * @return 结束时间.
      */
     public long getEndTime() {
-        return endTime;
+        return this.endTime;
     }
 
     /**
@@ -157,7 +159,7 @@ public class RuntimeData {
      * @return {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >} 参数map.
      */
     public Map<String, Object> getExtraParams() {
-        return extraParams;
+        return this.extraParams;
     }
 
     /**
@@ -185,5 +187,23 @@ public class RuntimeData {
      */
     public void setPublished(boolean isPublished) {
         this.isPublished = isPublished;
+    }
+
+    /**
+     * 获取执行时间.
+     *
+     * @return 执行时间.
+     */
+    public long getExecuteTime() {
+        return this.executeTime;
+    }
+
+    /**
+     * 设置执行时间.
+     *
+     * @param executeTime 执行时间
+     */
+    public void setExecuteTime(long executeTime) {
+        this.executeTime = executeTime;
     }
 }

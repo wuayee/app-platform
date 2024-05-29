@@ -68,6 +68,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.time.LocalDateTime;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -315,7 +316,7 @@ class FlowDefinitionTest {
             List<FlowContext<FlowData>> newContexts = flowEchoJober.execute(
                             Collections.singletonList(contexts.get(0).getData()))
                     .stream()
-                    .map(data -> contexts.get(0).generate(data, asyncNodeId))
+                    .map(data -> contexts.get(0).generate(data, asyncNodeId, LocalDateTime.now()))
                     .collect(Collectors.toList());
 
             Node<FlowData, FlowData> asyncNode = from.findNodeFromFlow(from, asyncNodeId);

@@ -53,6 +53,7 @@
       padding-left: .75rem;
       padding-right: .75rem;
       font-weight: 600;
+      min-width: 100px;
         .anticon-upload {
             margin-right: 5px;
         }
@@ -108,5 +109,19 @@
   .ant-layout-header,.ant-layout-content {
     //background-color: transparent !important;
     //padding: 0 !important;
+  }
+}
+.header-grid {
+  display: flex;
+  gap: 16px;
+  .last-run-btn {
+    color: #1d1c2399 !important;
+    background-color: #ffffff !important;
+    min-width: 100px;
+  }
+  .test-btn {
+    color: #047bfc !important;
+    background-color: #ffffff !important;
+    min-width: 100px;
   }
 }

@@ -4,8 +4,7 @@
 
 package com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter;
 
-import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
-
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,20 +25,21 @@ public class MappingFlowDataConverter implements FlowDataConverter {
     }
 
     @Override
-    public FlowData convertInput(FlowData input) {
-        Map<String, Object> businessData = input.getBusinessData();
-        inputMappingConfig.forEach(mappingConfig -> {
-            businessData.put(mappingConfig.getName(),
-                    MappingProcessorFactory.get(mappingConfig).generate(mappingConfig, businessData));
+    public Map<String, Object> convertInput(Map<String, Object> input) {
+        Map<String, Object> result = new HashMap<>();
+        this.inputMappingConfig.forEach(mappingConfig -> {
+            result.put(mappingConfig.getName(),
+                    MappingProcessorFactory.get(mappingConfig).generate(mappingConfig, input));
         });
-        return input;
+        return result;
     }
 
     @Override
-    public FlowData convertOutput(Object result, FlowData output) {
+    public Map<String, Object> convertOutput(Object result) {
+        HashMap<String, Object> outputMap = new HashMap<>();
         if (!this.outputName.isEmpty()) {
-            output.getBusinessData().put(outputName, result);
+            outputMap.put(outputName, result);
         }
-        return output;
+        return outputMap;
     }
 }

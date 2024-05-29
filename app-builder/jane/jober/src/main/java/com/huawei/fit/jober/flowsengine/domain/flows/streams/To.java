@@ -53,6 +53,7 @@ import com.huawei.fitframework.util.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -609,7 +610,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             this.afterProcess(pre, after);
         } catch (Exception ex) {
             LOG.error("node process exception stream-id: {}, node-id: {}, position-id: {}, traceId: {}. errors: {}",
-                    this.streamId, this.id, pre.get(0).getPosition(), pre.get(0).getTraceId(), ex);
+                    this.streamId, this.id, pre.get(0).getPosition(), pre.get(0).getTraceId(), ex.getMessage());
             LOG.error("node process exception details: ", ex);
             setFailed(pre, ex);
         } finally {
@@ -827,7 +828,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                 // 同步任务，返回结果
                 return processData(to, contexts)
                         .stream()
-                        .map(data -> contexts.get(0).generate(data, to.getId()))
+                        .map(data -> contexts.get(0).generate(data, to.getId(), LocalDateTime.now()))
                         .collect(Collectors.toList());
             }
 
@@ -845,7 +846,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             @Override
             public <T1, R1> List<FlowContext<R1>> process(To<T1, R1> to, List<FlowContext<T1>> contexts) {
                 List<FlowContext<R1>> result = new ArrayList<>();
-                result.add(contexts.get(0).generate(to.reduce.process(contexts), to.getId()));
+                result.add(contexts.get(0).generate(to.reduce.process(contexts), to.getId(), LocalDateTime.now()));
                 return result;
             }
 
@@ -859,7 +860,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             public <T1, R1> List<FlowContext<R1>> process(To<T1, R1> to, List<FlowContext<T1>> contexts) {
                 return contexts.stream()
                         .parallel()
-                        .map(context -> context.generate(to.map.process(context), to.getId()))
+                        .map(context -> context.generate(to.map.process(context), to.getId(), LocalDateTime.now()))
                         .collect(Collectors.toList());
             }
 

@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * store工具调用的测试
@@ -72,9 +73,10 @@ class FlowStoreJoberTest {
         String expectArgs = "{\"name\":\"hello\"}";
         String expectToolResult = "tool result";
         when(invoker.invoke(any())).thenReturn("\"" + expectToolResult + "\"");
-        when(converter.convertOutput(any(), any())).thenAnswer(invocation -> {
-            ((FlowData) invocation.getArgument(1)).getBusinessData().put("toolResult", invocation.getArgument(0));
-            return invocation.getArgument(1);
+        when(converter.convertOutput(any())).thenAnswer(invocation -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("toolResult", invocation.getArgument(0));
+            return map;
         });
 
         FlowData flowData = FlowData.builder().businessData(new HashMap<>()).contextData(new HashMap<>()).build();

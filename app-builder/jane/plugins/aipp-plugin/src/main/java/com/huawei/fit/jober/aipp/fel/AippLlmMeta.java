@@ -5,7 +5,6 @@
 package com.huawei.fit.jober.aipp.fel;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
-import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
@@ -44,18 +43,16 @@ public class AippLlmMeta {
      *
      * @param flowData 表示携带元数据的 {@link List}{@code <}{@link Map}{@code <}{@link String}{@code ,} {@link Object}{@code >}{@code >}。
      * @param metaService 表示元数据服务的 {@link MetaService}。
-     * @param metaInstanceService 表示实例元数据服务的 {@link MetaInstanceService}。
      * @return 返回表示大模型节点元数据的 {@link AippLlmMeta}。
      */
-    public static AippLlmMeta parse(List<Map<String, Object>> flowData, MetaService metaService,
-            MetaInstanceService metaInstanceService) {
+    public static AippLlmMeta parse(List<Map<String, Object>> flowData, MetaService metaService) {
         AippLlmMeta aippLlmMeta = new AippLlmMeta();
         aippLlmMeta.flowData = flowData;
         aippLlmMeta.businessData = Utils.getBusiness(flowData);
         aippLlmMeta.versionId = ObjectUtils.cast(aippLlmMeta.businessData.get(AippConst.BS_META_VERSION_ID_KEY));
         aippLlmMeta.instId = ObjectUtils.cast(aippLlmMeta.businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
         aippLlmMeta.context = Utils.getOpContext(aippLlmMeta.businessData);
-        aippLlmMeta.flowTraceId = Utils.getFlowTraceId(aippLlmMeta.businessData, metaInstanceService);
+        aippLlmMeta.flowTraceId = Utils.getFlowTraceId(flowData);
         aippLlmMeta.flowDefinitionId = Utils.getFlowDefinitionId(aippLlmMeta.businessData, metaService);
         return aippLlmMeta;
     }

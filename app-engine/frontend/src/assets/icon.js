@@ -40,6 +40,8 @@ import Languages from './svg/setting.svg';
 import Rebot from './svg/rebot.svg';
 import Like from './svg/like.svg';
 import Unlike from './svg/unlike.svg';
+import Close from './svg/close.svg';
+import Run from  './svg/run-solid.svg';
 import LikeSelect from './svg/likeSelect.svg';
 import UnlikeSelect from './svg/unlikeSelect.svg';
 import Share from './svg/share.svg';
@@ -84,6 +86,8 @@ const TabRightIcon = (props) => <Icon component={() => (<TabRight/>)} {...props}
 const AudioIcon = (props) => <Icon component={() => (<Audio/>)} {...props} />;
 const AvatarIcon = (props) => <Icon component={() => (<Avatar />)} {...props} />;
 const AppDefaultIcon = (props) => <Icon component={() => (<AppDefault />)} {...props} />;
+const CloseIcon = (props) => <Icon component={() => (<Close />)} {...props} />;
+const RunIcon = (props) => <Icon component={() => (<Run />)} {...props} />;
 const HistoryIcon = (props) => <Icon component={() => (<History />)} {...props} />;
 const ArrowDownIcon = (props) => <Icon component={() => (<ArrowDown />)} {...props} />;
 const LanguagesIcon = (props) => <Icon component={() => (<Languages />)} {...props} />;
@@ -142,6 +146,8 @@ export {
   UnlikeIcon,
   LikeSelectIcon,
   UnlikeSelectIcon,
+  CloseIcon,
+  RunIcon,
   ShareIcon,
   CopyIcon,
   DeleteIcon,
