@@ -34,6 +34,8 @@ LOGGING_CONFIG["formatters"]["access"]["fmt"] = "%(asctime)s - %(levelprefix)s %
 KUBE_CONFIG = "/root/.kube/config"
 NAMESPACE_FILE = "/var/run/secrets/kubernetes.io/serviceaccount/namespace"
 
+EMBEDDING_MODEL_TYPE = "Embedding"
+
 
 def set_cross_header(response, request):
     response.headers["access-control-allow-headers"] = "content-type"
@@ -180,26 +182,92 @@ async def list_gateways():
     endpoints = get_model_io_gateways()
     return JSONResponse(content=jsonable_encoder(endpoints))
 
+EXTRA_CHAT_MODEL = "extra_chat_model"
+EXTRA_EMBED_MODEL = "extra_embed_model"
+OBJECT_KEY = "object"
+MODEL_VALUE = "model"
+MODEL_TYPE_KEY = "type"
+CHAT_MODEL_TYPE = "chat"
+EMBED_MODEL_TYPE = "embed"
 
-@app.get("/v1/models")
-async def list_models():
+extra_models = [
+    {
+        "id": "Qwen-72B",
+        OBJECT_KEY: MODEL_VALUE,
+        MODEL_TYPE_KEY: CHAT_MODEL_TYPE
+    },
+    {
+        "id": "Qwen1.5-32B-Chat",
+        OBJECT_KEY: MODEL_VALUE,
+        MODEL_TYPE_KEY: CHAT_MODEL_TYPE
+    },
+    {
+        "id": "bce-embedding-base",
+        OBJECT_KEY: MODEL_VALUE,
+        MODEL_TYPE_KEY: EMBED_MODEL_TYPE
+    },
+    {
+        "id": "bge-large-zh",
+        OBJECT_KEY: MODEL_VALUE,
+        MODEL_TYPE_KEY: EMBED_MODEL_TYPE
+    },
+    {
+        "id": "bge-large-en",
+        OBJECT_KEY: MODEL_VALUE,
+        MODEL_TYPE_KEY: EMBED_MODEL_TYPE
+    },
+]
+
+
+def list_models(chat_model_only=False):
+    data = "data"
     models = {
         "object": "list",
-        "data": [],
+        data : [],
     }
     models_meta = get_models_meta()
     models_service = get_cached_model_services()
+    deployed_models = set()
     for service_name in models_service:
         try:
-            model = {
-                "id" : models_meta["services"][service_name],
-                "object" : "chat_model"
-            }
-            models["data"].append(model)
+            model_meta = models_meta["services"][service_name]
+            model_name = model_meta["name"]
+            model_type = model_meta.get("type_id", CHAT_MODEL_TYPE)
+
+            if not chat_model_only or model_type == CHAT_MODEL_TYPE:
+                model = {
+                    "id" : model_name,
+                    "object" : "model",
+                    "type" : model_type
+                }
+                models[data].append(model)
+            deployed_models.add(model_name)
         except KeyError as e:
             logging.error("KeyError:%s", e)
 
+    extra_gateway = os.environ.get("EXTRA_GATEWAY_URL")
+
+    if not extra_gateway:
+        return JSONResponse(content=jsonable_encoder(models))
+
+    for extra_model in extra_models:
+        model_type = extra_model.get(MODEL_TYPE_KEY, CHAT_MODEL_TYPE)
+        if extra_model.get("id", "") not in deployed_models:
+            if not chat_model_only or model_type == CHAT_MODEL_TYPE:
+                models.get(data).append(extra_model)
+
     return JSONResponse(content=jsonable_encoder(models))
+    
+
+
+@app.get("/v1/models")
+async def list_all_models():
+    return list_models()
+
+
+@app.get("/v1/chat/models")
+async def list_chat_models():
+    return list_models(chat_model_only=True)
 
 
 def get_model_name(service_name):
@@ -328,9 +396,13 @@ def _notify_model_io_gateways():
         logger.error("Exception: %s.", str(e))
 
 
-def get_supported_images():
-    supported_images = ["mindie:latest"]
+def get_supported_images(model_type=CHAT_MODEL_TYPE):
+    if model_type == EMBED_MODEL_TYPE:
+        supported_images = ["model-io-embedding:latest"]
+    else:
+        supported_images = ["mindie:latest"]
     return supported_images
+
 
 models_meta_singleton = {}
 supported_models_singleton = {"llms" : []}
@@ -361,7 +433,7 @@ def get_model_name_by_service_name(service_name):
     models_meta = get_models_meta()
     model_name = service_name
     try:
-        model_name = models_meta["services"][service_name]
+        model_name = models_meta["services"][service_name]["name"]
     except KeyError as e:
         logger.error("KeyError:%s", e)
     return model_name
@@ -378,7 +450,11 @@ def get_models_meta():
 
     for model in models_meta.get("llms", []):
         model_name = model["name"]
-        models_meta["services"][model_name.lower()] = model_name
+        models_meta["services"][model_name.lower()] = model
+        if model["type"] == EMBEDDING_MODEL_TYPE:
+            model["type_id"] = "embed"
+        else:
+            model["type_id"] = "chat"
 
     return models_meta
 
@@ -416,7 +492,8 @@ def get_supported_models_template(meta=False):
     agg_statistics = get_models_statistics_from_gateway()
 
     for model in models.get("llms", []):
-        model["supported_images"] = get_supported_images()
+        model_type_id = model.get("type_id", "chat")
+        model["supported_images"] = get_supported_images(model_type_id)
         name = "name"
         model_name = model[name]
         model["id"] = model_name + "-id" + "-1"
