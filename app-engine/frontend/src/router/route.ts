@@ -190,6 +190,7 @@ export const routeList: MenuItem[] = [
     icon: Icons.app({}),
     label: '团队',
     component: Demo,
+    hidden: true,
   },
 ];
 
