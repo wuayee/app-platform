@@ -8,7 +8,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.jade.app.engine.base.dto.UsrFeedbackDto;
-import com.huawei.jade.app.engine.base.mapper.UserFeedbackMapper;
+import com.huawei.jade.app.engine.base.mapper.UsrFeedbackMapper;
 import com.huawei.jade.app.engine.base.service.UsrFeedbackService;
 
 import java.util.List;
@@ -23,9 +23,9 @@ import java.util.List;
 public class UsrFeedbackServiceImpl implements UsrFeedbackService {
     private static final Logger log = Logger.get(UsrFeedbackServiceImpl.class);
 
-    private final UserFeedbackMapper usrFeedbackMapper;
+    private final UsrFeedbackMapper usrFeedbackMapper;
 
-    public UsrFeedbackServiceImpl(UserFeedbackMapper userFeedbackMapper) {
+    public UsrFeedbackServiceImpl(UsrFeedbackMapper userFeedbackMapper) {
         this.usrFeedbackMapper = userFeedbackMapper;
     }
 
