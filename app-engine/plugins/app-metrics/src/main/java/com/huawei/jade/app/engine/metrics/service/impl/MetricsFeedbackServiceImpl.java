@@ -64,7 +64,8 @@ public class MetricsFeedbackServiceImpl implements MetricsFeedbackService {
     public ByteArrayInputStream export(MetricsFeedbackDto metricsFeedbackDTO) throws IOException {
         String[] headStr = {"用户提问", "应用回答", "时间", "响应速度", "用户", "反馈", "反馈详情"};
 
-        try (Workbook wb = new HSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+        try (Workbook wb = new HSSFWorkbook();
+                ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = wb.createSheet();
             int rowIndex = 0;
 
@@ -89,8 +90,10 @@ public class MetricsFeedbackServiceImpl implements MetricsFeedbackService {
                     row.createCell(2, CellType.STRING).setCellValue(vo.getCreateTime());
                     row.createCell(3, CellType.STRING).setCellValue(vo.getResponseTime());
                     row.createCell(4, CellType.STRING).setCellValue(vo.getCreateUser());
-                    row.createCell(5, CellType.STRING).setCellValue(vo.getUserFeedback());
-                    row.createCell(6, CellType.STRING).setCellValue(vo.getUserFeedbackText());
+                    row.createCell(5, CellType.STRING)
+                            .setCellValue(vo.getUserFeedback() == null ? -1 : vo.getUserFeedback());
+                    row.createCell(6, CellType.STRING)
+                            .setCellValue(vo.getUserFeedbackText() == null ? "" : vo.getUserFeedbackText());
                 }
             }
 

@@ -111,6 +111,8 @@ public class AippFlowEndCallback implements FlowCallbackService {
                     Utils.buildLogDataWithFormData(this.formRepository, endFormId, endFormVersion, businessData);
             Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
         }
+
+        businessData.put(AippConst.ATTR_APP_ID_KEY, attr.get(AippConst.ATTR_APP_ID_KEY));
         this.logFinalOutput(contexts, businessData, aippInstId);
 
         // 子流程 callback 主流程
@@ -149,13 +151,16 @@ public class AippFlowEndCallback implements FlowCallbackService {
         // 评估调用接口时不记录历史会话
         Object isEval = businessData.get(AippConst.IS_EVAL_INVOCATION);
         if (isEval == null || !ObjectUtils.<Boolean>cast(isEval)) {
+            OperationContext context =
+                    JsonUtils.parseObject(
+                            ObjectUtils.cast(businessData.get(AippConst.BS_HTTP_CONTEXT_KEY)), OperationContext.class);
             // 构造用户历史对话记录并插表
             ConversationRecordPo conversationRecordPo =
                     ConversationRecordPo.builder()
                             .appId(ObjectUtils.cast(businessData.get(AippConst.ATTR_APP_ID_KEY)))
                             .question(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_QUESTION_KEY)))
                             .answer(logMsg)
-                            .createUser(ObjectUtils.cast(businessData.get(AippConst.INST_CREATOR_KEY)))
+                            .createUser(context.getName())
                             .createTime(LocalDateTime.parse(businessData.get(AippConst.INSTANCE_START_TIME).toString()))
                             .finishTime(LocalDateTime.now())
                             .instanceId(aippInstId)

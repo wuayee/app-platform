@@ -11,8 +11,8 @@
     </resultMap>
     <!-- 插入metric_access -->
     <insert id="insertMetricAccess" parameterType="com.huawei.jade.app.engine.metrics.po.MetricsAccessPo" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO metrics_access (app_id, total_access)
-        VALUES (#{appId}, #{totalAccess})
+        INSERT INTO metrics_access (app_id, total_access, create_time)
+        VALUES (#{appId}, #{totalAccess}, #{createTime})
     </insert>
 
     <select id="getHourlyAccessData" resultType="map">
