@@ -57,8 +57,13 @@ const TextSplitClear = ({ form }: props) => {
       icon: <KnowledgeIcons.operator />,
     },
     {
-      label: 'HTML标签去除',
+      label: '文档乱码去除',
       value: 'com.huawei.eDataMate.operators.garble_characters_cleaner_plugin',
+      icon: <KnowledgeIcons.operator />,
+    },
+    {
+      label: 'HTML标签去除',
+      value: 'com.huawei.eDataMate.operators.html_tag_cleaner_plugin',
       icon: <KnowledgeIcons.operator />,
     },
     {
@@ -77,7 +82,7 @@ const TextSplitClear = ({ form }: props) => {
       icon: <KnowledgeIcons.operator />,
     },
     {
-      label: '文档乱码去除',
+      label: '空格标准化插件',
       value: 'com.huawei.eDataMate.operators.unicode_space_cleaner_plugin',
       icon: <KnowledgeIcons.operator />,
     },

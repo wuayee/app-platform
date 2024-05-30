@@ -144,7 +144,10 @@ const KnowledgeBaseCreate = () => {
                   width: 391,
                   height: 40,
                   borderRadius: 4,
-                }}>{<Icons.userGroup></Icons.userGroup>}  团队</Radio.Button>
+                }} 
+                // 禁用团队选择
+                disabled={true}
+                >{<Icons.userGroup></Icons.userGroup>}  团队</Radio.Button>
               </Radio.Group>
             </Form.Item>
             {knowledgeType === 'userGroup' ? (
