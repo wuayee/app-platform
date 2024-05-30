@@ -58,9 +58,16 @@ export default function ModelForm({shapeId, modelOptions}) {
         return value;
     };
 
-    // 失焦时才设置值.若为空，则不设置.
-    const changeOnBlur = (e, actionType, id) => {
-        if (e.target.value === "") {
+    /**
+     * 失焦时才设置值，对于必填项.若为空，则不设置
+     *
+     * @param e
+     * @param actionType
+     * @param id
+     * @param required
+     */
+    const changeOnBlur = (e, actionType, id, required) => {
+        if (required && e.target.value === "") {
             return;
         }
         dispatch({
@@ -121,7 +128,7 @@ export default function ModelForm({shapeId, modelOptions}) {
                                         min={0}
                                         max={1}
                                         step={0.1}
-                                        onBlur={(e) => changeOnBlur(e, "changeConfig", temperature.id)}
+                                        onBlur={(e) => changeOnBlur(e, "changeConfig", temperature.id, true)}
                                         stringMode
                                 />
                             </Form.Item>
@@ -144,7 +151,7 @@ export default function ModelForm({shapeId, modelOptions}) {
                             >
                                 <TextArea
                                     className="jade-textarea-input jade-font-size"
-                                    onBlur={(e) => changeOnBlur(e, "changePrompt", prompt.id)}
+                                    onBlur={(e) => changeOnBlur(e, "changePrompt", prompt.id, true)}
                                     placeholder="你可以用{{variable name}}来关联输入中的变量名"
                                 />
                             </Form.Item>
@@ -163,7 +170,7 @@ export default function ModelForm({shapeId, modelOptions}) {
                             >
                                 <TextArea
                                     className="jade-textarea-input jade-font-size"
-                                    onBlur={(e) => changeOnBlur(e, "changeConfig", systemPrompt.id)}
+                                    onBlur={(e) => changeOnBlur(e, "changeConfig", systemPrompt.id, false)}
                                     placeholder="输入一段提示词，可以给应用预设身份"
                                 />
                             </Form.Item>
