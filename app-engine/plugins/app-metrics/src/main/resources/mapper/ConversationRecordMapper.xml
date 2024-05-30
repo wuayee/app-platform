@@ -85,8 +85,8 @@
 
     <!-- insert conversation_record -->
     <insert id="insertConversationRecord" parameterType="com.huawei.jade.app.engine.metrics.po.ConversationRecordPo" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO conversation_record (app_id, question, answer, create_user, create_time, finish_time, path)
-        VALUES (#{appId}, #{question}, #{answer},  #{createUser}, #{createTime}, #{finishTime}, #{path})
+        INSERT INTO conversation_record (app_id, question, answer, create_user, create_time, finish_time, instance_id)
+        VALUES (#{appId}, #{question}, #{answer},  #{createUser}, #{createTime}, #{finishTime}, #{instanceId})
     </insert>
 
     <select id="getByCondition" resultType="com.huawei.jade.app.engine.metrics.vo.MetricsFeedbackVo">

@@ -156,7 +156,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
                             .question(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_QUESTION_KEY)))
                             .answer(logMsg)
                             .createUser(ObjectUtils.cast(businessData.get(AippConst.INST_CREATOR_KEY)))
-                            .createTime(ObjectUtils.cast(businessData.get(AippConst.INSTANCE_START_TIME)))
+                            .createTime(LocalDateTime.parse(businessData.get(AippConst.INSTANCE_START_TIME).toString()))
                             .finishTime(LocalDateTime.now())
                             .instanceId(aippInstId)
                             .build();
