@@ -142,7 +142,7 @@ export const routeList: MenuItem[] = [
       {
         key: '/knowledge-base/knowledge-detail',
         icon: Icons.app({}),
-        label: '小魔方知识库',
+        label: '知识库详情',
         component: KnowledgeBaseDetail,
         hidden: true,
         children: [
