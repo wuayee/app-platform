@@ -1,4 +1,13 @@
-import React, {createContext, useContext, useEffect, useReducer, useState} from "react";
+import React, {
+    createContext,
+    forwardRef,
+    useContext,
+    useEffect,
+    useImperativeHandle,
+    useReducer,
+    useRef,
+    useState
+} from "react";
 import "./contentStyle.css";
 import {Form} from "antd";
 import RunResult from "@/components/flowRunComponent/RunResult.jsx";
@@ -17,11 +26,20 @@ const FormContext = createContext(null);
  * @return {JSX.Element}
  * @constructor
  */
-export const DefaultRoot = ({shape, component}) => {
+export const DefaultRoot = forwardRef(function ({shape, component, onReportShow}, ref) {
     const [data, dispatch] = useReducer(component.reducers, component.getJadeConfig());
     const id = "react-root-" + shape.id;
     const [form] = Form.useForm();
     const [runStatus, setRunStatus] = useState(shape.runStatus);
+    const runReportRef = useRef();
+
+    useImperativeHandle(ref, () => {
+        return {
+            getRunReportRect: () => {
+                return runReportRef.current && runReportRef.current.getRunReportRect();
+            }
+        };
+    });
 
     /**
      * 用于图形可获取组件中的数据.
@@ -62,7 +80,7 @@ export const DefaultRoot = ({shape, component}) => {
     };
 
     return (<>
-        {runStatus !== NODE_STATUS.DEFAULT && <RunResult shape={shape}/>}
+        {runStatus !== NODE_STATUS.DEFAULT && <RunResult shape={shape} ref={runReportRef} onReportShow={onReportShow}/>}
         <div id={id} style={{display: "block"}}>
             <Form form={form}
                   name={`form-${shape.id}`}
@@ -84,7 +102,7 @@ export const DefaultRoot = ({shape, component}) => {
             </Form>
         </div>
     </>);
-};
+});
 
 export function useDataContext() {
     return useContext(DataContext);
