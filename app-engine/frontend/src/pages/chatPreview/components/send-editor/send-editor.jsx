@@ -28,7 +28,8 @@ const SendEditor = (props) => {
     requestLoading,
     openClick,
     inspirationOpen,
-    recommendList } = props;
+    recommendList,
+  } = props;
   const [ content, setContent ] = useState('');
   const [ selectItem, setSelectItem ] = useState({});
   const [ selectDom, setSelectDom ] = useState();
@@ -36,7 +37,7 @@ const SendEditor = (props) => {
   const [ showPreview, setShowPreview ] = useState(false);
   const [ showClear, setShowClear ] = useState(false);
   const [ positionConfig, setPositionConfig ] = useState({});
-  const { aippInfo ,chatRunning }  = useContext(AippContext);
+  const { aippInfo ,chatRunning, showHistory }  = useContext(AippContext);
   const { WS_AUDIO_URL } = httpUrlMap[process.env.NODE_ENV];
   const editorRef = useRef(null);
   const recording = useRef(false);
@@ -189,7 +190,8 @@ const SendEditor = (props) => {
       <div className='editor-inner'>
         <EditorBtnHome 
           aippInfo={aippInfo} 
-          setOpen={setOpenHistory} 
+          setOpen={setOpenHistory}
+          showHistory = {showHistory}
           clear={onClear}
           fileCallBack={fileSend}
         />
