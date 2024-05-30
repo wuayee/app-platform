@@ -92,13 +92,13 @@
             EXTRACT(EPOCH FROM (cr.finish_time - cr.create_time)) * 1000 AS responseTime,
             cr.create_user AS createUser,
             COALESCE(ufi.usr_feedback, -1) AS userFeedback,
-            COALESCE(ufi.usr_feedback_text, "") AS userFeedbackText
+            COALESCE(ufi.usr_feedback_text, '') AS userFeedbackText
         FROM
             conversation_record cr
                 LEFT JOIN
             usr_feedback_info ufi ON cr.instance_id = ufi.instance_id
         WHERE
-            1=1
+            cr.app_id = #{metricsFeedbackDTO.appId}
             <if test="metricsFeedbackDTO.startTime != null and metricsFeedbackDTO.endTime != null">
                 AND cr.create_time BETWEEN #{metricsFeedbackDTO.startTime} AND #{metricsFeedbackDTO.endTime}
             </if>
