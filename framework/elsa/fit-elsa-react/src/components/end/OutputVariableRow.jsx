@@ -30,7 +30,7 @@ export default function OutputVariableRow({item, handleItemChange}) {
      *
      * @return {(function(*): void)|*}
      */
-    const editOutputVariable = () => (e) => {
+    const editOutputVariable = (e) => {
         if (!e.target.value) {
             return;
         }
