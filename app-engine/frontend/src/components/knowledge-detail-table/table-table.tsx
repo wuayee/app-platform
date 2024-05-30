@@ -100,8 +100,8 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
               return (
               <>
                 <div>
-                  <Button type="link" size="small" onClick={modifyFunc}>修改</Button>
-                  <Button type="link" size="small" onClick={deleteFunc}>删除</Button>
+                  <Button type="link" size="small" onClick={modifyFunc} disabled={true}>修改</Button>
+                  <Button type="link" size="small" onClick={deleteFunc} disabled={true}>删除</Button>
                 </div>
               </>)
         }
@@ -184,7 +184,7 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
             backgroundColor: '#2673E5',
             display: 'flex',
             alignItems: 'center'
-          }}>
+          }} disabled={true}>
             {<KnowledgeIcons.add/>} 添加行
         </Button>
         <Input 
@@ -194,7 +194,8 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
             height: 32,
             borderRadius: '4px',
             border: '1px solid rgb(230, 230, 230)',
-            }} 
+            }}
+            disabled={type ==='text'? false : true}
             onChange={(e)=>onSearchValueChange(e.target.value)}
             prefix={<Icons.search color = {'rgb(230, 230, 230)'}/>}/>
       </div>
