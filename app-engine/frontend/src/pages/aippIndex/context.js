@@ -8,7 +8,8 @@ export const AippContext = createContext({
   showElsa: false,
   messageChecked: false,
   chatRunning: false,
-  updateAippCallBack: null
+  updateAippCallBack: null,
+  showHistory: true,
 })
 export const ChatContext = createContext({
   setShareClass: null,

@@ -5,12 +5,15 @@ import type { RootState } from '../index';
 interface CounterState {
   value: {};
   rawData: any;
+
+  defaultAppId: string;
 }
 
 // 使用该类型定义初始 state
 const initialState: CounterState = {
   value: {},
   rawData: null,
+  defaultAppId: '',
 } as CounterState
 
 export const collectionStore = createSlice({
@@ -40,11 +43,16 @@ export const collectionStore = createSlice({
       data[action.payload] = true;
 
       state.value = {...data};
+    },
+
+    // 设置默认应用
+    setDefaultApp:(state, action: any) => {
+      state.defaultAppId = action.payload;
     }
   }
 })
 
-export const { setCollectionValue, removeCollectionApp, addCollectionApp } = collectionStore.actions
+export const { setCollectionValue, removeCollectionApp, addCollectionApp, setDefaultApp } = collectionStore.actions
 // 选择器等其他代码可以使用导入的 `RootState` 类型
 
 export default collectionStore.reducer

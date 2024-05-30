@@ -19,7 +19,7 @@ import robot from "@assets/images/ai/robot1.png";
 
 // 操作按钮
 const EditorBtnHome = (props) => {
-  const { aippInfo, setOpen, clear, fileCallBack } = props;
+  const { aippInfo, setOpen, clear, fileCallBack, showHistory } = props;
   const { chatRunning, tenantId, appId } = useContext(AippContext);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ openStar, setOpenStar ] = useState(false);
@@ -36,8 +36,8 @@ const EditorBtnHome = (props) => {
     })
     if (aippInfo.attributes?.icon) {
       setAppIcon(aippInfo.attributes.icon);
-      setAppName(aippInfo.name || '应用');
     }
+    setAppName(aippInfo.name || '应用');
   }, [props]);
 
   // 新聊天
@@ -77,7 +77,9 @@ const EditorBtnHome = (props) => {
       return;
     }
     setShowAt(false);
-    setOpenStar(true)
+    if(showHistory) {
+      setOpenStar(true)
+    }
   }
   // 开始聊天
   const chatClick = (item) => {

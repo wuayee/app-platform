@@ -17,7 +17,9 @@ const ChatDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
   let modalRef = useRef();
-  const isHomepage = location.pathname.includes("home") || location.pathname === "/";
+  // const isHomepage = location.pathname.includes("home") || location.pathname === "/" ;
+  const isHomepage = aippInfo.name === '小海' ;
+  // const isHomepage = false;
   const addApp = () => {
     setModalInfo(() => {
       modalRef.current.showModal();
@@ -37,7 +39,7 @@ const ChatDetail = () => {
   }
   return <>{(
     <div className='chat-details-content'>
-      { isHomepage ? (
+       {aippInfo?.name ? ( isHomepage ? (
         <div className="home-top">
           <div className="head-inner">
             <div className="inner-left">
@@ -97,7 +99,7 @@ const ChatDetail = () => {
             </div>
           </div>
         </div>
-      ) }
+      ) ) : ''}
        <EditModal type="add" modalRef={modalRef} aippInfo={modalInfo} addAippCallBack={addAippCallBack}/>
     </div>
   )}</>;

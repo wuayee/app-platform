@@ -9,10 +9,10 @@ import {
 import "./style.scoped.scss";
 import { httpUrlMap } from "../../../../shared/http/httpConfig";
 import { cancleUserCollection, collectionApp, getUserCollection, updateCollectionApp } from "../../../../shared/http/appDev";
-import { setCollectionValue } from "../../../../store/collection/collection";
+import { setCollectionValue, setDefaultApp } from "../../../../store/collection/collection";
 import { useAppSelector, useAppDispatch } from "../../../../store/hook";
 import { AnyAction } from "redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const { ICON_URL } = process.env.NODE_ENV === 'development' ? { ICON_URL: `${window.location.origin}/api`} : httpUrlMap[process.env.NODE_ENV];
 
@@ -28,7 +28,6 @@ interface StarAppsProps {
 const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick }) => {
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   const navigate = useNavigate();
-  
   const [apps, setApps] = useState<any[]>([]);
   const clickMap: any = {
     2: async (item: AnyAction) => {
@@ -103,6 +102,9 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
   const translateData = (remoteData: any): any[] => {
     
     const defaultData = remoteData?.data?.defaultApp || null;
+
+    // 设置默认应用
+    dispatch(setDefaultApp(defaultData?.aippId || ''))
     const collectionList: any[] = remoteData?.data?.collectionPoList || [];
     collectionList.unshift(defaultData);
     const data = collectionList.filter(item=> item);
@@ -138,7 +140,8 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
 
   // 开始聊天
   const startChat = (item: any) => {
-    navigate(`/app/${tenantId}/chat/${item.aippId}`);
+    dispatch(setDefaultApp(item?.aippId || ''));
+    // navigate(`/app/${tenantId}/chat/${item.aippId}`);
   }
 
   useEffect(()=> {

@@ -1,8 +1,11 @@
 
 import React, { useEffect, useState, useRef } from 'react';
+import { Button } from 'antd';
+
 import { useParams } from 'react-router-dom';
 import { AippContext } from '../aippIndex/context';
 import { getCurUser, getAippInfo } from '../../shared/http/aipp';
+import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
 import ChatPreview from '__pages/chatPreview/index.jsx';
 import './index.scss';
 
@@ -12,6 +15,7 @@ const ChatRunning = () => {
   const [ prompValue, setPrompValue ] = useState({});
   const [ chatRunning, setChatRunning ] = useState(false);
   const [ refreshPrompValue, setRefreshPrompValue ] = useState(false);
+  const navigate = useNavigate();
   const aippRef = useRef(null);
   useEffect(() => {
     getUser();
@@ -31,6 +35,7 @@ const ChatRunning = () => {
     const res = await getAippInfo(tenantId, appId);
     if (res.code === 0) {
       setAippInfo(() => {
+        res.data.notShowHistory = true;
         aippRef.current = JSON.parse(JSON.stringify(res.data));
         return res.data
       });
@@ -49,12 +54,16 @@ const ChatRunning = () => {
     setPrompValue,
     refreshPrompValue,
     setRefreshPrompValue,
+    showHistory: false,
   };
   return (
     <>
       {
         <div className="chat-running-container">
-          <div className="chat-running-chat">{ aippInfo.name }</div>
+        
+          <div className="chat-running-chat"><Button type='text' onClick={()=> {
+            navigate(-1)
+          }}>返回</Button>{ aippInfo.name }</div>
            <AippContext.Provider value={provider}>
               <ChatPreview chatStatusChange={chatStatusChange}/>
            </AippContext.Provider>
