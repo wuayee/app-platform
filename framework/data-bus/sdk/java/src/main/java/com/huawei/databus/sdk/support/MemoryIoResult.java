@@ -9,6 +9,7 @@ import com.huawei.databus.sdk.memory.SharedMemory;
 import com.huawei.databus.sdk.memory.SharedMemoryKey;
 import com.huawei.databus.sdk.message.ErrorType;
 import com.huawei.databus.sdk.message.PermissionType;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.Optional;
 
@@ -89,7 +90,7 @@ public interface MemoryIoResult extends DataBusIoResult {
 
         private SuccessResult(SharedMemory sharedMemory, byte[] bytes, byte[] userData, byte permissionType) {
             this.sharedMemory = sharedMemory;
-            this.bytes = bytes;
+            this.bytes = ObjectUtils.getIfNull(bytes, () -> new byte[0]);
             this.userData = userData;
             this.permissionType = permissionType;
         }

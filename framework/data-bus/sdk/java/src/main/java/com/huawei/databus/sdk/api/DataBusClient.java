@@ -5,6 +5,8 @@
 package com.huawei.databus.sdk.api;
 
 import com.huawei.databus.sdk.client.DefaultDataBusClient;
+import com.huawei.databus.sdk.support.GetMetaDataRequest;
+import com.huawei.databus.sdk.support.GetMetaDataResult;
 import com.huawei.databus.sdk.support.MemoryIoRequest;
 import com.huawei.databus.sdk.support.MemoryIoResult;
 import com.huawei.databus.sdk.support.OpenConnectionResult;
@@ -26,8 +28,8 @@ public interface DataBusClient {
     /**
      * 打开通向指定地址和端口的 DataBus 连接。
      *
-     * @param dataBusAddr 表示 DataBus 服务地址的 {@link InetAddress}
-     * @param dataBusPort 表示 DataBus 服务端口的 {@code int}
+     * @param dataBusAddr 表示 DataBus 服务地址的 {@link InetAddress}。
+     * @param dataBusPort 表示 DataBus 服务端口的 {@code int}。
      * @return 表示连接结果的 {@link OpenConnectionResult}。
      */
     OpenConnectionResult open(InetAddress dataBusAddr, int dataBusPort);
@@ -35,15 +37,15 @@ public interface DataBusClient {
     /**
      * 向 DataBus 服务发起内存申请请求。
      *
-     * @param request 表示内存申请请求的 {@link SharedMemoryRequest}
-     * @return SharedMemoryResult 表示内存申请结果的 {@link SharedMemoryResult}
+     * @param request 表示内存申请请求的 {@link SharedMemoryRequest}。
+     * @return SharedMemoryResult 表示内存申请结果的 {@link SharedMemoryResult}。
      */
     SharedMemoryResult sharedMalloc(@Nonnull SharedMemoryRequest request);
 
     /**
      * 向 DataBus 服务发起内存释放请求。内存具体释放的时机由 DataBus 服务确定，因此本 API 不返回结果。
      *
-     * @param request 表示内存释放请求的 {@link ReleaseMemoryRequest}
+     * @param request 表示内存释放请求的 {@link ReleaseMemoryRequest}。
      */
     void sharedFree(@Nonnull ReleaseMemoryRequest request);
 
@@ -55,18 +57,26 @@ public interface DataBusClient {
     void close() throws IOException;
 
     /**
-     * 向指定的内存块中读入数据。同一内存块不可并发读写，不同内存块可以并发读写。
+     * 从指定的内存块中读入数据。同一内存块不可并发读写，不同内存块可以并发读写。
      *
-     * @param memoryIORequest 表示读取请求 {@link MemoryIoRequest}
-     * @return 表示 IO 操作结果的 {@link MemoryIoRequest}
+     * @param memoryIORequest 表示读取请求 {@link MemoryIoRequest}。
+     * @return 表示 IO 操作结果的 {@link MemoryIoRequest}。
      */
     MemoryIoResult readOnce(@Nonnull MemoryIoRequest memoryIORequest);
 
     /**
+     * 读取指定的内存块的元数据。
+     *
+     * @param getMetaDataRequest 表示读取元数据请求 {@link GetMetaDataRequest}。
+     * @return 表示获取元数据操作结果的 {@link GetMetaDataResult}。
+     */
+    GetMetaDataResult readMetaData(@Nonnull GetMetaDataRequest getMetaDataRequest);
+
+    /**
      * 向指定的内存块中读入数据。同一内存块不可并发读写，不同内存块可以并发读写。
      *
-     * @param memoryIORequest 表示写入请求 {@link MemoryIoRequest}
-     * @return 表示 IO 操作结果的 {@link MemoryIoResult}
+     * @param memoryIORequest 表示写入请求 {@link MemoryIoRequest}。
+     * @return 表示 IO 操作结果的 {@link MemoryIoResult}。
      */
     MemoryIoResult writeOnce(@Nonnull MemoryIoRequest memoryIORequest);
 

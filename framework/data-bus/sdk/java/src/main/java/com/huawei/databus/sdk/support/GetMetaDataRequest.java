@@ -8,22 +8,22 @@ import com.huawei.databus.sdk.api.DataBusRequest;
 import com.huawei.fitframework.inspection.Validation;
 
 /**
- * DataBus 服务释放共享内存请求
+ * DataBus 服务读取内存元数据。
  *
  * @author 王成 w00863339
- * @since 2024-05-07
+ * @since 2024-05-25
  */
-public class ReleaseMemoryRequest implements DataBusRequest {
+public class GetMetaDataRequest implements DataBusRequest {
     private final String userKey;
 
-    private ReleaseMemoryRequest(Builder builder) {
+    private GetMetaDataRequest(Builder builder) {
         this.userKey = Validation.notBlank(builder.userKey, "User key could not be empty.");
     }
 
     /**
-     * 获取被释放的内存句柄
+     * 获取希望读取用户数据的内存句柄。
      *
-     * @return 表示内存句柄的 {@code String}
+     * @return 表示内存句柄的 {@code String}。
      */
     @Override
     public String userKey() {
@@ -31,13 +31,13 @@ public class ReleaseMemoryRequest implements DataBusRequest {
     }
 
     /**
-     * {@link ReleaseMemoryRequest} 的构造器
+     * {@link GetMetaDataRequest} 的构造器。
      */
     public static class Builder {
         private String userKey;
 
         /**
-         * 向当前构建器中设置内存自定义 key 。
+         * 向当前构建器中设置内存自定义键。
          *
          * @param userKey 表示申请内存的自定义 key 的 {@code String}。
          * @return 表示当前构建器的 {@link Builder}。
@@ -50,19 +50,19 @@ public class ReleaseMemoryRequest implements DataBusRequest {
         /**
          * 构建对象。
          *
-         * @return 表示构建出来的对象的 {@link ReleaseMemoryRequest}。
+         * @return 表示构建出来的对象的 {@link GetMetaDataRequest}。
          */
-        public ReleaseMemoryRequest build() {
-            return new ReleaseMemoryRequest(this);
+        public GetMetaDataRequest build() {
+            return new GetMetaDataRequest(this);
         }
     }
 
     /**
-     * 获取 {@link ReleaseMemoryRequest} 的构建器。
+     * 获取 {@link GetMetaDataRequest} 的构建器。
      *
-     * @return 表示 {@link ReleaseMemoryRequest} 的构建器的 {@link ReleaseMemoryRequest.Builder}。
+     * @return 表示 {@link GetMetaDataRequest} 的构建器的 {@link GetMetaDataRequest.Builder}。
      */
-    public static ReleaseMemoryRequest.Builder custom() {
-        return new ReleaseMemoryRequest.Builder();
+    public static GetMetaDataRequest.Builder custom() {
+        return new GetMetaDataRequest.Builder();
     }
 }

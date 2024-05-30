@@ -13,14 +13,7 @@ import java.util.Optional;
  * @author 王成 w00863339
  * @since 2024-03-17
  */
-public interface DataBusIoRequest {
-    /**
-     * 返回与本次 IO 相关的内存用户 key。
-     *
-     * @return 表示与本次 IO 请求相关的内存 {@code String}。
-     */
-    String userKey();
-
+public interface DataBusIoRequest extends DataBusRequest {
     /**
      * 返回与本次 IO 相关的字节数组。
      *
@@ -117,7 +110,7 @@ public interface DataBusIoRequest {
         Builder memoryOffset(long memoryOffset);
 
         /**
-         * 向当前构建器中设置用户自定义 key。
+         * 向当前构建器中设置用户自定义键。
          *
          * @param userKey 表示被设置的内存句柄 {@code String}。
          * @return 表示当前构建器的 {@link Builder}。

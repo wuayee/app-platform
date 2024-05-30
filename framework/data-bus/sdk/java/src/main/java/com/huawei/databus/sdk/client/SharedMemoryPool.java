@@ -12,16 +12,22 @@ import com.huawei.databus.sdk.message.ApplyMemoryMessageResponse;
 import com.huawei.databus.sdk.message.ApplyPermissionMessage;
 import com.huawei.databus.sdk.message.ApplyPermissionMessageResponse;
 import com.huawei.databus.sdk.message.ErrorType;
+import com.huawei.databus.sdk.message.GetMetaDataMessage;
+import com.huawei.databus.sdk.message.GetMetaDataMessageResponse;
 import com.huawei.databus.sdk.message.MessageType;
 import com.huawei.databus.sdk.message.PermissionType;
 import com.huawei.databus.sdk.message.ReleaseMemoryMessage;
 import com.huawei.databus.sdk.message.ReleasePermissionMessage;
+import com.huawei.databus.sdk.support.GetMetaDataRequest;
+import com.huawei.databus.sdk.support.GetMetaDataResult;
 import com.huawei.databus.sdk.support.MemoryIoRequest;
 import com.huawei.databus.sdk.support.MemoryPermissionResult;
 import com.huawei.databus.sdk.support.ReleaseMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
 import com.huawei.databus.sdk.tools.DataBusUtils;
+import com.huawei.fitframework.inspection.Nonnull;
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.StringUtils;
 
 import com.google.flatbuffers.FlatBufferBuilder;
@@ -57,7 +63,8 @@ class SharedMemoryPool {
      * @param request 传入的 {@link SharedMemoryRequest}。
      * @return 表示共享内存结果的 {@link SharedMemoryResult}。
      */
-    public SharedMemoryResult applySharedMemory(SharedMemoryRequest request) {
+    public SharedMemoryResult applySharedMemory(@Nonnull SharedMemoryRequest request) {
+        Validation.notNull(request, "The apply memory request cannot be null.");
         // 先建造消息体
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
         int objectKeyOffset = bodyBuilder.createString(request.userKey());
@@ -134,7 +141,10 @@ class SharedMemoryPool {
      * @param memory 需要申请权限的内存 {@link SharedMemoryInternal}。
      * @return 表示权限申请结果的 {@link MemoryPermissionResult}。
      */
-    public MemoryPermissionResult applyPermission(MemoryIoRequest request, SharedMemoryInternal memory) {
+    public MemoryPermissionResult applyPermission(@Nonnull MemoryIoRequest request,
+                                                  @Nonnull SharedMemoryInternal memory) {
+        Validation.notNull(request, "The apply permission request cannot be null.");
+        Validation.notNull(memory, "The apply permission memory cannot be null.");
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
         int objectKeyOffset = bodyBuilder.createString(getUserKeyIfIdAbsent(memory.sharedMemoryKey()));
         byte[] userData = request.isOperatingUserData() && request.permissionType() == PermissionType.Write
@@ -183,7 +193,9 @@ class SharedMemoryPool {
      * @param request 传入的 {@link MemoryIoRequest}。
      * @param memory 需要申请权限的内存 {@link SharedMemoryInternal}。
      */
-    public void releasePermission(MemoryIoRequest request, SharedMemoryInternal memory) {
+    public void releasePermission(@Nonnull MemoryIoRequest request, @Nonnull SharedMemoryInternal memory) {
+        Validation.notNull(request, "The release permission request cannot be null.");
+        Validation.notNull(memory, "The release permission memory cannot be null.");
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
         int objectKeyOffset = bodyBuilder.createString(getUserKeyIfIdAbsent(memory.sharedMemoryKey()));
         ReleasePermissionMessage.startReleasePermissionMessage(bodyBuilder);
@@ -213,7 +225,8 @@ class SharedMemoryPool {
      *
      * @param request 传入的 {@link ReleaseMemoryRequest}。
      */
-    public void releaseSharedMemory(ReleaseMemoryRequest request) {
+    public void releaseSharedMemory(@Nonnull ReleaseMemoryRequest request) {
+        Validation.notNull(request, "The release memory request cannot be null.");
         // 先建造消息体。
         FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
 
@@ -253,5 +266,42 @@ class SharedMemoryPool {
             return resData;
         }
         return new byte[0];
+    }
+
+    /**
+     * 根据传入的 {@link GetMetaDataRequest} 查询内存元数据。
+     *
+     * @param request 传入的 {@link GetMetaDataRequest}。
+     * @return 表示元数据读取结果的 {@link GetMetaDataResult}。
+     */
+    public GetMetaDataResult getMemoryMetaData(@Nonnull GetMetaDataRequest request) {
+        Validation.notNull(request, "The get memory metadata request cannot be null.");
+        // 先建造消息体。
+        FlatBufferBuilder bodyBuilder = new FlatBufferBuilder();
+        int objectKeyOffset = bodyBuilder.createString(request.userKey());
+        GetMetaDataMessage.startGetMetaDataMessage(bodyBuilder);
+        GetMetaDataMessage.addObjectKey(bodyBuilder, objectKeyOffset);
+        int messageOffset = GetMetaDataMessage.endGetMetaDataMessage(bodyBuilder);
+        bodyBuilder.finish(messageOffset);
+        ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
+
+        // 建造消息头。
+        ByteBuffer messageHeaderBuffer = DataBusUtils.buildMessageHeader(MessageType.GetMetaData,
+                messageBodyBuffer.remaining());
+
+        try {
+            this.socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
+            // 阻塞等待回复。
+            ByteBuffer resBuffer = this.replyQueues.get(MessageType.GetMetaData).take();
+            GetMetaDataMessageResponse response =
+                    GetMetaDataMessageResponse.getRootAsGetMetaDataMessageResponse(resBuffer);
+            if (response.errorType() == ErrorType.None) {
+                byte[] resData = this.getUserData(response.userDataAsByteBuffer());
+                return GetMetaDataResult.success(resData, response.memorySize());
+            }
+            return GetMetaDataResult.failure(response.errorType());
+        } catch (IOException | InterruptedException e) {
+            return GetMetaDataResult.failure(ErrorType.UnknownError, e);
+        }
     }
 }
