@@ -18,7 +18,7 @@ const Feedbacks = ({ logId, instanceId, feedbackStatus, refreshFeedbackStatus })
   };
   const unLikeClickConfirm = async () => {
     if (feedbackStatus === -1) {
-      let params = { "logId": logId, "usrFeedback": "0", "usrFeedbackText": textValue, "instanceId": instanceId }
+      let params = { "usrFeedback": "0", "usrFeedbackText": textValue, "instanceId": instanceId }
       await feedbacksRq(params);
     }
     else if (feedbackStatus === 0) {
@@ -32,7 +32,7 @@ const Feedbacks = ({ logId, instanceId, feedbackStatus, refreshFeedbackStatus })
   // 点赞
   const likeClick = async () => {
     if (feedbackStatus === -1) {
-      let params = { "logId": logId, "usrFeedback": "1", "usrFeedbackText": "", "instanceId": instanceId }
+      let params = { "usrFeedback": "1", "usrFeedbackText": "", "instanceId": instanceId }
       await feedbacksRq(params);
     }
     else if (feedbackStatus === 1) {
