@@ -14,14 +14,6 @@
         <result column="instance_id" property="instanceId"/>
     </resultMap>
 
-    <resultMap id="UsrFeedbackInfo" type="com.huawei.jade.app.engine.base.dto.UsrFeedbackDto" >
-        <result column="id" property="id"/>
-        <result column="log_id" property="logId"/>
-        <result column="usr_feedback" property="usrFeedback"/>
-        <result column="usr_feedback_text" property="usrFeedbackText"/>
-        <result column="instance_id" property="instanceId"/>
-    </resultMap>
-
     <resultMap id="MetricsFeedbackVOResultMap" type="com.huawei.jade.app.engine.metrics.vo.MetricsFeedbackVo">
         <id property="id" column="id" />
         <result property="question" column="question" />
@@ -79,8 +71,10 @@
     </select>
 
     <!-- filter by time to query conversation_record -->
-    <select id="getRecordByTime" resultType="com.huawei.jade.app.engine.metrics.po.ConversationRecordPo">
-        SELECT * FROM conversation_record WHERE create_time BETWEEN #{startTime} AND #{endTime}
+    <select id="getRecordByTime" resultMap="ConversationRecord">
+        SELECT app_id, question, answer, create_user, create_time, finish_time, instance_id
+        FROM conversation_record
+        WHERE create_time BETWEEN #{startTime} AND #{endTime}
     </select>
 
     <!-- insert conversation_record -->
@@ -97,8 +91,8 @@
             cr.create_time AS createTime,
             EXTRACT(EPOCH FROM (cr.finish_time - cr.create_time)) * 1000 AS responseTime,
             cr.create_user AS createUser,
-            ufi.usr_feedback AS userFeedback,
-            ufi.usr_feedback_text AS userFeedbackText
+            COALESCE(ufi.usr_feedback, -1) AS userFeedback,
+            COALESCE(ufi.usr_feedback_text, "") AS userFeedbackText
         FROM
             conversation_record cr
                 LEFT JOIN
