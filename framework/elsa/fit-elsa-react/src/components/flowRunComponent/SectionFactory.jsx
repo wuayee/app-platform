@@ -35,36 +35,36 @@ export default function SectionFactory({shape}) {
     const buildConditionSection = section => (
             <div key={`section-${section.no}-${uuidv4()}`} className="section">
                 <SectionHeader section={section} shape={shape}/>
-                {section.data.conditions.map((condition, index) => {
-                    const {key, value} = condition.left;
-                    const separatorIndex = key.indexOf(".");
-                    const referenceNodeId = key.substring(0, separatorIndex);
-                    const text = shape.page.getShapeById(referenceNodeId).text;
-                    const newKey = text + key.substring(separatorIndex);
-                    let isShowLogic = section.data.conditions.length > 1 && index < section.data.conditions.length - 1;
-                    return (
-                            <div key={`condition-container-${section.no}-${uuidv4()}`}
-                                 className={"condition-container"}>
-                                <div key={`condition-card-${index}-${uuidv4()}`} className="condition-card">
-                                    <div className="json-tree-section condition-json-tree-section-width">
-                                        <SectionContent data={{[newKey]: value}}/>
-                                    </div>
-                                    <svg className="line-svg">
-                                        <line x1="50%" y1="0" x2="50%" y2="100%" stroke="rgba(29,28,35,.16)"/>
-                                    </svg>
-                                    <Card className="center-card">
-                                        <div className="center-text">{condition.condition}</div>
-                                    </Card>
-                                    <div className="json-tree-section condition-json-tree-section-width">
-                                        <SectionContent data={condition.right ? condition.right.value : {}}/>
-                                    </div>
-                                </div>
-                                {isShowLogic && <div className={"condition-logic"}>
-                                    {section.data.conditionRelation}
-                                </div>}
-                            </div>
-                    );
-                })}
+                {section.data.conditions
+                        .filter(c => c.condition !== "true" || c.left)
+                        .map((condition, index) => {
+                            const {key, value} = condition.left;
+                            const separatorIndex = key.indexOf(".");
+                            const referenceNodeId = key.substring(0, separatorIndex);
+                            const text = shape.page.getShapeById(referenceNodeId).text;
+                            const newKey = text + key.substring(separatorIndex);
+                            let isShowLogic = section.data.conditions.length > 1 && index < section.data.conditions.length - 1;
+                            return (<div key={`condition-container-${section.no}-${uuidv4()}`}
+                                         className={"condition-container"}>
+                                        <div key={`condition-card-${index}-${uuidv4()}`} className="condition-card">
+                                            <div className="json-tree-section condition-json-tree-section-width">
+                                                <SectionContent data={{[newKey]: value}}/>
+                                            </div>
+                                            <svg className="line-svg">
+                                                <line x1="50%" y1="0" x2="50%" y2="100%" stroke="rgba(29,28,35,.16)"/>
+                                            </svg>
+                                            <Card className="center-card">
+                                                <div className="center-text">{condition.condition}</div>
+                                            </Card>
+                                            <div className="json-tree-section condition-json-tree-section-width">
+                                                <SectionContent data={condition.right ? condition.right.value : {}}/>
+                                            </div>
+                                        </div>
+                                        {isShowLogic && <div className={"condition-logic"}>
+                                            {section.data.conditionRelation}
+                                        </div>}
+                                    </div>);
+                        })}
             </div>);
 
     /**
