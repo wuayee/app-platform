@@ -7,8 +7,8 @@ export function getPlugins(data: {
   pageNum: number;
   pageSize: number;
   includeTags: string;
-  searchTool: string;
+  name: string;
 }) {
-  const url = `${PLUGIN_URL}/tools`;
+  const url = `${PLUGIN_URL}/tools/search`;
   return get(url, data);
 }
