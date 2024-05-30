@@ -364,7 +364,7 @@ const ChatPreview = (props) => {
         "memories": [
           {
             "question": "你好",
-            "answer": "你好"
+            "msg": "你好"
           }
         ]
       }
