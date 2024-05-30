@@ -36,8 +36,12 @@ let mouseEvents = () => {
 
         // 鼠标事件会互相影响，因此这里通过类型区分鼠标的prevX和prevY.
         !mouseActionsRecords[e.type] && (mouseActionsRecords[e.type] = {prevX: 0, prevY: 0});
-        const prevX = mouseActionsRecords[e.type].prevX;
-        const prevY = mouseActionsRecords[e.type].prevY;
+        let prevX = 0;
+        let prevY = 0;
+        if (e.type) {
+            prevX = mouseActionsRecords[e.type].prevX;
+            prevY = mouseActionsRecords[e.type].prevY;
+        }
 
         const zoom = page.interactDrawer.zoom;
 
@@ -52,8 +56,10 @@ let mouseEvents = () => {
         const y = calculateY(mouseY, zoom, scrollPosition);
         const nx = calculateX(prevX, zoom, scrollPosition);
         const ny = calculateY(prevY, zoom, scrollPosition);
-        mouseActionsRecords[e.type].prevX = mouseX;
-        mouseActionsRecords[e.type].prevY = mouseY;
+        if (e.type) {
+            mouseActionsRecords[e.type].prevX = mouseX;
+            mouseActionsRecords[e.type].prevY = mouseY;
+        }
 
         return {
             x, y,

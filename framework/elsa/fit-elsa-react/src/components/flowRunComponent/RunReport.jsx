@@ -1,6 +1,6 @@
 import {Button} from "antd";
 import {CloseOutlined} from "@ant-design/icons";
-import {useEffect, useRef} from "react";
+import {forwardRef, useEffect, useImperativeHandle, useRef} from "react";
 import SectionFactory from "@/components/flowRunComponent/SectionFactory.jsx";
 
 /**
@@ -12,8 +12,25 @@ import SectionFactory from "@/components/flowRunComponent/SectionFactory.jsx";
  * @return {JSX.Element}
  * @constructor
  */
-export default function RunReport({shape, showResultPanel, handleExpandResult}) {
+const RunReport = forwardRef(({shape, showResultPanel, handleExpandResult}, ref) => {
     const resultPanelRef = useRef(null);
+
+    useImperativeHandle(ref, () => {
+        return {
+            getRunReportRect: () => {
+                if (!resultPanelRef.current) {
+                    return null;
+                }
+                const {x, y, width, height} = resultPanelRef.current.getBoundingClientRect();
+                return {
+                    x: x,
+                    y: y,
+                    width: width,
+                    height: height
+                }
+            }
+        };
+    });
 
     useEffect(() => {
         const updateResultPanelPosition = () => {
@@ -33,4 +50,6 @@ export default function RunReport({shape, showResultPanel, handleExpandResult}) 
                 </div>
                 <SectionFactory shape={shape}/>
             </div>);
-}
+});
+
+export default RunReport;

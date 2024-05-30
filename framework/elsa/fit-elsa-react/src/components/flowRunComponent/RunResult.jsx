@@ -2,9 +2,9 @@ import {Button, Layout} from 'antd';
 import {CheckCircleFilled, CloseCircleFilled, LoadingOutlined} from '@ant-design/icons';
 import "./style.css"
 import RunReport from "@/components/flowRunComponent/RunReport.jsx";
-import {useState} from "react";
+import {forwardRef, useImperativeHandle, useRef, useState} from "react";
 
-const {Header, Content} = Layout;
+const {Content} = Layout;
 
 const map = new Map;
 map.set("success", "运行成功");
@@ -18,15 +18,29 @@ map.set("running", "试运行中");
  * @return {JSX.Element}
  * @constructor
  */
-const RunResult = ({shape}) => {
+const RunResult = forwardRef(function ({shape, onReportShow}, ref) {
     const [showResultPanel, setShowResultPanel] = useState(false);
     const status = shape.runStatus;
+    const reportRef = useRef();
+
+    useImperativeHandle(ref, () => {
+        return {
+            getRunReportRect: () => {
+                return reportRef.current && reportRef.current.getRunReportRect();
+            }
+        }
+    });
 
     /**
      * 展开关闭测试报告的回调
      */
     const handleExpandResult = () => {
         setShowResultPanel(!showResultPanel);
+        setTimeout(() => {
+            if (!showResultPanel) {
+                onReportShow();
+            }
+        });
     };
 
     /**
@@ -48,7 +62,6 @@ const RunResult = ({shape}) => {
     return (
             <Layout>
                 <Content>
-                    {/*todo 需要根据shape的状态，选择使用哪个css样式*/}
                     <div className={`graph-header-common graph-header-${status}`}>
                         {getRunIcon(status)}
                         <div className="run-text">{map.get(status)}</div>
@@ -61,12 +74,14 @@ const RunResult = ({shape}) => {
                         </Button>
                     </div>
                     {showResultPanel && (
-                            <RunReport shape={shape} showResultPanel={showResultPanel}
+                            <RunReport shape={shape}
+                                       ref={reportRef}
+                                       showResultPanel={showResultPanel}
                                        handleExpandResult={handleExpandResult}/>
                     )}
                 </Content>
             </Layout>
     );
-};
+});
 
 export default RunResult;

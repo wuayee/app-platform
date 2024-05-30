@@ -4,6 +4,7 @@ import {DefaultRoot} from "@/components/DefaultRoot.jsx";
 import {v4 as uuidv4} from "uuid";
 import {Header} from "@/components/Header.jsx";
 import {NODE_STATUS, SECTION_TYPE} from "@/common/Consts.js";
+import {useRef} from "react";
 
 /**
  * jadeStream中的流程编排节点.
@@ -471,6 +472,41 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         self.validateForm && self.validateForm();
     };
 
+    /**
+     * 需要加上report的范围.
+     *
+     * @override
+     */
+    const getShapeFrame = self.getShapeFrame;
+    self.getShapeFrame = (withMargin) => {
+        const frame = getShapeFrame.apply(self, [withMargin]);
+        const reportFrame = self.drawer.getReportFrame();
+        if (!reportFrame) {
+            return frame;
+        }
+        frame.x2 = reportFrame.x + reportFrame.width;
+        frame.y2 = Math.max(frame.y2, reportFrame.y + reportFrame.height);
+        return frame;
+    };
+
+    /**
+     * 需要加上report的范围.
+     *
+     * @override
+     */
+    const getBound = self.getBound;
+    self.getBound = () => {
+        const bound = getBound.apply(self);
+        const reportFrame = self.drawer.getReportFrame();
+        if (!reportFrame) {
+            return bound;
+        }
+        bound.width = reportFrame.x + reportFrame.width - bound.x;
+        bound.height = Math.max(reportFrame.y + reportFrame.height, self.x + self.height)
+                - Math.min(self.y, reportFrame.y);
+        return bound;
+    };
+
     return self;
 };
 
@@ -512,6 +548,7 @@ const ObserverProxy = (nodeId, observableId, observer) => {
 const jadeNodeDrawer = (shape, div, x, y) => {
     const self = rectangleDrawer(shape, div, x, y);
     self.reactContainer = null;
+    self.rootRef = null;
 
     /**
      * @override
@@ -547,7 +584,50 @@ const jadeNodeDrawer = (shape, div, x, y) => {
             return;
         }
         self.root = ReactDOM.createRoot(self.reactContainer);
-        self.root.render(<DefaultRoot shape={shape} component={shape.getComponent()}/>);
+        self.root.render(<Root/>);
+    };
+
+    const Root = () => {
+        self.rootRef = useRef();
+
+        /**
+         * 当战士报告时，需要重新计算area.
+         */
+        const onReportShow = () => {
+            shape.indexCoordinate();
+        };
+
+        return (<>
+            <DefaultRoot ref={self.rootRef} shape={shape} component={shape.getComponent()} onReportShow={onReportShow}/>
+        </>);
+    };
+
+    self.getReportFrame = () => {
+        if (!self.rootRef || !self.rootRef.current || !self.rootRef.current.getRunReportRect()) {
+            return null;
+        }
+        const rect = self.rootRef.current.getRunReportRect();
+        const position = shape.page.calculatePosition({clientX: rect.x, clientY: rect.y})
+        return {
+            x: position.x,
+            y: position.y,
+            width: rect.width / shape.page.scaleX,
+            height: rect.height / shape.page.scaleY
+        }
+    };
+
+    /**
+     * 存在report时，需要判断是否坐标在report dom中.
+     *
+     * @override
+     */
+    const containsBack = self.containsBack;
+    self.containsBack = (x, y) => {
+        const reportFrame = self.getReportFrame();
+        if (!reportFrame) {
+            return containsBack.apply(self, [x, y]);
+        }
+        return containsBack.apply(self, [x, y]) || isPointInRect({x, y}, reportFrame);
     };
 
     /**
@@ -603,4 +683,12 @@ const jadeNodeDrawer = (shape, div, x, y) => {
     };
 
     return self;
+};
+
+let isPointInRect = function (point, rect) {
+    try {
+        return (point.x >= rect.x && point.x <= (rect.x + rect.width) && point.y >= rect.y && point.y <= (rect.y + rect.height));
+    } catch (e) {
+        return false;
+    }
 };
