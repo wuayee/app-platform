@@ -71,12 +71,12 @@ export default function OutputVariableRow({item, handleItemChange}) {
                             name={`value-${item.id}`}
                             rules={[{required: true, message: '字段值不能为空'}]}
                             validateTrigger="onBlur"
+                            initialValue={item.value}
                     >
                         <Input
                                 className="value-custom jade-input"
                                 style={{fontSize: "12px"}}
                                 placeholder="请输入"
-                                value={item.value}
                                 onBlur={editOutputVariable}
                         />
                     </Form.Item>
