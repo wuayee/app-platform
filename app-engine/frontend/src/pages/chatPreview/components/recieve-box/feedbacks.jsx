@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { LikeIcon, UnlikeIcon, LikeSelectIcon, UnlikeSelectIcon } from '@/assets/icon';
 import { Modal, Input } from "antd";
-import { feedbacksRq, queryFeedback, updateFeedback, deleteFeedback } from '@shared/http/chat';
+import { feedbacksRq, updateFeedback, deleteFeedback } from '@shared/http/chat';
 import './styles/feedbacks.scss';
 const { TextArea } = Input;
 
@@ -22,12 +22,12 @@ const Feedbacks = ({ logId, instanceId, feedbackStatus, refreshFeedbackStatus })
       await feedbacksRq(params);
     }
     else if (feedbackStatus === 0) {
-      await deleteFeedback(logId);
+      await deleteFeedback(instanceId);
     } else {
       let data = { "usrFeedback": "0", "usrFeedbackText": textValue }
-      await updateFeedback(logId, data);
+      await updateFeedback(instanceId, data);
     }
-    refreshFeedbackStatus(logId);
+    refreshFeedbackStatus(instanceId);
   }
   // 点赞
   const likeClick = async () => {
@@ -36,12 +36,12 @@ const Feedbacks = ({ logId, instanceId, feedbackStatus, refreshFeedbackStatus })
       await feedbacksRq(params);
     }
     else if (feedbackStatus === 1) {
-      await deleteFeedback(logId);
+      await deleteFeedback(instanceId);
     } else {
       let data = { "usrFeedback": "1", "usrFeedbackText": "" }
-      await updateFeedback(logId, data);
+      await updateFeedback(instanceId, data);
     }
-    refreshFeedbackStatus(logId);
+    refreshFeedbackStatus(instanceId);
   }
   // 点踩
   const unLikeClick = () => {
