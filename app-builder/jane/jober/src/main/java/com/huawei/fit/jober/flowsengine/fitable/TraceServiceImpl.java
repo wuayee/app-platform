@@ -86,10 +86,11 @@ public class TraceServiceImpl implements FlowCallbackService, FlowExceptionServi
         if (contexts.isEmpty()) {
             throw new JobberException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "contexts");
         }
-        Map<String, Object> context = contexts.get(0);
-        String nodeId = getValueOfSpecifyKey(context, NODE_ID_KEY);
-        FlowNodePublishInfo flowNodePublishInfo = constructFlowNodePublishInfo(context, nodeId, StringUtils.EMPTY);
-        publishNodeInfo(flowNodePublishInfo);
+        contexts.forEach(context -> {
+            String nodeId = getValueOfSpecifyKey(context, NODE_ID_KEY);
+            FlowNodePublishInfo flowNodePublishInfo = constructFlowNodePublishInfo(context, nodeId, StringUtils.EMPTY);
+            publishNodeInfo(flowNodePublishInfo);
+        });
     }
 
     @Fitable("com.huawei.fit.jober.fitable.FlowInfoException")
@@ -98,11 +99,12 @@ public class TraceServiceImpl implements FlowCallbackService, FlowExceptionServi
         if (contexts.isEmpty()) {
             throw new JobberException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "contexts");
         }
-        Map<String, Object> context = contexts.get(0);
-        // 由于notify之后才统一改的context的status为ERROR，所以这里需要手动设置一下
-        context.put("status", FlowNodeStatus.ERROR.name());
-        FlowNodePublishInfo flowNodePublishInfo = constructFlowNodePublishInfo(context, nodeId, errorMessage);
-        publishNodeInfo(flowNodePublishInfo);
+        contexts.forEach(context -> {
+            // 由于notify之后才统一改的context的status为ERROR，所以这里需要手动设置一下
+            context.put("status", FlowNodeStatus.ERROR.name());
+            FlowNodePublishInfo flowNodePublishInfo = constructFlowNodePublishInfo(context, nodeId, errorMessage);
+            publishNodeInfo(flowNodePublishInfo);
+        });
     }
 
     /**
