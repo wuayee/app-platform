@@ -4,32 +4,17 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
-import com.huawei.fit.jober.aipp.common.HttpUtils;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.common.PageResponse;
 import com.huawei.fit.jober.aipp.condition.KnowledgeQueryCondition;
-import com.huawei.fit.jober.aipp.condition.PaginationCondition;
-import com.huawei.fit.jober.aipp.dto.KnowledgeDetailDto;
 import com.huawei.fit.jober.aipp.service.KnowledgeService;
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
-
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.util.EntityUtils;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
+import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
+import com.huawei.jade.app.engine.knowledge.params.RepoQueryParam;
+import com.huawei.jade.app.engine.knowledge.service.KRepoService;
+import com.huawei.jade.app.engine.knowledge.service.KTableService;
+import com.huawei.jade.app.engine.knowledge.service.param.PageQueryParam;
 
 /**
  * 知识库服务接口实现
@@ -39,71 +24,41 @@ import java.util.stream.Collectors;
  */
 @Component
 public class KnowledgeServiceImpl implements KnowledgeService {
-    private static final Logger log = Logger.get(KnowledgeServiceImpl.class);
-    private final String queryListUrl;
+    private final KRepoService kRepoService;
+    private final KTableService kTableService;
 
-    public KnowledgeServiceImpl(@Value("${eDataMate.query_list_url}") String queryListUrl) {
+    public KnowledgeServiceImpl(KRepoService kRepoService, KTableService kTableService) {
         // todo: 独立环境的 eDataMate.query_list_url 暂时由外部环境注入，之后统一整改到配置文件中
-        this.queryListUrl = queryListUrl;
+        this.kRepoService = kRepoService;
+        this.kTableService = kTableService;
     }
 
-    /**
-     * 查询知识库列表
-     *
-     * @param cond 过滤条件
-     * @param page 分页
-     * @return 知识库详细信息
-     */
     @Override
-    public PageResponse<KnowledgeDetailDto> listKnowledge(KnowledgeQueryCondition cond, PaginationCondition page)
-            throws IOException {
-        log.info("listKnowledge cond{} page{}", cond, page);
-        Map<String, Object> data = queryListEDataMate(cond, page);
-        List<Map<String, Object>> records = ObjectUtils.cast(data.get("records"));
-        List<KnowledgeDetailDto> result = records.stream()
-                .map(map -> new KnowledgeDetailDto(this.safelyConvertToLongType(ObjectUtils.cast(map.get("id"))),
-                        ObjectUtils.cast(map.get("name")),
-                        ObjectUtils.cast(map.get("description"))))
-                .collect(Collectors.toList());
-        return new PageResponse<>(this.safelyConvertToLongType(ObjectUtils.cast(data.get("total"))), null, result);
+    public PageResponse<KRepoDto> listKnowledgeRepo(KnowledgeQueryCondition cond, Integer pageNum, Integer pageSize) {
+        RepoQueryParam param = this.buildRepoQueryParam(pageNum, pageSize, cond);
+        return new PageResponse<>(this.safelyConvertToLongType(this.kRepoService.queryReposCount(param)),
+                null,
+                this.kRepoService.queryReposByName(param));
     }
 
-    private Map<String, Object> queryListEDataMate(KnowledgeQueryCondition cond, PaginationCondition page)
-            throws IOException {
-        HttpPost httpPost = new HttpPost(this.queryListUrl);
-        httpPost.setEntity(new StringEntity(this.buildQueryListEBody(cond, page), ContentType.APPLICATION_JSON));
-        try (CloseableHttpResponse response = HttpUtils.execute(httpPost)) {
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                throw new IOException(String.format(Locale.ROOT,
-                        "send http fail. url=%s result=%d",
-                        httpPost.getURI(),
-                        response.getStatusLine().getStatusCode()));
-            }
-            String respContent = EntityUtils.toString(response.getEntity());
-            Map<String, Object> respObj = JsonUtils.parseObject(respContent);
-            int code = (int) respObj.get("code");
-            if (code != 0) {
-                throw new IOException(String.format(Locale.ROOT,
-                        "knowledgeService queryListEDataMate fail. code=%d msg=%s",
-                        code,
-                        respObj.get("msg")));
-            }
-            return ObjectUtils.cast(respObj.get("data"));
-        } catch (IOException e) {
-            throw new IOException(String.format(Locale.ROOT,
-                    "knowledgeService queryListEDataMate fail: %s",
-                    e.getMessage()));
-        }
-    }
-
-    private String buildQueryListEBody(KnowledgeQueryCondition cond, PaginationCondition page) {
-        Map<String, Object> map = new HashMap<>();
+    private RepoQueryParam buildRepoQueryParam(Integer pageNum, Integer pageSize, KnowledgeQueryCondition cond) {
+        RepoQueryParam param = new RepoQueryParam();
+        param.setOffset(pageNum);
+        param.setSize(pageSize);
         if (StringUtils.isNotEmpty(cond.getName())) {
-            map.put("name", cond.getName());
+            param.setName(cond.getName());
         }
-        map.put("pageNo", page.getPageNum());
-        map.put("pageSize", page.getPageSize());
-        return JsonUtils.toJsonString(map);
+        return param;
+    }
+
+    @Override
+    public PageResponse<KTableDto> listKnowledgeTables(Long repoId, Integer pageNum, Integer pageSize) {
+        PageQueryParam param = new PageQueryParam();
+        param.setPageNum(pageNum);
+        param.setPageSize(pageSize);
+        return new PageResponse<>(this.safelyConvertToLongType(this.kTableService.getTableCountByRepoId(repoId)),
+                null,
+                this.kTableService.getByRepoId(repoId, param));
     }
 
     private Long safelyConvertToLongType(Number value) {
