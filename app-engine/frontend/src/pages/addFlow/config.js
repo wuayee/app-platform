@@ -53,7 +53,8 @@ export const configMap = {
               urls: {
                   llmModelEndpoint: `${origin}/api`,
                   toolListEndpoint: origin,
-                  workflowListEndpoint: origin
+                  workflowListEndpoint: origin,
+                  aippUrl:`${origin}/api/jober/v1/api`
               },
               params: {
                 tenantId: '',

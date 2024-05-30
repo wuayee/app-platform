@@ -182,7 +182,7 @@ const AddFlow = (props) => {
     };
     const res = await startInstance(tenantId, appId, params);
     if (res.code === 0) {
-      const {aippCreateDto, instanceId} = res.data;
+      const {aippCreate, instanceId} = res.data;
       setIsTesting(true);
       setTestStatus('Running');
       if (type) {
@@ -190,7 +190,7 @@ const AddFlow = (props) => {
         setFlowTestStatus('Running');
       }
       // 调用轮询
-      startTestInstance(aippCreateDto.aippId, aippCreateDto.version, instanceId);
+      startTestInstance(aippCreate.aippId, aippCreate.version, instanceId);
     }
   }
   // 判断是否流程结束
