@@ -518,11 +518,6 @@ public class AippFlowServiceImpl implements AippFlowService {
                 AippTypeEnum.PREVIEW.name());
 
         List<AippNodeForms> aippNodeForms = buildAippNodeForms(flowInfo);
-        // 合并 表单props
-        List<MetaPropertyDeclarationInfo> formProps = getMetaPropertyDeclarationInfos(aippNodeForms);
-        if (!formProps.isEmpty()) {
-            declarationInfo.getProperties().getValue().addAll(formProps);
-        }
         // 追加attribute
         Map<String, Object> attr = declarationInfo.getAttributes().getValue();
         appendAttribute(attr, aippNodeForms, flowInfo.getFlowDefinitionId());

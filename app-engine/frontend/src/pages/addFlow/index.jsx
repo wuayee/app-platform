@@ -111,7 +111,7 @@ const AddFlow = (props) => {
         () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/interviewQuestionsComponent.jsx`),
         () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/manageCubeCreateReportComponent.jsx`),
     ];
-    JadeFlow.edit(stageDom, data, CONFIGS).then(agent => {
+    JadeFlow.edit(stageDom, data, CONFIGS, importFiles).then(agent => {
       window.agent ? null : window.agent = agent;
       agent.onChange(() => {
         handleSearch();

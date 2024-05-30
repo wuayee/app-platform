@@ -13,7 +13,6 @@ import com.huawei.fit.finance.NLRouter;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.xiaohai.QADto;
-import com.huawei.fit.jober.aipp.service.LLMService;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
@@ -22,7 +21,15 @@ import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.hllm.model.LlmModel;
+import com.huawei.jade.fel.chat.ChatMessage;
+import com.huawei.jade.fel.chat.ChatModelService;
+import com.huawei.jade.fel.chat.ChatOptions;
+import com.huawei.jade.fel.chat.Prompt;
+import com.huawei.jade.fel.core.util.Tip;
+import com.huawei.jade.fel.engine.flows.AiFlows;
+import com.huawei.jade.fel.engine.flows.AiProcessFlow;
+import com.huawei.jade.fel.engine.operators.models.ChatBlockModel;
+import com.huawei.jade.fel.engine.operators.prompts.Prompts;
 
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -35,6 +42,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -47,9 +56,14 @@ import java.util.stream.Collectors;
 public class DefaultFinanceService implements FinanceService {
     private static final Logger log = Logger.get(DefaultFinanceService.class);
 
-    private final LLMService llmService;
+    private final AiProcessFlow<Tip, ChatMessage> agentFlow;
 
-    public DefaultFinanceService(LLMService llmService) {this.llmService = llmService;}
+    public DefaultFinanceService(ChatModelService chatModelService) {
+        agentFlow = AiFlows.<Tip>create()
+                .prompt(Prompts.human("给下面的问题和答案做个总结：\n\n{{content}}"))
+                .generate(new ChatBlockModel<Prompt>(chatModelService).bind(ChatOptions.builder().model("Qwen-72B").temperature(0.0).build()))
+                .close();
+    }
 
     @Fitable("default")
     @Override
@@ -130,19 +144,22 @@ public class DefaultFinanceService implements FinanceService {
 
     private List<String> buildChartSummaryList(List<Map<String, Object>> chartDataList, List<String> chartAnswerList) {
         List<String> chartSummaryList = new ArrayList<>();
-        String promptPrefix = "给下面的问题和答案做个总结：\n\n";
         for (int i = chartAnswerList.size(); i < chartDataList.size(); ++i) {
             chartAnswerList.add(chartAnswerList.get(i - 1));
         }
         for (int i = 0; i < chartDataList.size(); i++) {
             String charJsonString = JsonUtils.toJsonString(chartDataList.get(i));
             String answer = chartAnswerList.get(i);
-            String prompt = promptPrefix + answer + "\n" + charJsonString;
-            try {
-                String chartSummary = this.llmService.askModelWithText(prompt, 20000, 0.0, LlmModel.QWEN_72B);
-                chartSummaryList.add(chartSummary);
-            } catch (IOException e) {
-                log.error("ask model failed.", e);
+            AtomicReference<Boolean> errorFlag = new AtomicReference<>(false);
+            agentFlow.converse()
+                    .doOnSuccess(msg -> chartSummaryList.add(msg.text()))
+                    .doOnError(throwable -> {
+                        errorFlag.set(true);
+                        log.error("ask model failed.", throwable.getMessage());
+                    })
+                    .offer(Tip.from("content", answer + "\n" + charJsonString))
+                    .await(60, TimeUnit.SECONDS);
+            if (errorFlag.get()) {
                 throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "ask model failed.");
             }
         }
