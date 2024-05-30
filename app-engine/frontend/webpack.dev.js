@@ -120,7 +120,7 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/v1': {
-        target: 'http://80.11.128.66:31110',
+        target: 'http://80.11.128.66:31111',
         pathRewrite: {
           '^/modelApi': '',
         },
