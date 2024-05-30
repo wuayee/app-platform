@@ -1,6 +1,6 @@
 create table if not exists conversation_record
 (
-    id          bigint not null
+    id          bigserial
         primary key,
     app_id      varchar(255),
     question    text,
@@ -13,7 +13,7 @@ create table if not exists conversation_record
 
 create table if not exists metrics_access
 (
-    id           bigint not null
+    id           bigserial
         primary key,
     app_id       varchar(255),
     total_access bigint,
