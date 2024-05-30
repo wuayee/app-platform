@@ -10,6 +10,8 @@ import com.huawei.databus.sdk.memory.SharedMemoryInternal;
 import com.huawei.databus.sdk.message.ErrorType;
 import com.huawei.databus.sdk.message.MessageType;
 import com.huawei.databus.sdk.message.PermissionType;
+import com.huawei.databus.sdk.support.GetMetaDataRequest;
+import com.huawei.databus.sdk.support.GetMetaDataResult;
 import com.huawei.databus.sdk.support.MemoryIoRequest;
 import com.huawei.databus.sdk.support.MemoryIoResult;
 import com.huawei.databus.sdk.support.MemoryPermissionResult;
@@ -19,6 +21,7 @@ import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
 import com.huawei.databus.sdk.tools.DataBusUtils;
 import com.huawei.fitframework.inspection.Nonnull;
+import com.huawei.fitframework.inspection.Validation;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -32,15 +35,15 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * DataBus 客户端默认实现
- * 使用单例模式
+ * DataBus 客户端默认实现。
+ * 使用单例模式。
  *
  * @author 王成 w00863339
  * @since 2024-03-17
  */
 public class DefaultDataBusClient implements DataBusClient {
     /**
-     * 单例变量
+     * 单例变量。
      */
     private static final DefaultDataBusClient INSTANCE = new DefaultDataBusClient();
 
@@ -60,6 +63,7 @@ public class DefaultDataBusClient implements DataBusClient {
         tmpQueues.put(MessageType.HeartBeat, new LinkedBlockingQueue<>());
         tmpQueues.put(MessageType.ApplyMemory, new LinkedBlockingQueue<>());
         tmpQueues.put(MessageType.ApplyPermission, new LinkedBlockingQueue<>());
+        tmpQueues.put(MessageType.GetMetaData, new LinkedBlockingQueue<>());
 
         this.replyQueues = Collections.unmodifiableMap(tmpQueues);
     }
@@ -74,7 +78,7 @@ public class DefaultDataBusClient implements DataBusClient {
         }
         try {
             this.socketChannel = SocketChannel.open();
-            // 设置TCP_NODELAY，禁用Nagle算法，以防止粘包问题
+            // 设置TCP_NODELAY，禁用Nagle算法，以防止粘包问题。
             this.socketChannel.socket().setTcpNoDelay(true);
             InetSocketAddress address = new InetSocketAddress(dataBusAddr, dataBusPort);
             socketChannel.connect(address);
@@ -100,10 +104,11 @@ public class DefaultDataBusClient implements DataBusClient {
     }
 
     @Override
-    public void sharedFree(ReleaseMemoryRequest request) {
+    public void sharedFree(@Nonnull ReleaseMemoryRequest request) {
         if (!isConnected()) {
             return;
         }
+        Validation.notNull(request, "The release memory request cannot be null.");
         this.sharedMemoryPool.releaseSharedMemory(request);
     }
 
@@ -119,48 +124,57 @@ public class DefaultDataBusClient implements DataBusClient {
     }
 
     @Override
+    public GetMetaDataResult readMetaData(@Nonnull GetMetaDataRequest request) {
+        if (!this.isConnected()) {
+            return GetMetaDataResult.failure(ErrorType.NotConnectedToDataBus);
+        }
+        Validation.notNull(request, "The release memory request cannot be null.");
+        return this.sharedMemoryPool.getMemoryMetaData(request);
+    }
+
+    @Override
     public MemoryIoResult writeOnce(@Nonnull MemoryIoRequest request) {
         return this.doIoRequest(request, PermissionType.Write);
     }
 
     /**
-     * 获取 {@link DefaultDataBusClient} 的单例对象
+     * 获取 {@link DefaultDataBusClient} 的单例对象。
      *
-     * @return {@link DefaultDataBusClient}
+     * @return {@link DefaultDataBusClient}。
      */
     public static DefaultDataBusClient getInstance() {
         return INSTANCE;
     }
 
     private MemoryIoResult doIoRequest(MemoryIoRequest request, byte permissionType) {
-        // 核验参数有效性以及是否连接到 DataBus 主程序
+        // 核验参数有效性以及是否连接到 DataBus 主程序。
         if (!this.isConnected()) {
             return MemoryIoResult.failure(ErrorType.NotConnectedToDataBus);
         }
         DataBusUtils.verifyIoRequest(request, permissionType);
 
-        // 当前内存上锁
+        // 当前内存上锁。
         SharedMemoryInternal memory = this.sharedMemoryPool.getOrAddMemory(request.userKey());
         memory.lock().lock();
 
         try {
-            // 申请内存许可
+            // 申请内存许可。
             MemoryPermissionResult result = this.sharedMemoryPool.applyPermission(request, memory);
             if (!result.isSuccess()) {
                 return MemoryIoResult.failure(result.errorType());
             }
 
-            // 检查读写操作是否在内存边界内
+            // 检查读写操作是否在内存边界内。
             if (request.memoryOffset() + request.dataLength() > result.sharedMemory().size()) {
                 return MemoryIoResult.failure(ErrorType.IOOutOfBounds);
             }
 
-            // 检查 memoryId 是否被正确设置
+            // 检查 memoryId 是否被正确设置。
             if (memory.sharedMemoryKey().memoryId() == -1) {
                 return MemoryIoResult.failure(ErrorType.KeyNotFound);
             }
 
-            // 执行读写操作
+            // 执行读写操作。
             byte[] ioBytes;
             if (permissionType == PermissionType.Read) {
                 long readLength = request.dataLength() == 0 ? memory.size() : request.dataLength();
@@ -173,10 +187,10 @@ public class DefaultDataBusClient implements DataBusClient {
                         writeLength, ioBytes);
             }
 
-            // 返回读写成功结果
+            // 返回读写成功结果。
             return MemoryIoResult.success(memory, ioBytes, result.userData(), request.permissionType());
         } catch (IOException e) {
-            // 日志打印真实错误信息
+            // 日志打印真实错误信息。
             return MemoryIoResult.failure(permissionType == PermissionType.Read ? ErrorType.MemoryReadError
                     : ErrorType.MemoryWriteError, e);
         } finally {
@@ -187,11 +201,11 @@ public class DefaultDataBusClient implements DataBusClient {
     }
 
     /**
-     * 返回客户端当前状态
+     * 返回客户端当前状态。
      *
      * @return 表示客户端当前是否在连接的 {@code boolean}。
      */
     public boolean isConnected() {
-        return isConnected;
+        return this.isConnected;
     }
 }
