@@ -9,6 +9,7 @@ import com.huawei.fit.waterflow.domain.emitters.Emitter;
 import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.SynchronousQueue;
@@ -27,17 +28,28 @@ public class Source<T> implements Emitter<T, FlowSession> {
     private static final ExecutorService THREAD_POOL = new ThreadPoolExecutor(0, MAXIMUM_POOL_SIZE,
             60L, TimeUnit.SECONDS, new SynchronousQueue<>());
 
-    private final List<EmitterListener<T, FlowSession>> handlers = new ArrayList<>();
+    private final List<EmitterListener<T, FlowSession>> listeners = Collections.synchronizedList(new ArrayList<>());
+
+    /**
+     * 注销监听器。
+     *
+     * @param listener 监听器。
+     */
+    public void unregister(EmitterListener<T, FlowSession> listener) {
+        if (listener != null) {
+            listeners.remove(listener);
+        }
+    }
 
     @Override
-    public void register(EmitterListener<T, FlowSession> handler) {
-        if (handler != null) {
-            handlers.add(handler);
+    public void register(EmitterListener<T, FlowSession> listener) {
+        if (listener != null) {
+            listeners.add(listener);
         }
     }
 
     @Override
     public void emit(T data, FlowSession session) {
-        handlers.forEach(handler -> THREAD_POOL.execute(() -> handler.handle(data, session)));
+        listeners.forEach(handler -> THREAD_POOL.execute(() -> handler.handle(data, session)));
     }
 }

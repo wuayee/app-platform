@@ -5,6 +5,7 @@
 package com.huawei.jade.fel.engine.flows;
 
 import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.emitters.Emitter;
@@ -58,10 +59,12 @@ public class AiProcessFlow<D, R> extends AiFlow<D, ProcessFlow<D>> implements Em
      *
      * @param nodeId 表示节点名称的 {@link String}
      * @param emitter 表示被订阅的发射源的 {@link Emitter}{@code <}{@link D}{@code , }{@link FlowSession}{@code >}。
-     * @throws IllegalArgumentException 当 {@code nodeId} 为 {@code null} 、空字符串或只有空白字符的字符串时。
+     * @throws IllegalArgumentException 当 {@code nodeId} 为 {@code null} 、空字符串或只有空白字符的字符串时，或
+     * {@code emitter} 为 {@code null} 时。
      */
     public void offer(String nodeId, Emitter<D, FlowSession> emitter) {
-        notBlank(nodeId, "invalid nodeId.");
+        notBlank(nodeId, "Invalid nodeId.");
+        notNull(emitter, "Emitter can not be null.");
         this.origin().offer(nodeId, emitter);
     }
 

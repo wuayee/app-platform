@@ -59,6 +59,7 @@ public class FlowCallBack<O> {
      *
      * @param <O> 表示流程输出数据类型。
      */
+    @Getter
     public static class Builder<O> {
         private Consumer<O> successCb = EmptyCallBack.doNothingOnSuccess();
         private Consumer<Throwable> errorCb = EmptyCallBack.doNothingOnError();

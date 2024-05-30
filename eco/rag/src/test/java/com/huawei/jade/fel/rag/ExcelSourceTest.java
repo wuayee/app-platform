@@ -2,6 +2,7 @@ package com.huawei.jade.fel.rag;
 
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
+import com.huawei.jade.fel.engine.flows.ConverseLatch;
 import com.huawei.jade.fel.rag.common.Chunk;
 import com.huawei.jade.fel.rag.common.Document;
 import com.huawei.jade.fel.rag.index.TableIndex;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -71,19 +72,17 @@ public class ExcelSourceTest {
         List<DbFieldType> type = Arrays.asList(DbFieldType.NUMBER, DbFieldType.VARCHAR, DbFieldType.VARCHAR);
         TableIndex idx = new TableIndex(conn, type, "test");
         TableSplitter splitter = new TableSplitter();
-        CountDownLatch latch = new CountDownLatch(1);
 
         AiProcessFlow<List<Document>, List<Chunk>> flow = AiFlows.<List<Document>>create()
                 .split(splitter)
                 .index(idx)
-                .close(n -> {
-                    latch.countDown();
-                });
-        flow.offer(source);
+                .close();
+        ConverseLatch<List<Chunk>> converseLatch = flow.converse().offer(source);
         source.load("src/test/testfiles/test.xlsx", 0, 1, 0);
+
         try {
-            latch.await();
-        } catch (InterruptedException e) {
+            converseLatch.await(1000, TimeUnit.MILLISECONDS);
+        } catch (IllegalStateException e) {
             fail();
         }
     }
