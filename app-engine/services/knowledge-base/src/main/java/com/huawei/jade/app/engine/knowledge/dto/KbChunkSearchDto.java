@@ -46,6 +46,11 @@ public class KbChunkSearchDto {
     private String content;
 
     /**
+     * 模糊查询关键字
+     */
+    private String fuzzyContent;
+
+    /**
      * topK
      */
     private Integer topK;
