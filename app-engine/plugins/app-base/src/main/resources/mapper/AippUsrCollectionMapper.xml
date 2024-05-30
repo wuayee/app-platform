@@ -71,6 +71,13 @@
         and aipp_id = #{aippId}
     </delete>
 
+    <delete id="deleteByAippId">
+        delete
+        from usr_collection_info
+        where aipp_id = #{aippId}
+    </delete>
+
+
     <select id="getCollectionsByUsrInfo" resultMap="BaseResultMap" resultType="com.huawei.jade.app.engine.base.po.UsrAppCollectionPo">
         select
         <include refid="Base_Column_List"/>

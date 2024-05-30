@@ -27,20 +27,20 @@ public interface UsrFeedbackService {
     /**
      * 更新用户反馈记录
      *
-     * @param logId 日志Id
+     * @param instanceId 应用实例id
      * @param usrFeedbackDto 用户反馈信息
      */
     @Genericable(id = "com.huawei.jade.app.engine.base.service.UsrFeedbackService.update")
-    void updateOne(Long logId, UsrFeedbackDto usrFeedbackDto);
+    void updateOne(String instanceId, UsrFeedbackDto usrFeedbackDto);
 
 
     /**
      * 删除用户反馈记录
      *
-     * @param logId 对话id
+     * @param instanceId 对话实例Id
      */
     @Genericable(id = "com.huawei.jade.app.engine.base.service.UsrFeedbackService.delete")
-    void deleteByLogId(long logId);
+    void deleteByLogId(String instanceId);
 
     /**
      * 获取所有用户反馈记录
@@ -53,9 +53,9 @@ public interface UsrFeedbackService {
     /**
      * 通过logId查询用户反馈记录
      *
-     * @param logId 日志id
+     * @param instanceId 对话实例Id
      * @return 用户反馈信息
      */
-    @Genericable(id = "com.huawei.jade.app.engine.base.service.UsrFeedbackService.getUsrFeedbackByLogId")
-    UsrFeedbackDto getUsrFeedbackByLogId(Long logId);
+    @Genericable(id = "com.huawei.jade.app.engine.base.service.UsrFeedbackService.getUsrFeedbackByInstanceId")
+    UsrFeedbackDto getUsrFeedbackByInstanceId(String instanceId);
 }

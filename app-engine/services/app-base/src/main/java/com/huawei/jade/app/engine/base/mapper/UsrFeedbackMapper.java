@@ -25,18 +25,18 @@ public interface UsrFeedbackMapper {
     /**
      * 用户反馈更新接口
      *
-     * @param logId 日志Id
+     * @param instanceId 对话实例id
      * @param usrFeedback 用户反馈
      * @param usrFeedbackText 用户反馈文本
      */
-    void updateOne(Long logId, Integer usrFeedback, String usrFeedbackText);
+    void updateOne(String instanceId, Integer usrFeedback, String usrFeedbackText);
 
     /**
      * 通过日志Id删除用户反馈记录
      *
-     * @param logId 日志Id
+     * @param instanceId 对话实例id
      */
-    void deleteByLogId(Long logId);
+    void deleteByLogId(String instanceId);
 
     /**
      * 获取用户反馈列表
@@ -48,8 +48,8 @@ public interface UsrFeedbackMapper {
     /**
      * 通过日志Id获取用户反馈信息
      *
-     * @param logId 日志Id
+     * @param instanceId 对话实例id
      * @return 用户反馈信息
      */
-    UsrFeedbackDto getUsrFeedbackByLogId(Long logId);
+    UsrFeedbackDto getUsrFeedbackByInstanceId(String instanceId);
 }

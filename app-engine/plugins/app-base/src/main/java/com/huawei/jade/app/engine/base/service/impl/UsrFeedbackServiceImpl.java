@@ -37,14 +37,14 @@ public class UsrFeedbackServiceImpl implements UsrFeedbackService {
 
     @Override
     @Fitable(id = "UsrFeedbackUpdate")
-    public void updateOne(Long logId, UsrFeedbackDto usrFeedbackDto) {
-        usrFeedbackMapper.updateOne(logId, usrFeedbackDto.getUsrFeedback(), usrFeedbackDto.getUsrFeedbackText());
+    public void updateOne(String instanceId, UsrFeedbackDto usrFeedbackDto) {
+        usrFeedbackMapper.updateOne(instanceId, usrFeedbackDto.getUsrFeedback(), usrFeedbackDto.getUsrFeedbackText());
     }
 
     @Override
     @Fitable(id = "UsrFeedbackDelete")
-    public void deleteByLogId(long logId) {
-        usrFeedbackMapper.deleteByLogId(logId);
+    public void deleteByLogId(String instanceId) {
+        usrFeedbackMapper.deleteByLogId(instanceId);
     }
 
     @Override
@@ -54,8 +54,8 @@ public class UsrFeedbackServiceImpl implements UsrFeedbackService {
     }
 
     @Override
-    @Fitable(id = "UsrGetUsrFeedbackByLogId")
-    public UsrFeedbackDto getUsrFeedbackByLogId(Long logId) {
-        return usrFeedbackMapper.getUsrFeedbackByLogId(logId);
+    @Fitable(id = "getUsrFeedbackByInstanceId")
+    public UsrFeedbackDto getUsrFeedbackByInstanceId(String instanceId) {
+        return usrFeedbackMapper.getUsrFeedbackByInstanceId(instanceId);
     }
 }

@@ -21,6 +21,7 @@ import com.huawei.fit.jober.aipp.repository.AppBuilderFlowGraphRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.impl.AppBuilderAppServiceImpl;
+import com.huawei.jade.app.engine.base.service.UsrAppCollectionService;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
@@ -62,6 +63,9 @@ public class AppBuilderAppServiceImplTest {
     @Mock
     private MetaService metaService;
 
+    @Mock
+    private UsrAppCollectionService usrAppCollectionService;
+
     private AppBuilderAppServiceImpl appBuilderAppService;
 
     private static final LocalDateTime TIME = LocalDateTime.of(2024, 5, 6, 15, 15, 15);
@@ -74,7 +78,8 @@ public class AppBuilderAppServiceImplTest {
                 configPropertyRepository,
                 formPropertyRepository,
                 appRepository);
-        appBuilderAppService = new AppBuilderAppServiceImpl(factory, aippFlowService, appRepository, 64, metaService);
+        appBuilderAppService = new AppBuilderAppServiceImpl(factory, aippFlowService, appRepository,
+                64, metaService, usrAppCollectionService);
     }
 
     private AppBuilderApp mockApp() {

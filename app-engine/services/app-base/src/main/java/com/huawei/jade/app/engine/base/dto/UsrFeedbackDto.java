@@ -23,9 +23,6 @@ public class UsrFeedbackDto {
     @Property(description = "反馈记录 id")
     private Long id;
 
-    @Property(description = "日志id")
-    private Long logId;
-
     @Property(description = "实例id")
     private String instanceId;
 

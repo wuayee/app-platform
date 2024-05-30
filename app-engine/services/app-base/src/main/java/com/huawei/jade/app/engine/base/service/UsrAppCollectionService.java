@@ -46,6 +46,14 @@ public interface UsrAppCollectionService {
     void deleteByUsrInfoAndAippId(String usrInfo, String aippId);
 
     /**
+     * 删除收藏应用记录
+     *
+     * @param aippId 应用Id
+     */
+    @Genericable(id = "com.huawei.jade.app.engine.base.service.UsrCollectionService.deleteByAippId")
+    void deleteByAippId(String aippId);
+
+    /**
      * 获取用户收藏应用列表
      *
      * @param usrInfo 用户信息
