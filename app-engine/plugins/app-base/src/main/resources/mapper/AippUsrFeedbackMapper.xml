@@ -3,18 +3,17 @@
 <mapper namespace="com.huawei.jade.app.engine.base.mapper.UsrFeedbackMapper">
     <resultMap id="BaseResultMap" type="com.huawei.jade.app.engine.base.dto.UsrFeedbackDto">
         <result column="id" property="id"/>
-        <result column="log_id" property="logId"/>
         <result column="instance_id" property="instanceId"/>
         <result column="usr_feedback" property="usrFeedback"/>
         <result column="usr_feedback_text" property="usrFeedbackText"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, log_id, instance_id, usr_feedback, usr_feedback_text
+        id, instance_id, usr_feedback, usr_feedback_text
     </sql>
 
     <insert id="insert" parameterType="com.huawei.jade.app.engine.base.dto.UsrFeedbackDto">
-        insert into usr_feedback_info (log_id, instance_id, usr_feedback, usr_feedback_text)
-        values (#{logId}, #{instanceId}, #{usrFeedback}, #{usrFeedbackText})
+        insert into usr_feedback_info (instance_id, usr_feedback, usr_feedback_text)
+        values (#{instanceId}, #{usrFeedback}, #{usrFeedbackText})
     </insert>
 
     <update id="updateOne" parameterType="com.huawei.jade.app.engine.base.dto.UsrFeedbackDto">
@@ -27,13 +26,13 @@
                 usr_feedback_text = #{usrFeedbackText},
             </if>
         </set>
-        where log_id = #{logId}
+        where instance_id = #{instanceId}
     </update>
 
     <delete id="deleteByLogId">
         delete
         from usr_feedback_info
-        where log_id = #{logId}
+        where instance_id = #{instanceId}
     </delete>
 
     <select id="getAllUsrFeedbacks" resultMap="BaseResultMap" resultType="com.huawei.jade.app.engine.base.dto.UsrFeedbackDto">
@@ -42,11 +41,11 @@
         from usr_feedback_info
     </select>
 
-    <select id="getUsrFeedbackByLogId" resultMap="BaseResultMap" resultType="com.huawei.jade.app.engine.base.dto.UsrFeedbackDto">
+    <select id="getUsrFeedbackByInstanceId" resultMap="BaseResultMap" resultType="com.huawei.jade.app.engine.base.dto.UsrFeedbackDto">
         select
         <include refid="Base_Column_List"/>
         from usr_feedback_info
-        where log_id = #{logId}
+        where instance_id = #{instanceId}
     </select>
 
 </mapper>

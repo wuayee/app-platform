@@ -78,6 +78,16 @@ public class UsrAppCollectionServiceImpl implements UsrAppCollectionService {
     }
 
     /**
+     * 删除应用相关收藏记录
+     *
+     * @param aippId 应用Id
+     */
+    @Override
+    public void deleteByAippId(String aippId) {
+        usrAppCollectionMapper.deleteByAippId(aippId);
+    }
+
+    /**
      * 通过用户信息获取应用收藏列表
      *
      * @param usrInfo 用户信息

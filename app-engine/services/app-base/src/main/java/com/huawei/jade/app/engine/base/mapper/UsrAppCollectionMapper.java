@@ -41,6 +41,13 @@ public interface UsrAppCollectionMapper {
     void deleteByUsrInfoAndAippId(String usrInfo, String aippId);
 
     /**
+     * 通过id删除应用收藏记录
+     *
+     * @param aippId 应用id
+     */
+    void deleteByAippId(String aippId);
+
+    /**
      * 通过用户信息获取应用收藏列表
      *
      * @param usrInfo 用户信息
