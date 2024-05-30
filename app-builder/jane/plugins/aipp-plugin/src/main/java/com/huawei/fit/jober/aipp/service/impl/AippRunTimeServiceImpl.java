@@ -11,7 +11,6 @@ import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
 import com.huawei.fit.dynamicform.entity.FormMetaQueryParameter;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.enums.DirectionEnum;
-import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
@@ -32,7 +31,6 @@ import com.huawei.fit.jober.aipp.common.exception.AippNotFoundException;
 import com.huawei.fit.jober.aipp.condition.AippInstanceQueryCondition;
 import com.huawei.fit.jober.aipp.condition.PaginationCondition;
 import com.huawei.fit.jober.aipp.constants.AippConst;
-import com.huawei.fit.jober.aipp.dto.AippCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippInstanceCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
@@ -49,6 +47,7 @@ import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.FormEdgeEnum;
 import com.huawei.fit.jober.aipp.enums.MetaInstSortKeyEnum;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
+import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogService;
@@ -901,21 +900,20 @@ public class AippRunTimeServiceImpl
     @Override
     public AppBuilderAppStartDto startInstance(AppBuilderAppDto appDto, Map<String, Object> initContext,
                                                OperationContext context) {
-        Rsp<AippCreateDto> aippCreateDtoRsp;
-        final String genericableId = "a389e19779fcc245b7a6135a46eb5863";
-        final String fitableId = "b389e19779fcc245b7a6135a46eb5864";
+        AippCreate aippCreate;
+        final String genericableId = "com.huawei.fit.jober.aipp.service.app.debug";
+        final String fitableId = "default";
         try {
-            aippCreateDtoRsp = this.client.getRouter(genericableId)
+            aippCreate = this.client.getRouter(genericableId)
                     .route(new FitableIdFilter(fitableId))
                     .invoke(appDto, context);
         } catch (FitException t) {
             log.error("Error occurred when create debug aipp, error: {}", t.getMessage());
             throw new AippException(AippErrCode.CREATE_DEBUG_AIPP_FAILED);
         }
-        AippCreateDto aippCreateDto = aippCreateDtoRsp.getData();
-        String instanceId = createAippInstance(aippCreateDto.getAippId(),
-                aippCreateDto.getVersion(),
+        String instanceId = createAippInstance(aippCreate.getAippId(),
+                aippCreate.getVersion(),
                 initContext, context);
-        return AppBuilderAppStartDto.builder().instanceId(instanceId).aippCreateDto(aippCreateDto).build();
+        return AppBuilderAppStartDto.builder().instanceId(instanceId).aippCreate(aippCreate).build();
     }
 }
