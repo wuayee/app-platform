@@ -37,7 +37,7 @@ public class AppBuilderAppToolImpl implements AppBuilderAppTool {
     private final AppBuilderAppService appService;
     private static final String DEFAULT_TEMPLATE_ID = "df87073b9bc85a48a9b01eccc9afccc4";
     private static final String INDEX_URL_FORMAT =
-            "应用创建成功！ \n访问地址：{0}//#//app//31f20efc7e0848deab6a6bc10fc3021e//detail//{1}";
+            "应用创建成功！ \n访问地址：{0}//#//app-develop//31f20efc7e0848deab6a6bc10fc3021e//app-detail//{1}";
     private final String appEngineUrl;
     private static final Logger log = Logger.get(AppBuilderAppToolImpl.class);
 
