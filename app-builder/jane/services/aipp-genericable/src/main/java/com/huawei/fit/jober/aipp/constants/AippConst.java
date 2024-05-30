@@ -531,6 +531,16 @@ public class AippConst {
      */
     public static final String OUTPUT_IS_FROM_CHILD = "outputIsFromChild";
 
+    /**
+     * 表单渲染数据的key
+     */
+    public static final String FORM_APPEARANCE_KEY = "formAppearance";
+
+    /**
+     * 表单填充数据的key
+     */
+    public static final String FORM_DATA_KEY = "formData";
+
     // *** aipp initial static meta items ***
     /**
      * aipp initial static meta items

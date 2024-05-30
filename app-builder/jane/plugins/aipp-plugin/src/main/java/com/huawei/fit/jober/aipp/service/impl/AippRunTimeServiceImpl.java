@@ -793,6 +793,10 @@ public class AippRunTimeServiceImpl
         String formId = instDetail.getInfo().get(AippConst.INST_CURR_FORM_ID_KEY);
         String formVersion = instDetail.getInfo().get(AippConst.INST_CURR_FORM_VERSION_KEY);
         AippLogData logData = Utils.buildLogDataWithFormData(this.formRepository, formId, formVersion, businessData);
+
+        // 设置表单的渲染数据和填充数据
+        logData.setFormAppearance(ObjectUtils.cast(formArgs.get(AippConst.FORM_APPEARANCE_KEY)));
+        logData.setFormData(ObjectUtils.cast(formArgs.get(AippConst.FORM_DATA_KEY)));
         Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
 
         // 更新实例并清空当前表单数据

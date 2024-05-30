@@ -30,7 +30,7 @@
         select
         <include refid="Base_Column_List"/>
         from app_builder_form
-        where type = #{id}
+        where type = #{id} and tenant_id = #{tenantId}
     </select>
 
     <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderFormPO">

@@ -28,11 +28,16 @@ public class AppBuilderFormServiceImpl implements AppBuilderFormService {
     }
 
     @Override
-    public Rsp<List<AppBuilderFormDto>> queryByType(HttpClassicServerRequest httpRequest, String type) {
-        return Rsp.ok(this.formRepository.selectWithType(type)
+    public Rsp<List<AppBuilderFormDto>> queryByType(HttpClassicServerRequest httpRequest, String type, String tenantId) {
+        return Rsp.ok(this.formRepository.selectWithType(type, tenantId)
                 .stream()
                 .map(this::buildFormDto)
                 .collect(Collectors.toList()));
+    }
+
+    @Override
+    public AppBuilderForm selectWithId(String id) {
+        return this.formRepository.selectWithId(id);
     }
 
     private AppBuilderFormDto buildFormDto(AppBuilderForm appBuilderForm) {

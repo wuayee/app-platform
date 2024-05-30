@@ -30,7 +30,7 @@ public class AppBuilderFormController {
 
     @GetMapping(value = "/type/{type}", description = "查询指定 type 的表单")
     public Rsp<List<AppBuilderFormDto>> queryByType(HttpClassicServerRequest httpRequest,
-            @PathVariable("type") String type) {
-        return this.formService.queryByType(httpRequest, type);
+            @PathVariable("type") String type, @PathVariable("tenant_id") String tenantId) {
+        return this.formService.queryByType(httpRequest, type, tenantId);
     }
 }
