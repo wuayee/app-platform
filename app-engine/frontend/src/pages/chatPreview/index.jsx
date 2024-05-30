@@ -330,6 +330,7 @@ const ChatPreview = (props) => {
               markdownSyntax: markdowned !== -1,
               type: 'recieve',
               instanceId,
+              feedbackStatus: -1
             }
             if (log.msgId !== null) {
               socketChat2(log, msg, initObj);
@@ -503,6 +504,7 @@ const ChatPreview = (props) => {
           logId: log.logId,
           markdownSyntax: markdowned !== -1,
           type: "recieve",
+          feedbackStatus: -1
         };
         if (isJsonString(msg)) {
           let msgObj = JSON.parse(msg);
