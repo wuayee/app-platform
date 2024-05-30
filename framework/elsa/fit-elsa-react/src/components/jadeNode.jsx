@@ -1,4 +1,4 @@
-import {CopyPasteHelpers, DIRECTION, node, rectangleDrawer} from "@fit-elsa/elsa-core";
+import {CopyPasteHelpers, DIRECTION, node, rectangleDrawer, isPointInRect} from "@fit-elsa/elsa-core";
 import ReactDOM from "react-dom/client";
 import {DefaultRoot} from "@/components/DefaultRoot.jsx";
 import {v4 as uuidv4} from "uuid";
@@ -683,12 +683,4 @@ const jadeNodeDrawer = (shape, div, x, y) => {
     };
 
     return self;
-};
-
-let isPointInRect = function (point, rect) {
-    try {
-        return (point.x >= rect.x && point.x <= (rect.x + rect.width) && point.y >= rect.y && point.y <= (rect.y + rect.height));
-    } catch (e) {
-        return false;
-    }
 };
