@@ -5,6 +5,7 @@ import { Form, Select,  Modal, Button } from 'antd';
 import { DownOutlined, UpOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
 import { getTools, getWaterFlows } from "@shared/http/appBuilder";
 import { AippContext } from '../../../aippIndex/context';
+import {createAipp} from "@shared/http/aipp";
 const { Option } = Select;
 
 const Skill = (props) => {
@@ -24,9 +25,15 @@ const Skill = (props) => {
     func(!value);
   }
 
-  const onAddFlowClick = () => {
-    navigate(`/app-develop/${tenantId}/app-detail/add-flow/${appId}`);
-  };
+  // 新增工具流
+  const handleAddWaterFlow = async () => {
+    const timeStr = new Date().getTime().toString();
+    const res = await createAipp(tenantId, 'df87073b9bc85a48a9b01eccc9afccc3', { type: 'waterFlow', name: timeStr });
+    if (res.code === 0) {
+      const aippId = res.data.id;
+      navigate(`/app-develop/${tenantId}/app-detail/add-flow/${aippId}`);
+    }
+  }
 
   const onAddToolClick = () => {
     setShowFlowModal(true);
@@ -114,7 +121,7 @@ const Skill = (props) => {
             <div className="control-title">
               工具流
             </div>
-            <PlusOutlined className="icon plus-icon" onClick={onAddFlowClick}/>
+            <PlusOutlined className="icon plus-icon" onClick={handleAddWaterFlow}/>
           </div>
             <Form.Item
               name="workflows"
