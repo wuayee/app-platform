@@ -15,10 +15,22 @@ export function createModel(params) {
 
 // 删除模型
 export function deleteModelByName(_object) {
-  return del(`${MODEL_LIST_URL}/delete`,{}, _object);
+  return del(`${MODEL_LIST_URL}/delete`, {}, _object);
 }
 
 // 刷新模型列表
 export function getModelListMeta(params) {
   return get(`${MODEL_LIST_URL}/list_supported_models_meta`, params);
+}
+
+export function getExternalModelList() {
+  return get(`${MODEL_LIST_URL}/external_model_services`);
+}
+
+export function deleteExternalModel(name) {
+  return del(`${MODEL_LIST_URL}/external_model_service/${name}`);
+}
+
+export function createExternalModel(requestBody) {
+  return post(`${MODEL_LIST_URL}/external_model_service`, requestBody);
 }
