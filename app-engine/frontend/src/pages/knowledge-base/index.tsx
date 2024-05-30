@@ -54,6 +54,7 @@ const KnowledgeBase = () => {
   const deleteKnowBase = (id: string) => {
     deleteKnowledgeBase(id).then((res: any) => {
       setPage(1);
+      getKnowledgeList();
     })
   }
 
