@@ -4,6 +4,8 @@
 
 package com.huawei.fit.jober.aipp.dto;
 
+import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +25,7 @@ public class AppBuilderAppStartDto {
     /**
      * aippCreateDto 创建Aipp响应体
      */
-    private AippCreateDto aippCreateDto;
+    private AippCreate aippCreate;
 
     /**
      * instanceId 实例Id
