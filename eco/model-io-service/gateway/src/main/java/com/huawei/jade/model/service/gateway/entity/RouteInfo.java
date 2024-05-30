@@ -4,15 +4,19 @@
 
 package com.huawei.jade.model.service.gateway.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.cloud.gateway.filter.FilterDefinition;
 import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +38,9 @@ public class RouteInfo {
 
     private String path;
 
+    @JsonProperty("api_key")
+    private String apiKey;
+
     /**
      * 构造网关路由定义。
      *
@@ -51,6 +58,15 @@ public class RouteInfo {
         routeDefinition.setUri(uri);
         routeDefinition.setId(this.id);
         routeDefinition.setPredicates(getPredicateDefinitions());
+
+        if (this.apiKey != null && !this.apiKey.isEmpty()) {
+            FilterDefinition filter = new FilterDefinition();
+            filter.setName("AddRequestHeader");
+            filter.addArg("name", "Authorization");
+            filter.addArg("value", "Bearer " + this.apiKey);
+            routeDefinition.setFilters(Collections.singletonList(filter));
+            log.info("Set api key=" + this.apiKey + " for " + this.id);
+        }
         return routeDefinition;
     }
 
