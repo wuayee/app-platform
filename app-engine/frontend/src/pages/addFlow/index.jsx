@@ -190,9 +190,7 @@ const AddFlow = (props) => {
         setFlowTestStatus('Running');
       }
       // 调用轮询
-      startTestInstance(aippCreateDto.aipp_id, aippCreateDto.version, instanceId);
-    } else {
-      onStop(res.msg || '测试失败');
+      startTestInstance(aippCreateDto.aippId, aippCreateDto.version, instanceId);
     }
   }
   // 判断是否流程结束
