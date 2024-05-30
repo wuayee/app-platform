@@ -288,8 +288,7 @@ const ChatPreview = (props) => {
     runningAppid.current = aipp_id;
     if (!wsCurrent.current) {
       const prefix = window.location.protocol === 'http:' ? 'ws' : 'wss';
-      // wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
-      wsCurrent.current = new WebSocket(`ws://10.91.144.226:8080/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
+      wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
       wsCurrent.current.onopen = () => {
         wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));   
       }
@@ -365,7 +364,7 @@ const ChatPreview = (props) => {
         "memories": [
           {
             "question": "你好",
-            "msg": "你好"
+            "anwser": "你好"
           }
         ]
       }
