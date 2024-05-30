@@ -59,6 +59,9 @@ public class AppFlowFinishObserverImpl implements AppFlowFinishObserver {
             return;
         }
         EvalReportPo report = evalReportMapper.getByInstanceId(aippInstance);
+        if (report == null) {
+            return;
+        }
         EvalTaskPo task = evalTaskMapper.getById(report.getEvalTaskId());
         double score = executeEval(task.getEvalAlgorithmId(), report.getExpectedOutput(), data);
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
