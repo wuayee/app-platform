@@ -127,7 +127,7 @@
         SELECT count(*)
         FROM conversation_record
         WHERE
-        1=1
+        app_id = #{appId}
         <if test="startTime != null and endTime != null">
             AND create_time BETWEEN #{startTime} AND #{endTime}
         </if>
