@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Card } from 'antd';
+import { Card, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import { Button, Dropdown, Space } from 'antd';
 import { StarFilled, UserOutlined, StarOutlined } from '@ant-design/icons';
@@ -88,10 +88,10 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
 
   // 
   const clickCollection = (e: Event) => {
-    if(loading) {
+    if (loading) {
       // 处于请求状态不允许点击
     } else {
-      if(collectionStore[cardInfo.id]) {
+      if (collectionStore[cardInfo.id]) {
         cancleCollection()
       } else {
         collectionClick();
@@ -104,15 +104,15 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
   // 查询当前应用的收藏数量
   const getAppCollectionCount = async () => {
     try {
-      if(cardInfo?.id) {
+      if (cardInfo?.id) {
         const res = await getCollectionCountApp(cardInfo?.id);
         setCount(res?.data ?? 0)
       }
     } catch (error) {
-      
+
     }
   }
-  useEffect(()=> {
+  useEffect(() => {
     getAppCollectionCount();
   }, [cardInfo])
   return (
@@ -131,7 +131,15 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
           )}
         </div>
         <div className='infoArea'>
-          <div className='headerTitle'>{cardInfo.name}</div>
+          <Tooltip title={cardInfo?.name}>
+            <div className='headerTitle' style={{
+              maxWidth: '300px',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+              wordBreak: 'keep-all',
+            }}>{cardInfo?.name}</div>
+          </Tooltip>
           <div className='title_info' style={{ display: 'flex', alignItems: 'center' }}>
             <Avatar />
             <div className='createBy'>{cardInfo.createBy}</div>
@@ -148,10 +156,10 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
           <div className='icon_box'>
             <UserOutlined /> 2.36k
           </div>
-          <div className='icon_box' onClick={(e)=> {clickCollection(e)}} style={{
-            cursor: loading ? 'not-allowed' :'pointer'
+          <div className='icon_box' onClick={(e) => { clickCollection(e) }} style={{
+            cursor: loading ? 'not-allowed' : 'pointer'
           }}>
-            { collectionStore[cardInfo.id] ? <StarFilled />: <StarOutlined/>  } {count}
+            {collectionStore[cardInfo.id] ? <StarFilled /> : <StarOutlined />} {count}
           </div>
         </div>
         <div style={{ flex: 1 }}></div>
@@ -180,7 +188,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 

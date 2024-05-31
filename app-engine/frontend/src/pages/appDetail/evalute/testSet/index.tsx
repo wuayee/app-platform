@@ -125,6 +125,7 @@ const TestSet: React.FC = () => {
       key: 'datasetName',
       dataIndex: 'datasetName',
       title: '测试集名称',
+      ...getColumnSearchProps('datasetName', filterChange)
     },
     {
       key: 'description',

@@ -1,4 +1,4 @@
-import { del, get, post, put } from './http';
+import { del, get, post, put, patch } from './http';
 import { httpUrlMap } from './httpConfig';
 
 const appurl = window.localStorage.getItem('evalTask_URL') || '/api/jober'
@@ -50,16 +50,8 @@ export function getDataSetListById(params) {
 }
 
 /**
- * @typedef {Object} Data
- * @property {string} id - 数据集id.
- * @property {string} datasetName - 数据集名称.
- * @property {string} description - 数据集描述.
- * */
-
-/**
  * @description 修改数据集基本信息
  * @param {Data} data - 修改数据集基本信息.
- * @property {string} id - 数据集id.
  * @property {string} datasetName - 数据集名称.
  * @property {string} description - 数据集描述.
  * */
@@ -124,7 +116,7 @@ export function getAlgorithmsList() {
 
 // 创建评估任务
 export function createAssessmentTasks(data) {
-  const url =`${appurl}/evalTask`;
+  const url = `${appurl}/evalTask`;
   return post(url, data);
 }
 
@@ -150,13 +142,13 @@ export function exportFeedBackData(data) {
   xhr.open('POST', url, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.responseType = 'blob';
-  xhr.onload = function() {
+  xhr.onload = function () {
     if (xhr.status === 200) {
       var contentDisposition = xhr.getResponseHeader('Content-Disposition');
       var match = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
       var filename = match[1].replace(/['"]/g, '');
       filename = decodeURI(filename.split('UTF-8')[1])
-      var blob = new Blob([xhr.response], {type: 'application/octet-stream'});
+      var blob = new Blob([xhr.response], { type: 'application/octet-stream' });
       var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
       a.href = url;
