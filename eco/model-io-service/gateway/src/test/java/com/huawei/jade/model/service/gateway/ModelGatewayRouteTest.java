@@ -13,6 +13,7 @@ import com.huawei.jade.model.service.gateway.entity.RouteInfoList;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.Collections;
@@ -27,6 +28,9 @@ import java.util.Collections;
 public class ModelGatewayRouteTest {
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private Environment env;
 
     @Test
     public void testHealthRoute() {
@@ -135,5 +139,27 @@ public class ModelGatewayRouteTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ModelInfo.class).hasSize(1).contains(expectedResponse);
+    }
+
+    @Test
+    void testUrlWithPath() {
+        RouteInfo routeInfo = new RouteInfo();
+        routeInfo.setId("test_id");
+        routeInfo.setUrl("http://localhost:" + env.getProperty("server.port") + "/actuator/");
+
+        RouteInfoList requestBody = new RouteInfoList();
+        requestBody.setRoutes(Collections.singletonList(routeInfo));
+        webTestClient.post()
+                .uri("/v1/routes")
+                .bodyValue(requestBody)
+                .exchange().expectStatus().isOk();
+
+        // 预期路径可以与路由中url的路径拼接，转发后预期路径为：/actuator/health
+        webTestClient.get()
+                .uri("/health")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .value(responseBody -> assertThat(responseBody).contains("UP"));
     }
 }
