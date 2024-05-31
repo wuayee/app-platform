@@ -16,31 +16,63 @@
     </insert>
 
     <select id="getHourlyAccessData" resultType="map">
+        WITH hourly_series AS (
+            SELECT generate_series(
+                           DATE_TRUNC('hour', #{startTime}::timestamp),
+                           DATE_TRUNC('hour', #{endTime}::timestamp),
+                           '1 hour'::interval
+                       ) AS time_unit
+        ),
+             access_data AS (
+                 SELECT
+                     DATE_TRUNC('hour', create_time) AS time_unit,
+                     SUM(total_access) AS access_count
+                 FROM
+                     metrics_access
+                 WHERE
+                     app_id = #{appId} AND create_time BETWEEN #{startTime} AND #{endTime}
+                 GROUP BY
+                     DATE_TRUNC('hour', create_time)
+             )
         SELECT
-            TO_CHAR(DATE_TRUNC('hour', create_time), 'YYYY-MM-DD HH24:MI') AS time_unit,
-            SUM(total_access) AS access_count
+            TO_CHAR(hs.time_unit, 'YYYY-MM-DD HH24:MI') AS time_unit,
+            COALESCE(ad.access_count, 0) AS access_count
         FROM
-            metrics_access
-        WHERE
-            app_id = #{appId} AND create_time BETWEEN #{startTime} AND #{endTime}
-        GROUP BY
-            DATE_TRUNC('hour', create_time)
+            hourly_series hs
+                LEFT JOIN
+            access_data ad ON hs.time_unit = ad.time_unit
         ORDER BY
-            DATE_TRUNC('hour', create_time)
+            hs.time_unit;
     </select>
 
     <select id="getDailyAccessData" resultType="map">
+        WITH daily_series AS (
+            SELECT generate_series(
+                           DATE_TRUNC('day', #{startTime}::timestamp),
+                           DATE_TRUNC('day', #{endTime}::timestamp),
+                           '1 day'::interval
+                       ) AS time_unit
+        ),
+             access_data AS (
+                 SELECT
+                     DATE_TRUNC('day', create_time) AS time_unit,
+                     SUM(total_access) AS access_count
+                 FROM
+                     metrics_access
+                 WHERE
+                     app_id = #{appId} AND create_time BETWEEN #{startTime} AND #{endTime}
+                 GROUP BY
+                     DATE_TRUNC('day', create_time)
+             )
         SELECT
-            TO_CHAR(DATE_TRUNC('day', create_time), 'YYYY-MM-DD') AS time_unit,
-            SUM(total_access) AS access_count
+            TO_CHAR(ds.time_unit, 'YYYY-MM-DD') AS time_unit,
+            COALESCE(ad.access_count, 0) AS access_count
         FROM
-            metrics_access
-        WHERE
-            app_id = #{appId} AND create_time BETWEEN #{startTime} AND #{endTime}
-        GROUP BY
-            DATE_TRUNC('day', create_time)
+            daily_series ds
+                LEFT JOIN
+            access_data ad ON ds.time_unit = ad.time_unit
         ORDER BY
-            DATE_TRUNC('day', create_time)
+            ds.time_unit;
     </select>
 
 
