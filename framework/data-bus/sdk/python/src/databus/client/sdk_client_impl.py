@@ -6,17 +6,13 @@
 `SdkClientImpl`类提供连接到DataBus内核的各种功能.
 """
 import logging
-from typing import Optional
+from typing import Optional, Tuple
 
 from databus.memory_io import read as shared_mem_read, write as shared_mem_write
-from flatbuffers import Builder as FbBuilder
-from databus.message import (
-    ApplyMemoryMessage, ReleaseMemoryMessage, CoreMessageType, CorePermissionType,
-    DEFAULT_FLATBUFFERS_BUILDER_SIZE
-)
+
 from databus.exceptions import CoreError, NotConnectedError
 from databus.manager import MemoryManager
-
+from databus.message import CorePermissionType
 from .socket_client import SocketClient
 
 
@@ -68,9 +64,9 @@ class SdkClientImpl:
         """
         self._pre_access_check(user_key)
         if size <= 0:
-            raise ValueError("Invalid input parameter: size is {size}")
+            raise ValueError(f"Invalid input parameter: size is {size}")
         response = self._socket.send_shared_malloc_message(user_key, size)
-        CoreError.check_core_response("Allocation failed with error code %u", response.ErrorType())
+        CoreError.check_core_response("Allocation failed with error code {}", response.ErrorType())
         self._mem_manager.add_memory_block(user_key=user_key, memory_id=response.MemoryKey(),
                                            memory_size=response.MemorySize())
 
@@ -103,9 +99,10 @@ class SdkClientImpl:
                 logging.warning("Invalid access to memory @ id=[%d] memory_size=[%d], where read_size=[%d] offset=[%d]",
                                 memory_id, memory_size, size, offset)
                 return None
+            size = size if size else memory_size
             logging.info("ready to read memory @ id=[%d] size=[%d/%d] offset=[%d]", memory_id, size, memory_size,
                          offset)
-            contents = shared_mem_read(memory_id, size if size else memory_size, offset=offset)
+            contents = shared_mem_read(memory_id, size, offset=offset)
         return contents
 
     def write_once(self, user_key: str, contents: bytes, offset: int = 0) -> int:
