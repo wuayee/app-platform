@@ -9,10 +9,10 @@ import com.huawei.fit.waterflow.domain.stream.nodes.Retryable;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.jade.fel.engine.activities.FlowCallBack;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 /**
  * 流程对话级别的回调操作。
@@ -21,8 +21,7 @@ import java.util.function.Consumer;
  * @since 2024-04-10
  */
 public class Predictable<T> implements ConverseListener<T> {
-    private Consumer<T> converseSuccessCb = doNothing();
-    private Consumer<Throwable> converseErrorCb = doNothing();
+    private final FlowCallBack<T> converseCallBack;
     private final Operators.ErrorHandler<Object> flowErrorCb;
     private final String flowId;
     private final ConverseLatch<T> latch;
@@ -31,77 +30,24 @@ public class Predictable<T> implements ConverseListener<T> {
      * 对话回调操作对象的构造方法。
      *
      * @param flow 表示 AI 数据处理流程的 {@link AiProcessFlow}{@code <}{@code ?, }{@link T}{@code >}。
+     * @param converseCallBack 表示流程会话回调对象的 {@link FlowCallBack}{@code <}{@link T}{@code >}。
      * @param latch 表示流程调用同步器的 {@link ConverseLatch}{@code <}{@link T}{@code >}。
-     * @throws IllegalArgumentException 当 {@code flow} 为 {@code null} 时。
+     * @throws IllegalArgumentException 当 {@code flow}、{@code converseCallBack} 或 {@code latch} 为 {@code null} 时。
      */
-    public Predictable(AiProcessFlow<?, T> flow, ConverseLatch<T> latch) {
-        Validation.notNull(flow, "Flow cannot be null.");
-
+    public Predictable(AiProcessFlow<?, T> flow, FlowCallBack<T> converseCallBack, ConverseLatch<T> latch) {
+        Validation.notNull(flow, "Flow can not be null.");
+        Validation.notNull(converseCallBack, "Callback can not be null.");
+        this.converseCallBack = FlowCallBack.<T>builder()
+                .doOnSuccess(converseCallBack.getSuccessCb().andThen(latch::setData))
+                .doOnError(converseCallBack.getErrorCb().andThen(latch::setThrowable))
+                .doOnFinally(latch::countDown)
+                .build();
         this.flowErrorCb = (exception, retryable, contexts) -> {
             List<Operators.ErrorHandler<Object>> handlers = ObjectUtils.cast(flow.end().getErrorHandlers());
             handlers.forEach(handler -> handler.handle(exception, retryable, contexts));
         };
         this.flowId = flow.getId();
-        this.latch = latch;
-    }
-
-    /**
-     * 对话回调操作对象的构造方法。
-     *
-     * @param predictable 表示对话回调操作对象的 {@link Predictable}{@code <}{@link T}{@code >}。
-     * @param latch 表示流程调用同步器的 {@link ConverseLatch}{@code <}{@link T}{@code >}。
-     * @throws IllegalArgumentException 当 {@code predictable} 或 {@code latch} 为 {@code null} 时。
-     */
-    public Predictable(Predictable<T> predictable, ConverseLatch<T> latch) {
-        Validation.notNull(predictable, "Predictable cannot be null.");
-        Validation.notNull(latch, "Conversation latch cannot be null.");
-
-        this.converseSuccessCb = predictable.converseSuccessCb.andThen(latch::setData);
-        this.converseErrorCb = predictable.converseErrorCb.andThen(latch::setThrowable);
-        this.setFinallyCb(latch::countDown);
-        this.flowErrorCb = predictable.flowErrorCb;
-        this.flowId = predictable.flowId;
-        this.latch = latch;
-    }
-
-    /**
-     * 设置成功回调。
-     *
-     * @param successCb 表示指定的对话成功时操作的 {@link Consumer}{@code <}{@link Object}{@code >}。
-     * @throws IllegalArgumentException 当 {@code successCb} 为 {@code null} 时。
-     */
-    public void setSuccessCb(Consumer<T> successCb) {
-        this.converseSuccessCb = Validation.notNull(successCb, "Success processor cannot be null.");
-    }
-
-    /**
-     * 设置异常回调。
-     *
-     * @param errorCb 表示指定的对话发生异常时操作的 {@link Consumer}{@code <}{@link Throwable}{@code >}。
-     * @throws IllegalArgumentException 当 {@code errorCb} 为 {@code null} 时。
-     */
-    public void setErrorCb(Consumer<Throwable> errorCb) {
-        this.converseErrorCb = Validation.notNull(errorCb, "error handler cannot be null.");
-    }
-
-    /**
-     * 设置结束回调。
-     *
-     * @param finallyAction 表示待设置的结束回调的 {@link Action}。
-     * @throws IllegalArgumentException 当 {@code finallyAction} 为 {@code null} 时。
-     */
-    public void setFinallyCb(Action finallyAction) {
-        Validation.notNull(finallyAction, "Finally action cannot be null.");
-        this.converseSuccessCb = this.converseSuccessCb.andThen(d -> finallyAction.exec());
-        this.converseErrorCb = this.converseErrorCb.andThen(d -> finallyAction.exec());
-    }
-
-    /**
-     * 清理对话成功回调和异常回调。
-     */
-    public void clear() {
-        converseSuccessCb = doNothing();
-        converseErrorCb = doNothing();
+        this.latch = Validation.notNull(latch, "Conversation latch can not be null.");
     }
 
     @Override
@@ -110,7 +56,7 @@ public class Predictable<T> implements ConverseListener<T> {
         if (!Objects.equals(flowId, this.flowId)) {
             return;
         }
-        this.converseSuccessCb.accept(data);
+        this.converseCallBack.getSuccessCb().accept(data);
     }
 
     @Override
@@ -121,7 +67,7 @@ public class Predictable<T> implements ConverseListener<T> {
 
     @Override
     public void onConverseError(Exception exception) {
-        this.converseErrorCb.accept(exception);
+        this.converseCallBack.getErrorCb().accept(exception);
     }
 
     @Override
@@ -130,9 +76,5 @@ public class Predictable<T> implements ConverseListener<T> {
             return true;
         }
         return this.latch.getCountDownLatch().getCount() == 0;
-    }
-
-    private static <R> Consumer<R> doNothing() {
-        return input -> {};
     }
 }

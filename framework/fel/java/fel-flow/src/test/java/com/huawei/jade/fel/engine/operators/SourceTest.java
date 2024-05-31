@@ -4,17 +4,20 @@
 
 package com.huawei.jade.fel.engine.operators;
 
-import static com.huawei.jade.fel.utils.FlowsTestUtils.waitUntil;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.huawei.fit.waterflow.domain.utils.SleepUtil;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
+import com.huawei.jade.fel.engine.flows.ConverseLatch;
 import com.huawei.jade.fel.engine.operators.prompts.Prompts;
 import com.huawei.jade.fel.engine.operators.sources.Source;
 
 import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * {@link Source} 的测试。
@@ -25,16 +28,32 @@ import org.junit.jupiter.api.Test;
 public class SourceTest {
     @Test
     void shouldOkWhenFlowOfferSource() {
-        final StringBuilder answer = new StringBuilder();
+        AtomicInteger cnt = new AtomicInteger(0);
+        StringBuilder answer = new StringBuilder();
         AiProcessFlow<Tip, Prompt> flow = AiFlows.<Tip>create()
-                .prompt(Prompts.sys("{{someone}}"), Prompts.human("{{question}}"))
-                .close(r -> answer.append(r.get().getData().text()));
+                .prompt(Prompts.human("{{question}}"))
+                .close(data -> cnt.incrementAndGet());
 
         Source<Tip> tipSource = new Source<>();
-        flow.offer(tipSource);
-        tipSource.emit(new Tip().add("someone", "will").add("question", "my question"));
+        ConverseLatch<Prompt> converseLatch = flow.converse()
+                .doOnSuccess(data -> answer.append(data.text()))
+                .offer(tipSource);
+        tipSource.emit(Tip.from("question", "my question"));
 
-        waitUntil(() -> answer.length() != 0, 1000);
-        assertThat(answer.toString()).isEqualTo("will\nmy question");
+        converseLatch.await();
+        assertThat(answer.toString()).isEqualTo("my question");
+
+        // 第二次会话
+        StringBuilder answer2 = new StringBuilder();
+        ConverseLatch<Prompt> converseLatch2 =
+                flow.converse().doOnSuccess(data -> answer2.append(data.text())).offer(tipSource);
+        tipSource.emit(Tip.from("question", "my question2"));
+
+        converseLatch2.await();
+        assertThat(answer2.toString()).isEqualTo("my question2");
+
+        // 验证会话结束后注销热源的订阅
+        SleepUtil.sleep(10);
+        assertThat(cnt.get()).isEqualTo(2);
     }
 }

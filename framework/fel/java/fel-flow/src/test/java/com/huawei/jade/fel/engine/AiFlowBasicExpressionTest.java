@@ -14,6 +14,7 @@ import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.core.util.Tip;
+import com.huawei.jade.fel.engine.activities.FlowCallBack;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.flows.Conversation;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -87,10 +89,29 @@ public class AiFlowBasicExpressionTest {
                     maps[i] = String.valueOf(i);
                 }
                 return AiFlows.flux(maps);
-            }).just(value -> result.add(value)).close(data -> {}, (r, x, y) -> {});
+            }).just(value -> result.add(value)).close();
             flow.converse().offer(4);
             waitUntil(() -> result.size() == 4, 1000);
             assertThat(result).hasSize(4).containsSequence("0", "1", "2", "3");
+        }
+
+        @Test
+        @DisplayName("测试AiFlow的回调能力")
+        void shouldOkWhenCreateAiFlowWithCallBack() throws InterruptedException {
+            CountDownLatch latch = new CountDownLatch(1);
+            List<String> result = new ArrayList<>();
+            FlowCallBack<String> flowCallBack = FlowCallBack.<String>builder()
+                    .doOnFinally(latch::countDown)
+                    .doOnSuccess(result::add)
+                    .build();
+
+            AiProcessFlow<Integer, String> flow = AiFlows.<Integer>create()
+                    .map(num -> String.valueOf(num + 1))
+                    .close(flowCallBack);
+            flow.converse().offer(4);
+            // 仅为了验证流程的 doOnFinally
+            latch.await();
+            assertThat(result).hasSize(1).containsSequence("5");
         }
     }
 
@@ -223,7 +244,7 @@ public class AiFlowBasicExpressionTest {
                     .matchTo(data -> data.length() < 10, node -> node.just(i -> {
                     }).to("plus2"))
                     .others()
-                    .close(i -> result.set(i.get().getData()))
+                    .close(result::set)
                     .converse()
                     .offer("3");
             waitUntil(() -> result.get() != 0);
@@ -241,7 +262,7 @@ public class AiFlowBasicExpressionTest {
                     .matchTo(data -> data.getFirst().get() < 20, node -> node.to("plusF"))
                     .matchTo(data -> data.getSecond().get() < 20, node -> node.to("plusS"))
                     .others(i -> i)
-                    .close(r -> output.add(r.get().getData()));
+                    .close(output::add);
             flow.converse().offer(new AiFlowTestData(11, 0, 0)).await();
             assertThat(output).hasSize(1);
             assertThat(output.get(0).getFirst().get()).isEqualTo(20);
@@ -263,7 +284,7 @@ public class AiFlowBasicExpressionTest {
                     .match(data -> data.getThird().get() < 5, node -> node.just(data -> data.getThird().getAndAdd(5)))
                     .matchTo(data -> data.getThird().get() < 20, node -> node.to("plusT"))
                     .others(i -> i)
-                    .close(r -> output.add(r.get().getData()));
+                    .close(output::add);
             flow.converse().offer(new AiFlowTestData(11, 0, 0)).await();
 
             assertThat(output).hasSize(1);

@@ -4,15 +4,18 @@
 
 package com.huawei.jade.fel.engine.flows;
 
+import com.huawei.fit.waterflow.domain.context.FlowContext;
 import com.huawei.fit.waterflow.domain.context.FlowSession;
-import com.huawei.fit.waterflow.domain.emitters.Emitter;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.core.memory.Memory;
+import com.huawei.jade.fel.engine.activities.FlowCallBack;
 import com.huawei.jade.fel.engine.operators.models.ChatChunk;
 import com.huawei.jade.fel.engine.operators.models.StreamingConsumer;
+import com.huawei.jade.fel.engine.operators.sources.Source;
 import com.huawei.jade.fel.engine.util.StateKey;
 import com.huawei.jade.fel.tool.ToolContext;
 
@@ -34,7 +37,7 @@ public class Conversation<D, R> {
     private final AiProcessFlow<D, R> flow;
     private final FlowSession session;
     private final AtomicReference<ConverseListener<R>> converseListener = new AtomicReference<>(null);
-    private final Predictable<R> tempListener;
+    private FlowCallBack.Builder<R> callBackBuilder;
 
     /**
      * AI 数据处理流程对话的构造方法。
@@ -45,10 +48,10 @@ public class Conversation<D, R> {
      */
     public Conversation(AiProcessFlow<D, R> flow, FlowSession session) {
         this.flow = Validation.notNull(flow, "Flow cannot be null.");
-        this.tempListener = new Predictable<>(flow, null);
         this.session = (session == null)
                 ? this.setConverseListener(new FlowSession())
                 : this.setSubConverseListener(session);
+        this.callBackBuilder = FlowCallBack.builder();
     }
 
     /**
@@ -60,7 +63,7 @@ public class Conversation<D, R> {
      */
     @SafeVarargs
     public final ConverseLatch<R> offer(D... data) {
-        ConverseLatch<R> latch = setListener();
+        ConverseLatch<R> latch = setListener(this.flow);
         FlowSession newSession = new FlowSession(this.session);
         this.flow.start().offer(data, newSession);
         return latch;
@@ -77,20 +80,34 @@ public class Conversation<D, R> {
      */
     public ConverseLatch<R> offer(String nodeId, List<?> data) {
         Validation.notBlank(nodeId, "invalid nodeId.");
-        ConverseLatch<R> latch = setListener();
+        ConverseLatch<R> latch = setListener(this.flow);
         FlowSession newSession = new FlowSession(this.session);
         this.flow.origin().offer(nodeId, data.toArray(new Object[0]), newSession);
         return latch;
     }
 
     /**
-     * 订阅一个发射源
+     * 当前会话订阅一个发射源，由发射源驱动会话执行，会话结束后会注销本次订阅。
+     * <p>注意发射源的 {@link Source#emit(Object, FlowSession)} 传入的 {@link FlowSession} 的状态数据，会被当前会话的各类
+     * {@code bind} 方法覆盖， 如 {@link Conversation#bind(String, Object)}、 {@link Conversation#bind(Memory)} 等。</p>
      *
-     * @param emitter 发射源
+     * @param source 表示发射源的 {@link Source}{@code <}{@link D}{@code >}。
+     * @return 表示线程同步器的 {@link ConverseLatch}{@code <}{@link R}{@code >}。
+     * @throws IllegalArgumentException 当 {@code source} 为 {@code null} 时。
      */
-    public void offer(Emitter<D, FlowSession> emitter) {
-        setListener();
-        this.flow.offer(emitter);
+    public ConverseLatch<R> offer(Source<D> source) {
+        Validation.notNull(source, "Source can not be null.");
+
+        FlowSession sessionClone = new FlowSession(this.session);
+        AiProcessFlow<D, R> processFlow = AiFlows.<D>create().just((data, ctx) -> {
+            FlowContext<D> flowContext = ObjectUtils.cast(ctx);
+            flowContext.getSession().copySessionState(sessionClone);
+        }).delegate(this.flow).close();
+        processFlow.offer(source);
+
+        Action finallyCb = this.callBackBuilder.getFinallyCb();
+        this.callBackBuilder.doOnFinally(finallyCb.andThen(() -> source.unregister(processFlow)));
+        return setListener(processFlow);
     }
 
     /**
@@ -188,7 +205,7 @@ public class Conversation<D, R> {
      * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
     public Conversation<D, R> doOnSuccess(Consumer<R> processor) {
-        this.tempListener.setSuccessCb(processor);
+        this.callBackBuilder.doOnSuccess(processor);
         return this;
     }
 
@@ -200,7 +217,7 @@ public class Conversation<D, R> {
      * @throws IllegalArgumentException 当 {@code errorHandler} 为 {@code null} 时。
      */
     public Conversation<D, R> doOnError(Consumer<Throwable> errorHandler) {
-        this.tempListener.setErrorCb(errorHandler);
+        this.callBackBuilder.doOnError(errorHandler);
         return this;
     }
 
@@ -212,13 +229,13 @@ public class Conversation<D, R> {
      * @throws IllegalArgumentException 当 {@code finallyAction} 为 {@code null} 时。
      */
     public Conversation<D, R> doOnFinally(Action finallyAction) {
-        this.tempListener.setFinallyCb(finallyAction);
+        this.callBackBuilder.doOnFinally(finallyAction);
         return this;
     }
 
-    private ConverseLatch<R> setListener() {
+    private ConverseLatch<R> setListener(AiProcessFlow<D, R> currFlow) {
         ConverseLatch<R> latch = new ConverseLatch<>();
-        Predictable<R> predictable = new Predictable<>(this.tempListener, latch);
+        Predictable<R> predictable = new Predictable<>(currFlow, this.callBackBuilder.build(), latch);
         ConverseListener<R> listener = this.converseListener.getAndSet(predictable);
         if (listener != null && !listener.isCompleted()) {
             throw new IllegalStateException("conversation is running.");
@@ -226,10 +243,10 @@ public class Conversation<D, R> {
 
         AtomicReference<Map<String, AtomicReference<ConverseListener<R>>>> listenerMap =
                 this.session.getInnerState(StateKey.CONVERSE_LISTENER);
-        listenerMap.get().put(this.flow.getId(), converseListener);
+        listenerMap.get().put(currFlow.getId(), converseListener);
 
-        // 清空临时 listener，用于同一会话的下一次 offer 数据
-        this.tempListener.clear();
+        // 清空临时 builder，用于同一会话的下一次 offer 数据
+        this.callBackBuilder = FlowCallBack.builder();
         return latch;
     }
 

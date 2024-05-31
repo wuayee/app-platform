@@ -11,6 +11,7 @@ import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
 import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fit.waterflow.domain.flow.ProcessFlow;
 import com.huawei.fit.waterflow.domain.states.State;
+import com.huawei.fit.waterflow.domain.stream.callbacks.ToCallback;
 import com.huawei.fit.waterflow.domain.stream.nodes.BlockToken;
 import com.huawei.fit.waterflow.domain.stream.nodes.Retryable;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
@@ -24,11 +25,14 @@ import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.flows.ConverseListener;
 import com.huawei.jade.fel.engine.util.StateKey;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 /**
  * <p>表示 AI 流程中间的一般节点：开始和结束中间的常规节点，条件节点和平行节点这些特殊节点除外。
@@ -166,35 +170,46 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      * @return 表示当前流程实例的 {@link ProcessFlow}{@code <}{@link D}{@code , }{@link O}{@code >}。
      */
     public AiProcessFlow<D, O> close() {
-        return this.close(input -> {});
+        return this.close(FlowCallBack.emptyCallBack());
     }
 
     /**
      * 在流程最后添加终止节点，并设置成功回调。
      *
-     * @param callback 表示流程成功结束后操作的 {@link Operators.Just}{@code <}{@link Callback}{@code <}{@link
-     * FlowContext}{@code <}{@link O}{@code >>>}。
+     * @param callback 表示流程成功结束后操作的 {@link Consumer}{@code <}{@link O}{@code >}。
      * @return 表示当前流程实例的 {@link ProcessFlow}{@code <}{@link D}{@code , }{@link O}{@code >}。
      */
-    public AiProcessFlow<D, O> close(Operators.Just<Callback<FlowContext<O>>> callback) {
-        return this.close(callback, null);
+    public AiProcessFlow<D, O> close(Consumer<O> callback) {
+        return this.close(FlowCallBack.<O>builder().doOnSuccess(callback).build());
     }
 
     /**
      * 在流程最后添加终止节点，并设置成功回调和异常回调。
      *
-     * @param callback 表示流程成功结束后操作的 {@link Operators.Just}{@code <}{@link Callback}{@code <}{@link
+     * @param callback 表示流程成功后操作的 {@link Operators.Just}{@code <}{@link Callback}{@code <}{@link
      * FlowContext}{@code <}{@link O}{@code >>>}。
      * @param errHandler 表示流程异常处理器的 {@link Operators.ErrorHandler}{@code <}{@link Object}{@code >}。
      * @return 表示当前流程实例的 {@link ProcessFlow}{@code <}{@link D}{@code , }{@link O}{@code >}。
      */
+    @Deprecated
     public AiProcessFlow<D, O> close(Operators.Just<Callback<FlowContext<O>>> callback,
             Operators.ErrorHandler<Object> errHandler) {
-        Operators.Just<Callback<FlowContext<O>>> successCb = input -> {
-            Operators.Just<Callback<FlowContext<O>>> actualCallback =
-                    ObjectUtils.nullIf(callback, EmptyCallBack.<O>doNothingOnSuccess());
-            actualCallback.process(input);
+        Consumer<Throwable> errorCbWrapper = exception -> errHandler.handle(new Exception(exception), null, null);
+        return this.close(FlowCallBack.<O>builder()
+                .doOnSuccess(data -> callback.process(new ToCallback<>(Collections.singletonList(
+                        new FlowContext<>(null, null, data, new HashSet<>(), null)))))
+                .doOnError(errorCbWrapper).build());
+    }
 
+    /**
+     * 在流程最后添加终止节点，并设置回调。
+     *
+     * @param callback 表示流程回调操作的 {@link FlowCallBack}{@code <}{@link O}{@code >}。
+     * @return 表示当前流程实例的 {@link ProcessFlow}{@code <}{@link D}{@code , }{@link O}{@code >}。
+     */
+    public AiProcessFlow<D, O> close(FlowCallBack<O> callback) {
+        Operators.Just<Callback<FlowContext<O>>> successCb = input -> {
+            callback.getSuccessCb().accept(input.get().getData());
             // 对话结束回调由直接起会话的流程触发
             String flowId = this.getFlow().getId();
             getConverseListener(input.get(), flowId).ifPresent(listener -> listener.onSuccess(flowId,
@@ -202,10 +217,7 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         };
 
         Operators.ErrorHandler<Object> errCb = (exception, retryable, flowContexts) -> {
-            Operators.ErrorHandler<Object> actualErrorHandler =
-                    ObjectUtils.nullIf(errHandler, EmptyCallBack.doNothingOnError());
-            actualErrorHandler.handle(exception, retryable, flowContexts);
-
+            callback.getErrorCb().accept(exception);
             // 触发对话异常处理，及父流程异常处理
             handleConverseAndParentError(exception, retryable, flowContexts);
         };
@@ -259,15 +271,5 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
                 .flatMap(mapRef -> Optional.ofNullable(mapRef.get()))
                 .flatMap(listenerMap -> Optional.ofNullable(listenerMap.get(flowId)))
                 .flatMap(ref -> Optional.ofNullable(ref.get()));
-    }
-
-    private static class EmptyCallBack {
-        static <R> Operators.Just<Callback<FlowContext<R>>> doNothingOnSuccess() {
-            return input -> {};
-        }
-
-        static <R> Operators.ErrorHandler<R> doNothingOnError() {
-            return (exception, retryable, flowContexts) -> {};
-        }
     }
 }
