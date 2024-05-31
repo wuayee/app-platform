@@ -63,7 +63,7 @@ const jadeFlowAgent = (graph) => {
                 if (preNodes.some(s => s.type === "conditionNodeCondition" || s.runStatus === NODE_STATUS.ERROR)) {
                     return;
                 }
-                if (preNodes.every(preNode => nodeIds.includes(preNode))) {
+                if (preNodes.every(preNode => nodeIds.includes(preNode.id))) {
                     s.setRunStatus(NODE_STATUS.RUNNING);
                 }
             }
