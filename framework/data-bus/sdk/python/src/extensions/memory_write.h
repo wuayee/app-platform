@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-void WriteToSharedBuffer(uint8_t* src, uintmax_t srcLength, uint8_t* sharedBuffer);
+void WriteToSharedBuffer(const uint8_t* src, uintmax_t srcLength, uint8_t* sharedBuffer);
 
 #ifdef __cplusplus
 }

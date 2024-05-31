@@ -8,7 +8,7 @@
 #include <algorithm>
 
 extern "C" {
-void WriteToSharedBuffer(uint8_t* src, uintmax_t srcLength, uint8_t* sharedBuffer)
+void WriteToSharedBuffer(const uint8_t* src, uintmax_t srcLength, uint8_t* sharedBuffer)
 {
     (void) std::copy(src, src + srcLength, sharedBuffer);
 }
