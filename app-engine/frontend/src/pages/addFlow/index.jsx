@@ -167,8 +167,12 @@ const AddFlow = (props) => {
   }
   // 测试
   const handleDebugClick = () => {
-    setDebugTypes(window.agent.getFlowRunInputMetaData());
-    setShowDebug(true);
+    window.agent.validate().then(()=> {
+      setDebugTypes(window.agent.getFlowRunInputMetaData());
+      setShowDebug(true);
+    }).catch(err => {
+      Message({ type: 'warning', content: '请输入流程必填项' });
+    })
   }
   // 关闭测试抽屉
   const handleCloseDebug = () => {
@@ -248,20 +252,16 @@ const AddFlow = (props) => {
       isChange.current = true
       return
     }
-    window.agent.validate().then(()=> {
-      if (type) {
-        aippInfo.flowGraph.appearance = graphChangeData;
-        updateAppRunningFlow();
-      } else {
-        setModalInfo(() => {
-          appRef.current.flowGraph.appearance = graphChangeData;
-          return appRef.current;
-        })
-        updateAppRunningFlow();
-      }
-    }).catch(err => {
-      Message({ type: 'warning', content: '请输入必填项' });
-    })
+    if (type) {
+      aippInfo.flowGraph.appearance = graphChangeData;
+      updateAppRunningFlow();
+    } else {
+      setModalInfo(() => {
+        appRef.current.flowGraph.appearance = graphChangeData;
+        return appRef.current;
+      })
+      updateAppRunningFlow();
+    }
   }
   // 创建更新应用
   async function updateAppWorkFlow(optionType = undefined) {
