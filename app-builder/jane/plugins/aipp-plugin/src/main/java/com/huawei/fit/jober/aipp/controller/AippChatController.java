@@ -125,7 +125,7 @@ public class AippChatController extends AbstractController {
      * @return Rsp<QueryChatRsp>
      */
     @PostMapping(path = "/{chat_id}", description = "更新会话接口")
-    public Rsp<QueryChatRsp> deleteChat(HttpClassicServerRequest httpRequest,
+    public Rsp<QueryChatRsp> updateChat(HttpClassicServerRequest httpRequest,
                                         @PathVariable("tenant_id") String tenantId,
                                         @PathVariable("chat_id") String chatId,
                                         @RequestBody CreateChatRequest body) {

@@ -153,6 +153,10 @@ public class AippChatServiceImpl implements AippChatService {
         if (chatResult == null || chatResult.size() == 0 || chatResult.get(0) == null) {
             throw new IllegalArgumentException("chatId is not exist");
         }
+        // 只查询该应用的近次记录
+        Map<String, Object> bodyContext = body.getInitContext();
+        bodyContext.put("chatId", chatId);
+        body.setInitContext(bodyContext);
         persistChat(body, context, chatId);
         QueryChatRequest queryBody = QueryChatRequest.builder()
                 .offset(0)
