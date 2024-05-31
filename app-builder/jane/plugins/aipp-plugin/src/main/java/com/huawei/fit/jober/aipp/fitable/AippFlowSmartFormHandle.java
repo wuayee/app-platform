@@ -92,7 +92,7 @@ public class AippFlowSmartFormHandle implements FlowSmartFormService {
                 .putInfo(AippConst.INST_CURR_NODE_ID_KEY, nodeId)
                 .build();
 
-        this.metaInstanceService.patchMetaInstance((String) businessData.get(AippConst.BS_AIPP_ID_KEY),
+        this.metaInstanceService.patchMetaInstance((String) businessData.get(AippConst.BS_META_VERSION_ID_KEY),
                 (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY),
                 declarationInfo,
                 JsonUtils.parseObject((String) businessData.get(AippConst.BS_HTTP_CONTEXT_KEY),
