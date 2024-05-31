@@ -156,6 +156,10 @@ void TaskHandler::HandleMessage(const Common::MessageHeader* header, const char*
             HandleMessageGetMeta(header, buffer, socketFd);
             break;
         }
+        case Common::MessageType::CleanupExpiredMemory: {
+            HandleMessageCleanupExpiredMemory();
+            break;
+        }
         default:
             logger.Error("[TaskHandler] Unknown message type from client {}", socketFd);
             Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, GetSender(socketFd));
@@ -290,6 +294,12 @@ void TaskHandler::HandleMessageReleaseMemory(const Common::MessageHeader *header
         logger.Error("[TaskHandler] Failed to ReleaseMemory, client: {}, memory key: {}",
             socketFd, sharedMemoryId);
     }
+}
+
+void TaskHandler::HandleMessageCleanupExpiredMemory()
+{
+    logger.Info("[TaskHandler] Clean up expired memory blocks");
+    resourceMgrPtr_->CleanupExpiredMemory();
 }
 
 void TaskHandler::SendApplyMemoryResponse(int32_t socketFd, int32_t memoryId, uint64_t memorySize,

@@ -8,5 +8,5 @@ add_executable(databus_test
 )
 add_dependencies(databus_test databus_common)
 target_link_libraries(databus_test databus_resource gtest_main gmock_main)
-target_include_directories(databus_test PRIVATE ${DATABUS_SRC_PATH}/common/stl/)
+target_include_directories(databus_test PRIVATE ${DATABUS_SRC_PATH}/common/stl/ ${CMAKE_CURRENT_LIST_DIR}/mock/)
 add_test(NAME databus_test COMMAND databus_test)
