@@ -2,7 +2,7 @@ import {jadeNode} from "@/components/jadeNode.jsx";
 import LlmIcon from '../asserts/icon-llm.svg?react'; // 导入背景图片
 import {Button} from "antd";
 import "./style.css";
-import {v4 as uuidv4} from "uuid";
+import {SECTION_TYPE} from "@/common/Consts.js";
 
 /**
  * jadeStream中的大模型节点.
@@ -30,6 +30,24 @@ export const llmNodeState = (id, x, y, width, height, parent, drawer) => {
                 <LlmIcon/>
             </Button>
         );
+    };
+
+    /**
+     * 获取大模型节点测试报告章节
+     */
+    self.getRunReportSections = () => {
+        // 这里的data是每个节点的每个章节需要展示的数据，比如工具节点展示为输入、输出的数据
+        return [{
+            no: "1",
+            name: "输入",
+            type: SECTION_TYPE.DEFAULT,
+            data: self.input ? self.input.prompt.variables : {}
+        }, {
+            no: "2",
+            name: "输出",
+            type: SECTION_TYPE.DEFAULT,
+            data: self.getOutputData(self.output)
+        }];
     };
 
     return self;
