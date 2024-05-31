@@ -33,23 +33,48 @@
         SELECT 'total_active_users' as metric, COUNT(DISTINCT user) AS value FROM conversation_record
         WHERE app_id = #{appId} AND create_time BETWEEN #{startTime} AND #{endTime}
         UNION
-        SELECT 'average_response_time' as metric, EXTRACT(EPOCH FROM AVG(finish_time - create_time))::bigint AS value FROM conversation_record
+        SELECT 'average_response_time' as metric, EXTRACT(EPOCH FROM AVG(finish_time - create_time))*1000 AS value FROM conversation_record
         WHERE app_id = #{appId} AND create_time BETWEEN #{startTime} AND #{endTime}
     </select>
 
     <!-- Query for average response time range -->
     <select id="getAvgResponseRange" resultType="map">
+        WITH time_ranges AS (
+            SELECT 'below 500ms' AS range
+            UNION ALL
+            SELECT '501-1000ms'
+            UNION ALL
+            SELECT '1001ms-2000ms'
+            UNION ALL
+            SELECT 'above 2000ms'
+        ),
+        response_data AS (
+            SELECT
+            CASE
+                WHEN EXTRACT(EPOCH FROM finish_time - create_time)*1000 &lt; 500 THEN 'below 500ms'
+                WHEN EXTRACT(EPOCH FROM finish_time - create_time)*1000 BETWEEN 500 AND 1000 THEN '501-1000ms'
+                WHEN EXTRACT(EPOCH FROM finish_time - create_time)*1000 BETWEEN 1000 AND 2000 THEN '1001ms-2000ms'
+                ELSE 'above 2000ms'
+            END AS range,
+            COUNT(*) AS count
+            FROM conversation_record
+            WHERE app_id = #{appId} AND create_time BETWEEN #{startTime} AND #{endTime}
+            GROUP BY range
+        )
         SELECT
-        CASE
-        WHEN EXTRACT(EPOCH FROM finish_time - create_time)  &lt; 500 THEN 'below 500ms'
-        WHEN EXTRACT(EPOCH FROM finish_time - create_time) BETWEEN 500 AND 1000 THEN '501-1000ms'
-        WHEN EXTRACT(EPOCH FROM finish_time - create_time) BETWEEN 1000 AND 2000 THEN '1001ms-2000ms'
-        ELSE 'above 2000ms'
-        END AS range,
-        COUNT(*) AS count
-        FROM conversation_record
-        WHERE app_id = #{appId} AND create_time BETWEEN #{startTime} AND #{endTime}
-        GROUP BY range
+            tr.range,
+            COALESCE(rd.count, 0) AS count
+        FROM
+            time_ranges tr
+        LEFT JOIN
+            response_data rd ON tr.range = rd.range
+        ORDER BY
+            CASE tr.range
+                WHEN 'below 500ms' THEN 1
+                WHEN '501-1000ms' THEN 2
+                WHEN '1001ms-2000ms' THEN 3
+                WHEN 'above 2000ms' THEN 4
+            END
     </select>
 
     <!-- Query for top 5 users -->
