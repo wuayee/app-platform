@@ -7,7 +7,7 @@ import Feedbacks from './feedbacks';
 import MessageDetail from './message-detail';
 import RuntimeForm from './runtime-form';
 import SendBtn from '../send-box/send-btn';
-import robot from '@assets/images/ai/robot1.png';
+import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
 import '../../styles/recieve-box.scss';
 
 const ReciveBox = (props) => {
@@ -75,7 +75,7 @@ const Img = () => {
   const { aippInfo } = useContext(AippContext);
   return <>{(
     <span>
-      {aippInfo.attributes?.icon ? <img src={aippInfo.attributes.icon} /> : <img src={robot} />}
+      {aippInfo.attributes?.icon ? <img src={aippInfo.attributes.icon} /> : <img src={knowledgeBase} />}
     </span>
   )}</>
 }

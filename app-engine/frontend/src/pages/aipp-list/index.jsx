@@ -8,7 +8,7 @@ import {
 import { getAippList, createAipp } from '../../shared/http/aipp';
 import { UserIcon } from '../../assets/icon';
 import EditModal from '../components/edit-modal.jsx';
-import robot from '../../assets/images/ai/robot1.png';
+import knowledgeBase from '../../assets/images/knowledge/knowledge-base.png';
 import './home.scss';
 
 const { Search } = Input;
@@ -138,7 +138,7 @@ const AppItem = (props) => {
   return <>{(
     <div className="app-item" onClick={itemClick}>
       <div className="app-header">
-        <span className="item-avatar">{ icon ? <img src={icon}/> : <img src={robot}/> }</span>
+        <span className="item-avatar">{ icon ? <img src={icon}/> : <img src={knowledgeBase}/> }</span>
         <div className="item-title">
           <div className="title">{ name }</div>
           <div className="tag">

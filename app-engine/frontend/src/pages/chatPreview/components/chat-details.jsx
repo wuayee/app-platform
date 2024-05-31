@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AippContext } from '../../aippIndex/context';
 import { TabLeftIcon, TabRightIcon } from '@assets/icon';
 import EditModal from '../../components/edit-modal';
-import robot from '@assets/images/ai/robot1.png';
+import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
 import robot2 from '@assets/images/ai/xiaohai.png';
 import '../styles/chat-details.scss';
 import StarApps from "./star-apps";
@@ -107,7 +107,7 @@ const ChatDetail = () => {
 
 const Img = (props) => {
   const { icon } = props;
-  return <>{<span>{icon ? <img src={icon} /> : <img src={robot} />}</span>}</>;
+  return <>{<span>{icon ? <img src={icon} /> : <img src={knowledgeBase} />}</span>}</>;
 };
 
 export default ChatDetail;

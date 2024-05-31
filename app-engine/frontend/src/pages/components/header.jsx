@@ -3,13 +3,11 @@ import { LeftArrowIcon, EditIcon, UploadIcon } from '@assets/icon';
 import { Message } from "../../shared/utils/message";
 import PublishModal from './publish-modal.jsx';
 import EditModal from './edit-modal.jsx';
-import robot from '../../assets/images/ai/robot1.png';
-import TestStatus from "./test-status";
+import knowledgeBase from '../../assets/images/knowledge/knowledge-base.png';
 
 const Head = (props) => {
   const { showElsa, aippInfo, updateAippCallBack,
-    mashupClick, status, chatRunning, openDebug,
-    isTested, isTesting, testTime, testStatus } = props;
+    mashupClick, status, chatRunning } = props;
   let modalRef = React.createRef();
   let editRef = React.createRef();
   // 编辑名称
@@ -28,25 +26,18 @@ const Head = (props) => {
     }
     showElsa && mashupClick();
   }
-  // 打开调试抽屉
-  const handleOpenDebug = () => {
-    openDebug();
-  }
 
   return <>{(
     <div className="header">
       <div className="logo">
         { showElsa && <LeftArrowIcon className="back-icon" onClick={backClick}/> }
-        { aippInfo?.attributes?.icon ? <img src={aippInfo.attributes.icon} onClick={backClick} /> : <img src={robot} onClick={backClick}/> }
+        { aippInfo?.attributes?.icon ? <img src={aippInfo.attributes.icon} onClick={backClick} /> : <img src={knowledgeBase} onClick={backClick}/> }
         <span className="header-text">{ aippInfo?.name }</span>
         {
           !status && <EditIcon onClick={ handleEditClick } />
         }
-        {showElsa && <TestStatus isTested={isTested} isTesting={isTesting} testTime={testTime} testStatus={testStatus}/>}
       </div>
       <div className="header-grid">
-        {/*{ showElsa && <span className="header-btn last-run-btn" onClick={modalClick}>展示上一次运行</span> }*/}
-        { showElsa && <span className="header-btn test-btn" onClick={handleOpenDebug}>调试</span> }
         { !status && <span className="header-btn" onClick={modalClick}><UploadIcon />发布</span>  }
       </div>
       <PublishModal modalRef={modalRef} aippInfo={aippInfo} publishType="app" />

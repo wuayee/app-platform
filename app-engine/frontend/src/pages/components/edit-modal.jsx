@@ -8,7 +8,7 @@ import {
 import { Message } from '../../shared/utils/message';
 import { uploadChatFile, updateAippInfo, createAipp } from '../../shared/http/aipp';
 import { httpUrlMap } from '../../shared/http/httpConfig';
-import robot from '../../assets/images/ai/robot1.png';
+import knowledgeBase from '../../assets/images/knowledge/knowledge-base.png';
 import './styles/edit-modal.scss';
 
 const { TextArea } = Input;
@@ -205,7 +205,7 @@ const Img = (props) => {
   const { icon } = props;
   return <>{(
     <span>
-      { icon ? <img src={icon}/> : <img src={robot}/> }
+      { icon ? <img src={icon}/> : <img src={knowledgeBase}/> }
     </span>
   )}</>
 }

@@ -15,7 +15,7 @@ import {
 import ReferencingApp from './referencing-app';
 import UploadFile from './upload-file';
 import StarApps from "../../star-apps";
-import robot from "@assets/images/ai/robot1.png";
+import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
 
 // 操作按钮
 const EditorBtnHome = (props) => {
@@ -25,7 +25,7 @@ const EditorBtnHome = (props) => {
   const [ openStar, setOpenStar ] = useState(false);
   const [ showAt, setShowAt ] = useState(false);
   const [ appName, setAppName ] = useState('');
-  const [ appIcon, setAppIcon ] = useState(robot);
+  const [ appIcon, setAppIcon ] = useState(knowledgeBase);
   const [ isAt, setIsAt ] = useState(false);
   let modalRef = useRef(null);
   const navigate = useNavigate();
