@@ -18,7 +18,9 @@ public:
     Config(const Config&) = delete;
     Config& operator=(const Config&) = delete;
 
-    Config(int port, uint64_t memorySizeLimit) : port_(port), memorySizeLimit_(memorySizeLimit) {}
+    Config(int port, uint64_t memorySizeLimit, int32_t memoryTtlDuration, int32_t memorySweepInterval) : port_(port),
+        memorySizeLimit_(memorySizeLimit), memoryTtlDuration_(memoryTtlDuration),
+        memorySweepInterval_(memorySweepInterval) {}
 
     int GetPort() const
     {
@@ -30,9 +32,21 @@ public:
         return memorySizeLimit_;
     }
 
+    int32_t GetMemoryTtlDuration() const
+    {
+        return memoryTtlDuration_;
+    }
+
+    int32_t GetMemorySweepInterval() const
+    {
+        return memorySweepInterval_;
+    }
+
 private:
     int port_; // 服务器端口
     uint64_t memorySizeLimit_; // 内存分配上限
+    int32_t memoryTtlDuration_; // 内存存活时长（毫秒）
+    int32_t memorySweepInterval_; // 内存清理周期（毫秒）
 };
 } // namespace Runtime
 } // namespace DataBus

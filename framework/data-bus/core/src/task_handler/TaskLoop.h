@@ -13,16 +13,18 @@ namespace DataBus {
 namespace Task {
 
 constexpr int TASK_BACKLOG_MAX = 100000;
+constexpr int32_t DATABUS_SOCKET_FD = 0;
 
 class TaskLoop {
 public:
     explicit TaskLoop(): taskQueue_(TASK_BACKLOG_MAX) {}
+    virtual ~TaskLoop() = default;
 
-    void AddOpenTask(int socketFd);
-    void AddCloseTask(int socketFd);
-    void AddReadTask(int socketFd, const char*, size_t len);
-    void AddWriteTask(int socketFd, const char*, size_t len);
-    std::unique_ptr<Task> GetNextTask();
+    virtual void AddOpenTask(int socketFd);
+    virtual void AddCloseTask(int socketFd);
+    virtual void AddReadTask(int socketFd, const char*, size_t len);
+    virtual void AddWriteTask(int socketFd, const char*, size_t len);
+    virtual std::unique_ptr<Task> GetNextTask();
 private:
     DataBus::Stl::BlockingQueue<std::unique_ptr<Task>> taskQueue_;
 };

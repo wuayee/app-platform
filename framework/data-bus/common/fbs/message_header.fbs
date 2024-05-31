@@ -9,6 +9,7 @@ enum MessageType:byte {
     ApplyPermission = 0x21,
     ReleasePermission = 0x30,
     ReleaseMemory = 0x31,
+    CleanupExpiredMemory = 0x32,
     GetMetaData = 0x41,
 }
 

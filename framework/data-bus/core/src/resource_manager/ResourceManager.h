@@ -17,6 +17,7 @@
 #include "PermissionHeld.h"
 #include "SharedMemoryInfo.h"
 #include "utils/FileUtils.h"
+#include "TaskLoop.h"
 #include "WaitingPermitRequest.h"
 #include "fbs/common_generated.h"
 #include "report/ReportCollector.h"
@@ -28,8 +29,8 @@ const std::string LOG_PATH = DataBus::Common::FileUtils::GetDataBusDirectory() +
 
 class ResourceManager {
 public:
-    static void Init();
-    explicit ResourceManager(const Runtime::Config& config);
+    void Init();
+    explicit ResourceManager(const Runtime::Config& config, std::shared_ptr<Task::TaskLoop>& taskLoopPtr);
     ~ResourceManager();
     std::tuple<int32_t, Common::ErrorType> HandleApplyMemory(int32_t socketFd, const std::string& objectKey,
                                                              uint64_t memorySize);
@@ -41,6 +42,7 @@ public:
     bool ProcessPendingReleaseMemory(int32_t sharedMemoryId);
     std::vector<PermissionHeld> GetPermissionsHeld(int32_t socketFd);
     void RemoveClientFromWaitingQueue(int32_t socketFd);
+    void CleanupExpiredMemory();
 
     uint64_t GetCurMallocSize() const;
     int32_t GetMemoryId(const std::string& objectKey);
@@ -50,9 +52,10 @@ public:
     uint64_t GetMemorySize(int32_t sharedMemoryId);
     int32_t GetReadingRefCnt(int32_t sharedMemoryId);
     int32_t GetWritingRefCnt(int32_t sharedMemoryId);
-    time_t GetLastUsedTime(int32_t  sharedMemoryId);
+    std::chrono::system_clock::time_point GetLastUsedTime(int32_t  sharedMemoryId);
     const std::shared_ptr<UserData>& GetUserData(int32_t sharedMemoryId);
     bool IsPendingRelease(int32_t sharedMemoryId);
+    std::chrono::system_clock::time_point GetExpiryTime(int32_t sharedMemoryId);
     const std::unordered_set<int32_t>& GetReadingMemoryBlocks(int32_t socketFd);
     const std::unordered_set<int32_t>& GetWritingMemoryBlocks(int32_t socketFd);
     int32_t GetPermissionStatus(int32_t sharedMemoryId);
@@ -80,16 +83,24 @@ private:
     bool ReleaseMemory(int32_t sharedMemoryId);
     void CleanupWaitingPermitRequests(int32_t sharedMemoryId);
     void RemoveObjectKey(int32_t sharedMemoryId);
+    void StartMemorySweep(int32_t scheduleInterval);
+    void AddMemoryCleanupTask();
 
     int32_t IncrementReadingRefCnt(int32_t sharedMemoryId);
     int32_t DecrementReadingRefCnt(int32_t sharedMemoryId);
     int32_t IncrementWritingRefCnt(int32_t sharedMemoryId);
     int32_t DecrementWritingRefCnt(int32_t sharedMemoryId);
     void UpdateLastUsedTime(int32_t sharedMemoryId);
+    void UpdateExpiryTime(int32_t sharedMemoryId);
 
     std::ofstream logStream_;
     uint64_t mallocSizeLimit_; // 内存分配上限
     uint64_t curMallocSize_; // 当前已分配内存大小
+    int32_t memoryTtlDuration_; // 内存块存活时长（毫秒）
+    int32_t memorySweepInterval_; // 过期内存块清理周期（毫秒）
+    // TD: 把过期内存清扫线程抽离到资源管理模块之外
+    std::atomic<bool> stopMemorySweepThread_; // 是否停止过期内存清扫线程
+    std::thread memorySweepThread_; // 过期内存扫描线程
     std::unordered_map<int32_t, std::unique_ptr<SharedMemoryInfo>> sharedMemoryIdToInfo_; // 内存块信息记录
     std::unordered_map<int32_t, std::unordered_set<int32_t>> readingMemoryBlocks_; // 客户端正在读取的内存块
     std::unordered_map<int32_t, std::unordered_set<int32_t>> writingMemoryBlocks_; // 客户端正在写入的内存块
@@ -114,6 +125,7 @@ private:
      * 值：客户端等待授权的共享内存块ID集合
      */
     std::unordered_map<int32_t, std::unordered_set<int32_t>> waitingPermitMemoryBlocks_;
+    std::shared_ptr<Task::TaskLoop> taskLoopPtr_;
 };
 }  // namespace Resource
 }  // namespace DataBus
