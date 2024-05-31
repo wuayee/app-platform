@@ -280,12 +280,12 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     /**
      * 生成数据检索节点，用于 RAG 流程。
      *
-     * @param retriever 表示数据检索器的 {@link Retriever}{@code <}{@link MessageContent}{@code >}。
-     * @return 表示数据检索节点的 {@link AiState}{@code <}{@link MessageContent}{@code , }{@link D}{@code ,
+     * @param retriever 表示数据检索器的 {@link Retriever}{@code <}{@link R}{@code >}。
+     * @return 表示数据检索节点的 {@link AiState}{@code <}{@link R}{@code , }{@link D}{@code ,
      * }{@link O}{@code , }{@link RF}{@code , }{@link F}{@code >}。
-     * @throws IllegalArgumentException 当 {@code retriever} 为 {@code null} 时。
+     * @throws IllegalArgumentException 当 {@code TextRetriever} 为 {@code null} 时。
      */
-    public AiState<MessageContent, D, O, RF, F> retrieve(Retriever<O> retriever) {
+    public <R> AiState<R, D, O, RF, F> retrieve(Retriever<O, R> retriever) {
         Validation.notNull(retriever, "Retriever operator cannot be null.");
         return new AiState<>(new State<>(this.publisher()
                 .map(input -> retriever.invoke(input.getData()), null).displayAs("retrieve"),

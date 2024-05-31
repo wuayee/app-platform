@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class MultiSourceRetriever implements Retriever<String> {
+public class MultiSourceRetriever implements Retriever<String, String> {
 
     private final Integer topK;
     private final List<String> collectionNames;
@@ -39,7 +39,7 @@ public class MultiSourceRetriever implements Retriever<String> {
     }
 
     @Override
-    public MessageContent invoke(String arg) {
+    public String invoke(String arg) {
         List<String> searchRes = new ArrayList<>();
         StringBuffer str = new StringBuffer();
         EmbedRequest request = new EmbedRequest();
@@ -65,7 +65,7 @@ public class MultiSourceRetriever implements Retriever<String> {
         }
 
         searchRes.forEach((chunk) -> str.append(chunk).append(";"));
-        return Contents.from(str.toString());
+        return str.toString();
     }
 
     private String constructSqlQuery(List<Pair<Map<String, Object>, Float>> dataInMilvus) {

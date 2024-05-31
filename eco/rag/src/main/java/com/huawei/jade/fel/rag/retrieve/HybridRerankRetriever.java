@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  *
  * @since 2024-05-07
  */
-public class HybridRerankRetriever implements Retriever<String> {
+public class HybridRerankRetriever implements Retriever<String, Chunks> {
     private List<VectorIndex> indexers;
     private HybridRerank reranker;
     private int topK;

@@ -7,6 +7,7 @@ package com.huawei.jade.fel.chat;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.content.Media;
+import com.huawei.jade.fel.chat.content.MessageContent;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
  * @author 易文渊
  * @since 2024-04-16
  */
-public interface Prompt {
+public interface Prompt extends MessageContent {
     /**
      * 获取输入的聊天消息列表。
      *

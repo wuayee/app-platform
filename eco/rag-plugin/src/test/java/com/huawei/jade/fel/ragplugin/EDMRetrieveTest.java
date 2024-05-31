@@ -31,6 +31,6 @@ public class EDMRetrieveTest {
         }
 
         MultiSourceRetriever retriever = new MultiSourceRetriever(Arrays.asList("KnowledgeBase_96"), 1, milvusConn, jdbcConn);
-        System.out.println(retriever.invoke("山东代表处").text());
+        System.out.println(retriever.invoke("山东代表处"));
     }
 }

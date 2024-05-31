@@ -4,24 +4,19 @@
 
 package com.huawei.jade.fel.rag.common;
 
-import com.huawei.jade.fel.chat.content.Media;
-import com.huawei.jade.fel.chat.content.MessageContent;
-
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Chunk列表的封装。
- * <p>实现 {@link MessageContent} 接口。</p>
  *
  * @since 2024-05-07
  */
-public class Chunks implements MessageContent {
+public class Chunks {
     @Getter
     private List<Chunk> chunks;
 
@@ -53,15 +48,9 @@ public class Chunks implements MessageContent {
         return this.chunks.iterator();
     }
 
-    @Override
     public String text() {
         return chunks.stream()
                 .map(chunk -> chunk.getContent())
                 .collect(Collectors.joining(System.lineSeparator()));
-    }
-
-    @Override
-    public List<Media> medias() {
-        return Collections.emptyList();
     }
 }
