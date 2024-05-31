@@ -53,7 +53,7 @@ const DetailTable = ({ rawData }: props) => {
 
   const dataOpera = async (data: any, index: number) => {
     try {
-      if(index<0) {
+      if (index < 0) {
         // 创建
         await createDataSetListData({
           datasetId: rawData.id,
@@ -72,13 +72,13 @@ const DetailTable = ({ rawData }: props) => {
       refresh();
       setItemOpen(false);
     } catch (error) {
-      
+
     }
 
   }
 
   const callback = (operate: string, data: any, index: number) => {
-    if(operate === 'submit') {
+    if (operate === 'submit') {
       dataOpera(data, index)
 
     } else {
@@ -88,7 +88,7 @@ const DetailTable = ({ rawData }: props) => {
 
   // 总条数
   const [total, setTotal] = useState(0);
-  
+
   // 分页
   const [page, setPage] = useState(1);
 
@@ -97,34 +97,32 @@ const DetailTable = ({ rawData }: props) => {
 
   // 分页变化
   const paginationChange = (curPage: number, curPageSize: number) => {
-    if(page!==curPage) {
+    if (page !== curPage) {
       setPage(curPage);
     }
-    if(pageSize!=curPageSize) {
+    if (pageSize != curPageSize) {
       setPageSize(curPageSize);
     }
   }
 
   useEffect(() => {
-
     //获取测试集输入输出数据TODO
-      refresh()
+    refresh();
   }, [page, pageSize]);
 
-  const refresh = async ()=> {
+  const refresh = async () => {
     try {
       const res = await getDataSetListById({
         datasetId: rawData.id,
         pageIndex: page,
         pageSize: pageSize
-      })
-
+      });
       const data = res?.data?.data || [];
       const total = res?.data?.total || 0;
       setTotal(total);
       setItems([...data])
     } catch (error) {
-      
+
     }
   }
 
@@ -179,19 +177,19 @@ const DetailTable = ({ rawData }: props) => {
     <>
 
 
-        <Button
-          type='primary'
-          style={{ minWidth: '96px', margin: '8px 0 16px' }}
-          onClick={createItemDrawer}
-        >创建</Button>
+      <Button
+        type='primary'
+        style={{ minWidth: '96px', margin: '8px 0 16px' }}
+        onClick={createItemDrawer}
+      >创建</Button>
 
-        <Table
-          dataSource={items}
-          columns={columns}
-          pagination={false}
-        />
-        <Pagination total = {total} current={page} onChange={paginationChange} pageSize={pageSize}/>
-        <CreateItem params={params} visible={itemOpen} callback={callback} />
+      <Table
+        dataSource={items}
+        columns={columns}
+        pagination={false}
+      />
+      <Pagination total={total} current={page} onChange={paginationChange} pageSize={pageSize} />
+      <CreateItem params={params} visible={itemOpen} callback={callback} />
     </>
   )
 }

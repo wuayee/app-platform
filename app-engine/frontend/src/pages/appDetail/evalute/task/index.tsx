@@ -77,7 +77,7 @@ const EvaluateTask = () => {
       appId: searchParams.appId,
       pageSize: pagination.pageSize,
       version: filters?.version?.[0],
-      statusList:filters?.status,
+      statusList: filters?.status,
     };
 
     setSearchParams(paramBody);
@@ -133,15 +133,15 @@ const EvaluateTask = () => {
           text: '未开始',
           value: TaskStatusE.NOT_START,
         },
-        
+
       ],
       render: (value, record) => taskStatusMap[value],
     },
     {
-      title: '任务进度',
+      title: '通过率',
       dataIndex: 'passRate',
       key: 'passRate',
-      render: (value, record) => <Progress percent={value} size='small' />,
+      render: (value, record) => <Progress percent={Math.floor(value * 100)} size='small' />,
     },
     {
       title: '操作',
@@ -159,7 +159,7 @@ const EvaluateTask = () => {
 
           <a
             onClick={(e) => {
-              currentRow.current=record;
+              currentRow.current = record;
               setOpenSignal(e.timeStamp);
             }}
           >
@@ -187,10 +187,10 @@ const EvaluateTask = () => {
           defaultCurrent: 1,
           showSizeChanger: true,
           showTotal: () => <div>共{total}条</div>,
-          onChange: (pageNo, pageSize) => {},
+          onChange: (pageNo, pageSize) => { },
         }}
       />
-      <EvaluationDrawer openSignal={openSignal} taskRecord={currentRow.current}/>
+      <EvaluationDrawer openSignal={openSignal} taskRecord={currentRow.current} />
     </div>
   );
 };

@@ -139,7 +139,7 @@ const TextSplitClear = ({ form }: props) => {
         {textSplit === 'TOKEN' ? (
           <>
             <Form.Item
-              label='设置分段数'
+              label='设置分片长度'
               rules={[{ required: true, message: '输入不能为空' }]}
               name='chunkSize'
               style={{
