@@ -131,7 +131,6 @@ const AddFlow = (props) => {
       agent.onChange(() => {
         handleSearch();
       })
-      agent.resetStatus();
     })
     getAddFlowConfig(tenantId).then(res => {
       if (res.code === 0) {
