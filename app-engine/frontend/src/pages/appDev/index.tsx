@@ -180,7 +180,7 @@ const AppDev: React.FC = () => {
         <div className='card_list'>
           {appData.map((item: any) => (
             <div className='card_box' key={item.id} onClick={(e) => clickCard(item, e)}>
-              <AppCard cardInfo={item} clickMore={clickMore} />
+              <AppCard cardInfo={item} clickMore={clickMore} showOptions={false}/>
             </div>
           ))}
         </div>
