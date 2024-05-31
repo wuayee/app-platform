@@ -14,6 +14,9 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 /**
  * 网关路由配置。
  *
@@ -31,12 +34,28 @@ public class GatewayRouteConfig {
      */
     @Bean
     public RouteLocator configDefaultRoutes(RouteLocatorBuilder builder) {
-        String extraGatewayUrl = System.getenv("EXTRA_GATEWAY_URL");
         RouteLocatorBuilder.Builder routeLocatorBuilder = builder.routes();
-        if (extraGatewayUrl != null && !extraGatewayUrl.isEmpty()) {
+        addExtraGatewayRoute(routeLocatorBuilder);
+        addModelManagerRoute(routeLocatorBuilder);
+        return routeLocatorBuilder.build();
+    }
+
+    private void addExtraGatewayRoute(RouteLocatorBuilder.Builder routeLocatorBuilder) {
+        String extraGatewayUrl = System.getenv("EXTRA_GATEWAY_URL");
+        if (extraGatewayUrl == null || extraGatewayUrl.isEmpty()) {
+            log.info("EXTRA_GATEWAY_URL is empty");
+            return;
+        }
+
+        log.info("EXTRA_GATEWAY_URL=" + extraGatewayUrl);
+        try {
+            String path = new URI(extraGatewayUrl).getRawPath();
+            if (path == null || path.isEmpty()) {
+                return;
+            }
             RewritePathGatewayFilterFactory.Config config = new RewritePathGatewayFilterFactory.Config();
             config.setRegexp("/(?<segment>/?.*)");
-            config.setReplacement("/model-gateway/${segment}");
+            config.setReplacement(path + "/${segment}");
             routeLocatorBuilder.route(
                     "extra-gateway",
                     r -> r.order(1) // 设置为低优先级，其余路由不匹配时才使用内部测试地址
@@ -44,10 +63,12 @@ public class GatewayRouteConfig {
                             .filters(f -> f.filter(new RewritePathGatewayFilterFactory().apply(config)))
                             .uri(extraGatewayUrl)
             );
-        } else {
-            log.info("EXTRA_GATEWAY_URL is empty");
+        } catch (URISyntaxException e) {
+            log.error("Parse EXTRA_GATEWAY_URL failed: " + e);
         }
+    }
 
+    private void addModelManagerRoute(RouteLocatorBuilder.Builder routeLocatorBuilder) {
         String modelManagerUrl = System.getenv(ModelGatewayApplication.MODEL_MANAGER_URL);
         if (modelManagerUrl != null && !modelManagerUrl.isEmpty()) {
             routeLocatorBuilder.route(
@@ -61,6 +82,5 @@ public class GatewayRouteConfig {
         } else {
             log.info(ModelGatewayApplication.MODEL_MANAGER_URL + " is empty");
         }
-        return routeLocatorBuilder.build();
     }
 }

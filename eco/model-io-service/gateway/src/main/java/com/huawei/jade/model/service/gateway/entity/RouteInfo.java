@@ -16,7 +16,6 @@ import org.springframework.cloud.gateway.route.RouteDefinition;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,11 +60,23 @@ public class RouteInfo {
 
         if (this.apiKey != null && !this.apiKey.isEmpty()) {
             FilterDefinition filter = new FilterDefinition();
-            filter.setName("AddRequestHeader");
+            filter.setName("ReplaceHeader");
             filter.addArg("name", "Authorization");
             filter.addArg("value", "Bearer " + this.apiKey);
-            routeDefinition.setFilters(Collections.singletonList(filter));
+            routeDefinition.getFilters().add(filter);
             log.info("Set api key=" + this.apiKey + " for " + this.id);
+        }
+
+        if (uri != null) {
+            String uriRawPath = uri.getRawPath();
+            log.info("Build route definition for uri=" + uri + ", path=" + uriRawPath);
+            if (uriRawPath != null) {
+                FilterDefinition rewritePathFilter = new FilterDefinition();
+                rewritePathFilter.setName("RewritePath");
+                rewritePathFilter.addArg("regexp", "/(?<segment>/?.*)");
+                rewritePathFilter.addArg("replacement", uriRawPath + "/${segment}");
+                routeDefinition.getFilters().add(rewritePathFilter);
+            }
         }
         return routeDefinition;
     }
