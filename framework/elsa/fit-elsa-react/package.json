@@ -1,7 +1,7 @@
 {
   "name": "@fit-elsa/elsa-react",
   "private": false,
-  "version": "1.0.0-alpha.24",
+  "version": "1.0.0-alpha.25",
   "type": "module",
   "main": "./build/elsa-react.js",
   "module": "./build/elsa-react.js",
