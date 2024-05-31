@@ -154,15 +154,15 @@ COMMENT ON COLUMN "t_chat_session_task_instance_wide_relationship"."update_at" I
 COMMENT ON COLUMN "t_chat_session_task_instance_wide_relationship"."update_by" IS '更新人';
 
 CREATE TABLE IF NOT EXISTS "t_chat_session" (
-    "chat_id"     VARCHAR(32)  NOT NULL DEFAULT NULL,
-    "app_id"      VARCHAR(32)  NULL     DEFAULT NULL,
-    "app_version" VARCHAR(32)  NULL     DEFAULT NULL,
-    "name"        VARCHAR(32)  NULL     DEFAULT NULL,
+    "chat_id"     VARCHAR(64)  NOT NULL DEFAULT NULL,
+    "app_id"      VARCHAR(64)  NULL     DEFAULT NULL,
+    "app_version" VARCHAR(64)  NULL     DEFAULT NULL,
+    "name"        VARCHAR(64)  NULL     DEFAULT NULL,
     "attributes"  VARCHAR(255) NULL     DEFAULT NULL,
     "create_at"   TIMESTAMP(6) NULL     DEFAULT NULL,
-    "create_by"   VARCHAR(32)  NULL     DEFAULT NULL,
+    "create_by"   VARCHAR(64)  NULL     DEFAULT NULL,
     "update_at"   TIMESTAMP(6) NULL     DEFAULT NULL,
-    "update_by"   VARCHAR(32)  NULL     DEFAULT NULL,
+    "update_by"   VARCHAR(64)  NULL     DEFAULT NULL,
     "status"      INT4         NULL     DEFAULT NULL,
     CONSTRAINT "pk_t_chat_session" PRIMARY KEY("chat_id")
     );
