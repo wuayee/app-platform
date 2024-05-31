@@ -24,19 +24,23 @@ export function deleteAppApi(tenantId,appId) {
  * @property {boolean} isDefault - 是否默认.
  * */ 
 export function collectionApp(data) {
+  data.appId = data.aippId;
   const url = `${COLLECT_URL}/usr/collection`
   return post(url, data);
 }
 
 /**
  * @description 更新收藏
- * @param {any} isDefault - 是否默认.
- * @property {string} id - 收藏的id.
+ * @param {any} defaultApp - appid. 取消收藏设置为小海的id
+ * @property {string} userName - 用户名.
  * 
  * */ 
-export function updateCollectionApp(id, isDefault) {
-  const url = `${COLLECT_URL}/usr/collection/${id}`
-  return patch(url, isDefault);
+export function updateCollectionApp(userName, defaultApp) {
+  const url = `${COLLECT_URL}/usr/info`
+  return patch(url, {
+    userName,
+    defaultApp,
+  });
 }
 
 /**
@@ -49,7 +53,7 @@ export function getCollectionCountApp(id) {
 }
 
 /**
- * @description 查询用户收藏的应用
+ * @description 查询用户收藏的应用详情
  * @property {string} id - 用户id.
  * */ 
 export function getUserCollection(id) {
@@ -57,12 +61,22 @@ export function getUserCollection(id) {
   return get(url);
 }
 
+
+/**
+ * @description 查询用户收藏的应用
+ * @property {string} id - 用户id.
+ * */ 
+export function getUserCollectionNoDesc(id) {
+  const url = `${COLLECT_URL}/usr/collection/${id}`
+  return get(url);
+}
 /**
  * @description 取消收藏
  * @property {string} usrInfo - 用户id.
  * @property {string} aippId - 用户appId.
  * */ 
 export function cancleUserCollection(data) {
-  const url = `${COLLECT_URL}/usr/collection`
+  data.appId = data.aippId;
+  const url = `${COLLECT_URL}/usr/collection`;
   return del(url, data);
 }

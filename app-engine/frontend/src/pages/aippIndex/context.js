@@ -10,9 +10,19 @@ export const AippContext = createContext({
   chatRunning: false,
   updateAippCallBack: null,
   showHistory: true,
-})
+  setChatRunning: '',
+  chatList: [],
+  setChatList: '',
+  chatId: '',
+  setChatId: '',
+  timerRef: '',
+  requestLoading: '',
+  setRequestLoading: '',
+  clearChat: '',
+  listRef: '',
+});
 export const ChatContext = createContext({
   setShareClass: null,
   setInspiration: null,
-  checkCallBack: null
+  checkCallBack: null,
 });

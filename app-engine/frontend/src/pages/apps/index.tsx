@@ -6,7 +6,7 @@ import AppCard from '../../components/appCard';
 import './index.scoped.scss';
 import { debounce } from '../../shared/utils/common';
 import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
-import { deleteAppApi, getUserCollection } from '../../shared/http/appDev';
+import { deleteAppApi, getUserCollection, getUserCollectionNoDesc } from '../../shared/http/appDev';
 import { setCollectionValue } from '../../store/collection/collection';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
 
@@ -113,14 +113,9 @@ const Apps: React.FC = () => {
 
   // 获取用户收藏列表
   const getUserCollectionList = async () => {
-    const res = await getUserCollection(getLoaclUser());
-    const defaultData = res?.data?.defaultApp || null;
-    const collectionList: any[] = res?.data?.collectionPoList || [];
-    collectionList.unshift(defaultData);
-    const collectMap = (collectionList ?? []).reduce((prev: any, next: any)=> {
-      if(next?.id) {
-        prev[next.aippId] = true;
-      }
+    const res = await getUserCollectionNoDesc(getLoaclUser());
+    const collectMap = (res?.data ?? []).reduce((prev: any, next: any)=> {
+        prev[next.appId] = true;
       return prev
     }, {})
     dispatch(setCollectionValue(collectMap))

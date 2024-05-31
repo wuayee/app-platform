@@ -28,8 +28,7 @@ const EditorBtnHome = (props) => {
   const [ appIcon, setAppIcon ] = useState(knowledgeBase);
   const [ isAt, setIsAt ] = useState(false);
   let modalRef = useRef(null);
-  const navigate = useNavigate();
-
+  const {setChatList,setChatId,listRef,setChatRunning,setClearChat} = useContext(AippContext);
   useEffect(() => {
     document.body.addEventListener('click', () => {
       setShowAt(false);
@@ -40,13 +39,9 @@ const EditorBtnHome = (props) => {
     setAppName(aippInfo.name || '应用');
   }, [props]);
 
-  // 新聊天
-  const handleOk = () => {
-    if (chatRunning) {
-      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
-      return;
-    }
-    clear('all');
+  // 清空聊天
+  const handleOk = (time) => {
+    setClearChat(time);
     setIsModalOpen(false);
   };
   // @ 应用点击
@@ -83,8 +78,6 @@ const EditorBtnHome = (props) => {
   }
   // 开始聊天
   const chatClick = (item) => {
-    console.log(item);
-    navigate(`/app-develop/${tenantId}/chat/28be0a14e1504e218917f31db1396122`)
     setOpenStar(false);
   }
   // 多模态上传文件
@@ -142,9 +135,17 @@ const EditorBtnHome = (props) => {
           ) : 
           (
             <div className="inner-item">
-              <ClearChatIcon style={{ marginTop: '6px' }} onClick={clearAllModal} />
-              <HistoryIcon  onClick={openHistory}/>
-              <span className="item-clear" onClick={() => clear()}>+ 新聊天</span>
+              <div><ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} /></div>
+              <HistoryIcon  onClick={() => setOpen(true)}/>
+              <span className="item-clear" onClick={() => {
+                setChatRunning(false);
+                setChatId(null);
+                setChatList(() => {
+                  let arr = [];
+                  listRef.current = arr;
+                  return arr;
+                });
+              }}>+ 新聊天</span>
             </div>
           )
         }
@@ -154,7 +155,7 @@ const EditorBtnHome = (props) => {
       <Modal 
         title="确认清空当前聊天" 
         open={isModalOpen} 
-        onOk={handleOk} 
+        onOk={(e)=>handleOk(e.timeStamp)} 
         onCancel={() => setIsModalOpen(false)} 
         centered>
         <span>清空后当前窗口聊天内容将不会被系统保存。</span>

@@ -24,8 +24,17 @@ const AippIndex = () => {
   const [ prompValue, setPrompValue ] = useState({});
   const [ refreshPrompValue, setRefreshPrompValue ] = useState(false);
   const [ reloadInspiration, setReloadInspiration ] = useState('');
+  const [ isTested, setIsTested ] = useState(false);
+  const [ testStatus, setTestStatus ] = useState('Running');
+  const [ isTesting, setIsTesting ] = useState(false);
+  const [ testTime, setTestTime ] = useState(0);
+  const [chatList, setChatList] = useState([]);
   const aippRef = useRef(null);
   const inspirationRefresh = useRef(false);
+  let addFlowRef = React.createRef();
+  const listRef = useRef(null);
+  const [chatId,setChatId]=useState(null);
+  const[clearChat,setClearChat] =useState(null);
 
   const elsaChange = () => {
     setShowElsa(!showElsa);
@@ -43,6 +52,7 @@ const AippIndex = () => {
       const res = await getAippInfo(tenantId, appId);
       if (res.code === 0) {
         setAippInfo(() => {
+          res.data.notShowHistory = true;
           aippRef.current = JSON.parse(JSON.stringify(res.data));
           return res.data
         });
@@ -110,7 +120,16 @@ const AippIndex = () => {
     refreshPrompValue,
     setRefreshPrompValue,
     chatRunning,
-    updateAippCallBack
+    updateAippCallBack,
+    chatList,
+    setChatList,
+    listRef,
+    chatRunning,
+    setChatRunning,
+    chatId,
+    setChatId,
+    clearChat,
+    setClearChat
   };
   return (
     <>

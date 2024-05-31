@@ -28,13 +28,10 @@ public class UsrAppInfoAndCollectionPo {
     private Long id;
 
     @Property(description = "app id")
-    private String aippId;
+    private String appId;
 
     @Property(description = "usr info")
     private String usrInfo;
-
-    @Property(description = "isDefault")
-    private Boolean isDefault;
 
     @Property(description = "name")
     private String name;

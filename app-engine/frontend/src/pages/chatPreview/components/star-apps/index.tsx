@@ -30,19 +30,11 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
   const navigate = useNavigate();
   const [apps, setApps] = useState<any[]>([]);
   const clickMap: any = {
+
+    // 设为默认
     2: async (item: AnyAction) => {
       try {
-        if(item?.id) {
-          await updateCollectionApp(item.id, {
-            isDefault: true
-          })
-        } else {
-          await collectionApp({
-            aippId: item.aippId,
-            usrInfo: getLoaclUser(),
-            isDefault: true,
-          });
-        }
+        await updateCollectionApp(getLoaclUser(), item.appId) 
         getUserCollectionList();
       } catch (error) {
         
@@ -50,11 +42,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
     },
     3: async (item: AnyAction) => {
       try {
-        if(item?.id) {
-          await updateCollectionApp(item.id, {
-            isDefault: false
-          })
-        } 
+        await updateCollectionApp(getLoaclUser(), '3a617d8aeb1d41a9ad7453f2f0f70d61')
         getUserCollectionList();
       } catch (error) {
         
@@ -83,10 +71,10 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
       key: "3",
       label: "取消默认",
     },
-    {
-      key: "1",
-      label: "取消收藏",
-    },
+    // {
+    //   key: "1",
+    //   label: "取消收藏",
+    // },
   ];
 
   const count = useAppSelector((state: any) => state.collectionStore.value);
@@ -104,7 +92,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
     const defaultData = remoteData?.data?.defaultApp || null;
 
     // 设置默认应用
-    dispatch(setDefaultApp(defaultData?.aippId || ''))
+    // dispatch(setDefaultApp(defaultData?.appId || ''))
     const collectionList: any[] = remoteData?.data?.collectionPoList || [];
     collectionList.unshift(defaultData);
     const data = collectionList.filter(item=> item);
@@ -140,7 +128,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
 
   // 开始聊天
   const startChat = (item: any) => {
-    dispatch(setDefaultApp(item?.aippId || ''));
+    dispatch(setDefaultApp(item?.appId || ''));
     // navigate(`/app/${tenantId}/chat/${item.aippId}`);
   }
 
@@ -197,7 +185,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
                 <Avatar size={32} src={app.authorAvatar} />
                 <span className="text">由{app.author}创建</span>
               </div>
-              <Dropdown menu={{ items, onClick: (info)=> {
+              <Dropdown menu={{ items: [items[index>0?0:1]], onClick: (info)=> {
                 clickOpera(info, app)
               } }} trigger={["click"]} >
                 <EllipsisOutlined className="app-item-footer-more" />
