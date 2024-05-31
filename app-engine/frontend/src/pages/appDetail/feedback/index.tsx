@@ -76,8 +76,6 @@ const FeedBack = () => {
     return { ...filterData, ...sorterData };
   }
   const handleChange: void = (pagination, filters, sorter) => {
-    console.log(filters, 22)
-    console.log(sorter, 33)
     const search = buildSearchParms(filters, sorter)
     if (searchParams?.startTime) {
       setSearchParams({ ...search, startTime: searchParams?.startTime || null, endTime: searchParams?.endTime || null });
