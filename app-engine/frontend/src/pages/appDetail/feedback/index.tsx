@@ -11,9 +11,9 @@ import Pagination from '../../../components/pagination';
 import { useParams } from 'react-router-dom';
 
 const feedbackIcon = {
-  0: <AppIcons.UnFeedbackIcon style={{ verticalAlign: 'text-bottom' }} />,
-  1: <AppIcons.LikeIcon style={{ verticalAlign: 'text-bottom' }} />,
-  2: <AppIcons.DisLikeIcon style={{ verticalAlign: 'text-bottom' }} />,
+  '-1': <AppIcons.UnFeedbackIcon style={{ verticalAlign: 'text-bottom' }} />,
+  '0': <AppIcons.LikeIcon style={{ verticalAlign: 'text-bottom' }} />,
+  '1': <AppIcons.DisLikeIcon style={{ verticalAlign: 'text-bottom' }} />,
 };
 
 const basicInfoCols = [
@@ -47,29 +47,43 @@ const basicInfoCols = [
 const FeedBack = () => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<any[]>([]);
-  const [searchParams,setSearchParams]=useState({});
+  const [searchParams, setSearchParams] = useState({});
 
-  const { tenantId, appId} = useParams();
+  const { tenantId, appId } = useParams();
   const currentRow = useRef(null);
   const refreshData = () => {
-    
+
   };
   useEffect(() => {
     refreshData();
   }, [searchParams]);
 
   // 搜索数据
-  const buildSearchParms = (filters: any, sorter) => {
+  const buildSearchParms = (filters: any, sorter: any) => {
     const filterData: any = {};
-    Object.keys(filters).forEach(item=> {
+    Object.keys(filters).forEach(item => {
       filterData[item] = filters[item]?.[0] ?? ''
     });
-
-    return filterData;
+    const sorterData: any = {};
+    if (sorter.columnKey === 'createTime') {
+      sorterData['isSortByCreateTime'] = true;
+      sorterData['isSortByResponseTime'] = false;
+    } else {
+      sorterData['isSortByCreateTime'] = false;
+      sorterData['isSortByResponseTime'] = true;
+    }
+    sorterData['orderDirection'] = sorter.order === 'ascend' ? 'ASC' : sorter.order === 'descend' ? 'DESC' : ''
+    return { ...filterData, ...sorterData };
   }
   const handleChange: void = (pagination, filters, sorter) => {
-    const serach = buildSearchParms(filters, sorter)
-    setSearchParams({...serach, startTime:searchParams?.startTime || null, endTime: searchParams?.endTime || null});
+    console.log(filters, 22)
+    console.log(sorter, 33)
+    const search = buildSearchParms(filters, sorter)
+    if (searchParams?.startTime) {
+      setSearchParams({ ...search, startTime: searchParams?.startTime || null, endTime: searchParams?.endTime || null });
+    } else {
+      setSearchParams({ ...search });
+    }
     setPage(1);
   };
   const columns = [
@@ -94,11 +108,13 @@ const FeedBack = () => {
       dataIndex: 'createTime',
       key: 'createTime',
       width: 200,
+      sorter: (a: any, b: any) => Date.parse(a.createTime.replace(/-/g, "/")) - Date.parse(b.createTime.replace(/-/g, "/")),
     },
     {
       title: '响应速度',
       dataIndex: 'responseTime',
       key: 'responseTime',
+      sorter: (a: any, b: any) => a.responseTime - b.responseTime,
       render: (value) => <>
         {value}ms
       </>
@@ -107,6 +123,7 @@ const FeedBack = () => {
       title: '用户',
       dataIndex: 'createUser',
       key: 'createUser',
+      ...TableTextSearch('createUser'),
     },
     // {
     //   title: '部门',
@@ -151,15 +168,15 @@ const FeedBack = () => {
 
   // 分页变化
   const paginationChange = (curPage: number, curPageSize: number) => {
-    if(page!==curPage) {
+    if (page !== curPage) {
       setPage(curPage);
     }
-    if(pageSize!=curPageSize) {
+    if (pageSize != curPageSize) {
       setPageSize(curPageSize);
     }
   }
 
-  useEffect(()=> {
+  useEffect(() => {
     getFeedBack()
   }, [page, pageSize, searchParams])
 
@@ -174,7 +191,7 @@ const FeedBack = () => {
       });
       setTotal(res?.total || 0);
 
-      const resdata: any[] = (res?.data || []).map((item: any)=> ({
+      const resdata: any[] = (res?.data || []).map((item: any) => ({
         ...item,
         id: item.id,
         question: item.question,
@@ -186,7 +203,7 @@ const FeedBack = () => {
       }));
       setData([...resdata]);
     } catch (error) {
-      
+
     }
   }
 
@@ -199,9 +216,9 @@ const FeedBack = () => {
         appId: appId,
         ...searchParams
       });
-      
+
     } catch (error) {
-      
+
     }
   }
 
@@ -211,7 +228,7 @@ const FeedBack = () => {
         <DatePicker.RangePicker
           showTime
           onChange={(_date, dateString) => {
-            setSearchParams({...searchParams,startTime:dateString[0], endTime: dateString[1]})
+            setSearchParams({ ...searchParams, startTime: dateString[0] || null, endTime: dateString[1] || null })
             setPage(1);
           }}
         />
@@ -225,7 +242,7 @@ const FeedBack = () => {
         scroll={{ y: 'calc(100vh - 320px)' }}
         pagination={false}
       />
-      <Pagination total = {total} current={page} onChange={paginationChange} pageSize={pageSize}/>
+      <Pagination total={total} current={page} onChange={paginationChange} pageSize={pageSize} />
       <Drawer
         title='反馈详情'
         placement='right'

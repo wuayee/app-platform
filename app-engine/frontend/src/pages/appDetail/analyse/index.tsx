@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import * as echarts from 'echarts';
 import './style.scoped.scss';
-import { float } from 'html2canvas/dist/types/css/property-descriptors/float';
 import { Card, Select } from 'antd';
 import { getAnalysisData } from '../../../shared/http/apps';
 import { useParams } from 'react-router-dom';
 
 const timeOption = [
-  { value: 'YESTERDAY', label: '过去1天' },
-  { value: 'LAST_7_DAYS', label: '过去7天 ' },
-  { value: 'LAST_MONTH', label: '过去1月' },
-  // { value: '4', label: '过去半年' },
+  { value: '0', label: '今天' },
+  { value: '1', label: '昨天' },
+  { value: '2', label: '过去7天 ' },
+  { value: '3', label: '过去30天' },
+  { value: '4', label: '本周' },
+  { value: '5', label: '上周' },
+  { value: '6', label: '本月' },
+  { value: '7', label: '上月' },
 ];
 
 const top5UserOption = {
@@ -98,6 +101,9 @@ const speedOption = {
 };
 
 const tradeOption = {
+  tooltip: {
+    trigger: 'item'
+  },
   xAxis: {
     type: 'category',
     boundaryGap: false,
@@ -132,9 +138,9 @@ const AnalyseCard = ({ info }) => (
   </Card>
 );
 const ChartCard = ({ info }: any) => (
-  <Card className='chart-card' style={{ 
-    height: info.height + 50, 
-    width: `${info?.width ?? '49.5%'}` 
+  <Card className='chart-card' style={{
+    height: info.height + 50,
+    width: `${info?.width ?? '49.5%'}`
   }}>
     <div className='title'>{info.title}</div>
     <div id={info.id} className='chart' style={{ height: info.height }} />
@@ -142,13 +148,14 @@ const ChartCard = ({ info }: any) => (
 );
 
 const AppAnalyse: React.FC = () => {
-  const [graphData,setgraphData]=useState({allRequest:{},allActive:{},avgSpeed:{}});
-  const [time, setTime]=useState('LAST_MONTH');
-  const [total, setTotal]=useState(0);
+  const [graphData, setgraphData] = useState({ allRequest: {}, allActive: {}, avgSpeed: {} });
+  const [time, setTime] = useState('0');
+  const [total, setTotal] = useState(0);
+  const [speedList, setSpeedList] = useState([]);
 
-  const { tenantId, appId} = useParams();
+  const { tenantId, appId } = useParams();
 
-  useEffect(() => {
+  const initData = () => {
     const tradeChart = echarts.init(document.getElementById('trade'));
     const speedChart = echarts.init(document.getElementById('speed'));
     const top5UserChart = echarts.init(document.getElementById('top5User'));
@@ -158,33 +165,41 @@ const AppAnalyse: React.FC = () => {
       speedChart.resize();
       top5UserChart.resize();
     });
+  }
+
+  useEffect(() => {
+    initData();
+    const timer = setInterval(() => {
+      initData()
+    }, 60000);
+    return () => clearInterval(timer);
   }, [time]);
 
 
   // 设置Tab数据
   const setTabData = (metrics: any) => {
-    const allRequest={title:'总请求数',num:metrics?.total_requests?.value ?? 0 ,unit:'个',sign:'down',percent:2};
-    const allActive={title:'总活跃用户数',num:metrics?.total_active_users?.value ?? 0,unit:'个',sign:'up',percent:2};
-    const avgSpeed={title:'平均响应速度',num:metrics?.average_response_time?.value ?? 0,unit:'ms',sign:'down',percent:2};
-    setgraphData({allRequest,allActive,avgSpeed})
+    const allRequest = { title: '总请求数', num: metrics?.total_requests?.value ?? 0, unit: '个', sign: 'down', percent: 2 };
+    const allActive = { title: '总活跃用户数', num: metrics?.total_active_users?.value ?? 0, unit: '个', sign: 'up', percent: 2 };
+    const avgSpeed = { title: '平均响应速度', num: metrics?.average_response_time?.value ?? 0, unit: 'ms', sign: 'down', percent: 2 };
+    setgraphData({ allRequest, allActive, avgSpeed })
   }
 
   // 设置Top5用户数据
   const setTop5UserData = (topUsers: any, top5UserChart) => {
 
-    const x = (topUsers?? []).map(user=> (user?.createUser || ''));
-    const y = (topUsers?? []).map(user=> (user?.accessCount || 0));
+    const x = (topUsers ?? []).map(user => (user?.createUser || ''));
+    const y = (topUsers ?? []).map(user => (user?.accessCount || 0));
     top5UserOption.xAxis.data = x;
-    top5UserOption.series[0].data= y;
+    top5UserOption.series[0].data = y;
     top5UserChart.setOption(top5UserOption);
   }
 
   // 设置平均响应速度
   const setAvargeSpeed = (avgResponseRange, speedChart) => {
-    let totalData =0;
+    let totalData = 0;
 
-    const data = Object.keys(avgResponseRange || {}).map(item=> {
-      totalData +=  avgResponseRange[item]?.count || 0;
+    const data = Object.keys(avgResponseRange || {}).map(item => {
+      totalData += avgResponseRange[item]?.count || 0;
       return ({
         value: avgResponseRange[item]?.count || 0,
         name: avgResponseRange[item]?.range || ''
@@ -197,8 +212,8 @@ const AppAnalyse: React.FC = () => {
 
   // 设置用户访问趋势
   const setUserTrade = (userAccessData, speedChart) => {
-    const xData = (userAccessData || []).map(item=> (item.time_unit))
-    const xValue = (userAccessData || []).map(item=> (item.access_count))
+    const xData = (userAccessData || []).map(item => (item.time_unit))
+    const xValue = (userAccessData || []).map(item => (item.access_count))
     tradeOption.xAxis.data = xData;
     tradeOption.series[0].data = xValue;
     speedChart.setOption(tradeOption);
@@ -215,8 +230,9 @@ const AppAnalyse: React.FC = () => {
       setTop5UserData(res?.topUsers, top5UserChart);
       setAvargeSpeed(res?.avgResponseRange, speedChart);
       setUserTrade(res?.userAccessData, tradeChart)
+      setSpeedList(Object.values(res?.avgResponseRange));
     } catch (error) {
-      
+
     }
   }
 
@@ -234,9 +250,9 @@ const AppAnalyse: React.FC = () => {
         />
       </div>
       <div className='cards'>
-        <AnalyseCard info={graphData.allRequest}/>
-        <AnalyseCard info={graphData.allActive}/>
-        <AnalyseCard info={graphData.avgSpeed}/>
+        <AnalyseCard info={graphData.allRequest} />
+        <AnalyseCard info={graphData.allActive} />
+        <AnalyseCard info={graphData.avgSpeed} />
       </div>
       <div className='chart-cards'>
         <ChartCard info={{ id: 'top5User', title: 'Top5用户', height: 300 }} />
@@ -246,15 +262,25 @@ const AppAnalyse: React.FC = () => {
             <div id='speed' style={{ width: 600, height: 250 }} />
             <div className='speed-number'>
               <div className='number'>{total}</div>
-              <div>数据条款</div>
+              <div>数据条数</div>
             </div>
           </div>
+          <div style={{
+            margin: '-169px 600px'
+          }}>{
+              speedList.map(item => {
+                return (<div style={{
+                  marginBottom: 8,
+                  fontSize: 12
+                }}>{item.count}</div>)
+              })
+            }</div>
         </Card>
       </div>
       <div className='chart-cards' style={{
         width: '100%'
       }}>
-        <ChartCard info={{ id: 'trade', height: 350,title:'用户访趋势', width:'100%'  }} />
+        <ChartCard info={{ id: 'trade', height: 350, title: '用户访趋势', width: '100%' }} />
         {/* <ChartCard info={{ id: 'top5Department', title: 'Top5部门', height: 300 }} /> */}
       </div>
     </div>

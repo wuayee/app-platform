@@ -47,8 +47,8 @@
   }
   
   .speed-number {
-    position: fixed;
-    margin: 70px 0 0 270px;
+    position: relative;
+    margin: 70px 0 0 -325px;
     .number {
       font-size: 40px;
       font-weight: 600;
