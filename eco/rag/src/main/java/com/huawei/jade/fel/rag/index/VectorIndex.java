@@ -6,7 +6,7 @@ package com.huawei.jade.fel.rag.index;
 
 import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.jade.fel.core.retriever.Indexer;
-import com.huawei.jade.fel.rag.common.Chunk;
+import com.huawei.jade.fel.rag.Chunk;
 import com.huawei.jade.fel.rag.common.EmbeddingModel;
 import com.huawei.jade.fel.rag.store.VectorStore;
 import com.huawei.jade.fel.rag.store.query.Expression;

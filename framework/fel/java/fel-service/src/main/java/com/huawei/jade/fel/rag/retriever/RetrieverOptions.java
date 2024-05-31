@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RetrieverOptions {
+    private String embeddingModelUrl;
     private String type;
     private Integer topK;
     private Float scoreThreshold;

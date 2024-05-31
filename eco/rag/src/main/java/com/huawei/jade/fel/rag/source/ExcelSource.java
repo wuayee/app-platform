@@ -6,7 +6,7 @@ package com.huawei.jade.fel.rag.source;
 
 import com.huawei.fitframework.log.Logger;
 import com.huawei.jade.fel.engine.operators.sources.Source;
-import com.huawei.jade.fel.rag.common.Document;
+import com.huawei.jade.fel.rag.Document;
 import com.huawei.jade.fel.rag.common.IdGenerator;
 
 import lombok.Getter;
@@ -73,13 +73,14 @@ public class ExcelSource extends Source<List<Document>> {
     }
 
     private void normalExtract(Integer headRow, Integer dataRow, Integer rowNum, Sheet sheet) {
-        Integer readNum = rowNum == -1 ? sheet.getPhysicalNumberOfRows() : rowNum;
+        Integer endRow = Math.min(rowNum == -1 ? sheet.getPhysicalNumberOfRows() : (dataRow + rowNum),
+                sheet.getPhysicalNumberOfRows());
         int colNum = sheet.getRow(0).getPhysicalNumberOfCells();
 
         sheet.getRow(headRow).forEach((cell) -> {
             titleName.add(cell.getStringCellValue());
         });
-        for (Integer rowNo = dataRow; rowNo < readNum; rowNo++) {
+        for (Integer rowNo = dataRow; rowNo < endRow; rowNo++) {
             List<String> rowContent = new ArrayList<>();
             Row row = sheet.getRow(rowNo);
             if (row == null) {

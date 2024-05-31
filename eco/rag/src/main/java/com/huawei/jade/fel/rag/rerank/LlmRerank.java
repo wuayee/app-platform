@@ -12,8 +12,8 @@ import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.operators.models.ChatBlockModel;
 import com.huawei.jade.fel.engine.operators.prompts.Prompts;
-import com.huawei.jade.fel.rag.common.Chunk;
-import com.huawei.jade.fel.rag.common.Chunks;
+import com.huawei.jade.fel.rag.Chunk;
+import com.huawei.jade.fel.rag.Chunks;
 
 import java.util.ArrayList;
 import java.util.List;

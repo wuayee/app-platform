@@ -1,7 +1,5 @@
 package com.huawei.jade.fel.rag.retrieve;
 
-import com.huawei.jade.fel.chat.content.Contents;
-import com.huawei.jade.fel.chat.content.MessageContent;
 import com.huawei.jade.fel.core.retriever.Retriever;
 import com.huawei.jade.fel.embed.EmbedOptions;
 import com.huawei.jade.fel.embed.EmbedRequest;
@@ -11,6 +9,7 @@ import com.huawei.jade.fel.rag.store.config.VectorConfig;
 import com.huawei.jade.fel.rag.store.connector.SqlConnector;
 import com.huawei.jade.fel.rag.store.connector.VectorConnector;
 import com.huawei.jade.fel.rag.store.query.VectorQuery;
+
 import javafx.util.Pair;
 
 import java.util.ArrayList;

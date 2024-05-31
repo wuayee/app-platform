@@ -20,7 +20,6 @@ import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.Prompt;
-import com.huawei.jade.fel.chat.content.MessageContent;
 import com.huawei.jade.fel.core.formatters.Parser;
 import com.huawei.jade.fel.core.retriever.Indexer;
 import com.huawei.jade.fel.core.retriever.Retriever;

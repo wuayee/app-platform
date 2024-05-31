@@ -5,6 +5,9 @@
 package com.huawei.jade.fel.rag.retriever;
 
 import com.huawei.fitframework.annotation.Genericable;
+import com.huawei.jade.fel.rag.protocol.FlatChunk;
+
+import java.util.List;
 
 /**
  * 表示检索服务。
@@ -21,5 +24,5 @@ public interface TextRetrieverService {
      * @return 表示检索返回内容的 {@link String}。
      */
     @Genericable(id = "com.huawei.jade.fel.rag.retriever.text")
-    String retrieve(String query, RetrieverOptions options);
+    List<FlatChunk> retrieve(String query, RetrieverOptions options);
 }

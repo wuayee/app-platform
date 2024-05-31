@@ -10,7 +10,6 @@ import com.huawei.jade.fel.chat.ChatModelService;
 import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.protocol.ChatCompletion;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
-import com.huawei.jade.fel.rag.common.Chunk;
 import com.huawei.jade.fel.rag.index.VectorIndex;
 import com.huawei.jade.fel.rag.rerank.LlmRerank;
 import com.huawei.jade.fel.rag.rerank.RrfRerank;

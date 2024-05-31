@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.rag.store;
 
-import com.huawei.jade.fel.rag.common.Chunk;
+import com.huawei.jade.fel.rag.Chunk;
 import com.huawei.jade.fel.rag.common.RequireType;
 import com.huawei.jade.fel.rag.store.config.IndexType;
 import com.huawei.jade.fel.rag.store.config.MetricType;

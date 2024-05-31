@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.rag.store;
 
-import com.huawei.jade.fel.rag.common.Chunk;
+import com.huawei.jade.fel.rag.Chunk;
 import com.huawei.jade.fel.rag.store.config.KvConfig;
 import com.huawei.jade.fel.rag.store.connector.KvConnector;
 

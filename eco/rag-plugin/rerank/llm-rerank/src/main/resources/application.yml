@@ -1,0 +1,3 @@
+fit:
+  beans:
+    packages: 'com.huawei.jade.fel.rag.plugins.llmrerank'
