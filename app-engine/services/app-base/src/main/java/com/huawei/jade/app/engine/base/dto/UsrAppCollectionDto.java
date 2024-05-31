@@ -24,11 +24,8 @@ public class UsrAppCollectionDto {
     private Long id;
 
     @Property(description = "应用 id")
-    private String aippId;
+    private String appId;
 
     @Property(description = "用户信息")
     private String usrInfo;
-
-    @Property(description = "默认应用")
-    private Boolean isDefault;
 }

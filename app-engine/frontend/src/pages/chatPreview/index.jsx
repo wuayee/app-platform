@@ -17,7 +17,6 @@ import {
 import { AippContext } from "../aippIndex/context";
 import {
   aippDebug,
-  aippStart,
   reGetInstance,
   updateFlowInfo,
   getRecentInstances,
@@ -28,29 +27,24 @@ import {
 } from "@shared/http/aipp";
 import { getRecommends } from '@shared/http/chat';
 import "./styles/chat-preview.scss";
+import { creatChat, tenantId, updateChat } from "../../shared/http/chat.js";
 
 const ChatPreview = (props) => {
   const { chatStatusChange, chatType, previewBack } = props;
-  const { 
-    showElsa, 
-    chatRunning, 
-    prompValue, 
-    aippInfo, 
-    appId, 
-    tenantId } = useContext(AippContext);
-  const [chatList, setChatList] = useState([]);
+  const { showElsa, chatRunning, prompValue, aippInfo, appId, 
+    tenantId,chatList, setChatList,chatId,setChatId,timerRef,
+    requestLoading, setRequestLoading,listRef,clearChat } =
+    useContext(AippContext);
   const [checkedList, setCheckedList] = useState([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [groupType, setGroupType] = useState("share");
   const [sessionName, setSessionName] = useState(["default"]);
   const [showCheck, setShowCheck] = useState(false);
-  const [requestLoading, setRequestLoading] = useState(false);
   const [recommendList, setRecommendList] = useState([]);
   const location = useLocation();
   const chatInitObj = JSON.parse(JSON.stringify(initChat));
   let editorRef = React.createRef();
-  let timerRef = useRef(null);
   let regex = /{{(.*?)}}/g;
   let runningInstanceId = useRef("");
   let runningVersion = useRef("");
@@ -61,6 +55,12 @@ const ChatPreview = (props) => {
   let wsCurrent = useRef(null);
   let reportInstance = useRef('');
   let reportIContext = useRef(null);
+
+  useEffect(()=>{ 
+    if(clearChat>0){
+    clearChats();
+    }
+  },[clearChat])
 
   // 灵感大全点击
   useEffect(() => {
@@ -84,13 +84,10 @@ const ChatPreview = (props) => {
       editorDom.innerHTML = prompValue.prompt || "";
     }
   }, [prompValue.key]);
+
   useEffect(() => {
     !chatType && setOpen(true);
   }, []);
-  useEffect(() => {
-    (aippInfo.name && !aippInfo.notShowHistory) && initChatHistory();
-    setRecommend();
-  }, [aippInfo]);
   // 灵感大全设置下拉列表
   function setEditorSelect(data, prompItem) {
     let { prompt, promptVarData } = prompItem;
@@ -126,8 +123,10 @@ const ChatPreview = (props) => {
     });
     editorRef.current.setFilterHtml(prompt, promptArr);
   }
+
   // 获取历史会话
   async function initChatHistory() {
+    console.log('ddd')
     setChatList(() => {
       listRef.current = [];
       return [];
@@ -164,8 +163,6 @@ const ChatPreview = (props) => {
                 logId: aItem.logId,
                 markdownSyntax: markdowned !== -1,
                 type: "recieve",
-                instanceId: item.instanceId,
-                feedbackStatus: -1
               };
               if (isJsonString(msg)) {
                 let msgObj = JSON.parse(msg);
@@ -189,6 +186,12 @@ const ChatPreview = (props) => {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    (aippInfo.name && !aippInfo.notShowHistory) && initChatHistory();
+    setRecommend();
+  }, [aippInfo]);
+  
   // 发送消息
   const onSend = (value, type = undefined) => {
     if (!type && !value.trim().length) {
@@ -215,16 +218,17 @@ const ChatPreview = (props) => {
     sendMessageRequest(value, type);
   };
   // 发送消息
-  const listRef = useRef(null);
   const sendMessageRequest = async (value, type) => {
     const reciveInitObj = JSON.parse(JSON.stringify(initChat));
     reciveInitObj.type = "recieve";
     reciveInitObj.loading = true;
+    reciveInitObj.loading = false;
     setChatList(() => {
       let arr = [...listRef.current, reciveInitObj];
       listRef.current = arr;
       return arr;
     });
+    
     chatStatusChange(true);
     if (showElsa) {
       let params = aippInfo.flowGraph;
@@ -246,6 +250,7 @@ const ChatPreview = (props) => {
       getAippAndVersion(value, type);
     }
   };
+
   // 获取aipp_id和version
   async function getAippAndVersion(value, type) {
     try {
@@ -262,20 +267,25 @@ const ChatPreview = (props) => {
   // 启动任务
   const chatMissionStart = async (res, value, type) => {
     let { aipp_id, version } = res;
-    let params = {};
-    if (type) {
-      params = { initContext: { "$[FileDescription]": value } };
-    } else {
-      params = { initContext: { Question: value } };
-    }
+    let params = type?{ initContext: { "$[FileDescription]": value } }:{ initContext: { Question: value } };
     try {
-      const startes = await aippStart(tenantId, aipp_id, version, params);
-      if (startes.code === 0 && startes.data) {
+      const requestBody={
+        app_id:aipp_id,
+        app_version:version,
+        init_context:params,
+        }
+        let res;
+          if(chatId){
+            res= await updateChat(tenantId, chatId, requestBody);
+          }else{
+            res= await creatChat(tenantId, requestBody);
+            setChatId(res?.data?.chat_id);
+          }
+          childInstanceStop.current = false;
+      const instanceId = res?.data?.current_instance_id;
+      if (instanceId) {
         childInstanceStop.current = false;
-        let instanceId = startes.data;
         queryInstance(aipp_id, version, instanceId);
-      } else {
-        onStop("启动任务失败");
       }
     } catch {
       onStop("启动任务失败");
@@ -533,31 +543,7 @@ const ChatPreview = (props) => {
     }
     return false;
   }
-  // 清除历史对话记录
-  async function clearChat(val) {
-    if (chatRunning) {
-      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
-      return;
-    }
-    if (!chatList.length) {
-      return;
-    }
-    if (!val) {
-      setChatList([]);
-      return
-    }
-    try {
-      setRequestLoading(true);
-      const res = await clearInstance(tenantId, appId, 'preview');
-      if (res.code === 0) {
-        setChatList([]);
-        clearInterval(timerRef.current);
-        insLogIds = [];
-      }
-    } finally {
-      setRequestLoading(false);
-    }
-  }
+  
   function openClick() {
     setSessionName("经营小魔方");
     setOpen(!open);
@@ -629,6 +615,32 @@ const ChatPreview = (props) => {
       setRecommendList([]);
     }
   }
+
+    // 清除历史对话记录
+async function clearChats(val) {
+  if (chatRunning) {
+    Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+    return;
+  }
+  if (!chatList.length) {
+    return;
+  }
+  if (!val) {
+    setChatList([]);
+    return
+  }
+  try {
+    setRequestLoading(true);
+    const res = await clearInstance(tenantId, appId, 'preview');
+    if (res.code === 0) {
+      setChatList([]);
+      clearInterval(timerRef.current);
+      insLogIds = [];
+    }
+  } finally {
+    setRequestLoading(false);
+  }
+}
   return <>{(
       <div className={[
         'chat-preview',
@@ -664,7 +676,6 @@ const ChatPreview = (props) => {
                     <SendEditor
                       filterRef={editorRef}
                       onSend={onSend}
-                      onClear={clearChat}
                       openClick={openClick}
                       onStop={chatRunningStop}
                       chatType={chatType}

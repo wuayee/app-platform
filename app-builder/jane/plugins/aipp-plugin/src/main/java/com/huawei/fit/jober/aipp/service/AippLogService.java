@@ -41,6 +41,19 @@ public interface AippLogService {
             OperationContext context);
 
     /**
+     * 查询指定chatId的历史记录,
+     *
+     * @param aippId 指定aipp的id
+     * @param aippType 指定aipp的类型
+     * @param count 轮次数目
+     * @param context 登录信息
+     * @param chatId 会话ID
+     * @return log数据
+     */
+    List<AippInstLogDataDto> queryChatRecentInstLog(String aippId, String aippType, Integer count,
+                                                    OperationContext context, String chatId);
+
+    /**
      * 查询指定aipp instance的历史记录, 可选开始时间
      *
      * @param instanceId 指定aipp instance的id

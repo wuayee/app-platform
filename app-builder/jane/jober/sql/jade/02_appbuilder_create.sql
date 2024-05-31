@@ -128,3 +128,60 @@ create table if not exists app_builder_form_property
     data_type  varchar(255) not null,
     default_value  text
     );
+
+CREATE TABLE IF NOT EXISTS "t_chat_session_task_instance_wide_relationship" (
+    "msg_id"                VARCHAR(32)  NOT NULL DEFAULT NULL,
+    "chat_id"               VARCHAR(32)  NULL     DEFAULT NULL,
+    "task_instance_wide_id" VARCHAR(32)  NULL     DEFAULT NULL,
+    "create_at"             TIMESTAMP(6) NULL     DEFAULT NULL,
+    "create_by"             VARCHAR      NULL     DEFAULT NULL,
+    "update_at"             TIMESTAMP(6) NULL     DEFAULT NULL,
+    "update_by"             VARCHAR      NULL     DEFAULT NULL,
+    CONSTRAINT "pk_t_chat_session_task_instance_wide_relationship_msg_id" PRIMARY KEY("msg_id")
+    );
+COMMENT ON COLUMN "t_chat_session_task_instance_wide_relationship"."msg_id" IS '消息ID';
+
+COMMENT ON COLUMN "t_chat_session_task_instance_wide_relationship"."chat_id" IS '会话ID';
+
+COMMENT ON COLUMN "t_chat_session_task_instance_wide_relationship"."task_instance_wide_id" IS '实例ID';
+
+COMMENT ON COLUMN "t_chat_session_task_instance_wide_relationship"."create_at" IS '创建时间';
+
+COMMENT ON COLUMN "t_chat_session_task_instance_wide_relationship"."create_by" IS '创建人';
+
+COMMENT ON COLUMN "t_chat_session_task_instance_wide_relationship"."update_at" IS '更新时间';
+
+COMMENT ON COLUMN "t_chat_session_task_instance_wide_relationship"."update_by" IS '更新人';
+
+CREATE TABLE IF NOT EXISTS "t_chat_session" (
+    "chat_id"     VARCHAR(32)  NOT NULL DEFAULT NULL,
+    "app_id"      VARCHAR(32)  NULL     DEFAULT NULL,
+    "app_version" VARCHAR(32)  NULL     DEFAULT NULL,
+    "name"        VARCHAR(32)  NULL     DEFAULT NULL,
+    "attributes"  VARCHAR(255) NULL     DEFAULT NULL,
+    "create_at"   TIMESTAMP(6) NULL     DEFAULT NULL,
+    "create_by"   VARCHAR(32)  NULL     DEFAULT NULL,
+    "update_at"   TIMESTAMP(6) NULL     DEFAULT NULL,
+    "update_by"   VARCHAR(32)  NULL     DEFAULT NULL,
+    "status"      INT4         NULL     DEFAULT NULL,
+    CONSTRAINT "pk_t_chat_session" PRIMARY KEY("chat_id")
+    );
+COMMENT ON COLUMN "t_chat_session"."chat_id" IS '会话ID';
+
+COMMENT ON COLUMN "t_chat_session"."app_id" IS '应用ID';
+
+COMMENT ON COLUMN "t_chat_session"."app_version" IS '应用版本';
+
+COMMENT ON COLUMN "t_chat_session"."name" IS '会话纪要';
+
+COMMENT ON COLUMN "t_chat_session"."attributes" IS '属性扩展字段';
+
+COMMENT ON COLUMN "t_chat_session"."create_at" IS '创建时间';
+
+COMMENT ON COLUMN "t_chat_session"."create_by" IS '创建人';
+
+COMMENT ON COLUMN "t_chat_session"."update_at" IS '更新时间';
+
+COMMENT ON COLUMN "t_chat_session"."update_by" IS '更新人';
+
+COMMENT ON COLUMN "t_chat_session"."status" IS '状态 0-正常 1-已删除';

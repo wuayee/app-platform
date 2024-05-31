@@ -341,7 +341,7 @@ public class AippRunTimeServiceImpl
         List<Map<String, Object>> memoryConfig = flowInfo.getInputParamsByName("memory");
 
         if (memoryConfig == null || memoryConfig.isEmpty()) {
-            return getConversationTurns(aippId, aippType, 5, context);
+            return getConversationTurns(aippId, aippType, 5, context, null);
         }
 
         Map<String, Object> typeConfig = memoryConfig.stream()
@@ -352,14 +352,14 @@ public class AippRunTimeServiceImpl
                 .filter(config -> StringUtils.equals((String) config.get("name"), "value"))
                 .findFirst()
                 .orElseThrow(() -> new AippException(AippErrCode.PARSE_MEMORY_CONFIG_FAILED));
-
+        String chatId = (businessData.get("chatId") == null) ? null : businessData.get("chatId").toString();
         String memoryType = (String) typeConfig.get("value");
         switch (memoryType) {
             case "UserSelect":
                 return (List<Map<String, Object>>) businessData.get(AippConst.INST_CHAT_HISTORY_KEY);
             case "ByConversationTurn":
                 Integer turnNum = Integer.parseInt((String) valueConfig.get("value"));
-                return getConversationTurns(aippId, aippType, turnNum, context);
+                return getConversationTurns(aippId, aippType, turnNum, context, chatId);
             case "NotUseMemory":
                 return new ArrayList<>();
             case "Customizing":
@@ -369,13 +369,18 @@ public class AippRunTimeServiceImpl
                 Map<String, Object> params = new HashMap<>();
                 return getCustomizedLogs(fitableId, params, aippId, aippType, context);
             default:
-                return getConversationTurns(aippId, aippType, 5, context);
+                return getConversationTurns(aippId, aippType, 5, context, chatId);
         }
     }
 
     private List<Map<String, Object>> getConversationTurns(String aippId, String aippType, Integer count,
-            OperationContext context) {
-        List<AippInstLogDataDto> logs = aippLogService.queryAippRecentInstLog(aippId, aippType, count, context);
+                                                           OperationContext context, String chatId) {
+        List<AippInstLogDataDto> logs;
+        if (chatId != null) {
+            logs = aippLogService.queryChatRecentInstLog(aippId, aippType, count, context, chatId);
+            return getLogMaps(logs);
+        }
+        logs = aippLogService.queryAippRecentInstLog(aippId, aippType, count, context);
         return getLogMaps(logs);
     }
 

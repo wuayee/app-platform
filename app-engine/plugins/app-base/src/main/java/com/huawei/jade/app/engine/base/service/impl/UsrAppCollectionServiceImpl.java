@@ -8,7 +8,9 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.jade.app.engine.base.dto.CollectionAppInfoDto;
+import com.huawei.jade.app.engine.base.dto.UserInfoDto;
 import com.huawei.jade.app.engine.base.dto.UsrAppCollectionDto;
+import com.huawei.jade.app.engine.base.mapper.UserInfoMapper;
 import com.huawei.jade.app.engine.base.mapper.UsrAppCollectionMapper;
 import com.huawei.jade.app.engine.base.po.UsrAppCollectionPo;
 import com.huawei.jade.app.engine.base.po.UsrAppInfoAndCollectionPo;
@@ -35,8 +37,12 @@ public class UsrAppCollectionServiceImpl implements UsrAppCollectionService {
 
     private final UsrAppCollectionMapper usrAppCollectionMapper;
 
-    public UsrAppCollectionServiceImpl(UsrAppCollectionMapper userAppCollectionMapper) {
+    private final UserInfoMapper userInfoMapper;
+
+    public UsrAppCollectionServiceImpl(UsrAppCollectionMapper userAppCollectionMapper,
+                                       UserInfoMapper userInfoMapper) {
         this.usrAppCollectionMapper = userAppCollectionMapper;
+        this.userInfoMapper = userInfoMapper;
     }
 
     /**
@@ -49,42 +55,31 @@ public class UsrAppCollectionServiceImpl implements UsrAppCollectionService {
     @Override
     public Long create(UsrAppCollectionDto usrCollectionDto) {
         usrAppCollectionMapper.insert(usrCollectionDto);
-        usrAppCollectionMapper.updateCollectionUsrCntByAippId(usrCollectionDto.getAippId(), 1);
+        usrAppCollectionMapper.updateCollectionUsrCntByAppId(usrCollectionDto.getAppId(), 1);
         return usrCollectionDto.getId();
-    }
-
-    /**
-     * 更新应用收藏记录
-     *
-     * @param collectionId 收藏记录id
-     * @param usrCollectionDto 用户应用收藏信息
-     */
-    @Override
-    public void updateOne(Long collectionId, UsrAppCollectionDto usrCollectionDto) {
-        usrAppCollectionMapper.updateOne(collectionId, usrCollectionDto.getIsDefault());
     }
 
     /**
      * 通过id删除应用收藏记录
      *
      * @param usrInfo 用户信息
-     * @param aippId 应用Id
+     * @param appId 应用Id
      */
     @Transactional
     @Override
-    public void deleteByUsrInfoAndAippId(String usrInfo, String aippId) {
-        usrAppCollectionMapper.deleteByUsrInfoAndAippId(usrInfo, aippId);
-        usrAppCollectionMapper.updateCollectionUsrCntByAippId(aippId, -1);
+    public void deleteByUsrInfoAndAppId(String usrInfo, String appId) {
+        usrAppCollectionMapper.deleteByUsrInfoAndAppId(usrInfo, appId);
+        usrAppCollectionMapper.updateCollectionUsrCntByAppId(appId, -1);
     }
 
     /**
      * 删除应用相关收藏记录
      *
-     * @param aippId 应用Id
+     * @param appId 应用Id
      */
     @Override
-    public void deleteByAippId(String aippId) {
-        usrAppCollectionMapper.deleteByAippId(aippId);
+    public void deleteByAppId(String appId) {
+        usrAppCollectionMapper.deleteByAppId(appId);
     }
 
     /**
@@ -105,21 +100,26 @@ public class UsrAppCollectionServiceImpl implements UsrAppCollectionService {
      * @return 应用信息消息类
      */
     @Override
+    @Transactional
     public CollectionAppInfoDto getAppInfoByUsrInfo(String usrInfo) {
         List<UsrAppInfoAndCollectionPo> collectionList = usrAppCollectionMapper.getAppInfoByUsrInfo(usrInfo);
-        UsrAppInfoAndCollectionPo defaultApp = usrAppCollectionMapper.getDefaultAppInfo(DEFAULT_APP_ID);
 
-        for (UsrAppInfoAndCollectionPo usrAppCollectionDto : collectionList) {
-            if (usrAppCollectionDto.getIsDefault()) {
-                defaultApp = usrAppCollectionDto;
-                collectionList.remove(usrAppCollectionDto);
-                return new CollectionAppInfoDto(collectionList, defaultApp);
-            }
+        // TODO: move to login logic
+        UserInfoDto userInfoDto = userInfoMapper.get(usrInfo);
+        if (userInfoDto == null) {
+            userInfoMapper.insert(UserInfoDto.builder().userName(usrInfo).defaultApp(DEFAULT_APP_ID).build());
         }
 
-        String aippId = defaultApp.getAippId();
+        UsrAppInfoAndCollectionPo defaultApp = usrAppCollectionMapper.getDefaultAppInfo(usrInfo);
+        // 如果之前设置的默认应用被删除，此处懒更新重置默认应用
+        if (defaultApp == null) {
+            userInfoMapper.update(UserInfoDto.builder().userName(usrInfo).defaultApp(DEFAULT_APP_ID).build());
+            defaultApp = usrAppCollectionMapper.getDefaultAppInfo(usrInfo);
+        }
+
+        String defaultAppAppId = defaultApp.getAppId();
         collectionList = collectionList.stream()
-                .filter(n -> !Objects.equals(aippId, n.getAippId()))
+                .filter(n -> !Objects.equals(defaultAppAppId, n.getAppId()))
                 .collect(Collectors.toList());
         return new CollectionAppInfoDto(collectionList, defaultApp);
     }
@@ -127,21 +127,21 @@ public class UsrAppCollectionServiceImpl implements UsrAppCollectionService {
     /**
      * 通过应用id更新收藏用户数量
      *
-     * @param aippId 应用id
+     * @param appId 应用id
      */
     @Override
-    public void updateCollectionUsrCntByAippId(String aippId) {
-        usrAppCollectionMapper.updateCollectionUsrCntByAippId(aippId, 1);
+    public void updateCollectionUsrCntByAppId(String appId) {
+        usrAppCollectionMapper.updateCollectionUsrCntByAppId(appId, 1);
     }
 
     /**
      * 通过应用id获取收藏用户数量
      *
-     * @param aippId 应用id
+     * @param appId 应用id
      * @return 应用收藏用户数量
      */
     @Override
-    public Integer getCollectionUsrCntByAippId(String aippId) {
-        return usrAppCollectionMapper.getCollectionUsrCntByAippId(aippId);
+    public Integer getCollectionUsrCntByAppId(String appId) {
+        return usrAppCollectionMapper.getCollectionUsrCntByAppId(appId);
     }
 }

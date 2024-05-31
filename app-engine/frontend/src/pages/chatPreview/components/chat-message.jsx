@@ -44,7 +44,7 @@ const ChatMessaga = (props) => {
   }, [chatList])
   useEffect(() => {
     initFeedbackStatus('all');
-  }, [chatList.length])
+  }, [chatList?.length])
   const scrollBottom = () => {
     setTimeout(() => {
       const messageBox = document.getElementById('chat-list-dom');
@@ -63,16 +63,16 @@ const ChatMessaga = (props) => {
   }
   // 选中回调
   function checkCallBack() {
-    let checkList = chatList.filter(item => item.checked);
+    let checkList = chatList?.filter(item => item.checked);
     setCheckedList(checkList);
   }
   return <>{(
     <div className={['chat-message-container', showCheck ? 'group-active' : null].join(' ')} id="chat-list-dom">
-      {!chatList.length && <ChatDetail />}
-      <ChatContext.Provider value={{ setShareClass, setInspiration, checkCallBack, showCheck }}>
+      { !chatList?.length && <ChatDetail /> }
+      <ChatContext.Provider value={{ setShareClass, setInspiration, checkCallBack, showCheck}}>
         <div className='message-box'>
           {
-            chatList.map((item, index) => {
+            chatList?.map((item, index) => {
               return (
                 item.type === 'send' ?
                   <SendBox chatItem={item} key={index} /> :

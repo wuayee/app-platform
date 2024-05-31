@@ -432,7 +432,7 @@ public class AppBuilderAppServiceImpl
         // todo step5 删除store相关
 
         // step6 删除应用收藏记录相关
-        usrAppCollectionService.deleteByAippId(appId);
+        usrAppCollectionService.deleteByAppId(appId);
 
     }
 

@@ -536,6 +536,11 @@ public class AippConst {
      */
     public static final String INSTANCE_START_TIME = "_instanceStartTime";
 
+    /**
+     * 表明当前会话是否被删除
+     */
+    public static final Integer CHAT_STATUS = 0;
+
     // *** aipp initial static meta items ***
     /**
      * aipp initial static meta items

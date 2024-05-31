@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.jade.app.engine.base.mapper.UserInfoMapper">
+    <resultMap id="BaseResultMap" type="com.huawei.jade.app.engine.base.dto.UserInfoDto">
+        <result column="id" property="id"/>
+        <result column="user_name" property="userName"/>
+        <result column="default_app" property="defaultApp"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_name, default_app
+    </sql>
+
+    <sql id="App_Column_List">
+        id, name, config_id, flow_graph_id, tenant_id, type, version, attributes, state, create_by, create_at, update_by, update_at
+    </sql>
+
+    <insert id="insert" parameterType="com.huawei.jade.app.engine.base.dto.UserInfoDto" useGeneratedKeys="true" keyProperty="id">
+        insert into user_info (user_name, default_app)
+        values (#{userName}, #{defaultApp})
+    </insert>
+
+    <update id="update" parameterType="com.huawei.jade.app.engine.base.dto.UserInfoDto">
+        update user_info
+        <set>
+            default_app = #{defaultApp}
+        </set>
+        where user_name = #{userName}
+    </update>
+
+    <select id="get" resultMap="BaseResultMap" resultType="com.huawei.jade.app.engine.base.dto.UserInfoDto">
+        select
+        <include refid="Base_Column_List"/>
+        from user_info
+        where user_name = #{userName}
+    </select>
+</mapper>

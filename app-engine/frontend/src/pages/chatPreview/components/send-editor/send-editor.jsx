@@ -223,7 +223,7 @@ const SendEditor = (props) => {
         positionConfig={positionConfig}
         clearMove={clearMove} />
      )}
-     <HistoryChat open={openHistory} setOpen={setOpenHistory} />
+     <HistoryChat open={openHistory} setOpen={setOpenHistory}/>
     </div>
   )}</>
 };

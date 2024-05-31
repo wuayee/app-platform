@@ -15,8 +15,12 @@ const ChatRunning = () => {
   const [ prompValue, setPrompValue ] = useState({});
   const [ chatRunning, setChatRunning ] = useState(false);
   const [ refreshPrompValue, setRefreshPrompValue ] = useState(false);
+  const [chatId,setChatId]=useState(null);
   const navigate = useNavigate();
+  const listRef = useRef(null);
   const aippRef = useRef(null);
+  const [chatList, setChatList] = useState([]);
+  const[clearChat,setClearChat] =useState(null);
   useEffect(() => {
     getUser();
     getAippDetails();
@@ -45,6 +49,7 @@ const ChatRunning = () => {
   const chatStatusChange = (running) => {
     setChatRunning(running)
   }
+
   const provider = {
     appId,
     tenantId,
@@ -54,7 +59,15 @@ const ChatRunning = () => {
     setPrompValue,
     refreshPrompValue,
     setRefreshPrompValue,
+    setChatRunning,
     showHistory: false,
+    chatList,
+    setChatList,
+    listRef,
+    chatId,
+    setChatId,
+    clearChat,
+    setClearChat
   };
   return (
     <>

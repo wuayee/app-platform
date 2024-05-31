@@ -138,7 +138,7 @@ const EvaluateTask = () => {
       render: (value, record) => taskStatusMap[value],
     },
     {
-      title: '任务进度',
+      title: '通过率',
       dataIndex: 'passRate',
       key: 'passRate',
       render: (value, record) => <Progress percent={value} size='small' />,

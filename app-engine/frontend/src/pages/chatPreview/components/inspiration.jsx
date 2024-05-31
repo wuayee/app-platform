@@ -46,8 +46,10 @@ const Inspiration = (props) => {
   const treeChildData = useRef([]);
 
   useEffect(() => {
-    getList();
-  }, [reloadInspiration]);
+    if(appId) {
+      getList();
+    }
+  }, [reloadInspiration, appId]);
   // 获取灵感大全列表
   async function getList() {
     const res = await queryDepartMent(tenantId, appId);
@@ -211,6 +213,7 @@ const Inspiration = (props) => {
             </div>
             <div className="prompt-search">
               <Input
+              disabled
                 prefix={<SearchOutlined />}
                 allowClear
                 placeholder="搜索"
