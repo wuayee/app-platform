@@ -69,17 +69,15 @@ public class MetricsAnalysisServiceImpl implements MetricsAnalysisService {
      */
     @Override
     public MetricsAnalysisVo findMetricsData(String appId, TimeType timeType) {
-        LocalDateTime startTime = calculateStartTime(timeType);
-        LocalDateTime endTime = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startTime = calculateStartTime(timeType, now);
+        LocalDateTime endTime = calculateEndTime(timeType, now);
+
         Map<String, Object> basicMetrics = conversationRecordMapper.getBasicMetrics(appId, startTime, endTime);
         Map<String, Object> avgResponseRange = conversationRecordMapper.getAvgResponseRange(appId, startTime, endTime);
         List<UserAccessVo> topUsers = conversationRecordMapper.getTopUsers(appId, startTime, endTime);
-        List<Map<String, Object>> userAccessData;
-        if (timeType == TimeType.TODAY || timeType == timeType.YESTERDAY) {
-            userAccessData = metricsAccessMapper.getHourlyAccessData(appId, startTime, endTime);
-        } else {
-            userAccessData = metricsAccessMapper.getDailyAccessData(appId, startTime, endTime);
-        }
+        List<Map<String, Object>> userAccessData = getUserAccessData(timeType, appId, startTime, endTime);
+
         MetricsAnalysisVo metricsAnalysisVO = new MetricsAnalysisVo();
         metricsAnalysisVO.setBasicMetrics(basicMetrics);
         metricsAnalysisVO.setAvgResponseRange(avgResponseRange);
@@ -88,9 +86,17 @@ public class MetricsAnalysisServiceImpl implements MetricsAnalysisService {
         return metricsAnalysisVO;
     }
 
-    private LocalDateTime calculateStartTime(TimeType timeType) {
+    private List<Map<String, Object>> getUserAccessData(TimeType timeType, String appId,
+                                                        LocalDateTime startTime, LocalDateTime endTime) {
+        if (timeType == TimeType.TODAY || timeType == TimeType.YESTERDAY) {
+            return metricsAccessMapper.getHourlyAccessData(appId, startTime, endTime);
+        } else {
+            return metricsAccessMapper.getDailyAccessData(appId, startTime, endTime);
+        }
+    }
+
+    private LocalDateTime calculateStartTime(TimeType timeType, LocalDateTime now) {
         // 根据 TimeType 计算开始时间
-        LocalDateTime now = LocalDateTime.now();
         switch (timeType) {
             case TODAY:
                 return now.withHour(0).withMinute(0).withSecond(0).withNano(0);
@@ -103,11 +109,28 @@ public class MetricsAnalysisServiceImpl implements MetricsAnalysisService {
             case THIS_WEEK:
                 return now.with(DayOfWeek.MONDAY).withHour(0).withMinute(0).withSecond(0).withNano(0);
             case LAST_WEEK:
-                return now.minusWeeks(1).with(DayOfWeek.MONDAY).withHour(0).withMinute(0).withSecond(0).withNano(0);
+                return now.minusWeeks(1).with(DayOfWeek.MONDAY).withHour(0)
+                        .withMinute(0).withSecond(0).withNano(0);
             case THIS_MONTH:
                 return now.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
             case LAST_MONTH:
-                return now.minusMonths(1).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+                return now.minusMonths(1).withDayOfMonth(1).withHour(0).withMinute(0)
+                        .withSecond(0).withNano(0);
+            default:
+                return now;
+        }
+    }
+
+    private LocalDateTime calculateEndTime(TimeType timeType, LocalDateTime now) {
+        switch (timeType) {
+            case YESTERDAY:
+                return now.minusDays(1).withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+            case LAST_WEEK:
+                return now.minusWeeks(1).with(DayOfWeek.SUNDAY).withHour(23).withMinute(59).withSecond(59)
+                        .withNano(999999999);
+            case LAST_MONTH:
+                return now.minusMonths(1).withDayOfMonth(now.minusMonths(1).toLocalDate().lengthOfMonth())
+                        .withHour(23).withMinute(59).withSecond(59).withNano(999999999);
             default:
                 return now;
         }
