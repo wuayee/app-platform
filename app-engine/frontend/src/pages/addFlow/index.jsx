@@ -40,7 +40,7 @@ import TestStatus from "../components/test-status";
 const { Search } = Input;
 
 const AddFlow = (props) => {
-  const { type, addFlowRef, setFlowTested, setFlowTestTime, setFlowTestStatus, setFlowTesting } = props;
+  const { type } = props;
   const [ dragData, setDragData ] = useState([]);
   const { tenantId, appId } = useParams();
   const [ timestamp, setTimestamp ] = useState(new Date());
@@ -100,6 +100,8 @@ const AddFlow = (props) => {
   useEffect(() => {
     window.agent = null;
     type ? setElsaData() : initElsa();
+    setIsTested(false);
+    setIsTesting(false);
   }, [props.type]);
   // 新建工作流
   async function initElsa() {
@@ -129,6 +131,7 @@ const AddFlow = (props) => {
       agent.onChange(() => {
         handleSearch();
       })
+      agent.resetStatus();
     })
     getAddFlowConfig(tenantId).then(res => {
       if (res.code === 0) {
@@ -185,10 +188,6 @@ const AddFlow = (props) => {
       const {aippCreate, instanceId} = res.data;
       setIsTesting(true);
       setTestStatus('Running');
-      if (type) {
-        setFlowTesting(true);
-        setFlowTestStatus('Running');
-      }
       // 调用轮询
       startTestInstance(aippCreate.aippId, aippCreate.version, instanceId);
     }
@@ -213,22 +212,15 @@ const AddFlow = (props) => {
         if (isError(runtimeData.nodeInfos)) {
           clearInterval(timerRef.current);
           setTestStatus('Error');
-          type && setFlowTestStatus('Error');
         } else if (isEnd(runtimeData.nodeInfos)) {
           clearInterval(timerRef.current);
           setIsTesting(false);
           setIsTested(true);
           setTestStatus('Finished');
-          if (type) {
-            setFlowTesting(false);
-            setFlowTested(true);
-            setFlowTestStatus('Finished');
-          }
         }
         window.agent.setFlowRunData(runtimeData.nodeInfos);
         const time = (runtimeData.executeTime / 1000).toFixed(3);
         setTestTime(time);
-        type && setFlowTestTime(time);
       }
     }, 1000);
   }
@@ -241,12 +233,6 @@ const AddFlow = (props) => {
   const handleDisplayLastRun = () => {
 
   }
-  // 给父组件的测试回调
-  useImperativeHandle(addFlowRef, () => {
-    return {
-      'handleDebugClick': handleDebugClick,
-    }
-  })
 
   const formatTimeStamp = (now) => {
     let hours = now.getHours().toString().padStart(2, '0');
@@ -306,9 +292,7 @@ const AddFlow = (props) => {
   const handleRunTest = () => {
     window.agent.resetStatus();
     setIsTested(false);
-    type && setFlowTested(false);
     setTestTime(0);
-    type && setFlowTestTime(0);
     handleRun(form.getFieldsValue());
     handleCloseDebug();
   }
@@ -513,7 +497,6 @@ const LeftMenu = (props) => {
 
   // 搜索文本变化，更新工具列表
   const handleSearch = (value, event, source) => {
-    console.log(value);
   }
 
   const getIconByType = (type) => {
