@@ -425,7 +425,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
 
     /*
-     * 获取下一个节点.
+     * 获取下一批节点.
      */
     const getNextNodes = () => {
         const lines = self.page.shapes.filter(s => s.type === "jadeEvent").filter(l => l.fromShape === self.id);
@@ -505,6 +505,26 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         bound.height = Math.max(reportFrame.y + reportFrame.height, self.x + self.height)
                 - Math.min(self.y, reportFrame.y);
         return bound;
+    };
+
+    /**
+     * 节点的高度变化不需要触发dirties.
+     *
+     * @param property 属性名称.
+     * @param value 属性值.
+     * @param preValue 属性之前的值.
+     * @return {boolean|*} true/false.
+     */
+    const load = self.load;
+    self.load = () => {
+        load.apply(self);
+        const propertyChanged = self.propertyChanged;
+        self.propertyChanged = (property, value, preValue) => {
+            if (property === "height") {
+                return false;
+            }
+            return propertyChanged.apply(self, [property, value, preValue]);
+        };
     };
 
     return self;

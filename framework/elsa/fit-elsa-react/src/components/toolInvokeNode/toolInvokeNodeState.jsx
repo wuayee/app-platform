@@ -2,7 +2,6 @@ import {jadeNode} from "@/components/jadeNode.jsx";
 import {Button} from "antd";
 import ApiInvokeIcon from '../asserts/icon-api-invoke.svg?react';
 import {convertParameter, convertReturnFormat} from "@/components/util/MethodMetaDataParser.js";
-import {v4 as uuidv4} from "uuid";
 
 /**
  * 工具调用节点shape
