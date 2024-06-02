@@ -4,9 +4,7 @@
 
 package com.huawei.jade.fel.tool;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
@@ -17,16 +15,14 @@ import java.util.Map;
  * @since 2024-4-8
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Tool {
-    /**
-     * 表示是否是异步工具。
-     */
-    private boolean isAsync;
-
     /**
      * 表示工具描述。
      */
     private Map<String, Object> schema;
+
+    /**
+     * 表示工具的自定义上下文信息。
+     */
+    private Map<String, Object> context;
 }

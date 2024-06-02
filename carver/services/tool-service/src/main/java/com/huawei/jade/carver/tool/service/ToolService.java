@@ -66,10 +66,10 @@ public interface ToolService {
      * 添加工具标签。
      *
      * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
-     * @param tagName 表示待添加的工具标签的 {@link String}。
+     * @param tag 表示待添加的工具标签的 {@link String}。
      */
     @Genericable(id = "com.huawei.jade.store.service.addTag")
-    void addTag(String toolUniqueName, String tagName);
+    void addTag(String toolUniqueName, String tag);
 
     /**
      * 删除工具标签。

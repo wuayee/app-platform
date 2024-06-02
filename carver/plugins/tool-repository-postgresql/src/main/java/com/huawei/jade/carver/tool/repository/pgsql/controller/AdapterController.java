@@ -16,7 +16,6 @@ import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
@@ -43,7 +42,6 @@ import java.util.stream.Collectors;
 @Component
 @RequestMapping("/store/platform")
 public class AdapterController {
-    private static final Logger log = Logger.get(ToolController.class);
     private static final String DECODE_EX = "[异常]: 解析中文异常";
 
     private final ToolService toolService;

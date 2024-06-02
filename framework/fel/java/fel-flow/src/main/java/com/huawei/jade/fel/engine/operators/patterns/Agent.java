@@ -7,19 +7,20 @@ package com.huawei.jade.fel.engine.operators.patterns;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.MapUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.engine.activities.processors.AiToolProcessMap;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
-import com.huawei.jade.fel.tool.Tool;
 import com.huawei.jade.fel.tool.ToolCall;
 import com.huawei.jade.fel.tool.ToolContext;
 import com.huawei.jade.fel.tool.ToolProvider;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -50,11 +51,8 @@ public abstract class Agent<I, O> extends FlowSupportable<I, O> {
      * @param toolProvider 表示工具提供者的 {@link ToolProvider}。
      * @param agentMsgKey 表示 Agent 响应的所在键的 {@link String}。
      * @return 表示工具执行器 {@link AiToolProcessMap}{@code <}{@link ChatMessage}{@code , }{@link ChatMessage}{@code >}。
-     * @throws IllegalArgumentException
-     * <ln>
-     *     <li>当 {@code toolProvider} 为 {@code null} 时。</li>
-     *     <li>当 {@code agentMsgKey} 为 {@code null} 、空字符串或只有空白字符的字符串时。</li>
-     * </ln>
+     * @throws IllegalArgumentException 当 {@code toolProvider} 为 {@code null} 时，或当 {@code agentMsgKey} 为
+     * {@code null} 或空白字符串时。
      */
     protected static AiToolProcessMap<ChatMessage, ChatMessage> getToolProcessMap(ToolProvider toolProvider,
             String agentMsgKey) {
@@ -92,7 +90,6 @@ public abstract class Agent<I, O> extends FlowSupportable<I, O> {
         return (message, ctx) -> ctx.getState(agentMsgKey);
     }
 
-
     /**
      * 判断大模型响应中是否存在异步工具。
      *
@@ -110,7 +107,17 @@ public abstract class Agent<I, O> extends FlowSupportable<I, O> {
         if (toolsName.isEmpty()) {
             return false;
         }
-        return toolProvider.getTool(toolsName).stream().anyMatch(Tool::isAsync);
+        return toolProvider.getTool(toolsName).stream().anyMatch(tool -> {
+            Map<String, Object> context = tool.getContext();
+            if (MapUtils.isEmpty(context)) {
+                return false;
+            }
+            Object isAsyncValue = context.get("isAsync");
+            if (isAsyncValue == null) {
+                return false;
+            }
+            return Boolean.parseBoolean(isAsyncValue.toString());
+        });
     }
 
     /**

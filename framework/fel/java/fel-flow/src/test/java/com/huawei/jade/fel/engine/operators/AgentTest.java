@@ -40,7 +40,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -68,8 +70,7 @@ public class AgentTest {
 
             AtomicReference<String> answer = new AtomicReference<>();
             agentConverse.doOnSuccess(answer::set).offer(Tip.fromArray("calculate 40*50")).await();
-            assertThat(answer.get())
-                    .isEqualTo("calculate 40*50\ntoolcall\n" + TOOL_DEFAULT_VALUE + "\nmodel result1");
+            assertThat(answer.get()).isEqualTo("calculate 40*50\ntoolcall\n" + TOOL_DEFAULT_VALUE + "\nmodel result1");
             answer.set(null);
 
             agentConverse.doOnSuccess(answer::set).offer(Tip.fromArray("calculate 60*70")).await();
@@ -106,9 +107,10 @@ public class AgentTest {
                             .build());
 
             AtomicInteger converseErrCnt = new AtomicInteger();
-            assertThatThrownBy(() -> flow.converse().doOnError(e -> converseErrCnt.getAndIncrement())
-                    .offer(Tip.fromArray("calculate 40*50")).await())
-                    .isInstanceOf(IllegalStateException.class).message().isEqualTo(expectedMsg);
+            assertThatThrownBy(() -> flow.converse()
+                    .doOnError(e -> converseErrCnt.getAndIncrement())
+                    .offer(Tip.fromArray("calculate 40*50"))
+                    .await()).isInstanceOf(IllegalStateException.class).message().isEqualTo(expectedMsg);
             // 全局异常回调
             assertThat(err.get()).isEqualTo(expectedMsg);
             // delegate 场景也仅触发一次对话异常回调
@@ -122,8 +124,7 @@ public class AgentTest {
 
             String expectedToolVal = "test_tool_value";
             // converse
-            Conversation<Tip, String> agentConverse = flow.converse()
-                    .bind(ToolContext.from(TOOL_KEY, expectedToolVal));
+            Conversation<Tip, String> agentConverse = flow.converse().bind(ToolContext.from(TOOL_KEY, expectedToolVal));
 
             AtomicReference<String> answer = new AtomicReference<>();
             agentConverse.doOnSuccess(answer::set).offer(Tip.fromArray("calculate 40*50")).await();
@@ -164,7 +165,9 @@ public class AgentTest {
             StringBuilder chunkResult = new StringBuilder();
             // converse
             ChatOptions options = ChatOptions.builder().temperature(0.8).build();
-            Conversation<Tip, String> agentConverse = flow.converse().bind(new CacheMemory()).bind(options)
+            Conversation<Tip, String> agentConverse = flow.converse()
+                    .bind(new CacheMemory())
+                    .bind(options)
                     .bind(getStreamingConsumer(chunkResult, accResult));
 
             AtomicReference<String> answer = new AtomicReference<>();
@@ -187,8 +190,8 @@ public class AgentTest {
             StringBuilder accResult = new StringBuilder();
             StringBuilder chunkResult = new StringBuilder();
             // converse
-            Conversation<Tip, String> agentConverse = flow.converse().bind(new CacheMemory())
-                    .bind(getStreamingConsumer(chunkResult, accResult));
+            Conversation<Tip, String> agentConverse =
+                    flow.converse().bind(new CacheMemory()).bind(getStreamingConsumer(chunkResult, accResult));
 
             AtomicReference<String> answer = new AtomicReference<>();
             agentConverse.doOnSuccess(answer::set).offer(Tip.fromArray("calculate 40*50")).await();
@@ -204,9 +207,10 @@ public class AgentTest {
             AiProcessFlow<Tip, String> flow = getAgentFlow(agent);
 
             AtomicInteger converseErrCnt = new AtomicInteger();
-            assertThatThrownBy(() -> flow.converse().doOnError(e -> converseErrCnt.getAndIncrement())
-                            .offer(Tip.fromArray("calculate 40*50")).await())
-                    .isInstanceOf(IllegalStateException.class).message().isEqualTo(expectedMsg);
+            assertThatThrownBy(() -> flow.converse()
+                    .doOnError(e -> converseErrCnt.getAndIncrement())
+                    .offer(Tip.fromArray("calculate 40*50"))
+                    .await()).isInstanceOf(IllegalStateException.class).message().isEqualTo(expectedMsg);
             // delegate 场景也仅触发一次对话异常回调
             assertThat(converseErrCnt.get()).isEqualTo(1);
         }
@@ -218,8 +222,7 @@ public class AgentTest {
 
             String expectedToolVal = "test_tool_value";
             // converse
-            Conversation<Tip, String> agentConverse = flow.converse()
-                    .bind(ToolContext.from(TOOL_KEY, expectedToolVal));
+            Conversation<Tip, String> agentConverse = flow.converse().bind(ToolContext.from(TOOL_KEY, expectedToolVal));
 
             AtomicReference<String> answer = new AtomicReference<>();
             agentConverse.doOnSuccess(answer::set).offer(Tip.fromArray("calculate 40*50")).await();
@@ -281,7 +284,11 @@ public class AgentTest {
 
             @Override
             public List<Tool> getTool(List<String> name) {
-                return Collections.singletonList(new Tool(isAsyncTool, Collections.emptyMap()));
+                Map<String, Object> context = new HashMap<>();
+                context.put("isAsync", isAsyncTool);
+                Tool tool = new Tool();
+                tool.setContext(context);
+                return Collections.singletonList(tool);
             }
         };
     }
