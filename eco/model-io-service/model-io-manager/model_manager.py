@@ -35,6 +35,7 @@ LOGGING_CONFIG["formatters"]["access"]["fmt"] = "%(asctime)s - %(levelprefix)s %
 KUBE_CONFIG = "/root/.kube/config"
 NAMESPACE_FILE = "/var/run/secrets/kubernetes.io/serviceaccount/namespace"
 
+
 EMBEDDING_MODEL_TYPE = "Embedding"
 
 
@@ -47,11 +48,13 @@ def set_cross_header(response, request):
 
 
 def load_kube_config():
-    with open(KUBE_CONFIG) as f:
-        config_dict = yaml.safe_load(f)
-        if os.path.exists(NAMESPACE_FILE):
-            config_dict["clusters"][0]["cluster"]["server"] = "https://kubernetes.default.svc:443"
-        config.load_kube_config_from_dict(config_dict)
+    if os.path.exists(NAMESPACE_FILE):
+        config.load_incluster_config()
+    else:
+        with open(KUBE_CONFIG) as f:
+            config_dict = yaml.safe_load(f)
+            config.load_kube_config_from_dict(config_dict)
+
 
 load_kube_config()
 k8s_client = client.AppsV1Api()
