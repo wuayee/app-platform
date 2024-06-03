@@ -197,7 +197,6 @@ const AppAnalyse: React.FC = () => {
   // 设置平均响应速度
   const setAvargeSpeed = (avgResponseRange, speedChart) => {
     let totalData = 0;
-
     const data = Object.keys(avgResponseRange || {}).map(item => {
       totalData += avgResponseRange[item]?.count || 0;
       return ({
@@ -206,6 +205,10 @@ const AppAnalyse: React.FC = () => {
       })
     });
     setTotal(totalData)
+    const order = ['below 500ms', '501-1000ms', '1001ms-2000ms', 'above 2000ms']
+    data.sort((start, next) => {
+      return order.indexOf(start.name) - order.indexOf(next.name)
+    })
     speedOption.series[0].data = data;
     speedChart.setOption(speedOption);
   }
