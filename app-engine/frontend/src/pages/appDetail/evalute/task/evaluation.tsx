@@ -51,28 +51,33 @@ const EvaluationDrawer: React.FC<{ openSignal: number; taskRecord: object }> = (
 
     const allInput = [...reportRes.failureInput, ...reportRes.passInput]
     setReportData({ ...reportRes, allInput });
+    setSelectCard('allInput');
     setInputList(allInput);
-    if(allInput.length > 0) {
+    if (allInput.length > 0) {
       onGetReportDetail(allInput[0].id);
     }
   };
 
-  const onGetReportDetail = async(id) => {
+  const onGetReportDetail = async (id) => {
     const traceRes = await getEvalReportTrace(id);
     setRow(traceRes);
     setTraceData(traceRes?.trace);
   }
 
-  const onGetTrace = async (id) => {
-    const traceRes = await getEvalReportTrace(id);
-    setTraceData(traceRes?.trace);
-  }
   useEffect(() => {
     if (openSignal > 0) {
       setOpen(true);
       onGetReport();
     }
   }, [openSignal]);
+
+  const handleChangeCard = (cardId: string) => {
+    setSelectCard(cardId);
+    setInputList(reportData?.[cardId]);
+    if (reportData?.[cardId].length > 0) {
+      onGetReportDetail(reportData[cardId][0]?.id);
+    }
+  }
 
   return (
     <div>
@@ -107,15 +112,18 @@ const EvaluationDrawer: React.FC<{ openSignal: number; taskRecord: object }> = (
             <div
               id={info.id}
               className='evaluateCard'
-              style={{ borderColor: selectCard === info.id ? '#2673e5' : '#f0f2f4' }}
+              style={{
+                borderColor: selectCard === info.id ? '#2673e5' : '#f0f2f4',
+                cursor: 'pointer'
+              }}
               onClick={() => {
-                setSelectCard(info.id);
-                setInputList(reportData?.[info.id]);
-                setRow(reportData?.[info.id]?.[0]);
-                ['allInput', 'passInput', 'failureInput'].forEach((key) => {
-                  document.getElementById(key).style.borderColor =
-                    key === info.id ? '#2673e5' : '#f0f2f4';
-                });
+                if (info.id !== selectCard) {
+                  handleChangeCard(info.id);
+                  ['allInput', 'passInput', 'failureInput'].forEach((key) => {
+                    document.getElementById(key).style.borderColor =
+                      key === info.id ? '#2673e5' : '#f0f2f4';
+                  });
+                }
               }}
             >
               {info.icon}
