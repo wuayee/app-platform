@@ -4,6 +4,7 @@ import {JadeStopPropagationSelect} from "@/components/common/JadeStopPropagation
 import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSelect.jsx";
 import "./style.css";
 import {useFormContext} from "@/components/DefaultRoot.jsx";
+import {UNARY_OPERATOR} from "@/common/Consts.js";
 
 const {Panel} = Collapse;
 
@@ -16,7 +17,7 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
                                    addCondition, deleteCondition, changeConditionConfig}) {
     const form = useFormContext();
 
-    const unaryOperators = ['is empty', 'is not empty', 'is true', 'is false'];
+    const unaryOperators = Object.values(UNARY_OPERATOR);
 
     const binaryOperators = ['equal', 'not equal', 'longer than', 'longer than or equal', 'shorter than', 'shorter than or equal', 'contain', 'not contain', 'greater than', 'greater than or equal', 'less than', 'less than or equal'];
 
