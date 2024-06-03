@@ -4,19 +4,50 @@ import { Tooltip } from "antd";
 import { AippContext } from '@/pages/aippIndex/context';
 import { Message } from "@shared/utils/message";
 import { PanleCloseIcon, PanleIcon, RebotIcon } from '@assets/icon';
+import { getRecommends } from '../../../../../shared/http/chat';
 
 // 猜你想问
 const Recommends = (props) => {
-  const { openClick, inspirationOpen, send, recommendList } = props;
-  const { chatRunning } = useContext(AippContext);
+  const { 
+    onSend,
+    lastContent
+   } = props;
+  const { chatRunning,aippInfo,inspirationOpen,chatList } = useContext(AippContext);
   const [ visible, setVisible ] = useState(false);
+  const [recommendList, setRecommendList] = useState([]);
+
+  function openClick() {
+    setInspirationOpen(!inspirationOpen)
+  }
+
+  // 获取推荐列表
+  async function getRecommendList() {
+    let chatLength = chatList?.length;
+    let question = chatList?.[chatLength - 2].content;
+    let answer = chatList?.[chatLength - 1].content;
+    let params = {
+      question,
+      answer
+    }
+    const res = await getRecommends(params);
+    if (res.code === 0) {
+      setRecommendList(res.data);
+    } else {
+      setRecommendList([]);
+    }
+  }
+
+  useEffect(() => {
+    // getRecommendList();
+  }, [lastContent]);
+
   // 猜你想问
   const recommendClick = (item) => {
     if (chatRunning) {
       Message({ type: "warning", content: "对话进行中, 请稍后再试" });
       return;
     }
-    send(item);
+    onSend(item);
   }
   // 换一批
   const refreshClick = () => {

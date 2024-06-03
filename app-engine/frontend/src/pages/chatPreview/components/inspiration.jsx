@@ -28,10 +28,9 @@ const Inspiration = (props) => {
     messageChecked,
     reloadInspiration,
     setPrompValue,
-    refreshPrompValue,
-    setRefreshPrompValue,
   } = useContext(AippContext);
   const { Search } = Input;
+  const [ refreshPrompValue, setRefreshPrompValue ] = useState(false);
   const [showDrop, setShowDrop] = useState(false);
   const [promptTypeList, setPromptTypeList] = useState([]);
   const [dropList, setDropList] = useState([]);

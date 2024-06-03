@@ -1,5 +1,5 @@
 
-import React, { useImperativeHandle, useState, useContext } from 'react';
+import React, { useImperativeHandle, useState, useContext, useEffect } from 'react';
 import { Modal, Upload  } from 'antd';
 import { uploadChatFile } from "@shared/http/aipp";
 import { Message } from '@shared/utils/message';
@@ -9,17 +9,18 @@ import exportImg from '@assets/images/ai/export.png'
 
 const { Dragger } = Upload;
 
-const UploadFile = ({ modalRef, fileSend }) => {
+const UploadFile = ({ openUploadRef, fileSend }) => {
   const { tenantId, appId }  = useContext(AippContext);
   const [ modalOpen, setModalOpen] = useState(false);
   const showModal = () => {
     setModalOpen(true);
   };
-  useImperativeHandle(modalRef, () => {
+  useImperativeHandle(openUploadRef, () => {
     return {
       'showModal': showModal
     }
   });
+  
   const beforeUpload = (file) => {
     return false;
   };

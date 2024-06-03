@@ -19,7 +19,6 @@ export const AippContext = createContext({
   requestLoading: '',
   setRequestLoading: '',
   clearChat: '',
-  listRef: '',
 });
 export const ChatContext = createContext({
   setShareClass: null,

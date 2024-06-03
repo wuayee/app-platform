@@ -16,19 +16,21 @@ import ReferencingApp from './referencing-app';
 import UploadFile from './upload-file';
 import StarApps from "../../star-apps";
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
+import LinkFile from './file-preview';
 
-// 操作按钮
+// 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {
-  const { aippInfo, setOpen, clear, fileCallBack, showHistory } = props;
-  const { chatRunning, tenantId, appId } = useContext(AippContext);
+  const { setOpenHistory } = props;
+  const { chatRunning, tenantId, appId,aippInfo,showHistory } = useContext(AippContext);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ openStar, setOpenStar ] = useState(false);
   const [ showAt, setShowAt ] = useState(false);
   const [ appName, setAppName ] = useState('');
   const [ appIcon, setAppIcon ] = useState(knowledgeBase);
   const [ isAt, setIsAt ] = useState(false);
-  let modalRef = useRef(null);
-  const {setChatList,setChatId,listRef,setChatRunning,setClearChat} = useContext(AippContext);
+
+  let openUploadRef = useRef(null);
+  const {setChatList,setChatId,setChatRunning,setClearChat} = useContext(AippContext);
   useEffect(() => {
     document.body.addEventListener('click', () => {
       setShowAt(false);
@@ -86,11 +88,7 @@ const EditorBtnHome = (props) => {
       Message({ type: "warning", content: "对话进行中, 请稍后再试" });
       return;
     }
-    modalRef.current.showModal();
-  }
-  // 上传文件回调
-  const fileSend = (data, type) => {
-    fileCallBack(data, type);
+    openUploadRef.current.showModal();
   }
   // 清空聊天记录
   const clearAllModal = () => {
@@ -100,15 +98,9 @@ const EditorBtnHome = (props) => {
     };
     setIsModalOpen(true);
   }
-  // 打开历史会话
-  const openHistory = () => {
-    if (chatRunning) {
-      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
-      return;
-    };
-    setOpen(true);
-  }
+  
   return <>{(
+    <div>
     <div className="btn-inner">
       <div className="inner-left">
         <div className="inner-item">
@@ -136,20 +128,18 @@ const EditorBtnHome = (props) => {
           (
             <div className="inner-item">
               <div><ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} /></div>
-              <HistoryIcon  onClick={() => setOpen(true)}/>
+              <HistoryIcon  onClick={() => setOpenHistory(true)}/>
               <span className="item-clear" onClick={() => {
                 setChatRunning(false);
                 setChatId(null);
                 setChatList(() => {
                   let arr = [];
-                  listRef.current = arr;
                   return arr;
                 });
               }}>+ 新聊天</span>
             </div>
           )
         }
-        
       </div>
       { showAt && <ReferencingApp atItemClick={atItemClick} atClick={showMoreClick}/> }
       <Modal 
@@ -161,12 +151,11 @@ const EditorBtnHome = (props) => {
         <span>清空后当前窗口聊天内容将不会被系统保存。</span>
       </Modal>
       <StarApps 
-        open={openStar} 
-        setOpen={setOpenStar} 
+        openStarSignal={openStar} 
+        // setOpen={setOpenStar}
         handleAt={atItemClick}
-        chatClick={chatClick}
       />
-      <UploadFile  modalRef={modalRef} fileSend={fileSend}/>
+    <LinkFile openUploadRef={openUploadRef}/> 
     </div>
   )}</>
 }

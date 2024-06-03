@@ -33,15 +33,12 @@ const ChatPreview = (props) => {
   const { chatStatusChange, chatType, previewBack } = props;
   const { showElsa, chatRunning, prompValue, aippInfo, appId, 
     tenantId,chatList, setChatList,chatId,setChatId,timerRef,
-    requestLoading, setRequestLoading,listRef,clearChat } =
+    requestLoading, setRequestLoading,clearChat,setInspirationOpen,inspirationOpen } =
     useContext(AippContext);
   const [checkedList, setCheckedList] = useState([]);
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [groupType, setGroupType] = useState("share");
-  const [sessionName, setSessionName] = useState(["default"]);
   const [showCheck, setShowCheck] = useState(false);
-  const [recommendList, setRecommendList] = useState([]);
   const location = useLocation();
   const chatInitObj = JSON.parse(JSON.stringify(initChat));
   let editorRef = React.createRef();
@@ -55,6 +52,7 @@ const ChatPreview = (props) => {
   let wsCurrent = useRef(null);
   let reportInstance = useRef('');
   let reportIContext = useRef(null);
+  const listRef = useRef(null);
 
   useEffect(()=>{ 
     if(clearChat>0){
@@ -86,7 +84,7 @@ const ChatPreview = (props) => {
   }, [prompValue.key]);
 
   useEffect(() => {
-    !chatType && setOpen(true);
+    !chatType && setInspirationOpen(true);
   }, []);
   // 灵感大全设置下拉列表
   function setEditorSelect(data, prompItem) {
@@ -126,7 +124,6 @@ const ChatPreview = (props) => {
 
   // 获取历史会话
   async function initChatHistory() {
-    console.log('ddd')
     setChatList(() => {
       listRef.current = [];
       return [];
@@ -189,7 +186,6 @@ const ChatPreview = (props) => {
 
   useEffect(() => {
     (aippInfo.name && !aippInfo.notShowHistory) && initChatHistory();
-    setRecommend();
   }, [aippInfo]);
   
   // 发送消息
@@ -544,10 +540,6 @@ const ChatPreview = (props) => {
     return false;
   }
   
-  function openClick() {
-    setSessionName("经营小魔方");
-    setOpen(!open);
-  }
   // 显示问答组
   function setEditorShow(val, type='share') {
     !val && setCheckedList([]);
@@ -598,23 +590,6 @@ const ChatPreview = (props) => {
       setRequestLoading(false);
     }
   }
-  // 设置推荐列表
-  function setRecommend() {
-    let arr = aippInfo.config?.form?.properties || [];
-    let recommendItem = arr.filter(item => item.name === 'recommend')[0];
-    if (recommendItem) {
-      setRecommendList(recommendItem.defaultValue);
-    }
-  }
-  // 获取推荐列表
-  async function getRecommendList(params) {
-    const res = await getRecommends(params);
-    if (res.code === 0) {
-      setRecommendList(res.data);
-    } else {
-      setRecommendList([]);
-    }
-  }
 
     // 清除历史对话记录
 async function clearChats(val) {
@@ -646,52 +621,36 @@ async function clearChats(val) {
         'chat-preview',
         showElsa ? 'chat-preview-elsa chat-preview-shadow' : null,
         location.pathname.indexOf('chat') === -1 ? 'chat-preview-inner' : null,
-        (showElsa && open) ? 'chat-preview-mr' : null
+        (showElsa && inspirationOpen) ? 'chat-preview-mr' : null
         ].join(' ')}>
           <Spin spinning={loading}>
             { showElsa && (<span className="icon-back" onClick={previewBack}>
               <LeftArrowIcon />
             </span>) }
             <div className={['chat-inner', location.pathname.indexOf('chat') !== -1 ? 'chat-page-inner' : null].join(' ')}>
-              <div className={['chat-inner-left', open ? 'chat-left-close' : 'no-border'].join(' ')}>
+              <div className={['chat-inner-left', inspirationOpen ? 'chat-left-close' : 'no-border'].join(' ')}>
                 <ChatMessage
-                  chatList={chatList}
-                  setEditorShow={setEditorShow}
                   setCheckedList={setCheckedList}
-                  setChatList={setChatList}
                   showCheck={showCheck}/>
                 { showCheck ?
                   ( <CheckGroup
-                      appId={appId}
-                      tenantId={tenantId}
-                      chatList={chatList}
+                      type={groupType}
                       setEditorShow={setEditorShow}
                       checkedList={checkedList}
-                      totalNum={chatList.length}
                       selectAllClick={selectAllClick}
                       reportClick={reportClick}
-                      type={groupType}
                     />
                   ) : (
                     <SendEditor
-                      filterRef={editorRef}
                       onSend={onSend}
-                      openClick={openClick}
-                      onStop={chatRunningStop}
                       chatType={chatType}
-                      inspirationOpen={open}
-                      requestLoading={requestLoading}
-                      open={open}
-                      openInspiration={openClick}
-                      recommendList={recommendList}
+                      filterRef={editorRef}
                     />
                   )
                 }
               </div>
-              <div className={['chat-inner-right', open ? 'chat-right-close' : null].join(' ')}>
+              <div className={['chat-inner-right', inspirationOpen ? 'chat-right-close' : null].join(' ')}>
                 <Inspiration
-                  open={open}
-                  sessionName={sessionName}
                   chatType={chatType}>
                 </Inspiration>
               </div>

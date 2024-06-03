@@ -4,7 +4,7 @@ import { AippContext } from '../aippIndex/context';
 import { getCurUser, getAippInfo, clearInstance } from '../../shared/http/aipp';
 import ChatPreview from '__pages/chatPreview/index.jsx';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
-import { useBeforeUnload, useLocation, useNavigate } from "react-router-dom";
+import { useBeforeUnload, useLocation } from "react-router-dom";
 import './index.scss'
 import {getUserCollection} from '../../shared/http/appDev'
 import { setCollectionValue, setDefaultApp } from "../../store/collection/collection";
@@ -13,18 +13,16 @@ const ChatRunning = () => {
   const [appId,setAppId] = useState('3a617d8aeb1d41a9ad7453f2f0f70d61');
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   const [ aippInfo, setAippInfo ] = useState({});
-  const listRef = useRef(null);
   const [ prompValue, setPrompValue ] = useState({});
   const [ chatRunning, setChatRunning ] = useState(false);
   const [chatList, setChatList] = useState([]);
   const [chatId,setChatId]=useState(null);
-  const [ refreshPrompValue, setRefreshPrompValue ] = useState(false);
   const [requestLoading, setRequestLoading] = useState(false);
+  const [inspirationOpen,setInspirationOpen] =useState(false);
   let timerRef = useRef(null);
   const aippRef = useRef(null);
   const[clearChat,setClearChat] =useState(null);
-
-  const navigate = useNavigate();
+  const location = useLocation();
 
   const provider={
     appId: aippId ?? appId,
@@ -33,8 +31,6 @@ const ChatRunning = () => {
     chatRunning,
     prompValue,
     setPrompValue,
-    refreshPrompValue,
-    setRefreshPrompValue,
     showHistory: true,
     setChatRunning,
     chatList,
@@ -45,14 +41,22 @@ const ChatRunning = () => {
     requestLoading, 
     setRequestLoading,
     clearChat,
-    listRef,
-    setClearChat
+    setClearChat,
+    setInspirationOpen,
+    inspirationOpen
   };
 
   const aippId = useAppSelector((state) => state.collectionStore.defaultAppId);
+  
   useEffect(()=>{
-    setAppId(aippId);
     getAippDetails();
+  },[appId])
+
+  useEffect(()=>{
+    let appIdStr=aippId;
+    if(appIdStr){
+      setAppId(aippId);
+    }
   },[aippId]);
 
   // 获取用户信息
@@ -100,28 +104,19 @@ const ChatRunning = () => {
     setChatRunning(running)
   }
 
-
-  const location = useLocation();
-
   useEffect(() => {
     // 清除默认应用
     dispatch(setDefaultApp(''))
-
   }, [location]);
 
   return (
-    <>
-      {
-        <div className="chat-engine-container">
-
-           <AippContext.Provider value={provider}>
-              <ChatPreview chatStatusChange={chatStatusChange}/>
-           </AippContext.Provider>
-        </div>
-      }
-    </>
-  )
-};
+    <div className="chat-engine-container">
+      <AippContext.Provider value={provider}>
+         <ChatPreview chatStatusChange={chatStatusChange}/>
+      </AippContext.Provider>
+    </div>
+);
+  }
 
 
 export default ChatRunning;

@@ -1,14 +1,15 @@
 
-import React, { useEffect, useState, useImperativeHandle } from 'react';
+import React, { useEffect, useState, useImperativeHandle, useContext } from 'react';
 import SendBox from './send-box/send-box.jsx';
 import ReciveBox from './recieve-box/recieve-box.jsx';
 import ChatDetail from './chat-details.jsx';
-import { ChatContext } from '../../aippIndex/context';
+import { AippContext, ChatContext } from '../../aippIndex/context';
 import { queryFeedback } from '@shared/http/chat';
 import '../styles/chat-message-style.scss';
 
 const ChatMessaga = (props) => {
-  const { chatList, setEditorShow, showCheck, setCheckedList, setChatList } = props;
+  const {chatList,setChatList} = useContext(AippContext);
+  const { showCheck, setCheckedList } = props;
   const initFeedbackStatus = async (id) => {
     if (id === 'all') {
       for (let i = 0; i < chatList.length; i++) {
@@ -45,6 +46,7 @@ const ChatMessaga = (props) => {
   useEffect(() => {
     initFeedbackStatus('all');
   }, [chatList?.length])
+  
   const scrollBottom = () => {
     setTimeout(() => {
       const messageBox = document.getElementById('chat-list-dom');
@@ -54,22 +56,15 @@ const ChatMessaga = (props) => {
       });
     }, 100)
   }
-  // 分享问答
-  function setShareClass() {
-    setEditorShow(true);
-  }
-  // 添加灵感
-  function setInspiration() {
-  }
   // 选中回调
   function checkCallBack() {
     let checkList = chatList?.filter(item => item.checked);
     setCheckedList(checkList);
   }
-  return <>{(
+  return (
     <div className={['chat-message-container', showCheck ? 'group-active' : null].join(' ')} id="chat-list-dom">
       { !chatList?.length && <ChatDetail /> }
-      <ChatContext.Provider value={{ setShareClass, setInspiration, checkCallBack, showCheck}}>
+      <ChatContext.Provider value={{ checkCallBack, showCheck}}>
         <div className='message-box'>
           {
             chatList?.map((item, index) => {
@@ -83,7 +78,7 @@ const ChatMessaga = (props) => {
         </div>
       </ChatContext.Provider>
     </div>
-  )}</>
+  )
 };
 
 

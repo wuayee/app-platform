@@ -14,13 +14,12 @@ const ChatRunning = () => {
   const [ aippInfo, setAippInfo ] = useState({});
   const [ prompValue, setPrompValue ] = useState({});
   const [ chatRunning, setChatRunning ] = useState(false);
-  const [ refreshPrompValue, setRefreshPrompValue ] = useState(false);
   const [chatId,setChatId]=useState(null);
   const navigate = useNavigate();
-  const listRef = useRef(null);
   const aippRef = useRef(null);
   const [chatList, setChatList] = useState([]);
   const[clearChat,setClearChat] =useState(null);
+  const [inspirationOpen,setInspirationOpen] =useState(false);
   useEffect(() => {
     getUser();
     getAippDetails();
@@ -57,17 +56,16 @@ const ChatRunning = () => {
     chatRunning,
     prompValue,
     setPrompValue,
-    refreshPrompValue,
-    setRefreshPrompValue,
     setChatRunning,
     showHistory: false,
     chatList,
     setChatList,
-    listRef,
     chatId,
     setChatId,
     clearChat,
-    setClearChat
+    setClearChat,
+    inspirationOpen,
+    setInspirationOpen
   };
   return (
     <>

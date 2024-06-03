@@ -17,18 +17,19 @@ import { useNavigate, useLocation } from "react-router-dom";
 const { ICON_URL } = process.env.NODE_ENV === 'development' ? { ICON_URL: `${window.location.origin}/api`} : httpUrlMap[process.env.NODE_ENV];
 
 interface StarAppsProps {
-  open: boolean;
-  setOpen: (val: boolean) => void;
+  openStarSignal: boolean;
   handleAt: (val: any) => void;
-  chatClick: (val: any) => void;
 }
 
-
-
-const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick }) => {
+const StarApps: React.FC<StarAppsProps> = ({ openStarSignal, 
+   handleAt}) => {
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   const navigate = useNavigate();
   const [apps, setApps] = useState<any[]>([]);
+  const [ open, setOpen ] = useState(false);
+  useEffect(()=>{
+    setOpen(openStarSignal);},
+    [openStarSignal])
   const clickMap: any = {
 
     // 设为默认
@@ -71,10 +72,6 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
       key: "3",
       label: "取消默认",
     },
-    // {
-    //   key: "1",
-    //   label: "取消收藏",
-    // },
   ];
 
   const count = useAppSelector((state: any) => state.collectionStore.value);
@@ -129,6 +126,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
   // 开始聊天
   const startChat = (item: any) => {
     dispatch(setDefaultApp(item?.appId || ''));
+    setOpen(false);
     // navigate(`/app/${tenantId}/chat/${item.aippId}`);
   }
 
