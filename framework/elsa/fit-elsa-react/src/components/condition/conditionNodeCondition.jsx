@@ -103,18 +103,12 @@ export const conditionNodeCondition = (id, x, y, width, height, parent, drawer) 
     self.getRunReportSections = () => {
         const branches = self.getLatestJadeConfig().branches;
         const sectionSource = self.input ? self.input.branches : transformData(branches);
-
-        const conditionResult = sectionSource.map((branch, index) => {
+        // 过滤掉else分支
+        return sectionSource.filter(branch => !branch.conditions.some(condition => condition.condition === 'true')).map((branch, index) => {
             const no = (index + 1).toString();
             const name = "条件 " + no;
             return {no: no, name: name, type: SECTION_TYPE.CONDITION, data: branch}
-        })
-        return [...conditionResult, {
-            no: "2",
-            name: "输出",
-            type: SECTION_TYPE.DEFAULT,
-            data: self.getOutputData(self.output)
-        }];
+        });
     };
 
     return self;

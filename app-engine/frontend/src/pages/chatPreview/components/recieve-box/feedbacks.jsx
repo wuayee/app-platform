@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { LikeIcon, UnlikeIcon, LikeSelectIcon, UnlikeSelectIcon } from '@/assets/icon';
 import { Modal, Input } from "antd";
 import { feedbacksRq, updateFeedback, deleteFeedback } from '@shared/http/chat';
@@ -18,13 +18,13 @@ const Feedbacks = ({ logId, instanceId, feedbackStatus, refreshFeedbackStatus })
   };
   const unLikeClickConfirm = async () => {
     if (feedbackStatus === -1) {
-      let params = { "usrFeedback": "0", "usrFeedbackText": textValue, "instanceId": instanceId }
+      let params = { "usrFeedback": "1", "usrFeedbackText": textValue, "instanceId": instanceId }
       await feedbacksRq(params);
     }
-    else if (feedbackStatus === 0) {
+    else if (feedbackStatus === 1) {
       await deleteFeedback(instanceId);
     } else {
-      let data = { "usrFeedback": "0", "usrFeedbackText": textValue }
+      let data = { "usrFeedback": "1", "usrFeedbackText": textValue }
       await updateFeedback(instanceId, data);
     }
     refreshFeedbackStatus(instanceId);
@@ -32,13 +32,13 @@ const Feedbacks = ({ logId, instanceId, feedbackStatus, refreshFeedbackStatus })
   // 点赞
   const likeClick = async () => {
     if (feedbackStatus === -1) {
-      let params = { "usrFeedback": "1", "usrFeedbackText": "", "instanceId": instanceId }
+      let params = { "usrFeedback": "0", "usrFeedbackText": "", "instanceId": instanceId }
       await feedbacksRq(params);
     }
-    else if (feedbackStatus === 1) {
+    else if (feedbackStatus === 0) {
       await deleteFeedback(instanceId);
     } else {
-      let data = { "usrFeedback": "1", "usrFeedbackText": "" }
+      let data = { "usrFeedback": "0", "usrFeedbackText": "" }
       await updateFeedback(instanceId, data);
     }
     refreshFeedbackStatus(instanceId);
@@ -46,7 +46,7 @@ const Feedbacks = ({ logId, instanceId, feedbackStatus, refreshFeedbackStatus })
   // 点踩
   const unLikeClick = () => {
     setTextValue('');
-    if (feedbackStatus !== 0) {
+    if (feedbackStatus !== 1) {
       setIsModalOpen(true);
     } else {
       unLikeClickConfirm();
@@ -59,10 +59,10 @@ const Feedbacks = ({ logId, instanceId, feedbackStatus, refreshFeedbackStatus })
     <div className="feed-inner">
       <div className="feed-left"></div>
       <div className="feed-right">
-        {feedbackStatus !== 1 && <LikeIcon onClick={likeClick} />}
-        {feedbackStatus === 1 && <LikeSelectIcon onClick={likeClick} />}
-        {feedbackStatus !== 0 && <UnlikeIcon onClick={unLikeClick} />}
-        {feedbackStatus === 0 && <UnlikeSelectIcon onClick={unLikeClick} />}
+        {feedbackStatus !== 0 && <LikeIcon onClick={likeClick} />}
+        {feedbackStatus === 0 && <LikeSelectIcon onClick={likeClick} />}
+        {feedbackStatus !== 1 && <UnlikeIcon onClick={unLikeClick} />}
+        {feedbackStatus === 1 && <UnlikeSelectIcon onClick={unLikeClick} />}
       </div>
       <Modal title="问题反馈" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered>
         <TextArea rows={4} placeholder="请输入" value={textValue} onChange={onChange} />

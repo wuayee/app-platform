@@ -1,4 +1,4 @@
-import { del, get, post, put } from './http';
+import { del, get, post, patch } from './http';
 import { httpUrlMap } from './httpConfig';
 
 const { AI_URL, MODEL_LIST_URL, PLUGIN_URL } = httpUrlMap[process.env.NODE_ENV];

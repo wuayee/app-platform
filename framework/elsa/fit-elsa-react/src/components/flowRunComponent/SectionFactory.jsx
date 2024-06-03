@@ -2,7 +2,7 @@ import SectionHeader from "@/components/flowRunComponent/SectionHeader.jsx";
 import SectionContent from "@/components/flowRunComponent/SectionContent.jsx";
 import {v4 as uuidv4} from "uuid";
 import {Card} from "antd";
-import {SECTION_TYPE} from "@/common/Consts.js";
+import {SECTION_TYPE, UNARY_OPERATOR} from "@/common/Consts.js";
 
 /**
  * 构造运行报告的章节
@@ -12,6 +12,8 @@ import {SECTION_TYPE} from "@/common/Consts.js";
  * @constructor
  */
 export default function SectionFactory({shape}) {
+    // 一元表达式
+    const unaryOperators = Object.values(UNARY_OPERATOR);
 
     /**
      * 构造默认章节
@@ -22,9 +24,33 @@ export default function SectionFactory({shape}) {
     const buildDefaultSection = section => (<div key={`section-${section.no}-${uuidv4()}`} className="section">
         <SectionHeader section={section} shape={shape}/>
         <div className="json-tree-section default-json-tree-section-width">
-            <SectionContent data={section.data}/>
+            <SectionContent data={Object.keys(section.data).length === 0 ? `""` : section.data}/>
         </div>
     </div>);
+
+    const convertValue = (type, value) => {
+        if (type === "Object") {
+            return value ? value : '{}';
+        } else if (type === "Array") {
+            return value.length !== 0 ? value : '[]';
+        } else {
+            return value ? value : '""';
+        }
+    };
+
+    const _convertLeftValue = (condition, value) => {
+        return convertValue(condition.left.type, value);
+    };
+
+    const _convertRightValue = (condition) => {
+        // 如果是一元运算符，则不处理右值
+        if (unaryOperators.includes(condition.condition)) {
+            return {};
+        }
+        // 后端不会返回{}这种类型的空对象数据
+        let rightValue = condition.right.value;
+        return convertValue(condition.right.type, rightValue);
+    };
 
     /**
      * 构造条件章节
@@ -38,7 +64,9 @@ export default function SectionFactory({shape}) {
                 {section.data.conditions
                         .filter(c => c.condition !== "true" || c.left)
                         .map((condition, index) => {
-                            const {key, value} = condition.left;
+                            let {key, value} = condition.left;
+                            value = _convertLeftValue(condition, value);
+                            const rightValue = _convertRightValue(condition);
                             const separatorIndex = key.indexOf(".");
                             const referenceNodeId = key.substring(0, separatorIndex);
                             const text = shape.page.getShapeById(referenceNodeId).text;
@@ -46,24 +74,24 @@ export default function SectionFactory({shape}) {
                             let isShowLogic = section.data.conditions.length > 1 && index < section.data.conditions.length - 1;
                             return (<div key={`condition-container-${section.no}-${uuidv4()}`}
                                          className={"condition-container"}>
-                                        <div key={`condition-card-${index}-${uuidv4()}`} className="condition-card">
-                                            <div className="json-tree-section condition-json-tree-section-width">
-                                                <SectionContent data={{[newKey]: value}}/>
-                                            </div>
-                                            <svg className="line-svg">
-                                                <line x1="50%" y1="0" x2="50%" y2="100%" stroke="rgba(29,28,35,.16)"/>
-                                            </svg>
-                                            <Card className="center-card">
-                                                <div className="center-text">{condition.condition}</div>
-                                            </Card>
-                                            <div className="json-tree-section condition-json-tree-section-width">
-                                                <SectionContent data={condition.right ? condition.right.value : {}}/>
-                                            </div>
-                                        </div>
-                                        {isShowLogic && <div className={"condition-logic"}>
-                                            {section.data.conditionRelation}
-                                        </div>}
-                                    </div>);
+                                <div key={`condition-card-${index}-${uuidv4()}`} className="condition-card">
+                                    <div className="json-tree-section condition-json-tree-section-width">
+                                        <SectionContent data={{[newKey]: value}}/>
+                                    </div>
+                                    <svg className="line-svg">
+                                        <line x1="50%" y1="0" x2="50%" y2="100%" stroke="rgba(29,28,35,.16)"/>
+                                    </svg>
+                                    <Card className="center-card">
+                                        <div className="center-text">{condition.condition}</div>
+                                    </Card>
+                                    <div className="json-tree-section condition-json-tree-section-width">
+                                        <SectionContent data={rightValue}/>
+                                    </div>
+                                </div>
+                                {isShowLogic && <div className={"condition-logic"}>
+                                    {section.data.conditionRelation}
+                                </div>}
+                            </div>);
                         })}
             </div>);
 
