@@ -51,6 +51,14 @@ public interface SqlConnector {
     List<Map<String, Object>> execute(String sql);
 
     /**
+     * 批量执行sql语句。
+     *
+     * @param sqls 表示批量sql语句的 {@link List}{@code <}{@link String}{@code >}
+     * @return 返回批量执行的结果。
+     */
+    List<List<Map<String, Object>>> executeBatch(List<String> sqls);
+
+    /**
      * 创建表。
      *
      * @param tableName 表名称

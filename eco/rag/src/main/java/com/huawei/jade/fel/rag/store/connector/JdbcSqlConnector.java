@@ -9,6 +9,7 @@ import com.huawei.jade.fel.rag.store.connector.schema.RdbColumn;
 import com.huawei.jade.fel.rag.store.query.Expression;
 
 import lombok.NonNull;
+import lombok.Setter;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -29,7 +30,10 @@ import java.util.Map;
  */
 public class JdbcSqlConnector implements SqlConnector {
     private static final Logger logger = Logger.get(JdbcSqlConnector.class);
+    private static final int BATCH_LIMIT = 1000;
 
+    @Setter
+    private int batchLimit = BATCH_LIMIT;
     private Connection connection = null;
 
     /**
@@ -119,6 +123,64 @@ public class JdbcSqlConnector implements SqlConnector {
             close(stmt);
         }
         return rows;
+    }
+
+    private List<Map<String, Object>> executeSql(Statement stmt, String sql) {
+        List<Map<String, Object>> rows = new ArrayList<>();
+        ResultSet rs = null;
+
+        try {
+            if (stmt.execute(sql)) {
+                rs = stmt.getResultSet();
+                rows = processRows(rs);
+            }
+        } catch (SQLException e) {
+            logger.error("Failed to execute sql in execute batch");
+        } finally {
+            close(rs);
+        }
+
+        return rows;
+    }
+
+    @Override
+    public List<List<Map<String, Object>>> executeBatch(List<String> sqls) {
+        if (sqls == null || sqls.isEmpty()) {
+            return null;
+        }
+        Statement stmt = null;
+        List<List<Map<String, Object>>> resultSets = new ArrayList<>();
+
+        try {
+            stmt = connection.createStatement();
+            connection.setAutoCommit(false);
+            int batchSize = 0;
+
+            for (String sql : sqls) {
+                resultSets.add(executeSql(stmt, sql));
+                batchSize++;
+                if (batchSize >= batchLimit) {
+                    connection.commit();
+                    batchSize = 0;
+                }
+            }
+
+            connection.commit();
+        } catch (SQLException e) {
+            logger.error("Failed to execute transaction");
+        } finally {
+            close(stmt);
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                } catch (SQLException e) {
+                    logger.error("Failed to close connection");
+                }
+            }
+        }
+
+        return resultSets;
     }
 
     private List<Map<String, Object>> processRows(ResultSet rs) throws SQLException {
