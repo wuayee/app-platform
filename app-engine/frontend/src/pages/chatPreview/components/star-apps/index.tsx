@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Avatar, Button, Drawer, Input, Dropdown } from "antd";
 import type { MenuProps } from "antd";
 import {
@@ -13,23 +13,20 @@ import { setCollectionValue, setDefaultApp } from "../../../../store/collection/
 import { useAppSelector, useAppDispatch } from "../../../../store/hook";
 import { AnyAction } from "redux";
 import { useNavigate, useLocation } from "react-router-dom";
+import { AippContext } from "../../../aippIndex/context";
 
 const { ICON_URL } = process.env.NODE_ENV === 'development' ? { ICON_URL: `${window.location.origin}/api`} : httpUrlMap[process.env.NODE_ENV];
 
 interface StarAppsProps {
-  openStarSignal: boolean;
   handleAt: (val: any) => void;
 }
 
-const StarApps: React.FC<StarAppsProps> = ({ openStarSignal, 
+const StarApps: React.FC<StarAppsProps> = ({
    handleAt}) => {
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   const navigate = useNavigate();
+  const { openStar, setOpenStar }  = useContext(AippContext);
   const [apps, setApps] = useState<any[]>([]);
-  const [ open, setOpen ] = useState(false);
-  useEffect(()=>{
-    setOpen(openStarSignal);},
-    [openStarSignal])
   const clickMap: any = {
 
     // 设为默认
@@ -126,7 +123,7 @@ const StarApps: React.FC<StarAppsProps> = ({ openStarSignal,
   // 开始聊天
   const startChat = (item: any) => {
     dispatch(setDefaultApp(item?.appId || ''));
-    setOpen(false);
+    setOpenStar(false);
     // navigate(`/app/${tenantId}/chat/${item.aippId}`);
   }
 
@@ -144,13 +141,13 @@ const StarApps: React.FC<StarAppsProps> = ({ openStarSignal,
           </div>
           <CloseOutlined
             style={{ fontSize: 20 }}
-            onClick={() => setOpen(false)}
+            onClick={() => setOpenStar(false)}
           />
         </div>
       }
       closeIcon={false}
-      onClose={() => setOpen(false)}
-      open={open}
+      onClose={() => setOpenStar(false)}
+      open={openStar}
     >
       <Input placeholder="搜索应用" prefix={<SearchOutlined />} />
       <div className="app-wrapper">
@@ -193,7 +190,7 @@ const StarApps: React.FC<StarAppsProps> = ({ openStarSignal,
         ))}
       </div>
       <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
-        <Button onClick={() => setOpen(false)} className="close-button">
+        <Button onClick={() => setOpenStar(false)} className="close-button">
           关闭
         </Button>
       </div>

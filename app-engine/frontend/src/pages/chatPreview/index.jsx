@@ -30,18 +30,19 @@ import "./styles/chat-preview.scss";
 import { creatChat, tenantId, updateChat } from "../../shared/http/chat.js";
 
 const ChatPreview = (props) => {
-  const { chatStatusChange, chatType, previewBack } = props;
-  const { showElsa, chatRunning, prompValue, aippInfo, appId, 
-    tenantId,chatList, setChatList,chatId,setChatId,timerRef,
-    requestLoading, setRequestLoading,clearChat,setInspirationOpen,inspirationOpen } =
-    useContext(AippContext);
+  const { chatType, previewBack } = props;
+  const { chatRunning, aippInfo, appId, tenantId,chatList, 
+    setChatList,chatId,setChatId,clearChat,showElsa,
+    inspirationOpen,setInspirationOpen,setChatRunning} = useContext(AippContext);
   const [checkedList, setCheckedList] = useState([]);
+  const [ prompValue, setPrompValue ] = useState({});
   const [loading, setLoading] = useState(false);
   const [groupType, setGroupType] = useState("share");
   const [showCheck, setShowCheck] = useState(false);
   const location = useLocation();
   const chatInitObj = JSON.parse(JSON.stringify(initChat));
   let editorRef = React.createRef();
+  let timerRef = useRef(null);
   let regex = /{{(.*?)}}/g;
   let runningInstanceId = useRef("");
   let runningVersion = useRef("");
@@ -53,6 +54,11 @@ const ChatPreview = (props) => {
   let reportInstance = useRef('');
   let reportIContext = useRef(null);
   const listRef = useRef(null);
+
+  // 设置会话状态
+  const chatStatusChange = (running) => {
+    setChatRunning(running)
+  }
 
   useEffect(()=>{ 
     if(clearChat>0){
@@ -572,8 +578,6 @@ const ChatPreview = (props) => {
   }
   // 终止进行中的对话
   async function chatRunningStop() {
-    setRequestLoading(true);
-    try {
       clearInterval(timerRef.current);
       const res = await stopInstance(tenantId, runningInstanceId.current);
       if (res.code === 0) {
@@ -584,11 +588,7 @@ const ChatPreview = (props) => {
           runningAppid.current,
           runningVersion.current,
           runningInstanceId.current
-        );
-      }
-    } finally {
-      setRequestLoading(false);
-    }
+        );}
   }
 
     // 清除历史对话记录
@@ -604,19 +604,14 @@ async function clearChats(val) {
     setChatList([]);
     return
   }
-  try {
-    setRequestLoading(true);
     const res = await clearInstance(tenantId, appId, 'preview');
     if (res.code === 0) {
       setChatList([]);
       clearInterval(timerRef.current);
       insLogIds = [];
     }
-  } finally {
-    setRequestLoading(false);
-  }
 }
-  return <>{(
+  return (
       <div className={[
         'chat-preview',
         showElsa ? 'chat-preview-elsa chat-preview-shadow' : null,
@@ -645,20 +640,20 @@ async function clearChats(val) {
                       onSend={onSend}
                       chatType={chatType}
                       filterRef={editorRef}
+                      inspirationOpen={inspirationOpen}
                     />
                   )
                 }
               </div>
               <div className={['chat-inner-right', inspirationOpen ? 'chat-right-close' : null].join(' ')}>
                 <Inspiration
-                  chatType={chatType}>
+                  chatType={chatType} setPrompValue={setPrompValue}>
                 </Inspiration>
               </div>
             </div>
         </Spin>
     </div>
-    )}
-  </>
+    )
 };
 
 export default ChatPreview;

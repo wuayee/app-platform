@@ -1,7 +1,6 @@
 import React, {
   useEffect,
   useState,
-  useContext,
   useCallback,
   useRef,
   useImperativeHandle
@@ -25,7 +24,6 @@ import {
   CloseIcon,
   RunIcon
 } from '@assets/icon';
-import { AippContext } from '../aippIndex/context';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { debounce } from '../../shared/utils/common';
 import { Message } from '../../shared/utils/message';
@@ -40,7 +38,7 @@ import TestStatus from "../components/test-status";
 const { Search } = Input;
 
 const AddFlow = (props) => {
-  const { type } = props;
+  const { type,aippInfo } = props;
   const [ dragData, setDragData ] = useState([]);
   const { tenantId, appId } = useParams();
   const [ timestamp, setTimestamp ] = useState(new Date());
@@ -64,7 +62,6 @@ const AddFlow = (props) => {
       appearance: null
     }
   });
-  const { aippInfo }  = useContext(AippContext);
   const navigate = useNavigate();
   const appRef = useRef(null);
   const isChange = useRef(false);

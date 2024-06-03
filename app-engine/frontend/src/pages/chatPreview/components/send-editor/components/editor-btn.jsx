@@ -91,7 +91,7 @@ const EditorBtn = (props) => {
       {
         <div className="send-editor-btn">
           <div className="quill-item-inner">
-            {!chatType && (
+            {chatType!=='preview' && (
               <span className="quill-span quill-item-span" onClick={onExit}>
                 <img src={exit} alt="" />
                 <span>退出助手</span>

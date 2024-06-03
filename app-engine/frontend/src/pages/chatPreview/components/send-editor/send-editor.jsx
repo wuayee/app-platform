@@ -30,7 +30,7 @@ const SendEditor = (props) => {
   const [ showSelect, setShowSelect ] = useState(false);
   const [ showClear, setShowClear ] = useState(false);
   const [ positionConfig, setPositionConfig ] = useState({});
-  const { chatRunning, showHistory,inspirationOpen }  = useContext(AippContext);
+  const { chatRunning }  = useContext(AippContext);
   const { WS_AUDIO_URL } = httpUrlMap[process.env.NODE_ENV];
   const [lastSendContent,setLastSend]=useState(null);
   const editorRef = useRef(null);
@@ -171,7 +171,6 @@ const SendEditor = (props) => {
       <div className='editor-inner'>
         <EditorBtnHome 
           setOpenHistory={setOpenHistory}
-          showHistory = {showHistory}
         />
         <div className='editor-input' id="drop">
           <div

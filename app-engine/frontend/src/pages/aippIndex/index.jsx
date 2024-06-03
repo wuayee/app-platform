@@ -1,46 +1,39 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Spin, Tooltip } from 'antd';
-import Header from '__pages/components/header.jsx';
-import ConfigForm from '__pages/configForm/index.jsx';
-import ChatPreview from '__pages/chatPreview/index.jsx';
-import AddFlow from '__pages/addFlow/index.jsx';
 import { TalkFlowIcon  } from '@assets/icon';
-import { AippContext } from './context';
 import { templateJson } from './template';
 import { getCurUser, getAippInfo } from '@shared/http/aipp';
 import { updateFormInfo } from '@shared/http/aipp';
 import { debounce, getUiD } from "@shared/utils/common";
 import { Message } from "@shared/utils/message";
+import AddFlow from '../addFlow';
+import ConfigForm from '../configForm';
+import CommonChat from '../chatPreview/chatComminPage';
 
 const AippIndex = () => {
   const { appId, tenantId } = useParams();
   const [ showElsa, setShowElsa ] = useState(false);
   const [ spinning, setSpinning] = useState(false);
   const [ aippInfo, setAippInfo] = useState({});
-  const [ chatRunning, setChatRunning ] = useState(false);
   const [ showChat, setShowChat ] = useState(false);
   const [ messageChecked, setMessageCheck ] = useState(false);
-  const [ prompValue, setPrompValue ] = useState({});
-  const [ reloadInspiration, setReloadInspiration ] = useState('');
   const [ isTested, setIsTested ] = useState(false);
   const [ testStatus, setTestStatus ] = useState('Running');
   const [ isTesting, setIsTesting ] = useState(false);
   const [ testTime, setTestTime ] = useState(0);
-  const [chatList, setChatList] = useState([]);
   const aippRef = useRef(null);
   const inspirationRefresh = useRef(false);
   let addFlowRef = React.createRef();
   const [chatId,setChatId]=useState(null);
   const[clearChat,setClearChat] =useState(null);
-  const [inspirationOpen,setInspirationOpen] =useState(false);
 
   const elsaChange = () => {
     setShowElsa(!showElsa);
     showElsa && getAippDetails();
   }
   useEffect(() => {
-    getUser();
+    // getUser();
     getAippDetails();
   }, [])
 
@@ -52,7 +45,6 @@ const AippIndex = () => {
       if (res.code === 0) {
         setAippInfo(() => {
           res.data.notShowHistory = true;
-          aippRef.current = JSON.parse(JSON.stringify(res.data));
           return res.data
         });
       }
@@ -67,10 +59,7 @@ const AippIndex = () => {
       return aippRef.current
     })
   }
-  // 设置会话状态
-  const chatStatusChange = (running) => {
-    setChatRunning(running)
-  }
+
   // 获取用户信息
   const getUser = () => {
     getCurUser().then(res => {
@@ -88,7 +77,6 @@ const AippIndex = () => {
         if (inspirationRefresh.current) {
           inspirationRefresh.current = false;
           let key = getUiD();
-          setReloadInspiration(key);
         }
       }
     })
@@ -106,58 +94,37 @@ const AippIndex = () => {
   const handleConfigDataChange = (data) => {
     handleSearch(data);
   };
-  const provider = {
+  const contextProvider = {
     appId,
     tenantId,
-    showElsa,
     aippInfo,
     messageChecked,
     setMessageCheck,
-    prompValue,
-    reloadInspiration,
-    setPrompValue,
-    chatRunning,
+    showElsa,
     updateAippCallBack,
-    chatList,
-    setChatList,
-    chatRunning,
-    setChatRunning,
-    chatId,
-    setChatId,
-    clearChat,
-    setClearChat,
-    inspirationOpen,
-    setInspirationOpen
   };
   return (
     <>
       {
         <div className="container">
-          <Header
-            aippInfo={aippInfo}
-            showElsa={showElsa}
-            updateAippCallBack={updateAippCallBack}
-            mashupClick={elsaChange}
-            chatRunning={chatRunning}
-          />
           <div className={[
             "layout-content",
             showElsa ? "layout-elsa-content" : null,
             showChat ? "layout-show-preview" : null
           ].join(' ')}
           >
-            <AippContext.Provider value={provider}>
               {showElsa ? (
-                <AddFlow type="edit"/>
+                <AddFlow type="edit" aippInfo={aippInfo}/>
               ) : (
                 <ConfigForm
                   mashupClick={elsaChange}
                   configData={aippInfo.config}
                   handleConfigDataChange={handleConfigDataChange}
                   inspirationChange={inspirationChange}
+                  showElsa={showElsa}
                 />
               )}
-                <ChatPreview chatStatusChange={chatStatusChange} chatType="preview" previewBack={changeChat}/>
+              <CommonChat chatType="preview" contextProvider={contextProvider} previewBack={changeChat} /> 
               {
                 (!showChat && showElsa) &&
                 <Tooltip placement="leftTop" title="展开预览与调试区">
@@ -165,9 +132,7 @@ const AippIndex = () => {
                     <TalkFlowIcon />
                   </div>
                 </Tooltip>
-
               }
-            </AippContext.Provider>
           </div>
         </div>
       }

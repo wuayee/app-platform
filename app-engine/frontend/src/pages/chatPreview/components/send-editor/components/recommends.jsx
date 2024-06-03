@@ -10,9 +10,9 @@ import { getRecommends } from '../../../../../shared/http/chat';
 const Recommends = (props) => {
   const { 
     onSend,
-    lastContent
+    lastContent,
    } = props;
-  const { chatRunning,aippInfo,inspirationOpen,chatList } = useContext(AippContext);
+  const { chatRunning,aippInfo,chatList,inspirationOpen,setInspirationOpen } = useContext(AippContext);
   const [ visible, setVisible ] = useState(false);
   const [recommendList, setRecommendList] = useState([]);
 

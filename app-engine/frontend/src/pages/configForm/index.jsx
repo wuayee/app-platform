@@ -1,18 +1,17 @@
 
-import React, { useEffect, useState, useContext} from 'react';
+import React, { useEffect, useState} from 'react';
 import { WorkFlowIcon } from '@assets/icon';
 import { ConfigFormWrap } from './styled';
 import ConfigUI from './configUi/index.jsx';
-import { AippContext } from '../aippIndex/context';
 
 const ConfigForm = (props) => {
   const { 
     mashupClick, 
     configData, 
     handleConfigDataChange, 
-    inspirationChange 
+    inspirationChange,
+    showElsa 
   } = props;
-  const { showElsa }  = useContext(AippContext);
   const [ activeKey, setActiveKey ] = useState('application');
   const tab = [
     { name: '应用能力配置', key: 'application' },

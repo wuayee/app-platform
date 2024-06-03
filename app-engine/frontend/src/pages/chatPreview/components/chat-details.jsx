@@ -11,9 +11,8 @@ import StarApps from "./star-apps";
 import { AppBoxIcon, CreateAppIcon } from '@assets/icon';
 
 const ChatDetail = () => {
-  const { aippInfo, tenantId }  = useContext(AippContext);
+  const { aippInfo, tenantId,openStar, setOpenStar }  = useContext(AippContext);
   const [ modalInfo, setModalInfo ] = useState({});
-  const [ openStar, setOpenStar ] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   let modalRef = useRef();
@@ -81,7 +80,6 @@ const ChatDetail = () => {
               </div>
             </div>
           </div>
-          <StarApps open={openStar} setOpen={setOpenStar} />
         </div>
       ) : (
         <div className="top">

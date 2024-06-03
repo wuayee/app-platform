@@ -21,9 +21,8 @@ import LinkFile from './file-preview';
 // 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {
   const { setOpenHistory } = props;
-  const { chatRunning, tenantId, appId,aippInfo,showHistory } = useContext(AippContext);
+  const { chatRunning, tenantId, appId,aippInfo ,setOpenStar} = useContext(AippContext);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
-  const [ openStar, setOpenStar ] = useState(false);
   const [ showAt, setShowAt ] = useState(false);
   const [ appName, setAppName ] = useState('');
   const [ appIcon, setAppIcon ] = useState(knowledgeBase);
@@ -74,9 +73,7 @@ const EditorBtnHome = (props) => {
       return;
     }
     setShowAt(false);
-    if(showHistory) {
-      setOpenStar(true)
-    }
+    setOpenStar(true)
   }
   // 开始聊天
   const chatClick = (item) => {
@@ -99,8 +96,7 @@ const EditorBtnHome = (props) => {
     setIsModalOpen(true);
   }
   
-  return <>{(
-    <div>
+  return (
     <div className="btn-inner">
       <div className="inner-left">
         <div className="inner-item">
@@ -151,13 +147,11 @@ const EditorBtnHome = (props) => {
         <span>清空后当前窗口聊天内容将不会被系统保存。</span>
       </Modal>
       <StarApps 
-        openStarSignal={openStar} 
-        // setOpen={setOpenStar}
         handleAt={atItemClick}
       />
     <LinkFile openUploadRef={openUploadRef}/> 
     </div>
-  )}</>
+  );
 }
 
 
