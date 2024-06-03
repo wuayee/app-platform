@@ -180,6 +180,26 @@ let jadeEvent = (id, x, y, width, height, parent, drawer) => {
         return self.getToShape();
     };
 
+    /**
+     * jadeEvent的x/y/width/height变化不需要触发dirties.
+     *
+     * @param property 属性名称.
+     * @param value 属性值.
+     * @param preValue 属性之前的值.
+     * @return {boolean|*} true/false.
+     */
+    const load = self.load;
+    self.load = () => {
+        load.apply(self);
+        const propertyChanged = self.propertyChanged;
+        self.propertyChanged = (property, value, preValue) => {
+            if (property === "height" || property === "width" || property === "x" || property === "y") {
+                return false;
+            }
+            return propertyChanged.apply(self, [property, value, preValue]);
+        };
+    };
+
     return self;
 };
 

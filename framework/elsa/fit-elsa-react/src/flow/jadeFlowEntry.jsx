@@ -58,7 +58,6 @@ const jadeFlowAgent = (graph) => {
                 s.setRunStatus(data.status === "ERROR" ? NODE_STATUS.ERROR : NODE_STATUS.SUCCESS);
                 s.setRunReportSections(data);
             } else {
-                // todo 直接前继节点中，如果包括了条件节点或者有失败的节点，状态就不能是running
                 const preNodes = s.getDirectPreNodeIds();
                 if (preNodes.some(s => s.type === "conditionNodeCondition" || s.runStatus === NODE_STATUS.ERROR)) {
                     return;
@@ -215,8 +214,6 @@ export const JadeFlow = (() => {
             await g.dynamicImportStatement(importStatements[i]);
         }
         await g.initialize();
-        // todo 不需要重新添加页面
-        // g.addPage("newFlowPage");
         g.deSerialize(flowConfigData);
         const pageData = g.getPageData(0);
         await g.edit(0, div, pageData.id);
