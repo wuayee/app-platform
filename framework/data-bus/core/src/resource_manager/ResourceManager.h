@@ -93,11 +93,9 @@ private:
     void UpdateLastUsedTime(int32_t sharedMemoryId);
     void UpdateExpiryTime(int32_t sharedMemoryId);
 
+    const Runtime::Config& config_;
     std::ofstream logStream_;
-    uint64_t mallocSizeLimit_; // 内存分配上限
     uint64_t curMallocSize_; // 当前已分配内存大小
-    int32_t memoryTtlDuration_; // 内存块存活时长（毫秒）
-    int32_t memorySweepInterval_; // 过期内存块清理周期（毫秒）
     // TD: 把过期内存清扫线程抽离到资源管理模块之外
     std::atomic<bool> stopMemorySweepThread_; // 是否停止过期内存清扫线程
     std::thread memorySweepThread_; // 过期内存扫描线程
