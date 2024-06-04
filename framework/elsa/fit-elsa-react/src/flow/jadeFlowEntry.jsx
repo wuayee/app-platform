@@ -152,6 +152,9 @@ const jadeFlowAgent = (graph) => {
      */
     self.validate = async () => {
         const nodes = graph.activePage.shapes.filter(s => s.isTypeof("jadeNode"));
+        if (nodes.length < 3) {
+            return Promise.reject("流程校验失败，至少需要三个节点");
+        }
         const validationPromises = nodes.map(s => s.validate().catch(error => error));
         const results = await Promise.all(validationPromises);
         // 获取所有校验失败的信息
