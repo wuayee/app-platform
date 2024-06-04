@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import {DefaultRoot} from "@/components/DefaultRoot.jsx";
 import {v4 as uuidv4} from "uuid";
 import {Header} from "@/components/Header.jsx";
-import {NODE_STATUS, SECTION_TYPE} from "@/common/Consts.js";
+import {NODE_STATUS, SECTION_TYPE, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 import {useRef} from "react";
 
 /**
@@ -187,6 +187,12 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
 
         // 从当前节点开始启动递归
         explorePreShapesRecursive(self.id);
+        // 统一加上虚拟上下文节点信息
+        formerNodesInfo.push({
+            id: VIRTUAL_CONTEXT_NODE.id,
+            name: VIRTUAL_CONTEXT_NODE.name,
+            observableList: self.page.getObservableList(VIRTUAL_CONTEXT_NODE.id)
+        });
         formerNodesInfo.shift();
         return formerNodesInfo;
     };
