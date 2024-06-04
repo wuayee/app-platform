@@ -21,7 +21,7 @@ export default function ManualCheckFormWrapper() {
     const formName = data.formName;
     const taskId = data.taskId;
     const [formOptions, setFormOptions] = useState([]);
-    const selectedFormDefaultValue = (formName === null || formName === undefined) ? undefined : `${formName.replace(/Component$/, '')} | ${taskId}`;
+    const selectedFormDefaultValue = (formName === null || formName === undefined) ? undefined : `${formName.replace(/Component$/, '')}|${taskId}`;
 
     useEffect(() => {
         // 发起网络请求获取 options 数据
