@@ -20,7 +20,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -40,7 +39,7 @@ public class MetricsAnalysisServiceImpl implements MetricsAnalysisService {
     /**
      * collect data hourly
      */
-    @Scheduled(strategy = Scheduled.Strategy.FIXED_RATE, value = "3600000", timeUnit = TimeUnit.MILLISECONDS)
+    @Scheduled(strategy = Scheduled.Strategy.CRON, value = "0 0 0/1 * * ?")
     @Override
     public void collectAccessData() {
         LocalDateTime endTime = LocalDateTime.now();
@@ -50,14 +49,17 @@ public class MetricsAnalysisServiceImpl implements MetricsAnalysisService {
                 metricMessages.stream()
                         .collect(Collectors.groupingBy(ConversationRecordPo::getAppId, Collectors.counting()));
 
-        totalAccessByApp.forEach(
-                (appId, totalAccess) -> {
+        List<MetricsAccessPo> metricsAccessList = totalAccessByApp.entrySet().stream()
+                .map(entry -> {
                     MetricsAccessPo metricAccess = new MetricsAccessPo();
-                    metricAccess.setAppId(appId);
-                    metricAccess.setTotalAccess(totalAccess.intValue());
-                    metricAccess.setCreateTime(LocalDateTime.now());
-                    metricsAccessMapper.insertMetricAccess(metricAccess);
-                });
+                    metricAccess.setAppId(entry.getKey());
+                    metricAccess.setTotalAccess(entry.getValue().intValue());
+                    metricAccess.setCreateTime(endTime);
+                    return metricAccess;
+                })
+                .collect(Collectors.toList());
+
+        metricsAccessMapper.insertMetricAccessBatch(metricsAccessList);
     }
 
     /**
