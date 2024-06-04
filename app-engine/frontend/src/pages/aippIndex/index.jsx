@@ -12,6 +12,7 @@ import ConfigForm from '../configForm';
 import CommonChat from '../chatPreview/chatComminPage';
 import ChoreographyHead from '../components/header';
 import { ConfigFormContext } from './context';
+import { getUser } from '../helper';
 
 const AippIndex = () => {
   const { appId, tenantId } = useParams();
@@ -35,7 +36,7 @@ const AippIndex = () => {
     showElsa && getAippDetails();
   }
   useEffect(() => {
-    // getUser();
+    getUser();
     getAippDetails();
   }, [])
 
@@ -62,14 +63,6 @@ const AippIndex = () => {
     })
   }
 
-  // 获取用户信息
-  const getUser = () => {
-    getCurUser().then(res => {
-      localStorage.setItem('currentUserId', res.data.account?.substr(1));
-      localStorage.setItem('currentUserIdComplete', res.data.account);
-      localStorage.setItem('currentUser', res.data.chineseName);
-    })
-  }
   // 保存配置
   const saveConfig = (data) => {
     updateFormInfo(tenantId, appId, data).then((res) => {
