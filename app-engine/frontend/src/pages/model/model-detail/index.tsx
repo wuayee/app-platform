@@ -34,7 +34,8 @@ const ModelDetail = () => {
     replicas: 0,
     npu_flag: true,
     xpu_consume: 0,
-    port: 0
+    port: 0,
+    image: ""
   };
   const [modelItem, setModelItem] = useState<ModelItem>(obj);
   const location = useLocation();
@@ -139,7 +140,7 @@ const ModelDetail = () => {
             >
               大模型容器镜像名称
             </div>
-            <div>{modelItem.name}</div>
+            <div>{modelItem.image}</div>
           </div>
           <div>
             <div

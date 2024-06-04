@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext;
 
 import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowContext;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.callbacks.FlowCallback;
 import com.huawei.fit.jober.flowsengine.domain.flows.events.FlowCallbackEvent;
 import com.huawei.fit.jober.flowsengine.domain.flows.events.FlowTaskCreatedEvent;
 import com.huawei.fit.jober.flowsengine.domain.flows.streams.IdGenerator;
@@ -34,13 +35,6 @@ public class FlowContextPersistMessenger implements FlowContextMessenger {
         this.plugin = plugin;
     }
 
-    /**
-     * 发送事件到引擎外部
-     *
-     * @param nodeId 节点ID
-     * @param contexts 流程实例执行过程产生的contexts
-     * @param <I> 流程实例执行时的入参数据类型，用于泛型推倒
-     */
     @Override
     public <I> void send(String nodeId, List<FlowContext<I>> contexts) {
         if (CollectionUtils.isEmpty(contexts)) {
@@ -55,19 +49,13 @@ public class FlowContextPersistMessenger implements FlowContextMessenger {
                                 contexts.get(0).getStreamId(), nodeId, this));
     }
 
-    /**
-     * 发送回调函数事件到引擎外部
-     *
-     * @param contexts 流程实例执行过程产生的contexts
-     * @param <O> 流程实例执行时的入参数据类型，用于泛型推倒
-     */
     @Override
-    public <O> void sendCallback(List<FlowContext<O>> contexts) {
+    public <O> void sendCallback(FlowCallback callback, List<FlowContext<O>> contexts) {
         if (CollectionUtils.isEmpty(contexts)) {
             log.info("Empty contexts.");
             return;
         }
         log.info("Start sending a callback event.");
-        this.plugin.runtime().publisherOfEvents().publishEvent(new FlowCallbackEvent(contexts, this));
+        this.plugin.runtime().publisherOfEvents().publishEvent(new FlowCallbackEvent(contexts, callback, this));
     }
 }

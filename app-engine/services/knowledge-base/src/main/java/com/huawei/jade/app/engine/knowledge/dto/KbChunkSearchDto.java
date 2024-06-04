@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 向量化知识内容检索参数类
+ * 混合检索类，根据表具体类型执行标量/向量检索
  *
  * @since 2024-05-21
  */
@@ -44,6 +44,11 @@ public class KbChunkSearchDto {
      * 查询关键字
      */
     private String content;
+
+    /**
+     * 是否使用 content 进行模糊查询
+     */
+    private Boolean isFuzzySearch;
 
     /**
      * topK

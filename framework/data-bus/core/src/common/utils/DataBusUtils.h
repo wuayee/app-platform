@@ -20,11 +20,14 @@ constexpr int32_t MESSAGE_HEADER_LEN = 24;
 /**
  * 生成消息头，拼接整个消息并发送
  */
-static void SendMessage(flatbuffers::FlatBufferBuilder &builder, Common::MessageType type,
+inline void SendMessage(flatbuffers::FlatBufferBuilder &builder, Common::MessageType type,
                         const std::function<void(const uint8_t *, size_t)> &sender)
 {
     const size_t respBodySize = builder.GetSize();
-    FinishMessageHeaderBuffer(builder, Common::CreateMessageHeader(builder, type, respBodySize));
+    // 创建消息头时，如果消息体大小为0，消息头大小会变成20。使用消息体大小特殊占位值使消息头大小和预期保持一致。
+    const size_t bodySizePlaceHolder = -1;
+    const size_t messageBodySize = respBodySize == 0 ? bodySizePlaceHolder : respBodySize;
+    FinishMessageHeaderBuffer(builder, Common::CreateMessageHeader(builder, type, messageBodySize));
     if (builder.GetSize() != MESSAGE_HEADER_LEN + respBodySize) {
         logger.Error("Incorrect header size, expected: {}, actual: {}", MESSAGE_HEADER_LEN + respBodySize,
                      builder.GetSize());
@@ -33,7 +36,7 @@ static void SendMessage(flatbuffers::FlatBufferBuilder &builder, Common::Message
     sender(builder.GetBufferPointer(), builder.GetSize());
 }
 
-static void SendErrorMessage(ErrorType errorType, const std::function<void(const uint8_t *, size_t)> &sender)
+inline void SendErrorMessage(ErrorType errorType, const std::function<void(const uint8_t *, size_t)> &sender)
 {
     flatbuffers::FlatBufferBuilder bodyBuilder;
     flatbuffers::Offset<ErrorMessageResponse> respBody =

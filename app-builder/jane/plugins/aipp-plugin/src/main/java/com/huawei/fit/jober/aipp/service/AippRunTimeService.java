@@ -10,6 +10,8 @@ import com.huawei.fit.jober.aipp.condition.AippInstanceQueryCondition;
 import com.huawei.fit.jober.aipp.condition.PaginationCondition;
 import com.huawei.fit.jober.aipp.dto.AippInstanceCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
+import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
+import com.huawei.fit.jober.aipp.dto.AppBuilderAppStartDto;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
 
 import java.util.List;
@@ -165,4 +167,15 @@ public interface AippRunTimeService {
      * @return 分享内容
      */
     Map<String, Object> getShareData(String shareId);
+
+    /**
+     * 启动对话实例
+     *
+     * @param appDto      app信息
+     * @param initContext 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
+     * @param context     操作上下文
+     * @return 实例id
+     */
+    AppBuilderAppStartDto startInstance(AppBuilderAppDto appDto, Map<String, Object> initContext,
+        OperationContext context);
 }

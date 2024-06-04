@@ -102,8 +102,7 @@ class FlowContextServiceTest extends DatabaseBaseTest {
         flowDefinitionRepo = new DefaultFlowDefinitionRepo(flowDefinitionMapper, fitableUsageMapper, parser);
         QueryFlowContextPersistRepo queryContextRepo = new QueryFlowContextPersistRepo(contextMapper);
         flowContextsService = new FlowContextsService(flowDefinitionRepo, contextPersistRepo, messenger,
-                queryContextRepo,
-                traceRepo, retryRepo, locks, traceOwnerService, new ArrayList<>());
+                queryContextRepo, traceRepo, retryRepo, locks, traceOwnerService, new ArrayList<>(), null);
     }
 
     @Nested

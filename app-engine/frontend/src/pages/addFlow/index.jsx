@@ -1,6 +1,12 @@
-import React, { useEffect, useState, useContext, useCallback, useRef } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useImperativeHandle
+} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Tooltip, Tabs, Input } from "antd";
+import { Tooltip, Tabs, Input, Drawer, Form, InputNumber, Switch, Button, Modal } from "antd";
 import {
   EditIcon,
   AddFlowIcon,
@@ -14,23 +20,25 @@ import {
   LlmIcon,
   ConfigFlowIcon,
   IfIcon,
-  FitIcon
+  FitIcon,
+  CloseIcon,
+  RunIcon
 } from '@assets/icon';
-import { AippContext } from '../aippIndex/context';
 import { JadeFlow } from '@fit-elsa/elsa-react';
-import { debounce } from '@shared/utils/common';
-import { Message } from '@shared/utils/message';
-import { createAipp, updateAippInfo, updateFlowInfo } from '@shared/http/aipp';
-import { graphData } from '../components/common/testFlowData';
+import { debounce } from '../../shared/utils/common';
+import { Message } from '../../shared/utils/message';
+import { updateAippInfo, updateFlowInfo, reTestInstance, startInstance, getAippInfo } from '@shared/http/aipp';
 import EditTitleModal from "../components/edit-title-modal.jsx";
 import PublishModal from '../components/publish-modal.jsx';
 import './styles/index.scss';
 import { configMap } from "./config";
 import { getAddFlowConfig } from "@shared/http/appBuilder";
+import TestModal from "../components/test-modal";
+import TestStatus from "../components/test-status";
 const { Search } = Input;
 
 const AddFlow = (props) => {
-  const { type } = props;
+  const { type,aippInfo } = props;
   const [ dragData, setDragData ] = useState([]);
   const { tenantId, appId } = useParams();
   const [ timestamp, setTimestamp ] = useState(new Date());
@@ -38,6 +46,12 @@ const AddFlow = (props) => {
   const [ added, setAdded ] = useState(false);
   const [ waterFlowName, setWaterFlowName ] = useState('无标题');
   const [ showMenu, setShowMenu ] = useState(false);
+  const [ showDebug, setShowDebug ] = useState(false);
+  const [ isTested, setIsTested ] = useState(false);
+  const [ testStatus, setTestStatus ] = useState('Running');
+  const [ isTesting, setIsTesting ] = useState(false);
+  const [ testTime, setTestTime ] = useState(0);
+  const [ debugTypes, setDebugTypes ] = useState([]);
   const [ modalInfo, setModalInfo ] = useState({
     name: '无标题',
     type: 'waterFlow',
@@ -48,14 +62,15 @@ const AddFlow = (props) => {
       appearance: null
     }
   });
-  const { aippInfo }  = useContext(AippContext);
   const navigate = useNavigate();
   const appRef = useRef(null);
-  const addRef = useRef(false);
   const isChange = useRef(false);
   const flowIdRef = useRef(null);
   let editRef = useRef(null);
   let modalRef = useRef(null);
+  let timerRef = useRef(null);
+  let testRef = useRef(null);
+  const [form] = Form.useForm();
   const { CONFIGS } = configMap[process.env.NODE_ENV];
   useEffect(() => {
     type ? null : setShowMenu(true);
@@ -82,18 +97,15 @@ const AddFlow = (props) => {
   useEffect(() => {
     window.agent = null;
     type ? setElsaData() : initElsa();
+    setIsTested(false);
+    setIsTesting(false);
   }, [props.type]);
   // 新建工作流
   async function initElsa() {
-    const timeStr = new Date().getTime().toString();
-    const res = await createAipp(tenantId, 'df87073b9bc85a48a9b01eccc9afccc3', { type: 'waterFlow', name: timeStr });
+    flowIdRef.current = appId;
+    setAddId(appId);
+    const res = await getAippInfo(tenantId, appId);
     if (res.code === 0) {
-      setAdded(() => {
-        addRef.current = true;
-        return true;
-      });
-      flowIdRef.current = res.data.id;
-      setAddId(res.data.id);
       appRef.current = res.data;
       setElsaData(appRef.current.flowGraph.appearance);
     }
@@ -136,9 +148,9 @@ const AddFlow = (props) => {
   const handleSearch = useCallback(debounce((e) => elsaChange(e), 2000), []);
   // 发布
   const handleUploadFlow = () => {
-    if (!addRef.current) {
-      Message({ type: 'warning', content: '请先创建保存后再发布' })
-      return
+    if (!isTested) {
+      testRef.current.showModal();
+      return;
     }
     modalRef.current.showModal();
   }
@@ -147,8 +159,81 @@ const AddFlow = (props) => {
     editRef.current.showModal();
   }
   const handleBackClick = () => {
-    navigate(`/app-develop/${tenantId}/detail/${appId}`);
+    navigate(-1);
   }
+  // 测试
+  const handleDebugClick = () => {
+    window.agent.validate().then(()=> {
+      setDebugTypes(window.agent.getFlowRunInputMetaData());
+      setShowDebug(true);
+    }).catch(err => {
+      Message({ type: 'warning', content: '请输入流程必填项' });
+    })
+  }
+  // 关闭测试抽屉
+  const handleCloseDebug = () => {
+    setShowDebug(false);
+  }
+  // 点击运行
+  const handleRun = async (values) => {
+    let appDto = type ? aippInfo : appRef.current;
+    const params = {
+      appDto,
+      context: {
+        initContext: values
+      }
+    };
+    const res = await startInstance(tenantId, appId, params);
+    if (res.code === 0) {
+      const {aippCreate, instanceId} = res.data;
+      setIsTesting(true);
+      setTestStatus('Running');
+      // 调用轮询
+      startTestInstance(aippCreate.aippId, aippCreate.version, instanceId);
+    }
+  }
+  // 判断是否流程结束
+  const isEnd = (nodeInfos) => {
+    return nodeInfos.some((value) => value.nodeType === 'END');
+  }
+  // 判断是否流程出错
+  const isError = (nodeInfos) => {
+    return nodeInfos.some((value) => value.status === 'ERROR');
+  }
+  // 测试轮询
+  const startTestInstance = (aippId, version, instanceId) => {
+    timerRef.current = setInterval(async () => {
+      const res = await reTestInstance(tenantId, aippId, instanceId, version);
+      if (res.code !== 0) {
+        onStop( res.msg || '测试失败');
+      }
+      const runtimeData = res.data;
+      if (runtimeData) {
+        if (isError(runtimeData.nodeInfos)) {
+          clearInterval(timerRef.current);
+          setTestStatus('Error');
+        } else if (isEnd(runtimeData.nodeInfos)) {
+          clearInterval(timerRef.current);
+          setIsTesting(false);
+          setIsTested(true);
+          setTestStatus('Finished');
+        }
+        window.agent.setFlowRunData(runtimeData.nodeInfos);
+        const time = (runtimeData.executeTime / 1000).toFixed(3);
+        setTestTime(time);
+      }
+    }, 1000);
+  }
+  // 终止轮询
+  const onStop = (content) => {
+    clearInterval(timerRef.current);
+    Message({ type: 'warning', content: content });
+  }
+  // 展示上一次测试
+  const handleDisplayLastRun = () => {
+
+  }
+
   const formatTimeStamp = (now) => {
     let hours = now.getHours().toString().padStart(2, '0');
     let minutes = now.getMinutes().toString().padStart(2, '0');
@@ -163,19 +248,16 @@ const AddFlow = (props) => {
       isChange.current = true
       return
     }
-    window.agent.validate().then(()=> {
-      if (type) {
-        aippInfo.flowGraph.appearance = graphChangeData;
-        updateAppRunningFlow();
-      } else {
-        setModalInfo(() => {
-          appRef.current.flowGraph.appearance = graphChangeData;
-          return appRef.current;
-        })
-      }
-    }).catch(err => {
-      Message({ type: 'warning', content: '请输入必填项' });
-    })
+    if (type) {
+      aippInfo.flowGraph.appearance = graphChangeData;
+      updateAppRunningFlow();
+    } else {
+      setModalInfo(() => {
+        appRef.current.flowGraph.appearance = graphChangeData;
+        return appRef.current;
+      })
+      updateAppRunningFlow();
+    }
   }
   // 创建更新应用
   async function updateAppWorkFlow(optionType = undefined) {
@@ -191,16 +273,132 @@ const AddFlow = (props) => {
   }
   // 编辑更新应用
   async function updateAppRunningFlow() {
-    let params = aippInfo.flowGraph;
-    const res = await updateFlowInfo(tenantId, appId, params);
+    let id = type ? appId : flowIdRef.current;
+    let params = type ?  aippInfo.flowGraph : appRef.current.flowGraph;
+    const res = await updateFlowInfo(tenantId, id, params);
     if (res.code === 0) {
-      Message({ type: 'success', content: '高级配置更新成功' })
+      Message({ type: 'success', content: type ? '高级配置更新成功': '工具流更新成功' })
     }
   }
   // 显示隐藏左侧菜单
   function menuClick() {
     setShowMenu(!showMenu)
   }
+  //
+  const handleRunTest = () => {
+    window.agent.resetStatus();
+    setIsTested(false);
+    setTestTime(0);
+    handleRun(form.getFieldsValue());
+    handleCloseDebug();
+  }
+
+  const RenderFormItem = (props) => {
+    const {type, name} = props;
+
+    useEffect(() => {
+      const value = form.getFieldValue(name);
+      if (value && isNaN(value) && (type === 'Number' || type === 'Integer')) {
+        form.setFieldValue(name, null);
+      }
+    }, [])
+
+    const customLabel = (
+      <span className='debug-form-label'>
+      <span className='item-name'>{name}</span>
+      <span className='item-type'>{type}</span>
+    </span>
+    );
+
+    const validateNumber = (_, value) => {
+      if (value === undefined || value === null || value === '') {
+        return Promise.resolve();
+      }
+      if (isNaN(value)) {
+        return Promise.reject(new Error('请输入一个有效的数字'));
+      }
+      return Promise.resolve();
+    };
+
+    const handleBlur = (value, isInteger) => {
+      if (isNaN(value)) {
+        form.setFieldValue(name, null);
+        form.validateFields([name]);
+      } else {
+        form.setFieldValue(name, isInteger ? Math.floor(value) : value);
+      }
+    }
+
+    return <>
+      {type === 'String' &&
+        <Form.Item
+          name={name}
+          label={customLabel}
+          rules={[
+            { required: true, message: '请输入字符串' },
+          ]}
+          className='debug-form-item'
+        >
+          <Input placeholder={`请输入${name}`} />
+        </Form.Item>
+      }
+      {type === 'Integer' &&
+        <Form.Item
+          name={name}
+          label={customLabel}
+          initialValue={null}
+          rules={[
+            { required: true, message: '请输入一个整数' },
+            { validator: validateNumber }
+          ]}
+          className='debug-form-item'
+        >
+          <InputNumber
+            min={0}
+            step={1}
+            style={{width: '100%'}}
+            placeholder={`请输入${name}`}
+            onBlur={(e) => handleBlur(e.target.value, true)}
+          />
+        </Form.Item>
+      }
+      {type === 'Number' &&
+        <Form.Item
+          name={name}
+          label={customLabel}
+          initialValue={null}
+          rules={[
+            { required: true, message: '请输入一个数字' },
+            { validator: validateNumber }
+          ]}
+          className='debug-form-item'
+        >
+          <InputNumber
+            min={0}
+            step={1}
+            formatter={(value) => value > 1e21 ? 'Infinity' : value}
+            style={{width: '100%'}}
+            placeholder={`请输入${name}`}
+            onBlur={(e) => handleBlur(e.target.value, false)}
+          />
+        </Form.Item>
+      }
+      {type === 'Boolean' &&
+        <Form.Item
+          name={name}
+          label={customLabel}
+          initialValue={true}
+          rules={[
+            { required: true, message: '请输入一个bool值' },
+          ]}
+          className='debug-form-item'
+        >
+          <Switch />
+        </Form.Item>
+      }
+    </>
+  }
+
   return <>{(
     <div className='add-flow-container'>
       {
@@ -209,9 +407,14 @@ const AddFlow = (props) => {
             <LeftArrowIcon className="icon-back" onClick={ handleBackClick } />
             <span className='header-text'>{ waterFlowName }</span>
             <span className='header-edit'><EditIcon onClick={ handleEditClick } /></span>
-            {/* { added && <span className='header-last-saved'>自动保存于 { formatTimeStamp(timestamp) }</span> } */}
+             { added && <span className='header-last-saved'>自动保存于 { formatTimeStamp(timestamp) }</span> }
+            <TestStatus isTested={isTested} isTesting={isTesting} testTime={testTime} testStatus={testStatus}/>
           </div>
-          <span className="header-btn" onClick={handleUploadFlow}><UploadIcon />发布</span>
+          <div className='header-grid'>
+            {/*{isTested && <span className="header-btn last-run-btn" onClick={handleDisplayLastRun}>展示上一次运行</span>}*/}
+            <span className="header-btn test-btn" onClick={handleDebugClick}>测试</span>
+            <span className="header-btn" onClick={handleUploadFlow}><UploadIcon />发布</span>
+          </div>
         </div>
       }
       <div className={['content', !type ? 'content-add' : null ].join(' ')}>
@@ -241,12 +444,46 @@ const AddFlow = (props) => {
         addId={addId}
         publishType="waterflow"
       />
+      <TestModal
+        testRef={testRef}
+        handleDebugClick={handleDebugClick}
+      />
       <EditTitleModal
         modalRef={editRef}
         onFlowNameChange={onFlowNameChange}
         waterFlowName={waterFlowName}
         modalInfo={modalInfo}
       />
+      <Drawer title={<h5>测试运行</h5>} open={showDebug} onClose={handleCloseDebug} width={600}
+              footer={
+                <div style={{ textAlign: 'right' }}>
+                  <span onClick={handleRunTest} className="run-btn">
+                    <RunIcon className="run-icon"/>运行
+                  </span>
+                </div>
+              }
+              closeIcon={
+                <CloseIcon />
+              }
+      >
+        <div className='debug'>
+          <div className='debug-header'>
+            <StartIcon className='header-icon' />
+            <span className='header-title'>开始节点</span>
+          </div>
+          <Form
+            form={form}
+            layout="vertical"
+            className="debug-form"
+          >
+            {debugTypes.map((debugType, index) => {
+              return (
+                <RenderFormItem type={debugType.type} name={debugType.name} key={index} />
+              )
+            })}
+          </Form>
+        </div>
+      </Drawer>
     </div>
   )}</>
 };
@@ -256,7 +493,6 @@ const LeftMenu = (props) => {
 
   // 搜索文本变化，更新工具列表
   const handleSearch = (value, event, source) => {
-    console.log(value);
   }
 
   const getIconByType = (type) => {

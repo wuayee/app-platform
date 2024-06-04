@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Avatar, Button, Drawer, Input, Dropdown } from "antd";
 import type { MenuProps } from "antd";
 import {
@@ -9,38 +9,29 @@ import {
 import "./style.scoped.scss";
 import { httpUrlMap } from "../../../../shared/http/httpConfig";
 import { cancleUserCollection, collectionApp, getUserCollection, updateCollectionApp } from "../../../../shared/http/appDev";
-import { setCollectionValue } from "../../../../store/collection/collection";
+import { setCollectionValue, setDefaultApp } from "../../../../store/collection/collection";
 import { useAppSelector, useAppDispatch } from "../../../../store/hook";
 import { AnyAction } from "redux";
+import { useNavigate, useLocation } from "react-router-dom";
+import { AippContext } from "../../../aippIndex/context";
 
 const { ICON_URL } = process.env.NODE_ENV === 'development' ? { ICON_URL: `${window.location.origin}/api`} : httpUrlMap[process.env.NODE_ENV];
 
 interface StarAppsProps {
-  open: boolean;
-  setOpen: (val: boolean) => void;
   handleAt: (val: any) => void;
-  chatClick: (val: any) => void;
 }
 
-
-
-const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick }) => {
+const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
+  const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
+  const navigate = useNavigate();
+  const { openStar, setOpenStar}  = useContext(AippContext);
   const [apps, setApps] = useState<any[]>([]);
   const clickMap: any = {
+
+    // 设为默认
     2: async (item: AnyAction) => {
       try {
-        if(item?.id) {
-          console.log(item)
-          await updateCollectionApp(item.id, {
-            isDefault: true
-          })
-        } else {
-          await collectionApp({
-            aippId: item.aippId,
-            usrInfo: getLoaclUser(),
-            isDefault: true,
-          });
-        }
+        await updateCollectionApp(getLoaclUser(), item.appId) 
         getUserCollectionList();
       } catch (error) {
         
@@ -48,11 +39,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
     },
     3: async (item: AnyAction) => {
       try {
-        if(item?.id) {
-          await updateCollectionApp(item.id, {
-            isDefault: false
-          })
-        } 
+        await updateCollectionApp(getLoaclUser(), '3a617d8aeb1d41a9ad7453f2f0f70d61')
         getUserCollectionList();
       } catch (error) {
         
@@ -81,17 +68,13 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
       key: "3",
       label: "取消默认",
     },
-    {
-      key: "1",
-      label: "取消收藏",
-    },
   ];
 
   const count = useAppSelector((state: any) => state.collectionStore.value);
 
   // 获取当前登录用户名
   const getLoaclUser = () => {
-    return localStorage.getItem('currentUserId') ?? '';
+    return localStorage.getItem('currentUserIdComplete') ?? '';
   }
 
   const dispatch = useAppDispatch();
@@ -100,6 +83,9 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
   const translateData = (remoteData: any): any[] => {
     
     const defaultData = remoteData?.data?.defaultApp || null;
+
+    // 设置默认应用
+    // dispatch(setDefaultApp(defaultData?.appId || ''))
     const collectionList: any[] = remoteData?.data?.collectionPoList || [];
     collectionList.unshift(defaultData);
     const data = collectionList.filter(item=> item);
@@ -133,6 +119,12 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
     clickMap[btn.key](item)
   }
 
+  // 开始聊天
+  const startChat = (item: any) => {
+    dispatch(setDefaultApp(item?.appId || ''));
+    setOpenStar(false);
+  }
+
   useEffect(()=> {
     getUserCollectionList()
   }, [])
@@ -147,13 +139,13 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
           </div>
           <CloseOutlined
             style={{ fontSize: 20 }}
-            onClick={() => setOpen(false)}
+            onClick={() => setOpenStar(false)}
           />
         </div>
       }
       closeIcon={false}
-      onClose={() => setOpen(false)}
-      open={open}
+      onClose={() => setOpenStar(false)}
+      open={openStar}
     >
       <Input placeholder="搜索应用" prefix={<SearchOutlined />} />
       <div className="app-wrapper">
@@ -167,12 +159,12 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
                 <div className="app-item-text-header">
                   <div className="app-item-title">{app.name}</div>
                   <div className="app-item-title-actions">
-                    <span style={{ cursor: "pointer" }} onClick={() => handleAt(app)}>
+                    {/* <span style={{ cursor: "pointer" }} onClick={() => handleAt(app)}>
                       @Ta
-                    </span>
+                    </span> */}
                     <span
                       style={{ color: "#1677ff", cursor: "pointer" }}
-                      onClick={() => chatClick(app)}
+                      onClick={() => startChat(app)}
                     >
                       开始聊天
                     </span>
@@ -186,7 +178,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
                 <Avatar size={32} src={app.authorAvatar} />
                 <span className="text">由{app.author}创建</span>
               </div>
-              <Dropdown menu={{ items, onClick: (info)=> {
+              <Dropdown menu={{ items: [items[index>0?0:1]], onClick: (info)=> {
                 clickOpera(info, app)
               } }} trigger={["click"]} >
                 <EllipsisOutlined className="app-item-footer-more" />
@@ -196,7 +188,7 @@ const StarApps: React.FC<StarAppsProps> = ({ open, setOpen, handleAt, chatClick 
         ))}
       </div>
       <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
-        <Button onClick={() => setOpen(false)} className="close-button">
+        <Button onClick={() => setOpenStar(false)} className="close-button">
           关闭
         </Button>
       </div>

@@ -4,6 +4,7 @@
 
 package com.huawei.databus.sdk.support;
 
+import com.huawei.databus.sdk.api.DataBusRequest;
 import com.huawei.fitframework.inspection.Validation;
 
 /**
@@ -12,7 +13,7 @@ import com.huawei.fitframework.inspection.Validation;
  * @author 王成 w00863339
  * @since 2024-03-17
  */
-public class SharedMemoryRequest {
+public class SharedMemoryRequest implements DataBusRequest {
     private final long size;
     private final String userKey;
 
@@ -35,6 +36,7 @@ public class SharedMemoryRequest {
      *
      * @return 表示用户自定义 key 的 {@code String}
      */
+    @Override
     public String userKey() {
         return userKey;
     }

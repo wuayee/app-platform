@@ -24,6 +24,7 @@ import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
 import com.huawei.jade.app.engine.knowledge.dto.KbChunkSearchDto;
 import com.huawei.jade.app.engine.knowledge.dto.KbGenerateConfigDto;
 import com.huawei.jade.app.engine.knowledge.dto.KbTextQueryDto;
+import com.huawei.jade.app.engine.knowledge.dto.KbVectorSearchDto;
 import com.huawei.jade.app.engine.knowledge.dto.TableKnowledgeColDto;
 import com.huawei.jade.app.engine.knowledge.params.RepoQueryParam;
 import com.huawei.jade.app.engine.knowledge.params.TableKnowledgeParam;
@@ -277,7 +278,7 @@ public class KnowledgeBaseController {
     }
 
     /**
-     * 获取向量知识信息
+     * 获取向量/标量知识信息
      *
      * @param chunkQueryDto 查询参数
      * @return 查询结果
@@ -285,6 +286,18 @@ public class KnowledgeBaseController {
     @PostMapping(path = "/table/chunks")
     public PageResultVo<String> getChunks(@RequestBody KbChunkSearchDto chunkQueryDto) {
         List<String> chunks = knowledgeBaseService.searchKnowledgeTable(chunkQueryDto);
+        return new PageResultVo<>(chunks.size(), chunks);
+    }
+
+    /**
+     * 获取向量知识信息
+     *
+     * @param vectorQueryDto 查询参数
+     * @return 查询结果
+     */
+    @PostMapping(path = "/table/vector-search")
+    public PageResultVo<String> vectorSearch(@RequestBody KbVectorSearchDto vectorQueryDto) {
+        List<String> chunks = knowledgeBaseService.vectorSearchKnowledgeTable(vectorQueryDto);
         return new PageResultVo<>(chunks.size(), chunks);
     }
 

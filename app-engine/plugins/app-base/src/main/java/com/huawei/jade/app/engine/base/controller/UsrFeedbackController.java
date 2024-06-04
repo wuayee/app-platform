@@ -46,21 +46,22 @@ public class UsrFeedbackController {
      * 更新用户反馈信息
      *
      * @param usrFeedbackDto 用户反馈消息体
-     * @param logId 日志Id
+     * @param instanceId 对话实例Id
      */
-    @PatchMapping("/feedback/{logId}")
-    public void updateUsrFeedback(@PathVariable("logId") Long logId, @RequestBody UsrFeedbackDto usrFeedbackDto) {
-        usrFeedbackService.updateOne(logId, usrFeedbackDto);
+    @PatchMapping("/feedback/{instanceId}")
+    public void updateUsrFeedback(@PathVariable("instanceId") String instanceId,
+                                  @RequestBody UsrFeedbackDto usrFeedbackDto) {
+        usrFeedbackService.updateOne(instanceId, usrFeedbackDto);
     }
 
     /**
      * 删除用户反馈信息
      *
-     * @param logId 对话id
+     * @param instanceId 对话实例Id
      */
-    @DeleteMapping("/feedback/{logId}")
-    public void deleteByLogId(@PathVariable("logId") Long logId) {
-        usrFeedbackService.deleteByLogId(logId);
+    @DeleteMapping("/feedback/{instanceId}")
+    public void deleteByLogId(@PathVariable("instanceId") String instanceId) {
+        usrFeedbackService.deleteByLogId(instanceId);
     }
 
     /**
@@ -76,11 +77,11 @@ public class UsrFeedbackController {
     /**
      * 通过LogId获取对话信息列表
      *
-     * @param logId 日志Id
+     * @param instanceId 对话实例Id
      * @return 对话信息
      */
-    @GetMapping("/feedback/{logId}")
-    public UsrFeedbackDto getAllAnswerByLogId(@PathVariable("logId") Long logId) {
-        return usrFeedbackService.getUsrFeedbackByLogId(logId);
+    @GetMapping("/feedback/{instanceId}")
+    public UsrFeedbackDto getAllAnswerByInstanceId(@PathVariable("instanceId") String instanceId) {
+        return usrFeedbackService.getUsrFeedbackByInstanceId(instanceId);
     }
 }

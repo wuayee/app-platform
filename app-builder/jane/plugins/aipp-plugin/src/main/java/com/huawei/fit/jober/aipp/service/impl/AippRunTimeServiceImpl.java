@@ -34,6 +34,8 @@ import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.AippInstanceCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
 import com.huawei.fit.jober.aipp.dto.MemoryConfigDto;
+import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
+import com.huawei.fit.jober.aipp.dto.AppBuilderAppStartDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
@@ -46,6 +48,7 @@ import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.FormEdgeEnum;
 import com.huawei.fit.jober.aipp.enums.MetaInstSortKeyEnum;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
+import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogService;
@@ -63,6 +66,7 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.CollectionUtils;
@@ -70,6 +74,7 @@ import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -234,7 +239,7 @@ public class AippRunTimeServiceImpl
      */
     @Override
     public AippInstanceCreateDto createAippInstanceLatest(String aippId, Map<String, Object> initContext,
-            OperationContext context) {
+                                                          OperationContext context) {
         Meta meta = MetaUtils.getLastPublishedMeta(metaService, aippId, context);
         String instId = createInstanceHandle(initContext, context, meta);
         return AippInstanceCreateDto.builder()
@@ -246,6 +251,10 @@ public class AippRunTimeServiceImpl
 
     private String createInstanceHandle(Map<String, Object> initContext, OperationContext context, Meta meta) {
         Map<String, Object> businessData = (Map<String, Object>) initContext.get(AippConst.BS_INIT_CONTEXT_KEY);
+        businessData.put("startNodeInputParams",
+                JSONObject.parse(JSONObject.toJSONString(initContext.get(AippConst.BS_INIT_CONTEXT_KEY))));
+        // 记录启动时间
+        businessData.put(AippConst.INSTANCE_START_TIME, LocalDateTime.now());
         String aippType = ObjectUtils.cast(meta.getAttributes()
                 .getOrDefault(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.NORMAL.name()));
         String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
@@ -279,8 +288,9 @@ public class AippRunTimeServiceImpl
         List<Map<String, Object>> memoryConfigs = this.getMemoryConfigs(flowDefinitionId, context);
         String memoryType = this.getMemoryType(memoryConfigs);
         if (!StringUtils.equalsIgnoreCase("UserSelect", memoryType)) {
+            String chatId = (businessData.get("chatId") == null) ? null : businessData.get("chatId").toString();
             businessData.put(AippConst.BS_AIPP_MEMORIES_KEY,
-                    this.getMemories(meta.getId(), memoryType, memoryConfigs, aippType, context));
+                    this.getMemories(meta.getId(), memoryType, chatId, memoryConfigs, aippType, context));
             this.startFlow(metaVersionId, flowDefinitionId, metaInstId, businessData, context);
         } else {
             String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
@@ -372,10 +382,10 @@ public class AippRunTimeServiceImpl
         return true;
     }
 
-    private List<Map<String, Object>> getMemories(String aippId, String memoryType,
+    private List<Map<String, Object>> getMemories(String aippId, String memoryType, String chatId,
             List<Map<String, Object>> memoryConfigs, String aippType, OperationContext context) {
         if (memoryConfigs == null || memoryConfigs.isEmpty()) {
-            return this.getConversationTurns(aippId, aippType, 5, context);
+            return this.getConversationTurns(aippId, aippType, 5, context, null);
         }
         Map<String, Object> valueConfig = memoryConfigs.stream()
                 .filter(config -> StringUtils.equals((String) config.get("name"), "value"))
@@ -384,7 +394,7 @@ public class AippRunTimeServiceImpl
         switch (memoryType) {
             case "ByConversationTurn":
                 Integer turnNum = Integer.parseInt((String) valueConfig.get("value"));
-                return getConversationTurns(aippId, aippType, turnNum, context);
+                return getConversationTurns(aippId, aippType, turnNum, context, chatId);
             case "NotUseMemory":
                 return new ArrayList<>();
             case "Customizing":
@@ -394,13 +404,18 @@ public class AippRunTimeServiceImpl
                 Map<String, Object> params = new HashMap<>();
                 return getCustomizedLogs(fitableId, params, aippId, aippType, context);
             default:
-                return getConversationTurns(aippId, aippType, 5, context);
+                return getConversationTurns(aippId, aippType, 5, context, chatId);
         }
     }
 
     private List<Map<String, Object>> getConversationTurns(String aippId, String aippType, Integer count,
-            OperationContext context) {
-        List<AippInstLogDataDto> logs = aippLogService.queryAippRecentInstLog(aippId, aippType, count, context);
+                                                           OperationContext context, String chatId) {
+        List<AippInstLogDataDto> logs;
+        if (chatId != null) {
+            logs = aippLogService.queryChatRecentInstLog(aippId, aippType, count, context, chatId);
+            return getLogMaps(logs);
+        }
+        logs = aippLogService.queryAippRecentInstLog(aippId, aippType, count, context);
         return getLogMaps(logs);
     }
 
@@ -485,7 +500,7 @@ public class AippRunTimeServiceImpl
     }
 
     private AippInstanceDto InstanceToAippInstanceDto(Instance instance, List<AippInstLog> instanceLogs,
-            OperationContext context) {
+                                                      OperationContext context) {
         Map<String, String> info = instance.getInfo();
         DynamicFormDetailEntity entity = Utils.queryFormDetailByPrimaryKey(info.get(AippConst.INST_CURR_FORM_ID_KEY),
                 info.get(AippConst.INST_CURR_FORM_VERSION_KEY),
@@ -924,5 +939,26 @@ public class AippRunTimeServiceImpl
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public AppBuilderAppStartDto startInstance(AppBuilderAppDto appDto, Map<String, Object> initContext,
+                                               OperationContext context) {
+        AippCreate aippCreate;
+        final String genericableId = "com.huawei.fit.jober.aipp.service.app.debug";
+        final String fitableId = "default";
+        try {
+            aippCreate = this.client.getRouter(genericableId)
+                    .route(new FitableIdFilter(fitableId))
+                    .invoke(appDto, context);
+        } catch (FitException t) {
+            String errorMsg = t.getMessage();
+            log.error("Error occurred when create debug aipp, error: {}", errorMsg);
+            throw new AippException(AippErrCode.CREATE_DEBUG_AIPP_FAILED, errorMsg);
+        }
+        String instanceId = createAippInstance(aippCreate.getAippId(),
+                aippCreate.getVersion(),
+                initContext, context);
+        return AppBuilderAppStartDto.builder().instanceId(instanceId).aippCreate(aippCreate).build();
     }
 }

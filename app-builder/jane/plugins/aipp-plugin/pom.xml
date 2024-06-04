@@ -163,6 +163,11 @@
             <artifactId>rag-service</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.jade.service</groupId>
+            <artifactId>app-engine-knowledge-base-service</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- Redis -->
         <dependency>
@@ -252,6 +257,17 @@
         <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>
             <artifactId>tool-service</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.jade.service</groupId>
+            <artifactId>app-engine-metrics-base-service</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.jade.service</groupId>
+            <artifactId>app-engine-base-service</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

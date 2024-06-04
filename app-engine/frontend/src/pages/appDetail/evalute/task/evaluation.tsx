@@ -1,18 +1,15 @@
 import { CloseOutlined } from '@ant-design/icons';
-import { Button, Card, ConfigProvider, Drawer, Table } from 'antd';
+import { Button, Card, Col, ConfigProvider, Drawer, Row, Table } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { AppIcons } from '../../../../components/icons/app';
 import './index.scss';
 import {
   compareColumns,
-  compareData,
   inOutColumns,
   listColumns,
-  listData,
   traceColumns,
-  traceData,
 } from './model';
-import { getEvalReport, getEvalReportTrace, getEvalTaskReport } from '../../../../shared/http/apps';
+import { getEvalReportTrace, getEvalTaskReport } from '../../../../shared/http/apps';
 
 const numOriginInfos = {
   all: { id: 'allInput', num: 0, des: '全部用例', icon: <AppIcons.EvalueateAllIcon /> },
@@ -26,7 +23,7 @@ const numOriginInfos = {
     id: 'failureInput',
     num: 0,
     des: '失败用例',
-    icon: <AppIcons.EvalueateFailIcon />, 
+    icon: <AppIcons.EvalueateFailIcon />,
   },
 };
 
@@ -39,9 +36,9 @@ const EvaluationDrawer: React.FC<{ openSignal: number; taskRecord: object }> = (
   const [numInfos, setNumInfos] = useState(numOriginInfos);
   const [row, setRow] = useState(null);
   const [selectCard, setSelectCard] = useState('allInput');
-  const [reportData,setReportData]=useState(null);
-  const [inputList,setInputList]=useState([]);
-  const [traceData,setTraceData]=useState([]);
+  const [reportData, setReportData] = useState<any>(null);
+  const [inputList, setInputList] = useState([]);
+  const [traceData, setTraceData] = useState([]);
 
   const onGetReport = async () => {
     const reportRes = await getEvalTaskReport(taskRecord?.id);
@@ -52,22 +49,35 @@ const EvaluationDrawer: React.FC<{ openSignal: number; taskRecord: object }> = (
     numInfos.success.num = reportRes?.passInput?.length;
     setNumInfos({ ...numInfos });
 
-    const allInput=[...reportRes.failureInput,...reportRes.passInput]
-    setReportData({...reportRes,allInput});
+    const allInput = [...reportRes.failureInput, ...reportRes.passInput]
+    setReportData({ ...reportRes, allInput });
+    setSelectCard('allInput');
     setInputList(allInput);
-    setRow(allInput?.[0]);
+    if (allInput.length > 0) {
+      onGetReportDetail(allInput[0].id);
+    }
   };
 
-  const onGetTrace=async(id)=>{
-  const traceRes=  await getEvalReportTrace(id);
-  setTraceData(traceRes?.trace);
+  const onGetReportDetail = async (id) => {
+    const traceRes = await getEvalReportTrace(id);
+    setRow(traceRes);
+    setTraceData(traceRes?.trace);
   }
+
   useEffect(() => {
     if (openSignal > 0) {
       setOpen(true);
       onGetReport();
     }
   }, [openSignal]);
+
+  const handleChangeCard = (cardId: string) => {
+    setSelectCard(cardId);
+    setInputList(reportData?.[cardId]);
+    if (reportData?.[cardId].length > 0) {
+      onGetReportDetail(reportData[cardId][0]?.id);
+    }
+  }
 
   return (
     <div>
@@ -102,15 +112,18 @@ const EvaluationDrawer: React.FC<{ openSignal: number; taskRecord: object }> = (
             <div
               id={info.id}
               className='evaluateCard'
-              style={{ borderColor: selectCard === info.id ? '#2673e5' : '#f0f2f4' }}
+              style={{
+                borderColor: selectCard === info.id ? '#2673e5' : '#f0f2f4',
+                cursor: 'pointer'
+              }}
               onClick={() => {
-                setSelectCard(info.id);
-                setInputList(reportData?.[info.id]);
-                setRow(reportData?.[info.id]?.[0]);
-                ['allInput','passInput','failureInput'].forEach((key) => {
-                  document.getElementById(key).style.borderColor =
-                    key === info.id ? '#2673e5' : '#f0f2f4';
-                });
+                if (info.id !== selectCard) {
+                  handleChangeCard(info.id);
+                  ['allInput', 'passInput', 'failureInput'].forEach((key) => {
+                    document.getElementById(key).style.borderColor =
+                      key === info.id ? '#2673e5' : '#f0f2f4';
+                  });
+                }
               }}
             >
               {info.icon}
@@ -121,9 +134,16 @@ const EvaluationDrawer: React.FC<{ openSignal: number; taskRecord: object }> = (
             </div>
           ))}
         </div>
-
-        <div style={{marginTop:'18px'}}>算法评估</div>
-        <div>{reportData?.algorithm}</div>
+        <Row>
+          <Col span={12}>
+            <div style={{ marginTop: '18px' }}>算法评估</div>
+            <div>{reportData?.algorithm}</div>
+          </Col>
+          <Col span={12}>
+            <div style={{ marginTop: '18px' }}>及格分</div>
+            <div>{reportData?.passScore}</div>
+          </Col>
+        </Row>
         <div style={{ display: 'flex', marginTop: '14px', width: '100%' }}>
           <Table
             virtual
@@ -134,7 +154,7 @@ const EvaluationDrawer: React.FC<{ openSignal: number; taskRecord: object }> = (
             scroll={{ y: 'calc(100vh - 280px)' }}
             onRow={(record) => ({
               onClick: (event) => {
-                setRow(record);
+                onGetReportDetail(record?.id);
               }, // 点击行
             })}
             rowClassName={(record) => (row?.id === record.id ? 'clickRowStyl' : '')}
@@ -145,7 +165,6 @@ const EvaluationDrawer: React.FC<{ openSignal: number; taskRecord: object }> = (
                 className='call-track-button'
                 onClick={() => {
                   setTraceDrawer(true);
-                  onGetTrace(row?.id);
                 }}
               >
                 调用轨迹
@@ -164,14 +183,14 @@ const EvaluationDrawer: React.FC<{ openSignal: number; taskRecord: object }> = (
             <div className='block'>
               <div className='block-title'>输入</div>
               <div className='block-num'>
-              {row?.input}
+                {row?.input}
               </div>
             </div>
             <Table
               rowHoverable={false}
               style={{ marginTop: '20px', height: '200px' }}
               virtual
-              dataSource={[{output:row?.output,expectedOutput:row?.expectedOutput}]}
+              dataSource={[{ output: row?.output, expectedOutput: row?.expectedOutput }]}
               columns={compareColumns}
               pagination={false}
             />
@@ -204,8 +223,8 @@ const EvaluationDrawer: React.FC<{ openSignal: number; taskRecord: object }> = (
         }
       >
         <Table
-          rowKey='time'
           columns={traceColumns}
+          rowKey={(_, index) => index?.toString()}
           expandable={{
             expandedRowRender: (record) => (
               <ConfigProvider
@@ -220,7 +239,7 @@ const EvaluationDrawer: React.FC<{ openSignal: number; taskRecord: object }> = (
                 <Table
                   rowHoverable={false}
                   style={{ margin: '20px 0px', width: '640px' }}
-                  dataSource={[record] }
+                  dataSource={[record]}
                   columns={inOutColumns}
                   pagination={false}
                 />

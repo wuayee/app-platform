@@ -19,7 +19,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 负责监听并解析来自服务器的信息，然后将信息分派到不同的队列里
+ * 负责监听并解析来自服务器的信息，然后将信息分派到不同的队列里。
  *
  * @author 王成 w00863339
  * @since 2024-03-17
@@ -30,7 +30,7 @@ class ResponseDispatcher {
     private boolean isRunning;
 
     /**
-     * 单线程池，只有一个长任务监听信息
+     * 单线程池，只有一个长任务监听信息。
      */
     private final ExecutorService dispatcherService = new ThreadPoolExecutor(1,
             1,
@@ -46,7 +46,7 @@ class ResponseDispatcher {
     }
 
     /**
-     * 启动分发器任务
+     * 启动分发器任务。
      */
     public void start() {
         // TODO: 处理线程池异常
@@ -54,49 +54,14 @@ class ResponseDispatcher {
             ByteBuffer buffer = ByteBuffer.allocate(1024);
             this.isRunning = true;
 
-            while (true) {
-                buffer.clear();
-
-                int bytesRead = 0;
-                try {
-                    bytesRead = socketChannel.read(buffer);
-                } catch (IOException e) {
-                    this.isRunning = false;
-                    return;
-                }
-
-                if (bytesRead == -1) {
-                    break;
-                }
-
-                buffer.flip();
-
-                // TODO：处理半包和粘包
-                MessageHeader header = MessageHeader.getRootAsMessageHeader(buffer);
-
-                // 读取并打印type和size字段
-                byte type = header.type();
-                Validation.equals((long) buffer.remaining(),
-                        header.size() + Constant.DATABUS_SERVICE_HEADER_SIZE, "Incorrect body payload size");
-
-                buffer.position(Constant.DATABUS_SERVICE_HEADER_SIZE);
-
-                // 将消息体拷贝到新的ByteBuffer里
-                ByteBuffer messageBody = ByteBuffer.allocate(buffer.remaining());
-
-                while (buffer.hasRemaining()) {
-                    messageBody.put(buffer.get());
-                }
-                messageBody.flip();
-                this.replyQueues.get(type).offer(messageBody);
-            }
+            this.startEventLoop(buffer);
         });
     }
 
     /**
-     * 结束分发器运行。通过关闭 socketChannel 来打断阻塞读
+     * 结束分发器运行。通过关闭 socketChannel 来打断阻塞读。
      *
-     * @throws IOException 当 socketChannel 非正常关闭
+     * @throws IOException 当 socketChannel 非正常关闭。
      */
     public void stop() throws IOException {
         this.isRunning = false;
@@ -105,11 +70,49 @@ class ResponseDispatcher {
     }
 
     /**
-     * 返回分发器当前状态
+     * 返回分发器当前状态。
      *
      * @return 表示分发器是否在工作的 {@code boolean}。
      */
     public boolean isRunning() {
-        return isRunning;
+        return this.isRunning;
+    }
+
+    private void startEventLoop(ByteBuffer buffer) {
+        while (true) {
+            buffer.clear();
+
+            int bytesRead = 0;
+            try {
+                bytesRead = socketChannel.read(buffer);
+                if (bytesRead == -1) {
+                    break;
+                }
+
+                buffer.flip();
+
+                // TODO：处理半包和粘包。
+                MessageHeader header = MessageHeader.getRootAsMessageHeader(buffer);
+
+                // 读取并打印type和size字段。
+                byte type = header.type();
+                Validation.equals((long) buffer.remaining(),
+                        header.size() + Constant.DATABUS_SERVICE_HEADER_SIZE, "Incorrect body payload size");
+
+                buffer.position(Constant.DATABUS_SERVICE_HEADER_SIZE);
+
+                // 将消息体拷贝到新的ByteBuffer里。
+                ByteBuffer messageBody = ByteBuffer.allocate(buffer.remaining());
+
+                while (buffer.hasRemaining()) {
+                    messageBody.put(buffer.get());
+                }
+                messageBody.flip();
+                this.replyQueues.get(type).offer(messageBody);
+            } catch (IOException e) {
+                this.isRunning = false;
+                return;
+            }
+        }
     }
 }

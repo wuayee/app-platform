@@ -70,12 +70,8 @@ DataBus_MemoryIo_Read(PyObject* self, PyObject* args, PyObject* keywords)
         &sharedMemoryId, &readSize, &readOffset)) {
         return PyErr_Format(PyExc_ValueError, "invalid input parameter");
     }
-    printf("[databus.memory.read] id=%d Size=%ld Offset=%ld\n",
-        sharedMemoryId, readSize, readOffset);
     // 获取共享内存指针
     void* sharedMemoryBuffer = shmat(sharedMemoryId, NULL, SHM_RDONLY);
-    printf("[databus.memory.read] sharedMemoryBuffer: 0x%p, error code: %d %s\n",
-        sharedMemoryBuffer, errno, strerror(errno));
     if (sharedMemoryBuffer == (void*) -1) {
         // 获取到的指针无效时抛出`IOError`(Python实际抛`OSError`)
         // 见[alias IOError to OSError](https://peps.python.org/pep-3151/#step-1-coalesce-exception-types)
@@ -118,17 +114,14 @@ DataBus_MemoryIo_Write(PyObject* self, PyObject* args, PyObject* keywords)
         &sharedMemoryId, &contents, &contentLength, &readOffset)) {
         return PyErr_Format(PyExc_ValueError, "invalid input parameter");
     }
-    printf("[databus.memory_io.write] id=%d Offset=%ld writeLength=%ld\n", sharedMemoryId, readOffset, contentLength);
     // 获取共享内存指针
     void* sharedMemoryBuffer = shmat(sharedMemoryId, NULL, 0);
     if (sharedMemoryBuffer == (void*) -1) {
-        printf("[databus.memory_io.write] sharedMemoryBuffer: 0x%p, error code: %d %s\n",
-            sharedMemoryBuffer, errno, strerror(errno));
         // 获取到的指针无效时抛出`IOError`(Python实际抛`OSError`)
         // 见[alias IOError to OSError](https://peps.python.org/pep-3151/#step-1-coalesce-exception-types)
         return PyErr_Format(PyExc_IOError, "fail to attach the shared memory, reason: %s", strerror(errno));
     }
-    WriteToSharedBuffer(contents, contentLength, sharedMemoryBuffer + readOffset);
+    WriteToSharedBuffer((const unsigned char*) contents, contentLength, sharedMemoryBuffer + readOffset);
     if (shmdt(sharedMemoryBuffer) == -1) {
         // 读取或分离失败同样抛`IOError`(实际抛`OSError`,见上)
         return PyErr_Format(PyExc_IOError, "fail to detach the shared memory");

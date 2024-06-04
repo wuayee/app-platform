@@ -1,8 +1,10 @@
-import {CopyPasteHelpers, DIRECTION, node, rectangleDrawer} from "@fit-elsa/elsa-core";
+import {CopyPasteHelpers, DIRECTION, node, rectangleDrawer, isPointInRect} from "@fit-elsa/elsa-core";
 import ReactDOM from "react-dom/client";
 import {DefaultRoot} from "@/components/DefaultRoot.jsx";
 import {v4 as uuidv4} from "uuid";
 import {Header} from "@/components/Header.jsx";
+import {NODE_STATUS, SECTION_TYPE} from "@/common/Consts.js";
+import {useRef} from "react";
 
 /**
  * jadeStream中的流程编排节点.
@@ -30,6 +32,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.cornerRadius = 8;
     self.enableAnimation = false;
     self.modeRegion.visible = false;
+    self.runStatus = NODE_STATUS.DEFAULT;
     self.flowMeta = {
         "triggerMode": "auto",
         "jober": {
@@ -66,11 +69,51 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
 
     /**
+     * 获取节点默认的测试报告章节
+     */
+    self.getRunReportSections = () => {
+        // 这里的data是每个节点的每个章节需要展示的数据，比如工具节点展示为输入、输出的数据
+        return [{no: "1", name: "输入", type: SECTION_TYPE.DEFAULT, data: self.input ? self.input : {}}, {
+            no: "2",
+            name: "输出",
+            type: SECTION_TYPE.DEFAULT,
+            data: self.getOutputData(self.output)
+        }];
+    };
+
+    /**
+     * 获取输出的数据
+     *
+     * @param source 数据源
+     * @return {*|{}}
+     */
+    self.getOutputData = (source) => {
+        if (self.runStatus === NODE_STATUS.ERROR) {
+            return self.errorMsg;
+        } else {
+            return source ? source : {};
+        }
+    }
+
+    /**
+     * 获取节点默认的测试报告章节 todo 这里是否需要是先到DefaultRoot中，用来进行组件刷新操作，现目前状态可以刷新
+     */
+    self.setRunReportSections = (data) => {
+        // 把节点推送来的的data处理成Section
+        // 开始节点只有输入，结束节点只有输出，普通节点输入输出，条件节点有条件1...n和输出
+        self.output = JSON.parse(data.parameters[0].output);
+        self.input = JSON.parse(data.parameters[0].input);
+        self.errorMsg = data.errorMsg;
+        self.cost = data.runCost;
+    };
+
+    /**
      * 处理传递的元数据
      *
      * @param metaData 元数据信息
      */
-    self.processMetaData = (metaData) => {};
+    self.processMetaData = (metaData) => {
+    };
 
     /**
      * 设置方向为W和N的connector不支持拖出连接线
@@ -146,6 +189,18 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         explorePreShapesRecursive(self.id);
         formerNodesInfo.shift();
         return formerNodesInfo;
+    };
+
+    /**
+     * 获取直接前继节点信息
+     */
+    self.getDirectPreNodeIds = () => {
+        if (!self.allowToLink) {
+            return [];
+        }
+        return self.page.shapes.filter(s => s.type === "jadeEvent")
+                .filter(s => s.toShape === self.id)
+                .map(line => self.page.getShapeById(line.fromShape));
     };
 
     /**
@@ -370,7 +425,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
 
     /*
-     * 获取下一个节点.
+     * 获取下一批节点.
      */
     const getNextNodes = () => {
         const lines = self.page.shapes.filter(s => s.type === "jadeEvent").filter(l => l.fromShape === self.id);
@@ -417,6 +472,61 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         self.validateForm && self.validateForm();
     };
 
+    /**
+     * 需要加上report的范围.
+     *
+     * @override
+     */
+    const getShapeFrame = self.getShapeFrame;
+    self.getShapeFrame = (withMargin) => {
+        const frame = getShapeFrame.apply(self, [withMargin]);
+        const reportFrame = self.drawer.getReportFrame();
+        if (!reportFrame) {
+            return frame;
+        }
+        frame.x2 = reportFrame.x + reportFrame.width;
+        frame.y2 = Math.max(frame.y2, reportFrame.y + reportFrame.height);
+        return frame;
+    };
+
+    /**
+     * 需要加上report的范围.
+     *
+     * @override
+     */
+    const getBound = self.getBound;
+    self.getBound = () => {
+        const bound = getBound.apply(self);
+        const reportFrame = self.drawer.getReportFrame();
+        if (!reportFrame) {
+            return bound;
+        }
+        bound.width = reportFrame.x + reportFrame.width - bound.x;
+        bound.height = Math.max(reportFrame.y + reportFrame.height, self.x + self.height)
+                - Math.min(self.y, reportFrame.y);
+        return bound;
+    };
+
+    /**
+     * 节点的高度变化不需要触发dirties.
+     *
+     * @param property 属性名称.
+     * @param value 属性值.
+     * @param preValue 属性之前的值.
+     * @return {boolean|*} true/false.
+     */
+    const load = self.load;
+    self.load = () => {
+        load.apply(self);
+        const propertyChanged = self.propertyChanged;
+        self.propertyChanged = (property, value, preValue) => {
+            if (property === "height") {
+                return false;
+            }
+            return propertyChanged.apply(self, [property, value, preValue]);
+        };
+    };
+
     return self;
 };
 
@@ -458,6 +568,7 @@ const ObserverProxy = (nodeId, observableId, observer) => {
 const jadeNodeDrawer = (shape, div, x, y) => {
     const self = rectangleDrawer(shape, div, x, y);
     self.reactContainer = null;
+    self.rootRef = null;
 
     /**
      * @override
@@ -493,7 +604,50 @@ const jadeNodeDrawer = (shape, div, x, y) => {
             return;
         }
         self.root = ReactDOM.createRoot(self.reactContainer);
-        self.root.render(<DefaultRoot shape={shape} component={shape.getComponent()}/>);
+        self.root.render(<Root/>);
+    };
+
+    const Root = () => {
+        self.rootRef = useRef();
+
+        /**
+         * 当战士报告时，需要重新计算area.
+         */
+        const onReportShow = () => {
+            shape.indexCoordinate();
+        };
+
+        return (<>
+            <DefaultRoot ref={self.rootRef} shape={shape} component={shape.getComponent()} onReportShow={onReportShow}/>
+        </>);
+    };
+
+    self.getReportFrame = () => {
+        if (!self.rootRef || !self.rootRef.current || !self.rootRef.current.getRunReportRect()) {
+            return null;
+        }
+        const rect = self.rootRef.current.getRunReportRect();
+        const position = shape.page.calculatePosition({clientX: rect.x, clientY: rect.y})
+        return {
+            x: position.x,
+            y: position.y,
+            width: rect.width / shape.page.scaleX,
+            height: rect.height / shape.page.scaleY
+        }
+    };
+
+    /**
+     * 存在report时，需要判断是否坐标在report dom中.
+     *
+     * @override
+     */
+    const containsBack = self.containsBack;
+    self.containsBack = (x, y) => {
+        const reportFrame = self.getReportFrame();
+        if (!reportFrame) {
+            return containsBack.apply(self, [x, y]);
+        }
+        return containsBack.apply(self, [x, y]) || isPointInRect({x, y}, reportFrame);
     };
 
     /**

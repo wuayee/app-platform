@@ -39,7 +39,11 @@ public class Bleu implements EvalAlgorithm {
         List<String> gtDict = Analyzer.splitWithoutPunctuation(gt);
         List<String> gmDict = Analyzer.splitWithoutPunctuation(gm);
 
-        return (gtDict.size() < gmDict.size() ? 1 : Math.exp(1 - gtDict.size() / gmDict.size()))
+        if (gmDict.isEmpty() || gtDict.isEmpty()) {
+            return 0;
+        }
+
+        return (gtDict.size() < gmDict.size() ? 1 : Math.exp(1 - (double) gtDict.size() / gmDict.size()))
                 * Math.exp(
                         (Math.log(getNGramPrecision(1, gtDict, gmDict))
                                         + Math.log(getNGramPrecision(2, gtDict, gmDict))

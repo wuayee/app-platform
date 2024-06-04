@@ -57,8 +57,13 @@ const TextSplitClear = ({ form }: props) => {
       icon: <KnowledgeIcons.operator />,
     },
     {
-      label: 'HTML标签去除',
+      label: '文档乱码去除',
       value: 'com.huawei.eDataMate.operators.garble_characters_cleaner_plugin',
+      icon: <KnowledgeIcons.operator />,
+    },
+    {
+      label: 'HTML标签去除',
+      value: 'com.huawei.eDataMate.operators.html_tag_cleaner_plugin',
       icon: <KnowledgeIcons.operator />,
     },
     {
@@ -77,7 +82,7 @@ const TextSplitClear = ({ form }: props) => {
       icon: <KnowledgeIcons.operator />,
     },
     {
-      label: '文档乱码去除',
+      label: '空格标准化插件',
       value: 'com.huawei.eDataMate.operators.unicode_space_cleaner_plugin',
       icon: <KnowledgeIcons.operator />,
     },
@@ -134,7 +139,7 @@ const TextSplitClear = ({ form }: props) => {
         {textSplit === 'TOKEN' ? (
           <>
             <Form.Item
-              label='设置分段数'
+              label='设置分片长度'
               rules={[{ required: true, message: '输入不能为空' }]}
               name='chunkSize'
               style={{

@@ -10,6 +10,7 @@
 #include <cstring>
 #include <dirent.h>
 #include <unistd.h>
+#include <pwd.h>
 #include <fstream>
 
 #include "log/Logger.h"
@@ -28,11 +29,12 @@ static void CreateDirectory(const std::string &directory)
     }
     while ((pos = dir.find_first_of(delimiter, pos + 1)) != std::string::npos) {
         dir[pos] = '\0';
-        /* S_IRWXU: 允许文件路径所有者阅读、编写、执行它。
-        * S_IRWXG: 允许文件路径所属组阅读、编写、执行它。
-        * S_IROTH: 允许其他所有用户阅读它。
-        * S_IXOTH: 允许其他所有用户执行它。
-        */
+        /*
+         * S_IRWXU: 允许文件路径所有者阅读、编写、执行它。
+         * S_IRWXG: 允许文件路径所属组阅读、编写、执行它。
+         * S_IROTH: 允许其他所有用户阅读它。
+         * S_IXOTH: 允许其他所有用户执行它。
+         */
         if (mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == -1) {
             logger.Debug("Failed to create the directory {}: {}", dir.c_str(), strerror(errno));
         }
@@ -69,7 +71,7 @@ static bool RemoveDirectory(const std::string &directory)
     return true;
 }
 
-static void CreateFileIfNotExists(const std::string &filePath)
+inline void CreateFileIfNotExists(const std::string &filePath)
 {
     // 提取目录路径
     std::string directory = filePath.substr(0, filePath.find_last_of('/'));
@@ -84,6 +86,21 @@ static void CreateFileIfNotExists(const std::string &filePath)
         return;
     }
     fileCheck.close();
+}
+
+inline std::string GetDataBusDirectory()
+{
+    // 获取有效用户ID
+    uid_t uid = geteuid();
+    // 根据用户ID获取用户信息
+    struct passwd *pw = getpwuid(uid);
+    if (!pw) {
+        logger.Error("[FileUtils] Failed to get the username");
+        return {};
+    }
+    const std::string DATABUS_PATH_PREFIX = "/tmp/";
+    const std::string DATABUS_PATH_SUFFIX = "/databus/";
+    return DATABUS_PATH_PREFIX + pw->pw_name + DATABUS_PATH_SUFFIX;
 }
 } // namespace FileUtils
 } // namespace Common

@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSON;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +76,8 @@ public class FlowStateNode extends FlowNode {
     private List<FlowData> stateProduce(List<FlowContext<FlowData>> inputs) {
         List<FlowData> flowDataList = inputs.stream().map(context -> {
             context.getData().getContextData().put("nodeMetaId", getMetaId());
+            context.getData().getContextData().put("nodeType", getType().getCode());
+            context.getData().getContextData().put("flowTraceIds", new ArrayList<>(context.getTraceId()));
             return context.getData();
         }).collect(Collectors.toList());
         if (Objects.isNull(this.jober)) {

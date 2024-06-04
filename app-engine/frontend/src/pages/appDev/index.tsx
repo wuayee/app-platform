@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Divider, Input, Pagination, Tabs } from 'antd';
 import { Icons } from '../../components/icons';
-import { deleteAppApi, getUserCollection, queryAppDevApi } from '../../shared/http/appDev.js';
+import { deleteAppApi, getUserCollection, getUserCollectionNoDesc, queryAppDevApi } from '../../shared/http/appDev.js';
 import AppCard from '../../components/appCard';
 import './index.scoped.scss';
 import { debounce } from '../../shared/utils/common';
@@ -74,7 +74,7 @@ const AppDev: React.FC = () => {
     });
   };
   function addAippCallBack(appId: string) {
-    navigate(`/app-develop/${tenantId}/detail/${appId}`);
+    navigate(`/app-develop/${tenantId}/app-detail/${appId}`);
   }
 
   // 搜索
@@ -121,28 +121,25 @@ const AppDev: React.FC = () => {
 
   // 获取当前登录用户名
   const getLoaclUser = () => {
-    return localStorage.getItem('currentUserId') ?? '';
+    return localStorage.getItem('currentUserIdComplete') ?? '';
   }
 
   // 获取用户收藏列表
   const getUserCollectionList = async () => {
-    const res = await getUserCollection(getLoaclUser());
-
-    const defaultData = res?.data?.defaultApp || null;
-    const collectionList: any[] = res?.data?.collectionPoList || [];
-    collectionList.unshift(defaultData);
-    const collectMap = (collectionList ?? []).reduce((prev: any, next: any)=> {
-      if(next?.id) {
-        prev[next.aippId] = true;
-      }
+    const res = await getUserCollectionNoDesc(getLoaclUser());
+    const collectMap = (res?.data ?? []).reduce((prev: any, next: any)=> {
+        prev[next.appId] = true;
       return prev
     }, {})
     dispatch(setCollectionValue(collectMap))
   }
 
   useEffect(()=> {
-    getUserCollectionList()
-  }, [])
+    getUserCollectionList();
+  }, []);
+  useEffect(() => {
+    queryApps();
+  }, [current, search]);
 
   return (
     <div className=' apps_root'>
@@ -183,7 +180,7 @@ const AppDev: React.FC = () => {
         <div className='card_list'>
           {appData.map((item: any) => (
             <div className='card_box' key={item.id} onClick={(e) => clickCard(item, e)}>
-              <AppCard cardInfo={item} clickMore={clickMore} />
+              <AppCard cardInfo={item} clickMore={clickMore} showOptions={false}/>
             </div>
           ))}
         </div>

@@ -8,10 +8,22 @@ export const AippContext = createContext({
   showElsa: false,
   messageChecked: false,
   chatRunning: false,
-  updateAippCallBack: null
-})
+  updateAippCallBack: null,
+  setChatRunning: '',
+  chatList: [],
+  setChatList: [],
+  chatId: '',
+  setChatId: '',
+  setRequestLoading: '',
+  clearChat: false,
+});
 export const ChatContext = createContext({
   setShareClass: null,
   setInspiration: null,
-  checkCallBack: null
+  checkCallBack: null,
+});
+
+export const ConfigFormContext = createContext({
+  appId: '',
+  tenantId: '',
 });

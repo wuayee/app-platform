@@ -38,7 +38,7 @@ const PluginCard = ({ pluginData }: any) => (
           flexWrap: 'wrap'
         }}>
           <Icons.user />
-          <span style={{ marginRight: 8 }}>Author</span>
+          <span style={{ marginRight: 8 }}>{pluginData.creator}</span>
           {pluginData.tags.map((tag: string) => <Tag style={{ margin: 0 }}>{tag}</Tag>)}
         </div>
       </div>

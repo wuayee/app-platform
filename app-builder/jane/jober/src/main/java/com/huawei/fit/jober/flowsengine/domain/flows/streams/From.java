@@ -37,6 +37,7 @@ import com.huawei.fit.jober.flowsengine.domain.flows.streams.nodes.Node;
 import com.huawei.fit.jober.flowsengine.domain.flows.streams.nodes.ParallelNode;
 import com.huawei.fitframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -500,7 +501,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
             c.setStatus(FlowNodeStatus.ARCHIVED);
         });
         List<FlowContext<I>> after = pre.stream().map(c -> {
-            FlowContext<I> context = c.generate(c.getData(), c.getPosition()).batchId(toBatchId);
+            FlowContext<I> context = c.generate(c.getData(), c.getPosition(), LocalDateTime.now()).batchId(toBatchId);
             trace.getContextPool().add(context.getId());
             return context;
         }).collect(Collectors.toList());

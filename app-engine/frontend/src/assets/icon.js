@@ -40,12 +40,17 @@ import Languages from './svg/setting.svg';
 import Rebot from './svg/rebot.svg';
 import Like from './svg/like.svg';
 import Unlike from './svg/unlike.svg';
+import Close from './svg/close.svg';
+import Run from  './svg/run-solid.svg';
+import LikeSelect from './svg/likeSelect.svg';
+import UnlikeSelect from './svg/unlikeSelect.svg';
 import Share from './svg/share.svg';
 import Copy from './svg/copy.svg';
 import Delete from './svg/delete.svg';
 import DeleteContent from './svg/deleteContent.svg';
 import More from './svg/more.svg';
 import ClearFile from './svg/clear-file.svg';
+import WorkFlow from './svg/work-flow.svg';
 
 // 编辑按钮
 const EditIcon = (props) => <Icon component={() => (<Edit/>)} {...props} />;
@@ -82,18 +87,23 @@ const TabRightIcon = (props) => <Icon component={() => (<TabRight/>)} {...props}
 const AudioIcon = (props) => <Icon component={() => (<Audio/>)} {...props} />;
 const AvatarIcon = (props) => <Icon component={() => (<Avatar />)} {...props} />;
 const AppDefaultIcon = (props) => <Icon component={() => (<AppDefault />)} {...props} />;
+const CloseIcon = (props) => <Icon component={() => (<Close />)} {...props} />;
+const RunIcon = (props) => <Icon component={() => (<Run />)} {...props} />;
 const HistoryIcon = (props) => <Icon component={() => (<History />)} {...props} />;
 const ArrowDownIcon = (props) => <Icon component={() => (<ArrowDown />)} {...props} />;
 const LanguagesIcon = (props) => <Icon component={() => (<Languages />)} {...props} />;
 const RebotIcon = (props) => <Icon component={() => (<Rebot />)} {...props} />;
 const LikeIcon = (props) => <Icon component={() => (<Like />)} {...props} />;
 const UnlikeIcon = (props) => <Icon component={() => (<Unlike />)} {...props} />;
+const LikeSelectIcon = (props) => <Icon component={() => (<LikeSelect />)} {...props} />;
+const UnlikeSelectIcon = (props) => <Icon component={() => (<UnlikeSelect />)} {...props} />;
 const ShareIcon = (props) => <Icon component={() => (<Share />)} {...props} />;
 const CopyIcon = (props) => <Icon component={() => (<Copy />)} {...props} />;
 const DeleteIcon = (props) => <Icon component={() => (<Delete />)} {...props} />;
 const DeleteContentIcon = (props) => <Icon component={() => (<DeleteContent />)} {...props} />;
 const MoreIcon = (props) => <Icon component={() => (<More />)} {...props} />;
 const ClearFileIcon = (props) => <Icon component={() => (<ClearFile />)} {...props} />;
+const WorkFlowIcon = (props) => <Icon component={() => (<WorkFlow />)} {...props} />;
 
 export {
   EditIcon,
@@ -136,11 +146,16 @@ export {
   RebotIcon,
   LikeIcon,
   UnlikeIcon,
+  LikeSelectIcon,
+  UnlikeSelectIcon,
+  CloseIcon,
+  RunIcon,
   ShareIcon,
   CopyIcon,
   DeleteIcon,
   DeleteContentIcon,
   MoreIcon,
-  ClearFileIcon
+  ClearFileIcon,
+  WorkFlowIcon
 }
 

@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
+import com.huawei.fit.jober.flowsengine.utils.FlowUtil;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -33,10 +34,10 @@ class MappingFlowDataConverterTest {
         MappingFlowDataConverter target = new MappingFlowDataConverter(null, customName);
 
         FlowData flowData = FlowData.builder().businessData(new HashMap<>()).contextData(new HashMap<>()).build();
-        FlowData result = target.convertOutput(expectGenericableResult, flowData);
+        flowData.getBusinessData().putAll(target.convertOutput(expectGenericableResult));
 
-        assertTrue(result.getBusinessData().containsKey(customName));
-        Assertions.assertEquals(expectGenericableResult, result.getBusinessData().get(customName));
+        assertTrue(flowData.getBusinessData().containsKey(customName));
+        Assertions.assertEquals(expectGenericableResult, flowData.getBusinessData().get(customName));
     }
 
     @Test
@@ -48,11 +49,12 @@ class MappingFlowDataConverterTest {
         MappingFlowDataConverter target = new MappingFlowDataConverter(inputMappingConfig, null);
 
         FlowData flowData = FlowData.builder().businessData(new HashMap<>()).contextData(new HashMap<>()).build();
-        FlowData result = target.convertInput(flowData);
+        flowData.setBusinessData(
+                FlowUtil.mergeMaps(flowData.getBusinessData(), target.convertInput(flowData.getBusinessData())));
 
-        assertTrue(result.getBusinessData().containsKey("str"));
-        assertTrue(result.getBusinessData().containsKey("int"));
-        assertEquals("str1", result.getBusinessData().get("str"));
-        assertEquals(666, result.getBusinessData().get("int"));
+        assertTrue(flowData.getBusinessData().containsKey("str"));
+        assertTrue(flowData.getBusinessData().containsKey("int"));
+        assertEquals("str1", flowData.getBusinessData().get("str"));
+        assertEquals(666, flowData.getBusinessData().get("int"));
     }
 }

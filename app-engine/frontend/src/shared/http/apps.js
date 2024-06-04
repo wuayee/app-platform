@@ -1,69 +1,62 @@
-import { del, get, post, put } from './http';
+import { del, get, post, put, patch } from './http';
 import { httpUrlMap } from './httpConfig';
 
+const appurl = window.localStorage.getItem('evalTask_URL') || '/api/jober'
 const { JANE_URL, AIPP_URL, APP_URL } = httpUrlMap[process.env.NODE_ENV];
 
 // 获取应用市场列表
 export function queryAppsApi(tenantId, params) {
-  return get(`${AIPP_URL}/tools`, params);
+  return get(`${appurl}/tools/search`, params);
 }
 
 export function getEvalTaskList(requestBody) {
-  return post(`${AIPP_URL}/evalTask/list`, requestBody);
+  return post(`${appurl}/evalTask/list`, requestBody);
 }
 
 export function copyEvalTask(id, author) {
-  return post(`${AIPP_URL}/evalTask/copy?id=${id}&author=${author}`, {});
+  return post(`${appurl}/evalTask/copy?id=${id}&author=${author}`, {});
 }
 
 // 应用测评=查看报告-根据报告ID查看调用轨迹
 export function getEvalReportTrace(id) {
-  return get(`${AIPP_URL}/evalTask/report?reportId=${id}`, {});
+  return get(`${appurl}/evalTask/report?reportId=${id}`, {});
 }
 
 // 应用测评=查看报告-根据任务ID查看报告详情
 export function getEvalTaskReport(id) {
-  return get(`${AIPP_URL}/evalTask/reportSummary?evalTaskId=${id}`, {});
+  return get(`${appurl}/evalTask/reportSummary?evalTaskId=${id}`, {});
 }
 
 // 获取评估测试集
 export function getEvalDataList(params) {
-  return post(`${AIPP_URL}/evalDataset/list`, params);
+  return post(`${appurl}/evalDataset/list`, params);
 }
 
 // 创建测试集
 export function createEvalData(data) {
-  return post(`${AIPP_URL}/evalDataset`, data);
+  return post(`${appurl}/evalDataset`, data);
 }
 
 // 上传测试集文件
 export function uploadTestSetFile(data) {
-  const url = `${AIPP_URL}/evalDataset/upload`;
+  const url = `${appurl}/evalDataset/upload`;
   return post(url, data);
 }
 
 // 查询单个数据集列表
 export function getDataSetListById(params) {
-  const url = `${AIPP_URL}/evalDataset`;
+  const url = `${appurl}/evalDataset`;
   return get(url, params);
 }
 
 /**
- * @typedef {Object} Data
- * @property {string} id - 数据集id.
- * @property {string} datasetName - 数据集名称.
- * @property {string} description - 数据集描述.
- * */
-
-/**
  * @description 修改数据集基本信息
  * @param {Data} data - 修改数据集基本信息.
- * @property {string} id - 数据集id.
  * @property {string} datasetName - 数据集名称.
  * @property {string} description - 数据集描述.
  * */
 export function modifyDataSetBaseInfo(data) {
-  const url = `${AIPP_URL}/evalDataset`;
+  const url = `${appurl}/evalDataset`;
   return patch(url, data);
 }
 
@@ -82,7 +75,7 @@ export function modifyDataSetBaseInfo(data) {
  * @property {string} input - 输出.
  * */
 export function modifyDataSetListData(dataSet) {
-  const url = `${AIPP_URL}/evalDataset/evalData`;
+  const url = `${appurl}/evalDataset/evalData`;
   return patch(url, dataSet);
 }
 
@@ -93,7 +86,7 @@ export function modifyDataSetListData(dataSet) {
  * @property {string} input - 输出.
  * */
 export function createDataSetListData(dataSet) {
-  const url = `${AIPP_URL}/evalDataset/evalData`;
+  const url = `${appurl}/evalDataset/evalData`;
   return post(url, dataSet);
 }
 
@@ -102,7 +95,7 @@ export function createDataSetListData(dataSet) {
  * @property {string} id - 数据集id.
  * */
 export function deleteDataSetListData(id) {
-  const url = `${AIPP_URL}/evalDataset/evalData/${id}`;
+  const url = `${appurl}/evalDataset/evalData/${id}`;
   return del(url);
 }
 
@@ -111,9 +104,60 @@ export function deleteDataSetListData(id) {
  * @property {string} id - 数据集id.
  * */
 export function deleteDataSetData(id) {
-  const url = `${AIPP_URL}/evalDataset/${id}`;
+  const url = `${appurl}/evalDataset/${id}`;
   return del(url);
 }
 
+// 查询评估算法列表
+export function getAlgorithmsList() {
+  const url = `${appurl}/evalTask/evalAlgorithmList`;
+  return get(url);
+}
+
+// 创建评估任务
+export function createAssessmentTasks(data) {
+  const url = `${appurl}/evalTask`;
+  return post(url, data);
+}
+
 // 下载模板链接
-export const downTemplateUrl = `${AIPP_URL}/eval_dataset_template.xlsx`;
+export const downTemplateUrl = `${appurl}/eval_dataset_template.xlsx`;
+
+// 查询分析数据 appId ,  timeType 
+export function getAnalysisData(data) {
+  const url = `${appurl}/metrics/analysis`;
+  return get(url, data);
+}
+
+// 查询反馈数据 isSortByCreateTime  isSortByResponseTime  answer  question pageIndex createTime appId pageSize orderDirection startTime createUser endTime
+export function getFeedBackData(data) {
+  const url = `${appurl}/metrics/feedback`;
+  return post(url, data);
+}
+
+// 导出数据
+export function exportFeedBackData(data) {
+  const url = `${appurl}/metrics/export`;
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', url, true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.responseType = 'blob';
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      var contentDisposition = xhr.getResponseHeader('Content-Disposition');
+      var match = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+      var filename = match[1].replace(/['"]/g, '');
+      filename = decodeURI(filename.split('UTF-8')[1])
+      var blob = new Blob([xhr.response], { type: 'application/octet-stream' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  };
+  xhr.send(JSON.stringify(data));
+  return post(url, data);
+}

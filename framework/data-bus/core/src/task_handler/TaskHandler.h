@@ -22,11 +22,11 @@ namespace Task {
 
 class TaskHandler {
 public:
-    explicit TaskHandler(std::shared_ptr<TaskLoop> taskLoopPtr, const Runtime::Config& config)
-        : taskLoopPtr_(std::move(taskLoopPtr))
+    explicit TaskHandler(std::shared_ptr<TaskLoop>& taskLoopPtr, const Runtime::Config& config)
+        : taskLoopPtr_(taskLoopPtr)
     {
         connectionMgrPtr_ = std::make_unique<DataBus::Connection::ConnectionManager>(config);
-        resourceMgrPtr_ = std::make_unique<DataBus::Resource::ResourceManager>(config);
+        resourceMgrPtr_ = std::make_unique<DataBus::Resource::ResourceManager>(config, taskLoopPtr);
     }
 
     void Init();
@@ -39,11 +39,14 @@ private:
     std::function<void(const uint8_t*, size_t)> GetSender(int32_t socketFd);
     void SendApplyPermissionResponse(const Resource::ApplyPermissionResponse&);
     void SendApplyMemoryResponse(int32_t socketFd, int32_t memoryId, uint64_t memorySize, Common::ErrorType errorType);
+    void SendGetMetaDataResponse(int32_t socketFd, Common::ErrorType errorType, int32_t memoryId);
     void HandleMessageApplyPermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleMessageReleasePermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void ReleasePermission(int32_t socketFd, int32_t sharedMemoryId, Common::PermissionType permissionType);
     void HandleMessageApplyMemory(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleMessageReleaseMemory(const Common::MessageHeader* header, const char* buffer, int socketFd);
+    void HandleMessageGetMeta(const Common::MessageHeader* header, const char* buffer, int socketFd);
+    void HandleMessageCleanupExpiredMemory();
 
     std::shared_ptr<TaskLoop> taskLoopPtr_;
     std::unique_ptr<DataBus::Connection::ConnectionManager> connectionMgrPtr_;

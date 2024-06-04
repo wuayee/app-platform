@@ -2,9 +2,9 @@
 import React, {  useState, useImperativeHandle } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Modal, Button } from 'antd';
-import { Message } from '../../shared/utils/message';
-import { httpUrlMap } from '../../shared/http/httpConfig';
-import { appPublish, updateFlowInfo } from '../../shared/http/aipp'
+import { Message } from '@shared/utils/message';
+import { httpUrlMap } from '@shared/http/httpConfig';
+import { appPublish, updateFlowInfo } from '@shared/http/aipp'
 
 const PublishModal = (props) => {
   const { modalRef, aippInfo, publishType, modalInfo, waterFlowName, addId } = props;
@@ -42,7 +42,7 @@ const PublishModal = (props) => {
       if (res.code === 0) {
         Message({ type: 'success', content: `发布工具流成功` });
         sessionStorage.setItem('uniqueName', res.data.tool_unique_name);
-        navigate(`/app-develop/${tenantId}/detail/${appId}`);
+        navigate(`/app-develop/${tenantId}/app-detail/${appId}`);
       }
     } finally {
       setLoading(false)

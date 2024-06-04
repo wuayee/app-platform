@@ -56,11 +56,17 @@ public class FlowSession extends IdGenerator implements StateContext {
 
     public FlowSession(FlowSession session) {
         super(Optional.ofNullable(session).map(IdGenerator::getId).orElseGet(UUIDUtil::uuid));
-        if (session != null) {
-            this.states.get(CUSTOM_STATE).putAll(session.states.get(CUSTOM_STATE));
-            this.states.get(INNER_STATE).putAll(session.states.get(INNER_STATE));
-            this.keyBy = session.keyBy;
-        }
+        this.copyState(session);
+        this.keyBy = Optional.ofNullable(session).map(FlowSession::keyBy).orElse(null);
+    }
+
+    /**
+     * 拷贝运行实例的状态数据。
+     *
+     * @param session 表示被拷贝的运行实例信息的 {@link FlowSession}。
+     */
+    public void copySessionState(FlowSession session) {
+        this.copyState(session);
     }
 
     /**
@@ -122,5 +128,12 @@ public class FlowSession extends IdGenerator implements StateContext {
      */
     public void setInnerState(String key, Object value) {
         this.states.get(INNER_STATE).put(key, value);
+    }
+
+    private void copyState(FlowSession session) {
+        if (session != null) {
+            this.states.get(CUSTOM_STATE).putAll(session.states.get(CUSTOM_STATE));
+            this.states.get(INNER_STATE).putAll(session.states.get(INNER_STATE));
+        }
     }
 }

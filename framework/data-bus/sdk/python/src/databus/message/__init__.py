@@ -14,7 +14,7 @@ from . import (
     ReleasePermissionMessage
 )
 
-from .ErrorType import ErrorType as CoreErrorType
+from .ErrorType import ErrorType as DataBusErrorCode
 from .MessageType import MessageType as CoreMessageType
 from .PermissionType import PermissionType as CorePermissionType
 

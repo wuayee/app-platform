@@ -49,6 +49,7 @@ import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.app.engine.base.service.UsrAppCollectionService;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -90,14 +91,18 @@ public class AppBuilderAppServiceImpl
     private final int nameLengthMaximum;
     private final MetaService metaService;
 
+    private final UsrAppCollectionService usrAppCollectionService;
+
     public AppBuilderAppServiceImpl(AppBuilderAppFactory appFactory, AippFlowService aippFlowService,
-            AppBuilderAppRepository appRepository,
-            @Value("${validation.task.name.length.maximum:64}") int nameLengthMaximum, MetaService metaService) {
+                                    AppBuilderAppRepository appRepository,
+                                    @Value("${validation.task.name.length.maximum:64}") int nameLengthMaximum,
+                                    MetaService metaService, UsrAppCollectionService usrAppCollectionService) {
         this.nameLengthMaximum = nameLengthMaximum;
         this.appFactory = appFactory;
         this.aippFlowService = aippFlowService;
         this.appRepository = appRepository;
         this.metaService = metaService;
+        this.usrAppCollectionService = usrAppCollectionService;
     }
 
     @Override
@@ -425,6 +430,10 @@ public class AppBuilderAppServiceImpl
         // todo step3 删除日志
         // todo step4 删除流程定义相关
         // todo step5 删除store相关
+
+        // step6 删除应用收藏记录相关
+        usrAppCollectionService.deleteByAppId(appId);
+
     }
 
     @NotNull

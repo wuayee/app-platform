@@ -10,6 +10,7 @@ import com.huawei.jade.fel.rag.store.connector.JdbcSqlConnector;
 import com.huawei.jade.fel.rag.store.connector.schema.DbFieldType;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 关系型表格内容存储。
@@ -37,10 +38,9 @@ public class TableIndex implements Indexer<List<Chunk>> {
 
     @Override
     public void process(List<Chunk> input) {
-        input.forEach(chunk -> {
-            String sql = formatInsertionSQL(chunk);
-            conn.execute(sql);
-        });
+        conn.executeBatch(input.stream()
+                .map(chunk -> formatInsertionSQL(chunk))
+                .collect(Collectors.toList()));
     }
 
     private String formatInsertionSQL(Chunk chunk) {

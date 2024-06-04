@@ -9,20 +9,23 @@
 #include "fbs/apply_permission_message_response_generated.h"
 #include "FtokArgsGenerator.h"
 #include "log/Logger.h"
-#include "utils/FileUtils.h"
+#include "utils/DataBusUtils.h"
 #include "ResourceManager.h"
 
 using namespace std;
 using namespace DataBus::Common;
+using namespace DataBus::Common::Utils;
 
 namespace DataBus {
 namespace Resource {
 
-ResourceManager::ResourceManager(const Runtime::Config& config)
-    : mallocSizeLimit_(config.GetMemorySizeLimit()), curMallocSize_(0)
+ResourceManager::ResourceManager(const Runtime::Config& config, shared_ptr<Task::TaskLoop>& taskLoopPtr)
+    : mallocSizeLimit_(config.GetMemorySizeLimit()), curMallocSize_(0),
+    memoryTtlDuration_(config.GetMemoryTtlDuration()), memorySweepInterval_(config.GetMemorySweepInterval()),
+    stopMemorySweepThread_(false), taskLoopPtr_(taskLoopPtr)
 {
     Init();
-    // 打开内存分配日志文件
+    // 打开内存分配日志文件。
     logStream_.open(LOG_PATH, std::ios::binary | std::ios::app);
     if (!logStream_.is_open()) {
         logger.Error("[ResourceManager] Failed to open the malloc log file {}", LOG_PATH);
@@ -31,9 +34,14 @@ ResourceManager::ResourceManager(const Runtime::Config& config)
 
 ResourceManager::~ResourceManager()
 {
-    // 关闭内存分配日志文件
+    // 关闭内存分配日志文件。
     if (logStream_.is_open()) {
         logStream_.close();
+    }
+    // 停止过期内存清扫线程。
+    stopMemorySweepThread_.store(true);
+    if (memorySweepThread_.joinable()) {
+        memorySweepThread_.join();
     }
 }
 
@@ -45,10 +53,13 @@ void ResourceManager::Init()
     }
 
     FileUtils::CreateFileIfNotExists(LOG_PATH);
-    // 释放之前申请的共享内存
+    // 释放之前申请的共享内存。
     CleanupMemory();
-    // 清空内存分配日志文件
+    // 清空内存分配日志文件。
     std::ofstream(LOG_PATH, std::ofstream::out | std::ofstream::trunc).close();
+
+    // 启动过期内存清扫线程。
+    StartMemorySweep(memorySweepInterval_);
 }
 
 tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, const std::string& objectKey,
@@ -101,8 +112,9 @@ tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, 
 
     // 记录共享内存块ID和共享内存块信息的对应关系
     const auto& now = std::chrono::system_clock::now();
-    time_t curTime = std::chrono::system_clock::to_time_t(now);
-    sharedMemoryIdToInfo_[sharedMemoryId] = std::make_unique<SharedMemoryInfo>(socketFd, memorySize, curTime);
+    sharedMemoryIdToInfo_[sharedMemoryId] =
+            std::make_unique<SharedMemoryInfo>(socketFd, memorySize, now,
+                                               now + chrono::milliseconds(memoryTtlDuration_));
     if (!objectKey.empty()) {
         keyToSharedMemoryId_[objectKey] = sharedMemoryId;
     }
@@ -258,6 +270,20 @@ void ResourceManager::RemoveClientFromWaitingQueue(int32_t socketFd)
     waitingPermitMemoryBlocks_.erase(socketFd);
 }
 
+void ResourceManager::CleanupExpiredMemory()
+{
+    const auto& now = std::chrono::system_clock::now();
+    vector<int32_t> memoryBlocksToRelease;
+    for (const auto& pair : sharedMemoryIdToInfo_) {
+        if (pair.second->expiryTime_ < now) {
+            memoryBlocksToRelease.push_back(pair.first);
+        }
+    }
+    for (int32_t sharedMemoryId : memoryBlocksToRelease) {
+        ReleaseMemory(sharedMemoryId);
+    }
+}
+
 void ResourceManager::MarkPendingRelease(int32_t sharedMemoryId)
 {
     sharedMemoryIdToInfo_[sharedMemoryId]->pendingRelease_ = true;
@@ -299,6 +325,26 @@ void ResourceManager::RemoveObjectKey(int32_t sharedMemoryId)
             ++it;
         }
     }
+}
+
+void ResourceManager::StartMemorySweep(int32_t scheduleInterval)
+{
+    memorySweepThread_ = thread([this, scheduleInterval]() {
+        while (!stopMemorySweepThread_.load()) {
+            this_thread::sleep_for(chrono::milliseconds(scheduleInterval));
+            this->AddMemoryCleanupTask();
+        }
+    });
+}
+
+void ResourceManager::AddMemoryCleanupTask()
+{
+    flatbuffers::FlatBufferBuilder bodyBuilder;
+    auto sender = [this](const uint8_t* buf, ssize_t s) {
+        taskLoopPtr_->AddReadTask(Task::DATABUS_SOCKET_FD, reinterpret_cast<const char*>(buf), s);
+    };
+    logger.Info("[ResourceManager] Adding a memory cleanup task to the task loop");
+    Utils::SendMessage(bodyBuilder, Common::MessageType::CleanupExpiredMemory, sender);
 }
 
 ErrorType ResourceManager::PreCheckPermissionCommon(DataBus::Common::PermissionType permissionType,
@@ -360,6 +406,8 @@ void ResourceManager::GrantPermission(const ApplyPermissionRequest& request)
     if (permissionType == PermissionType::Write && request.isOperatingUserData_) {
         sharedMemoryIdToInfo_[sharedMemoryId]->userData_ = request.userData_;
     }
+    // 更新内存块过期时间
+    UpdateExpiryTime(sharedMemoryId);
 }
 
 PermissionType ResourceManager::CheckPermissionOwnership(int32_t socketFd,
@@ -400,6 +448,8 @@ void ResourceManager::ReleasePermission(int32_t socketFd, DataBus::Common::Permi
         DecrementWritingRefCnt(sharedMemoryId);
         writingMemoryBlocks_[socketFd].erase(sharedMemoryId);
     }
+    // 更新内存块过期时间
+    UpdateExpiryTime(sharedMemoryId);
 }
 
 void ResourceManager::AppendLog(int32_t sharedMemoryId, bool released)
@@ -502,7 +552,7 @@ int32_t ResourceManager::GetWritingRefCnt(int sharedMemoryId)
     return sharedMemoryIdToInfo_[sharedMemoryId]->writingRefCnt_;
 }
 
-time_t ResourceManager::GetLastUsedTime(int sharedMemoryId)
+chrono::system_clock::time_point ResourceManager::GetLastUsedTime(int sharedMemoryId)
 {
     return sharedMemoryIdToInfo_[sharedMemoryId]->lastUsedTime_;
 }
@@ -515,6 +565,11 @@ const shared_ptr<UserData>& ResourceManager::GetUserData(int32_t sharedMemoryId)
 bool ResourceManager::IsPendingRelease(int32_t sharedMemoryId)
 {
     return sharedMemoryIdToInfo_[sharedMemoryId]->pendingRelease_;
+}
+
+chrono::system_clock::time_point ResourceManager::GetExpiryTime(int32_t sharedMemoryId)
+{
+    return sharedMemoryIdToInfo_[sharedMemoryId]->expiryTime_;
 }
 
 const std::unordered_set<int32_t>& ResourceManager::GetReadingMemoryBlocks(int32_t socketFd)
@@ -564,7 +619,19 @@ int32_t ResourceManager::DecrementWritingRefCnt(int sharedMemoryId)
 
 void ResourceManager::UpdateLastUsedTime(int sharedMemoryId)
 {
-    sharedMemoryIdToInfo_[sharedMemoryId]->lastUsedTime_ = time(nullptr);
+    sharedMemoryIdToInfo_[sharedMemoryId]->lastUsedTime_ = std::chrono::system_clock::now();
+}
+
+void ResourceManager::UpdateExpiryTime(int32_t sharedMemoryId)
+{
+    if (permissionStatus_[sharedMemoryId] == 0) {
+        // 内存块引用计数归零，生命周期进入倒计时
+        const auto& now = std::chrono::system_clock::now();
+        sharedMemoryIdToInfo_[sharedMemoryId]->expiryTime_ = now + chrono::milliseconds(memoryTtlDuration_);
+    } else {
+        // 内存块被引用，永不过期
+        sharedMemoryIdToInfo_[sharedMemoryId]->expiryTime_ = chrono::system_clock::time_point::max();
+    }
 }
 
 void ResourceManager::GenerateReport(stringstream& reportStream) const
@@ -584,7 +651,9 @@ void ResourceManager::GenerateReport(stringstream& reportStream) const
                      "\"Size\":" << memoryInfo->memorySize_ << "," <<
                      "\"ReadingRefCnt\":" << memoryInfo->readingRefCnt_ << "," <<
                      "\"WritingRefCnt\":" << memoryInfo->writingRefCnt_ << "," <<
-                     "\"LastUsedTime\":" << memoryInfo->lastUsedTime_;
+                     "\"LastUsedTime\":" << chrono::system_clock::to_time_t(memoryInfo->lastUsedTime_) << "," <<
+                     "\"PendingRelease\":" << memoryInfo->pendingRelease_ << "," <<
+                     "\"ExpiryTime\":" << chrono::system_clock::to_time_t(memoryInfo->expiryTime_);
         // 内存块当前读写状态
         if (permissionStatus_.find(memoryId) != permissionStatus_.cend()) {
             reportStream << ",\"PermissionStatus\":" << permissionStatus_.at(memoryId);

@@ -1,0 +1,61 @@
+.knowledge-drawer {
+  .knowledge-check-list {
+    display: flex;
+    .knowledge-left {
+      width: 400px;
+      flex-shrink: 0;
+      .item {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        height: 48px;
+        border-top: 1px solid #f2f2f2;
+        >span {
+          max-width: 300px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          font-weight: 600;
+          margin-left: 16px;
+        }
+      }
+    }
+    .knowledge-right {
+      flex: 1;
+      .knowledge-details {
+        display: flex;
+        .left {
+          width: 100px;
+          height: 100px;
+          display: flex;
+          flex-shrink: 0;
+          justify-content: center;
+          align-items: center;
+          img {
+            width: 70px;
+            height: 70px;
+          }
+        }
+        .right {
+          flex: 1;
+          margin-left: 16px;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          >div {
+            width: 100%;
+          }
+          .knowledge-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #1A1A1A;
+          }
+        }
+      }
+    }
+  }
+}
+.drawer-footer {
+  display: flex;
+  justify-content: flex-end;
+}

@@ -99,21 +99,24 @@ def _remove_plugin(plugin_path: str):
 def _run_path(path: str):
     file_list = os.listdir(path)
     for file_name in file_list:
-        if file_name.endswith(".py"):
+        if file_name == "requirements.txt":
             file_path = os.path.join(path, file_name)
-            _run_python_command(file_path)
+            _run_python_command(path, file_path)
 
 
-def _run_python_command(file_path):
-    if _python_interpreter_alias():
-        subprocess.call([_python_interpreter_alias(), file_path])
-    elif _check_command_availability("python3"):
-        subprocess.run(['python3', file_path])
-    elif _check_command_availability("python"):
-        subprocess.run(['python', file_path])
-    else:
-        sys_plugin_logger.error(
-            f"failed to install pypi plugins: cannot find any available python version.")
+def _run_python_command(path, file_path):
+    with open(file_path, 'r') as f:
+        whl_path = os.path.join(path, f.readline())
+        while whl_path:
+            if _python_interpreter_alias():
+                subprocess.call([_python_interpreter_alias(), "-m", "pip", "install", whl_path])
+            elif _check_command_availability("python3"):
+                subprocess.run(['python3', "-m", "pip", "install", "install", whl_path])
+            elif _check_command_availability("python"):
+                subprocess.run(['python', "-m", "pip", "install", "install", whl_path])
+            else:
+                sys_plugin_logger.error(
+                    f"failed to install pypi plugins: cannot find any available python version.")
 
 
 def _load_plugin(decompressed_plugin_name: str):

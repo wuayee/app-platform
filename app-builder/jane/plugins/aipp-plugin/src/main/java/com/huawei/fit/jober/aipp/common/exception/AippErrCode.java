@@ -98,7 +98,7 @@ public enum AippErrCode implements ErrorCode {
     /**
      * 调试失败
      */
-    PREVIEW_AIPP_FAILED(90001011, "Preview aipp failed, please retry later."),
+    PREVIEW_AIPP_FAILED(90001011, "Preview aipp failed, please retry later : {0}"),
 
     /**
      * 属性key重复
@@ -185,6 +185,11 @@ public enum AippErrCode implements ErrorCode {
      * 模型节点模板解析失败
      */
     LLM_COMPONENT_TEMPLATE_RENDER_FAILED(90002906, "请检查提示词模板中的变量。"),
+
+    /**
+     * 创建调试aipp失败
+     */
+    CREATE_DEBUG_AIPP_FAILED(90002907, "调试失败，请检查流程配置是否正确: {0}"),
 
     /**
      * 错误码截止值

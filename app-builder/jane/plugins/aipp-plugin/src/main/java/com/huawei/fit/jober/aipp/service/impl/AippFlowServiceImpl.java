@@ -594,6 +594,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         // 设置预览版本
         int retryTimes = RETRY_PREVIEW_TIMES;
         String previewVersion;
+        String errorMsg;
         do {
             previewVersion = Utils.buildPreviewVersion(baselineVersion);
             aippDto.getFlowViewData().put(AippConst.FLOW_CONFIG_VERSION_KEY, previewVersion);
@@ -601,8 +602,10 @@ public class AippFlowServiceImpl implements AippFlowService {
                 return this.createPreviewAipp(baselineVersion, aippDto, context);
             } catch (JobberException e) {
                 if (e.getCode() != ErrorCodes.FLOW_ALREADY_EXIST.getErrorCode()) {
+                    errorMsg = e.getMessage();
                     break;
                 }
+                errorMsg = e.getMessage();
                 log.warn("create preview aipp failed, times {} aippId {} version {}, error {}",
                         RETRY_PREVIEW_TIMES - retryTimes,
                         aippDto.getId(),
@@ -610,7 +613,7 @@ public class AippFlowServiceImpl implements AippFlowService {
                         e.getMessage());
             }
         } while (retryTimes-- > 0);
-        throw new AippException(context, AippErrCode.PREVIEW_AIPP_FAILED);
+        throw new AippException(context, AippErrCode.PREVIEW_AIPP_FAILED, errorMsg);
     }
 
     private MetaFilter buildFlowDefinitionFilter(FlowDefinitionResult definitionResult) {

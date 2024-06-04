@@ -22,6 +22,9 @@ import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext.Qu
 import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowlock.FlowLocks;
 import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowtrace.FlowTraceRepo;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.FlowDefinition;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowNode;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter.FlowDataConverter;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus;
 import com.huawei.fit.jober.flowsengine.domain.flows.streams.From;
@@ -65,19 +68,33 @@ public class FlowContextsServiceNoDbTest {
         FlowTraceRepo flowTraceRepo = Mockito.mock(FlowTraceRepo.class);
         FlowLocks flowLocks = Mockito.mock(FlowLocks.class);
         flowContextsService = new FlowContextsService(flowDefinitionRepo, flowContextRepo, flowContextMessenger,
-                queryFlowContextPersistRepo, flowTraceRepo, null, flowLocks, traceOwnerService, new ArrayList<>());
+                queryFlowContextPersistRepo, flowTraceRepo, null, flowLocks, traceOwnerService, new ArrayList<>(),
+                null);
     }
 
     @Test
     @DisplayName("测试恢复一个异步jober")
     public void testResumeAsyncJober() {
-        String position = "state1";
-        FlowDefinition flowDefinition = mock(FlowDefinition.class);
-        Node node = mock(Node.class);
+        FlowNode mockFlowNode = mock(FlowNode.class);
+        when(mockFlowNode.getMetaId()).thenReturn("jadeMockId");
+        FlowJober mockFlowJober = mock(FlowJober.class);
+        FlowDataConverter flowDataConverter = mock(FlowDataConverter.class);
+        Map<String, Object> convertNullOutput = new HashMap<>();
+        Map<String, Object> convertNullSecondLayerOutput = new HashMap<>();
+        convertNullSecondLayerOutput.put("secondLayerK1", null);
+        convertNullOutput.put("k1", null);
+        convertNullOutput.put("k2", convertNullSecondLayerOutput);
+        when(flowDataConverter.convertOutput(eq(null))).thenReturn(convertNullOutput);
+        when(mockFlowJober.getConverter()).thenReturn(flowDataConverter);
+        when(mockFlowNode.getJober()).thenReturn(mockFlowJober);
         From from = mock(From.class);
+        FlowDefinition flowDefinition = mock(FlowDefinition.class);
         when(flowDefinition.convertToFlow(any(), any(), any())).thenReturn(from);
+        Node node = mock(Node.class);
+        String position = "state1";
         when(from.findNodeFromFlow(any(), eq(position))).thenReturn(node);
         when(flowDefinitionRepo.findByStreamId(anyString())).thenReturn(flowDefinition);
+        when(flowDefinition.getFlowNode(anyString())).thenReturn(mockFlowNode);
 
         FlowData flowData = FlowData.builder()
                 .operator("a")
@@ -90,11 +107,17 @@ public class FlowContextsServiceNoDbTest {
         flowContext.setPosition(position);
         flowContext.setStatus(FlowNodeStatus.PROCESSING);
         Map<String, Object> newBusinessData = new HashMap<>();
+        Map<String, Object> secondLayerMap = new HashMap<>();
+        secondLayerMap.put("secondLayerK1", "secondLayerV1");
         newBusinessData.put("k1", "v1");
+        newBusinessData.put("k2", secondLayerMap);
         flowContextsService.resumeAsyncJob(
                 Collections.singletonList(flowContext), Collections.singletonList(newBusinessData),
                 getOperationContext());
+        testResumeAsyncJoberAssertions(position, node, flowContext);
+    }
 
+    private static void testResumeAsyncJoberAssertions(String position, Node node, FlowContext<FlowData> flowContext) {
         ArgumentCaptor<List> captorPre = ArgumentCaptor.forClass(List.class);
         ArgumentCaptor<List> captorAfter = ArgumentCaptor.forClass(List.class);
         verify(node).afterProcess(captorPre.capture(), captorAfter.capture());
@@ -107,18 +130,18 @@ public class FlowContextsServiceNoDbTest {
         Assertions.assertEquals(flowContext.getRootId(), after.get(0).getRootId());
         Assertions.assertEquals(position, after.get(0).getPosition());
         Assertions.assertEquals(flowContext.getId(), after.get(0).getPrevious());
-        Assertions.assertEquals(1, after.get(0).getData().getBusinessData().size());
+        Assertions.assertEquals(3, after.get(0).getData().getBusinessData().size());
     }
 
     @Test
     @Disabled
     @DisplayName("测试异步job失败能正常设置的场景")
     public void shouldSetJoberFailedWhenFailAsyncJobGivenError() {
-        String position = "state1";
-        FlowDefinition flowDefinition = mock(FlowDefinition.class);
-        Node node = mock(Node.class);
         From from = mock(From.class);
+        FlowDefinition flowDefinition = mock(FlowDefinition.class);
         when(flowDefinition.convertToFlow(any(), any(), any())).thenReturn(from);
+        String position = "state1";
+        Node node = mock(Node.class);
         when(from.findNodeFromFlow(any(), eq(position))).thenReturn(node);
         when(flowDefinitionRepo.findByStreamId(anyString())).thenReturn(flowDefinition);
 

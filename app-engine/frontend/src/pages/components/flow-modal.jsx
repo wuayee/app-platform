@@ -52,14 +52,10 @@ const FlowModal = (props) => {
     };
   }
   // 刷新
-  const refreshList = () => {
-    console.log('refresh');
-  }
+  const refreshList = () => {}
 
   // 新建工作流
-  const addFlow = () => {
-    console.log('add');
-  }
+  const addFlow = () => {}
 
   return <>{(
     <Modal 

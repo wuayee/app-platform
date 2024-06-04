@@ -25,5 +25,5 @@ druid:
 mybatis:
   mapper-locations: 'mapper/*Mapper.xml'
 eval:
-  task-thread-num: 4
-  tenant-id: 727d7157b3d24209aefd59eb7d1c49ff
+  task-thread-num: 10
+  tenant-id: 31f20efc7e0848deab6a6bc10fc3021e

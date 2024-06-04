@@ -1,37 +1,83 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Tooltip } from "antd";
+import { AippContext } from '@/pages/aippIndex/context';
+import { Message } from "@shared/utils/message";
 import { PanleCloseIcon, PanleIcon, RebotIcon } from '@assets/icon';
+import { getRecommends } from '../../../../../shared/http/chat';
 
 // 猜你想问
 const Recommends = (props) => {
-  const { openClick, inspirationOpen, send } = props;
-  const [ guessQuestions, setGuessQuestions ] = useState([
-    "如何构建知识库",
-    "我想创建一个应用",
-    "推荐几个常用的应用机器人",
-  ]);
+  const { 
+    onSend,
+    lastContent,
+   } = props;
+  const { chatRunning,aippInfo,chatList,inspirationOpen,setInspirationOpen } = useContext(AippContext);
   const [ visible, setVisible ] = useState(false);
-  const recommendClick = (item) => {
-    send(item);
+  const [recommendList, setRecommendList] = useState([]);
+
+  function openClick() {
+    setInspirationOpen(!inspirationOpen)
   }
+
+  // 获取推荐列表
+  async function getRecommendList() {
+    let chatLength = chatList?.length;
+    let question = chatList?.[chatLength - 2].content;
+    let answer = chatList?.[chatLength - 1].content;
+    let params = {
+      question,
+      answer
+    }
+    const res = await getRecommends(params);
+    if (res.code === 0) {
+      setRecommendList(res.data);
+    } else {
+      setRecommendList([]);
+    }
+  }
+
+  useEffect(() => {
+    // getRecommendList();
+  }, [lastContent]);
+
+  // 猜你想问
+  const recommendClick = (item) => {
+    if (chatRunning) {
+      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      return;
+    }
+    onSend(item);
+  }
+  // 换一批
+  const refreshClick = () => {
+    if (chatRunning) {
+      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      return;
+    }
+  }
+  // 打开收起灵感大全
   const iconClick = () => {
     setVisible(false)
     openClick();
   }
   return <>{(
     <div className="recommends-inner">
-      <div className="recommends-top">
-        <span className="title">猜你想问</span>
-        <RebotIcon />
-        <span className="refresh">换一批</span>
-      </div>
+      {
+        (recommendList?.length > 0) && (
+          <div className="recommends-top">
+            <span className="title">猜你想问</span>
+            <RebotIcon />
+            <span className="refresh" onClick={refreshClick}>换一批</span>
+          </div>
+        )
+      }
       <div className="recommends-list">
         <div className="list-left">
           {
-            guessQuestions.map(item => {
+            recommendList?.map((item, index) => {
               return (
-                <div className="recommends-item" onClick={recommendClick.bind(this, item)}>{item}</div>
+                <div className="recommends-item" onClick={recommendClick.bind(this, item)} key={index}>{item}</div>
               )
             })
           }

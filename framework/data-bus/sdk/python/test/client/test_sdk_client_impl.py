@@ -3,12 +3,11 @@
 
 import unittest
 from unittest.mock import MagicMock, Mock, patch
+
+from test.mock import memory_io_mock, memory_manager_mock
 from test.utils import disable_logger
-from test.mock import (
-    memory_io_mock, memory_manager_mock, flatbuffers_builder_mock
-)
-from databus.message import CoreErrorType, CoreMessageType
 from databus.exceptions import CoreError
+from databus.message import DataBusErrorCode
 
 with (patch("databus.memory_io.read", new=memory_io_mock.read),
       patch("databus.memory_io.write", new=memory_io_mock.write),
@@ -40,12 +39,12 @@ class TestSdkClientImpl(unittest.TestCase):
         user_key, memory_id, size = "key", 10, 100
         response_mock = Mock()
         self._socket_mock.send_shared_malloc_message.return_value = response_mock
-        response_mock.ErrorType.return_value = CoreErrorType.None_
+        response_mock.ErrorType.return_value = DataBusErrorCode.None_
         response_mock.MemoryKey.return_value = memory_id
         response_mock.MemorySize.return_value = size
 
         self._client.shared_malloc(user_key, size)
-        self._socket_mock.send_shared_malloc_message.assert_called_once_with(size)
+        self._socket_mock.send_shared_malloc_message.assert_called_once_with(user_key, size)
 
     def test_shared_malloc_with_invalid_param(self):
         user_key, memory_id, size = "key", 10, 100
@@ -56,13 +55,13 @@ class TestSdkClientImpl(unittest.TestCase):
         user_key, memory_id, size = "key", 10, 100
         response_mock = Mock()
         self._socket_mock.send_shared_malloc_message.return_value = response_mock
-        response_mock.ErrorType.return_value = CoreErrorType.MallocFailed
+        response_mock.ErrorType.return_value = DataBusErrorCode.MallocFailed
         response_mock.MemoryKey.return_value = None
         response_mock.MemorySize.return_value = None
 
         with disable_logger():
             self.assertRaises(CoreError, lambda: self._client.shared_malloc(user_key, size))
-        self._socket_mock.send_shared_malloc_message.assert_called_once_with(size)
+        self._socket_mock.send_shared_malloc_message.assert_called_once_with(user_key, size)
 
     def test_shared_free(self):
         user_key, memory_id, size = "some key", 6, 30

@@ -21,17 +21,14 @@ import {
 import "../styles/inspiration.scss";
 
 const Inspiration = (props) => {
-  const { chatType } = props;
+  const { chatType,setPrompValue } = props;
   const {
     appId,
     tenantId,
     messageChecked,
-    reloadInspiration,
-    setPrompValue,
-    refreshPrompValue,
-    setRefreshPrompValue,
   } = useContext(AippContext);
   const { Search } = Input;
+  const [ refreshPrompValue, setRefreshPrompValue ] = useState(false);
   const [showDrop, setShowDrop] = useState(false);
   const [promptTypeList, setPromptTypeList] = useState([]);
   const [dropList, setDropList] = useState([]);
@@ -46,8 +43,10 @@ const Inspiration = (props) => {
   const treeChildData = useRef([]);
 
   useEffect(() => {
-    getList();
-  }, [reloadInspiration]);
+    if(appId) {
+      getList();
+    }
+  }, [appId]);
   // 获取灵感大全列表
   async function getList() {
     const res = await queryDepartMent(tenantId, appId);
@@ -180,7 +179,7 @@ const Inspiration = (props) => {
         <div
           className={[
             "inspiration-conyainer",
-            !chatType ? "inspiration-active" : null,
+            chatType!=='preview' ? "inspiration-active" : null,
           ].join(" ")}
         >
           <div className="right-content">
@@ -211,8 +210,10 @@ const Inspiration = (props) => {
             </div>
             <div className="prompt-search">
               <Input
+              disabled
                 prefix={<SearchOutlined />}
                 allowClear
+                placeholder="搜索"
                 onSearch={onSearch}
               />
             </div>
@@ -230,8 +231,10 @@ const Inspiration = (props) => {
                       }
                       onClick={radioClick.bind(this, item)}
                     >
-                      {item.title}
+                      <span className="text"> {item.title}</span>
+                      <span className="line"></span>
                     </span>
+                    
                   );
                 })}
               </div>

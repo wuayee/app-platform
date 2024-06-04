@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Input } from 'antd';
 import { Form }from 'antd';
-import { updateKnowledgeTable } from '../../../../shared/http/knowledge';
+// import { updateKnowledgeTable } from '../../../../shared/http/knowledge';
 import LocalUpload from '../select-form/local-upload';
 import { createTableColumns } from '../../shared/http/knowledge';
 

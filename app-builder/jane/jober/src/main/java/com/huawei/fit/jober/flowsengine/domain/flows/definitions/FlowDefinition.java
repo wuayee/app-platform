@@ -17,6 +17,7 @@ import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext.Fl
 import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
 import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowlock.FlowLocks;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowNode;
+import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.callbacks.FlowCallback;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.events.FlowEvent;
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowDefinitionStatus;
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeType;
@@ -30,8 +31,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -137,6 +140,17 @@ public class FlowDefinition {
     private Map<String, Object> properties;
 
     /**
+     * 流程节点回调函数
+     */
+    @Getter
+    @Setter
+    private FlowCallback callback;
+
+    @Getter
+    @Setter
+    private Set<String> exceptionFitables;
+
+    /**
      * 将流程定义转换为处理流，运行流程实例
      * 初次启动流程实例
      *
@@ -187,6 +201,15 @@ public class FlowDefinition {
      */
     public FlowNode getFlowNode(String metaId) {
         return this.nodeMap.get(metaId);
+    }
+
+    /**
+     * 获取推送节点信息的fitableId列表。
+     *
+     * @return 推送节点信息的fitableId列表，当前先写死，后续由graph中获取。
+     */
+    public List<String> getPublishNodeFitables() {
+        return Collections.singletonList("com.huawei.fit.jober.aipp.fitable.FlowPublishSubscriber");
     }
 
     /**

@@ -5,7 +5,6 @@
 package com.huawei.fit.jober.aipp.fitable;
 
 import static com.huawei.fit.jober.aipp.TestUtils.mockResumeFlow;
-import static com.huawei.fit.jober.aipp.TestUtils.mockReturnFlowTraceId;
 import static com.huawei.fit.jober.aipp.TestUtils.mockTerminateFlow;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -71,7 +70,6 @@ public class LLMComponentTest {
 
     @BeforeEach
     void setUp() {
-        mockReturnFlowTraceId(metaInstanceService);
         Mockito.when(toolProvider.getTool(any())).thenReturn(Collections.emptyList());
     }
 

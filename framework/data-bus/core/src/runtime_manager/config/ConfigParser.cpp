@@ -5,15 +5,23 @@
 #include "ConfigParser.h"
 
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/sinks/hourly_file_sink.h"
 
 #include "log/Logger.h"
 
 void DataBus::Runtime::ConfigParser::Parse()
 {
-    // may later include "spdlog/sinks/basic_file_sink.h"
-    // and use `spdlog::basic_logger_mt("databus", "databus-log.txt")`
+    const std::string logFilePath = "/var/log/databus.log";
+    constexpr uint16_t maxLogFiles = 24 * 7;  // 暂时先保存一周的
+    const std::initializer_list<spdlog::sink_ptr> sinks = {
+        // 按小时分的日志文件
+        std::make_shared<spdlog::sinks::hourly_file_sink_mt>(logFilePath, false, maxLogFiles),
+        // 标准输入输出
+        std::make_shared<spdlog::sinks::stdout_color_sink_mt>()
+    };
+
     // _mt stands for multi-threaded
-    DataBus::logger.SetLogHandler(spdlog::stdout_color_mt("console"));
+    DataBus::logger.SetLogHandler(std::make_shared<spdlog::logger>("log", sinks));
 }
 
 void DataBus::Runtime::ConfigParser::Parse(const std::string& configFilePath)

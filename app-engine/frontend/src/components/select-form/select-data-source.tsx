@@ -65,12 +65,14 @@ const SelectDataSource = ({ type, form }: props) => {
     const customOption = {
       label: '自定义',
       value: 'custom',
+      disabled: true,
       icon: <KnowledgeIcons.custom />,
     };
     if (type === 'text') {
       const nasOption = {
         label: 'NAS文档',
         value: 'nas',
+        disabled: true,
         icon: <KnowledgeIcons.nas />,
       };
       setDataSourceOptions([localOption, nasOption, customOption]);
@@ -108,6 +110,7 @@ const SelectDataSource = ({ type, form }: props) => {
               {dataSourceOptions.map((option) => (
                 <Radio.Button
                   value={option.value}
+                  disabled={option?.disabled ? true : false}
                   style={{ borderColor: datasourceType === option.value ? '#1677ff' : '' }}
                 >
                   <div className='radio-card-item'>

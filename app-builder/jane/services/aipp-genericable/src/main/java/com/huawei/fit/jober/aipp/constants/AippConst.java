@@ -541,6 +541,21 @@ public class AippConst {
      */
     public static final String FORM_DATA_KEY = "formData";
 
+    /**
+     * 标识是否是评估模块调用接口
+     */
+    public static final String IS_EVAL_INVOCATION = "_isEvalInvocation";
+
+    /**
+     * 记录实例启动时间
+     */
+    public static final String INSTANCE_START_TIME = "_instanceStartTime";
+
+    /**
+     * 表明当前会话是否被删除
+     */
+    public static final Integer CHAT_STATUS = 0;
+
     // *** aipp initial static meta items ***
     /**
      * aipp initial static meta items

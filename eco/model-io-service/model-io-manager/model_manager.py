@@ -7,8 +7,9 @@ import argparse
 import socket
 import json
 import logging
+import uuid
+from urllib.parse import urljoin
 import yaml
-import urllib3
 import requests
 import uvicorn
 
@@ -18,7 +19,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 from jinja2 import Template
 
-from kubernetes import client, config, utils
+from kubernetes import client, config, dynamic, utils
 from kubernetes.client import ApiClient, Configuration
 from kubernetes.client.rest import ApiException
 from fastapi.middleware.cors import CORSMiddleware
@@ -35,6 +36,9 @@ KUBE_CONFIG = "/root/.kube/config"
 NAMESPACE_FILE = "/var/run/secrets/kubernetes.io/serviceaccount/namespace"
 
 
+EMBEDDING_MODEL_TYPE = "Embedding"
+
+
 def set_cross_header(response, request):
     response.headers["access-control-allow-headers"] = "content-type"
     response.headers["access-control-allow-methods"] = "GET,POST,PUT,DELETE,OPTIONS"
@@ -44,11 +48,13 @@ def set_cross_header(response, request):
 
 
 def load_kube_config():
-    with open(KUBE_CONFIG) as f:
-        config_dict = yaml.safe_load(f)
-        if os.path.exists(NAMESPACE_FILE):
-            config_dict["clusters"][0]["cluster"]["server"] = "https://kubernetes.default.svc:443"
-        config.load_kube_config_from_dict(config_dict)
+    if os.path.exists(NAMESPACE_FILE):
+        config.load_incluster_config()
+    else:
+        with open(KUBE_CONFIG) as f:
+            config_dict = yaml.safe_load(f)
+            config.load_kube_config_from_dict(config_dict)
+
 
 load_kube_config()
 k8s_client = client.AppsV1Api()
@@ -68,6 +74,10 @@ app = FastAPI()
 app.model_io_gateways = []
 
 
+external_model_services = {
+}
+
+
 class Item(BaseModel):
     name: str
     des: str
@@ -76,6 +86,12 @@ class Item(BaseModel):
     replicas: int
     node_port: int
     npus: int
+
+
+class ExternalService(BaseModel):
+    name: str
+    url: str
+    api_key: str
 
 
 class Llm(BaseModel):
@@ -102,7 +118,60 @@ async def startup_event():
     asyncio.create_task(run_tasks())
 
 
+def create_namespace_if_needed():
+    namespace = client.V1Namespace(metadata=client.V1ObjectMeta(name=MODEL_IO_NAMESPACE))
+    try:
+        response = api_instance.read_namespace(MODEL_IO_NAMESPACE)
+        return
+    except ApiException as e:
+        logger.warning(e)
+
+    try:
+        response = api_instance.create_namespace(MODEL_IO_NAMESPACE)
+    except ApiException as e:
+        logger.warning(e)
+    return
+
+
+MODEL_IO_MANAGER_CONFIG = "model-io-conf"
+
+
+def init_from_configmap():
+    global external_model_services
+    try:
+        model_io_config_map = api_instance.read_namespaced_config_map(MODEL_IO_MANAGER_CONFIG, MODEL_IO_NAMESPACE)
+        external_model_services = json.loads(model_io_config_map.data["external_model_services"])
+        logger.info("Loaded external model services: %s", external_model_services)
+        return
+    except ApiException as e:
+        logger.warning(e)
+    try:
+        configmap_manifest = {
+                "apiVersion": "v1",
+                "kind": "ConfigMap",
+                "metadata": {"name": MODEL_IO_MANAGER_CONFIG},
+                "data": {"external_model_services":"{}"}
+        }
+        response = api_instance.create_namespaced_config_map(MODEL_IO_NAMESPACE, body=configmap_manifest)
+    except ApiException as e:
+        logger.warning(e)
+    return
+
+
+def update_configmap():
+    try:
+        model_io_config_map = api_instance.read_namespaced_config_map(MODEL_IO_MANAGER_CONFIG, MODEL_IO_NAMESPACE)
+        model_io_config_map.data["external_model_services"] = json.dumps(external_model_services)
+        api_instance.patch_namespaced_config_map(MODEL_IO_MANAGER_CONFIG, MODEL_IO_NAMESPACE, model_io_config_map)
+        logger.info("Update config map: %s", external_model_services)
+        return
+    except ApiException as e:
+        logger.warning(e)
+
+
 async def run_tasks():
+    create_namespace_if_needed()
+    init_from_configmap()
     _notify_model_io_gateways()
 
 
@@ -180,26 +249,96 @@ async def list_gateways():
     endpoints = get_model_io_gateways()
     return JSONResponse(content=jsonable_encoder(endpoints))
 
+EXTRA_CHAT_MODEL = "extra_chat_model"
+EXTRA_EMBED_MODEL = "extra_embed_model"
+OBJECT_KEY = "object"
+MODEL_VALUE = "model"
+MODEL_TYPE_KEY = "type"
+CHAT_MODEL_TYPE = "chat"
+EMBED_MODEL_TYPE = "embed"
 
-@app.get("/v1/models")
-async def list_models():
+extra_models = [
+    {
+        "id": "Qwen-72B",
+        OBJECT_KEY: MODEL_VALUE,
+        MODEL_TYPE_KEY: CHAT_MODEL_TYPE
+    },
+    {
+        "id": "Qwen1.5-32B-Chat",
+        OBJECT_KEY: MODEL_VALUE,
+        MODEL_TYPE_KEY: CHAT_MODEL_TYPE
+    },
+    {
+        "id": "bce-embedding-base",
+        OBJECT_KEY: MODEL_VALUE,
+        MODEL_TYPE_KEY: EMBED_MODEL_TYPE
+    },
+    {
+        "id": "bge-large-zh",
+        OBJECT_KEY: MODEL_VALUE,
+        MODEL_TYPE_KEY: EMBED_MODEL_TYPE
+    },
+    {
+        "id": "bge-large-en",
+        OBJECT_KEY: MODEL_VALUE,
+        MODEL_TYPE_KEY: EMBED_MODEL_TYPE
+    },
+]
+
+
+def list_models(chat_model_only=False):
+    data = "data"
     models = {
         "object": "list",
-        "data": [],
+        data : [],
     }
     models_meta = get_models_meta()
     models_service = get_cached_model_services()
+    deployed_models = set()
     for service_name in models_service:
         try:
-            model = {
-                "id" : models_meta["services"][service_name],
-                "object" : "chat_model"
-            }
-            models["data"].append(model)
+            model_meta = models_meta["services"][service_name]
+            model_name = model_meta["name"]
+            model_type = model_meta.get("type_id", CHAT_MODEL_TYPE)
+
+            if not chat_model_only or model_type == CHAT_MODEL_TYPE:
+                model = {
+                    "id" : model_name,
+                    "object" : "model",
+                    "type" : model_type
+                }
+                models[data].append(model)
+            deployed_models.add(model_name)
         except KeyError as e:
             logging.error("KeyError:%s", e)
 
+    extra_gateway = os.environ.get("EXTRA_GATEWAY_URL")
+
+    if not extra_gateway:
+        return JSONResponse(content=jsonable_encoder(models))
+
+    for extra_model in extra_models:
+        model_type = extra_model.get(MODEL_TYPE_KEY, CHAT_MODEL_TYPE)
+        if extra_model.get("id", "") not in deployed_models:
+            if not chat_model_only or model_type == CHAT_MODEL_TYPE:
+                models.get(data).append(extra_model)
+
+    global external_model_services
+    if external_model_services:
+        external_datas = get_v1_models_from_external_service()
+        models.get(data).extend(external_datas)
+
     return JSONResponse(content=jsonable_encoder(models))
+    
+
+@app.get("/v1/models")
+async def list_all_models():
+    return list_models()
+
+
+@app.get("/v1/chat/models")
+async def list_chat_models():
+    return list_models(chat_model_only=True)
 
 
 def get_model_name(service_name):
@@ -232,17 +371,92 @@ async def list_services():
     return JSONResponse(content=jsonable_encoder(services))
 
 
+def get_v1_models_from_external_service():
+
+    global external_model_services
+    datas = []
+    for service_name in external_model_services:
+        external_service = external_model_services[service_name]
+        url = external_service["url"]
+        api_key = external_service["api_key"]
+        service_datas = get_model_data_from_external_service(url, api_key)
+        if service_datas:
+            datas.extend(service_datas)
+    return datas
+
+
+def get_model_data_from_external_service(url, api_key):
+    model_list_url = urljoin(url, "v1/models")
+    headers = {'Accept': '*/*', 'Authorization': f'Bearer {api_key}'}
+    datas = []
+    try:
+        response = requests.get(model_list_url, headers=headers, timeout=10)
+        if response.status_code != 200:
+            return datas
+
+        models_response = json.loads(response.content)
+        return models_response.get("data", [])
+
+    except requests.RequestException as e:
+        logging.error(e)
+    return datas
+
+
+def get_models_from_external_service(url, api_key):
+    urlpath = "/v1/models"
+    model_list_url = url.rstrip("/") + urlpath
+    headers = {'Accept': '*/*', 'Authorization': f'Bearer {api_key}'}
+    models = []
+    logging.info("Get Models for url:%s, %s", url, model_list_url)
+    try:
+        response = requests.get(model_list_url, headers=headers, timeout=10)
+        if response.status_code != 200:
+            return models
+
+        models_response = json.loads(response.content)
+        for model_info in models_response.get("data", []):
+            model_name = model_info.get("id", "")
+            if model_name:
+                models.append(model_name)
+
+    except requests.RequestException as e:
+        logging.error("Url get failed for url:%s, %s", url, model_list_url)
+        logging.error(e)
+    return models
+
+        
+
 def get_routes():
     routes = []
     services = get_services()
+    routed_models = {}
+    url_key = "url"
     for service in services:
         model_name = get_model_name_by_service_name(service["model_name"])
         url = f"http://{service['cluster_ip']}:{service['port']}"
-        routes.append({
-                         "id": model_name,
-                         "model": model_name,
-                         "url": url
-                       })
+        if model_name not in routed_models:
+            routes.append({
+                             "id": model_name,
+                             "model": model_name,
+                             url_key: url
+                           })
+            routed_models[model_name] = url
+        
+    for name in external_model_services:
+        external_model_service = external_model_services[name]
+        url = external_model_service["url"]
+        api_key = "api_key"
+        api_key_value = external_model_service[api_key]
+        external_models = get_models_from_external_service(url, api_key)
+        for model_name in external_models:
+            if model_name not in routed_models:
+                routes.append({
+                                 "id": model_name,
+                                 "model": model_name,
+                                 url_key: url,
+                                 api_key: api_key_value
+                               })
+                routed_models[model_name] = url
     return routes
 
 
@@ -328,9 +542,13 @@ def _notify_model_io_gateways():
         logger.error("Exception: %s.", str(e))
 
 
-def get_supported_images():
-    supported_images = ["mindie:latest"]
+def get_supported_images(model_type=CHAT_MODEL_TYPE):
+    if model_type == EMBED_MODEL_TYPE:
+        supported_images = ["model-io-embedding:latest"]
+    else:
+        supported_images = ["mindie:latest"]
     return supported_images
+
 
 models_meta_singleton = {}
 supported_models_singleton = {"llms" : []}
@@ -361,7 +579,7 @@ def get_model_name_by_service_name(service_name):
     models_meta = get_models_meta()
     model_name = service_name
     try:
-        model_name = models_meta["services"][service_name]
+        model_name = models_meta["services"][service_name]["name"]
     except KeyError as e:
         logger.error("KeyError:%s", e)
     return model_name
@@ -378,7 +596,11 @@ def get_models_meta():
 
     for model in models_meta.get("llms", []):
         model_name = model["name"]
-        models_meta["services"][model_name.lower()] = model_name
+        models_meta["services"][model_name.lower()] = model
+        if model["type"] == EMBEDDING_MODEL_TYPE:
+            model["type_id"] = "embed"
+        else:
+            model["type_id"] = "chat"
 
     return models_meta
 
@@ -416,7 +638,8 @@ def get_supported_models_template(meta=False):
     agg_statistics = get_models_statistics_from_gateway()
 
     for model in models.get("llms", []):
-        model["supported_images"] = get_supported_images()
+        model_type_id = model.get("type_id", "chat")
+        model["supported_images"] = get_supported_images(model_type_id)
         name = "name"
         model_name = model[name]
         model["id"] = model_name + "-id" + "-1"
@@ -513,6 +736,70 @@ model_weight_model_dir = {
 }
 
 
+
+
+@app.get("/v1/external_model_services")
+async def get_external_model_services(request : Request):
+    global external_model_services
+    external_model_services_list = []
+
+    for service in external_model_services:
+        external_model_services_list.append(external_model_services.get(service))
+
+    body = {
+       "services" : external_model_services_list
+    }
+
+    response = JSONResponse(status_code=200, content=jsonable_encoder(body))
+    set_cross_header(response, request)
+    return response
+
+
+def persist_external_services():
+    global external_model_services
+    try:
+        update_configmap()
+    except ApiException as e:
+        logger.warning(e)
+
+
+    
+@app.post("/v1/external_model_service")
+async def add_external_model_services(external_service : ExternalService, request : Request):
+    global external_model_services
+    ex_service = {}
+    ex_name = external_service.name
+    new_uid = str(uuid.uuid1())
+    id_key = "id"
+    if ex_name in external_model_services:
+        if id_key not in ex_service:
+            ex_service[id_key] = new_uid
+    else:
+        ex_service[id_key] = new_uid
+    ex_service["name"] = ex_name
+    ex_service["url"] = external_service.url
+    ex_service["api_key"] = external_service.api_key
+    external_model_services[ex_name] = ex_service
+    persist_external_services()
+    _notify_model_io_gateways()
+    response = JSONResponse(status_code=200, content=jsonable_encoder({"ok"}))
+    set_cross_header(response, request)
+    return response
+
+
+@app.delete("/v1/external_model_service/{name}")
+async def delete_external_model_services(name : str, request : Request):
+    global external_model_services
+    ex_name = name
+    if ex_name in external_model_services:
+        del external_model_services[ex_name]
+        persist_external_services()
+        _notify_model_io_gateways()
+    response = JSONResponse(status_code=200, content=jsonable_encoder({"ok"}))
+    set_cross_header(response, request)
+    return response
+
+
 @app.post("/v1/start_up")
 async def start_up(item: Item, request : Request):
     templates = get_template()
@@ -532,6 +819,7 @@ async def start_up(item: Item, request : Request):
         "image_name":item.image_name.strip(),
         "model_weight_path":model_weight_path
     }
+
 
     fill_template = [template.render(render_data) for template in templates]
     yaml_objs = [yaml.safe_load(fill) for fill in fill_template]

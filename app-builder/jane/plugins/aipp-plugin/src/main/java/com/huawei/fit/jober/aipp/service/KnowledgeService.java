@@ -6,10 +6,8 @@ package com.huawei.fit.jober.aipp.service;
 
 import com.huawei.fit.jober.aipp.common.PageResponse;
 import com.huawei.fit.jober.aipp.condition.KnowledgeQueryCondition;
-import com.huawei.fit.jober.aipp.condition.PaginationCondition;
-import com.huawei.fit.jober.aipp.dto.KnowledgeDetailDto;
-
-import java.io.IOException;
+import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
+import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
 
 /**
  * 知识库服务接口
@@ -19,12 +17,22 @@ import java.io.IOException;
  */
 public interface KnowledgeService {
     /**
-     * 查询知识库列表
+     * 获取知识库列表。
      *
-     * @param cond 过滤条件
-     * @param page 分页
-     * @return 知识库概况
+     * @param cond 查询条件
+     * @param pageNum 页码
+     * @param pageSize 单页大小
+     * @return 分页返回知识库列表详细信息
      */
-    PageResponse<KnowledgeDetailDto> listKnowledge(KnowledgeQueryCondition cond, PaginationCondition page)
-            throws IOException;
+    PageResponse<KRepoDto> listKnowledgeRepo(KnowledgeQueryCondition cond, Integer pageNum, Integer pageSize);
+
+    /**
+     * 获取知识表列表。
+     *
+     * @param repoId 知识库 id
+     * @param pageNum 页码
+     * @param pageSize 单页大小
+     * @return 分页返回知识表列表详细信息
+     */
+    PageResponse<KTableDto> listKnowledgeTables(Long repoId, Integer pageNum, Integer pageSize);
 }

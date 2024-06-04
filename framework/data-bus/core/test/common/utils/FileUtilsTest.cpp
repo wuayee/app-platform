@@ -49,5 +49,11 @@ TEST_F(FileUtilsTest, CreateFileIfNotExists)
     fileCheck.close();
     FileUtils::RemoveDirectory("test_dir");
 }
+
+TEST_F(FileUtilsTest, GetDataBusDirectory)
+{
+    std::string dataBusDir = FileUtils::GetDataBusDirectory();
+    EXPECT_FALSE(dataBusDir.empty());
+}
 } // namespace Test
 } // namespace DataBus

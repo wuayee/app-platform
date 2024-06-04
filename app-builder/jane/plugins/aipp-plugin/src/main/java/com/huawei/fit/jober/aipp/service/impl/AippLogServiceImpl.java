@@ -25,6 +25,7 @@ import com.huawei.fit.jober.aipp.entity.AippLogData;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
+import com.huawei.fit.jober.aipp.mapper.AippChatMapper;
 import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
@@ -58,6 +59,7 @@ import java.util.stream.Collectors;
 public class AippLogServiceImpl implements AippLogService {
     private static final Logger log = Logger.get(AippLogServiceImpl.class);
     private final AippLogMapper aippLogMapper;
+    private final AippChatMapper aippChatMapper;
     private final DynamicFormService dynamicFormService;
     private final MetaInstanceService metaInstanceService;
     private final UploadedFileManageService uploadedFileManageService;
@@ -65,8 +67,9 @@ public class AippLogServiceImpl implements AippLogService {
 
     public AippLogServiceImpl(AippLogMapper aippLogMapper, DynamicFormService dynamicFormService,
             MetaInstanceService metaInstanceService, UploadedFileManageService uploadedFileManageService,
-            MetaService metaService) {
+            MetaService metaService, AippChatMapper aippChatMapper) {
         this.aippLogMapper = aippLogMapper;
+        this.aippChatMapper = aippChatMapper;
         this.dynamicFormService = dynamicFormService;
         this.metaInstanceService = metaInstanceService;
         this.uploadedFileManageService = uploadedFileManageService;
@@ -148,6 +151,14 @@ public class AippLogServiceImpl implements AippLogService {
             OperationContext context) {
         List<String> instanceIds =
                 aippLogMapper.selectRecentInstanceId(aippId, aippType, count, context.getW3Account());
+        return this.queryAndSortLogs(instanceIds, context);
+    }
+
+    @Override
+    public List<AippInstLogDataDto> queryChatRecentInstLog(String aippId, String aippType, Integer count,
+                                                           OperationContext context, String chatId) {
+        List<String> instanceIds =
+                aippChatMapper.selectInstanceByChat(chatId, count);
         return this.queryAndSortLogs(instanceIds, context);
     }
 

@@ -67,8 +67,14 @@ public class Rougel implements EvalAlgorithm {
      * @return 表示RougeL精度的 {@link Double}
      */
     private double getRougeL(int lcsLen, int gtLen, int gmLen) {
+        if (gtLen == 0 || gmLen == 0) {
+            return 0;
+        }
         double precision = (double) lcsLen / (double) gmLen;
         double recall = (double) lcsLen / (double) gtLen;
+        if (precision + recall == 0) {
+            return 0;
+        }
         return 2 * precision * recall / (precision + recall);
     }
 }

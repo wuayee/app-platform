@@ -39,8 +39,6 @@ import java.util.stream.Collectors;
  * @since 2024-05-17
  */
 public class OpenAiModelServiceTest {
-    private final int mockPort = 8080;
-
     private MockWebServer server;
 
     private OpenAiClient client;
@@ -48,8 +46,7 @@ public class OpenAiModelServiceTest {
     @BeforeEach
     public void setUp() throws IOException {
         this.server = new MockWebServer();
-        this.server.start(this.mockPort);
-        this.client = new OpenAiClient("http://localhost:" + this.mockPort, false);
+        this.client = new OpenAiClient("http://localhost:" + this.server.getPort(), false);
     }
 
     @AfterEach

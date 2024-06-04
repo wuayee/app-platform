@@ -42,6 +42,7 @@ class SocketClient:
         :param core_socket: 连接DataBus core的socket(可选)
         """
         super().__init__()
+        self._executor, self._socket = None, None
         if core_socket is not None:
             self._socket = core_socket
         elif core_address is not None:
@@ -57,18 +58,25 @@ class SocketClient:
         self._mailbox = {msg_type: queue.Queue() for msg_type in self.MESSAGE_RESPONSE_MAPPING}
 
     def __del__(self):
-        self._executor.shutdown()
-        self._socket.shutdown(socket.SHUT_RDWR)
-        self._socket.close()
+        if self._executor:
+            self._executor.shutdown()
+            self._executor = None
+        if self._socket:
+            self._socket.shutdown(socket.SHUT_RDWR)
+            self._socket.close()
+            self._socket = None
 
-    def send_shared_malloc_message(self, size: int) -> ApplyMemoryMessageResponse:
+    def send_shared_malloc_message(self, user_key: str, size: int) -> ApplyMemoryMessageResponse:
         """向DataBus内核发送申请内存块消息
 
-        :param size: 要释放的内存块大小
+        :param user_key: 要申请的内存块名
+        :param size: 要申请的内存块大小
         :return: 内核返回的ApplyMemoryMessageResponse
         """
         builder = flatbuffers.Builder(DEFAULT_FLATBUFFERS_BUILDER_SIZE)
+        user_key_str = builder.CreateString(user_key)
         ApplyMemoryMessage.ApplyMemoryMessageStart(builder)
+        ApplyMemoryMessage.AddObjectKey(builder, user_key_str)
         ApplyMemoryMessage.AddMemorySize(builder, size)
         builder.Finish(ApplyMemoryMessage.ApplyMemoryMessageEnd(builder))
         logging.info("Sending allocation request for %u bytes.", size)
@@ -81,11 +89,14 @@ class SocketClient:
         :param memory_id: 要释放的内存块ID, 与user_key二选一
         """
         builder = flatbuffers.Builder(DEFAULT_FLATBUFFERS_BUILDER_SIZE)
-        ReleaseMemoryMessage.ReleaseMemoryMessageStart(builder)
-        # 有memory_id就直接用, 没有再用user_key
+        # 优先使用memory_id
         if not memory_id:
-            ReleaseMemoryMessage.AddObjectKey(builder, user_key)
+            user_key_str = builder.CreateString(user_key)
+            ReleaseMemoryMessage.ReleaseMemoryMessageStart(builder)
+            ReleaseMemoryMessage.AddObjectKey(builder, user_key_str)
         else:
+            # 否则使用user_key
+            ReleaseMemoryMessage.ReleaseMemoryMessageStart(builder)
             ReleaseMemoryMessage.AddMemoryKey(builder, memory_id)
         builder.Finish(ReleaseMemoryMessage.ReleaseMemoryMessageEnd(builder))
         self._send_message(builder, CoreMessageType.ReleaseMemory)
@@ -106,26 +117,32 @@ class SocketClient:
         if not user_key and not memory_id:
             raise ValueError("Both are None: user_key and memory_id.")
         apply_builder = flatbuffers.Builder(DEFAULT_FLATBUFFERS_BUILDER_SIZE)
-        ApplyPermissionMessage.ApplyPermissionMessageStart(apply_builder)
-        ApplyPermissionMessage.AddPermission(apply_builder, permission_type)
+        apply_builder.ForceDefaults(True)
         if not memory_id:
-            ApplyPermissionMessage.AddObjectKey(apply_builder, user_key)
+            user_key_str = apply_builder.CreateString(user_key)
+            ApplyPermissionMessage.ApplyPermissionMessageStart(apply_builder)
+            ApplyPermissionMessage.AddObjectKey(apply_builder, user_key_str)
         else:
+            ApplyPermissionMessage.ApplyPermissionMessageStart(apply_builder)
             ApplyPermissionMessage.AddMemoryKey(apply_builder, memory_id)
+        ApplyPermissionMessage.AddPermission(apply_builder, permission_type)
         apply_builder.Finish(ApplyPermissionMessage.ApplyPermissionMessageEnd(apply_builder))
         try:
             response = self._send_message(apply_builder, CoreMessageType.ApplyPermission)
-            CoreError.check_core_response("apply permission failed, result code %u", response.ErrorType())
+            CoreError.check_core_response("apply permission failed, result code {}", response.ErrorType())
             # 自动实现context manager, 返回memory_id, memory_size方便裸读写
             yield response.MemoryKey(), response.MemorySize()
         finally:
             release_builder = flatbuffers.Builder(DEFAULT_FLATBUFFERS_BUILDER_SIZE)
-            ReleasePermissionMessage.ReleasePermissionMessageStart(release_builder)
-            ReleasePermissionMessage.AddPermission(release_builder, permission_type)
+            release_builder.ForceDefaults(True)
             if not memory_id:
-                ReleasePermissionMessage.AddObjectKey(release_builder, user_key)
+                user_key_str = release_builder.CreateString(user_key)
+                ReleasePermissionMessage.ReleasePermissionMessageStart(release_builder)
+                ReleasePermissionMessage.AddObjectKey(release_builder, user_key_str)
             else:
+                ReleasePermissionMessage.ReleasePermissionMessageStart(release_builder)
                 ReleasePermissionMessage.AddMemoryKey(release_builder, memory_id)
+            ReleasePermissionMessage.AddPermission(release_builder, permission_type)
             release_builder.Finish(ReleasePermissionMessage.ReleasePermissionMessageEnd(release_builder))
             # 返回值为None, 忽略
             _ = self._send_message(release_builder, CoreMessageType.ReleasePermission)
@@ -176,6 +193,6 @@ class SocketClient:
         if message_type == CoreMessageType.Error:
             # 有可能返回的是ErrorMessage
             error_body = SocketClient.MESSAGE_RESPONSE_MAPPING[CoreMessageType.Error].GetRootAs(raw_body)
-            raise CoreError("Received error %u from core.", error_body.ErrorType())
+            raise CoreError("Received error {} from core.", error_body.ErrorType())
 
         return self._mailbox[message_type].put(SocketClient.MESSAGE_RESPONSE_MAPPING[header.Type()].GetRootAs(raw_body))

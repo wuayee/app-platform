@@ -10,7 +10,7 @@ import {useShapeContext} from "@/components/DefaultRoot.jsx";
  * @constructor
  */
 export const JadeObservableInput = (props) => {
-    const {onChange, onBlur, ...rest} = props;
+    const {onChange, onBlur, type, ...rest} = props;
     if (!rest.id) {
         throw new Error("JadeObservableInput requires an id property.");
     }
@@ -45,7 +45,7 @@ export const JadeObservableInput = (props) => {
 
     // 组件初始化时注册observable.
     useEffect(() => {
-        shape.page.registerObservable(shape.id, rest.id, rest.value, rest.type, rest.parent);
+        shape.page.registerObservable(shape.id, rest.id, rest.value, type, rest.parent);
 
         // 组件unmount时，删除observable.
         return () => {
@@ -55,8 +55,8 @@ export const JadeObservableInput = (props) => {
 
     // 如果类型发生了变化，重新注册，修改observable中的type值.
     useEffect(() => {
-        shape.emit(rest.id, {type: rest.type});
-    }, [rest.type]);
+        shape.emit(rest.id, {type: type});
+    }, [type]);
 
     return <><Input {...rest} onChange={(e) => _onChange(e)} onBlur={_onBlur} /></>
 };

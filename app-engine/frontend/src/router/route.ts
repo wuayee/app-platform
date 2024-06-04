@@ -61,21 +61,21 @@ export const routeList: MenuItem[] = [
     component: AppDev,
     children: [
       {
-        key: "/app-develop/:tenantId/detail/:appId",
+        key: "/app-develop/:tenantId/app-detail/:appId",
         icon: Icons.app({}),
         label: 'app编排',
         component: AippIndex,
         hidden: true,
       },
       {
-        key: "/app-develop/:tenantId/addFlow/:appId",
+        key: "/app-develop/:tenantId/app-detail/add-flow/:appId",
         icon: Icons.app({}),
         label: '新增工具流',
         component: AddFlow,
         hidden: true,
       },
       {
-        key: "/app-develop/:tenantId/flowDetail/:appId",
+        key: "/app-develop/:tenantId/app-detail/flow-detail/:appId",
         icon: Icons.app({}),
         label: '工具流',
         component: FlowDetail,
@@ -89,7 +89,7 @@ export const routeList: MenuItem[] = [
         hidden: true,
       },
       {
-        key: "/app-develop/:tenantId/chat/:appId",
+        key: "/app/:tenantId/chat/:appId",
         icon: Icons.app({}),
         label: '',
         component: ChatRunning,
@@ -142,7 +142,7 @@ export const routeList: MenuItem[] = [
       {
         key: '/knowledge-base/knowledge-detail',
         icon: Icons.app({}),
-        label: '小魔方知识库',
+        label: '知识库详情',
         component: KnowledgeBaseDetail,
         hidden: true,
         children: [

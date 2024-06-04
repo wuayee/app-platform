@@ -8,6 +8,7 @@ import com.huawei.fitframework.annotation.Genericable;
 import com.huawei.jade.app.engine.knowledge.dto.KbChunkSearchDto;
 import com.huawei.jade.app.engine.knowledge.dto.KbGenerateConfigDto;
 import com.huawei.jade.app.engine.knowledge.dto.KbTextQueryDto;
+import com.huawei.jade.app.engine.knowledge.dto.KbVectorSearchDto;
 import com.huawei.jade.app.engine.knowledge.dto.TableKnowledgeColDto;
 import com.huawei.jade.app.engine.knowledge.params.TableKnowledgeParam;
 import com.huawei.jade.app.engine.knowledge.vo.PageResultVo;
@@ -38,6 +39,15 @@ public interface KnowledgeBaseService {
      */
     @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KnowledgeBaseService.searchKnowledgeTable")
     List<String> searchKnowledgeTable(KbChunkSearchDto chunkSearchDto);
+
+    /**
+     * 向量检索知识库数据，返回召回文本列表
+     *
+     * @param chunkSearchDto 检索参数
+     * @return 检索结果
+     */
+    @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KnowledgeBaseService.vectorSearchKnowledgeTable")
+    List<String> vectorSearchKnowledgeTable(KbVectorSearchDto chunkSearchDto);
 
     /**
      * <p>分页获取文本类型知识表chunk列表</p>

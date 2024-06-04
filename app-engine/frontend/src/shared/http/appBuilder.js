@@ -67,14 +67,23 @@ const getWaterFlows = (params) => {
 // 获取知识库
 const getKnowledges = (params) => {
     return new Promise((resolve, reject) => {
-        get(`${JANE_URL}/jober/v1/api/${params.tenantId}/knowledge?pageNum=${params.pageNum}&pageSize=${params.pageSize}&name=${params.name}`).then((res) => {
+        get(`${AIPP_URL}/${params.tenantId}/knowledge/repos?pageNum=${params.pageNum}&pageSize=${params.pageSize}&name=${params.name}`).then((res) => {
             resolve(res);
         }, (error) => {
             reject(error);
         });
     });
 }
-
+// 获取知识库
+const getKnowledgesList = (params) => {
+  return new Promise((resolve, reject) => {
+      get(`${AIPP_URL}/${params.tenantId}/knowledge/repos/${params.repoId}/tables?pageNum=${params.pageNum}&pageSize=${params.pageSize}`).then((res) => {
+          resolve(res);
+      }, (error) => {
+          reject(error);
+      });
+  });
+}
 // 获取灵感大全fitable列表
 const getFitables = () => {
     return new Promise((resolve, reject) => {
@@ -98,5 +107,5 @@ const getAddFlowConfig = (tenant_Id) => {
 }
 
 export {
-    getMockChart, saveContent, getModels, getTools, getKnowledges, getFitables, getAddFlowConfig, getWaterFlows
+  getMockChart, saveContent, getModels, getTools, getKnowledges, getFitables, getAddFlowConfig, getWaterFlows, getKnowledgesList
 };

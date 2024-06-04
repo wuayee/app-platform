@@ -17,7 +17,7 @@ public interface FlowPublishService {
     /**
      * PUBLISH_NODE_INFO_GENERICABLE
      */
-    String PUBLISH_NODE_INFO_GENERICABLE = "1b5ffv4ib16iui8ddizapuejgqtsjj59";
+    String PUBLISH_NODE_INFO_GENERICABLE = "493b419f8e3641d88d7ff54b460d52ba";
 
     /**
      * 推送节点信息。

@@ -52,7 +52,7 @@ export default function ConditionFormWrapper() {
                     <span>添加分支</span>
                 </Button>
             </div>
-            {branches.map((branch, index) => (
+            {branches.filter(branch => branch.type === "if").map((branch, index) => (
                 <ConnectorProvider key={"dynamic-" + index} name={"dynamic-" + index}>
                     <IfForm key={branch.id} branch={branch} index = {index} name={index === 0 ? "If" : "Else if"}
                             totalItemNum={branches.length + 1}

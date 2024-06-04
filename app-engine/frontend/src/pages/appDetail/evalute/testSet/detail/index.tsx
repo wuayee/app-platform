@@ -19,51 +19,53 @@ const SetDetail = ({ params, visible, detailCallback }: props) => {
   useEffect(() => {
     generateListData(detailData);
     setDetailOpen(visible);
-  }, [params, visible]);
+  }, [params, visible, detailData]);
 
   const modifyBaseInfo = async (key: string, data: any) => {
+    const requestBody = {
+      id: params.id,
+      datasetName: detailData.datasetName,
+      description: detailData.description,
+      [key]: data.data
+    };
     try {
-      await modifyDataSetBaseInfo({
-        id: params.id,
-        datasetName: params.datasetName,
-        description: params.description,
-        [key]: data.data
-      } as any)
-      setDetailData({...detailData, [key]: data.data});
-      generateListData({...detailData, [key]: data.data});
-      
+      await modifyDataSetBaseInfo(requestBody);
+      const modifiedData = { ...detailData, [key]: data.data };
+      setDetailData(modifiedData);
+      generateListData({ ...detailData, [key]: data.data });
+
     } catch (error) {
-      
+
     }
   }
 
 
-  const generateListData = (params: any) => {
+  const generateListData = (info: any) => {
     const items: DescriptionsProps['items'] = [
       {
         key: 'datasetName',
         label: '测试集名称',
-        children: <ModifyBaseInfo data={params.datasetName} dataKey={'datasetName'} saveCallback={modifyBaseInfo}/>
+        children: <ModifyBaseInfo data={info.datasetName} dataKey={'datasetName'} saveCallback={modifyBaseInfo} />
       },
       {
         key: 'description',
         label: '测试集描述',
-        children: <ModifyBaseInfo data={params.description} dataKey={'description'} saveCallback={modifyBaseInfo}/>
+        children: <ModifyBaseInfo data={info.description} dataKey={'description'} saveCallback={modifyBaseInfo} />
       },
       {
         key: 'author',
         label: '创建人',
-        children: params?.author
+        children: info?.author
       },
       {
         key: 'createTime',
         label: '创建时间',
-        children: params?.createTime
+        children: info?.createTime
       },
       {
         key: 'modifyTime',
         label: '修改时间',
-        children: params?.modifyTime
+        children: info?.modifyTime
       }
     ];
     setDetailInfo(items);
@@ -90,7 +92,7 @@ const SetDetail = ({ params, visible, detailCallback }: props) => {
           </div>
         }>
         <Descriptions layout='vertical' items={detailInfo} column={2} />
-        <DetailTable rawData ={params}/>
+        <DetailTable rawData={params} />
       </Drawer>
     </>
   )

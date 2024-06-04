@@ -4,6 +4,7 @@
 
 package com.huawei.databus.sdk.support;
 
+import com.huawei.databus.sdk.api.DataBusRequest;
 import com.huawei.fitframework.inspection.Validation;
 
 /**
@@ -12,7 +13,7 @@ import com.huawei.fitframework.inspection.Validation;
  * @author 王成 w00863339
  * @since 2024-05-07
  */
-public class ReleaseMemoryRequest {
+public class ReleaseMemoryRequest implements DataBusRequest {
     private final String userKey;
 
     private ReleaseMemoryRequest(Builder builder) {
@@ -24,6 +25,7 @@ public class ReleaseMemoryRequest {
      *
      * @return 表示内存句柄的 {@code String}
      */
+    @Override
     public String userKey() {
         return this.userKey;
     }

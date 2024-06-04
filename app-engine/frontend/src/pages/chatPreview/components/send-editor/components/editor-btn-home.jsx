@@ -1,6 +1,9 @@
 
 import React, { useEffect, useState, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Tooltip, Dropdown, Space, Modal } from "antd";
+import { Message } from "@shared/utils/message";
+import { AippContext } from '@/pages/aippIndex/context';
 import { CloseOutlined } from "@ant-design/icons";
 import { 
   LinkIcon, 
@@ -12,41 +15,48 @@ import {
 import ReferencingApp from './referencing-app';
 import UploadFile from './upload-file';
 import StarApps from "../../star-apps";
-import robot from "@assets/images/ai/robot1.png";
+import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
+import LinkFile from './file-preview';
 
-// 操作按钮
+// 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {
-  const { aippInfo, setOpen, clear, fileCallBack } = props;
+  const { setOpenHistory } = props;
+  const { chatRunning, tenantId, appId,aippInfo ,setOpenStar,
+    setChatList,setChatId,setChatRunning,setClearChat,chatType} = useContext(AippContext);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
-  const [ openStar, setOpenStar ] = useState(false);
   const [ showAt, setShowAt ] = useState(false);
   const [ appName, setAppName ] = useState('');
-  const [ appIcon, setAppIcon ] = useState(robot);
+  const [ appIcon, setAppIcon ] = useState(knowledgeBase);
   const [ isAt, setIsAt ] = useState(false);
-  let modalRef = useRef(null);
 
+  let openUploadRef = useRef(null);
   useEffect(() => {
     document.body.addEventListener('click', () => {
       setShowAt(false);
     })
     if (aippInfo.attributes?.icon) {
       setAppIcon(aippInfo.attributes.icon);
-      setAppName(aippInfo.name || '应用');
     }
+    setAppName(aippInfo.name || '应用');
   }, [props]);
 
-  // 新聊天
-  const handleOk = () => {
-    clear('all');
+  // 清空聊天
+  const handleOk = (time) => {
+    setClearChat(time);
     setIsModalOpen(false);
   };
   // @ 应用点击
   const atClick = (e) => {
     e.stopPropagation();
+    if (chatRunning) {
+      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      return;
+    }
     setShowAt(!showAt);
   }
   // 取消@应用功能
   const cancleAt = () => {
+    setAppName(aippInfo.name);
     setIsAt(false);
   }
   // @应用点击回调
@@ -54,37 +64,53 @@ const EditorBtnHome = (props) => {
     setAppName(item.name);
     setShowAt(false);
     setIsAt(true);
+    setOpenStar(false)
   }
   // 更多应用
   const showMoreClick = () => {
+    if (chatRunning) {
+      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      return;
+    }
+    setShowAt(false);
     setOpenStar(true)
   }
   // 开始聊天
   const chatClick = (item) => {
-    console.log(item);
     setOpenStar(false);
   }
   // 多模态上传文件
   const uploadClick = () => {
-    modalRef.current.showModal();
+    if (chatRunning) {
+      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      return;
+    }
+    openUploadRef.current.showModal();
   }
-  // 上传文件回调
-  const fileSend = (data, type) => {
-    fileCallBack(data, type);
+  // 清空聊天记录
+  const clearAllModal = () => {
+    if (chatRunning) {
+      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      return;
+    };
+    setIsModalOpen(true);
   }
-  return <>{(
+  
+  return (
     <div className="btn-inner">
       <div className="inner-left">
         <div className="inner-item">
           <img src={appIcon} alt="" />
-          <div className={['switch-app', isAt ? 'switch-active' : null ].join(' ')} onClick={showMoreClick}>
+          <div className={['switch-app', isAt ? 'switch-active' : null ].join(' ')} onClick={()=>{if(chatType==='home'){showMoreClick();}}}>
             { isAt && <span style={{ marginLeft: '6px' }}>正在跟</span> }
             <span className="item-name" title={appName}>{appName}</span>
-            <ArrowDownIcon className="arrow-icon" />
+            <div hidden={chatType!=='home'}><ArrowDownIcon className="arrow-icon"/></div>
             { isAt && <span style={{ marginLeft: '6px' }}>对话</span> }
           </div>
           <LinkIcon onClick={uploadClick} />
-          { !isAt && <AtIcon onClick={atClick} /> }
+
+          {/* 暂时隐藏@图标 */}
+          {/* { !isAt && <AtIcon onClick={atClick} /> } */}
         </div>
       </div>
       <div className="inner-right">
@@ -97,32 +123,35 @@ const EditorBtnHome = (props) => {
           ) : 
           (
             <div className="inner-item">
-              <ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} />
-              <HistoryIcon  onClick={() => setOpen(true)}/>
-              <span className="item-clear" onClick={() => clear()}>+ 新聊天</span>
+              <div><ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} /></div>
+              <HistoryIcon  onClick={() => setOpenHistory(true)}/>
+              <span className="item-clear" onClick={() => {
+                setChatRunning(false);
+                setChatId(null);
+                setChatList(() => {
+                  let arr = [];
+                  return arr;
+                });
+              }}>+ 新聊天</span>
             </div>
           )
         }
-        
       </div>
       { showAt && <ReferencingApp atItemClick={atItemClick} atClick={showMoreClick}/> }
       <Modal 
         title="确认清空当前聊天" 
         open={isModalOpen} 
-        onOk={handleOk} 
+        onOk={(e)=>handleOk(e.timeStamp)} 
         onCancel={() => setIsModalOpen(false)} 
         centered>
         <span>清空后当前窗口聊天内容将不会被系统保存。</span>
       </Modal>
       <StarApps 
-        open={openStar} 
-        setOpen={setOpenStar} 
         handleAt={atItemClick}
-        chatClick={chatClick}
       />
-      <UploadFile  modalRef={modalRef} fileSend={fileSend}/>
+    <LinkFile openUploadRef={openUploadRef}/> 
     </div>
-  )}</>
+  );
 }
 
 

@@ -13,6 +13,7 @@ export const conditionComponent = (jadeConfig) => {
                 {
                     id: uuidv4(),
                     conditionRelation: "and",
+                    type: "if",
                     conditions: [
                         {
                             id: uuidv4(),
@@ -39,6 +40,18 @@ export const conditionComponent = (jadeConfig) => {
                                     referenceKey: ""
                                 }
                             ]
+                        },
+                    ]
+                },
+                {
+                    id: uuidv4(),
+                    conditionRelation: "and",
+                    type: "else",
+                    conditions: [
+                        {
+                            id: uuidv4(),
+                            condition: "true",
+                            value: []
                         },
                     ]
                 }
@@ -156,6 +169,7 @@ class Branch {
         return {
             id: uuidv4(),
             conditionRelation: "and",
+            type: "if",
             conditions: [
                 {
                     id: uuidv4(),
@@ -231,7 +245,13 @@ class Data {
 
     addBranch() {
         const newBranch = Branch.createNewBranch();
-        this.data.branches.push(newBranch);
+        const elseBranchIndex = this.data.branches.findIndex(branch => branch.type === "else");
+
+        if (elseBranchIndex !== -1) {
+            this.data.branches.splice(elseBranchIndex, 0, newBranch);
+        } else {
+            this.data.branches.push(newBranch);
+        }
         return this.data;
     }
 }

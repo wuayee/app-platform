@@ -18,6 +18,7 @@ import com.huawei.jade.fel.chat.character.ToolMessage;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.core.memory.CacheMemory;
 import com.huawei.jade.fel.core.util.Tip;
+import com.huawei.jade.fel.engine.activities.FlowCallBack;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.flows.Conversation;
@@ -100,9 +101,9 @@ public class AgentTest {
                     .prompt(Prompts.human("{{0}}"))
                     .delegate(agent)
                     .map(Prompt::text)
-                    .close(r -> {}, (e, r, f) -> {
-                        err.set(e.getMessage());
-                    });
+                    .close(FlowCallBack.<String>builder()
+                            .doOnError(exception -> err.set(exception.getMessage()))
+                            .build());
 
             AtomicInteger converseErrCnt = new AtomicInteger();
             assertThatThrownBy(() -> flow.converse().doOnError(e -> converseErrCnt.getAndIncrement())

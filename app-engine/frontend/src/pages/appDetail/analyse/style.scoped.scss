@@ -11,15 +11,15 @@
     background-size: cover;
     background-image: url(/src/assets/images/knowledge/knowledge-background.png);
     .title {
-      color: #808080;
       margin-bottom: 12px;
+      font-size: 18px;
     }
     .number {
-      font-size: 18px;
+      font-size: 40px;
       font-weight: 600;
     }
     .number-unit {
-      font-size: 12px;
+      font-size: 18px;
     }
     .number-tip {
       color: #808080;
@@ -47,12 +47,13 @@
   }
   
   .speed-number {
-    position: fixed;
-    margin: 70px 0 0 270px;
+    position: relative;
+    margin: 70px 0 0 -325px;
     .number {
       font-size: 40px;
       font-weight: 600;
       margin-left: -10px;
+      text-align: center;
     }
   }
   .select {

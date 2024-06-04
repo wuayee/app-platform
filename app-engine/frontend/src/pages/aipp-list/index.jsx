@@ -8,7 +8,7 @@ import {
 import { getAippList, createAipp } from '../../shared/http/aipp';
 import { UserIcon } from '../../assets/icon';
 import EditModal from '../components/edit-modal.jsx';
-import robot from '../../assets/images/ai/robot1.png';
+import knowledgeBase from '../../assets/images/knowledge/knowledge-base.png';
 import './home.scss';
 
 const { Search } = Input;
@@ -91,7 +91,7 @@ const Home = () => {
     })
   }
   function addAippCallBack(appId) {
-    navigate(`/app-develop/${tenantId}/detail/${appId}`);
+    navigate(`/app-develop/${tenantId}/app-detail/${appId}`);
   }
   return <>{(
     <div className="home-content">
@@ -133,12 +133,12 @@ const AppItem = (props) => {
   const tenantId = '727d7157b3d24209aefd59eb7d1c49ff';
 
   function itemClick() {
-    navigate(`/app-develop/${tenantId}/detail/${id}`);
+    navigate(`/app-develop/${tenantId}/app-detail/${id}`);
   }
   return <>{(
     <div className="app-item" onClick={itemClick}>
       <div className="app-header">
-        <span className="item-avatar">{ icon ? <img src={icon}/> : <img src={robot}/> }</span>
+        <span className="item-avatar">{ icon ? <img src={icon}/> : <img src={knowledgeBase}/> }</span>
         <div className="item-title">
           <div className="title">{ name }</div>
           <div className="tag">

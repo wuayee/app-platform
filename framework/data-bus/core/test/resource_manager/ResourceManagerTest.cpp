@@ -6,6 +6,8 @@
 #include <gtest/gtest.h>
 #include <fstream>
 
+#include "TaskLoop.h"
+#include "MockTaskLoop.h"
 #include "ResourceManager.h"
 #include "FtokArgsGenerator.h"
 #include "utils/FileUtils.h"
@@ -13,6 +15,7 @@
 using namespace std;
 using namespace DataBus::Resource;
 using namespace DataBus::Common;
+using ::testing::_;
 
 
 namespace DataBus {
@@ -29,14 +32,21 @@ struct MallocRecord {
 class ResourceManagerTest : public testing::Test {
 public:
     std::unique_ptr<ResourceManager> resourceManager;
+    std::shared_ptr<MockTaskLoop> mockTaskLoopPtr;
+    std::shared_ptr<Task::TaskLoop> taskLoopPtr;
 protected:
     void SetUp() override
     {
         FtokArgsGenerator::Instance().Reset();
         int port = 1234;
         uint64_t mallocSizeLimit = 200U;
-        Runtime::Config config(port, mallocSizeLimit);
-        resourceManager = std::make_unique<ResourceManager>(config);
+        // 内存块存活时长30分钟
+        int32_t memoryTtlDuration = 30 * 60 * 1000;
+        int32_t memorySweepInterval = 100;
+        Runtime::Config config(port, mallocSizeLimit, memoryTtlDuration, memorySweepInterval);
+        mockTaskLoopPtr = std::make_shared<MockTaskLoop>();
+        taskLoopPtr = std::static_pointer_cast<Task::TaskLoop>(mockTaskLoopPtr);
+        resourceManager = std::make_unique<ResourceManager>(config, taskLoopPtr);
     }
 
     void TearDown() override
@@ -103,11 +113,14 @@ protected:
 
 TEST_F(ResourceManagerTest, should_clean_up_ftok_file_path_and_shm_log_file_when_init)
 {
-    std::string filePath = FILE_PATH_PREFIX + "test";
-    FileUtils::CreateDirectory(filePath);
-    EXPECT_TRUE(IsFolderExist(filePath));
-    resourceManager->Init();
-    EXPECT_FALSE(IsFolderExist(filePath));
+    resourceManager.reset();
+    // 预先创建测试路径
+    std::string testDir = FILE_PATH_PREFIX + "test";
+    FileUtils::CreateDirectory(testDir);
+    EXPECT_TRUE(IsFolderExist(testDir));
+    // 重新构建ResourceManager，验证路径和日志文件被清理
+    ResourceManagerTest::SetUp();
+    EXPECT_FALSE(IsFolderExist(testDir));
     std::ifstream fileCheck(LOG_PATH, std::ios::binary | std::ios::ate);
     EXPECT_TRUE(fileCheck.good() && fileCheck.tellg() == 0);
 }
@@ -149,7 +162,8 @@ TEST_F(ResourceManagerTest, should_malloc_and_save_memory_info_when_handle_apply
     EXPECT_EQ(memorySize, resourceManager->GetMemorySize(memoryId));
     EXPECT_EQ(0, resourceManager->GetReadingRefCnt(memoryId));
     EXPECT_EQ(0, resourceManager->GetWritingRefCnt(memoryId));
-    EXPECT_TRUE(resourceManager->GetLastUsedTime(memoryId) > 0);
+    EXPECT_TRUE(resourceManager->GetLastUsedTime(memoryId) < chrono::system_clock::now());
+    EXPECT_TRUE(resourceManager->GetExpiryTime(memoryId) > chrono::system_clock::now());
 }
 
 TEST_F(ResourceManagerTest, should_log_malloc_when_handle_apply_memory_succeeds)
@@ -300,6 +314,7 @@ TEST_F(ResourceManagerTest, should_update_memory_status_when_handle_apply_and_re
     EXPECT_EQ(true, applyPermitRes.granted_);
     EXPECT_EQ(ErrorType::None, applyPermitRes.errorType_);
     // 断言内存管理状态修改成功
+    EXPECT_TRUE(resourceManager->GetExpiryTime(memoryId) == chrono::system_clock::time_point::max());
     EXPECT_EQ(1, resourceManager->GetWritingRefCnt(memoryId));
     const std::unordered_set<int32_t>& writingMemoryBlocks =
             resourceManager->GetWritingMemoryBlocks(permissionApplicantId);
@@ -310,6 +325,7 @@ TEST_F(ResourceManagerTest, should_update_memory_status_when_handle_apply_and_re
 
     resourceManager->HandleReleasePermission(permissionApplicantId, PermissionType::Write, memoryId);
     // 断言内存管理状态修改成功
+    EXPECT_TRUE(resourceManager->GetExpiryTime(memoryId) < chrono::system_clock::time_point::max());
     EXPECT_EQ(0, resourceManager->GetWritingRefCnt(memoryId));
     EXPECT_TRUE(writingMemoryBlocks.find(memoryId) == writingMemoryBlocks.end());
     EXPECT_EQ(0, resourceManager->GetPermissionStatus(memoryId));
@@ -545,6 +561,38 @@ TEST_F(ResourceManagerTest, should_remove_client_from_waiting_permit_request_que
 
     EXPECT_EQ(readCount - 1, resourceManager->GetWaitingPermitRequests(memoryId).size());
     EXPECT_TRUE(resourceManager->GetWaitingPermitMemoryBlocks(readStartId).empty());
+}
+
+TEST_F(ResourceManagerTest, should_auto_recycle_memory_when_memory_expires)
+{
+    int port = 1234;
+    uint64_t mallocSizeLimit = 100U;
+    // 内存块存活时长1分钟
+    int32_t memoryTtlDuration = 1000;
+    int32_t memorySweepInterval = 100;
+    Runtime::Config config(port, mallocSizeLimit, memoryTtlDuration, memorySweepInterval);
+    // 自定义MockTaskLoop的行为
+    EXPECT_CALL(*mockTaskLoopPtr, AddReadTask(_, _, _)).WillRepeatedly(testing::Invoke([&]() {
+        if (resourceManager) {
+            resourceManager->CleanupExpiredMemory();
+        }
+    }));
+    resourceManager = std::make_unique<ResourceManager>(config, taskLoopPtr);
+
+    // 分配内存
+    int32_t memoryId = AllocateMemory(TEST_OBJECT_KEY);
+    EXPECT_EQ(memoryId, resourceManager->GetMemoryId(TEST_OBJECT_KEY));
+    // 申请权限
+    int32_t permissionApplicantId = 2;
+    resourceManager->HandleApplyPermission({permissionApplicantId, PermissionType::Write, memoryId, false,
+                                            make_shared<UserData>()});
+    // 释放权限
+    resourceManager->HandleReleasePermission(permissionApplicantId, PermissionType::Write, memoryId);
+    // 等待自动回收
+    int32_t sleepDuration = 1300;
+    this_thread::sleep_for(chrono::milliseconds(sleepDuration));
+    // 验证内存块已经被自动回收
+    EXPECT_EQ(-1, resourceManager->GetMemoryId(TEST_OBJECT_KEY));
 }
 
 class ApplyPermissionParamTest : public ResourceManagerTest,

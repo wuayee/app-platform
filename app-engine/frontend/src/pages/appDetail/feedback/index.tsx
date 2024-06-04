@@ -6,32 +6,35 @@ import { getColumnSearchProps } from '../../../components/table';
 import { feedbackType } from './model';
 import { AppIcons } from '../../../components/icons/app';
 import TableTextSearch from '../../../components/table-text-search';
+import { exportFeedBackData, getFeedBackData } from '../../../shared/http/apps';
+import Pagination from '../../../components/pagination';
+import { useParams } from 'react-router-dom';
 
 const feedbackIcon = {
-  0: <AppIcons.UnFeedbackIcon style={{ verticalAlign: 'text-bottom' }} />,
-  1: <AppIcons.LikeIcon style={{ verticalAlign: 'text-bottom' }} />,
-  2: <AppIcons.DisLikeIcon style={{ verticalAlign: 'text-bottom' }} />,
+  '-1': <AppIcons.UnFeedbackIcon style={{ verticalAlign: 'text-bottom' }} />,
+  '0': <AppIcons.LikeIcon style={{ verticalAlign: 'text-bottom' }} />,
+  '1': <AppIcons.DisLikeIcon style={{ verticalAlign: 'text-bottom' }} />,
 };
 
 const basicInfoCols = [
   {
-    key: 'time',
-    label: '时间',
+    key: 'createTime',
+    label: '创建时间',
   },
   {
-    key: 'speed',
-    label: '相应速度',
+    key: 'responseTime',
+    label: '响应速度',
   },
   {
-    key: 'user',
+    key: 'createUser',
     label: '用户',
   },
+  // {
+  //   key: 'department',
+  //   label: '部门',
+  // },
   {
-    key: 'department',
-    label: '部门',
-  },
-  {
-    key: 'feedback',
+    key: 'userFeedback',
     label: '用户反馈',
     render: (value) => (
       <div>
@@ -43,30 +46,43 @@ const basicInfoCols = [
 
 const FeedBack = () => {
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState([]);
-  const [searchParams,setSearchParams]=useState({});
+  const [data, setData] = useState<any[]>([]);
+  const [searchParams, setSearchParams] = useState({});
+
+  const { tenantId, appId } = useParams();
   const currentRow = useRef(null);
   const refreshData = () => {
-    const dataSource = new Array(100).fill(1).map((_,i) => {
-     return {
-      id: i,
-      question: '这是一个很长长长长长长长长长长长长长长长长长长长长的问题',
-      answer: '回答',
-      time: '2024-03-04 14:33:23',
-      speed: `${i}ms`,
-      user: `用户${i}`,
-      department: '部门',
-      feedback: i % 3,
-      }
-    });
-    setData(dataSource);
+
   };
   useEffect(() => {
     refreshData();
   }, [searchParams]);
+
+  // 搜索数据
+  const buildSearchParms = (filters: any, sorter: any) => {
+    const filterData: any = {};
+    Object.keys(filters).forEach(item => {
+      filterData[item] = filters[item]?.[0] ?? ''
+    });
+    const sorterData: any = {};
+    if (sorter.columnKey === 'createTime') {
+      sorterData['isSortByCreateTime'] = true;
+      sorterData['isSortByResponseTime'] = false;
+    } else {
+      sorterData['isSortByCreateTime'] = false;
+      sorterData['isSortByResponseTime'] = true;
+    }
+    sorterData['orderDirection'] = sorter.order === 'ascend' ? 'ASC' : sorter.order === 'descend' ? 'DESC' : ''
+    return { ...filterData, ...sorterData };
+  }
   const handleChange: void = (pagination, filters, sorter) => {
-    setSearchParams({...searchParams,pagination,filters,sorter})
-    console.log('Various parameters', pagination, filters, sorter);
+    const search = buildSearchParms(filters, sorter)
+    if (searchParams?.startTime) {
+      setSearchParams({ ...search, startTime: searchParams?.startTime || null, endTime: searchParams?.endTime || null });
+    } else {
+      setSearchParams({ ...search });
+    }
+    setPage(1);
   };
   const columns = [
     {
@@ -86,34 +102,39 @@ const FeedBack = () => {
       ...TableTextSearch('answer'),
     },
     {
-      title: '时间',
-      dataIndex: 'time',
-      key: 'time',
+      title: '创建时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
       width: 200,
+      sorter: (a: any, b: any) => Date.parse(a.createTime.replace(/-/g, "/")) - Date.parse(b.createTime.replace(/-/g, "/")),
     },
     {
-      title: '相应速度',
-      dataIndex: 'speed',
-      key: 'speed',
-      sorter: (a, b) => false,
+      title: '响应速度',
+      dataIndex: 'responseTime',
+      key: 'responseTime',
+      sorter: (a: any, b: any) => a.responseTime - b.responseTime,
+      render: (value) => <>
+        {value}ms
+      </>
     },
     {
       title: '用户',
-      dataIndex: 'user',
-      key: 'user',
+      dataIndex: 'createUser',
+      key: 'createUser',
+      ...TableTextSearch('createUser'),
     },
-    {
-      title: '部门',
-      dataIndex: 'department',
-      key: 'department',
-    },
+    // {
+    //   title: '部门',
+    //   dataIndex: 'department',
+    //   key: 'department',
+    // },
     {
       title: '用户反馈',
-      dataIndex: 'feedback',
-      key: 'feedback',
+      dataIndex: 'userFeedback',
+      key: 'userFeedback',
       render: (value, record) => (
         <div>
-          {feedbackIcon[value]} <span>{feedbackType[value]}</span>{' '}
+          {feedbackIcon[value]} <span>{feedbackType[value]}</span>
         </div>
       ),
     },
@@ -134,17 +155,82 @@ const FeedBack = () => {
     },
   ];
 
+  // 总条数
+  const [total, setTotal] = useState(0);
+
+  // 分页
+  const [page, setPage] = useState(1);
+
+  // 分页数
+  const [pageSize, setPageSize] = useState(10);
+
+  // 分页变化
+  const paginationChange = (curPage: number, curPageSize: number) => {
+    if (page !== curPage) {
+      setPage(curPage);
+    }
+    if (pageSize != curPageSize) {
+      setPageSize(curPageSize);
+    }
+  }
+
+  useEffect(() => {
+    getFeedBack()
+  }, [page, pageSize, searchParams])
+
+  // 查询反馈数据
+  const getFeedBack = async () => {
+    try {
+      const res = await getFeedBackData({
+        pageIndex: page,
+        pageSize: pageSize,
+        appId: appId,
+        ...searchParams
+      });
+      setTotal(res?.total || 0);
+
+      const resdata: any[] = (res?.data || []).map((item: any) => ({
+        ...item,
+        id: item.id,
+        question: item.question,
+        answer: item.answer,
+        responseTime: item.responseTime,
+        createTime: item.createTime,
+        createUser: item.createUser,
+        userFeedback: item.userFeedback
+      }));
+      setData([...resdata]);
+    } catch (error) {
+
+    }
+  }
+
+  // 导出数据
+  const exportData = async () => {
+    try {
+      await exportFeedBackData({
+        pageIndex: page,
+        pageSize: pageSize,
+        appId: appId,
+        ...searchParams
+      });
+
+    } catch (error) {
+
+    }
+  }
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 14 }}>
         <DatePicker.RangePicker
           showTime
           onChange={(_date, dateString) => {
-            setSearchParams({...searchParams,date:dateString})
-            console.log(dateString);
+            setSearchParams({ ...searchParams, startTime: dateString[0] || null, endTime: dateString[1] || null })
+            setPage(1);
           }}
         />
-        <Button type='primary'>导出</Button>
+        <Button type='primary' onClick={exportData}>导出</Button>
       </div>
       <Table
         dataSource={data}
@@ -152,16 +238,9 @@ const FeedBack = () => {
         onChange={handleChange}
         virtual
         scroll={{ y: 'calc(100vh - 320px)' }}
-        pagination={{
-          position: ['bottomRight'],
-          size: 'small',
-          showQuickJumper: true,
-          defaultCurrent: 1,
-          showSizeChanger: true,
-          showTotal: (total) => <div>共{total}条</div>,
-          onChange: (pageNo, pageSize) => {},
-        }}
+        pagination={false}
       />
+      <Pagination total={total} current={page} onChange={paginationChange} pageSize={pageSize} />
       <Drawer
         title='反馈详情'
         placement='right'
@@ -208,24 +287,13 @@ const FeedBack = () => {
         </div>
         <div className='drawer-title'>问答详情</div>
         <div className='drawer-sub-title'>用户提问</div>
-        <div className='question-card '>天舟的按时发大发？</div>
+        <div className='question-card '>{currentRow.current?.question}</div>
         <div className='drawer-sub-title'>用户回答</div>
         <div className='answer-card'>
-          哈利·波特，是英国女作家J.K.罗琳的魔幻系列小说《哈利·波特》系列及其衍生作品中的主人公，是詹姆·波特和莉莉·波特（原名莉莉·伊万斯）的独生子，出生于1980年7月31日，成年后身高182cm，教父为小天狼星布莱克（Sirius
-          Black），或者说西里斯·布莱克。魔杖长11英寸，冬青木，杖芯是凤凰福克斯的尾羽。
-          身怀母亲莉莉用生命施加的只保护哈利的保护咒，可保护自身不受伏地魔伤害。因只有待在有母族血缘的身边，血缘魔法才能生效，所以被麻瓜弗农·德思礼姨夫与佩妮·德思礼（原名佩妮·伊万斯）姨妈收养，就读于霍格沃茨魔法学校格兰芬多学院，曾两次在阿瓦达索命下依然存活，被称为“大难不死的男孩”（The
-          boy who lived）。
+          {currentRow.current?.answer}
         </div>
         <div className='drawer-title'>用户反馈</div>
-        <div className='drawer-sub-title'>用户提问</div>
-        <div className='question-card '>天舟的按时发大发？</div>
-        <div className='drawer-sub-title'>用户回答</div>
-        <div className='answer-card'>
-          哈利·波特，是英国女作家J.K.罗琳的魔幻系列小说《哈利·波特》系列及其衍生作品中的主人公，是詹姆·波特和莉莉·波特（原名莉莉·伊万斯）的独生子，出生于1980年7月31日，成年后身高182cm，教父为小天狼星布莱克（Sirius
-          Black），或者说西里斯·布莱克。魔杖长11英寸，冬青木，杖芯是凤凰福克斯的尾羽。
-          身怀母亲莉莉用生命施加的只保护哈利的保护咒，可保护自身不受伏地魔伤害。因只有待在有母族血缘的身边，血缘魔法才能生效，所以被麻瓜弗农·德思礼姨夫与佩妮·德思礼（原名佩妮·伊万斯）姨妈收养，就读于霍格沃茨魔法学校格兰芬多学院，曾两次在阿瓦达索命下依然存活，被称为“大难不死的男孩”（The
-          boy who lived）。
-        </div>
+        <div className='question-card '>{currentRow.current?.userFeedbackText}</div>
       </Drawer>
     </div>
   );

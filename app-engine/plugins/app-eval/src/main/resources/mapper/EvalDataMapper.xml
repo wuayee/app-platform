@@ -25,7 +25,7 @@
 
     <update id="updateById" parameterType="com.huawei.jade.app.engine.eval.po.EvalDataPo">
         update eval_data
-        set modify_time = #{modifyTime}, input = #{input}, output = #{input}
+        set modify_time = #{modifyTime}, input = #{input}, output = #{output}
         where id = #{id}
     </update>
 

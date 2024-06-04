@@ -4,15 +4,14 @@
 
 package com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.jobers;
 
-import static com.huawei.fit.jober.FlowExceptionService.HANDLE_EXCEPTION_GENERICABLE;
 import static com.huawei.fit.jober.common.Constant.BUSINESS_DATA_KEY;
 import static com.huawei.fit.jober.common.Constant.CONTEXT_DATA;
 import static com.huawei.fit.jober.common.Constant.PASS_DATA;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_EXECUTE_FITABLE_TASK_FAILED;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowJoberProperties.ENTITY;
+import static com.huawei.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fit.jober.FlowExceptionService;
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.common.OhscriptExecuteException;
 import com.huawei.fit.jober.common.TypeNotSupportException;
@@ -24,6 +23,7 @@ import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowJoberProperties;
 import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowJoberType;
 import com.huawei.fit.jober.flowsengine.domain.flows.parsers.FlowGraphData;
+import com.huawei.fit.jober.flowsengine.domain.flows.utils.FlowExecuteInfoUtil;
 import com.huawei.fit.jober.flowsengine.utils.FlowUtil;
 import com.huawei.fitframework.broker.CommunicationType;
 import com.huawei.fitframework.broker.client.BrokerClient;
@@ -75,6 +75,8 @@ public abstract class FlowJober {
     private static final String TIMEOUT = "timeout";
 
     private static final String IS_ASYNC = "isAsync";
+
+    private static final String JOBER_EXECUTE_INFO_TYPE = "jober";
 
     /**
      * 所在节点的metaId
@@ -159,7 +161,6 @@ public abstract class FlowJober {
         } catch (OhscriptExecuteException | TypeNotSupportException ex) {
             throw ex;
         } catch (FitException ex) {
-            notifyException(ex, convertedInputs);
             String fitableString = Optional.ofNullable(fitables).map(Object::toString).orElse("");
             log.error("Catch throwable when remote invoke, fitables is {}. Caused by {}.", fitableString,
                     ex.getMessage());
@@ -170,14 +171,6 @@ public abstract class FlowJober {
             restoreJoberConfig(oldValues);
         }
         return flowData;
-    }
-
-    public void notifyException(Throwable ex, List<FlowData> convertedInputs) {
-        for (String fitableId : exceptionFitables) {
-            this.brokerClient.getRouter(FlowExceptionService.class, HANDLE_EXCEPTION_GENERICABLE)
-                    .route(new FitableIdFilter(fitableId))
-                    .invoke(this.nodeMetaId, filterFlowData(convertedInputs), ex.getMessage());
-        }
     }
 
     /**
@@ -192,7 +185,7 @@ public abstract class FlowJober {
 
         Optional<JSONObject> jober = Optional.ofNullable(
                         ObjectUtils.<JSONObject>cast(flowData.getBusinessData().get(nodeMetaId)))
-                .map(json -> ObjectUtils.cast(json.get(FlowGraphData.JOBER)));
+                .map(json -> cast(json.get(FlowGraphData.JOBER)));
         if (jober.isPresent()) {
             jober.map(joberObject -> ObjectUtils.<JSONArray>cast(joberObject.get(FlowGraphData.FITABLES)))
                     .map(jsonArray -> JSON.parseObject(jsonArray.toJSONString(), new TypeReference<List<String>>() {}))
@@ -223,9 +216,9 @@ public abstract class FlowJober {
      * @param oldValues oldValues
      */
     protected void restoreJoberConfig(Map<String, Object> oldValues) {
-        this.setFitables(ObjectUtils.cast(oldValues.get(FlowGraphData.FITABLES)));
+        this.setFitables(cast(oldValues.get(FlowGraphData.FITABLES)));
         Optional.ofNullable(oldValues.get(ENTITY.getValue()))
-                .ifPresent(value -> this.getProperties().put(ENTITY.getValue(), ObjectUtils.cast(value)));
+                .ifPresent(value -> this.getProperties().put(ENTITY.getValue(), cast(value)));
     }
 
     /**
@@ -269,10 +262,8 @@ public abstract class FlowJober {
         return outputEntities.stream()
                 .map(output -> FlowData.builder()
                         .operator(input.getOperator())
-                        .startTime(input.getStartTime())
-                        .businessData(ObjectUtils.cast(output.get("businessData")))
-                        .contextData(new HashMap<>(input.getContextData()))
-                        .passData(ObjectUtils.cast(output.get("passData")))
+                        .startTime(input.getStartTime()).businessData(cast(output.get("businessData")))
+                        .contextData(new HashMap<>(input.getContextData())).passData(cast(output.get("passData")))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -296,11 +287,11 @@ public abstract class FlowJober {
      */
     protected List<Map<String, Object>> fitableInvoke(List<Map<String, Object>> contextData, String fitableId) {
         List<Map<String, Object>> outputEntities;
-        Map<String, Object> fitableConf = ObjectUtils.cast(this.fitablesConfig.get(fitableId));
+        Map<String, Object> fitableConf = cast(this.fitablesConfig.get(fitableId));
         if (fitableConf != null && fitableConf.containsKey(TIMEOUT)) {
             outputEntities = this.brokerClient.getRouter(FlowableService.class, FLOWABLE_HANDLE_TASK_GENERICABLE)
                     .route(new FitableIdFilter(fitableId))
-                    .timeout(ObjectUtils.cast(fitableConf.get(TIMEOUT)), TimeUnit.MILLISECONDS)
+                    .timeout(cast(fitableConf.get(TIMEOUT)), TimeUnit.MILLISECONDS)
                     .invoke(contextData);
         } else {
             outputEntities = this.brokerClient.getRouter(FlowableService.class, FLOWABLE_HANDLE_TASK_GENERICABLE)
@@ -312,14 +303,20 @@ public abstract class FlowJober {
     }
 
     private List<FlowData> convertFlowData(List<FlowData> inputs) {
-        if (Objects.isNull(converter)) {
+        if (Objects.isNull(this.converter)) {
             return inputs;
         }
-        return inputs.stream().map(converter::convertInput).collect(Collectors.toList());
+        return inputs.stream().peek(flowData -> {
+            Map<String, Object> newInputMap = this.converter.convertInput(flowData.getBusinessData());
+            if (this.nodeMetaId != null) {
+                FlowExecuteInfoUtil.addInputMap2ExecuteInfoMap(flowData, newInputMap, this.nodeMetaId,
+                        JOBER_EXECUTE_INFO_TYPE);
+            }
+            flowData.setBusinessData(FlowUtil.mergeMaps(flowData.getBusinessData(), newInputMap));
+        }).collect(Collectors.toList());
     }
 
-    protected FlowData addResultToFlowData(Object result, Map<String, Object> businessData,
-            FlowData contextInfo) {
+    protected FlowData addResultToFlowData(Object result, Map<String, Object> businessData, FlowData contextInfo) {
         if (Objects.isNull(converter)) {
             log.error("There is no converter for adding result, nodeMetaId={}.", this.nodeMetaId);
             throw new JobberParamException(INPUT_PARAM_IS_INVALID, "flowConverter");
@@ -330,6 +327,13 @@ public abstract class FlowJober {
                 .businessData(businessData)
                 .contextData(new HashMap<>(contextInfo.getContextData()))
                 .build();
-        return converter.convertOutput(result, flowData);
+
+        Map<String, Object> newOutputMap = converter.convertOutput(result);
+        if (!newOutputMap.isEmpty()) {
+            flowData.getBusinessData().putAll(newOutputMap);
+            FlowExecuteInfoUtil.addOutputMap2ExecuteInfoMap(flowData, newOutputMap, this.nodeMetaId,
+                    JOBER_EXECUTE_INFO_TYPE);
+        }
+        return flowData;
     }
 }

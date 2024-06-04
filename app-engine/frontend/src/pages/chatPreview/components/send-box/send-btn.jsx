@@ -38,11 +38,6 @@ const SendBtn = (props) => {
           </div> 
         </Tooltip>
         }
-        <Tooltip title="删除" color="white" overlayInnerStyle={{color: '#212121' }}>
-          <div>
-            <DeleteIcon />
-          </div>
-        </Tooltip>
       </div>
     </div>
   )}</>

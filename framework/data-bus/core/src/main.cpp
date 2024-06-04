@@ -22,12 +22,19 @@ using namespace std;
 namespace DataBus {
 
 const int MAX_EVENTS = 10;
-// TD: 从runtime config读取
-const int PORT = 5284;
 const int MAX_BUFFER_SIZE = 1024;
+// TD: 下列配置从runtime config读取
+// 主服务端口5284
+constexpr int PORT = 5284;
 // 内存分配上限40G
-// TD: 从runtime config读取
-constexpr uint64_t MALLOC_SIZE_LIMIT = 42949672960;
+constexpr uint64_t MB = 1024 * 1024;
+constexpr uint64_t GB = 1024 * MB;
+constexpr uint64_t MALLOC_SIZE_LIMIT = 40 * GB;
+// 内存块存活时长30分钟
+constexpr int32_t MINUTE = 60 * 1000;
+constexpr int32_t MEMORY_TTL_DURATION = 30 * MINUTE;
+// 过期内存清理周期1分钟
+constexpr int32_t MEMORY_SWEEP_INTERVAL = MINUTE;
 
 void HandleEvent(struct epoll_event event, int epollFd, int serverFd,
     const shared_ptr<TaskLoop>& taskLoopPtr)
@@ -85,7 +92,7 @@ void StartDataBusService(int serverFd)
     }
     shared_ptr<TaskLoop> taskLoopPtr = std::make_shared<TaskLoop>();
     // TD: configParser从配置文件解析
-    const Runtime::Config config(PORT, MALLOC_SIZE_LIMIT);
+    const Runtime::Config config(PORT, MALLOC_SIZE_LIMIT, MEMORY_TTL_DURATION, MEMORY_SWEEP_INTERVAL);
     unique_ptr<TaskHandler> taskHandlerPtr = std::make_unique<TaskHandler>(taskLoopPtr, config);
     taskHandlerPtr->Init();
     while (true) {
