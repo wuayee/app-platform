@@ -89,7 +89,6 @@ const items: MenuProps["items"] = [
   }
 
   useEffect(() => {
-    console.log(aippInfo)
     if(aippInfo){
     getAppId(aippInfo);
     }

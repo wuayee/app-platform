@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useContext } from 'react';
 import { getKnowledges } from "@shared/http/appBuilder";
 import { Form, Select, Button, TreeSelect  } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import { AippContext } from '../../../aippIndex/context';
+import { ConfigFormContext } from '../../../aippIndex/context';
 import AddKnowledge from  './add-knowledge';
 
 const Knowledge = (props) => {
@@ -11,7 +11,7 @@ const Knowledge = (props) => {
   const [ showKnowControl, setShowKnowControl ] = useState(true);
   const [ knowledgeOptions, setKnowledgeOptions ] = useState(null);
   const [ knows, setKnows] = useState([]);
-  const { tenantId } = useContext(AippContext);
+  const { tenantId } = useContext(ConfigFormContext);
   const searchName = useRef('');
   const list = useRef('');
   const modalRef = useRef();

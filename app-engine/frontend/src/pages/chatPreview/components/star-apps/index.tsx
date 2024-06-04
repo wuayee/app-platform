@@ -21,11 +21,10 @@ interface StarAppsProps {
   handleAt: (val: any) => void;
 }
 
-const StarApps: React.FC<StarAppsProps> = ({
-   handleAt}) => {
+const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   const navigate = useNavigate();
-  const { openStar, setOpenStar }  = useContext(AippContext);
+  const { openStar, setOpenStar}  = useContext(AippContext);
   const [apps, setApps] = useState<any[]>([]);
   const clickMap: any = {
 
@@ -124,7 +123,6 @@ const StarApps: React.FC<StarAppsProps> = ({
   const startChat = (item: any) => {
     dispatch(setDefaultApp(item?.appId || ''));
     setOpenStar(false);
-    // navigate(`/app/${tenantId}/chat/${item.aippId}`);
   }
 
   useEffect(()=> {
