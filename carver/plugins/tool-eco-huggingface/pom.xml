@@ -4,13 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fit.jade</groupId>
-        <artifactId>app-builder-plugin-parent</artifactId>
+        <groupId>com.huawei.fit.jade.plugin</groupId>
+        <artifactId>carver-plugin-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.huawei.fit.jade.plugin</groupId>
-    <artifactId>tool-waterflow</artifactId>
+    <artifactId>tool-eco-huggingface</artifactId>
 
     <dependencies>
         <!-- FIT core -->
@@ -31,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>
-            <artifactId>fel-service</artifactId>
+            <artifactId>fel-pipeline-huggingface</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
@@ -49,17 +48,6 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
-            <artifactId>fit-message-serializer-json-jackson</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.15.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
