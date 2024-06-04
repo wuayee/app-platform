@@ -54,12 +54,32 @@ public class ExcelSourceTest {
     }
 
     @Test
+    void test_extract_synonyms_limit_row() {
+        ExcelSource source = new ExcelSource();
+        source.parseContent("src/test/testfiles/近义词test.xlsx", 0, 0, 1, 0);
+
+        List<List<String>> contents = source.getContents();
+        assertEquals(contents.size(), 3);
+        assertEquals(contents.get(0).size(), 2);
+    }
+
+    @Test
     void test_extract_relation_enums() {
         ExcelSource source = new ExcelSource();
         source.parseContent("src/test/testfiles/从属枚举test.xlsx", 0, 0, 0);
 
         List<List<String>> contents = source.getContents();
         assertEquals(contents.size(), 7);
+        assertEquals(contents.get(0).size(), 2);
+    }
+
+    @Test
+    void test_extract_relation_enums_limit_row() {
+        ExcelSource source = new ExcelSource();
+        source.parseContent("src/test/testfiles/从属枚举test.xlsx", 0, 0, 2, 0);
+
+        List<List<String>> contents = source.getContents();
+        assertEquals(contents.size(), 4);
         assertEquals(contents.get(0).size(), 2);
     }
 
