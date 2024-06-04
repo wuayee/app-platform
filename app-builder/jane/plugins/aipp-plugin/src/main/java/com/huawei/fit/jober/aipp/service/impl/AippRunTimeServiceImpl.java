@@ -913,8 +913,9 @@ public class AippRunTimeServiceImpl
                     .route(new FitableIdFilter(fitableId))
                     .invoke(appDto, context);
         } catch (FitException t) {
-            log.error("Error occurred when create debug aipp, error: {}", t.getMessage());
-            throw new AippException(AippErrCode.CREATE_DEBUG_AIPP_FAILED);
+            String errorMsg = t.getMessage();
+            log.error("Error occurred when create debug aipp, error: {}", errorMsg);
+            throw new AippException(AippErrCode.CREATE_DEBUG_AIPP_FAILED, errorMsg);
         }
         String instanceId = createAippInstance(aippCreate.getAippId(),
                 aippCreate.getVersion(),

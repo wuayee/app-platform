@@ -131,7 +131,6 @@ const AddFlow = (props) => {
       agent.onChange(() => {
         handleSearch();
       })
-      agent.resetStatus();
     })
     getAddFlowConfig(tenantId).then(res => {
       if (res.code === 0) {
@@ -281,7 +280,7 @@ const AddFlow = (props) => {
     let params = type ?  aippInfo.flowGraph : appRef.current.flowGraph;
     const res = await updateFlowInfo(tenantId, id, params);
     if (res.code === 0) {
-      Message({ type: 'success', content: '高级配置更新成功' })
+      Message({ type: 'success', content: type ? '高级配置更新成功': '工具流更新成功' })
     }
   }
   // 显示隐藏左侧菜单

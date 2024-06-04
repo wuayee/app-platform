@@ -98,7 +98,7 @@ public enum AippErrCode implements ErrorCode {
     /**
      * 调试失败
      */
-    PREVIEW_AIPP_FAILED(90001011, "Preview aipp failed, please retry later."),
+    PREVIEW_AIPP_FAILED(90001011, "Preview aipp failed, please retry later : {0}"),
 
     /**
      * 属性key重复
@@ -189,7 +189,7 @@ public enum AippErrCode implements ErrorCode {
     /**
      * 创建调试aipp失败
      */
-    CREATE_DEBUG_AIPP_FAILED(90002907, "调试失败，请检查流程配置是否正确."),
+    CREATE_DEBUG_AIPP_FAILED(90002907, "调试失败，请检查流程配置是否正确: {0}"),
 
     /**
      * 错误码截止值
