@@ -100,7 +100,7 @@ public class FlowTaskCreatedEventHandler implements EventHandler<FlowTaskCreated
             return contexts;
         }
         contexts.forEach(context -> {
-            taskConverter.convertInput(context.getData());
+            taskConverter.convertInput(context.getData().getBusinessData());
         });
         return contexts;
     }
