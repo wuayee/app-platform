@@ -194,6 +194,8 @@ const AppAnalyse: React.FC = () => {
     top5UserChart.setOption(top5UserOption);
   }
 
+  const order = ['below 500ms', '501-1000ms', '1001ms-2000ms', 'above 2000ms'];
+
   // 设置平均响应速度
   const setAvargeSpeed = (avgResponseRange, speedChart) => {
     let totalData = 0;
@@ -204,11 +206,10 @@ const AppAnalyse: React.FC = () => {
         name: avgResponseRange[item]?.range || ''
       })
     });
-    setTotal(totalData)
-    const order = ['below 500ms', '501-1000ms', '1001ms-2000ms', 'above 2000ms']
+    setTotal(totalData);
     data.sort((start, next) => {
       return order.indexOf(start.name) - order.indexOf(next.name)
-    })
+    });
     speedOption.series[0].data = data;
     speedChart.setOption(speedOption);
   }
@@ -233,7 +234,13 @@ const AppAnalyse: React.FC = () => {
       setTop5UserData(res?.topUsers, top5UserChart);
       setAvargeSpeed(res?.avgResponseRange, speedChart);
       setUserTrade(res?.userAccessData, tradeChart)
-      setSpeedList(Object.values(res?.avgResponseRange));
+      if (res && res.avgResponseRange) {
+        let avgResponseRange = Object.values(res?.avgResponseRange);
+        avgResponseRange.sort((start, next) => {
+          return order.indexOf(start.range) - order.indexOf(next.range)
+        });
+        setSpeedList(avgResponseRange);
+      }
     } catch (error) {
 
     }
