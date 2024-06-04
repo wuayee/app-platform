@@ -16,6 +16,7 @@
     <modules>
         <module>fel-core</module>
         <module>fel-flow</module>
+        <module>fel-huggingface-pipeline</module>
         <module>fel-service</module>
         <module>rag-service</module>
         <module>tool-aiflow</module>
