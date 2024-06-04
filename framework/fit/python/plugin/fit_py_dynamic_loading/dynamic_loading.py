@@ -106,8 +106,8 @@ def _run_path(path: str):
 
 def _run_python_command(path, file_path):
     with open(file_path, 'r') as f:
-        whl_path = os.path.join(path, f.readline())
-        while whl_path:
+        whl_paths = [os.path.join(path, line.strip()) for line in f.readlines()]
+        for whl_path in whl_paths:
             if _python_interpreter_alias():
                 subprocess.call([_python_interpreter_alias(), "-m", "pip", "install", whl_path])
             elif _check_command_availability("python3"):
