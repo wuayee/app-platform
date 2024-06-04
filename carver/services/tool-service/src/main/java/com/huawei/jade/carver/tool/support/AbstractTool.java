@@ -51,7 +51,7 @@ public abstract class AbstractTool implements Tool {
     }
 
     @Override
-    public String callByJson(String jsonArgs) {
+    public String jsonCall(String jsonArgs) {
         Map<String, Object> mapArgs = this.serializer.deserialize(jsonArgs.getBytes(UTF_8),
                 UTF_8,
                 TypeUtils.parameterized(Map.class, new Type[] {String.class, Object.class}));

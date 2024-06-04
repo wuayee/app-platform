@@ -49,7 +49,7 @@ public class WaterFlowTool implements Tool {
     }
 
     @Override
-    public String callByJson(String jsonArgs) {
-        return this.tool.callByJson(jsonArgs);
+    public String jsonCall(String jsonArgs) {
+        return this.tool.jsonCall(jsonArgs);
     }
 }

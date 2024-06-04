@@ -57,6 +57,6 @@ public class DefaultToolExecuteService implements ToolExecuteService {
                     info.tags()));
         }
         Tool tool = query.get().create(info, metadata);
-        return tool.callByJson(jsonArgs);
+        return tool.jsonCall(jsonArgs);
     }
 }

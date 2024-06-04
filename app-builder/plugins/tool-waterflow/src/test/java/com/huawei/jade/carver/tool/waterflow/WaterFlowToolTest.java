@@ -76,7 +76,7 @@ public class WaterFlowToolTest {
         String expectedResult = new String(this.serializer.serialize("OK", UTF_8), UTF_8);
 
         // when
-        Object result = this.customizeWorkflowTool.callByJson(jsonArgs);
+        Object result = this.customizeWorkflowTool.jsonCall(jsonArgs);
 
         // then
         assertThat(result).isEqualTo(expectedResult);

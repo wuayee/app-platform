@@ -50,7 +50,7 @@ public interface Tool {
      * @param jsonArgs 表示调用工具的 Json 格式的参数的 {@link String}。
      * @return 表示调用工具的 Json 格式的结果的 {@link String}。
      */
-    String callByJson(String jsonArgs);
+    String jsonCall(String jsonArgs);
 
     /**
      * 表示工具信息。
