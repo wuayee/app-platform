@@ -1,15 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 import { LeftArrowIcon, EditIcon, UploadIcon } from '@assets/icon';
 import { Message } from "../../shared/utils/message";
 import PublishModal from './publish-modal.jsx';
 import EditModal from './edit-modal.jsx';
 import knowledgeBase from '../../assets/images/knowledge/knowledge-base.png';
-import { AippContext } from "../aippIndex/context";
 
-const Head = (props) => {
-  const { updateAippCallBack,
+const ChoreographyHead = (props) => {
+  const { showElsa, aippInfo,updateAippCallBack,
     mashupClick, status } = props;
-    const { showElsa, chatRunning, aippInfo } = useContext(AippContext);
   let modalRef = React.createRef();
   let editRef = React.createRef();
   // 编辑名称
@@ -22,10 +20,6 @@ const Head = (props) => {
   }
   // 返回编排页面
   function backClick() {
-    if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中，请稍后再试' })
-      return
-    }
     showElsa && mashupClick();
   }
 
@@ -48,4 +42,4 @@ const Head = (props) => {
   )} </>;
 };
 
-export default Head;
+export default ChoreographyHead;

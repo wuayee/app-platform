@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Form, Select,  Modal, Button } from 'antd';
 import { DownOutlined, UpOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
 import { getTools, getWaterFlows } from "@shared/http/appBuilder";
-import { AippContext } from '../../../aippIndex/context';
+import { ConfigFormContext } from '../../../aippIndex/context';
 import {createAipp} from "@shared/http/aipp";
 const { Option } = Select;
 
@@ -13,7 +13,7 @@ const Skill = (props) => {
   const [ showToolControl, setShowToolControl ] = useState(true);
   const [ showFlowControl, setShowFlowControl ] = useState(true);
   const [ showFlowModal, setShowFlowModal ] = useState(false);
-  const { appId, tenantId } = useContext(AippContext);
+  const { appId, tenantId } = useContext(ConfigFormContext);
   const [ tools, setTools ] = useState([]);
   const [ waterFlow, setWaterFlow ] = useState(null);
   const navigate = useNavigate();

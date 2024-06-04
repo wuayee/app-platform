@@ -26,7 +26,6 @@ const CreateModel = ({ visible, createCallback }: props) => {
   }
 
   const onFinish = (value: any) => {
-    console.log(value);
     createExternalModel(value).then(_ => {
       messageApi.open({
         type: 'success',

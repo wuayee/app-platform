@@ -22,3 +22,8 @@ export const ChatContext = createContext({
   setInspiration: null,
   checkCallBack: null,
 });
+
+export const ConfigFormContext = createContext({
+  appId: '',
+  tenantId: '',
+});

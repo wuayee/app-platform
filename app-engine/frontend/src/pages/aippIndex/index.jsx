@@ -10,6 +10,9 @@ import { Message } from "@shared/utils/message";
 import AddFlow from '../addFlow';
 import ConfigForm from '../configForm';
 import CommonChat from '../chatPreview/chatComminPage';
+import ChoreographyHead from '../components/header';
+import { ConfigFormContext } from './context';
+import { getUser } from '../helper';
 
 const AippIndex = () => {
   const { appId, tenantId } = useParams();
@@ -33,7 +36,7 @@ const AippIndex = () => {
     showElsa && getAippDetails();
   }
   useEffect(() => {
-    // getUser();
+    getUser();
     getAippDetails();
   }, [])
 
@@ -60,14 +63,6 @@ const AippIndex = () => {
     })
   }
 
-  // 获取用户信息
-  const getUser = () => {
-    getCurUser().then(res => {
-      localStorage.setItem('currentUserId', res.data.account?.substr(1));
-      localStorage.setItem('currentUserIdComplete', res.data.account);
-      localStorage.setItem('currentUser', res.data.chineseName);
-    })
-  }
   // 保存配置
   const saveConfig = (data) => {
     updateFormInfo(tenantId, appId, data).then((res) => {
@@ -103,27 +98,40 @@ const AippIndex = () => {
     showElsa,
     updateAippCallBack,
   };
+
+  const configFormProvider ={
+    appId,
+    tenantId,
+  }
   return (
     <>
       {
         <div className="container">
+          <ChoreographyHead
+            aippInfo={aippInfo}
+            showElsa={showElsa}
+            updateAippCallBack={updateAippCallBack}
+            mashupClick={elsaChange}
+          />
           <div className={[
             "layout-content",
             showElsa ? "layout-elsa-content" : null,
             showChat ? "layout-show-preview" : null
           ].join(' ')}
           >
+            <ConfigFormContext.Provider value={configFormProvider}> 
               {showElsa ? (
                 <AddFlow type="edit" aippInfo={aippInfo}/>
               ) : (
-                <ConfigForm
-                  mashupClick={elsaChange}
-                  configData={aippInfo.config}
-                  handleConfigDataChange={handleConfigDataChange}
-                  inspirationChange={inspirationChange}
-                  showElsa={showElsa}
-                />
+                   <ConfigForm
+                     mashupClick={elsaChange}
+                     configData={aippInfo.config}
+                     handleConfigDataChange={handleConfigDataChange}
+                     inspirationChange={inspirationChange}
+                     showElsa={showElsa}
+                   />
               )}
+              </ConfigFormContext.Provider>
               <CommonChat chatType="preview" contextProvider={contextProvider} previewBack={changeChat} /> 
               {
                 (!showChat && showElsa) &&

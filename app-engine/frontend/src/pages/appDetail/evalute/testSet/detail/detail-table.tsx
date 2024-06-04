@@ -61,7 +61,6 @@ const DetailTable = ({ rawData }: props) => {
           output: data?.output ?? ''
         })
       } else {
-        console.log(params)
         // 修改
         await modifyDataSetListData({
           id: params?.datasetId,

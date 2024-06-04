@@ -7,6 +7,7 @@ import './index.scss'
 import {getUserCollection} from '../../shared/http/appDev'
 import { setCollectionValue, setDefaultApp } from "../../store/collection/collection";
 import CommonChat from '../chatPreview/chatComminPage';
+import { getUser } from '../helper';
 
 const ChatRunning = () => {
   const [appId,setAppId] = useState('3a617d8aeb1d41a9ad7453f2f0f70d61');
@@ -29,11 +30,13 @@ const ChatRunning = () => {
   useEffect(()=>{
     let appIdStr=aippId;
     if(appIdStr){
+      getUser();
       setAppId(aippId);
     }
   },[aippId]);
 
   const dispatch = useAppDispatch();
+
 
   // 获取当前登录用户名
   const getLoaclUser = () => {
@@ -42,7 +45,6 @@ const ChatRunning = () => {
 
   // 获取aipp详情
   const getAippDetails = async () => {
-
     if(!localStorage.getItem('currentUserIdComplete')) {
       await getUser();
     }

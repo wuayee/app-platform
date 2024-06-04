@@ -11,21 +11,18 @@ const CommonChat = ({chatType,contextProvider,previewBack}) => {
   const [ chatRunning, setChatRunning ] = useState(false);
   const [chatId,setChatId]=useState(null);
   const [chatList, setChatList] = useState([]);
-  const[clearChat,setClearChat] =useState(null);
+  const [clearChat,setClearChat] =useState(null);
   const [ openStar, setOpenStar ] = useState(false);
   const [inspirationOpen,setInspirationOpen] =useState(false);
-  useEffect(() => {
-    getUser();
-  }, []);
 
-  // 获取用户信息
-  const getUser = () => {
-    getCurUser().then(res => {
-      localStorage.setItem('currentUserId', res.data.account?.substr(1));
-      localStorage.setItem('currentUserIdComplete', res.data.account);
-      localStorage.setItem('currentUser', res.data.chineseName);
-    })
-  }
+  useEffect(()=>{
+    setChatRunning(false);
+    setChatId(null);
+    setChatList(() => {
+      let arr = [];
+      return arr;
+    });
+  },[contextProvider.appId])
 
   const provider = {
     chatRunning,
@@ -40,7 +37,8 @@ const CommonChat = ({chatType,contextProvider,previewBack}) => {
     setInspirationOpen,
     openStar,
     setOpenStar,
-    ...contextProvider
+    ...contextProvider,
+    chatType
   }; 
   return (
     <AippContext.Provider value={provider}> 

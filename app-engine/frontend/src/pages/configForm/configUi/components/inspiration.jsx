@@ -107,7 +107,6 @@ const Inspiration = (props) => {
   }
 
   const clickInspiration = (value) => {
-    console.log(value);
     setShowModal(true);
     setId(value.id);
     setCategory(value.category);

@@ -21,7 +21,8 @@ import LinkFile from './file-preview';
 // 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {
   const { setOpenHistory } = props;
-  const { chatRunning, tenantId, appId,aippInfo ,setOpenStar} = useContext(AippContext);
+  const { chatRunning, tenantId, appId,aippInfo ,setOpenStar,
+    setChatList,setChatId,setChatRunning,setClearChat,chatType} = useContext(AippContext);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ showAt, setShowAt ] = useState(false);
   const [ appName, setAppName ] = useState('');
@@ -29,7 +30,6 @@ const EditorBtnHome = (props) => {
   const [ isAt, setIsAt ] = useState(false);
 
   let openUploadRef = useRef(null);
-  const {setChatList,setChatId,setChatRunning,setClearChat} = useContext(AippContext);
   useEffect(() => {
     document.body.addEventListener('click', () => {
       setShowAt(false);
@@ -101,10 +101,10 @@ const EditorBtnHome = (props) => {
       <div className="inner-left">
         <div className="inner-item">
           <img src={appIcon} alt="" />
-          <div className={['switch-app', isAt ? 'switch-active' : null ].join(' ')} onClick={showMoreClick}>
+          <div className={['switch-app', isAt ? 'switch-active' : null ].join(' ')} onClick={()=>{if(chatType==='home'){showMoreClick();}}}>
             { isAt && <span style={{ marginLeft: '6px' }}>正在跟</span> }
             <span className="item-name" title={appName}>{appName}</span>
-            <ArrowDownIcon className="arrow-icon" />
+            <div hidden={chatType!=='home'}><ArrowDownIcon className="arrow-icon"/></div>
             { isAt && <span style={{ marginLeft: '6px' }}>对话</span> }
           </div>
           <LinkIcon onClick={uploadClick} />
