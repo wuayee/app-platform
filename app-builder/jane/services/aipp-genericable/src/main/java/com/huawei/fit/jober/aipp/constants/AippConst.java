@@ -64,6 +64,16 @@ public class AippConst {
      */
     public static final String BASIC_NODE_COMPONENT_DATA_KEY = "basic_node_component_data";
 
+    /**
+     * tool_context_key
+     */
+    public static final String TOOL_CONTEXT_KEY = "tool_context_key";
+
+    /**
+     * WaterFlowAgent
+     */
+    public static final String WATER_FLOW_AGENT_BEAN = "WaterFlowAgent";
+
     // *** business key ***
     /**
      * business data

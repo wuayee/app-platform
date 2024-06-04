@@ -28,20 +28,18 @@ import com.huawei.jade.fel.core.retriever.Splitter;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.activities.processors.AiBranchProcessor;
 import com.huawei.jade.fel.engine.activities.processors.AiFlatMap;
-import com.huawei.jade.fel.engine.activities.processors.AiToolProcessMap;
 import com.huawei.jade.fel.engine.flows.AiFlow;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.operators.AiRunnableArg;
 import com.huawei.jade.fel.engine.operators.models.ChatBlockModel;
 import com.huawei.jade.fel.engine.operators.models.ChatChunk;
 import com.huawei.jade.fel.engine.operators.models.ChatStreamModel;
+import com.huawei.jade.fel.engine.operators.patterns.AbstractFlowPattern;
 import com.huawei.jade.fel.engine.operators.patterns.AsyncPattern;
-import com.huawei.jade.fel.engine.operators.patterns.FlowSupportable;
 import com.huawei.jade.fel.engine.operators.patterns.SimpleAsyncPattern;
 import com.huawei.jade.fel.engine.operators.patterns.SyncPattern;
 import com.huawei.jade.fel.engine.operators.prompts.PromptTemplate;
 import com.huawei.jade.fel.engine.util.StateKey;
-import com.huawei.jade.fel.tool.ToolContext;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -356,8 +354,8 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
             pattern.offer(input.getData(), input.getSession());
             return null;
         }, null);
-        if (pattern instanceof FlowSupportable) {
-            Flow<O> originFlow = ObjectUtils.<FlowSupportable<O, R>>cast(pattern).origin();
+        if (pattern instanceof AbstractFlowPattern) {
+            Flow<O> originFlow = ObjectUtils.<AbstractFlowPattern<O, R>>cast(pattern).origin();
             processor.displayAs("delegate to flow", originFlow, originFlow.start().getId());
         } else {
             processor.displayAs("delegate to pattern");
@@ -384,27 +382,6 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public <R> AiState<R, D, O, RF, F> delegate(Operators.ProcessMap<O, R> operator) {
         Validation.notNull(operator, "Pattern operator cannot be null.");
         return this.delegate(new SimpleAsyncPattern<>(operator));
-    }
-
-    /**
-     * 将数据委托给 {@link AiToolProcessMap}{@code <}{@link O}{@code , }{@link R}{@code >}
-     * 处理。用途与 {@link AiStart#delegate(Operators.ProcessMap)} 一致。
-     *
-     * @param toolOperator 表示数据接收方的 {@link AiToolProcessMap}{@code <}{@link O}{@code , }{@link R}{@code >}。
-     * @param <R> 表示委托节点的输出数据类型。
-     * @return 表示委托节点的 {@link AiState}{@code <}{@link R}{@code , }{@link D}{@code , }{@link O}{@code ,
-     * }{@link RF}{@code , }{@link F}{@code >}。
-     * @throws IllegalArgumentException 当 {@code toolOperator} 为 {@code null} 时。
-     */
-    public <R> AiState<R, D, O, RF, F> delegate(AiToolProcessMap<O, R> toolOperator) {
-        Validation.notNull(toolOperator, "Pattern operator cannot be null.");
-        Operators.ProcessMap<O, R> operatorWrapper = (input, context) -> {
-            FlowSession session = ObjectUtils.cast(context);
-            ToolContext toolContext = Optional.ofNullable(session.<ToolContext>getInnerState(StateKey.TOOL_CONTEXT))
-                    .orElseGet(ToolContext::new);
-            return toolOperator.process(input, context, toolContext);
-        };
-        return this.delegate(operatorWrapper);
     }
 
     /**

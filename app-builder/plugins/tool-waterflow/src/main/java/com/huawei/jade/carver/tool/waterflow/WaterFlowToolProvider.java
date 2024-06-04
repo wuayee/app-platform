@@ -18,7 +18,6 @@ import com.huawei.jade.fel.chat.character.ToolMessage;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.tool.Tool;
 import com.huawei.jade.fel.tool.ToolCall;
-import com.huawei.jade.fel.tool.ToolContext;
 import com.huawei.jade.fel.tool.ToolProvider;
 
 import java.lang.reflect.Type;
@@ -39,6 +38,7 @@ import java.util.stream.Collectors;
 public class WaterFlowToolProvider implements ToolProvider {
     private static final String SCHEMA_NAME_KEY = "name";
     private static final String TAG_TYPE_WATER_FLOW = "WATERFLOW";
+    private static final String WATER_FLOW_ASYNC_KEY = "isAsync";
 
     private final ToolExecuteService executeService;
     private final ToolService toolService;
@@ -60,13 +60,13 @@ public class WaterFlowToolProvider implements ToolProvider {
 
     @Override
     @Fitable(id = "app-factory")
-    public FlatChatMessage call(ToolCall toolCall, ToolContext toolContext) {
+    public FlatChatMessage call(ToolCall toolCall, Map<String, Object> toolContext) {
         this.addDynamicParams(toolCall, toolContext);
         return new FlatChatMessage(new ToolMessage(toolCall.getId(),
                 this.executeService.executeTool(toolCall.getName(), toolCall.getParameters())));
     }
 
-    private void addDynamicParams(ToolCall toolCall, ToolContext toolContext) {
+    private void addDynamicParams(ToolCall toolCall, Map<String, Object> toolContext) {
         Map<String, Object> parameters = this.objectSerializer.deserialize(toolCall.getParameters(),
                 TypeUtils.parameterized(Map.class, new Type[] {String.class, Object.class}));
         // 目前普通工具和工具流调用都会走到这里，先将校验去掉，等 ToolProvider 加上责任链后再加回去。
@@ -74,11 +74,11 @@ public class WaterFlowToolProvider implements ToolProvider {
             return;
         }
         Map<String, Object> inputParams = cast(parameters.get(WaterFlowToolConst.INPUT_PARAMS_KEY));
-        Map<String, String> context = toolContext.toMap();
-        if (!context.containsKey(WaterFlowToolConst.TRACE_ID) || !context.containsKey(WaterFlowToolConst.CALLBACK_ID)) {
+        if (!toolContext.containsKey(WaterFlowToolConst.TRACE_ID)
+                || !toolContext.containsKey(WaterFlowToolConst.CALLBACK_ID)) {
             throw new IllegalStateException("toolContext does not contain traceId or callbackId.");
         }
-        inputParams.putAll(context);
+        inputParams.putAll(toolContext);
         toolCall.setParameters(this.objectSerializer.serialize(parameters));
     }
 
@@ -102,6 +102,9 @@ public class WaterFlowToolProvider implements ToolProvider {
                         toolData.getUniqueName()));
             } else {
                 waterflowContext = cast(waterflowRunnable);
+            }
+            if (tags.contains(TAG_TYPE_WATER_FLOW)) {
+                waterflowContext.put(WATER_FLOW_ASYNC_KEY, "true");
             }
             Tool tool = new Tool();
             tool.setSchema(schema);
