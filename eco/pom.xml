@@ -17,6 +17,7 @@
 <!--        <module>connector/redis</module>-->
         <module>model</module>
         <module>model-plugin</module>
+        <module>huggingface-pipeline</module>
         <module>rag-plugin</module>
         <module>rag</module>
     </modules>
