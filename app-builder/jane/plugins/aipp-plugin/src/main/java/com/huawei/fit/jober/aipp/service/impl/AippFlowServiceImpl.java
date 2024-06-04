@@ -830,15 +830,9 @@ public class AippFlowServiceImpl implements AippFlowService {
 
     private MetaDeclarationInfo buildPublishMetaDeclaration(String aippId, List<AippNodeForms> aippNodeForms,
             String flowDefinitionId, Meta meta, AippDto aippDto) {
-        // 解析表单属性字段
-        List<MetaPropertyDeclarationInfo> props = getMetaPropertyDeclarationInfos(aippNodeForms);
 
         // 追加aipp meta属性字段
         MetaDeclarationInfo declaration = new MetaDeclarationInfo();
-        if (!props.isEmpty()) {
-            declaration.setProperties(Undefinable.defined(buildPatchProps(props, meta)));
-            log.debug("add props, aippId {}  props size {} props {}", aippId, props.size(), props);
-        }
 
         // 追加/更新 aipp attribute字段
         Map<String, Object> attrPatch = meta.getAttributes();
@@ -948,7 +942,7 @@ public class AippFlowServiceImpl implements AippFlowService {
             String uniqueName = this.publishToStore(aippDto, context, flowInfo);
             return Rsp.ok(new AippCreateDto(aippId, meta.getVersion(), uniqueName));
         } catch (Exception e) {
-            log.error("publish aipp {} failed, e = {}", aippId, e);
+            log.error("publish aipp {} failed", aippId, e);
             rollbackAipp(meta.getVersionId(), originalDraftVersion, flowInfo.getFlowDefinitionId(), attr, context);
             throw e;
         }

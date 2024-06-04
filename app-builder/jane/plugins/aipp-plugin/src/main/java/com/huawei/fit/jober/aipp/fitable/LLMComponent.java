@@ -300,7 +300,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         skillNameList.addAll(ObjectUtils.cast(businessData.get("workflows")));
         return ChatOptions.builder()
                 .model(ObjectUtils.cast(businessData.get("model")))
-                .maxTokens(18000)
+                .maxTokens(10000)
                 .temperature(ObjectUtils.cast(businessData.get("temperature")))
                 .tools(this.toolProvider.getTool(skillNameList))
                 .build();
