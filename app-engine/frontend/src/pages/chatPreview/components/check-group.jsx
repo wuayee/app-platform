@@ -9,23 +9,19 @@ import { toClipboard } from "@shared/utils/common"
 const CheckGroup = (props) => {
   const {
     type,
-    totalNum,
     confirmText,
     shareWelink,
     setEditorShow,
-    checkedList,
     selectAllClick,
-    chatList,
-    tenantId,
-    appId,
     reportClick
   } = props;
   const navigate = useNavigate();
   const [ checkAll, setCheckAll ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ shareUrl, setShareUrl ] = useState('');
+  const { appId,tenantId,chatList } = useContext(AippContext);
   useEffect(() => {
-    setCheckAll((totalNum === 2*checkedList.length))
+    setCheckAll((chatList?.length === 2*checkedList.length))
   }, [props.checkedList])
   // 取消
   function cancle() {

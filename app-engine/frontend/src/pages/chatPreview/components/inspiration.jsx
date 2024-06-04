@@ -21,17 +21,14 @@ import {
 import "../styles/inspiration.scss";
 
 const Inspiration = (props) => {
-  const { chatType } = props;
+  const { chatType,setPrompValue } = props;
   const {
     appId,
     tenantId,
     messageChecked,
-    reloadInspiration,
-    setPrompValue,
-    refreshPrompValue,
-    setRefreshPrompValue,
   } = useContext(AippContext);
   const { Search } = Input;
+  const [ refreshPrompValue, setRefreshPrompValue ] = useState(false);
   const [showDrop, setShowDrop] = useState(false);
   const [promptTypeList, setPromptTypeList] = useState([]);
   const [dropList, setDropList] = useState([]);
@@ -49,7 +46,7 @@ const Inspiration = (props) => {
     if(appId) {
       getList();
     }
-  }, [reloadInspiration, appId]);
+  }, [appId]);
   // 获取灵感大全列表
   async function getList() {
     const res = await queryDepartMent(tenantId, appId);
@@ -182,7 +179,7 @@ const Inspiration = (props) => {
         <div
           className={[
             "inspiration-conyainer",
-            !chatType ? "inspiration-active" : null,
+            chatType!=='preview' ? "inspiration-active" : null,
           ].join(" ")}
         >
           <div className="right-content">

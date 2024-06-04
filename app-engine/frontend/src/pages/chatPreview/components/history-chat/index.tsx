@@ -21,7 +21,7 @@ interface HistoryChatProps {
 
 const HistoryChat: React.FC<HistoryChatProps> = ({ open, setOpen}) => {
   const currentChat = useRef(null);
-  const { aippInfo, appId, tenantId,chatId,setChatList,setChatId,listRef ,setChatRunning} = useContext(AippContext);
+  const { aippInfo, appId, tenantId,chatId,setChatList,setChatId,setChatRunning} = useContext(AippContext);
   const [data, setData] = useState([]);
   const [requestInfo,setRequestInfo]=useState({
     aipp_id:'', version:'',offset:0, limit:100
@@ -62,7 +62,6 @@ const items: MenuProps["items"] = [
       setChatId(null);
       setChatList(() => {
         let arr = [];
-        listRef.current = arr;
         return arr;
       });
      }
@@ -84,7 +83,6 @@ const items: MenuProps["items"] = [
 
     setChatList(() => {
       let arr = [...list];
-      listRef.current = arr;
       return arr;
     });
     setOpen(false);

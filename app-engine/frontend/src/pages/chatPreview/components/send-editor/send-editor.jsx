@@ -14,31 +14,25 @@ import { httpUrlMap } from "@shared/http/httpConfig";
 import HistoryChat from "../history-chat";
 import Recommends from './components/recommends';
 import EditorBtnHome from './components/editor-btn-home';
-import FilePreview from './components/file-preview';
+import LinkFile from './components/file-preview';
 import "@shared/utils/rendos";
 import "../../styles/send-editor.scss";
 
 const SendEditor = (props) => {
   const {
     onSend,
-    onClear,
-    onStop,
     chatType,
     filterRef,
-    requestLoading,
-    openClick,
-    inspirationOpen,
-    recommendList,
   } = props;
-  const [ content, setContent ] = useState('');
+  const [ nowContent, setNowContent ] = useState('');
   const [ selectItem, setSelectItem ] = useState({});
   const [ selectDom, setSelectDom ] = useState();
   const [ showSelect, setShowSelect ] = useState(false);
-  const [ showPreview, setShowPreview ] = useState(false);
   const [ showClear, setShowClear ] = useState(false);
   const [ positionConfig, setPositionConfig ] = useState({});
-  const { aippInfo ,chatRunning, showHistory }  = useContext(AippContext);
+  const { chatRunning }  = useContext(AippContext);
   const { WS_AUDIO_URL } = httpUrlMap[process.env.NODE_ENV];
+  const [lastSendContent,setLastSend]=useState(null);
   const editorRef = useRef(null);
   const recording = useRef(false);
   // 编辑器change事件
@@ -46,11 +40,11 @@ const SendEditor = (props) => {
     setShowClear(() => {
       return editorRef.current.innerText.trim().length > 0
     })
-    setContent(editorRef.current.innerText.trim());
+    setNowContent(editorRef.current.innerText.trim());
   }
   // 清除内容
   function clearContent() {
-    setContent("");
+    setNowContent("");
     editorRef.current.innerText = "";
     setShowClear(false);
   }
@@ -85,7 +79,8 @@ const SendEditor = (props) => {
     }
     let chatContent = document.getElementById("ctrl-promet").innerText;
     onSend(chatContent);
-    setContent("");
+    setLastSend(chatContent);
+    setNowContent("");
     editorRef.current.innerText = "";
     setShowClear(false);
   }
@@ -119,15 +114,6 @@ const SendEditor = (props) => {
   function clearMove() {
     setShowSelect(false);
   }
-  // 文件自动发送
-  function fileSend(fileResult, fileType) {
-    console.log(fileResult, fileType);
-    setShowPreview(true);
-  }
-  // 取消文件
-  const cancleFile = () => {
-    setShowPreview(false);
-  }
   // 是否联网
   const onSwitchChange = (checked) => {}
   useImperativeHandle(filterRef, () => {
@@ -135,9 +121,6 @@ const SendEditor = (props) => {
       setFilterHtml: setFilterHtml,
     };
   });
-  function recommendSend(item) {
-    onSend(item);
-  }
   
   // 语音实时转文字
   let recorderHome = null;
@@ -182,20 +165,13 @@ const SendEditor = (props) => {
   return <>{(
     <div className='send-editor-container'>
       <Recommends 
-        openClick={openClick} 
-        inspirationOpen={inspirationOpen} 
-        send={recommendSend}
-        recommendList={recommendList}
+        onSend={onSend}
+        lastContent={lastSendContent}
       />
       <div className='editor-inner'>
         <EditorBtnHome 
-          aippInfo={aippInfo} 
-          setOpen={setOpenHistory}
-          showHistory = {showHistory}
-          clear={onClear}
-          fileCallBack={fileSend}
+          setOpenHistory={setOpenHistory}
         />
-        { showPreview && <FilePreview cancleFile={cancleFile} /> }
         <div className='editor-input' id="drop">
           <div
             className="chat-promet-editor"

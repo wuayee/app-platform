@@ -10,7 +10,7 @@ import '../../styles/send-box.scss';
 
 const SendBox = (props) => {
   const { content, checked, sendType } = props.chatItem;
-  const { setShareClass, setInspiration, checkCallBack, showCheck }  = useContext(ChatContext);
+  const { checkCallBack, showCheck }  = useContext(ChatContext);
   const [ showIcon, setShowIcon ] = useState(true);
   const employeeNumber = localStorage.getItem('currentUserId') || null;
   const currentUser = localStorage.getItem('currentUser') || '';

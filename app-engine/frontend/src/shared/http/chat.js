@@ -48,7 +48,7 @@ export function getChatDetail(tenantId, chatId, params) {
 }
 // 猜你想问
 export function getRecommends(params) {
-  const url = `${AI_URL}/recommend`;
+  const url = `${PLUGIN_URL}/vi/api/recommend`;
   return post(url, params);
 }
 
