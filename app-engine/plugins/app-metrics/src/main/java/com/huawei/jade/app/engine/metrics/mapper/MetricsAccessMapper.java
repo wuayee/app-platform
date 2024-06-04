@@ -23,11 +23,11 @@ import java.util.Map;
 @Mapper
 public interface MetricsAccessMapper {
     /**
-     * insert to metrics_access
+     * insert to metrics_access in batch
      *
-     * @param metricAccess metrics_access字段
+     * @param metricsAccessList metrics_access list
      */
-    void insertMetricAccess(MetricsAccessPo metricAccess);
+    void insertMetricAccessBatch(@Param("metricsAccessList") List<MetricsAccessPo> metricsAccessList);
 
     /**
      * get hourly data

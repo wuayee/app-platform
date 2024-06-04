@@ -9,10 +9,13 @@
         <result column="total_access" property="totalAccess"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
-    <!-- 插入metric_access -->
-    <insert id="insertMetricAccess" parameterType="com.huawei.jade.app.engine.metrics.po.MetricsAccessPo" useGeneratedKeys="true" keyProperty="id">
+    <!-- 批量插入metric_access -->
+    <insert id="insertMetricAccessBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO metrics_access (app_id, total_access, create_time)
-        VALUES (#{appId}, #{totalAccess}, #{createTime})
+        VALUES
+        <foreach collection="metricsAccessList" item="item" separator=",">
+            (#{item.appId}, #{item.totalAccess}, #{item.createTime})
+        </foreach>
     </insert>
 
     <select id="getHourlyAccessData" resultType="map">
