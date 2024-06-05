@@ -32,7 +32,7 @@ druid:
   driver-class-name: org.postgresql.Driver
   initialSize: 5
   minIdle: 5
-  maxActive: 80
+  maxActive: 15
   maxWait: 60000
   timeBetweenEvictionRunsMillis: 60000
   minEvictableIdleTimeMillis: 300000
