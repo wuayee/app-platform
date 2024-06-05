@@ -7,46 +7,66 @@
 #define DATABUS_CONFIG_H
 
 #include <iostream>
+#include <Constants.h>
 
 namespace DataBus {
 namespace Runtime {
 
 struct Config {
 public:
-    // 禁用默认构造器和赋值语义
-    Config() = delete;
-    Config(const Config&) = delete;
-    Config& operator=(const Config&) = delete;
+    Config() : port(DataBus::Common::DEFAULT_PORT), mallocSizeLimit(DataBus::Common::DEFAULT_MALLOC_SIZE_LIMIT),
+        memoryTtlDuration(DataBus::Common::DEFAULT_MEMORY_TTL_DURATION),
+        memorySweepInterval(DataBus::Common::DEFAULT_MEMORY_SWEEP_INTERVAL) {}
 
-    Config(int port, uint64_t memorySizeLimit, int32_t memoryTtlDuration, int32_t memorySweepInterval) : port_(port),
-        memorySizeLimit_(memorySizeLimit), memoryTtlDuration_(memoryTtlDuration),
-        memorySweepInterval_(memorySweepInterval) {}
+    Config(int port, uint64_t mallocSizeLimit, int32_t memoryTtlDuration, int32_t memorySweepInterval) : port(port),
+        mallocSizeLimit(mallocSizeLimit), memoryTtlDuration(memoryTtlDuration),
+        memorySweepInterval(memorySweepInterval) {}
+
+    void SetPort(const int serverPort)
+    {
+        port = serverPort;
+    }
+
+    void SetMallocSizeLimit(const uint64_t sizeLimit)
+    {
+        mallocSizeLimit = sizeLimit;
+    }
+
+    void SetMemoryTtlDuration(const int32_t ttlDuration)
+    {
+        memoryTtlDuration = ttlDuration;
+    }
+
+    void SetMemorySweepInterval(const int32_t sweepInterval)
+    {
+        memorySweepInterval = sweepInterval;
+    }
 
     int GetPort() const
     {
-        return port_;
+        return port;
     }
 
-    uint64_t GetMemorySizeLimit() const
+    uint64_t GetMallocSizeLimit() const
     {
-        return memorySizeLimit_;
+        return mallocSizeLimit;
     }
 
     int32_t GetMemoryTtlDuration() const
     {
-        return memoryTtlDuration_;
+        return memoryTtlDuration;
     }
 
     int32_t GetMemorySweepInterval() const
     {
-        return memorySweepInterval_;
+        return memorySweepInterval;
     }
 
 private:
-    int port_; // 服务器端口
-    uint64_t memorySizeLimit_; // 内存分配上限
-    int32_t memoryTtlDuration_; // 内存存活时长（毫秒）
-    int32_t memorySweepInterval_; // 内存清理周期（毫秒）
+    int port; // 服务器端口
+    uint64_t mallocSizeLimit; // 内存分配上限
+    int32_t memoryTtlDuration; // 内存存活时长（毫秒）
+    int32_t memorySweepInterval; // 内存清理周期（毫秒）
 };
 } // namespace Runtime
 } // namespace DataBus

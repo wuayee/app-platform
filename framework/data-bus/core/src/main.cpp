@@ -14,6 +14,7 @@
 #include "config/DataBusConfig.h"
 #include "task_handler/TaskLoop.h"
 #include "task_handler/TaskHandler.h"
+#include "utils/FileUtils.h"
 
 using DataBus::Task::TaskLoop;
 using DataBus::Task::TaskHandler;
@@ -22,19 +23,10 @@ using namespace std;
 namespace DataBus {
 
 const int MAX_EVENTS = 10;
-const int MAX_BUFFER_SIZE = 1024;
-// TD: 下列配置从runtime config读取
-// 主服务端口5284
-constexpr int PORT = 5284;
-// 内存分配上限40G
-constexpr uint64_t MB = 1024 * 1024;
-constexpr uint64_t GB = 1024 * MB;
-constexpr uint64_t MALLOC_SIZE_LIMIT = 40 * GB;
-// 内存块存活时长30分钟
-constexpr int32_t MINUTE = 60 * 1000;
-constexpr int32_t MEMORY_TTL_DURATION = 30 * MINUTE;
-// 过期内存清理周期1分钟
-constexpr int32_t MEMORY_SWEEP_INTERVAL = MINUTE;
+const int MAX_BUFFER_SIZE = 2048;
+
+// 配置文件路径
+const std::string CONFIG_FILE_PATH = DataBus::Common::FileUtils::GetDataBusDirectory() + "configs/config.json";
 
 void HandleEvent(struct epoll_event event, int epollFd, int serverFd,
     const shared_ptr<TaskLoop>& taskLoopPtr)
@@ -73,7 +65,7 @@ void HandleEvent(struct epoll_event event, int epollFd, int serverFd,
     }
 }
 
-void StartDataBusService(int serverFd)
+void StartDataBusService(int serverFd, const Runtime::Config& databusConfig)
 {
     struct epoll_event event{}, events[MAX_EVENTS];
     event.data.fd = serverFd;
@@ -91,9 +83,8 @@ void StartDataBusService(int serverFd)
         return;
     }
     shared_ptr<TaskLoop> taskLoopPtr = std::make_shared<TaskLoop>();
-    // TD: configParser从配置文件解析
-    const Runtime::Config config(PORT, MALLOC_SIZE_LIMIT, MEMORY_TTL_DURATION, MEMORY_SWEEP_INTERVAL);
-    unique_ptr<TaskHandler> taskHandlerPtr = std::make_unique<TaskHandler>(taskLoopPtr, config);
+
+    unique_ptr<TaskHandler> taskHandlerPtr = std::make_unique<TaskHandler>(taskLoopPtr, databusConfig);
     taskHandlerPtr->Init();
     while (true) {
         HandleEvent(event, epollFd, serverFd, taskLoopPtr);
@@ -120,10 +111,13 @@ int main()
         return 0;
     }
 
+    // 读取DataBus配置文件。
+    const DataBus::Runtime::Config config = DataBus::Runtime::ConfigParser::Parse(DataBus::CONFIG_FILE_PATH);
+
     sockaddr_in address{};
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(DataBus::PORT);
+    address.sin_port = htons(config.GetPort());
 
     if (bind(serverFd, (sockaddr*)&address, sizeof(address)) < 0) {
         perror("bind failed");
@@ -134,8 +128,8 @@ int main()
         perror("listen");
         return 0;
     }
-    DataBus::logger.Info("Databus service starts up at port {}", DataBus::PORT);
-    DataBus::StartDataBusService(serverFd);
+    DataBus::logger.Info("Databus service starts up at port {}", config.GetPort());
+    DataBus::StartDataBusService(serverFd, config);
     close(serverFd);
     return 0;
 }

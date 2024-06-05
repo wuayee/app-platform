@@ -7,11 +7,13 @@
 
 #include <string>
 
+#include "DataBusConfig.h"
+
 namespace DataBus {
 namespace Runtime {
 namespace ConfigParser {
 void Parse();
-void Parse(const std::string& configFilePath);
+DataBus::Runtime::Config Parse(const std::string& configFilePath);
 }  // namespace ConfigParser
 }  // namespace Runtime
 }  // namespace DataBus
