@@ -106,11 +106,10 @@ class SdkClient:
             return DataBusErrorCode.MemoryWriteError
 
     def get_meta_data(self, user_key: str) -> Tuple[DataBusErrorCode, Optional[Tuple[int, bytes]]]:
-
-        """从DataBus内核获取user_key内存的元数据
+        """从DataBus内核获取user_key内存的内存大小和元数据
 
         :param user_key: 要获取元数据的内存名
-        :return: (memory_size, user_data)的元组或None
+        :return: (错误码, (memory_size, user_data))的元组或(错误码, None)
         """
         try:
             return DataBusErrorCode.None_, self._impl.get_meta_data(user_key=user_key)

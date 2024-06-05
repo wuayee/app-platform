@@ -8,5 +8,5 @@ from dataclasses import dataclass
 @dataclass
 class ReadResponse:
     """向DataBus内核发送读取请求的回信"""
-    content: Optional[bytes]
+    contents: Optional[bytes]
     user_data: Optional[bytes] = None

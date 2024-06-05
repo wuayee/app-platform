@@ -81,12 +81,12 @@ class SdkClientImpl:
         self._mem_manager.del_memory_block(user_key)
 
     def read_once(self, request: ReadRequest) -> ReadResponse:
-        """读取如果request.user_key的内存, 从如果request.offset开始读取如果request.size大小
+        """读取request.user_key的内存, 从request.offset开始读取request.size大小
 
         另外, 如果request.is_operating_user_data为True, 则从DataBus内核中读取request.user_key的内存的user_data
 
         :param request: 向DataBus读取的请求
-        :return: ReadResponse(content: Optional[bytes], user_data: Optional[bytes] = None)
+        :return: ReadResponse(contents: Optional[bytes], user_data: Optional[bytes] = None)
         """
         self._pre_access_check(request.user_key)
         request.validation()

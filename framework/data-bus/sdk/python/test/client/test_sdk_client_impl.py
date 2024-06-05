@@ -88,7 +88,7 @@ class TestSdkClientImpl(unittest.TestCase):
 
         request = ReadRequest(user_key, size, offset=offset, is_operating_user_data=is_operating_user_data)
         response = self._client.read_once(request)
-        self.assertEqual(expected_contents, response.content)
+        self.assertEqual(expected_contents, response.contents)
         self.assertEqual(expect_user_data, response.user_data)
 
         self._mem_io_mock.read.assert_called_once_with(memory_id, size, offset=offset)
