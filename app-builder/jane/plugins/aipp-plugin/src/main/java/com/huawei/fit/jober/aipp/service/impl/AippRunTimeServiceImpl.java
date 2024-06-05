@@ -33,9 +33,9 @@ import com.huawei.fit.jober.aipp.condition.PaginationCondition;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.AippInstanceCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
-import com.huawei.fit.jober.aipp.dto.MemoryConfigDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppStartDto;
+import com.huawei.fit.jober.aipp.dto.MemoryConfigDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
@@ -785,21 +785,19 @@ public class AippRunTimeServiceImpl
     /**
      * 更新表单数据，并恢复实例任务执行
      *
-     * @param aippId aippId
-     * @param version aipp版本
      * @param instanceId 实例id
      * @param formArgs 用于填充表单的数据
      * @param context 操作上下文
      */
     @Override
-    public void resumeAndUpdateAippInstance(String aippId, String version, String instanceId,
-            Map<String, Object> formArgs, OperationContext context) {
-        Meta meta = MetaUtils.getAnyMeta(metaService, aippId, version, context);
+    public void resumeAndUpdateAippInstance(String instanceId, Map<String, Object> formArgs, OperationContext context) {
+        String metaVersionId = this.metaInstanceService.getMetaVersionId(instanceId);
+        Meta meta = this.metaService.retrieve(metaVersionId, context);
         String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
         String versionId = meta.getVersionId();
 
         // 更新表单数据
-        Map<String, Object> businessData = (Map<String, Object>) formArgs.get(AippConst.BS_DATA_KEY);
+        Map<String, Object> businessData = ObjectUtils.cast(formArgs.get(AippConst.BS_DATA_KEY));
         setExtraBusinessData(context, businessData, meta, instanceId);
 
         // 获取旧的实例数据

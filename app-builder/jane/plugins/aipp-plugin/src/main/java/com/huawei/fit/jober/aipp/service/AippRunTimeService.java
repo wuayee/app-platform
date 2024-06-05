@@ -125,14 +125,11 @@ public interface AippRunTimeService {
     /**
      * 更新表单数据，并恢复实例任务执行
      *
-     * @param context 操作上下文
-     * @param aippId aippId
-     * @param version aipp版本
      * @param instanceId 实例id
      * @param formArgs 用于填充表单的数据
+     * @param context 操作上下文
      */
-    void resumeAndUpdateAippInstance(String aippId, String version, String instanceId, Map<String, Object> formArgs,
-            OperationContext context);
+    void resumeAndUpdateAippInstance(String instanceId, Map<String, Object> formArgs, OperationContext context);
 
     /**
      * 终止aipp实例
