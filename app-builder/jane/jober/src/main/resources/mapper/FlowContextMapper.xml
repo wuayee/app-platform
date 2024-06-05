@@ -137,7 +137,9 @@
         <include refid="table"/>
         SET
         status = #{updateInfo.status},
-        position_id = #{updateInfo.position},
+        <if test="updateInfo.position != null">
+            position_id = #{updateInfo.position},
+        </if>
         update_at = #{updateInfo.updateAt},
         archived_at = #{updateInfo.archivedAt}
         WHERE
