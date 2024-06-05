@@ -63,7 +63,7 @@ public class RestartContextSchedule {
     public RestartContextSchedule(FlowTraceRepo traceRepo, FlowContextPersistRepo contextPersistRepo,
             DefaultFlowDefinitionRepo flowDefinitionRepo, FlowLocks locks,
             FlowContextPersistMessenger messenger, TraceOwnerService traceOwnerService,
-            @Value("${a3000.operator}") boolean ownTrace) {
+            @Value("${a3000.ownTrace}") boolean ownTrace) {
         this.traceRepo = traceRepo;
         this.contextPersistRepo = contextPersistRepo;
         this.flowDefinitionRepo = flowDefinitionRepo;

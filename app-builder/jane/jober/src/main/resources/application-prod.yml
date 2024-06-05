@@ -1,25 +1,20 @@
-elsa:
-  endpoint: https://fit-elsa-prod.lab.huawei.com
-  accessKey: 8dd1c90252b94c24a76018e9b08be2b2
-
 jane:
-  endpoint: https://jane.huawei.com
-  taskTypeId: e53a9e917b314096ae8808914825d810
+  endpoint:
   targetUrl:
-    whiteList: 任务,审批任务,repoDMS审批任务,需求,质量要求类,交付件写作类
     noSource: 需求
   default:
     template:
-      id: 4f91b69973d1453aadf384d508aed894
+      id:
+  useDataEngine: false
 
 corsfilter:
-  priority: 50
-  patterns: "/**"
-  origin: "https://tianzhou.huawei.com"
+  priority:
+  patterns:
+  origin: jade.huawei.com
 
 a3000:
-  tenantId: 4b1f59a7ccdd4faf930f29b4f1f946b3
+  tenantId:
   ownTrace: false
   useLimit: true
   limit: 2
-  operator: com.huawei.a3000
+  operator:
