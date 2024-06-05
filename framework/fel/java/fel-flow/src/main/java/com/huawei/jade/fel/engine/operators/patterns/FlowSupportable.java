@@ -4,13 +4,8 @@
 
 package com.huawei.jade.fel.engine.operators.patterns;
 
-import com.huawei.fit.waterflow.domain.context.FlowSession;
-import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
-import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
-import com.huawei.jade.fel.engine.operators.AiRunnableArg;
 
 import java.util.function.Supplier;
 
@@ -22,8 +17,8 @@ import java.util.function.Supplier;
  * @author 刘信宏
  * @since 2024-04-22
  */
-public class FlowSupportable<I, O> implements AsyncPattern<I, O> {
-    private final AiProcessFlow<I, O> flow;
+public class FlowSupportable<I, O> extends AbstractFlowPattern<I, O> {
+    private final Supplier<AiProcessFlow<I, O>> flowSupplier;
 
     /**
      * 通过 AI 流程提供者初始化 {@link FlowSupportable}{@code <}{@link I}{@code , }{@link O}{@code >}。
@@ -33,46 +28,11 @@ public class FlowSupportable<I, O> implements AsyncPattern<I, O> {
      * @throws IllegalArgumentException 当 {@code flowSupplier} 为 {@code null} 时。
      */
     public FlowSupportable(Supplier<AiProcessFlow<I, O>> flowSupplier) {
-        this.flow = Validation.notNull(flowSupplier.get(), "Flow cannot be null.");
+        this.flowSupplier = Validation.notNull(flowSupplier, "Flow supplier cannot be null.");
     }
 
     @Override
-    public void register(EmitterListener<O, FlowSession> handler) {
-        if (handler != null) {
-            this.flow.register(handler);
-        }
-    }
-
-    @Override
-    public void emit(O data, FlowSession session) {
-        FlowSession flowSession = new FlowSession(session);
-        this.flow.emit(data, flowSession);
-    }
-
-    @Override
-    public void offer(I data, FlowSession session) {
-        this.flow.converse(session).offer(data);
-    }
-
-    /**
-     * 获取同步委托单元。
-     *
-     * @return 表示同步委托单元的 {@link SyncPattern}{@code <}{@link I}{@code , }{@link O}{@code >}。
-     * @throws IllegalStateException 当流程发生异常时。
-     */
-    public SyncPattern<I, O> sync() {
-        return arg -> {
-            AiRunnableArg<I> aiArg = ObjectUtils.cast(arg);
-            return this.flow.converse(aiArg.getSession()).offer(aiArg.data()).await();
-        };
-    }
-
-    /**
-     * 获取被装饰的流程对象。
-     *
-     * @return 表示被装饰流程对象的 {@link Flow}{@code <}{@link I}{@code >}。
-     */
-    public Flow<I> origin() {
-        return this.flow.origin();
+    protected AiProcessFlow<I, O> buildFlow() {
+        return this.flowSupplier.get();
     }
 }

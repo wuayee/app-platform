@@ -5,6 +5,7 @@
 package com.huawei.jade.fel.engine.operators;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
+import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.core.memory.Memory;
 import com.huawei.jade.fel.engine.util.StateKey;
@@ -31,13 +32,12 @@ public class AiRunnableArg<T> implements CustomState<T> {
      * @throws IllegalArgumentException 当 {@code data} 或 {@code session} 为 {@code null} 时。
      */
     public AiRunnableArg(T data, FlowSession session) {
-        Validation.notNull(data, "Data cannot be null.");
-        Validation.notNull(session, "FlowSession cannot be null.");
-        this.data = data;
-        this.session = session;
+        this.data = Validation.notNull(data, "The data cannot be null.");
+        this.session = Validation.notNull(session, "The flow session cannot be null.");
     }
 
     @Override
+    @Nonnull
     public T data() {
         return this.data;
     }

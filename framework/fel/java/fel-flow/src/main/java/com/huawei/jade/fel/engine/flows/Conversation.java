@@ -17,7 +17,6 @@ import com.huawei.jade.fel.engine.operators.models.ChatChunk;
 import com.huawei.jade.fel.engine.operators.models.StreamingConsumer;
 import com.huawei.jade.fel.engine.operators.sources.Source;
 import com.huawei.jade.fel.engine.util.StateKey;
-import com.huawei.jade.fel.tool.ToolContext;
 
 import java.util.List;
 import java.util.Map;
@@ -181,19 +180,6 @@ public class Conversation<D, R> {
     public Conversation<D, R> bind(Map<String, Object> ctx) {
         Validation.notNull(ctx, "Context map cannot be null.");
         ctx.forEach(this::bind);
-        return this;
-    }
-
-    /**
-     * 绑定自定义工具参数到对话上下文，用于工具调用。
-     *
-     * @param toolContext 表示自定义工具上下文参数的 {@link ToolContext}。
-     * @return 表示绑定了工具上下文参数的对话对象的 {@link Conversation}{@code <}{@link D}{@code , }{@link R}{@code >}。
-     * @throws IllegalArgumentException 当 {@code ctx} 为 {@code null} 时。
-     */
-    public Conversation<D, R> bind(ToolContext toolContext) {
-        Validation.notNull(toolContext, "Tool context cannot be null.");
-        this.session.setInnerState(StateKey.TOOL_CONTEXT, toolContext);
         return this;
     }
 

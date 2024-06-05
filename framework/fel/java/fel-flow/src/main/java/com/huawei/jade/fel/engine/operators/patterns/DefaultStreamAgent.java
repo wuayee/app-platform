@@ -4,10 +4,11 @@
 
 package com.huawei.jade.fel.engine.operators.patterns;
 
-import com.huawei.fit.waterflow.domain.stream.operators.Operators;
+import com.huawei.fit.waterflow.domain.context.StateContext;
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
+import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.ChatModelStreamService;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.Prompt;
@@ -17,6 +18,8 @@ import com.huawei.jade.fel.engine.operators.models.ChatChunk;
 import com.huawei.jade.fel.engine.operators.models.ChatStreamModel;
 import com.huawei.jade.fel.tool.ToolProvider;
 
+import java.util.Collections;
+
 /**
  * {@link Agent} 的默认流式实现。
  *
@@ -25,6 +28,11 @@ import com.huawei.jade.fel.tool.ToolProvider;
  */
 public class DefaultStreamAgent extends Agent<Prompt, Prompt> {
     private static final String AGENT_MSG_KEY = "stream_agent_request";
+    private static final String GOTO_NODE_ID = "ahead_llm_node";
+
+    private final ToolProvider toolProvider;
+    private final ChatStreamModel<Prompt> model;
+    private final String agentMsgKey;
 
     /**
      * 使用工具提供者和大模型服务对象初始化 {@link DefaultStreamAgent}。
@@ -54,34 +62,38 @@ public class DefaultStreamAgent extends Agent<Prompt, Prompt> {
      */
     public DefaultStreamAgent(ToolProvider toolProvider, ChatModelStreamService chatStreamModel, ChatOptions options,
             String agentMsgKey) {
-        super(() -> buildFlow(toolProvider, new ChatStreamModel<>(chatStreamModel, options), agentMsgKey));
+        this.toolProvider = Validation.notNull(toolProvider, "The tool provider cannot be null.");
+        this.model = new ChatStreamModel<>(chatStreamModel, options);
+        this.agentMsgKey = Validation.notBlank(agentMsgKey, "The agent message key cannot be blank.");
     }
 
-    private static AiProcessFlow<Prompt, Prompt> buildFlow(ToolProvider toolProvider, ChatStreamModel<Prompt> model,
-            String agentMsgKey) {
-        Validation.notNull(toolProvider, "Tool provider cannot be null.");
-        Validation.notBlank(agentMsgKey, "Agent message key cannot be blank.");
-
+    @Override
+    protected AiProcessFlow<Prompt, Prompt> buildFlow() {
         // 流式model有内置window节点，无法直接跳转到model节点
         return AiFlows.<Prompt>create()
-                .just(Agent.putAgentMsg(agentMsgKey)).id("aheadLlm")
-                .generate(model)
-                .reduce(ChatChunk::new, getReduceProcessor())
-                .delegate(Agent.getToolProcessMap(toolProvider, agentMsgKey))
+                .just((input, ctx) -> ctx.setState(this.agentMsgKey, ChatMessages.from(input.messages())))
+                .id(GOTO_NODE_ID)
+                .generate(this.model)
+                .reduce(ChatChunk::new, Agent::defaultReduce)
+                .delegate(this::handleTool)
                 .conditions()
-                .match(input -> Agent.isFinish(toolProvider, input), node -> node.map(Agent.getAgentMsg(agentMsgKey)))
-                .matchTo(Agent::isToolCall, node -> node.map(Agent.getAgentMsg(agentMsgKey)).to("aheadLlm"))
-                .others()
+                .matchTo(message -> CollectionUtils.isNotEmpty(message.toolCalls()),
+                        node -> node.map(this::getAgentMsg).to(GOTO_NODE_ID))
+                .others(node -> node.map(this::getAgentMsg))
                 .close();
     }
 
-    private static Operators.Reduce<ChatChunk, ChatMessage> getReduceProcessor() {
-        return (acc, input) -> {
-            if (input.isEnd()) {
-                return acc;
-            }
-            ObjectUtils.<ChatChunk>cast(acc).merge(input);
-            return acc;
-        };
+    private Prompt getAgentMsg(ChatMessage input, StateContext ctx) {
+        Validation.notNull(ctx, "The state context cannot be null.");
+        return ctx.getState(this.agentMsgKey);
+    }
+
+    private ChatMessage handleTool(ChatMessage input, StateContext ctx) {
+        Validation.notNull(ctx, "The state context cannot be null.");
+
+        ChatMessages lastRequest = ctx.getState(this.agentMsgKey);
+        lastRequest.add(Validation.notNull(input, "The input message cannot be null."));
+        lastRequest.addAll(Agent.toolCallHandle(this.toolProvider, input, Collections.emptyMap()).messages());
+        return input;
     }
 }

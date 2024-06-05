@@ -11,6 +11,7 @@ import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
 import com.huawei.jade.carver.tool.repository.ToolRepository;
@@ -129,12 +130,15 @@ public class DefaultToolRepository implements ToolRepository {
      * 仓储层添加标签。
      *
      * @param uniqueName 表示工具的唯一标识的 {@link String}。
-     * @param tagName 表示工具的标签的 {@link String}。
+     * @param tag 表示工具的标签的 {@link String}。
      */
     @Override
-    public void addTag(String uniqueName, String tagName) {
+    public void addTag(String uniqueName, String tag) {
+        if (StringUtils.isBlank(tag)) {
+            return;
+        }
         TagDo tagDo = new TagDo();
-        tagDo.setName(tagName);
+        tagDo.setName(StringUtils.toUpperCase(tag));
         tagDo.setToolUniqueName(uniqueName);
         this.tagMapper.addTag(tagDo);
     }

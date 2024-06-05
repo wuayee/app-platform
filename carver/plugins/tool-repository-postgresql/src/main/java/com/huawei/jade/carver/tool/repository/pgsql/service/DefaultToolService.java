@@ -6,9 +6,9 @@ package com.huawei.jade.carver.tool.repository.pgsql.service;
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
@@ -31,8 +31,6 @@ import java.util.UUID;
  */
 @Component
 public class DefaultToolService implements ToolService {
-    private static final Logger log = Logger.get(DefaultToolService.class);
-
     private final ToolRepository toolRepo;
 
     /**
@@ -168,12 +166,15 @@ public class DefaultToolService implements ToolService {
      * 服务层添加标签
      *
      * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
-     * @param tagName 表示待添加的工具标签的 {@link String}。
+     * @param tag 表示待添加的工具标签的 {@link String}。
      */
     @Override
     @Fitable("addTag")
-    public void addTag(String toolUniqueName, String tagName) {
-        this.toolRepo.addTag(toolUniqueName, tagName);
+    public void addTag(String toolUniqueName, String tag) {
+        if (StringUtils.isBlank(tag)) {
+            return;
+        }
+        this.toolRepo.addTag(toolUniqueName, tag);
     }
 
     /**

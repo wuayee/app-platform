@@ -4,11 +4,13 @@
 
 package com.huawei.jade.carver.tool.waterflow;
 
+import static com.huawei.fitframework.util.ObjectUtils.cast;
+
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.carver.tool.service.ToolExecuteService;
 import com.huawei.jade.carver.tool.service.ToolService;
@@ -16,7 +18,6 @@ import com.huawei.jade.fel.chat.character.ToolMessage;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.tool.Tool;
 import com.huawei.jade.fel.tool.ToolCall;
-import com.huawei.jade.fel.tool.ToolContext;
 import com.huawei.jade.fel.tool.ToolProvider;
 
 import java.lang.reflect.Type;
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
 public class WaterFlowToolProvider implements ToolProvider {
     private static final String SCHEMA_NAME_KEY = "name";
     private static final String TAG_TYPE_WATER_FLOW = "WATERFLOW";
+    private static final String WATER_FLOW_ASYNC_KEY = "isAsync";
 
     private final ToolExecuteService executeService;
     private final ToolService toolService;
@@ -58,39 +60,56 @@ public class WaterFlowToolProvider implements ToolProvider {
 
     @Override
     @Fitable(id = "app-factory")
-    public FlatChatMessage call(ToolCall toolCall, ToolContext toolContext) {
+    public FlatChatMessage call(ToolCall toolCall, Map<String, Object> toolContext) {
         this.addDynamicParams(toolCall, toolContext);
         return new FlatChatMessage(new ToolMessage(toolCall.getId(),
                 this.executeService.executeTool(toolCall.getName(), toolCall.getParameters())));
     }
 
-    private void addDynamicParams(ToolCall toolCall, ToolContext toolContext) {
+    private void addDynamicParams(ToolCall toolCall, Map<String, Object> toolContext) {
         Map<String, Object> parameters = this.objectSerializer.deserialize(toolCall.getParameters(),
-                TypeUtils.parameterized(Map.class, new Type[]{String.class, Object.class}));
+                TypeUtils.parameterized(Map.class, new Type[] {String.class, Object.class}));
         // 目前普通工具和工具流调用都会走到这里，先将校验去掉，等 ToolProvider 加上责任链后再加回去。
         if (!parameters.containsKey(WaterFlowToolConst.INPUT_PARAMS_KEY)) {
             return;
         }
-        Map<String, Object> inputParams = ObjectUtils.cast(parameters.get(WaterFlowToolConst.INPUT_PARAMS_KEY));
-        Map<String, String> context = toolContext.toMap();
-        if (!context.containsKey(WaterFlowToolConst.TRACE_ID) || !context.containsKey(WaterFlowToolConst.CALLBACK_ID)) {
+        Map<String, Object> inputParams = cast(parameters.get(WaterFlowToolConst.INPUT_PARAMS_KEY));
+        if (!toolContext.containsKey(WaterFlowToolConst.TRACE_ID)
+                || !toolContext.containsKey(WaterFlowToolConst.CALLBACK_ID)) {
             throw new IllegalStateException("toolContext does not contain traceId or callbackId.");
         }
-        inputParams.putAll(context);
+        inputParams.putAll(toolContext);
         toolCall.setParameters(this.objectSerializer.serialize(parameters));
     }
 
     @Override
     @Fitable(id = "app-factory")
     public List<Tool> getTool(List<String> name) {
-        return name.stream().map(this.toolService::getTool).filter(Objects::nonNull).map(tool -> {
-            Set<String> tags = tool.getTags();
-            Map<String, Object> schema = new HashMap<>(tool.getSchema());
+        return name.stream().map(this.toolService::getTool).filter(Objects::nonNull).map(toolData -> {
+            Set<String> tags = toolData.getTags();
+            Map<String, Object> schema = new HashMap<>(toolData.getSchema());
             if (tags.contains(TAG_TYPE_WATER_FLOW)) {
                 schema = DefaultValueFilterToolInfo.getFilterSchema(schema);
             }
-            schema.put(SCHEMA_NAME_KEY, tool.getUniqueName());
-            return new Tool(tags.contains(TAG_TYPE_WATER_FLOW), schema);
+            schema.put(SCHEMA_NAME_KEY, toolData.getUniqueName());
+            Map<String, Object> runnables = toolData.getRunnables();
+            Object waterflowRunnable = runnables.get(TAG_TYPE_WATER_FLOW);
+            Map<String, Object> waterflowContext;
+            if (waterflowRunnable == null) {
+                waterflowContext = new HashMap<>();
+            } else if (!(waterflowRunnable instanceof Map)) {
+                throw new IllegalStateException(StringUtils.format("Incorrect tool runnable info. [toolUniqueName={0}]",
+                        toolData.getUniqueName()));
+            } else {
+                waterflowContext = cast(waterflowRunnable);
+            }
+            if (tags.contains(TAG_TYPE_WATER_FLOW)) {
+                waterflowContext.put(WATER_FLOW_ASYNC_KEY, "true");
+            }
+            Tool tool = new Tool();
+            tool.setSchema(schema);
+            tool.setContext(waterflowContext);
+            return tool;
         }).collect(Collectors.toList());
     }
 }
