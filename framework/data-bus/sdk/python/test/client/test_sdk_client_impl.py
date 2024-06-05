@@ -6,8 +6,9 @@ from unittest.mock import MagicMock, Mock, patch
 
 from test.mock import memory_io_mock, memory_manager_mock
 from test.utils import disable_logger
+from databus.dto import ReadRequest, WriteRequest
 from databus.exceptions import CoreError
-from databus.message import DataBusErrorCode
+from databus.message import DataBusErrorCode, CorePermissionType
 
 with (patch("databus.memory_io.read", new=memory_io_mock.read),
       patch("databus.memory_io.write", new=memory_io_mock.write),
@@ -72,37 +73,55 @@ class TestSdkClientImpl(unittest.TestCase):
         self._mem_manager_mock.to_memory_id.assert_called_once_with(user_key)
         self._mem_manager_mock.del_memory_block.assert_called_once_with(user_key)
 
-    def test_read_once(self):
-        user_key, memory_id, size, offset = "user_key", 1, 1, 0
-        expected_contents = b"hello"
+    def test_read_once_with_reading_user_data(self):
+        user_key, memory_id, size, offset, is_operating_user_data = "user_key", 1, 1, 0, True
+        expected_contents, expect_user_data = b"hello", b"\x02"
         self._socket_mock.with_permission = MagicMock()
-        self._socket_mock.with_permission().__enter__.return_value = memory_id, size
+        apply_permission_response_mock = Mock()
+        self._socket_mock.with_permission().__enter__.return_value = apply_permission_response_mock
+        apply_permission_response_mock.MemoryKey.return_value = memory_id
+        apply_permission_response_mock.MemorySize.return_value = size
+        apply_permission_response_mock.UserDataLength.return_value = len(expect_user_data)
+        apply_permission_response_mock.UserData.return_value = int(expect_user_data.hex())
         self._mem_manager_mock.to_memory_id.return_value = memory_id
         self._mem_io_mock.read.return_value = expected_contents
 
-        self.assertEqual(expected_contents, self._client.read_once(user_key, size, offset=offset))
+        request = ReadRequest(user_key, size, offset=offset, is_operating_user_data=is_operating_user_data)
+        response = self._client.read_once(request)
+        self.assertEqual(expected_contents, response.content)
+        self.assertEqual(expect_user_data, response.user_data)
 
         self._mem_io_mock.read.assert_called_once_with(memory_id, size, offset=offset)
+        self._socket_mock.with_permission.assert_called_with(CorePermissionType.Read, request=request,
+                                                             memory_id=memory_id)
 
     def test_write_once(self):
-        contents = b"world"
+        contents, user_data = b"world", b"\x01"
         user_key, memory_id, size, offset = "user_key", 1, len(contents) + 1, 0
         self._socket_mock.with_permission = MagicMock()
-        self._socket_mock.with_permission().__enter__.return_value = memory_id, size
+        apply_permission_response_mock = Mock()
+        self._socket_mock.with_permission().__enter__.return_value = apply_permission_response_mock
+        apply_permission_response_mock.MemorySize.return_value = size
+        apply_permission_response_mock.MemoryKey.return_value = memory_id
         self._mem_manager_mock.get_memory_info.return_value = memory_id, size
         self._mem_io_mock.write.return_value = size
 
-        self.assertEqual(size, self._client.write_once(user_key, contents, offset=offset))
+        request = WriteRequest(user_key, contents, offset=offset, is_operating_user_data=True, user_data=user_data)
+        self.assertTrue(self._client.write_once(request))
         self._mem_io_mock.write.assert_called_once_with(memory_id, contents, offset=offset)
 
     def test_write_once_with_invalid_access(self):
         contents = b"python"
         user_key, memory_id = "user_key", 1
         self._socket_mock.with_permission = MagicMock()
-        self._socket_mock.with_permission().__enter__.return_value = memory_id, len(contents) - 1
+        apply_permission_response_mock = Mock()
+        self._socket_mock.with_permission().__enter__.return_value = apply_permission_response_mock
+        apply_permission_response_mock.MemorySize.return_value = len(contents) - 1
+        apply_permission_response_mock.MemoryKey.return_value = memory_id
         self._mem_io_mock.write = Mock()
 
         with disable_logger():
-            self.assertEqual(0, self._client.write_once(user_key, contents))
+            request = WriteRequest(user_key, contents, is_operating_user_data=False)
+            self.assertEqual(0, self._client.write_once(request))
 
         self._mem_io_mock.write.assert_not_called()
