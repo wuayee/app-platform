@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Spin } from 'antd';
 import { Message } from '../../shared/utils/message';
 import {getAippInfo, getSharedDialog} from '../../shared/http/aipp';
-import ChatMessage from '../chatPreview/components/chat-message.jsx';
+import ChatMessage from '../chatPreview/components/chat-message.tsx';
 import robot from '../../assets/images/ai/robot1.png';
 import './index.scss';
 

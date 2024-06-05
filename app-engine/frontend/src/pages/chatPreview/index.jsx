@@ -3,7 +3,7 @@ import { useLocation } from "react-router";
 import { Spin } from "antd";
 import { LeftArrowIcon } from "@assets/icon";
 import { Message } from "@shared/utils/message";
-import ChatMessage from "./components/chat-message.jsx";
+import ChatMessage from "./components/chat-message.tsx";
 import SendEditor from "./components/send-editor/send-editor.jsx";
 import CheckGroup from "./components/check-group.jsx";
 import Inspiration from "./components/inspiration.jsx";
@@ -191,6 +191,11 @@ const ChatPreview = (props) => {
   }
 
   useEffect(() => {
+    // 清空聊天记录
+    setChatRunning(false);
+    setChatId(null);
+    setChatList([]);
+    // 初始化聊天记录，目前所有chat聊天记录均未调用initChatHistory()
     (aippInfo.name && !aippInfo.notShowHistory) && initChatHistory();
   }, [aippInfo]);
   

@@ -17,10 +17,10 @@ import UploadFile from './upload-file';
 import StarApps from "../../star-apps";
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
 import LinkFile from './file-preview';
+import HistoryChatDrawer from '../../history-chat';
 
 // 操作按钮,聊天界面下面操作框
-const EditorBtnHome = (props) => {
-  const { setOpenHistory } = props;
+const EditorBtnHome = () => {
   const { chatRunning, tenantId, appId,aippInfo ,setOpenStar,
     setChatList,setChatId,setChatRunning,setClearChat,chatType} = useContext(AippContext);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
@@ -28,6 +28,7 @@ const EditorBtnHome = (props) => {
   const [ appName, setAppName ] = useState('');
   const [ appIcon, setAppIcon ] = useState(knowledgeBase);
   const [ isAt, setIsAt ] = useState(false);
+  const [openHistorySignal,setOpenHistorySignal]=useState(null);
 
   let openUploadRef = useRef(null);
   useEffect(() => {
@@ -38,7 +39,7 @@ const EditorBtnHome = (props) => {
       setAppIcon(aippInfo.attributes.icon);
     }
     setAppName(aippInfo.name || '应用');
-  }, [props]);
+  }, [aippInfo]);
 
   // 清空聊天
   const handleOk = (time) => {
@@ -124,7 +125,7 @@ const EditorBtnHome = (props) => {
           (
             <div className="inner-item">
               <div><ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} /></div>
-              <HistoryIcon  onClick={() => setOpenHistory(true)}/>
+              <HistoryIcon  onClick={(e) => {setOpenHistorySignal(e.timeStamp);}}/>
               <span className="item-clear" onClick={() => {
                 setChatRunning(false);
                 setChatId(null);
@@ -149,7 +150,8 @@ const EditorBtnHome = (props) => {
       <StarApps 
         handleAt={atItemClick}
       />
-    <LinkFile openUploadRef={openUploadRef}/> 
+    <LinkFile openUploadRef={openUploadRef}/>
+    <HistoryChatDrawer openHistorySignal={openHistorySignal}/>
     </div>
   );
 }
