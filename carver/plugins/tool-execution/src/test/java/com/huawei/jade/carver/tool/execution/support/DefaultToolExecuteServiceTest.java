@@ -35,30 +35,36 @@ import java.util.Optional;
 @DisplayName("测试 DefaultToolExecuteService")
 public class DefaultToolExecuteServiceTest {
     private DefaultToolExecuteService service;
-    private ToolService toolService;
-    private ToolFactoryRepository toolFactoryRepository;
     private JacksonObjectSerializer serializer;
-    private ToolFactory toolFactory;
 
     @BeforeEach
     void setup() {
-        this.toolService = mock(ToolService.class);
-        this.toolFactoryRepository = mock(ToolFactoryRepository.class);
+        ToolService toolService = mock(ToolService.class);
+        ToolFactoryRepository toolFactoryRepository = mock(ToolFactoryRepository.class);
         this.serializer = new JacksonObjectSerializer(null, null, null);
-        this.service = new DefaultToolExecuteService(this.toolService, this.toolFactoryRepository);
-        this.toolFactory = mock(ToolFactory.class);
+        this.service = new DefaultToolExecuteService(toolService, toolFactoryRepository);
+        ToolFactory toolFactory = mock(ToolFactory.class);
         Tool tool = mock(Tool.class);
-        when(this.toolService.getTool(any())).thenReturn(this.buildToolData());
+        when(toolService.getTool(any())).thenReturn(this.buildToolData());
         when(toolFactory.create(any(), any())).thenReturn(tool);
         when(toolFactoryRepository.query(any())).thenReturn(Optional.of(toolFactory));
         when(tool.executeWithJson(any())).thenReturn("OK");
+        when(tool.executeWithJsonObject(any())).thenReturn("OK");
     }
 
     @Test
-    @DisplayName("当调用执行器时返回正确结果")
-    void shouldReturnOK() {
+    @DisplayName("当使用 Json 参数调用执行器时，返回正确结果")
+    void shouldReturnOKWhenExecuteWithJson() {
         String uniqueName = "testUniqueName";
-        String executeResult = this.service.executeTool(uniqueName, buildJsonArgs());
+        String executeResult = this.service.executeTool(uniqueName, this.buildJsonArgs());
+        assertThat(executeResult).isEqualTo("OK");
+    }
+
+    @Test
+    @DisplayName("当使用 Json 对象参数调用执行器时，返回正确结果")
+    void shouldReturnOKWhenExecuteWithJsonObject() {
+        String uniqueName = "testUniqueName";
+        Object executeResult = this.service.executeTool(uniqueName, this.buildJsonObjectArgs());
         assertThat(executeResult).isEqualTo("OK");
     }
 
@@ -91,8 +97,12 @@ public class DefaultToolExecuteServiceTest {
         return toolData;
     }
 
+    private Map<String, Object> buildJsonObjectArgs() {
+        return MapBuilder.<String, Object>get().put("p1", "1").build();
+    }
+
     private String buildJsonArgs() {
-        Map<String, Object> in = MapBuilder.<String, Object>get().put("p1", "1").build();
+        Map<String, Object> in = this.buildJsonObjectArgs();
         return new String(this.serializer.serialize(in, UTF_8));
     }
 }
