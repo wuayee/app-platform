@@ -20,5 +20,5 @@ public interface TaskTool extends Tool {
      * @param args 表示调用工具的参数列表的 {@link Object}{@code []}。
      * @return 表示调用工具的结果的 {@link Object}。
      */
-    Object taskCall(String taskId, Object... args);
+    Object executeWithTask(String taskId, Object... args);
 }

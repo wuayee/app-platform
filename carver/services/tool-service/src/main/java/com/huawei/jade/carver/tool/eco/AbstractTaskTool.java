@@ -36,6 +36,6 @@ public abstract class AbstractTaskTool extends AbstractTool implements TaskTool 
         String taskId = isInstanceOf(args[0], String.class, "The first arg must be String.class.");
         Object[] actual = new Object[args.length - 1];
         System.arraycopy(args, 1, actual, 0, actual.length);
-        return this.taskCall(taskId, actual);
+        return this.executeWithTask(taskId, actual);
     }
 }

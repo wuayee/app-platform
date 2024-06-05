@@ -39,7 +39,7 @@ public class HuggingFaceTool extends AbstractTaskTool {
     }
 
     @Override
-    public Object taskCall(String taskId, Object... args) {
+    public Object executeWithTask(String taskId, Object... args) {
         notNull(args, "The call args cannot be null.");
         isTrue(args.length == 2, "The call args must have 2 args.");
         String model = isInstanceOf(args[0], String.class, "The first arg must be String.class.");
