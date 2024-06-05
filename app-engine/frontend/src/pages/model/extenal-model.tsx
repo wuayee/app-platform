@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, message, Modal, Table } from 'antd';
 import { deleteExternalModel, getExternalModelList } from '../../shared/http/model';
 import CreateModel from './components/external-create';
+import GlobalConfig from './components/global-config';
 
 const ExternalModel = () => {
 
@@ -10,6 +11,7 @@ const ExternalModel = () => {
   const [openCreate, setOpenCreate] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteName, setDeleteName] = useState('');
+  const [openConfig, setOpenConfig] = useState(false);
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -26,6 +28,13 @@ const ExternalModel = () => {
 
   const createCallback = (type: string) => {
     setOpenCreate(false);
+    if (type === 'submit') {
+      getList();
+    }
+  }
+
+  const configCallback = (type: string) => {
+    setOpenConfig(false);
     if (type === 'submit') {
       getList();
     }
@@ -67,6 +76,18 @@ const ExternalModel = () => {
       ellipsis: true,
     },
     {
+      key: 'http_proxy',
+      dataIndex: 'http_proxy',
+      title: 'HTTP代理',
+      ellipsis: true,
+    },
+    {
+      key: 'https_proxy',
+      dataIndex: 'https_proxy',
+      title: 'HTTPS代理',
+      ellipsis: true,
+    },
+    {
       key: 'action',
       title: '操作',
       render(_: any, record: any) {
@@ -105,6 +126,21 @@ const ExternalModel = () => {
       >
         创建
       </Button>
+      <Button
+        style={{
+          width: '96px',
+          height: '32px',
+          fontSize: '14px',
+          borderRadius: '4px',
+          letterSpacing: '0',
+          marginBottom: '16px',
+        }}
+        onClick={() => {
+          setOpenConfig(true);
+        }}
+      >
+        全局配置
+      </Button>
       <Table
         style={{ marginBottom: '16px' }}
         columns={columns}
@@ -119,6 +155,7 @@ const ExternalModel = () => {
       <Modal title='删除' open={deleteOpen} onOk={handleOk} onCancel={handleCancel}>
         <p>确定要删除该条记录？</p>
       </Modal>
+      <GlobalConfig visible={openConfig} configCallback={configCallback} />
     </>
   )
 }
