@@ -10,17 +10,19 @@ from contextlib import contextmanager
 import logging
 import queue
 import socket
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 import flatbuffers
 from databus.message import (
     MessageHeader, DEFAULT_FLATBUFFERS_BUILDER_SIZE, ErrorMessageResponse,
     ApplyMemoryMessage, ApplyMemoryMessageResponse,
     ApplyPermissionMessage, ApplyPermissionMessageResponse,
-    ReleaseMemoryMessage, ReleasePermissionMessage
+    ReleaseMemoryMessage, ReleasePermissionMessage,
+    GetMetaDataMessage, GetMetaDataMessageResponse
 )
 from databus.message import CoreMessageType, CorePermissionType, CoreMessageResponseTypeHint
 from databus.exceptions import CoreError
+from databus.dto import WriteRequest, ReadRequest
 
 
 class SocketClient:
@@ -31,7 +33,8 @@ class SocketClient:
     MESSAGE_RESPONSE_MAPPING = {
         CoreMessageType.ApplyMemory: ApplyMemoryMessageResponse.ApplyMemoryMessageResponse,
         CoreMessageType.ApplyPermission: ApplyPermissionMessageResponse.ApplyPermissionMessageResponse,
-        CoreMessageType.Error: ErrorMessageResponse.ErrorMessageResponse
+        CoreMessageType.Error: ErrorMessageResponse.ErrorMessageResponse,
+        CoreMessageType.GetMetaData: GetMetaDataMessageResponse.GetMetaDataMessageResponse,
     }
 
     def __init__(self, core_address: Tuple[str, int] = None, core_socket: Optional[socket.socket] = None):
@@ -101,8 +104,23 @@ class SocketClient:
         builder.Finish(ReleaseMemoryMessage.ReleaseMemoryMessageEnd(builder))
         self._send_message(builder, CoreMessageType.ReleaseMemory)
 
+    def send_get_meta_message(self, user_key: str) -> GetMetaDataMessageResponse:
+        """向DataBus内核查询内存块相关元信息
+
+        :param user_key: 要查询元信息的内存块名
+        :return: 内核返回的GetMetaDataMessageResponse
+        """
+        builder = flatbuffers.Builder(DEFAULT_FLATBUFFERS_BUILDER_SIZE)
+        user_key_str = builder.CreateString(user_key)
+        GetMetaDataMessage.Start(builder)
+        GetMetaDataMessage.AddObjectKey(builder, user_key_str)
+        builder.Finish(GetMetaDataMessage.End(builder))
+        return self._send_message(builder, CoreMessageType.GetMetaData)
+
     @contextmanager
-    def with_permission(self, permission_type: CorePermissionType, user_key: Optional[str] = None,
+    def with_permission(self,
+                        permission_type: CorePermissionType,
+                        request: Union[WriteRequest, ReadRequest],
                         memory_id: Optional[int] = None):
         """返回一个自动申请释放内存块权限的context, 例:
 
@@ -110,33 +128,39 @@ class SocketClient:
             ... # do anything that requires permission application and release
 
         :param permission_type: 申请的权限类型
-        :param memory_id: 需要申请权限的内存块id, 与user_key二选一
-        :param user_key: 需要申请权限的内存块名, 与memory_id二选一
+        :param request: 需要申请权限的请求体
+        :param memory_id: 需要申请权限的内存块id, 若有则优先使用
         :raise CoreError: DataBus内核返回的内存申请失败错误
         """
-        if not user_key and not memory_id:
+        if not request.user_key and not memory_id:
             raise ValueError("Both are None: user_key and memory_id.")
         apply_builder = flatbuffers.Builder(DEFAULT_FLATBUFFERS_BUILDER_SIZE)
         apply_builder.ForceDefaults(True)
+        #
+        need_to_write_user_data = permission_type == CorePermissionType.Write and request.is_operating_user_data
+        user_data_vec = apply_builder.CreateByteVector(request.user_data) if need_to_write_user_data else None
         if not memory_id:
-            user_key_str = apply_builder.CreateString(user_key)
+            user_key_str = apply_builder.CreateString(request.user_key)
             ApplyPermissionMessage.ApplyPermissionMessageStart(apply_builder)
             ApplyPermissionMessage.AddObjectKey(apply_builder, user_key_str)
         else:
             ApplyPermissionMessage.ApplyPermissionMessageStart(apply_builder)
             ApplyPermissionMessage.AddMemoryKey(apply_builder, memory_id)
         ApplyPermissionMessage.AddPermission(apply_builder, permission_type)
+        if need_to_write_user_data:
+            ApplyPermissionMessage.AddIsOperatingUserData(apply_builder, True)
+            ApplyPermissionMessage.AddUserData(apply_builder, user_data_vec)
         apply_builder.Finish(ApplyPermissionMessage.ApplyPermissionMessageEnd(apply_builder))
         try:
             response = self._send_message(apply_builder, CoreMessageType.ApplyPermission)
             CoreError.check_core_response("apply permission failed, result code {}", response.ErrorType())
-            # 自动实现context manager, 返回memory_id, memory_size方便裸读写
-            yield response.MemoryKey(), response.MemorySize()
+            # 自动实现context manager, 返回ApplyPermissionMessageResponse方便裸读写
+            yield response
         finally:
             release_builder = flatbuffers.Builder(DEFAULT_FLATBUFFERS_BUILDER_SIZE)
             release_builder.ForceDefaults(True)
             if not memory_id:
-                user_key_str = release_builder.CreateString(user_key)
+                user_key_str = release_builder.CreateString(request.user_key)
                 ReleasePermissionMessage.ReleasePermissionMessageStart(release_builder)
                 ReleasePermissionMessage.AddObjectKey(release_builder, user_key_str)
             else:
@@ -170,7 +194,7 @@ class SocketClient:
         :param message_type: 发送的消息消息类型
         :return: 如果消息有response则返回response, 否则返回None
         """
-        logging.debug("Message: %s.", message.hex())
+        logging.debug("DataBus message to core: %s.", message.hex())
         self._socket.send(message)
         if message_type in self.MESSAGE_RESPONSE_MAPPING:
             self._handle_response(self._socket.recv(DEFAULT_FLATBUFFERS_BUILDER_SIZE))
@@ -186,7 +210,7 @@ class SocketClient:
         :raise CoreError: 内核返回错误
         :raise UnexpectedMessageTypeError: 内核返回消息类型错误
         """
-        logging.debug("Response: %s.", response.hex())
+        logging.debug("DataBus core response: %s.", response.hex())
         header = MessageHeader.MessageHeader.GetRootAs(response)
         raw_body = response[len(response) - header.Size():]
         message_type = header.Type()
