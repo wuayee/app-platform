@@ -713,11 +713,6 @@ public class FlowContextsService {
      */
     public void terminateFlows(String traceId, Map<String, Object> filter, OperationContext operationContext) {
         FlowTrace flowTrace = traceRepo.find(traceId);
-
-        if (!flowTrace.getOperator().equals(operationContext.operator())) {
-            throw new JobberException(NO_OPERATE_PERMISSION);
-        }
-
         if (TRACE_EXCLUSIVE_STATUS_MAP.get(FlowTraceStatus.TERMINATE.toString())
                 .contains(flowTrace.getStatus().toString())) {
             LOG.warn("The trace cannot be terminated, traceId={}, currentStatus={}, start={}, end={}.",
