@@ -23,6 +23,9 @@ import com.huawei.databus.sdk.tools.DataBusUtils;
 import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.inspection.Validation;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -42,6 +45,8 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @since 2024-03-17
  */
 public class DefaultDataBusClient implements DataBusClient {
+    private static final Logger logger = LogManager.getLogger(DefaultDataBusClient.class);
+
     /**
      * 单例变量。
      */
@@ -83,6 +88,7 @@ public class DefaultDataBusClient implements DataBusClient {
             InetSocketAddress address = new InetSocketAddress(dataBusAddr, dataBusPort);
             socketChannel.connect(address);
         } catch (IOException e) {
+            logger.error("[open] Open connection failed. [e={}]", e.toString());
             return OpenConnectionResult.failure(ErrorType.NotConnectedToDataBus, e);
         }
 
@@ -190,7 +196,7 @@ public class DefaultDataBusClient implements DataBusClient {
             // 返回读写成功结果。
             return MemoryIoResult.success(memory, ioBytes, result.userData(), request.permissionType());
         } catch (IOException e) {
-            // 日志打印真实错误信息。
+            logger.error("[doIoRequest] IO request failed. [e={}]", e.toString());
             return MemoryIoResult.failure(permissionType == PermissionType.Read ? ErrorType.MemoryReadError
                     : ErrorType.MemoryWriteError, e);
         } finally {
