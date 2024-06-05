@@ -17,6 +17,7 @@ import com.huawei.jade.carver.tool.repository.ToolFactoryRepository;
 import com.huawei.jade.carver.tool.service.ToolExecuteService;
 import com.huawei.jade.carver.tool.service.ToolService;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -44,19 +45,30 @@ public class DefaultToolExecuteService implements ToolExecuteService {
     @Override
     @Fitable(id = "standard")
     public String executeTool(String uniqueName, String jsonArgs) {
+        Tool tool = this.getTool(uniqueName);
+        return tool.executeWithJson(jsonArgs);
+    }
+
+    @Override
+    @Fitable(id = "standard")
+    public Object executeTool(String uniqueName, Map<String, Object> jsonObjectArgs) {
+        Tool tool = this.getTool(uniqueName);
+        return tool.executeWithJsonObject(jsonObjectArgs);
+    }
+
+    private Tool getTool(String uniqueName) {
         notBlank(uniqueName, "The tool unique name cannot be blank.");
         Tool.Info info = ToolData.convertToInfo(this.toolService.getTool(uniqueName));
         if (info == null) {
             throw new IllegalStateException(StringUtils.format("No tool with specified unique name. [uniqueName={0}]",
                     uniqueName));
         }
-        Optional<ToolFactory> query = this.toolFactoryRepository.query(info.tags());
-        Tool.Metadata metadata = Tool.Metadata.fromSchema(info.schema());
-        if (!query.isPresent()) {
+        Optional<ToolFactory> factory = this.toolFactoryRepository.query(info.tags());
+        if (!factory.isPresent()) {
             throw new IllegalStateException(StringUtils.format("No tool factory to create tool. [tags={0}]",
                     info.tags()));
         }
-        Tool tool = query.get().create(info, metadata);
-        return tool.jsonCall(jsonArgs);
+        Tool.Metadata metadata = Tool.Metadata.fromSchema(info.schema());
+        return factory.get().create(info, metadata);
     }
 }

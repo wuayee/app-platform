@@ -8,6 +8,8 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.jade.carver.tool.Tool;
 
+import java.util.Map;
+
 /**
  * 表示 {@link WaterFlowTool} 的自定义实现。
  *
@@ -44,12 +46,17 @@ public class WaterFlowTool implements Tool {
     }
 
     @Override
-    public Object call(Object... args) {
-        return this.tool.call(args);
+    public Object execute(Object... args) {
+        return this.tool.execute(args);
     }
 
     @Override
-    public String jsonCall(String jsonArgs) {
-        return this.tool.jsonCall(jsonArgs);
+    public String executeWithJson(String jsonArgs) {
+        return this.tool.executeWithJson(jsonArgs);
+    }
+
+    @Override
+    public Object executeWithJsonObject(Map<String, Object> jsonObjectArg) {
+        return this.tool.executeWithJsonObject(jsonObjectArg);
     }
 }

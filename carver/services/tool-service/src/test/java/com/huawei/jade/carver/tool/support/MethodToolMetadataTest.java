@@ -92,14 +92,14 @@ public class MethodToolMetadataTest {
     @Test
     @DisplayName("当 FIT 调用成功，返回正确的结果")
     void shouldReturnCorrectResult() {
-        Object result = this.tool.call("1");
+        Object result = this.tool.execute("1");
         assertThat(result).isEqualTo("OK");
     }
 
     @Test
     @DisplayName("当 FIT 调用失败，返回错误的结果")
     void shouldReturnIncorrectResult() {
-        IllegalStateException cause = catchThrowableOfType(() -> this.tool.call("2"), IllegalStateException.class);
+        IllegalStateException cause = catchThrowableOfType(() -> this.tool.execute("2"), IllegalStateException.class);
         assertThat(cause).hasMessage("Error");
     }
 

@@ -51,7 +51,7 @@ public class DefaultToolExecuteServiceTest {
         when(this.toolService.getTool(any())).thenReturn(this.buildToolData());
         when(toolFactory.create(any(), any())).thenReturn(tool);
         when(toolFactoryRepository.query(any())).thenReturn(Optional.of(toolFactory));
-        when(tool.jsonCall(any())).thenReturn("OK");
+        when(tool.executeWithJson(any())).thenReturn("OK");
     }
 
     @Test

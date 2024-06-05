@@ -41,7 +41,7 @@ public class HttpTool extends AbstractTool {
     }
 
     @Override
-    public Object call(Object... args) {
+    public Object execute(Object... args) {
         Map<String, Object> runnable = cast(this.info().schema().get("runnable"));
         String method = cast(runnable.get("method"));
         String url = cast(runnable.get("url"));

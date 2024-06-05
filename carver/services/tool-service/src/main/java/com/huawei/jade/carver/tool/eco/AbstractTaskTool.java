@@ -30,7 +30,7 @@ public abstract class AbstractTaskTool extends AbstractTool implements TaskTool 
     }
 
     @Override
-    public Object call(Object... args) {
+    public Object execute(Object... args) {
         notNull(args, "The call args cannot be null.");
         isTrue(args.length >= 1, "The call args must have 1 arg at least.");
         String taskId = isInstanceOf(args[0], String.class, "The first arg must be String.class.");
