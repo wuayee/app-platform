@@ -63,7 +63,7 @@ export default function OutputVariableRow({item, handleItemChange}) {
                             rules={[{required: true, message: "字段值不能为空"}]}
                     />
                 </>);
-            case 'String':
+            case 'Input':
                 return (<>
                     <Form.Item
                             style={{marginBottom: '8px'}}
@@ -108,7 +108,7 @@ export default function OutputVariableRow({item, handleItemChange}) {
                                 onChange={(value) => {
                                     form.resetFields([`reference-${item.id}`, inputName]);
                                     let changes = [{key: 'from', value: value}, {key: "value", value: ""}];
-                                    if (value === "String") {
+                                    if (value === "Input") {
                                         changes = [
                                             {key: 'from', value: value},
                                             {key: "value", value: ""},
@@ -121,7 +121,7 @@ export default function OutputVariableRow({item, handleItemChange}) {
                                 }}
                                 options={[
                                     {value: 'Reference', label: '引用'},
-                                    {value: 'String', label: '输入'}
+                                    {value: 'Input', label: '输入'}
                                 ]}
                                 value={item.from}
                         />
