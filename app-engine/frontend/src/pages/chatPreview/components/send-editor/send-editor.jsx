@@ -11,7 +11,7 @@ import { Message } from "@shared/utils/message";
 import { AippContext } from "../../../aippIndex/context";
 import { docArr, imgArr } from './common/config';
 import { httpUrlMap } from "@shared/http/httpConfig";
-import HistoryChat from "../history-chat";
+import HistoryChatDrawer from "../history-chat";
 import Recommends from './components/recommends';
 import EditorBtnHome from './components/editor-btn-home';
 import LinkFile from './components/file-preview';
@@ -161,7 +161,6 @@ const SendEditor = (props) => {
       };
     }
   }
-  const [openHistory, setOpenHistory] = useState(false);
   return <>{(
     <div className='send-editor-container'>
       <Recommends 
@@ -169,9 +168,7 @@ const SendEditor = (props) => {
         lastContent={lastSendContent}
       />
       <div className='editor-inner'>
-        <EditorBtnHome 
-          setOpenHistory={setOpenHistory}
-        />
+        <EditorBtnHome />
         <div className='editor-input' id="drop">
           <div
             className="chat-promet-editor"
@@ -181,7 +178,7 @@ const SendEditor = (props) => {
             onInput={messageChange}
             onKeyDown={messageKeyDown}
             onPaste={messagePaste}
-          ></div>
+          />
           <div className='send-icon' onClick={ sendMessage }>
             <SendIcon />
           </div>
@@ -199,7 +196,6 @@ const SendEditor = (props) => {
         positionConfig={positionConfig}
         clearMove={clearMove} />
      )}
-     <HistoryChat open={openHistory} setOpen={setOpenHistory}/>
     </div>
   )}</>
 };

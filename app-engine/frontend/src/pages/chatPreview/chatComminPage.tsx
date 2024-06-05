@@ -14,16 +14,7 @@ const CommonChat = ({chatType,contextProvider,previewBack}) => {
   const [clearChat,setClearChat] =useState(null);
   const [ openStar, setOpenStar ] = useState(false);
   const [inspirationOpen,setInspirationOpen] =useState(false);
-
-  useEffect(()=>{
-    setChatRunning(false);
-    setChatId(null);
-    setChatList(() => {
-      let arr = [];
-      return arr;
-    });
-  },[contextProvider.appId])
-
+  
   const provider = {
     chatRunning,
     setChatRunning,
@@ -40,6 +31,7 @@ const CommonChat = ({chatType,contextProvider,previewBack}) => {
     ...contextProvider,
     chatType
   }; 
+
   return (
     <AippContext.Provider value={provider}> 
       <ChatPreview chatType={chatType} previewBack={previewBack}/>

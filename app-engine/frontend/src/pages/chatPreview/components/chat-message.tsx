@@ -3,49 +3,34 @@ import React, { useEffect, useState, useImperativeHandle, useContext } from 'rea
 import SendBox from './send-box/send-box.jsx';
 import ReciveBox from './recieve-box/recieve-box.jsx';
 import ChatDetail from './chat-details.jsx';
-import { AippContext, ChatContext } from '../../aippIndex/context';
+import { AippContext, ChatContext } from '../../aippIndex/context.js';
 import { queryFeedback } from '@shared/http/chat';
 import '../styles/chat-message-style.scss';
 
 const ChatMessaga = (props) => {
-  const {chatList,setChatList} = useContext(AippContext);
+  const {chatList} = useContext(AippContext);
   const { showCheck, setCheckedList } = props;
   const initFeedbackStatus = async (id) => {
-    if (id === 'all') {
-      for (let i = 0; i < chatList.length; i++) {
-        let item = chatList[i]
-        if (item.type === 'recieve' && item.instanceId) {
-          await queryFeedback(item.instanceId).then((res) => {
-            if (!res) {
-              item.feedbackStatus = -1;
-            } else {
-              item.feedbackStatus = res.usrFeedback;
-            }
-          });
+  for (let i = 0; i < chatList.length; i++) {
+    let item = chatList[i]
+    if (item.type === 'recieve' && item?.instanceId &&(id === 'all'||item?.instanceId === id)) {
+      await queryFeedback(item.instanceId).then((res) => {
+        if (!res) {
+          item.feedbackStatus = -1;
+        } else {
+          item.feedbackStatus = res.usrFeedback;
         }
-      }
-    } else {
-      for (let i = 0; i < chatList.length; i++) {
-        let item = chatList[i]
-        if (item.type === 'recieve' && item.instanceId && item.instanceId === id) {
-          await queryFeedback(item.instanceId).then((res) => {
-            if (!res) {
-              item.feedbackStatus = -1;
-            } else {
-              item.feedbackStatus = res.usrFeedback;
-            }
-          });
-        }
-      }
+      });
     }
+  }
     setChatList([...chatList]);
   }
+
   useEffect(() => {
     scrollBottom();
-  }, [chatList])
-  useEffect(() => {
     initFeedbackStatus('all');
-  }, [chatList?.length])
+
+  }, [chatList?.length]);
   
   const scrollBottom = () => {
     setTimeout(() => {
@@ -80,6 +65,5 @@ const ChatMessaga = (props) => {
     </div>
   )
 };
-
 
 export default ChatMessaga;
