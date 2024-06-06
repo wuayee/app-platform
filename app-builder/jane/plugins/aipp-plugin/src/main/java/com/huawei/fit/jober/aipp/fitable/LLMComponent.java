@@ -214,7 +214,6 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     private void llmOutputConsumer(AippLlmMeta llmMeta, Prompt trace) {
         ChatMessage answer = trace.messages().get(trace.messages().size() - 1);
         if (answer.type() == MessageType.AI) {
-            // todo: resumeAsyncJober保存businessData
             Map<String, Object> businessData = llmMeta.getBusinessData();
             businessData.putIfAbsent("output", new HashMap<String, Object>());
             Map<String, Object> output = ObjectUtils.cast(businessData.get("output"));
