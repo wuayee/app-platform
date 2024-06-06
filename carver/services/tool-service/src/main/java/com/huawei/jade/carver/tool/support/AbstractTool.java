@@ -5,6 +5,7 @@
 package com.huawei.jade.carver.tool.support;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
+import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.huawei.fitframework.serialization.ObjectSerializer;
@@ -13,6 +14,7 @@ import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.carver.tool.Tool;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,21 +53,27 @@ public abstract class AbstractTool implements Tool {
     }
 
     @Override
-    public String callByJson(String jsonArgs) {
-        Map<String, Object> mapArgs = this.serializer.deserialize(jsonArgs.getBytes(UTF_8),
+    public String executeWithJson(String jsonArgs) {
+        Map<String, Object> jsonObjectArgs = this.serializer.deserialize(jsonArgs.getBytes(UTF_8),
                 UTF_8,
                 TypeUtils.parameterized(Map.class, new Type[] {String.class, Object.class}));
+        Object result = this.executeWithJsonObject(jsonObjectArgs);
+        return new String(this.serializer.serialize(result, UTF_8), UTF_8);
+    }
+
+    @Override
+    public Object executeWithJsonObject(Map<String, Object> jsonObjectArg) {
+        Map<String, Object> actualArgs = getIfNull(jsonObjectArg, HashMap::new);
         List<String> params = this.metadata().parameterNames();
         List<Type> types = this.metadata().parameters();
         Object[] args = new Object[params.size()];
         for (int i = 0; i < args.length; ++i) {
-            Object value = mapArgs.get(params.get(i));
+            Object value = actualArgs.get(params.get(i));
             if (value == null) {
                 value = this.metadata().parameterDefaultValue(params.get(i));
             }
             args[i] = ObjectUtils.toCustomObject(value, types.get(i));
         }
-        Object result = this.call(args);
-        return new String(this.serializer.serialize(result, UTF_8), UTF_8);
+        return this.execute(args);
     }
 }

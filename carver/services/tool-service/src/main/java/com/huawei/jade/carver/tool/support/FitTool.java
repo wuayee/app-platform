@@ -48,8 +48,8 @@ public class FitTool extends AbstractTool {
     }
 
     @Override
-    public Object call(Object... args) {
-        Map<String, Object> runnable = cast(this.info().runnables().get("FIT"));
+    public Object execute(Object... args) {
+        Map<String, Object> runnable = cast(this.info().runnables().get(TYPE));
         if (MapUtils.isEmpty(runnable)) {
             throw new IllegalStateException("No runnable info. [type=FIT]");
         }
