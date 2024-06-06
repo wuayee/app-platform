@@ -116,7 +116,7 @@ public class AippChatController extends AbstractController {
 
 
     /**
-     * deleteChat
+     * updateChat
      *
      * @param httpRequest httpRequest
      * @param tenantId tenantId

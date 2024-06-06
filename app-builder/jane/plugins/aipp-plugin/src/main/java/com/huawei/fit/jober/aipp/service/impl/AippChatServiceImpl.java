@@ -52,9 +52,9 @@ public class AippChatServiceImpl implements AippChatService {
         String instId = persistChat(body, context, chatId);
         Map<String, Object> initContext = body.getInitContext();
         Map<String, Object> result = (Map<String, Object>) initContext.get("initContext");
-        String chatName = (result.get("Question").toString().length() < 20)
+        String chatName = (result.get("Question").toString().length() < AippConst.CHAT_NAME_LENGTH)
                 ? result.get("Question").toString()
-                : result.get("Question").toString().substring(0, 20);
+                : result.get("Question").toString().substring(0, AippConst.CHAT_NAME_LENGTH);
         return QueryChatRsp.builder()
                 .aippId(body.getAippId())
                 .chatName(chatName)
@@ -71,9 +71,9 @@ public class AippChatServiceImpl implements AippChatService {
                 body.getVersion(), body.getInitContext(), context);
         Map<String, Object> initContext = body.getInitContext();
         Map<String, Object> result = (Map<String, Object>) initContext.get("initContext");
-        String chatName = (result.get("Question").toString().length() < 20)
+        String chatName = (result.get("Question").toString().length() < AippConst.CHAT_NAME_LENGTH)
                 ? result.get("Question").toString()
-                : result.get("Question").toString().substring(0, 20);
+                : result.get("Question").toString().substring(0, AippConst.CHAT_NAME_LENGTH);
         ChatInfo chatInfo = ChatInfo.builder()
                 .aippId(body.getAippId())
                 .version(body.getVersion())
@@ -121,6 +121,8 @@ public class AippChatServiceImpl implements AippChatService {
                     .build();
             msgList.add(messageInfo);
         });
+        Integer total = aippChatMapper.countChat(chatId);
+        rsp.setTotal(total * 2);
         rsp.setMassageList(msgList);
         return rsp;
     }

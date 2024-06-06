@@ -66,4 +66,8 @@ public class QueryChatRsp {
     @Property(description = "current time")
     @JsonProperty("current_time_timestamp")
     private long currentTime;
+
+    @Property(description = "total")
+    @JsonProperty("total")
+    private Integer total;
 }
