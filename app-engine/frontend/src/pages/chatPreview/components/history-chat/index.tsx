@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Drawer, Input, Dropdown } from "antd";
+import { Drawer, Input, Dropdown, Tooltip, Modal } from "antd";
 import type { MenuProps } from "antd";
 import {
   SearchOutlined,
@@ -8,7 +8,7 @@ import {
   CloseOutlined,
 } from "@ant-design/icons";
 import "./style.scoped.scss";
-import { deleteChat, getChatDetail, getChatList, tenantId } from "../../../../shared/http/chat";
+import { clearChatHistory, deleteChat, getChatDetail, getChatList, tenantId } from "../../../../shared/http/chat";
 import { AippContext } from "../../../aippIndex/context";
 import { aippDebug } from "../../../../shared/http/aipp";
 import { getDaysAndHours } from "../../../../common/dataUtil";
@@ -24,11 +24,12 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
   const [lastResSignal, setLastResSignal] = useState(0);
+  const [isClearOpen,setClearOpen]=useState(false);
   const [requestInfo, setRequestInfo] = useState({
     aipp_id: '', version: '', offset: 0, limit: 100
   });
 
-  const freshList = async () => {
+  const refreshList = async () => {
     const chatRes = await getChatList(tenantId, requestInfo);
     setData(chatRes?.data);
   }
@@ -36,7 +37,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     if (openHistorySignal > 0) {
       setOpen(true);
       setOpenStar(false);
-      freshList();
+      refreshList();
     }
   }, [openHistorySignal]);
 
@@ -51,7 +52,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     const debugRes = await aippDebug(tenantId, aippInfo.id, aippInfo);
     let { aipp_id, version } = debugRes?.data;
     const requestBody = {
-      app_id: aipp_id,
+      aipp_id: aipp_id,
       app_version: version,
       offset: 0,
       limit: 100
@@ -145,6 +146,15 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     }
   }
 
+  const onClearList = async()=>{
+   await clearChatHistory(tenantId,appId);
+   refreshList();
+   setChatList(() => []);
+   setChatId(null);
+   setClearOpen(false);
+   setOpen(false);
+  }
+
   return (
     <Drawer
       destroyOnClose
@@ -153,7 +163,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
         <div className="history-title">
           <div className="history-title-left">
             <span>历史聊天</span>
-            <div className="history-clear-btn" hidden onClick={() => setData([])}>
+            <div className="history-clear-btn" onClick={() => setClearOpen(true)}>
               <ClearOutlined style={{ fontSize: 14, marginLeft: 8 }} />
               <span className="history-clear-btn-text" >清空</span>
             </div>
@@ -177,7 +187,9 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
           <div className="history-item" key={item?.chat_id} onClick={() => { currentChat.current = item; }}>
             <div className="history-item-content">
               <div className="history-item-header">
-                <div className="history-item-title">{item?.chat_name}</div>
+              <Tooltip placement="top" title={<span style={{color:'#4d4d4d'}}>{item?.chat_name}</span>} color='#ffffff'>
+              <div className="history-item-title">{item?.chat_name?.length>10?item?.chat_name?.substring(0,10)+'...':item?.chat_name}</div>
+              </Tooltip>
                 <span
                   style={{ cursor: "pointer", color: "#1677ff" }}
                   onClick={() => { continueChat(item?.chat_id, item?.current_instance_id); setChatId(item?.chat_id); }}
@@ -196,6 +208,9 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
           </div>
         ))}
       </div>
+      <Modal title="警告" open={isClearOpen} onOk={onClearList} onCancel={()=>setClearOpen(false)}>
+        <p>确认要清空所有聊天记录？删除后该数据无法恢复。</p>
+      </Modal>
     </Drawer>
   );
 };

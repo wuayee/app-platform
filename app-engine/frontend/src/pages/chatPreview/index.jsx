@@ -149,7 +149,7 @@ const ChatPreview = (props) => {
     let params = type?{ initContext: { "$[FileDescription]$": value } }:{ initContext: { Question: value } };
     try {
       const requestBody={
-        app_id:aipp_id,
+        aipp_id:aipp_id,
         app_version:version,
         init_context:params,
       }
