@@ -19,8 +19,10 @@ import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
 import com.huawei.fit.jober.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
 import com.huawei.fit.jober.flowsengine.domain.flows.events.FlowTaskCreatedEvent;
+import com.huawei.fit.jober.flowsengine.domain.flows.utils.FlowExecuteInfoUtil;
 import com.huawei.fit.jober.flowsengine.manual.operation.OperatorFactory;
 import com.huawei.fit.jober.flowsengine.manual.operation.operator.Operator;
+import com.huawei.fit.jober.flowsengine.utils.FlowUtil;
 import com.huawei.fitframework.annotation.Asynchronous;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.broker.client.BrokerClient;
@@ -33,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -50,6 +53,8 @@ public class FlowTaskCreatedEventHandler implements EventHandler<FlowTaskCreated
     private final FlowDefinitionRepo flowDefinitionRepo;
 
     private final BrokerClient brokerClient;
+
+    private static final String TASK_EXECUTE_INFO_TYPE = "task";
 
     public FlowTaskCreatedEventHandler(FlowContextPersistRepo flowContextPersistRepo,
             FlowDefinitionRepo flowDefinitionRepo, BrokerClient brokerClient) {
@@ -100,7 +105,15 @@ public class FlowTaskCreatedEventHandler implements EventHandler<FlowTaskCreated
             return contexts;
         }
         contexts.forEach(context -> {
-            taskConverter.convertInput(context.getData().getBusinessData());
+            FlowData flowData = context.getData();
+            Map<String, Object> newInputMap = taskConverter.convertInput(flowData.getBusinessData());
+            Optional.of(flowData)
+                    .map(FlowData::getContextData)
+                    .map(contextData -> contextData.get("nodeMetaId"))
+                    .map(Object::toString)
+                    .ifPresent(nodeMetaId -> FlowExecuteInfoUtil.addInputMap2ExecuteInfoMap(flowData, newInputMap,
+                            nodeMetaId, TASK_EXECUTE_INFO_TYPE));
+            flowData.setBusinessData(FlowUtil.mergeMaps(flowData.getBusinessData(), newInputMap));
         });
         return contexts;
     }
