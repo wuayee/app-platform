@@ -8,39 +8,36 @@ import { getRecommends } from '../../../../../shared/http/chat';
 
 // 猜你想问
 const Recommends = (props) => {
+  const { onSend } = props;
   const { 
-    onSend,
-    lastContent,
-   } = props;
-  const { chatRunning,aippInfo,chatList,inspirationOpen,setInspirationOpen } = useContext(AippContext);
+    chatRunning,
+    aippInfo,
+    chatList,
+    inspirationOpen,
+    setInspirationOpen 
+  } = useContext(AippContext);
   const [ visible, setVisible ] = useState(false);
-  const [recommendList, setRecommendList] = useState([]);
-
-  function openClick() {
-    setInspirationOpen(!inspirationOpen)
-  }
-
-  // 获取推荐列表
-  async function getRecommendList() {
-    let chatLength = chatList?.length;
-    let question = chatList?.[chatLength - 2].content;
-    let answer = chatList?.[chatLength - 1].content;
-    let params = {
-      question,
-      answer
-    }
-    const res = await getRecommends(params);
-    if (res.code === 0) {
-      setRecommendList(res.data);
-    } else {
-      setRecommendList([]);
-    }
-  }
+  const [ recommendList, setRecommendList ] = useState([]);
 
   useEffect(() => {
-    // getRecommendList();
-  }, [lastContent]);
+    setRecommend();
+  }, [aippInfo]);
 
+  // 实时刷新推荐列表
+  useEffect(() => {
+    let chatItem = chatList[chatList.length - 1];
+    if (chatItem && chatItem.finished && chatItem.logId === -1) {
+      getRecommendList();
+    }
+  }, [chatList]);
+  // 设置推荐列表
+  function setRecommend() {
+    let arr = aippInfo.config?.form?.properties || [];
+    let recommendItem = arr.filter(item => item.name === 'recommend')[0];
+    if (recommendItem) {
+      setRecommendList(recommendItem.defaultValue);
+    }
+  }
   // 猜你想问
   const recommendClick = (item) => {
     if (chatRunning) {
@@ -55,11 +52,30 @@ const Recommends = (props) => {
       Message({ type: "warning", content: "对话进行中, 请稍后再试" });
       return;
     }
+    if (chatList.length) {
+      getRecommendList();
+    }
+  }
+  // 获取推荐列表
+  async function getRecommendList() {
+    let chatLength = chatList.length;
+    let question = chatList[chatLength - 2].content;
+    let answer = chatList[chatLength - 1].content;
+    let params = {
+      question,
+      answer
+    }
+    const res = await getRecommends(params);
+    if (res.code === 0) {
+      setRecommendList(res.data);
+    } else {
+      setRecommendList([]);
+    }
   }
   // 打开收起灵感大全
   const iconClick = () => {
-    setVisible(false)
-    openClick();
+    setVisible(false);
+    setInspirationOpen(!inspirationOpen);
   }
   return <>{(
     <div className="recommends-inner">

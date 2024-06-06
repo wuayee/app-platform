@@ -8,8 +8,8 @@ import { queryFeedback } from '@shared/http/chat';
 import '../styles/chat-message-style.scss';
 
 const ChatMessaga = (props) => {
-  const { chatList, setChatList } = useContext(AippContext);
-  const { showCheck, setCheckedList } = props;
+  const { chatList, setChatList} = useContext(AippContext);
+  const { showCheck, setCheckedList, setEditorShow } = props;
   const initFeedbackStatus = async (id) => {
     for (let i = 0; i < chatList.length; i++) {
       let item = chatList[i]
@@ -41,6 +41,11 @@ const ChatMessaga = (props) => {
       });
     }, 100)
   }
+  // 分享问答
+  function setShareClass() {
+    setEditorShow(true);
+  }
+  
   // 选中回调
   function checkCallBack() {
     let checkList = chatList?.filter(item => item.checked);
@@ -48,8 +53,8 @@ const ChatMessaga = (props) => {
   }
   return (
     <div className={['chat-message-container', showCheck ? 'group-active' : null].join(' ')} id="chat-list-dom">
-      {!chatList?.length && <ChatDetail />}
-      <ChatContext.Provider value={{ checkCallBack, showCheck }}>
+      { !chatList?.length && <ChatDetail /> }
+      <ChatContext.Provider value={{ checkCallBack, setShareClass, showCheck}}>
         <div className='message-box'>
           {
             chatList?.map((item, index) => {

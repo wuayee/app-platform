@@ -6,7 +6,7 @@ import FileContent from '../runtimeForm/FileContent.jsx';
 
 // runtime表单渲染
 const RuntimeForm = (props) => {
-  const { formType, formMap, reportData } = props.formConfig;
+  const { formName, formMap, instanceId } = props.formConfig;
   const questions = [
     {
       question: '分享一下你最近在车联网或者深度学习领域有哪些具有突破性的科研成果。',
@@ -27,7 +27,7 @@ const RuntimeForm = (props) => {
         return <InterviewQuestions questions={questions}/>
         break;
       case 'report':
-        return <ManageCubeCreateReport data={reportData}/>
+        return <ManageCubeCreateReport data={props.formConfig}/>
         break;
       default:
         return <div>44444444</div>
@@ -35,7 +35,7 @@ const RuntimeForm = (props) => {
   }
   return <>{(
     <div className="recieve-form-item">
-      { setFormDom(formType) }
+      { setFormDom(formName) }
     </div>
   )}</>
 }

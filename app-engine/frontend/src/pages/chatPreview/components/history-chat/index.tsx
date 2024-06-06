@@ -173,7 +173,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
         <Input placeholder="搜索..." prefix={<SearchOutlined />} disabled />
       </div>
       <div className="history-wrapper">
-        {data.map((item) => (
+        {data?.map((item) => (
           <div className="history-item" key={item?.chat_id} onClick={() => { currentChat.current = item; }}>
             <div className="history-item-content">
               <div className="history-item-header">

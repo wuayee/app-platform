@@ -59,6 +59,9 @@ export const trans = (text) => {
 
 // 日期方法
 export const formatDateTime = (dateString) => {
+  if (!dateString) {
+    return '-'
+  }
   let date = new Date(dateString);
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
@@ -112,3 +115,21 @@ export const debounce = (fn, wait) => {
     }, wait)
   }
 }
+// 判断是否为json
+export const isJsonString = (str) => {
+  try {
+    if (typeof JSON.parse(str) === "object") {
+      return true;
+    }
+  } catch (e) {
+    return false;
+  }
+  return false;
+}
+
+export const urlify = (text) => { 
+  const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
+  return text.replace(urlRegex, (url) => { 
+    return `<a href="${url}">${url}</a>`; 
+  }) 
+} 

@@ -50,11 +50,9 @@ const ChatRunning = () => {
     }
     const collectionInfo = await getUserCollection(getLoaclUser());
     const defaultData = collectionInfo?.data?.defaultApp || null;
-
     if(!aippId) {
       dispatch(setDefaultApp(defaultData?.appId || ''))
     }
-
     // 设置默认应用
     // 获取默认收藏
     const res = await getAippInfo(tenantId, (aippId || appId));
