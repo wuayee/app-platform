@@ -19,13 +19,13 @@ export function feedbacksRq(params) {
 
 // 创建对话
 export function creatChat(tenantId, params) {
-  const url = `${AIPP_URL}/${tenantId}/chat`;
+  const url = `${PLUGIN_URL}/v1/api/${tenantId}/chat`;
   return post(url, params);
 }
 
 // 更新会话
 export function updateChat(tenantId, chatId, params) {
-  const url = `${AIPP_URL}/${tenantId}/chat/${chatId}`;
+  const url = `${PLUGIN_URL}/v1/api/${tenantId}/chat/${chatId}`;
   return post(url, params);
 }
 
