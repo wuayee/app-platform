@@ -5,7 +5,10 @@
 package com.huawei.fit.jober.aipp.service.impl;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fit.jane.meta.multiversion.MetaService;
+import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
+import com.huawei.fit.jober.aipp.common.MetaUtils;
 import com.huawei.fit.jober.aipp.common.UUIDUtil;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.chat.ChatDto;
@@ -18,9 +21,15 @@ import com.huawei.fit.jober.aipp.entity.ChatAndInstanceMap;
 import com.huawei.fit.jober.aipp.entity.ChatInfo;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.mapper.AippChatMapper;
+import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
+import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import com.huawei.fit.jober.aipp.service.AippChatService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
+import com.huawei.fitframework.util.ObjectUtils;
+
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -38,46 +47,50 @@ import java.util.Map;
 @Component
 public class AippChatServiceImpl implements AippChatService {
     private final AippChatMapper aippChatMapper;
+    private final MetaService metaService;
+    private final AppBuilderAppMapper appBuilderAppMapper;
 
     @Fit
     private com.huawei.fit.jober.aipp.genericable.AippRunTimeService aippRunTimeService;
 
-    public AippChatServiceImpl(AippChatMapper aippChatMapper) {
+    public AippChatServiceImpl(AippChatMapper aippChatMapper, MetaService metaService,
+                               AppBuilderAppMapper appBuilderAppMapper) {
         this.aippChatMapper = aippChatMapper;
+        this.metaService = metaService;
+        this.appBuilderAppMapper = appBuilderAppMapper;
     }
 
     @Override
     public QueryChatRsp createChat(CreateChatRequest body, OperationContext context) {
         String chatId = UUIDUtil.uuid();
-        String instId = persistChat(body, context, chatId);
         Map<String, Object> initContext = body.getInitContext();
         Map<String, Object> result = (Map<String, Object>) initContext.get("initContext");
-        String chatName = (result.get("Question").toString().length() < AippConst.CHAT_NAME_LENGTH)
-                ? result.get("Question").toString()
-                : result.get("Question").toString().substring(0, AippConst.CHAT_NAME_LENGTH);
+        String chatName = result.get("Question").toString();
+        String instId = persistChat(body, context, chatId, chatName);
+        AppBuilderAppPO appInfo = covertAippToApp(body.getAippId(), body.getVersion(), context);
         return QueryChatRsp.builder()
+                .appId(appInfo.getId())
+                .aippVersion(body.getVersion())
                 .aippId(body.getAippId())
                 .chatName(chatName)
                 .chatId(chatId)
                 .msgId(instId)
-                .version(body.getVersion())
+                .version(appInfo.getVersion())
                 .massageList(new ArrayList<>())
                 .updateTime(LocalDateTime.now().toString())
                 .build();
     }
 
-    private String persistChat(CreateChatRequest body, OperationContext context, String chatId) {
+    private String persistChat(CreateChatRequest body, OperationContext context, String chatId, String chatName) {
         String instId = aippRunTimeService.createAippInstance(body.getAippId(),
                 body.getVersion(), body.getInitContext(), context);
-        Map<String, Object> initContext = body.getInitContext();
-        Map<String, Object> result = (Map<String, Object>) initContext.get("initContext");
-        String chatName = (result.get("Question").toString().length() < AippConst.CHAT_NAME_LENGTH)
-                ? result.get("Question").toString()
-                : result.get("Question").toString().substring(0, AippConst.CHAT_NAME_LENGTH);
+        AppBuilderAppPO appInfo = covertAippToApp(body.getAippId(), body.getVersion(), context);
+        JSONObject attributesObject = new JSONObject();
+        attributesObject.put("instId", instId);
         ChatInfo chatInfo = ChatInfo.builder()
-                .aippId(body.getAippId())
-                .version(body.getVersion())
-                .attributes(instId)
+                .appId(appInfo.getId())
+                .version(appInfo.getVersion())
+                .attributes(attributesObject.toString())
                 .chatId(chatId)
                 .chatName(chatName)
                 .status(AippConst.CHAT_STATUS)
@@ -98,10 +111,22 @@ public class AippChatServiceImpl implements AippChatService {
         return instId;
     }
 
+    private AppBuilderAppPO covertAippToApp(String aippId, String versionId, OperationContext context) {
+        Meta meta = MetaUtils.getAnyMeta(this.metaService, aippId, versionId, context);
+        String appId = ObjectUtils.cast(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
+        return appBuilderAppMapper.selectWithId(appId);
+    }
+
     @Override
     public QueryChatRsp queryChat(QueryChatRequest body, String chatId, OperationContext context) {
         QueryChatRsp rsp = new QueryChatRsp();
-        List<QueryChatRsp> chatResult = aippChatMapper.selectChatList(body, chatId);
+        QueryChatRequest request = QueryChatRequest.builder().build();
+        if (body.getAippId() != null && body.getAippVersion() != null) {
+            AppBuilderAppPO appBuilderAppPO = covertAippToApp(body.getAippId(), body.getAippVersion(), context);
+            request.setAppId(appBuilderAppPO.getId());
+            request.setAppVersion(appBuilderAppPO.getVersion());
+        }
+        List<QueryChatRsp> chatResult = aippChatMapper.selectChatList(request, chatId);
         if (chatResult != null && chatResult.size() > 0 && chatResult.get(0) != null) {
             rsp = chatResult.get(0);
         } else {
@@ -122,6 +147,10 @@ public class AippChatServiceImpl implements AippChatService {
             msgList.add(messageInfo);
         });
         Integer total = aippChatMapper.countChat(chatId);
+        Map mapTypes = JSON.parseObject(rsp.getMsgId());
+        rsp.setMsgId(mapTypes.get("instId").toString());
+        rsp.setAippId(body.getAippId());
+        rsp.setAippVersion(body.getAippVersion());
         rsp.setTotal(total * 2);
         rsp.setMassageList(msgList);
         return rsp;
@@ -129,11 +158,19 @@ public class AippChatServiceImpl implements AippChatService {
 
     @Override
     public List<QueryChatRsp> queryChatList(QueryChatRequest body, OperationContext context) {
-        List<QueryChatRsp> result = aippChatMapper.selectChatList(body, null);
+        QueryChatRequest request = QueryChatRequest.builder().build();
+        if (body.getAippId() != null && body.getAippVersion() != null) {
+            AppBuilderAppPO appBuilderAppPO = covertAippToApp(body.getAippId(), body.getAippVersion(), context);
+            request.setAppId(appBuilderAppPO.getId());
+            request.setAppVersion(appBuilderAppPO.getVersion());
+        }
+        List<QueryChatRsp> result = aippChatMapper.selectChatList(request, null);
         result.forEach((chat) -> {
             chat.setUpdateTimeStamp(Timestamp.valueOf(chat.getUpdateTime()).getTime());
             chat.setCurrentTime(Timestamp.valueOf(LocalDateTime.now()).getTime());
             chat.setRecentInfo("暂无新消息");
+            Map mapTypes = JSON.parseObject(chat.getMsgId());
+            chat.setMsgId(mapTypes.get("instId").toString());
             String log = aippChatMapper.selectMsgByInstance(chat.getMsgId());
             if (log != null) {
                 AippLogData data = JsonUtils.parseObject(log, AippLogData.class);
@@ -161,10 +198,14 @@ public class AippChatServiceImpl implements AippChatService {
         }
         // 只查询该应用的近次记录
         Map<String, Object> bodyContext = body.getInitContext();
+        Map<String, Object> result = (Map<String, Object>) bodyContext.get("initContext");
+        String chatName = result.get("Question").toString();
         bodyContext.put("chatId", chatId);
         body.setInitContext(bodyContext);
-        persistChat(body, context, chatId);
+        persistChat(body, context, chatId, chatName);
         QueryChatRequest queryBody = QueryChatRequest.builder()
+                .aippId(body.getAippId())
+                .aippVersion(body.getVersion())
                 .offset(0)
                 .limit(10)
                 .build();
