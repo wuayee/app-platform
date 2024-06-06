@@ -40,9 +40,10 @@ public class TokenSplitter implements Splitter<List<Document>, List<Chunk>> {
         List<Chunk> ret = new ArrayList<>();
         String content = input.getContent();
 
-        for (int i = 0; i < content.length() / (tokenSize - overlap); i++) {
-            int endIdx = Math.min(i * (tokenSize - overlap) + tokenSize, content.length());
-            String chunkContent = content.substring(i * (tokenSize - overlap), endIdx);
+        int step = tokenSize - overlap;
+        for (int i = 0; i < content.length(); i += step) {
+            int endIdx = Math.min(i + tokenSize, content.length());
+            String chunkContent = content.substring(i, endIdx);
             ret.add(new Chunk(IdGenerator.getId(), chunkContent, null, input.getId()));
         }
         return ret;

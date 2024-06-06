@@ -60,9 +60,9 @@ public interface ToolRepository {
      * 添加工具标签。
      *
      * @param uniqueName 表示工具的唯一标识的 {@link String}。
-     * @param tagName 表示工具的标签的 {@link String}。
+     * @param tag 表示工具的标签的 {@link String}。
      */
-    void addTag(String uniqueName, String tagName);
+    void addTag(String uniqueName, String tag);
 
     /**
      * 删除工具标签。

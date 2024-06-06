@@ -34,3 +34,11 @@ export function deleteExternalModel(name) {
 export function createExternalModel(requestBody) {
   return post(`${MODEL_LIST_URL}/external_model_service`, requestBody);
 }
+
+export function updateExternalProxy(requestBody) {
+  return post(`${MODEL_LIST_URL}/external_model_proxies`, requestBody);
+}
+
+export function getExternalProxy() {
+  return get(`${MODEL_LIST_URL}/external_model_proxies`);
+}

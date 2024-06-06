@@ -17,8 +17,10 @@ import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fitframework.flowable.Publisher;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.Prompt;
+import com.huawei.jade.fel.chat.character.HumanMessage;
 import com.huawei.jade.fel.core.memory.Memory;
 import com.huawei.jade.fel.engine.operators.AiRunnableArg;
 
@@ -52,7 +54,8 @@ public class LlmEmitter<O extends ChatMessage> extends FiniteEmitter<O, ChatChun
             FiniteEmitterDataBuilder<O, ChatChunk> builder, AiRunnableArg<Prompt> arg) {
         super(arg.getSession(), publisher, builder);
         this.memory = arg.memory();
-        this.question = Validation.notNull(arg.getInnerState(HISTORY_INPUT), "Question cant be null.");
+        this.question = ObjectUtils.getIfNull(arg.getInnerState(HISTORY_INPUT),
+                () -> this.getDefaultQuestion(arg.data()));
         this.consumer = ObjectUtils.nullIf(arg.getInnerState(STREAMING_CONSUMER), EMPTY_CONSUMER);
         this.processor = Validation.notNull(arg.getInnerState(STREAMING_PROCESSOR), "Processor cant be null");
         this.context = Validation.notNull(arg.getInnerState(STREAMING_FLOW_CONTEXT), "FlowContext cant be null");
@@ -77,5 +80,13 @@ public class LlmEmitter<O extends ChatMessage> extends FiniteEmitter<O, ChatChun
         Retryable<Prompt> retryable = new Retryable<Prompt>(this.processor.getFlowContextRepo(), processor);
         processor.getErrorHandlers()
                 .forEach(error -> error.handle(cause, retryable, Collections.singletonList(context)));
+    }
+
+    private ChatMessage getDefaultQuestion(Prompt prompt) {
+        int size = prompt.messages().size();
+        if (size == 0) {
+            return new HumanMessage(StringUtils.EMPTY);
+        }
+        return prompt.messages().get(size - 1);
     }
 }

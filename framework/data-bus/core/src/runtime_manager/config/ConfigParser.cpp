@@ -2,12 +2,18 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
  * Description: config parser for databus core
  */
+
+#include "fstream"
+
+#include "Constants.h"
+#include "log/Logger.h"
 #include "ConfigParser.h"
 
+#include "nlohmann/json.hpp"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/hourly_file_sink.h"
 
-#include "log/Logger.h"
+using namespace DataBus::Common;
 
 void DataBus::Runtime::ConfigParser::Parse()
 {
@@ -24,9 +30,21 @@ void DataBus::Runtime::ConfigParser::Parse()
     DataBus::logger.SetLogHandler(std::make_shared<spdlog::logger>("log", sinks));
 }
 
-void DataBus::Runtime::ConfigParser::Parse(const std::string& configFilePath)
+DataBus::Runtime::Config DataBus::Runtime::ConfigParser::Parse(const std::string& configFilePath)
 {
-    // unimplemented! do real parsing on configFilePath.
-    (void) configFilePath;
-    Parse();
+    std::ifstream configFile(configFilePath);
+    if (!configFile.good()) {
+        logger.Warn("Cannot access the config file {}, using the default values", configFilePath);
+        return {};
+    }
+    nlohmann::json jsonConfig;
+    configFile >> jsonConfig;
+
+    // 解析JSON配置。
+    const int port = jsonConfig[SERVER_KEY][PORT_KEY];
+    const uint64_t mallocSizeLimit = jsonConfig[MEMORY_KEY][SIZE_LIMIT_KEY];
+    const int32_t memoryTtlDuration = jsonConfig[MEMORY_KEY][TTL_DURATION_KEY];
+    const int32_t memorySweepInterval = jsonConfig[MEMORY_KEY][SWEEP_INTERVAL_KEY];
+
+    return {port, mallocSizeLimit, memoryTtlDuration, memorySweepInterval};
 }

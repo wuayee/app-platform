@@ -10,9 +10,9 @@ druid:
   testWhileIdle: true
   testOnBorrow: true
   testOnReturn: true
-  url: jdbc:postgresql://7.194.138.160:5432/jane?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true
-  username: enc(2X1X2023080321220040PMdwf7HsYlxgCAlHHJpK6ep1qXgwfFSnP5sx5Ejg0MdAADONsAij9onrEOWVSCJtAwxCzfhAh/UZQh4oNYNA88v1xRztt3tHoVrO3XkqfltscD6T7MUo)
-  password: enc(2X1X2023080321220040PMdwf7HsYlxgCAlHHJpK6ep1qXgwfFSnP5sx5Ejg0MdAADONsAij9onrEOWVSCJtAwynIIMlWrYfTXDAoWzpFSbXrPIUicJ9E/gngW7Rs9ilGwjP0j9X9Ht/kGo=)
+  url:
+  username:
+  password:
 
 corsfilter:
   priority: 50

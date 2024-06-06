@@ -1,4 +1,5 @@
 import {page, uuid} from "@fit-elsa/elsa-core";
+import {VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 
 /**
  * jadeFlow的page.
@@ -31,6 +32,13 @@ export const jadeFlowPage = (div, graph, name, id) => {
     self.onLoaded = () => {
         onLoaded.apply(self);
         self.shapes.forEach(s => s.onPageLoaded && s.onPageLoaded());
+
+        const registerVirtualNodeInfo = () => {
+            self.registerObservable(VIRTUAL_CONTEXT_NODE.id, "instanceId", "instanceId", "String", undefined);
+            self.registerObservable(VIRTUAL_CONTEXT_NODE.id, "appId", "appId", "String", undefined);
+        };
+        // 上下文虚拟节点信息注册
+        registerVirtualNodeInfo();
     };
 
     /**

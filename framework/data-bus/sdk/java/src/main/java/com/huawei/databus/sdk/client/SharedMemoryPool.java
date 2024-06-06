@@ -32,6 +32,9 @@ import com.huawei.fitframework.util.StringUtils;
 
 import com.google.flatbuffers.FlatBufferBuilder;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -47,6 +50,8 @@ import java.util.concurrent.BlockingQueue;
  * @since 2024/3/25
  */
 class SharedMemoryPool {
+    private static final Logger logger = LogManager.getLogger(SharedMemoryPool.class);
+
     private final Map<String, SharedMemoryInternal> memoryPool;
     private final Map<Byte, BlockingQueue<ByteBuffer>> replyQueues;
     private final SocketChannel socketChannel;
@@ -92,6 +97,7 @@ class SharedMemoryPool {
             }
             return SharedMemoryResult.failure(response.errorType());
         } catch (IOException | InterruptedException e) {
+            logger.error("[applySharedMemory] unexpected exception. [e={}]", e.toString());
             return SharedMemoryResult.failure(ErrorType.UnknownError, e);
         }
     }
@@ -183,6 +189,7 @@ class SharedMemoryPool {
             }
             return MemoryPermissionResult.failure(response.errorType());
         } catch (IOException | InterruptedException e) {
+            logger.error("[applyPermission] unexpected exception. [e={}]", e.toString());
             return MemoryPermissionResult.failure(ErrorType.UnknownError, e);
         }
     }
@@ -212,8 +219,8 @@ class SharedMemoryPool {
         try {
             // 发出信息后即刻返回，释放许可总是被 DataBus 主服务批准而且没有回复信息。
             this.socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
-        } catch (IOException ignored) {
-            // 需要打日志但是无需返回错误。
+        } catch (IOException e) {
+            logger.error("[releasePermission] socket channel exception. [e={}]", e.toString());
         } finally {
             // 客户端不再持有此内存块的读写许可。
             memory.setPermission(PermissionType.None);
@@ -247,8 +254,8 @@ class SharedMemoryPool {
         try {
             // 发出信息后即刻返回，释放内存没有回复信息。
             this.socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
-        } catch (IOException ignored) {
-            // 需要打日志但是无需返回错误。
+        } catch (IOException e) {
+            logger.error("[releaseSharedMemory] socket channel exception. [e={}]", e.toString());
         } finally {
             // 客户端不再持有此内存块。
             this.memoryPool.remove(request.userKey());
@@ -301,6 +308,7 @@ class SharedMemoryPool {
             }
             return GetMetaDataResult.failure(response.errorType());
         } catch (IOException | InterruptedException e) {
+            logger.error("[getMemoryMetaData] unexpected exception. [e={}]", e.toString());
             return GetMetaDataResult.failure(ErrorType.UnknownError, e);
         }
     }

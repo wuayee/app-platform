@@ -124,10 +124,10 @@ const AddFlow = (props) => {
   const handleSearch = useCallback(debounce((e) => elsaChange(e), 2000), []);
   // 发布
   const handleUploadFlow = () => {
-    if (!isTested) {
-      testRef.current.showModal();
-      return;
-    }
+    // if (!isTested) {
+    //   testRef.current.showModal();
+    //   return;
+    // }
     modalRef.current.showModal();
   }
   // 编辑

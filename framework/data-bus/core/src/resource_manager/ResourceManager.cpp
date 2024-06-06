@@ -20,9 +20,7 @@ namespace DataBus {
 namespace Resource {
 
 ResourceManager::ResourceManager(const Runtime::Config& config, shared_ptr<Task::TaskLoop>& taskLoopPtr)
-    : mallocSizeLimit_(config.GetMemorySizeLimit()), curMallocSize_(0),
-    memoryTtlDuration_(config.GetMemoryTtlDuration()), memorySweepInterval_(config.GetMemorySweepInterval()),
-    stopMemorySweepThread_(false), taskLoopPtr_(taskLoopPtr)
+    : config_(config), curMallocSize_(0), stopMemorySweepThread_(false), taskLoopPtr_(taskLoopPtr)
 {
     Init();
     // 打开内存分配日志文件。
@@ -59,7 +57,7 @@ void ResourceManager::Init()
     std::ofstream(LOG_PATH, std::ofstream::out | std::ofstream::trunc).close();
 
     // 启动过期内存清扫线程。
-    StartMemorySweep(memorySweepInterval_);
+    StartMemorySweep(config_.GetMemorySweepInterval());
 }
 
 tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, const std::string& objectKey,
@@ -71,9 +69,10 @@ tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, 
         return make_tuple(-1, ErrorType::KeyAlreadyExists);
     }
     // 检查剩余内存分配空间是否充足
-    if (curMallocSize_ + memorySize > mallocSizeLimit_) {
+    if (curMallocSize_ + memorySize > config_.GetMallocSizeLimit()) {
         logger.Error("[ResourceManager] Failed to allocate the memory block for {} due to insufficient memory "
-                     "space. requested: {}, remaining: {}", objectKey, memorySize, mallocSizeLimit_ - curMallocSize_);
+                     "space. requested: {}, remaining: {}", objectKey, memorySize,
+                     config_.GetMallocSizeLimit() - curMallocSize_);
         return make_tuple(-1, ErrorType::OutOfMemory);
     }
     // 获取ftok函数参数生成器单例
@@ -100,8 +99,7 @@ tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, 
                     "sharedMemoryKey {}", sharedMemoryKey);
         sharedMemoryId = RecreateSharedMemoryBlock(sharedMemoryKey, memorySize);
         if (sharedMemoryId == -1) {
-            logger.Error("[ResourceManager] Failed to recreate a shared memory block: {}",
-                         strerror(errno));
+            logger.Error("[ResourceManager] Failed to recreate a shared memory block: {}", strerror(errno));
             return make_tuple(-1, ErrorType::MallocFailed);
         }
         logger.Info("[ResourceManager] Recreating a new sharedMemoryId associated with sharedMemoryKey {} "
@@ -114,7 +112,7 @@ tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, 
     const auto& now = std::chrono::system_clock::now();
     sharedMemoryIdToInfo_[sharedMemoryId] =
             std::make_unique<SharedMemoryInfo>(socketFd, memorySize, now,
-                                               now + chrono::milliseconds(memoryTtlDuration_));
+                                               now + chrono::milliseconds(config_.GetMemoryTtlDuration()));
     if (!objectKey.empty()) {
         keyToSharedMemoryId_[objectKey] = sharedMemoryId;
     }
@@ -627,7 +625,8 @@ void ResourceManager::UpdateExpiryTime(int32_t sharedMemoryId)
     if (permissionStatus_[sharedMemoryId] == 0) {
         // 内存块引用计数归零，生命周期进入倒计时
         const auto& now = std::chrono::system_clock::now();
-        sharedMemoryIdToInfo_[sharedMemoryId]->expiryTime_ = now + chrono::milliseconds(memoryTtlDuration_);
+        sharedMemoryIdToInfo_[sharedMemoryId]->expiryTime_ =
+                now + chrono::milliseconds(config_.GetMemoryTtlDuration());
     } else {
         // 内存块被引用，永不过期
         sharedMemoryIdToInfo_[sharedMemoryId]->expiryTime_ = chrono::system_clock::time_point::max();

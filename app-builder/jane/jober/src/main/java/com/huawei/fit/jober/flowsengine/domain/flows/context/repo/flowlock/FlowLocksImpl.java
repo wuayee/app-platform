@@ -7,7 +7,8 @@ package com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowlock;
 import com.huawei.fit.jane.task.gateway.DistributedLockProvider;
 import com.huawei.fitframework.annotation.Alias;
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.annotation.Fit;
+import com.huawei.fitframework.annotation.Value;
+import com.huawei.fitframework.ioc.BeanContainer;
 
 import java.util.concurrent.locks.Lock;
 
@@ -19,12 +20,13 @@ import java.util.concurrent.locks.Lock;
  */
 @Component
 @Alias("flowLocksDatabase")
-public class FlowLocksDatabase implements FlowLocks {
+public class FlowLocksImpl implements FlowLocks {
     private final DistributedLockProvider distributedLockProvider;
 
-    public FlowLocksDatabase(
-            @Fit(alias = "databaseDistributedLockProvider") DistributedLockProvider distributedLockProvider) {
-        this.distributedLockProvider = distributedLockProvider;
+    public FlowLocksImpl(@Value("${distributed-lock-provider}") String providerAlias, BeanContainer beanContainer)
+            throws IllegalAccessException {
+        this.distributedLockProvider =
+                beanContainer.lookup(providerAlias).orElseThrow(IllegalAccessException::new).get();
     }
 
     /**

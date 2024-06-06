@@ -24,6 +24,7 @@ import java.util.List;
  */
 public class SplitTest {
     List<Document> docs;
+    List<Document> docs2;
 
     @BeforeEach
     void init() {
@@ -31,6 +32,9 @@ public class SplitTest {
                 new Document("1",
                         "content1" + System.lineSeparator() + "content2" + System.lineSeparator() + "content3",
                         null)
+        );
+        docs2 = Arrays.asList(
+                new Document("1", "content1" + "content2" + "content3", null)
         );
     }
 
@@ -47,12 +51,12 @@ public class SplitTest {
     @Test
     void test_token_splitter() {
         TokenSplitter splitter = new TokenSplitter(8, 1);
-        List<Chunk> chunks = splitter.split(docs);
+        List<Chunk> chunks = splitter.split(docs2);
 
-        assertEquals(chunks.size(), 4);
+        assertEquals(4, chunks.size());
         assertEquals("content1", chunks.get(0).getContent());
-        assertEquals("1\r\nconte", chunks.get(1).getContent());
-        assertEquals("ent2\r\nco", chunks.get(2).getContent());
-        assertEquals("ontent3", chunks.get(3).getContent());
+        assertEquals("1content", chunks.get(1).getContent());
+        assertEquals("t2conten", chunks.get(2).getContent());
+        assertEquals("nt3", chunks.get(3).getContent());
     }
 }

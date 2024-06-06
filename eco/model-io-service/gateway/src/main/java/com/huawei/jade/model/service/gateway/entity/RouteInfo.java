@@ -4,6 +4,8 @@
 
 package com.huawei.jade.model.service.gateway.entity;
 
+import com.huawei.jade.model.service.gateway.filter.ProxyFilter;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
@@ -40,6 +42,9 @@ public class RouteInfo {
     @JsonProperty("api_key")
     private String apiKey;
 
+    @JsonProperty("http_proxy")
+    private String httpProxy;
+
     /**
      * 构造网关路由定义。
      *
@@ -57,6 +62,7 @@ public class RouteInfo {
         routeDefinition.setUri(uri);
         routeDefinition.setId(this.id);
         routeDefinition.setPredicates(getPredicateDefinitions());
+        routeDefinition.getMetadata().put(ProxyFilter.HTTP_PROXY, this.httpProxy);
 
         if (this.apiKey != null && !this.apiKey.isEmpty()) {
             FilterDefinition filter = new FilterDefinition();

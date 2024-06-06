@@ -16,3 +16,8 @@ export const UNARY_OPERATOR = {
     IS_TRUE: "is true",
     IS_FALSE: "is false"
 };
+
+export const VIRTUAL_CONTEXT_NODE = {
+    id: "virtualContextNode",
+    name: "系统上下文"
+}

@@ -5,6 +5,7 @@ from typing import Optional, Tuple
 
 from databus.message import DataBusErrorCode
 from databus.exceptions import CoreError, NotConnectedError
+from databus.dto import ReadResponse, ReadRequest, WriteRequest
 from .sdk_client_impl import SdkClientImpl
 
 
@@ -67,35 +68,34 @@ class SdkClient:
             return DataBusErrorCode.NotConnectedToDataBus
         return DataBusErrorCode.None_
 
-    def read_once(self, user_key: str, size: Optional[int] = None, offset: int = 0) \
-            -> Tuple[DataBusErrorCode, Optional[bytes]]:
-        """读取user_key的内存, 从offset开始读取size大小
+    def read_once(self, request: ReadRequest) -> Tuple[DataBusErrorCode, ReadResponse]:
+        """读取request.user_key的内存, 从request.offset开始读取request.size大小
 
-        :param user_key: 期望读取的内存块名
-        :param size:  读取的大小, 若为None则读取全部
-        :param offset: 读取开始偏移, 默认为0
-        :return: (错误码, 内容)元组
+        另外, 如果request.is_operating_user_data为True, 则从DataBus内核中读取request.user_key的内存的user_data
+
+        :param request: 向DataBus内核发送的读取请求
+        :return: (错误码, ReadResponse)元组
         """
         try:
-            return DataBusErrorCode.None_, self._impl.read_once(user_key, size=size, offset=offset)
+            return DataBusErrorCode.None_, self._impl.read_once(request)
         except CoreError as e:
-            return e.error_code, None
+            return e.error_code, ReadResponse(None, None)
         except NotConnectedError:
-            return DataBusErrorCode.NotConnectedToDataBus, None
+            return DataBusErrorCode.NotConnectedToDataBus, ReadResponse(None, None)
         except IOError:
-            return DataBusErrorCode.MemoryReadError, None
+            return DataBusErrorCode.MemoryReadError, ReadResponse(None, None)
 
-    def write_once(self, user_key: str, contents: bytes, offset: int = 0) -> DataBusErrorCode:
-        """写入user_key的内存, 从offset开始写入contents的全部内容
+    def write_once(self, request: WriteRequest) -> DataBusErrorCode:
+        """写入request.user_key的内存, 从request.offset开始写入request.contents的全部内容
 
-        :param user_key: 期望写入的内存块名
-        :param contents: 写入的内容
-        :param offset: 写入位置的偏移, 默认为0
+        另外, 如果request.is_operating_user_data为True, 则向DataBus内核中为request.user_key的内存记录request.user_data
+
+        :param request: 向DataBus内核发送的写入请求
         :return: 写入操作错误码
         """
         try:
-            write_len = self._impl.write_once(user_key, contents, offset=offset)
-            if not write_len:
+            success = self._impl.write_once(request)
+            if not success:
                 return DataBusErrorCode.IOOutOfBounds
             return DataBusErrorCode.None_
         except CoreError as e:
@@ -104,3 +104,16 @@ class SdkClient:
             return DataBusErrorCode.NotConnectedToDataBus
         except IOError:
             return DataBusErrorCode.MemoryWriteError
+
+    def get_meta_data(self, user_key: str) -> Tuple[DataBusErrorCode, Optional[Tuple[int, bytes]]]:
+        """从DataBus内核获取user_key内存的内存大小和元数据
+
+        :param user_key: 要获取元数据的内存名
+        :return: (错误码, (memory_size, user_data))的元组或(错误码, None)
+        """
+        try:
+            return DataBusErrorCode.None_, self._impl.get_meta_data(user_key=user_key)
+        except CoreError as e:
+            return e.error_code, None
+        except NotConnectedError:
+            return DataBusErrorCode.NotConnectedToDataBus, None

@@ -28,6 +28,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.fitframework.util.UuidUtils;
@@ -44,7 +45,6 @@ import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.operators.patterns.Agent;
 import com.huawei.jade.fel.engine.operators.prompts.Prompts;
-import com.huawei.jade.fel.tool.ToolContext;
 import com.huawei.jade.fel.tool.ToolProvider;
 
 import java.time.LocalDateTime;
@@ -64,10 +64,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class LLMComponent implements FlowableService, FlowCallbackService {
     private static final Logger log = Logger.get(LLMComponent.class);
-
     private static final String SYSTEM_PROMPT = "# 人设与回复逻辑\n\n{{0}}";
     private static final String PROMPT_TEMPLATE = "{{1}}";
     private static final String CALLBACK_ID = "com.huawei.fit.jober.aipp.fitable.LLMComponentCallback";
+    private static final String AGENT_NODE_ID = "agent";
 
     // todo: 暂时使用ConcurrentHashMap存储父节点的元数据
     private final ConcurrentHashMap<String, AippLlmMeta> llmCache = new ConcurrentHashMap<>();
@@ -94,7 +94,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
             MetaInstanceService metaInstanceService,
             MetaService metaService,
             ToolProvider toolProvider,
-            @Fit(alias = "defaultStreamAgent") Agent<Prompt, Prompt> agent,
+            @Fit(alias = AippConst.WATER_FLOW_AGENT_BEAN) Agent<Prompt, Prompt> agent,
             AippLogService aippLogService,
             AippLogStreamService aippLogStreamService) {
         this.flowInstanceService = flowInstanceService;
@@ -107,7 +107,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         // handleTask从入口开始处理，callback从agent node开始处理
         this.agentFlow = AiFlows.<Tip>create()
                 .prompt(Prompts.sys(SYSTEM_PROMPT), Prompts.history(), Prompts.human(PROMPT_TEMPLATE))
-                .id("agent")
+                .id(AGENT_NODE_ID)
                 .delegate(agent)
                 .close();
     }
@@ -148,7 +148,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
                 .bind((acc, chunk) -> this.sendLog(chunk, path, msgId, parentInstanceId))
                 .doOnSuccess(msg -> llmOutputConsumer(llmMeta, ObjectUtils.cast(msg)))
                 .doOnError(throwable -> doOnAgentError(llmMeta, throwable.getMessage()))
-                .offer("agent", Collections.singletonList(chatMessages));
+                .offer(AGENT_NODE_ID, Collections.singletonList(chatMessages));
     }
 
     /**
@@ -173,10 +173,14 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         String msgId = UuidUtils.randomUuidString();
 
         // todo: 待add多模态，期望使用image的url，当前传入的历史记录里面没有image
+        Map<String, Object> toolContext = MapBuilder.<String, Object>get()
+                .put(AippConst.TRACE_ID, llmMeta.getInstId())
+                .put(AippConst.CALLBACK_ID, CALLBACK_ID)
+                .build();
         agentFlow.converse()
                 .bind((acc, chunk) -> this.sendLog(chunk, path, msgId, instId))
                 .bind(new AippMemory(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_MEMORIES_KEY))))
-                .bind(ToolContext.from(AippConst.TRACE_ID, llmMeta.getInstId()).add(AippConst.CALLBACK_ID, CALLBACK_ID))
+                .bind(AippConst.TOOL_CONTEXT_KEY, toolContext)
                 .doOnSuccess(msg -> llmOutputConsumer(llmMeta, msg))
                 .doOnError(throwable -> doOnAgentError(llmMeta, throwable.getMessage()))
                 .bind(buildChatOptions(businessData))

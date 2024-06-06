@@ -88,4 +88,12 @@ public interface AippChatMapper {
      * @return String
      */
     String selectMsgByInstance(String instanceId);
+
+    /**
+     * countChat
+     *
+     * @param chatId chatId
+     * @return Integer
+     */
+    Integer countChat(String chatId);
 }

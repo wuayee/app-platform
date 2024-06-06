@@ -64,6 +64,16 @@ public class AippConst {
      */
     public static final String BASIC_NODE_COMPONENT_DATA_KEY = "basic_node_component_data";
 
+    /**
+     * tool_context_key
+     */
+    public static final String TOOL_CONTEXT_KEY = "tool_context_key";
+
+    /**
+     * WaterFlowAgent
+     */
+    public static final String WATER_FLOW_AGENT_BEAN = "WaterFlowAgent";
+
     // *** business key ***
     /**
      * business data
@@ -555,6 +565,11 @@ public class AippConst {
      * 表明当前会话是否被删除
      */
     public static final Integer CHAT_STATUS = 0;
+
+    /**
+     * 表明最长chat_name为20
+     */
+    public static final Integer CHAT_NAME_LENGTH = 20;
 
     // *** aipp initial static meta items ***
     /**

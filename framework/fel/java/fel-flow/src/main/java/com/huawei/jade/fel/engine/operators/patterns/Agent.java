@@ -4,24 +4,18 @@
 
 package com.huawei.jade.fel.engine.operators.patterns;
 
-import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
-import com.huawei.jade.fel.engine.activities.processors.AiToolProcessMap;
-import com.huawei.jade.fel.engine.flows.AiProcessFlow;
-import com.huawei.jade.fel.tool.Tool;
-import com.huawei.jade.fel.tool.ToolCall;
-import com.huawei.jade.fel.tool.ToolContext;
+import com.huawei.jade.fel.engine.operators.models.ChatChunk;
 import com.huawei.jade.fel.tool.ToolProvider;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -32,112 +26,36 @@ import java.util.stream.Collectors;
  * @author 刘信宏
  * @since 2024-04-12
  */
-public abstract class Agent<I, O> extends FlowSupportable<I, O> {
+public abstract class Agent<I, O> extends AbstractFlowPattern<I, O> {
     /**
-     * 使用 AI 流程提供者初始化 {@link Agent}{@code <}{@link I}{@code , }{@link O}{@code >}。
+     * 数据聚合处理器。
      *
-     * @param flowSupplier 表示AI 流程提供者的 {@link Supplier} {@code <}{@link AiProcessFlow}{@code <}{@link I}{@code ,
-     * }{@link O}{@code >}{@code >}。
-     * @throws IllegalArgumentException 当 {@code flowSupplier} 为 {@code null} 时。
+     * @param acc 表示聚合数据的 {@link ChatChunk}。
+     * @param input 表示单次切片数据的 {@link ChatChunk}。
+     * @return 表示聚合数据的 {@link ChatChunk}。
      */
-    public Agent(Supplier<AiProcessFlow<I, O>> flowSupplier) {
-        super(flowSupplier);
-    }
-
-    /**
-     * 获取工具执行器。
-     *
-     * @param toolProvider 表示工具提供者的 {@link ToolProvider}。
-     * @param agentMsgKey 表示 Agent 响应的所在键的 {@link String}。
-     * @return 表示工具执行器 {@link AiToolProcessMap}{@code <}{@link ChatMessage}{@code , }{@link ChatMessage}{@code >}。
-     * @throws IllegalArgumentException
-     * <ln>
-     *     <li>当 {@code toolProvider} 为 {@code null} 时。</li>
-     *     <li>当 {@code agentMsgKey} 为 {@code null} 、空字符串或只有空白字符的字符串时。</li>
-     * </ln>
-     */
-    protected static AiToolProcessMap<ChatMessage, ChatMessage> getToolProcessMap(ToolProvider toolProvider,
-            String agentMsgKey) {
-        Validation.notNull(toolProvider, "ToolProvider cannot be null.");
-        Validation.notBlank(agentMsgKey, "Agent message key cannot be blank.");
-        return (input, context, toolContext) -> {
-            ChatMessages lastRequest = context.getState(agentMsgKey);
-            lastRequest.add(input);
-            lastRequest.addAll(Agent.toolCallHandle(toolProvider, input, toolContext).messages());
-            return input;
-        };
-    }
-
-    /**
-     * 将 Agent 的 {@link Prompt} 输入信息保存在自定义上下文。
-     *
-     * @param agentMsgKey 表示 Agent 响应的所在自定义键的 {@link String}。
-     * @return 表示数据处理器的 {@link Operators.ProcessJust}{@code <}{@link Prompt}{@code >}。
-     * @throws IllegalArgumentException 当 {@code agentMsgKey} 为 {@code null} 、空字符串或只有空白字符的字符串时。
-     */
-    protected static Operators.ProcessJust<Prompt> putAgentMsg(String agentMsgKey) {
-        Validation.notBlank(agentMsgKey, "Agent message key cannot be blank.");
-        return (input, context) -> context.setState(agentMsgKey, ChatMessages.from(input.messages()));
-    }
-
-    /**
-     * 自定义上下文获取 Agent 的 {@link Prompt} 信息。
-     *
-     * @param agentMsgKey 表示 Agent 响应的所在自定义键的 {@link String}。
-     * @return 表示数据处理器的 {@link Operators.ProcessMap}{@code <}{@link ChatMessage}{@code , }{@link Prompt}{@code >}。
-     * @throws IllegalArgumentException 当 {@code agentMsgKey} 为 {@code null} 、空字符串或只有空白字符的字符串时。
-     */
-    protected static Operators.ProcessMap<ChatMessage, Prompt> getAgentMsg(String agentMsgKey) {
-        Validation.notBlank(agentMsgKey, "Agent message key cannot be blank.");
-        return (message, ctx) -> ctx.getState(agentMsgKey);
-    }
-
-
-    /**
-     * 判断大模型响应中是否存在异步工具。
-     *
-     * @param message 表示大模型响应的 {@link ChatMessage}。
-     * @param toolProvider 表示工具提供者的 {@link ToolProvider}。
-     * @return 如果存在异步工具，则返回 {@code true}，否则，返回 {@code false}。
-     * @throws IllegalArgumentException 当 {@code toolProvider} 或 {@code aiMessage} 为 {@code null} 时。
-     */
-    protected static boolean containAsyncTool(ToolProvider toolProvider, ChatMessage message) {
-        Validation.notNull(toolProvider, "ToolProvider cannot be null.");
-        Validation.notNull(message, "Message cannot be null.");
-        List<String> toolsName = Optional.ofNullable(message.toolCalls())
-                .map(m -> m.stream().map(ToolCall::getName).collect(Collectors.toList()))
-                .orElseGet(Collections::emptyList);
-        if (toolsName.isEmpty()) {
-            return false;
+    protected static ChatChunk defaultReduce(ChatChunk acc, ChatChunk input) {
+        Validation.notNull(input, "The input data cannot be null.");
+        if (acc == null) {
+            return new ChatChunk(input.text(), input.medias(), input.toolCalls());
         }
-        return toolProvider.getTool(toolsName).stream().anyMatch(Tool::isAsync);
+        if (input.isEnd()) {
+            return acc;
+        }
+        acc.merge(input);
+        return acc;
     }
 
     /**
-     * 判断 Agent 响应是否完成。
+     * 调用工具。
      *
-     * @param message 表示大模型响应的 {@link ChatMessage}。
      * @param toolProvider 表示工具提供者的 {@link ToolProvider}。
-     * @return 如果完成，则返回 {@code true}，否则，返回 {@code false}。
-     * @throws IllegalArgumentException 当 {@code toolProvider} 或 {@code aiMessage} 为 {@code null} 时。
-     */
-    protected static boolean isFinish(ToolProvider toolProvider, ChatMessage message) {
-        Validation.notNull(toolProvider, "ToolProvider cannot be null.");
-        Validation.notNull(message, "Message cannot be null.");
-        return !CollectionUtils.isNotEmpty(message.toolCalls()) || Agent.containAsyncTool(toolProvider, message);
-    }
-
-    /**
-     * 判断模型响应是否是调用工具。
-     *
      * @param message 表示聊天消息的 {@link ChatMessage}。
-     * @return 表示是否是调用工具的 {@code boolean}。
+     * @param toolContext 表示自定义工具上下文的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     * @return 表示工具执行结果的 {@link Prompt}。
      */
-    protected static boolean isToolCall(ChatMessage message) {
-        return CollectionUtils.isNotEmpty(message.toolCalls());
-    }
-
-    private static Prompt toolCallHandle(ToolProvider toolProvider, ChatMessage message, ToolContext toolContext) {
+    protected static Prompt toolCallHandle(ToolProvider toolProvider, ChatMessage message,
+            Map<String, Object> toolContext) {
         List<FlatChatMessage> collect = Optional.ofNullable(message.toolCalls())
                 .map(m -> m.stream()
                         .map(toolCall -> toolProvider.call(toolCall, toolContext))

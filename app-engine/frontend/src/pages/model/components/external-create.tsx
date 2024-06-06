@@ -1,5 +1,5 @@
 
-import { Button, Form, Input, Radio, Space, Drawer, message } from 'antd';
+import { Button, Form, Input, Space, Drawer, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { createExternalModel } from '../../../shared/http/model';
 
@@ -47,6 +47,7 @@ const CreateModel = ({ visible, createCallback }: props) => {
         title={'新建'}
         width={500}
         open={createOpen}
+        onClose={cancel}
         maskClosable={false}
         destroyOnClose={true}
         footer={
@@ -100,6 +101,40 @@ const CreateModel = ({ visible, createCallback }: props) => {
             <Input />
           </Form.Item>
           <Form.Item label='API Key' name='api_key' required rules={[{ required: true, message: '输入不能为空' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label='HTTP代理'
+            name='http_proxy'
+            rules={[
+              {
+                validator: (_, value) => {
+                  if (!value || /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(value)) {
+                    return Promise.resolve();
+                  } else {
+                    return Promise.reject('请输入正确的地址');
+                  }
+                }
+              }
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label='HTTPS代理'
+            name='https_proxy'
+            rules={[
+              {
+                validator: (_, value) => {
+                  if (!value || /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(value)) {
+                    return Promise.resolve();
+                  } else {
+                    return Promise.reject('请输入正确的地址');
+                  }
+                }
+              }
+            ]}
+          >
             <Input />
           </Form.Item>
         </Form>

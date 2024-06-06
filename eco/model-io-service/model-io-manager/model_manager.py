@@ -8,7 +8,7 @@ import socket
 import json
 import logging
 import uuid
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 import yaml
 import requests
 import uvicorn
@@ -77,6 +77,9 @@ app.model_io_gateways = []
 external_model_services = {
 }
 
+global_proxy_configs = {
+}
+
 
 class Item(BaseModel):
     name: str
@@ -88,10 +91,18 @@ class Item(BaseModel):
     npus: int
 
 
+class GlobalExternalServiceProxy(BaseModel):
+    http_proxy: str | None = None
+    https_proxy: str | None = None
+    no_proxy: str | None = None
+
+
 class ExternalService(BaseModel):
     name: str
     url: str
     api_key: str
+    http_proxy: str | None = None
+    https_proxy: str | None = None
 
 
 class Llm(BaseModel):
@@ -136,21 +147,33 @@ def create_namespace_if_needed():
 MODEL_IO_MANAGER_CONFIG = "model-io-conf"
 
 
-def init_from_configmap():
+
+def load_model_io_configs():
     global external_model_services
+    global global_proxy_configs
+    model_io_config_map = api_instance.read_namespaced_config_map(MODEL_IO_MANAGER_CONFIG, MODEL_IO_NAMESPACE)
+    model_io_config_str = model_io_config_map.data.get("model_io_configs", "{}")
+    model_io_config_data = json.loads(model_io_config_str)
+    external_model_services = model_io_config_data.get("external_model_services", {})
+    global_proxy_configs = model_io_config_data.get("external_global_proxies", {})
+    return get_model_io_configs()
+
+
+
+def init_from_configmap():
     try:
-        model_io_config_map = api_instance.read_namespaced_config_map(MODEL_IO_MANAGER_CONFIG, MODEL_IO_NAMESPACE)
-        external_model_services = json.loads(model_io_config_map.data["external_model_services"])
-        logger.info("Loaded external model services: %s", external_model_services)
+        model_io_configs = load_model_io_configs()
+        logger.info("Loaded  model_io_configs: %s", model_io_configs)
         return
     except ApiException as e:
         logger.warning(e)
     try:
+        model_io_configs = get_model_io_configs()
         configmap_manifest = {
                 "apiVersion": "v1",
                 "kind": "ConfigMap",
                 "metadata": {"name": MODEL_IO_MANAGER_CONFIG},
-                "data": {"external_model_services":"{}"}
+                "data": {"model_io_configs": json.dumps(model_io_configs)}
         }
         response = api_instance.create_namespaced_config_map(MODEL_IO_NAMESPACE, body=configmap_manifest)
     except ApiException as e:
@@ -158,12 +181,22 @@ def init_from_configmap():
     return
 
 
+def get_model_io_configs():
+    model_io_configs = {
+        "external_model_services" : external_model_services,
+        "external_global_proxies" : global_proxy_configs
+    }
+    return model_io_configs
+
+
+
 def update_configmap():
     try:
+        model_io_configs = get_model_io_configs()
         model_io_config_map = api_instance.read_namespaced_config_map(MODEL_IO_MANAGER_CONFIG, MODEL_IO_NAMESPACE)
-        model_io_config_map.data["external_model_services"] = json.dumps(external_model_services)
+        model_io_config_map.data["model_io_configs"] = json.dumps(model_io_configs)
         api_instance.patch_namespaced_config_map(MODEL_IO_MANAGER_CONFIG, MODEL_IO_NAMESPACE, model_io_config_map)
-        logger.info("Update config map: %s", external_model_services)
+        logger.info("Update config map: %s", model_io_configs)
         return
     except ApiException as e:
         logger.warning(e)
@@ -256,6 +289,10 @@ MODEL_VALUE = "model"
 MODEL_TYPE_KEY = "type"
 CHAT_MODEL_TYPE = "chat"
 EMBED_MODEL_TYPE = "embed"
+HTTP_KEY = "http"
+HTTPS_KEY = "https"
+HTTP_PROXY = "http_proxy"
+HTTPS_PROXY = "https_proxy"
 
 extra_models = [
     {
@@ -377,20 +414,21 @@ def get_v1_models_from_external_service():
     datas = []
     for service_name in external_model_services:
         external_service = external_model_services[service_name]
-        url = external_service["url"]
-        api_key = external_service["api_key"]
-        service_datas = get_model_data_from_external_service(url, api_key)
+        service_datas = get_model_data_from_external_service(external_service)
         if service_datas:
             datas.extend(service_datas)
     return datas
 
 
-def get_model_data_from_external_service(url, api_key):
+def get_model_data_from_external_service(external_model_service):
+    url = external_model_service["url"]
+    api_key = external_model_service["api_key"]
     model_list_url = urljoin(url, "v1/models")
-    headers = {'Accept': '*/*', 'Authorization': f'Bearer {api_key}'}
+    headers = {'Accept':'*/*', 'Authorization':f'Bearer {api_key}'}
+    proxies = get_effective_proxies(external_model_service)
     datas = []
     try:
-        response = requests.get(model_list_url, headers=headers, timeout=10)
+        response = requests.get(model_list_url, headers=headers, timeout=10, proxies=proxies)
         if response.status_code != 200:
             return datas
 
@@ -402,14 +440,17 @@ def get_model_data_from_external_service(url, api_key):
     return datas
 
 
-def get_models_from_external_service(url, api_key):
+def get_models_from_external_service(external_service):
+    url = external_service["url"]
+    api_key = external_service["api_key"]
+    proxies = get_effective_proxies(external_service)
     urlpath = "/v1/models"
     model_list_url = url.rstrip("/") + urlpath
-    headers = {'Accept': '*/*', 'Authorization': f'Bearer {api_key}'}
+    headers = {'Accept':'*/*', 'Authorization':f'Bearer {api_key}'}
     models = []
-    logging.info("Get Models for url:%s, %s", url, model_list_url)
+    logging.info("Get Models for exertal service :%s, : %s, with proxy : %s", url, model_list_url, proxies)
     try:
-        response = requests.get(model_list_url, headers=headers, timeout=10)
+        response = requests.get(model_list_url, headers=headers, timeout=10, proxies=proxies)
         if response.status_code != 200:
             return models
 
@@ -424,7 +465,115 @@ def get_models_from_external_service(url, api_key):
         logging.error(e)
     return models
 
-        
+
+def is_valid_cidr(string_network):
+    """
+    Very simple check of the cidr format in no_proxy variable.
+
+    :rtype: bool
+    """
+    if string_network.count("/") == 1:
+        try:
+            mask = int(string_network.split("/")[1])
+        except ValueError:
+            return False
+
+        if mask < 1 or mask > 32:
+            return False
+
+        try:
+            socket.inet_aton(string_network.split("/")[0])
+        except OSError:
+            return False
+    else:
+        return False
+    return True
+
+
+def is_ipv4_address(string_ip):
+    """
+    :rtype: bool
+    """
+    try:
+        socket.inet_aton(string_ip)
+    except OSError:
+        return False
+    return True
+
+
+def should_bypass_proxies(url, no_proxy):
+    parsed = urlparse(url)
+
+    if parsed.hostname is None:
+        # URLs don't always have hostnames, e.g. file:/// urls.
+        return True
+
+
+    if not no_proxy:
+        # no_proxy is empty, use http/https proxy in the proxies
+        return False
+
+
+    # We need to check whether we match here. We need to see if we match
+    # the end of the hostname, both with and without the port.
+    no_proxy = (host for host in no_proxy.replace(" ", "").split(",") if host)
+
+    if is_ipv4_address(parsed.hostname):
+        for proxy_ip in no_proxy:
+            is_proxy_ip_valid_cidr = is_valid_cidr(proxy_ip)
+            if is_proxy_ip_valid_cidr and address_in_network(parsed.hostname, proxy_ip):
+                return True
+            elif not is_proxy_ip_valid_cidr and parsed.hostname == proxy_ip:
+                # If no_proxy ip was defined in plain IP notation instead of cidr notation &
+                # matches the IP of the index
+                return True
+    else:
+        host_with_port = parsed.hostname
+        if parsed.port:
+            host_with_port += f":{parsed.port}"
+
+        for host in no_proxy:
+            if parsed.hostname.endswith(host) or host_with_port.endswith(host):
+                # The URL does match something in no_proxy, so we don't want
+                # to apply the proxies on this URL.
+                return True
+    return False
+
+
+def get_effective_proxie(url, global_proxy, local_proxy, no_proxy):
+    if local_proxy:
+        return local_proxy
+
+    if no_proxy is None:
+        no_proxy = ""
+
+    bypass_proxy = should_bypass_proxies(url, no_proxy)
+
+    if bypass_proxy:
+        return ""
+    else:
+        return global_proxy
+
+
+def get_effective_proxies(external_service):
+    proxies = {}
+    global_http_proxy = global_proxy_configs.get(HTTP_PROXY)
+    global_https_proxy = global_proxy_configs.get(HTTPS_PROXY)
+    global_no_proxy = global_proxy_configs.get("no_proxy")
+
+    url = external_service.get("url", "")
+
+    local_http_proxy = external_service.get(HTTP_PROXY, "")
+    local_https_proxy = external_service.get(HTTPS_PROXY, "")
+
+    proxies[HTTP_PROXY] = get_effective_proxie(url, global_http_proxy, local_http_proxy, global_no_proxy)
+    proxies[HTTPS_PROXY] = get_effective_proxie(url, global_https_proxy, local_https_proxy, global_no_proxy)
+    proxies[HTTP_KEY] = proxies[HTTP_PROXY]
+    proxies[HTTPS_KEY] = proxies[HTTPS_PROXY]
+
+
+    return proxies
+
 
 def get_routes():
     routes = []
@@ -441,20 +590,25 @@ def get_routes():
                              url_key: url
                            })
             routed_models[model_name] = url
-        
+
     for name in external_model_services:
         external_model_service = external_model_services[name]
         url = external_model_service["url"]
         api_key = "api_key"
         api_key_value = external_model_service[api_key]
-        external_models = get_models_from_external_service(url, api_key)
+        external_models = get_models_from_external_service(external_model_service)
+
+        proxies = get_effective_proxies(external_model_service)
+
         for model_name in external_models:
             if model_name not in routed_models:
                 routes.append({
                                  "id": model_name,
                                  "model": model_name,
                                  url_key: url,
-                                 api_key: api_key_value
+                                 api_key: api_key_value,
+                                 "http_proxy": proxies.get("http_proxy", ""),
+                                 "https_proxy": proxies.get("https_proxy", ""),
                                })
                 routed_models[model_name] = url
     return routes
@@ -755,15 +909,6 @@ async def get_external_model_services(request : Request):
     return response
 
 
-def persist_external_services():
-    global external_model_services
-    try:
-        update_configmap()
-    except ApiException as e:
-        logger.warning(e)
-
-
-    
 @app.post("/v1/external_model_service")
 async def add_external_model_services(external_service : ExternalService, request : Request):
     global external_model_services
@@ -779,12 +924,18 @@ async def add_external_model_services(external_service : ExternalService, reques
     ex_service["name"] = ex_name
     ex_service["url"] = external_service.url
     ex_service["api_key"] = external_service.api_key
+
+    if external_service.http_proxy:
+        ex_service["http_proxy"] = external_service.http_proxy
+    if external_service.https_proxy:
+        ex_service["https_proxy"] = external_service.https_proxy
     external_model_services[ex_name] = ex_service
     persist_external_services()
     _notify_model_io_gateways()
     response = JSONResponse(status_code=200, content=jsonable_encoder({"ok"}))
     set_cross_header(response, request)
     return response
+
 
 
 @app.delete("/v1/external_model_service/{name}")
@@ -798,6 +949,45 @@ async def delete_external_model_services(name : str, request : Request):
     response = JSONResponse(status_code=200, content=jsonable_encoder({"ok"}))
     set_cross_header(response, request)
     return response
+
+
+
+@app.post("/v1/external_model_proxies")
+async def update_external_model_proxies(external_model_proxies : GlobalExternalServiceProxy, request : Request):
+    global global_proxy_configs
+    http_proxy = external_model_proxies.http_proxy
+    https_proxy = external_model_proxies.https_proxy
+    no_proxy = external_model_proxies.no_proxy
+    if http_proxy:
+        global_proxy_configs["http_proxy"] = http_proxy
+    if https_proxy:
+        global_proxy_configs["https_proxy"] = https_proxy
+    if no_proxy:
+        global_proxy_configs["no_proxy"] = no_proxy
+
+    persist_external_services()
+    _notify_model_io_gateways()
+
+    response = JSONResponse(status_code=200, content=jsonable_encoder({"ok"}))
+    set_cross_header(response, request)
+    return response
+
+
+@app.get("/v1/external_model_proxies")
+async def get_external_model_proxies(request : Request):
+    global external_model_proxies
+
+    body = {
+       "global_proxies" : global_proxy_configs
+    }
+
+    response = JSONResponse(status_code=200, content=jsonable_encoder(body))
+    set_cross_header(response, request)
+    return response
+
+
+def persist_external_services():
+    update_configmap()
 
 
 @app.post("/v1/start_up")

@@ -17,6 +17,8 @@ import Apps from '../pages/apps';
 import KnowledgeBaseDetailCreateTable from '../pages/knowledge-base/knowledge-detail/create-table';
 import KnowledgeBaseDetailImportData from '../pages/knowledge-base/knowledge-detail/import-data';
 import Model from '../pages/model';
+import ModelBase from '../pages/model-base';
+import ModelTuning from '../pages/model-tuning';
 import ModelDetail from '../pages/model/model-detail';
 import AppDev from '../pages/appDev/index';
 import IndustryTerminology from '../pages/knowledge-base/knowledge-detail/industry-terminology';
@@ -124,6 +126,19 @@ export const routeList: MenuItem[] = [
         hidden: true,
       },
     ],
+  },
+  {
+    key: '/model-base',
+    icon: Icons.app({}),
+    label: '模型仓管理',
+    component: ModelBase,
+  },
+  {
+    key: '/model-tuning',
+    icon: Icons.app({}),
+    label: '模型精调',
+    component: ModelTuning,
+    hidden: true
   },
   {
     key: '/knowledge-base',
