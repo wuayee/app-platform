@@ -16,6 +16,7 @@
         <module>connector/milvus</module>
 <!--        <module>connector/redis</module>-->
         <module>model</module>
+        <module>model-plugin</module>
         <module>rag-plugin</module>
         <module>rag</module>
     </modules>
