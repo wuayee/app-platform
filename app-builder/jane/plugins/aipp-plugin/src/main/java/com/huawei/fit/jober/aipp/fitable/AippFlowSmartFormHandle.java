@@ -65,15 +65,14 @@ public class AippFlowSmartFormHandle implements FlowSmartFormService {
 
         AppBuilderForm appBuilderForm = this.formService.selectWithId(sheetId);
         String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
-        String instanceId = StringUtils.isEmpty(parentInstanceId)
-                ? ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY))
-                : parentInstanceId;
-        this.aippStreamService.send(instanceId, buildFormData(businessData, appBuilderForm));
+        String instanceId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
+        this.aippStreamService.sendToAncestor(instanceId,
+                buildFormData(businessData, appBuilderForm, parentInstanceId));
     }
 
     @NotNull
-    private static Map<String, Object> buildFormData(Map<String, Object> businessData,
-            AppBuilderForm appBuilderForm) {
+    private static Map<String, Object> buildFormData(Map<String, Object> businessData, AppBuilderForm appBuilderForm,
+            String parentInstanceId) {
         Map<String, Object> form = new HashMap<>();
         form.put(AippConst.FORM_APPEARANCE_KEY, appBuilderForm.getAppearance());
         Map<String, Object> formDataMap = new HashMap<>();
@@ -82,6 +81,7 @@ public class AippFlowSmartFormHandle implements FlowSmartFormService {
                 .map(AppBuilderFormProperty::getName)
                 .forEach(name -> formDataMap.put(name, businessData.getOrDefault(name, StringUtils.EMPTY)));
         form.put(AippConst.FORM_DATA_KEY, formDataMap);
+        form.put(AippConst.PARENT_INSTANCE_ID, parentInstanceId);
         return form;
     }
 

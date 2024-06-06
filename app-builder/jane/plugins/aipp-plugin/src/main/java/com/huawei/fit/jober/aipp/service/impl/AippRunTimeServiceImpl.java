@@ -293,8 +293,7 @@ public class AippRunTimeServiceImpl
                     this.getMemories(meta.getId(), memoryType, chatId, memoryConfigs, aippType, context));
             this.startFlow(metaVersionId, flowDefinitionId, metaInstId, businessData, context);
         } else {
-            String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
-            this.aippStreamService.send(parentInstanceId,
+            this.aippStreamService.sendToAncestor(metaInstId,
                     this.buildMemoryConfigDto(initContext, metaInstId, "UserSelect"));
         }
         return metaInstId;
