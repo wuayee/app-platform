@@ -15,7 +15,6 @@ import static com.huawei.fit.jober.common.ErrorCodes.FLOW_NODE_NOT_FOUND;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_RETRY_JOBER_UPDATE_DATABASE_FAILED;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_START_ERROR;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
-import static com.huawei.fit.jober.common.ErrorCodes.NO_OPERATE_PERMISSION;
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowDefinitionStatus.INACTIVE;
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus.READY;
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus.RETRYABLE;
@@ -713,11 +712,10 @@ public class FlowContextsService {
      */
     public void terminateFlows(String traceId, Map<String, Object> filter, OperationContext operationContext) {
         FlowTrace flowTrace = traceRepo.find(traceId);
-
-        if (!flowTrace.getOperator().equals(operationContext.operator())) {
-            throw new JobberException(NO_OPERATE_PERMISSION);
+        if (Objects.isNull(flowTrace)) {
+            LOG.warn("The trace is not exist. traceId={}.", traceId);
+            return;
         }
-
         if (TRACE_EXCLUSIVE_STATUS_MAP.get(FlowTraceStatus.TERMINATE.toString())
                 .contains(flowTrace.getStatus().toString())) {
             LOG.warn("The trace cannot be terminated, traceId={}, currentStatus={}, start={}, end={}.",
@@ -731,7 +729,9 @@ public class FlowContextsService {
                 .collect(Collectors.toSet());
 
         traceRepo.updateStatus(new ArrayList<>(traceIdSet), FlowTraceStatus.TERMINATE.toString());
-        repo.updateStatus(contextList, FlowNodeStatus.TERMINATE.toString(), contextList.get(0).getPosition());
+        repo.updateStatus(contextList, FlowNodeStatus.TERMINATE.toString(), null);
+        LOG.info("The trace is terminated, traceId={}, currentStatus={}, start={}.", flowTrace.getId(),
+                flowTrace.getStatus().name(), flowTrace.getStartTime());
     }
 
     public void resumeAsyncJob(List<FlowContext<FlowData>> pre, List<Map<String, Object>> newContexts,
