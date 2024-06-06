@@ -6,6 +6,9 @@ package com.huawei.databus.sdk.client.jni;
 
 import com.huawei.databus.sdk.tools.DataBusUtils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 
 /**
@@ -15,6 +18,8 @@ import java.io.IOException;
  * @since 2024-03-19
  */
 public class SharedMemoryReaderWriter {
+    private static final Logger logger = LogManager.getLogger(SharedMemoryReaderWriter.class);
+
     /**
      *  动态链接库名称
      */
@@ -24,8 +29,8 @@ public class SharedMemoryReaderWriter {
         if (DataBusUtils.isSupportedPlatform()) {
             try {
                 NativeLibraryLoader.loadLibrary(DATABUS_JNI_NATIVE_LIBRARY_NAME);
-            } catch (IOException ignored) {
-                // 需要打日志但是无需返回错误
+            } catch (IOException e) {
+                logger.error("[init] Loading native library failed. [e={}]", e.toString());
             }
         }
     }

@@ -15,4 +15,9 @@ public class Constant {
      * 信息头部长度
      */
     public static final int DATABUS_SERVICE_HEADER_SIZE = 24;
+
+    /**
+     * 接收缓冲区长度
+     */
+    public static final int BUFFER_SIZE = 2048;
 }

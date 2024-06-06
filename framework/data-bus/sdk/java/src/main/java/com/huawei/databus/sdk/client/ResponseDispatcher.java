@@ -8,6 +8,9 @@ import com.huawei.databus.sdk.message.MessageHeader;
 import com.huawei.databus.sdk.tools.Constant;
 import com.huawei.fitframework.inspection.Validation;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -25,9 +28,11 @@ import java.util.concurrent.TimeUnit;
  * @since 2024-03-17
  */
 class ResponseDispatcher {
+    private static final Logger logger = LogManager.getLogger(ResponseDispatcher.class);
+
     private final Map<Byte, BlockingQueue<ByteBuffer>> replyQueues;
     private final SocketChannel socketChannel;
-    private boolean isRunning;
+    private volatile boolean isRunning;
 
     /**
      * 单线程池，只有一个长任务监听信息。
@@ -49,12 +54,9 @@ class ResponseDispatcher {
      * 启动分发器任务。
      */
     public void start() {
-        // TODO: 处理线程池异常
         dispatcherService.submit(() -> {
-            ByteBuffer buffer = ByteBuffer.allocate(1024);
             this.isRunning = true;
-
-            this.startEventLoop(buffer);
+            this.startEventLoop();
         });
     }
 
@@ -78,8 +80,9 @@ class ResponseDispatcher {
         return this.isRunning;
     }
 
-    private void startEventLoop(ByteBuffer buffer) {
-        while (true) {
+    private void startEventLoop() {
+        ByteBuffer buffer = ByteBuffer.allocate(Constant.BUFFER_SIZE);
+        while (this.isRunning) {
             buffer.clear();
 
             int bytesRead = 0;
@@ -110,8 +113,8 @@ class ResponseDispatcher {
                 messageBody.flip();
                 this.replyQueues.get(type).offer(messageBody);
             } catch (IOException e) {
-                this.isRunning = false;
-                return;
+                // 不退出但是打印日志
+                logger.error("[startEventLoop] message receiving exception, [e={}]", e.toString());
             }
         }
     }
