@@ -1,7 +1,7 @@
 import { del, get, post, patch } from './http';
 import { httpUrlMap } from './httpConfig';
 
-const { AIPP_URL, AI_URL, MODEL_LIST_URL, PLUGIN_URL } = httpUrlMap[process.env.NODE_ENV];
+const { AI_URL, PLUGIN_URL } = httpUrlMap[process.env.NODE_ENV];
 
 export const tenantId = '282b963640544f148dbdfa49718075bc';
 
@@ -45,6 +45,12 @@ export function deleteChat(tenantId, chatId) {
 export function getChatDetail(tenantId, chatId, params) {
   const url = `${PLUGIN_URL}/v1/api/${tenantId}/chat/chat_list/${chatId}`;
   return post(url, params);
+}
+
+//清空APP的历史对话
+export function clearChatHistory(tenantId, appId) {
+  const url = `${PLUGIN_URL}/v1/api/${tenantId}/chat?chat_id=&app_id=${appId}`;
+  return del(url);
 }
 // 猜你想问
 export function getRecommends(params) {
