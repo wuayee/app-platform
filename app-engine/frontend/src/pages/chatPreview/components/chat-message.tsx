@@ -8,21 +8,21 @@ import { queryFeedback } from '@shared/http/chat';
 import '../styles/chat-message-style.scss';
 
 const ChatMessaga = (props) => {
-  const {chatList} = useContext(AippContext);
+  const { chatList, setChatList } = useContext(AippContext);
   const { showCheck, setCheckedList } = props;
   const initFeedbackStatus = async (id) => {
-  for (let i = 0; i < chatList.length; i++) {
-    let item = chatList[i]
-    if (item.type === 'recieve' && item?.instanceId &&(id === 'all'||item?.instanceId === id)) {
-      await queryFeedback(item.instanceId).then((res) => {
-        if (!res) {
-          item.feedbackStatus = -1;
-        } else {
-          item.feedbackStatus = res.usrFeedback;
-        }
-      });
+    for (let i = 0; i < chatList.length; i++) {
+      let item = chatList[i]
+      if (item.type === 'recieve' && item?.instanceId && (id === 'all' || item?.instanceId === id)) {
+        await queryFeedback(item.instanceId).then((res) => {
+          if (!res) {
+            item.feedbackStatus = -1;
+          } else {
+            item.feedbackStatus = res.usrFeedback;
+          }
+        });
+      }
     }
-  }
     setChatList([...chatList]);
   }
 
@@ -31,7 +31,7 @@ const ChatMessaga = (props) => {
     initFeedbackStatus('all');
 
   }, [chatList?.length]);
-  
+
   const scrollBottom = () => {
     setTimeout(() => {
       const messageBox = document.getElementById('chat-list-dom');
@@ -48,8 +48,8 @@ const ChatMessaga = (props) => {
   }
   return (
     <div className={['chat-message-container', showCheck ? 'group-active' : null].join(' ')} id="chat-list-dom">
-      { !chatList?.length && <ChatDetail /> }
-      <ChatContext.Provider value={{ checkCallBack, showCheck}}>
+      {!chatList?.length && <ChatDetail />}
+      <ChatContext.Provider value={{ checkCallBack, showCheck }}>
         <div className='message-box'>
           {
             chatList?.map((item, index) => {
