@@ -9,7 +9,6 @@ import {
 import { Message } from "@shared/utils/message";
 import { queryDepartMent, queryInspiration } from "../../../shared/http/aipp";
 import { getUiD } from "../../../shared/utils/common";
-import { inspirationMock } from "../common/config";
 import { AippContext } from "../../aippIndex/context";
 import {
   getDepth,
@@ -21,14 +20,16 @@ import {
 import "../styles/inspiration.scss";
 
 const Inspiration = (props) => {
-  const { chatType,setPrompValue } = props;
+  const { inspirationClick, setEditorSelect } = props;
   const {
     appId,
     tenantId,
     messageChecked,
+    chatType,
+    chatRunning,
+    reloadInspiration
   } = useContext(AippContext);
   const { Search } = Input;
-  const [ refreshPrompValue, setRefreshPrompValue ] = useState(false);
   const [showDrop, setShowDrop] = useState(false);
   const [promptTypeList, setPromptTypeList] = useState([]);
   const [dropList, setDropList] = useState([]);
@@ -41,12 +42,11 @@ const Inspiration = (props) => {
   const [searchValue, setSearchValue] = useState("");
   const treeNormalData = useRef();
   const treeChildData = useRef([]);
+  let regex = /{{(.*?)}}/g;
 
   useEffect(() => {
-    if(appId) {
-      getList();
-    }
-  }, [appId]);
+    appId && getList();
+  }, [appId, reloadInspiration]);
   // 获取灵感大全列表
   async function getList() {
     const res = await queryDepartMent(tenantId, appId);
@@ -126,12 +126,28 @@ const Inspiration = (props) => {
   // 灵感大全点击
   function handleClickPrompt(item) {
     if (messageChecked) {
-      Message.warning("问答组勾选中, 请取消后再试");
+      Message.warning('问答组勾选中, 请取消后再试');
       return;
     }
-    item.key = getUiD();
-    setPrompValue(item);
-    setRefreshPrompValue(!refreshPrompValue);
+    if (chatRunning) {
+      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
+      return;
+    }
+    if (item.name && item.auto) {
+      inspirationClick(item.prompt);
+      return;
+    }
+    let result = [];
+    let match;
+    while ((match = regex.exec(item.prompt))) {
+      result.push(match[1]);
+    }
+    if (result.length) {
+      setEditorSelect(result, item);
+    } else {
+      const editorDom = document.getElementById('ctrl-promet');
+      editorDom.innerHTML = item.prompt || '';
+    }
   }
   // 隐藏下拉框
   function hide() {
@@ -163,16 +179,6 @@ const Inspiration = (props) => {
   function handleOpenChange(newOpen) {
     setPopoverOpen(newOpen);
   }
-  const items = [
-    {
-      key: "1",
-      label: "编辑灵感",
-    },
-    {
-      key: "2",
-      label: "添加新灵感",
-    },
-  ];
   return (
     <>
       {
@@ -214,7 +220,6 @@ const Inspiration = (props) => {
                 prefix={<SearchOutlined />}
                 allowClear
                 placeholder="搜索"
-                onSearch={onSearch}
               />
             </div>
             <div className="prompt-container">
@@ -229,7 +234,7 @@ const Inspiration = (props) => {
                           ? "prompt-type-active prompt-type-item"
                           : "prompt-type-item"
                       }
-                      onClick={radioClick.bind(this, item)}
+                      onClick={() => radioClick(item)}
                     >
                       <span className="text"> {item.title}</span>
                       <span className="line"></span>
@@ -245,7 +250,7 @@ const Inspiration = (props) => {
                       <div
                         key={cIndex}
                         className="prompt-item"
-                        onClick={handleClickPrompt.bind(this, cItem)}
+                        onClick={() => handleClickPrompt(cItem)}
                       >
                         <div className="title"> {cItem.name}</div>
                         <div

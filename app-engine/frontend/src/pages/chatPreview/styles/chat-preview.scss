@@ -49,7 +49,7 @@
   background-image: url('../../../assets/images/bg3.png');
   .chat-inner-left {
     width: 100%;
-    height: calc(100vh - 125px);
+    height: calc(100vh - 130px);
     display: flex;
     flex-direction: column;
     transition: width .2s;
@@ -107,7 +107,7 @@
   background-color: #ffffffbf;
   margin: 0;
   .chat-inner-left {
-    height: calc(100vh - 46px);
+    height: calc(100vh - 50px);
     position: relative;
     overflow-x: auto;
     display: flex;
@@ -149,7 +149,7 @@
     margin: 0;
     width: 100%;
     border-radius: 0;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 105px);
     .chat-inner-left {
       height: 100%;
       display: flex;

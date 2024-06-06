@@ -1,39 +1,25 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Modal } from 'antd';
 import '../styles/check-group.scss'
 import { shareDialog } from "@shared/http/aipp";
-import { useNavigate } from "react-router-dom";
-import { toClipboard } from "@shared/utils/common"
+import { AippContext } from '@/pages/aippIndex/context';
+import { toClipboard } from "@shared/utils/common";
 
 const CheckGroup = (props) => {
   const {
     type,
-    confirmText,
-    shareWelink,
     setEditorShow,
-    selectAllClick,
+    checkedList,
     reportClick
   } = props;
-  const navigate = useNavigate();
-  const [ checkAll, setCheckAll ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ shareUrl, setShareUrl ] = useState('');
-  const { appId,tenantId,chatList } = useContext(AippContext);
-  useEffect(() => {
-    setCheckAll((chatList?.length === 2*checkedList.length))
-  }, [props.checkedList])
+  const { appId,tenantId } = useContext(AippContext);
+
   // 取消
   function cancle() {
     setEditorShow(false)
-  }
-  // 全选反选
-  function checkAllClick() {
-    setCheckAll(() => {
-      let all = !checkAll;
-      selectAllClick(all);
-      return all
-    })
   }
   function handleCancel() {
     setIsModalOpen(false);

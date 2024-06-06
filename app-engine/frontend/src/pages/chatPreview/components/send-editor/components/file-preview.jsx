@@ -8,30 +8,28 @@ import UploadFile from './upload-file';
 const LinkFile = ({openUploadRef}) => {
   const [ showPreview, setShowPreview ] = useState(false);
   const [ file, setFile ] = useState({data:null, type:null});
-  useEffect(()=>{
-    if(file?.data){
-    setShowPreview(true)
-    }
-  },[file])
-    // 取消文件
-    const cancleFile = () => {
-      setShowPreview(false);
-    }
+  // 取消文件
+  const cancleFile = () => {
+    setShowPreview(false);
+  }
   return (
     <>
-    {/* 预览文件内容 */}
-    {showPreview&&
-    <div className="file-preview">
-      <div className="preview-inner">
-        <div>文件内容</div>
-        <span className="delete-icon">
-          <ClearFileIcon onClick={() => cancleFile()}/>
-        </span>
+      {/* 预览文件内容 */}
+      {showPreview&&
+      <div className="file-preview">
+        <div className="preview-inner">
+          <div>文件内容</div>
+          <span className="delete-icon">
+            <ClearFileIcon onClick={() => cancleFile()}/>
+          </span>
+        </div>
       </div>
-    </div>
-    }
-    {/* 上传文件弹窗 */}
-    <UploadFile openUploadRef={openUploadRef} fileSend={(data, type)=>{setFile({data, type})}}/>
+      }
+      {/* 上传文件弹窗 */}
+      <UploadFile 
+        openUploadRef={openUploadRef} 
+        fileSend={(data, type)=>{setFile({data, type})}}
+      />
     </>
   )
 };

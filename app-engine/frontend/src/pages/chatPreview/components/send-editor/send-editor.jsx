@@ -9,30 +9,30 @@ import { AudioIcon, SendIcon, DeleteContentIcon } from '@/assets/icon';
 import $ from "jquery";
 import { Message } from "@shared/utils/message";
 import { AippContext } from "../../../aippIndex/context";
-import { docArr, imgArr } from './common/config';
 import { httpUrlMap } from "@shared/http/httpConfig";
+import { messagePaste } from './utils';
 import HistoryChat from "../history-chat";
+import HistoryChatDrawer from "../history-chat";
 import Recommends from './components/recommends';
 import EditorBtnHome from './components/editor-btn-home';
-import LinkFile from './components/file-preview';
 import "@shared/utils/rendos";
 import "../../styles/send-editor.scss";
 
 const SendEditor = (props) => {
   const {
     onSend,
-    chatType,
-    filterRef,
+    onStop,
+    onClear,
+    filterRef
   } = props;
-  const [ nowContent, setNowContent ] = useState('');
   const [ selectItem, setSelectItem ] = useState({});
   const [ selectDom, setSelectDom ] = useState();
   const [ showSelect, setShowSelect ] = useState(false);
   const [ showClear, setShowClear ] = useState(false);
+  const [ openHistory, setOpenHistory ] = useState(false);
   const [ positionConfig, setPositionConfig ] = useState({});
   const { chatRunning }  = useContext(AippContext);
   const { WS_AUDIO_URL } = httpUrlMap[process.env.NODE_ENV];
-  const [lastSendContent,setLastSend]=useState(null);
   const editorRef = useRef(null);
   const recording = useRef(false);
   // 编辑器change事件
@@ -40,11 +40,9 @@ const SendEditor = (props) => {
     setShowClear(() => {
       return editorRef.current.innerText.trim().length > 0
     })
-    setNowContent(editorRef.current.innerText.trim());
   }
   // 清除内容
   function clearContent() {
-    setNowContent("");
     editorRef.current.innerText = "";
     setShowClear(false);
   }
@@ -58,19 +56,6 @@ const SendEditor = (props) => {
       sendMessage();
     }
   }
-  // 粘贴文本
-  function messagePaste(e) {
-    e.preventDefault();
-    let items = e.clipboardData?.items || [];
-    for (let i = 0; i < items?.length; i++) {
-      const item = items[i];
-      if (item.kind === "string" && item.type === "text/plain") {
-        item.getAsString(function (str) {
-          document.execCommand("insertText", true, str);
-        });
-      }
-    }
-  }
   // 发送消息
   function sendMessage() {
     if (chatRunning) {
@@ -79,8 +64,6 @@ const SendEditor = (props) => {
     }
     let chatContent = document.getElementById("ctrl-promet").innerText;
     onSend(chatContent);
-    setLastSend(chatContent);
-    setNowContent("");
     editorRef.current.innerText = "";
     setShowClear(false);
   }
@@ -110,18 +93,15 @@ const SendEditor = (props) => {
       }
     });
   }
-  //  清除节点
-  function clearMove() {
-    setShowSelect(false);
+  // 文件自动发送
+  function fileSend(fileResult, fileType) {
+    onSend(fileResult, fileType);
   }
-  // 是否联网
-  const onSwitchChange = (checked) => {}
   useImperativeHandle(filterRef, () => {
     return {
       setFilterHtml: setFilterHtml,
     };
   });
-  
   // 语音实时转文字
   let recorderHome = null;
   let intervalData = null;
@@ -161,17 +141,21 @@ const SendEditor = (props) => {
       };
     }
   }
-  const [openHistory, setOpenHistory] = useState(false);
   return <>{(
     <div className='send-editor-container'>
-      <Recommends 
-        onSend={onSend}
-        lastContent={lastSendContent}
-      />
+      <Recommends onSend={onSend}/>
       <div className='editor-inner'>
         <EditorBtnHome 
           setOpenHistory={setOpenHistory}
+          clear={onClear}
+          fileCallBack={fileSend}
         />
+        { chatRunning && 
+          <div className="editor-stop" onClick={onStop}>
+            <img src="/src/assets/images/ai/stop.png" alt="" />
+            <span>停止响应</span>
+          </div>
+        }
         <div className='editor-input' id="drop">
           <div
             className="chat-promet-editor"
@@ -181,7 +165,7 @@ const SendEditor = (props) => {
             onInput={messageChange}
             onKeyDown={messageKeyDown}
             onPaste={messagePaste}
-          ></div>
+          />
           <div className='send-icon' onClick={ sendMessage }>
             <SendIcon />
           </div>
@@ -197,9 +181,8 @@ const SendEditor = (props) => {
         chatSelectDom={selectDom}
         chatSelectItem={selectItem}
         positionConfig={positionConfig}
-        clearMove={clearMove} />
+        clearMove={() => setShowSelect(false)} />
      )}
-     <HistoryChat open={openHistory} setOpen={setOpenHistory}/>
     </div>
   )}</>
 };

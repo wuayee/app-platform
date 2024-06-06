@@ -120,7 +120,7 @@ const Inspiration = (props) => {
   }
 
   const onAddClick = () => {
-    modalForm.setFieldsValue({category: null, auto: false, name: "", description: "", prompt: "", promptVarData: []});
+    modalForm.setFieldsValue({category: null, auto: false, name: "", description: "", prompt: "", promptVarData: [], promptTemplate: ''});
     setPromptVar([]);
     setShowModal(true);
     setId(null);
@@ -304,7 +304,7 @@ const Inspiration = (props) => {
               }}
             >
               <div className="inspiration-add">
-                <Button type="link" onClick={() => setShowModal(true)} icon={<PlusCircleOutlined />} >创建新灵感</Button>
+                <Button type="link" onClick={onAddClick} icon={<PlusCircleOutlined />} >创建新灵感</Button>
               </div>
               {
                 inspirationValues && inspirationValues.inspirations.map((item, index) => (
@@ -368,6 +368,22 @@ const Inspiration = (props) => {
                   >
                     <TextArea
                       placeholder="你可以使用{{变量名}}添加变量"
+                      rows={6}
+                      onBlur={onPromptChange}
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="promptTemplate"
+                    label="提示词模板"
+                    rules={[
+                      {
+                        required: false,
+                      }
+                    ]}
+                    style={{ marginBottom: '16px' }}
+                  >
+                    <TextArea
+                      placeholder="请输入"
                       rows={6}
                       onBlur={onPromptChange}
                     />

@@ -3,6 +3,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Checkbox } from "antd";
 import { AippContext, ChatContext } from '@/pages/aippIndex/context';
+import { urlify } from '@shared/utils/common';
 import Feedbacks from './feedbacks';
 import MessageDetail from './message-detail';
 import RuntimeForm from './runtime-form';
@@ -23,6 +24,7 @@ const ReciveBox = (props) => {
     chartConfig,
     logId,
     instanceId,
+    finished,
     feedbackStatus } = props.chatItem;
   const [showIcon, setShowIcon] = useState(true);
   const location = useLocation();
@@ -42,7 +44,7 @@ const ReciveBox = (props) => {
     if (type === 'form') {
       return <RuntimeForm formConfig={formConfig} />
     }
-    return <MessageDetail content={content} markdownSyntax={markdownSyntax} chartConfig={chartConfig} />
+    return <MessageDetail content={content} markdownSyntax={markdownSyntax} finished={finished} chartConfig={chartConfig} />
   }
   return <>{(
     <div className='recieve-box'>
@@ -63,10 +65,10 @@ const ReciveBox = (props) => {
 const Loading = () => {
   return (
     <>
-      <div class="recieve-loading">
-        <div class="bounce1"></div>
-        <div class="bounce2"></div>
-        <div class="bounce3"></div>
+      <div className="recieve-loading">
+        <div className="bounce1"></div>
+        <div className="bounce2"></div>
+        <div className="bounce3"></div>
       </div>
     </>
   )

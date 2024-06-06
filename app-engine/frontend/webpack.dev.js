@@ -58,7 +58,8 @@ module.exports = merge(common, {
     https: false,
     proxy: {
       '/api': {
-        target: 'http://80.11.128.86:30030',
+        // target: 'http://80.11.128.86:30010',
+        target: 'http://10.91.144.140:8080',
         secure: false,
         changeOrigin: true,
         pathRewrite: {
@@ -66,8 +67,20 @@ module.exports = merge(common, {
           '^/api': '',
         },
       },
+      '/elsaApi': {
+        // target: 'https://tzaip-beta.paas.huawei.com/tzaip/api',
+        target: 'http://10.91.144.140:8080/v1/api/31f20efc7e0848deab6a6bc10fc3021e/form/type/runtime',
+        pathRewrite: {
+          '^/elsaApi': '',
+        },
+        secure: false,
+        changeOrigin: true,
+      },
       '/aiApi': {
-        target: 'http://80.11.128.86:30030',
+        // target: 'https://tzaip-beta.paas.huawei.com/tzaip/api',
+        // target: 'http://10.169.63.12:8080/aipp',
+        // target: 'http://80.11.128.86:30010/api/jober/v1/api',
+        target: 'http://10.91.144.140:8080/v1/api',
         pathRewrite: {
           '^/aiApi': '',
         },
@@ -75,13 +88,18 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/aippApi': {
-        target: 'http://80.11.128.86:30030',
-        pathRewrite: { '^/aippApi': '/api/jober/v1/api' },
+        // target: 'http://10.91.144.92:8080/v1/api',
+        // target: 'http://10.169.63.12:8080/api/jober/v1/api',
+        // target: 'http://80.11.128.86:30010/api/jober/v1/api',
+        target: 'http://10.91.144.140:8080/v1/api',
+        // target: 'https://jane-beta.huawei.com/api/jober/v1/api',
+        // target: 'http://10.91.144.226:8080/v1/api',
+        pathRewrite: { '^/aippApi': '' },
         secure: false,
         changeOrigin: true,
       },
       '/modelApi': {
-        target: 'http://80.11.128.86:30030',
+        target: 'http://80.11.128.86:30010',
         pathRewrite: {
           '^/modelApi': '',
         },
@@ -89,7 +107,7 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/knowledge': {
-        target: 'http://80.11.128.86:30030',
+        target: 'http://80.11.128.86:30010',
         pathRewrite: {
           '^/knowledge': '',
         },
@@ -97,13 +115,13 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/app': {
-        target: 'http://80.11.128.86:30030',
+        target: 'http://80.11.128.86:30010',
         pathRewrite: { '^/app': '' },
         secure: false,
         changeOrigin: true,
       },
       '/v1': {
-        target: 'http://80.11.128.86:30030',
+        target: 'http://80.11.128.86:30010',
         pathRewrite: { '^/v1': '/v1' }, //不能替换V1
         secure: false,
         changeOrigin: true,

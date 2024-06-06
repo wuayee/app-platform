@@ -6,7 +6,9 @@ import EditModal from './edit-modal.jsx';
 import knowledgeBase from '../../assets/images/knowledge/knowledge-base.png';
 
 const ChoreographyHead = (props) => {
-  const { showElsa, aippInfo,updateAippCallBack,
+  const { 
+    showElsa, aippInfo,
+    updateAippCallBack,
     mashupClick, status } = props;
   let modalRef = React.createRef();
   let editRef = React.createRef();
@@ -22,13 +24,12 @@ const ChoreographyHead = (props) => {
   function backClick() {
     showElsa && mashupClick();
   }
-
   return <>{(
     <div className="header">
       <div className="logo">
         { showElsa && <LeftArrowIcon className="back-icon" onClick={backClick}/> }
         { aippInfo?.attributes?.icon ? <img src={aippInfo.attributes.icon} onClick={backClick} /> : <img src={knowledgeBase} onClick={backClick}/> }
-        <span className="header-text">{ aippInfo?.name }</span>
+          <span className="header-text">{ aippInfo?.name }</span>
         {
           !status && <EditIcon onClick={ handleEditClick } />
         }

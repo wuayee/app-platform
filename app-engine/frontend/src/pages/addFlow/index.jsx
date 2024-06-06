@@ -9,18 +9,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Tooltip, Tabs, Input, Drawer, Form, InputNumber, Switch, Button, Modal } from "antd";
 import {
   EditIcon,
-  AddFlowIcon,
   LeftArrowIcon,
   UploadIcon,
   StartIcon,
-  DataRetrievalIcon,
-  EndIcon,
-  ApiIcon,
-  ManualCheckIcon,
-  LlmIcon,
   ConfigFlowIcon,
-  IfIcon,
-  FitIcon,
   CloseIcon,
   RunIcon
 } from '@assets/icon';
@@ -35,10 +27,12 @@ import { configMap } from "./config";
 import { getAddFlowConfig } from "@shared/http/appBuilder";
 import TestModal from "../components/test-modal";
 import TestStatus from "../components/test-status";
-const { Search } = Input;
+import LeftMenu from './components/left-menu';
+import Stage from './components/elsa-stage';
+
 
 const AddFlow = (props) => {
-  const { type,aippInfo } = props;
+  const { type, aippInfo } = props;
   const [ dragData, setDragData ] = useState([]);
   const { tenantId, appId } = useParams();
   const [ timestamp, setTimestamp ] = useState(new Date());
@@ -75,25 +69,7 @@ const AddFlow = (props) => {
   useEffect(() => {
     type ? null : setShowMenu(true);
   }, [props.type])
-  // 拖拽完成回调
-  function handleDragEnter(e) {
-    const nodeTab = e.dataTransfer.getData('itemTab');
-    let nodeType;
-    switch (nodeTab) {
-        case 'basic':
-            nodeType = e.dataTransfer.getData('itemType');
-            window.agent.createNode(nodeType, e);
-            break;
-        case 'tool':
-            nodeType = e.dataTransfer.getData('itemType');
-            let nodeMetaData = e.dataTransfer.getData('itemMetaData');
-            window.agent.createNode(nodeType, e, JSON.parse(nodeMetaData));
-            break;
-        default:
-            break;
-    }
 
-  }
   useEffect(() => {
     window.agent = null;
     type ? setElsaData() : initElsa();
@@ -229,11 +205,6 @@ const AddFlow = (props) => {
     clearInterval(timerRef.current);
     Message({ type: 'warning', content: content });
   }
-  // 展示上一次测试
-  const handleDisplayLastRun = () => {
-
-  }
-
   const formatTimeStamp = (now) => {
     let hours = now.getHours().toString().padStart(2, '0');
     let minutes = now.getMinutes().toString().padStart(2, '0');
@@ -401,8 +372,7 @@ const AddFlow = (props) => {
 
   return <>{(
     <div className='add-flow-container'>
-      {
-        !type && <div className='header'>
+      {!type && <div className='header'>
           <div className='header-left'>
             <LeftArrowIcon className="icon-back" onClick={ handleBackClick } />
             <span className='header-text'>{ waterFlowName }</span>
@@ -411,7 +381,6 @@ const AddFlow = (props) => {
             <TestStatus isTested={isTested} isTesting={isTesting} testTime={testTime} testStatus={testStatus}/>
           </div>
           <div className='header-grid'>
-            {/*{isTested && <span className="header-btn last-run-btn" onClick={handleDisplayLastRun}>展示上一次运行</span>}*/}
             <span className="header-btn test-btn" onClick={handleDebugClick}>测试</span>
             <span className="header-btn" onClick={handleUploadFlow}><UploadIcon />发布</span>
           </div>
@@ -429,16 +398,11 @@ const AddFlow = (props) => {
             </Tooltip>
           )
         }
-        <div
-          className='content-right'
-          onDragOver={(e) => e.preventDefault()}
-          onDrop ={handleDragEnter}>
-            <div className='elsa-canvas' id='stage'></div>
-        </div>
+        <Stage />
       </div>
       <PublishModal
         modalRef={modalRef}
-        aippInfo={aippInfo}
+        aippInfo={aippInfo || appRef.current}
         waterFlowName={waterFlowName}
         modalInfo={modalInfo}
         addId={addId}
@@ -487,116 +451,5 @@ const AddFlow = (props) => {
     </div>
   )}</>
 };
-
-const LeftMenu = (props) => {
-  const { type, dragData, menuClick } = props;
-
-  // 搜索文本变化，更新工具列表
-  const handleSearch = (value, event, source) => {
-  }
-
-  const getIconByType = (type) => {
-    return {
-      "startNodeStart": <StartIcon />,
-      "retrievalNodeState": <DataRetrievalIcon />,
-      "llmNodeState": <LlmIcon />,
-      "endNodeEnd": <EndIcon />,
-      "manualCheckNodeState": <ManualCheckIcon />,
-      "fitInvokeNodeState": <FitIcon />,
-      "conditionNodeCondition": <IfIcon />,
-      "toolInvokeNodeState": <FitIcon />
-    }[type];
-  }
-
-    const BasicItems = (props) => {
-      const {dragData, tab} = props;
-        return <>
-            { tab === 'tool' &&
-                <Search
-                    placeholder="请输入搜索关键词"
-                    allowClear
-                    onSearch={handleSearch}
-                />
-            }
-            { dragData.map((item, index) => {
-                return (
-                    <div
-                        className='drag-item'
-                        onDragStart={(e) => config[tab].dragFunc(item, e)}
-                        draggable={true}
-                        key={index}
-                    >
-                        <div className='drag-item-title'>
-                            <div>
-                                { tab === 'basic' ? getIconByType(item.type) : getIconByType("toolInvokeNodeState") }
-                                <span className='content-node-name'>{ item.name }</span>
-                            </div>
-                            <span className='drag-item-icon' onClick={(event) => config[tab].addFunc(item, event)}><AddFlowIcon /></span>
-                        </div>
-                    </div>
-                )
-            })}
-        </>
-    }
-
-    const config = {
-      basic: {
-          addFunc: (item, e) => handleClickAddBasicNode(item.type, e),
-          dragFunc: (item, e) => handleDragBasicNode(item, e)
-      },
-      tool: {
-          addFunc:(item, e) => handleClickAddToolNode("toolInvokeNodeState", e, item),
-          dragFunc:(item, e) => handleDragToolNode(item, e)
-      }
-    }
-
-    const items = [
-      {
-          key: 'basic',
-          label: '基础',
-          children: <BasicItems dragData={dragData.basic || []} tab={"basic"}/>,
-          icon: <LeftArrowIcon onClick={menuClick} />
-      },
-      {
-          key: 'tool',
-          label: '工具',
-          children: <BasicItems dragData={dragData.tool || []} tab={"tool"}/>,
-      },
-    ];
-
-  const handleClickAddBasicNode = (type, e) => {
-    e.clientX += 100;
-    window.agent.createNode(type, e);
-  }
-
-  const handleClickAddToolNode = (type, e, metaData) => {
-      e.clientX += 100;
-      window.agent.createNode(type, e, metaData);
-  }
-
-  const handleDragBasicNode = (item, e) => {
-      e.dataTransfer.setData('itemTab', 'basic');
-      e.dataTransfer.setData('itemType', item.type);
-  }
-
-  const handleDragToolNode = (item, e) => {
-      e.dataTransfer.setData('itemTab', 'tool');
-      e.dataTransfer.setData('itemType', 'toolInvokeNodeState');
-      e.dataTransfer.setData('itemMetaData', JSON.stringify(item));
-  }
-
-  return <>{(
-    <div className='content-left'>
-      {/*{*/}
-      {/*  <div className='content-header'>*/}
-      {/*    <LeftArrowIcon onClick={menuClick} />*/}
-      {/*    <span className="flow-title">高级配置</span>*/}
-      {/*  </div>*/}
-      {/*}*/}
-      {/*<div className="content-desc">将工作流节点拖进画布进行配置</div>*/}
-        <Tabs defaultActiveKey="basic" items={items} />
-    </div>
-  )}</>
-}
 
 export default AddFlow;

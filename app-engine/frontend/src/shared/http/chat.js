@@ -1,7 +1,7 @@
 import { del, get, post, patch } from './http';
 import { httpUrlMap } from './httpConfig';
 
-const { AI_URL, MODEL_LIST_URL, PLUGIN_URL } = httpUrlMap[process.env.NODE_ENV];
+const { AIPP_URL, AI_URL, MODEL_LIST_URL, PLUGIN_URL } = httpUrlMap[process.env.NODE_ENV];
 
 export const tenantId = '282b963640544f148dbdfa49718075bc';
 
@@ -19,13 +19,13 @@ export function feedbacksRq(params) {
 
 // 创建对话
 export function creatChat(tenantId, params) {
-  const url = `${PLUGIN_URL}/v1/api/${tenantId}/chat`;
+  const url = `${AIPP_URL}/${tenantId}/chat`;
   return post(url, params);
 }
 
 // 更新会话
 export function updateChat(tenantId, chatId, params) {
-  const url = `${PLUGIN_URL}/v1/api/${tenantId}/chat/${chatId}`;
+  const url = `${AIPP_URL}/${tenantId}/chat/${chatId}`;
   return post(url, params);
 }
 

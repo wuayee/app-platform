@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Spin } from 'antd';
 import { Message } from '../../shared/utils/message';
 import {getAippInfo, getSharedDialog} from '../../shared/http/aipp';
-import ChatMessage from '../chatPreview/components/chat-message.jsx';
+import ChatMessage from '../chatPreview/components/chat-message.tsx';
 import robot from '../../assets/images/ai/robot1.png';
 import './index.scss';
 
@@ -34,19 +34,19 @@ const ChatShare = () => {
   }
   // 获取对话详情
   const getDialog = async () => {
-      setSpinning(true);
-      try {
-          const res = await getSharedDialog(tenantId, shareId);
-          if (res.code === 0) {
-              const data = JSON.parse(res.data);
-              const parsedItem = data.map(item => {
-                  return JSON.parse(item.query);
-              });
-              setChatList(parsedItem);
-          }
-      } finally {
-          setSpinning(false);
+    setSpinning(true);
+    try {
+      const res = await getSharedDialog(tenantId, shareId);
+      if (res.code === 0) {
+        const data = JSON.parse(res.data);
+        const parsedItem = data.map(item => {
+          return JSON.parse(item.query);
+        });
+        setChatList(parsedItem);
       }
+    } finally {
+      setSpinning(false);
+    }
   }
   return <>{(
     <div className="share-content">

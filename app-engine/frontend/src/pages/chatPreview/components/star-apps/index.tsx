@@ -187,7 +187,7 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
           </div>
         ))}
       </div>
-      <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
+      <div style={{float:'right', marginTop: 12 }}>
         <Button onClick={() => setOpenStar(false)} className="close-button">
           关闭
         </Button>
