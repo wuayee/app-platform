@@ -66,7 +66,7 @@ const Home = () => {
 
 export default function App() {
   return (
-    <ConfigProvider locale={zhCN} autoInsertSpaceInButton={true}>
+    <ConfigProvider locale={zhCN} autoInsertSpace={true}>
       {/* <StoreProvider> */}
           <Home/>
       {/* </StoreProvider> */}

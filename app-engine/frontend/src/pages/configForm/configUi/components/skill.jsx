@@ -19,7 +19,7 @@ const Skill = (props) => {
   const navigate = useNavigate();
 
   const filterOption = (input, option) =>
-        (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+    (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
   const onArrowClick = (value, func) => {
     func(!value);

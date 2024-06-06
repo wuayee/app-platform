@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Button } from 'antd';
 import { useParams } from 'react-router-dom';
-import { AippContext } from '../aippIndex/context';
 import { getAippInfo } from '../../shared/http/aipp';
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
@@ -26,7 +25,6 @@ const ChatRunning = () => {
       });
     }
   }
-
   const contextProvider = {
     appId,
     tenantId,

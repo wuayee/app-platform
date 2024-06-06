@@ -34,19 +34,19 @@ const ChatShare = () => {
   }
   // 获取对话详情
   const getDialog = async () => {
-      setSpinning(true);
-      try {
-          const res = await getSharedDialog(tenantId, shareId);
-          if (res.code === 0) {
-              const data = JSON.parse(res.data);
-              const parsedItem = data.map(item => {
-                  return JSON.parse(item.query);
-              });
-              setChatList(parsedItem);
-          }
-      } finally {
-          setSpinning(false);
+    setSpinning(true);
+    try {
+      const res = await getSharedDialog(tenantId, shareId);
+      if (res.code === 0) {
+        const data = JSON.parse(res.data);
+        const parsedItem = data.map(item => {
+          return JSON.parse(item.query);
+        });
+        setChatList(parsedItem);
       }
+    } finally {
+      setSpinning(false);
+    }
   }
   return <>{(
     <div className="share-content">

@@ -2,11 +2,11 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Spin, Tooltip } from 'antd';
 import { TalkFlowIcon  } from '@assets/icon';
-import { templateJson } from './template';
 import { getCurUser, getAippInfo } from '@shared/http/aipp';
 import { updateFormInfo } from '@shared/http/aipp';
 import { debounce, getUiD } from "@shared/utils/common";
 import { Message } from "@shared/utils/message";
+import { AippContext } from './context';
 import AddFlow from '../addFlow';
 import ConfigForm from '../configForm';
 import CommonChat from '../chatPreview/chatComminPage';
@@ -19,17 +19,11 @@ const AippIndex = () => {
   const [ showElsa, setShowElsa ] = useState(false);
   const [ spinning, setSpinning] = useState(false);
   const [ aippInfo, setAippInfo] = useState({});
+  const [ reloadInspiration, setReloadInspiration ] = useState('');
   const [ showChat, setShowChat ] = useState(false);
   const [ messageChecked, setMessageCheck ] = useState(false);
-  const [ isTested, setIsTested ] = useState(false);
-  const [ testStatus, setTestStatus ] = useState('Running');
-  const [ isTesting, setIsTesting ] = useState(false);
-  const [ testTime, setTestTime ] = useState(0);
   const aippRef = useRef(null);
   const inspirationRefresh = useRef(false);
-  let addFlowRef = React.createRef();
-  const [chatId,setChatId]=useState(null);
-  const[clearChat,setClearChat] =useState(null);
 
   const elsaChange = () => {
     setShowElsa(!showElsa);
@@ -47,7 +41,7 @@ const AippIndex = () => {
       const res = await getAippInfo(tenantId, appId);
       if (res.code === 0) {
         setAippInfo(() => {
-          res.data.notShowHistory = true;
+          res.data.hideHistory = true;
           return res.data
         });
       }
@@ -62,7 +56,6 @@ const AippIndex = () => {
       return aippRef.current
     })
   }
-
   // 保存配置
   const saveConfig = (data) => {
     updateFormInfo(tenantId, appId, data).then((res) => {
@@ -72,19 +65,20 @@ const AippIndex = () => {
         if (inspirationRefresh.current) {
           inspirationRefresh.current = false;
           let key = getUiD();
+          setReloadInspiration(key);
         }
       }
     })
   }
-
+  // 灵感大全更新后自动刷新
   const inspirationChange = () => {
     inspirationRefresh.current = true;
   }
-
   // 编辑工具流设置右侧聊天展开
   const changeChat = () => {
     setShowChat(!showChat)
   }
+  // 实时自动保存
   const handleSearch = useCallback(debounce((data) => saveConfig(data), 1000), []);
   const handleConfigDataChange = (data) => {
     handleSearch(data);
@@ -97,11 +91,12 @@ const AippIndex = () => {
     setMessageCheck,
     showElsa,
     updateAippCallBack,
+    reloadInspiration
   };
 
   const configFormProvider ={
     appId,
-    tenantId,
+    tenantId
   }
   return (
     <>

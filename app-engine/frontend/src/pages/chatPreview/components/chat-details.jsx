@@ -16,9 +16,7 @@ const ChatDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
   let modalRef = useRef();
-  // const isHomepage = location.pathname.includes("home") || location.pathname === "/" ;
-  const isHomepage = aippInfo.name === '小海' ;
-  // const isHomepage = false;
+  const isHomepage = aippInfo.name === '小海' && !location.pathname.includes("app-detail");
   const addApp = () => {
     setModalInfo(() => {
       modalRef.current.showModal();

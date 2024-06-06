@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState, useContext, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Tooltip, Dropdown, Space, Modal } from "antd";
+import { Modal } from "antd";
 import { Message } from "@shared/utils/message";
 import { AippContext } from '@/pages/aippIndex/context';
 import { CloseOutlined } from "@ant-design/icons";
@@ -9,20 +8,30 @@ import {
   LinkIcon, 
   AtIcon, 
   HistoryIcon, 
-  ArrowDownIcon, 
-  LanguagesIcon, 
+  ArrowDownIcon,
   ClearChatIcon } from '@/assets/icon';
+import { clearInstance } from '@shared/http/aipp';
 import ReferencingApp from './referencing-app';
 import UploadFile from './upload-file';
 import StarApps from "../../star-apps";
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
-import LinkFile from './file-preview';
 import HistoryChatDrawer from '../../history-chat';
 
 // 操作按钮,聊天界面下面操作框
-const EditorBtnHome = () => {
-  const { chatRunning, tenantId, appId,aippInfo ,setOpenStar,
-    setChatList,setChatId,setChatRunning,setClearChat,chatType} = useContext(AippContext);
+const EditorBtnHome = (props) => {
+  const { fileCallBack } = props;
+  const { 
+    chatRunning, 
+    tenantId, 
+    appId,
+    aippInfo,
+    setOpenStar,
+    chatList,
+    setChatList,
+    setChatId,
+    setChatRunning,
+    chatType
+  } = useContext(AippContext);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ showAt, setShowAt ] = useState(false);
   const [ appName, setAppName ] = useState('');
@@ -41,9 +50,20 @@ const EditorBtnHome = () => {
     setAppName(aippInfo.name || '应用');
   }, [aippInfo]);
 
-  // 清空聊天
-  const handleOk = (time) => {
-    setClearChat(time);
+  // 清空历史记录
+  const handleOk = async () => {
+    if (chatRunning) {
+      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      return;
+    }
+    if (!chatList.length) {
+      setIsModalOpen(false);
+      return;
+    }
+    const res = await clearInstance(tenantId, appId, 'preview');
+    if (res.code === 0) {
+      setChatList([]);
+    }
     setIsModalOpen(false);
   };
   // @ 应用点击
@@ -74,11 +94,7 @@ const EditorBtnHome = () => {
       return;
     }
     setShowAt(false);
-    setOpenStar(true)
-  }
-  // 开始聊天
-  const chatClick = (item) => {
-    setOpenStar(false);
+    setOpenStar(true);
   }
   // 多模态上传文件
   const uploadClick = () => {
@@ -88,6 +104,10 @@ const EditorBtnHome = () => {
     }
     openUploadRef.current.showModal();
   }
+  // 上传文件回调
+  const fileSend = (data, type) => {
+    fileCallBack(data, type);
+  }
   // 清空聊天记录
   const clearAllModal = () => {
     if (chatRunning) {
@@ -96,7 +116,7 @@ const EditorBtnHome = () => {
     };
     setIsModalOpen(true);
   }
-  
+
   return (
     <div className="btn-inner">
       <div className="inner-left">
@@ -105,13 +125,11 @@ const EditorBtnHome = () => {
           <div className={['switch-app', isAt ? 'switch-active' : null ].join(' ')} onClick={()=>{if(chatType==='home'){showMoreClick();}}}>
             { isAt && <span style={{ marginLeft: '6px' }}>正在跟</span> }
             <span className="item-name" title={appName}>{appName}</span>
-            <div hidden={chatType!=='home'}><ArrowDownIcon className="arrow-icon"/></div>
+            { !aippInfo.hideHistory && <ArrowDownIcon className="arrow-icon" /> }
             { isAt && <span style={{ marginLeft: '6px' }}>对话</span> }
           </div>
           <LinkIcon onClick={uploadClick} />
-
-          {/* 暂时隐藏@图标 */}
-          {/* { !isAt && <AtIcon onClick={atClick} /> } */}
+          { (!isAt && !aippInfo.hideHistory ) && <AtIcon onClick={atClick} /> }
         </div>
       </div>
       <div className="inner-right">
@@ -125,7 +143,7 @@ const EditorBtnHome = () => {
           (
             <div className="inner-item">
               <div><ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} /></div>
-              <HistoryIcon  onClick={(e) => {setOpenHistorySignal(e.timeStamp);}}/>
+              { !aippInfo.hideHistory && <HistoryIcon  onClick={(e) => {setOpenHistorySignal(e.timeStamp)}}/> }
               <span className="item-clear" onClick={() => {
                 setChatRunning(false);
                 setChatId(null);
@@ -150,7 +168,7 @@ const EditorBtnHome = () => {
       <StarApps 
         handleAt={atItemClick}
       />
-    <LinkFile openUploadRef={openUploadRef}/>
+    <UploadFile  openUploadRef={openUploadRef} fileSend={fileSend}/>
     <HistoryChatDrawer openHistorySignal={openHistorySignal}/>
     </div>
   );

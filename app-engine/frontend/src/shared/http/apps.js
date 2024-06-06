@@ -123,7 +123,7 @@ export function createAssessmentTasks(data) {
 // 下载模板链接
 export const downTemplateUrl = `${appurl}/eval_dataset_template.xlsx`;
 
-// 查询分析数据 appId ,  timeType 
+// 查询分析数据 appId ,  timeType
 export function getAnalysisData(data) {
   const url = `${appurl}/metrics/analysis`;
   return get(url, data);

@@ -38,7 +38,7 @@ import TestStatus from "../components/test-status";
 const { Search } = Input;
 
 const AddFlow = (props) => {
-  const { type,aippInfo } = props;
+  const { type, aippInfo } = props;
   const [ dragData, setDragData ] = useState([]);
   const { tenantId, appId } = useParams();
   const [ timestamp, setTimestamp ] = useState(new Date());
@@ -148,10 +148,10 @@ const AddFlow = (props) => {
   const handleSearch = useCallback(debounce((e) => elsaChange(e), 2000), []);
   // 发布
   const handleUploadFlow = () => {
-    if (!isTested) {
-      testRef.current.showModal();
-      return;
-    }
+    // if (!isTested) {
+    //   testRef.current.showModal();
+    //   return;
+    // }
     modalRef.current.showModal();
   }
   // 编辑
@@ -438,7 +438,7 @@ const AddFlow = (props) => {
       </div>
       <PublishModal
         modalRef={modalRef}
-        aippInfo={aippInfo}
+        aippInfo={aippInfo || appRef.current}
         waterFlowName={waterFlowName}
         modalInfo={modalInfo}
         addId={addId}
