@@ -93,4 +93,10 @@
           and log_type = 'MSG'
     </select>
 
+    <select id="countChat" resultType="int">
+        select count(*)
+        from t_chat_session_task_instance_wide_relationship
+        where chat_id = #{chatId}
+    </select>
+
 </mapper>

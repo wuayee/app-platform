@@ -551,6 +551,11 @@ public class AippConst {
      */
     public static final Integer CHAT_STATUS = 0;
 
+    /**
+     * 表明最长chat_name为20
+     */
+    public static final Integer CHAT_NAME_LENGTH = 20;
+
     // *** aipp initial static meta items ***
     /**
      * aipp initial static meta items
