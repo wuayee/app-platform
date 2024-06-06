@@ -6,13 +6,18 @@ package com.huawei.fit.jober.aipp.common;
 
 import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
 import com.huawei.fit.jober.aipp.common.exception.AippJsonEncodeException;
+import com.huawei.fit.jober.aipp.init.serialization.custom.LocalDateTimeDeserializer;
+import com.huawei.fit.jober.aipp.init.serialization.custom.LocalDateTimeSerializer;
+import com.huawei.fitframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +50,12 @@ public interface JsonUtils {
 
     static String toJsonString(Object object) {
         try {
-            return new ObjectMapper().writeValueAsString(object);
+            ObjectMapper mapper = new ObjectMapper();
+            SimpleModule module = new SimpleModule();
+            module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(StringUtils.EMPTY));
+            module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(StringUtils.EMPTY));
+            mapper.registerModule(module);
+            return mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new AippJsonEncodeException(e.getMessage());
         }
