@@ -17,9 +17,9 @@ import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.fitframework.value.Result;
 import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
-import com.huawei.jade.carver.tool.repository.pgsql.model.reponse.Result;
 import com.huawei.jade.carver.tool.service.ToolService;
 
 import java.io.UnsupportedEncodingException;

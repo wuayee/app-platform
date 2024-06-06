@@ -2,9 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.carver.tool.repository.pgsql.model.reponse;
-
-import lombok.Getter;
+package com.huawei.fitframework.value;
 
 import java.util.Collection;
 
@@ -14,7 +12,6 @@ import java.util.Collection;
  * @author 李金绪 l00878072
  * @since 2024/5/10
  */
-@Getter
 public class Result<T> {
     /**
      * 表示构造结果的输入。
@@ -41,6 +38,18 @@ public class Result<T> {
         this.data = data;
         this.code = code;
         this.initializeBasedOnType(data);
+    }
+
+    public T getData() {
+        return this.data;
+    }
+
+    public int getCode() {
+        return this.code;
+    }
+
+    public int getTotal() {
+        return this.total;
     }
 
     /**
