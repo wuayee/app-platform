@@ -28,7 +28,7 @@ const saveContent = (tenant_id, instance_id, value) => {
 // 获取模型列表接口
 const getModels = () => {
   return new Promise((resolve, reject) => {
-    get(`${MODEL_URL}/api/gateway/v1/chat/models`).then((res) => {
+    get(`${MODEL_URL}/gateway/v1/chat/models`).then((res) => {
       resolve(res);
     }, (error) => {
       reject(error);
