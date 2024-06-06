@@ -73,7 +73,10 @@ public class StatisticsFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getPath().toString();
-        if (!"/v1/chat/completions".equals(path) && !"/v1/embeddings".equals(path)) {
+        log.info("Statistics filter: path=" + path);
+
+        // path不会为空指针，空路径默认为"/"
+        if (!path.contains("/v1/chat/completions") && !path.contains("/v1/embeddings")) {
             return chain.filter(exchange);
         }
 
