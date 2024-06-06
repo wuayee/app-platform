@@ -31,6 +31,11 @@
             <artifactId>fel-flow</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jade.eco</groupId>
+            <artifactId>jade-fel-model-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- fit-->
         <dependency>

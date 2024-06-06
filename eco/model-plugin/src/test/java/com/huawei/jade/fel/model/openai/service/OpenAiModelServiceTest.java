@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.fel.model.openai;
+package com.huawei.jade.fel.model.openai.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,9 +15,6 @@ import com.huawei.jade.fel.embed.EmbedOptions;
 import com.huawei.jade.fel.embed.EmbedRequest;
 import com.huawei.jade.fel.embed.EmbedResponse;
 import com.huawei.jade.fel.model.openai.client.OpenAiClient;
-import com.huawei.jade.fel.model.openai.service.OpenAiChatModelService;
-import com.huawei.jade.fel.model.openai.service.OpenAiChatModelStreamService;
-import com.huawei.jade.fel.model.openai.service.OpenAiEmbedModelService;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
