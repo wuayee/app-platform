@@ -16,7 +16,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.value.Result;
 import com.huawei.jade.store.entity.query.TaskQuery;
 import com.huawei.jade.store.entity.transfer.TaskData;
-import com.huawei.jade.store.service.TaskService;
+import com.huawei.jade.store.service.EcoTaskService;
 
 import java.util.List;
 
@@ -29,14 +29,14 @@ import java.util.List;
 @Component
 @RequestMapping("/tasks")
 public class TaskController {
-    private final TaskService taskService;
+    private final EcoTaskService taskService;
 
     /**
      * 通过任务服务来初始化 {@link TaskController} 的新实例。
      *
-     * @param taskService 表示任务服务的 {@link TaskService}。
+     * @param taskService 表示任务服务的 {@link EcoTaskService}。
      */
-    public TaskController(TaskService taskService) {
+    public TaskController(EcoTaskService taskService) {
         this.taskService = notNull(taskService, "The task service cannot be null.");
     }
 
@@ -49,7 +49,7 @@ public class TaskController {
     @GetMapping("/{taskId}")
     public Result<TaskData> getTask(@PathVariable("taskId") String taskId) {
         notBlank(taskId, "The tool unique name cannot be blank.");
-        return Result.createResult(this.taskService.getTask(taskId), 0);
+        return Result.create(this.taskService.getTask(taskId), 0);
     }
 
     /**
@@ -71,8 +71,7 @@ public class TaskController {
         if (pageSize != null) {
             notNegative(pageSize, "The page size cannot be negative. [pageSize={0}]", pageSize);
         }
-        TaskQuery toolTagQuery =
-                new TaskQuery(toolUniqueName, pageNum, pageSize);
-        return Result.createResult(this.taskService.getTasks(toolTagQuery), 0);
+        TaskQuery taskQuery = new TaskQuery(toolUniqueName, pageNum, pageSize);
+        return Result.create(this.taskService.getTasks(taskQuery), 0);
     }
 }

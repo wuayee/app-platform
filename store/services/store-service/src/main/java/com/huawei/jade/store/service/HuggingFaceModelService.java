@@ -18,7 +18,7 @@ import java.util.List;
  * @author 鲁为 l00839724
  * @since 2024-06-07
  */
-public interface ModelService {
+public interface HuggingFaceModelService {
     /**
      * 根据动态条件准确查询模型列表。
      *

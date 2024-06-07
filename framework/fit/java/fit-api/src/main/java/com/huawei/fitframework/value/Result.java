@@ -7,57 +7,25 @@ package com.huawei.fitframework.value;
 import java.util.Collection;
 
 /**
- * Http 调用的返回结果类。
+ * 表示结果对象的包装类。
  *
  * @author 李金绪 l00878072
  * @since 2024/5/10
  */
 public class Result<T> {
-    /**
-     * 表示构造结果的输入。
-     */
     private final T data;
-
-    /**
-     * 表示构造结果的代码。
-     */
     private final int code;
+    private final int total;
 
     /**
-     * 表示构造结果的输入的数量。
-     */
-    private int total;
-
-    /**
-     * 自定义构造方法。
+     * 通过数据对象和状态码来初始化 {@link Result} 的新实例。
      *
-     * @param data 表示输入对象的 {@link T}。
-     * @param code 表示 Http 返回代码的 {@link Integer}。
+     * @param data 表示数据对象的 {@link T}。
+     * @param code 表示状态码的 {@code int}。
      */
-    public Result(T data, Integer code) {
+    public Result(T data, int code) {
         this.data = data;
         this.code = code;
-        this.initializeBasedOnType(data);
-    }
-
-    public T getData() {
-        return this.data;
-    }
-
-    public int getCode() {
-        return this.code;
-    }
-
-    public int getTotal() {
-        return this.total;
-    }
-
-    /**
-     * 初始化输入的数量。
-     *
-     * @param data 构造结果的输入 {@link T}。
-     */
-    private void initializeBasedOnType(T data) {
         if (data == null) {
             this.total = 0;
         } else if (data instanceof Collection) {
@@ -69,14 +37,52 @@ public class Result<T> {
     }
 
     /**
-     * 创建返回对象的静态方法。
+     * 获取数据对象。
      *
-     * @param data 表示操作返回对象的 {@link T}。
-     * @param code 表示构造结果的代码。
-     * @param <T> 表示操作返回对象的泛型。
-     * @return 返回结果的 {@link Result}{@code <}{@link T}{@code >}。
+     * @return 表示数据对象的 {@link T}。
      */
-    public static <T> Result<T> createResult(T data, Integer code) {
+    public T getData() {
+        return this.data;
+    }
+
+    /**
+     * 获取状态码。
+     *
+     * @return 表示状态码的 {@code int}。
+     */
+    public int getCode() {
+        return this.code;
+    }
+
+    /**
+     * 获取数据的数量。
+     *
+     * @return 表示数据数量的 {@code int}。
+     */
+    public int getTotal() {
+        return this.total;
+    }
+
+    /**
+     * 创建一个数据对象的包装类。
+     *
+     * @param data 表示数据对象的 {@link T}。
+     * @param code 表示状态码的 {@code int}。
+     * @param <T> 表示数据对象的类型的 {@link T}。
+     * @return 表示创建出来的数据对象的包装类的 {@link Result}{@code <}{@link T}{@code >}。
+     */
+    public static <T> Result<T> create(T data, int code) {
         return new Result<>(data, code);
+    }
+
+    /**
+     * 根据页数和每页大小来计算偏移量。
+     *
+     * @param pageNum 表示页数的 {@code int}。
+     * @param pageSize 表示每页大小的 {@code int}。
+     * @return 表示计算出来的偏移量的 {@code int}。
+     */
+    public static int calculateOffset(int pageNum, int pageSize) {
+        return pageNum < 0 || pageSize < 0 ? 0 : (pageNum - 1) * pageSize;
     }
 }

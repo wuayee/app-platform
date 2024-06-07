@@ -132,6 +132,10 @@
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.service</groupId>
             <artifactId>fit-server</artifactId>
         </dependency>
         <dependency>

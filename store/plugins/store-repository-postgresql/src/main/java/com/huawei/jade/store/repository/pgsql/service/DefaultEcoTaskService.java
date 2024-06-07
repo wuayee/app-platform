@@ -4,23 +4,23 @@
 
 package com.huawei.jade.store.repository.pgsql.service;
 
+import static com.huawei.fitframework.inspection.Validation.notNull;
+import static com.huawei.jade.store.repository.pgsql.util.SerializerUtils.json2obj;
+
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.store.entity.query.TaskQuery;
 import com.huawei.jade.store.entity.transfer.TaskData;
 import com.huawei.jade.store.repository.pgsql.entity.TaskDo;
 import com.huawei.jade.store.repository.pgsql.mapper.TaskMapper;
-import com.huawei.jade.store.service.TaskService;
+import com.huawei.jade.store.service.EcoTaskService;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 任务的 Http 请求的服务层实现。
@@ -29,19 +29,19 @@ import java.util.Map;
  * @since 2024-06-06
  */
 @Component
-public class DefaultTaskService implements TaskService {
+public class DefaultEcoTaskService implements EcoTaskService {
     private final ObjectSerializer serializer;
     private final TaskMapper taskMapper;
 
     /**
-     * 通过持久层接口来初始化 {@link DefaultTaskService} 的实例。
+     * 通过持久层接口来初始化 {@link DefaultEcoTaskService} 的实例。
      *
      * @param serializer 表示序列化器实例的 {@link ObjectSerializer}。
      * @param taskMapper 表示持久层实例的 {@link TaskMapper}。
      */
-    public DefaultTaskService(@Fit(alias = "json") ObjectSerializer serializer, TaskMapper taskMapper) {
-        this.serializer = serializer;
-        this.taskMapper = taskMapper;
+    public DefaultEcoTaskService(@Fit(alias = "json") ObjectSerializer serializer, TaskMapper taskMapper) {
+        this.serializer = notNull(serializer, "The json serializer cannot be null.");
+        this.taskMapper = notNull(taskMapper, "The task mapper cannot be null.");
     }
 
     @Override
@@ -50,8 +50,8 @@ public class DefaultTaskService implements TaskService {
         TaskDo taskDo = this.taskMapper.getTask(taskId);
         TaskData taskData = new TaskData();
         taskData.setTaskId(taskDo.getTaskId());
-        taskData.setSchema(json2obj(taskDo.getSchema(), serializer));
-        taskData.setContext(json2obj(taskDo.getContext(), serializer));
+        taskData.setSchema(json2obj(taskDo.getSchema(), this.serializer));
+        taskData.setContext(json2obj(taskDo.getContext(), this.serializer));
         taskData.setToolUniqueName(taskDo.getToolUniqueName());
         return taskData;
     }
@@ -62,8 +62,7 @@ public class DefaultTaskService implements TaskService {
         if (taskQuery == null) {
             return Collections.emptyList();
         }
-        if ((taskQuery.getLimit() != null
-                && taskQuery.getLimit() < 0)) {
+        if ((taskQuery.getLimit() != null && taskQuery.getLimit() < 0)) {
             return Collections.emptyList();
         }
         List<TaskDo> dos = this.taskMapper.getTasks(taskQuery);
@@ -72,28 +71,12 @@ public class DefaultTaskService implements TaskService {
             for (TaskDo taskDo : dos) {
                 TaskData taskData = new TaskData();
                 taskData.setTaskId(taskDo.getTaskId());
-                taskData.setSchema(json2obj(taskDo.getSchema(), serializer));
-                taskData.setContext(json2obj(taskDo.getContext(), serializer));
+                taskData.setSchema(json2obj(taskDo.getSchema(), this.serializer));
+                taskData.setContext(json2obj(taskDo.getContext(), this.serializer));
                 taskData.setToolUniqueName(taskDo.getToolUniqueName());
                 taskDataList.add(taskData);
             }
         }
         return taskDataList;
-    }
-
-    /**
-     * 反序列化。
-     *
-     * @param schema 表示待序列化的字符串 {@link String}。
-     * @param serializer 表示序列化对象的 {@link ObjectSerializer}。
-     * @return 序列化的结果的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
-     */
-    public static Map<String, Object> json2obj(String schema, ObjectSerializer serializer) {
-        Map<String, Object> res = null;
-        if (schema != null) {
-            res = serializer.deserialize(schema,
-                    TypeUtils.parameterized(Map.class, new Type[] {String.class, Object.class}));
-        }
-        return res;
     }
 }

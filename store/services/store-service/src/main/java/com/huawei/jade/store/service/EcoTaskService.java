@@ -16,7 +16,7 @@ import java.util.List;
  * @author 鲁为 l00839724
  * @since 2024-06-06
  */
-public interface TaskService {
+public interface EcoTaskService {
     /**
      * 查询任务。
      *

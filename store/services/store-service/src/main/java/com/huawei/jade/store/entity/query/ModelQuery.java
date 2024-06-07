@@ -4,6 +4,8 @@
 
 package com.huawei.jade.store.entity.query;
 
+import com.huawei.fitframework.value.Result;
+
 /**
  * 动态条件查询模型的类。
  *
@@ -13,19 +15,16 @@ package com.huawei.jade.store.entity.query;
 public class ModelQuery {
     /**
      * 表示任务唯一标识。
-     * <p>构造条件时按需传入。</p>
      */
     private String taskId;
 
     /**
      * 表示偏移量。
-     * <p>构造条件时按需传入。</p>
      */
     private Integer offset;
 
     /**
      * 表示数量限制。
-     * <p>构造条件时按需传入。</p>
      */
     private Integer limit;
 
@@ -36,40 +35,65 @@ public class ModelQuery {
      * @param pageNum 表示页码的 {@link Integer}。
      * @param pageSize 表示限制的 {@link Integer}。
      */
-    public ModelQuery(String taskId, Integer pageNum,
-            Integer pageSize) {
+    public ModelQuery(String taskId, Integer pageNum, Integer pageSize) {
         this.taskId = taskId;
         this.limit = pageSize;
         if (pageNum != null && pageSize != null) {
-            this.offset = this.getOffset(pageNum, pageSize);
+            this.offset = Result.calculateOffset(pageNum, pageSize);
         }
     }
 
+    /**
+     * 获取任务唯一标识。
+     *
+     * @return 标识任务唯一标识的 {@link String}。
+     */
     public String getTaskId() {
         return this.taskId;
     }
 
+    /**
+     * 设置任务唯一标识。
+     *
+     * @param taskId 标识待设置的任务唯一标识的 {@link String}。
+     */
     public void setTaskId(String taskId) {
         this.taskId = taskId;
     }
 
+    /**
+     * 获取偏移量。
+     *
+     * @return 表示偏移量的 {@link Integer}。
+     */
     public Integer getOffset() {
         return this.offset;
     }
 
+    /**
+     * 设置偏移量。
+     *
+     * @param offset 表示待设置的偏移量的 {@link Integer}。
+     */
     public void setOffset(Integer offset) {
         this.offset = offset;
     }
 
+    /**
+     * 获取数量限制值。
+     *
+     * @return 表示数量限制值的 {@link Integer}。
+     */
     public Integer getLimit() {
         return this.limit;
     }
 
+    /**
+     * 设置数量限制值。
+     *
+     * @param limit 表示待设置的数量限制值的 {@link Integer}。
+     */
     public void setLimit(Integer limit) {
         this.limit = limit;
-    }
-
-    private int getOffset(int pageNum, int pageSize) {
-        return pageNum < 0 || pageSize < 0 ? 0 : (pageNum - 1) * pageSize;
     }
 }

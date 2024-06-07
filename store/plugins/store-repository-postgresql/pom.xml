@@ -47,12 +47,10 @@
         <dependency>
             <groupId>com.huawei.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
-            <version>${fit.version}</version>
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.service</groupId>
             <artifactId>fit-security</artifactId>
-            <version>${fit.version}</version>
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>

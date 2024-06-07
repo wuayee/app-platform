@@ -11,10 +11,6 @@
 
     <artifactId>store-service</artifactId>
 
-    <properties>
-        <lombok.version>1.18.26</lombok.version>
-    </properties>
-
     <dependencies>
         <!-- FIT -->
         <dependency>

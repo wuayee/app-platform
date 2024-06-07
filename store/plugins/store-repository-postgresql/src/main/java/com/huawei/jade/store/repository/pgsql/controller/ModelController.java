@@ -14,8 +14,8 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.value.Result;
 import com.huawei.jade.store.entity.query.ModelQuery;
 import com.huawei.jade.store.entity.transfer.ModelData;
-import com.huawei.jade.store.service.ModelService;
-import com.huawei.jade.store.service.TaskService;
+import com.huawei.jade.store.service.HuggingFaceModelService;
+import com.huawei.jade.store.service.EcoTaskService;
 
 import java.util.List;
 
@@ -28,14 +28,14 @@ import java.util.List;
 @Component
 @RequestMapping("/models")
 public class ModelController {
-    private final ModelService modelService;
+    private final HuggingFaceModelService modelService;
 
     /**
      * 通过模型服务来初始化 {@link ModelController} 的新实例。
      *
-     * @param modelService 表示任务服务的 {@link TaskService}。
+     * @param modelService 表示任务服务的 {@link EcoTaskService}。
      */
-    public ModelController(ModelService modelService) {
+    public ModelController(HuggingFaceModelService modelService) {
         this.modelService = notNull(modelService, "The model service cannot be null.");
     }
 
@@ -48,8 +48,7 @@ public class ModelController {
      * @return 表示查询到的指定模型的信息的 {@link Result}{@code <}{@link ModelData}{@code >}。
      */
     @GetMapping
-    public Result<List<ModelData>> getModels(
-            @RequestQuery(value = "taskId", required = false) String taskId,
+    public Result<List<ModelData>> getModels(@RequestQuery(value = "taskId", required = false) String taskId,
             @RequestQuery(value = "pageNum", required = false) Integer pageNum,
             @RequestQuery(value = "pageSize", required = false) Integer pageSize) {
         if (pageNum != null) {
@@ -58,8 +57,7 @@ public class ModelController {
         if (pageSize != null) {
             notNegative(pageSize, "The page size cannot be negative. [pageSize={0}]", pageSize);
         }
-        ModelQuery modelQuery =
-                new ModelQuery(taskId, pageNum, pageSize);
-        return Result.createResult(this.modelService.getModels(modelQuery), 0);
+        ModelQuery modelQuery = new ModelQuery(taskId, pageNum, pageSize);
+        return Result.create(this.modelService.getModels(modelQuery), 0);
     }
 }

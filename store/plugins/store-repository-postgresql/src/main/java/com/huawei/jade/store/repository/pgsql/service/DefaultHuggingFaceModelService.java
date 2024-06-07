@@ -4,23 +4,23 @@
 
 package com.huawei.jade.store.repository.pgsql.service;
 
+import static com.huawei.fitframework.inspection.Validation.notNull;
+import static com.huawei.jade.store.repository.pgsql.util.SerializerUtils.json2obj;
+
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.store.entity.query.ModelQuery;
 import com.huawei.jade.store.entity.transfer.ModelData;
 import com.huawei.jade.store.repository.pgsql.entity.ModelDo;
 import com.huawei.jade.store.repository.pgsql.mapper.ModelMapper;
 import com.huawei.jade.store.repository.pgsql.mapper.TaskMapper;
-import com.huawei.jade.store.service.ModelService;
+import com.huawei.jade.store.service.HuggingFaceModelService;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 任务的 Http 请求的服务层实现。
@@ -29,19 +29,19 @@ import java.util.Map;
  * @since 2024-06-07
  */
 @Component
-public class DefaultModelService implements ModelService {
+public class DefaultHuggingFaceModelService implements HuggingFaceModelService {
     private final ObjectSerializer serializer;
     private final ModelMapper modelMapper;
 
     /**
-     * 通过持久层接口来初始化 {@link DefaultTaskService} 的实例。
+     * 通过持久层接口来初始化 {@link DefaultHuggingFaceModelService} 的实例。
      *
      * @param serializer 表示序列化器实例的 {@link ObjectSerializer}。
      * @param modelMapper 表示持久层实例的 {@link TaskMapper}。
      */
-    public DefaultModelService(@Fit(alias = "json") ObjectSerializer serializer, ModelMapper modelMapper) {
-        this.serializer = serializer;
-        this.modelMapper = modelMapper;
+    public DefaultHuggingFaceModelService(@Fit(alias = "json") ObjectSerializer serializer, ModelMapper modelMapper) {
+        this.serializer = notNull(serializer, "The json serializer cannot be null.");
+        this.modelMapper = notNull(modelMapper, "The model mapper cannot be null.");
     }
 
     @Override
@@ -57,26 +57,10 @@ public class DefaultModelService implements ModelService {
                 modelData.setTaskId(modelDo.getTaskId());
                 modelData.setName(modelDo.getName());
                 modelData.setUrl(modelDo.getUrl());
-                modelData.setContext(json2obj(modelDo.getContext(), serializer));
+                modelData.setContext(json2obj(modelDo.getContext(), this.serializer));
                 modelDataList.add(modelData);
             }
         }
         return modelDataList;
-    }
-
-    /**
-     * 反序列化。
-     *
-     * @param schema 表示待序列化的字符串 {@link String}。
-     * @param serializer 表示序列化对象的 {@link ObjectSerializer}。
-     * @return 序列化的结果的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
-     */
-    public static Map<String, Object> json2obj(String schema, ObjectSerializer serializer) {
-        Map<String, Object> res = null;
-        if (schema != null) {
-            res = serializer.deserialize(schema,
-                    TypeUtils.parameterized(Map.class, new Type[] {String.class, Object.class}));
-        }
-        return res;
     }
 }
