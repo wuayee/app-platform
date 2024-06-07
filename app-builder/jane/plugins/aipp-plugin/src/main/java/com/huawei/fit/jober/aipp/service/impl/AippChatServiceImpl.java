@@ -67,7 +67,7 @@ public class AippChatServiceImpl implements AippChatService {
         Map<String, Object> result = (Map<String, Object>) initContext.get("initContext");
         String chatName = result.get("Question").toString();
         String instId = persistChat(body, context, chatId, chatName);
-        AppBuilderAppPO appInfo = covertAippToApp(body.getAippId(), body.getVersion(), context);
+        AppBuilderAppPO appInfo = convertAippToApp(body.getAippId(), body.getVersion(), context);
         return QueryChatRsp.builder()
                 .appId(appInfo.getId())
                 .aippVersion(body.getVersion())
@@ -84,7 +84,7 @@ public class AippChatServiceImpl implements AippChatService {
     private String persistChat(CreateChatRequest body, OperationContext context, String chatId, String chatName) {
         String instId = aippRunTimeService.createAippInstance(body.getAippId(),
                 body.getVersion(), body.getInitContext(), context);
-        AppBuilderAppPO appInfo = covertAippToApp(body.getAippId(), body.getVersion(), context);
+        AppBuilderAppPO appInfo = convertAippToApp(body.getAippId(), body.getVersion(), context);
         JSONObject attributesObject = new JSONObject();
         attributesObject.put("instId", instId);
         ChatInfo chatInfo = ChatInfo.builder()
@@ -111,7 +111,7 @@ public class AippChatServiceImpl implements AippChatService {
         return instId;
     }
 
-    private AppBuilderAppPO covertAippToApp(String aippId, String versionId, OperationContext context) {
+    private AppBuilderAppPO convertAippToApp(String aippId, String versionId, OperationContext context) {
         Meta meta = MetaUtils.getAnyMeta(this.metaService, aippId, versionId, context);
         String appId = ObjectUtils.cast(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
         return appBuilderAppMapper.selectWithId(appId);
@@ -122,7 +122,7 @@ public class AippChatServiceImpl implements AippChatService {
         QueryChatRsp rsp = new QueryChatRsp();
         QueryChatRequest request = QueryChatRequest.builder().build();
         if (body.getAippId() != null && body.getAippVersion() != null) {
-            AppBuilderAppPO appBuilderAppPO = covertAippToApp(body.getAippId(), body.getAippVersion(), context);
+            AppBuilderAppPO appBuilderAppPO = convertAippToApp(body.getAippId(), body.getAippVersion(), context);
             request.setAppId(appBuilderAppPO.getId());
             request.setAppVersion(appBuilderAppPO.getVersion());
         }
@@ -160,7 +160,7 @@ public class AippChatServiceImpl implements AippChatService {
     public List<QueryChatRsp> queryChatList(QueryChatRequest body, OperationContext context) {
         QueryChatRequest request = QueryChatRequest.builder().build();
         if (body.getAippId() != null && body.getAippVersion() != null) {
-            AppBuilderAppPO appBuilderAppPO = covertAippToApp(body.getAippId(), body.getAippVersion(), context);
+            AppBuilderAppPO appBuilderAppPO = convertAippToApp(body.getAippId(), body.getAippVersion(), context);
             request.setAppId(appBuilderAppPO.getId());
             request.setAppVersion(appBuilderAppPO.getVersion());
         }
