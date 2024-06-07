@@ -43,6 +43,14 @@ public class BeanAccessorTest {
     }
 
     @Test
+    @DisplayName("调用获取映射方法获取别名，执行成功")
+    void givenAliaValueWhenInvokeAcceptThenExecuteSuccessfully() {
+        BeanAccessor accessor = BeanAccessor.of(Object5.class);
+        assertThat(accessor.getAlias("foo_bar")).isEqualTo("fooBar");
+        assertThat(accessor.getAlias("fooBar")).isEqualTo("foo_bar");
+    }
+
+    @Test
     @DisplayName("给定不存在的属性的名称，抛出异常")
     void givenNotExistPropertyThenThrowException() {
         String property = "notExistProperty";

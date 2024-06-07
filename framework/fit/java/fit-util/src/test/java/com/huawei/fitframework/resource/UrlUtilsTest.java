@@ -19,6 +19,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -275,6 +277,24 @@ public class UrlUtilsTest {
             URL url = new URL("file:/path/to/single.jar");
             Optional<String> actual = UrlUtils.extractInnerJarNameFromURL(url);
             assertThat(actual).isPresent().get().isEqualTo("single.jar");
+        }
+    }
+
+    @Nested
+    @DisplayName("测试方法：isUrl()")
+    class TestIsUrl {
+        @ParameterizedTest
+        @ValueSource(strings = {"https://github.com", "ftp://github.com"})
+        @DisplayName("当输入是合法 URL 时，返回 true")
+        void shouldReturnTrue(String input) {
+            assertThat(UrlUtils.isUrl(input)).isTrue();
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"", "github.com"})
+        @DisplayName("当输入是非法时，返回 false")
+        void shouldReturnFalse(String input) {
+            assertThat(UrlUtils.isUrl(input)).isFalse();
         }
     }
 }

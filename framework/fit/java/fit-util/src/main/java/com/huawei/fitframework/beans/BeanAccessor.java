@@ -6,6 +6,7 @@ package com.huawei.fitframework.beans;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
+import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.beans.convert.ConversionService;
 import com.huawei.fitframework.util.ReflectionUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -13,6 +14,8 @@ import com.huawei.fitframework.util.StringUtils;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -32,6 +35,7 @@ public final class BeanAccessor {
 
     private final Class<?> type;
     private final Map<String, BeanPropertyAccessor> properties;
+    private final Map<String, String> propertiesAliases;
     private final ConversionService conversionService;
 
     /**
@@ -55,6 +59,16 @@ public final class BeanAccessor {
                 .map(descriptor -> BeanPropertyAccessor.of(this, descriptor))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(BeanPropertyAccessor::name, Function.identity()));
+        Map<String, String> propertiesRelation = new HashMap<>();
+        for (Field field : type.getDeclaredFields()) {
+            Property property = field.getDeclaredAnnotation(Property.class);
+            if (property != null && StringUtils.isNotBlank(property.name()) && !field.getName()
+                .equals(property.name())) {
+                propertiesRelation.put(property.name(), field.getName());
+                propertiesRelation.put(field.getName(), property.name());
+            }
+        }
+        this.propertiesAliases = propertiesRelation;
     }
 
     /**
@@ -89,6 +103,16 @@ public final class BeanAccessor {
     }
 
     /**
+     * 获取属性的别名。
+     *
+     * @param property 表示属性的名称的 {@link String}。
+     * @return 表示属性的别名的 {@link String}。
+     */
+    public String getAlias(String property) {
+        return this.propertiesAliases.getOrDefault(property, property);
+    }
+
+    /**
      * 设置指定 Bean 的指定名称的属性的值。
      *
      * @param bean 表示待设置属性值的 Bean 的 {@link Object}。
@@ -109,7 +133,8 @@ public final class BeanAccessor {
      */
     public void accept(Object bean, Map<String, Object> values) {
         for (Map.Entry<String, Object> entry : values.entrySet()) {
-            BeanPropertyAccessor property = this.properties.get(entry.getKey());
+            String key = entry.getKey();
+            BeanPropertyAccessor property = this.properties.get(this.getAlias(key));
             if (property == null) {
                 continue;
             }
