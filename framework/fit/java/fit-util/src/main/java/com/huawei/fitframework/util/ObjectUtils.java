@@ -334,7 +334,7 @@ public final class ObjectUtils {
             if (value == null) {
                 continue;
             }
-            map.put(property, toJavaObject(value));
+            map.put(srcAccessor.getAlias(property), toJavaObject(value));
         }
         return map;
     }
