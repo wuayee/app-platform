@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * 存入数据库的工具的实体类。
+ * 表示工具的仓库。
  *
  * @author 王攀博
  * @since 2024-04-27

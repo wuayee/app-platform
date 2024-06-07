@@ -27,12 +27,12 @@ public class AiFlowTool extends AbstractTool {
     }
 
     @Override
-    public Object call(Object... args) {
+    public Object execute(Object... args) {
         return null;
     }
 
     @Override
-    public String callByJson(String jsonArgs) {
+    public String executeWithJson(String jsonArgs) {
         return null;
     }
 }

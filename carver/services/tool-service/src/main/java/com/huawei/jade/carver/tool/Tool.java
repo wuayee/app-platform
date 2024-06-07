@@ -42,15 +42,28 @@ public interface Tool {
      * @param args 表示调用工具的参数列表的 {@link Object}{@code []}。
      * @return 表示调用工具的结果的 {@link Object}。
      */
-    Object call(Object... args);
+    Object execute(Object... args);
 
     /**
      * 使用 Json 格式的参数调用工具。
+     * <p>该调用的参数实际上是将 {@link #executeWithJsonObject(Map)} 方法的参数进行了一次 Json 序列化。</p>
+     * <p>该调用的返回值实际上是将工具调用的原始返回值进行了一次 Json 序列化。</p>
      *
      * @param jsonArgs 表示调用工具的 Json 格式的参数的 {@link String}。
      * @return 表示调用工具的 Json 格式的结果的 {@link String}。
      */
-    String callByJson(String jsonArgs);
+    String executeWithJson(String jsonArgs);
+
+    /**
+     * 使用 Json 格式的对象参数调用工具。
+     * <p>该调用的参数实际上是将 {@link #execute(Object...)} 方法的参数按照参数名加值的方式，拼装成了一个对象。</p>
+     * <p>该调用的返回值就是工具调用的原始返回值。</p>
+     *
+     * @param jsonObjectArg 表示调用工具的 Json 格式的对象参数的 {@link Map}{@code <}{@link String}{@code , }{@link
+     * Object}{@code >}。
+     * @return 表示调用工具的结果的 {@link Object}。
+     */
+    Object executeWithJsonObject(Map<String, Object> jsonObjectArg);
 
     /**
      * 表示工具信息。
