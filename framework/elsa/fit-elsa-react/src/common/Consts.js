@@ -18,6 +18,6 @@ export const UNARY_OPERATOR = {
 };
 
 export const VIRTUAL_CONTEXT_NODE = {
-    id: "virtualContextNode",
+    id: "_systemEnv",
     name: "系统上下文"
 }
