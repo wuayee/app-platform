@@ -11,7 +11,7 @@ import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.eco.AbstractTaskTool;
-import com.huawei.jade.fel.pipeline.service.HuggingFacePipelineService;
+import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;
 
 import java.util.Map;
 

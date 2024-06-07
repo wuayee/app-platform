@@ -11,7 +11,7 @@ import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.ToolFactory;
-import com.huawei.jade.fel.pipeline.service.HuggingFacePipelineService;
+import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;
 
 /**
  * 表示 {@link ToolFactory} 的 HuggingFace 的实现。
