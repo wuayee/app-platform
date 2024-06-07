@@ -15,12 +15,12 @@
 
     <insert id="insertChat" parameterType="com.huawei.fit.jober.aipp.entity.ChatInfo">
         insert into t_chat_session (chat_id, app_id, app_version, name, attributes, create_at, create_by, update_at, update_by, status)
-        values (#{chatId}, #{appId}, #{version}, #{chatName}, #{attributes}, #{createTime}, #{creator}, #{updateTime}, #{updater}, #{status})
+        values (#{chatId}, #{appId}, #{version}, #{chatName}, #{attributes}::jsonb, #{createTime}, #{creator}, #{updateTime}, #{updater}, #{status})
         ON CONFLICT(chat_id) DO UPDATE SET
                          update_at = #{updateTime},
                          update_by = #{updater},
                          name = #{chatName},
-                        attributes = #{attributes}
+                        attributes = #{attributes}::jsonb
     </insert>
 
     <insert id="insertWideRelationship" parameterType="com.huawei.fit.jober.aipp.entity.ChatAndInstanceMap">

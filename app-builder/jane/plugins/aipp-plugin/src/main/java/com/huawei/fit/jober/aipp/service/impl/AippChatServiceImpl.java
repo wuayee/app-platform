@@ -28,20 +28,18 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.util.ObjectUtils;
 
-import com.alibaba.fastjson.JSONObject;
-
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 历史会话时服务接口.
+ * AippChatServiceImpl
  *
- * @author z00559346 张越
- * @since 2024-05-25
+ * @since 2024-06-07
  */
 @Component
 public class AippChatServiceImpl implements AippChatService {
@@ -87,12 +85,12 @@ public class AippChatServiceImpl implements AippChatService {
         String instId = this.aippRunTimeService.createAippInstance(body.getAippId(),
                 body.getAippVersion(), body.getInitContext(), context);
         AppBuilderAppPO appInfo = convertAippToApp(body.getAippId(), body.getAippVersion(), context);
-        JSONObject attributesObject = new JSONObject();
-        attributesObject.put("instId", instId);
+        Map<String, String> attributesMap = new HashMap<>();
+        attributesMap.put("instId", instId);
         ChatInfo chatInfo = ChatInfo.builder()
                 .appId(appInfo.getId())
                 .version(appInfo.getVersion())
-                .attributes(attributesObject.toString())
+                .attributes(JsonUtils.toJsonString(attributesMap))
                 .chatId(chatId)
                 .chatName(chatName)
                 .status(AippConst.CHAT_STATUS)
