@@ -32,7 +32,7 @@ public class CreateChatRequest {
 
     @Property(description = "aipp_version")
     @JsonProperty("aipp_version")
-    private String version;
+    private String aippVersion;
 
     @Property(description = "init context")
     @JsonProperty("init_context")
