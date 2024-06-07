@@ -24,6 +24,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QueryChatRequest {
+    @Property(description = "aipp id")
+    @JsonProperty("aipp_id")
+    private String aippId;
+
+    @Property(description = "aipp version")
+    @JsonProperty("aipp_version")
+    private String aippVersion;
+
+    @Property(description = "offset")
+    @JsonProperty("offset")
+    private Integer offset;
+
+    @Property(description = "limit")
+    @JsonProperty("limit")
+    private Integer limit;
+
     @Property(description = "app id")
     @JsonProperty("app_id")
     private String appId;
@@ -31,12 +47,4 @@ public class QueryChatRequest {
     @Property(description = "app version")
     @JsonProperty("app_version")
     private String appVersion;
-
-    @Property(description = "offset")
-    @JsonProperty("offset")
-    private Integer offset = 0;
-
-    @Property(description = "limit")
-    @JsonProperty("limit")
-    private Integer limit = 10;
 }
