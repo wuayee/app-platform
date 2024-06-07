@@ -99,6 +99,11 @@
             <artifactId>fit-data-repository-service</artifactId>
             <version>${fit.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jade.service</groupId>
+            <artifactId>tool-service</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- DB -->
         <dependency>
@@ -312,7 +317,8 @@
                         <item>/com/huawei/fit/jober/flowsengine/controller/*</item>
                         <item>/com/huawei/fit/jober/bff/controller/*</item>
                         <item>/com/huawei/fit/jober/taskcenter/fitable/MetaInstanceFitable1</item>
-                        <item>/com/huawei/fit/jober/taskcenter/eventhandler/converter/impl/MetaInstanceConverterImpl</item>
+                        <item>/com/huawei/fit/jober/taskcenter/eventhandler/converter/impl/MetaInstanceConverterImpl
+                        </item>
                     </excludeStats>
                     <!-- 建议配置，描述报告的名称，默认为最后一个${project.artifactId} -->
                     <reportName>TestReport</reportName>
