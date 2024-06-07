@@ -19,6 +19,7 @@ import com.huawei.fitframework.util.CollectionUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -45,7 +46,10 @@ public class AppBuilderPromptServiceImpl implements AppBuilderPromptService {
         JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(defaultValue));
         List<AppBuilderPromptCategoryDto> categories =
                 jsonObject.getObject("category", new TypeReference<List<AppBuilderPromptCategoryDto>>() {});
-        AppBuilderPromptCategoryDto flagCategory = findCategoryById(categories, categoryId);
+        AppBuilderPromptCategoryDto flagCategory =
+                Objects.equals(categoryId, "others") ? AppBuilderPromptCategoryDto.builder()
+                .children(new ArrayList<>())
+                .build() : findCategoryById(categories, categoryId);
         Validation.notNull(flagCategory, () -> new IllegalStateException("Category " + categoryId + " not found."));
 
         List<AppBuilderPromptDto.AppBuilderInspirationDto> inspirations = jsonObject.getObject("inspirations",
