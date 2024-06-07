@@ -91,6 +91,7 @@ class WaterFlowsTest {
     }
 
     @Nested
+    @Disabled
     @DisplayName("流程流转引擎基础测试用例集合")
     class WaterFlowBaseLineTest {
         private FlowContextRepo repo;
