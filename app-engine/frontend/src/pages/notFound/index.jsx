@@ -11,7 +11,7 @@ const NotFound = () => {
     let mode = process.env.NODE_ENV;
     let env = '-alpha';
     if (mode === 'dev') {
-      let url = `http://localhost.huawei.com:3300/#/tenant/727d7157b3d24209aefd59eb7d1c49ff/aipp`;
+      let url = `http://localhost.huawei.com:3300/#/tenant/31f20efc7e0848deab6a6bc10fc3021e/aipp`;
       window.open(url);
       return
     }
@@ -24,7 +24,7 @@ const NotFound = () => {
     if (mode === 'prop') {
       env = ''
     }
-    let url = `https://jane${env}.huawei.com/tenant/727d7157b3d24209aefd59eb7d1c49ff/aipp`;
+    let url = `https://jane${env}.huawei.com/tenant/31f20efc7e0848deab6a6bc10fc3021e/aipp`;
     window.open(url);
   }
   return <>

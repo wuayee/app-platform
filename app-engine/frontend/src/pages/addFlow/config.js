@@ -29,7 +29,7 @@ export const configMap = {
           },
           {
             node: "knowledgeState",
-            urls: {knowledgeUrl: "https://jane-beta.huawei.com/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/knowledge"}
+            urls: {knowledgeUrl: "https://jane-beta.huawei.com/api/jober/v1/api/31f20efc7e0848deab6a6bc10fc3021e/knowledge"}
           },
           {
             node: "fitInvokeState",
@@ -106,7 +106,7 @@ export const configMap = {
           },
           {
             node: "knowledgeState",
-            urls: {knowledgeUrl: "https://jane-beta.huawei.com/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/knowledge"}
+            urls: {knowledgeUrl: "https://jane-beta.huawei.com/api/jober/v1/api/31f20efc7e0848deab6a6bc10fc3021e/knowledge"}
           },
           {
             node: "fitInvokeState",
@@ -140,13 +140,13 @@ export const configMap = {
           {
               node: "manualCheckNodeState",
               urls: {
-                  runtimeFormUrl: "https://jane-alpha.huawei.com/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/form/type/runtime"
+                  runtimeFormUrl: "https://jane-alpha.huawei.com/api/jober/v1/api/31f20efc7e0848deab6a6bc10fc3021e/form/type/runtime"
               }
           },
           {
               node: "knowledgeState",
               urls: {
-                  knowledgeUrl: "10.91.144.92:8028/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/knowledge?pageNum=1&pageSize=10"
+                  knowledgeUrl: "10.91.144.92:8028/api/jober/v1/api/31f20efc7e0848deab6a6bc10fc3021e/knowledge?pageNum=1&pageSize=10"
               }
           },
           {
