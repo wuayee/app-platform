@@ -130,15 +130,16 @@ export default function JadeInputTree({data, updateItem}) {
         switch (node.type) {
             case "Object":
                 if (node.hasOwnProperty("generic")) {
-                    return [{value: "Reference", label: "引用"}];
+                    return [{value: "Reference", label: "引用"}, {value: "Input", label: "输入"}];
                 } else {
-                    return [{value: "Reference", label: "引用"}, {value: "Expand", label: "展开"}];
+                    return [{value: "Reference", label: "引用"},
+                        {value: "Input", label: "输入"},
+                        {value: "Expand", label: "展开"}
+                    ];
                 }
             case "Array":
-                return [{value: "Reference", label: "引用"}];
             default:
-                // 现阶段默认只能选择Reference
-                return [{value: "Reference", label: "引用"}];
+                return [{value: "Reference", label: "引用"}, {value: "Input", label: "输入"}];
         }
     };
 

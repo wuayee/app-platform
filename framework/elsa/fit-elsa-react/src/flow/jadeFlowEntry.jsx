@@ -108,6 +108,17 @@ const jadeFlowAgent = (graph) => {
     };
 
     /**
+     * 创建工具节点
+     *
+     * @param e 鼠标事件.
+     * @param schemaData schema元数据
+     */
+    self.createTool = (e, schemaData) => {
+        const position = graph.activePage.calculatePosition(e);
+        self.createToolByPosition(position, schemaData);
+    };
+
+    /**
      * 创建节点.
      *
      * @param type 节点类型.
@@ -118,6 +129,17 @@ const jadeFlowAgent = (graph) => {
         console.log("call createNodeByPosition...");
         const shape = graph.activePage.createNew(type, position.x, position.y);
         shape.processMetaData(metaData);
+    };
+
+    /**
+     * 创建工具节点
+     *
+     * @param position 坐标.
+     * @param schemaData schema元数据
+     */
+    self.createToolByPosition = (position, schemaData) => {
+        const shape = graph.activePage.createNew("toolInvokeNodeState", position.x, position.y);
+        shape.processMetaData(schemaData);
     };
 
     /**
