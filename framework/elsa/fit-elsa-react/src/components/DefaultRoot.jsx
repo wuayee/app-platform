@@ -99,6 +99,7 @@ export const DefaultRoot = forwardRef(function ({shape, component, onReportShow}
                         </DataContext.Provider>
                     </ShapeContext.Provider>
                 </FormContext.Provider>
+                {shape.getFooterComponent()}
             </Form>
         </div>
     </>);

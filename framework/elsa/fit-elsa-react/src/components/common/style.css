@@ -162,3 +162,23 @@
     font-size: 12px;
     width: 100%;
 }
+
+.jade-node-footer-button {
+    margin-left: auto;
+    background-color: transparent !important;
+    height: 20px !important;
+    padding: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    margin-right: 0 !important;
+    border: 0 !important;
+}
+
+.jade-node-footer-icon {
+    height: 20px !important;
+}
+
+.react-node-footer {
+    margin-top: 8px;
+    user-select: none;
+}

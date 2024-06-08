@@ -223,6 +223,7 @@ export const graphData = {
                             }
                         ]
                     },
+                    "sourcePlatform": "official",
                     "componentName": "startComponent",
                     "index": 100,
                     "dirty": true
@@ -325,6 +326,7 @@ export const graphData = {
                             }
                         }
                     },
+                    "sourcePlatform": "official",
                     "componentName": "retrievalComponent",
                     "index": 101,
                     "dirty": true
@@ -479,6 +481,7 @@ export const graphData = {
                             "isAsync": "true"
                         }
                     },
+                    "sourcePlatform": "official",
                     "componentName": "llmComponent",
                     "index": 102,
                     "dirty": true
@@ -548,6 +551,7 @@ export const graphData = {
                             }
                         }
                     },
+                    "sourcePlatform": "official",
                     "componentName": "endComponent",
                     "index": 104,
                     "dirty": true
