@@ -30,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>
-            <artifactId>fel-pipeline-huggingface</artifactId>
+            <artifactId>fel-pipeline-service</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 

@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.fel.pipeline.service;
+package com.huawei.jade.fel.service.pipeline;
 
 import com.huawei.fitframework.annotation.Genericable;
 
