@@ -25,10 +25,13 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppMetadataDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
+import com.huawei.fit.jober.aipp.dto.PublishedAppResDto;
 import com.huawei.fit.jober.aipp.service.AppBuilderAppService;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.validation.Validated;
+
+import java.util.List;
 
 /**
  * @author 邬涨财 w00575064
@@ -57,6 +60,14 @@ public class AppBuilderAppController extends AbstractController {
     @GetMapping(value = "/{app_id}", description = "查询 app ")
     public Rsp<AppBuilderAppDto> query(@PathVariable("app_id") String appId) {
         return Rsp.ok(this.appGenericable.query(appId));
+    }
+
+    @GetMapping(value = "/{app_id}/published", description = "查询 app 的历史发布版本")
+    public Rsp<List<PublishedAppResDto>> recentPublished(HttpClassicServerRequest httpRequest,
+            @PathVariable("app_id") String appId, @PathVariable("tenant_id") String tenantId,
+            @RequestParam(value = "offset", defaultValue = "0") long offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit, @RequestBean AppQueryCondition cond) {
+        return Rsp.ok(this.appService.published(cond, offset, limit, appId, this.contextOf(httpRequest, tenantId)));
     }
 
     @PostMapping(value = "/{app_id}", description = "根据模板创建aipp")

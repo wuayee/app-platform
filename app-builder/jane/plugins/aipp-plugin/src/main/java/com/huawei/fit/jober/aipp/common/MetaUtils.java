@@ -223,6 +223,20 @@ public class MetaUtils {
         return getListMetaHandle(metaService, metaFilter, context);
     }
 
+    public static List<Meta> getAllMetasByAppId(MetaService metaService, String appId,
+            OperationContext context) throws AippException {
+        MetaFilter metaFilter = getMetaFilter(appId);
+        return getListMetaHandle(metaService, metaFilter, context);
+    }
+
+    private static MetaFilter getMetaFilter(String appId) {
+        MetaFilter metaFilter = new MetaFilter();
+        Map<String, List<String>> attributes = new HashMap<>();
+        attributes.put(AippConst.ATTR_APP_ID_KEY, Collections.singletonList(appId));
+        metaFilter.setAttributes(attributes);
+        return metaFilter;
+    }
+
     private static MetaFilter getMetaFilter(String appId, String aippType) {
         MetaFilter metaFilter = new MetaFilter();
         Map<String, List<String>> attributes = new HashMap<>();

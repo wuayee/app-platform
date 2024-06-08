@@ -12,6 +12,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * @author 邬涨财 w00575064
  * @since 2024-05-06
@@ -23,6 +25,7 @@ import lombok.NoArgsConstructor;
 public class AppQueryCondition {
     private String tenantId;
     private String type;
+    private List<String> ids;
 
     @RequestQuery(name = "name", required = false)
     private String name;

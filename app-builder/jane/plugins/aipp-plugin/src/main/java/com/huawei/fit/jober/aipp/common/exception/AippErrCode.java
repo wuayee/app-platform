@@ -192,6 +192,11 @@ public enum AippErrCode implements ErrorCode {
     CREATE_DEBUG_AIPP_FAILED(90002907, "调试失败，请检查流程配置是否正确: {0}"),
 
     /**
+     * task 不存在
+     */
+    TASK_NOT_FOUND(90002908, "Task not found."),
+
+    /**
      * 错误码截止值
      */
     ERROR_CODE_BUTT(99999999, "Error code butt.");

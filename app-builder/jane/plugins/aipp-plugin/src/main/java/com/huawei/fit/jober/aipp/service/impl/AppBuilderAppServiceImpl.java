@@ -4,6 +4,8 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
+import static com.huawei.fit.jober.aipp.common.exception.AippErrCode.TASK_NOT_FOUND;
+
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.response.Rsp;
@@ -17,6 +19,7 @@ import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
+import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfig;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfigProperty;
@@ -32,6 +35,7 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderConfigDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormPropertyDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
+import com.huawei.fit.jober.aipp.dto.PublishedAppResDto;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.AppTypeEnum;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
@@ -46,6 +50,7 @@ import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.transaction.Transactional;
+import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -434,6 +439,52 @@ public class AppBuilderAppServiceImpl
         // step6 删除应用收藏记录相关
         usrAppCollectionService.deleteByAppId(appId);
 
+    }
+
+    @Override
+    public List<PublishedAppResDto> published(AppQueryCondition cond, long offset, int limit, String appId,
+            OperationContext context) {
+        List<Meta> metas = MetaUtils.getAllMetasByAppId(this.metaService, appId, context);
+        if (CollectionUtils.isEmpty(metas)) {
+            log.error("Meta can not be null.");
+            throw new AippParamException(TASK_NOT_FOUND);
+        }
+        String aippId = metas.get(0).getId();
+        List<Meta> allPublishedMeta = MetaUtils.getAllPublishedMeta(this.metaService, aippId, context)
+                .stream()
+                .filter(meta -> !this.isAppBelong(appId, meta))
+                .collect(Collectors.toList());
+        List<String> appIds = allPublishedMeta.stream()
+                .map(meta -> String.valueOf(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY)))
+                .collect(Collectors.toList());
+        cond.setIds(appIds);
+        cond.setTenantId(context.getTenantId());
+        List<AppBuilderApp> allPublishedApp = this.appRepository.selectWithCondition(cond);
+        Map<String, AppBuilderApp> appIdKeyAppValueMap =
+                allPublishedApp.stream().collect(Collectors.toMap(AppBuilderApp::getId, Function.identity()));
+        return this.buildPublishedAppResDtos(allPublishedMeta, appIdKeyAppValueMap);
+    }
+
+    private boolean isAppBelong(String appId, Meta meta) {
+        return Objects.equals(String.valueOf(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY)), appId);
+    }
+
+    private List<PublishedAppResDto> buildPublishedAppResDtos(List<Meta> metas,
+            Map<String, AppBuilderApp> appIdKeyAppValueMap) {
+        return metas.stream()
+                .map(meta -> this.buildPublishedAppResDto(meta, appIdKeyAppValueMap))
+                .collect(Collectors.toList());
+    }
+
+    private PublishedAppResDto buildPublishedAppResDto(Meta meta, Map<String, AppBuilderApp> appIdKeyAppValueMap) {
+        String appId = String.valueOf(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
+        AppBuilderApp app = appIdKeyAppValueMap.get(appId);
+        return PublishedAppResDto.builder()
+                .appId(appId)
+                .appVersion(app.getVersion())
+                .publishedAt(meta.getCreationTime())
+                .publishedBy(meta.getCreator())
+                .build();
     }
 
     @NotNull
