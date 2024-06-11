@@ -7,7 +7,7 @@ import knowledgeBase from '../../assets/images/knowledge/knowledge-base.png';
 
 const ChoreographyHead = (props) => {
   const { 
-    showElsa, aippInfo,
+    showElsa, appInfo,
     updateAippCallBack,
     mashupClick, status } = props;
   let modalRef = React.createRef();
@@ -28,8 +28,8 @@ const ChoreographyHead = (props) => {
     <div className="header">
       <div className="logo">
         { showElsa && <LeftArrowIcon className="back-icon" onClick={backClick}/> }
-        { aippInfo?.attributes?.icon ? <img src={aippInfo.attributes.icon} onClick={backClick} /> : <img src={knowledgeBase} onClick={backClick}/> }
-          <span className="header-text">{ aippInfo?.name }</span>
+        { appInfo?.attributes?.icon ? <img src={appInfo.attributes.icon} onClick={backClick} /> : <img src={knowledgeBase} onClick={backClick}/> }
+          <span className="header-text">{ appInfo?.name }</span>
         {
           !status && <EditIcon onClick={ handleEditClick } />
         }
@@ -37,8 +37,8 @@ const ChoreographyHead = (props) => {
       <div className="header-grid">
         { !status && <span className="header-btn" onClick={modalClick}><UploadIcon />发布</span>  }
       </div>
-      <PublishModal modalRef={modalRef} aippInfo={aippInfo} publishType="app" />
-      <EditModal modalRef={editRef} aippInfo={aippInfo} updateAippCallBack={updateAippCallBack}/>
+      <PublishModal modalRef={modalRef} appInfo={appInfo} publishType="app" />
+      <EditModal modalRef={editRef} appInfo={appInfo} updateAippCallBack={updateAippCallBack}/>
     </div>
   )} </>;
 };

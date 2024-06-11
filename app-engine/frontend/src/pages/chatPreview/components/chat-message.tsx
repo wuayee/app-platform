@@ -3,15 +3,18 @@ import React, { useEffect, useState, useImperativeHandle, useContext } from 'rea
 import SendBox from './send-box/send-box.jsx';
 import ReciveBox from './recieve-box/recieve-box.jsx';
 import ChatDetail from './chat-details.jsx';
-import { AippContext, ChatContext } from '../../aippIndex/context.js';
+import { ChatContext } from '../../aippIndex/context.js';
 import { queryFeedback } from '@shared/http/chat';
 import '../styles/chat-message-style.scss';
+import { useAppDispatch, useAppSelector } from '../../../store/hook';
+import { setChatList } from '../../../store/CommonChat/CommonChat';
 
 const ChatMessaga = (props) => {
-  const { chatList, setChatList} = useContext(AippContext);
+  const dispatch = useAppDispatch();
+  const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const { showCheck, setCheckedList, setEditorShow } = props;
   const initFeedbackStatus = async (id) => {
-    for (let i = 0; i < chatList.length; i++) {
+    for (let i = 0; i < chatList?.length; i++) {
       let item = chatList[i]
       if (item.type === 'recieve' && item?.instanceId && (id === 'all' || item?.instanceId === id)) {
         await queryFeedback(item.instanceId).then((res) => {
@@ -23,7 +26,7 @@ const ChatMessaga = (props) => {
         });
       }
     }
-    setChatList([...chatList]);
+    dispatch(setChatList([...chatList]));
   }
 
   useEffect(() => {

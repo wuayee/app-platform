@@ -18,17 +18,18 @@ import {
   getDeepNode,
 } from "../utils/inspiration-utils";
 import "../styles/inspiration.scss";
+import { useAppSelector } from "../../../store/hook";
 
 const Inspiration = (props) => {
   const { inspirationClick, setEditorSelect } = props;
   const {
-    appId,
-    tenantId,
     messageChecked,
-    chatType,
-    chatRunning,
     reloadInspiration
   } = useContext(AippContext);
+  const appId = useAppSelector((state) => state.appStore.appId);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const chatType = useAppSelector((state) => state.chatCommonStore.chatType);
+  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const { Search } = Input;
   const [showDrop, setShowDrop] = useState(false);
   const [promptTypeList, setPromptTypeList] = useState([]);

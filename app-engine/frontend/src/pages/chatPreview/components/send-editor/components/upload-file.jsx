@@ -3,14 +3,15 @@ import React, { useImperativeHandle, useState, useContext, useEffect } from 'rea
 import { Modal, Upload  } from 'antd';
 import { uploadChatFile } from "@shared/http/aipp";
 import { Message } from '@shared/utils/message';
-import { AippContext } from '@/pages/aippIndex/context';
 import { docArr } from '../common/config';
 import exportImg from '@assets/images/ai/export.png'
+import { useAppSelector } from '../../../../../store/hook';
 
 const { Dragger } = Upload;
 
 const UploadFile = ({ openUploadRef, fileSend }) => {
-  const { tenantId, appId }  = useContext(AippContext);
+  const appId = useAppSelector((state) => state.appStore.appId);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const [ modalOpen, setModalOpen] = useState(false);
   const showModal = () => {
     setModalOpen(true);

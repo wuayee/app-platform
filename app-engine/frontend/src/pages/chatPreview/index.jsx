@@ -26,12 +26,21 @@ import {
   beforeSend } from './utils/chat-process';
 import "./styles/chat-preview.scss";
 import { creatChat, tenantId, updateChat } from "../../shared/http/chat.js";
+import { useAppDispatch, useAppSelector } from "../../store/hook";
+import { setChatId, setChatList, setChatRunning, setChatType, setInspirationOpen,setchatT } from "../../store/CommonChat/CommonChat";
 
 const ChatPreview = (props) => {
   const { previewBack } = props;
-  const { chatRunning, aippInfo, appId, tenantId,chatList, 
-    setChatList,chatId,setChatId,showElsa,chatType,
-    inspirationOpen,setInspirationOpen,setChatRunning} = useContext(AippContext);
+  const dispatch = useAppDispatch();
+  const appInfo = useAppSelector((state) => state.appStore.appInfo);
+  const appId = useAppSelector((state) => state.appStore.appId);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const chatId = useAppSelector((state) => state.chatCommonStore.chatId);
+  const chatType = useAppSelector((state) => state.chatCommonStore.chatType);
+  const inspirationOpen = useAppSelector((state) => state.chatCommonStore.inspirationOpen);
+  const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
+  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
+  const { showElsa } = useContext(AippContext);
   const [checkedList, setCheckedList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [groupType, setGroupType] = useState("share");
@@ -49,7 +58,7 @@ const ChatPreview = (props) => {
   const chatPage =  location.pathname.indexOf('chat') !== -1;
 
   useEffect(() => {
-    !chatType && setInspirationOpen(true);
+    !chatType && dispatch(setInspirationOpen(true));
   }, []);
 
   // 灵感大全设置下拉列表
@@ -59,19 +68,15 @@ const ChatPreview = (props) => {
   }
   // 获取历史会话
   async function initChatHistory() {
-    setChatList(() => {
-      listRef.current = [];
-      return [];
-    });
+    listRef.current = [];
+    dispatch(setChatList([]));
     setLoading(true);
     try {
       const res = await getRecentInstances(tenantId, appId, 'preview');
       if (res.data && res.data.length) {
         let chatArr = historyChatProcess(res);
-        setChatList(() => {
-          listRef.current = [...chatArr];
-          return [...chatArr];
-        });
+        listRef.current = [...chatArr];
+        dispatch(setChatList(chatArr));
       }
     } finally {
       setLoading(false);
@@ -80,22 +85,19 @@ const ChatPreview = (props) => {
 
   useEffect(() => {
     // 清空聊天记录
-    setChatRunning(false);
-    setChatId(null);
-    setChatList([]);
+    dispatch(setChatRunning(false));
+    dispatch(setChatId(null));
+    dispatch(setChatList([]));
     // 初始化聊天记录，目前所有chat聊天记录均未调用initChatHistory()
-    (aippInfo.name && !aippInfo.notShowHistory) && initChatHistory();
-  }, [aippInfo]);
+    (appInfo.name && !appInfo.notShowHistory) && initChatHistory();
+  }, [appInfo]);
   
   // 发送消息
   const onSend = (value, type = undefined) => {
     const sentItem = beforeSend(chatRunning, value, type);
     if (sentItem) {
-      setChatList(() => {
-        let arr = [...chatList, sentItem];
-        listRef.current = arr;
-        return arr;
-      });
+      let arr = [...chatList, sentItem];
+      listRef.current = arr;
       sendMessageRequest(value, type);
     }
   };
@@ -104,14 +106,12 @@ const ChatPreview = (props) => {
     const reciveInitObj = JSON.parse(JSON.stringify(initChat));
     reciveInitObj.type = "recieve";
     reciveInitObj.loading = true;
-    setChatList(() => {
-      let arr = [...listRef.current, reciveInitObj];
-      listRef.current = arr;
-      return arr;
-    });
-    setChatRunning(true);
+    let arr = [...listRef.current, reciveInitObj];
+    listRef.current = arr;
+    dispatch(setChatList(arr));
+    dispatch(setChatRunning(true));
     if (showElsa) {
-      let params = aippInfo.flowGraph;
+      let params = appInfo.flowGraph;
       window.agent
         .validate()
         .then(async () => {
@@ -133,7 +133,8 @@ const ChatPreview = (props) => {
   // 获取aipp_id和version
   async function getAippAndVersion(value, type) {
     try {
-      const debugRes = await aippDebug(tenantId, appId, aippInfo);
+      console.log(444,appId)
+      const debugRes = await aippDebug(tenantId, appId, appInfo);
       if (debugRes.code === 0) {
         chatMissionStart(debugRes.data, value, type);
       } else {
@@ -158,7 +159,7 @@ const ChatPreview = (props) => {
         res= await updateChat(tenantId, chatId, requestBody);
       } else {
         res= await creatChat(tenantId, requestBody);
-        setChatId(res?.data?.chat_id);
+        dispatch(setChatId(res?.data?.chat_id));
       }
       childInstanceStop.current = false;
       const instanceId = res?.data?.current_instance_id;
@@ -188,7 +189,7 @@ const ChatPreview = (props) => {
     }
     wsCurrent.current.onerror = () => {
       onStop('socket对话失败');
-      setChatRunning(false);
+      dispatch(setChatRunning(false));
     }
     wsCurrent.current.onmessage = ({ data }) => {
       let messageData = {};
@@ -217,14 +218,14 @@ const ChatPreview = (props) => {
           }
         })
         if (['ARCHIVED'].includes(messageData.status)) {
-          setChatRunning(false);
+          dispatch(setChatRunning(false));
         }
         if (['ERROR'].includes(messageData.status)) {
-          setChatRunning(false);
+          dispatch(setChatRunning(false));
         }
       } catch (err){
         onStop('数据解析异常');
-        setChatRunning(false);
+        dispatch(setChatRunning(false));
       }
     }
   }
@@ -232,23 +233,19 @@ const ChatPreview = (props) => {
   const chatForm = (chatObj) => {
     const idx = listRef.current.length - 1;
     listRef.current.splice(idx, 1, chatObj);
-    setChatList(() => {
-      let arr = [...listRef.current];
-      listRef.current = arr;
-      return arr;
-    });
-    setChatRunning(false);
+    let arr = [...listRef.current];
+    listRef.current = arr;
+    dispatch(setChatList(arr));
+    dispatch(setChatRunning(false));
   }
   // 用户自勾选
   function selfSelect(instanceId, initContext) {
     reportInstance.current = instanceId;
     reportIContext.current = initContext;
-    setChatList(() => {
-      listRef.current.forEach(item => item.checked = false);
-      let arr = [...listRef.current];
-      listRef.current = arr;
-      return arr;
-    });
+    listRef.current.forEach(item => item.checked = false);
+    let arr = [...listRef.current];
+    listRef.current = arr;
+    dispatch(setChatList(arr));
     onStop("请勾选对话");
     setCheckedList([]);
     setEditorShow(true, 'report');
@@ -268,11 +265,9 @@ const ChatPreview = (props) => {
       if (startes.code === 0 && startes.data) {
         let instanceId = startes.data;
         listRef.current[listRef.current.length - 1].loading = true;
-        setChatList(() => {
-          let arr = [...listRef.current];
-          listRef.current = arr;
-          return arr;
-        });
+        let arr = [...listRef.current];
+        listRef.current = arr;
+        dispatch(setChatList(arr));
         queryInstance(runningAppid.current, runningVersion.current, instanceId);
       } else {
         onStop("启动任务失败");
@@ -295,11 +290,9 @@ const ChatPreview = (props) => {
     initObj.finished = (status === 'ARCHIVED');
     const idx = listRef.current.length - 1;
     listRef.current.splice(idx, 1, initObj);
-    setChatList(() => {
-      let arr = [...listRef.current];
-      listRef.current = arr;
-      return arr;
-    });
+    let arr = [...listRef.current];
+    listRef.current = arr;
+    dispatch(setChatList(arr));
   }
   // 流式输出拼接
   function chatSplicing(log, msg, initObj, status) {
@@ -309,15 +302,14 @@ const ChatPreview = (props) => {
     if (currentChatItem) {
       let index = listRef.current.findIndex((item) => item.logId === log.msgId);
       let str = "";
+      console.log(currentChatItem)
       let { content } = currentChatItem;
       str = content + msg;
       listRef.current[index].content = str;
       listRef.current[index].finished = (status === 'ARCHIVED');
-      setChatList(() => {
-        let arr = [...listRef.current];
-        listRef.current = arr;
-        return arr;
-      });
+      let arr = [...listRef.current];
+      listRef.current = arr;
+      dispatch(setChatList(arr));
     } else {
       chatStrInit(msg, initObj, status);
     }
@@ -330,13 +322,11 @@ const ChatPreview = (props) => {
   }
   // 终止对话成功回调
   function onStop(content) {
-    setChatList(() => {
-      let item = listRef.current[listRef.current.length - 1];
-      item.content = content;
-      item.loading = false;
-      return listRef.current;
-    });
-    setChatRunning(false);
+    let item = listRef.current[listRef.current.length - 1];
+    item.content = content;
+    item.loading = false;
+    dispatch(setChatList(listRef.current));
+    dispatch(setChatRunning(false));
   }
   // 终止进行中的对话
   async function chatRunningStop() {

@@ -1,38 +1,38 @@
 
 import React, { useContext, useState, useEffect } from 'react';
 import { Tooltip } from "antd";
-import { AippContext } from '@/pages/aippIndex/context';
 import { Message } from "@shared/utils/message";
 import { PanleCloseIcon, PanleIcon, RebotIcon } from '@assets/icon';
 import { getRecommends } from '../../../../../shared/http/chat';
+import { useAppDispatch, useAppSelector } from '../../../../../store/hook';
 
 // 猜你想问
 const Recommends = (props) => {
   const { onSend } = props;
-  const { 
-    chatRunning,
-    aippInfo,
-    chatList,
-    inspirationOpen,
-    setInspirationOpen 
-  } = useContext(AippContext);
+  const dispatch = useAppDispatch();
+  const appInfo = useAppSelector((state) => state.appStore.appInfo);
+  const inspirationOpen = useAppSelector((state) => state.chatCommonStore.inspirationOpen);
+  const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
+  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const [ visible, setVisible ] = useState(false);
   const [ recommendList, setRecommendList ] = useState([]);
 
   useEffect(() => {
     setRecommend();
-  }, [aippInfo]);
+  }, [appInfo]);
 
   // 实时刷新推荐列表
   useEffect(() => {
-    let chatItem = chatList[chatList.length - 1];
+    if(chatList?.length>0){
+    let chatItem = chatList[chatList?.length - 1];
     if (chatItem && chatItem.finished && chatItem.logId === -1) {
       getRecommendList();
     }
+  }
   }, [chatList]);
   // 设置推荐列表
   function setRecommend() {
-    let arr = aippInfo.config?.form?.properties || [];
+    let arr = appInfo.config?.form?.properties || [];
     let recommendItem = arr.filter(item => item.name === 'recommend')[0];
     if (recommendItem) {
       setRecommendList(recommendItem.defaultValue);
@@ -75,7 +75,7 @@ const Recommends = (props) => {
   // 打开收起灵感大全
   const iconClick = () => {
     setVisible(false);
-    setInspirationOpen(!inspirationOpen);
+    dispatch(setInspirationOpen(!inspirationOpen));
   }
   return <>{(
     <div className="recommends-inner">

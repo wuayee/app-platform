@@ -199,7 +199,7 @@ const AppDev: React.FC = () => {
       <EditModal
         type='add'
         modalRef={modalRef}
-        aippInfo={modalInfo}
+        appInfo={modalInfo}
         addAippCallBack={addAippCallBack}
       />
     </div>

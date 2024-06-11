@@ -7,7 +7,7 @@ import { httpUrlMap } from '@shared/http/httpConfig';
 import { appPublish, updateFlowInfo } from '@shared/http/aipp'
 
 const PublishModal = (props) => {
-  const { modalRef, aippInfo, publishType, modalInfo, waterFlowName, addId } = props;
+  const { modalRef, appInfo, publishType, modalInfo, waterFlowName, addId } = props;
   const { appId, tenantId } = useParams();
   const [ isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -19,14 +19,14 @@ const PublishModal = (props) => {
   // 发布点击
   function publishClick() {
     const { PUBLISH_URL } = httpUrlMap[process.env.NODE_ENV];
-    aippInfo.publishUrl = `${PUBLISH_URL}/aipp/${tenantId}/chat/${appId}`;
+    appInfo.publishUrl = `${PUBLISH_URL}/aipp/${tenantId}/chat/${appId}`;
     publishType !== 'app' ? updateAppRunningFlow() : publishApp();
   }
   // 发布应用
   async function publishApp() {
     setLoading(true);
     try {
-      const res = await appPublish(tenantId, appId, aippInfo);
+      const res = await appPublish(tenantId, appId, appInfo);
       if (res.code === 0) {
         Message({ type: 'success', content: `发布应用成功` });
         setIsModalOpen(false);

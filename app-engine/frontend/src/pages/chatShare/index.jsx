@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Spin } from 'antd';
 import { Message } from '../../shared/utils/message';
-import {getAippInfo, getSharedDialog} from '../../shared/http/aipp';
+import {getAppInfo, getSharedDialog} from '../../shared/http/aipp';
 import ChatMessage from '../chatPreview/components/chat-message.tsx';
 import robot from '../../assets/images/ai/robot1.png';
 import './index.scss';
@@ -11,7 +11,7 @@ import './index.scss';
 
 const ChatShare = () => {
   const { appId, tenantId, shareId } = useParams();
-  const [ aippInfo, setAippInfo ] = useState({});
+  const [ appInfo, setAppInfo ] = useState({});
   const [ spinning, setSpinning] = useState(false);
   const [chatList ,setChatList] = useState([]);
 
@@ -24,9 +24,9 @@ const ChatShare = () => {
   const getAippDetails = async () => {
     setSpinning(true);
     try {
-      const res = await getAippInfo(tenantId, appId);
+      const res = await getAppInfo(tenantId, appId);
       if (res.code === 0) {
-        setAippInfo(res.data);
+        setAppInfo(res.data);
       }
     } finally {
       setSpinning(false);
@@ -54,10 +54,10 @@ const ChatShare = () => {
         <div className='chat-share-content'>
           <div className='top'>
             <div className="head">
-              <Img icon={aippInfo.attributes?.icon}/>
+              <Img icon={appInfo.attributes?.icon}/>
             </div>
-            <div className="title">{ aippInfo.name }</div>
-            <div className="text">{aippInfo.attributes?.description }</div>
+            <div className="title">{ appInfo.name }</div>
+            <div className="text">{appInfo.attributes?.description }</div>
           </div>
         </div>
           <ChatMessage

@@ -6,7 +6,7 @@ import {
   ToTopOutlined
 } from '@ant-design/icons';
 import { Message } from '../../shared/utils/message';
-import { uploadChatFile, updateAippInfo, createAipp } from '../../shared/http/aipp';
+import { uploadChatFile, updateAppInfo, createAipp } from '../../shared/http/aipp';
 import { httpUrlMap } from '../../shared/http/httpConfig';
 import knowledgeBase from '../../assets/images/knowledge/knowledge-base.png';
 import './styles/edit-modal.scss';
@@ -14,7 +14,7 @@ import './styles/edit-modal.scss';
 const { TextArea } = Input;
 const { AIPP_URL } = process.env.NODE_ENV === 'development' ? {AIPP_URL: `${window.location.origin}/api/jober/v1/api`} : httpUrlMap[process.env.NODE_ENV];
 const EditModal = (props) => {
-  const { modalRef, aippInfo, updateAippCallBack, type, addAippCallBack } = props;
+  const { modalRef, appInfo, updateAippCallBack, type, addAippCallBack } = props;
   const [ form ] = Form.useForm();
   const { appId } = useParams();
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
@@ -36,11 +36,11 @@ const EditModal = (props) => {
   };
   useEffect(() => {
     form.setFieldsValue({
-      name: aippInfo.name,
-      description: aippInfo.attributes?.description,
-      greeting: aippInfo.attributes?.greeting,
-      icon: aippInfo.attributes?.icon,
-      app_type:aippInfo.attributes?.app_type
+      name: appInfo.name,
+      description: appInfo.attributes?.description,
+      greeting: appInfo.attributes?.greeting,
+      icon: appInfo.attributes?.icon,
+      app_type:appInfo.attributes?.app_type
     })
   }, [isModalOpen])
   const confrimClick = () => {
@@ -82,11 +82,11 @@ const EditModal = (props) => {
       const params = {
         name: formParams.name,
         attributes: formParams,
-        type: aippInfo.type,
-        version: aippInfo.version
+        type: appInfo.type,
+        version: appInfo.version
       }
-      filePath ? params.attributes.icon = `${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}` : params.attributes.icon = aippInfo.attributes?.icon;
-      const res = await updateAippInfo(tenantId, appId, params);
+      filePath ? params.attributes.icon = `${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}` : params.attributes.icon = appInfo.attributes?.icon;
+      const res = await updateAppInfo(tenantId, appId, params);
       if (res.code === 0) {
         updateAippCallBack(res.data);
         handleCancel();
@@ -185,7 +185,7 @@ const EditModal = (props) => {
               <div className='avatar'>
                 {  filePath ?
                   (<img className="img-send-item" src={`${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`}/>)
-                  : (<Img icon={aippInfo.attributes?.icon}/>)}
+                  : (<Img icon={appInfo.attributes?.icon}/>)}
                 <Upload
                   beforeUpload={beforeUpload}
                   onChange={onChange}

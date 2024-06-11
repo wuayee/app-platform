@@ -8,7 +8,6 @@ import React, {
 import { AudioIcon, SendIcon, DeleteContentIcon } from '@/assets/icon';
 import $ from "jquery";
 import { Message } from "@shared/utils/message";
-import { AippContext } from "../../../aippIndex/context";
 import { httpUrlMap } from "@shared/http/httpConfig";
 import { messagePaste } from './utils';
 import HistoryChat from "../history-chat";
@@ -17,6 +16,7 @@ import Recommends from './components/recommends';
 import EditorBtnHome from './components/editor-btn-home';
 import "@shared/utils/rendos";
 import "../../styles/send-editor.scss";
+import { useAppSelector } from "../../../../store/hook";
 
 const SendEditor = (props) => {
   const {
@@ -31,7 +31,7 @@ const SendEditor = (props) => {
   const [ showClear, setShowClear ] = useState(false);
   const [ openHistory, setOpenHistory ] = useState(false);
   const [ positionConfig, setPositionConfig ] = useState({});
-  const { chatRunning }  = useContext(AippContext);
+  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const { WS_AUDIO_URL } = httpUrlMap[process.env.NODE_ENV];
   const editorRef = useRef(null);
   const recording = useRef(false);

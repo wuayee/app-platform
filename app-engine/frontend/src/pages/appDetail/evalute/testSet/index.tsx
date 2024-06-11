@@ -11,7 +11,7 @@ import { createAssessmentTasks, deleteDataSetData, getEvalDataList } from '../..
 import { useParams } from 'react-router-dom';
 import Pagination from '../../../../components/pagination';
 import AppEvalute from './app-evalute/app-evalute';
-import { getAippInfo } from '../../../../shared/http/aipp';
+import { getAppInfo } from '../../../../shared/http/aipp';
 
 const showTotal: PaginationProps['showTotal'] = (total) => `共 ${total} 条`;
 
@@ -198,9 +198,9 @@ const TestSet: React.FC = () => {
   const [appInfo, setAppInfo] = useState<any>({});
 
   // 获取应用信息
-  const getAppInfo = async () => {
+  const onGetAppInfo = async () => {
     try {
-      const res = await getAippInfo(tenantId, appId);
+      const res = await getAppInfo(tenantId, appId);
       setAppInfo(res?.data || {});
     } catch (error) {
       
@@ -243,7 +243,7 @@ const TestSet: React.FC = () => {
   }
 
   useEffect(()=> {
-    getAppInfo();
+    onGetAppInfo();
   }, [])
 
   useEffect(()=> {

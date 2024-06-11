@@ -8,6 +8,7 @@ import {AippContext} from "../../../aippIndex/context";
 import chartImg from "@/assets/images/chart.png";
 import tableImg from "@/assets/images/table.png";
 import {Message} from "@shared/utils/message";
+import { useAppSelector } from '../../../../store/hook';
 
 const FormWrap = styled.div`
     width: 100%;
@@ -64,7 +65,10 @@ const ManageCubeCreateReport = (props) => {
   const [editable, setEditable] = useState(false);
   const [editTime, setEditTime] = useState(0);
   const [canSave, setCanSave] = useState(false);
-  const {appId, tenantId, showElsa, agent, chatRunning} = useContext(AippContext);
+  const {showElsa, agent} = useContext(AippContext);
+  const appId = useAppSelector((state) => state.appStore.appId);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
 
   const handleEdit = () => {
     setEditable(true);

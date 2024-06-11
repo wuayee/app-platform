@@ -2,9 +2,9 @@
 import React, { useState, useContext } from 'react';
 import { Button, Modal } from 'antd';
 import '../styles/check-group.scss'
-import { shareDialog } from "@shared/http/aipp";
-import { AippContext } from '@/pages/aippIndex/context';
+import { shareDialog } from "@shared/http/aipp";;
 import { toClipboard } from "@shared/utils/common";
+import { useAppSelector } from '../../../store/hook';
 
 const CheckGroup = (props) => {
   const {
@@ -15,7 +15,8 @@ const CheckGroup = (props) => {
   } = props;
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ shareUrl, setShareUrl ] = useState('');
-  const { appId,tenantId } = useContext(AippContext);
+  const appId = useAppSelector((state) => state.appStore.appId);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
 
   // 取消
   function cancle() {
