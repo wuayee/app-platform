@@ -7,9 +7,9 @@ import { CommentOutlined } from '@ant-design/icons';
 import {saveContent} from "@shared/http/appBuilder";
 import {Message} from "@shared/utils/message";
 import styled from "styled-components";
-import { AippContext } from "../../../aippIndex/context";
 import { saveReport } from "@shared/http/appBuilder";
 import { uuid } from "../../../../common/utils";
+import { useAppSelector } from '../../../../store/hook';
 
 
 const { TextArea } = Input;
@@ -66,7 +66,8 @@ const FormWrap = styled.div`
 const InterviewQuestions = (props) => {
     const { data, instanceId, mode } = props;
     const id = "interviewResult";
-    const {appId, tenantId} = useContext(AippContext);
+    const appId = useAppSelector((state) => state.appStore.appId);
+    const tenantId = useAppSelector((state) => state.appStore.tenantId);
     const [qa, setQA] = useState([]);
 
     useEffect(() => {

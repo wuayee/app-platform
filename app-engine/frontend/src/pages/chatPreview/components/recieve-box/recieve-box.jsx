@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Checkbox } from "antd";
-import { AippContext, ChatContext } from '@/pages/aippIndex/context';
+import { ChatContext } from '@/pages/aippIndex/context';
 import { urlify } from '@shared/utils/common';
 import Feedbacks from './feedbacks';
 import MessageDetail from './message-detail';
@@ -10,9 +10,12 @@ import RuntimeForm from './runtime-form';
 import SendBtn from '../send-box/send-btn';
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
 import '../../styles/recieve-box.scss';
+import { useAppSelector } from '../../../../store/hook';
 
 const ReciveBox = (props) => {
-  const { aippInfo, tenantId, appId } = useContext(AippContext);
+  const appInfo = useAppSelector((state) => state.appStore.appInfo);
+  const appId = useAppSelector((state) => state.appStore.appId);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const { checkCallBack, showCheck } = useContext(ChatContext);
   const {
     content,
@@ -51,7 +54,7 @@ const ReciveBox = (props) => {
       {showCheck && <Checkbox className='check-box' checked={checked} onChange={onChange}></Checkbox>}
       <div className='user-image'>
         <Img />
-        <span>{aippInfo?.name || 'xxx'}</span>
+        <span>{appInfo?.name || 'xxx'}</span>
       </div>
       <span className="recieve-info-inner">
         {loading ? <Loading /> : setRecieveDom(recieveType)}
@@ -74,10 +77,10 @@ const Loading = () => {
   )
 }
 const Img = () => {
-  const { aippInfo } = useContext(AippContext);
+  const appInfo = useAppSelector((state) => state.appStore.appInfo);
   return <>{(
     <span>
-      {aippInfo.attributes?.icon ? <img src={aippInfo.attributes.icon} /> : <img src={knowledgeBase} />}
+      {appInfo.attributes?.icon ? <img src={appInfo.attributes.icon} /> : <img src={knowledgeBase} />}
     </span>
   )}</>
 }

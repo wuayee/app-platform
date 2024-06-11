@@ -1,7 +1,7 @@
 import { Button, Divider, Flex, Input, Switch, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import './style.scoped.scss';
-import { getAippInfo } from '../../../shared/http/aipp';
+import { getAppInfo } from '../../../shared/http/aipp';
 import { Message } from '../../../shared/utils/message';
 import { useNavigate, useParams } from 'react-router';
 import { AppIcons } from '../../../components/icons/app';
@@ -16,7 +16,7 @@ const AppOverview: React.FC = () => {
   const [appIcon, setAppIcon] = useState('');
 
   useEffect(() => {
-    getAippInfo(tenantId, appId).then(res => {
+    getAppInfo(tenantId, appId).then(res => {
       if (res.code === 0) {
         setDetail({ ...res.data });
         if (res.data?.attributes?.icon) {

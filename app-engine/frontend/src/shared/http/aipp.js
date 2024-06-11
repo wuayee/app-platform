@@ -32,11 +32,11 @@ export function createAipp(tenantId, appId, params) {
   return post(`${AIPP_URL}/${tenantId}/app/${appId}`, params);
 }
 // 获取应用详情
-export function getAippInfo(tenantId, appId) {
+export function getAppInfo(tenantId, appId) {
   return get(`${AIPP_URL}/${tenantId}/app/${appId}`);
 }
 // 更新应用全部详情
-export function updateAippInfo(tenantId, appId, params) {
+export function updateAppInfo(tenantId, appId, params) {
   return put(`${AIPP_URL}/${tenantId}/app/${appId}`, params);
 }
 // 更新表单详情

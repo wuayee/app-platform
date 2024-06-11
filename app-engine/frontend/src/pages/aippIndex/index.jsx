@@ -2,34 +2,37 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Spin, Tooltip } from 'antd';
 import { TalkFlowIcon  } from '@assets/icon';
-import { getCurUser, getAippInfo } from '@shared/http/aipp';
+import { getCurUser, getAppInfo } from '@shared/http/aipp';
 import { updateFormInfo } from '@shared/http/aipp';
 import { debounce, getUiD } from "@shared/utils/common";
 import { Message } from "@shared/utils/message";
-import { AippContext } from './context';
 import AddFlow from '../addFlow';
 import ConfigForm from '../configForm';
 import CommonChat from '../chatPreview/chatComminPage';
 import ChoreographyHead from '../components/header';
 import { ConfigFormContext } from './context';
 import { getUser } from '../helper';
+import { useAppDispatch, useAppSelector } from '../../store/hook';
+import { setAppId, setAppInfo } from '../../store/appInfo/appInfo';
 
 const AippIndex = () => {
   const { appId, tenantId } = useParams();
   const [ showElsa, setShowElsa ] = useState(false);
   const [ spinning, setSpinning] = useState(false);
-  const [ aippInfo, setAippInfo] = useState({});
   const [ reloadInspiration, setReloadInspiration ] = useState('');
   const [ showChat, setShowChat ] = useState(false);
   const [ messageChecked, setMessageCheck ] = useState(false);
   const aippRef = useRef(null);
   const inspirationRefresh = useRef(false);
+  const dispatch = useAppDispatch();
+  const appInfo = useAppSelector((state) => state.appStore.appInfo);
 
   const elsaChange = () => {
     setShowElsa(!showElsa);
     showElsa && getAippDetails();
   }
   useEffect(() => {
+    dispatch(setAppId(appId));
     getUser();
     getAippDetails();
   }, [])
@@ -38,12 +41,10 @@ const AippIndex = () => {
   const getAippDetails = async () => {
     setSpinning(true);
     try {
-      const res = await getAippInfo(tenantId, appId);
+      const res = await getAppInfo(tenantId, appId);
       if (res.code === 0) {
-        setAippInfo(() => {
-          res.data.hideHistory = true;
-          return res.data
-        });
+        res.data.hideHistory = true;
+        dispatch(setAppInfo(res.data));
       }
     } finally {
       setSpinning(false);
@@ -51,10 +52,11 @@ const AippIndex = () => {
   }
   // 修改aipp更新回调
   const updateAippCallBack = (data) => {
-    data && setAippInfo(() => {
+    if(data)
+    {
       aippRef.current = data;
-      return aippRef.current
-    })
+      dispatch(setAppInfo(aippRef.current));
+    }
   }
   // 保存配置
   const saveConfig = (data) => {
@@ -84,9 +86,6 @@ const AippIndex = () => {
     handleSearch(data);
   };
   const contextProvider = {
-    appId,
-    tenantId,
-    aippInfo,
     messageChecked,
     setMessageCheck,
     showElsa,
@@ -103,7 +102,7 @@ const AippIndex = () => {
       {
         <div className="container">
           <ChoreographyHead
-            aippInfo={aippInfo}
+            appInfo={appInfo}
             showElsa={showElsa}
             updateAippCallBack={updateAippCallBack}
             mashupClick={elsaChange}
@@ -116,11 +115,11 @@ const AippIndex = () => {
           >
             <ConfigFormContext.Provider value={configFormProvider}> 
               {showElsa ? (
-                <AddFlow type="edit" aippInfo={aippInfo}/>
+                <AddFlow type="edit" appInfo={appInfo}/>
               ) : (
                    <ConfigForm
                      mashupClick={elsaChange}
-                     configData={aippInfo.config}
+                     configData={appInfo.config}
                      handleConfigDataChange={handleConfigDataChange}
                      inspirationChange={inspirationChange}
                      showElsa={showElsa}

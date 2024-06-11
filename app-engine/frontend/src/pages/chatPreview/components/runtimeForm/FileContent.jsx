@@ -4,11 +4,11 @@
 import React, {useContext, useEffect, useState} from 'react';
 import { Input, Button, Typography } from 'antd';
 import { CommentOutlined } from '@ant-design/icons';
-import {AippContext} from "../../../aippIndex/context";
 import {saveContent} from "@shared/http/appBuilder";
 import styled from "styled-components";
 import {uuid} from "../../../../common/utils";
 import {Message} from "@shared/utils/message";
+import { useAppSelector } from '../../../../store/hook';
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -48,7 +48,8 @@ const FormWrap = styled.div`
 const FileContent = (props) => {
     const { data, instanceId, mode } = props;
     const id = "FileContent";
-    const {appId, tenantId} = useContext(AippContext);
+    const appId = useAppSelector((state) => state.appStore.appId);
+    const tenantId = useAppSelector((state) => state.appStore.tenantId);
     const [result, setResult] = useState("");
 
     useEffect(() => {

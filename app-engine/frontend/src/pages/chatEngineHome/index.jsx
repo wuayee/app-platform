@@ -1,41 +1,34 @@
 
 import React, { useEffect, useState, useRef } from 'react';
-import { getCurUser, getAippInfo, clearInstance } from '../../shared/http/aipp';
+import { getCurUser, getAppInfo, clearInstance } from '../../shared/http/aipp';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
 import { useBeforeUnload, useLocation } from "react-router-dom";
 import './index.scss'
 import {getUserCollection} from '../../shared/http/appDev'
-import { setCollectionValue, setDefaultApp } from "../../store/collection/collection";
+import { setCollectionValue, setCurAppId } from "../../store/collection/collection";
 import CommonChat from '../chatPreview/chatComminPage';
 import { getUser } from '../helper';
+import { setAppId, setAppInfo } from '../../store/appInfo/appInfo';
 
+const xiaohaiAppId='3a617d8aeb1d41a9ad7453f2f0f70d61';
 const ChatRunning = () => {
-  const [appId,setAppId] = useState('3a617d8aeb1d41a9ad7453f2f0f70d61');
-  const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
-  const [ aippInfo, setAippInfo ] = useState({});
   const location = useLocation();
-
-  const contextProvider={
-    appId: aippId ?? appId,
-    aippInfo,
-    tenantId
-  };
-
-  const aippId = useAppSelector((state) => state.collectionStore.defaultAppId);
+  const dispatch = useAppDispatch();
+  const curAppId = useAppSelector((state) => state.collectionStore.AppId);
+  const appId = useAppSelector((state) => state.appStore.AppId);
+  const appInfo = useAppSelector((state) => state.appStore.appInfo);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
   
   useEffect(()=>{
-    getAippDetails();
-  },[appId])
-
-  useEffect(()=>{
-    let appIdStr=aippId;
-    if(appIdStr){
-      getUser();
-      setAppId(aippId);
+    if(curAppId){
+    getAppDetails();
+    dispatch(setAppId(curAppId));
     }
-  },[aippId]);
-
-  const dispatch = useAppDispatch();
+  },[curAppId]);
+  
+  useEffect(()=>{
+    initialApp();
+  },[]);
 
 
   // 获取当前登录用户名
@@ -43,35 +36,35 @@ const ChatRunning = () => {
     return localStorage.getItem('currentUserIdComplete') ?? '';
   }
 
-  // 获取aipp详情
-  const getAippDetails = async () => {
-    if(!localStorage.getItem('currentUserIdComplete')) {
-      await getUser();
-    }
+  // 第一次加载界面，获取user信息
+  const initialApp = async () => {
+    //获取appId
+    await getUser();
     const collectionInfo = await getUserCollection(getLoaclUser());
     const defaultData = collectionInfo?.data?.defaultApp || null;
-    if(!aippId) {
-      dispatch(setDefaultApp(defaultData?.appId || ''))
+    if(!appId) {
+      dispatch(setCurAppId(defaultData?.appId || ''))
+      dispatch(setAppId(defaultData?.appId));
     }
-    // 设置默认应用
-    // 获取默认收藏
-    const res = await getAippInfo(tenantId, (aippId || appId));
+  }
+
+  const getAppDetails=async ()=>{
+    // 设置当前应用
+    const res = await getAppInfo(tenantId, curAppId || xiaohaiAppId);
     if (res.code === 0) {
-      setAippInfo(() => {
-        res.data.notShowHistory = true;
-        return res.data
-      });
+      res.data.notShowHistory = true;
+      dispatch(setAppInfo(res.data));
     }
   }
 
   useEffect(() => {
     // 清除默认应用
-    dispatch(setDefaultApp(''))
+    dispatch(setCurAppId(''));
   }, [location]);
 
   return (
     <div className="chat-engine-container">
-      <CommonChat chatType='home' contextProvider={contextProvider}/> 
+      <CommonChat chatType='home'/> 
     </div>
 );
   }

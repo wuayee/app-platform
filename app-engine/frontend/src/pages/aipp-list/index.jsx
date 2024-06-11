@@ -15,7 +15,7 @@ const { Search } = Input;
 const Home = () => {
   const [ tableData, setTableData ] = useState([]);
   const [ tableLoading, setTableLoading ] = useState(false);
-  const [ aippInfo, setAippInfo ] = useState({});
+  const [ appInfo, setAppInfo ] = useState({});
   const [ total, setTotal ] = useState(1);
   const [ current, setCurrent] = useState(1);
   const filterParams = useRef({});
@@ -77,7 +77,7 @@ const Home = () => {
   }
   // 新增aipp
   function addClick() {
-    setAippInfo(() => {
+    setAppInfo(() => {
       modalRef.current.showModal();
       return {
         name: '',
@@ -121,7 +121,7 @@ const Home = () => {
         />}
 
       </div>
-      <EditModal type="add" modalRef={modalRef} aippInfo={aippInfo} addAippCallBack={addAippCallBack}/>
+      <EditModal type="add" modalRef={modalRef} appInfo={appInfo} addAippCallBack={addAippCallBack}/>
     </div>
   )}</>
 };

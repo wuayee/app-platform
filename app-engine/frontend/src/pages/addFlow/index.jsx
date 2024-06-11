@@ -27,7 +27,7 @@ import {
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { debounce } from '../../shared/utils/common';
 import { Message } from '../../shared/utils/message';
-import { updateAippInfo, updateFlowInfo, reTestInstance, startInstance, getAippInfo } from '@shared/http/aipp';
+import { updateAppInfo, updateFlowInfo, reTestInstance, startInstance, getAppInfo } from '@shared/http/aipp';
 import EditTitleModal from "../components/edit-title-modal.jsx";
 import PublishModal from '../components/publish-modal.jsx';
 import './styles/index.scss';
@@ -38,7 +38,7 @@ import TestStatus from "../components/test-status";
 const { Search } = Input;
 
 const AddFlow = (props) => {
-  const { type, aippInfo } = props;
+  const { type, appInfo } = props;
   const [ dragData, setDragData ] = useState([]);
   const { tenantId, appId } = useParams();
   const [ timestamp, setTimestamp ] = useState(new Date());
@@ -104,7 +104,7 @@ const AddFlow = (props) => {
   async function initElsa() {
     flowIdRef.current = appId;
     setAddId(appId);
-    const res = await getAippInfo(tenantId, appId);
+    const res = await getAppInfo(tenantId, appId);
     if (res.code === 0) {
       appRef.current = res.data;
       setElsaData(appRef.current.flowGraph.appearance);
@@ -112,7 +112,7 @@ const AddFlow = (props) => {
   }
   // 编辑工作流
   function setElsaData(editData) {
-    let graphData = editData || aippInfo.flowGraph?.appearance || {};
+    let graphData = editData || appInfo.flowGraph?.appearance || {};
     const stageDom = document.getElementById('stage');
     let data = JSON.parse(JSON.stringify(graphData));
     let configIndex = CONFIGS.findIndex(item => item.node === 'llmNodeState');
@@ -176,7 +176,7 @@ const AddFlow = (props) => {
   }
   // 点击运行
   const handleRun = async (values) => {
-    let appDto = type ? aippInfo : appRef.current;
+    let appDto = type ? appInfo : appRef.current;
     const params = {
       appDto,
       context: {
@@ -249,7 +249,7 @@ const AddFlow = (props) => {
       return
     }
     if (type) {
-      aippInfo.flowGraph.appearance = graphChangeData;
+      appInfo.flowGraph.appearance = graphChangeData;
       updateAppRunningFlow();
     } else {
       setModalInfo(() => {
@@ -262,7 +262,7 @@ const AddFlow = (props) => {
   // 创建更新应用
   async function updateAppWorkFlow(optionType = undefined) {
     let id = type ? appId : flowIdRef.current;
-    const res = await updateAippInfo(tenantId, id, appRef.current);
+    const res = await updateAppInfo(tenantId, id, appRef.current);
     if (res.code === 0) {
       setWaterFlowName(appRef.current.name);
       setTimestamp(new Date());
@@ -274,7 +274,7 @@ const AddFlow = (props) => {
   // 编辑更新应用
   async function updateAppRunningFlow() {
     let id = type ? appId : flowIdRef.current;
-    let params = type ?  aippInfo.flowGraph : appRef.current.flowGraph;
+    let params = type ?  appInfo.flowGraph : appRef.current.flowGraph;
     const res = await updateFlowInfo(tenantId, id, params);
     if (res.code === 0) {
       Message({ type: 'success', content: type ? '高级配置更新成功': '工具流更新成功' })
@@ -438,7 +438,7 @@ const AddFlow = (props) => {
       </div>
       <PublishModal
         modalRef={modalRef}
-        aippInfo={aippInfo || appRef.current}
+        appInfo={appInfo || appRef.current}
         waterFlowName={waterFlowName}
         modalInfo={modalInfo}
         addId={addId}

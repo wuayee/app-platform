@@ -9,12 +9,15 @@ import file from "@assets/images/ai/file.png";
 import image from "@assets/images/ai/image.png";
 import audio from "@assets/images/ai/audio.png";
 import stop from "@assets/images/ai/play.png";
+import { useAppSelector } from '../../../../../store/hook';
 
 // 编辑器操作按钮
 const EditorBtn = (props) => {
   const { onClear, onStop, chatType, fileSend, requestLoading } = props;
   const [ recording, setRecording ] = useState(false);
-  const { chatRunning, tenantId, appId } = useContext(AippContext);
+  const appId = useAppSelector((state) => state.appStore.appId);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const { WS_AUDIO_URL } = httpUrlMap[process.env.NODE_ENV];
   const beforeUpload = (file) => {
     return false;
