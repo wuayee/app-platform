@@ -32,7 +32,6 @@ import com.huawei.fit.jober.FlowsDataBaseTest;
 import com.huawei.fit.jober.bff.util.FlowDefinitionParseUtils;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import com.huawei.fit.jober.common.utils.SleepUtil;
 import com.huawei.fit.jober.common.utils.UUIDUtil;
 import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
@@ -107,6 +106,116 @@ class FlowDefinitionTest {
     }
 
     @Nested
+    @DisplayName("带条件节点的Elsa数据转化为flowable流程测试集合")
+    class FlowConvertTestWithElsaConditionNode extends FlowsDataBaseTest {
+        private static final String FILE_PATH_PREFIX = "flows/convertors/";
+
+        @Test
+        @DisplayName("测试解析Elsa条件事件成功")
+        public void testElsaConditionParserSuccess() {
+            String jsonData = getJsonData(getFilePath("flows_with_elsa_condition.json"));
+
+            FlowDefinition flowDefinition = PARSER.parse(
+                    FlowDefinitionParseUtils.getParsedGraphData(JSONObject.parseObject(jsonData), "1.0"));
+            flowDefinition.setDefinitionId(UUIDUtil.uuid());
+            flowDefinition.setMetaId(UUIDUtil.uuid());
+            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+
+            HashMap<String, Object> businessData = new HashMap<String, Object>() {{
+                put("Operator", "crx");
+                put("bool1", false);
+                put("bool2", false);
+            }};
+            FlowUtil.cacheResultToNode(businessData, from.getId());
+            String traceId = from.offer(getFlowData(businessData, "crx")).getTraceId();
+            String streamId = flowDefinition.getStreamId();
+            List<FlowContext<FlowData>> contexts = waitSingle(
+                    contextSupplier(REPO, streamId, traceId, "elsaShapesoux52", ARCHIVED));
+
+            assertEquals("elsaShapesoux52", contexts.get(0).getPosition());
+        }
+
+        @Test
+        @DisplayName("测试解析Elsa条件事件并走Else逻辑成功")
+        public void testElsaConditionParserAndRunElseBranchSuccess() {
+            String jsonData = getJsonData(getFilePath("flows_with_elsa_condition.json"));
+
+            FlowDefinition flowDefinition = PARSER.parse(
+                    FlowDefinitionParseUtils.getParsedGraphData(JSONObject.parseObject(jsonData), "1.0"));
+            flowDefinition.setDefinitionId(UUIDUtil.uuid());
+            flowDefinition.setMetaId(UUIDUtil.uuid());
+            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+
+            HashMap<String, Object> businessData = new HashMap<String, Object>() {{
+                put("Operator", "crx");
+                put("bool1", false);
+                put("bool2", true);
+            }};
+            FlowUtil.cacheResultToNode(businessData, from.getId());
+            String traceId = from.offer(getFlowData(businessData, "crx")).getTraceId();
+            String streamId = flowDefinition.getStreamId();
+            List<FlowContext<FlowData>> contexts = waitSingle(
+                    contextSupplier(REPO, streamId, traceId, "elsaShapesoux53", ARCHIVED));
+
+            assertEquals("elsaShapesoux53", contexts.get(0).getPosition());
+        }
+
+        @Test
+        @DisplayName("测试解析带有branchType的Elsa条件事件并走Else逻辑成功")
+        public void testElsaConditionParserWithBranchTypeThenRunElseBranchSuccess() {
+            String jsonData = getJsonData(getFilePath("flows_with_elsa_condition_with_branch_type.json"));
+
+            FlowDefinition flowDefinition = PARSER.parse(
+                    FlowDefinitionParseUtils.getParsedGraphData(JSONObject.parseObject(jsonData), "1.0"));
+            flowDefinition.setDefinitionId(UUIDUtil.uuid());
+            flowDefinition.setMetaId(UUIDUtil.uuid());
+            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+
+            HashMap<String, Object> businessData = new HashMap<String, Object>() {{
+                put("Operator", "crx");
+                put("bool1", false);
+                put("bool2", true);
+            }};
+            FlowUtil.cacheResultToNode(businessData, from.getId());
+            String traceId = from.offer(getFlowData(businessData, "crx")).getTraceId();
+            String streamId = flowDefinition.getStreamId();
+            List<FlowContext<FlowData>> contexts = waitSingle(
+                    contextSupplier(REPO, streamId, traceId, "elsaShapesoux52", ARCHIVED));
+
+            assertEquals("elsaShapesoux52", contexts.get(0).getPosition());
+        }
+
+        @Test
+        @DisplayName("测试解析字段类型为String的条件并走第二个分支逻辑成功")
+        public void testStringTypeConditionThenRunSecondBranchSuccess() {
+            String jsonData = getJsonData(getFilePath("flows_with_elsa_string_condition.json"));
+
+            FlowDefinition flowDefinition = PARSER.parse(
+                    FlowDefinitionParseUtils.getParsedGraphData(JSONObject.parseObject(jsonData), "1.0"));
+            flowDefinition.setDefinitionId(UUIDUtil.uuid());
+            flowDefinition.setMetaId(UUIDUtil.uuid());
+            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
+
+            HashMap<String, Object> businessData = new HashMap<String, Object>() {{
+                put("Operator", "crx");
+                put("Question", "   ");
+            }};
+            FlowUtil.cacheResultToNode(businessData, from.getId());
+            String traceId = from.offer(getFlowData(businessData, "crx")).getTraceId();
+            String streamId = flowDefinition.getStreamId();
+            List<FlowContext<FlowData>> contexts = waitSingle(
+                    contextSupplier(REPO, streamId, traceId, "elsaShapesoux52", ARCHIVED));
+
+            assertEquals("elsaShapesoux52", contexts.get(0).getPosition());
+        }
+
+        @Override
+        protected String getFilePathPrefix() {
+            return FILE_PATH_PREFIX;
+        }
+    }
+
+    @Nested
     @DisplayName("流程定义转化为flowable流程测试集合")
     class FlowConvertTest extends FlowsDataBaseTest {
         private static final String FILE_PATH_PREFIX = "flows/convertors/";
@@ -120,72 +229,6 @@ class FlowDefinitionTest {
             From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
 
             assertFlowableFlow(flowDefinition, from);
-        }
-
-        @Test
-        @Disabled
-        @DisplayName("测试解析Elsa条件事件成功")
-        public void testElsaConditionParserSuccess() {
-            String jsonData = getJsonData(getFilePath("flows_with_elsa_condition.json"));
-
-            FlowDefinition flowDefinition = PARSER.parse(
-                    FlowDefinitionParseUtils.getParsedGraphData(JSONObject.parseObject(jsonData), "1.0"));
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
-
-            HashMap<String, Object> businessData = new HashMap<String, Object>() {{
-                put("Operator", "crx");
-                put("bool1", false);
-                put("bool2", false);
-            }};
-            FlowUtil.cacheResultToNode(businessData, from.getId());
-            from.offer(getFlowData(businessData, "crx"));
-            // 这里只有sleep才会走到 com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.
-            // FlowConditionNode.getWhether 的异步方法中 查看ohScript执行结果
-            SleepUtil.sleep(10000);
-        }
-
-        @Test
-        @Disabled
-        @DisplayName("测试解析Elsa条件事件并走Else逻辑成功")
-        public void testElsaConditionParserAndRunElseBranchSuccess() {
-            String jsonData = getJsonData(getFilePath("flows_with_elsa_condition.json"));
-
-            FlowDefinition flowDefinition = PARSER.parse(
-                    FlowDefinitionParseUtils.getParsedGraphData(JSONObject.parseObject(jsonData), "1.0"));
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
-
-            HashMap<String, Object> businessData = new HashMap<String, Object>() {{
-                put("Operator", "crx");
-                put("bool1", false);
-                put("bool2", true);
-            }};
-            FlowUtil.cacheResultToNode(businessData, from.getId());
-            from.offer(getFlowData(businessData, "crx"));
-            // 这里只有sleep才会走到 com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.
-            // FlowConditionNode.getWhether 的异步方法中 查看ohScript执行结果
-            SleepUtil.sleep(10000);
-        }
-
-        @Test
-        @Disabled
-        @DisplayName("测试解析带有branchType的Elsa条件事件并走Else逻辑成功")
-        public void testElsaConditionParserWithBranchTypeThenRunElseBranchSuccess() {
-            String jsonData = getJsonData(getFilePath("flows_with_elsa_condition_with_branch_type.json"));
-
-            FlowDefinition flowDefinition = PARSER.parse(
-                    FlowDefinitionParseUtils.getParsedGraphData(JSONObject.parseObject(jsonData), "1.0"));
-            From<FlowData> from = (From<FlowData>) flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS);
-
-            HashMap<String, Object> businessData = new HashMap<String, Object>() {{
-                put("Operator", "crx");
-                put("bool1", false);
-                put("bool2", true);
-            }};
-            FlowUtil.cacheResultToNode(businessData, from.getId());
-            from.offer(getFlowData(businessData, "crx"));
-            // 这里只有sleep才会走到 com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.
-            // FlowConditionNode.getWhether 的异步方法中 查看ohScript执行结果
-            SleepUtil.sleep(10000);
         }
 
         @Test

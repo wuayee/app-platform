@@ -64,25 +64,27 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
                     // {value: 'shorter than or equal', label: 'shorter than or equal'},
                     // {value: 'contain', label: 'contain'},
                     // {value: 'not contain', label: 'not contain'},
-                    {value: 'is empty', label: 'is empty'},
-                    {value: 'is not empty', label: 'is not empty'},
+                    {value: UNARY_OPERATOR.IS_EMPTY_STRING, label: 'is empty'},
+                    {value: UNARY_OPERATOR.IS_NOT_EMPTY_STRING, label: 'is not empty'},
+                    {value: UNARY_OPERATOR.IS_NULL, label: 'is null'},
+                    {value: UNARY_OPERATOR.IS_NOT_NULL, label: 'is not null'},
                 ];
             case 'Boolean':
                 return [
                     {value: 'equal', label: 'equal'},
                     {value: 'not equal', label: 'not equal'},
-                    {value: 'is empty', label: 'is empty'},
-                    {value: 'is not empty', label: 'is not empty'},
-                    {value: 'is true', label: 'is true'},
-                    {value: 'is false', label: 'is false'},
+                    {value: UNARY_OPERATOR.IS_NULL, label: 'is null'},
+                    {value: UNARY_OPERATOR.IS_NOT_NULL, label: 'is not null'},
+                    {value: UNARY_OPERATOR.IS_TRUE, label: 'is true'},
+                    {value: UNARY_OPERATOR.IS_FALSE, label: 'is false'},
                 ];
             case 'Integer':
             case 'Number':
                 return [
                     {value: 'equal', label: 'equal'},
                     {value: 'not equal', label: 'not equal'},
-                    {value: 'is empty', label: 'is empty'},
-                    {value: 'is not empty', label: 'is not empty'},
+                    {value: UNARY_OPERATOR.IS_NULL, label: 'is null'},
+                    {value: UNARY_OPERATOR.IS_NOT_NULL, label: 'is not null'},
                     {value: 'greater than', label: 'greater than'},
                     {value: 'greater than or equal', label: 'greater than or equal'},
                     {value: 'less than', label: 'less than'},
@@ -99,8 +101,8 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
                     // {value: 'shorter than or equal', label: 'shorter than or equal'},
                     // {value: 'contain', label: 'contain'},
                     // {value: 'not contain', label: 'not contain'},
-                    {value: 'is empty', label: 'is empty'},
-                    {value: 'is not empty', label: 'is not empty'},
+                    {value: UNARY_OPERATOR.IS_EMPTY, label: 'is empty'},
+                    {value: UNARY_OPERATOR.IS_NOT_EMPTY, label: 'is not empty'},
                 ];
             default:
                 return [];
