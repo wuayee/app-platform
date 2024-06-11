@@ -5,8 +5,8 @@
 package com.huawei.jade.fel.rag.retrieve;
 
 import com.huawei.jade.fel.core.retriever.Retriever;
-import com.huawei.jade.fel.rag.common.Chunk;
-import com.huawei.jade.fel.rag.common.Chunks;
+import com.huawei.jade.fel.rag.Chunk;
+import com.huawei.jade.fel.rag.Chunks;
 import com.huawei.jade.fel.rag.index.VectorIndex;
 import com.huawei.jade.fel.rag.rerank.HybridRerank;
 
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  *
  * @since 2024-05-07
  */
-public class HybridRerankRetriever implements Retriever<String> {
+public class HybridRerankRetriever implements Retriever<String, Chunks> {
     private List<VectorIndex> indexers;
     private HybridRerank reranker;
     private int topK;

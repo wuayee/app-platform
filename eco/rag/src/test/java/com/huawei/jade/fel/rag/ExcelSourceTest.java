@@ -3,8 +3,6 @@ package com.huawei.jade.fel.rag;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.flows.ConverseLatch;
-import com.huawei.jade.fel.rag.common.Chunk;
-import com.huawei.jade.fel.rag.common.Document;
 import com.huawei.jade.fel.rag.index.TableIndex;
 import com.huawei.jade.fel.rag.source.ExcelSource;
 import com.huawei.jade.fel.rag.split.TableSplitter;
@@ -76,11 +74,11 @@ public class ExcelSourceTest {
     @Test
     void test_extract_relation_enums_limit_row() {
         ExcelSource source = new ExcelSource();
-        source.parseContent("src/test/testfiles/从属枚举test.xlsx", 0, 0, 2, 0);
+        source.parseContent("src/test/testfiles/test.xlsx", 0, 1, 1, 0);
 
         List<List<String>> contents = source.getContents();
-        assertEquals(contents.size(), 4);
-        assertEquals(contents.get(0).size(), 2);
+        assertEquals(contents.size(), 1);
+        assertEquals(contents.get(0).size(), 3);
     }
 
     @Disabled

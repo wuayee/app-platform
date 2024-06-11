@@ -6,7 +6,7 @@ package com.huawei.jade.fel.rag.source;
 
 import com.huawei.fitframework.log.Logger;
 import com.huawei.jade.fel.engine.operators.sources.Source;
-import com.huawei.jade.fel.rag.common.Document;
+import com.huawei.jade.fel.rag.Document;
 import com.huawei.jade.fel.rag.common.IdGenerator;
 
 import java.io.BufferedReader;

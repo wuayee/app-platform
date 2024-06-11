@@ -10,7 +10,6 @@ import com.huawei.jade.fel.chat.ChatModelService;
 import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.protocol.ChatCompletion;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
-import com.huawei.jade.fel.rag.common.Chunk;
 import com.huawei.jade.fel.rag.index.VectorIndex;
 import com.huawei.jade.fel.rag.rerank.LlmRerank;
 import com.huawei.jade.fel.rag.rerank.RrfRerank;
@@ -81,7 +80,7 @@ public class RetrieveTest {
     void test_basic_retrieve() {
         BasicRetriever retriever = new BasicRetriever(new MockVectorIndexer(chunks), 2);
         assertEquals(String.join(System.lineSeparator(), "content1", "content2"),
-                retriever.invoke("question").text());
+                retriever.invoke("question"));
     }
 
     @Test
@@ -103,6 +102,6 @@ public class RetrieveTest {
                 2
         );
         assertEquals(String.join(System.lineSeparator(), "content3", "content2"),
-                retriever.invoke("question").text());
+                retriever.invoke("question"));
     }
 }
