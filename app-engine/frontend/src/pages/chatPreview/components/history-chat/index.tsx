@@ -12,7 +12,7 @@ import { clearChatHistory, deleteChat, getChatDetail, getChatList, tenantId } fr
 import { aippDebug } from "../../../../shared/http/aipp";
 import { getDaysAndHours } from "../../../../common/dataUtil";
 import { useAppDispatch, useAppSelector } from "../../../../store/hook";
-import { setChatList, setChatRunning,setChatId,setOpenStar } from "../../../../store/CommonChat/CommonChat";
+import { setChatList, setChatRunning,setChatId,setOpenStar } from "../../../../store/chatStore/chatStore";
 
 interface HistoryChatProps {
   openHistorySignal: number;

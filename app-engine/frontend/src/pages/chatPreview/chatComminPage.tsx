@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { AippContext } from '../aippIndex/context';
 import { getCurUser } from '../../shared/http/aipp';
 import ChatPreview from '.';
-import { setChatType } from '../../store/CommonChat/CommonChat';
+import { setChatType } from '../../store/chatStore/chatStore';
 import { useAppDispatch } from '../../store/hook';
 
 // 公共参数，公共聊天界面

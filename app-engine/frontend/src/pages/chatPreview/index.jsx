@@ -27,7 +27,7 @@ import {
 import "./styles/chat-preview.scss";
 import { creatChat, tenantId, updateChat } from "../../shared/http/chat.js";
 import { useAppDispatch, useAppSelector } from "../../store/hook";
-import { setChatId, setChatList, setChatRunning, setChatType, setInspirationOpen,setchatT } from "../../store/CommonChat/CommonChat";
+import { setChatId, setChatList, setChatRunning, setChatType, setInspirationOpen,setchatT } from "../../store/chatStore/chatStore";
 
 const ChatPreview = (props) => {
   const { previewBack } = props;

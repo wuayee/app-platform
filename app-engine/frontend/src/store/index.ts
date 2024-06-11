@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import collectionStore from './collection/collection';
 import appStore from './appInfo/appInfo';
-import chatCommonStore from './CommonChat/CommonChat';
+import chatCommonStore from './chatStore/chatStore';
 // ...
 
 export const store = configureStore({
