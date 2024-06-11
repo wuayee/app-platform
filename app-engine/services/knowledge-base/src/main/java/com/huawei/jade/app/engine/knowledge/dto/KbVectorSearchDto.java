@@ -36,5 +36,5 @@ public class KbVectorSearchDto {
     /**
      * 阈值
      */
-    private Double threshold;
+    private Float threshold;
 }

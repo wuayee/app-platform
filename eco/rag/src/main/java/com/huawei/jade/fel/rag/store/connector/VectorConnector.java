@@ -30,6 +30,16 @@ public interface VectorConnector {
     List<Pair<Map<String, Object>, Float>> get(VectorQuery query, VectorConfig conf);
 
     /**
+     * 根据传入的查询参数和配置信息进行查询。
+     *
+     * @param query 表示查询参数的 {@link VectorQuery}。
+     * @param conf 表示配置信息的 {@link VectorConfig}。
+     * @param threshold 表示查询返回结果的最低相似阈值 {@link Float}
+     * @return 返回查询到的值及其相关性得分。
+     */
+    List<Pair<Map<String, Object>, Float>> get(VectorQuery query, VectorConfig conf, Float threshold);
+
+    /**
      * 根据传入的配置信息进行数量统计。
      *
      * @param conf 表示配置信息的 {@link VectorConfig}。
