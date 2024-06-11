@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskDo {
+public class TaskDo extends CommonDo {
     /**
      * 表示任务的唯一标识。
      */

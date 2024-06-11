@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ModelDo {
+public class ModelDo extends CommonDo {
     /**
      * 表示模型的创建时间。
      */

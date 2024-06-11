@@ -14,8 +14,8 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.value.Result;
 import com.huawei.jade.store.entity.query.ModelQuery;
 import com.huawei.jade.store.entity.transfer.ModelData;
-import com.huawei.jade.store.service.HuggingFaceModelService;
 import com.huawei.jade.store.service.EcoTaskService;
+import com.huawei.jade.store.service.HuggingFaceModelService;
 
 import java.util.List;
 
