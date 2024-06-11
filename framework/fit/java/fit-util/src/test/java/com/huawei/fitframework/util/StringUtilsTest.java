@@ -1782,7 +1782,7 @@ public class StringUtilsTest {
         }
 
         @Test
-        @DisplayName("当输入不全部都是 ASCII 字符时，返回 true")
+        @DisplayName("当输入不全部都是 ASCII 字符时，返回 false")
         void shouldReturnFalse() {
             boolean actual = StringUtils.isAscii("你好.txt");
             assertThat(actual).isFalse();

@@ -1,8 +1,8 @@
 package com.huawei.jade.fel.rag.split;
 
 import com.huawei.jade.fel.core.retriever.Splitter;
-import com.huawei.jade.fel.rag.common.Chunk;
-import com.huawei.jade.fel.rag.common.Document;
+import com.huawei.jade.fel.rag.Chunk;
+import com.huawei.jade.fel.rag.Document;
 import com.huawei.jade.fel.rag.common.IdGenerator;
 
 import java.util.ArrayList;

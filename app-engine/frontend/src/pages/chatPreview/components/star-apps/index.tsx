@@ -9,11 +9,11 @@ import {
 import "./style.scoped.scss";
 import { httpUrlMap } from "../../../../shared/http/httpConfig";
 import { cancleUserCollection, collectionApp, getUserCollection, updateCollectionApp } from "../../../../shared/http/appDev";
-import { setCollectionValue, setDefaultApp } from "../../../../store/collection/collection";
+import { setCollectionValue, setCurAppId } from "../../../../store/collection/collection";
 import { useAppSelector, useAppDispatch } from "../../../../store/hook";
 import { AnyAction } from "redux";
 import { useNavigate, useLocation } from "react-router-dom";
-import { AippContext } from "../../../aippIndex/context";
+import { setOpenStar } from "../../../../store/chatStore/chatStore";
 
 const { ICON_URL } = process.env.NODE_ENV === 'development' ? { ICON_URL: `${window.location.origin}/api`} : httpUrlMap[process.env.NODE_ENV];
 
@@ -24,7 +24,8 @@ interface StarAppsProps {
 const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   const navigate = useNavigate();
-  const { openStar, setOpenStar}  = useContext(AippContext);
+  const dispatch = useAppDispatch();
+  const openStar = useAppSelector((state) => state.chatCommonStore.openStar);
   const [apps, setApps] = useState<any[]>([]);
   const clickMap: any = {
 
@@ -77,15 +78,13 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
     return localStorage.getItem('currentUserIdComplete') ?? '';
   }
 
-  const dispatch = useAppDispatch();
-
   // 数据转换
   const translateData = (remoteData: any): any[] => {
     
     const defaultData = remoteData?.data?.defaultApp || null;
 
     // 设置默认应用
-    // dispatch(setDefaultApp(defaultData?.appId || ''))
+    // dispatch(setCurAppId(defaultData?.appId || ''))
     const collectionList: any[] = remoteData?.data?.collectionPoList || [];
     collectionList.unshift(defaultData);
     const data = collectionList.filter(item=> item);
@@ -121,8 +120,8 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
 
   // 开始聊天
   const startChat = (item: any) => {
-    dispatch(setDefaultApp(item?.appId || ''));
-    setOpenStar(false);
+    dispatch(setCurAppId(item?.appId))
+    dispatch(setOpenStar(false));
   }
 
   useEffect(()=> {
@@ -139,12 +138,12 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
           </div>
           <CloseOutlined
             style={{ fontSize: 20 }}
-            onClick={() => setOpenStar(false)}
+            onClick={() => dispatch(setOpenStar(false))}
           />
         </div>
       }
       closeIcon={false}
-      onClose={() => setOpenStar(false)}
+      onClose={() => dispatch(setOpenStar(false))}
       open={openStar}
     >
       <Input placeholder="搜索应用" prefix={<SearchOutlined />} />
@@ -188,7 +187,7 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
         ))}
       </div>
       <div style={{float:'right', marginTop: 12 }}>
-        <Button onClick={() => setOpenStar(false)} className="close-button">
+        <Button onClick={() => dispatch(setOpenStar(false))} className="close-button">
           关闭
         </Button>
       </div>

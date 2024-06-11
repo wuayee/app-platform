@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { LeftArrowIcon } from '@assets/icon';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getAippInfo } from '@shared/http/aipp';
+import { getAppInfo } from '@shared/http/aipp';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { configMap } from "../addFlow/config";
 import './index.scss'
@@ -18,7 +18,7 @@ const FlowDetail = () => {
   }, [])
   // 获取aipp详情
   async function getAippDetails() {
-    const res = await getAippInfo(tenantId, appId);
+    const res = await getAppInfo(tenantId, appId);
     if (res.code === 0) {
       setAppInfo(res.data);
       setElsaData(res.data.flowGraph?.appearance);

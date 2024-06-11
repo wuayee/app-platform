@@ -54,7 +54,7 @@ public class PatternTest {
     @Test
     void shouldOkWhenAiFlowWithRetriever() {
         Memory memory = getMockMemory();
-        Retriever<Prompt> retriever =
+        Retriever<Prompt, MessageContent> retriever =
                 input -> Contents.from(new TextContent("[context: " + input.text() + "]"), new MediaContent("url"));
         final StringBuilder answer = new StringBuilder();
         AiProcessFlow<Tip, MessageContent> ragFlow = AiFlows.<Tip>create()

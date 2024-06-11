@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { Modal } from "antd";
 import { Message } from "@shared/utils/message";
-import { AippContext } from '@/pages/aippIndex/context';
 import { CloseOutlined } from "@ant-design/icons";
 import { 
   LinkIcon, 
@@ -16,22 +15,21 @@ import UploadFile from './upload-file';
 import StarApps from "../../star-apps";
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
 import HistoryChatDrawer from '../../history-chat';
+import { useAppDispatch, useAppSelector } from '../../../../../store/hook';
+import { setChatId, setChatList, setChatRunning, setOpenStar } from '../../../../../store/chatStore/chatStore';
 
 // 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {
   const { fileCallBack } = props;
-  const { 
-    chatRunning, 
-    tenantId, 
-    appId,
-    aippInfo,
-    setOpenStar,
-    chatList,
-    setChatList,
-    setChatId,
-    setChatRunning,
-    chatType
-  } = useContext(AippContext);
+  const dispatch = useAppDispatch();
+  const appInfo = useAppSelector((state) => state.appStore.appInfo);
+  const appId = useAppSelector((state) => state.appStore.appId);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const chatId = useAppSelector((state) => state.chatCommonStore.chatId);
+  const chatType = useAppSelector((state) => state.chatCommonStore.chatType);
+  const inspirationOpen = useAppSelector((state) => state.chatCommonStore.inspirationOpen);
+  const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
+  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ showAt, setShowAt ] = useState(false);
   const [ appName, setAppName ] = useState('');
@@ -41,14 +39,15 @@ const EditorBtnHome = (props) => {
 
   let openUploadRef = useRef(null);
   useEffect(() => {
+    console.log(chatType)
     document.body.addEventListener('click', () => {
       setShowAt(false);
     })
-    if (aippInfo.attributes?.icon) {
-      setAppIcon(aippInfo.attributes.icon);
+    if (appInfo.attributes?.icon) {
+      setAppIcon(appInfo.attributes.icon);
     }
-    setAppName(aippInfo.name || '应用');
-  }, [aippInfo]);
+    setAppName(appInfo.name || '应用');
+  }, [appInfo]);
 
   // 清空历史记录
   const handleOk = async () => {
@@ -62,7 +61,7 @@ const EditorBtnHome = (props) => {
     }
     const res = await clearInstance(tenantId, appId, 'preview');
     if (res.code === 0) {
-      setChatList([]);
+      dispatch(setChatList([]));
     }
     setIsModalOpen(false);
   };
@@ -77,7 +76,7 @@ const EditorBtnHome = (props) => {
   }
   // 取消@应用功能
   const cancleAt = () => {
-    setAppName(aippInfo.name);
+    setAppName(appInfo.name);
     setIsAt(false);
   }
   // @应用点击回调
@@ -85,7 +84,7 @@ const EditorBtnHome = (props) => {
     setAppName(item.name);
     setShowAt(false);
     setIsAt(true);
-    setOpenStar(false)
+    dispatch(setOpenStar(false));
   }
   // 更多应用
   const showMoreClick = () => {
@@ -94,7 +93,7 @@ const EditorBtnHome = (props) => {
       return;
     }
     setShowAt(false);
-    setOpenStar(true);
+    dispatch(setOpenStar(true));
   }
   // 多模态上传文件
   const uploadClick = () => {
@@ -125,11 +124,11 @@ const EditorBtnHome = (props) => {
           <div className={['switch-app', isAt ? 'switch-active' : null ].join(' ')} onClick={()=>{if(chatType==='home'){showMoreClick();}}}>
             { isAt && <span style={{ marginLeft: '6px' }}>正在跟</span> }
             <span className="item-name" title={appName}>{appName}</span>
-            { !aippInfo.hideHistory && <ArrowDownIcon className="arrow-icon" /> }
+            { !appInfo.hideHistory && <ArrowDownIcon className="arrow-icon" /> }
             { isAt && <span style={{ marginLeft: '6px' }}>对话</span> }
           </div>
           <LinkIcon onClick={uploadClick} />
-          { (!isAt && !aippInfo.hideHistory ) && <AtIcon onClick={atClick} /> }
+          { (!isAt && !appInfo.hideHistory ) && <AtIcon onClick={atClick} /> }
         </div>
       </div>
       <div className="inner-right">
@@ -142,15 +141,12 @@ const EditorBtnHome = (props) => {
           ) : 
           (
             <div className="inner-item">
-              <div><ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} /></div>
-              { !aippInfo.hideHistory && <HistoryIcon  onClick={(e) => {setOpenHistorySignal(e.timeStamp)}}/> }
+              <div hidden><ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} /></div>
+              { !appInfo.hideHistory && <HistoryIcon  onClick={(e) => {setOpenHistorySignal(e.timeStamp)}}/> }
               <span className="item-clear" onClick={() => {
-                setChatRunning(false);
-                setChatId(null);
-                setChatList(() => {
-                  let arr = [];
-                  return arr;
-                });
+                dispatch(setChatRunning(false));
+                dispatch(setChatId(null));
+                dispatch(setChatList([]));
               }}>+ 新聊天</span>
             </div>
           )

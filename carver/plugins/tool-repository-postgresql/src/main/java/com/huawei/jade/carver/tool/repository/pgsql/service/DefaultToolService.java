@@ -49,7 +49,7 @@ public class DefaultToolService implements ToolService {
      * @return 工具的唯一标识名。 {@link String}。
      */
     @Override
-    @Fitable("addTool")
+    @Fitable(id = "tool-repository-pgsql")
     @Transactional
     public String addTool(ToolData toolData) {
         toolData.setUniqueName(UUID.randomUUID().toString());
@@ -74,7 +74,7 @@ public class DefaultToolService implements ToolService {
      * @return 工具的唯一标识名或提示。 {@link String}。
      */
     @Override
-    @Fitable("deleteTool")
+    @Fitable(id = "tool-repository-pgsql")
     @Transactional
     public String deleteTool(String toolUniqueName) {
         this.toolRepo.deleteTool(toolUniqueName);
@@ -89,7 +89,7 @@ public class DefaultToolService implements ToolService {
      * @return 工具的传输对象 {@link ToolData}。
      */
     @Override
-    @Fitable("getToolByUniqueName")
+    @Fitable(id = "tool-repository-pgsql")
     @Transactional
     public ToolData getTool(String toolUniqueName) {
         Optional<Tool.Info> info = this.toolRepo.getTool(toolUniqueName);
@@ -109,7 +109,7 @@ public class DefaultToolService implements ToolService {
      * @return 工具列表 {@link List}{@code <}{@link ToolData}{@code >}。
      */
     @Override
-    @Fitable("getToolsByToolTagQuery")
+    @Fitable(id = "tool-repository-pgsql")
     @Transactional
     public List<ToolData> getTools(ToolTagQuery toolTagQuery) {
         if (toolTagQuery == null) {
@@ -120,16 +120,16 @@ public class DefaultToolService implements ToolService {
             return Collections.emptyList();
         }
         List<Tool.Info> infos = this.toolRepo.getTools(toolTagQuery);
-        ArrayList<ToolData> toolDatas = new ArrayList<>();
+        ArrayList<ToolData> toolDataList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(infos)) {
             for (Tool.Info info : infos) {
                 ToolData toolData = ToolData.from(info);
                 Set<String> tags = this.toolRepo.getTags(toolData.getUniqueName());
                 toolData.setTags(tags);
-                toolDatas.add(toolData);
+                toolDataList.add(toolData);
             }
         }
-        return toolDatas;
+        return toolDataList;
     }
 
     /**
@@ -139,7 +139,7 @@ public class DefaultToolService implements ToolService {
      * @return 工具列表 {@link List}{@code <}{@link ToolData}{@code >}。
      */
     @Override
-    @Fitable("searchToolsByToolTagQuery")
+    @Fitable(id = "tool-repository-pgsql")
     @Transactional
     public List<ToolData> searchTools(ToolTagQuery toolTagQuery) {
         if (toolTagQuery == null) {
@@ -150,16 +150,16 @@ public class DefaultToolService implements ToolService {
             return Collections.emptyList();
         }
         List<Tool.Info> infos = this.toolRepo.searchTools(toolTagQuery);
-        ArrayList<ToolData> toolDatas = new ArrayList<>();
+        ArrayList<ToolData> toolDataList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(infos)) {
             for (Tool.Info info : infos) {
                 ToolData toolData = ToolData.from(info);
                 Set<String> tags = this.toolRepo.getTags(toolData.getUniqueName());
                 toolData.setTags(tags);
-                toolDatas.add(toolData);
+                toolDataList.add(toolData);
             }
         }
-        return toolDatas;
+        return toolDataList;
     }
 
     /**
@@ -169,7 +169,7 @@ public class DefaultToolService implements ToolService {
      * @param tag 表示待添加的工具标签的 {@link String}。
      */
     @Override
-    @Fitable("addTag")
+    @Fitable(id = "tool-repository-pgsql")
     public void addTag(String toolUniqueName, String tag) {
         if (StringUtils.isBlank(tag)) {
             return;
@@ -184,7 +184,7 @@ public class DefaultToolService implements ToolService {
      * @param tagName 表示待删除的工具标签的 {@link String}。
      */
     @Override
-    @Fitable("deleteTag")
+    @Fitable(id = "tool-repository-pgsql")
     public void deleteTag(String toolUniqueName, String tagName) {
         this.toolRepo.deleteTag(toolUniqueName, tagName);
     }

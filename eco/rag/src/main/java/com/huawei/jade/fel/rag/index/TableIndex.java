@@ -5,7 +5,7 @@
 package com.huawei.jade.fel.rag.index;
 
 import com.huawei.jade.fel.core.retriever.Indexer;
-import com.huawei.jade.fel.rag.common.Chunk;
+import com.huawei.jade.fel.rag.Chunk;
 import com.huawei.jade.fel.rag.store.connector.JdbcSqlConnector;
 import com.huawei.jade.fel.rag.store.connector.schema.DbFieldType;
 

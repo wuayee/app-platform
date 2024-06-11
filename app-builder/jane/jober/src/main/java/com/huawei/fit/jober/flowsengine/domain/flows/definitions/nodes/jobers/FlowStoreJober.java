@@ -32,10 +32,11 @@ import java.util.Map;
  * @since 2024/5/7
  */
 public class FlowStoreJober extends FlowJober {
-
+    /**
+     * {@link com.huawei.jade.carver.tool.service.ToolExecuteService#executeTool(String, String)} 的服务唯一标识。
+     */
+    public static final String TOOL_EXECUTE_GENERICABLE_ID = "com.huawei.jade.carver.tool.execute.json";
     private static final Logger LOG = Logger.get(FlowStoreJober.class);
-
-    public static final String TOOL_EXECUTE_GENERICABLE_ID = "com.huawei.jade.store.tool.execute";
 
     /**
      * 工具服务的元数据信息

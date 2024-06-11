@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.jade.store.repository.pgsql.mapper.ModelMapper">
+    <resultMap id="Model" type="com.huawei.jade.store.repository.pgsql.entity.ModelDo">
+        <result column="created_time" property="createdTime"/>
+        <result column="updated_time" property="updatedTime"/>
+        <result column="task_id" property="taskId"/>
+        <result column="name" property="name"/>
+        <result column="url" property="url"/>
+        <result column="context" property="context"/>
+    </resultMap>
+    <sql id="sortAndLimit">
+        order by i."updated_time" desc
+        <if test="offset != null and offset >= 0">
+            offset #{offset}
+        </if>
+        <if test="limit != null and limit > 0">
+            limit #{limit}
+        </if>
+    </sql>
+    <select id="getModels" resultMap="Model">
+        select i."created_time", i."updated_time", i."task_id", i."name", i."url", i."context"
+        from "store_model" i
+        <where>
+            <if test="taskId != null">
+                i."task_id" = #{taskId}
+            </if>
+        </where>
+        <include refid="sortAndLimit"/>
+    </select>
+</mapper>

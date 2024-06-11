@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import {DefaultRoot} from "@/components/DefaultRoot.jsx";
 import {v4 as uuidv4} from "uuid";
 import {Header} from "@/components/Header.jsx";
+import {Footer} from "@/components/Footer.jsx";
 import {NODE_STATUS, SECTION_TYPE, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 import {useRef} from "react";
 
@@ -14,7 +15,7 @@ import {useRef} from "react";
 export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     const self = node(id, x, y, width, height, parent, false, drawer ? drawer : jadeNodeDrawer);
     self.type = "jadeNode";
-    self.serializedFields.batchAdd("toolConfigs", "componentName", "flowMeta");
+    self.serializedFields.batchAdd("toolConfigs", "componentName", "flowMeta", "sourcePlatform");
     self.eventType = "jadeEvent";
     self.hideText = true;
     self.autoHeight = true;
@@ -44,6 +45,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
             },
         }
     };
+    self.sourcePlatform = "official";
 
     const observed = [];
 
@@ -223,6 +225,15 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
      */
     self.getHeaderComponent = () => {
         return (<Header shape={self}/>);
+    }
+
+    /**
+     * 获取Footer组件
+     *
+     * @return {JSX.Element}
+     */
+    self.getFooterComponent = () => {
+        return (<Footer shape={self}/>);
     }
 
     /**

@@ -25,7 +25,7 @@
         <guava.version>32.0.1-jre</guava.version>
         <fit.version>3.5.0-SNAPSHOT</fit.version>
         <hisp.jane.api.version>1.0-SNAPSHOT</hisp.jane.api.version>
-        <ohscript.version>0.0.3.2-SNAPSHOT</ohscript.version>
+        <ohscript.version>0.0.3.4-SNAPSHOT</ohscript.version>
     </properties>
 
     <!--Hdt 增量覆盖率使用-->
@@ -98,6 +98,11 @@
             <groupId>com.huawei.fit.service</groupId>
             <artifactId>fit-data-repository-service</artifactId>
             <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jade.service</groupId>
+            <artifactId>tool-service</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <!-- DB -->
@@ -312,7 +317,8 @@
                         <item>/com/huawei/fit/jober/flowsengine/controller/*</item>
                         <item>/com/huawei/fit/jober/bff/controller/*</item>
                         <item>/com/huawei/fit/jober/taskcenter/fitable/MetaInstanceFitable1</item>
-                        <item>/com/huawei/fit/jober/taskcenter/eventhandler/converter/impl/MetaInstanceConverterImpl</item>
+                        <item>/com/huawei/fit/jober/taskcenter/eventhandler/converter/impl/MetaInstanceConverterImpl
+                        </item>
                     </excludeStats>
                     <!-- 建议配置，描述报告的名称，默认为最后一个${project.artifactId} -->
                     <reportName>TestReport</reportName>

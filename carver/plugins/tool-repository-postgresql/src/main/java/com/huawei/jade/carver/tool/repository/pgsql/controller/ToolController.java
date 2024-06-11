@@ -17,9 +17,9 @@ import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestQuery;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.fitframework.value.Result;
 import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
-import com.huawei.jade.carver.tool.repository.pgsql.model.reponse.Result;
 import com.huawei.jade.carver.tool.service.ToolService;
 
 import java.io.UnsupportedEncodingException;
@@ -60,7 +60,7 @@ public class ToolController {
         if ((name instanceof String) && StringUtils.isBlank((String) name)) {
             throw new IllegalArgumentException("The tool name cannot be blank.");
         }
-        return Result.createResult(this.toolService.addTool(tool), 0);
+        return Result.create(this.toolService.addTool(tool), 0);
     }
 
     /**
@@ -72,7 +72,7 @@ public class ToolController {
     @GetMapping("/{uniqueName}")
     public Result<ToolData> getToolByUniqueName(@PathVariable("uniqueName") String uniqueName) {
         notBlank(uniqueName, "The tool unique name cannot be blank.");
-        return Result.createResult(this.toolService.getTool(this.decodeChinese(uniqueName)), 0);
+        return Result.create(this.toolService.getTool(this.decodeChinese(uniqueName)), 0);
     }
 
     /**
@@ -99,7 +99,7 @@ public class ToolController {
         }
         ToolTagQuery toolTagQuery =
                 new ToolTagQuery(this.decodeChinese(name), includeTags, excludeTags, pageNum, limit);
-        return Result.createResult(this.toolService.getTools(toolTagQuery), 0);
+        return Result.create(this.toolService.getTools(toolTagQuery), 0);
     }
 
     /**
@@ -126,7 +126,7 @@ public class ToolController {
         }
         ToolTagQuery toolTagQuery =
                 new ToolTagQuery(this.decodeChinese(name), includeTags, excludeTags, pageNum, limit);
-        return Result.createResult(this.toolService.searchTools(toolTagQuery), 0);
+        return Result.create(this.toolService.searchTools(toolTagQuery), 0);
     }
 
     /**
@@ -138,7 +138,7 @@ public class ToolController {
     @DeleteMapping("/{uniqueName}")
     public Result<String> deleteTool(@PathVariable("uniqueName") String uniqueName) {
         notBlank(uniqueName, "The unique name cannot be blank.");
-        return Result.createResult(this.toolService.deleteTool(this.decodeChinese(uniqueName)), 0);
+        return Result.create(this.toolService.deleteTool(this.decodeChinese(uniqueName)), 0);
     }
 
     private String decodeChinese(String input) {

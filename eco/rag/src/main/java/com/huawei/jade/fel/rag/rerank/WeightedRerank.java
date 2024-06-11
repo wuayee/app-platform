@@ -5,8 +5,8 @@
 package com.huawei.jade.fel.rag.rerank;
 
 import com.huawei.jade.fel.core.retriever.Indexer;
-import com.huawei.jade.fel.rag.common.Chunk;
-import com.huawei.jade.fel.rag.common.Chunks;
+import com.huawei.jade.fel.rag.Chunk;
+import com.huawei.jade.fel.rag.Chunks;
 import com.huawei.jade.fel.rag.common.RequireType;
 
 import java.util.Comparator;

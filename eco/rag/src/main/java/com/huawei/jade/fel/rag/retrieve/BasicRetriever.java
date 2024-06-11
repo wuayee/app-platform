@@ -4,10 +4,9 @@
 
 package com.huawei.jade.fel.rag.retrieve;
 
-import com.huawei.jade.fel.chat.content.MessageContent;
 import com.huawei.jade.fel.core.retriever.Retriever;
-import com.huawei.jade.fel.rag.common.Chunk;
-import com.huawei.jade.fel.rag.common.Chunks;
+import com.huawei.jade.fel.rag.Chunk;
+import com.huawei.jade.fel.rag.Chunks;
 import com.huawei.jade.fel.rag.index.VectorIndex;
 
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
  *
  * @since 2024-05-07
  */
-public class BasicRetriever implements Retriever<String> {
+public class BasicRetriever implements Retriever<String, String> {
     private VectorIndex indexer;
     private int topK;
 
@@ -40,13 +39,12 @@ public class BasicRetriever implements Retriever<String> {
      * @return 返回检索到的数据。
      */
     @Override
-    public MessageContent invoke(String question) {
+    public String invoke(String question) {
         List<Chunk> searched = indexer.searchChunks(question, topK, null);
 
         return Chunks.from(
                 searched.stream()
                         .limit(topK)
-                        .collect(Collectors.toList())
-        );
+                        .collect(Collectors.toList())).text();
     }
 }

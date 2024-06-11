@@ -3,7 +3,7 @@
 <mapper namespace="com.huawei.fit.jober.aipp.mapper.AippChatMapper">
     <resultMap id="BaseResultMap" type="com.huawei.fit.jober.aipp.dto.chat.QueryChatRsp">
         <result column="chat_id" property="chatId"/>
-        <result column="app_id" property="aippId"/>
+        <result column="app_id" property="appId"/>
         <result column="app_version" property="version"/>
         <result column="name" property="chatName"/>
         <result column="attrbutes" property="msgId"/>
@@ -15,12 +15,12 @@
 
     <insert id="insertChat" parameterType="com.huawei.fit.jober.aipp.entity.ChatInfo">
         insert into t_chat_session (chat_id, app_id, app_version, name, attributes, create_at, create_by, update_at, update_by, status)
-        values (#{chatId}, #{aippId}, #{version}, #{chatName}, #{attributes}, #{createTime}, #{creator}, #{updateTime}, #{updater}, #{status})
+        values (#{chatId}, #{appId}, #{version}, #{chatName}, #{attributes}::jsonb, #{createTime}, #{creator}, #{updateTime}, #{updater}, #{status})
         ON CONFLICT(chat_id) DO UPDATE SET
                          update_at = #{updateTime},
                          update_by = #{updater},
                          name = #{chatName},
-                        attributes = #{attributes}
+                        attributes = #{attributes}::jsonb
     </insert>
 
     <insert id="insertWideRelationship" parameterType="com.huawei.fit.jober.aipp.entity.ChatAndInstanceMap">
@@ -34,7 +34,7 @@
         chat_id as chatId,
         name as chatName,
         attributes as msgId,
-        app_id as aippId,
+        app_id as appId,
         app_version as version,
         update_at as updateTime
         from t_chat_session

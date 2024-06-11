@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.rag.rerank;
 
-import com.huawei.jade.fel.rag.common.Chunks;
+import com.huawei.jade.fel.rag.Chunks;
 
 /**
  * 基于模型的重排序基类，将检索到的数据利用模型进行重排序。

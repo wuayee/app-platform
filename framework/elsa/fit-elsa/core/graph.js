@@ -290,7 +290,7 @@ let graph = (div, title) => {
                 type = "rectangle";
             }
             newShape = self.plugins[type](id, x, y, width, height, parent);
-            //set nameespace and type
+            //set namespace and type
             const namespaces = type.split(".");
             const typeName = namespaces[namespaces.length - 1];
             newShape.type = typeName;

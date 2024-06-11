@@ -6,8 +6,6 @@ package com.huawei.jade.fel.rag;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.huawei.jade.fel.rag.common.Chunk;
-import com.huawei.jade.fel.rag.common.Document;
 import com.huawei.jade.fel.rag.split.CharacterTextSplitter;
 
 import com.huawei.jade.fel.rag.split.TokenSplitter;

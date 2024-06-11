@@ -27,13 +27,21 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QueryChatRsp {
+    @Property(description = "app id")
+    @JsonProperty("app_id")
+    private String appId;
+
+    @Property(description = "app version")
+    @JsonProperty("app_version")
+    private String version;
+
     @Property(description = "aipp id")
     @JsonProperty("aipp_id")
     private String aippId;
 
     @Property(description = "aipp version")
     @JsonProperty("aipp_version")
-    private String version;
+    private String aippVersion;
 
     @Property(description = "chat id")
     @JsonProperty("chat_id")

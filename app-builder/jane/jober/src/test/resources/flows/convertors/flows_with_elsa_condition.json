@@ -316,6 +316,142 @@
           "dirty": true
         },
         {
+          "type": "endNodeEnd",
+          "container": "elsa-page:tvp1s6",
+          "id": "elsaShapesoux52",
+          "text": "结束",
+          "namespace": "flowable",
+          "x": 1015.7142857142849,
+          "y": 216.42857142857127,
+          "width": 360,
+          "height": 214,
+          "bold": false,
+          "italic": false,
+          "deletable": false,
+          "pad": 6,
+          "rotateAble": false,
+          "triggerMode": "auto",
+          "enableAnimation": false,
+          "warningTask": 0,
+          "runningTask": 0,
+          "completedTask": 0,
+          "hideText": true,
+          "autoHeight": true,
+          "borderColor": "rgba(28,31,35,.08)",
+          "mouseInBorderColor": "rgba(28,31,35,.08)",
+          "shadow": "0 2px 4px 0 rgba(0,0,0,.1)",
+          "focusShadow": "0 0 1px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.1)",
+          "borderWidth": 1,
+          "focusBorderWidth": 2,
+          "dashWidth": 0,
+          "backColor": "white",
+          "focusBackColor": "white",
+          "cornerRadius": 8,
+          "flowMeta": {
+            "triggerMode": "auto",
+            "callback": {
+              "type": "general_callback",
+              "name": "通知回调",
+              "fitables": [
+                "com.huawei.fit.jober.aipp.fitable.AippFlowEndCallback"
+              ],
+              "converter": {
+                "type": "mapping_converter",
+                "entity": {
+                  "inputParams": [
+                    {
+                      "id": "ffad80c2-3f60-4d57-93b2-c2362a5dab9c",
+                      "name": "finalOutput",
+                      "type": "String",
+                      "from": "Reference",
+                      "referenceNode": "elsaShape6qm5eg",
+                      "referenceId": "input_ae2ffd6e-2b9e-4e73-9d7f-0e661ec3dbdb",
+                      "referenceKey": "Question",
+                      "value": [
+                        "Question"
+                      ]
+                    }
+                  ],
+                  "outputParams": [
+                    {}
+                  ]
+                }
+              }
+            }
+          },
+          "componentName": "endComponent",
+          "index": 106,
+          "dirty": true
+        },
+        {
+          "type": "endNodeEnd",
+          "container": "elsa-page:tvp1s6",
+          "id": "elsaShapesoux53",
+          "text": "结束",
+          "namespace": "flowable",
+          "x": 1015.7142857142849,
+          "y": 216.42857142857127,
+          "width": 360,
+          "height": 214,
+          "bold": false,
+          "italic": false,
+          "deletable": false,
+          "pad": 6,
+          "rotateAble": false,
+          "triggerMode": "auto",
+          "enableAnimation": false,
+          "warningTask": 0,
+          "runningTask": 0,
+          "completedTask": 0,
+          "hideText": true,
+          "autoHeight": true,
+          "borderColor": "rgba(28,31,35,.08)",
+          "mouseInBorderColor": "rgba(28,31,35,.08)",
+          "shadow": "0 2px 4px 0 rgba(0,0,0,.1)",
+          "focusShadow": "0 0 1px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.1)",
+          "borderWidth": 1,
+          "focusBorderWidth": 2,
+          "dashWidth": 0,
+          "backColor": "white",
+          "focusBackColor": "white",
+          "cornerRadius": 8,
+          "flowMeta": {
+            "triggerMode": "auto",
+            "callback": {
+              "type": "general_callback",
+              "name": "通知回调",
+              "fitables": [
+                "com.huawei.fit.jober.aipp.fitable.AippFlowEndCallback"
+              ],
+              "converter": {
+                "type": "mapping_converter",
+                "entity": {
+                  "inputParams": [
+                    {
+                      "id": "ffad80c2-3f60-4d57-93b2-c2362a5dab9c",
+                      "name": "finalOutput",
+                      "type": "String",
+                      "from": "Reference",
+                      "referenceNode": "elsaShape6qm5eg",
+                      "referenceId": "input_ae2ffd6e-2b9e-4e73-9d7f-0e661ec3dbdb",
+                      "referenceKey": "Question",
+                      "value": [
+                        "Question"
+                      ]
+                    }
+                  ],
+                  "outputParams": [
+                    {}
+                  ]
+                }
+              }
+            }
+          },
+          "componentName": "endComponent",
+          "index": 106,
+          "dirty": true
+        },
+        {
           "type": "conditionNodeCondition",
           "container": "elsa-page:tvp1s6",
           "id": "elsaShapehc0gkr",
@@ -598,7 +734,7 @@
           "hAlign": "center",
           "lineWidth": 2,
           "fromShape": "elsaShapehc0gkr",
-          "toShape": "elsaShapesoux5i",
+          "toShape": "elsaShapesoux53",
           "definedFromConnector": "dynamic-2",
           "definedToConnector": "W",
           "arrowBeginPoint": {
@@ -656,7 +792,7 @@
           "hAlign": "center",
           "lineWidth": 2,
           "fromShape": "elsaShapehc0gkr",
-          "toShape": "elsaShapesoux5i",
+          "toShape": "elsaShapesoux52",
           "definedFromConnector": "dynamic-1",
           "definedToConnector": "W",
           "arrowBeginPoint": {

@@ -14,6 +14,7 @@ import com.huawei.fitframework.beans.Object1;
 import com.huawei.fitframework.beans.Object2;
 import com.huawei.fitframework.beans.Object3;
 import com.huawei.fitframework.beans.Object4;
+import com.huawei.fitframework.beans.Object5;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -564,6 +565,15 @@ public class ObjectUtilsTest {
                     .hasFieldOrPropertyWithValue("f1", "in")
                     .hasFieldOrPropertyWithValue("f2", 1);
         }
+
+        @Test
+        @DisplayName("当对象属性为自定义对象且存在别名时，转换成合适的 Map 对象")
+        void shouldReturnAliaMapWhenAttributesHaveCustomObject() {
+            Object5 o5 = new Object5();
+            o5.setFooBar("out");
+            Map<String, Object> map = cast(ObjectUtils.toJavaObject(o5));
+            assertThat(map).containsEntry("foo_bar", "out");
+        }
     }
 
     @Nested
@@ -644,6 +654,16 @@ public class ObjectUtilsTest {
             Object3 obj3 = ObjectUtils.toCustomObject(map, Object3.class);
             assertThat(obj3).returns("out", Object3::getF1).returns(2, Object3::getF2);
             assertThat(obj3.getO1()).isNotNull().returns("in", Object1::getF1).returns(1, Object1::getF2);
+        }
+
+        @Test
+        @DisplayName("当对象属性和自定义对象存在别名关系时，转换成合适的自定义对象")
+        void shouldReturnObject5WhenAttributesHaveCustomObjectValues() {
+            Map<String, Object> map = MapBuilder.<String, Object>get()
+                .put("foo_bar", "out")
+                .build();
+            Object5 obj5 = ObjectUtils.toCustomObject(map, Object5.class);
+            assertThat(obj5).returns("out", Object5::getFooBar);
         }
 
         @Test

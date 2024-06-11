@@ -9,14 +9,18 @@ import robot2 from '@assets/images/ai/xiaohai.png';
 import '../styles/chat-details.scss';
 import StarApps from "./star-apps";
 import { AppBoxIcon, CreateAppIcon } from '@assets/icon';
+import { useAppDispatch, useAppSelector } from '../../../store/hook';
 
 const ChatDetail = () => {
-  const { aippInfo, tenantId,openStar, setOpenStar }  = useContext(AippContext);
+  const dispatch = useAppDispatch();
+  const appInfo = useAppSelector((state) => state.appStore.appInfo);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const openStar = useAppSelector((state) => state.chatCommonStore.openStar);
   const [ modalInfo, setModalInfo ] = useState({});
   const navigate = useNavigate();
   const location = useLocation();
   let modalRef = useRef();
-  const isHomepage = aippInfo.name === '小海' && !location.pathname.includes("app-detail");
+  const isHomepage = appInfo.name === '小海' && !location.pathname.includes("app-detail");
   const addApp = () => {
     setModalInfo(() => {
       modalRef.current.showModal();
@@ -36,7 +40,7 @@ const ChatDetail = () => {
   }
   return <>{(
     <div className='chat-details-content'>
-       {aippInfo?.name ? ( isHomepage ? (
+       {appInfo?.name ? ( isHomepage ? (
         <div className="home-top">
           <div className="head-inner">
             <div className="inner-left">
@@ -67,7 +71,7 @@ const ChatDetail = () => {
             </div>
             <div
               className={`nav-right ${openStar ? "nav-item-active" : ""}`}
-              onClick={() => setOpenStar(true)}
+              onClick={() => dispatch(setOpenStar(true))}
             >
               <div className="tag">
                 <AppBoxIcon />
@@ -82,21 +86,21 @@ const ChatDetail = () => {
       ) : (
         <div className="top">
           <div className="head">
-            <Img icon={aippInfo.attributes?.icon} />
+            <Img icon={appInfo.attributes?.icon} />
           </div>
-          <div className="title">{aippInfo.name}</div>
-          <div className="text">{aippInfo.attributes?.description}</div>
+          <div className="title">{appInfo.name}</div>
+          <div className="text">{appInfo.attributes?.description}</div>
           <div className="bottom">
             <div className="left">
-              <Img icon={aippInfo.attributes?.icon} />
+              <Img icon={appInfo.attributes?.icon} />
             </div>
             <div className="right">
-              {aippInfo.attributes?.greeting || "你好"}
+              {appInfo.attributes?.greeting || "你好"}
             </div>
           </div>
         </div>
       ) ) : ''}
-       <EditModal type="add" modalRef={modalRef} aippInfo={modalInfo} addAippCallBack={addAippCallBack}/>
+       <EditModal type="add" modalRef={modalRef} appInfo={modalInfo} addAippCallBack={addAippCallBack}/>
     </div>
   )}</>;
 };

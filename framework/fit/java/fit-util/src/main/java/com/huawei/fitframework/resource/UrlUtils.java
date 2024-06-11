@@ -187,4 +187,22 @@ public final class UrlUtils {
         }
         return decodeValue(StringUtils.toLowerCase(url.toString())).contains(DECODED_JAVA_HOME);
     }
+
+    /**
+     * 判断指定字符串是否为 {@link URL#toString()}。
+     *
+     * @param source 表示指定字符串的 {@link String}。
+     * @return 如果指定字符串是合法的 URL，则返回 {@code true}，否则，返回 {@code false}。
+     */
+    public static boolean isUrl(String source) {
+        if (StringUtils.isBlank(source)) {
+            return false;
+        }
+        try {
+            new URL(source);
+        } catch (java.net.MalformedURLException e) {
+            return false;
+        }
+        return true;
+    }
 }

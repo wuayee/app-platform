@@ -26,13 +26,13 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateChatRequest {
-    @Property(description = "app_id")
-    @JsonProperty("app_id")
+    @Property(description = "aipp_id")
+    @JsonProperty("aipp_id")
     private String aippId;
 
-    @Property(description = "app_version")
-    @JsonProperty("app_version")
-    private String version;
+    @Property(description = "aipp_version")
+    @JsonProperty("aipp_version")
+    private String aippVersion;
 
     @Property(description = "init context")
     @JsonProperty("init_context")

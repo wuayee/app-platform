@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ChatInfo {
     @Property(description = "app_id")
-    private String aippId;
+    private String appId;
 
     @Property(description = "app_version")
     private String version;
