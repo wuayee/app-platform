@@ -13,7 +13,7 @@ import { setCollectionValue, setCurAppId } from "../../../../store/collection/co
 import { useAppSelector, useAppDispatch } from "../../../../store/hook";
 import { AnyAction } from "redux";
 import { useNavigate, useLocation } from "react-router-dom";
-import { setOpenStar } from "../../../../store/CommonChat/CommonChat";
+import { setOpenStar } from "../../../../store/chatStore/chatStore";
 
 const { ICON_URL } = process.env.NODE_ENV === 'development' ? { ICON_URL: `${window.location.origin}/api`} : httpUrlMap[process.env.NODE_ENV];
 

@@ -16,7 +16,7 @@ import StarApps from "../../star-apps";
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
 import HistoryChatDrawer from '../../history-chat';
 import { useAppDispatch, useAppSelector } from '../../../../../store/hook';
-import { setChatId, setChatList, setChatRunning, setOpenStar } from '../../../../../store/CommonChat/CommonChat';
+import { setChatId, setChatList, setChatRunning, setOpenStar } from '../../../../../store/chatStore/chatStore';
 
 // 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {

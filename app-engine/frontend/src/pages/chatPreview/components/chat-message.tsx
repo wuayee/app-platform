@@ -7,7 +7,7 @@ import { ChatContext } from '../../aippIndex/context.js';
 import { queryFeedback } from '@shared/http/chat';
 import '../styles/chat-message-style.scss';
 import { useAppDispatch, useAppSelector } from '../../../store/hook';
-import { setChatList } from '../../../store/CommonChat/CommonChat';
+import { setChatList } from '../../../store/chatStore/chatStore.js';
 
 const ChatMessaga = (props) => {
   const dispatch = useAppDispatch();
