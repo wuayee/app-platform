@@ -961,7 +961,7 @@ public class AippFlowServiceImpl implements AippFlowService {
 
     private String publishToStore(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
         ToolData itemData = this.buildItemData(aippDto, context, flowInfo);
-        String uniqueName = this.brokerClient.getRouter(ToolService.class, "com.huawei.jade.store.service.addTool")
+        String uniqueName = this.brokerClient.getRouter(ToolService.class, "com.huawei.jade.carver.tool.addTool")
                 .route(new FitableIdFilter("addTool"))
                 .invoke(itemData);
         appBuilderAppMapper.updateAppWithStoreId(uniqueName, aippDto.getAppId(), aippDto.getVersion());
