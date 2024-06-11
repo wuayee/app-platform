@@ -5,6 +5,7 @@
 package com.huawei.jade.carver.tool;
 
 import com.huawei.fitframework.broker.client.BrokerClient;
+import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.support.FitToolFactory;
 
@@ -21,6 +22,7 @@ public interface ToolFactory {
      *
      * @return 表示工厂支持的工具类型的 {@link String}。
      */
+    @Nonnull
     String type();
 
     /**

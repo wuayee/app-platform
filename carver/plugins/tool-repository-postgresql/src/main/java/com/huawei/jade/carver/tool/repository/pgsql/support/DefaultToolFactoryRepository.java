@@ -6,6 +6,7 @@ package com.huawei.jade.carver.tool.repository.pgsql.support;
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.ToolFactory;
 import com.huawei.jade.carver.tool.repository.ToolFactoryRepository;
 
@@ -30,8 +31,9 @@ public class DefaultToolFactoryRepository implements ToolFactoryRepository {
             return Optional.empty();
         }
         for (String tag : tags) {
-            if (this.tagFactoryMapping.containsKey(tag)) {
-                return Optional.ofNullable(this.tagFactoryMapping.get(tag));
+            String actual = StringUtils.toUpperCase(tag);
+            if (this.tagFactoryMapping.containsKey(actual)) {
+                return Optional.ofNullable(this.tagFactoryMapping.get(actual));
             }
         }
         return Optional.empty();
@@ -42,7 +44,7 @@ public class DefaultToolFactoryRepository implements ToolFactoryRepository {
         if (toolFactory == null) {
             return;
         }
-        this.tagFactoryMapping.put(toolFactory.type(), toolFactory);
+        this.tagFactoryMapping.put(StringUtils.toUpperCase(toolFactory.type()), toolFactory);
     }
 
     @Override
@@ -50,6 +52,6 @@ public class DefaultToolFactoryRepository implements ToolFactoryRepository {
         if (toolFactory == null) {
             return;
         }
-        this.tagFactoryMapping.remove(toolFactory.type());
+        this.tagFactoryMapping.remove(StringUtils.toUpperCase(toolFactory.type()));
     }
 }
