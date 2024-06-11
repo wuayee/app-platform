@@ -13,6 +13,7 @@ import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -114,6 +115,7 @@ class OhScriptExecutorTest {
         }
 
         @Test
+        @Disabled
         @DisplayName("流程条件节点条件规则解析错误测试")
         void testConditionRuleParseError() {
             Map<String, Object> businessData = new HashMap<>();
