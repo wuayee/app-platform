@@ -25,7 +25,7 @@
         <guava.version>32.0.1-jre</guava.version>
         <fit.version>3.5.0-SNAPSHOT</fit.version>
         <hisp.jane.api.version>1.0-SNAPSHOT</hisp.jane.api.version>
-        <ohscript.version>0.0.3.2-SNAPSHOT</ohscript.version>
+        <ohscript.version>0.0.3.4-SNAPSHOT</ohscript.version>
     </properties>
 
     <!--Hdt 增量覆盖率使用-->
