@@ -9,7 +9,7 @@ export default defineConfig({
     plugins: [
         react(),
         libCss(),
-        svgr()
+        svgr({svgrOptions: {icon: true}})
     ],
     build: {
         lib: {

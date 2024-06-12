@@ -12,21 +12,20 @@ const {Panel} = Collapse;
 /**
  * 开始表单Wrapper
  *
+ * @param disabled 是否禁用.
  * @returns {JSX.Element} 开始表单Wrapper的DOM
  */
-export default function StartFormWrapper() {
+export default function StartFormWrapper({disabled}) {
     const dispatch = useDispatch();
     const data = useDataContext();
-    const config = useShapeContext().graph.configs.find(node => node.node === "startNodeStart");
+    const shape = useShapeContext();
+    const config = shape.graph.configs.find(node => node.node === "startNodeStart");
+    const items = data.find(item => item.name === "input").value // 找出 name 为 "input" 的项，获取value值
 
-    const initItems = () => {
-        return data.find(item => item.name === "input").value // 找出 name 为 "input" 的项，获取value值
-    }
-
-    const items = initItems(); // 从DataContext中获取初始状态数组
+    // items中所有初始都为打开状态
     const [openItems, setOpenItems] = useState(() => {
         return items.map(item => item.id);
-    }); // items中所有初始都为打开状态
+    });
 
     // 添加新元素到 items 数组中，并将其 key 添加到当前展开的面板数组中
     const addItem = () => {
@@ -36,22 +35,33 @@ export default function StartFormWrapper() {
     };
 
     const renderAddInputIcon = () => {
-        const configObject = data.find(item => item.name === "input")?.config?.find(configItem => configItem.hasOwnProperty("allowAdd")); // 查找具有 "allowAdd" 属性的对象
+        const configObject = data.find(item => item.name === "input")
+                ?.config
+                ?.find(configItem => configItem.hasOwnProperty("allowAdd")); // 查找具有 "allowAdd" 属性的对象
         if (configObject ? configObject.allowAdd : false) {
-            return <Button type="text" className="icon-button" onClick={addItem}
-                           style={{"height": "32px", marginLeft: "auto", marginRight: "12px"}}>
-                <PlusOutlined/>
-            </Button>;
+            return (<>
+                <Button disabled={disabled}
+                        type="text"
+                        className="icon-button"
+                        onClick={addItem}
+                        style={{"height": "32px", marginLeft: "auto", marginRight: "12px"}}>
+                    <PlusOutlined/>
+                </Button>
+            </>);
         }
     };
 
     const renderDeleteIcon = (item) => {
         if (!item.disableModifiable) {
-            return <Button type="text" className="icon-button"
-                           style={{"height": "22px", "marginLeft": "auto"}}
-                           onClick={() => handleDelete(item.id)}>
-                <DeleteOutlined/>
-            </Button>
+            return (<>
+                <Button disabled={disabled}
+                        type="text"
+                        className="icon-button"
+                        style={{"height": "22px", "marginLeft": "auto"}}
+                        onClick={() => handleDelete(item.id)}>
+                    <DeleteOutlined/>
+                </Button>
+            </>);
         }
     };
 
@@ -67,7 +77,8 @@ export default function StartFormWrapper() {
             <p>在适当的时间启动工作流并填写正确的信息。</p>
         </div>);
 
-    return (<div>
+    return (<>
+        <div>
             <div style={{
                 display: "flex", alignItems: "center", marginBottom: "8px", paddingLeft: "8px", paddingRight: "4px", height: "32px"
             }}>
@@ -77,7 +88,9 @@ export default function StartFormWrapper() {
                 </Popover>
                 {renderAddInputIcon()}
             </div>
-            <Collapse bordered={false} activeKey={openItems} onChange={(keys) => setOpenItems(keys)}
+            <Collapse bordered={false}
+                      activeKey={openItems}
+                      onChange={(keys) => setOpenItems(keys)}
                       className="jade-collapse-custom-background-color">
                 {
                     items.map((item) => (
@@ -97,7 +110,9 @@ export default function StartFormWrapper() {
                     ))
                 }
             </Collapse>
-            <Collapse bordered={false} className="jade-collapse-custom-background-color" defaultActiveKey={["historicalRecordsPanel"]}>
+            <Collapse bordered={false}
+                      className="jade-collapse-custom-background-color"
+                      defaultActiveKey={["historicalRecordsPanel"]}>
                 {
                     <Panel
                         key={"historicalRecordsPanel"}
@@ -110,10 +125,10 @@ export default function StartFormWrapper() {
                         className="jade-panel"
                         style={{width: "100%"}}
                     >
-                        <Memory config={config}/>
+                        <Memory disabled={disabled} config={config}/>
                     </Panel>
                 }
             </Collapse>
         </div>
-    );
+    </>);
 };

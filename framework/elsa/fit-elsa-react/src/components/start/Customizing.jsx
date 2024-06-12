@@ -15,9 +15,11 @@ Customizing.propTypes = {
  *
  * @param propValue 前端渲染的值
  * @param onValueChange 参数变化所需调用方法
+ * @param config 配置
+ * @param disabled 禁用.
  * @returns {JSX.Element} 按自定义选取的Dom
  */
-export default function Customizing({propValue, onValueChange, config}) {
+export default function Customizing({propValue, onValueChange, config, disabled}) {
     const value = propValue;
     const [fitableOptions, setFitableOptions] = useState([]);
 
@@ -48,6 +50,7 @@ export default function Customizing({propValue, onValueChange, config}) {
             <JadeStopPropagationSelect
                 allowClear
                 showSearch
+                disabled={disabled}
                 className="jade-select"
                 style={{ width: "100%" }}
                 onClick={handleSelectClick} // 点击下拉框时阻止事件冒泡

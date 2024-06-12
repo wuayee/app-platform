@@ -29,6 +29,8 @@ import {toolInvokeComponent} from "@/components/toolInvokeNode/toolInvokeCompone
 import {toolInvokeNodeState} from "@/components/toolInvokeNode/toolInvokeNodeState.jsx";
 import {conditionNodeCondition} from "@/components/condition/conditionNodeCondition.jsx";
 import {conditionComponent} from "@/components/condition/conditionComponent.jsx";
+import {huggingFaceNodeState} from "@/components/huggingFace/huggingFaceNodeState.jsx";
+import {huggingFaceComponent} from "@/components/huggingFace/huggingFaceComponent.jsx";
 
 /**
  * jadeFlow的专用画布.
@@ -98,6 +100,8 @@ export const jadeFlowGraph = (div, title) => {
         self.registerPlugin("toolInvokeComponent", toolInvokeComponent);
         self.registerPlugin("conditionNodeCondition", conditionNodeCondition);
         self.registerPlugin("conditionComponent", conditionComponent);
+        self.registerPlugin("huggingFaceNodeState", huggingFaceNodeState);
+        self.registerPlugin("huggingFaceComponent", huggingFaceComponent);
         return initialize.apply(self);
     };
 

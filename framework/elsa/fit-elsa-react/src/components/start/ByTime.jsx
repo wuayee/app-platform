@@ -12,9 +12,10 @@ ByTime.propTypes = {
  *
  * @param propValue 前端渲染的值
  * @param onValueChange 参数变化所需调用方法
+ * @param disabled 禁用.
  * @returns {JSX.Element} Memory按时间的Dom
  */
-export default function ByTime({propValue, onValueChange}) {
+export default function ByTime({propValue, onValueChange, disabled}) {
     const value = propValue;
 
     const handleSelectClick = (event) => {
@@ -32,6 +33,7 @@ export default function ByTime({propValue, onValueChange}) {
     return (<>
             <JadeStopPropagationSelect
                 showSearch
+                disabled={disabled}
                 className="jade-select"
                 style={{width: "100%"}}
                 onClick={handleSelectClick} // 点击下拉框时阻止事件冒泡
