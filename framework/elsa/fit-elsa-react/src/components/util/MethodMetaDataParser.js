@@ -136,7 +136,7 @@ export const convertParameter = param => {
         referenceNode: "",
         referenceId: "",
         referenceKey: "",
-        value: []
+        value: param.property.type.capitalize() === "Array" ? [] : ""
     };
     if (isMap) {
         result.generic = "Map";
