@@ -79,6 +79,10 @@ public class GatewayRouteConfig {
                     "chat-model-list",
                     r -> r.path("/v1/chat/models").uri(modelManagerUrl)
             );
+            routeLocatorBuilder.route(
+                    "start-up-pipeline",
+                    r -> r.path("/v1/start_up_pipeline").uri(modelManagerUrl)
+            );
         } else {
             log.info(ModelGatewayApplication.MODEL_MANAGER_URL + " is empty");
         }

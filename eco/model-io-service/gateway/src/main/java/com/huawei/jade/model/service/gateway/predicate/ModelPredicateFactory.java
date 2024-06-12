@@ -5,6 +5,7 @@
 package com.huawei.jade.model.service.gateway.predicate;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 import org.springframework.cloud.gateway.handler.AsyncPredicate;
@@ -27,6 +28,7 @@ import java.util.function.Predicate;
  * @since 2024-05-09
  */
 @Component
+@Slf4j
 public class ModelPredicateFactory extends AbstractRoutePredicateFactory<ModelPredicateFactory.Config> {
     private static final String CACHE_REQUEST_BODY_OBJECT = "cachedRequestBodyObject";
 
@@ -66,7 +68,19 @@ public class ModelPredicateFactory extends AbstractRoutePredicateFactory<ModelPr
     }
 
     private boolean compare(String model, ModelRequest request) {
-        return Objects.equals(model, request.getModel());
+        if (request == null) {
+            log.error("Failed to compare model {}, the request is null", model);
+            return false;
+        }
+
+        String task = request.getTask();
+        if (task == null || task.isEmpty()) {
+            return Objects.equals(model, request.getModel());
+        } else {
+            String pipeline = request.getModel().replace('/', '-') + "-" + request.getTask();
+            log.info("Compare pipeline={} with model={}", pipeline, model);
+            return pipeline.equals(model);
+        }
     }
 
     @Override
@@ -87,6 +101,8 @@ public class ModelPredicateFactory extends AbstractRoutePredicateFactory<ModelPr
      */
     @Data
     public static class ModelRequest {
+        private String task;
+
         private String model;
     }
 }
