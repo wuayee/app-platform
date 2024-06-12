@@ -1,6 +1,5 @@
 import {v4 as uuidv4} from "uuid";
 import HuggingFaceFormWrapper from "@/components/huggingFace/HuggingFaceFormWrapper.jsx";
-import {JADE_MODEL_PREFIX} from "@/common/Consts.js";
 
 /**
  * huggingFace调用节点组件
@@ -61,27 +60,19 @@ export const huggingFaceComponent = (jadeConfig) => {
         function _insertOrUpdateModelParam() {
             const inputParams = config.inputParams.slice(); // 创建一个新数组以避免直接修改原数组
             const modelParam = {
-                id: JADE_MODEL_PREFIX + uuidv4(),
+                id: "model_" + uuidv4(),
                 name: "model",
                 type: "String",
                 from: "Input",
                 value: action.value
             };
-            if (inputParams.length === 0) {
-                // 如果数组为空，直接添加 modelParam 对象
-                inputParams.push(modelParam);
-            } else if (inputParams.length === 1) {
-                // 如果数组长度为1，直接在第二个位置插入新的 modelParam 对象
-                inputParams.splice(1, 0, modelParam);
+            const secondElement = inputParams[1];
+            if (secondElement.id.startsWith("model_")) {
+                // 修改第二个对象的 value 属性
+                inputParams[1] = {...secondElement, value: action.value};
             } else {
-                const secondElement = inputParams[1];
-                if (secondElement.id.startsWith(JADE_MODEL_PREFIX)) {
-                    // 修改第二个对象的 value 属性
-                    inputParams[1] = {...secondElement, value: action.value};
-                } else {
-                    // 在第二个位置插入新的 modelParam 对象
-                    inputParams.splice(1, 0, modelParam);
-                }
+                // 在第二个位置插入新的 modelParam 对象
+                inputParams.splice(1, 0, modelParam);
             }
             return inputParams;
         }

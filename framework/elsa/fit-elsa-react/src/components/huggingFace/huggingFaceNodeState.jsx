@@ -1,8 +1,6 @@
 import {Button} from "antd";
 import {toolInvokeNodeState} from "@/components/toolInvokeNode/toolInvokeNodeState.jsx";
 import HuggingFaceIcon from '../asserts/icon-huggingface-header.svg?react'; // 导入背景图片
-import {v4 as uuidv4} from "uuid";
-import {JADE_MODEL_PREFIX, JADE_TASK_ID_PREFIX} from "@/common/Consts.js";
 
 /**
  * 工具调用节点shape
@@ -35,22 +33,11 @@ export const huggingFaceNodeState = (id, x, y, width, height, parent, drawer) =>
         processMetaData.apply(self, [metaData]);
         self.flowMeta.jober.entity.uniqueName = metaData.toolUniqueName;
         self.text = metaData.schema.name;
-        const modelParam = {
-            id: JADE_MODEL_PREFIX + uuidv4(),
-            name: "model",
-            type: "String",
-            from: "Input",
-            value: metaData.context.default_model
-        }
-        const taskIdParam = {
-            id: JADE_TASK_ID_PREFIX + uuidv4(),
-            name: "taskId",
-            type: "String",
-            from: "Input",
-            value: metaData.taskId
-        }
-        self.flowMeta.jober.converter.entity.inputParams.unshift(modelParam)
-        self.flowMeta.jober.converter.entity.inputParams.unshift(taskIdParam)
+        const INPUT_FROM_TYPE_VALUE = "Input";
+        self.flowMeta.jober.converter.entity.inputParams[0].from = INPUT_FROM_TYPE_VALUE;
+        self.flowMeta.jober.converter.entity.inputParams[1].from = INPUT_FROM_TYPE_VALUE;
+        self.flowMeta.jober.converter.entity.inputParams[0].value = metaData.taskId;
+        self.flowMeta.jober.converter.entity.inputParams[1].value = metaData.context.default_model;
         self.drawer.unmountReact();
         self.invalidateAlone();
     }
