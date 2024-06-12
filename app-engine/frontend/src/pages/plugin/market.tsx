@@ -98,17 +98,6 @@ const MarketItems = () => {
       onChange={(key: string) => setSelectedSource(key)}
       tabBarExtraContent={tabSearch}
     />
-    {/* <div style={{ marginBottom: 16 }}>
-      {categoryItems.map(tag => (
-        <Tag.CheckableTag
-          key={tag.key}
-          checked={selectedCategory.includes(tag.key)}
-          onChange={() => handleChecked(tag)}
-        >
-          {tag.label}
-        </Tag.CheckableTag>
-      ))}
-    </div> */}
     {pluginData.length > 0 ? <>
       <div style={{
         overflowY: 'auto',
@@ -118,7 +107,7 @@ const MarketItems = () => {
         flexWrap: 'wrap',
         alignContent: 'flex-start'
       }}>
-        {pluginData.map((card: any) => <PluginCard key={card.uniqueName} pluginData={card} />)}
+        {pluginData.map((card: any) => <PluginCard key={card.uniqueName} pluginData={card}/>)}
       </div>
       <div style={{ paddingTop: 16 }}>
         <Pagination
