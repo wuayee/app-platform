@@ -18,9 +18,24 @@ const ModelBase = () => {
     },
     {
       key: '2',
+      label: 'Huggingface',
+    },
+    {
+      key: '3',
       label: 'ModelLink',
     },
-  ]
+  ];
+
+  useEffect(() => {
+    const mode = sessionStorage.getItem('modelBaseListType') ?? 'card';
+    sessionStorage.setItem('modelBaseListType', mode);
+    setType(mode);
+  }, []);
+
+  const changeShowType = (e: any) => {
+    setType(e.target.value);
+    sessionStorage.setItem('modelBaseListType', e.target.value);
+  }
 
   return (
     <div className='aui-fullpage'>
@@ -30,7 +45,7 @@ const ModelBase = () => {
           display: 'flex',
         }}
       >
-        <div className='aui-title-1'>模型仓管理</div>
+        <div className='aui-title-1'>模型仓库</div>
       </div>
       <div className='aui-block-tab'>
         <Tabs defaultActiveKey={activeIndex} items={items} onChange={(key) => { setActiveIndex(key) }} />
@@ -53,7 +68,7 @@ const ModelBase = () => {
           >刷新数据
           </Button>
           <div>
-            <Radio.Group value={type} onChange={(e) => { setType(e.target.value) }}>
+            <Radio.Group value={type} onChange={changeShowType}>
               <Radio.Button value='card' style={{ padding: '3px 4px' }}>
                 <AppstoreOutlined style={{ fontSize: '24px' }} />
               </Radio.Button>

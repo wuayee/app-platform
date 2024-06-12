@@ -8,46 +8,51 @@ interface props {
 }
 
 const ModelBaseCard = () => {
+  
   const data = {
     data: [
       {
-        name: 'Qwen-7B-Chat',
+        id: 1,
+        name: 'Qwen2-7B-Instruct',
         creator: 'Alibaba',
-        description: '通义千问-7B（Qwen-7B）',
+        description: 'Qwen2 is the new series of Qwen large language models. For Qwen2, we release a number of base language models and instruction-tuned language models ranging from 0.5 to 72 billion parameters, including a Mixture-of-Experts model. This repo contains the instruction-tuned 7B Qwen2 model.',
+        tags: ['Qwen', 'Alibaba Cloud'],
+        versionNum: 2,
+        type: '语言模型',
+        series: 'Qwen2',
+        size: '14GB'
+      },
+      {
+        id: 2,
+        name: 'Qwen2-72B-Instruct',
+        creator: 'Alibaba',
+        description: 'Qwen2 is the new series of Qwen large language models. For Qwen2, we release a number of base language models and instruction-tuned language models ranging from 0.5 to 72 billion parameters, including a Mixture-of-Experts model. This repo contains the instruction-tuned 72B Qwen2 model.',
         tags: ['Qwen', 'Alibaba Cloud'],
         versionNum: 1,
         type: '语言模型',
-        series: 'Qwen',
-        size: '15GB'
+        series: 'Qwen2',
+        size: '140GB'
       },
       {
-        name: 'Qwen-14B-Chat',
-        creator: 'Alibaba',
-        description: '通义千问-14B（Qwen-14B）是阿里云研发的通义千问大模型系列的140亿参数规模的模型。Qwen-14B是基于Transformer的大语言模型, 在超大规模的预训练数据上进行训练得到。预训练数据类型多样，覆盖广泛，包括大量网络文本、专业书籍、代码等。',
-        tags: ['Qwen', 'Alibaba Cloud'],
-        versionNum: 1,
-        type: '语言模型',
-        series: 'Qwen',
-        size: '50GB'
-      },
-      {
-        name: 'Llama2-70B-Chat',
+        id: 3,
+        name: 'Meta-Llama-3-8B-Instruct',
         creator: 'Meta',
-        description: 'Meta developed and publicly released the Llama 2 family of large language models (LLMs), a collection of pretrained and fine-tuned generative text models ranging in scale from 7 billion to 70 billion parameters. Our fine-tuned LLMs, called Llama-2-Chat, are optimized for dialogue use cases. Llama-2-Chat models outperform open-source chat models on most benchmarks we tested, and in our human evaluations for helpfulness and safety, are on par with some popular closed-source models like ChatGPT and PaLM.',
-        tags: ['Meta', 'Llama2'],
+        description: 'Meta developed and released the Meta Llama 3 family of large language models (LLMs), a collection of pretrained and instruction tuned generative text models in 8 and 70B sizes. The Llama 3 instruction tuned models are optimized for dialogue use cases and outperform many of the available open source chat models on common industry benchmarks. Further, in developing these models, we took great care to optimize helpfulness and safety.',
+        tags: ['Meta', 'Llama3'],
         versionNum: 1,
         type: '语言模型',
-        series: 'Llama2',
-        size: '40GB'
+        series: 'LLaMA3',
+        size: '16GB'
       },
       {
-        name: 'Llama2-14B-Chat',
-        creator: 'Alibaba',
-        description: 'Meta developed and publicly released the Llama 2 family of large language models (LLMs), a collection of pretrained and fine-tuned generative text models ranging in scale from 7 billion to 70 billion parameters. Our fine-tuned LLMs, called Llama-2-Chat, are optimized for dialogue use cases. Llama-2-Chat models outperform open-source chat models on most benchmarks we tested, and in our human evaluations for helpfulness and safety, are on par with some popular closed-source models like ChatGPT and PaLM.',
-        tags: ['Meta', 'Llama2'],
+        id: 4,
+        name: 'glm-4-9b-chat',
+        creator: 'THUDM',
+        description: 'GLM-4-9B 是智谱 AI 推出的最新一代预训练模型 GLM-4 系列中的开源版本。 在语义、数学、推理、代码和知识等多方面的数据集测评中， GLM-4-9B 及其人类偏好对齐的版本 GLM-4-9B-Chat 均表现出超越 Llama-3-8B 的卓越性能。除了能进行多轮对话，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理（支持最大 128K 上下文）等高级功能。本代模型增加了多语言支持，支持包括日语，韩语，德语在内的 26 种语言。我们还推出了支持 1M 上下文长度（约 200 万中文字符）的 GLM-4-9B-Chat-1M 模型和基于 GLM-4-9B 的多模态模型 GLM-4V-9B。GLM-4V-9B 具备 1120 * 1120 高分辨率下的中英双语多轮对话能力，在中英文综合能力、感知推理、文字识别、图表理解等多方面多模态评测中，GLM-4V-9B 表现出超越 GPT-4-turbo-2024-04-09、Gemini 1.0 Pro、Qwen-VL-Max 和 Claude 3 Opus 的卓越性能。',
+        tags: ['Meta', 'ChatGLM4'],
         versionNum: 1,
         type: '语言模型',
-        series: 'Llama2',
+        series: 'ChatGLM4',
         size: '40GB'
       },
     ],
