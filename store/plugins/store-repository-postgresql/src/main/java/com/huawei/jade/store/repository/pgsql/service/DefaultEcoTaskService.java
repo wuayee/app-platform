@@ -49,8 +49,7 @@ public class DefaultEcoTaskService implements EcoTaskService {
     public TaskData getTask(String taskId) {
         TaskDo taskDo = this.taskMapper.getTask(taskId);
         TaskData taskData = new TaskData();
-        taskData.setTaskId(taskDo.getTaskId());
-        taskData.setSchema(json2obj(taskDo.getSchema(), this.serializer));
+        taskData.setTaskName(taskDo.getTaskName());
         taskData.setContext(json2obj(taskDo.getContext(), this.serializer));
         taskData.setToolUniqueName(taskDo.getToolUniqueName());
         return taskData;
@@ -70,8 +69,7 @@ public class DefaultEcoTaskService implements EcoTaskService {
         if (CollectionUtils.isNotEmpty(dos)) {
             for (TaskDo taskDo : dos) {
                 TaskData taskData = new TaskData();
-                taskData.setTaskId(taskDo.getTaskId());
-                taskData.setSchema(json2obj(taskDo.getSchema(), this.serializer));
+                taskData.setTaskName(taskDo.getTaskName());
                 taskData.setContext(json2obj(taskDo.getContext(), this.serializer));
                 taskData.setToolUniqueName(taskDo.getToolUniqueName());
                 taskDataList.add(taskData);

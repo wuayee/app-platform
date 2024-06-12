@@ -54,7 +54,7 @@ public class DefaultHuggingFaceModelService implements HuggingFaceModelService {
                 ModelData modelData = new ModelData();
                 modelData.setCreatedTime(modelDo.getCreatedTime());
                 modelData.setUpdatedTime(modelDo.getUpdatedTime());
-                modelData.setTaskId(modelDo.getTaskId());
+                modelData.setTaskName(modelDo.getTaskName());
                 modelData.setName(modelDo.getName());
                 modelData.setUrl(modelDo.getUrl());
                 modelData.setContext(json2obj(modelDo.getContext(), this.serializer));

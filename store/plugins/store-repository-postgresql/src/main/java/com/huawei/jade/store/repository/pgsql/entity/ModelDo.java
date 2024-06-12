@@ -31,7 +31,7 @@ public class ModelDo extends CommonDo {
     /**
      * 表示任务的唯一标识。
      */
-    private String taskId;
+    private String taskName;
 
     /**
      * 表示模型的名字。

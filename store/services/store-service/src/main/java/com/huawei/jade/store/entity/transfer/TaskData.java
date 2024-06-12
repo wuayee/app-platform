@@ -16,12 +16,7 @@ public class TaskData {
     /**
      * 表示任务的唯一标识。
      */
-    private String taskId;
-
-    /**
-     * 表示任务的结构。
-     */
-    private Map<String, Object> schema;
+    private String taskName;
 
     /**
      * 表示任务的上下文。
@@ -36,14 +31,12 @@ public class TaskData {
     /**
      * 用所有属性的参数构造 {@link TaskData}。
      *
-     * @param taskId 表示任务唯一标识的 {@link String}。
-     * @param schema 表示工具格式的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
+     * @param taskName 表示任务唯一标识的 {@link String}。
      * @param context 表示任务的上下文的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
      * @param toolUniqueName 表示工具唯一标识的 {@link String}。
      */
-    public TaskData(String taskId, Map<String, Object> schema, Map<String, Object> context, String toolUniqueName) {
-        this.taskId = taskId;
-        this.schema = schema;
+    public TaskData(String taskName, Map<String, Object> context, String toolUniqueName) {
+        this.taskName = taskName;
         this.context = context;
         this.toolUniqueName = toolUniqueName;
     }
@@ -58,35 +51,17 @@ public class TaskData {
      *
      * @return 表示任务的唯一标识的 {@link String}。
      */
-    public String getTaskId() {
-        return this.taskId;
+    public String getTaskName() {
+        return this.taskName;
     }
 
     /**
      * 设置任务的唯一标识。
      *
-     * @param taskId 表示任务的唯一标识的 {@link String}。
+     * @param taskName 表示任务的唯一标识的 {@link String}。
      */
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
-    }
-
-    /**
-     * 获取任务的格式。
-     *
-     * @return 表示任务的格式的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
-     */
-    public Map<String, Object> getSchema() {
-        return this.schema;
-    }
-
-    /**
-     * 设置任务的格式。
-     *
-     * @param schema 表示任务的格式的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
-     */
-    public void setSchema(Map<String, Object> schema) {
-        this.schema = schema;
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
 
     /**
