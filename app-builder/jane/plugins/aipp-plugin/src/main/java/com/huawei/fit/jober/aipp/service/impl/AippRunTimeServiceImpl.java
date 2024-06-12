@@ -255,6 +255,10 @@ public class AippRunTimeServiceImpl
                 context);
         setExtraBusinessData(context, businessData, meta, metaInst.getId());
 
+        // 记录上下文
+        businessData.put(AippConst.CONTEXT_APP_ID, meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
+        businessData.put(AippConst.CONTEXT_INSTANCE_ID, metaInst.getId());
+
         // 添加memory
         businessData.put(AippConst.BS_AIPP_MEMORY_KEY,
                 this.getMemories(meta.getId(), flowDefinitionId, meta.getVersionId(), aippType, businessData, context));
