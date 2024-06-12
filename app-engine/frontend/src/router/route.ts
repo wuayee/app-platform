@@ -23,6 +23,7 @@ import ModelDetail from '../pages/model/model-detail';
 import AppDev from '../pages/appDev/index';
 import IndustryTerminology from '../pages/knowledge-base/knowledge-detail/industry-terminology';
 import ModelBaseDetail from '../pages/model-base/detail';
+import PlugeDetail from '../pages/plugin/detail/detail';
 
 export type MenuItem = Required<MenuProps>['items'][number] & {
   component?: (() => ReactElement) | React.FC<any>;
@@ -64,21 +65,21 @@ export const routeList: MenuItem[] = [
     component: AppDev,
     children: [
       {
-        key: "/app-develop/:tenantId/app-detail/:appId",
+        key: '/app-develop/:tenantId/app-detail/:appId',
         icon: Icons.app({}),
         label: 'app编排',
         component: AippIndex,
         hidden: true,
       },
       {
-        key: "/app-develop/:tenantId/app-detail/add-flow/:appId",
+        key: '/app-develop/:tenantId/app-detail/add-flow/:appId',
         icon: Icons.app({}),
         label: '新增工具流',
         component: AddFlow,
         hidden: true,
       },
       {
-        key: "/app-develop/:tenantId/app-detail/flow-detail/:appId",
+        key: '/app-develop/:tenantId/app-detail/flow-detail/:appId',
         icon: Icons.app({}),
         label: '工具流',
         component: FlowDetail,
@@ -92,7 +93,7 @@ export const routeList: MenuItem[] = [
         hidden: true,
       },
       {
-        key: "/app-develop/:tenantId/chat/:appId",
+        key: '/app-develop/:tenantId/chat/:appId',
         icon: Icons.app({}),
         label: '',
         component: ChatRunning,
@@ -133,16 +134,16 @@ export const routeList: MenuItem[] = [
         icon: Icons.app({}),
         label: '模型仓库',
         component: ModelBaseDetail,
-        hidden: true
-      }
-    ]
+        hidden: true,
+      },
+    ],
   },
   {
     key: '/model-tuning',
     icon: Icons.app({}),
     label: '模型精调',
     component: ModelTuning,
-    hidden: true
+    hidden: true,
   },
   {
     key: '/knowledge-base',
@@ -195,6 +196,15 @@ export const routeList: MenuItem[] = [
     icon: Icons.app({}),
     label: '插件',
     component: Plugin,
+    children: [
+      {
+        key: '/plugin/detail/:pluginId',
+        icon: Icons.app({}),
+        label: '插件详情',
+        component: PlugeDetail,
+        hidden: true,
+      },
+    ],
   },
   {
     key: '/Tooling',

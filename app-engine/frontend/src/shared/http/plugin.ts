@@ -12,3 +12,8 @@ export function getPlugins(data: {
   const url = `${PLUGIN_URL}/tools/search`;
   return get(url, data);
 }
+
+export function getPluginDetail(pluginId) {
+  const url = `${PLUGIN_URL}/tools/${pluginId}`;
+  return get(url);
+}
