@@ -18,3 +18,10 @@ export const ConfigFormContext = createContext({
   appId: '',
   tenantId: '',
 });
+
+export const FlowContext = createContext({
+  appInfo: {},
+  type: '',
+  modalInfo: {},
+  setModalInfo: undefined,
+});

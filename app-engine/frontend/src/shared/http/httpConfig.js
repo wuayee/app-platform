@@ -1,6 +1,6 @@
 export const httpUrlMap = {
   development: {
-    JANE_URL: '/api',
+    JANE_URL: '/aippApi',
     ELSA_URL: '/else',
     AI_URL: '/aiApi',
     AIPP_URL: '/aippApi',

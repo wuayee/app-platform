@@ -39,7 +39,6 @@ const EditorBtnHome = (props) => {
 
   let openUploadRef = useRef(null);
   useEffect(() => {
-    console.log(chatType)
     document.body.addEventListener('click', () => {
       setShowAt(false);
     })

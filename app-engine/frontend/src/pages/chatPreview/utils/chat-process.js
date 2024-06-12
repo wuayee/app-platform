@@ -178,6 +178,7 @@ export const messageProcess = (aipp_id, instanceId, version, messageData) => {
       instanceId,
       version,
       aippId: aipp_id,
+      parentInstanceId: messageData.parentInstanceId,
       formName: 'report',
       formAppearance: messageData.formAppearance,
       formData: messageData.formData,

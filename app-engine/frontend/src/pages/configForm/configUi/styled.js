@@ -93,6 +93,13 @@ export const ConfigWrap = styled.div`
         border: 1px solid rgb(230, 230, 230);
         justify-content: space-between;
         margin-bottom: 12px;
+        .item-left {
+          display: flex;
+          align-items: center;
+          img {
+            margin-right: 8px;
+          }
+        }
       }
     }
     .plus-icon {

@@ -1,7 +1,8 @@
-import React, {useEffect, useState } from 'react';
+import React, {useEffect, useState, useRef, useCallback } from 'react';
 import { Form, Collapse, theme } from 'antd';
 import { ConfigWrap } from './styled';
 import { CaretRightOutlined } from '@ant-design/icons';
+import { debounce } from '@shared/utils/common';
 import LLM from './components/llm';
 import Skill from './components/skill';
 import Knowledge from './components/knowledge';
@@ -13,9 +14,11 @@ function ConfigUI(props) {
     const [ form ] = Form.useForm();
     const [ inspirationValues, setInspirationValues ] = useState(null);
     const [ recommendValues, setRecommendValues ] = useState([]);
+    const [ pluginValue, setPluginValue ] = useState([]);
     const [ knowledge, setKnowledge ] = useState(null);
     const [ isDisabled, setIsDisabled ] = useState(false);
     const { token } = theme.useToken();
+    const renderRef = useRef(false);
     const panelStyle = {
       border: 'none',
     };
@@ -29,7 +32,7 @@ function ConfigUI(props) {
       {
         key: '2',
         label: '插件',
-        children: <Skill waterflowChange={waterflowChange} updateData={updateConfig} />,
+        children: <Skill waterflowChange={waterflowChange} pluginData={pluginValue} updateData={updateConfig} />,
         style: panelStyle,
       },
       {
@@ -64,8 +67,20 @@ function ConfigUI(props) {
         return acc;
       }, {});
       form.setFieldsValue(newData);
-    }, [formData])
-
+      handleSet();
+    }, [formData]);
+    const handleSet = useCallback(debounce(() => setFormInitData(), 200), []);
+    // 设置初始值
+    const setFormInitData = () => {
+      setInspirationValues(form.getFieldValue("inspiration"));
+      setKnowledge(form.getFieldValue("knowledge"));
+      setRecommendValues(form.getFieldValue("recommend"));
+      if (form.getFieldValue("workflows") && form.getFieldValue("tools")) {
+        let list = [...form.getFieldValue("workflows"), ...form.getFieldValue("tools")];
+        setPluginValue(list);
+      };
+    }
+    // 自动保存参数构建
     const buildSaveData = (key, value, saveData) => {
       for (let prop of saveData.properties) {
         if (prop.name === key) {
@@ -82,8 +97,8 @@ function ConfigUI(props) {
         })
       }
     }
-
-    const handleValuesChange = (changedValues, allValues) => {
+    // 数据变化回调
+    const handleValuesChange = (changedValues) => {
       const entries = Object.entries(changedValues);
       const saveData = {...formData};
       entries.forEach(([key, value]) => {
@@ -91,29 +106,23 @@ function ConfigUI(props) {
       });
       handleConfigDataChange(saveData);
     }
-
-    useEffect(() => {
-      setInspirationValues(form.getFieldValue("inspiration"));
-      setKnowledge(form.getFieldValue("knowledge"));
-      setRecommendValues(form.getFieldValue("recommend"));
-    }, [form.getFieldsValue()])
-
-    const updateConfig = (value, key) => {
+    // 监听数据变化
+    const updateConfig = (value, key, map=undefined) => {
       const saveData = {...formData};
-      buildSaveData(key, value, saveData);
+      buildSaveData(key, value, saveData, map);
       handleConfigDataChange(saveData);
       if (key === "inspiration") {
         inspirationChange();
       }
     }
-
+    // 工具流自动选中
     const waterflowChange = () => {
       let uniqueName = sessionStorage.getItem('uniqueName');
       if (uniqueName) {
         let workflows = form?.getFieldValue('workflows');
         let workflwArr =  Array.from(new Set([...workflows, uniqueName]))
         form.setFieldValue('workflows', workflwArr);
-        handleValuesChange({ workflows: workflwArr });
+        handleValuesChange({ workflows: workflwArr }, valueMap);
         sessionStorage.removeItem('uniqueName');
       }
     }

@@ -38,7 +38,7 @@ const getModels = () => {
 
 // 获取工具 工具流列表
 const getTools = (params) => {
-  let url = `${JANE_URL}/jober/store/platform/jade/categories/TOOL?pageNum=${params.pageNum}&pageSize=${params.pageSize}`;
+  let url = `${JANE_URL}/store/platform/jade/categories/TOOL?pageNum=${params.pageNum}&pageSize=${params.pageSize}`;
   if (params.includeTags) {
     url += `&includeTags=${params.includeTags}`;
   }
