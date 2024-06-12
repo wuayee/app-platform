@@ -8,6 +8,7 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
+import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.ToolFactory;
@@ -30,6 +31,7 @@ public class HuggingFaceToolFactory implements ToolFactory {
         this.pipelineService = notNull(pipelineService, "The hugging face pipeline service cannot be null.");
     }
 
+    @Nonnull
     @Override
     public String type() {
         return "HuggingFace";

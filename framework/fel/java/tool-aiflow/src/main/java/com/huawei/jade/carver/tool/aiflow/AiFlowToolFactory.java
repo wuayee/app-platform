@@ -5,6 +5,7 @@
 package com.huawei.jade.carver.tool.aiflow;
 
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.ToolFactory;
 
@@ -16,6 +17,7 @@ import com.huawei.jade.carver.tool.ToolFactory;
  */
 @Component
 public class AiFlowToolFactory implements ToolFactory {
+    @Nonnull
     @Override
     public String type() {
         return "AiFlow";
