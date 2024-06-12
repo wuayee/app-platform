@@ -71,6 +71,11 @@ public class ToolDo {
     private String icon;
 
     /**
+     * 表示工具的版本。
+     */
+    private String version;
+
+    /**
      * 表示工具的唯一标识。
      */
     private String uniqueName;
@@ -91,6 +96,7 @@ public class ToolDo {
         toolDo.setRunnables(serializer.serialize(info.runnables()));
         toolDo.setSource(info.source());
         toolDo.setIcon(info.icon());
+        toolDo.setVersion(info.version());
         toolDo.setUniqueName(info.uniqueName());
         toolDo.setDescription(info.description());
         return toolDo;
@@ -112,6 +118,7 @@ public class ToolDo {
                 .runnables(json2obj(toolDo.getRunnables(), serializer))
                 .source(toolDo.getSource())
                 .icon(toolDo.getIcon())
+                .version(toolDo.getVersion())
                 .uniqueName(toolDo.getUniqueName())
                 .description(toolDo.getDescription())
                 .build();

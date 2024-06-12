@@ -14,6 +14,7 @@
         <result column="runnables" property="runnables"/>
         <result column="source" property="source"/>
         <result column="icon" property="icon"/>
+        <result column="version" property="version"/>
     </resultMap>
     <insert id="addTool" parameterType="com.huawei.jade.carver.tool.repository.pgsql.model.entity.ToolDo">
         insert into store_tool
@@ -21,6 +22,7 @@
             <if test="creator != null">"creator",</if> <if test="modifier != null">"modifier",</if> "name",
             <if test="description != null">"description",</if> "unique_name", "schema", "runnables",
             <if test="source != null">"source",</if> <if test="icon != null">"icon",</if>
+            <if test="version != null">"version",</if>
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -29,6 +31,7 @@
             cast(#{runnables} as
             json),
             <if test="source != null">#{source},</if> <if test="icon != null">#{icon},</if>
+            <if test="version != null">#{version},</if>
         </trim>
     </insert>
     <delete id="deleteTool" parameterType="String">
@@ -37,12 +40,12 @@
         where unique_name = #{uniqueName};
     </delete>
     <select id="getToolByUniqueName" resultMap="Tool">
-        select "creator", "modifier", "name", "description", "unique_name", "schema", "runnables", "source", "icon"
+        select "creator", "modifier", "name", "description", "unique_name", "schema", "runnables", "source", "icon", "version"
         from "store_tool"
         where unique_name = #{uniqueName}
     </select>
     <sql id="getOrSearchSelect">
-        select i."creator", i."modifier", i."name", i."unique_name", i."description", i."schema", i."runnables", i."source", i."icon"
+        select i."creator", i."modifier", i."name", i."unique_name", i."description", i."schema", i."runnables", i."source", i."icon", i."version"
         from "store_tool" i
                  left join (select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags
                             from "store_tag" t

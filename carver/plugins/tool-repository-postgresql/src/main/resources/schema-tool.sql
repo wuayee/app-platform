@@ -14,6 +14,7 @@ create table if not exists store_tool
     "runnables"      json        default '{}'::json        not null,
     "source"         varchar(16) default 'Builtin'         not null,
     "icon"           text,
+    "version"        varchar(8),
     "unique_name"    char(36)                              not null,
     unique("unique_name")
 );
@@ -28,6 +29,7 @@ comment on column store_tool.schema is '工具的格式';
 comment on column store_tool.runnables is '工具的运行描述';
 comment on column store_tool.source is '工具的来源';
 comment on column store_tool.icon is '工具的图标';
+comment on column store_tool.version is '工具的版本';
 comment on column store_tool.unique_name is '工具的唯一标识';
 
 create table if not exists store_tag

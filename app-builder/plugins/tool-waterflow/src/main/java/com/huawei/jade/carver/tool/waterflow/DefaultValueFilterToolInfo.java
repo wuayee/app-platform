@@ -131,4 +131,9 @@ public class DefaultValueFilterToolInfo implements Tool.Info {
     public Set<String> tags() {
         return this.toolInfo.tags();
     }
+
+    @Override
+    public String version() {
+        return this.toolInfo.version();
+    }
 }
