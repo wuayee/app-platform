@@ -14,7 +14,6 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
     self.width = 360;
     self.backColor = 'white';
     self.pointerEvents = "auto";
-    self.text = "工具调用";
     self.componentName = "toolInvokeComponent";
     self.flowMeta.triggerMode = 'auto';
     self.flowMeta.jober.type = 'STORE_JOBER';
@@ -67,6 +66,7 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
         self.flowMeta.jober.entity = toolEntity;
         self.flowMeta.jober.entity.uniqueName = metaData.uniqueName;
         self.flowMeta.jober.entity.return.type = metaData.schema.return.type;
+        self.text = self.page.generateNodeName(metaData.name, self.type);
         self.drawer.unmountReact();
         self.invalidateAlone();
     }
