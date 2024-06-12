@@ -110,12 +110,10 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
     };
 
     /**
-     * 获取Header组件
-     *
      * @override
      */
-    self.getHeaderComponent = () => {
-        return (<EndNodeHeader shape={self}/>);
+    self.getHeaderComponent = (disabled) => {
+        return (<EndNodeHeader shape={self} disabled={disabled}/>);
     }
 
     self.getHeaderIcon = () => {

@@ -9,11 +9,12 @@
 
 .react-node-toolbar-name {
     display: flex;
-    flex-direction: column;
-    flex: 1 1;
+    flex-direction: row;
+    flex: 1 2;
     font-size: 14px;
     height: 24px;
-    justify-content: center;
+    align-items: center; /* 垂直居中对齐 */
+    justify-content: flex-start;
 }
 
 .react-node-header-description {

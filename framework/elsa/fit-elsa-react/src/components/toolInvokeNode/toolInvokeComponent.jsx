@@ -1,5 +1,4 @@
-import InvokeInput from "@/components/common/InvokeInput.jsx";
-import InvokeOutput from "@/components/common/InvokeOutput.jsx";
+import ToolInvokeFormWrapper from "@/components/toolInvokeNode/ToolInvokeFormWrapper.jsx";
 
 /**
  * 工具调用节点组件
@@ -28,8 +27,7 @@ export const toolInvokeComponent = (jadeConfig) => {
      */
     self.getReactComponents = () => {
         return (<>
-            <InvokeInput/>
-            <InvokeOutput/>
+            <ToolInvokeFormWrapper/>
         </>);
     };
 

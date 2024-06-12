@@ -156,6 +156,41 @@ export const jadeFlowPage = (div, graph, name, id) => {
     }
 
     /**
+     * 生成节点的名称
+     *
+     * @param text 节点text
+     * @param type 节点类型
+     */
+    self.generateNodeName = (text, type) => {
+        const jadeNodes = self.shapes.filter(s => s.isTypeof("jadeNode"));
+        // 找到所有节点text
+        const textArray = jadeNodes.map(s => s.text);
+        if (!textArray.find(t => t === text)) {
+            return text;
+        }
+        const separator = "_";
+        if (jadeNodes.filter(s => s.type === type).length <= 1) {
+            return text;
+        }
+        let index = 1;
+        while (true) {
+            // 不带下划线，直接拼接_1
+            const lastSeparatorIndex = text.lastIndexOf(separator);
+            const last = text.substring(lastSeparatorIndex + 1, text.length);
+            // 如果是数字，把数字+1  如果不是数字，拼接_1
+            if (lastSeparatorIndex !== -1 && !isNaN(parseInt(last))) {
+                text = text.substring(0, lastSeparatorIndex) + separator + index;
+            } else {
+                text = text + separator + index;
+            }
+            if (!textArray.includes(text)) {
+                return text;
+            }
+            index++;
+        }
+    };
+
+    /**
      * 注册对图形创建的前后处理.
      *
      * @param handler 处理器.
@@ -182,31 +217,7 @@ export const jadeFlowPage = (div, graph, name, id) => {
     self.registerShapeCreationHandler({
         type: "after",
         handle: (page, shape) => {
-            const jadeNodes = page.shapes.filter(s => s.isTypeof("jadeNode"));
-            // 找到所有节点text
-            const textArray = jadeNodes.map(s => s.text);
-            if (!textArray.find(text => text === shape.text)) {
-                return;
-            }
-            const separator = "_";
-            if (jadeNodes.filter(s => s.type === shape.type).length <= 1) {
-                return;
-            }
-            let index = 1;
-            while (true) {
-                const lastSeparatorIndex = shape.text.lastIndexOf(separator);
-                const last = shape.text.substring(lastSeparatorIndex + 1, shape.text.length);
-                // 如果是数字，把数字+1  如果不是数字，拼接_1
-                if (!isNaN(parseInt(last))) {
-                    shape.text = shape.text.substring(0, lastSeparatorIndex) + separator + index;
-                } else {
-                    shape.text = shape.text + separator + index;
-                }
-                if (!textArray.includes(shape.text)) {
-                    return;
-                }
-                index++;
-            }
+            shape.text = self.generateNodeName(shape.text, shape.type);
         }
     });
 

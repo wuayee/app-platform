@@ -2,8 +2,9 @@ export const NODE_STATUS = {
     RUNNING: "running",
     ERROR: "failed",
     SUCCESS: "success",
-    DEFAULT: "default"
-}
+    DEFAULT: "default",
+    UN_RUNNING: "unRunning"
+};
 
 export const SECTION_TYPE = {
     CONDITION: "condition",
@@ -25,3 +26,6 @@ export const VIRTUAL_CONTEXT_NODE = {
     id: "_systemEnv",
     name: "系统上下文"
 }
+
+export const JADE_MODEL_PREFIX = "jadeModel_";
+export const JADE_TASK_ID_PREFIX = "jadeTaskId_";
