@@ -1,6 +1,6 @@
 import {Button, Col, Collapse, Form, Row} from 'antd';
 import {PlusOutlined} from '@ant-design/icons';
-import {useDataContext, useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
+import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
 import "../common/style.css";
 import {JadeStopPropagationSelect} from "../common/JadeStopPropagationSelect.jsx";
 import PropTypes from "prop-types";
@@ -20,9 +20,10 @@ SkillForm.propTypes = {
  * @param toolOptions 工具选项。
  * @param workflowOptions 工具流选项。
  * @param config 相关配置。
+ * @param disabled 是否禁用.
  * @returns {JSX.Element} 大模型节点技能表单的DOM。
  */
-export default function SkillForm({toolOptions, workflowOptions, config}) {
+export default function SkillForm({toolOptions, workflowOptions, config, disabled}) {
     const data = useDataContext();
     const dispatch = useDispatch();
     const tool = data.inputParams.find(item => item.name === "tools");
@@ -30,7 +31,7 @@ export default function SkillForm({toolOptions, workflowOptions, config}) {
     const aippUrl = config.urls.aippUrl;
 
     // 新增工具流
-    const handleAddWaterFlow = async (event) => {
+    const handleAddWaterFlow = (event) => {
         event.stopPropagation(); // 阻止事件冒泡
         if (!config || !config.params || !config.params.tenantId || !config.params.appId) {
             console.error('Cannot get config.params.tenantId or config.params.appId.');
@@ -47,7 +48,7 @@ export default function SkillForm({toolOptions, workflowOptions, config}) {
                 console.log("create aipp error errorMsg=", error)
             });
         }
-    }
+    };
 
     // Filter `option.label` match the user type `input`
     const filterOption = (input, option) =>
@@ -88,6 +89,7 @@ export default function SkillForm({toolOptions, workflowOptions, config}) {
                         </Row>
                         <Form.Item>
                             <JadeStopPropagationSelect
+                                    disabled={disabled}
                                     mode="multiple"
                                     showSearch
                                     allowClear
@@ -107,7 +109,9 @@ export default function SkillForm({toolOptions, workflowOptions, config}) {
                                       style={{marginLeft: "6px"}}>工具流</span>
                             </Col>
                             <Col span={2} style={{paddingLeft: "3%"}}>
-                                <Button type="text" className="icon-button"
+                                <Button disabled={disabled}
+                                        type="text"
+                                        className="icon-button"
                                         style={{height: "22px"}}
                                         onClick={(event) => {
                                             handleAddWaterFlow(event);
@@ -119,6 +123,7 @@ export default function SkillForm({toolOptions, workflowOptions, config}) {
 
                         <Form.Item>
                             <JadeStopPropagationSelect
+                                    disabled={disabled}
                                     mode="multiple"
                                     showSearch
                                     allowClear

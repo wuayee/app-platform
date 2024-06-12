@@ -107,12 +107,6 @@ export const routeList: MenuItem[] = [
     hidden: true,
   },
   {
-    key: '/plugin',
-    icon: Icons.app({}),
-    label: '插件市场',
-    component: Plugin,
-  },
-  {
     key: '/model',
     icon: Icons.app({}),
     label: '模型服务',
@@ -185,6 +179,12 @@ export const routeList: MenuItem[] = [
         ],
       },
     ],
+  },
+  {
+    key: '/plugin',
+    icon: Icons.app({}),
+    label: '插件',
+    component: Plugin,
   },
   {
     key: '/Tooling',

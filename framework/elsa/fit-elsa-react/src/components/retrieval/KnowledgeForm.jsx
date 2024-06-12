@@ -11,9 +11,10 @@ const {Panel} = Collapse;
 /**
  * 知识节点组件
  *
+ * @param disabled 禁用状态.
  * @returns {JSX.Element}
  */
-export default function KnowledgeForm() {
+export default function KnowledgeForm({disabled}) {
     // 保存下拉框选项
     const dispatch = useDispatch();
     const data = useDataContext();
@@ -174,7 +175,7 @@ export default function KnowledgeForm() {
                 {/*    </Form.Item>*/}
                 {/*</Col>*/}
             </Row>))}
-            <KnowledgeConfig/>
+            <KnowledgeConfig disabled={disabled}/>
         </Panel>
     </Collapse>);
 }

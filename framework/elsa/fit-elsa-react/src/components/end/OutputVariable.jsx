@@ -10,10 +10,11 @@ const {Panel} = Collapse;
 /**
  * 输出变量的组件，包含多条输出变量的条目
  *
+ * @param disabled 是否禁用.
  * @returns {JSX.Element}
  * @constructor
  */
-export default function OutputVariable() {
+export default function OutputVariable({disabled}) {
     const dispatch = useDispatch();
     const data = useDataContext();
 
@@ -73,7 +74,7 @@ export default function OutputVariable() {
                             </Form.Item>
                         </Col>
                     </Row>
-                    <OutputVariableRow item={initData()[0]} handleItemChange={handleItemChange}/>
+                    <OutputVariableRow disabled={disabled} item={initData()[0]} handleItemChange={handleItemChange}/>
                 </Panel>
             </Collapse>
         </div>

@@ -6,13 +6,14 @@ import "./headerStyle.css";
  * 头部.
  *
  * @param shape 图形.
+ * @param disabled 是否禁用.
  * @return {JSX.Element}
  * @constructor
  */
-export const Header = ({shape}) => {
+export const Header = ({shape, disabled}) => {
     const [edit, setEdit] = useState(false);
     const inputRef = useRef(null);
-    const [endNodeCount, setEndNodeCount] = useState(0);
+    const [, setEndNodeCount] = useState(0);
 
     useEffect(() => {
         inputRef.current && inputRef.current.focus({
@@ -79,7 +80,7 @@ export const Header = ({shape}) => {
             });
             return (<>
                 <div>
-                    <Dropdown menu={{items: menus, onClick: (e) => onMenuClick(e)}} placement="bottomRight">
+                    <Dropdown disabled={disabled} menu={{items: menus, onClick: (e) => onMenuClick(e)}} placement="bottomRight">
                         <Button type="text" size="small" style={{
                             margin: 0,
                             padding: 0,
@@ -110,6 +111,7 @@ export const Header = ({shape}) => {
                 </div>
                 <div className="react-node-toolbar-name">
                     {getTitle()}
+                    {shape.getHeaderTypeIcon()}
                 </div>
                 {showMenus()}
             </div>

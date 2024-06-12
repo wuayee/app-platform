@@ -1,9 +1,8 @@
-import InvokeInput from "@/components/common/InvokeInput.jsx";
-import FitInvokeService from "@/components/fitInvokeNode/FitInvokeService.jsx";
-import InvokeOutput from "@/components/common/InvokeOutput.jsx";
 import {v4 as uuidv4} from "uuid";
 import {convertParameter, convertReturnFormat} from "@/components/util/MethodMetaDataParser.js";
 import {toolInvokeComponent} from "@/components/toolInvokeNode/toolInvokeComponent.jsx";
+import {useDataContext} from "@/components/DefaultRoot.jsx";
+import FitInvokeFormWrapper from "@/components/fitInvokeNode/FitInvokeFormWrapper.jsx";
 
 /**
  * FIT调用节点组件
@@ -11,6 +10,8 @@ import {toolInvokeComponent} from "@/components/toolInvokeNode/toolInvokeCompone
  * @param jadeConfig
  */
 export const fitInvokeComponent = (jadeConfig) => {
+    const data = useDataContext();
+    const inputData = data && data.inputParams;
     const self = toolInvokeComponent(jadeConfig);
 
     /**
@@ -48,9 +49,7 @@ export const fitInvokeComponent = (jadeConfig) => {
      */
     self.getReactComponents = () => {
         return (<>
-            <InvokeInput/>
-            <FitInvokeService/>
-            <InvokeOutput/>
+            <FitInvokeFormWrapper/>
         </>);
     };
 

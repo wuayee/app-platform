@@ -12,15 +12,17 @@ ByNumber.propTypes = {
  *
  * @param propValue 前端渲染的值
  * @param onValueChange 参数变化所需调用方法
+ * @param disabled 禁用.
  * @returns {JSX.Element} Memory按条数的Dom
  */
-export default function ByNumber({propValue, onValueChange}) {
+export default function ByNumber({propValue, onValueChange, disabled}) {
     const floatValue = parseFloat(propValue);
 
     return (<div style={{display: 'flex', alignItems: 'center'}}>
             <Slider
                 style={{width: "90%"}} // 设置固定宽度
                 min={1}
+                disabled={disabled}
                 max={100}
                 defaultValue={20}
                 step={1}
