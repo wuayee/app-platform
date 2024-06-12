@@ -795,7 +795,7 @@ public class AippRunTimeServiceImpl
      * @param instanceId 实例id
      */
     @Override
-    public void terminateInstance(String instanceId, OperationContext context) {
+    public void terminateInstance(String instanceId, Map<String, Object> msgArgs, OperationContext context) {
         String versionId = this.metaInstanceService.getMetaVersionId(instanceId);
         Instance instDetail = Utils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
         Function<String, Boolean> handler = status -> MetaInstStatusEnum.getMetaInstStatus(status).getValue()
@@ -819,13 +819,15 @@ public class AippRunTimeServiceImpl
                 .build();
         this.metaInstanceService.patchMetaInstance(versionId, instanceId, info, context);
 
+        String message = Objects.nonNull(msgArgs.get("message")) ? msgArgs.get("message").toString() : "已终止对话";
+
         this.aippLogService.insertLog(AippLogCreateDto.builder()
                 .aippId(aippId)
                 .version(version)
                 .aippType((String) meta.getAttributes().get(AippConst.ATTR_AIPP_TYPE_KEY))
                 .instanceId(instanceId)
                 .logType(AippInstLogType.MSG.name())
-                .logData(JsonUtils.toJsonString(AippLogData.builder().msg("已终止对话").build()))
+                .logData(JsonUtils.toJsonString(AippLogData.builder().msg(message).build()))
                 .createUserAccount(context.getW3Account())
                 .path(Utils.buildPath(this.aippLogService, instanceId, null)) // todo 这块在子流程调用时，得考虑下
                 .build());
