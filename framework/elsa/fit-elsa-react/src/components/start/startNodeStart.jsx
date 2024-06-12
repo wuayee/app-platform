@@ -93,5 +93,11 @@ export const startNodeStart = (id, x, y, width, height, parent, drawer) => {
         );
     };
 
+    /**
+     * @override
+     */
+    self.getHeaderTypeIcon = () => {
+    };
+
     return self;
 };

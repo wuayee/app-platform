@@ -116,12 +116,21 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
         return (<EndNodeHeader shape={self} disabled={disabled}/>);
     }
 
+    /**
+     * @override
+     */
     self.getHeaderIcon = () => {
         return (<>
             <Button disabled={true} className="jade-node-custom-header-icon">
                 <EndIcon/>
             </Button>
         </>);
+    };
+
+    /**
+     * @override
+     */
+    self.getHeaderTypeIcon = () => {
     };
 
     /**
