@@ -58,9 +58,11 @@ export const llmComponent = (jadeConfig) => {
 
     /**
      * 必须.
+     *
+     * @param disabled 是否禁用.
      */
-    self.getReactComponents = () => {
-        return (<><LlmComponent/></>);
+    self.getReactComponents = (disabled) => {
+        return (<><LlmComponent disabled={disabled}/></>);
     };
 
     /**
@@ -329,8 +331,8 @@ export const llmComponent = (jadeConfig) => {
     return self;
 };
 
-const LlmComponent = () => {
+const LlmComponent = ({disabled}) => {
     return (<>
-        <LlmFormWrapper/>
+        <LlmFormWrapper disabled={disabled}/>
     </>)
 };

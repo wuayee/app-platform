@@ -2,8 +2,9 @@ export const NODE_STATUS = {
     RUNNING: "running",
     ERROR: "failed",
     SUCCESS: "success",
-    DEFAULT: "default"
-}
+    DEFAULT: "default",
+    UN_RUNNING: "unRunning"
+};
 
 export const SECTION_TYPE = {
     CONDITION: "condition",

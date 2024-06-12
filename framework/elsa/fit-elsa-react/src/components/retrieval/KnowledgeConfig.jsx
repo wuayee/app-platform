@@ -6,10 +6,11 @@ import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
 /**
  * 知识配置组件
  *
+ * @param disabled 禁用状态.
  * @returns {JSX.Element}
  * @constructor
  */
-export default function KnowledgeConfig() {
+export default function KnowledgeConfig({disabled}) {
     const dispatch = useDispatch();
     const data = useDataContext();
     const config = data && data.inputParams.find(item => item.name === "maximum").value;
@@ -49,7 +50,7 @@ export default function KnowledgeConfig() {
                     id={`valueSource`}
                     initialValue='Reference'
                 >
-                    <Slider
+                    <Slider disabled={disabled}
                         className="jade-slider"
                         style={{width: "90%"}}
                         min={1}

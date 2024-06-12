@@ -2,9 +2,6 @@ import {jadeNode} from "@/components/jadeNode.jsx";
 import "./style.css";
 import {Button} from "antd";
 import RetrievalIcon from '../asserts/icon-retrieval.svg?react';
-import InputForm from "@/components/retrieval/InputForm.jsx";
-import KnowledgeForm from "@/components/retrieval/KnowledgeForm.jsx";
-import OutputForm from "@/components/retrieval/OutputForm.jsx";
 import {SECTION_TYPE} from "@/common/Consts.js";
 
 /**
@@ -25,23 +22,12 @@ export const retrievalNodeState = (id, x, y, width, height, parent, drawer) => {
     /**
      * @override
      */
-    self.getReactComponents = () => {
-        return (<>
-            <InputForm/>
-            <KnowledgeForm/>
-            <OutputForm/>
-        </>);
-    };
-
     self.getHeaderIcon = () => {
-        return (
-                <Button
-                        disabled={true}
-                        className="jade-node-custom-header-icon"
-                >
-                    <RetrievalIcon/>
-                </Button>
-        );
+        return (<>
+            <Button disabled={true} className="jade-node-custom-header-icon">
+                <RetrievalIcon/>
+            </Button>
+        </>);
     };
 
     /**

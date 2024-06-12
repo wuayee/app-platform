@@ -10,9 +10,10 @@ const {Panel} = Collapse;
 /**
  * 输入节点组件
  *
+ * @param disabled 禁用.
  * @returns {JSX.Element}
  */
-export default function InputForm() {
+export default function InputForm({disabled}) {
     const dispatch = useDispatch();
     const data = useDataContext();
     const currentData = data && data.inputParams.find(item => item.name === "query");
@@ -77,6 +78,7 @@ export default function InputForm() {
             case 'Reference':
                 return (<>
                     <JadeReferenceTreeSelect
+                            disabled={disabled}
                             reference={item}
                             onReferencedValueChange={(v) => _onReferencedValueChange(item, v)}
                             onReferencedKeyChange={(e) => _onReferencedKeyChange(item, e)}
@@ -94,21 +96,20 @@ export default function InputForm() {
                 </>);
             case 'Input':
                 return (<>
-                    <Form.Item
-                            id={`input-${item.id}`}
-                            name={`input-${item.id}`}
-                            rules={[{required: true, message: "字段值不能为空"}, {
-                                pattern: /^[^\s]*$/,
-                                message: "禁止输入空格"
-                            }]}
-                            initialValue={item.value}
-                            validateTrigger="onBlur"
+                    <Form.Item id={`input-${item.id}`}
+                               name={`input-${item.id}`}
+                               rules={[{required: true, message: "字段值不能为空"}, {
+                                   pattern: /^[^\s]*$/,
+                                   message: "禁止输入空格"
+                               }]}
+                               initialValue={item.value}
+                               validateTrigger="onBlur"
                     >
-                        <Input
-                                className="value-custom jade-input"
-                                placeholder="清输入"
-                                value={item.value}
-                                onBlur={editInput(item)}
+                        <Input disabled={disabled}
+                               className="value-custom jade-input"
+                               placeholder="清输入"
+                               value={item.value}
+                               onBlur={editInput(item)}
                         />
                     </Form.Item>
                 </>);
@@ -154,6 +155,7 @@ export default function InputForm() {
                     <Col span={8} style={{paddingRight: 0}}>
                         <Form.Item id={`valueSource`} initialValue="Reference">
                             <JadeStopPropagationSelect
+                                    disabled={disabled}
                                     id={`valueSource-select-${currentData.id}`}
                                     className={"value-source-custom jade-select"}
                                     style={{width: "100%"}}

@@ -14,9 +14,11 @@ Memory.propTypes = {
 /**
  * 开始节点Memory组件
  *
+ * @param config 配置.
+ * @param disabled 禁用.
  * @returns {JSX.Element} 开始节点Memory组件的Dom
  */
-export default function Memory({config}) {
+export default function Memory({config, disabled}) {
     const dispatch = useDispatch();
     const data = useDataContext();
     const memoryTypeValue = data.find(item => item.name === "memory").value.find(item => item.name === "type").value;
@@ -35,15 +37,26 @@ export default function Memory({config}) {
     const renderComponent = () => {
         switch (memoryTypeValue) {
             case 'ByConversationTurn': // 按对话轮次(一问一答，0-10，默认3)
-                return <ByConversationTurn propValue={memoryValueValue} onValueChange={handleComponentValueChange}/>;
+                return <ByConversationTurn disabled={disabled}
+                                           propValue={memoryValueValue}
+                                           onValueChange={handleComponentValueChange}/>;
             case 'ByNumber': // 按条数(默认20)
-                return <ByNumber propValue={memoryValueValue} onValueChange={handleComponentValueChange}/>;
+                return <ByNumber disabled={disabled}
+                                 propValue={memoryValueValue}
+                                 onValueChange={handleComponentValueChange}/>;
             case 'ByTokenSize': // 按token大小
-                return <ByTokenSize propValue={memoryValueValue} onValueChange={handleComponentValueChange}/>;
+                return <ByTokenSize disabled={disabled}
+                                    propValue={memoryValueValue}
+                                    onValueChange={handleComponentValueChange}/>;
             case 'ByTime': // 按时间
-                return <ByTime propValue={memoryValueValue} onValueChange={handleComponentValueChange}/>;
+                return <ByTime disabled={disabled}
+                               propValue={memoryValueValue}
+                               onValueChange={handleComponentValueChange}/>;
             case 'Customizing': // 自定义(选fitable)
-                return <Customizing propValue={memoryValueValue} onValueChange={handleComponentValueChange} config={config}/>;
+                return <Customizing disabled={disabled}
+                                    propValue={memoryValueValue}
+                                    onValueChange={handleComponentValueChange}
+                                    config={config}/>;
             case 'UserSelect': // 用户自己勾选(true、false)
                 return null;
             case 'NotUseMemory': // 不使用历史记录
@@ -92,6 +105,7 @@ export default function Memory({config}) {
     return (<>
         <JadeStopPropagationSelect
             className="jade-select"
+            disabled={disabled}
             defaultValue={memoryTypeValue}
             style={{width: "100%", marginBottom: "8px", marginTop: "8px"}}
             onClick={handleSelectClick} // 点击下拉框时阻止事件冒泡

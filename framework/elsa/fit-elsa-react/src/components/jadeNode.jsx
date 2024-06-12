@@ -5,7 +5,9 @@ import {v4 as uuidv4} from "uuid";
 import {Header} from "@/components/Header.jsx";
 import {Footer} from "@/components/Footer.jsx";
 import {NODE_STATUS, SECTION_TYPE, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
-import {useRef} from "react";
+import React, {useRef, useState} from "react";
+import {HORIZONTAL_LEFT, HORIZONTAL_RIGHT, VERTICAL_DOWN, VERTICAL_UP} from "@/components/asserts/waterDropRawSvg.js";
+import RunningStatusPanel from "@/components/flowRunComponent/RunningStatusPanel.jsx";
 
 /**
  * jadeStream中的流程编排节点.
@@ -15,17 +17,16 @@ import {useRef} from "react";
 export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     const self = node(id, x, y, width, height, parent, false, drawer ? drawer : jadeNodeDrawer);
     self.type = "jadeNode";
-    self.serializedFields.batchAdd("toolConfigs", "componentName", "flowMeta", "sourcePlatform");
+    self.serializedFields.batchAdd("toolConfigs", "componentName", "flowMeta", "outlineWidth", "outlineColor", "sourcePlatform");
     self.eventType = "jadeEvent";
     self.hideText = true;
     self.autoHeight = true;
     self.width = 360;
     self.borderColor = "rgba(28,31,35,.08)";
-    self.mouseInBorderColor = "rgba(28,31,35,.08)";
-    self.shadow = "0 2px 4px 0 rgba(0,0,0,.1)";
-    self.focusShadow = "0 0 1px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.1)";
+    self.outlineColor = "rgba(74,147,255,0.12)";
     self.borderWidth = 1;
-    self.focusBorderWidth = 2;
+    self.focusBorderWidth = 1;
+    self.outlineWidth = 10;
     self.dashWidth = 0;
     self.backColor = "white";
     self.focusBackColor = "white";
@@ -34,6 +35,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.enableAnimation = false;
     self.modeRegion.visible = false;
     self.runStatus = NODE_STATUS.DEFAULT;
+    self.emphasizedOffset = -5;
     self.flowMeta = {
         "triggerMode": "auto",
         "jober": {
@@ -221,10 +223,11 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     /**
      * 获取Header组件
      *
+     * @param disabled 是否禁用.
      * @return {JSX.Element}
      */
-    self.getHeaderComponent = () => {
-        return (<Header shape={self}/>);
+    self.getHeaderComponent = (disabled) => {
+        return (<Header shape={self} disabled={disabled}/>);
     }
 
     /**
@@ -544,6 +547,21 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         };
     };
 
+    /**
+     * 设置节点状态.
+     *
+     * @param status 状态.
+     */
+    self.setRunStatus = (status) => {
+        self.runStatus = status;
+        self.emphasized = status === NODE_STATUS.RUNNING;
+        const focused = self.page.getFocusedShapes();
+        if (focused.length === 0) {
+            self.isFocused = status === NODE_STATUS.RUNNING;
+        }
+        self.drawer.setRunStatus(status);
+    };
+
     return self;
 };
 
@@ -585,7 +603,12 @@ const ObserverProxy = (nodeId, observableId, observer) => {
 const jadeNodeDrawer = (shape, div, x, y) => {
     const self = rectangleDrawer(shape, div, x, y);
     self.reactContainer = null;
-    self.rootRef = null;
+    self.panelRef = null;
+    self.waterDrops = [];
+    self.waterDrops.push(waterDrop(HORIZONTAL_RIGHT, "horizontal", "right"));
+    self.waterDrops.push(waterDrop(HORIZONTAL_LEFT, "horizontal", "left"));
+    self.waterDrops.push(waterDrop(VERTICAL_UP, "vertical", "up"));
+    self.waterDrops.push(waterDrop(VERTICAL_DOWN, "vertical", "down"));
 
     /**
      * @override
@@ -595,9 +618,7 @@ const jadeNodeDrawer = (shape, div, x, y) => {
         initialize.apply(self);
         self.reactContainer = document.createElement("div");
         self.reactContainer.id = "react-container-" + shape.id;
-        self.reactContainer.style.padding = "12px";
         self.reactContainer.style.width = "100%";
-        self.reactContainer.style.borderRadius = shape.borderRadius + "px";
         self.parent.appendChild(self.reactContainer);
         self.parent.style.pointerEvents = "auto";
     };
@@ -625,25 +646,39 @@ const jadeNodeDrawer = (shape, div, x, y) => {
     };
 
     const Root = () => {
-        self.rootRef = useRef();
+        self.panelRef = useRef();
+        const [runStatus, setRunStatus] = useState(shape.runStatus);
+        const [disabled, setDisabled] = useState(false);
 
-        /**
-         * 当战士报告时，需要重新计算area.
-         */
+        // 设置运行状态.
+        self.setRunStatus = status => {
+            setRunStatus(status);
+        };
+
+        // 设置是否禁用.
+        self.setDisabled = (disabled) => {
+            setDisabled(disabled);
+        };
+
+        // 当展示报告时，需要重新计算area.
         const onReportShow = () => {
             shape.indexCoordinate();
         };
 
         return (<>
-            <DefaultRoot ref={self.rootRef} shape={shape} component={shape.getComponent()} onReportShow={onReportShow}/>
+            {runStatus !== NODE_STATUS.DEFAULT &&
+                    <RunningStatusPanel shape={shape} ref={self.panelRef} onReportShow={onReportShow}/>}
+            <div style={{position: "relative", background: "white", padding: 12, borderRadius: shape.borderRadius}}>
+                <DefaultRoot shape={shape} component={shape.getComponent()} disabled={disabled} />
+            </div>
         </>);
     };
 
     self.getReportFrame = () => {
-        if (!self.rootRef || !self.rootRef.current || !self.rootRef.current.getRunReportRect()) {
+        if (!self.panelRef || !self.panelRef.current || !self.panelRef.current.getRunReportRect()) {
             return null;
         }
-        const rect = self.rootRef.current.getRunReportRect();
+        const rect = self.panelRef.current.getRunReportRect();
         const position = shape.page.calculatePosition({clientX: rect.x, clientY: rect.y})
         return {
             x: position.x,
@@ -679,10 +714,8 @@ const jadeNodeDrawer = (shape, div, x, y) => {
     const drawBorder = self.drawBorder;
     self.drawBorder = () => {
         drawBorder.apply(self);
-        if (shape.isFocused) {
-            self.parent.style.border = "";
-            self.parent.style.border = shape.borderWidth + "px" + " solid " + shape.borderColor;
-            self.parent.style.outline = shape.focusBorderWidth + "px" + " solid " + shape.getBorderColor();
+        if (shape.isFocused || shape.emphasized) {
+            self.parent.style.outline = shape.outlineWidth + "px" + " solid " + shape.outlineColor;
         } else {
             self.parent.style.outline = "";
         }
@@ -716,8 +749,92 @@ const jadeNodeDrawer = (shape, div, x, y) => {
 
             shape.resize(shape.width, self.parent.offsetHeight);
             prevHeight = self.parent.offsetHeight;
+            self.panelRef?.current?.setHeight(shape.height);
         }).observe(self.parent);
     };
+
+    /**
+     * 绘制水滴流转效果.
+     *
+     * @override
+     */
+    self.drawDynamic = (context, x, y) => {
+        self.waterDrops.forEach(wd => {
+            if (wd.loaded) {
+                wd.draw(context, x, y, shape)
+            } else {
+                wd.load();
+            }
+        })
+    };
+
+    return self;
+};
+
+const STEP = 0.01
+
+/**
+ * 水滴绘制器.
+ *
+ * @param rawSvg 原始svg字符串.
+ * @param location 位置, horizontal/vertical.
+ * @param direction 方向, left/right/up/down.
+ * @return {{}} 对象.
+ */
+const waterDrop = (rawSvg, location, direction) => {
+    const self = {};
+    self.img = null;
+    self.control = { percent: 0, times: 0 };
+
+    function calcPosition(x, y, shape) {
+        if ("horizontal" === location) {
+            if (direction === "right") {
+                return {x: x + self.control.percent * shape.width, y: y + shape.emphasizedOffset};
+            }
+            return {x: x + shape.width - self.control.percent * shape.width,
+                y: y + shape.height - shape.emphasizedOffset};
+        }
+        if (direction === "down") {
+            return {x: x + shape.width - shape.emphasizedOffset, y: y + self.control.percent * shape.height};
+        }
+        return {x: x + shape.emphasizedOffset, y: y + shape.height - self.control.percent * shape.height};
+    }
+
+    /**
+     * 绘制.
+     *
+     * @param context canvas2dContext对象.
+     * @param x 横坐标.
+     * @param y 纵坐标.
+     * @param shape 图形对象.
+     */
+    self.draw = (context, x, y, shape) => {
+        self.control.percent += STEP;
+        if (self.control.percent >= 1) {
+            self.control.times = 100;
+            self.control.percent = 0;
+            return;
+        }
+        x -= shape.width / 2;
+        y -= shape.height / 2;
+        const position = calcPosition(x, y, shape);
+        context.drawImage(self.img, position.x, position.y);
+    };
+
+    /**
+     * 加载svg为image对象.
+     */
+    self.load = () => {
+        const svg = new Blob([rawSvg], {type:"image/svg+xml;charset=utf-8"});
+        const url = URL.createObjectURL(svg);
+        const img = new Image();
+        img.src = url;
+        img.onload = function () {
+            URL.revokeObjectURL(url);
+            self.img = img;
+            self.loaded = true;
+        };
+    }
 
     return self;
 };

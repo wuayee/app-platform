@@ -1,7 +1,5 @@
 import {v4 as uuidv4} from "uuid";
-import InputForm from "@/components/retrieval/InputForm.jsx";
-import KnowledgeForm from "@/components/retrieval/KnowledgeForm.jsx";
-import OutputForm from "@/components/retrieval/OutputForm.jsx";
+import {RetrievalWrapper} from "@/components/retrieval/RetrievalWrapper.jsx";
 
 /**
  * retrieval节点组件
@@ -61,11 +59,12 @@ export const retrievalComponent = (jadeConfig) => {
         };
     };
 
-    self.getReactComponents = () => {
+    /**
+     * @override
+     */
+    self.getReactComponents = (disabled) => {
         return (<>
-            <InputForm/>
-            <KnowledgeForm/>
-            <OutputForm/>
+            <RetrievalWrapper disabled={disabled}/>
         </>);
     };
 

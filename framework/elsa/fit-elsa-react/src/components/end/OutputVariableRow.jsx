@@ -8,10 +8,11 @@ import {useFormContext} from "@/components/DefaultRoot.jsx";
  *
  * @param item 当前条目数据
  * @param handleItemChange 更改值的回调
+ * @param disabled 是否禁用.
  * @returns {JSX.Element}
  * @constructor
  */
-export default function OutputVariableRow({item, handleItemChange}) {
+export default function OutputVariableRow({item, handleItemChange, disabled}) {
     const inputName = `value-${item.id}`;
     const form = useFormContext();
 
@@ -48,6 +49,7 @@ export default function OutputVariableRow({item, handleItemChange}) {
             case 'Reference':
                 return (<>
                     <JadeReferenceTreeSelect
+                            disabled={disabled}
                             reference={item}
                             onReferencedValueChange={_onReferencedValueChange}
                             onReferencedKeyChange={_onReferencedKeyChange}
@@ -73,11 +75,11 @@ export default function OutputVariableRow({item, handleItemChange}) {
                             validateTrigger="onBlur"
                             initialValue={item.value}
                     >
-                        <Input
-                                className="value-custom jade-input"
-                                style={{fontSize: "12px"}}
-                                placeholder="请输入"
-                                onBlur={editOutputVariable}
+                        <Input disabled={disabled}
+                               className="value-custom jade-input"
+                               style={{fontSize: "12px"}}
+                               placeholder="请输入"
+                               onBlur={editOutputVariable}
                         />
                     </Form.Item>
                 </>);
@@ -100,7 +102,7 @@ export default function OutputVariableRow({item, handleItemChange}) {
                             id={`valueSource-${item.id}`}
                             initialValue='Reference'
                     >
-                        <Select
+                        <Select disabled={disabled}
                                 onMouseDown={(e) => e.stopPropagation()}
                                 id={`valueSource-select-${item.id}`}
                                 className={"value-source-custom jade-select"}
