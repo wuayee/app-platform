@@ -7,13 +7,15 @@ package com.huawei.jade.carver.tool.eco.huggingface;
 import static com.huawei.fitframework.inspection.Validation.isInstanceOf;
 import static com.huawei.fitframework.inspection.Validation.isTrue;
 import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.eco.AbstractTaskTool;
 import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 表示 {@link com.huawei.jade.carver.tool.Tool} 的 <a href="https://huggingface.co/">HuggingFace</a> 的实现。
@@ -41,9 +43,14 @@ public class HuggingFaceTool extends AbstractTaskTool {
     @Override
     public Object executeWithTask(String taskId, Object... args) {
         notNull(args, "The call args cannot be null.");
-        isTrue(args.length == 2, "The call args must have 2 args.");
+        isTrue(args.length >= 1, "The call args must have 1 arg.");
         String model = isInstanceOf(args[0], String.class, "The first arg must be String.class.");
-        Map<String, Object> actual = cast(isInstanceOf(args[1], Map.class, "The second arg must be Map.class."));
-        return this.pipelineService.call(taskId, model, actual);
+        List<String> actualNames = this.metadata().parameterNames().stream().skip(2).collect(Collectors.toList());
+        isTrue(actualNames.size() == args.length - 1, "The arg names do not match the actual args.");
+        Map<String, Object> actualMapArg = new HashMap<>();
+        for (int i = 0; i < actualNames.size(); i++) {
+            actualMapArg.put(actualNames.get(i), args[i + 1]);
+        }
+        return this.pipelineService.call(taskId, model, actualMapArg);
     }
 }
