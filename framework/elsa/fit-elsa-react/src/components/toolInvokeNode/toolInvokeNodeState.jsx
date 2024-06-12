@@ -54,7 +54,8 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
             newConfig.inputParams = Object.keys(metaData.schema.parameters.properties).map(key => {
                 return convertParameter({
                     propertyName: key,
-                    property: metaData.schema.parameters.properties[key]
+                    property: metaData.schema.parameters.properties[key],
+                    isRequired: metaData.schema.parameters.required.some(item => item === key)
                 });
             });
         };

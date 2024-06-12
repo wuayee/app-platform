@@ -1,7 +1,6 @@
 import {v4 as uuidv4} from "uuid";
 import {convertParameter, convertReturnFormat} from "@/components/util/MethodMetaDataParser.js";
 import {toolInvokeComponent} from "@/components/toolInvokeNode/toolInvokeComponent.jsx";
-import {useDataContext} from "@/components/DefaultRoot.jsx";
 import FitInvokeFormWrapper from "@/components/fitInvokeNode/FitInvokeFormWrapper.jsx";
 
 /**
@@ -10,8 +9,6 @@ import FitInvokeFormWrapper from "@/components/fitInvokeNode/FitInvokeFormWrappe
  * @param jadeConfig
  */
 export const fitInvokeComponent = (jadeConfig) => {
-    const data = useDataContext();
-    const inputData = data && data.inputParams;
     const self = toolInvokeComponent(jadeConfig);
 
     /**

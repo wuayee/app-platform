@@ -132,6 +132,7 @@ export const convertParameter = param => {
         type: param.property.type === 'object' ? 'Object' : param.property.type.capitalize(),
         // 对象默认展开，map直接为引用
         from: param.property.type === 'object' ? (isMap ? 'Reference' : 'Expand') : 'Reference',
+        isRequired: param.isRequired,
         referenceNode: "",
         referenceId: "",
         referenceKey: "",

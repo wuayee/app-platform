@@ -3,6 +3,7 @@ import "./jadeInputTree.css";
 import PropTypes from "prop-types";
 import {JadeStopPropagationSelect} from "./JadeStopPropagationSelect.jsx";
 import {JadeReferenceTreeSelect} from "./JadeReferenceTreeSelect.jsx";
+import {useFormContext} from "@/components/DefaultRoot.jsx";
 
 /**
  * 构建节点，只有Object节点有子孙节点.
@@ -31,6 +32,7 @@ const convert = (nodeData, level) => {
             level: level,
             value: nodeData.value,
             from: nodeData.from,
+            isRequired: nodeData.isRequired ?? true,
             referenceKey: nodeData.referenceKey,
             referenceNode: nodeData.referenceNode,
             referenceId: nodeData.referenceId,
@@ -106,12 +108,20 @@ export default function JadeInputTree({data, updateItem}) {
      */
     const getValueInput = (node) => {
         if (node.from === "Input") {
-            return <Input className="jade-input" style={{borderRadius: "0px 8px 8px 0px"}} placeholder={"请输入"}
-                          value={node.value}
-                          onChange={(e) => onInputChange(node.id, "value", e)}/>;
+            return <Form.Item
+                id={`value-${node.id}`}
+                name={`value-${node.id}`}
+                rules={node.isRequired ? [{required: true, message: "字段值不能为空"}] : []}
+                initialValue={node.value}
+                validateTrigger="onBlur"
+            >
+                <Input className="jade-input" style={{borderRadius: "0px 8px 8px 0px"}} placeholder={"请输入"}
+                       value={node.value}
+                       onChange={(e) => onInputChange(node.id, "value", e)}/>
+            </Form.Item>;
         } else if (node.from === "Reference") {
             return <JadeReferenceTreeSelect className="jade-input-tree-title-tree-select jade-select"
-                                            rules={[{required: true, message: "字段值不能为空"}]}
+                                            rules={node.isRequired ? [{required: true, message: "字段值不能为空"}] : []}
                                             reference={node}
                                             onReferencedKeyChange={(e) => onReferenceKeyChange(node.id, e)}
                                             onReferencedValueChange={(v) => onReferenceValueChange(node.id, v)}/>;
@@ -201,6 +211,8 @@ export default function JadeInputTree({data, updateItem}) {
  * @constructor
  */
 const JadeInputTreeSelect = ({node, options, updateItem}) => {
+    const form = useFormContext();
+
     /**
      * 处理选择变化事件.
      *
@@ -215,6 +227,7 @@ const JadeInputTreeSelect = ({node, options, updateItem}) => {
                 {key: "value", value: node.props}
             ]);
         } else if (v === "Input") {
+            form.setFieldsValue({[`value-${node.id}`]: undefined});
             updateItem(node.id, [{key: "from", value: v},
                 {key: "referenceNode", value: null},
                 {key: "referenceId", value: null},

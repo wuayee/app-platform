@@ -36,7 +36,7 @@ export const huggingFaceNodeState = (id, x, y, width, height, parent, drawer) =>
         const INPUT_FROM_TYPE_VALUE = "Input";
         self.flowMeta.jober.converter.entity.inputParams[0].from = INPUT_FROM_TYPE_VALUE;
         self.flowMeta.jober.converter.entity.inputParams[1].from = INPUT_FROM_TYPE_VALUE;
-        self.flowMeta.jober.converter.entity.inputParams[0].value = metaData.taskId;
+        self.flowMeta.jober.converter.entity.inputParams[0].value = metaData.schema.name;
         self.flowMeta.jober.converter.entity.inputParams[1].value = metaData.context.default_model;
         self.drawer.unmountReact();
         self.invalidateAlone();
