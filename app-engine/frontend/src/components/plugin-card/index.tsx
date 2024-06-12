@@ -40,7 +40,7 @@ const PluginCard = ({ pluginData }: any) => (
         }}>
           <Icons.user />
           <span style={{ marginRight: 8 }}>{pluginData.creator}</span>
-          {pluginData.tags.map((tag: string) => <Tag style={{ margin: 0 }}>{tag}</Tag>)}
+          {pluginData.tags.map((tag: string, index: number) => <Tag style={{ margin: 0 }} key={index}>{tag}</Tag>)}
         </div>
       </div>
     </div>

@@ -54,7 +54,7 @@ const ChatPreview = (props) => {
   let wsCurrent = useRef(null);
   let reportInstance = useRef('');
   let reportIContext = useRef(null);
-  const listRef = useRef(null);
+  const listRef = useRef([]);
   const chatPage =  location.pathname.indexOf('chat') !== -1;
 
   useEffect(() => {
@@ -108,7 +108,7 @@ const ChatPreview = (props) => {
     reciveInitObj.loading = true;
     let arr = [...listRef.current, reciveInitObj];
     listRef.current = arr;
-    dispatch(setChatList(arr));
+    dispatch(setChatList(JSON.parse(JSON.stringify(arr))));
     dispatch(setChatRunning(true));
     if (showElsa) {
       let params = appInfo.flowGraph;
@@ -133,7 +133,6 @@ const ChatPreview = (props) => {
   // 获取aipp_id和version
   async function getAippAndVersion(value, type) {
     try {
-      console.log(444,appId)
       const debugRes = await aippDebug(tenantId, appId, appInfo);
       if (debugRes.code === 0) {
         chatMissionStart(debugRes.data, value, type);
@@ -233,9 +232,7 @@ const ChatPreview = (props) => {
   const chatForm = (chatObj) => {
     const idx = listRef.current.length - 1;
     listRef.current.splice(idx, 1, chatObj);
-    let arr = [...listRef.current];
-    listRef.current = arr;
-    dispatch(setChatList(arr));
+    dispatch(setChatList([...listRef.current]));
     dispatch(setChatRunning(false));
   }
   // 用户自勾选
@@ -243,9 +240,7 @@ const ChatPreview = (props) => {
     reportInstance.current = instanceId;
     reportIContext.current = initContext;
     listRef.current.forEach(item => item.checked = false);
-    let arr = [...listRef.current];
-    listRef.current = arr;
-    dispatch(setChatList(arr));
+    dispatch(setChatList([...listRef.current]));
     onStop("请勾选对话");
     setCheckedList([]);
     setEditorShow(true, 'report');
@@ -265,9 +260,7 @@ const ChatPreview = (props) => {
       if (startes.code === 0 && startes.data) {
         let instanceId = startes.data;
         listRef.current[listRef.current.length - 1].loading = true;
-        let arr = [...listRef.current];
-        listRef.current = arr;
-        dispatch(setChatList(arr));
+        dispatch(setChatList([...listRef.current]));
         queryInstance(runningAppid.current, runningVersion.current, instanceId);
       } else {
         onStop("启动任务失败");
@@ -290,9 +283,7 @@ const ChatPreview = (props) => {
     initObj.finished = (status === 'ARCHIVED');
     const idx = listRef.current.length - 1;
     listRef.current.splice(idx, 1, initObj);
-    let arr = [...listRef.current];
-    listRef.current = arr;
-    dispatch(setChatList(arr));
+    dispatch(setChatList([...listRef.current]));
   }
   // 流式输出拼接
   function chatSplicing(log, msg, initObj, status) {
@@ -302,14 +293,11 @@ const ChatPreview = (props) => {
     if (currentChatItem) {
       let index = listRef.current.findIndex((item) => item.logId === log.msgId);
       let str = "";
-      console.log(currentChatItem)
       let { content } = currentChatItem;
       str = content + msg;
       listRef.current[index].content = str;
       listRef.current[index].finished = (status === 'ARCHIVED');
-      let arr = [...listRef.current];
-      listRef.current = arr;
-      dispatch(setChatList(arr));
+      dispatch(setChatList([...listRef.current]));
     } else {
       chatStrInit(msg, initObj, status);
     }
@@ -325,7 +313,7 @@ const ChatPreview = (props) => {
     let item = listRef.current[listRef.current.length - 1];
     item.content = content;
     item.loading = false;
-    dispatch(setChatList(listRef.current));
+    dispatch(setChatList([...listRef.current]));
     dispatch(setChatRunning(false));
   }
   // 终止进行中的对话

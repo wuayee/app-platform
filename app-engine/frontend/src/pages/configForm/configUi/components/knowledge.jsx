@@ -15,22 +15,7 @@ const Knowledge = (props) => {
   const searchName = useRef('');
   const list = useRef('');
   const modalRef = useRef();
-  const onArrowClick = (value, func) => {
-    func(!value);
-  }
-
-  const handleSearch = (value) => {
-    searchName.current = value;
-    handleGetKnowledgeOptions();
-  }
-
-  const handleClose = (open) => {
-    if (!open) {
-      searchName.current = '';
-      handleGetKnowledgeOptions();
-    }
-  }
-
+  
   const handleGetKnowledgeOptions = () => {
     const params = {
       tenantId,
