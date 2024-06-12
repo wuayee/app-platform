@@ -85,7 +85,7 @@
       cursor: pointer;
     }
     .content-left {
-      width: 240px;
+      width: 300px;
       overflow-y: auto;
       background-color: #f6f6f8;
       position: absolute;
@@ -113,6 +113,13 @@
         .content-node-name {
           line-height: 24px;
           vertical-align: top;
+        }
+        .node-tool {
+          display: flex;
+          align-items: center;
+          img {
+            margin-right: 8px;
+          }
         }
         .drag-item-title {
           display: flex;
@@ -150,7 +157,7 @@
     }
   }
   .content-add {
-    height: calc(100vh - 88px);
+    height: calc(100vh - 100px);
     position: relative;
   }
   .anticon svg {

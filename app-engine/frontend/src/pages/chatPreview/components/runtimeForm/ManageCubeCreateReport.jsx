@@ -80,7 +80,10 @@ const ManageCubeCreateReport = (props) => {
     const params = {
       formAppearance: JSON.stringify(data.formAppearance),
       formData: JSON.stringify({[id]: chartData}),
-      businessData: {[id]: chartData}
+      businessData: {
+        parentInstanceId: data.parentInstanceId,
+        [id]: chartData
+      }
     }
     saveContent(tenantId, data.instanceId, params).then((res) => {
       if (res.code !== 0) {
@@ -129,7 +132,10 @@ const ManageCubeCreateReport = (props) => {
   useEffect(() => {
     console.log(data);
     if (!data?.formData) return;
-    setChartData(JSON.parse(data?.formData[id]))
+    if (data.formData[id]) {
+       typeof (data.formData[id]) === 'string' ? setChartData(JSON.parse(data?.formData[id])) : setChartData(data?.formData[id]);
+    }
+    
   }, [data?.formData])
 
   useEffect(() => {

@@ -24,7 +24,7 @@ export const configMap = {
           {
               node: "manualCheckNodeState",
               urls: {
-                  runtimeFormUrl: "https://jane-beta.huawei.com/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/form/type/runtime"
+                runtimeFormUrl: "/elsaApi"
               }
           },
           {
@@ -101,7 +101,7 @@ export const configMap = {
           {
               node: "manualCheckNodeState",
               urls: {
-                  runtimeFormUrl: "https://jane-beta.huawei.com/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/form/type/runtime"
+                runtimeFormUrl: "/elsaApi"
               }
           },
           {

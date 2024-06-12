@@ -25,7 +25,7 @@ const AippIndex = () => {
   const aippRef = useRef(null);
   const inspirationRefresh = useRef(false);
   const dispatch = useAppDispatch();
-  const appInfo = useAppSelector((state) => state.appStore.appInfo);
+  const appInfo = JSON.parse(JSON.stringify(useAppSelector((state) => state.appStore.appInfo)));
 
   const elsaChange = () => {
     setShowElsa(!showElsa);
@@ -35,8 +35,7 @@ const AippIndex = () => {
     dispatch(setAppId(appId));
     getUser();
     getAippDetails();
-  }, [])
-
+  }, []);
   // 获取aipp详情
   const getAippDetails = async () => {
     setSpinning(true);
@@ -52,8 +51,7 @@ const AippIndex = () => {
   }
   // 修改aipp更新回调
   const updateAippCallBack = (data) => {
-    if(data)
-    {
+    if(data){
       aippRef.current = data;
       dispatch(setAppInfo(aippRef.current));
     }

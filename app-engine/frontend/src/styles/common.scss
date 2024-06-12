@@ -133,17 +133,16 @@ code {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier,
     monospace, sans-serif;
   font-size: 14px !important;
+  background-color: rgba(0, 0, 0, 0.06);
   padding: 0 2px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 2px 2px;
   line-height: inherit;
   text-indent: 0;
+  color: #404040;
   letter-spacing: 0.008em;
   outline-style: none;
   white-space: pre-wrap;
-  display: block;
-  width: 100%;
-  background: #282c34;
-  padding: 1rem;
 }
 
 textarea {

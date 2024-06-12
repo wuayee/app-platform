@@ -62,14 +62,14 @@ export const templateJson = {
                   "dataType": "List<Object>",
                   "defaultValue": [
                       {
-                          "id": 92,
-                          "name": "testsess",
-                          "description": "",
+                        "id": 92,
+                        "name": "testsess",
+                        "description": "",
                       },
                       {
-                          "id": 91,
-                          "name": "testseg",
-                          "description": "",
+                        "id": 91,
+                        "name": "testseg",
+                        "description": "",
                       }
                   ],
                   "nodeId": "llm2sql"
