@@ -108,7 +108,7 @@ const getAddFlowConfig = (tenant_Id, params) => {
 // 获取hugging-face列表
 const getHuggingFaceList = (tenant_Id, params) => {
   return new Promise((resolve, reject) => {
-    get(`${AIPP_URL}/${tenant_Id}/store/task`, params).then((res) => {
+    get(`${AIPP_URL}/${tenant_Id}/store/models`, params).then((res) => {
       resolve(res);
     }, (error) => {
       reject(error);
