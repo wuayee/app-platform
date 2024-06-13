@@ -19,10 +19,10 @@ public interface TaskMapper {
     /**
      * 根据任务唯一标识获取任务。
      *
-     * @param taskId 表示任务唯一标识的 {@link String}。
+     * @param taskName 表示任务唯一标识的 {@link String}。
      * @return 所有任务的实体类的实例的 {@link TaskDo}。
      */
-    TaskDo getTask(String taskId);
+    TaskDo getTask(String taskName);
 
     /**
      * 根据工具的唯一标识分页查询任务。
