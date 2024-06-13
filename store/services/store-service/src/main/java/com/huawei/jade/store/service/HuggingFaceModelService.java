@@ -34,5 +34,5 @@ public interface HuggingFaceModelService {
      * @return 表示模型数量的 {@code int}。
      */
     @Genericable(id = "com.huawei.jade.store.model.getCount")
-    int getCount(String taskId);
+    int getCount(String taskName);
 }
