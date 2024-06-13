@@ -53,7 +53,7 @@ JadeInputTree.propTypes = {
     data: PropTypes.array.isRequired, updateItem: PropTypes.func.isRequired
 };
 
-const INPUT_WIDTH = 110;
+const INPUT_WIDTH = 100;
 const LEVEL_DISTANCE = 24;
 
 /**
@@ -124,7 +124,8 @@ export default function JadeInputTree({data, updateItem}) {
                                             rules={node.isRequired ? [{required: true, message: "字段值不能为空"}] : []}
                                             reference={node}
                                             onReferencedKeyChange={(e) => onReferenceKeyChange(node.id, e)}
-                                            onReferencedValueChange={(v) => onReferenceValueChange(node.id, v)}/>;
+                                            onReferencedValueChange={(v) => onReferenceValueChange(node.id, v)}
+                                            level={node.level}/>;
         } else {
             return null;
         }
@@ -178,12 +179,12 @@ export default function JadeInputTree({data, updateItem}) {
                         <Form.Item
                                 name={`value-select-${node.id}`}
                         >
-                        <div className="jade-input-tree-title-child">
-                            <JadeInputTreeSelect node={node} options={getOptions(node)} updateItem={updateItem}/>
-                        </div>
+                            <div className="jade-input-tree-title-child">
+                                <JadeInputTreeSelect node={node} options={getOptions(node)} updateItem={updateItem}/>
+                            </div>
                         </Form.Item>
                     </Col>
-                    <Col >
+                    <Col>
                         <div className="jade-input-tree-title-child">
                             {getValueInput(node)}
                         </div>
