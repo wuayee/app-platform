@@ -23,7 +23,8 @@ import {
   reportProcess,
   messageProcess,
   messageProcessNormal,
-  beforeSend } from './utils/chat-process';
+  beforeSend,
+  deepClone } from './utils/chat-process';
 import "./styles/chat-preview.scss";
 import { creatChat, tenantId, updateChat } from "../../shared/http/chat.js";
 import { useAppDispatch, useAppSelector } from "../../store/hook";
@@ -75,7 +76,7 @@ const ChatPreview = (props) => {
       const res = await getRecentInstances(tenantId, appId, 'preview');
       if (res.data && res.data.length) {
         let chatArr = historyChatProcess(res);
-        listRef.current = [...chatArr];
+        listRef.current = deepClone(chatArr);
         dispatch(setChatList(chatArr));
       }
     } finally {
@@ -108,7 +109,7 @@ const ChatPreview = (props) => {
     reciveInitObj.loading = true;
     let arr = [...listRef.current, reciveInitObj];
     listRef.current = arr;
-    dispatch(setChatList(JSON.parse(JSON.stringify(arr))));
+    dispatch(setChatList(deepClone(arr)));
     dispatch(setChatRunning(true));
     if (showElsa) {
       let params = appInfo.flowGraph;
@@ -179,7 +180,8 @@ const ChatPreview = (props) => {
     runningAppid.current = aipp_id;
     if (!wsCurrent.current) {
       const prefix = window.location.protocol === 'http:' ? 'ws' : 'wss';
-      wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
+      // wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
+      wsCurrent.current = new WebSocket(`${prefix}://80.11.128.86:30010/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
       wsCurrent.current.onopen = () => {
         wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));   
       }
@@ -232,7 +234,7 @@ const ChatPreview = (props) => {
   const chatForm = (chatObj) => {
     const idx = listRef.current.length - 1;
     listRef.current.splice(idx, 1, chatObj);
-    dispatch(setChatList([...listRef.current]));
+    dispatch(setChatList(deepClone(listRef.current)));
     dispatch(setChatRunning(false));
   }
   // 用户自勾选
@@ -240,7 +242,7 @@ const ChatPreview = (props) => {
     reportInstance.current = instanceId;
     reportIContext.current = initContext;
     listRef.current.forEach(item => item.checked = false);
-    dispatch(setChatList([...listRef.current]));
+    dispatch(setChatList(deepClone(listRef.current)));
     onStop("请勾选对话");
     setCheckedList([]);
     setEditorShow(true, 'report');
@@ -260,7 +262,7 @@ const ChatPreview = (props) => {
       if (startes.code === 0 && startes.data) {
         let instanceId = startes.data;
         listRef.current[listRef.current.length - 1].loading = true;
-        dispatch(setChatList([...listRef.current]));
+        dispatch(setChatList(deepClone(listRef.current)));
         queryInstance(runningAppid.current, runningVersion.current, instanceId);
       } else {
         onStop("启动任务失败");
@@ -283,7 +285,7 @@ const ChatPreview = (props) => {
     initObj.finished = (status === 'ARCHIVED');
     const idx = listRef.current.length - 1;
     listRef.current.splice(idx, 1, initObj);
-    dispatch(setChatList([...listRef.current]));
+    dispatch(setChatList(deepClone(listRef.current)));
   }
   // 流式输出拼接
   function chatSplicing(log, msg, initObj, status) {
@@ -292,12 +294,13 @@ const ChatPreview = (props) => {
     )[0];
     if (currentChatItem) {
       let index = listRef.current.findIndex((item) => item.logId === log.msgId);
+      let item = listRef.current[index];
       let str = "";
       let { content } = currentChatItem;
       str = content + msg;
-      listRef.current[index].content = str;
-      listRef.current[index].finished = (status === 'ARCHIVED');
-      dispatch(setChatList([...listRef.current]));
+      item.content = str;
+      item.finished = (status === 'ARCHIVED');
+      dispatch(setChatList(deepClone(listRef.current)));
     } else {
       chatStrInit(msg, initObj, status);
     }
@@ -309,11 +312,11 @@ const ChatPreview = (props) => {
     val && setGroupType(type);
   }
   // 终止对话成功回调
-  function onStop(content) {
+  function onStop(str) {
     let item = listRef.current[listRef.current.length - 1];
-    item.content = content;
+    item.content = str;
     item.loading = false;
-    dispatch(setChatList([...listRef.current]));
+    dispatch(setChatList(deepClone(listRef.current)));
     dispatch(setChatRunning(false));
   }
   // 终止进行中的对话
@@ -328,6 +331,7 @@ const ChatPreview = (props) => {
       Message({ type: "error", content: "终止对话失败" });
     }
   }
+
 
   return (
     <div className={`

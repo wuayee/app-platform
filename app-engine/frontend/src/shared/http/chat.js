@@ -54,7 +54,7 @@ export function clearChatHistory(tenantId, appId) {
 }
 // 猜你想问
 export function getRecommends(params) {
-  const url = `${PLUGIN_URL}/vi/api/recommend`;
+  const url = `${PLUGIN_URL}/v1/api/recommend`;
   return post(url, params);
 }
 
