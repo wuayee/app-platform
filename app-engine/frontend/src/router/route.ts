@@ -18,11 +18,12 @@ import KnowledgeBaseDetailCreateTable from '../pages/knowledge-base/knowledge-de
 import KnowledgeBaseDetailImportData from '../pages/knowledge-base/knowledge-detail/import-data';
 import Model from '../pages/model';
 import ModelBase from '../pages/model-base';
-import ModelTuning from '../pages/model-tuning';
+import ModelTraining from '../pages/model-training';
 import ModelDetail from '../pages/model/model-detail';
 import AppDev from '../pages/appDev/index';
 import IndustryTerminology from '../pages/knowledge-base/knowledge-detail/industry-terminology';
 import ModelBaseDetail from '../pages/model-base/detail';
+import ModelTrainingCreate from '../pages/model-training/create-task';
 
 export type MenuItem = Required<MenuProps>['items'][number] & {
   component?: (() => ReactElement) | React.FC<any>;
@@ -138,11 +139,19 @@ export const routeList: MenuItem[] = [
     ]
   },
   {
-    key: '/model-tuning',
+    key: '/model-training',
     icon: Icons.app({}),
-    label: '模型精调',
-    component: ModelTuning,
-    hidden: true
+    label: '模型训练',
+    component: ModelTraining,
+    children: [
+      {
+        key: 'model-training/create',
+        icon: Icons.app({}),
+        label: '创建训练任务',
+        component: ModelTrainingCreate,
+        hidden: true
+      }
+    ]
   },
   {
     key: '/knowledge-base',
