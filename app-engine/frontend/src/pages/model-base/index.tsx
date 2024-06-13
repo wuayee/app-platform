@@ -20,10 +20,6 @@ const ModelBase = () => {
       key: '2',
       label: 'Huggingface',
     },
-    {
-      key: '3',
-      label: 'ModelLink',
-    },
   ];
 
   useEffect(() => {
