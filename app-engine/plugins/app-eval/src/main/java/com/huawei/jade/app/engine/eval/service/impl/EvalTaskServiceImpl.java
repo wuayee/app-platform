@@ -37,7 +37,7 @@ import com.huawei.jade.app.engine.eval.vo.EvalReportTraceVo;
 import com.huawei.jade.app.engine.eval.vo.EvalReportVo;
 import com.huawei.jade.app.engine.eval.vo.EvalTaskVo;
 import com.huawei.jade.app.engine.eval.vo.Page;
-import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
+import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.service.ToolService;
 
@@ -362,9 +362,9 @@ public class EvalTaskServiceImpl implements EvalTaskService {
     public List<EvalAlgorithmVo> getEvalAlgorithmList() {
         Set<String> tags = new HashSet<>();
         tags.add("CARVER-EVAL");
-        ToolTagQuery tagQuery = new ToolTagQuery();
+        ToolQuery tagQuery = new ToolQuery();
         tagQuery.setIncludeTags(tags);
-        List<ToolData> algs = toolService.getTools(tagQuery);
+        List<ToolData> algs = toolService.getTools(tagQuery).getData();
         return algs.stream().map(a -> new EvalAlgorithmVo(a.getName(), a.getUniqueName())).collect(Collectors.toList());
     }
 

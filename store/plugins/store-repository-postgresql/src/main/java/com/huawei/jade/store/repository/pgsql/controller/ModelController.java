@@ -11,7 +11,7 @@ import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestQuery;
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.value.Result;
+import com.huawei.jade.carver.Result;
 import com.huawei.jade.store.entity.query.ModelQuery;
 import com.huawei.jade.store.entity.transfer.ModelData;
 import com.huawei.jade.store.service.EcoTaskService;
@@ -58,6 +58,6 @@ public class ModelController {
             notNegative(pageSize, "The page size cannot be negative. [pageSize={0}]", pageSize);
         }
         ModelQuery modelQuery = new ModelQuery(taskName, pageNum, pageSize);
-        return Result.create(this.modelService.getModels(modelQuery), 0);
+        return Result.create(this.modelService.getModels(modelQuery), 0, this.modelService.getCount(taskName));
     }
 }

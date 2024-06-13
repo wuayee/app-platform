@@ -13,7 +13,7 @@ import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.Tool;
-import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
+import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.repository.ToolRepository;
 import com.huawei.jade.carver.tool.repository.pgsql.mapper.TagMapper;
 import com.huawei.jade.carver.tool.repository.pgsql.mapper.ToolMapper;
@@ -93,12 +93,12 @@ public class DefaultToolRepository implements ToolRepository {
     /**
      * 仓储层动态条件准确查询工具列表。
      *
-     * @param toolTagQuery 表示动态查询条件的 {@link ToolTagQuery}。
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}。
      * @return 表示工具领域对象列表的 {@link List}{@code <}{@link Tool.Info}{@code >}。
      */
     @Override
-    public List<Tool.Info> getTools(ToolTagQuery toolTagQuery) {
-        List<ToolDo> toolDos = this.toolMapper.getTools(toolTagQuery);
+    public List<Tool.Info> getTools(ToolQuery toolQuery) {
+        List<ToolDo> toolDos = this.toolMapper.getTools(toolQuery);
         List<Tool.Info> infos = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(toolDos)) {
             infos.addAll(toolDos.stream()
@@ -111,12 +111,12 @@ public class DefaultToolRepository implements ToolRepository {
     /**
      * 仓储层动态条件模糊查询工具列表。
      *
-     * @param toolTagQuery 表示动态查询条件的 {@link ToolTagQuery}。
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}。
      * @return 表示工具领域对象列表的 {@link List}{@code <}{@link Tool.Info}{@code >}。
      */
     @Override
-    public List<Tool.Info> searchTools(ToolTagQuery toolTagQuery) {
-        List<ToolDo> toolDos = this.toolMapper.searchTools(toolTagQuery);
+    public List<Tool.Info> searchTools(ToolQuery toolQuery) {
+        List<ToolDo> toolDos = this.toolMapper.searchTools(toolQuery);
         List<Tool.Info> infos = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(toolDos)) {
             infos.addAll(toolDos.stream()
@@ -124,6 +124,28 @@ public class DefaultToolRepository implements ToolRepository {
                     .collect(Collectors.toList()));
         }
         return infos;
+    }
+
+    /**
+     * 仓储层动态条件准确查询工具总数。
+     *
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}。
+     * @return 表示工具总数的 {@code int}。
+     */
+    @Override
+    public int getToolsCount(ToolQuery toolQuery) {
+        return toolMapper.getToolsCount(toolQuery);
+    }
+
+    /**
+     * 仓储层动态条件模糊查询工具总数。
+     *
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}。
+     * @return 表示工具总数的 {@code int}。
+     */
+    @Override
+    public int searchToolsCount(ToolQuery toolQuery) {
+        return toolMapper.searchToolsCount(toolQuery);
     }
 
     /**

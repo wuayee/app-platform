@@ -5,11 +5,15 @@
 
     <parent>
         <groupId>com.huawei.fit.jade.service</groupId>
-        <artifactId>store-service-parent</artifactId>
+        <artifactId>carver-service-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>store-service</artifactId>
+    <artifactId>common-service</artifactId>
+
+    <properties>
+        <lombok.version>1.18.26</lombok.version>
+    </properties>
 
     <dependencies>
         <!-- FIT -->
@@ -21,36 +25,13 @@
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-util</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.service</groupId>
-            <artifactId>fit-http-classic</artifactId>
-        </dependency>
 
-        <!-- Test -->
+        <!-- lombok -->
         <dependency>
-            <groupId>com.huawei.fit.plugin</groupId>
-            <artifactId>fit-message-serializer-json-jackson</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
-            <artifactId>common-service</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
