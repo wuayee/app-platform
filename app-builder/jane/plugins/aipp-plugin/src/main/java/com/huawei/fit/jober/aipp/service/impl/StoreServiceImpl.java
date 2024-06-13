@@ -27,7 +27,6 @@ import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.service.ToolService;
 import com.huawei.jade.store.entity.query.ModelQuery;
-import com.huawei.jade.store.entity.transfer.ModelData;
 import com.huawei.jade.store.entity.transfer.TaskData;
 import com.huawei.jade.store.service.EcoTaskService;
 import com.huawei.jade.store.service.HuggingFaceModelService;
@@ -139,7 +138,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public ModelDto getModels(String taskName, int pageNum, int pageSize) {
-        List<ModelData> models = this.huggingFaceModelService.getModels(new ModelQuery(taskName, pageNum, pageSize));
-        return new ModelDto(models, models.size());
+        return new ModelDto(this.huggingFaceModelService.getModels(new ModelQuery(taskName, pageNum, pageSize)),
+                this.huggingFaceModelService.getCount(taskName));
     }
 }
