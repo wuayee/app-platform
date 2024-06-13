@@ -19,8 +19,6 @@ const createItems: MenuProps['items'] = [
   }
 ];
 
-
-
 const MyPlugins = () => {
 
   const categoryItems = [
@@ -40,9 +38,9 @@ const MyPlugins = () => {
   const [total, setTotal] = useState(0);
   const [pageNum, setPageNum] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [name, setName] = useState('');
+  const [name, setName] = useState<string>('');
   const [pluginData, setPluginData] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(categoryItems[0].key);
+  const [selectedCategory, setSelectedCategory] = useState('FAVOURITE');
 
 
   useEffect(() => {
@@ -67,7 +65,7 @@ const MyPlugins = () => {
   }
 
   const filterByName = (value: string) => {
-    if (value !== name) {
+    if (value) {
       setName(value);
     }
   }
