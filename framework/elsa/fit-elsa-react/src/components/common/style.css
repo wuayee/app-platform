@@ -213,12 +213,12 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 0px;
+    padding: 0;
     /* Inside Auto Layout */
     flex: none;
     order: 0;
     flex-grow: 0;
-    margin: 2px 0px;
+    margin: 2px 0;
 }
 
 .model-select-container {
