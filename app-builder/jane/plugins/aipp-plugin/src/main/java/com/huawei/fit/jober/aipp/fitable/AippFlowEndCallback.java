@@ -142,7 +142,9 @@ public class AippFlowEndCallback implements FlowCallbackService {
                 && ObjectUtils.<Boolean>cast(businessData.get(AippConst.OUTPUT_IS_FROM_CHILD))) {
             return;
         }
-        String logMsg = finalOutput == null ? "获取到的结果为 null，请检查配置。" : ObjectUtils.cast(finalOutput);
+        String finalOutputStr =
+                ObjectUtils.cast(finalOutput instanceof String ? finalOutput : JsonUtils.toJsonString(finalOutput));
+        String logMsg = finalOutput == null ? "获取到的结果为 null，请检查配置。" : finalOutputStr;
         Utils.persistAippMsgLog(this.aippLogService, logMsg, contexts);
         this.beanContainer.all(AppFlowFinishObserver.class).stream()
                 .<AppFlowFinishObserver>map(BeanFactory::get)
