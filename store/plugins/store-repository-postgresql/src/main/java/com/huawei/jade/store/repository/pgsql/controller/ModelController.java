@@ -42,7 +42,7 @@ public class ModelController {
     /**
      * 根据动态查询条件准确获取模型列表。
      *
-     * @param taskId 表示任务唯一标识的 {@link String}。
+     * @param taskName 表示任务唯一标识的 {@link String}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param pageSize 表示限制的 {@link Integer}。
      * @return 表示查询到的指定模型的信息的 {@link Result}{@code <}{@link ModelData}{@code >}。

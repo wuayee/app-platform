@@ -25,8 +25,9 @@ public interface ModelMapper {
     List<ModelDo> getModels(ModelQuery modelQuery);
 
     /**
-     * 获取模型的总数。
+     * 根据任务唯一标识获取模型的总数。
      *
+     * @param taskName 表示任务唯一标识名的  {@link String}。
      * @return 表示模型总数的 {@code int}。
      */
     int getCount(String taskName);
