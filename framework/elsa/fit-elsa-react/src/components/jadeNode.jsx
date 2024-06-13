@@ -595,6 +595,8 @@ const ObserverProxy = (nodeId, observableId, observer) => {
     return self;
 };
 
+const WATER_DROP_DISTANCE = 500;
+
 /**
  * jadeNode绘制器.
  *
@@ -605,10 +607,6 @@ const jadeNodeDrawer = (shape, div, x, y) => {
     self.reactContainer = null;
     self.panelRef = null;
     self.waterDrops = [];
-    self.waterDrops.push(waterDrop(HORIZONTAL_RIGHT, "horizontal", "right"));
-    self.waterDrops.push(waterDrop(HORIZONTAL_LEFT, "horizontal", "left"));
-    self.waterDrops.push(waterDrop(VERTICAL_UP, "vertical", "up"));
-    self.waterDrops.push(waterDrop(VERTICAL_DOWN, "vertical", "down"));
 
     /**
      * @override
@@ -750,7 +748,36 @@ const jadeNodeDrawer = (shape, div, x, y) => {
             shape.resize(shape.width, self.parent.offsetHeight);
             prevHeight = self.parent.offsetHeight;
             self.panelRef?.current?.setHeight(shape.height);
+            generateWaterDrops();
         }).observe(self.parent);
+    };
+
+    const generateWaterDrops = () => {
+        self.waterDrops = [];
+        const width = shape.width;
+        const height = shape.height;
+        const emphasizedOffset = shape.emphasizedOffset;
+
+        // 上右.
+        self.waterDrops.push(waterDrop(HORIZONTAL_RIGHT,
+                (x, ctl) => x + ctl.percent * width,
+                (y) => y + emphasizedOffset));
+
+        // 下左.
+        self.waterDrops.push(waterDrop(HORIZONTAL_LEFT,
+                (x, ctl) => x + width - ctl.percent * width,
+                (y) => y + height - emphasizedOffset));
+        const count = Math.floor(height / WATER_DROP_DISTANCE) + 1;
+        for (let i = 0; i < count; i++) {
+            // 左上
+            self.waterDrops.push(waterDrop(VERTICAL_UP,
+                    (x) => x + emphasizedOffset,
+                    (y, ctl) => y + height / count * (count - i) - ctl.percent * height / count));
+
+            // 右下.
+            self.waterDrops.push(waterDrop(VERTICAL_DOWN, (x) => x + width - emphasizedOffset,
+                    (y, ctl) => y + height / count * i + ctl.percent * height / count))
+        }
     };
 
     /**
@@ -771,34 +798,20 @@ const jadeNodeDrawer = (shape, div, x, y) => {
     return self;
 };
 
-const STEP = 0.01
+const STEP = 0.009
 
 /**
  * 水滴绘制器.
  *
  * @param rawSvg 原始svg字符串.
- * @param location 位置, horizontal/vertical.
- * @param direction 方向, left/right/up/down.
+ * @param getX 获取x的值.
+ * @param getY 获取y的值.
  * @return {{}} 对象.
  */
-const waterDrop = (rawSvg, location, direction) => {
+const waterDrop = (rawSvg, getX, getY) => {
     const self = {};
     self.img = null;
     self.control = { percent: 0, times: 0 };
-
-    function calcPosition(x, y, shape) {
-        if ("horizontal" === location) {
-            if (direction === "right") {
-                return {x: x + self.control.percent * shape.width, y: y + shape.emphasizedOffset};
-            }
-            return {x: x + shape.width - self.control.percent * shape.width,
-                y: y + shape.height - shape.emphasizedOffset};
-        }
-        if (direction === "down") {
-            return {x: x + shape.width - shape.emphasizedOffset, y: y + self.control.percent * shape.height};
-        }
-        return {x: x + shape.emphasizedOffset, y: y + shape.height - self.control.percent * shape.height};
-    }
 
     /**
      * 绘制.
@@ -817,8 +830,9 @@ const waterDrop = (rawSvg, location, direction) => {
         }
         x -= shape.width / 2;
         y -= shape.height / 2;
-        const position = calcPosition(x, y, shape);
-        context.drawImage(self.img, position.x, position.y);
+        x = getX(x, self.control);
+        y = getY(y, self.control);
+        context.drawImage(self.img, x, y);
     };
 
     /**
