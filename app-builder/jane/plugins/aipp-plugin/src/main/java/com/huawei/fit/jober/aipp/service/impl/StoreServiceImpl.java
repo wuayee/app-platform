@@ -10,6 +10,7 @@ import static com.huawei.fit.jober.aipp.init.AippComponentInitiator.COMPONENT_DA
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
+import com.huawei.fit.jober.aipp.dto.ModelDto;
 import com.huawei.fit.jober.aipp.dto.StoreBasicNodeInfoDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import com.huawei.fit.jober.aipp.dto.StoreWaterFlowDto;
@@ -137,10 +138,8 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<String> getModels(String taskName, int pageNum, int pageSize) {
-        return this.huggingFaceModelService.getModels(new ModelQuery(taskName, pageNum, pageSize))
-                .stream()
-                .map(ModelData::getName)
-                .collect(Collectors.toList());
+    public ModelDto getModels(String taskName, int pageNum, int pageSize) {
+        List<ModelData> models = this.huggingFaceModelService.getModels(new ModelQuery(taskName, pageNum, pageSize));
+        return new ModelDto(models, models.size());
     }
 }
