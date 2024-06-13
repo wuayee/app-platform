@@ -16,7 +16,7 @@ public class ModelQuery {
     /**
      * 表示任务唯一标识。
      */
-    private String taskId;
+    private String taskName;
 
     /**
      * 表示偏移量。
@@ -31,12 +31,12 @@ public class ModelQuery {
     /**
      * 构造动态查询条件。
      *
-     * @param taskId 表示任务唯一标识的 {@link String}。
+     * @param taskName 表示任务唯一标识的 {@link String}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param pageSize 表示限制的 {@link Integer}。
      */
-    public ModelQuery(String taskId, Integer pageNum, Integer pageSize) {
-        this.taskId = taskId;
+    public ModelQuery(String taskName, Integer pageNum, Integer pageSize) {
+        this.taskName = taskName;
         this.limit = pageSize;
         if (pageNum != null && pageSize != null) {
             this.offset = Result.calculateOffset(pageNum, pageSize);
@@ -48,17 +48,17 @@ public class ModelQuery {
      *
      * @return 标识任务唯一标识的 {@link String}。
      */
-    public String getTaskId() {
-        return this.taskId;
+    public String getTaskName() {
+        return this.taskName;
     }
 
     /**
      * 设置任务唯一标识。
      *
-     * @param taskId 标识待设置的任务唯一标识的 {@link String}。
+     * @param taskName 标识待设置的任务唯一标识的 {@link String}。
      */
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
 
     /**
