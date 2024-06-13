@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Input, Modal, Select, Button, Dropdown } from 'antd';
+import { Input, Modal, Select, Button, Dropdown, Empty } from 'antd';
 import { getPlugins } from '@shared/http/plugin';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
 import { categoryItems } from '../../configForm/common/common';
@@ -78,7 +78,8 @@ const ToolDrawer = (props) => {
     }
   }
   // 添加插件
-  const toolClick = (item) => {
+  const toolClick = (e, item) => {
+    e.stopPropagation();
     const type = item.type || 'toolInvokeNodeState';
     handleClickAddToolNode(type, { clientX: 400, clientY: 300}, item)
     setShowModal(false);
@@ -115,25 +116,28 @@ const ToolDrawer = (props) => {
         </div>
       </div>
       <div className="mashup-add-content">
-        <div className="mashup-add-inner" style={{ height: 'calc(100vh - 400px)' }}>
+        { pluginData.length > 0 && (
+          <div className="mashup-add-inner" style={{ height: 'calc(100vh - 400px)' }}>
             {pluginData.map((card: any) => 
               <div className="mashup-add-item" key={card.uniqueName}>
                 <PluginCard  pluginData={card} />
-                <span className="opration-item" onClick={() => toolClick(card)}>
+                <span className="opration-item" onClick={(e) => toolClick(e, card)}>
                   添加
                 </span>
               </div>
             )}
-          </div>
+          </div>)
+        }
+        { !pluginData.length && <div className="tool-empty"><Empty description="暂无数据" /></div> }
       </div>
-      <div style={{ paddingTop: 16 }}>
+      {/* <div style={{ paddingTop: 16 }}>
         <Pagination
           total={total}
           current={pageNum}
           onChange={selectPage}
           pageSize={pageSize}
         /> 
-      </div>
+      </div> */}
     </Modal>
   </>
 };

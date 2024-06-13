@@ -72,7 +72,7 @@ const ToolItem = (props) => {
           )
         })
       }
-      { !dragData.length && <Empty description="暂无数据" /> }
+      { !dragData.length && <div className="tool-empty"><Empty description="暂无数据" /></div> }
     </div>
     <ToolModal showModal={showModal} setShowModal={setShowModal} />
   </>
