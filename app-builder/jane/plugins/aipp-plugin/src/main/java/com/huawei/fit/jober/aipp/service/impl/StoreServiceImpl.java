@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
-import static com.huawei.fit.jober.aipp.enums.TaskEnum.HUGGINGFACE;
+import static com.huawei.fit.jober.aipp.enums.ToolCategoryEnum.HUGGINGFACE;
 import static com.huawei.fit.jober.aipp.init.AippComponentInitiator.COMPONENT_DATA;
 
 import com.huawei.fit.jober.aipp.common.JsonUtils;
@@ -19,6 +19,8 @@ import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.util.MapUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
@@ -65,7 +67,9 @@ public class StoreServiceImpl implements StoreService {
         return this.buildToolNodesConfig(tag, pageNum, pageSize)
                 .stream()
                 .map(toolData -> ToolModelDto.combine2ToolModelDto(toolData,
-                        tag.equals(HUGGINGFACE.getName()) ? getDefaultModel(toolData, tag) : StringUtils.EMPTY))
+                        tag.equalsIgnoreCase(HUGGINGFACE.getName())
+                                ? getDefaultModel(toolData, tag)
+                                : StringUtils.EMPTY))
                 .collect(Collectors.toList());
     }
 
@@ -79,12 +83,17 @@ public class StoreServiceImpl implements StoreService {
     }
 
     private String getDefaultModel(ToolData toolData, String tag) {
-        Map<String, Object> map = (Map<String, Object>) toolData.getRunnables().get(tag);
-        String taskName = (String) map.get("task_name");
+        Map<String, Object> map = ObjectUtils.cast(toolData.getRunnables().get(tag.toUpperCase());
+        if (MapUtils.isEmpty(map) || !map.containsKey("taskName")) {
+            return StringUtils.EMPTY;
+        }
+        String taskName = map.get("taskName") instanceof String ? (String) map.get("taskName") : StringUtils.EMPTY;
         TaskData task = ecoTaskService.getTask(taskName);
         if (task != null) {
             Map<String, Object> context = task.getContext();
-            return (String) context.get("defaultModel");
+            return context.get("defaultModel") instanceof String
+                    ? (String) context.get("defaultModel")
+                    : StringUtils.EMPTY;
         }
         return StringUtils.EMPTY;
     }

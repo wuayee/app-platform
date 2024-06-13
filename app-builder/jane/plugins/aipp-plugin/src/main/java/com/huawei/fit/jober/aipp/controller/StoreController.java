@@ -38,11 +38,11 @@ public class StoreController extends AbstractController {
     public Rsp<StoreNodeConfigResDto> getBasicNodesAndTools(HttpClassicServerRequest httpRequest,
             @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-            @RequestParam(value = "tag", defaultValue = "HUGGINGFACE") String tag) {
+            @RequestParam(value = "tag") String tag) {
         return Rsp.ok(this.storeService.getBasicNodesAndTools(tag, pageNum, pageSize));
     }
 
-    @GetMapping(path = "/task", description = "获取任务的模型列表")
+    @GetMapping(path = "/models", description = "获取任务的模型列表")
     public Rsp<List<String>> getModels(HttpClassicServerRequest httpRequest,
             @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
