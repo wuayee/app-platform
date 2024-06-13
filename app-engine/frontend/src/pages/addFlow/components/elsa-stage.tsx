@@ -15,6 +15,8 @@ import { configMap } from '../config';
 const Stage = (props) => {
   const { setAddId, setDragData, appRef, flowIdRef } = props;
   const [ showModal, setShowModal ] = useState(false);
+  const [ taskName, setTaskName ] = useState('');
+  const [ selectModal, setSelectModal ] = useState('');
   const { CONFIGS } = configMap[process.env.NODE_ENV];
   const { type, appInfo, setModalInfo } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
@@ -54,12 +56,14 @@ const Stage = (props) => {
       agent.onChange(() => {
         handleChange();
       });
-      agent.onModelSelect((fn) => {
+      agent.onModelSelect(({ taskName, selectedModel, onSelect }) => {
+        setSelectModal(selectedModel);
+        setTaskName(taskName);
+        modelCallback.current = onSelect;
         setShowModal(true);
-        modelCallback.current = fn;
       })
     })
-    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 10, tag: 'AUTHORITY'}).then(res => {
+    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 100, tag: 'AUTHORITY'}).then(res => {
       if (res.code === 0) {
         setDragData(res.data);
       }
@@ -128,6 +132,8 @@ const Stage = (props) => {
       showModal={showModal} 
       setShowModal={setShowModal}
       onModelSelectCallBack={onModelSelectCallBack}
+      taskName={taskName}
+      selectModal={selectModal}
     />
   </>
 };

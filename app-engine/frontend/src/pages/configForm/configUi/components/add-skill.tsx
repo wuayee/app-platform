@@ -8,7 +8,7 @@ import { getWaterFlows } from "@shared/http/appBuilder";
 import { createAipp } from "@shared/http/aipp";
 import { pluginItems } from '../../common/common';
 import { Icons } from "../../../../components/icons";
-import PluginCard from '../../../../components/plugin-card';
+import ToolCard from '../../../addFlow/components/tool-card';
 import Pagination from '../../../../components/pagination/index';
 import '../styles/add-skill.scss';
 const { Search } = Input;
@@ -177,7 +177,7 @@ const AddSkill = (props) => {
           <div className="mashup-add-inner">
             {pluginData.map((card: any) => 
               <div className="mashup-add-item" key={card.uniqueName}>
-                <PluginCard  pluginData={card} />
+                <ToolCard  pluginData={card} />
                 <span className="check-item">
                   <Checkbox defaultChecked={card.checked} onChange={(e) => onChange(e, card)}></Checkbox>
                 </span>

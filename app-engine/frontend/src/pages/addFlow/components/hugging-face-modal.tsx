@@ -7,78 +7,26 @@ import Pagination from '../../../components/pagination/index';
 const { Search } = Input;
 
 const HuggingFaceModal = (props) => {
-  const { showModal, setShowModal, onModelSelectCallBack } = props;
-  const [ name, setName ] = useState('fill-mask');
+  const { showModal, setShowModal, onModelSelectCallBack, taskName, selectModal } = props;
+  const [ name, setName ] = useState('');
   const [ pageNum, setPageNum ] = useState(1);
-  const [ pageSize, setPageSize ] = useState(10);
+  const [ pageSize, setPageSize ] = useState(100);
   const [ total, setTotal ] = useState(0);
   const [ pluginData, setPluginData ] = useState([]);
   const [ activeKey, setActiveKey ] = useState('');
-  const [ activeName, setActiveName ] = useState('');
   const [ activeUrl, setActiveUrl ] = useState('');
   const { tenantId, appId } = useParams();
-  const items = [
-    {
-      id: '1',
-      name: '2Noise/ChatTTS',
-      num: '9027',
-      desc: 'We are also training larger-scale models and need computational power and data suppor...'
-    },
-    {
-      id: '2',
-      name: '2Noise/ChatTTS',
-      num: '9027',
-      desc: 'We are also training larger-scale models and need computational power and data suppor...'
-    },
-    {
-      id: '3',
-      name: '2Noise/ChatTTS',
-      num: '9027',
-      desc: 'We are also training larger-scale models and need computational power and data suppor...'
-    },
-    {
-      id: '4',
-      name: '2Noise/ChatTTS',
-      num: '9027',
-      desc: 'We are also training larger-scale models and need computational power and data suppor...'
-    },
-    {
-      id: '5',
-      name: '2Noise/ChatTTS',
-      num: '9027',
-      desc: 'We are also training larger-scale models and need computational power and data suppor...'
-    },
-    {
-      id: '6',
-      name: '2Noise/ChatTTS',
-      num: '9027',
-      desc: 'We are also training larger-scale models and need computational power and data suppor...'
-    },
-    {
-      id: '7',
-      name: '2Noise/ChatTTS',
-      num: '9027',
-      desc: 'We are also training larger-scale models and need computational power and data suppor...'
-    }
-  ]
   useEffect(() => {
     showModal && getPluginList();
   }, [props.showModal, name, pageNum, pageSize]);
   // 获取插件列表
   const getPluginList = ()=> {
-    getHuggingFaceList(tenantId, {pageNum, pageSize, taskName: name}).then(res => {
+    getHuggingFaceList(tenantId, {pageNum, pageSize, taskName}).then(res => {
       if (res.code === 0) {
-        let arr = [];
-        res.data.forEach((item, index) => {
-          let obj:any = {};
-          obj.id = String(index);
-          obj.name = item;
-          obj.num = 9027;
-          obj.desc = 'We are also training larger-scale models and need computational power and data suppor...';
-          arr.push(obj);
-        })
-        setActiveKey(arr[0].id);
-        setPluginData(arr);
+        let item = res.data.modelDatas.filter(item => item.name === selectModal)[0];
+        item && setActiveUrl(`https://${item.url}`);
+        setActiveKey(selectModal);
+        setPluginData(res.data.modelDatas);
       }
     });
   };
@@ -89,12 +37,11 @@ const HuggingFaceModal = (props) => {
     }
   }
   const itemClick = (item) => {
-    setActiveKey(item.id);
-    setActiveName(item.name);
-    setActiveUrl('');
+    setActiveKey(item.name);
+    setActiveUrl(`https://${item.url}`);
   }
   const confirm = () => {
-    onModelSelectCallBack({ name: activeName });
+    onModelSelectCallBack({ name: activeKey });
     setShowModal(false);
   }
   // 分页
@@ -126,7 +73,7 @@ const HuggingFaceModal = (props) => {
         <div className="content-left">
           <div className="left-list">
             { pluginData.map((card:any) => 
-              <div className={ `left-item ${activeKey === card.id ? 'active' : null}` } 
+              <div className={ `left-item ${activeKey === card.name ? 'active' : null}` } 
                   key={card.id} 
                   onClick={() => itemClick(card)}>
                 <div className="item-top">
@@ -138,27 +85,27 @@ const HuggingFaceModal = (props) => {
                     <div className="item-tag">
                       <span>
                         <img src="/src/assets/images/ai/download.png" alt="" />
-                        {card.num}
+                        {card.context.downloads}
                       </span>
                       <span>
                         <img src="/src/assets/images/ai/like.png" alt="" />
-                        {card.num}
+                        {card.context.likes}
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="item-bottom" title={card.desc}>{card.desc }</div>
+                <div className="item-bottom" title={card.context.description}>{card.context.description }</div>
               </div>
             )}
           </div>
-          <div className="left-page">
+          {/* <div className="left-page">
             <Pagination
               total={total}
               current={pageNum}
               onChange={selectPage}
               pageSize={pageSize}
             /> 
-          </div>
+          </div> */}
         </div>
         <div className="content-right">
           <iframe className="iframe-item" src={activeUrl} frameBorder="0"></iframe>

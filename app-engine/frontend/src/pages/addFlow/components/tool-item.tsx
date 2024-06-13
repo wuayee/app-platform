@@ -1,6 +1,6 @@
 
-import React, { useEffect, useState } from 'react';
-import { Input, Empty } from "antd";
+import React, { useEffect, useState, useRef } from 'react';
+import { Input, Pagination, Empty } from "antd";
 import { AddFlowIcon } from '@assets/icon';
 import { handleClickAddToolNode, handleDragToolNode } from '../utils';
 import ToolModal from './tool-modal';
@@ -11,8 +11,15 @@ const { Search } = Input;
 const ToolItem = (props) => {
   const { dragData, tabClick } = props;
   const [ name, setName ] = useState('');
+  const [ pageNum, setPageNum ] = useState(1);
+  const [ list, setList ] = useState([]);
   const [ showModal, setShowModal ] = useState(false);
   const [ activeKey, setActiveKey ] = useState('AUTHORITY');
+  const listRef = useRef([]);
+  useEffect(() => {
+    listRef.current = JSON.parse(JSON.stringify(dragData));
+    setList(listRef.current);
+  }, [dragData])
   const tab = [
     { name: '官方', key: 'AUTHORITY' },
     { name: 'HuggingFace', key: 'HUGGINGFACE' },
@@ -20,18 +27,32 @@ const ToolItem = (props) => {
   ]
   // 搜索文本变化，更新工具列表
   const handleSearch = (value, event, source) => {
-    if(value !== name) {
-      setName(value);
+    setPageNum(1);
+    if (!value.trim().length) {
+      setList(listRef.current);
+    } else {
+      let arr = listRef.current.filter(item => item.name.indexOf(value.trim()) !== -1);
+      setList(arr);
     }
   }
   const handleClick = (key) => {
+    setPageNum(1);
     setActiveKey(key);
     tabClick(key);
+    setName('');
+  }
+  // 分页
+  const selectPage = (curPage: number, curPageSize: number) => {
+    if (pageNum !== curPage) {
+      setPageNum(curPage);
+    }
   }
   return <>
     <Search
       placeholder="请输入搜索关键词"
       allowClear
+      value={name}
+      onChange={ e => { setName(e.target.value) }}
       onSearch={handleSearch}
     />
     <div className="tool-tab">
@@ -47,33 +68,48 @@ const ToolItem = (props) => {
       }
       <span className="more" onClick={() => setShowModal(true)}>更多</span>
     </div>
-    <div className="drag-list">
-      { dragData.map((item, index) => {
-          return (
-            <div
-              className='drag-item'
-              onDragStart={(e) => handleDragToolNode(item, e)}
-              draggable={true}
-              key={index}
-            >
-              <div className='drag-item-title'>
-                <div>
-                  <span className='content-node-name node-tool'>
-                    <img src='/src/assets/images/ai/tool.png' alt='' />
-                    { item.name }
+    {
+      list.length > 0 && <div className="drag-list">
+        { list.slice((pageNum - 1)*10, pageNum*10).map((item, index) => {
+            return (
+              <div
+                className='drag-item'
+                onDragStart={(e) => handleDragToolNode(item, e)}
+                draggable={true}
+                key={index}
+              >
+                <div className='drag-item-title'>
+                  <div>
+                    <span className='content-node-name node-tool'>
+                      <img src='/src/assets/images/ai/tool.png' alt='' />
+                      { item.name }
+                    </span>
+                  </div>
+                  <span className='drag-item-icon' 
+                    onClick={(event) => handleClickAddToolNode(item.type || 'toolInvokeNodeState', event, item)}>
+                      <AddFlowIcon />
                   </span>
                 </div>
-                <span className='drag-item-icon' 
-                  onClick={(event) => handleClickAddToolNode(item.type || 'toolInvokeNodeState', event, item)}>
-                    <AddFlowIcon />
-                </span>
               </div>
-            </div>
-          )
-        })
-      }
-      { !dragData.length && <div className="tool-empty"><Empty description="暂无数据" /></div> }
-    </div>
+            )
+          })
+        }
+      </div>
+    }
+    { list.length ?  
+      <div style={{ paddingTop: 16 }}>
+        <Pagination
+          size="small"
+          total={list.length}
+          current={pageNum}
+          onChange={selectPage}
+          showSizeChanger={false}
+          showLessItems={true}
+        /> 
+      </div>
+      : 
+      <div className="tool-empty"><Empty description="暂无数据" /></div> 
+    }
     <ToolModal showModal={showModal} setShowModal={setShowModal} />
   </>
 };

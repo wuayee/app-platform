@@ -6,7 +6,7 @@ import { getPlugins } from '@shared/http/plugin';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
 import { categoryItems } from '../../configForm/common/common';
 import { handleClickAddToolNode } from '../utils';
-import PluginCard from '../../../components/plugin-card';
+import ToolCard from './tool-card';
 import Pagination from '../../../components/pagination/index';
 import '../styles/tool-modal.scss';
 const { Search } = Input;
@@ -48,7 +48,7 @@ const ToolDrawer = (props) => {
   };
   // 获取插件列表
   const getPluginList = ()=> {
-    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: pageSize, tag: activeKey}).then(res => {
+    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 1000, tag: activeKey}).then(res => {
       if (res.code === 0) {
         if (activeKey === 'HUGGINGFACE') {
           res.data.tool.forEach(item => {
@@ -94,7 +94,7 @@ const ToolDrawer = (props) => {
     >
       <div className="tool-modal-search">
         <Search size="large" addonBefore={selectBefore} onSearch={filterByName} placeholder="请输入" />
-        <Button type="primary">创建</Button>
+        {/* <Button type="primary">创建</Button> */}
       </div>
       <div className="tool-modal-tab">
         { tab.map(item => {
@@ -118,9 +118,9 @@ const ToolDrawer = (props) => {
       <div className="mashup-add-content">
         { pluginData.length > 0 && (
           <div className="mashup-add-inner" style={{ height: 'calc(100vh - 400px)' }}>
-            {pluginData.map((card: any) => 
+            {pluginData.slice((pageNum - 1)*pageSize, pageNum*pageSize).map((card: any) => 
               <div className="mashup-add-item" key={card.uniqueName}>
-                <PluginCard  pluginData={card} />
+                <ToolCard  pluginData={card} />
                 <span className="opration-item" onClick={(e) => toolClick(e, card)}>
                   添加
                 </span>
@@ -130,14 +130,14 @@ const ToolDrawer = (props) => {
         }
         { !pluginData.length && <div className="tool-empty"><Empty description="暂无数据" /></div> }
       </div>
-      {/* <div style={{ paddingTop: 16 }}>
+      <div style={{ paddingTop: 16 }}>
         <Pagination
-          total={total}
+          total={pluginData.length}
           current={pageNum}
           onChange={selectPage}
           pageSize={pageSize}
         /> 
-      </div> */}
+      </div>
     </Modal>
   </>
 };
