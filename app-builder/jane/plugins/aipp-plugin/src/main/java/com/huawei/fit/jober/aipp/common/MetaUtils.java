@@ -148,7 +148,7 @@ public class MetaUtils {
         return metaRes.getResults().get(0);
     }
 
-    private static List<Meta> getListMetaHandle(MetaService metaService, MetaFilter metaFilter,
+    public static List<Meta> getListMetaHandle(MetaService metaService, MetaFilter metaFilter,
             OperationContext context) throws AippException {
         final int limitPerQuery = 10;
         return Utils.getAllFromRangedResult(limitPerQuery,

@@ -60,4 +60,7 @@ public class AippDto {
 
     @Property(description = "小海app分类")
     private String xiaohaiClassification;
+
+    @Property(description = "aipp 发布描述", example = "该发布的作用是生成稳定版本")
+    private String publishedDescription;
 }

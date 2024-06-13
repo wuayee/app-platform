@@ -42,5 +42,7 @@ public class PublishedAppResDto {
     @JsonProperty("publishedBy")
     private String publishedBy;
 
-    // todo 后续需要加上发布描述功能
+    @Property(description = "发布描述信息")
+    @JsonProperty("publishedDescription")
+    private String publishedDescription;
 }

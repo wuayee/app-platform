@@ -40,7 +40,7 @@
 
     <select id="selectByTenantIdWithPage" resultMap="BaseResultMap"
             resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
-        select
+        select DISTINCT ON (name)
         <include refid="Base_Column_List"/>
         from app_builder_app
         where tenant_id = #{tenantId}
@@ -50,31 +50,9 @@
         <if test="cond != null and cond.name != null and cond.name != ''">
             and name like '%' || #{cond.name} || '%'
         </if>
-        <include refid="order"/>
+        ORDER BY name, create_at DESC
         offset #{offset} limit #{limit}
     </select>
-
-    <sql id="order">
-        <choose>
-            <when test="cond != null and cond.sort != null and cond.order != null">
-                order by ${cond.sort}
-                <choose>
-                    <when test="cond.order == 'descend'">
-                        desc
-                    </when>
-                    <when test="cond.order == 'ascend'">
-                        asc
-                    </when>
-                    <otherwise>
-                        desc
-                    </otherwise>
-                </choose>
-            </when>
-            <otherwise>
-                order by create_at desc
-            </otherwise>
-        </choose>
-    </sql>
 
     <select id="selectWithCondition" resultMap="BaseResultMap"
             resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
@@ -102,13 +80,15 @@
     </select>
 
     <select id="countByTenantId" resultType="long">
-        select
-        count(*)
-        from app_builder_app
-        where tenant_id = #{tenantId}
-        <if test="typeFilter != null">
-            and type = #{typeFilter}
-        </if>
+        select count(*) from (
+            select
+            DISTINCT ON (name) *
+            from app_builder_app
+            where tenant_id = #{tenantId}
+            <if test="typeFilter != null">
+                and type = #{typeFilter}
+            </if>
+        ) as latest_records;
     </select>
 
     <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">

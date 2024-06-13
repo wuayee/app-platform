@@ -434,9 +434,7 @@ public class Utils {
             return new ArrayList<>();
         }
         List<AppBuilderFormProperty> formProperties = form.getFormProperties();
-        return formProperties.stream()
-                .map(Utils::buildFormMetaItem)
-                .collect(Collectors.toList());
+        return formProperties.stream().map(Utils::buildFormMetaItem).collect(Collectors.toList());
     }
 
     private static FormMetaItem buildFormMetaItem(AppBuilderFormProperty formProperty) {
@@ -560,5 +558,30 @@ public class Utils {
                 .replace("\t", "")
                 .replace("\\", "\\\\")
                 .replace("\"", "\\\"");
+    }
+
+    public static boolean isValidVersion(String version) {
+        String[] parts = version.split("\\.");
+        if (parts.length != 3) {
+            return false;
+        }
+        for (String part : parts) {
+            if (!isNumeric(part)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isNumeric(String str) {
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        for (char c : str.toCharArray()) {
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
