@@ -556,6 +556,11 @@ public class AippConst {
      */
     public static final Integer CHAT_NAME_LENGTH = 20;
 
+    /**
+     * 用于获取终止信息
+     */
+    public static final String TERMINATE_MESSAGE_KEY = "message";
+
     // *** aipp initial static meta items ***
     /**
      * aipp initial static meta items

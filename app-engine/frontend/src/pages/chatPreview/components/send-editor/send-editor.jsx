@@ -169,7 +169,7 @@ const SendEditor = (props) => {
           <div className='send-icon' onClick={ sendMessage }>
             <SendIcon />
           </div>
-          <div className='audio-icon' onClick={onRecord}><AudioIcon /></div>
+          {/* <div className='audio-icon' onClick={onRecord}><AudioIcon /></div> */}
           { showClear && <div className='send-icon clear-icon' onClick={clearContent}><DeleteContentIcon /></div> }
         </div>
       </div>

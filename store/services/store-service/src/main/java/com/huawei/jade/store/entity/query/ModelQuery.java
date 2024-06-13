@@ -4,7 +4,7 @@
 
 package com.huawei.jade.store.entity.query;
 
-import com.huawei.fitframework.value.Result;
+import com.huawei.jade.carver.Result;
 
 /**
  * 动态条件查询模型的类。

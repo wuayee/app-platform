@@ -2,9 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.value;
-
-import java.util.Collection;
+package com.huawei.jade.carver;
 
 /**
  * 表示结果对象的包装类。
@@ -22,18 +20,12 @@ public class Result<T> {
      *
      * @param data 表示数据对象的 {@link T}。
      * @param code 表示状态码的 {@code int}。
+     * @param total 表示状态码的 {@code int}。
      */
-    public Result(T data, int code) {
+    public Result(T data, int code, int total) {
         this.data = data;
         this.code = code;
-        if (data == null) {
-            this.total = 0;
-        } else if (data instanceof Collection) {
-            Collection<?> dataList = (Collection<?>) data;
-            this.total = dataList.size();
-        } else {
-            this.total = 1;
-        }
+        this.total = total;
     }
 
     /**
@@ -68,11 +60,12 @@ public class Result<T> {
      *
      * @param data 表示数据对象的 {@link T}。
      * @param code 表示状态码的 {@code int}。
+     * @param total 表示状态码的 {@code int}。
      * @param <T> 表示数据对象的类型的 {@link T}。
      * @return 表示创建出来的数据对象的包装类的 {@link Result}{@code <}{@link T}{@code >}。
      */
-    public static <T> Result<T> create(T data, int code) {
-        return new Result<>(data, code);
+    public static <T> Result<T> create(T data, int code, int total) {
+        return new Result<>(data, code, total);
     }
 
     /**

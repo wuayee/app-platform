@@ -8,6 +8,7 @@ import './index.scss';
 import CommonChat from '../chatPreview/chatComminPage';
 import { setAppId, setAppInfo } from '../../store/appInfo/appInfo';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
+import { setAppId, setAppInfo } from '../../store/appInfo/appInfo';
 
 const ChatRunning = () => {
   const { appId, tenantId } = useParams();
