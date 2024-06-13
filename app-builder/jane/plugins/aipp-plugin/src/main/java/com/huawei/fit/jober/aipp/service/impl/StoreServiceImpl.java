@@ -83,7 +83,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     private String getDefaultModel(ToolData toolData, String tag) {
-        Map<String, Object> map = ObjectUtils.cast(toolData.getRunnables().get(tag.toUpperCase());
+        Map<String, Object> map = ObjectUtils.cast(toolData.getRunnables().get(tag.toUpperCase()));
         if (MapUtils.isEmpty(map) || !map.containsKey("taskName")) {
             return StringUtils.EMPTY;
         }
