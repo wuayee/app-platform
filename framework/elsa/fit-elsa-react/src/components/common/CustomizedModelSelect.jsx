@@ -20,7 +20,12 @@ export const CustomizedModelSelect = ({disabled, defaultValue}) => {
         e.preventDefault();
         shape.page.triggerEvent({
             type: "SELECT_MODEL",
-            value: onSelect
+            value: {
+                taskName: shape.flowMeta.jober.converter.entity.inputParams[0].value,
+                shapeId: shape.id,
+                selectedModel: shape.flowMeta.jober.converter.entity.inputParams[1].value,
+                onSelect: onSelect
+            }
         });
     };
 
