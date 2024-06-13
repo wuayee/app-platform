@@ -76,16 +76,15 @@ const Stage = (props) => {
   // 数据实时保存
   const handleChange = useCallback(debounce(() => elsaChange(), 2000), []);
   function elsaChange() {
+    let graphChangeData = window.agent.serialize();
+    type ? appInfo.flowGraph.appearance = graphChangeData : setModalInfo(() => {
+      appRef.current.flowGraph.appearance = graphChangeData;
+      return appRef.current;
+    })
     window.agent.validate().then(() => {
-      let graphChangeData = window.agent.serialize();
       if (type) {
-        appInfo.flowGraph.appearance = graphChangeData;
         updateAppRunningFlow();
       } else {
-        setModalInfo(() => {
-          appRef.current.flowGraph.appearance = graphChangeData;
-          return appRef.current;
-        })
         updateAppRunningFlow();
       }
     }).catch((err) => {
