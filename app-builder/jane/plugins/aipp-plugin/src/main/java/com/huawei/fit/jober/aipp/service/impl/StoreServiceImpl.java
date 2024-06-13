@@ -137,10 +137,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<String> getModels(String taskName, int pageNum, int pageSize) {
-        return this.huggingFaceModelService.getModels(new ModelQuery(taskName, pageNum, pageSize))
-                .stream()
-                .map(ModelData::getName)
-                .collect(Collectors.toList());
+    public List<ModelData> getModels(String taskName, int pageNum, int pageSize) {
+        return this.huggingFaceModelService.getModels(new ModelQuery(taskName, pageNum, pageSize));
     }
 }
