@@ -820,7 +820,7 @@ public class AippRunTimeServiceImpl
                 .build();
         this.metaInstanceService.patchMetaInstance(versionId, instanceId, info, context);
 
-        String message = Objects.nonNull(msgArgs.get("message")) ? msgArgs.get("message").toString() : "已终止对话";
+        String message = msgArgs.get(AippConst.TERMINATE_MESSAGE_KEY) != null ? msgArgs.get(AippConst.TERMINATE_MESSAGE_KEY).toString() : "已终止对话";
 
         this.aippLogService.insertLog(AippLogCreateDto.builder()
                 .aippId(aippId)
