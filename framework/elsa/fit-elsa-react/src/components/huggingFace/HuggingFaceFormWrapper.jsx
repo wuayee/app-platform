@@ -17,7 +17,10 @@ export default function HuggingFaceFormWrapper({disabled}) {
 
     return (<>
         <InvokeInput inputData={filteredInputData} disabled={disabled}/>
-        <CustomizedModelSelect defaultValue={modelDefaultValue} disabled={disabled}/>
+        <div style={{marginTop: "8px", marginBottom: "16px"}}>
+            <span className={"jade-panel-header-font"}>模型</span>
+            <CustomizedModelSelect defaultValue={modelDefaultValue} disabled={disabled}/>
+        </div>
         <InvokeOutput disabled={disabled}/>
     </>);
 }
