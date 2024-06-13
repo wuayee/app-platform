@@ -63,4 +63,10 @@ public class DefaultHuggingFaceModelService implements HuggingFaceModelService {
         }
         return modelDataList;
     }
+
+    @Override
+    @Fitable(id = "store-repository-pgsql")
+    public int getCount(String taskName) {
+        return this.modelMapper.getCount(taskName);
+    }
 }

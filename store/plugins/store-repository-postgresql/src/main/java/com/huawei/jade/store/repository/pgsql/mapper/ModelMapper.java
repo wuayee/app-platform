@@ -23,4 +23,12 @@ public interface ModelMapper {
      * @return 所有任务的实体类的实例的 {@link List}{@code <}{@link ModelDo}{@code >}。
      */
     List<ModelDo> getModels(ModelQuery modelQuery);
+
+    /**
+     * 根据任务唯一标识获取模型的总数。
+     *
+     * @param taskName 表示任务唯一标识名的  {@link String}。
+     * @return 表示模型总数的 {@code int}。
+     */
+    int getCount(String taskName);
 }
