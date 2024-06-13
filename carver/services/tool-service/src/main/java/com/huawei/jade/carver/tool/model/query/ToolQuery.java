@@ -23,7 +23,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ToolTagQuery {
+public class ToolQuery {
     /**
      * 表示工具名称。
      * <p>构造条件时按需传入。</p>
@@ -69,7 +69,7 @@ public class ToolTagQuery {
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
      */
-    public ToolTagQuery(String toolName, List<String> includeTags, List<String> excludeTags, Integer pageNum,
+    public ToolQuery(String toolName, List<String> includeTags, List<String> excludeTags, Integer pageNum,
             Integer limit) {
         this.toolName = toolName;
         this.includeTags = CollectionUtils.isNotEmpty(includeTags) ? new HashSet<>(includeTags) : new HashSet<>();

@@ -9,14 +9,14 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.carver.tool.Tool;
-import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
+import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.repository.ToolRepository;
 import com.huawei.jade.carver.tool.service.ToolService;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -105,21 +105,21 @@ public class DefaultToolService implements ToolService {
     /**
      * 服务层动态条件准确查询工具列表
      *
-     * @param toolTagQuery 表示动态查询条件的 {@link ToolTagQuery}
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}
      * @return 工具列表 {@link List}{@code <}{@link ToolData}{@code >}。
      */
     @Override
     @Fitable(id = "tool-repository-pgsql")
     @Transactional
-    public List<ToolData> getTools(ToolTagQuery toolTagQuery) {
-        if (toolTagQuery == null) {
-            return Collections.emptyList();
+    public ListResult<ToolData> getTools(ToolQuery toolQuery) {
+        if (toolQuery == null) {
+            return ListResult.empty();
         }
-        if ((toolTagQuery.getPageNum() != null && toolTagQuery.getPageNum() < 0) || (toolTagQuery.getLimit() != null
-                && toolTagQuery.getLimit() < 0)) {
-            return Collections.emptyList();
+        if ((toolQuery.getPageNum() != null && toolQuery.getPageNum() < 0) || (toolQuery.getLimit() != null
+                && toolQuery.getLimit() < 0)) {
+            return ListResult.empty();
         }
-        List<Tool.Info> infos = this.toolRepo.getTools(toolTagQuery);
+        List<Tool.Info> infos = this.toolRepo.getTools(toolQuery);
         ArrayList<ToolData> toolDataList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(infos)) {
             for (Tool.Info info : infos) {
@@ -129,27 +129,31 @@ public class DefaultToolService implements ToolService {
                 toolDataList.add(toolData);
             }
         }
-        return toolDataList;
+
+        toolQuery.setLimit(null);
+        toolQuery.setOffset(null);
+        int count = this.toolRepo.getToolsCount(toolQuery);
+        return ListResult.create(toolDataList, count);
     }
 
     /**
      * 服务层动态条件模糊查询工具列表
      *
-     * @param toolTagQuery 表示动态查询条件的 {@link ToolTagQuery}
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}
      * @return 工具列表 {@link List}{@code <}{@link ToolData}{@code >}。
      */
     @Override
     @Fitable(id = "tool-repository-pgsql")
     @Transactional
-    public List<ToolData> searchTools(ToolTagQuery toolTagQuery) {
-        if (toolTagQuery == null) {
-            return Collections.emptyList();
+    public ListResult<ToolData> searchTools(ToolQuery toolQuery) {
+        if (toolQuery == null) {
+            return ListResult.empty();
         }
-        if ((toolTagQuery.getPageNum() != null && toolTagQuery.getPageNum() < 0) || (toolTagQuery.getLimit() != null
-                && toolTagQuery.getLimit() < 0)) {
-            return Collections.emptyList();
+        if ((toolQuery.getPageNum() != null && toolQuery.getPageNum() < 0) || (toolQuery.getLimit() != null
+                && toolQuery.getLimit() < 0)) {
+            return ListResult.empty();
         }
-        List<Tool.Info> infos = this.toolRepo.searchTools(toolTagQuery);
+        List<Tool.Info> infos = this.toolRepo.searchTools(toolQuery);
         ArrayList<ToolData> toolDataList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(infos)) {
             for (Tool.Info info : infos) {
@@ -159,7 +163,11 @@ public class DefaultToolService implements ToolService {
                 toolDataList.add(toolData);
             }
         }
-        return toolDataList;
+
+        toolQuery.setLimit(null);
+        toolQuery.setOffset(null);
+        int count = this.toolRepo.searchToolsCount(toolQuery);
+        return ListResult.create(toolDataList, count);
     }
 
     /**

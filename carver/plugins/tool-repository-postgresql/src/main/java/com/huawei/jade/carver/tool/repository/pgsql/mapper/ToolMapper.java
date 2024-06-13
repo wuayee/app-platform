@@ -4,7 +4,7 @@
 
 package com.huawei.jade.carver.tool.repository.pgsql.mapper;
 
-import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
+import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.repository.pgsql.model.entity.ToolDo;
 
 import java.util.List;
@@ -41,16 +41,32 @@ public interface ToolMapper {
     /**
      * 根据动态条件准确获取所有的工具。
      *
-     * @param toolTagQuery 表示动态查询条件的 {@link ToolTagQuery}。
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}。
      * @return 所有工具列表 {@link List}{@code <}{@link ToolDo}{@code >}。
      */
-    List<ToolDo> getTools(ToolTagQuery toolTagQuery);
+    List<ToolDo> getTools(ToolQuery toolQuery);
 
     /**
      * 根据动态条件模糊获取所有的工具。
      *
-     * @param toolTagQuery 表示动态查询条件的 {@link ToolTagQuery}。
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}。
      * @return 所有工具列表 {@link List}{@code <}{@link ToolDo}{@code >}。
      */
-    List<ToolDo> searchTools(ToolTagQuery toolTagQuery);
+    List<ToolDo> searchTools(ToolQuery toolQuery);
+
+    /**
+     * 根据动态条件模糊获取工具总数。
+     *
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}。
+     * @return 表示工具总数的 {@code int}。
+     */
+    int getToolsCount(ToolQuery toolQuery);
+
+    /**
+     * 根据动态条件模糊获取所有的工具。
+     *
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}。
+     * @return 表示工具总数的 {@code int}。
+     */
+    int searchToolsCount(ToolQuery toolQuery);
 }
