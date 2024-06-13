@@ -4,6 +4,7 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
+import static com.huawei.fit.jober.aipp.enums.ToolCategoryEnum.HUGGINGFACE;
 import static com.huawei.fit.jober.aipp.init.AippComponentInitiator.COMPONENT_DATA;
 
 import com.huawei.fit.jober.aipp.common.JsonUtils;
@@ -12,15 +13,23 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
 import com.huawei.fit.jober.aipp.dto.StoreBasicNodeInfoDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import com.huawei.fit.jober.aipp.dto.StoreWaterFlowDto;
+import com.huawei.fit.jober.aipp.dto.ToolModelDto;
 import com.huawei.fit.jober.aipp.enums.AppCategory;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.util.MapUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.service.ToolService;
+import com.huawei.jade.store.entity.query.ModelQuery;
+import com.huawei.jade.store.entity.transfer.ModelData;
+import com.huawei.jade.store.entity.transfer.TaskData;
+import com.huawei.jade.store.service.EcoTaskService;
+import com.huawei.jade.store.service.HuggingFaceModelService;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,28 +43,59 @@ import java.util.stream.Collectors;
 @Component
 public class StoreServiceImpl implements StoreService {
     private final ToolService toolService;
+    private final EcoTaskService ecoTaskService;
+    private final HuggingFaceModelService huggingFaceModelService;
     private final AppBuilderAppMapper appBuilderAppMapper;
 
-    public StoreServiceImpl(ToolService toolService, AppBuilderAppMapper appBuilderAppMapper) {
+    public StoreServiceImpl(ToolService toolService, EcoTaskService ecoTaskService,
+            HuggingFaceModelService huggingFaceModelService, AppBuilderAppMapper appBuilderAppMapper) {
         this.toolService = toolService;
+        this.ecoTaskService = ecoTaskService;
+        this.huggingFaceModelService = huggingFaceModelService;
         this.appBuilderAppMapper = appBuilderAppMapper;
     }
 
     @Override
-    public StoreNodeConfigResDto getBasicNodesAndTools(int pageNum, int pageSize) {
+    public StoreNodeConfigResDto getBasicNodesAndTools(String tag, int pageNum, int pageSize) {
         return StoreNodeConfigResDto.builder()
-                .toolList(this.buildToolNodesConfig(AppCategory.FIT, pageNum, pageSize))
+                .toolList(this.getToolModelList(tag, pageNum, pageSize))
                 .basicList(this.buildBasicNodesConfig())
                 .build();
     }
 
-    private List<ToolData> buildToolNodesConfig(AppCategory appCategory, int pageNum, int pageSize) {
+    private List<ToolModelDto> getToolModelList(String tag, int pageNum, int pageSize) {
+        return this.buildToolNodesConfig(tag, pageNum, pageSize)
+                .stream()
+                .map(toolData -> ToolModelDto.combine2ToolModelDto(toolData,
+                        tag.equalsIgnoreCase(HUGGINGFACE.getName())
+                                ? getDefaultModel(toolData, tag)
+                                : StringUtils.EMPTY))
+                .collect(Collectors.toList());
+    }
+
+    private List<ToolData> buildToolNodesConfig(String tag, int pageNum, int pageSize) {
         ToolTagQuery query = new ToolTagQuery(null,
-                Collections.singletonList(appCategory.getTag()),
+                Collections.singletonList(tag),
                 Collections.singletonList(StringUtils.EMPTY),
                 pageNum,
                 pageSize);
         return this.toolService.searchTools(query);
+    }
+
+    private String getDefaultModel(ToolData toolData, String tag) {
+        Map<String, Object> map = ObjectUtils.cast(toolData.getRunnables().get(tag.toUpperCase()));
+        if (MapUtils.isEmpty(map) || !map.containsKey("taskName")) {
+            return StringUtils.EMPTY;
+        }
+        String taskName = map.get("taskName") instanceof String ? (String) map.get("taskName") : StringUtils.EMPTY;
+        TaskData task = ecoTaskService.getTask(taskName);
+        if (task != null) {
+            Map<String, Object> context = task.getContext();
+            return context.get("defaultModel") instanceof String
+                    ? (String) context.get("defaultModel")
+                    : StringUtils.EMPTY;
+        }
+        return StringUtils.EMPTY;
     }
 
     private List<StoreBasicNodeInfoDto> buildBasicNodesConfig() {
@@ -64,7 +104,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(int pageNum, int pageSize) {
-        List<ToolData> waterFlows = this.buildToolNodesConfig(AppCategory.WATER_FLOW, pageNum, pageSize);
+        List<ToolData> waterFlows = this.buildToolNodesConfig(AppCategory.WATER_FLOW.getTag(), pageNum, pageSize);
         List<String> storeIds = waterFlows.stream().map(ToolData::getUniqueName).collect(Collectors.toList());
         if (storeIds.isEmpty()) {
             return Collections.emptyList();
@@ -94,5 +134,13 @@ public class StoreServiceImpl implements StoreService {
                 .version(appInfo.getVersion())
                 .tenantId(appInfo.getTenantId())
                 .build();
+    }
+
+    @Override
+    public List<String> getModels(String taskName, int pageNum, int pageSize) {
+        return this.huggingFaceModelService.getModels(new ModelQuery(taskName, pageNum, pageSize))
+                .stream()
+                .map(ModelData::getName)
+                .collect(Collectors.toList());
     }
 }
