@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Select, Button, Drawer, Input, Form, message } from 'antd';
+import { Select, Button, Drawer, Input, Form, message, InputNumber } from 'antd';
 import { SearchOutlined, EllipsisOutlined, CloseOutlined } from '@ant-design/icons';
 
 import { createModel, getModelList } from '../../shared/http/model';
@@ -20,13 +20,18 @@ interface StarAppsProps {
 
 const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setModels }) => {
   const [form] = Form.useForm();
-
   const nameOptions: any[] = [];
   // 下拉框联动
   const [nameOption, setNameOption] = useState(null);
   const [precisionOption, setPrecisionOption] = useState(null);
   const [imageOption, setImageOption] = useState(null);
   const [gpuOption, setGpuOption] = useState(null);
+  const [linkNumMax, setLinkNumMax] = useState(300);
+
+  useEffect(() => {
+    form.setFieldValue('max_link_num', 300);
+  }, []);
+
   const handleNameChange = (value: any) => {
     setNameOption(value);
     setPrecisionOption(null);
@@ -44,8 +49,9 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
   }
 
   const deployModel = () => {
+    console.log(form.getFieldsValue());
     form.validateFields().then((values) => {
-      const { name, inference_accuracy, image_name, des, npus, replicas } = values;
+      const { name, inference_accuracy, image_name, des, npus, replicas, max_link_num } = values;
       const modelParams = {
         name,
         des,
@@ -53,6 +59,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
         inference_accuracy,
         replicas,
         node_port: 80,
+        max_link_num,
         npus: parseInt(npus),
       };
       createModel(modelParams).then((res) => {
@@ -64,6 +71,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
             }
           });
           form.resetFields();
+          form.setFieldValue('max_link_num', 300);
         } else {
           message.error('模型部署失败');
         }
@@ -71,6 +79,10 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
       setOpen(false);
     });
   };
+
+  const replicasChange = (e) => {
+    setLinkNumMax(300 * e);
+  }
 
   return (
     <Drawer
@@ -134,31 +146,34 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
             { required: true, message: '请输入大模型实例数' }
           ]}
         >
-           <Select
-            options={filteredGpuOption?.map((option) => ({ label: option, value: option }))}
-            value={gpuOption}
-            onChange={setGpuOption}
-          />
+          <InputNumber style={{ width: '100%' }} min={1} max={8} onChange={replicasChange} />
         </Form.Item>
         <Form.Item
           label='单实例消耗的NPU数'
           name='npus'
           rules={[
             { required: true, message: '请输入单实例消耗的NPU数' },
-            {
-              whitespace: true,
-              type: 'number',
-              transform(value) {
-                if (value) {
-                  return Number(value);
-                }
-              },
-              message: '模型服务端口号仅支持数字',
-            },
-            { pattern: /^[^\s]*$/, message: '禁止输入空格' },
           ]}
         >
-          <Input />
+          <Select
+            options={filteredGpuOption?.map((option) => ({ label: option, value: option }))}
+            value={gpuOption}
+          />
+        </Form.Item>
+        <Form.Item
+          label='请求并发数'
+          name='max_link_num'
+          rules={[
+            { required: true, message: '请输入请求并发数' },
+            {
+              type: 'number',
+              max: linkNumMax,
+              min: 1,
+              message: `输入范围为1 - ${linkNumMax}`
+            }
+          ]}
+        >
+          <InputNumber style={{ width: '100%' }} min={1} max={linkNumMax} />
         </Form.Item>
       </Form>
       <div
