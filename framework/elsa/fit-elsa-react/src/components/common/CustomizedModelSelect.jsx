@@ -37,14 +37,17 @@ export const CustomizedModelSelect = ({disabled, defaultValue}) => {
 
     return (<>
         <ConfigProvider theme={{components: {Button: {borderColorDisabled: "true"}}}}>
-            <div style={{display: "flex", border: "1px solid rgb(128, 128, 128, 0.2)", borderRadius: 4}}>
+            <div className="model-text-container model-text">模型</div>
+            <div className="model-select-container"
+                 style={{display: "flex", border: "1px solid rgb(128, 128, 128, 0.2)", borderRadius: 4}}>
                 <Input readOnly
+                       className="model-select model-select-text"
                        disabled={disabled}
-                       style={{borderWidth: 0}}
                        onMouseDown={(e) => triggerSelect(e)}
                        value={value}
                        defaultValue={value}/>
-                <Button style={{borderWidth: 0, margin: 0, borderRadius: 0}}
+                <Button
+                        className="button-select button-select-text"
                         disabled={disabled}
                         onClick={e => triggerSelect(e)}>选择</Button>
             </div>

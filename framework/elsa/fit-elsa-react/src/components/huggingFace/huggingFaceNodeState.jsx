@@ -12,7 +12,8 @@ export const huggingFaceNodeState = (id, x, y, width, height, parent, drawer) =>
     self.type = "huggingFaceNodeState";
     self.text = "huggingFace调用";
     self.componentName = "huggingFaceComponent";
-    self.sourcePlatform = "huggingFace"
+    self.sourcePlatform = "huggingFace";
+    self.width = 368;
 
     /**
      * @override
@@ -43,9 +44,9 @@ export const huggingFaceNodeState = (id, x, y, width, height, parent, drawer) =>
 
     self.getHeaderIcon = () => {
         return (
-            <Button disabled={true} className="jade-node-custom-header-icon">
-                <HuggingFaceIcon/>
-            </Button>
+                <Button disabled={true} className="jade-node-custom-header-icon">
+                    <HuggingFaceIcon/>
+                </Button>
         );
     };
 
