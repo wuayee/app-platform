@@ -12,7 +12,8 @@ export const huggingFaceNodeState = (id, x, y, width, height, parent, drawer) =>
     self.type = "huggingFaceNodeState";
     self.text = "huggingFace调用";
     self.componentName = "huggingFaceComponent";
-    self.sourcePlatform = "huggingFace"
+    self.sourcePlatform = "huggingFace";
+    self.width = 368;
 
     /**
      * @override
@@ -31,7 +32,6 @@ export const huggingFaceNodeState = (id, x, y, width, height, parent, drawer) =>
     const processMetaData = self.processMetaData;
     self.processMetaData = (metaData) => {
         processMetaData.apply(self, [metaData]);
-        self.flowMeta.jober.entity.uniqueName = metaData.toolUniqueName;
         self.text = metaData.schema.name;
         const INPUT_FROM_TYPE_VALUE = "Input";
         self.flowMeta.jober.converter.entity.inputParams[0].from = INPUT_FROM_TYPE_VALUE;
@@ -44,9 +44,9 @@ export const huggingFaceNodeState = (id, x, y, width, height, parent, drawer) =>
 
     self.getHeaderIcon = () => {
         return (
-            <Button disabled={true} className="jade-node-custom-header-icon">
-                <HuggingFaceIcon/>
-            </Button>
+                <Button disabled={true} className="jade-node-custom-header-icon">
+                    <HuggingFaceIcon/>
+                </Button>
         );
     };
 

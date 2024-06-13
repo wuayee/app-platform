@@ -227,7 +227,7 @@ const JadeInputTreeSelect = ({node, options, updateItem}) => {
                 {key: "value", value: node.props}
             ]);
         } else if (v === "Input") {
-            form.setFieldsValue({[`value-${node.id}`]: undefined});
+            form.setFieldsValue({[`value-${node.id}`]: null});
             updateItem(node.id, [{key: "from", value: v},
                 {key: "referenceNode", value: null},
                 {key: "referenceId", value: null},

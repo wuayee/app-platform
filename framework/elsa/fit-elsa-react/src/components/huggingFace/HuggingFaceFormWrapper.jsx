@@ -17,7 +17,9 @@ export default function HuggingFaceFormWrapper({disabled}) {
 
     return (<>
         <InvokeInput inputData={filteredInputData} disabled={disabled}/>
-        <CustomizedModelSelect defaultValue={modelDefaultValue} disabled={disabled}/>
+        <div style={{marginTop: "16px", marginBottom: "16px"}}>
+            <CustomizedModelSelect defaultValue={modelDefaultValue} disabled={disabled}/>
+        </div>
         <InvokeOutput disabled={disabled}/>
     </>);
 }

@@ -64,12 +64,12 @@ export const huggingFaceComponent = (jadeConfig) => {
                 name: "model",
                 type: "String",
                 from: "Input",
-                value: action.value
+                value: action.data.name
             };
             const secondElement = inputParams[1];
             if (secondElement.id.startsWith("model_")) {
                 // 修改第二个对象的 value 属性
-                inputParams[1] = {...secondElement, value: action.value};
+                inputParams[1] = {...secondElement, value: action.data.name};
             } else {
                 // 在第二个位置插入新的 modelParam 对象
                 inputParams.splice(1, 0, modelParam);

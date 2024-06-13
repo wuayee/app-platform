@@ -28,14 +28,14 @@
 
 .jade-panel-header-popover-content {
     margin-left: 2px;
-    color: rgba(28,31,35,.35);
+    color: rgba(28, 31, 35, .35);
     align-self: flex-start;
     height: 12px;
     width: 12px;
 }
 
 .jade-panel {
-    background-color: rgba(247,248,249); /* 设置背景颜色 */
+    background-color: rgba(247, 248, 249); /* 设置背景颜色 */
     margin-bottom: 8px !important;
     border-radius: 8px !important;
     width: 100%;
@@ -61,17 +61,17 @@
     border: none !important;
 }
 
-.jade-form-item .ant-form-item-label >label {
+.jade-form-item .ant-form-item-label > label {
     font-size: 12px;
-    color: rgba(28,31,35,.35);
+    color: rgba(28, 31, 35, .35);
 }
 
-.jade-font-size, .jade-select .ant-select-selector .ant-select-selection-item, .jade-select .ant-select-item-option,.ant-select-selection-placeholder, .jade-input::placeholder, .ant-select-dropdown .ant-select-item, .ant-tree-select-dropdown .ant-select-tree{
+.jade-font-size, .jade-select .ant-select-selector .ant-select-selection-item, .jade-select .ant-select-item-option, .ant-select-selection-placeholder, .jade-input::placeholder, .ant-select-dropdown .ant-select-item, .ant-tree-select-dropdown .ant-select-tree {
     font-size: 12px;
 }
 
 .jade-font-color {
-    color: rgba(28,31,35,.35);
+    color: rgba(28, 31, 35, .35);
 }
 
 .jade-select .ant-select-selector {
@@ -105,7 +105,7 @@
 }
 
 .jade-popover-icon {
-    color: rgba(28,31,35,.35);
+    color: rgba(28, 31, 35, .35);
 }
 
 .jade-second-title {
@@ -123,7 +123,7 @@
 .jade-top-header-popover-content {
     margin-left: 2px;
     margin-top: 6px;
-    color: rgba(28,31,35,.35);
+    color: rgba(28, 31, 35, .35);
     align-self: flex-start;
     height: 12px;
     width: 12px;
@@ -191,4 +191,101 @@
     width: 24px !important;
     height: 24px !important;
     border: none !important;
+}
+
+.model-text {
+    color: rgb(77, 77, 77);
+    font-family: Huawei Sans;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0;
+    text-align: left;
+}
+
+.model-text-container {
+    /* 通用/Label必填-非必填 */
+    position: static;
+    width: 96px;
+    height: 18px;
+    /* 自动布局 */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+    /* Inside Auto Layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    margin: 2px 0;
+}
+
+.model-select-container {
+    position: static;
+    width: 320px;
+    height: 32px;
+    /* 自动布局 */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 10px 0 10px;
+
+    /* Inside Auto Layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+    margin: 2px 0;
+}
+
+.model-select {
+    /* google-bert/bert-base-uncased */
+    position: static;
+    width: 280px;
+    height: 32px;
+    /* 自动布局 */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0;
+    border-width: 0;
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+}
+
+.model-select-text {
+    color: rgb(128, 128, 128);
+    font-family: Huawei Sans;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: 0px;
+    text-align: left;
+}
+
+.button-select {
+    width: 32px;
+    display: flex;
+    padding: 0;
+    align-items: center;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    border-width: 0;
+    border-radius: 0;
+    margin-left: 8px;
+}
+
+.button-select-text {
+    color: rgb(38, 115, 229);
+    font-family: Huawei Sans;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: -1px;
+    text-align: left;
 }
