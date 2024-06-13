@@ -1,41 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Divider, Table, Tag } from 'antd';
+import { Divider, Flex, Table, Tag } from 'antd';
 import GoBack from '../../../components/go-back/GoBack';
 import { PluginIcons } from '../../../components/icons/plugin';
 import { Icons } from '../../../components/icons';
 import { useParams } from 'react-router';
 import { getPluginDetail } from '../../../shared/http/plugin';
 import '../style.scoped.scss';
+import { IconMap, paramsColumns } from '../helper';
 
 const tags = ['fit', 'http'];
-const columns = [
-  {
-    title: '参数名',
-    dataIndex: 'name',
-    key: 'name',
-    width: 300,
-  },
-  {
-    title: '参数类型',
-    dataIndex: 'type',
-    key: 'type',
-    width: 300,
-  },
-  {
-    title: '参数说明',
-    dataIndex: 'des',
-    key: 'des',
-    ellipsis: true,
-  },
-];
-const data0 = [{ name: 1, type: 2, des: 3 }];
 const PlugeDetail: React.FC = () => {
-  const { pluginId } = useParams();
+const { pluginId } = useParams();
 const [data,setData]=useState(null);
+const [inputParams,setInputParams]=useState([]);
+const [outputParams,setOutputParams]=useState([]);
  const refreshDetail=async()=>{
     const res= await getPluginDetail(pluginId);
-    console.log(res);
-    setData(res?.data)
+    setData(res?.data);
+    let properties=res?.data?.schema?.parameters?.properties || {};
+    const resInput = Object.keys(properties).map((key)=> ({...properties[key],key:key}));
+    setInputParams(resInput);
+    properties=res?.data?.schema?.return?.items?.properties || {};
+    const resOutput = Object.keys(properties).map((key)=> ({...properties[key],key:key}));
+    setOutputParams(resOutput);
+    
   }
   useEffect(()=>{
     if(pluginId){
@@ -58,10 +46,10 @@ const [data,setData]=useState(null);
             <div className='version-div'>
               <Tag className='version'>v1.1.0</Tag>
             </div>
-            <div style={{ alignContent: 'center'}}>
-              <PluginIcons.ButterFlydate style={{ marginLeft: '8px' }}/>
-              <PluginIcons.HuggingFaceIcon style={{marginLeft: '8px' }}/>
-            </div>
+            <Flex style={{ display: 'flex', alignItems: 'center' }} gap={4}>
+               {IconMap[data?.tags?.[0]]?.icon}
+               <span style={{ fontSize: 12, fontWeight: 700 }}>{IconMap[data?.tags?.[0]]?.name}</span>
+            </Flex>
             <div className='header-tag'>
               {data?.tags.map((tag: string, index: number) => (
                 <Tag key={index}>{tag}</Tag>
@@ -71,17 +59,17 @@ const [data,setData]=useState(null);
           <div className='user-info'>
             <Icons.user />
             <span>{data?.creator}</span>
-            <span className='header-time'>创建于2021</span>
-            <span className='header-time'>引用数:250</span>
+            <span className='header-time' hidden>创建于2021</span>
+            <span className='header-time' hidden>引用数:250</span>
           </div>
         </div>
       </div>
       <div style={{marginTop:14}}>{data?.description}</div>
       <Divider />
       <div className='param-title'>输入参数</div>
-      <Table dataSource={data0} columns={columns} pagination={false} />
+      <Table dataSource={inputParams} columns={paramsColumns} pagination={false} />
       <div className='param-title' style={{marginTop:14}}>输出参数</div>
-      <Table dataSource={data0} columns={columns} pagination={false} />
+      <Table dataSource={outputParams} columns={paramsColumns} pagination={false} />
     </div>
   </div>
 )};
