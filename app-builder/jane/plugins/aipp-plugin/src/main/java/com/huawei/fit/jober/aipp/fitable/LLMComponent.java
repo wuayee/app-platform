@@ -29,6 +29,7 @@ import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.MapBuilder;
+import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.fitframework.util.UuidUtils;
@@ -78,7 +79,6 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     private final ToolProvider toolProvider;
     private final AiProcessFlow<Tip, Prompt> agentFlow;
     private final AippLogService aippLogService;
-
     private final AippLogStreamService aippLogStreamService;
 
     /**
@@ -214,7 +214,6 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     private void llmOutputConsumer(AippLlmMeta llmMeta, Prompt trace) {
         ChatMessage answer = trace.messages().get(trace.messages().size() - 1);
         if (answer.type() == MessageType.AI) {
-            // todo: resumeAsyncJober保存businessData
             Map<String, Object> businessData = llmMeta.getBusinessData();
             businessData.putIfAbsent("output", new HashMap<String, Object>());
             Map<String, Object> output = ObjectUtils.cast(businessData.get("output"));
@@ -285,15 +284,35 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     /**
      * 使用{@link StringTemplate}渲染用户模板。
      */
-    private static String buildInputText(Map<String, Object> businessData) {
+    private String buildInputText(Map<String, Object> businessData) {
         Map<String, Object> input = ObjectUtils.cast(businessData.get("prompt"));
-        StringTemplate template = new DefaultStringTemplate(ObjectUtils.cast(input.get("template")));
+        // todo: 如果有文件，将内容拼到template里；为临时方案，历史记录的多模态会有问题
+        StringTemplate template = new DefaultStringTemplate(ObjectUtils.cast(input.get("template"))
+                + this.getFilePath(businessData));
         Map<String, String> variables = ObjectUtils.cast(input.get("variables"));
         try {
             return template.render(variables);
         } catch (NullPointerException e) {
             throw new AippException(Utils.getOpContext(businessData), AippErrCode.LLM_COMPONENT_TEMPLATE_RENDER_FAILED);
         }
+    }
+
+    /**
+     * 获取文件路径。
+     */
+    private String getFilePath(Map<String, Object> businessData) {
+        if (!businessData.containsKey(AippConst.BS_AIPP_FILE_DESC_KEY)) {
+            return StringUtils.EMPTY;
+        }
+        Object data = businessData.get(AippConst.BS_AIPP_FILE_DESC_KEY);
+        if (!(data instanceof Map)) {
+            throw new AippException(AippErrCode.DATA_TYPE_IS_NOT_SUPPORTED, data.getClass().getName());
+        }
+        Map<String, String> fileDesc = ObjectUtils.cast(data);
+        if (MapUtils.isEmpty(fileDesc)) {
+            return StringUtils.EMPTY;
+        }
+        return ("filePath: " + fileDesc.get("file_path") + "\n");
     }
 
     /**
