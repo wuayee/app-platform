@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.aipp.service;
 
 import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
+import com.huawei.fit.jober.aipp.dto.ModelDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import com.huawei.jade.store.entity.transfer.ModelData;
 
@@ -35,5 +36,5 @@ public interface StoreService {
      * @param pageSize 表示分页查询的大小的 {@code int}。
      * @return 模型列表的 {@link List}{@code <}{@link String}{@code >}。
      */
-    List<ModelData> getModels(String taskName, int pageNum, int pageSize);
+    ModelDto getModels(String taskName, int pageNum, int pageSize);
 }
