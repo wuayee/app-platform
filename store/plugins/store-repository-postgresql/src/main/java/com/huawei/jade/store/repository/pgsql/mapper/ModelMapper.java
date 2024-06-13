@@ -29,5 +29,5 @@ public interface ModelMapper {
      *
      * @return 表示模型总数的 {@code int}。
      */
-    int getCount();
+    int getCount(String taskName);
 }
