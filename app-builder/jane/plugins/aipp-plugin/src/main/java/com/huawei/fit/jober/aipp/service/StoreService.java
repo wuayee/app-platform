@@ -14,7 +14,9 @@ import java.util.List;
  * @since 2024-05-13
  */
 public interface StoreService {
-    StoreNodeConfigResDto getBasicNodesAndTools(int pageNum, int pageSize);
+    StoreNodeConfigResDto getBasicNodesAndTools(String tag, int pageNum, int pageSize);
 
     List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(int pageNum, int pageSize);
+
+    List<String> getModels(String taskName, int pageNum, int pageSize);
 }

@@ -37,8 +37,17 @@ public class StoreController extends AbstractController {
     @GetMapping(path = "/nodes", description = "获取所有工具和基础节点配置")
     public Rsp<StoreNodeConfigResDto> getBasicNodesAndTools(HttpClassicServerRequest httpRequest,
             @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
-            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        return Rsp.ok(this.storeService.getBasicNodesAndTools(pageNum, pageSize));
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "tag", defaultValue = "HUGGINGFACE") String tag) {
+        return Rsp.ok(this.storeService.getBasicNodesAndTools(tag, pageNum, pageSize));
+    }
+
+    @GetMapping(path = "/task", description = "获取任务的模型列表")
+    public Rsp<List<String>> getModels(HttpClassicServerRequest httpRequest,
+            @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "taskName", defaultValue = "") String taskName) {
+        return Rsp.ok(this.storeService.getModels(taskName, pageNum, pageSize));
     }
 
     @GetMapping(path = "/waterflow", description = "获取所有工具流")
