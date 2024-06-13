@@ -89,6 +89,7 @@ class Item(BaseModel):
     replicas: int
     node_port: int
     npus: int
+    max_link_num: int | None = None
 
 
 class GlobalExternalServiceProxy(BaseModel):
