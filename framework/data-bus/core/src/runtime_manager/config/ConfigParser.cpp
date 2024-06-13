@@ -3,6 +3,7 @@
  * Description: config parser for databus core
  */
 
+#include <chrono>
 #include "fstream"
 
 #include "Constants.h"
@@ -28,6 +29,8 @@ void DataBus::Runtime::ConfigParser::Parse()
 
     // _mt stands for multi-threaded
     DataBus::logger.SetLogHandler(std::make_shared<spdlog::logger>("log", sinks));
+    // 每60秒刷新一次日志
+    spdlog::flush_every(std::chrono::seconds(60));
 }
 
 DataBus::Runtime::Config DataBus::Runtime::ConfigParser::Parse(const std::string& configFilePath)
