@@ -59,78 +59,8 @@ const Stage = (props) => {
         modelCallback.current = fn;
       })
     })
-    getAddFlowConfig(tenantId).then(res => {
+    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 10, tag: 'AUTHORITY'}).then(res => {
       if (res.code === 0) {
-        res.data.tool.unshift({
-          'name': 'hugging-face',
-          'type': 'huggingFaceNodeState',
-          "taskId": "1264ab63-62e3-4965-ac91-a7396099f123",
-          "schema": {
-            "name": "fill-mask",
-            "description": "该流水线可以输入带有掩码标记的句子，模型会根据上下文对掩码标记进行填空",
-            "parameters": {
-              "type": "object",
-              "properties": {
-                "inputs": {
-                  "description": "一个包含掩码标记[MASK]的文本。",
-                  "type": "string"
-                },
-                "targets": {
-                  "description": "可通过此参数限定模型向掩码标记填空的token类型，如：'positive'",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "top_k": {
-                  "description": "返回的填空结果数量",
-                  "type": "integer",
-                  "default": 5
-                }
-              },
-              "required": [
-                "inputs"
-              ]
-            },
-            "return": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "sequence": {
-                    "description": "向掩码标记填空后的输入",
-                    "type": "string"
-                  },
-                  "score": {
-                    "description": "该填空token的出现概率。",
-                    "type": "number"
-                  },
-                  "token": {
-                    "description": "预测的标记token ID（用于替换掩码标记）。",
-                    "type": "integer"
-                  },
-                  "token_str": {
-                    "description": "预测的标记token（用于替换掩码标记）。",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "sequence",
-                  "score",
-                  "token",
-                  "token_str"
-                ]
-              }
-            }
-          },
-          "context": {
-            "model": [],
-            "summary": "Masked language modeling is the task of masking some of the words in a sentence and predicting which words should replace those masks. These models are useful when we want to get a statistical understanding of the language in which the model is trained in.",
-            "default_model": "distilbert/distilroberta-base",
-            "base_url": "huggingface.co/"
-          },
-          "toolUniqueName": "1264ab63-62e3-4965-ac91-a7396099f123"
-        })
         setDragData(res.data);
       }
     });

@@ -8,9 +8,9 @@
     border-radius: 6px;
     margin-right: 8px;
     font-size: 12px;
-    .active {
-      background-color: rgb(235, 235, 235);
-    }
+  }
+  .active {
+    background-color: rgb(235, 235, 235);
   }
   .more {
     position: absolute;
@@ -19,4 +19,10 @@
     background-color: #ffffff;
     color: rgb(38, 115, 229);
   }
+}
+.drag-list {
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0 4px;
 }

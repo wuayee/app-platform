@@ -1,7 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Input, Modal, Select, Button, Dropdown } from 'antd';
 import { getPlugins } from '@shared/http/plugin';
+import { getAddFlowConfig } from '@shared/http/appBuilder';
 import { categoryItems } from '../../configForm/common/common';
 import { handleClickAddToolNode } from '../utils';
 import PluginCard from '../../../components/plugin-card';
@@ -12,31 +14,32 @@ const { Option } = Select;
 
 const ToolDrawer = (props) => {
   const { showModal, setShowModal } = props;
-  const [ activeKey, setActiveKey ] = useState('1');
+  const [ activeKey, setActiveKey ] = useState('AUTHORITY');
   const [ menuName, setMenuName ] = useState('新闻阅读');
   const [ name, setName ] = useState('');
   const [ pageNum, setPageNum ] = useState(1);
   const [ pageSize, setPageSize ] = useState(10);
   const [ total, setTotal ] = useState(0);
-  const [ pluginCategory, setPluginCategory ] = useState(categoryItems[0].key);
   const [ pluginData, setPluginData ] = useState([]);
+  const { tenantId, appId } = useParams();
   const tab = [
-    { name: '官方', key: '1' },
-    { name: 'HuggingFace', key: '2' },
-    { name: 'LangChain', key: '3' },
-    { name: 'LlamaIndex', key: '4' },
+    { name: '官方', key: 'AUTHORITY' },
+    { name: 'HuggingFace', key: 'HUGGINGFACE' },
+    { name: 'LangChain', key: 'LANGCHAIN' },
+    { name: 'LlamaIndex', key: 'LLAMAINDEX' },
   ]
   useEffect(() => {
     showModal && getPluginList();
-  }, [props.showModal, name, pageNum, pageSize])
+  }, [props.showModal, name, pageNum, pageSize, activeKey])
   const items = categoryItems;
   const selectBefore = (
     <Select defaultValue="市场">
-      <Option value="个人">个人</Option>
-      <Option value="市场">市场</Option>
+      <Option value="个人" disabled>个人</Option>
+      <Option value="市场" disabled>市场</Option>
     </Select>
   );
   const handleClick = (key) => {
+    setPageNum(1);
     setActiveKey(key);
   }
   const onClick = ({ key }) => {
@@ -44,12 +47,20 @@ const ToolDrawer = (props) => {
     setMenuName(name);
   };
   // 获取插件列表
-  const getPluginList = (category = pluginCategory)=> {
-    getPlugins({ pageNum: pageNum - 1, pageSize, includeTags: 'FIT', name })
-      .then(({ data, total }) => {
-        setTotal(total);
-        setPluginData(data);
-      })
+  const getPluginList = ()=> {
+    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: pageSize, tag: activeKey}).then(res => {
+      if (res.code === 0) {
+        if (activeKey === 'HUGGINGFACE') {
+          res.data.tool.forEach(item => {
+            item.type = 'huggingFaceNodeState',
+            item.context = {
+              default_model: item.defaultModel
+            }
+          })
+        };
+        setPluginData(res.data.tool);
+      }
+    });
   }
   // 分页
   const selectPage = (curPage: number, curPageSize: number) => {
@@ -98,9 +109,9 @@ const ToolDrawer = (props) => {
           })
         }
         <div className="tool-modal-drop">
-          <Dropdown menu={{ items, onClick }} trigger={['click']}>
+          {/* <Dropdown menu={{ items, onClick }} trigger={['click']}>
             <span>{ menuName }</span> 
-          </Dropdown>
+          </Dropdown> */}
         </div>
       </div>
       <div className="mashup-add-content">

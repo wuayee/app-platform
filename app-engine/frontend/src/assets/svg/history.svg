@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>Icon/24px/History n</title>
-    <g id="页面-2备份" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="页面-2备份" stroke="none" stroke-width="1" fill="none" fillRule="evenodd">
         <g id="icon" transform="translate(-97.000000, -254.000000)">
             <g id="button-/-small_32-/-history-n备份-13" transform="translate(97.000000, 254.000000)">
-                <rect id="矩形" fill-opacity="0" fill="#D8D8D8" x="0" y="0" width="24" height="24"></rect>
+                <rect id="矩形" fillOpacity="0" fill="#D8D8D8" x="0" y="0" width="24" height="24"></rect>
                 <g id="编组" transform="translate(3.000000, 3.000000)" stroke="#4D4D4D" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4">
                     <path d="M2.27771755,14.984363 C3.92609942,16.8346851 6.32696277,18 9,18 C13.9705627,18 18,13.9705627 18,9 C18,4.02943725 13.9705627,0 9,0 C4.02943725,0 0,4.02943725 0,9 L2.25,7.5" id="路径"></path>
                     <polyline id="路径-3" points="9.81818182 3.27272727 9.81818182 9.81818182 5.72727273 12.2727273"></polyline>

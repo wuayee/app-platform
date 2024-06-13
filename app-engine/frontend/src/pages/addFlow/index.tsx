@@ -48,7 +48,12 @@ const AddFlow = (props) => {
         <div className={['content', !type ? 'content-add' : null ].join(' ')}>
           {
             showMenu ? (
-              <LeftMenu menuClick={menuClick} addId={addId} dragData={dragData}/>
+              <LeftMenu 
+                menuClick={menuClick} 
+                addId={addId} 
+                dragData={dragData} 
+                setDragData={setDragData}
+              />
             ) : (
               <Tooltip placement="rightTop" title="展开编排区">
                 <div className="menu-icon" onClick={menuClick}>
@@ -57,7 +62,12 @@ const AddFlow = (props) => {
               </Tooltip>
             )
           }
-          <Stage setAddId={setAddId} setDragData={setDragData} appRef={appRef} flowIdRef={flowIdRef} />
+          <Stage 
+            setAddId={setAddId} 
+            setDragData={setDragData} 
+            appRef={appRef} 
+            flowIdRef={flowIdRef} 
+          />
         </div>
       </FlowContext.Provider>
     </div>

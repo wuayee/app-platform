@@ -96,16 +96,25 @@ const getFitables = () => {
 };
 
 // 获取流程配置面板配置
-const getAddFlowConfig = (tenant_Id) => {
+const getAddFlowConfig = (tenant_Id, params) => {
   return new Promise((resolve, reject) => {
-    get(`${AIPP_URL}/${tenant_Id}/store/nodes`).then((res) => {
+    get(`${AIPP_URL}/${tenant_Id}/store/nodes`, params).then((res) => {
       resolve(res);
     }, (error) => {
       reject(error);
     });
   });
 }
-
+// 获取hugging-face列表
+const getHuggingFaceList = (tenant_Id, params) => {
+  return new Promise((resolve, reject) => {
+    get(`${AIPP_URL}/${tenant_Id}/store/task`, params).then((res) => {
+      resolve(res);
+    }, (error) => {
+      reject(error);
+    });
+  });
+}
 export {
   getMockChart, 
   saveContent, 
@@ -115,5 +124,6 @@ export {
   getFitables, 
   getAddFlowConfig, 
   getWaterFlows, 
-  getKnowledgesList
+  getKnowledgesList,
+  getHuggingFaceList
 };

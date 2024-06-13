@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
 import { getPlugins } from '@shared/http/plugin';
 import { getWaterFlows } from "@shared/http/appBuilder";
 import { ConfigFormContext } from '../../../aippIndex/context';
@@ -9,9 +10,9 @@ import AddSkill from './add-skill';
 
 const Skill = (props) => {
   const { pluginData, updateData } = props;
-  const [ checkData, setCheckData] = useState([]);
   const [ skillList, setSkillList] = useState([]);
   const { tenantId } = useContext(ConfigFormContext);
+  const navigate=useNavigate();
   const modalRef = useRef();
   const pluginMap = useRef([]);
 
@@ -22,7 +23,6 @@ const Skill = (props) => {
     }
   }, [props.pluginData])
   const addPlugin = () => {
-    setCheckData(pluginData);
     modalRef.current.showModal()
   }
   // 选择数据后回调
@@ -59,7 +59,14 @@ const Skill = (props) => {
   const handleGetWaterFlows = () => {
     getWaterFlows({ pageNum: 0, pageSize: 100, tenantId }).then(async (res) => {
       if (res.code === 0) {
-        let list = res.data.map(item => item.itemData)
+        let list = res.data.map(item => {
+          return {
+            appId: item.appId,
+            tenantId: item.tenantId,
+            version: item.version,
+            ...item.itemData
+          }
+        });
         setSkillArr(list, 'workflow');
         setSkillList([...pluginMap.current]);
       }
@@ -74,10 +81,16 @@ const Skill = (props) => {
           name: item.name,
           tags: item.tags,
           type,
+          appId: item.appId || '',
+          tenantId: item.tenantId || '',
         };
         pluginMap.current.push(obj);
       }
     })
+  }
+  // 工具流详情
+  const workflowDetail = (item) => {
+    navigate(`/app-develop/${item.tenantId}/app-detail/flow-detail/${item.appId}`);
   }
   return (
     <>
@@ -101,6 +114,7 @@ const Skill = (props) => {
                       {item.name || item }
                     </span>
                     <span>
+                      { item.type === 'workflow' && <EyeOutlined style={{ cursor: 'pointer', fontSize: '14px', color: '#4D4D4D', marginRight: '8px' }} onClick={() => workflowDetail(item)}/> }
                       <CloseOutlined style={{ cursor: 'pointer', fontSize: '14px', color: '#4D4D4D' }} onClick={() => deleteItem(item)} />
                     </span>
                   </div>

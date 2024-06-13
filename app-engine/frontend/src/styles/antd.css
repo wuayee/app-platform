@@ -2785,7 +2785,7 @@ html {
 }
 .ant-empty-img-default-ellipse {
   fill: #f5f5f5;
-  fill-opacity: 0.8;
+  fillOpacity: 0.8;
 }
 .ant-empty-img-default-path-1 {
   fill: #aeb8c2;
