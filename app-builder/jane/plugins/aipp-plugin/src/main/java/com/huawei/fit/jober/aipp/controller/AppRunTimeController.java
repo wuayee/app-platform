@@ -209,6 +209,7 @@ public class AppRunTimeController extends AbstractController {
      * @param httpRequest 操作上下文
      * @param tenantId 租户id
      * @param instanceId 实例id
+     * @param msgArgs 用于终止时返回的信息
      * @return
      */
     @PutMapping(path = "/instances/{instance_id}/terminate", description = "终止实例任务")

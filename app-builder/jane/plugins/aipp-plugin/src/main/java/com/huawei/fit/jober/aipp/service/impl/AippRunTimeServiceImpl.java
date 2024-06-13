@@ -793,6 +793,7 @@ public class AippRunTimeServiceImpl
      *
      * @param context 操作上下文
      * @param instanceId 实例id
+     * @param msgArgs 用于终止时返回的信息
      */
     @Override
     public void terminateInstance(String instanceId, Map<String, Object> msgArgs, OperationContext context) {
