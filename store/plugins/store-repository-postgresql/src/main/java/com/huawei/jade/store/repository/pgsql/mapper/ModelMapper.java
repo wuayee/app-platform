@@ -23,4 +23,11 @@ public interface ModelMapper {
      * @return 所有任务的实体类的实例的 {@link List}{@code <}{@link ModelDo}{@code >}。
      */
     List<ModelDo> getModels(ModelQuery modelQuery);
+
+    /**
+     * 获取模型的总数。
+     *
+     * @return 表示模型总数的 {@code int}。
+     */
+    int getCount();
 }

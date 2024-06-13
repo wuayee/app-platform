@@ -28,4 +28,7 @@
         </where>
         <include refid="sortAndLimit"/>
     </select>
+    <sql id="getCount">
+        select count(*) from "store_model"
+    </sql>
 </mapper>

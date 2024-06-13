@@ -58,6 +58,6 @@ public class ModelController {
             notNegative(pageSize, "The page size cannot be negative. [pageSize={0}]", pageSize);
         }
         ModelQuery modelQuery = new ModelQuery(taskId, pageNum, pageSize);
-        return Result.create(this.modelService.getModels(modelQuery), 0);
+        return Result.create(this.modelService.getModels(modelQuery), this.modelService.getCount());
     }
 }

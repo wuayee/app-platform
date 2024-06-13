@@ -27,4 +27,12 @@ public interface HuggingFaceModelService {
      */
     @Genericable(id = "com.huawei.jade.store.model.getModels.byTaskId")
     List<ModelData> getModels(ModelQuery modelQuery);
+
+    /**
+     * 获取模型的数量。
+     *
+     * @return 表示模型数量的 {@code int}。
+     */
+    @Genericable(id = "com.huawei.jade.store.model.getCount")
+    int getCount();
 }
