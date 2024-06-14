@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form }from 'antd';
+import { Form } from 'antd';
 import { Button, Input, Radio, Select } from 'antd';
 import type { TableProps } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -69,22 +69,22 @@ const KnowledgeBaseDetailCreateTable = () => {
   const formItemLayout =
     formLayout === 'horizontal' ? { labelCol: { span: 8 }, wrapperCol: { span: 20 } } : null;
 
-  const submit = ()=> {
+  const submit = () => {
     form.submit();
   }
   const onFinish = async (value: FieldType) => {
     // loading状态点击不触发，禁止多次触发提交
-    if(loading) return;
+    if (loading) return;
     createKnowledgeTable(value)
   };
 
   // 获取类型
-  const getTableType = async()=> {
+  const getTableType = async () => {
     try {
       const typeList = await getKnowledgeTableType();
-      if(typeList && typeList.length) {
+      if (typeList && typeList.length) {
         const data = typeList.reduce((prev: any, next: any) => {
-          if(prev[next.type]) {
+          if (prev[next.type]) {
             prev[next.type].push(next);
           } else {
             prev[next.type] = [next];
@@ -92,9 +92,9 @@ const KnowledgeBaseDetailCreateTable = () => {
           return prev;
         }, {});
 
-        setServiceMap({...data})
+        setServiceMap({ ...data })
 
-        const typeOptionList: any[] = Object.keys(data).map(item=> ({
+        const typeOptionList: any[] = Object.keys(data).map(item => ({
           value: item,
           label: item,
         }));
@@ -102,7 +102,7 @@ const KnowledgeBaseDetailCreateTable = () => {
         setGroupList([...typeOptionList]);
       }
     } catch (error) {
-      
+
     }
   }
 
@@ -115,7 +115,7 @@ const KnowledgeBaseDetailCreateTable = () => {
   const createKnowledgeTable = async (value: FieldType) => {
     setLoading(true);
 
-    const res =await createKnowledgeTableRow(id, {
+    const res = await createKnowledgeTableRow(id, {
       name: value.knowledgeBaseName,
       serviceType: value.knowledgeBaseType,
       serviceId: value.knowledgeBaseRemoteService,
@@ -123,32 +123,32 @@ const KnowledgeBaseDetailCreateTable = () => {
       repositoryId: id,
     })
 
-    if(value.importData && res) {
+    if (value.importData && res) {
       // 创建成功保存id，跳转至导入数据表单
       navigate(`/knowledge-base/knowledge-detail/import-data?id=${id}&tableid=${res}&tabletype=${value.knowledgeBaseFormat}`, { replace: true });
       return;
     }
 
-    if(res) {
+    if (res) {
       navigate(-1)
     }
 
     setLoading(false)
   }
 
-  const onCancle = ()=> {
+  const onCancle = () => {
     navigate(-1)
   }
 
-  useEffect(()=> {
-    if(table_id) {
+  useEffect(() => {
+    if (table_id) {
     }
     getTableType();
   }, []);
 
-  useEffect(()=> {
+  useEffect(() => {
     form.setFieldValue('knowledgeBaseRemoteService', '')
-    if(seviceMap[knowledgeBaseTypeChange]) {
+    if (seviceMap[knowledgeBaseTypeChange]) {
       setServiceList([...seviceMap[knowledgeBaseTypeChange].map((item: any) => {
         return ({
           value: item.id,
@@ -165,49 +165,60 @@ const KnowledgeBaseDetailCreateTable = () => {
 
   return (
     <>
-    <div className='aui-fullpage'>
-    <div className='aui-header-1'>
-      <div className='aui-title-1'>
-        <BreadcrumbSelf currentLabel={table_id ? '修改知识表': '添加知识表'} searchFlag={true}></BreadcrumbSelf>
-      </div>
-    </div>
-      <div className='aui-block' style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 8
-      }}>
-                <div style={{
-          width: '100%',
-          flex:1,
-          background: '#fff',
+      <div className='aui-fullpage'>
+        <div className='aui-header-1'>
+          <div className='aui-title-1'>
+            <BreadcrumbSelf currentLabel={table_id ? '修改知识表' : '添加知识表'} searchFlag={true}></BreadcrumbSelf>
+          </div>
+        </div>
+        <div className='aui-block' style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 8
         }}>
-           <Form<FieldType>
-            {...formItemLayout}
-            layout={formLayout}
-            form={form}
-            initialValues={initialValues}
-            onFinish={onFinish}
-            style={{ maxWidth: formLayout === 'inline' ? 'none' : 800 }}
-          >
-            <Form.Item label="知识表名称"  name = 'knowledgeBaseName' rules={[{ required: true, message: '输入不能为空' }]}>
-              <Input placeholder='请输入'/>
-            </Form.Item>
-            
-            <Form.Item label="类型选择" name = 'knowledgeBaseType' rules={[{ required: true, message: '输入不能为空' }]} style={{
-                    marginTop: 16
-                  }}>
-              <Select options={groupList} allowClear/>
-            </Form.Item>
-            
-            <Form.Item label="后端服务"  name = 'knowledgeBaseRemoteService' rules={[{ required: true, message: '输入不能为空' }]} style={{
-                    marginTop: 16
-                  }}>
-              <Select options={serviceList} allowClear/>
-            </Form.Item>
-            <Form.Item label="格式" name = 'knowledgeBaseFormat' style={{
-                    marginTop: 16
-                  }}>
-              <Radio.Group size="large" style={{
+          <div style={{
+            width: '100%',
+            flex: 1,
+            background: '#fff',
+          }}>
+            <Form<FieldType>
+              {...formItemLayout}
+              layout={formLayout}
+              form={form}
+              initialValues={initialValues}
+              onFinish={onFinish}
+              style={{ maxWidth: formLayout === 'inline' ? 'none' : 800 }}
+            >
+              <Form.Item
+                label="知识表名称"
+                name='knowledgeBaseName'
+                rules={[
+                  { required: true, message: '输入不能为空' },
+                  {
+                    type: 'string',
+                    max: 64,
+                    message: '输入字符长度范围：1 - 64'
+                  }
+                ]}
+              >
+                <Input placeholder='请输入' />
+              </Form.Item>
+
+              <Form.Item label="类型选择" name='knowledgeBaseType' rules={[{ required: true, message: '输入不能为空' }]} style={{
+                marginTop: 16
+              }}>
+                <Select options={groupList} allowClear />
+              </Form.Item>
+
+              <Form.Item label="后端服务" name='knowledgeBaseRemoteService' rules={[{ required: true, message: '输入不能为空' }]} style={{
+                marginTop: 16
+              }}>
+                <Select options={serviceList} allowClear />
+              </Form.Item>
+              <Form.Item label="格式" name='knowledgeBaseFormat' style={{
+                marginTop: 16
+              }}>
+                <Radio.Group size="large" style={{
                   display: 'flex',
                   justifyContent: 'space-between'
                 }}>
@@ -217,62 +228,62 @@ const KnowledgeBaseDetailCreateTable = () => {
                     borderRadius: 4,
                     display: 'flex',
                     alignItems: 'center'
-                  }} value="text"> 
+                  }} value="text">
                     <div style={{
                       display: 'flex',
                       alignItems: 'center',
                       gap: 4,
-                      }}>
-                        {<KnowledgeIcons.text></KnowledgeIcons.text>} 文本
+                    }}>
+                      {<KnowledgeIcons.text></KnowledgeIcons.text>} 文本
                     </div>
                   </Radio.Button>
-                  
+
                   <Radio.Button value="table" style={{
                     width: 391,
                     height: 40,
                     borderRadius: 4,
-  
+
                   }}>
                     <div style={{
                       display: 'flex',
                       alignItems: 'center',
                       gap: 4,
-                      }}>
+                    }}>
                       {<KnowledgeIcons.table></KnowledgeIcons.table>} 表格
                     </div>
                   </Radio.Button>
-              </Radio.Group>
-            </Form.Item>
-            <Form.Item label="是否导入数据" name = 'importData' style={{
-              width: 150,
-              marginTop: 16,
-            }}>
-              <Radio.Group size="large" style={{
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item label="是否导入数据" name='importData' style={{
+                width: 150,
+                marginTop: 16,
+              }}>
+                <Radio.Group size="large" style={{
                   display: 'flex',
                   justifyContent: 'space-between'
                 }}>
-                  <Radio  value={true}>是</Radio>
-                  <Radio  value={false}> 否</Radio>
-              </Radio.Group>
-            </Form.Item>
+                  <Radio value={true}>是</Radio>
+                  <Radio value={false}> 否</Radio>
+                </Radio.Group>
+              </Form.Item>
 
-          </Form>
+            </Form>
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'end',
+            gap: 16,
+          }}>
+            <Button onClick={onCancle} style={{
+              borderRadius: 4,
+            }}>取消</Button>
+            <Button type="primary" loading={loading} onClick={submit} style={{
+              borderRadius: 4,
+            }}>确定</Button>
+          </div>
+          <div />
         </div>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'end',
-          gap: 16,
-        }}>
-          <Button onClick={onCancle} style={{
-            borderRadius: 4,
-          }}>取消</Button>
-          <Button type="primary" loading={loading} onClick={submit} style={{
-            borderRadius: 4,
-          }}>确定</Button>
-        </div>
-      <div />
-    </div>
-    </div>
+      </div>
 
     </>
   )
