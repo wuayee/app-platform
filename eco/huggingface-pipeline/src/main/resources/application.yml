@@ -2,4 +2,4 @@ fit:
   beans:
     packages: 'com.huawei.jade.fel.pipeline.huggingface'
 
-huggingface-pipeline-base-url: 'http://80.11.128.86:8100'
+gateway-url: 'http://model-io-gateway:8009'
