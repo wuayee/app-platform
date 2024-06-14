@@ -422,4 +422,17 @@ public class AippLogServiceImpl implements AippLogService {
         }
         this.aippLogMapper.deleteInstanceLog(instanceId);
     }
+
+    @Override
+    public List<AippInstLogDataDto> queryAippRecentInstLogAfterSplice(String aippId, String aippType, Integer count,
+        OperationContext context) {
+        List<String> instanceIds =
+            aippLogMapper.selectRecentInstanceId(aippId, aippType, count, context.getW3Account());
+        return queryRecentLogByInstanceIds(instanceIds, context).values()
+            .stream()
+            .map(AippInstLogDataDto::fromAippInstLogListAfterSplice)
+            .filter(dto -> dto.getQuestion() != null)
+            .sorted((d1, d2) -> Math.toIntExact(d1.getQuestion().getLogId() - d2.getQuestion().getLogId()))
+            .collect(Collectors.toList());
+    }
 }

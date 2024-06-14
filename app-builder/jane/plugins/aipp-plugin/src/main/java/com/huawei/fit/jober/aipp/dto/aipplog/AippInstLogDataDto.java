@@ -56,6 +56,20 @@ public class AippInstLogDataDto {
         return new AippInstLogDataDto(inAippId,inAippVersion, inInstanceId, MetaInstStatusEnum.ARCHIVED.name(), null, null, convert(question), logBodies);
     }
 
+    /**
+     * 获取经过天舟AI提示词拼接工具处理后的历史记录
+     *
+     * @param rawLogs 日志列表
+     * @return 实例历史记录
+     */
+    public static AippInstLogDataDto fromAippInstLogListAfterSplice(List<AippInstLog> rawLogs) {
+        List<AippInstLog> updatedLogs = rawLogs.stream()
+            .filter(log -> !(rawLogs.size() == 3 && AippInstLogType.QUESTION.name().equals(log.getLogType())))
+            .collect(Collectors.toList());
+
+        return fromAippInstLogList(updatedLogs);
+    }
+
     @AllArgsConstructor
     @Getter
     public static class AippInstanceLogBody {
