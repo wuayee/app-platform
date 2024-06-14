@@ -147,7 +147,7 @@ const Inspiration = (props) => {
       setEditorSelect(result, item);
     } else {
       const editorDom = document.getElementById('ctrl-promet');
-      editorDom.innerHTML = item.prompt || '';
+      editorDom.innerText = item.prompt || '';
     }
   }
   // 隐藏下拉框
