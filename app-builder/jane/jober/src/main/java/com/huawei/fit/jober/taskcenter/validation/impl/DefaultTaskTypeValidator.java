@@ -7,6 +7,7 @@ package com.huawei.fit.jober.taskcenter.validation.impl;
 import com.huawei.fit.jane.task.util.Entities;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
+import com.huawei.fit.jober.common.utils.VersionUtils;
 import com.huawei.fit.jober.taskcenter.validation.TaskTypeValidator;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Value;
@@ -38,7 +39,8 @@ public class DefaultTaskTypeValidator implements TaskTypeValidator {
     @Override
     public String name(String name) {
         String actual = StringUtils.trim(name);
-        if (StringUtils.isEmpty(actual) || actual.length() > this.nameLengthMaximum) {
+        String versionName = VersionUtils.getRealName(actual);
+        if (StringUtils.isEmpty(versionName) || versionName.length() > this.nameLengthMaximum) {
             throw new BadRequestException(ErrorCodes.TYPE_NAME_LENGTH_OUT_OF_BOUNDS);
         }
         return actual;
