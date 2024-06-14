@@ -59,6 +59,7 @@
     width: 24px !important;
     height: 24px !important;
     border: none !important;
+    pointer-events: none;
 }
 
 .jade-form-item .ant-form-item-label > label {
@@ -145,7 +146,7 @@
 }
 
 .title {
-    font-family: SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
     font-size: 14px;
     font-weight: 600;
     margin-right: 4px;
@@ -187,10 +188,31 @@
     background-size: cover !important;
     background-position: center !important;
     padding: 0 !important;
-    margin: 0 0 0 8px !important;
-    width: 24px !important;
-    height: 24px !important;
+    width: 14px !important;
+    height: 14px !important;
     border: none !important;
+    pointer-events: none;
+}
+
+.jade-node-custom-header-type-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 0 8px !important;
+    width: 24px;
+    height: 24px;
+    background: rgb(230, 242, 255);
+    border-radius: 4px;
+}
+
+.jade-component-title {
+    color: rgb(37, 43, 58);
+    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 19px;
+    letter-spacing: 0;
+    text-align: left;
 }
 
 .model-text {

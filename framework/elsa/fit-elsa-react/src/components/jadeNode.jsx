@@ -383,12 +383,9 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
      */
     self.getHeaderTypeIcon = () => {
         return (
-            <Button
-                disabled={true}
-                className="jade-node-custom-header-type-icon"
-            >
-                <ToolIcon/>
-            </Button>
+            <div className={"jade-node-custom-header-type-icon-wrapper"}>
+                <ToolIcon className="jade-node-custom-header-type-icon"/>
+            </div>
         );
     };
 

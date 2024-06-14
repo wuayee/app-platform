@@ -60,11 +60,12 @@ export const Header = ({shape, disabled}) => {
                     <Input onBlur={(e) => onInputBlur(e)}
                            ref={inputRef}
                            placeholder="请输入名称"
+                           onClick={handleClick}
                            style={{height: "24px", borderColor: shape.focusBorderColor}}/>
                 </Form.Item>
             </>);
         } else {
-            return <p style={{margin: 0}}><span>{shape.text}</span></p>;
+            return <p className={"jade-component-title"} style={{margin: 0}}><span>{shape.text}</span></p>;
         }
     };
 
