@@ -679,7 +679,7 @@ const jadeNodeDrawer = (shape, div, x, y) => {
         return (<>
             {runStatus !== NODE_STATUS.DEFAULT &&
                     <RunningStatusPanel shape={shape} ref={self.panelRef} onReportShow={onReportShow}/>}
-            <div style={{position: "relative", background: "white", padding: 12, borderRadius: shape.borderRadius}}>
+            <div style={{position: "relative", background: "white", padding: 16, borderRadius: shape.borderRadius}}>
                 <DefaultRoot shape={shape} component={shape.getComponent()} disabled={disabled} />
             </div>
         </>);
