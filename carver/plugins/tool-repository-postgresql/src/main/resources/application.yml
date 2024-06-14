@@ -14,8 +14,8 @@ druid:
   testWhileIdle: true
   testOnBorrow: false
   testOnReturn: false
-  url:
-  username:
-  password:
+  url: 'jdbc:postgresql://${ip}:${port}/' # 将 ip 换成本地 pgsql 服务器的 ip 地址，将 port 换成本地 pgsql 监听的端口
+  username: '${username}' # 将 username 换成本地 pgsql 的用户名
+  password: '${password}' # 将 password 换成本地 pgsql 的密码
 mybatis:
   mapper-locations: 'mapper/*Mapper.xml'

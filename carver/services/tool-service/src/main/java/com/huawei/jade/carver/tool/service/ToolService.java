@@ -5,10 +5,9 @@
 package com.huawei.jade.carver.tool.service;
 
 import com.huawei.fitframework.annotation.Genericable;
-import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
+import com.huawei.jade.carver.ListResult;
+import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
-
-import java.util.List;
 
 /**
  * 提供工具的通用服务。
@@ -47,20 +46,20 @@ public interface ToolService {
     /**
      * 根据动态条件准确查询工具列表。
      *
-     * @param toolTagQuery 表示动态查询条件的 {@link ToolTagQuery}
-     * @return 表示工具列表的 {@link List}{@code <}{@link ToolData}{@code >}。
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}
+     * @return 表示工具列表的 {@link ListResult}{@code <}{@link ToolData}{@code >}。
      */
-    @Genericable(id = "com.huawei.jade.carver.tool.getTools.byToolTagQuery")
-    List<ToolData> getTools(ToolTagQuery toolTagQuery);
+    @Genericable(id = "com.huawei.jade.carver.tool.getTools.byToolQuery")
+    ListResult<ToolData> getTools(ToolQuery toolQuery);
 
     /**
      * 根据动态条件模糊查询工具列表。
      *
-     * @param toolTagQuery 表示动态查询条件的 {@link ToolTagQuery}
-     * @return 表示工具列表的 {@link List}{@code <}{@link ToolData}{@code >}。
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}
+     * @return 表示工具列表的 {@link ListResult}{@code <}{@link ToolData}{@code >}。
      */
-    @Genericable(id = "com.huawei.jade.carver.tool.searchTools.byToolTagQuery")
-    List<ToolData> searchTools(ToolTagQuery toolTagQuery);
+    @Genericable(id = "com.huawei.jade.carver.tool.searchTools.byToolQuery")
+    ListResult<ToolData> searchTools(ToolQuery toolQuery);
 
     /**
      * 添加工具标签。

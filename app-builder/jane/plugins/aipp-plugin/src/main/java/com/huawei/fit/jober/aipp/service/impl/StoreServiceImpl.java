@@ -22,7 +22,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
+import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.service.ToolService;
 import com.huawei.jade.store.entity.query.ModelQuery;
@@ -79,7 +79,7 @@ public class StoreServiceImpl implements StoreService {
                 Collections.singletonList(StringUtils.EMPTY),
                 pageNum,
                 pageSize);
-        return this.toolService.searchTools(query);
+        return this.toolService.searchTools(query).getData();
     }
 
     private String getDefaultModel(ToolData toolData, String tag) {

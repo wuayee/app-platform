@@ -28,4 +28,7 @@
         </where>
         <include refid="sortAndLimit"/>
     </select>
+    <select id="getCount" resultType="int">
+        select count(*) from "store_model" where "task_name" = #{taskName}
+    </select>
 </mapper>

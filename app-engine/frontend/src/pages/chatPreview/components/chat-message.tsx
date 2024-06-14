@@ -12,23 +12,29 @@ import { setChatList } from '../../../store/chatStore/chatStore';
 const ChatMessaga = (props) => {
   const dispatch = useAppDispatch();
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
-  const { showCheck, setCheckedList, setEditorShow } = props;
+  const { showCheck, setCheckedList, setEditorShow, feedRef } = props;
   
   const initFeedbackStatus = async (id) => {
-    for (let i = 0; i < chatList?.length; i++) {
-      let item = chatList[i]
+    let arr = JSON.parse(JSON.stringify(chatList))
+    for (let i = 0; i < arr?.length; i++) {
+      let item = arr[i]
       if (item.type === 'recieve' && item?.instanceId && (id === 'all' || item?.instanceId === id)) {
         await queryFeedback(item.instanceId).then((res) => {
           if (!res) {
-            item = { ...item, feedbackStatus: -1 };
+            item.feedbackStatus = -1 ;
           } else {
-            item = { ...item, feedbackStatus: res.usrFeedback };
+            item.feedbackStatus = res.usrFeedback ;
           }
         });
       }
     }
+    dispatch(setChatList(arr));
   }
-
+  useImperativeHandle(feedRef, () => {
+    return {
+      'initFeedbackStatus': initFeedbackStatus
+    }
+  })
   useEffect(() => {
     scrollBottom();
   }, [chatList?.length]);

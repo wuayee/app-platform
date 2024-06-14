@@ -11,7 +11,7 @@ import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestQuery;
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.value.Result;
+import com.huawei.jade.carver.Result;
 import com.huawei.jade.store.entity.query.ModelQuery;
 import com.huawei.jade.store.entity.transfer.ModelData;
 import com.huawei.jade.store.service.EcoTaskService;
@@ -42,13 +42,13 @@ public class ModelController {
     /**
      * 根据动态查询条件准确获取模型列表。
      *
-     * @param taskId 表示任务唯一标识的 {@link String}。
+     * @param taskName 表示任务唯一标识的 {@link String}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param pageSize 表示限制的 {@link Integer}。
      * @return 表示查询到的指定模型的信息的 {@link Result}{@code <}{@link ModelData}{@code >}。
      */
     @GetMapping
-    public Result<List<ModelData>> getModels(@RequestQuery(value = "taskId", required = false) String taskId,
+    public Result<List<ModelData>> getModels(@RequestQuery(value = "taskName", required = false) String taskName,
             @RequestQuery(value = "pageNum", required = false) Integer pageNum,
             @RequestQuery(value = "pageSize", required = false) Integer pageSize) {
         if (pageNum != null) {
@@ -57,7 +57,7 @@ public class ModelController {
         if (pageSize != null) {
             notNegative(pageSize, "The page size cannot be negative. [pageSize={0}]", pageSize);
         }
-        ModelQuery modelQuery = new ModelQuery(taskId, pageNum, pageSize);
-        return Result.create(this.modelService.getModels(modelQuery), 0);
+        ModelQuery modelQuery = new ModelQuery(taskName, pageNum, pageSize);
+        return Result.create(this.modelService.getModels(modelQuery), 0, this.modelService.getCount(taskName));
     }
 }

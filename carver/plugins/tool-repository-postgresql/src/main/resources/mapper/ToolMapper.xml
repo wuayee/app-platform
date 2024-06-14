@@ -48,6 +48,13 @@
                             from "store_tag" t
                             group by t."tool_unique_name") tg on i."unique_name" = tg."tool_unique_name"
     </sql>
+    <sql id="getCount">
+        select count(i."creator")
+        from "store_tool" i
+                 left join (select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags
+                            from "store_tag" t
+                            group by t."tool_unique_name") tg on i."unique_name" = tg."tool_unique_name"
+    </sql>
     <sql id="getOrSearchConditions">
         <if test="includeTags != null and includeTags.size() > 0">
             and tg.tags is not null
@@ -76,7 +83,7 @@
             limit #{limit}
         </if>
     </sql>
-    <select id="getTools" parameterType="com.huawei.jade.carver.tool.model.query.ToolTagQuery" resultMap="Tool">
+    <select id="getTools" parameterType="com.huawei.jade.carver.tool.model.query.ToolQuery" resultMap="Tool">
         <include refid="getOrSearchSelect"/>
         <where>
             <include refid="getOrSearchConditions"/>
@@ -86,7 +93,7 @@
         </where>
         <include refid="sortAndLimit"/>
     </select>
-    <select id="searchTools" parameterType="com.huawei.jade.carver.tool.model.query.ToolTagQuery" resultMap="Tool">
+    <select id="searchTools" parameterType="com.huawei.jade.carver.tool.model.query.ToolQuery" resultMap="Tool">
         <include refid="getOrSearchSelect"/>
         <where>
             <include refid="getOrSearchConditions"/>
@@ -95,5 +102,23 @@
             </if>
         </where>
         <include refid="sortAndLimit"/>
+    </select>
+    <select id="getToolsCount" parameterType="com.huawei.jade.carver.tool.model.query.ToolQuery">
+        <include refid="getCount"/>
+        <where>
+            <include refid="getOrSearchConditions"/>
+            <if test="toolName != null and toolName != ''">
+                and i."name" = #{toolName}
+            </if>
+        </where>
+    </select>
+    <select id="searchToolsCount" parameterType="com.huawei.jade.carver.tool.model.query.ToolQuery">
+        <include refid="getCount"/>
+        <where>
+            <include refid="getOrSearchConditions"/>
+            <if test="toolName != null and toolName != ''">
+                and i."name" like '%' || #{toolName} || '%'
+            </if>
+        </where>
     </select>
 </mapper>
