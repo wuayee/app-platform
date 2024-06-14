@@ -4,16 +4,14 @@
 
 package com.huawei.jade.carver.tool.repository.pgsql.model.entity;
 
+import static com.huawei.jade.carver.util.SerializeUtils.json2obj;
+
 import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.carver.tool.Tool;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.lang.reflect.Type;
-import java.util.Map;
 
 /**
  * 存入数据库的工具的实体类。
@@ -115,21 +113,5 @@ public class ToolDo {
                 .uniqueName(toolDo.getUniqueName())
                 .description(toolDo.getDescription())
                 .build();
-    }
-
-    /**
-     * 反序列化。
-     *
-     * @param schema 表示待序列化的字符串 {@link String}。
-     * @param serializer 表示序列化对象的 {@link ObjectSerializer}。
-     * @return 序列化的结果的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
-     */
-    public static Map<String, Object> json2obj(String schema, ObjectSerializer serializer) {
-        Map<String, Object> res = null;
-        if (schema != null) {
-            res = serializer.deserialize(schema,
-                    TypeUtils.parameterized(Map.class, new Type[] {String.class, Object.class}));
-        }
-        return res;
     }
 }
