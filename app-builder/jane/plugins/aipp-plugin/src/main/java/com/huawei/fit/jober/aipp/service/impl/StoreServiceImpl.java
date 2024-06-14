@@ -18,7 +18,7 @@ import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
+import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.service.ToolService;
 
@@ -50,12 +50,12 @@ public class StoreServiceImpl implements StoreService {
     }
 
     private List<ToolData> buildToolNodesConfig(AppCategory appCategory, int pageNum, int pageSize) {
-        ToolTagQuery query = new ToolTagQuery(null,
+        ToolQuery query = new ToolQuery(null,
                 Collections.singletonList(appCategory.getTag()),
                 Collections.singletonList(StringUtils.EMPTY),
                 pageNum,
                 pageSize);
-        return this.toolService.searchTools(query);
+        return this.toolService.searchTools(query).getData();
     }
 
     private List<StoreBasicNodeInfoDto> buildBasicNodesConfig() {

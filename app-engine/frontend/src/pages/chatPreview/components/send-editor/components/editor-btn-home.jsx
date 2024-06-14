@@ -39,7 +39,6 @@ const EditorBtnHome = (props) => {
 
   let openUploadRef = useRef(null);
   useEffect(() => {
-    console.log(chatType)
     document.body.addEventListener('click', () => {
       setShowAt(false);
     })
@@ -127,8 +126,8 @@ const EditorBtnHome = (props) => {
             { !appInfo.hideHistory && <ArrowDownIcon className="arrow-icon" /> }
             { isAt && <span style={{ marginLeft: '6px' }}>对话</span> }
           </div>
-          <LinkIcon onClick={uploadClick} />
-          { (!isAt && !appInfo.hideHistory ) && <AtIcon onClick={atClick} /> }
+          {/* <LinkIcon onClick={uploadClick} /> */}
+          {/* { (!isAt && !appInfo.hideHistory ) && <AtIcon onClick={atClick} /> } */}
         </div>
       </div>
       <div className="inner-right">

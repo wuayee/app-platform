@@ -7,6 +7,7 @@ package com.huawei.jade.carver.tool.waterflow;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.broker.client.BrokerClient;
+import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.ToolFactory;
@@ -25,6 +26,7 @@ public class WaterFlowToolFactory implements ToolFactory {
         this.fitToolFactory = ToolFactory.fit(brokerClient, serializer);
     }
 
+    @Nonnull
     @Override
     public String type() {
         return "WATERFLOW";

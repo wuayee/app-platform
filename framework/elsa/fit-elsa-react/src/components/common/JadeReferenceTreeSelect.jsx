@@ -5,16 +5,12 @@ import {useEffect, useRef, useState} from "react";
 /**
  * jade的带引用功能的级联选择框.
  *
- * @param reference 引用数据.
- * @param onReferencedValueChange 当引用组件的值发生变化时触发.
- * @param onReferencedKeyChange 当引用的key发生变化时触发.
- * @param rules 校验规则.
- * @param className 组件使用的类名称.
- * @param rest 其他参数.
+ * @param props 参数
  * @return {JSX.Element}
  * @constructor
  */
-export const JadeReferenceTreeSelect = ({reference, onReferencedValueChange, onReferencedKeyChange, rules, className, ...rest}) => {
+export const JadeReferenceTreeSelect = (props) => {
+    const {reference, onReferencedValueChange, onReferencedKeyChange, rules, className, ...rest} = props;
     const shape = useShapeContext();
     const form = useFormContext();
     const stopObserve = useRef(null);

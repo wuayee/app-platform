@@ -356,7 +356,8 @@ public class AippRunTimeServiceTest {
                 .when(aippLogServiceMock)
                 .insertLog(argThat(dto -> AippInstLogType.MSG.name().equals(dto.getLogType())));
 
-        runTimeService.terminateInstance(DUMMY_INST_ID, genTestOpContext());
+        Map<String, Object> msgArgs = new HashMap<>();
+        runTimeService.terminateInstance(DUMMY_INST_ID, msgArgs, genTestOpContext());
         verify(flowInstanceServiceMock, times(1)).terminateFlows(any(), eq(DUMMY_FLOW_INST_ID), any(), any());
     }
 

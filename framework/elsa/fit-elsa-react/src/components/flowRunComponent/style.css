@@ -1,59 +1,18 @@
-/*todo 这里需要提供多种类型的header样式，比如header-success，header-failed，header-test-running*/
-
-.graph-header-common {
-    display: flex;
-    align-items: center;
-    width: calc(100% + 24px);
-    cursor: default;
-    margin-left: -12px;
-    margin-top: -12px;
-    padding-left: 12px;
-}
-
-.graph-header-success {
-    background-color: #EDF9EE;
-}
-
-.graph-header-running {
-    background-color: #E7F9FA;
-}
-
-.graph-header-failed {
-    background-color: #FFF3EE;
-}
-
-.success-icon {
-    color: #F05B56;
-}
-
-.failed-icon {
-    color: #52C41A;
-}
-
-.running-icon {
-    color: #03B6D0;
-}
-
-.circle-icon-success {
+.icon-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: #52c41a;
-    margin-right: 10px;
 }
 
 .run-text {
-    font-weight: 400;
-    margin-left: 10px;
+    font-weight: bold;
+    margin-left: 5px;
     align-items: center;
-    color: rgb(56, 55, 67);
+    color: rgb(26, 26, 26);
     user-select: none;
     font-family: SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
     font-size: 14px;
-    line-height: 22px;
+    line-height: 20px;
     font-style: normal;
 }
 
@@ -65,15 +24,11 @@
 }
 
 .time-text-container-success {
-    background-color: rgb(210, 243, 213);
-}
-
-.time-text-container-running {
-    background-color: rgb(197, 243, 246);
+    background-color: rgb(77, 185, 155, 0.2);
 }
 
 .time-text-container-failed {
-    background-color: rgb(255, 218, 207);
+    background-color: rgb(198, 57, 57, 0.2);
 }
 
 .time-text {
@@ -86,7 +41,7 @@
 }
 
 .time-text-success {
-    color: rgb(50, 162, 71);
+    color: rgb(83, 171, 107);
 }
 
 .time-text-running {
@@ -94,15 +49,15 @@
 }
 
 .time-text-failed {
-    color: rgb(219, 21, 7);
+    color: rgb(198, 57, 57);
 }
 
 .button-text {
-    color: rgb(77, 83, 232);
+    color: rgb(77, 77, 77);
     font-family: SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
     font-size: 14px;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 300;
     line-height: 22px;
     user-select: none;
     cursor: pointer;
@@ -112,7 +67,7 @@
 /* 新增这部分来覆盖悬停效果 */
 .button-text-no-hover-effect:hover {
     background-color: transparent !important;
-    color: rgb(77, 83, 232) !important;
+    color: rgb(74, 147, 255) !important;
     box-shadow: none !important; /* 移除阴影 */
 }
 
@@ -140,10 +95,6 @@
     line-height: 24px;
     color: rgb(28, 31, 35);
     user-select: none;
-}
-
-.panel-content {
-    padding: 20px;
 }
 
 .copy-button {
@@ -234,12 +185,6 @@
     margin-bottom: 6px;
 }
 
-.value-display-area {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .center-text {
     font-size: 14px;
     color: #1D1C23;
@@ -252,4 +197,10 @@
     top: 0;
     left: 0;
     pointer-events: none;
+}
+
+.running-status-panel {
+    position: absolute;
+    border-radius: 16px;
+    background: rgba(197, 197, 197, 0.13);
 }

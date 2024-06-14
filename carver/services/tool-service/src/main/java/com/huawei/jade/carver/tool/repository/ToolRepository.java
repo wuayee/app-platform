@@ -5,7 +5,7 @@
 package com.huawei.jade.carver.tool.repository;
 
 import com.huawei.jade.carver.tool.Tool;
-import com.huawei.jade.carver.tool.model.query.ToolTagQuery;
+import com.huawei.jade.carver.tool.model.query.ToolQuery;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,18 +43,34 @@ public interface ToolRepository {
     /**
      * 根据动态条件准确查询所有的工具信息。
      *
-     * @param toolTagQuery 表示动态查询条件的 {@link ToolTagQuery}。
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}。
      * @return 表示所有工具详细信息的列表的 {@link List}{@code <}{@link Tool.Info>}{@code >}。
      */
-    List<Tool.Info> getTools(ToolTagQuery toolTagQuery);
+    List<Tool.Info> getTools(ToolQuery toolQuery);
 
     /**
      * 根据动态条件准确查询所有的工具信息。
      *
-     * @param toolTagQuery 表示动态查询条件的 {@link ToolTagQuery}。
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}。
      * @return 表示所有工具详细信息的列表的 {@link List}{@code <}{@link Tool.Info>}{@code >}。
      */
-    List<Tool.Info> searchTools(ToolTagQuery toolTagQuery);
+    List<Tool.Info> searchTools(ToolQuery toolQuery);
+
+    /**
+     * 根据动态条件准确查询所有的工具信息。
+     *
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}。
+     * @return 表示所有工具详细信息的列表的 {@link List}{@code <}{@link Tool.Info>}{@code >}。
+     */
+    int getToolsCount(ToolQuery toolQuery);
+
+    /**
+     * 根据动态条件准确查询所有的工具信息。
+     *
+     * @param toolQuery 表示动态查询条件的 {@link ToolQuery}。
+     * @return 表示所有工具详细信息的列表的 {@link List}{@code <}{@link Tool.Info>}{@code >}。
+     */
+    int searchToolsCount(ToolQuery toolQuery);
 
     /**
      * 添加工具标签。

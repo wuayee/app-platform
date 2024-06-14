@@ -32,7 +32,6 @@ export const collectionStore = createSlice({
     removeCollectionApp: (state, action: any) => {
       const data: any = state.value;
       data[action.payload] = false;
-
       state.value = { ...data };
     },
 

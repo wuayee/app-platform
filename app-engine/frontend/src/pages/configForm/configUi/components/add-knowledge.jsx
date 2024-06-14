@@ -169,8 +169,8 @@ const AddKnowledge = (props) => {
       extra={
         <CloseOutlined onClick={cancle}/>
       }>
-        <div className="knowledge-drawer">
-          {/* <div className="knowledge-tab">
+        <div className="mashup-add-drawer">
+          {/* <div className="mashup-add-tab">
             <span className="active"><img src='/src/assets/images/ai/account.png' />个人</span>
             <span><img src='/src/assets/images/ai/load.png' />团队</span>
           </div> */}

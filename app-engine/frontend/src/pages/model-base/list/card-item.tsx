@@ -2,9 +2,11 @@ import React from 'react';
 import { Card, Dropdown, Tag } from 'antd';
 import type { MenuProps } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router';
 
 const CardItem = ({ data }: any) => {
 
+  const navigate = useNavigate();
   const items: MenuProps['items'] = [
     {
       key: '1',
@@ -15,6 +17,10 @@ const CardItem = ({ data }: any) => {
       ),
     },
   ];
+
+  const gotoDetail = () => {
+    navigate(`/model-base/${data.id}/detail`);
+  }
 
   return (
     <Card
@@ -29,7 +35,7 @@ const CardItem = ({ data }: any) => {
         display: 'flex',
         justifyContent: 'space-between'
       }}>
-        <div style={{ fontSize: 20 }}>
+        <div style={{ fontSize: 20, cursor: 'pointer' }} onClick={gotoDetail}>
           {data.name}
         </div>
         <div>
@@ -50,7 +56,6 @@ const CardItem = ({ data }: any) => {
         title={data.description}
         style={{
           display: '-webkit-box',
-          wordBreak: 'break-all',
           textOverflow: 'ellipsis',
           overflow: 'hidden',
           WebkitLineClamp: 3,

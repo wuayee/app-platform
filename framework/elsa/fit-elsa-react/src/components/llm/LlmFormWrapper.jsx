@@ -10,9 +10,10 @@ import httpUtil from "../util/httpUtil.jsx";
 /**
  * 大模型表单Wrapper
  *
+ * @param disabled 是否禁用.
  * @returns {JSX.Element} 大模型表单Wrapper的DOM
  */
-export default function LlmFormWrapper() {
+export default function LlmFormWrapper({disabled}) {
     const dispatch = useDispatch();
     const data = useDataContext();
     const shape = useShapeContext();
@@ -86,9 +87,9 @@ export default function LlmFormWrapper() {
 
     return (
         <div>
-            <JadeInput items={initItems()} addItem={addItem} updateItem={updateItem} deleteItem={deleteItem}/>
-            <ModelForm shapeId={shape.id} modelOptions={modelOptions}/>
-            <SkillForm toolOptions={toolOptions} workflowOptions={workflowOptions} config={config}/>
+            <JadeInput disabled={disabled} items={initItems()} addItem={addItem} updateItem={updateItem} deleteItem={deleteItem}/>
+            <ModelForm disabled={disabled} shapeId={shape.id} modelOptions={modelOptions}/>
+            <SkillForm disabled={disabled} toolOptions={toolOptions} workflowOptions={workflowOptions} config={config}/>
             <LlmOutput/>
         </div>
     );

@@ -15,5 +15,6 @@
 
     <modules>
         <module>tool-service</module>
+        <module>common-service</module>
     </modules>
 </project>

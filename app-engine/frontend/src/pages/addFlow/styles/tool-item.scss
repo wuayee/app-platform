@@ -1,0 +1,22 @@
+.tool-tab {
+  margin: 12px 0;
+  position: relative;
+  span {
+    cursor: pointer;
+    padding: 0 8px;
+    display: inline-block;
+    border-radius: 6px;
+    margin-right: 8px;
+    font-size: 12px;
+    .active {
+      background-color: rgb(235, 235, 235);
+    }
+  }
+  .more {
+    position: absolute;
+    right: 0;
+    top: 3px;
+    background-color: #ffffff;
+    color: rgb(38, 115, 229);
+  }
+}

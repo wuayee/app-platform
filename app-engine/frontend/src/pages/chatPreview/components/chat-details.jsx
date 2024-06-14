@@ -10,6 +10,7 @@ import '../styles/chat-details.scss';
 import StarApps from "./star-apps";
 import { AppBoxIcon, CreateAppIcon } from '@assets/icon';
 import { useAppDispatch, useAppSelector } from '../../../store/hook';
+import { setOpenStar } from "../../../store/chatStore/chatStore";
 
 const ChatDetail = () => {
   const dispatch = useAppDispatch();

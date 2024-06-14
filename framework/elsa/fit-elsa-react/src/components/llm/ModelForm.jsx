@@ -17,9 +17,10 @@ ModelForm.propTypes = {
  *
  * @param shapeId 所属图形唯一标识。
  * @param modelOptions 模型选项。
+ * @param disabled 是否禁用.
  * @returns {JSX.Element} 大模型节点模型表单的DOM。
  */
-export default function ModelForm({shapeId, modelOptions}) {
+export default function ModelForm({shapeId, modelOptions, disabled}) {
     const data = useDataContext();
     const dispatch = useDispatch();
     const model = data.inputParams.find(item => item.name === "model");
@@ -52,7 +53,8 @@ export default function ModelForm({shapeId, modelOptions}) {
         }
         if (value === 0.0) {
             return '0';
-        } else if (value === 1.0) {
+        }
+        if (value === 1.0) {
             return '1';
         }
         return value;
@@ -70,11 +72,7 @@ export default function ModelForm({shapeId, modelOptions}) {
         if (required && e.target.value === "") {
             return;
         }
-        dispatch({
-            actionType: actionType,
-            id: id,
-            value: e.target.value
-        })
+        dispatch({actionType: actionType, id: id, value: e.target.value});
     };
 
     return (
@@ -100,6 +98,7 @@ export default function ModelForm({shapeId, modelOptions}) {
                                     validateTrigger="onBlur"
                             >
                                 <JadeStopPropagationSelect
+                                        disabled={disabled}
                                         className="jade-select"
                                         onClick={handleSelectClick} // 点击下拉框时阻止事件冒泡
                                         onChange={(e) => dispatch({actionType: "changeConfig", id: model.id, value: e})}
@@ -121,15 +120,15 @@ export default function ModelForm({shapeId, modelOptions}) {
                                     initialValue={temperature.value}
                                     validateTrigger="onBlur"
                             >
-                                <InputNumber
-                                        formatter={formatter}
-                                        className="jade-input"
-                                        style={{width: "100%"}}
-                                        min={0}
-                                        max={1}
-                                        step={0.1}
-                                        onBlur={(e) => changeOnBlur(e, "changeConfig", temperature.id, true)}
-                                        stringMode
+                                <InputNumber disabled={disabled}
+                                             formatter={formatter}
+                                             className="jade-input"
+                                             style={{width: "100%"}}
+                                             min={0}
+                                             max={1}
+                                             step={0.1}
+                                             onBlur={(e) => changeOnBlur(e, "changeConfig", temperature.id, true)}
+                                             stringMode
                                 />
                             </Form.Item>
                         </Col>
@@ -149,10 +148,10 @@ export default function ModelForm({shapeId, modelOptions}) {
                                     initialValue={prompt.value}
                                     validateTrigger="onBlur"
                             >
-                                <TextArea
-                                    className="jade-textarea-input jade-font-size"
-                                    onBlur={(e) => changeOnBlur(e, "changePrompt", prompt.id, true)}
-                                    placeholder="你可以用{{variable name}}来关联输入中的变量名"
+                                <TextArea disabled={disabled}
+                                          className="jade-textarea-input jade-font-size"
+                                          onBlur={(e) => changeOnBlur(e, "changePrompt", prompt.id, true)}
+                                          placeholder="你可以用{{variable name}}来关联输入中的变量名"
                                 />
                             </Form.Item>
                         </Col>
@@ -168,10 +167,10 @@ export default function ModelForm({shapeId, modelOptions}) {
                                 initialValue={systemPrompt.value}
                                 validateTrigger="onBlur"
                             >
-                                <TextArea
-                                    className="jade-textarea-input jade-font-size"
-                                    onBlur={(e) => changeOnBlur(e, "changeConfig", systemPrompt.id, false)}
-                                    placeholder="输入一段提示词，可以给应用预设身份"
+                                <TextArea disabled={disabled}
+                                          className="jade-textarea-input jade-font-size"
+                                          onBlur={(e) => changeOnBlur(e, "changeConfig", systemPrompt.id, false)}
+                                          placeholder="输入一段提示词，可以给应用预设身份"
                                 />
                             </Form.Item>
                         </Col>

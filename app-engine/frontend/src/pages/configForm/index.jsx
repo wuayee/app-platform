@@ -18,7 +18,6 @@ const ConfigForm = (props) => {
     { name: '界面配置', key: 'interface' },
   ]
   const handlePropDataChange = (data) => {
-    // config ui 调用该方法传递更新的formData
     const newData = {...configData, form : data}
     handleConfigDataChange(newData);
   }

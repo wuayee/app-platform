@@ -45,6 +45,9 @@ function App() {
 
         JadeFlow.edit(stage, graphData, configs).then(agent => {
             window.agent = agent;
+            agent.onModelSelect((onModelSelectedCallback) => {
+                onModelSelectedCallback({name: "zy-model"});
+            });
             agent.onChange(() => {
                 // const data = agent.serialize();
                 // console.log(data);

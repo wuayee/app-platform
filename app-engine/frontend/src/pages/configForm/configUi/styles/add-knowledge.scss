@@ -1,7 +1,7 @@
-.knowledge-drawer {
-  .knowledge-tab {
+.mashup-add-drawer {
+  .mashup-add-tab {
     display: flex;
-    margin-bottom: 12px;
+    margin-bottom: 6px;
     span {
       display: flex;
       align-items: center;
@@ -19,6 +19,9 @@
     .active {
       border-color: rgb(38, 115, 229);
     }
+  }
+  .mashup-add-tablist {
+    padding: 0 4px;
   }
   .knowledge-search {
     margin: 6px 0;

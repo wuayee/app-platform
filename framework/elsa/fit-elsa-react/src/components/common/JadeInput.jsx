@@ -29,9 +29,10 @@ JadeInput.propTypes = {
  * @param addItem 当添加一个新item时会调用此方法，此方法需要有id入参
  * @param updateItem 当修改一个已有item时会调用此方法，此方法需要有id，修改的key和修改的value组成的对象列表两个入参
  * @param deleteItem 当删除一个已有item时会调用此方法，此方法需要有id入参
+ * @param disabled 是否禁用.
  * @returns {JSX.Element} Jade标准输入表单的DOM
  */
-export default function JadeInput({items, addItem, updateItem, deleteItem}) {
+export default function JadeInput({items, addItem, updateItem, deleteItem, disabled}) {
     /**
      * 示例items,其中id，name，from，value必须，涉及reference时，referenceNode, referenceId, referenceKey必须, value会变为列表
      *
@@ -107,6 +108,7 @@ export default function JadeInput({items, addItem, updateItem, deleteItem}) {
             case 'Reference':
                 return (<>
                     <JadeReferenceTreeSelect
+                            disabled={disabled}
                             rules={[{required: true, message: "字段值不能为空"}]}
                             className="value-custom jade-select"
                             reference={item}
@@ -122,10 +124,10 @@ export default function JadeInput({items, addItem, updateItem, deleteItem}) {
                     initialValue={item.value}
                     validateTrigger="onBlur"
                 >
-                    <Input
-                        className="value-custom jade-input"
-                        value={item.value}
-                        onChange={(e) => handleItemChange('value', e.target.value, item.id)}
+                    <Input disabled={disabled}
+                           className="value-custom jade-input"
+                           value={item.value}
+                           onChange={(e) => handleItemChange('value', e.target.value, item.id)}
                     />
                 </Form.Item>;
             default:
@@ -142,7 +144,8 @@ export default function JadeInput({items, addItem, updateItem, deleteItem}) {
                         <Popover content={content}>
                             <InfoCircleOutlined className="jade-panel-header-popover-content"/>
                         </Popover>
-                        <Button type="text" className="icon-button jade-panel-header-icon-position"
+                        <Button disabled={disabled}
+                                type="text" className="icon-button jade-panel-header-icon-position"
                                 onClick={(event) => {
                                     handleAdd();
                                     handleSelectClick(event);
@@ -172,15 +175,18 @@ export default function JadeInput({items, addItem, updateItem, deleteItem}) {
                                 <Form.Item
                                         id={`name-${item.id}`}
                                         name={`name-${item.id}`}
-                                        rules={[{required: true, message: "字段值不能为空"}, {pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: '只能包含字母、数字或下划线，且必须以字母或下划线开头'}]}
+                                        rules={[{required: true, message: "字段值不能为空"}, {
+                                            pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/,
+                                            message: '只能包含字母、数字或下划线，且必须以字母或下划线开头'
+                                        }]}
                                         initialValue={item.name}
                                 >
-                                    <Input
-                                            className="jade-input"
-                                            placeholder="请输入字段名称"
-                                            style={{paddingRight: "12px"}}
-                                            value={item.name}
-                                            onChange={(e) => handleItemChange('name', e.target.value, item.id)}
+                                    <Input disabled={disabled}
+                                           className="jade-input"
+                                           placeholder="请输入字段名称"
+                                           style={{paddingRight: "12px"}}
+                                           value={item.name}
+                                           onChange={(e) => handleItemChange('name', e.target.value, item.id)}
                                     />
                                 </Form.Item>
                             </Col>
@@ -190,6 +196,7 @@ export default function JadeInput({items, addItem, updateItem, deleteItem}) {
                                         initialValue="Reference"
                                 >
                                     <JadeStopPropagationSelect
+                                            disabled={disabled}
                                             id={`from-select-${item.id}`}
                                             className="value-source-custom jade-select"
                                             style={{width: "100%"}}
@@ -205,7 +212,9 @@ export default function JadeInput({items, addItem, updateItem, deleteItem}) {
                             </Col>
                             <Col span={2} style={{paddingLeft: 0}}>
                                 <Form.Item>
-                                    <Button type="text" className="icon-button"
+                                    <Button disabled={disabled}
+                                            type="text"
+                                            className="icon-button"
                                             style={{height: "100%"}}
                                             onClick={() => handleDelete(item.id)}>
                                         <MinusCircleOutlined/>

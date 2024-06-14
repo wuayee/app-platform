@@ -4,7 +4,7 @@
     <resultMap id="Model" type="com.huawei.jade.store.repository.pgsql.entity.ModelDo">
         <result column="created_time" property="createdTime"/>
         <result column="updated_time" property="updatedTime"/>
-        <result column="task_id" property="taskId"/>
+        <result column="task_name" property="taskName"/>
         <result column="name" property="name"/>
         <result column="url" property="url"/>
         <result column="context" property="context"/>
@@ -19,13 +19,16 @@
         </if>
     </sql>
     <select id="getModels" resultMap="Model">
-        select i."created_time", i."updated_time", i."task_id", i."name", i."url", i."context"
+        select i."created_time", i."updated_time", i."task_name", i."name", i."url", i."context"
         from "store_model" i
         <where>
-            <if test="taskId != null">
-                i."task_id" = #{taskId}
+            <if test="taskName != null">
+                i."task_name" = #{taskName}
             </if>
         </where>
         <include refid="sortAndLimit"/>
+    </select>
+    <select id="getCount" resultType="int">
+        select count(*) from "store_model" where "task_name" = #{taskName}
     </select>
 </mapper>

@@ -46,39 +46,57 @@ const jadeFlowAgent = (graph) => {
     };
 
     /**
-     * 设置流程运行的数据，用于前端数据展示
+     * 运行流程.
      *
-     * @param dataList 数据列表
+     * @return {{stop: stop, refresh: refresh, reset: reset}} 通过refresh刷新流程状态，通过reset重置流程，通过stop结束流程.
      */
-    self.setFlowRunData = dataList => {
-        const nodeIds = dataList.map(d => d.nodeId);
-        graph.activePage.shapes.filter(s => s.isTypeof("jadeNode")).forEach(s => {
-            const data = dataList.find(d => d.nodeId === s.id);
-            if (data) {
-                s.setRunStatus(data.status === "ERROR" ? NODE_STATUS.ERROR : NODE_STATUS.SUCCESS);
-                s.setRunReportSections(data);
-            } else {
-                const preNodes = s.getDirectPreNodeIds();
-                if (preNodes.some(s => s.type === "conditionNodeCondition" || s.runStatus === NODE_STATUS.ERROR)) {
-                    return;
-                }
-                if (preNodes.every(preNode => nodeIds.includes(preNode.id))) {
-                    s.setRunStatus(NODE_STATUS.RUNNING);
-                }
+    self.run = () => {
+        const nodes = graph.activePage.shapes.filter(s => s.isTypeof("jadeNode"));
+        nodes.forEach(n => {
+            n.setRunStatus(NODE_STATUS.UN_RUNNING);
+            n.moveable = false;
+            n.drawer.setDisabled(true);
+        });
+        return {
+            // 刷新流程节点状态.
+            refresh: (dataList) => {
+                const nodeIds = dataList.map(d => d.nodeId);
+                nodes.forEach(node => {
+                    const data = dataList.find(d => d.nodeId === node.id);
+                    if (data) {
+                        node.setRunStatus(data.status === "ERROR" ? NODE_STATUS.ERROR : NODE_STATUS.SUCCESS);
+                        node.setRunReportSections(data);
+                    } else {
+                        const preNodes = node.getDirectPreNodeIds();
+                        if (preNodes.some(s => s.type === "conditionNodeCondition"
+                                || s.runStatus === NODE_STATUS.ERROR)) {
+                            return;
+                        }
+                        if (preNodes.every(preNode => nodeIds.includes(preNode.id))) {
+                            node.setRunStatus(NODE_STATUS.RUNNING);
+                        }
+                    }
+                });
+            },
+            // 重置流程节点装填.
+            reset: () => {
+                nodes.forEach(n => {
+                    n.setRunStatus(NODE_STATUS.DEFAULT);
+                    n.moveable = true;
+                    n.drawer.setDisabled(false);
+                    delete n.output;
+                    delete n.input;
+                    delete n.cost;
+                });
+            },
+            // 结束运行.
+            stop: () => {
+                nodes.forEach(n => {
+                    n.moveable = true;
+                    n.drawer.setDisabled(false);
+                });
             }
-        });
-    };
-
-    /**
-     * 重置所有节点状态节点数据
-     */
-    self.resetStatus = () => {
-        graph.activePage.shapes.filter(s => s.isTypeof("jadeNode")).forEach(s => {
-            s.setRunStatus(NODE_STATUS.DEFAULT);
-            delete s.output;
-            delete s.input;
-            delete s.cost;
-        });
+        };
     };
 
     /**
@@ -186,6 +204,17 @@ const jadeFlowAgent = (graph) => {
         }
         // 可选：.then()中可以获取校验的所有节点信息 Promise.resolve(results.filter(result => !errors.includes(result)))
         return Promise.resolve();
+    };
+
+    /**
+     * 当需要触发模型选择时的回调.
+     *
+     * @param callback 回调函数.
+     */
+    self.onModelSelect = (callback) => {
+        graph.activePage.addEventListener("SELECT_MODEL", (onModelSelected) => {
+            callback(onModelSelected);
+        });
     };
 
     return self;

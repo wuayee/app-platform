@@ -23,7 +23,8 @@ import {
   reportProcess,
   messageProcess,
   messageProcessNormal,
-  beforeSend } from './utils/chat-process';
+  beforeSend,
+  deepClone } from './utils/chat-process';
 import "./styles/chat-preview.scss";
 import { creatChat, tenantId, updateChat } from "../../shared/http/chat.js";
 import { useAppDispatch, useAppSelector } from "../../store/hook";
@@ -48,17 +49,20 @@ const ChatPreview = (props) => {
   const location = useLocation();
   let editorRef = React.createRef();
   let runningInstanceId = useRef("");
+  let currentInfo = useRef();
+  let feedRef = useRef();
   let runningVersion = useRef("");
   let runningAppid = useRef("");
   let childInstanceStop = useRef(false);
   let wsCurrent = useRef(null);
   let reportInstance = useRef('');
   let reportIContext = useRef(null);
-  const listRef = useRef(null);
+  const listRef = useRef([]);
   const chatPage =  location.pathname.indexOf('chat') !== -1;
 
   useEffect(() => {
     !chatType && dispatch(setInspirationOpen(true));
+    currentInfo.current = appInfo;
   }, []);
 
   // 灵感大全设置下拉列表
@@ -69,14 +73,14 @@ const ChatPreview = (props) => {
   // 获取历史会话
   async function initChatHistory() {
     listRef.current = [];
-    dispatch(setChatList([]));
     setLoading(true);
     try {
       const res = await getRecentInstances(tenantId, appId, 'preview');
       if (res.data && res.data.length) {
         let chatArr = historyChatProcess(res);
-        listRef.current = [...chatArr];
-        dispatch(setChatList(chatArr));
+        listRef.current = deepClone(chatArr);
+        await dispatch(setChatList(chatArr));
+        feedRef.current.initFeedbackStatus('all');
       }
     } finally {
       setLoading(false);
@@ -84,12 +88,12 @@ const ChatPreview = (props) => {
   }
 
   useEffect(() => {
-    // 清空聊天记录
-    dispatch(setChatRunning(false));
-    dispatch(setChatId(null));
-    dispatch(setChatList([]));
-    // 初始化聊天记录，目前所有chat聊天记录均未调用initChatHistory()
-    (appInfo.name && !appInfo.notShowHistory) && initChatHistory();
+    if (!currentInfo.current || currentInfo.current.id !== appInfo.id) {
+      dispatch(setChatRunning(false));
+      dispatch(setChatId(null));
+      dispatch(setChatList([]));
+      (appInfo.name && !appInfo.notShowHistory) && initChatHistory();
+    }
   }, [appInfo]);
   
   // 发送消息
@@ -108,7 +112,7 @@ const ChatPreview = (props) => {
     reciveInitObj.loading = true;
     let arr = [...listRef.current, reciveInitObj];
     listRef.current = arr;
-    dispatch(setChatList(arr));
+    dispatch(setChatList(deepClone(arr)));
     dispatch(setChatRunning(true));
     if (showElsa) {
       let params = appInfo.flowGraph;
@@ -133,7 +137,6 @@ const ChatPreview = (props) => {
   // 获取aipp_id和version
   async function getAippAndVersion(value, type) {
     try {
-      console.log(444,appId)
       const debugRes = await aippDebug(tenantId, appId, appInfo);
       if (debugRes.code === 0) {
         chatMissionStart(debugRes.data, value, type);
@@ -233,9 +236,7 @@ const ChatPreview = (props) => {
   const chatForm = (chatObj) => {
     const idx = listRef.current.length - 1;
     listRef.current.splice(idx, 1, chatObj);
-    let arr = [...listRef.current];
-    listRef.current = arr;
-    dispatch(setChatList(arr));
+    dispatch(setChatList(deepClone(listRef.current)));
     dispatch(setChatRunning(false));
   }
   // 用户自勾选
@@ -243,9 +244,7 @@ const ChatPreview = (props) => {
     reportInstance.current = instanceId;
     reportIContext.current = initContext;
     listRef.current.forEach(item => item.checked = false);
-    let arr = [...listRef.current];
-    listRef.current = arr;
-    dispatch(setChatList(arr));
+    dispatch(setChatList(deepClone(listRef.current)));
     onStop("请勾选对话");
     setCheckedList([]);
     setEditorShow(true, 'report');
@@ -265,9 +264,7 @@ const ChatPreview = (props) => {
       if (startes.code === 0 && startes.data) {
         let instanceId = startes.data;
         listRef.current[listRef.current.length - 1].loading = true;
-        let arr = [...listRef.current];
-        listRef.current = arr;
-        dispatch(setChatList(arr));
+        dispatch(setChatList(deepClone(listRef.current)));
         queryInstance(runningAppid.current, runningVersion.current, instanceId);
       } else {
         onStop("启动任务失败");
@@ -290,9 +287,7 @@ const ChatPreview = (props) => {
     initObj.finished = (status === 'ARCHIVED');
     const idx = listRef.current.length - 1;
     listRef.current.splice(idx, 1, initObj);
-    let arr = [...listRef.current];
-    listRef.current = arr;
-    dispatch(setChatList(arr));
+    dispatch(setChatList(deepClone(listRef.current)));
   }
   // 流式输出拼接
   function chatSplicing(log, msg, initObj, status) {
@@ -301,15 +296,13 @@ const ChatPreview = (props) => {
     )[0];
     if (currentChatItem) {
       let index = listRef.current.findIndex((item) => item.logId === log.msgId);
+      let item = listRef.current[index];
       let str = "";
-      console.log(currentChatItem)
       let { content } = currentChatItem;
       str = content + msg;
-      listRef.current[index].content = str;
-      listRef.current[index].finished = (status === 'ARCHIVED');
-      let arr = [...listRef.current];
-      listRef.current = arr;
-      dispatch(setChatList(arr));
+      item.content = str;
+      item.finished = (status === 'ARCHIVED');
+      dispatch(setChatList(deepClone(listRef.current)));
     } else {
       chatStrInit(msg, initObj, status);
     }
@@ -321,11 +314,11 @@ const ChatPreview = (props) => {
     val && setGroupType(type);
   }
   // 终止对话成功回调
-  function onStop(content) {
+  function onStop(str) {
     let item = listRef.current[listRef.current.length - 1];
-    item.content = content;
+    item.content = str;
     item.loading = false;
-    dispatch(setChatList(listRef.current));
+    dispatch(setChatList(deepClone(listRef.current)));
     dispatch(setChatRunning(false));
   }
   // 终止进行中的对话
@@ -341,6 +334,7 @@ const ChatPreview = (props) => {
     }
   }
 
+
   return (
     <div className={`
         chat-preview 
@@ -355,6 +349,7 @@ const ChatPreview = (props) => {
         <div className={ `chat-inner ${ chatPage ? 'chat-page-inner' : ''}`}>
           <div className={ `chat-inner-left ${ inspirationOpen ? 'chat-left-close' : 'no-border'}` }>
             <ChatMessage
+              feedRef={feedRef}
               setCheckedList={setCheckedList}
               setEditorShow={setEditorShow}
               showCheck={showCheck}/>

@@ -136,8 +136,9 @@ public interface AippRunTimeService {
      *
      * @param context 操作上下文
      * @param instanceId 实例id
+     * @param msgArgs 用于终止时返回的信息
      */
-    void terminateInstance(String instanceId, OperationContext context);
+    void terminateInstance(String instanceId, Map<String, Object> msgArgs, OperationContext context);
 
     /**
      * 终止aipp全部实例

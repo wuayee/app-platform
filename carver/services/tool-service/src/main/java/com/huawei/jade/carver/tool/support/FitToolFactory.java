@@ -7,6 +7,7 @@ package com.huawei.jade.carver.tool.support;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fitframework.broker.client.BrokerClient;
+import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.ToolFactory;
@@ -26,6 +27,7 @@ public class FitToolFactory implements ToolFactory {
         this.serializer = notNull(serializer, "The serializer cannot be null.");
     }
 
+    @Nonnull
     @Override
     public String type() {
         return FitTool.TYPE;

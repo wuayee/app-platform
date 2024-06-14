@@ -12,9 +12,10 @@ ByTokenSize.propTypes = {
  *
  * @param propValue 前端渲染的值
  * @param onValueChange 参数变化所需调用方法
+ * @param disabled 禁用.
  * @returns {JSX.Element} Memory按Token大小的Dom
  */
-export default function ByTokenSize({propValue, onValueChange}) {
+export default function ByTokenSize({propValue, onValueChange, disabled}) {
     const intValue = parseInt(propValue);
 
     const handleChange = (val) => {
@@ -29,6 +30,7 @@ export default function ByTokenSize({propValue, onValueChange}) {
                     width: "100%",
                 }}
                 min={1}
+                disabled={disabled}
                 max={10000}
                 step={100}
                 onChange={handleChange}

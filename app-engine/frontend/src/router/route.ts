@@ -22,6 +22,7 @@ import ModelTuning from '../pages/model-tuning';
 import ModelDetail from '../pages/model/model-detail';
 import AppDev from '../pages/appDev/index';
 import IndustryTerminology from '../pages/knowledge-base/knowledge-detail/industry-terminology';
+import ModelBaseDetail from '../pages/model-base/detail';
 
 export type MenuItem = Required<MenuProps>['items'][number] & {
   component?: (() => ReactElement) | React.FC<any>;
@@ -107,12 +108,6 @@ export const routeList: MenuItem[] = [
     hidden: true,
   },
   {
-    key: '/plugin',
-    icon: Icons.app({}),
-    label: '插件市场',
-    component: Plugin,
-  },
-  {
     key: '/model',
     icon: Icons.app({}),
     label: '模型服务',
@@ -130,8 +125,17 @@ export const routeList: MenuItem[] = [
   {
     key: '/model-base',
     icon: Icons.app({}),
-    label: '模型仓管理',
+    label: '模型仓库',
     component: ModelBase,
+    children: [
+      {
+        key: '/model-base/:id/detail',
+        icon: Icons.app({}),
+        label: '模型仓库',
+        component: ModelBaseDetail,
+        hidden: true
+      }
+    ]
   },
   {
     key: '/model-tuning',
@@ -185,6 +189,12 @@ export const routeList: MenuItem[] = [
         ],
       },
     ],
+  },
+  {
+    key: '/plugin',
+    icon: Icons.app({}),
+    label: '插件',
+    component: Plugin,
   },
   {
     key: '/Tooling',

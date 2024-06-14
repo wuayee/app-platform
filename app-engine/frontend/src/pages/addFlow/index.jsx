@@ -56,6 +56,7 @@ const AddFlow = (props) => {
       appearance: null
     }
   });
+  const elsaRunningCtl = useRef();
   const navigate = useNavigate();
   const appRef = useRef(null);
   const isChange = useRef(false);
@@ -159,6 +160,7 @@ const AddFlow = (props) => {
         initContext: values
       }
     };
+    elsaRunningCtl.current = window.agent.run();
     const res = await startInstance(tenantId, appId, params);
     if (res.code === 0) {
       const {aippCreate, instanceId} = res.data;
@@ -188,13 +190,15 @@ const AddFlow = (props) => {
         if (isError(runtimeData.nodeInfos)) {
           clearInterval(timerRef.current);
           setTestStatus('Error');
+          elsaRunningCtl.current?.stop();
         } else if (isEnd(runtimeData.nodeInfos)) {
           clearInterval(timerRef.current);
           setIsTesting(false);
           setIsTested(true);
           setTestStatus('Finished');
+          elsaRunningCtl.current?.stop()
         }
-        window.agent.setFlowRunData(runtimeData.nodeInfos);
+        elsaRunningCtl.current?.refresh(runtimeData.nodeInfos);
         const time = (runtimeData.executeTime / 1000).toFixed(3);
         setTestTime(time);
       }
@@ -204,6 +208,7 @@ const AddFlow = (props) => {
   const onStop = (content) => {
     clearInterval(timerRef.current);
     Message({ type: 'warning', content: content });
+    elsaRunningCtl.current?.stop();
   }
   const formatTimeStamp = (now) => {
     let hours = now.getHours().toString().padStart(2, '0');
@@ -257,7 +262,7 @@ const AddFlow = (props) => {
   }
   //
   const handleRunTest = () => {
-    window.agent.resetStatus();
+    elsaRunningCtl.current?.reset();
     setIsTested(false);
     setTestTime(0);
     handleRun(form.getFieldsValue());

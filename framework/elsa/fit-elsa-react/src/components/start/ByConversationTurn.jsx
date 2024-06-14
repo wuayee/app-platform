@@ -12,9 +12,10 @@ ByConversationTurn.propTypes = {
  *
  * @param propValue 前端渲染的值
  * @param onValueChange 参数变化所需调用方法
+ * @param disabled 禁用.
  * @returns {JSX.Element} Memory按对话轮次的Dom
  */
-export default function ByConversationTurn({propValue, onValueChange}) {
+export default function ByConversationTurn({propValue, onValueChange, disabled}) {
     const intValue = parseInt(propValue);
 
     const defaultRecalls = {
@@ -28,6 +29,7 @@ export default function ByConversationTurn({propValue, onValueChange}) {
                 style={{width: "95%"}} // 设置固定宽度
                 min={1}
                 max={10}
+                disabled={disabled}
                 defaultValue={3}
                 marks={defaultRecalls}
                 step={1} // 设置步长为1
