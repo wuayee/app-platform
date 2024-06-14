@@ -32,7 +32,7 @@ export const CustomizedModelSelect = ({disabled, defaultValue}) => {
     // 选择了model之后的回调.
     const onSelect = (data) => {
         setValue(data.name);
-        dispatch({type: "insertOrUpdateModel", data});
+        dispatch({type: "insertOrUpdateModel", value: data.name});
     };
 
     return (<>
