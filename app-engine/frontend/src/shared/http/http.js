@@ -179,6 +179,7 @@ const msag = (err) => {
         Message({ type: 'error', content: "HTTP版本不受支持" });
         break;
       default:
+        Message({ type: 'error', content: "操作失败" });
     }
   }
 };

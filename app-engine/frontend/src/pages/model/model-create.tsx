@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Select, Button, Drawer, Input, Form, message, InputNumber } from 'antd';
-import { SearchOutlined, EllipsisOutlined, CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined } from '@ant-design/icons';
 
 import { createModel, getModelList } from '../../shared/http/model';
+import { ModelItem } from './cards-tab';
 
 interface createItem {
   name: string;
@@ -16,9 +17,10 @@ interface StarAppsProps {
   setOpen: (val: boolean) => void;
   createItems: Array<createItem>;
   setModels: (val: Array<any>) => void;
+  modifyData: ModelItem;
 }
 
-const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setModels }) => {
+const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setModels, modifyData }) => {
   const [form] = Form.useForm();
   const nameOptions: any[] = [];
   // 下拉框联动
@@ -29,8 +31,12 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
   const [linkNumMax, setLinkNumMax] = useState(300);
 
   useEffect(() => {
+    form.resetFields();
     form.setFieldValue('max_link_num', 300);
-  }, []);
+    if (modifyData) {
+      handleModifyData();
+    }
+  }, [modifyData]);
 
   const handleNameChange = (value: any) => {
     setNameOption(value);
@@ -38,6 +44,19 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
     setImageOption(null);
     setGpuOption(null);
   };
+
+  const handleModifyData = () => {
+    form.setFieldValue('name', modifyData?.name);
+    setNameOption(modifyData?.name);
+    form.setFieldsValue({
+      image_name: modifyData?.image,
+      inference_accuracy: modifyData?.precision?.current,
+      replicas: modifyData?.replicas,
+      npus: modifyData?.npu?.current,
+      max_link_num: modifyData?.max_link_num
+    })
+  }
+
   const filteredPrecisionOption = createItems.find((item) => item.name === nameOption)?.precision;
   const filteredImageOption = createItems.find((item) => item.name === nameOption)?.image;
   const filteredGpuOption = createItems.find((item) => item.name === nameOption)?.gpu;
@@ -49,12 +68,10 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
   }
 
   const deployModel = () => {
-    console.log(form.getFieldsValue());
     form.validateFields().then((values) => {
-      const { name, inference_accuracy, image_name, des, npus, replicas, max_link_num } = values;
+      const { name, inference_accuracy, image_name, npus, replicas, max_link_num } = values;
       const modelParams = {
         name,
-        des,
         image_name,
         inference_accuracy,
         replicas,
@@ -87,7 +104,6 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
   return (
     <Drawer
       destroyOnClose
-      mask={false}
       title={
         <div
           className='app-title'
@@ -112,10 +128,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           name='name'
           rules={[{ required: true, message: '请输入大模型服务名称' }]}
         >
-          <Select options={nameOptions} value={nameOption} onChange={handleNameChange} />
-        </Form.Item>
-        <Form.Item label='描述' name='des' rules={[{ required: true, message: '请输入描述' }]}>
-          <Input placeholder='这里是描述信息~' />
+          <Select disabled={modifyData} options={nameOptions} value={nameOption} onChange={handleNameChange} />
         </Form.Item>
         <Form.Item
           label='大模型镜像名称'
@@ -143,7 +156,13 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           label='大模型实例数'
           name='replicas'
           rules={[
-            { required: true, message: '请输入大模型实例数' }
+            { required: true, message: '请输入大模型实例数' },
+            {
+              type: 'number',
+              max: 8,
+              min: 1,
+              message: `输入范围为1 - ${8}`
+            }
           ]}
         >
           <InputNumber style={{ width: '100%' }} min={1} max={8} onChange={replicasChange} />
