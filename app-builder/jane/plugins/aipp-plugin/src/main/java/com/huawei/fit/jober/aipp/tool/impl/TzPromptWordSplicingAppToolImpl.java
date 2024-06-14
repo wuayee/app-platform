@@ -58,6 +58,8 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
 
     private static final String LINE_BREAK = "\n";
 
+    private static final String EMPTY_STRING = "";
+
     private final AppBuilderPromptService appBuilderPromptService;
 
     private final AippLogService aippLogService;
@@ -90,12 +92,13 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
             }
             // 替换模板中的变量
             String overridePromptTemplate = overridePromptTemplate(toBeReplacedVariables, promptTemplate);
+            log.info("[promptWordSplice]: overridePromptTemplate is {}", overridePromptTemplate);
             // 将改写后的写入历史记录
             writePromptLog(instanceId, overridePromptTemplate);
             return overridePromptTemplate;
         } catch (Exception e) {
-            log.error("Failed to query inspirations: {}", e.getMessage(), e);
-            return "查询灵感大全信息失败：" + e.getMessage();
+            log.error("Failed to prompt word splice, error is {}", e.getMessage(), e);
+            return "天舟AI提示词拼接工具失败：" + e.getMessage();
         }
     }
 
@@ -133,8 +136,8 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
 
     @Nullable
     private String getCategoryIdByTemplateName(String appId, String templateName) {
-        Rsp<List<AppBuilderPromptCategoryDto>> promptCategoriesResponse
-            = this.appBuilderPromptService.listPromptCategories(appId, this.buildOperationContext());
+        Rsp<List<AppBuilderPromptCategoryDto>> promptCategoriesResponse =
+            this.appBuilderPromptService.listPromptCategories(appId, this.buildOperationContext());
         if (Rsp.ok().getCode() != promptCategoriesResponse.getCode()) {
             log.info("Failed to query list prompt categories, appId is {}, error message is {}", appId,
                 promptCategoriesResponse.getMsg());
@@ -147,7 +150,7 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
     }
 
     private Map<String, String> getToBeReplacedVariables(String input, String title) {
-        String variableInput = input.replaceAll(title, "");
+        String variableInput = input.replaceAll(title, EMPTY_STRING);
         Map<String, String> toBeReplacedVariables = new HashMap<>();
         Matcher matcherVar = VARIABLE_PATTERN.matcher(variableInput);
         while (matcherVar.find()) {
@@ -160,7 +163,7 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
 
     private String getTemplateName(String title) {
         Matcher matcher = TEMPLATE_PATTERN.matcher(title);
-        return matcher.find() ? matcher.group(1).trim() : null;
+        return matcher.find() ? matcher.group(1).trim() : EMPTY_STRING;
     }
 
     private AippLogCreateDto convertAippInstToDto(AippInstLog aippInstLog, String rewrittenInput) {
@@ -180,12 +183,13 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
 
     // 查找指定标题对应的categoryId
     private String findIdByTemplateName(List<AppBuilderPromptCategoryDto> data, String title) {
-        return data.stream()
-            .map(dto -> findIdByTitleRecursive(dto, title))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .findFirst()
-            .orElse(null);
+        for (AppBuilderPromptCategoryDto dto : data) {
+            Optional<String> result = findIdByTitleRecursive(dto, title);
+            if (result.isPresent()) {
+                return result.get();
+            }
+        }
+        return EMPTY_STRING;
     }
 
     // 递归查找标题对应的ID
@@ -193,13 +197,15 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
         if (dto.getTitle().equals(title)) {
             return Optional.of(dto.getId());
         }
-        return Optional.ofNullable(dto.getChildren()
-            .stream()
-            .map(child -> findIdByTitleRecursive(child, title))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .findFirst()
-            .orElse(String.valueOf(Optional.empty())));
+        if (dto.getChildren() != null) {
+            for (AppBuilderPromptCategoryDto child : dto.getChildren()) {
+                Optional<String> result = findIdByTitleRecursive(child, title);
+                if (result.isPresent()) {
+                    return result;
+                }
+            }
+        }
+        return Optional.empty();
     }
 
     private OperationContext buildOperationContext() {
