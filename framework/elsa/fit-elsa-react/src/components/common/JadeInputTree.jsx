@@ -171,7 +171,7 @@ export default function JadeInputTree({data, updateItem}) {
                         >
                             <div className="jade-input-tree-title-child"
                                  style={{display: "flex", alignItems: "center"}}>
-                                <span>{node.title}</span>
+                                <span className="huggingface-light-font">{node.title}</span>
                             </div>
                         </Form.Item>
                     </Col>

@@ -24,5 +24,14 @@
 }
 
 .jade-ant-tree .ant-tree {
-    background: #f2f2f2
+    background: rgb(250, 250, 250);
+    border-radius: 8px;
+}
+
+.jade-ant-tree .ant-tree-switcher-leaf-line {
+    display: none;
+}
+
+.jade-ant-tree .ant-tree-switcher {
+    width: 4px;
 }

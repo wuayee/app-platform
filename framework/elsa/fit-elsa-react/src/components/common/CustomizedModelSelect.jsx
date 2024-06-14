@@ -41,7 +41,7 @@ export const CustomizedModelSelect = ({disabled, defaultValue}) => {
             <div className="model-select-container"
                  style={{display: "flex", border: "1px solid rgb(128, 128, 128, 0.2)", borderRadius: 4}}>
                 <Input readOnly
-                       className="model-select model-select-text"
+                       className="model-select huggingface-light-font"
                        disabled={disabled}
                        onMouseDown={(e) => triggerSelect(e)}
                        value={value}

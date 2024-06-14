@@ -83,13 +83,14 @@ export const Header = ({shape, disabled}) => {
                 <div>
                     <Dropdown disabled={disabled} menu={{items: menus, onClick: (e) => onMenuClick(e)}} placement="bottomRight">
                         <Button type="text" size="small" style={{
-                            margin: 0,
+                            position: "static",
+                            width: "20px",
+                            height: "20px",
+                            flex: "none",
+                            order: 1,
+                            flexGrow: 0,
+                            margin: "0 10px",
                             padding: 0,
-                            width: "28px",
-                            height: "28px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center"
                         }}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
                                  viewBox="0 0 16 16">
