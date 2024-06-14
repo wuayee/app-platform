@@ -10,6 +10,7 @@ import static com.huawei.fit.jober.aipp.init.AippComponentInitiator.COMPONENT_DA
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
+import com.huawei.fit.jober.aipp.dto.ModelDto;
 import com.huawei.fit.jober.aipp.dto.StoreBasicNodeInfoDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import com.huawei.fit.jober.aipp.dto.StoreWaterFlowDto;
@@ -26,7 +27,6 @@ import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.service.ToolService;
 import com.huawei.jade.store.entity.query.ModelQuery;
-import com.huawei.jade.store.entity.transfer.ModelData;
 import com.huawei.jade.store.entity.transfer.TaskData;
 import com.huawei.jade.store.service.EcoTaskService;
 import com.huawei.jade.store.service.HuggingFaceModelService;
@@ -74,7 +74,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     private List<ToolData> buildToolNodesConfig(String tag, int pageNum, int pageSize) {
-        ToolTagQuery query = new ToolTagQuery(null,
+        ToolQuery query = new ToolQuery(null,
                 Collections.singletonList(tag),
                 Collections.singletonList(StringUtils.EMPTY),
                 pageNum,
@@ -137,10 +137,8 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<String> getModels(String taskName, int pageNum, int pageSize) {
-        return this.huggingFaceModelService.getModels(new ModelQuery(taskName, pageNum, pageSize))
-                .stream()
-                .map(ModelData::getName)
-                .collect(Collectors.toList());
+    public ModelDto getModels(String taskName, int pageNum, int pageSize) {
+        return new ModelDto(this.huggingFaceModelService.getModels(new ModelQuery(taskName, pageNum, pageSize)),
+                this.huggingFaceModelService.getCount(taskName));
     }
 }

@@ -5,6 +5,7 @@ import { PluginIcons } from '../icons/plugin';
 import { StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import './style.scoped.scss';
+import { IconMap } from '../../pages/plugin/helper';
 
 const PluginCard = ({ pluginData }: any) => {
   const navigate = useNavigate();
@@ -45,8 +46,8 @@ const PluginCard = ({ pluginData }: any) => {
         </span>
       </Flex>
       <Flex style={{ display: 'flex', alignItems: 'center' }} gap={4}>
-        <PluginIcons.HuggingFaceIcon />
-        <span style={{ fontSize: 12, fontWeight: 700 }}>HuggingFace</span>
+        {IconMap[pluginData?.tags?.[0]]?.icon}
+        <span style={{ fontSize: 12, fontWeight: 700 }}>{IconMap[pluginData?.tags?.[0]]?.name}</span>
       </Flex>
     </div>
   </div >

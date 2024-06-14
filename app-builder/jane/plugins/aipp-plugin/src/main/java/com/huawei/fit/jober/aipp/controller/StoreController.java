@@ -12,9 +12,11 @@ import com.huawei.fit.jane.common.controller.AbstractController;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
+import com.huawei.fit.jober.aipp.dto.ModelDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.jade.store.entity.transfer.ModelData;
 
 import java.util.List;
 
@@ -43,7 +45,7 @@ public class StoreController extends AbstractController {
     }
 
     @GetMapping(path = "/models", description = "获取任务的模型列表")
-    public Rsp<List<String>> getModels(HttpClassicServerRequest httpRequest,
+    public Rsp<ModelDto> getModels(HttpClassicServerRequest httpRequest,
             @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(value = "taskName", defaultValue = "") String taskName) {
