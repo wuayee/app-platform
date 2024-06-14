@@ -11,11 +11,11 @@ import { setChatList } from '../../../store/chatStore/chatStore';
 
 const ChatMessaga = (props) => {
   const dispatch = useAppDispatch();
-  const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
+  const chatListConstant = useAppSelector((state) => state.chatCommonStore.chatList);
   const { showCheck, setCheckedList, setEditorShow, feedRef } = props;
-  
+  let chatList=JSON.parse(JSON.stringify(chatListConstant));
   const initFeedbackStatus = async (id) => {
-    let arr = JSON.parse(JSON.stringify(chatList))
+    let arr = chatList;
     for (let i = 0; i < arr?.length; i++) {
       let item = arr[i]
       if (item.type === 'recieve' && item?.instanceId && (id === 'all' || item?.instanceId === id)) {
@@ -55,9 +55,8 @@ const ChatMessaga = (props) => {
   }
   
   // 选中回调
-  function checkCallBack() {
-    let checkList = chatList?.filter(item => item.checked);
-    setCheckedList(checkList);
+  function checkCallBack(index,check) {
+    dispatch(setChatList(chatList));
   }
   return (
     <div className={['chat-message-container', showCheck ? 'group-active' : null].join(' ')} id="chat-list-dom">
@@ -68,8 +67,8 @@ const ChatMessaga = (props) => {
             chatList?.map((item, index) => {
               return (
                 item.type === 'send' ?
-                  <SendBox chatItem={item} key={index} /> :
-                  <ReciveBox chatItem={item} key={index} refreshFeedbackStatus={initFeedbackStatus} />
+                  <SendBox chatItem={item} key={index} index={index}/> :
+                  <ReciveBox chatItem={item} key={index} index={index} refreshFeedbackStatus={initFeedbackStatus} />
               )
             })
           }

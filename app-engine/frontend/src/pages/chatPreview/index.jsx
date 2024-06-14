@@ -42,7 +42,6 @@ const ChatPreview = (props) => {
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const { showElsa } = useContext(AippContext);
-  const [checkedList, setCheckedList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [groupType, setGroupType] = useState("share");
   const [showCheck, setShowCheck] = useState(false);
@@ -246,7 +245,6 @@ const ChatPreview = (props) => {
     listRef.current.forEach(item => item.checked = false);
     dispatch(setChatList(deepClone(listRef.current)));
     onStop("请勾选对话");
-    setCheckedList([]);
     setEditorShow(true, 'report');
   }
   // 用户自勾选确定回调
@@ -309,7 +307,6 @@ const ChatPreview = (props) => {
   }
   // 显示问答组
   function setEditorShow(val, type='share') {
-    !val && setCheckedList([]);
     setShowCheck(val);
     val && setGroupType(type);
   }
@@ -350,14 +347,12 @@ const ChatPreview = (props) => {
           <div className={ `chat-inner-left ${ inspirationOpen ? 'chat-left-close' : 'no-border'}` }>
             <ChatMessage
               feedRef={feedRef}
-              setCheckedList={setCheckedList}
               setEditorShow={setEditorShow}
               showCheck={showCheck}/>
             { showCheck ?
               <CheckGroup
                 type={groupType}
                 setEditorShow={setEditorShow}
-                checkedList={checkedList}
                 reportClick={reportClick} />
               : 
               <SendEditor
