@@ -610,16 +610,19 @@ def get_routes():
     for name in external_model_services:
         external_model_service = external_model_services[name]
         url = external_model_service["url"]
+        proxies = get_effective_proxies(external_model_service)
         api_key = "api_key"
         api_key_value = external_model_service[api_key]
-        external_models = get_models_from_external_service(url, api_key)
+        external_models = get_models_from_external_service(external_model_service)
         for model_name in external_models:
             if model_name not in routed_models:
                 routes.append({
                     "id": model_name,
                     "model": model_name,
                     url_key: url,
-                    api_key: api_key_value
+                    api_key: api_key_value,
+                    "http_proxy": proxies.get("http_proxy", ""),
+                    "https_proxy": proxies.get("https_proxy", ""),
                 })
                 routed_models[model_name] = url
     return routes
