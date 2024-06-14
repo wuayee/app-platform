@@ -51,6 +51,19 @@ public class ModelGatewayPredicateTest {
         assertEquals(false, result.block());
     }
 
+    @Test
+    public void testPredicateWithTask() {
+        String taskName = "test-task";
+        MockServerHttpRequest request = MockServerHttpRequest.post("/")
+                .header("Content-Type", "application/json")
+                .body("{\"model\": \"" + MODEL_NAME + "\", \"task\": \"" + taskName + "\"}");
+
+        ServerWebExchange exchange = MockServerWebExchange.from(request);
+        Mono<Boolean> result =
+                (Mono<Boolean>) getTestAsyncPredicate(MODEL_NAME + "-" + taskName).apply(exchange);
+        assertEquals(true, result.block());
+    }
+
     private AsyncPredicate<ServerWebExchange> getTestAsyncPredicate(String modelName) {
         ModelPredicateFactory predicate = new ModelPredicateFactory();
         ModelPredicateFactory.Config config = new ModelPredicateFactory.Config();
