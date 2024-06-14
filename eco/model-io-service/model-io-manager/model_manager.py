@@ -8,6 +8,8 @@ import socket
 import json
 import logging
 import uuid
+from time import sleep
+from urllib.parse import urljoin
 from urllib.parse import urljoin, urlparse
 import yaml
 import requests
@@ -23,6 +25,9 @@ from kubernetes import client, config, dynamic, utils
 from kubernetes.client import ApiClient, Configuration
 from kubernetes.client.rest import ApiException
 from fastapi.middleware.cors import CORSMiddleware
+from requests.adapters import HTTPAdapter
+from requests.utils import address_in_network
+from urllib3 import Retry
 from urllib3.exceptions import MaxRetryError
 from uvicorn.config import LOGGING_CONFIG
 
@@ -35,8 +40,8 @@ LOGGING_CONFIG["formatters"]["access"]["fmt"] = "%(asctime)s - %(levelprefix)s %
 KUBE_CONFIG = "/root/.kube/config"
 NAMESPACE_FILE = "/var/run/secrets/kubernetes.io/serviceaccount/namespace"
 
-
 EMBEDDING_MODEL_TYPE = "Embedding"
+HEALTHY_STATUS = 200
 
 
 def set_cross_header(response, request):
@@ -64,7 +69,6 @@ api_instance = client.CoreV1Api()
 
 MODEL_IO_NAMESPACE = "model-io"
 
-
 logger = logging.getLogger('uvicorn.error')
 
 model_weight_dir = "/mnt/models"
@@ -72,7 +76,6 @@ model_weight_dir = "/mnt/models"
 app = FastAPI()
 
 app.model_io_gateways = []
-
 
 external_model_services = {
 }
@@ -96,6 +99,14 @@ class GlobalExternalServiceProxy(BaseModel):
     http_proxy: str | None = None
     https_proxy: str | None = None
     no_proxy: str | None = None
+    max_link_num: int | None = None
+
+
+class PipelineItem(BaseModel):
+    name: str
+    task: str
+    image_name: str
+    node_port: int
 
 
 class ExternalService(BaseModel):
@@ -117,9 +128,17 @@ class NodePortItem(BaseModel):
 gateways = []
 
 
+def get_pipeline_template():
+    with open('static/pipeline_template.yaml', 'r') as stream:
+        data = stream.read()
+    documents = data.split('---')
+    templates = [Template(doc) for doc in documents]
+    return templates
+
+
 def get_template():
     with open('static/template.yaml', 'r') as stream:
-        data = stream.read()    
+        data = stream.read()
     documents = data.split('---')
     templates = [Template(doc) for doc in documents]
     return templates
@@ -148,7 +167,6 @@ def create_namespace_if_needed():
 MODEL_IO_MANAGER_CONFIG = "model-io-conf"
 
 
-
 def load_model_io_configs():
     global external_model_services
     global global_proxy_configs
@@ -158,7 +176,6 @@ def load_model_io_configs():
     external_model_services = model_io_config_data.get("external_model_services", {})
     global_proxy_configs = model_io_config_data.get("external_global_proxies", {})
     return get_model_io_configs()
-
 
 
 def init_from_configmap():
@@ -171,10 +188,10 @@ def init_from_configmap():
     try:
         model_io_configs = get_model_io_configs()
         configmap_manifest = {
-                "apiVersion": "v1",
-                "kind": "ConfigMap",
-                "metadata": {"name": MODEL_IO_MANAGER_CONFIG},
-                "data": {"model_io_configs": json.dumps(model_io_configs)}
+            "apiVersion": "v1",
+            "kind": "ConfigMap",
+            "metadata": {"name": MODEL_IO_MANAGER_CONFIG},
+            "data": {"model_io_configs": json.dumps(model_io_configs)}
         }
         response = api_instance.create_namespaced_config_map(MODEL_IO_NAMESPACE, body=configmap_manifest)
     except ApiException as e:
@@ -184,11 +201,10 @@ def init_from_configmap():
 
 def get_model_io_configs():
     model_io_configs = {
-        "external_model_services" : external_model_services,
-        "external_global_proxies" : global_proxy_configs
+        "external_model_services": external_model_services,
+        "external_global_proxies": global_proxy_configs
     }
     return model_io_configs
-
 
 
 def update_configmap():
@@ -213,7 +229,7 @@ async def run_tasks():
 @app.options("/v1/start_up")
 @app.options("/v1/list_supported_models")
 @app.options("/v1/list_supported_models_meta")
-def options_response(request : Request):
+def options_response(request: Request):
     res = {"status": "ok"}
     response = JSONResponse(content=jsonable_encoder(res))
     set_cross_header(response, request)
@@ -254,10 +270,10 @@ def get_model_io_gateways():
         for model_io_gateway in model_io_gateways.split(","):
             address = model_io_gateway.split(':')
             endpoints.append(
-                             {"address": address[0],
-                              "port": address[1]
-                             }
-                            )
+                {"address": address[0],
+                 "port": address[1]
+                 }
+            )
         return endpoints
 
     try:
@@ -269,10 +285,10 @@ def get_model_io_gateways():
             return endpoints
         for subset in k8s_endpoints.subsets:
             endpoints.append(
-                             {"address": subset.addresses[0].ip,
-                              "port": subset.ports[0].port
-                             }
-                            )
+                {"address": subset.addresses[0].ip,
+                 "port": subset.ports[0].port
+                 }
+            )
     except MaxRetryError as e:
         logger.error(e)
     return endpoints
@@ -282,6 +298,7 @@ def get_model_io_gateways():
 async def list_gateways():
     endpoints = get_model_io_gateways()
     return JSONResponse(content=jsonable_encoder(endpoints))
+
 
 EXTRA_CHAT_MODEL = "extra_chat_model"
 EXTRA_EMBED_MODEL = "extra_embed_model"
@@ -328,7 +345,7 @@ def list_models(chat_model_only=False):
     data = "data"
     models = {
         "object": "list",
-        data : [],
+        data: [],
     }
     models_meta = get_models_meta()
     models_service = get_cached_model_services()
@@ -341,9 +358,9 @@ def list_models(chat_model_only=False):
 
             if not chat_model_only or model_type == CHAT_MODEL_TYPE:
                 model = {
-                    "id" : model_name,
-                    "object" : "model",
-                    "type" : model_type
+                    "id": model_name,
+                    "object": "model",
+                    "type": model_type
                 }
                 models[data].append(model)
             deployed_models.add(model_name)
@@ -367,7 +384,7 @@ def list_models(chat_model_only=False):
         models.get(data).extend(external_datas)
 
     return JSONResponse(content=jsonable_encoder(models))
-    
+
 
 @app.get("/v1/models")
 async def list_all_models():
@@ -393,7 +410,9 @@ def get_services():
     for k8s_service in k8s_services.items:
         service_name = k8s_service.metadata.name
         services.append({
-            "model_name" : get_model_name(k8s_service.metadata.labels["app"]),
+            "model_name": get_model_name(k8s_service.metadata.labels.get("app")),
+            "pipeline": k8s_service.metadata.labels.get("pipeline"),
+            "task": k8s_service.metadata.labels.get("task"),
             "service_name": service_name,
             "cluster_ip": k8s_service.spec.cluster_ip,
             "port": k8s_service.spec.ports[0].port,
@@ -410,7 +429,6 @@ async def list_services():
 
 
 def get_v1_models_from_external_service():
-
     global external_model_services
     datas = []
     for service_name in external_model_services:
@@ -425,7 +443,7 @@ def get_model_data_from_external_service(external_model_service):
     url = external_model_service["url"]
     api_key = external_model_service["api_key"]
     model_list_url = urljoin(url, "v1/models")
-    headers = {'Accept':'*/*', 'Authorization':f'Bearer {api_key}'}
+    headers = {'Accept': '*/*', 'Authorization': f'Bearer {api_key}'}
     proxies = get_effective_proxies(external_model_service)
     datas = []
     try:
@@ -447,7 +465,7 @@ def get_models_from_external_service(external_service):
     proxies = get_effective_proxies(external_service)
     urlpath = "/v1/models"
     model_list_url = url.rstrip("/") + urlpath
-    headers = {'Accept':'*/*', 'Authorization':f'Bearer {api_key}'}
+    headers = {'Accept': '*/*', 'Authorization': f'Bearer {api_key}'}
     models = []
     logging.info("Get Models for exertal service :%s, : %s, with proxy : %s", url, model_list_url, proxies)
     try:
@@ -509,11 +527,9 @@ def should_bypass_proxies(url, no_proxy):
         # URLs don't always have hostnames, e.g. file:/// urls.
         return True
 
-
     if not no_proxy:
         # no_proxy is empty, use http/https proxy in the proxies
         return False
-
 
     # We need to check whether we match here. We need to see if we match
     # the end of the hostname, both with and without the port.
@@ -572,7 +588,6 @@ def get_effective_proxies(external_service):
     proxies[HTTP_KEY] = proxies[HTTP_PROXY]
     proxies[HTTPS_KEY] = proxies[HTTPS_PROXY]
 
-
     return proxies
 
 
@@ -586,10 +601,10 @@ def get_routes():
         url = f"http://{service['cluster_ip']}:{service['port']}"
         if model_name not in routed_models:
             routes.append({
-                             "id": model_name,
-                             "model": model_name,
-                             url_key: url
-                           })
+                "id": model_name,
+                "model": model_name,
+                url_key: url
+            })
             routed_models[model_name] = url
 
     for name in external_model_services:
@@ -597,20 +612,15 @@ def get_routes():
         url = external_model_service["url"]
         api_key = "api_key"
         api_key_value = external_model_service[api_key]
-        external_models = get_models_from_external_service(external_model_service)
-
-        proxies = get_effective_proxies(external_model_service)
-
+        external_models = get_models_from_external_service(url, api_key)
         for model_name in external_models:
             if model_name not in routed_models:
                 routes.append({
-                                 "id": model_name,
-                                 "model": model_name,
-                                 url_key: url,
-                                 api_key: api_key_value,
-                                 "http_proxy": proxies.get("http_proxy", ""),
-                                 "https_proxy": proxies.get("https_proxy", ""),
-                               })
+                    "id": model_name,
+                    "model": model_name,
+                    url_key: url,
+                    api_key: api_key_value
+                })
                 routed_models[model_name] = url
     return routes
 
@@ -618,7 +628,7 @@ def get_routes():
 @app.get("/v1/routes")
 async def list_routes():
     routes = get_routes()
-    return JSONResponse(content=jsonable_encoder({"routes":routes}))
+    return JSONResponse(content=jsonable_encoder({"routes": routes}))
 
 
 @app.post("/v1/health")
@@ -628,14 +638,14 @@ async def health(item: NodePortItem) -> Response:
 
 def gen_error_info(code, detail):
     error_info = {
-       "code": code,
-       "detail": detail
+        "code": code,
+        "detail": detail
     }
     return error_info
 
 
 @app.delete("/v1/delete")
-async def delete_model(llm: Llm, request : Request):
+async def delete_model(llm: Llm, request: Request):
     model_name = llm.name.strip()
     model_services = get_cached_model_services()
     logger.info(model_services)
@@ -689,7 +699,6 @@ def _notify_model_io_gateways():
             url = f"http://{endpoint['address']}:{endpoint['port']}/v1/routes"
             data = get_routes()
             routes = {"routes": data}
-
             response = requests.post(url, json=routes, timeout=10)
             logger.info("Notify_Model_IO_Gateways %s : %s", url, str(routes))
             logger.info(response)
@@ -706,7 +715,7 @@ def get_supported_images(model_type=CHAT_MODEL_TYPE):
 
 
 models_meta_singleton = {}
-supported_models_singleton = {"llms" : []}
+supported_models_singleton = {"llms": []}
 
 MODEL_SERVICES_SINGLETON = None
 
@@ -788,7 +797,7 @@ def get_supported_models_template(meta=False):
         models[llms_key] = models_meta.get(llms_key)
 
     if meta:
-        return models_meta.get(llms_key, {llms_key:[]})
+        return models_meta.get(llms_key, {llms_key: []})
 
     agg_statistics = get_models_statistics_from_gateway()
 
@@ -819,7 +828,6 @@ def get_supported_models_template(meta=False):
         except KeyError as e:
             logger.error("KeyError:%s", e)
         model["npu_flag"] = True
-
 
     return models
 
@@ -861,10 +869,10 @@ def get_models_statistics_from_gateway():
 async def get_models_statistics():
     statistics = get_models_statistics_from_gateway()
     return JSONResponse(content=jsonable_encoder(statistics))
-    
+
 
 @app.get("/v1/list_supported_models")
-async def list_supported_models(request : Request):
+async def list_supported_models(request: Request):
     models = get_supported_models_template()
     response = JSONResponse(content=jsonable_encoder(models))
     set_cross_header(response, request)
@@ -872,7 +880,7 @@ async def list_supported_models(request : Request):
 
 
 @app.get("/v1/list_supported_models_meta")
-async def list_supported_models(request : Request):
+async def list_supported_models(request: Request):
     models = get_supported_models_template(meta=True)
     response = JSONResponse(content=jsonable_encoder(models))
     set_cross_header(response, request)
@@ -884,17 +892,16 @@ async def notify_model_io_gateways():
     _notify_model_io_gateways()
     return Response(status_code=200)
 
+
 model_weight_model_dir = {
-        #model name and it's base dir name
-        "Meta-Llama-3-8B-Instruct" : "Meta-Llama-3-8B-Instruct",
-        "Qwen-14B-Chat" : "Qwen-14B-Chat"
+    # model name and it's base dir name
+    "Meta-Llama-3-8B-Instruct": "Meta-Llama-3-8B-Instruct",
+    "Qwen-14B-Chat": "Qwen-14B-Chat"
 }
 
 
-
-
 @app.get("/v1/external_model_services")
-async def get_external_model_services(request : Request):
+async def get_external_model_services(request: Request):
     global external_model_services
     external_model_services_list = []
 
@@ -902,7 +909,7 @@ async def get_external_model_services(request : Request):
         external_model_services_list.append(external_model_services.get(service))
 
     body = {
-       "services" : external_model_services_list
+        "services": external_model_services_list
     }
 
     response = JSONResponse(status_code=200, content=jsonable_encoder(body))
@@ -911,7 +918,7 @@ async def get_external_model_services(request : Request):
 
 
 @app.post("/v1/external_model_service")
-async def add_external_model_services(external_service : ExternalService, request : Request):
+async def add_external_model_services(external_service: ExternalService, request: Request):
     global external_model_services
     ex_service = {}
     ex_name = external_service.name
@@ -938,9 +945,8 @@ async def add_external_model_services(external_service : ExternalService, reques
     return response
 
 
-
 @app.delete("/v1/external_model_service/{name}")
-async def delete_external_model_services(name : str, request : Request):
+async def delete_external_model_services(name: str, request: Request):
     global external_model_services
     ex_name = name
     if ex_name in external_model_services:
@@ -952,9 +958,60 @@ async def delete_external_model_services(name : str, request : Request):
     return response
 
 
+@app.post("/v1/start_up_pipeline")
+async def start_up_pipeline(item: PipelineItem, request: Request):
+    templates = get_pipeline_template()
+    model_name = item.name.strip()
+    model_name_pre = model_name.split('/')[0]
+    model_name_post = model_name.split('/')[1]
+    render_name = model_name_pre + '-' + model_name_post + '-' + item.task
+
+    render_data = {
+        "name": render_name,
+        "model_name": model_name,
+        "task": item.task,
+        "node_port": item.node_port,
+        "image_name": item.image_name.strip(),
+    }
+
+    fill_template = [template.render(render_data) for template in templates]
+    yaml_objs = [yaml.safe_load(fill) for fill in fill_template]
+
+    service_manifest = yaml_objs[0]
+    deployment_manifest = yaml_objs[1]
+
+    flags = os.O_WRONLY | os.O_CREAT
+    modes = stat.S_IRUSR
+
+    with os.fdopen(os.open(f'{render_name}.yaml', flags, modes), 'w') as f:
+        for obj in yaml_objs:
+            yaml.dump(obj, f)
+            f.write('---\n')
+
+    try:
+        response = api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, service_manifest)
+    except ApiException as e:
+        logger.warning(e)
+    try:
+        response = k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, deployment_manifest)
+    except ApiException as e:
+        logger.warning(e)
+
+    _notify_model_io_gateways()
+
+    status_code = 200
+    error_info = {
+        "code": status_code,
+        "detail": "ok"
+    }
+
+    response = JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))
+    set_cross_header(response, request)
+    return response
+
 
 @app.post("/v1/external_model_proxies")
-async def update_external_model_proxies(external_model_proxies : GlobalExternalServiceProxy, request : Request):
+async def update_external_model_proxies(external_model_proxies: GlobalExternalServiceProxy, request: Request):
     global global_proxy_configs
     http_proxy = external_model_proxies.http_proxy
     https_proxy = external_model_proxies.https_proxy
@@ -975,11 +1032,11 @@ async def update_external_model_proxies(external_model_proxies : GlobalExternalS
 
 
 @app.get("/v1/external_model_proxies")
-async def get_external_model_proxies(request : Request):
+async def get_external_model_proxies(request: Request):
     global external_model_proxies
 
     body = {
-       "global_proxies" : global_proxy_configs
+        "global_proxies": global_proxy_configs
     }
 
     response = JSONResponse(status_code=200, content=jsonable_encoder(body))
@@ -992,7 +1049,7 @@ def persist_external_services():
 
 
 @app.post("/v1/start_up")
-async def start_up(item: Item, request : Request):
+async def start_up(item: Item, request: Request):
     templates = get_template()
     model_name = item.name.strip()
     model_base_dir = model_name
@@ -1004,13 +1061,12 @@ async def start_up(item: Item, request : Request):
     model_name = item.name.strip()
 
     render_data = {
-        "name":model_name.lower(),
-        "replicas":item.replicas,
-        "node_port":item.node_port,
-        "image_name":item.image_name.strip(),
-        "model_weight_path":model_weight_path
+        "name": model_name.lower(),
+        "replicas": item.replicas,
+        "node_port": item.node_port,
+        "image_name": item.image_name.strip(),
+        "model_weight_path": model_weight_path
     }
-
 
     fill_template = [template.render(render_data) for template in templates]
     yaml_objs = [yaml.safe_load(fill) for fill in fill_template]
@@ -1046,6 +1102,7 @@ async def start_up(item: Item, request : Request):
     response = JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))
     set_cross_header(response, request)
     return response
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
