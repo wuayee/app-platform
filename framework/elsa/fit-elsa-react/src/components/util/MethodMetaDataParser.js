@@ -130,6 +130,7 @@ export const convertParameter = param => {
         id: param.propertyName + "_" + uuidv4(),
         name: param.propertyName,
         type: param.property.type === 'object' ? 'Object' : param.property.type.capitalize(),
+        description: param.property.description,
         // 对象默认展开，map直接为引用
         from: param.property.type === 'object' ? (isMap ? 'Reference' : 'Expand') : 'Reference',
         isRequired: param.isRequired,

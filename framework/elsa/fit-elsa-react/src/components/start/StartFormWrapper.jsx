@@ -84,7 +84,7 @@ export default function StartFormWrapper({disabled}) {
             }}>
                 <div className="jade-panel-header-font">输入</div>
                 <Popover content={content}>
-                    <InfoCircleOutlined className="jade-top-header-popover-content"/>
+                    <InfoCircleOutlined className="jade-panel-header-popover-content"/>
                 </Popover>
                 {renderAddInputIcon()}
             </div>
