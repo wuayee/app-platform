@@ -53,7 +53,7 @@ JadeInputTree.propTypes = {
     data: PropTypes.array.isRequired, updateItem: PropTypes.func.isRequired
 };
 
-const INPUT_WIDTH = 100;
+const INPUT_WIDTH = 110;
 const LEVEL_DISTANCE = 24;
 
 /**
@@ -171,6 +171,7 @@ export default function JadeInputTree({data, updateItem}) {
                         >
                             <div className="jade-input-tree-title-child"
                                  style={{display: "flex", alignItems: "center"}}>
+                                {node.isRequired && <span className="jade-required-indicator">*</span>}
                                 <span className="huggingface-light-font">{node.title}</span>
                             </div>
                         </Form.Item>

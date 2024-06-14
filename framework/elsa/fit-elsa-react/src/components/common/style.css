@@ -305,3 +305,13 @@
     letter-spacing: -1px;
     text-align: left;
 }
+
+.jade-required-indicator {
+    color: rgb(198, 57, 57);
+    font-family: Huawei Sans;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 18px;
+    letter-spacing: 0px;
+    text-align: left;
+}
