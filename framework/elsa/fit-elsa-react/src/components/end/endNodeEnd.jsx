@@ -121,9 +121,7 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
      */
     self.getHeaderIcon = () => {
         return (<>
-            <Button disabled={true} className="jade-node-custom-header-icon">
-                <EndIcon/>
-            </Button>
+            <EndIcon className="jade-node-custom-header-icon"/>
         </>);
     };
 

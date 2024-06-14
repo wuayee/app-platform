@@ -23,9 +23,7 @@ export const llmNodeState = (id, x, y, width, height, parent, drawer) => {
      */
     self.getHeaderIcon = () => {
         return (<>
-            <Button disabled={true} className="jade-node-custom-header-icon">
-                <LlmIcon/>
-            </Button>
+            <LlmIcon className="jade-node-custom-header-icon"/>
         </>);
     };
 

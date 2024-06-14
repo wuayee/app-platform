@@ -50,9 +50,7 @@ export const conditionNodeCondition = (id, x, y, width, height, parent, drawer) 
      */
     self.getHeaderIcon = () => {
         return (
-                <Button disabled={true} className="jade-node-custom-header-icon">
-                    <ConditionIcon/>
-                </Button>
+            <ConditionIcon className="jade-node-custom-header-icon"/>
         );
     };
 

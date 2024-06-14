@@ -22,12 +22,7 @@ export const manualCheckNodeState = (id, x, y, width, height, parent, drawer) =>
      */
     self.getHeaderIcon = () => {
         return (
-            <Button
-                disabled={true}
-                className="jade-node-custom-header-icon"
-            >
-                <ManualCheckIcon/>
-            </Button>
+            <ManualCheckIcon className="jade-node-custom-header-icon"/>
         );
     };
 

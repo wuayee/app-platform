@@ -84,12 +84,7 @@ export const startNodeStart = (id, x, y, width, height, parent, drawer) => {
      */
     self.getHeaderIcon = () => {
         return (
-                <Button
-                        disabled={true}
-                        className="jade-node-custom-header-icon"
-                >
-                    <StartIcon/>
-                </Button>
+            <StartIcon className="jade-node-custom-header-icon"/>
         );
     };
 

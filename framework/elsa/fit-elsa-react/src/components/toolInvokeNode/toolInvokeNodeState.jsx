@@ -74,9 +74,7 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
 
     self.getHeaderIcon = () => {
         return (
-                <Button disabled={true} className="jade-node-custom-header-icon">
-                    <ApiInvokeIcon/>
-                </Button>
+            <ApiInvokeIcon className="jade-node-custom-header-icon"/>
         );
     };
 
