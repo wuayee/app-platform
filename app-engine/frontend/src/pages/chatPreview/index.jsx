@@ -49,6 +49,8 @@ const ChatPreview = (props) => {
   const location = useLocation();
   let editorRef = React.createRef();
   let runningInstanceId = useRef("");
+  let currentInfo = useRef();
+  let feedRef = useRef();
   let runningVersion = useRef("");
   let runningAppid = useRef("");
   let childInstanceStop = useRef(false);
@@ -60,6 +62,7 @@ const ChatPreview = (props) => {
 
   useEffect(() => {
     !chatType && dispatch(setInspirationOpen(true));
+    currentInfo.current = appInfo;
   }, []);
 
   // 灵感大全设置下拉列表
@@ -70,14 +73,14 @@ const ChatPreview = (props) => {
   // 获取历史会话
   async function initChatHistory() {
     listRef.current = [];
-    dispatch(setChatList([]));
     setLoading(true);
     try {
       const res = await getRecentInstances(tenantId, appId, 'preview');
       if (res.data && res.data.length) {
         let chatArr = historyChatProcess(res);
         listRef.current = deepClone(chatArr);
-        dispatch(setChatList(chatArr));
+        await dispatch(setChatList(chatArr));
+        feedRef.current.initFeedbackStatus('all');
       }
     } finally {
       setLoading(false);
@@ -85,12 +88,12 @@ const ChatPreview = (props) => {
   }
 
   useEffect(() => {
-    // 清空聊天记录
-    dispatch(setChatRunning(false));
-    dispatch(setChatId(null));
-    dispatch(setChatList([]));
-    // 初始化聊天记录，目前所有chat聊天记录均未调用initChatHistory()
-    (appInfo.name && !appInfo.notShowHistory) && initChatHistory();
+    if (!currentInfo.current || currentInfo.current.id !== appInfo.id) {
+      dispatch(setChatRunning(false));
+      dispatch(setChatId(null));
+      dispatch(setChatList([]));
+      (appInfo.name && !appInfo.notShowHistory) && initChatHistory();
+    }
   }, [appInfo]);
   
   // 发送消息
@@ -346,6 +349,7 @@ const ChatPreview = (props) => {
         <div className={ `chat-inner ${ chatPage ? 'chat-page-inner' : ''}`}>
           <div className={ `chat-inner-left ${ inspirationOpen ? 'chat-left-close' : 'no-border'}` }>
             <ChatMessage
+              feedRef={feedRef}
               setCheckedList={setCheckedList}
               setEditorShow={setEditorShow}
               showCheck={showCheck}/>

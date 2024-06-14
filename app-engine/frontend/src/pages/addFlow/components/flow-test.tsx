@@ -21,7 +21,7 @@ const Index = (props) => {
   } = props;
   const { type, appInfo } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
-  
+  const elsaRunningCtl = useRef();
   const [form] = Form.useForm();
   const timerRef = useRef(null);
   // 关闭测试抽屉
@@ -29,7 +29,7 @@ const Index = (props) => {
     setShowDebug(false);
   }
   const handleRunTest = () => {
-    window.agent.resetStatus();
+    elsaRunningCtl.current?.reset();
     setIsTested(false);
     setTestTime(0);
     handleRun(form.getFieldsValue());
@@ -44,6 +44,7 @@ const Index = (props) => {
         initContext: values
       }
     };
+    elsaRunningCtl.current = window.agent.run();
     const res = await startInstance(tenantId, appId, params);
     if (res.code === 0) {
       const {aippCreate, instanceId} = res.data;
@@ -65,13 +66,15 @@ const Index = (props) => {
         if (isError(runtimeData.nodeInfos)) {
           clearInterval(timerRef.current);
           setTestStatus('Error');
+          elsaRunningCtl.current?.stop();
         } else if (isEnd(runtimeData.nodeInfos)) {
           clearInterval(timerRef.current);
           setIsTesting(false);
           setIsTested(true);
           setTestStatus('Finished');
+          elsaRunningCtl.current?.stop();
         }
-        window.agent.setFlowRunData(runtimeData.nodeInfos);
+        elsaRunningCtl.current?.refresh(runtimeData.nodeInfos);
         const time = (runtimeData.executeTime / 1000).toFixed(3);
         setTestTime(time);
       }
@@ -90,6 +93,7 @@ const Index = (props) => {
   const onStop = (content) => {
     clearInterval(timerRef.current);
     Message({ type: 'warning', content: content });
+    elsaRunningCtl.current?.stop();
   }
   return <>{(
     <div>
