@@ -6,6 +6,7 @@ package com.huawei.jade.app.engine.knowledge.service;
 
 import com.huawei.fitframework.annotation.Genericable;
 import com.huawei.jade.app.engine.knowledge.dto.KStorageDto;
+import com.huawei.jade.app.engine.knowledge.dto.enums.KStorageType;
 
 import java.util.List;
 
@@ -65,4 +66,13 @@ public interface KStorageService {
      */
     @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KStorageService.getByTableId")
     KStorageDto getByTableId(Long tableId);
+
+    /**
+     * 根据存储类型获取存储服务。
+     *
+     * @param type 知识表的主键 {@link KStorageType}。
+     * @return 返回存储服务。
+     */
+    @Genericable(id = "com.huawei.jade.app.engine.knowledge.service.KStorageService.getByType")
+    KStorageDto getByType(KStorageType type);
 }

@@ -99,8 +99,12 @@ public class ExcelSource extends Source<List<Document>> {
                     case STRING:
                         rowContent.add(naiveStringClean(cell.getStringCellValue()));
                         break;
+                    case BLANK:
+                        rowContent.add("");
+                        break;
                     default:
                         logger.error("Unsupported datatype: {}", cell.getCellType());
+                        throw new IllegalArgumentException("unsupported data type " + cell.getCellType());
                 }
             }
             contents.add(rowContent);
