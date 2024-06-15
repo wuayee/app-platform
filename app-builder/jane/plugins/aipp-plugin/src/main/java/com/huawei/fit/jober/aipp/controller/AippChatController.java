@@ -131,4 +131,21 @@ public class AippChatController extends AbstractController {
                                         @RequestBody CreateChatRequest body) {
         return Rsp.ok(this.aippChatService.updateChat(chatId, body, this.contextOf(httpRequest, tenantId)));
     }
+
+    /**
+     * 重新发起会话。
+     *
+     * @param httpRequest Http 请求体。
+     * @param currentInstanceId 需要重新发起会话的实例 ID。
+     * @param tenantId 租户 ID。
+     * @param body 创建会话请求体。
+     * @return 表示会话相应体的 {@link Rsp}{@code <}{@link QueryChatRsp}{@code >}。
+     */
+    @PostMapping(path = "/instances/{current_instance_id}", description = "重新发起会话接口")
+    public Rsp<QueryChatRsp> restartChat(HttpClassicServerRequest httpRequest,
+            @PathVariable("tenant_id") String tenantId,
+            @PathVariable("current_instance_id") String currentInstanceId,
+            @RequestBody CreateChatRequest body) {
+        return Rsp.ok(this.aippChatService.restartChat(currentInstanceId, body, this.contextOf(httpRequest, tenantId)));
+    }
 }

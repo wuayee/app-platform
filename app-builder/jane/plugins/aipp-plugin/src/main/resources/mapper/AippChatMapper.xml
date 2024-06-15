@@ -99,4 +99,15 @@
         where chat_id = #{chatId}
     </select>
 
+    <select id="selectChatIdByInstanceId" resultType="string">
+        select chat_id
+        from t_chat_session_task_instance_wide_relationship
+        where task_instance_wide_id = #{instanceId}
+    </select>
+
+    <delete id="deleteWideRelationshipByInstanceId">
+        delete
+        from t_chat_session_task_instance_wide_relationship
+        where task_instance_wide_id = #{instanceId}
+    </delete>
 </mapper>

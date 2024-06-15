@@ -24,9 +24,11 @@ import com.huawei.fit.jober.aipp.mapper.AippChatMapper;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import com.huawei.fit.jober.aipp.service.AippChatService;
+import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.StringUtils;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -46,15 +48,17 @@ public class AippChatServiceImpl implements AippChatService {
     private final AippChatMapper aippChatMapper;
     private final MetaService metaService;
     private final AppBuilderAppMapper appBuilderAppMapper;
+    private final AippLogService aippLogService;
 
     @Fit
     private com.huawei.fit.jober.aipp.genericable.AippRunTimeService aippRunTimeService;
 
     public AippChatServiceImpl(AippChatMapper aippChatMapper, MetaService metaService,
-                               AppBuilderAppMapper appBuilderAppMapper) {
+                               AppBuilderAppMapper appBuilderAppMapper, AippLogService aippLogService) {
         this.aippChatMapper = aippChatMapper;
         this.metaService = metaService;
         this.appBuilderAppMapper = appBuilderAppMapper;
+        this.aippLogService = aippLogService;
     }
 
     @Override
@@ -213,5 +217,18 @@ public class AippChatServiceImpl implements AippChatService {
                 .limit(10)
                 .build();
         return queryChat(queryBody, chatId, context);
+    }
+
+    @Override
+    public QueryChatRsp restartChat(String currentInstanceId, CreateChatRequest body,
+            OperationContext context) {
+        String chatId = this.aippChatMapper.selectChatIdByInstanceId(currentInstanceId);
+        if (StringUtils.isEmpty(chatId)) {
+            throw new IllegalArgumentException(StringUtils.format("The instance id {0} does not match any chat id.",
+                    currentInstanceId));
+        }
+        this.aippChatMapper.deleteWideRelationshipByInstanceId(currentInstanceId);
+        this.aippLogService.deleteInstanceLog(currentInstanceId);
+        return this.updateChat(chatId, body, context);
     }
 }
