@@ -65,8 +65,7 @@ public class ModelTest {
     @Test
     void shouldOkWhenBlockModelWithSettingMemoryKey() {
         List<ChatMessages> messages = new ArrayList<>();
-        ChatBlockModel<ChatMessages> model =
-                new ChatBlockModel<>(prompts -> new FlatChatMessage(new AiMessage("model answer")));
+        ChatBlockModel model = new ChatBlockModel(prompts -> new FlatChatMessage(new AiMessage("model answer")));
         AiProcessFlow<Tip, ChatMessage> flow = AiFlows.<Tip>create()
                 .prompt(Prompts.sys("sys msg"), Prompts.human("answer {{0}}").memory("0"))
                 .generate(model)
@@ -86,8 +85,8 @@ public class ModelTest {
         OutputParser<ModelOutput> parser =
                 JsonOutputParser.create(TEST_SERIALIZER, ModelOutput.class);
 
-        ChatBlockModel<ChatMessages> model =
-                new ChatBlockModel<>(prompts -> new FlatChatMessage(new AiMessage("{\"ans\":\"model answer\"}")));
+        ChatBlockModel model = new ChatBlockModel(prompts ->
+                new FlatChatMessage(new AiMessage("{\"ans\":\"model answer\"}")));
         AiProcessFlow<Tip, ModelOutput> flow = AiFlows.<Tip>create()
                 .runnableParallel(format("format", parser), passThrough())
                 .prompt(Prompts.human("{{question}} {{format}}").memory("question"))
@@ -109,7 +108,7 @@ public class ModelTest {
     @Nested
     @DisplayName("流式模型测试")
     class StreamingModelTest {
-        private final ChatStreamModel<ChatMessages> model = new ChatStreamModel<>(input -> Choir.create(emitter -> {
+        private final ChatStreamModel model = new ChatStreamModel(input -> Choir.create(emitter -> {
             for (int i = 0; i < 4; i++) {
                 emitter.emit(new FlatChatMessage(new AiMessage(String.valueOf(i))));
                 SleepUtil.sleep(10);
@@ -180,7 +179,7 @@ public class ModelTest {
 
         @Test
         void shouldOkWhenStreamModelWithMedia() {
-            ChatStreamModel<ChatMessages> mediasModel = new ChatStreamModel<>(input -> Choir.create(emitter -> {
+            ChatStreamModel mediasModel = new ChatStreamModel(input -> Choir.create(emitter -> {
                 for (int i = 0; i < 4; i++) {
                     emitter.emit(new FlatChatMessage(new AiMessage(String.valueOf(i))));
                 }
@@ -237,7 +236,7 @@ public class ModelTest {
         @Test
         void shouldThrowWhenStreamModelWithException() {
             String expectedMsg = "test exception";
-            ChatStreamModel<ChatMessages> exceptionModel = new ChatStreamModel<>(input -> Choir.create(emitter -> {
+            ChatStreamModel exceptionModel = new ChatStreamModel(input -> Choir.create(emitter -> {
                 emitter.fail(new Exception(expectedMsg));
             }));
             Memory memory = new CacheMemory();

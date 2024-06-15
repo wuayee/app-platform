@@ -31,7 +31,7 @@ import com.huawei.jade.fel.chat.character.ToolMessage;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
-import com.huawei.jade.fel.engine.operators.patterns.Agent;
+import com.huawei.jade.fel.engine.operators.patterns.AbstractAgent;
 import com.huawei.jade.fel.tool.Tool;
 import com.huawei.jade.fel.tool.ToolCall;
 import com.huawei.jade.fel.tool.ToolProvider;
@@ -110,8 +110,8 @@ public class LLMComponentTest {
         return businessData;
     }
 
-    private Agent<Prompt, Prompt> buildStubAgent(AiProcessFlow<Prompt, Prompt> flow) {
-        return new Agent<Prompt, Prompt>() {
+    private AbstractAgent<Prompt, Prompt> buildStubAgent(AiProcessFlow<Prompt, Prompt> flow) {
+        return new AbstractAgent<Prompt, Prompt>() {
             @Override
             protected AiProcessFlow<Prompt, Prompt> buildFlow() {
                 return flow;
@@ -119,7 +119,7 @@ public class LLMComponentTest {
         };
     }
 
-    private Agent<Prompt, Prompt> getWaterFlowAgent(ChatModelStreamService model, boolean isAsyncTool) {
+    private AbstractAgent<Prompt, Prompt> getWaterFlowAgent(ChatModelStreamService model, boolean isAsyncTool) {
         return new WaterFlowAgent(getToolProvider(isAsyncTool), model, new ChatOptions());
     }
 
@@ -165,7 +165,7 @@ public class LLMComponentTest {
     @Test
     void shouldOkWhenWaterFlowAgentWithoutAsyncTool() throws InterruptedException {
         // stub
-        Agent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel(null), false);
+        AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel(null), false);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
                 toolProvider, agent, aippLogService, aippLogStreamService);
 
@@ -187,7 +187,7 @@ public class LLMComponentTest {
     @Test
     void shouldFailWhenWaterFlowAgentThrowException() throws InterruptedException {
         // stub
-        Agent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel("exceptionMsg"), false);
+        AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel("exceptionMsg"), false);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
                 toolProvider, agent, aippLogService, aippLogStreamService);
 
@@ -208,7 +208,7 @@ public class LLMComponentTest {
     @Test
     void shouldOkWhenWaterFlowAgentWithAsyncTool() throws InterruptedException {
         // stub
-        Agent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel(null), true);
+        AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel(null), true);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
                 toolProvider, agent, aippLogService, aippLogStreamService);
 
@@ -249,7 +249,7 @@ public class LLMComponentTest {
         AiProcessFlow<Prompt, Prompt> testAgent = AiFlows.<Prompt>create()
                 .map(m -> (Prompt) ChatMessages.from(new AiMessage("bad")))
                 .close();
-        Agent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
+        AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
                 toolProvider, agent, null, null);
 
@@ -273,7 +273,7 @@ public class LLMComponentTest {
         AiProcessFlow<Prompt, Prompt> testAgent = AiFlows.<Prompt>create().just(m -> {
             int err = 1 / 0;
         }).close();
-        Agent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
+        AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService,
                 metaInstanceService,
                 metaService,
@@ -303,7 +303,7 @@ public class LLMComponentTest {
                 .just(m -> Assertions.assertEquals(4, m.messages().size()))
                 .map(m -> (Prompt) ChatMessages.from(new ToolMessage("", "\"tool_async\"")))
                 .close();
-        Agent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
+        AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
                 toolProvider, agent, this.aippLogService, null);
 
@@ -352,7 +352,7 @@ public class LLMComponentTest {
                 })
                 .just(m -> flag.set(true))
                 .close();
-        Agent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
+        AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
                 toolProvider, agent, this.aippLogService, null);
 

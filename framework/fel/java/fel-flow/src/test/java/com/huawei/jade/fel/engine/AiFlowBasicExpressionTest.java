@@ -312,8 +312,8 @@ public class AiFlowBasicExpressionTest {
     @Nested
     @DisplayName("测试解析mermaid格式的流程结构")
     class MermaidTest {
-        private final ChatBlockModel<Prompt> model =
-                new ChatBlockModel<>(prompts -> new FlatChatMessage(new AiMessage("model answer")));
+        private final ChatBlockModel model =
+                new ChatBlockModel(prompts -> new FlatChatMessage(new AiMessage("model answer")));
 
         private final AiProcessFlow<Prompt, ChatMessage> subFlow = AiFlows.<Prompt>create()
                 .just((input, context) -> {})
@@ -356,7 +356,7 @@ public class AiFlowBasicExpressionTest {
         void shouldOkWhenParseMermaidWithDelegateFlowPattern() {
             AiProcessFlow<Tip, String> flow = AiFlows.<Tip>create()
                     .prompt(Prompts.history(), Prompts.human("{{0}}"))
-                    .delegate(new FlowSupportable<>(() -> this.subFlow))
+                    .delegate(new FlowSupportable<>(this.subFlow))
                     .map(ChatMessage::text)
                     .close();
 

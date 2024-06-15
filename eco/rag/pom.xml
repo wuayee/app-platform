@@ -32,6 +32,13 @@
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
+        <!-- rag service-->
+        <dependency>
+            <groupId>com.huawei.fit.jade.service</groupId>
+            <artifactId>rag-service</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
         <!-- fit-->
         <dependency>
             <groupId>com.huawei.fitframework</groupId>

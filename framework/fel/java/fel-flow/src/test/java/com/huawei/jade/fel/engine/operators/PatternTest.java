@@ -10,6 +10,9 @@ import static com.huawei.jade.fel.engine.operators.patterns.SyncTipper.question;
 import static com.huawei.jade.fel.engine.operators.patterns.SyncTipper.value;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.huawei.fit.waterflow.domain.context.FlowSession;
+import com.huawei.fitframework.util.MapBuilder;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.content.Contents;
@@ -22,9 +25,15 @@ import com.huawei.jade.fel.core.retriever.Retriever;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
+import com.huawei.jade.fel.engine.flows.Conversation;
+import com.huawei.jade.fel.engine.operators.patterns.SimplePattern;
 import com.huawei.jade.fel.engine.operators.prompts.Prompts;
+import com.huawei.jade.fel.engine.util.StateKey;
 
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * 委托单元测试。
@@ -37,18 +46,23 @@ public class PatternTest {
     void shouldOkWhenAiFlowWithNormalRunnableParallel() {
         Memory memory = getMockMemory();
         final StringBuilder answer = new StringBuilder();
-        AiFlows.<String>create()
+        Conversation<String, Prompt> converse = AiFlows.<String>create()
                 .runnableParallel(question(),
                         history("history"),
                         value("context", (arg -> Contents.from("context"))),
                         value("key", "val"))
                 .prompt(Prompts.human("answer {{question}} from {{context}} with {{history}}"))
-                .close(r -> answer.append(r.text()))
+                .close()
                 .converse()
-                .bind(memory)
-                .offer("question")
-                .await();
+                .bind(memory);
+
+        converse.doOnSuccess(r -> answer.append(r.text())).offer("question").await();
         assertThat(answer.toString()).isEqualTo("answer question from context with my history");
+
+        // 验证 runnableParallel 中 join 初始值重新获取，不影响后续的请求。
+        StringBuilder answer1 = new StringBuilder();
+        converse.doOnSuccess(r -> answer1.append(r.text())).offer("question1").await();
+        assertThat(answer1.toString()).isEqualTo("answer question1 from context with my history");
     }
 
     @Test
@@ -78,6 +92,30 @@ public class PatternTest {
                 "answer my question1 and my question2 from %s with my history",
                 answer));
         assertThat(messages.medias()).hasSize(1);
+    }
+
+    @Test
+    void shouldOkWhenDelegatePatternWithBindingArgs() {
+        FlowSession session = new FlowSession();
+        Map<String, Object> argsInit = MapBuilder.<String, Object>get().put("key", "value").build();
+        SimplePattern<Prompt, String> pattern =
+            new SimplePattern<Prompt, String>(
+                (prompt, args) -> {
+                    String value = Optional.ofNullable(ObjectUtils.<String>cast(args.get("key")))
+                            .orElse("empty");
+                    String sessionId = ObjectUtils.<FlowSession>cast(args.get(StateKey.FLOW_SESSION)).getId();
+                    return prompt.text() + value + sessionId;
+                }).bind(argsInit);
+        String result = AiFlows.<Tip>create()
+                .prompt(Prompts.human("{{0}}"))
+                .delegate(pattern)
+                .close()
+                .converse(session)
+                .offer(Tip.fromArray("human msg."))
+                .await();
+
+        // pattern 已绑定的参数被后续的bind操作清空
+        assertThat(result).isEqualTo("human msg.empty" + session.getId());
     }
 
     private static Memory getMockMemory() {

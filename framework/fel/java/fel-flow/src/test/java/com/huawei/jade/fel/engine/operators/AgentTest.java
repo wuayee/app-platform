@@ -22,7 +22,7 @@ import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.flows.Conversation;
 import com.huawei.jade.fel.engine.operators.models.ChatChunk;
 import com.huawei.jade.fel.engine.operators.models.StreamingConsumer;
-import com.huawei.jade.fel.engine.operators.patterns.Agent;
+import com.huawei.jade.fel.engine.operators.patterns.AbstractAgent;
 import com.huawei.jade.fel.engine.operators.patterns.DefaultStreamAgent;
 import com.huawei.jade.fel.engine.operators.prompts.Prompts;
 import com.huawei.jade.fel.tool.Tool;
@@ -53,7 +53,7 @@ public class AgentTest {
     class StreamingAgentTest {
         @Test
         void shouldOkWhenCreateAiFlowWithStreamAgent() {
-            Agent<Prompt, Prompt> agent = getStreamAgent(buildChatStreamModel(null));
+            AbstractAgent<Prompt, Prompt> agent = getStreamAgent(buildChatStreamModel(null));
             AiProcessFlow<Tip, String> flow = getAgentFlow(agent);
 
             StringBuilder accResult = new StringBuilder();
@@ -80,7 +80,7 @@ public class AgentTest {
         @Test
         void shouldThrowWhenStreamAgentWithException() {
             String expectedMsg = "model exception";
-            Agent<Prompt, Prompt> agent = getStreamAgent(buildChatStreamModel(expectedMsg));
+            AbstractAgent<Prompt, Prompt> agent = getStreamAgent(buildChatStreamModel(expectedMsg));
             AiProcessFlow<Tip, String> flow = getAgentFlow(agent);
 
             AtomicInteger converseErrCnt = new AtomicInteger();
@@ -103,7 +103,7 @@ public class AgentTest {
             };
         }
 
-        private Agent<Prompt, Prompt> getStreamAgent(ChatModelStreamService model) {
+        private AbstractAgent<Prompt, Prompt> getStreamAgent(ChatModelStreamService model) {
             ToolProvider toolProvider = getToolProvider();
             return new DefaultStreamAgent(toolProvider, model, new ChatOptions());
         }
@@ -129,7 +129,7 @@ public class AgentTest {
         }
     }
 
-    private AiProcessFlow<Tip, String> getAgentFlow(Agent<Prompt, Prompt> agent) {
+    private AiProcessFlow<Tip, String> getAgentFlow(AbstractAgent<Prompt, Prompt> agent) {
         return AiFlows.<Tip>create()
                 .prompt(Prompts.history(), Prompts.human("{{0}}"))
                 .delegate(agent)

@@ -10,7 +10,6 @@ import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.core.template.StringTemplate;
 import com.huawei.jade.fel.core.template.support.SystemMessageTemplate;
 import com.huawei.jade.fel.core.util.Tip;
-import com.huawei.jade.fel.engine.operators.CustomState;
 
 /**
  * 系统提示词模板。仅使用文本数据渲染模板，忽略媒体数据。
@@ -29,11 +28,11 @@ public class SystemTemplate implements PromptTemplate<Tip> {
      */
     public SystemTemplate(StringTemplate template) {
         Validation.notNull(template, "Template cannot be null.");
-        messageTemplate = new SystemMessageTemplate(template);
+        this.messageTemplate = new SystemMessageTemplate(template);
     }
 
     @Override
-    public Prompt invoke(CustomState<Tip> arg) {
-        return ChatMessages.from(messageTemplate.render(arg.data().freeze()));
+    public Prompt invoke(Tip input) {
+        return ChatMessages.from(this.messageTemplate.render(input.freeze()));
     }
 }
