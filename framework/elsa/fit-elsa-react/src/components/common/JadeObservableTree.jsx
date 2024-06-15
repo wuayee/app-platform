@@ -75,7 +75,7 @@ export const JadeObservableTree = ({data}) => {
     const displayTitle = (nodeData) => {
         return (<>
             <div className="jade-observable-tree-node-div">
-                <div style={{display: "flex"}}>
+                <div style={{display: "flex", alignItems: "center"}}>
                     <span className="jade-observable-tree-node-title">{nodeData.title}</span>
                     <div className="jade-observable-tree-node-type-div">
                         <span className="jade-observable-tree-node-type-name">{nodeData.type}</span>
