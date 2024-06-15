@@ -203,12 +203,35 @@ export default function JadeInputTree({data, updateItem, disabled}) {
         </>);
     };
 
+    const renderTreeNodes = (data) =>
+        data.map((item) => {
+            const isRootNode = item.level === 0;
+            const className = isRootNode ? "jade-hide-tree-left-line" : '';
+
+            if (item.children) {
+                return (
+                    <Tree.TreeNode title={displayTitle(item)} key={item.key} className={className}>
+                        {renderTreeNodes(item.children)}
+                    </Tree.TreeNode>
+                );
+            }
+            return <Tree.TreeNode title={displayTitle(item)} key={item.key} className={className}/>;
+        });
+
     return (<>
-        <Tree blockNode={true}
-              treeData={treeData}
-              className={"jade-ant-tree"}
-              titleRender={displayTitle}
-              showLine={true}/>
+        <div style={{paddingLeft: "8px"}}>
+            <Row wrap={false}>
+                <Col flex={"0 0 " + INPUT_WIDTH + "px"}>
+                    <span className={"jade-second-title-text"}>字段名称</span>
+                </Col>
+                <Col>
+                    <span className={"jade-second-title-text"}>字段值</span>
+                </Col>
+            </Row>
+        </div>
+        <Tree blockNode={true} className={"jade-ant-tree"} showLine={true}>
+            {renderTreeNodes(treeData)}
+        </Tree>
     </>);
 };
 
