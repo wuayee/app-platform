@@ -197,7 +197,7 @@ CREATE INDEX IF NOT EXISTS IDX_TASK_PROPERTY_TASK ON task_property (task_id);
 CREATE TABLE IF NOT EXISTS task
 (
     id         CHAR(32) PRIMARY KEY,
-    name       VARCHAR(64) NOT NULL,
+    name       VARCHAR(255) NOT NULL,
     tenant_id  CHAR(32)    NOT NULL,
     attributes JSON        NOT NULL DEFAULT '{}',
     created_by VARCHAR(127) NOT NULL,
@@ -333,7 +333,7 @@ CREATE TABLE IF NOT EXISTS task_type
     id         CHAR(32) PRIMARY KEY,
     tree_id    CHAR(32)    NOT NULL,
     parent_id  CHAR(32)    NOT NULL,
-    name       VARCHAR(64) NOT NULL,
+    name       VARCHAR(255) NOT NULL,
     created_by VARCHAR(127) NOT NULL,
     created_at TIMESTAMP   NOT NULL,
     updated_by VARCHAR(127) NOT NULL,
