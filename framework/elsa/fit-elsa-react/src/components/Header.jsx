@@ -60,8 +60,8 @@ export const Header = ({shape, disabled}) => {
                 <Form.Item name="title" rules={[{required: true, message: "请输入名称"}]} initialValue={shape.text}>
                     <Input onBlur={(e) => onInputBlur(e)}
                            ref={inputRef}
+                           onMouseDown={(e) => e.stopPropagation()}
                            placeholder="请输入名称"
-                           onClick={handleClick}
                            style={{height: "24px", borderColor: shape.focusBorderColor}}/>
                 </Form.Item>
             </>);
