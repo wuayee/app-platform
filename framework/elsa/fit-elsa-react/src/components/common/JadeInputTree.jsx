@@ -219,7 +219,7 @@ export default function JadeInputTree({data, updateItem, disabled}) {
         });
 
     return (<>
-        <div style={{paddingLeft: "8px"}}>
+        <div className={"jade-custom-panel-content"} style={{paddingLeft: "8px"}}>
             <Row wrap={false}>
                 <Col flex={"0 0 " + INPUT_WIDTH + "px"}>
                     <span className={"jade-second-title-text"}>字段名称</span>

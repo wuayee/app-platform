@@ -51,7 +51,7 @@ export default function JadeCollapseInputTree({data, updateItem, disabled}) {
                         ) : null}
                     </div>
                 }
-                className="jade-panel"
+                className="jade-panel transparent-background"
             >
                 <JadeInputTree disabled={disabled} data={data} updateItem={updateItem}/>
             </Panel>
