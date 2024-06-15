@@ -91,7 +91,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     const list: [] = chatListRes?.data?.msg_list?.reverse()?.map((item, index) => {
       return index % 2 === 0 ?
         { content: item.content?.[0], type: 'send', checked: false, sendType: 'text' } :
-        { content: item.content?.[0], type: 'recieve', checked: false, recieveType: 'text', instanceId: current_instance_id }
+        { content: item.content?.[0], type: 'recieve', checked: false, recieveType: 'text', instanceId:item?.message_id  }
     });
 
     if (role === 'USER') {

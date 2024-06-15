@@ -8,6 +8,7 @@ import com.huawei.fit.jane.task.util.Entities;
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
+import com.huawei.fit.jober.common.utils.VersionUtils;
 import com.huawei.fit.jober.taskcenter.fitable.util.ParamUtils;
 import com.huawei.fit.jober.taskcenter.validation.NodeValidator;
 import com.huawei.fitframework.annotation.Component;
@@ -32,12 +33,13 @@ public class NodeValidatorImpl implements NodeValidator {
 
     @Override
     public String name(String name, Set<String> names, OperationContext context) {
-        if (StringUtils.isEmpty(name)) {
+        String realName = VersionUtils.getRealName(name);
+        if (StringUtils.isEmpty(realName)) {
             throw new BadRequestException(ErrorCodes.TYPE_NAME_REQUIRED, ParamUtils.convertOperationContext(context));
-        } else if (name.length() > this.nameLengthMaximum) {
+        } else if (realName.length() > this.nameLengthMaximum) {
             throw new BadRequestException(ErrorCodes.TYPE_NAME_LENGTH_OUT_OF_BOUNDS,
                     ParamUtils.convertOperationContext(context));
-        } else if (names.contains(name)) {
+        } else if (names.contains(realName)) {
             throw new BadRequestException(ErrorCodes.TYPE_NAME_ALREADY_EXISTS,
                     ParamUtils.convertOperationContext(context));
         } else {

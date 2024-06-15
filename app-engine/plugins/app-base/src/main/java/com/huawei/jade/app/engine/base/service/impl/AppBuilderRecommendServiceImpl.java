@@ -11,7 +11,6 @@ import com.huawei.jade.app.engine.base.service.AppBuilderRecommendService;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatModelService;
 import com.huawei.jade.fel.chat.ChatOptions;
-import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
@@ -52,7 +51,7 @@ public class AppBuilderRecommendServiceImpl implements AppBuilderRecommendServic
 
         AiProcessFlow<Tip, String> flow = AiFlows.<Tip>create()
                 .prompt(Prompts.human(historyPrompt + recommendPrompt))
-                .generate(new ChatBlockModel<Prompt>(chatModelService).bind(ChatOptions.builder()
+                .generate(new ChatBlockModel(chatModelService).bind(ChatOptions.builder()
                         .model("Qwen-72B")
                         .build()))
                 .map(ChatMessage::text)

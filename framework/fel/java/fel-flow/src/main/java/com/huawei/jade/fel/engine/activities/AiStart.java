@@ -4,6 +4,7 @@
 
 package com.huawei.jade.fel.engine.activities;
 
+import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitter;
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fit.waterflow.domain.flow.Flows;
@@ -15,12 +16,14 @@ import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.utils.Tuple;
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
-import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.Prompt;
+import com.huawei.jade.fel.core.Pattern;
 import com.huawei.jade.fel.core.formatters.Parser;
+import com.huawei.jade.fel.core.model.BlockModel;
 import com.huawei.jade.fel.core.retriever.Indexer;
 import com.huawei.jade.fel.core.retriever.Retriever;
 import com.huawei.jade.fel.core.retriever.Splitter;
@@ -29,20 +32,18 @@ import com.huawei.jade.fel.engine.activities.processors.AiBranchProcessor;
 import com.huawei.jade.fel.engine.activities.processors.AiFlatMap;
 import com.huawei.jade.fel.engine.flows.AiFlow;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
-import com.huawei.jade.fel.engine.operators.AiRunnableArg;
-import com.huawei.jade.fel.engine.operators.models.ChatBlockModel;
 import com.huawei.jade.fel.engine.operators.models.ChatChunk;
-import com.huawei.jade.fel.engine.operators.models.ChatStreamModel;
+import com.huawei.jade.fel.engine.operators.models.StreamModel;
 import com.huawei.jade.fel.engine.operators.patterns.AbstractFlowPattern;
-import com.huawei.jade.fel.engine.operators.patterns.AsyncPattern;
-import com.huawei.jade.fel.engine.operators.patterns.SimpleAsyncPattern;
-import com.huawei.jade.fel.engine.operators.patterns.SyncPattern;
+import com.huawei.jade.fel.engine.operators.patterns.FlowPattern;
+import com.huawei.jade.fel.engine.operators.patterns.SimpleFlowPattern;
 import com.huawei.jade.fel.engine.operators.prompts.PromptTemplate;
 import com.huawei.jade.fel.engine.util.StateKey;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
@@ -338,37 +339,54 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     }
 
     /**
-     * 将数据委托给 {@link AsyncPattern}{@code <}{@link O}{@code , }{@link R}{@code >}
+     * 将数据委托给 {@link Pattern}{@code <}{@link O}{@code , }{@link R}{@code >}
      * 处理，然后自身放弃处理数据。处理后的数据会发送回该节点，作为该节点的处理结果。
      *
-     * @param pattern 表示异步委托单元的 {@link AsyncPattern}{@code <}{@link O}{@code , }{@link R}{@code >}。
+     * @param pattern 表示异步委托单元的 {@link Pattern}{@code <}{@link O}{@code , }{@link R}{@code >}。
      * @param <R> 表示委托节点的输出数据类型。
      * @return 表示委托节点的 {@link AiState}{@code <}{@link R}{@code , }{@link D}{@code , }{@link O}{@code ,
      * }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code pattern} 为 {@code null} 时。
      */
-    public <R> AiState<R, D, O, RF, F> delegate(AsyncPattern<O, R> pattern) {
+    public <R> AiState<R, D, O, RF, F> delegate(Pattern<O, R> pattern) {
         Validation.notNull(pattern, "Pattern operator cannot be null.");
+        AtomicReference<FlowPattern<O, R>> flowPatternRef = new AtomicReference<>();
         Processor<O, R> processor = this.publisher().map(input -> {
-            pattern.offer(input.getData(), input.getSession());
+            Pattern<O, R> dynamicPattern = flowPatternRef.get().bind(MapBuilder.<String, Object>get()
+                    .put(StateKey.FLOW_SESSION, input.getSession())
+                    .build());
+            dynamicPattern.invoke(input.getData());
             return null;
         }, null);
+        this.displayPatternProcessor(pattern, processor);
+        flowPatternRef.set(this.castFlowPattern(pattern));
+        AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
+        state.offer(flowPatternRef.get());
+        return state;
+    }
+
+    private <R> void displayPatternProcessor(Pattern<O, R> pattern, Processor<O, R> processor) {
         if (pattern instanceof AbstractFlowPattern) {
             Flow<O> originFlow = ObjectUtils.<AbstractFlowPattern<O, R>>cast(pattern).origin();
             processor.displayAs("delegate to flow", originFlow, originFlow.start().getId());
         } else {
             processor.displayAs("delegate to pattern");
         }
-        AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
-        state.offer(pattern);
-        return state;
+    }
+
+    private <R> FlowPattern<O, R> castFlowPattern(Pattern<O, R> pattern) {
+        if (pattern instanceof FlowPattern) {
+            return ObjectUtils.cast(pattern);
+        } else {
+            return new SimpleFlowPattern<>(pattern);
+        }
     }
 
     /**
      * 将数据委托给 {@link Operators.ProcessMap}{@code <}{@link O}{@code , }{@link R}{@code >}
      * 处理，然后自身放弃处理数据。处理后的数据会发送回该节点，作为该节点的处理结果。
      * <p>
-     * 数据接收方 {@code operator} 将在 {@link SimpleAsyncPattern}{@code <}{@link O}{@code , }{@link R}{@code >}
+     * 数据接收方 {@code operator} 将在 {@link SimpleFlowPattern}{@code <}{@link O}{@code , }{@link R}{@code >}
      * 里面的独立线程池中执行，不占用委托节点的线程。一般用于 {@code operator} 为 IO 密集型任务的场景。
      * </p>
      *
@@ -380,7 +398,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public <R> AiState<R, D, O, RF, F> delegate(Operators.ProcessMap<O, R> operator) {
         Validation.notNull(operator, "Pattern operator cannot be null.");
-        return this.delegate(new SimpleAsyncPattern<>(operator));
+        return this.delegate(new SimpleFlowPattern<>(operator));
     }
 
     /**
@@ -443,9 +461,10 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public final AiState<Prompt, D, O, RF, F> prompt(PromptTemplate<O>... templates) {
         return new AiState<>(new State<>(this.publisher().map(input -> {
             ChatMessages messages = new ChatMessages();
-            AiRunnableArg<O> runnableArg = new AiRunnableArg<>(input.getData(), input.getSession());
+            Map<String, Object> args =
+                    MapBuilder.<String, Object>get().put(StateKey.FLOW_SESSION, input.getSession()).build();
             for (PromptTemplate<O> template : templates) {
-                messages.addAll(template.invoke(runnableArg).messages());
+                messages.addAll(template.bind(args).invoke(input.getData()).messages());
             }
             return (Prompt) messages;
         }, null).displayAs("prompt"), this.getFlow().origin()), this.getFlow());
@@ -454,48 +473,47 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     /**
      * 生成大模型阻塞调用节点。
      *
-     * @param model 表示模型算子实现的 {@link ChatBlockModel}{@code <}{@link M}{@code >}。
+     * @param model 表示模型算子实现的 {@link BlockModel}{@code <}{@link M}{@code >}。
      * @param <M> 表示模型节点的输入数据类型。
      * @return 表示大模型阻塞调用节点的 {@link AiState}{@code <}{@link ChatMessage}{@code , }{@link D}{@code ,
      * }{@link O}{@code , }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code model} 为 {@code null} 时。
      */
-    public <M extends O> AiState<ChatMessage, D, O, RF, F> generate(ChatBlockModel<M> model) {
+    public <M extends ChatMessage> AiState<M, D, O, RF, F> generate(BlockModel<O, M> model) {
         Validation.notNull(model, "Model operator cannot be null.");
         return new AiState<>(new State<>(this.publisher().map(input -> {
-            FlowSession session = input.getSession();
-            ChatBlockModel<M> dynamicModel =
-                    Optional.ofNullable(session.<ChatOptions>getInnerState(StateKey.CHAT_OPTIONS))
-                            .map(model::bind)
-                            .orElse(model);
-            return dynamicModel.invoke(new AiRunnableArg<>(ObjectUtils.cast(input.getData()), session));
+            Map<String, Object> args = MapBuilder.<String, Object>get()
+                    .put(StateKey.FLOW_SESSION, input.getSession())
+                    .build();
+            Pattern<O, M> dynamicModel = model.bind(args);
+            return dynamicModel.invoke(input.getData());
         }, null).displayAs("generate"), this.getFlow().origin()), this.getFlow());
     }
 
     /**
      * 生成大模型流式调用节点。
      *
-     * @param model 表示流式模型算子实现的 {@link ChatStreamModel}{@code <}{@link O}{@code >}。
+     * @param model 表示流式模型算子实现的 {@link StreamModel}{@code <}{@link O}{@code >}。
      * @param <M> 表示模型节点的输入数据类型。
      * @return 表示大模型流式调用节点的 {@link AiState}{@code <}{@link ChatChunk}{@code , }{@link D}{@code ,
      * }{@link ChatChunk}{@code , }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code model} 为 {@code null} 时。
      */
-    public <M extends O> AiState<ChatChunk, D, ChatChunk, RF, F> generate(ChatStreamModel<M> model) {
+    public <M extends ChatMessage> AiState<ChatChunk, D, ChatChunk, RF, F> generate(StreamModel<O, M> model) {
         Validation.notNull(model, "Streaming Model operator cannot be null.");
 
         AtomicReference<Processor<O, ChatChunk>> processorRef = new AtomicReference<>();
         Processor<O, ChatChunk> processor = this.publisher().flatMap(input -> {
             FlowSession session = input.getSession();
             input.setKeyBy(session.getId());
-            ChatStreamModel<M> dynamicModel =
-                    Optional.ofNullable(session.<ChatOptions>getInnerState(StateKey.CHAT_OPTIONS))
-                            .map(model::bind)
-                            .orElse(model);
-            AiRunnableArg<Prompt> runnableArg = new AiRunnableArg<>(ObjectUtils.cast(input.getData()), session);
-            runnableArg.setInnerState(StateKey.STREAMING_PROCESSOR, processorRef.get());
-            runnableArg.setInnerState(StateKey.STREAMING_FLOW_CONTEXT, input);
-            return Flows.source(dynamicModel.invoke(runnableArg));
+
+            Map<String, Object> args = MapBuilder.<String, Object>get()
+                    .put(StateKey.STREAMING_PROCESSOR, processorRef.get())
+                    .put(StateKey.STREAMING_FLOW_CONTEXT, input)
+                    .put(StateKey.FLOW_SESSION, session)
+                    .build();
+            Pattern<O, FiniteEmitter<M, ChatChunk>> dynamicModel = model.bind(args);
+            return Flows.source(dynamicModel.invoke(input.getData()));
         }, null).displayAs("generate streaming");
         processorRef.set(processor);
         return new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow())
@@ -505,23 +523,21 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     /**
      * 生成平行分支节点。每个分支将输出一个键值对。
      *
-     * @param patterns 表示同步委托单元数组的 {@link SyncPattern}{@code <}{@link O}{@code , }{@link Tip}{@code >[]}。
+     * @param patterns 表示同步委托单元数组的 {@link Pattern}{@code <}{@link O}{@code , }{@link Tip}{@code >[]}。
      * @return 表示平行分支节点的 {@link AiState}{@code <}{@link Tip}{@code , }{@link D}{@code , }{@link Tip}{@code ,
      * }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code patterns} 数组为空时。
      */
     @SafeVarargs
-    public final AiState<Tip, D, Tip, RF, F> runnableParallel(SyncPattern<O, Tip>... patterns) {
+    public final AiState<Tip, D, Tip, RF, F> runnableParallel(Pattern<O, Tip>... patterns) {
         Validation.isTrue(patterns.length > 0, "Patterns can not be empty.");
 
         F mineFlow = this.getFlow();
         RF mineOrigin = this.getFlow().origin();
         AiFork<Tip, D, O, RF, F> aiFork = null;
-        for (SyncPattern<O, Tip> pattern : patterns) {
+        for (Pattern<O, Tip> pattern : patterns) {
             AiBranchProcessor<Tip, D, O, RF, F> branchProcessor = node -> {
-                Processor<O, Tip> processor = node.publisher()
-                        .map(input -> pattern.invoke(new AiRunnableArg<>(input.getData(), input.getSession())),
-                                null);
+                Processor<O, Tip> processor = this.getPatternProcessor(pattern, node);
                 return new AiState<>(new State<>(processor, mineOrigin), mineFlow);
             };
             aiFork = Optional.ofNullable(aiFork)
@@ -529,11 +545,21 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
                     .orElseGet(() -> new AiParallel<>(this.start.parallel(), mineFlow).fork(branchProcessor));
         }
 
-        AiState<Tip, D, Tip, RF, F> state = aiFork.join(new Tip(), (acc, data) -> {
+        AiState<Tip, D, Tip, RF, F> state = aiFork.join(Tip::new, (acc, data) -> {
             acc.merge(data);
             return acc;
         });
         ((Processor<?, ?>) state.publisher()).displayAs("runnableParallel");
         return state;
+    }
+
+    private Processor<O, Tip> getPatternProcessor(Pattern<O, Tip> pattern, AiState<O, D, O, RF, F> node) {
+        return node.publisher().map(input -> {
+                Map<String, Object> args = MapBuilder.<String, Object>get()
+                        .put(StateKey.FLOW_SESSION, input.getSession())
+                        .build();
+                Pattern<O, Tip> dynamicPattern = pattern.bind(args);
+                return dynamicPattern.invoke(input.getData());
+            }, null);
     }
 }

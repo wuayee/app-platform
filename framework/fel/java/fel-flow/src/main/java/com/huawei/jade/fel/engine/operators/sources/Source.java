@@ -37,19 +37,19 @@ public class Source<T> implements Emitter<T, FlowSession> {
      */
     public void unregister(EmitterListener<T, FlowSession> listener) {
         if (listener != null) {
-            listeners.remove(listener);
+            this.listeners.remove(listener);
         }
     }
 
     @Override
     public void register(EmitterListener<T, FlowSession> listener) {
         if (listener != null) {
-            listeners.add(listener);
+            this.listeners.add(listener);
         }
     }
 
     @Override
     public void emit(T data, FlowSession session) {
-        listeners.forEach(handler -> THREAD_POOL.execute(() -> handler.handle(data, session)));
+        this.listeners.forEach(handler -> THREAD_POOL.execute(() -> handler.handle(data, session)));
     }
 }

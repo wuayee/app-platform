@@ -21,17 +21,17 @@ import com.huawei.jade.fel.tool.ToolProvider;
 import java.util.Collections;
 
 /**
- * {@link Agent} 的默认流式实现。
+ * {@link AbstractAgent} 的默认流式实现。
  *
  * @author 刘信宏
  * @since 2024-05-17
  */
-public class DefaultStreamAgent extends Agent<Prompt, Prompt> {
+public class DefaultStreamAgent extends AbstractAgent<Prompt, Prompt> {
     private static final String AGENT_MSG_KEY = "stream_agent_request";
     private static final String GOTO_NODE_ID = "ahead_llm_node";
 
     private final ToolProvider toolProvider;
-    private final ChatStreamModel<Prompt> model;
+    private final ChatStreamModel model;
     private final String agentMsgKey;
 
     /**
@@ -63,7 +63,7 @@ public class DefaultStreamAgent extends Agent<Prompt, Prompt> {
     public DefaultStreamAgent(ToolProvider toolProvider, ChatModelStreamService chatStreamModel, ChatOptions options,
             String agentMsgKey) {
         this.toolProvider = Validation.notNull(toolProvider, "The tool provider cannot be null.");
-        this.model = new ChatStreamModel<>(chatStreamModel, options);
+        this.model = new ChatStreamModel(chatStreamModel, options);
         this.agentMsgKey = Validation.notBlank(agentMsgKey, "The agent message key cannot be blank.");
     }
 
@@ -74,7 +74,7 @@ public class DefaultStreamAgent extends Agent<Prompt, Prompt> {
                 .just((input, ctx) -> ctx.setState(this.agentMsgKey, ChatMessages.from(input.messages())))
                 .id(GOTO_NODE_ID)
                 .generate(this.model)
-                .reduce(ChatChunk::new, Agent::defaultReduce)
+                .reduce(ChatChunk::new, AbstractAgent::defaultReduce)
                 .delegate(this::handleTool)
                 .conditions()
                 .matchTo(message -> CollectionUtils.isNotEmpty(message.toolCalls()),
@@ -93,7 +93,7 @@ public class DefaultStreamAgent extends Agent<Prompt, Prompt> {
 
         ChatMessages lastRequest = ctx.getState(this.agentMsgKey);
         lastRequest.add(Validation.notNull(input, "The input message cannot be null."));
-        lastRequest.addAll(Agent.toolCallHandle(this.toolProvider, input, Collections.emptyMap()).messages());
+        lastRequest.addAll(AbstractAgent.toolCallHandle(this.toolProvider, input, Collections.emptyMap()).messages());
         return input;
     }
 }

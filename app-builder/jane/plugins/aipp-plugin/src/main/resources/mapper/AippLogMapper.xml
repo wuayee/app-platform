@@ -191,4 +191,10 @@
         </where>
         LIMIT 1
     </select>
+
+    <delete id="deleteInstanceLog">
+        delete
+        from aipp_instance_log
+        where path Like '/'||#{instanceId}||'%'
+    </delete>
 </mapper>

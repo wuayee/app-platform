@@ -5,7 +5,7 @@
 package com.huawei.jade.store.repository.pgsql.service;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.jade.store.repository.pgsql.util.SerializerUtils.json2obj;
+import static com.huawei.jade.carver.util.SerializeUtils.json2obj;
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;

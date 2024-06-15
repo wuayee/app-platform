@@ -65,4 +65,14 @@ public interface AippChatService {
      * @return QueryChatRsp
      */
     QueryChatRsp updateChat(String chatId, CreateChatRequest body, OperationContext context);
+
+    /**
+     * 重新发起会话。
+     *
+     * @param currentInstanceId 需要重新发起会话的实例 ID。
+     * @param body 请求体。
+     * @param context 上下文。
+     * @return 表示会话相应体的 {@link QueryChatRsp}。
+     */
+    QueryChatRsp restartChat(String currentInstanceId, CreateChatRequest body, OperationContext context);
 }

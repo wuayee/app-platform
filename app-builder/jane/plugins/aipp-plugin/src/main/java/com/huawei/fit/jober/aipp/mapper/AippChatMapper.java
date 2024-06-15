@@ -96,4 +96,19 @@ public interface AippChatMapper {
      * @return Integer
      */
     Integer countChat(String chatId);
+
+    /**
+     * 根据指定实例 ID 查询会话 ID。
+     *
+     * @param instanceId 指定实例 ID。
+     * @return 表示会话 ID 的 {@link String}。
+     */
+    String selectChatIdByInstanceId(String instanceId);
+
+    /**
+     * 根据指定实例 ID 删除关系宽表。
+     *
+     * @param instanceId 指定实例 ID。
+     */
+    void deleteWideRelationshipByInstanceId(String instanceId);
 }

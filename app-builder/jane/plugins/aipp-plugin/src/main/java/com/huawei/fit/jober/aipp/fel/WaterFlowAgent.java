@@ -19,7 +19,7 @@ import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.operators.models.ChatChunk;
 import com.huawei.jade.fel.engine.operators.models.ChatStreamModel;
-import com.huawei.jade.fel.engine.operators.patterns.Agent;
+import com.huawei.jade.fel.engine.operators.patterns.AbstractAgent;
 import com.huawei.jade.fel.tool.ToolCall;
 import com.huawei.jade.fel.tool.ToolProvider;
 
@@ -30,22 +30,22 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * WaterFlow 场景的 {@link Agent} 实现。
+ * WaterFlow 场景的 {@link AbstractAgent} 实现。
  *
  * @author 刘信宏
  * @since 2024-06-04
  */
-public class WaterFlowAgent extends Agent<Prompt, Prompt> {
+public class WaterFlowAgent extends AbstractAgent<Prompt, Prompt> {
     private static final String AGENT_MSG_KEY = "water_flow_agent_request";
     private static final String GOTO_NODE_ID = "ahead_llm_node";
 
     private final ToolProvider toolProvider;
-    private final ChatStreamModel<Prompt> model;
+    private final ChatStreamModel model;
     private final String agentMsgKey;
 
     public WaterFlowAgent(ToolProvider toolProvider, ChatModelStreamService chatStreamModel, ChatOptions options) {
         this.toolProvider = Validation.notNull(toolProvider, "The tool provider cannot be null.");
-        this.model = new ChatStreamModel<>(chatStreamModel, options);
+        this.model = new ChatStreamModel(chatStreamModel, options);
         this.agentMsgKey = AGENT_MSG_KEY;
     }
 
@@ -55,7 +55,7 @@ public class WaterFlowAgent extends Agent<Prompt, Prompt> {
                 .just((input, ctx) -> ctx.setState(this.agentMsgKey, ChatMessages.from(input.messages())))
                 .id(GOTO_NODE_ID)
                 .generate(this.model)
-                .reduce(ChatChunk::new, Agent::defaultReduce)
+                .reduce(ChatChunk::new, AbstractAgent::defaultReduce)
                 .delegate(this::handleTool)
                 .conditions()
                 .matchTo(this::shouldRepeated, node -> node.map(this::getAgentMsg).to(GOTO_NODE_ID))
@@ -70,7 +70,7 @@ public class WaterFlowAgent extends Agent<Prompt, Prompt> {
                 ObjectUtils.getIfNull(ctx.getState(AippConst.TOOL_CONTEXT_KEY), Collections::emptyMap);
         ChatMessages lastRequest = ctx.getState(this.agentMsgKey);
         lastRequest.add(Validation.notNull(input, "The input message cannot be null."));
-        lastRequest.addAll(Agent.toolCallHandle(this.toolProvider, input, toolContext).messages());
+        lastRequest.addAll(AbstractAgent.toolCallHandle(this.toolProvider, input, toolContext).messages());
         return input;
     }
 

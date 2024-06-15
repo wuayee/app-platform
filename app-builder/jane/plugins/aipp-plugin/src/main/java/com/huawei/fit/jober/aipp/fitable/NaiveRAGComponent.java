@@ -74,7 +74,7 @@ public class NaiveRAGComponent implements FlowableService {
         kbVectorSearchCondition.setTableId(tableIdList);
         kbVectorSearchCondition.setContent(ObjectUtils.cast(businessData.get("query")));
         kbVectorSearchCondition.setTopK(ObjectUtils.cast(businessData.get("maximum")));
-        kbVectorSearchCondition.setThreshold(0.5);
+        kbVectorSearchCondition.setThreshold(0.5F);
         return kbVectorSearchCondition;
     }
 }

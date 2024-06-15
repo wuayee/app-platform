@@ -43,6 +43,11 @@ public class VectorIndexTest {
         }
 
         @Override
+        public List<Pair<Map<String, Object>, Float>> get(VectorQuery query, VectorConfig conf, Float threshold) {
+            return null;
+        }
+
+        @Override
         public Long getCount(VectorConfig conf) {
             return null;
         }

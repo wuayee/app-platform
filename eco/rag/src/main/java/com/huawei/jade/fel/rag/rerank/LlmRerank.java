@@ -44,7 +44,7 @@ public class LlmRerank extends ModelRerank {
      */
     public LlmRerank(ChatModelService modelService) {
         rerankFlow = AiFlows.<Tip>create()
-                .prompt(Prompts.human(PROMPT)).generate(new ChatBlockModel<>(modelService)).close();
+                .prompt(Prompts.human(PROMPT)).generate(new ChatBlockModel(modelService)).close();
     }
 
     /**

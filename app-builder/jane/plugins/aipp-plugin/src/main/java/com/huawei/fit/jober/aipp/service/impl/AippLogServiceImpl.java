@@ -366,4 +366,13 @@ public class AippLogServiceImpl implements AippLogService {
         }
         return aippLogMapper.getParentPath(parentInstId);
     }
+
+    @Override
+    public void deleteInstanceLog(String instanceId) {
+        if (StringUtils.isEmpty(instanceId)) {
+            log.error("Instance id is null or empty.");
+            throw new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID);
+        }
+        this.aippLogMapper.deleteInstanceLog(instanceId);
+    }
 }

@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * 工具的 Http 请求的服务层实现。
@@ -119,6 +120,10 @@ public class DefaultToolService implements ToolService {
                 && toolQuery.getLimit() < 0)) {
             return ListResult.empty();
         }
+        Set<String> includeTags = toolQuery.getIncludeTags();
+        toolQuery.setIncludeTags(includeTags.stream().map(StringUtils::toUpperCase).collect(Collectors.toSet()));
+        Set<String> excludeTags = toolQuery.getExcludeTags();
+        toolQuery.setExcludeTags(excludeTags.stream().map(StringUtils::toUpperCase).collect(Collectors.toSet()));
         List<Tool.Info> infos = this.toolRepo.getTools(toolQuery);
         ArrayList<ToolData> toolDataList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(infos)) {
@@ -153,6 +158,10 @@ public class DefaultToolService implements ToolService {
                 && toolQuery.getLimit() < 0)) {
             return ListResult.empty();
         }
+        Set<String> includeTags = toolQuery.getIncludeTags();
+        toolQuery.setIncludeTags(includeTags.stream().map(StringUtils::toUpperCase).collect(Collectors.toSet()));
+        Set<String> excludeTags = toolQuery.getExcludeTags();
+        toolQuery.setExcludeTags(excludeTags.stream().map(StringUtils::toUpperCase).collect(Collectors.toSet()));
         List<Tool.Info> infos = this.toolRepo.searchTools(toolQuery);
         ArrayList<ToolData> toolDataList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(infos)) {

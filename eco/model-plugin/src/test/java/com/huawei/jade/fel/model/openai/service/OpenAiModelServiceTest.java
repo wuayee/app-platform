@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fitframework.flowable.Choir;
 import com.huawei.jade.fel.chat.ChatOptions;
-import com.huawei.jade.fel.chat.MessageType;
+import com.huawei.jade.fel.chat.character.HumanMessage;
 import com.huawei.jade.fel.chat.protocol.ChatCompletion;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.embed.EmbedOptions;
@@ -87,9 +87,7 @@ public class OpenAiModelServiceTest {
     }
 
     private ChatCompletion getRequest() {
-        FlatChatMessage msg = new FlatChatMessage();
-        msg.setType(MessageType.HUMAN);
-        msg.setText("test");
+        FlatChatMessage msg = new FlatChatMessage(new HumanMessage("test"));
 
         ChatOptions options = new ChatOptions();
         options.setModel("model");

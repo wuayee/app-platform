@@ -307,7 +307,7 @@ class WaterFlowsTest {
                             .just(i -> i.second += 5))
                     // 执行后: f=4;s=54;t=102
                     .fork(node -> node.just(i -> i.third += 2))
-                    .join(input, (acc, data) -> data)
+                    .join(() -> input, (acc, data) -> data)
                     .close(r -> output1.add(r.get().getData()))
                     .offer(input);
             waitSingle(() -> output1);
@@ -751,7 +751,7 @@ class WaterFlowsTest {
                     .parallel()
                     .fork(p -> p.map(i -> i + 1))
                     .fork(p -> p.map(i -> i * 2))
-                    .join("", (acc, i) -> acc + i.toString())
+                    .join(() -> "", (acc, i) -> acc + i.toString())
                     .close();
             assertEquals("start((Start))\n" + "start-->node0(map)\n" + "node9-->node3\n" + "node8-->node6\n"
                     + "node6-->end7((End))\n" + "node5-->node6([+])\n" + "node4-->node8(map)\n" + "node4-->node5(map)\n"
