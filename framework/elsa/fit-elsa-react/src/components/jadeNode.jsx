@@ -99,7 +99,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         } else {
             return source ? source : {};
         }
-    }
+    };
 
     /**
      * 获取节点默认的测试报告章节 todo 这里是否需要是先到DefaultRoot中，用来进行组件刷新操作，现目前状态可以刷新
@@ -133,6 +133,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
                 || c.direction.key === "ROTATE");
         self.connectors.forEach(connector => {
             connector.isSolid = true;
+            connector.radius = 6;
             if (connector.direction.key === DIRECTION.W.key) {
                 connector.allowFromLink = false
             }
