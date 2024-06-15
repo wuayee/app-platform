@@ -43,7 +43,7 @@ function App() {
         //     });
         // });
 
-        JadeFlow.edit(stage, graphData, configs).then(agent => {
+        JadeFlow.edit(stage, "1111", graphData, configs).then(agent => {
             window.agent = agent;
             agent.onModelSelect((onModelSelectedCallback) => {
                 onModelSelectedCallback.onSelect({name: "zy-model"});

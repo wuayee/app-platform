@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Button, Dropdown, Form, Input} from "antd";
+import {HEADER_TOOL_MENU_ICON} from "@/components/asserts/svgIcons.jsx";
 import "./headerStyle.css";
 
 /**
@@ -45,13 +46,13 @@ export const Header = ({shape, disabled}) => {
      */
     const onMenuClick = (e) => {
         const m = shape.getToolMenus().find(t => t.key === e.key);
-        m.action(setEdit);
+        m.action && m.action(setEdit);
     };
 
     /**
      * 获取文本组件，处于编辑态时，需要能修改标题；否则只展示标题.
      *
-     * @return {JSX.Element}
+     * @return {JSX.Element} 标题组件.
      */
     const getTitle = () => {
         if (edit) {
@@ -69,6 +70,34 @@ export const Header = ({shape, disabled}) => {
         }
     };
 
+    const onOpenChange = (openKeys) => {
+        shape.getToolMenus().forEach(m => {
+           if (openKeys.includes(m.key)) {
+               m.onOpen && m.onOpen();
+           }
+        });
+    };
+
+    /**
+     * 获取菜单项.
+     *
+     * @return {*} 菜单项
+     */
+    const getMenu = () => {
+        const items = shape.getToolMenus().map(t => {
+            const menu = {
+                key: t.key,
+                label: t.label,
+                popupClassName: "react-node-header-menu-sub",
+                popupOffset: [10, 0]
+            };
+            t.children && (menu.children = t.children);
+            t.onTitleClick && (menu.onTitleClick = t.onTitleClick);
+            return menu;
+        });
+        return {items, onClick: (e) => onMenuClick(e), onOpenChange, triggerSubMenuAction: "click"};
+    };
+
     /**
      * 展示菜单.
      *
@@ -76,27 +105,11 @@ export const Header = ({shape, disabled}) => {
      */
     const showMenus = () => {
         if (shape.getToolMenus().length > 0) {
-            const menus = shape.getToolMenus().map(t => {
-                return {key: t.key, label: t.label};
-            });
             return (<>
                 <div>
-                    <Dropdown disabled={disabled} menu={{items: menus, onClick: (e) => onMenuClick(e)}} placement="bottomRight">
-                        <Button type="text" size="small" style={{
-                            position: "static",
-                            width: "20px",
-                            height: "20px",
-                            flex: "none",
-                            order: 1,
-                            flexGrow: 0,
-                            margin: "0 10px",
-                            padding: 0,
-                        }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
-                                 viewBox="0 0 16 16">
-                                <path fill="#1C1D23" fillOpacity="0.8"
-                                      d="M3.667 7.833a1.167 1.167 0 1 1-2.334 0 1.167 1.167 0 0 1 2.334 0ZM9.15 7.833a1.167 1.167 0 1 1-2.333 0 1.167 1.167 0 0 1 2.333 0ZM14.667 7.833a1.167 1.167 0 1 1-2.334 0 1.167 1.167 0 0 1 2.334 0Z"></path>
-                            </svg>
+                    <Dropdown disabled={disabled} menu={getMenu()} trigger="click" placement="bottomRight">
+                        <Button type="text" size="small" className={"react-node-header-button"}>
+                            {HEADER_TOOL_MENU_ICON}
                         </Button>
                     </Dropdown>
                 </div>

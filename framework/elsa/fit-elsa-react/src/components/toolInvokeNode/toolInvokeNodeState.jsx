@@ -2,6 +2,9 @@ import {jadeNode} from "@/components/jadeNode.jsx";
 import {Button} from "antd";
 import ApiInvokeIcon from '../asserts/icon-api-invoke.svg?react';
 import {convertParameter, convertReturnFormat} from "@/components/util/MethodMetaDataParser.js";
+import httpUtil from "@/components/util/httpUtil.jsx";
+import {formatString} from "@/components/util/StringUtil.js";
+import {toolInvokeNodeDrawer} from "@/components/toolInvokeNode/toolInvokeNodeDrawer.jsx";
 
 /**
  * 工具调用节点shape
@@ -9,7 +12,7 @@ import {convertParameter, convertReturnFormat} from "@/components/util/MethodMet
  * @override
  */
 export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => {
-    const self = jadeNode(id, x, y, width, height, parent, drawer);
+    const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : toolInvokeNodeDrawer);
     self.type = "toolInvokeNodeState";
     self.width = 360;
     self.backColor = 'white';
@@ -27,6 +30,50 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
     const template = {
         inputParams: [],
         outputParams: []
+    };
+
+    /**
+     * @override
+     */
+    const getToolMenus = self.getToolMenus;
+    self.getToolMenus = () => {
+        const menus = getToolMenus.apply(self);
+        const uniqueName = self.flowMeta.jober.entity.uniqueName;
+        if (uniqueName) {
+            menus.push({
+                key: '4',
+                label: "查看版本信息",
+                action: () => {},
+                // 子菜单被打开时调用.
+                onOpen: () => {
+                    self.drawer.refreshVersionInfo && self.drawer.refreshVersionInfo();
+                },
+                children: [{
+                    key: "4-1",
+                    label: (<>
+                        {self.drawer.getVersionInfoComponent()}
+                    </>)
+                }]
+            });
+        }
+        return menus;
+    };
+
+    /**
+     * 拉取versionInfo数据.
+     *
+     * @param callback 回调.
+     */
+    self.fetchVersionInfo = (callback) => {
+        const url = self.graph.getConfig(self.type)?.urls?.versionInfo;
+        if (!url) {
+            return;
+        }
+        const uniqueName = self.flowMeta.jober.entity.uniqueName;
+        const replacedUrl = formatString(url, {tenant: self.graph.tenant, uniqueName});
+        httpUtil.get(replacedUrl, new Map(), (result) => {
+            callback(result.data);
+        });
     };
 
     /**
@@ -72,6 +119,9 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
         self.invalidateAlone();
     }
 
+    /**
+     * @override
+     */
     self.getHeaderIcon = () => {
         return (
             <ApiInvokeIcon className="jade-node-custom-header-icon"/>
@@ -79,4 +129,4 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
     };
 
     return self;
-}
+};

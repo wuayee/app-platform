@@ -32,7 +32,7 @@ const FlowDetail = () => {
     let configIndex = CONFIGS.findIndex(item => item.node === 'llmNodeState');
     CONFIGS[configIndex].params.tenantId = tenantId;
     CONFIGS[configIndex].params.appId = appId;
-    JadeFlow.edit(stageDom, data, CONFIGS).then(agent => {
+    JadeFlow.edit(stageDom, tenantId, data, CONFIGS).then(agent => {
       window.agent ? null : window.agent = agent;
     })
   }

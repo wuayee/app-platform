@@ -132,5 +132,15 @@ export const jadeFlowGraph = (div, title) => {
         self.onChangeCallback && self.onChangeCallback();
     };
 
+    /**
+     * 获取对应节点的配置.
+     *
+     * @param nodeType 节点类型.
+     * @return {*} 配置信息.
+     */
+    self.getConfig = (nodeType) => {
+        return self.configs?.find(config => config.node === nodeType);
+    };
+
     return self;
 };

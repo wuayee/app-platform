@@ -10,10 +10,11 @@ const {Panel} = Collapse;
  *
  * @param data 数据.
  * @param updateItem 修改方法.
+ * @param disabled 禁用.
  * @return {JSX.Element}
  * @constructor
  */
-export default function JadeCollapseInputTree({data, updateItem}) {
+export default function JadeCollapseInputTree({data, updateItem, disabled}) {
     const getContent = () => {
         const contentItems = data
             .filter(item => item.description)  // 过滤出有描述的项目
@@ -52,7 +53,7 @@ export default function JadeCollapseInputTree({data, updateItem}) {
                 }
                 className="jade-panel"
             >
-                <JadeInputTree data={data} updateItem={updateItem}/>
+                <JadeInputTree disabled={disabled} data={data} updateItem={updateItem}/>
             </Panel>
         </Collapse>
     </>);

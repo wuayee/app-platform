@@ -1,4 +1,4 @@
-import {Col, ConfigProvider, Form, Input, Row, Tree} from 'antd';
+import {Col, Form, Input, Row, Tree} from 'antd';
 import "./jadeInputTree.css";
 import PropTypes from "prop-types";
 import {JadeStopPropagationSelect} from "./JadeStopPropagationSelect.jsx";
@@ -61,10 +61,11 @@ const LEVEL_DISTANCE = 24;
  *
  * @param data 数据.
  * @param updateItem 修改方法.
+ * @param disabled 是否禁用.
  * @return {JSX.Element}
  * @constructor
  */
-export default function JadeInputTree({data, updateItem}) {
+export default function JadeInputTree({data, updateItem, disabled}) {
     const treeData = data.map(d => convert(d, 0));
 
     /**
@@ -115,12 +116,16 @@ export default function JadeInputTree({data, updateItem}) {
                 initialValue={node.value}
                 validateTrigger="onBlur"
             >
-                <Input className="jade-input" style={{borderRadius: "0px 8px 8px 0px"}} placeholder={"请输入"}
+                <Input disabled={disabled}
+                       className="jade-input"
+                       style={{borderRadius: "0px 8px 8px 0px"}}
+                       placeholder={"请输入"}
                        value={node.value}
                        onChange={(e) => onInputChange(node.id, "value", e)}/>
             </Form.Item>;
         } else if (node.from === "Reference") {
             return <JadeReferenceTreeSelect className="jade-input-tree-title-tree-select jade-select"
+                                            disabled={disabled}
                                             rules={node.isRequired ? [{required: true, message: "字段值不能为空"}] : []}
                                             reference={node}
                                             onReferencedKeyChange={(e) => onReferenceKeyChange(node.id, e)}
@@ -181,7 +186,10 @@ export default function JadeInputTree({data, updateItem}) {
                                 name={`value-select-${node.id}`}
                         >
                             <div className="jade-input-tree-title-child">
-                                <JadeInputTreeSelect node={node} options={getOptions(node)} updateItem={updateItem}/>
+                                <JadeInputTreeSelect node={node}
+                                                     options={getOptions(node)}
+                                                     updateItem={updateItem}
+                                                     disabled={disabled}/>
                             </div>
                         </Form.Item>
                     </Col>
@@ -196,10 +204,11 @@ export default function JadeInputTree({data, updateItem}) {
     };
 
     return (<>
-        <ConfigProvider theme={{components: {Tree: {nodeSelectedBg: "transparent", nodeHoverBg: "transparent"}}}}>
-            <Tree blockNode={true} treeData={treeData} className={"jade-ant-tree"}
-                  titleRender={displayTitle} showLine={true}/>
-        </ConfigProvider>
+        <Tree blockNode={true}
+              treeData={treeData}
+              className={"jade-ant-tree"}
+              titleRender={displayTitle}
+              showLine={true}/>
     </>);
 };
 
@@ -209,10 +218,11 @@ export default function JadeInputTree({data, updateItem}) {
  * @param node 节点.
  * @param options 可选项.
  * @param updateItem 修改item的方法.
+ * @param disabled 禁用.
  * @return {JSX.Element}
  * @constructor
  */
-const JadeInputTreeSelect = ({node, options, updateItem}) => {
+const JadeInputTreeSelect = ({node, options, updateItem, disabled}) => {
     const form = useFormContext();
 
     /**
@@ -244,6 +254,7 @@ const JadeInputTreeSelect = ({node, options, updateItem}) => {
     return (<>
         <JadeStopPropagationSelect
                 style={{background: "#f7f7f7", width: "100%"}}
+                disabled={disabled}
                 placeholder={"请选择"}
                 defaultValue={node.from}
                 className={"jade-input-tree-title-select jade-select"}

@@ -3,6 +3,16 @@
     user-select: none;
 }
 
+.react-node-header-button {
+    margin: 0;
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .react-node-toolbar {
     display: flex;
 }
@@ -22,4 +32,27 @@
     font-size: 14px;
     line-height: 22px;
     margin-top: 8px;
+}
+
+.ant-dropdown {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item:hover {
+    background: rgb(242, 247, 253);
+    color: rgb(38, 115, 229);
+}
+
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-submenu-title:hover {
+    background: rgb(242, 247, 253);
+    color: rgb(38, 115, 229);
+}
+
+.react-node-header-menu-sub .ant-dropdown-menu {
+    padding: 0;
+}
+
+.react-node-header-menu-sub .ant-dropdown-menu .ant-dropdown-menu-item-only-child {
+    padding: 0;
 }

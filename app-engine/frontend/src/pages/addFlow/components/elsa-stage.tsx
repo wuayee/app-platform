@@ -51,7 +51,7 @@ const Stage = (props) => {
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/interviewQuestionsComponent.jsx`),
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/manageCubeCreateReportComponent.jsx`),
     ];
-    JadeFlow.edit(stageDom, data, CONFIGS, importFiles).then(agent => {
+    JadeFlow.edit(stageDom, tenantId, data, CONFIGS, importFiles).then(agent => {
       window.agent ? null : window.agent = agent;
       agent.onChange(() => {
         handleChange();

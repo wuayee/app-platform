@@ -1,4 +1,4 @@
-import {Button, ConfigProvider, Input} from "antd";
+import {Button, Input} from "antd";
 import {useState} from "react";
 import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
 
@@ -36,21 +36,19 @@ export const CustomizedModelSelect = ({disabled, defaultValue}) => {
     };
 
     return (<>
-        <ConfigProvider theme={{components: {Button: {borderColorDisabled: "true"}}}}>
-            <div className="model-text-container model-text">模型</div>
-            <div className="model-select-container"
-                 style={{display: "flex", border: "1px solid rgb(128, 128, 128, 0.2)", borderRadius: 4}}>
-                <Input readOnly
-                       className="model-select huggingface-light-font"
-                       disabled={disabled}
-                       onMouseDown={(e) => triggerSelect(e)}
-                       value={value}
-                       defaultValue={value}/>
-                <Button
-                        className="button-select button-select-text"
-                        disabled={disabled}
-                        onClick={e => triggerSelect(e)}>选择</Button>
-            </div>
-        </ConfigProvider>
+        <div className="model-text-container model-text">模型</div>
+        <div className="model-select-container"
+             style={{display: "flex", border: "1px solid rgb(128, 128, 128, 0.2)", borderRadius: 4}}>
+            <Input readOnly
+                   className="model-select huggingface-light-font"
+                   disabled={disabled}
+                   onMouseDown={(e) => triggerSelect(e)}
+                   value={value}
+                   defaultValue={value}/>
+            <Button
+                    className="button-select button-select-text"
+                    disabled={disabled}
+                    onClick={e => triggerSelect(e)}>选择</Button>
+        </div>
     </>);
 }

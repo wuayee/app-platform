@@ -6,7 +6,7 @@ import {Header} from "@/components/Header.jsx";
 import {Footer} from "@/components/Footer.jsx";
 import {NODE_STATUS, SECTION_TYPE, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 import React, {useRef, useState} from "react";
-import {HORIZONTAL_LEFT, HORIZONTAL_RIGHT, VERTICAL_DOWN, VERTICAL_UP} from "@/components/asserts/waterDropRawSvg.js";
+import {HORIZONTAL_LEFT, HORIZONTAL_RIGHT, VERTICAL_DOWN, VERTICAL_UP} from "@/components/asserts/svgIcons.jsx";
 import RunningStatusPanel from "@/components/flowRunComponent/RunningStatusPanel.jsx";
 import {Button} from "antd";
 import ToolIcon from './asserts/icon-tool.svg?react';
@@ -54,9 +54,9 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     const observed = [];
 
     /**
-     * 默认的header配置.
+     * 默认的工具栏配置.
      *
-     * @return 下拉按钮配置项
+     * @return {*} 数组.
      */
     self.getToolMenus = () => {
         return [{
@@ -615,7 +615,7 @@ const WATER_DROP_DISTANCE = 500;
  *
  * @override
  */
-const jadeNodeDrawer = (shape, div, x, y) => {
+export const jadeNodeDrawer = (shape, div, x, y) => {
     const self = rectangleDrawer(shape, div, x, y);
     self.reactContainer = null;
     self.panelRef = null;
