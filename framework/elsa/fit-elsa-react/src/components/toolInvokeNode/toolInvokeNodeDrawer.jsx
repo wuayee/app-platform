@@ -1,6 +1,6 @@
-import {jadeNodeDrawer} from "@/components/jadeNode.jsx";
 import {VersionInfo} from "@/components/toolInvokeNode/VersionInfo.jsx";
 import {useEffect, useState} from "react";
+import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
 
 /**
  * 工具调用节点绘制器
