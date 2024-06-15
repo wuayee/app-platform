@@ -44,7 +44,7 @@ import com.huawei.jade.fel.core.template.support.DefaultStringTemplate;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
-import com.huawei.jade.fel.engine.operators.patterns.Agent;
+import com.huawei.jade.fel.engine.operators.patterns.AbstractAgent;
 import com.huawei.jade.fel.engine.operators.prompts.Prompts;
 import com.huawei.jade.fel.tool.ToolProvider;
 
@@ -88,13 +88,14 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
      * @param metaInstanceService 表示元数据实例服务的 {@link MetaInstanceService}。
      * @param metaService 表示提供给AIPP元数据服务的 {@link MetaService}。
      * @param toolProvider 表示具提供者功能的 {@link ToolProvider}。
-     * @param agent 表示提供智能体功能的 {@link Agent}{@code <}{@link ChatMessages}{@code ,} {@link ChatMessages}{@code >}。
+     * @param agent 表示提供智能体功能的 {@link AbstractAgent}{@code <}{@link ChatMessages}{@code ,
+     * }{@link ChatMessages}{@code >}。
      */
     public LLMComponent(FlowInstanceService flowInstanceService,
             MetaInstanceService metaInstanceService,
             MetaService metaService,
             ToolProvider toolProvider,
-            @Fit(alias = AippConst.WATER_FLOW_AGENT_BEAN) Agent<Prompt, Prompt> agent,
+            @Fit(alias = AippConst.WATER_FLOW_AGENT_BEAN) AbstractAgent<Prompt, Prompt> agent,
             AippLogService aippLogService,
             AippLogStreamService aippLogStreamService) {
         this.flowInstanceService = flowInstanceService;

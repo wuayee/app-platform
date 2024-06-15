@@ -5,7 +5,7 @@
 package com.huawei.jade.fel.engine.operators.prompts;
 
 import com.huawei.jade.fel.chat.Prompt;
-import com.huawei.jade.fel.engine.operators.AiRunnable;
+import com.huawei.jade.fel.core.Pattern;
 
 /**
  * 提示词模板接口。
@@ -14,4 +14,4 @@ import com.huawei.jade.fel.engine.operators.AiRunnable;
  * @author 刘信宏
  * @since 2024-04-12
  */
-public interface PromptTemplate<T> extends AiRunnable<T, Prompt> {}
+public interface PromptTemplate<T> extends Pattern<T, Prompt> {}

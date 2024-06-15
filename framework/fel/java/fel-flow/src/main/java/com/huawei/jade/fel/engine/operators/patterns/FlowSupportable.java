@@ -7,8 +7,6 @@ package com.huawei.jade.fel.engine.operators.patterns;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 
-import java.util.function.Supplier;
-
 /**
  * 异步委托单元的 AI 流程实现。
  *
@@ -18,21 +16,20 @@ import java.util.function.Supplier;
  * @since 2024-04-22
  */
 public class FlowSupportable<I, O> extends AbstractFlowPattern<I, O> {
-    private final Supplier<AiProcessFlow<I, O>> flowSupplier;
+    private final AiProcessFlow<I, O> flow;
 
     /**
-     * 通过 AI 流程提供者初始化 {@link FlowSupportable}{@code <}{@link I}{@code , }{@link O}{@code >}。
+     * 通过 AI 流程初始化 {@link FlowSupportable}{@code <}{@link I}{@code , }{@link O}{@code >}。
      *
-     * @param flowSupplier 表示AI 流程提供者的 {@link Supplier}{@code <}{@link AiProcessFlow}{@code <}{@link I}{@code ,
-     * }{@link O}{@code >}{@code >}。
-     * @throws IllegalArgumentException 当 {@code flowSupplier} 为 {@code null} 时。
+     * @param flow 表示 AI 流程的 {@link AiProcessFlow}{@code <}{@link I}{@code , }{@link O}{@code >}。
+     * @throws IllegalArgumentException 当 {@code flow} 为 {@code null} 时。
      */
-    public FlowSupportable(Supplier<AiProcessFlow<I, O>> flowSupplier) {
-        this.flowSupplier = Validation.notNull(flowSupplier, "Flow supplier cannot be null.");
+    public FlowSupportable(AiProcessFlow<I, O> flow) {
+        this.flow = Validation.notNull(flow, "The flow cannot be null.");
     }
 
     @Override
     protected AiProcessFlow<I, O> buildFlow() {
-        return this.flowSupplier.get();
+        return this.flow;
     }
 }

@@ -22,6 +22,16 @@ public interface StateKey {
     String HISTORY_INPUT = "history_input";
 
     /**
+     * 表示流程实例运行标识的键。
+     */
+    String FLOW_SESSION = "flow_session";
+
+    /**
+     * 表示委托单元动态参数的键。
+     */
+    String PATTERN_ARGS = "pattern_args";
+
+    /**
      * 表示模型超参数的键。
      */
     String CHAT_OPTIONS = "chat_options";
@@ -45,9 +55,4 @@ public interface StateKey {
      * 表示流式模型节点处理器。
      */
     String STREAMING_FLOW_CONTEXT = "streaming_flow_context";
-
-    /**
-     * 表示工具调用的上下文。
-     */
-    String TOOL_CONTEXT = "tool_context";
 }

@@ -4,6 +4,7 @@
 
 package com.huawei.jade.fel.engine.operators.models;
 
+import static com.huawei.fitframework.util.ObjectUtils.cast;
 import static com.huawei.jade.fel.engine.util.StateKey.HISTORY_INPUT;
 import static com.huawei.jade.fel.engine.util.StateKey.STREAMING_CONSUMER;
 import static com.huawei.jade.fel.engine.util.StateKey.STREAMING_FLOW_CONTEXT;
@@ -12,6 +13,7 @@ import static com.huawei.jade.fel.engine.util.StateKey.STREAMING_PROCESSOR;
 import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitter;
 import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitterDataBuilder;
 import com.huawei.fit.waterflow.domain.context.FlowContext;
+import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.stream.nodes.Retryable;
 import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fitframework.flowable.Publisher;
@@ -22,9 +24,10 @@ import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.character.HumanMessage;
 import com.huawei.jade.fel.core.memory.Memory;
-import com.huawei.jade.fel.engine.operators.AiRunnableArg;
+import com.huawei.jade.fel.engine.util.StateKey;
 
 import java.util.Collections;
+import java.util.Map;
 
 /**
  * 流式模型发射器。
@@ -48,17 +51,19 @@ public class LlmEmitter<O extends ChatMessage> extends FiniteEmitter<O, ChatChun
      * @param publisher 表示数据发布者的 {@link Publisher}{@code <}{@link O}{@code >}。
      * @param builder 表示有限流数据构造器的 {@link FiniteEmitterDataBuilder}{@code <}{@link O}{@code ,
      * }{@link ChatChunk}{@code >}。
-     * @param arg 表示模型节点运行时参数的 {@link AiRunnableArg}{@code <}{@link Prompt}{@code >}。
+     * @param args 表示模型节点运行时参数的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     * @param prompt 表示模型输入的 {@link Prompt}， 用于获取默认用户问题。
      */
     public LlmEmitter(Publisher<O> publisher,
-            FiniteEmitterDataBuilder<O, ChatChunk> builder, AiRunnableArg<Prompt> arg) {
-        super(arg.getSession(), publisher, builder);
-        this.memory = arg.memory();
-        this.question = ObjectUtils.getIfNull(arg.getInnerState(HISTORY_INPUT),
-                () -> this.getDefaultQuestion(arg.data()));
-        this.consumer = ObjectUtils.nullIf(arg.getInnerState(STREAMING_CONSUMER), EMPTY_CONSUMER);
-        this.processor = Validation.notNull(arg.getInnerState(STREAMING_PROCESSOR), "Processor cant be null");
-        this.context = Validation.notNull(arg.getInnerState(STREAMING_FLOW_CONTEXT), "FlowContext cant be null");
+            FiniteEmitterDataBuilder<O, ChatChunk> builder, Map<String, Object> args, Prompt prompt) {
+        super(cast(args.get(StateKey.FLOW_SESSION)), publisher, builder);
+        FlowSession session = cast(args.get(StateKey.FLOW_SESSION));
+        this.memory = session.getInnerState(StateKey.HISTORY_OBJ);
+        this.question = ObjectUtils.getIfNull(session.getInnerState(HISTORY_INPUT),
+                () -> this.getDefaultQuestion(prompt));
+        this.consumer = ObjectUtils.nullIf(session.getInnerState(STREAMING_CONSUMER), EMPTY_CONSUMER);
+        this.processor = Validation.notNull(cast(args.get(STREAMING_PROCESSOR)), "The processor cant be null.");
+        this.context = Validation.notNull(cast(args.get(STREAMING_FLOW_CONTEXT)), "The flow context cant be null.");
     }
 
     @Override

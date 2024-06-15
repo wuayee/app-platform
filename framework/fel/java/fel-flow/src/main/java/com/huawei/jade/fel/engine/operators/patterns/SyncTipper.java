@@ -5,26 +5,22 @@
 package com.huawei.jade.fel.engine.operators.patterns;
 
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.content.MessageContent;
+import com.huawei.jade.fel.core.Pattern;
 import com.huawei.jade.fel.core.examples.ExampleSelector;
 import com.huawei.jade.fel.core.formatters.Formatter;
-import com.huawei.jade.fel.core.memory.Memory;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
-import com.huawei.jade.fel.engine.operators.CustomState;
-
-import java.util.Optional;
 
 /**
- * 平行分支工具。<p>用于 {@link com.huawei.jade.fel.engine.activities.AiStart#runnableParallel(SyncPattern[])} 表达式。
+ * 平行分支工具。<p>用于 {@link com.huawei.jade.fel.engine.activities.AiStart#runnableParallel(Pattern[])} 表达式。
  * 每个分支生成一个键值对。</p>
  *
  * @author 刘信宏
  * @since 2024-05-07
  */
-public interface SyncTipper<I> extends SyncPattern<I, Tip> {
+public interface SyncTipper<I> extends Pattern<I, Tip> {
     /**
      * 表示用户问题的默认键。
      */
@@ -49,7 +45,7 @@ public interface SyncTipper<I> extends SyncPattern<I, Tip> {
      * 同步委托分支。
      *
      * @param key 表示同步委托单元结果所在的键的 {@link String}。
-     * @param pattern 表示同步委托单元的 {@link P} , 它是 {@link SyncPattern}{@code <}{@link I}{@code ,
+     * @param pattern 表示同步委托单元的 {@link P}，它是 {@link Pattern}{@code <}{@link I}{@code ,
      * }{@link MessageContent}{@code >} 的拓展。
      * @param <I> 表示委托单元的入参类型。
      * @param <P> 表示委托单元的类型。
@@ -57,7 +53,7 @@ public interface SyncTipper<I> extends SyncPattern<I, Tip> {
      * @throws IllegalArgumentException 当 {@code key} 为 {@code null} 、空字符串或只有空白字符的字符串时，或
      * {@code pattern} 为 {@code null} 时。
      */
-    static <I, P extends SyncPattern<I, MessageContent>> SyncTipper<I> value(String key, P pattern) {
+    static <I, P extends Pattern<I, MessageContent>> SyncTipper<I> value(String key, P pattern) {
         Validation.notBlank(key, "Key cannot be blank.");
         Validation.notNull(pattern, "Pattern cannot be null.");
         return arg -> Tip.from(key, pattern.invoke(arg));
@@ -69,14 +65,14 @@ public interface SyncTipper<I> extends SyncPattern<I, Tip> {
      * @param key 表示子流程输出结果所在的键的 {@link String}。
      * @param flow 表示子流程的 {@link AiProcessFlow}{@code <}{@link I}{@code , }{@link MessageContent}{@code >}。
      * @param <I> 表示委托的入参类型。
-     * @return 表示一个同步委托单元的 {@link SyncPattern}{@code <}{@link I}{@code , }{@link Tip}{@code >}。
+     * @return 表示一个同步委托单元的 {@link Pattern}{@code <}{@link I}{@code , }{@link Tip}{@code >}。
      * @throws IllegalArgumentException 当 {@code key} 为 {@code null} 、空字符串或只有空白字符的字符串时，或 {@code flow}
      * 为 {@code null} 时。
      */
-    static <I> SyncPattern<I, Tip> value(String key, AiProcessFlow<I, MessageContent> flow) {
+    static <I> Pattern<I, Tip> value(String key, AiProcessFlow<I, MessageContent> flow) {
         Validation.notBlank(key, "Key cannot be blank.");
         Validation.notNull(flow, "Flow cannot be null.");
-        return new FlowSupportable<>(() -> AiFlows.<I>create()
+        return new FlowSupportable<>(AiFlows.<I>create()
                 .delegate(flow)
                 .map(input -> Tip.from(key, input))
                 .close()).sync();
@@ -104,7 +100,7 @@ public interface SyncTipper<I> extends SyncPattern<I, Tip> {
      */
     static SyncTipper<String> question(String questionKey) {
         Validation.notBlank(questionKey, "Question key cannot be blank.");
-        return arg -> Tip.from(questionKey, arg.data());
+        return arg -> Tip.from(questionKey, arg);
     }
 
     /**
@@ -128,7 +124,7 @@ public interface SyncTipper<I> extends SyncPattern<I, Tip> {
     static SyncTipper<String> fewShot(String key, ExampleSelector selector) {
         Validation.notBlank(key, "FewShot key cannot be blank.");
         Validation.notNull(selector, "Flow cannot be null.");
-        return arg -> Tip.from(key, selector.select(arg.data()));
+        return arg -> Tip.from(key, selector.select(arg));
     }
 
     /**
@@ -139,7 +135,7 @@ public interface SyncTipper<I> extends SyncPattern<I, Tip> {
      * @throws IllegalArgumentException 当 {@code selector} 为 {@code null} 时。
      */
     static SyncTipper<String> fewShot(ExampleSelector selector) {
-        return arg -> Tip.from(DEFAULT_EXAMPLE_KEY, selector.select(arg.data()));
+        return arg -> Tip.from(DEFAULT_EXAMPLE_KEY, selector.select(arg));
     }
 
     /**
@@ -174,7 +170,7 @@ public interface SyncTipper<I> extends SyncPattern<I, Tip> {
      * @return 表示一个平行分支的 {@link SyncTipper}{@code <}{@link Tip}{@code >}。
      */
     static SyncTipper<Tip> passThrough() {
-        return CustomState::data;
+        return arg -> arg;
     }
 
     /**
@@ -186,10 +182,7 @@ public interface SyncTipper<I> extends SyncPattern<I, Tip> {
      */
     static <I> SyncTipper<I> history(String historyKey) {
         Validation.notBlank(historyKey, "History key cannot be blank.");
-        return arg -> {
-            String memoryStr = Optional.ofNullable(arg.memory()).map(Memory::text).orElse(StringUtils.EMPTY);
-            return Tip.from(historyKey, memoryStr);
-        };
+        return new HistoryTipper<>(historyKey);
     }
 
     /**

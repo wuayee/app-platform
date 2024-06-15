@@ -11,6 +11,8 @@ import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.engine.activities.processors.AiBranchProcessor;
 import com.huawei.jade.fel.engine.flows.AiFlow;
 
+import java.util.function.Supplier;
+
 /**
  * 平行节点的子分支。
  *
@@ -66,14 +68,14 @@ public class AiFork<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> extend
     /**
      * 指定初始值和汇聚逻辑，生成汇聚节点。
      *
-     * @param init 表示初始值的 {@link R}。
+     * @param init 表示初始值提供者的 {@link Supplier}{@code <}{@link R}{@code >}。
      * @param processor 表示数据聚合器的 {@link Operators.Reduce}{@code <}{@link O}{@code , }{@link R}{@code >}。
      * @param <R> 表示新节点的输出数据类型。
      * @return 表示汇聚节点的 {@link AiFork}{@code <}{@link R}{@code , }{@link D}{@code , }{@link O}{@code ,
      * }{@link RF}{@code , }{@link F}{@code >}。
      * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
-    public <R> AiState<R, D, O, RF, F> join(R init, Operators.Reduce<O, R> processor) {
+    public <R> AiState<R, D, O, RF, F> join(Supplier<R> init, Operators.Reduce<O, R> processor) {
         Validation.notNull(processor, "Reduce processor cannot be null.");
         return new AiState<>(this.fork.join(init, processor), this.getFlow());
     }
