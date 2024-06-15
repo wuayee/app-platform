@@ -25,11 +25,11 @@ const SendBox = (props) => {
   // 选中回调
   function onChange(e) {
     props.chatItem.checked = e.target.checked;
-    checkCallBack();
+    checkCallBack(props.index,e.target.checked);
   }
   return <>{(
     <div className='send-box'>
-      { showCheck && <Checkbox className='check-box' checked={checked} onChange={onChange}></Checkbox>}
+      { showCheck && <Checkbox className='check-box' onChange={onChange}></Checkbox>}
       <div className='user-image'>
         { employeeNumber ? <img src={`https://w3.huawei.com/w3lab/rest/yellowpage/face/${employeeNumber}/120`}/> : 
           <img src={`https://w3.huawei.com/w3lab/rest/yellowpage/face/default/120`}/>

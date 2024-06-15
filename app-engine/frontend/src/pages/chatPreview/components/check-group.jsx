@@ -1,5 +1,5 @@
 
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Button, Modal } from 'antd';
 import '../styles/check-group.scss'
 import { shareDialog } from "@shared/http/aipp";;
@@ -10,13 +10,19 @@ const CheckGroup = (props) => {
   const {
     type,
     setEditorShow,
-    checkedList,
     reportClick
   } = props;
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ shareUrl, setShareUrl ] = useState('');
   const appId = useAppSelector((state) => state.appStore.appId);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
+  const [checkedList,setCheckedList]=useState([]);
+
+  useEffect(()=>{
+    const checkList = chatList?.filter(item => item.checked);
+    setCheckedList(checkList);
+  },[chatList])
 
   // 取消
   function cancle() {
@@ -31,7 +37,8 @@ const CheckGroup = (props) => {
   // 处理点击
   const handleShare = (e) => {
     const result = [];
-    checkedList.map((item,index) => {
+    let checkList = chatList?.filter(item => item.checked);
+    checkList.map((item,index) => {
       result.push({query: JSON.stringify(item)});
     })
     type === 'share' ? shareConfirm(result) : reportClick(result);

@@ -40,8 +40,9 @@ const ReciveBox = (props) => {
   }, [location])
   function onChange(e) {
     props.chatItem.checked = e.target.checked;
-    checkCallBack();
+    checkCallBack(props.index,e.target.checked);
   }
+  
   // 设置显示类型
   function setRecieveDom(type) {
     if (type === 'form') {
@@ -51,7 +52,7 @@ const ReciveBox = (props) => {
   }
   return <>{(
     <div className='recieve-box'>
-      {showCheck && <Checkbox className='check-box' checked={checked} onChange={onChange}></Checkbox>}
+      {showCheck && <Checkbox className='check-box' onChange={onChange}></Checkbox>}
       <div className='user-image'>
         <Img />
         <span>{appInfo?.name || 'xxx'}</span>

@@ -135,7 +135,7 @@ const Inspiration = (props) => {
       return;
     }
     if (item.name && item.auto) {
-      inspirationClick(item.prompt);
+      inspirationClick(item?.prompt);
       return;
     }
     let result = [];
