@@ -16,7 +16,7 @@ export const JadeObservableTree = ({data}) => {
         throw new Error("data must be array.");
     }
 
-    const [treeData, setTreeData] = useState(null);
+    const [treeData, setTreeData] = useState([]);
     const shape = useShapeContext();
 
     useEffect(() => {

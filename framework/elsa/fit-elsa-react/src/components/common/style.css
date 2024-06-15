@@ -207,6 +207,25 @@
     border-radius: 4px;
 }
 
+.jade-node-custom-header-type-tooltip .ant-tooltip-inner {
+    background-color: white !important;
+    color: rgb(33, 33, 33) !important;
+    font-family: HarmonyOS Sans;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0px;
+    text-align: center;
+}
+
+.jade-node-custom-header-type-tooltip .ant-tooltip-arrow {
+    background: none !important;
+}
+
+.jade-node-custom-header-type-tooltip .ant-tooltip-arrow::before {
+    background-color: white !important; /* 设置箭头的颜色 */
+}
+
 .jade-component-title {
     color: rgb(37, 43, 58);
     font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;

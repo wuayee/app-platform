@@ -8,6 +8,7 @@ import {HORIZONTAL_LEFT, HORIZONTAL_RIGHT, VERTICAL_DOWN, VERTICAL_UP} from "./a
 import ToolIcon from "./asserts/icon-tool.svg?react";
 import {Header} from "@/components/Header.jsx";
 import {Footer} from "@/components/Footer.jsx";
+import {Tooltip} from "antd";
 
 const WATER_DROP_DISTANCE = 500;
 
@@ -221,9 +222,11 @@ export const jadeNodeDrawer = (shape, div, x, y) => {
      */
     self.getHeaderTypeIcon = () => {
         return (<>
-            <div className={"jade-node-custom-header-type-icon-wrapper"}>
-                <ToolIcon className="jade-node-custom-header-type-icon"/>
-            </div>
+            <Tooltip overlayClassName={"jade-node-custom-header-type-tooltip"} title="工具">
+                <div className={"jade-node-custom-header-type-icon-wrapper"}>
+                    <ToolIcon className="jade-node-custom-header-type-icon"/>
+                </div>
+            </Tooltip>
         </>);
     };
 
