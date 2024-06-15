@@ -87,27 +87,28 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
                     }
                     className="jade-panel"
                 >
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
+                    <div className={"jade-custom-panel-content"}>
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item
                                     className="jade-form-item"
                                     name={`model-${shapeId}`}
                                     label="模型"
                                     rules={[{required: true, message: '请选择使用的模型'}]}
                                     initialValue={model.value} // 当组件套在Form.Item中的时候，内部组件的初始值使用Form.Item的initialValue进行赋值
                                     validateTrigger="onBlur"
-                            >
-                                <JadeStopPropagationSelect
+                                >
+                                    <JadeStopPropagationSelect
                                         disabled={disabled}
                                         className="jade-select"
                                         onClick={handleSelectClick} // 点击下拉框时阻止事件冒泡
                                         onChange={(e) => dispatch({actionType: "changeConfig", id: model.id, value: e})}
                                         options={modelOptions}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
                                     className="jade-form-item"
                                     name={`temperature-${shapeId}`}
                                     label={<div style={{display: 'flex', alignItems: 'center'}}>
@@ -119,23 +120,23 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
                                     rules={[{required: true, message: '请输入0-1之间的参数!'}]}
                                     initialValue={temperature.value}
                                     validateTrigger="onBlur"
-                            >
-                                <InputNumber disabled={disabled}
-                                             formatter={formatter}
-                                             className="jade-input"
-                                             style={{width: "100%"}}
-                                             min={0}
-                                             max={1}
-                                             step={0.1}
-                                             onBlur={(e) => changeOnBlur(e, "changeConfig", temperature.id, true)}
-                                             stringMode
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={24}>
-                            <Form.Item
+                                >
+                                    <InputNumber disabled={disabled}
+                                                 formatter={formatter}
+                                                 className="jade-input"
+                                                 style={{width: "100%"}}
+                                                 min={0}
+                                                 max={1}
+                                                 step={0.1}
+                                                 onBlur={(e) => changeOnBlur(e, "changeConfig", temperature.id, true)}
+                                                 stringMode
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={16}>
+                            <Col span={24}>
+                                <Form.Item
                                     className="jade-form-item"
                                     name={`propmt-${shapeId}`}
                                     label={<div style={{display: 'flex', alignItems: 'center'}}>
@@ -147,34 +148,35 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
                                     rules={[{required: true, message: '参数不能为空'}]}
                                     initialValue={prompt.value}
                                     validateTrigger="onBlur"
-                            >
-                                <TextArea disabled={disabled}
-                                          className="jade-textarea-input jade-font-size"
-                                          onBlur={(e) => changeOnBlur(e, "changePrompt", prompt.id, true)}
-                                          placeholder="你可以用{{variable name}}来关联输入中的变量名"
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={24}>
-                            <Form.Item
-                                className="jade-form-item"
-                                name={`system-prompt-${shapeId}`}
-                                label={<div style={{display: 'flex', alignItems: 'center'}}>
-                                    <span className="jade-second-title">系统提示词</span>
-                                </div>}
-                                initialValue={systemPrompt.value}
-                                validateTrigger="onBlur"
-                            >
-                                <TextArea disabled={disabled}
-                                          className="jade-textarea-input jade-font-size"
-                                          onBlur={(e) => changeOnBlur(e, "changeConfig", systemPrompt.id, false)}
-                                          placeholder="输入一段提示词，可以给应用预设身份"
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                                >
+                                    <TextArea disabled={disabled}
+                                              className="jade-textarea-input jade-font-size"
+                                              onBlur={(e) => changeOnBlur(e, "changePrompt", prompt.id, true)}
+                                              placeholder="你可以用{{variable name}}来关联输入中的变量名"
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={16}>
+                            <Col span={24}>
+                                <Form.Item
+                                    className="jade-form-item"
+                                    name={`system-prompt-${shapeId}`}
+                                    label={<div style={{display: 'flex', alignItems: 'center'}}>
+                                        <span className="jade-second-title">系统提示词</span>
+                                    </div>}
+                                    initialValue={systemPrompt.value}
+                                    validateTrigger="onBlur"
+                                >
+                                    <TextArea disabled={disabled}
+                                              className="jade-textarea-input jade-font-size"
+                                              onBlur={(e) => changeOnBlur(e, "changeConfig", systemPrompt.id, false)}
+                                              placeholder="输入一段提示词，可以给应用预设身份"
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                    </div>
                 </Panel>
             }
         </Collapse>

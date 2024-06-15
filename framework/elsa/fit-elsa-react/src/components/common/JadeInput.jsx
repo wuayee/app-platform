@@ -155,73 +155,75 @@ export default function JadeInput({items, addItem, updateItem, deleteItem, disab
                     </div>}
                     className="jade-panel"
             >
-                <Row gutter={16}>
-                    <Col span={8}>
-                        <Form.Item>
-                            <span className="jade-font-size jade-font-color">字段名称</span>
-                        </Form.Item>
-                    </Col>
-                    <Col span={16}>
-                        <Form.Item>
-                            <span className="jade-font-size jade-font-color">字段值</span>
-                        </Form.Item>
-                    </Col>
-                </Row>
-                {items.map((item) => (<Row
-                                key={item.id}
-                                gutter={16}
-                        >
-                            <Col span={8}>
-                                <Form.Item
-                                        id={`name-${item.id}`}
-                                        name={`name-${item.id}`}
-                                        rules={[{required: true, message: "字段值不能为空"}, {
-                                            pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/,
-                                            message: '只能包含字母、数字或下划线，且必须以字母或下划线开头'
-                                        }]}
-                                        initialValue={item.name}
-                                >
-                                    <Input disabled={disabled}
-                                           className="jade-input"
-                                           placeholder="请输入字段名称"
-                                           style={{paddingRight: "12px"}}
-                                           value={item.name}
-                                           onChange={(e) => handleItemChange('name', e.target.value, item.id)}
-                                    />
-                                </Form.Item>
-                            </Col>
-                            <Col span={6} style={{paddingRight: 0}}>
-                                <Form.Item
-                                        id={`from-${item.id}`}
-                                        initialValue="Reference"
-                                >
-                                    <JadeStopPropagationSelect
-                                            disabled={disabled}
-                                            id={`from-select-${item.id}`}
-                                            className="value-source-custom jade-select"
-                                            style={{width: "100%"}}
-                                            onChange={(value) => handleItemChange('from', value, item.id)}
-                                            options={[{value: 'Reference', label: '引用'},
-                                                {value: 'Input', label: '输入'}]}
-                                            value={item.from}
-                                    />
-                                </Form.Item>
-                            </Col>
-                            <Col span={8} style={{paddingLeft: 0}}>
-                                {renderComponent(item)} {/* 渲染对应的组件 */}
-                            </Col>
-                            <Col span={2} style={{paddingLeft: 0}}>
-                                <Form.Item>
-                                    <Button disabled={disabled}
-                                            type="text"
-                                            className="icon-button"
-                                            style={{height: "100%"}}
-                                            onClick={() => handleDelete(item.id)}>
-                                        <MinusCircleOutlined/>
-                                    </Button>
-                                </Form.Item>
-                            </Col>
-                        </Row>))}
+                <div className={"jade-custom-panel-content"}>
+                    <Row gutter={16}>
+                        <Col span={8}>
+                            <Form.Item>
+                                <span className="jade-font-size jade-font-color">字段名称</span>
+                            </Form.Item>
+                        </Col>
+                        <Col span={16}>
+                            <Form.Item>
+                                <span className="jade-font-size jade-font-color">字段值</span>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    {items.map((item) => (<Row
+                        key={item.id}
+                        gutter={16}
+                    >
+                        <Col span={8}>
+                            <Form.Item
+                                id={`name-${item.id}`}
+                                name={`name-${item.id}`}
+                                rules={[{required: true, message: "字段值不能为空"}, {
+                                    pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/,
+                                    message: '只能包含字母、数字或下划线，且必须以字母或下划线开头'
+                                }]}
+                                initialValue={item.name}
+                            >
+                                <Input disabled={disabled}
+                                       className="jade-input"
+                                       placeholder="请输入字段名称"
+                                       style={{paddingRight: "12px"}}
+                                       value={item.name}
+                                       onChange={(e) => handleItemChange('name', e.target.value, item.id)}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={6} style={{paddingRight: 0}}>
+                            <Form.Item
+                                id={`from-${item.id}`}
+                                initialValue="Reference"
+                            >
+                                <JadeStopPropagationSelect
+                                    disabled={disabled}
+                                    id={`from-select-${item.id}`}
+                                    className="value-source-custom jade-select"
+                                    style={{width: "100%"}}
+                                    onChange={(value) => handleItemChange('from', value, item.id)}
+                                    options={[{value: 'Reference', label: '引用'},
+                                        {value: 'Input', label: '输入'}]}
+                                    value={item.from}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={8} style={{paddingLeft: 0}}>
+                            {renderComponent(item)} {/* 渲染对应的组件 */}
+                        </Col>
+                        <Col span={2} style={{paddingLeft: 0}}>
+                            <Form.Item>
+                                <Button disabled={disabled}
+                                        type="text"
+                                        className="icon-button"
+                                        style={{height: "100%"}}
+                                        onClick={() => handleDelete(item.id)}>
+                                    <MinusCircleOutlined/>
+                                </Button>
+                            </Form.Item>
+                        </Col>
+                    </Row>))}
+                </div>
             </Panel>
             }
         </Collapse>

@@ -21,7 +21,9 @@ export default function FitInvokeOutput() {
                 <span className={'title'}>输出</span>
             </div>}
             key='FitInvokeOutput'>
-            <JadeObservableTree data={outputData}/>
+            <div className={"jade-custom-panel-content"}>
+                <JadeObservableTree data={outputData}/>
+            </div>
         </Panel>
     </Collapse>);
 }

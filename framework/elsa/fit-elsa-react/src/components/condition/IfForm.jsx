@@ -397,7 +397,9 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
                     }
                     className="jade-panel"
                 >
-                    {renderForm()}
+                    <div className={"jade-custom-panel-content"}>
+                        {renderForm()}
+                    </div>
                 </Panel>
             }
         </Collapse>

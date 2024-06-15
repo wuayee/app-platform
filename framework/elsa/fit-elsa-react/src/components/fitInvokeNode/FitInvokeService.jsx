@@ -21,11 +21,13 @@ export default function FitInvokeService() {
                 </div>}
                 key='FitInvokeService'
             >
-                <div style={{marginTop: "8px"}}><span className='select-genericable'>选择服务</span></div>
-                <FitSelectGenericable/>
+                <div className={"jade-custom-panel-content"}>
+                    <div style={{marginTop: "8px"}}><span className='select-genericable'>选择服务</span></div>
+                    <FitSelectGenericable/>
 
-                <div style={{marginTop: "8px"}}><span className='select-fitable'>选择实现</span></div>
-                <FitSelectTool/>
+                    <div style={{marginTop: "8px"}}><span className='select-fitable'>选择实现</span></div>
+                    <FitSelectTool/>
+                </div>
             </Panel>
         </Collapse>
     );

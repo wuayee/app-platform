@@ -40,7 +40,9 @@ export default function OutputForm() {
                 className="jade-panel"
                 key='Output'
             >
-                <JadeObservableTree data={outputData}/>
+                <div className={"jade-custom-panel-content"}>
+                    <JadeObservableTree data={outputData}/>
+                </div>
             </Panel>
         </Collapse>
     )

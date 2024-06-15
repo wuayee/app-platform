@@ -61,9 +61,11 @@ export default function AnswerContent() {
                         </div>
                     </div>
                 } key={"Answer content"}>
-                    <TextArea rows={4}
-                              placeholder="Variables in output parameters can be referenced using {{variable name}}"
-                              onChange={(e) => setValue(e.target.value)}/>
+                    <div className={"jade-custom-panel-content"}>
+                        <TextArea rows={4}
+                                  placeholder="Variables in output parameters can be referenced using {{variable name}}"
+                                  onChange={(e) => setValue(e.target.value)}/>
+                    </div>
                 </Panel>
             </Collapse>
         </div>

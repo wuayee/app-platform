@@ -48,7 +48,9 @@ export default function InvokeOutput() {
                 ) : null}
             </div>}
             key='InvokeOutput'>
-            <JadeObservableTree data={outputData}/>
+            <div className={"jade-custom-panel-content"}>
+                <JadeObservableTree data={outputData}/>
+            </div>
         </Panel>
     </Collapse>);
 }

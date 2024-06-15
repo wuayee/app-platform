@@ -105,7 +105,9 @@ export default function StartFormWrapper({disabled}) {
                                 className="jade-panel"
                                 style={{marginBottom: 8, borderRadius: "8px", width: "100%"}}
                             >
-                                <StartInputForm item={item}/>
+                                <div className={"jade-custom-panel-content"}>
+                                    <StartInputForm item={item}/>
+                                </div>
                             </Panel>
                     ))
                 }
@@ -125,7 +127,9 @@ export default function StartFormWrapper({disabled}) {
                         className="jade-panel"
                         style={{width: "100%"}}
                     >
-                        <Memory disabled={disabled} config={config}/>
+                        <div className={"jade-custom-panel-content"}>
+                            <Memory disabled={disabled} config={config}/>
+                        </div>
                     </Panel>
                 }
             </Collapse>

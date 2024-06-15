@@ -53,7 +53,9 @@ export default function JadeCollapseInputTree({data, updateItem, disabled}) {
                 }
                 className="jade-panel"
             >
-                <JadeInputTree disabled={disabled} data={data} updateItem={updateItem}/>
+                <div className={"jade-custom-panel-content"}>
+                    <JadeInputTree disabled={disabled} data={data} updateItem={updateItem}/>
+                </div>
             </Panel>
         </Collapse>
     </>);

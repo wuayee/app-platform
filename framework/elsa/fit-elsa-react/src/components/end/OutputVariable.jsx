@@ -62,19 +62,22 @@ export default function OutputVariable({disabled}) {
                     className="jade-panel"
                     key='Output variable'
                 >
-                    <Row gutter={16}>
-                        <Col span={8}>
-                            <Form.Item style={{marginBottom: "8px"}}>
-                                <span className="jade-font-size jade-font-color">字段名称</span>
-                            </Form.Item>
-                        </Col>
-                        <Col span={16}>
-                            <Form.Item style={{marginBottom: "8px"}}>
-                                <span className="jade-font-size jade-font-color">字段值</span>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <OutputVariableRow disabled={disabled} item={initData()[0]} handleItemChange={handleItemChange}/>
+                    <div className={"jade-custom-panel-content"}>
+                        <Row gutter={16}>
+                            <Col span={8}>
+                                <Form.Item style={{marginBottom: "8px"}}>
+                                    <span className="jade-font-size jade-font-color">字段名称</span>
+                                </Form.Item>
+                            </Col>
+                            <Col span={16}>
+                                <Form.Item style={{marginBottom: "8px"}}>
+                                    <span className="jade-font-size jade-font-color">字段值</span>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <OutputVariableRow disabled={disabled} item={initData()[0]}
+                                           handleItemChange={handleItemChange}/>
+                    </div>
                 </Panel>
             </Collapse>
         </div>
