@@ -1,6 +1,4 @@
 import {jadeNode} from "@/components/jadeNode.jsx";
-import {Button} from "antd";
-import ApiInvokeIcon from '../asserts/icon-api-invoke.svg?react';
 import {convertParameter, convertReturnFormat} from "@/components/util/MethodMetaDataParser.js";
 import httpUtil from "@/components/util/httpUtil.jsx";
 import {formatString} from "@/components/util/StringUtil.js";
@@ -30,33 +28,6 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
     const template = {
         inputParams: [],
         outputParams: []
-    };
-
-    /**
-     * @override
-     */
-    const getToolMenus = self.getToolMenus;
-    self.getToolMenus = () => {
-        const menus = getToolMenus.apply(self);
-        const uniqueName = self.flowMeta.jober.entity.uniqueName;
-        if (uniqueName) {
-            menus.push({
-                key: '4',
-                label: "查看版本信息",
-                action: () => {},
-                // 子菜单被打开时调用.
-                onOpen: () => {
-                    self.drawer.refreshVersionInfo && self.drawer.refreshVersionInfo();
-                },
-                children: [{
-                    key: "4-1",
-                    label: (<>
-                        {self.drawer.getVersionInfoComponent()}
-                    </>)
-                }]
-            });
-        }
-        return menus;
     };
 
     /**
@@ -117,15 +88,6 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
         self.text = self.page.generateNodeName(metaData.name, self.type);
         self.drawer.unmountReact();
         self.invalidateAlone();
-    }
-
-    /**
-     * @override
-     */
-    self.getHeaderIcon = () => {
-        return (
-            <ApiInvokeIcon className="jade-node-custom-header-icon"/>
-        );
     };
 
     return self;

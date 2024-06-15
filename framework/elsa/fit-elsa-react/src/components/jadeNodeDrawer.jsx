@@ -4,7 +4,10 @@ import React, {useRef, useState} from "react";
 import {NODE_STATUS} from "@";
 import RunningStatusPanel from "@/components/flowRunComponent/RunningStatusPanel.jsx";
 import {DefaultRoot} from "@/components/DefaultRoot.jsx";
-import {HORIZONTAL_LEFT, HORIZONTAL_RIGHT, VERTICAL_DOWN, VERTICAL_UP} from "@/components/asserts/svgIcons.jsx";
+import {HORIZONTAL_LEFT, HORIZONTAL_RIGHT, VERTICAL_DOWN, VERTICAL_UP} from "./asserts/svgIcons.jsx?react";
+import ToolIcon from "./asserts/icon-tool.svg?react";
+import {Header} from "@/components/Header.jsx";
+import {Footer} from "@/components/Footer.jsx";
 
 const WATER_DROP_DISTANCE = 500;
 
@@ -15,6 +18,7 @@ const WATER_DROP_DISTANCE = 500;
  */
 export const jadeNodeDrawer = (shape, div, x, y) => {
     const self = rectangleDrawer(shape, div, x, y);
+    self.type = "jadeNodeDrawer";
     self.reactContainer = null;
     self.panelRef = null;
     self.waterDrops = [];
@@ -204,6 +208,63 @@ export const jadeNodeDrawer = (shape, div, x, y) => {
                 wd.load();
             }
         })
+    };
+
+    /**
+     * 有子类重写.
+     */
+    self.getHeaderIcon = () => {
+    };
+
+    /**
+     * 本方法提供默认值-工具，具体可由子类重写.
+     */
+    self.getHeaderTypeIcon = () => {
+        return (<>
+            <div className={"jade-node-custom-header-type-icon-wrapper"}>
+                <ToolIcon className="jade-node-custom-header-type-icon"/>
+            </div>
+        </>);
+    };
+
+    /**
+     * 获取Header组件
+     *
+     * @param disabled 是否禁用.
+     * @return {JSX.Element}
+     */
+    self.getHeaderComponent = (disabled) => {
+        return (<Header shape={shape} disabled={disabled}/>);
+    }
+
+    /**
+     * 获取Footer组件
+     *
+     * @return {JSX.Element}
+     */
+    self.getFooterComponent = () => {
+        return (<Footer shape={shape}/>);
+    };
+
+    /**
+     * 默认的工具栏配置.
+     *
+     * @return {*} 数组.
+     */
+    self.getToolMenus = () => {
+        return [{
+            key: '1', label: "复制", action: () => {
+                shape.duplicate();
+            }
+        }, {
+            key: '2', label: "删除", action: () => {
+                shape.remove();
+            }
+        }, {
+            key: '3', label: "重命名", action: (setEdit) => {
+                setEdit(true);
+            }
+        }];
     };
 
     return self;

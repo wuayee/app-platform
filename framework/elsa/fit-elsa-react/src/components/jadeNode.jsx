@@ -1,10 +1,7 @@
 import {CopyPasteHelpers, DIRECTION, node} from "@fit-elsa/elsa-core";
 import {v4 as uuidv4} from "uuid";
-import {Header} from "@/components/Header.jsx";
-import {Footer} from "@/components/Footer.jsx";
 import {NODE_STATUS, SECTION_TYPE, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 import React from "react";
-import ToolIcon from './asserts/icon-tool.svg?react';
 import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
 
 /**
@@ -48,27 +45,6 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.sourcePlatform = "official";
 
     const observed = [];
-
-    /**
-     * 默认的工具栏配置.
-     *
-     * @return {*} 数组.
-     */
-    self.getToolMenus = () => {
-        return [{
-            key: '1', label: "复制", action: () => {
-                self.duplicate();
-            }
-        }, {
-            key: '2', label: "删除", action: () => {
-                self.remove();
-            }
-        }, {
-            key: '3', label: "重命名", action: (setEdit) => {
-                setEdit(true);
-            }
-        }];
-    };
 
     /**
      * 获取节点默认的测试报告章节
@@ -220,25 +196,6 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
 
     /**
-     * 获取Header组件
-     *
-     * @param disabled 是否禁用.
-     * @return {JSX.Element}
-     */
-    self.getHeaderComponent = (disabled) => {
-        return (<Header shape={self} disabled={disabled}/>);
-    }
-
-    /**
-     * 获取Footer组件
-     *
-     * @return {JSX.Element}
-     */
-    self.getFooterComponent = () => {
-        return (<Footer shape={self}/>);
-    }
-
-    /**
      * 获取用户自定义组件.
      *
      * @return {*}
@@ -367,23 +324,6 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
      */
     self.getEntity = () => {
         return self.flowMeta.jober.converter.entity;
-    };
-
-    /**
-     * 有子类重写.
-     */
-    self.getHeaderIcon = () => {
-    };
-
-    /**
-     * 本方法提供默认值-工具，具体可由子类重写.
-     */
-    self.getHeaderTypeIcon = () => {
-        return (
-            <div className={"jade-node-custom-header-type-icon-wrapper"}>
-                <ToolIcon className="jade-node-custom-header-type-icon"/>
-            </div>
-        );
     };
 
     /**

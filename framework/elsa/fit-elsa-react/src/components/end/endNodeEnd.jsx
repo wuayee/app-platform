@@ -1,10 +1,8 @@
 import {jadeNode} from "@/components/jadeNode.jsx";
 import "./style.css";
-import {Button} from "antd";
 import {DIRECTION} from "@fit-elsa/elsa-core";
-import EndIcon from '../asserts/icon-end.svg?react';
-import {EndNodeHeader} from "@/components/end/EndNodeHeader.jsx";
-import {NODE_STATUS, SECTION_TYPE} from "@/common/Consts.js";
+import {SECTION_TYPE} from "@/common/Consts.js";
+import {endNodeDrawer} from "@/components/end/endNodeDrawer.jsx";
 
 /**
  * 结束节点shape
@@ -12,7 +10,7 @@ import {NODE_STATUS, SECTION_TYPE} from "@/common/Consts.js";
  @override
  */
 export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
-    const self = jadeNode(id, x, y, width, height, parent, drawer);
+    const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : endNodeDrawer);
     self.type = "endNodeEnd";
     self.backColor = 'white';
     self.pointerEvents = "auto";
@@ -28,25 +26,6 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
                 "type": "mapping_converter"
             },
         }
-    };
-
-    /**
-     * @override
-     */
-    const getToolMenus = self.getToolMenus;
-    self.getToolMenus = () => {
-        if (self.page.shapes.filter(s => s.type === self.type).length === 1) {
-            return [{
-                key: '1', label: "复制", action: () => {
-                    self.duplicate();
-                }
-            }, {
-                key: '2', label: "重命名", action: (setEdit) => {
-                    setEdit(true);
-                }
-            }];
-        }
-        return getToolMenus.apply(self);
     };
 
     /**
@@ -89,7 +68,7 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
      */
     self.serializerJadeConfig = () => {
         self.flowMeta.callback.converter.entity = self.getLatestJadeConfig();
-    }
+    };
 
     /**
      * 获取用户自定义组件.
@@ -107,28 +86,6 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
      */
     self.getEntity = () => {
         return self.flowMeta.callback.converter.entity;
-    };
-
-    /**
-     * @override
-     */
-    self.getHeaderComponent = (disabled) => {
-        return (<EndNodeHeader shape={self} disabled={disabled}/>);
-    }
-
-    /**
-     * @override
-     */
-    self.getHeaderIcon = () => {
-        return (<>
-            <EndIcon className="jade-node-custom-header-icon"/>
-        </>);
-    };
-
-    /**
-     * @override
-     */
-    self.getHeaderTypeIcon = () => {
     };
 
     /**

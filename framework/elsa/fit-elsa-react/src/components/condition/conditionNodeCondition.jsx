@@ -1,8 +1,7 @@
 import {jadeNode} from "@/components/jadeNode.jsx";
-import ConditionIcon from '../asserts/icon-condition.svg?react'; // 导入背景图片
-import {Button} from "antd";
 import {DIRECTION} from "@fit-elsa/elsa-core";
 import {SECTION_TYPE} from "@/common/Consts.js";
+import {conditionNodeDrawer} from "@/components/condition/conditionNodeDrawer.jsx";
 
 /**
  * jadeStream中的条件节点.
@@ -10,7 +9,7 @@ import {SECTION_TYPE} from "@/common/Consts.js";
  * @override
  */
 export const conditionNodeCondition = (id, x, y, width, height, parent, drawer) => {
-    const self = jadeNode(id, x, y, width, height, parent, drawer);
+    const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : conditionNodeDrawer);
     self.type = "conditionNodeCondition";
     self.text = "条件";
     self.width = 600;
@@ -43,15 +42,6 @@ export const conditionNodeCondition = (id, x, y, width, height, parent, drawer) 
      */
     self.serializerJadeConfig = () => {
         self.flowMeta.conditionParams = self.getLatestJadeConfig();
-    }
-
-    /**
-     * @override
-     */
-    self.getHeaderIcon = () => {
-        return (
-            <ConditionIcon className="jade-node-custom-header-icon"/>
-        );
     };
 
     /**

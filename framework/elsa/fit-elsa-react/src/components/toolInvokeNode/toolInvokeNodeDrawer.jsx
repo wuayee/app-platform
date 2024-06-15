@@ -1,6 +1,7 @@
 import {VersionInfo} from "@/components/toolInvokeNode/VersionInfo.jsx";
 import {useEffect, useState} from "react";
 import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
+import ApiInvokeIcon from "../asserts/icon-api-invoke.svg?react";
 
 /**
  * 工具调用节点绘制器
@@ -9,14 +10,42 @@ import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
  */
 export const toolInvokeNodeDrawer = (shape, div, x, y) => {
     const self = jadeNodeDrawer(shape, div, x, y);
+    self.type = "toolInvokeNodeDrawer";
 
     /**
-     * 获取版本信息组件.
-     *
-     * @return {JSX.Element} 组件对象.
+     * @override
      */
-    self.getVersionInfoComponent = () => {
-        return <VersionInfoLoader shape={shape} drawer={self}/>
+    self.getHeaderIcon = () => {
+        return (<>
+            <ApiInvokeIcon className="jade-node-custom-header-icon"/>
+        </>);
+    };
+
+    /**
+     * @override
+     */
+    const getToolMenus = self.getToolMenus;
+    self.getToolMenus = () => {
+        const menus = getToolMenus.apply(self);
+        const uniqueName = shape.flowMeta.jober.entity.uniqueName;
+        if (uniqueName) {
+            menus.push({
+                key: '4',
+                label: "查看版本信息",
+                action: () => {},
+                // 子菜单被打开时调用.
+                onOpen: () => {
+                    self.refreshVersionInfo && self.refreshVersionInfo();
+                },
+                children: [{
+                    key: "4-1",
+                    label: (<>
+                        <VersionInfoLoader shape={shape} drawer={self}/>
+                    </>)
+                }]
+            });
+        }
+        return menus;
     };
 
     return self;

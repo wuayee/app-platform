@@ -1,14 +1,13 @@
-import {Button} from "antd";
 import {toolInvokeNodeState} from "@/components/toolInvokeNode/toolInvokeNodeState.jsx";
-import HuggingFaceIcon from '../asserts/icon-huggingface-header.svg?react'; // 导入背景图片
+import {huggingFaceNodeDrawer} from "@/components/huggingFace/huggingFaceNodeDrawer.jsx"; // 导入背景图片
 
 /**
- * 工具调用节点shape
+ * huggingFace节点.
  *
  * @override
  */
 export const huggingFaceNodeState = (id, x, y, width, height, parent, drawer) => {
-    const self = toolInvokeNodeState(id, x, y, width, height, parent, drawer);
+    const self = toolInvokeNodeState(id, x, y, width, height, parent, drawer ? drawer : huggingFaceNodeDrawer);
     self.type = "huggingFaceNodeState";
     self.text = "huggingFace调用";
     self.componentName = "huggingFaceComponent";
@@ -40,12 +39,6 @@ export const huggingFaceNodeState = (id, x, y, width, height, parent, drawer) =>
         self.flowMeta.jober.converter.entity.inputParams[1].value = metaData.context.default_model;
         self.drawer.unmountReact();
         self.invalidateAlone();
-    }
-
-    self.getHeaderIcon = () => {
-        return (
-            <HuggingFaceIcon className="jade-node-custom-header-icon"/>
-        );
     };
 
     return self;

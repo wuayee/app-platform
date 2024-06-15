@@ -1,8 +1,7 @@
 import {jadeNode} from "@/components/jadeNode.jsx";
-import LlmIcon from '../asserts/icon-llm.svg?react'; // 导入背景图片
-import {Button} from "antd";
 import "./style.css";
 import {SECTION_TYPE} from "@/common/Consts.js";
+import {llmNodeDrawer} from "@/components/llm/llmNodeDrawer.jsx";
 
 /**
  * jadeStream中的大模型节点.
@@ -10,22 +9,13 @@ import {SECTION_TYPE} from "@/common/Consts.js";
  * @override
  */
 export const llmNodeState = (id, x, y, width, height, parent, drawer) => {
-    const self = jadeNode(id, x, y, width, height, parent, drawer);
+    const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : llmNodeDrawer);
     self.type = "llmNodeState";
     self.text = "大模型";
     self.pointerEvents = "auto";
     self.componentName = "llmComponent";
     self.flowMeta.jober.fitables.push("com.huawei.fit.jober.aipp.fitable.LLMComponent");
     self.flowMeta.jober.isAsync = "true";
-
-    /**
-     * @override
-     */
-    self.getHeaderIcon = () => {
-        return (<>
-            <LlmIcon className="jade-node-custom-header-icon"/>
-        </>);
-    };
 
     /**
      * 获取大模型节点测试报告章节

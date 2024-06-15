@@ -61,7 +61,7 @@ export const DefaultRoot = ({shape, component, disabled}) => {
                       layout="vertical" // 设置全局的垂直布局
                       className={"jade-form"}
                 >
-                    {shape.getHeaderComponent(disabled)}
+                    {shape.drawer.getHeaderComponent(disabled)}
                     <FormContext.Provider value={form}>
                         <ShapeContext.Provider value={shape}>
                             <DataContext.Provider value={data}>
@@ -74,7 +74,7 @@ export const DefaultRoot = ({shape, component, disabled}) => {
                             </DataContext.Provider>
                         </ShapeContext.Provider>
                     </FormContext.Provider>
-                    {shape.getFooterComponent()}
+                    {shape.drawer.getFooterComponent()}
                 </Form>
             </div>
         </ConfigProvider>

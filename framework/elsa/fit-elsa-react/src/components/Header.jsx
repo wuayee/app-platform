@@ -45,7 +45,7 @@ export const Header = ({shape, disabled}) => {
      * @param e 事件对象.
      */
     const onMenuClick = (e) => {
-        const m = shape.getToolMenus().find(t => t.key === e.key);
+        const m = shape.drawer.getToolMenus().find(t => t.key === e.key);
         m.action && m.action(setEdit);
     };
 
@@ -71,7 +71,7 @@ export const Header = ({shape, disabled}) => {
     };
 
     const onOpenChange = (openKeys) => {
-        shape.getToolMenus().forEach(m => {
+        shape.drawer.getToolMenus().forEach(m => {
            if (openKeys.includes(m.key)) {
                m.onOpen && m.onOpen();
            }
@@ -84,7 +84,7 @@ export const Header = ({shape, disabled}) => {
      * @return {*} 菜单项
      */
     const getMenu = () => {
-        const items = shape.getToolMenus().map(t => {
+        const items = shape.drawer.getToolMenus().map(t => {
             const menu = {
                 key: t.key,
                 label: t.label,
@@ -104,7 +104,7 @@ export const Header = ({shape, disabled}) => {
      * @return {JSX.Element}
      */
     const showMenus = () => {
-        if (shape.getToolMenus().length > 0) {
+        if (shape.drawer.getToolMenus().length > 0) {
             return (<>
                 <div>
                     <Dropdown disabled={disabled} menu={getMenu()} trigger="click" placement="bottomRight">
@@ -122,11 +122,11 @@ export const Header = ({shape, disabled}) => {
         <div className="react-node-header">
             <div className="react-node-toolbar" style={{alignItems: "center"}}>
                 <div style={{display: "flex", alignItems: "center"}}>
-                    {shape.getHeaderIcon()}
+                    {shape.drawer.getHeaderIcon()}
                 </div>
                 <div className="react-node-toolbar-name">
                     {getTitle()}
-                    {shape.getHeaderTypeIcon()}
+                    {shape.drawer.getHeaderTypeIcon()}
                 </div>
                 {showMenus()}
             </div>
