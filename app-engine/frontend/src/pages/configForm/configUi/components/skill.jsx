@@ -6,11 +6,12 @@ import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
 import { getPlugins } from '@shared/http/plugin';
 import { getWaterFlows } from "@shared/http/appBuilder";
 import { ConfigFormContext } from '../../../aippIndex/context';
-import AddSkill from './add-skill';
+import AddSkill from '../../../addFlow/components/tool-modal';
 
 const Skill = (props) => {
   const { pluginData, updateData } = props;
   const [ skillList, setSkillList] = useState([]);
+  const [ showModal, setShowModal ] = useState(false);
   const { tenantId } = useContext(ConfigFormContext);
   const navigate=useNavigate();
   const modalRef = useRef();
@@ -23,7 +24,7 @@ const Skill = (props) => {
     }
   }, [props.pluginData])
   const addPlugin = () => {
-    modalRef.current.showModal()
+    setShowModal(true);
   }
   // 选择数据后回调
   const confirmCallBack = (workFlowId, fitId) => {
@@ -90,7 +91,11 @@ const Skill = (props) => {
   }
   // 工具流详情
   const workflowDetail = (item) => {
-    navigate(`/app-develop/${item.tenantId}/app-detail/flow-detail/${item.appId}`);
+    if (item.type === 'workflow') {
+      navigate(`/app-develop/${item.tenantId}/app-detail/flow-detail/${item.appId}`);
+    } else {
+      navigate(`/plugin/detail/${item.uniqueName}`);
+    }
   }
   return (
     <>
@@ -114,7 +119,7 @@ const Skill = (props) => {
                       {item.name || item }
                     </span>
                     <span>
-                      { item.type === 'workflow' && <EyeOutlined style={{ cursor: 'pointer', fontSize: '14px', color: '#4D4D4D', marginRight: '8px' }} onClick={() => workflowDetail(item)}/> }
+                      { <EyeOutlined style={{ cursor: 'pointer', fontSize: '14px', color: '#4D4D4D', marginRight: '8px' }} onClick={() => workflowDetail(item)}/> }
                       <CloseOutlined style={{ cursor: 'pointer', fontSize: '14px', color: '#4D4D4D' }} onClick={() => deleteItem(item)} />
                     </span>
                   </div>
@@ -123,8 +128,9 @@ const Skill = (props) => {
             }
           </div>
           <AddSkill 
-            modalRef={modalRef}
-            tenantId={tenantId}
+            type='addSkill'
+            showModal={showModal} 
+            setShowModal={setShowModal}
             checkData={skillList}
             confirmCallBack={confirmCallBack}
           />

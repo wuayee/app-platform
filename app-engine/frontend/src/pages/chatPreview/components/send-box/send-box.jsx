@@ -34,7 +34,7 @@ const SendBox = (props) => {
         { employeeNumber ? <img src={`https://w3.huawei.com/w3lab/rest/yellowpage/face/${employeeNumber}/120`}/> : 
           <img src={`https://w3.huawei.com/w3lab/rest/yellowpage/face/default/120`}/>
         } 
-        <span>{currentUser}</span>
+        <span title={currentUser}>{currentUser}</span>
       </div>
       <div className='send-info'>
         <span className="send-info-inner">

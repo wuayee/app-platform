@@ -1,5 +1,5 @@
 
-import React, { useEffect, useCallback, useState, useRef, useContext } from 'react';
+import React, { useEffect, useCallback, useState, useRef, useContext,  } from 'react';
 import { useParams } from 'react-router-dom';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { debounce } from '@shared/utils/common';
@@ -8,6 +8,8 @@ import {
   updateFlowInfo, } from '@shared/http/aipp';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
 import { Message } from '@shared/utils/message';
+import { useAppDispatch } from '../../../store/hook';
+import { setAppInfo } from '../../../store/appInfo/appInfo';
 import HuggingFaceModal from './hugging-face-modal';
 import { FlowContext } from '../../aippIndex/context';
 import { configMap } from '../config';
@@ -21,6 +23,7 @@ const Stage = (props) => {
   const { type, appInfo, setModalInfo } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
   const modelCallback = useRef();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     window.agent = null;
@@ -82,11 +85,7 @@ const Stage = (props) => {
       return appRef.current;
     })
     window.agent.validate().then(() => {
-      if (type) {
-        updateAppRunningFlow();
-      } else {
-        updateAppRunningFlow();
-      }
+      updateAppRunningFlow();
     }).catch((err) => {
       let str = typeof(err) === 'string' ? err : '请输入流程必填项';
       Message({ type: "warning", content: str});
@@ -98,6 +97,7 @@ const Stage = (props) => {
     let params = type ?  appInfo.flowGraph : appRef.current.flowGraph;
     const res = await updateFlowInfo(tenantId, id, params);
     if (res.code === 0) {
+      dispatch(setAppInfo(JSON.parse(JSON.stringify(appInfo))));
       Message({ type: 'success', content: type ? '高级配置更新成功': '工具流更新成功' })
     }
   }

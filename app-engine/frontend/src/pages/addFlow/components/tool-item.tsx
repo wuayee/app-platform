@@ -70,7 +70,7 @@ const ToolItem = (props) => {
     </div>
     {
       list.length > 0 && <div className="drag-list">
-        { list.slice((pageNum - 1)*10, pageNum*10).map((item, index) => {
+        { list.map((item, index) => {
             return (
               <div
                 className='drag-item'
@@ -81,13 +81,13 @@ const ToolItem = (props) => {
                 <div className='drag-item-title'>
                   <div>
                     <span className='content-node-name node-tool'>
-                      <img src='/src/assets/images/ai/tool.png' alt='' />
+                      <img src='/src/assets/images/ai/plugin.png' alt='' />
                       { item.name }
                     </span>
                   </div>
                   <span className='drag-item-icon' 
                     onClick={(event) => handleClickAddToolNode(item.type || 'toolInvokeNodeState', event, item)}>
-                      <AddFlowIcon />
+                     <img src='/src/assets/images/ai/flow.png'  />
                   </span>
                 </div>
               </div>
@@ -96,7 +96,7 @@ const ToolItem = (props) => {
         }
       </div>
     }
-    { list.length ?  
+    {/* { list.length ?  
       <div style={{ paddingTop: 16 }}>
         <Pagination
           size="small"
@@ -109,7 +109,7 @@ const ToolItem = (props) => {
       </div>
       : 
       <div className="tool-empty"><Empty description="暂无数据" /></div> 
-    }
+    } */}
     <ToolModal showModal={showModal} setShowModal={setShowModal} />
   </>
 };

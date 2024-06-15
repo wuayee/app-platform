@@ -1,19 +1,18 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Input, Modal, Select, Button, Dropdown, Empty } from 'antd';
-import { getPlugins } from '@shared/http/plugin';
-import { getAddFlowConfig } from '@shared/http/appBuilder';
+import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination } from 'antd';
+import { getAddFlowConfig, getWaterFlows } from '@shared/http/appBuilder';
 import { categoryItems } from '../../configForm/common/common';
 import { handleClickAddToolNode } from '../utils';
 import ToolCard from './tool-card';
-import Pagination from '../../../components/pagination/index';
 import '../styles/tool-modal.scss';
+import { Message } from '@shared/utils/message';
 const { Search } = Input;
 const { Option } = Select;
 
 const ToolDrawer = (props) => {
-  const { showModal, setShowModal } = props;
+  const { showModal, setShowModal, checkData, confirmCallBack, type } = props;
   const [ activeKey, setActiveKey ] = useState('AUTHORITY');
   const [ menuName, setMenuName ] = useState('新闻阅读');
   const [ name, setName ] = useState('');
@@ -21,7 +20,9 @@ const ToolDrawer = (props) => {
   const [ pageSize, setPageSize ] = useState(10);
   const [ total, setTotal ] = useState(0);
   const [ pluginData, setPluginData ] = useState([]);
-  const { tenantId, appId } = useParams();
+  const { tenantId } = useParams();
+  const checkedList = useRef([]);
+  const pluginList = useRef([]);
   const tab = [
     { name: '官方', key: 'AUTHORITY' },
     { name: 'HuggingFace', key: 'HUGGINGFACE' },
@@ -30,7 +31,10 @@ const ToolDrawer = (props) => {
   ]
   useEffect(() => {
     showModal && getPluginList();
-  }, [props.showModal, name, pageNum, pageSize, activeKey])
+  }, [props.showModal, name, pageNum, pageSize, activeKey]);
+  useEffect(() => {
+    type === 'addSkill' && (checkedList.current = JSON.parse(JSON.stringify(checkData)));
+  }, [props.checkData])
   const items = categoryItems;
   const selectBefore = (
     <Select defaultValue="市场">
@@ -58,7 +62,9 @@ const ToolDrawer = (props) => {
             }
           })
         };
+        setDefaultCheck(res.data.tool);
         setPluginData(res.data.tool);
+        pluginList.current = res.data.tool;
       }
     });
   }
@@ -78,19 +84,61 @@ const ToolDrawer = (props) => {
     }
   }
   // 添加插件
-  const toolClick = (e, item) => {
-    e.stopPropagation();
-    const type = item.type || 'toolInvokeNodeState';
-    handleClickAddToolNode(type, { clientX: 400, clientY: 300}, item)
+  const toolClick = () => {
+    checkedList.current.forEach((item, index) => {
+      const type = item.type || 'toolInvokeNodeState';
+      handleClickAddToolNode(type, { clientX: 400 + 10*index, clientY: 300 + 10*index}, item)
+    });
+    Message({ type: 'success', content: '添加插件成功' });
+  }
+  // 选中
+  const onChange = (e, item) => {
+    item.checked = e.target.checked;
+    if (e.target.checked) {
+      checkedList.current.push(item);
+    } else {
+      checkedList.current = checkedList.current.filter(cItem => cItem.uniqueName !== item.uniqueName);
+    }
+  }
+  // 确定提交
+  const confirm = () => {
+    if (type !== 'addSkill') {
+      toolClick();
+    } else {
+      let workFlowList:any = [];
+      let fitList:any = [];
+      checkedList.current.forEach(item => {
+        if (item.tags.includes('WATERFLOW')) {
+          workFlowList.push(item);
+        } else {
+          fitList.push(item);
+        }
+      })
+      let workFlowId = workFlowList.map(item => item.uniqueName);
+      let fitId = fitList.map(item => item.uniqueName);
+      confirmCallBack(workFlowId, fitId);
+    }
     setShowModal(false);
+  } 
+  // 设置默认选中
+  const setDefaultCheck = (data) => {
+    let nameList = checkedList.current.map(item => item.uniqueName);
+    data.forEach(item => {
+      item.checked = nameList.includes(item.uniqueName);
+    })
   }
   return <>
     <Modal 
       title='更多插件' 
       open={showModal} 
       onCancel={() => setShowModal(false)} 
-      width='1230px'
-      footer={null}
+      width='1100px'
+      footer={
+        <div className="drawer-footer">
+          <Button onClick={() => setShowModal(false)}>取消</Button>
+          <Button type="primary" onClick={confirm}>确定</Button>
+        </div>
+      }
     >
       <div className="tool-modal-search">
         <Search size="large" addonBefore={selectBefore} onSearch={filterByName} placeholder="请输入" />
@@ -117,12 +165,12 @@ const ToolDrawer = (props) => {
       </div>
       <div className="mashup-add-content">
         { pluginData.length > 0 && (
-          <div className="mashup-add-inner" style={{ height: 'calc(100vh - 400px)' }}>
+          <div className="mashup-add-inner" style={{ height: 'calc(100vh - 500px)' }}>
             {pluginData.slice((pageNum - 1)*pageSize, pageNum*pageSize).map((card: any) => 
               <div className="mashup-add-item" key={card.uniqueName}>
                 <ToolCard  pluginData={card} />
-                <span className="opration-item" onClick={(e) => toolClick(e, card)}>
-                  添加
+                <span className="opration-item">
+                  <Checkbox defaultChecked={card.checked} onChange={(e) => onChange(e, card)}></Checkbox>
                 </span>
               </div>
             )}

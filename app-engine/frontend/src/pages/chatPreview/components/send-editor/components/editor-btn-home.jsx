@@ -127,7 +127,7 @@ const EditorBtnHome = (props) => {
             { isAt && <span style={{ marginLeft: '6px' }}>对话</span> }
           </div>
           {/* <LinkIcon onClick={uploadClick} /> */}
-          {/* { (!isAt && !appInfo.hideHistory ) && <AtIcon onClick={atClick} /> } */}
+          { (!isAt && !appInfo.hideHistory ) && <AtIcon onClick={atClick} /> }
         </div>
       </div>
       <div className="inner-right">

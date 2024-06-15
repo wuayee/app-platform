@@ -372,5 +372,4 @@ const ChartGraphs = (props) => {
     </div>
   )}</>
 }
-
 export default ChatItem;

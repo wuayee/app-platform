@@ -9,11 +9,10 @@ import { setInspirationOpen } from '../../../../../store/chatStore/chatStore';
 
 // 猜你想问
 const Recommends = (props) => {
-  const { onSend } = props;
+  const { onSend, chatList } = props;
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const inspirationOpen = useAppSelector((state) => state.chatCommonStore.inspirationOpen);
-  const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const [ visible, setVisible ] = useState(false);
   const [ recommendList, setRecommendList ] = useState([]);

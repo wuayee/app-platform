@@ -27,6 +27,7 @@ export const historyChatProcess = (res) => {
           content: msg,
           loading: false,
           openLoading: false,
+          checked: false,
           logId: aItem.logId,
           markdownSyntax: markdowned !== -1,
           type: "recieve",
@@ -174,6 +175,7 @@ export const messageProcess = (aipp_id, instanceId, version, messageData) => {
     content: '',
     recieveType: 'form',
     finished: true,
+    checked: false,
     formConfig: {
       instanceId,
       version,
@@ -202,6 +204,7 @@ export const messageProcessNormal = (log, instanceId) => {
     content: msg,
     loading: false,
     openLoading: false,
+    checked: false,
     logId: log.msgId || -1,
     markdownSyntax: markdowned !== -1,
     type: 'recieve',

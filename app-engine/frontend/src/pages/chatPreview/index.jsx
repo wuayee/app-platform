@@ -86,7 +86,6 @@ const ChatPreview = (props) => {
       setLoading(false);
     }
   }
-
   useEffect(() => {
     if (!currentInfo.current || currentInfo.current.id !== appInfo.id) {
       dispatch(setChatRunning(false));
@@ -94,7 +93,7 @@ const ChatPreview = (props) => {
       dispatch(setChatList([]));
       (appInfo.name && !appInfo.notShowHistory) && initChatHistory();
     }
-  }, [appInfo]);
+  }, [appInfo.id]);
   
   // 发送消息
   const onSend = (value, type = undefined) => {
@@ -183,7 +182,8 @@ const ChatPreview = (props) => {
     runningAppid.current = aipp_id;
     if (!wsCurrent.current) {
       const prefix = window.location.protocol === 'http:' ? 'ws' : 'wss';
-      wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
+      // wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
+      wsCurrent.current = new WebSocket(`${prefix}://80.11.128.86:30030/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
       wsCurrent.current.onopen = () => {
         wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));   
       }
@@ -243,10 +243,10 @@ const ChatPreview = (props) => {
   function selfSelect(instanceId, initContext) {
     reportInstance.current = instanceId;
     reportIContext.current = initContext;
-    listRef.current.forEach(item => item.checked = false);
     dispatch(setChatList(deepClone(listRef.current)));
     onStop("请勾选对话");
     setCheckedList([]);
+    feedRef.current.setCheckStatus();
     setEditorShow(true, 'report');
   }
   // 用户自勾选确定回调
@@ -333,7 +333,6 @@ const ChatPreview = (props) => {
       Message({ type: "error", content: "终止对话失败" });
     }
   }
-
 
   return (
     <div className={`

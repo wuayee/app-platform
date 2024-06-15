@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Tabs } from "antd";
 import { LeftArrowIcon } from '@assets/icon';
@@ -10,6 +10,7 @@ import ToolItems from './tool-item';
 const LeftMenu = (props) => {
   const { dragData, menuClick, setDragData } = props;
   const { tenantId, appId } = useParams();
+  const [ activeKey, setActiveKey ] = useState('basic');
 
   const tabClick = (key) => {
     getAddFlowConfig(tenantId,  {pageNum: 1, pageSize: 100, tag: key}).then(res => {
@@ -26,22 +27,33 @@ const LeftMenu = (props) => {
       }
     });
   }
-  const items = [
-    {
-      key: 'basic',
-      label: '基础',
-      children: <BasicItems dragData={dragData.basic || []} />,
-      icon: <LeftArrowIcon onClick={menuClick} />
-    },
-    {
-      key: 'tool',
-      label: '插件',
-      children: <ToolItems dragData={dragData.tool || []} tabClick={tabClick} />,
-    },
-  ];
+  const tab = [
+    { name: '基础', key: 'basic' },
+    { name: '插件', key: 'plugin' }
+  ]
+  const handleClick = (key) => {
+    setActiveKey(key);
+  }
   return <>{(
-    <div className='content-left'>
-      <Tabs defaultActiveKey="basic" items={items} />
+    <div className='content-left '>
+      <div className="tool-modal-tab" style={{ justifyContent: 'flex-start' }}>
+        { tab.map(item => {
+            return (
+              <span className={ activeKey === item.key ? 'active' : null } 
+                key={item.key} 
+                onClick={() => handleClick(item.key)}
+              >
+                <span className="text">{ item.name }</span> 
+                <span className="line"></span>
+              </span>
+            )
+          })
+        }
+      </div>
+      { activeKey === 'basic' ? <BasicItems dragData={dragData.basic || []} /> : <ToolItems dragData={dragData.tool || []} tabClick={tabClick} /> }
+      <div className="arrow-icon" onClick={menuClick}>
+        <img src='/src/assets/images/ai/arrow.png'  />
+      </div>
     </div>
   )}</>
 };

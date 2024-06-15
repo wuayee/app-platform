@@ -54,7 +54,7 @@ const ReciveBox = (props) => {
       {showCheck && <Checkbox className='check-box' checked={checked} onChange={onChange}></Checkbox>}
       <div className='user-image'>
         <Img />
-        <span>{appInfo?.name || 'xxx'}</span>
+        <span title={appInfo?.name}>{appInfo?.name || 'xxx'}</span>
       </div>
       <span className="recieve-info-inner">
         {loading ? <Loading /> : setRecieveDom(recieveType)}

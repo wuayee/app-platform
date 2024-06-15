@@ -131,7 +131,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     if (appInfo?.id) {
       getAippId();
     }
-  }, [appInfo])
+  }, [appInfo.id])
 
   const getLastContext = async () => {
     const chatListRes = await getChatDetail(tenantId, chatId, requestInfo);

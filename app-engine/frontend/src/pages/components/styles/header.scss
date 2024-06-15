@@ -1,0 +1,97 @@
+.app-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgb(240, 242, 244);
+  height: 40px;
+  justify-content: space-between;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .status-tag {
+      display: flex;
+      align-items: center;
+      margin: 0 24px;
+      img {
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+      }
+      .version {
+        background-color: #ffffff;
+        margin: 0 12px;
+        padding: 0 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        margin-top: 2px;
+      }
+    }
+    .header-text {
+      margin: 0 16px;
+      color: #000000;
+      font-size: 18px;
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .edit-icon {
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+    .back-icon {
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+  .header-grid {
+    display: flex;
+    align-items: center;
+    .history {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background-color: #ffffff;
+      padding: 6px;
+      border-radius: 6px;
+    }
+    .robot {
+      padding: 6px 12px;
+      font-size: 12px;
+      img {
+        margin-right: 4px;
+      }
+    }
+  }
+  .header-btn{
+    display: inline-block;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    color: #fff;
+    background-color: #047bfc;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    padding-left: .75rem;
+    padding-right: .75rem;
+    min-width: 80px;
+      .anticon-upload {
+        margin-right: 5px;
+      }
+  }
+}
