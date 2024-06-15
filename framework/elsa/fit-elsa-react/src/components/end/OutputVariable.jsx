@@ -1,6 +1,6 @@
 import {Col, Collapse, Form, Popover, Row} from "antd";
 import React from "react";
-import {InfoCircleOutlined} from '@ant-design/icons';
+import {QuestionCircleOutlined} from '@ant-design/icons';
 import "./style.css";
 import OutputVariableRow from "@/components/end/OutputVariableRow.jsx";
 import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
@@ -45,7 +45,7 @@ export default function OutputVariable({disabled}) {
 
     return (
         <div>
-            <Collapse bordered={false} className="jade-collapse-custom-background-color"
+            <Collapse bordered={false} className="jade-custom-collapse"
                       style={{marginTop: "10px", marginBottom: 8, borderRadius: "8px", width: "100%"}}
                       defaultActiveKey={['Output variable']}>
                 <Panel
@@ -55,7 +55,7 @@ export default function OutputVariable({disabled}) {
                             style={{display: 'flex', alignItems: 'center', justifyContent: "flex-start"}}>
                             <span className="jade-panel-header-font">输出</span>
                             <Popover content={tips}>
-                                <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                                <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                             </Popover>
                         </div>
                     }

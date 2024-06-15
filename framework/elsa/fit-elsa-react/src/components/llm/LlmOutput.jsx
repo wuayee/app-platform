@@ -1,5 +1,5 @@
 import {Collapse, Popover} from 'antd';
-import {InfoCircleOutlined} from '@ant-design/icons';
+import {QuestionCircleOutlined} from '@ant-design/icons';
 import {useDataContext, useShapeContext} from "@/components/DefaultRoot.jsx";
 import "../common/style.css";
 import {JadeObservableTree} from "@/components/common/JadeObservableTree.jsx";
@@ -52,7 +52,7 @@ export default function LlmOutput() {
     );
 
     return (
-        <Collapse bordered={false} className="jade-collapse-custom-background-color" defaultActiveKey={["outputPanel"]}>
+        <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["outputPanel"]}>
             {
                 <Panel
                     key={"outputPanel"}
@@ -61,7 +61,7 @@ export default function LlmOutput() {
                              style={{display: 'flex', alignItems: 'center', justifyContent: "flex-start"}}>
                             <span className="jade-panel-header-font">输出</span>
                             <Popover content={content}>
-                                <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                                <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                             </Popover>
                             {/*430演示大模型输出不需要新增和删除，暂时屏蔽*/}
                             {/*<Button type="text" className="icon-button"*/}

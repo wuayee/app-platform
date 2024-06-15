@@ -2,7 +2,7 @@ import {JadeObservableTree} from "@/components/common/JadeObservableTree.jsx";
 import {useDataContext} from "@/components/DefaultRoot.jsx";
 import React from "react";
 import {Collapse, Popover} from "antd";
-import {InfoCircleOutlined} from "@ant-design/icons";
+import {QuestionCircleOutlined} from "@ant-design/icons";
 
 const {Panel} = Collapse;
 /**
@@ -35,7 +35,7 @@ export default function InvokeOutput() {
 
     const content = getContent();
 
-    return (<Collapse bordered={false} className="jade-collapse-custom-background-color"
+    return (<Collapse bordered={false} className="jade-custom-collapse"
                       defaultActiveKey={['InvokeOutput']}>
         <Panel
             className="jade-panel"
@@ -43,7 +43,7 @@ export default function InvokeOutput() {
                 <span className='jade-panel-header-font'>输出</span>
                 {content ? (
                     <Popover content={content}>
-                        <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                        <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                     </Popover>
                 ) : null}
             </div>}

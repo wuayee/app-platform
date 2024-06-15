@@ -1,5 +1,5 @@
 import {Col, Collapse, Form, Input, Popover, Row} from "antd";
-import {InfoCircleOutlined} from "@ant-design/icons";
+import {QuestionCircleOutlined} from "@ant-design/icons";
 import React from "react";
 import {useDataContext, useDispatch, useFormContext} from "@/components/DefaultRoot.jsx";
 import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSelect.jsx";
@@ -120,14 +120,14 @@ export default function InputForm({disabled}) {
     const tips = <div className={"jade-font-size"}><p>输入需要从知识库中匹配的关键信息</p></div>;
 
     return (<div>
-        <Collapse bordered={false} className="jade-collapse-custom-background-color"
+        <Collapse bordered={false} className="jade-custom-collapse"
                   defaultActiveKey={['Input']}>
             <Panel
                     header={
                         <div className="panel-header">
                             <span className="jade-panel-header-font">输入</span>
                             <Popover content={tips}>
-                                <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                                <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                             </Popover>
                         </div>
                     }

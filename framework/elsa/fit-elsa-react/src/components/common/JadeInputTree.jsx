@@ -175,7 +175,7 @@ export default function JadeInputTree({data, updateItem, disabled}) {
                                 name={`property-${node.id}`}
                         >
                             <div className="jade-input-tree-title-child"
-                                 style={{display: "flex", alignItems: "center"}}>
+                                 style={{display: "flex", alignItems: "center", padding: "0 10px"}}>
                                 {node.isRequired && <span className="jade-required-indicator">*</span>}
                                 <span className="huggingface-light-font">{node.title}</span>
                             </div>
@@ -219,19 +219,21 @@ export default function JadeInputTree({data, updateItem, disabled}) {
         });
 
     return (<>
-        <div className={"jade-custom-panel-content"} style={{paddingLeft: "8px"}}>
-            <Row wrap={false}>
-                <Col flex={"0 0 " + INPUT_WIDTH + "px"}>
-                    <span className={"jade-second-title-text"}>字段名称</span>
-                </Col>
-                <Col>
-                    <span className={"jade-second-title-text"}>字段值</span>
-                </Col>
-            </Row>
+        <div className={"jade-custom-panel-content"}>
+            <div style={{paddingLeft: "8px"}}>
+                <Row wrap={false}>
+                    <Col flex={"0 0 " + INPUT_WIDTH + "px"}>
+                        <span className={"jade-second-title-text"}>字段名称</span>
+                    </Col>
+                    <Col>
+                        <span className={"jade-second-title-text"}>字段值</span>
+                    </Col>
+                </Row>
+            </div>
+            <Tree blockNode={true} className={"jade-ant-tree"} showLine={true}>
+                {renderTreeNodes(treeData)}
+            </Tree>
         </div>
-        <Tree blockNode={true} className={"jade-ant-tree"} showLine={true}>
-            {renderTreeNodes(treeData)}
-        </Tree>
     </>);
 };
 

@@ -64,7 +64,7 @@ export default function ManualCheckFormWrapper() {
         if (!output || !Array.isArray(output) || !output.length > 0) {
             return null;
         }
-        return <Collapse bordered={false} className="jade-collapse-custom-background-color" defaultActiveKey={["manualCheckOutputPanel"]}>
+        return <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["manualCheckOutputPanel"]}>
             {
                 <Panel
                     key={"manualCheckOutputPanel"}
@@ -84,7 +84,7 @@ export default function ManualCheckFormWrapper() {
 
     return (
         <div>
-            <Collapse bordered={false} className="jade-collapse-custom-background-color" defaultActiveKey={["manualCheckFormPanel"]}>
+            <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["manualCheckFormPanel"]}>
                 {
                     <Panel
                         key={"manualCheckFormPanel"}

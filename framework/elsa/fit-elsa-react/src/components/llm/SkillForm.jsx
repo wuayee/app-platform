@@ -59,7 +59,7 @@ export default function SkillForm({toolOptions, workflowOptions, config, disable
     };
 
     return (
-            <Collapse bordered={false} className="jade-collapse-custom-background-color"
+            <Collapse bordered={false} className="jade-custom-collapse"
                       defaultActiveKey={["skillPanel"]}>
                 {
                     <Panel

@@ -12,7 +12,7 @@ const {Panel} = Collapse;
 export default function FitInvokeService() {
 
     return (
-        <Collapse bordered={false} className="jade-collapse-custom-background-color"
+        <Collapse bordered={false} className="jade-custom-collapse"
                   defaultActiveKey={['FitInvokeService']}>
             <Panel
                 className="jade-panel"

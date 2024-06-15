@@ -1,9 +1,9 @@
-.jade-collapse-custom-background-color {
+.jade-custom-collapse {
     background-color: transparent; /* 设置背景透明 */
 }
 
-.transparent-background {
-    background-color: transparent !important; /* 设置背景透明 */
+.jade-custom-collapse .ant-collapse-header {
+    padding: 8px !important;
 }
 
 .value-custom, .value-custom .ant-select-selector {
@@ -46,11 +46,10 @@
     margin-bottom: 8px !important;
     border-radius: 8px !important;
     width: 100%;
-    padding: 12px;
 }
 
 .jade-panel .ant-collapse-header {
-    padding: 0 !important;
+    padding: 8px !important;
     align-items: center !important;
 }
 
@@ -280,7 +279,7 @@
 .huggingface-light-font {
     color: rgb(128, 128, 128);
     font-family: Huawei Sans;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
     line-height: 32px;
     letter-spacing: 0px;
@@ -313,7 +312,7 @@
 .jade-required-indicator {
     color: rgb(198, 57, 57);
     font-family: Huawei Sans;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 700;
     line-height: 18px;
     letter-spacing: 0px;
@@ -321,5 +320,6 @@
 }
 
 .jade-custom-panel-content {
-    background: rgb(250, 250, 250);
+    border-radius: 8px;
+    padding: 12px;
 }

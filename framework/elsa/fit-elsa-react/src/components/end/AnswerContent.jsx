@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Collapse, Input, Popover, Switch} from 'antd';
-import {InfoCircleOutlined} from "@ant-design/icons";
+import {QuestionCircleOutlined} from "@ant-design/icons";
 
 const {Panel} = Collapse;
 const {TextArea} = Input;
@@ -42,7 +42,7 @@ export default function AnswerContent() {
                             <span
                                 className="Answer-content-text">Answer content</span>
                             <Popover content={tips}>
-                                <InfoCircleOutlined/>
+                                <QuestionCircleOutlined/>
                             </Popover>
                         </div>
 
@@ -52,7 +52,7 @@ export default function AnswerContent() {
                             <span
                                 className='Streaming-output-text'>Streaming output</span>
                                 <Popover content={tips}>
-                                    <InfoCircleOutlined/>
+                                    <QuestionCircleOutlined/>
                                 </Popover>
                             </div>
                             <div className="switch-container">

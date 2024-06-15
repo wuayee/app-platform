@@ -1,6 +1,6 @@
 import {Collapse, Popover} from 'antd';
 import JadeInputTree from "./JadeInputTree.jsx";
-import {InfoCircleOutlined} from "@ant-design/icons";
+import {QuestionCircleOutlined} from "@ant-design/icons";
 import React from "react";
 
 const {Panel} = Collapse;
@@ -37,7 +37,7 @@ export default function JadeCollapseInputTree({data, updateItem, disabled}) {
     const content = getContent();
 
     return (<>
-        <Collapse bordered={false} className="jade-collapse-custom-background-color"
+        <Collapse bordered={false} className="jade-custom-collapse"
                   defaultActiveKey={["jadeInputTreePanel"]}>
             <Panel
                 key={"jadeInputTreePanel"}
@@ -46,12 +46,12 @@ export default function JadeCollapseInputTree({data, updateItem, disabled}) {
                         <span className='jade-panel-header-font'>输入</span>
                         {content ? (
                             <Popover content={content}>
-                                <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                                <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                             </Popover>
                         ) : null}
                     </div>
                 }
-                className="jade-panel transparent-background"
+                className="jade-panel"
             >
                 <JadeInputTree disabled={disabled} data={data} updateItem={updateItem}/>
             </Panel>

@@ -1,5 +1,5 @@
 import {Col, Form, Popover, Row, Slider} from "antd";
-import {InfoCircleOutlined} from "@ant-design/icons";
+import {QuestionCircleOutlined} from "@ant-design/icons";
 import React from "react";
 import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
 
@@ -40,7 +40,7 @@ export default function KnowledgeConfig({disabled}) {
                                 color: 'rgba(28, 29, 35, 0.35)'
                             }}>返回最大值</span>
                     <Popover content={maxRecallsTip}>
-                        <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                        <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                     </Popover>
                 </Form.Item>
             </Col>

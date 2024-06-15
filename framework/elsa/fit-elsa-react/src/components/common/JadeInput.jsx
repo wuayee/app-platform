@@ -1,5 +1,5 @@
 import {Button, Col, Collapse, Form, Input, Popover, Row} from 'antd';
-import {InfoCircleOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {QuestionCircleOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import "./style.css";
 import PropTypes from "prop-types";
 import {v4 as uuidv4} from "uuid";
@@ -136,13 +136,13 @@ export default function JadeInput({items, addItem, updateItem, deleteItem, disab
     };
 
     return (
-        <Collapse bordered={false} className="jade-collapse-custom-background-color" defaultActiveKey={["inputPanel"]}>
+        <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["inputPanel"]}>
             {<Panel
                     key={"inputPanel"}
                     header={<div className="panel-header">
                         <span className="jade-panel-header-font">输入</span>
                         <Popover content={content}>
-                            <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                            <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                         </Popover>
                         <Button disabled={disabled}
                                 type="text" className="icon-button jade-panel-header-icon-position"

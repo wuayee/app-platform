@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {Button, Collapse, Popover} from 'antd';
-import {DeleteOutlined, InfoCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {DeleteOutlined, QuestionCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import StartInputForm from "./StartInputForm.jsx";
 import Memory from './Memory.jsx';
 import "./style.css";
@@ -84,14 +84,14 @@ export default function StartFormWrapper({disabled}) {
             }}>
                 <div className="jade-panel-header-font">输入</div>
                 <Popover content={content}>
-                    <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                    <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                 </Popover>
                 {renderAddInputIcon()}
             </div>
             <Collapse bordered={false}
                       activeKey={openItems}
                       onChange={(keys) => setOpenItems(keys)}
-                      className="jade-collapse-custom-background-color">
+                      className="jade-custom-collapse">
                 {
                     items.map((item) => (
                             <Panel
@@ -111,7 +111,7 @@ export default function StartFormWrapper({disabled}) {
                 }
             </Collapse>
             <Collapse bordered={false}
-                      className="jade-collapse-custom-background-color"
+                      className="jade-custom-collapse"
                       defaultActiveKey={["historicalRecordsPanel"]}>
                 {
                     <Panel

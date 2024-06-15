@@ -1,5 +1,5 @@
 import {Col, Collapse, Form, Input, InputNumber, Popover, Row} from 'antd';
-import {InfoCircleOutlined} from '@ant-design/icons';
+import {QuestionCircleOutlined} from '@ant-design/icons';
 import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
 import {JadeStopPropagationSelect} from "../common/JadeStopPropagationSelect.jsx";
 import PropTypes from "prop-types";
@@ -76,7 +76,7 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
     };
 
     return (
-        <Collapse bordered={false} className="jade-collapse-custom-background-color" defaultActiveKey={["modelPanel"]}>
+        <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["modelPanel"]}>
             {
                 <Panel
                     key={"modelPanel"}
@@ -113,7 +113,7 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
                                     label={<div style={{display: 'flex', alignItems: 'center'}}>
                                         <span className="jade-second-title">温度</span>
                                         <Popover content={content}>
-                                            <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                                            <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                                         </Popover>
                                     </div>}
                                     rules={[{required: true, message: '请输入0-1之间的参数!'}]}
@@ -141,7 +141,7 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
                                     label={<div style={{display: 'flex', alignItems: 'center'}}>
                                         <span className="jade-second-title">用户提示词模板</span>
                                         <Popover content={[promptContent]}>
-                                            <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                                            <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                                         </Popover>
                                     </div>}
                                     rules={[{required: true, message: '参数不能为空'}]}
