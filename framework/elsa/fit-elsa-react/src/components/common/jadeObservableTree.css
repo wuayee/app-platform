@@ -4,11 +4,13 @@
 }
 
 .jade-observable-tree-node-title {
+    color: rgb(77, 77, 77);
+    font-family: Huawei Sans;
     font-size: 12px;
-    font-style: normal;
-    font-weight: 500;
-    word-break: keep-all;
-    line-height: 20px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0px;
+    text-align: left;
 }
 
 .jade-observable-tree-node-type-div {

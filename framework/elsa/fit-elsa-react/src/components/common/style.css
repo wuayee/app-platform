@@ -26,7 +26,7 @@
     color: rgb(37, 43, 58);
     justify-content: flex-start;
     margin-right: 4px;
-    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-family: HarmonyOS Sans, 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
     font-size: 12px;
     font-weight: 400;
     line-height: 14px;
@@ -69,8 +69,13 @@
 }
 
 .jade-form-item .ant-form-item-label > label {
+    color: rgb(77, 77, 77);
+    font-family: Huawei Sans;
     font-size: 12px;
-    color: rgba(28, 31, 35, .35);
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0px;
+    text-align: left;
 }
 
 .jade-font-size, .jade-select .ant-select-selector .ant-select-selection-item, .jade-select .ant-select-item-option, .ant-select-selection-placeholder, .jade-input::placeholder, .ant-select-dropdown .ant-select-item, .ant-tree-select-dropdown .ant-select-tree {
@@ -78,7 +83,7 @@
 }
 
 .jade-font-color {
-    color: rgba(28, 31, 35, .35);
+    color: rgb(77, 77, 77);
 }
 
 .jade-select .ant-select-selector {
@@ -317,6 +322,7 @@
     line-height: 18px;
     letter-spacing: 0px;
     text-align: left;
+    padding-right: 2px;
 }
 
 .jade-custom-panel-content {

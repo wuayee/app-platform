@@ -20,7 +20,7 @@ export const JadeObservableTree = ({data}) => {
     const shape = useShapeContext();
 
     useEffect(() => {
-        const treeData = data.map(d => buildNode(d, null));
+        const treeData = data.map(d => buildNode(d, null, 0));
         setTreeData(treeData);
 
         // unmount时取消监听.
@@ -46,20 +46,22 @@ export const JadeObservableTree = ({data}) => {
      *
      * @param nodeData 节点数据.
      * @param parent 父节点数据.
+     * @param level 层级.
      * @return {{title, isLeaf: boolean, key}|{children: *, title, key}} 树节点.
      */
-    const buildNode = (nodeData, parent) => {
+    const buildNode = (nodeData, parent, level) => {
         shape.page.registerObservable(shape.id, nodeData.id, nodeData.name, nodeData.type, parent ? parent.id : null);
         if (nodeData.type === "Object") {
             return {
                 title: nodeData.name,
                 type: nodeData.type,
                 key: nodeData.id,
-                children: nodeData.value.map(v => buildNode(v, nodeData))
+                level: level,
+                children: nodeData.value.map(v => buildNode(v, nodeData, level + 1))
             };
         } else {
             return {
-                title: nodeData.name, type: nodeData.type, key: nodeData.id, isLeaf: true
+                title: nodeData.name, type: nodeData.type, key: nodeData.id, level: level, isLeaf: true
             };
         }
     };
@@ -83,10 +85,28 @@ export const JadeObservableTree = ({data}) => {
         </>);
     };
 
+    const renderTreeNodes = (data) =>
+        data.map((item) => {
+            const isRootNode = item.level === 0;
+            const className = isRootNode && !item.children ? "jade-hide-tree-left-line" : '';
+
+            if (item.children) {
+                return (
+                    <Tree.TreeNode title={displayTitle(item)} key={item.key} className={className}>
+                        {renderTreeNodes(item.children)}
+                    </Tree.TreeNode>
+                );
+            }
+            return <Tree.TreeNode title={displayTitle(item)} key={item.key} className={className}/>;
+        });
+
     return <>
-        <Tree treeData={treeData} titleRender={(nodeData) => displayTitle(nodeData)}
-              switcherIcon={({expanded}) => <TreeSwitcherIcon expanded={expanded}/>}
-              showLine={true}
-              selectable={false}/>
+        <Tree
+            className={"jade-ant-tree"}
+            switcherIcon={({expanded}) => <TreeSwitcherIcon expanded={expanded}/>}
+            showLine={true}
+            selectable={false}>
+            {renderTreeNodes(treeData)}
+        </Tree>
     </>;
 };

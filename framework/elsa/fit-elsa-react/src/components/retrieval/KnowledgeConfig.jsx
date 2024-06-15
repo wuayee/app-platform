@@ -37,7 +37,7 @@ export default function KnowledgeConfig({disabled}) {
                                 alignItems: "center",
                                 userSelect: 'none',
                                 marginRight: '4px',
-                                color: 'rgba(28, 29, 35, 0.35)'
+                                color: 'rgb(37, 43, 58)'
                             }}>返回最大值</span>
                     <Popover content={maxRecallsTip}>
                         <QuestionCircleOutlined className="jade-panel-header-popover-content"/>

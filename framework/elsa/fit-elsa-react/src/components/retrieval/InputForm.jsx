@@ -150,7 +150,7 @@ export default function InputForm({disabled}) {
 
                     <Row>
                         <Col span={8} style={{display: "flex", paddingTop: "5px"}}>
-                            <span className="retrieval-starred-text">query</span>
+                            <span className="retrieval-starred-text jade-font-size">query</span>
                         </Col>
 
                         <Col span={8} style={{paddingRight: 0}}>
