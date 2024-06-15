@@ -4,13 +4,14 @@
 }
 
 .react-node-header-button {
-    margin: 0;
+    position: static;
+    width: 20px;
+    height: 20px;
+    flex: none;
+    order: 1;
+    flexGrow: 0;
+    margin: 0 10px;
     padding: 0;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .react-node-toolbar {
