@@ -45,7 +45,6 @@ const ChatMessaga = (props) => {
       const messageBox = document.getElementById('chat-list-dom');
       messageBox?.scrollTo({
         top: messageBox.scrollHeight,
-        behavior: 'smooth',
       });
     }, 100)
   }
