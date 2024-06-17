@@ -28,5 +28,5 @@ export const VIRTUAL_CONTEXT_NODE = {
 };
 
 export const CONNECTOR = {
-    RADIUS: 8
+    RADIUS: 6
 };

@@ -106,7 +106,6 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         self.connectors.forEach(connector => {
             connector.radius = CONNECTOR.RADIUS;
             connector.isSolid = true;
-            connector.radius = 6;
             if (connector.direction.key === DIRECTION.W.key) {
                 connector.allowFromLink = false
             }
