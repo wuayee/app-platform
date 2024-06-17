@@ -235,7 +235,7 @@ public class AppBuilderAppServiceImpl
 
     private void validateAppName(String name, OperationContext context) {
         if (StringUtils.isEmpty(name)) {
-            log.error("Create aipp failed: name can not be empty.", name);
+            log.error("Create aipp failed: name can not be empty.");
             throw new AippParamException(context, AippErrCode.AIPP_NAME_IS_EMPTY);
         } else if (name.length() > this.nameLengthMaximum) {
             log.error("Create aipp failed: the length of task name is out of bounds. [name={}]", name);
