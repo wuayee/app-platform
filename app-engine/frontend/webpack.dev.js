@@ -109,6 +109,14 @@ module.exports = merge(common, {
         secure: false,
         changeOrigin: true,
       },
+      '/elsaApi': {
+        target: 'http://10.91.144.226:8080',
+        pathRewrite: {
+          '^/elsaApi': '',
+        },
+        secure: false,
+        changeOrigin: true,
+      },
     },
   },
 });

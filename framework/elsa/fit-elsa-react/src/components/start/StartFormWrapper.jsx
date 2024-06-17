@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {Button, Collapse, Popover} from 'antd';
-import {DeleteOutlined, InfoCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {DeleteOutlined, QuestionCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import StartInputForm from "./StartInputForm.jsx";
 import Memory from './Memory.jsx';
 import "./style.css";
@@ -84,14 +84,14 @@ export default function StartFormWrapper({disabled}) {
             }}>
                 <div className="jade-panel-header-font">输入</div>
                 <Popover content={content}>
-                    <InfoCircleOutlined className="jade-top-header-popover-content"/>
+                    <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                 </Popover>
                 {renderAddInputIcon()}
             </div>
             <Collapse bordered={false}
                       activeKey={openItems}
                       onChange={(keys) => setOpenItems(keys)}
-                      className="jade-collapse-custom-background-color">
+                      className="jade-custom-collapse">
                 {
                     items.map((item) => (
                             <Panel
@@ -105,13 +105,15 @@ export default function StartFormWrapper({disabled}) {
                                 className="jade-panel"
                                 style={{marginBottom: 8, borderRadius: "8px", width: "100%"}}
                             >
-                                <StartInputForm item={item}/>
+                                <div className={"jade-custom-panel-content"}>
+                                    <StartInputForm item={item}/>
+                                </div>
                             </Panel>
                     ))
                 }
             </Collapse>
             <Collapse bordered={false}
-                      className="jade-collapse-custom-background-color"
+                      className="jade-custom-collapse"
                       defaultActiveKey={["historicalRecordsPanel"]}>
                 {
                     <Panel
@@ -125,7 +127,9 @@ export default function StartFormWrapper({disabled}) {
                         className="jade-panel"
                         style={{width: "100%"}}
                     >
-                        <Memory disabled={disabled} config={config}/>
+                        <div className={"jade-custom-panel-content"}>
+                            <Memory disabled={disabled} config={config}/>
+                        </div>
                     </Panel>
                 }
             </Collapse>

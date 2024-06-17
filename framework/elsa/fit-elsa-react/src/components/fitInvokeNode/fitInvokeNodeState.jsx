@@ -1,7 +1,6 @@
 import {jadeNode} from "@/components/jadeNode.jsx";
 import "./style.css";
-import {Button} from "antd";
-import ApiInvokeIcon from '../asserts/icon-fit-invoke.svg?react';
+import {fitInvokeNodeDrawer} from "@/components/fitInvokeNode/fitInvokeNodeDrawer.jsx";
 
 /**
  * FIT调用节点shape
@@ -9,7 +8,7 @@ import ApiInvokeIcon from '../asserts/icon-fit-invoke.svg?react';
  * @override
  */
 export const fitInvokeNodeState = (id, x, y, width, height, parent, drawer) => {
-    const self = jadeNode(id, x, y, width, height, parent, drawer);
+    const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : fitInvokeNodeDrawer);
     self.type = "fitInvokeNodeState";
     self.width = 360;
     self.backColor = 'white';
@@ -54,14 +53,6 @@ export const fitInvokeNodeState = (id, x, y, width, height, parent, drawer) => {
                 .find(item => item.name === 'id')
                 .value;
         self.flowMeta.jober.entity = fitEntity;
-    };
-
-    self.getHeaderIcon = () => {
-        return (
-            <Button disabled={true} className="jade-node-custom-header-icon">
-                <ApiInvokeIcon/>
-            </Button>
-        );
     };
 
     return self;

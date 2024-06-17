@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Col, Collapse, Form, Popover, Row} from "antd";
-import {InfoCircleOutlined, MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
+import {QuestionCircleOutlined, MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import KnowledgeConfig from "@/components/retrieval/KnowledgeConfig.jsx";
 import {useDataContext, useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {v4 as uuidv4} from "uuid";
@@ -121,7 +121,7 @@ export default function KnowledgeForm({disabled}) {
         <p>仅从所选知识中调出信息</p>
     </div>;
 
-    return (<Collapse bordered={false} className="jade-collapse-custom-background-color"
+    return (<Collapse bordered={false} className="jade-custom-collapse"
                       style={{marginTop: "10px", marginBottom: 8, borderRadius: "8px", width: "100%"}}
                       defaultActiveKey={['Knowledge']}>
         <Panel
@@ -130,7 +130,7 @@ export default function KnowledgeForm({disabled}) {
                 style={{display: 'flex', alignItems: 'center'}}>
                 <span className="jade-panel-header-font">知识库</span>
                 <Popover content={tips}>
-                    <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                    <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                 </Popover>
                 {/*<Button type="text" className="icon-button" onClick={(event) => addItem(event)}*/}
                 {/*        style={{height: "22px", marginLeft: "auto"}}>*/}
@@ -140,42 +140,44 @@ export default function KnowledgeForm({disabled}) {
             className="jade-panel"
             key='Knowledge'
         >
-            {getKnowledge.map((item) => (<Row
+            <div className={"jade-custom-panel-content"}>
+                {getKnowledge.map((item) => (<Row
                     key={`knowledgeRow-${item.id}`}
                     gutter={16}
-            >
-                {/*<Col span={22}>*/}
-                {/*    <Form.Item*/}
-                {/*            key={`knowledge-${item.id}`}*/}
-                {/*            style={{marginBottom: '8px'}}*/}
-                {/*            id={`knowledge-${item.id}`}*/}
-                {/*    >*/}
-                {/*        <JadeScrollSelect*/}
-                {/*                allowClear*/}
-                {/*                placeholder="选择知识库"*/}
-                {/*                id={`valueSource-select-${item.id}`}*/}
-                {/*                onClear={() => handleKnowledgeClear(item.id)}*/}
-                {/*                onChange={(value, options) => handleKnowledgeChange(item.id, 'value', value, options)}*/}
-                {/*                buildUrl={buildUrl}*/}
-                {/*                disabled={false}*/}
-                {/*                getOptions={getOptions}*/}
-                {/*                dealResponse={dealResponse}*/}
-                {/*                value={getValue(item)}*/}
-                {/*        />*/}
-                {/*    </Form.Item>*/}
-                {/*</Col>*/}
-                {/*<Col span={2} style={{paddingLeft: "2px"}}>*/}
-                {/*    <Form.Item key={`button-${item.id}`} style={{marginBottom: '8px'}}>*/}
-                {/*        <Button disabled={getButtonDisable()}*/}
-                {/*                type="text" className="icon-button"*/}
-                {/*                style={{alignItems: "center", marginLeft: "auto"}}*/}
-                {/*                onClick={() => handleDelete(item.id)}>*/}
-                {/*            <MinusCircleOutlined/>*/}
-                {/*        </Button>*/}
-                {/*    </Form.Item>*/}
-                {/*</Col>*/}
-            </Row>))}
-            <KnowledgeConfig disabled={disabled}/>
+                >
+                    {/*<Col span={22}>*/}
+                    {/*    <Form.Item*/}
+                    {/*            key={`knowledge-${item.id}`}*/}
+                    {/*            style={{marginBottom: '8px'}}*/}
+                    {/*            id={`knowledge-${item.id}`}*/}
+                    {/*    >*/}
+                    {/*        <JadeScrollSelect*/}
+                    {/*                allowClear*/}
+                    {/*                placeholder="选择知识库"*/}
+                    {/*                id={`valueSource-select-${item.id}`}*/}
+                    {/*                onClear={() => handleKnowledgeClear(item.id)}*/}
+                    {/*                onChange={(value, options) => handleKnowledgeChange(item.id, 'value', value, options)}*/}
+                    {/*                buildUrl={buildUrl}*/}
+                    {/*                disabled={false}*/}
+                    {/*                getOptions={getOptions}*/}
+                    {/*                dealResponse={dealResponse}*/}
+                    {/*                value={getValue(item)}*/}
+                    {/*        />*/}
+                    {/*    </Form.Item>*/}
+                    {/*</Col>*/}
+                    {/*<Col span={2} style={{paddingLeft: "2px"}}>*/}
+                    {/*    <Form.Item key={`button-${item.id}`} style={{marginBottom: '8px'}}>*/}
+                    {/*        <Button disabled={getButtonDisable()}*/}
+                    {/*                type="text" className="icon-button"*/}
+                    {/*                style={{alignItems: "center", marginLeft: "auto"}}*/}
+                    {/*                onClick={() => handleDelete(item.id)}>*/}
+                    {/*            <MinusCircleOutlined/>*/}
+                    {/*        </Button>*/}
+                    {/*    </Form.Item>*/}
+                    {/*</Col>*/}
+                </Row>))}
+                <KnowledgeConfig disabled={disabled}/>
+            </div>
         </Panel>
     </Collapse>);
 }

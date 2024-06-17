@@ -384,7 +384,7 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
     };
 
     return (
-        <Collapse bordered={false} className="jade-collapse-custom-background-color" defaultActiveKey={["ifPanel"]}>
+        <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["ifPanel"]}>
             {
                 <Panel
                     key={"ifPanel"}
@@ -397,7 +397,9 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
                     }
                     className="jade-panel"
                 >
-                    {renderForm()}
+                    <div className={"jade-custom-panel-content"}>
+                        {renderForm()}
+                    </div>
                 </Panel>
             }
         </Collapse>

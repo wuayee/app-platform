@@ -1,5 +1,5 @@
 import {Collapse, Popover, Form} from "antd";
-import {InfoCircleOutlined} from "@ant-design/icons";
+import {QuestionCircleOutlined} from "@ant-design/icons";
 import React from "react";
 import "./style.css";
 import {JadeObservableTree} from "@/components/common/JadeObservableTree.jsx";
@@ -24,7 +24,7 @@ export default function OutputForm() {
 
     return (
         <Collapse
-            bordered={false} className="jade-collapse-custom-background-color"
+            bordered={false} className="jade-custom-collapse"
             style={{marginTop: "10px", marginBottom: 8, borderRadius: "8px", width: "100%"}}
             defaultActiveKey={['Output']}>
             <Panel
@@ -33,14 +33,16 @@ export default function OutputForm() {
                         style={{display: 'flex', alignItems: 'center', paddingLeft: '-16px'}}>
                         <span className="jade-panel-header-font">输出</span>
                         <Popover content={tips}>
-                            <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                            <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                         </Popover>
                     </div>
                 }
                 className="jade-panel"
                 key='Output'
             >
-                <JadeObservableTree data={outputData}/>
+                <div className={"jade-custom-panel-content"}>
+                    <JadeObservableTree data={outputData}/>
+                </div>
             </Panel>
         </Collapse>
     )

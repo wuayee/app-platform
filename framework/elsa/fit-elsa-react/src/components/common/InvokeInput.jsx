@@ -6,7 +6,7 @@ import {useDispatch} from "@/components/DefaultRoot.jsx";
  *
  * @returns {JSX.Element}
  */
-export default function InvokeInput({inputData}) {
+export default function InvokeInput({inputData, disabled}) {
     const dispatch = useDispatch();
 
     /**
@@ -18,5 +18,6 @@ export default function InvokeInput({inputData}) {
     const updateItem = (id, changes) => {
         dispatch({type: "update", id, changes});
     };
-    return (<JadeCollapseInputTree data={inputData} updateItem={updateItem}/>);
+
+    return (<JadeCollapseInputTree data={inputData} updateItem={updateItem} disabled={disabled}/>);
 }

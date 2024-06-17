@@ -1,5 +1,9 @@
-.jade-collapse-custom-background-color {
+.jade-custom-collapse {
     background-color: transparent; /* 设置背景透明 */
+}
+
+.jade-custom-collapse .ant-collapse-header {
+    padding: 8px !important;
 }
 
 .value-custom, .value-custom .ant-select-selector {
@@ -19,31 +23,33 @@
 }
 
 .jade-panel-header-font {
+    color: rgb(37, 43, 58);
     justify-content: flex-start;
     margin-right: 4px;
-    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-family: HarmonyOS Sans, 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 400;
+    line-height: 14px;
+    letter-spacing: 0;
+    text-align: left;
 }
 
 .jade-panel-header-popover-content {
-    margin-left: 2px;
+    margin-left: 4px;
     color: rgba(28, 31, 35, .35);
-    align-self: flex-start;
-    height: 12px;
-    width: 12px;
+    height: 14px;
+    width: 14px;
 }
 
 .jade-panel {
-    background-color: rgba(247, 248, 249); /* 设置背景颜色 */
+    background-color: rgba(250, 250, 250); /* 设置背景颜色 */
     margin-bottom: 8px !important;
     border-radius: 8px !important;
     width: 100%;
-    padding: 12px;
 }
 
 .jade-panel .ant-collapse-header {
-    padding: 0 !important;
+    padding: 8px !important;
     align-items: center !important;
 }
 
@@ -59,11 +65,17 @@
     width: 24px !important;
     height: 24px !important;
     border: none !important;
+    pointer-events: none;
 }
 
 .jade-form-item .ant-form-item-label > label {
+    color: rgb(77, 77, 77);
+    font-family: Huawei Sans;
     font-size: 12px;
-    color: rgba(28, 31, 35, .35);
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0px;
+    text-align: left;
 }
 
 .jade-font-size, .jade-select .ant-select-selector .ant-select-selection-item, .jade-select .ant-select-item-option, .ant-select-selection-placeholder, .jade-input::placeholder, .ant-select-dropdown .ant-select-item, .ant-tree-select-dropdown .ant-select-tree {
@@ -71,7 +83,7 @@
 }
 
 .jade-font-color {
-    color: rgba(28, 31, 35, .35);
+    color: rgb(77, 77, 77);
 }
 
 .jade-select .ant-select-selector {
@@ -120,15 +132,6 @@
     font-size: 12px;
 }
 
-.jade-top-header-popover-content {
-    margin-left: 2px;
-    margin-top: 6px;
-    color: rgba(28, 31, 35, .35);
-    align-self: flex-start;
-    height: 12px;
-    width: 12px;
-}
-
 .jade-column {
     display: flex;
     align-items: center;
@@ -145,7 +148,7 @@
 }
 
 .title {
-    font-family: SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
     font-size: 14px;
     font-weight: 600;
     margin-right: 4px;
@@ -187,13 +190,53 @@
     background-size: cover !important;
     background-position: center !important;
     padding: 0 !important;
-    margin: 0 0 0 8px !important;
-    width: 24px !important;
-    height: 24px !important;
+    width: 14px !important;
+    height: 14px !important;
     border: none !important;
+    pointer-events: none;
 }
 
-.model-text {
+.jade-node-custom-header-type-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 0 8px !important;
+    width: 24px;
+    height: 24px;
+    background: rgb(230, 242, 255);
+    border-radius: 4px;
+}
+
+.jade-node-custom-header-type-tooltip .ant-tooltip-inner {
+    background-color: white !important;
+    color: rgb(33, 33, 33) !important;
+    font-family: HarmonyOS Sans;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0px;
+    text-align: center;
+}
+
+.jade-node-custom-header-type-tooltip .ant-tooltip-arrow {
+    background: none !important;
+}
+
+.jade-node-custom-header-type-tooltip .ant-tooltip-arrow::before {
+    background-color: white !important; /* 设置箭头的颜色 */
+}
+
+.jade-component-title {
+    color: rgb(37, 43, 58);
+    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 19px;
+    letter-spacing: 0;
+    text-align: left;
+}
+
+.jade-second-title-text {
     color: rgb(77, 77, 77);
     font-family: Huawei Sans;
     font-size: 12px;
@@ -257,10 +300,10 @@
     flex-grow: 1;
 }
 
-.model-select-text {
+.huggingface-light-font {
     color: rgb(128, 128, 128);
     font-family: Huawei Sans;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
     line-height: 32px;
     letter-spacing: 0px;
@@ -288,4 +331,20 @@
     line-height: 32px;
     letter-spacing: -1px;
     text-align: left;
+}
+
+.jade-required-indicator {
+    color: rgb(198, 57, 57);
+    font-family: Huawei Sans;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 18px;
+    letter-spacing: 0px;
+    text-align: left;
+    padding-right: 2px;
+}
+
+.jade-custom-panel-content {
+    border-radius: 8px;
+    padding: 12px;
 }

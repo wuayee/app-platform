@@ -1,5 +1,7 @@
-import {Collapse} from 'antd';
+import {Collapse, Popover} from 'antd';
 import JadeInputTree from "./JadeInputTree.jsx";
+import {QuestionCircleOutlined} from "@ant-design/icons";
+import React from "react";
 
 const {Panel} = Collapse;
 
@@ -8,23 +10,52 @@ const {Panel} = Collapse;
  *
  * @param data 数据.
  * @param updateItem 修改方法.
+ * @param disabled 禁用.
  * @return {JSX.Element}
  * @constructor
  */
-export default function JadeCollapseInputTree({data, updateItem}) {
+export default function JadeCollapseInputTree({data, updateItem, disabled}) {
+    const getContent = () => {
+        const contentItems = data
+            .filter(item => item.description)  // 过滤出有描述的项目
+            .map((item) => (
+                <p key={item.id}>{item.name}: {item.description}</p>
+            ));
+
+        if (contentItems.length === 0) {
+            return null;  // 如果没有内容，返回null
+        }
+
+        return (
+            <div className={"jade-font-size"} style={{ lineHeight: "1.2" }}>
+                <p>参数介绍：</p>
+                {contentItems}
+            </div>
+        );
+    };
+
+    const content = getContent();
+
     return (<>
-        <Collapse bordered={false} className="jade-collapse-custom-background-color"
+        <Collapse bordered={false} className="jade-custom-collapse"
                   defaultActiveKey={["jadeInputTreePanel"]}>
             <Panel
                 key={"jadeInputTreePanel"}
                 header={
                     <div>
                         <span className='jade-panel-header-font'>输入</span>
+                        {content ? (
+                            <Popover content={content}>
+                                <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
+                            </Popover>
+                        ) : null}
                     </div>
                 }
                 className="jade-panel"
             >
-                <JadeInputTree data={data} updateItem={updateItem}/>
+                <div className={"jade-custom-panel-content"}>
+                    <JadeInputTree disabled={disabled} data={data} updateItem={updateItem}/>
+                </div>
             </Panel>
         </Collapse>
     </>);

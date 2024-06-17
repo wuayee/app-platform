@@ -37,6 +37,12 @@ export const configMap = {
                 serviceListEndpoint: "https://jane-beta.huawei.com/api/jober/store/platform/tianzhou/fit/tool/genericables",
                 fitableMetaInfoUrl: "https://jane-beta.huawei.com/api/jober/store/platform/tianzhou/fit/tool/genericables/"
             }
+          },
+          {
+              node: "toolInvokeNodeState",
+              urls: {
+                  versionInfo: "/elsaApi/v1/api/{tenant}/app/published/unique_name/{uniqueName}"
+              }
           }
       ]
   },
@@ -71,6 +77,12 @@ export const configMap = {
               node: "knowledgeState",
               urls: {
                   knowledgeUrl: `${origin}/api/jober/v1/api/727d7157b3d24209aefd59eb7d1c49ff/knowledge?pageNum=1&pageSize=10`
+              }
+          },
+          {
+              node: "toolInvokeNodeState",
+              urls: {
+                  versionInfo: `${origin}/api/jober/v1/api/{tenant}/app/published/unique_name/{uniqueName}`
               }
           }
       ]
@@ -114,6 +126,12 @@ export const configMap = {
                 serviceListEndpoint: "https://jane-beta.huawei.com/api/jober/store/platform/tianzhou/fit/tool/genericables",
                 fitableMetaInfoUrl: "https://jane-beta.huawei.com/api/jober/store/platform/tianzhou/fit/tool/genericables/"
             }
+          },
+          {
+              node: "toolInvokeNodeState",
+              urls: {
+                  versionInfo: `${origin}/api/jober/v1/api/{tenant}/app/published/unique_name/{uniqueName}`
+              }
           }
       ]
   },
@@ -154,6 +172,12 @@ export const configMap = {
               urls: {
                   serviceListEndpoint: "https://tzaip-beta.paas.huawei.com",
                   fitableMetaInfoUrl: "http://10.91.144.110:8080"
+              }
+          },
+          {
+              node: "toolInvokeNodeState",
+              urls: {
+                  versionInfo: `${origin}/api/jober/v1/api/{tenant}/app/published/unique_name/{uniqueName}`
               }
           }
       ]

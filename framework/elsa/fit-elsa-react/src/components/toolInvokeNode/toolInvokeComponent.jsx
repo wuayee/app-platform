@@ -21,13 +21,11 @@ export const toolInvokeComponent = (jadeConfig) => {
     };
 
     /**
-     * 获取当前节点的所有组件
-     *
-     * @return {JSX.Element}
+     * @override
      */
-    self.getReactComponents = () => {
+    self.getReactComponents = (disabled) => {
         return (<>
-            <ToolInvokeFormWrapper/>
+            <ToolInvokeFormWrapper disabled={disabled}/>
         </>);
     };
 

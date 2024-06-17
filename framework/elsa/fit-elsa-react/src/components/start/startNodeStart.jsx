@@ -1,9 +1,8 @@
 import {jadeNode} from "@/components/jadeNode.jsx";
-import {Button} from "antd";
 import {DIRECTION} from "@fit-elsa/elsa-core";
-import StartIcon from '../asserts/icon-start.svg?react'; // 导入背景图片
 import "./style.css";
-import {NODE_STATUS, SECTION_TYPE} from "@/common/Consts.js";
+import {SECTION_TYPE} from "@/common/Consts.js";
+import {startNodeDrawer} from "@/components/start/startNodeDrawer.jsx";
 
 /**
  * jadeStream中的流程启动节点.
@@ -11,7 +10,7 @@ import {NODE_STATUS, SECTION_TYPE} from "@/common/Consts.js";
  * @override
  */
 export const startNodeStart = (id, x, y, width, height, parent, drawer) => {
-    const self = jadeNode(id, x, y, width, height, parent, drawer);
+    const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : startNodeDrawer);
     self.type = "startNodeStart";
     self.text = "开始";
     self.pointerEvents = "auto";
@@ -29,19 +28,6 @@ export const startNodeStart = (id, x, y, width, height, parent, drawer) => {
     self.initConnectors = () => {
         initConnectors.apply(self);
         self.connectors.remove(c => c.direction.key === DIRECTION.W.key);
-    };
-
-    /**
-     * 开始节点header只显示重命名选项
-     *
-     * @override
-     */
-    self.getToolMenus = () => {
-        return [{
-            key: '1', label: "重命名", action: (setEdit) => {
-                setEdit(true);
-            }
-        }];
     };
 
     /**
@@ -77,26 +63,6 @@ export const startNodeStart = (id, x, y, width, height, parent, drawer) => {
             type: SECTION_TYPE.DEFAULT,
             data: self.getOutputData(self.input)
         }];
-    };
-
-    /**
-     * @override
-     */
-    self.getHeaderIcon = () => {
-        return (
-                <Button
-                        disabled={true}
-                        className="jade-node-custom-header-icon"
-                >
-                    <StartIcon/>
-                </Button>
-        );
-    };
-
-    /**
-     * @override
-     */
-    self.getHeaderTypeIcon = () => {
     };
 
     return self;
