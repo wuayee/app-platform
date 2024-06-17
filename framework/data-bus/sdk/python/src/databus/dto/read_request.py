@@ -30,7 +30,7 @@ class ReadRequest:
         self.is_operating_user_data = is_operating_user_data
 
     def validation(self):
-        if self.offset < 0 or (self.size and self.size <= 0):
+        if self.offset < 0 or (self.size and self.size < 0):
             raise ValueError("Invalid input parameter: {}.".format(
                 f"offset is {self.offset}" if self.offset < 0 else f"size is {self.size}"
             ))

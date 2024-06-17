@@ -96,7 +96,7 @@ public class OpenAiMessageUtils {
         Object content = getMessageContent(inputMessage);
 
         return new OpenAiChatMessage(
-                Role.generateRole(inputMessage.getType()),
+                Role.generateRole(inputMessage.type()),
                 content,
                 toolCallId,
                 toolCalls);

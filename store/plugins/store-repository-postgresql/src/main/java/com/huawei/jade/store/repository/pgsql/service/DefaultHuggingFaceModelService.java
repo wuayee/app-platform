@@ -5,13 +5,15 @@
 package com.huawei.jade.store.repository.pgsql.service;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.jade.store.repository.pgsql.util.SerializerUtils.json2obj;
+import static com.huawei.jade.carver.util.SerializeUtils.json2obj;
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.MapBuilder;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.store.entity.query.ModelQuery;
 import com.huawei.jade.store.entity.transfer.ModelData;
 import com.huawei.jade.store.repository.pgsql.entity.ModelDo;
@@ -21,6 +23,7 @@ import com.huawei.jade.store.service.HuggingFaceModelService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 任务的 Http 请求的服务层实现。
@@ -57,7 +60,13 @@ public class DefaultHuggingFaceModelService implements HuggingFaceModelService {
                 modelData.setTaskName(modelDo.getTaskName());
                 modelData.setName(modelDo.getName());
                 modelData.setUrl(modelDo.getUrl());
-                modelData.setContext(json2obj(modelDo.getContext(), this.serializer));
+                Map<String, Object> context = json2obj(modelDo.getContext(), this.serializer);
+                modelData.setContext(MapBuilder.<String, Object>get()
+                        .put("likes", context.containsKey("likes") ? context.get("likes") : 0)
+                        .put("downloads", context.containsKey("downloads") ? context.get("downloads") : 0)
+                        .put("description",
+                                context.containsKey("description") ? context.get("description") : StringUtils.EMPTY)
+                        .build());
                 modelDataList.add(modelData);
             }
         }

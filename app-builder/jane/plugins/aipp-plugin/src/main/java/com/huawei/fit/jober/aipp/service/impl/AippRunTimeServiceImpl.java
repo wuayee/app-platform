@@ -333,7 +333,10 @@ public class AippRunTimeServiceImpl
 
     private void persistAippLog(Map<String, Object> businessData) {
         String question = (String) businessData.get(AippConst.BS_AIPP_QUESTION_KEY);
-        String fileDesc = (String) businessData.get(AippConst.BS_AIPP_FILE_DESC_KEY);
+        String fileDesc =
+                businessData.containsKey(AippConst.BS_AIPP_FILE_DESC_KEY) ? JsonUtils.toJsonString(businessData.get(
+                        AippConst.BS_AIPP_FILE_DESC_KEY)) : StringUtils.EMPTY;
+        // 持久化日志
         if (StringUtils.isEmpty(fileDesc)) {
             if (this.isChildInstance(businessData)) {
                 // 如果是子流程，插入 hidden_question
@@ -358,6 +361,7 @@ public class AippRunTimeServiceImpl
                     AippInstLogType.FILE.name(),
                     AippLogData.builder().msg(fileDesc).build(),
                     businessData);
+            businessData.put(AippConst.BS_AIPP_QUESTION_KEY, DEFAULT_QUESTION);
         }
     }
 

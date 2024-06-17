@@ -133,6 +133,11 @@ public class MilvusVectorConnector implements VectorConnector {
      */
     @Override
     public List<Pair<Map<String, Object>, Float>> get(VectorQuery query, VectorConfig conf) {
+        return get(query, conf, null);
+    }
+
+    @Override
+    public List<Pair<Map<String, Object>, Float>> get(VectorQuery query, VectorConfig conf, Float threshold) {
         Validation.notNull(query, "The vector query cannot be null.");
         Validation.notNull(conf, "The vector conf cannot be null.");
 
@@ -158,8 +163,11 @@ public class MilvusVectorConnector implements VectorConnector {
         List<SearchResultsWrapper.IDScore> scores = wrapper.getIDScore(0);
 
         for (SearchResultsWrapper.IDScore s : scores) {
-            result.add(new Pair<>(s.getFieldValues(),
-                    ScoreNormalizer.process(s.getScore(), conf.getMetricType(), conf.isShouldNormalizeScore())));
+            Float score = ScoreNormalizer.process(s.getScore(), conf.getMetricType(), conf.isShouldNormalizeScore());
+            if (threshold != null && score < threshold) {
+                continue;
+            }
+            result.add(new Pair<>(s.getFieldValues(), score));
         }
         return result;
     }
@@ -341,6 +349,13 @@ public class MilvusVectorConnector implements VectorConnector {
         }
     }
 
+    /**
+     * 依据param进行遍历查询。
+     *
+     * @param query 承载查询所需相关信息 {@link QueryParams}
+     * @param conf 表示配置信息的 {@link VectorConfig}。
+     * @return 返回查询到的结果数据 {列名 : 内容}
+     */
     @Override
     public List<Map<String, Object>> scalarQuery(QueryParams query, VectorConfig conf) {
         R<QueryResults> response = milvusClient.query(QueryParam.newBuilder()

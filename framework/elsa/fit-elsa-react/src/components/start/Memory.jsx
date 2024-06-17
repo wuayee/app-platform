@@ -109,7 +109,7 @@ export default function Memory({config, disabled}) {
             // { value: 'ByNumber', label: '按条数' },
             // { value: 'ByTokenSize', label: '按Token大小' },
             // { value: 'ByTime', label: '按时间' },
-            { value: 'Customizing', label: '自定义' },
+            // { value: 'Customizing', label: '自定义' },
             { value: 'NotUseMemory', label: '不使用历史记录' }
         ];
 

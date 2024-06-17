@@ -43,4 +43,11 @@ public interface AippLogMapper {
     void updateOne(Long logId, String newLogData);
 
     String getParentPath(String parentId);
+
+    /**
+     * 删除指定实例的历史记录。
+     *
+     * @param instanceId 指定实例的 id。
+     */
+    void deleteInstanceLog(String instanceId);
 }

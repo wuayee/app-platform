@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form }from 'antd';
+import { Form } from 'antd';
 import { Button, Input, Radio, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useSearchParams } from "react-router-dom";
@@ -40,28 +40,28 @@ const KnowledgeBaseCreate = () => {
   const [loading, setLoading] = useState(false);
 
   // 团队列表
-  const groupList =[{ value: 'storage', label: '存储团队' }]
+  const groupList = [{ value: 'storage', label: '存储团队' }]
 
   const formItemLayout =
     formLayout === 'horizontal' ? { labelCol: { span: 4 }, wrapperCol: { span: 14 } } : null;
 
-  const submit = ()=> {
+  const submit = () => {
     form.submit();
   }
   const onFinish = async (value: FieldType) => {
     // loading状态点击不触发，禁止多次触发提交
-    if(loading) return;
+    if (loading) return;
     await modifyData(value);
   }
 
   // 知识库创建修改
-  const modifyData = async (value: FieldType)=> {
+  const modifyData = async (value: FieldType) => {
     setLoading(true)
     try {
-      if(id) {
-        await modifyKnowledgeBase({name: value.knowledgeName, description: value.knowledgeDesc, id})
+      if (id) {
+        await modifyKnowledgeBase({ name: value.knowledgeName, description: value.knowledgeDesc, id })
       } else {
-        await createKnowledgeBase({name: value.knowledgeName, description: value.knowledgeDesc, owner: '1'})
+        await createKnowledgeBase({ name: value.knowledgeName, description: value.knowledgeDesc, owner: '1' })
       }
       navigate('/knowledge-base')
 
@@ -82,7 +82,7 @@ const KnowledgeBaseCreate = () => {
         knowledgeDesc: res?.description,
       })
     } catch (error) {
-      
+
     }
   }
 
@@ -90,98 +90,109 @@ const KnowledgeBaseCreate = () => {
   const navigate = useNavigate()
 
   // 取消提交
-  const onCancle = ()=> {
+  const onCancle = () => {
     navigate('/knowledge-base')
   }
 
-  useEffect(()=> {
-    if(id) {
+  useEffect(() => {
+    if (id) {
       getKnowledgeBase(id);
     }
   }, [])
 
   return (
     <>
-    <div className='aui-fullpage' style={{
-      height: 'calc(100vh - 100px)'
-    }}>
-    <div className='aui-header-1'>
-      <div className='aui-title-1'>
-        <BreadcrumbSelf currentLabel={id ? '修改知识库': '创建知识库'}></BreadcrumbSelf>
-      </div>
-    </div>
-      <div className='aui-block' style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between'
+      <div className='aui-fullpage' style={{
+        height: 'calc(100vh - 100px)'
       }}>
-        <div style={{
-          width: '100%',
-          flex:1,
-          background: '#fff',
-          borderRadius: '8px 8px 0px 0px',
-          padding: '24px 24px 0 25px',
-        }}>
-           <Form<FieldType>
-            {...formItemLayout}
-            layout={formLayout}
-            form={form}
-            initialValues={initialValues}
-            onFinish={onFinish}
-            style={{ maxWidth: formLayout === 'inline' ? 'none' : 800 }}
-          >
-            <Form.Item label="个人/团队"  name = 'knowledgeType'>
-              <Radio.Group size="large" style={{
-                display: 'flex',
-                justifyContent: 'space-between'
-              }}>
-                <Radio.Button style={{
-                  width: 391,
-                  height: 40,
-                  borderRadius: 4,
-                }} value="user"> {<Icons.user></Icons.user>}  个人</Radio.Button>
-                <Radio.Button className='userGroup' value="userGroup" style={{
-                  width: 391,
-                  height: 40,
-                  borderRadius: 4,
-                }} 
-                // 禁用团队选择
-                disabled={true}
-                >{<Icons.userGroup></Icons.userGroup>}  团队</Radio.Button>
-              </Radio.Group>
-            </Form.Item>
-            {knowledgeType === 'userGroup' ? (
-              <>
-                <Form.Item label="知识库团队" rules={[{ required: true, message: '选择不能为空' }]} name = 'knowledgeGroup'>
-                  <Select options={groupList} allowClear/>
-                </Form.Item>
-              </>
-            ) : ''}
-            
-            <Form.Item label="知识库名称" rules={[{ required: true, message: '输入不能为空' }]} name = 'knowledgeName'>
-              <Input placeholder='请输入'/>
-            </Form.Item>
-            <Form.Item label="知识库描述" rules={[{ required: true, message: '输入不能为空' }]} name = 'knowledgeDesc'>
-              <Input.TextArea size='large' autoSize={{ minRows: 2, maxRows: 6 }} placeholder='请输入'/>
-            </Form.Item>
-
-          </Form>
+        <div className='aui-header-1'>
+          <div className='aui-title-1'>
+            <BreadcrumbSelf currentLabel={id ? '修改知识库' : '创建知识库'}></BreadcrumbSelf>
+          </div>
         </div>
-        <div style={{
+        <div className='aui-block' style={{
           display: 'flex',
-          justifyContent: 'end',
-          gap: 16,
+          flexDirection: 'column',
+          justifyContent: 'space-between'
         }}>
-          <Button onClick={onCancle} style={{
-            borderRadius: 4,
-          }}>取消</Button>
-          <Button type="primary" loading={loading} onClick={submit} style={{
-            borderRadius: 4,
-          }}>确定</Button>
+          <div style={{
+            width: '100%',
+            flex: 1,
+            background: '#fff',
+            borderRadius: '8px 8px 0px 0px',
+            padding: '24px 24px 0 25px',
+          }}>
+            <Form<FieldType>
+              {...formItemLayout}
+              layout={formLayout}
+              form={form}
+              initialValues={initialValues}
+              onFinish={onFinish}
+              style={{ maxWidth: formLayout === 'inline' ? 'none' : 800 }}
+            >
+              <Form.Item label="个人/团队" name='knowledgeType'>
+                <Radio.Group size="large" style={{
+                  display: 'flex',
+                  justifyContent: 'space-between'
+                }}>
+                  <Radio.Button style={{
+                    width: 391,
+                    height: 40,
+                    borderRadius: 4,
+                  }} value="user"> {<Icons.user></Icons.user>}  个人</Radio.Button>
+                  <Radio.Button className='userGroup' value="userGroup" style={{
+                    width: 391,
+                    height: 40,
+                    borderRadius: 4,
+                  }}
+                    // 禁用团队选择
+                    disabled={true}
+                  >{<Icons.userGroup></Icons.userGroup>}  团队</Radio.Button>
+                </Radio.Group>
+              </Form.Item>
+              {knowledgeType === 'userGroup' ? (
+                <>
+                  <Form.Item label="知识库团队" rules={[{ required: true, message: '选择不能为空' }]} name='knowledgeGroup'>
+                    <Select options={groupList} allowClear />
+                  </Form.Item>
+                </>
+              ) : ''}
+
+              <Form.Item
+                label="知识库名称"
+                rules={[
+                  { required: true, message: '输入不能为空' },
+                  {
+                    type: 'string',
+                    max: 64,
+                    message: '输入字符长度范围：1 - 64'
+                  }
+                ]}
+                name='knowledgeName'
+              >
+                <Input placeholder='请输入' />
+              </Form.Item>
+              <Form.Item label="知识库描述" rules={[{ required: true, message: '输入不能为空' }]} name='knowledgeDesc'>
+                <Input.TextArea size='large' autoSize={{ minRows: 2, maxRows: 6 }} placeholder='请输入' />
+              </Form.Item>
+
+            </Form>
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'end',
+            gap: 16,
+          }}>
+            <Button onClick={onCancle} style={{
+              borderRadius: 4,
+            }}>取消</Button>
+            <Button type="primary" loading={loading} onClick={submit} style={{
+              borderRadius: 4,
+            }}>确定</Button>
+          </div>
+          <div />
         </div>
-        <div />
       </div>
-    </div>
 
     </>
   )

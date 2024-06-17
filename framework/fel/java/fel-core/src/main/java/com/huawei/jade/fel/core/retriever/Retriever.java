@@ -4,6 +4,8 @@
 
 package com.huawei.jade.fel.core.retriever;
 
+import com.huawei.jade.fel.core.Pattern;
+
 /**
  * 检索算子。
  *
@@ -12,12 +14,4 @@ package com.huawei.jade.fel.core.retriever;
  * @since 2024-04-28
  */
 @FunctionalInterface
-public interface Retriever<I, O> {
-    /**
-     * 检索内容。
-     *
-     * @param input 表示输入参数的 {@link I}。
-     * @return 表示输出数据的 {@link O}。
-     */
-    O invoke(I input);
-}
+public interface Retriever<I, O> extends Pattern<I, O> {}

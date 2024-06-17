@@ -46,6 +46,11 @@ public class KbChunkSearchDto {
     private String content;
 
     /**
+     * 仅表格查询场景生效，是否进行向量检索
+     */
+    private Boolean isVectorSearch = false;
+
+    /**
      * 是否使用 content 进行模糊查询
      */
     private Boolean isFuzzySearch;
@@ -58,7 +63,7 @@ public class KbChunkSearchDto {
     /**
      * 阈值
      */
-    private Integer threshold;
+    private Float threshold;
 
     /**
      * 列

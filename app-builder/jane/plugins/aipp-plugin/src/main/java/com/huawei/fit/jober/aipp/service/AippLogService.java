@@ -105,4 +105,11 @@ public interface AippLogService {
     List<AippInstLogDataDto> queryRecentLogsSinceResume(String aippId, String aippType, OperationContext context);
 
     String getParentPath(String parentInstId);
+
+    /**
+     * 删除指定实例的历史记录。
+     *
+     * @param instanceId 指定实例的 id。
+     */
+    void deleteInstanceLog(String instanceId);
 }

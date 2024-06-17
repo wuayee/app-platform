@@ -7,6 +7,7 @@ package com.huawei.fit.jober.taskcenter.validation.impl;
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
+import com.huawei.fit.jober.common.utils.VersionUtils;
 import com.huawei.fit.jober.taskcenter.fitable.util.ParamUtils;
 import com.huawei.fit.jober.taskcenter.validation.AbstractValidator;
 import com.huawei.fit.jober.taskcenter.validation.TaskValidator;
@@ -34,12 +35,13 @@ public class TaskValidatorImpl extends AbstractValidator implements TaskValidato
 
     @Override
     public String validateName(String name, OperationContext context) {
-        if (StringUtils.isEmpty(name)) {
+        String realName = VersionUtils.getRealName(name);
+        if (StringUtils.isEmpty(realName)) {
             throw new BadRequestException(ErrorCodes.TASK_NAME_REQUIRED, ParamUtils.convertOperationContext(context));
-        } else if (name.length() > this.nameLengthMaximum) {
+        } else if (realName.length() > this.nameLengthMaximum) {
             throw new BadRequestException(ErrorCodes.TASK_NAME_LENGTH_OUT_OF_BOUNDS,
                     ParamUtils.convertOperationContext(context));
-        } else if (name.length() < this.nameLengthMinimum) {
+        } else if (realName.length() < this.nameLengthMinimum) {
             throw new BadRequestException(ErrorCodes.TASK_NAME_LENGTH_LESS_THAN_BOUNDS,
                     ParamUtils.convertOperationContext(context));
         } else {
