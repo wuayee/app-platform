@@ -113,7 +113,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           }}
         >
           <div className='app-title-left'>
-            <span>创建大模型服务</span>
+            <span>{modifyData ? '修改' : '创建'}大模型服务</span>
           </div>
           <CloseOutlined style={{ fontSize: 12 }} onClick={() => setOpen(false)} />
         </div>
@@ -205,7 +205,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
         }}
       >
         <Button type='primary' onClick={() => deployModel()}>
-          部署模型
+          {modifyData ? '修改' : '部署模型'}
         </Button>
         <Button onClick={() => setOpen(false)}>取消</Button>
       </div>
