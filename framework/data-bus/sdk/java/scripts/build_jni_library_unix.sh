@@ -4,10 +4,10 @@
 # 创建动态链接库目标目录
 mkdir -p src/main/resources/jni
 
-if [ "${PLATFORM}" = "arm_64" ]; then
-    databus_compiler="aarch64-linux-gnu-g++"
-else
+if [ "${PLATFORM}" = "x86_64" ]; then
     databus_compiler="g++"
+else
+    databus_compiler="aarch64-linux-gnu-g++"
 fi
 
 # 编译源文件并生成目标文件
