@@ -145,7 +145,7 @@ export default function JadeInputTree({data, updateItem, disabled}) {
     const getOptions = (node) => {
         switch (node.type) {
             case "Object":
-                if (node.hasOwnProperty("generic")) {
+                if (node.hasOwnProperty("generic") || node.props === undefined) {
                     return [{value: "Reference", label: "引用"}, {value: "Input", label: "输入"}];
                 } else {
                     return [{value: "Reference", label: "引用"},
