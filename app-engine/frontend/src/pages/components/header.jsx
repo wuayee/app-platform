@@ -16,7 +16,6 @@ const ChoreographyHead = (props) => {
   } = props;
   const [ currentTime, setCurrentTime ] = useState('');
   const [ open, setOpen ] = useState(false);
-  const [ versionList, setVersionList ] = useState([]);
   let modalRef = React.createRef();
   let editRef = React.createRef();
   const { tenantId, appId } = useParams();
@@ -45,11 +44,6 @@ const ChoreographyHead = (props) => {
   }
   const versionDetail = () => {
     setOpen(true);
-    setVersionList([
-      { name: '1.0.7', desc: '这个版本优化了llm节点，使大模型可以快速回答出精准的内容。', user: '林靖峰', time: '2024-06-07 14:23:12' },
-      { name: '1.0.7', desc: '这个版本优化了llm节点，使大模型可以快速回答出精准的内容。', user: '林靖峰', time: '2024-06-07 14:23:12' },
-      { name: '1.0.7', desc: '这个版本优化了llm节点，使大模型可以快速回答出精准的内容。', user: '林靖峰', time: '2024-06-07 14:23:12' }
-    ]);
   }
   return <>{(
     <div className="app-header">
@@ -74,21 +68,22 @@ const ChoreographyHead = (props) => {
             <div className="status-tag">
               <img src='/src/assets/images/ai/publish.png' />
               <span>未发布</span>
+              <span className="version">V{appInfo.version}</span>
             </div>
           )
         }
         { showTime && <span>自动保存：{currentTime}</span> }
       </div>
       <div className="header-grid">
-        {/* <span className="history" onClick={versionDetail}>
+        <span className="history" onClick={versionDetail}>
           <img src='/src/assets/images/ai/time.png' />
-        </span> */}
+        </span>
         { appInfo.state === 'active' && <span className="history robot" onClick={chatClick}><img src='/src/assets/images/ai/robot.png' />去聊天</span> }
         <span className="header-btn" onClick={modalClick}>发布</span>
       </div>
       <PublishModal modalRef={modalRef} appInfo={appInfo} publishType="app" />
       <EditModal modalRef={editRef} appInfo={appInfo} updateAippCallBack={updateAippCallBack}/>
-      <TimeLineDrawer open={open} setOpen={setOpen} list={versionList} />
+      <TimeLineDrawer open={open} setOpen={setOpen} tenantId={tenantId}  appId={appId} />
     </div>
   )} </>;
 };

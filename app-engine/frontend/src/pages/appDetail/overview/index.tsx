@@ -1,7 +1,7 @@
 import { Button, Divider, Flex, Input, Switch, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import './style.scoped.scss';
-import { getAppInfo } from '../../../shared/http/aipp';
+import { getAppInfo, getAppInfoByVersion } from '@shared/http/aipp';
 import { Message } from '../../../shared/utils/message';
 import { useNavigate, useParams } from 'react-router';
 import { AppIcons } from '../../../components/icons/app';
@@ -32,8 +32,12 @@ const AppOverview: React.FC = () => {
   }, [])
 
   const gotoArrange = () => {
-    dispatch(setAppInfo({}));
-    navigate(`/app-develop/${tenantId}/app-detail/${appId}`);
+    getAppInfoByVersion(tenantId, appId).then(res => {
+      if (res.code === 0) {
+        dispatch(setAppInfo({}));
+        navigate(`/app-develop/${tenantId}/app-detail/${appId}`);
+      }
+    })
   }
 
   return (
@@ -48,7 +52,7 @@ const AppOverview: React.FC = () => {
           }
 
             <Flex vertical gap='middle'>
-              <h3>{detail?.name || 'Test AppName'}</h3>
+              <h3 className="detail-name">{detail?.name || 'Test AppName'}</h3>
               <Flex gap={20}>
                 <Flex gap='small' align='center'>
                   <AvatarIcon />

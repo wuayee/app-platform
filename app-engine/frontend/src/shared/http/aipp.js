@@ -35,6 +35,10 @@ export function createAipp(tenantId, appId, params) {
 export function getAppInfo(tenantId, appId) {
   return get(`${AIPP_URL}/${tenantId}/app/${appId}`);
 }
+// 点击去编排
+export function getAppInfoByVersion(tenantId, appId) {
+  return get(`${AIPP_URL}/${tenantId}/app/${appId}/latest_orchestration`);
+}
 // 更新应用全部详情
 export function updateAppInfo(tenantId, appId, params) {
   return put(`${AIPP_URL}/${tenantId}/app/${appId}`, params);
@@ -121,5 +125,11 @@ export function startInstance(tenantId, appId, params) {
 export function reTestInstance(tenantId, aippId, instanceId, version) {
   return get(
     `${AIPP_URL}/${tenantId}/aipp/${aippId}/instances/${instanceId}/runtime?version=${version}`
+  );
+}
+// 获取版本历史记录
+export function getVersion(tenantId, aippId) {
+  return get(
+    `${AIPP_URL}/${tenantId}/app/${aippId}/recentPublished`
   );
 }
