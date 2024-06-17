@@ -61,10 +61,11 @@ class VllmEngine:
 
     async def generate(self, vllm_request: ChatCompletionRequest, raw_request) -> Union[
         ErrorResponse, AsyncGenerator[str, None]]:
+        if not vllm_request.tools:
+            vllm_request.tool_choice = None
         messages = vllm_request.messages
-        if vllm_request.tool_choice:
+        if vllm_request.tool_choice == "auto":
             messages = preprocess_fncall_messages(self.fn_call_model, vllm_request.messages)  # 预处理函数调用信息拼接
-        if vllm_request.tools:
             messages = prepend_tools_system(self.fn_call_model, messages, vllm_request.tools)
         if isinstance(vllm_request.stop, str):
             vllm_request.stop = [vllm_request.stop]
@@ -97,14 +98,18 @@ class VllmEngine:
                                                 request_id, token_ids,
                                                 lora_request)
 
+        tool_stream = False
+
         pretext = ''
         if vllm_request.stream and vllm_request.tool_choice == "auto":
             pretext = await self._get_pretext(result_generator)
             if self.fn_call_model.fn_name in pretext:
-                vllm_request.stream = False
+                tool_stream = True
 
         # Streaming response
         if vllm_request.stream:
+            if tool_stream:
+                return self._chat_completion_stream_tool_generator(vllm_request, result_generator, request_id)
             return self._chat_completion_stream_generator(
                 vllm_request, pretext, result_generator, request_id)
         else:
@@ -163,6 +168,43 @@ class VllmEngine:
             usage=usage,
         )
         return response
+
+    async def _chat_completion_stream_tool_generator(
+            self, request: ChatCompletionRequest,
+            result_generator: AsyncIterator, request_id: str
+    ) -> Union[ErrorResponse, AsyncGenerator[str, None]]:
+        data = None
+        final_res = None
+        model_name = request.model
+        created_time = int(time.monotonic())
+        chunk_object_type = "chat.completion.chunk"
+
+        # Send first response for each request.n (index) with the role / 对于每个生成序列创建一个流
+        previous_num_tokens = [0] * request.n
+
+        async for res in result_generator:
+            final_res = res
+
+        for output in final_res.outputs:
+            i = output.index
+
+            delta_text = output.text
+            previous_num_tokens[i] = len(output.token_ids)
+
+            if output.finish_reason is not None:
+                prompt_tokens = len(final_res.prompt_token_ids)
+                final_usage = await self._create_usage(prompt_tokens=prompt_tokens,
+                                                       previous_num_tokens=previous_num_tokens[i])
+                choice_data = await self._create_tool_choice_data(role=None, index=i, delta_text=delta_text,
+                                                                  finish_reason=output.finish_reason)
+                chunk = await self._create_chunk(request_id=request_id, chunk_object_type=chunk_object_type,
+                                                 created_time=created_time, choice_data=choice_data,
+                                                 model_name=model_name)
+                chunk.usage = final_usage
+                data = chunk.model_dump_json(exclude_unset=True, exclude_none=True)
+
+            yield f"data: {data}\n\n"
+        yield "data: [DONE]\n\n"
 
     async def _chat_completion_stream_generator(
             self, request: ChatCompletionRequest, pretext: str,
@@ -237,6 +279,12 @@ class VllmEngine:
         return ChatCompletionResponseStreamChoice(
             index=index,
             delta=DeltaMessage(role=role, content=delta_text),
+            finish_reason=finish_reason)
+
+    async def _create_tool_choice_data(self, role, index, delta_text, finish_reason):
+        return ChatCompletionResponseStreamChoice(
+            index=index,
+            delta=postprocess_fncall_messages(self.fn_call_model, ChatMessage(role=role, content=delta_text)),
             finish_reason=finish_reason)
 
     async def _create_chunk(self, request_id, chunk_object_type, created_time, choice_data, model_name):
