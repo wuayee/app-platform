@@ -4,17 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
 import { getPlugins } from '@shared/http/plugin';
-import { getWaterFlows } from "@shared/http/appBuilder";
-import { ConfigFormContext } from '../../../aippIndex/context';
 import AddSkill from '../../../addFlow/components/tool-modal';
 
 const Skill = (props) => {
   const { pluginData, updateData } = props;
   const [ skillList, setSkillList] = useState([]);
   const [ showModal, setShowModal ] = useState(false);
-  const { tenantId } = useContext(ConfigFormContext);
   const navigate=useNavigate();
-  const modalRef = useRef();
   const pluginMap = useRef([]);
 
   useEffect(() => {
@@ -52,42 +48,25 @@ const Skill = (props) => {
   const getPluginList = ()=> {
     getPlugins({ pageNum: 0, pageSize: 1000, includeTags: 'FIT', })
       .then(({ data }) => {
-        setSkillArr(data, 'tool');
-        handleGetWaterFlows();
+        setSkillArr(data);
       })
   }
-  // 获取工具流列表
-  const handleGetWaterFlows = () => {
-    getWaterFlows({ pageNum: 0, pageSize: 100, tenantId }).then(async (res) => {
-      if (res.code === 0) {
-        let list = res.data.map(item => {
-          return {
-            appId: item.appId,
-            tenantId: item.tenantId,
-            version: item.version,
-            ...item.itemData
-          }
-        });
-        setSkillArr(list, 'workflow');
-        setSkillList([...pluginMap.current]);
-      }
-    })
-  }
   // 回显设置
-  const setSkillArr = (data, type) => {
+  const setSkillArr = (data) => {
     data.forEach(item => {
       if (pluginData.includes(item.uniqueName) ) {
         let obj = {
           uniqueName: item.uniqueName,
           name: item.name,
           tags: item.tags,
-          type,
+          type: item.tags.includes('WATERFLOW') ? 'workflow' : 'tool',
           appId: item.appId || '',
           tenantId: item.tenantId || '',
         };
         pluginMap.current.push(obj);
       }
-    })
+    });
+    setSkillList([...pluginMap.current]);
   }
   // 工具流详情
   const workflowDetail = (item) => {

@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { getAddFlowConfig, getWaterFlows } from '@shared/http/appBuilder';
+import { getAddFlowConfig } from '@shared/http/appBuilder';
 import { categoryItems } from '../../configForm/common/common';
 import { handleClickAddToolNode } from '../utils';
 import ToolCard from './tool-card';
