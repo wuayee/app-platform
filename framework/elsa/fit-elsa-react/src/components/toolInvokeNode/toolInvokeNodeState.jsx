@@ -36,7 +36,7 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
      * @param callback 回调.
      */
     self.fetchVersionInfo = (callback) => {
-        const url = self.graph.getConfig(self.type)?.urls?.versionInfo;
+        const url = self.graph.getConfig(self)?.urls?.versionInfo;
         if (!url) {
             return;
         }

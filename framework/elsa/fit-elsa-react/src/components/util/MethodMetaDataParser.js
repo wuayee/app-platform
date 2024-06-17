@@ -132,7 +132,7 @@ export const convertParameter = param => {
         type: param.property.type === 'object' ? 'Object' : param.property.type.capitalize(),
         description: param.property.description,
         // 对象默认展开，map直接为引用
-        from: param.property.type === 'object' ? (isMap ? 'Reference' : 'Expand') : 'Reference',
+        from: param.property.type === 'object' ? (!isMap && param.property.properties ? 'Expand' : 'Reference') : 'Reference',
         isRequired: param.isRequired,
         referenceNode: "",
         referenceId: "",
@@ -143,8 +143,8 @@ export const convertParameter = param => {
         result.generic = "Map";
     }
 
-    // 如果入参为map，则不进行属性展开
-    if (param.property.type === 'object' && !isMap) {
+    // 如果入参为map，或者properties为空，则不进行属性展开
+    if (param.property.type === 'object' && !isMap && param.property.properties) {
         const properties = param.property.properties;
         result.value = Object.keys(properties).map(key => {
             return convertParameter({
