@@ -525,9 +525,29 @@ uint64_t ResourceManager::GetCurMallocSize() const
     return curMallocSize_;
 }
 
-int32_t ResourceManager::GetMemoryId(const std::string &objectKey)
+int32_t ResourceManager::GetMemoryId(const std::string& objectKey)
 {
     return keyToSharedMemoryId_.find(objectKey) == keyToSharedMemoryId_.end() ? -1 : keyToSharedMemoryId_[objectKey];
+}
+
+bool ResourceManager::IsZeroMemory(const std::string& objectKey)
+{
+    return zeroMemoryUserData_.find(objectKey) != zeroMemoryUserData_.end();
+}
+
+void ResourceManager::AddZeroMemoryUserData(const std::string& objectKey, const std::shared_ptr<UserData>& userDataPtr)
+{
+    zeroMemoryUserData_[objectKey] = userDataPtr;
+}
+
+const std::shared_ptr<UserData>& ResourceManager::GetZeroMemoryUserData(const std::string& objectKey)
+{
+    return zeroMemoryUserData_[objectKey];
+}
+
+void ResourceManager::RemoveZeroMemoryUserData(const std::string& objectKey)
+{
+    zeroMemoryUserData_.erase(objectKey);
 }
 
 int32_t ResourceManager::GetMemoryApplicant(int sharedMemoryId)
