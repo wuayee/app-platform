@@ -69,6 +69,9 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     private static final String PROMPT_TEMPLATE = "{{1}}";
     private static final String CALLBACK_ID = "com.huawei.fit.jober.aipp.fitable.LLMComponentCallback";
     private static final String AGENT_NODE_ID = "agent";
+    private static final String DEFAULT_FILE_PROMPT_PREFIX =
+            "如果问题中包含\"请解析以下文件\"，请调用工具**a933a223-6722-f940-98da-57bf22899868**来处理这个任务，例如：\n问题：请解析以下文件。file_path: "
+                    + "\\var\\share\\test333.jpg\n你的问答应该包含一个toolcall\n\n如果问题中不包含\"请解析以下文件\"，请按照以下步骤生成您的回复：\n";
 
     // todo: 暂时使用ConcurrentHashMap存储父节点的元数据
     private final ConcurrentHashMap<String, AippLlmMeta> llmCache = new ConcurrentHashMap<>();
@@ -288,7 +291,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     private String buildInputText(Map<String, Object> businessData) {
         Map<String, Object> input = ObjectUtils.cast(businessData.get("prompt"));
         // todo: 如果有文件，将内容拼到template里；为临时方案，历史记录的多模态会有问题
-        StringTemplate template = new DefaultStringTemplate(ObjectUtils.cast(input.get("template"))
+        StringTemplate template = new DefaultStringTemplate(DEFAULT_FILE_PROMPT_PREFIX + ObjectUtils.cast(input.get("template"))
                 + this.getFilePath(businessData));
         Map<String, String> variables = ObjectUtils.cast(input.get("variables"));
         try {
