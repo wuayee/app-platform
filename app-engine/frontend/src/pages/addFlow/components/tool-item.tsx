@@ -21,7 +21,7 @@ const ToolItem = (props) => {
     setList(listRef.current);
   }, [dragData])
   const tab = [
-    { name: '官方', key: 'AUTHORITY' },
+    { name: '官方', key: 'Builtin' },
     { name: 'HuggingFace', key: 'HUGGINGFACE' },
     { name: 'LangChain', key: 'LANGCHAIN' },
   ]
@@ -96,20 +96,8 @@ const ToolItem = (props) => {
         }
       </div>
     }
-    {/* { list.length ?  
-      <div style={{ paddingTop: 16 }}>
-        <Pagination
-          size="small"
-          total={list.length}
-          current={pageNum}
-          onChange={selectPage}
-          showSizeChanger={false}
-          showLessItems={true}
-        /> 
-      </div>
-      : 
-      <div className="tool-empty"><Empty description="暂无数据" /></div> 
-    } */}
+    { list.length === 0 && <div className="tool-empty"><Empty description="暂无数据" /></div> 
+    }
     <ToolModal showModal={showModal} setShowModal={setShowModal} />
   </>
 };

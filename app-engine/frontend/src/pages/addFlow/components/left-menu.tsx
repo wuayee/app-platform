@@ -13,7 +13,7 @@ const LeftMenu = (props) => {
   const [ activeKey, setActiveKey ] = useState('basic');
 
   const tabClick = (key) => {
-    getAddFlowConfig(tenantId,  {pageNum: 1, pageSize: 100, tag: key}).then(res => {
+    getAddFlowConfig(tenantId,  {pageNum: 1, pageSize: 1000, tag: key}).then(res => {
       if (res.code === 0) {
         if (key === 'HUGGINGFACE') {
           res.data.tool.forEach(item => {

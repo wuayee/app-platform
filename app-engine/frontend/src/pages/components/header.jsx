@@ -43,14 +43,6 @@ const ChoreographyHead = (props) => {
   const chatClick = () => {
     navigate(`/app-develop/${tenantId}/chat/${appId}`);
   }
-  const versionDetail = () => {
-    setOpen(true);
-    setVersionList([
-      { name: '1.0.7', desc: '这个版本优化了llm节点，使大模型可以快速回答出精准的内容。', user: '林靖峰', time: '2024-06-07 14:23:12' },
-      { name: '1.0.7', desc: '这个版本优化了llm节点，使大模型可以快速回答出精准的内容。', user: '林靖峰', time: '2024-06-07 14:23:12' },
-      { name: '1.0.7', desc: '这个版本优化了llm节点，使大模型可以快速回答出精准的内容。', user: '林靖峰', time: '2024-06-07 14:23:12' }
-    ]);
-  }
   return <>{(
     <div className="app-header">
       <div className="logo">
@@ -83,7 +75,7 @@ const ChoreographyHead = (props) => {
         {/* <span className="history" onClick={versionDetail}>
           <img src='/src/assets/images/ai/time.png' />
         </span> */}
-        { appInfo.state === 'active' && <span className="history robot" onClick={chatClick}><img src='/src/assets/images/ai/robot.png' />去聊天</span> }
+        <span className="history robot" onClick={chatClick}><img src='/src/assets/images/ai/robot.png' />去聊天</span>
         <span className="header-btn" onClick={modalClick}>发布</span>
       </div>
       <PublishModal modalRef={modalRef} appInfo={appInfo} publishType="app" />

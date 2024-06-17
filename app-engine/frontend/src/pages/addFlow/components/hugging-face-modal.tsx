@@ -1,7 +1,7 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Modal, Input, Button } from 'antd';
+import { Modal, Input, Button, Empty } from 'antd';
 import { getHuggingFaceList } from '@shared/http/appBuilder';
 import Pagination from '../../../components/pagination/index';
 const { Search } = Input;
@@ -12,10 +12,11 @@ const HuggingFaceModal = (props) => {
   const [ pageNum, setPageNum ] = useState(1);
   const [ pageSize, setPageSize ] = useState(100);
   const [ total, setTotal ] = useState(0);
-  const [ pluginData, setPluginData ] = useState([]);
+  const [ list, setList ] = useState([]);
   const [ activeKey, setActiveKey ] = useState('');
   const [ activeUrl, setActiveUrl ] = useState('');
   const { tenantId, appId } = useParams();
+  const listRef = useRef([]);
   useEffect(() => {
     showModal && getPluginList();
   }, [props.showModal, name, pageNum, pageSize]);
@@ -26,14 +27,18 @@ const HuggingFaceModal = (props) => {
         let item = res.data.modelDatas.filter(item => item.name === selectModal)[0];
         item && setActiveUrl(`https://${item.url}`);
         setActiveKey(selectModal);
-        setPluginData(res.data.modelDatas);
+        listRef.current = JSON.parse(JSON.stringify(res.data.modelDatas));
+        setList(listRef.current);
       }
     });
   };
   // 名称搜索
   const filterByName = (value: string) => {
-    if(value !== name) {
-      setName(value);
+    if (!value.trim().length) {
+      setList(listRef.current);
+    } else {
+      let arr = listRef.current.filter(item => item.name.indexOf(value.trim()) !== -1);
+      setList(arr);
     }
   }
   const itemClick = (item) => {
@@ -67,14 +72,14 @@ const HuggingFaceModal = (props) => {
       }
     >
       <div className="tool-modal-search">
-        <Search size="large" onSearch={filterByName} placeholder="请输入" />
+        <Search size="large" onSearch={filterByName} placeholder="请输入" allowClear/>
       </div>
       <div className="tool-modal-content">
         <div className="content-left">
           <div className="left-list">
-            { pluginData.map((card:any) => 
+            { list.length > 0 && list.map((card:any) => 
               <div className={ `left-item ${activeKey === card.name ? 'active' : null}` } 
-                  key={card.id} 
+                  key={card.taskName} 
                   onClick={() => itemClick(card)}>
                 <div className="item-top">
                   <div className="top-left">
@@ -97,15 +102,8 @@ const HuggingFaceModal = (props) => {
                 <div className="item-bottom" title={card.context.description}>{card.context.description }</div>
               </div>
             )}
+            { list.length === 0 && <div className="tool-empty"><Empty description="暂无数据" /></div> }
           </div>
-          {/* <div className="left-page">
-            <Pagination
-              total={total}
-              current={pageNum}
-              onChange={selectPage}
-              pageSize={pageSize}
-            /> 
-          </div> */}
         </div>
         <div className="content-right">
           <iframe className="iframe-item" src={activeUrl} frameBorder="0"></iframe>

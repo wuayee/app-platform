@@ -1,6 +1,15 @@
 .add-flow-container {
   height: 100%;
   width: 100%;
+  position: relative;
+  .app-header {
+    position: absolute;
+    z-index: 999;
+    width: 100%;
+    background: transparent;
+    top: 10px;
+    padding: 0 15px;
+  }
   .header-text {
     font-weight: 700;
     font-size: 18px;
@@ -173,7 +182,7 @@
     }
   }
   .content-add {
-    height: calc(100vh - 100px);
+    height: calc(100vh - 55px);
     position: relative;
   }
   .anticon svg {

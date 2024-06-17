@@ -69,6 +69,7 @@
 .header-grid {
   display: flex;
   gap: 16px;
+  justify-content: flex-end;
   .last-run-btn {
     color: #1d1c2399 !important;
     background-color: #ffffff !important;
@@ -77,6 +78,24 @@
   .test-btn {
     color: #047bfc !important;
     background-color: #ffffff !important;
-    min-width: 100px;
+    border: 1px solid #ebebeb;
   }
+  // .header-btn{
+  //   display: inline-block;
+  //   height: 32px;
+  //   line-height: 32px;
+  //   text-align: center;
+  //   color: #fff;
+  //   background-color: #047bfc;
+  //   cursor: pointer;
+  //   border-radius: 4px;
+  //   font-size: 14px;
+  //   padding-left: .75rem;
+  //   padding-right: .75rem;
+  //   margin-bottom: 6px;
+  //   min-width: 80px;
+  //     .anticon-upload {
+  //       margin-right: 5px;
+  //     }
+  // }
 }
