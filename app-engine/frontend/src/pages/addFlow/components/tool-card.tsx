@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router';
 import '../styles/tool-card.scss';
 
 const ToolCard = ({ pluginData }: any) => {
+  const navigate = useNavigate();
   // 类型处理
-
   return(
   <div className='plugin-card'>
     <div className='plugin-card-header'>
@@ -44,9 +44,9 @@ const ToolCard = ({ pluginData }: any) => {
         </span>
       </Flex>
     </div>
-    <div className="card-detail">
+    {/* <div className="card-detail" onClick={detailClick}>
       查看详情
-    </div>
+    </div> */}
   </div >
 )}
 
