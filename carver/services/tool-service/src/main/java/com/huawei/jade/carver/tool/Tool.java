@@ -119,13 +119,6 @@ public interface Tool {
         String icon();
 
         /**
-         * 获取工具的版本。
-         *
-         * @return 表示工具的版本的 {@link String}。
-         */
-        String version();
-
-        /**
          * 获取工具的标签集合。
          *
          * @return 表示工具的标签集合的 {@link Set}{@code <}{@link String}{@code >}。
@@ -229,14 +222,6 @@ public interface Tool {
              * @return 表示当前构建器的 {@link Builder}。
              */
             Builder icon(String icon);
-
-            /**
-             * 向当前构建器中设置工具的版本。
-             *
-             * @param version 表示待设置的工具版本的 {@link String}。
-             * @return 表示当前构建器的 {@link Builder}。
-             */
-            Builder version(String version);
 
             /**
              * 构建对象。

@@ -118,17 +118,6 @@ public class ToolData {
     private String icon;
 
     /**
-     * 表示工具的版本。
-     * <p>
-     *     <ul>
-     *         <li>添加工具时可不传入。</li>
-     *         <li>查询工具时会返回。</li>
-     *     </ul>
-     * </p>
-     */
-    private String version;
-
-    /**
      * 表示工具的标签集合。
      * <p>
      *     <ul>
@@ -302,24 +291,6 @@ public class ToolData {
     }
 
     /**
-     * 获取工具的版本。
-     *
-     * @return 表示工具版本的 {@link String}。
-     */
-    public String getVersion() {
-        return this.version;
-    }
-
-    /**
-     * 设置工具的版本。
-     *
-     * @param version 表示工具版本的 {@link String}。
-     */
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    /**
      * 获取工具的标签集合。
      *
      * @return 表示工具的标签集合的 {@link Set}{@code <}{@link String}{@code >}。
@@ -355,7 +326,6 @@ public class ToolData {
         toolData.setRunnables(info.runnables());
         toolData.setSource(info.source());
         toolData.setIcon(info.icon());
-        toolData.setVersion(info.version());
         return toolData;
     }
 
@@ -377,7 +347,6 @@ public class ToolData {
                 .runnables(toolData.getRunnables())
                 .source(toolData.getSource())
                 .icon(toolData.getIcon())
-                .version(toolData.getVersion())
                 .build();
     }
 
