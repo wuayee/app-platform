@@ -46,6 +46,10 @@ public:
 
     uint64_t GetCurMallocSize() const;
     int32_t GetMemoryId(const std::string& objectKey);
+    bool IsZeroMemory(const std::string& objectKey);
+    void AddZeroMemoryUserData(const std::string& objectKey, const std::shared_ptr<UserData>& userDataPtr);
+    const std::shared_ptr<UserData>& GetZeroMemoryUserData(const std::string& objectKey);
+    void RemoveZeroMemoryUserData(const std::string& objectKey);
 
     // SharedMemoryInfo属性获取方法集合
     int32_t GetMemoryApplicant(int32_t sharedMemoryId);
@@ -104,6 +108,12 @@ private:
     std::unordered_map<int32_t, std::unordered_set<int32_t>> writingMemoryBlocks_; // 客户端正在写入的内存块
     std::unordered_map<std::string, int32_t> keyToSharedMemoryId_; // 客户端自定义key
 
+    /*
+     * 大小为0的内存块的用户自定义元数据
+     * 键：客户端自定义key
+     * 值：用户自定义元数据
+     */
+    std::unordered_map<std::string, std::shared_ptr<UserData>> zeroMemoryUserData_;
     /*
      * 内存块当前读写状态。
      * 如果值等于0: 当前没有任何读写操作。
