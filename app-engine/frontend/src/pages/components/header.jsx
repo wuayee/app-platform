@@ -80,9 +80,9 @@ const ChoreographyHead = (props) => {
         { showTime && <span>自动保存：{currentTime}</span> }
       </div>
       <div className="header-grid">
-        <span className="history" onClick={versionDetail}>
+        {/* <span className="history" onClick={versionDetail}>
           <img src='/src/assets/images/ai/time.png' />
-        </span>
+        </span> */}
         { appInfo.state === 'active' && <span className="history robot" onClick={chatClick}><img src='/src/assets/images/ai/robot.png' />去聊天</span> }
         <span className="header-btn" onClick={modalClick}>发布</span>
       </div>
