@@ -9,7 +9,7 @@ import com.huawei.jade.fel.core.Pattern;
 import com.huawei.jade.fel.service.langchain.LangChainRunnableService;
 
 /**
- * LangChain Runnable 算子代理，用于代理 LangChain 的 Chain、CompiledGraph 和 LLM 等自定义算子。
+ * LangChain 通用 Runnable 算子代理。
  *
  * @author 刘信宏
  * @since 2024-06-06

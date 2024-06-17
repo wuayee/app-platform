@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.huawei.fit.jade.plugin</groupId>
-    <artifactId>fel-langchain-plugin</artifactId>
+    <artifactId>fel-langchain-runnable</artifactId>
 
     <dependencies>
         <!-- FIT -->
@@ -21,7 +21,7 @@
 
         <!-- services -->
         <dependency>
-            <groupId>com.huawei.fit.jade.fel</groupId>
+            <groupId>com.huawei.fit.jade.service</groupId>
             <artifactId>fel-langchain-service</artifactId>
             <version>${fel.version}</version>
         </dependency>

@@ -5,6 +5,7 @@
 package com.huawei.jade.fel.langchain.retriever;
 
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.core.retriever.Retriever;
 import com.huawei.jade.fel.langchain.runnable.LangChainRunnable;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
  * @since 2024-06-06
  */
 public class LangChainRetriever implements Retriever<String, List<Document>> {
+    private static final Logger log = Logger.get(LangChainRetriever.class);
     private static final String LANG_CHAIN_RETRIEVER_TASK = "langchain.retrieve";
 
     private final LangChainRunnable runnable;
@@ -34,9 +36,18 @@ public class LangChainRetriever implements Retriever<String, List<Document>> {
     @Override
     public List<Document> invoke(String input) {
         Validation.notBlank(input, "The input data cannot be blank.");
-        List<Map<String, Object>> res = ObjectUtils.cast(runnable.invoke(input));
+        List<Map<String, Object>> res = this.castRetrieverOutput(runnable.invoke(input));
         return res.stream()
                 .map(doc -> ObjectUtils.<TextDocument>cast(ObjectUtils.toCustomObject(doc, TextDocument.class)))
                 .collect(Collectors.toList());
+    }
+
+    private List<Map<String, Object>> castRetrieverOutput(Object retrieverDocs) {
+        if (retrieverDocs instanceof List<?>
+                && ((List<?>) retrieverDocs).stream().allMatch(item -> item instanceof Map)) {
+            return ObjectUtils.cast(retrieverDocs);
+        }
+        log.error("Invalid retriever output: {}", retrieverDocs.toString());
+        throw new IllegalArgumentException("Invalid langchain retriever output.");
     }
 }
