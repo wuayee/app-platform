@@ -88,7 +88,7 @@ export const JadeObservableTree = ({data}) => {
     const renderTreeNodes = (data) =>
         data.map((item) => {
             const isRootNode = item.level === 0;
-            const className = isRootNode && !item.children ? "jade-hide-tree-left-line" : '';
+            const className = isRootNode && (!item.children || item.children.length === 0) ? "jade-hide-tree-left-line" : '';
 
             if (item.children) {
                 return (
