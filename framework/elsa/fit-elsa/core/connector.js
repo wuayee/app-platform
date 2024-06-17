@@ -164,8 +164,8 @@ let connector = (shape, getX, getY, getDirection, getVisibility = (s) => true, g
             if (self.shapeStyle === "round") {
                 // const r = (self.radius-offset) / shape.page.scaleX;
                 // 减去一个shape.borderWidth / 2,使得视觉效果更好
-                context.arc(x + region.x + region.width / 2 - shape.borderWidth / 2,
-                        y + region.y + region.height / 2 - shape.borderWidth / 2,
+                context.arc(x + region.x + region.width / 2,
+                        y + region.y + region.height / 2,
                         self.radius,
                         0,
                         2 * Math.PI);
