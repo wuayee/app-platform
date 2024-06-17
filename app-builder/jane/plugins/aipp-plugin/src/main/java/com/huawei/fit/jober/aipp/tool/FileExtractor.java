@@ -15,6 +15,12 @@ import java.io.File;
  * @since 2024-06-08
  */
 public interface FileExtractor {
+    /**
+     * 提取文件内容
+     *
+     * @param file 待提取的文件
+     * @return 文件内容。
+     */
     @Genericable("com.huawei.fit.jober.aipp.tool.file.extractor")
     String extractFile(File file);
 }

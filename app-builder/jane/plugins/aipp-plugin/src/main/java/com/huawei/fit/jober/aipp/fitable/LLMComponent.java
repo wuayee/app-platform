@@ -168,7 +168,6 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         Map<String, Object> businessData = Utils.getBusiness(flowData);
         String instId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
         String parentInstId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
-        String path = Utils.buildPath(this.aippLogService, instId, parentInstId);
         log.debug("LLMComponent business data {}", businessData);
 
         AippLlmMeta llmMeta = AippLlmMeta.parse(flowData, metaService);
@@ -181,6 +180,8 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
             this.processFile(llmMeta, businessData);
             return flowData;
         }
+
+        String path = Utils.buildPath(this.aippLogService, instId, parentInstId);
 
         // todo: 待add多模态，期望使用image的url，当前传入的历史记录里面没有image
         Map<String, Object> toolContext = MapBuilder.<String, Object>get()

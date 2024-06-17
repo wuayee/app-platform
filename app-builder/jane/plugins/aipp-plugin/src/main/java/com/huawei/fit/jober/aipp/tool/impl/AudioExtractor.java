@@ -37,7 +37,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -51,6 +52,7 @@ import java.util.stream.Stream;
 @Component
 public class AudioExtractor implements FileExtractor {
     private static final Logger log = Logger.get(AudioExtractor.class);
+
     private static final String PROMPT = "\nPerform the following actions:\n"
             + "1. - Use chinese summarize the following video delimited by <> limit in 100 words.\n"
             + "2. - Write a title for the summary.\n"
@@ -58,9 +60,14 @@ public class AudioExtractor implements FileExtractor {
             + "Video: <文本摘要旨在将文本或文本集合转换为包含关键信息的简短摘要...>\n" + "Output JSON:\n"
             + "{\"title\": \"文本摘要简介\", \"text\": \"文本摘要...\"}\n\n" + "--------\n" + "Video: <%s>\n"
             + "Output JSON:\n";
+
     private static final String TMP_DIR_PREFIX = "audioTmp-";
-    private final static ExecutorService SUMMARY_EXECUTOR = Executors.newFixedThreadPool(8);
+
+    private static final ExecutorService SUMMARY_EXECUTOR =
+            new ThreadPoolExecutor(8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+
     private final HllmClient hllmClient;
+
     private final FfmpegService ffmpegService;
 
     public AudioExtractor(HllmClient hllmClient, FfmpegService ffmpegService) {
@@ -115,7 +122,7 @@ public class AudioExtractor implements FileExtractor {
             SummarySection section =
                     JsonUtils.parseObject(LLMUtils.tryFixLlmJsonString(llmOutput), SummarySection.class);
             summaryDto.setSummary(section.getText());
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error("Llm generate unexpect rsp, msg: {}.", e);
             summaryDto.setSummary("");
         }
@@ -124,19 +131,19 @@ public class AudioExtractor implements FileExtractor {
 
     private AudioSplitInfo covertVideo(String dirName, File audio) throws IOException {
         File targetDir = Paths.get(Utils.NAS_SHARE_DIR, dirName).toFile();
-        FfmpegMeta meta = ffmpegService.stat(audio.getAbsolutePath());
+        FfmpegMeta meta = ffmpegService.stat(audio.getCanonicalPath());
         FileUtils.copyFile(audio, Paths.get(targetDir.getPath(), audio.getName()).toFile());
         File copyAudio = Paths.get(targetDir.getPath(), audio.getName()).toFile();
         if (meta.getDuration() >= 6 * 60) {
             int segmentCount = Math.max(1, Math.min(meta.getDuration() / 300, 8));
             int segmentSize = (meta.getDuration() + segmentCount - 1) / segmentCount;
-            ffmpegService.splitAudio(audio.getAbsolutePath(),
-                    targetDir.getAbsolutePath() + "/split_%03d." + meta.getVideoExt(),
+            ffmpegService.splitAudio(audio.getCanonicalPath(),
+                    targetDir.getCanonicalPath() + "/split_%03d." + meta.getVideoExt(),
                     segmentSize);
             FileUtils.delete(copyAudio);
-            return new AudioSplitInfo(targetDir.getAbsolutePath(), segmentSize);
+            return new AudioSplitInfo(targetDir.getCanonicalPath(), segmentSize);
         }
-        return new AudioSplitInfo(targetDir.getAbsolutePath(), meta.getDuration());
+        return new AudioSplitInfo(targetDir.getCanonicalPath(), meta.getDuration());
     }
 
     @Fitable("llmAudio2Summary")
@@ -148,7 +155,7 @@ public class AudioExtractor implements FileExtractor {
         try {
             audioSplitInfo = this.covertVideo(tmpDir, file);
         } catch (IOException e) {
-            log.error("切分音频文件时出现了问题。");
+            log.error("error occurs during audio segmentation.");
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "error occurs during audio segmentation.");
         }
 
@@ -156,7 +163,7 @@ public class AudioExtractor implements FileExtractor {
             List<File> audioFiles = audioPathStream.map(Path::toFile).collect(Collectors.toList());
             SummaryDto summaryDto = batchSummary(audioFiles, audioSplitInfo.getSegmentSize());
             if (summaryDto.getSectionList().isEmpty()) {
-                log.error("很抱歉！无法识别文件中的内容，您可以尝试换个文件");
+                log.error("audio summary result is empty.");
                 throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "audio summary result is empty.");
             }
             return summaryDto.getSummary();

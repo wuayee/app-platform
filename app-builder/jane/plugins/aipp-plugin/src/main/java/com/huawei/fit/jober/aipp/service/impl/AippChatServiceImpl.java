@@ -272,7 +272,7 @@ public class AippChatServiceImpl implements AippChatService {
     private String getChatName(Map<String, Object> initContext) {
         String chatName;
         if (initContext.containsKey(AippConst.BS_AIPP_FILE_DESC_KEY)) {
-            chatName = ((Map<String, String>)initContext.get(AippConst.BS_AIPP_FILE_DESC_KEY)).get("file_name");
+            chatName = ((Map<String, String>) initContext.get(AippConst.BS_AIPP_FILE_DESC_KEY)).get("file_name");
         } else if (initContext.containsKey(AippConst.BS_AIPP_QUESTION_KEY)) {
             chatName = initContext.get(AippConst.BS_AIPP_QUESTION_KEY).toString();
         } else {
