@@ -220,8 +220,7 @@ const drawFocusFrame = (shape, context) => {
         if (shape.drawer.customizedDrawFocus) {
             shape.drawer.customizedDrawFocus(context, x1, y1, frame.width + 2*pad + 2 * focusMargin, frame.height + 2*pad + 2 * focusMargin);
         } else {
-            // 这里去掉pad, 选中虚线框绘制 todo 减去一个shape.borderWidth / 2,使得视觉效果更好
-            context.dashedRect(x1 - shape.borderWidth / 2, y1 - shape.borderWidth / 2, frame.width + 2 * focusMargin, frame.height + 2 * focusMargin, 2, 1, shape.page.focusFrameColor);
+            context.dashedRect(x1, y1, frame.width + 2 * focusMargin, frame.height + 2 * focusMargin, 2, 1, shape.page.focusFrameColor);
         }
     }
     //if (shape.rotateAble && shape.rotateConnector !== null && shape.rotateConnector.visible && shape.connectors.find(c => c === shape.rotateConnector) !== undefined) context.dashedLineTo(0, y1, 0, y1 - pad * 10, 1, 1, "gray");

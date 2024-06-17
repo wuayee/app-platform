@@ -25,4 +25,8 @@ export const UNARY_OPERATOR = {
 export const VIRTUAL_CONTEXT_NODE = {
     id: "_systemEnv",
     name: "系统上下文"
-}
+};
+
+export const CONNECTOR = {
+    RADIUS: 8
+};

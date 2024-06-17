@@ -1,6 +1,6 @@
 import {CopyPasteHelpers, DIRECTION, node} from "@fit-elsa/elsa-core";
 import {v4 as uuidv4} from "uuid";
-import {NODE_STATUS, SECTION_TYPE, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
+import {CONNECTOR, NODE_STATUS, SECTION_TYPE, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 import React from "react";
 import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
 
@@ -104,6 +104,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         self.connectors.remove(c => c.direction.key === DIRECTION.S.key || c.direction.key === DIRECTION.N.key
                 || c.direction.key === "ROTATE");
         self.connectors.forEach(connector => {
+            connector.radius = CONNECTOR.RADIUS;
             connector.isSolid = true;
             connector.radius = 6;
             if (connector.direction.key === DIRECTION.W.key) {
