@@ -93,7 +93,7 @@ global_proxy_configs = {
 
 class Item(BaseModel):
     name: str
-    des: str
+    des: str | None = None
     image_name: str
     inference_accuracy: str
     replicas: int
