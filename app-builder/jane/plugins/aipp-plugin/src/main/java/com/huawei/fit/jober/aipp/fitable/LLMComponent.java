@@ -27,6 +27,9 @@ import com.huawei.fit.jober.aipp.vo.AippLogVO;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
+import com.huawei.fitframework.broker.client.BrokerClient;
+import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.MapUtils;
@@ -69,9 +72,6 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     private static final String PROMPT_TEMPLATE = "{{1}}";
     private static final String CALLBACK_ID = "com.huawei.fit.jober.aipp.fitable.LLMComponentCallback";
     private static final String AGENT_NODE_ID = "agent";
-    private static final String DEFAULT_FILE_PROMPT_PREFIX =
-            "如果问题中包含\"请解析以下文件\"，请调用工具**a933a223-6722-f940-98da-57bf22899868**来处理这个任务，例如：\n问题：请解析以下文件。file_path: "
-                    + "\\var\\share\\test333.jpg\n你的问答应该包含一个toolcall\n\n如果问题中不包含\"请解析以下文件\"，请按照以下步骤生成您的回复：\n";
 
     // todo: 暂时使用ConcurrentHashMap存储父节点的元数据
     private final ConcurrentHashMap<String, AippLlmMeta> llmCache = new ConcurrentHashMap<>();
@@ -83,6 +83,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     private final AiProcessFlow<Tip, Prompt> agentFlow;
     private final AippLogService aippLogService;
     private final AippLogStreamService aippLogStreamService;
+    private final BrokerClient client;
 
     /**
      * 大模型节点构造器，内部通过提供的agent和tool构建智能体工作流。
@@ -99,14 +100,14 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
             MetaService metaService,
             ToolProvider toolProvider,
             @Fit(alias = AippConst.WATER_FLOW_AGENT_BEAN) AbstractAgent<Prompt, Prompt> agent,
-            AippLogService aippLogService,
-            AippLogStreamService aippLogStreamService) {
+            AippLogService aippLogService, AippLogStreamService aippLogStreamService, BrokerClient client) {
         this.flowInstanceService = flowInstanceService;
         this.metaService = metaService;
         this.metaInstanceService = metaInstanceService;
         this.toolProvider = toolProvider;
         this.aippLogService = aippLogService;
         this.aippLogStreamService = aippLogStreamService;
+        this.client = client;
 
         // handleTask从入口开始处理，callback从agent node开始处理
         this.agentFlow = AiFlows.<Tip>create()
@@ -176,6 +177,11 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         String systemPrompt = ObjectUtils.cast(businessData.get("systemPrompt"));
         String msgId = UuidUtils.randomUuidString();
 
+        if (businessData.containsKey(AippConst.BS_AIPP_FILE_DESC_KEY)) {
+            this.processFile(llmMeta, businessData);
+            return flowData;
+        }
+
         // todo: 待add多模态，期望使用image的url，当前传入的历史记录里面没有image
         Map<String, Object> toolContext = MapBuilder.<String, Object>get()
                 .put(AippConst.TRACE_ID, llmMeta.getInstId())
@@ -190,6 +196,21 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
                 .bind(buildChatOptions(businessData))
                 .offer(Tip.fromArray(systemPrompt, buildInputText(businessData)));
         return flowData;
+    }
+
+    private void processFile(AippLlmMeta llmMeta, Map<String, Object> businessData) {
+        try {
+            Map<String, String> fileDescription = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_FILE_DESC_KEY));
+            String filePath = fileDescription.get("file_path");
+            String fileContent = this.client.getRouter("com.huawei.fit.jober.aipp.tool.extract.file")
+                    .route(new FitableIdFilter("extract.multi.type"))
+                    .invoke(filePath);
+            this.addAnswer(llmMeta, fileContent);
+        } catch (FitException e) {
+            // 打印错误日志
+            String errorMsg = "无法解析文件";
+            this.doOnAgentError(llmMeta, errorMsg);
+        }
     }
 
     private void sendLog(ChatMessage chunk, String path, String msgId, String instId) {
@@ -218,16 +239,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     private void llmOutputConsumer(AippLlmMeta llmMeta, Prompt trace) {
         ChatMessage answer = trace.messages().get(trace.messages().size() - 1);
         if (answer.type() == MessageType.AI) {
-            Map<String, Object> businessData = llmMeta.getBusinessData();
-            businessData.putIfAbsent("output", new HashMap<String, Object>());
-            Map<String, Object> output = ObjectUtils.cast(businessData.get("output"));
-            output.put("llmOutput", answer.text());
-            InstanceDeclarationInfo info = InstanceDeclarationInfo.custom().putInfo("llmOutput", answer.text()).build();
-            metaInstanceService.patchMetaInstance(llmMeta.getVersionId(),
-                    llmMeta.getInstId(),
-                    info,
-                    llmMeta.getContext());
-            doOnAgentComplete(llmMeta);
+            addAnswer(llmMeta, answer.text());
             return;
         }
         // todo: 还没保存trace数据，子流程就跑完了怎么办？（目前走到这里一定有表单阻塞，所以暂时不会有这个问题）
@@ -238,6 +250,19 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         } catch (AippJsonDecodeException e) {
             this.doOnAgentError(llmMeta, e.getMessage());
         }
+    }
+
+    private void addAnswer(AippLlmMeta llmMeta, String answer) {
+        Map<String, Object> businessData = llmMeta.getBusinessData();
+        businessData.putIfAbsent("output", new HashMap<String, Object>());
+        Map<String, Object> output = ObjectUtils.cast(businessData.get("output"));
+        output.put("llmOutput", answer);
+        InstanceDeclarationInfo info = InstanceDeclarationInfo.custom().putInfo("llmOutput", answer).build();
+        metaInstanceService.patchMetaInstance(llmMeta.getVersionId(),
+                llmMeta.getInstId(),
+                info,
+                llmMeta.getContext());
+        doOnAgentComplete(llmMeta);
     }
 
     private void setChildInstanceId(AippLlmMeta llmMeta, String childInstanceId) {
@@ -291,7 +316,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     private String buildInputText(Map<String, Object> businessData) {
         Map<String, Object> input = ObjectUtils.cast(businessData.get("prompt"));
         // todo: 如果有文件，将内容拼到template里；为临时方案，历史记录的多模态会有问题
-        StringTemplate template = new DefaultStringTemplate(DEFAULT_FILE_PROMPT_PREFIX + ObjectUtils.cast(input.get("template"))
+        StringTemplate template = new DefaultStringTemplate(ObjectUtils.cast(input.get("template"))
                 + this.getFilePath(businessData));
         Map<String, String> variables = ObjectUtils.cast(input.get("variables"));
         try {
