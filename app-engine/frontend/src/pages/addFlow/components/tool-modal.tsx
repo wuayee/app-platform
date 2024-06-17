@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import { getAddFlowConfig, getWaterFlows } from '@shared/http/appBuilder';
 import { categoryItems } from '../../configForm/common/common';
 import { handleClickAddToolNode } from '../utils';
@@ -29,6 +30,7 @@ const ToolDrawer = (props) => {
     { name: 'LangChain', key: 'LANGCHAIN' },
     { name: 'LlamaIndex', key: 'LLAMAINDEX' },
   ]
+  
   useEffect(() => {
     showModal && getPluginList();
   }, [props.showModal, name, pageNum, pageSize, activeKey]);
@@ -36,6 +38,10 @@ const ToolDrawer = (props) => {
     type === 'addSkill' && (checkedList.current = JSON.parse(JSON.stringify(checkData)));
   }, [props.checkData])
   const items = categoryItems;
+  const btnItems = [
+    { key: 'workflow', label: '插件' },
+    { key: 'NEWS', label: '工具流' },
+  ];
   const selectBefore = (
     <Select defaultValue="市场">
       <Option value="个人" disabled>个人</Option>
@@ -50,6 +56,9 @@ const ToolDrawer = (props) => {
     let name = items.filter(item => item.key === key)[0].label;
     setMenuName(name);
   };
+  const createClick = ({ key }) => {
+    console.log(key);
+  }
   // 获取插件列表
   const getPluginList = ()=> {
     getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 1000, tag: activeKey}).then(res => {
@@ -142,7 +151,9 @@ const ToolDrawer = (props) => {
     >
       <div className="tool-modal-search">
         <Search size="large" addonBefore={selectBefore} onSearch={filterByName} placeholder="请输入" />
-        {/* <Button type="primary">创建</Button> */}
+        <Dropdown menu={{ items: btnItems, onClick: createClick }} trigger={['click']}>
+          <Button type="primary" icon={<DownOutlined />}>创建</Button>
+        </Dropdown>
       </div>
       <div className="tool-modal-tab">
         { tab.map(item => {

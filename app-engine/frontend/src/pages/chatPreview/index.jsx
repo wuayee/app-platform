@@ -42,6 +42,7 @@ const ChatPreview = (props) => {
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const { showElsa } = useContext(AippContext);
+  const [checkedList, setCheckedList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [groupType, setGroupType] = useState("share");
   const [showCheck, setShowCheck] = useState(false);
@@ -181,8 +182,7 @@ const ChatPreview = (props) => {
     runningAppid.current = aipp_id;
     if (!wsCurrent.current) {
       const prefix = window.location.protocol === 'http:' ? 'ws' : 'wss';
-      // wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
-      wsCurrent.current = new WebSocket(`${prefix}://80.11.128.86:30030/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
+      wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
       wsCurrent.current.onopen = () => {
         wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));   
       }
@@ -308,6 +308,7 @@ const ChatPreview = (props) => {
   }
   // 显示问答组
   function setEditorShow(val, type='share') {
+    !val && setCheckedList([]);
     setShowCheck(val);
     val && setGroupType(type);
   }
@@ -347,12 +348,14 @@ const ChatPreview = (props) => {
           <div className={ `chat-inner-left ${ inspirationOpen ? 'chat-left-close' : 'no-border'}` }>
             <ChatMessage
               feedRef={feedRef}
+              setCheckedList={setCheckedList}
               setEditorShow={setEditorShow}
               showCheck={showCheck}/>
             { showCheck ?
               <CheckGroup
                 type={groupType}
                 setEditorShow={setEditorShow}
+                checkedList={checkedList}
                 reportClick={reportClick} />
               : 
               <SendEditor

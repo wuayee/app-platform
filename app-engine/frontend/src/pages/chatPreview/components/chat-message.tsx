@@ -12,12 +12,11 @@ import { setChatList } from '../../../store/chatStore/chatStore';
 
 const ChatMessaga = (props) => {
   const dispatch = useAppDispatch();
-  const chatListConstant = useAppSelector((state) => state.chatCommonStore.chatList);
-  const { showCheck, setCheckedList, setEditorShow, feedRef } = props;
+  const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const [ list, setList ] = useState([]);
-  let chatList=JSON.parse(JSON.stringify(chatListConstant));
+  const { showCheck, setCheckedList, setEditorShow, feedRef } = props;
   const initFeedbackStatus = async (id) => {
-    let arr = chatList;
+    let arr = JSON.parse(JSON.stringify(chatList))
     for (let i = 0; i < arr?.length; i++) {
       let item = arr[i]
       if (item.type === 'recieve' && item?.instanceId && (id === 'all' || item?.instanceId === id)) {
@@ -49,6 +48,7 @@ const ChatMessaga = (props) => {
       const messageBox = document.getElementById('chat-list-dom');
       messageBox?.scrollTo({
         top: messageBox.scrollHeight,
+        behavior: 'smooth',
       });
     }, 100)
   }
