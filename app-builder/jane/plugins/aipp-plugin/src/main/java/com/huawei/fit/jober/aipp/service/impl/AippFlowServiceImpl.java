@@ -978,7 +978,6 @@ public class AippFlowServiceImpl implements AippFlowService {
         itemData.setModifier(context.getOperator());
         itemData.setIcon(aippDto.getIcon());
         itemData.setName(aippDto.getName());
-        itemData.setVersion(aippDto.getVersion());
         itemData.setDescription(aippDto.getDescription());
         if (this.isToolCategory(appCategory)) {
             itemData.setSchema(this.buildToolSchema(appCategory, context, aippDto, flowInfo));
