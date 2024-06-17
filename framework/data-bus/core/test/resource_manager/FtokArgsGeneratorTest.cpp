@@ -30,11 +30,11 @@ protected:
 TEST_F(FtokArgsGeneratorTest, should_return_correct_file_path_and_proj_id)
 {
     for (int32_t i = MIN_PROJ_ID; i <= MAX_PROJ_ID; i++) {
-        EXPECT_EQ(generator->GetFilePath(), "./tmp/0");
-        EXPECT_EQ(generator->GetProjId(), i);
+        EXPECT_EQ(FILE_PATH_PREFIX + "0", generator->GetFilePath());
+        EXPECT_EQ(i, generator->GetProjId());
     }
-    EXPECT_EQ(generator->GetFilePath(), "./tmp/1");
-    EXPECT_EQ(generator->GetProjId(), 0);
+    EXPECT_EQ(FILE_PATH_PREFIX + "1", generator->GetFilePath());
+    EXPECT_EQ(0, generator->GetProjId());
 }
 }  // namespace Test
 }  // namespace DataBus

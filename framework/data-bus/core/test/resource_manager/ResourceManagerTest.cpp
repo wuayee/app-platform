@@ -31,6 +31,7 @@ struct MallocRecord {
 
 class ResourceManagerTest : public testing::Test {
 public:
+    Runtime::Config* config{};
     std::unique_ptr<ResourceManager> resourceManager;
     std::shared_ptr<MockTaskLoop> mockTaskLoopPtr;
     std::shared_ptr<Task::TaskLoop> taskLoopPtr;
@@ -43,15 +44,16 @@ protected:
         // 内存块存活时长30分钟
         int32_t memoryTtlDuration = 30 * 60 * 1000;
         int32_t memorySweepInterval = 100;
-        Runtime::Config config(port, mallocSizeLimit, memoryTtlDuration, memorySweepInterval);
+        config = new Runtime::Config(port, mallocSizeLimit, memoryTtlDuration, memorySweepInterval);
         mockTaskLoopPtr = std::make_shared<MockTaskLoop>();
         taskLoopPtr = std::static_pointer_cast<Task::TaskLoop>(mockTaskLoopPtr);
-        resourceManager = std::make_unique<ResourceManager>(config, taskLoopPtr);
+        resourceManager = std::make_unique<ResourceManager>(*config, taskLoopPtr);
     }
 
     void TearDown() override
     {
         resourceManager.reset();
+        delete config;
     }
 
     static bool IsFolderExist(const string& folderPath)
