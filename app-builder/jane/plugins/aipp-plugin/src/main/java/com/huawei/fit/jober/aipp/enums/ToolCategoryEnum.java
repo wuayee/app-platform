@@ -17,7 +17,7 @@ public enum ToolCategoryEnum {
 
     LLAMAINDEX("LlamaIndex"),
 
-    AUTHORITY("Authority");
+    BUILTIN("Builtin");
 
     private final String name;
 
