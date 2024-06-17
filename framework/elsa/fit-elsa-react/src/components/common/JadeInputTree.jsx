@@ -6,54 +6,30 @@ import {JadeReferenceTreeSelect} from "./JadeReferenceTreeSelect.jsx";
 import {useFormContext} from "@/components/DefaultRoot.jsx";
 
 /**
- * 构建节点，只有Object节点有子孙节点.
+ * 构建树.
  *
- * @param nodeData 节点数据.
+ * @param data 数据.
  * @param level 层级.
- * @return {{title, isLeaf: boolean, key}|{children: *, title, key}} 树节点.
+ * @return {Omit<*, "name">} 树状结构.
  */
-const convert = (nodeData, level) => {
-    if (nodeData.from === "Expand") {
-        return {
-            id: nodeData.id,
-            title: nodeData.name,
-            type: nodeData.type,
-            key: nodeData.id,
-            level: level,
-            from: nodeData.from,
-            children: nodeData.value.map(v => convert(v, level + 1))
-        };
-    } else {
-        const ans = {
-            id: nodeData.id,
-            title: nodeData.name,
-            type: nodeData.type,
-            key: nodeData.id,
-            level: level,
-            value: nodeData.value,
-            from: nodeData.from,
-            isRequired: nodeData.isRequired ?? true,
-            referenceKey: nodeData.referenceKey,
-            referenceNode: nodeData.referenceNode,
-            referenceId: nodeData.referenceId,
-            isLeaf: true,
-        };
-        if (nodeData.generic) {
-            ans.generic = nodeData.generic
-        }
-        if (nodeData.type === "Object") {
-            ans.props = nodeData.props;
-        }
-
-        return ans;
+const convert = (data, level) => {
+    const {name, ...ans} = data;
+    ans.level = level;
+    ans.title = name;
+    ans.key = data.id;
+    ans.isRequired = data.isRequired ?? true;
+    ans.isLeaf = data.from !== "Expand";
+    if (!ans.isLeaf) {
+        ans.children = data.value.map(v => convert(v, level + 1));
     }
+    return ans;
 };
 
 JadeInputTree.propTypes = {
     data: PropTypes.array.isRequired, updateItem: PropTypes.func.isRequired
 };
 
-const INPUT_WIDTH = 110;
+const INPUT_WIDTH = 100;
 const LEVEL_DISTANCE = 24;
 
 /**
@@ -171,20 +147,16 @@ export default function JadeInputTree({data, updateItem, disabled}) {
             <div className="jade-input-tree-title">
                 <Row wrap={false}>
                     <Col flex={"0 0 " + inputWidth + "px"}>
-                        <Form.Item
-                                name={`property-${node.id}`}
-                        >
+                        <Form.Item name={`property-${node.id}`}>
                             <div className="jade-input-tree-title-child"
-                                 style={{display: "flex", alignItems: "center", padding: "0 10px"}}>
+                                 style={{display: "flex", alignItems: "center"}}>
                                 {node.isRequired && <span className="jade-required-indicator">*</span>}
                                 <span className="huggingface-light-font">{node.title}</span>
                             </div>
                         </Form.Item>
                     </Col>
                     <Col flex="0 0 70px" style={{paddingRight: 0}}>
-                        <Form.Item
-                                name={`value-select-${node.id}`}
-                        >
+                        <Form.Item name={`value-select-${node.id}`}>
                             <div className="jade-input-tree-title-child">
                                 <JadeInputTreeSelect node={node}
                                                      options={getOptions(node)}
@@ -206,7 +178,7 @@ export default function JadeInputTree({data, updateItem, disabled}) {
     const renderTreeNodes = (data) =>
         data.map((item) => {
             const isRootNode = item.level === 0;
-            const className = isRootNode ? "jade-hide-tree-left-line" : '';
+            const className = isRootNode ? "jade-hide-tree-left-line jade-tree-node" : 'jade-tree-node';
 
             if (item.children) {
                 return (
@@ -219,9 +191,9 @@ export default function JadeInputTree({data, updateItem, disabled}) {
         });
 
     return (<>
-        <div style={{paddingLeft: "8px"}}>
+        <div style={{paddingLeft: "15px"}}>
             <Row wrap={false}>
-                <Col flex={"0 0 " + INPUT_WIDTH + "px"}>
+                <Col flex={"0 0 " + (INPUT_WIDTH + 15) + "px"}>
                     <span className={"jade-second-title-text"}>字段名称</span>
                 </Col>
                 <Col>
