@@ -611,7 +611,10 @@ def get_routes():
     routed_models = {}
     url_key = "url"
     for service in services:
-        model_name = get_model_name_by_service_name(service["model_name"])
+        if not service["pipeline"]:
+            model_name = get_model_name_by_service_name(service["model_name"])
+        else:
+            model_name = service["model_name"]
         url = f"http://{service['cluster_ip']}:{service['port']}"
         if model_name not in routed_models:
             routes.append({
