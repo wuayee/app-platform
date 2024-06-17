@@ -3,7 +3,7 @@ import { Button, Input } from 'antd';
 
 import Pagination from '../../components/pagination/index';
 import { getModelList } from '../../shared/http/model';
-import CardsTab from './cards-tab';
+import CardsTab, { ModelItem } from './cards-tab';
 import TableTab from './table-tab';
 import ModelCreate from './model-create';
 import { Tabs } from 'antd';
@@ -27,6 +27,7 @@ const LocalModelList = () => {
   const [openStar, setOpenStar] = useState(false);
 
   const [createItems, setCreateItems] = useState([]);
+  const [modifyData, setModifyData] = useState<ModelItem>();
 
   // 分页变化
   const paginationChange = (curPage: number, curPageSize: number) => {
@@ -64,6 +65,11 @@ const LocalModelList = () => {
     });
   };
 
+  const openModify = (item: ModelItem) => {
+    setModifyData(item);
+    setOpenStar(true);
+  }
+
   useEffect(() => {
     queryModelList();
   }, [page, pageSize]);
@@ -91,6 +97,7 @@ const LocalModelList = () => {
           onClick={() => {
             setOpenStar(true);
             setCreateItems(createItems);
+            setModifyData(null);
           }}
         >
           创建
@@ -127,9 +134,9 @@ const LocalModelList = () => {
           marginLeft: -20,
         }}
       >
-        {modelTab === 1 && <CardsTab modelList={modelList} setModels={setModelList} />}
+        {modelTab === 1 && <CardsTab modelList={modelList} setModels={setModelList} openModify={openModify} />}
         {modelTab === 2 && (
-          <TableTab modelList={modelList} setOpen={setOpenStar} setModels={setModelList} />
+          <TableTab modelList={modelList} setOpen={setOpenStar} setModels={setModelList} openModify={openModify} />
         )}
       </div>
       <Pagination total={total} current={page} onChange={paginationChange} pageSize={pageSize} />
@@ -138,6 +145,7 @@ const LocalModelList = () => {
         setOpen={setOpenStar}
         createItems={createItems}
         setModels={setModelList}
+        modifyData={modifyData}
       />
     </>
   );
