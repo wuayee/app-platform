@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ReactElement } from 'react';
-import { Button, Input } from 'antd';
+import { Button, Input, message, Radio } from 'antd';
 
 import Pagination from '../../components/pagination/index';
 import { getModelList } from '../../shared/http/model';
@@ -9,13 +9,13 @@ import ModelCreate from './model-create';
 import { Tabs } from 'antd';
 
 import '../../index.scss';
+import { AppstoreOutlined, BarsOutlined, ReloadOutlined } from '@ant-design/icons';
 
 const LocalModelList = () => {
   // 总条数
   const [total, setTotal] = useState(0);
 
-  const [modelTab, setModelTab] = useState(1);
-
+  const [type, setType] = useState('card');
   // 分页
   const [page, setPage] = useState(1);
 
@@ -40,12 +40,15 @@ const LocalModelList = () => {
   };
 
   // 获取数据列表
-  const queryModelList = () => {
+  const queryModelList = (operationTip = false) => {
     getModelList({
       offset: page - 1,
       size: pageSize,
     }).then((res) => {
       if (res) {
+        if (operationTip) {
+          message.success('刷新成功');
+        }
         setModelList(res.llms);
         setTotal(res.llms.length);
         res.llms.forEach((item: any) => {
@@ -73,6 +76,11 @@ const LocalModelList = () => {
   useEffect(() => {
     queryModelList();
   }, [page, pageSize]);
+
+  const changeShowType = (e: any) => {
+    setType(e.target.value);
+    sessionStorage.setItem('modelBaseListType', e.target.value);
+  }
 
   return (
     <>
@@ -102,31 +110,16 @@ const LocalModelList = () => {
         >
           创建
         </Button>
-        <div>
-          {modelTab === 1 && (
-            <img src='/src/assets/images/model/card-active.svg' onClick={() => setModelTab(1)} />
-          )}
-          {modelTab === 2 && (
-            <img
-              src='/src/assets/images/model/card.svg'
-              onClick={() => setModelTab(1)}
-              style={{
-                cursor: 'pointer',
-              }}
-            />
-          )}
-          {modelTab === 1 && (
-            <img
-              src='/src/assets/images/model/table.svg'
-              onClick={() => setModelTab(2)}
-              style={{
-                cursor: 'pointer',
-              }}
-            />
-          )}
-          {modelTab === 2 && (
-            <img src='/src/assets/images/model/table-active.svg' onClick={() => setModelTab(2)} />
-          )}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Button style={{ marginRight: 16 }} icon={<ReloadOutlined />} onClick={() => queryModelList(true)}></Button>
+          <Radio.Group value={type} onChange={changeShowType}>
+            <Radio.Button value='card' style={{ padding: '3px 4px' }}>
+              <AppstoreOutlined style={{ fontSize: '24px' }} />
+            </Radio.Button>
+            <Radio.Button value='table' style={{ padding: '3px 4px' }}>
+              <BarsOutlined style={{ fontSize: '24px' }} />
+            </Radio.Button>
+          </Radio.Group>
         </div>
       </div>
       <div
@@ -134,8 +127,8 @@ const LocalModelList = () => {
           marginLeft: -20,
         }}
       >
-        {modelTab === 1 && <CardsTab modelList={modelList} setModels={setModelList} openModify={openModify} />}
-        {modelTab === 2 && (
+        {type === 'card' && <CardsTab modelList={modelList} setModels={setModelList} openModify={openModify} />}
+        {type === 'table' && (
           <TableTab modelList={modelList} setOpen={setOpenStar} setModels={setModelList} openModify={openModify} />
         )}
       </div>
