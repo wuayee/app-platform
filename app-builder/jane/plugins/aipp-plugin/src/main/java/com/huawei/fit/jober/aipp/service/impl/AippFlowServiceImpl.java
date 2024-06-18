@@ -618,6 +618,7 @@ public class AippFlowServiceImpl implements AippFlowService {
                         e.getMessage());
             }
         } while (retryTimes-- > 0);
+        log.error("Failed to preview aipp.[errorMsg={}]", errorMsg);
         throw new AippException(context, AippErrCode.PREVIEW_AIPP_FAILED, errorMsg);
     }
 
