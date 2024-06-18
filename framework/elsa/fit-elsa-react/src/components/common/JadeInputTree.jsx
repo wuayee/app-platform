@@ -42,6 +42,7 @@ const LEVEL_DISTANCE = 24;
  * @constructor
  */
 export default function JadeInputTree({data, updateItem, disabled}) {
+    const form = useFormContext();
     const treeData = data.map(d => convert(d, 0));
 
     /**
@@ -52,7 +53,11 @@ export default function JadeInputTree({data, updateItem, disabled}) {
      * @param e 事件对象.
      */
     const onInputChange = (id, key, e) => {
-        updateItem(id, [{key, value: e.target.value}]);
+        const value = e.target.value.trim() === '' ? null : e.target.value;
+        if (value === null) {
+            form.setFieldsValue({[`value-${id}`]: null});
+        }
+        updateItem(id, [{key, value}]);
     };
 
     /**
