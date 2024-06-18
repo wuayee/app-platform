@@ -7,6 +7,7 @@ package com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converte
 import static com.huawei.fit.jober.common.Constant.BUSINESS_DATA_INTERNAL_KEY;
 import static com.huawei.fit.jober.common.Constant.INTERNAL_OUTPUT_SCOPE_KEY;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
+import static com.huawei.fit.jober.common.ErrorCodes.NOT_SUPPORT;
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
@@ -33,11 +34,13 @@ public abstract class AbstractMappingProcessor implements MappingProcessor {
     public Object generate(MappingNode mappingConfig, Map<String, Object> businessData) {
         if (MappingFromType.REFERENCE.equals(mappingConfig.getFrom())) {
             return generateReference(mappingConfig, businessData);
-        } else if (MappingFromType.isValueType(mappingConfig.getFrom())) {
+        } else if (MappingFromType.INPUT.equals(mappingConfig.getFrom())) {
             if (Objects.isNull(mappingConfig.getValue())) {
                 return mappingConfig.getValue();
             }
-            return generateValue(mappingConfig, businessData);
+            return generateInput(mappingConfig, businessData);
+        } else if (MappingFromType.EXPAND.equals(mappingConfig.getFrom())) {
+            return generateExpand(mappingConfig, businessData);
         }
         LOG.error("The from is invalid. from={}, name={}.", mappingConfig.getFrom(), mappingConfig.getName());
         throw new JobberParamException(INPUT_PARAM_IS_INVALID, mappingConfig.getName());
@@ -50,7 +53,17 @@ public abstract class AbstractMappingProcessor implements MappingProcessor {
      * @param businessData 源数据
      * @return 生成的数据
      */
-    protected abstract Object generateValue(MappingNode mappingConfig, Map<String, Object> businessData);
+    protected abstract Object generateInput(MappingNode mappingConfig, Map<String, Object> businessData);
+
+    /**
+     * expand类型的参数处理
+     * @param mappingConfig 映射配置
+     * @param businessData 源数据
+     * @return 生成的数据
+     */
+    protected Object generateExpand(MappingNode mappingConfig, Map<String, Object> businessData) {
+        throw new JobberParamException(NOT_SUPPORT, mappingConfig.getType().getCode());
+    }
 
     private Object generateReference(MappingNode mappingConfig, Map<String, Object> businessData) {
         return getValueByPath(businessData, cast(mappingConfig.getValue()), mappingConfig.getReferenceNode());

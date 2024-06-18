@@ -30,7 +30,7 @@ public class AbstractMappingConverterTest {
         private int callCount = 0;
 
         @Override
-        protected Object generateValue(MappingNode mappingConfig, Map<String, Object> businessData) {
+        protected Object generateInput(MappingNode mappingConfig, Map<String, Object> businessData) {
             ++callCount;
             return mappingConfig.getValue();
         }

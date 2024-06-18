@@ -30,8 +30,6 @@ public enum MappingFromType {
 
     private String code;
 
-    private static final Set<MappingFromType> valueTypes = new HashSet<>(Arrays.asList(INPUT, EXPAND));
-
     MappingFromType(String code) {
         this.code = code;
     }
@@ -41,15 +39,5 @@ public enum MappingFromType {
                 .filter(value -> value.getCode().equals(code.toUpperCase(Locale.ROOT)))
                 .findFirst()
                 .orElseThrow(() -> new JobberParamException(ENUM_CONVERT_FAILED, "MappingFromType", code));
-    }
-
-    /**
-     * 判断是否是值类型，值类型需要继续根据实际类型解析值的配置
-     *
-     * @param type 目标类型
-     * @return 是否是值类型
-     */
-    public static boolean isValueType(MappingFromType type) {
-        return valueTypes.contains(type);
     }
 }
