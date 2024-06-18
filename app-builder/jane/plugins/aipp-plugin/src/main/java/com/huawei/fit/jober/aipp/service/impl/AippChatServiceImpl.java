@@ -90,7 +90,8 @@ public class AippChatServiceImpl implements AippChatService {
     }
 
     private String persistChat(CreateChatRequest body, OperationContext context,
-                String chatId, String chatName) {
+                String chatId, String unCutChatName) {
+        String chatName = (unCutChatName.length() > 64) ? unCutChatName.substring(0, 32) : unCutChatName;
         String instId = this.aippRunTimeService.createAippInstance(body.getAippId(),
                 body.getAippVersion(), body.getInitContext(), context);
         Map<String, String> attributesMap = new HashMap<>();
@@ -164,6 +165,11 @@ public class AippChatServiceImpl implements AippChatService {
             AppBuilderAppPO appBuilderAppPO = this.convertAippToApp(body.getAippId(), body.getAippVersion(), context);
             request.setAppId(appBuilderAppPO.getId());
             request.setAppVersion(appBuilderAppPO.getVersion());
+            return request;
+        }
+        if (body.getAppId() != null && body.getAppVersion() != null) {
+            request.setAppId(body.getAppId());
+            request.setAppVersion(body.getAppVersion());
         }
         return request;
     }
