@@ -4,8 +4,6 @@
 
 package com.huawei.fit.http.client.proxy;
 
-import com.huawei.fit.http.client.HttpClassicClientRequest;
-
 /**
  * 表示属性值的填充器。
  *
@@ -17,8 +15,8 @@ public interface PropertyValueApplier {
     /**
      * 将指定值通过规则填充进 Http 请求。
      *
-     * @param request 表示待设置的 Http 请求的 {@link HttpClassicClientRequest}。
+     * @param requestBuilder 表示待设置的 Http 请求建造者的 {@link RequestBuilder}。
      * @param value 表示指定值的 {@link Object}。
      */
-    void apply(HttpClassicClientRequest request, Object value);
+    void apply(RequestBuilder requestBuilder, Object value);
 }

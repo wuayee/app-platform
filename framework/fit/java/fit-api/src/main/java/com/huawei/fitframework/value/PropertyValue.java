@@ -5,14 +5,12 @@
 package com.huawei.fitframework.value;
 
 import com.huawei.fitframework.value.support.FieldValue;
-import com.huawei.fitframework.value.support.JsonSchemaValue;
 import com.huawei.fitframework.value.support.ParameterValue;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -70,16 +68,5 @@ public interface PropertyValue {
      */
     static PropertyValue createFieldValue(Field field) {
         return new FieldValue(field);
-    }
-
-    /**
-     * 创建一个 Json Schema 类型的属性值。
-     *
-     * @param name 表示属性值名字的 {@link String}。
-     * @param schema 表示属性值的 Json Schema 格式规范的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
-     * @return 表示创建后的属性值的 {@link PropertyValue}。
-     */
-    static PropertyValue createJsonSchemaValue(String name, Map<String, Object> schema) {
-        return new JsonSchemaValue(name, schema);
     }
 }
