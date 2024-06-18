@@ -128,12 +128,12 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         AippLlmMeta llmMeta = llmCache.get(parentInstanceId);
         if (!ObjectUtils.<Boolean>cast(childBusinessData.get(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM))) {
             Map<String, Object> businessData = llmMeta.getBusinessData();
-            businessData.putIfAbsent("output", new HashMap<String, Object>());
-            Map<String, Object> output = ObjectUtils.cast(businessData.get("output"));
+            Map<String, Object> output = new HashMap<>();
             // todo: 当前如果子流程不需要模型加工，子流程和主流程会重复打印 toolOutput。
             //  为了避免这种情况，临时设置一个 key 来表明结果是否来自子流程。
             //  如果结果来自子流程，主流程的结束节点不打印；否则主流程的结束节点打印。
             output.put("llmOutput", toolOutput);
+            businessData.put("output", output);
             businessData.put(AippConst.OUTPUT_IS_FROM_CHILD, true);
             doOnAgentComplete(llmMeta);
             return;
@@ -216,9 +216,9 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         ChatMessage answer = trace.messages().get(trace.messages().size() - 1);
         if (answer.type() == MessageType.AI) {
             Map<String, Object> businessData = llmMeta.getBusinessData();
-            businessData.putIfAbsent("output", new HashMap<String, Object>());
-            Map<String, Object> output = ObjectUtils.cast(businessData.get("output"));
+            Map<String, Object> output = new HashMap<>();
             output.put("llmOutput", answer.text());
+            businessData.put("output", output);
             InstanceDeclarationInfo info = InstanceDeclarationInfo.custom().putInfo("llmOutput", answer.text()).build();
             metaInstanceService.patchMetaInstance(llmMeta.getVersionId(),
                     llmMeta.getInstId(),
