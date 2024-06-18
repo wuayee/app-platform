@@ -33,19 +33,23 @@ public final class MessageHeader extends Table {
 
   public byte type() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
   public long size() { int o = __offset(6); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public long seq() { int o = __offset(8); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
 
   public static int createMessageHeader(FlatBufferBuilder builder,
       byte type,
-      long size) {
-    builder.startTable(2);
+      long size,
+      long seq) {
+    builder.startTable(3);
+    MessageHeader.addSeq(builder, seq);
     MessageHeader.addSize(builder, size);
     MessageHeader.addType(builder, type);
     return MessageHeader.endMessageHeader(builder);
   }
 
-  public static void startMessageHeader(FlatBufferBuilder builder) { builder.startTable(2); }
+  public static void startMessageHeader(FlatBufferBuilder builder) { builder.startTable(3); }
   public static void addType(FlatBufferBuilder builder, byte type) { builder.addByte(0, type, 0); }
   public static void addSize(FlatBufferBuilder builder, long size) { builder.addInt(1, (int) size, (int) 0L); }
+  public static void addSeq(FlatBufferBuilder builder, long seq) { builder.addInt(2, (int) seq, (int) 0L); }
   public static int endMessageHeader(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
