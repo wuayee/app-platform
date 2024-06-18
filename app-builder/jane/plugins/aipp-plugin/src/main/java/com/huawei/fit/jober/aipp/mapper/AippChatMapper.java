@@ -98,6 +98,15 @@ public interface AippChatMapper {
     Integer countChat(String chatId);
 
     /**
+     * 根据指定应用ID, 查询最近count个会话ID
+     *
+     * @param appId 应用Id
+     * @param count count
+     * @return List<String> 会话ID列表
+     */
+    List<String> selectChatByAppId(String appId, int count);
+
+    /**
      * 根据指定实例 ID 查询会话 ID。
      *
      * @param instanceId 指定实例 ID。

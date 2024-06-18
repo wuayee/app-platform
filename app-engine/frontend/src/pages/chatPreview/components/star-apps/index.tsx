@@ -32,7 +32,7 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
     // 设为默认
     2: async (item: AnyAction) => {
       try {
-        await updateCollectionApp(getLoaclUser(), item.appId) 
+        await updateCollectionApp(getLocalUser(), item.appId)
         getUserCollectionList();
       } catch (error) {
         
@@ -40,7 +40,7 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
     },
     3: async (item: AnyAction) => {
       try {
-        await updateCollectionApp(getLoaclUser(), '3a617d8aeb1d41a9ad7453f2f0f70d61')
+        await updateCollectionApp(getLocalUser(), '3a617d8aeb1d41a9ad7453f2f0f70d61')
         getUserCollectionList();
       } catch (error) {
         
@@ -50,7 +50,7 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
       try {
         if(item?.id) {
           await cancleUserCollection({
-            usrInfo: getLoaclUser(),
+            usrInfo: getLocalUser(),
             aippId: item.aippId,
           })
         }
@@ -74,7 +74,7 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
   const count = useAppSelector((state: any) => state.collectionStore.value);
 
   // 获取当前登录用户名
-  const getLoaclUser = () => {
+  const getLocalUser = () => {
     return localStorage.getItem('currentUserIdComplete') ?? '';
   }
 
@@ -106,7 +106,7 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
   // 获取用户收藏列表
   const getUserCollectionList = async () => {
     try {
-      const res = await getUserCollection(getLoaclUser());
+      const res = await getUserCollection(getLocalUser());
       setApps([...translateData(res)]);
     } catch (error) {
       console.error(error);
@@ -122,6 +122,13 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
   const startChat = (item: any) => {
     dispatch(setCurAppId(item?.appId))
     dispatch(setOpenStar(false));
+  }
+
+  // @应用
+  const atApp = (item) => {
+    let app = item;
+    app.id = item.appId;
+    handleAt(app);
   }
 
   useEffect(()=> {
@@ -158,9 +165,9 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
                 <div className="app-item-text-header">
                   <div className="app-item-title">{app.name}</div>
                   <div className="app-item-title-actions">
-                    {/* <span style={{ cursor: "pointer" }} onClick={() => handleAt(app)}>
+                    {<span style={{ cursor: "pointer" }} onClick={() => atApp(app)}>
                       @Ta
-                    </span> */}
+                    </span>}
                     <span
                       style={{ color: "#1677ff", cursor: "pointer" }}
                       onClick={() => startChat(app)}
