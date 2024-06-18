@@ -53,7 +53,9 @@ export const ConfigFormWrap = styled.div`
         color: #2673e5;
         display: flex;
         align-item: center;
-        svg {
+        img {
+          width: 16px;
+          height: 16px;
           margin-right: 6px;
         }
       }

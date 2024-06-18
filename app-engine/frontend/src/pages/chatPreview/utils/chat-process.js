@@ -10,7 +10,7 @@ export const historyChatProcess = (res) => {
     let { msg } = JSON.parse(item.question.logData);
     questionObj.logId = item.question.logId;
     questionObj.content = msg;
-    chatArr.push(questionObj);
+    item.question.logType !== 'HIDDEN_QUESTION' && chatArr.push(questionObj);
     if (item.instanceLogBodies.length) {
       item.instanceLogBodies.forEach((aItem) => {
         const regex = /```markdown(.*?)```/g;
@@ -22,7 +22,7 @@ export const historyChatProcess = (res) => {
             aItem.logData = aItem.logData.replace(item, str);
           });
         }
-        let { msg } = JSON.parse(aItem.logData);
+        let { msg, file_type, file_path } = JSON.parse(aItem.logData);
         let answerObj = {
           content: msg,
           loading: false,
@@ -47,6 +47,9 @@ export const historyChatProcess = (res) => {
             formAppearance: JSON.parse(data.formAppearance),
             formData: JSON.parse(data.formData),
           }
+        }
+        if (aItem.logType === 'FILE') {
+          answerObj.type = 'send';
         }
         if (isJsonString(msg)) {
           let msgObj = JSON.parse(msg);

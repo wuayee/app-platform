@@ -18,6 +18,10 @@
       font-family: '苹方-简';
       word-break: break-all;
       position: relative;
+      code {
+        background-color:#5e7ce0;
+        color:#ffffff;
+      }
       &:hover {
         .message-tip-box-send {
           width: max-content;
