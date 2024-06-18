@@ -205,7 +205,10 @@ const EditorBtnHome = (props) => {
           )
         }
       </div>
-      { showAt && <ReferencingApp atItemClick={atItemClick} atClick={showMoreClick} searchKey={searchKey} /> }
+      { showAt && <ReferencingApp atItemClick={atItemClick}
+                                  atClick={showMoreClick}
+                                  searchKey={searchKey}
+                                  setSearchKey={setSearchKey}/> }
       <Modal 
         title="确认清空当前聊天" 
         open={isModalOpen} 
