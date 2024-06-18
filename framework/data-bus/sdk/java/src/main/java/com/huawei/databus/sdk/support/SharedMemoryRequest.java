@@ -18,7 +18,7 @@ public class SharedMemoryRequest implements DataBusRequest {
     private final String userKey;
 
     private SharedMemoryRequest(long size, String userKey) {
-        this.size = Validation.greaterThan(size, 0, "Applied memory size must be larger than 0");
+        this.size = Validation.greaterThanOrEquals(size, 0, "Applied memory size must be no less than 0");
         this.userKey = Validation.notBlank(userKey, "User key could not be empty.");
     }
 

@@ -28,7 +28,10 @@ const ReciveBox = (props) => {
     logId,
     instanceId,
     finished,
-    feedbackStatus } = props.chatItem;
+    feedbackStatus,
+    appName,
+    appIcon,
+    isAt } = props.chatItem;
   const [showIcon, setShowIcon] = useState(true);
   const location = useLocation();
 
@@ -53,8 +56,8 @@ const ReciveBox = (props) => {
     <div className='recieve-box'>
       {showCheck && <Checkbox className='check-box' checked={checked} onChange={onChange}></Checkbox>}
       <div className='user-image'>
-        <Img />
-        <span title={appInfo?.name}>{appInfo?.name || 'xxx'}</span>
+        {isAt ? <Img iconPath={appIcon} /> : <Img iconPath={appInfo.attributes.icon} />}
+        {isAt ? <Name name={appName} /> : <Name name={appInfo.name} />}
       </div>
       <span className="recieve-info-inner">
         {loading ? <Loading /> : setRecieveDom(recieveType)}
@@ -76,12 +79,19 @@ const Loading = () => {
     </>
   )
 }
-const Img = () => {
-  const appInfo = useAppSelector((state) => state.appStore.appInfo);
+const Img = (props) => {
+  const {iconPath} = props;
   return <>{(
     <span>
-      {appInfo.attributes?.icon ? <img src={appInfo.attributes.icon} /> : <img src={knowledgeBase} />}
+      {iconPath ? <img src={iconPath} /> : <img src={knowledgeBase} />}
     </span>
+  )}</>
+}
+
+const Name = (props) => {
+  const {name} = props;
+  return <>{(
+    <span>{name}</span>
   )}</>
 }
 

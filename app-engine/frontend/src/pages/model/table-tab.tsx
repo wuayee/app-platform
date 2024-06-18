@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Table, message } from 'antd';
+import { Button, Table, message, Space } from 'antd';
 import type { TableProps } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,9 +10,10 @@ interface TableTabProps {
   modelList: Array<ModelItem>;
   setOpen: (val: boolean) => void;
   setModels: (val: Array<any>) => void;
+  openModify: Function,
 }
 
-const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels }) => {
+const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels,openModify }) => {
   const navigate = useNavigate();
   const toModelDetail = (id: string) => {
     navigate('/model/detail', { state: { modelId: id } });
@@ -29,6 +30,7 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels }) =>
       typeFilters.push(typeItem);
     }
   });
+
   const deleteModel = (name: string) => {
     const deleteParams = {
       data: {
@@ -48,6 +50,10 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels }) =>
       }
     });
   };
+
+  const modifyModel = (record: any) => {
+    openModify(record);
+  }
 
   const columns: TableProps<ModelItem>['columns'] = [
     {
@@ -168,28 +174,26 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels }) =>
       key: 'operator',
       render(value, record) {
         return (
-          <div>
-            {record.status === 'undeployed' && (
-              <Button
-                type='link'
-                onClick={() => {
-                  setOpen(true);
-                }}
-              >
-                部署
-              </Button>
-            )}
-            {record.status !== 'undeployed' && (
-              <Button
-                type='link'
-                onClick={() => {
-                  deleteModel(record.name);
-                }}
-              >
-                删除
-              </Button>
-            )}
-          </div>
+          <Space>
+            <Button
+              type='link'
+              style={{ padding: 0 }}
+              onClick={() => modifyModel(record)}
+              disabled={record?.status === 'undeployed'}
+            >
+              修改
+            </Button>
+            <Button
+              type='link'
+              style={{ padding: 0 }}
+              onClick={() => {
+                deleteModel(record.name);
+              }}
+              disabled={record?.status === 'undeployed'}
+            >
+              删除
+            </Button>
+          </Space>
         );
       },
     },
@@ -209,7 +213,7 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels }) =>
           dataSource={modelList}
           size='small'
           pagination={false}
-          scroll={{ x: 2000, y: 600 }}
+          scroll={{ y: 800 }}
         />
       </div>
       <div />

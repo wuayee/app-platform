@@ -149,6 +149,7 @@ const SendEditor = (props) => {
           setOpenHistory={setOpenHistory}
           clear={onClear}
           fileCallBack={fileSend}
+          editorRef={editorRef}
         />
         { chatRunning && 
           <div className="editor-stop" onClick={onStop}>

@@ -9,7 +9,7 @@ import ImgSendBox from './img-send-box';
 import '../../styles/send-box.scss';
 
 const SendBox = (props) => {
-  const { content, checked, sendType } = props.chatItem;
+  const { content, checked, sendType} = props.chatItem;
   const { checkCallBack, showCheck }  = useContext(ChatContext);
   const [ showIcon, setShowIcon ] = useState(true);
   const employeeNumber = localStorage.getItem('currentUserId') || null;

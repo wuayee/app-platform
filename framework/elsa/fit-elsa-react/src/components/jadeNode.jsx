@@ -344,7 +344,9 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
 
         // 监听时，主动推送一次数据.
         const observable = self.page.getObservable(nodeId, observableId);
-        observerProxy.observe({value: observable.value, type: observable.type});
+        if (observable.value || observable.type) {
+            observerProxy.observe({value: observable.value, type: observable.type});
+        }
 
         // 返回取消监听的方法.
         return () => {

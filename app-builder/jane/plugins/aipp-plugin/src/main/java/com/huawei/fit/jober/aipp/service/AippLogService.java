@@ -54,6 +54,15 @@ public interface AippLogService {
                                                     OperationContext context, String chatId);
 
     /**
+     * 查询指定appId的最近一次会话的历史记录
+     *
+     * @param appId 指定app的id
+     * @param context 登录信息
+     * @return log数据
+     */
+    List<AippInstLogDataDto> queryAppRecentChatLog(String appId, String aippType, OperationContext context);
+
+    /**
      * 查询指定aipp instance的历史记录, 可选开始时间
      *
      * @param instanceId 指定aipp instance的id

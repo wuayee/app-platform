@@ -175,6 +175,11 @@ public class DefaultDataBusClient implements DataBusClient {
                 return MemoryIoResult.failure(ErrorType.IOOutOfBounds);
             }
 
+            // 检查是否为0长度数组。
+            if (result.sharedMemory().size() == 0) {
+                return MemoryIoResult.success(memory, new byte[0], result.userData(), request.permissionType());
+            }
+
             // 检查 memoryId 是否被正确设置。
             if (memory.sharedMemoryKey().memoryId() == -1) {
                 return MemoryIoResult.failure(ErrorType.KeyNotFound);

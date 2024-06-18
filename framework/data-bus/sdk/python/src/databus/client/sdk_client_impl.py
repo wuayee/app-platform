@@ -64,12 +64,13 @@ class SdkClientImpl:
         :param size: 期望分配的内存大小
         """
         self._pre_access_check(user_key)
-        if size <= 0:
+        if size < 0:
             raise ValueError(f"Invalid input parameter: size is {size}")
         response = self._socket.send_shared_malloc_message(user_key, size)
         CoreError.check_core_response("Allocation failed with error code {}", response.ErrorType())
-        self._mem_manager.add_memory_block(user_key=user_key, memory_id=response.MemoryKey(),
-                                           memory_size=response.MemorySize())
+        if size != 0:
+            self._mem_manager.add_memory_block(user_key=user_key, memory_id=response.MemoryKey(),
+                                               memory_size=response.MemorySize())
 
     def shared_free(self, user_key: str):
         """通知DataBus内核释放user_key对应的内存块
@@ -99,10 +100,12 @@ class SdkClientImpl:
                                 apply_response.MemoryKey(), apply_response.MemorySize(), request.size, request.offset)
                 return ReadResponse(None, None)
             size = request.size if request.size else apply_response.MemorySize()
-            logging.info("ready to read memory @ id=[%d] size=[%d/%d] offset=[%d]",
-                         apply_response.MemoryKey(), size, apply_response.MemorySize(),
-                         request.offset)
-            contents = shared_mem_read(apply_response.MemoryKey(), size, offset=request.offset)
+            contents = b""
+            if size != 0:
+                logging.info("ready to read memory @ id=[%d] size=[%d/%d] offset=[%d]",
+                             apply_response.MemoryKey(), size, apply_response.MemorySize(),
+                             request.offset)
+                contents = shared_mem_read(apply_response.MemoryKey(), size, offset=request.offset)
             if request.is_operating_user_data:
                 user_data = bytes([apply_response.UserData(i) for i in range(apply_response.UserDataLength())])
         return ReadResponse(contents, user_data)
@@ -120,6 +123,9 @@ class SdkClientImpl:
         with self._socket.with_permission(
                 CorePermissionType.Write, request=request,
                 memory_id=self._mem_manager.to_memory_id(request.user_key)) as apply_response:
+            if len(request.contents) == 0:
+                # 允许写入0长度内容
+                return True
             if len(request.contents) + request.offset > apply_response.MemorySize():
                 logging.warning("Invalid access to memory @ id=[%d] memory_size=[%d], where write_len=[%d] offset=[%d]",
                                 apply_response.MemoryKey(), apply_response.MemorySize(), len(request.contents),
@@ -139,7 +145,8 @@ class SdkClientImpl:
         self._pre_access_check(user_key)
         response = self._socket.send_get_meta_message(user_key)
         memory_id, memory_size = response.MemoryKey(), response.MemorySize()
-        self._mem_manager.add_memory_block(user_key, memory_id, memory_size)
+        if memory_size != 0:
+            self._mem_manager.add_memory_block(user_key, memory_id, memory_size)
         data = bytes([response.UserData(i) for i in range(response.UserDataLength())])
         return memory_size, data
 

@@ -26,11 +26,11 @@ const SendBtn = (props) => {
   return <>{(
     <div className='message-tip-box-send'>
       <div className='inner'>
-        <Tooltip title="分享" color="white" overlayInnerStyle={{color: '#212121' }} destroyTooltipOnHide>
+        {/* <Tooltip title="分享" color="white" overlayInnerStyle={{color: '#212121' }} destroyTooltipOnHide>
           <div onClick={ hideTooltip }>
             <ShareIcon />
           </div>
-        </Tooltip>
+        </Tooltip> */}
         {  sendType === 'text' && 
         <Tooltip title="复制" color="white" overlayInnerStyle={{color: '#212121' }}>
           <div onClick={ handleCopyQuestion }>
