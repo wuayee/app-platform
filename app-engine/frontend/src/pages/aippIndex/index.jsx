@@ -22,10 +22,15 @@ const AippIndex = () => {
   const [ reloadInspiration, setReloadInspiration ] = useState('');
   const [ showChat, setShowChat ] = useState(false);
   const [ messageChecked, setMessageCheck ] = useState(false);
+  const [ isTested, setIsTested ] = useState(false);
+  const [ testStatus, setTestStatus ] = useState('Running');
+  const [ isTesting, setIsTesting ] = useState(false);
+  const [ testTime, setTestTime ] = useState(null);
   const aippRef = useRef(null);
   const inspirationRefresh = useRef(false);
   const dispatch = useAppDispatch();
   const appInfo = JSON.parse(JSON.stringify(useAppSelector((state) => state.appStore.appInfo)));
+  let addFlowRef = React.createRef();
 
   const elsaChange = () => {
     setShowElsa(!showElsa);
@@ -83,6 +88,14 @@ const AippIndex = () => {
   const handleConfigDataChange = (data) => {
     handleSearch(data);
   };
+  // 打开调试抽屉方法
+  const openDebug = () => {
+    addFlowRef.current.handleDebugClick();
+  }
+  const handleIsTested =  (value) => setIsTested(value);
+  const handleIsTesting = (value) => setIsTesting(value);
+  const handleTestStatus = (value) => setTestStatus(value);
+  const handleTestTime = (value) => setTestTime(value);
   const contextProvider = {
     messageChecked,
     setMessageCheck,
@@ -104,6 +117,12 @@ const AippIndex = () => {
             showElsa={showElsa}
             updateAippCallBack={updateAippCallBack}
             mashupClick={elsaChange}
+            openDebug={openDebug}
+            isTested={isTested}
+            isTesting={isTesting}
+            testTime={testTime}
+            testStatus={testStatus}
+            addFlowRef={addFlowRef}
           />
           <div className={[
             "layout-content",
@@ -113,7 +132,14 @@ const AippIndex = () => {
           >
             <ConfigFormContext.Provider value={configFormProvider}> 
               {showElsa ? (
-                <AddFlow type="edit" appInfo={appInfo}/>
+                <AddFlow type="edit"
+                         addFlowRef={addFlowRef}
+                         setFlowTested={handleIsTested}
+                         setFlowTesting={handleIsTesting}
+                         setFlowTestStatus={handleTestStatus}
+                         setFlowTestTime={handleTestTime}
+                         appInfo={appInfo}
+                />
               ) : (
                    <ConfigForm
                      mashupClick={elsaChange}
