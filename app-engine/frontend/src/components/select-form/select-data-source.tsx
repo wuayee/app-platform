@@ -141,7 +141,7 @@ const SelectDataSource = ({ type, form }: props) => {
                 },
               ]}
             >
-              <LocalUpload form={form} />
+              <LocalUpload form={form} type={type}/>
             </Form.Item>
           )}
 

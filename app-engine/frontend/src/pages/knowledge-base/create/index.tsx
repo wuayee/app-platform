@@ -93,7 +93,26 @@ const KnowledgeBaseCreate = () => {
   const onCancle = () => {
     navigate('/knowledge-base')
   }
-
+  // 字符限制长度不能超过255
+  const changeName = () => {
+    const name = form.getFieldValue('knowledgeName');
+    if (name.length) {
+      let n = 0;
+      for (let i = 0; i < name.length; i++) {
+        let code = name.charCodeAt(i);
+        if (code > 255) {
+          n +=2;
+        } else {
+          n += 1
+        }
+      }
+      if (n > 255) {
+        return Promise.reject('字符串长度不能大于255');
+      }
+    } else {
+      return Promise.reject('');
+    }
+  }
   useEffect(() => {
     if (id) {
       getKnowledgeBase(id);
@@ -161,12 +180,8 @@ const KnowledgeBaseCreate = () => {
               <Form.Item
                 label="知识库名称"
                 rules={[
-                  { required: true, message: '输入不能为空' },
-                  {
-                    type: 'string',
-                    max: 64,
-                    message: '输入字符长度范围：1 - 64'
-                  }
+                  { required: true },
+                  { validator: changeName}
                 ]}
                 name='knowledgeName'
               >

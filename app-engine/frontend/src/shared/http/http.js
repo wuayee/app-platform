@@ -146,7 +146,7 @@ const msag = (err) => {
   if (err && err.response) {
     switch (err.response.status) {
       case 400:
-        Message({ type: 'error', content: err.response });
+        Message({ type: 'error', content: err.response.data?.msg || '请求失败'});
         break;
       case 401:
         Message({ type: 'error', content: "未授权，请登录" });
