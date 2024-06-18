@@ -32,6 +32,8 @@ public class AippInstLogDataDto {
     private String version;
     private String instanceId;
     private String status;
+    private String appName;
+    private String appIcon;
     private AippInstanceLogBody question;
     private List<AippInstanceLogBody> instanceLogBodies;
 
@@ -51,7 +53,7 @@ public class AippInstLogDataDto {
         AippInstLog question = instanceLogs.stream()
                 .filter(log -> (log.getLogType().equals(AippInstLogType.QUESTION.name()) || log.getLogType().equals(AippInstLogType.HIDDEN_QUESTION.name())))
                 .findFirst().orElse(null);
-        return new AippInstLogDataDto(inAippId,inAippVersion, inInstanceId, MetaInstStatusEnum.ARCHIVED.name(), convert(question), logBodies);
+        return new AippInstLogDataDto(inAippId,inAippVersion, inInstanceId, MetaInstStatusEnum.ARCHIVED.name(), null, null, convert(question), logBodies);
     }
 
     @AllArgsConstructor

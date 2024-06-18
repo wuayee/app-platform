@@ -14,6 +14,7 @@ import {
   aippDebug,
   updateFlowInfo,
   getRecentInstances,
+  getAppRecentlog,
   stopInstance,
   getReportInstance
 } from '@shared/http/aipp';
@@ -28,7 +29,13 @@ import {
 import "./styles/chat-preview.scss";
 import { creatChat, tenantId, updateChat } from "../../shared/http/chat.js";
 import { useAppDispatch, useAppSelector } from "../../store/hook";
-import { setChatId, setChatList, setChatRunning, setChatType, setInspirationOpen,setchatT } from "../../store/chatStore/chatStore";
+import {
+  setAtChatId,
+  setChatId,
+  setChatList,
+  setChatRunning,
+  setInspirationOpen
+} from "../../store/chatStore/chatStore";
 
 const ChatPreview = (props) => {
   const { previewBack } = props;
@@ -41,6 +48,9 @@ const ChatPreview = (props) => {
   const inspirationOpen = useAppSelector((state) => state.chatCommonStore.inspirationOpen);
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
+  const atChatId = useAppSelector((state) => state.chatCommonStore.atChatId);
+  const atAppId = useAppSelector((state) => state.appStore.atAppId);
+  const atAppInfo = useAppSelector((state) => state.appStore.atAppInfo);
   const { showElsa } = useContext(AippContext);
   const [loading, setLoading] = useState(false);
   const [groupType, setGroupType] = useState("share");
@@ -58,7 +68,6 @@ const ChatPreview = (props) => {
   let reportIContext = useRef(null);
   const listRef = useRef([]);
   const chatPage =  location.pathname.indexOf('chat') !== -1;
-
   useEffect(() => {
     !chatType && dispatch(setInspirationOpen(true));
     currentInfo.current = appInfo;
@@ -74,7 +83,7 @@ const ChatPreview = (props) => {
     listRef.current = [];
     setLoading(true);
     try {
-      const res = await getRecentInstances(tenantId, appId, 'preview');
+      const res = await getAppRecentlog(tenantId, appId, 'preview');
       if (res.data && res.data.length) {
         let chatArr = historyChatProcess(res);
         listRef.current = deepClone(chatArr);
@@ -93,7 +102,7 @@ const ChatPreview = (props) => {
       dispatch(setChatList([]));
       (appInfo.name && !appInfo.notShowHistory) && initChatHistory();
     }
-  }, [appInfo]);
+  }, [appInfo.id]);
   
   // 发送消息
   const onSend = (value, type = undefined) => {
@@ -109,6 +118,11 @@ const ChatPreview = (props) => {
     const reciveInitObj = JSON.parse(JSON.stringify(initChat));
     reciveInitObj.type = "recieve";
     reciveInitObj.loading = true;
+    if (atAppInfo) {
+      reciveInitObj.appName = atAppInfo.name;
+      reciveInitObj.appIcon = atAppInfo.attributes.icon;
+      reciveInitObj.isAt = true;
+    }
     let arr = [...listRef.current, reciveInitObj];
     listRef.current = arr;
     dispatch(setChatList(deepClone(arr)));
@@ -135,8 +149,14 @@ const ChatPreview = (props) => {
   };
   // 获取aipp_id和version
   async function getAippAndVersion(value, type) {
+    let chatAppId = appId;
+    let chatAppInfo = appInfo;
+    if (atAppId) {
+      chatAppInfo = atAppInfo;
+      chatAppId = atAppId;
+    }
     try {
-      const debugRes = await aippDebug(tenantId, appId, appInfo);
+      const debugRes = await aippDebug(tenantId, chatAppId, chatAppInfo);
       if (debugRes.code === 0) {
         chatMissionStart(debugRes.data, value, type);
       } else {
@@ -153,18 +173,28 @@ const ChatPreview = (props) => {
     try {
       const requestBody={
         aipp_id:aipp_id,
-        app_version:version,
+        aipp_version:version,
         init_context:params,
+      }
+      if (atAppId) {
+        requestBody.origin_app = appInfo.id;
+        requestBody.origin_app_version = appInfo.version;
+      }
+      if (atChatId) {
+        requestBody.chat_id = atChatId;
       }
       let res;
       if(chatId){
         res= await updateChat(tenantId, chatId, requestBody);
       } else {
         res= await creatChat(tenantId, requestBody);
-        dispatch(setChatId(res?.data?.chat_id));
+        dispatch(setChatId(res?.data?.origin_chat_id));
       }
       childInstanceStop.current = false;
       const instanceId = res?.data?.current_instance_id;
+      if (atAppId) {
+        dispatch(setAtChatId(res?.data?.chat_id));
+      }
       if (instanceId) {
         childInstanceStop.current = false;
         queryInstance(aipp_id, version, instanceId);
@@ -204,14 +234,14 @@ const ChatPreview = (props) => {
         }
         // 智能表单
         if (messageData.formAppearance?.length) {
-          let obj = messageProcess(aipp_id, instanceId, version, messageData);
+          let obj = messageProcess(aipp_id, instanceId, version, messageData, atAppInfo);
           chatForm(obj);
           return;
         }
         // 普通日志
         messageData.aippInstanceLogs?.forEach(log => {
           if (log.logData && log.logData.length) {
-            let { msg, recieveChatItem } = messageProcessNormal(log, instanceId);
+            let { msg, recieveChatItem } = messageProcessNormal(log, instanceId, atAppInfo);
             if (log.msgId !== null) {
               chatSplicing(log, msg, recieveChatItem, messageData.status);
             } else {

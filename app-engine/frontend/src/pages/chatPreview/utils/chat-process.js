@@ -32,8 +32,13 @@ export const historyChatProcess = (res) => {
           type: "recieve",
           instanceId: item.instanceId,
           finished: true,
-          feedbackStatus: -1
+          feedbackStatus: -1,
+          appName: item.appName,
+          appIcon: item.appIcon
         };
+        if (item.appName) {
+          answerObj.isAt = true;
+        }
         if (aItem.logType === 'FORM') {
           let data  = JSON.parse(aItem.logData);
           answerObj.recieveType = 'form';
@@ -167,7 +172,7 @@ export const reportProcess = (list, listRef) => {
   return memoriesList;
 };
 // 流式接收消息数据处理
-export const messageProcess = (aipp_id, instanceId, version, messageData) => {
+export const messageProcess = (aipp_id, instanceId, version, messageData, atAppInfo) => {
   let obj = {
     loading: false,
     openLoading: false,
@@ -184,10 +189,15 @@ export const messageProcess = (aipp_id, instanceId, version, messageData) => {
       formData: messageData.formData,
     }
   }
+  if (atAppInfo) {
+    obj.appName = atAppInfo.name;
+    obj.appIcon = atAppInfo.attributes.icon;
+    obj.isAt = true;
+  }
   return obj;
 };
 // 流式接收消息数据处理
-export const messageProcessNormal = (log, instanceId) => {
+export const messageProcessNormal = (log, instanceId, atAppInfo) => {
   let { msg } = JSON.parse(log.logData);
   const regex = /```markdown(.*?)```/g;
   const replacedArr = log.logData.match(regex);
@@ -206,8 +216,13 @@ export const messageProcessNormal = (log, instanceId) => {
     markdownSyntax: markdowned !== -1,
     type: 'recieve',
     instanceId,
-    feedbackStatus: -1
+    feedbackStatus: -1,
   };
+  if (atAppInfo) {
+    recieveChatItem.appName = atAppInfo.name;
+    recieveChatItem.appIcon = atAppInfo.attributes.icon;
+    recieveChatItem.isAt = true;
+  }
   return { 
     msg, 
     recieveChatItem

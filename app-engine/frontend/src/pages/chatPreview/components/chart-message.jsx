@@ -9,7 +9,7 @@ const ChartMessage = (props) => {
 
   useEffect(() => {
     handleChartData();
-  }, [props.chartConfig])
+  }, [])
   // 图表数据格式化
   function handleChartData() {
     if (chartData) {

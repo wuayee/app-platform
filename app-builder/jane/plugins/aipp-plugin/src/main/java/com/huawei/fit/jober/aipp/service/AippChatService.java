@@ -23,7 +23,7 @@ public interface AippChatService {
      *
      * @param body 请求体
      * @param context 上下文
-     * @return QueryChatRsp
+     * @return 表示会话相应体的 {@link QueryChatRsp}。
      */
     QueryChatRsp createChat(CreateChatRequest body, OperationContext context);
 
@@ -33,7 +33,7 @@ public interface AippChatService {
      * @param body 请求体
      * @param chatId 会话ID
      * @param context 上下文
-     * @return QueryChatRsp
+     * @return 表示会话相应体的 {@link QueryChatRsp}。
      */
     QueryChatRsp queryChat(QueryChatRequest body, String chatId, OperationContext context);
 
@@ -42,7 +42,7 @@ public interface AippChatService {
      *
      * @param body 请求体
      * @param context 上下文
-     * @return List<QueryChatRsp>
+     * @return 表示会话相应体列表 {@link QueryChatRsp}。List<QueryChatRsp>
      */
     List<QueryChatRsp> queryChatList(QueryChatRequest body, OperationContext context);
 
@@ -59,12 +59,12 @@ public interface AippChatService {
     /**
      * 缓存运行时数据.
      *
-     * @param chatId 会话ID
+     * @param originChatId 主应用会话ID
      * @param body 请求体
      * @param context 上下文
-     * @return QueryChatRsp
+     * @return 表示会话相应体的 {@link QueryChatRsp}。
      */
-    QueryChatRsp updateChat(String chatId, CreateChatRequest body, OperationContext context);
+    QueryChatRsp updateChat(String originChatId, CreateChatRequest body, OperationContext context);
 
     /**
      * 重新发起会话。

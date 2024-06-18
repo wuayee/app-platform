@@ -24,8 +24,12 @@ export function uploadFile(data, headers) {
 }
 
 // 查询应用列表
-export function getAippList(tenant_id, params) {
-  return get(`${AIPP_URL}/${tenant_id}/app`, params);
+export function getAippList(tenant_id, params, limit, offset, name) {
+  let url = `${AIPP_URL}/${tenant_id}/app?offset=${offset}&limit=${limit}`;
+  if (name) {
+    url += `&name=${name}`;
+  }
+  return get(url, params);
 }
 // 创建应用
 export function createAipp(tenantId, appId, params) {
@@ -71,6 +75,10 @@ export function reGetInstance(tenantId, appId, instanceId, version) {
 // 获取历史对话
 export function getRecentInstances(tenantId, appId, type) {
   return get(`${AIPP_URL}/${tenantId}/log/app/${appId}/recent?type=${type}`);
+}
+// 获取多应用历史对话
+export function getAppRecentlog(tenantId, appId, type) {
+  return get(`${AIPP_URL}/${tenantId}/log/app/${appId}/chat/recent?type=${type}`);
 }
 // 删除历史对话记录
 export function clearInstance(tenantId, appId, type) {

@@ -99,6 +99,15 @@
         where chat_id = #{chatId}
     </select>
 
+    <select id="selectChatByAppId" resultType="string">
+        select chat_id
+        from t_chat_session
+        where app_id = #{appId}
+        and attributes -> 'originApp' IS NULL
+        order by create_at desc
+        offset 0 limit #{count}
+    </select>
+
     <select id="selectChatIdByInstanceId" resultType="string">
         select chat_id
         from t_chat_session_task_instance_wide_relationship
