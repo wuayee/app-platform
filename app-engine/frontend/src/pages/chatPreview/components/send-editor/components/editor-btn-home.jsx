@@ -177,7 +177,7 @@ const EditorBtnHome = (props) => {
             { !appInfo.hideHistory && <ArrowDownIcon className="arrow-icon" /> }
             { isAt && <span style={{ marginLeft: '6px' }}>对话</span> }
           </div>
-          {/* <LinkIcon onClick={uploadClick} /> */}
+           <LinkIcon onClick={uploadClick} />
            { (!isAt) && <AtIcon onClick={atClick} /> }
         </div>
       </div>
