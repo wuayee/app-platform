@@ -129,7 +129,7 @@ public class AudioExtractor implements FileExtractor {
         return summaryDto;
     }
 
-    private AudioSplitInfo covertVideo(String dirName, File audio) throws IOException {
+    private AudioSplitInfo covertAudio(String dirName, File audio) throws IOException {
         File targetDir = Paths.get(Utils.NAS_SHARE_DIR, dirName).toFile();
         FfmpegMeta meta = ffmpegService.stat(audio.getCanonicalPath());
         FileUtils.copyFile(audio, Paths.get(targetDir.getPath(), audio.getName()).toFile());
@@ -146,6 +146,12 @@ public class AudioExtractor implements FileExtractor {
         return new AudioSplitInfo(targetDir.getCanonicalPath(), meta.getDuration());
     }
 
+    private AudioSplitInfo covertAudioSimple(String dirName, File audio) throws IOException {
+        File targetDir = Paths.get(Utils.NAS_SHARE_DIR, dirName).toFile();
+        FileUtils.copyFile(audio, Paths.get(targetDir.getPath(), audio.getName()).toFile());
+        return new AudioSplitInfo(targetDir.getCanonicalPath(), 0);
+    }
+
     @Fitable("llmAudio2Summary")
     @Override
     public String extractFile(File file) {
@@ -153,7 +159,7 @@ public class AudioExtractor implements FileExtractor {
         String tmpDir = TMP_DIR_PREFIX + UUIDUtil.uuid();
         AudioSplitInfo audioSplitInfo;
         try {
-            audioSplitInfo = this.covertVideo(tmpDir, file);
+            audioSplitInfo = this.covertAudioSimple(tmpDir, file);
         } catch (IOException e) {
             log.error("error occurs during audio segmentation.");
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "error occurs during audio segmentation.");
