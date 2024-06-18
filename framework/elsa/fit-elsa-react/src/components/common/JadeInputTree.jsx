@@ -1,9 +1,11 @@
-import {Col, Form, Input, Row, Tree} from 'antd';
+import {Col, Form, Input, Row, Tree, Typography} from 'antd';
 import "./jadeInputTree.css";
 import PropTypes from "prop-types";
 import {JadeStopPropagationSelect} from "./JadeStopPropagationSelect.jsx";
 import {JadeReferenceTreeSelect} from "./JadeReferenceTreeSelect.jsx";
 import {useFormContext} from "@/components/DefaultRoot.jsx";
+
+const {Text} = Typography;
 
 /**
  * 构建树.
@@ -147,6 +149,14 @@ export default function JadeInputTree({data, updateItem, disabled}) {
      * @return {JSX.Element} react 组件对象.
      */
     const displayTitle = (node) => {
+        const getToolTip = () => {
+            return {
+                title: node.title,
+                color: "white",
+                overlayInnerStyle: {fontSize: "12px", color: "rgb(128, 128, 128)", background: "white"}
+            };
+        };
+
         const inputWidth = INPUT_WIDTH - node.level * LEVEL_DISTANCE;
         return (<>
             <div className="jade-input-tree-title">
@@ -156,7 +166,9 @@ export default function JadeInputTree({data, updateItem, disabled}) {
                             <div className="jade-input-tree-title-child"
                                  style={{display: "flex", alignItems: "center"}}>
                                 {node.isRequired && <span className="jade-required-indicator">*</span>}
-                                <span className="huggingface-light-font">{node.title}</span>
+                                <Text ellipsis={{tooltip: getToolTip()}}
+                                      className="huggingface-light-font"
+                                      style={{maxWidth: inputWidth - 15}}>{node.title}</Text>
                             </div>
                         </Form.Item>
                     </Col>
