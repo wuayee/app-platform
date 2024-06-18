@@ -33,7 +33,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
   const [lastResSignal, setLastResSignal] = useState(0);
   const [isClearOpen,setClearOpen]=useState(false);
   const [requestInfo, setRequestInfo] = useState({
-    aipp_id: '', app_version: '', offset: 0, limit: 100
+    aipp_id: '', aipp_version: '', offset: 0, limit: 100
   });
 
   const refreshList = async () => {
@@ -60,7 +60,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     let { aipp_id, version } = debugRes?.data;
     const requestBody = {
       aipp_id: aipp_id,
-      app_version: version,
+      aipp_version: version,
       offset: 0,
       limit: 100
     };
