@@ -1,14 +1,14 @@
 import { del, get, post, put } from './http';
 import { httpUrlMap } from './httpConfig';
 
-const { JANE_URL, AIPP_URL, PLUGIN_URL } = httpUrlMap[process.env.NODE_ENV];
+const { JANE_URL, AI_URL, AIPP_URL, PLUGIN_URL } = httpUrlMap[process.env.NODE_ENV];
 
-const sso_url = process.env.SSO_URL || '/jober/v1/user/sso_login_info';
+const sso_url = 'api/jober/v1/user/sso_login_info';
 
 // 获取当前用户信息
 export const getCurUser = () => {
   return new Promise((resolve, reject) => {
-    get(`${JANE_URL}` + sso_url).then(
+    get(`${AI_URL}` + sso_url).then(
       (res) => {
         resolve(res);
       },

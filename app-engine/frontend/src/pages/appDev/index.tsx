@@ -171,6 +171,8 @@ const AppDev: React.FC = () => {
             创建
           </Button>
           <Input
+            showCount
+            maxLength={20}
             placeholder='搜索'
             style={{ width: '200px', height: '35px', marginLeft: '16px' }}
             prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
