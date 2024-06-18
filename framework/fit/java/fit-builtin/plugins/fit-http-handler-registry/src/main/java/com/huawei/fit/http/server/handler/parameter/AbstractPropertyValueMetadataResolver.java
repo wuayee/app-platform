@@ -31,11 +31,11 @@ public abstract class AbstractPropertyValueMetadataResolver implements PropertyV
 
     @Override
     public List<PropertyValueMetadata> resolve(PropertyValue propertyValue) {
-        AnnotationMetadata annotations = this.annotationResolver.resolve(propertyValue.getElement());
-        if (!annotations.isAnnotationPresent(this.getAnnotation())) {
-            return Collections.emptyList();
-        }
-        return this.resolve(propertyValue, annotations);
+        return notNull(propertyValue, "The property value cannot be null.").getElement()
+                .map(this.annotationResolver::resolve)
+                .filter(annotations -> annotations.isAnnotationPresent(this.getAnnotation()))
+                .map(annotations -> this.resolve(propertyValue, annotations))
+                .orElseGet(Collections::emptyList);
     }
 
     /**

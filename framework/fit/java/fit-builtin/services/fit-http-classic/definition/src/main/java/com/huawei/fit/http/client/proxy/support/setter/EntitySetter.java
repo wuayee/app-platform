@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.http.client.proxy.support.setter;
+
+import com.huawei.fit.http.client.proxy.DestinationSetter;
+import com.huawei.fit.http.client.proxy.RequestBuilder;
+import com.huawei.fit.http.entity.Entity;
+import com.huawei.fitframework.inspection.Nonnull;
+import com.huawei.fitframework.util.ObjectUtils;
+
+/**
+ * 表示向消息体设置值的 {@link DestinationSetter}。
+ *
+ * @author 王攀博
+ * @since 2024-06-07
+ */
+public class EntitySetter implements DestinationSetter {
+    @Override
+    public void set(RequestBuilder requestBuilder, Object value) {
+        if (value == null) {
+            return;
+        }
+        this.setToRequest(requestBuilder, value);
+    }
+
+    /**
+     * 默认的向请求构建器中设置值。
+     *
+     * @param requestBuilder 表示请求构建器的 {@link RequestBuilder}。
+     * @param value 表示要设置的值的 {@link Object}。
+     */
+    protected void setToRequest(RequestBuilder requestBuilder, @Nonnull Object value) {
+        if (value instanceof Entity) {
+            requestBuilder.entity(ObjectUtils.cast(value));
+        }
+    }
+}

@@ -45,7 +45,7 @@ public class RequestParamMetadataResolver extends AbstractPropertyValueMetadataR
                 .type(propertyValue.getParameterizedType())
                 .isRequired(param.required())
                 .defaultValue(param.defaultValue())
-                .element(propertyValue.getElement())
+                .element(propertyValue.getElement().orElse(null))
                 .build();
         return Collections.singletonList(propertyValueMetadata);
     }

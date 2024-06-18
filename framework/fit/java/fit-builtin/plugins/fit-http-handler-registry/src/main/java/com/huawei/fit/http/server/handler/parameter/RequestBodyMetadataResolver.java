@@ -46,7 +46,7 @@ public class RequestBodyMetadataResolver extends AbstractPropertyValueMetadataRe
                 .type(propertyValue.getParameterizedType())
                 .isRequired(body.required())
                 .defaultValue(null)
-                .element(propertyValue.getElement())
+                .element(propertyValue.getElement().orElse(null))
                 .build();
         return Collections.singletonList(propertyValueMetadata);
     }

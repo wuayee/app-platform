@@ -36,11 +36,10 @@ public abstract class AbstractPropertyValueMapperResolver implements PropertyVal
 
     @Override
     public Optional<PropertyValueMapper> resolve(PropertyValue propertyValue) {
-        AnnotationMetadata annotations = this.annotationResolver.resolve(propertyValue.getElement());
-        if (!annotations.isAnnotationPresent(this.getAnnotation())) {
-            return Optional.empty();
-        }
-        return this.resolve(propertyValue, annotations);
+        return notNull(propertyValue, "The property value cannot be null.").getElement()
+                .map(this.annotationResolver::resolve)
+                .filter(annotations -> annotations.isAnnotationPresent(this.getAnnotation()))
+                .flatMap(annotations -> this.resolve(propertyValue, annotations));
     }
 
     /**
