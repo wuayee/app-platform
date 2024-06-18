@@ -33,11 +33,14 @@ import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.value.ValueFetcher;
 import com.huawei.jade.carver.tool.support.http.server.RuntimeForServer;
 
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,7 +55,9 @@ import java.util.Map;
  */
 @DisplayName("测试 Http 构建规则")
 public class HttpClientTest {
-    private RuntimeForServer runtime;
+    private static RuntimeForServer runtime;
+    private static int port;
+
     private RequestBuilder requestBuilder;
     private String protocol;
     private String domain;
@@ -64,15 +69,22 @@ public class HttpClientTest {
     private Map<String, Object> weather;
     private Map<String, Object> formBody;
 
-    public HttpClientTest() {
-        this.runtime = new RuntimeForServer(HttpClientTest.class);
+    @BeforeAll
+    static void setUpAll() {
+        HttpClientTest.runtime = new RuntimeForServer(HttpClientTest.class);
+        HttpClientTest.port = getLocalAvailablePort();
+        HttpClientTest.runtime.start(HttpClientTest.port);
+    }
+
+    @AfterAll
+    static void tearDownAll() {
+        HttpClientTest.runtime.stop();
     }
 
     @BeforeEach
     void setup() {
-        this.runtime.start();
         this.protocol = "http";
-        this.domain = "localhost:8080";
+        this.domain = "localhost:" + HttpClientTest.port;
         this.pathPattern = "/test/travel/{type}";
         this.method = HttpRequestMethod.POST;
         this.client = this.createHttpClient();
@@ -91,11 +103,6 @@ public class HttpClientTest {
         this.formBody = new HashMap<>();
         this.formBody.put("strings", Arrays.asList("string1", "string2"));
         this.formBody.put("integer", 666);
-    }
-
-    @AfterEach
-    void teardown() {
-        this.runtime.stop();
     }
 
     @Test
@@ -171,5 +178,13 @@ public class HttpClientTest {
         ValueFetcher valueFetcher = new FastJsonValueHandler();
         HttpClassicClientFactory httpClassicClientFactory = new OkHttpClassicClientFactory(serializers, valueFetcher);
         return httpClassicClientFactory.create();
+    }
+
+    private static int getLocalAvailablePort() {
+        try (ServerSocket serverSocket = new ServerSocket(0)) {
+            return serverSocket.getLocalPort();
+        } catch (IOException e) {
+            throw new IllegalStateException("Get local available port failed.", e);
+        }
     }
 }

@@ -28,12 +28,14 @@ public class RuntimeForServer {
 
     /**
      * 表示启动 Http 客户端。
+     *
+     * @param port 表示可用的端口 {@link int}。
      */
-    public void start() {
+    public void start(int port) {
         if (this.isStarted) {
             return;
         }
-        this.runtime = FitStarter.start(this.entry, new String[] {"server.http.port=8080"});
+        this.runtime = FitStarter.start(this.entry, new String[] {"server.http.port=" + port});
         HttpClassicServer httpClassicServer = runtime.root()
                 .container()
                 .lookup(HttpClassicServer.class)
