@@ -32,8 +32,13 @@ const Index = (props) => {
     elsaRunningCtl.current?.reset();
     setIsTested(false);
     setTestTime(0);
-    handleRun(form.getFieldsValue());
-    handleCloseDebug();
+    form.validateFields().then((values) => {
+      handleRun(values);
+      handleCloseDebug();
+    })
+      .catch((errorInfo) => {
+        Message({type: 'warning', content: "请输入必填项"});
+      });
   }
   // 点击运行
   const handleRun = async (values) => {
@@ -121,7 +126,7 @@ const Index = (props) => {
           >
             {debugTypes.map((debugType, index) => {
               return (
-                <RenderFormItem type={debugType.type} name={debugType.name} key={index} />
+                <RenderFormItem type={debugType.type} name={debugType.name} key={index} isRequired={debugType.isRequired}/>
               )
             })}
           </Form>
