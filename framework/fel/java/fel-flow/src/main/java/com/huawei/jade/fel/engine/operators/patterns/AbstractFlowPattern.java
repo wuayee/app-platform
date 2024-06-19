@@ -35,8 +35,8 @@ public abstract class AbstractFlowPattern<I, O> implements FlowPattern<I, O> {
     }
 
     private AbstractFlowPattern(LazyLoader<AiProcessFlow<I, O>> flowSupplier, Map<String, Object> args) {
-        this.flowSupplier = ObjectUtils.nullIf(flowSupplier, LazyLoader.of(this::buildFlow));
-        this.args = ObjectUtils.nullIf(args, Collections.emptyMap());
+        this.flowSupplier = ObjectUtils.getIfNull(flowSupplier, () -> LazyLoader.of(this::buildFlow));
+        this.args = ObjectUtils.getIfNull(args, Collections::emptyMap);
     }
 
     /**
