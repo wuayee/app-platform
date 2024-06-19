@@ -10,6 +10,8 @@ import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.common.MetaUtils;
 import com.huawei.fit.jober.aipp.common.UUIDUtil;
+import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
+import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.chat.ChatDto;
 import com.huawei.fit.jober.aipp.dto.chat.CreateChatRequest;
@@ -272,7 +274,12 @@ public class AippChatServiceImpl implements AippChatService {
     private String getChatName(Map<String, Object> initContext) {
         String chatName;
         if (initContext.containsKey(AippConst.BS_AIPP_FILE_DESC_KEY)) {
-            chatName = ((Map<String, String>) initContext.get(AippConst.BS_AIPP_FILE_DESC_KEY)).get("file_name");
+            Object data = initContext.get(AippConst.BS_AIPP_FILE_DESC_KEY);
+            if (!(data instanceof Map)) {
+                throw new AippException(AippErrCode.DATA_TYPE_IS_NOT_SUPPORTED, data.getClass().getName());
+            }
+            Map<String, String> fileDesc = ObjectUtils.cast(data);
+            chatName = fileDesc.get("file_name");
         } else if (initContext.containsKey(AippConst.BS_AIPP_QUESTION_KEY)) {
             chatName = initContext.get(AippConst.BS_AIPP_QUESTION_KEY).toString();
         } else {

@@ -10,6 +10,7 @@ import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.service.LLMService;
 import com.huawei.fit.jober.aipp.service.OperatorService;
+import com.huawei.fit.jober.aipp.tool.FileExtractor;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
@@ -324,10 +325,9 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     private String getAudioContent(File file) {
-        String gid = "com.huawei.fit.jober.aipp.tool.file.extractor";
         String fid = "llmAudio2Summary";
         try {
-            return this.client.getRouter(gid).route(new FitableIdFilter(fid)).invoke(file);
+            return this.client.getRouter(FileExtractor.FILE_EXTRACTOR_GID).route(new FitableIdFilter(fid)).invoke(file);
         } catch (FitException e) {
             log.error("read audio fail.", e);
             throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);

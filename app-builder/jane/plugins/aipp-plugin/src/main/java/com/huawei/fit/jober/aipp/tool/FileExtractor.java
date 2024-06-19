@@ -16,11 +16,16 @@ import java.io.File;
  */
 public interface FileExtractor {
     /**
+     *文件提取genericable接口gid
+     */
+    String FILE_EXTRACTOR_GID = "com.huawei.fit.jober.aipp.tool.file.extractor";
+
+    /**
      * 提取文件内容
      *
      * @param file 待提取的文件
      * @return 文件内容。
      */
-    @Genericable("com.huawei.fit.jober.aipp.tool.file.extractor")
+    @Genericable(FILE_EXTRACTOR_GID)
     String extractFile(File file);
 }
