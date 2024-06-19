@@ -165,7 +165,7 @@ def create_namespace_if_needed():
         logger.warning(e)
 
     try:
-        response = api_instance.create_namespace(MODEL_IO_NAMESPACE)
+        response = api_instance.create_namespace(body=namespace)
     except ApiException as e:
         logger.warning(e)
     return
@@ -938,7 +938,8 @@ async def notify_model_io_gateways():
 model_weight_model_dir = {
     # model name and it's base dir name
     "Meta-Llama-3-8B-Instruct": "Meta-Llama-3-8B-Instruct",
-    "Qwen-14B-Chat": "Qwen-14B-Chat"
+    "Qwen-14B-Chat": "Qwen-14B-Chat",
+    "chatglm3-6b": "chatglm3-6b"
 }
 
 
