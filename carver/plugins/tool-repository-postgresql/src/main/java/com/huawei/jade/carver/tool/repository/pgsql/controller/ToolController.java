@@ -18,10 +18,10 @@ import com.huawei.fit.http.annotation.RequestQuery;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.ListResult;
-import com.huawei.jade.carver.Result;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.service.ToolService;
+import com.huawei.jade.common.Result;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -61,7 +61,7 @@ public class ToolController {
         if ((name instanceof String) && StringUtils.isBlank((String) name)) {
             throw new IllegalArgumentException("The tool name cannot be blank.");
         }
-        return Result.create(this.toolService.addTool(tool), 0, 1);
+        return Result.ok(this.toolService.addTool(tool), 1);
     }
 
     /**
@@ -73,7 +73,7 @@ public class ToolController {
     @GetMapping("/{uniqueName}")
     public Result<ToolData> getToolByUniqueName(@PathVariable("uniqueName") String uniqueName) {
         notBlank(uniqueName, "The tool unique name cannot be blank.");
-        return Result.create(this.toolService.getTool(this.decodeChinese(uniqueName)), 0, 1);
+        return Result.ok(this.toolService.getTool(this.decodeChinese(uniqueName)), 1);
     }
 
     /**
@@ -101,7 +101,7 @@ public class ToolController {
         ToolQuery toolQuery = new ToolQuery(this.decodeChinese(name), includeTags, excludeTags, pageNum, limit);
         ListResult<ToolData> res = this.toolService.getTools(toolQuery);
         List<ToolData> data = res.getData();
-        return Result.create(data, 0, res.getCount());
+        return Result.ok(data, res.getCount());
     }
 
     /**
@@ -128,7 +128,7 @@ public class ToolController {
         }
         ToolQuery toolQuery = new ToolQuery(this.decodeChinese(name), includeTags, excludeTags, pageNum, limit);
         ListResult<ToolData> res = this.toolService.searchTools(toolQuery);
-        return Result.create(res.getData(), 0, res.getCount());
+        return Result.ok(res.getData(), res.getCount());
     }
 
     /**
@@ -140,7 +140,7 @@ public class ToolController {
     @DeleteMapping("/{uniqueName}")
     public Result<String> deleteTool(@PathVariable("uniqueName") String uniqueName) {
         notBlank(uniqueName, "The unique name cannot be blank.");
-        return Result.create(this.toolService.deleteTool(this.decodeChinese(uniqueName)), 0, 1);
+        return Result.ok(this.toolService.deleteTool(this.decodeChinese(uniqueName)), 1);
     }
 
     private String decodeChinese(String input) {

@@ -5,30 +5,11 @@
 
     <parent>
         <groupId>com.huawei.fit.jade.service</groupId>
-        <artifactId>carver-service-parent</artifactId>
+        <artifactId>common-service-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>common-service</artifactId>
-
-    <dependencies>
-        <!-- FIT -->
-        <dependency>
-            <groupId>com.huawei.fitframework</groupId>
-            <artifactId>fit-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fitframework</groupId>
-            <artifactId>fit-util</artifactId>
-        </dependency>
-
-        <!-- Service -->
-        <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
-            <artifactId>jade-common-service</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
+    <artifactId>jade-common-service</artifactId>
 
     <build>
         <plugins>
