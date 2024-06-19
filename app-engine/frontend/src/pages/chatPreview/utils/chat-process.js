@@ -2,6 +2,9 @@ import { isJsonString, getUiD } from "@shared/utils/common";
 import { queryInspirationSelect } from "@shared/http/aipp";
 import { Message } from "@shared/utils/message";
 
+const audioType = ['mp3'];
+const videoType = ['mp4'];
+
 // 历史会话消息处理
 export const historyChatProcess = (res) => {
   let chatArr = [];
@@ -55,6 +58,7 @@ export const historyChatProcess = (res) => {
         }
         if (aItem.logType === 'FILE') {
           answerObj.type = 'send';
+          answerObj.sendType = 'img'
         }
         if (isJsonString(msg)) {
           let msgObj = JSON.parse(msg);

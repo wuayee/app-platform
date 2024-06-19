@@ -63,7 +63,7 @@ const ChoreographyHead = (props) => {
       <div className="logo">
         { showElsa && <LeftArrowIcon className="back-icon" onClick={backClick}/> }
         { appInfo?.attributes?.icon ?
-          <img src={appInfo.attributes.icon} onClick={backClick} /> :
+          <img src={appInfo.attributes?.icon} onClick={backClick} /> :
           <img src='/src/assets/images/knowledge/knowledge-base.png' onClick={backClick}/>
         }
         <span className="header-text" title={appInfo?.name}>{ appInfo?.name }</span>
