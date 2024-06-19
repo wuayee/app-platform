@@ -1,18 +1,23 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useImperativeHandle } from 'react';
 import { Tooltip } from "antd";
 import { ConfigFlowIcon } from '@assets/icon';
+import { Message } from '@shared/utils/message';
 import { FlowContext } from '../aippIndex/context';
 import LeftMenu from './components/left-menu';
 import Stage from './components/elsa-stage';
 import FlowHeader from './components/addflow-header';
 import './styles/index.scss';
+import FlowTest from "./components/flow-test";
+import TestModal from "../components/test-modal";
 
 
 const AddFlow = (props) => {
-  const { type, appInfo } = props;
+  const { type, appInfo, addFlowRef, setFlowTested, setFlowTestTime, setFlowTestStatus, setFlowTesting } = props;
   const [ dragData, setDragData ] = useState([]);
   const [ addId, setAddId ] = useState(false);
   const [ showMenu, setShowMenu ] = useState(false);
+  const [ debugTypes, setDebugTypes ] = useState([]);
+  const [ showDebug, setShowDebug ] = useState(false);
   const [ modalInfo, setModalInfo ] = useState({
     name: '无标题',
     type: 'waterFlow',
@@ -41,10 +46,42 @@ const AddFlow = (props) => {
   function menuClick() {
     setShowMenu(!showMenu)
   }
+  // 测试
+  const handleDebugClick = () => {
+    window.agent.validate().then(()=> {
+      setDebugTypes(window.agent.getFlowRunInputMetaData());
+      setShowDebug(true);
+    }).catch(err => {
+      let str = typeof(err) === 'string' ? err : '请输入流程必填项';
+      Message({ type: "warning", content: str});
+    })
+  }
+  // 给父组件的测试回调
+  useImperativeHandle(addFlowRef, () => {
+    return {
+      'handleDebugClick': handleDebugClick,
+    }
+  })
   return <>{(
     <div className='add-flow-container'>
       <FlowContext.Provider value={flowContext}>
-        {!type && <FlowHeader addId={addId} appRef={appRef} flowIdRef={flowIdRef} />}
+        {!type && <FlowHeader addId={addId}
+                              appRef={appRef}
+                              flowIdRef={flowIdRef}
+                              debugTypes={debugTypes}
+                              handleDebugClick={handleDebugClick}
+                              showDebug={showDebug}
+                              setShowDebug={setShowDebug}
+        />}
+        {type && <FlowTest setIsTested={setFlowTested}
+          setTestStatus={setFlowTestStatus}
+          setIsTesting={setFlowTesting}
+          setTestTime={setFlowTestTime}
+          setShowDebug={setShowDebug}
+          showDebug={showDebug}
+          debugTypes={debugTypes}
+          appRef={appRef}
+        />}
         <div className={['content', !type ? 'content-add' : null ].join(' ')}>
           {
             showMenu ? (
