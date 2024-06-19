@@ -27,6 +27,10 @@ public class ModelStatisticsService {
     @Getter
     private Map<String, ModelInfo> models = new ConcurrentHashMap<>();
 
+    @Getter
+    private Map<String, Integer> modelLinkControl = new ConcurrentHashMap<>();
+
+
     private double totalLatency;
 
     private long totalTokens;
@@ -40,12 +44,25 @@ public class ModelStatisticsService {
         if (modelStats == null || modelStats.getModel() == null || modelStats.getModel().isEmpty()) {
             return;
         }
+        if (this.modelLinkControl.containsKey(modelStats.getModel())
+                && this.modelLinkControl.get(modelStats.getModel()) == 0) {
+            // modelLinkControl 中最大连接数为0，则无法符合新的请求
+            log.error("load cannot afford, error");
+            throw new IllegalArgumentException("load cannot afford, error");
+        }
 
         log.info("Update stats with request for model: " + modelStats.getModel());
         ModelInfo modelInfo = this.models.getOrDefault(modelStats.getModel(), new ModelInfo());
         modelInfo.setRequests(modelInfo.getRequests() + 1);
         modelInfo.setModel(modelStats.getModel());
         this.models.put(modelStats.getModel(), modelInfo);
+        if (this.modelLinkControl.get(modelStats.getModel()) != null) {
+            // modellinkControl中无对应模型信息但可以路由，则允许访问大模型
+            // modellinkControl中有对应模型信息，则更新最大链接值减一
+            Integer linkNum = this.modelLinkControl.get(modelStats.getModel()) - 1;
+            log.info("Update modelLinkControl for " + modelStats.getModel() + "for link num to: " + linkNum);
+            this.modelLinkControl.put(modelStats.getModel(), linkNum);
+        }
     }
 
     /**
@@ -75,6 +92,12 @@ public class ModelStatisticsService {
         }
         modelInfo.setTotalInputTokens(modelInfo.getTotalInputTokens() + usage.getPromptTokens());
         modelInfo.setTotalOutputTokens(modelInfo.getTotalOutputTokens() + usage.getCompletionTokens());
+        Integer currentLinkNum = this.modelLinkControl.get(modelInfo.getModel());
+        if (currentLinkNum != null) {
+            currentLinkNum += 1;
+            log.info("Update modelLinkControl for " + modelInfo.getModel() + "for link num to: " + currentLinkNum);
+            this.modelLinkControl.put(modelInfo.getModel(), currentLinkNum);
+        }
     }
 
     /**

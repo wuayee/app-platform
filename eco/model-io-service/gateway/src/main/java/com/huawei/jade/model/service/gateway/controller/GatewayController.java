@@ -120,6 +120,29 @@ public class GatewayController {
 
             this.currentRoutes.put(routeInfo.getId(), routeInfo);
             log.info(routeInfo.getId() + " is updated");
+
+            // 根据模型路由信息设置流控信息
+            if (routeInfo.getModel() != null
+                    && !this.modelStatisticsService.getModelLinkControl().containsKey(routeInfo.getModel())) {
+                // 初次设置，增加到modelLinkControl缓存
+                // 未传入max_link_num参数，默认设置最大链接数为1000
+                Integer maxLinkNum = (routeInfo.getMaxLinkNum() != null) ? routeInfo.getMaxLinkNum() : 1000;
+                log.info("Add new link control for model: " + routeInfo.getModel() + "for link num to: " + maxLinkNum);
+                this.modelStatisticsService.getModelLinkControl().put(routeInfo.getModel(), maxLinkNum);
+            } else {
+                // 已经设置过最大链接数，更新modellinkcontrol
+                Integer currentLinkNum = this.modelStatisticsService.getModelLinkControl().get(routeInfo.getId());
+                Integer oldLinkNum = this.currentRoutes.get(routeInfo.getModel()).getMaxLinkNum();
+                Integer currentUsage = oldLinkNum - currentLinkNum;
+                Integer newLinkNum = routeInfo.getMaxLinkNum();
+                Integer updateLinkNum = 0;
+                if (currentUsage < newLinkNum) {
+                    updateLinkNum = currentLinkNum + newLinkNum - oldLinkNum;
+                }
+                log.info("update exist link control for model: " + routeInfo.getModel()
+                        + "for link num to: " + updateLinkNum);
+                this.modelStatisticsService.getModelLinkControl().put(routeInfo.getModel(), updateLinkNum);
+            }
         }
         return ResponseEntity.ok().build();
     }

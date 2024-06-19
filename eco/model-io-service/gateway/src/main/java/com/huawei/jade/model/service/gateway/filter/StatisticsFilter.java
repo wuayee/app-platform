@@ -81,7 +81,13 @@ public class StatisticsFilter implements GlobalFilter, Ordered {
         }
 
         ServerHttpResponse response = exchange.getResponse();
-        ServerHttpRequest request = exchange.getRequest();
+        ServerHttpRequest request = exchange.getRequest()
+                .mutate()
+                .headers(httpHeaders -> {
+                    httpHeaders.set("Accept-Encoding", "identity");
+                    httpHeaders.remove("content-length");
+                })
+                .build();
         DataBufferFactory dataBufferFactory = response.bufferFactory();
 
         exchange.getAttributes().put(REQUEST_START_TIME, System.currentTimeMillis());

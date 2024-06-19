@@ -45,6 +45,9 @@ public class RouteInfo {
     @JsonProperty("http_proxy")
     private String httpProxy;
 
+    @JsonProperty("max_link_num")
+    private Integer maxLinkNum;
+
     /**
      * 构造网关路由定义。
      *
