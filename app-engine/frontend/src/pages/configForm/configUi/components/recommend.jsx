@@ -23,8 +23,7 @@ const Recommend = (props) => {
     setList([ ...listCrrent.current ]);
     saveRecommend();
   }
-  const addRecommend = () => {
-    if (listCrrent.current.length > 2) ;
+  const addRecommend = () => {、
     listCrrent.current = [ ...listCrrent.current, '' ]
     setList(listCrrent.current);
   }
