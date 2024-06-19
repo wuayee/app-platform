@@ -3,6 +3,7 @@ import Type from './Type.jsx';
 import Description from './Description.jsx';
 import PropTypes from 'prop-types'; // 导入 PropTypes
 import {useDispatch} from "@/components/DefaultRoot.jsx";
+import Required from "@/components/start/Required.jsx";
 
 StartInputForm.propTypes = {
     item: PropTypes.shape({
@@ -43,9 +44,6 @@ export default function StartInputForm({item}) {
               onChange={handleFormValueChange}/>
         <Type itemId={item.id} propValue={item.type} disableModifiable={item.disableModifiable} onChange={handleFormValueChange}/>
         <Description itemId={item.id} propValue={item.description} disableModifiable={item.disableModifiable} onChange={handleFormValueChange}/>
-        {/*0430版本暂不需要required参数*/}
-        {/*<Form.Item name="required">*/}
-        {/*    <Required/>*/}
-        {/*</Form.Item>*/}
+        <Required itemId={item.id} propValue={item.isRequired} disableModifiable={item.disableModifiable} onChange={handleFormValueChange}/>
     </>);
 }

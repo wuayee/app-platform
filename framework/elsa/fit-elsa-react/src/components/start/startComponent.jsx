@@ -55,7 +55,20 @@ export const startComponent = (jadeConfig) => {
             return data.map(item => {
                 if (item.name === "input") {
                     return {
-                        ...item, value: [...item.value, {id: action.id, name: "", type: "String", from: "Input", description: "", value: "", disableModifiable: false}]
+                        ...item,
+                        value: [
+                            ...item.value,
+                            {
+                                id: action.id,
+                                name: "",
+                                type: "String",
+                                from: "Input",
+                                description: "",
+                                value: "",
+                                disableModifiable: false,
+                                isRequired: true
+                            }
+                        ]
                     }
                 } else {
                     return item;
