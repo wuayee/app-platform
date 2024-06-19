@@ -7,6 +7,7 @@ package com.huawei.fit.jober.aipp.service.impl;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
+import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.common.MetaUtils;
 import com.huawei.fit.jober.aipp.common.UUIDUtil;
@@ -25,6 +26,7 @@ import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import com.huawei.fit.jober.aipp.service.AippChatService;
 import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.util.ObjectUtils;
@@ -37,6 +39,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * AippChatServiceImpl
@@ -185,6 +190,7 @@ public class AippChatServiceImpl implements AippChatService {
             return rsp;
         }
         List<ChatDto> result = this.aippChatMapper.selectChat(chatId, body.getOffset(), body.getLimit());
+        getChatAppInfo(result, body.getAippId(), context);
         ArrayList msgList = new ArrayList<>();
         result.forEach((chat) -> {
             AippLogData data = JsonUtils.parseObject(chat.getLogData(), AippLogData.class);
@@ -195,6 +201,8 @@ public class AippChatServiceImpl implements AippChatService {
                     .role((AippInstLogType.QUESTION.name().equals(chat.getLogType())) ? "USER" : "SYSTEM")
                     .createTime(chat.getCreateTime())
                     .msgId(chat.getMsgId())
+                    .appName(chat.getAppName())
+                    .appIcon(chat.getAppIcon())
                     .build();
             msgList.add(messageInfo);
         });
@@ -206,6 +214,39 @@ public class AippChatServiceImpl implements AippChatService {
         rsp.setTotal(total * 2);
         rsp.setMassageList(msgList);
         return rsp;
+    }
+
+    private void getChatAppInfo(List<ChatDto> chatList, String originAippId, OperationContext context) {
+        // 620出包需要 与logService的getAippLogWithAppInfo逻辑雷同 后续要整改
+        List<String> atAippIds = chatList.stream()
+                .filter(data -> !Objects.equals(data.getAippId(), originAippId))
+                .map(ChatDto::getAippId)
+                .collect(Collectors.toList());
+        RangedResultSet<Meta> metas =
+                metaService.list(this.buildAippIdFilter(atAippIds), true, 0, atAippIds.size(), context);
+        if (!metas.getResults().isEmpty()) {
+            List<Meta> meta = metas.getResults();
+            Map<String, Meta> metaMap = meta.stream().collect(Collectors.toMap(Meta::getId, Function.identity()));
+            chatList.stream().forEach(data -> setChatAppInfoWithMetaMap(metaMap, data));
+        }
+    }
+
+    private void setChatAppInfoWithMetaMap(Map<String, Meta> metaMap, ChatDto chat) {
+        if (!metaMap.containsKey(chat.getAippId())) {
+            return;
+        }
+        Meta meta = metaMap.get(chat.getAippId());
+        chat.setAppName(meta.getName());
+        Object icon = meta.getAttributes().get("meta_icon");
+        if (icon instanceof String) {
+            chat.setAppIcon((String) icon);
+        }
+    }
+
+    private MetaFilter buildAippIdFilter(List<String> aippIds) {
+        MetaFilter filter = new MetaFilter();
+        filter.setMetaIds(aippIds);
+        return filter;
     }
 
     @Override

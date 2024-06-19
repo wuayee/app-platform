@@ -168,8 +168,12 @@ public class AippLogServiceImpl implements AippLogService {
     @Override
     public List<AippInstLogDataDto> queryAppRecentChatLog(String appId, String aippType, OperationContext context) {
         List<String> chatIds = aippChatMapper.selectChatByAppId(appId, 1);
+        List<AippInstLogDataDto> logData = new ArrayList<>();
+        if (chatIds.isEmpty()) {
+            return logData;
+        }
         List<String> instanceIds = aippChatMapper.selectInstanceByChat(chatIds.get(0), 5);
-        List<AippInstLogDataDto> logData = queryAndSortLogs(instanceIds, context);
+        logData = queryAndSortLogs(instanceIds, context);
         return this.getAippLogWithAppInfo(logData, aippType, appId, context);
     }
 
