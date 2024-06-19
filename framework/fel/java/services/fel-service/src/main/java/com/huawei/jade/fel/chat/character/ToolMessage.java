@@ -4,6 +4,7 @@
 
 package com.huawei.jade.fel.chat.character;
 
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.chat.MessageType;
 
 import java.util.Optional;
@@ -25,12 +26,12 @@ public class ToolMessage extends AbstractChatMessage {
      */
     public ToolMessage(String id, String text) {
         super(text);
-        this.id = id;
+        this.id = Validation.notBlank(id, "The id cannot be blank.");
     }
 
     @Override
     public Optional<String> id() {
-        return Optional.ofNullable(this.id);
+        return Optional.of(this.id);
     }
 
     @Override
@@ -40,6 +41,6 @@ public class ToolMessage extends AbstractChatMessage {
 
     @Override
     public String toString() {
-        return "Tool " + this.id + ": " + this.text();
+        return "tool " + this.id + ": " + this.text();
     }
 }

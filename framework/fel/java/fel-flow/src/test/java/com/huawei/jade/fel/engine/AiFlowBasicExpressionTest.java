@@ -313,7 +313,7 @@ public class AiFlowBasicExpressionTest {
     @DisplayName("测试解析mermaid格式的流程结构")
     class MermaidTest {
         private final ChatBlockModel model =
-                new ChatBlockModel(prompts -> new FlatChatMessage(new AiMessage("model answer")));
+                new ChatBlockModel(prompts -> FlatChatMessage.from(new AiMessage("model answer")));
 
         private final AiProcessFlow<Prompt, ChatMessage> subFlow = AiFlows.<Prompt>create()
                 .just((input, context) -> {})

@@ -132,12 +132,12 @@ public class LLMComponentTest {
                 emitter.fail(new IllegalStateException(exceptionMsg));
             }
             if (step.getAndIncrement() == 0) {
-                emitter.emit(new FlatChatMessage(new AiMessage("tool_data", toolCalls)));
+                emitter.emit(FlatChatMessage.from(new AiMessage("tool_data", toolCalls)));
                 emitter.complete();
                 return;
             }
             for (int i = 0; i < 4; i++) {
-                emitter.emit(new FlatChatMessage(new AiMessage(String.valueOf(i))));
+                emitter.emit(FlatChatMessage.from(new AiMessage(String.valueOf(i))));
             }
             emitter.complete();
         });
@@ -148,7 +148,7 @@ public class LLMComponentTest {
             @Override
             public FlatChatMessage call(ToolCall toolCall, Map<String, Object> toolContext) {
                 String toolData = JsonUtils.toJsonString(toolContext.get(AippConst.CALLBACK_ID));
-                return new FlatChatMessage(new ToolMessage("", toolData == null ? TOOL_DEFAULT_VALUE : toolData));
+                return FlatChatMessage.from(new ToolMessage("1", toolData == null ? TOOL_DEFAULT_VALUE : toolData));
             }
 
             @Override
@@ -301,7 +301,7 @@ public class LLMComponentTest {
         // stub
         AiProcessFlow<Prompt, Prompt> testAgent = AiFlows.<Prompt>create()
                 .just(m -> Assertions.assertEquals(4, m.messages().size()))
-                .map(m -> (Prompt) ChatMessages.from(new ToolMessage("", "\"tool_async\"")))
+                .map(m -> (Prompt) ChatMessages.from(new ToolMessage("1", "\"tool_async\"")))
                 .close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
@@ -346,7 +346,7 @@ public class LLMComponentTest {
                         chatMessages.add(new AiMessage("bad"));
                     } else {
                         chatMessages.add(new AiMessage("", Collections.singletonList(new ToolCall())));
-                        chatMessages.add(new ToolMessage("", "\"tool_async\""));
+                        chatMessages.add(new ToolMessage("1", "\"tool_async\""));
                     }
                     return (Prompt) chatMessages;
                 })

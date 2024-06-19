@@ -7,9 +7,9 @@ package com.huawei.jade.fel.model.openai;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.huawei.fitframework.resource.web.Media;
 import com.huawei.jade.fel.chat.character.HumanMessage;
 import com.huawei.jade.fel.chat.character.SystemMessage;
-import com.huawei.jade.fel.chat.content.Media;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.model.openai.entity.Usage;
 import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
@@ -213,8 +213,8 @@ public class OpenAiChatMessageTest {
 
     @Test
     void testBasicMessageConversion() {
-        FlatChatMessage systemMessage = new FlatChatMessage(new SystemMessage("system message"));
-        FlatChatMessage humanMessage = new FlatChatMessage(new HumanMessage("human message"));
+        FlatChatMessage systemMessage = FlatChatMessage.from(new SystemMessage("system message"));
+        FlatChatMessage humanMessage = FlatChatMessage.from(new HumanMessage("human message"));
 
         List<OpenAiChatMessage> prompts = OpenAiMessageUtils.buildPrompts(Arrays.asList(systemMessage, humanMessage));
         assertThat(prompts.get(0)).hasFieldOrPropertyWithValue("role", Role.SYSTEM)
@@ -225,8 +225,8 @@ public class OpenAiChatMessageTest {
 
     @Test
     void testMessageWithImageUrlConversion() {
-        FlatChatMessage humanMessage = new FlatChatMessage(new HumanMessage("human message"));
-        Media media = new Media("test_base64", "image/jpg");
+        FlatChatMessage humanMessage = FlatChatMessage.from(new HumanMessage("human message"));
+        Media media = new Media("image/jpg", "test_base64");
         humanMessage.setMedias(Collections.singletonList(media));
 
         List<OpenAiChatMessage> prompts = OpenAiMessageUtils.buildPrompts(Collections.singletonList(humanMessage));
@@ -279,8 +279,8 @@ public class OpenAiChatMessageTest {
 
     @Test
     void testOpenAiChatCompletionRequestSerialization() throws JsonProcessingException {
-        FlatChatMessage humanMessage = new FlatChatMessage(new HumanMessage("human"));
-        Media media = new Media("test_base64", "image/jpg");
+        FlatChatMessage humanMessage = FlatChatMessage.from(new HumanMessage("human"));
+        Media media = new Media("image/jpg", "test_base64");
         humanMessage.setMedias(Collections.singletonList(media));
 
         String toolJson = "{\"name\": \"test_tool\",\"description\": \"tool_description\","
