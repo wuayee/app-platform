@@ -17,10 +17,10 @@ import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.carver.Result;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.service.ToolService;
+import com.huawei.jade.common.Result;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -77,7 +77,7 @@ public class AdapterController {
             tags.addAll((List<String>) schema.get("tags"));
         }
         ToolData tool = this.convertToolData(this.decodeChinese(toolName), schema, runnables, tags);
-        return Result.create(this.toolService.addTool(tool), 0, 1);
+        return Result.ok(this.toolService.addTool(tool), 1);
     }
 
     /**
@@ -96,7 +96,7 @@ public class AdapterController {
             @PathVariable("genericableId") String genericableId, @PathVariable("itemName") String itemName,
             @RequestParam("tags") List<String> tags, @RequestBody Map<String, Object> schema) {
         ToolData tool = this.convertToolData(this.decodeChinese(itemName), schema, null, new HashSet<>(tags));
-        return Result.create(this.toolService.addTool(tool), 0, 1);
+        return Result.ok(this.toolService.addTool(tool), 1);
     }
 
     /**
@@ -118,7 +118,7 @@ public class AdapterController {
         notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
         notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         ToolQuery toolQuery = new ToolQuery(null, includeTags, excludeTags, pageNum, limit);
-        return Result.create(this.toolService.getTools(toolQuery).getData(), 0,
+        return Result.ok(this.toolService.getTools(toolQuery).getData(),
                 this.toolService.getTools(toolQuery).getCount());
     }
 
@@ -136,8 +136,7 @@ public class AdapterController {
         notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
         notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         ToolQuery toolQuery =
-                new ToolQuery(null, new HashSet<>(Collections.singleton("FIT")),
-                        null, null, pageNum, limit);
+                new ToolQuery(null, new HashSet<>(Collections.singleton("FIT")), null, null, pageNum, limit);
         List<ToolData> tools = this.toolService.getTools(toolQuery).getData();
         Set<String> genericableIds = tools.stream()
                 .filter(toolData -> toolData.getRunnables() != null && toolData.getRunnables().containsKey("FIT"))
@@ -145,7 +144,7 @@ public class AdapterController {
                 .filter(fitMap -> fitMap.get("genericableId") instanceof String)
                 .map(fitMap -> (String) fitMap.get("genericableId"))
                 .collect(Collectors.toSet());
-        return Result.create(genericableIds, 0, 1);
+        return Result.ok(genericableIds, 1);
     }
 
     /**
@@ -169,10 +168,10 @@ public class AdapterController {
         notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
         notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         if (this.decodeChinese(genericableId).equals(DECODE_EX)) {
-            return Result.create(null, 0, 0);
+            return Result.ok(null, 0);
         }
         ToolQuery toolQuery = new ToolQuery(null, includeTags, excludeTags, pageNum, limit);
-        return Result.create(this.toolService.getTools(toolQuery).getData(), 0,
+        return Result.ok(this.toolService.getTools(toolQuery).getData(),
                 this.toolService.getTools(toolQuery).getCount());
     }
 
@@ -192,11 +191,10 @@ public class AdapterController {
         notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
         notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         if (this.decodeChinese(genericableId).equals(DECODE_EX)) {
-            return Result.create(null, 0, 0);
+            return Result.ok(null, 0);
         }
-        ToolQuery toolQuery = new ToolQuery(null, new ArrayList<>(Collections.singleton("FIT")),
-                null, pageNum, limit);
-        return Result.create(this.toolService.getTools(toolQuery).getData(), 0,
+        ToolQuery toolQuery = new ToolQuery(null, new ArrayList<>(Collections.singleton("FIT")), null, pageNum, limit);
+        return Result.ok(this.toolService.getTools(toolQuery).getData(),
                 this.toolService.getTools(toolQuery).getCount());
     }
 
@@ -211,7 +209,7 @@ public class AdapterController {
     public Result<ToolData> getItemByUniqueName(@PathVariable("platform") String platform,
             @RequestParam("uniqueName") String uniqueName) {
         notBlank(uniqueName, "The tool unique name cannot be blank.");
-        return Result.create(this.toolService.getTool(uniqueName), 0, 1);
+        return Result.ok(this.toolService.getTool(uniqueName), 1);
     }
 
     /**
@@ -225,7 +223,7 @@ public class AdapterController {
     @DeleteMapping(path = "/{platform}/categories/{category}")
     public Result<String> deleteItem(@PathVariable("platform") String platform,
             @PathVariable("category") String category, @RequestParam("uniqueName") String uniqueName) {
-        return Result.create(this.toolService.deleteTool(uniqueName), 0, 1);
+        return Result.ok(this.toolService.deleteTool(uniqueName), 1);
     }
 
     /**
@@ -244,9 +242,8 @@ public class AdapterController {
             @PathVariable("category") String category, @PathVariable("genericableId") String genericableId,
             @PathVariable("itemName") String itemName, @RequestParam("includeTags") List<String> includeTags,
             @RequestParam("excludeTags") List<String> excludeTags) {
-        ToolQuery toolQuery =
-                new ToolQuery(this.decodeChinese(itemName), includeTags, excludeTags, null, null);
-        return Result.create(this.toolService.getTools(toolQuery).getData(), 0, 1);
+        ToolQuery toolQuery = new ToolQuery(this.decodeChinese(itemName), includeTags, excludeTags, null, null);
+        return Result.ok(this.toolService.getTools(toolQuery).getData(), 1);
     }
 
     private Map<String, Object> setFitRunnable(String genericableId, String fitableId) {
