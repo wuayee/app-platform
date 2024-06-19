@@ -18,8 +18,7 @@ def dump_schema(function_tools: List[BaseTool], file_path: str):
         file_path (str): 表示 schema 文件的导出路径。
     """
     tools_schema = [{
-        "type": "langchain",
-        "runnables": {"FIT": {"genericableId": "langchain.tool", "fitableId": f"{tool.name}"}},
+        "runnables": {"langchain": {"genericableId": "langchain.tool", "fitableId": f"{tool.name}"}},
         "schema": {**convert_to_openai_function(tool), "return": {"type": "string"}}
     } for tool in function_tools]
 

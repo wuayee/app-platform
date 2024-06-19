@@ -61,9 +61,9 @@ public class LlmEmitter<O extends ChatMessage> extends FiniteEmitter<O, ChatChun
                 () -> this.getDefaultQuestion(prompt));
         this.consumer = ObjectUtils.nullIf(session.getInnerState(STREAMING_CONSUMER), EMPTY_CONSUMER);
         this.processor = Validation.notNull(
-                cast(session.getInnerState(STREAMING_PROCESSOR)), "The processor cant be null.");
+                cast(session.getInnerState(STREAMING_PROCESSOR)), "The processor cannot be null.");
         this.context = Validation.notNull(
-                cast(session.getInnerState(STREAMING_FLOW_CONTEXT)), "The flow context cant be null.");
+                cast(session.getInnerState(STREAMING_FLOW_CONTEXT)), "The flow context cannot be null.");
     }
 
     @Override

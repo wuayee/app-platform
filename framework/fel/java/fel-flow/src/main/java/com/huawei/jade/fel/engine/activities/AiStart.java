@@ -349,15 +349,14 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public <R> AiState<R, D, O, RF, F> delegate(Pattern<O, R> pattern) {
         Validation.notNull(pattern, "Pattern operator cannot be null.");
-        AtomicReference<FlowPattern<O, R>> flowPatternRef = new AtomicReference<>();
+        FlowPattern<O, R> flowPattern = this.castFlowPattern(pattern);
         Processor<O, R> processor = this.publisher().map(input -> {
-            AiFlowSession.applyPattern(flowPatternRef.get(), input.getData(), input.getSession());
+            AiFlowSession.applyPattern(flowPattern, input.getData(), input.getSession());
             return null;
         }, null);
         this.displayPatternProcessor(pattern, processor);
-        flowPatternRef.set(this.castFlowPattern(pattern));
         AiState<R, D, O, RF, F> state = new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow());
-        state.offer(flowPatternRef.get());
+        state.offer(flowPattern);
         return state;
     }
 

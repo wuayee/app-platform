@@ -32,6 +32,16 @@ public class AiFlowSession {
     }
 
     /**
+     *
+     * 获取线程变量 {@link FlowSession}，如果变量为空，则返回一个新构造的对象。
+     *
+     * @return {@link FlowSession} 对象。
+     */
+    public static FlowSession require() {
+        return AiFlowSession.get().orElseGet(FlowSession::new);
+    }
+
+    /**
      * 在 {@link AiFlowSession} 上下文执行委托单元。
      *
      * @param pattern 表示委托单元的 {@link Pattern}{@code <}{@link I}{@code , }{@link O}{@code >}。
@@ -55,8 +65,10 @@ public class AiFlowSession {
      */
     public static <I, O> List<O> applyBatchPattern(List<Pattern<I, O>> patterns, I input, FlowSession session) {
         AiFlowSession.SESSION_THREAD_LOCAL.set(session);
-        List<O> output = patterns.stream().map(pattern -> pattern.invoke(input)).collect(Collectors.toList());
-        AiFlowSession.SESSION_THREAD_LOCAL.remove();
-        return output;
+        try {
+            return patterns.stream().map(pattern -> pattern.invoke(input)).collect(Collectors.toList());
+        } finally {
+            AiFlowSession.SESSION_THREAD_LOCAL.remove();
+        }
     }
 }

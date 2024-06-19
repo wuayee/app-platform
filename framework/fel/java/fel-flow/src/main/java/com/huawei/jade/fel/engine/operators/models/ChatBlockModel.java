@@ -71,12 +71,15 @@ public class ChatBlockModel implements BlockModel<Prompt, ChatMessage> {
     }
 
     private void updateMemory(AiMessage answer) {
+        if (answer.isToolCall()) {
+            return;
+        }
         Optional<FlowSession> session = AiFlowSession.get();
         if (!session.isPresent()) {
             return;
         }
         Memory memory = session.get().getInnerState(StateKey.HISTORY_OBJ);
-        if (answer.isToolCall() || memory == null) {
+        if (memory == null) {
             return;
         }
         memory.add(session.get().getInnerState(StateKey.HISTORY_INPUT), answer);

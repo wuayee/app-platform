@@ -48,8 +48,7 @@ public abstract class AbstractFlowPattern<I, O> implements FlowPattern<I, O> {
 
     @Override
     public O invoke(I data) {
-        FlowSession session = AiFlowSession.get().orElseGet(FlowSession::new);
-        this.getFlow().converse(session).offer(data);
+        this.getFlow().converse(AiFlowSession.require()).offer(data);
         return null;
     }
 
@@ -60,10 +59,7 @@ public abstract class AbstractFlowPattern<I, O> implements FlowPattern<I, O> {
      * @throws IllegalStateException 当流程发生异常时。
      */
     public Pattern<I, O> sync() {
-        return new SimplePattern<>(data -> {
-            FlowSession session = AiFlowSession.get().orElseGet(FlowSession::new);
-            return this.getFlow().converse(session).offer(data).await();
-        });
+        return new SimplePattern<>(data -> this.getFlow().converse(AiFlowSession.require()).offer(data).await());
     }
 
     /**

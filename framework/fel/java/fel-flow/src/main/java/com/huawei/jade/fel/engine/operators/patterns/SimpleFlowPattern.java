@@ -54,7 +54,7 @@ public class SimpleFlowPattern<I, O> implements FlowPattern<I, O> {
 
     @Override
     public O invoke(I data) {
-        FlowSession session = AiFlowSession.get().orElseGet(FlowSession::new);
+        FlowSession session = AiFlowSession.require();
         THREAD_POOL.execute(() -> this.emit(this.processor.process(data, session), session));
         return null;
     }

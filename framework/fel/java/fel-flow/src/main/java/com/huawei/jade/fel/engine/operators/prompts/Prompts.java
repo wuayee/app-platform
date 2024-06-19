@@ -14,7 +14,6 @@ import com.huawei.jade.fel.engine.util.StateKey;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 提示词工具方法。用于 {@link com.huawei.jade.fel.engine.activities.AiStart#prompt(PromptTemplate[])} 构造提示词。
@@ -76,7 +75,7 @@ public class Prompts {
     public static <I> PromptTemplate<I> history() {
         return input -> {
             List<ChatMessage> messages = AiFlowSession.get()
-                    .flatMap(session -> Optional.ofNullable(session.<Memory>getInnerState(StateKey.HISTORY_OBJ)))
+                    .map(session -> session.<Memory>getInnerState(StateKey.HISTORY_OBJ))
                     .map(Memory::messages)
                     .orElseGet(Collections::emptyList);
             return ChatMessages.from(messages);

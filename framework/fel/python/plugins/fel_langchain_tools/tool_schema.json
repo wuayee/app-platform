@@ -1,9 +1,8 @@
 {
 	"tools": [
 		{
-			"type": "langchain",
 			"runnables": {
-				"FIT": {
+				"langchain": {
 					"genericableId": "langchain.tool",
 					"fitableId": "Python_REPL"
 				}
@@ -29,9 +28,8 @@
 			}
 		},
 		{
-			"type": "langchain",
 			"runnables": {
-				"FIT": {
+				"langchain": {
 					"genericableId": "langchain.tool",
 					"fitableId": "terminal"
 				}
@@ -60,29 +58,11 @@
 			}
 		},
 		{
-			"type": "langchain",
 			"runnables": {
-				"FIT": {
+				"langchain": {
 					"genericableId": "langchain.tool",
 					"fitableId": "google_search"
 				}
-			},
-			"user_parameters": {
-				"properties": {
-					"google_api_key": {
-						"description": "google search api key",
-						"type": "string"
-					},
-					"google_cse_id": {
-						"description": "google search cse id",
-						"type": "string"
-					}
-				},
-				"required": [
-					"google_api_key",
-					"google_cse_id"
-				],
-				"type": "object"
 			},
 			"schema": {
 				"name": "google_search",
@@ -96,6 +76,23 @@
 					},
 					"required": [
 						"__arg1"
+					],
+					"type": "object"
+				},
+				"extraParameters": {
+					"properties": {
+						"google_api_key": {
+							"description": "google search api key",
+							"type": "string"
+						},
+						"google_cse_id": {
+							"description": "google search cse id",
+							"type": "string"
+						}
+					},
+					"required": [
+						"google_api_key",
+						"google_cse_id"
 					],
 					"type": "object"
 				},

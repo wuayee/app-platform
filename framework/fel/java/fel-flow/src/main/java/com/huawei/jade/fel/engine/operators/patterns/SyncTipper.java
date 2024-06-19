@@ -17,8 +17,6 @@ import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.util.AiFlowSession;
 import com.huawei.jade.fel.engine.util.StateKey;
 
-import java.util.Optional;
-
 /**
  * 平行分支工具。<p>用于 {@link com.huawei.jade.fel.engine.activities.AiStart#runnableParallel(Pattern[])} 表达式。
  * 每个分支生成一个键值对。</p>
@@ -190,7 +188,7 @@ public interface SyncTipper<I> extends Pattern<I, Tip> {
         Validation.notBlank(historyKey, "History key cannot be blank.");
         return input -> {
             String memoryStr = AiFlowSession.get()
-                    .flatMap(session -> Optional.ofNullable(session.<Memory>getInnerState(StateKey.HISTORY_OBJ)))
+                    .map(session -> session.<Memory>getInnerState(StateKey.HISTORY_OBJ))
                     .map(Memory::text)
                     .orElse(StringUtils.EMPTY);
             return Tip.from(historyKey, memoryStr);
