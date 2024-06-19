@@ -160,12 +160,13 @@ const KnowledgeBaseDetailCreateTable = () => {
       }
       if (n > 255) {
         return Promise.reject('字符串长度不能大于255');
+      } else {
+        return Promise.resolve();
       }
     } else {
       return Promise.reject('');
     }
   }
-
   const selectChange = (e) => {
     e === 'RDB' && form.setFieldValue('knowledgeBaseFormat', 'table');
     e === 'VECTOR' && form.setFieldValue('knowledgeBaseFormat', 'text');
