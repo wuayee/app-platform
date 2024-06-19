@@ -199,11 +199,12 @@ void TaskHandler::HandleMessageApplyMemory(const Common::MessageHeader* header, 
 void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* header, const char* buffer, int socketFd)
 {
     // 解析消息体
+    const uint32_t seq = header->seq();
     auto startPtr = buffer + MESSAGE_HEADER_LEN;
     flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), header->size());
     if (!Common::VerifyApplyPermissionMessageBuffer(bodyVerifier)) {
         logger.Error("[TaskHandler] Received incorrect apply permission body format");
-        SendApplyPermissionResponse({false, socketFd, -1, 0,
+        SendApplyPermissionResponse({false, socketFd, seq, -1, 0,
                                      make_shared<Resource::UserData>(), ErrorType::IllegalMessageBody});
         return;
     }
@@ -215,7 +216,7 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
     // 0大小内存权限申请
     if (applyPermissionMessage->object_key() &&
         resourceMgrPtr_->IsZeroMemory(applyPermissionMessage->object_key()->str())) {
-        HandleApplyZeroMemoryPermission(socketFd, const_cast<ApplyPermissionMessage *>(applyPermissionMessage));
+        HandleApplyZeroMemoryPermission(socketFd, seq, const_cast<ApplyPermissionMessage *>(applyPermissionMessage));
         return;
     }
 
@@ -223,7 +224,7 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
                 resourceMgrPtr_->GetMemoryId(applyPermissionMessage->object_key()->str());
     if (sharedMemoryId == -1) {
         logger.Error("[TaskHandler] The object key {} is not found", applyPermissionMessage->object_key()->str());
-        SendApplyPermissionResponse({false, socketFd, -1, 0,
+        SendApplyPermissionResponse({false, socketFd, seq, -1, 0,
                                      make_shared<Resource::UserData>(), ErrorType::KeyNotFound});
         return;
     }
@@ -236,7 +237,7 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
     }
     auto userDataPtr = make_shared<Resource::UserData>(userData, dataSize);
     auto applyPermitResp =
-            resourceMgrPtr_->HandleApplyPermission({socketFd, applyPermissionMessage->permission(),
+            resourceMgrPtr_->HandleApplyPermission({socketFd, seq, applyPermissionMessage->permission(),
                                                     sharedMemoryId, applyPermissionMessage->is_operating_user_data(),
                                                     userDataPtr});
     // 权限申请请求进入等待队列，阻塞客户端通知
@@ -429,7 +430,7 @@ void TaskHandler::HandleApplyZeroMemory(int32_t socketFd, const std::string& obj
     }
 }
 
-void TaskHandler::HandleApplyZeroMemoryPermission(int32_t socketFd,
+void TaskHandler::HandleApplyZeroMemoryPermission(int32_t socketFd, uint32_t seq,
                                                   Common::ApplyPermissionMessage* applyPermissionMessage)
 {
     const std::string& objectKey = applyPermissionMessage->object_key()->str();
@@ -449,7 +450,7 @@ void TaskHandler::HandleApplyZeroMemoryPermission(int32_t socketFd,
     // 当且仅当读请求且设定操作用户自定义数据时，返回用户自定义元数据
     auto userDataPtr = permissionType == PermissionType::Read && isOperatingUserData ?
                        resourceMgrPtr_->GetZeroMemoryUserData(objectKey) : make_shared<Resource::UserData>();
-    SendApplyPermissionResponse({true, socketFd, -1, 0, userDataPtr, ErrorType::None});
+    SendApplyPermissionResponse({true, socketFd, seq, -1, 0, userDataPtr, ErrorType::None});
 }
 }  // Task
 }  // DataBus
