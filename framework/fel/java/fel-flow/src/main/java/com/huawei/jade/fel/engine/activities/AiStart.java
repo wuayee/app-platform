@@ -4,7 +4,6 @@
 
 package com.huawei.jade.fel.engine.activities;
 
-import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitter;
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fit.waterflow.domain.flow.Flows;
@@ -16,7 +15,6 @@ import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.utils.Tuple;
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
@@ -38,12 +36,13 @@ import com.huawei.jade.fel.engine.operators.patterns.AbstractFlowPattern;
 import com.huawei.jade.fel.engine.operators.patterns.FlowPattern;
 import com.huawei.jade.fel.engine.operators.patterns.SimpleFlowPattern;
 import com.huawei.jade.fel.engine.operators.prompts.PromptTemplate;
+import com.huawei.jade.fel.engine.util.AiFlowSession;
 import com.huawei.jade.fel.engine.util.StateKey;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
@@ -352,10 +351,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Validation.notNull(pattern, "Pattern operator cannot be null.");
         AtomicReference<FlowPattern<O, R>> flowPatternRef = new AtomicReference<>();
         Processor<O, R> processor = this.publisher().map(input -> {
-            Pattern<O, R> dynamicPattern = flowPatternRef.get().bind(MapBuilder.<String, Object>get()
-                    .put(StateKey.FLOW_SESSION, input.getSession())
-                    .build());
-            dynamicPattern.invoke(input.getData());
+            AiFlowSession.applyPattern(flowPatternRef.get(), input.getData(), input.getSession());
             return null;
         }, null);
         this.displayPatternProcessor(pattern, processor);
@@ -461,11 +457,9 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     public final AiState<Prompt, D, O, RF, F> prompt(PromptTemplate<O>... templates) {
         return new AiState<>(new State<>(this.publisher().map(input -> {
             ChatMessages messages = new ChatMessages();
-            Map<String, Object> args =
-                    MapBuilder.<String, Object>get().put(StateKey.FLOW_SESSION, input.getSession()).build();
-            for (PromptTemplate<O> template : templates) {
-                messages.addAll(template.bind(args).invoke(input.getData()).messages());
-            }
+            List<Prompt> prompts =
+                    AiFlowSession.applyBatchPattern(Arrays.asList(templates), input.getData(), input.getSession());
+            prompts.forEach(prompt -> messages.addAll(prompt.messages()));
             return (Prompt) messages;
         }, null).displayAs("prompt"), this.getFlow().origin()), this.getFlow());
     }
@@ -481,13 +475,9 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      */
     public <M extends ChatMessage> AiState<M, D, O, RF, F> generate(BlockModel<O, M> model) {
         Validation.notNull(model, "Model operator cannot be null.");
-        return new AiState<>(new State<>(this.publisher().map(input -> {
-            Map<String, Object> args = MapBuilder.<String, Object>get()
-                    .put(StateKey.FLOW_SESSION, input.getSession())
-                    .build();
-            Pattern<O, M> dynamicModel = model.bind(args);
-            return dynamicModel.invoke(input.getData());
-        }, null).displayAs("generate"), this.getFlow().origin()), this.getFlow());
+        return new AiState<>(new State<>(this.publisher()
+                .map(input -> AiFlowSession.applyPattern(model, input.getData(), input.getSession()), null)
+                .displayAs("generate"), this.getFlow().origin()), this.getFlow());
     }
 
     /**
@@ -506,14 +496,9 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         Processor<O, ChatChunk> processor = this.publisher().flatMap(input -> {
             FlowSession session = input.getSession();
             input.setKeyBy(session.getId());
-
-            Map<String, Object> args = MapBuilder.<String, Object>get()
-                    .put(StateKey.STREAMING_PROCESSOR, processorRef.get())
-                    .put(StateKey.STREAMING_FLOW_CONTEXT, input)
-                    .put(StateKey.FLOW_SESSION, session)
-                    .build();
-            Pattern<O, FiniteEmitter<M, ChatChunk>> dynamicModel = model.bind(args);
-            return Flows.source(dynamicModel.invoke(input.getData()));
+            session.setInnerState(StateKey.STREAMING_PROCESSOR, processorRef.get());
+            session.setInnerState(StateKey.STREAMING_FLOW_CONTEXT, input);
+            return Flows.source(AiFlowSession.applyPattern(model, input.getData(), input.getSession()));
         }, null).displayAs("generate streaming");
         processorRef.set(processor);
         return new AiState<>(new State<>(processor, this.getFlow().origin()), this.getFlow())
@@ -554,12 +539,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
     }
 
     private Processor<O, Tip> getPatternProcessor(Pattern<O, Tip> pattern, AiState<O, D, O, RF, F> node) {
-        return node.publisher().map(input -> {
-                Map<String, Object> args = MapBuilder.<String, Object>get()
-                        .put(StateKey.FLOW_SESSION, input.getSession())
-                        .build();
-                Pattern<O, Tip> dynamicPattern = pattern.bind(args);
-                return dynamicPattern.invoke(input.getData());
-            }, null);
+        return node.publisher()
+                .map(input -> AiFlowSession.applyPattern(pattern, input.getData(), input.getSession()), null);
     }
 }

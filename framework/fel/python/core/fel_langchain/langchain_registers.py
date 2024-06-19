@@ -31,7 +31,7 @@ def _pop_api_keys(input_args: dict, api_keys_name: List[str]) -> dict:
         raise ValueError(f"{input_args} not contain all api keys in {api_keys_name}")
 
 
-def register_api_tools(supplier: Callable[[dict], BaseTool],
+def register_api_tools(tool_builder: Callable[[dict], BaseTool],
                        api_keys_name: List[str],
                        tool_name: str,
                        config: Optional[RunnableConfig] = None,
@@ -40,7 +40,7 @@ def register_api_tools(supplier: Callable[[dict], BaseTool],
     langchain api 工具注册方法。
 
     Args:
-        supplier (Callable[[dict], BaseTool]): 表示 api 工具提供者。
+        tool_builder (Callable[[dict], BaseTool]): 表示 api 工具构造器。
         api_keys_name (List[str]): 表示工具的 api key 名称数组。
         tool_name (str): 工具名称。
         config (Optional[RunnableConfig]): 表示 langchain runnable 配置信息。
@@ -55,7 +55,7 @@ def register_api_tools(supplier: Callable[[dict], BaseTool],
         else:
             _input_args = input_args
 
-        tool = supplier(api_keys)
+        tool = tool_builder(api_keys)
         tool_ans = tool.invoke(_input_args, config, **kwargs)
 
         if not isinstance(tool_ans, str):

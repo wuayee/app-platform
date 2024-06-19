@@ -2,6 +2,7 @@
 # Copyright (c) Huawei Technologies Co., Ltd. -. All rights reserved.
 import json
 import os
+import stat
 from typing import List
 
 from langchain_core.tools import BaseTool
@@ -22,6 +23,6 @@ def dump_schema(function_tools: List[BaseTool], file_path: str):
         "schema": {**convert_to_openai_function(tool), "return": {"type": "string"}}
     } for tool in function_tools]
 
-    fd = os.open(file_path, os.O_RDWR | os.O_CREAT)
+    fd = os.open(file_path, os.O_RDWR | os.O_CREAT, stat.S_IWUSR | stat.S_IRUSR)
     with os.fdopen(fd, "w") as file:
         json.dump({"tools": tools_schema}, file)
