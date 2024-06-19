@@ -52,6 +52,8 @@ const ReferencingApp = (props) => {
             prefix={<SearchOutlined />}
             allowClear
             placeholder="搜索"
+            maxLength={20}
+            showCount
             onChange={(e) => {setSearchKey(e.target.value)}}
           />
         </div>
