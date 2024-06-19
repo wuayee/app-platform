@@ -212,8 +212,7 @@ const ChatPreview = (props) => {
     runningAppid.current = aipp_id;
     if (!wsCurrent.current) {
       const prefix = window.location.protocol === 'http:' ? 'ws' : 'wss';
-      // wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
-      wsCurrent.current = new WebSocket(`${prefix}://80.11.128.86:30010/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
+      wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
       wsCurrent.current.onopen = () => {
         wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));   
       }
@@ -367,7 +366,7 @@ const ChatPreview = (props) => {
   return (
     <div className={`
         chat-preview 
-        ${ showElsa ? 'chat-preview-elsa chat-preview-shadow': ''} 
+        ${ showElsa ? 'chat-preview-elsa': ''} 
         ${ !chatPage ? 'chat-preview-inner' : '' } 
         ${(showElsa && inspirationOpen) ? 'chat-preview-mr' : ''}`}
     >

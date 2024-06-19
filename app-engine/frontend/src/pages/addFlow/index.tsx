@@ -15,6 +15,7 @@ const AddFlow = (props) => {
   const { type, appInfo, addFlowRef, setFlowTested, setFlowTestTime, setFlowTestStatus, setFlowTesting } = props;
   const [ dragData, setDragData ] = useState([]);
   const [ addId, setAddId ] = useState(false);
+  const [ loading, setLoading ] = useState(false);
   const [ showMenu, setShowMenu ] = useState(false);
   const [ debugTypes, setDebugTypes ] = useState([]);
   const [ showDebug, setShowDebug ] = useState(false);
@@ -89,6 +90,8 @@ const AddFlow = (props) => {
                 menuClick={menuClick} 
                 addId={addId} 
                 dragData={dragData} 
+                loading={loading}
+                setLoading={setLoading}
                 setDragData={setDragData}
               />
             ) : (
@@ -102,6 +105,7 @@ const AddFlow = (props) => {
           <Stage 
             setAddId={setAddId} 
             setDragData={setDragData} 
+            setLoading={setLoading}
             appRef={appRef} 
             flowIdRef={flowIdRef} 
           />

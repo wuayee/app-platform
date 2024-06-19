@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState, useRef } from 'react';
-import { Input, Pagination, Empty } from "antd";
+import { Input, Pagination, Empty, Spin } from "antd";
 import { AddFlowIcon } from '@assets/icon';
 import { handleClickAddToolNode, handleDragToolNode } from '../utils';
 import ToolModal from './tool-modal';
@@ -9,12 +9,11 @@ import '../styles/tool-item.scss';
 const { Search } = Input;
 
 const ToolItem = (props) => {
-  const { dragData, tabClick } = props;
+  const { dragData, tabClick, loading, toolKey } = props;
   const [ name, setName ] = useState('');
   const [ pageNum, setPageNum ] = useState(1);
   const [ list, setList ] = useState([]);
   const [ showModal, setShowModal ] = useState(false);
-  const [ activeKey, setActiveKey ] = useState('AUTHORITY');
   const listRef = useRef([]);
   useEffect(() => {
     listRef.current = JSON.parse(JSON.stringify(dragData));
@@ -37,7 +36,6 @@ const ToolItem = (props) => {
   }
   const handleClick = (key) => {
     setPageNum(1);
-    setActiveKey(key);
     tabClick(key);
     setName('');
   }
@@ -58,7 +56,7 @@ const ToolItem = (props) => {
     <div className="tool-tab">
       { tab.map(item => {
           return (
-            <span className={ activeKey === item.key ? 'active' : null } 
+            <span className={ toolKey === item.key ? 'active' : null } 
               key={item.key} 
               onClick={() => handleClick(item.key)}
             >{ item.name }
@@ -68,39 +66,38 @@ const ToolItem = (props) => {
       }
       <span className="more" onClick={() => setShowModal(true)}>更多</span>
     </div>
-    {
-      list.length > 0 && <div className="drag-list">
-        { list.map((item, index) => {
-            return (
-              <div
-                className='drag-item'
-                onDragStart={(e) => handleDragToolNode(item, e)}
-                draggable={true}
-                key={index}
-              >
-                <div className='drag-item-title'>
-                  <div>
-                    <span className='content-node-name node-tool'>
-                      <img src='/src/assets/images/ai/plugin.png' alt='' />
-                      { item.name }
+    <Spin spinning={loading}>
+      {
+        list.length > 0 && <div className="drag-list">
+          { list.map((item, index) => {
+              return (
+                <div
+                  className='drag-item'
+                  onDragStart={(e) => handleDragToolNode(item, e)}
+                  draggable={true}
+                  key={index}
+                >
+                  <div className='drag-item-title'>
+                    <div>
+                      <span className='content-node-name node-tool'>
+                        <img src='/src/assets/images/ai/plugin.png' alt='' />
+                        { item.name }
+                      </span>
+                    </div>
+                    <span className='drag-item-icon' 
+                      onClick={(event) => handleClickAddToolNode(item.type || 'toolInvokeNodeState', event, item)}>
+                      <img src='/src/assets/images/ai/flow.png'  />
                     </span>
                   </div>
-                  <span className='drag-item-icon' 
-                    onClick={(event) => handleClickAddToolNode(item.type || 'toolInvokeNodeState', event, item)}>
-                     <img src='/src/assets/images/ai/flow.png'  />
-                  </span>
                 </div>
-              </div>
-            )
-          })
-        }
-      </div>
-    }
-    { list.length === 0 && <div className="tool-empty"><Empty description="暂无数据" /></div> 
-    }
+              )
+            })
+          }
+        </div>
+      }
+      { list.length === 0 && <div className="tool-empty"><Empty description="暂无数据" /></div> }
+    </Spin>
     <ToolModal showModal={showModal} setShowModal={setShowModal} />
   </>
 };
-
-
 export default ToolItem;

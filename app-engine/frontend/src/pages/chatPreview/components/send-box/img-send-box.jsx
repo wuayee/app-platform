@@ -12,14 +12,14 @@ const ImgSendBox = (props) => {
 
   function setFileDom(type) {
     switch (type) {
-      case 'img':
+      case 'image':
         return <img className="img-send-item" src={`${AIPP_URL}/${tenantId}/file?filePath=${file_path}&fileName=${file_name}`}/>
         break;
       case 'audio':
-        return <audio className="audio-file" src={`${AIPP_URL}/${tenantId}/file?filePath=${file_path}&fileName=${file_name}`} autoPlay></audio>
+        return <audio src={`${AIPP_URL}/${tenantId}/file?filePath=${file_path}&fileName=${file_name}`} controls></audio>
         break;
       case 'video':
-        return <video src={`${AIPP_URL}/${tenantId}/file?filePath=${file_path}&fileName=${file_name}`} autoPlay></video>
+        return <video src={`${AIPP_URL}/${tenantId}/file?filePath=${file_path}&fileName=${file_name}`} controls></video>
         break;
       default:
         return  (<div className="file-div-item">

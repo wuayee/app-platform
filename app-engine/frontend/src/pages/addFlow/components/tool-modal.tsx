@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination } from 'antd';
+import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination, Spin } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
 import { createAipp } from "@shared/http/aipp";
@@ -18,6 +18,7 @@ const ToolDrawer = (props) => {
   const [ activeKey, setActiveKey ] = useState('Builtin');
   const [ menuName, setMenuName ] = useState('新闻阅读');
   const [ name, setName ] = useState('');
+  const [ loading, setLoading ] = useState(false);
   const [ pageNum, setPageNum ] = useState(1);
   const [ pageSize, setPageSize ] = useState(10);
   const [ total, setTotal ] = useState(0);
@@ -73,7 +74,9 @@ const ToolDrawer = (props) => {
   }
   // 获取插件列表
   const getPluginList = ()=> {
+    setLoading(true);
     getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 1000, tag: activeKey}).then(res => {
+      setLoading(false);
       if (res.code === 0) {
         if (activeKey === 'HUGGINGFACE') {
           res.data.tool.forEach(item => {
@@ -197,19 +200,21 @@ const ToolDrawer = (props) => {
         </div>
       </div>
       <div className="mashup-add-content">
-        { pluginData.length > 0 && (
-          <div className="mashup-add-inner" style={{ height: 'calc(100vh - 500px)' }}>
-            {pluginData.slice((pageNum - 1)*pageSize, pageNum*pageSize).map((card: any) => 
-              <div className="mashup-add-item" key={card.uniqueName}>
-                <ToolCard  pluginData={card} />
-                <span className="opration-item">
-                  <Checkbox defaultChecked={card.checked} onChange={(e) => onChange(e, card)}></Checkbox>
-                </span>
-              </div>
-            )}
-          </div>)
-        }
-        { !pluginData.length && <div className="tool-empty"><Empty description="暂无数据" /></div> }
+        <Spin spinning={loading}>
+          { pluginData.length > 0 && (
+            <div className="mashup-add-inner" style={{ height: 'calc(100vh - 500px)' }}>
+              {pluginData.slice((pageNum - 1)*pageSize, pageNum*pageSize).map((card: any) => 
+                <div className="mashup-add-item" key={card.uniqueName}>
+                  <ToolCard  pluginData={card} />
+                  <span className="opration-item">
+                    <Checkbox defaultChecked={card.checked} onChange={(e) => onChange(e, card)}></Checkbox>
+                  </span>
+                </div>
+              )}
+            </div>)
+          }
+          { !pluginData.length && <div className="tool-empty"><Empty description="暂无数据" /></div> }
+        </Spin>
       </div>
       <div style={{ paddingTop: 16 }}>
         <Pagination

@@ -15,7 +15,7 @@ import { FlowContext } from '../../aippIndex/context';
 import { configMap } from '../config';
 
 const Stage = (props) => {
-  const { setAddId, setDragData, appRef, flowIdRef } = props;
+  const { setAddId, setDragData, setLoading, appRef, flowIdRef } = props;
   const [ showModal, setShowModal ] = useState(false);
   const [ taskName, setTaskName ] = useState('');
   const [ selectModal, setSelectModal ] = useState('');
@@ -23,6 +23,7 @@ const Stage = (props) => {
   const { type, appInfo, setModalInfo } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
   const modelCallback = useRef();
+  const change = useRef(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -66,7 +67,9 @@ const Stage = (props) => {
         setShowModal(true);
       })
     })
+    setLoading(true);
     getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 1000, tag: 'Builtin'}).then(res => {
+      setLoading(false);
       if (res.code === 0) {
         setDragData(res.data);
       }
@@ -79,17 +82,21 @@ const Stage = (props) => {
   // 数据实时保存
   const handleChange = useCallback(debounce(() => elsaChange(), 2000), []);
   function elsaChange() {
-    let graphChangeData = window.agent.serialize();
-    type ? appInfo.flowGraph.appearance = graphChangeData : setModalInfo(() => {
-      appRef.current.flowGraph.appearance = graphChangeData;
-      return appRef.current;
-    })
-    window.agent.validate().then(() => {
-      updateAppRunningFlow();
-    }).catch((err) => {
-      let str = typeof(err) === 'string' ? err : '请输入流程必填项';
-      Message({ type: "warning", content: str});
-    });;
+    if (change.current) {
+      let graphChangeData = window.agent.serialize();
+      type ? appInfo.flowGraph.appearance = graphChangeData : setModalInfo(() => {
+        appRef.current.flowGraph.appearance = graphChangeData;
+        return appRef.current;
+      })
+      window.agent.validate().then(() => {
+        updateAppRunningFlow();
+      }).catch((err) => {
+        let str = typeof(err) === 'string' ? err : '请输入流程必填项';
+        Message({ type: "warning", content: str});
+      });
+    } else {
+      change.current = true;
+    }
   }
   // 编辑更新应用
   async function updateAppRunningFlow() {

@@ -2,9 +2,6 @@ import { isJsonString, getUiD } from "@shared/utils/common";
 import { queryInspirationSelect } from "@shared/http/aipp";
 import { Message } from "@shared/utils/message";
 
-const audioType = ['mp3'];
-const videoType = ['mp4'];
-
 // 历史会话消息处理
 export const historyChatProcess = (res) => {
   let chatArr = [];
@@ -25,7 +22,7 @@ export const historyChatProcess = (res) => {
             aItem.logData = aItem.logData.replace(item, str);
           });
         }
-        let { msg, file_type, file_path } = JSON.parse(aItem.logData);
+        let { msg } = JSON.parse(aItem.logData);
         let answerObj = {
           content: msg,
           loading: false,
@@ -58,7 +55,8 @@ export const historyChatProcess = (res) => {
         }
         if (aItem.logType === 'FILE') {
           answerObj.type = 'send';
-          answerObj.sendType = 'img'
+          let { file_type } = JSON.parse(msg);
+          answerObj.sendType = fileTypeSet(file_type);
         }
         if (isJsonString(msg)) {
           let msgObj = JSON.parse(msg);
@@ -241,4 +239,21 @@ export const messageProcessNormal = (log, instanceId, atAppInfo) => {
 // 深拷贝
 export const deepClone = (obj) => {
   return JSON.parse(JSON.stringify(obj));
+}
+// 文件类型设置
+export const fileTypeSet = (type) => {
+  const audioType = ['mp3', 'wav', 'wmv'];
+  const videoType = ['mp4', 'm2v', 'mkv', 'rmvb', 'wmv', 'avi', 'flv', 'mov', 'm4v'];
+  const imgType = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
+  let fileType = '';
+  if (audioType.includes(type)) {
+    fileType = 'audio';
+  } else if (videoType.includes(type)) {
+    fileType = 'video';
+  } else if (imgType.includes(type)) {
+    fileType = 'image';
+  } else {
+    fileType = 'file';
+  }
+  return fileType
 }

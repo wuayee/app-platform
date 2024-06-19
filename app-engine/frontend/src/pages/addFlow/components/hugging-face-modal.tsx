@@ -1,9 +1,10 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Modal, Input, Button, Empty } from 'antd';
+import { Modal, Input, Button } from 'antd';
 import { getHuggingFaceList } from '@shared/http/appBuilder';
 import Pagination from '../../../components/pagination/index';
+import EmptyItem from '../../../components/empty/empty-item';
 const { Search } = Input;
 
 const HuggingFaceModal = (props) => {
@@ -14,8 +15,7 @@ const HuggingFaceModal = (props) => {
   const [ total, setTotal ] = useState(0);
   const [ list, setList ] = useState([]);
   const [ activeKey, setActiveKey ] = useState('');
-  const [ activeUrl, setActiveUrl ] = useState('');
-  const { tenantId, appId } = useParams();
+  const { tenantId } = useParams();
   const listRef = useRef([]);
   useEffect(() => {
     showModal && getPluginList();
@@ -24,8 +24,6 @@ const HuggingFaceModal = (props) => {
   const getPluginList = ()=> {
     getHuggingFaceList(tenantId, {pageNum, pageSize, taskName}).then(res => {
       if (res.code === 0) {
-        let item = res.data.modelDatas.filter(item => item.name === selectModal)[0];
-        item && setActiveUrl(`https://${item.url}`);
         setActiveKey(selectModal);
         listRef.current = JSON.parse(JSON.stringify(res.data.modelDatas));
         setList(listRef.current);
@@ -43,7 +41,7 @@ const HuggingFaceModal = (props) => {
   }
   const itemClick = (item) => {
     setActiveKey(item.name);
-    setActiveUrl(`https://${item.url}`);
+    window.open(`https://${item.url}`);
   }
   const confirm = () => {
     onModelSelectCallBack({ name: activeKey });
@@ -63,7 +61,7 @@ const HuggingFaceModal = (props) => {
       title='选择HuggingFace模型' 
       open={showModal} 
       onCancel={() => setShowModal(false)} 
-      width='1230px'
+      width='1100px'
       footer={
         <div className="drawer-footer">
           <Button onClick={() => setShowModal(false)}>取消</Button>
@@ -78,7 +76,7 @@ const HuggingFaceModal = (props) => {
         <div className="content-left">
           <div className="left-list">
             { list.length > 0 && list.map((card:any) => 
-              <div className={ `left-item ${activeKey === card.name ? 'active' : null}` } 
+              <div className={ `left-item ${activeKey === card.name ? 'active' : ''}` } 
                   key={card.taskName} 
                   onClick={() => itemClick(card)}>
                 <div className="item-top">
@@ -102,11 +100,8 @@ const HuggingFaceModal = (props) => {
                 <div className="item-bottom" title={card.context.description}>{card.context.description }</div>
               </div>
             )}
-            { list.length === 0 && <div className="tool-empty"><Empty description="暂无数据" /></div> }
+            { list.length === 0 && <div className="tool-empty"><EmptyItem text="暂无数据" /></div> }
           </div>
-        </div>
-        <div className="content-right">
-          <iframe className="iframe-item" src={activeUrl} frameBorder="0"></iframe>
         </div>
       </div>
     </Modal>

@@ -24,7 +24,7 @@ const Recommend = (props) => {
     saveRecommend();
   }
   const addRecommend = () => {
-    if (listCrrent.current.length > 2) return;
+    if (listCrrent.current.length > 2) ;
     listCrrent.current = [ ...listCrrent.current, '' ]
     setList(listCrrent.current);
   }
@@ -52,7 +52,7 @@ const Recommend = (props) => {
           }}
         >
           <div className="recommend-add">
-            <Button type="link" icon={<PlusCircleOutlined />} onClick={addRecommend}>创建</Button>
+            <Button type="link" disabled={list.length === 3} icon={<PlusCircleOutlined />} onClick={addRecommend}>创建</Button>
           </div>
           {
             list.map((item, index) => {
