@@ -50,7 +50,8 @@ private:
     void HandleMessageGetMeta(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleMessageCleanupExpiredMemory();
     void HandleApplyZeroMemory(int32_t socketFd, const std::string& objectKey);
-    void HandleApplyZeroMemoryPermission(int32_t socketFd, Common::ApplyPermissionMessage* applyPermissionMessage);
+    void HandleApplyZeroMemoryPermission(int32_t socketFd, uint32_t seq,
+                                         Common::ApplyPermissionMessage* applyPermissionMessage);
 
     std::shared_ptr<TaskLoop> taskLoopPtr_;
     std::unique_ptr<DataBus::Connection::ConnectionManager> connectionMgrPtr_;
