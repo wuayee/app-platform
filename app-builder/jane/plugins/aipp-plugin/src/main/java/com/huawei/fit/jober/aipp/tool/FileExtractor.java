@@ -16,7 +16,7 @@ import java.io.File;
  */
 public interface FileExtractor {
     /**
-     *文件提取genericable接口gid
+     * 文件提取genericable接口gid
      */
     String FILE_EXTRACTOR_GID = "com.huawei.fit.jober.aipp.tool.file.extractor";
 
