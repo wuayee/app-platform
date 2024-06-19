@@ -1,0 +1,121 @@
+{
+  "tools": [
+    {
+      "schema": {
+        "name": "链表加法",
+        "description": "This method adds two list",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "a": {
+              "description": "First list",
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "b": {
+              "description": "Second list",
+              "type": "array",
+              "items": {
+                "type": "int"
+              }
+            }
+          },
+          "required": [
+            "a",
+            "b"
+          ]
+        },
+        "order": [
+          "a",
+          "b"
+        ],
+        "return": {
+          "description": "The sum of two list",
+          "type": "int"
+        }
+      },
+      "runnables": {
+        "FIT": {
+          "fitableId": "default",
+          "genericableId": "com.huawei.fit.jober.aipp.tool.create.app"
+        }
+      }
+    },
+    {
+      "schema": {
+        "name": "自己相加",
+        "description": "This method adds two integers",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "a": {
+              "description": "First integer",
+              "type": "int"
+            }
+          },
+          "required": [
+            "a"
+          ]
+        },
+        "order": [
+          "a"
+        ],
+        "return": {
+          "description": "The sum of two integers",
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "runnables": {
+        "FIT": {
+          "fitableId": "default",
+          "genericableId": "com.huawei.fit.jober.aipp.tool.create.app"
+        }
+      }
+    },
+    {
+      "schema": {
+        "name": "财经问题结果生成",
+        "description": "这是一个用于生成财经类问题结果的工具。",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "condition": {
+              "description": "生成结果的规则。",
+              "type": "string"
+            },
+            "query": {
+              "description": "用户问题。",
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          },
+          "required": [
+            "condition",
+            "query"
+          ]
+        },
+        "order": [
+          "condition",
+          "query"
+        ],
+        "return": {
+          "description": "生成财经类问题结果",
+          "type": "string"
+        }
+      },
+      "runnables": {
+        "FIT": {
+          "fitableId": "default",
+          "genericableId": "com.huawei.fit.jober.aipp.tool.create.app"
+        }
+      }
+    }
+  ]
+}
