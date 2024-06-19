@@ -87,7 +87,7 @@ public class OpenAiModelServiceTest {
     }
 
     private ChatCompletion getRequest() {
-        FlatChatMessage msg = new FlatChatMessage(new HumanMessage("test"));
+        FlatChatMessage msg = FlatChatMessage.from(new HumanMessage("test"));
 
         ChatOptions options = new ChatOptions();
         options.setModel("model");

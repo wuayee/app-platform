@@ -39,7 +39,7 @@ public class HistoryTemplate<T> implements PromptTemplate<T> {
     }
 
     @Override
-    public Prompt invoke(T input) {
+    public Prompt invoke(T ignore) {
         FlowSession session = getIfNull(cast(this.args.get(StateKey.FLOW_SESSION)), FlowSession::new);
         Memory memory = session.getInnerState(StateKey.HISTORY_OBJ);
         List<ChatMessage> messages = Optional.ofNullable(memory)

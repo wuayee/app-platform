@@ -7,6 +7,7 @@ package com.huawei.jade.fel.pipeline.huggingface;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.pipeline.Pipeline;
+import com.huawei.jade.fel.pipeline.PipelineInput;
 import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;
 
 import java.util.Map;
@@ -19,7 +20,7 @@ import java.util.Map;
  * @author 易文渊
  * @since 2024-06-04
  */
-public abstract class ExplicitPipeline<I, O> implements Pipeline<I, O> {
+public abstract class ExplicitPipeline<I extends PipelineInput, O> implements Pipeline<I, O> {
     private final GeneralPipeline generalPipeline;
 
     private final PipelineTask task;
@@ -33,16 +34,14 @@ public abstract class ExplicitPipeline<I, O> implements Pipeline<I, O> {
      */
     protected ExplicitPipeline(PipelineTask task, String model, HuggingFacePipelineService service) {
         Validation.notBlank(model, "The model cannot be blank.");
-        Validation.notNull(service, "The HuggingFacePipelineService cannot be null.");
+        Validation.notNull(service, "The pipeline service cannot be null.");
         this.generalPipeline = new GeneralPipeline(task, model, service);
-        this.task = Validation.notNull(task, "The PipelineTask cannot be null.");
+        this.task = Validation.notNull(task, "The pipeline task cannot be null.");
     }
 
     @Override
     public O apply(I input) {
-        Object obj = ObjectUtils.toJavaObject(input);
-        Validation.isInstanceOf(obj, Map.class, "Pipeline input needs to be able to be converted to a Map");
-        Map<String, Object> args = ObjectUtils.cast(obj);
+        Map<String, Object> args = ObjectUtils.cast(ObjectUtils.toJavaObject(input));
         return ObjectUtils.toCustomObject(generalPipeline.apply(args), task.getOutputType());
     }
 }

@@ -50,7 +50,7 @@ public class DefaultBulkStringTemplate implements BulkStringTemplate {
     /**
      * 将输入的映射数组的内容按照模板渲染。
      *
-     * @param values 表示输入的映射数组。
+     * @param values 表示输入映射列表的
      * {@link List}{@code <}{@link Map}{@code <}{@link String}, {@link String}{@code >}{@code >}。
      * @return 表示构建完成的字符串。
      */

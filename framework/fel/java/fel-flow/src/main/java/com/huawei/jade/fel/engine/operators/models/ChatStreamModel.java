@@ -91,7 +91,7 @@ public class ChatStreamModel implements StreamModel<Prompt, ChatMessage> {
             @Override
             public ChatChunk data(ChatMessage data) {
                 Validation.notNull(data, "The chat message can not be null.");
-                return new ChatChunk(data.text(), data.medias(), data.toolCalls());
+                return new ChatChunk(data.text(), data.toolCalls());
             }
 
             @Override

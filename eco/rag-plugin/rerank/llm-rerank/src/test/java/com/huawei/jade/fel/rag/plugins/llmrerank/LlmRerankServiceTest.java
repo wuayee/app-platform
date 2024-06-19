@@ -42,7 +42,7 @@ public class LlmRerankServiceTest {
     private class MockModel implements ChatModelService {
         @Override
         public FlatChatMessage generate(ChatCompletion chatCompletion) {
-            return new FlatChatMessage(new AiMessage(MODEL_OUTPUT));
+            return FlatChatMessage.from(new AiMessage(MODEL_OUTPUT));
         }
     }
 

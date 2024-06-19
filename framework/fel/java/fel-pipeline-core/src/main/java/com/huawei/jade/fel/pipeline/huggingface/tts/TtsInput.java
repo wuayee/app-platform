@@ -5,6 +5,7 @@
 package com.huawei.jade.fel.pipeline.huggingface.tts;
 
 import com.huawei.fitframework.annotation.Property;
+import com.huawei.jade.fel.pipeline.PipelineInput;
 
 import lombok.Data;
 
@@ -17,7 +18,7 @@ import java.util.Map;
  * @since 2024-06-05
  */
 @Data
-public class TtsInput {
+public class TtsInput implements PipelineInput {
     /**
      * 表示输入文本的 {@link String}。
      */

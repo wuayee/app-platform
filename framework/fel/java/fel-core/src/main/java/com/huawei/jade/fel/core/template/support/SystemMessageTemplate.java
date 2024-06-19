@@ -4,15 +4,12 @@
 
 package com.huawei.jade.fel.core.template.support;
 
+import com.huawei.fitframework.resource.web.Media;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.character.SystemMessage;
-import com.huawei.jade.fel.chat.content.Content;
-import com.huawei.jade.fel.chat.content.Contents;
-import com.huawei.jade.fel.chat.content.TextContent;
 import com.huawei.jade.fel.core.template.StringTemplate;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.List;
 
 /**
  * 系统消息模板实现。
@@ -41,9 +38,7 @@ public class SystemMessageTemplate extends AbstractMessageTemplate {
     }
 
     @Override
-    protected ChatMessage collect(Stream<Content> contentStream) {
-        return contentStream.filter(c -> c instanceof TextContent)
-                .collect(Collectors.collectingAndThen(Collectors.toList(),
-                        data -> new SystemMessage(Contents.from(data))));
+    protected ChatMessage collect(String text, List<Media> ignore) {
+        return new SystemMessage(text);
     }
 }
