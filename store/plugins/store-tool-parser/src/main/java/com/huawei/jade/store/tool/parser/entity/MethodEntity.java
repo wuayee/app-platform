@@ -2,7 +2,9 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.store.entity.parser;
+package com.huawei.jade.store.tool.parser.entity;
+
+import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,7 @@ public class MethodEntity {
     private final String methodName;
     private final String methodDescription;
     private String returnDescription;
-    private Object returnType;
+    private String returnType;
     private final List<ParameterEntity> parameterEntities = new ArrayList<>();
 
     /**
@@ -27,8 +29,8 @@ public class MethodEntity {
      * @param methodDescription 给定方法描述的 {@link String}。
      */
     public MethodEntity(String methodName, String methodDescription) {
-        this.methodName = methodName;
-        this.methodDescription = methodDescription;
+        this.methodName = notNull(methodName, "The methodName can not be null.");
+        this.methodDescription = notNull(methodDescription, "The methodDescription can not be null.");
     }
 
     /**
@@ -43,9 +45,9 @@ public class MethodEntity {
     /**
      * 表示设置的返回值类型。
      *
-     * @param returnType 表示给定的返回值类型的 {@link Object}。
+     * @param returnType 表示给定的返回值类型的 {@link String}。
      */
-    public void setReturnType(Object returnType) {
+    public void setReturnType(String returnType) {
         this.returnType = returnType;
     }
 
@@ -92,12 +94,5 @@ public class MethodEntity {
      */
     public List<ParameterEntity> getParameterEntities() {
         return this.parameterEntities;
-    }
-
-    @Override
-    public String toString() {
-        return "MethodEntity{" + "methodName='" + methodName + '\'' + ", methodDescription='" + methodDescription + '\''
-                + ", returnDescription='" + returnDescription + '\'' + ", returnType=" + returnType
-                + ", parameterEntities=" + parameterEntities + '}';
     }
 }

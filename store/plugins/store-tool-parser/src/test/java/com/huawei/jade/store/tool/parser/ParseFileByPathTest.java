@@ -4,12 +4,14 @@
 
 package com.huawei.jade.store.tool.parser;
 
+import static com.huawei.jade.store.tool.parser.utils.ParseFileByPath.getRunnableInfo;
+import static com.huawei.jade.store.tool.parser.utils.ParseFileByPath.getSchemaInfo;
 import static com.huawei.jade.store.tool.parser.utils.ParseFileByPath.parseToolsJsonSchema;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fitframework.util.support.Zip;
-import com.huawei.jade.store.entity.parser.MethodEntity;
-import com.huawei.jade.store.entity.parser.ParameterEntity;
+import com.huawei.jade.store.tool.parser.entity.MethodEntity;
+import com.huawei.jade.store.tool.parser.entity.ParameterEntity;
 import com.huawei.jade.store.tool.parser.utils.ParseFileByPath;
 
 import org.apache.maven.surefire.shared.compress.archivers.tar.TarArchiveEntry;
@@ -26,8 +28,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -81,6 +86,40 @@ public class ParseFileByPathTest {
             assertThat(parameterEntity.getDescription()).isEqualTo("First integer");
             assertThat(parameterEntity.getName()).isEqualTo("a");
             assertThat(parameterEntity.getType()).isEqualTo("int");
+        }
+
+        @Test
+        @DisplayName("解析有效的 zip 文件中的 schema 数据成功")
+        void givenValidZipFileThenParsedRunnableSuccessfully() throws IOException {
+            List<Map<String, Object>> runnableInfo = getRunnableInfo(this.targetZipFilePath);
+            assertThat(runnableInfo.size()).isEqualTo(3);
+
+            Set<String> runnableKey = new HashSet<>();
+            runnableKey.add("FIT");
+            for (Map<String, Object> runnable : runnableInfo) {
+                assertThat(runnable.keySet()).isEqualTo(runnableKey);
+                assertThat(runnable.get("FIT").toString()).isEqualTo(
+                        "{fitableId=default, genericableId=com.huawei.fit.jober.aipp.tool.create.app}");
+            }
+        }
+
+        @Test
+        @DisplayName("解析有效的 zip 文件中的所有 schema json 数据成功")
+        void givenValidZipFileThenParsedSchemaJsonSuccessfully() throws IOException {
+            List<Map<String, Object>> schemaInfo = getSchemaInfo(this.targetZipFilePath);
+            assertThat(schemaInfo.size()).isEqualTo(3);
+            Set<String> schemaKey = new HashSet<>();
+            schemaKey.add("name");
+            schemaKey.add("description");
+            schemaKey.add("parameters");
+            schemaKey.add("order");
+            schemaKey.add("return");
+            for (Map<String, Object> schema : schemaInfo) {
+                assertThat(schema.keySet()).isEqualTo(schemaKey);
+            }
+            assertThat(schemaInfo.get(0).get("name").toString()).isEqualTo("链表加法");
+            assertThat(schemaInfo.get(1).get("name").toString()).isEqualTo("自己相加");
+            assertThat(schemaInfo.get(2).get("name").toString()).isEqualTo("财经问题结果生成");
         }
     }
 
@@ -185,7 +224,7 @@ public class ParseFileByPathTest {
     private void deleteFile(String filePath) {
         File file = new File(filePath);
         if (file.exists() && !file.delete()) {
-            throw new IllegalStateException("Failed to delete file: " + filePath);
+            throw new IllegalStateException(String.format("Failed to delete file %s .", filePath));
         }
     }
 }

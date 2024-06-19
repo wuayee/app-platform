@@ -4,9 +4,12 @@
 
 package com.huawei.jade.store.tool.parser.utils;
 
-import com.huawei.jade.store.entity.parser.MethodEntity;
-import com.huawei.jade.store.entity.parser.ParameterEntity;
+import static com.huawei.fitframework.inspection.Validation.notNull;
 
+import com.huawei.jade.store.tool.parser.entity.MethodEntity;
+import com.huawei.jade.store.tool.parser.entity.ParameterEntity;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -24,6 +27,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -39,17 +43,68 @@ import java.util.zip.ZipFile;
 public class ParseFileByPath {
     private static final String JSON_FILE_PATH = "FIT-INF/tools.json";
     private static final String SCHEMA = "schema";
+    private static final String RUNNABLES = "runnables";
+    private static final String JAR = ".jar";
+    private static final String ZIP = ".zip";
+    private static final String TAR = ".tar";
+    private static final String NAME = "name";
+    private static final String DESCRIPTION = "description";
+    private static final String RETURN = "return";
+    private static final String PARAMETERS = "parameters";
+    private static final String PROPERTIES = "properties";
+    private static final String TYPE = "type";
+    private static final String ARRAY = "array";
+    private static final String ITEMS = "items";
+    private static final String SQUARE_BRACKETS = "[]";
+    private static final String TOOLS = "tools";
 
     private static List<String> toolFileParser(String filePath) throws IOException {
-        if (filePath.endsWith(".jar")) {
+        if (filePath.endsWith(JAR)) {
             return parseJarFile(filePath);
-        } else if (filePath.endsWith(".zip")) {
+        } else if (filePath.endsWith(ZIP)) {
             return parseZipFile(filePath);
-        } else if (filePath.endsWith(".tar")) {
+        } else if (filePath.endsWith(TAR)) {
             return parseTarFile(filePath);
         } else {
-            throw new IllegalArgumentException("The given file could not be parsed");
+            throw new IllegalArgumentException(String.format("The given file %s could not be parsed", filePath));
         }
+    }
+
+    /**
+     * 获取 json 文件中的所有 schema 信息。
+     *
+     * @param filePath 待解析的压缩文件路径的 {@link String}。
+     * @return 解析后的数据的 {@link List}{@code <}{@link Map}{@code <}{@link String}{@code , }
+     * {@link Object}{@code >}{@code >}。
+     * @throws IOException 解析失败时抛出的异常。
+     */
+    public static List<Map<String, Object>> getSchemaInfo(String filePath) throws IOException {
+        return getJsonInfo(filePath, SCHEMA);
+    }
+
+    /**
+     * 获取 json 文件中的 runnables 信息。
+     *
+     * @param filePath 待解析的压缩文件路径的 {@link String}。
+     * @return 解析后的数据的 {@link List}{@code <}{@link Map}{@code <}{@link String}{@code , }
+     * {@link Object}{@code >}{@code >}。
+     * @throws IOException 解析失败时抛出的异常。
+     */
+    public static List<Map<String, Object>> getRunnableInfo(String filePath) throws IOException {
+        return getJsonInfo(filePath, RUNNABLES);
+    }
+
+    private static List<Map<String, Object>> getJsonInfo(String filePath, String fileName) throws IOException {
+        List<Map<String, Object>> runnablesInfo = new ArrayList<>();
+        List<String> toolInfo = toolFileParser(filePath);
+        ObjectMapper objectMapper = new ObjectMapper();
+        for (String toolJsonString : toolInfo) {
+            JsonNode toolNode = objectMapper.readTree(toolJsonString);
+            JsonNode schemaNode = toolNode.path(fileName);
+            runnablesInfo.add(
+                    objectMapper.readValue(schemaNode.traverse(), new TypeReference<Map<String, Object>>() {}));
+        }
+        return runnablesInfo;
     }
 
     /**
@@ -62,18 +117,17 @@ public class ParseFileByPath {
     public static List<MethodEntity> parseToolsJsonSchema(String filePath) throws IOException {
         List<MethodEntity> methodEntities = new ArrayList<MethodEntity>();
         ObjectMapper objectMapper = new ObjectMapper();
-        List<String> toolInfo = toolFileParser(filePath);
-        for (String toolJsonString : toolInfo) {
-            JsonNode toolNode = objectMapper.readTree(toolJsonString);
+        List<String> toolInfos = toolFileParser(filePath);
+        for (String toolInfo : toolInfos) {
+            JsonNode toolNode = objectMapper.readTree(toolInfo);
             JsonNode schemaNode = toolNode.path(SCHEMA);
 
-            String methodName = schemaNode.path("name").asText();
-            String methodDescription = schemaNode.path("description").asText();
-            String returnDescription = schemaNode.path("return").path("description").asText();
-            Object returnType = resolveParamType(schemaNode.path("return"));
+            String methodName = schemaNode.path(NAME).asText();
+            String methodDescription = schemaNode.path(DESCRIPTION).asText();
+            String returnDescription = schemaNode.path(RETURN).path(DESCRIPTION).asText();
+            String returnType = resolveParamType(schemaNode.path(RETURN));
 
-            List<ParameterEntity> parameterEntities = parseParameters(schemaNode.path("parameters"));
-
+            List<ParameterEntity> parameterEntities = parseParameters(schemaNode.path(PARAMETERS));
             MethodEntity methodEntity = new MethodEntity(methodName, methodDescription);
             methodEntity.setReturnDescription(returnDescription);
             methodEntity.setReturnType(returnType);
@@ -86,14 +140,14 @@ public class ParseFileByPath {
 
     private static List<ParameterEntity> parseParameters(JsonNode parametersNode) {
         List<ParameterEntity> parameterEntities = new ArrayList<ParameterEntity>();
-        JsonNode properties = parametersNode.path("properties");
+        JsonNode properties = parametersNode.path(PROPERTIES);
         if (!properties.isMissingNode()) {
             properties.fields().forEachRemaining(entry -> {
                 String paramName = entry.getKey();
                 JsonNode paramNode = entry.getValue();
 
-                String paramDescription = paramNode.path("description").asText();
-                Object paramType = resolveParamType(paramNode);
+                String paramDescription = paramNode.path(DESCRIPTION).asText();
+                String paramType = resolveParamType(paramNode);
                 ParameterEntity parameterEntity = new ParameterEntity(paramName, paramType, paramDescription);
                 parameterEntities.add(parameterEntity);
             });
@@ -101,22 +155,20 @@ public class ParseFileByPath {
         return parameterEntities;
     }
 
-    private static Object resolveParamType(JsonNode typeNode) {
-        if ("array".equals(typeNode.path("type").asText())) {
-            JsonNode itemsNode = typeNode.path("items");
-            return itemsNode.path("type").asText() + "[]";
+    private static String resolveParamType(JsonNode typeNode) {
+        if (ARRAY.equals(typeNode.path(TYPE).asText())) {
+            JsonNode itemsNode = typeNode.path(ITEMS);
+            return itemsNode.path(TYPE).asText() + SQUARE_BRACKETS;
         }
-        return typeNode.path("type").asText();
+        return typeNode.path(TYPE).asText();
     }
 
     private static List<String> parseJarFile(String filePath) throws IOException {
         try (JarFile jarFile = new JarFile(filePath)) {
-            JarEntry xmlEntry = jarFile.getJarEntry(JSON_FILE_PATH);
-            if (xmlEntry == null) {
-                throw new FileNotFoundException("json file not found in the JAR");
-            }
+            JarEntry jarEntry = jarFile.getJarEntry(JSON_FILE_PATH);
+            notNull(jarEntry, String.format("The json file not found in the given jar file %s.", filePath));
 
-            try (InputStream xmlInputStream = jarFile.getInputStream(xmlEntry)) {
+            try (InputStream xmlInputStream = jarFile.getInputStream(jarEntry)) {
                 return parseJson(xmlInputStream);
             }
         }
@@ -124,12 +176,13 @@ public class ParseFileByPath {
 
     private static List<String> parseZipFile(String filePath) throws IOException {
         try (ZipFile zipFile = new ZipFile(filePath)) {
-            ZipEntry xmlEntry = zipFile.getEntry(JSON_FILE_PATH);
-            if (xmlEntry == null) {
-                throw new FileNotFoundException("json file not found in the ZIP");
+            ZipEntry zipEntry = zipFile.getEntry(JSON_FILE_PATH);
+            if (zipEntry == null) {
+                throw new FileNotFoundException(
+                        String.format("The json file not found in the given zip file %s.", filePath));
             }
 
-            try (InputStream xmlInputStream = zipFile.getInputStream(xmlEntry)) {
+            try (InputStream xmlInputStream = zipFile.getInputStream(zipEntry)) {
                 return parseJson(xmlInputStream);
             }
         }
@@ -155,15 +208,15 @@ public class ParseFileByPath {
 
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(jsonString.toString());
-            JsonNode toolsNode = rootNode.get("tools");
-            List<String> jsonList = new ArrayList<String>();
+            JsonNode toolsNode = rootNode.get(TOOLS);
+            List<String> jsonList = new ArrayList<>();
             for (JsonNode toolNode : toolsNode) {
                 String toolJsonString = objectMapper.writeValueAsString(toolNode);
                 jsonList.add(toolJsonString);
             }
             return jsonList;
         } catch (IOException e) {
-            throw new IllegalArgumentException("Failed to parse JSON from input stream", e);
+            throw new IllegalArgumentException("Failed to parse json from input stream.", e);
         }
     }
 

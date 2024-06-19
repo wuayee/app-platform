@@ -30,7 +30,7 @@
         <!-- Service -->
         <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>
-            <artifactId>store-service</artifactId>
+            <artifactId>tool-service</artifactId>
             <version>${version}</version>
         </dependency>
 
