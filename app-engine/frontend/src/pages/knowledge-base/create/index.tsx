@@ -108,6 +108,8 @@ const KnowledgeBaseCreate = () => {
       }
       if (n > 255) {
         return Promise.reject('字符串长度不能大于255');
+      } else {
+        return Promise.resolve();
       }
     } else {
       return Promise.reject('');
@@ -190,7 +192,6 @@ const KnowledgeBaseCreate = () => {
               <Form.Item label="知识库描述" rules={[{ required: true, message: '输入不能为空' }]} name='knowledgeDesc'>
                 <Input.TextArea size='large' autoSize={{ minRows: 2, maxRows: 6 }} placeholder='请输入' />
               </Form.Item>
-
             </Form>
           </div>
           <div style={{
