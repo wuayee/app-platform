@@ -19,6 +19,7 @@ import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.fel.WaterFlowAgent;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippLogStreamService;
+import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
@@ -80,6 +81,9 @@ public class LLMComponentTest {
 
     @Mock
     private AippLogStreamService aippLogStreamService;
+
+    @Mock
+    private BrokerClient client;
 
     @BeforeEach
     void setUp() {
@@ -167,7 +171,7 @@ public class LLMComponentTest {
         // stub
         AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel(null), false);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, aippLogService, aippLogStreamService);
+                toolProvider, agent, aippLogService, aippLogStreamService, client);
 
         // mock
         Mockito.doNothing().when(aippLogStreamService).send(any());
@@ -189,7 +193,7 @@ public class LLMComponentTest {
         // stub
         AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel("exceptionMsg"), false);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, aippLogService, aippLogStreamService);
+                toolProvider, agent, aippLogService, aippLogStreamService, client);
 
         // mock
         CountDownLatch countDownLatch = mockTerminateFlow(flowInstanceService, metaService, aippLogService);
@@ -210,7 +214,7 @@ public class LLMComponentTest {
         // stub
         AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel(null), true);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, aippLogService, aippLogStreamService);
+                toolProvider, agent, aippLogService, aippLogStreamService, client);
 
         AtomicInteger resCnt = new AtomicInteger(0);
 
@@ -251,7 +255,7 @@ public class LLMComponentTest {
                 .close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, null, null);
+                toolProvider, agent, null, null, client);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
@@ -280,7 +284,7 @@ public class LLMComponentTest {
                 toolProvider,
                 agent,
                 aippLogService,
-                null);
+                null, client);
 
         // mock
         CountDownLatch countDownLatch = mockTerminateFlow(flowInstanceService, metaService, aippLogService);
@@ -305,7 +309,7 @@ public class LLMComponentTest {
                 .close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, this.aippLogService, null);
+                toolProvider, agent, this.aippLogService, null, client);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
@@ -354,7 +358,7 @@ public class LLMComponentTest {
                 .close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, this.aippLogService, null);
+                toolProvider, agent, this.aippLogService, null, client);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);

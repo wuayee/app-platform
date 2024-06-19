@@ -152,6 +152,11 @@ public enum AippErrCode implements ErrorCode {
     FILE_EXPIRED_OR_BROKEN(90002001, "File expired or broken."),
 
     /**
+     * 解析文件内容失败
+     */
+    EXTRACT_FILE_FAILED(90002002, "Extract file failed."),
+
+    /**
      * json解析失败
      */
     JSON_DECODE_FAILED(90002900, "json decode failed, reason: {0}."),
