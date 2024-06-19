@@ -87,8 +87,7 @@
 .jade-textarea-input {
     border-color: #edeeef !important;
     font-size: 12px;
-    height: 86.5px !important;
-    resize: none !important;
+    min-height: 86.5px !important;
 }
 
 .ant-form-item-label {
