@@ -4,6 +4,7 @@
 
 package com.huawei.fit.http.server.handler;
 
+import com.huawei.fitframework.inspection.Nullable;
 import com.huawei.fitframework.pattern.builder.BuilderFactory;
 
 import java.lang.reflect.AnnotatedElement;
@@ -70,6 +71,7 @@ public interface PropertyValueMetadata {
      *
      * @return 表示属性值的具体元素的 {@link AnnotatedElement}。
      */
+    @Nullable
     AnnotatedElement element();
 
     /**

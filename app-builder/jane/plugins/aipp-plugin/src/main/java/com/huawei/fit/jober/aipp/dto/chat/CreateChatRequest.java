@@ -37,4 +37,16 @@ public class CreateChatRequest {
     @Property(description = "init context")
     @JsonProperty("init_context")
     private Map<String, Object> initContext;
+
+    @Property(description = "chat_id")
+    @JsonProperty("chat_id")
+    private String chatId;
+
+    @Property(description = "origin_app")
+    @JsonProperty("origin_app")
+    private String originApp;
+
+    @Property(description = "origin_app_version")
+    @JsonProperty("origin_app_version")
+    private String originAppVersion;
 }

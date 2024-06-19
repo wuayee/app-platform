@@ -95,6 +95,8 @@ const MyPlugins = () => {
         </Button>
       </Dropdown>
       <Input
+        showCount
+        maxLength={20}
         placeholder="搜索"
         style={{
           marginBottom: 16,

@@ -6,6 +6,8 @@ interface AppI {
   appId: string;
   tenantId: string;
   appInfo: object;
+  atAppId: string;
+  atAppInfo: object;
 }
 
 // 使用该类型定义初始 state
@@ -13,6 +15,8 @@ const initialState: AppI = {
   appId: '',
   tenantId: '31f20efc7e0848deab6a6bc10fc3021e',
   appInfo: {},
+  atAppId: null,
+  atAppInfo: null,
 } as AppI;
 
 export const appStore = createSlice({
@@ -32,10 +36,18 @@ export const appStore = createSlice({
     setTenantId: (state, action: any) => {
       state.tenantId = action.payload;
     },
+    // 设置聊天界面@应用Id
+    setAtAppId: (state, action: any) => {
+      state.atAppId = action.payload;
+    },
+    // 设置聊天界面@应用AppInfo
+    setAtAppInfo: (state, action: any) => {
+      state.atAppInfo = action.payload;
+    },
   },
 });
 
-export const { setAppId, setAppInfo, setTenantId } = appStore.actions;
+export const { setAppId, setAppInfo, setTenantId, setAtAppId, setAtAppInfo } = appStore.actions;
 // 选择器等其他代码可以使用导入的 `RootState` 类型
 
 export default appStore.reducer;

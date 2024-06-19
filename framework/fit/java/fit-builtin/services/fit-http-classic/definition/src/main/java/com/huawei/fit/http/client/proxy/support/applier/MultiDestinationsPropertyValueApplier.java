@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.http.client.proxy.support.applier;
+
+import static com.huawei.fitframework.inspection.Validation.notNull;
+
+import com.huawei.fit.http.client.proxy.DestinationSetter;
+import com.huawei.fit.http.client.proxy.PropertyValueApplier;
+import com.huawei.fit.http.client.proxy.RequestBuilder;
+import com.huawei.fit.http.client.proxy.support.setter.DestinationSetterInfo;
+import com.huawei.fitframework.util.StringUtils;
+import com.huawei.fitframework.value.ValueFetcher;
+
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * 表示 {@link PropertyValueApplier} 的多个目标的实现。
+ *
+ * @author 季聿阶
+ * @since 2024-05-11
+ */
+public class MultiDestinationsPropertyValueApplier implements PropertyValueApplier {
+    private static final String LIST_SOURCE_VALUE_SEPARATOR = ",";
+
+    private final List<DestinationSetterInfo> setterInfos;
+    private final ValueFetcher valueFetcher;
+
+    public MultiDestinationsPropertyValueApplier(List<DestinationSetterInfo> setterInfos, ValueFetcher valueFetcher) {
+        this.setterInfos = notNull(setterInfos, "The destination setter infos cannot be null.");
+        this.valueFetcher = notNull(valueFetcher, "The value fetcher cannot be null.");
+    }
+
+    @Override
+    public void apply(RequestBuilder requestBuilder, Object value) {
+        this.setterInfos.stream()
+                .filter(Objects::nonNull)
+                .forEach(setterInfo -> this.setDestination(requestBuilder, value, setterInfo));
+    }
+
+    private void setDestination(RequestBuilder requestBuilder, Object source, DestinationSetterInfo setterInfo) {
+        DestinationSetter setter = setterInfo.destinationSetter();
+        String sourcePath = setterInfo.sourcePath();
+        Object value = source;
+        if (StringUtils.isNotBlank(sourcePath)) {
+            value = this.valueFetcher.fetch(source, sourcePath);
+        }
+        setter.set(requestBuilder, value);
+    }
+}

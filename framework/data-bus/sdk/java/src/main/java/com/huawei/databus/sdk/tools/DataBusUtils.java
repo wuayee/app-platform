@@ -78,8 +78,6 @@ public class DataBusUtils {
                 () -> new IllegalArgumentException("Permission type mismatches with API."));
         if (permissionType == PermissionType.Write) {
             Validation.notNull(request.bytes(), () -> new IllegalArgumentException("Byte array cannot be null."));
-            Validation.greaterThan(request.bytes().length, 0,
-                    () -> new IllegalArgumentException("Byte array length cannot be 0."));
             Validation.greaterThanOrEquals(request.bytes().length, request.dataLength(),
                     () -> new IllegalArgumentException("The buffer length should not be less than data length."));
             if (request.isOperatingUserData()) {
@@ -106,8 +104,8 @@ public class DataBusUtils {
      */
     public static void verifyMemoryRequest(SharedMemoryRequest request) {
         Validation.notNull(request, () -> new IllegalArgumentException("Request cannot be null."));
-        Validation.greaterThan(request.size(), 0,
-                () -> new IllegalArgumentException("memory length must be positive."));
+        Validation.greaterThanOrEquals(request.size(), 0,
+                () -> new IllegalArgumentException("memory length must be non-negative."));
         Validation.notNull(request.userKey(),
                 () -> new IllegalArgumentException("Shared memory key cannot be null."));
     }

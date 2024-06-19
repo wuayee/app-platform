@@ -22,7 +22,7 @@ class WriteRequest:
     user_data: bytes = b""
 
     def validation(self):
-        if not self.contents or self.offset < 0:
+        if self.contents is None or self.offset < 0:
             raise ValueError("Invalid input parameter: {}.".format(
                 f"contents is {self.contents}" if not self.contents else f"offset is {self.offset}"
             ))

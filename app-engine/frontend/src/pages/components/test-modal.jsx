@@ -2,7 +2,7 @@ import React, {  useState, useImperativeHandle } from 'react';
 import { Modal, Button } from 'antd';
 
 const TestModal = (props) => {
-  const { testRef, handleDebugClick } = props;
+  const { testRef, handleDebugClick, type } = props;
   const [ isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -25,7 +25,7 @@ const TestModal = (props) => {
   })
   return <>{(
     <Modal
-      title='需要测试成功才能发布工具流'
+      title={type ? '需要测试成功才能发布应用' : '需要测试成功才能发布工具流'}
       width='380px'
       maskClosable={false}
       centered
@@ -40,7 +40,7 @@ const TestModal = (props) => {
           调试
         </Button>
       ]}>
-      <p>为了保证工作流运行正常，必须进行测试</p>
+      <p>为了保证{type ? '应用' : '工作流'}运行正常，必须进行测试</p>
     </Modal>
   )}</>
 };

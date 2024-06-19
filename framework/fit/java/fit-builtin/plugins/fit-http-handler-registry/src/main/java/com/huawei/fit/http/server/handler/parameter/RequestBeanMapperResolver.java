@@ -20,7 +20,7 @@ import com.huawei.fit.http.server.handler.SourceFetcher;
 import com.huawei.fit.http.server.handler.support.CookieFetcher;
 import com.huawei.fit.http.server.handler.support.FormUrlEncodedEntityFetcher;
 import com.huawei.fit.http.server.handler.support.HeaderFetcher;
-import com.huawei.fit.http.server.handler.support.MultiSourcePropertyValueMapper;
+import com.huawei.fit.http.server.handler.support.MultiSourcesPropertyValueMapper;
 import com.huawei.fit.http.server.handler.support.ObjectEntityFetcher;
 import com.huawei.fit.http.server.handler.support.PathVariableFetcher;
 import com.huawei.fit.http.server.handler.support.QueryFetcher;
@@ -34,6 +34,7 @@ import com.huawei.fitframework.util.StringUtils;
 import com.huawei.fitframework.value.PropertyValue;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -95,7 +96,7 @@ public class RequestBeanMapperResolver extends AbstractPropertyValueMapperResolv
     protected Optional<PropertyValueMapper> resolve(PropertyValue propertyValue,
             AnnotationMetadata annotationMetadata) {
         List<SourceFetcherInfo> propertyValueMappers = this.getSourceFetcherInfos(propertyValue, StringUtils.EMPTY);
-        return Optional.of(new TypeTransformationPropertyValueMapper(new MultiSourcePropertyValueMapper(
+        return Optional.of(new TypeTransformationPropertyValueMapper(new MultiSourcesPropertyValueMapper(
                 propertyValueMappers), propertyValue.getType(), false, null));
     }
 
@@ -104,12 +105,16 @@ public class RequestBeanMapperResolver extends AbstractPropertyValueMapperResolv
         for (Field field : ReflectionUtils.getDeclaredFields(propertyValue.getType())) {
             PropertyValue fieldPropertyValue = PropertyValue.createFieldValue(field);
             String fieldPath = destinationName + DESTINATION_NAME_SEPARATOR + fieldPropertyValue.getName();
-            AnnotationMetadata annotationMetadata = this.annotationResolver.resolve(fieldPropertyValue.getElement());
+            Optional<AnnotatedElement> element = fieldPropertyValue.getElement();
+            if (!element.isPresent()) {
+                continue;
+            }
+            AnnotationMetadata annotationMetadata = this.annotationResolver.resolve(element.get());
             if (annotationMetadata.isAnnotationPresent(this.getAnnotation())) {
                 sourceFetcherInfos.addAll(this.getSourceFetcherInfos(fieldPropertyValue, fieldPath));
                 continue;
             }
-            if (!annotationMetadata.isAnnotationPresent(RequestParam.class)) {
+            if (annotationMetadata.isAnnotationNotPresent(RequestParam.class)) {
                 continue;
             }
             RequestParam annotation = annotationMetadata.getAnnotation(RequestParam.class);

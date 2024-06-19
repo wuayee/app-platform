@@ -55,7 +55,7 @@ llms:
      max: 8
 -
    name: Llama2-14B-Chat
-   model: Qwen
+   model: Llama2
    scale: 14B
    type: "语言模型"
    orgnization: "Meta"

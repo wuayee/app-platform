@@ -38,8 +38,15 @@ class MessageHeader(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # MessageHeader
+    def Seq(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
 def MessageHeaderStart(builder):
-    builder.StartObject(2)
+    builder.StartObject(3)
 
 def Start(builder):
     MessageHeaderStart(builder)
@@ -55,6 +62,12 @@ def MessageHeaderAddSize(builder, size):
 
 def AddSize(builder, size):
     MessageHeaderAddSize(builder, size)
+
+def MessageHeaderAddSeq(builder, seq):
+    builder.PrependUint32Slot(2, seq, 0)
+
+def AddSeq(builder, seq):
+    MessageHeaderAddSeq(builder, seq)
 
 def MessageHeaderEnd(builder):
     return builder.EndObject()

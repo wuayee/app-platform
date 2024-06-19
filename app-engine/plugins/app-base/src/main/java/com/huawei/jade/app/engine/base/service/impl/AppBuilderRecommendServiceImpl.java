@@ -18,6 +18,7 @@ import com.huawei.jade.fel.engine.operators.models.ChatBlockModel;
 import com.huawei.jade.fel.engine.operators.prompts.Prompts;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class AppBuilderRecommendServiceImpl implements AppBuilderRecommendServic
             String response = flow.converse().offer(Tip.from("history", chatHistory)).await();
 
             res = JSONArray.parseArray(response, String.class);
-        } catch (SerializationException e) {
+        } catch (SerializationException | JSONException e) {
             log.error("{}\nparse model response error", e.getMessage());
             return new ArrayList<>();
         }
