@@ -18,6 +18,7 @@ import com.huawei.fit.jober.aipp.tool.TzPromptWordSplicingAppTool;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.CollectionUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
@@ -40,28 +41,18 @@ import java.util.regex.Pattern;
 @Component
 public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppTool {
     private static final Logger log = Logger.get(TzPromptWordSplicingAppToolImpl.class);
-
     private static final String DEFAULT_TENANT_ID = "31f20efc7e0848deab6a6bc10fc3021e";
-
     private static final int TEMPLATE_TITLE_INDEX = 0;
-
     private static final Pattern TEMPLATE_PATTERN = Pattern.compile("<步骤[：:](.*?)>");
-
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("<([^<>]*)>[:：]\\s*(.*?)(?=(<[^<>]*>[:：]\\s*|$))",
         Pattern.DOTALL);
-
     private static final String VARIABLE_TEMPLATE_FORMAT = "{{%s}}";
-
     private static final int VARIABLE_KEY_INDEX = 1;
-
     private static final int VARIABLE_VALUE_INDEX = 2;
-
     private static final String LINE_BREAK = "\n";
-
     private static final String EMPTY_STRING = "";
 
     private final AppBuilderPromptService appBuilderPromptService;
-
     private final AippLogService aippLogService;
 
     public TzPromptWordSplicingAppToolImpl(AppBuilderPromptService appBuilderPromptService,
@@ -128,10 +119,7 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
             log.info("Failed to query inspirations, appId is {}, category id is {}, error is {}",
                 inspirationsResponse.getMsg());
         }
-        AppBuilderPromptDto.AppBuilderInspirationDto inspirationDto = inspirationsResponse.getData()
-            .getInspirations()
-            .get(0);
-        return inspirationDto.getPromptTemplate();
+        return inspirationsResponse.getData().getInspirations().get(0).getPromptTemplate();
     }
 
     @Nullable
@@ -197,12 +185,13 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
         if (dto.getTitle().equals(title)) {
             return Optional.of(dto.getId());
         }
-        if (dto.getChildren() != null) {
-            for (AppBuilderPromptCategoryDto child : dto.getChildren()) {
-                Optional<String> result = findIdByTitleRecursive(child, title);
-                if (result.isPresent()) {
-                    return result;
-                }
+        if (CollectionUtils.isEmpty(dto.getChildren())) {
+            return Optional.empty();
+        }
+        for (AppBuilderPromptCategoryDto child : dto.getChildren()) {
+            Optional<String> result = findIdByTitleRecursive(child, title);
+            if (result.isPresent()) {
+                return result;
             }
         }
         return Optional.empty();

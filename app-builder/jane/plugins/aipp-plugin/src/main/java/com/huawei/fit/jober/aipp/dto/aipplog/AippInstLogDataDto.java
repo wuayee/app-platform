@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +27,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Data
 public class AippInstLogDataDto {
+    private static final int LOG_COUNT_AFTER_TZ_TOOL = 3;
+
     private String aippId;
     private String version;
     private String instanceId;
@@ -64,10 +65,14 @@ public class AippInstLogDataDto {
      */
     public static AippInstLogDataDto fromAippInstLogListAfterSplice(List<AippInstLog> rawLogs) {
         List<AippInstLog> updatedLogs = rawLogs.stream()
-            .filter(log -> !(rawLogs.size() == 3 && AippInstLogType.QUESTION.name().equals(log.getLogType())))
+            .filter(log -> !isUserQuestionLogBeforeTzTool(rawLogs, log))
             .collect(Collectors.toList());
 
         return fromAippInstLogList(updatedLogs);
+    }
+
+    private static boolean isUserQuestionLogBeforeTzTool(List<AippInstLog> rawLogs, AippInstLog log) {
+        return rawLogs.size() == LOG_COUNT_AFTER_TZ_TOOL && AippInstLogType.QUESTION.name().equals(log.getLogType());
     }
 
     @AllArgsConstructor
