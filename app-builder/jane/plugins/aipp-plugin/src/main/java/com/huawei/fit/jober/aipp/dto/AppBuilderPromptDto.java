@@ -31,6 +31,7 @@ public class AppBuilderPromptDto {
         private String name;
         private String id;
         private String prompt;
+        private String promptTemplate;
         private String category;
         private String description;
         private Boolean auto;
