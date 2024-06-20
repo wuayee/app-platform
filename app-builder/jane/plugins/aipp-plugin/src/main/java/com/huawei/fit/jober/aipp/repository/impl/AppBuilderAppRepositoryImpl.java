@@ -44,7 +44,7 @@ public class AppBuilderAppRepositoryImpl implements AppBuilderAppRepository {
     }
 
     @Override
-    public List<AppBuilderApp> selectByTenantIdWithPage(AppQueryCondition cond, String tenantId, String typeFilter, long offset, int limit) {
+    public List<AppBuilderApp> selectWithLatestApp(AppQueryCondition cond, String tenantId, String typeFilter, long offset, int limit) {
         return this.appBuilderAppMapper.selectByTenantIdWithPage(cond, tenantId, typeFilter, offset, limit)
                 .stream()
                 .map(this.serializer::deserialize)
@@ -60,7 +60,7 @@ public class AppBuilderAppRepositoryImpl implements AppBuilderAppRepository {
     }
 
     @Override
-    public long countByTenantId(String tenantId, String typeFilter) {
+    public long countWithLatestApp(String tenantId, String typeFilter) {
         return this.appBuilderAppMapper.countByTenantId(tenantId, typeFilter);
     }
 

@@ -314,9 +314,6 @@ public class AippFlowServiceImpl implements AippFlowService {
      */
     @Override
     public AippCreateDto create(AippDto aippDto, OperationContext context) throws AippException {
-        String version =
-                aippDto.getFlowViewData().getOrDefault(AippConst.FLOW_CONFIG_VERSION_KEY, DEFAULT_VERSION).toString();
-        aippDto.setVersion(version);
         return this.createAippHandle(aippDto, context);
     }
 
@@ -834,7 +831,7 @@ public class AippFlowServiceImpl implements AippFlowService {
     }
 
     private MetaDeclarationInfo buildPublishMetaDeclaration(String aippId, List<AippNodeForms> aippNodeForms,
-            String flowDefinitionId, Meta meta, AippDto aippDto) {
+            String flowDefinitionId, Meta meta, AippDto aippDto, String uniqueName) {
         // 解析表单属性字段
         List<MetaPropertyDeclarationInfo> props = getMetaPropertyDeclarationInfos(aippNodeForms);
 
@@ -849,6 +846,8 @@ public class AippFlowServiceImpl implements AippFlowService {
         Map<String, Object> attrPatch = meta.getAttributes();
         appendAttribute(attrPatch, aippNodeForms, flowDefinitionId);
         updateAttribute(attrPatch, aippDto);
+        attrPatch.put(AippConst.ATTR_PUBLISH_DESCRIPTION, aippDto.getPublishedDescription());
+        attrPatch.put(AippConst.ATTR_UNIQUE_NAME, uniqueName);
         declaration.setAttributes(Undefinable.defined(attrPatch));
         declaration.setName(Undefinable.defined(meta.getName()));
         declaration.setVersion(Undefinable.defined(meta.getVersion()));
@@ -945,15 +944,17 @@ public class AippFlowServiceImpl implements AippFlowService {
         try {
             // 查询表单 元数据
             List<AippNodeForms> aippNodeForms = buildAippNodeForms(flowInfo);
+
+            // 往 store 发布
+            String uniqueName = this.publishToStore(aippDto, context, flowInfo);
+
             // 发布aipp
             MetaDeclarationInfo declaration =
-                    buildPublishMetaDeclaration(aippId, aippNodeForms, flowInfo.getFlowDefinitionId(), meta, aippDto);
-            metaService.patch(meta.getVersionId(), declaration, context);
-
-            String uniqueName = this.publishToStore(aippDto, context, flowInfo);
+                    buildPublishMetaDeclaration(aippId, aippNodeForms, flowInfo.getFlowDefinitionId(), meta, aippDto, uniqueName);
+            this.metaService.patch(meta.getVersionId(), declaration, context);
             return Rsp.ok(new AippCreateDto(aippId, meta.getVersion(), uniqueName));
         } catch (Exception e) {
-            log.error("publish aipp {} failed, e = {}", aippId, e);
+            log.error("publish aipp {} failed, e = {}", aippId, e.getMessage());
             rollbackAipp(meta.getVersionId(), originalDraftVersion, flowInfo.getFlowDefinitionId(), attr, context);
             throw e;
         }
@@ -964,7 +965,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         String uniqueName = this.brokerClient.getRouter(ToolService.class, "com.huawei.jade.carver.tool.addTool")
                 .route(new FitableIdFilter("tool-repository-pgsql"))
                 .invoke(itemData);
-        appBuilderAppMapper.updateAppWithStoreId(uniqueName, aippDto.getAppId(), aippDto.getVersion());
+        this.appBuilderAppMapper.updateAppWithStoreId(uniqueName, aippDto.getAppId(), aippDto.getVersion());
         return uniqueName;
     }
 

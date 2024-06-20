@@ -4,6 +4,7 @@
 
 package com.huawei.fit.jober.aipp.common;
 
+import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.dto.AippCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
@@ -32,6 +33,22 @@ public class ConvertUtils {
                 .appId(appDto.getId())
                 .version(appDto.getVersion())
                 .type(appDto.getType())
+                .xiaohaiClassification(classification)
+                .publishedDescription(appDto.getPublishedDescription())
+                .build();
+    }
+
+    public static AippDto toAppDto(AppBuilderApp app) {
+        String description = String.valueOf(app.getAttributes().getOrDefault("description", StringUtils.EMPTY));
+        String icon = String.valueOf(app.getAttributes().getOrDefault("icon", StringUtils.EMPTY));
+        String classification = String.valueOf(app.getAttributes().getOrDefault("app_type", StringUtils.EMPTY));
+        return AippDto.builder()
+                .name(app.getName())
+                .description(description)
+                .icon(icon)
+                .appId(app.getId())
+                .version(app.getVersion())
+                .type(app.getType())
                 .xiaohaiClassification(classification)
                 .build();
     }

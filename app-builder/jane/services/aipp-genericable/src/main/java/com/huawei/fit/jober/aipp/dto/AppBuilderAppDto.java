@@ -40,4 +40,7 @@ public class AppBuilderAppDto {
 
     @Property(description = "aipp 发布链接")
     private String publishUrl;
+
+    @Property(description = "aipp 发布描述")
+    private String publishedDescription;
 }

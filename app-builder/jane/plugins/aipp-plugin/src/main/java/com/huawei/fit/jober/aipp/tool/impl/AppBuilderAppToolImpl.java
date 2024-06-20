@@ -74,7 +74,7 @@ public class AppBuilderAppToolImpl implements AppBuilderAppTool {
         OperationContext context = this.buildOperationContext();
         AppBuilderAppDto appDto;
         try {
-            appDto = this.appService.create(DEFAULT_TEMPLATE_ID, this.convert(dto), context);
+            appDto = this.appService.create(DEFAULT_TEMPLATE_ID, this.convert(dto), context, false);
         } catch (Exception exception) {
             log.error("Failed to create app: {}", exception.getMessage(), exception);
             return "创建应用失败：" + exception.getMessage();

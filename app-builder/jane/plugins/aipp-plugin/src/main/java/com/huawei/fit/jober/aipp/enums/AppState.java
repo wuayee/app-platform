@@ -11,9 +11,9 @@ package com.huawei.fit.jober.aipp.enums;
  * @since 2024-05-24
  */
 public enum AppState {
-    PUBLISHED("RUNNING"),
+    PUBLISHED("active"),
 
-    INACTIVE("INACTIVE");
+    INACTIVE("inactive");
 
     private final String name;
 

@@ -148,7 +148,7 @@ public class MetaUtils {
         return metaRes.getResults().get(0);
     }
 
-    private static List<Meta> getListMetaHandle(MetaService metaService, MetaFilter metaFilter,
+    public static List<Meta> getListMetaHandle(MetaService metaService, MetaFilter metaFilter,
             OperationContext context) throws AippException {
         final int limitPerQuery = 10;
         return Utils.getAllFromRangedResult(limitPerQuery,
@@ -221,6 +221,20 @@ public class MetaUtils {
             OperationContext context) throws AippException {
         MetaFilter metaFilter = getMetaFilter(appId, aippType);
         return getListMetaHandle(metaService, metaFilter, context);
+    }
+
+    public static List<Meta> getAllMetasByAppId(MetaService metaService, String appId,
+            OperationContext context) throws AippException {
+        MetaFilter metaFilter = getMetaFilter(appId);
+        return getListMetaHandle(metaService, metaFilter, context);
+    }
+
+    private static MetaFilter getMetaFilter(String appId) {
+        MetaFilter metaFilter = new MetaFilter();
+        Map<String, List<String>> attributes = new HashMap<>();
+        attributes.put(AippConst.ATTR_APP_ID_KEY, Collections.singletonList(appId));
+        metaFilter.setAttributes(attributes);
+        return metaFilter;
     }
 
     private static MetaFilter getMetaFilter(String appId, String aippType) {

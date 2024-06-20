@@ -25,10 +25,13 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppMetadataDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
+import com.huawei.fit.jober.aipp.dto.PublishedAppResDto;
 import com.huawei.fit.jober.aipp.service.AppBuilderAppService;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.validation.Validated;
+
+import java.util.List;
 
 /**
  * @author 邬涨财 w00575064
@@ -59,10 +62,30 @@ public class AppBuilderAppController extends AbstractController {
         return Rsp.ok(this.appGenericable.query(appId));
     }
 
+    @GetMapping(value = "/{app_id}/latest_orchestration", description = "查询 app 最新可编排的版本")
+    public Rsp<AppBuilderAppDto> queryLatestOrchestration(HttpClassicServerRequest httpRequest,
+            @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId) {
+        return Rsp.ok(this.appGenericable.queryLatestOrchestration(appId, this.contextOf(httpRequest, tenantId)));
+    }
+
+    @GetMapping(value = "/{app_id}/recentPublished", description = "查询 app 的历史发布版本")
+    public Rsp<List<PublishedAppResDto>> recentPublished(HttpClassicServerRequest httpRequest,
+            @PathVariable("app_id") String appId, @PathVariable("tenant_id") String tenantId,
+            @RequestParam(value = "offset", defaultValue = "0") long offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit, @RequestBean AppQueryCondition cond) {
+        return Rsp.ok(this.appService.recentPublished(cond, offset, limit, appId, this.contextOf(httpRequest, tenantId)));
+    }
+
+    @GetMapping(path = "/published/unique_name/{unique_name}", description = "获取应用的发布详情")
+    public Rsp<PublishedAppResDto> published(HttpClassicServerRequest httpRequest,
+            @PathVariable("tenant_id") String tenantId, @PathVariable("unique_name") String uniqueName) {
+        return Rsp.ok(this.appService.published(uniqueName, this.contextOf(httpRequest, tenantId)));
+    }
+
     @PostMapping(value = "/{app_id}", description = "根据模板创建aipp")
     public Rsp<AppBuilderAppDto> create(HttpClassicServerRequest request, @PathVariable("app_id") String appId,
             @PathVariable("tenant_id") String tenantId, @RequestBody @Validated AppBuilderAppCreateDto dto) {
-        return Rsp.ok(this.appService.create(appId, dto, this.contextOf(request, tenantId)));
+        return Rsp.ok(this.appService.create(appId, dto, this.contextOf(request, tenantId), false));
     }
 
     @PutMapping(value = "/{app_id}/config", description = "通过config更新aipp")
@@ -97,6 +120,13 @@ public class AppBuilderAppController extends AbstractController {
     public Rsp<AippCreateDto> debug(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
             @RequestBody @Validated AppBuilderAppDto appDto) {
         return Rsp.ok(ConvertUtils.toAippCreateDto(this.appGenericable.debug(appDto,
+                this.contextOf(httpRequest, tenantId))));
+    }
+
+    @GetMapping(path = "/{app_id}/latest_published", description = "获取 app 最新发布版本信息")
+    public Rsp<AippCreateDto> latestPublished(HttpClassicServerRequest httpRequest,
+            @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId) {
+        return Rsp.ok(ConvertUtils.toAippCreateDto(this.appGenericable.queryLatestPublished(appId,
                 this.contextOf(httpRequest, tenantId))));
     }
 
