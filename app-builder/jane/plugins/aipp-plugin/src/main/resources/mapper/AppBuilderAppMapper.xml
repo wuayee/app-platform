@@ -40,7 +40,7 @@
 
     <select id="selectByTenantIdWithPage" resultMap="BaseResultMap"
             resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
-        select DISTINCT ON (name)
+        select
         <include refid="Base_Column_List"/>
         from app_builder_app
         where tenant_id = #{tenantId}
@@ -50,7 +50,8 @@
         <if test="cond != null and cond.name != null and cond.name != ''">
             and name like '%' || #{cond.name} || '%'
         </if>
-        ORDER BY name, create_at DESC
+        GROUP BY id, name
+        ORDER BY create_at DESC, name
         offset #{offset} limit #{limit}
     </select>
 
