@@ -82,7 +82,7 @@ void TaskHandler::HandleRead(const Task& task)
     const uint32_t seq = header->seq();
 
     if (len < MESSAGE_HEADER_LEN) {
-        logger.Error("[TaskHandler] Incorrect message header length from client {}, seq={}", socketFd, seq);
+        logger.Error("[HandleRead] Incorrect message header length from client {}, seq={}", socketFd, seq);
         Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, seq, GetSender(socketFd));
         return;
     }
@@ -90,19 +90,26 @@ void TaskHandler::HandleRead(const Task& task)
     // 验证buf是否包含有效的消息头
     flatbuffers::Verifier verifier(reinterpret_cast<const uint8_t*>(buffer), MESSAGE_HEADER_LEN);
     if (!Common::VerifyMessageHeaderBuffer(verifier)) {
-        logger.Error("[TaskHandler] Incorrect message header format from client {}, seq={}", socketFd, seq);
+        logger.Error("[HandleRead] Incorrect message header format from client {}, seq={}", socketFd, seq);
         Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, seq, GetSender(socketFd));
         return;
     }
 
-    // TODO: 需要处理半包和粘包
+    // TODO: 需要处理半包
     uint bodySize = header->size();
-    if (len < bodySize + MESSAGE_HEADER_LEN) {
-        logger.Error("[TaskHandler] Incorrect message body length from client {}, seq={}", socketFd, seq);
+    if ((header->type() != Common::MessageType::CleanupExpiredMemory) && (len < bodySize + MESSAGE_HEADER_LEN)) {
+        logger.Error("[HandleRead] Incorrect message body length from client {}, seq={}", socketFd, seq);
         Utils::SendErrorMessage(ErrorType::IllegalMessageBody, seq, GetSender(socketFd));
         return;
     }
     HandleMessage(header, buffer, socketFd);
+
+    // 处理粘包
+    const auto messageSize = header->size() + MESSAGE_HEADER_LEN;
+    if ((header->type() != Common::MessageType::CleanupExpiredMemory) && (len > messageSize)) {
+        logger.Info("[HandleRead] Sticky TCP packet received from client={}, seq={}, size={}", socketFd, seq, len);
+        taskLoopPtr_->AddReadTask(socketFd, buffer + messageSize, len - messageSize);
+    }
 }
 
 void TaskHandler::HandleClose(int socketFd)
