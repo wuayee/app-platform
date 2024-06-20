@@ -37,7 +37,7 @@ public abstract class AbstractAgent<I, O> extends AbstractFlowPattern<I, O> {
     protected static ChatChunk defaultReduce(ChatChunk acc, ChatChunk input) {
         Validation.notNull(input, "The input data cannot be null.");
         if (acc == null) {
-            return new ChatChunk(input.text(), input.medias(), input.toolCalls());
+            return new ChatChunk(input.text(), input.toolCalls());
         }
         if (input.isEnd()) {
             return acc;

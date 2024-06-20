@@ -14,6 +14,7 @@ import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.character.HumanMessage;
 import com.huawei.jade.fel.core.Pattern;
+import com.huawei.jade.fel.core.template.MessageContent;
 import com.huawei.jade.fel.core.template.StringTemplate;
 import com.huawei.jade.fel.core.template.support.HumanMessageTemplate;
 import com.huawei.jade.fel.core.util.Tip;
@@ -70,8 +71,12 @@ public class HumanTemplate implements PromptTemplate<Tip> {
         FlowSession session = ObjectUtils.cast(this.args.get(StateKey.FLOW_SESSION));
         Validation.notNull(session, "The flow session cannot be null.");
         session.setInnerState(HISTORY_INPUT, Optional.ofNullable(this.historyInputKey)
-                .map(key -> ObjectUtils.<ChatMessage>cast(new HumanMessage(input.freeze().get(key))))
-                .orElse(chatMessage));
+            .map(key -> {
+                Map<String, MessageContent> values = input.freeze();
+                return ObjectUtils.<ChatMessage>cast(new HumanMessage(values.get(key).text(),
+                    values.get(key).medias()));
+            })
+            .orElse(chatMessage));
         return ChatMessages.from(chatMessage);
     }
 

@@ -4,12 +4,8 @@
 
 package com.huawei.jade.fel.chat;
 
-import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.fel.chat.content.Media;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,20 +24,6 @@ public interface Prompt {
      */
     List<? extends ChatMessage> messages();
 
-    /**
-     * 获取媒体内容。
-     *
-     * @return 返回表示媒体内容的 {@link List}{@code <}{@link Media}{@code  >}。
-     */
-    default List<Media> medias() {
-        return Optional.ofNullable(this.messages())
-                .map(msg -> msg.stream()
-                        .map(ChatMessage::medias)
-                        .filter(CollectionUtils::isNotEmpty)
-                        .flatMap(Collection::stream)
-                        .collect(Collectors.toList()))
-                .orElseGet(Collections::emptyList);
-    }
 
     /**
      * 获取文本内容。
@@ -50,7 +32,7 @@ public interface Prompt {
      */
     default String text() {
         return Optional.ofNullable(this.messages())
-                .map(msg -> msg.stream().map(ChatMessage::text).collect(Collectors.joining("\n")))
-                .orElse(StringUtils.EMPTY);
+            .map(msg -> msg.stream().map(ChatMessage::text).collect(Collectors.joining("\n")))
+            .orElse(StringUtils.EMPTY);
     }
 }

@@ -13,7 +13,9 @@ public interface OperatorService {
     enum FileType {
         PDF,
         WORD,
-        EXCEL
+        EXCEL,
+        IMAGE,
+        AUDIO
     }
 
     String fileExtractor(File file, Optional<FileType> optionalFileType);

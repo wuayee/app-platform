@@ -17,7 +17,7 @@ const Feedbacks = ({ logId, instanceId, feedbackStatus, refreshFeedbackStatus })
     setIsModalOpen(false);
   };
   const unLikeClickConfirm = async () => {
-    if (feedbackStatus === -1) {
+    if (feedbackStatus === -1 || feedbackStatus === undefined) {
       let params = { "usrFeedback": "1", "usrFeedbackText": textValue, "instanceId": instanceId }
       await feedbacksRq(params);
     }
@@ -31,7 +31,7 @@ const Feedbacks = ({ logId, instanceId, feedbackStatus, refreshFeedbackStatus })
   }
   // 点赞
   const likeClick = async () => {
-    if (feedbackStatus === -1) {
+    if (feedbackStatus === -1 || feedbackStatus === undefined) {
       let params = { "usrFeedback": "0", "usrFeedbackText": "", "instanceId": instanceId }
       await feedbacksRq(params);
     }

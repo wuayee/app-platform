@@ -117,12 +117,12 @@ public class AgentTest {
                     emitter.fail(new IllegalStateException(exceptionMsg));
                 }
                 if (step.getAndIncrement() == 0) {
-                    emitter.emit(new FlatChatMessage(new AiMessage("toolcall", toolCalls)));
+                    emitter.emit(FlatChatMessage.from(new AiMessage("toolcall", toolCalls)));
                     emitter.complete();
                     return;
                 }
                 for (int i = 0; i < 4; i++) {
-                    emitter.emit(new FlatChatMessage(new AiMessage(String.valueOf(i))));
+                    emitter.emit(FlatChatMessage.from(new AiMessage(String.valueOf(i))));
                 }
                 emitter.complete();
             });
@@ -141,7 +141,7 @@ public class AgentTest {
         return new ToolProvider() {
             @Override
             public FlatChatMessage call(ToolCall toolCall, Map<String, Object> toolContext) {
-                return new FlatChatMessage(new ToolMessage("", TOOL_DEFAULT_VALUE));
+                return FlatChatMessage.from(new ToolMessage("1", TOOL_DEFAULT_VALUE));
             }
 
             @Override

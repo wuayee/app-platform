@@ -11,6 +11,8 @@ import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.common.MetaUtils;
 import com.huawei.fit.jober.aipp.common.UUIDUtil;
+import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
+import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.chat.ChatDto;
 import com.huawei.fit.jober.aipp.dto.chat.CreateChatRequest;
@@ -74,10 +76,7 @@ public class AippChatServiceImpl implements AippChatService {
         }
         Map<String, Object> initContext = body.getInitContext();
         Map<String, Object> result = (Map<String, Object>) initContext.get("initContext");
-        if (result.get("Question") == null) {
-            throw new IllegalArgumentException("Question is not null");
-        }
-        String chatName = result.get("Question").toString();
+        String chatName = getChatName(result);
         String originChatId = UUIDUtil.uuid();
         AppBuilderAppPO appInfo = this.convertAippToApp(body.getAippId(), body.getAippVersion(), context);
         return QueryChatRsp.builder()
@@ -289,15 +288,12 @@ public class AippChatServiceImpl implements AippChatService {
         bodyContext.put("chatId", originChatId);
         body.setInitContext(bodyContext);
         Map<String, Object> result = (Map<String, Object>) bodyContext.get("initContext");
-        if (result.get("Question") == null) {
-            throw new IllegalArgumentException("Question is not null");
-        }
         if (body.getOriginApp() != null && body.getChatId() == null) {
             // 首次@应用对话
             String chatId = UUIDUtil.uuid();
             body.setChatId(chatId);
         }
-        String chatName = result.get("Question").toString();
+        String chatName = getChatName(result);
         this.persistChat(body, context, originChatId, chatName);
         QueryChatRequest queryBody = QueryChatRequest.builder()
                 .aippId(body.getAippId())
@@ -320,5 +316,22 @@ public class AippChatServiceImpl implements AippChatService {
         this.aippChatMapper.deleteWideRelationshipByInstanceId(currentInstanceId);
         this.aippLogService.deleteInstanceLog(currentInstanceId);
         return this.updateChat(chatId, body, context);
+    }
+
+    private String getChatName(Map<String, Object> initContext) {
+        String chatName;
+        if (initContext.containsKey(AippConst.BS_AIPP_FILE_DESC_KEY)) {
+            Object data = initContext.get(AippConst.BS_AIPP_FILE_DESC_KEY);
+            if (!(data instanceof Map)) {
+                throw new AippException(AippErrCode.DATA_TYPE_IS_NOT_SUPPORTED, data.getClass().getName());
+            }
+            Map<String, String> fileDesc = ObjectUtils.cast(data);
+            chatName = fileDesc.get("file_name");
+        } else if (initContext.containsKey(AippConst.BS_AIPP_QUESTION_KEY)) {
+            chatName = initContext.get(AippConst.BS_AIPP_QUESTION_KEY).toString();
+        } else {
+            throw new IllegalArgumentException("Chat has no question.");
+        }
+        return chatName;
     }
 }

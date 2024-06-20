@@ -354,7 +354,7 @@
 .chat-select-content {
   position: fixed;
   z-index: 999;
-  width: 400px;
+  width: 300px;
   max-height: 200px;
   overflow-y: auto;
   border-radius: 8px;
@@ -384,16 +384,12 @@
     .check-span,
     .normal-span {
       font-size: 12px;
-      width: 130px;
+      width: 100%;
       display: inline-block;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       vertical-align: middle;
-    }
-
-    .normal-span {
-      width: 150px;
     }
   }
 }

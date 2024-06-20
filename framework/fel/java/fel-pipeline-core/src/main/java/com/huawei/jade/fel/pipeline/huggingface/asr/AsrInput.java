@@ -5,6 +5,7 @@
 package com.huawei.jade.fel.pipeline.huggingface.asr;
 
 import com.huawei.fitframework.annotation.Property;
+import com.huawei.jade.fel.pipeline.PipelineInput;
 
 import lombok.Data;
 
@@ -17,7 +18,7 @@ import java.util.Map;
  * @since 2024-06-04
  */
 @Data
-public class AsrInput {
+public class AsrInput implements PipelineInput {
     /**
      * 表示音频文件的公共 URL 地址的 {@link String}。
      */

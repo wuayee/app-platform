@@ -10,7 +10,6 @@ import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.MessageType;
-import com.huawei.jade.fel.chat.content.Media;
 import com.huawei.jade.fel.tool.ToolCall;
 
 import lombok.NoArgsConstructor;
@@ -31,18 +30,16 @@ public class ChatChunk implements ChatMessage, FiniteEmitterData {
     private boolean isEnd = false;
     private Throwable throwable = null;
     private final StringBuilder text = new StringBuilder();
-    private final List<Media> medias = new ArrayList<>();
     private final List<ToolCall> toolCalls = new ArrayList<>();
 
     /**
      * 使用文本数据、媒体数据和工具请求初始化 {@link ChatChunk}。
      *
      * @param text 表示字符串数据的 {@link String}。
-     * @param medias 表示媒体数据的 {@link List}{@code <}{@link Media}{@code >}。
      * @param toolCalls 表示工具请求的 {@link List}{@code <}{@link ToolCall}{@code >}。
      */
-    public ChatChunk(String text, List<Media> medias, List<ToolCall> toolCalls) {
-        this.merge(text, medias, toolCalls);
+    public ChatChunk(String text, List<ToolCall> toolCalls) {
+        this.merge(text, toolCalls);
     }
 
     /**
@@ -58,12 +55,10 @@ public class ChatChunk implements ChatMessage, FiniteEmitterData {
      * 合并文本数据、媒体数据和工具请求 。
      *
      * @param text 表示字符串数据的 {@link String}。
-     * @param medias 表示媒体数据的 {@link List}{@code <}{@link Media}{@code >}。
      * @param toolCalls 表示工具请求的 {@link List}{@code <}{@link ToolCall}{@code >}。
      */
-    public void merge(String text, List<Media> medias, List<ToolCall> toolCalls) {
+    public void merge(String text, List<ToolCall> toolCalls) {
         this.text.append(ObjectUtils.nullIf(text, StringUtils.EMPTY));
-        this.medias.addAll(ObjectUtils.getIfNull(medias, Collections::emptyList));
         this.toolCalls.addAll(ObjectUtils.getIfNull(toolCalls, Collections::emptyList));
     }
 
@@ -74,7 +69,7 @@ public class ChatChunk implements ChatMessage, FiniteEmitterData {
      */
     public void merge(ChatMessage message) {
         Validation.notNull(message, "Chat message can not be null.");
-        this.merge(message.text(), message.medias(), message.toolCalls());
+        this.merge(message.text(), message.toolCalls());
     }
 
     /**
@@ -113,11 +108,6 @@ public class ChatChunk implements ChatMessage, FiniteEmitterData {
     }
 
     @Override
-    public List<Media> medias() {
-        return this.medias;
-    }
-
-    @Override
     public List<ToolCall> toolCalls() {
         return this.toolCalls;
     }
@@ -125,10 +115,6 @@ public class ChatChunk implements ChatMessage, FiniteEmitterData {
     @Override
     public String toString() {
         String textVal = this.toolCalls.isEmpty() ? this.text() : this.toolCalls.toString();
-        return this.displayText(textVal);
-    }
-
-    private String displayText(String textVal) {
-        return this.type().name().toLowerCase() + ": " + textVal;
+        return this.type().getRole() + ": " + textVal;
     }
 }
