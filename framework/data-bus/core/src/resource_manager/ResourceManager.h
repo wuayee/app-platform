@@ -14,6 +14,7 @@
 #include "ApplyPermissionRequest.h"
 #include "ApplyPermissionResponse.h"
 #include "config/DataBusConfig.h"
+#include "MemoryMetadata.h"
 #include "PermissionHeld.h"
 #include "SharedMemoryInfo.h"
 #include "utils/FileUtils.h"
@@ -56,7 +57,7 @@ public:
     uint64_t GetMemorySize(int32_t sharedMemoryId);
     int32_t GetReadingRefCnt(int32_t sharedMemoryId);
     int32_t GetWritingRefCnt(int32_t sharedMemoryId);
-    std::chrono::system_clock::time_point GetLastUsedTime(int32_t  sharedMemoryId);
+    std::chrono::system_clock::time_point GetLastUsedTime(int32_t sharedMemoryId);
     const std::shared_ptr<UserData>& GetUserData(int32_t sharedMemoryId);
     bool IsPendingRelease(int32_t sharedMemoryId);
     std::chrono::system_clock::time_point GetExpiryTime(int32_t sharedMemoryId);
@@ -65,6 +66,8 @@ public:
     int32_t GetPermissionStatus(int32_t sharedMemoryId);
     const std::deque<WaitingPermitRequest>& GetWaitingPermitRequests(int32_t sharedMemoryId);
     const std::unordered_set<int32_t>& GetWaitingPermitMemoryBlocks(int32_t socketFd);
+
+    MemoryMetadata GetMemoryMetadata(int32_t sharedMemoryId);
 
     void GenerateReport(std::stringstream& reportStream) const;
 private:

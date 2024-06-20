@@ -78,28 +78,28 @@ void TaskHandler::HandleRead(const Task& task)
     const size_t len = task.Size();
     const char* buffer = task.DataRaw();
     const int socketFd = task.ClientFd();
+    auto header = Common::GetMessageHeader(buffer);
+    const uint32_t seq = header->seq();
 
     if (len < MESSAGE_HEADER_LEN) {
-        logger.Error("[TaskHandler] Incorrect message header length from client {}", socketFd);
-        Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, GetSender(socketFd));
+        logger.Error("[TaskHandler] Incorrect message header length from client {}, seq={}", socketFd, seq);
+        Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, seq, GetSender(socketFd));
         return;
     }
 
     // 验证buf是否包含有效的消息头
     flatbuffers::Verifier verifier(reinterpret_cast<const uint8_t*>(buffer), MESSAGE_HEADER_LEN);
     if (!Common::VerifyMessageHeaderBuffer(verifier)) {
-        logger.Error("[TaskHandler] Incorrect message header format from client {}", socketFd);
-        Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, GetSender(socketFd));
+        logger.Error("[TaskHandler] Incorrect message header format from client {}, seq={}", socketFd, seq);
+        Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, seq, GetSender(socketFd));
         return;
     }
-
-    auto header = Common::GetMessageHeader(buffer);
 
     // TODO: 需要处理半包和粘包
     uint bodySize = header->size();
     if (len < bodySize + MESSAGE_HEADER_LEN) {
-        logger.Error("[TaskHandler] Incorrect message body length from client {}", socketFd);
-        Utils::SendErrorMessage(ErrorType::IllegalMessageBody, GetSender(socketFd));
+        logger.Error("[TaskHandler] Incorrect message body length from client {}, seq={}", socketFd, seq);
+        Utils::SendErrorMessage(ErrorType::IllegalMessageBody, seq, GetSender(socketFd));
         return;
     }
     HandleMessage(header, buffer, socketFd);
@@ -161,29 +161,31 @@ void TaskHandler::HandleMessage(const Common::MessageHeader* header, const char*
             break;
         }
         default:
-            logger.Error("[TaskHandler] Unknown message type from client {}", socketFd);
-            Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, GetSender(socketFd));
+            const uint32_t seq = header->seq();
+            logger.Error("[TaskHandler] Unknown message type from client {}, seq={}", socketFd, seq);
+            Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, header->seq(), GetSender(socketFd));
     }
 }
 
 void TaskHandler::HandleMessageApplyMemory(const Common::MessageHeader* header, const char* buffer, int socketFd)
 {
     // 解析消息体
+    const uint32_t seq = header->seq();
     auto startPtr = buffer + MESSAGE_HEADER_LEN;
     flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), header->size());
     if (!Common::VerifyMessageHeaderBuffer(bodyVerifier)) {
-        logger.Error("[TaskHandler] Received incorrect apply memory body format");
-        SendApplyMemoryResponse(socketFd, -1, 0, ErrorType::IllegalMessageBody);
+        logger.Error("[TaskHandler] Received incorrect apply memory body format from client {}, seq={}", socketFd, seq);
+        SendApplyMemoryResponse(socketFd, seq, -1, 0, ErrorType::IllegalMessageBody);
         return;
     }
     auto applyMemoryMessage = Common::GetApplyMemoryMessage(startPtr);
     auto objectKey = applyMemoryMessage->object_key() ? applyMemoryMessage->object_key()->str() : "";
-    logger.Info("[TaskHandler] Received ApplyMemory from client {}, object key: {}, size: {}", socketFd,
-        objectKey, applyMemoryMessage->memory_size());
+    logger.Info("[TaskHandler] Received ApplyMemory from client {}, seq: {}, object key: {}, size: {}",
+                socketFd, seq, objectKey, applyMemoryMessage->memory_size());
 
     // 如果申请内存大小为0，仅在资源管理模块标记，不实际分配内存。
     if (!objectKey.empty() && applyMemoryMessage->memory_size() == 0) {
-        HandleApplyZeroMemory(socketFd, objectKey);
+        HandleApplyZeroMemory(socketFd, seq, objectKey);
         return;
     }
 
@@ -193,7 +195,7 @@ void TaskHandler::HandleMessageApplyMemory(const Common::MessageHeader* header, 
     ErrorType errorType;
     tie(memoryId, errorType) = applyMemoryRes;
     uint64_t memorySize = errorType == ErrorType::None ? applyMemoryMessage->memory_size() : 0;
-    SendApplyMemoryResponse(socketFd, memoryId, memorySize, errorType);
+    SendApplyMemoryResponse(socketFd, seq, memoryId, memorySize, errorType);
 }
 
 void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* header, const char* buffer, int socketFd)
@@ -203,14 +205,15 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
     auto startPtr = buffer + MESSAGE_HEADER_LEN;
     flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), header->size());
     if (!Common::VerifyApplyPermissionMessageBuffer(bodyVerifier)) {
-        logger.Error("[TaskHandler] Received incorrect apply permission body format");
+        logger.Error("[TaskHandler] Received incorrect apply permission body format from client {}, seq={}",
+                     socketFd, seq);
         SendApplyPermissionResponse({false, socketFd, seq, -1, 0,
                                      make_shared<Resource::UserData>(), ErrorType::IllegalMessageBody});
         return;
     }
     auto applyPermissionMessage = Common::GetApplyPermissionMessage(startPtr);
 
-    logger.Info("[TaskHandler] Received ApplyPermission from client {}, permission: {}", socketFd,
+    logger.Info("[TaskHandler] Received ApplyPermission from client {}, seq: {}, permission: {}", socketFd, seq,
                 static_cast<int32_t>(applyPermissionMessage->permission()));
 
     // 0大小内存权限申请
@@ -223,7 +226,8 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
     int32_t sharedMemoryId = applyPermissionMessage->memory_key() != -1 ? applyPermissionMessage->memory_key() :
                 resourceMgrPtr_->GetMemoryId(applyPermissionMessage->object_key()->str());
     if (sharedMemoryId == -1) {
-        logger.Error("[TaskHandler] The object key {} is not found", applyPermissionMessage->object_key()->str());
+        logger.Error("[TaskHandler] The object key {} is not found from client {}, seq={}",
+                     applyPermissionMessage->object_key()->str(), socketFd, seq);
         SendApplyPermissionResponse({false, socketFd, seq, -1, 0,
                                      make_shared<Resource::UserData>(), ErrorType::KeyNotFound});
         return;
@@ -250,14 +254,16 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
 void TaskHandler::HandleMessageReleasePermission(const Common::MessageHeader* header, const char* buffer, int socketFd)
 {
     // 解析消息体
+    const uint32_t seq = header->seq();
     auto startPtr = buffer + MESSAGE_HEADER_LEN;
     flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), header->size());
     if (!Common::VerifyReleasePermissionMessageBuffer(bodyVerifier)) {
-        logger.Error("[TaskHandler] Received incorrect release permission body format");
+        logger.Error("[TaskHandler] Received incorrect release permission body format from client {}, seq={}",
+                     socketFd, seq);
         return;
     }
     auto releasePermissionMessage = Common::GetReleasePermissionMessage(startPtr);
-    logger.Info("[TaskHandler] Received ReleasePermission from client {}, permission: {}", socketFd,
+    logger.Info("[TaskHandler] Received ReleasePermission from client {}, seq: {}, permission: {}", socketFd, seq,
                 static_cast<int32_t>(releasePermissionMessage->permission()));
 
     // 0大小内存权限释放,直接返回。
@@ -269,7 +275,8 @@ void TaskHandler::HandleMessageReleasePermission(const Common::MessageHeader* he
     int32_t sharedMemoryId = releasePermissionMessage->memory_key() != -1 ? releasePermissionMessage->memory_key() :
                              resourceMgrPtr_->GetMemoryId(releasePermissionMessage->object_key()->str());
     if (sharedMemoryId == -1) {
-        logger.Error("[TaskHandler] The object key {} is not found", releasePermissionMessage->object_key()->str());
+        logger.Error("[TaskHandler] The object key {} is not found from client {}, seq={}",
+                     releasePermissionMessage->object_key()->str(), socketFd, seq);
         return;
     }
     ReleasePermission(socketFd, sharedMemoryId, releasePermissionMessage->permission());
@@ -296,17 +303,19 @@ void TaskHandler::ReleasePermission(int32_t socketFd, int32_t sharedMemoryId, Co
 void TaskHandler::HandleMessageReleaseMemory(const Common::MessageHeader *header, const char *buffer, int socketFd)
 {
     // 解析消息体
+    const uint32_t seq = header->seq();
     auto startPtr = buffer + MESSAGE_HEADER_LEN;
     flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), header->size());
     if (!Common::VerifyReleaseMemoryMessageBuffer(bodyVerifier)) {
-        logger.Error("[TaskHandler] Received incorrect release memory body format");
+        logger.Error("[TaskHandler] Received incorrect release memory body format from client {}, seq={}",
+                     socketFd, seq);
         return;
     }
     auto releaseMemoryMessage = Common::GetReleaseMemoryMessage(startPtr);
     int32_t sharedMemoryId = releaseMemoryMessage->memory_key() != -1 ? releaseMemoryMessage->memory_key() :
                              resourceMgrPtr_->GetMemoryId(releaseMemoryMessage->object_key()->str());
-    logger.Info("[TaskHandler] Received ReleaseMemory from client {}, memory key: {}", socketFd,
-        sharedMemoryId);
+    logger.Info("[TaskHandler] Received ReleaseMemory from client {}, seq: {}, memory key: {}", socketFd, seq,
+                sharedMemoryId);
 
     // 0大小内存释放，移除内存对应的用户自定义元数据。
     if (releaseMemoryMessage->object_key() &&
@@ -316,13 +325,53 @@ void TaskHandler::HandleMessageReleaseMemory(const Common::MessageHeader *header
     }
 
     if (sharedMemoryId == -1) {
-        logger.Error("[TaskHandler] The object key {} is not found", releaseMemoryMessage->object_key()->str());
+        logger.Error("[TaskHandler] The object key {} is not found from client {}, seq={}",
+                     releaseMemoryMessage->object_key()->str(), socketFd, seq);
         return;
     }
     if (!resourceMgrPtr_->HandleReleaseMemory(sharedMemoryId)) {
-        logger.Error("[TaskHandler] Failed to ReleaseMemory, client: {}, memory key: {}",
-            socketFd, sharedMemoryId);
+        logger.Error("[TaskHandler] Failed to ReleaseMemory, client: {}, seq: {}, memory key: {}",
+                     socketFd, seq, sharedMemoryId);
     }
+}
+
+void TaskHandler::HandleMessageGetMeta(const Common::MessageHeader* header, const char* buffer, int socketFd)
+{
+    // 解析消息体。
+    const uint32_t seq = header->seq();
+    auto startPtr = buffer + MESSAGE_HEADER_LEN;
+    flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), header->size());
+    if (!Common::VerifyGetMetaDataMessageBuffer(bodyVerifier)) {
+        logger.Error("[TaskHandler] Received incorrect get meta body format from client {}, seq={}",
+                     socketFd, seq);
+        SendGetMetaDataResponse(socketFd, seq, ErrorType::IllegalMessageBody, {-1, 0,
+                                make_shared<Resource::UserData>()});
+        return;
+    }
+
+    // 获取共享内存 ID。
+    auto getMetaDataMessage = Common::GetGetMetaDataMessage(startPtr);
+    auto objectKey = getMetaDataMessage->object_key() ? getMetaDataMessage->object_key()->str() : "";
+    logger.Info("[TaskHandler] Received GetMetaData from client {}, seq: {}, object key: {}",
+                socketFd, seq, objectKey);
+
+    // 0大小内存读取用户元数据
+    if (resourceMgrPtr_->IsZeroMemory(objectKey)) {
+        SendGetMetaDataResponse(socketFd, seq, ErrorType::None, {-1, 0,
+                                resourceMgrPtr_->GetZeroMemoryUserData(objectKey)});
+        return;
+    }
+
+    auto sharedMemoryId = resourceMgrPtr_->GetMemoryId(objectKey);
+    if (sharedMemoryId == -1) {
+        logger.Error("[GetMetaData] The object key {} is not found from client {}, seq={}",
+                     objectKey, socketFd, seq);
+        SendGetMetaDataResponse(socketFd, seq, ErrorType::KeyNotFound, {-1, 0,
+                                make_shared<Resource::UserData>()});
+        return;
+    }
+    auto metadata = resourceMgrPtr_->GetMemoryMetadata(sharedMemoryId);
+    SendGetMetaDataResponse(socketFd, seq, ErrorType::None, metadata);
 }
 
 void TaskHandler::HandleMessageCleanupExpiredMemory()
@@ -331,31 +380,32 @@ void TaskHandler::HandleMessageCleanupExpiredMemory()
     resourceMgrPtr_->CleanupExpiredMemory();
 }
 
-void TaskHandler::SendApplyMemoryResponse(int32_t socketFd, int32_t memoryId, uint64_t memorySize,
+void TaskHandler::SendApplyMemoryResponse(int32_t socketFd, uint32_t seq, int32_t memoryId, uint64_t memorySize,
                                           ErrorType errorType)
 {
     flatbuffers::FlatBufferBuilder bodyBuilder;
     auto respBody = Common::CreateApplyMemoryMessageResponse(bodyBuilder, errorType, memoryId, memorySize);
     bodyBuilder.Finish(respBody);
-    Utils::SendMessage(bodyBuilder, Common::MessageType::ApplyMemory, GetSender(socketFd));
-    logger.Info("[TaskHandler] Send memory to client {}, result: {}, memory key: {}, size: {}",
-        socketFd, static_cast<int32_t>(errorType), memoryId, memorySize);
+    Utils::SendMessage(bodyBuilder, Common::MessageType::ApplyMemory, seq, GetSender(socketFd));
+    logger.Info("[TaskHandler] Send memory to client {}, seq: {}, result: {}, memory key: {}, size: {}",
+        socketFd, seq, static_cast<int32_t>(errorType), memoryId, memorySize);
 }
 
-void TaskHandler::SendGetMetaDataResponse(int32_t socketFd, ErrorType errorType, int32_t memoryId, uint64_t memorySize,
-                                          const shared_ptr<Resource::UserData>& userData)
+void TaskHandler::SendGetMetaDataResponse(int32_t socketFd, uint32_t seq, ErrorType errorType,
+                                          const Resource::MemoryMetadata& metadata)
 {
     flatbuffers::FlatBufferBuilder bodyBuilder;
     flatbuffers::Offset<::flatbuffers::Vector<int8_t>> userDataOffset = 0;
-    if (userData && userData->userDataPtr_) {
-        userDataOffset = bodyBuilder.CreateVector(userData->userDataPtr_.get(), userData->dataSize_);
+    if (metadata.userData_ && metadata.userData_->userDataPtr_) {
+        userDataOffset = bodyBuilder.CreateVector(metadata.userData_->userDataPtr_.get(),
+                                                  metadata.userData_->dataSize_);
     }
     auto respBody = Common::CreateGetMetaDataMessageResponse(
-        bodyBuilder, errorType, userDataOffset, memoryId, memorySize);
+        bodyBuilder, errorType, userDataOffset, metadata.sharedMemoryId_, metadata.memorySize_);
     bodyBuilder.Finish(respBody);
-    Utils::SendMessage(bodyBuilder, Common::MessageType::GetMetaData, GetSender(socketFd));
-    logger.Info("[TaskHandler] Send metadata to client {}, result: {}, memory key: {}",
-        socketFd, static_cast<int32_t>(errorType), memoryId);
+    Utils::SendMessage(bodyBuilder, Common::MessageType::GetMetaData, seq, GetSender(socketFd));
+    logger.Info("[TaskHandler] Send metadata to client {}, seq: {}, result: {}, memory key: {}",
+        socketFd, seq, static_cast<int32_t>(errorType), metadata.sharedMemoryId_);
 }
 
 void TaskHandler::SendApplyPermissionResponse(const Resource::ApplyPermissionResponse& response)
@@ -371,9 +421,10 @@ void TaskHandler::SendApplyPermissionResponse(const Resource::ApplyPermissionRes
                                                      response.sharedMemoryId_, response.memorySize_, userDataOffset);
 
     bodyBuilder.Finish(respBody);
-    Utils::SendMessage(bodyBuilder, Common::MessageType::ApplyPermission, GetSender(response.applicant_));
-    logger.Info("[TaskHandler] Send Permission result to client {}, result: {}, memory key: {}, size: {}",
-        response.applicant_, response.granted_, response.sharedMemoryId_, response.memorySize_);
+    Utils::SendMessage(bodyBuilder, Common::MessageType::ApplyPermission, response.seq_,
+                       GetSender(response.applicant_));
+    logger.Info("[TaskHandler] Send Permission result to client {}, seq: {}, result: {}, memory key: {}, size: {}",
+                response.applicant_, response.seq_, response.granted_, response.sharedMemoryId_, response.memorySize_);
 }
 
 std::function<void(const uint8_t*, size_t)> TaskHandler::GetSender(int32_t socketFd)
@@ -383,50 +434,14 @@ std::function<void(const uint8_t*, size_t)> TaskHandler::GetSender(int32_t socke
     };
 }
 
-void TaskHandler::HandleMessageGetMeta(const Common::MessageHeader* header, const char* buffer, int socketFd)
-{
-    // 解析消息体。
-    auto startPtr = buffer + MESSAGE_HEADER_LEN;
-    flatbuffers::Verifier bodyVerifier(reinterpret_cast<const uint8_t*>(startPtr), header->size());
-    if (!Common::VerifyGetMetaDataMessageBuffer(bodyVerifier)) {
-        logger.Error("[TaskHandler] Received incorrect get meta body format");
-        SendGetMetaDataResponse(socketFd, ErrorType::IllegalMessageBody, -1, 0,
-                                make_shared<Resource::UserData>());
-        return;
-    }
-
-    // 获取共享内存 ID。
-    auto getMetaDataMessage = Common::GetGetMetaDataMessage(startPtr);
-    auto objectKey = getMetaDataMessage->object_key() ? getMetaDataMessage->object_key()->str() : "";
-    logger.Info("[TaskHandler] Received GetMetaData from client {}, object key: {}", socketFd, objectKey);
-
-    // 0大小内存读取用户元数据
-    if (resourceMgrPtr_->IsZeroMemory(objectKey)) {
-        SendGetMetaDataResponse(socketFd, ErrorType::None, -1, 0,
-                                resourceMgrPtr_->GetZeroMemoryUserData(objectKey));
-        return;
-    }
-
-    auto sharedMemoryId = resourceMgrPtr_->GetMemoryId(objectKey);
-    if (sharedMemoryId == -1) {
-        logger.Error("[GetMetaData] The object key {} is not found from client {}", objectKey, socketFd);
-        SendGetMetaDataResponse(socketFd, ErrorType::KeyNotFound, -1, 0,
-                                make_shared<Resource::UserData>());
-        return;
-    }
-    uint64_t memorySize = resourceMgrPtr_->GetMemorySize(sharedMemoryId);
-    auto userData = resourceMgrPtr_->GetUserData(sharedMemoryId);
-    SendGetMetaDataResponse(socketFd, ErrorType::None, sharedMemoryId, memorySize, userData);
-}
-
-void TaskHandler::HandleApplyZeroMemory(int32_t socketFd, const std::string& objectKey)
+void TaskHandler::HandleApplyZeroMemory(int32_t socketFd, uint32_t seq, const std::string& objectKey)
 {
     if (resourceMgrPtr_->IsZeroMemory(objectKey)) {
         logger.Error("[TaskHandler] The object key {} already exists", objectKey);
-        SendApplyMemoryResponse(socketFd, -1, 0, ErrorType::KeyAlreadyExists);
+        SendApplyMemoryResponse(socketFd, seq, -1, 0, ErrorType::KeyAlreadyExists);
     } else {
         resourceMgrPtr_->AddZeroMemoryUserData(objectKey, make_shared<Resource::UserData>());
-        SendApplyMemoryResponse(socketFd, -1, 0, ErrorType::None);
+        SendApplyMemoryResponse(socketFd, seq, -1, 0, ErrorType::None);
     }
 }
 

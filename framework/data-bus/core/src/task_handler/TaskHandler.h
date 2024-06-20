@@ -38,10 +38,11 @@ private:
     void HandleWrite(const Task&);
     void HandleClose(int socketFd);
     std::function<void(const uint8_t*, size_t)> GetSender(int32_t socketFd);
-    void SendApplyPermissionResponse(const Resource::ApplyPermissionResponse&);
-    void SendApplyMemoryResponse(int32_t socketFd, int32_t memoryId, uint64_t memorySize, Common::ErrorType errorType);
-    void SendGetMetaDataResponse(int32_t socketFd, Common::ErrorType errorType, int32_t memoryId, uint64_t memorySize,
-                                 const std::shared_ptr<Resource::UserData>& userData);
+    void SendApplyPermissionResponse(const Resource::ApplyPermissionResponse& applyPermissionResponse);
+    void SendApplyMemoryResponse(int32_t socketFd, uint32_t seq, int32_t memoryId, uint64_t memorySize,
+                                 Common::ErrorType errorType);
+    void SendGetMetaDataResponse(int32_t socketFd, uint32_t seq, Common::ErrorType errorType,
+                                 const Resource::MemoryMetadata& metadata);
     void HandleMessageApplyPermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleMessageReleasePermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void ReleasePermission(int32_t socketFd, int32_t sharedMemoryId, Common::PermissionType permissionType);
@@ -49,7 +50,7 @@ private:
     void HandleMessageReleaseMemory(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleMessageGetMeta(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleMessageCleanupExpiredMemory();
-    void HandleApplyZeroMemory(int32_t socketFd, const std::string& objectKey);
+    void HandleApplyZeroMemory(int32_t socketFd, uint32_t seq, const std::string& objectKey);
     void HandleApplyZeroMemoryPermission(int32_t socketFd, uint32_t seq,
                                          Common::ApplyPermissionMessage* applyPermissionMessage);
 

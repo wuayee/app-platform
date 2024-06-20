@@ -345,7 +345,8 @@ void ResourceManager::AddMemoryCleanupTask()
         taskLoopPtr_->AddReadTask(Task::DATABUS_SOCKET_FD, reinterpret_cast<const char*>(buf), s);
     };
     logger.Info("[ResourceManager] Adding a memory cleanup task to the task loop");
-    Utils::SendMessage(bodyBuilder, Common::MessageType::CleanupExpiredMemory, sender);
+    Utils::SendMessage(bodyBuilder, Common::MessageType::CleanupExpiredMemory,
+                       Task::DATABUS_INTERNAL_SEQ, sender);
 }
 
 ErrorType ResourceManager::PreCheckPermissionCommon(DataBus::Common::PermissionType permissionType,
@@ -616,6 +617,11 @@ const deque <WaitingPermitRequest>& ResourceManager::GetWaitingPermitRequests(in
 const unordered_set<int32_t>& ResourceManager::GetWaitingPermitMemoryBlocks(int32_t socketFd)
 {
     return waitingPermitMemoryBlocks_[socketFd];
+}
+
+MemoryMetadata ResourceManager::GetMemoryMetadata(int32_t sharedMemoryId)
+{
+    return {sharedMemoryId, GetMemorySize(sharedMemoryId), GetUserData(sharedMemoryId)};
 }
 
 int32_t ResourceManager::IncrementReadingRefCnt(int sharedMemoryId)
