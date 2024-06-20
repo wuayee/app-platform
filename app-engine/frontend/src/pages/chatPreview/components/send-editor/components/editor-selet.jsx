@@ -10,6 +10,17 @@ const EditorSelect = (props) => {
   const [checkedList, setCheckedList] = useState([]);
   const [checkedNameList, setCheckedNameList] = useState([]);
   useEffect(() => {
+    if (chatSelectItem.multiple) {
+      chatSelectItem.options.forEach((item, index) => {
+        if (typeof (item) === 'string') {
+          let obj = {
+            question: item,
+            answer: ''
+          };
+          chatSelectItem.options[index] = obj;
+        }
+      })
+    }
     const { left, top, width } = positionConfig;
     const styleObj = {
       left: `${left - (200 - width) / 2}px`,
