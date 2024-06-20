@@ -23,10 +23,6 @@ const ChoreographyHead = (props) => {
   }
   // 编辑基本信息
   function modalClick() {
-    if (testStatus !== 'Finished') {
-      testRef.current.showModal();
-      return;
-    }
     modalRef.current.showModal();
   }
   // 返回编排页面
