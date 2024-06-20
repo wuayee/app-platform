@@ -108,7 +108,7 @@ public enum AippErrCode implements ErrorCode {
     /**
      * 名称为空
      */
-    AIPP_NAME_IS_EMPTY(90001013, "名称为空。"),
+    AIPP_NAME_IS_EMPTY(90001013, "名称为空或者只包含空格。"),
 
     /**
      * 名称已存在
