@@ -142,6 +142,7 @@ export const routeList: MenuItem[] = [
     key: '/model-training',
     icon: Icons.app({}),
     label: '模型训练',
+    hidden: true,
     component: ModelTraining,
     children: [
       {
