@@ -4,8 +4,6 @@
 
 package com.huawei.jade.fel.core;
 
-import java.util.Map;
-
 /**
  * 委托单元。
  *
@@ -22,14 +20,4 @@ public interface Pattern<I, O> {
      * @return 表示输出数据的 {@link O}。
      */
     O invoke(I input);
-
-    /**
-     * 绑定自定义参数到委托单元。
-     *
-     * @param args 表示自定义参数的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
-     * @return 表示委托单元的 {@link Pattern}{@code <}{@link I}{@code , }{@link O}{@code >}。
-     */
-    default Pattern<I, O> bind(Map<String, Object> args) {
-        return this;
-    }
 }

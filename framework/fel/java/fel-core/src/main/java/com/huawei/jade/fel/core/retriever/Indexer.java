@@ -4,6 +4,8 @@
 
 package com.huawei.jade.fel.core.retriever;
 
+import com.huawei.jade.fel.core.Pattern;
+
 /**
  * 索引算子，用于 RAG 流程中的知识入库。
  *
@@ -12,11 +14,17 @@ package com.huawei.jade.fel.core.retriever;
  * @since 2024-04-28
  */
 @FunctionalInterface
-public interface Indexer<I> {
+public interface Indexer<I> extends Pattern<I, Void> {
     /**
      * 索引算子的处理方法。
      *
      * @param input 表示索引算子的输入数据的 {@link I}。
      */
     void process(I input);
+
+    @Override
+    default Void invoke(I input) {
+        this.process(input);
+        return null;
+    }
 }

@@ -14,6 +14,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>fel-langchain-runnable</module>
         <module>tool-aiflow</module>
     </modules>
 </project>

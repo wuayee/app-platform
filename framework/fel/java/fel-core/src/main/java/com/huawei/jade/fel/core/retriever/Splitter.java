@@ -4,6 +4,8 @@
 
 package com.huawei.jade.fel.core.retriever;
 
+import com.huawei.jade.fel.core.Pattern;
+
 /**
  * 文本切分算子。
  *
@@ -13,7 +15,7 @@ package com.huawei.jade.fel.core.retriever;
  * @since 2024-04-28
  */
 @FunctionalInterface
-public interface Splitter<I, O> {
+public interface Splitter<I, O> extends Pattern<I, O> {
     /**
      * 文本切分。
      *
@@ -21,4 +23,9 @@ public interface Splitter<I, O> {
      * @return 表示返回数据的 {@link O}。
      */
     O split(I input);
+
+    @Override
+    default O invoke(I input) {
+        return this.split(input);
+    }
 }

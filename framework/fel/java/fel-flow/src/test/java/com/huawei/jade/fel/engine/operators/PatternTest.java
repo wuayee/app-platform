@@ -11,10 +11,10 @@ import static com.huawei.jade.fel.engine.operators.patterns.SyncTipper.value;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.waterflow.domain.context.FlowSession;
+import com.huawei.fit.waterflow.domain.utils.IdGenerator;
 import com.huawei.fitframework.resource.web.Media;
 import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.MapBuilder;
-import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.Prompt;
@@ -28,13 +28,11 @@ import com.huawei.jade.fel.engine.flows.AiProcessFlow;
 import com.huawei.jade.fel.engine.flows.Conversation;
 import com.huawei.jade.fel.engine.operators.patterns.SimplePattern;
 import com.huawei.jade.fel.engine.operators.prompts.Prompts;
-import com.huawei.jade.fel.engine.util.StateKey;
+import com.huawei.jade.fel.engine.util.AiFlowSession;
 
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -102,14 +100,12 @@ public class PatternTest {
     }
 
     @Test
-    void shouldOkWhenDelegatePatternWithBindingArgs() {
+    void shouldOkWhenDelegateSimplePattern() {
         FlowSession session = new FlowSession();
-        Map<String, Object> argsInit = MapBuilder.<String, Object>get().put("key", "value").build();
-        SimplePattern<Prompt, String> pattern = new SimplePattern<Prompt, String>((prompt, args) -> {
-            String value = Optional.ofNullable(ObjectUtils.<String>cast(args.get("key"))).orElse("empty");
-            String sessionId = ObjectUtils.<FlowSession>cast(args.get(StateKey.FLOW_SESSION)).getId();
-            return prompt.text() + value + sessionId;
-        }).bind(argsInit);
+        SimplePattern<Prompt, String> pattern = new SimplePattern<>(prompt -> {
+            String sessionId = AiFlowSession.get().map(IdGenerator::getId).orElse(StringUtils.EMPTY);
+            return prompt.text() + sessionId;
+        });
         String result = AiFlows.<Tip>create()
             .prompt(Prompts.human("{{0}}"))
             .delegate(pattern)
@@ -118,8 +114,7 @@ public class PatternTest {
             .offer(Tip.fromArray("human msg."))
             .await();
 
-        // pattern 已绑定的参数被后续的bind操作清空
-        assertThat(result).isEqualTo("human msg.empty" + session.getId());
+        assertThat(result).isEqualTo("human msg." + session.getId());
     }
 
     private static Memory getMockMemory() {

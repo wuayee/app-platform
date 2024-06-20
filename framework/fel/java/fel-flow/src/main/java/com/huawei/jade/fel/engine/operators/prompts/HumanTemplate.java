@@ -13,14 +13,12 @@ import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.character.HumanMessage;
-import com.huawei.jade.fel.core.Pattern;
 import com.huawei.jade.fel.core.template.MessageContent;
 import com.huawei.jade.fel.core.template.StringTemplate;
 import com.huawei.jade.fel.core.template.support.HumanMessageTemplate;
 import com.huawei.jade.fel.core.util.Tip;
-import com.huawei.jade.fel.engine.util.StateKey;
+import com.huawei.jade.fel.engine.util.AiFlowSession;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,7 +31,6 @@ import java.util.Optional;
 public class HumanTemplate implements PromptTemplate<Tip> {
     private final HumanMessageTemplate messageTemplate;
     private String historyInputKey = null;
-    private final Map<String, Object> args;
 
     /**
      * 使用 mustache 模板初始化 {@link HumanTemplate}。
@@ -44,13 +41,6 @@ public class HumanTemplate implements PromptTemplate<Tip> {
     public HumanTemplate(StringTemplate template) {
         Validation.notNull(template, "The template cannot be null.");
         this.messageTemplate = new HumanMessageTemplate(template);
-        this.args = Collections.emptyMap();
-    }
-
-    private HumanTemplate(HumanMessageTemplate template, String historyInputKey, Map<String, Object> args) {
-        this.messageTemplate = Validation.notNull(template, "The template cannot be null.");
-        this.historyInputKey = historyInputKey;
-        this.args = Validation.notNull(args, "The args cannot be null.");
     }
 
     /**
@@ -68,8 +58,8 @@ public class HumanTemplate implements PromptTemplate<Tip> {
     @Override
     public Prompt invoke(Tip input) {
         ChatMessage chatMessage = this.messageTemplate.render(input.freeze());
-        FlowSession session = ObjectUtils.cast(this.args.get(StateKey.FLOW_SESSION));
-        Validation.notNull(session, "The flow session cannot be null.");
+        Validation.isTrue(AiFlowSession.get().isPresent(), "The ai flow session cannot be empty.");
+        FlowSession session = Validation.notNull(AiFlowSession.get().get(), "The flow session cannot be null.");
         session.setInnerState(HISTORY_INPUT, Optional.ofNullable(this.historyInputKey)
             .map(key -> {
                 Map<String, MessageContent> values = input.freeze();
@@ -78,10 +68,5 @@ public class HumanTemplate implements PromptTemplate<Tip> {
             })
             .orElse(chatMessage));
         return ChatMessages.from(chatMessage);
-    }
-
-    @Override
-    public Pattern<Tip, Prompt> bind(Map<String, Object> args) {
-        return new HumanTemplate(this.messageTemplate, this.historyInputKey, args);
     }
 }
