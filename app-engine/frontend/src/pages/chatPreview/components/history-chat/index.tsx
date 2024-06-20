@@ -65,8 +65,6 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
       limit: 100
     };
     setRequestInfo(requestBody);
-    const chatRes = await getChatList(tenantId, requestBody);
-    setData(chatRes?.data);
   }
 
   const items: MenuProps["items"] = [
@@ -180,7 +178,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
         <Input placeholder="搜索..." prefix={<SearchOutlined />} disabled />
       </div>
       <div className="history-wrapper">
-        {data?.map((item) => (
+        {data?.slice(0, 30).map((item) => (
           <div className="history-item" key={item?.chat_id} onClick={() => { currentChat.current = item; }}>
             <div className="history-item-content">
               <div className="history-item-header">
