@@ -30,7 +30,6 @@ public class ModelStatisticsService {
     @Getter
     private Map<String, Integer> modelLinkControl = new ConcurrentHashMap<>();
 
-
     private double totalLatency;
 
     private long totalTokens;
