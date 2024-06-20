@@ -192,9 +192,14 @@ public enum AippErrCode implements ErrorCode {
     CREATE_DEBUG_AIPP_FAILED(90002907, "调试失败，请检查流程配置是否正确: {0}"),
 
     /**
+     * 不支持的数据格式
+     */
+    DATA_TYPE_IS_NOT_SUPPORTED(90002908, "Not supported data type to get. [type={0}]"),
+
+    /**
      * task 不存在
      */
-    TASK_NOT_FOUND(90002908, "Task not found."),
+    TASK_NOT_FOUND(90002909, "Task not found."),
 
     /**
      * 错误码截止值

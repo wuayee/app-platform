@@ -7,6 +7,7 @@ package com.huawei.fit.jober.aipp.service.impl;
 import static com.huawei.fit.jober.aipp.enums.ToolCategoryEnum.HUGGINGFACE;
 import static com.huawei.fit.jober.aipp.init.AippComponentInitiator.COMPONENT_DATA;
 
+import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
@@ -61,6 +62,16 @@ public class StoreServiceImpl implements StoreService {
                 .toolList(this.getToolModelList(tag, pageNum, pageSize))
                 .basicList(this.buildBasicNodesConfig())
                 .build();
+    }
+
+    @Override
+    public List<ToolData> getPlugins(String tag, int pageNum, int pageSize, OperationContext operationContext) {
+        return this.buildToolNodesConfig(tag, pageNum, pageSize);
+    }
+
+    @Override
+    public List<StoreBasicNodeInfoDto> getBasic() {
+        return this.buildBasicNodesConfig();
     }
 
     private List<ToolModelDto> getToolModelList(String tag, int pageNum, int pageSize) {

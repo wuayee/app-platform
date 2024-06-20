@@ -10,28 +10,91 @@ import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import java.util.List;
 
 /**
+ * App 相关的数据库操作
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-16
  */
 public interface AppBuilderAppMapper {
+    /**
+     * 根据 id 获取 App 数据对象。
+     *
+     * @param id 表示 app 的唯一标识的 {@link String}。
+     * @return 表示 App 数据对象的 {@link AppBuilderAppPO}。
+     */
     AppBuilderAppPO selectWithId(String id);
 
+    /**
+     * 根据租户 id 获取 App 数据对象。
+     *
+     * @param tenantId 表示租户 id 的唯一标识的 {@link String}。
+     * @return 表示 App 数据对象列表的 {@link List}{@code <}{@link AppBuilderAppPO}{@code >}。
+     */
     List<AppBuilderAppPO> selectWithTenantId(String tenantId);
 
-    List<AppBuilderAppPO> selectByTenantIdWithPage(AppQueryCondition cond, String tenantId, String typeFilter,
-            long offset, int limit);
+    /**
+     * 根据指定条件获取 App 数据对象列表。
+     *
+     * @param cond 表示 App 查询条件的 {@link AppQueryCondition}。
+     * @param tenantId 表示租户 id 的唯一标识的 {@link String}。
+     * @param offset 表示偏移量的 {@code long}。
+     * @param limit 表示获取个数的 {@code int}。
+     * @return 表示 App 数据对象列表的 {@link List}{@code <}{@link AppBuilderAppPO}{@code >}。
+     */
+    List<AppBuilderAppPO> selectByTenantIdWithPage(AppQueryCondition cond, String tenantId, long offset, int limit);
 
+    /**
+     * 根据指定条件获取 App 数据对象列表。
+     *
+     * @param cond 表示 App 查询条件的 {@link AppQueryCondition}。
+     * @return 表示 App 数据对象列表的 {@link List}{@code <}{@link AppBuilderAppPO}{@code >}。
+     */
     List<AppBuilderAppPO> selectWithCondition(AppQueryCondition cond);
 
-    long countByTenantId(String tenantId, String typeFilter);
+    /**
+     * 根据指定条件计算 App 个数。
+     *
+     * @param tenantId 表示租户 id 的唯一标识的 {@link String}。
+     * @param cond 表示 App 查询条件的 {@link AppQueryCondition}。
+     * @return 表示 App 个数的 {@code long}。
+     */
+    long countByTenantId(String tenantId, AppQueryCondition cond);
 
+    /**
+     * 插入一条 App 数据对象。
+     *
+     * @param insert 表示需要插入的 App 数据对象的 {@link AppBuilderAppPO}。
+     */
     void insertOne(AppBuilderAppPO insert);
 
+    /**
+     * 更新一条 App 数据对象。
+     *
+     * @param update 表示需要更新的 App 数据对象的 {@link AppBuilderAppPO}。
+     */
     void updateOne(AppBuilderAppPO update);
 
+    /**
+     * 根据 Store 标识列表获取 App 数据对象列表。
+     *
+     * @param storeIds 表示 Store 标识列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @return 表示 App 数据对象列表的 {@link List}{@code <}{@link AppBuilderAppPO}{@code >}。
+     */
     List<AppBuilderAppPO> selectWithStoreId(List<String> storeIds);
 
+    /**
+     * 根据 Store 标识更新 App 数据对象列表。
+     *
+     * @param uniqueName 表示 Store 标识的 {@link String}。
+     * @param id 表示 app 标识的 {@link String}。
+     * @param version 表示 app 版本的 {@link String}。
+     */
     void updateAppWithStoreId(String uniqueName, String id, String version);
 
+    /**
+     * 根据 app 唯一标识删除 app 对象数据。
+     *
+     * @param appId 表示 app 唯一标识的 {@link String}。
+     */
     void delete(String appId);
 }

@@ -4,13 +4,18 @@
 
 package com.huawei.fit.jober.aipp.service;
 
+import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
+import com.huawei.fit.jober.aipp.dto.StoreBasicNodeInfoDto;
 import com.huawei.fit.jober.aipp.dto.ModelDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
+import com.huawei.jade.carver.tool.model.transfer.ToolData;
 
 import java.util.List;
 
 /**
+ * Store 相关服务
+ *
  * @author 邬涨财 w00575064
  * @since 2024-05-13
  */
@@ -25,7 +30,32 @@ public interface StoreService {
      */
     StoreNodeConfigResDto getBasicNodesAndTools(String tag, int pageNum, int pageSize);
 
+    /**
+     * 获取工具流配置对象列表。
+     *
+     * @param pageNum 表示分页的页数的 {@link int}。
+     * @param pageSize 表示分页的每页个数的 {@link int}。
+     * @return 表示获取到的工具流配置对象列表的 {@link List}{@code <}{@link AppBuilderWaterFlowInfoDto}{@code >}。
+     */
     List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(int pageNum, int pageSize);
+
+    /**
+     * 获取指定插件列表。
+     *
+     * @param tag 表示插件的类型。
+     * @param pageNum 表示分页的页数的 {@link int}。
+     * @param pageSize 表示分页的每页个数的 {@link int}。
+     * @param operationContext 表示操作上下文的 {@link OperationContext}。
+     * @return 表示插件列表的 {@link List}{@code <}{@link ToolData}{@code >}。
+     */
+    List<ToolData> getPlugins(String tag, int pageNum, int pageSize, OperationContext operationContext);
+
+    /**
+     * 获取基础节点列表。
+     *
+     * @return 表示基础列表的 {@link List}{@code <}{@link StoreBasicNodeInfoDto}{@code >}。
+     */
+    List<StoreBasicNodeInfoDto> getBasic();
 
     /**
      * 获取模型列表。

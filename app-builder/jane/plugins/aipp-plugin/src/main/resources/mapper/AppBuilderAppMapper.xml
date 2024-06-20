@@ -44,8 +44,11 @@
         <include refid="Base_Column_List"/>
         from app_builder_app
         where tenant_id = #{tenantId}
-        <if test="typeFilter != null">
-            and type = #{typeFilter}
+        <if test="cond.type != null">
+            and type = #{cond.type}
+        </if>
+        <if test="cond.state != null">
+            and state = #{cond.state}
         </if>
         <if test="cond != null and cond.name != null and cond.name != ''">
             and name like '%' || #{cond.name} || '%'
@@ -82,13 +85,16 @@
 
     <select id="countByTenantId" resultType="long">
         select count(*) from (
-            select
-            DISTINCT ON (name) *
-            from app_builder_app
-            where tenant_id = #{tenantId}
-            <if test="typeFilter != null">
-                and type = #{typeFilter}
-            </if>
+        select
+        DISTINCT ON (name) *
+        from app_builder_app
+        where tenant_id = #{tenantId}
+        <if test="cond.type != null">
+            and type = #{cond.type}
+        </if>
+        <if test="cond.state != null">
+            and state = #{cond.state}
+        </if>
         ) as latest_records;
     </select>
 

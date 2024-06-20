@@ -991,7 +991,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         itemData.setTags(new HashSet<String>() {{
             add(appCategory.getTag());
         }});
-        itemData.setRunnables(this.buildRunnables(appCategory, aippDto));
+        itemData.setRunnables(this.buildRunnables(aippDto));
         return itemData;
     }
 
@@ -1025,12 +1025,10 @@ public class AippFlowServiceImpl implements AippFlowService {
         return parameterMap;
     }
 
-    private Map<String, Object> buildRunnables(AppCategory appCategory, AippDto aippDto) {
+    private Map<String, Object> buildRunnables(AippDto aippDto) {
         Map<String, Object> runnablesMap = new HashMap<>();
         runnablesMap.put("FIT", MapBuilder.get().put("genericableId", "07b51bd246594c159d403164369ce1db").build());
-        if (isAppCategory(appCategory)) {
-            runnablesMap.put("APP", MapBuilder.get().put("appId", aippDto.getAppId()).build());
-        }
+        runnablesMap.put("APP", MapBuilder.get().put("appId", aippDto.getAppId()).build());
         return runnablesMap;
     }
 

@@ -29,12 +29,11 @@ public interface AppBuilderAppRepository {
      *
      * @param cond 表示 app 的唯一标识的 {@link String}。
      * @param tenantId 表示租户 id 的唯一标识的 {@link String}。
-     * @param typeFilter 表示过滤条件的 {@link String}。
      * @param offset 表示偏移量的 {@code offset}。
      * @param limit 表示获取到的个数的 {@code int}。
      * @return 表示获取到的最新的 app 对象列表的 {@link List}{@code <}{@link AppBuilderApp}{@code >}。
      */
-    List<AppBuilderApp> selectWithLatestApp(AppQueryCondition cond, String tenantId, String typeFilter,
+    List<AppBuilderApp> selectWithLatestApp(AppQueryCondition cond, String tenantId,
             long offset, int limit);
 
     /**
@@ -49,10 +48,10 @@ public interface AppBuilderAppRepository {
      * 根据查询条件获取最新的 app 对象数量。
      *
      * @param tenantId 表示租户 id 的唯一标识的 {@link String}。
-     * @param typeFilter 表示过滤条件的 {@link String}。
+     * @param cond 表示过滤条件的 {@link AppQueryCondition}。
      * @return 表示获取到的最新的 app 对象数量的 {@code long}。
      */
-    long countWithLatestApp(String tenantId, String typeFilter);
+    long countWithLatestApp(String tenantId, AppQueryCondition cond);
 
     /**
      * 数据插入。

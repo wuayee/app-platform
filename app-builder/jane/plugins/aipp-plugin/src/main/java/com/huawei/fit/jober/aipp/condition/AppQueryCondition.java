@@ -24,9 +24,15 @@ import java.util.List;
 @AllArgsConstructor
 public class AppQueryCondition {
     private String tenantId;
+
+    @RequestQuery(name = "type", defaultValue = "app")
     private String type;
+
     private List<String> ids;
 
     @RequestQuery(name = "name", required = false)
     private String name;
+
+    @RequestQuery(name = "state", required = false)
+    private String state;
 }

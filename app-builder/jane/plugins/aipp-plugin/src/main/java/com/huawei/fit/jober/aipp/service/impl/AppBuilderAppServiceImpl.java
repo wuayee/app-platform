@@ -238,12 +238,11 @@ public class AppBuilderAppServiceImpl
     @Fitable(id = "default")
     public Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(AppQueryCondition cond,
             HttpClassicServerRequest httpRequest, String tenantId, long offset, int limit) {
-        List<AppBuilderAppMetadataDto> result =
-                this.appRepository.selectWithLatestApp(cond, tenantId, AppTypeEnum.APP.code(), offset, limit)
+        List<AppBuilderAppMetadataDto> result = this.appRepository.selectWithLatestApp(cond, tenantId, offset, limit)
                         .stream()
                         .map(this::buildAppMetaData)
                         .collect(Collectors.toList());
-        long total = this.appRepository.countWithLatestApp(tenantId, AppTypeEnum.APP.code());
+        long total = this.appRepository.countWithLatestApp(tenantId, cond);
         return Rsp.ok(RangedResultSet.create(result, offset, limit, total));
     }
 

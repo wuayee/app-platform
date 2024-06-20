@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.aipp.controller;
 
 import com.huawei.fit.http.annotation.GetMapping;
+import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
@@ -13,10 +14,12 @@ import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
 import com.huawei.fit.jober.aipp.dto.ModelDto;
+import com.huawei.fit.jober.aipp.dto.StoreBasicNodeInfoDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.jade.store.entity.transfer.ModelData;
+import com.huawei.jade.carver.tool.model.transfer.ToolData;
 
 import java.util.List;
 
@@ -36,6 +39,7 @@ public class StoreController extends AbstractController {
         this.storeService = storeService;
     }
 
+    @Deprecated
     @GetMapping(path = "/nodes", description = "获取所有工具和基础节点配置")
     public Rsp<StoreNodeConfigResDto> getBasicNodesAndTools(HttpClassicServerRequest httpRequest,
             @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
@@ -50,6 +54,19 @@ public class StoreController extends AbstractController {
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(value = "taskName", defaultValue = "") String taskName) {
         return Rsp.ok(this.storeService.getModels(taskName, pageNum, pageSize));
+    }
+
+    @GetMapping(path = "/plugins", description = "获取已发布的所有指定类型的插件配置")
+    public Rsp<List<ToolData>> getPlugins(HttpClassicServerRequest httpRequest, @RequestParam("tag") String tag,
+            @PathVariable("tenant_id") String tenantId,
+            @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        return Rsp.ok(this.storeService.getPlugins(tag, pageNum, pageSize, this.contextOf(httpRequest, tenantId)));
+    }
+
+    @GetMapping(path = "/nodes/basic", description = "获取基础节点配置")
+    public Rsp<List<StoreBasicNodeInfoDto>> getBasic(HttpClassicServerRequest httpRequest) {
+        return Rsp.ok(this.storeService.getBasic());
     }
 
     @GetMapping(path = "/waterflow", description = "获取所有工具流")
