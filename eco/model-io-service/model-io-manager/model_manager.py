@@ -1098,11 +1098,17 @@ def persist_external_services():
 async def start_up(item: Item, request: Request, background_tasks : BackgroundTasks):
     templates = get_template()
     model_name = item.name.strip()
-    model_base_dir = model_name
-
     model_base_dir = model_weight_model_dir.get(model_name, model_name)
-
     model_weight_path = os.path.join(model_weight_dir, model_base_dir)
+    weight_path_validation = os.environ.get("WEIGHT_PATH_VALIDATION") == "true"
+    logger.error("weight_path_validation=%s", weight_path_validation)
+
+    if weight_path_validation and not os.path.exists(model_weight_path):
+        error_msg = "No model weight found in " + model_weight_path
+        logger.error(error_msg)
+        status_code = 400
+        error_info = {"code": status_code, "detail": error_msg}
+        return JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))
 
     model_name = item.name.strip()
 
