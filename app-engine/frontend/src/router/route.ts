@@ -127,6 +127,7 @@ export const routeList: MenuItem[] = [
     key: '/model-base',
     icon: Icons.app({}),
     label: '模型仓库',
+    hidden: true,
     component: ModelBase,
     children: [
       {
