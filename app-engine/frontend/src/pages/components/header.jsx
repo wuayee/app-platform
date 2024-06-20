@@ -12,8 +12,7 @@ const ChoreographyHead = (props) => {
     showElsa, appInfo,
     updateAippCallBack,
     mashupClick, status,
-    openDebug, isTested,
-    isTesting, testTime,
+    openDebug, testTime,
     testStatus } = props;
   let modalRef = React.createRef();
   let editRef = React.createRef();
@@ -24,7 +23,7 @@ const ChoreographyHead = (props) => {
   }
   // 编辑基本信息
   function modalClick() {
-    if (!isTested) {
+    if (testStatus !== 'Finished') {
       testRef.current.showModal();
       return;
     }
@@ -48,7 +47,7 @@ const ChoreographyHead = (props) => {
         {
           !status && <EditIcon onClick={ handleEditClick } />
         }
-        {showElsa && <TestStatus isTested={isTested} isTesting={isTesting} testTime={testTime} testStatus={testStatus}/>}
+        {showElsa && <TestStatus testTime={testTime} testStatus={testStatus}/>}
       </div>
       <div className="header-grid">
         { showElsa && <span className="header-btn test-btn" onClick={handleOpenDebug}>调试</span> }

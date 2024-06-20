@@ -2,10 +2,10 @@ import React from "react";
 import {CheckCircleFilled, CloseCircleFilled, LoadingOutlined} from "@ant-design/icons";
 import './styles/test-status.scss';
 const TestStatus = (props) => {
-  const { isTested, isTesting, testStatus, testTime} = props;
+  const { testStatus, testTime} = props;
 
   return <>
-    { (isTesting || isTested) && <span className={[
+    { testStatus && <span className={[
       'header-time',
       testStatus === 'Running' ? 'running' : '',
       testStatus === 'Finished' ? 'finished' : '',

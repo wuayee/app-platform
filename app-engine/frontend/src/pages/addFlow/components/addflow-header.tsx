@@ -15,9 +15,7 @@ const AddHeader = (props) => {
   const { type, appInfo, modalInfo, setModalInfo } = useContext(FlowContext);
   const [ waterFlowName, setWaterFlowName ] = useState('无标题');
   const { tenantId, appId } = useParams();
-  const [ isTested, setIsTested ] = useState(false);
-  const [ testStatus, setTestStatus ] = useState('Running');
-  const [ isTesting, setIsTesting ] = useState(false);
+  const [ testStatus, setTestStatus ] = useState(null);
   const [ testTime, setTestTime ] = useState(0);
   let editRef:any = useRef(null);
   let modalRef:any = useRef(null);
@@ -26,7 +24,7 @@ const AddHeader = (props) => {
   const navigate = useNavigate();
   // 发布工具流
   const handleUploadFlow = () => {
-    if (!isTested) {
+    if (testStatus !== 'Finished') {
       testRef.current.showModal();
       return;
     }
@@ -70,7 +68,7 @@ const AddHeader = (props) => {
           <span className='header-edit'>
             <EditIcon onClick={ handleEditClick } />
           </span>
-          < TestStatus isTested={isTested} isTesting={isTesting} testTime={testTime} testStatus={testStatus}/>
+          <TestStatus testTime={testTime} testStatus={testStatus}/>
         </div>
         <div className='header-grid'>
           <span className="header-btn test-btn" onClick={handleDebugClick}>测试</span>
@@ -95,10 +93,8 @@ const AddHeader = (props) => {
         waterFlowName={waterFlowName}
         modalInfo={modalInfo}
       />
-      <FlowTest 
-        setIsTested={setIsTested} 
+      <FlowTest
         setTestStatus={setTestStatus}
-        setIsTesting={setIsTesting}
         setTestTime={setTestTime}
         setShowDebug={setShowDebug}
         showDebug={showDebug}
