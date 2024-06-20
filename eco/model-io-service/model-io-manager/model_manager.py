@@ -1116,12 +1116,12 @@ async def start_up(item: Item, request: Request, background_tasks : BackgroundTa
     model_weight_path = os.path.join(model_weight_dir, model_base_dir)
     weight_path_validation = os.environ.get("WEIGHT_PATH_VALIDATION") == "true"
     logger.error("weight_path_validation=%s", weight_path_validation)
+    status_code = 200
 
     if weight_path_validation and not os.path.exists(model_weight_path):
-        error_msg = "No model weight found in " + model_weight_path
+        error_msg = "模型权重不存在，需要上传至" + model_weight_path
         logger.error(error_msg)
-        status_code = 400
-        error_info = {"code": status_code, "detail": error_msg}
+        error_info = {"code": 1, "detail": error_msg}
         return JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))
 
     model_name = item.name.strip()
@@ -1163,9 +1163,8 @@ async def start_up(item: Item, request: Request, background_tasks : BackgroundTa
 
     notify_model_io_gateways_in_bg(background_tasks)
 
-    status_code = 200
     error_info = {
-        "code": status_code,
+        "code": 0,
         "detail": "ok"
     }
 
