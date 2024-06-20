@@ -60,7 +60,8 @@ public class ModelStatisticsService {
             // modellinkControl中无对应模型信息但可以路由，则允许访问大模型
             // modellinkControl中有对应模型信息，则更新最大链接值减一
             Integer linkNum = this.modelLinkControl.get(modelStats.getModel()) - 1;
-            log.info("Update modelLinkControl for " + modelStats.getModel() + "for link num to: " + linkNum);
+            log.info("Update modelLinkControl for " + modelStats.getModel()
+                    + " in request process, link num to: " + linkNum);
             this.modelLinkControl.put(modelStats.getModel(), linkNum);
         }
     }
@@ -92,12 +93,6 @@ public class ModelStatisticsService {
         }
         modelInfo.setTotalInputTokens(modelInfo.getTotalInputTokens() + usage.getPromptTokens());
         modelInfo.setTotalOutputTokens(modelInfo.getTotalOutputTokens() + usage.getCompletionTokens());
-        Integer currentLinkNum = this.modelLinkControl.get(modelInfo.getModel());
-        if (currentLinkNum != null) {
-            currentLinkNum += 1;
-            log.info("Update modelLinkControl for " + modelInfo.getModel() + "for link num to: " + currentLinkNum);
-            this.modelLinkControl.put(modelInfo.getModel(), currentLinkNum);
-        }
     }
 
     /**

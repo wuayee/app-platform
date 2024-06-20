@@ -81,18 +81,12 @@ public class StatisticsFilter implements GlobalFilter, Ordered {
         }
 
         ServerHttpResponse response = exchange.getResponse();
-        ServerHttpRequest request = exchange.getRequest()
-                .mutate()
-                .headers(httpHeaders -> {
-                    httpHeaders.set("Accept-Encoding", "identity");
-                    httpHeaders.remove("content-length");
-                })
-                .build();
+        ServerHttpRequest request = exchange.getRequest();
         DataBufferFactory dataBufferFactory = response.bufferFactory();
 
         exchange.getAttributes().put(REQUEST_START_TIME, System.currentTimeMillis());
         ServerHttpRequest decoratedRequest = updateStatsWithRequest(request, exchange);
-        ServerHttpResponseDecorator decoratedResponse = updateStatsWithResponse(response, dataBufferFactory);
+        ServerHttpResponseDecorator decoratedResponse = updateStatsWithResponse(response, dataBufferFactory, exchange);
         return chain.filter(exchange.mutate().request(decoratedRequest).response(decoratedResponse).build())
                 .then(Mono.fromRunnable(() -> {
             Long startTime = exchange.getAttribute(REQUEST_START_TIME);
@@ -107,8 +101,9 @@ public class StatisticsFilter implements GlobalFilter, Ordered {
     }
 
     private ServerHttpResponseDecorator updateStatsWithResponse(ServerHttpResponse response,
-                                                                DataBufferFactory dataBufferFactory) {
-        return new ResponseBodyStatisticsReader(response, dataBufferFactory);
+                                                                DataBufferFactory dataBufferFactory,
+                                                                ServerWebExchange exchange) {
+        return new ResponseBodyStatisticsReader(response, dataBufferFactory, exchange);
     }
 
     private ServerHttpRequest updateStatsWithRequest(ServerHttpRequest request, ServerWebExchange exchange) {
@@ -157,21 +152,26 @@ public class StatisticsFilter implements GlobalFilter, Ordered {
     }
 
     private class ResponseBodyStatisticsReader extends ServerHttpResponseDecorator {
+        private final ServerWebExchange exchange;
         private DataBufferFactory dataBufferFactory;
 
         private boolean isStreaming = false;
 
         private StringBuilder responseBodyBuilder = new StringBuilder();
 
+
         /**
          * 读取响应体中统计信息相关字段。
          *
          * @param response {@link ServerHttpResponse}
          * @param bufferFactory {@link DataBufferFactory}
+         * @param exchange exchange
          */
-        public ResponseBodyStatisticsReader(ServerHttpResponse response, DataBufferFactory bufferFactory) {
+        public ResponseBodyStatisticsReader(ServerHttpResponse response, DataBufferFactory bufferFactory,
+                                            ServerWebExchange exchange) {
             super(response);
             this.dataBufferFactory = bufferFactory;
+            this.exchange = exchange;
         }
 
         @Override
@@ -185,6 +185,15 @@ public class StatisticsFilter implements GlobalFilter, Ordered {
                 dataBuffer.read(content);
                 DataBufferUtils.release(dataBuffer);
                 String responseBody = new String(content, StandardCharsets.UTF_8);
+                // 释放currentRoutes的请求连接数
+                String modelName = String.valueOf(exchange.getAttributes().get(REQUEST_MODEL_NAME));
+                Integer currentLinkNum = modelRouteService.getModelLinkControl().get(modelName);
+                if (currentLinkNum != null) {
+                    currentLinkNum += 1;
+                    log.info("Update modelLinkControl for " + modelName
+                            + " in response process, link num to: " + currentLinkNum);
+                    modelRouteService.getModelLinkControl().put(modelName, currentLinkNum);
+                }
                 if (this.isStreaming) {
                     processStreamingResponse(responseBody);
                 } else {
