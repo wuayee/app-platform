@@ -63,6 +63,30 @@ export default function JadeInputTree({data, updateItem, disabled}) {
     };
 
     /**
+     * input失去焦点时的回调.
+     *
+     * @param node 对应的节点.
+     */
+    const onInputBlur = (node) => {
+        function nodeValueJsonization() {
+            let value = node.value;
+            const type = node.type;
+
+            if (type === "Object" || type === "Array") {
+                try {
+                    value = JSON.parse(value);
+                } catch(error) {
+                    console.error("Input value is invalid json.");
+                }
+            }
+            const key = "value";
+            updateItem(node.id, [{key, value}]);
+        }
+
+        nodeValueJsonization();
+    }
+
+    /**
      * 当reference的value变化时的处理方法.
      *
      * @param id 唯一标志.
@@ -104,7 +128,9 @@ export default function JadeInputTree({data, updateItem, disabled}) {
                        style={{borderRadius: "0px 8px 8px 0px"}}
                        placeholder={"请输入"}
                        value={node.value}
-                       onChange={(e) => onInputChange(node.id, "value", e)}/>
+                       onChange={(e) => onInputChange(node.id, "value", e)}
+                       onBlur={() => onInputBlur(node)}
+                />
             </Form.Item>;
         } else if (node.from === "Reference") {
             return <JadeReferenceTreeSelect className="jade-input-tree-title-tree-select jade-select"
