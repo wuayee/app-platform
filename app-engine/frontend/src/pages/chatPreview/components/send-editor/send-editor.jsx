@@ -14,6 +14,7 @@ import HistoryChat from "../history-chat";
 import HistoryChatDrawer from "../history-chat";
 import Recommends from './components/recommends';
 import EditorBtnHome from './components/editor-btn-home';
+import EditorSelect from './components/editor-selet';
 import "@shared/utils/rendos";
 import "../../styles/send-editor.scss";
 import { useAppSelector } from "../../../../store/hook";

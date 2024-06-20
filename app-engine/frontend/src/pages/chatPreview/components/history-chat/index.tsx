@@ -33,7 +33,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
   const [lastResSignal, setLastResSignal] = useState(0);
   const [isClearOpen,setClearOpen]=useState(false);
   const [requestInfo, setRequestInfo] = useState({
-    aipp_id: '', app_version: '', offset: 0, limit: 100
+    aipp_id: '', aipp_version: '', offset: 0, limit: 100
   });
 
   const refreshList = async () => {
@@ -60,13 +60,11 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     let { aipp_id, version } = debugRes?.data;
     const requestBody = {
       aipp_id: aipp_id,
-      app_version: version,
+      aipp_version: version,
       offset: 0,
       limit: 100
     };
     setRequestInfo(requestBody);
-    const chatRes = await getChatList(tenantId, requestBody);
-    setData(chatRes?.data);
   }
 
   const items: MenuProps["items"] = [
@@ -131,7 +129,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     if (appInfo?.id) {
       getAippId();
     }
-  }, [appInfo])
+  }, [appInfo.id])
 
   const getLastContext = async () => {
     const chatListRes = await getChatDetail(tenantId, chatId, requestInfo);
@@ -180,7 +178,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
         <Input placeholder="搜索..." prefix={<SearchOutlined />} disabled />
       </div>
       <div className="history-wrapper">
-        {data?.map((item) => (
+        {data?.slice(0, 30).map((item) => (
           <div className="history-item" key={item?.chat_id} onClick={() => { currentChat.current = item; }}>
             <div className="history-item-content">
               <div className="history-item-header">
