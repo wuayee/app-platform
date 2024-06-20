@@ -12,28 +12,18 @@ const ModelCard = ({ modelItem, setModelItems, openModify }: { modelItem: ModelI
     {
       key: 'delete',
       label: (
-        <div
-          style={{
-            width: 50,
-          }}
-          onClick={() => deleteModel()}
-        >
+        <a style={{ width: 50 }} onClick={() => deleteModel()}>
           删除
-        </div>
+        </a>
       ),
       disabled: modelItem.status === 'undeployed'
     },
     {
       key: 'edit',
       label: (
-        <div
-          style={{
-            width: 50,
-          }}
-          onClick={() => modifyModel()}
-        >
+        <a style={{ width: 50 }} onClick={() => modifyModel()}>
           修改
-        </div>
+        </a>
       ),
       disabled: modelItem.status === 'undeployed'
     },
