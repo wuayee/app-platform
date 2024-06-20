@@ -23,7 +23,7 @@ const Recommend = (props) => {
     setList([ ...listCrrent.current ]);
     saveRecommend();
   }
-  const addRecommend = () => {、
+  const addRecommend = () => {
     listCrrent.current = [ ...listCrrent.current, '' ]
     setList(listCrrent.current);
   }

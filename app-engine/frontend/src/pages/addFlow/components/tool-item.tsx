@@ -16,6 +16,8 @@ const ToolItem = (props) => {
   const [ showModal, setShowModal ] = useState(false);
   const listRef = useRef([]);
   useEffect(() => {
+    console.log(dragData);
+    
     listRef.current = JSON.parse(JSON.stringify(dragData));
     setList(listRef.current);
   }, [dragData])
@@ -31,6 +33,8 @@ const ToolItem = (props) => {
       setList(listRef.current);
     } else {
       let arr = listRef.current.filter(item => item.name.indexOf(value.trim()) !== -1);
+      console.log(arr);
+      
       setList(arr);
     }
   }
