@@ -181,3 +181,11 @@
     margin-top: 8px;
     user-select: none;
 }
+
+.jade-drop-down-popover {
+    margin-left: 8px;
+}
+
+.jade-drop-down-popover-overlay {
+    z-index: 1200 !important;
+}
