@@ -50,7 +50,7 @@ public class JdbcSqlConnector implements SqlConnector {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(connStr, properties.getUsername(), properties.getPassword());
         } catch (Exception e) {
-            logger.debug(e.getMessage());
+            logger.error(e.getMessage());
             logger.error("Failed to establish connection with {}", dbType.getName());
             throw new IllegalArgumentException("Connection failed");
         }
