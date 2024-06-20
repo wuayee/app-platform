@@ -22,9 +22,7 @@ const AippIndex = () => {
   const [ reloadInspiration, setReloadInspiration ] = useState('');
   const [ showChat, setShowChat ] = useState(false);
   const [ messageChecked, setMessageCheck ] = useState(false);
-  const [ isTested, setIsTested ] = useState(false);
-  const [ testStatus, setTestStatus ] = useState('Running');
-  const [ isTesting, setIsTesting ] = useState(false);
+  const [ testStatus, setTestStatus ] = useState(null);
   const [ testTime, setTestTime ] = useState(null);
   const aippRef = useRef(null);
   const inspirationRefresh = useRef(false);
@@ -92,8 +90,6 @@ const AippIndex = () => {
   const openDebug = () => {
     addFlowRef.current.handleDebugClick();
   }
-  const handleIsTested =  (value) => setIsTested(value);
-  const handleIsTesting = (value) => setIsTesting(value);
   const handleTestStatus = (value) => setTestStatus(value);
   const handleTestTime = (value) => setTestTime(value);
   const contextProvider = {
@@ -118,8 +114,6 @@ const AippIndex = () => {
             updateAippCallBack={updateAippCallBack}
             mashupClick={elsaChange}
             openDebug={openDebug}
-            isTested={isTested}
-            isTesting={isTesting}
             testTime={testTime}
             testStatus={testStatus}
             addFlowRef={addFlowRef}
@@ -134,8 +128,6 @@ const AippIndex = () => {
               {showElsa ? (
                 <AddFlow type="edit"
                          addFlowRef={addFlowRef}
-                         setFlowTested={handleIsTested}
-                         setFlowTesting={handleIsTesting}
                          setFlowTestStatus={handleTestStatus}
                          setFlowTestTime={handleTestTime}
                          appInfo={appInfo}

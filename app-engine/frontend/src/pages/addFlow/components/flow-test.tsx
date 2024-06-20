@@ -10,10 +10,8 @@ import RenderFormItem from './render-form-item';
 
 const Index = (props) => {
   const { 
-    debugTypes, 
-    setIsTested, 
-    setTestTime, 
-    setIsTesting, 
+    debugTypes,
+    setTestTime,
     setTestStatus,
     setShowDebug,
     showDebug,
@@ -30,7 +28,7 @@ const Index = (props) => {
   }
   const handleRunTest = () => {
     elsaRunningCtl.current?.reset();
-    setIsTested(false);
+    setTestStatus(null);
     setTestTime(0);
     form.validateFields().then((values) => {
       handleRun(values);
@@ -53,7 +51,6 @@ const Index = (props) => {
     const res = await startInstance(tenantId, appId, params);
     if (res.code === 0) {
       const {aippCreate, instanceId} = res.data;
-      setIsTesting(true);
       setTestStatus('Running');
       // 调用轮询
       startTestInstance(aippCreate.aippId, aippCreate.version, instanceId);
@@ -74,8 +71,6 @@ const Index = (props) => {
           elsaRunningCtl.current?.stop();
         } else if (isEnd(runtimeData.nodeInfos)) {
           clearInterval(timerRef.current);
-          setIsTesting(false);
-          setIsTested(true);
           setTestStatus('Finished');
           elsaRunningCtl.current?.stop();
         }
