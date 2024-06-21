@@ -278,7 +278,9 @@ const ObservableStore = () => {
             const observableMap = self.store.get(nodeId);
             if (observableMap) {
                 if (observableId) {
+                    const observable = observableMap.get(observableId);
                     observableMap.delete(observableId);
+                    observable && observable.observers.forEach(o => o.stopObserve());
                     if (observableMap.size === 0) {
                         self.store.delete(nodeId);
                     }

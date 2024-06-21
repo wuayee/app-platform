@@ -17,6 +17,7 @@ import RunningStatusPanel from "@/components/flowRunComponent/RunningStatusPanel
 export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     const self = node(id, x, y, width, height, parent, false, drawer ? drawer : jadeNodeDrawer);
     self.type = "jadeNode";
+    self.serializedFields.delete("emphasized");
     self.serializedFields.batchAdd("toolConfigs", "componentName", "flowMeta", "outlineWidth", "outlineColor", "sourcePlatform");
     self.eventType = "jadeEvent";
     self.hideText = true;
@@ -48,8 +49,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         }
     };
     self.sourcePlatform = "official";
-
-    const observed = [];
+    self.observed = [];
 
     /**
      * 默认的header配置.
@@ -387,9 +387,9 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.observeTo = (nodeId, observableId, observer) => {
         const preNodeInfos = self.getPreNodeInfos();
         const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
-        const observerProxy = ObserverProxy(nodeId, observableId, observer);
+        const observerProxy = ObserverProxy(nodeId, observableId, observer, self);
         observerProxy.status = preNodeIdSet.has(nodeId) ? "enable" : "disable";
-        observed.push(observerProxy);
+        self.observed.push(observerProxy);
         self.page.observeTo(nodeId, observableId, observerProxy);
 
         // 监听时，主动推送一次数据.
@@ -400,9 +400,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
 
         // 返回取消监听的方法.
         return () => {
-            const index = observed.findIndex(o => o === observerProxy);
-            observed.splice(index, 1);
-            self.page.stopObserving(nodeId, observableId, observerProxy);
+            observerProxy.stopObserve();
         };
     };
 
@@ -412,7 +410,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.offConnect = () => {
         const preNodeInfos = self.getPreNodeInfos();
         const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
-        observed.filter(o => o.status === "enable").filter(o => !preNodeIdSet.has(o.nodeId)).forEach(o => {
+        self.observed.filter(o => o.status === "enable").filter(o => !preNodeIdSet.has(o.nodeId)).forEach(o => {
             o.observe({value: null, type: null});
             o.status = "disable";
         });
@@ -426,7 +424,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.onConnect = () => {
         const preNodeInfos = self.getPreNodeInfos();
         const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
-        observed.filter(o => o.status === "disable").filter(o => preNodeIdSet.has(o.nodeId)).forEach(o => {
+        self.observed.filter(o => o.status === "disable").filter(o => preNodeIdSet.has(o.nodeId)).forEach(o => {
             o.status = "enable";
             const observable = self.page.getObservable(o.nodeId, o.observableId);
             o.observe({value: observable.value, type: observable.type});
@@ -443,7 +441,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         self.page.removeObservable(self.id);
 
         // 清除我的observer.
-        observed.forEach(o => self.page.stopObserving(o.nodeId, o.observableId, o));
+        self.observed.forEach(o => self.page.stopObserving(o.nodeId, o.observableId, o));
     };
 
     /*
@@ -467,7 +465,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
             try {
                 const preNodeInfos = self.getPreNodeInfos();
                 const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
-                observed.forEach(o => {
+                self.observed.forEach(o => {
                     const node = self.page.getShapeById(o.nodeId);
                     if (!node) {
                         throw new Error("节点[" + o.nodeId + "]不存在.");
@@ -480,7 +478,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
                 // 调用 form 本身的校验能力，校验所有字段
                 self.validateForm().then(resolve).catch(reject);
             } catch (error) {
-                reject(error);
+                reject({errorFields: [{errors: [error.message], name: "node-error"}]});
             }
         });
     };
@@ -573,10 +571,11 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
  * @param nodeId 被监听节点的id.
  * @param observableId 待监听的id.
  * @param observer 监听器.
+ * @param shape 图形.
  * @return {{}}
  * @constructor
  */
-const ObserverProxy = (nodeId, observableId, observer) => {
+const ObserverProxy = (nodeId, observableId, observer, shape) => {
     const self = {};
     self.nodeId = nodeId;
     self.observableId = observableId;
@@ -592,6 +591,16 @@ const ObserverProxy = (nodeId, observableId, observer) => {
         if (self.status === "enable") {
             self.origin(args);
         }
+    };
+
+    /**
+     * 停止观察.
+     * 删除shape中的observed，删除page中的监听.
+     */
+    self.stopObserve = () => {
+        const index = shape.observed.findIndex(o => o === self);
+        shape.observed.splice(index, 1);
+        shape.page.stopObserving(nodeId, observableId, self);
     };
 
     return self;

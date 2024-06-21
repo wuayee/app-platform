@@ -8,6 +8,7 @@ import IconRunningUnRunning from '../asserts/icon-running-unRunning.svg?react';
 import IconRunningSuccess from '../asserts/icon-running-success.svg?react';
 import IconRunningFailed from '../asserts/icon-running-failed.svg?react';
 import "./style.css";
+import {NODE_STATUS} from "@";
 
 // 左右上下的边距.
 const MARGIN = {
@@ -20,13 +21,13 @@ const MARGIN = {
 /**
  * 运行状态面板
  *
- * @type {React.ForwardRefExoticComponent<React.PropsWithoutRef<{readonly shape?: *, readonly onReportShow?: *}> & React.RefAttributes<unknown>>}
+ * @type {*} 面板组件.
  */
 const RunningStatusPanel = forwardRef(function ({shape, onReportShow}, ref) {
     const [showResultPanel, setShowResultPanel] = useState(false);
     const [, setHeight] = useState(shape.height);
     const reportRef = useRef();
-    const status = RUN_STATUSES[shape.runStatus];
+    const status = getStatus(shape.runStatus);
 
     // 对外暴露方法.
     useImperativeHandle(ref, () => {
@@ -114,46 +115,54 @@ const TimeComponent = ({shape}) => {
     </>);
 };
 
-const RUN_STATUSES = {
-    success: {
-        title: "运行成功",
-        enableReport: true,
-        getTime: (shape) => {
-            return <TimeComponent shape={shape}/>;
-        },
-        getIcon: () => {
-            return <Icon component={(props) => <SvgComponent {...props} SvgCom={IconRunningSuccess}/>} />;
-        }
-    },
-    failed: {
-        title: "运行失败",
-        enableReport: true,
-        getTime: (shape) => {
-            return <TimeComponent shape={shape}/>;
-        },
-        getIcon: () => {
-            return <Icon component={(props) => <SvgComponent {...props} SvgCom={IconRunningFailed}/>} />;
-        }
-    },
-    running: {
-        title: "运行中",
-        enableReport: false,
-        getTime: () => {
-            return null;
-        },
-        getIcon: () => {
-            return <Icon spin={true} component={(props) => <SvgComponent {...props} SvgCom={IconRunningLoading}/>} />;
-        }
-    },
-    unRunning: {
-        title: "未运行",
-        enableReport: false,
-        getTime: () => {
-            return null;
-        },
-        getIcon: () => {
-            return <Icon component={(props) => <SvgComponent {...props} SvgCom={IconRunningUnRunning}/>} />;
-        }
+const getStatus = (nodeStatus) => {
+    switch (nodeStatus) {
+        case NODE_STATUS.SUCCESS:
+            return {
+                title: "运行成功",
+                enableReport: true,
+                getTime: (shape) => {
+                    return <TimeComponent shape={shape}/>;
+                },
+                getIcon: () => {
+                    return <Icon component={(props) => <SvgComponent {...props} SvgCom={IconRunningSuccess}/>} />;
+                }
+            };
+        case NODE_STATUS.ERROR:
+            return {
+                title: "运行失败",
+                enableReport: true,
+                getTime: (shape) => {
+                    return <TimeComponent shape={shape}/>;
+                },
+                getIcon: () => {
+                    return <Icon component={(props) => <SvgComponent {...props} SvgCom={IconRunningFailed}/>} />;
+                }
+            };
+        case NODE_STATUS.RUNNING:
+            return {
+                title: "运行中",
+                enableReport: false,
+                getTime: () => {
+                    return null;
+                },
+                getIcon: () => {
+                    return <Icon spin={true} component={(props) => <SvgComponent {...props} SvgCom={IconRunningLoading}/>} />;
+                }
+            };
+        case NODE_STATUS.UN_RUNNING:
+            return {
+                title: "未运行",
+                enableReport: false,
+                getTime: () => {
+                    return null;
+                },
+                getIcon: () => {
+                    return <Icon component={(props) => <SvgComponent {...props} SvgCom={IconRunningUnRunning}/>} />;
+                }
+            };
+        default:
+            throw new Error("Unsupported node status[" + nodeStatus + "]");
     }
 };
 

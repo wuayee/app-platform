@@ -60,19 +60,14 @@ const jadeFlowAgent = (graph) => {
         return {
             // 刷新流程节点状态.
             refresh: (dataList) => {
-                const nodeIds = dataList.map(d => d.nodeId);
                 nodes.forEach(node => {
                     const data = dataList.find(d => d.nodeId === node.id);
                     if (data) {
-                        node.setRunStatus(data.status === "ERROR" ? NODE_STATUS.ERROR : NODE_STATUS.SUCCESS);
+                        node.setRunStatus(data.status);
                         node.setRunReportSections(data);
                     } else {
                         const preNodes = node.getDirectPreNodeIds();
-                        if (preNodes.some(s => s.type === "conditionNodeCondition"
-                                || s.runStatus === NODE_STATUS.ERROR)) {
-                            return;
-                        }
-                        if (preNodes.every(preNode => nodeIds.includes(preNode.id))) {
+                        if (preNodes.every(preNode => _isPreNodeFinished(preNode, dataList))) {
                             node.setRunStatus(NODE_STATUS.RUNNING);
                         }
                     }
@@ -93,10 +88,19 @@ const jadeFlowAgent = (graph) => {
             stop: () => {
                 nodes.forEach(n => {
                     n.moveable = true;
+                    n.emphasized = false;
                     n.drawer.setDisabled(false);
                 });
             }
         };
+    };
+
+    const _isPreNodeFinished = (preNode, dataList) => {
+        if (preNode.type === "conditionNodeCondition") {
+            return false;
+        }
+        const data = dataList.find(d => d.nodeId === preNode.id);
+        return data && data.status === NODE_STATUS.SUCCESS;
     };
 
     /**
