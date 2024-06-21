@@ -16,7 +16,6 @@ import com.huawei.fit.jober.aipp.dto.ModelDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.jade.common.Result;
 
 import java.util.List;
 
