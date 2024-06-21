@@ -36,7 +36,7 @@ class DataBusUtilsTest {
     void headerShouldEqualToGivenValue() {
         ByteBuffer expected = ByteBuffer.wrap(new byte[]{12, 0, 0, 0, 8, 0, 12, 0, 11, 0, 4, 0, 8, 0, 0, 0, 100,
                 0, 0, 0, 0, 0, 0, 33});
-        ByteBuffer actual = DataBusUtils.buildMessageHeader(MessageType.ApplyPermission, 100);
+        ByteBuffer actual = DataBusUtils.buildMessageHeader(MessageType.ApplyPermission, 100, 1);
         assertThat(isEqualByteBuffer(actual, expected)).isTrue();
     }
 
