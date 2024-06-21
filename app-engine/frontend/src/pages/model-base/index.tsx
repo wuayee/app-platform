@@ -10,6 +10,8 @@ const ModelBase = () => {
 
   const [activeIndex, setActiveIndex] = useState('1');
   const [type, setType] = useState('card');
+  const [canSync, setCanSync] = useState(false);
+  const [syncButtonText, setSyncButtonText] = useState('刷新数据');
 
   const items: TabsProps['items'] = [
     {
@@ -22,11 +24,24 @@ const ModelBase = () => {
     const mode = sessionStorage.getItem('modelBaseListType') ?? 'card';
     sessionStorage.setItem('modelBaseListType', mode);
     setType(mode);
+    getSyncStatus();
   }, []);
 
   const changeShowType = (e: any) => {
     setType(e.target.value);
     sessionStorage.setItem('modelBaseListType', e.target.value);
+  }
+
+  //手动同步模型仓
+  const syncModel = () => {
+
+  }
+
+  //查询同步状态，进入模型仓时会固定查询一次，若有正在同步的任务，则不允许点击同步按钮；
+  //若已同步完成或暂未有同步任务，可点击同步
+  const getSyncStatus = () => {
+    //TODO
+    //setSyncButtonText('刷新中');
   }
 
   return (
@@ -50,14 +65,15 @@ const ModelBase = () => {
           <Button
             type='primary'
             style={{
-              background: '#2673E5',
-              width: '96px',
+              minWidth: '96px',
               height: '32px',
               fontSize: '14px',
               borderRadius: '4px',
               letterSpacing: '0',
             }}
-          >刷新数据
+            disabled={!canSync}
+            onClick={syncModel}
+          >{syncButtonText}
           </Button>
           <div>
             <Radio.Group value={type} onChange={changeShowType}>
