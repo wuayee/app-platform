@@ -8,7 +8,6 @@ import com.huawei.databus.sdk.api.DataBusClient;
 import com.huawei.databus.sdk.client.jni.SharedMemoryReaderWriter;
 import com.huawei.databus.sdk.memory.SharedMemoryInternal;
 import com.huawei.databus.sdk.message.ErrorType;
-import com.huawei.databus.sdk.message.MessageType;
 import com.huawei.databus.sdk.message.PermissionType;
 import com.huawei.databus.sdk.support.GetMetaDataRequest;
 import com.huawei.databus.sdk.support.GetMetaDataResult;
@@ -31,11 +30,9 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * DataBus 客户端默认实现。
@@ -55,7 +52,7 @@ public class DefaultDataBusClient implements DataBusClient {
     private SocketChannel socketChannel;
     private ResponseDispatcher responseDispatcher;
     private boolean isConnected;
-    private final Map<Byte, BlockingQueue<ByteBuffer>> replyQueues;
+    private final Map<Long, BlockingQueue<ByteBuffer>> replyQueues;
     private SharedMemoryPool sharedMemoryPool;
     private final SharedMemoryReaderWriter sharedMemoryReaderWriter;
 
@@ -63,14 +60,7 @@ public class DefaultDataBusClient implements DataBusClient {
     private DefaultDataBusClient() {
         this.isConnected = false;
         this.sharedMemoryReaderWriter = new SharedMemoryReaderWriter();
-
-        Map<Byte, BlockingQueue<ByteBuffer>> tmpQueues = new HashMap<>();
-        tmpQueues.put(MessageType.HeartBeat, new LinkedBlockingQueue<>());
-        tmpQueues.put(MessageType.ApplyMemory, new LinkedBlockingQueue<>());
-        tmpQueues.put(MessageType.ApplyPermission, new LinkedBlockingQueue<>());
-        tmpQueues.put(MessageType.GetMetaData, new LinkedBlockingQueue<>());
-
-        this.replyQueues = Collections.unmodifiableMap(tmpQueues);
+        this.replyQueues = new ConcurrentHashMap<>();
     }
 
     @Override
