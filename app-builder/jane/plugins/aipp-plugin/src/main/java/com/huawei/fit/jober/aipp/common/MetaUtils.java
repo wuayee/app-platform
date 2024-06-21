@@ -23,6 +23,7 @@ import com.huawei.fit.jober.aipp.enums.JaneCategory;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -213,8 +215,22 @@ public class MetaUtils {
             attributes.put(AippConst.ATTR_META_STATUS_KEY,
                     Collections.singletonList(AippMetaStatusEnum.INACTIVE.getCode()));
         }
+        String sortEncode = MetaUtils.formatSorter("create_at", "descend");
+        metaFilter.setOrderBys(Collections.singletonList(sortEncode));
         metaFilter.setAttributes(attributes);
         return metaFilter;
+    }
+
+    public static boolean isPublished(Meta meta) {
+        Map<String, Object> attributes = meta.getAttributes();
+        if (!attributes.containsKey(AippConst.ATTR_AIPP_TYPE_KEY)
+                || !attributes.containsKey(AippConst.ATTR_META_STATUS_KEY)) {
+            return false;
+        }
+        String aippType = String.valueOf(attributes.get(AippConst.ATTR_AIPP_TYPE_KEY));
+        String metaStatus = String.valueOf(attributes.get(AippConst.ATTR_META_STATUS_KEY));
+        return StringUtils.equals(aippType, AippTypeEnum.NORMAL.name()) && Objects.equals(metaStatus,
+                AippMetaStatusEnum.ACTIVE.getCode());
     }
 
     public static List<Meta> getAllMetasByAppId(MetaService metaService, String appId, String aippType,
@@ -234,6 +250,8 @@ public class MetaUtils {
         Map<String, List<String>> attributes = new HashMap<>();
         attributes.put(AippConst.ATTR_APP_ID_KEY, Collections.singletonList(appId));
         metaFilter.setAttributes(attributes);
+        String sortEncode = MetaUtils.formatSorter("create_at", "descend");
+        metaFilter.setOrderBys(Collections.singletonList(sortEncode));
         return metaFilter;
     }
 

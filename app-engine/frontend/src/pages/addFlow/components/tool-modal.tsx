@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
+import { getPersonPluginData } from '@shared/http/appBuilder';
 import { categoryItems } from '../../configForm/common/common';
 import { handleClickAddToolNode } from '../utils';
 import ToolCard from './tool-card';
@@ -14,7 +15,7 @@ const { Option } = Select;
 
 const ToolDrawer = (props) => {
   const { showModal, setShowModal, checkData, confirmCallBack, type } = props;
-  const [ activeKey, setActiveKey ] = useState('AUTHORITY');
+  const [ activeKey, setActiveKey ] = useState('BUILTIN');
   const [ menuName, setMenuName ] = useState('新闻阅读');
   const [ name, setName ] = useState('');
   const [ pageNum, setPageNum ] = useState(1);
@@ -25,7 +26,7 @@ const ToolDrawer = (props) => {
   const checkedList = useRef([]);
   const pluginList = useRef([]);
   const tab = [
-    { name: '官方', key: 'AUTHORITY' },
+    { name: '官方', key: 'BUILTIN' },
     { name: 'HuggingFace', key: 'HUGGINGFACE' },
     { name: 'LangChain', key: 'LANGCHAIN' },
     { name: 'LlamaIndex', key: 'LLAMAINDEX' },
@@ -42,10 +43,21 @@ const ToolDrawer = (props) => {
     { key: 'workflow', label: '插件' },
     { key: 'NEWS', label: '工具流' },
   ];
+
+  const pluginTypeOnchange = (value) => {
+      if (value === "个人") {
+        getPersonPluginList();
+      } else if (value === "市场") {
+        getPluginList();
+      }
+  }
+
   const selectBefore = (
-    <Select defaultValue="市场">
-      <Option value="个人" disabled>个人</Option>
-      <Option value="市场" disabled>市场</Option>
+    // 加切换选项会触发的事件
+    // onChange (value) => 调用接口并赋值
+    <Select defaultValue="市场" onChange={pluginTypeOnchange}>
+      <Option value="个人">个人</Option>
+      <Option value="市场">市场</Option>
     </Select>
   );
   const handleClick = (key) => {
@@ -77,6 +89,18 @@ const ToolDrawer = (props) => {
       }
     });
   }
+
+  // 获取个人插件列表
+  const getPersonPluginList = ()=> {
+    getPersonPluginData(tenantId, {pageNum: 1, pageSize: 1000, tag: "WATERFLOW"}).then(res => {
+      if (res.code === 0) {
+        setDefaultCheck(res.data);
+        setPluginData(res.data);
+        pluginList.current = res.data;
+      }
+    });
+  }
+
   // 分页
   const selectPage = (curPage: number, curPageSize: number) => {
     if (pageNum !== curPage) {

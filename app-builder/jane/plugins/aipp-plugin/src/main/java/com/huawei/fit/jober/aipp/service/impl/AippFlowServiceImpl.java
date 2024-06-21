@@ -30,6 +30,7 @@ import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.convertor.FormMetaConvertor;
 import com.huawei.fit.jober.aipp.convertor.MetaConvertor;
 import com.huawei.fit.jober.aipp.convertor.TaskPropertyConvertor;
+import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.dto.AippCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippDetailDto;
 import com.huawei.fit.jober.aipp.dto.AippDto;
@@ -40,7 +41,9 @@ import com.huawei.fit.jober.aipp.dto.AippVersionDto;
 import com.huawei.fit.jober.aipp.enums.AippMetaStatusEnum;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.AppCategory;
+import com.huawei.fit.jober.aipp.enums.AppState;
 import com.huawei.fit.jober.aipp.enums.JaneCategory;
+import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippFlowService;
@@ -101,7 +104,7 @@ public class AippFlowServiceImpl implements AippFlowService {
     private final MetaService metaService;
     private final FlowDefinitionService flowDefinitionService;
     private final AippRunTimeService aippRunTimeService;
-
+    private final AppBuilderAppFactory factory;
     private final BrokerClient brokerClient;
 
     private final AppBuilderAppMapper appBuilderAppMapper;
@@ -109,7 +112,7 @@ public class AippFlowServiceImpl implements AippFlowService {
     public AippFlowServiceImpl(@Fit FlowsService flowsService, @Fit MetaService metaService,
             @Fit FlowDefinitionService flowDefinitionService, @Fit AippRunTimeService aippRunTimeService,
             @Fit AppBuilderFormRepository formRepository, @Fit BrokerClient brokerClient,
-            AppBuilderAppMapper appBuilderAppMapper) {
+            AppBuilderAppMapper appBuilderAppMapper, AppBuilderAppFactory factory) {
         this.flowsService = flowsService;
         this.metaService = metaService;
         this.flowDefinitionService = flowDefinitionService;
@@ -117,6 +120,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         this.formRepository = formRepository;
         this.brokerClient = brokerClient;
         this.appBuilderAppMapper = appBuilderAppMapper;
+        this.factory = factory;
     }
 
     /**
@@ -580,6 +584,13 @@ public class AippFlowServiceImpl implements AippFlowService {
     @Override
     public AippCreateDto previewAipp(String baselineVersion, AippDto aippDto, OperationContext context)
             throws AippException {
+        List<Meta> metaList = MetaUtils.getAllMetasByAppId(this.metaService, aippDto.getAppId(), context);
+        if (!metaList.isEmpty()) {
+            Meta meta = metaList.get(0);
+            if (MetaUtils.isPublished(meta)) {
+                return AippCreateDto.builder().aippId(meta.getId()).version(meta.getVersion()).build();
+            }
+        }
         FlowDefinitionResult definitionResult = this.getSameFlowDefinition(aippDto);
         if (definitionResult != null) {
             RangedResultSet<Meta> metas =

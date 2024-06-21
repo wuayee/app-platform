@@ -54,6 +54,17 @@ const getTools = (params) => {
   });
 }
 
+// 获取个人插件列表
+const getPersonPluginData = (tenant_Id, params) => {
+  return new Promise((resolve, reject) => {
+    get(`${AIPP_URL}/${tenant_Id}/store/plugins`, params).then((res) => {
+      resolve(res);
+    }, (error) => {
+      reject(error);
+    });
+  });
+}
+
 const getWaterFlows = (params) => {
   let url = `${AIPP_URL}/${params.tenantId}/store/waterflow?pageNum=${params.pageNum}&pageSize=${params.pageSize}`;
   return new Promise((resolve, reject) => {
@@ -125,5 +136,6 @@ export {
   getAddFlowConfig, 
   getWaterFlows, 
   getKnowledgesList,
-  getHuggingFaceList
+  getHuggingFaceList,
+  getPersonPluginData
 };

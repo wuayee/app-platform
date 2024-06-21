@@ -35,7 +35,8 @@ const AppOverview: React.FC = () => {
     getAppInfoByVersion(tenantId, appId).then(res => {
       if (res.code === 0) {
         dispatch(setAppInfo({}));
-        navigate(`/app-develop/${tenantId}/app-detail/${appId}`);
+        const newAppId = res.data.id;
+        navigate(`/app-develop/${tenantId}/app-detail/${newAppId}`);
       }
     })
   }

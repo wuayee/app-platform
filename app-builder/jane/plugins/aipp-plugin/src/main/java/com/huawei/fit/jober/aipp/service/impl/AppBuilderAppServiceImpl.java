@@ -45,13 +45,13 @@ import com.huawei.fit.jober.aipp.dto.PublishedAppResDto;
 import com.huawei.fit.jober.aipp.enums.AippMetaStatusEnum;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.AppState;
-import com.huawei.fit.jober.aipp.enums.AppTypeEnum;
 import com.huawei.fit.jober.aipp.enums.JaneCategory;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
 import com.huawei.fit.jober.aipp.service.AippFlowService;
 import com.huawei.fit.jober.aipp.service.AppBuilderAppService;
+import com.huawei.fit.jober.aipp.validation.AppUpdateValidator;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
@@ -108,19 +108,20 @@ public class AppBuilderAppServiceImpl
     private final AppBuilderAppRepository appRepository;
     private final int nameLengthMaximum;
     private final MetaService metaService;
-
     private final UsrAppCollectionService usrAppCollectionService;
+    private final AppUpdateValidator appUpdateValidator;
 
     public AppBuilderAppServiceImpl(AppBuilderAppFactory appFactory, AippFlowService aippFlowService,
             AppBuilderAppRepository appRepository,
             @Value("${validation.task.name.length.maximum:64}") int nameLengthMaximum, MetaService metaService,
-            UsrAppCollectionService usrAppCollectionService) {
+            UsrAppCollectionService usrAppCollectionService, AppUpdateValidator appUpdateValidator) {
         this.nameLengthMaximum = nameLengthMaximum;
         this.appFactory = appFactory;
         this.aippFlowService = aippFlowService;
         this.appRepository = appRepository;
         this.metaService = metaService;
         this.usrAppCollectionService = usrAppCollectionService;
+        this.appUpdateValidator = appUpdateValidator;
     }
 
     @Override
@@ -136,6 +137,7 @@ public class AppBuilderAppServiceImpl
     public Rsp<AippCreateDto> publish(AppBuilderAppDto appDto, OperationContext contextOf) {
         // todo 要加个save appDto到数据的逻辑
         AippDto aippDto = ConvertUtils.toAppDto(appDto);
+        this.validateVersion(aippDto, contextOf);
         AippCreateDto aippCreateDto = this.aippFlowService.create(aippDto, contextOf);
         aippDto.setId(aippCreateDto.getAippId());
         String id = appDto.getId();
@@ -143,6 +145,19 @@ public class AppBuilderAppServiceImpl
         appBuilderApp.setState(AppState.PUBLISHED.getName());
         this.appFactory.update(appBuilderApp);
         return this.aippFlowService.publish(aippDto, contextOf);
+    }
+
+    private void validateVersion(AippDto aippDto, OperationContext contextOf) {
+        MetaFilter metaFilter = new MetaFilter();
+        metaFilter.setVersions(Collections.singletonList(aippDto.getVersion()));
+        Map<String, List<String>> attributes = new HashMap<>();
+        attributes.put(AippConst.ATTR_AIPP_TYPE_KEY, Collections.singletonList(AippTypeEnum.NORMAL.name()));
+        attributes.put(AippConst.ATTR_META_STATUS_KEY, Collections.singletonList(AippMetaStatusEnum.ACTIVE.name()));
+        metaFilter.setAttributes(attributes);
+        RangedResultSet<Meta> metas = this.metaService.list(metaFilter, true, 0, 1, contextOf);
+        if (!metas.getResults().isEmpty()) {
+            throw new AippException(AippErrCode.APP_VERSION_HAS_ALREADY);
+        }
     }
 
     @Override
@@ -168,7 +183,7 @@ public class AppBuilderAppServiceImpl
         Meta latestMeta = metas.get(0);
         String copiedAppId = String.valueOf(latestMeta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
         AppBuilderApp copiedApp = this.appFactory.create(copiedAppId);
-        if (this.isPublished(latestMeta)) {
+        if (MetaUtils.isPublished(latestMeta)) {
             return this.create(copiedAppId, this.buildAppBuilderAppCreateDto(copiedApp), context, true);
         }
         return this.query(copiedAppId);
@@ -211,18 +226,6 @@ public class AppBuilderAppServiceImpl
                 .appType(appType)
                 .type(app.getType())
                 .build();
-    }
-
-    private boolean isPublished(Meta meta) {
-        Map<String, Object> attributes = meta.getAttributes();
-        if (!attributes.containsKey(AippConst.ATTR_AIPP_TYPE_KEY)
-                || !attributes.containsKey(AippConst.ATTR_META_STATUS_KEY)) {
-            return false;
-        }
-        String aippType = String.valueOf(attributes.get(AippConst.ATTR_AIPP_TYPE_KEY));
-        String metaStatus = String.valueOf(attributes.get(AippConst.ATTR_META_STATUS_KEY));
-        return StringUtils.equals(aippType, AippTypeEnum.NORMAL.name()) && Objects.equals(metaStatus,
-                AippMetaStatusEnum.ACTIVE.getCode());
     }
 
     @Override
@@ -408,6 +411,7 @@ public class AppBuilderAppServiceImpl
         if (appDto != null) {
             this.validateUpdateApp(appId, appDto.getName(), context);
         }
+        this.appUpdateValidator.validate(appId);
         AppBuilderApp update = this.appFactory.create(appId);
         update.setUpdateBy(context.getOperator());
         update.setUpdateAt(LocalDateTime.now());
@@ -498,6 +502,7 @@ public class AppBuilderAppServiceImpl
     @Transactional
     @Fitable(id = "default")
     public Rsp<AppBuilderAppDto> updateConfig(String appId, AppBuilderConfigDto configDto, OperationContext context) {
+        this.appUpdateValidator.validate(appId);
         LocalDateTime operateTime = LocalDateTime.now();
         AppBuilderApp oldApp = this.appFactory.create(appId);
         AppBuilderConfig oldConfig = oldApp.getConfig();
@@ -535,6 +540,7 @@ public class AppBuilderAppServiceImpl
     @Fitable(id = "default")
     public Rsp<AppBuilderAppDto> updateFlowGraph(String appId, AppBuilderFlowGraphDto graphDto,
             OperationContext context) {
+        this.appUpdateValidator.validate(appId);
         LocalDateTime operateTime = LocalDateTime.now();
 
         AppBuilderApp oldApp = this.appFactory.create(appId);

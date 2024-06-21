@@ -51,6 +51,7 @@ const PublishModal = (props) => {
       if (res.code === 0) {
         Message({ type: 'success', content: `发布应用成功` });
         setIsModalOpen(false);
+        navigate(`/app`);
       }
     } finally {
       setLoading(false)

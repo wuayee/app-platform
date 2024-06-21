@@ -4,6 +4,12 @@
 
 package com.huawei.fit.jober.aipp.enums;
 
+import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
+import com.huawei.fit.jober.aipp.common.exception.AippParamException;
+import com.huawei.fitframework.util.StringUtils;
+
+import java.util.Arrays;
+
 /**
  * App的状态.
  *
@@ -28,5 +34,12 @@ public enum AppState {
      */
     public String getName() {
         return name;
+    }
+
+    public static AppState getAppState(String name) {
+        return Arrays.stream(values())
+                .filter(value -> StringUtils.equalsIgnoreCase(name, value.getName()))
+                .findFirst()
+                .orElseThrow(() -> new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID, name));
     }
 }

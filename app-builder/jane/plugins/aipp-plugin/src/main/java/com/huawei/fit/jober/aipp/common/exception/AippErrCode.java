@@ -202,6 +202,16 @@ public enum AippErrCode implements ErrorCode {
     TASK_NOT_FOUND(90002909, "Task not found."),
 
     /**
+     * 应用已发布
+     */
+    APP_HAS_ALREADY(90002910, "应用已经发布，无法修改"),
+
+    /**
+     * 应用已发布
+     */
+    APP_VERSION_HAS_ALREADY(90002911, "该版本名称已发布，请使用其他版本名称"),
+
+    /**
      * 错误码截止值
      */
     ERROR_CODE_BUTT(99999999, "Error code butt.");

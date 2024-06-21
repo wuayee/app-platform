@@ -42,19 +42,21 @@
             resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
         select
         <include refid="Base_Column_List"/>
-        from app_builder_app
-        where tenant_id = #{tenantId}
-        <if test="cond.type != null">
-            and type = #{cond.type}
-        </if>
-        <if test="cond.state != null">
-            and state = #{cond.state}
-        </if>
-        <if test="cond != null and cond.name != null and cond.name != ''">
-            and name like '%' || #{cond.name} || '%'
-        </if>
-        GROUP BY id, name
-        ORDER BY create_at DESC, name
+        from (
+            SELECT DISTINCT ON ( "name" ) * FROM app_builder_app where tenant_id = #{tenantId}
+            <if test="cond.type != null">
+                and type = #{cond.type}
+            </if>
+            <if test="cond.state != null">
+                and state = #{cond.state}
+            </if>
+            <if test="cond != null and cond.name != null and cond.name != ''">
+                and name like '%' || #{cond.name} || '%'
+            </if>
+            ORDER BY
+                "name", create_at DESC
+        )
+        ORDER BY create_at DESC,
         offset #{offset} limit #{limit}
     </select>
 
