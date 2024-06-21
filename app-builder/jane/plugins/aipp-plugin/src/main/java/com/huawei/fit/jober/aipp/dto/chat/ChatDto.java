@@ -34,4 +34,13 @@ public class ChatDto {
 
     @Property(description = "msg")
     private String logData;
+
+    @Property(description = "aipp id")
+    private String aippId;
+
+    @Property(description = "app name")
+    private String appName;
+
+    @Property(description = "app icon")
+    private String appIcon;
 }

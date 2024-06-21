@@ -5,7 +5,6 @@
 package com.huawei.jade.fel.core.template;
 
 import com.huawei.jade.fel.chat.ChatMessage;
-import com.huawei.jade.fel.chat.content.MessageContent;
 
 import java.util.Map;
 

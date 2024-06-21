@@ -19,11 +19,13 @@ struct ApplyPermissionRequest {
     ApplyPermissionRequest(const ApplyPermissionRequest&) = delete;
     ApplyPermissionRequest& operator=(const ApplyPermissionRequest&) = delete;
 
-    ApplyPermissionRequest(int32_t socketFd, DataBus::Common::PermissionType permissionType, int32_t sharedMemoryId,
-                           bool isOperatingUserData, const std::shared_ptr<UserData>& userData)
-                           : socketFd_(socketFd), permissionType_(permissionType), sharedMemoryId_(sharedMemoryId),
-                           isOperatingUserData_(isOperatingUserData), userData_(userData) {};
+    ApplyPermissionRequest(int32_t socketFd, uint32_t seq, DataBus::Common::PermissionType permissionType,
+                           int32_t sharedMemoryId, bool isOperatingUserData, const std::shared_ptr<UserData>& userData)
+                           : socketFd_(socketFd), seq_(seq), permissionType_(permissionType),
+                           sharedMemoryId_(sharedMemoryId), isOperatingUserData_(isOperatingUserData),
+                           userData_(userData) {};
     int32_t socketFd_; // 申请权限的客户端
+    uint32_t seq_; // 申请权限的请求序列号
     DataBus::Common::PermissionType permissionType_; // 权限种类
     int32_t sharedMemoryId_; // 共享内存ID
     bool isOperatingUserData_; // 是否操作用户自定义数据

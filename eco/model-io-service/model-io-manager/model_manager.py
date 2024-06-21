@@ -165,7 +165,7 @@ def create_namespace_if_needed():
         logger.warning(e)
 
     try:
-        response = api_instance.create_namespace(MODEL_IO_NAMESPACE)
+        response = api_instance.create_namespace(body=namespace)
     except ApiException as e:
         logger.warning(e)
     return
@@ -611,20 +611,26 @@ def get_routes():
     routed_models = {}
     url_key = "url"
     for service in services:
+        max_link_num = 1000
         if not service["pipeline"]:
             model_name = get_model_name_by_service_name(service["model_name"])
         else:
             model_name = service["model_name"]
         url = f"http://{service['cluster_ip']}:{service['port']}"
+        if model_name in model_run_info:
+            max_link_num = model_run_info[model_name]
+        logging.info("max_link_num for %s is %s", model_name, str(max_link_num))
         if model_name not in routed_models:
             routes.append({
                 "id": model_name,
                 "model": model_name,
-                url_key: url
+                url_key: url,
+                "max_link_num": max_link_num
             })
             routed_models[model_name] = url
 
     for name in external_model_services:
+        max_link_num = 1000
         external_model_service = external_model_services[name]
         url = external_model_service["url"]
         proxies = get_effective_proxies(external_model_service)
@@ -632,6 +638,9 @@ def get_routes():
         api_key_value = external_model_service[api_key]
         external_models = get_models_from_external_service(external_model_service)
         for model_name in external_models:
+            if model_name in model_run_info:
+                max_link_num = model_run_info[model_name]
+            logging.info("max_link_num for %s is %s", model_name, str(max_link_num))
             if model_name not in routed_models:
                 routes.append({
                     "id": model_name,
@@ -640,8 +649,10 @@ def get_routes():
                     api_key: api_key_value,
                     "http_proxy": proxies.get("http_proxy", ""),
                     "https_proxy": proxies.get("https_proxy", ""),
+                    "max_link_num": max_link_num,
                 })
                 routed_models[model_name] = url
+    logger.info("routes is: %s", str(routes))
     return routes
 
 
@@ -938,7 +949,8 @@ async def notify_model_io_gateways():
 model_weight_model_dir = {
     # model name and it's base dir name
     "Meta-Llama-3-8B-Instruct": "Meta-Llama-3-8B-Instruct",
-    "Qwen-14B-Chat": "Qwen-14B-Chat"
+    "Qwen-14B-Chat": "Qwen-14B-Chat",
+    "chatglm3-6b": "chatglm3-6b"
 }
 
 
@@ -1092,16 +1104,25 @@ async def get_external_model_proxies(request: Request):
 def persist_external_services():
     update_configmap()
 
+model_run_info = {}
+
 
 @app.post("/v1/start_up")
 async def start_up(item: Item, request: Request, background_tasks : BackgroundTasks):
+    model_run_info[item.name] = item.max_link_num
     templates = get_template()
     model_name = item.name.strip()
-    model_base_dir = model_name
-
     model_base_dir = model_weight_model_dir.get(model_name, model_name)
-
     model_weight_path = os.path.join(model_weight_dir, model_base_dir)
+    weight_path_validation = os.environ.get("WEIGHT_PATH_VALIDATION") == "true"
+    logger.error("weight_path_validation=%s", weight_path_validation)
+    status_code = 200
+
+    if weight_path_validation and not os.path.exists(model_weight_path):
+        error_msg = "模型权重不存在，需要上传至" + model_weight_path
+        logger.error(error_msg)
+        error_info = {"code": 1, "detail": error_msg}
+        return JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))
 
     model_name = item.name.strip()
 
@@ -1142,9 +1163,8 @@ async def start_up(item: Item, request: Request, background_tasks : BackgroundTa
 
     notify_model_io_gateways_in_bg(background_tasks)
 
-    status_code = 200
     error_info = {
-        "code": status_code,
+        "code": 0,
         "detail": "ok"
     }
 

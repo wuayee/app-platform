@@ -27,7 +27,6 @@ import com.huawei.jade.fel.core.memory.Memory;
 import com.huawei.jade.fel.engine.util.StateKey;
 
 import java.util.Collections;
-import java.util.Map;
 
 /**
  * 流式模型发射器。
@@ -51,19 +50,20 @@ public class LlmEmitter<O extends ChatMessage> extends FiniteEmitter<O, ChatChun
      * @param publisher 表示数据发布者的 {@link Publisher}{@code <}{@link O}{@code >}。
      * @param builder 表示有限流数据构造器的 {@link FiniteEmitterDataBuilder}{@code <}{@link O}{@code ,
      * }{@link ChatChunk}{@code >}。
-     * @param args 表示模型节点运行时参数的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
      * @param prompt 表示模型输入的 {@link Prompt}， 用于获取默认用户问题。
+     * @param session 表示流程实例运行标识的 {@link FlowSession}。
      */
     public LlmEmitter(Publisher<O> publisher,
-            FiniteEmitterDataBuilder<O, ChatChunk> builder, Map<String, Object> args, Prompt prompt) {
-        super(cast(args.get(StateKey.FLOW_SESSION)), publisher, builder);
-        FlowSession session = cast(args.get(StateKey.FLOW_SESSION));
+            FiniteEmitterDataBuilder<O, ChatChunk> builder, Prompt prompt, FlowSession session) {
+        super(Validation.notNull(session, "The session cannot be null."), publisher, builder);
         this.memory = session.getInnerState(StateKey.HISTORY_OBJ);
         this.question = ObjectUtils.getIfNull(session.getInnerState(HISTORY_INPUT),
                 () -> this.getDefaultQuestion(prompt));
         this.consumer = ObjectUtils.nullIf(session.getInnerState(STREAMING_CONSUMER), EMPTY_CONSUMER);
-        this.processor = Validation.notNull(cast(args.get(STREAMING_PROCESSOR)), "The processor cant be null.");
-        this.context = Validation.notNull(cast(args.get(STREAMING_FLOW_CONTEXT)), "The flow context cant be null.");
+        this.processor = Validation.notNull(
+                cast(session.getInnerState(STREAMING_PROCESSOR)), "The processor cannot be null.");
+        this.context = Validation.notNull(
+                cast(session.getInnerState(STREAMING_FLOW_CONTEXT)), "The flow context cannot be null.");
     }
 
     @Override

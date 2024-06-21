@@ -67,7 +67,15 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
      * @override
      */
     self.serializerJadeConfig = () => {
-        self.flowMeta.callback.converter.entity = self.getLatestJadeConfig();
+        const jadeConfig = self.getLatestJadeConfig();
+        const mode = jadeConfig.inputParams ? "variables" : "manualCheck";
+        if (mode === "variables") {
+            self.flowMeta.callback.converter.entity = jadeConfig;
+            self.flowMeta.task = {};
+        } else {
+            self.flowMeta.callback.converter.entity = {};
+            self.flowMeta.task = jadeConfig;
+        }
     };
 
     /**
@@ -76,7 +84,8 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
      * @override
      */
     self.getComponent = () => {
-        return self.graph.plugins[self.componentName](self.flowMeta.callback.converter.entity);
+        const jadeConfig = self.flowMeta.callback.converter.entity.inputParams ? self.flowMeta.callback.converter.entity : self.flowMeta.task;
+        return self.graph.plugins[self.componentName](jadeConfig);
     };
 
     /**

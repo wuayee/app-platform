@@ -15,8 +15,7 @@ const ChoreographyHead = (props) => {
     showElsa, appInfo,
     updateAippCallBack,
     mashupClick, status,
-    openDebug, isTested,
-    isTesting, testTime,
+    openDebug, testTime,
     testStatus, showTime
   } = props;
   const [ currentTime, setCurrentTime ] = useState('');
@@ -36,10 +35,6 @@ const ChoreographyHead = (props) => {
   }
   // 编辑基本信息
   function modalClick() {
-    if (!isTested) {
-      testRef.current.showModal();
-      return;
-    }
     modalRef.current.showModal();
   }
   // 返回编排页面
@@ -85,7 +80,7 @@ const ChoreographyHead = (props) => {
           )
         }
         { showTime && <span>自动保存：{currentTime}</span> }
-        {showElsa && <TestStatus isTested={isTested} isTesting={isTesting} testTime={testTime} testStatus={testStatus}/>}
+        {showElsa && <TestStatus testTime={testTime} testStatus={testStatus}/>}
       </div>
       <div className="header-grid">
         {/* <span className="history" onClick={versionDetail}>

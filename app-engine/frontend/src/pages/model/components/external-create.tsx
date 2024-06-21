@@ -67,6 +67,7 @@ const CreateModel = ({ visible, createCallback }: props) => {
             validateFirst
             rules={[
               { required: true, message: '输入不能为空' },
+              { type: 'string', max: 100, message: '长度范围1 - 100' },
               {
                 validator: (_, value) => {
                   if (/^[a-zA-Z0-9](([a-zA-Z0-9-_])*[a-zA-Z0-9])*$/.test(value)) {
@@ -89,7 +90,7 @@ const CreateModel = ({ visible, createCallback }: props) => {
               { required: true, message: '输入不能为空' },
               {
                 validator: (_, value) => {
-                  if (/^https?:\/\/((www\.)?([a-zA-Z0-9-]+\.){1,6}[a-zA-Z]+|((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.){3}(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]))$/.test(value)) {
+                  if (/^https?:\/\/((www\.)?([a-zA-Z0-9-]+\.){1,6}[a-zA-Z]+|((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.){3}(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])(:[0-9]{1,5})?)$/.test(value)) {
                     return Promise.resolve();
                   } else {
                     return Promise.reject('请输入正确的url地址');

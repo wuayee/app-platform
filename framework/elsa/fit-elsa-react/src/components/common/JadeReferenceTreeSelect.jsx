@@ -1,6 +1,8 @@
-import {Form, TreeSelect} from "antd";
+import {Form, Popover, TreeSelect} from "antd";
 import {useFormContext, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {useEffect, useRef, useState} from "react";
+import {VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
+import {InfoCircleOutlined} from '@ant-design/icons';
 
 /**
  * jade的带引用功能的级联选择框.
@@ -61,14 +63,40 @@ export const JadeReferenceTreeSelect = (props) => {
         return ans;
     };
 
+    const content = (<>
+        <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
+            <p>每次对话生成的上下文，包含应用及对话实例相关的系统属性，只读。属性列表：</p>
+            <p>1.instanceId：每次对话实例的唯一标识</p>
+            <p>2.appId：所属应用的唯一标识</p>
+        </div>
+    </>);
+
     /**
      * 当dropdown显示时触发，实时获取tree数据.
      */
     const onDropdownVisibleChange = () => {
         const nodeInfos = shape.getPreNodeInfos();
+
+        function getTitle(nodeInfo) {
+            return nodeInfo.id === VIRTUAL_CONTEXT_NODE.id ? <>
+                <div className={"jade-font-size"}>
+                    <span>{n.name}</span>
+                    <Popover className={"jade-drop-down-popover"} overlayClassName="jade-drop-down-popover-overlay" content={content}>
+                        <InfoCircleOutlined/>
+                    </Popover>
+                </div>
+            </> : nodeInfo.name;
+        }
+
         const simpleTree = nodeInfos.map(n => {
             const ans = [];
-            ans.push({id: n.id, pId: 0, value: n.id, title: n.name, selectable: false});
+            ans.push({
+                id: n.id,
+                pId: 0,
+                value: n.id,
+                title: getTitle(n),
+                selectable: false
+            });
             n.observableList.forEach(o => {
                 if (!o.parentId) {
                     o.parentId = n.id;

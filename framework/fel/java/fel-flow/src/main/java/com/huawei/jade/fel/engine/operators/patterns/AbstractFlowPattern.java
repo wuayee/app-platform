@@ -4,21 +4,14 @@
 
 package com.huawei.jade.fel.engine.operators.patterns;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
-
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
 import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.LazyLoader;
-import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.core.Pattern;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
-import com.huawei.jade.fel.engine.util.StateKey;
-
-import java.util.Collections;
-import java.util.Map;
+import com.huawei.jade.fel.engine.util.AiFlowSession;
 
 /**
  * 流程委托单元。
@@ -28,15 +21,9 @@ import java.util.Map;
  */
 public abstract class AbstractFlowPattern<I, O> implements FlowPattern<I, O> {
     private final LazyLoader<AiProcessFlow<I, O>> flowSupplier;
-    private final Map<String, Object> args;
 
     protected AbstractFlowPattern() {
-        this(null, null);
-    }
-
-    private AbstractFlowPattern(LazyLoader<AiProcessFlow<I, O>> flowSupplier, Map<String, Object> args) {
-        this.flowSupplier = ObjectUtils.nullIf(flowSupplier, LazyLoader.of(this::buildFlow));
-        this.args = ObjectUtils.nullIf(args, Collections.emptyMap());
+        this.flowSupplier = LazyLoader.of(this::buildFlow);
     }
 
     /**
@@ -60,22 +47,8 @@ public abstract class AbstractFlowPattern<I, O> implements FlowPattern<I, O> {
     }
 
     @Override
-    public Pattern<I, O> bind(Map<String, Object> args) {
-        // 使用同一个流程对象，否则 delegate 已经注册的流程会泄露，且新的流程没有注册时机。
-        return new AbstractFlowPattern<I, O>(this.flowSupplier, args) {
-            @Override
-            protected AiProcessFlow<I, O> buildFlow() {
-                // bind 产生的新对象使用的 {@code flowSupplier} 是初始对象的成员，
-                // 其绑定的是初始对象的 buildFlow 方法，所以此处不会被调用。
-                throw new IllegalStateException("Not allow to build flow again.");
-            }
-        };
-    }
-
-    @Override
     public O invoke(I data) {
-        FlowSession session = getIfNull(cast(this.args.get(StateKey.FLOW_SESSION)), FlowSession::new);
-        this.getFlow().converse(session).offer(data);
+        this.getFlow().converse(AiFlowSession.require()).offer(data);
         return null;
     }
 
@@ -86,10 +59,7 @@ public abstract class AbstractFlowPattern<I, O> implements FlowPattern<I, O> {
      * @throws IllegalStateException 当流程发生异常时。
      */
     public Pattern<I, O> sync() {
-        return new SimplePattern<>((data, patternArgs) -> {
-            FlowSession session = getIfNull(cast(patternArgs.get(StateKey.FLOW_SESSION)), FlowSession::new);
-            return this.getFlow().converse(session).offer(data).await();
-        });
+        return new SimplePattern<>(data -> this.getFlow().converse(AiFlowSession.require()).offer(data).await());
     }
 
     /**

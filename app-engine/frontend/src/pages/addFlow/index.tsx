@@ -12,7 +12,7 @@ import TestModal from "../components/test-modal";
 
 
 const AddFlow = (props) => {
-  const { type, appInfo, addFlowRef, setFlowTested, setFlowTestTime, setFlowTestStatus, setFlowTesting } = props;
+  const { type, appInfo, addFlowRef, setFlowTestTime, setFlowTestStatus } = props;
   const [ dragData, setDragData ] = useState([]);
   const [ addId, setAddId ] = useState(false);
   const [ loading, setLoading ] = useState(false);
@@ -74,14 +74,13 @@ const AddFlow = (props) => {
                               showDebug={showDebug}
                               setShowDebug={setShowDebug}
         />}
-        {type && <FlowTest setIsTested={setFlowTested}
-          setTestStatus={setFlowTestStatus}
-          setIsTesting={setFlowTesting}
-          setTestTime={setFlowTestTime}
-          setShowDebug={setShowDebug}
-          showDebug={showDebug}
-          debugTypes={debugTypes}
-          appRef={appRef}
+        {type && <FlowTest
+                           setTestStatus={setFlowTestStatus}
+                           setTestTime={setFlowTestTime}
+                           setShowDebug={setShowDebug}
+                           showDebug={showDebug}
+                           debugTypes={debugTypes}
+                           appRef={appRef}
         />}
         <div className={['content', !type ? 'content-add' : null ].join(' ')}>
           {

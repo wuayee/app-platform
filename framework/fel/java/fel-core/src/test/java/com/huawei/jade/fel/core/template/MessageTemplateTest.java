@@ -6,11 +6,9 @@ package com.huawei.jade.fel.core.template;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.huawei.fitframework.resource.web.Media;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.MessageType;
-import com.huawei.jade.fel.chat.content.Contents;
-import com.huawei.jade.fel.chat.content.MediaContent;
-import com.huawei.jade.fel.chat.content.TextContent;
 import com.huawei.jade.fel.core.template.support.DefaultStringTemplate;
 import com.huawei.jade.fel.core.template.support.HumanMessageTemplate;
 import com.huawei.jade.fel.core.template.support.SystemMessageTemplate;
@@ -44,7 +42,7 @@ public class MessageTemplateTest {
         @DisplayName("渲染系统消息并携带媒体数据，返回正确结果")
         void shouldReturnOkWithMedia() {
             MessageTemplate template = new SystemMessageTemplate("You are a helpful {{character}}.");
-            Contents contents = Contents.from(new TextContent("assistant"), new MediaContent("robot.png"));
+            MessageContent contents = MessageContent.from("assistant", new Media("image/png", "robot.png"));
             ChatMessage message = template.render(Tip.from("character", contents).freeze());
             assertThat(message.type()).isEqualTo(MessageType.SYSTEM);
             assertThat(message.medias()).isEmpty();
@@ -83,8 +81,8 @@ public class MessageTemplateTest {
         @DisplayName("渲染人类消息并携带媒体数据，返回正确结果")
         void shouldReturnOkWithMedia() {
             MessageTemplate template = new HumanMessageTemplate("I'm a good {{sex}}, I like play {{something}}.");
-            Tip tip = new Tip().add("sex", Contents.from(new TextContent("man"), new MediaContent("man.png")))
-                    .add("something", Contents.from(new TextContent("basketball"), new MediaContent("basketball.png")));
+            Tip tip = new Tip().add("sex", MessageContent.from("man", new Media("image/png", "man.png")))
+                    .add("something", MessageContent.from("basketball", new Media("image/png", "basketball.png")));
             ChatMessage message = template.render(tip.freeze());
             assertThat(message.type()).isEqualTo(MessageType.HUMAN);
             assertThat(message.medias()).hasSize(2);

@@ -16,6 +16,7 @@
     <modules>
         <module>fel-core</module>
         <module>fel-flow</module>
+        <module>fel-langchain</module>
         <module>fel-pipeline-core</module>
         <module>services</module>
         <module>plugins</module>

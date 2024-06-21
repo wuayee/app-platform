@@ -1,0 +1,23 @@
+fit:
+  beans:
+    packages:
+    - 'com.huawei.jade.app.engine.announcement'
+
+druid:
+  driver-class-name: org.postgresql.Driver
+  initialSize: 5
+  minIdle: 5
+  maxActive: 10
+  maxWait: 60000
+  timeBetweenEvictionRunsMillis: 60000
+  minEvictableIdleTimeMillis: 300000
+  validationQuery: SELECT 1
+  testWhileIdle: true
+  testOnBorrow: true
+  testOnReturn: true
+  url: jdbc:postgresql://7.180.146.52:5432/jane_beta?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true
+  username: jane
+  password: FitLab123
+
+mybatis:
+  mapper-locations: 'mapper/*Mapper.xml'

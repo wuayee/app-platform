@@ -99,8 +99,7 @@
 .jade-textarea-input {
     border-color: #edeeef !important;
     font-size: 12px;
-    height: 86.5px !important;
-    resize: none !important;
+    min-height: 86.5px !important;
 }
 
 .ant-form-item-label {
@@ -184,6 +183,27 @@
 .react-node-footer {
     margin-top: 8px;
     user-select: none;
+}
+
+.jade-code-editor-container {
+    width: 100%;
+    height: 272px;
+}
+
+.jade-code-editor .monaco-editor {
+    border-radius: 4px;
+}
+
+.jade-code-editor .monaco-editor .overflow-guard {
+    border-radius: 4px;
+}
+
+.jade-drop-down-popover {
+    margin-left: 8px;
+}
+
+.jade-drop-down-popover-overlay {
+    z-index: 1200 !important;
 }
 
 .jade-node-custom-header-type-icon {

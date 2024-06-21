@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Input, Form, InputNumber, Switch } from "antd";
 
 const RenderFormItem = (props) => {
-  const {type, name} = props;
+  const {type, name, isRequired} = props;
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -44,8 +44,8 @@ const RenderFormItem = (props) => {
       <Form.Item
         name={name}
         label={customLabel}
-        rules={[
-          { required: true, message: '请输入字符串' },
+        rules={ [
+          { required: isRequired !== false, message: '请输入字符串' },
         ]}
         className='debug-form-item'
       >
@@ -58,8 +58,8 @@ const RenderFormItem = (props) => {
         label={customLabel}
         initialValue={null}
         rules={[
-          { required: true, message: '请输入一个整数' },
-          { validator: validateNumber }
+          { validator: validateNumber },
+          { required: isRequired !== false, message: '请输入一个整数' }
         ]}
         className='debug-form-item'
       >
@@ -78,8 +78,8 @@ const RenderFormItem = (props) => {
         label={customLabel}
         initialValue={null}
         rules={[
-          { required: true, message: '请输入一个数字' },
-          { validator: validateNumber }
+          { validator: validateNumber },
+          { required: isRequired !== false, message: '请输入一个数字' }
         ]}
         className='debug-form-item'
       >
@@ -98,8 +98,8 @@ const RenderFormItem = (props) => {
         name={name}
         label={customLabel}
         initialValue={true}
-        rules={[
-          { required: true, message: '请输入一个bool值' },
+        rules={ [
+          { required: isRequired !== false, message: '请输入字符串' },
         ]}
         className='debug-form-item'
       >

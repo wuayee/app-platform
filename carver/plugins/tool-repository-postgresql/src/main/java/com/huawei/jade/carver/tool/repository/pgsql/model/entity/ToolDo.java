@@ -7,11 +7,17 @@ package com.huawei.jade.carver.tool.repository.pgsql.model.entity;
 import static com.huawei.jade.carver.util.SerializeUtils.json2obj;
 
 import com.huawei.fitframework.serialization.ObjectSerializer;
+import com.huawei.fitframework.util.MapUtils;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.Tool;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 存入数据库的工具的实体类。
@@ -86,7 +92,7 @@ public class ToolDo {
         toolDo.setModifier(info.modifier());
         toolDo.setName(info.name());
         toolDo.setSchema(serializer.serialize(info.schema()));
-        toolDo.setRunnables(serializer.serialize(info.runnables()));
+        toolDo.setRunnables(serializer.serialize(upperKeys(info.runnables())));
         toolDo.setSource(info.source());
         toolDo.setIcon(info.icon());
         toolDo.setUniqueName(info.uniqueName());
@@ -107,11 +113,20 @@ public class ToolDo {
                 .modifier(toolDo.getModifier())
                 .name(toolDo.getName())
                 .schema(json2obj(toolDo.getSchema(), serializer))
-                .runnables(json2obj(toolDo.getRunnables(), serializer))
+                .runnables(upperKeys(json2obj(toolDo.getRunnables(), serializer)))
                 .source(toolDo.getSource())
                 .icon(toolDo.getIcon())
                 .uniqueName(toolDo.getUniqueName())
                 .description(toolDo.getDescription())
                 .build();
+    }
+
+    private static Map<String, Object> upperKeys(Map<String, Object> mapData) {
+        if (MapUtils.isEmpty(mapData)) {
+            return Collections.emptyMap();
+        }
+        return mapData.entrySet()
+                .stream()
+                .collect(Collectors.toMap(entry -> StringUtils.toUpperCase(entry.getKey()), Map.Entry::getValue));
     }
 }

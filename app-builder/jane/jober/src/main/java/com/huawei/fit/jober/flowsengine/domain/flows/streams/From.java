@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -404,7 +405,11 @@ public class From<I> extends IdGenerator implements Publisher<I> {
         }
 
         while (!nodesQueue.isEmpty()) {
-            Node<?, ?> curNode = (Node<?, ?>) nodesQueue.removeFirst();
+            Subscriber<?, ?> cur = nodesQueue.removeFirst();
+            if (!(cur instanceof Node<?, ?>)) {
+                continue;
+            }
+            Node<?, ?> curNode = (Node<?, ?>) cur;
             for (Subscription<?, ?> s : curNode.getSubscriptions()) {
                 if (!visited.contains(s.getTo().getId())) {
                     nodesQueue.offer(s.getTo());
@@ -425,31 +430,8 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * @return 订阅节点
      */
     public To<I, Object> getSubscriber(String nodeId) {
-        ArrayDeque<Subscriber<?, ?>> nodesQueue = new ArrayDeque<>();
-        Set<String> visited = new HashSet<>();
-        for (Subscription<?, ?> s : this.getSubscriptions()) {
-            To<I, Object> curTo = (To<I, Object>) s.getTo();
-            nodesQueue.addLast(curTo);
-            visited.add(curTo.getId());
-            if (curTo.getId().equals(nodeId)) {
-                return curTo;
-            }
-        }
-
-        while (!nodesQueue.isEmpty()) {
-            Node<?, ?> curNode = (Node<?, ?>) nodesQueue.removeFirst();
-            for (Subscription<?, ?> s : curNode.getSubscriptions()) {
-                To<I, Object> curTo = (To<I, Object>) s.getTo();
-                if (!visited.contains(curTo.getId())) {
-                    nodesQueue.offer(curTo);
-                    visited.add(curTo.getId());
-                }
-                if (curTo.getId().equals(nodeId)) {
-                    return curTo;
-                }
-            }
-        }
-        throw new JobberException(FLOW_ENGINE_INVALID_NODE_ID, nodeId);
+        return (To<I, Object>) Optional.ofNullable(findNode(this, nodeId))
+                .orElseThrow(() -> new JobberException(FLOW_ENGINE_INVALID_NODE_ID, nodeId));
     }
 
     /**
@@ -460,31 +442,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * @return Node<FlowData, FlowData>
      */
     public Node<FlowData, FlowData> findNodeFromFlow(From<FlowData> from, String nodeMetaId) {
-        ArrayDeque<Subscriber<FlowData, ?>> nodesQueue = new ArrayDeque<>();
-        Set<String> visited = new HashSet<>();
-        for (Subscription<FlowData, ?> s : from.getSubscriptions()) {
-            nodesQueue.addLast((Subscriber<FlowData, ?>) s.getTo());
-            visited.add(s.getTo().getId());
-            if (s.getTo().getId().equals(nodeMetaId)) {
-                Subscriber<FlowData, ?> target = (Subscriber<FlowData, ?>) s.getTo();
-                return (Node<FlowData, FlowData>) target;
-            }
-        }
-
-        while (!nodesQueue.isEmpty()) {
-            Node<?, ?> curNode = (Node<?, ?>) nodesQueue.removeFirst();
-            for (Subscription<?, ?> s : curNode.getSubscriptions()) {
-                if (!visited.contains(s.getTo().getId())) {
-                    nodesQueue.offer((Subscriber<FlowData, ?>) s.getTo());
-                    visited.add(s.getTo().getId());
-                }
-                if (s.getTo().getId().equals(nodeMetaId)) {
-                    Subscriber<FlowData, ?> target = (Subscriber<FlowData, ?>) s.getTo();
-                    return (Node<FlowData, FlowData>) target;
-                }
-            }
-        }
-        return null;
+        return (Node<FlowData, FlowData>) Optional.ofNullable(findNode(this, nodeMetaId)).get();
     }
 
     // 开始节点无需处理直接标记结束
@@ -509,5 +467,44 @@ public class From<I> extends IdGenerator implements Publisher<I> {
         repo.save(after);
         repo.save(pre);
         return after;
+    }
+
+    /**
+     * findNode
+     *
+     * @param from from
+     * @param nodeMetaId nodeMetaId
+     * @return To<?, ?> To object
+     */
+    private static To<?, ?> findNode(From<?> from, String nodeMetaId) {
+        ArrayDeque<Subscriber<?, ?>> nodesQueue = new ArrayDeque<>();
+        Set<String> visited = new HashSet<>();
+        for (Subscription<?, ?> s : from.getSubscriptions()) {
+            Subscriber<?, Object> to = s.getTo();
+            nodesQueue.addLast(to);
+            visited.add(to.getId());
+            if (to.getId().equals(nodeMetaId)) {
+                return (To<?, ?>) to;
+            }
+        }
+
+        while (!nodesQueue.isEmpty()) {
+            Subscriber<?, ?> cur = nodesQueue.removeFirst();
+            if (!(cur instanceof Node<?, ?>)) {
+                continue;
+            }
+            Node<?, ?> curNode = (Node<?, ?>) cur;
+            for (Subscription<?, ?> s : curNode.getSubscriptions()) {
+                Subscriber<?, Object> to = s.getTo();
+                if (!visited.contains(to.getId())) {
+                    nodesQueue.offer(to);
+                    visited.add(to.getId());
+                }
+                if (to.getId().equals(nodeMetaId)) {
+                    return (To<?, ?>) to;
+                }
+            }
+        }
+        return null;
     }
 }

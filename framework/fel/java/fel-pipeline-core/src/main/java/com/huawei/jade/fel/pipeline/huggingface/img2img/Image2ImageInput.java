@@ -5,6 +5,7 @@
 package com.huawei.jade.fel.pipeline.huggingface.img2img;
 
 import com.huawei.fitframework.annotation.Property;
+import com.huawei.jade.fel.pipeline.PipelineInput;
 
 import lombok.Data;
 
@@ -15,7 +16,7 @@ import lombok.Data;
  * @since 2024-06-06
  */
 @Data
-public class Image2ImageInput {
+public class Image2ImageInput implements PipelineInput {
     @Property(required = true)
     private String prompt;
 

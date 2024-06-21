@@ -4,7 +4,6 @@
 
 package com.huawei.jade.fel.chat;
 
-import com.huawei.jade.fel.ModelOptions;
 import com.huawei.jade.fel.tool.Tool;
 
 import lombok.AllArgsConstructor;
@@ -24,7 +23,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatOptions implements ModelOptions {
+public class ChatOptions {
     /**
      * 模型名。
      */

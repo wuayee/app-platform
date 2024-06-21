@@ -4,18 +4,14 @@
 
 package com.huawei.jade.fel.engine.operators.patterns;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
-import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
-
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
 import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.core.Pattern;
-import com.huawei.jade.fel.engine.util.StateKey;
+import com.huawei.jade.fel.engine.util.AiFlowSession;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -36,8 +32,6 @@ public class SimpleFlowPattern<I, O> implements FlowPattern<I, O> {
 
     private EmitterListener<O, FlowSession> handler;
     private final Operators.ProcessMap<I, O> processor;
-    private final Map<String, Object> dynamicArgs;
-    private final Pattern<I, O> delegatePattern;
 
     /**
      * 使用数据处理器初始化 {@link SimpleFlowPattern}{@code <}{@link I}{@code , }{@link O}{@code >}。
@@ -46,34 +40,21 @@ public class SimpleFlowPattern<I, O> implements FlowPattern<I, O> {
      * @throws IllegalArgumentException 当 {@code processor} 为 {@code null} 时。
      */
     public SimpleFlowPattern(Operators.ProcessMap<I, O> processor) {
-        this(processor, null, null, Collections.emptyMap());
+        this(processor, null);
     }
 
     public SimpleFlowPattern(Pattern<I, O> pattern) {
-        this((data, ctx) -> pattern.invoke(data), null, pattern, Collections.emptyMap());
+        this((data, ctx) -> AiFlowSession.applyPattern(pattern, data, ObjectUtils.cast(ctx)), null);
     }
 
-    private SimpleFlowPattern(Operators.ProcessMap<I, O> processor, EmitterListener<O, FlowSession> handler,
-            Pattern<I, O> pattern, Map<String, Object> args) {
+    private SimpleFlowPattern(Operators.ProcessMap<I, O> processor, EmitterListener<O, FlowSession> handler) {
         this.processor = Validation.notNull(processor, "The processor cannot be null.");
         this.handler = handler;
-        this.delegatePattern = pattern;
-        this.dynamicArgs = Validation.notNull(args, "The args cannot be null.");
-    }
-
-    @Override
-    public SimpleFlowPattern<I, O> bind(Map<String, Object> args) {
-        Operators.ProcessMap<I, O> newProcessor = this.processor;
-        // 避免从 ctx 获取 args，否则相同 session 的多分支并发场景，args 存在相互覆盖的问题。
-        if (this.delegatePattern != null) {
-            newProcessor = (data, ctx) -> delegatePattern.bind(args).invoke(data);
-        }
-        return new SimpleFlowPattern<>(newProcessor, this.handler, this.delegatePattern, args);
     }
 
     @Override
     public O invoke(I data) {
-        FlowSession session = getIfNull(cast(this.dynamicArgs.get(StateKey.FLOW_SESSION)), FlowSession::new);
+        FlowSession session = AiFlowSession.require();
         THREAD_POOL.execute(() -> this.emit(this.processor.process(data, session), session));
         return null;
     }

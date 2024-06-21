@@ -4,8 +4,6 @@
 
 package com.huawei.jade.fel.embed;
 
-import com.huawei.jade.fel.ModelOptions;
-
 import lombok.Data;
 
 /**
@@ -15,7 +13,7 @@ import lombok.Data;
  * @since 2024-04-24
  */
 @Data
-public class EmbedOptions implements ModelOptions {
+public class EmbedOptions {
     /**
      * 模型名。
      */

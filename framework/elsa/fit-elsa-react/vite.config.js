@@ -19,12 +19,13 @@ export default defineConfig({
         },
         sourcemap: true,
         rollupOptions: {
-            external: ['react', 'react-dom', '@fit-elsa/elsa-core', 'antd', 'axios'],
+            external: ['react', 'react-dom', '@fit-elsa/elsa-core', 'antd', 'axios', '@monaco-editor/react'],
             output: {
                 globals: {
                     react: 'react',
                     'react-dom': 'ReactDOM',
-                    '@fit-elsa/elsa-core': '@fit-elsa/elsa-core'
+                    '@fit-elsa/elsa-core': '@fit-elsa/elsa-core',
+                    '@monaco-editor/react': '@monaco-editor/react'
                 }
             }
         },

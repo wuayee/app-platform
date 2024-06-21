@@ -1,6 +1,7 @@
 import {useEffect} from "react";
 import {JadeFlow} from "./flow/jadeFlowEntry.jsx";
 import {graphData} from "./testFlowData.js";
+import {Button} from "antd";
 
 function App() {
     useEffect(() => {
@@ -57,6 +58,13 @@ function App() {
 
     return (<>
         <div>
+            <Button onClick={() => {
+                window.agent.validate().then(() => {
+                    console.log("success");
+                }).catch((error) => {
+                    console.log("异常: ", error);
+                })
+            }}>validate</Button>
             <div id="stage" style={{position: "relative", width: 1600, height: 800}}></div>
         </div>
     </>)

@@ -30,7 +30,8 @@ TEST_F(DataBusUtilsTest, should_send_message_when_size_correct)
             Common::CreateApplyMemoryMessageResponse(bodyBuilder, ErrorType::None, memoryId, memorySize);
     bodyBuilder.Finish(respBody);
     EXPECT_CALL(mockSender, Call(_, MESSAGE_HEADER_LEN + bodyBuilder.GetSize())).Times(1);
-    Utils::SendMessage(bodyBuilder, MessageType::ApplyMemory, mockSender.AsStdFunction());
+    uint32_t seq = 1;
+    Utils::SendMessage(bodyBuilder, MessageType::ApplyMemory, seq, mockSender.AsStdFunction());
 }
 
 TEST_F(DataBusUtilsTest, should_send_error_message_when_sender_given)
@@ -40,7 +41,8 @@ TEST_F(DataBusUtilsTest, should_send_error_message_when_sender_given)
             CreateErrorMessageResponse(bodyBuilder, ErrorType::IllegalMessageHeader);
     bodyBuilder.Finish(respBody);
     EXPECT_CALL(mockSender, Call(_, MESSAGE_HEADER_LEN + bodyBuilder.GetSize())).Times(1);
-    Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, mockSender.AsStdFunction());
+    uint32_t seq = 1;
+    Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, seq, mockSender.AsStdFunction());
 }
 } // namespace Test
 } // namespace DataBus

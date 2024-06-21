@@ -10,10 +10,8 @@ import RenderFormItem from './render-form-item';
 
 const Index = (props) => {
   const { 
-    debugTypes, 
-    setIsTested, 
-    setTestTime, 
-    setIsTesting, 
+    debugTypes,
+    setTestTime,
     setTestStatus,
     setShowDebug,
     showDebug,
@@ -30,10 +28,15 @@ const Index = (props) => {
   }
   const handleRunTest = () => {
     elsaRunningCtl.current?.reset();
-    setIsTested(false);
+    setTestStatus(null);
     setTestTime(0);
-    handleRun(form.getFieldsValue());
-    handleCloseDebug();
+    form.validateFields().then((values) => {
+      handleRun(values);
+      handleCloseDebug();
+    })
+      .catch((errorInfo) => {
+        Message({type: 'warning', content: "请输入必填项"});
+      });
   }
   // 点击运行
   const handleRun = async (values) => {
@@ -48,7 +51,6 @@ const Index = (props) => {
     const res = await startInstance(tenantId, appId, params);
     if (res.code === 0) {
       const {aippCreate, instanceId} = res.data;
-      setIsTesting(true);
       setTestStatus('Running');
       // 调用轮询
       startTestInstance(aippCreate.aippId, aippCreate.version, instanceId);
@@ -69,8 +71,6 @@ const Index = (props) => {
           elsaRunningCtl.current?.stop();
         } else if (isEnd(runtimeData.nodeInfos)) {
           clearInterval(timerRef.current);
-          setIsTesting(false);
-          setIsTested(true);
           setTestStatus('Finished');
           elsaRunningCtl.current?.stop();
         }
@@ -121,7 +121,7 @@ const Index = (props) => {
           >
             {debugTypes.map((debugType, index) => {
               return (
-                <RenderFormItem type={debugType.type} name={debugType.name} key={index} />
+                <RenderFormItem type={debugType.type} name={debugType.name} key={index} isRequired={debugType.isRequired}/>
               )
             })}
           </Form>

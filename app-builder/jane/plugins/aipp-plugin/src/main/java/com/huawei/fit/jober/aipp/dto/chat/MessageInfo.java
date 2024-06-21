@@ -53,4 +53,11 @@ public class MessageInfo {
     @Property(description = "children id")
     @JsonProperty("children_id")
     private String childrenId;
+    @Property(description = "app name")
+    @JsonProperty("app_name")
+    private String appName;
+
+    @Property(description = "app icon")
+    @JsonProperty("app_icon")
+    private String appIcon;
 }

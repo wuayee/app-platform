@@ -43,7 +43,7 @@ public class ChatCompletion implements Prompt {
     public ChatCompletion(Prompt prompt, ChatOptions options) {
         Validation.notNull(prompt, "The prompt cannot be null.");
         Validation.notEmpty(prompt.messages(), "The messages cannot be empty");
-        this.messages = prompt.messages().stream().map(FlatChatMessage::new).collect(Collectors.toList());
+        this.messages = prompt.messages().stream().map(FlatChatMessage::from).collect(Collectors.toList());
         this.options = Validation.notNull(options, "The option must not be null");
     }
 

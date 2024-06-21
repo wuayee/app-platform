@@ -246,14 +246,14 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
 
     private void handleConverseError(AtomicReference<ConverseListener<O>> listenerInput, Exception exception) {
         Optional.ofNullable(listenerInput)
-                .flatMap(ref -> Optional.ofNullable(ref.get()))
+                .map(AtomicReference::get)
                 .ifPresent(listener -> listener.onConverseError(exception));
     }
 
     private void handleConverseFlowError(AtomicReference<ConverseListener<O>> listenerInput, Exception exception,
             Retryable<Object> retryable, List<FlowContext<Object>> contexts) {
         Optional.ofNullable(listenerInput)
-                .flatMap(ref -> Optional.ofNullable(ref.get()))
+                .map(AtomicReference::get)
                 .ifPresent(listener -> listener.onFlowError(exception, retryable, contexts));
     }
 
@@ -261,15 +261,15 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
         AtomicReference<Map<String, AtomicReference<ConverseListener<O>>>> listenerRefMap =
                 ctx.getSession().getInnerState(StateKey.CONVERSE_LISTENER);
         return Optional.ofNullable(listenerRefMap)
-                .flatMap(mapRef -> Optional.ofNullable(mapRef.getAndSet(null)));
+                .map(mapRef -> mapRef.getAndSet(null));
     }
 
     private Optional<ConverseListener<O>> getConverseListener(FlowContext<?> ctx, String flowId) {
         AtomicReference<Map<String, AtomicReference<ConverseListener<O>>>> listenerRefMap =
                 ctx.getSession().getInnerState(StateKey.CONVERSE_LISTENER);
         return Optional.ofNullable(listenerRefMap)
-                .flatMap(mapRef -> Optional.ofNullable(mapRef.get()))
-                .flatMap(listenerMap -> Optional.ofNullable(listenerMap.get(flowId)))
-                .flatMap(ref -> Optional.ofNullable(ref.get()));
+                .map(AtomicReference::get)
+                .map(listenerMap -> listenerMap.get(flowId))
+                .map(AtomicReference::get);
     }
 }

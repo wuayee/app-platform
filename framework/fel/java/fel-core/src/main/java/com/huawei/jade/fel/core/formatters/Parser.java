@@ -4,6 +4,8 @@
 
 package com.huawei.jade.fel.core.formatters;
 
+import com.huawei.jade.fel.core.Pattern;
+
 /**
  * 表示字符串解析接口，将字符串转换成指定对象。
  *
@@ -13,7 +15,7 @@ package com.huawei.jade.fel.core.formatters;
  * @since 2024-04-28
  */
 @FunctionalInterface
-public interface Parser<I, R> {
+public interface Parser<I, R> extends Pattern<I, R> {
     /**
      * 将字符串转换为对象。
      *
@@ -21,4 +23,9 @@ public interface Parser<I, R> {
      * @return 表示输出对象的 {@link R}。
      */
     R parse(I input);
+
+    @Override
+    default R invoke(I input) {
+        return this.parse(input);
+    }
 }

@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 class ResponseDispatcher {
     private static final Logger logger = LogManager.getLogger(ResponseDispatcher.class);
 
-    private final Map<Byte, BlockingQueue<ByteBuffer>> replyQueues;
+    private final Map<Long, BlockingQueue<ByteBuffer>> replyQueues;
     private final SocketChannel socketChannel;
     private volatile boolean isRunning;
 
@@ -44,7 +44,7 @@ class ResponseDispatcher {
             new ArrayBlockingQueue<>(1),
             new ThreadPoolExecutor.AbortPolicy());
 
-    public ResponseDispatcher(Map<Byte, BlockingQueue<ByteBuffer>> replyQueues, SocketChannel socketChannel) {
+    public ResponseDispatcher(Map<Long, BlockingQueue<ByteBuffer>> replyQueues, SocketChannel socketChannel) {
         this.replyQueues = replyQueues;
         this.socketChannel = socketChannel;
         this.isRunning = false;
@@ -99,8 +99,11 @@ class ResponseDispatcher {
 
                 // 读取并打印type和size字段。
                 byte type = header.type();
+                long seq = header.seq();
                 Validation.equals((long) buffer.remaining(),
                         header.size() + Constant.DATABUS_SERVICE_HEADER_SIZE, "Incorrect body payload size");
+                logger.info("[startEventLoop] DataBus message received, [size={}, type={}, seq={}]", header.size(),
+                        type, seq);
 
                 buffer.position(Constant.DATABUS_SERVICE_HEADER_SIZE);
 
@@ -111,7 +114,12 @@ class ResponseDispatcher {
                     messageBody.put(buffer.get());
                 }
                 messageBody.flip();
-                this.replyQueues.get(type).offer(messageBody);
+
+                if (this.replyQueues.containsKey(seq)) {
+                    this.replyQueues.get(seq).offer(messageBody);
+                } else {
+                    logger.error("[startEventLoop] No waiting consumer, [seq={}]", seq);
+                }
             } catch (IOException e) {
                 // 不退出但是打印日志
                 logger.error("[startEventLoop] message receiving exception, [e={}]", e.toString());

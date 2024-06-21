@@ -62,7 +62,7 @@ public class WaterFlowToolProvider implements ToolProvider {
     @Fitable(id = "app-factory")
     public FlatChatMessage call(ToolCall toolCall, Map<String, Object> toolContext) {
         this.addDynamicParams(toolCall, toolContext);
-        return new FlatChatMessage(new ToolMessage(toolCall.getId(),
+        return FlatChatMessage.from(new ToolMessage(toolCall.getId(),
                 this.executeService.executeTool(toolCall.getName(), toolCall.getParameters())));
     }
 

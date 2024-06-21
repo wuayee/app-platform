@@ -16,10 +16,6 @@ const ModelBase = () => {
       key: '1',
       label: '本地模型',
     },
-    {
-      key: '2',
-      label: 'Huggingface',
-    },
   ];
 
   useEffect(() => {

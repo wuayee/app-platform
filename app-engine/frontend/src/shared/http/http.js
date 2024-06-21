@@ -21,7 +21,7 @@ baseAxios.interceptors.response.use(
       return Promise.resolve(response.data);
     }
     console.warn(response.config?.url);
-    Message({ type: 'error', content: response.data.msg || '操作失败' });
+    Message({ type: 'error', content: response.data.msg || response.data.detail || '操作失败' });
     return Promise.resolve(response.data);
   },
   (error) => {
@@ -46,7 +46,7 @@ baseAxios.interceptors.response.use(
 export const get = (url, params = {}, _object = {}) => {
   return new Promise((resolve, reject) => {
     baseAxios
-      .get(url, {params, ..._object})
+      .get(url, { params, ..._object })
       .then((response) => {
         resolve(response);
       })
@@ -129,7 +129,7 @@ export const put = (url, data = {}, _object = {}) => {
 
 export const del = (url, data = {}, _object = {}) => {
   return new Promise((resolve, reject) => {
-    baseAxios.delete(url, { data, ..._object}).then(
+    baseAxios.delete(url, { data, ..._object }).then(
       (response) => {
         resolve(response);
       },
@@ -146,7 +146,7 @@ const msag = (err) => {
   if (err && err.response) {
     switch (err.response.status) {
       case 400:
-        Message({ type: 'error', content: err.response.data?.msg || '请求失败'});
+        Message({ type: 'error', content: err.response.data?.msg || '请求失败' });
         break;
       case 401:
         Message({ type: 'error', content: "未授权，请登录" });

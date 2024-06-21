@@ -89,7 +89,8 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     const list: [] = chatListRes?.data?.msg_list?.reverse()?.map((item, index) => {
       return index % 2 === 0 ?
         { content: item.content?.[0], type: 'send', checked: false, sendType: 'text' } :
-        { content: item.content?.[0], type: 'recieve', checked: false, recieveType: 'text', instanceId:item?.message_id  }
+        { content: item.content?.[0], type: 'recieve', checked: false, recieveType: 'text',
+          instanceId:item?.message_id, appName: item?.app_name, appIcon: item?.app_icon, isAt: !!item?.app_name }
     });
 
     if (role === 'USER') {
@@ -107,7 +108,8 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     const role = chatListRes?.data?.msg_list?.[0]?.role;
     if (role === 'SYSTEM') {
       const lastRes = chatListRes?.data?.msg_list?.[0]?.content?.[0]; //最近的聊天在最前面
-      const lastItem = { content: lastRes, type: 'recieve', checked: false, sendType: 'text' };
+      const lastItem = { content: lastRes, type: 'recieve', checked: false, sendType: 'text',
+        appName: item?.app_name, appIcon: item?.app_icon, isAt: !!item?.app_name };
       chatList.pop();
       dispatch(setChatList([...chatList, lastItem]));
       dispatch(setChatRunning(false));
@@ -137,7 +139,8 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     if (length % 2 === 0) {
       const lastItem = chatListRes?.data?.msg_list?.[length - 1];
       chatList.pop();
-      chatList.push({ content: lastItem.content?.[0], type: 'recieve', checked: false, recieveType: 'text' });
+      chatList.push({ content: lastItem.content?.[0], type: 'recieve', checked: false,
+        recieveType: 'text', appName: item?.app_name, appIcon: item?.app_icon, isAt: !!item?.app_name });
     }
   }
 

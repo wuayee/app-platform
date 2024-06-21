@@ -4,8 +4,16 @@
 
 package com.huawei.jade.fel.engine.operators.prompts;
 
+import com.huawei.jade.fel.chat.ChatMessage;
+import com.huawei.jade.fel.chat.ChatMessages;
+import com.huawei.jade.fel.core.memory.Memory;
 import com.huawei.jade.fel.core.template.StringTemplate;
 import com.huawei.jade.fel.core.template.support.DefaultStringTemplate;
+import com.huawei.jade.fel.engine.util.AiFlowSession;
+import com.huawei.jade.fel.engine.util.StateKey;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 提示词工具方法。用于 {@link com.huawei.jade.fel.engine.activities.AiStart#prompt(PromptTemplate[])} 构造提示词。
@@ -65,6 +73,12 @@ public class Prompts {
      * @return 表示提示词模板的 {@link PromptTemplate}{@code <}{@link I}{@code >}。
      */
     public static <I> PromptTemplate<I> history() {
-        return new HistoryTemplate<>();
+        return input -> {
+            List<ChatMessage> messages = AiFlowSession.get()
+                    .map(session -> session.<Memory>getInnerState(StateKey.HISTORY_OBJ))
+                    .map(Memory::messages)
+                    .orElseGet(Collections::emptyList);
+            return ChatMessages.from(messages);
+        };
     }
 }
