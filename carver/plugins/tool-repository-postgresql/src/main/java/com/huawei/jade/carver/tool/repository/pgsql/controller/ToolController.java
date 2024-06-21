@@ -88,6 +88,7 @@ public class ToolController {
     public Result<List<ToolData>> getTools(@RequestQuery(value = "name", required = false) String name,
             @RequestQuery(value = "includeTags", required = false) List<String> includeTags,
             @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
             @RequestQuery(value = "pageNum", required = false) Integer pageNum,
             @RequestQuery(value = "pageSize", required = false) Integer limit) {
         if (pageNum != null) {
@@ -96,7 +97,7 @@ public class ToolController {
         if (limit != null) {
             notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         }
-        ToolQuery toolQuery = new ToolQuery(name, includeTags, excludeTags, pageNum, limit);
+        ToolQuery toolQuery = new ToolQuery(name, includeTags, excludeTags, orTags, pageNum, limit);
         ListResult<ToolData> res = this.toolService.getTools(toolQuery);
         List<ToolData> data = res.getData();
         return Result.ok(data, res.getCount());
@@ -116,6 +117,7 @@ public class ToolController {
     public Result<List<ToolData>> searchTools(@RequestQuery(value = "name", required = false) String name,
             @RequestQuery(value = "includeTags", required = false) List<String> includeTags,
             @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
             @RequestQuery(value = "pageNum", required = false) Integer pageNum,
             @RequestQuery(value = "pageSize", required = false) Integer limit) {
         if (pageNum != null) {
@@ -124,7 +126,7 @@ public class ToolController {
         if (limit != null) {
             notNegative(limit, "The limit cannot be negative.");
         }
-        ToolQuery toolQuery = new ToolQuery(name, includeTags, excludeTags, pageNum, limit);
+        ToolQuery toolQuery = new ToolQuery(name, includeTags, excludeTags, orTags, pageNum, limit);
         ListResult<ToolData> res = this.toolService.searchTools(toolQuery);
         return Result.ok(res.getData(), res.getCount());
     }

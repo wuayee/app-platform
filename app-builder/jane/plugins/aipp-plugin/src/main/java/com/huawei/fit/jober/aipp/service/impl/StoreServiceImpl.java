@@ -57,16 +57,16 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreNodeConfigResDto getBasicNodesAndTools(String tag, int pageNum, int pageSize) {
+    public StoreNodeConfigResDto getBasicNodesAndTools(String tag, boolean orTags, int pageNum, int pageSize) {
         return StoreNodeConfigResDto.builder()
-                .toolList(this.getToolModelList(tag, pageNum, pageSize))
+                .toolList(this.getToolModelList(tag, orTags, pageNum, pageSize))
                 .basicList(this.buildBasicNodesConfig())
                 .build();
     }
 
     @Override
-    public List<ToolData> getPlugins(String tag, int pageNum, int pageSize, OperationContext operationContext) {
-        return this.buildToolNodesConfig(tag, pageNum, pageSize);
+    public List<ToolData> getPlugins(String tag, boolean orTags, int pageNum, int pageSize, OperationContext operationContext) {
+        return this.buildToolNodesConfig(tag, orTags, pageNum, pageSize);
     }
 
     @Override
@@ -74,8 +74,8 @@ public class StoreServiceImpl implements StoreService {
         return this.buildBasicNodesConfig();
     }
 
-    private List<ToolModelDto> getToolModelList(String tag, int pageNum, int pageSize) {
-        return this.buildToolNodesConfig(tag, pageNum, pageSize)
+    private List<ToolModelDto> getToolModelList(String tag, boolean orTags, int pageNum, int pageSize) {
+        return this.buildToolNodesConfig(tag, orTags, pageNum, pageSize)
                 .stream()
                 .map(toolData -> ToolModelDto.combine2ToolModelDto(toolData,
                         tag.equalsIgnoreCase(HUGGINGFACE.getName())
@@ -84,10 +84,11 @@ public class StoreServiceImpl implements StoreService {
                 .collect(Collectors.toList());
     }
 
-    private List<ToolData> buildToolNodesConfig(String tag, int pageNum, int pageSize) {
+    private List<ToolData> buildToolNodesConfig(String tag, boolean orTags, int pageNum, int pageSize) {
         ToolQuery query = new ToolQuery(null,
                 Collections.singletonList(tag),
                 Collections.singletonList(StringUtils.EMPTY),
+                orTags,
                 pageNum,
                 pageSize);
         return this.toolService.searchTools(query).getData();
@@ -114,8 +115,8 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(int pageNum, int pageSize) {
-        List<ToolData> waterFlows = this.buildToolNodesConfig(AppCategory.WATER_FLOW.getTag(), pageNum, pageSize);
+    public List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(boolean orTags, int pageNum, int pageSize) {
+        List<ToolData> waterFlows = this.buildToolNodesConfig(AppCategory.WATER_FLOW.getTag(), orTags, pageNum, pageSize);
         List<String> storeIds = waterFlows.stream().map(ToolData::getUniqueName).collect(Collectors.toList());
         if (storeIds.isEmpty()) {
             return Collections.emptyList();
