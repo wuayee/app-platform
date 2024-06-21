@@ -7,7 +7,10 @@ package com.huawei.jade.store.tool.parser.entity;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 表示方法实体的实体。
@@ -21,6 +24,9 @@ public class MethodEntity {
     private String returnDescription;
     private String returnType;
     private final List<ParameterEntity> parameterEntities = new ArrayList<>();
+    private Set<String> tags = new HashSet<>();
+    private Map<String, Object> schemaInfo;
+    private Map<String, Object> runnablesInfo;
 
     /**
      * 基于方法的名字与描述的构造方法。
@@ -90,9 +96,63 @@ public class MethodEntity {
     /**
      * 表示获取方法的参数列表信息。
      *
-     * @return 获取方法的参数列表信息的{@link List}{@code <}{@link ParameterEntity}{@code >}。
+     * @return 获取方法的参数列表信息的 {@link List}{@code <}{@link ParameterEntity}{@code >}。
      */
     public List<ParameterEntity> getParameterEntities() {
         return this.parameterEntities;
+    }
+
+    /**
+     * 表示获取工具的所有的标签。
+     *
+     * @return 获取工具的所有的标签的 {@link Set}{@code <}{@link String}{@code >}。
+     */
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    /**
+     * 表示设置工具的所有标签。
+     *
+     * @param tags 表示待设置的工具的标签的 {@link Set}{@code <}{@link String}{@code >}。
+     */
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
+    }
+
+    /**
+     * 表示获取 schema 数据。
+     *
+     * @return schema 数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     */
+    public Map<String, Object> getSchemaInfo() {
+        return schemaInfo;
+    }
+
+    /**
+     * 表示设置 schema 数据。
+     *
+     * @param schemaInfo 待设置的 schema 数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     */
+    public void setSchemaInfo(Map<String, Object> schemaInfo) {
+        this.schemaInfo = schemaInfo;
+    }
+
+    /**
+     * 表示获取 runnables 数据。
+     *
+     * @return runnables 数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     */
+    public Map<String, Object> getRunnablesInfo() {
+        return runnablesInfo;
+    }
+
+    /**
+     * 表示设置 runnables 数据。
+     *
+     * @param runnablesInfo 待设置的 runnables 数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     */
+    public void setRunnablesInfo(Map<String, Object> runnablesInfo) {
+        this.runnablesInfo = runnablesInfo;
     }
 }

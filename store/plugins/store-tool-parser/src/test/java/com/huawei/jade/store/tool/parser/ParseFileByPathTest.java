@@ -4,9 +4,7 @@
 
 package com.huawei.jade.store.tool.parser;
 
-import static com.huawei.jade.store.tool.parser.utils.ParseFileByPath.getRunnableInfo;
-import static com.huawei.jade.store.tool.parser.utils.ParseFileByPath.getSchemaInfo;
-import static com.huawei.jade.store.tool.parser.utils.ParseFileByPath.parseToolsJsonSchema;
+import static com.huawei.jade.store.tool.parser.utils.ParseFileByPath.parseToolSchema;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fitframework.util.support.Zip;
@@ -28,9 +26,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.zip.ZipEntry;
@@ -63,7 +61,7 @@ public class ParseFileByPathTest {
         @Test
         @DisplayName("解析有效的 zip 文件中的 schema 数据成功")
         void givenValidZipFileThenParsedSchemaSuccessfully() throws IOException {
-            List<MethodEntity> list = parseToolsJsonSchema(this.targetZipFilePath);
+            List<MethodEntity> list = parseToolSchema(this.targetZipFilePath);
             assertThat(list.size()).isEqualTo(3);
 
             assertThat(list.get(0).getMethodName()).isEqualTo("链表加法");
@@ -82,44 +80,42 @@ public class ParseFileByPathTest {
             assertThat(list.get(1).getParameterEntities().size()).isEqualTo(1);
             assertThat(list.get(2).getParameterEntities().size()).isEqualTo(2);
 
+            Set<String> tags = new HashSet<>(Collections.singletonList("FIT"));
+            assertThat(list.get(0).getTags()).isEqualTo(tags);
+            assertThat(list.get(1).getTags()).isEqualTo(tags);
+            assertThat(list.get(2).getTags()).isEqualTo(tags);
+
             ParameterEntity parameterEntity = list.get(1).getParameterEntities().get(0);
             assertThat(parameterEntity.getDescription()).isEqualTo("First integer");
             assertThat(parameterEntity.getName()).isEqualTo("a");
             assertThat(parameterEntity.getType()).isEqualTo("int");
+
+            assertSchema(list);
+            assertRunnable(list);
         }
 
-        @Test
-        @DisplayName("解析有效的 zip 文件中的 schema 数据成功")
-        void givenValidZipFileThenParsedRunnableSuccessfully() throws IOException {
-            List<Map<String, Object>> runnableInfo = getRunnableInfo(this.targetZipFilePath);
-            assertThat(runnableInfo.size()).isEqualTo(3);
-
-            Set<String> runnableKey = new HashSet<>();
-            runnableKey.add("FIT");
-            for (Map<String, Object> runnable : runnableInfo) {
-                assertThat(runnable.keySet()).isEqualTo(runnableKey);
-                assertThat(runnable.get("FIT").toString()).isEqualTo(
+        private void assertRunnable(List<MethodEntity> methodEntities) {
+            Set<String> runnableKey = new HashSet<>(Collections.singletonList("FIT"));
+            for (MethodEntity methodEntity : methodEntities) {
+                assertThat(methodEntity.getRunnablesInfo().keySet()).isEqualTo(runnableKey);
+                assertThat(methodEntity.getRunnablesInfo().get("FIT").toString()).isEqualTo(
                         "{fitableId=default, genericableId=com.huawei.fit.jober.aipp.tool.create.app}");
             }
         }
 
-        @Test
-        @DisplayName("解析有效的 zip 文件中的所有 schema json 数据成功")
-        void givenValidZipFileThenParsedSchemaJsonSuccessfully() throws IOException {
-            List<Map<String, Object>> schemaInfo = getSchemaInfo(this.targetZipFilePath);
-            assertThat(schemaInfo.size()).isEqualTo(3);
+        private void assertSchema(List<MethodEntity> methodEntities) {
             Set<String> schemaKey = new HashSet<>();
             schemaKey.add("name");
             schemaKey.add("description");
             schemaKey.add("parameters");
             schemaKey.add("order");
             schemaKey.add("return");
-            for (Map<String, Object> schema : schemaInfo) {
-                assertThat(schema.keySet()).isEqualTo(schemaKey);
+            for (MethodEntity methodEntity : methodEntities) {
+                assertThat(methodEntity.getSchemaInfo().keySet()).isEqualTo(schemaKey);
             }
-            assertThat(schemaInfo.get(0).get("name").toString()).isEqualTo("链表加法");
-            assertThat(schemaInfo.get(1).get("name").toString()).isEqualTo("自己相加");
-            assertThat(schemaInfo.get(2).get("name").toString()).isEqualTo("财经问题结果生成");
+            assertThat(methodEntities.get(0).getSchemaInfo().get("name").toString()).isEqualTo("链表加法");
+            assertThat(methodEntities.get(1).getSchemaInfo().get("name").toString()).isEqualTo("自己相加");
+            assertThat(methodEntities.get(2).getSchemaInfo().get("name").toString()).isEqualTo("财经问题结果生成");
         }
     }
 
@@ -141,7 +137,7 @@ public class ParseFileByPathTest {
         @Test
         @DisplayName("解析有效的 tar 文件中的 schema 数据成功")
         void givenValidTarFileThenParsedSchemaSuccessfully() throws IOException {
-            List<MethodEntity> list = parseToolsJsonSchema(this.targetTarFilePath);
+            List<MethodEntity> list = parseToolSchema(this.targetTarFilePath);
             assertThat(list.size()).isEqualTo(3);
 
             assertThat(list.get(0).getMethodName()).isEqualTo("链表加法");
@@ -173,7 +169,7 @@ public class ParseFileByPathTest {
         @Test
         @DisplayName("解析有效的 jar 文件中的 schema 数据成功")
         void givenValidJarFileThenParsedSchemaSuccessfully() throws IOException {
-            List<MethodEntity> list = parseToolsJsonSchema(this.targetJarFilePath);
+            List<MethodEntity> list = parseToolSchema(this.targetJarFilePath);
             assertThat(list.size()).isEqualTo(3);
 
             assertThat(list.get(0).getMethodName()).isEqualTo("链表加法");

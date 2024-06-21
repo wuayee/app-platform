@@ -58,6 +58,13 @@ public class ParseFileByPath {
     private static final String SQUARE_BRACKETS = "[]";
     private static final String TOOLS = "tools";
 
+    /**
+     * 根据文件路径解析文件信息。
+     *
+     * @param filePath 给定文件路径的 {@link String}。
+     * @return 根据文件解析出的数据列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @throws IOException 解析文件失败时抛出的异常。
+     */
     private static List<String> toolFileParser(String filePath) throws IOException {
         if (filePath.endsWith(JAR)) {
             return parseJarFile(filePath);
@@ -71,40 +78,32 @@ public class ParseFileByPath {
     }
 
     /**
-     * 获取 json 文件中的所有 schema 信息。
+     * 解析工具数据中的所有 schema 信息。
      *
-     * @param filePath 待解析的压缩文件路径的 {@link String}。
-     * @return 解析后的数据的 {@link List}{@code <}{@link Map}{@code <}{@link String}{@code , }
-     * {@link Object}{@code >}{@code >}。
+     * @param toolInfo 表示工具信息的 {@link String}。
+     * @return 解析后的数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
      * @throws IOException 解析失败时抛出的异常。
      */
-    public static List<Map<String, Object>> getSchemaInfo(String filePath) throws IOException {
-        return getJsonInfo(filePath, SCHEMA);
+    private static Map<String, Object> getSchemaInfos(String toolInfo) throws IOException {
+        return getToolInfo(toolInfo, SCHEMA);
     }
 
     /**
-     * 获取 json 文件中的 runnables 信息。
+     * 解析工具数据中的 runnables 信息。
      *
-     * @param filePath 待解析的压缩文件路径的 {@link String}。
-     * @return 解析后的数据的 {@link List}{@code <}{@link Map}{@code <}{@link String}{@code , }
-     * {@link Object}{@code >}{@code >}。
+     * @param toolInfo 表示工具的信息的 {@link String}。
+     * @return 解析后的数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
      * @throws IOException 解析失败时抛出的异常。
      */
-    public static List<Map<String, Object>> getRunnableInfo(String filePath) throws IOException {
-        return getJsonInfo(filePath, RUNNABLES);
+    private static Map<String, Object> getRunnableInfos(String toolInfo) throws IOException {
+        return getToolInfo(toolInfo, RUNNABLES);
     }
 
-    private static List<Map<String, Object>> getJsonInfo(String filePath, String fileName) throws IOException {
-        List<Map<String, Object>> runnablesInfo = new ArrayList<>();
-        List<String> toolInfo = toolFileParser(filePath);
+    private static Map<String, Object> getToolInfo(String toolInfo, String fileName) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        for (String toolJsonString : toolInfo) {
-            JsonNode toolNode = objectMapper.readTree(toolJsonString);
-            JsonNode schemaNode = toolNode.path(fileName);
-            runnablesInfo.add(
-                    objectMapper.readValue(schemaNode.traverse(), new TypeReference<Map<String, Object>>() {}));
-        }
-        return runnablesInfo;
+        JsonNode toolNode = objectMapper.readTree(toolInfo);
+        JsonNode schemaNode = toolNode.path(fileName);
+        return objectMapper.readValue(schemaNode.traverse(), new TypeReference<Map<String, Object>>() {});
     }
 
     /**
@@ -114,7 +113,7 @@ public class ParseFileByPath {
      * @return 解析后的数据的 {@link List}{@code <}{@link MethodEntity}{@code >}。
      * @throws IOException 解析失败时抛出的异常。
      */
-    public static List<MethodEntity> parseToolsJsonSchema(String filePath) throws IOException {
+    public static List<MethodEntity> parseToolSchema(String filePath) throws IOException {
         List<MethodEntity> methodEntities = new ArrayList<MethodEntity>();
         ObjectMapper objectMapper = new ObjectMapper();
         List<String> toolInfos = toolFileParser(filePath);
@@ -132,6 +131,11 @@ public class ParseFileByPath {
             methodEntity.setReturnDescription(returnDescription);
             methodEntity.setReturnType(returnType);
             methodEntity.getParameterEntities().addAll(parameterEntities);
+
+            Map<String, Object> runnableInfos = getRunnableInfos(toolInfo);
+            methodEntity.setTags(runnableInfos.keySet());
+            methodEntity.setRunnablesInfo(runnableInfos);
+            methodEntity.setSchemaInfo(getSchemaInfos(toolInfo));
 
             methodEntities.add(methodEntity);
         }

@@ -29,6 +29,11 @@
 
         <!-- Service -->
         <dependency>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-http-classic</artifactId>
+            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>
             <artifactId>tool-service</artifactId>
             <version>${version}</version>
