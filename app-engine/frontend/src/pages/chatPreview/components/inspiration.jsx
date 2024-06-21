@@ -26,8 +26,8 @@ const Inspiration = (props) => {
     messageChecked,
     reloadInspiration
   } = useContext(AippContext);
-  const appId = useAppSelector((state) => state.appStore.appId);
-  const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const defaultTenantId = '31f20efc7e0848deab6a6bc10fc3021e';
+  const defaultAppId = '3a617d8aeb1d41a9ad7453f2f0f70d61';
   const chatType = useAppSelector((state) => state.chatCommonStore.chatType);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const { Search } = Input;
@@ -41,16 +41,26 @@ const Inspiration = (props) => {
   const [currentPromptType, setCurrentPromptType] = useState("-1");
   const [currentPromptName, setCurrentPromptName] = useState("");
   const [searchValue, setSearchValue] = useState("");
+  const { tenantId, appId } = useParams();
   const treeNormalData = useRef();
+  const tenantIdVal = useRef('');
+  const appIdVal = useRef('');
   const treeChildData = useRef([]);
   let regex = /{{(.*?)}}/g;
 
   useEffect(() => {
-    appId && getList();
+    if (appId) {
+      tenantIdVal.current = tenantId;
+      appIdVal.current = appId;
+    } else {
+      tenantIdVal.current = defaultTenantId;
+      appIdVal.current = defaultAppId;
+    }
+    getList();
   }, [appId, reloadInspiration]);
   // 获取灵感大全列表
   async function getList() {
-    const res = await queryDepartMent(tenantId, appId);
+    const res = await queryDepartMent(tenantIdVal.current, appIdVal.current);
     if (res.code === 0 && res.data?.length) {
       inspirationProcess(res.data[0]);
     }
@@ -98,7 +108,7 @@ const Inspiration = (props) => {
   }
   // 根据节点获取灵感大全数据
   async function getPromptList(nodeId) {
-    const res = await queryInspiration(tenantId, appId, nodeId);
+    const res = await queryInspiration(tenantIdVal.current, appIdVal.current, nodeId);
     if (res.code === 0 && res.data) {
       setAllPromptData(res.data.inspirations);
       search(searchValue, res.data.inspirations);
