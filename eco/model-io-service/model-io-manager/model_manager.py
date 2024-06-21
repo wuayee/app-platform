@@ -464,8 +464,8 @@ def get_model_data_from_external_service(external_model_service):
         models_response = json.loads(response.content)
         return models_response.get("data", [])
 
-    except requests.RequestException as e:
-        logging.error(e)
+    except Exception as e:
+        logging.error("error=%s, url=%s, headers=%s, proxies=%s", e, url, headers, proxies)
     return datas
 
 
