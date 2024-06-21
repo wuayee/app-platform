@@ -67,6 +67,7 @@ const CreateModel = ({ visible, createCallback }: props) => {
             validateFirst
             rules={[
               { required: true, message: '输入不能为空' },
+              { type: 'string', max: 100, message: '长度范围1 - 100' },
               {
                 validator: (_, value) => {
                   if (/^[a-zA-Z0-9](([a-zA-Z0-9-_])*[a-zA-Z0-9])*$/.test(value)) {
