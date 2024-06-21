@@ -4,10 +4,12 @@ import { Icons } from '../../../components/icons';
 import { StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import '../styles/tool-card.scss';
+import { useAppSelector } from '../../../store/hook';
 
 const ToolCard = ({ pluginData }: any) => {
   // 类型处理
-
+  const navigate = useNavigate();
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
   return(
   <div className='plugin-card'>
     <div className='plugin-card-header'>
@@ -44,7 +46,11 @@ const ToolCard = ({ pluginData }: any) => {
         </span>
       </Flex>
     </div>
-    <div className="card-detail">
+    <div className="card-detail" onClick={()=>{
+      if(pluginData.tags.includes('WATERFLOW')){
+        navigate(`/app-develop/${tenantId}/app-detail/add-flow/${pluginData?.runnables?.APP?.appId}`);
+      }else{
+      navigate(`/plugin/detail/${pluginData?.uniqueName}`);}}}>
       查看详情
     </div>
   </div >
