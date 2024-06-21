@@ -41,7 +41,6 @@ const HuggingFaceModal = (props) => {
   }
   const itemClick = (item) => {
     setActiveKey(item.name);
-    window.open(`https://${item.url}`);
   }
   const confirm = () => {
     onModelSelectCallBack({ name: activeKey });
@@ -79,6 +78,7 @@ const HuggingFaceModal = (props) => {
               <div className={ `left-item ${activeKey === card.name ? 'active' : ''}` } 
                   key={card.taskName} 
                   onClick={() => itemClick(card)}>
+                <div className="card-detail" onClick={() => window.open(`https://${card.url}`)}>查看详情</div>
                 <div className="item-top">
                   <div className="top-left">
                     <img src="/src/assets/images/ai/hugging-face.png" alt="" />

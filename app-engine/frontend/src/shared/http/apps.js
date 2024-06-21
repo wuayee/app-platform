@@ -8,7 +8,6 @@ const { JANE_URL, AIPP_URL, APP_URL } = httpUrlMap[process.env.NODE_ENV];
 export function queryAppsApi(tenantId, params) {
   return get(`${appurl}/tools/search`, params);
 }
-
 export function getEvalTaskList(requestBody) {
   return post(`${appurl}/evalTask/list`, requestBody);
 }

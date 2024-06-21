@@ -5,7 +5,6 @@ import { KnowledgeIcons } from '../icons';
 import './style.scoped.scss';
 import CustomTable from './custom-table';
 import LocalUpload from './local-upload';
-import { getPlugins } from '../../shared/http/knowledge';
 
 interface props {
   type: 'text' | 'table';

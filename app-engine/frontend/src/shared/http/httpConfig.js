@@ -11,6 +11,7 @@ export const httpUrlMap = {
     WS_AUDIO_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/asr',
     MODEL_URL: '/modelApi',
     APP_URL: '/app',
+    TOOL_URL: '/toolApi',
     MODEL_LIST_URL: '/v1',
     PLUGIN_URL: '/api/jober',
   },

@@ -62,13 +62,13 @@ const Stage = (props) => {
       });
       agent.onModelSelect(({ taskName, selectedModel, onSelect }) => {
         setSelectModal(selectedModel);
-        setTaskName(taskName);
+        setTaskName(taskName.trim());
         modelCallback.current = onSelect;
         setShowModal(true);
       })
     })
     setLoading(true);
-    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 1000, tag: 'Builtin'}).then(res => {
+    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 20, tag: 'Builtin'}).then(res => {
       setLoading(false);
       if (res.code === 0) {
         setDragData(res.data);
