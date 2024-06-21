@@ -42,10 +42,11 @@ public class StoreController extends AbstractController {
     @Deprecated
     @GetMapping(path = "/nodes", description = "获取所有工具和基础节点配置")
     public Rsp<StoreNodeConfigResDto> getBasicNodesAndTools(HttpClassicServerRequest httpRequest,
+            @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean orTags,
             @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(value = "tag") String tag) {
-        return Rsp.ok(this.storeService.getBasicNodesAndTools(tag, pageNum, pageSize));
+        return Rsp.ok(this.storeService.getBasicNodesAndTools(tag, orTags, pageNum, pageSize));
     }
 
     @GetMapping(path = "/models", description = "获取任务的模型列表")
@@ -59,9 +60,10 @@ public class StoreController extends AbstractController {
     @GetMapping(path = "/plugins", description = "获取已发布的所有指定类型的插件配置")
     public Rsp<List<ToolData>> getPlugins(HttpClassicServerRequest httpRequest, @RequestParam("tag") String tag,
             @PathVariable("tenant_id") String tenantId,
+            @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean orTags,
             @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        return Rsp.ok(this.storeService.getPlugins(tag, pageNum, pageSize, this.contextOf(httpRequest, tenantId)));
+        return Rsp.ok(this.storeService.getPlugins(tag, orTags, pageNum, pageSize, this.contextOf(httpRequest, tenantId)));
     }
 
     @GetMapping(path = "/nodes/basic", description = "获取基础节点配置")
@@ -71,8 +73,9 @@ public class StoreController extends AbstractController {
 
     @GetMapping(path = "/waterflow", description = "获取所有工具流")
     public Rsp<List<AppBuilderWaterFlowInfoDto>> getWaterFlowInfos(HttpClassicServerRequest httpRequest,
+            @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean orTags,
             @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        return Rsp.ok(this.storeService.getWaterFlowInfos(pageNum, pageSize));
+        return Rsp.ok(this.storeService.getWaterFlowInfos(orTags, pageNum, pageSize));
     }
 }

@@ -43,6 +43,13 @@ public class ToolQuery {
     private Set<String> excludeTags;
 
     /**
+     * 表示选择标签的与和或逻辑。
+     * <p>构造条件时可不传，默认与。</p>
+     * <p>构造条件时可传 true，选择或。</p>
+     */
+    private Boolean orTags;
+
+    /**
      * 表示第几页。
      * <p>构造条件时按需传入。</p>
      */
@@ -69,11 +76,12 @@ public class ToolQuery {
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
      */
-    public ToolQuery(String toolName, List<String> includeTags, List<String> excludeTags, Integer pageNum,
+    public ToolQuery(String toolName, List<String> includeTags, List<String> excludeTags, Boolean orTags, Integer pageNum,
             Integer limit) {
         this.toolName = toolName;
         this.includeTags = CollectionUtils.isNotEmpty(includeTags) ? new HashSet<>(includeTags) : new HashSet<>();
         this.excludeTags = CollectionUtils.isNotEmpty(excludeTags) ? new HashSet<>(excludeTags) : new HashSet<>();
+        this.orTags = orTags;
         this.pageNum = pageNum;
         this.limit = limit;
         if (pageNum != null && limit != null) {
