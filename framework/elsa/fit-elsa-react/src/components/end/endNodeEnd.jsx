@@ -4,7 +4,7 @@ import {Button} from "antd";
 import {DIRECTION} from "@fit-elsa/elsa-core";
 import EndIcon from '../asserts/icon-end.svg?react';
 import {EndNodeHeader} from "@/components/end/EndNodeHeader.jsx";
-import {NODE_STATUS, SECTION_TYPE} from "@/common/Consts.js";
+import {SECTION_TYPE} from "@/common/Consts.js";
 
 /**
  * 结束节点shape
@@ -88,8 +88,16 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
      * @override
      */
     self.serializerJadeConfig = () => {
-        self.flowMeta.callback.converter.entity = self.getLatestJadeConfig();
-    }
+        const jadeConfig = self.getLatestJadeConfig();
+        const mode = jadeConfig.inputParams ? "variables" : "manualCheck";
+        if (mode === "variables") {
+            self.flowMeta.callback.converter.entity = jadeConfig;
+            self.flowMeta.task = {};
+        } else {
+            self.flowMeta.callback.converter.entity = {};
+            self.flowMeta.task = jadeConfig;
+        }
+    };
 
     /**
      * 获取用户自定义组件.
@@ -97,7 +105,8 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
      * @override
      */
     self.getComponent = () => {
-        return self.graph.plugins[self.componentName](self.flowMeta.callback.converter.entity);
+        const jadeConfig = self.flowMeta.callback.converter.entity.inputParams ? self.flowMeta.callback.converter.entity : self.flowMeta.task;
+        return self.graph.plugins[self.componentName](jadeConfig);
     };
 
     /**
