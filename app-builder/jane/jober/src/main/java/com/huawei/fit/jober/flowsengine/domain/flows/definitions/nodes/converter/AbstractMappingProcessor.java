@@ -57,6 +57,7 @@ public abstract class AbstractMappingProcessor implements MappingProcessor {
 
     /**
      * expand类型的参数处理
+     *
      * @param mappingConfig 映射配置
      * @param businessData 源数据
      * @return 生成的数据

@@ -11,9 +11,7 @@ import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import lombok.Getter;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 
 /**
  * 映射来源类型
