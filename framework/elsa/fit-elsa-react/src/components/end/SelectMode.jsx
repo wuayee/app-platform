@@ -1,0 +1,70 @@
+import {JadeStopPropagationSelect} from "@/components/common/JadeStopPropagationSelect.jsx";
+import {useDispatch} from "@/components/DefaultRoot.jsx";
+import {v4 as uuidv4} from "uuid";
+
+/**
+ * 选择模式的组件
+ *
+ * @param mode 模式
+ * @param onSelectChange 更改模式的回调
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export default function SelectMode({mode}) {
+    const dispatch = useDispatch();
+
+    /**
+     * 模式切换后的回调
+     *
+     * @param value 模式的值
+     */
+    const onChange = (value) => {
+        if (value === mode) {
+            return;
+        }
+        let config;
+        if (value === "manualCheck") {
+            config = {
+                converter: {},
+                taskId: "",
+                type: "AIPP_SMART_FORM",
+                formName: "",
+                outputParams: ""
+            };
+        } else {
+            config = {
+                inputParams: [{
+                    id: uuidv4(),
+                    name: "finalOutput",
+                    type: "String",
+                    from: "Reference",
+                    referenceNode: "",
+                    referenceId: "",
+                    referenceKey: "",
+                    value: []
+                }],
+                outputParams: [{}],
+            };
+        }
+        dispatch({type: "changeMode", value: config});
+    };
+
+    return (<>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+            <div className="mode-select-title jade-panel-header-font">模式选择</div>
+            <JadeStopPropagationSelect
+                    showSearch
+                    optionFilterProp="children"
+                    onChange={onChange}
+                    defaultValue='mode-variables'
+                    value={mode}
+                    options={[
+                        {value: 'variables', label: "通过机器人生成的变量"},
+                        {value: 'manualCheck', label: "智能表单展示"},
+                    ]}
+                    style={{width: '70%', marginLeft: 'auto'}}
+            >
+            </JadeStopPropagationSelect>
+        </div>
+    </>);
+}

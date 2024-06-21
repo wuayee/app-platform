@@ -48,12 +48,40 @@ export const endComponent = (jadeConfig) => {
             })
         };
 
+        /**
+         * 选择form表单
+         *
+         * @return {*&{output: *, formName: (string|*), taskId: *}}
+         * @private
+         */
+        const _changeForm = () => {
+            return {
+                ...config,
+                taskId: action.formId,
+                formName: action.formName,
+                output: action.formOutput,
+            };
+        };
+
+        /**
+         * 切换整个jadeConfig的值
+         *
+         * @return {*}
+         * @private
+         */
+        const _changeMode = () => {
+            return action.value;
+        };
+
         const newConfig = {...config};
         switch (action.type) {
-            // 格式：dispatch({type: 'editOutputVariable', item:{id: 0, name: "", type: "String", from: "Reference", value: ""})
             case 'editOutputVariable':
                 _editOutputVariable();
                 return newConfig;
+            case 'changeForm':
+                return _changeForm();
+            case 'changeMode':
+                return _changeMode();
             default: {
                 throw Error('Unknown action: ' + action.type);
             }
