@@ -37,6 +37,13 @@ public class ToolModelDto {
     private Set<String> tags;
     private String defaultModel;
 
+    /**
+     * 将 ToolData 和 default model 组合成一个 ToolModelDtod。
+     *
+     * @param toolData 表示工具的 {@link ToolData}。
+     * @param defaultModel 表示默认模型的 {@link String}。
+     * @return 表示组合后的工具数据的 {@link ToolModelDto}。
+     */
     public static ToolModelDto combine2ToolModelDto(ToolData toolData, String defaultModel) {
         return ToolModelDto.builder()
                 .creator(toolData.getCreator())
