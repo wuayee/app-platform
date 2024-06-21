@@ -24,5 +24,5 @@ CoreMessageResponseTypeHint = Union[
     ErrorMessageResponse.ErrorMessageResponse
 ]
 
-# 默认给flatbuffers message的Builder预留的空间
-DEFAULT_FLATBUFFERS_BUILDER_SIZE = 128
+# flatbuffers message的最大长度
+MAX_MESSAGE_LENGTH = 128
