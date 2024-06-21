@@ -16,6 +16,7 @@ import com.huawei.fit.http.server.HttpServerException;
 import com.huawei.fit.http.server.HttpServerResponseException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.jade.app.engine.knowledge.dto.KRepoDto;
@@ -32,6 +33,7 @@ import com.huawei.jade.app.engine.knowledge.service.KRepoService;
 import com.huawei.jade.app.engine.knowledge.service.KStorageService;
 import com.huawei.jade.app.engine.knowledge.service.KTableService;
 import com.huawei.jade.app.engine.knowledge.service.KnowledgeBaseService;
+import com.huawei.jade.app.engine.knowledge.service.exception.ServiceException;
 import com.huawei.jade.app.engine.knowledge.service.param.PageQueryParam;
 import com.huawei.jade.app.engine.knowledge.vo.PageResultVo;
 
@@ -107,7 +109,11 @@ public class KnowledgeBaseController {
     public void createRepo(@RequestBody KRepoDto kRepoDto) {
         // 用户后端设置固定值
         kRepoDto.setOwnerId(1L);
-        kRepoService.create(kRepoDto);
+        try {
+            kRepoService.create(kRepoDto);
+        } catch (FitException e) {
+            throw new ServiceException(e.getCause());
+        }
     }
 
     /**

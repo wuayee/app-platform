@@ -1,0 +1,25 @@
+{
+  "schema": {
+    "parameters": {
+      "order": [
+        "values"
+      ]
+    }
+  },
+  "runnables": {
+    "HTTP": {
+      "method": "POST",
+      "protocol": "http",
+      "domain": "localhost:{port}",
+      "pathPattern": "/test/return/integer",
+      "mappings": {
+        "values": {
+          "$": {
+            "key": "values",
+            "httpSource": "QUERY"
+          }
+        }
+      }
+    }
+  }
+}

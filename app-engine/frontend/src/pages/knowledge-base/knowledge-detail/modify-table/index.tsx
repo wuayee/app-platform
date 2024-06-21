@@ -42,6 +42,28 @@ const ModifyTable = ({ open, data, setOpen, refresh }: props) => {
     }
     setOpen(false);
   }
+  // 字符限制长度不能超过255
+  const changeName = () => {
+    const name = form.getFieldValue('name');
+    if (name.length) {
+      let n = 0;
+      for (let i = 0; i < name.length; i++) {
+        let code = name.charCodeAt(i);
+        if (code > 255) {
+          n +=2;
+        } else {
+          n += 1
+        }
+      }
+      if (n > 255) {
+        return Promise.reject('字符串长度不能大于255');
+      } else {
+        return Promise.resolve();
+      }
+    } else {
+      return Promise.reject('');
+    }
+  }
 
   useEffect(()=> {
     form.setFieldValue('name', data?.name || '')
@@ -64,7 +86,13 @@ const ModifyTable = ({ open, data, setOpen, refresh }: props) => {
             initialValues={initialValues}
             style={{ maxWidth: formLayout === 'inline' ? 'none' : 800 }}
           >
-            <Form.Item label="知识表名称"  name = 'name' rules={[{ required: true, message: '输入不能为空' }]}>
+            <Form.Item 
+              label="知识表名称"  
+              name = 'name' 
+              rules={[
+                { required: true},
+                { validator: changeName}]
+              }>
               <Input placeholder='请输入'/>
             </Form.Item>
           </Form>

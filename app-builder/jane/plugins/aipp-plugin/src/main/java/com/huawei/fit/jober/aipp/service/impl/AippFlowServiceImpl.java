@@ -626,6 +626,7 @@ public class AippFlowServiceImpl implements AippFlowService {
                         e.getMessage());
             }
         } while (retryTimes-- > 0);
+        log.error("Failed to preview aipp.[errorMsg={}]", errorMsg);
         throw new AippException(context, AippErrCode.PREVIEW_AIPP_FAILED, errorMsg);
     }
 
@@ -885,17 +886,12 @@ public class AippFlowServiceImpl implements AippFlowService {
         }).collect(Collectors.toList());
     }
 
-    private void rollbackAipp(String versionId, String originalVersion, String flowDefinitionId,
-            Map<String, Object> attr, OperationContext context) {
+    private void rollbackAipp(String versionId, FlowInfo flowInfo, OperationContext context) {
         try {
-            flowDefinitionService.deleteFlows(flowDefinitionId, context);
-
-            attr.put(AippConst.ATTR_META_STATUS_KEY, AippMetaStatusEnum.INACTIVE.getCode());
-            attr.put(AippConst.ATTR_VERSION_KEY, originalVersion);  // 从发布指定的版本号恢复原始版本
-            MetaDeclarationInfo declaration = new MetaDeclarationInfo();
-            declaration.setAttributes(Undefinable.defined(attr));
-            declaration.setVersion(Undefinable.defined(originalVersion));
-            metaService.patch(versionId, declaration, context);
+            if (flowInfo != null) {
+                this.flowDefinitionService.deleteFlows(flowInfo.getFlowDefinitionId(), context);
+            }
+            this.metaService.delete(versionId, context);
         } catch (Exception e) {
             log.error("rollbackAipp failed, versionId {}, e = {}", versionId, e);
         }
@@ -951,8 +947,9 @@ public class AippFlowServiceImpl implements AippFlowService {
 
         validateUpdate(aippId, attr, aippDto.getName(), context);
         // 发布流程
-        FlowInfo flowInfo = publishFlow(aippDto, attr, context);
+        FlowInfo flowInfo = null;
         try {
+            flowInfo = publishFlow(aippDto, attr, context);
             // 查询表单 元数据
             List<AippNodeForms> aippNodeForms = buildAippNodeForms(flowInfo);
 
@@ -965,8 +962,8 @@ public class AippFlowServiceImpl implements AippFlowService {
             this.metaService.patch(meta.getVersionId(), declaration, context);
             return Rsp.ok(new AippCreateDto(aippId, meta.getVersion(), uniqueName));
         } catch (Exception e) {
-            log.error("publish aipp {} failed, e = {}", aippId, e.getMessage());
-            rollbackAipp(meta.getVersionId(), originalDraftVersion, flowInfo.getFlowDefinitionId(), attr, context);
+            log.error("publish aipp {} failed.", aippId, e);
+            rollbackAipp(meta.getVersionId(), flowInfo, context);
             throw e;
         }
     }

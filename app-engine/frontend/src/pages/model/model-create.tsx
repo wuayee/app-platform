@@ -80,7 +80,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
         npus: parseInt(npus),
       };
       createModel(modelParams).then((res) => {
-        if (res && res.code === 200) {
+        if (res && res.code === 0) {
           message.success('模型部署成功');
           getModelList().then((res) => {
             if (res) {
@@ -89,8 +89,6 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           });
           form.resetFields();
           form.setFieldValue('max_link_num', 300);
-        } else {
-          message.error('模型部署失败');
         }
       });
       setOpen(false);
@@ -113,7 +111,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           }}
         >
           <div className='app-title-left'>
-            <span>创建大模型服务</span>
+            <span>{modifyData ? '修改' : '创建'}大模型服务</span>
           </div>
           <CloseOutlined style={{ fontSize: 12 }} onClick={() => setOpen(false)} />
         </div>
@@ -205,7 +203,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
         }}
       >
         <Button type='primary' onClick={() => deployModel()}>
-          部署模型
+          {modifyData ? '修改' : '部署模型'}
         </Button>
         <Button onClick={() => setOpen(false)}>取消</Button>
       </div>

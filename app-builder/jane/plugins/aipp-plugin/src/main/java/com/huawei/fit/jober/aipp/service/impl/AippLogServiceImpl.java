@@ -168,8 +168,12 @@ public class AippLogServiceImpl implements AippLogService {
     @Override
     public List<AippInstLogDataDto> queryAppRecentChatLog(String appId, String aippType, OperationContext context) {
         List<String> chatIds = aippChatMapper.selectChatByAppId(appId, 1);
+        List<AippInstLogDataDto> logData = new ArrayList<>();
+        if (chatIds.isEmpty()) {
+            return logData;
+        }
         List<String> instanceIds = aippChatMapper.selectInstanceByChat(chatIds.get(0), 5);
-        List<AippInstLogDataDto> logData = queryAndSortLogs(instanceIds, context);
+        logData = queryAndSortLogs(instanceIds, context);
         return this.getAippLogWithAppInfo(logData, aippType, appId, context);
     }
 
@@ -421,5 +425,18 @@ public class AippLogServiceImpl implements AippLogService {
             throw new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID);
         }
         this.aippLogMapper.deleteInstanceLog(instanceId);
+    }
+
+    @Override
+    public List<AippInstLogDataDto> queryAippRecentInstLogAfterSplice(String aippId, String aippType, Integer count,
+        OperationContext context) {
+        List<String> instanceIds =
+            aippLogMapper.selectRecentInstanceId(aippId, aippType, count, context.getW3Account());
+        return queryRecentLogByInstanceIds(instanceIds, context).values()
+            .stream()
+            .map(AippInstLogDataDto::fromAippInstLogListAfterSplice)
+            .filter(dto -> dto.getQuestion() != null)
+            .sorted((d1, d2) -> Math.toIntExact(d1.getQuestion().getLogId() - d2.getQuestion().getLogId()))
+            .collect(Collectors.toList());
     }
 }

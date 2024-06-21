@@ -13,7 +13,6 @@ import com.huawei.jade.fel.core.template.support.DefaultBulkStringTemplate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -37,7 +36,7 @@ public class CacheMemory implements Memory {
     public CacheMemory() {
         this("{{type}}:{{text}}", "\n",
                 cm -> MapBuilder.<String, String>get()
-                        .put("type", cm.type().toString().toLowerCase(Locale.ROOT))
+                        .put("type", cm.type().getRole())
                         .put("text", cm.text())
                         .build());
     }

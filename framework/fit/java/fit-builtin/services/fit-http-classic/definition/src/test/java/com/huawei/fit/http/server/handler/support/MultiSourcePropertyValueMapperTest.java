@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 表示 {@link MultiSourcePropertyValueMapper } 的单元测试。
+ * 表示 {@link MultiSourcesPropertyValueMapper} 的单元测试。
  *
  * @author 邬涨财 w00575064
  * @since 2024-02-17
@@ -33,9 +33,9 @@ public class MultiSourcePropertyValueMapperTest {
         final DefaultHttpClassicServerRequest request = serverRequest.getRequest();
         List<SourceFetcherInfo> sourceFetcherInfos =
                 Collections.singletonList(new SourceFetcherInfo(new HeaderFetcher(HEADER_KEY), "a.b", false));
-        PropertyValueMapper mapper = new MultiSourcePropertyValueMapper(sourceFetcherInfos);
-        final Object value = mapper.map(request, null,null);
-        Map<String, Map> map = ObjectUtils.cast(value);
+        PropertyValueMapper mapper = new MultiSourcesPropertyValueMapper(sourceFetcherInfos);
+        final Object value = mapper.map(request, null, null);
+        Map<String, Map<?, ?>> map = ObjectUtils.cast(value);
         assertThat(map).containsKey("a");
     }
 }

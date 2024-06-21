@@ -4,8 +4,6 @@
 
 package com.huawei.jade.fel.engine.operators.models;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
-
 import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitter;
 import com.huawei.fit.waterflow.bridge.fitflow.FiniteEmitterDataBuilder;
 import com.huawei.fit.waterflow.domain.context.FlowSession;
@@ -18,10 +16,9 @@ import com.huawei.jade.fel.chat.ChatModelStreamService;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.chat.protocol.ChatCompletion;
+import com.huawei.jade.fel.engine.util.AiFlowSession;
 import com.huawei.jade.fel.engine.util.StateKey;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -33,26 +30,14 @@ import java.util.Optional;
 public class ChatStreamModel implements StreamModel<Prompt, ChatMessage> {
     private final ChatModelStreamService provider;
     private final ChatOptions options;
-    private final Map<String, Object> args;
 
     public ChatStreamModel(ChatModelStreamService provider) {
         this(provider, new ChatOptions());
     }
 
     public ChatStreamModel(ChatModelStreamService provider, ChatOptions options) {
-        this(provider, options, Collections.emptyMap());
-    }
-
-    private ChatStreamModel(ChatModelStreamService provider, ChatOptions options, Map<String, Object> args) {
         this.provider = Validation.notNull(provider, "The model provider can not be null.");
         this.options = Validation.notNull(options, "The chat options can not be null.");
-        this.args = Validation.notNull(args, "The model args cannot be null.");
-    }
-
-    @Override
-    public ChatStreamModel bind(Map<String, Object> args) {
-        ChatOptions dynamicOptions = this.getDynamicChatOptions(args);
-        return new ChatStreamModel(this.provider, dynamicOptions, args);
     }
 
     /**
@@ -70,19 +55,14 @@ public class ChatStreamModel implements StreamModel<Prompt, ChatMessage> {
     @Override
     public FiniteEmitter<ChatMessage, ChatChunk> invoke(Prompt input) {
         Validation.notNull(input, "The model input data can not be null.");
+        FlowSession session = AiFlowSession.get()
+                .orElseThrow(() -> new IllegalStateException("The ai session cannot be empty."));
 
-        ChatCompletion completionRequest = new ChatCompletion(input, this.options);
-        Choir<ChatMessage> choir = ObjectUtils.cast(this.provider.generate(completionRequest));
-        return new LlmEmitter<>(choir, getEmitterDataBuilder(), this.args, input);
-    }
-
-    private ChatOptions getDynamicChatOptions(Map<String, Object> dynamicArgs) {
-        FlowSession session = cast(dynamicArgs.get(StateKey.FLOW_SESSION));
-        if (session == null) {
-            return this.options;
-        }
-        return Optional.ofNullable(session.<ChatOptions>getInnerState(StateKey.CHAT_OPTIONS))
+        ChatOptions dynamicOptions = Optional.ofNullable(session.<ChatOptions>getInnerState(StateKey.CHAT_OPTIONS))
                 .orElse(this.options);
+        ChatCompletion completionRequest = new ChatCompletion(input, dynamicOptions);
+        Choir<ChatMessage> choir = ObjectUtils.cast(this.provider.generate(completionRequest));
+        return new LlmEmitter<>(choir, getEmitterDataBuilder(), input, session);
     }
 
     private static FiniteEmitterDataBuilder<ChatMessage, ChatChunk> getEmitterDataBuilder() {
@@ -91,7 +71,7 @@ public class ChatStreamModel implements StreamModel<Prompt, ChatMessage> {
             @Override
             public ChatChunk data(ChatMessage data) {
                 Validation.notNull(data, "The chat message can not be null.");
-                return new ChatChunk(data.text(), data.medias(), data.toolCalls());
+                return new ChatChunk(data.text(), data.toolCalls());
             }
 
             @Override

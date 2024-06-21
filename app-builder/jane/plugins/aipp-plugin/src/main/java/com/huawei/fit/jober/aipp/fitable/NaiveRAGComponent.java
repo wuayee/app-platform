@@ -54,7 +54,6 @@ public class NaiveRAGComponent implements FlowableService {
         if (CollectionUtils.isNotEmpty(knowledgeList)) {
             tableIdList = knowledgeList.stream()
                     .filter(MapUtils::isNotEmpty)
-                    .filter(map -> "VECTOR".equals(map.get("serviceType")))
                     .map(map -> Long.valueOf(ObjectUtils.cast(map.get("tableId"))))
                     .collect(Collectors.toList());
         }

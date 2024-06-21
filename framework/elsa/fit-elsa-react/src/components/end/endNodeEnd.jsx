@@ -1,8 +1,10 @@
 import {jadeNode} from "@/components/jadeNode.jsx";
 import "./style.css";
+import {Button} from "antd";
 import {DIRECTION} from "@fit-elsa/elsa-core";
+import EndIcon from '../asserts/icon-end.svg?react';
+import {EndNodeHeader} from "@/components/end/EndNodeHeader.jsx";
 import {SECTION_TYPE} from "@/common/Consts.js";
-import {endNodeDrawer} from "@/components/end/endNodeDrawer.jsx";
 
 /**
  * 结束节点shape
@@ -10,7 +12,7 @@ import {endNodeDrawer} from "@/components/end/endNodeDrawer.jsx";
  @override
  */
 export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
-    const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : endNodeDrawer);
+    const self = jadeNode(id, x, y, width, height, parent, drawer);
     self.type = "endNodeEnd";
     self.backColor = 'white';
     self.pointerEvents = "auto";
@@ -26,6 +28,25 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
                 "type": "mapping_converter"
             },
         }
+    };
+
+    /**
+     * @override
+     */
+    const getToolMenus = self.getToolMenus;
+    self.getToolMenus = () => {
+        if (self.page.shapes.filter(s => s.type === self.type).length === 1) {
+            return [{
+                key: '1', label: "复制", action: () => {
+                    self.duplicate();
+                }
+            }, {
+                key: '2', label: "重命名", action: (setEdit) => {
+                    setEdit(true);
+                }
+            }];
+        }
+        return getToolMenus.apply(self);
     };
 
     /**
@@ -67,7 +88,15 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
      * @override
      */
     self.serializerJadeConfig = () => {
-        self.flowMeta.callback.converter.entity = self.getLatestJadeConfig();
+        const jadeConfig = self.getLatestJadeConfig();
+        const mode = jadeConfig.inputParams ? "variables" : "manualCheck";
+        if (mode === "variables") {
+            self.flowMeta.callback.converter.entity = jadeConfig;
+            self.flowMeta.task = {};
+        } else {
+            self.flowMeta.callback.converter.entity = {};
+            self.flowMeta.task = jadeConfig;
+        }
     };
 
     /**
@@ -76,7 +105,8 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
      * @override
      */
     self.getComponent = () => {
-        return self.graph.plugins[self.componentName](self.flowMeta.callback.converter.entity);
+        const jadeConfig = self.flowMeta.callback.converter.entity.inputParams ? self.flowMeta.callback.converter.entity : self.flowMeta.task;
+        return self.graph.plugins[self.componentName](jadeConfig);
     };
 
     /**
@@ -86,6 +116,21 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
      */
     self.getEntity = () => {
         return self.flowMeta.callback.converter.entity;
+    };
+
+    /**
+     * @override
+     */
+    self.getHeaderComponent = (disabled) => {
+        return (<EndNodeHeader shape={self} disabled={disabled}/>);
+    }
+
+    self.getHeaderIcon = () => {
+        return (<>
+            <Button disabled={true} className="jade-node-custom-header-icon">
+                <EndIcon/>
+            </Button>
+        </>);
     };
 
     /**

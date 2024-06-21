@@ -16,6 +16,7 @@
     <modules>
         <module>lowcode-flow-trace-adapter</module>
         <module>tool-eco-huggingface</module>
+        <module>tool-eco-langchain</module>
         <module>tool-execution</module>
         <module>tool-repository-postgresql</module>
     </modules>

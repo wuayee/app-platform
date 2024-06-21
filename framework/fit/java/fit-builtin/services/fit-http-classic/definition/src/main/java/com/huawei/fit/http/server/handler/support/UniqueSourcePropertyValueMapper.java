@@ -43,7 +43,7 @@ public class UniqueSourcePropertyValueMapper implements PropertyValueMapper {
         List<SourceFetcherInfo> sourceFetcherInfos = Collections.singletonList(new SourceFetcherInfo(notNull(
                 sourceFetcher,
                 "The source fetch cannot be null."), null, isDestinationArray));
-        this.propertyValueMapper = new MultiSourcePropertyValueMapper(sourceFetcherInfos);
+        this.propertyValueMapper = new MultiSourcesPropertyValueMapper(sourceFetcherInfos);
     }
 
     @Override

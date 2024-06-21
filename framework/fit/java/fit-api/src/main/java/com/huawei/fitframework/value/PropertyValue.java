@@ -11,6 +11,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 /**
  * 表示属性值。
@@ -36,9 +37,9 @@ public interface PropertyValue {
     /**
      * 获取属性值的具体元素。
      *
-     * @return 表示属性值的具体元素的 {@link AnnotatedElement}.
+     * @return 表示属性值的具体元素的 {@link Optional}{@code <}{@link AnnotatedElement}{@code >}。
      */
-    AnnotatedElement getElement();
+    Optional<AnnotatedElement> getElement();
 
     /**
      * 获取属性值的值名。
@@ -52,6 +53,7 @@ public interface PropertyValue {
      *
      * @param parameter 表示需要创建的参数的 {@link Parameter}。
      * @return 表示创建后的属性值的 {@link PropertyValue}。
+     * @throws IllegalArgumentException 当 {@code parameter} 为 {@code null} 时。
      */
     static PropertyValue createParameterValue(Parameter parameter) {
         return new ParameterValue(parameter);
@@ -62,6 +64,7 @@ public interface PropertyValue {
      *
      * @param field 表示需要创建的字段的 {@link Field}。
      * @return 表示创建后的属性值的 {@link PropertyValue}。
+     * @throws IllegalArgumentException 当 {@code field} 为 {@code null} 时。
      */
     static PropertyValue createFieldValue(Field field) {
         return new FieldValue(field);

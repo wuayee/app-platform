@@ -4,11 +4,14 @@
 
 package com.huawei.fitframework.value.support;
 
+import static com.huawei.fitframework.inspection.Validation.notNull;
+
 import com.huawei.fitframework.value.PropertyValue;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 /**
  * 表示字段类型的属性值。
@@ -20,7 +23,7 @@ public class FieldValue implements PropertyValue {
     private final Field field;
 
     public FieldValue(Field field) {
-        this.field = field;
+        this.field = notNull(field, "The field cannot be null.");
     }
 
     @Override
@@ -34,8 +37,8 @@ public class FieldValue implements PropertyValue {
     }
 
     @Override
-    public AnnotatedElement getElement() {
-        return this.field;
+    public Optional<AnnotatedElement> getElement() {
+        return Optional.of(this.field);
     }
 
     @Override

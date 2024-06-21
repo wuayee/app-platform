@@ -4,10 +4,13 @@
 
 package com.huawei.jade.carver.tool;
 
+import com.huawei.fit.http.client.HttpClassicClientFactory;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.serialization.ObjectSerializer;
+import com.huawei.fitframework.value.ValueFetcher;
 import com.huawei.jade.carver.tool.support.FitToolFactory;
+import com.huawei.jade.carver.tool.support.HttpToolFactory;
 
 /**
  * 表示创建工具的工厂。
@@ -44,5 +47,17 @@ public interface ToolFactory {
      */
     static ToolFactory fit(BrokerClient brokerClient, ObjectSerializer serializer) {
         return new FitToolFactory(brokerClient, serializer);
+    }
+
+    /**
+     * 创建一个 HTTP 调用的工具工厂。
+     *
+     * @param factory 表示 HTTP 调用客户端工厂的 {@link HttpClassicClientFactory}。
+     * @param serializer 表示 Json 序列化器的 {@link ObjectSerializer}。
+     * @param valueFetcher 表示值获取工具的 {@link ValueFetcher}。
+     * @return 表示创建出来的 HTTP 调用的工具工厂的 {@link ToolFactory}。
+     */
+    static ToolFactory http(HttpClassicClientFactory factory, ObjectSerializer serializer, ValueFetcher valueFetcher) {
+        return new HttpToolFactory(factory, serializer, valueFetcher);
     }
 }

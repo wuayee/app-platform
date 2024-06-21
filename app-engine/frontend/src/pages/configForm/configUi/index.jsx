@@ -140,7 +140,7 @@ function ConfigUI(props) {
               (
                 <Collapse
                   bordered={false}
-                  activeKey={['1', '2', '3']}
+                  defaultActiveKey={['1', '2', '3']}
                   expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                   style={{
                     background: token.colorBgContainer,
@@ -150,7 +150,7 @@ function ConfigUI(props) {
               ) : (
                 <Collapse
                   bordered={false}
-                  activeKey={['4', '5']}
+                  defaultActiveKey={['4', '5']}
                   expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                   style={{
                     background: token.colorBgContainer,

@@ -6,10 +6,15 @@ package com.huawei.fit.jober.aipp.service.impl;
 
 import com.huawei.fit.jober.aipp.common.AippFileUtils;
 import com.huawei.fit.jober.aipp.common.Utils;
+import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
+import com.huawei.fit.jober.aipp.common.exception.AippException;
+import com.huawei.fit.jober.aipp.service.LLMService;
 import com.huawei.fit.jober.aipp.service.OperatorService;
-import com.huawei.fit.jober.common.ErrorCodes;
-import com.huawei.fit.jober.common.exceptions.JobberException;
+import com.huawei.fit.jober.aipp.tool.FileExtractor;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.broker.client.BrokerClient;
+import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
 
 import org.apache.commons.lang3.StringUtils;
@@ -75,8 +80,8 @@ public class OperatorServiceImpl implements OperatorService {
             }
         } catch (IOException e) {
             log.error("read pdf fail.", e);
+            throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
         }
-        return "";
     };
 
     private static final Function<File, String> DOC_EXTRACTOR = docFile -> {
@@ -88,9 +93,18 @@ public class OperatorServiceImpl implements OperatorService {
             }
         } catch (IOException e) {
             log.error("read doc fail.", e);
+            throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
         }
         return "";
     };
+
+    private final LLMService llmService;
+
+    private final BrokerClient client;
+
+    private final Function<File, String> imageExtractor = this::getImageContent;
+
+    private final Function<File, String> audioExtractor = this::getAudioContent;
 
     private static String getExcelContent(File file) {
         StringBuilder excelContent = new StringBuilder();
@@ -113,6 +127,7 @@ public class OperatorServiceImpl implements OperatorService {
             }
         } catch (IOException e) {
             log.error("read excel fail.", e);
+            throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
         }
         return excelContent.toString();
     }
@@ -140,15 +155,6 @@ public class OperatorServiceImpl implements OperatorService {
 
     private static final Function<File, String> EXCEL_EXTRACTOR = OperatorServiceImpl::getExcelContent;
 
-    private static final EnumMap<FileType, Function<File, String>> FILE_OPERATOR_MAP =
-            new EnumMap<FileType, Function<File, String>>(FileType.class) {
-                {
-                    put(FileType.PDF, PDF_EXTRACTOR);
-                    put(FileType.WORD, DOC_EXTRACTOR);
-                    put(FileType.EXCEL, EXCEL_EXTRACTOR);
-                }
-            };
-
     private static final Function<File, String> DOC_OUTLINE_EXTRACTOR = docFile -> {
         try {
             try (InputStream fis = new BufferedInputStream(Files.newInputStream(docFile.toPath()))) {
@@ -174,6 +180,7 @@ public class OperatorServiceImpl implements OperatorService {
             }
         } catch (IOException e) {
             log.error("read doc fail.", e);
+            throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
         }
         return "";
     };
@@ -184,6 +191,22 @@ public class OperatorServiceImpl implements OperatorService {
                     put(FileType.WORD, DOC_OUTLINE_EXTRACTOR);
                 }
             };
+
+    private final EnumMap<FileType, Function<File, String>> fileOperatorMap =
+            new EnumMap<FileType, Function<File, String>>(FileType.class) {
+                {
+                    put(FileType.PDF, PDF_EXTRACTOR);
+                    put(FileType.WORD, DOC_EXTRACTOR);
+                    put(FileType.EXCEL, EXCEL_EXTRACTOR);
+                    put(FileType.IMAGE, imageExtractor);
+                    put(FileType.AUDIO, audioExtractor);
+                }
+            };
+
+    public OperatorServiceImpl(LLMService llmService, BrokerClient client) {
+        this.llmService = llmService;
+        this.client = client;
+    }
 
     private static String extractDocHandle(InputStream fis, String fileName) throws IOException {
         try (XWPFDocument doc = new XWPFDocument(fis);
@@ -277,7 +300,7 @@ public class OperatorServiceImpl implements OperatorService {
     @Override
     public String fileExtractor(File file, Optional<FileType> optionalFileType) {
         if (optionalFileType.isPresent()) {
-            Function<File, String> function = FILE_OPERATOR_MAP.get(optionalFileType.get());
+            Function<File, String> function = this.fileOperatorMap.get(optionalFileType.get());
             return Optional.ofNullable(function).map(f -> f.apply(file)).orElse("");
         }
         return this.extractTextFile(file);
@@ -288,7 +311,26 @@ public class OperatorServiceImpl implements OperatorService {
             return new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
         } catch (IOException e) {
             log.error("io exception on file {}, reason {}", file.getName(), e.getMessage());
-            throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "extractTextFile failed.");
+            throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
+        }
+    }
+
+    private String getImageContent(File file) {
+        try {
+            return this.llmService.askModelWithImage(file, null);
+        } catch (IOException e) {
+            log.error("read image fail.", e);
+            throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
+        }
+    }
+
+    private String getAudioContent(File file) {
+        String fid = "llmAudio2Summary";
+        try {
+            return this.client.getRouter(FileExtractor.FILE_EXTRACTOR_GID).route(new FitableIdFilter(fid)).invoke(file);
+        } catch (FitException e) {
+            log.error("read audio fail.", e);
+            throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);
         }
     }
 }

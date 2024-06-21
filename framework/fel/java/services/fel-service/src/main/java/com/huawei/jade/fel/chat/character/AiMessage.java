@@ -5,12 +5,11 @@
 package com.huawei.jade.fel.chat.character;
 
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.chat.MessageType;
-import com.huawei.jade.fel.chat.content.Media;
-import com.huawei.jade.fel.chat.content.MessageContent;
 import com.huawei.jade.fel.tool.ToolCall;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,7 +19,7 @@ import java.util.List;
  * @since 2024-4-12
  */
 public class AiMessage extends AbstractChatMessage {
-    private List<ToolCall> toolCalls = new ArrayList<>();
+    private final List<ToolCall> toolCalls;
 
     /**
      * 通过文本信息来初始化 {@link AiMessage} 的新实例。
@@ -28,7 +27,7 @@ public class AiMessage extends AbstractChatMessage {
      * @param text 表示文本信息的 {@link String}。
      */
     public AiMessage(String text) {
-        super(text);
+        this(text, null);
     }
 
     /**
@@ -39,18 +38,7 @@ public class AiMessage extends AbstractChatMessage {
      */
     public AiMessage(String text, List<ToolCall> toolCalls) {
         super(text);
-        this.toolCalls = toolCalls;
-    }
-
-    /**
-     * 通过消息内容集合和工具调用来初始化 {@link AiMessage} 的新实例。
-     *
-     * @param contents 表示息内容集合的 {@link MessageContent}。
-     * @param toolCalls 表示工具调用列表的 {@link List}{@code <}{@link ToolCall}{@code >}。
-     */
-    public AiMessage(MessageContent contents, List<ToolCall> toolCalls) {
-        super(contents);
-        this.toolCalls = toolCalls;
+        this.toolCalls = ObjectUtils.nullIf(toolCalls, Collections.emptyList());
     }
 
     @Override
@@ -61,11 +49,6 @@ public class AiMessage extends AbstractChatMessage {
     @Override
     public List<ToolCall> toolCalls() {
         return this.toolCalls;
-    }
-
-    @Override
-    public List<Media> medias() {
-        return this.contents.medias();
     }
 
     /**

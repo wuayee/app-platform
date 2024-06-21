@@ -33,21 +33,6 @@
     background: transparent;
 }
 
-.custom-font-style {
-    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    color: rgb(56, 55, 67);
-    line-height: 20px;
-}
-
-.Answer-content-text, .Streaming-output-text {
-    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    margin-right: 4px;
-}
-
 .end-starred-text {
     position: relative;
     display: inline-block;
@@ -62,4 +47,11 @@
     color: red;
     bottom: auto;
     font-size: 1.2em;
+}
+
+.mode-select-title {
+    margin-right: auto;
+    display: flex;
+    font-weight: 600;
+    pointer-events: none;
 }

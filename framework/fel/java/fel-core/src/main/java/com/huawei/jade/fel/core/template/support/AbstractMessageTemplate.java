@@ -4,21 +4,20 @@
 
 package com.huawei.jade.fel.core.template.support;
 
+import com.huawei.fitframework.resource.web.Media;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
-import com.huawei.jade.fel.chat.content.Content;
-import com.huawei.jade.fel.chat.content.MediaContent;
-import com.huawei.jade.fel.chat.content.MessageContent;
-import com.huawei.jade.fel.chat.content.TextContent;
+import com.huawei.jade.fel.core.template.MessageContent;
 import com.huawei.jade.fel.core.template.MessageTemplate;
 import com.huawei.jade.fel.core.template.StringTemplate;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 表示 {@link MessageTemplate} 的抽象实现。
@@ -41,16 +40,18 @@ public abstract class AbstractMessageTemplate implements MessageTemplate {
     @Override
     public ChatMessage render(Map<String, MessageContent> values) {
         Map<String, MessageContent> args = ObjectUtils.getIfNull(values, Collections::emptyMap);
-        Stream<Content> textStream = Stream.of(args)
-                .map(v -> v.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().text())))
-                .map(this.template::render)
-                .map(TextContent::new);
-        Stream<Content> mediaStream = this.template.placeholder()
-                .stream()
-                .map(args::get)
-                .filter(Objects::nonNull)
-                .flatMap(cs -> cs.medias().stream().map(MediaContent::new));
-        return this.collect(Stream.concat(textStream, mediaStream));
+        String text = args.entrySet()
+            .stream()
+            .filter(entry -> entry.getValue() != null)
+            .collect(Collectors.collectingAndThen(Collectors.toMap(Entry::getKey, e -> e.getValue().text()),
+                this.template::render));
+        List<Media> medias = this.template.placeholder()
+            .stream()
+            .map(args::get)
+            .filter(Objects::nonNull)
+            .flatMap(cs -> cs.medias().stream())
+            .collect(Collectors.toList());
+        return this.collect(text, medias);
     }
 
     @Override
@@ -61,8 +62,9 @@ public abstract class AbstractMessageTemplate implements MessageTemplate {
     /**
      * 收集消息内容流生成 {@link ChatMessage}。
      *
-     * @param contentStream 表示消息内容流的 {@link Stream}{@code <}{@link Content}{@code >}。
+     * @param text 表示文本内容的 {@link String}。
+     * @param medias 表示媒体内容流的 {@link List}{@code <}{@link String}{@code >}。
      * @return 返回表示聊天消息的 {@link ChatMessage}。
      */
-    protected abstract ChatMessage collect(Stream<Content> contentStream);
+    protected abstract ChatMessage collect(String text, List<Media> medias);
 }

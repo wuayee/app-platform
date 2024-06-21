@@ -21,12 +21,14 @@ const AippIndex = () => {
   const [ spinning, setSpinning] = useState(false);
   const [ reloadInspiration, setReloadInspiration ] = useState('');
   const [ showChat, setShowChat ] = useState(false);
-  const [ showTime, setShowTime ] = useState(false);
   const [ messageChecked, setMessageCheck ] = useState(false);
+  const [ testStatus, setTestStatus ] = useState(null);
+  const [ testTime, setTestTime ] = useState(null);
   const aippRef = useRef(null);
   const inspirationRefresh = useRef(false);
   const dispatch = useAppDispatch();
   const appInfo = JSON.parse(JSON.stringify(useAppSelector((state) => state.appStore.appInfo)));
+  let addFlowRef = React.createRef();
 
   const elsaChange = () => {
     setShowElsa(!showElsa);
@@ -63,7 +65,6 @@ const AippIndex = () => {
       if (res.code === 0) {
         Message({type: "success", content: "保存配置成功"});
         getAippDetails();
-        setShowTime(true);
         if (inspirationRefresh.current) {
           inspirationRefresh.current = false;
           let key = getUiD();
@@ -85,6 +86,12 @@ const AippIndex = () => {
   const handleConfigDataChange = (data) => {
     handleSearch(data);
   };
+  // 打开调试抽屉方法
+  const openDebug = () => {
+    addFlowRef.current.handleDebugClick();
+  }
+  const handleTestStatus = (value) => setTestStatus(value);
+  const handleTestTime = (value) => setTestTime(value);
   const contextProvider = {
     messageChecked,
     setMessageCheck,
@@ -100,39 +107,50 @@ const AippIndex = () => {
   return (
     <>
       {
-        <div className={`container ${showElsa ? 'layout-elsa-content' : ''} ${showChat ? 'layout-show-preview' : ''}`}>
+        <div className="container">
           <ChoreographyHead
             appInfo={appInfo}
             showElsa={showElsa}
             updateAippCallBack={updateAippCallBack}
-            showTime={showTime}
             mashupClick={elsaChange}
+            openDebug={openDebug}
+            testTime={testTime}
+            testStatus={testStatus}
+            addFlowRef={addFlowRef}
           />
-          <div className="layout-content">
+          <div className={[
+            "layout-content",
+            showElsa ? "layout-elsa-content" : null,
+            showChat ? "layout-show-preview" : null
+          ].join(' ')}
+          >
             <ConfigFormContext.Provider value={configFormProvider}> 
-              {showElsa ? 
-              (
-                <AddFlow type="edit" appInfo={appInfo}/>
-              ) : 
-              (
-                <ConfigForm
-                  mashupClick={elsaChange}
-                  configData={appInfo.config}
-                  handleConfigDataChange={handleConfigDataChange}
-                  inspirationChange={inspirationChange}
-                  showElsa={showElsa}
+              {showElsa ? (
+                <AddFlow type="edit"
+                         addFlowRef={addFlowRef}
+                         setFlowTestStatus={handleTestStatus}
+                         setFlowTestTime={handleTestTime}
+                         appInfo={appInfo}
                 />
+              ) : (
+                   <ConfigForm
+                     mashupClick={elsaChange}
+                     configData={appInfo.config}
+                     handleConfigDataChange={handleConfigDataChange}
+                     inspirationChange={inspirationChange}
+                     showElsa={showElsa}
+                   />
               )}
-            </ConfigFormContext.Provider>
-            <CommonChat chatType="preview" contextProvider={contextProvider} previewBack={changeChat} /> 
-            {
-              (!showChat && showElsa) &&
-              <Tooltip placement="leftTop" title="展开预览与调试区">
-                <div className="chat-icon" onClick={changeChat}>
-                  <TalkFlowIcon />
-                </div>
-              </Tooltip>
-            }
+              </ConfigFormContext.Provider>
+              <CommonChat chatType="preview" contextProvider={contextProvider} previewBack={changeChat} /> 
+              {
+                (!showChat && showElsa) &&
+                <Tooltip placement="leftTop" title="展开预览与调试区">
+                  <div className="chat-icon" onClick={changeChat}>
+                    <TalkFlowIcon />
+                  </div>
+                </Tooltip>
+              }
           </div>
         </div>
       }

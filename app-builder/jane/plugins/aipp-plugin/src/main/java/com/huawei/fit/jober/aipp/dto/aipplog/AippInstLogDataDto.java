@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +27,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Data
 public class AippInstLogDataDto {
+    private static final int LOG_COUNT_AFTER_TZ_TOOL = 3;
+
     private String aippId;
     private String version;
     private String instanceId;
@@ -54,6 +55,24 @@ public class AippInstLogDataDto {
                 .filter(log -> (log.getLogType().equals(AippInstLogType.QUESTION.name()) || log.getLogType().equals(AippInstLogType.HIDDEN_QUESTION.name())))
                 .findFirst().orElse(null);
         return new AippInstLogDataDto(inAippId,inAippVersion, inInstanceId, MetaInstStatusEnum.ARCHIVED.name(), null, null, convert(question), logBodies);
+    }
+
+    /**
+     * 获取经过天舟AI提示词拼接工具处理后的历史记录
+     *
+     * @param rawLogs 日志列表
+     * @return 实例历史记录
+     */
+    public static AippInstLogDataDto fromAippInstLogListAfterSplice(List<AippInstLog> rawLogs) {
+        List<AippInstLog> updatedLogs = rawLogs.stream()
+            .filter(log -> !isUserQuestionLogBeforeTzTool(rawLogs, log))
+            .collect(Collectors.toList());
+
+        return fromAippInstLogList(updatedLogs);
+    }
+
+    private static boolean isUserQuestionLogBeforeTzTool(List<AippInstLog> rawLogs, AippInstLog log) {
+        return rawLogs.size() == LOG_COUNT_AFTER_TZ_TOOL && AippInstLogType.QUESTION.name().equals(log.getLogType());
     }
 
     @AllArgsConstructor

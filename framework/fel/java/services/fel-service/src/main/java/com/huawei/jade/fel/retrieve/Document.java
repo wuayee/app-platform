@@ -4,7 +4,7 @@
 
 package com.huawei.jade.fel.retrieve;
 
-import com.huawei.jade.fel.chat.content.Media;
+import com.huawei.fitframework.resource.web.Media;
 
 import java.util.Map;
 import java.util.Optional;

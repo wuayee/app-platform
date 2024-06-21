@@ -117,6 +117,8 @@ const KnowledgeBase = () => {
             letterSpacing: '0',
           }} onClick={createKnowledge}>创建</Button>
           <Input 
+            showCount
+            maxLength={20}
             placeholder="搜索"  
             style={{
             width: '200px',

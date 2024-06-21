@@ -1,14 +1,15 @@
 import React, {useEffect, useRef, useState} from 'react';
-import { Spin } from 'antd';
+import {Input, Spin } from 'antd';
 import { MoreIcon, HistoryIcon } from '@assets/icon';
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
 import '../styles/referencing-app.scss'
 import { getAippList } from "../../../../../shared/http/aipp";
 import { useAppSelector } from "../../../../../store/hook";
+import { SearchOutlined } from "@ant-design/icons";
 
 const ReferencingApp = (props) => {
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
-  const { atItemClick, atClick, searchKey } = props;
+  const { atItemClick, atClick, searchKey, setSearchKey } = props;
   const [ appArr, setAppArr ] = useState([]);
   const [ tableLoading, setTableLoading ] = useState(false);
   const [ total, setTotal ] = useState(1);
@@ -44,11 +45,23 @@ const ReferencingApp = (props) => {
   return <>{(
     <div className="at-content" onClick={(e) => e.stopPropagation()}>
       <div className="at-head">
-        <span className="left">收藏的应用</span>
-        <span className="right"  onClick={moreClick}>
-          <MoreIcon />
-          <span>更多应用</span>
-        </span>
+        {/*<span className="left">收藏的应用</span>*/}
+        <div className="at-app-search">
+          <Input
+            value={searchKey}
+            prefix={<SearchOutlined />}
+            allowClear
+            placeholder="搜索"
+            maxLength={20}
+            showCount
+            onChange={(e) => {setSearchKey(e.target.value)}}
+          />
+        </div>
+        {/*<span className="left">收藏的应用</span>*/}
+        {/*<span className="right"  onClick={moreClick}>*/}
+        {/*  <MoreIcon />*/}
+        {/*  <span>更多应用</span>*/}
+        {/*</span>*/}
       </div>
       <Spin spinning={tableLoading}>
         <div className="at-content-inner">
@@ -63,9 +76,9 @@ const ReferencingApp = (props) => {
                     <span className="name">{item.name}</span>
                     <span className="description">{item.attributes.description}</span>
                   </div>
-                  <div className="right">
-                    <HistoryIcon />
-                  </div>
+                  {/*<div className="right">*/}
+                  {/*  <HistoryIcon />*/}
+                  {/*</div>*/}
                 </div>
               )
             })

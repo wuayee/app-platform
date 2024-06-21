@@ -15,6 +15,9 @@
     justify-content: space-between;
     align-items: center;
     color: #4D4D4D;
+    .at-app-search {
+      width: 100%;
+    }
     .left {
       font-size: 16px;
       color: #777777;
@@ -42,6 +45,8 @@
         align-items: center;
         font-size: 12px;
         color: #808080;
+        font-weight: 400;
+        height: 40px;
         img {
           width: 40px;
           height: 40px;
@@ -49,20 +54,20 @@
         }
         .name {
           color: #233046;
-          font-weight: 400;
           font-size: 16px;
           margin: 0 8px;
           max-width: 200px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          line-height: 24px;
         }
         .description {
           max-width: 400px;
-          font-size: 12px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          line-height: 18px;
         }
       }
       .right {

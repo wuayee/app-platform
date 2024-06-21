@@ -177,8 +177,8 @@ const EditorBtnHome = (props) => {
             { !appInfo.hideHistory && <ArrowDownIcon className="arrow-icon" /> }
             { isAt && <span style={{ marginLeft: '6px' }}>对话</span> }
           </div>
-          {/* <LinkIcon onClick={uploadClick} /> */}
-          { (!isAt && !appInfo.hideHistory ) && <AtIcon onClick={atClick} /> }
+           <LinkIcon onClick={uploadClick} />
+           { (!isAt) && <AtIcon onClick={atClick} /> }
         </div>
       </div>
       <div className="inner-right">
@@ -205,7 +205,10 @@ const EditorBtnHome = (props) => {
           )
         }
       </div>
-      { showAt && <ReferencingApp atItemClick={atItemClick} atClick={showMoreClick} searchKey={searchKey} /> }
+      { showAt && <ReferencingApp atItemClick={atItemClick}
+                                  atClick={showMoreClick}
+                                  searchKey={searchKey}
+                                  setSearchKey={setSearchKey}/> }
       <Modal 
         title="确认清空当前聊天" 
         open={isModalOpen} 

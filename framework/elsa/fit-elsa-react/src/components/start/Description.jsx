@@ -28,6 +28,7 @@ export default function Description({itemId, propValue, disableModifiable, onCha
     >
         <TextArea
             className="jade-textarea-input jade-font-size"
+            onMouseDown={(e) => e.stopPropagation()}
             value={propValue}
             disabled={disableModifiable}
             onChange={e => onChange("description", e.target.value)} // 当文本输入框的值发生变化时调用父组件传递的回调函数

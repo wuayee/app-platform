@@ -13,7 +13,9 @@ namespace DataBus {
 namespace Task {
 
 constexpr int TASK_BACKLOG_MAX = 100000;
+// DataBus内部向TaskLoop投递消息时使用的套接字文件描述符和请求序列号。
 constexpr int32_t DATABUS_SOCKET_FD = 0;
+constexpr uint32_t DATABUS_INTERNAL_SEQ = 1;
 
 class TaskLoop {
 public:

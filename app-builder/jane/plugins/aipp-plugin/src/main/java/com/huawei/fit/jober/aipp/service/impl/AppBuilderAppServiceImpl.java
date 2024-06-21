@@ -386,7 +386,8 @@ public class AppBuilderAppServiceImpl
     }
 
     private void validateAppName(String name, OperationContext context) {
-        if (StringUtils.isEmpty(name)) {
+        String trimName = StringUtils.trim(name);
+        if (StringUtils.isEmpty(trimName)) {
             log.error("Create aipp failed: name can not be empty.");
             throw new AippParamException(context, AippErrCode.AIPP_NAME_IS_EMPTY);
         } else if (name.length() > this.nameLengthMaximum) {

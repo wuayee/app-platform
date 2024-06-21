@@ -38,7 +38,7 @@ public interface AippLogService {
      * @return log数据
      */
     List<AippInstLogDataDto> queryAippRecentInstLog(String aippId, String aippType, Integer count,
-            OperationContext context);
+        OperationContext context);
 
     /**
      * 查询指定chatId的历史记录,
@@ -121,4 +121,16 @@ public interface AippLogService {
      * @param instanceId 指定实例的 id。
      */
     void deleteInstanceLog(String instanceId);
+
+    /**
+     * 查询提示词拼接后的历史记录
+     *
+     * @param aippId 指定aipp的id
+     * @param aippType aipp的类型
+     * @param count 轮次数目
+     * @param context 登录信息
+     * @return log数据
+     */
+    List<AippInstLogDataDto> queryAippRecentInstLogAfterSplice(String aippId, String aippType, Integer count,
+        OperationContext context);
 }
