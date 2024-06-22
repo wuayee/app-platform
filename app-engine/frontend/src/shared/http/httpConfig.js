@@ -14,6 +14,7 @@ export const httpUrlMap = {
     MODEL_LIST_URL: '/v1',
     PLUGIN_URL: '/api/jober',
     MODEL_BASE_URL: 'modelbase',
+    MODEL_TRAINING_URL: 'modeltrain',
   },
   production: {
     JANE_URL: 'https://jane.huawei.com/api',
@@ -28,6 +29,7 @@ export const httpUrlMap = {
     MODEL_LIST_URL: 'http://model-io-manager:8010/v1',
     PLUGIN_URL: '/api/jober',
     MODEL_BASE_URL: 'modelbase',
+    MODEL_TRAINING_URL: 'modeltrain',
   },
   gamma: {
     JANE_URL: 'https://jane-gamma.huawei.com/api',
