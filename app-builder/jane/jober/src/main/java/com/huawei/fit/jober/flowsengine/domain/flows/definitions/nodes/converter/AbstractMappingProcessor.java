@@ -33,14 +33,14 @@ public abstract class AbstractMappingProcessor implements MappingProcessor {
     @Override
     public Object generate(MappingNode mappingConfig, Map<String, Object> businessData) {
         if (MappingFromType.REFERENCE.equals(mappingConfig.getFrom())) {
-            return generateReference(mappingConfig, businessData);
+            return this.generateReference(mappingConfig, businessData);
         } else if (MappingFromType.INPUT.equals(mappingConfig.getFrom())) {
             if (Objects.isNull(mappingConfig.getValue())) {
                 return mappingConfig.getValue();
             }
-            return generateInput(mappingConfig, businessData);
+            return this.generateInput(mappingConfig, businessData);
         } else if (MappingFromType.EXPAND.equals(mappingConfig.getFrom())) {
-            return generateExpand(mappingConfig, businessData);
+            return this.generateExpand(mappingConfig, businessData);
         }
         LOG.error("The from is invalid. from={}, name={}.", mappingConfig.getFrom(), mappingConfig.getName());
         throw new JobberParamException(INPUT_PARAM_IS_INVALID, mappingConfig.getName());
@@ -49,7 +49,7 @@ public abstract class AbstractMappingProcessor implements MappingProcessor {
     /**
      * 值类型的节点生成处理
      *
-     * @param mappingConfig 映射配置
+     * @param mappingConfig 映射配置， 调用者需要保证其中的value不为null
      * @param businessData 源数据
      * @return 生成的数据
      */
