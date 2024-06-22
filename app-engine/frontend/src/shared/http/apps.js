@@ -161,3 +161,8 @@ export function exportFeedBackData(data) {
   xhr.send(JSON.stringify(data));
   return post(url, data);
 }
+
+// 获取公告
+export function getAnnouncement()  {
+  return get(`${appurl}/announcement`);
+}

@@ -80,7 +80,7 @@ export const JadeReferenceTreeSelect = (props) => {
         function getTitle(nodeInfo) {
             return nodeInfo.id === VIRTUAL_CONTEXT_NODE.id ? <>
                 <div className={"jade-font-size"}>
-                    <span>{n.name}</span>
+                    <span>{nodeInfo.name}</span>
                     <Popover className={"jade-drop-down-popover"} overlayClassName="jade-drop-down-popover-overlay" content={content}>
                         <InfoCircleOutlined/>
                     </Popover>
