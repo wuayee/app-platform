@@ -32,7 +32,7 @@ const FlowDetail = () => {
     let configIndex = CONFIGS.findIndex(item => item.node === 'llmNodeState');
     CONFIGS[configIndex].params.tenantId = tenantId;
     CONFIGS[configIndex].params.appId = appId;
-    JadeFlow.edit(stageDom, data, CONFIGS).then(agent => {
+    JadeFlow.edit(stageDom, tenantId, data, CONFIGS).then(agent => {
       window.agent ? null : window.agent = agent;
     })
   }
@@ -44,7 +44,7 @@ const FlowDetail = () => {
       <div className='header'>
           <div className='header-left'>
             <LeftArrowIcon className="icon-back" onClick={ handleBackClick } />
-            <span className='header-text'>{ appInfo.name }</span>
+            <span className='header-text' title={appInfo?.name}>{ appInfo.name }</span>
           </div>
           <div className="header-right">
             <span className='header-text'>创建人：{ appInfo.createBy }</span>

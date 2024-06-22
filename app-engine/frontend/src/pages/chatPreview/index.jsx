@@ -52,6 +52,7 @@ const ChatPreview = (props) => {
   const atAppId = useAppSelector((state) => state.appStore.atAppId);
   const atAppInfo = useAppSelector((state) => state.appStore.atAppInfo);
   const { showElsa } = useContext(AippContext);
+  const [checkedList, setCheckedList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [groupType, setGroupType] = useState("share");
   const [showCheck, setShowCheck] = useState(false);
@@ -94,7 +95,6 @@ const ChatPreview = (props) => {
       setLoading(false);
     }
   }
-
   useEffect(() => {
     if (!currentInfo.current || currentInfo.current.id !== appInfo.id) {
       dispatch(setChatRunning(false));
@@ -272,9 +272,10 @@ const ChatPreview = (props) => {
   function selfSelect(instanceId, initContext) {
     reportInstance.current = instanceId;
     reportIContext.current = initContext;
-    listRef.current.forEach(item => item.checked = false);
     dispatch(setChatList(deepClone(listRef.current)));
     onStop("请勾选对话");
+    setCheckedList([]);
+    feedRef.current.setCheckStatus();
     setEditorShow(true, 'report');
   }
   // 用户自勾选确定回调
@@ -337,6 +338,7 @@ const ChatPreview = (props) => {
   }
   // 显示问答组
   function setEditorShow(val, type='share') {
+    !val && setCheckedList([]);
     setShowCheck(val);
     val && setGroupType(type);
   }
@@ -361,11 +363,10 @@ const ChatPreview = (props) => {
     }
   }
 
-
   return (
     <div className={`
         chat-preview 
-        ${ showElsa ? 'chat-preview-elsa chat-preview-shadow': ''} 
+        ${ showElsa ? 'chat-preview-elsa': ''} 
         ${ !chatPage ? 'chat-preview-inner' : '' } 
         ${(showElsa && inspirationOpen) ? 'chat-preview-mr' : ''}`}
     >
@@ -377,12 +378,14 @@ const ChatPreview = (props) => {
           <div className={ `chat-inner-left ${ inspirationOpen ? 'chat-left-close' : 'no-border'}` }>
             <ChatMessage
               feedRef={feedRef}
+              setCheckedList={setCheckedList}
               setEditorShow={setEditorShow}
               showCheck={showCheck}/>
             { showCheck ?
               <CheckGroup
                 type={groupType}
                 setEditorShow={setEditorShow}
+                checkedList={checkedList}
                 reportClick={reportClick} />
               : 
               <SendEditor

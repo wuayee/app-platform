@@ -132,5 +132,25 @@ export const jadeFlowGraph = (div, title) => {
         self.onChangeCallback && self.onChangeCallback();
     };
 
+    /**
+     * 获取对应节点的配置.
+     *
+     * @param shape 图形.
+     * @return {*} 配置信息.
+     */
+    self.getConfig = (shape) => {
+        let chain = shape.typeChain;
+        while (chain !== null) {
+            if (chain.type) {
+                const config = self.configs?.find(config => config.node === chain.type);
+                if (config) {
+                    return config;
+                }
+            }
+            chain = chain.parent;
+        }
+        return null;
+    };
+
     return self;
 };

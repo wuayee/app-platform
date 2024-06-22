@@ -1,9 +1,7 @@
-import InvokeInput from "@/components/common/InvokeInput.jsx";
-import FitInvokeService from "@/components/fitInvokeNode/FitInvokeService.jsx";
-import InvokeOutput from "@/components/common/InvokeOutput.jsx";
 import {v4 as uuidv4} from "uuid";
 import {convertParameter, convertReturnFormat} from "@/components/util/MethodMetaDataParser.js";
 import {toolInvokeComponent} from "@/components/toolInvokeNode/toolInvokeComponent.jsx";
+import FitInvokeFormWrapper from "@/components/fitInvokeNode/FitInvokeFormWrapper.jsx";
 
 /**
  * FIT调用节点组件
@@ -48,9 +46,7 @@ export const fitInvokeComponent = (jadeConfig) => {
      */
     self.getReactComponents = () => {
         return (<>
-            <InvokeInput/>
-            <FitInvokeService/>
-            <InvokeOutput/>
+            <FitInvokeFormWrapper/>
         </>);
     };
 

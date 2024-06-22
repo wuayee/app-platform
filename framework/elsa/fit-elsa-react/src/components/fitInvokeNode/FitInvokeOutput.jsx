@@ -13,7 +13,7 @@ export default function FitInvokeOutput() {
     const data = useDataContext();
     const outputData = data && data.outputParams;
 
-    return (<Collapse bordered={false} className="jade-collapse-custom-background-color"
+    return (<Collapse bordered={false} className="jade-custom-collapse"
                       defaultActiveKey={['FitInvokeOutput']}>
         <Panel
             className="jade-panel"
@@ -21,7 +21,9 @@ export default function FitInvokeOutput() {
                 <span className={'title'}>输出</span>
             </div>}
             key='FitInvokeOutput'>
-            <JadeObservableTree data={outputData}/>
+            <div className={"jade-custom-panel-content"}>
+                <JadeObservableTree data={outputData}/>
+            </div>
         </Panel>
     </Collapse>);
 }

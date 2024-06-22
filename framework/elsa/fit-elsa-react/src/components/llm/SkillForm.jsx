@@ -59,7 +59,7 @@ export default function SkillForm({toolOptions, workflowOptions, config, disable
     };
 
     return (
-            <Collapse bordered={false} className="jade-collapse-custom-background-color"
+            <Collapse bordered={false} className="jade-custom-collapse"
                       defaultActiveKey={["skillPanel"]}>
                 {
                     <Panel
@@ -72,23 +72,25 @@ export default function SkillForm({toolOptions, workflowOptions, config, disable
                             }
                             className="jade-panel"
                     >
-                        <Row gutter={16} style={{marginBottom: "6px", marginRight: 0, marginLeft: "-3%"}}>
-                            <Col span={21}>
-                                <span className="jade-font-size jade-font-color" style={{marginLeft: "6px"}}>工具</span>
-                            </Col>
-                            {/*430演示工具不需要+号跳转，暂时屏蔽*/}
-                            {/*<Col span={3}>*/}
-                            {/*    <Button type="text" className="icon-button"*/}
-                            {/*            style={{height: "22px", marginLeft: "4px"}}*/}
-                            {/*            onClick={(event) => {*/}
-                            {/*                handleClick(event);*/}
-                            {/*            }}>*/}
-                            {/*        <PlusOutlined/>*/}
-                            {/*    </Button>*/}
-                            {/*</Col>*/}
-                        </Row>
-                        <Form.Item>
-                            <JadeStopPropagationSelect
+                        <div className={"jade-custom-panel-content"}>
+                            <Row gutter={16} style={{marginBottom: "6px", marginRight: 0, marginLeft: "-3%"}}>
+                                <Col span={21}>
+                                    <span className="jade-font-size jade-font-color"
+                                          style={{marginLeft: "6px"}}>工具</span>
+                                </Col>
+                                {/*430演示工具不需要+号跳转，暂时屏蔽*/}
+                                {/*<Col span={3}>*/}
+                                {/*    <Button type="text" className="icon-button"*/}
+                                {/*            style={{height: "22px", marginLeft: "4px"}}*/}
+                                {/*            onClick={(event) => {*/}
+                                {/*                handleClick(event);*/}
+                                {/*            }}>*/}
+                                {/*        <PlusOutlined/>*/}
+                                {/*    </Button>*/}
+                                {/*</Col>*/}
+                            </Row>
+                            <Form.Item>
+                                <JadeStopPropagationSelect
                                     disabled={disabled}
                                     mode="multiple"
                                     showSearch
@@ -101,28 +103,28 @@ export default function SkillForm({toolOptions, workflowOptions, config, disable
                                     onMouseDown={(e) => e.stopPropagation()}
                                     onChange={(e) => handleSkillChange(tool.id, e)}
                                     options={toolOptions}
-                            />
-                        </Form.Item>
-                        <Row gutter={16} style={{marginBottom: "6px", marginRight: 0, marginLeft: "-3%"}}>
-                            <Col span={22}>
+                                />
+                            </Form.Item>
+                            <Row gutter={16} style={{marginBottom: "6px", marginRight: 0, marginLeft: "-3%"}}>
+                                <Col span={22}>
                                 <span className="jade-font-size jade-font-color"
                                       style={{marginLeft: "6px"}}>工具流</span>
-                            </Col>
-                            <Col span={2} style={{paddingLeft: "3%"}}>
-                                <Button disabled={disabled}
-                                        type="text"
-                                        className="icon-button"
-                                        style={{height: "22px"}}
-                                        onClick={(event) => {
-                                            handleAddWaterFlow(event);
-                                        }}>
-                                    <PlusOutlined/>
-                                </Button>
-                            </Col>
-                        </Row>
+                                </Col>
+                                <Col span={2} style={{paddingLeft: "3%"}}>
+                                    <Button disabled={disabled}
+                                            type="text"
+                                            className="icon-button"
+                                            style={{height: "22px"}}
+                                            onClick={(event) => {
+                                                handleAddWaterFlow(event);
+                                            }}>
+                                        <PlusOutlined/>
+                                    </Button>
+                                </Col>
+                            </Row>
 
-                        <Form.Item>
-                            <JadeStopPropagationSelect
+                            <Form.Item>
+                                <JadeStopPropagationSelect
                                     disabled={disabled}
                                     mode="multiple"
                                     showSearch
@@ -134,8 +136,9 @@ export default function SkillForm({toolOptions, workflowOptions, config, disable
                                     value={workflow.value}
                                     onChange={(e) => handleSkillChange(workflow.id, e)}
                                     options={workflowOptions}
-                            />
-                        </Form.Item>
+                                />
+                            </Form.Item>
+                        </div>
                     </Panel>
                 }
             </Collapse>

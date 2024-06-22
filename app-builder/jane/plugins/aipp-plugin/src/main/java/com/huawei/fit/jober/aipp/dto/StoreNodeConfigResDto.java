@@ -4,8 +4,6 @@
 
 package com.huawei.fit.jober.aipp.dto;
 
-import com.huawei.jade.carver.tool.model.transfer.ToolData;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -29,5 +27,5 @@ public class StoreNodeConfigResDto {
     @JsonProperty("basic")
     private List<StoreBasicNodeInfoDto> basicList;
     @JsonProperty("tool")
-    private List<ToolData> toolList;
+    private List<ToolModelDto> toolList;
 }

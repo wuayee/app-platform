@@ -1,18 +1,16 @@
 
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
 import { getPlugins } from '@shared/http/plugin';
-import { getWaterFlows } from "@shared/http/appBuilder";
-import { ConfigFormContext } from '../../../aippIndex/context';
-import AddSkill from './add-skill';
+import AddSkill from '../../../addFlow/components/tool-modal';
 
 const Skill = (props) => {
   const { pluginData, updateData } = props;
-  const [ checkData, setCheckData] = useState([]);
   const [ skillList, setSkillList] = useState([]);
-  const { tenantId } = useContext(ConfigFormContext);
-  const modalRef = useRef();
+  const [ showModal, setShowModal ] = useState(false);
+  const navigate=useNavigate();
   const pluginMap = useRef([]);
 
   useEffect(() => {
@@ -22,8 +20,7 @@ const Skill = (props) => {
     }
   }, [props.pluginData])
   const addPlugin = () => {
-    setCheckData(pluginData);
-    modalRef.current.showModal()
+    setShowModal(true);
   }
   // 选择数据后回调
   const confirmCallBack = (workFlowId, fitId) => {
@@ -51,33 +48,33 @@ const Skill = (props) => {
   const getPluginList = ()=> {
     getPlugins({ pageNum: 0, pageSize: 1000, includeTags: 'FIT', })
       .then(({ data }) => {
-        setSkillArr(data, 'tool');
-        handleGetWaterFlows();
+        setSkillArr(data);
       })
   }
-  // 获取工具流列表
-  const handleGetWaterFlows = () => {
-    getWaterFlows({ pageNum: 0, pageSize: 100, tenantId }).then(async (res) => {
-      if (res.code === 0) {
-        let list = res.data.map(item => item.itemData)
-        setSkillArr(list, 'workflow');
-        setSkillList([...pluginMap.current]);
-      }
-    })
-  }
   // 回显设置
-  const setSkillArr = (data, type) => {
+  const setSkillArr = (data) => {
     data.forEach(item => {
       if (pluginData.includes(item.uniqueName) ) {
         let obj = {
           uniqueName: item.uniqueName,
           name: item.name,
           tags: item.tags,
-          type,
+          type: item.tags.includes('WATERFLOW') ? 'workflow' : 'tool',
+          appId: item.appId || '',
+          tenantId: item.tenantId || '',
         };
         pluginMap.current.push(obj);
       }
-    })
+    });
+    setSkillList([...pluginMap.current]);
+  }
+  // 工具流详情
+  const workflowDetail = (item) => {
+    if (item.type === 'workflow') {
+      navigate(`/app-develop/${item.tenantId}/app-detail/flow-detail/${item.appId}`);
+    } else {
+      navigate(`/plugin/detail/${item.uniqueName}`);
+    }
   }
   return (
     <>
@@ -101,6 +98,7 @@ const Skill = (props) => {
                       {item.name || item }
                     </span>
                     <span>
+                      { <EyeOutlined style={{ cursor: 'pointer', fontSize: '14px', color: '#4D4D4D', marginRight: '8px' }} onClick={() => workflowDetail(item)}/> }
                       <CloseOutlined style={{ cursor: 'pointer', fontSize: '14px', color: '#4D4D4D' }} onClick={() => deleteItem(item)} />
                     </span>
                   </div>
@@ -109,8 +107,9 @@ const Skill = (props) => {
             }
           </div>
           <AddSkill 
-            modalRef={modalRef}
-            tenantId={tenantId}
+            type='addSkill'
+            showModal={showModal} 
+            setShowModal={setShowModal}
             checkData={skillList}
             confirmCallBack={confirmCallBack}
           />

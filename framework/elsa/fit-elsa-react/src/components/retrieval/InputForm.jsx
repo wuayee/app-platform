@@ -1,5 +1,5 @@
 import {Col, Collapse, Form, Input, Popover, Row} from "antd";
-import {InfoCircleOutlined} from "@ant-design/icons";
+import {QuestionCircleOutlined} from "@ant-design/icons";
 import React from "react";
 import {useDataContext, useDispatch, useFormContext} from "@/components/DefaultRoot.jsx";
 import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSelect.jsx";
@@ -120,41 +120,42 @@ export default function InputForm({disabled}) {
     const tips = <div className={"jade-font-size"}><p>输入需要从知识库中匹配的关键信息</p></div>;
 
     return (<div>
-        <Collapse bordered={false} className="jade-collapse-custom-background-color"
+        <Collapse bordered={false} className="jade-custom-collapse"
                   defaultActiveKey={['Input']}>
             <Panel
                     header={
                         <div className="panel-header">
                             <span className="jade-panel-header-font">输入</span>
                             <Popover content={tips}>
-                                <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                                <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                             </Popover>
                         </div>
                     }
                     className="jade-panel"
                     key='Input'
             >
-                <Row>
-                    <Col span={8}>
-                        <Form.Item style={{marginBottom: "8px"}}>
-                            <span className="jade-font-size jade-font-color">字段名称</span>
-                        </Form.Item>
-                    </Col>
-                    <Col span={16}>
-                        <Form.Item style={{marginBottom: "8px"}}>
-                            <span className="jade-font-size jade-font-color">字段值</span>
-                        </Form.Item>
-                    </Col>
-                </Row>
+                <div className={"jade-custom-panel-content"}>
+                    <Row>
+                        <Col span={8}>
+                            <Form.Item style={{marginBottom: "8px"}}>
+                                <span className="jade-font-size jade-font-color">字段名称</span>
+                            </Form.Item>
+                        </Col>
+                        <Col span={16}>
+                            <Form.Item style={{marginBottom: "8px"}}>
+                                <span className="jade-font-size jade-font-color">字段值</span>
+                            </Form.Item>
+                        </Col>
+                    </Row>
 
-                <Row>
-                    <Col span={8} style={{display: "flex", paddingTop: "5px"}}>
-                        <span className="retrieval-starred-text">query</span>
-                    </Col>
+                    <Row>
+                        <Col span={8} style={{display: "flex", paddingTop: "5px"}}>
+                            <span className="retrieval-starred-text jade-font-size">query</span>
+                        </Col>
 
-                    <Col span={8} style={{paddingRight: 0}}>
-                        <Form.Item id={`valueSource`} initialValue="Reference">
-                            <JadeStopPropagationSelect
+                        <Col span={8} style={{paddingRight: 0}}>
+                            <Form.Item id={`valueSource`} initialValue="Reference">
+                                <JadeStopPropagationSelect
                                     disabled={disabled}
                                     id={`valueSource-select-${currentData.id}`}
                                     className={"value-source-custom jade-select"}
@@ -173,13 +174,14 @@ export default function InputForm({disabled}) {
                                     }}
                                     options={[{value: 'Reference', label: '引用'}, {value: 'Input', label: '输入'}]}
                                     value={currentData.from}
-                            />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8} style={{paddingLeft: 0}}>
-                        {renderComponent(currentData)} {/* 渲染对应的组件 */}
-                    </Col>
-                </Row>
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={8} style={{paddingLeft: 0}}>
+                            {renderComponent(currentData)} {/* 渲染对应的组件 */}
+                        </Col>
+                    </Row>
+                </div>
             </Panel>
         </Collapse>
     </div>)

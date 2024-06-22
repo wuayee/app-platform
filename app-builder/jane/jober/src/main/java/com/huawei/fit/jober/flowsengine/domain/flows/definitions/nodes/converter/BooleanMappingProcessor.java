@@ -22,7 +22,7 @@ public class BooleanMappingProcessor extends AbstractMappingProcessor {
     private static final Logger LOG = Logger.get(BooleanMappingProcessor.class);
 
     @Override
-    protected Object generateValue(MappingNode mappingConfig, Map<String, Object> businessData) {
+    protected Object generateInput(MappingNode mappingConfig, Map<String, Object> businessData) {
         if (mappingConfig.getValue() instanceof String) {
             return Boolean.parseBoolean(cast(mappingConfig.getValue()));
         }

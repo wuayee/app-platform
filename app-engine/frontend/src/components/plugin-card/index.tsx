@@ -3,25 +3,16 @@ import { Flex, Tag } from 'antd';
 import { Icons } from '../icons';
 import { PluginIcons } from '../icons/plugin';
 import { StarOutlined, UserOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router';
+import './style.scoped.scss';
+import { IconMap } from '../../pages/plugin/helper';
 
-const PluginCard = ({ pluginData }: any) => (
-  <div style={{
-    padding: '24px 24px 0',
-    width: 380,
-    height: 260,
-    background: 'url(/src/assets/images/knowledge/knowledge-background.png)',
-    backgroundPosition: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 16,
-    border: '1px solid #ebebeb',
-    borderRadius: 8
-  }}>
-    <div style={{
-      display: 'flex',
-      gap: 16,
-      alignItems: 'flex-start'
-    }}>
+const PluginCard = ({ pluginData }: any) => {
+  const navigate = useNavigate();
+  return(
+  <div className='plugin-card'
+   onClick={()=>{navigate(`/plugin/detail/${pluginData.uniqueName}`)}}>
+    <div className='plugin-card-header'>
       <img src='/src/assets/images/knowledge/knowledge-base.png' />
       <div>
         <div style={{ display: 'flex' }}>
@@ -32,37 +23,18 @@ const PluginCard = ({ pluginData }: any) => (
             <PluginIcons.ButterFlydate />
           </div>
         </div>
-        <div style={{
-          display: 'flex',
-          gap: 4,
-          alignItems: 'center',
-          flexWrap: 'wrap'
-        }}>
+        <div className='plugin-card-user'>
           <Icons.user />
           <span style={{ marginRight: 8 }}>{pluginData.creator}</span>
           {pluginData.tags.map((tag: string, index: number) => <Tag style={{ margin: 0 }} key={index}>{tag}</Tag>)}
         </div>
       </div>
     </div>
-    <div className='content' style={{
-      wordBreak: 'break-all',
-      lineHeight: '22px',
-      textAlign: 'justify',
-      height: '100%',
-      overflowY: 'auto'
-    }}>
+    <div className='card-content'>
       {pluginData.description}
     </div>
     {/* 卡片底部 */}
-    <div style={{
-      padding: '16px 0',
-      display: 'flex',
-      justifyContent: 'space-between',
-      gap: 32,
-      borderTop: '1px solid #ebebeb',
-      color: '#808080',
-      alignItems: 'center'
-    }}>
+    <div className='card-footer'>
       <Flex gap={16}>
         <span>
           <UserOutlined style={{ marginRight: 8 }} />
@@ -74,11 +46,11 @@ const PluginCard = ({ pluginData }: any) => (
         </span>
       </Flex>
       <Flex style={{ display: 'flex', alignItems: 'center' }} gap={4}>
-        <PluginIcons.HuggingFaceIcon />
-        <span style={{ fontSize: 12, fontWeight: 700 }}>HuggingFace</span>
+        {IconMap[pluginData?.tags?.[0]]?.icon}
+        <span style={{ fontSize: 12, fontWeight: 700 }}>{IconMap[pluginData?.tags?.[0]]?.name}</span>
       </Flex>
     </div>
   </div >
-)
+)}
 
 export default PluginCard;

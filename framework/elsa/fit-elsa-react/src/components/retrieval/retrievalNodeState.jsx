@@ -1,8 +1,7 @@
 import {jadeNode} from "@/components/jadeNode.jsx";
 import "./style.css";
-import {Button} from "antd";
-import RetrievalIcon from '../asserts/icon-retrieval.svg?react';
 import {SECTION_TYPE} from "@/common/Consts.js";
+import {retrievalNodeDrawer} from "@/components/retrieval/retrievalNodeDrawer.jsx";
 
 /**
  * 知识检索shape
@@ -10,7 +9,7 @@ import {SECTION_TYPE} from "@/common/Consts.js";
  * @override
  */
 export const retrievalNodeState = (id, x, y, width, height, parent, drawer) => {
-    const self = jadeNode(id, x, y, width, height, parent, drawer);
+    const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : retrievalNodeDrawer);
     self.type = "retrievalNodeState";
     self.backColor = 'white';
     self.pointerEvents = "auto";
@@ -18,17 +17,6 @@ export const retrievalNodeState = (id, x, y, width, height, parent, drawer) => {
     self.componentName = "retrievalComponent";
     self.flowMeta.jober.fitables.push("com.huawei.fit.jober.aipp.fitable.NaiveRAGComponent");
     self.flowMeta.triggerMode = 'auto';
-
-    /**
-     * @override
-     */
-    self.getHeaderIcon = () => {
-        return (<>
-            <Button disabled={true} className="jade-node-custom-header-icon">
-                <RetrievalIcon/>
-            </Button>
-        </>);
-    };
 
     /**
      * 获取知识检索节点测试报告章节

@@ -6,8 +6,8 @@ import { getAppInfo } from '../../shared/http/aipp';
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
 import CommonChat from '../chatPreview/chatComminPage';
-import { useAppDispatch, useAppSelector } from '../../store/hook';
 import { setAppId, setAppInfo } from '../../store/appInfo/appInfo';
+import { useAppDispatch, useAppSelector } from '../../store/hook';
 
 const ChatRunning = () => {
   const { appId, tenantId } = useParams();

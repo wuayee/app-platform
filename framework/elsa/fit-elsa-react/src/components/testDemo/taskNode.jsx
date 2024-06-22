@@ -2,7 +2,6 @@ import {jadeNode} from "@/components/jadeNode.jsx";
 import TaskList from "@/components/testDemo/TaskList.jsx";
 import AddTask from "@/components/testDemo/AddTask.jsx";
 import {CloudSyncOutlined} from "@ant-design/icons";
-import "./style.css";
 
 /**
  * jadeStream中的流程编排节点.

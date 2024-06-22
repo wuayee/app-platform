@@ -1,6 +1,5 @@
-import InvokeInput from "@/components/common/InvokeInput.jsx";
-import InvokeOutput from "@/components/common/InvokeOutput.jsx";
 import {v4 as uuidv4} from "uuid";
+import HuggingFaceFormWrapper from "@/components/huggingFace/HuggingFaceFormWrapper.jsx";
 
 /**
  * huggingFace调用节点组件
@@ -27,10 +26,9 @@ export const huggingFaceComponent = (jadeConfig) => {
      *
      * @return {JSX.Element}
      */
-    self.getReactComponents = () => {
+    self.getReactComponents = (disabled) => {
         return (<>
-            <InvokeInput/>
-            <InvokeOutput/>
+            <HuggingFaceFormWrapper disabled={disabled}/>
         </>);
     };
 
@@ -43,8 +41,8 @@ export const huggingFaceComponent = (jadeConfig) => {
             if (d.id === id) {
                 changes.forEach(change => {
                     newD[change.key] = change.value;
-                    // 当对象由展开变为引用时，需要把对象的value置空
-                    if (change.value === "Reference") {
+                    // 当对象变为引用或输入时，需要把对象的value置空
+                    if (change.value === "Reference" || change.value === "Input") {
                         newD.value = [];
                     }
                 });
@@ -68,21 +66,13 @@ export const huggingFaceComponent = (jadeConfig) => {
                 from: "Input",
                 value: action.value
             };
-            if (inputParams.length === 0) {
-                // 如果数组为空，直接添加 modelParam 对象
-                inputParams.push(modelParam);
-            } else if (inputParams.length === 1) {
-                // 如果数组长度为1，直接在第二个位置插入新的 modelParam 对象
-                inputParams.splice(1, 0, modelParam);
+            const secondElement = inputParams[1];
+            if (secondElement.id.startsWith("model_")) {
+                // 修改第二个对象的 value 属性
+                inputParams[1] = {...secondElement, value: action.value};
             } else {
-                const secondElement = inputParams[1];
-                if (secondElement.id.startsWith("model_")) {
-                    // 修改第二个对象的 value 属性
-                    inputParams[1] = {...secondElement, value: action.value};
-                } else {
-                    // 在第二个位置插入新的 modelParam 对象
-                    inputParams.splice(1, 0, modelParam);
-                }
+                // 在第二个位置插入新的 modelParam 对象
+                inputParams.splice(1, 0, modelParam);
             }
             return inputParams;
         }

@@ -62,9 +62,9 @@ public class NaiveRAGComponent implements FlowableService {
             List<String> chunksList = this.knowledgeBaseService.vectorSearchKnowledgeTable(kbVectorSearchCondition);
             ragOutput = String.join("; ", chunksList);
         }
-        businessData.putIfAbsent("output", new HashMap<String, Object>());
-        Map<String, Object> output = ObjectUtils.cast(businessData.get("output"));
+        Map<String, Object> output = new HashMap<>();
         output.put("retrievalOutput", ragOutput);
+        businessData.put("output", output);
         return flowData;
     }
 

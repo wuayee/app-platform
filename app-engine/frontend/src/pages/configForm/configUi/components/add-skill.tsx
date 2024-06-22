@@ -2,13 +2,12 @@
 import React, { useImperativeHandle, useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Drawer, Tabs, Button, Input, Checkbox } from 'antd';
-import { CloseOutlined, SearchOutlined } from '@ant-design/icons';
+import { CloseOutlined } from '@ant-design/icons';
 import { getPlugins } from '@shared/http/plugin';
-import { getWaterFlows } from "@shared/http/appBuilder";
 import { createAipp } from "@shared/http/aipp";
 import { pluginItems } from '../../common/common';
 import { Icons } from "../../../../components/icons";
-import PluginCard from '../../../../components/plugin-card';
+import ToolCard from '../../../addFlow/components/tool-card';
 import Pagination from '../../../../components/pagination/index';
 import '../styles/add-skill.scss';
 const { Search } = Input;
@@ -57,11 +56,7 @@ const AddSkill = (props) => {
     setPluginCategory(category);
     setPageNum(1);
     setName('');
-    if (category === 'FIT') {
-      getPluginList();
-    } else {
-      handleGetWaterFlows();
-    }
+    getPluginList();
   }
   // 获取插件列表
   const getPluginList = (category = pluginCategory)=> {
@@ -71,17 +66,6 @@ const AddSkill = (props) => {
         setDefaultCheck(data);
         setPluginData(data);
       })
-  }
-  // 获取工具流列表
-  const handleGetWaterFlows = () => {
-    const params = { pageNum: pageNum - 1, pageSize: 100, tenantId };
-    getWaterFlows(params).then(async (res) => {
-      if (res.code === 0) {
-        let list = res.data.map(item => item.itemData)
-        setDefaultCheck(list);
-        setPluginData(list);
-      }
-    })
   }
   // 新增工具流
   const handleAddWaterFlow = async () => {
@@ -177,7 +161,7 @@ const AddSkill = (props) => {
           <div className="mashup-add-inner">
             {pluginData.map((card: any) => 
               <div className="mashup-add-item" key={card.uniqueName}>
-                <PluginCard  pluginData={card} />
+                <ToolCard  pluginData={card} />
                 <span className="check-item">
                   <Checkbox defaultChecked={card.checked} onChange={(e) => onChange(e, card)}></Checkbox>
                 </span>

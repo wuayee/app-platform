@@ -21,20 +21,20 @@ const SendBox = (props) => {
     if (pathname.includes('/chatShare/')) {
       setShowIcon(false);
     } 
-  }, [location])
+  }, [location]);
   // 选中回调
   function onChange(e) {
     props.chatItem.checked = e.target.checked;
-    checkCallBack(props.index,e.target.checked);
+    checkCallBack();
   }
   return <>{(
     <div className='send-box'>
-      { showCheck && <Checkbox className='check-box' onChange={onChange}></Checkbox>}
+      { showCheck && <Checkbox className='check-box' checked={checked} onChange={onChange}></Checkbox>}
       <div className='user-image'>
         { employeeNumber ? <img src={`https://w3.huawei.com/w3lab/rest/yellowpage/face/${employeeNumber}/120`}/> : 
           <img src={`https://w3.huawei.com/w3lab/rest/yellowpage/face/default/120`}/>
         } 
-        <span>{currentUser}</span>
+        <span title={currentUser}>{currentUser}</span>
       </div>
       <div className='send-info'>
         <span className="send-info-inner">

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useCallback, useState, useRef, useContext } from 'react';
+import React, { useEffect, useCallback, useState, useRef, useContext,  } from 'react';
 import { useParams } from 'react-router-dom';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { debounce } from '@shared/utils/common';
@@ -8,17 +8,23 @@ import {
   updateFlowInfo, } from '@shared/http/aipp';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
 import { Message } from '@shared/utils/message';
+import { useAppDispatch } from '../../../store/hook';
+import { setAppInfo } from '../../../store/appInfo/appInfo';
 import HuggingFaceModal from './hugging-face-modal';
 import { FlowContext } from '../../aippIndex/context';
 import { configMap } from '../config';
 
 const Stage = (props) => {
-  const { setAddId, setDragData, appRef, flowIdRef } = props;
+  const { setAddId, setDragData, setLoading, appRef, flowIdRef } = props;
   const [ showModal, setShowModal ] = useState(false);
+  const [ taskName, setTaskName ] = useState('');
+  const [ selectModal, setSelectModal ] = useState('');
   const { CONFIGS } = configMap[process.env.NODE_ENV];
   const { type, appInfo, setModalInfo } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
   const modelCallback = useRef();
+  const change = useRef(false);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     window.agent = null;
@@ -49,88 +55,22 @@ const Stage = (props) => {
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/interviewQuestionsComponent.jsx`),
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/manageCubeCreateReportComponent.jsx`),
     ];
-    JadeFlow.edit(stageDom, data, CONFIGS, importFiles).then(agent => {
+    JadeFlow.edit(stageDom, tenantId, data, CONFIGS, importFiles).then(agent => {
       window.agent ? null : window.agent = agent;
       agent.onChange(() => {
         handleChange();
       });
-      agent.onModelSelect((fn) => {
+      agent.onModelSelect(({ taskName, selectedModel, onSelect }) => {
+        setSelectModal(selectedModel);
+        setTaskName(taskName);
+        modelCallback.current = onSelect;
         setShowModal(true);
-        modelCallback.current = fn;
       })
     })
-    getAddFlowConfig(tenantId).then(res => {
+    setLoading(true);
+    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 1000, tag: 'Builtin'}).then(res => {
+      setLoading(false);
       if (res.code === 0) {
-        res.data.tool.unshift({
-          'name': 'hugging-face',
-          'type': 'huggingFaceNodeState',
-          "taskId": "1264ab63-62e3-4965-ac91-a7396099f123",
-          "schema": {
-            "name": "fill-mask",
-            "description": "该流水线可以输入带有掩码标记的句子，模型会根据上下文对掩码标记进行填空",
-            "parameters": {
-              "type": "object",
-              "properties": {
-                "inputs": {
-                  "description": "一个包含掩码标记[MASK]的文本。",
-                  "type": "string"
-                },
-                "targets": {
-                  "description": "可通过此参数限定模型向掩码标记填空的token类型，如：'positive'",
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "top_k": {
-                  "description": "返回的填空结果数量",
-                  "type": "integer",
-                  "default": 5
-                }
-              },
-              "required": [
-                "inputs"
-              ]
-            },
-            "return": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "sequence": {
-                    "description": "向掩码标记填空后的输入",
-                    "type": "string"
-                  },
-                  "score": {
-                    "description": "该填空token的出现概率。",
-                    "type": "number"
-                  },
-                  "token": {
-                    "description": "预测的标记token ID（用于替换掩码标记）。",
-                    "type": "integer"
-                  },
-                  "token_str": {
-                    "description": "预测的标记token（用于替换掩码标记）。",
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "sequence",
-                  "score",
-                  "token",
-                  "token_str"
-                ]
-              }
-            }
-          },
-          "context": {
-            "model": [],
-            "summary": "Masked language modeling is the task of masking some of the words in a sentence and predicting which words should replace those masks. These models are useful when we want to get a statistical understanding of the language in which the model is trained in.",
-            "default_model": "distilbert/distilroberta-base",
-            "base_url": "huggingface.co/"
-          },
-          "toolUniqueName": "1264ab63-62e3-4965-ac91-a7396099f123"
-        })
         setDragData(res.data);
       }
     });
@@ -142,22 +82,21 @@ const Stage = (props) => {
   // 数据实时保存
   const handleChange = useCallback(debounce(() => elsaChange(), 2000), []);
   function elsaChange() {
-    window.agent.validate().then(() => {
+    if (change.current) {
       let graphChangeData = window.agent.serialize();
-      if (type) {
-        appInfo.flowGraph.appearance = graphChangeData;
+      type ? appInfo.flowGraph.appearance = graphChangeData : setModalInfo(() => {
+        appRef.current.flowGraph.appearance = graphChangeData;
+        return appRef.current;
+      })
+      window.agent.validate().then(() => {
         updateAppRunningFlow();
-      } else {
-        setModalInfo(() => {
-          appRef.current.flowGraph.appearance = graphChangeData;
-          return appRef.current;
-        })
-        updateAppRunningFlow();
-      }
-    }).catch((err) => {
-      let str = typeof(err) === 'string' ? err : '请输入流程必填项';
-      Message({ type: "warning", content: str});
-    });;
+      }).catch((err) => {
+        let str = typeof(err) === 'string' ? err : '请输入流程必填项';
+        Message({ type: "warning", content: str});
+      });
+    } else {
+      change.current = true;
+    }
   }
   // 编辑更新应用
   async function updateAppRunningFlow() {
@@ -165,6 +104,7 @@ const Stage = (props) => {
     let params = type ?  appInfo.flowGraph : appRef.current.flowGraph;
     const res = await updateFlowInfo(tenantId, id, params);
     if (res.code === 0) {
+      dispatch(setAppInfo(JSON.parse(JSON.stringify(appInfo))));
       Message({ type: 'success', content: type ? '高级配置更新成功': '工具流更新成功' })
     }
   }
@@ -198,6 +138,8 @@ const Stage = (props) => {
       showModal={showModal} 
       setShowModal={setShowModal}
       onModelSelectCallBack={onModelSelectCallBack}
+      taskName={taskName}
+      selectModal={selectModal}
     />
   </>
 };

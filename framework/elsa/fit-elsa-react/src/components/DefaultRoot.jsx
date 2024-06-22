@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useEffect, useReducer} from "react";
 import "./contentStyle.css";
-import {Form} from "antd";
+import {ConfigProvider, Form} from "antd";
 
 const DataContext = createContext(null);
 const ShapeContext = createContext(null);
@@ -50,27 +50,34 @@ export const DefaultRoot = ({shape, component, disabled}) => {
     }, [data]);
 
     return (<>
-        <div id={id} style={{display: "block"}}>
-            <Form form={form}
-                  name={`form-${shape.id}`}
-                  layout="vertical" // 设置全局的垂直布局
-                  className={"jade-form"}
-            >
-                {shape.getHeaderComponent(disabled)}
-                <FormContext.Provider value={form}>
-                    <ShapeContext.Provider value={shape}>
-                        <DataContext.Provider value={data}>
-                            <DispatchContext.Provider value={dispatch}>
-                                <div className="react-node-content" style={{borderRadius: shape.borderRadius + "px"}}>
-                                    {component.getReactComponents(disabled)}
-                                </div>
-                            </DispatchContext.Provider>
-                        </DataContext.Provider>
-                    </ShapeContext.Provider>
-                </FormContext.Provider>
-                {shape.getFooterComponent()}
-            </Form>
-        </div>
+        <ConfigProvider theme={{
+            components: {
+                Tree: {nodeSelectedBg: "transparent", nodeHoverBg: "transparent"}
+            }
+        }}>
+            <div id={id} style={{display: "block"}}>
+                <Form form={form}
+                      name={`form-${shape.id}`}
+                      layout="vertical" // 设置全局的垂直布局
+                      className={"jade-form"}
+                >
+                    {shape.drawer.getHeaderComponent(disabled)}
+                    <FormContext.Provider value={form}>
+                        <ShapeContext.Provider value={shape}>
+                            <DataContext.Provider value={data}>
+                                <DispatchContext.Provider value={dispatch}>
+                                    <div className="react-node-content"
+                                         style={{borderRadius: shape.borderRadius + "px"}}>
+                                        {component.getReactComponents(disabled)}
+                                    </div>
+                                </DispatchContext.Provider>
+                            </DataContext.Provider>
+                        </ShapeContext.Provider>
+                    </FormContext.Provider>
+                    {shape.drawer.getFooterComponent()}
+                </Form>
+            </div>
+        </ConfigProvider>
     </>);
 };
 

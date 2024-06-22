@@ -1,22 +1,26 @@
 
 import React, { useImperativeHandle, useState, useRef } from 'react';
-import { Drawer, Pagination, Table, Button, Input } from 'antd';
-import { CloseOutlined, SearchOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import { Drawer, Pagination, Table, Button, Input, Dropdown, Select, Tag } from 'antd';
+import { CloseOutlined, SearchOutlined, DownOutlined } from '@ant-design/icons';
 import { getKnowledges, getKnowledgesList } from "@shared/http/appBuilder";
 import { formatDateTime } from '@/shared/utils/common';
 import '../styles/add-knowledge.scss';
 const { Search } = Input;
+const { Option } = Select;
 
 const AddKnowledge = (props) => {
   const { modalRef, tenantId, handleDataChange, checkData } = props;
   const [ open, setOpen] = useState(false);
   const [ knowledgeOptions, setKnowledgeOptions ] = useState([]);
   const [ knowledgeTable, setKnowledgeTable ] = useState([]);
+  const [ knowledgeList, setKnowledgeList ] = useState([]);
   const [ knowledgeItem, setKnowledgeItem ] = useState(null);
   const [ selectedRowKeys, setSelectedRowKeys ] = useState([]);
   const [ total, setTotal ] = useState(0);
   const searchName = useRef('');
   const knowledgeCurrent = useRef([]);
+  const navigate = useNavigate();
   const columns = [
     {
       title: '名称',
@@ -39,25 +43,34 @@ const AddKnowledge = (props) => {
       key: 'serviceType',
     },
   ]
+  const selectBefore = (
+    <Select defaultValue="市场">
+      <Option value="个人" disabled>个人</Option>
+      <Option value="市场" disabled>市场</Option>
+    </Select>
+  );
+  const btnItems = [
+    { key: 'knowledge', label: '知识库' }
+  ];
   const cancle = () => {
     setOpen(false)
   }
   const showModal = () => {
     setOpen(true);
-    handleGetKnowledgeOptions();
     setCheck();
   }
   // 设置选中
   const setCheck = () => {
     let arr = checkData.map(item => item.tableId);
     setSelectedRowKeys(arr);
+    handleGetKnowledgeOptions();
   }
   // 获取左侧知识库列表
   const handleGetKnowledgeOptions = (page) => {
     const params = {
       tenantId,
       pageNum: page || 0,
-      pageSize: 10,
+      pageSize: 100,
       name: searchName.current
     };
     getKnowledges(params).then((res) => {
@@ -65,7 +78,8 @@ const AddKnowledge = (props) => {
         const data = res.data.items;
         setKnowledgeOptions(data || []);
         if (data.length) {
-          getTableList(data[0]);
+          initTagList(data);
+          setKnowledgeItem(data[0]);
         } else {
           setKnowledgeTable([]);
           setKnowledgeItem({});
@@ -75,9 +89,35 @@ const AddKnowledge = (props) => {
       }
     })
   }
+  // 初始化tag
+  const initTagList = (data) => {
+    let arr = [];
+    data.forEach(item => {
+      let list = checkData.filter(cItem => cItem.repoId === item.id);
+      if (list.length) {
+        let obj = {
+          name: item.name,
+          id: item.id,
+          child: list
+        }
+        arr.push(obj);
+      }
+    });
+    setKnowledgeList(arr);
+    if (arr.length) {
+      arr.forEach(item => {
+        getTableList(item);
+      })
+    } else {
+      getTableList(data[0]);
+    }
+  }
+  const leftMenuClick = (item) => {
+    setKnowledgeItem(item);
+    getTableList(item)
+  }
   // 获取右侧列表
   const getTableList = (item) => {
-    setKnowledgeItem(item);
     const params = {
       tenantId,
       pageNum: 0,
@@ -110,7 +150,23 @@ const AddKnowledge = (props) => {
       });
       arr.push(obj);
     });
+    let list = arr.filter(item => item.child.length > 0);
+    setKnowledgeList(list);
   };
+  // 取消选中
+  const tagClose = (e, item) => {
+    let list = JSON.parse(JSON.stringify(knowledgeList));
+    let keyArr = selectedRowKeys.filter(kItem => kItem !== (item.tableId || item.id));
+    let ListItem = list.filter(kItem => kItem.id === (item.repoId || item.repositoryId))[0];
+    ListItem.child = ListItem.child.filter(lItem => lItem.tableId !== item.tableId);
+    list = list.filter(lItem => lItem.child.length > 0);
+    setSelectedRowKeys(keyArr);
+    setKnowledgeList(list);
+  }
+  // 创建知识库
+  const createClick = ({ key }) => {
+    navigate(`/knowledge-base/create`);
+  }
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -132,7 +188,7 @@ const AddKnowledge = (props) => {
           arr.push(obj);
         }
       })
-    })
+    });
     handleDataChange(arr);
     setOpen(false);
   }
@@ -170,26 +226,41 @@ const AddKnowledge = (props) => {
         <CloseOutlined onClick={cancle}/>
       }>
         <div className="mashup-add-drawer">
-          {/* <div className="mashup-add-tab">
-            <span className="active"><img src='/src/assets/images/ai/account.png' />个人</span>
-            <span><img src='/src/assets/images/ai/load.png' />团队</span>
-          </div> */}
           <div className="knowledge-search">
             <Search
               prefix={<SearchOutlined />}
+              addonBefore={selectBefore} 
               allowClear
               placeholder="搜索"
               onSearch={onSearch}
             />
+            <Dropdown menu={{ items: btnItems, onClick: createClick }} trigger={['click']}>
+              <Button type="primary" icon={<DownOutlined />}>创建</Button>
+            </Dropdown>
+          </div>
+          <div className="knowledge-check-info">
+            { knowledgeList.map(item => {
+                return (
+                  <div className="info" key={item.name}>
+                    <div className="info-left">{item.name}</div>
+                    <div className="info-right">
+                      { item.child?.map(tItem => {
+                        return <Tag closeIcon key={tItem.name} onClose={(e) => tagClose(e, tItem)}>{tItem.name}</Tag>
+                      })}
+                    </div>
+                  </div>
+                )
+              }) 
+            }
           </div>
           <div className="knowledge-check-list">
             <div className="knowledge-left">
-              <div className="item">知识库</div>
+              <div className="item-title">知识库</div>
               <div className="item-inner">
                 {
                   knowledgeOptions?.map((item, index) => {
                     return (
-                      <div className="item" key={index} onClick={() => getTableList(item)}>
+                      <div className="item" key={index} onClick={() => leftMenuClick(item)}>
                         <span className={knowledgeItem?.id === item.id ? 'active' : null}>{item.name}</span>
                       </div>
                     )
@@ -197,7 +268,7 @@ const AddKnowledge = (props) => {
                 }
               </div>
               <div className="item-page">
-                <Pagination total={total} onChange={pageChange}/>
+                <Pagination total={total} pageSize={100} onChange={pageChange}/>
               </div>
             </div>
             <div className="knowledge-right">

@@ -24,7 +24,17 @@ public class ObjectMappingProcessor extends AbstractMappingProcessor {
     private static final Logger LOG = Logger.get(ObjectMappingProcessor.class);
 
     @Override
-    protected Object generateValue(MappingNode mappingConfig, Map<String, Object> businessData) {
+    protected Object generateInput(MappingNode mappingConfig, Map<String, Object> businessData) {
+        if (!(mappingConfig.getValue() instanceof Map)) {
+            LOG.error("The value can not be converted to object, name={}, value={}, valueType={}.",
+                    mappingConfig.getName(), mappingConfig.getValue(), mappingConfig.getValue().getClass().getName());
+            throw new JobberParamException(INPUT_PARAM_IS_INVALID, mappingConfig.getName());
+        }
+        return mappingConfig.getValue();
+    }
+
+    @Override
+    protected Object generateExpand(MappingNode mappingConfig, Map<String, Object> businessData) {
         if (!(mappingConfig.getValue() instanceof List)) {
             LOG.error("The value can not be converted to object, name={}, value={}, valueType={}.",
                     mappingConfig.getName(), mappingConfig.getValue(), mappingConfig.getValue().getClass().getName());

@@ -334,8 +334,8 @@ let drawer = (shape, div, x = 0, y = 0) => {
             }
 
             const canvasSize = self.updateCanvas(width, height, 'animationCanvas');
-            const dx = -(canvasSize.width - width) / 2 - shape.borderWidth;
-            const dy = -(canvasSize.height - height) / 2 - shape.borderWidth;
+            const dx = -(canvasSize.width - width) / 2 - shape.getBorderWidth();
+            const dy = -(canvasSize.height - height) / 2 - shape.getBorderWidth();
             self.updateIfChange(self.animationCanvas.style, 'left', dx + "px", 'animationCanvas_left');
             self.updateIfChange(self.animationCanvas.style, 'top', dy + "px", 'animationCanvas_top');
 
@@ -359,7 +359,7 @@ let drawer = (shape, div, x = 0, y = 0) => {
         if (!shape.autoWidth || self.text.offsetWidth === 0) {
             return Math.abs(shape.width);
         }
-        const w = self.text.offsetWidth + 2 * shape.borderWidth + 1;// + shape.getPadLeft() + shape.getPadRight();
+        const w = self.parent.offsetWidth + 2 * shape.borderWidth + 1;// + shape.getPadLeft() + shape.getPadRight();
         shape.width = shape.minWidth ? Math.max(shape.minWidth, w) : w;
 
         // todo@zhangyue 不知道啥用，先暂时注释掉
@@ -564,7 +564,7 @@ let drawer = (shape, div, x = 0, y = 0) => {
         let context = self.animationCanvas.getContext("2d");
         context.save();
         context.clearRect(0, 0, context.canvas.width / self.pixelRate.ratioX, context.canvas.height / self.pixelRate.ratioY);
-        context.translate((context.canvas.width / 2 - 2) / self.pixelRate.ratioX, (context.canvas.height / 2 - 2) / self.pixelRate.ratioY);
+        context.translate(context.canvas.width / 2 / self.pixelRate.ratioX, context.canvas.height / 2 / self.pixelRate.ratioY);
         context.beginPath();
         self.drawDynamic(context, 0, 0);
         self.drawFocus(context);

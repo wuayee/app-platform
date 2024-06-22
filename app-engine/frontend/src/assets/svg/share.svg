@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>Icon/24px/share n</title>
-    <g id="页面-2备份" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="页面-2备份" stroke="none" stroke-width="1" fill="none" fillRule="evenodd">
         <g id="icon" transform="translate(-97.000000, -158.000000)">
             <g id="button-/-small_32-/-history-n备份-7" transform="translate(97.000000, 158.000000)">
-                <rect id="矩形" fill="#D8D8D8" fill-rule="nonzero" opacity="0" x="0" y="0" width="32" height="32"></rect>
+                <rect id="矩形" fill="#D8D8D8" fillRule="nonzero" opacity="0" x="0" y="0" width="32" height="32"></rect>
                 <g id="编组-2">
-                    <rect id="矩形" fill="#D8D8D8" fill-rule="nonzero" opacity="0" x="0" y="0" width="24" height="24"></rect>
+                    <rect id="矩形" fill="#D8D8D8" fillRule="nonzero" opacity="0" x="0" y="0" width="24" height="24"></rect>
                     <g id="编组" transform="translate(2.000000, 2.000000)" stroke="#4D4D4D" stroke-linejoin="round" stroke-width="1.4">
                         <path d="M16.135,7.23247232 C14.1775,7.23247232 12.5825,5.61140094 12.5825,3.61878102 C12.5825,1.62616109 14.1775,0 16.135,0 C18.0925,0 19.6875,1.62107138 19.6875,3.61623616 C19.6875,5.61140094 18.095,7.23247232 16.135,7.23247232 L16.135,7.23247232 Z" id="路径" stroke-linecap="round"></path>
                         <path d="M16.4475,20 C14.49,20 12.895,18.3789286 12.895,16.3837638 C12.895,14.3885991 14.4875,12.7675277 16.4475,12.7675277 C18.4075,12.7675277 20,14.3911439 20,16.3837638 C20,18.3763838 18.4075,20 16.4475,20 Z" id="路径" stroke-linecap="round"></path>

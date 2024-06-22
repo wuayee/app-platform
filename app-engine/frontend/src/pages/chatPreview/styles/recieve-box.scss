@@ -78,6 +78,11 @@
       font-size: 14px;
       color: #1a1a1a;
       font-weight: 600;
+      display: inline-block;
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
   .message-tip-box-send {

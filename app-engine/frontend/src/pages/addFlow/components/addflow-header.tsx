@@ -61,10 +61,10 @@ const AddHeader = (props) => {
   }
   return <>{(
     <div>
-      <div className='header'>
-        <div className='header-left'>
+      <div className='app-header'>
+        <div className='logo'>
           <LeftArrowIcon className="icon-back" onClick={ handleBackClick } />
-          <span className='header-text'>{ waterFlowName }</span>
+          <span className='header-text' title={waterFlowName}>{ waterFlowName }</span>
           <span className='header-edit'>
             <EditIcon onClick={ handleEditClick } />
           </span>

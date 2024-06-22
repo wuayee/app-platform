@@ -15,6 +15,7 @@ const AddFlow = (props) => {
   const { type, appInfo, addFlowRef, setFlowTestTime, setFlowTestStatus } = props;
   const [ dragData, setDragData ] = useState([]);
   const [ addId, setAddId ] = useState(false);
+  const [ loading, setLoading ] = useState(false);
   const [ showMenu, setShowMenu ] = useState(false);
   const [ debugTypes, setDebugTypes ] = useState([]);
   const [ showDebug, setShowDebug ] = useState(false);
@@ -84,7 +85,14 @@ const AddFlow = (props) => {
         <div className={['content', !type ? 'content-add' : null ].join(' ')}>
           {
             showMenu ? (
-              <LeftMenu menuClick={menuClick} addId={addId} dragData={dragData}/>
+              <LeftMenu 
+                menuClick={menuClick} 
+                addId={addId} 
+                dragData={dragData} 
+                loading={loading}
+                setLoading={setLoading}
+                setDragData={setDragData}
+              />
             ) : (
               <Tooltip placement="rightTop" title="展开编排区">
                 <div className="menu-icon" onClick={menuClick}>
@@ -93,7 +101,13 @@ const AddFlow = (props) => {
               </Tooltip>
             )
           }
-          <Stage setAddId={setAddId} setDragData={setDragData} appRef={appRef} flowIdRef={flowIdRef} />
+          <Stage 
+            setAddId={setAddId} 
+            setDragData={setDragData} 
+            setLoading={setLoading}
+            appRef={appRef} 
+            flowIdRef={flowIdRef} 
+          />
         </div>
       </FlowContext.Provider>
     </div>

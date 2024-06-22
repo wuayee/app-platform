@@ -20,7 +20,8 @@ export const JadeReferenceTreeSelect = (props) => {
     const name = `reference-${reference.id}`;
     // 合并外部传入的 className 和内部定义的 className
     const combinedClassName = `jade-tree-select ${className || ''}`.trim();
-
+    // 后续可能需要根据新的剩余的宽度，动态设置: 100 - rest.level * 20
+    const minWidth = '100px';
 
     /**
      * 当选择发生变化时，触发.监听不同的组件.
@@ -154,6 +155,7 @@ export const JadeReferenceTreeSelect = (props) => {
                     treeData={treeData}
                     onDropdownVisibleChange={onDropdownVisibleChange}
                     treeDefaultExpandAll={false}
+                    style={{minWidth: `${minWidth}`}}
                     onMouseDown={(e) => e.stopPropagation()}
             />
         </Form.Item>

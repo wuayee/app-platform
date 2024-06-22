@@ -7,6 +7,8 @@ import { useNavigate, useParams } from 'react-router';
 import { AppIcons } from '../../../components/icons/app';
 import { AvatarIcon } from '../../../assets/icon';
 import { AppDefaultIcon } from '../../../assets/icon';
+import { useAppDispatch } from '../../../store/hook';
+import { setAppInfo } from "../../../store/appInfo/appInfo";
 
 const AppOverview: React.FC = () => {
 
@@ -14,6 +16,7 @@ const AppOverview: React.FC = () => {
   const { appId, tenantId } = useParams();
   const [detail, setDetail] = useState({});
   const [appIcon, setAppIcon] = useState('');
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     getAppInfo(tenantId, appId).then(res => {
@@ -29,6 +32,7 @@ const AppOverview: React.FC = () => {
   }, [])
 
   const gotoArrange = () => {
+    dispatch(setAppInfo({}));
     navigate(`/app-develop/${tenantId}/app-detail/${appId}`);
   }
 

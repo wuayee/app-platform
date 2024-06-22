@@ -1,3 +1,7 @@
+import Icon from '@ant-design/icons/lib/components/Icon';
+import SystemPlugin from '../../assets/svg/plugin-system.svg';
+import Liamaindex from '../../assets/svg/plugin-liamaindex.svg';
+import Langchain from '../../assets/svg/plugin-langchain.svg';
 import * as React from 'react'
 
 type IconProps = React.HTMLAttributes<SVGElement> & any;
@@ -34,6 +38,9 @@ export const PluginIcons = {
         <path id="path" d="M12.8 17.42C12.17 16.51 12.22 15.82 13.07 14.96C13.93 14.1 14.43 12.85 14.43 12.85C14.43 12.85 14.62 12.12 15.05 12.19C15.47 12.26 15.78 13.34 14.89 14.01C14 14.67 15.07 15.13 15.41 14.5C15.75 13.88 16.69 12.27 17.17 11.96C17.66 11.65 18 11.82 17.88 12.46C17.77 13.09 15.74 14.63 15.94 14.96C16.14 15.29 16.83 14.57 16.83 14.57C16.83 14.57 19.01 12.59 19.48 13.11C19.95 13.62 19.12 14.06 17.94 14.77C16.75 15.49 16.66 15.68 16.82 15.96C16.99 16.23 19.61 14.02 19.86 14.96C20.1 15.89 17.19 16.16 17.37 16.81C17.55 17.46 19.42 15.59 19.81 16.31C20.19 17.04 17.16 17.9 17.13 17.91C16.15 18.16 13.67 18.7 12.8 17.42Z" fill="#FFD21E" fill-opacity="1.000000" fill-rule="nonzero" />
       </g>
     </svg>
-  )
+  ),
+  SytemIcon:(props)=><Icon component={() => (<SystemPlugin/>)} {...props}/>,
+  LiamaindexIcon:(props)=><Icon component={() => (<Liamaindex/>)} {...props}/>,
+  LangchainIcon:(props)=><Icon component={() => (<Langchain/>)} {...props}/>
 }
 

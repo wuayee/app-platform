@@ -12,6 +12,7 @@ import com.huawei.fit.jane.common.controller.AbstractController;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
+import com.huawei.fit.jober.aipp.dto.ModelDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fitframework.annotation.Component;
@@ -37,8 +38,26 @@ public class StoreController extends AbstractController {
     @GetMapping(path = "/nodes", description = "获取所有工具和基础节点配置")
     public Rsp<StoreNodeConfigResDto> getBasicNodesAndTools(HttpClassicServerRequest httpRequest,
             @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
-            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        return Rsp.ok(this.storeService.getBasicNodesAndTools(pageNum, pageSize));
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "tag") String tag) {
+        return Rsp.ok(this.storeService.getBasicNodesAndTools(tag, pageNum, pageSize));
+    }
+
+    /**
+     * 获取任务的模型列表。
+     *
+     * @param httpRequest 表示 http 请求的 {@link HttpClassicServerRequest}。
+     * @param pageNum 表示页码的 {@code int}。
+     * @param pageSize 表示限制的 {@code int}。
+     * @param taskName 表示任务名的 {@link String}。
+     * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link ModelDto}{@code >}。
+     */
+    @GetMapping(path = "/models", description = "获取任务的模型列表")
+    public Rsp<ModelDto> getModels(HttpClassicServerRequest httpRequest,
+            @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "taskName", defaultValue = "") String taskName) {
+        return Rsp.ok(this.storeService.getModels(taskName, pageNum, pageSize));
     }
 
     @GetMapping(path = "/waterflow", description = "获取所有工具流")
