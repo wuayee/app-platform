@@ -1,10 +1,11 @@
-import { Col, Flex, Row, Space, Table } from 'antd';
+import { Col, Flex, message, Modal, Row, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import GoBack from '../../../components/go-back/GoBack';
 import type { PaginationProps, TableColumnsType } from 'antd';
 import ModelConfig from './config';
 import { useParams } from 'react-router';
-import { queryModelDetail } from '../../../shared/http/model-base';
+import { deleteModelbaseVersion, queryModelDetail } from '../../../shared/http/model-base';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 
 const showTotal: PaginationProps['showTotal'] = (total) => `Total: ${total}`;
 
@@ -44,17 +45,12 @@ const ModelBaseDetail: React.FC = () => {
   ];
 
   useEffect(() => {
-    // setData({ ...detailData[Number(id) - 1] });
-    // setVersionData([...generateVersionData(Number(id) === 1 ? 2 : 1)]);
-    // setConfig(configData[Number(id) - 1]);
     getDetail();
   }, []);
 
   const getDetail = () => {
     if (id) {
       queryModelDetail(id).then(res => {
-        //TODO：获取接口详情数据逻辑
-        console.log(res);
         if (res) {
           setData(res?.modelInfo);
           setConfig(res?.config);
@@ -65,7 +61,23 @@ const ModelBaseDetail: React.FC = () => {
   }
 
   const deleteVersion = (item: any) => {
-    //TODO 删除版本逻辑
+    Modal.confirm({
+      title: '确认删除',
+      icon: <ExclamationCircleFilled />,
+      content: `确认删除模型版本 ${item?.versionNo} ?`,
+      okType: 'danger',
+      onOk() {
+        //删除逻辑
+        deleteModelbaseVersion(item?.versionId).then(res => {
+          if (res && (res?.code === 0 || res?.code === 200)) {
+            message.success('删除成功');
+            getDetail();
+          } else {
+            message.error('删除失败');
+          }
+        })
+      }
+    })
   }
 
   const columns: TableColumnsType = [

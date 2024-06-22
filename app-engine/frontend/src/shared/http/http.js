@@ -20,7 +20,6 @@ baseAxios.interceptors.response.use(
     if (response.data.code === undefined || response.data.code === 0 || response.data.code === 200) {
       return Promise.resolve(response.data);
     }
-    console.warn(response.config?.url);
     Message({ type: 'error', content: response.data.msg || response.data.detail || '操作失败' });
     return Promise.resolve(response.data);
   },
