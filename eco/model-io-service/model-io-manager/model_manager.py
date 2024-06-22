@@ -941,7 +941,8 @@ model_weight_model_dir = {
     # model name and it's base dir name
     "Meta-Llama-3-8B-Instruct": "Meta-Llama-3-8B-Instruct",
     "Qwen-14B-Chat": "Qwen-14B-Chat",
-    "chatglm3-6b": "chatglm3-6b"
+    "chatglm3-6b": "chatglm3-6b",
+    "Qwen-72B": "Qwen1.5-72B-Chat"
 }
 
 
