@@ -58,7 +58,7 @@ public class GatewayRouteConfig {
             config.setReplacement(path + "/${segment}");
             routeLocatorBuilder.route(
                     "extra-gateway",
-                    r -> r.order(1) // 设置为低优先级，其余路由不匹配时才使用内部测试地址
+                    r -> r.order(100) // 设置为低优先级，其余路由不匹配时才使用内部测试地址
                             .path("/**")
                             .filters(f -> f.filter(new RewritePathGatewayFilterFactory().apply(config)))
                             .uri(extraGatewayUrl)
