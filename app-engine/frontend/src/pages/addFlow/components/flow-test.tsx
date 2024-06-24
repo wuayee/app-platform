@@ -52,6 +52,8 @@ const Index = (props) => {
       setTestStatus('Running');
       // 调用轮询
       startTestInstance(aippCreate.aippId, aippCreate.version, instanceId);
+    } else {
+      elsaRunningCtl.current && elsaRunningCtl.current.reset();
     }
   }
   // 测试轮询
