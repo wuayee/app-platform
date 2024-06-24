@@ -209,6 +209,13 @@ export const graphData = {
                                 "from": "Expand",
                                 "value": [
                                     {
+                                        id: "cee9a31b-781c-4835-a616-ceed73be22a7",
+                                        name: "memorySwitch",
+                                        type: "Boolean",
+                                        from: "Input",
+                                        value: true
+                                    },
+                                    {
                                         "id": "cee9a31b-781c-4835-a616-ceed73be22f2",
                                         "name": "type",
                                         "type": "String",

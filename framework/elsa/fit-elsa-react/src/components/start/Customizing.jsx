@@ -38,7 +38,7 @@ export default function Customizing({propValue, onValueChange, config, disabled}
 
     useEffect(() => {
         // 发起网络请求获取 options 数据
-        httpUtil.get(config.urls.customHistoryUrl, {}, (jsonData) => setFitableOptions(jsonData.data.map(item => {
+        httpUtil.get(config?.urls?.customHistoryUrl ?? '', {}, (jsonData) => setFitableOptions(jsonData.data.map(item => {
             return {
                 value: item.fitableId,
                 label: item.name
