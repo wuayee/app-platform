@@ -68,6 +68,7 @@ export const JadeReferenceTreeSelect = (props) => {
             <p>每次对话生成的上下文，包含应用及对话实例相关的系统属性，只读。属性列表：</p>
             <p>1.instanceId：每次对话实例的唯一标识</p>
             <p>2.appId：所属应用的唯一标识</p>
+            <p>3.memories：所属应用的历史记录QA对列表</p>
         </div>
     </>);
 
