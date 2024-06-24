@@ -202,6 +202,11 @@ public enum AippErrCode implements ErrorCode {
     DATA_TYPE_IS_NOT_SUPPORTED(90002908, "Not supported data type to get. [type={0}]"),
 
     /**
+     * 应用已经发布过
+     */
+    APP_HAS_PUBLISHED(90002909, "该应用已经成功发布过，请不要重复发布。"),
+
+    /**
      * 错误码截止值
      */
     ERROR_CODE_BUTT(99999999, "Error code butt.");

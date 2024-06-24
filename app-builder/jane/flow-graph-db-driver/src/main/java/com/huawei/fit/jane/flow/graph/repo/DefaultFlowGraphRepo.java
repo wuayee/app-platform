@@ -47,7 +47,7 @@ public class DefaultFlowGraphRepo implements FlowGraphRepo {
             flowGraphMapper.create(flowGraphDefinition);
         } else {
             if (!StringUtils.equals(findOne.get().getStatus(), "unpublished")) {
-                log.error("graph data with id: %s version: %s has been published, can not be modified.", id, version);
+                log.error("graph data with id: {} version: {} has been published, can not be modified.", id, version);
                 throw new JobberException(ErrorCodes.FLOW_MODIFY_PUBLISHED_GRAPH, id, version);
             }
             flowGraphMapper.update(id, version, tenantId, flowGraphDefinition);

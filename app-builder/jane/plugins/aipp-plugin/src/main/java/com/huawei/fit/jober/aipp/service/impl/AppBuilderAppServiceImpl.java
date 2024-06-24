@@ -9,6 +9,7 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
+import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jane.task.util.Entities;
 import com.huawei.fit.jober.aipp.common.ConvertUtils;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
@@ -17,6 +18,7 @@ import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
+import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfig;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfigProperty;
@@ -32,6 +34,7 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderConfigDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormPropertyDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
+import com.huawei.fit.jober.aipp.enums.AippMetaStatusEnum;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.AppTypeEnum;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
@@ -67,6 +70,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,6 +122,7 @@ public class AppBuilderAppServiceImpl
     public Rsp<AippCreateDto> publish(AppBuilderAppDto appDto, OperationContext contextOf) {
         // todo 要加个save appDto到数据的逻辑
         AippDto aippDto = ConvertUtils.toAppDto(appDto);
+        this.validatePublished(aippDto, contextOf);
         AippCreateDto aippCreateDto = this.aippFlowService.create(aippDto, contextOf);
         aippDto.setId(aippCreateDto.getAippId());
         String id = appDto.getId();
@@ -125,6 +130,20 @@ public class AppBuilderAppServiceImpl
         appBuilderApp.setState("RUNNING");
         this.appFactory.update(appBuilderApp);
         return this.aippFlowService.publish(aippDto, contextOf);
+    }
+
+    private void validatePublished(AippDto aippDto, OperationContext contextOf) {
+        MetaFilter metaFilter = new MetaFilter();
+        metaFilter.setVersions(Collections.singletonList(aippDto.getVersion()));
+        Map<String, List<String>> attributes = new HashMap<>();
+        attributes.put(AippConst.ATTR_AIPP_TYPE_KEY, Collections.singletonList(AippTypeEnum.NORMAL.type()));
+        attributes.put(AippConst.ATTR_META_STATUS_KEY, Collections.singletonList(AippMetaStatusEnum.ACTIVE.getCode()));
+        attributes.put(AippConst.ATTR_APP_ID_KEY, Collections.singletonList(aippDto.getAppId()));
+        metaFilter.setAttributes(attributes);
+        RangedResultSet<Meta> metas = this.metaService.list(metaFilter, true, 0, 1, contextOf);
+        if (!metas.getResults().isEmpty()) {
+            throw new AippException(AippErrCode.APP_HAS_PUBLISHED);
+        }
     }
 
     @Override
