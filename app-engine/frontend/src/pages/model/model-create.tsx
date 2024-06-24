@@ -36,7 +36,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
     if (modifyData) {
       handleModifyData();
     }
-  }, [modifyData]);
+  }, [modifyData, open]);
 
   const handleNameChange = (value: any) => {
     setNameOption(value);
