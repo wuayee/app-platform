@@ -54,7 +54,7 @@ const ModelTrainingCreate = () => {
       setGlobalBatchSize('--');
     }
   }
-   
+
 
   return (
     <div className='aui-fullpage'>
@@ -132,10 +132,28 @@ const ModelTrainingCreate = () => {
           }
           <h3 style={{ fontSize: 18, margin: '16px 0' }}>训练策略</h3>
           <Flex gap={16}>
-            <Form.Item required label='TP' name='tp' tooltip='test'>
+            <Form.Item required
+              label='TP'
+              name='tp'
+              tooltip='test'
+              rules={[
+                {
+                  required: true, message: '不能为空',
+                }
+              ]}
+            >
               <InputNumber style={{ width: inputWidth }} />
             </Form.Item>
-            <Form.Item required label='PP' name='pp' tooltip='test'>
+            <Form.Item required
+              label='PP'
+              name='pp'
+              tooltip='test'
+              rules={[
+                {
+                  required: true, message: '不能为空',
+                }
+              ]}
+            >
               <InputNumber style={{ width: inputWidth }} />
             </Form.Item>
           </Flex>
@@ -174,11 +192,16 @@ const ModelTrainingCreate = () => {
           </Row>
           <h3 style={{ fontSize: 18, margin: '16px 0' }}>训练参数</h3>
           <Flex gap={16} style={{ width: 800 }} wrap>
-            <Form.Item required label='最大序列长度' name='maxSequence' rules={[
-              {
-                required: true, message: '不能为空',
-              }
-            ]}>
+            <Form.Item required
+              label='最大序列长度'
+              name='maxSequence'
+              rules={[
+                {
+                  required: true, message: '不能为空',
+                }
+              ]}
+              tooltip='test'
+            >
               <Select
                 style={{ width: inputWidth }}
                 options={[
@@ -190,22 +213,32 @@ const ModelTrainingCreate = () => {
                   { value: 8192, label: 8192 }
                 ]} />
             </Form.Item>
-            <Form.Item required label='训练数据遍历次数' name='epoch' rules={[
-              {
-                required: true, message: '不能为空',
-              }
-            ]}>
+            <Form.Item required
+              label='训练数据遍历次数'
+              name='epoch'
+              rules={[
+                {
+                  required: true, message: '不能为空',
+                }
+              ]}
+              tooltip='test'
+            >
               <Select
                 style={{ width: inputWidth }}
                 options={Array.from({ length: 7 }).fill(null).map((_, index) => (
                   { value: index + 2, label: index + 2 }
                 ))} />
             </Form.Item>
-            <Form.Item required label='Local batch size' name='localBatchSize' rules={[
-              {
-                required: true, message: '不能为空',
-              }
-            ]}>
+            <Form.Item required
+              label='Local batch size'
+              name='localBatchSize'
+              rules={[
+                {
+                  required: true, message: '不能为空',
+                }
+              ]}
+              tooltip='test'
+            >
               <Select onChange={culculateGBSize}
                 style={{ width: inputWidth }}
                 options={[
@@ -214,11 +247,16 @@ const ModelTrainingCreate = () => {
                   { value: 4, label: 4 }
                 ]} />
             </Form.Item>
-            <Form.Item required label='梯度累计步数' name='gradientAccuStep' rules={[
-              {
-                required: true, message: '不能为空',
-              }
-            ]}>
+            <Form.Item required
+              label='梯度累计步数'
+              name='gradientAccuStep'
+              rules={[
+                {
+                  required: true, message: '不能为空',
+                }
+              ]}
+              tooltip='test'
+            >
               <Select onChange={culculateGBSize}
                 style={{ width: inputWidth }}
                 options={[
@@ -229,21 +267,31 @@ const ModelTrainingCreate = () => {
                   { value: 16, label: 16 }
                 ]} />
             </Form.Item>
-            <Form.Item required label='NPU数' name='npuNum' rules={[
-              {
-                required: true, message: '不能为空',
-              }
-            ]}>
+            <Form.Item required
+              label='NPU数'
+              name='npuNum'
+              rules={[
+                {
+                  required: true, message: '不能为空',
+                }
+              ]}
+              tooltip='test'
+            >
               <InputNumber onChange={culculateGBSize} style={{ width: inputWidth }} />
             </Form.Item>
             <Form.Item label='Global batch size' tooltip='Global batch size = Local batch size * number of NPU * Gradient Accumulation Steps'>
               <span>{globalBatchSize}</span>
             </Form.Item>
-            <Form.Item required label='学习率' name='learningRate' rules={[
-              {
-                required: true, message: '不能为空',
-              }
-            ]}>
+            <Form.Item required
+              label='学习率'
+              name='learningRate'
+              rules={[
+                {
+                  required: true, message: '不能为空',
+                }
+              ]}
+              tooltip='test'
+            >
               <Select
                 style={{ width: inputWidth }}
                 options={[

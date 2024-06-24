@@ -10,7 +10,7 @@ export const historyChatProcess = (res) => {
     let { msg } = JSON.parse(item.question.logData);
     questionObj.logId = item.question.logId;
     questionObj.content = msg;
-    chatArr.push(questionObj);
+    item.question.logType !== 'HIDDEN_QUESTION' && chatArr.push(questionObj);
     if (item.instanceLogBodies.length) {
       item.instanceLogBodies.forEach((aItem) => {
         const regex = /```markdown(.*?)```/g;
@@ -52,6 +52,11 @@ export const historyChatProcess = (res) => {
             formAppearance: JSON.parse(data.formAppearance),
             formData: JSON.parse(data.formData),
           }
+        }
+        if (aItem.logType === 'FILE') {
+          answerObj.type = 'send';
+          let { file_type } = JSON.parse(msg);
+          answerObj.sendType = fileTypeSet(file_type);
         }
         if (isJsonString(msg)) {
           let msgObj = JSON.parse(msg);
@@ -234,4 +239,21 @@ export const messageProcessNormal = (log, instanceId, atAppInfo) => {
 // 深拷贝
 export const deepClone = (obj) => {
   return JSON.parse(JSON.stringify(obj));
+}
+// 文件类型设置
+export const fileTypeSet = (type) => {
+  const audioType = ['mp3', 'wav', 'wmv'];
+  const videoType = ['mp4', 'm2v', 'mkv', 'rmvb', 'wmv', 'avi', 'flv', 'mov', 'm4v'];
+  const imgType = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
+  let fileType = '';
+  if (audioType.includes(type)) {
+    fileType = 'audio';
+  } else if (videoType.includes(type)) {
+    fileType = 'video';
+  } else if (imgType.includes(type)) {
+    fileType = 'image';
+  } else {
+    fileType = 'file';
+  }
+  return fileType
 }

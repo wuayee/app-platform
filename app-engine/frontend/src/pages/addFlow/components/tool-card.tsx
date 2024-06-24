@@ -7,18 +7,29 @@ import '../styles/tool-card.scss';
 import { useAppSelector } from '../../../store/hook';
 
 const ToolCard = ({ pluginData }: any) => {
-  // 类型处理
   const navigate = useNavigate();
-  const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  // 类型处理
+  const detailClick = () => {
+   if (pluginData.tags.includes('WATERFLOW')) {
+    // navigate(`/app-develop/${item.tenantId}/app-detail/flow-detail/${item.appId}`);
+   } else {
+    navigate(`/plugin/detail/${pluginData.uniqueName}`)
+   }
+  }
   return(
   <div className='plugin-card'>
     <div className='plugin-card-header'>
-      <img src='/src/assets/images/knowledge/knowledge-base.png' />
+      {
+        pluginData.tags.includes('HUGGINGFACE') ? 
+          <img src={`/src/assets/images/ai/${2}.png`} /> : 
+          <img src='/src/assets/images/knowledge/knowledge-base.png' />
+      }
+      
       <div>
         <div style={{ display: 'flex' }}>
           <div className="tool-name">
             <span>{pluginData.name}</span> 
-            { pluginData.tags.includes('WATERFLOW') ? 
+            {  pluginData.tags.includes('WATERFLOW') || pluginData.tags.includes('HUGGINGFACE') ? 
               <img src='/src/assets/images/ai/workflow.png' alt='' /> : 
               <img src='/src/assets/images/ai/application.png' alt='' />}
           </div>
@@ -46,11 +57,7 @@ const ToolCard = ({ pluginData }: any) => {
         </span>
       </Flex>
     </div>
-    <div className="card-detail" onClick={()=>{
-      if(pluginData.tags.includes('WATERFLOW')){
-        navigate(`/app-develop/${tenantId}/app-detail/add-flow/${pluginData?.runnables?.APP?.appId}`);
-      }else{
-      navigate(`/plugin/detail/${pluginData?.uniqueName}`);}}}>
+    <div className="card-detail" onClick={detailClick}>
       查看详情
     </div>
   </div >

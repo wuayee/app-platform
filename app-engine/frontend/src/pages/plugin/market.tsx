@@ -63,7 +63,7 @@ const MarketItems = () => {
   return <div
     className='aui-block'
     style={{
-      height: 'calc(100vh - 118px)',
+      height: 'calc(100vh - 140px)',
       display: 'flex',
       flexDirection: 'column',
       borderRadius: '0 8px 0 0',

@@ -367,7 +367,7 @@ const ChatPreview = (props) => {
   return (
     <div className={`
         chat-preview 
-        ${ showElsa ? 'chat-preview-elsa chat-preview-shadow': ''} 
+        ${ showElsa ? 'chat-preview-elsa': ''} 
         ${ !chatPage ? 'chat-preview-inner' : '' } 
         ${(showElsa && inspirationOpen) ? 'chat-preview-mr' : ''}`}
     >

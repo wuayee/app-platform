@@ -112,7 +112,7 @@ public class KnowledgeBaseController {
         try {
             kRepoService.create(kRepoDto);
         } catch (FitException e) {
-            throw new ServiceException(e.getCause());
+            throw new ServiceException(e.getCause().getMessage());
         }
     }
 
@@ -124,7 +124,11 @@ public class KnowledgeBaseController {
     @PostMapping("/repos/update")
     public void updateRepo(@RequestBody KRepoDto kRepoDto) {
         kRepoDto.setUpdatedAt(new Date(System.currentTimeMillis()));
-        kRepoService.update(kRepoDto);
+        try {
+            kRepoService.update(kRepoDto);
+        } catch (FitException e) {
+            throw new ServiceException(e.getCause().getMessage());
+        }
     }
 
     /**
@@ -180,7 +184,11 @@ public class KnowledgeBaseController {
      */
     @PostMapping("/repos/{repo_id}/tables")
     public Long createTable(@RequestBody KTableDto kTableDto) {
-        return kTableService.create(kTableDto);
+        try {
+            return kTableService.create(kTableDto);
+        } catch (FitException e) {
+            throw new ServiceException(e.getCause().getMessage());
+        }
     }
 
     /**
@@ -190,7 +198,11 @@ public class KnowledgeBaseController {
      */
     @PostMapping("/tables/update/")
     public void updateTable(@RequestBody KTableDto kTableDto) {
-        kTableService.update(kTableDto);
+        try {
+            kTableService.update(kTableDto);
+        } catch (FitException e) {
+            throw new ServiceException(e.getCause().getMessage());
+        }
     }
 
     /**

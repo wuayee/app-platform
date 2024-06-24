@@ -1,19 +1,23 @@
 
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Tabs } from "antd";
+import { Spin } from "antd";
 import { LeftArrowIcon } from '@assets/icon';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
 import BasicItems from './basic-item';
 import ToolItems from './tool-item';
 
 const LeftMenu = (props) => {
-  const { dragData, menuClick, setDragData } = props;
+  const { dragData, menuClick, setDragData, loading, setLoading } = props;
   const { tenantId, appId } = useParams();
   const [ activeKey, setActiveKey ] = useState('basic');
+  const [ toolKey, setToolKey ] = useState('Builtin');
 
   const tabClick = (key) => {
-    getAddFlowConfig(tenantId,  {pageNum: 1, pageSize: 100, tag: key}).then(res => {
+    setLoading(true);
+    setToolKey(key);
+    getAddFlowConfig(tenantId,  {pageNum: 1, pageSize: 1000, tag: key}).then(res => {
+      setLoading(false);
       if (res.code === 0) {
         if (key === 'HUGGINGFACE') {
           res.data.tool.forEach(item => {
@@ -50,7 +54,11 @@ const LeftMenu = (props) => {
           })
         }
       </div>
-      { activeKey === 'basic' ? <BasicItems dragData={dragData.basic || []} /> : <ToolItems dragData={dragData.tool || []} tabClick={tabClick} /> }
+      { 
+        activeKey === 'basic' ? 
+        <Spin spinning={loading}><BasicItems dragData={dragData.basic || []} /> </Spin>: 
+        <ToolItems dragData={dragData.tool || []} tabClick={tabClick} loading={loading} toolKey={toolKey}/> 
+      }
       <div className="arrow-icon" onClick={menuClick}>
         <img src='/src/assets/images/ai/arrow.png'  />
       </div>

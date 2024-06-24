@@ -2,9 +2,8 @@ import {jadeNode} from "@/components/jadeNode.jsx";
 import "./style.css";
 import {Button} from "antd";
 import {DIRECTION} from "@fit-elsa/elsa-core";
-import EndIcon from '../asserts/icon-end.svg?react';
-import {EndNodeHeader} from "@/components/end/EndNodeHeader.jsx";
 import {SECTION_TYPE} from "@/common/Consts.js";
+import {endNodeDrawer} from "@/components/end/endNodeDrawer.jsx";
 
 /**
  * 结束节点shape

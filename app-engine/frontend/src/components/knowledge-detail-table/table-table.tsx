@@ -204,8 +204,6 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
       {type === 'text' && (<>
         <div className='containerArea' style={{
           width: '100%',
-          minHeight: '800px',
-          maxHeight: 'calc(100% - 200px)',
           boxSizing: 'border-box',
           paddingTop: '20px',
           paddingBottom: '20px',

@@ -44,13 +44,11 @@ const ChatMessaga = (props) => {
 
   
   const scrollBottom = () => {
-    setTimeout(() => {
-      const messageBox = document.getElementById('chat-list-dom');
-      messageBox?.scrollTo({
-        top: messageBox.scrollHeight,
-        behavior: 'smooth',
-      });
-    }, 100)
+    const messageBox = document.getElementById('chat-list-dom');
+    messageBox?.scrollTo({
+      top: messageBox.scrollHeight,
+      behavior: 'smooth',
+    });
   }
   // 重置选中状态
   const setCheckStatus = () => {

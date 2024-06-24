@@ -34,6 +34,7 @@ import com.huawei.jade.store.service.HuggingFaceModelService;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -95,7 +96,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     private String getDefaultModel(ToolData toolData, String tag) {
-        Map<String, Object> map = ObjectUtils.cast(toolData.getRunnables().get(tag.toUpperCase()));
+        Map<String, Object> map = ObjectUtils.cast(toolData.getRunnables().get(tag.toUpperCase(Locale.ROOT)));
         if (MapUtils.isEmpty(map) || !map.containsKey("taskName")) {
             return StringUtils.EMPTY;
         }

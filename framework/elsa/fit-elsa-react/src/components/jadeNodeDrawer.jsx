@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom/client";
-import {rectangleDrawer} from "@fit-elsa/elsa-core";
+import {rectangleDrawer, isPointInRect} from "@fit-elsa/elsa-core";
 import React, {useRef, useState} from "react";
 import {NODE_STATUS} from "@";
 import RunningStatusPanel from "@/components/flowRunComponent/RunningStatusPanel.jsx";

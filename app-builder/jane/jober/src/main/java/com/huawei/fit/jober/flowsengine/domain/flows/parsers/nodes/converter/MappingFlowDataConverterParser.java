@@ -61,7 +61,7 @@ public class MappingFlowDataConverterParser implements FlowDataConverterParser {
         Object value = config.get(VALUE);
         MappingNodeType type = MappingNodeType.get(cast(config.get(TYPE)));
         MappingFromType from = MappingFromType.get(cast(config.get(FROM)));
-        if (MappingNodeType.isNestedType(type) && !MappingFromType.REFERENCE.equals(from)) {
+        if (MappingNodeType.isNestedType(type) && MappingFromType.EXPAND.equals(from)) {
             List<Map<String, Object>> nestedValueConfig = cast(value);
             value = nestedValueConfig.stream()
                     .map(MappingFlowDataConverterParser::getMappingNode)

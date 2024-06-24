@@ -39,7 +39,7 @@ const ConfigForm = (props) => {
             })}
           </span>
           <span className='config-btn' onClick={mashupClick}>
-            <WorkFlowIcon />
+            <img src="/src/assets/images/ai/mashup.png" width="16" height="16" />
             工作流编排  
           </span>
         </div>

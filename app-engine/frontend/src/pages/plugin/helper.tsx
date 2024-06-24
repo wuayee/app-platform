@@ -5,16 +5,16 @@ export const IconMap = {
     icon: <PluginIcons.HuggingFaceIcon />,
     name: 'HuggingFace',
   },
-  OFFICIAL: {
-    icon: null,
-    name: '官方',
+  BUILTIN: {
+    icon: <PluginIcons.SytemIcon />,
+    name: '系统内置',
   },
   LANGCHAIN: {
-    icon: null,
+    icon: <PluginIcons.LangchainIcon />,
     name: 'Langchain',
   },
   LLAMAINDEX: {
-    icon: null,
+    icon: <PluginIcons.LiamaindexIcon />,
     name: 'Llamaindex',
   },
   FAVOURITE: {
@@ -25,7 +25,7 @@ export const IconMap = {
 
 export const sourceTabs = [
   { key: 'FIT', label: '全部' },
-  { key: 'OFFICIAL', label: '官方' },
+  { key: 'BUILTIN', label: '系统内置' },
   { key: 'HUGGINGFACE', label: 'Huggingface' },
   { key: 'LANGCHAIN', label: 'Langchain' },
   { key: 'LLAMAINDEX', label: 'Llamaindex' },

@@ -87,6 +87,8 @@ const AddFlow = (props) => {
               <LeftMenu 
                 menuClick={menuClick}
                 dragData={dragData} 
+                loading={loading}
+                setLoading={setLoading}
                 setDragData={setDragData}
               />
             ) : (
@@ -99,6 +101,7 @@ const AddFlow = (props) => {
           }
           <Stage
             setDragData={setDragData} 
+            setLoading={setLoading}
             appRef={appRef} 
             flowIdRef={flowIdRef} 
           />

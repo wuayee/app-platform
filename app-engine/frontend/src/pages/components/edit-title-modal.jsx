@@ -66,7 +66,11 @@ const EditTitleModal = (props) => {
             <Form.Item
               label="名称"
               name="name"
-              rules={[{ required: true, message: '请输入名称' }]}
+              rules={[{ required: true, message: '请输入名称' },  {
+                type: 'string',
+                max: 64,
+                message: '输入字符长度范围：1 - 64'
+              }]}
             >
               <Input />
             </Form.Item>

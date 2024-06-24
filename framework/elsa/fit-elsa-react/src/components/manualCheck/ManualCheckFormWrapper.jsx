@@ -29,7 +29,9 @@ export default function ManualCheckFormWrapper() {
                     panelKey="manualCheckOutputPanel"
                     headerText="输出"
             >
-                <JadeObservableTree data={output}/>
+                <div className={"jade-custom-panel-content"}>
+                    <JadeObservableTree data={output}/>
+                </div>
             </JadePanelCollapse>
         </>);
     };

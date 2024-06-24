@@ -14,10 +14,15 @@ public class Constant {
     /**
      * 信息头部长度
      */
-    public static final int DATABUS_SERVICE_HEADER_SIZE = 24;
+    public static final int DATABUS_SERVICE_HEADER_SIZE = 32;
 
     /**
      * 接收缓冲区长度
      */
     public static final int BUFFER_SIZE = 2048;
+
+    /**
+     * 默认回复等待时间
+     */
+    public static final long DEFAULT_WAITING_TIME_SECOND = 30L;
 }

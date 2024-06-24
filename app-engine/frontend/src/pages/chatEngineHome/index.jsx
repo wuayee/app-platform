@@ -9,6 +9,7 @@ import { setCollectionValue, setCurAppId } from "../../store/collection/collecti
 import CommonChat from '../chatPreview/chatComminPage';
 import { getUser } from '../helper';
 import { setAppId, setAppInfo } from '../../store/appInfo/appInfo';
+import InfoModal from './components/InfoModal';
 
 const xiaohaiAppId='3a617d8aeb1d41a9ad7453f2f0f70d61';
 const ChatRunning = () => {
@@ -65,6 +66,7 @@ const ChatRunning = () => {
   return (
     <div className="chat-engine-container">
       <CommonChat chatType='home'/> 
+      <InfoModal/>
     </div>
 );
   }

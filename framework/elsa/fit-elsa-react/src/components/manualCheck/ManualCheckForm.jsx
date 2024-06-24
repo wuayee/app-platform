@@ -69,17 +69,19 @@ export default function ManualCheckForm({data, handleFormChange}) {
                 headerText="表单"
                 panelStyle={{marginBottom: 8, borderRadius: "8px", width: "100%"}}
         >
-            <Form.Item>
-                <JadeStopPropagationSelect
+            <div className={"jade-custom-panel-content"}>
+                <Form.Item>
+                    <JadeStopPropagationSelect
                         allowClear
                         className="jade-select"
                         defaultValue={selectedFormDefaultValue}
                         style={{width: "100%", marginBottom: "8px"}}
                         onChange={e => onChange(e)}
                         options={formOptions}
-                />
-                {renderComponent()} {/* 渲染对应的组件 */}
-            </Form.Item>
+                    />
+                    {renderComponent()} {/* 渲染对应的组件 */}
+                </Form.Item>
+            </div>
         </JadePanelCollapse>
     </>);
 }

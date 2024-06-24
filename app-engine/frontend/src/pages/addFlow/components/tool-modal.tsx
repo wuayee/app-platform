@@ -1,10 +1,10 @@
 
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination } from 'antd';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination, Spin } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
-import { getPersonPluginData } from '@shared/http/appBuilder';
+import { createAipp } from "@shared/http/aipp";
 import { categoryItems } from '../../configForm/common/common';
 import { handleClickAddToolNode } from '../utils';
 import ToolCard from './tool-card';
@@ -15,9 +15,10 @@ const { Option } = Select;
 
 const ToolDrawer = (props) => {
   const { showModal, setShowModal, checkData, confirmCallBack, type } = props;
-  const [ activeKey, setActiveKey ] = useState('BUILTIN');
+  const [ activeKey, setActiveKey ] = useState('Builtin');
   const [ menuName, setMenuName ] = useState('新闻阅读');
   const [ name, setName ] = useState('');
+  const [ loading, setLoading ] = useState(false);
   const [ pageNum, setPageNum ] = useState(1);
   const [ pageSize, setPageSize ] = useState(10);
   const [ total, setTotal ] = useState(0);
@@ -25,8 +26,9 @@ const ToolDrawer = (props) => {
   const { tenantId } = useParams();
   const checkedList = useRef([]);
   const pluginList = useRef([]);
+  const navigate = useNavigate();
   const tab = [
-    { name: '官方', key: 'BUILTIN' },
+    { name: '系统内置', key: 'Builtin' },
     { name: 'HuggingFace', key: 'HUGGINGFACE' },
     { name: 'LangChain', key: 'LANGCHAIN' },
     { name: 'LlamaIndex', key: 'LLAMAINDEX' },
@@ -40,8 +42,8 @@ const ToolDrawer = (props) => {
   }, [props.checkData])
   const items = categoryItems;
   const btnItems = [
-    { key: 'workflow', label: '插件' },
-    { key: 'NEWS', label: '工具流' },
+    { key: 'tool', label: '插件' },
+    { key: 'workflow', label: '工具流' },
   ];
 
   const pluginTypeOnchange = (value) => {
@@ -63,17 +65,29 @@ const ToolDrawer = (props) => {
   const handleClick = (key) => {
     setPageNum(1);
     setActiveKey(key);
+    setName('');
   }
   const onClick = ({ key }) => {
     let name = items.filter(item => item.key === key)[0].label;
     setMenuName(name);
   };
-  const createClick = ({ key }) => {
-    console.log(key);
+  const createClick = async ({ key }) => {
+    if (key === 'tool') {
+      navigate(`/plugin`);
+    } else {
+      const timeStr = new Date().getTime().toString();
+      const res = await createAipp(tenantId, 'df87073b9bc85a48a9b01eccc9afccc3', { type: 'waterFlow', name: timeStr });
+      if (res.code === 0) {
+        const aippId = res.data.id;
+        navigate(`/app-develop/${tenantId}/app-detail/add-flow/${aippId}`);
+      }
+    }
   }
   // 获取插件列表
   const getPluginList = ()=> {
+    setLoading(true);
     getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 1000, tag: activeKey}).then(res => {
+      setLoading(false);
       if (res.code === 0) {
         if (activeKey === 'HUGGINGFACE') {
           res.data.tool.forEach(item => {
@@ -84,8 +98,8 @@ const ToolDrawer = (props) => {
           })
         };
         setDefaultCheck(res.data.tool);
+        pluginList.current = JSON.parse(JSON.stringify(res.data.tool));
         setPluginData(res.data.tool);
-        pluginList.current = res.data.tool;
       }
     });
   }
@@ -112,8 +126,12 @@ const ToolDrawer = (props) => {
   }
   // 名称搜索
   const filterByName = (value: string) => {
-    if(value !== name) {
-      setName(value);
+    setPageNum(1);
+    if (!value.trim().length) {
+      setPluginData(pluginList.current);
+    } else {
+      let arr = pluginList.current.filter(item => item.name.indexOf(value.trim()) !== -1);
+      setPluginData(arr);
     }
   }
   // 添加插件
@@ -174,7 +192,13 @@ const ToolDrawer = (props) => {
       }
     >
       <div className="tool-modal-search">
-        <Search size="large" addonBefore={selectBefore} onSearch={filterByName} placeholder="请输入" />
+        <Search 
+          size="large" 
+          addonBefore={selectBefore} 
+          onSearch={filterByName}
+          value={name}
+          onChange={ e => { setName(e.target.value) }}
+          placeholder="请输入" />
         <Dropdown menu={{ items: btnItems, onClick: createClick }} trigger={['click']}>
           <Button type="primary" icon={<DownOutlined />}>创建</Button>
         </Dropdown>
@@ -199,19 +223,21 @@ const ToolDrawer = (props) => {
         </div>
       </div>
       <div className="mashup-add-content">
-        { pluginData.length > 0 && (
-          <div className="mashup-add-inner" style={{ height: 'calc(100vh - 500px)' }}>
-            {pluginData.slice((pageNum - 1)*pageSize, pageNum*pageSize).map((card: any) => 
-              <div className="mashup-add-item" key={card.uniqueName}>
-                <ToolCard  pluginData={card} />
-                <span className="opration-item">
-                  <Checkbox defaultChecked={card.checked} onChange={(e) => onChange(e, card)}></Checkbox>
-                </span>
-              </div>
-            )}
-          </div>)
-        }
-        { !pluginData.length && <div className="tool-empty"><Empty description="暂无数据" /></div> }
+        <Spin spinning={loading}>
+          { pluginData.length > 0 && (
+            <div className="mashup-add-inner" style={{ height: 'calc(100vh - 500px)' }}>
+              {pluginData.slice((pageNum - 1)*pageSize, pageNum*pageSize).map((card: any) => 
+                <div className="mashup-add-item" key={card.uniqueName}>
+                  <ToolCard  pluginData={card} />
+                  <span className="opration-item">
+                    <Checkbox defaultChecked={card.checked} onChange={(e) => onChange(e, card)}></Checkbox>
+                  </span>
+                </div>
+              )}
+            </div>)
+          }
+          { !pluginData.length && <div className="tool-empty"><Empty description="暂无数据" /></div> }
+        </Spin>
       </div>
       <div style={{ paddingTop: 16 }}>
         <Pagination

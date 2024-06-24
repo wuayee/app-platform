@@ -125,15 +125,16 @@ const AippIndex = () => {
           ].join(' ')}
           >
             <ConfigFormContext.Provider value={configFormProvider}> 
-              {showElsa ? (
-                <AddFlow 
-                  type="edit"
-                  addFlowRef={addFlowRef}
-                  setFlowTestStatus={handleTestStatus}
-                  setFlowTestTime={handleTestTime}
-                  appInfo={appInfo}
+              {showElsa ?
+              (
+                <AddFlow type="edit"
+                         addFlowRef={addFlowRef}
+                         setFlowTestStatus={handleTestStatus}
+                         setFlowTestTime={handleTestTime}
+                         appInfo={appInfo}
                 />
-              ) : (
+              ) :
+              (
                 <ConfigForm
                   mashupClick={elsaChange}
                   configData={appInfo.config}
@@ -142,16 +143,16 @@ const AippIndex = () => {
                   showElsa={showElsa}
                 />
               )}
-              </ConfigFormContext.Provider>
-              <CommonChat chatType="preview" contextProvider={contextProvider} previewBack={changeChat} /> 
-              {
-                (!showChat && showElsa) &&
-                <Tooltip placement="leftTop" title="展开预览与调试区">
-                  <div className="chat-icon" onClick={changeChat}>
-                    <TalkFlowIcon />
-                  </div>
-                </Tooltip>
-              }
+            </ConfigFormContext.Provider>
+            <CommonChat chatType="preview" contextProvider={contextProvider} previewBack={changeChat} />
+            {
+              (!showChat && showElsa) &&
+              <Tooltip placement="leftTop" title="展开预览与调试区">
+                <div className="chat-icon" onClick={changeChat}>
+                  <TalkFlowIcon />
+                </div>
+              </Tooltip>
+            }
           </div>
         </div>
       }

@@ -4,7 +4,9 @@
 
 package com.huawei.jade.fel.pipeline.huggingface.api;
 
+import com.huawei.jade.fel.pipeline.huggingface.entity.HealthCheckRequest;
 import com.huawei.jade.fel.pipeline.huggingface.entity.HuggingFacePipelineRequest;
+import com.huawei.jade.fel.pipeline.huggingface.entity.PipelineStartUpRequest;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -19,7 +21,7 @@ import retrofit2.http.Url;
  */
 public interface HuggingFacePipelineApi {
     /**
-     * 启动 Hugging Face 管道。
+     * 调用 Hugging Face 管道执行指定任务。
      *
      * @param url 管道地址。
      * @param request {@link HuggingFacePipelineRequest}
@@ -27,4 +29,24 @@ public interface HuggingFacePipelineApi {
      */
     @POST
     Call<Object> callPipeline(@Url String url, @Body HuggingFacePipelineRequest request);
+
+    /**
+     * 初始化 Hugging Face 管道。
+     *
+     * @param url model-io-manager 地址。
+     * @param request {@link PipelineStartUpRequest}
+     * @return 管道初始化结果。
+     */
+    @POST
+    Call<Object> startUpPipeline(@Url String url, @Body PipelineStartUpRequest request);
+
+    /**
+     * 管道健康检测接口。
+     *
+     * @param url model-io-manager 地址。
+     * @param request {@link HealthCheckRequest}
+     * @return 健康检测结果。
+     */
+    @POST
+    Call<Object> pipelineHealthCheck(@Url String url, @Body HealthCheckRequest request);
 }

@@ -63,41 +63,41 @@ const AddHeader = (props) => {
   return <>{(
     <div>
       <div className='app-header'>
-      <div className="logo">
-        <LeftArrowIcon className="back-icon" onClick={handleBackClick}/>
-        { appInfo?.attributes?.icon ?
-          <img src={appInfo.attributes?.icon} /> :
-          <img src='/src/assets/images/knowledge/knowledge-base.png' />
-        }
-        <span className="header-text" title={appInfo?.name}>{ appInfo?.name }</span>
-        <img className="edit-icon" src='/src/assets/images/ai/edit.png' onClick={ handleEditClick } />
-        {
-          appInfo.state === 'active' ?
-          (
-            <div className="status-tag">
-              <img src='/src/assets/images/ai/complate.png' />
-              <span>已发布</span>
-              <span className="version">V{appInfo.version}</span>
-            </div>
-          ) :
-          (
-            <div className="status-tag">
-              <img src='/src/assets/images/ai/publish.png' />
-              <span>未发布</span>
-              <span className="version">V{appInfo.version}</span>
-            </div>
-          )
-        }
-        <span>自动保存：{currentTime}</span>
-        <TestStatus testTime={testTime} testStatus={testStatus}/>
-      </div>
-      <div className="header-grid">
-        <span className="history" onClick={versionDetail}>
-          <img src='/src/assets/images/ai/time.png' />
-        </span>
-        <span className="header-btn test-btn" onClick={handleDebugClick}>调试</span>
-        <span className="header-btn" onClick={handleUploadFlow}><UploadIcon />发布</span>
-      </div>
+        <div className="logo">
+          <LeftArrowIcon className="back-icon" onClick={handleBackClick}/>
+          { appInfo?.attributes?.icon ?
+            <img src={appInfo.attributes?.icon} /> :
+            <img src='/src/assets/images/knowledge/knowledge-base.png' />
+          }
+          <span className="header-text" title={appInfo?.name}>{ appInfo?.name }</span>
+          <img className="edit-icon" src='/src/assets/images/ai/edit.png' onClick={ handleEditClick } />
+          {
+            appInfo.state === 'active' ?
+            (
+              <div className="status-tag">
+                <img src='/src/assets/images/ai/complate.png' />
+                <span>已发布</span>
+                <span className="version">V{appInfo.version}</span>
+              </div>
+            ) :
+            (
+              <div className="status-tag">
+                <img src='/src/assets/images/ai/publish.png' />
+                <span>未发布</span>
+                <span className="version">V{appInfo.version}</span>
+              </div>
+            )
+          }
+          <span>自动保存：{currentTime}</span>
+          <TestStatus testTime={testTime} testStatus={testStatus}/>
+        </div>
+        <div className="header-grid">
+          <span className="history" onClick={versionDetail}>
+            <img src='/src/assets/images/ai/time.png' />
+          </span>
+          <span className="header-btn test-btn" onClick={handleDebugClick}>调试</span>
+          <span className="header-btn" onClick={handleUploadFlow}><UploadIcon />发布</span>
+        </div>
       </div>
       <PublishModal
         modalRef={modalRef}
