@@ -126,20 +126,21 @@ const AippIndex = () => {
           >
             <ConfigFormContext.Provider value={configFormProvider}> 
               {showElsa ? (
-                <AddFlow type="edit"
-                         addFlowRef={addFlowRef}
-                         setFlowTestStatus={handleTestStatus}
-                         setFlowTestTime={handleTestTime}
-                         appInfo={appInfo}
+                <AddFlow 
+                  type="edit"
+                  addFlowRef={addFlowRef}
+                  setFlowTestStatus={handleTestStatus}
+                  setFlowTestTime={handleTestTime}
+                  appInfo={appInfo}
                 />
               ) : (
-                   <ConfigForm
-                     mashupClick={elsaChange}
-                     configData={appInfo.config}
-                     handleConfigDataChange={handleConfigDataChange}
-                     inspirationChange={inspirationChange}
-                     showElsa={showElsa}
-                   />
+                <ConfigForm
+                  mashupClick={elsaChange}
+                  configData={appInfo.config}
+                  handleConfigDataChange={handleConfigDataChange}
+                  inspirationChange={inspirationChange}
+                  showElsa={showElsa}
+                />
               )}
               </ConfigFormContext.Provider>
               <CommonChat chatType="preview" contextProvider={contextProvider} previewBack={changeChat} /> 

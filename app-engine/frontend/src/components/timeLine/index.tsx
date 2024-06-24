@@ -1,14 +1,17 @@
 
 import React, { useEffect, useState } from 'react';
 import { Drawer, Timeline, Empty } from 'antd';
+import { useParams } from 'react-router-dom';
 import { CloseOutlined } from '@ant-design/icons';
 import { getVersion } from '@shared/http/aipp';
 
 const TimeLine = (props) => {
-  const { open, setOpen, tenantId, appId } = props;
-  const [ timeList, setTimeList ] = useState([])
+  const { open, setOpen } = props;
+  const [ timeList, setTimeList ] = useState([]);
+  const { tenantId, appId } = useParams();
+
   useEffect(() => {
-    getVersion(tenantId, appId).then(res => {
+    open && getVersion(tenantId, appId).then(res => {
       if(res.code === 0) {
         dataProcess(res.data);
       }

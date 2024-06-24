@@ -136,8 +136,8 @@ export function reTestInstance(tenantId, aippId, instanceId, version) {
   );
 }
 // 获取版本历史记录
-export function getVersion(tenantId, aippId) {
+export function getVersion(tenantId, appId) {
   return get(
-    `${AIPP_URL}/${tenantId}/app/${aippId}/recentPublished`
+    `${AIPP_URL}/${tenantId}/app/${appId}/recentPublished`
   );
 }

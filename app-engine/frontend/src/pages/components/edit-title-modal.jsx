@@ -1,20 +1,22 @@
 
-import React, { useEffect, useState, useImperativeHandle } from 'react';
+import React, { useEffect, useState, useImperativeHandle, useContext } from 'react';
 import { Input, Modal, Form, Button } from 'antd';
+import { FlowContext } from '../aippIndex/context';
 import './styles/edit-modal.scss';
 
 const EditTitleModal = (props) => {
-  const { modalRef, onFlowNameChange, modalInfo, waterFlowName } = props;
+  const { modalRef, onFlowNameChange } = props;
   const [ form ] = Form.useForm();
   const [ isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { appInfo } = useContext(FlowContext);
   const showModal = () => {
     setIsModalOpen(true);
   };
   useEffect(() => {
     form.setFieldsValue({
-      name: waterFlowName === '无标题' ? '' : waterFlowName,
-      description: modalInfo.attributes.description,
+      name: appInfo.name,
+      description: appInfo.attributes?.description,
     })
   }, [isModalOpen])
   const handleOk = async () => {
