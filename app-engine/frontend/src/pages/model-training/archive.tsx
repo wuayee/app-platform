@@ -1,40 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Drawer, Input, Modal, Space, Table } from "antd";
+import { Alert, Button, Drawer, Input, message, Modal, Space, Table } from "antd";
 import type { PaginationProps, TableColumnsType } from "antd";
+import { getCheckpointList, saveCheckpoints } from "../../shared/http/model-train";
 
 const showTotal: PaginationProps['showTotal'] = (total) => `Total: ${total}`;
 
 const ArchiveCheckpoint = ({ taskId, open, closeCallback }: any) => {
 
-  const data = [
-    {
-      checkpointId: 1,
-      curIteration: 100,
-      testLoss: 0.01,
-      generateTime: '2024-6-21 10:45:20',
-      description: '',
-      key: 1,
-    },
-    {
-      checkpointId: 2,
-      curIteration: 300,
-      testLoss: 0.01,
-      generateTime: '2024-6-21 10:45:20',
-      description: '',
-      key: 2,
-    }
-  ];
-
-  const [selectedCheckpoint, setSelectedCheckpoint] = useState<any[]>([]);
-  const [tableItems, setTableItems] = useState(data);
+  const [data, setData] = useState([]);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
   useEffect(() => {
-    getCheckpoint();
+    if (taskId) {
+      setSelectedKeys([]);
+      getCheckpoint();
+    }
   }, [taskId]);
 
   const getCheckpoint = () => {
-    //TODO通过taskId获取checkpoint列表
-    console.log('获取checkpoint接口：', taskId);
+    getCheckpointList(taskId).then(res => {
+      setData(res?.result.map((item) => ({
+        ...item,
+        key: item?.checkpointId,
+        description: ''
+      })));
+    })
   }
 
   const columns: TableColumnsType = [
@@ -48,7 +38,7 @@ const ArchiveCheckpoint = ({ taskId, open, closeCallback }: any) => {
     },
     {
       title: '测试集损失',
-      dataIndex: 'testLoss'
+      dataIndex: 'validationLoss'
     },
     {
       title: '生成时间',
@@ -60,7 +50,7 @@ const ArchiveCheckpoint = ({ taskId, open, closeCallback }: any) => {
         return (
           <Input
             value={record?.description}
-            disabled={!selectedCheckpoint?.some(id => id === record?.checkpointId)}
+            disabled={!selectedKeys?.some(id => id === record?.checkpointId)}
             onChange={(e) => descriptionChange(e, record)}
           />
         )
@@ -69,23 +59,23 @@ const ArchiveCheckpoint = ({ taskId, open, closeCallback }: any) => {
   ];
 
   const descriptionChange = (e, record) => {
-    let items = [...tableItems];
+    let items = [...data];
     items.forEach(item => {
       if (item.checkpointId === record?.checkpointId) {
         item.description = e.target?.value;
       }
     });
-    setTableItems(items);
+    setData(items);
   }
 
   const rowSelection = {
-    onChange: (_, selectedRows) => {
-      setSelectedCheckpoint(selectedRows.map((item) => item.checkpointId));
+    onChange: (selectedKeys: string[]) => {
+      setSelectedKeys(selectedKeys);
     }
   }
 
   const confirmArchive = () => {
-    if (selectedCheckpoint?.length === 0) {
+    if (selectedKeys?.length === 0) {
       Modal.info({
         title: '请选择Checkpoint',
       })
@@ -93,7 +83,15 @@ const ArchiveCheckpoint = ({ taskId, open, closeCallback }: any) => {
       //TODO归档确认
       Modal.confirm({
         title: '确认',
-        content: `已选择 ${selectedCheckpoint.length} 个Checkpoint，确认归档？`,
+        content: `已选择 ${selectedKeys.length} 个Checkpoint，确认归档？`,
+        onOk: () => {
+          const archiveParams = data.filter(item => selectedKeys.some(v => v === item.checkpointId))
+            .map(item => ({ checkpointId: item.checkpointId, desc: item.description }));
+          saveCheckpoints(taskId, { archiveParams }).then(res => {
+            message.success('归档成功');
+            closeCallback(true);
+          });
+        }
       })
     }
   }
@@ -125,17 +123,17 @@ const ArchiveCheckpoint = ({ taskId, open, closeCallback }: any) => {
             fontSize: 14,
             color: '#808080',
             marginRight: 16
-          }}>共 {tableItems?.length} 个Checkpoint</span>
-        <span> 已选择 {selectedCheckpoint?.length} 个</span>
+          }}>共 {data?.length} 个Checkpoint</span>
+        <span> 已选择 {selectedKeys?.length} 个</span>
       </div>
       <Table
         rowSelection={{
           type: 'checkbox',
-
+          selectedRowKeys: selectedKeys,
           ...rowSelection,
         }}
         columns={columns}
-        dataSource={tableItems}
+        dataSource={data}
         pagination={{
           size: 'small',
           showSizeChanger: true,

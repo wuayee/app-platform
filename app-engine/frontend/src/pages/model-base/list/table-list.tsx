@@ -1,25 +1,26 @@
 
 import { Pagination, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
-import type { TableColumnsType } from 'antd';
+import type { TableColumnsType, PaginationProps } from 'antd';
 import TableTextSearch from '../../../components/table-text-search';
 import { useNavigate } from 'react-router';
-import { queryModelbaseList } from '../../../shared/http/model-base';
+import { getModelSeries, queryModelbaseList } from '../../../shared/http/model-base';
 import { deleteModel } from './delete';
+
+const showTotal: PaginationProps['showTotal'] = (total) => `Total: ${total}`;
 
 const ModelBaseTable = () => {
 
-  const [pageNo, setPageNo] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [queryBody, setQueryBody] = useState<any>({ limit: pageSize, offset: pageNo - 1 });
   const [listData, setListData] = useState([]);
   const [total, setTotal] = useState(0);
+  const [seriesOptions, setSeriesOptions] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    getModelbaseList();
-  }, [queryBody])
+    getModelbaseList({ offset: 0, limit: 10 });
+    getSeriesOptions();
+  }, [])
 
   const typeOptions = [
     {
@@ -28,19 +29,19 @@ const ModelBaseTable = () => {
     },
   ];
 
-  const seriesOptions = [
-    {
-      text: '千问',
-      value: 'qwen'
-    },
-    {
-      text: 'Llama2',
-      value: 'llama2'
-    }
-  ];
+  //获取模型系列筛选项
+  const getSeriesOptions = () => {
+    getModelSeries().then(res => {
+      if (res?.seriesNameList && res?.seriesNameList.length > 0) {
+        setSeriesOptions(res.seriesNameList);
+      } else {
+        setSeriesOptions([]);
+      }
+    });
+  }
 
   //获取模型仓库列表接口
-  const getModelbaseList = () => {
+  const getModelbaseList = (queryBody: any) => {
     queryModelbaseList(queryBody).then(res => {
       if (res) {
         setListData(res?.modelInfoList);
@@ -112,7 +113,7 @@ const ModelBaseTable = () => {
       title: '操作',
       render(_, record) {
         const deleteConfirm = () => {
-          deleteModel(record);
+          deleteModel(record, getModelbaseList);
         }
         return (
           <Space size='middle'>
@@ -123,11 +124,11 @@ const ModelBaseTable = () => {
     }
   ];
 
-  //TODO：筛选和排序项变更时的回调方法，触发数据调用方法
-  const fetchData = (_, filters, sorter) => {
+  //筛选和排序项变更时的回调方法，触发数据调用方法
+  const fetchData = (pagination, filters, sorter) => {
     let params: any = {
-      offset: pageNo - 1,
-      limit: pageSize
+      offset: pagination?.current - 1,
+      limit: pagination?.pageSize
     };
     if (filters?.author && filters.author.length > 0) {
       params.author = filters.author[0];
@@ -145,17 +146,7 @@ const ModelBaseTable = () => {
       params.sort = [sorter?.field];
       params.direction = [sorter?.order.slice(0, -3)];
     }
-    setQueryBody(params);
-  }
-
-  const pageChange = (page: number, pageSize: number) => {
-    setPageNo(page);
-    setPageSize(pageSize);
-    setQueryBody({
-      ...queryBody,
-      offset: page - 1,
-      limit: pageSize
-    });
+    getModelbaseList(params);
   }
 
   return (
@@ -164,27 +155,15 @@ const ModelBaseTable = () => {
         dataSource={listData}
         columns={columns}
         scroll={{ y: '800px' }}
-        pagination={false}
+        pagination={{
+          size: 'small',
+          total: total,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          showTotal: showTotal
+        }}
         onChange={fetchData}
       />
-      <div style={{
-        width: '100%',
-        display: 'flex',
-        'justifyContent': 'space-between',
-        fontSize: '12px',
-        marginTop: 16,
-      }}>
-        <span>Total: {total}</span>
-        <Pagination
-          size='small'
-          total={total}
-          showSizeChanger
-          showQuickJumper
-          pageSize={pageSize}
-          current={pageNo}
-          onChange={pageChange}
-        />
-      </div>
     </>
   );
 };
