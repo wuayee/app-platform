@@ -3,11 +3,11 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination, Spin } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { getAddFlowConfig } from '@shared/http/appBuilder';
-import { createAipp, getToolList } from "@shared/http/aipp";
+import { getToolList } from "@shared/http/aipp";
 import { categoryItems } from '../../configForm/common/common';
 import { handleClickAddToolNode } from '../utils';
 import ToolCard from './tool-card';
+import AddWaterFlow from './add-waterflow-drawer';
 import '../styles/tool-modal.scss';
 import { Message } from '@shared/utils/message';
 const { Search } = Input;
@@ -23,9 +23,8 @@ const ToolDrawer = (props) => {
   const [ total, setTotal ] = useState(0);
   const [ pluginData, setPluginData ] = useState([]);
   const currentUser = localStorage.getItem('currentUser') || '';
-  const { tenantId } = useParams();
+  const [ open, setOpen ] = useState(false);
   const checkedList = useRef([]);
-  const pluginList = useRef([]);
   const searchName = useRef('');
   const listType = useRef('all');
   const navigate = useNavigate();
@@ -70,12 +69,8 @@ const ToolDrawer = (props) => {
     if (key === 'tool') {
       navigate(`/plugin`);
     } else {
-      const timeStr = new Date().getTime().toString();
-      const res = await createAipp(tenantId, 'df87073b9bc85a48a9b01eccc9afccc3', { type: 'waterFlow', name: timeStr });
-      if (res.code === 0) {
-        const aippId = res.data.id;
-        navigate(`/app-develop/${tenantId}/app-detail/add-flow/${aippId}`);
-      }
+      setShowModal(false);
+      setOpen(true);
     }
   }
   // 获取插件列表
@@ -228,6 +223,7 @@ const ToolDrawer = (props) => {
         /> 
       </div>
     </Modal>
+    <AddWaterFlow open={open} setOpen={setOpen} />
   </>
 };
 

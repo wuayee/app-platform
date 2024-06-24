@@ -118,7 +118,7 @@ const PublishModal = (props) => {
       <div className='search-list'>
         { !isPublished ? 
           (
-            <div className="publish-tag">
+            <div className="publish-tag" style={{ display: publishType === 'app' ? 'block' : 'none'}}>
               <img src='/src/assets/images/ai/info.png' />
               <span>请调试应用，确认无误后发布</span>
             </div>

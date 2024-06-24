@@ -15,6 +15,7 @@ const AddFlow = (props) => {
   const { type, appInfo, addFlowRef, setFlowTestTime, setFlowTestStatus } = props;
   const [ dragData, setDragData ] = useState([]);
   const [ flowInfo, setFlowInfo ] = useState({});
+  const [ showTime, setShowTime ] = useState(false);
   const [ showMenu, setShowMenu ] = useState(false);
   const [ debugTypes, setDebugTypes ] = useState([]);
   const [ showDebug, setShowDebug ] = useState(false);
@@ -36,7 +37,10 @@ const AddFlow = (props) => {
     type,
     appInfo: type ? appInfo : flowInfo,
     showMenu,
-    setShowMenu
+    setShowMenu,
+    setFlowInfo,
+    showTime,
+    setShowTime
   }
   
   useEffect(() => {

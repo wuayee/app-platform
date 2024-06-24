@@ -107,7 +107,7 @@ const AippIndex = () => {
   return (
     <>
       {
-        <div className="container">
+        <div className={`container ${showElsa ? 'layout-elsa-content' : ''} ${showChat ? 'layout-show-preview' : ''}`}>
           <ChoreographyHead
             appInfo={appInfo}
             showElsa={showElsa}
@@ -118,12 +118,7 @@ const AippIndex = () => {
             testStatus={testStatus}
             addFlowRef={addFlowRef}
           />
-          <div className={[
-            "layout-content",
-            showElsa ? "layout-elsa-content" : null,
-            showChat ? "layout-show-preview" : null
-          ].join(' ')}
-          >
+          <div className="layout-content">
             <ConfigFormContext.Provider value={configFormProvider}> 
               {showElsa ?
               (

@@ -8,7 +8,7 @@ const EditTitleModal = (props) => {
   const { modalRef, onFlowNameChange } = props;
   const [ form ] = Form.useForm();
   const [ isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [ loading, setLoading ] = useState(false);
   const { appInfo } = useContext(FlowContext);
   const showModal = () => {
     setIsModalOpen(true);

@@ -18,15 +18,16 @@ const Stage = (props) => {
   const [ taskName, setTaskName ] = useState('');
   const [ selectModal, setSelectModal ] = useState('');
   const { CONFIGS } = configMap[process.env.NODE_ENV];
-  const { type, appInfo } = useContext(FlowContext);
+  const { type, appInfo, setFlowInfo, setShowTime } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
-  const modelCallback = useRef();
+  const modelCallback = useRef<any>();
+  const currentApp = useRef<any>();
   const render = useRef(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log(appInfo);
     if (appInfo.name && !render.current) {
+      currentApp.current = JSON.parse(JSON.stringify(appInfo));
       window.agent = null;
       setElsaData();
     }
@@ -58,9 +59,7 @@ const Stage = (props) => {
         setShowModal(true);
       })
     })
-    setLoading(true);
     getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 20, tag: 'Builtin'}).then(res => {
-      setLoading(false);
       if (res.code === 0) {
         setDragData(res.data);
       }
@@ -74,7 +73,7 @@ const Stage = (props) => {
   const handleChange = useCallback(debounce(() => elsaChange(), 2000), []);
   function elsaChange() {
     let graphChangeData = window.agent.serialize();
-    appInfo.flowGraph.appearance = graphChangeData;
+    currentApp.current.flowGraph.appearance = graphChangeData;
     window.agent.validate().then(() => {
       updateAppRunningFlow();
     }).catch((err) => {
@@ -84,10 +83,11 @@ const Stage = (props) => {
   }
   // 编辑更新应用
   async function updateAppRunningFlow() {
-    const res = await updateFlowInfo(tenantId, appId, appInfo.flowGraph);
+    const res = await updateFlowInfo(tenantId, appId, currentApp.current.flowGraph);
     if (res.code === 0) {
       dispatch(setAppInfo(JSON.parse(JSON.stringify(appInfo))));
-      Message({ type: 'success', content: type ? '高级配置更新成功': '工具流更新成功' })
+      setShowTime(true);
+      type && Message({ type: 'success', content: '高级配置更新成功'})
     }
   }
   // 拖拽完成回调

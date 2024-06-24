@@ -8,7 +8,7 @@ import BasicItems from './basic-item';
 import ToolItems from './tool-item';
 
 const LeftMenu = (props) => {
-  const { dragData, menuClick, setDragData, loading, setLoading } = props;
+  const { dragData, menuClick } = props;
   const { tenantId, appId } = useParams();
   const [ activeKey, setActiveKey ] = useState('basic');
   const tab = [
@@ -36,7 +36,7 @@ const LeftMenu = (props) => {
       </div>
       { 
         activeKey === 'basic' ? 
-        <Spin spinning={loading}><BasicItems dragData={dragData.basic || []} /> </Spin>: 
+        <BasicItems dragData={dragData.basic || []} />: 
         <ToolItems activeKey={activeKey} /> 
       }
       <div className="arrow-icon" onClick={menuClick}>

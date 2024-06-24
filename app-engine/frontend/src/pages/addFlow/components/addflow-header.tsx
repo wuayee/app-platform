@@ -3,6 +3,7 @@ import React, { useState, useRef, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EditIcon, LeftArrowIcon, UploadIcon } from '@assets/icon';
 import { updateAppInfo } from '@shared/http/aipp';
+import { Message } from '@shared/utils/message';
 import { FlowContext } from '../../aippIndex/context';
 import EditTitleModal from '../../components/edit-title-modal';
 import PublishModal from '../../components/publish-modal';
@@ -12,13 +13,12 @@ import TimeLineDrawer from '../../../components/timeLine';
 import FlowTest from './flow-test';
 
 const AddHeader = (props) => {
-  const { addId, debugTypes, handleDebugClick, showDebug, setShowDebug } = props;
-  const { type, appInfo } = useContext(FlowContext);
+  const { debugTypes, handleDebugClick, showDebug, setShowDebug } = props;
+  const { appInfo, showTime } = useContext(FlowContext);
   const [ open, setOpen ] = useState(false);
   const { tenantId, appId } = useParams();
   const [ testStatus, setTestStatus ] = useState(null);
   const [ testTime, setTestTime ] = useState(0);
-  const [ currentTime, setCurrentTime ] = useState('');
   let editRef:any = useRef(null);
   let modalRef:any = useRef(null);
   let testRef:any = useRef(null);
@@ -26,10 +26,10 @@ const AddHeader = (props) => {
   const navigate = useNavigate();
   // 发布工具流
   const handleUploadFlow = () => {
-    // if (testStatus !== 'Finished') {
-    //   testRef.current.showModal();
-    //   return;
-    // }
+    if (testStatus !== 'Finished') {
+      testRef.current.showModal();
+      return;
+    }
     modalRef.current.showModal();
   }
   // 编辑工具流
@@ -42,16 +42,19 @@ const AddHeader = (props) => {
   }
   const getCurrentTime = () => {
     let str = new Date().toTimeString().substring(0, 8);
-    setCurrentTime(str);
+    return str
   }
   // 保存回调
-  function onFlowNameChange() {
+  function onFlowNameChange(params) {
+    appInfo.name = params.name;
+    appInfo.attributes.description = params.description;
     updateAppWorkFlow('waterFlow');
   }
    // 创建更新应用
    async function updateAppWorkFlow(optionType = '') {
     const res = await updateAppInfo(tenantId, appId, appInfo);
     if (res.code === 0) {
+      Message({ type: 'success', content: '操作成功' })
       optionType && editRef.current.handleCancel();
     } else {
       optionType && editRef.current.handleLoading();
@@ -88,7 +91,7 @@ const AddHeader = (props) => {
               </div>
             )
           }
-          <span>自动保存：{currentTime}</span>
+          { showTime && <span>自动保存：{getCurrentTime()}</span> }
           <TestStatus testTime={testTime} testStatus={testStatus}/>
         </div>
         <div className="header-grid">
