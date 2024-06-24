@@ -11,26 +11,6 @@ const LeftMenu = (props) => {
   const { dragData, menuClick, setDragData, loading, setLoading } = props;
   const { tenantId, appId } = useParams();
   const [ activeKey, setActiveKey ] = useState('basic');
-  const [ toolKey, setToolKey ] = useState('Builtin');
-
-  const tabClick = (key) => {
-    setLoading(true);
-    setToolKey(key);
-    getAddFlowConfig(tenantId,  {pageNum: 1, pageSize: 1000, tag: key}).then(res => {
-      setLoading(false);
-      if (res.code === 0) {
-        if (key === 'HUGGINGFACE') {
-          res.data.tool.forEach(item => {
-            item.type = 'huggingFaceNodeState',
-            item.context = {
-              default_model: item.defaultModel
-            }
-          })
-        };
-        setDragData(res.data);
-      }
-    });
-  }
   const tab = [
     { name: '基础', key: 'basic' },
     { name: '插件', key: 'plugin' }
@@ -57,7 +37,7 @@ const LeftMenu = (props) => {
       { 
         activeKey === 'basic' ? 
         <Spin spinning={loading}><BasicItems dragData={dragData.basic || []} /> </Spin>: 
-        <ToolItems dragData={dragData.tool || []} tabClick={tabClick} loading={loading} toolKey={toolKey}/> 
+        <ToolItems activeKey={activeKey} /> 
       }
       <div className="arrow-icon" onClick={menuClick}>
         <img src='/src/assets/images/ai/arrow.png'  />

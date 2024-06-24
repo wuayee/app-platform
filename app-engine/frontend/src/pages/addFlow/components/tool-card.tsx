@@ -49,11 +49,11 @@ const ToolCard = ({ pluginData }: any) => {
       <Flex gap={16}>
         <span>
           <UserOutlined style={{ marginRight: 8 }} />
-          2.36k
+          {pluginData.downloadCount}
         </span>
         <span>
           <StarOutlined style={{ marginRight: 8 }} />
-          126
+          {pluginData.likeCount}
         </span>
       </Flex>
     </div>
