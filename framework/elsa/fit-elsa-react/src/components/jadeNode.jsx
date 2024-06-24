@@ -417,7 +417,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
                 const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
                 self.observed.forEach(o => {
                     const node = self.page.getShapeById(o.nodeId);
-                    if (!node) {
+                    if (!node && VIRTUAL_CONTEXT_NODE.id !== o.nodeId) {
                         throw new Error("节点[" + o.nodeId + "]不存在.");
                     }
                     if (!preNodeIdSet.has(o.nodeId)) {
