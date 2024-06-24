@@ -95,7 +95,7 @@ const ChoreographyHead = (props) => {
       </div>
       <PublishModal modalRef={modalRef} appInfo={appInfo} publishType="app" />
       <EditModal modalRef={editRef} appInfo={appInfo} updateAippCallBack={updateAippCallBack}/>
-      <TimeLineDrawer open={open} setOpen={setOpen} list={versionList} />
+      <TimeLineDrawer open={open} setOpen={setOpen} />
       <TestModal testRef={testRef} handleDebugClick={openDebug} type="edit"/>
     </div>
   )} </>;

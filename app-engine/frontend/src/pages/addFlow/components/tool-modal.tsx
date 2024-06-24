@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination, Spin } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
+import { getPersonPluginData } from '@shared/http/appBuilder';
 import { createAipp } from "@shared/http/aipp";
 import { categoryItems } from '../../configForm/common/common';
 import { handleClickAddToolNode } from '../utils';

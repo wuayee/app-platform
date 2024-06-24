@@ -3,9 +3,7 @@ import React, { useEffect, useCallback, useState, useRef, useContext,  } from 'r
 import { useParams } from 'react-router-dom';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { debounce } from '@shared/utils/common';
-import { 
-  getAppInfo,
-  updateFlowInfo, } from '@shared/http/aipp';
+import { updateFlowInfo } from '@shared/http/aipp';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
 import { Message } from '@shared/utils/message';
 import { useAppDispatch } from '../../../store/hook';
@@ -15,7 +13,7 @@ import { FlowContext } from '../../aippIndex/context';
 import { configMap } from '../config';
 
 const Stage = (props) => {
-  const { setDragData, } = props;
+  const { setDragData } = props;
   const [ showModal, setShowModal ] = useState(false);
   const [ taskName, setTaskName ] = useState('');
   const [ selectModal, setSelectModal ] = useState('');
@@ -27,6 +25,7 @@ const Stage = (props) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    console.log(appInfo);
     if (appInfo.name && !render.current) {
       window.agent = null;
       setElsaData();
@@ -59,9 +58,7 @@ const Stage = (props) => {
         setShowModal(true);
       })
     })
-    setLoading(true);
     getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 1000, tag: 'Builtin'}).then(res => {
-      setLoading(false);
       if (res.code === 0) {
         setDragData(res.data);
       }
