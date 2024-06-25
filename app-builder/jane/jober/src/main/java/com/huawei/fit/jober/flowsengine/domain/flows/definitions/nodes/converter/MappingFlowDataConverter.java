@@ -42,4 +42,9 @@ public class MappingFlowDataConverter implements FlowDataConverter {
         }
         return outputMap;
     }
+
+    @Override
+    public String getOutputName() {
+        return this.outputName;
+    }
 }
