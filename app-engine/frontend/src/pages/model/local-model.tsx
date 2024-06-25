@@ -52,7 +52,7 @@ const LocalModelList = () => {
         setModelList(res.llms);
         setTotal(res.llms.length);
         res.llms.forEach((item: any) => {
-          const createItem = { name: '', image: [], precision: [], gpu: [] };
+          const createItem = { name: '', image: [], precision: [], gpu: [], max_token_size: {} };
           createItem.name = item.name;
           createItem.image = item.supported_images;
           createItem.precision = item.precision.supports;
@@ -61,6 +61,7 @@ const LocalModelList = () => {
             gpuList.push(gpu);
           }
           createItem.gpu = gpuList;
+          createItem.max_token_size = item?.tokenSize;
           createItems.push(createItem);
         });
         setCreateItems(createItems);
