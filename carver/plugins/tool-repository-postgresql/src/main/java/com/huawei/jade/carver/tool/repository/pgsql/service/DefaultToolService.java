@@ -60,12 +60,7 @@ public class DefaultToolService implements ToolService {
         }
         Tool.Info info = ToolData.convertToInfo(toolData);
         this.toolRepo.addTool(info);
-        String uniqueName = toolData.getUniqueName();
-        Set<String> tagNames = toolData.getTags();
-        if (CollectionUtils.isNotEmpty(tagNames)) {
-            tagNames.forEach(tagName -> this.addTag(uniqueName, tagName));
-        }
-        return uniqueName;
+        return toolData.getUniqueName();
     }
 
     /**
@@ -79,7 +74,6 @@ public class DefaultToolService implements ToolService {
     @Transactional
     public String deleteTool(String toolUniqueName) {
         this.toolRepo.deleteTool(toolUniqueName);
-        this.toolRepo.deleteTagByUniqueName(toolUniqueName);
         return toolUniqueName;
     }
 

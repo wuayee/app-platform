@@ -66,7 +66,7 @@ public class AopInterceptor implements BeanLifecycleInterceptor {
             return initializedBean;
         }
         InterceptSupport support = new DefaultInterceptSupport(TypeUtils.toClass(lifecycle.metadata().type()),
-                initializedBean,
+                () -> initializedBean,
                 methodInterceptors);
         return this.createAopProxy(support);
     }

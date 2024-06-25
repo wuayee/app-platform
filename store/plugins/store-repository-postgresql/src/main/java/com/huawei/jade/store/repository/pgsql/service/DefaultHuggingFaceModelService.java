@@ -11,6 +11,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.serialization.ObjectSerializer;
+import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.StringUtils;
@@ -49,6 +50,7 @@ public class DefaultHuggingFaceModelService implements HuggingFaceModelService {
 
     @Override
     @Fitable(id = "store-repository-pgsql")
+    @Transactional
     public List<ModelData> getModels(ModelQuery modelQuery) {
         List<ModelDo> dos = this.modelMapper.getModels(modelQuery);
         ArrayList<ModelData> modelDataList = new ArrayList<>();
@@ -75,6 +77,7 @@ public class DefaultHuggingFaceModelService implements HuggingFaceModelService {
 
     @Override
     @Fitable(id = "store-repository-pgsql")
+    @Transactional
     public int getCount(String taskName) {
         return this.modelMapper.getCount(taskName);
     }

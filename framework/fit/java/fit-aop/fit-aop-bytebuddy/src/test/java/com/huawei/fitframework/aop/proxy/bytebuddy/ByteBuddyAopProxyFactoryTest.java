@@ -41,7 +41,7 @@ public class ByteBuddyAopProxyFactoryTest {
     @DisplayName("当使用 bytebuddy 创建相同类的两个代理时，两个代理的类型一致")
     void ShouldCreateSameTypeProxyWhenGivenSameClass() {
         InterceptSupport support =
-                new DefaultInterceptSupport(TestTargetClass.class, new TestTargetClass(), Collections.emptyList());
+                new DefaultInterceptSupport(TestTargetClass.class, TestTargetClass::new, Collections.emptyList());
         AopProxyFactory aopProxyFactory = new ByteBuddyAopProxyFactory();
         Object proxy1 = aopProxyFactory.createProxy(support);
         Object proxy2 = aopProxyFactory.createProxy(support);
@@ -75,7 +75,7 @@ public class ByteBuddyAopProxyFactoryTest {
         methodInterceptor3.getPointCut().add(TestTargetClass.class);
         TestTargetClass targetBean = new TestTargetClass();
         InterceptSupport interceptSupport =
-                new DefaultInterceptSupport(TestTargetClass.class, targetBean, methodInterceptors);
+                new DefaultInterceptSupport(TestTargetClass.class, () -> targetBean, methodInterceptors);
 
         // when
         AopProxyFactory aopProxyFactory = new ByteBuddyAopProxyFactory();
