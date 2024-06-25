@@ -71,7 +71,6 @@ public class PatternTest {
 
     @Test
     void shouldOkWhenAiFlowWithExampleSelector() {
-        final StringBuilder answer = new StringBuilder();
         Example[] examples = {new DefaultExample("2+2", "4"), new DefaultExample("2+3", "5")};
         Conversation<String, Prompt> converse = AiFlows.<String>create()
                 .runnableParallel(question(),
@@ -84,6 +83,7 @@ public class PatternTest {
                 .close()
                 .converse();
 
+        final StringBuilder answer = new StringBuilder();
         converse.doOnSuccess(r -> answer.append(r.text())).offer("1+2").await();
         assertThat(answer.toString()).isEqualTo("2+2=4\n2+3=5\n1+2=");
     }
