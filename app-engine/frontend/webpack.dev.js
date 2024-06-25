@@ -58,7 +58,7 @@ module.exports = merge(common, {
     https: false,
     proxy: {
       '/api': {
-        target: 'http://80.11.128.86:30010',
+        target: 'http://10.91.144.226:8080',
         secure: false,
         changeOrigin: true,
         pathRewrite: {
@@ -67,7 +67,7 @@ module.exports = merge(common, {
         },
       },
       '/aiApi': {
-        target: 'http://80.11.128.86:30010',
+        target: 'http://10.91.144.226:8080',
         pathRewrite: {
           '^/aiApi': '',
         },
@@ -75,7 +75,6 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/aippApi': {
-        // target: 'http://80.11.128.86:30010',
         target: 'http://10.91.144.226:8080',
         // pathRewrite: { '^/aippApi': '/api/jober/v1/api' },
         pathRewrite: { '^/aippApi': '/v1/api' },
@@ -83,7 +82,7 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/modelApi': {
-        target: 'http://80.11.128.86:30010',
+        target: 'http://10.91.144.226:8080',
         pathRewrite: {
           '^/modelApi': '',
         },
@@ -91,7 +90,7 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/knowledge': {
-        target: 'http://80.11.128.86:30010',
+        target: 'http://10.91.144.226:8080',
         pathRewrite: {
           '^/knowledge': '',
         },
@@ -99,13 +98,13 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/app': {
-        target: 'http://80.11.128.86:30010',
+        target: 'http://10.91.144.226:8080',
         pathRewrite: { '^/app': '' },
         secure: false,
         changeOrigin: true,
       },
       '/v1': {
-        target: 'http://80.11.128.86:30010',
+        target: 'http://10.91.144.226:8080',
         pathRewrite: { '^/v1': '/v1' }, //不能替换V1
         secure: false,
         changeOrigin: true,

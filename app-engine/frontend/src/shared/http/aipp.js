@@ -109,6 +109,11 @@ export function queryInspirationSelect(tenantId, fitableid, params) {
 export function uploadChatFile(tenantId, appId, data, headers) {
   return post(`${AIPP_URL}/${tenantId}/file?aipp_id=${appId}`, data, { headers });
 }
+
+// 文件上传
+export function uploadImage(tenantId, data, headers) {
+  return post(`${AIPP_URL}/${tenantId}/file`, data, { headers });
+}
 // 图片预览
 export function picturePreview(tenantId, params) {
   return get(`${AIPP_URL}/${tenantId}/file`, params);

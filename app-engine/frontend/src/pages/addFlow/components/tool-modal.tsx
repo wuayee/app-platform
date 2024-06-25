@@ -10,6 +10,7 @@ import { handleClickAddToolNode } from '../utils';
 import ToolCard from './tool-card';
 import '../styles/tool-modal.scss';
 import { Message } from '@shared/utils/message';
+import CreateWorkflow from './create-workflow';
 const { Search } = Input;
 const { Option } = Select;
 
@@ -24,6 +25,7 @@ const ToolDrawer = (props) => {
   const [ pluginData, setPluginData ] = useState([]);
   const { tenantId } = useParams();
   const checkedList = useRef([]);
+  const [ createWorkflowSignal, setCreateWorkflowSignal ] = useState(false);
   const pluginList = useRef([]);
   const tab = [
     { name: '官方', key: 'BUILTIN' },
@@ -68,8 +70,13 @@ const ToolDrawer = (props) => {
     let name = items.filter(item => item.key === key)[0].label;
     setMenuName(name);
   };
-  const createClick = ({ key }) => {
-    console.log(key);
+  const createClick = async ({ key,domEvent }) => {
+    if (key === 'tool') {
+      navigate(`/plugin`);
+    } 
+    if(key === 'workflow'){
+      setCreateWorkflowSignal(domEvent?.timeStamp);
+    }
   }
   // 获取插件列表
   const getPluginList = ()=> {
@@ -221,6 +228,7 @@ const ToolDrawer = (props) => {
           pageSize={pageSize}
         /> 
       </div>
+      <CreateWorkflow createWorkflowSignal={createWorkflowSignal}/>
     </Modal>
   </>
 };
