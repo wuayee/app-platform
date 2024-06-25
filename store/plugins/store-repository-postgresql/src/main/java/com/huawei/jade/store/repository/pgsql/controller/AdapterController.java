@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.carver.tool.repository.pgsql.controller;
+package com.huawei.jade.store.repository.pgsql.controller;
 
 import static com.huawei.fitframework.inspection.Validation.notBlank;
 import static com.huawei.fitframework.inspection.Validation.notNegative;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * 旧版适配。
  *
  * @author 李金绪 l00878072
- * @since 2024/5/14
+ * @since 2024-05-14
  */
 @Component
 @RequestMapping("/store/platform")
