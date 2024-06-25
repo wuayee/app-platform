@@ -1,19 +1,35 @@
 import { get } from './http';
 import { httpUrlMap } from './httpConfig';
 
-const { PLUGIN_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
+const { PLUGIN_URL, AI_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
 
 export function getPlugins(data: {
   pageNum: number;
   pageSize: number;
   includeTags: string;
+  excludeTags: string;
   name: string;
 }) {
-  const url = `${PLUGIN_URL}/tools/search`;
-  return get(url, data);
+  const url = `${PLUGIN_URL}/store/plugins/search`;
+  return get(url, { ...data, excludeTags: 'App' });
 }
 
 export function getPluginDetail(pluginId) {
-  const url = `${PLUGIN_URL}/tools/${pluginId}`;
+  const url = `${PLUGIN_URL}/store/plugins/${pluginId}`;
   return get(url);
+}
+
+// 我的-工具
+export function getPluginTool(tenantId, data: { pageNum: number; pageSize: number; tag: string }) {
+  const url = `${PLUGIN_URL}/v1/api/${tenantId}/store/plugins`;
+  return get(url, data);
+}
+
+// 我的-工具流
+export function getPluginWaterFlow(
+  tenantId,
+  data: { offset: number; limit: number; type: string }
+) {
+  const url = `${PLUGIN_URL}/v1/api/${tenantId}/app`;
+  return get(url, data);
 }

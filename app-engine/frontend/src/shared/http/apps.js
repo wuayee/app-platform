@@ -1,12 +1,12 @@
 import { del, get, post, put, patch } from './http';
 import { httpUrlMap } from './httpConfig';
 
-const appurl = window.localStorage.getItem('evalTask_URL') || '/api/jober'
+const appurl = window.localStorage.getItem('evalTask_URL') || '/api/jober';
 const { JANE_URL, AIPP_URL, APP_URL } = httpUrlMap[process.env.NODE_ENV];
 
 // 获取应用市场列表
 export function queryAppsApi(tenantId, params) {
-  return get(`${appurl}/tools/search`, params);
+  return get(`${appurl}/store/apps/search`, params);
 }
 
 export function getEvalTaskList(requestBody) {
@@ -147,7 +147,7 @@ export function exportFeedBackData(data) {
       var contentDisposition = xhr.getResponseHeader('Content-Disposition');
       var match = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
       var filename = match[1].replace(/['"]/g, '');
-      filename = decodeURI(filename.split('UTF-8')[1])
+      filename = decodeURI(filename.split('UTF-8')[1]);
       var blob = new Blob([xhr.response], { type: 'application/octet-stream' });
       var url = URL.createObjectURL(blob);
       var a = document.createElement('a');

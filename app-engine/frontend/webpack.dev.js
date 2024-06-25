@@ -69,7 +69,7 @@ module.exports = merge(common, {
       '/aiApi': {
         target: 'http://80.11.128.86:30010',
         pathRewrite: {
-          '^/aiApi': '',
+          '^/aiApi': '/tzaip/api/hisp', // 后端环境即为次路径
         },
         secure: false,
         changeOrigin: true,

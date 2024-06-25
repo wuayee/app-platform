@@ -39,3 +39,70 @@
     margin-bottom: 14px;
     font-size: 16px;
 }
+
+.top-operate{
+    display:flex;
+    justify-content: space-between;
+}
+.app-select{
+    margin-right: 40px;
+}
+
+.button-display{
+    display: flex;
+    gap:4px;
+    margin-bottom: 14px;
+}
+
+.drawer-footer{
+   display: flex;
+   gap:8px;
+   float: right;
+}
+
+.select-space{
+    width: 240px;
+    margin-bottom: 14px;
+}
+.param-card{
+    padding: 14px;
+    margin-top: 14px;
+    border-radius: 4px;
+    border:1px solid #e8e8e8;
+    .card-header-left{
+        display: flex;
+        gap:16px;
+    }
+    .card-user{
+     display: flex;
+     gap:4px;
+     align-items: center;
+     flex-wrap: wrap;
+    }
+    .card-des{
+      word-wrap: break-word;
+      margin-bottom: 8px;
+      margin-top: 8px;
+      color: #808080;
+    }
+}
+
+.plugin-cards{
+    overflow-y: auto;
+    height: 100%;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+.myplugin{
+    height: calc(100vh - 140px);
+    display: flex;
+    flex-direction: column;
+    border-radius: 0 8px 0 0;
+}
+.icon-display{
+    display: flex;
+    align-items: center;
+}
