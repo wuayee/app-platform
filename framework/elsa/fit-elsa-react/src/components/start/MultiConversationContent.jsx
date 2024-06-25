@@ -154,7 +154,7 @@ export default function MultiConversationContent({
                         // {value: 'ByTime', label: '按时间'},
                         // {value: 'Customizing', label: '自定义'},
                         {value: 'UserSelect', label: '用户自勾选'},
-                        // {value: 'NotUseMemory', label: '不使用历史记录'},
+                        {value: 'NotUseMemory', label: '不使用历史记录'},
                     ]}
                 />
             </Form.Item>
