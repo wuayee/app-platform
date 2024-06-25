@@ -14,10 +14,9 @@ const Index = (props) => {
     setTestTime,
     setTestStatus,
     setShowDebug,
-    showDebug,
-    appRef
+    showDebug
   } = props;
-  const { type, appInfo } = useContext(FlowContext);
+  const { appInfo } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
   const elsaRunningCtl = useRef();
   const [form] = Form.useForm();
@@ -40,7 +39,7 @@ const Index = (props) => {
   }
   // 点击运行
   const handleRun = async (values) => {
-    let appDto = type ? appInfo : appRef.current;
+    let appDto = appInfo ;
     const params = {
       appDto,
       context: {

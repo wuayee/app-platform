@@ -36,7 +36,7 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
      * @param callback 回调.
      */
     self.fetchVersionInfo = (callback) => {
-        const url = self.graph.getConfig(self.type)?.urls?.versionInfo;
+        const url = self.graph.getConfig(self)?.urls?.versionInfo;
         if (!url) {
             return;
         }
@@ -69,7 +69,8 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
         const _generateInput = () => {
             // 这里需要确认，返回的到底是什么数据类型，data是个数组还是对象
             delete newConfig.inputParams;
-            newConfig.inputParams = Object.keys(metaData.schema.parameters.properties).map(key => {
+            const orderProperties = metaData.schema.parameters.order ? metaData.schema.parameters.order : Object.keys(metaData.schema.parameters.properties);
+            newConfig.inputParams = orderProperties.map(key => {
                 return convertParameter({
                     propertyName: key,
                     property: metaData.schema.parameters.properties[key],

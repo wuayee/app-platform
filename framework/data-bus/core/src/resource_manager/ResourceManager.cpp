@@ -306,6 +306,7 @@ bool ResourceManager::ReleaseMemory(int32_t sharedMemoryId)
     RemoveObjectKey(sharedMemoryId);
     // 更新内存申请日志
     AppendLog(sharedMemoryId, true);
+    logger.Info("[ResourceManager] Releasing the shared memory block {} succeeded", sharedMemoryId);
     return true;
 }
 

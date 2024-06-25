@@ -1,17 +1,19 @@
 import React from 'react';
-import { Card, Dropdown, Tag } from 'antd';
+import { Card, Dropdown, Flex, Tag } from 'antd';
 import type { MenuProps } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
+import { deleteModel } from './delete';
+import { AvatarIcon } from '../../../assets/icon';
 
 const CardItem = ({ data }: any) => {
 
   const navigate = useNavigate();
-  const items: MenuProps['items'] = [
+  const operatorItems: MenuProps['items'] = [
     {
       key: '1',
       label: (
-        <a>
+        <a onClick={() => deleteModel(data)}>
           删除
         </a>
       ),
@@ -19,7 +21,7 @@ const CardItem = ({ data }: any) => {
   ];
 
   const gotoDetail = () => {
-    navigate(`/model-base/${data.id}/detail`);
+    navigate(`/model-base/${data.model_id}/detail`);
   }
 
   return (
@@ -35,11 +37,20 @@ const CardItem = ({ data }: any) => {
         display: 'flex',
         justifyContent: 'space-between'
       }}>
-        <div style={{ fontSize: 20, cursor: 'pointer' }} onClick={gotoDetail}>
-          {data.name}
+        <div
+          title={data.model_name}
+          style={{
+            fontSize: 20,
+            cursor: 'pointer',
+            maxWidth: 250,
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+          }}
+          onClick={gotoDetail}>
+          {data.model_name}
         </div>
         <div>
-          版本数：{data.versionNum}
+          版本数：{data.version_num}
         </div>
       </div>
       <div style={{
@@ -49,11 +60,36 @@ const CardItem = ({ data }: any) => {
         flexWrap: 'wrap',
         marginTop: 16,
       }}>
-        <span style={{ marginRight: 8 }}>{data.creator}</span>
-        {data.tags.map((tag: string) => <Tag style={{ margin: 0 }}>{tag}</Tag>)}
+        <Flex gap='small' align='center'>
+          <AvatarIcon />
+          <span
+            title={data.author}
+            style={{
+              marginRight: 8,
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              maxWidth: 80,
+            }}>{data.author}</span>
+        </Flex>
+        <Tag
+          title={data.model_type}
+          style={{
+            margin: 0,
+            maxWidth: 80,
+            textOverflow: 'ellipsis',
+            overflow: 'hidden'
+          }}>{data.model_type}</Tag>
+        <Tag
+          title={data.series_name}
+          style={{
+            margin: 0,
+            maxWidth: 80,
+            textOverflow: 'ellipsis',
+            overflow: 'hidden'
+          }}>{data.series_name}</Tag>
       </div>
       <div
-        title={data.description}
+        title={data.model_description}
         style={{
           display: '-webkit-box',
           textOverflow: 'ellipsis',
@@ -65,7 +101,7 @@ const CardItem = ({ data }: any) => {
           marginTop: 16,
           height: 66,
         }}>
-        {data.description}
+        {data.model_description}
       </div>
       <div style={{
         padding: '12px 0',
@@ -76,11 +112,11 @@ const CardItem = ({ data }: any) => {
         justifyContent: 'end',
         marginTop: 16,
       }}>
-        <Dropdown menu={{ items }} trigger={['click']}>
+        <Dropdown menu={{ items: operatorItems }} trigger={['click']}>
           <EllipsisOutlined style={{ fontSize: 24, cursor: 'pointer' }} />
         </Dropdown>
       </div>
-    </Card>
+    </Card >
   )
 }
 

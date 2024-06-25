@@ -11,8 +11,10 @@ export const httpUrlMap = {
     WS_AUDIO_URL: 'wss://tzaip-beta.paas.huawei.com/tzaip/api/hisp/api/v1/platform/app/asr',
     MODEL_URL: '/modelApi',
     APP_URL: '/app',
+    TOOL_URL: '/toolApi',
     MODEL_LIST_URL: '/v1',
     PLUGIN_URL: '/api/jober',
+    MODEL_BASE_URL: 'modelbase',
   },
   production: {
     JANE_URL: 'https://jane.huawei.com/api',
@@ -26,6 +28,7 @@ export const httpUrlMap = {
     MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
     MODEL_LIST_URL: 'http://model-io-manager:8010/v1',
     PLUGIN_URL: '/api/jober',
+    MODEL_BASE_URL: 'modelbase',
   },
   gamma: {
     JANE_URL: 'https://jane-gamma.huawei.com/api',

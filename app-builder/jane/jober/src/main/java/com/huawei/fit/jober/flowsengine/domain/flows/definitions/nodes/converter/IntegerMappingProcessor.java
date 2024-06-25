@@ -21,7 +21,7 @@ public class IntegerMappingProcessor extends AbstractMappingProcessor {
     private static final Logger LOG = Logger.get(IntegerMappingProcessor.class);
 
     @Override
-    protected Object generateValue(MappingNode mappingConfig, Map<String, Object> businessData) {
+    protected Object generateInput(MappingNode mappingConfig, Map<String, Object> businessData) {
         if (mappingConfig.getValue() instanceof Integer) {
             return mappingConfig.getValue();
         }

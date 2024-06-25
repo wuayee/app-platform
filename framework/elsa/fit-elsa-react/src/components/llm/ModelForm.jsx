@@ -147,36 +147,37 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
                                     rules={[{required: true, message: '参数不能为空'}]}
                                     initialValue={prompt.value}
                                     validateTrigger="onBlur"
-                            >
-                                <TextArea disabled={disabled}
-                                          onMouseDown={(e) => e.stopPropagation()}
-                                          className="jade-textarea-input jade-font-size"
-                                          onBlur={(e) => changeOnBlur(e, "changePrompt", prompt.id, true)}
-                                          placeholder="你可以用{{variable name}}来关联输入中的变量名"
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={24}>
-                            <Form.Item
-                                className="jade-form-item"
-                                name={`system-prompt-${shapeId}`}
-                                label={<div style={{display: 'flex', alignItems: 'center'}}>
-                                    <span className="jade-second-title">系统提示词</span>
-                                </div>}
-                                initialValue={systemPrompt.value}
-                                validateTrigger="onBlur"
-                            >
-                                <TextArea disabled={disabled}
-                                          onMouseDown={(e) => e.stopPropagation()}
-                                          className="jade-textarea-input jade-font-size"
-                                          onBlur={(e) => changeOnBlur(e, "changeConfig", systemPrompt.id, false)}
-                                          placeholder="输入一段提示词，可以给应用预设身份"
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                                >
+                                    <TextArea disabled={disabled}
+                                              onMouseDown={(e) => e.stopPropagation()}
+                                              className="jade-textarea-input jade-font-size"
+                                              onBlur={(e) => changeOnBlur(e, "changePrompt", prompt.id, true)}
+                                              placeholder="你可以用{{variable name}}来关联输入中的变量名"
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={16}>
+                            <Col span={24}>
+                                <Form.Item
+                                    className="jade-form-item"
+                                    name={`system-prompt-${shapeId}`}
+                                    label={<div style={{display: 'flex', alignItems: 'center'}}>
+                                        <span className="jade-second-title">系统提示词</span>
+                                    </div>}
+                                    initialValue={systemPrompt.value}
+                                    validateTrigger="onBlur"
+                                >
+                                    <TextArea disabled={disabled}
+                                              onMouseDown={(e) => e.stopPropagation()}
+                                              className="jade-textarea-input jade-font-size"
+                                              onBlur={(e) => changeOnBlur(e, "changeConfig", systemPrompt.id, false)}
+                                              placeholder="输入一段提示词，可以给应用预设身份"
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                    </div>
                 </Panel>
             }
         </Collapse>

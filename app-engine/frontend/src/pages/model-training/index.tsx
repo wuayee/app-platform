@@ -1,27 +1,34 @@
-import { Button, Flex, Progress, Table } from 'antd';
+import { Button, Flex, Progress, Space, Table } from 'antd';
 import type { PaginationProps, TableColumnsType } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 import TableTextSearch from '../../components/table-text-search';
 import { useNavigate } from 'react-router';
+import { AppIcons } from '../../components/icons/app';
+import ArchiveCheckpoint from './archive';
 
 const showTotal: PaginationProps['showTotal'] = (total) => `Total: ${total}`;
 
 const ModelTraining = () => {
+
+  const [isCheckpointOpen, setIsCheckpointOpen] = useState(false);
+  const [archiveTaskId, setArchiveTaskId] = useState({});
 
   const navigate = useNavigate();
 
   const data = {
     data: [
       {
-        id: '123',
-        name: 'Qwen2-14B-Chat',
-        type: 'lora',
-        policy: 'TP4PP2',
-        dataSet: '数据集123',
+        taskId: '123',
+        modelName: 'Qwen2-14B-Chat',
+        mode: 'lora',
+        strategy: 'TP4PP2',
+        datasetName: '数据集123',
         startTime: '2024-6-13 10:21:23',
-        progress: 0.5,
-        curIters: 200,
-        totalIters: 400
+        percent: 0.5,
+        curIter: 200,
+        totalIter: 400,
+        taskStatus: 'running',
+        archiveStatus: 'undo'
       },
     ],
     total: 1
@@ -36,23 +43,119 @@ const ModelTraining = () => {
       text: 'LoRA微调',
       value: 'lora'
     }
-  ]
+  ];
+
+  const taskStatusOptions = [
+    {
+      text: '成功',
+      value: 'success',
+    },
+    {
+      text: '失败',
+      value: 'fail'
+    },
+    {
+      text: '训练中',
+      value: 'running'
+    },
+  ];
+
+  const archiveStatusOptions = [
+    {
+      text: '已归档',
+      value: 'archived',
+    },
+    {
+      text: '未归档',
+      value: 'undo'
+    },
+    {
+      text: '归档中',
+      value: 'archiving'
+    },
+  ];
+
+  const taskStatusCell = (status: string) => {
+    switch (status) {
+      case 'success':
+        return (
+          <Flex gap={4} align='center'>
+            <AppIcons.NormalIcon />
+            成功
+          </Flex>
+        );
+      case 'fail':
+        return (
+          <Flex gap={4} align='center'>
+            <AppIcons.AbnormalIcon />
+            失败
+          </Flex>
+        );
+      case 'running':
+        return (
+          <Flex gap={4} align='center'>
+            <AppIcons.RunningIcon />
+            训练中
+          </Flex>
+        );
+      default:
+        return (
+          <>未知</>
+        )
+    }
+  }
+
+  const archiveStatusCell = (status: string) => {
+    switch (status) {
+      case 'archived':
+        return (
+          <Flex gap={4} align='center'>
+            <AppIcons.NormalIcon />
+            已归档
+          </Flex>
+        );
+      case 'undo':
+        return (
+          <Flex gap={4} align='center'>
+            <AppIcons.UndoIcon />
+            未归档
+          </Flex>
+        );
+      case 'archiving':
+        return (
+          <Flex gap={4} align='center'>
+            <AppIcons.RunningIcon />
+            归档中
+          </Flex>
+        );
+      default:
+        return (
+          <>未知</>
+        )
+    }
+  }
+
+  const archiveCallback = () => {
+    setIsCheckpointOpen(false);
+  }
 
   const columns: TableColumnsType = [
     {
-      key: 'id',
-      dataIndex: 'id',
+      key: 'taskId',
+      dataIndex: 'taskId',
       title: '任务ID',
+      ellipsis: true
     },
     {
-      key: 'name',
-      dataIndex: 'name',
+      key: 'modelName',
+      dataIndex: 'modelName',
       title: '模型名称',
-      ...TableTextSearch('name', true),
+      ...TableTextSearch('modelName', true),
+      ellipsis: true
     },
     {
-      key: 'type',
-      dataIndex: 'type',
+      key: 'mode',
+      dataIndex: 'mode',
       title: '训练类型',
       filters: typeOptions,
       render: (value) => {
@@ -62,14 +165,14 @@ const ModelTraining = () => {
       },
     },
     {
-      key: 'policy',
-      dataIndex: 'policy',
+      key: 'strategy',
+      dataIndex: 'strategy',
       title: '训练策略',
-      ...TableTextSearch('policy', true),
+      ...TableTextSearch('strategy', true),
     },
     {
-      key: 'dataSet',
-      dataIndex: 'dataSet',
+      key: 'datasetName',
+      dataIndex: 'datasetName',
       title: '数据集名称',
       ...TableTextSearch('dataSet', true),
     },
@@ -77,11 +180,12 @@ const ModelTraining = () => {
       key: 'startTime',
       dataIndex: 'startTime',
       title: '启动时间',
-      sorter: true
+      sorter: true,
+      ellipsis: true
     },
     {
-      key: 'progress',
-      dataIndex: 'progress',
+      key: 'percent',
+      dataIndex: 'percent',
       title: '训练进度',
       sorter: true,
       width: 250,
@@ -90,15 +194,46 @@ const ModelTraining = () => {
         return (
           <Flex gap={4}>
             <Progress style={{ width: 80 }} showInfo={false} percent={val * 100} size='small' />
-            <span>{val * 100}%({record.curIters}/{record.totalIters})</span>
+            <span>{val * 100}%({record.curIter}/{record.totalIter})</span>
           </Flex>
         );
       },
     },
     {
+      key: 'taskStatus',
+      dataIndex: 'taskStatus',
+      title: '训练状态',
+      filters: taskStatusOptions,
+      render: (val) => {
+        return taskStatusCell(val);
+      }
+    },
+    {
+      key: 'archiveStatus',
+      dataIndex: 'archiveStatus',
+      title: '归档状态',
+      filters: archiveStatusOptions,
+      render: (val) => {
+        return archiveStatusCell(val);
+      }
+    },
+    {
       key: 'operate',
       dataIndex: 'operate',
       title: '操作',
+      render(_, record) {
+        const openArchive = () => {
+          setArchiveTaskId(record?.taskId);
+          setIsCheckpointOpen(true);
+        }
+        return (
+          <Space size='small'>
+            <a>查看详情</a>
+            <a onClick={openArchive}>Checkpoint归档</a>
+          </Space>
+        )
+      },
+      width: 200
     },
   ];
 
@@ -142,6 +277,7 @@ const ModelTraining = () => {
           }}
         />
       </div>
+      <ArchiveCheckpoint taskId={archiveTaskId} open={isCheckpointOpen} closeCallback={archiveCallback} />
     </div>
   );
 };

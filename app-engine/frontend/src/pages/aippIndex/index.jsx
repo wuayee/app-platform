@@ -107,7 +107,7 @@ const AippIndex = () => {
   return (
     <>
       {
-        <div className="container">
+        <div className={`container ${showElsa ? 'layout-elsa-content' : ''} ${showChat ? 'layout-show-preview' : ''}`}>
           <ChoreographyHead
             appInfo={appInfo}
             showElsa={showElsa}
@@ -118,39 +118,36 @@ const AippIndex = () => {
             testStatus={testStatus}
             addFlowRef={addFlowRef}
           />
-          <div className={[
-            "layout-content",
-            showElsa ? "layout-elsa-content" : null,
-            showChat ? "layout-show-preview" : null
-          ].join(' ')}
-          >
+          <div className="layout-content">
             <ConfigFormContext.Provider value={configFormProvider}> 
-              {showElsa ? (
+              {showElsa ?
+              (
                 <AddFlow type="edit"
                          addFlowRef={addFlowRef}
                          setFlowTestStatus={handleTestStatus}
                          setFlowTestTime={handleTestTime}
                          appInfo={appInfo}
                 />
-              ) : (
-                   <ConfigForm
-                     mashupClick={elsaChange}
-                     configData={appInfo.config}
-                     handleConfigDataChange={handleConfigDataChange}
-                     inspirationChange={inspirationChange}
-                     showElsa={showElsa}
-                   />
+              ) :
+              (
+                <ConfigForm
+                  mashupClick={elsaChange}
+                  configData={appInfo.config}
+                  handleConfigDataChange={handleConfigDataChange}
+                  inspirationChange={inspirationChange}
+                  showElsa={showElsa}
+                />
               )}
-              </ConfigFormContext.Provider>
-              <CommonChat chatType="preview" contextProvider={contextProvider} previewBack={changeChat} /> 
-              {
-                (!showChat && showElsa) &&
-                <Tooltip placement="leftTop" title="展开预览与调试区">
-                  <div className="chat-icon" onClick={changeChat}>
-                    <TalkFlowIcon />
-                  </div>
-                </Tooltip>
-              }
+            </ConfigFormContext.Provider>
+            <CommonChat chatType="preview" contextProvider={contextProvider} previewBack={changeChat} />
+            {
+              (!showChat && showElsa) &&
+              <Tooltip placement="leftTop" title="展开预览与调试区">
+                <div className="chat-icon" onClick={changeChat}>
+                  <TalkFlowIcon />
+                </div>
+              </Tooltip>
+            }
           </div>
         </div>
       }

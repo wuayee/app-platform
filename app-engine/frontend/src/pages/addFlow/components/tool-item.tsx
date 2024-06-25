@@ -1,45 +1,66 @@
 
 import React, { useEffect, useState, useRef } from 'react';
-import { Input, Pagination, Empty } from "antd";
-import { AddFlowIcon } from '@assets/icon';
+import { Input, Pagination, Empty, Spin, Select } from "antd";
 import { handleClickAddToolNode, handleDragToolNode } from '../utils';
+import { getToolList } from "@shared/http/aipp";
 import ToolModal from './tool-modal';
 import '../styles/tool-item.scss';
-
 const { Search } = Input;
+const { Option } = Select;
 
 const ToolItem = (props) => {
-  const { dragData, tabClick } = props;
-  const [ name, setName ] = useState('');
+  const { activeKey } = props;
+  const [ toolKey, setToolKey ] = useState('Builtin');
+  const [ loading, setLoading ] = useState(false);
   const [ pageNum, setPageNum ] = useState(1);
-  const [ list, setList ] = useState([]);
+  const [ pluginData, setPluginData ] = useState([]);
   const [ showModal, setShowModal ] = useState(false);
-  const [ activeKey, setActiveKey ] = useState('AUTHORITY');
-  const listRef = useRef([]);
+  const currentUser = localStorage.getItem('currentUser') || '';
+  const searchName = useRef('');
+  const listType = useRef('all');
   useEffect(() => {
-    listRef.current = JSON.parse(JSON.stringify(dragData));
-    setList(listRef.current);
-  }, [dragData])
+    getPluginList()
+  }, [activeKey])
   const tab = [
-    { name: '官方', key: 'AUTHORITY' },
+    { name: '系统内置', key: 'Builtin' },
     { name: 'HuggingFace', key: 'HUGGINGFACE' },
     { name: 'LangChain', key: 'LANGCHAIN' },
-  ]
-  // 搜索文本变化，更新工具列表
-  const handleSearch = (value, event, source) => {
+  ];
+  const handleChange = (value: string) => {
     setPageNum(1);
-    if (!value.trim().length) {
-      setList(listRef.current);
-    } else {
-      let arr = listRef.current.filter(item => item.name.indexOf(value.trim()) !== -1);
-      setList(arr);
-    }
+    listType.current = value;
+    getPluginList();
+  };
+  const selectBefore = (
+    <Select defaultValue="市场" onChange={handleChange}>
+      <Option value="owner">个人</Option>
+      <Option value="all">市场</Option>
+    </Select>
+  );
+  // 获取插件列表
+  const getPluginList = (key = undefined)=> {
+    setLoading(true);
+    let params:any = { pageNum: 1, pageSize: 200, includeTags: (key || toolKey), name: searchName.current };
+    listType.current === 'owner' && (params.owner = currentUser)
+    getToolList(params).then(res => {
+      setLoading(false);
+      if (res.code === 0) {
+        if (activeKey === 'HUGGINGFACE') {
+          res.data.forEach(item => {
+            item.type = 'huggingFaceNodeState',
+            item.context = {
+              default_model: item.defaultModel
+            }
+          })
+        };
+        setPluginData(res.data);
+      }
+    });
   }
   const handleClick = (key) => {
     setPageNum(1);
-    setActiveKey(key);
-    tabClick(key);
-    setName('');
+    setToolKey(key);
+    getPluginList(key);
   }
   // 分页
   const selectPage = (curPage: number, curPageSize: number) => {
@@ -47,18 +68,23 @@ const ToolItem = (props) => {
       setPageNum(curPage);
     }
   }
+  // 名称搜索
+  const filterByName = (value: string) => {
+    searchName.current = value.trim();
+    setPageNum(1);
+    getPluginList();
+  }
   return <>
-    <Search
-      placeholder="请输入搜索关键词"
-      allowClear
-      value={name}
-      onChange={ e => { setName(e.target.value) }}
-      onSearch={handleSearch}
-    />
+    <Search 
+      size="large" 
+      addonBefore={selectBefore} 
+      onSearch={filterByName}
+      size="small"
+      placeholder="请输入" />
     <div className="tool-tab">
       { tab.map(item => {
           return (
-            <span className={ activeKey === item.key ? 'active' : null } 
+            <span className={ toolKey === item.key ? 'active' : null } 
               key={item.key} 
               onClick={() => handleClick(item.key)}
             >{ item.name }
@@ -68,51 +94,38 @@ const ToolItem = (props) => {
       }
       <span className="more" onClick={() => setShowModal(true)}>更多</span>
     </div>
-    {
-      list.length > 0 && <div className="drag-list">
-        { list.map((item, index) => {
-            return (
-              <div
-                className='drag-item'
-                onDragStart={(e) => handleDragToolNode(item, e)}
-                draggable={true}
-                key={index}
-              >
-                <div className='drag-item-title'>
-                  <div>
-                    <span className='content-node-name node-tool'>
-                      <img src='/src/assets/images/ai/plugin.png' alt='' />
-                      { item.name }
+    <Spin spinning={loading}>
+      {
+        pluginData.length > 0 && <div className="drag-list">
+          { pluginData.map((item, index) => {
+              return (
+                <div
+                  className='drag-item'
+                  onDragStart={(e) => handleDragToolNode(item, e)}
+                  draggable={true}
+                  key={index}
+                >
+                  <div className='drag-item-title'>
+                    <div>
+                      <span className='content-node-name node-tool'>
+                        <img src='/src/assets/images/ai/plugin.png' alt='' />
+                        { item.name }
+                      </span>
+                    </div>
+                    <span className='drag-item-icon' 
+                      onClick={(event) => handleClickAddToolNode(item.type || 'toolInvokeNodeState', event, item)}>
+                      <img src='/src/assets/images/ai/flow.png'  />
                     </span>
                   </div>
-                  <span className='drag-item-icon' 
-                    onClick={(event) => handleClickAddToolNode(item.type || 'toolInvokeNodeState', event, item)}>
-                     <img src='/src/assets/images/ai/flow.png'  />
-                  </span>
                 </div>
-              </div>
-            )
-          })
-        }
-      </div>
-    }
-    {/* { list.length ?  
-      <div style={{ paddingTop: 16 }}>
-        <Pagination
-          size="small"
-          total={list.length}
-          current={pageNum}
-          onChange={selectPage}
-          showSizeChanger={false}
-          showLessItems={true}
-        /> 
-      </div>
-      : 
-      <div className="tool-empty"><Empty description="暂无数据" /></div> 
-    } */}
+              )
+            })
+          }
+        </div>
+      }
+      { pluginData.length === 0 && <div className="tool-empty"><Empty description="暂无数据" /></div> }
+    </Spin>
     <ToolModal showModal={showModal} setShowModal={setShowModal} />
   </>
 };
-
-
 export default ToolItem;

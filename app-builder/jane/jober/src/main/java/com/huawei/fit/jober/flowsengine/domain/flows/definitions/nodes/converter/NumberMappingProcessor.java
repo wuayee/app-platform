@@ -22,7 +22,7 @@ public class NumberMappingProcessor extends AbstractMappingProcessor {
     private static final Logger LOG = Logger.get(NumberMappingProcessor.class);
 
     @Override
-    protected Object generateValue(MappingNode mappingConfig, Map<String, Object> businessData) {
+    protected Object generateInput(MappingNode mappingConfig, Map<String, Object> businessData) {
         if (mappingConfig.getValue() instanceof BigDecimal) {
             return ((BigDecimal) mappingConfig.getValue()).doubleValue();
         }

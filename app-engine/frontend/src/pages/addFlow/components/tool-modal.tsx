@@ -1,13 +1,13 @@
 
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination } from 'antd';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Input, Modal, Select, Button, Dropdown, Empty, Checkbox, Pagination, Spin } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { getAddFlowConfig } from '@shared/http/appBuilder';
-import { getPersonPluginData } from '@shared/http/appBuilder';
+import { getToolList } from "@shared/http/aipp";
 import { categoryItems } from '../../configForm/common/common';
 import { handleClickAddToolNode } from '../utils';
 import ToolCard from './tool-card';
+import AddWaterFlow from './add-waterflow-drawer';
 import '../styles/tool-modal.scss';
 import { Message } from '@shared/utils/message';
 import CreateWorkflow from './create-workflow';
@@ -16,19 +16,23 @@ const { Option } = Select;
 
 const ToolDrawer = (props) => {
   const { showModal, setShowModal, checkData, confirmCallBack, type } = props;
-  const [ activeKey, setActiveKey ] = useState('BUILTIN');
+  const [ activeKey, setActiveKey ] = useState('Builtin');
   const [ menuName, setMenuName ] = useState('新闻阅读');
-  const [ name, setName ] = useState('');
+  const [ loading, setLoading ] = useState(false);
   const [ pageNum, setPageNum ] = useState(1);
   const [ pageSize, setPageSize ] = useState(10);
   const [ total, setTotal ] = useState(0);
   const [ pluginData, setPluginData ] = useState([]);
-  const { tenantId } = useParams();
+  const currentUser = localStorage.getItem('currentUser') || '';
+  const [ open, setOpen ] = useState(false);
   const checkedList = useRef([]);
   const [ createWorkflowSignal, setCreateWorkflowSignal ] = useState(false);
   const pluginList = useRef([]);
+  const searchName = useRef('');
+  const listType = useRef('all');
+  const navigate = useNavigate();
   const tab = [
-    { name: '官方', key: 'BUILTIN' },
+    { name: '系统内置', key: 'Builtin' },
     { name: 'HuggingFace', key: 'HUGGINGFACE' },
     { name: 'LangChain', key: 'LANGCHAIN' },
     { name: 'LlamaIndex', key: 'LLAMAINDEX' },
@@ -36,30 +40,24 @@ const ToolDrawer = (props) => {
   
   useEffect(() => {
     showModal && getPluginList();
-  }, [props.showModal, name, pageNum, pageSize, activeKey]);
+  }, [props.showModal, pageNum, pageSize, activeKey]);
   useEffect(() => {
     type === 'addSkill' && (checkedList.current = JSON.parse(JSON.stringify(checkData)));
   }, [props.checkData])
   const items = categoryItems;
   const btnItems = [
-    { key: 'workflow', label: '插件' },
-    { key: 'NEWS', label: '工具流' },
+    { key: 'tool', label: '插件' },
+    { key: 'workflow', label: '工具流' },
   ];
-
-  const pluginTypeOnchange = (value) => {
-      if (value === "个人") {
-        getPersonPluginList();
-      } else if (value === "市场") {
-        getPluginList();
-      }
-  }
-
+  const handleChange = (value: string) => {
+    setPageNum(1);
+    listType.current = value;
+    getPluginList();
+  };
   const selectBefore = (
-    // 加切换选项会触发的事件
-    // onChange (value) => 调用接口并赋值
-    <Select defaultValue="市场" onChange={pluginTypeOnchange}>
-      <Option value="个人">个人</Option>
-      <Option value="市场">市场</Option>
+    <Select defaultValue="市场" onChange={handleChange}>
+      <Option value="owner">个人</Option>
+      <Option value="all">市场</Option>
     </Select>
   );
   const handleClick = (key) => {
@@ -80,30 +78,23 @@ const ToolDrawer = (props) => {
   }
   // 获取插件列表
   const getPluginList = ()=> {
-    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 1000, tag: activeKey}).then(res => {
+    setLoading(true);
+    let params:any = { pageNum, pageSize: 20, includeTags: activeKey, name: searchName.current };
+    listType.current === 'owner' && (params.owner = currentUser)
+    getToolList(params).then(res => {
+      setLoading(false);
       if (res.code === 0) {
         if (activeKey === 'HUGGINGFACE') {
-          res.data.tool.forEach(item => {
+          res.data.forEach(item => {
             item.type = 'huggingFaceNodeState',
             item.context = {
               default_model: item.defaultModel
             }
           })
         };
-        setDefaultCheck(res.data.tool);
-        setPluginData(res.data.tool);
-        pluginList.current = res.data.tool;
-      }
-    });
-  }
-
-  // 获取个人插件列表
-  const getPersonPluginList = ()=> {
-    getPersonPluginData(tenantId, {pageNum: 1, pageSize: 1000, tag: "WATERFLOW"}).then(res => {
-      if (res.code === 0) {
+        setTotal(res.total);
         setDefaultCheck(res.data);
         setPluginData(res.data);
-        pluginList.current = res.data;
       }
     });
   }
@@ -119,9 +110,9 @@ const ToolDrawer = (props) => {
   }
   // 名称搜索
   const filterByName = (value: string) => {
-    if(value !== name) {
-      setName(value);
-    }
+    searchName.current = value.trim();
+    setPageNum(1);
+    getPluginList();
   }
   // 添加插件
   const toolClick = () => {
@@ -181,7 +172,11 @@ const ToolDrawer = (props) => {
       }
     >
       <div className="tool-modal-search">
-        <Search size="large" addonBefore={selectBefore} onSearch={filterByName} placeholder="请输入" />
+        <Search 
+          size="large" 
+          addonBefore={selectBefore} 
+          onSearch={filterByName}
+          placeholder="请输入" />
         <Dropdown menu={{ items: btnItems, onClick: createClick }} trigger={['click']}>
           <Button type="primary" icon={<DownOutlined />}>创建</Button>
         </Dropdown>
@@ -206,19 +201,21 @@ const ToolDrawer = (props) => {
         </div>
       </div>
       <div className="mashup-add-content">
-        { pluginData.length > 0 && (
-          <div className="mashup-add-inner" style={{ height: 'calc(100vh - 500px)' }}>
-            {pluginData.slice((pageNum - 1)*pageSize, pageNum*pageSize).map((card: any) => 
-              <div className="mashup-add-item" key={card.uniqueName}>
-                <ToolCard  pluginData={card} />
-                <span className="opration-item">
-                  <Checkbox defaultChecked={card.checked} onChange={(e) => onChange(e, card)}></Checkbox>
-                </span>
-              </div>
-            )}
-          </div>)
-        }
-        { !pluginData.length && <div className="tool-empty"><Empty description="暂无数据" /></div> }
+        <Spin spinning={loading}>
+          { pluginData.length > 0 && (
+            <div className="mashup-add-inner" style={{ height: 'calc(100vh - 500px)' }}>
+              {pluginData.map((card: any) => 
+                <div className="mashup-add-item" key={card.uniqueName}>
+                  <ToolCard  pluginData={card} />
+                  <span className="opration-item">
+                    <Checkbox defaultChecked={card.checked} onChange={(e) => onChange(e, card)}></Checkbox>
+                  </span>
+                </div>
+              )}
+            </div>)
+          }
+          { !pluginData.length && <div className="tool-empty"><Empty description="暂无数据" /></div> }
+        </Spin>
       </div>
       <div style={{ paddingTop: 16 }}>
         <Pagination
@@ -230,6 +227,7 @@ const ToolDrawer = (props) => {
       </div>
       <CreateWorkflow createWorkflowSignal={createWorkflowSignal}/>
     </Modal>
+    <AddWaterFlow open={open} setOpen={setOpen} />
   </>
 };
 

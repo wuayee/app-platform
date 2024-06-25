@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
 import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
-import { getPlugins } from '@shared/http/plugin';
+import { getToolList } from '@shared/http/aipp';
 import AddSkill from '../../../addFlow/components/tool-modal';
 
 const Skill = (props) => {
@@ -46,7 +46,7 @@ const Skill = (props) => {
   }
   // 获取插件列表
   const getPluginList = ()=> {
-    getPlugins({ pageNum: 0, pageSize: 1000, includeTags: 'FIT', })
+    getToolList({ pageNum: 1, pageSize: 1000, excludeTags: 'App' })
       .then(({ data }) => {
         setSkillArr(data);
       })

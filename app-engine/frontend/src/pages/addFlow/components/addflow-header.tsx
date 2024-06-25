@@ -3,17 +3,19 @@ import React, { useState, useRef, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EditIcon, LeftArrowIcon, UploadIcon } from '@assets/icon';
 import { updateAppInfo } from '@shared/http/aipp';
+import { Message } from '@shared/utils/message';
 import { FlowContext } from '../../aippIndex/context';
 import EditTitleModal from '../../components/edit-title-modal';
 import PublishModal from '../../components/publish-modal';
 import TestModal from "../../components/test-modal";
 import TestStatus from "../../components/test-status";
+import TimeLineDrawer from '../../../components/timeLine';
 import FlowTest from './flow-test';
 
 const AddHeader = (props) => {
-  const { addId,  appRef, flowIdRef, debugTypes, handleDebugClick, showDebug, setShowDebug } = props;
-  const { type, appInfo, modalInfo, setModalInfo } = useContext(FlowContext);
-  const [ waterFlowName, setWaterFlowName ] = useState('无标题');
+  const { debugTypes, handleDebugClick, showDebug, setShowDebug } = props;
+  const { appInfo, showTime } = useContext(FlowContext);
+  const [ open, setOpen ] = useState(false);
   const { tenantId, appId } = useParams();
   const [ testStatus, setTestStatus ] = useState(null);
   const [ testTime, setTestTime ] = useState(0);
@@ -38,49 +40,71 @@ const AddHeader = (props) => {
   const handleBackClick = () => {
     navigate(-1);
   }
+  const getCurrentTime = () => {
+    let str = new Date().toTimeString().substring(0, 8);
+    return str
+  }
   // 保存回调
   function onFlowNameChange(params) {
-    setModalInfo(() => {
-      appRef.current.name = params.name;
-      appRef.current.attributes.description = params.description;
-      let list = JSON.parse(JSON.stringify(appRef.current))
-      return list;
-    })
+    appInfo.name = params.name;
+    appInfo.attributes.description = params.description;
     updateAppWorkFlow('waterFlow');
   }
    // 创建更新应用
    async function updateAppWorkFlow(optionType = '') {
-    let id = type ? appId : flowIdRef.current;
-    const res = await updateAppInfo(tenantId, id, appRef.current);
+    const res = await updateAppInfo(tenantId, appId, appInfo);
     if (res.code === 0) {
-      setWaterFlowName(appRef.current.name);
+      Message({ type: 'success', content: '操作成功' })
       optionType && editRef.current.handleCancel();
     } else {
       optionType && editRef.current.handleLoading();
     }
   }
+  const versionDetail = () => {
+    setOpen(true);
+  }
   return <>{(
     <div>
-      <div className='header'>
-        <div className='header-left'>
-          <LeftArrowIcon className="icon-back" onClick={ handleBackClick } />
-          <span className='header-text' title={waterFlowName}>{ waterFlowName }</span>
-          <span className='header-edit'>
-            <EditIcon onClick={ handleEditClick } />
-          </span>
+      <div className='app-header'>
+        <div className="logo">
+          <LeftArrowIcon className="back-icon" onClick={handleBackClick}/>
+          { appInfo?.attributes?.icon ?
+            <img src={appInfo.attributes?.icon} /> :
+            <img src='/src/assets/images/knowledge/knowledge-base.png' />
+          }
+          <span className="header-text" title={appInfo?.name}>{ appInfo?.name }</span>
+          <img className="edit-icon" src='/src/assets/images/ai/edit.png' onClick={ handleEditClick } />
+          {
+            appInfo.state === 'active' ?
+            (
+              <div className="status-tag">
+                <img src='/src/assets/images/ai/complate.png' />
+                <span>已发布</span>
+                <span className="version">V{appInfo.version}</span>
+              </div>
+            ) :
+            (
+              <div className="status-tag">
+                <img src='/src/assets/images/ai/publish.png' />
+                <span>未发布</span>
+                <span className="version">V{appInfo.version}</span>
+              </div>
+            )
+          }
+          { showTime && <span>自动保存：{getCurrentTime()}</span> }
           <TestStatus testTime={testTime} testStatus={testStatus}/>
         </div>
-        <div className='header-grid'>
-          <span className="header-btn test-btn" onClick={handleDebugClick}>测试</span>
+        <div className="header-grid">
+          <span className="history" onClick={versionDetail}>
+            <img src='/src/assets/images/ai/time.png' />
+          </span>
+          <span className="header-btn test-btn" onClick={handleDebugClick}>调试</span>
           <span className="header-btn" onClick={handleUploadFlow}><UploadIcon />发布</span>
         </div>
       </div>
       <PublishModal
         modalRef={modalRef}
-        appInfo={appInfo || appRef.current}
-        waterFlowName={waterFlowName}
-        modalInfo={modalInfo}
-        addId={addId}
+        appInfo={appInfo}
         publishType="waterflow"
       />
       <TestModal
@@ -90,8 +114,7 @@ const AddHeader = (props) => {
       <EditTitleModal
         modalRef={editRef}
         onFlowNameChange={onFlowNameChange}
-        waterFlowName={waterFlowName}
-        modalInfo={modalInfo}
+        appInfo={appInfo}
       />
       <FlowTest
         setTestStatus={setTestStatus}
@@ -99,8 +122,9 @@ const AddHeader = (props) => {
         setShowDebug={setShowDebug}
         showDebug={showDebug}
         debugTypes={debugTypes}
-        appRef={appRef}
+        appInfo={appInfo}
       />
+      <TimeLineDrawer open={open} setOpen={setOpen} />
     </div>
   )}</>
 };

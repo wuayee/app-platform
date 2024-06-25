@@ -21,7 +21,7 @@ const SendBox = (props) => {
     if (pathname.includes('/chatShare/')) {
       setShowIcon(false);
     } 
-  }, [location])
+  }, [location]);
   // 选中回调
   function onChange(e) {
     props.chatItem.checked = e.target.checked;

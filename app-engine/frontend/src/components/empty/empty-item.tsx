@@ -7,7 +7,7 @@ const EmptyItem = ({ text = '暂无数据' }) => {
     <>
       <Flex vertical align={"center"}>
         <Icons.emptyIcon  />
-        <div>{text}</div>
+        <div style={{ margin :'12px 0' }}>{text}</div>
       </Flex>
     </>
   );

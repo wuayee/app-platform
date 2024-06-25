@@ -56,7 +56,7 @@ const ReciveBox = (props) => {
     <div className='recieve-box'>
       {showCheck && <Checkbox className='check-box' checked={checked} onChange={onChange}></Checkbox>}
       <div className='user-image'>
-        {isAt ? <Img iconPath={appIcon} /> : <Img iconPath={appInfo.attributes.icon} />}
+        {isAt ? <Img iconPath={appIcon} /> : <Img iconPath={appInfo.attributes?.icon} />}
         {isAt ? <Name name={appName} /> : <Name name={appInfo.name} />}
       </div>
       <span className="recieve-info-inner">

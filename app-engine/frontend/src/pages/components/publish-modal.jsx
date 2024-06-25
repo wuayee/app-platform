@@ -9,7 +9,7 @@ import './styles/publish-modal.scss';
 const { TextArea } = Input;
 
 const PublishModal = (props) => {
-  const { modalRef, appInfo, publishType, modalInfo, waterFlowName, addId } = props;
+  const { modalRef, appInfo, publishType } = props;
   const { appId, tenantId } = useParams();
   const [ isModalOpen, setIsModalOpen] = useState(false);
   const [ isPublished, setIsPublished] = useState(false);
@@ -27,7 +27,7 @@ const PublishModal = (props) => {
       name: appInfo.name,
       description: appInfo.publishedDescription,
       version: appInfo.state === 'active' ? incrementVersion(appInfo.version) : appInfo.version,
-      app_type:appInfo.attributes?.app_type
+      app_type: publishType !== 'app' ? 'waterflow' : appInfo.attributes?.app_type
     });
     setIsPublished(appInfo.state === 'active');
     setIsModalOpen(true);
@@ -60,7 +60,7 @@ const PublishModal = (props) => {
   // 发布工具流
   async function publishWaterFlow() {
     try {
-      const res = await appPublish(tenantId, appId, modalInfo);
+      const res = await appPublish(tenantId, appId, appInfo);
       if (res.code === 0) {
         Message({ type: 'success', content: `发布工具流成功` });
         sessionStorage.setItem('uniqueName', res.data.tool_unique_name);
@@ -72,13 +72,9 @@ const PublishModal = (props) => {
   }
   // 编辑更新应用
   async function updateAppRunningFlow() {
-    if (waterFlowName === '无标题') {
-      Message({ type: 'warning', content: '工具流标题不能为空' });
-      return
-    }
     setLoading(true);
-    let params = modalInfo.flowGraph;
-    const res = await updateFlowInfo(tenantId, addId, params);
+    let params = appInfo.flowGraph;
+    const res = await updateFlowInfo(tenantId, appId, params);
     if (res.code === 0) {
       publishWaterFlow();
     } else {
@@ -122,7 +118,7 @@ const PublishModal = (props) => {
       <div className='search-list'>
         { !isPublished ? 
           (
-            <div className="publish-tag">
+            <div className="publish-tag" style={{ display: publishType === 'app' ? 'block' : 'none'}}>
               <img src='/src/assets/images/ai/info.png' />
               <span>请调试应用，确认无误后发布</span>
             </div>
@@ -139,14 +135,17 @@ const PublishModal = (props) => {
           layout="vertical"
           autoComplete="off"
           className='edit-form-content'
-        > 
-          <Form.Item
-            label="分类"
-            name="app_type"
-            rules={[{ required: true, message: '不能为空' }]}
-          >
-            <Select options={tagOptions} />
-          </Form.Item>
+        > {
+            publishType === 'app' && 
+            <Form.Item
+              label="分类"
+              name="app_type"
+              rules={[{ required: true, message: '不能为空' }]}
+            >
+              <Select options={tagOptions} />
+            </Form.Item>
+          }
+          
           <Form.Item
             label="版本名称"
             name="version"

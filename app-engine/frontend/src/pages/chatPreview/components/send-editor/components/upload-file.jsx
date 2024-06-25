@@ -3,6 +3,7 @@ import React, { useImperativeHandle, useState, useContext, useEffect } from 'rea
 import { Modal, Upload  } from 'antd';
 import { uploadChatFile } from "@shared/http/aipp";
 import { Message } from '@shared/utils/message';
+import { fileTypeSet } from '../../../utils/chat-process';
 import { docArr } from '../common/config';
 import exportImg from '@assets/images/ai/export.png'
 import { useAppSelector } from '../../../../../store/hook';
@@ -27,7 +28,18 @@ const UploadFile = ({ openUploadRef, fileSend }) => {
   };
   // 文件上传
   const onChange = async ({ file }) => {
-    let fileType = docArr.includes(file.type) ? "file" : "img";
+    let suffix = '';
+    try {
+      const fileArr = file.name.split('.');
+      suffix = fileArr[fileArr.length - 1];
+    } catch {
+      suffix = '';
+    }
+    if (!suffix) {
+      Message({ type: 'warning', content: '文件格式错误' });
+      return
+    }
+    let fileType = fileTypeSet(suffix);
     let headers = {
       "attachment-filename": encodeURI(file.name || ""),
     };
@@ -53,12 +65,13 @@ const UploadFile = ({ openUploadRef, fileSend }) => {
         <Dragger
           beforeUpload={beforeUpload}
           onChange={onChange}
+          fileList={[]}
           maxCount={1}
         >
           <p className="ant-upload-drag-icon">
             <img src={exportImg} alt="" />
           </p>
-          <p className="ant-upload-text">将图片拖到此处 或 点击上传图片</p>
+          <p className="ant-upload-text">将文件拖到此处 或 点击上传文件</p>
           <p className="ant-upload-hint">
             文件最大不超过500MB. 持文件类型 .jpg, .png, .pdf, .mp4, .mov…
           </p>

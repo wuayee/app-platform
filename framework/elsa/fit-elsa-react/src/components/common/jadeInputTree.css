@@ -29,9 +29,10 @@
 }
 
 .jade-hide-tree-left-line .ant-tree-switcher-leaf-line {
-    display: none;
+    visibility:hidden;
 }
 
-.jade-hide-tree-left-line .ant-tree-switcher {
-    width: 4px;
+.jade-tree-node .ant-tree-switcher {
+    display: flex;
+    justify-content: center;
 }

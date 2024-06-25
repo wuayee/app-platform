@@ -1,7 +1,7 @@
 import { del, get, post, put } from './http';
 import { httpUrlMap } from './httpConfig';
 
-const { JANE_URL, AIPP_URL, PLUGIN_URL } = httpUrlMap[process.env.NODE_ENV];
+const { JANE_URL, AIPP_URL, PLUGIN_URL, TOOL_URL } = httpUrlMap[process.env.NODE_ENV];
 
 const sso_url = '/v1/user/sso_login_info';
 
@@ -141,8 +141,12 @@ export function reTestInstance(tenantId, aippId, instanceId, version) {
   );
 }
 // 获取版本历史记录
-export function getVersion(tenantId, aippId) {
+export function getVersion(tenantId, appId) {
   return get(
-    `${AIPP_URL}/${tenantId}/app/${aippId}/recentPublished`
+    `${AIPP_URL}/${tenantId}/app/${appId}/recentPublished`
   );
+}
+// 获取插件接口
+export function getToolList(params) {
+  return get(`${AIPP_URL}/store/plugins/search`, params);
 }

@@ -1,68 +1,25 @@
 
-import { Space, Table } from 'antd';
+import { Pagination, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
-import type { PaginationProps, TableColumnsType } from 'antd';
+import type { TableColumnsType } from 'antd';
 import TableTextSearch from '../../../components/table-text-search';
 import { useNavigate } from 'react-router';
-
-interface props {
-  data: any
-}
-const showTotal: PaginationProps['showTotal'] = (total) => `Total: ${total}`;
+import { queryModelbaseList } from '../../../shared/http/model-base';
+import { deleteModel } from './delete';
 
 const ModelBaseTable = () => {
 
+  const [pageNo, setPageNo] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [queryBody, setQueryBody] = useState<any>({ limit: pageSize, offset: pageNo - 1 });
+  const [listData, setListData] = useState([]);
+  const [total, setTotal] = useState(0);
+
   const navigate = useNavigate();
 
-  const data = {
-    data: [
-      {
-        id: 1,
-        name: 'Qwen2-7B-Instruct',
-        creator: 'Alibaba',
-        description: 'Qwen2 is the new series of Qwen large language models. For Qwen2, we release a number of base language models and instruction-tuned language models ranging from 0.5 to 72 billion parameters, including a Mixture-of-Experts model. This repo contains the instruction-tuned 7B Qwen2 model.',
-        tags: ['Qwen', 'Alibaba Cloud'],
-        versionNum: 2,
-        type: '语言模型',
-        series: 'Qwen2',
-        size: '14GB'
-      },
-      {
-        id: 2,
-        name: 'Qwen2-72B-Instruct',
-        creator: 'Alibaba',
-        description: 'Qwen2 is the new series of Qwen large language models. For Qwen2, we release a number of base language models and instruction-tuned language models ranging from 0.5 to 72 billion parameters, including a Mixture-of-Experts model. This repo contains the instruction-tuned 72B Qwen2 model.',
-        tags: ['Qwen', 'Alibaba Cloud'],
-        versionNum: 1,
-        type: '语言模型',
-        series: 'Qwen2',
-        size: '140GB'
-      },
-      {
-        id: 3,
-        name: 'Meta-Llama-3-8B-Instruct',
-        creator: 'Meta',
-        description: 'Meta developed and released the Meta Llama 3 family of large language models (LLMs), a collection of pretrained and instruction tuned generative text models in 8 and 70B sizes. The Llama 3 instruction tuned models are optimized for dialogue use cases and outperform many of the available open source chat models on common industry benchmarks. Further, in developing these models, we took great care to optimize helpfulness and safety.',
-        tags: ['Meta', 'Llama3'],
-        versionNum: 1,
-        type: '语言模型',
-        series: 'LLaMA3',
-        size: '16GB'
-      },
-      {
-        id: 4,
-        name: 'glm-4-9b-chat',
-        creator: 'THUDM',
-        description: 'GLM-4-9B 是智谱 AI 推出的最新一代预训练模型 GLM-4 系列中的开源版本。 在语义、数学、推理、代码和知识等多方面的数据集测评中， GLM-4-9B 及其人类偏好对齐的版本 GLM-4-9B-Chat 均表现出超越 Llama-3-8B 的卓越性能。除了能进行多轮对话，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理（支持最大 128K 上下文）等高级功能。本代模型增加了多语言支持，支持包括日语，韩语，德语在内的 26 种语言。我们还推出了支持 1M 上下文长度（约 200 万中文字符）的 GLM-4-9B-Chat-1M 模型和基于 GLM-4-9B 的多模态模型 GLM-4V-9B。GLM-4V-9B 具备 1120 * 1120 高分辨率下的中英双语多轮对话能力，在中英文综合能力、感知推理、文字识别、图表理解等多方面多模态评测中，GLM-4V-9B 表现出超越 GPT-4-turbo-2024-04-09、Gemini 1.0 Pro、Qwen-VL-Max 和 Claude 3 Opus 的卓越性能。',
-        tags: ['Meta', 'ChatGLM4'],
-        versionNum: 1,
-        type: '语言模型',
-        series: 'ChatGLM4',
-        size: '18GB'
-      },
-    ],
-    total: 4
-  };
+  useEffect(() => {
+    getModelbaseList();
+  }, [queryBody])
 
   const typeOptions = [
     {
@@ -82,95 +39,153 @@ const ModelBaseTable = () => {
     }
   ];
 
+  //获取模型仓库列表接口
+  const getModelbaseList = () => {
+    queryModelbaseList(queryBody).then(res => {
+      if (res) {
+        setListData(res?.modelInfoList);
+        setTotal(res?.total);
+      }
+    });
+  }
+
   const columns: TableColumnsType = [
     {
-      key: 'id',
-      dataIndex: 'id',
+      key: 'model_id',
+      dataIndex: 'model_id',
       title: 'ID',
       hidden: true
     },
     {
-      key: 'name',
-      dataIndex: 'name',
+      key: 'model_name',
+      dataIndex: 'model_name',
       title: '模型',
       sorter: true,
-      ...TableTextSearch('name', true),
+      ...TableTextSearch('model_name', true),
       render: (_, record) => (
-        <a onClick={() => { navigate(`/model-base/${record.id}/detail`); }}>
-          {record.name}
+        <a onClick={() => { navigate(`/model-base/${record.model_id}/detail`); }}>
+          {record.model_name}
         </a>
       ),
     },
     {
-      key: 'type',
-      dataIndex: 'type',
+      key: 'model_type',
+      dataIndex: 'model_type',
       title: '类型',
       filters: typeOptions,
       sorter: true,
     },
     {
-      key: 'creator',
-      dataIndex: 'creator',
+      key: 'author',
+      dataIndex: 'author',
       title: '作者',
       sorter: true,
       ...TableTextSearch('creator', true),
     },
     {
-      key: 'series',
-      dataIndex: 'series',
+      key: 'series_name',
+      dataIndex: 'series_name',
       title: '模型系列',
       filters: seriesOptions,
       sorter: true,
     },
     {
-      key: 'description',
-      dataIndex: 'description',
+      key: 'model_description',
+      dataIndex: 'model_description',
       title: '描述',
       ellipsis: true,
     },
     {
-      key: 'versionNum',
-      dataIndex: 'versionNum',
+      key: 'version_num',
+      dataIndex: 'version_num',
       title: '版本数量',
       sorter: true,
     },
     {
-      key: 'size',
-      dataIndex: 'size',
+      key: 'model_size',
+      dataIndex: 'model_size',
       title: '模型大小',
       sorter: true,
     },
     {
       key: 'action',
       title: '操作',
-      render() {
+      render(_, record) {
+        const deleteConfirm = () => {
+          deleteModel(record);
+        }
         return (
           <Space size='middle'>
-            <a>删除</a>
+            <a onClick={deleteConfirm}>删除</a>
           </Space>
         )
       },
     }
   ];
 
-  //TODO：列表分页，筛选和排序项变更时的回调方法，触发数据调用方法
-  const fetchData = (pagination, filters, sorter) => {
-    console.log(pagination, filters, sorter);
+  //TODO：筛选和排序项变更时的回调方法，触发数据调用方法
+  const fetchData = (_, filters, sorter) => {
+    let params: any = {
+      offset: pageNo - 1,
+      limit: pageSize
+    };
+    if (filters?.author && filters.author.length > 0) {
+      params.author = filters.author[0];
+    }
+    if (filters?.model_name && filters.model_name.length > 0) {
+      params.model_name = filters.model_name[0];
+    }
+    if (filters?.model_type) {
+      params.model_type = filters.model_type;
+    }
+    if (filters?.series_name) {
+      params.series_name = filters.series_name;
+    }
+    if (sorter?.order) {
+      params.sort = [sorter?.field];
+      params.direction = [sorter?.order.slice(0, -3)];
+    }
+    setQueryBody(params);
+  }
+
+  const pageChange = (page: number, pageSize: number) => {
+    setPageNo(page);
+    setPageSize(pageSize);
+    setQueryBody({
+      ...queryBody,
+      offset: page - 1,
+      limit: pageSize
+    });
   }
 
   return (
-    <Table
-      dataSource={data?.data}
-      columns={columns}
-      scroll={{ y: '800px' }}
-      pagination={{
-        size: 'small',
-        showSizeChanger: true,
-        showQuickJumper: true,
-        showTotal: showTotal,
-      }}
-      onChange={fetchData}
-    />
+    <>
+      <Table
+        dataSource={listData}
+        columns={columns}
+        scroll={{ y: '800px' }}
+        pagination={false}
+        onChange={fetchData}
+      />
+      <div style={{
+        width: '100%',
+        display: 'flex',
+        'justifyContent': 'space-between',
+        fontSize: '12px',
+        marginTop: 16,
+      }}>
+        <span>Total: {total}</span>
+        <Pagination
+          size='small'
+          total={total}
+          showSizeChanger
+          showQuickJumper
+          pageSize={pageSize}
+          current={pageNo}
+          onChange={pageChange}
+        />
+      </div>
+    </>
   );
 };
 export default ModelBaseTable;
