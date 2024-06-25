@@ -53,8 +53,8 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
     };
 
     const getConditionOptionsByReferenceType = (referenceType) => {
-        switch (referenceType) {
-            case 'String':
+        switch (referenceType.toLowerCase()) {
+            case 'string':
                 return [
                     {value: 'equal', label: 'equal'},
                     {value: 'not equal', label: 'not equal'},
@@ -69,7 +69,7 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
                     {value: UNARY_OPERATOR.IS_NULL, label: 'is null'},
                     {value: UNARY_OPERATOR.IS_NOT_NULL, label: 'is not null'},
                 ];
-            case 'Boolean':
+            case 'boolean':
                 return [
                     {value: 'equal', label: 'equal'},
                     {value: 'not equal', label: 'not equal'},
@@ -78,8 +78,8 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
                     {value: UNARY_OPERATOR.IS_TRUE, label: 'is true'},
                     {value: UNARY_OPERATOR.IS_FALSE, label: 'is false'},
                 ];
-            case 'Integer':
-            case 'Number':
+            case 'integer':
+            case 'number':
                 return [
                     {value: 'equal', label: 'equal'},
                     {value: 'not equal', label: 'not equal'},
@@ -90,10 +90,10 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
                     {value: 'less than', label: 'less than'},
                     {value: 'less than or equal', label: 'less than or equal'},
                 ];
-            case 'Array<String>':
-            case 'Array<Integer>':
-            case 'Array<Boolean>':
-            case 'Array<Number>':
+            case 'array<string>':
+            case 'array<integer>':
+            case 'array<boolean>':
+            case 'array<number>':
                 return [
                     // {value: 'longer than', label: 'longer than'},
                     // {value: 'longer than or equal', label: 'longer than or equal'},
