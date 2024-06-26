@@ -687,19 +687,11 @@ async def delete_model(llm: Llm, request: Request, background_tasks: BackgroundT
             logger.info("Delete service {%s} successful", service_name)
         except ApiException as e:
             logger.warning(e)
-            error_info = gen_error_info(e.status, e.reason)
-            response = JSONResponse(status_code=522, content=jsonable_encoder(error_info))
-            set_cross_header(response, request)
-            return response
         try:
             response = k8s_client.delete_namespaced_deployment(deployment_name, MODEL_IO_NAMESPACE)
             logger.info("Delete deployment {%s} successful", deployment_name)
         except ApiException as e:
-            error_info = gen_error_info(e.status, e.reason)
             logger.warning(e)
-            response = JSONResponse(status_code=522, content=jsonable_encoder(error_info))
-            set_cross_header(response, request)
-            return response
         notify_model_io_gateways_in_bg(background_tasks)
         status_ok = 200
         error_info = gen_error_info(status_ok, "ok")
@@ -987,10 +979,8 @@ async def add_external_model_services(external_service: ExternalService, request
     ex_service["url"] = external_service.url
     ex_service["api_key"] = external_service.api_key
 
-    if external_service.http_proxy:
-        ex_service["http_proxy"] = external_service.http_proxy
-    if external_service.https_proxy:
-        ex_service["https_proxy"] = external_service.https_proxy
+    ex_service["http_proxy"] = external_service.http_proxy
+    ex_service["https_proxy"] = external_service.https_proxy
     external_model_services[ex_name] = ex_service
     persist_external_services()
     notify_model_io_gateways_in_bg(background_tasks)
@@ -1072,12 +1062,9 @@ async def update_external_model_proxies(external_model_proxies: GlobalExternalSe
     http_proxy = external_model_proxies.http_proxy
     https_proxy = external_model_proxies.https_proxy
     no_proxy = external_model_proxies.no_proxy
-    if http_proxy:
-        global_proxy_configs["http_proxy"] = http_proxy
-    if https_proxy:
-        global_proxy_configs["https_proxy"] = https_proxy
-    if no_proxy:
-        global_proxy_configs["no_proxy"] = no_proxy
+    global_proxy_configs["http_proxy"] = http_proxy
+    global_proxy_configs["https_proxy"] = https_proxy
+    global_proxy_configs["no_proxy"] = no_proxy
 
     persist_external_services()
     notify_model_io_gateways_in_bg(background_tasks)
