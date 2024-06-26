@@ -59,7 +59,7 @@
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <configuration>
-                    <category>system</category>
+                    <category>user</category>
                     <level>5</level>
                 </configuration>
                 <executions>
