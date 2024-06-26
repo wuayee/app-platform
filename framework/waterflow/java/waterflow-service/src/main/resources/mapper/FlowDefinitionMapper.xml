@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowDefinitionMapper">
+    <resultMap id="objectMap"
+               type="com.huawei.fit.waterflow.flowsengine.persist.po.FlowDefinitionPO">
+        <id column="definition_id" property="definitionId"/>
+        <result column="meta_id" property="metaId"/>
+        <result column="name" property="name"/>
+        <result column="tenant" property="tenant"/>
+        <result column="version" property="version"/>
+        <result column="status" property="status"/>
+        <result column="graph" property="graph"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <resultMap id="FitableCountMap" type="java.util.Map">
+        <result property="fitableId" column="fitable_id"/>
+        <result property="count" column="count"/>
+    </resultMap>
+
+    <sql id="table">flow_definition</sql>
+
+    <sql id="columns">definition_id
+    , meta_id, name, tenant, version, status, graph, created_by</sql>
+
+    <insert id="create">
+        INSERT INTO
+        <include refid="table"/>
+        (<include refid="columns"/>, created_at)
+        VALUES(#{flowDefinition.definitionId},
+        #{flowDefinition.metaId},
+        #{flowDefinition.name},
+        #{flowDefinition.tenant},
+        #{flowDefinition.version},
+        #{flowDefinition.status},
+        #{flowDefinition.graph}::jsonb,
+        #{flowDefinition.createdBy},
+        #{createdAt})
+    </insert>
+
+    <select id="find" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="table"/>
+        WHERE definition_id = #{definitionId}
+    </select>
+
+    <update id="update">
+        UPDATE
+        <include refid="table"/>
+        SET
+        status = #{flowDefinition.status},
+        graph = #{flowDefinition.graph}::jsonb
+        WHERE
+        definition_id = #{flowDefinition.definitionId}
+    </update>
+
+    <update id="delete">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE definition_id = #{definitionId}
+    </update>
+
+    <select id="findByTenantId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>
+        FROM flow_definition f1
+        LEFT JOIN (
+        SELECT meta_id as temp_meta, MAX(version) as max_version
+        FROM flow_definition
+        WHERE tenant = #{tenantId}
+        GROUP BY temp_meta
+        ) f2 on f1.meta_id = f2.temp_meta
+        WHERE f2.temp_meta IS NOT NULL
+    </select>
+
+    <select id="findByFlowNameAndVersion" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>, created_at
+        FROM
+        <include refid="table"/>
+        WHERE name = #{name} AND version = #{version}
+    </select>
+
+    <select id="findByStreamIdList" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>, created_at
+        FROM
+        <include refid="table"/>
+        WHERE
+        <foreach item="stream" collection="streams" separator="OR">
+            meta_id = #{stream.metaId} AND version = #{stream.version}
+        </foreach>
+    </select>
+
+    <select id="findByMetaIdAndVersion" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>, created_at
+        FROM
+        <include refid="table"/>
+        WHERE meta_id = #{metaId} AND version = #{version}
+    </select>
+
+    <select id="findByMetaIdAndPartVersion" resultMap="objectMap">
+        <bind name="pattern" value="'%' + version + '%'"/>
+        SELECT
+        <include refid="columns"/>, created_at
+        FROM
+        <include refid="table"/>
+        WHERE meta_id = #{metaId} AND version like #{pattern}
+    </select>
+
+    <select id="findByFitableId" resultMap="objectMap">
+        SELECT
+        <include refid="columns"/>, created_at
+        FROM
+        <include refid="table"/>
+        WHERE definition_id
+        IN
+        (
+        SELECT fu.definition_id
+        FROM fitable_usage fu
+        WHERE fu.fitable_id = #{fitableId}
+        )
+        OFFSET #{offset} LIMIT #{limit}
+    </select>
+
+    <select id="getCountByFitableId" resultType="int">
+        SELECT COUNT(1)
+        FROM flow_definition fd
+                 JOIN fitable_usage fu ON fd.definition_id = fu.definition_id
+        WHERE fu.fitable_id = #{fitableId};
+    </select>
+
+    <select id="selectFitableCounts" resultMap="FitableCountMap">
+        SELECT
+        f.fitable_id,
+        COUNT(fd.definition_id) AS count
+        FROM
+        <foreach collection="fitableIds" item="id" open="(" separator="UNION" close=")">
+            SELECT #{id} AS fitable_id
+        </foreach>
+        f
+        LEFT JOIN
+        fitable_usage fu ON f.fitable_id = fu.fitable_id
+        LEFT JOIN
+        flow_definition fd ON fu.definition_id = fd.definition_id
+        GROUP BY
+        f.fitable_id;
+    </select>
+
+</mapper>
