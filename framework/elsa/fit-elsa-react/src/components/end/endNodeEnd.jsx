@@ -104,6 +104,9 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
      * @override
      */
     self.getComponent = () => {
+        if (!self.flowMeta.callback.converter.entity) {
+            return self.graph.plugins[self.componentName](undefined);
+        }
         const jadeConfig = self.flowMeta.callback.converter.entity.inputParams ? self.flowMeta.callback.converter.entity : self.flowMeta.task;
         return self.graph.plugins[self.componentName](jadeConfig);
     };

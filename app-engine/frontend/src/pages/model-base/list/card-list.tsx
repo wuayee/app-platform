@@ -53,7 +53,7 @@ const ModelBaseCard = () => {
         alignContent: 'flex-start',
         marginBottom: 16
       }}>
-        {listData.map((item: any) => <CardItem data={item} />)}
+        {listData.map((item: any) => <CardItem data={item} deleteCallback={getModelbaseList} />)}
       </div>
       <div style={{
         width: '100%',

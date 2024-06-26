@@ -28,4 +28,11 @@ public interface FlowDataConverter {
      * @return 根据节点输出生成的调用节点服务出参 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
      */
     Map<String, Object> convertOutput(Object result);
+
+    /**
+     * 获取Converter中outputName
+     *
+     * @return outputName对应的 {@link String}。
+     */
+    String getOutputName();
 }

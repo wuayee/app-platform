@@ -36,6 +36,7 @@ export const jadeFlowPage = (div, graph, name, id) => {
         const registerVirtualNodeInfo = () => {
             self.registerObservable(VIRTUAL_CONTEXT_NODE.id, "instanceId", "instanceId", "String", undefined);
             self.registerObservable(VIRTUAL_CONTEXT_NODE.id, "appId", "appId", "String", undefined);
+            self.registerObservable(VIRTUAL_CONTEXT_NODE.id, "memories", "memories", "Array", undefined);
         };
         // 上下文虚拟节点信息注册
         registerVirtualNodeInfo();

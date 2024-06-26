@@ -30,6 +30,7 @@ export interface ModelItem {
   xpu_consume: number;
   port: number;
   image: string;
+  max_token_size: object;
 }
 const CardsTab = ({ modelList, setModels, openModify }: { modelList: ModelItem[], setModels: (val: Array<any>) => void, openModify: Function }) => {
   // 路由

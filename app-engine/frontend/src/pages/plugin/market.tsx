@@ -6,7 +6,7 @@ import { getPlugins } from '../../shared/http/plugin';
 import '../../index.scss'
 import { Icons } from "../../components/icons";
 import EmptyItem from '../../components/empty/empty-item';
-import { sourceTabs } from './helper';
+import { PluginCardTypeE, sourceTabs } from './helper';
 
 const MarketItems = () => {
   const [total, setTotal] = useState(0);
@@ -38,7 +38,7 @@ const MarketItems = () => {
   }, [selectedSource, name, pageNum, pageSize]);
 
   const getPluginList = () => {
-    getPlugins({ pageNum: pageNum - 1, pageSize, includeTags: selectedSource?.toUpperCase(), name })
+    getPlugins({ pageNum: pageNum, pageSize, includeTags: selectedSource==='ALL'?undefined:selectedSource,isPublished:true, name })
       .then(({ data, total }) => {
         setTotal(total);
         setPluginData(data);
@@ -84,7 +84,7 @@ const MarketItems = () => {
         flexWrap: 'wrap',
         alignContent: 'flex-start'
       }}>
-        {pluginData.map((card: any) => <PluginCard key={card.uniqueName} pluginData={card}/>)}
+        {pluginData.map((card: any) => <PluginCard key={card.uniqueName} pluginData={card} cardType={PluginCardTypeE.MARKET}/>)}
       </div>
       <div style={{ paddingTop: 16 }}>
         <Pagination

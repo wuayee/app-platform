@@ -36,13 +36,17 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
     if (modifyData) {
       handleModifyData();
     }
-  }, [modifyData]);
+  }, [modifyData, open]);
 
   const handleNameChange = (value: any) => {
     setNameOption(value);
     setPrecisionOption(null);
     setImageOption(null);
     setGpuOption(null);
+    form.setFieldValue(
+      'max_token_size',
+      createItems.find((item) => item.name === value)?.max_token_size?.default
+    );
   };
 
   const handleModifyData = () => {
@@ -53,13 +57,16 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
       inference_accuracy: modifyData?.precision?.current,
       replicas: modifyData?.replicas,
       npus: modifyData?.npu?.current,
-      max_link_num: modifyData?.max_link_num
+      max_link_num: modifyData?.max_link_num,
+      max_token_size: modifyData?.max_token_size?.current
     })
   }
 
   const filteredPrecisionOption = createItems.find((item) => item.name === nameOption)?.precision;
   const filteredImageOption = createItems.find((item) => item.name === nameOption)?.image;
   const filteredGpuOption = createItems.find((item) => item.name === nameOption)?.gpu;
+  const tokenMin = createItems.find((item) => item.name === nameOption)?.max_token_size?.min;
+  const tokenMax = createItems.find((item) => item.name === nameOption)?.max_token_size?.max;
 
   if (createItems.length) {
     createItems.forEach((item) => {
@@ -69,7 +76,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
 
   const deployModel = () => {
     form.validateFields().then((values) => {
-      const { name, inference_accuracy, image_name, npus, replicas, max_link_num } = values;
+      const { name, inference_accuracy, image_name, npus, replicas, max_link_num, max_token_size } = values;
       const modelParams = {
         name,
         image_name,
@@ -77,10 +84,11 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
         replicas,
         node_port: 80,
         max_link_num,
+        max_token_size,
         npus: parseInt(npus),
       };
       createModel(modelParams).then((res) => {
-        if (res && res.code === 0) {
+        if (res && (res.code === 0 || res.code === 200)) {
           message.success('模型部署成功');
           getModelList().then((res) => {
             if (res) {
@@ -124,14 +132,14 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
         <Form.Item
           label='大模型服务名称'
           name='name'
-          rules={[{ required: true, message: '请输入大模型服务名称' }]}
+          rules={[{ required: true }]}
         >
           <Select disabled={modifyData} options={nameOptions} value={nameOption} onChange={handleNameChange} />
         </Form.Item>
         <Form.Item
           label='大模型镜像名称'
           name='image_name'
-          rules={[{ required: true, message: '请输入大模型镜像名称' }]}
+          rules={[{ required: true }]}
         >
           <Select
             options={filteredImageOption?.map((option) => ({ label: option, value: option }))}
@@ -142,7 +150,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
         <Form.Item
           label='推理精度'
           name='inference_accuracy'
-          rules={[{ required: true, message: '请输入推理精度' }]}
+          rules={[{ required: true }]}
         >
           <Select
             options={filteredPrecisionOption?.map((option) => ({ label: option, value: option }))}
@@ -154,7 +162,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           label='大模型实例数'
           name='replicas'
           rules={[
-            { required: true, message: '请输入大模型实例数' },
+            { required: true },
             {
               type: 'number',
               max: 8,
@@ -169,7 +177,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           label='单实例消耗的NPU数'
           name='npus'
           rules={[
-            { required: true, message: '请输入单实例消耗的NPU数' },
+            { required: true },
           ]}
         >
           <Select
@@ -181,7 +189,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           label='请求并发数'
           name='max_link_num'
           rules={[
-            { required: true, message: '请输入请求并发数' },
+            { required: true},
             {
               type: 'number',
               max: linkNumMax,
@@ -191,6 +199,21 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           ]}
         >
           <InputNumber style={{ width: '100%' }} min={1} max={linkNumMax} />
+        </Form.Item>
+        <Form.Item
+          label='最大Token数'
+          name='max_token_size'
+          rules={[
+            { required: true },
+            {
+              type: 'number',
+              max: tokenMax,
+              min: tokenMin,
+              message: `输入范围为${tokenMin} - ${tokenMax}`
+            }
+          ]}
+        >
+          <InputNumber style={{ width: '100%' }} min={tokenMin} max={tokenMax} />
         </Form.Item>
       </Form>
       <div

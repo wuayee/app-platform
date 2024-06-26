@@ -1,7 +1,7 @@
-import { del, get, post, put } from "./http";
-import { httpUrlMap } from "./httpConfig";
+import { del, get, post, put } from './http';
+import { httpUrlMap } from './httpConfig';
 
-const { MODEL_LIST_URL } = httpUrlMap[process.env.NODE_ENV];
+const { MODEL_LIST_URL, AI_URL } = httpUrlMap[process.env.NODE_ENV];
 
 // 查询模型列表
 export function getModelList(params) {

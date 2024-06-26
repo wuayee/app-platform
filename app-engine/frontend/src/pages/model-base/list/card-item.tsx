@@ -6,14 +6,14 @@ import { useNavigate } from 'react-router';
 import { deleteModel } from './delete';
 import { AvatarIcon } from '../../../assets/icon';
 
-const CardItem = ({ data }: any) => {
+const CardItem = ({ data, deleteCallback }: any) => {
 
   const navigate = useNavigate();
   const operatorItems: MenuProps['items'] = [
     {
       key: '1',
       label: (
-        <a onClick={() => deleteModel(data)}>
+        <a onClick={() => deleteModel(data, deleteCallback)}>
           删除
         </a>
       ),
