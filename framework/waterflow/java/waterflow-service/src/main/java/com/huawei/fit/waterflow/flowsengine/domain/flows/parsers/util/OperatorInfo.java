@@ -124,7 +124,7 @@ public enum OperatorInfo {
         if (OperatorInfo.UNARY_TYPE.equalsIgnoreCase(operator.getType()) || OperatorInfo.BINARY_TYPE.equalsIgnoreCase(
                 operator.getType())) {
             JSONObject left = values.getJSONObject(0);
-            return generateExpression(left);
+            return generateExpression(left, operator.getType());
         }
         return ""; // Unary operators do not require a right expression
     }
@@ -132,15 +132,15 @@ public enum OperatorInfo {
     private static String generateRightExpression(JSONArray values, OperatorInfo operator) {
         if (OperatorInfo.BINARY_TYPE.equalsIgnoreCase(operator.getType())) {
             JSONObject right = values.getJSONObject(1);
-            return generateExpression(right);
+            return generateExpression(right, operator.getType());
         }
         return ""; // Unary operators do not require a right expression
     }
 
-    private static String generateExpression(JSONObject valueObj) {
+    private static String generateExpression(JSONObject valueObj, String operatorType) {
         String from = valueObj.getString(FROM_KEY);
         if (REFERENCE_FROM_TYPE.equals(from)) {
-            return buildReferenceExpression(valueObj);
+            return buildReferenceExpression(valueObj, operatorType);
         } else if (INPUT_FROM_TYPE.equals(from)) {
             return formatInputValue(valueObj);
         } else {
@@ -148,13 +148,16 @@ public enum OperatorInfo {
         }
     }
 
-    private static String buildReferenceExpression(JSONObject valueObj) {
+    private static String buildReferenceExpression(JSONObject valueObj, String operatorType) {
         String referenceNode = valueObj.getString(VALUE_REFERENCE_NODE_KEY);
         JSONArray valueArray = valueObj.getJSONArray(VALUE_VALUE_ARRAY_KEY);
         StringBuilder valueBuilder = new StringBuilder(BUSINESS_DATA_PREFIX + Constant.BUSINESS_DATA_INTERNAL_KEY + "."
                 + Constant.INTERNAL_OUTPUT_SCOPE_KEY + ".").append(referenceNode);
         for (Object val : valueArray) {
             valueBuilder.append(".").append(val.toString());
+        }
+        if ("String".equals(valueObj.getString(INPUT_TYPE_KEY)) && OperatorInfo.BINARY_TYPE.equals(operatorType)) {
+            valueBuilder.append(".trim()");
         }
         return valueBuilder.toString();
     }
