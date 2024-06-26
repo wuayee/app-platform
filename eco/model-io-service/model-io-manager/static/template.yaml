@@ -22,6 +22,8 @@ metadata:
   namespace: model-io
 spec:
   replicas: {{replicas}}                        # The value of replicas is 1 in a single-node scenario and N in an N-node scenario. The number of NPUs in the requests field is 8 in an N-node scenario.
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: {{name}}_inference
@@ -34,17 +36,24 @@ spec:
         - image: {{image_name}}
           imagePullPolicy: Never
           securityContext:
-            privileged: true
+            privileged: {% if enable_npu_schedule %}false{% else %}true{% endif %}
           name: infer-{{name}}
           command: ["/bin/bash"]
           args: ["/root/mindie/start_mindie.sh"]
+{%- if enable_npu_schedule %}
+          resources:
+            requests:
+              huawei.com/Ascend910: {{npus}}
+            limits:
+              huawei.com/Ascend910: {{npus}}
+{%- endif %}
           env:
           - name: ModelName
             value: {{name}}
           - name: ModelWeightPath
             value: {{model_weight_path}}
           - name: WorldSize
-            value: "1"
+            value: {% if enable_npu_schedule %}"{{npus}}"{% else %}"1"{% endif %}
           - name: Port
             value: "9981"
           - name: MaxTokenSize
@@ -54,13 +63,15 @@ spec:
               path: /v2/health/ready
               port: 9981
             initialDelaySeconds: 60
-            periodSeconds: 60
+            periodSeconds: {% if name == 'qwen-72b' %}60{% else %}10{% endif %}
+            failureThreshold: 6
           livenessProbe:
             httpGet:
               path: /v2/health/live
               port: 9981
             initialDelaySeconds: 60
-            periodSeconds: 60
+            periodSeconds: {% if name == 'qwen-72b' %}60{% else %}10{% endif %}
+            failureThreshold: 6
           volumeMounts:
           - name: ascend-driver
             mountPath: /usr/local/Ascend/driver
