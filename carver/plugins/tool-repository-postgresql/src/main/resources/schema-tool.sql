@@ -15,7 +15,9 @@ create table if not exists store_tool
     "source"         varchar(16) default 'Builtin'         not null,
     "icon"           text,
     "unique_name"    char(36)                              not null,
-    unique("unique_name")
+    "version"        varchar(10) default '1.0.0'           not null,
+    "is_latest"      boolean     default true              not null,
+    unique("unique_name", "version")
 );
 comment on column store_tool.id is '工具的自增主键';
 comment on column store_tool.created_time is '工具的创建时间';
@@ -29,6 +31,8 @@ comment on column store_tool.runnables is '工具的运行描述';
 comment on column store_tool.source is '工具的来源';
 comment on column store_tool.icon is '工具的图标';
 comment on column store_tool.unique_name is '工具的唯一标识';
+comment on column store_tool.version is '工具的版本';
+comment on column store_tool.is_latest is '表示当前版本工具是否最新';
 
 create table if not exists store_tag
 (

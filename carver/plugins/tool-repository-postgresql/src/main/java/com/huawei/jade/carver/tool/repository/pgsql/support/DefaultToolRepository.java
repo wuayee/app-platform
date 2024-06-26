@@ -22,6 +22,7 @@ import com.huawei.jade.carver.tool.repository.pgsql.model.entity.ToolDo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -73,6 +74,12 @@ public class DefaultToolRepository implements ToolRepository {
     @Override
     public void deleteTool(String uniqueName) {
         this.toolMapper.deleteTool(uniqueName);
+    }
+
+    @Override
+    public String deleteToolByVersion(String uniqueName, String version) {
+        this.toolMapper.deleteToolByVersion(uniqueName, version);
+        return uniqueName;
     }
 
     /**
@@ -196,5 +203,34 @@ public class DefaultToolRepository implements ToolRepository {
     public Set<String> getTags(String uniqueName) {
         List<TagDo> tagDos = this.tagMapper.getTags(uniqueName);
         return tagDos.stream().map(TagDo::getName).collect(Collectors.toSet());
+    }
+
+    @Override
+    public void setNotLatest(String toolUniqueName) {
+        this.toolMapper.setNotLatest(toolUniqueName);
+    }
+
+    @Override
+    public Optional<Tool.Info> getToolByVersion(String toolUniqueName, String version) {
+        ToolDo toolDo = this.toolMapper.getToolByVersion(toolUniqueName, version);
+        return Optional.ofNullable(toolDo).map(tool -> ToolDo.do2Info(tool, this.serializer));
+    }
+
+    @Override
+    public List<Tool.Info> getAllToolVersions(ToolQuery toolQuery) {
+        List<ToolDo> toolDos = this.toolMapper.getAllToolVersions(toolQuery);
+        List<Tool.Info> infos = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(toolDos)) {
+            infos.addAll(toolDos.stream()
+                    .filter(Objects::nonNull)
+                    .map(toolDo -> ToolDo.do2Info(toolDo, this.serializer))
+                    .collect(Collectors.toList()));
+        }
+        return infos;
+    }
+
+    @Override
+    public int getAllToolVersionsCount(ToolQuery toolQuery) {
+        return this.toolMapper.getAllToolVersionsCount(toolQuery);
     }
 }

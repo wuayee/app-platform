@@ -61,6 +61,12 @@ public class ToolQuery {
     private Integer limit;
 
     /**
+     * 表示工具版本。
+     * <p>构造条件时按需传入。</p>
+     */
+    private String version;
+
+    /**
      * 构造动态查询条件。
      *
      * @param toolName 表示工具名的 {@link String}。
@@ -68,14 +74,16 @@ public class ToolQuery {
      * @param excludeTags 表示排除标签的 {@link Set}{@code <}{@link String}{@code >}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
+     * @param version 表示版本的 {@link String}
      */
     public ToolQuery(String toolName, List<String> includeTags, List<String> excludeTags, Integer pageNum,
-            Integer limit) {
+            Integer limit, String version) {
         this.toolName = toolName;
         this.includeTags = CollectionUtils.isNotEmpty(includeTags) ? new HashSet<>(includeTags) : new HashSet<>();
         this.excludeTags = CollectionUtils.isNotEmpty(excludeTags) ? new HashSet<>(excludeTags) : new HashSet<>();
         this.pageNum = pageNum;
         this.limit = limit;
+        this.version = version;
         if (pageNum != null && limit != null) {
             this.offset = this.getOffset(pageNum, limit);
         }
