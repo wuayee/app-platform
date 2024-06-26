@@ -18,6 +18,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ServerWebExchange;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -78,6 +79,7 @@ public class ModelPredicateFactory extends AbstractRoutePredicateFactory<ModelPr
             return Objects.equals(model, request.getModel());
         } else {
             String pipeline = request.getModel().replace('/', '-') + "-" + request.getTask();
+            pipeline = pipeline.toLowerCase(Locale.ENGLISH);
             log.info("Compare pipeline={} with model={}", pipeline, model);
             return pipeline.equals(model);
         }
