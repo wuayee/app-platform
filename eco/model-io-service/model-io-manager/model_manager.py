@@ -410,7 +410,9 @@ async def list_chat_models():
 
 
 def get_model_name(service_name):
-    return service_name.split("_")[0]
+    name = service_name.split("_")[0]
+    return name.replace("dot", ".")
+
 
 
 def get_services():
@@ -1024,6 +1026,7 @@ async def start_up_pipeline(item: PipelineItem, request: Request, background_tas
     model_name_pre = model_name.split('/')[0]
     model_name_post = model_name.split('/')[1]
     render_name = model_name_pre + '-' + model_name_post + '-' + item.task
+    render_name = render_name.replace(".", "dot").lower()
 
     render_data = {
         "name": render_name,
