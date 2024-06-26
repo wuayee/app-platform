@@ -41,7 +41,6 @@ const HuggingFaceModal = (props) => {
   }
   const itemClick = (item) => {
     setActiveKey(item.name);
-    window.open(`https://${item.url}`);
   }
   const confirm = () => {
     onModelSelectCallBack({ name: activeKey });
@@ -77,26 +76,27 @@ const HuggingFaceModal = (props) => {
           <div className="left-list">
             { list.length > 0 && list.map((card:any) => 
               <div className={ `left-item ${activeKey === card.name ? 'active' : ''}` } 
-                  key={card.taskName} 
-                  onClick={() => itemClick(card)}>
-                <div className="item-top">
-                  <div className="top-left">
-                    <img src="/src/assets/images/ai/hugging-face.png" alt="" />
-                  </div>
-                  <div className="top-right">
-                    <div className="item-title" title={card.name}>{card.name} </div>
-                    <div className="item-tag">
-                      <span>
-                        <img src="/src/assets/images/ai/download.png" alt="" />
-                        {card.context.downloads}
-                      </span>
-                      <span>
-                        <img src="/src/assets/images/ai/like.png" alt="" />
-                        {card.context.likes}
-                      </span>
+                key={card.taskName} 
+                onClick={() => itemClick(card)}>
+                  <div className="card-detail" onClick={() => window.open(`https://${card.url}`)}>查看详情</div>
+                  <div className="item-top">
+                    <div className="top-left">
+                      <img src="/src/assets/images/ai/hugging-face.png" alt="" />
+                    </div>
+                    <div className="top-right">
+                      <div className="item-title" title={card.name}>{card.name} </div>
+                      <div className="item-tag">
+                        <span>
+                          <img src="/src/assets/images/ai/download.png" alt="" />
+                          {card.context.downloads}
+                        </span>
+                        <span>
+                          <img src="/src/assets/images/ai/like.png" alt="" />
+                          {card.context.likes}
+                        </span>
                     </div>
                   </div>
-                </div>
+                 </div>
                 <div className="item-bottom" title={card.context.description}>{card.context.description }</div>
               </div>
             )}
