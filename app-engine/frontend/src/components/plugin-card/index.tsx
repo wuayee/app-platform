@@ -1,14 +1,28 @@
 import React from 'react';
-import { Flex, Tag } from 'antd';
+import { Dropdown, Flex, MenuProps, Tag } from 'antd';
 import { Icons } from '../icons';
 import { PluginIcons } from '../icons/plugin';
-import { StarOutlined, UserOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import './style.scoped.scss';
-import { IconMap } from '../../pages/plugin/helper';
+import { IconMap, PluginCardTypeE } from '../../pages/plugin/helper';
 
-const PluginCard = ({ pluginData }: any) => {
-  const navigate = useNavigate();
+const PluginCard = ({ pluginData,cardType }: any) => {
+  const navigate = useNavigate()
+  const operatItems: MenuProps['items'] = [
+    {
+      label: <div>发布</div>,
+      key: 'piblish',
+    },
+    {
+      label: <div>编排</div>,
+      key: 'choreography',
+    },
+    {
+      label: <div>删除</div>,
+      key: 'delete',
+    },
+  ];
   return(
   <div className='plugin-card'
    onClick={()=>{navigate(`/plugin/detail/${pluginData.uniqueName}`)}}>
@@ -35,20 +49,30 @@ const PluginCard = ({ pluginData }: any) => {
     </div>
     {/* 卡片底部 */}
     <div className='card-footer'>
-      <Flex gap={16}>
+      <Flex gap={14}>
+        <span hidden={cardType===PluginCardTypeE.MARKET}>
+          <Tag className='footer-type'>Tag 1</Tag>
+        </span>
         <span>
           <UserOutlined style={{ marginRight: 8 }} />
-          2.36k
+          {pluginData?.downloadCount}
         </span>
         <span>
           <StarOutlined style={{ marginRight: 8 }} />
-          126
+          {pluginData?.likeCount}
         </span>
       </Flex>
-      <Flex style={{ display: 'flex', alignItems: 'center' }} gap={4}>
-        {IconMap[pluginData?.tags?.[0]]?.icon}
-        <span style={{ fontSize: 12, fontWeight: 700 }}>{IconMap[pluginData?.tags?.[0]]?.name}</span>
+      <div hidden={cardType!==PluginCardTypeE.MARKET}>
+      <Flex style={{ display: 'flex', alignItems: 'center' }} gap={4} >
+        {IconMap[pluginData?.source?.toUpperCase()]?.icon}
+        <span style={{ fontSize: 12, fontWeight: 700 }}>{IconMap[pluginData?.source?.toUpperCase()]?.name}</span>
       </Flex>
+      </div>
+      <div hidden={cardType===PluginCardTypeE.MARKET} onClick={(e)=>{e.stopPropagation();}}>
+        <Dropdown menu={{items:operatItems}} trigger={['click']}>
+           <EllipsisOutlined className='footer-more'/>
+        </Dropdown>
+      </div>
     </div>
   </div >
 )}
