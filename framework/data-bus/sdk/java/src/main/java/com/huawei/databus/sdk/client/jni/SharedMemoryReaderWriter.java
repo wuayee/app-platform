@@ -30,7 +30,7 @@ public class SharedMemoryReaderWriter {
             try {
                 NativeLibraryLoader.loadLibrary(DATABUS_JNI_NATIVE_LIBRARY_NAME);
             } catch (IOException e) {
-                logger.error("[init] Loading native library failed. [e={}]", e.toString());
+                logger.error("[init] Loading native library failed.", e);
             }
         }
     }
