@@ -82,10 +82,7 @@ public class PatternTest {
                 .prompt(Prompts.human("{{examples}}\n{{question}}="))
                 .close()
                 .converse();
-
-        final StringBuilder answer = new StringBuilder();
-        converse.doOnSuccess(r -> answer.append(r.text())).offer("1+2").await();
-        assertThat(answer.toString()).isEqualTo("2+2=4\n2+3=5\n1+2=");
+        assertThat(converse.offer("1+2").await().text()).isEqualTo("2+2=4\n2+3=5\n1+2=");
     }
 
     @Test
