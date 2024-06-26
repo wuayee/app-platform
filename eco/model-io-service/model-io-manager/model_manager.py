@@ -8,8 +8,6 @@ import socket
 import json
 import logging
 import uuid
-from time import sleep
-from urllib.parse import urljoin
 from urllib.parse import urljoin, urlparse
 from concurrent.futures import ThreadPoolExecutor
 import yaml
@@ -23,13 +21,9 @@ from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 from jinja2 import Template
 
-from kubernetes import client, config, dynamic, utils
-from kubernetes.client import ApiClient, Configuration
+from kubernetes import client, config
 from kubernetes.client.rest import ApiException
-from fastapi.middleware.cors import CORSMiddleware
-from requests.adapters import HTTPAdapter
 from requests.utils import address_in_network
-from urllib3 import Retry
 from urllib3.exceptions import MaxRetryError
 from uvicorn.config import LOGGING_CONFIG
 
@@ -100,7 +94,6 @@ class Item(BaseModel):
     node_port: int
     npus: int
     max_link_num: int | None = None
-    max_token_size: int | None = None
 
 
 class GlobalExternalServiceProxy(BaseModel):
@@ -938,7 +931,7 @@ async def list_supported_models(request: Request):
 notifying = False
 
 
-def notify_model_io_gateways_in_bg(background_tasks : BackgroundTasks):
+def notify_model_io_gateways_in_bg(background_tasks: BackgroundTasks):
     if notifying:
         return
     background_tasks.add_task(_notify_model_io_gateways)
@@ -1005,7 +998,7 @@ async def add_external_model_services(external_service: ExternalService, request
 
 
 @app.delete("/v1/external_model_service/{name}")
-async def delete_external_model_services(name: str, request: Request, background_tasks:BackgroundTasks):
+async def delete_external_model_services(name: str, request: Request, background_tasks: BackgroundTasks):
     global external_model_services
     ex_name = name
     if ex_name in external_model_services:
@@ -1018,7 +1011,7 @@ async def delete_external_model_services(name: str, request: Request, background
 
 
 @app.post("/v1/start_up_pipeline")
-async def start_up_pipeline(item: PipelineItem, request: Request, background_tasks:BackgroundTasks):
+async def start_up_pipeline(item: PipelineItem, request: Request, background_tasks: BackgroundTasks):
     templates = get_pipeline_template()
     model_name = item.name.strip()
     model_name_pre = model_name.split('/')[0]
@@ -1058,7 +1051,6 @@ async def start_up_pipeline(item: PipelineItem, request: Request, background_tas
 
     notify_model_io_gateways_in_bg(background_tasks)
 
-
     status_code = 200
     error_info = {
         "code": status_code,
@@ -1072,7 +1064,7 @@ async def start_up_pipeline(item: PipelineItem, request: Request, background_tas
 
 @app.post("/v1/external_model_proxies")
 async def update_external_model_proxies(external_model_proxies: GlobalExternalServiceProxy, request: Request,
-                                        background_tasks:BackgroundTasks):
+                                        background_tasks: BackgroundTasks):
     global global_proxy_configs
     http_proxy = external_model_proxies.http_proxy
     https_proxy = external_model_proxies.https_proxy
@@ -1107,6 +1099,7 @@ async def get_external_model_proxies(request: Request):
 
 def persist_external_services():
     update_configmap()
+
 
 model_run_info = {}
 
@@ -1144,22 +1137,21 @@ def get_max_token_size(item, models_meta, model_name):
 @app.post("/v1/start_up")
 async def start_up(item: Item, request: Request, background_tasks: BackgroundTasks):
     model_run_info[item.name] = item.max_link_num
-    models_meta = get_models_meta()
-    templates = get_template()
     model_name = item.name.strip()
-    max_token_size = get_max_token_size(item, models_meta, model_name)
-
-    model_base_dir = model_weight_model_dir.get(model_name, model_name)
-    model_weight_path = os.path.join(model_weight_dir, model_base_dir)
+    max_token_size = get_max_token_size(item, get_models_meta(), model_name)
+    model_weight_path = os.path.join(model_weight_dir, model_weight_model_dir.get(model_name, model_name))
     weight_path_validation = os.environ.get("WEIGHT_PATH_VALIDATION") == "true"
     logger.error("weight_path_validation=%s", weight_path_validation)
-    status_code = 200
 
     if weight_path_validation and not os.path.exists(model_weight_path):
         error_msg = "模型权重不存在，需要上传至" + model_weight_path
         logger.error(error_msg)
-        error_info = {"code": 1, "detail": error_msg}
-        return JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))
+        return JSONResponse(status_code=200, content=jsonable_encoder({"code": 1, "detail": error_msg}))
+
+    pod_list = api_instance.list_namespaced_pod(
+        namespace="kube-system",
+        label_selector="name=ascend-device-plugin-ds",
+    )
 
     render_data = {
         "name": model_name.lower(),
@@ -1167,35 +1159,40 @@ async def start_up(item: Item, request: Request, background_tasks: BackgroundTas
         "node_port": item.node_port,
         "image_name": item.image_name.strip(),
         "model_weight_path": model_weight_path,
-        "max_token_size": max_token_size
+        "max_token_size": max_token_size,
+        "npus": item.npus,
+        "enable_npu_schedule": len(pod_list.items) > 0,
     }
 
-    fill_template = [template.render(render_data) for template in templates]
-    yaml_objs = [yaml.safe_load(fill) for fill in fill_template]
+    create_model_svc_and_deploy(item, render_data)
 
-    service_manifest = yaml_objs[0]
-    deployment_manifest = yaml_objs[1]
-
-    create_yaml_files(item, yaml_objs)
-    deploy_service_and_deployment(service_manifest, deployment_manifest)
-
-    #persist services
+    # persist services
     local_model_services[model_name] = item.model_dump()
     update_configmap()
 
     notify_model_io_gateways_in_bg(background_tasks)
 
-    error_detail = "detail"
-    code = "status_code"
-
-    error_info = {
-        code: 0,
-        error_detail: "ok"
-    }
-
-    response = JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))
+    response = JSONResponse(status_code=200, content=jsonable_encoder({"code": 0, "detail": "ok"}))
     set_cross_header(response, request)
     return response
+
+
+def create_model_svc_and_deploy(item, render_data):
+    templates = get_template()
+    fill_template = [template.render(render_data) for template in templates]
+    yaml_objs = [yaml.safe_load(fill) for fill in fill_template]
+    with os.fdopen(os.open(f'{item.name}.yaml', os.O_WRONLY | os.O_CREAT, stat.S_IRUSR), 'w') as f:
+        for obj in yaml_objs:
+            yaml.dump(obj, f)
+            f.write('---\n')
+    try:
+        api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, yaml_objs[0])
+    except ApiException as e:
+        logger.warning("Create service [{}/{}] failed: {}", MODEL_IO_NAMESPACE, item.name.strip(), e)
+    try:
+        k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, yaml_objs[1])
+    except ApiException as e:
+        logger.warning("Create deployment [{}/{}] failed: {}.", MODEL_IO_NAMESPACE, item.name.strip(), e)
 
 
 if __name__ == "__main__":
