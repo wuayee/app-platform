@@ -326,7 +326,7 @@ class SharedMemoryPool {
             }
             return GetMetaDataResult.failure(response.errorType());
         } catch (IOException | InterruptedException e) {
-            logger.error("[getMemoryMetaData] unexpected exception. [e={}]", e.toString());
+            logger.error("[getMemoryMetaData] unexpected exception.", e);
             return GetMetaDataResult.failure(ErrorType.UnknownError, e);
         }
     }

@@ -120,9 +120,16 @@ class ResponseDispatcher {
                 } else {
                     logger.error("[startEventLoop] No waiting consumer, [seq={}]", seq);
                 }
-            } catch (IOException e) {
-                // 不退出但是打印日志
-                logger.error("[startEventLoop] message receiving exception, [e={}]", e.toString());
+            } catch (Exception e) {
+                // 异常意味着连接问题或者编程错误，此时应该退出
+                logger.error("[startEventLoop] message receiving exception.", e);
+                this.isRunning = false;
+                try {
+                    this.socketChannel.close();
+                } catch (IOException ex) {
+                    logger.error("[startEventLoop] closing socket receiving exception.", ex);
+                }
+                return;
             }
         }
     }
