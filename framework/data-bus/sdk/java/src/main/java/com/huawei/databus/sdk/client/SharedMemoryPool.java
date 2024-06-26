@@ -183,7 +183,7 @@ class SharedMemoryPool {
         try {
             ByteBuffer resBuf = getReply(seq, messageHeaderBuffer, messageBodyBuffer);
             if (resBuf == null) {
-                logger.error("[applyPermission] Apply memory timeout. [seq={}]", seq);
+                logger.error("[applyPermission] Apply permission timeout. [seq={}]", seq);
                 return MemoryPermissionResult.failure(ErrorType.Timeout);
             }
 
@@ -314,7 +314,7 @@ class SharedMemoryPool {
         try {
             ByteBuffer resBuf = getReply(seq, messageHeaderBuffer, messageBodyBuffer);
             if (resBuf == null) {
-                logger.error("[applyPermission] Apply memory timeout. [seq={}]", seq);
+                logger.error("[getMemoryMetaData] GetMeta timeout. [seq={}]", seq);
                 return GetMetaDataResult.failure(ErrorType.Timeout);
             }
 
