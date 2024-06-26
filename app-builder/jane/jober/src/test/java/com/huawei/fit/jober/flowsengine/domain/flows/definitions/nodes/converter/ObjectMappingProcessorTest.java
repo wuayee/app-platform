@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -27,12 +28,25 @@ import java.util.Map;
 class ObjectMappingProcessorTest {
     @Test
     @DisplayName("测试对象值转换的成功场景")
-    void shouldReturnValueWhenGenerateGivenElementWithValue() {
+    void shouldReturnValueWhenGenerateGivenElementWithInput() {
+        Map<String, Object> expectValue = MapBuilder.<String, Object>get().put("int", 666).put("str", "str1").build();
+        MappingNode mappingConfig = new MappingNode("keyObj", MappingNodeType.OBJECT, MappingFromType.INPUT,
+                expectValue, "");
+
+        MappingProcessor target = new ObjectMappingProcessor();
+        Object result = target.generate(mappingConfig, new HashMap<>());
+
+        assertEquals(expectValue, result);
+    }
+
+    @Test
+    @DisplayName("测试对象expand转换的成功场景")
+    void shouldReturnValueWhenGenerateGivenElementWithExpand() {
         Map<String, Object> expectValue = MapBuilder.<String, Object>get().put("int", 666).put("str", "str1").build();
         ArrayList<MappingNode> objectValueConfig = new ArrayList<>(
                 Arrays.asList(new MappingNode("str", MappingNodeType.STRING, MappingFromType.INPUT, "str1", ""),
                         new MappingNode("int", MappingNodeType.INTEGER, MappingFromType.INPUT, 666, "")));
-        MappingNode mappingConfig = new MappingNode("keyObj", MappingNodeType.OBJECT, MappingFromType.INPUT,
+        MappingNode mappingConfig = new MappingNode("keyObj", MappingNodeType.OBJECT, MappingFromType.EXPAND,
                 objectValueConfig, "");
 
         MappingProcessor target = new ObjectMappingProcessor();
@@ -49,7 +63,7 @@ class ObjectMappingProcessorTest {
                 new MappingNode("str", MappingNodeType.STRING, MappingFromType.REFERENCE, Arrays.asList("str"), ""),
                 new MappingNode("int", MappingNodeType.INTEGER, MappingFromType.REFERENCE,
                         Arrays.asList("level1", "level2"), "")));
-        MappingNode mappingConfig = new MappingNode("keyObj", MappingNodeType.OBJECT, MappingFromType.INPUT,
+        MappingNode mappingConfig = new MappingNode("keyObj", MappingNodeType.OBJECT, MappingFromType.EXPAND,
                 objectValueConfig, "");
         Map<String, Object> businessData = MapBuilder.<String, Object>get()
                 .put("level1", MapBuilder.<String, Object>get().put("level2", 666).build())
@@ -72,11 +86,11 @@ class ObjectMappingProcessorTest {
         ArrayList<MappingNode> subObjectValueConfig = new ArrayList<>(
                 Arrays.asList(new MappingNode("str", MappingNodeType.STRING, MappingFromType.INPUT, "str1", ""),
                         new MappingNode("int", MappingNodeType.INTEGER, MappingFromType.INPUT, 666, "")));
-        MappingNode objectMappingConfig = new MappingNode("obj", MappingNodeType.OBJECT, MappingFromType.INPUT,
+        MappingNode objectMappingConfig = new MappingNode("obj", MappingNodeType.OBJECT, MappingFromType.EXPAND,
                 subObjectValueConfig, "");
 
         ArrayList<MappingNode> objectValueConfig = new ArrayList<>(Arrays.asList(objectMappingConfig));
-        MappingNode mappingConfig = new MappingNode("key", MappingNodeType.OBJECT, MappingFromType.INPUT,
+        MappingNode mappingConfig = new MappingNode("key", MappingNodeType.OBJECT, MappingFromType.EXPAND,
                 objectValueConfig, "");
 
         MappingProcessor target = new ObjectMappingProcessor();
@@ -95,11 +109,11 @@ class ObjectMappingProcessorTest {
         ArrayList<MappingNode> subArrayValueConfig = new ArrayList<>(
                 Arrays.asList(new MappingNode("", MappingNodeType.STRING, MappingFromType.INPUT, "str1", ""),
                         new MappingNode("", MappingNodeType.INTEGER, MappingFromType.INPUT, 666, "")));
-        MappingNode subArrayMappingConfig = new MappingNode("arr", MappingNodeType.ARRAY, MappingFromType.INPUT,
+        MappingNode subArrayMappingConfig = new MappingNode("arr", MappingNodeType.ARRAY, MappingFromType.EXPAND,
                 subArrayValueConfig, "");
 
         ArrayList<MappingNode> objectValueConfig = new ArrayList<>(Arrays.asList(subArrayMappingConfig));
-        MappingNode mappingConfig = new MappingNode("key", MappingNodeType.OBJECT, MappingFromType.INPUT,
+        MappingNode mappingConfig = new MappingNode("key", MappingNodeType.OBJECT, MappingFromType.EXPAND,
                 objectValueConfig, "");
 
         MappingProcessor target = new ObjectMappingProcessor();
@@ -111,8 +125,8 @@ class ObjectMappingProcessorTest {
     @Test
     @DisplayName("测试Value类型不匹配抛异常的失败场景")
     void shouldThrowJoberExceptionWhenGenerateGivenInvalidTypeValue() {
-        MappingNode mappingConfig = new MappingNode("key", MappingNodeType.ARRAY, MappingFromType.INPUT,
-                new HashMap<>(), "");
+        MappingNode mappingConfig = new MappingNode("key", MappingNodeType.OBJECT, MappingFromType.INPUT,
+                new LinkedList<>(), "");
 
         MappingProcessor target = new ObjectMappingProcessor();
         assertThrows(JobberParamException.class, () -> target.generate(mappingConfig, new HashMap<>()));

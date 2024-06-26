@@ -1,9 +1,9 @@
 export const NODE_STATUS = {
-    RUNNING: "running",
-    ERROR: "failed",
-    SUCCESS: "success",
-    DEFAULT: "default",
-    UN_RUNNING: "unRunning"
+    RUNNING: "RUNNING",
+    ERROR: "ERROR",
+    SUCCESS: "ARCHIVED",
+    DEFAULT: "DEFAULT",
+    UN_RUNNING: "UN_RUNNING"
 };
 
 export const SECTION_TYPE = {
@@ -25,4 +25,8 @@ export const UNARY_OPERATOR = {
 export const VIRTUAL_CONTEXT_NODE = {
     id: "_systemEnv",
     name: "系统上下文"
-}
+};
+
+export const CONNECTOR = {
+    RADIUS: 6
+};

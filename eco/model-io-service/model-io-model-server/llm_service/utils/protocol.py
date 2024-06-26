@@ -89,7 +89,7 @@ class ChatCompletionRequest(BaseModelCompatibleDict):
     model: str
     messages: List[ChatMessage]
     tools: Optional[List[ToolCall]] = None
-    tool_choice: Optional[str] = None
+    tool_choice: Optional[str] = "auto"
     temperature: Optional[float] = 0.7
     top_p: Optional[float] = 1.0
     n: Optional[int] = 1

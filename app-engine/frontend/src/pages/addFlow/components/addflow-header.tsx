@@ -1,9 +1,8 @@
 
-import React, { useEffect, useState, useImperativeHandle, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { EditIcon, LeftArrowIcon, UploadIcon } from '@assets/icon';
 import { updateAppInfo } from '@shared/http/aipp';
-import { Message } from '@shared/utils/message';
 import { FlowContext } from '../../aippIndex/context';
 import EditTitleModal from '../../components/edit-title-modal';
 import PublishModal from '../../components/publish-modal';
@@ -12,24 +11,20 @@ import TestStatus from "../../components/test-status";
 import FlowTest from './flow-test';
 
 const AddHeader = (props) => {
-  const { addId,  appRef, flowIdRef } = props;
+  const { addId,  appRef, flowIdRef, debugTypes, handleDebugClick, showDebug, setShowDebug } = props;
   const { type, appInfo, modalInfo, setModalInfo } = useContext(FlowContext);
   const [ waterFlowName, setWaterFlowName ] = useState('无标题');
-  const [ debugTypes, setDebugTypes ] = useState([]);
   const { tenantId, appId } = useParams();
-  const [ showDebug, setShowDebug ] = useState(false);
-  const [ isTested, setIsTested ] = useState(false);
-  const [ testStatus, setTestStatus ] = useState('Running');
-  const [ isTesting, setIsTesting ] = useState(false);
+  const [ testStatus, setTestStatus ] = useState(null);
   const [ testTime, setTestTime ] = useState(0);
   let editRef:any = useRef(null);
   let modalRef:any = useRef(null);
   let testRef:any = useRef(null);
-  
+
   const navigate = useNavigate();
   // 发布工具流
   const handleUploadFlow = () => {
-    if (!isTested) {
+    if (testStatus !== 'Finished') {
       testRef.current.showModal();
       return;
     }
@@ -64,26 +59,16 @@ const AddHeader = (props) => {
       optionType && editRef.current.handleLoading();
     }
   }
-  // 测试
-  const handleDebugClick = () => {
-    window.agent.validate().then(()=> {
-      setDebugTypes(window.agent.getFlowRunInputMetaData());
-      setShowDebug(true);
-    }).catch(err => {
-      let str = typeof(err) === 'string' ? err : '请输入流程必填项';
-      Message({ type: "warning", content: str});
-    })
-  }
   return <>{(
     <div>
-      <div className='header'>
-        <div className='header-left'>
+      <div className='app-header'>
+        <div className='logo'>
           <LeftArrowIcon className="icon-back" onClick={ handleBackClick } />
-          <span className='header-text'>{ waterFlowName }</span>
+          <span className='header-text' title={waterFlowName}>{ waterFlowName }</span>
           <span className='header-edit'>
             <EditIcon onClick={ handleEditClick } />
           </span>
-          < TestStatus isTested={isTested} isTesting={isTesting} testTime={testTime} testStatus={testStatus}/>
+          <TestStatus testTime={testTime} testStatus={testStatus}/>
         </div>
         <div className='header-grid'>
           <span className="header-btn test-btn" onClick={handleDebugClick}>测试</span>
@@ -109,9 +94,7 @@ const AddHeader = (props) => {
         modalInfo={modalInfo}
       />
       <FlowTest
-        setIsTested={setIsTested}
         setTestStatus={setTestStatus}
-        setIsTesting={setIsTesting}
         setTestTime={setTestTime}
         setShowDebug={setShowDebug}
         showDebug={showDebug}

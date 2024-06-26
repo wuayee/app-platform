@@ -7,20 +7,25 @@ import { Icons } from '../../../components/icons';
 import { ModelItem } from '../cards-tab';
 import { deleteModelByName, getModelList } from '../../../shared/http/model';
 
-const ModelCard = ({ modelItem, setModelItems }: { modelItem: ModelItem, setModelItems: (val: Array<any>) => void }) => {
+const ModelCard = ({ modelItem, setModelItems, openModify }: { modelItem: ModelItem, setModelItems: (val: Array<any>) => void, openModify: Function }) => {
   const operatorItems: MenuProps['items'] = [
     {
       key: 'delete',
       label: (
-        <div
-          style={{
-            width: 50,
-          }}
-          onClick={() => deleteModel()}
-        >
+        <a style={{ width: 50 }} onClick={() => deleteModel()}>
           删除
-        </div>
+        </a>
       ),
+      disabled: modelItem.status === 'undeployed'
+    },
+    {
+      key: 'edit',
+      label: (
+        <a style={{ width: 50 }} onClick={() => modifyModel()}>
+          修改
+        </a>
+      ),
+      disabled: modelItem.status === 'undeployed'
     },
   ];
   // 路由
@@ -48,6 +53,11 @@ const ModelCard = ({ modelItem, setModelItems }: { modelItem: ModelItem, setMode
       }
     });
   };
+
+  const modifyModel = () => {
+    openModify(modelItem);
+  }
+
   return (
     <Card
       style={{
@@ -148,14 +158,14 @@ const ModelCard = ({ modelItem, setModelItems }: { modelItem: ModelItem, setMode
         title={modelItem.description}
         style={{
           display: '-webkit-box',
-          wordBreak: 'break-all',
           textOverflow: 'ellipsis',
           overflow: 'hidden',
           WebkitLineClamp: 3,
-          webkitBoxOrient: 'vertical',
+          WebkitBoxOrient: 'vertical',
           fontSize: '14px',
           lineHeight: '22px',
           textAlign: 'justify',
+          height: 66,
           marginTop: 16,
         }}
       >

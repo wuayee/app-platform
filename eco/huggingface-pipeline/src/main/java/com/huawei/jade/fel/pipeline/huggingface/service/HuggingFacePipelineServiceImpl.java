@@ -81,6 +81,9 @@ public class HuggingFacePipelineServiceImpl implements HuggingFacePipelineServic
                     new HuggingFacePipelineRequest(task, model, args)).execute();
 
             if (response.code() != HTTP_NOT_FOUND) {
+                if (!response.isSuccessful()) {
+                    throw new IllegalStateException("Failed to call Hugging Face pipeline: " + response);
+                }
                 return response.body();
             }
 
@@ -115,8 +118,13 @@ public class HuggingFacePipelineServiceImpl implements HuggingFacePipelineServic
             }
 
             LOGGER.info("Health check success, retry task={}", task);
-            return this.api.callPipeline(this.gatewayUrl + CALL_PIPELINE_ENDPOINT,
-                    new HuggingFacePipelineRequest(task, model, args)).execute().body();
+            response = this.api.callPipeline(this.gatewayUrl + CALL_PIPELINE_ENDPOINT,
+                    new HuggingFacePipelineRequest(task, model, args)).execute();
+            if (!response.isSuccessful()) {
+                throw new IllegalStateException("Failed to call Hugging Face pipeline: " + response);
+            }
+
+            return response.body();
         } catch (IOException e) {
             throw new IllegalStateException("Failed to call Hugging Face pipeline: " + e);
         }

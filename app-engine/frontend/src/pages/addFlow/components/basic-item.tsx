@@ -29,25 +29,29 @@ const BasicItems = (props:any) => {
     }[type];
   }
   return <>
-    { dragData.map((item, index) => {
-      return (
-        <div
-          className='drag-item'
-          onDragStart={(e) => handleDragBasicNode(item, e)}
-          draggable={true}
-          key={index}
-        >
-          <div className='drag-item-title'>
-            <div>
-              { getIconByType(item.type) }
-              <span className='content-node-name'>{ item.name }</span>
+    <div className="basic-drag-list">
+      { dragData.map((item, index) => {
+        return (
+          <div
+            className='drag-item'
+            onDragStart={(e) => handleDragBasicNode(item, e)}
+            draggable={true}
+            key={index}
+          >
+            <div className='drag-item-title'>
+              <div>
+                { getIconByType(item.type) }
+                <span className='content-node-name'>{ item.name }</span>
+              </div>
+              <span className='drag-item-icon' onClick={(event) => handleClickAddBasicNode(item, event)}>
+                <img src='/src/assets/images/ai/flow.png'  />
+              </span>
             </div>
-            <span className='drag-item-icon' onClick={(event) => handleClickAddBasicNode(item, event)}><AddFlowIcon /></span>
           </div>
-        </div>
-      )
-      })
-    }
+        )
+        })
+      }
+    </div>
   </>
 };
 

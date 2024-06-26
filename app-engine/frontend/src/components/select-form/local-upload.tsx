@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import { Form, Upload } from 'antd';
 import { UploadFile } from 'antd/lib';
-import useSearchParams from '../../shared/hooks/useSearchParams';
+import { Message } from '@shared/utils/message';
+import useSearchParams from '@shared/hooks/useSearchParams';
 import { deleteLocalFile, uploadLocalFile } from '../../shared/http/knowledge';
 
 const { Dragger } = Upload;
 
-const LocalUpload: React.FC<{ form: any, respId?: any, tableId?: any }> = ({ form, respId, tableId }) => {
+const LocalUpload: React.FC<{ form: any, respId?: any, tableId?: any, type: string }> = ({ form, respId, tableId, type }) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const filesKeys = useRef<Map<string, any>>(new Map());
   let { id, tableid } = useSearchParams();
@@ -18,6 +19,7 @@ const LocalUpload: React.FC<{ form: any, respId?: any, tableId?: any }> = ({ for
   useEffect(() => {
     setFileList(selectedFile);
   }, [selectedFile]);
+
 
   const handleFileChange = () => {};
 
@@ -31,6 +33,14 @@ const LocalUpload: React.FC<{ form: any, respId?: any, tableId?: any }> = ({ for
   const isFilesUnique = (file: UploadFile): boolean => !filesKeys.current.has(makeFileKey(file));
 
   const handleBeforeUpload = (file: UploadFile): boolean => {
+    if (type === 'text' && file.type !== 'text/plain') {
+      Message({ type: 'warning', content: '只能上传.txt类型的文件' });
+      return false
+    }
+    if (type === 'table' && file.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      Message({ type: 'warning', content: '只能上传.xlsx类型的文件' });
+      return false
+    }
     if (isFilesUnique(file)) {
       filesKeys.current.set(makeFileKey(file), file);
       setFiles();
@@ -61,6 +71,7 @@ const LocalUpload: React.FC<{ form: any, respId?: any, tableId?: any }> = ({ for
     <Dragger
       multiple
       name='file'
+      accept={ type === 'text' ? '.txt' : '.xlsx' }
       fileList={fileList}
       onChange={handleFileChange}
       beforeUpload={handleBeforeUpload}

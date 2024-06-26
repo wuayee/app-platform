@@ -2,63 +2,6 @@
 .ant-layout {
   background: #fafafa;
   font-family: '';
-  .header {
-    position: relative;
-    display: flex;
-    align-items: center;
-    background: rgb(240, 242, 244);
-    height: 40px;
-    justify-content: space-between;
-    box-sizing: border-box;
-    margin-bottom: 8px;
-    .logo {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      img {
-        width: 32px;
-        height: 32px;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-      .header-text {
-        margin: 0 16px;
-        color: #000000;
-        font-size: 18px;
-      }
-      svg {
-        width: 16px;
-        height: 16px;
-        margin-top: 2px;
-        cursor: pointer;
-      }
-      .back-icon {
-        margin-right: 12px;
-        svg {
-          width: 24px;
-          height: 24px;
-        }
-      }
-    }
-    .header-btn{
-      display: inline-block;
-      height: 32px;
-      line-height: 32px;
-      text-align: center;
-      color: #fff;
-      background-color: #047bfc;
-      cursor: pointer;
-      border-radius: 8px;
-      font-size: 14px;
-      padding-left: .75rem;
-      padding-right: .75rem;
-      font-weight: 600;
-      min-width: 100px;
-        .anticon-upload {
-            margin-right: 5px;
-        }
-    }
-  }
   .layout-content {
     display: flex;
     height: calc(100vh - 100px);
@@ -78,11 +21,23 @@
   }
 }
 .layout-elsa-content {
+  position: relative;
+  .app-header {
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    z-index: 500;
+    background: transparent;
+    padding: 0 15px;
+  }
   .add-flow-container {
     flex: 1;
   }
   .chat-preview-elsa {
     display: none;
+  }
+  .layout-content {
+    height: calc(100vh - 55px);
   }
 }
 .layout-show-preview {
@@ -114,6 +69,7 @@
 .header-grid {
   display: flex;
   gap: 16px;
+  justify-content: flex-end;
   .last-run-btn {
     color: #1d1c2399 !important;
     background-color: #ffffff !important;
@@ -122,6 +78,24 @@
   .test-btn {
     color: #047bfc !important;
     background-color: #ffffff !important;
-    min-width: 100px;
+    border: 1px solid #ebebeb;
   }
+  // .header-btn{
+  //   display: inline-block;
+  //   height: 32px;
+  //   line-height: 32px;
+  //   text-align: center;
+  //   color: #fff;
+  //   background-color: #047bfc;
+  //   cursor: pointer;
+  //   border-radius: 4px;
+  //   font-size: 14px;
+  //   padding-left: .75rem;
+  //   padding-right: .75rem;
+  //   margin-bottom: 6px;
+  //   min-width: 80px;
+  //     .anticon-upload {
+  //       margin-right: 5px;
+  //     }
+  // }
 }

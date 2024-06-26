@@ -57,7 +57,8 @@
         select a.msg_id as msgId,
                b.log_type as logType,
                b.create_at as createTime,
-               b.log_data as logData
+               b.log_data as logData,
+               b.aipp_id as aippId
         from t_chat_session_task_instance_wide_relationship a
                  join aipp_instance_log b
                       on a.task_instance_wide_id = b.instance_id
@@ -97,6 +98,15 @@
         select count(*)
         from t_chat_session_task_instance_wide_relationship
         where chat_id = #{chatId}
+    </select>
+
+    <select id="selectChatByAppId" resultType="string">
+        select chat_id
+        from t_chat_session
+        where app_id = #{appId}
+        and attributes -> 'originApp' IS NULL
+        order by create_at desc
+        offset 0 limit #{count}
     </select>
 
     <select id="selectChatIdByInstanceId" resultType="string">

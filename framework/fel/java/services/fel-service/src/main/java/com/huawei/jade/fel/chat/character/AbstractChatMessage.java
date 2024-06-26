@@ -4,9 +4,9 @@
 
 package com.huawei.jade.fel.chat.character;
 
+import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
-import com.huawei.jade.fel.chat.content.Contents;
-import com.huawei.jade.fel.chat.content.MessageContent;
 
 /**
  * 表示聊天消息的抽象实现。
@@ -18,7 +18,7 @@ public abstract class AbstractChatMessage implements ChatMessage {
     /**
      * 表示聊天消息的内容。
      */
-    protected final MessageContent contents;
+    private final String content;
 
     /**
      * 通过文本信息来初始化 {@link AbstractChatMessage} 的新实例。
@@ -26,25 +26,16 @@ public abstract class AbstractChatMessage implements ChatMessage {
      * @param text 表示文本信息的 {@link String}。
      */
     protected AbstractChatMessage(String text) {
-        this(Contents.from(text));
-    }
-
-    /**
-     * 通过 {@link MessageContent} 来初始化 {@link AbstractChatMessage} 的新实例。
-     *
-     * @param contents 表示文本内容的 {@link MessageContent}。
-     */
-    protected AbstractChatMessage(MessageContent contents) {
-        this.contents = contents;
+        this.content = ObjectUtils.nullIf(text, StringUtils.EMPTY);
     }
 
     @Override
     public String text() {
-        return this.contents.text();
+        return this.content;
     }
 
     @Override
     public String toString() {
-        return this.type().name().toLowerCase() + ": " + this.text();
+        return this.type().getRole() + ": " + this.text();
     }
 }

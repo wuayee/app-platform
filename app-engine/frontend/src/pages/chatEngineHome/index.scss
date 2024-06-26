@@ -11,5 +11,15 @@
       display: flex;
       flex-direction: column;
     }
+    .chat-left-close {
+      width: calc(100% - 380px);
+    }
+    .chat-inner-right {
+      width: 360px;
+      right: -360px;
+    }
+    .chat-right-close {
+      right: 16px;
+    }
   }
 }

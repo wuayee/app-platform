@@ -63,8 +63,8 @@ import com.huawei.fitframework.model.Tuple;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.carver.tool.model.transfer.ToolData;
-import com.huawei.jade.carver.tool.service.ToolService;
+import com.huawei.jade.store.entity.transfer.AppData;
+import com.huawei.jade.store.service.AppService;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -613,6 +613,7 @@ public class AippFlowServiceImpl implements AippFlowService {
                         e.getMessage());
             }
         } while (retryTimes-- > 0);
+        log.error("Failed to preview aipp.[errorMsg={}]", errorMsg);
         throw new AippException(context, AippErrCode.PREVIEW_AIPP_FAILED, errorMsg);
     }
 
@@ -864,17 +865,12 @@ public class AippFlowServiceImpl implements AippFlowService {
         }).collect(Collectors.toList());
     }
 
-    private void rollbackAipp(String versionId, String originalVersion, String flowDefinitionId,
-            Map<String, Object> attr, OperationContext context) {
+    private void rollbackAipp(String versionId, FlowInfo flowInfo, OperationContext context) {
         try {
-            flowDefinitionService.deleteFlows(flowDefinitionId, context);
-
-            attr.put(AippConst.ATTR_META_STATUS_KEY, AippMetaStatusEnum.INACTIVE.getCode());
-            attr.put(AippConst.ATTR_VERSION_KEY, originalVersion);  // 从发布指定的版本号恢复原始版本
-            MetaDeclarationInfo declaration = new MetaDeclarationInfo();
-            declaration.setAttributes(Undefinable.defined(attr));
-            declaration.setVersion(Undefinable.defined(originalVersion));
-            metaService.patch(versionId, declaration, context);
+            if (flowInfo != null) {
+                this.flowDefinitionService.deleteFlows(flowInfo.getFlowDefinitionId(), context);
+            }
+            this.metaService.delete(versionId, context);
         } catch (Exception e) {
             log.error("rollbackAipp failed, versionId {}, e = {}", versionId, e);
         }
@@ -930,8 +926,9 @@ public class AippFlowServiceImpl implements AippFlowService {
 
         validateUpdate(aippId, attr, aippDto.getName(), context);
         // 发布流程
-        FlowInfo flowInfo = publishFlow(aippDto, attr, context);
+        FlowInfo flowInfo = null;
         try {
+            flowInfo = publishFlow(aippDto, attr, context);
             // 查询表单 元数据
             List<AippNodeForms> aippNodeForms = buildAippNodeForms(flowInfo);
             // 发布aipp
@@ -942,26 +939,26 @@ public class AippFlowServiceImpl implements AippFlowService {
             String uniqueName = this.publishToStore(aippDto, context, flowInfo);
             return Rsp.ok(new AippCreateDto(aippId, meta.getVersion(), uniqueName));
         } catch (Exception e) {
-            log.error("publish aipp {} failed", aippId, e);
-            rollbackAipp(meta.getVersionId(), originalDraftVersion, flowInfo.getFlowDefinitionId(), attr, context);
+            log.error("publish aipp {} failed.", aippId, e);
+            rollbackAipp(meta.getVersionId(), flowInfo, context);
             throw e;
         }
     }
 
     private String publishToStore(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
-        ToolData itemData = this.buildItemData(aippDto, context, flowInfo);
-        String uniqueName = this.brokerClient.getRouter(ToolService.class, "com.huawei.jade.carver.tool.addTool")
-                .route(new FitableIdFilter("tool-repository-pgsql"))
+        AppData itemData = this.buildItemData(aippDto, context, flowInfo);
+        String uniqueName = this.brokerClient.getRouter(AppService.class, "com.huawei.jade.store.app.addApp")
+                .route(new FitableIdFilter("store-repository-pgsql"))
                 .invoke(itemData);
         appBuilderAppMapper.updateAppWithStoreId(uniqueName, aippDto.getAppId(), aippDto.getVersion());
         return uniqueName;
     }
 
     @NotNull
-    private ToolData buildItemData(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
+    private AppData buildItemData(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
         AppCategory appCategory = AppCategory.findByType(aippDto.getType())
                 .orElseThrow(() -> new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID));
-        ToolData itemData = new ToolData();
+        AppData itemData = new AppData();
         itemData.setCreator(context.getOperator());
         itemData.setModifier(context.getOperator());
         itemData.setIcon(aippDto.getIcon());

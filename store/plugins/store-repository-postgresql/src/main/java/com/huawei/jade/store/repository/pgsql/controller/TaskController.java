@@ -13,7 +13,7 @@ import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestQuery;
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.jade.carver.Result;
+import com.huawei.jade.common.Result;
 import com.huawei.jade.store.entity.query.TaskQuery;
 import com.huawei.jade.store.entity.transfer.TaskData;
 import com.huawei.jade.store.service.EcoTaskService;
@@ -49,7 +49,7 @@ public class TaskController {
     @GetMapping("/{taskId}")
     public Result<TaskData> getTask(@PathVariable("taskId") String taskId) {
         notBlank(taskId, "The tool unique name cannot be blank.");
-        return Result.create(this.taskService.getTask(taskId), 0, 1);
+        return Result.ok(this.taskService.getTask(taskId), 1);
     }
 
     /**
@@ -72,6 +72,6 @@ public class TaskController {
             notNegative(pageSize, "The page size cannot be negative. [pageSize={0}]", pageSize);
         }
         TaskQuery taskQuery = new TaskQuery(toolUniqueName, pageNum, pageSize);
-        return Result.create(this.taskService.getTasks(taskQuery), 0, 1);
+        return Result.ok(this.taskService.getTasks(taskQuery), 1);
     }
 }

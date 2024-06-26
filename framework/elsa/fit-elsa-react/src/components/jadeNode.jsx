@@ -1,13 +1,8 @@
-import {CopyPasteHelpers, DIRECTION, node, rectangleDrawer, isPointInRect} from "@fit-elsa/elsa-core";
-import ReactDOM from "react-dom/client";
-import {DefaultRoot} from "@/components/DefaultRoot.jsx";
+import {CopyPasteHelpers, DIRECTION, node} from "@fit-elsa/elsa-core";
 import {v4 as uuidv4} from "uuid";
-import {Header} from "@/components/Header.jsx";
-import {Footer} from "@/components/Footer.jsx";
-import {NODE_STATUS, SECTION_TYPE, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
-import React, {useRef, useState} from "react";
-import {HORIZONTAL_LEFT, HORIZONTAL_RIGHT, VERTICAL_DOWN, VERTICAL_UP} from "@/components/asserts/waterDropRawSvg.js";
-import RunningStatusPanel from "@/components/flowRunComponent/RunningStatusPanel.jsx";
+import {CONNECTOR, NODE_STATUS, SECTION_TYPE, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
+import React from "react";
+import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
 
 /**
  * jadeStream中的流程编排节点.
@@ -17,6 +12,7 @@ import RunningStatusPanel from "@/components/flowRunComponent/RunningStatusPanel
 export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     const self = node(id, x, y, width, height, parent, false, drawer ? drawer : jadeNodeDrawer);
     self.type = "jadeNode";
+    self.serializedFields.delete("emphasized");
     self.serializedFields.batchAdd("toolConfigs", "componentName", "flowMeta", "outlineWidth", "outlineColor", "sourcePlatform");
     self.eventType = "jadeEvent";
     self.hideText = true;
@@ -48,29 +44,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         }
     };
     self.sourcePlatform = "official";
-
-    const observed = [];
-
-    /**
-     * 默认的header配置.
-     *
-     * @return 下拉按钮配置项
-     */
-    self.getToolMenus = () => {
-        return [{
-            key: '1', label: "复制", action: () => {
-                self.duplicate();
-            }
-        }, {
-            key: '2', label: "删除", action: () => {
-                self.remove();
-            }
-        }, {
-            key: '3', label: "重命名", action: (setEdit) => {
-                setEdit(true);
-            }
-        }];
-    };
+    self.observed = [];
 
     /**
      * 获取节点默认的测试报告章节
@@ -97,7 +71,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         } else {
             return source ? source : {};
         }
-    }
+    };
 
     /**
      * 获取节点默认的测试报告章节 todo 这里是否需要是先到DefaultRoot中，用来进行组件刷新操作，现目前状态可以刷新
@@ -130,6 +104,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         self.connectors.remove(c => c.direction.key === DIRECTION.S.key || c.direction.key === DIRECTION.N.key
                 || c.direction.key === "ROTATE");
         self.connectors.forEach(connector => {
+            connector.radius = CONNECTOR.RADIUS;
             connector.isSolid = true;
             if (connector.direction.key === DIRECTION.W.key) {
                 connector.allowFromLink = false
@@ -219,25 +194,6 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.observe = () => {
         self.drawer.observe();
     };
-
-    /**
-     * 获取Header组件
-     *
-     * @param disabled 是否禁用.
-     * @return {JSX.Element}
-     */
-    self.getHeaderComponent = (disabled) => {
-        return (<Header shape={self} disabled={disabled}/>);
-    }
-
-    /**
-     * 获取Footer组件
-     *
-     * @return {JSX.Element}
-     */
-    self.getFooterComponent = () => {
-        return (<Footer shape={self}/>);
-    }
 
     /**
      * 获取用户自定义组件.
@@ -371,12 +327,6 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
 
     /**
-     * 有子类重写.
-     */
-    self.getHeaderIcon = () => {
-    };
-
-    /**
      * 监听.
      *
      * @param nodeId 被监听节点的id.
@@ -387,20 +337,20 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.observeTo = (nodeId, observableId, observer) => {
         const preNodeInfos = self.getPreNodeInfos();
         const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
-        const observerProxy = ObserverProxy(nodeId, observableId, observer);
+        const observerProxy = ObserverProxy(nodeId, observableId, observer, self);
         observerProxy.status = preNodeIdSet.has(nodeId) ? "enable" : "disable";
-        observed.push(observerProxy);
+        self.observed.push(observerProxy);
         self.page.observeTo(nodeId, observableId, observerProxy);
 
         // 监听时，主动推送一次数据.
         const observable = self.page.getObservable(nodeId, observableId);
-        observerProxy.observe({value: observable.value, type: observable.type});
+        if (observable.value || observable.type) {
+            observerProxy.observe({value: observable.value, type: observable.type});
+        }
 
         // 返回取消监听的方法.
         return () => {
-            const index = observed.findIndex(o => o === observerProxy);
-            observed.splice(index, 1);
-            self.page.stopObserving(nodeId, observableId, observerProxy);
+            observerProxy.stopObserve();
         };
     };
 
@@ -410,7 +360,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.offConnect = () => {
         const preNodeInfos = self.getPreNodeInfos();
         const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
-        observed.filter(o => o.status === "enable").filter(o => !preNodeIdSet.has(o.nodeId)).forEach(o => {
+        self.observed.filter(o => o.status === "enable").filter(o => !preNodeIdSet.has(o.nodeId)).forEach(o => {
             o.observe({value: null, type: null});
             o.status = "disable";
         });
@@ -424,7 +374,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.onConnect = () => {
         const preNodeInfos = self.getPreNodeInfos();
         const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
-        observed.filter(o => o.status === "disable").filter(o => preNodeIdSet.has(o.nodeId)).forEach(o => {
+        self.observed.filter(o => o.status === "disable").filter(o => preNodeIdSet.has(o.nodeId)).forEach(o => {
             o.status = "enable";
             const observable = self.page.getObservable(o.nodeId, o.observableId);
             o.observe({value: observable.value, type: observable.type});
@@ -441,7 +391,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         self.page.removeObservable(self.id);
 
         // 清除我的observer.
-        observed.forEach(o => self.page.stopObserving(o.nodeId, o.observableId, o));
+        self.observed.forEach(o => self.page.stopObserving(o.nodeId, o.observableId, o));
     };
 
     /*
@@ -465,9 +415,9 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
             try {
                 const preNodeInfos = self.getPreNodeInfos();
                 const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
-                observed.forEach(o => {
+                self.observed.forEach(o => {
                     const node = self.page.getShapeById(o.nodeId);
-                    if (!node) {
+                    if (!node && VIRTUAL_CONTEXT_NODE.id !== o.nodeId) {
                         throw new Error("节点[" + o.nodeId + "]不存在.");
                     }
                     if (!preNodeIdSet.has(o.nodeId)) {
@@ -478,7 +428,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
                 // 调用 form 本身的校验能力，校验所有字段
                 self.validateForm().then(resolve).catch(reject);
             } catch (error) {
-                reject(error);
+                reject({errorFields: [{errors: [error.message], name: "node-error"}]});
             }
         });
     };
@@ -571,10 +521,11 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
  * @param nodeId 被监听节点的id.
  * @param observableId 待监听的id.
  * @param observer 监听器.
+ * @param shape 图形.
  * @return {{}}
  * @constructor
  */
-const ObserverProxy = (nodeId, observableId, observer) => {
+const ObserverProxy = (nodeId, observableId, observer, shape) => {
     const self = {};
     self.nodeId = nodeId;
     self.observableId = observableId;
@@ -592,263 +543,15 @@ const ObserverProxy = (nodeId, observableId, observer) => {
         }
     };
 
-    return self;
-};
-
-const WATER_DROP_DISTANCE = 500;
-
-/**
- * jadeNode绘制器.
- *
- * @override
- */
-const jadeNodeDrawer = (shape, div, x, y) => {
-    const self = rectangleDrawer(shape, div, x, y);
-    self.reactContainer = null;
-    self.panelRef = null;
-    self.waterDrops = [];
-
     /**
-     * @override
+     * 停止观察.
+     * 删除shape中的observed，删除page中的监听.
      */
-    const initialize = self.initialize;
-    self.initialize = () => {
-        initialize.apply(self);
-        self.reactContainer = document.createElement("div");
-        self.reactContainer.id = "react-container-" + shape.id;
-        self.reactContainer.style.width = "100%";
-        self.parent.appendChild(self.reactContainer);
-        self.parent.style.pointerEvents = "auto";
+    self.stopObserve = () => {
+        const index = shape.observed.findIndex(o => o === self);
+        shape.observed.splice(index, 1);
+        shape.page.stopObserving(nodeId, observableId, self);
     };
-
-    /**
-     * 写在react.
-     */
-    self.unmountReact = () => {
-        if (!self.root) {
-            return;
-        }
-        self.root.unmount();
-        self.root = null;
-    };
-
-    /**
-     * @override
-     */
-    self.drawStatic = () => {
-        if (!shape.componentName || self.root) {
-            return;
-        }
-        self.root = ReactDOM.createRoot(self.reactContainer);
-        self.root.render(<Root/>);
-    };
-
-    const Root = () => {
-        self.panelRef = useRef();
-        const [runStatus, setRunStatus] = useState(shape.runStatus);
-        const [disabled, setDisabled] = useState(false);
-
-        // 设置运行状态.
-        self.setRunStatus = status => {
-            setRunStatus(status);
-        };
-
-        // 设置是否禁用.
-        self.setDisabled = (disabled) => {
-            setDisabled(disabled);
-        };
-
-        // 当展示报告时，需要重新计算area.
-        const onReportShow = () => {
-            shape.indexCoordinate();
-        };
-
-        return (<>
-            {runStatus !== NODE_STATUS.DEFAULT &&
-                    <RunningStatusPanel shape={shape} ref={self.panelRef} onReportShow={onReportShow}/>}
-            <div style={{position: "relative", background: "white", padding: 12, borderRadius: shape.borderRadius}}>
-                <DefaultRoot shape={shape} component={shape.getComponent()} disabled={disabled} />
-            </div>
-        </>);
-    };
-
-    self.getReportFrame = () => {
-        if (!self.panelRef || !self.panelRef.current || !self.panelRef.current.getRunReportRect()) {
-            return null;
-        }
-        const rect = self.panelRef.current.getRunReportRect();
-        const position = shape.page.calculatePosition({clientX: rect.x, clientY: rect.y})
-        return {
-            x: position.x,
-            y: position.y,
-            width: rect.width / shape.page.scaleX,
-            height: rect.height / shape.page.scaleY
-        }
-    };
-
-    /**
-     * 存在report时，需要判断是否坐标在report dom中.
-     *
-     * @override
-     */
-    const containsBack = self.containsBack;
-    self.containsBack = (x, y) => {
-        const reportFrame = self.getReportFrame();
-        if (!reportFrame) {
-            return containsBack.apply(self, [x, y]);
-        }
-        return containsBack.apply(self, [x, y]) || isPointInRect({x, y}, reportFrame);
-    };
-
-    /**
-     * 不绘制focusFrame.
-     */
-    self.drawFocusFrame = () => {
-    };
-
-    /**
-     * @override
-     */
-    const drawBorder = self.drawBorder;
-    self.drawBorder = () => {
-        drawBorder.apply(self);
-        if (shape.isFocused || shape.emphasized) {
-            self.parent.style.outline = shape.outlineWidth + "px" + " solid " + shape.outlineColor;
-        } else {
-            self.parent.style.outline = "";
-        }
-    };
-
-    /**
-     * 删除之前清理掉react相关的组件.
-     *
-     * @override
-     */
-    const beforeRemove = self.beforeRemove;
-    self.beforeRemove = () => {
-        beforeRemove.apply(self);
-        self.unmountReact();
-    };
-
-    /**
-     * 监听parent的变化，当发生变化时，需要修改图形的高度和宽度.
-     */
-    let prevHeight = 0;
-    self.observe = () => {
-        new ResizeObserver((entries) => {
-            if (prevHeight === self.parent.offsetHeight) {
-                return;
-            }
-
-            // 删除之后不需要修改图形大小.
-            if (shape.container === "") {
-                return;
-            }
-
-            shape.resize(shape.width, self.parent.offsetHeight);
-            prevHeight = self.parent.offsetHeight;
-            self.panelRef?.current?.setHeight(shape.height);
-            generateWaterDrops();
-        }).observe(self.parent);
-    };
-
-    const generateWaterDrops = () => {
-        self.waterDrops = [];
-        const width = shape.width;
-        const height = shape.height;
-        const emphasizedOffset = shape.emphasizedOffset;
-
-        // 上右.
-        self.waterDrops.push(waterDrop(HORIZONTAL_RIGHT,
-                (x, ctl) => x + ctl.percent * width,
-                (y) => y + emphasizedOffset));
-
-        // 下左.
-        self.waterDrops.push(waterDrop(HORIZONTAL_LEFT,
-                (x, ctl) => x + width - ctl.percent * width,
-                (y) => y + height - emphasizedOffset));
-        const count = Math.floor(height / WATER_DROP_DISTANCE) + 1;
-        for (let i = 0; i < count; i++) {
-            // 左上
-            self.waterDrops.push(waterDrop(VERTICAL_UP,
-                    (x) => x + emphasizedOffset,
-                    (y, ctl) => y + height / count * (count - i) - ctl.percent * height / count));
-
-            // 右下.
-            self.waterDrops.push(waterDrop(VERTICAL_DOWN, (x) => x + width - emphasizedOffset,
-                    (y, ctl) => y + height / count * i + ctl.percent * height / count))
-        }
-    };
-
-    /**
-     * 绘制水滴流转效果.
-     *
-     * @override
-     */
-    self.drawDynamic = (context, x, y) => {
-        self.waterDrops.forEach(wd => {
-            if (wd.loaded) {
-                wd.draw(context, x, y, shape)
-            } else {
-                wd.load();
-            }
-        })
-    };
-
-    return self;
-};
-
-const STEP = 0.009
-
-/**
- * 水滴绘制器.
- *
- * @param rawSvg 原始svg字符串.
- * @param getX 获取x的值.
- * @param getY 获取y的值.
- * @return {{}} 对象.
- */
-const waterDrop = (rawSvg, getX, getY) => {
-    const self = {};
-    self.img = null;
-    self.control = { percent: 0, times: 0 };
-
-    /**
-     * 绘制.
-     *
-     * @param context canvas2dContext对象.
-     * @param x 横坐标.
-     * @param y 纵坐标.
-     * @param shape 图形对象.
-     */
-    self.draw = (context, x, y, shape) => {
-        self.control.percent += STEP;
-        if (self.control.percent >= 1) {
-            self.control.times = 100;
-            self.control.percent = 0;
-            return;
-        }
-        x -= shape.width / 2;
-        y -= shape.height / 2;
-        x = getX(x, self.control);
-        y = getY(y, self.control);
-        context.drawImage(self.img, x, y);
-    };
-
-    /**
-     * 加载svg为image对象.
-     */
-    self.load = () => {
-        const svg = new Blob([rawSvg], {type:"image/svg+xml;charset=utf-8"});
-        const url = URL.createObjectURL(svg);
-        const img = new Image();
-        img.src = url;
-        img.onload = function () {
-            URL.revokeObjectURL(url);
-            self.img = img;
-            self.loaded = true;
-        };
-    }
 
     return self;
 };

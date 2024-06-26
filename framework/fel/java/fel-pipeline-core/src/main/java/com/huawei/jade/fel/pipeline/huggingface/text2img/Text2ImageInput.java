@@ -5,6 +5,7 @@
 package com.huawei.jade.fel.pipeline.huggingface.text2img;
 
 import com.huawei.fitframework.annotation.Property;
+import com.huawei.jade.fel.pipeline.PipelineInput;
 
 import lombok.Data;
 
@@ -15,7 +16,7 @@ import lombok.Data;
  * @since 2024-06-06
  */
 @Data
-public class Text2ImageInput {
+public class Text2ImageInput implements PipelineInput {
     private String prompt;
 
     @Property(name = "negative_prompt")

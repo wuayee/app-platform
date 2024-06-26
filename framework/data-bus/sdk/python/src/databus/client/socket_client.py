@@ -6,15 +6,15 @@
 `SocketClient`类提供连接到DataBus内核的socket通道.
 """
 import concurrent.futures
+import threading
 from contextlib import contextmanager
 import logging
-import queue
 import socket
 from typing import Optional, Tuple, Union
 
 import flatbuffers
 from databus.message import (
-    MessageHeader, DEFAULT_FLATBUFFERS_BUILDER_SIZE, ErrorMessageResponse,
+    MessageHeader, MAX_MESSAGE_LENGTH, ErrorMessageResponse,
     ApplyMemoryMessage, ApplyMemoryMessageResponse,
     ApplyPermissionMessage, ApplyPermissionMessageResponse,
     ReleaseMemoryMessage, ReleasePermissionMessage,
@@ -23,12 +23,16 @@ from databus.message import (
 from databus.message import CoreMessageType, CorePermissionType, CoreMessageResponseTypeHint
 from databus.exceptions import CoreError
 from databus.dto import WriteRequest, ReadRequest
+from databus.manager import MessageSeqManager
 
 
 class SocketClient:
     """
     和DataBus内核建立socket连接并对外提供消息发送接口的client
     """
+    # 最长消息等待时间(unit: seconds)
+    MAX_MESSAGE_WAITING_TIME = 30.0
+
     # 消息发送类型与返回类型对应关系
     MESSAGE_RESPONSE_MAPPING = {
         CoreMessageType.ApplyMemory: ApplyMemoryMessageResponse.ApplyMemoryMessageResponse,
@@ -58,7 +62,8 @@ class SocketClient:
             raise ValueError("SocketClient init without input parameters")
 
         self._executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
-        self._mailbox = {msg_type: queue.Queue() for msg_type in self.MESSAGE_RESPONSE_MAPPING}
+        self._mailbox = dict()
+        self._seq_manager = MessageSeqManager()
 
     def __del__(self):
         if self._executor:
@@ -76,7 +81,7 @@ class SocketClient:
         :param size: 要申请的内存块大小
         :return: 内核返回的ApplyMemoryMessageResponse
         """
-        builder = flatbuffers.Builder(DEFAULT_FLATBUFFERS_BUILDER_SIZE)
+        builder = flatbuffers.Builder(MAX_MESSAGE_LENGTH)
         user_key_str = builder.CreateString(user_key)
         ApplyMemoryMessage.ApplyMemoryMessageStart(builder)
         ApplyMemoryMessage.AddObjectKey(builder, user_key_str)
@@ -91,7 +96,7 @@ class SocketClient:
         :param user_key: 要释放的内存块名称, 与memory_id二选一
         :param memory_id: 要释放的内存块ID, 与user_key二选一
         """
-        builder = flatbuffers.Builder(DEFAULT_FLATBUFFERS_BUILDER_SIZE)
+        builder = flatbuffers.Builder(MAX_MESSAGE_LENGTH)
         # 优先使用memory_id
         if not memory_id:
             user_key_str = builder.CreateString(user_key)
@@ -110,7 +115,7 @@ class SocketClient:
         :param user_key: 要查询元信息的内存块名
         :return: 内核返回的GetMetaDataMessageResponse
         """
-        builder = flatbuffers.Builder(DEFAULT_FLATBUFFERS_BUILDER_SIZE)
+        builder = flatbuffers.Builder(MAX_MESSAGE_LENGTH)
         user_key_str = builder.CreateString(user_key)
         GetMetaDataMessage.Start(builder)
         GetMetaDataMessage.AddObjectKey(builder, user_key_str)
@@ -134,7 +139,7 @@ class SocketClient:
         """
         if not request.user_key and not memory_id:
             raise ValueError("Both are None: user_key and memory_id.")
-        apply_builder = flatbuffers.Builder(DEFAULT_FLATBUFFERS_BUILDER_SIZE)
+        apply_builder = flatbuffers.Builder(MAX_MESSAGE_LENGTH)
         apply_builder.ForceDefaults(True)
         #
         need_to_write_user_data = permission_type == CorePermissionType.Write and request.is_operating_user_data
@@ -157,7 +162,7 @@ class SocketClient:
             # 自动实现context manager, 返回ApplyPermissionMessageResponse方便裸读写
             yield response
         finally:
-            release_builder = flatbuffers.Builder(DEFAULT_FLATBUFFERS_BUILDER_SIZE)
+            release_builder = flatbuffers.Builder(MAX_MESSAGE_LENGTH)
             release_builder.ForceDefaults(True)
             if not memory_id:
                 user_key_str = release_builder.CreateString(request.user_key)
@@ -180,43 +185,55 @@ class SocketClient:
         :return: 如果内核有返回则返回, 否则返回None
         """
         body_size = message_builder.Offset()
+        message_seq = self._seq_manager.get_seq()
         MessageHeader.Start(message_builder)
         MessageHeader.AddType(message_builder, message_type)
         MessageHeader.AddSize(message_builder, body_size)
+        MessageHeader.AddSeq(message_builder, message_seq)
         message_builder.Finish(MessageHeader.End(message_builder))
         message = message_builder.Output()
-        return self._executor.submit(self._handle_message, message, message_type).result()
+        return self._executor.submit(self._handle_message, message_seq, message, message_type).result()
 
-    def _handle_message(self, message: bytes, message_type: CoreMessageType) -> Optional[bytes]:
+    def _handle_message(self, message_seq: int, message: bytes, message_type: CoreMessageType) -> Optional[bytes]:
         """发送消息, 并且如果等待response则返回response
 
+        :param message_seq: 消息的序列号
         :param message: 需要发送的消息
         :param message_type: 发送的消息消息类型
         :return: 如果消息有response则返回response, 否则返回None
         """
         logging.debug("DataBus message to core: %s.", message.hex())
+        cv = threading.Condition()
+        self._mailbox[message_seq] = [cv]
         self._socket.send(message)
         if message_type in self.MESSAGE_RESPONSE_MAPPING:
-            self._handle_response(self._socket.recv(DEFAULT_FLATBUFFERS_BUILDER_SIZE))
-            response = self._mailbox[message_type].get()
-            return response
+            self._handle_response(self._socket.recv(MAX_MESSAGE_LENGTH))
+            with cv:
+                cv.wait_for(lambda: len(self._mailbox[message_seq]) > 1, self.MAX_MESSAGE_WAITING_TIME)
+            mailbox = self._mailbox[message_seq]
+            return mailbox[1] if len(mailbox) > 1 else None
         return None
 
-    def _handle_response(self, response: bytes) -> CoreMessageResponseTypeHint:
+    def _handle_response(self, response: bytes):
         """处理内核返回的消息
 
         :param response: 内核返回消息原始数据
-        :return: 内核返回消息的消息体
         :raise CoreError: 内核返回错误
         :raise UnexpectedMessageTypeError: 内核返回消息类型错误
         """
         logging.debug("DataBus core response: %s.", response.hex())
         header = MessageHeader.MessageHeader.GetRootAs(response)
+        sequence_number = header.Seq()
         raw_body = response[len(response) - header.Size():]
         message_type = header.Type()
         if message_type == CoreMessageType.Error:
             # 有可能返回的是ErrorMessage
             error_body = SocketClient.MESSAGE_RESPONSE_MAPPING[CoreMessageType.Error].GetRootAs(raw_body)
             raise CoreError("Received error {} from core.", error_body.ErrorType())
-
-        return self._mailbox[message_type].put(SocketClient.MESSAGE_RESPONSE_MAPPING[header.Type()].GetRootAs(raw_body))
+        if sequence_number in self._mailbox:
+            self._mailbox[sequence_number].append(
+                SocketClient.MESSAGE_RESPONSE_MAPPING[header.Type()].GetRootAs(raw_body))
+            # 通知线程
+            cv = self._mailbox[sequence_number][0]
+            with cv:
+                cv.notify()

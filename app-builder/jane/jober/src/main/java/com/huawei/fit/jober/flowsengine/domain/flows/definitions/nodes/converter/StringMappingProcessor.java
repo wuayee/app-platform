@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class StringMappingProcessor extends AbstractMappingProcessor {
     @Override
-    protected Object generateValue(MappingNode mappingConfig, Map<String, Object> businessData) {
+    protected Object generateInput(MappingNode mappingConfig, Map<String, Object> businessData) {
         return mappingConfig.getValue().toString();
     }
 }

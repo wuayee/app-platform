@@ -8,40 +8,38 @@ import socket
 import json
 import logging
 import uuid
-from time import sleep
-from urllib.parse import urljoin
 from urllib.parse import urljoin, urlparse
+from concurrent.futures import ThreadPoolExecutor
 import yaml
 import requests
 import uvicorn
 
-from fastapi import FastAPI, Response, Request
+from fastapi import FastAPI, Response, Request, BackgroundTasks
+
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 from jinja2 import Template
 
-from kubernetes import client, config, dynamic, utils
-from kubernetes.client import ApiClient, Configuration
+from kubernetes import client, config
 from kubernetes.client.rest import ApiException
-from fastapi.middleware.cors import CORSMiddleware
-from requests.adapters import HTTPAdapter
 from requests.utils import address_in_network
-from urllib3 import Retry
 from urllib3.exceptions import MaxRetryError
 from uvicorn.config import LOGGING_CONFIG
 
-logging.basicConfig(format='%(asctime)s - %(levelname)s:  -  %(filename)s - %(lineno)s:  %(message)s',
+logging.basicConfig(format='%(asctime)s - %(levelname)s:  -  %(filename)s - %(lineno)s - [%(thread)d]:  %(message)s',
                     level=logging.INFO)
-LOGGING_CONFIG["formatters"]["default"]["fmt"] = "%(asctime)s - %(levelprefix)s %(message)s"
+LOGGING_CONFIG["formatters"]["default"]["fmt"] = "%(asctime)s - %(levelprefix)s %(lineno)s [%(thread)d]: %(message)s"
 LOGGING_CONFIG["formatters"]["access"]["fmt"] = "%(asctime)s - %(levelprefix)s %(client_addr)s -" \
-                                                "'%(request_line)s' %(status_code)s"
+                                                "'%(request_line)s' [%(thread)d] %(status_code)s"
 
 KUBE_CONFIG = "/root/.kube/config"
 NAMESPACE_FILE = "/var/run/secrets/kubernetes.io/serviceaccount/namespace"
 
 EMBEDDING_MODEL_TYPE = "Embedding"
 HEALTHY_STATUS = 200
+
+EXECUTOR = None
 
 
 def set_cross_header(response, request):
@@ -80,13 +78,16 @@ app.model_io_gateways = []
 external_model_services = {
 }
 
+local_model_services = {
+}
+
 global_proxy_configs = {
 }
 
 
 class Item(BaseModel):
     name: str
-    des: str
+    des: str | None = None
     image_name: str
     inference_accuracy: str
     replicas: int
@@ -158,7 +159,7 @@ def create_namespace_if_needed():
         logger.warning(e)
 
     try:
-        response = api_instance.create_namespace(MODEL_IO_NAMESPACE)
+        response = api_instance.create_namespace(body=namespace)
     except ApiException as e:
         logger.warning(e)
     return
@@ -169,11 +170,13 @@ MODEL_IO_MANAGER_CONFIG = "model-io-conf"
 
 def load_model_io_configs():
     global external_model_services
+    global local_model_services
     global global_proxy_configs
     model_io_config_map = api_instance.read_namespaced_config_map(MODEL_IO_MANAGER_CONFIG, MODEL_IO_NAMESPACE)
     model_io_config_str = model_io_config_map.data.get("model_io_configs", "{}")
     model_io_config_data = json.loads(model_io_config_str)
     external_model_services = model_io_config_data.get("external_model_services", {})
+    local_model_services = model_io_config_data.get("local_model_services", {})
     global_proxy_configs = model_io_config_data.get("external_global_proxies", {})
     return get_model_io_configs()
 
@@ -202,7 +205,8 @@ def init_from_configmap():
 def get_model_io_configs():
     model_io_configs = {
         "external_model_services": external_model_services,
-        "external_global_proxies": global_proxy_configs
+        "external_global_proxies": global_proxy_configs,
+        "local_model_services": local_model_services
     }
     return model_io_configs
 
@@ -222,7 +226,9 @@ def update_configmap():
 async def run_tasks():
     create_namespace_if_needed()
     init_from_configmap()
-    _notify_model_io_gateways()
+    global EXECUTOR
+    EXECUTOR = ThreadPoolExecutor(max_workers=4)
+    await _notify_model_io_gateways()
 
 
 @app.options("/v1/delete")
@@ -397,7 +403,9 @@ async def list_chat_models():
 
 
 def get_model_name(service_name):
-    return service_name.split("_")[0]
+    name = service_name.split("_")[0]
+    return name.replace("dot", ".")
+
 
 
 def get_services():
@@ -409,15 +417,17 @@ def get_services():
 
     for k8s_service in k8s_services.items:
         service_name = k8s_service.metadata.name
+        model_name = get_model_name(k8s_service.metadata.labels.get("app"))
+        model_name_origin = get_model_name_by_service_name(model_name)
         services.append({
-            "model_name": get_model_name(k8s_service.metadata.labels.get("app")),
+            "model_name": model_name,
             "pipeline": k8s_service.metadata.labels.get("pipeline"),
             "task": k8s_service.metadata.labels.get("task"),
             "service_name": service_name,
             "cluster_ip": k8s_service.spec.cluster_ip,
             "port": k8s_service.spec.ports[0].port,
             "node_port": k8s_service.spec.ports[0].node_port,
-            "status": "healthy"
+            "status": "healthy",
         })
     return services
 
@@ -597,17 +607,26 @@ def get_routes():
     routed_models = {}
     url_key = "url"
     for service in services:
-        model_name = get_model_name_by_service_name(service["model_name"])
+        max_link_num = 1000
+        if not service["pipeline"]:
+            model_name = get_model_name_by_service_name(service["model_name"])
+        else:
+            model_name = service["model_name"]
         url = f"http://{service['cluster_ip']}:{service['port']}"
+        if model_name in model_run_info:
+            max_link_num = model_run_info[model_name]
+        logging.info("max_link_num for %s is %s", model_name, str(max_link_num))
         if model_name not in routed_models:
             routes.append({
                 "id": model_name,
                 "model": model_name,
-                url_key: url
+                url_key: url,
+                "max_link_num": max_link_num
             })
             routed_models[model_name] = url
 
     for name in external_model_services:
+        max_link_num = 1000
         external_model_service = external_model_services[name]
         url = external_model_service["url"]
         proxies = get_effective_proxies(external_model_service)
@@ -615,6 +634,9 @@ def get_routes():
         api_key_value = external_model_service[api_key]
         external_models = get_models_from_external_service(external_model_service)
         for model_name in external_models:
+            if model_name in model_run_info:
+                max_link_num = model_run_info[model_name]
+            logging.info("max_link_num for %s is %s", model_name, str(max_link_num))
             if model_name not in routed_models:
                 routes.append({
                     "id": model_name,
@@ -623,8 +645,10 @@ def get_routes():
                     api_key: api_key_value,
                     "http_proxy": proxies.get("http_proxy", ""),
                     "https_proxy": proxies.get("https_proxy", ""),
+                    "max_link_num": max_link_num,
                 })
                 routed_models[model_name] = url
+    logger.info("routes is: %s", str(routes))
     return routes
 
 
@@ -648,7 +672,7 @@ def gen_error_info(code, detail):
 
 
 @app.delete("/v1/delete")
-async def delete_model(llm: Llm, request: Request):
+async def delete_model(llm: Llm, request: Request, background_tasks: BackgroundTasks):
     model_name = llm.name.strip()
     model_services = get_cached_model_services()
     logger.info(model_services)
@@ -663,20 +687,12 @@ async def delete_model(llm: Llm, request: Request):
             logger.info("Delete service {%s} successful", service_name)
         except ApiException as e:
             logger.warning(e)
-            error_info = gen_error_info(e.status, e.reason)
-            response = JSONResponse(status_code=522, content=jsonable_encoder(error_info))
-            set_cross_header(response, request)
-            return response
         try:
             response = k8s_client.delete_namespaced_deployment(deployment_name, MODEL_IO_NAMESPACE)
             logger.info("Delete deployment {%s} successful", deployment_name)
         except ApiException as e:
-            error_info = gen_error_info(e.status, e.reason)
             logger.warning(e)
-            response = JSONResponse(status_code=522, content=jsonable_encoder(error_info))
-            set_cross_header(response, request)
-            return response
-        _notify_model_io_gateways()
+        notify_model_io_gateways_in_bg(background_tasks)
         status_ok = 200
         error_info = gen_error_info(status_ok, "ok")
         response = JSONResponse(status_code=status_ok, content=jsonable_encoder(error_info))
@@ -693,7 +709,7 @@ async def delete_model(llm: Llm, request: Request):
     pass
 
 
-def _notify_model_io_gateways():
+def _notify_model_io_gateways_in_threads():
     try:
         endpoints = get_model_io_gateways()
         if endpoints:
@@ -707,6 +723,13 @@ def _notify_model_io_gateways():
             logger.info(response)
     except requests.exceptions.RequestException as e:
         logger.error("Exception: %s.", str(e))
+
+
+async def _notify_model_io_gateways():
+    global notifying
+    global EXECUTOR
+    await asyncio.wrap_future(EXECUTOR.submit(_notify_model_io_gateways_in_threads))
+    notifying = False
 
 
 def get_supported_images(model_type=CHAT_MODEL_TYPE):
@@ -796,6 +819,7 @@ def get_supported_models_template(meta=False):
     models_meta = get_models_meta()
 
     llms_key = "llms"
+    replicas = "replicas"
     if models_meta.get(llms_key):
         models[llms_key] = models_meta.get(llms_key)
 
@@ -811,17 +835,25 @@ def get_supported_models_template(meta=False):
         model_name = model[name]
         model["id"] = model_name + "-id" + "-1"
 
-        model["replicas"] = 0
+        model[replicas] = 0
         model["port"] = 0
         model["xpu_consume"] = 0
+
+        current = "current"
 
         model_services = get_cached_model_services()
         try:
             if model_services.get(model[name].lower()):
+                model_info = local_model_services.get(model_name, {})
                 status = "status"
                 model[status] = model_services[model[name].lower()][status]
                 model["port"] = model_services[model[name].lower()]["node_port"]
                 model["image"] = get_supported_images()[0]
+                model["max_link_num"] = model_info.get("max_link_num", 300)
+                model["npu"][current] = model_info.get("npus", 1)
+                model["precision"][current] = model_info.get("inference_accuracy", "fp16")
+                model["tokenSize"][current] = model_info.get("max_token_size", 8192)
+                model[replicas] = model_info.get(replicas, 1)
             else:
                 model["status"] = "undeployed"
                 model["image"] = "unset"
@@ -890,6 +922,15 @@ async def list_supported_models(request: Request):
     return response
 
 
+notifying = False
+
+
+def notify_model_io_gateways_in_bg(background_tasks: BackgroundTasks):
+    if notifying:
+        return
+    background_tasks.add_task(_notify_model_io_gateways)
+
+
 @app.get("/v1/notify_model_io_gateways")
 async def notify_model_io_gateways():
     _notify_model_io_gateways()
@@ -899,7 +940,8 @@ async def notify_model_io_gateways():
 model_weight_model_dir = {
     # model name and it's base dir name
     "Meta-Llama-3-8B-Instruct": "Meta-Llama-3-8B-Instruct",
-    "Qwen-14B-Chat": "Qwen-14B-Chat"
+    "Qwen-14B-Chat": "Qwen-14B-Chat",
+    "chatglm3-6b": "chatglm3-6b"
 }
 
 
@@ -921,7 +963,8 @@ async def get_external_model_services(request: Request):
 
 
 @app.post("/v1/external_model_service")
-async def add_external_model_services(external_service: ExternalService, request: Request):
+async def add_external_model_services(external_service: ExternalService, request: Request,
+                                      background_tasks: BackgroundTasks):
     global external_model_services
     ex_service = {}
     ex_name = external_service.name
@@ -936,38 +979,37 @@ async def add_external_model_services(external_service: ExternalService, request
     ex_service["url"] = external_service.url
     ex_service["api_key"] = external_service.api_key
 
-    if external_service.http_proxy:
-        ex_service["http_proxy"] = external_service.http_proxy
-    if external_service.https_proxy:
-        ex_service["https_proxy"] = external_service.https_proxy
+    ex_service["http_proxy"] = external_service.http_proxy
+    ex_service["https_proxy"] = external_service.https_proxy
     external_model_services[ex_name] = ex_service
     persist_external_services()
-    _notify_model_io_gateways()
+    notify_model_io_gateways_in_bg(background_tasks)
     response = JSONResponse(status_code=200, content=jsonable_encoder({"ok"}))
     set_cross_header(response, request)
     return response
 
 
 @app.delete("/v1/external_model_service/{name}")
-async def delete_external_model_services(name: str, request: Request):
+async def delete_external_model_services(name: str, request: Request, background_tasks: BackgroundTasks):
     global external_model_services
     ex_name = name
     if ex_name in external_model_services:
         del external_model_services[ex_name]
         persist_external_services()
-        _notify_model_io_gateways()
+        notify_model_io_gateways_in_bg(background_tasks)
     response = JSONResponse(status_code=200, content=jsonable_encoder({"ok"}))
     set_cross_header(response, request)
     return response
 
 
 @app.post("/v1/start_up_pipeline")
-async def start_up_pipeline(item: PipelineItem, request: Request):
+async def start_up_pipeline(item: PipelineItem, request: Request, background_tasks: BackgroundTasks):
     templates = get_pipeline_template()
     model_name = item.name.strip()
     model_name_pre = model_name.split('/')[0]
     model_name_post = model_name.split('/')[1]
     render_name = model_name_pre + '-' + model_name_post + '-' + item.task
+    render_name = render_name.replace(".", "dot").lower()
 
     render_data = {
         "name": render_name,
@@ -1000,7 +1042,7 @@ async def start_up_pipeline(item: PipelineItem, request: Request):
     except ApiException as e:
         logger.warning(e)
 
-    _notify_model_io_gateways()
+    notify_model_io_gateways_in_bg(background_tasks)
 
     status_code = 200
     error_info = {
@@ -1014,20 +1056,18 @@ async def start_up_pipeline(item: PipelineItem, request: Request):
 
 
 @app.post("/v1/external_model_proxies")
-async def update_external_model_proxies(external_model_proxies: GlobalExternalServiceProxy, request: Request):
+async def update_external_model_proxies(external_model_proxies: GlobalExternalServiceProxy, request: Request,
+                                        background_tasks: BackgroundTasks):
     global global_proxy_configs
     http_proxy = external_model_proxies.http_proxy
     https_proxy = external_model_proxies.https_proxy
     no_proxy = external_model_proxies.no_proxy
-    if http_proxy:
-        global_proxy_configs["http_proxy"] = http_proxy
-    if https_proxy:
-        global_proxy_configs["https_proxy"] = https_proxy
-    if no_proxy:
-        global_proxy_configs["no_proxy"] = no_proxy
+    global_proxy_configs["http_proxy"] = http_proxy
+    global_proxy_configs["https_proxy"] = https_proxy
+    global_proxy_configs["no_proxy"] = no_proxy
 
     persist_external_services()
-    _notify_model_io_gateways()
+    notify_model_io_gateways_in_bg(background_tasks)
 
     response = JSONResponse(status_code=200, content=jsonable_encoder({"ok"}))
     set_cross_header(response, request)
@@ -1051,60 +1091,98 @@ def persist_external_services():
     update_configmap()
 
 
+model_run_info = {}
+
+
+def create_yaml_files(item, yaml_objs):
+    flags = os.O_WRONLY | os.O_CREAT
+    modes = stat.S_IRUSR
+    with os.fdopen(os.open(f'{item.name}.yaml', flags, modes), 'w') as f:
+        for obj in yaml_objs:
+            yaml.dump(obj, f)
+            f.write('---\n')
+
+
+def deploy_service_and_deployment(service_manifest, deployment_manifest):
+    try:
+        api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, service_manifest)
+    except ApiException as e:
+        logger.warning(e)
+    try:
+        k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, deployment_manifest)
+    except ApiException as e:
+        logger.warning(e)
+
+
+def get_max_token_size(item, models_meta, model_name):
+    max_token_size = item.max_token_size
+    if max_token_size is None:
+        for model in models_meta.get("llms", []):
+            if model_name == model["name"]:
+                max_token_size = model.get("tokenSize", {}).get("default")
+                break
+    return max_token_size
+
+
 @app.post("/v1/start_up")
-async def start_up(item: Item, request: Request):
-    templates = get_template()
+async def start_up(item: Item, request: Request, background_tasks: BackgroundTasks):
+    model_run_info[item.name] = item.max_link_num
     model_name = item.name.strip()
-    model_base_dir = model_name
+    max_token_size = get_max_token_size(item, get_models_meta(), model_name)
+    model_weight_path = os.path.join(model_weight_dir, model_weight_model_dir.get(model_name, model_name))
+    weight_path_validation = os.environ.get("WEIGHT_PATH_VALIDATION") == "true"
+    logger.error("weight_path_validation=%s", weight_path_validation)
 
-    model_base_dir = model_weight_model_dir.get(model_name, model_name)
+    if weight_path_validation and not os.path.exists(model_weight_path):
+        error_msg = "模型权重不存在，需要上传至" + model_weight_path
+        logger.error(error_msg)
+        return JSONResponse(status_code=200, content=jsonable_encoder({"code": 1, "detail": error_msg}))
 
-    model_weight_path = os.path.join(model_weight_dir, model_base_dir)
-
-    model_name = item.name.strip()
+    pod_list = api_instance.list_namespaced_pod(
+        namespace="kube-system",
+        label_selector="name=ascend-device-plugin-ds",
+    )
 
     render_data = {
         "name": model_name.lower(),
         "replicas": item.replicas,
         "node_port": item.node_port,
         "image_name": item.image_name.strip(),
-        "model_weight_path": model_weight_path
+        "model_weight_path": model_weight_path,
+        "max_token_size": max_token_size,
+        "npus": item.npus,
+        "enable_npu_schedule": len(pod_list.items) > 0,
     }
 
+    create_model_svc_and_deploy(item, render_data)
+
+    # persist services
+    local_model_services[model_name] = item.model_dump()
+    update_configmap()
+
+    notify_model_io_gateways_in_bg(background_tasks)
+
+    response = JSONResponse(status_code=200, content=jsonable_encoder({"code": 0, "detail": "ok"}))
+    set_cross_header(response, request)
+    return response
+
+
+def create_model_svc_and_deploy(item, render_data):
+    templates = get_template()
     fill_template = [template.render(render_data) for template in templates]
     yaml_objs = [yaml.safe_load(fill) for fill in fill_template]
-
-    service_manifest = yaml_objs[0]
-    deployment_manifest = yaml_objs[1]
-
-    flags = os.O_WRONLY | os.O_CREAT
-    modes = stat.S_IRUSR
-
-    with os.fdopen(os.open(f'{item.name}.yaml', flags, modes), 'w') as f:
+    with os.fdopen(os.open(f'{item.name}.yaml', os.O_WRONLY | os.O_CREAT, stat.S_IRUSR), 'w') as f:
         for obj in yaml_objs:
             yaml.dump(obj, f)
             f.write('---\n')
-
     try:
-        response = api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, service_manifest)
+        api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, yaml_objs[0])
     except ApiException as e:
-        logger.warning(e)
+        logger.warning("Create service [{}/{}] failed: {}", MODEL_IO_NAMESPACE, item.name.strip(), e)
     try:
-        response = k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, deployment_manifest)
+        k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, yaml_objs[1])
     except ApiException as e:
-        logger.warning(e)
-
-    _notify_model_io_gateways()
-
-    status_code = 200
-    error_info = {
-        "code": status_code,
-        "detail": "ok"
-    }
-
-    response = JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))
-    set_cross_header(response, request)
-    return response
+        logger.warning("Create deployment [{}/{}] failed: {}.", MODEL_IO_NAMESPACE, item.name.strip(), e)
 
 
 if __name__ == "__main__":

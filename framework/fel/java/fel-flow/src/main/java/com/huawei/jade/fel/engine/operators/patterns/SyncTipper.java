@@ -5,13 +5,17 @@
 package com.huawei.jade.fel.engine.operators.patterns;
 
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.jade.fel.chat.content.MessageContent;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.core.Pattern;
 import com.huawei.jade.fel.core.examples.ExampleSelector;
 import com.huawei.jade.fel.core.formatters.Formatter;
+import com.huawei.jade.fel.core.memory.Memory;
+import com.huawei.jade.fel.core.template.MessageContent;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;
+import com.huawei.jade.fel.engine.util.AiFlowSession;
+import com.huawei.jade.fel.engine.util.StateKey;
 
 /**
  * 平行分支工具。<p>用于 {@link com.huawei.jade.fel.engine.activities.AiStart#runnableParallel(Pattern[])} 表达式。
@@ -135,7 +139,7 @@ public interface SyncTipper<I> extends Pattern<I, Tip> {
      * @throws IllegalArgumentException 当 {@code selector} 为 {@code null} 时。
      */
     static SyncTipper<String> fewShot(ExampleSelector selector) {
-        return arg -> Tip.from(DEFAULT_EXAMPLE_KEY, selector.select(arg));
+        return fewShot(DEFAULT_EXAMPLE_KEY, selector);
     }
 
     /**
@@ -182,7 +186,13 @@ public interface SyncTipper<I> extends Pattern<I, Tip> {
      */
     static <I> SyncTipper<I> history(String historyKey) {
         Validation.notBlank(historyKey, "History key cannot be blank.");
-        return new HistoryTipper<>(historyKey);
+        return input -> {
+            String memoryStr = AiFlowSession.get()
+                    .map(session -> session.<Memory>getInnerState(StateKey.HISTORY_OBJ))
+                    .map(Memory::text)
+                    .orElse(StringUtils.EMPTY);
+            return Tip.from(historyKey, memoryStr);
+        };
     }
 
     /**

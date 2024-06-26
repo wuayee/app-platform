@@ -9,6 +9,7 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
+import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
 import com.huawei.fit.jober.aipp.aop.AippLogInsert;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
@@ -47,6 +48,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -160,6 +162,55 @@ public class AippLogServiceImpl implements AippLogService {
         List<String> instanceIds =
                 aippChatMapper.selectInstanceByChat(chatId, count);
         return this.queryAndSortLogs(instanceIds, context);
+    }
+
+    @Override
+    public List<AippInstLogDataDto> queryAppRecentChatLog(String appId, String aippType, OperationContext context) {
+        List<String> chatIds = aippChatMapper.selectChatByAppId(appId, 1);
+        List<AippInstLogDataDto> logData = new ArrayList<>();
+        if (chatIds.isEmpty()) {
+            return logData;
+        }
+        List<String> instanceIds = aippChatMapper.selectInstanceByChat(chatIds.get(0), 5);
+        logData = queryAndSortLogs(instanceIds, context);
+        return this.getAippLogWithAppInfo(logData, aippType, appId, context);
+    }
+
+    private List<AippInstLogDataDto> getAippLogWithAppInfo(
+                List<AippInstLogDataDto> logData, String aippType, String appId, OperationContext context) {
+        // 获取被@应用的头像、名称
+        String type = AippTypeEnum.getType(aippType).type();
+        List<String> originAippId = getMetaIds(appId, context, type);
+        List<String> atAippIds = logData.stream()
+                .filter(data -> !Objects.equals(data.getAippId(), originAippId.get(0)))
+                .map(AippInstLogDataDto::getAippId)
+                .collect(Collectors.toList());
+        RangedResultSet<Meta> metas =
+                metaService.list(this.buildAippIdFilter(atAippIds), true, 0, atAippIds.size(), context);
+        if (!metas.getResults().isEmpty()) {
+            List<Meta> meta = metas.getResults();
+            Map<String, Meta> metaMap = meta.stream().collect(Collectors.toMap(Meta::getId, Function.identity()));
+            logData.stream().forEach(aippInstLogDataDto -> setLogDataWithIcon(aippInstLogDataDto, metaMap));
+        }
+        return logData;
+    }
+
+    private void setLogDataWithIcon(AippInstLogDataDto aippInstLogDataDto, Map<String, Meta> metaMap) {
+        if (!metaMap.containsKey(aippInstLogDataDto.getAippId())) {
+            return;
+        }
+        Meta metaData = metaMap.get(aippInstLogDataDto.getAippId());
+        aippInstLogDataDto.setAppName(metaData.getName());
+        Object metaIcon = metaData.getAttributes().get("meta_icon");
+        if (metaIcon instanceof String) {
+            aippInstLogDataDto.setAppIcon((String) metaIcon);
+        }
+    }
+
+    private MetaFilter buildAippIdFilter(List<String> aippIds) {
+        MetaFilter filter = new MetaFilter();
+        filter.setMetaIds(aippIds);
+        return filter;
     }
 
     @NotNull
@@ -373,5 +424,18 @@ public class AippLogServiceImpl implements AippLogService {
             throw new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID);
         }
         this.aippLogMapper.deleteInstanceLog(instanceId);
+    }
+
+    @Override
+    public List<AippInstLogDataDto> queryAippRecentInstLogAfterSplice(String aippId, String aippType, Integer count,
+        OperationContext context) {
+        List<String> instanceIds =
+            aippLogMapper.selectRecentInstanceId(aippId, aippType, count, context.getW3Account());
+        return queryRecentLogByInstanceIds(instanceIds, context).values()
+            .stream()
+            .map(AippInstLogDataDto::fromAippInstLogListAfterSplice)
+            .filter(dto -> dto.getQuestion() != null)
+            .sorted((d1, d2) -> Math.toIntExact(d1.getQuestion().getLogId() - d2.getQuestion().getLogId()))
+            .collect(Collectors.toList());
     }
 }

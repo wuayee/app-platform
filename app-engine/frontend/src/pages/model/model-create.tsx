@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Select, Button, Drawer, Input, Form, message, InputNumber } from 'antd';
-import { SearchOutlined, EllipsisOutlined, CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined } from '@ant-design/icons';
 
 import { createModel, getModelList } from '../../shared/http/model';
+import { ModelItem } from './cards-tab';
 
 interface createItem {
   name: string;
@@ -16,9 +17,10 @@ interface StarAppsProps {
   setOpen: (val: boolean) => void;
   createItems: Array<createItem>;
   setModels: (val: Array<any>) => void;
+  modifyData: ModelItem;
 }
 
-const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setModels }) => {
+const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setModels, modifyData }) => {
   const [form] = Form.useForm();
   const nameOptions: any[] = [];
   // 下拉框联动
@@ -29,18 +31,42 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
   const [linkNumMax, setLinkNumMax] = useState(300);
 
   useEffect(() => {
+    form.resetFields();
     form.setFieldValue('max_link_num', 300);
-  }, []);
+    if (modifyData) {
+      handleModifyData();
+    }
+  }, [modifyData, open]);
 
   const handleNameChange = (value: any) => {
     setNameOption(value);
     setPrecisionOption(null);
     setImageOption(null);
     setGpuOption(null);
+    form.setFieldValue(
+      'max_token_size',
+      createItems.find((item) => item.name === value)?.max_token_size?.default
+    );
   };
+
+  const handleModifyData = () => {
+    form.setFieldValue('name', modifyData?.name);
+    setNameOption(modifyData?.name);
+    form.setFieldsValue({
+      image_name: modifyData?.image,
+      inference_accuracy: modifyData?.precision?.current,
+      replicas: modifyData?.replicas,
+      npus: modifyData?.npu?.current,
+      max_link_num: modifyData?.max_link_num,
+      max_token_size: modifyData?.max_token_size?.current
+    })
+  }
+
   const filteredPrecisionOption = createItems.find((item) => item.name === nameOption)?.precision;
   const filteredImageOption = createItems.find((item) => item.name === nameOption)?.image;
   const filteredGpuOption = createItems.find((item) => item.name === nameOption)?.gpu;
+  const tokenMin = createItems.find((item) => item.name === nameOption)?.max_token_size?.min;
+  const tokenMax = createItems.find((item) => item.name === nameOption)?.max_token_size?.max;
 
   if (createItems.length) {
     createItems.forEach((item) => {
@@ -49,21 +75,20 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
   }
 
   const deployModel = () => {
-    console.log(form.getFieldsValue());
     form.validateFields().then((values) => {
-      const { name, inference_accuracy, image_name, des, npus, replicas, max_link_num } = values;
+      const { name, inference_accuracy, image_name, npus, replicas, max_link_num, max_token_size } = values;
       const modelParams = {
         name,
-        des,
         image_name,
         inference_accuracy,
         replicas,
         node_port: 80,
         max_link_num,
+        max_token_size,
         npus: parseInt(npus),
       };
       createModel(modelParams).then((res) => {
-        if (res && res.code === 200) {
+        if (res && (res.code === 0 || res.code === 200)) {
           message.success('模型部署成功');
           getModelList().then((res) => {
             if (res) {
@@ -72,8 +97,6 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           });
           form.resetFields();
           form.setFieldValue('max_link_num', 300);
-        } else {
-          message.error('模型部署失败');
         }
       });
       setOpen(false);
@@ -87,7 +110,6 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
   return (
     <Drawer
       destroyOnClose
-      mask={false}
       title={
         <div
           className='app-title'
@@ -97,7 +119,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           }}
         >
           <div className='app-title-left'>
-            <span>创建大模型服务</span>
+            <span>{modifyData ? '修改' : '创建'}大模型服务</span>
           </div>
           <CloseOutlined style={{ fontSize: 12 }} onClick={() => setOpen(false)} />
         </div>
@@ -110,17 +132,14 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
         <Form.Item
           label='大模型服务名称'
           name='name'
-          rules={[{ required: true, message: '请输入大模型服务名称' }]}
+          rules={[{ required: true }]}
         >
-          <Select options={nameOptions} value={nameOption} onChange={handleNameChange} />
-        </Form.Item>
-        <Form.Item label='描述' name='des' rules={[{ required: true, message: '请输入描述' }]}>
-          <Input placeholder='这里是描述信息~' />
+          <Select disabled={modifyData} options={nameOptions} value={nameOption} onChange={handleNameChange} />
         </Form.Item>
         <Form.Item
           label='大模型镜像名称'
           name='image_name'
-          rules={[{ required: true, message: '请输入大模型镜像名称' }]}
+          rules={[{ required: true }]}
         >
           <Select
             options={filteredImageOption?.map((option) => ({ label: option, value: option }))}
@@ -131,7 +150,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
         <Form.Item
           label='推理精度'
           name='inference_accuracy'
-          rules={[{ required: true, message: '请输入推理精度' }]}
+          rules={[{ required: true }]}
         >
           <Select
             options={filteredPrecisionOption?.map((option) => ({ label: option, value: option }))}
@@ -143,7 +162,13 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           label='大模型实例数'
           name='replicas'
           rules={[
-            { required: true, message: '请输入大模型实例数' }
+            { required: true },
+            {
+              type: 'number',
+              max: 8,
+              min: 1,
+              message: `输入范围为1 - ${8}`
+            }
           ]}
         >
           <InputNumber style={{ width: '100%' }} min={1} max={8} onChange={replicasChange} />
@@ -152,7 +177,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           label='单实例消耗的NPU数'
           name='npus'
           rules={[
-            { required: true, message: '请输入单实例消耗的NPU数' },
+            { required: true },
           ]}
         >
           <Select
@@ -164,7 +189,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           label='请求并发数'
           name='max_link_num'
           rules={[
-            { required: true, message: '请输入请求并发数' },
+            { required: true},
             {
               type: 'number',
               max: linkNumMax,
@@ -174,6 +199,21 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           ]}
         >
           <InputNumber style={{ width: '100%' }} min={1} max={linkNumMax} />
+        </Form.Item>
+        <Form.Item
+          label='最大Token数'
+          name='max_token_size'
+          rules={[
+            { required: true },
+            {
+              type: 'number',
+              max: tokenMax,
+              min: tokenMin,
+              message: `输入范围为${tokenMin} - ${tokenMax}`
+            }
+          ]}
+        >
+          <InputNumber style={{ width: '100%' }} min={tokenMin} max={tokenMax} />
         </Form.Item>
       </Form>
       <div
@@ -186,7 +226,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
         }}
       >
         <Button type='primary' onClick={() => deployModel()}>
-          部署模型
+          {modifyData ? '修改' : '部署模型'}
         </Button>
         <Button onClick={() => setOpen(false)}>取消</Button>
       </div>

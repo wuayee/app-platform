@@ -1,24 +1,24 @@
 import { AppstoreOutlined, BarsOutlined } from '@ant-design/icons';
-import { Button, Radio, Tabs } from 'antd';
+import { Button, message, Radio, Tabs } from 'antd';
 import { TabsProps } from 'antd/lib';
 import React, { useEffect, useState } from 'react';
+import { modelbaseSync, modelbaseSyncStatus } from '../../shared/http/model-base';
 import './index.scoped.scss';
 import ModelBaseCard from './list/card-list';
 import ModelBaseTable from './list/table-list';
 
 const ModelBase = () => {
 
+  let syncTimer = null;
   const [activeIndex, setActiveIndex] = useState('1');
   const [type, setType] = useState('card');
+  const [canSync, setCanSync] = useState(false);
+  const [syncButtonText, setSyncButtonText] = useState('刷新数据');
 
   const items: TabsProps['items'] = [
     {
       key: '1',
       label: '本地模型',
-    },
-    {
-      key: '2',
-      label: 'Huggingface',
     },
   ];
 
@@ -26,11 +26,55 @@ const ModelBase = () => {
     const mode = sessionStorage.getItem('modelBaseListType') ?? 'card';
     sessionStorage.setItem('modelBaseListType', mode);
     setType(mode);
+    syncTimer = setInterval(() => getSyncStatus(true), 5000);
+    getSyncStatus();
+
+    return () => {
+      if (syncTimer) {
+        clearInterval(syncTimer);
+      }
+    }
   }, []);
 
   const changeShowType = (e: any) => {
     setType(e.target.value);
     sessionStorage.setItem('modelBaseListType', e.target.value);
+  }
+
+  //手动同步模型仓
+  const syncModel = () => {
+    modelbaseSync().then(res => {
+      syncTimer = setInterval(() => getSyncStatus(true), 5000);
+      getSyncStatus(true);
+    });
+  }
+
+  //查询同步状态，进入模型仓时会固定查询一次，若有正在同步的任务，则不允许点击同步按钮；
+  //若已同步完成或暂未有同步任务，可点击同步
+  const getSyncStatus = (showMessage = false) => {
+    setSyncButtonText('刷新中');
+    setCanSync(false);
+    modelbaseSyncStatus().then(res => {
+      switch (res) {
+        case 0:   //成功
+          if (showMessage) message.success('数据刷新成功');
+          setSyncButtonText('刷新数据');
+          setCanSync(true);
+          clearInterval(syncTimer);
+        case 1:   //刷新中
+          setSyncButtonText('刷新中');
+          setCanSync(false);
+        case 2:   //2失败
+          if (showMessage) message.error('数据刷新失败');
+          setSyncButtonText('刷新数据');
+          setCanSync(true);
+          clearInterval(syncTimer);
+        default:
+          setSyncButtonText('刷新数据');
+          setCanSync(true);
+          clearInterval(syncTimer);
+      }
+    });
   }
 
   return (
@@ -54,14 +98,15 @@ const ModelBase = () => {
           <Button
             type='primary'
             style={{
-              background: '#2673E5',
-              width: '96px',
+              minWidth: '96px',
               height: '32px',
               fontSize: '14px',
               borderRadius: '4px',
               letterSpacing: '0',
             }}
-          >刷新数据
+            loading={!canSync}
+            onClick={syncModel}
+          >{syncButtonText}
           </Button>
           <div>
             <Radio.Group value={type} onChange={changeShowType}>
@@ -74,14 +119,9 @@ const ModelBase = () => {
             </Radio.Group>
           </div>
         </div>
-        <div hidden={type === 'table'}>
-          <ModelBaseCard />
-        </div>
-        <div hidden={type === 'card'}>
-          <ModelBaseTable />
-        </div>
+        {type === 'card' && <ModelBaseCard />}
+        {type === 'table' && <ModelBaseTable />}
       </div>
-
     </div>
   );
 };

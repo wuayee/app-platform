@@ -1,11 +1,11 @@
 import {useState} from 'react';
 import {Button, Collapse, Popover} from 'antd';
-import {DeleteOutlined, InfoCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {DeleteOutlined, PlusOutlined, QuestionCircleOutlined} from '@ant-design/icons';
 import StartInputForm from "./StartInputForm.jsx";
-import Memory from './Memory.jsx';
 import "./style.css";
 import {useDataContext, useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {v4 as uuidv4} from "uuid";
+import MultiConversation from "@/components/start/MultiConversation.jsx";
 
 const {Panel} = Collapse;
 
@@ -21,6 +21,11 @@ export default function StartFormWrapper({disabled}) {
     const shape = useShapeContext();
     const config = shape.graph.configs.find(node => node.node === "startNodeStart");
     const items = data.find(item => item.name === "input").value // 找出 name 为 "input" 的项，获取value值
+    const memory = data.find(item => item.name === "memory");
+    const memoryId = memory.id;
+    const multiConversationSwitchValue = memory.value.find(item => item.name === "memorySwitch")?.value ?? true;
+    const multiConversationTypeValue = memory.value.find(item => item.name === "type").value;
+    const multiConversationValueValue = memory.value.find(item => item.name === "value").value;
 
     // items中所有初始都为打开状态
     const [openItems, setOpenItems] = useState(() => {
@@ -36,8 +41,8 @@ export default function StartFormWrapper({disabled}) {
 
     const renderAddInputIcon = () => {
         const configObject = data.find(item => item.name === "input")
-                ?.config
-                ?.find(configItem => configItem.hasOwnProperty("allowAdd")); // 查找具有 "allowAdd" 属性的对象
+            ?.config
+            ?.find(configItem => configItem.hasOwnProperty("allowAdd")); // 查找具有 "allowAdd" 属性的对象
         if (configObject ? configObject.allowAdd : false) {
             return (<>
                 <Button disabled={disabled}
@@ -72,63 +77,90 @@ export default function StartFormWrapper({disabled}) {
     };
 
     const content = (<div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
-            <p>定义启动工作流所需的输入参数，这些内容将由</p>
-            <p>大模型在机器人对话过程中读取，允许大模型</p>
-            <p>在适当的时间启动工作流并填写正确的信息。</p>
-        </div>);
+        <p>定义启动工作流所需的输入参数，这些内容将由</p>
+        <p>大模型在机器人对话过程中读取，允许大模型</p>
+        <p>在适当的时间启动工作流并填写正确的信息。</p>
+    </div>);
+
+    // 处理内部组件值变化的回调函数
+    const handleMultiConversationValueChange = (valueType, newValue) => {
+        dispatch({
+            actionType: "changeMemory",
+            memoryType: multiConversationTypeValue,
+            memoryValueType: valueType,
+            memoryValue: newValue
+        });
+    };
+
+    const handleMultiConversationTypeChange = (e, memoryValueType, memoryValue) => {
+        dispatch({
+            actionType: "changeMemory",
+            memoryType: e,
+            memoryValueType: memoryValueType,
+            memoryValue: memoryValue
+        });
+    };
+
+    const handleMultiConversationSwitchChange = (e) => {
+        dispatch({actionType: "changeMemorySwitch", value: e});
+    };
 
     return (<>
         <div>
             <div style={{
-                display: "flex", alignItems: "center", marginBottom: "8px", paddingLeft: "8px", paddingRight: "4px", height: "32px"
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "8px",
+                paddingLeft: "8px",
+                paddingRight: "4px",
+                height: "32px"
             }}>
                 <div className="jade-panel-header-font">输入</div>
                 <Popover content={content}>
-                    <InfoCircleOutlined className="jade-top-header-popover-content"/>
+                    <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                 </Popover>
                 {renderAddInputIcon()}
             </div>
             <Collapse bordered={false}
                       activeKey={openItems}
                       onChange={(keys) => setOpenItems(keys)}
-                      className="jade-collapse-custom-background-color">
+                      className="jade-custom-collapse">
                 {
                     items.map((item) => (
-                            <Panel
-                                key={item.id}
-                                header={
-                                    <div className="panel-header">
-                                        <span className="jade-panel-header-font">{item.name}</span> {/* 显示Name值的元素 */}
-                                        {renderDeleteIcon(item)}
-                                    </div>
-                                }
-                                className="jade-panel"
-                                style={{marginBottom: 8, borderRadius: "8px", width: "100%"}}
-                            >
+                        <Panel
+                            key={item.id}
+                            header={
+                                <div className="panel-header">
+                                    <span className="jade-panel-header-font">{item.name}</span> {/* 显示Name值的元素 */}
+                                    {renderDeleteIcon(item)}
+                                </div>
+                            }
+                            className="jade-panel"
+                            style={{marginBottom: 8, borderRadius: "8px", width: "100%"}}
+                        >
+                            <div className={"jade-custom-panel-content"}>
                                 <StartInputForm item={item}/>
-                            </Panel>
+                            </div>
+                        </Panel>
                     ))
                 }
             </Collapse>
-            <Collapse bordered={false}
-                      className="jade-collapse-custom-background-color"
-                      defaultActiveKey={["historicalRecordsPanel"]}>
-                {
-                    <Panel
-                        key={"historicalRecordsPanel"}
-                        header={
-                            <div className="panel-header"
-                                 style={{display: 'flex', alignItems: 'center', justifyContent: "flex-start"}}>
-                                <span className="jade-panel-header-font">历史记录</span>
-                            </div>
-                        }
-                        className="jade-panel"
-                        style={{width: "100%"}}
-                    >
-                        <Memory disabled={disabled} config={config}/>
-                    </Panel>
-                }
-            </Collapse>
+
+            <MultiConversation className="jade-multi-conversation" itemId={memoryId} disabled={disabled} config={config}
+                               props={{
+                                   switch: {
+                                       value: multiConversationSwitchValue,
+                                       onChange: handleMultiConversationSwitchChange
+                                   },
+                                   type: {
+                                       value: multiConversationTypeValue,
+                                       onChange: handleMultiConversationTypeChange
+                                   },
+                                   value: {
+                                       value: multiConversationValueValue,
+                                       onChange: handleMultiConversationValueChange
+                                   }
+                               }}/>
         </div>
     </>);
-};
+}

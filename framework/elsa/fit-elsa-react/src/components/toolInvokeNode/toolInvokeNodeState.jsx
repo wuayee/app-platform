@@ -1,7 +1,8 @@
 import {jadeNode} from "@/components/jadeNode.jsx";
-import {Button} from "antd";
-import ApiInvokeIcon from '../asserts/icon-api-invoke.svg?react';
 import {convertParameter, convertReturnFormat} from "@/components/util/MethodMetaDataParser.js";
+import httpUtil from "@/components/util/httpUtil.jsx";
+import {formatString} from "@/components/util/StringUtil.js";
+import {toolInvokeNodeDrawer} from "@/components/toolInvokeNode/toolInvokeNodeDrawer.jsx";
 
 /**
  * 工具调用节点shape
@@ -9,7 +10,7 @@ import {convertParameter, convertReturnFormat} from "@/components/util/MethodMet
  * @override
  */
 export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => {
-    const self = jadeNode(id, x, y, width, height, parent, drawer);
+    const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : toolInvokeNodeDrawer);
     self.type = "toolInvokeNodeState";
     self.width = 360;
     self.backColor = 'white';
@@ -27,6 +28,23 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
     const template = {
         inputParams: [],
         outputParams: []
+    };
+
+    /**
+     * 拉取versionInfo数据.
+     *
+     * @param callback 回调.
+     */
+    self.fetchVersionInfo = (callback) => {
+        const url = self.graph.getConfig(self)?.urls?.versionInfo;
+        if (!url) {
+            return;
+        }
+        const uniqueName = self.flowMeta.jober.entity.uniqueName;
+        const replacedUrl = formatString(url, {tenant: self.graph.tenant, uniqueName});
+        httpUtil.get(replacedUrl, new Map(), (result) => {
+            callback(result.data);
+        });
     };
 
     /**
@@ -51,10 +69,12 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
         const _generateInput = () => {
             // 这里需要确认，返回的到底是什么数据类型，data是个数组还是对象
             delete newConfig.inputParams;
-            newConfig.inputParams = Object.keys(metaData.schema.parameters.properties).map(key => {
+            const orderProperties = metaData.schema.parameters.order ? metaData.schema.parameters.order : Object.keys(metaData.schema.parameters.properties);
+            newConfig.inputParams = orderProperties.map(key => {
                 return convertParameter({
                     propertyName: key,
-                    property: metaData.schema.parameters.properties[key]
+                    property: metaData.schema.parameters.properties[key],
+                    isRequired: metaData.schema.parameters.required.some(item => item === key)
                 });
             });
         };
@@ -69,15 +89,7 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
         self.text = self.page.generateNodeName(metaData.name, self.type);
         self.drawer.unmountReact();
         self.invalidateAlone();
-    }
-
-    self.getHeaderIcon = () => {
-        return (
-                <Button disabled={true} className="jade-node-custom-header-icon">
-                    <ApiInvokeIcon/>
-                </Button>
-        );
     };
 
     return self;
-}
+};

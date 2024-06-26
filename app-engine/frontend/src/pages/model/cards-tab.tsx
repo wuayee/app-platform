@@ -7,8 +7,9 @@ export interface ModelItem {
   id: string;
   name: string;
   model: string;
+  max_link_num: number;
   scale: string;
-  type:string;
+  type: string;
   orgnization: string;
   description: string;
   precision: object;
@@ -29,8 +30,9 @@ export interface ModelItem {
   xpu_consume: number;
   port: number;
   image: string;
+  max_token_size: object;
 }
-const CardsTab = ({modelList, setModels}: {modelList: ModelItem[], setModels: (val: Array<any>) => void}) => {
+const CardsTab = ({ modelList, setModels, openModify }: { modelList: ModelItem[], setModels: (val: Array<any>) => void, openModify: Function }) => {
   // 路由
   return (
     <div className="aui-block">
@@ -56,6 +58,7 @@ const CardsTab = ({modelList, setModels}: {modelList: ModelItem[], setModels: (v
                 flex: "0",
               }}
               setModelItems={setModels}
+              openModify={openModify}
             />
           </>
         ))}

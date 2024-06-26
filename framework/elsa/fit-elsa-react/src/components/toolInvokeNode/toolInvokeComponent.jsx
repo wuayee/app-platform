@@ -1,5 +1,4 @@
-import InvokeInput from "@/components/common/InvokeInput.jsx";
-import InvokeOutput from "@/components/common/InvokeOutput.jsx";
+import ToolInvokeFormWrapper from "@/components/toolInvokeNode/ToolInvokeFormWrapper.jsx";
 
 /**
  * 工具调用节点组件
@@ -22,14 +21,11 @@ export const toolInvokeComponent = (jadeConfig) => {
     };
 
     /**
-     * 获取当前节点的所有组件
-     *
-     * @return {JSX.Element}
+     * @override
      */
-    self.getReactComponents = () => {
+    self.getReactComponents = (disabled) => {
         return (<>
-            <InvokeInput/>
-            <InvokeOutput/>
+            <ToolInvokeFormWrapper disabled={disabled}/>
         </>);
     };
 

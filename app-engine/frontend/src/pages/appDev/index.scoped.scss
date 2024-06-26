@@ -18,11 +18,10 @@
         }
     }
     .apps_main{
-        height: calc(100% - 30px);
+        height: calc(100% - 50px);
         padding: 24px;
         background: #fff;
         border-radius: 8px;
-        flex: 1;
         display: flex;
         flex-direction: column;
         .tabs{}

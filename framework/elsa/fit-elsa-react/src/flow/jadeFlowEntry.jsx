@@ -60,19 +60,14 @@ const jadeFlowAgent = (graph) => {
         return {
             // 刷新流程节点状态.
             refresh: (dataList) => {
-                const nodeIds = dataList.map(d => d.nodeId);
                 nodes.forEach(node => {
                     const data = dataList.find(d => d.nodeId === node.id);
                     if (data) {
-                        node.setRunStatus(data.status === "ERROR" ? NODE_STATUS.ERROR : NODE_STATUS.SUCCESS);
+                        node.setRunStatus(data.status);
                         node.setRunReportSections(data);
                     } else {
                         const preNodes = node.getDirectPreNodeIds();
-                        if (preNodes.some(s => s.type === "conditionNodeCondition"
-                                || s.runStatus === NODE_STATUS.ERROR)) {
-                            return;
-                        }
-                        if (preNodes.every(preNode => nodeIds.includes(preNode.id))) {
+                        if (preNodes.every(preNode => _isPreNodeFinished(preNode, dataList))) {
                             node.setRunStatus(NODE_STATUS.RUNNING);
                         }
                     }
@@ -93,10 +88,19 @@ const jadeFlowAgent = (graph) => {
             stop: () => {
                 nodes.forEach(n => {
                     n.moveable = true;
+                    n.emphasized = false;
                     n.drawer.setDisabled(false);
                 });
             }
         };
+    };
+
+    const _isPreNodeFinished = (preNode, dataList) => {
+        if (preNode.type === "conditionNodeCondition") {
+            return false;
+        }
+        const data = dataList.find(d => d.nodeId === preNode.id);
+        return data && data.status === NODE_STATUS.SUCCESS;
     };
 
     /**
@@ -230,12 +234,14 @@ export const JadeFlow = (() => {
      * 新建流程.
      *
      * @param div 待渲染的dom元素.
+     * @param tenant 租户.
      * @param configs 传入的其他参数列表.
      */
-    self.new = async (div, configs) => {
+    self.new = async (div, tenant, configs) => {
         const g = jadeFlowGraph(div, "jadeFlow");
         g.configs = configs;
         g.collaboration.mute = true;
+        g.tenant = tenant;
         await g.initialize();
         const page = g.addPage("newFlowPage");
 
@@ -256,13 +262,15 @@ export const JadeFlow = (() => {
      * 编辑流程.
      *
      * @param div 待渲染的dom元素.
+     * @param tenant 租户.
      * @param flowConfigData 流程元数据.
      * @param configs 传入的其他参数列表.
      * @param importStatements 传入的需要加载的语句.
      */
-    self.edit = async (div, flowConfigData, configs, importStatements = []) => {
+    self.edit = async (div, tenant, flowConfigData, configs, importStatements = []) => {
         const g = jadeFlowGraph(div, "jadeFlow");
         g.configs = configs;
+        g.tenant = tenant;
         g.collaboration.mute = true;
         for (let i = 0; i < importStatements.length; i++) {
             await g.dynamicImportStatement(importStatements[i]);

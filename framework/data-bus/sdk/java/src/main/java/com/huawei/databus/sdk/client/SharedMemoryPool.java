@@ -25,7 +25,9 @@ import com.huawei.databus.sdk.support.MemoryPermissionResult;
 import com.huawei.databus.sdk.support.ReleaseMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
+import com.huawei.databus.sdk.tools.Constant;
 import com.huawei.databus.sdk.tools.DataBusUtils;
+import com.huawei.databus.sdk.tools.SeqGenerator;
 import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.StringUtils;
@@ -41,7 +43,9 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 内存池，管理当前所有内存块的生命周期，包括内存申请、许可管理和释放。
@@ -53,13 +57,15 @@ class SharedMemoryPool {
     private static final Logger logger = LogManager.getLogger(SharedMemoryPool.class);
 
     private final Map<String, SharedMemoryInternal> memoryPool;
-    private final Map<Byte, BlockingQueue<ByteBuffer>> replyQueues;
+    private final Map<Long, BlockingQueue<ByteBuffer>> replyQueues;
     private final SocketChannel socketChannel;
+    private final SeqGenerator seqGenerator;
 
-    public SharedMemoryPool(Map<Byte, BlockingQueue<ByteBuffer>> replyQueues, SocketChannel socketChannel) {
+    public SharedMemoryPool(Map<Long, BlockingQueue<ByteBuffer>> replyQueues, SocketChannel socketChannel) {
         this.memoryPool = new HashMap<>();
         this.replyQueues = replyQueues;
         this.socketChannel = socketChannel;
+        this.seqGenerator = SeqGenerator.getInstance();
     }
 
     /**
@@ -81,15 +87,18 @@ class SharedMemoryPool {
         ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
 
         // 建造消息头
+        long seq = seqGenerator.getNextNumber();
         ByteBuffer messageHeaderBuffer = DataBusUtils.buildMessageHeader(MessageType.ApplyMemory,
-                messageBodyBuffer.remaining());
+                messageBodyBuffer.remaining(), seq);
 
         try {
-            this.socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
-            // 阻塞等待回复
-            ByteBuffer resBuffer = this.replyQueues.get(MessageType.ApplyMemory).take();
+            ByteBuffer resBuf = getReply(seq, messageHeaderBuffer, messageBodyBuffer);
+            if (resBuf == null) {
+                logger.error("[applySharedMemory] Apply memory timeout. [seq={}]", seq);
+                return SharedMemoryResult.failure(ErrorType.Timeout);
+            }
             ApplyMemoryMessageResponse response =
-                    ApplyMemoryMessageResponse.getRootAsApplyMemoryMessageResponse(resBuffer);
+                    ApplyMemoryMessageResponse.getRootAsApplyMemoryMessageResponse(resBuf);
             if (response.errorType() == ErrorType.None) {
                 SharedMemory sharedMemory = this.addNewMemory(response.memoryKey(), request.userKey(),
                         PermissionType.None, response.memorySize());
@@ -97,7 +106,7 @@ class SharedMemoryPool {
             }
             return SharedMemoryResult.failure(response.errorType());
         } catch (IOException | InterruptedException e) {
-            logger.error("[applySharedMemory] unexpected exception. [e={}]", e.toString());
+            logger.error("[applySharedMemory] unexpected exception. [e={}, seq={}]", e.toString(), seq);
             return SharedMemoryResult.failure(ErrorType.UnknownError, e);
         }
     }
@@ -168,15 +177,18 @@ class SharedMemoryPool {
         ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
 
         // 建造消息头。
+        long seq = seqGenerator.getNextNumber();
         ByteBuffer messageHeaderBuffer = DataBusUtils.buildMessageHeader(MessageType.ApplyPermission,
-                messageBodyBuffer.remaining());
+                messageBodyBuffer.remaining(), seq);
         try {
-            this.socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
-            // 阻塞等待回复。
-            ApplyPermissionMessageResponse response =
-                    ApplyPermissionMessageResponse.getRootAsApplyPermissionMessageResponse(
-                            this.replyQueues.get(MessageType.ApplyPermission).take());
+            ByteBuffer resBuf = getReply(seq, messageHeaderBuffer, messageBodyBuffer);
+            if (resBuf == null) {
+                logger.error("[applyPermission] Apply memory timeout. [seq={}]", seq);
+                return MemoryPermissionResult.failure(ErrorType.Timeout);
+            }
 
+            ApplyPermissionMessageResponse response =
+                    ApplyPermissionMessageResponse.getRootAsApplyPermissionMessageResponse(resBuf);
             // 修改本地内存信息。
             if (response.errorType() == ErrorType.None) {
                 memory.setPermission(request.permissionType()).setSize(response.memorySize())
@@ -189,7 +201,7 @@ class SharedMemoryPool {
             }
             return MemoryPermissionResult.failure(response.errorType());
         } catch (IOException | InterruptedException e) {
-            logger.error("[applyPermission] unexpected exception. [e={}]", e.toString());
+            logger.error("[applyPermission] unexpected exception. [e={}, seq={}]", e.toString(), seq);
             return MemoryPermissionResult.failure(ErrorType.UnknownError, e);
         }
     }
@@ -214,13 +226,14 @@ class SharedMemoryPool {
         ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
 
         // 建造消息头。
+        long seq = seqGenerator.getNextNumber();
         ByteBuffer messageHeaderBuffer = DataBusUtils.buildMessageHeader(MessageType.ReleasePermission,
-                messageBodyBuffer.remaining());
+                messageBodyBuffer.remaining(), seq);
         try {
             // 发出信息后即刻返回，释放许可总是被 DataBus 主服务批准而且没有回复信息。
             this.socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
         } catch (IOException e) {
-            logger.error("[releasePermission] socket channel exception. [e={}]", e.toString());
+            logger.error("[releasePermission] socket channel exception. [e={}, seq={}]", e.toString(), seq);
         } finally {
             // 客户端不再持有此内存块的读写许可。
             memory.setPermission(PermissionType.None);
@@ -249,13 +262,14 @@ class SharedMemoryPool {
         ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
 
         // 建造消息头。
+        long seq = seqGenerator.getNextNumber();
         ByteBuffer messageHeaderBuffer = DataBusUtils.buildMessageHeader(MessageType.ReleaseMemory,
-                messageBodyBuffer.remaining());
+                messageBodyBuffer.remaining(), seq);
         try {
             // 发出信息后即刻返回，释放内存没有回复信息。
             this.socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
         } catch (IOException e) {
-            logger.error("[releaseSharedMemory] socket channel exception. [e={}]", e.toString());
+            logger.error("[releaseSharedMemory] socket channel exception. [e={}, seq={}]", e.toString(), seq);
         } finally {
             // 客户端不再持有此内存块。
             this.memoryPool.remove(request.userKey());
@@ -293,15 +307,19 @@ class SharedMemoryPool {
         ByteBuffer messageBodyBuffer = bodyBuilder.dataBuffer();
 
         // 建造消息头。
+        long seq = seqGenerator.getNextNumber();
         ByteBuffer messageHeaderBuffer = DataBusUtils.buildMessageHeader(MessageType.GetMetaData,
-                messageBodyBuffer.remaining());
+                messageBodyBuffer.remaining(), seq);
 
         try {
-            this.socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
-            // 阻塞等待回复。
-            ByteBuffer resBuffer = this.replyQueues.get(MessageType.GetMetaData).take();
+            ByteBuffer resBuf = getReply(seq, messageHeaderBuffer, messageBodyBuffer);
+            if (resBuf == null) {
+                logger.error("[applyPermission] Apply memory timeout. [seq={}]", seq);
+                return GetMetaDataResult.failure(ErrorType.Timeout);
+            }
+
             GetMetaDataMessageResponse response =
-                    GetMetaDataMessageResponse.getRootAsGetMetaDataMessageResponse(resBuffer);
+                    GetMetaDataMessageResponse.getRootAsGetMetaDataMessageResponse(resBuf);
             if (response.errorType() == ErrorType.None) {
                 byte[] resData = this.getUserData(response.userDataAsByteBuffer());
                 return GetMetaDataResult.success(resData, response.memorySize());
@@ -311,5 +329,16 @@ class SharedMemoryPool {
             logger.error("[getMemoryMetaData] unexpected exception. [e={}]", e.toString());
             return GetMetaDataResult.failure(ErrorType.UnknownError, e);
         }
+    }
+
+    private ByteBuffer getReply(long seq, ByteBuffer messageHeaderBuffer, ByteBuffer messageBodyBuffer)
+            throws IOException, InterruptedException {
+        this.replyQueues.put(seq, new ArrayBlockingQueue<>(1));
+        this.socketChannel.write(new ByteBuffer[]{messageHeaderBuffer, messageBodyBuffer});
+        // 阻塞等待回复并清理
+        ByteBuffer resBuf = this.replyQueues.get(seq).poll(Constant.DEFAULT_WAITING_TIME_SECOND, TimeUnit.SECONDS);
+        this.replyQueues.remove(seq);
+
+        return resBuf;
     }
 }

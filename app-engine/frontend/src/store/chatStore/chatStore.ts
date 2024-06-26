@@ -9,6 +9,7 @@ interface ChatCommonI {
   openStar: boolean;
   chatType: string;
   chatId: string;
+  atChatId: string;
 }
 
 // 使用该类型定义初始 state
@@ -19,6 +20,7 @@ const initialState: ChatCommonI = {
   openStar: false,
   chatType: null,
   chatId: null,
+  atChatId: null,
 } as ChatCommonI;
 
 export const chatCommonStore = createSlice({
@@ -49,6 +51,10 @@ export const chatCommonStore = createSlice({
     setChatType: (state, action: any) => {
       state.chatType = action.payload;
     },
+
+    setAtChatId: (state, action: any) => {
+      state.atChatId = action.payload;
+    },
   },
 });
 
@@ -59,6 +65,7 @@ export const {
   setInspirationOpen,
   setChatRunning,
   setChatType,
+  setAtChatId,
 } = chatCommonStore.actions;
 // 选择器等其他代码可以使用导入的 `RootState` 类型
 

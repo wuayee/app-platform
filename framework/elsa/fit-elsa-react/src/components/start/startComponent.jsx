@@ -23,6 +23,12 @@ export const startComponent = (jadeConfig) => {
                 from: "Expand",
                 value: [{
                     id: uuidv4(),
+                    name: "memorySwitch",
+                    type: "Boolean",
+                    from: "Input",
+                    value: true
+                },{
+                    id: uuidv4(),
                     name: "type",
                     type: "String",
                     from: "Input",
@@ -51,19 +57,32 @@ export const startComponent = (jadeConfig) => {
      * 必须.
      */
     self.reducers = (data, action) => {
-        function addInputParam() {
+        const addInputParam = () => {
             return data.map(item => {
                 if (item.name === "input") {
                     return {
-                        ...item, value: [...item.value, {id: action.id, name: "", type: "String", from: "Input", description: "", value: "", disableModifiable: false}]
+                        ...item,
+                        value: [
+                            ...item.value,
+                            {
+                                id: action.id,
+                                name: "",
+                                type: "String",
+                                from: "Input",
+                                description: "",
+                                value: "",
+                                disableModifiable: false,
+                                isRequired: true
+                            }
+                        ]
                     }
                 } else {
                     return item;
                 }
             })
-        }
+        };
 
-        function changeInputParam() {
+        const changeInputParam = () => {
             return data.map(item => {
                 if (item.name === "input") {
                     return {
@@ -81,9 +100,27 @@ export const startComponent = (jadeConfig) => {
                     return item;
                 }
             });
-        }
+        };
 
-        function changeMemory() {
+        const changeMemorySwitch = () => {
+            return data.map(item => {
+                if (item.name === "memory") {
+                    return {
+                        ...item, value: item.value.map(memoryItem => {
+                            if (memoryItem.name === "memorySwitch") {
+                                return {...memoryItem, value: action.value};
+                            } else {
+                                return memoryItem;
+                            }
+                        })
+                    }
+                } else {
+                    return item;
+                }
+            });
+        };
+
+        const changeMemory = () => {
             return data.map(item => {
                 if (item.name === "memory") {
                     return {
@@ -101,9 +138,9 @@ export const startComponent = (jadeConfig) => {
                     return item;
                 }
             });
-        }
+        };
 
-        function deleteInputParam() {
+        const deleteInputParam = () => {
             return data.map(item => {
                 if (item.name === "input") {
                     return {
@@ -113,7 +150,7 @@ export const startComponent = (jadeConfig) => {
                     return item;
                 }
             });
-        }
+        };
 
         switch (action.actionType) {
             case 'addInputParam': {
@@ -124,6 +161,9 @@ export const startComponent = (jadeConfig) => {
             }
             case 'changeMemory': {
                 return changeMemory();
+            }
+            case 'changeMemorySwitch': {
+                return changeMemorySwitch();
             }
             case 'deleteInputParam': {
                 return deleteInputParam();

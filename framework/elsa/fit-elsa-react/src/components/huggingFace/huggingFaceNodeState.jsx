@@ -1,18 +1,18 @@
-import {Button} from "antd";
 import {toolInvokeNodeState} from "@/components/toolInvokeNode/toolInvokeNodeState.jsx";
-import {v4 as uuidv4} from "uuid";
+import {huggingFaceNodeDrawer} from "@/components/huggingFace/huggingFaceNodeDrawer.jsx"; // 导入背景图片
 
 /**
- * 工具调用节点shape
+ * huggingFace节点.
  *
  * @override
  */
 export const huggingFaceNodeState = (id, x, y, width, height, parent, drawer) => {
-    const self = toolInvokeNodeState(id, x, y, width, height, parent, drawer);
+    const self = toolInvokeNodeState(id, x, y, width, height, parent, drawer ? drawer : huggingFaceNodeDrawer);
     self.type = "huggingFaceNodeState";
     self.text = "huggingFace调用";
     self.componentName = "huggingFaceComponent";
-    self.sourcePlatform = "huggingFace"
+    self.sourcePlatform = "huggingFace";
+    self.width = 368;
 
     /**
      * @override
@@ -30,28 +30,15 @@ export const huggingFaceNodeState = (id, x, y, width, height, parent, drawer) =>
      */
     const processMetaData = self.processMetaData;
     self.processMetaData = (metaData) => {
-        processMetaData.apply(self, arguments);
-
-        self.text = metaData.name;
-        const taskIdParam = {
-            id: "taskId_" + uuidv4(),
-            name: "taskId",
-            type: "String",
-            from: "Input",
-            value: metaData.schema.taskId
-        }
-        self.flowMeta.jober.converter.entity.inputParams.unshift(taskIdParam)
+        processMetaData.apply(self, [metaData]);
+        self.text = metaData.schema.name;
+        const INPUT_FROM_TYPE_VALUE = "Input";
+        self.flowMeta.jober.converter.entity.inputParams[0].from = INPUT_FROM_TYPE_VALUE;
+        self.flowMeta.jober.converter.entity.inputParams[1].from = INPUT_FROM_TYPE_VALUE;
+        self.flowMeta.jober.converter.entity.inputParams[0].value = metaData.schema.name;
+        self.flowMeta.jober.converter.entity.inputParams[1].value = metaData.context.default_model;
         self.drawer.unmountReact();
         self.invalidateAlone();
-    }
-
-    self.getHeaderIcon = () => {
-        return (
-            <Button disabled={true} className="jade-node-custom-header-icon">
-                {/* Todo 待确认Icon*/}
-                {/*<ApiInvokeIcon/>*/}
-            </Button>
-        );
     };
 
     return self;

@@ -35,14 +35,16 @@ public class DataBusUtils {
      * 根据消息体类型和长度生成消息头
      *
      * @param type 代表消息类型的 {@code byte}
-     * @param size 代表消息体长度的 {@code size}
+     * @param size 代表消息体长度的 {@code int}
+     * @param seq 代表消息体序列号的 {@code long}
      * @return 内含消息体的 {@link ByteBuffer}
      */
-    public static ByteBuffer buildMessageHeader(byte type, int size) {
+    public static ByteBuffer buildMessageHeader(byte type, int size, long seq) {
         FlatBufferBuilder headerBuilder = new FlatBufferBuilder(Constant.DATABUS_SERVICE_HEADER_SIZE);
         MessageHeader.startMessageHeader(headerBuilder);
         MessageHeader.addType(headerBuilder, type);
         MessageHeader.addSize(headerBuilder, size);
+        MessageHeader.addSeq(headerBuilder, seq);
         int messageOffset = ApplyMemoryMessage.endApplyMemoryMessage(headerBuilder);
         headerBuilder.finish(messageOffset);
         ByteBuffer messageHeaderBuffer = headerBuilder.dataBuffer();

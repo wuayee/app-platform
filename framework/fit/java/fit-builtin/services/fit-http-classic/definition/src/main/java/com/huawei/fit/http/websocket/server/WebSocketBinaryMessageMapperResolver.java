@@ -4,10 +4,11 @@
 
 package com.huawei.fit.http.websocket.server;
 
+import static com.huawei.fitframework.inspection.Validation.notNull;
+
 import com.huawei.fit.http.server.handler.PropertyValueMapper;
 import com.huawei.fit.http.server.handler.PropertyValueMapperResolver;
 import com.huawei.fit.http.websocket.annotation.BinaryMessage;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
 import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
 import com.huawei.fitframework.value.PropertyValue;
 
@@ -28,10 +29,9 @@ public class WebSocketBinaryMessageMapperResolver implements PropertyValueMapper
 
     @Override
     public Optional<PropertyValueMapper> resolve(PropertyValue propertyValue) {
-        AnnotationMetadata annotations = this.annotationResolver.resolve(propertyValue.getElement());
-        if (annotations.isAnnotationNotPresent(BinaryMessage.class)) {
-            return Optional.empty();
-        }
-        return Optional.of(new WebSocketBinaryMessageMapper());
+        return notNull(propertyValue, "The property value cannot be null.").getElement()
+                .map(this.annotationResolver::resolve)
+                .filter(annotations -> annotations.isAnnotationPresent(BinaryMessage.class))
+                .map(annotations -> new WebSocketBinaryMessageMapper());
     }
 }

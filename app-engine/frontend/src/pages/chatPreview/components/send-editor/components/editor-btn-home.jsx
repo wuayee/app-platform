@@ -16,11 +16,19 @@ import StarApps from "../../star-apps";
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
 import HistoryChatDrawer from '../../history-chat';
 import { useAppDispatch, useAppSelector } from '../../../../../store/hook';
-import { setChatId, setChatList, setChatRunning, setOpenStar } from '../../../../../store/chatStore/chatStore';
+import {
+  setAtChatId,
+  setChatId,
+  setChatList,
+  setChatRunning,
+  setOpenStar
+} from '../../../../../store/chatStore/chatStore';
+import { setAtAppInfo, setAtAppId } from "../../../../../store/appInfo/appInfo";
+import { getAppInfo } from "../../../../../shared/http/aipp";
 
 // 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {
-  const { fileCallBack } = props;
+  const { fileCallBack, editorRef } = props;
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const appId = useAppSelector((state) => state.appStore.appId);
@@ -30,23 +38,55 @@ const EditorBtnHome = (props) => {
   const inspirationOpen = useAppSelector((state) => state.chatCommonStore.inspirationOpen);
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
+  const atAppId = useAppSelector((state) => state.appStore.atAppId);
+  const atAppInfo = useAppSelector((state) => state.appStore.atAppInfo);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ showAt, setShowAt ] = useState(false);
   const [ appName, setAppName ] = useState('');
   const [ appIcon, setAppIcon ] = useState(knowledgeBase);
   const [ isAt, setIsAt ] = useState(false);
   const [openHistorySignal,setOpenHistorySignal]=useState(null);
-
+  const [ searchKey, setSearchKey ] = useState(null);
   let openUploadRef = useRef(null);
   useEffect(() => {
     document.body.addEventListener('click', () => {
       setShowAt(false);
     })
-    if (appInfo.attributes?.icon) {
-      setAppIcon(appInfo.attributes.icon);
-    }
+    setAppIcon(appInfo.attributes?.icon);
     setAppName(appInfo.name || '应用');
   }, [appInfo]);
+
+  useEffect(() => {
+    if (atAppInfo) {
+      setAppIcon(atAppInfo.attributes?.icon);
+      setAppName(atAppInfo.name);
+    } else {
+      setAppIcon(appInfo.attributes?.icon);
+      setAppName(appInfo.name || '应用');
+    }
+  }, [atAppInfo])
+
+  // 检测是否输入@
+  useEffect(() => {
+    const handleInputAt = () => {
+      const value = editorRef.current.innerText;
+      if (value.startsWith('@')) {
+        const contentAfterAt = value.slice(1);
+        setSearchKey(contentAfterAt ? contentAfterAt : "");
+        setShowAt(true);
+      } else {
+        setShowAt(false);
+      }
+    };
+
+    editorRef.current.addEventListener('input', handleInputAt);
+
+    return () => {
+      if (editorRef.current) {
+        editorRef.current.removeEventListener('input', handleInputAt);
+      }
+    };
+  }, []);
 
   // 清空历史记录
   const handleOk = async () => {
@@ -74,16 +114,27 @@ const EditorBtnHome = (props) => {
     setShowAt(!showAt);
   }
   // 取消@应用功能
-  const cancleAt = () => {
+  const cancelAt = () => {
     setAppName(appInfo.name);
     setIsAt(false);
+    dispatch(setAtAppId(null));
+    dispatch(setAtAppInfo(null));
+    dispatch(setAtChatId(null));
   }
   // @应用点击回调
-  const atItemClick = (item) => {
+  const atItemClick = async (item) => {
+    const appInfoRes = await getAppInfo(tenantId, item.id);
+    if (appInfoRes.code === 0) {
+      dispatch(setAtAppInfo(appInfoRes.data));
+    }
+    dispatch(setAtAppId(item.id));
     setAppName(item.name);
     setShowAt(false);
     setIsAt(true);
     dispatch(setOpenStar(false));
+    if (item.id !== atAppId) {
+      dispatch(setAtChatId(null));
+    }
   }
   // 更多应用
   const showMoreClick = () => {
@@ -119,15 +170,15 @@ const EditorBtnHome = (props) => {
     <div className="btn-inner">
       <div className="inner-left">
         <div className="inner-item">
-          <img src={appIcon} alt="" />
+          {appIcon ? <img src={appIcon} alt="" /> : <img src={knowledgeBase} alt="" />}
           <div className={['switch-app', isAt ? 'switch-active' : null ].join(' ')} onClick={()=>{if(chatType==='home'){showMoreClick();}}}>
             { isAt && <span style={{ marginLeft: '6px' }}>正在跟</span> }
             <span className="item-name" title={appName}>{appName}</span>
             { !appInfo.hideHistory && <ArrowDownIcon className="arrow-icon" /> }
             { isAt && <span style={{ marginLeft: '6px' }}>对话</span> }
           </div>
-          {/* <LinkIcon onClick={uploadClick} /> */}
-          {/* { (!isAt && !appInfo.hideHistory ) && <AtIcon onClick={atClick} /> } */}
+           <LinkIcon onClick={uploadClick} />
+           { (!isAt) && <AtIcon onClick={atClick} /> }
         </div>
       </div>
       <div className="inner-right">
@@ -135,7 +186,7 @@ const EditorBtnHome = (props) => {
           isAt ? 
           (
             <div className="inner-item">
-              <CloseOutlined className="item-close" onClick={cancleAt}/>
+              <CloseOutlined className="item-close" onClick={cancelAt}/>
             </div>
           ) : 
           (
@@ -146,12 +197,18 @@ const EditorBtnHome = (props) => {
                 dispatch(setChatRunning(false));
                 dispatch(setChatId(null));
                 dispatch(setChatList([]));
+                dispatch(setAtAppInfo(null));
+                dispatch(setAtChatId(null));
+                dispatch(setAtAppId(null));
               }}>+ 新聊天</span>
             </div>
           )
         }
       </div>
-      { showAt && <ReferencingApp atItemClick={atItemClick} atClick={showMoreClick}/> }
+      { showAt && <ReferencingApp atItemClick={atItemClick}
+                                  atClick={showMoreClick}
+                                  searchKey={searchKey}
+                                  setSearchKey={setSearchKey}/> }
       <Modal 
         title="确认清空当前聊天" 
         open={isModalOpen} 

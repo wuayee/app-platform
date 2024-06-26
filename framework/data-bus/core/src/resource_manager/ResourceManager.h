@@ -14,6 +14,7 @@
 #include "ApplyPermissionRequest.h"
 #include "ApplyPermissionResponse.h"
 #include "config/DataBusConfig.h"
+#include "MemoryMetadata.h"
 #include "PermissionHeld.h"
 #include "SharedMemoryInfo.h"
 #include "utils/FileUtils.h"
@@ -46,13 +47,17 @@ public:
 
     uint64_t GetCurMallocSize() const;
     int32_t GetMemoryId(const std::string& objectKey);
+    bool IsZeroMemory(const std::string& objectKey);
+    void AddZeroMemoryUserData(const std::string& objectKey, const std::shared_ptr<UserData>& userDataPtr);
+    const std::shared_ptr<UserData>& GetZeroMemoryUserData(const std::string& objectKey);
+    void RemoveZeroMemoryUserData(const std::string& objectKey);
 
     // SharedMemoryInfo属性获取方法集合
     int32_t GetMemoryApplicant(int32_t sharedMemoryId);
     uint64_t GetMemorySize(int32_t sharedMemoryId);
     int32_t GetReadingRefCnt(int32_t sharedMemoryId);
     int32_t GetWritingRefCnt(int32_t sharedMemoryId);
-    std::chrono::system_clock::time_point GetLastUsedTime(int32_t  sharedMemoryId);
+    std::chrono::system_clock::time_point GetLastUsedTime(int32_t sharedMemoryId);
     const std::shared_ptr<UserData>& GetUserData(int32_t sharedMemoryId);
     bool IsPendingRelease(int32_t sharedMemoryId);
     std::chrono::system_clock::time_point GetExpiryTime(int32_t sharedMemoryId);
@@ -61,6 +66,8 @@ public:
     int32_t GetPermissionStatus(int32_t sharedMemoryId);
     const std::deque<WaitingPermitRequest>& GetWaitingPermitRequests(int32_t sharedMemoryId);
     const std::unordered_set<int32_t>& GetWaitingPermitMemoryBlocks(int32_t socketFd);
+
+    MemoryMetadata GetMemoryMetadata(int32_t sharedMemoryId);
 
     void GenerateReport(std::stringstream& reportStream) const;
 private:
@@ -104,6 +111,12 @@ private:
     std::unordered_map<int32_t, std::unordered_set<int32_t>> writingMemoryBlocks_; // 客户端正在写入的内存块
     std::unordered_map<std::string, int32_t> keyToSharedMemoryId_; // 客户端自定义key
 
+    /*
+     * 大小为0的内存块的用户自定义元数据
+     * 键：客户端自定义key
+     * 值：用户自定义元数据
+     */
+    std::unordered_map<std::string, std::shared_ptr<UserData>> zeroMemoryUserData_;
     /*
      * 内存块当前读写状态。
      * 如果值等于0: 当前没有任何读写操作。

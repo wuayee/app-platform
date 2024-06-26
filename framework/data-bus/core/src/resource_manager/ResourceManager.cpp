@@ -124,6 +124,7 @@ tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, 
 ApplyPermissionResponse ResourceManager::HandleApplyPermission(const ApplyPermissionRequest& request)
 {
     const int32_t socketFd = request.socketFd_;
+    const uint32_t seq = request.seq_;
     const PermissionType& permissionType = request.permissionType_;
     const int32_t sharedMemoryId = request.sharedMemoryId_;
 
@@ -131,7 +132,7 @@ ApplyPermissionResponse ResourceManager::HandleApplyPermission(const ApplyPermis
     if (preCheckRes != ErrorType::None) {
         logger.Error("[ResourceManager] Checking for applying the permission failed");
         std::shared_ptr<UserData> userDataPtr = std::make_shared<UserData>();
-        return {false, socketFd, -1, 0, userDataPtr, preCheckRes};
+        return {false, socketFd, seq, -1, 0, userDataPtr, preCheckRes};
     }
     bool shouldGrant = permissionType == PermissionType::Read ? permissionStatus_[sharedMemoryId] >= 0 :
                        permissionStatus_[sharedMemoryId] == 0;
@@ -143,15 +144,15 @@ ApplyPermissionResponse ResourceManager::HandleApplyPermission(const ApplyPermis
     if (shouldGrant) {
         // 当前内存块没有任何阻塞读写操作, 无需等待，直接授权
         GrantPermission(request);
-        return {true, socketFd, sharedMemoryId, memorySize, userDataPtr, ErrorType::None};
+        return {true, socketFd, seq, sharedMemoryId, memorySize, userDataPtr, ErrorType::None};
     }
     // 否则，将权限请求加入等待队列
     logger.Info("[ResourceManager] Client {}'s ApplyPermission request is being queued for "
                 "the shared memory block {}", socketFd, sharedMemoryId);
-    waitingPermitRequestQueues_[sharedMemoryId].emplace_back(socketFd, permissionType,
+    waitingPermitRequestQueues_[sharedMemoryId].emplace_back(socketFd, seq, permissionType,
                                                              request.isOperatingUserData_, request.userData_);
     waitingPermitMemoryBlocks_[socketFd].insert(sharedMemoryId);
-    return {false, socketFd, sharedMemoryId, memorySize, userDataPtr, ErrorType::None};
+    return {false, socketFd, seq, sharedMemoryId, memorySize, userDataPtr, ErrorType::None};
 }
 
 bool ResourceManager::HandleReleasePermission(int32_t socketFd, PermissionType permissionType, int32_t sharedMemoryId)
@@ -185,6 +186,8 @@ vector <ApplyPermissionResponse> ResourceManager::ProcessWaitingPermitRequests(i
     // 依次为等待队列中的多个读权限或位于队头的单个写权限申请颁发许可,并加入通知队列
     while (!waitingPermitRequestQueues_[sharedMemoryId].empty()) {
         const WaitingPermitRequest& request = waitingPermitRequestQueues_[sharedMemoryId].front();
+        const int32_t applicant = request.applicant_;
+        const uint32_t seq = request.seq_;
         const PermissionType& permissionType = request.permissionType_;
         // 当前内存块已经有互斥读写操作存在，停止颁发新的许可。
         if ((permissionType == PermissionType::Read && permissionStatus_[sharedMemoryId] == -1) ||
@@ -193,13 +196,13 @@ vector <ApplyPermissionResponse> ResourceManager::ProcessWaitingPermitRequests(i
         }
         logger.Info("[ResourceManager] Granting a permission for the waiting Client {} for "
                     "the shared memory block {}", request.applicant_, sharedMemoryId);
-        GrantPermission({request.applicant_, permissionType, sharedMemoryId,
+        GrantPermission({applicant, seq, permissionType, sharedMemoryId,
                         request.isOperatingUserData_, request.userData_});
         // 当且仅当读请求且设定操作用户自定义数据时，返回用户自定义元数据
         const shared_ptr<UserData>& userDataPtr =
                 permissionType == PermissionType::Read && request.isOperatingUserData_ ?
                 GetUserData(sharedMemoryId) : make_shared<UserData>();
-        notificationQueue.emplace_back(true, request.applicant_, sharedMemoryId, memorySize,
+        notificationQueue.emplace_back(true, applicant, seq, sharedMemoryId, memorySize,
                                        userDataPtr, ErrorType::None);
         waitingPermitRequestQueues_[sharedMemoryId].pop_front();
         waitingPermitMemoryBlocks_[request.applicant_].erase(sharedMemoryId);
@@ -303,6 +306,7 @@ bool ResourceManager::ReleaseMemory(int32_t sharedMemoryId)
     RemoveObjectKey(sharedMemoryId);
     // 更新内存申请日志
     AppendLog(sharedMemoryId, true);
+    logger.Info("[ResourceManager] Releasing the shared memory block {} succeeded", sharedMemoryId);
     return true;
 }
 
@@ -342,7 +346,8 @@ void ResourceManager::AddMemoryCleanupTask()
         taskLoopPtr_->AddReadTask(Task::DATABUS_SOCKET_FD, reinterpret_cast<const char*>(buf), s);
     };
     logger.Info("[ResourceManager] Adding a memory cleanup task to the task loop");
-    Utils::SendMessage(bodyBuilder, Common::MessageType::CleanupExpiredMemory, sender);
+    Utils::SendMessage(bodyBuilder, Common::MessageType::CleanupExpiredMemory,
+                       Task::DATABUS_INTERNAL_SEQ, sender);
 }
 
 ErrorType ResourceManager::PreCheckPermissionCommon(DataBus::Common::PermissionType permissionType,
@@ -525,9 +530,29 @@ uint64_t ResourceManager::GetCurMallocSize() const
     return curMallocSize_;
 }
 
-int32_t ResourceManager::GetMemoryId(const std::string &objectKey)
+int32_t ResourceManager::GetMemoryId(const std::string& objectKey)
 {
     return keyToSharedMemoryId_.find(objectKey) == keyToSharedMemoryId_.end() ? -1 : keyToSharedMemoryId_[objectKey];
+}
+
+bool ResourceManager::IsZeroMemory(const std::string& objectKey)
+{
+    return zeroMemoryUserData_.find(objectKey) != zeroMemoryUserData_.end();
+}
+
+void ResourceManager::AddZeroMemoryUserData(const std::string& objectKey, const std::shared_ptr<UserData>& userDataPtr)
+{
+    zeroMemoryUserData_[objectKey] = userDataPtr;
+}
+
+const std::shared_ptr<UserData>& ResourceManager::GetZeroMemoryUserData(const std::string& objectKey)
+{
+    return zeroMemoryUserData_[objectKey];
+}
+
+void ResourceManager::RemoveZeroMemoryUserData(const std::string& objectKey)
+{
+    zeroMemoryUserData_.erase(objectKey);
 }
 
 int32_t ResourceManager::GetMemoryApplicant(int sharedMemoryId)
@@ -593,6 +618,11 @@ const deque <WaitingPermitRequest>& ResourceManager::GetWaitingPermitRequests(in
 const unordered_set<int32_t>& ResourceManager::GetWaitingPermitMemoryBlocks(int32_t socketFd)
 {
     return waitingPermitMemoryBlocks_[socketFd];
+}
+
+MemoryMetadata ResourceManager::GetMemoryMetadata(int32_t sharedMemoryId)
+{
+    return {sharedMemoryId, GetMemorySize(sharedMemoryId), GetUserData(sharedMemoryId)};
 }
 
 int32_t ResourceManager::IncrementReadingRefCnt(int sharedMemoryId)

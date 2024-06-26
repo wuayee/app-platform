@@ -27,14 +27,27 @@ import java.util.Map;
  */
 class ArrayMappingProcessorTest {
     @Test
-    @DisplayName("测试列表值转换的成功场景")
-    void shouldReturnValueWhenGenerateGivenElementWithValue() {
+    @DisplayName("测试列表expand转换的成功场景")
+    void shouldReturnValueWhenGenerateGivenElementWithExpand() {
         List<Object> expectValue = new ArrayList<>(Arrays.asList("str", 666));
         ArrayList<MappingNode> arrayValueConfig = new ArrayList<>(
                 Arrays.asList(new MappingNode("", MappingNodeType.STRING, MappingFromType.INPUT, "str", ""),
                         new MappingNode("", MappingNodeType.INTEGER, MappingFromType.INPUT, 666, "")));
-        MappingNode mappingConfig = new MappingNode("arr", MappingNodeType.ARRAY, MappingFromType.INPUT,
+        MappingNode mappingConfig = new MappingNode("arr", MappingNodeType.ARRAY, MappingFromType.EXPAND,
                 arrayValueConfig, "");
+
+        MappingProcessor target = new ArrayMappingProcessor();
+        Object result = target.generate(mappingConfig, new HashMap<>());
+
+        assertEquals(expectValue, result);
+    }
+
+    @Test
+    @DisplayName("测试列表值转换的成功场景")
+    void shouldReturnValueWhenGenerateGivenElementWithInput() {
+        List<Object> expectValue = new ArrayList<>(Arrays.asList("str", 666));
+        MappingNode mappingConfig = new MappingNode("arr", MappingNodeType.ARRAY, MappingFromType.INPUT,
+                expectValue, "");
 
         MappingProcessor target = new ArrayMappingProcessor();
         Object result = target.generate(mappingConfig, new HashMap<>());
@@ -50,7 +63,7 @@ class ArrayMappingProcessorTest {
                 new MappingNode("", MappingNodeType.STRING, MappingFromType.REFERENCE, Arrays.asList("str"), ""),
                 new MappingNode("", MappingNodeType.INTEGER, MappingFromType.REFERENCE,
                         Arrays.asList("level1", "level2"), "")));
-        MappingNode mappingConfig = new MappingNode("arr", MappingNodeType.ARRAY, MappingFromType.INPUT,
+        MappingNode mappingConfig = new MappingNode("arr", MappingNodeType.ARRAY, MappingFromType.EXPAND,
                 arrayValueConfig, "");
         Map<String, Object> businessData = MapBuilder.<String, Object>get()
                 .put("level1", MapBuilder.<String, Object>get().put("level2", 666).build())
@@ -72,11 +85,11 @@ class ArrayMappingProcessorTest {
         ArrayList<MappingNode> objectValueConfig = new ArrayList<>(
                 Arrays.asList(new MappingNode("str", MappingNodeType.STRING, MappingFromType.INPUT, "str1", ""),
                         new MappingNode("int", MappingNodeType.INTEGER, MappingFromType.INPUT, 666, "")));
-        MappingNode objectMappingConfig = new MappingNode("keyObj", MappingNodeType.OBJECT, MappingFromType.INPUT,
+        MappingNode objectMappingConfig = new MappingNode("keyObj", MappingNodeType.OBJECT, MappingFromType.EXPAND,
                 objectValueConfig, "");
 
         ArrayList<MappingNode> arrayValueConfig = new ArrayList<>(Arrays.asList(objectMappingConfig));
-        MappingNode mappingConfig = new MappingNode("arr", MappingNodeType.ARRAY, MappingFromType.INPUT,
+        MappingNode mappingConfig = new MappingNode("arr", MappingNodeType.ARRAY, MappingFromType.EXPAND,
                 arrayValueConfig, "");
 
         MappingProcessor target = new ArrayMappingProcessor();
@@ -93,11 +106,11 @@ class ArrayMappingProcessorTest {
         ArrayList<MappingNode> subArrayValueConfig = new ArrayList<>(
                 Arrays.asList(new MappingNode("", MappingNodeType.STRING, MappingFromType.INPUT, "str1", ""),
                         new MappingNode("", MappingNodeType.INTEGER, MappingFromType.INPUT, 666, "")));
-        MappingNode subArrayMappingConfig = new MappingNode("keyObj", MappingNodeType.ARRAY, MappingFromType.INPUT,
+        MappingNode subArrayMappingConfig = new MappingNode("keyObj", MappingNodeType.ARRAY, MappingFromType.EXPAND,
                 subArrayValueConfig, "");
 
         ArrayList<MappingNode> arrayValueConfig = new ArrayList<>(Arrays.asList(subArrayMappingConfig));
-        MappingNode mappingConfig = new MappingNode("arr", MappingNodeType.ARRAY, MappingFromType.INPUT,
+        MappingNode mappingConfig = new MappingNode("arr", MappingNodeType.ARRAY, MappingFromType.EXPAND,
                 arrayValueConfig, "");
 
         MappingProcessor target = new ArrayMappingProcessor();

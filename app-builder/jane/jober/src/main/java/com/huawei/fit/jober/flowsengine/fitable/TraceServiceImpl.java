@@ -40,6 +40,8 @@ import java.util.Set;
  */
 @Component
 public class TraceServiceImpl implements FlowCallbackService, FlowExceptionService {
+    private static final String ARCHIVED_TYPE = "ARCHIVED";
+
     private final BrokerClient brokerClient;
 
     private final FlowsService flowsService;
@@ -56,11 +58,11 @@ public class TraceServiceImpl implements FlowCallbackService, FlowExceptionServi
     }
 
     private static FlowNodePublishInfo constructFlowNodePublishInfo(Map<String, Object> context, String nodeId,
-            String errorMessage) {
+            String errorMessage, String status) {
         Map<String, Object> businessData = getValueOfSpecifyKey(context, BUSINESS_DATA_KEY);
         Map<String, Object> contextData = getValueOfSpecifyKey(context, CONTEXT_DATA);
         Set<String> traces = cast(context.get(TRACE_ID_KEY));
-        FlowPublishContext flowContext = new FlowPublishContext(cast(traces.toArray()[0]), cast(context.get("status")),
+        FlowPublishContext flowContext = new FlowPublishContext(cast(traces.toArray()[0]), status,
                 cast(context.get("createAt")), cast(context.get("updateAt")), cast(context.get("archivedAt")));
         String flowDefinitionId = cast(contextData.get("flowDefinitionId"));
         FlowNodePublishInfo flowNodePublishInfo = new FlowNodePublishInfo();
@@ -88,7 +90,8 @@ public class TraceServiceImpl implements FlowCallbackService, FlowExceptionServi
         }
         contexts.forEach(context -> {
             String nodeId = getValueOfSpecifyKey(context, NODE_ID_KEY);
-            FlowNodePublishInfo flowNodePublishInfo = constructFlowNodePublishInfo(context, nodeId, StringUtils.EMPTY);
+            FlowNodePublishInfo flowNodePublishInfo = constructFlowNodePublishInfo(context, nodeId, StringUtils.EMPTY,
+                    FlowNodeStatus.ARCHIVED.name());
             publishNodeInfo(flowNodePublishInfo);
         });
     }
@@ -102,7 +105,8 @@ public class TraceServiceImpl implements FlowCallbackService, FlowExceptionServi
         contexts.forEach(context -> {
             // 由于notify之后才统一改的context的status为ERROR，所以这里需要手动设置一下
             context.put("status", FlowNodeStatus.ERROR.name());
-            FlowNodePublishInfo flowNodePublishInfo = constructFlowNodePublishInfo(context, nodeId, errorMessage);
+            FlowNodePublishInfo flowNodePublishInfo = constructFlowNodePublishInfo(context, nodeId, errorMessage,
+                    cast(context.get("status")));
             publishNodeInfo(flowNodePublishInfo);
         });
     }

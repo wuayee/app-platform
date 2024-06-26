@@ -11,7 +11,8 @@ create table if not exists store_model
     "task_name"        varchar(64)                           not null,
     "name"             varchar(128)                           not null,
     "url"              text                                  not null,
-    "context"          json        default '{}'::json        not null
+    "context"          json        default '{}'::json        not null,
+    unique("task_name", "name")
 );
 create index if not exists fast_query_model on store_model (task_name);
 comment on column store_model.id is '模型的自增主键';

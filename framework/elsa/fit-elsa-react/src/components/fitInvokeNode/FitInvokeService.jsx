@@ -12,7 +12,7 @@ const {Panel} = Collapse;
 export default function FitInvokeService() {
 
     return (
-        <Collapse bordered={false} className="jade-collapse-custom-background-color"
+        <Collapse bordered={false} className="jade-custom-collapse"
                   defaultActiveKey={['FitInvokeService']}>
             <Panel
                 className="jade-panel"
@@ -21,11 +21,13 @@ export default function FitInvokeService() {
                 </div>}
                 key='FitInvokeService'
             >
-                <div style={{marginTop: "8px"}}><span className='select-genericable'>选择服务</span></div>
-                <FitSelectGenericable/>
+                <div className={"jade-custom-panel-content"}>
+                    <div style={{marginTop: "8px"}}><span className='select-genericable'>选择服务</span></div>
+                    <FitSelectGenericable/>
 
-                <div style={{marginTop: "8px"}}><span className='select-fitable'>选择实现</span></div>
-                <FitSelectTool/>
+                    <div style={{marginTop: "8px"}}><span className='select-fitable'>选择实现</span></div>
+                    <FitSelectTool/>
+                </div>
             </Panel>
         </Collapse>
     );

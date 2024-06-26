@@ -7,9 +7,12 @@ package com.huawei.fit.jober.aipp.service.impl;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
+import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.common.MetaUtils;
 import com.huawei.fit.jober.aipp.common.UUIDUtil;
+import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
+import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.chat.ChatDto;
 import com.huawei.fit.jober.aipp.dto.chat.CreateChatRequest;
@@ -25,6 +28,7 @@ import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import com.huawei.fit.jober.aipp.service.AippChatService;
 import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.util.ObjectUtils;
@@ -37,6 +41,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * AippChatServiceImpl
@@ -63,39 +70,46 @@ public class AippChatServiceImpl implements AippChatService {
 
     @Override
     public QueryChatRsp createChat(CreateChatRequest body, OperationContext context) {
-        String chatId = UUIDUtil.uuid();
+        if (body.getOriginApp() != null) {
+            String chatId = UUIDUtil.uuid();
+            body.setChatId(chatId);
+        }
         Map<String, Object> initContext = body.getInitContext();
         Map<String, Object> result = (Map<String, Object>) initContext.get("initContext");
-        if (result.get("Question") == null) {
-            throw new IllegalArgumentException("Question is not null");
-        }
-        String chatName = result.get("Question").toString();
-        String instId = persistChat(body, context, chatId, chatName);
-        AppBuilderAppPO appInfo = convertAippToApp(body.getAippId(), body.getAippVersion(), context);
+        String chatName = getChatName(result);
+        String originChatId = UUIDUtil.uuid();
+        AppBuilderAppPO appInfo = this.convertAippToApp(body.getAippId(), body.getAippVersion(), context);
         return QueryChatRsp.builder()
                 .appId(appInfo.getId())
                 .aippVersion(body.getAippVersion())
                 .aippId(body.getAippId())
                 .chatName(chatName)
-                .chatId(chatId)
-                .msgId(instId)
+                .chatId(body.getChatId())
+                .originChatId(originChatId)
+                .msgId(this.persistChat(body, context, originChatId, chatName))
                 .version(appInfo.getVersion())
                 .massageList(new ArrayList<>())
                 .updateTime(LocalDateTime.now().toString())
                 .build();
     }
 
-    private String persistChat(CreateChatRequest body, OperationContext context, String chatId, String chatName) {
+    private String persistChat(CreateChatRequest body, OperationContext context,
+                String chatId, String unCutChatName) {
+        String chatName = (unCutChatName.length() > 64) ? unCutChatName.substring(0, 32) : unCutChatName;
         String instId = this.aippRunTimeService.createAippInstance(body.getAippId(),
                 body.getAippVersion(), body.getInitContext(), context);
-        AppBuilderAppPO appInfo = convertAippToApp(body.getAippId(), body.getAippVersion(), context);
         Map<String, String> attributesMap = new HashMap<>();
         attributesMap.put("instId", instId);
+        if (body.getOriginApp() != null) {
+            attributesMap.put("originApp", body.getOriginApp());
+            this.persistOriginAppChat(body, context, chatId, chatName, instId);
+        }
+        AppBuilderAppPO appInfo = this.convertAippToApp(body.getAippId(), body.getAippVersion(), context);
         ChatInfo chatInfo = ChatInfo.builder()
                 .appId(appInfo.getId())
                 .version(appInfo.getVersion())
                 .attributes(JsonUtils.toJsonString(attributesMap))
-                .chatId(chatId)
+                .chatId(body.getChatId() == null ? chatId : body.getChatId())
                 .chatName(chatName)
                 .status(AippConst.CHAT_STATUS)
                 .updater(context.getName())
@@ -106,13 +120,41 @@ public class AippChatServiceImpl implements AippChatService {
         ChatAndInstanceMap wideRelationInfo = ChatAndInstanceMap.builder()
                 .msgId(UUIDUtil.uuid())
                 .instanceId(instId)
-                .chatId(chatId)
+                .chatId(body.getChatId() == null ? chatId : body.getChatId())
                 .createTime(LocalDateTime.now())
                 .updateTime(LocalDateTime.now())
                 .build();
         this.aippChatMapper.insertChat(chatInfo);
         this.aippChatMapper.insertWideRelationship(wideRelationInfo);
         return instId;
+    }
+
+    private void persistOriginAppChat(CreateChatRequest body, OperationContext context,
+                String chatId, String chatName, String instId) {
+        // @应用对话，插入主应用记录
+        Map<String, String> attributesMapOrigin = new HashMap<>();
+        attributesMapOrigin.put("instId", instId);
+        ChatInfo chatInfoOrigin = ChatInfo.builder()
+                .appId(body.getOriginApp())
+                .version(body.getOriginAppVersion())
+                .attributes(JsonUtils.toJsonString(attributesMapOrigin))
+                .chatId(chatId)
+                .chatName(chatName)
+                .status(AippConst.CHAT_STATUS)
+                .updater(context.getName())
+                .createTime(LocalDateTime.now())
+                .updateTime(LocalDateTime.now())
+                .creator(context.getName())
+                .build();
+        ChatAndInstanceMap wideRelationInfoOrigin = ChatAndInstanceMap.builder()
+                .msgId(UUIDUtil.uuid())
+                .instanceId(instId)
+                .chatId(chatId)
+                .createTime(LocalDateTime.now())
+                .updateTime(LocalDateTime.now())
+                .build();
+        this.aippChatMapper.insertChat(chatInfoOrigin);
+        this.aippChatMapper.insertWideRelationship(wideRelationInfoOrigin);
     }
 
     private AppBuilderAppPO convertAippToApp(String aippId, String appVersion, OperationContext context) {
@@ -124,9 +166,14 @@ public class AippChatServiceImpl implements AippChatService {
     private QueryChatRequest buildQueryChatRequest(QueryChatRequest body, OperationContext context) {
         QueryChatRequest request = QueryChatRequest.builder().build();
         if (body.getAippId() != null && body.getAippVersion() != null) {
-            AppBuilderAppPO appBuilderAppPO = convertAippToApp(body.getAippId(), body.getAippVersion(), context);
+            AppBuilderAppPO appBuilderAppPO = this.convertAippToApp(body.getAippId(), body.getAippVersion(), context);
             request.setAppId(appBuilderAppPO.getId());
             request.setAppVersion(appBuilderAppPO.getVersion());
+            return request;
+        }
+        if (body.getAppId() != null && body.getAppVersion() != null) {
+            request.setAppId(body.getAppId());
+            request.setAppVersion(body.getAppVersion());
         }
         return request;
     }
@@ -134,7 +181,7 @@ public class AippChatServiceImpl implements AippChatService {
     @Override
     public QueryChatRsp queryChat(QueryChatRequest body, String chatId, OperationContext context) {
         QueryChatRsp rsp = new QueryChatRsp();
-        QueryChatRequest request = buildQueryChatRequest(body, context);
+        QueryChatRequest request = this.buildQueryChatRequest(body, context);
         List<QueryChatRsp> chatResult = this.aippChatMapper.selectChatList(request, chatId);
         if (chatResult != null && chatResult.size() > 0 && chatResult.get(0) != null) {
             rsp = chatResult.get(0);
@@ -142,6 +189,7 @@ public class AippChatServiceImpl implements AippChatService {
             return rsp;
         }
         List<ChatDto> result = this.aippChatMapper.selectChat(chatId, body.getOffset(), body.getLimit());
+        getChatAppInfo(result, body.getAippId(), context);
         ArrayList msgList = new ArrayList<>();
         result.forEach((chat) -> {
             AippLogData data = JsonUtils.parseObject(chat.getLogData(), AippLogData.class);
@@ -152,6 +200,8 @@ public class AippChatServiceImpl implements AippChatService {
                     .role((AippInstLogType.QUESTION.name().equals(chat.getLogType())) ? "USER" : "SYSTEM")
                     .createTime(chat.getCreateTime())
                     .msgId(chat.getMsgId())
+                    .appName(chat.getAppName())
+                    .appIcon(chat.getAppIcon())
                     .build();
             msgList.add(messageInfo);
         });
@@ -165,9 +215,42 @@ public class AippChatServiceImpl implements AippChatService {
         return rsp;
     }
 
+    private void getChatAppInfo(List<ChatDto> chatList, String originAippId, OperationContext context) {
+        // 620出包需要 与logService的getAippLogWithAppInfo逻辑雷同 后续要整改
+        List<String> atAippIds = chatList.stream()
+                .filter(data -> !Objects.equals(data.getAippId(), originAippId))
+                .map(ChatDto::getAippId)
+                .collect(Collectors.toList());
+        RangedResultSet<Meta> metas =
+                metaService.list(this.buildAippIdFilter(atAippIds), true, 0, atAippIds.size(), context);
+        if (!metas.getResults().isEmpty()) {
+            List<Meta> meta = metas.getResults();
+            Map<String, Meta> metaMap = meta.stream().collect(Collectors.toMap(Meta::getId, Function.identity()));
+            chatList.stream().forEach(data -> setChatAppInfoWithMetaMap(metaMap, data));
+        }
+    }
+
+    private void setChatAppInfoWithMetaMap(Map<String, Meta> metaMap, ChatDto chat) {
+        if (!metaMap.containsKey(chat.getAippId())) {
+            return;
+        }
+        Meta meta = metaMap.get(chat.getAippId());
+        chat.setAppName(meta.getName());
+        Object icon = meta.getAttributes().get("meta_icon");
+        if (icon instanceof String) {
+            chat.setAppIcon((String) icon);
+        }
+    }
+
+    private MetaFilter buildAippIdFilter(List<String> aippIds) {
+        MetaFilter filter = new MetaFilter();
+        filter.setMetaIds(aippIds);
+        return filter;
+    }
+
     @Override
     public List<QueryChatRsp> queryChatList(QueryChatRequest body, OperationContext context) {
-        QueryChatRequest request = buildQueryChatRequest(body, context);
+        QueryChatRequest request = this.buildQueryChatRequest(body, context);
         List<QueryChatRsp> result = this.aippChatMapper.selectChatList(request, null);
         result.forEach((chat) -> {
             chat.setUpdateTimeStamp(Timestamp.valueOf(chat.getUpdateTime()).getTime());
@@ -195,28 +278,31 @@ public class AippChatServiceImpl implements AippChatService {
     }
 
     @Override
-    public QueryChatRsp updateChat(String chatId, CreateChatRequest body, OperationContext context) {
-        List<QueryChatRsp> chatResult = this.aippChatMapper.selectChatList(null, chatId);
+    public QueryChatRsp updateChat(String originChatId, CreateChatRequest body, OperationContext context) {
+        List<QueryChatRsp> chatResult = this.aippChatMapper.selectChatList(null, originChatId);
         if (chatResult == null || chatResult.size() == 0 || chatResult.get(0) == null) {
             throw new IllegalArgumentException("chatId is not exist");
         }
         // 只查询该应用的近次记录
         Map<String, Object> bodyContext = body.getInitContext();
-        bodyContext.put("chatId", chatId);
+        bodyContext.put("chatId", originChatId);
         body.setInitContext(bodyContext);
         Map<String, Object> result = (Map<String, Object>) bodyContext.get("initContext");
-        if (result.get("Question") == null) {
-            throw new IllegalArgumentException("Question is not null");
+        if (body.getOriginApp() != null && body.getChatId() == null) {
+            // 首次@应用对话
+            String chatId = UUIDUtil.uuid();
+            body.setChatId(chatId);
         }
-        String chatName = result.get("Question").toString();
-        persistChat(body, context, chatId, chatName);
+        String chatName = getChatName(result);
+        this.persistChat(body, context, originChatId, chatName);
         QueryChatRequest queryBody = QueryChatRequest.builder()
                 .aippId(body.getAippId())
                 .aippVersion(body.getAippVersion())
                 .offset(0)
                 .limit(10)
                 .build();
-        return queryChat(queryBody, chatId, context);
+        return body.getChatId() == null
+                ? queryChat(queryBody, originChatId, context) : queryChat(queryBody, body.getChatId(), context);
     }
 
     @Override
@@ -230,5 +316,22 @@ public class AippChatServiceImpl implements AippChatService {
         this.aippChatMapper.deleteWideRelationshipByInstanceId(currentInstanceId);
         this.aippLogService.deleteInstanceLog(currentInstanceId);
         return this.updateChat(chatId, body, context);
+    }
+
+    private String getChatName(Map<String, Object> initContext) {
+        String chatName;
+        if (initContext.containsKey(AippConst.BS_AIPP_FILE_DESC_KEY)) {
+            Object data = initContext.get(AippConst.BS_AIPP_FILE_DESC_KEY);
+            if (!(data instanceof Map)) {
+                throw new AippException(AippErrCode.DATA_TYPE_IS_NOT_SUPPORTED, data.getClass().getName());
+            }
+            Map<String, String> fileDesc = ObjectUtils.cast(data);
+            chatName = fileDesc.get("file_name");
+        } else if (initContext.containsKey(AippConst.BS_AIPP_QUESTION_KEY)) {
+            chatName = initContext.get(AippConst.BS_AIPP_QUESTION_KEY).toString();
+        } else {
+            throw new IllegalArgumentException("Chat has no question.");
+        }
+        return chatName;
     }
 }

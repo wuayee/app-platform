@@ -5,12 +5,13 @@
 package com.huawei.jade.fel.model.openai.utils;
 
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.resource.UrlUtils;
+import com.huawei.fitframework.resource.web.Media;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatOptions;
 import com.huawei.jade.fel.chat.character.AiMessage;
-import com.huawei.jade.fel.chat.content.Media;
 import com.huawei.jade.fel.chat.protocol.ChatCompletion;
 import com.huawei.jade.fel.chat.protocol.FlatChatMessage;
 import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
@@ -52,9 +53,9 @@ public class OpenAiMessageUtils {
     }
 
     private static UserContent buildUserContent(Media media) {
-        String data = media.isUrl()
+        String data = UrlUtils.isUrl(media.getData())
                 ? media.getData()
-                : String.format("data:%s;base64,%s", media.getMimeType().toString(), media.getData());
+                : String.format("data:%s;base64,%s", media.getMime(), media.getData());
         return UserContent.image(data);
     }
 
@@ -185,7 +186,7 @@ public class OpenAiMessageUtils {
      * @return FEL 格式的人工智能消息。
      */
     public static FlatChatMessage buildFelAiMessage(OpenAiChatCompletionResponse response) {
-        FlatChatMessage emptyMessage = new FlatChatMessage(new AiMessage(""));
+        FlatChatMessage emptyMessage = FlatChatMessage.from(new AiMessage(""));
         if (response == null || CollectionUtils.isEmpty(response.getChoices())) {
             return emptyMessage;
         }
@@ -205,6 +206,6 @@ public class OpenAiMessageUtils {
             text = (String) openAiChatMessage.getContent();
         }
 
-        return new FlatChatMessage(new AiMessage(text, toolCalls));
+        return FlatChatMessage.from(new AiMessage(text, toolCalls));
     }
 }

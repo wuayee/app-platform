@@ -284,6 +284,10 @@ public class AippRunTimeServiceImpl
             Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
         }
 
+        // 记录上下文
+        businessData.put(AippConst.CONTEXT_APP_ID, meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
+        businessData.put(AippConst.CONTEXT_INSTANCE_ID, metaInst.getId());
+
         // 添加memory
         List<Map<String, Object>> memoryConfigs = this.getMemoryConfigs(flowDefinitionId, context);
         String memoryType = this.getMemoryType(memoryConfigs);

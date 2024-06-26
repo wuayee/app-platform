@@ -342,7 +342,9 @@ const Inspiration = (props) => {
                     ]}
                     style={{ marginBottom: '6px' }}
                   >
-                    <Input placeholder="请输入灵感大全名称" />
+                    <Input placeholder="请输入灵感大全名称"
+                           maxLength={20}
+                           showCount/>
                   </Form.Item>
                   <Form.Item
                     name="description"

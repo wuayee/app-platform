@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Button, Dropdown, Form, Input} from "antd";
+import {HEADER_TOOL_MENU_ICON} from "@/components/asserts/svgIcons.jsx";
 import "./headerStyle.css";
 
 /**
@@ -44,14 +45,14 @@ export const Header = ({shape, disabled}) => {
      * @param e 事件对象.
      */
     const onMenuClick = (e) => {
-        const m = shape.getToolMenus().find(t => t.key === e.key);
-        m.action(setEdit);
+        const m = shape.drawer.getToolMenus().find(t => t.key === e.key);
+        m.action && m.action(setEdit);
     };
 
     /**
      * 获取文本组件，处于编辑态时，需要能修改标题；否则只展示标题.
      *
-     * @return {JSX.Element}
+     * @return {JSX.Element} 标题组件.
      */
     const getTitle = () => {
         if (edit) {
@@ -59,13 +60,42 @@ export const Header = ({shape, disabled}) => {
                 <Form.Item name="title" rules={[{required: true, message: "请输入名称"}]} initialValue={shape.text}>
                     <Input onBlur={(e) => onInputBlur(e)}
                            ref={inputRef}
+                           onMouseDown={(e) => e.stopPropagation()}
                            placeholder="请输入名称"
                            style={{height: "24px", borderColor: shape.focusBorderColor}}/>
                 </Form.Item>
             </>);
         } else {
-            return <p style={{margin: 0}}><span>{shape.text}</span></p>;
+            return <p className={"jade-component-title"} style={{margin: 0}}><span>{shape.text}</span></p>;
         }
+    };
+
+    const onOpenChange = (openKeys) => {
+        shape.drawer.getToolMenus().forEach(m => {
+           if (openKeys.includes(m.key)) {
+               m.onOpen && m.onOpen();
+           }
+        });
+    };
+
+    /**
+     * 获取菜单项.
+     *
+     * @return {*} 菜单项
+     */
+    const getMenu = () => {
+        const items = shape.drawer.getToolMenus().map(t => {
+            const menu = {
+                key: t.key,
+                label: t.label,
+                popupClassName: "react-node-header-menu-sub",
+                popupOffset: [10, 0]
+            };
+            t.children && (menu.children = t.children);
+            t.onTitleClick && (menu.onTitleClick = t.onTitleClick);
+            return menu;
+        });
+        return {items, onClick: (e) => onMenuClick(e), onOpenChange, triggerSubMenuAction: "click"};
     };
 
     /**
@@ -74,27 +104,12 @@ export const Header = ({shape, disabled}) => {
      * @return {JSX.Element}
      */
     const showMenus = () => {
-        if (shape.getToolMenus().length > 0) {
-            const menus = shape.getToolMenus().map(t => {
-                return {key: t.key, label: t.label};
-            });
+        if (shape.drawer.getToolMenus().length > 0) {
             return (<>
                 <div>
-                    <Dropdown disabled={disabled} menu={{items: menus, onClick: (e) => onMenuClick(e)}} placement="bottomRight">
-                        <Button type="text" size="small" style={{
-                            margin: 0,
-                            padding: 0,
-                            width: "28px",
-                            height: "28px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center"
-                        }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
-                                 viewBox="0 0 16 16">
-                                <path fill="#1C1D23" fillOpacity="0.8"
-                                      d="M3.667 7.833a1.167 1.167 0 1 1-2.334 0 1.167 1.167 0 0 1 2.334 0ZM9.15 7.833a1.167 1.167 0 1 1-2.333 0 1.167 1.167 0 0 1 2.333 0ZM14.667 7.833a1.167 1.167 0 1 1-2.334 0 1.167 1.167 0 0 1 2.334 0Z"></path>
-                            </svg>
+                    <Dropdown disabled={disabled} menu={getMenu()} trigger="click" placement="bottomRight">
+                        <Button type="text" size="small" className={"react-node-header-button"}>
+                            {HEADER_TOOL_MENU_ICON}
                         </Button>
                     </Dropdown>
                 </div>
@@ -107,10 +122,11 @@ export const Header = ({shape, disabled}) => {
         <div className="react-node-header">
             <div className="react-node-toolbar" style={{alignItems: "center"}}>
                 <div style={{display: "flex", alignItems: "center"}}>
-                    {shape.getHeaderIcon()}
+                    {shape.drawer.getHeaderIcon()}
                 </div>
                 <div className="react-node-toolbar-name">
                     {getTitle()}
+                    {shape.drawer.getHeaderTypeIcon()}
                 </div>
                 {showMenus()}
             </div>

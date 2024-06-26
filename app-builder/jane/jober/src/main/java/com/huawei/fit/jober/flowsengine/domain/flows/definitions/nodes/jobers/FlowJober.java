@@ -30,6 +30,7 @@ import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -158,6 +159,14 @@ public abstract class FlowJober {
             if (this.parentNode.getParentFlow().isEnableOutputScope()) {
                 flowData.forEach(data -> FlowUtil.cacheResultToNode(data.getBusinessData(), this.nodeMetaId));
             }
+            if (this.converter != null) {
+                flowData.forEach(data -> {
+                    String outputName = this.converter.getOutputName();
+                    FlowExecuteInfoUtil.addOutputMap2ExecuteInfoMap(data, MapBuilder.<String, Object>get()
+                            .put(outputName, data.getBusinessData().get(outputName))
+                            .build(), this.nodeMetaId, JOBER_EXECUTE_INFO_TYPE);
+                });
+            }
         } catch (OhscriptExecuteException | TypeNotSupportException ex) {
             throw ex;
         } catch (FitException ex) {
@@ -262,8 +271,10 @@ public abstract class FlowJober {
         return outputEntities.stream()
                 .map(output -> FlowData.builder()
                         .operator(input.getOperator())
-                        .startTime(input.getStartTime()).businessData(cast(output.get("businessData")))
-                        .contextData(new HashMap<>(input.getContextData())).passData(cast(output.get("passData")))
+                        .startTime(input.getStartTime())
+                        .businessData(cast(output.get("businessData")))
+                        .contextData(new HashMap<>(input.getContextData()))
+                        .passData(cast(output.get("passData")))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -331,8 +342,6 @@ public abstract class FlowJober {
         Map<String, Object> newOutputMap = converter.convertOutput(result);
         if (!newOutputMap.isEmpty()) {
             flowData.getBusinessData().putAll(newOutputMap);
-            FlowExecuteInfoUtil.addOutputMap2ExecuteInfoMap(flowData, newOutputMap, this.nodeMetaId,
-                    JOBER_EXECUTE_INFO_TYPE);
         }
         return flowData;
     }

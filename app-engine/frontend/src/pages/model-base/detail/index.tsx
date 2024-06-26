@@ -1,9 +1,11 @@
-import { Col, Flex, Row, Space, Table } from 'antd';
+import { Col, Flex, message, Modal, Row, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import GoBack from '../../../components/go-back/GoBack';
 import type { PaginationProps, TableColumnsType } from 'antd';
 import ModelConfig from './config';
 import { useParams } from 'react-router';
+import { deleteModelbaseVersion, queryModelDetail } from '../../../shared/http/model-base';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 
 const showTotal: PaginationProps['showTotal'] = (total) => `Total: ${total}`;
 
@@ -11,169 +13,137 @@ const ModelBaseDetail: React.FC = () => {
 
   const { id } = useParams();
   const [configOpen, setConfigOpen] = useState(false);
-  const [data, setData] = useState({});
+  const [data, setData] = useState<any>({});
   const [versionData, setVersionData] = useState<any[]>([]);
+  const [config, setConfig] = useState('');
 
   const baseInfoKey = [
     {
       label: '作者',
-      key: 'creator'
+      key: 'author'
     },
     {
       label: '模型系列',
-      key: 'series'
+      key: 'series_name'
     },
     {
       label: '最大序列长度',
-      key: 'maxSequenceLength'
+      key: 'max_seq_length'
     },
     {
       label: '模型大小',
-      key: 'size'
+      key: 'model_size'
     },
     {
       label: '创建时间',
-      key: 'createTime'
+      key: 'create_time'
     },
     {
       label: '更新时间',
-      key: 'updateTime'
+      key: 'update_time'
     }
   ];
 
   useEffect(() => {
-    console.log(id);
-    setData({ ...detailData[Number(id) - 1] });
-    setVersionData([...generateVersionData(Number(id) === 1 ? 2 : 1)]);
+    getDetail();
   }, []);
 
-  const detailData = [
-    {
-      id: 1,
-      name: 'Qwen2-7B-Instruct',
-      creator: 'Alibaba',
-      description: 'Qwen2 is the new series of Qwen large language models. For Qwen2, we release a number of base language models and instruction-tuned language models ranging from 0.5 to 72 billion parameters, including a Mixture-of-Experts model. This repo contains the instruction-tuned 7B Qwen2 model.',
-      tags: ['Qwen', 'Alibaba Cloud'],
-      versionNum: 2,
-      type: '语言模型',
-      series: 'Qwen2',
-      size: '14GB',
-      maxSequenceLength: '128K',
-      createTime: '2024-6-7 16:32:47',
-      updateTime: '2024-6-7 16:32:58'
-    },
-    {
-      id: 2,
-      name: 'Qwen2-72B-Instruct',
-      creator: 'Alibaba',
-      description: 'Qwen2 is the new series of Qwen large language models. For Qwen2, we release a number of base language models and instruction-tuned language models ranging from 0.5 to 72 billion parameters, including a Mixture-of-Experts model. This repo contains the instruction-tuned 72B Qwen2 model.',
-      tags: ['Qwen', 'Alibaba Cloud'],
-      versionNum: 1,
-      type: '语言模型',
-      series: 'Qwen2',
-      size: '140GB',
-      maxSequenceLength: '128K',
-      createTime: '2024-6-7 16:32:47',
-      updateTime: '2024-6-7 16:32:58'
-    },
-    {
-      id: 3,
-      name: 'Meta-Llama-3-8B-Instruct',
-      creator: 'Meta',
-      description: 'Meta developed and released the Meta Llama 3 family of large language models (LLMs), a collection of pretrained and instruction tuned generative text models in 8 and 70B sizes. The Llama 3 instruction tuned models are optimized for dialogue use cases and outperform many of the available open source chat models on common industry benchmarks. Further, in developing these models, we took great care to optimize helpfulness and safety.',
-      tags: ['Meta', 'Llama3'],
-      versionNum: 1,
-      type: '语言模型',
-      series: 'LLaMA3',
-      size: '16GB',
-      maxSequenceLength: '8192',
-      createTime: '2024-6-7 16:32:47',
-      updateTime: '2024-6-7 16:32:58'
-    },
-    {
-      id: 4,
-      name: 'glm-4-9b-chat',
-      creator: 'THUDM',
-      description: 'GLM-4-9B 是智谱 AI 推出的最新一代预训练模型 GLM-4 系列中的开源版本。 在语义、数学、推理、代码和知识等多方面的数据集测评中， GLM-4-9B 及其人类偏好对齐的版本 GLM-4-9B-Chat 均表现出超越 Llama-3-8B 的卓越性能。除了能进行多轮对话，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理（支持最大 128K 上下文）等高级功能。本代模型增加了多语言支持，支持包括日语，韩语，德语在内的 26 种语言。我们还推出了支持 1M 上下文长度（约 200 万中文字符）的 GLM-4-9B-Chat-1M 模型和基于 GLM-4-9B 的多模态模型 GLM-4V-9B。GLM-4V-9B 具备 1120 * 1120 高分辨率下的中英双语多轮对话能力，在中英文综合能力、感知推理、文字识别、图表理解等多方面多模态评测中，GLM-4V-9B 表现出超越 GPT-4-turbo-2024-04-09、Gemini 1.0 Pro、Qwen-VL-Max 和 Claude 3 Opus 的卓越性能。',
-      tags: ['Meta', 'ChatGLM4'],
-      versionNum: 1,
-      type: '语言模型',
-      series: 'ChatGLM4',
-      size: '18GB',
-      maxSequenceLength: '128K',
-      createTime: '2024-6-7 16:32:47',
-      updateTime: '2024-6-7 16:32:58'
-    },
-  ];
+  const getDetail = () => {
+    if (id) {
+      queryModelDetail(id).then(res => {
+        if (res) {
+          setData(res?.modelInfo);
+          setConfig(res?.config);
+          setVersionData(res?.versionInfo);
+        }
+      });
+    }
+  }
 
-  const generateVersionData = (length: number) => {
-    return Array.from({ length }).fill(null).map((_, index) => ({
-      version: `${index + 1}.0`,
-      description: detailData[Number(id) - 1].description,
-      updateTime: '2024-6-7 17:07:40',
-      framework: index > 0 ? 'ModelLink' : 'N/A',
-      type: index > 0 ? '全参微调' : 'N/A',
-      policy: index > 0 ? `TP8PP1` : 'N/A',
-      duration: index > 0 ? '6分30秒' : 'N/A',
-      loss: index > 0 ? 0.6123 : 'N/A'
-    }));
+  const deleteVersion = (item: any) => {
+    Modal.confirm({
+      title: '确认删除',
+      icon: <ExclamationCircleFilled />,
+      content: `确认删除模型版本 ${item?.versionNo} ?`,
+      okType: 'danger',
+      onOk() {
+        //删除逻辑
+        deleteModelbaseVersion(item?.versionId).then(res => {
+          if (res && (res?.code === 0 || res?.code === 200)) {
+            message.success('删除成功');
+            getDetail();
+          } else {
+            message.error('删除失败');
+          }
+        })
+      }
+    })
   }
 
   const columns: TableColumnsType = [
     {
-      key: 'id',
-      dataIndex: 'id',
+      key: 'version_id',
+      dataIndex: 'version_id',
       title: 'ID',
       hidden: true
     },
     {
-      key: 'version',
-      dataIndex: 'version',
+      key: 'version_no',
+      dataIndex: 'version_no',
       title: '版本号',
     },
     {
-      key: 'description',
-      dataIndex: 'description',
+      key: 'version_description',
+      dataIndex: 'version_description',
       title: '版本说明',
       ellipsis: true
     },
     {
-      key: 'updateTime',
-      dataIndex: 'updateTime',
+      key: 'update_time',
+      dataIndex: 'update_time',
       title: '更新时间',
+      sorter: (a, b) => a.updateTime.localeCompare(b.updateTime)
     },
     {
-      key: 'framework',
-      dataIndex: 'framework',
+      key: 'train_frame',
+      dataIndex: 'train_frame',
       title: '训练框架',
+      sorter: (a, b) => a.trainFrame.localeCompare(b.trainFrame)
     },
     {
-      key: 'type',
-      dataIndex: 'type',
+      key: 'train_type',
+      dataIndex: 'train_type',
       title: '训练类型',
+      sorter: (a, b) => a.trainType.localeCompare(b.trainType)
     },
     {
-      key: 'policy',
-      dataIndex: 'policy',
+      key: 'train_strategy',
+      dataIndex: 'train_strategy',
       title: '训练策略',
+      sorter: (a, b) => a.trainStrategy.localeCompare(b.trainStrategy)
     },
     {
-      key: 'duration',
-      dataIndex: 'duration',
+      key: 'train_time',
+      dataIndex: 'train_time',
       title: '训练时长',
+      sorter: (a, b) => a.trainTime.localeCompare(b.trainTime)
     },
     {
-      key: 'loss',
-      dataIndex: 'loss',
+      key: 'final_loss',
+      dataIndex: 'final_loss',
       title: '最终loss',
+      sorter: (a, b) => a.finalLoss.toString().localeCompare(b.finalLoss)
     },
     {
       key: 'action',
       title: '操作',
-      render() {
+      render(_, record) {
+        const deleteConfirm = () => {
+          deleteVersion(record);
+        }
         return (
           <Space size='middle'>
-            <a>删除</a>
+            <a onClick={deleteConfirm}>删除</a>
           </Space>
         )
       },
@@ -196,13 +166,13 @@ const ModelBaseDetail: React.FC = () => {
           {/* 模型名称头部 */}
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Flex gap={16} style={{ alignItems: 'center' }}>
-              <h2 style={{ fontSize: 20, fontWeight: 400 }}>{data.name}</h2>
-              <span>版本数：{data.versionNum}</span>
+              <h2 style={{ fontSize: 20, fontWeight: 400 }}>{data.model_name}</h2>
+              <span>版本数：{data.version_num}</span>
             </Flex>
             <a onClick={() => { setConfigOpen(true) }}>配置详情</a>
           </div>
           {/* 模型描述 */}
-          <div title={data.description}
+          <div title={data.model_description}
             style={{
               display: '-webkit-box',
               textOverflow: 'ellipsis',
@@ -210,7 +180,7 @@ const ModelBaseDetail: React.FC = () => {
               WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
             }}>
-            {data.description}
+            {data.model_description}
           </div>
           {/* 模型其他基础信息 */}
           <div>
@@ -240,7 +210,7 @@ const ModelBaseDetail: React.FC = () => {
           </div>
         </Flex>
       </div>
-      <ModelConfig visible={configOpen} callback={configCallback} />
+      <ModelConfig visible={configOpen} callback={configCallback} configData={config} />
     </div>
   );
 };

@@ -4,8 +4,6 @@
 
 package com.huawei.jade.fel.engine.operators.models;
 
-import static com.huawei.fitframework.util.ObjectUtils.cast;
-
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.jade.fel.chat.ChatMessage;
@@ -17,10 +15,9 @@ import com.huawei.jade.fel.chat.character.AiMessage;
 import com.huawei.jade.fel.chat.protocol.ChatCompletion;
 import com.huawei.jade.fel.core.memory.Memory;
 import com.huawei.jade.fel.core.model.BlockModel;
+import com.huawei.jade.fel.engine.util.AiFlowSession;
 import com.huawei.jade.fel.engine.util.StateKey;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -32,26 +29,24 @@ import java.util.Optional;
 public class ChatBlockModel implements BlockModel<Prompt, ChatMessage> {
     private final ChatModelService provider;
     private final ChatOptions options;
-    private final Map<String, Object> args;
 
     public ChatBlockModel(ChatModelService provider) {
         this(provider, new ChatOptions());
     }
 
     public ChatBlockModel(ChatModelService provider, ChatOptions options) {
-        this(provider, options, Collections.emptyMap());
-    }
-
-    private ChatBlockModel(ChatModelService provider, ChatOptions options, Map<String, Object> args) {
         this.provider = Validation.notNull(provider, "The model provider cannot be null.");
         this.options = Validation.notNull(options, "The chat options cannot be null.");
-        this.args = Validation.notNull(args, "The model args cannot be null.");
     }
 
     @Override
     public ChatMessage invoke(Prompt input) {
         Validation.notNull(input, "The model input data cannot be null.");
-        ChatCompletion completionRequest = new ChatCompletion(input, this.options);
+        ChatOptions dynamicOptions = AiFlowSession.get()
+                .map(session -> session.<ChatOptions>getInnerState(StateKey.CHAT_OPTIONS))
+                .orElse(this.options);
+
+        ChatCompletion completionRequest = new ChatCompletion(input, dynamicOptions);
         ChatMessage message = this.provider.generate(completionRequest);
         Validation.notNull(message, "The model chat message can not be null.");
         Validation.equals(message.type(), MessageType.AI, "The message type must be {0}. [actualMessageType={1}]",
@@ -62,11 +57,6 @@ public class ChatBlockModel implements BlockModel<Prompt, ChatMessage> {
         return answer;
     }
 
-    @Override
-    public ChatBlockModel bind(Map<String, Object> args) {
-        ChatOptions dynamicOptions = this.getDynamicChatOptions(args);
-        return new ChatBlockModel(this.provider, dynamicOptions, args);
-    }
 
     /**
      * 绑定模型超参数。
@@ -81,23 +71,17 @@ public class ChatBlockModel implements BlockModel<Prompt, ChatMessage> {
     }
 
     private void updateMemory(AiMessage answer) {
-        FlowSession session = cast(this.args.get(StateKey.FLOW_SESSION));
-        if (session == null) {
+        if (answer.isToolCall()) {
             return;
         }
-        Memory memory = session.getInnerState(StateKey.HISTORY_OBJ);
-        if (answer.isToolCall() || memory == null) {
+        Optional<FlowSession> session = AiFlowSession.get();
+        if (!session.isPresent()) {
             return;
         }
-        memory.add(session.getInnerState(StateKey.HISTORY_INPUT), answer);
-    }
-
-    private ChatOptions getDynamicChatOptions(Map<String, Object> dynamicArgs) {
-        FlowSession session = cast(dynamicArgs.get(StateKey.FLOW_SESSION));
-        if (session == null) {
-            return this.options;
+        Memory memory = session.get().getInnerState(StateKey.HISTORY_OBJ);
+        if (memory == null) {
+            return;
         }
-        return Optional.ofNullable(session.<ChatOptions>getInnerState(StateKey.CHAT_OPTIONS))
-                .orElse(this.options);
+        memory.add(session.get().getInnerState(StateKey.HISTORY_INPUT), answer);
     }
 }

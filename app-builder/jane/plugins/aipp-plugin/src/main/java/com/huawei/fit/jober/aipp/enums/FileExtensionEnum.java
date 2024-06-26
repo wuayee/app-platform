@@ -21,7 +21,11 @@ public enum FileExtensionEnum {
     WORD_DOC("doc", OperatorService.FileType.WORD),
     PDF("pdf", OperatorService.FileType.PDF),
     EXCEL("xls", OperatorService.FileType.EXCEL),
-    EXCEL_X("xlsx", OperatorService.FileType.EXCEL);
+    EXCEL_X("xlsx", OperatorService.FileType.EXCEL),
+    PNG("png", OperatorService.FileType.IMAGE),
+    JPG("jpg", OperatorService.FileType.IMAGE),
+    JPGE("jpge", OperatorService.FileType.IMAGE),
+    AUDIO("mp3", OperatorService.FileType.AUDIO);
 
     private final String extension;
     private final OperatorService.FileType fileType;

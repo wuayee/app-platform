@@ -28,6 +28,8 @@ const BrokenLineHelper = () => {
      * @param line 线对象.
      */
     self.SN = (line) => {
+        line.arrowBeginPoint.direction = DIRECTION.S;
+        line.arrowEndPoint.direction = DIRECTION.N;
         if (line.height > 0) {
             line.brokenPoints.push({x: 0, y: line.height / 2});
             line.brokenPoints.push({x: line.width, y: line.height / 2});
@@ -51,8 +53,6 @@ const BrokenLineHelper = () => {
             line.brokenPoints.push({x: x, y: line.height - OFFSET});
             line.brokenPoints.push({x: line.width, y: line.height - OFFSET});
         }
-        line.arrowBeginPoint.direction = DIRECTION.S;
-        line.arrowEndPoint.direction = DIRECTION.N;
     };
 
     /**
@@ -211,6 +211,8 @@ const BrokenLineHelper = () => {
      * @param line 线对象.
      */
     self.EW = (line) => {
+        line.arrowBeginPoint.direction = DIRECTION.E;
+        line.arrowEndPoint.direction = DIRECTION.W;
         if (line.width > 0) {
             // 既兼容连接有图形时的情况，也兼容未连接图形的情况.
             line.brokenPoints.push({x: line.width / 2, y: 0});
@@ -241,8 +243,6 @@ const BrokenLineHelper = () => {
                 line.brokenPoints.push({x: line.width - OFFSET, y: line.height});
             }
         }
-        line.arrowBeginPoint.direction = DIRECTION.E;
-        line.arrowEndPoint.direction = DIRECTION.W;
     };
 
     /**
@@ -378,6 +378,8 @@ const BrokenLineHelper = () => {
      * @param line 线对象.
      */
     self.WE = (line) => {
+        line.arrowBeginPoint.direction = DIRECTION.W;
+        line.arrowEndPoint.direction = DIRECTION.E;
         if (line.width < 0) {
             line.brokenPoints.push({x: line.width / 2, y: 0});
             line.brokenPoints.push({x: line.width / 2, y: line.height});
@@ -404,8 +406,6 @@ const BrokenLineHelper = () => {
             line.brokenPoints.push({x: line.width + OFFSET, y: y});
             line.brokenPoints.push({x: line.width + OFFSET, y: line.height});
         }
-        line.arrowBeginPoint.direction = DIRECTION.W;
-        line.arrowEndPoint.direction = DIRECTION.E;
     };
 
     /**
@@ -544,6 +544,8 @@ const BrokenLineHelper = () => {
      * @param line 线对象.
      */
     self.NS = (line) => {
+        line.arrowBeginPoint.direction = DIRECTION.N;
+        line.arrowEndPoint.direction = DIRECTION.S;
         if (line.height < 0) {
             line.brokenPoints.push({x: 0, y: line.height / 2});
             line.brokenPoints.push({x: line.width, y: line.height / 2});
@@ -567,8 +569,6 @@ const BrokenLineHelper = () => {
             line.brokenPoints.push({x: x, y: line.height + OFFSET});
             line.brokenPoints.push({x: line.width, y: line.height + OFFSET});
         }
-        line.arrowBeginPoint.direction = DIRECTION.N;
-        line.arrowEndPoint.direction = DIRECTION.S;
     };
 
     /**

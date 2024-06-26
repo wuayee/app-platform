@@ -107,14 +107,14 @@ public interface Tool {
         /**
          * 获取工具的来源。
          *
-         * @return 表示工具的描述的 {@link String}。
+         * @return 表示工具的来源的 {@link String}。
          */
         String source();
 
         /**
          * 获取工具的图标。
          *
-         * @return 表示工具的描述的 {@link String}。
+         * @return 表示工具的图标的 {@link String}。
          */
         String icon();
 
@@ -252,7 +252,7 @@ public interface Tool {
     }
 
     /**
-     * 表示工具的元数信息。
+     * 表示工具的元数据信息。
      */
     interface Metadata {
         /**

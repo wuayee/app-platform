@@ -132,13 +132,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
         </div>
         <div className='infoArea'>
           <Tooltip title={cardInfo?.name}>
-            <div className='headerTitle' style={{
-              maxWidth: '300px',
-              overflow: 'hidden',
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis',
-              wordBreak: 'keep-all',
-            }}>{cardInfo?.name}</div>
+            <div className='headerTitle'>{cardInfo?.name}</div>
           </Tooltip>
           <div className='title_info' style={{ display: 'flex', alignItems: 'center' }}>
             <Avatar />

@@ -4,14 +4,17 @@
 
 package com.huawei.fit.jober.flowsengine.biz.service;
 
+import static com.huawei.fit.jober.common.Constant.STREAM_ID_SEPARATOR;
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus.READY;
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus.RETRYABLE;
 import static com.huawei.fit.jober.flowsengine.domain.flows.enums.ProcessType.PROCESS;
+import static com.huawei.fit.jober.flowsengine.utils.FlowExecutors.getThreadPool;
 import static com.huawei.fit.jober.flowsengine.utils.WaterFlows.getPublisher;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -38,9 +41,12 @@ import com.huawei.fit.jober.flowsengine.domain.flows.streams.From;
 import com.huawei.fit.jober.flowsengine.domain.flows.streams.To;
 import com.huawei.fit.jober.flowsengine.persist.mapper.FlowContextMapper;
 import com.huawei.fit.jober.flowsengine.persist.po.FlowContextPO;
+import com.huawei.fit.jober.flowsengine.utils.FlowExecutors;
+import com.huawei.fit.jober.flowsengine.utils.PriorityThreadPool;
 import com.huawei.fit.jober.flowsengine.utils.WaterFlows;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.util.IoUtils;
+import com.huawei.fitframework.util.StringUtils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -136,6 +142,18 @@ class flowRetryTest extends DatabaseBaseTest {
             when(traceOwnerService.getTraces()).thenReturn(new ArrayList<>(context.getTraceId()));
             MockedStatic<WaterFlows> waterFlows = Mockito.mockStatic(WaterFlows.class);
             waterFlows.when(() -> getPublisher("streamId")).thenReturn(from);
+
+            MockedStatic<FlowExecutors> flowExecutors = Mockito.mockStatic(FlowExecutors.class);
+            PriorityThreadPool threadPool = Mockito.mock(PriorityThreadPool.class);
+            flowExecutors.when(() -> getThreadPool(
+                    StringUtils.join(STREAM_ID_SEPARATOR, context.getStreamId(), context.getPosition()),
+                    To.MAX_CONCURRENCY)).thenReturn(threadPool);
+            doAnswer(invocation -> {
+                PriorityThreadPool.PriorityTask task = invocation.getArgument(0);
+                task.run();
+                return null;
+            }).when(threadPool).submit(any());
+
             doNothing().when(to).onProcess(anyList());
             flowContextsService.retryJober();
             verify(lock, times(1)).tryLock();

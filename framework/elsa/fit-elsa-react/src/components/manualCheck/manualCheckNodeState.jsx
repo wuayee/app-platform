@@ -1,7 +1,6 @@
 import {jadeNode} from "@/components/jadeNode.jsx";
-import {Button} from "antd";
-import ManualCheckIcon from '../asserts/icon-manual-check.svg?react'; // 导入背景图片
 import "./style.css";
+import {manualCheckNodeDrawer} from "@/components/manualCheck/manualCheckNodeDrawer.jsx";
 
 /**
  * jadeStream中的人工检查节点.
@@ -9,27 +8,13 @@ import "./style.css";
  * @override
  */
 export const manualCheckNodeState = (id, x, y, width, height, parent, drawer) => {
-    const self = jadeNode(id, x, y, width, height, parent, drawer);
+    const self = jadeNode(id, x, y, width, height, parent, drawer ? drawer : manualCheckNodeDrawer);
     self.type = "manualCheckNodeState";
     self.text = "人工检查";
     self.pointerEvents = "auto";
     self.componentName = "manualCheckComponent";
     self.flowMeta.triggerMode = "manual";
     delete self.flowMeta.jober;
-
-    /**
-     * @override
-     */
-    self.getHeaderIcon = () => {
-        return (
-            <Button
-                disabled={true}
-                className="jade-node-custom-header-icon"
-            >
-                <ManualCheckIcon/>
-            </Button>
-        );
-    };
 
     /**
      * 获取用户自定义组件.

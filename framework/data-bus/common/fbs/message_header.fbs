@@ -17,6 +17,7 @@ enum MessageType:byte {
 table MessageHeader {
     type: MessageType = 0;
     size: uint = 0;
+    seq: uint = 0;
 }
 
 root_type MessageHeader;

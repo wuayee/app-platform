@@ -5,10 +5,11 @@
 package com.huawei.jade.fel.chat.protocol;
 
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.resource.web.Media;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.MessageType;
-import com.huawei.jade.fel.chat.content.Media;
 import com.huawei.jade.fel.tool.ToolCall;
 
 import lombok.Data;
@@ -37,15 +38,21 @@ public class FlatChatMessage implements ChatMessage {
      * 根据{@link ChatMessage} 构造消息传输对象。
      *
      * @param chatMessage 提供构造参数的 {@link ChatMessage}。
+     * @return 表示创建成功的 {@link FlatChatMessage}。
      */
-    public FlatChatMessage(ChatMessage chatMessage) {
+    public static FlatChatMessage from(ChatMessage chatMessage) {
         Validation.notNull(chatMessage, "The chat message cannot be null.");
+        if (chatMessage instanceof FlatChatMessage) {
+            return (FlatChatMessage) chatMessage;
+        }
         Validation.notNull(chatMessage.type(), "The message type cannot be null.");
-        this.id = chatMessage.id().orElse(null);
-        this.type = chatMessage.type().name();
-        this.text = chatMessage.text();
-        this.medias = chatMessage.medias();
-        this.toolCalls = chatMessage.toolCalls();
+        FlatChatMessage flatMessage = new FlatChatMessage();
+        flatMessage.id = chatMessage.id().orElse(null);
+        flatMessage.type = chatMessage.type().getRole();
+        flatMessage.text = chatMessage.text();
+        flatMessage.medias = chatMessage.medias();
+        flatMessage.toolCalls = chatMessage.toolCalls();
+        return flatMessage;
     }
 
     @Override
@@ -55,22 +62,21 @@ public class FlatChatMessage implements ChatMessage {
 
     @Override
     public MessageType type() {
-        Validation.notNull(this.type, "The message type cannot be null.");
-        return MessageType.valueOf(StringUtils.toUpperCase(this.type));
+        return MessageType.parse(this.type);
     }
 
     @Override
     public String text() {
-        return Optional.ofNullable(this.text).orElse(StringUtils.EMPTY);
+        return ObjectUtils.nullIf(this.text, StringUtils.EMPTY);
     }
 
     @Override
     public List<Media> medias() {
-        return Optional.ofNullable(this.medias).orElseGet(Collections::emptyList);
+        return ObjectUtils.nullIf(this.medias, Collections.emptyList());
     }
 
     @Override
     public List<ToolCall> toolCalls() {
-        return Optional.ofNullable(this.toolCalls).orElseGet(Collections::emptyList);
+        return ObjectUtils.nullIf(this.toolCalls, Collections.emptyList());
     }
 }

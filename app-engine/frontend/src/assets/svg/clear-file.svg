@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>Icon/16px/delete n</title>
-    <g id="页面-2备份" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="页面-2备份" stroke="none" stroke-width="1" fill="none" fillRule="evenodd">
         <g id="icon" transform="translate(-102.000000, -346.000000)">
             <g id="Icon/16px/delete_normal" transform="translate(102.000000, 346.000000)">
-                <rect id="矩形" fill="#D8D8D8" fill-rule="nonzero" opacity="0" x="0" y="0" width="16" height="16"></rect>
+                <rect id="矩形" fill="#D8D8D8" fillRule="nonzero" opacity="0" x="0" y="0" width="16" height="16"></rect>
                 <path d="M8,0 C3.5816,0 0,3.5816 0,8 C0,12.4184 3.5816,16 8,16 C12.4184,16 16,12.4184 16,8 C16,3.5816 12.4184,0 8,0 L8,0 Z" id="Fill-1-path" fill="#9BA7B7"></path>
                 <path d="M11.2528,10.4136 C11.4872,10.648 11.4872,11.028 11.2528,11.2624 C11.136,11.3792 10.9824,11.4376 10.8288,11.4376 C10.6752,11.4376 10.5216,11.3792 10.404,11.2624 L8,8.8584 L5.596,11.2624 C5.4784,11.3792 5.3248,11.4376 5.1712,11.4376 C5.0184,11.4376 4.8648,11.3792 4.7472,11.2624 C4.5128,11.028 4.5128,10.648 4.7472,10.4136 L7.152,8.0096 L4.7472,5.6048 C4.5128,5.3704 4.5128,4.9912 4.7472,4.7568 C4.9816,4.5224 5.3616,4.5224 5.596,4.7568 L8,7.1616 L10.404,4.7568 C10.6384,4.5224 11.0184,4.5224 11.2528,4.7568 C11.4872,4.9912 11.4872,5.3704 11.2528,5.6048 L8.8488,8.0096 L11.2528,10.4136 Z" id="Fill-1-path" fill="#FFFFFF"></path>
             </g>

@@ -562,6 +562,16 @@ public class AippConst {
     public static final String INSTANCE_START_TIME = "_instanceStartTime";
 
     /**
+     * 系统上下文的应用Id
+     */
+    public static final String CONTEXT_APP_ID = "appId";
+
+    /**
+     * 系统上下文的对话实例Id
+     */
+    public static final String CONTEXT_INSTANCE_ID = "instanceId";
+
+    /**
      * 表明当前会话是否被删除
      */
     public static final Integer CHAT_STATUS = 0;

@@ -54,7 +54,6 @@ public class NaiveRAGComponent implements FlowableService {
         if (CollectionUtils.isNotEmpty(knowledgeList)) {
             tableIdList = knowledgeList.stream()
                     .filter(MapUtils::isNotEmpty)
-                    .filter(map -> "VECTOR".equals(map.get("serviceType")))
                     .map(map -> Long.valueOf(ObjectUtils.cast(map.get("tableId"))))
                     .collect(Collectors.toList());
         }
@@ -63,9 +62,9 @@ public class NaiveRAGComponent implements FlowableService {
             List<String> chunksList = this.knowledgeBaseService.vectorSearchKnowledgeTable(kbVectorSearchCondition);
             ragOutput = String.join("; ", chunksList);
         }
-        businessData.putIfAbsent("output", new HashMap<String, Object>());
-        Map<String, Object> output = ObjectUtils.cast(businessData.get("output"));
+        Map<String, Object> output = new HashMap<>();
         output.put("retrievalOutput", ragOutput);
+        businessData.put("output", output);
         return flowData;
     }
 

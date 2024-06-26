@@ -5,8 +5,7 @@
 package com.huawei.jade.fel.core.util;
 
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.jade.fel.chat.content.Contents;
-import com.huawei.jade.fel.chat.content.MessageContent;
+import com.huawei.jade.fel.core.template.MessageContent;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,8 +19,7 @@ import java.util.Map;
  * @since 2024-04-25
  */
 public class Tip {
-    private Map<String, MessageContent> values = new HashMap<>();
-    private Map<String, MessageContent> freezeMap = null;
+    private final Map<String, MessageContent> values = new HashMap<>();
     private int index = 0;
 
     /**
@@ -61,7 +59,6 @@ public class Tip {
      *
      * @param value 表示替换值的 {@link String}。
      * @return 表示当前的 {@link Tip}。
-     * @throws IllegalStateException 当执行{@link Tip#freeze()}后。
      */
     public Tip add(String value) {
         return this.add(String.valueOf(this.index), value);
@@ -73,10 +70,9 @@ public class Tip {
      * @param key 表示占位符的 {@link String}。
      * @param value 表示替换值的 {@link String}。
      * @return 表示当前的 {@link Tip}。
-     * @throws IllegalStateException 当执行{@link Tip#freeze()}后。
      */
     public Tip add(String key, String value) {
-        return this.add(key, Contents.from(value));
+        return this.add(key, MessageContent.from(value));
     }
 
     /**
@@ -85,7 +81,6 @@ public class Tip {
      * @param key 表示占位符的 {@link String}。
      * @param value 表示替换值的 {@link MessageContent}。
      * @return 表示当前的 {@link Tip}。
-     * @throws IllegalStateException 当执行{@link Tip#freeze()}后。
      */
     public Tip add(String key, MessageContent value) {
         Validation.notBlank(key, "The key cannot be blank");
@@ -100,7 +95,6 @@ public class Tip {
      *
      * @param other 表示另一个 {@link Tip}。
      * @return 表示当前的 {@link Tip}。
-     * @throws IllegalStateException 当执行{@link Tip#freeze()}后。
      */
     public Tip merge(Tip other) {
         return this.merge(other.values);
@@ -111,10 +105,10 @@ public class Tip {
      *
      * @param args 表示另一个参数集合的 {@link Map}{@code <}{@link String}{@code ,} {@link MessageContent}{@code >}。
      * @return 表示当前的 {@link Tip}。
-     * @throws IllegalStateException 当执行{@link Tip#freeze()}后。
+     * @throws IllegalStateException 当 {@code args} 为 {@code null}时。
      */
     public Tip merge(Map<String, MessageContent> args) {
-        Validation.notNull(this.values, () -> new IllegalStateException("The tip has been freeze."));
+        Validation.notNull(args, () -> new IllegalStateException("The input map cannot be null."));
         args.forEach(this::add);
         return this;
     }
@@ -125,11 +119,6 @@ public class Tip {
      * @return 返回表示参数数据的 {@link Map}{@code <}{@link String}{@code ,} {@link MessageContent}{@code >}。
      */
     public Map<String, MessageContent> freeze() {
-        if (this.freezeMap != null) {
-            return this.freezeMap;
-        }
-        this.freezeMap = Collections.unmodifiableMap(this.values);
-        this.values = null;
-        return this.freezeMap;
+        return Collections.unmodifiableMap(this.values);
     }
 }

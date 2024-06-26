@@ -4,10 +4,11 @@
 
 package com.huawei.jade.fel.chat.character;
 
+import com.huawei.fitframework.resource.web.Media;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.chat.MessageType;
-import com.huawei.jade.fel.chat.content.Media;
-import com.huawei.jade.fel.chat.content.MessageContent;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,22 +18,26 @@ import java.util.List;
  * @since 2024-4-12
  */
 public class HumanMessage extends AbstractChatMessage {
+    private final List<Media> medias;
+
     /**
      * 通过文本信息来初始化 {@link HumanMessage} 的新实例。
      *
      * @param text 表示文本信息的 {@link String}。
      */
     public HumanMessage(String text) {
-        super(text);
+        this(text, null);
     }
 
     /**
-     * 通过 {@link MessageContent} 来初始化 {@link HumanMessage} 的新实例。
+     * 通过文本和多媒体数据来初始化 {@link HumanMessage} 的新实例。
      *
-     * @param contents 表示消息内容的 {@link MessageContent}。
+     * @param text 表示文本信息的 {@link String}。
+     * @param medias 表示多媒体数据列表的 {@link List}{@code <}{@link Media}{@code >}。
      */
-    public HumanMessage(MessageContent contents) {
-        super(contents);
+    public HumanMessage(String text, List<Media> medias) {
+        super(text);
+        this.medias = ObjectUtils.nullIf(medias, Collections.emptyList());
     }
 
     @Override
@@ -42,6 +47,6 @@ public class HumanMessage extends AbstractChatMessage {
 
     @Override
     public List<Media> medias() {
-        return this.contents.medias();
+        return this.medias;
     }
 }

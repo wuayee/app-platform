@@ -10,7 +10,7 @@ export const historyChatProcess = (res) => {
     let { msg } = JSON.parse(item.question.logData);
     questionObj.logId = item.question.logId;
     questionObj.content = msg;
-    chatArr.push(questionObj);
+    item.question.logType !== 'HIDDEN_QUESTION' && chatArr.push(questionObj);
     if (item.instanceLogBodies.length) {
       item.instanceLogBodies.forEach((aItem) => {
         const regex = /```markdown(.*?)```/g;
@@ -27,13 +27,19 @@ export const historyChatProcess = (res) => {
           content: msg,
           loading: false,
           openLoading: false,
+          checked: false,
           logId: aItem.logId,
           markdownSyntax: markdowned !== -1,
           type: "recieve",
           instanceId: item.instanceId,
           finished: true,
-          feedbackStatus: -1
+          feedbackStatus: -1,
+          appName: item.appName,
+          appIcon: item.appIcon
         };
+        if (item.appName) {
+          answerObj.isAt = true;
+        }
         if (aItem.logType === 'FORM') {
           let data  = JSON.parse(aItem.logData);
           answerObj.recieveType = 'form';
@@ -46,6 +52,11 @@ export const historyChatProcess = (res) => {
             formAppearance: JSON.parse(data.formAppearance),
             formData: JSON.parse(data.formData),
           }
+        }
+        if (aItem.logType === 'FILE') {
+          answerObj.type = 'send';
+          let { file_type } = JSON.parse(msg);
+          answerObj.sendType = fileTypeSet(file_type);
         }
         if (isJsonString(msg)) {
           let msgObj = JSON.parse(msg);
@@ -167,13 +178,14 @@ export const reportProcess = (list, listRef) => {
   return memoriesList;
 };
 // 流式接收消息数据处理
-export const messageProcess = (aipp_id, instanceId, version, messageData) => {
+export const messageProcess = (aipp_id, instanceId, version, messageData, atAppInfo) => {
   let obj = {
     loading: false,
     openLoading: false,
     content: '',
     recieveType: 'form',
     finished: true,
+    checked: false,
     formConfig: {
       instanceId,
       version,
@@ -184,10 +196,15 @@ export const messageProcess = (aipp_id, instanceId, version, messageData) => {
       formData: messageData.formData,
     }
   }
+  if (atAppInfo) {
+    obj.appName = atAppInfo.name;
+    obj.appIcon = atAppInfo.attributes.icon;
+    obj.isAt = true;
+  }
   return obj;
 };
 // 流式接收消息数据处理
-export const messageProcessNormal = (log, instanceId) => {
+export const messageProcessNormal = (log, instanceId, atAppInfo) => {
   let { msg } = JSON.parse(log.logData);
   const regex = /```markdown(.*?)```/g;
   const replacedArr = log.logData.match(regex);
@@ -202,12 +219,18 @@ export const messageProcessNormal = (log, instanceId) => {
     content: msg,
     loading: false,
     openLoading: false,
+    checked: false,
     logId: log.msgId || -1,
     markdownSyntax: markdowned !== -1,
     type: 'recieve',
     instanceId,
-    feedbackStatus: -1
+    feedbackStatus: -1,
   };
+  if (atAppInfo) {
+    recieveChatItem.appName = atAppInfo.name;
+    recieveChatItem.appIcon = atAppInfo.attributes.icon;
+    recieveChatItem.isAt = true;
+  }
   return { 
     msg, 
     recieveChatItem
@@ -216,4 +239,21 @@ export const messageProcessNormal = (log, instanceId) => {
 // 深拷贝
 export const deepClone = (obj) => {
   return JSON.parse(JSON.stringify(obj));
+}
+// 文件类型设置
+export const fileTypeSet = (type) => {
+  const audioType = ['mp3', 'wav', 'wmv'];
+  const videoType = ['mp4', 'm2v', 'mkv', 'rmvb', 'wmv', 'avi', 'flv', 'mov', 'm4v'];
+  const imgType = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
+  let fileType = '';
+  if (audioType.includes(type)) {
+    fileType = 'audio';
+  } else if (videoType.includes(type)) {
+    fileType = 'video';
+  } else if (imgType.includes(type)) {
+    fileType = 'image';
+  } else {
+    fileType = 'file';
+  }
+  return fileType
 }

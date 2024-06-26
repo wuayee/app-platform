@@ -143,7 +143,7 @@ public class DynamicRoutingDependencyResolver implements DependencyResolver {
         private InterceptSupport constructInterceptSupport() {
             MethodInterceptor methodInterceptor = this.constructMethodInterceptor();
             return new DefaultInterceptSupport(this.clazz,
-                    this.result.resolved() ? this.result.get() : null,
+                    this.result.resolved() ? this.result::get : () -> null,
                     Collections.singletonList(methodInterceptor));
         }
 

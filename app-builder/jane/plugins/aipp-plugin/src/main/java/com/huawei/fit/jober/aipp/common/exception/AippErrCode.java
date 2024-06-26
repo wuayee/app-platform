@@ -98,7 +98,7 @@ public enum AippErrCode implements ErrorCode {
     /**
      * 调试失败
      */
-    PREVIEW_AIPP_FAILED(90001011, "Preview aipp failed, please retry later : {0}"),
+    PREVIEW_AIPP_FAILED(90001011, "配置有误，请查看工作流编排是否正确。"),
 
     /**
      * 属性key重复
@@ -108,7 +108,7 @@ public enum AippErrCode implements ErrorCode {
     /**
      * 名称为空
      */
-    AIPP_NAME_IS_EMPTY(90001013, "名称为空。"),
+    AIPP_NAME_IS_EMPTY(90001013, "名称为空或者只包含空格。"),
 
     /**
      * 名称已存在
@@ -150,6 +150,11 @@ public enum AippErrCode implements ErrorCode {
      * 上传文件失败
      */
     FILE_EXPIRED_OR_BROKEN(90002001, "File expired or broken."),
+
+    /**
+     * 解析文件内容失败
+     */
+    EXTRACT_FILE_FAILED(90002002, "Extract file failed."),
 
     /**
      * json解析失败
@@ -195,6 +200,11 @@ public enum AippErrCode implements ErrorCode {
      * 不支持的数据格式
      */
     DATA_TYPE_IS_NOT_SUPPORTED(90002908, "Not supported data type to get. [type={0}]"),
+
+    /**
+     * 应用已经发布过
+     */
+    APP_HAS_PUBLISHED(90002909, "该应用已经成功发布过，请不要重复发布。"),
 
     /**
      * 错误码截止值

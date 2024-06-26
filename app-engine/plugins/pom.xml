@@ -17,6 +17,7 @@
         <module>knowledge-base</module>
         <module>app-base</module>
         <module>app-metrics</module>
+        <module>app-announcement</module>
     </modules>
 
     <build>

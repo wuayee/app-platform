@@ -33,6 +33,7 @@ type FieldType = {
 const KnowledgeBaseDetailCreateTable = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [ selectValue, setSelectValue ] = useState();
   const id = searchParams.get("id") as string;
 
   // 表格id判断提交还是修改
@@ -114,7 +115,6 @@ const KnowledgeBaseDetailCreateTable = () => {
   // 创建知识表
   const createKnowledgeTable = async (value: FieldType) => {
     setLoading(true);
-
     const res = await createKnowledgeTableRow(id, {
       name: value.knowledgeBaseName,
       serviceType: value.knowledgeBaseType,
@@ -145,6 +145,33 @@ const KnowledgeBaseDetailCreateTable = () => {
     }
     getTableType();
   }, []);
+
+  const changeName = () => {
+    const name = form.getFieldValue('knowledgeBaseName');
+    if (name.length) {
+      let n = 0;
+      for (let i = 0; i < name.length; i++) {
+        let code = name.charCodeAt(i);
+        if (code > 255) {
+          n +=2;
+        } else {
+          n += 1
+        }
+      }
+      if (n > 255) {
+        return Promise.reject('字符串长度不能大于255');
+      } else {
+        return Promise.resolve();
+      }
+    } else {
+      return Promise.reject('');
+    }
+  }
+  const selectChange = (e) => {
+    e === 'RDB' && form.setFieldValue('knowledgeBaseFormat', 'table');
+    e === 'VECTOR' && form.setFieldValue('knowledgeBaseFormat', 'text');
+    setSelectValue(e);
+  }
 
   useEffect(() => {
     form.setFieldValue('knowledgeBaseRemoteService', '')
@@ -194,11 +221,7 @@ const KnowledgeBaseDetailCreateTable = () => {
                 name='knowledgeBaseName'
                 rules={[
                   { required: true, message: '输入不能为空' },
-                  {
-                    type: 'string',
-                    max: 64,
-                    message: '输入字符长度范围：1 - 64'
-                  }
+                  { validator: changeName}
                 ]}
               >
                 <Input placeholder='请输入' />
@@ -207,7 +230,7 @@ const KnowledgeBaseDetailCreateTable = () => {
               <Form.Item label="类型选择" name='knowledgeBaseType' rules={[{ required: true, message: '输入不能为空' }]} style={{
                 marginTop: 16
               }}>
-                <Select options={groupList} allowClear />
+                <Select options={groupList} allowClear onChange={selectChange} />
               </Form.Item>
 
               <Form.Item label="后端服务" name='knowledgeBaseRemoteService' rules={[{ required: true, message: '输入不能为空' }]} style={{
@@ -222,7 +245,7 @@ const KnowledgeBaseDetailCreateTable = () => {
                   display: 'flex',
                   justifyContent: 'space-between'
                 }}>
-                  <Radio.Button style={{
+                  <Radio.Button disabled={!selectValue || selectValue === 'RDB'} style={{
                     width: 391,
                     height: 40,
                     borderRadius: 4,
@@ -238,7 +261,7 @@ const KnowledgeBaseDetailCreateTable = () => {
                     </div>
                   </Radio.Button>
 
-                  <Radio.Button value="table" style={{
+                  <Radio.Button disabled={!selectValue || selectValue === 'VECTOR'} value="table" style={{
                     width: 391,
                     height: 40,
                     borderRadius: 4,

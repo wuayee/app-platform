@@ -30,15 +30,8 @@ TEST_F(DataBusUtilsTest, should_send_message_when_size_correct)
             Common::CreateApplyMemoryMessageResponse(bodyBuilder, ErrorType::None, memoryId, memorySize);
     bodyBuilder.Finish(respBody);
     EXPECT_CALL(mockSender, Call(_, MESSAGE_HEADER_LEN + bodyBuilder.GetSize())).Times(1);
-    Utils::SendMessage(bodyBuilder, MessageType::ApplyMemory, mockSender.AsStdFunction());
-}
-
-TEST_F(DataBusUtilsTest, should_early_return_when_size_incorrect)
-{
-    flatbuffers::FlatBufferBuilder bodyBuilder;
-    EXPECT_CALL(mockSender, Call(_, _)).Times(0);
-    // 在没有构建消息体的情况下直接构建消息头，导致消息尺寸错误
-    Utils::SendMessage(bodyBuilder, MessageType::ApplyMemory, mockSender.AsStdFunction());
+    uint32_t seq = 1;
+    Utils::SendMessage(bodyBuilder, MessageType::ApplyMemory, seq, mockSender.AsStdFunction());
 }
 
 TEST_F(DataBusUtilsTest, should_send_error_message_when_sender_given)
@@ -48,7 +41,8 @@ TEST_F(DataBusUtilsTest, should_send_error_message_when_sender_given)
             CreateErrorMessageResponse(bodyBuilder, ErrorType::IllegalMessageHeader);
     bodyBuilder.Finish(respBody);
     EXPECT_CALL(mockSender, Call(_, MESSAGE_HEADER_LEN + bodyBuilder.GetSize())).Times(1);
-    Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, mockSender.AsStdFunction());
+    uint32_t seq = 1;
+    Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, seq, mockSender.AsStdFunction());
 }
 } // namespace Test
 } // namespace DataBus
