@@ -4,9 +4,9 @@
 
 package com.huawei.fit.jober.bff.service.a3000;
 
-import com.huawei.fit.jober.flowsengine.domain.flows.InterStream;
-import com.huawei.fit.jober.flowsengine.domain.flows.InterStreamHandler;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.InterStream;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.InterStreamHandler;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
 
 import java.util.HashSet;
 import java.util.Set;

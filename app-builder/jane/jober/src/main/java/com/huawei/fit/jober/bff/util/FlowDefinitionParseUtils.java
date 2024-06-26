@@ -6,9 +6,9 @@ package com.huawei.fit.jober.bff.util;
 
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 
-import com.huawei.fit.jober.flowsengine.domain.flows.parsers.shapehandler.DefaultShapeHandler;
-import com.huawei.fit.jober.flowsengine.domain.flows.parsers.shapehandler.EventHandler;
-import com.huawei.fit.jober.flowsengine.domain.flows.parsers.shapehandler.ShapeHandler;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.shapehandler.DefaultShapeHandler;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.shapehandler.EventHandler;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.shapehandler.ShapeHandler;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONArray;

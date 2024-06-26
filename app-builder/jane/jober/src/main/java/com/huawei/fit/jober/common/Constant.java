@@ -6,16 +6,10 @@ package com.huawei.fit.jober.common;
 
 import static java.util.Collections.unmodifiableList;
 
-import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus;
-import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowTraceStatus;
-
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -248,83 +242,4 @@ public final class Constant {
      */
     public static final Set<String> BUSINESS_DATA_IGNORED_KEYS = new HashSet<>(
             Arrays.asList(BUSINESS_DATA_INTERNAL_KEY));
-
-    /**
-     * flowContext 终止状态的互斥状态列表，即如果原始状态为terminate\error\archived，则不能更改为terminate
-     */
-    public static final List<String> CONTEXT_TERMINATE_EXCLUSIVE_STATUS_LIST = Collections.unmodifiableList(
-            Arrays.asList(FlowNodeStatus.TERMINATE.toString(), FlowNodeStatus.ARCHIVED.toString(),
-                    FlowNodeStatus.ERROR.toString()));
-
-    /**
-     * flowContext 重试状态的互斥状态列表
-     */
-    public static final List<String> CONTEXT_RETRYABLE_EXCLUSIVE_STATUS_LIST = Collections.unmodifiableList(
-            Arrays.asList(FlowNodeStatus.NEW.toString(), FlowNodeStatus.PENDING.toString(),
-                    FlowNodeStatus.PROCESSING.toString(), FlowNodeStatus.TERMINATE.toString(),
-                    FlowNodeStatus.ARCHIVED.toString(), FlowNodeStatus.ERROR.toString(),
-                    FlowNodeStatus.RETRYABLE.toString()));
-
-    /**
-     * flowContext 其他状态的互斥状态列表
-     */
-    public static final List<String> CONTEXT_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST = Collections.singletonList(
-            FlowNodeStatus.TERMINATE.toString());
-
-    /**
-     * error状态互斥表
-     */
-    public static final List<String> CONTEXT_ERROR_EXCLUSIVE_STATUS_LIST = Collections.unmodifiableList(
-            Arrays.asList(FlowNodeStatus.TERMINATE.toString(), FlowNodeStatus.ARCHIVED.toString(),
-                    FlowNodeStatus.RETRYABLE.toString(), FlowNodeStatus.PENDING.toString(),
-                    FlowNodeStatus.ERROR.toString()));
-
-    /**
-     * archived状态互斥表
-     */
-    public static final List<String> CONTEXT_ARCHIVED_EXCLUSIVE_STATUS_LIST = Collections.unmodifiableList(
-            Arrays.asList(FlowNodeStatus.TERMINATE.toString(), FlowNodeStatus.ARCHIVED.toString(),
-                    FlowNodeStatus.RETRYABLE.toString(), FlowNodeStatus.PENDING.toString()));
-
-    /**
-     * flowContext状态互斥map
-     */
-    public static final Map<String, List<String>> CONTEXT_EXCLUSIVE_STATUS_MAP = new HashMap<String, List<String>>() {
-        {
-            put(FlowNodeStatus.RETRYABLE.toString(), CONTEXT_RETRYABLE_EXCLUSIVE_STATUS_LIST);
-            put(FlowNodeStatus.TERMINATE.toString(), CONTEXT_TERMINATE_EXCLUSIVE_STATUS_LIST);
-            put(FlowNodeStatus.ERROR.toString(), CONTEXT_ERROR_EXCLUSIVE_STATUS_LIST);
-            put(FlowNodeStatus.PENDING.toString(), CONTEXT_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-            put(FlowNodeStatus.READY.toString(), CONTEXT_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-            put(FlowNodeStatus.PROCESSING.toString(), CONTEXT_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-            put(FlowNodeStatus.ARCHIVED.toString(), CONTEXT_ARCHIVED_EXCLUSIVE_STATUS_LIST);
-        }
-    };
-
-    /**
-     * flowTrace 终止状态的互斥状态列表，即如果原始状态为terminate\error\archived，则不能更改为terminate
-     */
-    public static final List<String> TRACE_TERMINATE_EXCLUSIVE_STATUS_LIST = Collections.unmodifiableList(
-            Arrays.asList(FlowTraceStatus.TERMINATE.toString(), FlowTraceStatus.ARCHIVED.toString(),
-                    FlowTraceStatus.ERROR.toString()));
-
-    /**
-     * flowTrace 其他状态的互斥状态列表
-     */
-    public static final List<String> TRACE_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST = Collections.singletonList(
-            FlowTraceStatus.TERMINATE.toString());
-
-    /**
-     * flowTrace状态互斥map
-     */
-    public static final Map<String, List<String>> TRACE_EXCLUSIVE_STATUS_MAP = new HashMap<String, List<String>>() {
-        {
-            put(FlowTraceStatus.TERMINATE.toString(), TRACE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-            put(FlowTraceStatus.ERROR.toString(), TRACE_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-            put(FlowTraceStatus.RUNNING.toString(), TRACE_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-            put(FlowTraceStatus.READY.toString(), TRACE_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-            put(FlowTraceStatus.ARCHIVED.toString(), TRACE_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-            put(FlowTraceStatus.PARTIAL_ERROR.toString(), TRACE_NONE_TERMINATE_EXCLUSIVE_STATUS_LIST);
-        }
-    };
 }

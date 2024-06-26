@@ -8,7 +8,7 @@ import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
 
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowlock.FlowLocks;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocks;
 import com.huawei.fitframework.annotation.Alias;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
