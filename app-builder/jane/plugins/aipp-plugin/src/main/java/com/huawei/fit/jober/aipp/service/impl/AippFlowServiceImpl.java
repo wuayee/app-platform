@@ -66,8 +66,8 @@ import com.huawei.fitframework.model.Tuple;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.carver.tool.model.transfer.ToolData;
-import com.huawei.jade.carver.tool.service.ToolService;
+import com.huawei.jade.store.entity.transfer.AppData;
+import com.huawei.jade.store.service.AppService;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -969,19 +969,19 @@ public class AippFlowServiceImpl implements AippFlowService {
     }
 
     private String publishToStore(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
-        ToolData itemData = this.buildItemData(aippDto, context, flowInfo);
-        String uniqueName = this.brokerClient.getRouter(ToolService.class, "com.huawei.jade.carver.tool.addTool")
-                .route(new FitableIdFilter("tool-repository-pgsql"))
+        AppData itemData = this.buildItemData(aippDto, context, flowInfo);
+        String uniqueName = this.brokerClient.getRouter(AppService.class, "com.huawei.jade.store.app.addApp")
+                .route(new FitableIdFilter("store-repository-pgsql"))
                 .invoke(itemData);
         this.appBuilderAppMapper.updateAppWithStoreId(uniqueName, aippDto.getAppId(), aippDto.getVersion());
         return uniqueName;
     }
 
     @NotNull
-    private ToolData buildItemData(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
+    private AppData buildItemData(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
         AppCategory appCategory = AppCategory.findByType(aippDto.getType())
                 .orElseThrow(() -> new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID));
-        ToolData itemData = new ToolData();
+        AppData itemData = new AppData();
         itemData.setCreator(context.getOperator());
         itemData.setModifier(context.getOperator());
         itemData.setIcon(aippDto.getIcon());

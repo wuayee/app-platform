@@ -46,7 +46,7 @@ public class RouteInfo {
     private String httpProxy;
 
     @JsonProperty("max_link_num")
-    private Integer maxLinkNum;
+    private Integer maxLinkNum = 1000; // 默认配置最大请求并发数为1000
 
     /**
      * 构造网关路由定义。
