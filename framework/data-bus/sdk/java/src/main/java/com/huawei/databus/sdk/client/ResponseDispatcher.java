@@ -6,6 +6,7 @@ package com.huawei.databus.sdk.client;
 
 import com.huawei.databus.sdk.message.MessageHeader;
 import com.huawei.databus.sdk.tools.Constant;
+import com.huawei.databus.sdk.tools.DataBusUtils;
 import com.huawei.fitframework.inspection.Validation;
 
 import org.apache.logging.log4j.LogManager;
@@ -93,32 +94,28 @@ class ResponseDispatcher {
                 }
 
                 buffer.flip();
+                ByteBuffer messageBytes = buffer;
+                // 使用循环处理粘包。
+                while (messageBytes.hasRemaining()) {
+                    // TODO：处理半包。
+                    MessageHeader header = MessageHeader.getRootAsMessageHeader(messageBytes);
+                    byte type = header.type();
+                    long seq = header.seq();
+                    int curPacketSize = (int) header.size() + Constant.DATABUS_SERVICE_HEADER_SIZE;
 
-                // TODO：处理半包和粘包。
-                MessageHeader header = MessageHeader.getRootAsMessageHeader(buffer);
+                    // 只在剩余字节过少时抛出异常。
+                    Validation.greaterThanOrEquals(messageBytes.remaining(), curPacketSize, "Too few bytes.");
+                    logger.info(
+                            "[startEventLoop] DataBus message received, [total size={}, body size={}, type={}, seq={}]",
+                            messageBytes.remaining(), header.size(), type, seq);
 
-                // 读取并打印type和size字段。
-                byte type = header.type();
-                long seq = header.seq();
-                Validation.equals((long) buffer.remaining(),
-                        header.size() + Constant.DATABUS_SERVICE_HEADER_SIZE, "Incorrect body payload size");
-                logger.info("[startEventLoop] DataBus message received, [size={}, type={}, seq={}]", header.size(),
-                        type, seq);
+                    messageBytes.position(Constant.DATABUS_SERVICE_HEADER_SIZE);
 
-                buffer.position(Constant.DATABUS_SERVICE_HEADER_SIZE);
+                    // 将消息体拷贝到新的ByteBuffer里。
+                    ByteBuffer messageBody = DataBusUtils.copyFromByteBuffer(messageBytes, (int) header.size());
+                    messageBytes = DataBusUtils.copyFromByteBuffer(messageBytes, messageBytes.remaining());
 
-                // 将消息体拷贝到新的ByteBuffer里。
-                ByteBuffer messageBody = ByteBuffer.allocate(buffer.remaining());
-
-                while (buffer.hasRemaining()) {
-                    messageBody.put(buffer.get());
-                }
-                messageBody.flip();
-
-                if (this.replyQueues.containsKey(seq)) {
-                    this.replyQueues.get(seq).offer(messageBody);
-                } else {
-                    logger.error("[startEventLoop] No waiting consumer, [seq={}]", seq);
+                    this.deliverMessage(seq, messageBody);
                 }
             } catch (Exception e) {
                 // 异常意味着连接问题或者编程错误，此时应该退出
@@ -131,6 +128,14 @@ class ResponseDispatcher {
                 }
                 return;
             }
+        }
+    }
+
+    private void deliverMessage(long seq, ByteBuffer messageBody) {
+        if (this.replyQueues.containsKey(seq)) {
+            this.replyQueues.get(seq).offer(messageBody);
+        } else {
+            logger.error("[startEventLoop] No waiting consumer, [seq={}]", seq);
         }
     }
 }

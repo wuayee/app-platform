@@ -9,6 +9,7 @@ import com.huawei.databus.sdk.message.ApplyMemoryMessage;
 import com.huawei.databus.sdk.message.MessageHeader;
 import com.huawei.databus.sdk.message.PermissionType;
 import com.huawei.databus.sdk.support.SharedMemoryRequest;
+import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.inspection.Validation;
 
 import com.google.flatbuffers.FlatBufferBuilder;
@@ -119,5 +120,29 @@ public class DataBusUtils {
      */
     public static boolean isSupportedPlatform() {
         return SUPPORTED_PLATFORM.stream().anyMatch(p -> System.getProperty("os.name").toLowerCase().contains(p));
+    }
+
+    /**
+     * 创建一个新的 ByteBuffer ，其容量为要复制的字节数，从源 ByteBuffer 复制 n 个字节到新 ByteBuffer
+     *
+     * @param source 表示源数据的 {@link ByteBuffer}
+     * @param n 表示拷贝字节数的 {@code int}
+     * @return 表示目标数据的 {@link ByteBuffer}
+     */
+    public static ByteBuffer copyFromByteBuffer(@Nonnull ByteBuffer source, int n) {
+        if (source == null) {
+            throw new IllegalArgumentException("Source ByteBuffer cannot be null");
+        }
+        if (n < 0 || source.remaining() < n) {
+            throw new IllegalArgumentException("Invalid number of bytes to copy");
+        }
+
+        ByteBuffer destination = ByteBuffer.allocate(n);
+        for (int i = 0; i < n; i++) {
+            destination.put(source.get());
+        }
+        destination.flip();
+
+        return destination;
     }
 }
