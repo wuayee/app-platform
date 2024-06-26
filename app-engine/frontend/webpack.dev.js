@@ -69,7 +69,7 @@ module.exports = merge(common, {
       '/aiApi': {
         target: 'http://80.11.128.86:30010',
         pathRewrite: {
-          '^/aiApi': '/tzaip/api/hisp', // 后端环境即为次路径
+          '^/aiApi': '/tzaip/api/hisp', // 后端环境即为此路径
         },
         secure: false,
         changeOrigin: true,
@@ -110,9 +110,25 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/elsaApi': {
-        target: 'http://10.91.144.226:8080',
+        target: 'http://80.11.128.86:30010',
         pathRewrite: {
           '^/elsaApi': '',
+        },
+        secure: false,
+        changeOrigin: true,
+      },
+      '/modelbase': {
+        target: 'http://80.11.128.86:30010',
+        pathRewrite: {
+          '^/modelBase': '/api/model_manage', // 后端环境即为此路径
+        },
+        secure: false,
+        changeOrigin: true,
+      },
+      '/modeltrain': {
+        target: 'http://80.11.128.86:30010',
+        pathRewrite: {
+          '^/modeltrain': '/api/model_finetune', // 后端环境即为此路径
         },
         secure: false,
         changeOrigin: true,

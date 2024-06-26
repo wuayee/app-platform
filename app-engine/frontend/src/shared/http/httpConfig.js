@@ -13,8 +13,8 @@ export const httpUrlMap = {
     APP_URL: '/app',
     MODEL_LIST_URL: '/api/model_io_manager/v1',
     PLUGIN_URL: '/api/jober',
-    MODEL_BASE_URL: 'modelbase',
-    MODEL_TRAINING_URL: 'modeltrain',
+    MODEL_MANAGE_URL: '/modelbase',
+    FINETUNE_URL: '/modeltrain',
   },
   production: {
     JANE_URL: 'https://jane.huawei.com/api',
@@ -28,8 +28,8 @@ export const httpUrlMap = {
     MODEL_URL: 'https://tzaip-beta.paas.huawei.com/api',
     MODEL_LIST_URL: 'http://model-io-manager:8010/v1',
     PLUGIN_URL: '/api/jober',
-    MODEL_BASE_URL: 'modelbase',
-    MODEL_TRAINING_URL: 'modeltrain',
+    MODEL_MANAGE_URL: '/modelbase',
+    FINETUNE_URL: '/modeltrain',
   },
   gamma: {
     JANE_URL: 'https://jane-gamma.huawei.com/api',

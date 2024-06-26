@@ -2,14 +2,16 @@ import { Button, Col, Flex, Form, Input, InputNumber, Modal, Radio, Row, Select 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import GoBack from '../../../components/go-back/GoBack';
-import { queryModelbaseList, queryModelDetail } from '../../../shared/http/model-base';
+import { queryModelbaseList, queryModelDetail, queryModelVersionList } from '../../../shared/http/model-base';
 import './index.scoped.scss';
 import { bytesToSize } from '../../../common/util';
-import { getDatasetVersions, getDatasets, get_eDataMateLogin, login_eDataMate } from '../../../shared/http/model-train';
+import { getDatasetVersions, getDatasets, get_eDataMateLogin, login_eDataMate, postModelTraningTask } from '../../../shared/http/model-train';
+import { validate } from 'webpack';
+import { FormatQaNumber } from '../../helper';
 
 const ModelTrainingCreate = () => {
-
-  const [modeSelected, setModeSelected] = useState('');
+  const [typeSelected, setTypeSelected] = useState('');
+  const [model,setModel]=useState(undefined);
   const [modelOptions, setModelOptions] = useState<any[]>([]);
   const [versionOptions, setVersionOptions] = useState<any[]>([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -19,6 +21,7 @@ const ModelTrainingCreate = () => {
   const [datasetList,setDatasetList]=useState([]);
   const [datasetVersionList,setDatasetVersionList]=useState([]);
   const [dataset,setDastaset] = useState(undefined);
+  const [datasetVersion,setDastasetVersion] = useState(undefined);
   const [form] = Form.useForm();
   const [verifyForm] = Form.useForm();
 
@@ -28,27 +31,29 @@ const ModelTrainingCreate = () => {
     form.setFieldsValue({
       loraR: 8,
       loraAlpha: 16,
-      maxSequence: 1024,
+      maxSeqLength: 1024,
       epoch: 5,
       learningRate: 0.00005,
-      warmupRatio: 0.05,
+      warmUpRatio: 0.05,
       localBatchSize: 1,
       gradientAccuStep: 1,
-      mode: 'full',
+      mode:'FULL'
     });
   }, []);
 
   //获取model全量列表
   const getModelOptions = () => {
     queryModelbaseList({ limit: 0, offset: 0 }).then(res => {
-      //setModelOptions([{ value: 'modelId123', label: 'model123' }]);
+      setModelOptions(res?.modelInfoList);
     });
   }
 
   //选择model后获取对应的版本列表
-  const getModelVersions = (e: any) => {
+  const getModelVersions =async(val,option) => {
     //TODO:调用获取模型详情接口获取版本列表
-
+    setModel(option);
+    const res= await queryModelVersionList(option?.model_name)
+    setVersionOptions(res?.versionInfo)
   }
 
   //TODO:获取dataset的认证连通性检查，修改datasetVerified状态；进入创建页面时调用一次
@@ -66,19 +71,29 @@ const ModelTrainingCreate = () => {
   const inputWidth = 380;
   const navigate = useNavigate();
 
-  const modeOptions = [
+  const typeOptions = [
     {
-      value: 'full',
+      value: 'FULL',
       label: '全参训练'
     },
     {
-      value: 'lora',
+      value: 'LORA',
       label: 'LoRA微调'
     }
   ];
 
   //TODO：创建任务表单提交
-  const onFinish = (value: any) => {
+  const onFinish = async(value: any) => {
+    const paramBody={
+      ...value,
+      datasetName:dataset?.name,
+      modelType:model?.model_type,
+    }
+   const res= await postModelTraningTask(paramBody);
+   if(res)
+   {
+    navigate('/model-training');
+   }
   } 
 
   //TODO：身份认证提交
@@ -138,7 +153,7 @@ const ModelTrainingCreate = () => {
         <Form form={form} layout='vertical'  onFinish={onFinish}>
           <h3 style={{ fontSize: 18, marginBottom: 16 }}>模型和训练类型</h3>
           <Flex gap={16}>
-            <Form.Item required label='模型' name='model' rules={[
+            <Form.Item required label='模型' name='modelName' rules={[
               {
                 required: true, message: '不能为空',
               }
@@ -147,14 +162,15 @@ const ModelTrainingCreate = () => {
                 style={{ width: inputWidth }}
                 options={modelOptions}
                 onChange={getModelVersions}
+                fieldNames={{label:'model_name',value:'model_name'}}
               ></Select>
             </Form.Item>
-            <Form.Item required label='模型版本' name='modelVersion' rules={[
+            <Form.Item required label='模型版本' name='modelVersionNo' rules={[
               {
                 required: true, message: '不能为空',
               }
             ]}>
-              <Select style={{ width: inputWidth }} options={versionOptions}></Select>
+              <Select style={{ width: inputWidth }} options={versionOptions} fieldNames={{label:'versionNo',value:'versionNo'}}></Select>
             </Form.Item>
           </Flex>
           <Form.Item label='训练类型' name='mode' rules={[
@@ -162,13 +178,13 @@ const ModelTrainingCreate = () => {
               required: true, message: '不能为空',
             }
           ]}>
-            <Radio.Group value={modeSelected} onChange={(val) => { setModeSelected(val.target.value) }}>
-              {modeOptions.map(item => (
+            <Radio.Group value={typeSelected} onChange={(val) => {setTypeSelected(val.target.value) }}>
+              {typeOptions.map(item => (
                 <Radio value={item.value}>{item.label}</Radio>
               ))}
             </Radio.Group>
           </Form.Item>
-          {modeSelected === 'lora' &&
+          {typeSelected === 'lora' &&
             <Flex gap={16} style={{ width: 800 }} wrap>
               <Form.Item required label='lora-rank' name='loraR' tooltip='test' rules={[
                 {
@@ -240,7 +256,7 @@ const ModelTrainingCreate = () => {
             </div>
           </Flex>
           <Flex gap={16}>
-            <Form.Item  required label='数据集' name='dataset' rules={[
+            <Form.Item  required label='数据集' name='datasetId' rules={[
                 {
                   required: true, message: '不能为空',
                 }
@@ -248,13 +264,13 @@ const ModelTrainingCreate = () => {
               <Select options={datasetList} fieldNames={{label:'name',value:'id'}} style={{ width: inputWidth }}
               onSelect={selectDataset} disabled={datasetVerified !== 1}></Select>
             </Form.Item>
-            <Form.Item required label='数据集版本' name='datasetVersion' rules={[
+            <Form.Item required label='数据集版本' name='datasetVersionId' rules={[
                 {
                   required: true, message: '不能为空',
                 }
               ]}>
-              <Select options={datasetVersionList} style={{ width: inputWidth }}
-               fieldNames={{label:'version',value:'versionId'}} optionRender={(option)=>{return `V${option?.label}`}}
+              <Select options={datasetVersionList} style={{ width: inputWidth }} onSelect={(val,option)=>{setDastasetVersion(option)}}
+               fieldNames={{label:'version',value:'versionId'}} optionRender={(option)=>{ return `V${option?.label}`}}
                 disabled={datasetVerified !== 1}></Select> 
             </Form.Item>
           </Flex>
@@ -268,8 +284,8 @@ const ModelTrainingCreate = () => {
               <div className='input-value'>{bytesToSize(dataset?.totalSize)}</div>
             </Col>
             <Col span={6}>
-              <div className='input-label'>数据集规格</div>
-              <div className='input-value'>--</div>
+              <div className='input-label'>数据集版本规格</div>
+              <div className='input-value'>{FormatQaNumber(datasetVersion?.prompts)}</div>
             </Col>
             <Col span={6}>
               <div className='input-label'>数据集描述</div>
@@ -280,7 +296,7 @@ const ModelTrainingCreate = () => {
           <Flex gap={16} style={{ width: 800 }} wrap>
             <Form.Item required
               label='最大序列长度'
-              name='maxSequence'
+              name='maxSeqLength'
               rules={[
                 {
                   required: true, message: '不能为空',
@@ -388,7 +404,7 @@ const ModelTrainingCreate = () => {
                   { value: 0.0003, label: (0.0003).toExponential() }
                 ]} />
             </Form.Item>
-            <Form.Item required label='学习率 warmup-ratio' name='warmupRatio' rules={[
+            <Form.Item required label='学习率 warmup-ratio' name='warmUpRatio' rules={[
               {
                 required: true, message: '不能为空',
               }
