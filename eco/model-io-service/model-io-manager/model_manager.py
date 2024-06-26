@@ -100,6 +100,7 @@ class Item(BaseModel):
     node_port: int
     npus: int
     max_link_num: int | None = None
+    max_token_size: int | None = None
 
 
 class GlobalExternalServiceProxy(BaseModel):
@@ -851,6 +852,8 @@ def get_supported_models_template(meta=False):
         model["port"] = 0
         model["xpu_consume"] = 0
 
+        current = "current"
+
         model_services = get_cached_model_services()
         try:
             if model_services.get(model[name].lower()):
@@ -860,8 +863,9 @@ def get_supported_models_template(meta=False):
                 model["port"] = model_services[model[name].lower()]["node_port"]
                 model["image"] = get_supported_images()[0]
                 model["max_link_num"] = model_info.get("max_link_num", 300)
-                model["npu"]["current"] = model_info.get("npus", 1)
-                model["precision"]["current"] = model_info.get("inference_accuracy", "fp16")
+                model["npu"][current] = model_info.get("npus", 1)
+                model["precision"][current] = model_info.get("inference_accuracy", "fp16")
+                model["tokenSize"][current] = model_info.get("max_token_size", 8192)
                 model[replicas] = model_info.get(replicas, 1)
             else:
                 model["status"] = "undeployed"
@@ -1107,11 +1111,44 @@ def persist_external_services():
 model_run_info = {}
 
 
+def create_yaml_files(item, yaml_objs):
+    flags = os.O_WRONLY | os.O_CREAT
+    modes = stat.S_IRUSR
+    with os.fdopen(os.open(f'{item.name}.yaml', flags, modes), 'w') as f:
+        for obj in yaml_objs:
+            yaml.dump(obj, f)
+            f.write('---\n')
+
+
+def deploy_service_and_deployment(service_manifest, deployment_manifest):
+    try:
+        api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, service_manifest)
+    except ApiException as e:
+        logger.warning(e)
+    try:
+        k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, deployment_manifest)
+    except ApiException as e:
+        logger.warning(e)
+
+
+def get_max_token_size(item, models_meta, model_name):
+    max_token_size = item.max_token_size
+    if max_token_size is None:
+        for model in models_meta.get("llms", []):
+            if model_name == model["name"]:
+                max_token_size = model.get("tokenSize", {}).get("default")
+                break
+    return max_token_size
+
+
 @app.post("/v1/start_up")
-async def start_up(item: Item, request: Request, background_tasks : BackgroundTasks):
+async def start_up(item: Item, request: Request, background_tasks: BackgroundTasks):
     model_run_info[item.name] = item.max_link_num
+    models_meta = get_models_meta()
     templates = get_template()
     model_name = item.name.strip()
+    max_token_size = get_max_token_size(item, models_meta, model_name)
+
     model_base_dir = model_weight_model_dir.get(model_name, model_name)
     model_weight_path = os.path.join(model_weight_dir, model_base_dir)
     weight_path_validation = os.environ.get("WEIGHT_PATH_VALIDATION") == "true"
@@ -1124,14 +1161,13 @@ async def start_up(item: Item, request: Request, background_tasks : BackgroundTa
         error_info = {"code": 1, "detail": error_msg}
         return JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))
 
-    model_name = item.name.strip()
-
     render_data = {
         "name": model_name.lower(),
         "replicas": item.replicas,
         "node_port": item.node_port,
         "image_name": item.image_name.strip(),
-        "model_weight_path": model_weight_path
+        "model_weight_path": model_weight_path,
+        "max_token_size": max_token_size
     }
 
     fill_template = [template.render(render_data) for template in templates]
@@ -1140,22 +1176,8 @@ async def start_up(item: Item, request: Request, background_tasks : BackgroundTa
     service_manifest = yaml_objs[0]
     deployment_manifest = yaml_objs[1]
 
-    flags = os.O_WRONLY | os.O_CREAT
-    modes = stat.S_IRUSR
-
-    with os.fdopen(os.open(f'{item.name}.yaml', flags, modes), 'w') as f:
-        for obj in yaml_objs:
-            yaml.dump(obj, f)
-            f.write('---\n')
-
-    try:
-        response = api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, service_manifest)
-    except ApiException as e:
-        logger.warning(e)
-    try:
-        response = k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, deployment_manifest)
-    except ApiException as e:
-        logger.warning(e)
+    create_yaml_files(item, yaml_objs)
+    deploy_service_and_deployment(service_manifest, deployment_manifest)
 
     #persist services
     local_model_services[model_name] = item.model_dump()
@@ -1163,9 +1185,12 @@ async def start_up(item: Item, request: Request, background_tasks : BackgroundTa
 
     notify_model_io_gateways_in_bg(background_tasks)
 
+    error_detail = "detail"
+    code = "status_code"
+
     error_info = {
-        "code": 0,
-        "detail": "ok"
+        code: 0,
+        error_detail: "ok"
     }
 
     response = JSONResponse(status_code=status_code, content=jsonable_encoder(error_info))

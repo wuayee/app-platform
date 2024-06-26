@@ -47,6 +47,8 @@ spec:
             value: "1"
           - name: Port
             value: "9981"
+          - name: MaxTokenSize
+            value: {{max_token_size}}
           readinessProbe:
             httpGet:
               path: /v2/health/ready

@@ -17,6 +17,10 @@ llms:
    npu:
      min: 1
      max: 8
+   tokenSize:
+     default: 8192
+     min: 4096
+     max: 8192
 - 
    name: Qwen-14B-Chat
    model: Qwen
@@ -35,6 +39,10 @@ llms:
    npu:
      min: 1
      max: 8
+   tokenSize:
+     default: 8192
+     min: 4096
+     max: 8192
 -
    name: Llama2-7B-Chat
    model: Llama2
@@ -53,6 +61,10 @@ llms:
    npu:
      min: 1
      max: 8
+   tokenSize:
+     default: 8192
+     min: 4096
+     max: 8192
 -
    name: Llama2-14B-Chat
    model: Llama2
@@ -71,6 +83,10 @@ llms:
    npu:
      min: 1
      max: 8
+   tokenSize:
+     default: 8192
+     min: 4096
+     max: 8192
 -
    name: Llama2-70B-Chat
    model: Llama2
@@ -89,6 +105,10 @@ llms:
    npu:
      min: 8
      max: 8
+   tokenSize:
+     default: 8192
+     min: 4096
+     max: 8192
 -
    name: Baichuan2-7B-Chat
    model: Baichuan2
@@ -107,6 +127,10 @@ llms:
    npu:
      min: 1
      max: 8
+   tokenSize:
+     default: 8192
+     min: 4096
+     max: 8192
 -
    name: Baichuan2-13B-Chat
    model: Baichuan2
@@ -125,6 +149,10 @@ llms:
    npu:
      min: 1
      max: 8
+   tokenSize:
+     default: 8192
+     min: 4096
+     max: 8192
 -
    name: chatglm3-6b
    model: chatglm3-6b
@@ -161,6 +189,10 @@ llms:
    npu:
      min: 1
      max: 8
+   tokenSize:
+     default: 8192
+     min: 4096
+     max: 8192
 -
    name: bge-large-zh
    model: BGE
