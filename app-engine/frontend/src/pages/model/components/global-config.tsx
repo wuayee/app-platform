@@ -107,10 +107,10 @@ const GlobalConfig = ({ visible, configCallback }: props) => {
             rules={[
               {
                 validator: (_, value) => {
-                  if (!value || /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(value)) {
+                  if (!value || /^(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/.test(value)) {
                     return Promise.resolve();
                   } else {
-                    return Promise.reject('请输入正确的地址');
+                    return Promise.reject('请输入正确的IP');
                   }
                 }
               }
