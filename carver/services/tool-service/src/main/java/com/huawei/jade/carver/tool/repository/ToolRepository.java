@@ -33,6 +33,15 @@ public interface ToolRepository {
     void deleteTool(String uniqueName);
 
     /**
+     * 删除工具的某一个版本。
+     *
+     * @param uniqueName 表示待删除工具的唯一标识的 {@link String}。
+     * @param version 表示待删除工具的版本的 {@link String}。
+     * @return 表示删除工具的唯一标识名或失败提示的 {@link String}。
+     */
+    String deleteToolByVersion(String uniqueName, String version);
+
+    /**
      * 基于工具的唯一标识查询某个工具。
      *
      * @param uniqueName 表示工具的唯一标识的 {@link String}。
@@ -102,4 +111,36 @@ public interface ToolRepository {
      * @return 表示商品标签列表的 {@link List}。
      */
     Set<String> getTags(String uniqueName);
+
+    /**
+     * 将工具的所有版本可见性置否。
+     *
+     * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
+     */
+    void setNotLatest(String toolUniqueName);
+
+    /**
+     * 查询工具的某一个版本。
+     *
+     * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
+     * @param version 表示工具的版本的 {@link String}。
+     * @return 表示工具详细信息的 {@link Optional}{@code <}{@link Tool.Info}{@code >}。
+     */
+    Optional<Tool.Info> getToolByVersion(String toolUniqueName, String version);
+
+    /**
+     * 查询一个工具的所有版本。
+     *
+     * @param toolQuery 表示查询条件的 {@link ToolQuery}。
+     * @return 表示工具版本列表的 {@link List}{@code <}{@link Tool.Info}{@code >}。
+     */
+    List<Tool.Info> getAllVersionsTool(ToolQuery toolQuery);
+
+    /**
+     * 查询一个工具的所有版本的总数。
+     *
+     * @param toolQuery toolQuery 表示查询条件的 {@link ToolQuery}。
+     * @return 表示工具版本总数的 {@code int}。
+     */
+    int getAllVersionsToolCount(ToolQuery toolQuery);
 }

@@ -4,7 +4,6 @@
 
 package com.huawei.jade.store.entity.query;
 
-import com.huawei.fit.http.annotation.RequestQuery;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 
 import java.util.List;
@@ -22,12 +21,14 @@ public class AppQuery extends ToolQuery {
      * @param toolName 表示工具名的 {@link String}。
      * @param includeTags 表示包含标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
+     * @param orTags 表示查询工具标签方式选择或的方式的状态的 {@link Boolean}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
+     * @param version 表示工具的版本的 {@link String}。
      */
     public AppQuery(String toolName, List<String> includeTags,
-            List<String> excludeTags, Boolean orTags, Integer pageNum, Integer limit) {
-        super(toolName, includeTags, excludeTags, orTags, pageNum, limit);
+            List<String> excludeTags, Boolean orTags, Integer pageNum, Integer limit, String version) {
+        super(toolName, includeTags, excludeTags, orTags, pageNum, limit, version);
     }
 
     /**

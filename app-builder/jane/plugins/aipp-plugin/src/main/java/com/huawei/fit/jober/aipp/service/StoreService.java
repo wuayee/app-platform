@@ -28,9 +28,10 @@ public interface StoreService {
      * @param orTags 表示选择标签的与和或逻辑的 {@code boolean}。
      * @param pageNum 表示分页查询的页数的 {@code int}。
      * @param pageSize 表示分页查询的大小的 {@code int}。
+     * @param version 表示工具的版本的 {@link String}。
      * @return 表示基础节点和工具的响应的 {@link StoreNodeConfigResDto}。
      */
-    StoreNodeConfigResDto getBasicNodesAndTools(String tag, boolean orTags, int pageNum, int pageSize);
+    StoreNodeConfigResDto getBasicNodesAndTools(String tag, boolean orTags, int pageNum, int pageSize, String version);
 
     /**
      * 获取工具流配置对象列表。
@@ -38,9 +39,10 @@ public interface StoreService {
      * @param orTags 表示选择标签的与和或逻辑的 {@code boolean}。
      * @param pageNum 表示分页的页数的 {@link int}。
      * @param pageSize 表示分页的每页个数的 {@link int}。
+     * @param version 表示工具的版本的 {@link String}。
      * @return 表示获取到的工具流配置对象列表的 {@link List}{@code <}{@link AppBuilderWaterFlowInfoDto}{@code >}。
      */
-    List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(boolean orTags, int pageNum, int pageSize);
+    List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(boolean orTags, int pageNum, int pageSize, String version);
 
     /**
      * 获取指定插件列表。

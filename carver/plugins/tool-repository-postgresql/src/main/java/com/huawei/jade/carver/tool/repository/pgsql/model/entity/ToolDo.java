@@ -80,6 +80,16 @@ public class ToolDo {
     private String uniqueName;
 
     /**
+     * 表示工具的版本。
+     */
+    private String version;
+
+    /**
+     * 表示工具的可见性。
+     */
+    private Boolean isLatest;
+
+    /**
      * 将领域对象转换为数据对象实体类。
      *
      * @param serializer 表示序列化对象的 {@link ObjectSerializer}。
@@ -97,6 +107,8 @@ public class ToolDo {
         toolDo.setIcon(info.icon());
         toolDo.setUniqueName(info.uniqueName());
         toolDo.setDescription(info.description());
+        toolDo.setVersion(info.version());
+        toolDo.setIsLatest(info.isLatest());
         return toolDo;
     }
 
@@ -118,6 +130,8 @@ public class ToolDo {
                 .icon(toolDo.getIcon())
                 .uniqueName(toolDo.getUniqueName())
                 .description(toolDo.getDescription())
+                .version(toolDo.getVersion())
+                .isLatest(toolDo.getIsLatest())
                 .build();
     }
 

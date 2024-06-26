@@ -80,8 +80,10 @@ public class ToolController {
      * @param name 表示工具名的 {@link String}。
      * @param includeTags 表示包含标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
+     * @param orTags 表示查询工具的标签选择与和或的方式的 {@link Boolean}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
+     * @param version 表示工具版本的 {@link String}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link ToolData}{@code >}{@code >}。
      */
     @GetMapping
@@ -90,14 +92,15 @@ public class ToolController {
             @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
             @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
             @RequestQuery(value = "pageNum", required = false) Integer pageNum,
-            @RequestQuery(value = "pageSize", required = false) Integer limit) {
+            @RequestQuery(value = "pageSize", required = false) Integer limit,
+            @RequestQuery(value = "version", required = false) String version) {
         if (pageNum != null) {
             notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
         }
         if (limit != null) {
             notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         }
-        ToolQuery toolQuery = new ToolQuery(name, includeTags, excludeTags, orTags, pageNum, limit);
+        ToolQuery toolQuery = new ToolQuery(name, includeTags, excludeTags, orTags, pageNum, limit, version);
         ListResult<ToolData> res = this.toolService.getTools(toolQuery);
         List<ToolData> data = res.getData();
         return Result.ok(data, res.getCount());
@@ -109,8 +112,10 @@ public class ToolController {
      * @param name 表示工具名的 {@link String}。
      * @param includeTags 表示包含标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
+     * @param orTags 表示查询工具的标签与和或的方式的 {@link Boolean}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
+     * @param version 表示工具版本的 {@link String}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link ToolData}{@code >}{@code >}。
      */
     @GetMapping("/search")
@@ -119,20 +124,21 @@ public class ToolController {
             @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
             @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
             @RequestQuery(value = "pageNum", required = false) Integer pageNum,
-            @RequestQuery(value = "pageSize", required = false) Integer limit) {
+            @RequestQuery(value = "pageSize", required = false) Integer limit,
+            @RequestQuery(value = "version", required = false) String version) {
         if (pageNum != null) {
             notNegative(pageNum, "The page num cannot be negative.");
         }
         if (limit != null) {
             notNegative(limit, "The limit cannot be negative.");
         }
-        ToolQuery toolQuery = new ToolQuery(name, includeTags, excludeTags, orTags, pageNum, limit);
+        ToolQuery toolQuery = new ToolQuery(name, includeTags, excludeTags, orTags, pageNum, limit, version);
         ListResult<ToolData> res = this.toolService.searchTools(toolQuery);
         return Result.ok(res.getData(), res.getCount());
     }
 
     /**
-     * 删除工具。
+     * 删除工具的所有版本。
      *
      * @param uniqueName 表示工具的唯一索引的 {@link String}。
      * @return 格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
@@ -141,5 +147,20 @@ public class ToolController {
     public Result<String> deleteTool(@PathVariable("uniqueName") String uniqueName) {
         notBlank(uniqueName, "The unique name cannot be blank.");
         return Result.ok(this.toolService.deleteTool(uniqueName), 1);
+    }
+
+    /**
+     * 删除工具的某个版本。
+     *
+     * @param uniqueName 表示工具的唯一索引的 {@link String}。
+     * @param version 表示工具版本的 {@link String}。
+     * @return 格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
+     */
+    @DeleteMapping("/{uniqueName}/{version}")
+    public Result<String> deleteToolVersion(
+            @PathVariable("uniqueName") String uniqueName,
+            @PathVariable("version") String version) {
+        notBlank(uniqueName, "The unique name cannot be blank.");
+        return Result.ok(this.toolService.deleteToolByVersion(uniqueName, version), 1);
     }
 }

@@ -75,6 +75,12 @@ public class DefaultToolRepository implements ToolRepository {
         this.toolMapper.deleteTool(uniqueName);
     }
 
+    @Override
+    public String deleteToolByVersion(String uniqueName, String version) {
+        this.toolMapper.deleteToolByVersion(uniqueName, version);
+        return uniqueName;
+    }
+
     /**
      * 仓储层根据唯一标识查询工具。
      *
@@ -196,5 +202,36 @@ public class DefaultToolRepository implements ToolRepository {
     public Set<String> getTags(String uniqueName) {
         List<TagDo> tagDos = this.tagMapper.getTags(uniqueName);
         return tagDos.stream().map(TagDo::getName).collect(Collectors.toSet());
+    }
+
+    @Override
+    public void setNotLatest(String toolUniqueName) {
+        this.toolMapper.setNotLatest(toolUniqueName);
+    }
+
+    @Override
+    public Optional<Tool.Info> getToolByVersion(String toolUniqueName, String version) {
+        ToolDo toolDo = this.toolMapper.getToolByVersion(toolUniqueName, version);
+        if (toolDo != null) {
+            return Optional.of(ToolDo.do2Info(toolDo, this.serializer));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Tool.Info> getAllVersionsTool(ToolQuery toolQuery) {
+        List<ToolDo> toolDos = this.toolMapper.getAllVersionsTool(toolQuery);
+        List<Tool.Info> infos = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(toolDos)) {
+            infos.addAll(toolDos.stream()
+                    .map(toolDo -> ToolDo.do2Info(toolDo, this.serializer))
+                    .collect(Collectors.toList()));
+        }
+        return infos;
+    }
+
+    @Override
+    public int getAllVersionsToolCount(ToolQuery toolQuery) {
+        return toolMapper.getAllVersionsToolCount(toolQuery);
     }
 }

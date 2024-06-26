@@ -42,10 +42,11 @@ public class StoreController extends AbstractController {
     @GetMapping(path = "/nodes", description = "获取所有工具和基础节点配置")
     public Rsp<StoreNodeConfigResDto> getBasicNodesAndTools(HttpClassicServerRequest httpRequest,
             @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean orTags,
-            @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
+            @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-            @RequestParam(value = "tag") String tag) {
-        return Rsp.ok(this.storeService.getBasicNodesAndTools(tag, orTags, pageNum, pageSize));
+            @RequestParam(value = "tag") String tag,
+            @RequestParam(value = "version") String version) {
+        return Rsp.ok(this.storeService.getBasicNodesAndTools(tag, orTags, pageNum, pageSize, version));
     }
 
     /**
@@ -59,7 +60,7 @@ public class StoreController extends AbstractController {
      */
     @GetMapping(path = "/models", description = "获取任务的模型列表")
     public Rsp<ModelDto> getModels(HttpClassicServerRequest httpRequest,
-            @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
+            @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(value = "taskName", defaultValue = "") String taskName) {
         return Rsp.ok(this.storeService.getModels(taskName, pageNum, pageSize));
@@ -69,9 +70,10 @@ public class StoreController extends AbstractController {
     public Rsp<ToolDto> getPlugins(HttpClassicServerRequest httpRequest, @RequestParam("tag") String tag,
             @PathVariable("tenant_id") String tenantId,
             @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean orTags,
-            @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
+            @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        return Rsp.ok(this.storeService.getPlugins(tag, orTags, pageNum, pageSize, this.contextOf(httpRequest, tenantId)));
+        return Rsp.ok(this.storeService.getPlugins(tag, orTags, pageNum, pageSize,
+                this.contextOf(httpRequest, tenantId)));
     }
 
     @GetMapping(path = "/nodes/basic", description = "获取基础节点配置")
@@ -82,8 +84,9 @@ public class StoreController extends AbstractController {
     @GetMapping(path = "/waterflow", description = "获取所有工具流")
     public Rsp<List<AppBuilderWaterFlowInfoDto>> getWaterFlowInfos(HttpClassicServerRequest httpRequest,
             @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean orTags,
-            @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
-            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        return Rsp.ok(this.storeService.getWaterFlowInfos(orTags, pageNum, pageSize));
+            @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "version") String version) {
+        return Rsp.ok(this.storeService.getWaterFlowInfos(orTags, pageNum, pageSize, version));
     }
 }

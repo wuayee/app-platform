@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -53,7 +52,6 @@ public class DefaultToolService implements ToolService {
     @Fitable(id = "tool-repository-pgsql")
     @Transactional
     public String addTool(ToolData toolData) {
-        toolData.setUniqueName(UUID.randomUUID().toString());
         toolData.setName(Objects.toString(toolData.getSchema().get("name")));
         if (toolData.getSchema().containsKey("description")) {
             toolData.setDescription(Objects.toString(toolData.getSchema().get("description")));
@@ -75,6 +73,13 @@ public class DefaultToolService implements ToolService {
     public String deleteTool(String toolUniqueName) {
         this.toolRepo.deleteTool(toolUniqueName);
         return toolUniqueName;
+    }
+
+    @Override
+    @Fitable(id = "tool-repository-pgsql")
+    public String deleteToolByVersion(String uniqueName, String version) {
+        this.toolRepo.deleteToolByVersion(uniqueName, version);
+        return uniqueName;
     }
 
     /**
@@ -198,5 +203,44 @@ public class DefaultToolService implements ToolService {
     @Fitable(id = "tool-repository-pgsql")
     public void deleteTag(String toolUniqueName, String tagName) {
         this.toolRepo.deleteTag(toolUniqueName, tagName);
+    }
+
+    @Override
+    @Fitable(id = "tool-repository-pgsql")
+    public void setNotLatest(String toolUniqueName) {
+        this.toolRepo.setNotLatest(toolUniqueName);
+    }
+
+    @Override
+    @Fitable(id = "tool-repository-pgsql")
+    public ToolData getToolByVersion(String toolUniqueName, String version) {
+        Optional<Tool.Info> info = this.toolRepo.getToolByVersion(toolUniqueName, version);
+        if (!info.isPresent()) {
+            return null;
+        }
+        ToolData toolData = ToolData.from(info.get());
+        Set<String> tagNames = this.toolRepo.getTags(toolUniqueName);
+        toolData.setTags(tagNames);
+        return toolData;
+    }
+
+    @Override
+    @Fitable(id = "tool-repository-pgsql")
+    public ListResult<ToolData> getAllVersionsTool(ToolQuery toolQuery) {
+        List<Tool.Info> infos = this.toolRepo.getAllVersionsTool(toolQuery);
+        ArrayList<ToolData> toolDataList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(infos)) {
+            for (Tool.Info info : infos) {
+                ToolData toolData = ToolData.from(info);
+                Set<String> tags = this.toolRepo.getTags(toolData.getUniqueName());
+                toolData.setTags(tags);
+                toolDataList.add(toolData);
+            }
+        }
+
+        toolQuery.setLimit(null);
+        toolQuery.setOffset(null);
+        int count = this.toolRepo.getAllVersionsToolCount(toolQuery);
+        return ListResult.create(toolDataList, count);
     }
 }

@@ -23,6 +23,7 @@ import com.huawei.jade.store.service.AppService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -53,16 +54,16 @@ public class DefaultAppService implements AppService {
     @Override
     @Fitable(id = "store-repository-pgsql")
     @Transactional
-    public String addApp(AppData appData) {
-        AppDo appDo = AppDo.from(appData);
-        String uniqueName = this.toolService.addTool(appData);
-        appDo.setToolUniqueName(uniqueName);
-        this.appMapper.addApp(appDo);
-        Set<String> tagNames = appData.getTags();
-        if (CollectionUtils.isNotEmpty(tagNames)) {
-            tagNames.forEach(tagName -> this.tagMapper.addTag(new TagDo(uniqueName, tagName)));
+    public String publishApp(AppData appData) {
+        if (StringUtils.isBlank(appData.getUniqueName())) {
+            appData.setUniqueName(UUID.randomUUID().toString());
+            return addApp(appData);
         }
-        return uniqueName;
+        if (this.toolService.getToolByVersion(appData.getUniqueName(), appData.getVersion()) != null) {
+            this.toolService.deleteToolByVersion(appData.getUniqueName(), appData.getVersion());
+        }
+        this.toolService.setNotLatest(appData.getUniqueName());
+        return addApp(appData);
     }
 
     @Override
@@ -124,5 +125,19 @@ public class DefaultAppService implements AppService {
             data.add(appData);
         }
         return data;
+    }
+
+    private String addApp(AppData appData) {
+        AppDo appDo = AppDo.from(appData);
+        String uniqueName = this.toolService.addTool(appData);
+        if (this.appMapper.getAppByUniqueName(appDo.getToolUniqueName()) != null) {
+            return uniqueName;
+        }
+        this.appMapper.addApp(appDo);
+        Set<String> tagNames = appData.getTags().stream().map(StringUtils::toUpperCase).collect(Collectors.toSet());
+        if (CollectionUtils.isNotEmpty(tagNames)) {
+            tagNames.forEach(tagName -> this.tagMapper.addTag(new TagDo(uniqueName, tagName)));
+        }
+        return uniqueName;
     }
 }

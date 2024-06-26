@@ -83,8 +83,10 @@ public class PluginController {
      * @param name 表示插件名的 {@link String}。
      * @param includeTags 表示包含标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
+     * @param orTags 表示查询工具的标签与和或方式的 {@link Boolean}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
+     * @param version 表示工具的版本的 {@link String}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link PluginData}{@code >}{@code >}。
      */
     @GetMapping("/search")
@@ -97,7 +99,8 @@ public class PluginController {
             @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
             @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
             @RequestQuery(value = "pageNum", required = false) Integer pageNum,
-            @RequestQuery(value = "pageSize", required = false) Integer limit) {
+            @RequestQuery(value = "pageSize", required = false) Integer limit,
+            @RequestQuery(value = "version", required = false) String version) {
         if (pageNum != null) {
             notNegative(pageNum, "The page num cannot be negative.");
         }
@@ -105,7 +108,7 @@ public class PluginController {
             notNegative(limit, "The limit cannot be negative.");
         }
         PluginQuery pluginQuery = new PluginQuery(isPublished, owner, collector,
-                name, includeTags, excludeTags, orTags, pageNum, limit);
+                name, includeTags, excludeTags,orTags, pageNum, limit, version);
         ListResult<PluginData> res = this.pluginService.getPlugins(pluginQuery);
         return Result.ok(res.getData(), res.getCount());
     }

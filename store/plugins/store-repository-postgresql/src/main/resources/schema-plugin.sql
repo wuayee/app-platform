@@ -27,6 +27,6 @@ comment on column store_plugin.owner is '插件的上传者';
 comment on column store_plugin.like_count is '插件的点赞数量';
 comment on column store_plugin.download_count is '插件的下载数量';
 comment on column store_plugin.tool_name is '工具的名称';
-comment on column store_plugin.tool_unique_name is '插件的工具唯一标识';
+comment on column store_plugin.tool_unique_name is '应用的工具唯一标识';
 end
 $$;

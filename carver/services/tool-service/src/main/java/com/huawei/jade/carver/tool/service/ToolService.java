@@ -35,6 +35,16 @@ public interface ToolService {
     String deleteTool(String toolUniqueName);
 
     /**
+     * 删除工具的某一个版本。
+     *
+     * @param uniqueName 表示待删除工具的唯一标识的 {@link String}。
+     * @param version 表示待删除工具的版本的 {@link String}。
+     * @return 表示删除工具的唯一标识名或失败提示的 {@link String}。
+     */
+    @Genericable(id = "com.huawei.jade.carver.tool.deleteToolByVersion")
+    String deleteToolByVersion(String uniqueName, String version);
+
+    /**
      * 基于工具的唯一标识查询某个工具。
      *
      * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
@@ -78,4 +88,31 @@ public interface ToolService {
      */
     @Genericable(id = "com.huawei.jade.carver.tool.deleteTag")
     void deleteTag(String toolUniqueName, String tagName);
+
+    /**
+     * 将工具的可见版本设置为不可见。
+     *
+     * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
+     */
+    @Genericable(id = "com.huawei.jade.carver.tool.setNotLatest")
+    void setNotLatest(String toolUniqueName);
+
+    /**
+     * 查询工具的某一个版本。
+     *
+     * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
+     * @param version 表示工具的版本的 {@link String}。
+     * @return 表示工具详细信息的 {@link ToolData}。
+     */
+    @Genericable(id = "com.huawei.jade.carver.tool.getToolByVersion")
+    ToolData getToolByVersion(String toolUniqueName, String version);
+
+    /**
+     * 查询一个工具的所有版本。
+     *
+     * @param toolQuery 表示查询条件的 {@link ToolQuery}。
+     * @return 表示工具版本列表的 {@link ListResult}{@code <}{@link ToolData}{@code >}。
+     */
+    @Genericable(id = "com.huawei.jade.carver.tool.getAllVersionsTool")
+    ListResult<ToolData> getAllVersionsTool(ToolQuery toolQuery);
 }

@@ -107,8 +107,10 @@ public class AdapterController {
      * @param category 表示商品分类的 {@link String}。
      * @param includeTags 表示需要包括的标签的 {@link String}。
      * @param excludeTags 表示不需要包括的标签的 {@link String}。
+     * @param orTags 表示查询标签选择或的方式的状态的 {@link String}。
      * @param pageNum 表示分页查询的页数的 {@code int}。
      * @param limit 表示分页查询数量限制的 {@code int}。
+     * @param version 表示工具的版本的 {@link String}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link ToolData}{@code >}{@code >}。
      */
     @GetMapping(path = "/{platform}/categories/{category}")
@@ -116,10 +118,11 @@ public class AdapterController {
             @PathVariable("category") String category, @RequestParam("includeTags") List<String> includeTags,
             @RequestParam("excludeTags") List<String> excludeTags,
             @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
-            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int limit) {
+            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int limit,
+            @RequestQuery(value = "version", required = false) String version) {
         notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
         notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
-        ToolQuery toolQuery = new ToolQuery(null, includeTags, excludeTags, orTags, pageNum, limit);
+        ToolQuery toolQuery = new ToolQuery(null, includeTags, excludeTags, orTags, pageNum, limit, version);
         return Result.ok(this.toolService.getTools(toolQuery).getData(),
                 this.toolService.getTools(toolQuery).getCount());
     }
@@ -135,11 +138,12 @@ public class AdapterController {
     @GetMapping(path = "/{platform}/fit/tool/genericables")
     public Result<Set<String>> getAllGenericableIds(@PathVariable("platform") String platform,
             @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int limit,
-            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags) {
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
+            @RequestQuery(value = "version", required = false) String version) {
         notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
         notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         ToolQuery toolQuery =
-                new ToolQuery(null, new ArrayList<>(Collections.singleton("FIT")), null, null, pageNum, limit);
+                new ToolQuery(null, new ArrayList<>(Collections.singleton("FIT")), null, null, pageNum, limit, version);
         List<ToolData> tools = this.toolService.getTools(toolQuery).getData();
         Set<String> genericableIds = tools.stream()
                 .filter(toolData -> toolData.getRunnables() != null && toolData.getRunnables().containsKey("FIT"))
@@ -160,6 +164,7 @@ public class AdapterController {
      * @param excludeTags 表示不包括的标签的列表的 {@link List}{@code <}{@link String}{@code >}。
      * @param pageNum 表示分页查询的页数的 {@code int}。
      * @param limit 表示分页查询的数量限制的 {@code int}。
+     * @param version 表示工具的版本的 {@link String}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link ToolData}{@code >}{@code >}。
      */
     @GetMapping(path = "/{platform}/categories/{category}/groups/{genericableId}")
@@ -168,13 +173,14 @@ public class AdapterController {
             @RequestParam("includeTags") List<String> includeTags,
             @RequestParam("excludeTags") List<String> excludeTags,
             @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
-            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int limit) {
+            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int limit,
+            @RequestQuery(value = "version", required = false) String version) {
         notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
         notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         if (this.decodeChinese(genericableId).equals(DECODE_EX)) {
             return Result.ok(null, 0);
         }
-        ToolQuery toolQuery = new ToolQuery(null, includeTags, excludeTags, orTags, pageNum, limit);
+        ToolQuery toolQuery = new ToolQuery(null, includeTags, excludeTags, orTags, pageNum, limit, version);
         return Result.ok(this.toolService.getTools(toolQuery).getData(),
                 this.toolService.getTools(toolQuery).getCount());
     }
@@ -186,20 +192,23 @@ public class AdapterController {
      * @param genericableId 表示商品的泛服务标识的 {@link String}。
      * @param pageNum 表示分页查询的页数的 {@code int}。
      * @param limit 表示分页查询的数量限制的 {@code int}。
+     * @param version 表示工具的版本的 {@link String}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link ToolData}{@code >}{@code >}。
      */
     @GetMapping(path = "/{platform}/fit/tool/genericables/{genericableId}")
     public Result<List<ToolData>> getFitTools(@PathVariable("platform") String platform,
             @PathVariable("genericableId") String genericableId, @RequestParam("pageNum") int pageNum,
             @RequestParam("pageSize") int limit,
-            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags) {
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
+            @RequestQuery(value = "version", required = false) String version) {
         notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
         notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         if (this.decodeChinese(genericableId).equals(DECODE_EX)) {
             return Result.ok(null, 0);
         }
         ToolQuery toolQuery =
-                new ToolQuery(null, new ArrayList<>(Collections.singleton("FIT")), null, orTags, pageNum, limit);
+                new ToolQuery(null, new ArrayList<>(Collections.singleton("FIT")), null, orTags, pageNum, limit,
+                        version);
         return Result.ok(this.toolService.getTools(toolQuery).getData(),
                 this.toolService.getTools(toolQuery).getCount());
     }
@@ -241,6 +250,7 @@ public class AdapterController {
      * @param itemName 表示商品名字的 {@link String}。
      * @param includeTags 表示要包括的标签的列表的 {@link List}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示不包括的标签的列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @param version 表示工具的版本的 {@link String}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link ToolData}{@code >}{@code >}。
      */
     @GetMapping(path = "/{platform}/categories/{category}/groups/{genericableId}/names/{itemName}")
@@ -248,8 +258,10 @@ public class AdapterController {
             @PathVariable("category") String category, @PathVariable("genericableId") String genericableId,
             @PathVariable("itemName") String itemName, @RequestParam("includeTags") List<String> includeTags,
             @RequestParam("excludeTags") List<String> excludeTags,
-            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags) {
-        ToolQuery toolQuery = new ToolQuery(this.decodeChinese(itemName), includeTags, excludeTags, orTags, null, null);
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
+            @RequestQuery(value = "version", required = false) String version) {
+        ToolQuery toolQuery = new ToolQuery(this.decodeChinese(itemName), includeTags, excludeTags, orTags, null, null,
+                version);
         return Result.ok(this.toolService.getTools(toolQuery).getData(), 1);
     }
 

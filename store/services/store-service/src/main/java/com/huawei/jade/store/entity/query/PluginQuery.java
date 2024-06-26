@@ -42,12 +42,14 @@ public class PluginQuery extends ToolQuery {
      * @param toolName 表示工具名的 {@link String}。
      * @param includeTags 表示包含标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
+     * @param orTags 表示查询工具选择标签方式的或的 {@link Boolean}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
+     * @param version 表示工具版本的 {@link String}。
      */
     public PluginQuery(Boolean isPublished, String owner, String collector, String toolName, List<String> includeTags,
-            List<String> excludeTags, Boolean orTags, Integer pageNum, Integer limit) {
-        super(toolName, includeTags, excludeTags, orTags, pageNum, limit);
+            List<String> excludeTags, Boolean orTags, Integer pageNum, Integer limit, String version) {
+        super(toolName, includeTags, excludeTags, orTags, pageNum, limit, version);
         this.collector = collector;
         this.isPublished = isPublished;
         this.owner = owner;

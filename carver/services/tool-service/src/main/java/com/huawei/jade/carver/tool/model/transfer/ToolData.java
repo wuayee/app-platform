@@ -129,6 +129,28 @@ public class ToolData {
     private Set<String> tags;
 
     /**
+     * 表示工具的版本。
+     * <p>
+     *     <ul>
+     *         <li>添加工具时需传入。</li>
+     *         <li>查询工具时会返回。</li>
+     *     </ul>
+     * </p>
+     */
+    private String version;
+
+    /**
+     * 表示工具版本的可见性。
+     * <p>
+     *     <ul>
+     *         <li>添加工具时需传入。</li>
+     *         <li>查询工具时会返回。</li>
+     *     </ul>
+     * </p>
+     */
+    private Boolean isLatest;
+
+    /**
      * 获取工具的创建者。
      *
      * @return 表示工具创建者的 {@link String}。
@@ -309,6 +331,42 @@ public class ToolData {
     }
 
     /**
+     * 获取工具的版本。
+     *
+     * @return 表示工具的版本的 {@link String}。
+     */
+    public String getVersion() {
+        return this.version;
+    }
+
+    /**
+     * 设置工具的版本。
+     *
+     * @param version 表示待设置的工具版本的 {@link String}。
+     */
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    /**
+     * 获取工具的可见性。
+     *
+     * @return 表示工具的可见性的 {@link Boolean}。
+     */
+    public Boolean getLatest() {
+        return this.isLatest;
+    }
+
+    /**
+     * 设置工具的可见性。
+     *
+     * @param isLatest 表示待设置的工具可见性的 {@link String}。
+     */
+    public void setLatest(Boolean isLatest) {
+        this.isLatest = isLatest;
+    }
+
+    /**
      * 将工具信息转换为 {@link ToolData}。
      *
      * @param info 表示工具信息的 {@link Tool.Info}。
@@ -326,6 +384,8 @@ public class ToolData {
         toolData.setRunnables(info.runnables());
         toolData.setSource(info.source());
         toolData.setIcon(info.icon());
+        toolData.setVersion(info.version());
+        toolData.setLatest(info.isLatest());
         return toolData;
     }
 
@@ -347,6 +407,8 @@ public class ToolData {
                 .runnables(toolData.getRunnables())
                 .source(toolData.getSource())
                 .icon(toolData.getIcon())
+                .version(toolData.getVersion())
+                .isLatest(toolData.getLatest())
                 .build();
     }
 
