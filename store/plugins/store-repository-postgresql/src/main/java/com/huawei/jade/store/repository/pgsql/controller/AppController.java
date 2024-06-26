@@ -89,6 +89,7 @@ public class AppController {
             @RequestQuery(value = "name", required = false) String name,
             @RequestQuery(value = "includeTags", required = false) List<String> includeTags,
             @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
             @RequestQuery(value = "pageNum", required = false) Integer pageNum,
             @RequestQuery(value = "pageSize", required = false) Integer limit) {
         if (pageNum != null) {
@@ -97,7 +98,7 @@ public class AppController {
         if (limit != null) {
             notNegative(limit, "The limit cannot be negative.");
         }
-        AppQuery appQuery = new AppQuery(name, includeTags, excludeTags, pageNum, limit);
+        AppQuery appQuery = new AppQuery(name, includeTags, excludeTags, orTags, pageNum, limit);
         ListResult<AppData> res = this.appService.getApps(appQuery);
         return Result.ok(res.getData(), res.getCount());
     }

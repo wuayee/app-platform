@@ -55,9 +55,8 @@
             </if>
             ORDER BY
                 "name", create_at DESC
-        )
-        ORDER BY create_at DESC,
-        offset #{offset} limit #{limit}
+        ) as sub
+        ORDER BY create_at DESC offset #{offset} limit #{limit}
     </select>
 
     <select id="selectWithCondition" resultMap="BaseResultMap"

@@ -15,6 +15,7 @@ import com.huawei.fit.http.annotation.PostMapping;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestParam;
+import com.huawei.fit.http.annotation.RequestQuery;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
@@ -113,11 +114,12 @@ public class AdapterController {
     @GetMapping(path = "/{platform}/categories/{category}")
     public Result<List<ToolData>> getAllItems(@PathVariable("platform") String platform,
             @PathVariable("category") String category, @RequestParam("includeTags") List<String> includeTags,
-            @RequestParam("excludeTags") List<String> excludeTags, @RequestParam("pageNum") int pageNum,
-            @RequestParam("pageSize") int limit) {
+            @RequestParam("excludeTags") List<String> excludeTags,
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
+            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int limit) {
         notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
         notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
-        ToolQuery toolQuery = new ToolQuery(null, includeTags, excludeTags, pageNum, limit);
+        ToolQuery toolQuery = new ToolQuery(null, includeTags, excludeTags, orTags, pageNum, limit);
         return Result.ok(this.toolService.getTools(toolQuery).getData(),
                 this.toolService.getTools(toolQuery).getCount());
     }
@@ -132,11 +134,12 @@ public class AdapterController {
      */
     @GetMapping(path = "/{platform}/fit/tool/genericables")
     public Result<Set<String>> getAllGenericableIds(@PathVariable("platform") String platform,
-            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int limit) {
+            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int limit,
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags) {
         notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
         notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         ToolQuery toolQuery =
-                new ToolQuery(null, new HashSet<>(Collections.singleton("FIT")), null, null, pageNum, limit);
+                new ToolQuery(null, new ArrayList<>(Collections.singleton("FIT")), null, null, pageNum, limit);
         List<ToolData> tools = this.toolService.getTools(toolQuery).getData();
         Set<String> genericableIds = tools.stream()
                 .filter(toolData -> toolData.getRunnables() != null && toolData.getRunnables().containsKey("FIT"))
@@ -163,14 +166,15 @@ public class AdapterController {
     public Result<List<ToolData>> getItemsByGroup(@PathVariable("platform") String platform,
             @PathVariable("category") String category, @PathVariable("genericableId") String genericableId,
             @RequestParam("includeTags") List<String> includeTags,
-            @RequestParam("excludeTags") List<String> excludeTags, @RequestParam("pageNum") int pageNum,
-            @RequestParam("pageSize") int limit) {
+            @RequestParam("excludeTags") List<String> excludeTags,
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
+            @RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int limit) {
         notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
         notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         if (this.decodeChinese(genericableId).equals(DECODE_EX)) {
             return Result.ok(null, 0);
         }
-        ToolQuery toolQuery = new ToolQuery(null, includeTags, excludeTags, pageNum, limit);
+        ToolQuery toolQuery = new ToolQuery(null, includeTags, excludeTags, orTags, pageNum, limit);
         return Result.ok(this.toolService.getTools(toolQuery).getData(),
                 this.toolService.getTools(toolQuery).getCount());
     }
@@ -187,13 +191,15 @@ public class AdapterController {
     @GetMapping(path = "/{platform}/fit/tool/genericables/{genericableId}")
     public Result<List<ToolData>> getFitTools(@PathVariable("platform") String platform,
             @PathVariable("genericableId") String genericableId, @RequestParam("pageNum") int pageNum,
-            @RequestParam("pageSize") int limit) {
+            @RequestParam("pageSize") int limit,
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags) {
         notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
         notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         if (this.decodeChinese(genericableId).equals(DECODE_EX)) {
             return Result.ok(null, 0);
         }
-        ToolQuery toolQuery = new ToolQuery(null, new ArrayList<>(Collections.singleton("FIT")), null, pageNum, limit);
+        ToolQuery toolQuery =
+                new ToolQuery(null, new ArrayList<>(Collections.singleton("FIT")), null, orTags, pageNum, limit);
         return Result.ok(this.toolService.getTools(toolQuery).getData(),
                 this.toolService.getTools(toolQuery).getCount());
     }
@@ -241,8 +247,9 @@ public class AdapterController {
     public Result<List<ToolData>> getItem(@PathVariable("platform") String platform,
             @PathVariable("category") String category, @PathVariable("genericableId") String genericableId,
             @PathVariable("itemName") String itemName, @RequestParam("includeTags") List<String> includeTags,
-            @RequestParam("excludeTags") List<String> excludeTags) {
-        ToolQuery toolQuery = new ToolQuery(this.decodeChinese(itemName), includeTags, excludeTags, null, null);
+            @RequestParam("excludeTags") List<String> excludeTags,
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags) {
+        ToolQuery toolQuery = new ToolQuery(this.decodeChinese(itemName), includeTags, excludeTags, orTags, null, null);
         return Result.ok(this.toolService.getTools(toolQuery).getData(), 1);
     }
 

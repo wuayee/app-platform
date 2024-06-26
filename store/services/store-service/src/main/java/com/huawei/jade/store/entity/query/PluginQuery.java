@@ -46,8 +46,8 @@ public class PluginQuery extends ToolQuery {
      * @param limit 表示限制的 {@link Integer}。
      */
     public PluginQuery(Boolean isPublished, String owner, String collector, String toolName, List<String> includeTags,
-            List<String> excludeTags, Integer pageNum, Integer limit) {
-        super(toolName, includeTags, excludeTags, pageNum, limit);
+            List<String> excludeTags, Boolean orTags, Integer pageNum, Integer limit) {
+        super(toolName, includeTags, excludeTags, orTags, pageNum, limit);
         this.collector = collector;
         this.isPublished = isPublished;
         this.owner = owner;

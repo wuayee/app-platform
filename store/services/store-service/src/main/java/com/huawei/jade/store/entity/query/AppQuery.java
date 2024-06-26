@@ -4,6 +4,7 @@
 
 package com.huawei.jade.store.entity.query;
 
+import com.huawei.fit.http.annotation.RequestQuery;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 
 import java.util.List;
@@ -25,8 +26,8 @@ public class AppQuery extends ToolQuery {
      * @param limit 表示限制的 {@link Integer}。
      */
     public AppQuery(String toolName, List<String> includeTags,
-            List<String> excludeTags, Integer pageNum, Integer limit) {
-        super(toolName, includeTags, excludeTags, pageNum, limit);
+            List<String> excludeTags, Boolean orTags, Integer pageNum, Integer limit) {
+        super(toolName, includeTags, excludeTags, orTags, pageNum, limit);
     }
 
     /**
