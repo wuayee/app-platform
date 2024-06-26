@@ -192,10 +192,14 @@ const ModelTraining = () => {
       width: 250,
       ellipsis: true,
       render: (val, record) => {
+        if(val===-1)
+        {
+          return '--';
+        }
         return (
           <Flex gap={4}>
-            <Progress style={{ width: 80 }} showInfo={false} percent={val * 100} size='small' />
-            <span>{val * 100}%({record.curIter}/{record.totalIter})</span>
+            <Progress style={{ width: 80 }} showInfo={false} percent={val} size='small' />
+            <span>{val}%({record?.curIter}/{record?.totalIter})</span>
           </Flex>
         );
       },
@@ -229,8 +233,8 @@ const ModelTraining = () => {
         }
         return (
           <Space size='small'>
-            <a>查看详情</a>
-            <a onClick={openArchive}>Checkpoint归档</a>
+            <a hidden={record?.tensorboardUrl===''} onClick={()=>{window.open(record?.tensorboardUrl)}}>查看详情</a>
+            <a hidden={record?.taskStatus!=='FINISHED'} onClick={openArchive}>Checkpoint归档</a>
           </Space>
         )
       },
