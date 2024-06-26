@@ -44,7 +44,7 @@ public class ReportGenerationServiceImpl implements ReportGenerationService {
     public ReportGenerationServiceImpl(ChatModelService chatModelService) {
         this.agentFlow = AiFlows.<Tip>create()
                 .prompt(Prompts.human("给下面的问题和答案做个总结：\n\n{{content}}"))
-                .generate(new ChatBlockModel<Prompt>(chatModelService).bind(ChatOptions.builder()
+                .generate(new ChatBlockModel(chatModelService).bind(ChatOptions.builder()
                         .model("Qwen-72B")
                         .temperature(0.0)
                         .build()))
