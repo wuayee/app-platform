@@ -12,29 +12,6 @@ import JadePanelCollapse from "@/components/manualCheck/JadePanelCollapse.jsx";
 export default function ManualCheckFormWrapper() {
     const data = useDataContext();
     const dispatch = useDispatch();
-    const output = data.outputParams;
-
-    /**
-     * 渲染输出组件
-     *
-     * @return {JSX.Element|null} output组件
-     */
-    const renderOutput = () => {
-        if (!output || !Array.isArray(output) || !output.length > 0) {
-            return null;
-        }
-        return (<>
-            <JadePanelCollapse
-                    defaultActiveKey={["manualCheckOutputPanel"]}
-                    panelKey="manualCheckOutputPanel"
-                    headerText="输出"
-            >
-                <div className={"jade-custom-panel-content"}>
-                    <JadeObservableTree data={output}/>
-                </div>
-            </JadePanelCollapse>
-        </>);
-    };
 
     const handleFormChange = (changeFormName, changeFormId, formOutput) => {
         dispatch({
@@ -48,7 +25,6 @@ export default function ManualCheckFormWrapper() {
     return (<>
         <div>
             <ManualCheckForm data={data} handleFormChange={handleFormChange}/>
-            {renderOutput()}
         </div>
     </>);
 }

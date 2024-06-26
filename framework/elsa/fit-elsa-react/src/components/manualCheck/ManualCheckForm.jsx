@@ -19,7 +19,7 @@ export default function ManualCheckForm({data, handleFormChange}) {
     const formName = data.formName;
     const taskId = data.taskId;
     const [formOptions, setFormOptions] = useState([]);
-    const selectedFormDefaultValue = (formName === null || formName === undefined) ? undefined : `${formName.replace(/Component$/, '')} | ${taskId}`;
+    const selectedFormDefaultValue = (formName === null || formName === undefined) ? undefined : `${formName.replace(/Component$/, '')}|${taskId}`;
     const shape = useShapeContext();
 
     useEffect(() => {
@@ -46,7 +46,7 @@ export default function ManualCheckForm({data, handleFormChange}) {
      * @param e event
      */
     const onChange = (e) => {
-        let formOutput = "";
+        let formEntity = "";
         let changeFormName = "";
         let changeFormId = "";
         if (e && e.length > 0) {
@@ -54,12 +54,12 @@ export default function ManualCheckForm({data, handleFormChange}) {
             changeFormName = name + "Component";
             changeFormId = id;
             try {
-                formOutput = shape.graph.plugins[changeFormName]().getJadeConfig();
+                formEntity = shape.graph.plugins[changeFormName]().getJadeConfig();
             } catch (error) {
                 console.error("Error getting JadeConfig:", error);
             }
         }
-        handleFormChange(changeFormName, changeFormId, formOutput);
+        handleFormChange(changeFormName, changeFormId, formEntity);
     };
 
     return (<>
