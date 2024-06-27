@@ -13,14 +13,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 表示方法实体的实体。
+ * 表示方法实体类。
  *
  * @author 杭潇 h00675922
  * @since 2024-06-15
  */
 public class MethodEntity {
-    private final String methodName;
-    private final String methodDescription;
+    private String methodName;
+    private String methodDescription;
     private String returnDescription;
     private String returnType;
     private final List<ParameterEntity> parameterEntities = new ArrayList<>();
@@ -30,15 +30,9 @@ public class MethodEntity {
     private String targetFilePath;
 
     /**
-     * 基于方法的名字与描述的构造方法。
-     *
-     * @param methodName {@link String}。
-     * @param methodDescription 给定方法描述的 {@link String}。
+     * 无参构造方法构建 {@link MethodEntity} 实例。
      */
-    public MethodEntity(String methodName, String methodDescription) {
-        this.methodName = notNull(methodName, "The methodName can not be null.");
-        this.methodDescription = notNull(methodDescription, "The methodDescription can not be null.");
-    }
+    public MethodEntity() {}
 
     /**
      * 表示设置返回值的描述。
@@ -56,6 +50,24 @@ public class MethodEntity {
      */
     public void setReturnType(String returnType) {
         this.returnType = returnType;
+    }
+
+    /**
+     * 设置工具的名字。
+     *
+     * @param methodName 待设置的工具的名字的 {@link String}。
+     */
+    public void setMethodName(String methodName) {
+        this.methodName = notNull(methodName, "The methodName can not be null.");
+    }
+
+    /**
+     * 设置工具的描述。
+     *
+     * @param methodDescription 待设置的工具的描述的 {@link String}。
+     */
+    public void setMethodDescription(String methodDescription) {
+        this.methodDescription = notNull(methodDescription, "The methodDescription can not be null.");
     }
 
     /**
@@ -86,15 +98,6 @@ public class MethodEntity {
     }
 
     /**
-     * 表示获取方法的返回值类型。
-     *
-     * @return 获取方法的返回值类型的 {@link Object}。
-     */
-    public Object getReturnType() {
-        return this.returnType;
-    }
-
-    /**
      * 表示获取方法的参数列表信息。
      *
      * @return 获取方法的参数列表信息的 {@link List}{@code <}{@link ParameterEntity}{@code >}。
@@ -104,12 +107,12 @@ public class MethodEntity {
     }
 
     /**
-     * 表示获取工具的所有的标签。
+     * 表示获取方法的返回值类型。
      *
-     * @return 获取工具的所有的标签的 {@link Set}{@code <}{@link String}{@code >}。
+     * @return 获取方法的返回值类型的 {@link Object}。
      */
-    public Set<String> getTags() {
-        return tags;
+    public Object getReturnType() {
+        return this.returnType;
     }
 
     /**
@@ -122,12 +125,12 @@ public class MethodEntity {
     }
 
     /**
-     * 表示获取 schema 数据。
+     * 表示获取工具的所有的标签。
      *
-     * @return schema 数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     * @return 获取工具的所有的标签的 {@link Set}{@code <}{@link String}{@code >}。
      */
-    public Map<String, Object> getSchemaInfo() {
-        return schemaInfo;
+    public Set<String> getTags() {
+        return tags;
     }
 
     /**
@@ -140,12 +143,12 @@ public class MethodEntity {
     }
 
     /**
-     * 表示获取 runnables 数据。
+     * 表示获取 schema 数据。
      *
-     * @return runnables 数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     * @return schema 数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
      */
-    public Map<String, Object> getRunnablesInfo() {
-        return runnablesInfo;
+    public Map<String, Object> getSchemaInfo() {
+        return schemaInfo;
     }
 
     /**
@@ -158,12 +161,12 @@ public class MethodEntity {
     }
 
     /**
-     * 获取目标文件路径。
+     * 表示获取 runnables 数据。
      *
-     * @return 目标文件路径的 {@link String}。
+     * @return runnables 数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
      */
-    public String getTargetFilePath() {
-        return this.targetFilePath;
+    public Map<String, Object> getRunnablesInfo() {
+        return runnablesInfo;
     }
 
     /**
@@ -173,5 +176,14 @@ public class MethodEntity {
      */
     public void setTargetFilePath(String targetFilePath) {
         this.targetFilePath = targetFilePath;
+    }
+
+    /**
+     * 获取目标文件路径。
+     *
+     * @return 目标文件路径的 {@link String}。
+     */
+    public String getTargetFilePath() {
+        return this.targetFilePath;
     }
 }

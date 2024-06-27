@@ -127,7 +127,9 @@ public class ParseFileByPath {
             String returnType = resolveParamType(schemaNode.path(RETURN));
 
             List<ParameterEntity> parameterEntities = parseParameters(schemaNode.path(PARAMETERS));
-            MethodEntity methodEntity = new MethodEntity(methodName, methodDescription);
+            MethodEntity methodEntity = new MethodEntity();
+            methodEntity.setMethodName(methodName);
+            methodEntity.setMethodDescription(methodDescription);
             methodEntity.setReturnDescription(returnDescription);
             methodEntity.setReturnType(returnType);
             methodEntity.getParameterEntities().addAll(parameterEntities);
@@ -152,7 +154,10 @@ public class ParseFileByPath {
 
                 String paramDescription = paramNode.path(DESCRIPTION).asText();
                 String paramType = resolveParamType(paramNode);
-                ParameterEntity parameterEntity = new ParameterEntity(paramName, paramType, paramDescription);
+                ParameterEntity parameterEntity = new ParameterEntity();
+                parameterEntity.setType(paramType);
+                parameterEntity.setName(paramName);
+                parameterEntity.setDescription(paramDescription);
                 parameterEntities.add(parameterEntity);
             });
         }

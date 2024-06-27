@@ -5,6 +5,7 @@
 package com.huawei.jade.store.tool.parser.controller;
 
 import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static com.huawei.fitframework.inspection.Validation.notNull;
 import static com.huawei.jade.store.tool.parser.utils.ParseFileByPath.parseToolSchema;
 
 import com.huawei.fit.http.annotation.PostMapping;
@@ -15,8 +16,10 @@ import com.huawei.fit.http.entity.NamedEntity;
 import com.huawei.fit.http.entity.PartitionedEntity;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.carver.tool.model.transfer.ToolData;
+import com.huawei.jade.carver.tool.service.ToolService;
 import com.huawei.jade.store.tool.parser.entity.MethodEntity;
-import com.huawei.jade.store.tool.parser.entity.MoveFileEntity;
 
 import org.apache.maven.surefire.shared.io.FileUtils;
 
@@ -27,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ScheduledExecutorService;
@@ -47,6 +51,17 @@ public class UploadFileController {
     private static final String TEMPORARY_TOOL_PATH = "/var/temporary/tools";
     private static final String TOOL_PATH = "/var/store/tools/";
     private static final ScheduledExecutorService EXECUTOR_SERVICE = new ScheduledThreadPoolExecutor(1);
+
+    private final ToolService toolService;
+
+    /**
+     * 适配 ToolController 的 {@link UploadFileController} 的新实例。
+     *
+     * @param toolService 表示商品通用服务的 {@link ToolService}。
+     */
+    public UploadFileController(ToolService toolService) {
+        this.toolService = notNull(toolService, "The tool service cannot be null.");
+    }
 
     /**
      * 表示解析上传工具文件的请求。
@@ -73,15 +88,7 @@ public class UploadFileController {
         throw new IllegalStateException("No file entity found in the received file.");
     }
 
-    /**
-     * 确定加入工具时，需要将文件移动至挂载目标目录下。
-     *
-     * @param moveFileEntity 表示移动文件的实体的 {@link MoveFileEntity}。
-     * @throws IOException 拷贝文件失败时抛出异常。
-     */
-    @PostMapping(path = "/move/file", description = "上传工具文件")
-    public void moveFile(@RequestBody MoveFileEntity moveFileEntity) throws IOException {
-        String sourceFilePath = moveFileEntity.getSourceFilePath();
+    private void copyFile(String sourceFilePath) throws IOException {
         Path sourcePath = Paths.get(sourceFilePath);
         String targetFolderPath;
         if (sourceFilePath.endsWith(".jar")) {
@@ -97,14 +104,43 @@ public class UploadFileController {
         Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    private static void scheduleFileDeletion(File file) {
-        EXECUTOR_SERVICE.schedule(() -> deleteFile(file.getPath()), 15, TimeUnit.MINUTES);
+    /**
+     * 将数据保存至数据库接口，并将文件复制到容器目录中。
+     *
+     * @param toolInfo 表示工具的元数据信息的 {@link List}{@code <}{@link MethodEntity}{@code >}。
+     */
+    @PostMapping(path = "/save/file", description = "保存工具文件")
+    public void saveFiles(@RequestBody List<MethodEntity> toolInfo) {
+        List<String> filePath = new ArrayList<>();
+        for (MethodEntity methodEntity : toolInfo) {
+            saveTool(methodEntity);
+            filePath.add(methodEntity.getTargetFilePath());
+        }
+        filePath.stream().distinct().forEach(copyFilePath -> {
+            try {
+                copyFile(copyFilePath);
+            } catch (IOException e) {
+                throw new IllegalStateException(StringUtils.format("Fail to copy file{}", copyFilePath), e);
+            }
+        });
+        log.info("File information saved successfully.");
+    }
+
+    private void saveTool(MethodEntity methodEntity) {
+        ToolData toolData = new ToolData();
+        toolData.setTags(methodEntity.getTags());
+        toolData.setSchema(methodEntity.getSchemaInfo());
+        toolData.setRunnables(methodEntity.getRunnablesInfo());
+        toolData.setName(methodEntity.getMethodName());
+        toolData.setDescription(methodEntity.getMethodDescription());
+        // 临时使用上传｀市场｀的接口，待上传｀我的｀接口开发完毕再同步过来。
+        this.toolService.addTool(toolData);
     }
 
     private static void storeTemporaryFile(String fileName, List<NamedEntity> entityList, File targetFile) {
         try (InputStream inStream = entityList.get(0).asFile().getInputStream()) {
             FileUtils.copyInputStreamToFile(inStream, targetFile);
-            scheduleFileDeletion(targetFile);
+            EXECUTOR_SERVICE.schedule(() -> deleteFile(targetFile.getPath()), 15, TimeUnit.MINUTES);
         } catch (IOException e) {
             deleteFile(targetFile.getPath());
             log.error("Write file={} fail.", fileName, e);
