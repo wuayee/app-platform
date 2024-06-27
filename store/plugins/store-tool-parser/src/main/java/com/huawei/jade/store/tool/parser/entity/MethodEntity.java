@@ -27,6 +27,7 @@ public class MethodEntity {
     private Set<String> tags = new HashSet<>();
     private Map<String, Object> schemaInfo;
     private Map<String, Object> runnablesInfo;
+    private String targetFilePath;
 
     /**
      * 基于方法的名字与描述的构造方法。
@@ -154,5 +155,23 @@ public class MethodEntity {
      */
     public void setRunnablesInfo(Map<String, Object> runnablesInfo) {
         this.runnablesInfo = runnablesInfo;
+    }
+
+    /**
+     * 获取目标文件路径。
+     *
+     * @return 目标文件路径的 {@link String}。
+     */
+    public String getTargetFilePath() {
+        return this.targetFilePath;
+    }
+
+    /**
+     * 设置文件的目标路径。
+     *
+     * @param targetFilePath 待设置的目标文件路径的 {@link String}。
+     */
+    public void setTargetFilePath(String targetFilePath) {
+        this.targetFilePath = targetFilePath;
     }
 }

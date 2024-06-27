@@ -136,7 +136,7 @@ public class ParseFileByPath {
             methodEntity.setTags(runnableInfos.keySet());
             methodEntity.setRunnablesInfo(runnableInfos);
             methodEntity.setSchemaInfo(getSchemaInfos(toolInfo));
-
+            methodEntity.setTargetFilePath(filePath);
             methodEntities.add(methodEntity);
         }
         return methodEntities;

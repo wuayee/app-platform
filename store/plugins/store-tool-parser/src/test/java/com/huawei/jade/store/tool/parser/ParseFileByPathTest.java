@@ -192,7 +192,8 @@ public class ParseFileByPathTest {
                 IOUtils.copy(fis, tarOut);
             }
             tarOut.closeArchiveEntry();
-        } else if (file.isDirectory()) {
+        }
+        if (file.isDirectory()) {
             tarOut.closeArchiveEntry();
             for (File childFile : Objects.requireNonNull(file.listFiles())) {
                 addFilesToTar(childFile, tarOut, entryName + "/");
@@ -209,7 +210,8 @@ public class ParseFileByPathTest {
                 IOUtils.copy(fis, jarOut);
             }
             jarOut.closeEntry();
-        } else if (file.isDirectory()) {
+        }
+        if (file.isDirectory()) {
             jarOut.closeEntry();
             for (File childFile : Objects.requireNonNull(file.listFiles())) {
                 addFilesToJar(childFile, jarOut, entryName + "/");
