@@ -45,7 +45,7 @@ const ChatDetail = () => {
         <div className="home-top">
           <div className="head-inner">
             <div className="inner-left">
-              <div className="title">APP Engine</div>
+              <div className="title">Model Engine</div>
               <div className="sub-title">你的专属AI智能编排研发平台</div>
               <div className="desc">AI助力研发，开始创建专属应用吧～</div>
             </div>
@@ -55,7 +55,7 @@ const ChatDetail = () => {
               </div>
             </div>
             <div className="inner-right-chat">
-              Hi~我是APP
+              Hi~我是Model
               Engine的超级应用 <strong>小海</strong>，我可以<strong>呼唤其他应用</strong>协同工作，也可以<strong>解答存储领域相关任何问题</strong>，试试向我提问吧~
             </div>
           </div>

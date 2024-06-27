@@ -125,7 +125,7 @@ const AppLayout: React.FC = () => {
         <div className="layout-sider-header">
           <div className="layout-sider-content">
             <Icons.logo />
-            <span className="layout-sider-title">APP Engine</span>
+            <span className="layout-sider-title">Model Engine</span>
           </div>
           <MenuFoldOutlined
             style={{ color: "#6d6e72" }}

@@ -1,4 +1,4 @@
-import { get } from './http';
+import { get, post } from './http';
 import { httpUrlMap } from './httpConfig';
 
 const { PLUGIN_URL, AI_URL } = (httpUrlMap as any)[(process.env as any).NODE_ENV];
@@ -32,4 +32,23 @@ export function getPluginWaterFlow(
 ) {
   const url = `${PLUGIN_URL}/v1/api/${tenantId}/app`;
   return get(url, data);
+}
+
+// 解析工具插件包内容
+export function getPluginPackageInfo(file) {
+  const formData = new FormData();
+  formData.append('tool-filename', file);
+  const url = `${PLUGIN_URL}/tools/parse/file`;
+  return post(url, formData, {
+    headers: {
+      'Content-Type': 'application/form-data',
+      'tool-filename': file?.name,
+    },
+  });
+}
+
+// 确认上传插件
+export function uploadPlugin(param) {
+  const url = `${PLUGIN_URL}/tools/save/file`;
+  return post(url, param);
 }
