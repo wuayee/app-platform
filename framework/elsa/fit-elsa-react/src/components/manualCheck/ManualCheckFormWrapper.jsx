@@ -1,8 +1,6 @@
 import "./style.css";
 import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
-import {JadeObservableTree} from "@/components/common/JadeObservableTree.jsx";
 import ManualCheckForm from "@/components/manualCheck/ManualCheckForm.jsx";
-import JadePanelCollapse from "@/components/manualCheck/JadePanelCollapse.jsx";
 
 /**
  * 人工检查表单Wrapper
@@ -18,7 +16,7 @@ export default function ManualCheckFormWrapper() {
             actionType: "changeFormAndSetOutput",
             formName: changeFormName,
             formId: changeFormId,
-            formOutput: formOutput
+            entity: formOutput
         });
     };
 
