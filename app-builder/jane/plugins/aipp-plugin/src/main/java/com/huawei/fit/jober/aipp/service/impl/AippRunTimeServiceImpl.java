@@ -351,6 +351,22 @@ public class AippRunTimeServiceImpl
             return getConversationTurns(aippId, aippType, 5, context, null);
         }
 
+        Map<String, Object> memorySwitchConfig = memoryConfig.stream()
+                .filter(config -> StringUtils.equals(ObjectUtils.cast(config.get("name")), "memorySwitch"))
+                .findFirst()
+                .orElse(null);
+        if (memorySwitchConfig != null) {
+            Boolean shouldUseMemory = businessData.containsKey(AippConst.BS_AIPP_USE_MEMORY_KEY)
+                    ? ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_USE_MEMORY_KEY))
+                    : ObjectUtils.cast(memorySwitchConfig.get("value"));
+            businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, shouldUseMemory);
+            if (!shouldUseMemory) {
+                return new ArrayList<>();
+            }
+        } else {
+            // 兼容旧应用
+            businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, true);
+        }
         Map<String, Object> typeConfig = memoryConfig.stream()
                 .filter(config -> StringUtils.equals((String) config.get("name"), "type"))
                 .findFirst()
@@ -368,6 +384,8 @@ public class AippRunTimeServiceImpl
                 Integer turnNum = Integer.parseInt((String) valueConfig.get("value"));
                 return getConversationTurns(aippId, aippType, turnNum, context, chatId);
             case "NotUseMemory":
+                // 兼容旧应用
+                businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, false);
                 return new ArrayList<>();
             case "Customizing":
                 // todo 如何定义这个genericable接口，入参为一个map?

@@ -684,7 +684,7 @@ public class AppBuilderAppServiceImpl
             JSONObject node = shapes.getJSONObject(j);
             String id = node.getString("id");
             String type = node.getString("type");
-            if (!type.endsWith("NodeState")) {
+            if (!StringUtils.equals(type, "startNodeStart") && !type.endsWith("NodeState")) {
                 continue;
             }
 
@@ -764,7 +764,49 @@ public class AppBuilderAppServiceImpl
                         valueArrayNode.add(mapNode);
                     });
                     ((ObjectNode) node).set("value", valueArrayNode);
+                    continue;
                 }
+
+                if (StringUtils.equals("memory", param.getKey())) {
+                    JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
+                    ArrayNode valueArrayNode = nodeFactory.arrayNode();
+                    Map<String, Object> res = JsonUtils.parseObject(param.getValue(), Map.class);
+                    if (Objects.equals(res.get("type"), "UserSelect")) {
+                        this.parseUserSelect(res, valueArrayNode);
+                    } else {
+                        this.parseOtherMemoryType(res, valueArrayNode);
+                    }
+                    ((ObjectNode) node).set("value", valueArrayNode);
+                }
+            }
+        }
+    }
+
+    private void parseOtherMemoryType(Map<String, Object> res, ArrayNode valueArrayNode) {
+        for (Map.Entry<String, Object> resEntry : res.entrySet()) {
+            if (Objects.equals(resEntry.getKey(), "memorySwitch")) {
+                this.checkEntryType(resEntry, Boolean.class);
+                valueArrayNode.add(this.convertMemorySwitch(resEntry.getKey(),
+                        ObjectUtils.cast(resEntry.getValue())));
+            } else {
+                valueArrayNode.add(this.convertObject(resEntry.getKey(),
+                        String.valueOf(resEntry.getValue())));
+            }
+        }
+    }
+
+    private void parseUserSelect(Map<String, Object> res, ArrayNode valueArrayNode) {
+        for (Map.Entry<String, Object> resEntry : res.entrySet()) {
+            if (Objects.equals(resEntry.getKey(), "memorySwitch")) {
+                this.checkEntryType(resEntry, Boolean.class);
+                valueArrayNode.add(this.convertMemorySwitch(resEntry.getKey(),
+                        ObjectUtils.cast(resEntry.getValue())));
+            } else if (Objects.equals(resEntry.getKey(), "value")) {
+                valueArrayNode.add(this.convertValueForUserSelect(resEntry.getKey(),
+                        String.valueOf(resEntry.getValue())));
+            } else {
+                valueArrayNode.add(this.convertObject(resEntry.getKey(),
+                        String.valueOf(resEntry.getValue())));
             }
         }
     }
@@ -827,6 +869,49 @@ public class AppBuilderAppServiceImpl
             }
         }
         return mapNode;
+    }
+
+    private ObjectNode convertMemorySwitch(String key, Boolean isOpenSwitch) {
+        JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", UUID.randomUUID().toString());
+        map.put("name", key);
+        map.put("from", "Input");
+        map.put("type", "Boolean");
+        map.put("value", isOpenSwitch);
+        ObjectNode mapNode = nodeFactory.objectNode();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (StringUtils.equals(entry.getKey(), "value")) {
+                this.checkEntryType(entry, Boolean.class);
+                mapNode.put(entry.getKey(), ObjectUtils.<Boolean>cast(entry.getValue()));
+            } else {
+                this.checkEntryType(entry, String.class);
+                mapNode.put(entry.getKey(), ObjectUtils.<String>cast(entry.getValue()));
+            }
+        }
+        return mapNode;
+    }
+
+    private ObjectNode convertValueForUserSelect(String key, String value) {
+        JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
+        Map<String, String> map = new HashMap<>();
+        map.put("id", UUID.randomUUID().toString());
+        map.put("name", key);
+        map.put("from", "input");
+        map.put("type", StringUtils.EMPTY);
+        map.put("value", value);
+        ObjectNode mapNode = nodeFactory.objectNode();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            mapNode.put(entry.getKey(), entry.getValue());
+        }
+        return mapNode;
+    }
+
+    private void checkEntryType(Map.Entry<String, Object> entry, Class<?> clazz) {
+        if (!clazz.isInstance(entry.getValue())) {
+            throw new AippException(AippErrCode.DATA_TYPE_IS_NOT_SUPPORTED,
+                    entry.getValue().getClass().getName());
+        }
     }
 
     private void updateConfigByGlowGraphAppearance(String appearance, AppBuilderConfig config) {
