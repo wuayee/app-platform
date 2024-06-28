@@ -116,7 +116,7 @@ module.exports = merge(common, {
       '/modelbase': {
         target: 'http://80.11.128.86:30030',
         pathRewrite: {
-          '^/modelBase': '/api/model_manage', // 后端环境即为此路径
+          '^/modelbase': '/api/model_manage', // 后端环境即为此路径
         },
         secure: false,
         changeOrigin: true,

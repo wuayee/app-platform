@@ -12,10 +12,10 @@ export const deleteModel = (data: any, okCallback: Function) => {
     okType: 'danger',
     onOk() {
       //删除逻辑
-      deleteModelbase(data?.model_id).then(res => {
+      deleteModelbase(data?.model_name).then(res => {
         if (res && (res?.code===200 || res?.code===0)) {
           message.success('删除成功');
-          okCallback();
+          okCallback?.({ offset: 0, limit: 10 });
         } else {
           message.error('删除失败');
         }
