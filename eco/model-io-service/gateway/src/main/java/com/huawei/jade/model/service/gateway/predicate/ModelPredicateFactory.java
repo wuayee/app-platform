@@ -11,7 +11,9 @@ import reactor.core.publisher.Mono;
 import org.springframework.cloud.gateway.handler.AsyncPredicate;
 import org.springframework.cloud.gateway.handler.predicate.AbstractRoutePredicateFactory;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
+import org.springframework.http.MediaType;
 import org.springframework.http.codec.HttpMessageReader;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -48,6 +50,14 @@ public class ModelPredicateFactory extends AbstractRoutePredicateFactory<ModelPr
     public AsyncPredicate<ServerWebExchange> applyAsync(ModelPredicateFactory.Config config) {
         return exchange -> {
             Object cachedBody = exchange.getAttribute(CACHE_REQUEST_BODY_OBJECT);
+
+            ServerHttpRequest rawRequest = exchange.getRequest();
+            if (rawRequest.getHeaders().getFirst("Content-Type") != null
+                    && !rawRequest.getHeaders().getFirst("Content-Type").contains(MediaType.APPLICATION_JSON_VALUE)) {
+                log.warn("Failed to apply ModelPredicateFactory for Content-Type="
+                        + rawRequest.getHeaders().getContentType());
+                return Mono.just(false);
+            }
 
             if (cachedBody == null) {
                 return ServerWebExchangeUtils.cacheRequestBodyAndRequest(exchange,
