@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState, useContext, useRef } from 'react';
-import { Modal } from "antd";
+import {Modal, Switch} from "antd";
 import { Message } from "@shared/utils/message";
 import { CloseOutlined } from "@ant-design/icons";
 import { 
@@ -28,7 +28,7 @@ import { getAppInfo } from "../../../../../shared/http/aipp";
 
 // 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {
-  const { fileCallBack, editorRef } = props;
+  const { fileCallBack, editorRef, useMulti, setUseMulti } = props;
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const appId = useAppSelector((state) => state.appStore.appId);
@@ -40,6 +40,7 @@ const EditorBtnHome = (props) => {
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const atAppId = useAppSelector((state) => state.appStore.atAppId);
   const atAppInfo = useAppSelector((state) => state.appStore.atAppInfo);
+  const showMulti = useAppSelector((state) => state.commonStore.historySwitch);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ showAt, setShowAt ] = useState(false);
   const [ appName, setAppName ] = useState('');
@@ -165,6 +166,10 @@ const EditorBtnHome = (props) => {
     };
     setIsModalOpen(true);
   }
+  //是否使用多轮对话
+  const onMultiConverChange = (checked) => {
+    setUseMulti(checked);
+  }
 
   return (
     <div className="btn-inner">
@@ -193,6 +198,10 @@ const EditorBtnHome = (props) => {
             <div className="inner-item">
               <div hidden><ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} /></div>
               { !appInfo.hideHistory && <HistoryIcon  onClick={(e) => {setOpenHistorySignal(e.timeStamp)}}/> }
+              {showMulti && <div>
+                <span>多轮对话</span>
+                <Switch className='multi-conversation-switch' value={useMulti} onChange={onMultiConverChange}/>
+              </div>}
               <span className="item-clear" onClick={() => {
                 dispatch(setChatRunning(false));
                 dispatch(setChatId(null));
