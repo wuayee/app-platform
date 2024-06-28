@@ -4,7 +4,7 @@
 
 package com.huawei.jade.store.tool.parser.entity;
 
-import static com.huawei.fitframework.inspection.Validation.notNull;
+import static com.huawei.fitframework.inspection.Validation.notBlank;
 
 /**
  * 表示参数的定义。
@@ -28,7 +28,7 @@ public class ParameterEntity {
      * @param name 待设置参数的名字的 {@link String}。
      */
     public void setName(String name) {
-        this.name = notNull(name, "The name can not be null.");
+        this.name = notBlank(name, "The name can not be blank.");
     }
 
     /**
@@ -46,7 +46,7 @@ public class ParameterEntity {
      * @param type 待设置参数的类型的 {@link String}。
      */
     public void setType(String type) {
-        this.type = notNull(type, "The type can not be null.");
+        this.type = notBlank(type, "The type can not be blank.");
     }
 
     /**
@@ -64,7 +64,7 @@ public class ParameterEntity {
      * @param description 待设置参数的描述信息的 {@link String}。
      */
     public void setDescription(String description) {
-        this.description = notNull(description, "The description can not be null.");
+        this.description = notBlank(description, "The description can not be blank.");
     }
 
     /**

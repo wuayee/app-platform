@@ -2,7 +2,7 @@
   "tools": [
     {
       "schema": {
-        "name": "链表加法",
+        "name": "add list",
         "description": "This method adds two list",
         "parameters": {
           "type": "object",
@@ -38,14 +38,14 @@
       },
       "runnables": {
         "FIT": {
-          "fitableId": "default",
-          "genericableId": "com.huawei.fit.jober.aipp.tool.create.app"
+          "fitableId": "default_fitable_id",
+          "genericableId": "com.huawei.fit.test_demo"
         }
       }
     },
     {
       "schema": {
-        "name": "自己相加",
+        "name": "add itself",
         "description": "This method adds two integers",
         "parameters": {
           "type": "object",
@@ -72,24 +72,24 @@
       },
       "runnables": {
         "FIT": {
-          "fitableId": "default",
-          "genericableId": "com.huawei.fit.jober.aipp.tool.create.app"
+          "fitableId": "default_fitable_id",
+          "genericableId": "com.huawei.fit.test_demo"
         }
       }
     },
     {
       "schema": {
-        "name": "财经问题结果生成",
-        "description": "这是一个用于生成财经类问题结果的工具。",
+        "name": "name for tool",
+        "description": "description for tool.",
         "parameters": {
           "type": "object",
           "properties": {
             "condition": {
-              "description": "生成结果的规则。",
+              "description": "condition description.",
               "type": "string"
             },
             "query": {
-              "description": "用户问题。",
+              "description": "query description.",
               "type": "array",
               "items": {
                 "type": "object"
@@ -106,14 +106,14 @@
           "query"
         ],
         "return": {
-          "description": "生成财经类问题结果",
+          "description": "the ans for test demo.",
           "type": "string"
         }
       },
       "runnables": {
         "FIT": {
-          "fitableId": "default",
-          "genericableId": "com.huawei.fit.jober.aipp.tool.create.app"
+          "fitableId": "default_fitable_id",
+          "genericableId": "com.huawei.fit.test_demo"
         }
       }
     }

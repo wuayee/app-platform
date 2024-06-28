@@ -6,6 +6,7 @@ package com.huawei.jade.store.tool.parser.utils;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.store.tool.parser.entity.MethodEntity;
 import com.huawei.jade.store.tool.parser.entity.ParameterEntity;
 
@@ -13,22 +14,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.maven.surefire.shared.compress.archivers.tar.TarArchiveEntry;
-import org.apache.maven.surefire.shared.compress.archivers.tar.TarArchiveInputStream;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -46,7 +40,6 @@ public class ParseFileByPath {
     private static final String RUNNABLES = "runnables";
     private static final String JAR = ".jar";
     private static final String ZIP = ".zip";
-    private static final String TAR = ".tar";
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
     private static final String RETURN = "return";
@@ -70,10 +63,9 @@ public class ParseFileByPath {
             return parseJarFile(filePath);
         } else if (filePath.endsWith(ZIP)) {
             return parseZipFile(filePath);
-        } else if (filePath.endsWith(TAR)) {
-            return parseTarFile(filePath);
         } else {
-            throw new IllegalArgumentException(String.format("The given file %s could not be parsed", filePath));
+            throw new IllegalArgumentException(
+                    StringUtils.format("The given file could not be parsed. [file={0}]", filePath));
         }
     }
 
@@ -147,20 +139,21 @@ public class ParseFileByPath {
     private static List<ParameterEntity> parseParameters(JsonNode parametersNode) {
         List<ParameterEntity> parameterEntities = new ArrayList<ParameterEntity>();
         JsonNode properties = parametersNode.path(PROPERTIES);
-        if (!properties.isMissingNode()) {
-            properties.fields().forEachRemaining(entry -> {
-                String paramName = entry.getKey();
-                JsonNode paramNode = entry.getValue();
-
-                String paramDescription = paramNode.path(DESCRIPTION).asText();
-                String paramType = resolveParamType(paramNode);
-                ParameterEntity parameterEntity = new ParameterEntity();
-                parameterEntity.setType(paramType);
-                parameterEntity.setName(paramName);
-                parameterEntity.setDescription(paramDescription);
-                parameterEntities.add(parameterEntity);
-            });
+        if (properties.isMissingNode()) {
+            return parameterEntities;
         }
+        properties.fields().forEachRemaining(entry -> {
+            String paramName = entry.getKey();
+            JsonNode paramNode = entry.getValue();
+
+            String paramDescription = paramNode.path(DESCRIPTION).asText();
+            String paramType = resolveParamType(paramNode);
+            ParameterEntity parameterEntity = new ParameterEntity();
+            parameterEntity.setType(paramType);
+            parameterEntity.setName(paramName);
+            parameterEntity.setDescription(paramDescription);
+            parameterEntities.add(parameterEntity);
+        });
         return parameterEntities;
     }
 
@@ -175,7 +168,8 @@ public class ParseFileByPath {
     private static List<String> parseJarFile(String filePath) throws IOException {
         try (JarFile jarFile = new JarFile(filePath)) {
             JarEntry jarEntry = jarFile.getJarEntry(JSON_FILE_PATH);
-            notNull(jarEntry, String.format("The json file not found in the given jar file %s.", filePath));
+            notNull(jarEntry,
+                    StringUtils.format("The json file not found in the given jar file. [file={0}]", filePath));
 
             try (InputStream xmlInputStream = jarFile.getInputStream(jarEntry)) {
                 return parseJson(xmlInputStream);
@@ -188,26 +182,13 @@ public class ParseFileByPath {
             ZipEntry zipEntry = zipFile.getEntry(JSON_FILE_PATH);
             if (zipEntry == null) {
                 throw new FileNotFoundException(
-                        String.format("The json file not found in the given zip file %s.", filePath));
+                        StringUtils.format("The json file not found in the given zip file. [file={0}]", filePath));
             }
 
             try (InputStream xmlInputStream = zipFile.getInputStream(zipEntry)) {
                 return parseJson(xmlInputStream);
             }
         }
-    }
-
-    private static List<String> parseTarFile(String filePath) throws IOException {
-        try (InputStream fileInputStream = Files.newInputStream(new File(filePath).toPath());
-             TarArchiveInputStream tarInputStream = new TarArchiveInputStream(fileInputStream)) {
-            TarArchiveEntry entry;
-            while ((entry = tarInputStream.getNextTarEntry()) != null) {
-                if (Objects.equals(entry.getName(), JSON_FILE_PATH)) {
-                    return parseJson(tarInputStream);
-                }
-            }
-        }
-        return Collections.emptyList();
     }
 
     private static List<String> parseJson(InputStream jsonInputStream) {

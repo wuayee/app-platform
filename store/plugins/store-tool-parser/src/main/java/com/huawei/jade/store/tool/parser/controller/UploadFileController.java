@@ -16,16 +16,16 @@ import com.huawei.fit.http.entity.NamedEntity;
 import com.huawei.fit.http.entity.PartitionedEntity;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.store.entity.transfer.PluginData;
 import com.huawei.jade.store.service.PluginService;
 import com.huawei.jade.store.tool.parser.entity.MethodEntity;
 
-import org.apache.maven.surefire.shared.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -73,35 +73,45 @@ public class UploadFileController {
      */
     @PostMapping(path = "/parse/file", description = "上传工具文件")
     public List<MethodEntity> parseUploadFile(PartitionedEntity receivedFile) throws IOException {
+        notNull(receivedFile, "The file to be uploaded cannot be null.");
         List<NamedEntity> entityList =
                 receivedFile.entities().stream().filter(NamedEntity::isFile).collect(Collectors.toList());
-        if (!entityList.isEmpty()) {
-            FileEntity file = entityList.get(0).asFile();
+        if (entityList.isEmpty()) {
+            throw new IllegalStateException("No file entity found in the received file.");
+        }
+        List<MethodEntity> methodEntities = new ArrayList<>();
+        for (NamedEntity namedEntity : entityList) {
+            FileEntity file = namedEntity.asFile();
             String filename = file.filename();
             String uniqueFileName = generateUniqueFileName(filename);
-            log.info("Upload tool file fileName={} uniqueFileName={}.", filename, uniqueFileName);
             File targetTemporaryFile = Paths.get(TEMPORARY_TOOL_PATH, uniqueFileName).toFile();
-            storeTemporaryFile(filename, entityList, targetTemporaryFile);
-            log.info("Upload file fileName={} uniqueFileName={} success.", filename, uniqueFileName);
-            return parseToolSchema(targetTemporaryFile.getPath());
+            log.info("Save the file {} to the temporary file directory and rename it as {}.", filename, uniqueFileName);
+            storeTemporaryFile(filename, file, targetTemporaryFile);
+            methodEntities.addAll(parseToolSchema(targetTemporaryFile.getPath()));
+            log.info("The file {} is parsed successfully.", filename);
         }
-        throw new IllegalStateException("No file entity found in the received file.");
+        return methodEntities;
     }
 
-    private void copyFile(String sourceFilePath) throws IOException {
-        Path sourcePath = Paths.get(sourceFilePath);
+    private void copyFile(String toCopyFilePath) {
+        Path sourcePath = Paths.get(toCopyFilePath);
         String targetFolderPath;
-        if (sourceFilePath.endsWith(".jar")) {
+        if (toCopyFilePath.endsWith(".jar")) {
             targetFolderPath = TOOL_PATH + "java";
         } else {
             targetFolderPath = TOOL_PATH + "python";
         }
 
         Path targetPath = Paths.get(targetFolderPath).resolve(sourcePath.getFileName());
-        if (!Files.exists(targetPath.getParent())) {
-            Files.createDirectories(targetPath.getParent());
+        try {
+            if (!Files.exists(targetPath.getParent())) {
+                Files.createDirectories(targetPath.getParent());
+            }
+            Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new IllegalStateException(
+                    StringUtils.format("Failed to copy file. [toCopyFilePath={0}]", toCopyFilePath), e);
         }
-        Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
     }
 
     /**
@@ -116,13 +126,7 @@ public class UploadFileController {
             saveTool(methodEntity);
             filePath.add(methodEntity.getTargetFilePath());
         }
-        filePath.stream().distinct().forEach(copyFilePath -> {
-            try {
-                copyFile(copyFilePath);
-            } catch (IOException e) {
-                throw new IllegalStateException(StringUtils.format("Fail to copy file{}", copyFilePath), e);
-            }
-        });
+        filePath.stream().distinct().forEach(this::copyFile);
         log.info("File information saved successfully.");
     }
 
@@ -137,35 +141,26 @@ public class UploadFileController {
         this.pluginService.addPlugin(pluginData);
     }
 
-    private static void storeTemporaryFile(String fileName, List<NamedEntity> entityList, File targetFile) {
-        try (InputStream inStream = entityList.get(0).asFile().getInputStream()) {
-            FileUtils.copyInputStreamToFile(inStream, targetFile);
-            EXECUTOR_SERVICE.schedule(() -> deleteFile(targetFile.getPath()), 15, TimeUnit.MINUTES);
-        } catch (IOException e) {
-            deleteFile(targetFile.getPath());
-            log.error("Write file={} fail.", fileName, e);
-            throw new IllegalStateException("Upload file failed.");
-        }
-    }
-
-    private static void deleteFile(String filePath) {
-        Path fileToDeletePath = Paths.get(filePath);
-        if (Files.exists(fileToDeletePath)) {
-            try {
-                Files.delete(fileToDeletePath);
-            } catch (IOException e) {
-                log.error("Failed to delete file.", e);
+    private static void storeTemporaryFile(String fileName, FileEntity file, File targetFile) {
+        try (InputStream inStream = file.getInputStream();
+             OutputStream outStream = Files.newOutputStream(targetFile.toPath())) {
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inStream.read(buffer)) != -1) {
+                outStream.write(buffer, 0, bytesRead);
             }
+
+            EXECUTOR_SERVICE.schedule(() -> FileUtils.delete(targetFile.getPath()), 15, TimeUnit.MINUTES);
+        } catch (IOException e) {
+            FileUtils.delete(targetFile.getPath());
+            log.error("Failed to write file. [fileName={}]", fileName, e);
+            throw new IllegalStateException(StringUtils.format("Failed to write file. [fileName={0}]", fileName), e);
         }
     }
 
     private String generateUniqueFileName(String fileName) {
-        notBlank(fileName, "The file name cannot be null or empty.");
-        int extensionIndex = fileName.lastIndexOf('.');
-        if (extensionIndex == -1 || extensionIndex == fileName.length() - 1) {
-            throw new IllegalArgumentException("The file name must have a valid extension.");
-        }
-        String extension = fileName.substring(extensionIndex + 1);
+        String extension =
+                notBlank(FileUtils.extension(fileName), "The file {0} must have a valid extension.", fileName);
         return UUID.randomUUID() + "." + extension;
     }
 }
