@@ -32,7 +32,9 @@ const SendEditor = (props) => {
   const [ showClear, setShowClear ] = useState(false);
   const [ openHistory, setOpenHistory ] = useState(false);
   const [ positionConfig, setPositionConfig ] = useState({});
+  const [ useMulti, setUseMulti ] = useState(true);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
+  const showMulti = useAppSelector((state) => state.commonStore.historySwitch);
   const { WS_AUDIO_URL } = httpUrlMap[process.env.NODE_ENV];
   const editorRef = useRef(null);
   const recording = useRef(false);
@@ -64,7 +66,7 @@ const SendEditor = (props) => {
       return;
     }
     let chatContent = document.getElementById("ctrl-promet").innerText;
-    onSend(chatContent);
+    onSend(chatContent, useMulti);
     editorRef.current.innerText = "";
     setShowClear(false);
   }
@@ -142,6 +144,13 @@ const SendEditor = (props) => {
       };
     }
   }
+  useEffect(() => {
+    if (showMulti) {
+      setUseMulti(true);
+    } else {
+      setUseMulti(false);
+    }
+  }, [showMulti])
   return <>{(
     <div className='send-editor-container'>
       <Recommends onSend={onSend}/>
@@ -151,6 +160,8 @@ const SendEditor = (props) => {
           clear={onClear}
           fileCallBack={fileSend}
           editorRef={editorRef}
+          useMulti={useMulti}
+          setUseMulti={setUseMulti}
         />
         { chatRunning && 
           <div className="editor-stop" onClick={onStop}>
