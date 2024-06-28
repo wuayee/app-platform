@@ -6,9 +6,10 @@ package com.huawei.fit.jober.aipp.service;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
-import com.huawei.fit.jober.aipp.dto.StoreBasicNodeInfoDto;
 import com.huawei.fit.jober.aipp.dto.ModelDto;
+import com.huawei.fit.jober.aipp.dto.StoreBasicNodeInfoDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
+import com.huawei.fit.jober.aipp.dto.ToolDto;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 
 import java.util.List;
@@ -51,7 +52,7 @@ public interface StoreService {
      * @param operationContext 表示操作上下文的 {@link OperationContext}。
      * @return 表示插件列表的 {@link List}{@code <}{@link ToolData}{@code >}。
      */
-    List<ToolData> getPlugins(String tag, boolean orTags, int pageNum, int pageSize, OperationContext operationContext);
+    ToolDto getPlugins(String tag, boolean orTags, int pageNum, int pageSize, OperationContext operationContext);
 
     /**
      * 获取基础节点列表。
