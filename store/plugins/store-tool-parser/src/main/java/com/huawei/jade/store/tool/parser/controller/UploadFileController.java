@@ -17,8 +17,8 @@ import com.huawei.fit.http.entity.PartitionedEntity;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.jade.carver.tool.model.transfer.ToolData;
-import com.huawei.jade.carver.tool.service.ToolService;
+import com.huawei.jade.store.entity.transfer.PluginData;
+import com.huawei.jade.store.service.PluginService;
 import com.huawei.jade.store.tool.parser.entity.MethodEntity;
 
 import org.apache.maven.surefire.shared.io.FileUtils;
@@ -52,15 +52,15 @@ public class UploadFileController {
     private static final String TOOL_PATH = "/var/store/tools/";
     private static final ScheduledExecutorService EXECUTOR_SERVICE = new ScheduledThreadPoolExecutor(1);
 
-    private final ToolService toolService;
+    private final PluginService pluginService;
 
     /**
-     * 适配 ToolController 的 {@link UploadFileController} 的新实例。
+     * 通过插件服务来初始化 {@link UploadFileController} 的新实例。
      *
-     * @param toolService 表示商品通用服务的 {@link ToolService}。
+     * @param pluginService 表示商品通用服务的 {@link PluginService}。
      */
-    public UploadFileController(ToolService toolService) {
-        this.toolService = notNull(toolService, "The tool service cannot be null.");
+    public UploadFileController(PluginService pluginService) {
+        this.pluginService = notNull(pluginService, "The plugin service cannot be null.");
     }
 
     /**
@@ -127,14 +127,14 @@ public class UploadFileController {
     }
 
     private void saveTool(MethodEntity methodEntity) {
-        ToolData toolData = new ToolData();
-        toolData.setTags(methodEntity.getTags());
-        toolData.setSchema(methodEntity.getSchemaInfo());
-        toolData.setRunnables(methodEntity.getRunnablesInfo());
-        toolData.setName(methodEntity.getMethodName());
-        toolData.setDescription(methodEntity.getMethodDescription());
+        PluginData pluginData = new PluginData();
+        pluginData.setTags(methodEntity.getTags());
+        pluginData.setSchema(methodEntity.getSchemaInfo());
+        pluginData.setRunnables(methodEntity.getRunnablesInfo());
+        pluginData.setName(methodEntity.getMethodName());
+        pluginData.setDescription(methodEntity.getMethodDescription());
         // 临时使用上传｀市场｀的接口，待上传｀我的｀接口开发完毕再同步过来。
-        this.toolService.addTool(toolData);
+        this.pluginService.addPlugin(pluginData);
     }
 
     private static void storeTemporaryFile(String fileName, List<NamedEntity> entityList, File targetFile) {

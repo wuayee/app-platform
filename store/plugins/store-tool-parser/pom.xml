@@ -35,7 +35,7 @@
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>
-            <artifactId>tool-service</artifactId>
+            <artifactId>store-service</artifactId>
             <version>${version}</version>
         </dependency>
 
