@@ -113,7 +113,7 @@ class PipelineItem(BaseModel):
 class ExternalService(BaseModel):
     name: str
     url: str
-    api_key: str
+    api_key: str | None = None
     http_proxy: str | None = None
     https_proxy: str | None = None
 
