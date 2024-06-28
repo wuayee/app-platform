@@ -18,6 +18,11 @@ export function getPluginDetail(pluginId) {
   const url = `${PLUGIN_URL}/store/plugins/${pluginId}`;
   return get(url);
 }
+// 插件列表
+export function getToolsList(params) {
+  const url = `${PLUGIN_URL}/tools/search`;
+  return get(url, params);
+}
 
 // 我的-工具
 export function getPluginTool(tenantId, data: { pageNum: number; pageSize: number; tag: string }) {
