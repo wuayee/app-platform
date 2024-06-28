@@ -1,11 +1,11 @@
 llms:
 - 
-   name: Qwen-7B-Chat
+   name: Qwen-72B
    model: Qwen
-   scale: 7B
+   scale: 72B
    type: "语言模型"
    orgnization: "Alibaba Cloud"
-   description: "通义千问-7B（Qwen-7B）是阿里云研发的通义千问大模型系列的70亿参数规模的模型。Qwen-7B是基于Transformer的大语言模型, 在超大规模的预训练数据上进行训练得到。预训练数据类型多样，覆盖广泛，包括大量网络文本、专业书籍、代码等。"
+   description: "此模型为Qwen1.5-72B-Chat。Qwen1.5是Qwen2的 beta 版本，Qwen2是一种基于Transformer的解码器语言模型，经过大量数据预训练。"
    precision:
      default: fp16
      supports:
@@ -15,7 +15,7 @@ llms:
      min: 1
      max: 8
    npu:
-     min: 1
+     min: 4
      max: 8
    tokenSize:
      default: 8192
