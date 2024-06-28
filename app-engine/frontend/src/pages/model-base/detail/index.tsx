@@ -11,7 +11,7 @@ const showTotal: PaginationProps['showTotal'] = (total) => `Total: ${total}`;
 
 const ModelBaseDetail: React.FC = () => {
 
-  const { id } = useParams();
+  const { name } = useParams();
   const [configOpen, setConfigOpen] = useState(false);
   const [data, setData] = useState<any>({});
   const [versionData, setVersionData] = useState<any[]>([]);
@@ -46,11 +46,11 @@ const ModelBaseDetail: React.FC = () => {
 
   useEffect(() => {
     getDetail();
-  }, []);
+  }, [name]);
 
   const getDetail = () => {
-    if (id) {
-      queryModelDetail(id).then(res => {
+    if (name) {
+      queryModelDetail(name).then(res => {
         if (res) {
           setData(res?.modelInfo);
           setConfig(res?.config);
@@ -64,11 +64,11 @@ const ModelBaseDetail: React.FC = () => {
     Modal.confirm({
       title: '确认删除',
       icon: <ExclamationCircleFilled />,
-      content: `确认删除模型版本 ${item?.versionNo} ?`,
+      content: `确认删除模型版本 ${item?.version_no} ?`,
       okType: 'danger',
       onOk() {
         //删除逻辑
-        deleteModelbaseVersion(item?.versionId).then(res => {
+        deleteModelbaseVersion(item?.version_no, item?.model_name).then(res => {
           if (res && (res?.code === 0 || res?.code === 200)) {
             message.success('删除成功');
             getDetail();
@@ -166,13 +166,13 @@ const ModelBaseDetail: React.FC = () => {
           {/* 模型名称头部 */}
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Flex gap={16} style={{ alignItems: 'center' }}>
-              <h2 style={{ fontSize: 20, fontWeight: 400 }}>{data.model_name}</h2>
-              <span>版本数：{data.version_num}</span>
+              <h2 style={{ fontSize: 20, fontWeight: 400 }}>{data?.model_name}</h2>
+              <span>版本数：{data?.version_num}</span>
             </Flex>
             <a onClick={() => { setConfigOpen(true) }}>配置详情</a>
           </div>
           {/* 模型描述 */}
-          <div title={data.model_description}
+          <div title={data?.model_description}
             style={{
               display: '-webkit-box',
               textOverflow: 'ellipsis',
@@ -180,7 +180,7 @@ const ModelBaseDetail: React.FC = () => {
               WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
             }}>
-            {data.model_description}
+            {data?.model_description}
           </div>
           {/* 模型其他基础信息 */}
           <div>
@@ -189,7 +189,7 @@ const ModelBaseDetail: React.FC = () => {
                 <Col span={4}>
                   <Flex vertical>
                     <span style={{ fontSize: 12, color: '#4D4D4D' }}>{item.label}</span>
-                    <span style={{ fontSize: 14, color: '#1A1A1A' }}>{data[item.key]}</span>
+                    <span style={{ fontSize: 14, color: '#1A1A1A' }}>{data?.[item.key]}</span>
                   </Flex>
                 </Col>
               ))}

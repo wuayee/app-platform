@@ -8,8 +8,8 @@ import ModelBaseCard from './list/card-list';
 import ModelBaseTable from './list/table-list';
 
 const ModelBase = () => {
-
   let syncTimer = null;
+  let syncTimeout = null;
   const [activeIndex, setActiveIndex] = useState('1');
   const [type, setType] = useState('card');
   const [canSync, setCanSync] = useState(false);
@@ -27,55 +27,71 @@ const ModelBase = () => {
     sessionStorage.setItem('modelBaseListType', mode);
     setType(mode);
     syncTimer = setInterval(() => getSyncStatus(true), 5000);
-    getSyncStatus();
+    if (syncTimeout) {
+      clearTimeout(syncTimeout);
+    }
+    syncTimeout = setTimeout(() => getSyncStatus(true), 500);
 
     return () => {
       if (syncTimer) {
         clearInterval(syncTimer);
       }
-    }
+      if (syncTimeout) {
+        clearTimeout(syncTimeout);
+      }
+    };
   }, []);
 
   const changeShowType = (e: any) => {
     setType(e.target.value);
     sessionStorage.setItem('modelBaseListType', e.target.value);
-  }
+  };
 
   //手动同步模型仓
   const syncModel = () => {
-    modelbaseSync().then(res => {
+    modelbaseSync().then((res) => {
+      if (syncTimer) {
+        clearInterval(syncTimer);
+      }
       syncTimer = setInterval(() => getSyncStatus(true), 5000);
-      getSyncStatus(true);
+      if (syncTimeout) {
+        clearTimeout(syncTimeout);
+      }
+      syncTimeout = setTimeout(() => getSyncStatus(true), 500);
     });
-  }
+  };
 
   //查询同步状态，进入模型仓时会固定查询一次，若有正在同步的任务，则不允许点击同步按钮；
   //若已同步完成或暂未有同步任务，可点击同步
   const getSyncStatus = (showMessage = false) => {
     setSyncButtonText('刷新中');
     setCanSync(false);
-    modelbaseSyncStatus().then(res => {
-      switch (res) {
-        case 0:   //成功
+    modelbaseSyncStatus().then((res) => {
+      switch (res.code) {
+        case 200: //成功
           if (showMessage) message.success('数据刷新成功');
           setSyncButtonText('刷新数据');
           setCanSync(true);
           clearInterval(syncTimer);
-        case 1:   //刷新中
+          break;
+        case 1: //刷新中
           setSyncButtonText('刷新中');
           setCanSync(false);
-        case 2:   //2失败
+          break;
+        case 2: //2失败
           if (showMessage) message.error('数据刷新失败');
           setSyncButtonText('刷新数据');
           setCanSync(true);
           clearInterval(syncTimer);
+          break;
         default:
           setSyncButtonText('刷新数据');
           setCanSync(true);
           clearInterval(syncTimer);
+          break;
       }
     });
-  }
+  };
 
   return (
     <div className='aui-fullpage'>
@@ -88,13 +104,20 @@ const ModelBase = () => {
         <div className='aui-title-1'>模型仓库</div>
       </div>
       <div className='aui-block-tab'>
-        <Tabs defaultActiveKey={activeIndex} items={items} onChange={(key) => { setActiveIndex(key) }} />
+        <Tabs
+          defaultActiveKey={activeIndex}
+          items={items}
+          onChange={(key) => {
+            setActiveIndex(key);
+          }}
+        />
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            marginBottom: '16px'
-          }}>
+            marginBottom: '16px',
+          }}
+        >
           <Button
             type='primary'
             style={{
@@ -106,7 +129,8 @@ const ModelBase = () => {
             }}
             loading={!canSync}
             onClick={syncModel}
-          >{syncButtonText}
+          >
+            {syncButtonText}
           </Button>
           <div>
             <Radio.Group value={type} onChange={changeShowType}>

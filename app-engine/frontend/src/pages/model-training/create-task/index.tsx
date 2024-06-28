@@ -2,7 +2,7 @@ import { Button, Col, Flex, Form, Input, InputNumber, Modal, Radio, Row, Select 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import GoBack from '../../../components/go-back/GoBack';
-import { queryModelbaseList, queryModelDetail, queryModelVersionList } from '../../../shared/http/model-base';
+import { queryModelbaseList, queryModelVersionList } from '../../../shared/http/model-base';
 import './index.scoped.scss';
 import { bytesToSize } from '../../../common/util';
 import { getDatasetVersions, getDatasets, get_eDataMateLogin, login_eDataMate, postModelTraningTask } from '../../../shared/http/model-train';
@@ -84,10 +84,12 @@ const ModelTrainingCreate = () => {
 
   //TODO：创建任务表单提交
   const onFinish = async(value: any) => {
+    const { version_path } = versionOptions.find(item=>item.version_no === value.modelVersionNo);
     const paramBody={
       ...value,
       datasetName:dataset?.name,
       modelType:model?.model_type,
+      versionPath:version_path,
     }
    const res= await postModelTraningTask(paramBody);
    if(res)
@@ -155,7 +157,7 @@ const ModelTrainingCreate = () => {
           <Flex gap={16}>
             <Form.Item required label='模型' name='modelName' rules={[
               {
-                required: true, message: '不能为空',
+                required: true, message: '不能为空。',
               }
             ]}>
               <Select
@@ -167,28 +169,28 @@ const ModelTrainingCreate = () => {
             </Form.Item>
             <Form.Item required label='模型版本' name='modelVersionNo' rules={[
               {
-                required: true, message: '不能为空',
+                required: true, message: '不能为空。',
               }
             ]}>
-              <Select style={{ width: inputWidth }} options={versionOptions} fieldNames={{label:'versionNo',value:'versionNo'}}></Select>
+              <Select style={{ width: inputWidth }} options={versionOptions} fieldNames={{label:'version_no',value:'version_no'}}></Select>
             </Form.Item>
           </Flex>
           <Form.Item label='训练类型' name='mode' rules={[
             {
-              required: true, message: '不能为空',
+              required: true, message: '不能为空。',
             }
           ]}>
-            <Radio.Group value={typeSelected} onChange={(val) => {setTypeSelected(val.target.value) }}>
+            <Radio.Group value={typeSelected} onChange={(e) => {setTypeSelected(e.target.value)}}>
               {typeOptions.map(item => (
                 <Radio value={item.value}>{item.label}</Radio>
               ))}
             </Radio.Group>
           </Form.Item>
-          {typeSelected === 'lora' &&
+          {typeSelected === 'LORA' &&
             <Flex gap={16} style={{ width: 800 }} wrap>
-              <Form.Item required label='lora-rank' name='loraR' tooltip='test' rules={[
+              <Form.Item required label='lora-rank' name='loraR' tooltip='lora微调中低秩矩阵的维度。' rules={[
                 {
-                  required: true, message: '不能为空',
+                  required: true, message: '不能为空。',
                 }
               ]}>
                 <Select
@@ -200,9 +202,9 @@ const ModelTrainingCreate = () => {
                     { value: 32, label: 32 }
                   ]} />
               </Form.Item>
-              <Form.Item required label='lora-alpha' name='loraAlpha' tooltip='test' rules={[
+              <Form.Item required label='lora-alpha' name='loraAlpha' tooltip='lora学习率放缩因子，控制LORA参数的更新（一般为r的2倍）。' rules={[
                 {
-                  required: true, message: '不能为空',
+                  required: true, message: '不能为空。',
                 }
               ]}>
                 <Select
@@ -221,10 +223,10 @@ const ModelTrainingCreate = () => {
             <Form.Item required
               label='TP'
               name='tp'
-              tooltip='test'
+              tooltip='张量并行，把线性层按行或列对模型权重进行划分。'
               rules={[
                 {
-                  required: true, message: '不能为空',
+                  required: true, message: '不能为空。',
                 }
               ]}
             >
@@ -233,7 +235,7 @@ const ModelTrainingCreate = () => {
             <Form.Item required
               label='PP'
               name='pp'
-              tooltip='test'
+              tooltip='管道并行，对模型进行层间划分。'
               rules={[
                 {
                   required: true, message: '不能为空',
@@ -302,7 +304,7 @@ const ModelTrainingCreate = () => {
                   required: true, message: '不能为空',
                 }
               ]}
-              tooltip='test'
+              tooltip='决定了模型可以处理的输入文本的最大长度，长度越长，显存开销越大。'
             >
               <Select
                 style={{ width: inputWidth }}
@@ -323,7 +325,7 @@ const ModelTrainingCreate = () => {
                   required: true, message: '不能为空',
                 }
               ]}
-              tooltip='test'
+              tooltip='epoch ，遍历数据集的次数。（训练中会被转换成iter的形式）。'
             >
               <Select
                 style={{ width: inputWidth }}
@@ -332,14 +334,14 @@ const ModelTrainingCreate = () => {
                 ))} />
             </Form.Item>
             <Form.Item required
-              label='Local batch size'
+              label='Local Batch Size'
               name='localBatchSize'
               rules={[
                 {
                   required: true, message: '不能为空',
                 }
               ]}
-              tooltip='test'
+              tooltip='所有节点和机器上，进行一次权重更新，全部训练数据总量。由Local Batch Size * NPU数得到。'
             >
               <Select onChange={culculateGBSize}
                 style={{ width: inputWidth }}
@@ -350,14 +352,14 @@ const ModelTrainingCreate = () => {
                 ]} />
             </Form.Item>
             <Form.Item required
-              label='梯度累计步数'
+              label='Gradient Accumulation Steps'
               name='gradientAccuStep'
               rules={[
                 {
                   required: true, message: '不能为空',
                 }
               ]}
-              tooltip='test'
+              tooltip='梯度累计步数。'
             >
               <Select onChange={culculateGBSize}
                 style={{ width: inputWidth }}
@@ -377,11 +379,11 @@ const ModelTrainingCreate = () => {
                   required: true, message: '不能为空',
                 }
               ]}
-              tooltip='test'
+              tooltip='NPU数最大值为8'
             >
               <InputNumber onChange={culculateGBSize} style={{ width: inputWidth }} />
             </Form.Item>
-            <Form.Item label='Global batch size' tooltip='Global batch size = Local batch size * number of NPU * Gradient Accumulation Steps'>
+            <Form.Item label='Global Batch Size' tooltip='所有节点和机器上，进行一次权重更新，全部训练数据总量。由Local Batch Size * NPU * Gradient Accumulation Steps得到。'>
               <span>{globalBatchSize}</span>
             </Form.Item>
             <Form.Item required
@@ -389,10 +391,10 @@ const ModelTrainingCreate = () => {
               name='learningRate'
               rules={[
                 {
-                  required: true, message: '不能为空',
+                  required: true, message: '不能为空。',
                 }
               ]}
-              tooltip='test'
+              tooltip='学习率，控制权重参数的更新速度。'
             >
               <Select
                 style={{ width: inputWidth }}
@@ -404,11 +406,11 @@ const ModelTrainingCreate = () => {
                   { value: 0.0003, label: (0.0003).toExponential() }
                 ]} />
             </Form.Item>
-            <Form.Item required label='学习率 warmup-ratio' name='warmUpRatio' rules={[
+            <Form.Item required label='预热比例' name='warmUpRatio' rules={[
               {
-                required: true, message: '不能为空',
+                required: true, message: '不能为空。',
               }
-            ]}>
+            ]} tooltip='学习率预热比例, 表明预热过程中，学习率的增长轮数和总训练轮数的比例。'>
               <Select
                 style={{ width: inputWidth }}
                 options={[

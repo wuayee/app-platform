@@ -128,11 +128,10 @@ export const routeList: MenuItem[] = [
     key: '/model-base',
     icon: Icons.app({}),
     label: '模型仓库',
-    hidden: true,
     component: ModelBase,
     children: [
       {
-        key: '/model-base/:id/detail',
+        key: '/model-base/:name/detail',
         icon: Icons.app({}),
         label: '模型仓库',
         component: ModelBaseDetail,
@@ -144,7 +143,6 @@ export const routeList: MenuItem[] = [
     key: '/model-training',
     icon: Icons.app({}),
     label: '模型训练',
-    hidden: true,
     component: ModelTraining,
     children: [
       {

@@ -33,17 +33,17 @@ export function modelbaseSync() {
   return post(url, {});
 }
 
-export function deleteModelbase(modelId: string) {
-  const url = `${MODEL_MANAGE_URL}/v1/models/${modelId}`;
+export function deleteModelbase(modelName: string) {
+  const url = `${MODEL_MANAGE_URL}/v1/models/${modelName}`;
   return del(url);
 }
 
-export function deleteModelbaseVersion(versionId: string) {
-  const url = `${MODEL_MANAGE_URL}/v1/versions/${versionId}`;
+export function deleteModelbaseVersion(versionId: string, modelName: string) {
+  const url = `${MODEL_MANAGE_URL}/v1/models/${modelName}/versions/${versionId}`;
   return del(url);
 }
 
 export function getModelSeries() {
-  const url = `${MODEL_MANAGE_URL}/v1/models/seriesNames`;
+  const url = `${MODEL_MANAGE_URL}/v1/models/seriesnames`;
   return get(url);
 }
