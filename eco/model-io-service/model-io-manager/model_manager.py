@@ -113,7 +113,7 @@ class PipelineItem(BaseModel):
 class ExternalService(BaseModel):
     name: str
     url: str
-    api_key: str
+    api_key: str | None = None
     http_proxy: str | None = None
     https_proxy: str | None = None
 
@@ -1178,10 +1178,12 @@ def create_model_svc_and_deploy(item, render_data):
             f.write('---\n')
     try:
         api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, yaml_objs[0])
+        logger.info("Create service [{}/{}] success!", MODEL_IO_NAMESPACE, item.name.strip())
     except ApiException as e:
         logger.warning("Create service [{}/{}] failed: {}", MODEL_IO_NAMESPACE, item.name.strip(), e)
     try:
         k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, yaml_objs[1])
+        logger.info("Create deployment [{}/{}] success!", MODEL_IO_NAMESPACE, item.name.strip())
     except ApiException as e:
         logger.warning("Create deployment [{}/{}] failed: {}.", MODEL_IO_NAMESPACE, item.name.strip(), e)
 
