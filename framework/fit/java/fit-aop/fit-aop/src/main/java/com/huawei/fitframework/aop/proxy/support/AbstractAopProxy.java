@@ -13,6 +13,7 @@ import com.huawei.fitframework.aop.proxy.FitProxy;
 import com.huawei.fitframework.aop.proxy.InterceptSupport;
 import com.huawei.fitframework.inspection.Nullable;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.LazyLoader;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -27,8 +28,7 @@ import java.util.stream.Collectors;
  * @since 2022-05-25
  */
 public abstract class AbstractAopProxy implements FitProxy {
-    @Nullable
-    private final Object target;
+    private final LazyLoader<Object> targetSupplier;
     private final List<MethodInterceptor> methodInterceptors;
     private final Method interceptMethod;
     private final Method getActualClassMethod;
@@ -39,7 +39,7 @@ public abstract class AbstractAopProxy implements FitProxy {
      * @param support 表示拦截支持信息的 {@link InterceptSupport}。
      */
     protected AbstractAopProxy(InterceptSupport support) {
-        this.target = support.getTarget();
+        this.targetSupplier = new LazyLoader<>(support::getTarget);
         this.methodInterceptors = support.getMethodInterceptors();
         try {
             this.interceptMethod = MethodInterceptor.class.getDeclaredMethod("intercept", MethodJoinPoint.class);
@@ -52,7 +52,7 @@ public abstract class AbstractAopProxy implements FitProxy {
 
     @Override
     public Class<?> $fit$getActualClass() {
-        return Optional.ofNullable(this.target).map(Object::getClass).orElse(null);
+        return Optional.ofNullable(this.getTarget()).map(Object::getClass).orElse(null);
     }
 
     /**
@@ -80,7 +80,7 @@ public abstract class AbstractAopProxy implements FitProxy {
         }
         List<MethodInterceptor> actualMethodInterceptors = this.filterMethodInterceptors(method);
         if (CollectionUtils.isEmpty(actualMethodInterceptors)) {
-            return proxiedInvoker.invoke(new DefaultMethodInvocation(this.target, method, args));
+            return proxiedInvoker.invoke(new DefaultMethodInvocation(this.getTarget(), method, args));
         }
         MethodJoinPoint joinPoint = this.getJoinPoint(proxy, method, args, proxiedInvoker, actualMethodInterceptors);
         return actualMethodInterceptors.get(0).intercept(joinPoint);
@@ -95,7 +95,7 @@ public abstract class AbstractAopProxy implements FitProxy {
 
     private MethodJoinPoint getJoinPoint(Object proxy, Method method, Object[] args, ProxiedInvoker proxiedInvoker,
             List<MethodInterceptor> actualMethodInterceptors) {
-        MethodInvocation proxiedInvocation = new DefaultMethodInvocation(this.target, method, args);
+        MethodInvocation proxiedInvocation = new DefaultMethodInvocation(this.getTarget(), method, args);
         MethodInvocation proxyInvocation = new DefaultMethodInvocation(proxy, method, args);
         MethodJoinPoint lastJoinPoint =
                 new DefaultMethodJoinPoint(proxiedInvocation, proxiedInvocation, proxyInvocation);
@@ -110,5 +110,10 @@ public abstract class AbstractAopProxy implements FitProxy {
             lastJoinPoint = new DefaultMethodJoinPoint(nextInvocation, proxiedInvocation, proxyInvocation);
         }
         return lastJoinPoint;
+    }
+
+    @Nullable
+    private Object getTarget() {
+        return this.targetSupplier.get();
     }
 }

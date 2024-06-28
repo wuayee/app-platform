@@ -2,6 +2,10 @@
     background-color: transparent; /* 设置背景透明 */
 }
 
+.jade-custom-collapse .ant-collapse-header, .jade-multi-conversation .ant-collapse .ant-collapse-header {
+    padding: 8px !important;
+}
+
 .value-custom, .value-custom .ant-select-selector {
     width: 100%;
     border-radius: 0 8px 8px 0;
@@ -34,7 +38,7 @@
     width: 12px;
 }
 
-.jade-panel {
+.jade-panel, .jade-multi-conversation .ant-collapse .ant-collapse-item {
     background-color: rgba(247,248,249); /* 设置背景颜色 */
     margin-bottom: 8px !important;
     border-radius: 8px !important;

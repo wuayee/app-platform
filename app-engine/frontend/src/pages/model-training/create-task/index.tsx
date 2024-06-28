@@ -1,18 +1,30 @@
-import { Button, Col, Flex, Form, InputNumber, Modal, Radio, Row, Select } from 'antd';
+import { Button, Col, Flex, Form, Input, InputNumber, Modal, Radio, Row, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import GoBack from '../../../components/go-back/GoBack';
+import { queryModelbaseList, queryModelDetail } from '../../../shared/http/model-base';
 import './index.scoped.scss';
+import { bytesToSize } from '../../../common/util';
+import { getDatasetVersions, getDatasets, get_eDataMateLogin, login_eDataMate } from '../../../shared/http/model-train';
 
 const ModelTrainingCreate = () => {
 
   const [modeSelected, setModeSelected] = useState('');
+  const [modelOptions, setModelOptions] = useState<any[]>([]);
+  const [versionOptions, setVersionOptions] = useState<any[]>([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [globalBatchSize, setGlobalBatchSize] = useState<any>('--');
-
+  const [datasetVerified, setDatasetVerified] = useState(0);  //0认证中，1认证成功，2认证失败
+  const [openVerify, setOpenVerify] = useState(false);
+  const [datasetList,setDatasetList]=useState([]);
+  const [datasetVersionList,setDatasetVersionList]=useState([]);
+  const [dataset,setDastaset] = useState(undefined);
   const [form] = Form.useForm();
+  const [verifyForm] = Form.useForm();
 
   useEffect(() => {
+    getModelOptions();
+    datasetLogin();
     form.setFieldsValue({
       loraR: 8,
       loraAlpha: 16,
@@ -25,6 +37,31 @@ const ModelTrainingCreate = () => {
       mode: 'full',
     });
   }, []);
+
+  //获取model全量列表
+  const getModelOptions = () => {
+    queryModelbaseList({ limit: 0, offset: 0 }).then(res => {
+      //setModelOptions([{ value: 'modelId123', label: 'model123' }]);
+    });
+  }
+
+  //选择model后获取对应的版本列表
+  const getModelVersions = (e: any) => {
+    //TODO:调用获取模型详情接口获取版本列表
+
+  }
+
+  //TODO:获取dataset的认证连通性检查，修改datasetVerified状态；进入创建页面时调用一次
+  const datasetLogin = async() => {
+    const res= await get_eDataMateLogin();
+    if(res===true){
+    //认证成功...
+    setDatasetVerified(1); 
+    getDatasetList();
+    }else{
+    //认证失败...
+    setDatasetVerified(2);}
+  }
 
   const inputWidth = 380;
   const navigate = useNavigate();
@@ -40,8 +77,38 @@ const ModelTrainingCreate = () => {
     }
   ];
 
+  //TODO：创建任务表单提交
   const onFinish = (value: any) => {
-    console.log(value);
+  } 
+
+  //TODO：身份认证提交
+  const verifySubmit =async (value: any) => {
+    const res = await login_eDataMate(value);
+    //认证成功...
+    setDatasetVerified(1);
+    getDatasetList();
+    setOpenVerify(false);
+  }
+
+  // 获取数据集接口
+  const getDatasetList = async() => {
+   const res= await getDatasets({datasetType:1, pagination: {
+      page: 0,
+      limit: 100
+   }});
+   setDatasetList(res);
+  }
+
+  // 选择数据集后
+  const selectDataset=async(value,option)=>{
+    // 数据集详情
+    setDastaset(option);
+    // 获取数据集版本
+  const res= await getDatasetVersions(value,{typeFilter:1,sourceType:['local'],pagination: {
+    page: 0,
+    limit: 100
+  }})
+  setDatasetVersionList(res);
   }
 
   const culculateGBSize = () => {
@@ -54,7 +121,6 @@ const ModelTrainingCreate = () => {
       setGlobalBatchSize('--');
     }
   }
-
 
   return (
     <div className='aui-fullpage'>
@@ -69,7 +135,7 @@ const ModelTrainingCreate = () => {
           flexDirection: 'column',
           justifyContent: 'space-between'
         }}>
-        <Form form={form} layout='vertical' onFinish={onFinish}>
+        <Form form={form} layout='vertical'  onFinish={onFinish}>
           <h3 style={{ fontSize: 18, marginBottom: 16 }}>模型和训练类型</h3>
           <Flex gap={16}>
             <Form.Item required label='模型' name='model' rules={[
@@ -77,14 +143,18 @@ const ModelTrainingCreate = () => {
                 required: true, message: '不能为空',
               }
             ]}>
-              <Select style={{ width: inputWidth }}></Select>
+              <Select
+                style={{ width: inputWidth }}
+                options={modelOptions}
+                onChange={getModelVersions}
+              ></Select>
             </Form.Item>
             <Form.Item required label='模型版本' name='modelVersion' rules={[
               {
                 required: true, message: '不能为空',
               }
             ]}>
-              <Select style={{ width: inputWidth }}></Select>
+              <Select style={{ width: inputWidth }} options={versionOptions}></Select>
             </Form.Item>
           </Flex>
           <Form.Item label='训练类型' name='mode' rules={[
@@ -163,31 +233,47 @@ const ModelTrainingCreate = () => {
             margin: 0
           }}>TP=8，PP&gt;1 的配置需要多机多卡分布式训练
           </p>
-          <h3 style={{ fontSize: 18, margin: '16px 0' }}>数据集</h3>
+          <Flex gap={16} align='center' style={{ marginTop: 8 }}>
+            <h3 style={{ fontSize: 18, margin: '16px 0' }}>数据集</h3>
+            <div hidden={datasetVerified === 1}>
+              使用数据集需要先进行 <a onClick={() => setOpenVerify(true)}>身份认证</a>
+            </div>
+          </Flex>
           <Flex gap={16}>
-            <Form.Item required label='数据集' name='dataset'>
-              <Select style={{ width: inputWidth }}></Select>
+            <Form.Item  required label='数据集' name='dataset' rules={[
+                {
+                  required: true, message: '不能为空',
+                }
+              ]}>
+              <Select options={datasetList} fieldNames={{label:'name',value:'id'}} style={{ width: inputWidth }}
+              onSelect={selectDataset} disabled={datasetVerified !== 1}></Select>
             </Form.Item>
-            <Form.Item required label='数据集版本' name='datasetVersion'>
-              <Select style={{ width: inputWidth }}></Select>
+            <Form.Item required label='数据集版本' name='datasetVersion' rules={[
+                {
+                  required: true, message: '不能为空',
+                }
+              ]}>
+              <Select options={datasetVersionList} style={{ width: inputWidth }}
+               fieldNames={{label:'version',value:'versionId'}} optionRender={(option)=>{return `V${option?.label}`}}
+                disabled={datasetVerified !== 1}></Select> 
             </Form.Item>
           </Flex>
           <Row style={{ width: 800 }}>
             <Col span={6}>
               <div className='input-label'>数据集名称</div>
-              <div className='input-value'>alpaca1</div>
+              <div className='input-value'>{dataset?.name||'--'}</div>
             </Col>
             <Col span={6}>
               <div className='input-label'>数据集大小</div>
-              <div className='input-value'>5GB</div>
+              <div className='input-value'>{bytesToSize(dataset?.totalSize)}</div>
             </Col>
             <Col span={6}>
               <div className='input-label'>数据集规格</div>
-              <div className='input-value'>3.4k问答对</div>
+              <div className='input-value'>--</div>
             </Col>
             <Col span={6}>
               <div className='input-label'>数据集描述</div>
-              <div className='input-value'>test</div>
+              <div className='input-value'>{dataset?.description|| '--'}</div>
             </Col>
           </Row>
           <h3 style={{ fontSize: 18, margin: '16px 0' }}>训练参数</h3>
@@ -346,7 +432,39 @@ const ModelTrainingCreate = () => {
       >
         <p>点击确认将退出创建，所填数据不会被保留。点击取消可继续进行创建。</p>
       </Modal>
-    </div>
+      <Modal
+        title='身份认证'
+        open={openVerify}
+        onCancel={() => setOpenVerify(false)}
+        onOk={verifyForm.submit}
+      >
+        <p>请输入eDataMate系统用户名和密码进行身份认证。</p>
+        <Form form={verifyForm} layout='vertical' onFinish={verifySubmit}>
+          <Form.Item required
+            label='用户名'
+            name='userName'
+            rules={[
+              {
+                required: true, message: '不能为空'
+              }
+            ]}
+          >
+            <Input style={{ width: '100%' }} />
+          </Form.Item>
+          <Form.Item required
+            label='密码'
+            name='password'
+            rules={[
+              {
+                required: true, message: '不能为空'
+              }
+            ]}
+          >
+            <Input style={{ width: '100%' }} type='password' />
+          </Form.Item>
+        </Form>
+      </Modal>
+    </div >
   );
 };
 export default ModelTrainingCreate;

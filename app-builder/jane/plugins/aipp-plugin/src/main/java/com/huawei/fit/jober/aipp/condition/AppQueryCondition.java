@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jober.aipp.condition;
 
+import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fit.http.annotation.RequestQuery;
-import com.huawei.fitframework.annotation.Property;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,14 +25,15 @@ import java.util.List;
 public class AppQueryCondition {
     private String tenantId;
 
-    @RequestQuery(name = "type", defaultValue = "app")
+    // todo 这边 defaultValue 没有生效，得看看原因
+    @RequestParam(name = "type", required = false, defaultValue = "app")
     private String type;
 
     private List<String> ids;
 
-    @RequestQuery(name = "name", required = false)
+    @RequestParam(name = "name", required = false)
     private String name;
 
-    @RequestQuery(name = "state", required = false)
+    @RequestParam(name = "state", required = false)
     private String state;
 }

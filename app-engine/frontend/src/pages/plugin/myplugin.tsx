@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Button, Dropdown } from 'antd';
+import { Input, Button, Dropdown, Tabs, Space } from 'antd';
 import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Pagination from '../../components/pagination/index';
@@ -17,14 +17,29 @@ enum tabItemE {
   TOOLFLOW = 'waterFlow',
 }
 
-const createItems: MenuProps['items'] = [
+const tabItems: TabsProps['items'] = [
   {
-    key: '1',
-    label: '上传工具',
+    key: tabItemE.TOOL,
+    label: '工具',
   },
   {
-    key: '2',
-    label: '创建工具流',
+    key: tabItemE.TOOLFLOW,
+    label: '工作流',
+  },
+];
+
+const appItems: TabsProps['items'] = [
+  {
+    key: 'draft',
+    label: '草稿',
+  },
+  {
+    key: 'published',
+    label: '已发布',
+  },
+  {
+    key: 'avaliable',
+    label: '已上架',
   },
 ];
 
@@ -77,67 +92,58 @@ const MyPlugins = () => {
     }
   };
 
-  return (
-    <div
-      className='aui-block'
-      style={{
-        height: 'calc(100vh - 140px)',
-        display: 'flex',
-        flexDirection: 'column',
-        borderRadius: '0 8px 0 0',
-      }}
-    >
+  return <div className='aui-block myplugin'>
+    <Tabs defaultActiveKey={tabItemE.TOOL} items={tabItems} onChange={onTabChange} />
+    <div className='top-operate'>
+      <div className='button-display'>
+        <Button
+          type='primary'
+          iconPosition='end'
+          onClick={(e)=>{
+            if(currentTab===tabItemE.TOOL){
+              setOpenUploadDrawer(e.timeStamp);
+            }
+          }}
+        >
+          创建
+        </Button>
+        <Input
+          showCount
+          maxLength={20}
+          placeholder="搜索"
+          onPressEnter={(e) => filterByName(e.target.value)}
+          prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
+          defaultValue={name}
+        />
+      </div>
       <div>
-        <Dropdown menu={{ items: createItems }}>
-          <Button
-            type='primary'
-            icon={<DownOutlined />}
-            iconPosition='end'
-            style={{
-              borderRadius: 4,
-              background: '#2673E5',
-              marginRight: 16,
-            }}
-          >
-            创建
-          </Button>
-          <Input
-            showCount
-            maxLength={20}
-            placeholder='搜索'
-            onPressEnter={(e) => filterByName(e.target.value)}
-            prefix={<Icons.search color='rgb(230, 230, 230)' />}
-            defaultValue={name}
-          />
-        </Dropdown>
-        <div hidden>
-          <Dropdown menu={{ items: appItems }} trigger={['click']}>
-            <Space className='app-select'>
-              全部应用
-              <DownOutlined />
-            </Space>
-          </Dropdown>
-        </div>
-        <div className='plugin-cards'>
-          {pluginData.map((card: any) =>
+      <Dropdown menu={{ items:appItems }} trigger={['click']}>
+        <Space className='app-select'>
+          全部应用
+          <DownOutlined />
+        </Space>
+      </Dropdown>
+      </div>
+      </div>
+    <div className='plugin-cards'>
+    {pluginData.map((card: any) =>
             currentTab === tabItemE.TOOL ? (
               <PluginCard key={card.uniqueName} pluginData={card} />
             ) : (
               <WorkflowCard key={card.uniqueName} pluginData={card} />
             )
           )}
-        </div>
-        <div style={{ paddingTop: 16 }}>
-          <Pagination
-            total={total}
-            current={pagination?.pageNum}
-            onChange={selectPage}
-            pageSize={pagination?.pageSize}
-          />
-        </div>
-      </div>
     </div>
-  );
-};
+    <div style={{ paddingTop: 16 }}>
+      <Pagination
+        total={total}
+        current={pagination?.pageNum}
+        onChange={selectPage}
+        pageSize={pagination?.pageSize}
+      />
+    </div>
+    <UploadToolDrawer openSignal={openUploadDrawer}/>
+  </div >
+}
 
 export default MyPlugins;

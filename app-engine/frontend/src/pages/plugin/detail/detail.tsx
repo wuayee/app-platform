@@ -46,7 +46,10 @@ const [outputParams,setOutputParams]=useState([]);
             <div className='version-div'>
               <Tag className='version'>v1.1.0</Tag>
             </div>
-            <Flex style={{ display: 'flex', alignItems: 'center' }} gap={4}>
+            <div className='icon-display'>
+            <PluginIcons.ToolIcon/>  
+            </div>
+            <Flex className='icon-display' gap={4}>
                {IconMap[data?.tags?.[0]]?.icon}
                <span style={{ fontSize: 12, fontWeight: 700 }}>{IconMap[data?.tags?.[0]]?.name}</span>
             </Flex>

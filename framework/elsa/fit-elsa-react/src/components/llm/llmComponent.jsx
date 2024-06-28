@@ -49,7 +49,7 @@ export const llmComponent = (jadeConfig) => {
                     type: "Object",
                     from: "Expand",
                     value: [
-                        {id: uuidv4(), name: "llmOutput", type: "string", from: "Input", description: "", value: ""}
+                        {id: uuidv4(), name: "llmOutput", type: "String", from: "Input", description: "", value: ""}
                     ]
                 }
             ]

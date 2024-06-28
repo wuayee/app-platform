@@ -127,3 +127,7 @@ padding: 8.5px 14px;
   position: absolute;
   left: 0;
 }
+:where(.css-dev-only-do-not-override-1okl62o).ant-table-wrapper .ant-table-tbody-virtual .ant-table-cell{
+  height: 40px;
+  padding: 8px 12px 8px 14px;
+}

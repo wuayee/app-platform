@@ -217,6 +217,21 @@ public enum AippErrCode implements ErrorCode {
     APP_VERSION_HAS_ALREADY(90002911, "该版本名称已发布，请使用其他版本名称"),
 
     /**
+     * 该版本名称已发布，请使用其他版本名称
+     */
+    APP_HAS_PUBLISHED(90002912, "该应用已经成功发布过，请不要重复发布。"),
+
+    /**
+     * 不合法的操作
+     */
+    INVALID_OPERATION(90002913, "不合法的操作"),
+
+    /**
+     * 该应用已经成功发布过，无法修改应用名称
+     */
+    APP_NAME_HAS_PUBLISHED(90002914, "该应用已经成功发布过，无法修改应用名称"),
+
+    /**
      * 错误码截止值
      */
     ERROR_CODE_BUTT(99999999, "Error code butt.");

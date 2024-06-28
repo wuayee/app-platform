@@ -1,38 +1,36 @@
 import { Button, Flex, Progress, Space, Table } from 'antd';
 import type { PaginationProps, TableColumnsType } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TableTextSearch from '../../components/table-text-search';
 import { useNavigate } from 'react-router';
 import { AppIcons } from '../../components/icons/app';
 import ArchiveCheckpoint from './archive';
+import { queryModelTaskList } from '../../shared/http/model-train';
 
-const showTotal: PaginationProps['showTotal'] = (total) => `Total: ${total}`;
+const showTotal: PaginationProps['showTotal'] = (num) => `Total: ${num}`;
 
 const ModelTraining = () => {
 
   const [isCheckpointOpen, setIsCheckpointOpen] = useState(false);
-  const [archiveTaskId, setArchiveTaskId] = useState({});
+  const [archiveTaskId, setArchiveTaskId] = useState('');
+  const [data, setData] = useState({ data: [], total: 0 });
+  //单独设置一个，用于归档后回调时刷新页面时使用
+  const [queryBody, setQueryBody] = useState({ page: 0, limit: 10 });
 
   const navigate = useNavigate();
 
-  const data = {
-    data: [
-      {
-        taskId: '123',
-        modelName: 'Qwen2-14B-Chat',
-        mode: 'lora',
-        strategy: 'TP4PP2',
-        datasetName: '数据集123',
-        startTime: '2024-6-13 10:21:23',
-        percent: 0.5,
-        curIter: 200,
-        totalIter: 400,
-        taskStatus: 'running',
-        archiveStatus: 'undo'
-      },
-    ],
-    total: 1
-  };
+  useEffect(() => {
+    getModelTaskList(queryBody)
+  }, []);
+
+  const getModelTaskList = (queryBody: any) => {
+    queryModelTaskList(queryBody).then(res => {
+      setData({
+        data: res?.result,
+        total: res?.count
+      })
+    });
+  }
 
   const typeOptions = [
     {
@@ -48,50 +46,50 @@ const ModelTraining = () => {
   const taskStatusOptions = [
     {
       text: '成功',
-      value: 'success',
+      value: 'FINISHED',
     },
     {
       text: '失败',
-      value: 'fail'
+      value: 'FAILED'
     },
     {
       text: '训练中',
-      value: 'running'
+      value: 'PROCESSING'
     },
   ];
 
   const archiveStatusOptions = [
     {
       text: '已归档',
-      value: 'archived',
+      value: 'ARCHIVED',
     },
     {
       text: '未归档',
-      value: 'undo'
+      value: 'NOT_ARCHIVED'
     },
     {
       text: '归档中',
-      value: 'archiving'
+      value: 'ARCHIVING'
     },
   ];
 
   const taskStatusCell = (status: string) => {
-    switch (status) {
-      case 'success':
+    switch (status.toUpperCase()) {
+      case 'FINISHED':
         return (
           <Flex gap={4} align='center'>
             <AppIcons.NormalIcon />
             成功
           </Flex>
         );
-      case 'fail':
+      case 'FAILED':
         return (
           <Flex gap={4} align='center'>
             <AppIcons.AbnormalIcon />
             失败
           </Flex>
         );
-      case 'running':
+      case 'PROCESSING':
         return (
           <Flex gap={4} align='center'>
             <AppIcons.RunningIcon />
@@ -106,22 +104,22 @@ const ModelTraining = () => {
   }
 
   const archiveStatusCell = (status: string) => {
-    switch (status) {
-      case 'archived':
+    switch (status.toUpperCase()) {
+      case 'ARCHIVED':
         return (
           <Flex gap={4} align='center'>
             <AppIcons.NormalIcon />
             已归档
           </Flex>
         );
-      case 'undo':
+      case 'NOT_ARCHIVED':
         return (
           <Flex gap={4} align='center'>
             <AppIcons.UndoIcon />
             未归档
           </Flex>
         );
-      case 'archiving':
+      case 'ARCHIVING':
         return (
           <Flex gap={4} align='center'>
             <AppIcons.RunningIcon />
@@ -135,7 +133,10 @@ const ModelTraining = () => {
     }
   }
 
-  const archiveCallback = () => {
+  const archiveCallback = (refresh = false) => {
+    if (refresh) {
+      getModelTaskList(queryBody);
+    }
     setIsCheckpointOpen(false);
   }
 
@@ -154,8 +155,8 @@ const ModelTraining = () => {
       ellipsis: true
     },
     {
-      key: 'mode',
-      dataIndex: 'mode',
+      key: 'modeType',
+      dataIndex: 'modeType',
       title: '训练类型',
       filters: typeOptions,
       render: (value) => {
@@ -237,6 +238,39 @@ const ModelTraining = () => {
     },
   ];
 
+  //筛选和排序项变更时的回调方法，触发数据调用方法
+  const fetchData = (pagination, filters, sorter) => {
+    console.log(filters);
+    let params: any = {
+      page: pagination?.current - 1,
+      limit: pagination?.pageSize
+    };
+    if (filters?.modelName && filters.modelName.length > 0) {
+      params.modelName = filters.modelName[0];
+    }
+    if (filters?.modelType) {
+      params.modelType = filters.modelType;
+    }
+    if (filters?.datasetName && filters.datasetName.length > 0) {
+      params.datasetName = filters.datasetName[0];
+    }
+    if (filters?.strategy && filters.strategy.length > 0) {
+      params.strategy = filters.strategy[0];
+    }
+    if (filters?.archiveStatus) {
+      params.archiveStatus = filters.archiveStatus;
+    }
+    if (filters?.taskStatus) {
+      params.taskStatus = filters.taskStatus;
+    }
+    if (sorter?.order) {
+      params.sort = [sorter?.field];
+      params.direction = [sorter?.order.slice(0, -3)];
+    }
+    setQueryBody(params);
+    getModelTaskList(params);
+  }
+
   return (
     <div className='aui-fullpage'>
       <div
@@ -270,11 +304,13 @@ const ModelTraining = () => {
           columns={columns}
           scroll={{ y: '800px' }}
           pagination={{
+            total: data?.total,
             size: 'small',
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal: showTotal,
           }}
+          onChange={fetchData}
         />
       </div>
       <ArchiveCheckpoint taskId={archiveTaskId} open={isCheckpointOpen} closeCallback={archiveCallback} />

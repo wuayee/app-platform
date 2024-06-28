@@ -76,8 +76,8 @@ public class ToolQuery {
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
      */
-    public ToolQuery(String toolName, List<String> includeTags, List<String> excludeTags, Boolean orTags, Integer pageNum,
-            Integer limit) {
+    public ToolQuery(String toolName, List<String> includeTags, List<String> excludeTags, Boolean orTags,
+            Integer pageNum, Integer limit) {
         this.toolName = toolName;
         this.includeTags = CollectionUtils.isNotEmpty(includeTags) ? new HashSet<>(includeTags) : new HashSet<>();
         this.excludeTags = CollectionUtils.isNotEmpty(excludeTags) ? new HashSet<>(excludeTags) : new HashSet<>();

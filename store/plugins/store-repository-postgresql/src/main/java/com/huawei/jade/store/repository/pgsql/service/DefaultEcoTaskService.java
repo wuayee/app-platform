@@ -11,6 +11,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.serialization.ObjectSerializer;
+import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.jade.store.entity.query.TaskQuery;
 import com.huawei.jade.store.entity.transfer.TaskData;
@@ -46,6 +47,7 @@ public class DefaultEcoTaskService implements EcoTaskService {
 
     @Override
     @Fitable(id = "store-repository-pgsql")
+    @Transactional
     public TaskData getTask(String taskId) {
         TaskDo taskDo = this.taskMapper.getTask(taskId);
         TaskData taskData = new TaskData();
@@ -57,6 +59,7 @@ public class DefaultEcoTaskService implements EcoTaskService {
 
     @Override
     @Fitable(id = "store-repository-pgsql")
+    @Transactional
     public List<TaskData> getTasks(TaskQuery taskQuery) {
         if (taskQuery == null) {
             return Collections.emptyList();

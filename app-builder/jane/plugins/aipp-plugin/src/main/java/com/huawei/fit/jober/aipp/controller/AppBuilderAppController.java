@@ -13,6 +13,7 @@ import com.huawei.fit.http.annotation.RequestBean;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestParam;
+import com.huawei.fit.http.annotation.RequestQuery;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.controller.AbstractController;
 import com.huawei.fit.jane.common.response.Rsp;
@@ -53,7 +54,9 @@ public class AppBuilderAppController extends AbstractController {
     @GetMapping(description = "查询 app 列表")
     public Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @RequestParam(value = "offset", defaultValue = "0") long offset,
-            @RequestParam(value = "limit", defaultValue = "10") int limit, @RequestBean AppQueryCondition cond) {
+            @RequestParam(value = "limit", defaultValue = "10") int limit, @RequestBean AppQueryCondition cond,
+            @RequestQuery(name = "type", defaultValue = "app") String type) {
+        cond.setType(type);
         return this.appService.list(cond, httpRequest, tenantId, offset, limit);
     }
 
@@ -102,7 +105,7 @@ public class AppBuilderAppController extends AbstractController {
         return this.appService.updateFlowGraph(appId, flowGraphDto, this.contextOf(httpRequest, tenantId));
     }
 
-    @PutMapping(value = "/{app_id}", description = "创建aipp")
+    @PutMapping(value = "/{app_id}", description = "更新 app")
     public Rsp<AppBuilderAppDto> update(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId,
             @RequestBody @Validated AppBuilderAppDto appDto) {

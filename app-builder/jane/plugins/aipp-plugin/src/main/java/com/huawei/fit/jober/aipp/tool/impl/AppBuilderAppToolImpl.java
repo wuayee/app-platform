@@ -5,7 +5,6 @@
 package com.huawei.fit.jober.aipp.tool.impl;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppCreateDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigDto;
@@ -19,8 +18,12 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.fel.core.formatters.OutputParser;
+import com.huawei.jade.fel.core.formatters.json.JsonOutputParser;
+import com.huawei.jade.fel.core.formatters.support.MarkdownParser;
 
 import java.util.List;
 import java.util.Objects;
@@ -39,12 +42,14 @@ public class AppBuilderAppToolImpl implements AppBuilderAppTool {
     private static final String INDEX_URL_FORMAT =
             "应用创建成功！ \n访问地址：{0}//#//app-develop//31f20efc7e0848deab6a6bc10fc3021e//app-detail//{1}";
     private final String appEngineUrl;
+    private final ObjectSerializer objectSerializer;
     private static final Logger log = Logger.get(AppBuilderAppToolImpl.class);
 
-    public AppBuilderAppToolImpl(AppBuilderAppService appService,
+    public AppBuilderAppToolImpl(AppBuilderAppService appService, ObjectSerializer objectSerializer,
             @Value("${app-engine.endpoint}") String appEngineUrl) {
         this.appService = appService;
         this.appEngineUrl = appEngineUrl;
+        this.objectSerializer = objectSerializer;
     }
 
     @Override
@@ -52,7 +57,10 @@ public class AppBuilderAppToolImpl implements AppBuilderAppTool {
     public String createApp(String appInfo) {
         AppCreateToolDto dto;
         try {
-            dto = JsonUtils.parseObject(appInfo, AppCreateToolDto.class);
+            OutputParser<AppCreateToolDto> parser =
+                    new MarkdownParser<>(JsonOutputParser.create(this.objectSerializer, AppCreateToolDto.class),
+                            "json");
+            dto = parser.parse(appInfo);
         } catch (Exception exception) {
             log.error("Failed to create app, parse json str error: {}", appInfo, exception);
             log.info("use default app attributes.");

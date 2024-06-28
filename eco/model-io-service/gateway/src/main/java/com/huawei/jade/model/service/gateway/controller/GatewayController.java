@@ -122,13 +122,12 @@ public class GatewayController {
             if (routeInfo.getModel() != null
                     && !this.modelStatisticsService.getModelLinkControl().containsKey(routeInfo.getModel())) {
                 // 初次设置，增加到modelLinkControl缓存
-                // 未传入max_link_num参数，默认设置最大链接数为1000
-                Integer maxLinkNum = (routeInfo.getMaxLinkNum() != null) ? routeInfo.getMaxLinkNum() : 1000;
+                Integer maxLinkNum = routeInfo.getMaxLinkNum(); // RouteInfo#maxLinkNum已配置缺省值1000
                 log.info("Add new link control for model: " + routeInfo.getModel()
                         + " for link num to: " + maxLinkNum);
                 this.modelStatisticsService.getModelLinkControl().put(routeInfo.getModel(), maxLinkNum);
             } else {
-                // 已经设置过最大链接数，更新modellinkcontrol
+                // 已经设置过最大链接数，更新modelLinkControl
                 Integer currentLinkNum = this.modelStatisticsService.getModelLinkControl().get(routeInfo.getId());
                 Integer oldLinkNum = this.currentRoutes.get(routeInfo.getModel()).getMaxLinkNum();
                 Integer currentUsage = oldLinkNum - currentLinkNum;

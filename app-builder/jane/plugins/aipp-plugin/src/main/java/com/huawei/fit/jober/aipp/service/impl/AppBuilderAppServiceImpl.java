@@ -148,11 +148,13 @@ public class AppBuilderAppServiceImpl
     }
 
     private void validateVersion(AippDto aippDto, OperationContext contextOf) {
+        String aippId = this.getAippIdByAppId(aippDto.getAppId(), contextOf);
         MetaFilter metaFilter = new MetaFilter();
         metaFilter.setVersions(Collections.singletonList(aippDto.getVersion()));
+        metaFilter.setMetaIds(Collections.singletonList(aippId));
         Map<String, List<String>> attributes = new HashMap<>();
-        attributes.put(AippConst.ATTR_AIPP_TYPE_KEY, Collections.singletonList(AippTypeEnum.NORMAL.name()));
-        attributes.put(AippConst.ATTR_META_STATUS_KEY, Collections.singletonList(AippMetaStatusEnum.ACTIVE.name()));
+        attributes.put(AippConst.ATTR_AIPP_TYPE_KEY, Collections.singletonList(AippTypeEnum.NORMAL.type()));
+        attributes.put(AippConst.ATTR_META_STATUS_KEY, Collections.singletonList(AippMetaStatusEnum.ACTIVE.getCode()));
         metaFilter.setAttributes(attributes);
         RangedResultSet<Meta> metas = this.metaService.list(metaFilter, true, 0, 1, contextOf);
         if (!metas.getResults().isEmpty()) {
@@ -191,6 +193,16 @@ public class AppBuilderAppServiceImpl
 
     @Override
     public AippCreate queryLatestPublished(String appId, OperationContext context) {
+        List<Meta> metas = this.getPublishedMetaList(appId, context);
+        if (metas.isEmpty()) {
+            log.error("Meta list can not be empty.");
+            throw new AippParamException(TASK_NOT_FOUND);
+        }
+        Meta latestMeta = metas.get(0);
+        return AippCreate.builder().version(latestMeta.getVersion()).aippId(latestMeta.getId()).build();
+    }
+
+    private List<Meta> getPublishedMetaList(String appId, OperationContext context) {
         String aippId = this.getAippIdByAppId(appId, context);
         MetaFilter filter = new MetaFilter();
         filter.setMetaIds(Collections.singletonList(aippId));
@@ -200,16 +212,7 @@ public class AppBuilderAppServiceImpl
         attributes.put(AippConst.ATTR_AIPP_TYPE_KEY, Collections.singletonList(AippTypeEnum.NORMAL.name()));
         attributes.put(AippConst.ATTR_META_STATUS_KEY, Collections.singletonList(AippMetaStatusEnum.ACTIVE.getCode()));
         filter.setAttributes(attributes);
-        List<Meta> metas = MetaUtils.getListMetaHandle(this.metaService, filter, context);
-        if (metas.isEmpty()) {
-            log.error("Meta list can not be empty.");
-            throw new AippParamException(TASK_NOT_FOUND);
-        }
-        Meta latestMeta = metas.get(0);
-        return AippCreate.builder()
-                .version(latestMeta.getVersion())
-                .aippId(latestMeta.getId())
-                .build();
+        return MetaUtils.getListMetaHandle(this.metaService, filter, context);
     }
 
     private AppBuilderAppCreateDto buildAppBuilderAppCreateDto(AppBuilderApp app) {
@@ -383,6 +386,14 @@ public class AppBuilderAppServiceImpl
             log.error("update aipp failed, [name={}, tenantId={}]", name, context.getTenantId());
             throw new AippException(context, AippErrCode.AIPP_NAME_IS_DUPLICATE);
         }
+
+        List<Meta> metaList = this.getPublishedMetaList(appId, context);
+        if (metaList.isEmpty()) {
+            return;
+        }
+        if (!StringUtils.equals(metaList.get(0).getName(), name)) {
+            throw new AippException(AippErrCode.APP_NAME_HAS_PUBLISHED);
+        }
     }
 
     private void validateAppName(String name, OperationContext context) {
@@ -409,9 +420,10 @@ public class AppBuilderAppServiceImpl
     @Transactional
     @Fitable(id = "default")
     public Rsp<AppBuilderAppDto> updateApp(String appId, AppBuilderAppDto appDto, OperationContext context) {
-        if (appDto != null) {
-            this.validateUpdateApp(appId, appDto.getName(), context);
+        if (appDto == null) {
+            throw new AippException(AippErrCode.INVALID_OPERATION);
         }
+        this.validateUpdateApp(appId, appDto.getName(), context);
         this.appUpdateValidator.validate(appId);
         AppBuilderApp update = this.appFactory.create(appId);
         update.setUpdateBy(context.getOperator());

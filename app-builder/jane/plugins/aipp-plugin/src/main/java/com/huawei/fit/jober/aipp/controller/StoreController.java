@@ -18,6 +18,7 @@ import com.huawei.fit.jober.aipp.dto.StoreBasicNodeInfoDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.jade.carver.tool.model.transfer.ToolData;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class StoreController extends AbstractController {
      * @param pageNum 表示页码的 {@code int}。
      * @param pageSize 表示限制的 {@code int}。
      * @param taskName 表示任务名的 {@link String}。
-     * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link ModelDto}{@code >}。
+     * @return 表示格式化之后的返回消息的 {@link Rsp}{@code <}{@link ModelDto}{@code >}。
      */
     @GetMapping(path = "/models", description = "获取任务的模型列表")
     public Rsp<ModelDto> getModels(HttpClassicServerRequest httpRequest,
