@@ -16,9 +16,9 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
 import com.huawei.fit.jober.aipp.dto.ModelDto;
 import com.huawei.fit.jober.aipp.dto.StoreBasicNodeInfoDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
+import com.huawei.fit.jober.aipp.dto.ToolDto;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.jade.carver.tool.model.transfer.ToolData;
 
 import java.util.List;
 
@@ -66,7 +66,7 @@ public class StoreController extends AbstractController {
     }
 
     @GetMapping(path = "/plugins", description = "获取已发布的所有指定类型的插件配置")
-    public Rsp<List<ToolData>> getPlugins(HttpClassicServerRequest httpRequest, @RequestParam("tag") String tag,
+    public Rsp<ToolDto> getPlugins(HttpClassicServerRequest httpRequest, @RequestParam("tag") String tag,
             @PathVariable("tenant_id") String tenantId,
             @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean orTags,
             @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,

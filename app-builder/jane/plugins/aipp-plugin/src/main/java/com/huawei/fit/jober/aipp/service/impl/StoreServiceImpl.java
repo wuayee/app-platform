@@ -15,6 +15,7 @@ import com.huawei.fit.jober.aipp.dto.ModelDto;
 import com.huawei.fit.jober.aipp.dto.StoreBasicNodeInfoDto;
 import com.huawei.fit.jober.aipp.dto.StoreNodeConfigResDto;
 import com.huawei.fit.jober.aipp.dto.StoreWaterFlowDto;
+import com.huawei.fit.jober.aipp.dto.ToolDto;
 import com.huawei.fit.jober.aipp.dto.ToolModelDto;
 import com.huawei.fit.jober.aipp.enums.AppCategory;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
@@ -24,6 +25,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.service.ToolService;
@@ -66,8 +68,10 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<ToolData> getPlugins(String tag, boolean orTags, int pageNum, int pageSize, OperationContext operationContext) {
-        return this.buildToolNodesConfig(tag, orTags, pageNum, pageSize);
+    public ToolDto getPlugins(String tag, boolean orTags, int pageNum, int pageSize,
+            OperationContext operationContext) {
+        ListResult<ToolData> toolDataListResult = this.buildToolNodesConfig(tag, orTags, pageNum, pageSize);
+        return ToolDto.builder().toolData(toolDataListResult.getData()).total(toolDataListResult.getCount()).build();
     }
 
     @Override
@@ -76,7 +80,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     private List<ToolModelDto> getToolModelList(String tag, boolean orTags, int pageNum, int pageSize) {
-        return this.buildToolNodesConfig(tag, orTags, pageNum, pageSize)
+        return this.buildToolNodesConfig(tag, orTags, pageNum, pageSize).getData()
                 .stream()
                 .map(toolData -> ToolModelDto.combine2ToolModelDto(toolData,
                         tag.equalsIgnoreCase(HUGGINGFACE.getName())
@@ -85,14 +89,14 @@ public class StoreServiceImpl implements StoreService {
                 .collect(Collectors.toList());
     }
 
-    private List<ToolData> buildToolNodesConfig(String tag, boolean orTags, int pageNum, int pageSize) {
+    private ListResult<ToolData> buildToolNodesConfig(String tag, boolean orTags, int pageNum, int pageSize) {
         ToolQuery query = new ToolQuery(null,
                 Collections.singletonList(tag),
                 Collections.singletonList(StringUtils.EMPTY),
                 orTags,
                 pageNum,
                 pageSize);
-        return this.toolService.searchTools(query).getData();
+        return this.toolService.searchTools(query);
     }
 
     private String getDefaultModel(ToolData toolData, String tag) {
@@ -117,7 +121,8 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(boolean orTags, int pageNum, int pageSize) {
-        List<ToolData> waterFlows = this.buildToolNodesConfig(AppCategory.WATER_FLOW.getTag(), orTags, pageNum, pageSize);
+        List<ToolData> waterFlows =
+                this.buildToolNodesConfig(AppCategory.WATER_FLOW.getTag(), orTags, pageNum, pageSize).getData();
         List<String> storeIds = waterFlows.stream().map(ToolData::getUniqueName).collect(Collectors.toList());
         if (storeIds.isEmpty()) {
             return Collections.emptyList();
