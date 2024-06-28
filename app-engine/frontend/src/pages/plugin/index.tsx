@@ -14,7 +14,8 @@ const Plugin = () => {
     {
       key: 'user',
       label: '我的',
-      children: <MyPlugins />
+      children: <MyPlugins />,
+      // disabled: true,
     },
   ];
 

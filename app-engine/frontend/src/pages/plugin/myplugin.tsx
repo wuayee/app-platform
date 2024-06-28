@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import Pagination from '../../components/pagination/index';
 import PluginCard from '../../components/plugin-card';
-import { getPlugins } from '../../shared/http/plugin';
+import { getPluginTool, getPluginWaterFlow } from '../../shared/http/plugin';
+import { Icons } from '../../components/icons';
 import '../../index.scss';
-import { Icons } from "../../components/icons";
-import { DownOutlined } from '@ant-design/icons';
+import './style.scoped.scss';
+import UploadToolDrawer from './upload/uploadTool';
+import { useAppSelector } from '../../store/hook';
+import WorkflowCard from '../../components/plugin-card/workFlowCard';
+
+enum tabItemE {
+  TOOL = 'FIT',
+  TOOLFLOW = 'waterFlow',
+}
 
 const createItems: MenuProps['items'] = [
   {
@@ -16,118 +25,119 @@ const createItems: MenuProps['items'] = [
   {
     key: '2',
     label: '创建工具流',
-  }
+  },
 ];
 
 const MyPlugins = () => {
-
-  const categoryItems = [
-    { key: 'FIT', label: '推荐' },
-    { key: 'NEWS', label: '新闻阅读' },
-    { key: 'UTILITY', label: '实用工具' },
-    { key: 'SCIENCE', label: '科教' },
-    { key: 'SOCIAL', label: '社交' },
-    { key: 'LIFE', label: '便民生活' },
-    { key: 'WEBSITE', label: '网站搜索' },
-    { key: 'GAMES', label: '游戏娱乐' },
-    { key: 'FINANCE', label: '财经商务' },
-    { key: 'MEDIA', label: '摄影摄像' },
-    { key: 'MEETING', label: '会议记录' },
-  ];
-
   const [total, setTotal] = useState(0);
-  const [pageNum, setPageNum] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const [name, setName] = useState<string>('');
   const [pluginData, setPluginData] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('FAVOURITE');
+  const [openUploadDrawer, setOpenUploadDrawer] = useState(0); // 数字，非布尔值
+  const [currentTab, setCurrentTab] = useState(tabItemE.TOOL);
+  const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
 
+  const onTabChange = (activeKey) => {
+    setCurrentTab(activeKey);
+    setPagination({ pageNum: 1, pageSize: 10 });
+    getPluginList();
+  };
 
   useEffect(() => {
     getPluginList();
-  }, [selectedCategory, name, pageNum, pageSize]);
+  }, [name, pagination]);
 
   const getPluginList = () => {
-    getPlugins({ pageNum: pageNum - 1, pageSize, includeTags: selectedCategory, name })
-      .then(({ data, total }) => {
-        setTotal(total);
-        setPluginData(data);
-      })
-  }
+    const { pageNum, pageSize } = pagination;
+    if (currentTab === tabItemE.TOOL) {
+      getPluginTool(tenantId, { pageNum, pageSize, tag: currentTab }).then(({ data }) => {
+        setTotal(data?.total);
+        setPluginData(data?.toolData);
+      });
+    }
+    if (currentTab === tabItemE.TOOLFLOW) {
+      getPluginWaterFlow(tenantId, {
+        offset: (pageNum - 1) * pageSize,
+        limit: pageSize,
+        type: currentTab,
+      }).then(({ data }) => {
+        setTotal(data?.range?.total);
+        setPluginData(data?.results);
+      });
+    }
+  };
 
   const selectPage = (curPage: number, curPageSize: number) => {
-    if (pageNum !== curPage) {
-      setPageNum(curPage);
-    }
-    if (pageSize !== curPageSize) {
-      setPageSize(curPageSize);
-    }
-  }
+    setPagination({ pageNum: curPage, pageSize: curPageSize });
+  };
 
   const filterByName = (value: string) => {
     if (value) {
       setName(value);
     }
-  }
+  };
 
-  return <div
-    className='aui-block'
-    style={{
-      height: 'calc(100vh - 140px)',
-      display: 'flex',
-      flexDirection: 'column',
-      borderRadius: '0 8px 0 0',
-    }}
-  >
-    <div>
-      <Dropdown menu={{ items: createItems }}>
-        <Button
-          type='primary'
-          icon={<DownOutlined />}
-          iconPosition='end'
-          style={{
-            borderRadius: 4,
-            background: '#2673E5',
-            marginRight: 16
-          }}
-        >
-          创建
-        </Button>
-      </Dropdown>
-      <Input
-        showCount
-        maxLength={20}
-        placeholder="搜索"
-        style={{
-          marginBottom: 16,
-          width: '200px',
-          borderRadius: '4px',
-          border: '1px solid rgb(230, 230, 230)',
-        }}
-        onPressEnter={(e) => filterByName(e.target.value)}
-        prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
-        defaultValue={name}
-      />
+  return (
+    <div
+      className='aui-block'
+      style={{
+        height: 'calc(100vh - 140px)',
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: '0 8px 0 0',
+      }}
+    >
+      <div>
+        <Dropdown menu={{ items: createItems }}>
+          <Button
+            type='primary'
+            icon={<DownOutlined />}
+            iconPosition='end'
+            style={{
+              borderRadius: 4,
+              background: '#2673E5',
+              marginRight: 16,
+            }}
+          >
+            创建
+          </Button>
+          <Input
+            showCount
+            maxLength={20}
+            placeholder='搜索'
+            onPressEnter={(e) => filterByName(e.target.value)}
+            prefix={<Icons.search color='rgb(230, 230, 230)' />}
+            defaultValue={name}
+          />
+        </Dropdown>
+        <div hidden>
+          <Dropdown menu={{ items: appItems }} trigger={['click']}>
+            <Space className='app-select'>
+              全部应用
+              <DownOutlined />
+            </Space>
+          </Dropdown>
+        </div>
+        <div className='plugin-cards'>
+          {pluginData.map((card: any) =>
+            currentTab === tabItemE.TOOL ? (
+              <PluginCard key={card.uniqueName} pluginData={card} />
+            ) : (
+              <WorkflowCard key={card.uniqueName} pluginData={card} />
+            )
+          )}
+        </div>
+        <div style={{ paddingTop: 16 }}>
+          <Pagination
+            total={total}
+            current={pagination?.pageNum}
+            onChange={selectPage}
+            pageSize={pagination?.pageSize}
+          />
+        </div>
+      </div>
     </div>
-    <div style={{
-      overflowY: 'auto',
-      height: '100%',
-      display: 'flex',
-      gap: '16px',
-      flexWrap: 'wrap',
-      alignContent: 'flex-start'
-    }}>
-      {pluginData.map((card: any) => <PluginCard key={card.uniqueName} pluginData={card} />)}
-    </div>
-    <div style={{ paddingTop: 16 }}>
-      <Pagination
-        total={total}
-        current={pageNum}
-        onChange={selectPage}
-        pageSize={pageSize}
-      />
-    </div>
-  </div >
-}
+  );
+};
 
 export default MyPlugins;

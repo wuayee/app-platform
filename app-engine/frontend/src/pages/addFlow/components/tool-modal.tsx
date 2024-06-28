@@ -32,7 +32,7 @@ const ToolDrawer = (props) => {
   const listType = useRef('all');
   const navigate = useNavigate();
   const tab = [
-    { name: '系统内置', key: 'Builtin' },
+    { name: 'Builtin', key: 'Builtin' },
     { name: 'HuggingFace', key: 'HUGGINGFACE' },
     { name: 'LangChain', key: 'LANGCHAIN' },
     { name: 'LlamaIndex', key: 'LLAMAINDEX' },

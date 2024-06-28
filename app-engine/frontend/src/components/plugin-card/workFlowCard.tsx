@@ -1,14 +1,20 @@
 import React from 'react';
-import { Flex, Tag } from 'antd';
+import { Dropdown, Flex, MenuProps, Tag } from 'antd';
 import { Icons } from '../icons';
 import { PluginIcons } from '../icons/plugin';
-import { StarOutlined, UserOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import './style.scoped.scss';
-import { IconMap } from '../../pages/plugin/helper';
+import { IconMap, PluginCardTypeE } from '../../pages/plugin/helper';
 
-const PluginCard = ({ pluginData }: any) => {
-  const navigate = useNavigate();
+const WorkflowCard = ({ pluginData,cardType }: any) => {
+  const navigate = useNavigate()
+  const operatItems: MenuProps['items'] = [
+    {
+      label: <div>编排</div>,
+      key: 'choreography',
+    },
+  ];
   return(
   <div className='plugin-card'
    onClick={()=>{navigate(`/plugin/detail/${pluginData?.uniqueName}`)}}>
@@ -22,38 +28,32 @@ const PluginCard = ({ pluginData }: any) => {
         </div>
         <div className='plugin-card-user'>
           <Icons.user />
-          <span style={{ marginRight: 8 }}>{pluginData?.creator}</span>
+          <span style={{ marginRight: 8 }}>{pluginData?.createBy}</span>
           {pluginData?.tags?.map((tag: string, index: number) => <Tag style={{ margin: 0 }} key={index}>{tag}</Tag>)}
         </div>
       </div>
     </div>
     <div className='card-content'>
-      {pluginData?.description}
+      {pluginData?.attributes?.description}
     </div>
     {/* 卡片底部 */}
     <div className='card-footer'>
       <div hidden>
       <Flex gap={14}>
-        <span hidden={cardType===PluginCardTypeE.MARKET}>
+        <span hidden>
           <Tag className='footer-type'>Tag 1</Tag>
         </span>
         <span>
           <UserOutlined style={{ marginRight: 8 }} />
-          2.36k
+          {pluginData?.downloadCount}
         </span>
         <span>
           <StarOutlined style={{ marginRight: 8 }} />
-          126
+          {pluginData?.likeCount}
         </span>
       </Flex>
       </div>
-      <div hidden={cardType!==PluginCardTypeE.MARKET}>
-      <Flex style={{ display: 'flex', alignItems: 'center' }} gap={4} >
-        {IconMap[pluginData?.source?.toUpperCase()]?.icon}
-        <span style={{ fontSize: 12, fontWeight: 700 }}>{IconMap[pluginData?.source?.toUpperCase()]?.name}</span>
-      </Flex>
-      </div>
-      <div hidden onClick={(e)=>{e.stopPropagation();}}>
+      <div onClick={(e)=>{e.stopPropagation();}}>
         <Dropdown menu={{items:operatItems}} trigger={['click']}>
            <EllipsisOutlined className='footer-more'/>
         </Dropdown>
@@ -62,4 +62,4 @@ const PluginCard = ({ pluginData }: any) => {
   </div >
 )}
 
-export default PluginCard;
+export default WorkflowCard;
