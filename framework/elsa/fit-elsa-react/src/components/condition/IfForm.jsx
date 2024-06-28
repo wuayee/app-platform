@@ -53,6 +53,9 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
     };
 
     const getConditionOptionsByReferenceType = (referenceType) => {
+        if (!referenceType) {
+            return [];
+        }
         switch (referenceType.toLowerCase()) {
             case 'string':
                 return [
