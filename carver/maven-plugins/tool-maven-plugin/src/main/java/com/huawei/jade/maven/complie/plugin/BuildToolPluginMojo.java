@@ -1,8 +1,8 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fitframework.build.service;
+package com.huawei.jade.maven.complie.plugin;
 
 import com.huawei.fitframework.plugin.maven.support.AbstractMojo;
 
@@ -15,14 +15,14 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import java.util.Objects;
 
 /**
- * 表示编译服务的任务。
+ * 表示编译工具插件的任务。
  *
- * @author 季聿阶 j00559309
- * @since 2023-06-17
+ * @author 杭潇 h00675922
+ * @since 2024-06-13
  */
-@Mojo(name = "build-service", defaultPhase = LifecyclePhase.COMPILE,
+@Mojo(name = "build-tool", defaultPhase = LifecyclePhase.COMPILE,
         requiresDependencyResolution = ResolutionScope.RUNTIME)
-public class BuildServiceMojo extends AbstractMojo {
+public class BuildToolPluginMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project.packaging}", readonly = true, required = true)
     private String packaging;
 
@@ -31,7 +31,8 @@ public class BuildServiceMojo extends AbstractMojo {
         if (!Objects.equals(this.packaging, "jar")) {
             return;
         }
-        ServiceCompiler compiler = new ServiceCompiler(this.project(), this.getLog());
+        ToolPluginCompiler compiler = new ToolPluginCompiler(this.project(), this.getLog());
         compiler.compile();
     }
 }
+

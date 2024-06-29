@@ -10,6 +10,8 @@ import com.huawei.fitframework.maven.MavenCoordinate;
 import com.huawei.fitframework.parameterization.ParameterizedString;
 import com.huawei.fitframework.parameterization.ParameterizedStringResolver;
 import com.huawei.fitframework.parameterization.ResolvedParameter;
+import com.huawei.fitframework.plugin.maven.support.AbstractExecutor;
+import com.huawei.fitframework.plugin.maven.support.SharedDependency;
 import com.huawei.fitframework.protocol.jar.Jar;
 import com.huawei.fitframework.protocol.jar.Jar.Entry;
 import com.huawei.fitframework.protocol.jar.JarEntryLocation;

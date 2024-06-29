@@ -4,7 +4,6 @@
 
 package com.huawei.fitframework.build.service;
 
-import com.huawei.fitframework.build.support.AbstractCompiler;
 import com.huawei.fitframework.exception.ErrorCode;
 import com.huawei.fitframework.jvm.classfile.ClassFile;
 import com.huawei.fitframework.jvm.classfile.ConstantPool;
@@ -15,6 +14,7 @@ import com.huawei.fitframework.jvm.classfile.attribute.RuntimeVisibleAnnotations
 import com.huawei.fitframework.jvm.classfile.constant.IntegerInfo;
 import com.huawei.fitframework.jvm.classfile.constant.Utf8Info;
 import com.huawei.fitframework.jvm.classfile.lang.U2;
+import com.huawei.fitframework.plugin.maven.support.AbstractCompiler;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;

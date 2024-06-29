@@ -4,50 +4,53 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fitframework</groupId>
-        <artifactId>fit-maven-plugin</artifactId>
-        <version>3.5.0-SNAPSHOT</version>
+        <groupId>com.huawei.fit.jade</groupId>
+        <artifactId>jade-carver-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>fit-build-maven-plugin</artifactId>
+    <artifactId>tool-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
 
+    <properties>
+        <bytebuddy.version>1.14.12</bytebuddy.version>
+        <jackson.version>2.15.2</jackson.version>
+        <maven.project.version>2.2.1</maven.project.version>
+        <maven.plugin.api.version>3.9.1</maven.plugin.api.version>
+        <maven.plugin.plugin.version>3.6.0</maven.plugin.plugin.version>
+    </properties>
+
     <dependencies>
-        <!-- FIT core -->
+        <!-- FIT -->
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
-            <artifactId>fit-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fitframework</groupId>
-            <artifactId>fit-plugin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-maven-plugin-util</artifactId>
+            <version>${fit.version}</version>
         </dependency>
 
-        <!-- Maven -->
+        <!-- Service -->
         <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-compat</artifactId>
+            <groupId>com.huawei.fit.jade.service</groupId>
+            <artifactId>tool-service</artifactId>
+            <version>${version}</version>
         </dependency>
+
+        <!-- Bytebuddy -->
         <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-core</artifactId>
-            <scope>provided</scope>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>${bytebuddy.version}</version>
         </dependency>
+
+        <!-- Jackson -->
         <dependency>
-            <groupId>org.apache.maven.plugin-tools</groupId>
-            <artifactId>maven-plugin-annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.shared</groupId>
-            <artifactId>maven-dependency-tree</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <!-- Test -->
@@ -66,6 +69,18 @@
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Maven -->
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-project</artifactId>
+            <version>${maven.project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>${maven.plugin.api.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -73,6 +88,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
+                <version>${maven.plugin.plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>compile</phase>
