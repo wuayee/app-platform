@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -78,7 +79,7 @@ public class FileParserTest {
             assertThat(list.get(1).getParameterEntities().size()).isEqualTo(1);
             assertThat(list.get(2).getParameterEntities().size()).isEqualTo(2);
 
-            Set<String> tags = new HashSet<>(Collections.singletonList("FIT"));
+            Set<String> tags = new HashSet<>(Arrays.asList("FIT", "BUILTIN"));
             assertThat(list.get(0).getTags()).isEqualTo(tags);
             assertThat(list.get(1).getTags()).isEqualTo(tags);
             assertThat(list.get(2).getTags()).isEqualTo(tags);

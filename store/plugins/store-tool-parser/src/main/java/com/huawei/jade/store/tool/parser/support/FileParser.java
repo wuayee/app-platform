@@ -23,8 +23,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -35,6 +38,7 @@ import java.util.zip.ZipFile;
  * @since 2024-06-18
  */
 public class FileParser {
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final String JSON_FILE_PATH = "FIT-INF/tools.json";
     private static final String SCHEMA = "schema";
     private static final String RUNNABLES = "runnables";
@@ -92,10 +96,9 @@ public class FileParser {
     }
 
     private static Map<String, Object> getToolInfo(String toolInfo, String fileName) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode toolNode = objectMapper.readTree(toolInfo);
+        JsonNode toolNode = OBJECT_MAPPER.readTree(toolInfo);
         JsonNode schemaNode = toolNode.path(fileName);
-        return objectMapper.readValue(schemaNode.traverse(), new TypeReference<Map<String, Object>>() {});
+        return OBJECT_MAPPER.readValue(schemaNode.traverse(), new TypeReference<Map<String, Object>>() {});
     }
 
     /**
@@ -127,11 +130,16 @@ public class FileParser {
             methodEntity.getParameterEntities().addAll(parameterEntities);
 
             Map<String, Object> runnableInfos = getRunnableInfos(toolInfo);
-            methodEntity.setTags(runnableInfos.keySet());
             methodEntity.setRunnablesInfo(runnableInfos);
             methodEntity.setSchemaInfo(getSchemaInfos(toolInfo));
             methodEntity.setTargetFilePath(filePath);
             methodEntities.add(methodEntity);
+
+            JsonNode tagsInfo = toolNode.path("tags");
+            Set<String> tags = StreamSupport.stream(tagsInfo.spliterator(), false)
+                    .map(JsonNode::asText)
+                    .collect(Collectors.toSet());
+            methodEntity.setTags(tags);
         }
         return methodEntities;
     }

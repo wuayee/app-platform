@@ -41,7 +41,11 @@
           "fitableId": "default_fitable_id",
           "genericableId": "com.huawei.fit.test_demo"
         }
-      }
+      },
+      "tags": [
+        "FIT",
+        "BUILTIN"
+      ]
     },
     {
       "schema": {
@@ -75,7 +79,11 @@
           "fitableId": "default_fitable_id",
           "genericableId": "com.huawei.fit.test_demo"
         }
-      }
+      },
+      "tags": [
+        "FIT",
+        "BUILTIN"
+      ]
     },
     {
       "schema": {
@@ -115,7 +123,11 @@
           "fitableId": "default_fitable_id",
           "genericableId": "com.huawei.fit.test_demo"
         }
-      }
+      },
+      "tags": [
+        "FIT",
+        "BUILTIN"
+      ]
     }
   ]
 }
