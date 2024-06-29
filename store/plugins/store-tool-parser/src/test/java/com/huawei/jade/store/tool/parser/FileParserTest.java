@@ -4,14 +4,14 @@
 
 package com.huawei.jade.store.tool.parser;
 
-import static com.huawei.jade.store.tool.parser.support.ParseFileByPath.parseToolSchema;
+import static com.huawei.jade.store.tool.parser.support.FileParser.parseToolSchema;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.support.Zip;
 import com.huawei.jade.store.tool.parser.entity.MethodEntity;
 import com.huawei.jade.store.tool.parser.entity.ParameterEntity;
-import com.huawei.jade.store.tool.parser.support.ParseFileByPath;
+import com.huawei.jade.store.tool.parser.support.FileParser;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,13 +33,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
- * 表示 {@link ParseFileByPath} 的单元测试。
+ * 表示 {@link FileParser} 的单元测试。
  *
  * @author 杭潇 h00675922
  * @since 2024-06-15
  */
 @DisplayName("测试 ParseFileByPath 类")
-public class ParseFileByPathTest {
+public class FileParserTest {
     private final String sourceFolderPath = "src/test/resources/FIT-INF";
 
     @Nested

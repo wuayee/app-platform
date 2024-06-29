@@ -34,7 +34,7 @@ import java.util.zip.ZipFile;
  * @author 杭潇 h00675922
  * @since 2024-06-18
  */
-public class ParseFileByPath {
+public class FileParser {
     private static final String JSON_FILE_PATH = "FIT-INF/tools.json";
     private static final String SCHEMA = "schema";
     private static final String RUNNABLES = "runnables";

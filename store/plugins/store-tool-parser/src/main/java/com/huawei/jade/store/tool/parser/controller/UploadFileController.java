@@ -4,9 +4,10 @@
 
 package com.huawei.jade.store.tool.parser.controller;
 
+import static com.huawei.fitframework.inspection.Validation.greaterThan;
 import static com.huawei.fitframework.inspection.Validation.notBlank;
 import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.jade.store.tool.parser.support.ParseFileByPath.parseToolSchema;
+import static com.huawei.jade.store.tool.parser.support.FileParser.parseToolSchema;
 
 import com.huawei.fit.http.annotation.PostMapping;
 import com.huawei.fit.http.annotation.RequestBody;
@@ -65,12 +66,13 @@ public class UploadFileController {
      */
     public UploadFileController(PluginService pluginService, @Value("${file.temp.delete.timeout}") int deleteTimeout) {
         this.pluginService = notNull(pluginService, "The plugin service cannot be null.");
-        this.deleteTimeout = deleteTimeout;
+        this.deleteTimeout = greaterThan(deleteTimeout, 0, "The delete timeout must be positive. [deleteTimeout={0}]",
+                deleteTimeout);
     }
 
     /**
      * 表示解析上传工具文件的请求。
-     * <p>创建的临时文件设置默认15分钟自动删除。</p>
+     * <p>创建的临时文件设置根据配置超时时间自动删除，默认超时时间是 15 分钟。</p>
      *
      * @param receivedFile 表示分块的消息体数据的 {@link PartitionedEntity}。
      * @return 返回上传文件中的 JSON schema 数据列表的 {@link List}{@code <}{@link MethodEntity}{@code >}。
