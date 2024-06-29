@@ -45,27 +45,28 @@ const appItems: TabsProps['items'] = [
 
 const MyPlugins = () => {
   const [total, setTotal] = useState(0);
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState<string>(undefined);
   const [pluginData, setPluginData] = useState([]);
   const [openUploadDrawer, setOpenUploadDrawer] = useState(0); // 数字，非布尔值
   const [currentTab, setCurrentTab] = useState(tabItemE.TOOL);
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
+  const [refreshSignal, setRefreshSignal] = useState(0);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
 
   const onTabChange = (activeKey) => {
     setCurrentTab(activeKey);
     setPagination({ pageNum: 1, pageSize: 10 });
-    getPluginList();
+    setRefreshSignal(new Date().valueOf())
   };
 
   useEffect(() => {
     getPluginList();
-  }, [name, pagination]);
+  }, [refreshSignal]);
 
   const getPluginList = () => {
     const { pageNum, pageSize } = pagination;
     if (currentTab === tabItemE.TOOL) {
-      getPluginTool(tenantId, { pageNum, pageSize, tag: currentTab }).then(({ data }) => {
+      getPluginTool(tenantId, { pageNum, pageSize, tag: currentTab,name:name }).then(({ data }) => {
         setTotal(data?.total);
         setPluginData(data?.toolData);
       });
@@ -75,6 +76,7 @@ const MyPlugins = () => {
         offset: (pageNum - 1) * pageSize,
         limit: pageSize,
         type: currentTab,
+        name:name
       }).then(({ data }) => {
         setTotal(data?.range?.total);
         setPluginData(data?.results);
@@ -84,11 +86,13 @@ const MyPlugins = () => {
 
   const selectPage = (curPage: number, curPageSize: number) => {
     setPagination({ pageNum: curPage, pageSize: curPageSize });
+    setRefreshSignal(new Date().valueOf())
   };
 
-  const filterByName = (value: string) => {
-    if (value) {
-      setName(value);
+  const filterByName = (e) => {
+    if (e?.target?.value) {
+      setName(e.target.value);
+      setRefreshSignal(e.timeStamp);
     }
   };
 
@@ -108,21 +112,24 @@ const MyPlugins = () => {
           创建
         </Button>
         <Input
+          disabled
           showCount
           maxLength={20}
           placeholder="搜索"
-          onPressEnter={(e) => filterByName(e.target.value)}
+          onPressEnter={(e) => filterByName(e)}
           prefix={<Icons.search color={'rgb(230, 230, 230)'} />}
           defaultValue={name}
         />
       </div>
       <div>
+      <div hidden>
       <Dropdown menu={{ items:appItems }} trigger={['click']}>
         <Space className='app-select'>
           全部应用
           <DownOutlined />
         </Space>
       </Dropdown>
+      </div>
       </div>
       </div>
     <div className='plugin-cards'>
