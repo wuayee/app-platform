@@ -482,6 +482,11 @@ public class AippConst {
     public static final String BS_AIPP_MEMORY_KEY = "memories";
 
     /**
+     * use memory
+     */
+    public static final String BS_AIPP_USE_MEMORY_KEY = "useMemory";
+
+    /**
      * aipp app attribute key
      */
     public static final String ATTR_APP_ID_KEY = "app_id";
