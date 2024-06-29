@@ -1,0 +1,133 @@
+{
+  "tools": [
+    {
+      "schema": {
+        "name": "add list",
+        "description": "This method adds two list",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "a": {
+              "description": "First list",
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "b": {
+              "description": "Second list",
+              "type": "array",
+              "items": {
+                "type": "int"
+              }
+            }
+          },
+          "required": [
+            "a",
+            "b"
+          ]
+        },
+        "order": [
+          "a",
+          "b"
+        ],
+        "return": {
+          "description": "The sum of two list",
+          "type": "int"
+        }
+      },
+      "runnables": {
+        "FIT": {
+          "fitableId": "default_fitable_id",
+          "genericableId": "com.huawei.fit.test_demo"
+        }
+      },
+      "tags": [
+        "FIT",
+        "BUILTIN"
+      ]
+    },
+    {
+      "schema": {
+        "name": "add itself",
+        "description": "This method adds two integers",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "a": {
+              "description": "First integer",
+              "type": "int"
+            }
+          },
+          "required": [
+            "a"
+          ]
+        },
+        "order": [
+          "a"
+        ],
+        "return": {
+          "description": "The sum of two integers",
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "runnables": {
+        "FIT": {
+          "fitableId": "default_fitable_id",
+          "genericableId": "com.huawei.fit.test_demo"
+        }
+      },
+      "tags": [
+        "FIT",
+        "BUILTIN"
+      ]
+    },
+    {
+      "schema": {
+        "name": "name for tool",
+        "description": "description for tool.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "condition": {
+              "description": "condition description.",
+              "type": "string"
+            },
+            "query": {
+              "description": "query description.",
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          },
+          "required": [
+            "condition",
+            "query"
+          ]
+        },
+        "order": [
+          "condition",
+          "query"
+        ],
+        "return": {
+          "description": "the ans for test demo.",
+          "type": "string"
+        }
+      },
+      "runnables": {
+        "FIT": {
+          "fitableId": "default_fitable_id",
+          "genericableId": "com.huawei.fit.test_demo"
+        }
+      },
+      "tags": [
+        "FIT",
+        "BUILTIN"
+      ]
+    }
+  ]
+}
