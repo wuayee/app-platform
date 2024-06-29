@@ -42,7 +42,7 @@ register_api_tools(lambda dict_args: GoogleSearchRun(api_wrapper=GoogleSearchAPI
 
 if __name__ == "__main__":
     import time
-    from fel_langchain.schema_helper import dump_schema
+    from fel_langchain.langchain_schema_helper import dump_schema
 
     current_timestamp = time.strftime('%Y%m%d%H%M%S')
     dump_schema(function_tools, f"./tool_schema-{str(current_timestamp)}.json")

@@ -28,7 +28,7 @@ public class AiFlowSession {
      * @return {@link FlowSession} 对象。
      */
     public static Optional<FlowSession> get() {
-        return Optional.ofNullable(AiFlowSession.SESSION_THREAD_LOCAL.get());
+        return Optional.ofNullable(SESSION_THREAD_LOCAL.get());
     }
 
     /**
@@ -64,11 +64,11 @@ public class AiFlowSession {
      * @return 表示输出数据的 {@link O}。
      */
     public static <I, O> List<O> applyBatchPattern(List<Pattern<I, O>> patterns, I input, FlowSession session) {
-        AiFlowSession.SESSION_THREAD_LOCAL.set(session);
+        SESSION_THREAD_LOCAL.set(session);
         try {
             return patterns.stream().map(pattern -> pattern.invoke(input)).collect(Collectors.toList());
         } finally {
-            AiFlowSession.SESSION_THREAD_LOCAL.remove();
+            SESSION_THREAD_LOCAL.remove();
         }
     }
 }

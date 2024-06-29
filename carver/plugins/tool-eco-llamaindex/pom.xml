@@ -9,7 +9,8 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>tool-eco-langchain</artifactId>
+    <groupId>com.huawei.fit.jade.fel</groupId>
+    <artifactId>tool-eco-llamaindex</artifactId>
 
     <dependencies>
         <!-- FIT core -->
@@ -28,23 +29,6 @@
             <artifactId>tool-service</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
-
-        <!-- Test -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -54,7 +38,7 @@
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <configuration>
-                    <category>user</category>
+                    <category>system</category>
                     <level>5</level>
                 </configuration>
                 <executions>
