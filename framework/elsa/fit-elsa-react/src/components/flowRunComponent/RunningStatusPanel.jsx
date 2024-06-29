@@ -84,6 +84,11 @@ const RunningStatusPanel = forwardRef(function ({shape, onReportShow}, ref) {
                     <Button type="text"
                             className={`button-text button-text-no-hover-effect`}
                             disabled={!status.enableReport}
+                            onMouseDown={(e) => {
+                                // 防止每次点击触发elsa的鼠标事件，导致图形取消选中.
+                                e.stopPropagation();
+                                shape.select();
+                            }}
                             onClick={handleExpandResult}
                             icon={<Icon component={IconRunningResult}/>}>
                         {showResultPanel ? '收起运行结果' : '运行结果'}
