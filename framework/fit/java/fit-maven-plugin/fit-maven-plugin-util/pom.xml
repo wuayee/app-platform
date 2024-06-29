@@ -18,6 +18,12 @@
     </properties>
 
     <dependencies>
+        <!-- FIT core -->
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-util</artifactId>
+        </dependency>
+
         <!-- Maven -->
         <dependency>
             <groupId>org.apache.maven</groupId>

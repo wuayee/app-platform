@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fitframework.build.support;
+package com.huawei.fitframework.plugin.maven.support;
 
 /**
  * 表示共享的依赖信息。

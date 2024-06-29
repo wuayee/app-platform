@@ -7,8 +7,8 @@ package com.huawei.fitframework.build.plugin;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.huawei.fitframework.build.support.AbstractRepackager;
-import com.huawei.fitframework.build.support.SharedDependency;
 import com.huawei.fitframework.build.util.JarPackager;
+import com.huawei.fitframework.plugin.maven.support.SharedDependency;
 import com.huawei.fitframework.protocol.jar.Jar;
 import com.huawei.fitframework.util.StringUtils;
 

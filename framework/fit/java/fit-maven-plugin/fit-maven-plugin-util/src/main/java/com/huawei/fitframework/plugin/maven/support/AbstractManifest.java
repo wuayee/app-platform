@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fitframework.build.support;
+package com.huawei.fitframework.plugin.maven.support;
 
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.fitframework.util.XmlUtils;
@@ -36,6 +36,13 @@ public abstract class AbstractManifest {
         return value.replace(CRLF, LF).replace(CR, LF);
     }
 
+    /**
+     * 将给定的 XML 文档输出到指定的输出流。
+     *
+     * @param out 表示要写入 XML 文档的输出流的 {@link OutputStream}。
+     * @param document 表示要写入输出流的 XML 文档的 {@link Document}。
+     * @throws MojoExecutionException 在写入文档时发生 I/O 错误时抛出的异常。
+     */
     protected static void outputDocument(OutputStream out, Document document) throws MojoExecutionException {
         String content;
         try (ByteArrayOutputStream temporary = new ByteArrayOutputStream()) {
