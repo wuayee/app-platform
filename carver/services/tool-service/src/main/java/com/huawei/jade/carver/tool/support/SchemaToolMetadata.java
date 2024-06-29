@@ -43,6 +43,8 @@ public class SchemaToolMetadata implements Tool.Metadata {
             .build();
 
     private final Map<String, Object> parametersSchema;
+    private final Map<String, Object> parameterExtensions;
+    private final Map<String, Object> properties;
     private final Map<String, Object> returnSchema;
     private final Map<String, Object> defaultParameterValues;
 
@@ -53,9 +55,12 @@ public class SchemaToolMetadata implements Tool.Metadata {
      */
     public SchemaToolMetadata(Map<String, Object> toolSchema) {
         this.parametersSchema =
-                notNull(cast(toolSchema.get("parameters")), "The parameters json schema cannot be null.");
-        this.returnSchema = getIfNull(cast(toolSchema.get("return")), Collections::emptyMap);
-        this.defaultParameterValues = this.defaultParamValue(this.parametersSchema);
+                notNull(cast(toolSchema.get(SchemaKey.PARAMETERS)), "The parameters json schema cannot be null.");
+        this.parameterExtensions =
+                cast(toolSchema.getOrDefault(SchemaKey.PARAMETERS_EXTENSIONS, Collections.emptyMap()));
+        this.properties = cast(this.parametersSchema.get(SchemaKey.PARAMETERS_PROPERTIES));
+        this.returnSchema = getIfNull(cast(toolSchema.get(SchemaKey.RETURN_SCHEMA)), Collections::emptyMap);
+        this.defaultParameterValues = this.defaultParamValue(this.properties);
     }
 
     private static Type convertJsonSchemaTypeToJavaType(String schemaType) {
@@ -67,18 +72,18 @@ public class SchemaToolMetadata implements Tool.Metadata {
 
     @Override
     public List<Type> parameters() {
-        Map<String, Object> properties = cast(this.parametersSchema.get("properties"));
+        int propertiesSize = this.properties.size();
         List<String> parameterNames = this.parameterNames();
-        Validation.isTrue(properties.size() == parameterNames.size(),
+        Validation.isTrue(propertiesSize == parameterNames.size(),
                 "The size of properties must equals to the parameter names. "
                         + "[propertiesSize={0}, parameterNamesSize={1}]",
-                properties.size(),
+                propertiesSize,
                 parameterNames.size());
         List<Type> types = new ArrayList<>();
         for (String parameterName : parameterNames) {
-            Map<String, Object> property = cast(properties.get(parameterName));
+            Map<String, Object> property = cast(this.properties.get(parameterName));
             notNull(property, "No property. [name={0}]", parameterName);
-            String propertyType = cast(property.get("type"));
+            String propertyType = cast(property.get(SchemaKey.PROPERTIES_TYPE));
             types.add(convertJsonSchemaTypeToJavaType(propertyType));
         }
         return types;
@@ -86,10 +91,22 @@ public class SchemaToolMetadata implements Tool.Metadata {
 
     @Override
     public List<String> parameterNames() {
+        List<String> orderNames = this.getOrderNames();
+        if (CollectionUtils.isNotEmpty(orderNames)) {
+            // order 从 parametersSchema 上移到 schema 层级后，需要显式在order指定动态参数的顺序，这里不再需要合并 configParameters;
+            List<String> configParameters =
+                    cast(this.parameterExtensions.getOrDefault(SchemaKey.CONFIG_PARAMETERS, Collections.emptyList()));
+            return CollectionUtils.merge(orderNames, configParameters);
+        }
+        return new ArrayList<>(this.properties.keySet());
+    }
+
+    private List<String> getOrderNames() {
         if (MapUtils.isEmpty(this.parametersSchema)) {
             return Collections.emptyList();
         }
-        List<String> order = cast(this.parametersSchema.get("order"));
+        // 待从 parametersSchema 上移到 schema 层级;
+        List<String> order = cast(this.parametersSchema.get(SchemaKey.PARAMETERS_ORDER));
         if (CollectionUtils.isEmpty(order)) {
             return Collections.emptyList();
         }
@@ -117,7 +134,7 @@ public class SchemaToolMetadata implements Tool.Metadata {
         if (MapUtils.isEmpty(this.parametersSchema)) {
             return Collections.emptyList();
         }
-        List<String> required = cast(this.parametersSchema.get("required"));
+        List<String> required = cast(this.parametersSchema.get(SchemaKey.PARAMETERS_REQUIRED));
         if (CollectionUtils.isEmpty(required)) {
             return Collections.emptyList();
         }
@@ -134,15 +151,14 @@ public class SchemaToolMetadata implements Tool.Metadata {
         return Optional.empty();
     }
 
-    private Map<String, Object> defaultParamValue(Map<String, Object> parametersSchema) {
+    private Map<String, Object> defaultParamValue(Map<String, Object> properties) {
         Map<String, Object> tempParamValue = new HashMap<>();
-        Map<String, Object> properties = cast(parametersSchema.get("properties"));
         if (properties == null) {
             return tempParamValue;
         }
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             Map<String, Object> property = cast(entry.getValue());
-            Object value = property.get("default");
+            Object value = property.get(SchemaKey.DEFAULT_PARAMETER);
             if (value != null) {
                 tempParamValue.put(entry.getKey(), value);
             }
