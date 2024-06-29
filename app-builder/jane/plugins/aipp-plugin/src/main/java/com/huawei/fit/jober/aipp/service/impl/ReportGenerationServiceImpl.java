@@ -10,6 +10,7 @@ import com.huawei.fit.jober.aipp.dto.xiaohai.QADto;
 import com.huawei.fit.jober.aipp.service.ReportGenerationService;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
+import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.CollectionUtils;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
  * @author 李鑫 l00498867
  * @since 2024-06-15
  */
+@Component
 public class ReportGenerationServiceImpl implements ReportGenerationService {
     private static final Logger log = Logger.get(ReportGenerationService.class);
 
