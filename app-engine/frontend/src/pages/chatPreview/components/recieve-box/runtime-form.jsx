@@ -26,11 +26,11 @@ const RuntimeForm = (props) => {
       case 'interview':
         return <InterviewQuestions questions={questions}/>
         break;
-      case 'report':
-        return <ManageCubeCreateReport data={props.formConfig}/>
+      case 'manageCubeCreateReport':
+        return <ManageCubeCreateReport data={props.formConfig} mode={props.formConfig.type} />
         break;
       default:
-        return <div>44444444</div>
+        return <div>未找到对应的表单类型</div>
     }
   }
   return <>{(

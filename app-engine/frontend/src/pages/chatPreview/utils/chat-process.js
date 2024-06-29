@@ -42,15 +42,17 @@ export const historyChatProcess = (res) => {
         }
         if (aItem.logType === 'FORM') {
           let data  = JSON.parse(aItem.logData);
+          let formAppearance = JSON.parse(data.formAppearance);
+          let formData = JSON.parse(data.formData);
           answerObj.recieveType = 'form';
           answerObj.formConfig =  {
             instanceId: item.instanceId,
             version: '',
             aippId: '',
-            formName: 'report',
+            formName: formAppearance[0]?.name || 'normal',
             type: 'history',
-            formAppearance: JSON.parse(data.formAppearance),
-            formData: JSON.parse(data.formData),
+            formAppearance,
+            formData,
           }
         }
         if (aItem.logType === 'FILE') {
@@ -191,7 +193,8 @@ export const messageProcess = (aipp_id, instanceId, version, messageData, atAppI
       version,
       aippId: aipp_id,
       parentInstanceId: messageData.parentInstanceId,
-      formName: 'report',
+      formName: messageData.formAppearance[0].name || 'normal',
+      type: 'edit',
       formAppearance: messageData.formAppearance,
       formData: messageData.formData,
     }

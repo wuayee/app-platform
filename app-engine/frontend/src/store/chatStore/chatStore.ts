@@ -10,6 +10,7 @@ interface ChatCommonI {
   chatType: string;
   chatId: string;
   atChatId: string;
+  formReceived: boolean
 }
 
 // 使用该类型定义初始 state
@@ -21,6 +22,7 @@ const initialState: ChatCommonI = {
   chatType: null,
   chatId: null,
   atChatId: null,
+  formReceived: false
 } as ChatCommonI;
 
 export const chatCommonStore = createSlice({
@@ -55,6 +57,9 @@ export const chatCommonStore = createSlice({
     setAtChatId: (state, action: any) => {
       state.atChatId = action.payload;
     },
+    setFormReceived: (state, action: any) => {
+      state.formReceived = action.payload;
+    },
   },
 });
 
@@ -66,6 +71,7 @@ export const {
   setChatRunning,
   setChatType,
   setAtChatId,
+  setFormReceived
 } = chatCommonStore.actions;
 // 选择器等其他代码可以使用导入的 `RootState` 类型
 

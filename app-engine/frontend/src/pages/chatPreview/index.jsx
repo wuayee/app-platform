@@ -27,15 +27,16 @@ import {
   beforeSend,
   deepClone } from './utils/chat-process';
 import "./styles/chat-preview.scss";
-import { creatChat, tenantId, updateChat } from "../../shared/http/chat.js";
-import { useAppDispatch, useAppSelector } from "../../store/hook";
+import { creatChat, tenantId, updateChat } from "@shared/http/chat.js";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
 import {
   setAtChatId,
   setChatId,
   setChatList,
   setChatRunning,
-  setInspirationOpen
-} from "../../store/chatStore/chatStore";
+  setInspirationOpen,
+  setFormReceived
+} from "@/store/chatStore/chatStore";
 
 const ChatPreview = (props) => {
   const { previewBack } = props;
@@ -51,6 +52,7 @@ const ChatPreview = (props) => {
   const atChatId = useAppSelector((state) => state.chatCommonStore.atChatId);
   const atAppId = useAppSelector((state) => state.appStore.atAppId);
   const atAppInfo = useAppSelector((state) => state.appStore.atAppInfo);
+  const formReceived = useAppSelector((state) => state.chatCommonStore.formReceived);
   const { showElsa } = useContext(AippContext);
   const [checkedList, setCheckedList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -61,6 +63,7 @@ const ChatPreview = (props) => {
   let runningInstanceId = useRef("");
   let currentInfo = useRef();
   let feedRef = useRef();
+  let testRef = useRef(false);
   let runningVersion = useRef("");
   let runningAppid = useRef("");
   let childInstanceStop = useRef(false);
@@ -73,6 +76,10 @@ const ChatPreview = (props) => {
     !chatType && dispatch(setInspirationOpen(true));
     currentInfo.current = appInfo;
   }, []);
+
+  useEffect(() => {
+    testRef.current = formReceived;
+  }, [formReceived])
 
   // 灵感大全设置下拉列表
   function setEditorSelect(data, prompItem) {
@@ -249,10 +256,7 @@ const ChatPreview = (props) => {
             }
           }
         })
-        if (['ARCHIVED'].includes(messageData.status)) {
-          dispatch(setChatRunning(false));
-        }
-        if (['ERROR'].includes(messageData.status)) {
+        if (['ARCHIVED', 'ERROR'].includes(messageData.status)) {
           dispatch(setChatRunning(false));
         }
       } catch (err){
@@ -315,7 +319,13 @@ const ChatPreview = (props) => {
     initObj.loading = false;
     initObj.finished = (status === 'ARCHIVED');
     const idx = listRef.current.length - 1;
-    listRef.current.splice(idx, 1, initObj);
+    console.log(testRef.current);
+    if (testRef.current) {
+      listRef.current.push(initObj);
+      dispatch(setFormReceived(false));
+    } else {
+      listRef.current.splice(idx, 1, initObj);
+    }
     dispatch(setChatList(deepClone(listRef.current)));
   }
   // 流式输出拼接
