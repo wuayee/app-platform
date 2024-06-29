@@ -51,6 +51,7 @@ const jadeFlowAgent = (graph) => {
      * @return {{stop: stop, refresh: refresh, reset: reset}} 通过refresh刷新流程状态，通过reset重置流程，通过stop结束流程.
      */
     self.run = () => {
+        graph.activePage.isRunning = true;
         const nodes = graph.activePage.shapes.filter(s => s.isTypeof("jadeNode"));
         nodes.forEach(n => {
             n.setRunStatus(NODE_STATUS.UN_RUNNING);
@@ -83,6 +84,7 @@ const jadeFlowAgent = (graph) => {
                     delete n.input;
                     delete n.cost;
                 });
+                graph.activePage.isRunning = false;
             },
             // 结束运行.
             stop: () => {
@@ -91,6 +93,7 @@ const jadeFlowAgent = (graph) => {
                     n.emphasized = false;
                     n.drawer.setDisabled(false);
                 });
+                graph.activePage.isRunning = false;
             }
         };
     };
