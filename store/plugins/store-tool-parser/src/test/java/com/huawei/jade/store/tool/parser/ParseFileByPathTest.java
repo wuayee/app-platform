@@ -4,14 +4,14 @@
 
 package com.huawei.jade.store.tool.parser;
 
-import static com.huawei.jade.store.tool.parser.utils.ParseFileByPath.parseToolSchema;
+import static com.huawei.jade.store.tool.parser.support.ParseFileByPath.parseToolSchema;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.support.Zip;
 import com.huawei.jade.store.tool.parser.entity.MethodEntity;
 import com.huawei.jade.store.tool.parser.entity.ParameterEntity;
-import com.huawei.jade.store.tool.parser.utils.ParseFileByPath;
+import com.huawei.jade.store.tool.parser.support.ParseFileByPath;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -129,9 +129,7 @@ public class ParseFileByPathTest {
 
             try (FileOutputStream fos = new FileOutputStream(targetJarFile);
                  ZipOutputStream zos = new ZipOutputStream(fos)) {
-
                 zipFolder(sourceFolder, sourceFolder.getName(), zos);
-                System.out.println("Folder successfully zipped to " + targetJarFilePath);
             }
         }
 

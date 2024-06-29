@@ -2,3 +2,8 @@ fit:
   beans:
     packages:
     - 'com.huawei.jade.store.tool.parser'
+
+file:
+  temp:
+    delete:
+      timeout: 15

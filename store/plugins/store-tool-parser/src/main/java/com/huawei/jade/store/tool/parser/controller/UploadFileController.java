@@ -6,7 +6,7 @@ package com.huawei.jade.store.tool.parser.controller;
 
 import static com.huawei.fitframework.inspection.Validation.notBlank;
 import static com.huawei.fitframework.inspection.Validation.notNull;
-import static com.huawei.jade.store.tool.parser.utils.ParseFileByPath.parseToolSchema;
+import static com.huawei.jade.store.tool.parser.support.ParseFileByPath.parseToolSchema;
 
 import com.huawei.fit.http.annotation.PostMapping;
 import com.huawei.fit.http.annotation.RequestBody;
@@ -15,6 +15,7 @@ import com.huawei.fit.http.entity.FileEntity;
 import com.huawei.fit.http.entity.NamedEntity;
 import com.huawei.fit.http.entity.PartitionedEntity;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.FileUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -33,6 +34,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -52,15 +54,18 @@ public class UploadFileController {
     private static final String TOOL_PATH = "/var/store/tools/";
     private static final ScheduledExecutorService EXECUTOR_SERVICE = new ScheduledThreadPoolExecutor(1);
 
+    private final int deleteTimeout;
     private final PluginService pluginService;
 
     /**
      * 通过插件服务来初始化 {@link UploadFileController} 的新实例。
      *
      * @param pluginService 表示商品通用服务的 {@link PluginService}。
+     * @param deleteTimeout 表示临时文件删除的时间的 {@link Integer}。
      */
-    public UploadFileController(PluginService pluginService) {
+    public UploadFileController(PluginService pluginService, @Value("${file.temp.delete.timeout}") int deleteTimeout) {
         this.pluginService = notNull(pluginService, "The plugin service cannot be null.");
+        this.deleteTimeout = deleteTimeout;
     }
 
     /**
@@ -86,7 +91,7 @@ public class UploadFileController {
             String uniqueFileName = generateUniqueFileName(filename);
             File targetTemporaryFile = Paths.get(TEMPORARY_TOOL_PATH, uniqueFileName).toFile();
             log.info("Save the file {} to the temporary file directory and rename it as {}.", filename, uniqueFileName);
-            storeTemporaryFile(filename, file, targetTemporaryFile);
+            this.storeTemporaryFile(filename, file, targetTemporaryFile);
             methodEntities.addAll(parseToolSchema(targetTemporaryFile.getPath()));
             log.info("The file {} is parsed successfully.", filename);
         }
@@ -109,22 +114,32 @@ public class UploadFileController {
             }
             Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
+            log.info("Failed to copy file. [toCopyFilePath={}]", toCopyFilePath);
             throw new IllegalStateException(
                     StringUtils.format("Failed to copy file. [toCopyFilePath={0}]", toCopyFilePath), e);
+        } finally {
+            FileUtils.delete(toCopyFilePath);
+            log.info("The temporary file {} was deleted successfully.", toCopyFilePath);
         }
     }
 
     /**
-     * 将数据保存至数据库接口，并将文件复制到容器目录中。
+     * 数据保存至数据库，并将文件复制到容器目录中，该目录为共享目录。
      *
      * @param toolInfo 表示工具的元数据信息的 {@link List}{@code <}{@link MethodEntity}{@code >}。
      */
     @PostMapping(path = "/save/file", description = "保存工具文件")
     public void saveFiles(@RequestBody List<MethodEntity> toolInfo) {
-        List<String> filePath = new ArrayList<>();
+        List<String> filePath = new CopyOnWriteArrayList<>();
         for (MethodEntity methodEntity : toolInfo) {
+            String path = methodEntity.getTargetFilePath();
+            if (Files.exists(Paths.get(path))) {
+                filePath.add(path);
+            } else {
+                throw new IllegalStateException(
+                        StringUtils.format("Tool={0} timeout, please re-send.", methodEntity.getMethodName()));
+            }
             saveTool(methodEntity);
-            filePath.add(methodEntity.getTargetFilePath());
         }
         filePath.stream().distinct().forEach(this::copyFile);
         log.info("File information saved successfully.");
@@ -141,7 +156,7 @@ public class UploadFileController {
         this.pluginService.addPlugin(pluginData);
     }
 
-    private static void storeTemporaryFile(String fileName, FileEntity file, File targetFile) {
+    private void storeTemporaryFile(String fileName, FileEntity file, File targetFile) {
         try (InputStream inStream = file.getInputStream();
              OutputStream outStream = Files.newOutputStream(targetFile.toPath())) {
             byte[] buffer = new byte[4096];
@@ -149,8 +164,7 @@ public class UploadFileController {
             while ((bytesRead = inStream.read(buffer)) != -1) {
                 outStream.write(buffer, 0, bytesRead);
             }
-
-            EXECUTOR_SERVICE.schedule(() -> FileUtils.delete(targetFile.getPath()), 15, TimeUnit.MINUTES);
+            EXECUTOR_SERVICE.schedule(() -> FileUtils.delete(targetFile.getPath()), deleteTimeout, TimeUnit.MINUTES);
         } catch (IOException e) {
             FileUtils.delete(targetFile.getPath());
             log.error("Failed to write file. [fileName={}]", fileName, e);
@@ -161,6 +175,6 @@ public class UploadFileController {
     private String generateUniqueFileName(String fileName) {
         String extension =
                 notBlank(FileUtils.extension(fileName), "The file {0} must have a valid extension.", fileName);
-        return UUID.randomUUID() + "." + extension;
+        return UUID.randomUUID() + extension;
     }
 }
