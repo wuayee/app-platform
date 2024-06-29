@@ -226,7 +226,7 @@ const ModelTrainingCreate = () => {
               tooltip='张量并行，把线性层按行或列对模型权重进行划分。'
               rules={[
                 {
-                  required: true, message: '不能为空。',
+                  required: true,type:'number',min:1
                 }
               ]}
             >
@@ -238,7 +238,7 @@ const ModelTrainingCreate = () => {
               tooltip='管道并行，对模型进行层间划分。'
               rules={[
                 {
-                  required: true, message: '不能为空',
+                  required: true,type:'number',min:1
                 }
               ]}
             >
@@ -376,7 +376,7 @@ const ModelTrainingCreate = () => {
               name='npuNum'
               rules={[
                 {
-                  required: true, message: '不能为空',
+                  required: true, type:'number',min:1,max:8,
                 }
               ]}
               tooltip='NPU数最大值为8'
