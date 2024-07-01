@@ -3,6 +3,14 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
 
+    <mirrors>
+        <mirror>
+            <id>huaweicloud</id>
+            <mirrorOf>central</mirrorOf>
+            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/maven-central-repo/</url>
+        </mirror>
+    </mirrors>
+
     <profiles>
         <profile>
             <id>fit-snapshots</id>
