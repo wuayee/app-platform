@@ -7,10 +7,14 @@ package com.huawei.jade.carver.tool.waterflow;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 
+import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.carver.tool.Tool;
+import com.huawei.jade.carver.tool.support.SchemaKey;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,12 +28,6 @@ import java.util.Set;
  * @since 2024-04-22
  */
 public class DefaultValueFilterToolInfo implements Tool.Info {
-    private static final String PARAMETERS_KEY = "parameters";
-    private static final String PARAMETERS_PROPERTIES_KEY = "properties";
-    private static final String PARAMETERS_REQUIRED_KEY = "required";
-    private static final String PARAMETERS_ORDER_KEY = "order";
-    private static final String DEFAULT_PARAMETER_KEY = "default";
-
     private final Tool.Info toolInfo;
 
     public DefaultValueFilterToolInfo(Tool.Info toolInfo) {
@@ -45,17 +43,18 @@ public class DefaultValueFilterToolInfo implements Tool.Info {
     }
 
     static Map<String, Object> getFilterSchema(Map<String, Object> schema) {
-        Map<String, Object> parametersSchema = cast(schema.get(PARAMETERS_KEY));
+        Map<String, Object> parametersSchema = cast(schema.get(SchemaKey.PARAMETERS));
         if (MapUtils.isEmpty(parametersSchema)) {
             return schema;
         }
-        Map<String, Object> properties = cast(parametersSchema.get(PARAMETERS_PROPERTIES_KEY));
+        Map<String, Object> properties = cast(parametersSchema.get(SchemaKey.PARAMETERS_PROPERTIES));
         if (MapUtils.isEmpty(properties)) {
             return schema;
         }
         filterDefaultParams(properties, parametersSchema);
-        parametersSchema.remove(PARAMETERS_ORDER_KEY);
-        filterDynamicParams(properties);
+        parametersSchema.remove(SchemaKey.PARAMETERS_ORDER);
+        filterDynamicParams(properties, schema);
+        schema.remove(SchemaKey.PARAMETERS_EXTENSIONS);
         return schema;
     }
 
@@ -64,27 +63,40 @@ public class DefaultValueFilterToolInfo implements Tool.Info {
         Iterator<Map.Entry<String, Object>> iterator = properties.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, Object> entry = iterator.next();
-            Map<String, Object> property = cast(entry.getValue());
+            Map<String, Object> property = ObjectUtils.getIfNull(cast(entry.getValue()), Collections::emptyMap);
             // 删除有默认值的参数
-            if (property.get(DEFAULT_PARAMETER_KEY) != null) {
+            if (property.get(SchemaKey.DEFAULT_PARAMETER) != null) {
                 iterator.remove();
                 defaultKeyList.add(entry.getKey());
             }
         }
         // 过滤 required 中拥有默认值的参数。
-        List<String> requiredList = cast(parametersSchema.get(PARAMETERS_REQUIRED_KEY));
+        List<String> requiredList = cast(parametersSchema.get(SchemaKey.PARAMETERS_REQUIRED));
+        if (CollectionUtils.isEmpty(requiredList)) {
+            return;
+        }
         requiredList.removeIf(defaultKeyList::contains);
-        parametersSchema.put(PARAMETERS_REQUIRED_KEY, requiredList);
+        parametersSchema.put(SchemaKey.PARAMETERS_REQUIRED, requiredList);
     }
 
-    private static void filterDynamicParams(Map<String, Object> properties) {
+    private static void filterDynamicParams(Map<String, Object> properties, Map<String, Object> schema) {
+        getConfigParamName(schema).forEach(properties::remove);
+
         if (!properties.containsKey(WaterFlowToolConst.INPUT_PARAMS_KEY)) {
             return;
         }
         Map<String, Object> inputParams = cast(properties.get(WaterFlowToolConst.INPUT_PARAMS_KEY));
-        Map<String, Object> inputParamsProperties = cast(inputParams.get(PARAMETERS_PROPERTIES_KEY));
+        Map<String, Object> inputParamsProperties = cast(inputParams.get(SchemaKey.PARAMETERS_PROPERTIES));
         inputParamsProperties.remove(WaterFlowToolConst.TRACE_ID);
         inputParamsProperties.remove(WaterFlowToolConst.CALLBACK_ID);
+    }
+
+    private static List<String> getConfigParamName(Map<String, Object> schema) {
+        Map<String, Object> extension = cast(schema.get(SchemaKey.PARAMETERS_EXTENSIONS));
+        if (MapUtils.isEmpty(extension)) {
+            return Collections.emptyList();
+        }
+        return cast(extension.getOrDefault(SchemaKey.CONFIG_PARAMETERS, Collections.emptyList()));
     }
 
     @Override

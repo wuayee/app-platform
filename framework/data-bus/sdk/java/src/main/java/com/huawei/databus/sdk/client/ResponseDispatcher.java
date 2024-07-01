@@ -4,7 +4,9 @@
 
 package com.huawei.databus.sdk.client;
 
+import com.huawei.databus.sdk.message.ErrorMessageResponse;
 import com.huawei.databus.sdk.message.MessageHeader;
+import com.huawei.databus.sdk.message.MessageType;
 import com.huawei.databus.sdk.tools.Constant;
 import com.huawei.databus.sdk.tools.DataBusUtils;
 import com.huawei.fitframework.inspection.Validation;
@@ -115,7 +117,7 @@ class ResponseDispatcher {
                     ByteBuffer messageBody = DataBusUtils.copyFromByteBuffer(messageBytes, (int) header.size());
                     messageBytes = DataBusUtils.copyFromByteBuffer(messageBytes, messageBytes.remaining());
 
-                    this.deliverMessage(seq, messageBody);
+                    this.deliverMessage(seq, type, messageBody);
                 }
             } catch (Exception e) {
                 // 异常意味着连接问题或者编程错误，此时应该退出
@@ -131,11 +133,18 @@ class ResponseDispatcher {
         }
     }
 
-    private void deliverMessage(long seq, ByteBuffer messageBody) {
+    private void deliverMessage(long seq, byte type, ByteBuffer messageBody) {
         if (this.replyQueues.containsKey(seq)) {
-            this.replyQueues.get(seq).offer(messageBody);
+            // 打印错误信息并返回空缓冲区
+            if (type == MessageType.Error) {
+                ErrorMessageResponse response = ErrorMessageResponse.getRootAsErrorMessageResponse(messageBody);
+                logger.error("[deliverMessage] Error message received, [seq={}, error={}]", seq, response.errorType());
+                this.replyQueues.get(seq).offer(ByteBuffer.allocate(0));
+            } else {
+                this.replyQueues.get(seq).offer(messageBody);
+            }
         } else {
-            logger.error("[startEventLoop] No waiting consumer, [seq={}]", seq);
+            logger.error("[deliverMessage] No waiting consumer, [seq={}]", seq);
         }
     }
 }

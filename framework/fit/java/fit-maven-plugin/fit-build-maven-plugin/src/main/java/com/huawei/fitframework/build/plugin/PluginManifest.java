@@ -6,8 +6,8 @@ package com.huawei.fitframework.build.plugin;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.build.support.AbstractManifest;
 import com.huawei.fitframework.plugin.PluginCategory;
+import com.huawei.fitframework.plugin.maven.support.AbstractManifest;
 import com.huawei.fitframework.util.CodeableEnum;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.fitframework.util.XmlUtils;

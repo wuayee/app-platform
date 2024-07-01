@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fitframework.build.support;
+package com.huawei.fitframework.plugin.maven.support;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
 import static com.huawei.fitframework.util.ObjectUtils.getIfNull;
@@ -39,7 +39,7 @@ public abstract class AbstractExecutor {
     private final Log log;
     private final List<SharedDependency> sharedDependencies;
 
-    AbstractExecutor(MavenProject project, Log log, List<SharedDependency> sharedDependencies) {
+    protected AbstractExecutor(MavenProject project, Log log, List<SharedDependency> sharedDependencies) {
         this.project = notNull(project, "The maven project cannot be null.");
         this.log = notNull(log, "The log cannot be null.");
         this.sharedDependencies = getIfNull(sharedDependencies, Collections::emptyList);

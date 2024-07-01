@@ -7,7 +7,6 @@ package com.huawei.fitframework.build.app;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.huawei.fitframework.build.support.AbstractRepackager;
-import com.huawei.fitframework.build.support.SharedDependency;
 import com.huawei.fitframework.build.util.ArtifactDownloader;
 import com.huawei.fitframework.build.util.JarPackager;
 import com.huawei.fitframework.jvm.classfile.AccessFlag;
@@ -20,6 +19,7 @@ import com.huawei.fitframework.jvm.classfile.descriptor.MethodDescriptor;
 import com.huawei.fitframework.jvm.classfile.lang.U2;
 import com.huawei.fitframework.launch.AggregatedFitLauncher;
 import com.huawei.fitframework.maven.MavenCoordinate;
+import com.huawei.fitframework.plugin.maven.support.SharedDependency;
 import com.huawei.fitframework.protocol.jar.Jar;
 import com.huawei.fitframework.protocol.jar.JarEntryLocation;
 import com.huawei.fitframework.util.ClassUtils;

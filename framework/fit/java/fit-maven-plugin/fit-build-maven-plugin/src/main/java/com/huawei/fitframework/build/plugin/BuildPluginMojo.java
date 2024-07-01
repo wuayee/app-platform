@@ -4,8 +4,8 @@
 
 package com.huawei.fitframework.build.plugin;
 
-import com.huawei.fitframework.build.support.AbstractMojo;
-import com.huawei.fitframework.build.support.SharedDependency;
+import com.huawei.fitframework.plugin.maven.support.AbstractMojo;
+import com.huawei.fitframework.plugin.maven.support.SharedDependency;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;

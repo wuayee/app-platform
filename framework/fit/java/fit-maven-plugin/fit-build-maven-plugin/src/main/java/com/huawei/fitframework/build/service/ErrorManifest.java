@@ -6,7 +6,7 @@ package com.huawei.fitframework.build.service;
 
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
-import com.huawei.fitframework.build.support.AbstractManifest;
+import com.huawei.fitframework.plugin.maven.support.AbstractManifest;
 import com.huawei.fitframework.util.XmlUtils;
 
 import org.apache.maven.plugin.MojoExecutionException;

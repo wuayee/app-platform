@@ -33,7 +33,7 @@ const ModelBaseTable = () => {
   const getSeriesOptions = () => {
     getModelSeries().then(res => {
       if (res?.seriesNameList && res?.seriesNameList.length > 0) {
-        setSeriesOptions(res.seriesNameList);
+        setSeriesOptions(res.seriesNameList.map(item=>({text: item, value: item})));
       } else {
         setSeriesOptions([]);
       }
@@ -64,7 +64,7 @@ const ModelBaseTable = () => {
       sorter: true,
       ...TableTextSearch('model_name', true),
       render: (_, record) => (
-        <a onClick={() => { navigate(`/model-base/${record.model_id}/detail`); }}>
+        <a onClick={() => { navigate(`/model-base/${record.model_name}/detail`); }}>
           {record.model_name}
         </a>
       ),

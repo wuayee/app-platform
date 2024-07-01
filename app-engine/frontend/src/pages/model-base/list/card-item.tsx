@@ -7,7 +7,7 @@ import { deleteModel } from './delete';
 import { AvatarIcon } from '../../../assets/icon';
 
 const CardItem = ({ data, deleteCallback }: any) => {
-
+  
   const navigate = useNavigate();
   const operatorItems: MenuProps['items'] = [
     {
@@ -21,7 +21,7 @@ const CardItem = ({ data, deleteCallback }: any) => {
   ];
 
   const gotoDetail = () => {
-    navigate(`/model-base/${data.model_id}/detail`);
+    navigate(`/model-base/${data.model_name}/detail`);
   }
 
   return (

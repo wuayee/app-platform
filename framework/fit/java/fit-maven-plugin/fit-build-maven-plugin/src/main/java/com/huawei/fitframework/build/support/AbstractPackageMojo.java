@@ -5,6 +5,7 @@
 package com.huawei.fitframework.build.support;
 
 import com.huawei.fitframework.build.util.ArtifactDownloader;
+import com.huawei.fitframework.plugin.maven.support.AbstractMojo;
 
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.artifact.repository.ArtifactRepository;

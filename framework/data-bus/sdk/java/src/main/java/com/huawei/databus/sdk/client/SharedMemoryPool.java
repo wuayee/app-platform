@@ -97,6 +97,10 @@ class SharedMemoryPool {
                 logger.error("[applySharedMemory] Apply memory timeout. [seq={}]", seq);
                 return SharedMemoryResult.failure(ErrorType.Timeout);
             }
+            if (resBuf.remaining() == 0) {
+                return SharedMemoryResult.failure(ErrorType.UnknownError);
+            }
+
             ApplyMemoryMessageResponse response =
                     ApplyMemoryMessageResponse.getRootAsApplyMemoryMessageResponse(resBuf);
             if (response.errorType() == ErrorType.None) {
@@ -185,6 +189,9 @@ class SharedMemoryPool {
             if (resBuf == null) {
                 logger.error("[applyPermission] Apply permission timeout. [seq={}]", seq);
                 return MemoryPermissionResult.failure(ErrorType.Timeout);
+            }
+            if (resBuf.remaining() == 0) {
+                return MemoryPermissionResult.failure(ErrorType.UnknownError);
             }
 
             ApplyPermissionMessageResponse response =
@@ -316,6 +323,9 @@ class SharedMemoryPool {
             if (resBuf == null) {
                 logger.error("[getMemoryMetaData] GetMeta timeout. [seq={}]", seq);
                 return GetMetaDataResult.failure(ErrorType.Timeout);
+            }
+            if (resBuf.remaining() == 0) {
+                return GetMetaDataResult.failure(ErrorType.UnknownError);
             }
 
             GetMetaDataMessageResponse response =

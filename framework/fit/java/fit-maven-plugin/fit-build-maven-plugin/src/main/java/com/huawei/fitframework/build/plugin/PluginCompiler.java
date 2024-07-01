@@ -4,8 +4,8 @@
 
 package com.huawei.fitframework.build.plugin;
 
-import com.huawei.fitframework.build.support.AbstractCompiler;
-import com.huawei.fitframework.build.support.SharedDependency;
+import com.huawei.fitframework.plugin.maven.support.AbstractCompiler;
+import com.huawei.fitframework.plugin.maven.support.SharedDependency;
 import com.huawei.fitframework.util.StringUtils;
 
 import org.apache.maven.artifact.Artifact;

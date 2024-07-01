@@ -26,7 +26,6 @@
         <package name="" withSubpackages="true" static="false" />
         <emptyLine />
         <package name="net" withSubpackages="true" static="false" />
-        <emptyLine />
         <package name="org" withSubpackages="true" static="false" />
         <emptyLine />
         <package name="javacard" withSubpackages="true" static="false" />

@@ -50,6 +50,11 @@ public class AippConst {
     public static final int RETRY_TIMES = 60;
 
     /**
+     * 检索内容拼接符。
+     */
+    public static final String CONTENT_DELIMITER = "; ";
+
+    /**
      * flow_component_data
      */
     public static final String FLOW_COMPONENT_DATA_KEY = "flow_component_data";

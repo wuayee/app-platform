@@ -65,7 +65,7 @@ export default function LlmFormWrapper({disabled}) {
             if(!config.urls.toolListEndpoint) {
                 console.error('Cannot get config.urls.toolListEndpoint.');
             } else {
-                httpUtil.get(config.urls.toolListEndpoint + '/api/jober/store/platform/jade/categories/TOOL?pageNum=0&pageSize=10&includeTags=FIT', {}, (jsonData) => setToolOptions(jsonData.data.map(item => {
+                httpUtil.get(config.urls.toolListEndpoint + '/api/jober/store/platform/jade/categories/TOOL?pageNum=0&pageSize=10&includeTags=FIT&excludeTags=Config', {}, (jsonData) => setToolOptions(jsonData.data.map(item => {
                     return {
                         value: item.uniqueName,
                         label: item.name

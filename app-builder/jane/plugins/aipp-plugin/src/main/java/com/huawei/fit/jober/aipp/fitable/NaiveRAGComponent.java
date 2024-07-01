@@ -6,6 +6,7 @@ package com.huawei.fit.jober.aipp.fitable;
 
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.aipp.common.Utils;
+import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
@@ -60,7 +61,7 @@ public class NaiveRAGComponent implements FlowableService {
         if (CollectionUtils.isNotEmpty(tableIdList)) {
             KbVectorSearchDto kbVectorSearchCondition = this.buildKbVectorSearchDto(tableIdList, businessData);
             List<String> chunksList = this.knowledgeBaseService.vectorSearchKnowledgeTable(kbVectorSearchCondition);
-            ragOutput = String.join("; ", chunksList);
+            ragOutput = String.join(AippConst.CONTENT_DELIMITER, chunksList);
         }
         Map<String, Object> output = new HashMap<>();
         output.put("retrievalOutput", ragOutput);
