@@ -29,10 +29,10 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowtrace.
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowStateNode;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter.MappingFlowDataConverter;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter.MappingFromType;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter.MappingNode;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.converter.MappingNodeType;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.MappingFlowDataConverter;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.MappingFromType;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.MappingNode;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.MappingNodeType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowTaskType;

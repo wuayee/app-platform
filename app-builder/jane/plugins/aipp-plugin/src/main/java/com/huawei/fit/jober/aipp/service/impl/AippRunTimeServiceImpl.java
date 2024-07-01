@@ -287,6 +287,8 @@ public class AippRunTimeServiceImpl
         // 记录上下文
         businessData.put(AippConst.CONTEXT_APP_ID, meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
         businessData.put(AippConst.CONTEXT_INSTANCE_ID, metaInst.getId());
+        businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, true);
+        businessData.put(AippConst.BS_AIPP_MEMORIES_KEY, new ArrayList<>());
 
         // 添加memory
         List<Map<String, Object>> memoryConfigs = this.getMemoryConfigs(flowDefinitionId, context);
@@ -294,7 +296,6 @@ public class AippRunTimeServiceImpl
         boolean memorySwitch = this.getMemorySwitch(memoryConfigs, businessData);
         if (!memorySwitch) {
             this.startFlow(metaVersionId, flowDefinitionId, metaInstId, businessData, context);
-            businessData.put(AippConst.BS_AIPP_MEMORIES_KEY, new ArrayList<>());
             return metaInstId;
         }
         if (!StringUtils.equalsIgnoreCase("UserSelect", memoryType)) {
@@ -310,8 +311,6 @@ public class AippRunTimeServiceImpl
     }
 
     private boolean getMemorySwitch(List<Map<String, Object>> memoryConfig, Map<String, Object> businessData) {
-        // 兼容旧应用
-        businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, true);
         if (memoryConfig == null || memoryConfig.isEmpty()) {
             return true;
         }
