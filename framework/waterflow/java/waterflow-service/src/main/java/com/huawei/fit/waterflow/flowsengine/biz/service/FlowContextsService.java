@@ -78,7 +78,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -281,7 +280,7 @@ public class FlowContextsService {
         }
 
         Set<String> ids = contexts.keySet();
-        List<FlowContext<FlowData>> exits = repo.getPendingAndSentByIds(ids.stream().collect(Collectors.toList()));
+        List<FlowContext<FlowData>> exits = repo.getPendingAndSentByIds(new ArrayList(ids));
         if (CollectionUtils.isEmpty(exits)) {
             LOG.error("[resumeFlows] invalid context ids: {}", ids.toString());
             return;
