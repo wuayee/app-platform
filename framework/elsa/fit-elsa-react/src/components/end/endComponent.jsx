@@ -59,8 +59,11 @@ export const endComponent = (jadeConfig) => {
                 ...config,
                 taskId: action.formId,
                 formName: action.formName,
-                output: action.formOutput,
-            };
+                converter: {
+                    ...config.converter,
+                    entity: action.entity
+                }
+            }
         };
 
         /**
