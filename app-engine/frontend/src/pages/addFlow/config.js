@@ -24,7 +24,11 @@ export const configMap = {
           {
               node: "manualCheckNodeState",
               urls: {
-                runtimeFormUrl: "/elsaApi"
+                runtimeFormUrl: "/elsaApi/v1/api/{tenantId}/form/type/runtime"
+              },
+              params: {
+                tenantId: '31f20efc7e0848deab6a6bc10fc3021e',
+                appId: '',
               }
           },
           {
