@@ -30,3 +30,10 @@ export const VIRTUAL_CONTEXT_NODE = {
 export const CONNECTOR = {
     RADIUS: 6
 };
+
+export const SOURCE_PLATFORM = {
+    OFFICIAL: "official",
+    HUGGING_FACE: "huggingface",
+    LLAMA_INDEX: "llamaindex",
+    LANG_CHAIN: "langchain",
+};
