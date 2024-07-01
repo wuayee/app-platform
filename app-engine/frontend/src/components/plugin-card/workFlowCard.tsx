@@ -6,9 +6,12 @@ import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router';
 import './style.scoped.scss';
 import { IconMap, PluginCardTypeE } from '../../pages/plugin/helper';
+import { useAppSelector } from '../../store/hook';
 
 const WorkflowCard = ({ pluginData,cardType }: any) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const appId = useAppSelector((state) => state.appStore.appId);
   const operatItems: MenuProps['items'] = [
     {
       label: <div>编排</div>,
@@ -17,7 +20,7 @@ const WorkflowCard = ({ pluginData,cardType }: any) => {
   ];
   return(
   <div className='plugin-card'
-   onClick={()=>{navigate(`/plugin/detail/${pluginData?.uniqueName}`)}}>
+   onClick={()=>{navigate(``)}}>
     <div className='plugin-card-header'>
       <img src='/src/assets/images/knowledge/knowledge-base.png' />
       <div>

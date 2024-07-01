@@ -5,24 +5,27 @@ import { handleClickAddToolNode, handleDragToolNode } from '../utils';
 import { getToolList } from "@shared/http/aipp";
 import ToolModal from './tool-modal';
 import '../styles/tool-item.scss';
+import { PluginTypeE } from './model';
+import { getMyPlugin, getPlugins } from '../../../shared/http/plugin';
+import { useAppSelector } from '../../../store/hook';
 const { Search } = Input;
 const { Option } = Select;
 
-const ToolItem = (props) => {
-  const { activeKey } = props;
+const ToolItem = () => {
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const [ toolKey, setToolKey ] = useState('Builtin');
   const [ loading, setLoading ] = useState(false);
   const [ pageNum, setPageNum ] = useState(1);
   const [ pluginData, setPluginData ] = useState([]);
   const [ showModal, setShowModal ] = useState(false);
   const currentUser = localStorage.getItem('currentUser') || '';
-  const searchName = useRef('');
-  const listType = useRef('all');
+  const searchName = useRef(undefined);
+  const listType = useRef('market');
   useEffect(() => {
     getPluginList()
-  }, [activeKey])
+  }, [toolKey])
   const tab = [
-    { name: '系统内置', key: 'Builtin' },
+    { name: 'Builtin', key: 'Builtin' },
     { name: 'HuggingFace', key: 'HUGGINGFACE' },
     { name: 'LangChain', key: 'LANGCHAIN' },
   ];
@@ -34,28 +37,38 @@ const ToolItem = (props) => {
   const selectBefore = (
     <Select defaultValue="市场" onChange={handleChange}>
       <Option value="owner">个人</Option>
-      <Option value="all">市场</Option>
+      <Option value="market">市场</Option>
     </Select>
   );
   // 获取插件列表
-  const getPluginList = (key = undefined)=> {
+  const getPluginList =async (key = undefined)=> {
     setLoading(true);
-    let params:any = { pageNum: 1, pageSize: 200, includeTags: (key || toolKey), name: searchName.current };
-    listType.current === 'owner' && (params.owner = currentUser)
-    getToolList(params).then(res => {
+    let res;
+    if (listType.current === PluginTypeE.MARKET) {
+      res = await getPlugins({
+        pageNum,
+        pageSize:100,
+        includeTags: toolKey,
+        isPublished: true,
+        name: searchName.current,
+      });
+    } else {
+      res = await getMyPlugin(tenantId, {
+        pageNum,
+        pageSize:100,
+      });
+    }
+    const data=listType.current === PluginTypeE.MARKET? res?.data : res?.data?.toolData;
       setLoading(false);
-      if (res.code === 0) {
-        if (activeKey === 'HUGGINGFACE') {
-          res.data.forEach(item => {
-            item.type = 'huggingFaceNodeState',
-            item.context = {
-              default_model: item.defaultModel
-            }
-          })
-        };
-        setPluginData(res.data);
-      }
-    });
+      if (toolKey === 'HUGGINGFACE') {
+        data.forEach(item => {
+          item.type = 'huggingFaceNodeState',
+          item.context = {
+            default_model: item.defaultModel
+          }
+        })
+      };
+        setPluginData(data);
   }
   const handleClick = (key) => {
     setPageNum(1);

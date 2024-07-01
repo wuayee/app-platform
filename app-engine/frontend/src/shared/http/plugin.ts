@@ -33,3 +33,9 @@ export function getPluginWaterFlow(
   const url = `${PLUGIN_URL}/v1/api/${tenantId}/app`;
   return get(url, data);
 }
+
+// 我的-已发布（工具+工具流)
+export function getMyPlugin(tenantId, data: { pageNum: number; pageSize: number }) {
+  const url = `${PLUGIN_URL}/v1/api/${tenantId}/store/plugins`;
+  return get(url, data);
+}

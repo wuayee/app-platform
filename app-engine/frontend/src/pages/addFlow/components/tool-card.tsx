@@ -8,10 +8,13 @@ import { useAppSelector } from '../../../store/hook';
 
 const ToolCard = ({ pluginData }: any) => {
   const navigate = useNavigate();
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const appId = useAppSelector((state) => state.appStore.appId);
+
   // 类型处理
   const detailClick = () => {
    if (pluginData.tags.includes('WATERFLOW')) {
-    // navigate(`/app-develop/${item.tenantId}/app-detail/flow-detail/${item.appId}`);
+    // navigate(`/app-develop/${tenantId}/app-detail/flow-detail/${appId}`);
    } else {
     navigate(`/plugin/detail/${pluginData.uniqueName}`)
    }
