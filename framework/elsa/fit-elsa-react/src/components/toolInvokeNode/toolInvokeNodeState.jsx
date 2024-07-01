@@ -3,6 +3,7 @@ import {convertParameter, convertReturnFormat} from "@/components/util/MethodMet
 import httpUtil from "@/components/util/httpUtil.jsx";
 import {formatString} from "@/components/util/StringUtil.js";
 import {toolInvokeNodeDrawer} from "@/components/toolInvokeNode/toolInvokeNodeDrawer.jsx";
+import {SOURCE_PLATFORM} from "@/common/Consts.js";
 
 /**
  * 工具调用节点shape
@@ -84,6 +85,7 @@ export const toolInvokeNodeState = (id, x, y, width, height, parent, drawer) => 
         _generateOutput();
         self.flowMeta.jober.converter.entity = newConfig;
         self.flowMeta.jober.entity = toolEntity;
+        self.sourcePlatform = metaData.source?.toLowerCase() ?? SOURCE_PLATFORM.OFFICIAL;
         self.flowMeta.jober.entity.uniqueName = metaData.uniqueName;
         self.flowMeta.jober.entity.return.type = metaData.schema.return.type;
         self.text = self.page.generateNodeName(metaData.name, self.type);

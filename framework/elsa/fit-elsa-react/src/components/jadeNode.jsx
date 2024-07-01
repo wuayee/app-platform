@@ -1,6 +1,6 @@
 import {CopyPasteHelpers, DIRECTION, node} from "@fit-elsa/elsa-core";
 import {v4 as uuidv4} from "uuid";
-import {CONNECTOR, NODE_STATUS, SECTION_TYPE, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
+import {CONNECTOR, NODE_STATUS, SECTION_TYPE, SOURCE_PLATFORM, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 import React from "react";
 import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
 
@@ -42,7 +42,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
             },
         }
     };
-    self.sourcePlatform = "official";
+    self.sourcePlatform = SOURCE_PLATFORM.OFFICIAL;
     self.observed = [];
 
     /**
