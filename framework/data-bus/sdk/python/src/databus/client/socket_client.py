@@ -10,20 +10,20 @@ import threading
 from contextlib import contextmanager
 import logging
 import socket
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple, Union, Dict
 
 import flatbuffers
 from databus.message import (
-    MessageHeader, MAX_MESSAGE_LENGTH, ErrorMessageResponse,
+    MessageHeader, MAX_MESSAGE_LENGTH, MESSAGE_RESPONSE_MAPPING,
     ApplyMemoryMessage, ApplyMemoryMessageResponse,
-    ApplyPermissionMessage, ApplyPermissionMessageResponse,
+    ApplyPermissionMessage,
     ReleaseMemoryMessage, ReleasePermissionMessage,
     GetMetaDataMessage, GetMetaDataMessageResponse
 )
-from databus.message import CoreMessageType, CorePermissionType, CoreMessageResponseTypeHint
+from databus.message import CoreMessageType, CorePermissionType, CoreMessageResponseTypeHint, DataBusErrorCode
 from databus.exceptions import CoreError
 from databus.dto import WriteRequest, ReadRequest
-from databus.manager import MessageSeqManager
+from databus.manager import MessageSeqManager, ResponseItem, ResponseManager
 
 
 class SocketClient:
@@ -32,14 +32,6 @@ class SocketClient:
     """
     # 最长消息等待时间(unit: seconds)
     MAX_MESSAGE_WAITING_TIME = 30.0
-
-    # 消息发送类型与返回类型对应关系
-    MESSAGE_RESPONSE_MAPPING = {
-        CoreMessageType.ApplyMemory: ApplyMemoryMessageResponse.ApplyMemoryMessageResponse,
-        CoreMessageType.ApplyPermission: ApplyPermissionMessageResponse.ApplyPermissionMessageResponse,
-        CoreMessageType.Error: ErrorMessageResponse.ErrorMessageResponse,
-        CoreMessageType.GetMetaData: GetMetaDataMessageResponse.GetMetaDataMessageResponse,
-    }
 
     def __init__(self, core_address: Tuple[str, int] = None, core_socket: Optional[socket.socket] = None):
         """建立与`core_address` = (`core_host`, `core_port`)的socket连接并保持
@@ -62,8 +54,10 @@ class SocketClient:
             raise ValueError("SocketClient init without input parameters")
 
         self._executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
-        self._mailbox = dict()
+        self._mailbox: Dict[int, ResponseItem] = dict()
         self._seq_manager = MessageSeqManager()
+        self._response_manager = ResponseManager(self._socket, self._mailbox)
+        self._response_manager.start()
 
     def __del__(self):
         if self._executor:
@@ -73,6 +67,45 @@ class SocketClient:
             self._socket.shutdown(socket.SHUT_RDWR)
             self._socket.close()
             self._socket = None
+        if self._response_manager:
+            self._response_manager.join()
+            self._response_manager = None
+
+    @staticmethod
+    def _build_apply_permission_message(memory_id, permission_type, request):
+        apply_builder = flatbuffers.Builder(MAX_MESSAGE_LENGTH)
+        apply_builder.ForceDefaults(True)
+        # 判断是否需要写入用户自定义数据
+        need_to_write_user_data = permission_type == CorePermissionType.Write and request.is_operating_user_data
+        user_data_vec = apply_builder.CreateByteVector(request.user_data) if need_to_write_user_data else None
+        if not memory_id:
+            user_key_str = apply_builder.CreateString(request.user_key)
+            ApplyPermissionMessage.ApplyPermissionMessageStart(apply_builder)
+            ApplyPermissionMessage.AddObjectKey(apply_builder, user_key_str)
+        else:
+            ApplyPermissionMessage.ApplyPermissionMessageStart(apply_builder)
+            ApplyPermissionMessage.AddMemoryKey(apply_builder, memory_id)
+        ApplyPermissionMessage.AddPermission(apply_builder, permission_type)
+        if need_to_write_user_data:
+            ApplyPermissionMessage.AddIsOperatingUserData(apply_builder, True)
+            ApplyPermissionMessage.AddUserData(apply_builder, user_data_vec)
+        apply_builder.Finish(ApplyPermissionMessage.ApplyPermissionMessageEnd(apply_builder))
+        return apply_builder
+
+    @staticmethod
+    def _build_release_permission_message(memory_id, permission_type, request):
+        release_builder = flatbuffers.Builder(MAX_MESSAGE_LENGTH)
+        release_builder.ForceDefaults(True)
+        if not memory_id:
+            user_key_str = release_builder.CreateString(request.user_key)
+            ReleasePermissionMessage.ReleasePermissionMessageStart(release_builder)
+            ReleasePermissionMessage.AddObjectKey(release_builder, user_key_str)
+        else:
+            ReleasePermissionMessage.ReleasePermissionMessageStart(release_builder)
+            ReleasePermissionMessage.AddMemoryKey(release_builder, memory_id)
+        ReleasePermissionMessage.AddPermission(release_builder, permission_type)
+        release_builder.Finish(ReleasePermissionMessage.ReleasePermissionMessageEnd(release_builder))
+        return release_builder
 
     def send_shared_malloc_message(self, user_key: str, size: int) -> ApplyMemoryMessageResponse:
         """向DataBus内核发送申请内存块消息
@@ -139,40 +172,14 @@ class SocketClient:
         """
         if not request.user_key and not memory_id:
             raise ValueError("Both are None: user_key and memory_id.")
-        apply_builder = flatbuffers.Builder(MAX_MESSAGE_LENGTH)
-        apply_builder.ForceDefaults(True)
-        #
-        need_to_write_user_data = permission_type == CorePermissionType.Write and request.is_operating_user_data
-        user_data_vec = apply_builder.CreateByteVector(request.user_data) if need_to_write_user_data else None
-        if not memory_id:
-            user_key_str = apply_builder.CreateString(request.user_key)
-            ApplyPermissionMessage.ApplyPermissionMessageStart(apply_builder)
-            ApplyPermissionMessage.AddObjectKey(apply_builder, user_key_str)
-        else:
-            ApplyPermissionMessage.ApplyPermissionMessageStart(apply_builder)
-            ApplyPermissionMessage.AddMemoryKey(apply_builder, memory_id)
-        ApplyPermissionMessage.AddPermission(apply_builder, permission_type)
-        if need_to_write_user_data:
-            ApplyPermissionMessage.AddIsOperatingUserData(apply_builder, True)
-            ApplyPermissionMessage.AddUserData(apply_builder, user_data_vec)
-        apply_builder.Finish(ApplyPermissionMessage.ApplyPermissionMessageEnd(apply_builder))
+        apply_builder = self._build_apply_permission_message(memory_id, permission_type, request)
         try:
             response = self._send_message(apply_builder, CoreMessageType.ApplyPermission)
             CoreError.check_core_response("apply permission failed, result code {}", response.ErrorType())
             # 自动实现context manager, 返回ApplyPermissionMessageResponse方便裸读写
             yield response
         finally:
-            release_builder = flatbuffers.Builder(MAX_MESSAGE_LENGTH)
-            release_builder.ForceDefaults(True)
-            if not memory_id:
-                user_key_str = release_builder.CreateString(request.user_key)
-                ReleasePermissionMessage.ReleasePermissionMessageStart(release_builder)
-                ReleasePermissionMessage.AddObjectKey(release_builder, user_key_str)
-            else:
-                ReleasePermissionMessage.ReleasePermissionMessageStart(release_builder)
-                ReleasePermissionMessage.AddMemoryKey(release_builder, memory_id)
-            ReleasePermissionMessage.AddPermission(release_builder, permission_type)
-            release_builder.Finish(ReleasePermissionMessage.ReleasePermissionMessageEnd(release_builder))
+            release_builder = self._build_release_permission_message(memory_id, permission_type, request)
             # 返回值为None, 忽略
             _ = self._send_message(release_builder, CoreMessageType.ReleasePermission)
 
@@ -200,40 +207,21 @@ class SocketClient:
         :param message_seq: 消息的序列号
         :param message: 需要发送的消息
         :param message_type: 发送的消息消息类型
+        :raise CoreError: 内核返回错误
         :return: 如果消息有response则返回response, 否则返回None
         """
         logging.debug("DataBus message to core: %s.", message.hex())
         cv = threading.Condition()
-        self._mailbox[message_seq] = [cv]
+        self._mailbox[message_seq] = ResponseItem(cv)
         self._socket.send(message)
-        if message_type in self.MESSAGE_RESPONSE_MAPPING:
-            self._handle_response(self._socket.recv(MAX_MESSAGE_LENGTH))
+        if message_type in MESSAGE_RESPONSE_MAPPING:
             with cv:
-                cv.wait_for(lambda: len(self._mailbox[message_seq]) > 1, self.MAX_MESSAGE_WAITING_TIME)
-            mailbox = self._mailbox[message_seq]
-            return mailbox[1] if len(mailbox) > 1 else None
+                cv.wait_for(lambda: self._mailbox[message_seq].message_type is not None, self.MAX_MESSAGE_WAITING_TIME)
+            mail = self._mailbox[message_seq]
+            del self._mailbox[message_seq]
+            if not mail.message_type:
+                raise CoreError("Received nothing from core, code {}.", DataBusErrorCode.UnknownError)
+            if mail.message_type == CoreMessageType.Error:
+                raise CoreError("Received error {} from core.", mail.response.ErrorType())
+            return mail.response
         return None
-
-    def _handle_response(self, response: bytes):
-        """处理内核返回的消息
-
-        :param response: 内核返回消息原始数据
-        :raise CoreError: 内核返回错误
-        :raise UnexpectedMessageTypeError: 内核返回消息类型错误
-        """
-        logging.debug("DataBus core response: %s.", response.hex())
-        header = MessageHeader.MessageHeader.GetRootAs(response)
-        sequence_number = header.Seq()
-        raw_body = response[len(response) - header.Size():]
-        message_type = header.Type()
-        if message_type == CoreMessageType.Error:
-            # 有可能返回的是ErrorMessage
-            error_body = SocketClient.MESSAGE_RESPONSE_MAPPING[CoreMessageType.Error].GetRootAs(raw_body)
-            raise CoreError("Received error {} from core.", error_body.ErrorType())
-        if sequence_number in self._mailbox:
-            self._mailbox[sequence_number].append(
-                SocketClient.MESSAGE_RESPONSE_MAPPING[header.Type()].GetRootAs(raw_body))
-            # 通知线程
-            cv = self._mailbox[sequence_number][0]
-            with cv:
-                cv.notify()
