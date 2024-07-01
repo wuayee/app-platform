@@ -86,7 +86,7 @@ export default function ManualCheckForm({data, handleFormChange}) {
                 action(p, parent);
             }
         });
-    }
+    };
 
     const deregisterObservables = (entity) => {
         recursive(entity.outputParams, null, (p) => {
