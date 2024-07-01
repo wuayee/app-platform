@@ -10,7 +10,6 @@ import { queryModelTaskList } from '../../shared/http/model-train';
 const showTotal: PaginationProps['showTotal'] = (num) => `Total: ${num}`;
 
 const ModelTraining = () => {
-
   const [isCheckpointOpen, setIsCheckpointOpen] = useState(false);
   const [archiveTaskId, setArchiveTaskId] = useState('');
   const [data, setData] = useState({ data: [], total: 0 });
@@ -20,17 +19,17 @@ const ModelTraining = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getModelTaskList(queryBody)
+    getModelTaskList(queryBody);
   }, []);
 
   const getModelTaskList = (queryBody: any) => {
-    queryModelTaskList(queryBody).then(res => {
+    queryModelTaskList(queryBody).then((res) => {
       setData({
         data: res?.result,
-        total: res?.count
-      })
+        total: res?.count,
+      });
     });
-  }
+  };
 
   const typeOptions = [
     {
@@ -39,8 +38,8 @@ const ModelTraining = () => {
     },
     {
       text: 'LoRA微调',
-      value: 'lora'
-    }
+      value: 'lora',
+    },
   ];
 
   const taskStatusOptions = [
@@ -50,11 +49,11 @@ const ModelTraining = () => {
     },
     {
       text: '失败',
-      value: 'FAILED'
+      value: 'FAILED',
     },
     {
       text: '训练中',
-      value: 'PROCESSING'
+      value: 'PROCESSING',
     },
   ];
 
@@ -65,11 +64,15 @@ const ModelTraining = () => {
     },
     {
       text: '未归档',
-      value: 'NOT_ARCHIVED'
+      value: 'NOT_ARCHIVED',
     },
     {
       text: '归档中',
-      value: 'ARCHIVING'
+      value: 'ARCHIVING',
+    },
+    {
+      text: '归档失败',
+      value: 'FAILED',
     },
   ];
 
@@ -97,11 +100,9 @@ const ModelTraining = () => {
           </Flex>
         );
       default:
-        return (
-          <>未知</>
-        )
+        return <>未知</>;
     }
-  }
+  };
 
   const archiveStatusCell = (status: string) => {
     switch (status.toUpperCase()) {
@@ -126,33 +127,38 @@ const ModelTraining = () => {
             归档中
           </Flex>
         );
-      default:
+      case 'FAILED':
         return (
-          <>未知</>
-        )
+          <Flex gap={4} align='center'>
+            <AppIcons.AbnormalIcon />
+            归档失败
+          </Flex>
+        );
+      default:
+        return <>未知</>;
     }
-  }
+  };
 
   const archiveCallback = (refresh = false) => {
     if (refresh) {
       getModelTaskList(queryBody);
     }
     setIsCheckpointOpen(false);
-  }
+  };
 
   const columns: TableColumnsType = [
     {
       key: 'taskId',
       dataIndex: 'taskId',
       title: '任务ID',
-      ellipsis: true
+      ellipsis: true,
     },
     {
       key: 'modelName',
       dataIndex: 'modelName',
       title: '模型名称',
       ...TableTextSearch('modelName', true),
-      ellipsis: true
+      ellipsis: true,
     },
     {
       key: 'modeType',
@@ -160,9 +166,7 @@ const ModelTraining = () => {
       title: '训练类型',
       filters: typeOptions,
       render: (value) => {
-        return <>
-          {typeOptions.find(item => item.value === value)?.text ?? '--'}
-        </>;
+        return <>{typeOptions.find((item) => item.value === value)?.text ?? '--'}</>;
       },
     },
     {
@@ -182,7 +186,7 @@ const ModelTraining = () => {
       dataIndex: 'startTime',
       title: '启动时间',
       sorter: true,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       key: 'percent',
@@ -192,10 +196,15 @@ const ModelTraining = () => {
       width: 250,
       ellipsis: true,
       render: (val, record) => {
+        if (val === -1) {
+          return '--';
+        }
         return (
           <Flex gap={4}>
-            <Progress style={{ width: 80 }} showInfo={false} percent={val * 100} size='small' />
-            <span>{val * 100}%({record.curIter}/{record.totalIter})</span>
+            <Progress style={{ width: 80 }} showInfo={false} percent={val} size='small' />
+            <span>
+              {val}%({record?.curIter}/{record?.totalIter})
+            </span>
           </Flex>
         );
       },
@@ -207,7 +216,7 @@ const ModelTraining = () => {
       filters: taskStatusOptions,
       render: (val) => {
         return taskStatusCell(val);
-      }
+      },
     },
     {
       key: 'archiveStatus',
@@ -216,7 +225,7 @@ const ModelTraining = () => {
       filters: archiveStatusOptions,
       render: (val) => {
         return archiveStatusCell(val);
-      }
+      },
     },
     {
       key: 'operate',
@@ -226,15 +235,24 @@ const ModelTraining = () => {
         const openArchive = () => {
           setArchiveTaskId(record?.taskId);
           setIsCheckpointOpen(true);
-        }
+        };
         return (
           <Space size='small'>
-            <a>查看详情</a>
-            <a onClick={openArchive}>Checkpoint归档</a>
+            <a
+              hidden={record?.tensorboardUrl === ''}
+              onClick={() => {
+                window.open(record?.tensorboardUrl);
+              }}
+            >
+              查看详情
+            </a>
+            <a hidden={record?.taskStatus !== 'FINISHED'} onClick={openArchive}>
+              Checkpoint归档
+            </a>
           </Space>
-        )
+        );
       },
-      width: 200
+      width: 200,
     },
   ];
 
@@ -243,7 +261,7 @@ const ModelTraining = () => {
     console.log(filters);
     let params: any = {
       page: pagination?.current - 1,
-      limit: pagination?.pageSize
+      limit: pagination?.pageSize,
     };
     if (filters?.modelName && filters.modelName.length > 0) {
       params.modelName = filters.modelName[0];
@@ -269,7 +287,7 @@ const ModelTraining = () => {
     }
     setQueryBody(params);
     getModelTaskList(params);
-  }
+  };
 
   return (
     <div className='aui-fullpage'>
@@ -293,9 +311,12 @@ const ModelTraining = () => {
               fontSize: '14px',
               borderRadius: '4px',
               letterSpacing: '0',
-              margin: '0 0 16px'
+              margin: '0 0 16px',
             }}
-            onClick={() => { navigate('/model-training/create') }}>
+            onClick={() => {
+              navigate('/model-training/create');
+            }}
+          >
             创建任务
           </Button>
         </div>
@@ -313,7 +334,11 @@ const ModelTraining = () => {
           onChange={fetchData}
         />
       </div>
-      <ArchiveCheckpoint taskId={archiveTaskId} open={isCheckpointOpen} closeCallback={archiveCallback} />
+      <ArchiveCheckpoint
+        taskId={archiveTaskId}
+        open={isCheckpointOpen}
+        closeCallback={archiveCallback}
+      />
     </div>
   );
 };

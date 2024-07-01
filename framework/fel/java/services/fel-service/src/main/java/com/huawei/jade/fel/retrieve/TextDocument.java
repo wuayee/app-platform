@@ -36,4 +36,9 @@ public class TextDocument implements Document {
     public Map<String, Object> meta() {
         return Optional.ofNullable(this.metadata).orElseGet(Collections::emptyMap);
     }
+
+    @Override
+    public String toString() {
+        return this.text();
+    }
 }

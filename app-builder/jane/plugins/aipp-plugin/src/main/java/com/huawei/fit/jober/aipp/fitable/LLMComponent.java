@@ -30,7 +30,11 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
 import com.huawei.fitframework.exception.FitException;
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.parameterization.StringFormatException;
+import com.huawei.fitframework.serialization.ObjectSerializer;
+import com.huawei.fitframework.serialization.SerializationException;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
@@ -58,6 +62,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * LLM 组件实现
@@ -84,6 +89,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     private final AippLogService aippLogService;
     private final AippLogStreamService aippLogStreamService;
     private final BrokerClient client;
+    private final ObjectSerializer serializer;
 
     /**
      * 大模型节点构造器，内部通过提供的agent和tool构建智能体工作流。
@@ -94,13 +100,15 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
      * @param toolProvider 表示具提供者功能的 {@link ToolProvider}。
      * @param agent 表示提供智能体功能的 {@link AbstractAgent}{@code <}{@link ChatMessages}{@code ,
      * }{@link ChatMessages}{@code >}。
+     * @param serializer 表示序列化器的 {@link ObjectSerializer}。
      */
     public LLMComponent(FlowInstanceService flowInstanceService,
             MetaInstanceService metaInstanceService,
             MetaService metaService,
             ToolProvider toolProvider,
             @Fit(alias = AippConst.WATER_FLOW_AGENT_BEAN) AbstractAgent<Prompt, Prompt> agent,
-            AippLogService aippLogService, AippLogStreamService aippLogStreamService, BrokerClient client) {
+            AippLogService aippLogService, AippLogStreamService aippLogStreamService, BrokerClient client,
+            ObjectSerializer serializer) {
         this.flowInstanceService = flowInstanceService;
         this.metaService = metaService;
         this.metaInstanceService = metaInstanceService;
@@ -108,6 +116,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         this.aippLogService = aippLogService;
         this.aippLogStreamService = aippLogStreamService;
         this.client = client;
+        this.serializer = Validation.notNull(serializer, "The serializer cannot be nul.");
 
         // handleTask从入口开始处理，callback从agent node开始处理
         this.agentFlow = AiFlows.<Tip>create()
@@ -319,11 +328,32 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         // todo: 如果有文件，将内容拼到template里；为临时方案，历史记录的多模态会有问题
         StringTemplate template = new DefaultStringTemplate(ObjectUtils.cast(input.get("template"))
                 + this.getFilePath(businessData));
-        Map<String, String> variables = ObjectUtils.cast(input.get("variables"));
+        Map<String, Object> variables = ObjectUtils.cast(input.get("variables"));
+        Validation.notNull(variables, "The prompt variables cannot be null.");
         try {
-            return template.render(variables);
-        } catch (NullPointerException e) {
+            Map<String, String> standardInput = variables.entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(Map.Entry::getKey, entry -> this.getStandardValue(entry.getValue())));
+            return template.render(standardInput);
+        } catch (StringFormatException e) {
             throw new AippException(Utils.getOpContext(businessData), AippErrCode.LLM_COMPONENT_TEMPLATE_RENDER_FAILED);
+        }
+    }
+
+    private String getStandardValue(Object value) {
+        Validation.notNull(value, "The value cannot be null.");
+        if (value instanceof String) {
+            return ObjectUtils.cast(value);
+        }
+        if (value instanceof List) {
+            return ((List<?>) value).stream().map(Object::toString)
+                    .collect(Collectors.joining(AippConst.CONTENT_DELIMITER));
+        }
+        try {
+            return this.serializer.serialize(value);
+        } catch (SerializationException exception) {
+            log.error("Serialize failed, value: {}.", value.toString());
+            return StringUtils.EMPTY;
         }
     }
 

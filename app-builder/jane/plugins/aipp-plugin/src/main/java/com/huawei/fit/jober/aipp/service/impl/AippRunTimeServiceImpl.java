@@ -291,16 +291,42 @@ public class AippRunTimeServiceImpl
         // 添加memory
         List<Map<String, Object>> memoryConfigs = this.getMemoryConfigs(flowDefinitionId, context);
         String memoryType = this.getMemoryType(memoryConfigs);
+        boolean memorySwitch = this.getMemorySwitch(memoryConfigs, businessData);
+        if (!memorySwitch) {
+            this.startFlow(metaVersionId, flowDefinitionId, metaInstId, businessData, context);
+            businessData.put(AippConst.BS_AIPP_MEMORIES_KEY, new ArrayList<>());
+            return metaInstId;
+        }
         if (!StringUtils.equalsIgnoreCase("UserSelect", memoryType)) {
             String chatId = (businessData.get("chatId") == null) ? null : businessData.get("chatId").toString();
             businessData.put(AippConst.BS_AIPP_MEMORIES_KEY,
-                    this.getMemories(meta.getId(), memoryType, chatId, memoryConfigs, aippType, context));
+                    this.getMemories(meta.getId(), memoryType, chatId, memoryConfigs, aippType, businessData, context));
             this.startFlow(metaVersionId, flowDefinitionId, metaInstId, businessData, context);
         } else {
             this.aippStreamService.sendToAncestor(metaInstId,
                     this.buildMemoryConfigDto(initContext, metaInstId, "UserSelect"));
         }
         return metaInstId;
+    }
+
+    private boolean getMemorySwitch(List<Map<String, Object>> memoryConfig, Map<String, Object> businessData) {
+        // 兼容旧应用
+        businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, true);
+        if (memoryConfig == null || memoryConfig.isEmpty()) {
+            return true;
+        }
+        Map<String, Object> memorySwitchConfig = memoryConfig.stream()
+                .filter(config -> StringUtils.equals(ObjectUtils.cast(config.get("name")), "memorySwitch"))
+                .findFirst()
+                .orElse(null);
+        if (memorySwitchConfig == null) {
+            return true;
+        }
+        Boolean shouldUseMemory = businessData.containsKey(AippConst.BS_AIPP_USE_MEMORY_KEY)
+                ? ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_USE_MEMORY_KEY))
+                : ObjectUtils.cast(memorySwitchConfig.get("value"));
+        businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, shouldUseMemory);
+        return shouldUseMemory;
     }
 
     private String getMemoryType(List<Map<String, Object>> memoryConfigs) {
@@ -390,7 +416,7 @@ public class AippRunTimeServiceImpl
     }
 
     private List<Map<String, Object>> getMemories(String aippId, String memoryType, String chatId,
-            List<Map<String, Object>> memoryConfigs, String aippType, OperationContext context) {
+            List<Map<String, Object>> memoryConfigs, String aippType, Map<String, Object> businessData, OperationContext context) {
         if (memoryConfigs == null || memoryConfigs.isEmpty()) {
             return this.getConversationTurns(aippId, aippType, 5, context, null);
         }
@@ -403,6 +429,8 @@ public class AippRunTimeServiceImpl
                 Integer turnNum = Integer.parseInt((String) valueConfig.get("value"));
                 return getConversationTurns(aippId, aippType, turnNum, context, chatId);
             case "NotUseMemory":
+                // 兼容旧应用
+                businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, false);
                 return new ArrayList<>();
             case "Customizing":
                 // todo 如何定义这个genericable接口，入参为一个map?

@@ -50,6 +50,11 @@ public class AippConst {
     public static final int RETRY_TIMES = 60;
 
     /**
+     * 检索内容拼接符。
+     */
+    public static final String CONTENT_DELIMITER = "; ";
+
+    /**
      * flow_component_data
      */
     public static final String FLOW_COMPONENT_DATA_KEY = "flow_component_data";
@@ -485,6 +490,11 @@ public class AippConst {
      * memory: 历史记录在 config 的 key。
      */
     public static final String MEMORY_CONFIG_KEY = "memory";
+
+    /**
+     * use memory
+     */
+    public static final String BS_AIPP_USE_MEMORY_KEY = "useMemory";
 
     /**
      * aipp app attribute key

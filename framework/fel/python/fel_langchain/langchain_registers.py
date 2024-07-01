@@ -34,10 +34,10 @@ def _pop_api_keys(input_args: dict, api_keys_name: List[str]) -> dict:
 
 
 def _invoke(input_args: dict, tool_builder: Union[Callable[[dict], BaseTool], BaseTool],
-            api_keys_name: List[str],
-            config: Optional[RunnableConfig] = None,
-            **kwargs: Any) -> str:
-    api_keys = _pop_api_keys(input_args, api_keys_name)
+           extra_keys: List[str],
+           config: Optional[RunnableConfig] = None,
+           **kwargs: Any) -> str:
+    api_keys = _pop_api_keys(input_args, extra_keys)
     if "__arg1" in input_args:
         _input_args = input_args["__arg1"]
     else:
@@ -47,8 +47,15 @@ def _invoke(input_args: dict, tool_builder: Union[Callable[[dict], BaseTool], Ba
         tool = tool_builder
     else:
         tool = tool_builder(api_keys)
-    tool_ans = tool.invoke(_input_args, config, **kwargs)
 
+    try:
+        tool_ans = tool.invoke(_input_args, config, **kwargs)
+        return _dump_ans_to_str(tool_ans)
+    except BaseException:
+        return ""
+
+
+def _dump_ans_to_str(tool_ans):
     if not isinstance(tool_ans, str):
         try:
             content = json.dumps(tool_ans, ensure_ascii=False)
@@ -60,7 +67,7 @@ def _invoke(input_args: dict, tool_builder: Union[Callable[[dict], BaseTool], Ba
 
 
 def register_api_tools(tool_builder: Union[Callable[[dict], BaseTool], BaseTool],
-                       api_keys_name: List[str],
+                       extra_keys: List[str],
                        tool_name: str,
                        config: Optional[RunnableConfig] = None,
                        **kwargs: Any):
@@ -69,13 +76,12 @@ def register_api_tools(tool_builder: Union[Callable[[dict], BaseTool], BaseTool]
 
     Args:
         tool_builder (Callable[[dict], BaseTool]): 表示 api 工具构造器。
-        api_keys_name (List[str]): 表示工具的 api key 名称数组。
+        extra_keys (List[str]): 表示工具的额外参数，如 api key。
         tool_name (str): 工具名称。
         config (Optional[RunnableConfig]): 表示 langchain runnable 配置信息。
         **kwargs (Any): 表示额外参数。
     """
-    tool_invoke = functools.partial(_invoke, tool_builder=tool_builder, api_keys_name=api_keys_name, config=config,
-                                    **kwargs)
+    tool_invoke = functools.partial(_invoke, tool_builder=tool_builder, extra_keys=extra_keys, config=config, **kwargs)
     tool_invoke.__module__ = register_api_tools.__module__
     tool_invoke.__annotations__ = {
         'input_args': dict,

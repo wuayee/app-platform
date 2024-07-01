@@ -5,8 +5,8 @@
 package com.huawei.fit.jober.bff.service.a3000;
 
 import com.huawei.fit.jober.bff.service.FlowsEngineWebService;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext.FlowContextPersistRepo;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.repo.QueryFlowDefinitionRepo;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextPersistRepo;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.QueryFlowDefinitionRepo;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.plugin.Plugin;

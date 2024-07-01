@@ -51,21 +51,19 @@ public class DefaultDataBusClient implements DataBusClient {
 
     private SocketChannel socketChannel;
     private ResponseDispatcher responseDispatcher;
-    private boolean isConnected;
     private final Map<Long, BlockingQueue<ByteBuffer>> replyQueues;
     private SharedMemoryPool sharedMemoryPool;
     private final SharedMemoryReaderWriter sharedMemoryReaderWriter;
 
 
     private DefaultDataBusClient() {
-        this.isConnected = false;
         this.sharedMemoryReaderWriter = new SharedMemoryReaderWriter();
         this.replyQueues = new ConcurrentHashMap<>();
     }
 
     @Override
     public synchronized OpenConnectionResult open(InetAddress dataBusAddr, int dataBusPort) {
-        if (this.isConnected) {
+        if (this.responseDispatcher != null && this.responseDispatcher.isRunning()) {
             return OpenConnectionResult.success();
         }
         if (!DataBusUtils.isSupportedPlatform()) {
@@ -78,14 +76,13 @@ public class DefaultDataBusClient implements DataBusClient {
             InetSocketAddress address = new InetSocketAddress(dataBusAddr, dataBusPort);
             socketChannel.connect(address);
         } catch (IOException e) {
-            logger.error("[open] Open connection failed. [e={}]", e.toString());
+            logger.error("[open] Open connection failed.", e);
             return OpenConnectionResult.failure(ErrorType.NotConnectedToDataBus, e);
         }
 
         this.responseDispatcher = new ResponseDispatcher(this.replyQueues, socketChannel);
         this.sharedMemoryPool = new SharedMemoryPool(this.replyQueues, socketChannel);
         this.responseDispatcher.start();
-        this.isConnected = true;
 
         return OpenConnectionResult.success();
     }
@@ -191,7 +188,7 @@ public class DefaultDataBusClient implements DataBusClient {
             // 返回读写成功结果。
             return MemoryIoResult.success(memory, ioBytes, result.userData(), request.permissionType());
         } catch (IOException e) {
-            logger.error("[doIoRequest] IO request failed. [e={}]", e.toString());
+            logger.error("[doIoRequest] IO request failed.", e);
             return MemoryIoResult.failure(permissionType == PermissionType.Read ? ErrorType.MemoryReadError
                     : ErrorType.MemoryWriteError, e);
         } finally {
@@ -207,6 +204,6 @@ public class DefaultDataBusClient implements DataBusClient {
      * @return 表示客户端当前是否在连接的 {@code boolean}。
      */
     public boolean isConnected() {
-        return this.isConnected;
+        return this.responseDispatcher != null && this.responseDispatcher.isRunning();
     }
 }

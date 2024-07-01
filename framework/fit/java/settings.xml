@@ -7,7 +7,7 @@
         <mirror>
             <id>huaweicloud</id>
             <mirrorOf>central</mirrorOf>
-            <url>http://mirrors.tools.huawei.com/maven/</url>
+            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/maven-central-repo/</url>
         </mirror>
     </mirrors>
 

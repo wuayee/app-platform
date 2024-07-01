@@ -113,16 +113,16 @@ const ChatPreview = (props) => {
   }, [appInfo.id]);
   
   // 发送消息
-  const onSend = (value, type = undefined) => {
+  const onSend = (value, memorySwitch, type = undefined) => {
     const sentItem = beforeSend(chatRunning, value, type);
     if (sentItem) {
       let arr = [...chatList, sentItem];
       listRef.current = arr;
-      sendMessageRequest(value, type);
+      sendMessageRequest(value, memorySwitch, type);
     }
   };
   // 发送消息
-  const sendMessageRequest = async (value, type) => {
+  const sendMessageRequest = async (value, memorySwitch, type) => {
     const reciveInitObj = JSON.parse(JSON.stringify(initChat));
     reciveInitObj.type = "recieve";
     reciveInitObj.loading = true;
@@ -147,7 +147,7 @@ const ChatPreview = (props) => {
           if (res.code !== 0) {
             onStop("更新grpha数据失败");
           } else {
-            getAippAndVersion(value, type);
+            getAippAndVersion(value, memorySwitch, type);
           }
         })
         .catch((err) => {
@@ -155,11 +155,11 @@ const ChatPreview = (props) => {
           onStop("对话失败");
         });
     } else {
-      getAippAndVersion(value, type);
+      getAippAndVersion(value, memorySwitch, type);
     }
   };
   // 获取aipp_id和version
-  async function getAippAndVersion(value, type) {
+  async function getAippAndVersion(value, memorySwitch, type) {
     let chatAppId = appId;
     let chatAppInfo = appInfo;
     if (atAppId) {
@@ -169,7 +169,7 @@ const ChatPreview = (props) => {
     try {
       const debugRes = await aippDebug(tenantId, chatAppId, chatAppInfo);
       if (debugRes.code === 0) {
-        chatMissionStart(debugRes.data, value, type);
+        chatMissionStart(debugRes.data, value, memorySwitch, type);
       } else {
         onStop(debugRes.msg || "获取aippId失败");
       }
@@ -178,9 +178,10 @@ const ChatPreview = (props) => {
     }
   }
   // 启动任务
-  const chatMissionStart = async (res, value, type) => {
+  const chatMissionStart = async (res, value, memorySwitch, type) => {
     let { aipp_id, version } = res;
     let params = type?{ initContext: { "$[FileDescription]$": value } }:{ initContext: { Question: value } };
+    params.initContext.useMemory = memorySwitch;
     try {
       const requestBody={
         aipp_id:aipp_id,

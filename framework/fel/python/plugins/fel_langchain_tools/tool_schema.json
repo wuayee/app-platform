@@ -72,15 +72,7 @@
 						"__arg1": {
 							"title": "__arg1",
 							"type": "string"
-						}
-					},
-					"required": [
-						"__arg1"
-					],
-					"type": "object"
-				},
-				"extraParameters": {
-					"properties": {
+						},
 						"google_api_key": {
 							"description": "google search api key",
 							"type": "string"
@@ -91,6 +83,7 @@
 						}
 					},
 					"required": [
+						"__arg1",
 						"google_api_key",
 						"google_cse_id"
 					],
@@ -98,6 +91,12 @@
 				},
 				"return": {
 					"type": "string"
+				},
+				"parameterExtensions": {
+					"config": [
+						"google_api_key",
+						"google_cse_id"
+					]
 				}
 			}
 		}

@@ -129,6 +129,9 @@ export const jadeFlowGraph = (div, title) => {
     const dirtied = self.dirtied;
     self.dirtied = (data, dirtyAction) => {
         dirtied.call(self, data, dirtyAction);
+        if (self.activePage.isRunning) {
+            return;
+        }
         self.onChangeCallback && self.onChangeCallback();
     };
 

@@ -12,7 +12,6 @@ import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
 export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     const self = node(id, x, y, width, height, parent, false, drawer ? drawer : jadeNodeDrawer);
     self.type = "jadeNode";
-    self.serializedFields.delete("emphasized");
     self.serializedFields.batchAdd("toolConfigs", "componentName", "flowMeta", "outlineWidth", "outlineColor", "sourcePlatform");
     self.eventType = "jadeEvent";
     self.hideText = true;

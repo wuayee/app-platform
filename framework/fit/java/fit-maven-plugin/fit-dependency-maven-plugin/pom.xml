@@ -12,6 +12,11 @@
     <artifactId>fit-dependency-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
 
+    <properties>
+        <!-- Third-party versions -->
+        <lombok.version>1.18.28</lombok.version>
+    </properties>
+
     <dependencies>
         <!-- Maven -->
         <dependency>
@@ -33,11 +38,11 @@
             <artifactId>maven-plugin-annotations</artifactId>
         </dependency>
 
-        <!-- FIT maven plugin -->
+        <!-- Lombok -->
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
-            <artifactId>fit-maven-plugin-util</artifactId>
-            <version>${fit.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
         </dependency>
     </dependencies>
 

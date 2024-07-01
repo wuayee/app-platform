@@ -83,21 +83,27 @@ public class SchemaToolMetadataTest {
                 .put("name", "test_schema_default_implementation_name")
                 .put("index", "test_schema_index")
                 .put("description", "This is a demo FIT function.")
-                .put("parameters",
+                .put(SchemaKey.PARAMETERS,
                         MapBuilder.<String, Object>get()
                                 .put("type", "object")
-                                .put("properties",
+                                .put(SchemaKey.PARAMETERS_PROPERTIES,
                                         MapBuilder.<String, Object>get()
-                                                .put("p1",
-                                                        MapBuilder.<String, Object>get()
+                                                .put("p1", MapBuilder.<String, Object>get()
                                                                 .put("type", "string")
                                                                 .put("description", "This is the first parameter.")
                                                                 .build())
+                                                .put("extraP1", MapBuilder.<String, Object>get()
+                                                        .put("type", "string")
+                                                        .put("description", "This is the first extra parameter.")
+                                                        .build())
                                                 .build())
-                                .put("order", Collections.singletonList("p1"))
-                                .put("required", Collections.singletonList("p1"))
+                                .put(SchemaKey.PARAMETERS_ORDER, Collections.singletonList("p1"))
+                                .put(SchemaKey.PARAMETERS_REQUIRED, Collections.singletonList("p1"))
                                 .build())
-                .put("return", MapBuilder.<String, Object>get().put("type", "string").build())
+                .put(SchemaKey.PARAMETERS_EXTENSIONS, MapBuilder.<String, Object>get()
+                        .put(SchemaKey.CONFIG_PARAMETERS, Collections.singletonList("extraP1"))
+                        .build())
+                .put(SchemaKey.RETURN_SCHEMA, MapBuilder.<String, Object>get().put("type", "string").build())
                 .build();
     }
 
@@ -119,14 +125,14 @@ public class SchemaToolMetadataTest {
     @DisplayName("返回正确的参数类型")
     void shouldReturnParameters() {
         List<Type> parameters = this.toolMetadata.parameters();
-        assertThat(parameters).containsExactly(String.class);
+        assertThat(parameters).containsExactly(String.class, String.class);
     }
 
     @Test
     @DisplayName("返回正确的参数名字")
     void shouldReturnParameterNames() {
         List<String> parameterNames = this.toolMetadata.parameterNames();
-        assertThat(parameterNames).containsExactly("p1");
+        assertThat(parameterNames).containsExactly("p1", "extraP1");
     }
 
     @Test
@@ -134,6 +140,9 @@ public class SchemaToolMetadataTest {
     void shouldReturnParameterIndex() {
         int actual = this.toolMetadata.parameterIndex("p1");
         assertThat(actual).isEqualTo(0);
+
+        actual = this.toolMetadata.parameterIndex("extraP1");
+        assertThat(actual).isEqualTo(1);
     }
 
     @Test

@@ -37,6 +37,7 @@ export const jadeFlowPage = (div, graph, name, id) => {
             self.registerObservable(VIRTUAL_CONTEXT_NODE.id, "instanceId", "instanceId", "String", undefined);
             self.registerObservable(VIRTUAL_CONTEXT_NODE.id, "appId", "appId", "String", undefined);
             self.registerObservable(VIRTUAL_CONTEXT_NODE.id, "memories", "memories", "Array", undefined);
+            self.registerObservable(VIRTUAL_CONTEXT_NODE.id, "useMemory", "useMemory", "Boolean", undefined);
         };
         // 上下文虚拟节点信息注册
         registerVirtualNodeInfo();
@@ -56,14 +57,10 @@ export const jadeFlowPage = (div, graph, name, id) => {
     /**
      * 注册可被监听的id.
      *
-     * @param nodeId 节点id.
-     * @param observableId 可被监听的id.
-     * @param value 当前的值.
-     * @param type 值的类型.
-     * @param parentId 父组件id.
+     * @param props 相关属性.
      */
-    self.registerObservable = (nodeId, observableId, value, type, parentId) => {
-        self.observableStore.add(nodeId, observableId, value, type, parentId);
+    self.registerObservable = (props) => {
+        self.observableStore.add(props);
     };
 
     /**
@@ -247,22 +244,20 @@ const ObservableStore = () => {
     /**
      * 添加.
      *
-     * @param nodeId 节点id.
-     * @param observableId 可被监听的id.
-     * @param value 当前的值.
-     * @param type 值的类型.
-     * @param parentId 父组件id.
+     * @param props 相关属性.
      */
-    self.add = (nodeId, observableId, value, type, parentId) => {
+    self.add = (props) => {
+        const {nodeId, observableId, value, type, parentId, selectable} = props;
         const observableMap = getOrCreate(self.store, nodeId, () => new Map());
         const observable = getOrCreate(observableMap, observableId, () => {
             return {
-                observableId, value: null, type: null, observers: [], parentId
+                observableId, value: null, type: null, observers: [], parentId, selectable: selectable
             }
         });
         observable.value = value;
         observable.type = type;
         observable.parentId = parentId;
+        observable.selectable = selectable;
         if (observable.observers.length > 0) {
             observable.observers.forEach(observe => observe.observe({value: value, type: type}));
         }
@@ -353,7 +348,14 @@ const ObservableStore = () => {
         }
 
         return Array.from(observableMap.values()).map(o => {
-            return {nodeId, observableId: o.observableId, parentId: o.parentId, value: o.value, type: o.type};
+            return {
+                nodeId,
+                observableId: o.observableId,
+                parentId: o.parentId,
+                value: o.value,
+                type: o.type,
+                selectable: o.selectable
+            };
         });
     };
 

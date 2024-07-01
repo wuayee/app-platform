@@ -5,10 +5,10 @@
 package com.huawei.fit.jober;
 
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_ENGINE_EXECUTOR_ERROR;
-import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus.ARCHIVED;
-import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus.ERROR;
-import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus.PENDING;
-import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus.RETRYABLE;
+import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.ARCHIVED;
+import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.ERROR;
+import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.PENDING;
+import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.RETRYABLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -22,19 +22,18 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.huawei.fit.jober.common.exceptions.JobberException;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowContext;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMemoRepo;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.FlowDefinition;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowNode;
-import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus;
-import com.huawei.fit.jober.flowsengine.domain.flows.streams.FitStream;
-import com.huawei.fit.jober.flowsengine.domain.flows.streams.FitStream.Publisher;
-import com.huawei.fit.jober.flowsengine.domain.flows.streams.From;
-import com.huawei.fit.jober.flowsengine.persist.mapper.FlowRetryMapper;
-import com.huawei.fit.jober.flowsengine.persist.po.FlowRetryPO;
-import com.huawei.fit.jober.flowsengine.utils.WaterFlows;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMemoRepo;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.From;
+import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowRetryMapper;
+import com.huawei.fit.waterflow.flowsengine.persist.po.FlowRetryPO;
+import com.huawei.fit.waterflow.flowsengine.utils.WaterFlows;
 import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.IoUtils;
@@ -340,7 +339,8 @@ public abstract class FlowsDataBaseTest {
      * @param existInstance existInstance
      * @param newInstance newInstance
      */
-    protected void assertSingleInstance(Publisher<FlowData> existInstance, Publisher<FlowData> newInstance) {
+    protected void assertSingleInstance(
+            FitStream.Publisher<FlowData> existInstance, FitStream.Publisher<FlowData> newInstance) {
         assertEquals(System.identityHashCode(existInstance), System.identityHashCode(newInstance));
     }
 

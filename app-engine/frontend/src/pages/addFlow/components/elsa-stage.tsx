@@ -104,7 +104,7 @@ const Stage = (props) => {
     let params = type ?  appInfo.flowGraph : appRef.current.flowGraph;
     const res = await updateFlowInfo(tenantId, id, params);
     if (res.code === 0) {
-      dispatch(setAppInfo(JSON.parse(JSON.stringify(appInfo))));
+      type && dispatch(setAppInfo(JSON.parse(JSON.stringify(appInfo))));
       Message({ type: 'success', content: type ? '高级配置更新成功': '工具流更新成功' })
     }
   }

@@ -25,7 +25,6 @@
         <guava.version>32.0.1-jre</guava.version>
         <fit.version>3.5.0-SNAPSHOT</fit.version>
         <hisp.jane.api.version>1.0-SNAPSHOT</hisp.jane.api.version>
-        <ohscript.version>0.0.3.4-SNAPSHOT</ohscript.version>
     </properties>
 
     <!--Hdt 增量覆盖率使用-->
@@ -56,11 +55,6 @@
             <groupId>com.huawei.fit.jober</groupId>
             <artifactId>jober-multiversion-genericable</artifactId>
             <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.ohscript</groupId>
-            <artifactId>ohscript</artifactId>
-            <version>${ohscript.version}</version>
         </dependency>
 
         <dependency>
@@ -100,8 +94,8 @@
             <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
-            <artifactId>tool-service</artifactId>
+            <groupId>com.huawei.fit.jade.waterflow</groupId>
+            <artifactId>waterflow-service</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 

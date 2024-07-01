@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useRef, useCallback } from 'react';
-import { Form, Collapse, theme } from 'antd';
+import { useAppSelector, useAppDispatch } from "../../../store/hook";
+import {Form, Collapse, theme, Switch} from 'antd';
 import { ConfigWrap } from './styled';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { debounce } from '@shared/utils/common';
@@ -8,20 +9,47 @@ import Skill from './components/skill';
 import Knowledge from './components/knowledge';
 import Inspiration from './components/inspiration';
 import Recommend from './components/recommend';
+import { setHistorySwitch } from "../../../store/common/common";
+import { MultiConversationContent } from "@fit-elsa/elsa-react";
 
 function ConfigUI(props) {
     const { formData, handleConfigDataChange, inspirationChange, status, activeKey } = props;
     const [ form ] = Form.useForm();
     const [ inspirationValues, setInspirationValues ] = useState(null);
     const [ recommendValues, setRecommendValues ] = useState([]);
+    const [ memoryValues, setMemoryValues ] = useState(null);
     const [ pluginValue, setPluginValue ] = useState([]);
     const [ knowledge, setKnowledge ] = useState(null);
     const [ isDisabled, setIsDisabled ] = useState(false);
     const { token } = theme.useToken();
     const renderRef = useRef(false);
+    const dispatch = useAppDispatch();
+    const historySwitch = useAppSelector((state) => state.commonStore.historySwitch);
     const panelStyle = {
       border: 'none',
     };
+    // 更新Memory
+    const updateMemory = (data) => {
+      updateConfig(data,"memory");
+      setMemoryValues(data);
+    }
+    // 更新是否展示多轮对话开关
+    const historySwitchChange = (checked, event) => {
+      event.stopPropagation();
+      dispatch(setHistorySwitch(checked));
+      const data = {...memoryValues, memorySwitch: checked};
+      updateMemory(data);
+    }
+    // 更新多轮对话type
+    const onTypeChange = (e, memoryValueType, memoryValue) => {
+      const data = {memorySwitch: true, type: e, value: memoryValue};
+      updateMemory(data);
+    }
+    // 更新多轮对话value
+    const onValueChange = (valueType, newValue) => {
+      const data = {...memoryValues, value: newValue};
+      updateMemory(data);
+    }
     const getItems = (panelStyle) => [
       {
         key: '1',
@@ -51,6 +79,31 @@ function ConfigUI(props) {
       },
       {
         key: '5',
+        label: (
+          <div>
+            多轮对话
+            <Switch className="conversation-switch"
+                    onChange={(checked, event) => historySwitchChange(checked, event)}
+                    value={memoryValues.memorySwitch}/>
+          </div>
+        ),
+        children: <MultiConversationContent itemId="memory"
+                                            disabled={!historySwitch}
+                                            props={{
+                                              type: {
+                                                value: memoryValues.type,
+                                                onChange: onTypeChange
+                                              },
+                                              value: {
+                                                value: memoryValues.value,
+                                                onChange: onValueChange
+                                              }
+                                            }}
+        />,
+        style: panelStyle,
+      },
+      {
+        key: '6',
         label: '创意灵感',
         children: <Inspiration inspirationValues={inspirationValues} updateData={updateConfig}/>,
         style: panelStyle,
@@ -67,6 +120,7 @@ function ConfigUI(props) {
         return acc;
       }, {});
       form.setFieldsValue(newData);
+      dispatch(setHistorySwitch(newData?.memory?.memorySwitch));
       handleSet();
     }, [formData]);
     const handleSet = useCallback(debounce(() => setFormInitData(), 200), []);
@@ -75,6 +129,7 @@ function ConfigUI(props) {
       setInspirationValues(form.getFieldValue("inspiration"));
       setKnowledge(form.getFieldValue("knowledge"));
       setRecommendValues(form.getFieldValue("recommend"));
+      setMemoryValues(form.getFieldValue("memory"));
       if (form.getFieldValue("workflows") && form.getFieldValue("tools")) {
         let list = [...form.getFieldValue("workflows"), ...form.getFieldValue("tools")];
         setPluginValue(list);
@@ -150,7 +205,7 @@ function ConfigUI(props) {
               ) : (
                 <Collapse
                   bordered={false}
-                  defaultActiveKey={['4', '5']}
+                  defaultActiveKey={['4', '5', '6']}
                   expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
                   style={{
                     background: token.colorBgContainer,

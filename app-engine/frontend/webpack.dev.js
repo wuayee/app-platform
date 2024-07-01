@@ -58,24 +58,20 @@ module.exports = merge(common, {
     https: false,
     proxy: {
       '/api': {
-        target: 'http://80.11.128.86:30010',
+        target: 'http://80.11.128.86:30030',
         secure: false,
         changeOrigin: true,
-        pathRewrite: {
-          '^/api/jober': '/api/jober',
-          '^/api': '',
-        },
       },
       '/aiApi': {
-        target: 'http://80.11.128.86:30010',
+        target: 'http://80.11.128.86:30030',
         pathRewrite: {
-          '^/aiApi': '/tzaip/api/hisp', // 后端环境即为次路径
+          '^/aiApi': '/tzaip/api/hisp', // 后端环境即为此路径
         },
         secure: false,
         changeOrigin: true,
       },
       '/aippApi': {
-        target: 'http://80.11.128.86:30010',
+        target: 'http://80.11.128.86:30030',
         pathRewrite: { '^/aippApi': '/api/jober/v1/api' },
         // pathRewrite: { '^/aippApi': '/v1/api' },
         secure: false,
@@ -110,9 +106,25 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/elsaApi': {
-        target: 'http://10.91.144.226:8080',
+        target: 'http://80.11.128.86:30030',
         pathRewrite: {
           '^/elsaApi': '',
+        },
+        secure: false,
+        changeOrigin: true,
+      },
+      '/modelbase': {
+        target: 'http://80.11.128.86:30030',
+        pathRewrite: {
+          '^/modelbase': '/api/model_manage', // 后端环境即为此路径
+        },
+        secure: false,
+        changeOrigin: true,
+      },
+      '/modeltrain': {
+        target: 'http://80.11.128.86:30030',
+        pathRewrite: {
+          '^/modeltrain': '/api/model_finetune', // 后端环境即为此路径
         },
         secure: false,
         changeOrigin: true,

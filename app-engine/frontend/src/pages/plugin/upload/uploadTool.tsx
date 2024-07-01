@@ -3,6 +3,8 @@ import { Button, Checkbox, Drawer, Select, Table, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import '../style.scoped.scss';
 import DraggerUpload from '../../../components/draggerUpload';
+import { GetProp } from 'antd/lib';
+import { uploadPlugin } from '../../../shared/http/plugin';
 
 const data = [
   {
@@ -37,18 +39,24 @@ const columns = [
   },
   {
     title: '参数说明',
-    dataIndex: 'des',
-    key: 'des',
+    dataIndex: 'description',
+    key: 'description',
   },
 ];
 
 const UploadToolDrawer = ({ openSignal }) => {
   const [open, setOpen] = useState(false);
+  const [result,setResult] =useState([]);
+  const [checkedList,setCheckedList]=useState([]);
+const onCheckChange: GetProp<typeof Checkbox.Group, 'onChange'> = async(checkedValues) => {
+  setCheckedList(checkedValues);
+};
   useEffect(() => {
     if (openSignal > 0) {
       setOpen(true);
     }
   }, [openSignal]);
+
   const onChangeSpace = (value) => {};
 
   return (
@@ -79,7 +87,8 @@ const UploadToolDrawer = ({ openSignal }) => {
           </Button>
           <Button
             style={{ width: 90, backgroundColor: '#2673e5', color: '#ffffff' }}
-            onClick={() => {
+            onClick={async() => {
+              await uploadPlugin(checkedList);
               setOpen(false);
             }}
           >
@@ -91,23 +100,25 @@ const UploadToolDrawer = ({ openSignal }) => {
       <div>
         上传至：
         <Select
+          disabled={true}
           defaultValue='user'
           className='select-space'
           onChange={onChangeSpace}
           options={uploadSpaceOptions}
         />
-        <DraggerUpload accept='.zip,.tar,.jar' />
-        {data?.map((item) => (
-          <div className='param-card' key={item.name}>
+        <DraggerUpload accept='.zip,.tar,.jar' maxCount={1} setResult={setResult}/>
+        <Checkbox.Group style={{ width: '100%' }} onChange={onCheckChange}>
+        {result?.map((item) => (
+          <div className='param-card' key={item?.methodName}>
             <div style={{ float: 'right' }}>
-              <Checkbox />
+              <Checkbox value={item}/>
             </div>
             <div className='card-header-left'>
               <img src='/src/assets/images/knowledge/knowledge-base.png' />
               <div>
-                <div style={{ fontSize: 20, marginBottom: 8 }}>{item.name}</div>
+                <div style={{ fontSize: 20, marginBottom: 8 }}>{item?.methodName}</div>
                 <div className='card-user'>
-                  {item.tags.map((tag: string, index: number) => (
+                  {item?.tags?.map((tag: string, index: number) => (
                     <Tag style={{ margin: 0 }} key={index}>
                       {tag}
                     </Tag>
@@ -115,16 +126,17 @@ const UploadToolDrawer = ({ openSignal }) => {
                 </div>
               </div>
             </div>
-            <div className='card-des'>{item.des}</div>
+            <div className='card-des'>{item?.methodDescription}</div>
             <Table
               scroll={{ y: 120 }}
-              dataSource={item.data}
+              dataSource={item?.parameterEntities}
               columns={columns}
               virtual
               pagination={false}
             />
           </div>
         ))}
+        </Checkbox.Group>
       </div>
     </Drawer>
   );
