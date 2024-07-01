@@ -14,8 +14,6 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus;
 import com.huawei.fit.waterflow.flowsengine.persist.entity.FlowContextUpdateInfo;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO;
 
-import com.google.common.collect.Lists;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -70,7 +68,7 @@ public class FlowContextMapperTest extends DatabaseBaseTest {
     public void testUpdateFlowContextToSentSuccess() {
         executeSqlInFile(sqlFile);
 
-        List<String> ids = Lists.newArrayList("1", "2", "3", "4");
+        List<String> ids = Arrays.asList("1", "2", "3", "4");
         flowContextMapper.updateToSent(ids);
 
         ids.forEach(id -> {
@@ -84,7 +82,7 @@ public class FlowContextMapperTest extends DatabaseBaseTest {
     public void testFindFlowContextByPositionSuccess() {
         executeSqlInFile(sqlFile);
 
-        List<FlowContextPO> result = flowContextMapper.findByPositions("1", Lists.newArrayList("1"), "PENDING");
+        List<FlowContextPO> result = flowContextMapper.findByPositions("1", Arrays.asList("1"), "PENDING");
 
         assertEquals(1, result.size());
         assertEquals("1", result.get(0).getContextId());

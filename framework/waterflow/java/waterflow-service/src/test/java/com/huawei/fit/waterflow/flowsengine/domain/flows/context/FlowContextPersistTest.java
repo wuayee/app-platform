@@ -70,7 +70,6 @@ import com.huawei.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Lists;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -543,7 +542,7 @@ public class FlowContextPersistTest extends DatabaseBaseTest {
             resumeContext.getData().getBusinessData().put("status", "true");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             List<FlowContext<FlowData>> resumeContexts = waitSingle(
@@ -578,7 +577,7 @@ public class FlowContextPersistTest extends DatabaseBaseTest {
             resumeContext.getData().getBusinessData().put("status", false);
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             List<FlowContext<FlowData>> resumeContexts = waitSingle(
@@ -617,7 +616,7 @@ public class FlowContextPersistTest extends DatabaseBaseTest {
             resumeContext.getData().getBusinessData().put("status", "transferred");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             metaId = "event5";
             contexts = waitSingle(contextSupplier(REPO, streamId, traceId, metaId, PENDING));
@@ -632,7 +631,7 @@ public class FlowContextPersistTest extends DatabaseBaseTest {
             resumeContext.getData().getBusinessData().put("status", "approved");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             contexts = waitSingle(contextSupplier(REPO, streamId, traceId, flowNode.getMetaId(), ARCHIVED));
