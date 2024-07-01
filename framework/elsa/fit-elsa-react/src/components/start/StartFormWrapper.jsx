@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Button, Collapse, Popover} from 'antd';
 import {DeleteOutlined, PlusOutlined, QuestionCircleOutlined} from '@ant-design/icons';
 import StartInputForm from "./StartInputForm.jsx";
@@ -23,7 +23,8 @@ export default function StartFormWrapper({disabled}) {
     const items = data.find(item => item.name === "input").value // 找出 name 为 "input" 的项，获取value值
     const memory = data.find(item => item.name === "memory");
     const memoryId = memory.id;
-    const multiConversationSwitchValue = memory.value.find(item => item.name === "memorySwitch")?.value ?? true;
+    const multiConversationSwitch = memory.value.find(item => item.name === "memorySwitch");
+    const multiConversationSwitchValue = multiConversationSwitch?.value ?? true;
     const multiConversationTypeValue = memory.value.find(item => item.name === "type").value;
     const multiConversationValueValue = memory.value.find(item => item.name === "value").value;
 

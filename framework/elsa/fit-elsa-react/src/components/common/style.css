@@ -2,6 +2,12 @@
     background-color: transparent; /* 设置背景透明 */
 }
 
+.jade-custom-collapse .ant-collapse-item .ant-collapse-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
 .jade-custom-collapse .ant-collapse-header, .jade-multi-conversation .ant-collapse .ant-collapse-header {
     padding: 8px !important;
 }

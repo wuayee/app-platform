@@ -1,37 +1,24 @@
-import {Input} from "antd";
+import {Switch} from "antd";
 import {useEffect} from "react";
 import {useShapeContext} from "@/components/DefaultRoot.jsx";
 
 /**
- * 可被监听的Input组件.
+ * 可被监听的Switch组件.
  *
  * @param props 参数.
  * @return {JSX.Element}
  * @constructor
  */
-export const JadeObservableInput = (props) => {
-    const {onChange, onBlur, type, ...rest} = props;
+export const JadeObservableSwitch = (props) => {
+    const {onBlur, type, ...rest} = props;
     if (!rest.id) {
-        throw new Error("JadeObservableInput requires an id property.");
+        throw new Error("JadeObservableSwitch requires an id property.");
     }
 
     const shape = useShapeContext();
     if (!shape) {
-        throw new Error("JadeObservableInput must be wrapped by ShapeContext.");
+        throw new Error("JadeObservableSwitch must be wrapped by ShapeContext.");
     }
-
-    /**
-     * 输入被修改时调用.
-     *
-     * @param e 事件对象.
-     * @private
-     */
-    const _onChange = (e) => {
-        onChange && onChange(e);
-
-        // 触发节点的emit事件.
-        shape.emit(rest.id, {value: e.target.value});
-    };
 
     /**
      * 有些场景下value是在blur时触发修改的，所以这里透出blur事件.
@@ -48,7 +35,7 @@ export const JadeObservableInput = (props) => {
         shape.page.registerObservable({
             nodeId: shape.id,
             observableId: rest.id,
-            value: rest.value,
+            value: rest.name,
             type: type,
             parentId: rest.parent
         });
@@ -59,10 +46,5 @@ export const JadeObservableInput = (props) => {
         };
     }, []);
 
-    // 如果类型发生了变化，重新注册，修改observable中的type值.
-    useEffect(() => {
-        shape.emit(rest.id, {type: type});
-    }, [type]);
-
-    return <><Input {...rest} onChange={(e) => _onChange(e)} onBlur={_onBlur} /></>
+    return <><Switch {...rest} onBlur={_onBlur}/></>
 };

@@ -107,7 +107,8 @@ export const JadeReferenceTreeSelect = (props) => {
                     id: o.observableId,
                     pId: o.parentId,
                     value: o.observableId,
-                    title: o.value
+                    title: o.value,
+                    selectable: o.selectable ?? true
                 };
                 ans.push(treeNode);
             });
