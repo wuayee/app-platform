@@ -129,8 +129,8 @@
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
                 <configuration>
-                    <category>system</category>
-                    <level>5</level>
+                    <category>user</category>
+                    <level>3</level>
                 </configuration>
                 <executions>
                     <execution>
