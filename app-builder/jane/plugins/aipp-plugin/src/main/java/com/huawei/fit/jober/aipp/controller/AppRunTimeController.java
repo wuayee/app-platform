@@ -121,10 +121,20 @@ public class AppRunTimeController extends AbstractController {
                 this.contextOf(httpRequest, tenantId)));
     }
 
+    /**
+     * 用户选择历史后启动流程
+     *
+     * @param httpRequest 操作上下文
+     * @param tenantId 租户id
+     * @param metaInstId 实例id
+     * @param initContext 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
+     * @return 实例id
+     */
     @PostMapping(path = "/start/instances/{instance_id}", description = "用户选择历史后启动流程")
     public Rsp<String> startFlowByUserSelectMemory(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("instance_id") String metaInstId,
-            @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData", example = "图片url, 文本输入, prompt")
+            @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData",
+                    example = "图片url, 文本输入, prompt")
             @RequestBody Map<String, Object> initContext) {
         OperationContext context = this.contextOf(httpRequest, tenantId);
         return Rsp.ok(aippRunTimeService.startFlowWithUserSelectMemory(metaInstId, initContext, context));

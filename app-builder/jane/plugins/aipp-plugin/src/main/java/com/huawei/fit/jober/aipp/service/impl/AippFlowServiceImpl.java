@@ -831,7 +831,6 @@ public class AippFlowServiceImpl implements AippFlowService {
 
     private MetaDeclarationInfo buildPublishMetaDeclaration(String aippId, List<AippNodeForms> aippNodeForms,
             String flowDefinitionId, Meta meta, AippDto aippDto) {
-
         // 追加aipp meta属性字段
         MetaDeclarationInfo declaration = new MetaDeclarationInfo();
 

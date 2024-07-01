@@ -27,6 +27,11 @@ import java.util.Set;
 @NoArgsConstructor
 public class FlowTask {
     /**
+     * 任务数据转换器
+     */
+    protected FlowDataConverter converter;
+
+    /**
      * 手动操作任务ID标识
      */
     private String taskId;
@@ -46,9 +51,4 @@ public class FlowTask {
      * key为属性的键值，value为属性具体的值
      */
     private Map<String, String> properties;
-
-    /**
-     * 任务数据转换器
-     */
-    protected FlowDataConverter converter;
 }

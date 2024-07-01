@@ -49,10 +49,10 @@ public interface AippRunTimeService {
     /**
      * 指定版本，启动一个流程
      *
-     * @param metaInstId
-     * @param initContext
-     * @param context
-     * @return
+     * @param metaInstId 实例id
+     * @param initContext 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
+     * @param context 操作上下文
+     * @return 实例id
      */
     String startFlowWithUserSelectMemory(String metaInstId, Map<String, Object> initContext, OperationContext context);
 

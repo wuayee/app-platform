@@ -75,7 +75,6 @@ class ManualOperationCreatedEventHandlerTest extends DatabaseBaseTest {
     private static final String HANDLE_SMART_FORM_GENERICABLE = "htctmizg0mydwnt2ttbbp8jlgo2e9e0w";
 
     private FlowDefinition generateFlowDefinition(FlowTaskType taskType) {
-        Map<String, FlowNode> nodeMap = new HashMap<>();
         FlowNode flowNode = new FlowStateNode();
         Map<String, String> propertiesMap = new HashMap<>();
         propertiesMap.put("title", "PM审批");
@@ -89,6 +88,7 @@ class ManualOperationCreatedEventHandlerTest extends DatabaseBaseTest {
         FlowTask task = new FlowTask("taskId", taskType, Collections.singleton("exceptionFitable"), propertiesMap,
                 flowDataConverter);
         flowNode.setTask(task);
+        Map<String, FlowNode> nodeMap = new HashMap<>();
         nodeMap.put("nodeId", flowNode);
         return FlowDefinition.builder().nodeMap(nodeMap).build();
     }

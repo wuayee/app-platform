@@ -18,7 +18,6 @@ import java.util.List;
  * @since 2024-04-19
  */
 public interface AppBuilderFormService {
-
     /**
      * 根据类型查询
      *

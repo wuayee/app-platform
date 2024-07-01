@@ -17,7 +17,6 @@ import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatModelService;
 import com.huawei.jade.fel.chat.ChatOptions;
-import com.huawei.jade.fel.chat.Prompt;
 import com.huawei.jade.fel.core.util.Tip;
 import com.huawei.jade.fel.engine.flows.AiFlows;
 import com.huawei.jade.fel.engine.flows.AiProcessFlow;

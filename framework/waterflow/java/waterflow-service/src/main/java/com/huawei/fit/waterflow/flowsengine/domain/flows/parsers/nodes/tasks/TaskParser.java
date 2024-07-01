@@ -8,6 +8,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowDataConverterType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowTaskType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowGraphData;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ public class TaskParser {
         flowTask.setProperties(flowGraphData.getNodeTaskProperties(nodeIndex));
         Optional.ofNullable(flowGraphData.getNodeTaskConverter(nodeIndex))
                 .ifPresent(config -> flowTask.setConverter(
-                        FlowDataConverterType.getType((String) config.get("type")).getParser().parse(config)));
+                        FlowDataConverterType.getType(ObjectUtils.cast(config.get("type"))).getParser().parse(config)));
         return flowTask;
     }
 }

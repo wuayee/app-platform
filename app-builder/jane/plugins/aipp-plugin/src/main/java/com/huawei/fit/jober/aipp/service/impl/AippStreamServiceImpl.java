@@ -64,10 +64,11 @@ public class AippStreamServiceImpl implements AippStreamService {
 
     @Override
     public void sendToAncestor(String instanceId, Object data) {
-        String path = this.logService.getParentPath(instanceId);
+        String processedInstanceId = instanceId;
+        String path = this.logService.getParentPath(processedInstanceId);
         if (StringUtils.isNotEmpty(path)) {
-            instanceId = path.split(Utils.PATH_DELIMITER)[1];
+            processedInstanceId = path.split(Utils.PATH_DELIMITER)[1];
         }
-        this.send(instanceId, data);
+        this.send(processedInstanceId, data);
     }
 }

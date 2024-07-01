@@ -47,14 +47,11 @@ import java.util.stream.Collectors;
 @Component
 public class FlowTaskCreatedEventHandler implements EventHandler<FlowTaskCreatedEvent> {
     private static final Logger log = Logger.get(FlowTaskCreatedEventHandler.class);
+    private static final String TASK_EXECUTE_INFO_TYPE = "task";
 
     private final FlowContextPersistRepo flowContextPersistRepo;
-
     private final FlowDefinitionRepo flowDefinitionRepo;
-
     private final BrokerClient brokerClient;
-
-    private static final String TASK_EXECUTE_INFO_TYPE = "task";
 
     public FlowTaskCreatedEventHandler(FlowContextPersistRepo flowContextPersistRepo,
             FlowDefinitionRepo flowDefinitionRepo, BrokerClient brokerClient) {

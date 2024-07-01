@@ -220,7 +220,8 @@ public class AippRunTimeServiceImpl
     }
 
     @Override
-    public String startFlowWithUserSelectMemory(String metaInstId, Map<String, Object> initContext, OperationContext context) {
+    public String startFlowWithUserSelectMemory(String metaInstId, Map<String, Object> initContext,
+            OperationContext context) {
         String versionId = this.metaInstanceService.getMetaVersionId(metaInstId);
         Meta meta = this.metaService.retrieve(versionId, context);
         Map<String, Object> businessData = (Map<String, Object>) initContext.get(AippConst.BS_INIT_CONTEXT_KEY);
@@ -255,9 +256,6 @@ public class AippRunTimeServiceImpl
                 JSONObject.parse(JSONObject.toJSONString(initContext.get(AippConst.BS_INIT_CONTEXT_KEY))));
         // 记录启动时间
         businessData.put(AippConst.INSTANCE_START_TIME, LocalDateTime.now());
-        String aippType = ObjectUtils.cast(meta.getAttributes()
-                .getOrDefault(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.NORMAL.name()));
-        String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
 
         // 创建meta实例
         String metaVersionId = meta.getVersionId();
@@ -291,15 +289,18 @@ public class AippRunTimeServiceImpl
         businessData.put(AippConst.BS_AIPP_MEMORIES_KEY, new ArrayList<>());
 
         // 添加memory
+        String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
         List<Map<String, Object>> memoryConfigs = this.getMemoryConfigs(flowDefinitionId, context);
         String memoryType = this.getMemoryType(memoryConfigs);
-        boolean memorySwitch = this.getMemorySwitch(memoryConfigs, businessData);
-        if (!memorySwitch) {
+        boolean isMemorySwitch = this.getMemorySwitch(memoryConfigs, businessData);
+        if (!isMemorySwitch) {
             this.startFlow(metaVersionId, flowDefinitionId, metaInstId, businessData, context);
             return metaInstId;
         }
         if (!StringUtils.equalsIgnoreCase("UserSelect", memoryType)) {
             String chatId = (businessData.get("chatId") == null) ? null : businessData.get("chatId").toString();
+            String aippType = ObjectUtils.cast(meta.getAttributes()
+                    .getOrDefault(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.NORMAL.name()));
             businessData.put(AippConst.BS_AIPP_MEMORIES_KEY,
                     this.getMemories(meta.getId(), memoryType, chatId, memoryConfigs, aippType, businessData, context));
             this.startFlow(metaVersionId, flowDefinitionId, metaInstId, businessData, context);
@@ -415,7 +416,8 @@ public class AippRunTimeServiceImpl
     }
 
     private List<Map<String, Object>> getMemories(String aippId, String memoryType, String chatId,
-            List<Map<String, Object>> memoryConfigs, String aippType, Map<String, Object> businessData, OperationContext context) {
+            List<Map<String, Object>> memoryConfigs, String aippType, Map<String, Object> businessData,
+            OperationContext context) {
         if (memoryConfigs == null || memoryConfigs.isEmpty()) {
             return this.getConversationTurns(aippId, aippType, 5, context, null);
         }
