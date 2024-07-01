@@ -1,4 +1,4 @@
-import {Collapse} from 'antd';
+import {Collapse, Switch} from 'antd';
 import PropTypes from "prop-types";
 import MultiConversationContent from "@/components/start/MultiConversationContent.jsx";
 
@@ -27,6 +27,7 @@ export default function MultiConversation({
                                           }) {
 
     const switchValue = props?.switch?.value ?? true;
+    const onSwitchChange = props?.switch?.onChange || {}
 
     return (<>
         <div className={className}>
@@ -35,6 +36,12 @@ export default function MultiConversation({
                     key={"multiConversationPanel"}
                     header={<div className="panel-header">
                         <span className="jade-panel-header-font">多轮对话</span>
+                        <Switch
+                            value={switchValue}
+                            disabled={disabled}
+                            onClick={(value, event) => event.stopPropagation()}
+                            onChange={e => onSwitchChange(e)}
+                        />
                     </div>}
                     style={{width: "100%"}}
                 >

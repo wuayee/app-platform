@@ -160,6 +160,9 @@ export const ConfigWrap = styled.div`
     .ant-card-bordered:hover {
         box-shadow: 0px 3px 12px 3px rgba(0, 0, 0, 0.15);
     }
+    .conversation-switch {
+      margin-left: 10px;
+    }
 `;
 
 export const InspirationWrap = styled.div`

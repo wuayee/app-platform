@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import collectionStore from './collection/collection';
 import appStore from './appInfo/appInfo';
 import chatCommonStore from './chatStore/chatStore';
+import commonStore from './common/common';
 // ...
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     collectionStore,
     appStore,
     chatCommonStore,
+    commonStore
   },
 });
 
