@@ -14,6 +14,7 @@ import com.huawei.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -189,7 +190,8 @@ public class FlowData {
                 .startTime(this.startTime)
                 .errorInfo(this.errorInfo)
                 .build();
-        return JSONObject.toJSONString(data, ByteArraySerialiseUtilV1.getSerializeConfig());
+        return JSONObject.toJSONString(data, ByteArraySerialiseUtilV1.getSerializeConfig(),
+                SerializerFeature.DisableCircularReferenceDetect);
     }
 
     /**
