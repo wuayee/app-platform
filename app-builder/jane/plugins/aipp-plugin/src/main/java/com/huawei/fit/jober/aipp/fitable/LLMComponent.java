@@ -196,6 +196,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         Map<String, Object> toolContext = MapBuilder.<String, Object>get()
                 .put(AippConst.TRACE_ID, llmMeta.getInstId())
                 .put(AippConst.CALLBACK_ID, CALLBACK_ID)
+                .put(AippConst.CONTEXT_USER_ID, ObjectUtils.cast(businessData.get(AippConst.CONTEXT_USER_ID)))
                 .build();
         agentFlow.converse()
                 .bind((acc, chunk) -> this.sendLog(chunk, path, msgId, instId))

@@ -582,6 +582,11 @@ public class AippConst {
     public static final String CONTEXT_INSTANCE_ID = "instanceId";
 
     /**
+     * 系统上下文的用户Id
+     */
+    public static final String CONTEXT_USER_ID = "userId";
+
+    /**
      * 表明当前会话是否被删除
      */
     public static final Integer CHAT_STATUS = 0;
