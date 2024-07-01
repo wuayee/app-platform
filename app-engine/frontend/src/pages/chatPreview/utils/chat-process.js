@@ -260,3 +260,11 @@ export const fileTypeSet = (type) => {
   }
   return fileType
 }
+// 滚动底部
+export const scrollBottom = () => {
+  const messageBox = document.getElementById('chat-list-dom');
+  messageBox?.scrollTo({
+    top: messageBox.scrollHeight,
+    behavior: 'smooth',
+  });
+}

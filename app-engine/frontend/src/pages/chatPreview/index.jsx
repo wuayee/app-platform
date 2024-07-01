@@ -25,7 +25,8 @@ import {
   messageProcess,
   messageProcessNormal,
   beforeSend,
-  deepClone } from './utils/chat-process';
+  deepClone,
+  scrollBottom } from './utils/chat-process';
 import "./styles/chat-preview.scss";
 import { creatChat, tenantId, updateChat } from "@shared/http/chat.js";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
@@ -134,6 +135,9 @@ const ChatPreview = (props) => {
     listRef.current = arr;
     dispatch(setChatList(deepClone(arr)));
     dispatch(setChatRunning(true));
+    setTimeout(() => {
+      scrollBottom();
+    }, 50);
     if (showElsa) {
       let params = appInfo.flowGraph;
       window.agent
