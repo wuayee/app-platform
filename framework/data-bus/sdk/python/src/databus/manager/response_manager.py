@@ -1,0 +1,62 @@
+# coding: utf-8
+# Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
+""" `databus.manager.ResponseManager`类型, 管理从DataBus内核接收消息.
+
+本文件内容为DataBus Python SDK的`databus.manager.ResponseManager`类实现.
+`ResponseManager`类管理从DataBus内核接收消息,确保线程安全.
+"""
+import logging
+import threading
+from typing import Dict, Optional
+from dataclasses import dataclass
+from socket import socket as socket_type
+from databus.message import (
+    MessageHeader, MESSAGE_HEADER_LENGTH, MESSAGE_RESPONSE_MAPPING,
+    CoreMessageType, CoreMessageResponseTypeHint
+)
+
+
+@dataclass
+class ResponseItem:
+    cv: threading.Condition
+    message_type: Optional[CoreMessageType] = None
+    response: Optional[CoreMessageResponseTypeHint] = None
+
+
+class ResponseManager(threading.Thread):
+    def __init__(self, socket: socket_type, mailbox: Dict[int, ResponseItem]):
+        super().__init__()
+        self._socket = socket
+        self._mailbox = mailbox
+        self._is_running = True
+
+    def run(self):
+        """处理内核返回的消息"""
+        while self._is_running:
+            try:
+                data = self._socket.recv(2048)
+                # TD: 处理半包
+                self._split_message(data)
+            except OSError as err:
+                logging.error("Response manager receive error %d from DataBus core", err.errno)
+                self._is_running = False
+
+    def _split_message(self, data: bytes):
+        """分割处理内核返回的消息, 避免粘包"""
+        ptr = 0
+        while ptr < len(data):
+            header = MessageHeader.MessageHeader.GetRootAs(data)
+            seq = header.Seq()
+            ptr += MESSAGE_HEADER_LENGTH
+            raw_body = data[ptr: ptr + header.Size()]
+            logging.debug("DataBus core response (%d-%d of %d): %s.",
+                          ptr - MESSAGE_HEADER_LENGTH, ptr + header.Size() - 1, len(data),
+                          data[ptr - MESSAGE_HEADER_LENGTH:ptr + header.Size()].hex())
+            if seq in self._mailbox:
+                self._mailbox[seq].message_type = header.Type()
+                self._mailbox[seq].response = MESSAGE_RESPONSE_MAPPING[header.Type()].GetRootAs(raw_body)
+                # 通知线程
+                cv = self._mailbox[seq].cv
+                with cv:
+                    cv.notify()
+            ptr += header.Size()
