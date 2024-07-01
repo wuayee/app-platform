@@ -101,7 +101,7 @@ export default function ManualCheckForm({data, handleFormChange}) {
                 deregisterObservables(entityRef.current);
             }
         };
-    });
+    }, []);
 
     return (<>
         <JadePanelCollapse
