@@ -5,7 +5,7 @@ import ReciveBox from './recieve-box/recieve-box.jsx';
 import ChatDetail from './chat-details.jsx';
 import { ChatContext } from '../../aippIndex/context.js';
 import { queryFeedback } from '@shared/http/chat';
-import { deepClone } from '../utils/chat-process';
+import { deepClone, scrollBottom } from '../utils/chat-process';
 import '../styles/chat-message-style.scss';
 import { useAppDispatch, useAppSelector } from '../../../store/hook';
 import { setChatList } from '../../../store/chatStore/chatStore';
@@ -42,14 +42,6 @@ const ChatMessaga = (props) => {
     scrollBottom();
   }, [chatList]);
 
-  
-  const scrollBottom = () => {
-    const messageBox = document.getElementById('chat-list-dom');
-    messageBox?.scrollTo({
-      top: messageBox.scrollHeight,
-      behavior: 'smooth',
-    });
-  }
   // 重置选中状态
   const setCheckStatus = () => {
     list.forEach(item => item.checked = false);

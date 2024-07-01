@@ -4,6 +4,7 @@
 
 package com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks;
 
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.FlowDataConverter;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowTaskType;
 
 import lombok.AllArgsConstructor;
@@ -25,6 +26,11 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FlowTask {
+    /**
+     * 任务数据转换器
+     */
+    protected FlowDataConverter converter;
+
     /**
      * 手动操作任务ID标识
      */

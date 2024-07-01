@@ -25,11 +25,16 @@ export default function SelectMode({mode}) {
         let config;
         if (value === "manualCheck") {
             config = {
-                converter: {},
+                converter: {
+                    type: "mapping_converter",
+                    entity: {
+                        "inputParams": [],
+                        "outputParams": []
+                    }
+                },
                 taskId: "",
                 type: "AIPP_SMART_FORM",
-                formName: "",
-                outputParams: ""
+                formName: ""
             };
         } else {
             config = {

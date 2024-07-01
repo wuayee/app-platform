@@ -24,7 +24,7 @@ export const chatMock = {
 }
 export const chatMock3 = {
   "aipp_instance_id": "c8a9e655cfbb47c0aa6925b498078a1c",
-  "tenant_id": "727d7157b3d24209aefd59eb7d1c49ff",
+  "tenant_id": "31f20efc7e0848deab6a6bc10fc3021e",
   "aipp_instance_name": "无标题",
   "status": "ARCHIVED",
   "form_metadata": null,
@@ -77,7 +77,7 @@ export const chatMock3 = {
 }
 export const codeMock = {
   "aipp_instance_id": "c8a9e655cfbb47c0aa6925b498078a1c",
-  "tenant_id": "727d7157b3d24209aefd59eb7d1c49ff",
+  "tenant_id": "31f20efc7e0848deab6a6bc10fc3021e",
   "aipp_instance_name": "无标题",
   "status": "ARCHIVED",
   "form_metadata": null,

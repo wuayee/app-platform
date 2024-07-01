@@ -102,6 +102,32 @@ export default function Memory({config, disabled}) {
         document.activeElement.blur();// 在选择后取消焦点
     }
 
+    const getOptions = (config) => {
+        const defaultOptions = [
+            { value: 'ByConversationTurn', label: '按对话轮次' },
+            // 430演示大模型选项不需要按条数、按Token大小、按时间，暂时屏蔽
+            // { value: 'ByNumber', label: '按条数' },
+            // { value: 'ByTokenSize', label: '按Token大小' },
+            // { value: 'ByTime', label: '按时间' },
+            // { value: 'Customizing', label: '自定义' },
+            { value: 'NotUseMemory', label: '不使用历史记录' }
+        ];
+
+        // 如果 config 或 config.params 为空，设置默认 type 为 "tool"
+        const type = config?.params?.type || 'tool';
+
+        // 根据 type 返回不同的 options
+        switch (type) {
+            case 'workflow':
+                return [
+                    ...defaultOptions,
+                    { value: 'UserSelect', label: '用户自勾选' }
+                ];
+            default:
+                return defaultOptions;
+        }
+    }
+
     return (<>
         <JadeStopPropagationSelect
             className="jade-select"
@@ -110,14 +136,7 @@ export default function Memory({config, disabled}) {
             style={{width: "100%", marginBottom: "8px", marginTop: "8px"}}
             onClick={handleSelectClick} // 点击下拉框时阻止事件冒泡
             onChange={e => onChange(e)}
-            options={[{value: 'ByConversationTurn', label: '按对话轮次'},
-                // 430演示大模型选项不需要按条数、按Token大小、按时间，暂时屏蔽
-                // {value: 'ByNumber', label: '按条数'},
-                // {value: 'ByTokenSize', label: '按Token大小'},
-                // {value: 'ByTime', label: '按时间'},
-                // {value: 'Customizing', label: '自定义'},
-                {value: 'UserSelect', label: '用户自勾选'},
-                {value: 'NotUseMemory', label: '不使用历史记录'},]}
+            options={getOptions(config)}
         />
         {renderComponent()} {/* 渲染对应的组件 */}
     </>);

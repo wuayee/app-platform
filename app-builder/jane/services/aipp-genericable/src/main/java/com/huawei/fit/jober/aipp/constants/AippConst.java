@@ -482,9 +482,14 @@ public class AippConst {
     public static final String ANSWER_TYPE = "ELSA";
 
     /**
-     * memory
+     * memories: 根据配置获取的历史记录，最后放在 business。
      */
-    public static final String BS_AIPP_MEMORY_KEY = "memories";
+    public static final String BS_AIPP_MEMORIES_KEY = "memories";
+
+    /**
+     * memory: 历史记录在 config 的 key。
+     */
+    public static final String MEMORY_CONFIG_KEY = "memory";
 
     /**
      * use memory
@@ -545,6 +550,16 @@ public class AippConst {
      * 表明结果是否来自子流程
      */
     public static final String OUTPUT_IS_FROM_CHILD = "outputIsFromChild";
+
+    /**
+     * 表单渲染数据的key
+     */
+    public static final String FORM_APPEARANCE_KEY = "formAppearance";
+
+    /**
+     * 表单填充数据的key
+     */
+    public static final String FORM_DATA_KEY = "formData";
 
     /**
      * 标识是否是评估模块调用接口

@@ -2,25 +2,26 @@ import {Form} from "antd";
 import {JadeStopPropagationSelect} from "@/components/common/JadeStopPropagationSelect.jsx";
 import OriginForm from "@/components/manualCheck/OriginForm.jsx";
 import {useShapeContext} from "@/components/DefaultRoot.jsx";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import httpUtil from "@/components/util/httpUtil.jsx";
 import JadePanelCollapse from "@/components/manualCheck/JadePanelCollapse.jsx";
 
 /**
  * 人工检查节点折叠区域组件
  *
- * @param data  数据
+ * @param data 数据
  * @param handleFormChange 选项修改后的回调
  * @return {JSX.Element}
  * @constructor
  */
 export default function ManualCheckForm({data, handleFormChange}) {
-    const config = useShapeContext().graph.configs.find(node => node.node === "manualCheckNodeState");
+    const shape = useShapeContext();
+    const config = shape.graph.configs.find(node => node.node === "manualCheckNodeState");
     const formName = data.formName;
     const taskId = data.taskId;
     const [formOptions, setFormOptions] = useState([]);
-    const selectedFormDefaultValue = (formName === null || formName === undefined) ? undefined : `${formName.replace(/Component$/, '')} | ${taskId}`;
-    const shape = useShapeContext();
+    const selectedFormDefaultValue = (formName === null || formName === undefined) ? undefined : `${formName.replace(/Component$/, '')}|${taskId}`;
+    const entityRef = useRef();
 
     useEffect(() => {
         // 发起网络请求获取 options 数据
@@ -46,7 +47,12 @@ export default function ManualCheckForm({data, handleFormChange}) {
      * @param e event
      */
     const onChange = (e) => {
-        let formOutput = "";
+        // 每次切换表单，需要先清除之前注册的observables.
+        if (entityRef.current) {
+            deregisterObservables(entityRef.current);
+        }
+
+        let formEntity = "";
         let changeFormName = "";
         let changeFormId = "";
         if (e && e.length > 0) {
@@ -54,13 +60,48 @@ export default function ManualCheckForm({data, handleFormChange}) {
             changeFormName = name + "Component";
             changeFormId = id;
             try {
-                formOutput = shape.graph.plugins[changeFormName]().getJadeConfig();
+                formEntity = shape.graph.plugins[changeFormName]().getJadeConfig();
+
+                // 注册observables，使后续节点可引用表单中的输出.
+                registerObservables(formEntity);
+                entityRef.current = formEntity;
             } catch (error) {
                 console.error("Error getting JadeConfig:", error);
             }
         }
-        handleFormChange(changeFormName, changeFormId, formOutput);
+        handleFormChange(changeFormName, changeFormId, formEntity);
     };
+
+    const registerObservables = (entity) => {
+        recursive(entity.outputParams, null, (p, parent) => {
+            shape.page.registerObservable(shape.id, p.id, p.name, p.type, parent ? parent.id : null);
+        });
+    };
+
+    const recursive = (params, parent, action) => {
+        params.forEach(p => {
+            if ("Object" === p.type) {
+                recursive(p.value, p);
+            } else {
+                action(p, parent);
+            }
+        });
+    };
+
+    const deregisterObservables = (entity) => {
+        recursive(entity.outputParams, null, (p) => {
+            shape.page.removeObservable(shape.id, p.id);
+        });
+    };
+
+    // 组件销毁时，删除注册的observables.
+    useEffect(() => {
+        return () => {
+            if (entityRef.current) {
+                deregisterObservables(entityRef.current);
+            }
+        };
+    }, []);
 
     return (<>
         <JadePanelCollapse

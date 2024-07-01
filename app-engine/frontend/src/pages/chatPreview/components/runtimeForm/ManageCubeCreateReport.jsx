@@ -8,7 +8,7 @@ import {AippContext} from "../../../aippIndex/context";
 import chartImg from "@/assets/images/chart.png";
 import tableImg from "@/assets/images/table.png";
 import {Message} from "@shared/utils/message";
-import { useAppSelector } from '../../../../store/hook';
+
 
 const FormWrap = styled.div`
     width: 100%;
@@ -21,10 +21,11 @@ const FormWrap = styled.div`
     .report-title {
       width: 100%;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       padding-right: 10px;
       margin-bottom:12px;
+      position: relative;
     }
     .ant-input {
       //border: none !important;
@@ -59,17 +60,14 @@ const FormWrap = styled.div`
 
 const ManageCubeCreateReport = (props) => {
   const id = "reportResult";
-  const {data, mode} = props;
+  const {data, mode, saveCallBack} = props;
   const [chartData, setChartData] = useState(null);
   const [title, setTitle] = useState("经营分析报告");
   const [editable, setEditable] = useState(false);
   const [editTime, setEditTime] = useState(0);
   const [canSave, setCanSave] = useState(false);
-  const {showElsa, agent} = useContext(AippContext);
-  const appId = useAppSelector((state) => state.appStore.appId);
-  const tenantId = useAppSelector((state) => state.appStore.tenantId);
-  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
-
+  const {showElsa, agent, tenantId} = useContext(AippContext);
+  
   const handleEdit = () => {
     setEditable(true);
     setEditTime(1);
@@ -88,6 +86,8 @@ const ManageCubeCreateReport = (props) => {
     saveContent(tenantId, data.instanceId, params).then((res) => {
       if (res.code !== 0) {
         Message({ type: 'warning', content: res.msg || '保存失败' });
+      } else {
+        saveCallBack();
       }
     })
   }
@@ -130,7 +130,6 @@ const ManageCubeCreateReport = (props) => {
   }
 
   useEffect(() => {
-    console.log(data);
     if (!data?.formData) return;
     if (data.formData[id]) {
        typeof (data.formData[id]) === 'string' ? setChartData(JSON.parse(data?.formData[id])) : setChartData(data?.formData[id]);
@@ -149,9 +148,8 @@ const ManageCubeCreateReport = (props) => {
       <FormWrap>
         <div>
           <div className="report-title">
-            <div></div>
             <div style={{fontSize: "28px", fontWeight: "600"}}>{title}</div>
-            { mode !== "history" && <EditOutlined onClick={handleEdit} style={{fontSize: '20px',}}/> }
+            { mode !== "history" && <EditOutlined onClick={handleEdit} style={{fontSize: '20px', position: 'absolute', right: '20px'}}/> }
           </div>
             {!chartData &&
               <>

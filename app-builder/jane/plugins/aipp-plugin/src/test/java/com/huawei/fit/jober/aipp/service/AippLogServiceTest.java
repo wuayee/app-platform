@@ -324,7 +324,7 @@ public class AippLogServiceTest {
             put("form_args", dummyFormArgs);
             put("form_data", dummyFormData);
         }};
-        AippLogData dummyLogData = new AippLogData(dummyFormId, dummyFormVersion, dummyFormArgs, "");
+        AippLogData dummyLogData = new AippLogData(dummyFormId, dummyFormVersion, dummyFormArgs, "", null, null);
         String dummyLogDataJson = JsonUtils.toJsonString(dummyLogData);
         RangedResultSet<Instance> metaInstanceResult = new RangedResultSet<>();
         metaInstanceResult.setRange(new RangeResult(0, 1, 1));

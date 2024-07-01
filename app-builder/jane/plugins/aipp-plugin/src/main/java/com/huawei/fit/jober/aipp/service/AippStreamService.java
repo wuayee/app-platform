@@ -45,4 +45,12 @@ public interface AippStreamService {
      * @param data 数据.
      */
     void send(String instanceId, Object data);
+
+    /**
+     * 推送数据到前端祖先的流。
+     *
+     * @param instanceId 实例id.
+     * @param data 数据.
+     */
+    void sendToAncestor(String instanceId, Object data);
 }

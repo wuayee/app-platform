@@ -321,7 +321,7 @@ public class Utils {
     @NotNull
     public static String buildPath(AippLogService aippLogService, String instId, String parentInstId) {
         String path;
-        if (parentInstId == null) {
+        if (StringUtils.isEmpty(parentInstId)) {
             path = PATH_DELIMITER + instId;
         } else {
             String parentPath = aippLogService.getParentPath(parentInstId);

@@ -5,7 +5,6 @@
 package com.huawei.fit.jober.aipp.service.impl;
 
 import com.huawei.fit.dynamicform.DynamicFormService;
-import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
@@ -82,13 +81,13 @@ public class AippLogServiceImpl implements AippLogService {
     private AippInstLog completeFormDataJson(AippInstLog instanceLog, OperationContext context) {
         if (AippInstLogType.FORM.name().equals(instanceLog.getLogType())) {
             AippLogData form = JsonUtils.parseObject(instanceLog.getLogData(), AippLogData.class);
-            DynamicFormDetailEntity formEntity =
-                    dynamicFormService.queryFormDetailByPrimaryKey(form.getFormId(), form.getFormVersion(), context);
-            String formData = formEntity == null ? "" : formEntity.getData();
+            if (form == null) {
+                return instanceLog;
+            }
             Map<String, String> newLogData = new HashMap<String, String>() {
                 {
-                    put("form_args", form.getFormArgs());
-                    put("form_data", formData);
+                    put("formData", form.getFormData());
+                    put("formAppearance", form.getFormAppearance());
                 }
             };
             instanceLog.setLogData(JsonUtils.toJsonString(newLogData));

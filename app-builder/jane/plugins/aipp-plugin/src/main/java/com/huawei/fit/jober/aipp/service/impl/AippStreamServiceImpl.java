@@ -6,8 +6,11 @@ package com.huawei.fit.jober.aipp.service.impl;
 
 import com.huawei.fit.http.websocket.Session;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
+import com.huawei.fit.jober.aipp.common.Utils;
+import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippStreamService;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.util.StringUtils;
 
 import java.util.Map;
 import java.util.Objects;
@@ -23,6 +26,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class AippStreamServiceImpl implements AippStreamService {
     private final Map<String, Session> sessions = new ConcurrentHashMap<>();
+    private final AippLogService logService;
+
+    public AippStreamServiceImpl(AippLogService logService) {
+        this.logService = logService;
+    }
 
     @Override
     public void addSession(String instanceId, Session session) {
@@ -52,5 +60,15 @@ public class AippStreamServiceImpl implements AippStreamService {
         }
         Session session = this.sessions.get(instanceId);
         Optional.ofNullable(session).ifPresent(s -> s.send(JsonUtils.toJsonString(data)));
+    }
+
+    @Override
+    public void sendToAncestor(String instanceId, Object data) {
+        String processedInstanceId = instanceId;
+        String path = this.logService.getParentPath(processedInstanceId);
+        if (StringUtils.isNotEmpty(path)) {
+            processedInstanceId = path.split(Utils.PATH_DELIMITER)[1];
+        }
+        this.send(processedInstanceId, data);
     }
 }

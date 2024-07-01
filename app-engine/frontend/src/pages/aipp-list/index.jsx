@@ -21,7 +21,7 @@ const Home = () => {
   const filterParams = useRef({});
   const pageNo = useRef(1);
   const employeeNumber = localStorage.getItem('currentUserId') || null;
-  const tenantId = '727d7157b3d24209aefd59eb7d1c49ff';
+  const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   let modalRef = useRef();
   const navigate = useNavigate();
 
@@ -130,7 +130,7 @@ const AppItem = (props) => {
   const { name, id, state, updateAt, createBy, attributes } = props.item;
   const { app_type, description, icon } = attributes;
   const navigate = useNavigate();
-  const tenantId = '727d7157b3d24209aefd59eb7d1c49ff';
+  const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
 
   function itemClick() {
     navigate(`/app-develop/${tenantId}/app-detail/${id}`);

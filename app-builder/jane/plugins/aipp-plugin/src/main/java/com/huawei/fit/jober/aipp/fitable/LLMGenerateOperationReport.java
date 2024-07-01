@@ -4,10 +4,10 @@
 
 package com.huawei.fit.jober.aipp.fitable;
 
-import com.huawei.fit.finance.FinanceService;
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.service.ReportGenerationService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
@@ -25,10 +25,10 @@ import java.util.Map;
 public class LLMGenerateOperationReport implements FlowableService {
     private static final Logger log = Logger.get(LLMGenerateOperationReport.class);
 
-    private final FinanceService financeService;
+    private final ReportGenerationService reportGenerationService;
 
-    public LLMGenerateOperationReport(FinanceService financeService) {
-        this.financeService = financeService;
+    public LLMGenerateOperationReport(ReportGenerationService reportGenerationService) {
+        this.reportGenerationService = reportGenerationService;
     }
 
     /**
@@ -44,7 +44,7 @@ public class LLMGenerateOperationReport implements FlowableService {
         log.debug("LLMGenerateOperationReport businessData {}", businessData);
 
         String chatHistory = businessData.get(AippConst.INST_CHAT_HISTORY_KEY).toString();
-        String operationReport = this.financeService.generateOperationReport(chatHistory);
+        String operationReport = this.reportGenerationService.generateOperationReport(chatHistory);
         businessData.put(AippConst.INST_OPERATION_REPORT_KEY, operationReport);
         return flowData;
     }

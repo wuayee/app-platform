@@ -38,4 +38,10 @@ public class AippLogData {
 
     @Property(description = "提示信息，log_type为MSG时填充")
     private String msg;
+
+    @Property(description = "表单渲染数据")
+    private String formAppearance;
+
+    @Property(description = "表单填充数据")
+    private String formData;
 }

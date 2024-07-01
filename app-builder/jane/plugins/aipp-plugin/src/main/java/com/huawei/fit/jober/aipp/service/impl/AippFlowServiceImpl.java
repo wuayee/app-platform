@@ -518,11 +518,6 @@ public class AippFlowServiceImpl implements AippFlowService {
                 AippTypeEnum.PREVIEW.name());
 
         List<AippNodeForms> aippNodeForms = buildAippNodeForms(flowInfo);
-        // 合并 表单props
-        List<MetaPropertyDeclarationInfo> formProps = getMetaPropertyDeclarationInfos(aippNodeForms);
-        if (!formProps.isEmpty()) {
-            declarationInfo.getProperties().getValue().addAll(formProps);
-        }
         // 追加attribute
         Map<String, Object> attr = declarationInfo.getAttributes().getValue();
         appendAttribute(attr, aippNodeForms, flowInfo.getFlowDefinitionId());
@@ -836,15 +831,8 @@ public class AippFlowServiceImpl implements AippFlowService {
 
     private MetaDeclarationInfo buildPublishMetaDeclaration(String aippId, List<AippNodeForms> aippNodeForms,
             String flowDefinitionId, Meta meta, AippDto aippDto) {
-        // 解析表单属性字段
-        List<MetaPropertyDeclarationInfo> props = getMetaPropertyDeclarationInfos(aippNodeForms);
-
         // 追加aipp meta属性字段
         MetaDeclarationInfo declaration = new MetaDeclarationInfo();
-        if (!props.isEmpty()) {
-            declaration.setProperties(Undefinable.defined(buildPatchProps(props, meta)));
-            log.debug("add props, aippId {}  props size {} props {}", aippId, props.size(), props);
-        }
 
         // 追加/更新 aipp attribute字段
         Map<String, Object> attrPatch = meta.getAttributes();

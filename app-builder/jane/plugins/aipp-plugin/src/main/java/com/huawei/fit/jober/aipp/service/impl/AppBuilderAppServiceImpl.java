@@ -981,14 +981,21 @@ public class AppBuilderAppServiceImpl
     }
 
     private JSONArray extractingInputParams(JSONObject node) {
-        if (StringUtils.equalsIgnoreCase("startNodeStart", node.getString("type"))) {
+        String nodeType = node.getString("type");
+        if (StringUtils.equalsIgnoreCase("startNodeStart", nodeType)) {
             return node.getJSONObject("flowMeta").getJSONArray("inputParams");
-        } else if (StringUtils.equalsIgnoreCase("endNodeEnd", node.getString("type"))) {
+        } else if (StringUtils.equalsIgnoreCase("endNodeEnd", nodeType)) {
             return null;
-        } else if (StringUtils.equalsIgnoreCase("jadeEvent", node.getString("type"))) {
+        } else if (StringUtils.equalsIgnoreCase("jadeEvent", nodeType)) {
             return null;
-        } else if (StringUtils.equalsIgnoreCase("conditionNodeCondition", node.getString("type"))) {
+        } else if (StringUtils.equalsIgnoreCase("conditionNodeCondition", nodeType)) {
             return null;
+        } else if (StringUtils.equalsIgnoreCase("manualCheckNodeState", nodeType)) {
+            return node.getJSONObject("flowMeta")
+                    .getJSONObject("task")
+                    .getJSONObject("converter")
+                    .getJSONObject("entity")
+                    .getJSONArray("inputParams");
         } else {
             return node.getJSONObject("flowMeta")
                     .getJSONObject("jober")

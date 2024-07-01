@@ -11,11 +11,20 @@ import com.huawei.fit.jober.FlowSmartFormService;
 import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.domain.AppBuilderForm;
+import com.huawei.fit.jober.aipp.domain.AppBuilderFormProperty;
+import com.huawei.fit.jober.aipp.service.AippStreamService;
+import com.huawei.fit.jober.aipp.service.AppBuilderFormService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.StringUtils;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,9 +37,14 @@ import java.util.Map;
 @Component
 public class AippFlowSmartFormHandle implements FlowSmartFormService {
     private static final Logger log = Logger.get(AippFlowSmartFormHandle.class);
+    private final AppBuilderFormService formService;
+    private final AippStreamService aippStreamService;
     private final MetaInstanceService metaInstanceService;
 
-    public AippFlowSmartFormHandle(@Fit MetaInstanceService metaInstanceService) {
+    public AippFlowSmartFormHandle(@Fit AppBuilderFormService formService, @Fit AippStreamService aippStreamService,
+            @Fit MetaInstanceService metaInstanceService) {
+        this.formService = formService;
+        this.aippStreamService = aippStreamService;
         this.metaInstanceService = metaInstanceService;
     }
 
@@ -47,13 +61,38 @@ public class AippFlowSmartFormHandle implements FlowSmartFormService {
         Map<String, Object> businessData = Utils.getBusiness(contexts);
         log.debug("handleSmartForm nodeId {} businessData {}", nodeId, businessData);
 
+        this.updateInstance(sheetId, nodeId, businessData);
+
+        AppBuilderForm appBuilderForm = this.formService.selectWithId(sheetId);
+        String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
+        String instanceId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
+        this.aippStreamService.sendToAncestor(instanceId,
+                buildFormData(businessData, appBuilderForm, parentInstanceId));
+    }
+
+    @NotNull
+    private static Map<String, Object> buildFormData(Map<String, Object> businessData, AppBuilderForm appBuilderForm,
+            String parentInstanceId) {
+        Map<String, Object> form = new HashMap<>();
+        form.put(AippConst.FORM_APPEARANCE_KEY, appBuilderForm.getAppearance());
+        Map<String, Object> formDataMap = new HashMap<>();
+        appBuilderForm.getFormProperties()
+                .stream()
+                .map(AppBuilderFormProperty::getName)
+                .forEach(name -> formDataMap.put(name, businessData.getOrDefault(name, StringUtils.EMPTY)));
+        form.put(AippConst.FORM_DATA_KEY, formDataMap);
+        form.put(AippConst.PARENT_INSTANCE_ID, parentInstanceId);
+        return form;
+    }
+
+    private void updateInstance(String sheetId, String nodeId, Map<String, Object> businessData) {
         InstanceDeclarationInfo declarationInfo = InstanceDeclarationInfo.custom()
                 .putInfo(AippConst.INST_CURR_FORM_ID_KEY, sheetId)
                 .putInfo(AippConst.INST_CURR_FORM_VERSION_KEY, "1.0.0")
                 .putInfo(AippConst.INST_CURR_NODE_ID_KEY, nodeId)
                 .build();
 
-        this.metaInstanceService.patchMetaInstance((String) businessData.get(AippConst.BS_AIPP_ID_KEY),
+        this.metaInstanceService.patchMetaInstance((String) businessData.get(AippConst.BS_META_VERSION_ID_KEY),
                 (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY),
                 declarationInfo,
                 JsonUtils.parseObject((String) businessData.get(AippConst.BS_HTTP_CONTEXT_KEY),

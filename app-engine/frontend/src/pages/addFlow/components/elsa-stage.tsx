@@ -3,7 +3,7 @@ import React, { useEffect, useCallback, useState, useRef, useContext,  } from 'r
 import { useParams } from 'react-router-dom';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { debounce } from '@shared/utils/common';
-import { 
+import {
   getAppInfo,
   updateFlowInfo, } from '@shared/http/aipp';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
@@ -134,8 +134,8 @@ const Stage = (props) => {
       onDrop ={handleDragEnter}>
         <div className='elsa-canvas' id='stage'></div>
     </div>
-    <HuggingFaceModal 
-      showModal={showModal} 
+    <HuggingFaceModal
+      showModal={showModal}
       setShowModal={setShowModal}
       onModelSelectCallBack={onModelSelectCallBack}
       taskName={taskName}
