@@ -40,7 +40,9 @@ export default function EndNodeWrapper({disabled}) {
         if (mode === "variables") {
             return (<OutputVariable disabled={disabled}/>);
         } else {
-            return (<ManualCheckForm data={data} handleFormChange={handleFormChange}/>);
+            return (<ManualCheckForm formName={data.inputParams.find(item => item.name === "endFormName").value}
+                                     taskId={data.inputParams.find(item => item.name === "endFormId").value}
+                                     handleFormChange={handleFormChange}/>);
         }
     };
 

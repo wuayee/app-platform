@@ -30,8 +30,13 @@ export default function SelectMode({mode}) {
                 type: "String",
                 from: "Input",
                 value: ''
+            }, {
+                id: uuidv4(),
+                name: "endFormName",
+                type: "String",
+                from: "Input",
+                value: ''
             }]
-
         } else {
             config = [{
                 id: uuidv4(),

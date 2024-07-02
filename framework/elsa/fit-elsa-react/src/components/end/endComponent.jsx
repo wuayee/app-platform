@@ -56,6 +56,7 @@ export const endComponent = (jadeConfig) => {
          */
         const _changeForm = () => {
             newConfig.inputParams.find(item => item.name === 'endFormId').value = action.formId;
+            newConfig.inputParams.find(item => item.name === 'endFormName').value = action.formName;
         };
 
         /**
