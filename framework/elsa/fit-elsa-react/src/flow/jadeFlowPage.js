@@ -34,10 +34,34 @@ export const jadeFlowPage = (div, graph, name, id) => {
         self.shapes.forEach(s => s.onPageLoaded && s.onPageLoaded());
 
         const registerVirtualNodeInfo = () => {
-            self.registerObservable(VIRTUAL_CONTEXT_NODE.id, "instanceId", "instanceId", "String", undefined);
-            self.registerObservable(VIRTUAL_CONTEXT_NODE.id, "appId", "appId", "String", undefined);
-            self.registerObservable(VIRTUAL_CONTEXT_NODE.id, "memories", "memories", "Array", undefined);
-            self.registerObservable(VIRTUAL_CONTEXT_NODE.id, "useMemory", "useMemory", "Boolean", undefined);
+            self.registerObservable({
+                nodeId: VIRTUAL_CONTEXT_NODE.id,
+                observableId: "instanceId",
+                value: "instanceId",
+                type: "String",
+                parentId: undefined
+            });
+            self.registerObservable({
+                nodeId: VIRTUAL_CONTEXT_NODE.id,
+                observableId: "appId",
+                value: "appId",
+                type: "String",
+                parentId: undefined
+            });
+            self.registerObservable({
+                nodeId: VIRTUAL_CONTEXT_NODE.id,
+                observableId: "memories",
+                value: "memories",
+                type: "Array",
+                parentId: undefined
+            });
+            self.registerObservable({
+                nodeId: VIRTUAL_CONTEXT_NODE.id,
+                observableId: "useMemory",
+                value: "useMemory",
+                type: "Boolean",
+                parentId: undefined
+            });
         };
         // 上下文虚拟节点信息注册
         registerVirtualNodeInfo();
