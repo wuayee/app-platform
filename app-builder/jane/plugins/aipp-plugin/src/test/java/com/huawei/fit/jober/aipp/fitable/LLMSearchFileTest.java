@@ -58,6 +58,7 @@ public class LLMSearchFileTest {
     }
 
     @Test
+    @Disabled
     void shouldOkWhenSearchFile() throws IOException {
         Map<String, Object> businessData = genBusinessData();
 

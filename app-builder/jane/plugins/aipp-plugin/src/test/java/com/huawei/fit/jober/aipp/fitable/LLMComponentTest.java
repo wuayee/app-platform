@@ -258,7 +258,7 @@ public class LLMComponentTest {
                 .close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, null, null, client, serializer);
+                toolProvider, agent, aippLogService, aippLogStreamService, client, serializer);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);

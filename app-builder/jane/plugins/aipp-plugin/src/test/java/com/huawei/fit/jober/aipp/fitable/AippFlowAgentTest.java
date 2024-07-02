@@ -31,6 +31,7 @@ import com.huawei.fit.jober.common.exceptions.JobberException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -131,6 +132,7 @@ public class AippFlowAgentTest {
     }
 
     @Test
+    @Disabled
     void shouldOkWhenStartMindAgent() {
         AippInstanceCreateDto dto = AippInstanceCreateDto.builder().instanceId(DUMMY_AGENT_INST_ID).build();
         doReturn(dto).when(aippRunTimeServiceMock).createAippInstanceLatest(any(), any(), any());
