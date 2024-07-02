@@ -11,7 +11,6 @@ import { useAppSelector } from '../../store/hook';
 const WorkflowCard = ({ pluginData,cardType }: any) => {
   const navigate = useNavigate();
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
-  const appId = useAppSelector((state) => state.appStore.appId);
   const operatItems: MenuProps['items'] = [
     {
       label: <div>编排</div>,
@@ -20,7 +19,7 @@ const WorkflowCard = ({ pluginData,cardType }: any) => {
   ];
   return(
   <div className='plugin-card'
-   onClick={()=>{navigate(``)}}>
+   onClick={()=>{navigate(`/app-develop/${tenantId}/app-detail/add-flow/${pluginData?.id}`)}}>
     <div className='plugin-card-header'>
       <img src='/src/assets/images/knowledge/knowledge-base.png' />
       <div>

@@ -71,7 +71,7 @@ const Skill = (props) => {
   // 工具流详情
   const workflowDetail = (item) => {
     if (item.type === 'workflow') {
-      navigate(`/app-develop/${item.tenantId}/app-detail/flow-detail/${item.appId}`);
+      navigate(`/app-develop/${item.tenantId}/app-detail/add-flow/${item.appId}`);
     } else {
       navigate(`/plugin/detail/${item.uniqueName}`);
     }

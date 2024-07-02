@@ -1,12 +1,12 @@
 import { Button, Form, Input, Modal, Upload } from 'antd';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import TextArea from 'antd/es/input/TextArea';
-import { UploadFile } from 'antd/lib';
 import { ToTopOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router';
 import { createAipp, uploadChatFile, uploadImage } from '../../../shared/http/aipp';
 import { Message } from '../../../shared/utils/message';
 import { useAppSelector } from '../../../store/hook';
-import { useNavigate } from 'react-router';
+import { httpUrlMap } from '../../../shared/http/httpConfig';
 
 const CreateWorkflow = (props) => {
   const [openWorkFlow, setOpenWorkFlow] = useState(false);
@@ -56,13 +56,20 @@ const CreateWorkflow = (props) => {
       onCancel={() => {
         setOpenWorkFlow(false);
       }}
-      onOk={async() => {
-          await form.validateFields();
-          const icon = filePath&&`${AIPP_URL}/api/jober/v1/api/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`
-          const res= await createAipp(tenantId, 'df87073b9bc85a48a9b01eccc9afccc3', { type: 'waterFlow', name: form.getFieldValue('name'),icon:icon, description: form.getFieldValue('description')});
-          const aippId = res.data.id;
-          navigate(`/app-develop/${tenantId}/app-detail/add-flow/${aippId}`);
-          setOpenWorkFlow(false);
+      onOk={async () => {
+        await form.validateFields();
+        const icon =
+          filePath &&
+          `${AIPP_URL}/api/jober/v1/api/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`;
+        const res = await createAipp(tenantId, 'df87073b9bc85a48a9b01eccc9afccc3', {
+          type: 'waterFlow',
+          name: form.getFieldValue('name'),
+          icon,
+          description: form.getFieldValue('description'),
+        });
+        const aippId = res.data.id;
+        navigate(`/app-develop/${tenantId}/app-detail/add-flow/${aippId}`);
+        setOpenWorkFlow(false);
       }}
     >
       <Form form={form} layout='vertical' autoComplete='off' className='edit-form-content'>
@@ -74,7 +81,7 @@ const CreateWorkflow = (props) => {
                 src={`${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`}
               />
             ) : (
-                <img src='/src/assets/images/knowledge/knowledge-base.png' />
+              <img src='/src/assets/images/knowledge/knowledge-base.png' />
             )}
             <Upload
               beforeUpload={beforeUpload}

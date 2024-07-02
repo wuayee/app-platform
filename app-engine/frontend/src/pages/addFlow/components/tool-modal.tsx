@@ -11,14 +11,10 @@ import { Message } from '@shared/utils/message';
 import CreateWorkflow from './create-workflow';
 import { getMyPlugin, getPlugins } from '../../../shared/http/plugin';
 import { useAppSelector } from '../../../store/hook';
+import { PluginTypeE } from './model';
 
 const { Search } = Input;
 const { Option } = Select;
-
-enum PluginTypeE {
-  MARKET='market',
-  OWER='owner'
-}
 
 const ToolDrawer = (props) => {
   const { showModal, setShowModal, checkData, confirmCallBack, type } = props;
@@ -52,7 +48,7 @@ const ToolDrawer = (props) => {
   }, [props.checkData]);
   const items = categoryItems;
   const btnItems = [
-    { key: 'tool', label: '插件' },
+    { key: 'tool', label: '工具' },
     { key: 'workflow', label: '工具流' },
   ];
   const handleChange = (value: string) => {
@@ -100,14 +96,6 @@ const ToolDrawer = (props) => {
 
     setLoading(false);
     const data=listType.current === PluginTypeE.MARKET? res?.data : res?.data?.toolData;
-    if (activeKey === 'HUGGINGFACE') {
-      data.forEach((item) => {
-        (item.type = 'huggingFaceNodeState'),
-          (item.context = {
-            default_model: item.defaultModel,
-          });
-      });
-    }
     setTotal(res?.data?.total);
     setDefaultCheck(data);
     setPluginData(data);
@@ -125,13 +113,29 @@ const ToolDrawer = (props) => {
     getPluginList();
   };
   // 添加插件
-  const toolClick = () => {
+  const toolAdd = () => {
     checkedList.current.forEach((item, index) => {
       const type = item.type || 'toolInvokeNodeState';
       handleClickAddToolNode(type, { clientX: 400 + 10 * index, clientY: 300 + 10 * index }, item);
     });
     Message({ type: 'success', content: '添加插件成功' });
   };
+
+  // 添加工作流
+  const workflowAdd=()=>{
+    const workFlowList: any = [];
+    const fitList: any = [];
+    checkedList.current.forEach((item) => {
+      if (item.tags.includes('WATERFLOW')) {
+        workFlowList.push(item);
+      } else {
+        fitList.push(item);
+      }
+    });
+    const workFlowId = workFlowList.map((item) => item.uniqueName);
+    const fitId = fitList.map((item) => item.uniqueName);
+    confirmCallBack(workFlowId, fitId);
+  }
   // 选中
   const onChange = (e, item) => {
     item.checked = e.target.checked;
@@ -146,20 +150,9 @@ const ToolDrawer = (props) => {
   // 确定提交
   const confirm = () => {
     if (type !== 'addSkill') {
-      toolClick();
+      toolAdd();
     } else {
-      const workFlowList: any = [];
-      const fitList: any = [];
-      checkedList.current.forEach((item) => {
-        if (item.tags.includes('WATERFLOW')) {
-          workFlowList.push(item);
-        } else {
-          fitList.push(item);
-        }
-      });
-      const workFlowId = workFlowList.map((item) => item.uniqueName);
-      const fitId = fitList.map((item) => item.uniqueName);
-      confirmCallBack(workFlowId, fitId);
+      workflowAdd();
     }
     setShowModal(false);
   };
@@ -188,6 +181,7 @@ const ToolDrawer = (props) => {
       >
         <div className='tool-modal-search'>
           <Search
+            disabled
             size='large'
             addonBefore={selectBefore}
             onSearch={filterByName}
@@ -240,7 +234,7 @@ const ToolDrawer = (props) => {
         </div>
         <div style={{ paddingTop: 16 }}>
           <Pagination
-            total={pluginData.length}
+            total={total}
             current={pageNum}
             onChange={selectPage}
             pageSize={pageSize}

@@ -89,13 +89,14 @@ const ToolItem = () => {
   }
   return <>
     <Search 
+      disabled
       size="large" 
       addonBefore={selectBefore} 
       onSearch={filterByName}
       size="small"
       placeholder="请输入" />
     <div className="tool-tab">
-      { tab.map(item => {
+      { listType.current === PluginTypeE.MARKET&&tab?.map(item => {
           return (
             <span className={ toolKey === item.key ? 'active' : null } 
               key={item.key} 
@@ -125,7 +126,7 @@ const ToolItem = () => {
                         { item.name }
                       </span>
                     </div>
-                    <span className='drag-item-icon' 
+                    <span className='drag-item-icon'
                       onClick={(event) => handleClickAddToolNode(item.type || 'toolInvokeNodeState', event, item)}>
                       <img src='/src/assets/images/ai/flow.png'  />
                     </span>

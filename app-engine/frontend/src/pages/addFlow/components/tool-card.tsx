@@ -14,7 +14,7 @@ const ToolCard = ({ pluginData }: any) => {
   // 类型处理
   const detailClick = () => {
    if (pluginData.tags.includes('WATERFLOW')) {
-    // navigate(`/app-develop/${tenantId}/app-detail/flow-detail/${appId}`);
+    navigate(`/app-develop/${tenantId}/app-detail/add-flow/${pluginData?.runnables?.APP?.appId}`);
    } else {
     navigate(`/plugin/detail/${pluginData.uniqueName}`)
    }

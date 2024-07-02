@@ -11,6 +11,8 @@ import { useAppSelector } from '../../store/hook';
 import WorkflowCard from '../../components/plugin-card/workFlowCard';
 import '../../index.scss';
 import './style.scoped.scss';
+import CreateWorkflow from '../addFlow/components/create-workflow';
+import CreateWorkfowDrawer from './upload/createWorkflow';
 
 enum tabItemE {
   TOOL = 'FIT',
@@ -48,6 +50,7 @@ const MyPlugins = () => {
   const [name, setName] = useState<string>(undefined);
   const [pluginData, setPluginData] = useState([]);
   const [openUploadDrawer, setOpenUploadDrawer] = useState(0); // 数字，非布尔值
+  const [openCreateDrawer, setOpenCreateDrawer] = useState(0); // 数字，非布尔值
   const [currentTab, setCurrentTab] = useState(tabItemE.TOOL);
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [refreshSignal, setRefreshSignal] = useState(0);
@@ -107,6 +110,9 @@ const MyPlugins = () => {
               if (currentTab === tabItemE.TOOL) {
                 setOpenUploadDrawer(e.timeStamp);
               }
+              if(currentTab === tabItemE.TOOLFLOW){
+                setOpenCreateDrawer(e.timeStamp)
+              } 
             }}
           >
             创建
@@ -144,12 +150,13 @@ const MyPlugins = () => {
       <div style={{ paddingTop: 16 }}>
         <Pagination
           total={total}
-          current={pagination?.pageNum}
+          current={pagination?.pageNum} 
           onChange={selectPage}
           pageSize={pagination?.pageSize}
         />
       </div>
       <UploadToolDrawer openSignal={openUploadDrawer} />
+      <CreateWorkfowDrawer openSignal={openCreateDrawer}/>
     </div>
   );
 };
