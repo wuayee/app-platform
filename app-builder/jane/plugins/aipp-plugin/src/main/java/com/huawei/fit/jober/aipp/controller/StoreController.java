@@ -67,7 +67,8 @@ public class StoreController extends AbstractController {
     }
 
     @GetMapping(path = "/plugins", description = "获取已发布的所有指定类型的插件配置")
-    public Rsp<ToolDto> getPlugins(HttpClassicServerRequest httpRequest, @RequestParam("tag") String tag,
+    public Rsp<ToolDto> getPlugins(HttpClassicServerRequest httpRequest,
+            @RequestParam(value = "tag", defaultValue = "", required = false) String tag,
             @PathVariable("tenant_id") String tenantId,
             @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean orTags,
             @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,

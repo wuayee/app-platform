@@ -49,6 +49,9 @@ public class AippDto {
     @Property(description = "aipp 版本号")
     private String version;
 
+    @Property(description = "aipp 发布到store的唯一标识")
+    private String uniqueName;
+
     @Property(description = "aipp 唯一标识")
     private String id;
 

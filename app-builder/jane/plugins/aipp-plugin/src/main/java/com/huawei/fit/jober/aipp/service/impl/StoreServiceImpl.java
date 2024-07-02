@@ -34,6 +34,7 @@ import com.huawei.jade.store.entity.transfer.TaskData;
 import com.huawei.jade.store.service.EcoTaskService;
 import com.huawei.jade.store.service.HuggingFaceModelService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -70,7 +71,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public ToolDto getPlugins(String tag, boolean orTags, int pageNum, int pageSize,
             OperationContext operationContext) {
-        ListResult<ToolData> toolDataListResult = this.buildToolNodesConfig(tag, orTags, pageNum, pageSize);
+        ListResult<ToolData> toolDataListResult = this.buildToolNodesConfig(tag, orTags, pageNum, pageSize, "");
         return ToolDto.builder().toolData(toolDataListResult.getData()).total(toolDataListResult.getCount()).build();
     }
 
@@ -91,14 +92,22 @@ public class StoreServiceImpl implements StoreService {
 
     private ListResult<ToolData> buildToolNodesConfig(String tag, boolean orTags, int pageNum, int pageSize,
             String version) {
+        List<String> includeTag = new ArrayList<>();
+        if (StringUtils.isNotBlank(tag)) {
+            includeTag.add(tag);
+        } else {
+            includeTag.add("WATERFLOW");
+            includeTag.add("FIT");
+            orTags = true;
+        }
         ToolQuery query = new ToolQuery(null,
-                Collections.singletonList(tag),
+                includeTag,
                 Collections.singletonList(StringUtils.EMPTY),
                 orTags,
                 pageNum,
                 pageSize,
                 version);
-        return this.toolService.searchTools(query).getData();
+        return this.toolService.searchTools(query);
     }
 
     private String getDefaultModel(ToolData toolData, String tag) {
