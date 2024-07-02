@@ -145,6 +145,9 @@ public class AppBuilderAppServiceImpl
         AppBuilderApp appBuilderApp = this.appFactory.create(id);
         appBuilderApp.setState(AppState.PUBLISHED.getName());
         this.appFactory.update(appBuilderApp);
+        if (appBuilderApp.getAttributes().containsKey("store_id")) {
+            aippDto.setUniqueName(appBuilderApp.getAttributes().get("store_id").toString());
+        }
         return this.aippFlowService.publish(aippDto, contextOf);
     }
 
