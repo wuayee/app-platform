@@ -10,10 +10,10 @@ import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.jane.common.response.Rsp;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.AippFlowComponentDto;
 import com.huawei.fit.jober.aipp.dto.AippFormComponentDto;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.annotation.Component;
 
 /**

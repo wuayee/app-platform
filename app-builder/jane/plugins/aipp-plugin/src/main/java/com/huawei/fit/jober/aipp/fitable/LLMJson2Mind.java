@@ -7,11 +7,12 @@ package com.huawei.fit.jober.aipp.fitable;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.xiaohai.FileDto;
 import com.huawei.fit.jober.aipp.entity.MindJsonElement;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
@@ -40,10 +41,10 @@ public class LLMJson2Mind implements FlowableService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.LLMJson2Mind")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("LLMJson2Mind businessData {}", businessData);
 
-        String prompt = Utils.getPromptFromFlowContext(flowData);
+        String prompt = DataUtils.getPromptFromFlowContext(flowData);
         Validation.notBlank(prompt, "prompt cannot be null");
 
         List<FileDto> xiaoHaiAnswer = JsonUtils.parseArray(prompt, FileDto[].class);
@@ -68,7 +69,8 @@ public class LLMJson2Mind implements FlowableService {
 
         InstanceDeclarationInfo info =
                 InstanceDeclarationInfo.custom().putInfo(AippConst.INST_MIND_DATA_KEY, resultJson).build();
-        Utils.persistInstance(metaInstanceService, info, businessData, Utils.getOpContext(businessData));
+        MetaInstanceUtils.persistInstance(
+                metaInstanceService, info, businessData, DataUtils.getOpContext(businessData));
         return flowData;
     }
 

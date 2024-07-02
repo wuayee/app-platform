@@ -10,8 +10,6 @@ import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowCallbackService;
 import com.huawei.fit.jober.FlowInstanceService;
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
@@ -23,6 +21,8 @@ import com.huawei.fit.jober.aipp.fel.AippLlmMeta;
 import com.huawei.fit.jober.aipp.fel.AippMemory;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippLogStreamService;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.vo.AippLogVO;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
@@ -134,7 +134,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.LLMComponentCallback")
     @Override
     public void callback(List<Map<String, Object>> childFlowData) {
-        Map<String, Object> childBusinessData = Utils.getBusiness(childFlowData);
+        Map<String, Object> childBusinessData = DataUtils.getBusiness(childFlowData);
         log.debug("LLMComponentCallback business data {}", childBusinessData);
         String toolOutput = ObjectUtils.cast(childBusinessData.get(AippConst.BS_AIPP_FINAL_OUTPUT));
         String parentInstanceId = ObjectUtils.cast(childBusinessData.get(AippConst.PARENT_INSTANCE_ID));
@@ -174,7 +174,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.LLMComponent")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         String instId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
         String parentInstId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
         log.debug("LLMComponent business data {}", businessData);
@@ -190,7 +190,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
             return flowData;
         }
 
-        String path = Utils.buildPath(this.aippLogService, instId, parentInstId);
+        String path = this.aippLogService.buildPath(instId, parentInstId);
 
         // todo: 待add多模态，期望使用image的url，当前传入的历史记录里面没有image
         Map<String, Object> toolContext = MapBuilder.<String, Object>get()
@@ -305,7 +305,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         // todo: 临时逻辑，如果出错则停止前端轮询并主动终止流程；待流程支持异步调用抛异常后再修改
         log.error("versionId {} errorMessage {}", llmMeta.getVersionId(), errorMessage);
         String msg = "很抱歉，模型节点遇到了问题，请稍后重试。";
-        Utils.persistAippErrorLog(this.aippLogService, msg, llmMeta.getFlowData());
+        this.aippLogService.insertErrorLog(msg, llmMeta.getFlowData());
         InstanceDeclarationInfo declarationInfo = InstanceDeclarationInfo.custom()
                 .putInfo(AippConst.INST_FINISH_TIME_KEY, LocalDateTime.now())
                 .putInfo(AippConst.INST_STATUS_KEY, MetaInstStatusEnum.ERROR.name())
@@ -336,7 +336,8 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
                     .collect(Collectors.toMap(Map.Entry::getKey, entry -> this.getStandardValue(entry.getValue())));
             return template.render(standardInput);
         } catch (StringFormatException e) {
-            throw new AippException(Utils.getOpContext(businessData), AippErrCode.LLM_COMPONENT_TEMPLATE_RENDER_FAILED);
+            throw new AippException(
+                    DataUtils.getOpContext(businessData), AippErrCode.LLM_COMPONENT_TEMPLATE_RENDER_FAILED);
         }
     }
 

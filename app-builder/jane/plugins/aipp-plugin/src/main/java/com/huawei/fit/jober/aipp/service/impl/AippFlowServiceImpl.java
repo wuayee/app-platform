@@ -16,10 +16,7 @@ import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jane.meta.property.MetaPropertyDeclarationInfo;
 import com.huawei.fit.jober.FlowDefinitionService;
 import com.huawei.fit.jober.FlowsService;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.MetaUtils;
 import com.huawei.fit.jober.aipp.common.PageResponse;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.common.exception.AippForbiddenException;
@@ -45,6 +42,11 @@ import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippFlowService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
+import com.huawei.fit.jober.aipp.util.AippStringUtils;
+import com.huawei.fit.jober.aipp.util.FormUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.jober.aipp.util.MetaUtils;
+import com.huawei.fit.jober.aipp.util.UUIDUtil;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.common.exceptions.ConflictException;
@@ -91,6 +93,10 @@ import java.util.stream.Collectors;
  */
 @Component
 public class AippFlowServiceImpl implements AippFlowService {
+    /**
+     * 预览aipp version uuid后缀长度
+     */
+    public static final int PREVIEW_UUID_LEN = 6;
     private static final Logger log = Logger.get(AippFlowServiceImpl.class);
     private static final int RETRY_PREVIEW_TIMES = 5;
     private static final String DEFAULT_VERSION = "1.0.0";
@@ -117,6 +123,12 @@ public class AippFlowServiceImpl implements AippFlowService {
         this.formRepository = formRepository;
         this.brokerClient = brokerClient;
         this.appBuilderAppMapper = appBuilderAppMapper;
+    }
+
+    private String buildPreviewVersion(String version) {
+        String uuid = UUIDUtil.uuid();
+        String subUuid = (uuid.length() > PREVIEW_UUID_LEN) ? uuid.substring(0, PREVIEW_UUID_LEN) : uuid;
+        return version + "-" + subUuid;
     }
 
     /**
@@ -588,7 +600,7 @@ public class AippFlowServiceImpl implements AippFlowService {
             }
         }
         // 过滤预览版本
-        if (Utils.isPreview(baselineVersion)) {
+        if (AippStringUtils.isPreview(baselineVersion)) {
             throw new AippParamException(context, AippErrCode.INPUT_PARAM_IS_INVALID, "version is preview");
         }
         // 设置预览版本
@@ -596,7 +608,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         String previewVersion;
         String errorMsg;
         do {
-            previewVersion = Utils.buildPreviewVersion(baselineVersion);
+            previewVersion = buildPreviewVersion(baselineVersion);
             aippDto.getFlowViewData().put(AippConst.FLOW_CONFIG_VERSION_KEY, previewVersion);
             try {
                 return this.createPreviewAipp(baselineVersion, aippDto, context);
@@ -695,7 +707,7 @@ public class AippFlowServiceImpl implements AippFlowService {
      */
     public void cleanPreviewAipp(String previewAippId, String previewVersion, OperationContext context) {
         // 过滤非预览版本
-        if (!Utils.isPreview(previewVersion)) {
+        if (!AippStringUtils.isPreview(previewVersion)) {
             throw new AippParamException(context, AippErrCode.INPUT_PARAM_IS_INVALID, "version is not preview");
         }
         CompletableFuture.runAsync(() -> {
@@ -859,7 +871,7 @@ public class AippFlowServiceImpl implements AippFlowService {
                     Collections.singletonList(new FormMetaQueryParameter(form.getFormId(), form.getVersion()));
             return AippNodeForms.builder()
                     .type(item.getType())
-                    .metaInfo(Utils.buildFormMetaInfos(parameter, this.formRepository))
+                    .metaInfo(FormUtils.buildFormMetaInfos(parameter, this.formRepository))
                     .build();
         }).collect(Collectors.toList());
     }

@@ -1,11 +1,11 @@
 package com.huawei.fit.jober.aipp.fitable;
 
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.fitable.agent.AippFlowAgent;
 import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
@@ -47,12 +47,12 @@ public class AppFlowAgentSearch implements FlowableService {
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
         log.info("handle AppFlowAgentSearch");
 
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         String prompt = (String) businessData.get(AippConst.BS_MODEL_PROMPT_KEY);
         Validation.notNull(prompt, "prompt cannot be null");
 
         String msg = "基于以上信息，我决定调用智能推荐产品智能体，为您检索匹配产品";
-        Utils.persistAippMsgLog(aippLogService, msg, flowData);
+        this.aippLogService.insertMsgLog(msg, flowData);
 
         Map<String, Object> agentParam = new HashMap<String, Object>() {{
             put(AippConst.BS_MODEL_PROMPT_KEY, prompt);

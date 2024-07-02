@@ -4,13 +4,13 @@
 
 package com.huawei.fit.jober.aipp.fitable.finance;
 
-import static com.huawei.fit.jober.aipp.common.HttpUtils.sendHttpRequest;
+import static com.huawei.fit.jober.aipp.util.HttpUtils.sendHttpRequest;
 
 import com.huawei.fit.finance.AutoGraph;
 import com.huawei.fit.finance.ChartType;
 import com.huawei.fit.finance.FinanceService;
 import com.huawei.fit.finance.NLRouter;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.util.MapBuilder;

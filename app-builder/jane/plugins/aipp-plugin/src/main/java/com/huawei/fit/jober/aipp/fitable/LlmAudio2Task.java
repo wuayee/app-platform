@@ -7,17 +7,18 @@ package com.huawei.fit.jober.aipp.fitable;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.AippFileUtils;
 import com.huawei.fit.jober.aipp.common.AudioTextFunction;
-import com.huawei.fit.jober.aipp.common.AudioUtils;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.LLMUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.audio.AudioSplitInfo;
 import com.huawei.fit.jober.aipp.entity.ffmpeg.FfmpegMeta;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.FfmpegService;
+import com.huawei.fit.jober.aipp.util.AippFileUtils;
+import com.huawei.fit.jober.aipp.util.AudioUtils;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.jober.aipp.util.LLMUtils;
+import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
@@ -78,9 +79,9 @@ public class LlmAudio2Task implements FlowableService {
     private AudioSplitInfo splitAudio(String instId, String audioUrl) throws JobberException {
         File audioFile = null;
         try {
-            File targetDir = Paths.get(Utils.NAS_SHARE_DIR, UUID.randomUUID().toString()).toFile();
+            File targetDir = Paths.get(AippFileUtils.NAS_SHARE_DIR, UUID.randomUUID().toString()).toFile();
             FileUtils.forceMkdir(targetDir);
-            audioFile = Utils.getFileFromS3(instId, audioUrl, "audio");
+            audioFile = AippFileUtils.getFileFromS3(instId, audioUrl, "audio");
             FfmpegMeta meta = ffmpegService.stat(audioFile.getCanonicalPath());
             int segmentSize = meta.getDuration();
             if (meta.getDuration() >= 6 * 60) {
@@ -111,7 +112,7 @@ public class LlmAudio2Task implements FlowableService {
         output.forEach(stringBuilder::append);
 
         String msg = "以下是音频中提取到的关键内容：\n" + stringBuilder.toString();
-        Utils.persistAippMsgLog(aippLogService, msg, flowData);
+        this.aippLogService.insertMsgLog(msg, flowData);
 
         String llmOutput = hllmClient.generate(HllmChatEntity.builder()
                 .prompt(String.format(Locale.ROOT, PROMPT, stringBuilder))
@@ -129,7 +130,7 @@ public class LlmAudio2Task implements FlowableService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.LlmAudio2Task")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("LlmAudio2Task businessData {}", businessData);
 
         String audioPathStr = (String) businessData.get(AippConst.BS_AUDIO_PATH);
@@ -139,7 +140,7 @@ public class LlmAudio2Task implements FlowableService {
         Validation.notNull(audioUrl, "audioUrl cant be null.");
 
         String msg = "首先我需要了解音频中的关键信息，我决定调用音频信息提取工具";
-        Utils.persistAippMsgLog(aippLogService, msg, flowData);
+        this.aippLogService.insertMsgLog(msg, flowData);
 
         String instId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
         AudioSplitInfo audioInfo = splitAudio(instId, audioUrl);
@@ -152,7 +153,8 @@ public class LlmAudio2Task implements FlowableService {
 
             InstanceDeclarationInfo info =
                     InstanceDeclarationInfo.custom().putInfo(AippConst.BS_W3_TASK_RESULT, w3Task).build();
-            Utils.persistInstance(metaInstanceService, info, businessData, Utils.getOpContext(businessData));
+            MetaInstanceUtils.persistInstance(
+                    metaInstanceService, info, businessData, DataUtils.getOpContext(businessData));
         } catch (InterruptedException | IOException e) {
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR,
                     String.format(Locale.ROOT,

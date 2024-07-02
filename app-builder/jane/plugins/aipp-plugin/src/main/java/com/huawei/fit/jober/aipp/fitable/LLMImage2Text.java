@@ -8,12 +8,13 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.AippFileUtils;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.LLMService;
+import com.huawei.fit.jober.aipp.util.AippFileUtils;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
@@ -49,7 +50,7 @@ public class LLMImage2Text implements FlowableService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.LLMImage2Text")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("LLMImage2Text businessData {}", businessData);
 
         String imagePathStr = (String) businessData.get(AippConst.BS_IMAGE_PATH_KEY);
@@ -58,24 +59,24 @@ public class LLMImage2Text implements FlowableService {
         Validation.notNull(imageS3Url, "image path cannot be null");
 
         String msg = "首先我需要了解图片中的关键信息，我决定调用图片信息提取工具";
-        Utils.persistAippMsgLog(aippLogService, msg, flowData);
+        this.aippLogService.insertMsgLog(msg, flowData);
 
-        String prompt = Utils.getPromptFromFlowContext(flowData);
+        String prompt = DataUtils.getPromptFromFlowContext(flowData);
         String instId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
         File tmpImageFile = null;
         try {
-            tmpImageFile = Utils.getFileFromS3(instId, imageS3Url, "img");
+            tmpImageFile = AippFileUtils.getFileFromS3(instId, imageS3Url, "img");
             String result = llmService.askModelWithImage(tmpImageFile, prompt);
             persistLlmResultLog(flowData, result);
             businessData.put(AippConst.BS_IMAGE_DESCRIPTION_KEY, result);
 
             // update instance
-            OperationContext context = Utils.getOpContext(businessData);
+            OperationContext context = DataUtils.getOpContext(businessData);
             InstanceDeclarationInfo info = InstanceDeclarationInfo.custom()
                     .putInfo(AippConst.BS_IMAGE_DESCRIPTION_KEY, result)
                     .putInfo(AippConst.BS_IMAGE_PATH_KEY, imagePathStr)
                     .build();
-            Utils.persistInstance(metaInstanceService, info, businessData, context);
+            MetaInstanceUtils.persistInstance(metaInstanceService, info, businessData, context);
         } catch (IOException e) {
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR,
                     String.format(Locale.ROOT,
@@ -92,9 +93,9 @@ public class LLMImage2Text implements FlowableService {
     private void persistLlmResultLog(List<Map<String, Object>> flowData, String result) {
         if (result.isEmpty()) {
             String msg = "很抱歉！无法识别图片中的内容，您可以尝试换个图片";
-            Utils.persistAippErrorLog(aippLogService, msg, flowData);
+            this.aippLogService.insertErrorLog(msg, flowData);
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "image text result is empty.");
         }
-        Utils.persistAippMsgLog(aippLogService, result, flowData);
+        this.aippLogService.insertMsgLog(result, flowData);
     }
 }

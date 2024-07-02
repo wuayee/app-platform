@@ -8,13 +8,13 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowSmartFormService;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.domain.AppBuilderForm;
 import com.huawei.fit.jober.aipp.domain.AppBuilderFormProperty;
 import com.huawei.fit.jober.aipp.service.AippStreamService;
 import com.huawei.fit.jober.aipp.service.AppBuilderFormService;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
@@ -58,7 +58,7 @@ public class AippFlowSmartFormHandle implements FlowSmartFormService {
     @Fitable("qz90ufu144m607hfud1ecbk0dnq3xavd")
     public void handleSmartForm(List<Map<String, Object>> contexts, String sheetId) {
         String nodeId = (String) contexts.get(0).get(AippConst.BS_NODE_ID_KEY);
-        Map<String, Object> businessData = Utils.getBusiness(contexts);
+        Map<String, Object> businessData = DataUtils.getBusiness(contexts);
         log.debug("handleSmartForm nodeId {} businessData {}", nodeId, businessData);
 
         this.updateInstance(sheetId, nodeId, businessData);

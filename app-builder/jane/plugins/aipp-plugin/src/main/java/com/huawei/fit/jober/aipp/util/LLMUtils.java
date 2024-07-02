@@ -2,11 +2,12 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.jober.aipp.common;
+package com.huawei.fit.jober.aipp.util;
 
 import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
 import com.huawei.fit.jober.aipp.service.LLMService;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.hllm.model.LlmModel;
 
 import java.io.IOException;
@@ -84,20 +85,14 @@ public class LLMUtils {
             } else {
                 if (currentChar == '\"') {
                     isInString = true;
-                } else if (currentChar == '{') {
-                    symbolStack.add('}');
-                } else if (currentChar == '[') {
-                    symbolStack.add(']');
-                } else if (currentChar == '}' || currentChar == ']') {
-                    if (!symbolStack.isEmpty() && symbolStack.peek() == currentChar) {
-                        symbolStack.pop();
-                    } else {
-                        log.error("cannot determine the starting symbols for {}. stack:{}. json: \n{}",
-                                currentChar,
-                                symbolStack,
-                                jsonString);
-                        return "{}";
-                    }
+                }
+                String dealParentThesisResult = dealParentThesis(symbolStack, currentChar);
+                if (!StringUtils.isBlank(dealParentThesisResult)) {
+                    log.error("cannot determine the starting symbols for {}. stack:{}. json: \n{}",
+                            currentChar,
+                            symbolStack,
+                            jsonString);
+                    return "{}";
                 }
             }
             result.append(currentChar);
@@ -109,5 +104,24 @@ public class LLMUtils {
             result.append(symbolStack.pop());
         }
         return result.toString();
+    }
+
+    private static String dealParentThesis(Stack<Character> symbolStack, char currentChar) {
+        if (currentChar == '{') {
+            symbolStack.add('}');
+            return StringUtils.EMPTY;
+        }
+        if (currentChar == '[') {
+            symbolStack.add(']');
+            return StringUtils.EMPTY;
+        }
+        if (currentChar == '}' || currentChar == ']') {
+            if (!symbolStack.isEmpty() && symbolStack.peek() == currentChar) {
+                symbolStack.pop();
+            } else {
+                return "{}";
+            }
+        }
+        return StringUtils.EMPTY;
     }
 }

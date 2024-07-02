@@ -1,0 +1,112 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.jober.aipp.util;
+
+import com.huawei.fit.jober.common.ErrorCodes;
+import com.huawei.fit.jober.common.exceptions.JobberException;
+import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.FileUtils;
+import com.huawei.fitframework.util.StringUtils;
+
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Locale;
+
+/**
+ * 文件操作工具
+ *
+ * @author l00611472
+ * @since 2024/1/22
+ */
+public class AippFileUtils {
+    /**
+     * 上传文件会上传到该共享目录。
+     */
+    public static final String NAS_SHARE_DIR = "/var/share";
+    private static final Logger log = Logger.get(AippFileUtils.class);
+
+    /**
+     * 在本地临时目录 AippFileUtils.NAS_SHARE_DIR 创建子目录及文件。
+     *
+     * @param dirName 表示子目录名称的 {@link String}。
+     * @param fileName 表示文件名字的 {@link String}。
+     * @return 表示创建的临时文件的 {@link File}。
+     */
+    public static File createFile(String dirName, String fileName) throws IOException {
+        Validation.notBlank(dirName, "dirName cant be blank.");
+        Validation.notBlank(fileName, "fileName cant be blank.");
+
+        File dir = Paths.get(NAS_SHARE_DIR, dirName).toFile();
+        if (!dir.exists()) {
+            if(!dir.mkdir()) {
+                throw new IOException(dir.getCanonicalPath() + " created failed.");
+            }
+        }
+        File docFile = Paths.get(dir.getCanonicalPath(), fileName).toFile();
+        if (!docFile.exists()) {
+            if (!docFile.createNewFile()) {
+                log.warn(docFile.getCanonicalPath() + " already exist.");
+            }
+        }
+        return docFile;
+    }
+
+    /**
+     * 删除文件。
+     *
+     * @param file 文件句柄
+     */
+    public static void deleteFile(File file) {
+        try {
+            FileUtils.delete(file);
+        } catch (IllegalStateException e) {
+            log.warn("delete file {} failed, error = {}", file.getName(), e.getMessage());
+        }
+    }
+
+    /**
+     * 从s3获取文件到本地临时目录 {@link AippFileUtils#NAS_SHARE_DIR}。
+     * <p><b>注意：</b>使用结束需要手动删除临时文件。</p>
+     *
+     * @param instId 表示实例唯一标识的 {@link String}, 作为子目录名称。
+     * @param s3Url 表示s3的访问地址的 {@link String}。
+     * @param fileType 表示文件类型的 {@link String}。
+     * @return 表示下载下来的临时文件的 {@link File}。
+     */
+    public static File getFileFromS3(String instId, String s3Url, String fileType) throws JobberException {
+        HttpGet httpGetImage = new HttpGet(s3Url);
+        File tmpFile;
+        try (CloseableHttpResponse response = HttpUtils.execute(httpGetImage)) {
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                throw new IOException(String.format(Locale.ROOT,
+                        "bad result code=%d",
+                        response.getStatusLine().getStatusCode()));
+            }
+            tmpFile = createFile(instId, fileType + "_" + UUIDUtil.uuid());
+            try (InputStream inStream = response.getEntity().getContent();
+                 OutputStream outStream = Files.newOutputStream(tmpFile.toPath())) {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = inStream.read(buffer)) != -1) {
+                    outStream.write(buffer, 0, bytesRead);
+                }
+            }
+        } catch (IOException e) {
+            throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR,
+                    StringUtils.format("Fail to get file from s3. [fileType={0}, url={1}, error={2}]",
+                            fileType, s3Url, e.getMessage()));
+        }
+        return tmpFile;
+    }
+}

@@ -1,8 +1,8 @@
 package com.huawei.fit.jober.aipp.vo;
 
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
+import com.huawei.fit.jober.aipp.util.AippLogUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -74,6 +74,6 @@ public class AippLogVO {
      * @return 祖先实例的id列表.
      */
     public List<String> getAncestors() {
-        return Collections.singletonList(this.path.split(Utils.PATH_DELIMITER)[1]);
+        return Collections.singletonList(this.path.split(AippLogUtils.PATH_DELIMITER)[1]);
     }
 }
