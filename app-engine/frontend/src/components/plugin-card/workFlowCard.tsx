@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router';
 import './style.scoped.scss';
 import { IconMap, PluginCardTypeE } from '../../pages/plugin/helper';
 import { useAppSelector } from '../../store/hook';
+import { getAppInfoByVersion } from '../../shared/http/aipp';
 
 const WorkflowCard = ({ pluginData,cardType }: any) => {
   const navigate = useNavigate();
@@ -19,13 +20,24 @@ const WorkflowCard = ({ pluginData,cardType }: any) => {
   ];
   return(
   <div className='plugin-card'
-   onClick={()=>{navigate(`/app-develop/${tenantId}/app-detail/add-flow/${pluginData?.id}`)}}>
+   onClick={async()=>{
+    let id=pluginData?.id;
+    if(pluginData?.state==='active')
+    {
+      console.log('gg')
+      const res= await getAppInfoByVersion(tenantId,id);
+      id=res?.data?.id;
+    }
+    navigate(`/app-develop/${tenantId}/app-detail/add-flow/${id}`);
+  }}
+    >
     <div className='plugin-card-header'>
       <img src='/src/assets/images/knowledge/knowledge-base.png' />
       <div>
         <div style={{ display: 'flex' }}>
           <div style={{ fontSize: 20, marginBottom: 8 }}>
             {pluginData?.name}
+            <Tag className='version'>V{pluginData?.version}</Tag>
           </div>
         </div>
         <div className='plugin-card-user'>
@@ -40,16 +52,16 @@ const WorkflowCard = ({ pluginData,cardType }: any) => {
     </div>
     {/* 卡片底部 */}
     <div className='card-footer'>
-      <div hidden>
+      <div>
       <Flex gap={14}>
-        <span hidden>
-          <Tag className='footer-type'>Tag 1</Tag>
-        </span>
         <span>
+          {pluginData?.state==='active'?<Tag bordered={false} color="processing" className='footer-type'>已发布</Tag>:<Tag bordered={false} className='footer-type'>草稿</Tag>}
+        </span>
+        <span hidden>
           <UserOutlined style={{ marginRight: 8 }} />
           {pluginData?.downloadCount}
         </span>
-        <span>
+        <span hidden>
           <StarOutlined style={{ marginRight: 8 }} />
           {pluginData?.likeCount}
         </span>

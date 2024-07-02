@@ -59,7 +59,7 @@ const Stage = (props) => {
         setShowModal(true);
       })
     })
-    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 20, tag: 'Builtin'}).then(res => {
+    getAddFlowConfig(tenantId, {pageNum: 1, pageSize: 20, tag: 'Builtin',version:''}).then(res => {
       if (res.code === 0) {
         setDragData(res.data);
       }

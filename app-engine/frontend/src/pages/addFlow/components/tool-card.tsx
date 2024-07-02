@@ -5,6 +5,7 @@ import { StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import '../styles/tool-card.scss';
 import { useAppSelector } from '../../../store/hook';
+import { getAppInfoByVersion } from '../../../shared/http/aipp';
 
 const ToolCard = ({ pluginData }: any) => {
   const navigate = useNavigate();
@@ -12,9 +13,10 @@ const ToolCard = ({ pluginData }: any) => {
   const appId = useAppSelector((state) => state.appStore.appId);
 
   // 类型处理
-  const detailClick = () => {
+  const detailClick = async() => {
    if (pluginData.tags.includes('WATERFLOW')) {
-    navigate(`/app-develop/${tenantId}/app-detail/add-flow/${pluginData?.runnables?.APP?.appId}`);
+    const res = await getAppInfoByVersion(tenantId,pluginData?.runnables?.APP?.appId);
+    navigate(`/app-develop/${tenantId}/app-detail/add-flow/${res?.data?.id}`);
    } else {
     navigate(`/plugin/detail/${pluginData.uniqueName}`)
    }
@@ -35,6 +37,7 @@ const ToolCard = ({ pluginData }: any) => {
             {  pluginData.tags.includes('WATERFLOW') || pluginData.tags.includes('HUGGINGFACE') ? 
               <img src='/src/assets/images/ai/workflow.png' alt='' /> : 
               <img src='/src/assets/images/ai/application.png' alt='' />}
+              <span hidden={!pluginData?.version}><Tag className='version' bordered={false} >V{pluginData?.version}</Tag></span>
           </div>
         </div>
         <div className='plugin-card-user'>
