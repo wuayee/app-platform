@@ -15,7 +15,6 @@ import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
 import com.huawei.fitframework.inspection.Nonnull;
 
-import java.io.IOException;
 import java.net.InetAddress;
 
 /**
@@ -51,10 +50,8 @@ public interface DataBusClient {
 
     /**
      * 关闭通向指定地址和端口的 DataBus 连接。
-     *
-     * @throws IOException 当连接异常时，或者连接不存在时。
      */
-    void close() throws IOException;
+    void close();
 
     /**
      * 从指定的内存块中读入数据。同一内存块不可并发读写，不同内存块可以并发读写。
@@ -79,6 +76,13 @@ public interface DataBusClient {
      * @return 表示 IO 操作结果的 {@link MemoryIoResult}。
      */
     MemoryIoResult writeOnce(@Nonnull MemoryIoRequest memoryIORequest);
+
+    /**
+     * 返回客户端当前状态。
+     *
+     * @return 表示客户端当前是否在连接的 {@code boolean}。
+     */
+    boolean isConnected();
 
     /**
      * 获取 DataBus 客户端单例实例。

@@ -106,9 +106,10 @@ public class DefaultDataBusClient implements DataBusClient {
     }
 
     @Override
-    public void close() throws IOException {
-        socketChannel.close();
-        this.responseDispatcher.stop();
+    public void close() {
+        if (this.responseDispatcher != null) {
+            this.responseDispatcher.shutdownGracefully();
+        }
     }
 
     @Override
