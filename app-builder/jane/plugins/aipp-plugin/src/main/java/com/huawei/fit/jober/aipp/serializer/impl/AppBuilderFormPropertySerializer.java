@@ -4,11 +4,11 @@
 
 package com.huawei.fit.jober.aipp.serializer.impl;
 
-import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.domain.AppBuilderFormProperty;
 import com.huawei.fit.jober.aipp.enums.FormPropertyTypeEnum;
 import com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPO;
 import com.huawei.fit.jober.aipp.serializer.BaseSerializer;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 
 /**
  * @author 邬涨财 w00575064

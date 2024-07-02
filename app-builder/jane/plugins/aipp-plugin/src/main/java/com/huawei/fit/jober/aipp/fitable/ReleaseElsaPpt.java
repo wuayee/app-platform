@@ -11,10 +11,11 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.UUIDUtil;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.init.ElsaPptInitiator;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
+import com.huawei.fit.jober.aipp.util.UUIDUtil;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
@@ -93,16 +94,17 @@ public class ReleaseElsaPpt implements FlowableService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.ReleaseElsaPpt")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("ReleaseElsaPpt businessData {}", businessData);
-        OperationContext context = Utils.getOpContext(businessData);
+        OperationContext context = DataUtils.getOpContext(businessData);
         JSONObject graph = buildElsaPptGraph(businessData);
         saveElsaPpt(context, graph);
         String result = buildResult(context, graph);
         businessData.put(AippConst.INST_ELSA_PPT_RESULT_KEY, result);
         InstanceDeclarationInfo info =
                 InstanceDeclarationInfo.custom().putInfo(AippConst.INST_ELSA_PPT_RESULT_KEY, result).build();
-        Utils.persistInstance(metaInstanceService, info, businessData, Utils.getOpContext(businessData));
+        MetaInstanceUtils.persistInstance(
+                metaInstanceService, info, businessData, DataUtils.getOpContext(businessData));
         return flowData;
     }
 
@@ -185,7 +187,8 @@ public class ReleaseElsaPpt implements FlowableService {
         shapes.stream().map(shape -> (JSONObject) shape).forEach(shape -> {
             switch (shape.getString("id")) {
                 case CONTENT_PAGE_TITLE_ID:
-                    updateShapePlacedPropertiesData(idMap, shape, updateShapeTextData(shape, page.getString("title")));
+                    updateShapePlacedPropertiesData(
+                            idMap, shape, updateShapeTextData(shape, page.getString("title")));
                     break;
                 case CONTENT_PAGE_CONTENT_ID:
                     updateShapePlacedPropertiesData(idMap,

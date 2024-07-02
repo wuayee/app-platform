@@ -8,14 +8,14 @@ import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jober.FlowPublishService;
 import com.huawei.fit.jober.aipp.aop.AippLogInsertAspect;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.MetaUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.service.AippFlowRuntimeInfoService;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.jober.aipp.util.MetaUtils;
 import com.huawei.fit.jober.entity.FlowNodePublishInfo;
 import com.huawei.fit.jober.entity.FlowPublishContext;
 import com.huawei.fit.jober.entity.consts.NodeTypes;
@@ -144,7 +144,7 @@ public class FlowPublishSubscriber implements FlowPublishService {
     private boolean isPublished(Map<String, Object> businessData) {
         String aippId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_ID_KEY));
         String version = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_VERSION_KEY));
-        Meta meta = MetaUtils.getAnyMeta(this.metaService, aippId, version, Utils.getOpContext(businessData));
+        Meta meta = MetaUtils.getAnyMeta(this.metaService, aippId, version, DataUtils.getOpContext(businessData));
         String appId = ObjectUtils.cast(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
         AppBuilderApp app = this.appFactory.create(appId);
         return app.isPublished();

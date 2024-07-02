@@ -5,10 +5,10 @@
 package com.huawei.fit.jober.aipp.service.impl;
 
 import com.huawei.fit.http.websocket.Session;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippStreamService;
+import com.huawei.fit.jober.aipp.util.AippLogUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.StringUtils;
 
@@ -67,7 +67,7 @@ public class AippStreamServiceImpl implements AippStreamService {
         String processedInstanceId = instanceId;
         String path = this.logService.getParentPath(processedInstanceId);
         if (StringUtils.isNotEmpty(path)) {
-            processedInstanceId = path.split(Utils.PATH_DELIMITER)[1];
+            processedInstanceId = path.split(AippLogUtils.PATH_DELIMITER)[1];
         }
         this.send(processedInstanceId, data);
     }

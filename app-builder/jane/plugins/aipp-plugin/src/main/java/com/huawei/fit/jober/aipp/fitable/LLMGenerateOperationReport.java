@@ -5,9 +5,9 @@
 package com.huawei.fit.jober.aipp.fitable;
 
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.service.ReportGenerationService;
+import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
@@ -40,7 +40,7 @@ public class LLMGenerateOperationReport implements FlowableService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.LLMGenerateOperationReport")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("LLMGenerateOperationReport businessData {}", businessData);
 
         String chatHistory = businessData.get(AippConst.INST_CHAT_HISTORY_KEY).toString();

@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fit.jober.aipp.common;
+package com.huawei.fit.jober.aipp.util;
 
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
@@ -114,5 +114,21 @@ public class HttpUtils {
             }
             return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
         }
+    }
+
+    /**
+     * 获取HttpClient 请求配置
+     *
+     * @param socketTimeout 读取内存超时时长
+     * @return 请求配置
+     */
+    public static RequestConfig requestConfig(int socketTimeout) {
+        final int connectTimeout = 5000;
+        final int connectRequestTimeout = 5000;
+        return RequestConfig.custom()
+                .setConnectTimeout(connectTimeout)
+                .setSocketTimeout(socketTimeout)
+                .setConnectionRequestTimeout(connectRequestTimeout)
+                .build();
     }
 }

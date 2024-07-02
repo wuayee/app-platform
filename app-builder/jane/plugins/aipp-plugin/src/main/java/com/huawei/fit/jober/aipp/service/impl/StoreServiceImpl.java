@@ -7,7 +7,6 @@ package com.huawei.fit.jober.aipp.service.impl;
 import static com.huawei.fit.jober.aipp.enums.ToolCategoryEnum.HUGGINGFACE;
 import static com.huawei.fit.jober.aipp.init.AippComponentInitiator.COMPONENT_DATA;
 
-import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
 import com.huawei.fit.jober.aipp.dto.ModelDto;
@@ -19,6 +18,7 @@ import com.huawei.fit.jober.aipp.enums.AppCategory;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import com.huawei.fit.jober.aipp.service.StoreService;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;

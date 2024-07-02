@@ -4,13 +4,13 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
-import com.huawei.fit.jober.aipp.common.AippFileUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.service.LLMService;
 import com.huawei.fit.jober.aipp.service.OperatorService;
 import com.huawei.fit.jober.aipp.tool.FileExtractor;
+import com.huawei.fit.jober.aipp.util.AippFileUtils;
+import com.huawei.fit.jober.aipp.util.AippStringUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
@@ -227,7 +227,7 @@ public class OperatorServiceImpl implements OperatorService {
     private static String extractHeadings(XWPFParagraph paragraph, String styleName, List<Integer> titleCounter) {
         // 样式名中包含title或者以heading开头的是标题
         if (styleName.contains("title") || styleName.startsWith("heading")) {
-            String trimmedHeading = Utils.trimLine(paragraph.getText());
+            String trimmedHeading = AippStringUtils.trimLine(paragraph.getText());
             if (trimmedHeading.isEmpty()) {
                 return null;
             }

@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.aipp.dto;
 
-import com.huawei.fit.jober.aipp.common.JsonUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

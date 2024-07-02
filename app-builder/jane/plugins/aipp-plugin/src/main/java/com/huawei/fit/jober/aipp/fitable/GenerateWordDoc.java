@@ -5,13 +5,14 @@
 package com.huawei.fit.jober.aipp.fitable;
 
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.xiaohai.FileDto;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.LLMService;
 import com.huawei.fit.jober.aipp.service.OperatorService;
+import com.huawei.fit.jober.aipp.util.AippStringUtils;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
@@ -67,11 +68,11 @@ public class GenerateWordDoc implements FlowableService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.GenerateWordDoc")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("GenerateWordDoc businessData {}", businessData);
 
         String msg = "根据上面的信息，我决定调用word生成工具为您生成文档";
-        Utils.persistAippMsgLog(aippLogService, msg, flowData);
+        this.aippLogService.insertMsgLog(msg, flowData);
 
         String instId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
         String toDocText = (String) businessData.get(AippConst.BS_TO_DOC_TEXT);
@@ -93,8 +94,8 @@ public class GenerateWordDoc implements FlowableService {
 
     private String generateFileName(String text) throws IOException {
         String prompt =
-                "请根据如下内容生成一个不超过20个字的标题，这个标题必须满足Linux文件名要求。\n" + Utils.textLenLimit(text,
-                        Utils.MAX_TEXT_LEN);
+                "请根据如下内容生成一个不超过20个字的标题，这个标题必须满足Linux文件名要求。\n" + AippStringUtils.textLenLimit(text,
+                        AippStringUtils.MAX_TEXT_LEN);
         String fileName = llmService.askModelWithText(prompt, LlmModel.QWEN_72B);
         log.info("generateFileName={}", fileName);
         // 去除双引号 单引号 空格

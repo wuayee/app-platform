@@ -7,11 +7,14 @@ package com.huawei.fit.jober.aipp.fitable;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.enums.FileExtensionEnum;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.OperatorService;
+import com.huawei.fit.jober.aipp.util.AippFileUtils;
+import com.huawei.fit.jober.aipp.util.AippStringUtils;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
@@ -43,23 +46,24 @@ public class CompositeFileReader implements FlowableService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.CompositeFileReader")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("CompositeFileReader business data {}", businessData);
-        String fileName = Utils.getFilePath(businessData, AippConst.BS_FILE_PATH_KEY);
-        File file = Paths.get(Utils.NAS_SHARE_DIR, fileName).toFile();
+        String fileName = DataUtils.getFilePath(businessData, AippConst.BS_FILE_PATH_KEY);
+        File file = Paths.get(AippFileUtils.NAS_SHARE_DIR, fileName).toFile();
         String extractResult = operatorService.fileExtractor(file, FileExtensionEnum.findType(fileName));
         if (extractResult.isEmpty()) {
             String msg = "很抱歉！无法识别文件中的内容，您可以尝试换个文件";
-            Utils.persistAippErrorLog(aippLogService, msg, flowData);
+            this.aippLogService.insertErrorLog(msg, flowData);
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "text result is empty.");
         }
-        extractResult = Utils.textLenLimit(extractResult,
-            Utils.getIntegerFromStr((String) businessData.get(AippConst.BS_TEXT_LIMIT_KEY)));
+        extractResult = AippStringUtils.textLenLimit(extractResult,
+            AippStringUtils.getIntegerFromStr((String) businessData.get(AippConst.BS_TEXT_LIMIT_KEY)));
         businessData.put(AippConst.INST_FILE2TEXT_KEY, extractResult);
 
         InstanceDeclarationInfo info =
                 InstanceDeclarationInfo.custom().putInfo(AippConst.INST_FILE2TEXT_KEY, extractResult).build();
-        Utils.persistInstance(metaInstanceService, info, businessData, Utils.getOpContext(businessData));
+        MetaInstanceUtils.persistInstance(
+                metaInstanceService, info, businessData, DataUtils.getOpContext(businessData));
         return flowData;
     }
 }

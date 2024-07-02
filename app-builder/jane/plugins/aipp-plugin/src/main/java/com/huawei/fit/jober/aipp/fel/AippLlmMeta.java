@@ -6,8 +6,8 @@ package com.huawei.fit.jober.aipp.fel;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.chat.Prompt;
 
@@ -48,12 +48,12 @@ public class AippLlmMeta {
     public static AippLlmMeta parse(List<Map<String, Object>> flowData, MetaService metaService) {
         AippLlmMeta aippLlmMeta = new AippLlmMeta();
         aippLlmMeta.flowData = flowData;
-        aippLlmMeta.businessData = Utils.getBusiness(flowData);
+        aippLlmMeta.businessData = DataUtils.getBusiness(flowData);
         aippLlmMeta.versionId = ObjectUtils.cast(aippLlmMeta.businessData.get(AippConst.BS_META_VERSION_ID_KEY));
         aippLlmMeta.instId = ObjectUtils.cast(aippLlmMeta.businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
-        aippLlmMeta.context = Utils.getOpContext(aippLlmMeta.businessData);
-        aippLlmMeta.flowTraceId = Utils.getFlowTraceId(flowData);
-        aippLlmMeta.flowDefinitionId = Utils.getFlowDefinitionId(aippLlmMeta.businessData, metaService);
+        aippLlmMeta.context = DataUtils.getOpContext(aippLlmMeta.businessData);
+        aippLlmMeta.flowTraceId = DataUtils.getFlowTraceId(flowData);
+        aippLlmMeta.flowDefinitionId = DataUtils.getFlowDefinitionId(aippLlmMeta.businessData, metaService);
         return aippLlmMeta;
     }
 }

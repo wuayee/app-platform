@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jober.aipp.TestUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
+import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.jade.app.engine.knowledge.service.KnowledgeBaseService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -103,7 +103,7 @@ public class NaiveRAGComponentTest {
                 .thenReturn(Arrays.asList(exceptNaiveRAGOutput));
         List<Map<String, Object>> flowData = TestUtils.buildFlowDataWithExtraConfig(businessData, null);
         List<Map<String, Object>> resultFlowData = this.naiveRAGComponent.handleTask(flowData);
-        Map<String, Object> resultBusinessData = Utils.getBusiness(resultFlowData);
+        Map<String, Object> resultBusinessData = DataUtils.getBusiness(resultFlowData);
         verify(this.knowledgeBaseServiceMock, times(1)).vectorSearchKnowledgeTable(any());
         Assertions.assertEquals(resultBusinessData.get("output"), exceptResult);
     }
