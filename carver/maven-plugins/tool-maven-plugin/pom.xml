@@ -36,7 +36,7 @@
         <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>
             <artifactId>tool-service</artifactId>
-            <version>${version}</version>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Bytebuddy -->
