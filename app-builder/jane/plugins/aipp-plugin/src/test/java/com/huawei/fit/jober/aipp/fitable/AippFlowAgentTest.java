@@ -31,7 +31,6 @@ import com.huawei.fit.jober.common.exceptions.JobberException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -58,6 +57,7 @@ public class AippFlowAgentTest {
     private static final String DUMMY_MIND_AGENT_AIPP_ID = "mind_agent";
     private static final String DUMMY_SEARCH_AGENT_AIPP_ID = "search_agent";
     private static final String DUMMY_PROMPT = "prompt";
+    private static final String DUMMY_META_VERSION_ID = "meta_version";
 
     @Mock
     private AippRunTimeService aippRunTimeServiceMock;
@@ -88,6 +88,7 @@ public class AippFlowAgentTest {
         businessData.put(AippConst.BS_AIPP_ID_KEY, DUMMY_AIPP_ID);
         businessData.put(AippConst.BS_AIPP_INST_ID_KEY, DUMMY_INST_ID);
         businessData.put(AippConst.BS_MODEL_PROMPT_KEY, DUMMY_PROMPT);
+        businessData.put(AippConst.BS_META_VERSION_ID_KEY, DUMMY_META_VERSION_ID);
         return businessData;
     }
 
@@ -132,7 +133,6 @@ public class AippFlowAgentTest {
     }
 
     @Test
-    @Disabled
     void shouldOkWhenStartMindAgent() {
         AippInstanceCreateDto dto = AippInstanceCreateDto.builder().instanceId(DUMMY_AGENT_INST_ID).build();
         doReturn(dto).when(aippRunTimeServiceMock).createAippInstanceLatest(any(), any(), any());

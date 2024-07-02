@@ -43,7 +43,7 @@ public class MetaInstanceUtils {
         String versionId = notBlank(ObjectUtils.cast(businessData.get(AippConst.BS_META_VERSION_ID_KEY)),
                 "Get blank meta version id");
         String instId = notBlank(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY)),
-                "Get blank meta instance id");
+                "Get blank aipp instance id");
         service.patchMetaInstance(versionId, instId, info, context);
     }
 
