@@ -1104,17 +1104,6 @@ def create_yaml_files(item, yaml_objs):
             f.write('---\n')
 
 
-def deploy_service_and_deployment(service_manifest, deployment_manifest):
-    try:
-        api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, service_manifest)
-    except ApiException as e:
-        logger.warning(e)
-    try:
-        k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, deployment_manifest)
-    except ApiException as e:
-        logger.warning(e)
-
-
 def get_max_token_size(item, models_meta, model_name):
     max_token_size = item.max_token_size
     if max_token_size is None:
@@ -1155,7 +1144,14 @@ async def start_up(item: Item, request: Request, background_tasks: BackgroundTas
         "enable_npu_schedule": len(pod_list.items) > 0,
     }
 
-    create_model_svc_and_deploy(item, render_data)
+    success = create_model_svc_and_deploy(item, render_data)
+    if not success:
+        error_code = 521
+        error_args = ["Create deployment [{}/{}] failed: {}.", MODEL_IO_NAMESPACE, model_name]
+        detail = "Failed to create Model: [{}]. Failure cause:{}".format(model_name, error_args)
+        error_info = gen_error_info(521, detail)
+        response = JSONResponse(status_code=error_code, content=jsonable_encoder(error_info))
+        return response
 
     # persist services
     local_model_services[model_name] = item.model_dump()
@@ -1176,16 +1172,35 @@ def create_model_svc_and_deploy(item, render_data):
         for obj in yaml_objs:
             yaml.dump(obj, f)
             f.write('---\n')
+
     try:
         api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, yaml_objs[0])
         logger.info("Create service [{}/{}] success!", MODEL_IO_NAMESPACE, item.name.strip())
     except ApiException as e:
         logger.warning("Create service [{}/{}] failed: {}", MODEL_IO_NAMESPACE, item.name.strip(), e)
+
     try:
         k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, yaml_objs[1])
         logger.info("Create deployment [{}/{}] success!", MODEL_IO_NAMESPACE, item.name.strip())
     except ApiException as e:
         logger.warning("Create deployment [{}/{}] failed: {}.", MODEL_IO_NAMESPACE, item.name.strip(), e)
+        handle_deployment_failure(yaml_objs, render_data, item)
+        return False
+    return True
+
+
+def handle_deployment_failure(yaml_objs, render_data, item):
+    meta_data = "metadata"
+    name = "name"
+    try:
+        service_name = yaml_objs[0][meta_data][name]
+        api_instance.read_namespaced_service(service_name, MODEL_IO_NAMESPACE)
+        logger.info("Service [{}/{}] exists, starting to roll back service creation", MODEL_IO_NAMESPACE,
+                    item.name.strip())
+        api_instance.delete_namespaced_service(service_name, MODEL_IO_NAMESPACE)
+        logger.info("Rolled back service creation for [{}]", service_name)
+    except ApiException as e:
+        logger.warning("No existing service [{}/{}]: {}", MODEL_IO_NAMESPACE, item.name.strip(), e)
 
 
 if __name__ == "__main__":
