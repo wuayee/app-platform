@@ -24,7 +24,6 @@ const WorkflowCard = ({ pluginData,cardType }: any) => {
     let id=pluginData?.id;
     if(pluginData?.state==='active')
     {
-      console.log('gg')
       const res= await getAppInfoByVersion(tenantId,id);
       id=res?.data?.id;
     }
