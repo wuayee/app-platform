@@ -4,8 +4,11 @@
 
 package com.huawei.databus.sdk.client;
 
+import com.huawei.databus.sdk.message.ErrorMessageResponse;
 import com.huawei.databus.sdk.message.MessageHeader;
+import com.huawei.databus.sdk.message.MessageType;
 import com.huawei.databus.sdk.tools.Constant;
+import com.huawei.databus.sdk.tools.DataBusUtils;
 import com.huawei.fitframework.inspection.Validation;
 
 import org.apache.logging.log4j.LogManager;
@@ -54,21 +57,10 @@ class ResponseDispatcher {
      * 启动分发器任务。
      */
     public void start() {
+        this.isRunning = true;
         dispatcherService.submit(() -> {
-            this.isRunning = true;
             this.startEventLoop();
         });
-    }
-
-    /**
-     * 结束分发器运行。通过关闭 socketChannel 来打断阻塞读。
-     *
-     * @throws IOException 当 socketChannel 非正常关闭。
-     */
-    public void stop() throws IOException {
-        this.isRunning = false;
-        this.socketChannel.close();
-        this.dispatcherService.shutdownNow();
     }
 
     /**
@@ -85,45 +77,79 @@ class ResponseDispatcher {
         while (this.isRunning) {
             buffer.clear();
 
-            int bytesRead = 0;
+            int bytesRead;
             try {
                 bytesRead = socketChannel.read(buffer);
                 if (bytesRead == -1) {
-                    break;
+                    logger.error("[startEventLoop] Disconnected, Broken pipe.");
+                    this.shutdownGracefully();
+                    return;
                 }
 
                 buffer.flip();
+                ByteBuffer messageBytes = buffer;
+                // 使用循环处理粘包。
+                while (messageBytes.hasRemaining()) {
+                    // TODO：处理半包。
+                    MessageHeader header = MessageHeader.getRootAsMessageHeader(messageBytes);
+                    byte type = header.type();
+                    long seq = header.seq();
+                    int curPacketSize = (int) header.size() + Constant.DATABUS_SERVICE_HEADER_SIZE;
 
-                // TODO：处理半包和粘包。
-                MessageHeader header = MessageHeader.getRootAsMessageHeader(buffer);
+                    // 只在剩余字节过少时抛出异常。
+                    Validation.greaterThanOrEquals(messageBytes.remaining(), curPacketSize, "Too few bytes.");
+                    logger.info(
+                            "[startEventLoop] DataBus message received, [total size={}, body size={}, type={}, seq={}]",
+                            messageBytes.remaining(), header.size(), type, seq);
 
-                // 读取并打印type和size字段。
-                byte type = header.type();
-                long seq = header.seq();
-                Validation.equals((long) buffer.remaining(),
-                        header.size() + Constant.DATABUS_SERVICE_HEADER_SIZE, "Incorrect body payload size");
-                logger.info("[startEventLoop] DataBus message received, [size={}, type={}, seq={}]", header.size(),
-                        type, seq);
+                    messageBytes.position(Constant.DATABUS_SERVICE_HEADER_SIZE);
 
-                buffer.position(Constant.DATABUS_SERVICE_HEADER_SIZE);
+                    // 将消息体拷贝到新的ByteBuffer里。
+                    ByteBuffer messageBody = DataBusUtils.copyFromByteBuffer(messageBytes, (int) header.size());
+                    messageBytes = DataBusUtils.copyFromByteBuffer(messageBytes, messageBytes.remaining());
 
-                // 将消息体拷贝到新的ByteBuffer里。
-                ByteBuffer messageBody = ByteBuffer.allocate(buffer.remaining());
-
-                while (buffer.hasRemaining()) {
-                    messageBody.put(buffer.get());
+                    this.deliverMessage(seq, type, messageBody);
                 }
-                messageBody.flip();
-
-                if (this.replyQueues.containsKey(seq)) {
-                    this.replyQueues.get(seq).offer(messageBody);
-                } else {
-                    logger.error("[startEventLoop] No waiting consumer, [seq={}]", seq);
-                }
-            } catch (IOException e) {
-                // 不退出但是打印日志
-                logger.error("[startEventLoop] message receiving exception, [e={}]", e.toString());
+            } catch (Exception e) {
+                // 异常意味着连接问题或者编程错误，此时应该退出
+                logger.error("[startEventLoop] message receiving exception.", e);
+                this.shutdownGracefully();
+                return;
             }
+        }
+    }
+
+    /**
+     * 结束分发器运行。通过关闭 socketChannel 来打断阻塞读。
+     */
+    void shutdownGracefully() {
+        this.isRunning = false;
+        this.dispatcherService.shutdownNow();
+
+        for (Map.Entry<Long, BlockingQueue<ByteBuffer>> entry : replyQueues.entrySet()) {
+            // 对每一个等待的请求发送空缓冲区，强制其退出。
+            this.replyQueues.get(entry.getKey()).offer(ByteBuffer.allocate(0));
+        }
+
+        try {
+            this.socketChannel.close();
+        } catch (IOException ex) {
+            logger.error("[startEventLoop] closing socket receiving exception.", ex);
+        }
+    }
+
+    private void deliverMessage(long seq, byte type, ByteBuffer messageBody) {
+        if (this.replyQueues.containsKey(seq)) {
+            // 打印错误信息并返回空缓冲区
+            if (type == MessageType.Error) {
+                ErrorMessageResponse response = ErrorMessageResponse.getRootAsErrorMessageResponse(messageBody);
+                logger.error("[deliverMessage] Error message received, [seq={}, error={}]", seq, response.errorType());
+                this.replyQueues.get(seq).offer(ByteBuffer.allocate(0));
+            } else {
+                this.replyQueues.get(seq).offer(messageBody);
+            }
+        } else {
+            logger.error("[deliverMessage] No waiting consumer, [seq={}]", seq);
         }
     }
 }

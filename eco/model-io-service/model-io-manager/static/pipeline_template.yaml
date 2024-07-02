@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: pipeline-svc-{{name}}
+  name: {{name}}
   labels:
     app: {{name}}_pipeline
     pipeline: {{name}}

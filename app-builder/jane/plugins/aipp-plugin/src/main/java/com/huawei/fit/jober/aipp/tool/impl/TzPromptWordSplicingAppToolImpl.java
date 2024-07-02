@@ -6,7 +6,6 @@ package com.huawei.fit.jober.aipp.tool.impl;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.common.response.Rsp;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.dto.AppBuilderPromptCategoryDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderPromptDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
@@ -15,6 +14,7 @@ import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AppBuilderPromptService;
 import com.huawei.fit.jober.aipp.tool.TzPromptWordSplicingAppTool;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;

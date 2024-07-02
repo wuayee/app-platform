@@ -97,6 +97,10 @@ class SharedMemoryPool {
                 logger.error("[applySharedMemory] Apply memory timeout. [seq={}]", seq);
                 return SharedMemoryResult.failure(ErrorType.Timeout);
             }
+            if (resBuf.remaining() == 0) {
+                return SharedMemoryResult.failure(ErrorType.UnknownError);
+            }
+
             ApplyMemoryMessageResponse response =
                     ApplyMemoryMessageResponse.getRootAsApplyMemoryMessageResponse(resBuf);
             if (response.errorType() == ErrorType.None) {
@@ -183,8 +187,11 @@ class SharedMemoryPool {
         try {
             ByteBuffer resBuf = getReply(seq, messageHeaderBuffer, messageBodyBuffer);
             if (resBuf == null) {
-                logger.error("[applyPermission] Apply memory timeout. [seq={}]", seq);
+                logger.error("[applyPermission] Apply permission timeout. [seq={}]", seq);
                 return MemoryPermissionResult.failure(ErrorType.Timeout);
+            }
+            if (resBuf.remaining() == 0) {
+                return MemoryPermissionResult.failure(ErrorType.UnknownError);
             }
 
             ApplyPermissionMessageResponse response =
@@ -314,8 +321,11 @@ class SharedMemoryPool {
         try {
             ByteBuffer resBuf = getReply(seq, messageHeaderBuffer, messageBodyBuffer);
             if (resBuf == null) {
-                logger.error("[applyPermission] Apply memory timeout. [seq={}]", seq);
+                logger.error("[getMemoryMetaData] GetMeta timeout. [seq={}]", seq);
                 return GetMetaDataResult.failure(ErrorType.Timeout);
+            }
+            if (resBuf.remaining() == 0) {
+                return GetMetaDataResult.failure(ErrorType.UnknownError);
             }
 
             GetMetaDataMessageResponse response =
@@ -326,7 +336,7 @@ class SharedMemoryPool {
             }
             return GetMetaDataResult.failure(response.errorType());
         } catch (IOException | InterruptedException e) {
-            logger.error("[getMemoryMetaData] unexpected exception. [e={}]", e.toString());
+            logger.error("[getMemoryMetaData] unexpected exception.", e);
             return GetMetaDataResult.failure(ErrorType.UnknownError, e);
         }
     }

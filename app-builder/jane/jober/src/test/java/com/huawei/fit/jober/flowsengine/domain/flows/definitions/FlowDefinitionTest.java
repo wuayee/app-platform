@@ -4,20 +4,20 @@
 
 package com.huawei.fit.jober.flowsengine.domain.flows.definitions;
 
+import static com.huawei.fit.jober.FlowsTestUtil.waitEmpty;
+import static com.huawei.fit.jober.FlowsTestUtil.waitFortyMillis;
+import static com.huawei.fit.jober.FlowsTestUtil.waitMillis;
+import static com.huawei.fit.jober.FlowsTestUtil.waitSingle;
+import static com.huawei.fit.jober.FlowsTestUtil.waitSize;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_EXECUTE_ASYNC_JOBER_FAILED;
 import static com.huawei.fit.jober.common.ErrorCodes.FLOW_EXECUTE_FITABLE_TASK_FAILED;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
-import static com.huawei.fit.jober.flowsengine.domain.flows.FlowsTestUtil.waitEmpty;
-import static com.huawei.fit.jober.flowsengine.domain.flows.FlowsTestUtil.waitFortyMillis;
-import static com.huawei.fit.jober.flowsengine.domain.flows.FlowsTestUtil.waitMillis;
-import static com.huawei.fit.jober.flowsengine.domain.flows.FlowsTestUtil.waitSingle;
-import static com.huawei.fit.jober.flowsengine.domain.flows.FlowsTestUtil.waitSize;
-import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus.ARCHIVED;
-import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus.ERROR;
-import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus.PENDING;
-import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus.PROCESSING;
-import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeType.END;
-import static com.huawei.fit.jober.flowsengine.utils.WaterFlows.getPublisher;
+import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.ARCHIVED;
+import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.ERROR;
+import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.PENDING;
+import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.PROCESSING;
+import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeType.END;
+import static com.huawei.fit.waterflow.flowsengine.utils.WaterFlows.getPublisher;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -32,34 +32,34 @@ import com.huawei.fit.jober.FlowsDataBaseTest;
 import com.huawei.fit.jober.bff.util.FlowDefinitionParseUtils;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import com.huawei.fit.jober.common.utils.UUIDUtil;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowContext;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMemoMessenger;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMemoRepo;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMessenger;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowlock.FlowLocks;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowlock.FlowLocksMemo;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowNode;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.events.FlowEvent;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.jobers.FlowEchoJober;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
-import com.huawei.fit.jober.flowsengine.domain.flows.parsers.FlowParser;
-import com.huawei.fit.jober.flowsengine.domain.flows.parsers.Parser;
-import com.huawei.fit.jober.flowsengine.domain.flows.streams.FitStream.Publisher;
-import com.huawei.fit.jober.flowsengine.domain.flows.streams.FitStream.Subscriber;
-import com.huawei.fit.jober.flowsengine.domain.flows.streams.From;
-import com.huawei.fit.jober.flowsengine.domain.flows.streams.nodes.Blocks;
-import com.huawei.fit.jober.flowsengine.domain.flows.streams.nodes.Node;
-import com.huawei.fit.jober.flowsengine.utils.FlowUtil;
+import com.huawei.fit.waterflow.common.utils.UUIDUtil;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMemoMessenger;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMemoRepo;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextMessenger;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocks;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowlock.FlowLocksMemo;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.events.FlowEvent;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowEchoJober;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowParser;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.Parser;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream.Publisher;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.FitStream.Subscriber;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.From;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Blocks;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Node;
+import com.huawei.fit.waterflow.flowsengine.utils.FlowUtil;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.broker.client.Router;
 import com.huawei.fitframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Lists;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -70,6 +70,7 @@ import org.mockito.Mockito;
 import java.time.LocalDateTime;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -591,7 +592,7 @@ class FlowDefinitionTest {
             resumeContext.getData().getBusinessData().put("status", "true");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             List<FlowContext<FlowData>> resumeContexts = waitSingle(
@@ -626,7 +627,7 @@ class FlowDefinitionTest {
             resumeContext.getData().getBusinessData().put("status", "false");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             List<FlowContext<FlowData>> resumeContexts = waitSingle(
@@ -662,7 +663,7 @@ class FlowDefinitionTest {
             resumeContext.getData().getBusinessData().put("status", "transferred");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             metaId = "event5";
             contexts = waitSingle(contextSupplier(REPO, streamId, traceId, metaId, PENDING));
@@ -677,7 +678,7 @@ class FlowDefinitionTest {
             resumeContext.getData().getBusinessData().put("status", "approved");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             contexts = waitSingle(contextSupplier(REPO, streamId, traceId, flowNode.getMetaId(), ARCHIVED));
@@ -811,7 +812,7 @@ class FlowDefinitionTest {
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
-            List<Map<String, Object>> outputs = Lists.newArrayList(flowData).stream().map(f -> {
+            List<Map<String, Object>> outputs = Arrays.asList(flowData).stream().map(f -> {
                 Map<String, Object> result = new HashMap<>();
                 Map<String, Object> businessData = f.getBusinessData();
                 result.put("businessData", businessData);

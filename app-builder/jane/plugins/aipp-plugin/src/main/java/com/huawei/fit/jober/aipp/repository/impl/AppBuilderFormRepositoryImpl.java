@@ -43,8 +43,8 @@ public class AppBuilderFormRepositoryImpl implements AppBuilderFormRepository {
     }
 
     @Override
-    public List<AppBuilderForm> selectWithType(String type) {
-        return this.appBuilderFormMapper.selectWithType(type)
+    public List<AppBuilderForm> selectWithType(String type, String tenantId) {
+        return this.appBuilderFormMapper.selectWithType(type, tenantId)
                 .stream()
                 .filter(Objects::nonNull)
                 .map(appBuilderFormPO -> {

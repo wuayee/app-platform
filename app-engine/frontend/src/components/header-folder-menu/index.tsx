@@ -27,7 +27,7 @@ const HeaderFolderMenu = ({openMenuFunc, style}: {openMenuFunc: any, style: any}
           <Icons.logo width = {24} height={24} />
           <span style={{
             marginLeft: 8
-          }}>APP Engine</span>
+          }}>Model Engine</span>
         </div>
       </div>
     </>

@@ -26,7 +26,7 @@ export default function EndNodeWrapper({disabled}) {
             type: "changeForm",
             formName: changeFormName,
             formId: changeFormId,
-            formOutput: formOutput
+            entity: formOutput
         });
     };
 

@@ -97,7 +97,8 @@ const AippIndex = () => {
     setMessageCheck,
     showElsa,
     updateAippCallBack,
-    reloadInspiration
+    reloadInspiration,
+    tenantId,
   };
 
   const configFormProvider ={

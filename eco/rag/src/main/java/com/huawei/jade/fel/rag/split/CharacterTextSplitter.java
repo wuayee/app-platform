@@ -42,6 +42,7 @@ public class CharacterTextSplitter implements Splitter<List<Document>, List<Chun
         String[] sentences = doc.getContent().split(separator);
 
         return Arrays.stream(sentences)
+                .filter(sentence -> !sentence.replace("\u3000", " ").trim().isEmpty())
                 .map(sentence -> new Chunk(IdGenerator.getId(), sentence, new HashMap<>(), doc.getId()))
                 .collect(Collectors.toList());
     }

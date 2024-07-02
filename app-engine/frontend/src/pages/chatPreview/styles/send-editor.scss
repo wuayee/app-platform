@@ -473,6 +473,9 @@
   .inner-item {
     display: flex;
     align-items: center;
+    .multi-conversation-switch {
+      margin-left: 5px;
+    }
     img {
       width: 40px;
       height: 40px;

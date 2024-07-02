@@ -113,7 +113,7 @@ class PipelineItem(BaseModel):
 class ExternalService(BaseModel):
     name: str
     url: str
-    api_key: str
+    api_key: str | None = None
     http_proxy: str | None = None
     https_proxy: str | None = None
 
@@ -464,8 +464,8 @@ def get_model_data_from_external_service(external_model_service):
         models_response = json.loads(response.content)
         return models_response.get("data", [])
 
-    except requests.RequestException as e:
-        logging.error(e)
+    except Exception as e:
+        logging.error("error=%s, url=%s, headers=%s, proxies=%s", e, url, headers, proxies)
     return datas
 
 
@@ -687,19 +687,11 @@ async def delete_model(llm: Llm, request: Request, background_tasks: BackgroundT
             logger.info("Delete service {%s} successful", service_name)
         except ApiException as e:
             logger.warning(e)
-            error_info = gen_error_info(e.status, e.reason)
-            response = JSONResponse(status_code=522, content=jsonable_encoder(error_info))
-            set_cross_header(response, request)
-            return response
         try:
             response = k8s_client.delete_namespaced_deployment(deployment_name, MODEL_IO_NAMESPACE)
             logger.info("Delete deployment {%s} successful", deployment_name)
         except ApiException as e:
-            error_info = gen_error_info(e.status, e.reason)
             logger.warning(e)
-            response = JSONResponse(status_code=522, content=jsonable_encoder(error_info))
-            set_cross_header(response, request)
-            return response
         notify_model_io_gateways_in_bg(background_tasks)
         status_ok = 200
         error_info = gen_error_info(status_ok, "ok")
@@ -949,7 +941,8 @@ model_weight_model_dir = {
     # model name and it's base dir name
     "Meta-Llama-3-8B-Instruct": "Meta-Llama-3-8B-Instruct",
     "Qwen-14B-Chat": "Qwen-14B-Chat",
-    "chatglm3-6b": "chatglm3-6b"
+    "chatglm3-6b": "chatglm3-6b",
+    "Qwen-72B": "Qwen1.5-72B-Chat"
 }
 
 
@@ -987,10 +980,8 @@ async def add_external_model_services(external_service: ExternalService, request
     ex_service["url"] = external_service.url
     ex_service["api_key"] = external_service.api_key
 
-    if external_service.http_proxy:
-        ex_service["http_proxy"] = external_service.http_proxy
-    if external_service.https_proxy:
-        ex_service["https_proxy"] = external_service.https_proxy
+    ex_service["http_proxy"] = external_service.http_proxy
+    ex_service["https_proxy"] = external_service.https_proxy
     external_model_services[ex_name] = ex_service
     persist_external_services()
     notify_model_io_gateways_in_bg(background_tasks)
@@ -1072,12 +1063,9 @@ async def update_external_model_proxies(external_model_proxies: GlobalExternalSe
     http_proxy = external_model_proxies.http_proxy
     https_proxy = external_model_proxies.https_proxy
     no_proxy = external_model_proxies.no_proxy
-    if http_proxy:
-        global_proxy_configs["http_proxy"] = http_proxy
-    if https_proxy:
-        global_proxy_configs["https_proxy"] = https_proxy
-    if no_proxy:
-        global_proxy_configs["no_proxy"] = no_proxy
+    global_proxy_configs["http_proxy"] = http_proxy
+    global_proxy_configs["https_proxy"] = https_proxy
+    global_proxy_configs["no_proxy"] = no_proxy
 
     persist_external_services()
     notify_model_io_gateways_in_bg(background_tasks)
@@ -1114,17 +1102,6 @@ def create_yaml_files(item, yaml_objs):
         for obj in yaml_objs:
             yaml.dump(obj, f)
             f.write('---\n')
-
-
-def deploy_service_and_deployment(service_manifest, deployment_manifest):
-    try:
-        api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, service_manifest)
-    except ApiException as e:
-        logger.warning(e)
-    try:
-        k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, deployment_manifest)
-    except ApiException as e:
-        logger.warning(e)
 
 
 def get_max_token_size(item, models_meta, model_name):
@@ -1167,7 +1144,14 @@ async def start_up(item: Item, request: Request, background_tasks: BackgroundTas
         "enable_npu_schedule": len(pod_list.items) > 0,
     }
 
-    create_model_svc_and_deploy(item, render_data)
+    success = create_model_svc_and_deploy(item, render_data)
+    if not success:
+        error_code = 521
+        error_args = ["Create deployment [{}/{}] failed: {}.", MODEL_IO_NAMESPACE, model_name]
+        detail = "Failed to create Model: [{}]. Failure cause:{}".format(model_name, error_args)
+        error_info = gen_error_info(521, detail)
+        response = JSONResponse(status_code=error_code, content=jsonable_encoder(error_info))
+        return response
 
     # persist services
     local_model_services[model_name] = item.model_dump()
@@ -1188,14 +1172,35 @@ def create_model_svc_and_deploy(item, render_data):
         for obj in yaml_objs:
             yaml.dump(obj, f)
             f.write('---\n')
+
     try:
         api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, yaml_objs[0])
+        logger.info("Create service [{}/{}] success!", MODEL_IO_NAMESPACE, item.name.strip())
     except ApiException as e:
         logger.warning("Create service [{}/{}] failed: {}", MODEL_IO_NAMESPACE, item.name.strip(), e)
+
     try:
         k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, yaml_objs[1])
+        logger.info("Create deployment [{}/{}] success!", MODEL_IO_NAMESPACE, item.name.strip())
     except ApiException as e:
         logger.warning("Create deployment [{}/{}] failed: {}.", MODEL_IO_NAMESPACE, item.name.strip(), e)
+        handle_deployment_failure(yaml_objs, render_data, item)
+        return False
+    return True
+
+
+def handle_deployment_failure(yaml_objs, render_data, item):
+    meta_data = "metadata"
+    name = "name"
+    try:
+        service_name = yaml_objs[0][meta_data][name]
+        api_instance.read_namespaced_service(service_name, MODEL_IO_NAMESPACE)
+        logger.info("Service [{}/{}] exists, starting to roll back service creation", MODEL_IO_NAMESPACE,
+                    item.name.strip())
+        api_instance.delete_namespaced_service(service_name, MODEL_IO_NAMESPACE)
+        logger.info("Rolled back service creation for [{}]", service_name)
+    except ApiException as e:
+        logger.warning("No existing service [{}/{}]: {}", MODEL_IO_NAMESPACE, item.name.strip(), e)
 
 
 if __name__ == "__main__":

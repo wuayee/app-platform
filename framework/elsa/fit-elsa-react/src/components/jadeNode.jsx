@@ -1,6 +1,6 @@
 import {CopyPasteHelpers, DIRECTION, node} from "@fit-elsa/elsa-core";
 import {v4 as uuidv4} from "uuid";
-import {CONNECTOR, NODE_STATUS, SECTION_TYPE, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
+import {CONNECTOR, NODE_STATUS, SECTION_TYPE, SOURCE_PLATFORM, VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 import React from "react";
 import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
 
@@ -12,7 +12,6 @@ import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
 export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     const self = node(id, x, y, width, height, parent, false, drawer ? drawer : jadeNodeDrawer);
     self.type = "jadeNode";
-    self.serializedFields.delete("emphasized");
     self.serializedFields.batchAdd("toolConfigs", "componentName", "flowMeta", "outlineWidth", "outlineColor", "sourcePlatform");
     self.eventType = "jadeEvent";
     self.hideText = true;
@@ -43,7 +42,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
             },
         }
     };
-    self.sourcePlatform = "official";
+    self.sourcePlatform = SOURCE_PLATFORM.OFFICIAL;
     self.observed = [];
 
     /**
@@ -360,10 +359,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.offConnect = () => {
         const preNodeInfos = self.getPreNodeInfos();
         const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
-        self.observed.filter(o => o.status === "enable").filter(o => !preNodeIdSet.has(o.nodeId)).forEach(o => {
-            o.observe({value: null, type: null});
-            o.status = "disable";
-        });
+        self.observed.filter(o => !preNodeIdSet.has(o.nodeId)).forEach(o => o.disable());
         const nextNodes = getNextNodes();
         nextNodes.length > 0 && nextNodes.forEach(n => n.offConnect());
     };
@@ -374,11 +370,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.onConnect = () => {
         const preNodeInfos = self.getPreNodeInfos();
         const preNodeIdSet = new Set(preNodeInfos.map(n => n.id));
-        self.observed.filter(o => o.status === "disable").filter(o => preNodeIdSet.has(o.nodeId)).forEach(o => {
-            o.status = "enable";
-            const observable = self.page.getObservable(o.nodeId, o.observableId);
-            o.observe({value: observable.value, type: observable.type});
-        });
+        self.observed.filter(o => preNodeIdSet.has(o.nodeId)).forEach(o => o.enable());
         const nextNodes = getNextNodes();
         nextNodes.length > 0 && nextNodes.forEach(n => n.onConnect());
     };
@@ -533,6 +525,29 @@ const ObserverProxy = (nodeId, observableId, observer, shape) => {
     self.origin = observer;
 
     /**
+     * 禁用Observer.
+     */
+    self.disable = () => {
+        if (self.status === "disable") {
+            return;
+        }
+        self.observe({value: null, type: null});
+        self.status = "disable";
+    };
+
+    /**
+     * 启动Observer.
+     */
+    self.enable = () => {
+        if (self.status === "enable") {
+            return;
+        }
+        self.status = "enable";
+        const observable = shape.page.getObservable(self.nodeId, self.observableId);
+        self.observe({value: observable.value, type: observable.type});
+    };
+
+    /**
      * 触发监听.
      *
      * @param args 参数.
@@ -548,6 +563,8 @@ const ObserverProxy = (nodeId, observableId, observer, shape) => {
      * 删除shape中的observed，删除page中的监听.
      */
     self.stopObserve = () => {
+        // stopObserve时，先恢复到空值，再停止监听。防止直接调用stopObserve时，监听方虽然已不再监听，但值并没有变化的问题。
+        self.observe({value: null, type: null});
         const index = shape.observed.findIndex(o => o === self);
         shape.observed.splice(index, 1);
         shape.page.stopObserving(nodeId, observableId, self);

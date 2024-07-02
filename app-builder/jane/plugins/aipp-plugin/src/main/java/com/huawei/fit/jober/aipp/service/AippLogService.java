@@ -8,8 +8,10 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.entity.AippInstLog;
+import com.huawei.fit.jober.aipp.entity.AippLogData;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * aipp实例历史记录服务接口
@@ -104,6 +106,31 @@ public interface AippLogService {
     void insertLog(AippLogCreateDto logDto) throws IllegalArgumentException;
 
     /**
+     * 插入aipp的历史记录
+     *
+     * @param logType 日志类型
+     * @param logData 日志数据
+     * @param businessData 业务数据
+     */
+    void insertLog(String logType, AippLogData logData, Map<String, Object> businessData);
+
+    /**
+     * 插入MSG类型的历史记录
+     *
+     * @param msg MSG日志内容
+     * @param flowData 流程执行上下文数据。
+     */
+    void insertMsgLog(String msg, List<Map<String, Object>> flowData);
+
+    /**
+     * 插入ERROR类型的历史记录
+     *
+     * @param msg ERROR日志内容
+     * @param flowData 流程执行上下文数据。
+     */
+    void insertErrorLog(String msg, List<Map<String, Object>> flowData);
+
+    /**
      * 更新指定log id的记录
      *
      * @param logId 指定log的id
@@ -114,6 +141,15 @@ public interface AippLogService {
     List<AippInstLogDataDto> queryRecentLogsSinceResume(String aippId, String aippType, OperationContext context);
 
     String getParentPath(String parentInstId);
+
+    /**
+     * 根据父Instance的路径构建当前Instance的路径。
+     *
+     * @param instId 表示当前instance的id的 {@link String}。
+     * @param parentInstId 表示父instance的id的 {@link String}。
+     * @return 表示当前instId的路径的 {@link String}。
+     */
+    String buildPath(String instId, String parentInstId);
 
     /**
      * 删除指定实例的历史记录。

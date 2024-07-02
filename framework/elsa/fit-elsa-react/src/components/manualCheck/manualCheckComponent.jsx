@@ -8,11 +8,16 @@ export const manualCheckComponent = (jadeConfig) => {
      */
     self.getJadeConfig = () => {
         return jadeConfig ? jadeConfig : {
-            "converter": {},
+            "converter": {
+                "type": "mapping_converter",
+                "entity": {
+                    "inputParams": [],
+                    "outputParams": []
+                }
+            },
             "taskId": "",
             "type": "AIPP_SMART_FORM",
-            "formName": "",
-            "outputParams": ""
+            "formName": ""
         };
     };
 
@@ -32,7 +37,10 @@ export const manualCheckComponent = (jadeConfig) => {
                 ...data,
                 taskId: action.formId,
                 formName: action.formName,
-                output: action.formOutput,
+                converter: {
+                    ...data.converter,
+                    entity: action.entity
+                }
             }
         }
 

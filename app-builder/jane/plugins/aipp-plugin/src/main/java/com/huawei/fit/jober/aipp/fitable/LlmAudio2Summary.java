@@ -5,13 +5,13 @@
 package com.huawei.fit.jober.aipp.fitable;
 
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.LLMUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.audio.SummaryDto;
 import com.huawei.fit.jober.aipp.dto.audio.SummarySection;
 import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.jober.aipp.util.LLMUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
@@ -125,10 +125,10 @@ public class LlmAudio2Summary implements FlowableService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.LlmAudio2Summary")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("LlmAudio2Summary businessData {}", businessData);
         String msg = "好的，我可以帮你分析这个视频并生成对应的摘要，我决定先调用视频解析工具，再生成视频中的摘要";
-        Utils.persistAippMsgLog(aippLogService, msg, flowData);
+        this.aippLogService.insertMsgLog(msg, flowData);
         int segSize = (int) businessData.get(AippConst.BS_VIDEO_TO_AUDIO_SEG_SIZE);
         String audioDir = (String) businessData.get(AippConst.BS_VIDEO_TO_AUDIO_RESULT_DIR);
         try (Stream<Path> audioPathStream = Files.list(Paths.get(audioDir))) {
@@ -136,7 +136,7 @@ public class LlmAudio2Summary implements FlowableService {
             SummaryDto summaryDto = batchSummary(audioFiles, segSize);
             if (summaryDto.getSectionList().isEmpty()) {
                 msg = "很抱歉！无法识别文件中的内容，您可以尝试换个文件";
-                Utils.persistAippErrorLog(aippLogService, msg, flowData);
+                this.aippLogService.insertErrorLog(msg, flowData);
                 throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "audio summary result is empty.");
             }
             businessData.put(AippConst.BS_VIDEO_TO_TEXT_RESULT, JsonUtils.toJsonString(summaryDto));

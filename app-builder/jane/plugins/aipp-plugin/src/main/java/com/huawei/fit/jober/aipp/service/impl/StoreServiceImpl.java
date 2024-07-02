@@ -21,6 +21,7 @@ import com.huawei.fit.jober.aipp.enums.AppCategory;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import com.huawei.fit.jober.aipp.service.StoreService;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;

@@ -5,14 +5,14 @@
 package com.huawei.fit.jober.aipp.fitable;
 
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.AippFileUtils;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.audio.AudioSplitInfo;
 import com.huawei.fit.jober.aipp.entity.ffmpeg.FfmpegMeta;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.FfmpegService;
+import com.huawei.fit.jober.aipp.util.AippFileUtils;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
@@ -47,7 +47,7 @@ public class FfmpegVideo2Audio implements FlowableService {
     }
 
     private AudioSplitInfo covertVideo(String dirName, File video) throws IOException {
-        File targetDir = Paths.get(Utils.NAS_SHARE_DIR, dirName).toFile();
+        File targetDir = Paths.get(AippFileUtils.NAS_SHARE_DIR, dirName).toFile();
         FfmpegMeta meta = ffmpegService.stat(video.getAbsolutePath());
         File audio = Paths.get(targetDir.getPath(), video.getName() + "." + meta.getVideoExt()).toFile();
         ffmpegService.extractAudio(video.getAbsolutePath(), audio.getAbsolutePath());
@@ -66,7 +66,7 @@ public class FfmpegVideo2Audio implements FlowableService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.FfmpegVideo2Audio")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("FfmpegVideo2Audio businessData {}", businessData);
 
         File videoFile = null;
@@ -75,7 +75,7 @@ public class FfmpegVideo2Audio implements FlowableService {
             Map<String, Object> videoFileObject = JsonUtils.parseObject(videoPathStr);
             String videoUrl = (String) videoFileObject.get("s3_url");
             String instId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
-            videoFile = Utils.getFileFromS3(instId, videoUrl, "video");
+            videoFile = AippFileUtils.getFileFromS3(instId, videoUrl, "video");
 
             AudioSplitInfo result = covertVideo(instId, videoFile);
             businessData.put(AippConst.BS_VIDEO_TO_AUDIO_RESULT_DIR, result.getDirPath());

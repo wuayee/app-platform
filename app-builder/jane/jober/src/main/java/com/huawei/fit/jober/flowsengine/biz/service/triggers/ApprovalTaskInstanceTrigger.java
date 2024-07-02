@@ -6,19 +6,19 @@ package com.huawei.fit.jober.flowsengine.biz.service.triggers;
 
 import static com.huawei.fit.jober.common.Constant.BUSINESS_DATA_KEY;
 import static com.huawei.fit.jober.common.Constant.OPERATOR_KEY;
-import static com.huawei.fit.jober.flowsengine.utils.FlowUtil.originalVariable;
+import static com.huawei.fit.waterflow.flowsengine.utils.FlowUtil.originalVariable;
 
 import com.huawei.fit.jober.InstanceChangedService;
 import com.huawei.fit.jober.entity.OperationContext;
 import com.huawei.fit.jober.entity.instance.Instance;
 import com.huawei.fit.jober.entity.task.Task;
-import com.huawei.fit.jober.flowsengine.biz.service.FlowContextsService;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowContext;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.FlowDefinition;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowNode;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
+import com.huawei.fit.waterflow.flowsengine.biz.service.FlowContextsService;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextRepo;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
 import com.huawei.fitframework.annotation.Alias;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;

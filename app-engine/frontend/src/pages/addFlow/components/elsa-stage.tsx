@@ -3,7 +3,9 @@ import React, { useEffect, useCallback, useState, useRef, useContext,  } from 'r
 import { useParams } from 'react-router-dom';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { debounce } from '@shared/utils/common';
-import { updateFlowInfo } from '@shared/http/aipp';
+import {
+  getAppInfo,
+  updateFlowInfo, } from '@shared/http/aipp';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
 import { Message } from '@shared/utils/message';
 import { useAppDispatch } from '../../../store/hook';
@@ -85,9 +87,9 @@ const Stage = (props) => {
   async function updateAppRunningFlow() {
     const res = await updateFlowInfo(tenantId, appId, currentApp.current.flowGraph);
     if (res.code === 0) {
-      dispatch(setAppInfo(JSON.parse(JSON.stringify(appInfo))));
+      type && dispatch(setAppInfo(JSON.parse(JSON.stringify(appInfo))));
       setShowTime(true);
-      type && Message({ type: 'success', content: '高级配置更新成功'})
+      Message({ type: 'success', content: type ? '高级配置更新成功': '工具流更新成功' })
     }
   }
   // 拖拽完成回调
@@ -116,8 +118,8 @@ const Stage = (props) => {
       onDrop ={handleDragEnter}>
         <div className='elsa-canvas' id='stage'></div>
     </div>
-    <HuggingFaceModal 
-      showModal={showModal} 
+    <HuggingFaceModal
+      showModal={showModal}
       setShowModal={setShowModal}
       onModelSelectCallBack={onModelSelectCallBack}
       taskName={taskName}

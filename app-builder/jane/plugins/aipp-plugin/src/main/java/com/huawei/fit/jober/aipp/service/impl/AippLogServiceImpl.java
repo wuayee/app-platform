@@ -5,7 +5,6 @@
 package com.huawei.fit.jober.aipp.service.impl;
 
 import com.huawei.fit.dynamicform.DynamicFormService;
-import com.huawei.fit.dynamicform.entity.DynamicFormDetailEntity;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
@@ -13,9 +12,6 @@ import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
 import com.huawei.fit.jober.aipp.aop.AippLogInsert;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.MetaUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
@@ -31,9 +27,15 @@ import com.huawei.fit.jober.aipp.mapper.AippChatMapper;
 import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
+import com.huawei.fit.jober.aipp.util.AippLogUtils;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
+import com.huawei.fit.jober.aipp.util.MetaUtils;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -82,13 +84,13 @@ public class AippLogServiceImpl implements AippLogService {
     private AippInstLog completeFormDataJson(AippInstLog instanceLog, OperationContext context) {
         if (AippInstLogType.FORM.name().equals(instanceLog.getLogType())) {
             AippLogData form = JsonUtils.parseObject(instanceLog.getLogData(), AippLogData.class);
-            DynamicFormDetailEntity formEntity =
-                    dynamicFormService.queryFormDetailByPrimaryKey(form.getFormId(), form.getFormVersion(), context);
-            String formData = formEntity == null ? "" : formEntity.getData();
+            if (form == null) {
+                return instanceLog;
+            }
             Map<String, String> newLogData = new HashMap<String, String>() {
                 {
-                    put("form_args", form.getFormArgs());
-                    put("form_data", formData);
+                    put("formData", form.getFormData());
+                    put("formAppearance", form.getFormAppearance());
                 }
             };
             instanceLog.setLogData(JsonUtils.toJsonString(newLogData));
@@ -119,7 +121,8 @@ public class AippLogServiceImpl implements AippLogService {
             }
             String versionId = meta.getVersionId();
             RangedResultSet<Instance> instances =
-                    Utils.getInstances(versionId, lastLogData.getInstanceId(), context, metaInstanceService);
+                    MetaInstanceUtils.getInstances(
+                            versionId, lastLogData.getInstanceId(), context, metaInstanceService);
             if (instances.getRange().getTotal() == 0) {
                 return Collections.emptyList();
             }
@@ -349,7 +352,7 @@ public class AippLogServiceImpl implements AippLogService {
             String instanceId = instanceIdList.get(0);
             String versionId = this.metaInstanceService.getMetaVersionId(instanceId);
             RangedResultSet<Instance> instances =
-                    Utils.getInstances(versionId, instanceId, context, this.metaInstanceService);
+                    MetaInstanceUtils.getInstances(versionId, instanceId, context, this.metaInstanceService);
             if (instances.getRange().getTotal() == 0) {
                 return;
             }
@@ -396,6 +399,65 @@ public class AippLogServiceImpl implements AippLogService {
     }
 
     /**
+     * 插入aipp的历史记录
+     *
+     * @param logType 日志类型
+     * @param logData 日志数据
+     * @param businessData 业务数据
+     */
+    @Override
+    public void insertLog(String logType, AippLogData logData, Map<String, Object> businessData) {
+        String aippId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_ID_KEY));
+        String instId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
+        String parentInstId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
+        String version = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_VERSION_KEY));
+        String aippType = ObjectUtils.cast(businessData.get(AippConst.ATTR_AIPP_TYPE_KEY));
+        String w3Account = DataUtils.getOpContext(businessData).getW3Account();
+
+        if (!AippLogUtils.checkFormMsg(logData, logType)) {
+            log.warn("invalid logData {}, logType {}, aippId {}, instId {}", logData, logType, aippId, instId);
+            return;
+        }
+
+        String path = buildPath(instId, parentInstId);
+
+        insertLog(AippLogCreateDto.builder()
+                .aippId(aippId)
+                .version(version)
+                .aippType(aippType)
+                .instanceId(instId)
+                .logType(logType)
+                .logData(JsonUtils.toJsonString(logData))
+                .createUserAccount(w3Account)
+                .path(path)
+                .build());
+    }
+
+    /**
+     * 插入MSG类型的历史记录
+     *
+     * @param msg MSG日志内容
+     * @param flowData 流程执行上下文数据。
+     */
+    @Override
+    public void insertMsgLog(String msg, List<Map<String, Object>> flowData) {
+        AippLogData logData = AippLogData.builder().msg(msg).build();
+        insertLog(AippInstLogType.MSG.name(), logData, DataUtils.getBusiness(flowData));
+    }
+
+    /**
+     * 插入ERROR类型的历史记录
+     *
+     * @param msg ERROR日志内容
+     * @param flowData 流程执行上下文数据。
+     */
+    @Override
+    public void insertErrorLog(String msg, List<Map<String, Object>> flowData) {
+        AippLogData logData = AippLogData.builder().msg(msg).build();
+        insertLog(AippInstLogType.ERROR.name(), logData, DataUtils.getBusiness(flowData));
+    }
+
+    /**
      * 更新指定log id的记录
      *
      * @param logId 指定log的id
@@ -416,6 +478,28 @@ public class AippLogServiceImpl implements AippLogService {
             return "";
         }
         return aippLogMapper.getParentPath(parentInstId);
+    }
+
+    /**
+     * 根据父Instance的路径构建当前Instance的路径。
+     *
+     * @param instId 表示当前instance的id的 {@link String}。
+     * @param parentInstId 表示父instance的id的 {@link String}。
+     * @return 表示当前instId的路径的 {@link String}。
+     */
+    @Override
+    @NotNull
+    public String buildPath(String instId, String parentInstId) {
+        String path;
+        if (parentInstId == null) {
+            path = AippLogUtils.PATH_DELIMITER + instId;
+        } else {
+            String parentPath = getParentPath(parentInstId);
+            path = StringUtils.isEmpty(parentPath)
+                    ? AippLogUtils.PATH_DELIMITER + instId
+                    : String.join(AippLogUtils.PATH_DELIMITER, parentPath, instId);
+        }
+        return path;
     }
 
     @Override

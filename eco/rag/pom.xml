@@ -52,6 +52,13 @@
             <version>2.10.1</version>
         </dependency>
 
+        <!-- HanLP -->
+        <dependency>
+            <groupId>com.hankcs</groupId>
+            <artifactId>hanlp</artifactId>
+            <version>portable-1.8.4</version>
+        </dependency>
+
         <!-- lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>

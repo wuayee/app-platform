@@ -122,6 +122,25 @@ public class AppRunTimeController extends AbstractController {
     }
 
     /**
+     * 用户选择历史后启动流程
+     *
+     * @param httpRequest 操作上下文
+     * @param tenantId 租户id
+     * @param metaInstId 实例id
+     * @param initContext 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
+     * @return 实例id
+     */
+    @PostMapping(path = "/start/instances/{instance_id}", description = "用户选择历史后启动流程")
+    public Rsp<String> startFlowByUserSelectMemory(HttpClassicServerRequest httpRequest,
+            @PathVariable("tenant_id") String tenantId, @PathVariable("instance_id") String metaInstId,
+            @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData",
+                    example = "图片url, 文本输入, prompt")
+            @RequestBody Map<String, Object> initContext) {
+        OperationContext context = this.contextOf(httpRequest, tenantId);
+        return Rsp.ok(aippRunTimeService.startFlowWithUserSelectMemory(metaInstId, initContext, context));
+    }
+
+    /**
      * 删除应用实例
      *
      * @param httpRequest 操作上下文
@@ -184,20 +203,15 @@ public class AppRunTimeController extends AbstractController {
      *
      * @param httpRequest 操作上下文
      * @param tenantId 租户id
-     * @param aippId aippId
      * @param instanceId 实例id
      * @param formArgs 用于填充表单的数据
-     * @return
+     * @return 返回空回复的 {@link Rsp}{@code <}{@link Void}{@code >}
      */
-    @PutMapping(path = "/aipp/{aipp_id}/instances/{instance_id}", description = "更新表单数据，并恢复实例任务执行")
+    @PutMapping(path = "/app/instances/{instance_id}", description = "更新表单数据，并恢复实例任务执行")
     public Rsp<Void> resumeAndUpdateAippInstance(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
-            @PathVariable("instance_id") String instanceId,
-            @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息") @RequestBody Map<String, Object> formArgs,
-            @RequestParam(value = "version") String version) {
-        aippRunTimeService.resumeAndUpdateAippInstance(aippId,
-                version,
-                instanceId,
+            @PathVariable("tenant_id") String tenantId, @PathVariable("instance_id") String instanceId,
+            @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息") @RequestBody Map<String, Object> formArgs) {
+        this.aippRunTimeService.resumeAndUpdateAippInstance(instanceId,
                 formArgs,
                 this.contextOf(httpRequest, tenantId));
         return Rsp.ok();
@@ -274,8 +288,8 @@ public class AppRunTimeController extends AbstractController {
             @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
             @PathVariable("instance_id") String instanceId, @RequestParam(value = "version") String version) {
         OperationContext ctx = this.contextOf(httpRequest, tenantId);
-        RuntimeData runtimeData = this.aippFlowRuntimeInfoService.getRuntimeData(aippId, version, instanceId, ctx)
-                .orElse(null);
+        RuntimeData runtimeData =
+                this.aippFlowRuntimeInfoService.getRuntimeData(aippId, version, instanceId, ctx).orElse(null);
         return Rsp.ok(runtimeData);
     }
 }

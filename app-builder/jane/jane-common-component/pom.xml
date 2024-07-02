@@ -17,7 +17,6 @@
         <lombok.version>1.18.26</lombok.version>
         <fastjson.version>1.2.83</fastjson.version>
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
-        <forest-core.version>1.5.26</forest-core.version>
         <mockito.version>4.0.0</mockito.version>
         <task.version>0.1.0</task.version>
         <jober-genericable.version>0.6.0-SNAPSHOT</jober-genericable.version>

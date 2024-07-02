@@ -5,7 +5,8 @@
 package com.huawei.fit.jober.aipp.fitable;
 
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.Utils;
+import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
@@ -46,7 +47,7 @@ public class NaiveRAGComponent implements FlowableService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.NaiveRAGComponent")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("NaiveRAGComponent business data {}", businessData);
         String ragOutput = StringUtils.EMPTY;
         List<Map<String, Object>> knowledgeList = ObjectUtils.cast(businessData.get("knowledge"));
@@ -60,7 +61,7 @@ public class NaiveRAGComponent implements FlowableService {
         if (CollectionUtils.isNotEmpty(tableIdList)) {
             KbVectorSearchDto kbVectorSearchCondition = this.buildKbVectorSearchDto(tableIdList, businessData);
             List<String> chunksList = this.knowledgeBaseService.vectorSearchKnowledgeTable(kbVectorSearchCondition);
-            ragOutput = String.join("; ", chunksList);
+            ragOutput = String.join(AippConst.CONTENT_DELIMITER, chunksList);
         }
         Map<String, Object> output = new HashMap<>();
         output.put("retrievalOutput", ragOutput);

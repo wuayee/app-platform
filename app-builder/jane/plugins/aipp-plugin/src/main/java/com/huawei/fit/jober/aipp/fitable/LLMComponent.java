@@ -10,8 +10,6 @@ import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowCallbackService;
 import com.huawei.fit.jober.FlowInstanceService;
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
@@ -23,6 +21,8 @@ import com.huawei.fit.jober.aipp.fel.AippLlmMeta;
 import com.huawei.fit.jober.aipp.fel.AippMemory;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippLogStreamService;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.vo.AippLogVO;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
@@ -30,7 +30,11 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
 import com.huawei.fitframework.exception.FitException;
+import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.parameterization.StringFormatException;
+import com.huawei.fitframework.serialization.ObjectSerializer;
+import com.huawei.fitframework.serialization.SerializationException;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
@@ -58,6 +62,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * LLM 组件实现
@@ -84,6 +89,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     private final AippLogService aippLogService;
     private final AippLogStreamService aippLogStreamService;
     private final BrokerClient client;
+    private final ObjectSerializer serializer;
 
     /**
      * 大模型节点构造器，内部通过提供的agent和tool构建智能体工作流。
@@ -94,13 +100,15 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
      * @param toolProvider 表示具提供者功能的 {@link ToolProvider}。
      * @param agent 表示提供智能体功能的 {@link AbstractAgent}{@code <}{@link ChatMessages}{@code ,
      * }{@link ChatMessages}{@code >}。
+     * @param serializer 表示序列化器的 {@link ObjectSerializer}。
      */
     public LLMComponent(FlowInstanceService flowInstanceService,
             MetaInstanceService metaInstanceService,
             MetaService metaService,
             ToolProvider toolProvider,
             @Fit(alias = AippConst.WATER_FLOW_AGENT_BEAN) AbstractAgent<Prompt, Prompt> agent,
-            AippLogService aippLogService, AippLogStreamService aippLogStreamService, BrokerClient client) {
+            AippLogService aippLogService, AippLogStreamService aippLogStreamService, BrokerClient client,
+            ObjectSerializer serializer) {
         this.flowInstanceService = flowInstanceService;
         this.metaService = metaService;
         this.metaInstanceService = metaInstanceService;
@@ -108,6 +116,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         this.aippLogService = aippLogService;
         this.aippLogStreamService = aippLogStreamService;
         this.client = client;
+        this.serializer = Validation.notNull(serializer, "The serializer cannot be nul.");
 
         // handleTask从入口开始处理，callback从agent node开始处理
         this.agentFlow = AiFlows.<Tip>create()
@@ -125,7 +134,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.LLMComponentCallback")
     @Override
     public void callback(List<Map<String, Object>> childFlowData) {
-        Map<String, Object> childBusinessData = Utils.getBusiness(childFlowData);
+        Map<String, Object> childBusinessData = DataUtils.getBusiness(childFlowData);
         log.debug("LLMComponentCallback business data {}", childBusinessData);
         String toolOutput = ObjectUtils.cast(childBusinessData.get(AippConst.BS_AIPP_FINAL_OUTPUT));
         String parentInstanceId = ObjectUtils.cast(childBusinessData.get(AippConst.PARENT_INSTANCE_ID));
@@ -165,7 +174,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.LLMComponent")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         String instId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
         String parentInstId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
         log.debug("LLMComponent business data {}", businessData);
@@ -181,7 +190,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
             return flowData;
         }
 
-        String path = Utils.buildPath(this.aippLogService, instId, parentInstId);
+        String path = this.aippLogService.buildPath(instId, parentInstId);
 
         // todo: 待add多模态，期望使用image的url，当前传入的历史记录里面没有image
         Map<String, Object> toolContext = MapBuilder.<String, Object>get()
@@ -190,7 +199,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
                 .build();
         agentFlow.converse()
                 .bind((acc, chunk) -> this.sendLog(chunk, path, msgId, instId))
-                .bind(new AippMemory(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_MEMORY_KEY))))
+                .bind(new AippMemory(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_MEMORIES_KEY))))
                 .bind(AippConst.TOOL_CONTEXT_KEY, toolContext)
                 .doOnSuccess(msg -> llmOutputConsumer(llmMeta, msg))
                 .doOnError(throwable -> doOnAgentError(llmMeta, throwable.getMessage()))
@@ -296,7 +305,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         // todo: 临时逻辑，如果出错则停止前端轮询并主动终止流程；待流程支持异步调用抛异常后再修改
         log.error("versionId {} errorMessage {}", llmMeta.getVersionId(), errorMessage);
         String msg = "很抱歉，模型节点遇到了问题，请稍后重试。";
-        Utils.persistAippErrorLog(this.aippLogService, msg, llmMeta.getFlowData());
+        this.aippLogService.insertErrorLog(msg, llmMeta.getFlowData());
         InstanceDeclarationInfo declarationInfo = InstanceDeclarationInfo.custom()
                 .putInfo(AippConst.INST_FINISH_TIME_KEY, LocalDateTime.now())
                 .putInfo(AippConst.INST_STATUS_KEY, MetaInstStatusEnum.ERROR.name())
@@ -319,11 +328,33 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         // todo: 如果有文件，将内容拼到template里；为临时方案，历史记录的多模态会有问题
         StringTemplate template = new DefaultStringTemplate(ObjectUtils.cast(input.get("template"))
                 + this.getFilePath(businessData));
-        Map<String, String> variables = ObjectUtils.cast(input.get("variables"));
+        Map<String, Object> variables = ObjectUtils.cast(input.get("variables"));
+        Validation.notNull(variables, "The prompt variables cannot be null.");
         try {
-            return template.render(variables);
-        } catch (NullPointerException e) {
-            throw new AippException(Utils.getOpContext(businessData), AippErrCode.LLM_COMPONENT_TEMPLATE_RENDER_FAILED);
+            Map<String, String> standardInput = variables.entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(Map.Entry::getKey, entry -> this.getStandardValue(entry.getValue())));
+            return template.render(standardInput);
+        } catch (StringFormatException e) {
+            throw new AippException(
+                    DataUtils.getOpContext(businessData), AippErrCode.LLM_COMPONENT_TEMPLATE_RENDER_FAILED);
+        }
+    }
+
+    private String getStandardValue(Object value) {
+        Validation.notNull(value, "The value cannot be null.");
+        if (value instanceof String) {
+            return ObjectUtils.cast(value);
+        }
+        if (value instanceof List) {
+            return ((List<?>) value).stream().map(Object::toString)
+                    .collect(Collectors.joining(AippConst.CONTENT_DELIMITER));
+        }
+        try {
+            return this.serializer.serialize(value);
+        } catch (SerializationException exception) {
+            log.error("Serialize failed, value: {}.", value.toString());
+            return StringUtils.EMPTY;
         }
     }
 

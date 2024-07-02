@@ -5,8 +5,8 @@
 package com.huawei.fitframework.build.app;
 
 import com.huawei.fitframework.build.support.AbstractPackageMojo;
-import com.huawei.fitframework.build.support.SharedDependency;
 import com.huawei.fitframework.build.util.ArtifactDownloader;
+import com.huawei.fitframework.plugin.maven.support.SharedDependency;
 
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;

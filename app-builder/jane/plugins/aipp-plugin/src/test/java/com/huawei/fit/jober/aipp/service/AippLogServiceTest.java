@@ -23,7 +23,6 @@ import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
@@ -36,6 +35,7 @@ import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
 import com.huawei.fit.jober.aipp.service.impl.AippLogServiceImpl;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.common.RangeResult;
 import com.huawei.fit.jober.common.RangedResultSet;
 
@@ -324,7 +324,7 @@ public class AippLogServiceTest {
             put("form_args", dummyFormArgs);
             put("form_data", dummyFormData);
         }};
-        AippLogData dummyLogData = new AippLogData(dummyFormId, dummyFormVersion, dummyFormArgs, "");
+        AippLogData dummyLogData = new AippLogData(dummyFormId, dummyFormVersion, dummyFormArgs, "", null, null);
         String dummyLogDataJson = JsonUtils.toJsonString(dummyLogData);
         RangedResultSet<Instance> metaInstanceResult = new RangedResultSet<>();
         metaInstanceResult.setRange(new RangeResult(0, 1, 1));

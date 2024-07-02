@@ -4,9 +4,9 @@
 
 package com.huawei.fit.jober.aipp.dto.audio;
 
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.LLMUtils;
 import com.huawei.fit.jober.aipp.entity.ffmpeg.FfmpegUtil;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.jober.aipp.util.LLMUtils;
 import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.log.Logger;
 

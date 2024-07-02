@@ -68,6 +68,7 @@ export const JadeReferenceTreeSelect = (props) => {
             <p>1.instanceId：每次对话实例的唯一标识</p>
             <p>2.appId：所属应用的唯一标识</p>
             <p>3.memories：所属应用的历史记录QA对列表</p>
+            <p>4.useMemory：表示本次对话是否使用历史记录</p>
         </div>
     </>);
 
@@ -106,7 +107,8 @@ export const JadeReferenceTreeSelect = (props) => {
                     id: o.observableId,
                     pId: o.parentId,
                     value: o.observableId,
-                    title: o.value
+                    title: o.value,
+                    selectable: o.selectable ?? true
                 };
                 ans.push(treeNode);
             });

@@ -9,7 +9,6 @@ import com.huawei.fit.jane.common.utils.SleepUtil;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.AippInstanceCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
@@ -19,6 +18,8 @@ import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
@@ -99,17 +100,17 @@ public class AippFlowAgent implements FlowableService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.AppFlowAgent")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("AippAgent businessData {}", businessData);
 
-        Map<String, Object> agentParams = Utils.getAgentParams(flowData);
+        Map<String, Object> agentParams = DataUtils.getAgentParams(flowData);
         if (!agentParams.containsKey(AippConst.BS_AGENT_RESULT_LINK_KEY)) {
             agentParams.put(AippConst.BS_AGENT_RESULT_LINK_KEY, AippConst.INST_AGENT_RESULT_KEY);
         }
         String agentAippId = getAgentAippId(flowData, agentParams);
 
         Map<String, Object> initContext = Collections.singletonMap(AippConst.BS_INIT_CONTEXT_KEY, agentParams);
-        OperationContext context = Utils.getOpContext(businessData);
+        OperationContext context = DataUtils.getOpContext(businessData);
         AippInstanceCreateDto agentInstDto =
                 aippRunTimeService.createAippInstanceLatest(agentAippId, initContext, context);
         // 同步执行agent
@@ -141,12 +142,12 @@ public class AippFlowAgent implements FlowableService {
                     agentAippId,
                     agentInstId);
             InstanceDeclarationInfo info = InstanceDeclarationInfo.custom().putInfo(instUrlKey, instUrl).build();
-            Utils.persistInstance(metaInstanceService, info, businessData, context);
+            MetaInstanceUtils.persistInstance(metaInstanceService, info, businessData, context);
         }
     }
 
     private String getAgentAippId(List<Map<String, Object>> flowData, Map<String, Object> agentParams) {
-        String agentAippId = Utils.getAgentId(Utils.getContextData(flowData));
+        String agentAippId = DataUtils.getAgentId(DataUtils.getContextData(flowData));
         if (agentAippId.isEmpty()) {
             agentAippId = (String) agentParams.get(AippConst.BS_AGENT_ID_KEY);
         }

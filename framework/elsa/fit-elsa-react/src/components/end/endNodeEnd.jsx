@@ -91,7 +91,7 @@ export const endNodeEnd = (id, x, y, width, height, parent, drawer) => {
         const mode = jadeConfig.inputParams ? "variables" : "manualCheck";
         if (mode === "variables") {
             self.flowMeta.callback.converter.entity = jadeConfig;
-            self.flowMeta.task = {};
+            delete self.flowMeta.task;
         } else {
             self.flowMeta.callback.converter.entity = {};
             self.flowMeta.task = jadeConfig;

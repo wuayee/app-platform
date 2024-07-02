@@ -45,7 +45,13 @@ export const JadeObservableInput = (props) => {
 
     // 组件初始化时注册observable.
     useEffect(() => {
-        shape.page.registerObservable(shape.id, rest.id, rest.value, type, rest.parent);
+        shape.page.registerObservable({
+            nodeId: shape.id,
+            observableId: rest.id,
+            value: rest.value,
+            type: type,
+            parentId: rest.parent
+        });
 
         // 组件unmount时，删除observable.
         return () => {

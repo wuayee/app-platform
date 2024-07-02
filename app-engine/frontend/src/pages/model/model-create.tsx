@@ -25,10 +25,22 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
   const nameOptions: any[] = [];
   // 下拉框联动
   const [nameOption, setNameOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(null);
   const [precisionOption, setPrecisionOption] = useState(null);
   const [imageOption, setImageOption] = useState(null);
   const [gpuOption, setGpuOption] = useState(null);
   const [linkNumMax, setLinkNumMax] = useState(300);
+
+  useEffect(()=>{
+    if(nameOption){
+      const item=createItems.find((item) => item.name === nameOption);
+      setSelectedOption(item);
+      form.setFieldValue(
+        'max_token_size',item.max_token_size?.default
+      );
+      form.validateFields(['max_token_size']);
+    }
+  },[nameOption])
 
   useEffect(() => {
     form.resetFields();
@@ -43,10 +55,6 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
     setPrecisionOption(null);
     setImageOption(null);
     setGpuOption(null);
-    form.setFieldValue(
-      'max_token_size',
-      createItems.find((item) => item.name === value)?.max_token_size?.default
-    );
   };
 
   const handleModifyData = () => {
@@ -61,12 +69,6 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
       max_token_size: modifyData?.max_token_size?.current
     })
   }
-
-  const filteredPrecisionOption = createItems.find((item) => item.name === nameOption)?.precision;
-  const filteredImageOption = createItems.find((item) => item.name === nameOption)?.image;
-  const filteredGpuOption = createItems.find((item) => item.name === nameOption)?.gpu;
-  const tokenMin = createItems.find((item) => item.name === nameOption)?.max_token_size?.min;
-  const tokenMax = createItems.find((item) => item.name === nameOption)?.max_token_size?.max;
 
   if (createItems.length) {
     createItems.forEach((item) => {
@@ -142,7 +144,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           rules={[{ required: true }]}
         >
           <Select
-            options={filteredImageOption?.map((option) => ({ label: option, value: option }))}
+            options={selectedOption?.image?.map((option) => ({ label: option, value: option }))}
             value={imageOption}
             onChange={setImageOption}
           />
@@ -153,7 +155,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           rules={[{ required: true }]}
         >
           <Select
-            options={filteredPrecisionOption?.map((option) => ({ label: option, value: option }))}
+            options={selectedOption?.precision?.map((option) => ({ label: option, value: option }))}
             value={precisionOption}
             onChange={setPrecisionOption}
           />
@@ -171,7 +173,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
             }
           ]}
         >
-          <InputNumber style={{ width: '100%' }} min={1} max={8} onChange={replicasChange} />
+          <InputNumber style={{ width: '100%' }} onChange={replicasChange} />
         </Form.Item>
         <Form.Item
           label='单实例消耗的NPU数'
@@ -181,7 +183,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
           ]}
         >
           <Select
-            options={filteredGpuOption?.map((option) => ({ label: option, value: option }))}
+            options={selectedOption?.gpu?.map((option) => ({ label: option, value: option }))}
             value={gpuOption}
           />
         </Form.Item>
@@ -198,7 +200,7 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
             }
           ]}
         >
-          <InputNumber style={{ width: '100%' }} min={1} max={linkNumMax} />
+          <InputNumber style={{ width: '100%' }} />
         </Form.Item>
         <Form.Item
           label='最大Token数'
@@ -207,13 +209,12 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
             { required: true },
             {
               type: 'number',
-              max: tokenMax,
-              min: tokenMin,
-              message: `输入范围为${tokenMin} - ${tokenMax}`
+              min: selectedOption?.max_token_size?.min,
+              max: selectedOption?.max_token_size?.max,
             }
           ]}
         >
-          <InputNumber style={{ width: '100%' }} min={tokenMin} max={tokenMax} />
+          <InputNumber style={{ width: '100%' }} />
         </Form.Item>
       </Form>
       <div

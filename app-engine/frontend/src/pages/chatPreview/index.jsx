@@ -25,17 +25,19 @@ import {
   messageProcess,
   messageProcessNormal,
   beforeSend,
-  deepClone } from './utils/chat-process';
+  deepClone,
+  scrollBottom } from './utils/chat-process';
 import "./styles/chat-preview.scss";
-import { creatChat, tenantId, updateChat } from "../../shared/http/chat.js";
-import { useAppDispatch, useAppSelector } from "../../store/hook";
+import { creatChat, tenantId, updateChat } from "@shared/http/chat.js";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
 import {
   setAtChatId,
   setChatId,
   setChatList,
   setChatRunning,
-  setInspirationOpen
-} from "../../store/chatStore/chatStore";
+  setInspirationOpen,
+  setFormReceived
+} from "@/store/chatStore/chatStore";
 
 const ChatPreview = (props) => {
   const { previewBack } = props;
@@ -51,6 +53,7 @@ const ChatPreview = (props) => {
   const atChatId = useAppSelector((state) => state.chatCommonStore.atChatId);
   const atAppId = useAppSelector((state) => state.appStore.atAppId);
   const atAppInfo = useAppSelector((state) => state.appStore.atAppInfo);
+  const formReceived = useAppSelector((state) => state.chatCommonStore.formReceived);
   const { showElsa } = useContext(AippContext);
   const [checkedList, setCheckedList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -61,6 +64,7 @@ const ChatPreview = (props) => {
   let runningInstanceId = useRef("");
   let currentInfo = useRef();
   let feedRef = useRef();
+  let testRef = useRef(false);
   let runningVersion = useRef("");
   let runningAppid = useRef("");
   let childInstanceStop = useRef(false);
@@ -73,6 +77,10 @@ const ChatPreview = (props) => {
     !chatType && dispatch(setInspirationOpen(true));
     currentInfo.current = appInfo;
   }, []);
+
+  useEffect(() => {
+    testRef.current = formReceived;
+  }, [formReceived])
 
   // 灵感大全设置下拉列表
   function setEditorSelect(data, prompItem) {
@@ -105,16 +113,16 @@ const ChatPreview = (props) => {
   }, [appInfo.id]);
   
   // 发送消息
-  const onSend = (value, type = undefined) => {
+  const onSend = (value, memorySwitch, type = undefined) => {
     const sentItem = beforeSend(chatRunning, value, type);
     if (sentItem) {
       let arr = [...chatList, sentItem];
       listRef.current = arr;
-      sendMessageRequest(value, type);
+      sendMessageRequest(value, memorySwitch, type);
     }
   };
   // 发送消息
-  const sendMessageRequest = async (value, type) => {
+  const sendMessageRequest = async (value, memorySwitch, type) => {
     const reciveInitObj = JSON.parse(JSON.stringify(initChat));
     reciveInitObj.type = "recieve";
     reciveInitObj.loading = true;
@@ -127,6 +135,9 @@ const ChatPreview = (props) => {
     listRef.current = arr;
     dispatch(setChatList(deepClone(arr)));
     dispatch(setChatRunning(true));
+    setTimeout(() => {
+      scrollBottom();
+    }, 50);
     if (showElsa) {
       let params = appInfo.flowGraph;
       window.agent
@@ -136,7 +147,7 @@ const ChatPreview = (props) => {
           if (res.code !== 0) {
             onStop("更新grpha数据失败");
           } else {
-            getAippAndVersion(value, type);
+            getAippAndVersion(value, memorySwitch, type);
           }
         })
         .catch((err) => {
@@ -144,11 +155,11 @@ const ChatPreview = (props) => {
           onStop("对话失败");
         });
     } else {
-      getAippAndVersion(value, type);
+      getAippAndVersion(value, memorySwitch, type);
     }
   };
   // 获取aipp_id和version
-  async function getAippAndVersion(value, type) {
+  async function getAippAndVersion(value, memorySwitch, type) {
     let chatAppId = appId;
     let chatAppInfo = appInfo;
     if (atAppId) {
@@ -158,7 +169,7 @@ const ChatPreview = (props) => {
     try {
       const debugRes = await aippDebug(tenantId, chatAppId, chatAppInfo);
       if (debugRes.code === 0) {
-        chatMissionStart(debugRes.data, value, type);
+        chatMissionStart(debugRes.data, value, memorySwitch, type);
       } else {
         onStop(debugRes.msg || "获取aippId失败");
       }
@@ -167,9 +178,10 @@ const ChatPreview = (props) => {
     }
   }
   // 启动任务
-  const chatMissionStart = async (res, value, type) => {
+  const chatMissionStart = async (res, value, memorySwitch, type) => {
     let { aipp_id, version } = res;
     let params = type?{ initContext: { "$[FileDescription]$": value } }:{ initContext: { Question: value } };
+    params.initContext.useMemory = memorySwitch;
     try {
       const requestBody={
         aipp_id:aipp_id,
@@ -250,10 +262,7 @@ const ChatPreview = (props) => {
             }
           }
         })
-        if (['ARCHIVED'].includes(messageData.status)) {
-          dispatch(setChatRunning(false));
-        }
-        if (['ERROR'].includes(messageData.status)) {
+        if (['ARCHIVED', 'ERROR'].includes(messageData.status)) {
           dispatch(setChatRunning(false));
         }
       } catch (err){
@@ -316,7 +325,13 @@ const ChatPreview = (props) => {
     initObj.loading = false;
     initObj.finished = (status === 'ARCHIVED');
     const idx = listRef.current.length - 1;
-    listRef.current.splice(idx, 1, initObj);
+    console.log(testRef.current);
+    if (testRef.current) {
+      listRef.current.push(initObj);
+      dispatch(setFormReceived(false));
+    } else {
+      listRef.current.splice(idx, 1, initObj);
+    }
     dispatch(setChatList(deepClone(listRef.current)));
   }
   // 流式输出拼接

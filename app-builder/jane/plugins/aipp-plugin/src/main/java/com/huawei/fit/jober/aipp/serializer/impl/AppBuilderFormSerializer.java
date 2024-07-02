@@ -4,10 +4,10 @@
 
 package com.huawei.fit.jober.aipp.serializer.impl;
 
-import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.domain.AppBuilderForm;
 import com.huawei.fit.jober.aipp.po.AppBuilderFormPO;
 import com.huawei.fit.jober.aipp.serializer.BaseSerializer;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.List;

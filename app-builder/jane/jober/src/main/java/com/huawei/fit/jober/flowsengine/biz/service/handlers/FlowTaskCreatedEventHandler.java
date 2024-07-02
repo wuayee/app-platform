@@ -5,21 +5,24 @@
 package com.huawei.fit.jober.flowsengine.biz.service.handlers;
 
 import static com.huawei.fit.jober.FlowExceptionService.HANDLE_EXCEPTION_GENERICABLE;
-import static com.huawei.fit.jober.common.Constant.BUSINESS_DATA_KEY;
-import static com.huawei.fit.jober.common.Constant.CONTEXT_DATA;
-import static com.huawei.fit.jober.common.Constant.FLOWS_EVENT_HANDLER_EXECUTOR;
-import static com.huawei.fit.jober.common.Constant.PASS_DATA;
+import static com.huawei.fit.waterflow.common.Constant.BUSINESS_DATA_KEY;
+import static com.huawei.fit.waterflow.common.Constant.CONTEXT_DATA;
+import static com.huawei.fit.waterflow.common.Constant.FLOWS_EVENT_HANDLER_EXECUTOR;
+import static com.huawei.fit.waterflow.common.Constant.PASS_DATA;
 
 import com.huawei.fit.jober.FlowExceptionService;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowContext;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext.FlowContextPersistRepo;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.FlowDefinition;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
-import com.huawei.fit.jober.flowsengine.domain.flows.events.FlowTaskCreatedEvent;
 import com.huawei.fit.jober.flowsengine.manual.operation.OperatorFactory;
 import com.huawei.fit.jober.flowsengine.manual.operation.operator.Operator;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextPersistRepo;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.FlowDataConverter;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.events.FlowTaskCreatedEvent;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.utils.FlowExecuteInfoUtil;
+import com.huawei.fit.waterflow.flowsengine.utils.FlowUtil;
 import com.huawei.fitframework.annotation.Asynchronous;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.broker.client.BrokerClient;
@@ -31,6 +34,8 @@ import com.huawei.fitframework.log.Logger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -42,11 +47,10 @@ import java.util.stream.Collectors;
 @Component
 public class FlowTaskCreatedEventHandler implements EventHandler<FlowTaskCreatedEvent> {
     private static final Logger log = Logger.get(FlowTaskCreatedEventHandler.class);
+    private static final String TASK_EXECUTE_INFO_TYPE = "task";
 
     private final FlowContextPersistRepo flowContextPersistRepo;
-
     private final FlowDefinitionRepo flowDefinitionRepo;
-
     private final BrokerClient brokerClient;
 
     public FlowTaskCreatedEventHandler(FlowContextPersistRepo flowContextPersistRepo,
@@ -77,18 +81,38 @@ public class FlowTaskCreatedEventHandler implements EventHandler<FlowTaskCreated
         FlowTask task = flowDefinition.getFlowNode(eventData.getNodeId()).getTask();
         String type = task.getTaskType().getSource();
 
+        List<FlowContext<FlowData>> convertedContexts = this.convertFlowContext(contexts, task);
         Operator operator = OperatorFactory.getOperator(type, brokerClient);
         try {
-            operator.operate(contexts, task);
+            operator.operate(convertedContexts, task);
         } catch (FitException e) {
             for (String fitableId : task.getExceptionFitables()) {
                 this.brokerClient.getRouter(FlowExceptionService.class, HANDLE_EXCEPTION_GENERICABLE)
                         .route(new FitableIdFilter(fitableId))
-                        .invoke(eventData.getNodeId(), getFlowData(contexts), e.getMessage());
+                        .invoke(eventData.getNodeId(), getFlowData(convertedContexts), e.getMessage());
             }
             log.error("Caught a throwable during the task handling. TaskId is {}. Caused by {}", task.getTaskId(),
                     e.getMessage());
         }
+    }
+
+    private List<FlowContext<FlowData>> convertFlowContext(List<FlowContext<FlowData>> contexts, FlowTask task) {
+        FlowDataConverter taskConverter = task.getConverter();
+        if (Objects.isNull(taskConverter)) {
+            return contexts;
+        }
+        contexts.forEach(context -> {
+            FlowData flowData = context.getData();
+            Map<String, Object> newInputMap = taskConverter.convertInput(flowData.getBusinessData());
+            Optional.of(flowData)
+                    .map(FlowData::getContextData)
+                    .map(contextData -> contextData.get("nodeMetaId"))
+                    .map(Object::toString)
+                    .ifPresent(nodeMetaId -> FlowExecuteInfoUtil.addInputMap2ExecuteInfoMap(flowData, newInputMap,
+                            nodeMetaId, TASK_EXECUTE_INFO_TYPE));
+            flowData.setBusinessData(FlowUtil.mergeMaps(flowData.getBusinessData(), newInputMap));
+        });
+        return contexts;
     }
 
     private List<Map<String, Object>> getFlowData(List<FlowContext<FlowData>> flowContexts) {

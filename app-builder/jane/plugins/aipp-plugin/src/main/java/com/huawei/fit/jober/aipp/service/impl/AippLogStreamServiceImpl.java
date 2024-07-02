@@ -16,13 +16,14 @@ import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogStreamService;
 import com.huawei.fit.jober.aipp.service.AippStreamService;
+import com.huawei.fit.jober.aipp.util.FormUtils;
+import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.aipp.vo.AippInstanceVO;
 import com.huawei.fit.jober.aipp.vo.AippLogVO;
 import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
@@ -76,9 +77,10 @@ public class AippLogStreamServiceImpl implements AippLogStreamService {
         String instanceId = log.getInstanceId();
         String metaVersionId = this.metaInstanceService.getMetaVersionId(instanceId);
         Meta meta = this.metaService.retrieve(metaVersionId, null);
-        Instance instance = Utils.getInstanceDetail(meta.getVersionId(), instanceId, null, metaInstanceService);
+        Instance instance = MetaInstanceUtils.getInstanceDetail(
+                meta.getVersionId(), instanceId, null, metaInstanceService);
         Map<String, String> info = instance.getInfo();
-        DynamicFormDetailEntity entity = Utils.queryFormDetailByPrimaryKey(
+        DynamicFormDetailEntity entity = FormUtils.queryFormDetailByPrimaryKey(
                 info.get(INST_CURR_FORM_ID_KEY),
                 info.get(INST_CURR_FORM_VERSION_KEY),
                 new OperationContext(),

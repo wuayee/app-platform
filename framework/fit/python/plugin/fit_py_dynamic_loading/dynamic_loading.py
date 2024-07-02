@@ -111,9 +111,9 @@ def _run_python_command(path, file_path):
             if _python_interpreter_alias():
                 subprocess.call([_python_interpreter_alias(), "-m", "pip", "install", whl_path])
             elif _check_command_availability("python3"):
-                subprocess.run(['python3', "-m", "pip", "install", "install", whl_path])
+                subprocess.run(['python3', "-m", "pip", "install", whl_path])
             elif _check_command_availability("python"):
-                subprocess.run(['python', "-m", "pip", "install", "install", whl_path])
+                subprocess.run(['python', "-m", "pip", "install", whl_path])
             else:
                 sys_plugin_logger.error(
                     f"failed to install pypi plugins: cannot find any available python version.")

@@ -1,5 +1,6 @@
 import {toolInvokeNodeState} from "@/components/toolInvokeNode/toolInvokeNodeState.jsx";
-import {huggingFaceNodeDrawer} from "@/components/huggingFace/huggingFaceNodeDrawer.jsx"; // 导入背景图片
+import {huggingFaceNodeDrawer} from "@/components/huggingFace/huggingFaceNodeDrawer.jsx";
+import {SOURCE_PLATFORM} from "@/common/Consts.js"; // 导入背景图片
 
 /**
  * huggingFace节点.
@@ -11,7 +12,6 @@ export const huggingFaceNodeState = (id, x, y, width, height, parent, drawer) =>
     self.type = "huggingFaceNodeState";
     self.text = "huggingFace调用";
     self.componentName = "huggingFaceComponent";
-    self.sourcePlatform = "huggingFace";
     self.width = 368;
 
     /**
@@ -37,6 +37,7 @@ export const huggingFaceNodeState = (id, x, y, width, height, parent, drawer) =>
         self.flowMeta.jober.converter.entity.inputParams[1].from = INPUT_FROM_TYPE_VALUE;
         self.flowMeta.jober.converter.entity.inputParams[0].value = metaData.schema.name;
         self.flowMeta.jober.converter.entity.inputParams[1].value = metaData.context.default_model;
+        self.sourcePlatform = SOURCE_PLATFORM.HUGGING_FACE;
         self.drawer.unmountReact();
         self.invalidateAlone();
     };

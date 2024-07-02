@@ -19,11 +19,7 @@ import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jane.meta.multiversion.instance.MetaInstanceFilter;
 import com.huawei.fit.jober.FlowInstanceService;
 import com.huawei.fit.jober.FlowsService;
-import com.huawei.fit.jober.aipp.common.HttpUtils;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.MetaUtils;
 import com.huawei.fit.jober.aipp.common.PageResponse;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.common.exception.AippForbiddenException;
@@ -35,6 +31,7 @@ import com.huawei.fit.jober.aipp.dto.AippInstanceCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppStartDto;
+import com.huawei.fit.jober.aipp.dto.MemoryConfigDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
@@ -52,7 +49,15 @@ import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
+import com.huawei.fit.jober.aipp.service.AippStreamService;
 import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
+import com.huawei.fit.jober.aipp.util.AippFileUtils;
+import com.huawei.fit.jober.aipp.util.AippStringUtils;
+import com.huawei.fit.jober.aipp.util.FormUtils;
+import com.huawei.fit.jober.aipp.util.HttpUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
+import com.huawei.fit.jober.aipp.util.MetaUtils;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.entity.FlowInfo;
 import com.huawei.fit.jober.entity.FlowInstanceResult;
@@ -121,18 +126,15 @@ public class AippRunTimeServiceImpl
     private final AppBuilderFormPropertyRepository formPropertyRepository;
     private final FlowsService flowsService;
     private final String sharedUrl;
+    private final AippStreamService aippStreamService;
 
     public AippRunTimeServiceImpl(@Fit MetaService metaService, @Fit DynamicFormService dynamicFormService,
-                                  @Fit MetaInstanceService metaInstanceService,
-                                  @Fit FlowInstanceService flowInstanceService,
-                                  @Fit AippLogService aippLogService,
-                                  @Fit UploadedFileManageService uploadedFileManageService,
-                                  @Value("${xiaohai.upload_chat_history_url}") String uploadChatHistoryUrl,
-                                  BrokerClient client,
-                                  @Fit AppBuilderFormRepository formRepository,
-                                  @Fit AppBuilderFormPropertyRepository formPropertyRepository,
-                                  @Fit FlowsService flowsService,
-                                  @Value("${xiaohai.share_url}") String sharedUrl) {
+            @Fit MetaInstanceService metaInstanceService, @Fit FlowInstanceService flowInstanceService,
+            @Fit AippLogService aippLogService, @Fit UploadedFileManageService uploadedFileManageService,
+            @Value("${xiaohai.upload_chat_history_url}") String uploadChatHistoryUrl, BrokerClient client,
+            @Fit AppBuilderFormRepository formRepository, @Fit AppBuilderFormPropertyRepository formPropertyRepository,
+            @Fit FlowsService flowsService, @Value("${xiaohai.share_url}") String sharedUrl,
+            @Fit AippStreamService aippStreamService) {
         this.metaService = metaService;
         this.dynamicFormService = dynamicFormService;
         this.metaInstanceService = metaInstanceService;
@@ -145,6 +147,7 @@ public class AippRunTimeServiceImpl
         this.formPropertyRepository = formPropertyRepository;
         this.flowsService = flowsService;
         this.sharedUrl = sharedUrl;
+        this.aippStreamService = aippStreamService;
     }
 
     private static void setExtraBusinessData(OperationContext context, Map<String, Object> businessData, Meta meta,
@@ -171,7 +174,7 @@ public class AippRunTimeServiceImpl
     public AippFormRsp queryEdgeSheetData(String aippId, String version, String startOrEnd, OperationContext context) {
         FormEdgeEnum edge = FormEdgeEnum.getFormEdge(startOrEnd);
         Meta meta;
-        if (version != null && Utils.isPreview(version)) {
+        if (version != null && AippStringUtils.isPreview(version)) {
             meta = MetaUtils.getAnyMeta(metaService, aippId, version, context);
         } else {
             meta = MetaUtils.getLastPublishedMeta(metaService, aippId, context);
@@ -181,7 +184,7 @@ public class AippRunTimeServiceImpl
         Validation.notBlank(formId, () -> new AippNotFoundException(context, edge.name() + " formId"));
         String formVersion = (String) meta.getAttributes().get(edge.getVersionKey());
         Validation.notBlank(formVersion, () -> new AippNotFoundException(context, edge.name() + " formVersion"));
-        DynamicFormDetailEntity entity = Utils.queryFormDetailByPrimaryKey(formId,
+        DynamicFormDetailEntity entity = FormUtils.queryFormDetailByPrimaryKey(formId,
                 formVersion,
                 context,
                 this.formRepository,
@@ -219,6 +222,17 @@ public class AippRunTimeServiceImpl
         return createInstanceHandle(initContext, context, meta);
     }
 
+    @Override
+    public String startFlowWithUserSelectMemory(String metaInstId, Map<String, Object> initContext,
+            OperationContext context) {
+        String versionId = this.metaInstanceService.getMetaVersionId(metaInstId);
+        Meta meta = this.metaService.retrieve(versionId, context);
+        Map<String, Object> businessData = (Map<String, Object>) initContext.get(AippConst.BS_INIT_CONTEXT_KEY);
+        String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
+        this.startFlow(versionId, flowDefinitionId, metaInstId, businessData, context);
+        return metaInstId;
+    }
+
     /**
      * 启动一个最新版本的Aipp
      *
@@ -245,24 +259,112 @@ public class AippRunTimeServiceImpl
                 JSONObject.parse(JSONObject.toJSONString(initContext.get(AippConst.BS_INIT_CONTEXT_KEY))));
         // 记录启动时间
         businessData.put(AippConst.INSTANCE_START_TIME, LocalDateTime.now());
-        String aippType = ObjectUtils.cast(meta.getAttributes()
-                .getOrDefault(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.NORMAL.name()));
-        String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
 
         // 创建meta实例
-        Instance metaInst = metaInstanceService.createMetaInstance(meta.getVersionId(),
+        String metaVersionId = meta.getVersionId();
+        Instance metaInst = this.metaInstanceService.createMetaInstance(metaVersionId,
                 genMetaInstInitialInfo(businessData, context.getOperator()),
                 context);
-        setExtraBusinessData(context, businessData, meta, metaInst.getId());
+        String metaInstId = metaInst.getId();
+        setExtraBusinessData(context, businessData, meta, metaInstId);
+
+        // 持久化日志
+        this.persistAippLog(businessData);
+
+        // 添加文件记录标记, 使用aippId
+        uploadedFileManageService.addFileRecord(meta.getId(),
+                context.getW3Account(),
+                Paths.get(AippFileUtils.NAS_SHARE_DIR, metaInstId).toAbsolutePath().toString());
+
+        // 持久化aipp实例表单记录
+        String formId = (String) meta.getAttributes().get(AippConst.ATTR_START_FORM_ID_KEY);
+        String formVersion = (String) meta.getAttributes().get(AippConst.ATTR_START_FORM_VERSION_KEY);
+        if (StringUtils.isNotEmpty(formId) && StringUtils.isNotEmpty(formVersion)) {
+            AippLogData logData =
+                    FormUtils.buildLogDataWithFormData(this.formRepository, formId, formVersion, businessData);
+            aippLogService.insertLog(AippInstLogType.FORM.name(), logData, businessData);
+        }
 
         // 记录上下文
         businessData.put(AippConst.CONTEXT_APP_ID, meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
         businessData.put(AippConst.CONTEXT_INSTANCE_ID, metaInst.getId());
+        businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, true);
+        businessData.put(AippConst.BS_AIPP_MEMORIES_KEY, new ArrayList<>());
 
         // 添加memory
-        businessData.put(AippConst.BS_AIPP_MEMORY_KEY,
-                this.getMemories(meta.getId(), flowDefinitionId, meta.getVersionId(), aippType, businessData, context));
+        String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
+        List<Map<String, Object>> memoryConfigs = this.getMemoryConfigs(flowDefinitionId, context);
+        String memoryType = this.getMemoryType(memoryConfigs);
+        boolean isMemorySwitch = this.getMemorySwitch(memoryConfigs, businessData);
+        if (!isMemorySwitch) {
+            this.startFlow(metaVersionId, flowDefinitionId, metaInstId, businessData, context);
+            return metaInstId;
+        }
+        if (!StringUtils.equalsIgnoreCase("UserSelect", memoryType)) {
+            String chatId = (businessData.get("chatId") == null) ? null : businessData.get("chatId").toString();
+            String aippType = ObjectUtils.cast(meta.getAttributes()
+                    .getOrDefault(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.NORMAL.name()));
+            businessData.put(AippConst.BS_AIPP_MEMORIES_KEY,
+                    this.getMemories(meta.getId(), memoryType, chatId, memoryConfigs, aippType, businessData, context));
+            this.startFlow(metaVersionId, flowDefinitionId, metaInstId, businessData, context);
+        } else {
+            this.aippStreamService.sendToAncestor(metaInstId,
+                    this.buildMemoryConfigDto(initContext, metaInstId, "UserSelect"));
+        }
+        return metaInstId;
+    }
 
+    private boolean getMemorySwitch(List<Map<String, Object>> memoryConfig, Map<String, Object> businessData) {
+        if (memoryConfig == null || memoryConfig.isEmpty()) {
+            return true;
+        }
+        Map<String, Object> memorySwitchConfig = memoryConfig.stream()
+                .filter(config -> StringUtils.equals(ObjectUtils.cast(config.get("name")), "memorySwitch"))
+                .findFirst()
+                .orElse(null);
+        if (memorySwitchConfig == null) {
+            return true;
+        }
+        Boolean shouldUseMemory = businessData.containsKey(AippConst.BS_AIPP_USE_MEMORY_KEY)
+                ? ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_USE_MEMORY_KEY))
+                : ObjectUtils.cast(memorySwitchConfig.get("value"));
+        businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, shouldUseMemory);
+        return shouldUseMemory;
+    }
+
+    private String getMemoryType(List<Map<String, Object>> memoryConfigs) {
+        if (memoryConfigs == null || memoryConfigs.isEmpty()) {
+            return StringUtils.EMPTY;
+        }
+        Map<String, Object> typeConfig = memoryConfigs.stream()
+                .filter(config -> StringUtils.equals((String) config.get("name"), "type"))
+                .findFirst()
+                .orElseThrow(() -> new AippException(AippErrCode.PARSE_MEMORY_CONFIG_FAILED));
+        return ObjectUtils.cast(typeConfig.get("value"));
+    }
+
+    private List<Map<String, Object>> getMemoryConfigs(String flowDefinitionId, OperationContext context) {
+        FlowInfo flowInfo = this.flowsService.getFlows(flowDefinitionId, context);
+        return flowInfo.getInputParamsByName(AippConst.MEMORY_CONFIG_KEY);
+    }
+
+    private MemoryConfigDto buildMemoryConfigDto(Map<String, Object> initContext, String instanceId, String memory) {
+        return MemoryConfigDto.builder().initContext(initContext).instanceId(instanceId).memory(memory).build();
+    }
+
+    private void startFlow(String metaVersionId, String flowDefinitionId, String metaInstId,
+            Map<String, Object> businessData, OperationContext context) {
+        FlowStartParameter parameter = new FlowStartParameter(context.getOperator(), businessData);
+        FlowInstanceResult flowInst = flowInstanceService.startFlow(flowDefinitionId, parameter, context);
+
+        InstanceDeclarationInfo info = InstanceDeclarationInfo.custom()
+                .putInfo(AippConst.INST_FLOW_INST_ID_KEY, flowInst.getTraceId())
+                .build();
+        // 记录流程实例id到meta实例
+        this.metaInstanceService.patchMetaInstance(metaVersionId, metaInstId, info, context);
+    }
+
+    private void persistAippLog(Map<String, Object> businessData) {
         String question = (String) businessData.get(AippConst.BS_AIPP_QUESTION_KEY);
         String fileDesc =
                 businessData.containsKey(AippConst.BS_AIPP_FILE_DESC_KEY) ? JsonUtils.toJsonString(businessData.get(
@@ -271,55 +373,29 @@ public class AippRunTimeServiceImpl
         if (StringUtils.isEmpty(fileDesc)) {
             if (this.isChildInstance(businessData)) {
                 // 如果是子流程，插入 hidden_question
-                Utils.persistAippLog(aippLogService,
+                aippLogService.insertLog(
                         AippInstLogType.HIDDEN_QUESTION.name(),
                         AippLogData.builder().msg(question).build(),
                         businessData);
             } else {
                 // 插入question日志
-                Utils.persistAippLog(aippLogService,
+                aippLogService.insertLog(
                         AippInstLogType.QUESTION.name(),
                         AippLogData.builder().msg(question).build(),
                         businessData);
             }
         } else {
             // 插入 hidden_question及file日志
-            Utils.persistAippLog(aippLogService,
+            aippLogService.insertLog(
                     AippInstLogType.HIDDEN_QUESTION.name(),
                     AippLogData.builder().msg(DEFAULT_QUESTION).build(),
                     businessData);
-            Utils.persistAippLog(aippLogService,
+            aippLogService.insertLog(
                     AippInstLogType.FILE.name(),
                     AippLogData.builder().msg(fileDesc).build(),
                     businessData);
             businessData.put(AippConst.BS_AIPP_QUESTION_KEY, DEFAULT_QUESTION);
         }
-
-        // 添加文件记录标记, 使用aippId
-        uploadedFileManageService.addFileRecord(meta.getId(),
-                context.getW3Account(),
-                Paths.get(Utils.NAS_SHARE_DIR, metaInst.getId()).toAbsolutePath().toString());
-
-        // 持久化aipp实例表单记录
-        String formId = (String) meta.getAttributes().get(AippConst.ATTR_START_FORM_ID_KEY);
-        String formVersion = (String) meta.getAttributes().get(AippConst.ATTR_START_FORM_VERSION_KEY);
-        if (StringUtils.isNotEmpty(formId) && StringUtils.isNotEmpty(formVersion)) {
-            AippLogData logData =
-                    Utils.buildLogDataWithFormData(this.formRepository, formId, formVersion, businessData);
-            Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
-        }
-
-        // 启动流程
-        FlowStartParameter parameter = new FlowStartParameter(context.getOperator(), businessData);
-        FlowInstanceResult flowInst = flowInstanceService.startFlow(flowDefinitionId, parameter, context);
-
-        InstanceDeclarationInfo info = InstanceDeclarationInfo.custom()
-                .putInfo(AippConst.INST_FLOW_INST_ID_KEY, flowInst.getTraceId())
-                .build();
-        // 记录流程实例id到meta实例
-        metaInstanceService.patchMetaInstance(meta.getVersionId(), metaInst.getId(), info, context);
-
-        return metaInst.getId();
     }
 
     private boolean isChildInstance(Map<String, Object> businessData) {
@@ -342,32 +418,23 @@ public class AippRunTimeServiceImpl
         return true;
     }
 
-    private List<Map<String, Object>> getMemories(String aippId, String flowDefinitionId, String version,
-            String aippType, Map<String, Object> businessData, OperationContext context) {
-        FlowInfo flowInfo = flowsService.getFlows(flowDefinitionId, context);
-        List<Map<String, Object>> memoryConfig = flowInfo.getInputParamsByName("memory");
-
-        if (memoryConfig == null || memoryConfig.isEmpty()) {
-            return getConversationTurns(aippId, aippType, 5, context, null);
+    private List<Map<String, Object>> getMemories(String aippId, String memoryType, String chatId,
+            List<Map<String, Object>> memoryConfigs, String aippType, Map<String, Object> businessData,
+            OperationContext context) {
+        if (memoryConfigs == null || memoryConfigs.isEmpty()) {
+            return this.getConversationTurns(aippId, aippType, 5, context, null);
         }
-
-        Map<String, Object> typeConfig = memoryConfig.stream()
-                .filter(config -> StringUtils.equals((String) config.get("name"), "type"))
-                .findFirst()
-                .orElseThrow(() -> new AippException(AippErrCode.PARSE_MEMORY_CONFIG_FAILED));
-        Map<String, Object> valueConfig = memoryConfig.stream()
+        Map<String, Object> valueConfig = memoryConfigs.stream()
                 .filter(config -> StringUtils.equals((String) config.get("name"), "value"))
                 .findFirst()
                 .orElseThrow(() -> new AippException(AippErrCode.PARSE_MEMORY_CONFIG_FAILED));
-        String chatId = (businessData.get("chatId") == null) ? null : businessData.get("chatId").toString();
-        String memoryType = (String) typeConfig.get("value");
         switch (memoryType) {
-            case "UserSelect":
-                return (List<Map<String, Object>>) businessData.get(AippConst.INST_CHAT_HISTORY_KEY);
             case "ByConversationTurn":
                 Integer turnNum = Integer.parseInt((String) valueConfig.get("value"));
                 return getConversationTurns(aippId, aippType, turnNum, context, chatId);
             case "NotUseMemory":
+                // 兼容旧应用
+                businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, false);
                 return new ArrayList<>();
             case "Customizing":
                 // todo 如何定义这个genericable接口，入参为一个map?
@@ -461,7 +528,7 @@ public class AippRunTimeServiceImpl
         Meta meta = MetaUtils.getAnyMeta(metaService, aippId, version, context);
         String versionId = meta.getVersionId();
 
-        Instance instDetail = Utils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
+        Instance instDetail = MetaInstanceUtils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
         Function<String, Boolean> handler = status -> MetaInstStatusEnum.getMetaInstStatus(status).getValue()
                 > MetaInstStatusEnum.RUNNING.getValue();
         if (!checkInstanceStatus(aippId, instDetail, handler)) {
@@ -474,7 +541,8 @@ public class AippRunTimeServiceImpl
     private AippInstanceDto InstanceToAippInstanceDto(Instance instance, List<AippInstLog> instanceLogs,
                                                       OperationContext context) {
         Map<String, String> info = instance.getInfo();
-        DynamicFormDetailEntity entity = Utils.queryFormDetailByPrimaryKey(info.get(AippConst.INST_CURR_FORM_ID_KEY),
+        DynamicFormDetailEntity entity = FormUtils.queryFormDetailByPrimaryKey(
+                info.get(AippConst.INST_CURR_FORM_ID_KEY),
                 info.get(AippConst.INST_CURR_FORM_VERSION_KEY),
                 context,
                 this.formRepository,
@@ -519,7 +587,7 @@ public class AippRunTimeServiceImpl
      */
     @Override
     public AippInstanceDto getInstanceByVersionId(String versionId, String instanceId, OperationContext context) {
-        Instance instDetail = Utils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
+        Instance instDetail = MetaInstanceUtils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
         List<AippInstLog> instanceLogs = aippLogService.queryInstanceLogSince(instDetail.getId(), null);
         return InstanceToAippInstanceDto(instDetail, instanceLogs, context);
     }
@@ -651,12 +719,13 @@ public class AippRunTimeServiceImpl
 
     private void updateAippLog(String aippId, String instanceId, OperationContext context,
             Map<String, Object> businessData) {
-        Instance oldInstDetail = Utils.getInstanceDetail(aippId, instanceId, context, metaInstanceService);
+        Instance oldInstDetail = MetaInstanceUtils.getInstanceDetail(aippId, instanceId, context, metaInstanceService);
         String formId = oldInstDetail.getInfo().get(AippConst.INST_CURR_FORM_ID_KEY);
         String formVersion = oldInstDetail.getInfo().get(AippConst.INST_CURR_FORM_VERSION_KEY);
-        AippLogData newLogData = Utils.buildLogDataWithFormData(this.formRepository, formId, formVersion, businessData);
+        AippLogData newLogData = FormUtils.buildLogDataWithFormData(
+                this.formRepository, formId, formVersion, businessData);
         Long logId = this.getLodId(instanceId, context);
-        Utils.updateAippLog(aippLogService, logId, JsonUtils.toJsonString(newLogData));
+        aippLogService.updateLog(logId, JsonUtils.toJsonString(newLogData));
     }
 
     private void updateAippInstance(String aippId, List<TaskProperty> props, String instanceId,
@@ -757,30 +826,33 @@ public class AippRunTimeServiceImpl
     /**
      * 更新表单数据，并恢复实例任务执行
      *
-     * @param aippId aippId
-     * @param version aipp版本
      * @param instanceId 实例id
      * @param formArgs 用于填充表单的数据
      * @param context 操作上下文
      */
     @Override
-    public void resumeAndUpdateAippInstance(String aippId, String version, String instanceId,
-            Map<String, Object> formArgs, OperationContext context) {
-        Meta meta = MetaUtils.getAnyMeta(metaService, aippId, version, context);
+    public void resumeAndUpdateAippInstance(String instanceId, Map<String, Object> formArgs, OperationContext context) {
+        String metaVersionId = this.metaInstanceService.getMetaVersionId(instanceId);
+        Meta meta = this.metaService.retrieve(metaVersionId, context);
         String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
         String versionId = meta.getVersionId();
 
         // 更新表单数据
-        Map<String, Object> businessData = (Map<String, Object>) formArgs.get(AippConst.BS_DATA_KEY);
+        Map<String, Object> businessData = ObjectUtils.cast(formArgs.get(AippConst.BS_DATA_KEY));
         setExtraBusinessData(context, businessData, meta, instanceId);
 
         // 获取旧的实例数据
-        Instance instDetail = Utils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
+        Instance instDetail = MetaInstanceUtils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
         // 持久化aipp实例表单记录
         String formId = instDetail.getInfo().get(AippConst.INST_CURR_FORM_ID_KEY);
         String formVersion = instDetail.getInfo().get(AippConst.INST_CURR_FORM_VERSION_KEY);
-        AippLogData logData = Utils.buildLogDataWithFormData(this.formRepository, formId, formVersion, businessData);
-        Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
+        AippLogData logData = FormUtils.buildLogDataWithFormData(
+                this.formRepository, formId, formVersion, businessData);
+
+        // 设置表单的渲染数据和填充数据
+        logData.setFormAppearance(ObjectUtils.cast(formArgs.get(AippConst.FORM_APPEARANCE_KEY)));
+        logData.setFormData(ObjectUtils.cast(formArgs.get(AippConst.FORM_DATA_KEY)));
+        aippLogService.insertLog(AippInstLogType.FORM.name(), logData, businessData);
 
         // 更新实例并清空当前表单数据
         this.updateAippInstance(versionId, meta.getProperties(), instanceId, context, businessData, this::clearFormId);
@@ -805,7 +877,7 @@ public class AippRunTimeServiceImpl
     @Override
     public void terminateInstance(String instanceId, Map<String, Object> msgArgs, OperationContext context) {
         String versionId = this.metaInstanceService.getMetaVersionId(instanceId);
-        Instance instDetail = Utils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
+        Instance instDetail = MetaInstanceUtils.getInstanceDetail(versionId, instanceId, context, metaInstanceService);
         Function<String, Boolean> handler = status -> MetaInstStatusEnum.getMetaInstStatus(status).getValue()
                 == MetaInstStatusEnum.RUNNING.getValue();
         Meta meta = this.metaService.retrieve(versionId, context);
@@ -838,7 +910,7 @@ public class AippRunTimeServiceImpl
                 .logType(AippInstLogType.MSG.name())
                 .logData(JsonUtils.toJsonString(AippLogData.builder().msg(message).build()))
                 .createUserAccount(context.getW3Account())
-                .path(Utils.buildPath(this.aippLogService, instanceId, null)) // todo 这块在子流程调用时，得考虑下
+                .path(this.aippLogService.buildPath(instanceId, null)) // todo 这块在子流程调用时，得考虑下
                 .build());
     }
 
@@ -854,7 +926,7 @@ public class AippRunTimeServiceImpl
     public void terminateAllPreviewInstances(String aippId, String versionId, boolean deleteLog,
             OperationContext context) {
         final int limit = 15;
-        Stream<Instance> instances = Utils.getAllFromRangedResult(limit,
+        Stream<Instance> instances = MetaUtils.getAllFromRangedResult(limit,
                 offset -> metaInstanceService.list(versionId, new MetaInstanceFilter(), offset, limit, context));
         Function<String, Boolean> handler = status -> MetaInstStatusEnum.getMetaInstStatus(status).getValue()
                 == MetaInstStatusEnum.RUNNING.getValue();

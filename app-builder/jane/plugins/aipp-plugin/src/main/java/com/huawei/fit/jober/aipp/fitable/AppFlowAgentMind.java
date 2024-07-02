@@ -1,10 +1,10 @@
 package com.huawei.fit.jober.aipp.fitable;
 
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.fitable.agent.AippFlowAgent;
+import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
@@ -37,7 +37,7 @@ public class AppFlowAgentMind implements FlowableService {
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
         log.info("handle AppFlowAgentMind");
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         String recommendDoc = (String) businessData.get(AippConst.INST_RECOMMEND_DOC_KEY);
         Validation.notNull(recommendDoc, "recommendDoc info cannot be null");
 

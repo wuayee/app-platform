@@ -16,7 +16,7 @@ DROP SEQUENCE "list_index";
 
 --验证数量是否正确
 SELECT DISTINCT ON (instance_id) id  FROM list_text;
-SELECT count(1) FROM task_instance_wide
+SELECT count(1) FROM task_instance_wide;
 
 --将普通任务模板中的处理人和审批任务中的审批人属性的值.将属性的数据类型修改为LIST_TEXT，sequence修改为0
 --修改task_template_property和task_property表中owner对应的类型
@@ -36,4 +36,4 @@ TRUNCATE TABLE list_text;
 UPDATE task_template_property SET data_type='TEXT',sequence=4 WHERE name='owner';
 UPDATE task_property SET data_type='TEXT',sequence=4 WHERE template_id = (SELECT id FROM task_template_property WHERE name='owner');
 --回退index_text表
-DELETE FROM index_text WHERE instance_id IN (SELECT instance_id FROM list_text)
+DELETE FROM index_text WHERE instance_id IN (SELECT instance_id FROM list_text);

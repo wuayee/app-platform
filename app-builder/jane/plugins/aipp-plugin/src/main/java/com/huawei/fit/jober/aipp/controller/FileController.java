@@ -20,14 +20,15 @@ import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.jane.common.controller.AbstractController;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
-import com.huawei.fit.jober.aipp.common.HttpUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.dto.FileRspDto;
 import com.huawei.fit.jober.aipp.enums.FileExtensionEnum;
 import com.huawei.fit.jober.aipp.service.OperatorService;
 import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
+import com.huawei.fit.jober.aipp.util.AippFileUtils;
+import com.huawei.fit.jober.aipp.util.AippStringUtils;
+import com.huawei.fit.jober.aipp.util.HttpUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.log.Logger;
@@ -78,7 +79,7 @@ public class FileController extends AbstractController {
                 StandardCharsets.UTF_8);
         log.info("getFile url={}", baseUrl);
         HttpGet httpGet = new HttpGet(baseUrl);
-        httpGet.setConfig(Utils.requestConfig(this.xiaoHaiReadTimeout));
+        httpGet.setConfig(HttpUtils.requestConfig(this.xiaoHaiReadTimeout));
         try (CloseableHttpResponse response = HttpUtils.execute(httpGet)) {
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 throw new IOException(String.format(Locale.ROOT,
@@ -131,7 +132,7 @@ public class FileController extends AbstractController {
             throws IOException {
         String uniqueFileName = generateUniqueFileName(fileName);
         log.info("upload file fileName={} uniqueFileName={}", fileName, uniqueFileName);
-        File targetFile = Paths.get(Utils.NAS_SHARE_DIR, uniqueFileName).toFile();
+        File targetFile = Paths.get(AippFileUtils.NAS_SHARE_DIR, uniqueFileName).toFile();
 
         List<NamedEntity> entities =
                 receivedFile.entities().stream().filter(NamedEntity::isFile).collect(Collectors.toList());
@@ -166,6 +167,6 @@ public class FileController extends AbstractController {
             @RequestParam(value = "token", defaultValue = "20000") Integer token) {
         File file = Paths.get(filePath).toFile();
         String fileContent = this.operatorService.fileExtractor(file, FileExtensionEnum.findType(file.getName()));
-        return Utils.textLenLimit(fileContent, token);
+        return AippStringUtils.textLenLimit(fileContent, token);
     }
 }

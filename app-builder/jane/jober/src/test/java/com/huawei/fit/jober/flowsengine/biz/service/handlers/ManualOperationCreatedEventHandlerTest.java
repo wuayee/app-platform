@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.flowsengine.biz.service.handlers;
 
-import static com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowNodeStatus.ARCHIVED;
+import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.ARCHIVED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -21,20 +21,24 @@ import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.entity.task.Task;
 import com.huawei.fit.jober.entity.task.TaskProperty;
 import com.huawei.fit.jober.entity.task.TaskSource;
-import com.huawei.fit.jober.flowsengine.biz.service.TraceOwnerService;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.FlowData;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowcontext.FlowContextPersistRepo;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowretry.FlowRetryRepo;
-import com.huawei.fit.jober.flowsengine.domain.flows.context.repo.flowtrace.FlowTraceRepo;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.FlowDefinition;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowNode;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.FlowStateNode;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
-import com.huawei.fit.jober.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
-import com.huawei.fit.jober.flowsengine.domain.flows.enums.FlowTaskType;
-import com.huawei.fit.jober.flowsengine.domain.flows.events.FlowTaskCreatedEvent;
-import com.huawei.fit.jober.flowsengine.persist.mapper.FlowContextMapper;
-import com.huawei.fit.jober.flowsengine.persist.po.FlowContextPO;
+import com.huawei.fit.waterflow.flowsengine.biz.service.TraceOwnerService;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.FlowContextPersistRepo;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowretry.FlowRetryRepo;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowtrace.FlowTraceRepo;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowStateNode;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.MappingFlowDataConverter;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.MappingFromType;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.MappingNode;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.converter.MappingNodeType;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.FlowDefinitionRepo;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowTaskType;
+import com.huawei.fit.waterflow.flowsengine.domain.flows.events.FlowTaskCreatedEvent;
+import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowContextMapper;
+import com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.broker.client.Router;
@@ -48,6 +52,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -69,15 +75,24 @@ class ManualOperationCreatedEventHandlerTest extends DatabaseBaseTest {
     private static final String HANDLE_SMART_FORM_GENERICABLE = "htctmizg0mydwnt2ttbbp8jlgo2e9e0w";
 
     private FlowDefinition generateFlowDefinition(FlowTaskType taskType) {
-        Map<String, FlowNode> nodeMap = new HashMap<>();
-        FlowNode flowNode = new FlowStateNode();
         Map<String, String> propertiesMap = new HashMap<>();
         propertiesMap.put("title", "PM审批");
         propertiesMap.put("created_by", "{{creator}}");
         propertiesMap.put("owner", "{{owner1}}");
+        List<MappingNode> inputMappingConfig = new ArrayList<>(Arrays.asList(
+                new MappingNode("taskKey1", MappingNodeType.STRING, MappingFromType.REFERENCE, Arrays.asList("statue"),
+                        ""), new MappingNode("int", MappingNodeType.INTEGER, MappingFromType.INPUT, 666, "")));
+        MappingFlowDataConverter flowDataConverter = new MappingFlowDataConverter(inputMappingConfig, null);
 
-        FlowTask task = new FlowTask("taskId", taskType, Collections.singleton("exceptionFitable"), propertiesMap);
+        FlowTask task = new FlowTask();
+        task.setConverter(flowDataConverter);
+        task.setTaskId("taskId");
+        task.setTaskType(taskType);
+        task.setExceptionFitables(Collections.singleton("exceptionFitable"));
+        task.setProperties(propertiesMap);
+        FlowNode flowNode = new FlowStateNode();
         flowNode.setTask(task);
+        Map<String, FlowNode> nodeMap = new HashMap<>();
         nodeMap.put("nodeId", flowNode);
         return FlowDefinition.builder().nodeMap(nodeMap).build();
     }

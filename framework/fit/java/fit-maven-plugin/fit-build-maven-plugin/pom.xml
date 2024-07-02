@@ -26,6 +26,10 @@
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-plugin</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-maven-plugin-util</artifactId>
+        </dependency>
 
         <!-- Maven -->
         <dependency>

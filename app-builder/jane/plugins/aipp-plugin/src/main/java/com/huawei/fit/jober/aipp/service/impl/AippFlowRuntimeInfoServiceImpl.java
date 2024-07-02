@@ -9,10 +9,10 @@ import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
-import com.huawei.fit.jober.aipp.common.MetaUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.service.AippFlowRuntimeInfoService;
+import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
+import com.huawei.fit.jober.aipp.util.MetaUtils;
 import com.huawei.fit.runtime.entity.RuntimeData;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.CollectionUtils;
@@ -46,7 +46,8 @@ public class AippFlowRuntimeInfoServiceImpl implements AippFlowRuntimeInfoServic
             OperationContext context) {
         Meta meta = MetaUtils.getAnyMeta(this.metaService, aippId, version, context);
         String versionId = meta.getVersionId();
-        Instance instDetail = Utils.getInstanceDetail(versionId, instanceId, context, this.metaInstanceService);
+        Instance instDetail = MetaInstanceUtils.getInstanceDetail(
+                versionId, instanceId, context, this.metaInstanceService);
         String traceId = instDetail.getInfo().get(AippConst.INST_FLOW_INST_ID_KEY);
 
         List<RuntimeData> dataList = this.cache.get(traceId);

@@ -14,13 +14,13 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jober.aipp.TestUtils;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.FileRspDto;
 import com.huawei.fit.jober.aipp.dummy.OperationContextDummy;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.OperatorService;
+import com.huawei.fit.jober.aipp.util.AippFileUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 
 import org.junit.jupiter.api.Assertions;
@@ -61,7 +61,7 @@ public class LLMPdf2TextTest {
         final String dummyPdfContent = "some random Content";
         final String dummyId = "someRandomId";
         final String dummyFile = "some/Random.file";
-        final String dummyPath = Paths.get(Utils.NAS_SHARE_DIR, dummyFile).toAbsolutePath().toString();
+        final String dummyPath = Paths.get(AippFileUtils.NAS_SHARE_DIR, dummyFile).toAbsolutePath().toString();
         Map<String, Object> businessData = new HashMap<>();
         businessData.put(AippConst.BS_HTTP_CONTEXT_KEY, JsonUtils.toJsonString(OperationContextDummy.getDummy()));
         FileRspDto fileRspDto = FileRspDto.builder().filePath(dummyFile).build();
@@ -87,7 +87,7 @@ public class LLMPdf2TextTest {
         // given
         final String dummyPdfContent = "";
         final String dummyFile = "some/Random.file";
-        final String dummyPath = Paths.get(Utils.NAS_SHARE_DIR, dummyFile).toAbsolutePath().toString();
+        final String dummyPath = Paths.get(AippFileUtils.NAS_SHARE_DIR, dummyFile).toAbsolutePath().toString();
         Map<String, Object> businessData = new HashMap<>();
         businessData.put(AippConst.BS_HTTP_CONTEXT_KEY, JsonUtils.toJsonString(OperationContextDummy.getDummy()));
         FileRspDto fileRspDto = FileRspDto.builder().filePath(dummyFile).build();

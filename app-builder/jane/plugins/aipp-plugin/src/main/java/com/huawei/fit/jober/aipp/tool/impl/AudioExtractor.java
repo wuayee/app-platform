@@ -4,16 +4,16 @@
 
 package com.huawei.fit.jober.aipp.tool.impl;
 
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.LLMUtils;
-import com.huawei.fit.jober.aipp.common.UUIDUtil;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.dto.audio.AudioSplitInfo;
 import com.huawei.fit.jober.aipp.dto.audio.SummaryDto;
 import com.huawei.fit.jober.aipp.dto.audio.SummarySection;
 import com.huawei.fit.jober.aipp.entity.ffmpeg.FfmpegMeta;
 import com.huawei.fit.jober.aipp.service.FfmpegService;
 import com.huawei.fit.jober.aipp.tool.FileExtractor;
+import com.huawei.fit.jober.aipp.util.AippFileUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.jober.aipp.util.LLMUtils;
+import com.huawei.fit.jober.aipp.util.UUIDUtil;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
@@ -130,7 +130,7 @@ public class AudioExtractor implements FileExtractor {
     }
 
     private AudioSplitInfo covertAudio(String dirName, File audio) throws IOException {
-        File targetDir = Paths.get(Utils.NAS_SHARE_DIR, dirName).toFile();
+        File targetDir = Paths.get(AippFileUtils.NAS_SHARE_DIR, dirName).toFile();
         FfmpegMeta meta = ffmpegService.stat(audio.getCanonicalPath());
         FileUtils.copyFile(audio, Paths.get(targetDir.getPath(), audio.getName()).toFile());
         File copyAudio = Paths.get(targetDir.getPath(), audio.getName()).toFile();
@@ -147,7 +147,7 @@ public class AudioExtractor implements FileExtractor {
     }
 
     private AudioSplitInfo covertAudioSimple(String dirName, File audio) throws IOException {
-        File targetDir = Paths.get(Utils.NAS_SHARE_DIR, dirName).toFile();
+        File targetDir = Paths.get(AippFileUtils.NAS_SHARE_DIR, dirName).toFile();
         FileUtils.copyFile(audio, Paths.get(targetDir.getPath(), audio.getName()).toFile());
         return new AudioSplitInfo(targetDir.getCanonicalPath(), 0);
     }
@@ -178,7 +178,7 @@ public class AudioExtractor implements FileExtractor {
         } finally {
             // 删除临时目录
             try {
-                FileUtils.deleteDirectory(Paths.get(Utils.NAS_SHARE_DIR, tmpDir).toFile());
+                FileUtils.deleteDirectory(Paths.get(AippFileUtils.NAS_SHARE_DIR, tmpDir).toFile());
             } catch (IOException e) {
                 log.error("delete audio file tmp directory failed.");
             }

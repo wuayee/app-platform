@@ -14,13 +14,15 @@ import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowInstanceService;
 import com.huawei.fit.jober.aipp.TestUtils;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.fel.WaterFlowAgent;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippLogStreamService;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.flowable.Choir;
+import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
@@ -84,6 +86,7 @@ public class LLMComponentTest {
 
     @Mock
     private BrokerClient client;
+    private final ObjectSerializer serializer = new JacksonObjectSerializer(null, null, null);
 
     @BeforeEach
     void setUp() {
@@ -99,7 +102,7 @@ public class LLMComponentTest {
             put("input", "good");
         }});
         businessData.put("prompt", prompt);
-        businessData.put(AippConst.BS_AIPP_MEMORY_KEY, Collections.singletonList(new HashMap<String, String>() {{
+        businessData.put(AippConst.BS_AIPP_MEMORIES_KEY, Collections.singletonList(new HashMap<String, String>() {{
             put("question", "q1");
             put("answer", "a1");
         }}));
@@ -171,7 +174,7 @@ public class LLMComponentTest {
         // stub
         AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel(null), false);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, aippLogService, aippLogStreamService, client);
+                toolProvider, agent, aippLogService, aippLogStreamService, client, serializer);
 
         // mock
         Mockito.doNothing().when(aippLogStreamService).send(any());
@@ -193,7 +196,7 @@ public class LLMComponentTest {
         // stub
         AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel("exceptionMsg"), false);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, aippLogService, aippLogStreamService, client);
+                toolProvider, agent, aippLogService, aippLogStreamService, client, serializer);
 
         // mock
         CountDownLatch countDownLatch = mockTerminateFlow(flowInstanceService, metaService, aippLogService);
@@ -214,7 +217,7 @@ public class LLMComponentTest {
         // stub
         AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel(null), true);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, aippLogService, aippLogStreamService, client);
+                toolProvider, agent, aippLogService, aippLogStreamService, client, serializer);
 
         AtomicInteger resCnt = new AtomicInteger(0);
 
@@ -255,7 +258,7 @@ public class LLMComponentTest {
                 .close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, null, null, client);
+                toolProvider, agent, null, null, client, serializer);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
@@ -284,7 +287,7 @@ public class LLMComponentTest {
                 toolProvider,
                 agent,
                 aippLogService,
-                null, client);
+                null, client, serializer);
 
         // mock
         CountDownLatch countDownLatch = mockTerminateFlow(flowInstanceService, metaService, aippLogService);
@@ -309,7 +312,7 @@ public class LLMComponentTest {
                 .close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, this.aippLogService, null, client);
+                toolProvider, agent, this.aippLogService, null, client, serializer);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
@@ -358,7 +361,7 @@ public class LLMComponentTest {
                 .close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
         LLMComponent llmComponent = new LLMComponent(flowInstanceService, metaInstanceService, metaService,
-                toolProvider, agent, this.aippLogService, null, client);
+                toolProvider, agent, this.aippLogService, null, client, serializer);
 
         // mock
         CountDownLatch countDownLatch = mockResumeFlow(flowInstanceService, metaService);
