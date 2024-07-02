@@ -60,7 +60,6 @@ import com.huawei.fitframework.broker.client.Router;
 import com.huawei.fitframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Lists;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -71,6 +70,7 @@ import org.mockito.Mockito;
 import java.time.LocalDateTime;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -592,7 +592,7 @@ class FlowDefinitionTest {
             resumeContext.getData().getBusinessData().put("status", "true");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             List<FlowContext<FlowData>> resumeContexts = waitSingle(
@@ -627,7 +627,7 @@ class FlowDefinitionTest {
             resumeContext.getData().getBusinessData().put("status", "false");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             List<FlowContext<FlowData>> resumeContexts = waitSingle(
@@ -663,7 +663,7 @@ class FlowDefinitionTest {
             resumeContext.getData().getBusinessData().put("status", "transferred");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             metaId = "event5";
             contexts = waitSingle(contextSupplier(REPO, streamId, traceId, metaId, PENDING));
@@ -678,7 +678,7 @@ class FlowDefinitionTest {
             resumeContext.getData().getBusinessData().put("status", "approved");
             resumeContext.toBatch(UUIDUtil.uuid());
             REPO.updateFlowData(Collections.singletonList(resumeContext));
-            block.process(Lists.newArrayList(resumeContext));
+            block.process(Collections.singletonList(resumeContext));
 
             FlowNode flowNode = flowDefinition.getFlowNode(END);
             contexts = waitSingle(contextSupplier(REPO, streamId, traceId, flowNode.getMetaId(), ARCHIVED));
@@ -812,7 +812,7 @@ class FlowDefinitionTest {
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
 
-            List<Map<String, Object>> outputs = Lists.newArrayList(flowData).stream().map(f -> {
+            List<Map<String, Object>> outputs = Arrays.asList(flowData).stream().map(f -> {
                 Map<String, Object> result = new HashMap<>();
                 Map<String, Object> businessData = f.getBusinessData();
                 result.put("businessData", businessData);

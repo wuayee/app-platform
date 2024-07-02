@@ -74,8 +74,6 @@ import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
-import com.google.common.collect.Lists;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayDeque;
@@ -282,7 +280,7 @@ public class FlowContextsService {
         }
 
         Set<String> ids = contexts.keySet();
-        List<FlowContext<FlowData>> exits = repo.getPendingAndSentByIds(Lists.newArrayList(ids));
+        List<FlowContext<FlowData>> exits = repo.getPendingAndSentByIds(new ArrayList(ids));
         if (CollectionUtils.isEmpty(exits)) {
             LOG.error("[resumeFlows] invalid context ids: {}", ids.toString());
             return;
