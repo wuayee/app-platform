@@ -24,32 +24,25 @@ export default function SelectMode({mode}) {
         }
         let config;
         if (value === "manualCheck") {
-            config = {
-                converter: {
-                    type: "mapping_converter",
-                    entity: {
-                        "inputParams": [],
-                        "outputParams": []
-                    }
-                },
-                taskId: "",
-                type: "AIPP_SMART_FORM",
-                formName: ""
-            };
+            config = [{
+                id: uuidv4(),
+                name: "endFormId",
+                type: "String",
+                from: "Input",
+                value: ''
+            }]
+
         } else {
-            config = {
-                inputParams: [{
-                    id: uuidv4(),
-                    name: "finalOutput",
-                    type: "String",
-                    from: "Reference",
-                    referenceNode: "",
-                    referenceId: "",
-                    referenceKey: "",
-                    value: []
-                }],
-                outputParams: [{}],
-            };
+            config = [{
+                id: uuidv4(),
+                name: "finalOutput",
+                type: "String",
+                from: "Reference",
+                referenceNode: "",
+                referenceId: "",
+                referenceKey: "",
+                value: []
+            }]
         }
         dispatch({type: "changeMode", value: config});
     };
