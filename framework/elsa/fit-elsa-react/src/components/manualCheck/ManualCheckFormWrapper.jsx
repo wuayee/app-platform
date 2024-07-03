@@ -22,7 +22,7 @@ export default function ManualCheckFormWrapper() {
 
     return (<>
         <div>
-            <ManualCheckForm data={data} handleFormChange={handleFormChange}/>
+            <ManualCheckForm formName={data.formName} taskId={data.taskId} handleFormChange={handleFormChange}/>
         </div>
     </>);
 }

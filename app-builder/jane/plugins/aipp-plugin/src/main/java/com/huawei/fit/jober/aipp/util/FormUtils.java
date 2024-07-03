@@ -10,15 +10,20 @@ import com.huawei.fit.dynamicform.entity.FormMetaInfo;
 import com.huawei.fit.dynamicform.entity.FormMetaItem;
 import com.huawei.fit.dynamicform.entity.FormMetaQueryParameter;
 import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.domain.AppBuilderForm;
 import com.huawei.fit.jober.aipp.domain.AppBuilderFormProperty;
 import com.huawei.fit.jober.aipp.entity.AippLogData;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.StringUtils;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -61,6 +66,29 @@ public class FormUtils {
         builderForm.setFormPropertyRepository(formPropRepos);
         String data = buildData(builderForm.getFormProperties());
         return new DynamicFormDetailEntity(convertToDynamicFormEntity(builderForm), data);
+    }
+
+    /**
+     * 构建表单数据。
+     *
+     * @param businessData 表示业务数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     * @param appBuilderForm 表示表单领域对象的 {@link AppBuilderForm}。
+     * @param parentInstanceId 表示父实例 Id 的 {@link String}。
+     * @return 表示构建后的表单数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}。
+     */
+    @NotNull
+    public static Map<String, Object> buildFormData(Map<String, Object> businessData, AppBuilderForm appBuilderForm,
+            String parentInstanceId) {
+        Map<String, Object> form = new HashMap<>();
+        form.put(AippConst.FORM_APPEARANCE_KEY, appBuilderForm.getAppearance());
+        Map<String, Object> formDataMap = new HashMap<>();
+        appBuilderForm.getFormProperties()
+                .stream()
+                .map(AppBuilderFormProperty::getName)
+                .forEach(name -> formDataMap.put(name, businessData.getOrDefault(name, StringUtils.EMPTY)));
+        form.put(AippConst.FORM_DATA_KEY, formDataMap);
+        form.put(AippConst.PARENT_INSTANCE_ID, parentInstanceId);
+        return form;
     }
 
     private static String buildData(List<AppBuilderFormProperty> formProperties) {

@@ -290,6 +290,7 @@ public class AippRunTimeServiceImpl
         businessData.put(AippConst.CONTEXT_INSTANCE_ID, metaInst.getId());
         businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, true);
         businessData.put(AippConst.BS_AIPP_MEMORIES_KEY, new ArrayList<>());
+        businessData.put(AippConst.CONTEXT_USER_ID, context.getOperator());
 
         // 添加memory
         String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);

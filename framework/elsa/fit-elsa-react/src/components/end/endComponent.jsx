@@ -43,7 +43,7 @@ export const endComponent = (jadeConfig) => {
     self.reducers = (config, action) => {
         const _editOutputVariable = () => {
             const inputParams = newConfig.inputParams.find(item => item.name === "finalOutput");
-            action.changes.forEach(change => {
+            inputParams && action.changes.forEach(change => {
                 inputParams[change.key] = change.value;
             })
         };
@@ -55,15 +55,9 @@ export const endComponent = (jadeConfig) => {
          * @private
          */
         const _changeForm = () => {
-            return {
-                ...config,
-                taskId: action.formId,
-                formName: action.formName,
-                converter: {
-                    ...config.converter,
-                    entity: action.entity
-                }
-            }
+            newConfig.inputParams.find(item => item.name === 'endFormId').value = action.formId;
+            newConfig.inputParams.find(item => item.name === 'endFormName').value = action.formName;
+            newConfig.inputParams.find(item => item.name === 'reportResult').value = action.entity.inputParams.find(item => item.name === "reportResult").value;
         };
 
         /**
@@ -82,9 +76,11 @@ export const endComponent = (jadeConfig) => {
                 _editOutputVariable();
                 return newConfig;
             case 'changeForm':
-                return _changeForm();
+                _changeForm();
+                return newConfig;
             case 'changeMode':
-                return _changeMode();
+                newConfig.inputParams = _changeMode();
+                return newConfig;
             default: {
                 throw Error('Unknown action: ' + action.type);
             }

@@ -96,6 +96,11 @@ public class AippConst {
     public static final String BS_NODE_ID_KEY = "nodeId";
 
     /**
+     * context endFormId
+     */
+    public static final String BS_END_FORM_ID_KEY = "endFormId";
+
+    /**
      * business initContext key
      */
     public static final String BS_INIT_CONTEXT_KEY = "initContext";
@@ -580,6 +585,11 @@ public class AippConst {
      * 系统上下文的对话实例Id
      */
     public static final String CONTEXT_INSTANCE_ID = "instanceId";
+
+    /**
+     * 系统上下文的用户Id
+     */
+    public static final String CONTEXT_USER_ID = "userId";
 
     /**
      * 表明当前会话是否被删除

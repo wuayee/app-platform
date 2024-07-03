@@ -14,11 +14,9 @@ import JadePanelCollapse from "@/components/manualCheck/JadePanelCollapse.jsx";
  * @return {JSX.Element}
  * @constructor
  */
-export default function ManualCheckForm({data, handleFormChange}) {
+export default function ManualCheckForm({formName, taskId, handleFormChange}) {
     const shape = useShapeContext();
     const config = shape.graph.configs.find(node => node.node === "manualCheckNodeState");
-    const formName = data.formName;
-    const taskId = data.taskId;
     const [formOptions, setFormOptions] = useState([]);
     const selectedFormDefaultValue = (formName === null || formName === undefined) ? undefined : `${formName.replace(/Component$/, '')}|${taskId}`;
     const entityRef = useRef();
@@ -113,12 +111,12 @@ export default function ManualCheckForm({data, handleFormChange}) {
             <div className={"jade-custom-panel-content"}>
                 <Form.Item>
                     <JadeStopPropagationSelect
-                        allowClear
-                        className="jade-select"
-                        defaultValue={selectedFormDefaultValue}
-                        style={{width: "100%", marginBottom: "8px"}}
-                        onChange={e => onChange(e)}
-                        options={formOptions}
+                            allowClear
+                            className="jade-select"
+                            defaultValue={selectedFormDefaultValue}
+                            style={{width: "100%", marginBottom: "8px"}}
+                            onChange={e => onChange(e)}
+                            options={formOptions}
                     />
                     {renderComponent()} {/* 渲染对应的组件 */}
                 </Form.Item>

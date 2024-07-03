@@ -1063,6 +1063,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         Map<String, Object> propertiesMapOfInputParam = MapBuilder.<String, Object>get()
                 .put(AippConst.TRACE_ID, MapBuilder.get().put("type", "string").build())
                 .put(AippConst.CALLBACK_ID, MapBuilder.get().put("type", "string").build())
+                .put(AippConst.CONTEXT_USER_ID, MapBuilder.get().put("type", "string").build())
                 .build();
         flowInfo.getInputParamsByName("input").forEach(inputParam -> {
             String name = inputParam.getOrDefault("name", StringUtils.EMPTY).toString();

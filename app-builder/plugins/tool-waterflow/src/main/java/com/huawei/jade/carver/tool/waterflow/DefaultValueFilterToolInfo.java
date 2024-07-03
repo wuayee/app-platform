@@ -89,6 +89,7 @@ public class DefaultValueFilterToolInfo implements Tool.Info {
         Map<String, Object> inputParamsProperties = cast(inputParams.get(SchemaKey.PARAMETERS_PROPERTIES));
         inputParamsProperties.remove(WaterFlowToolConst.TRACE_ID);
         inputParamsProperties.remove(WaterFlowToolConst.CALLBACK_ID);
+        inputParamsProperties.remove(WaterFlowToolConst.USER_ID);
     }
 
     private static List<String> getConfigParamName(Map<String, Object> schema) {
