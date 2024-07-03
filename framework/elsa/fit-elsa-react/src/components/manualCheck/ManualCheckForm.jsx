@@ -72,7 +72,7 @@ export default function ManualCheckForm({formName, taskId, handleFormChange}) {
 
     const registerObservables = (entity) => {
         recursive(entity.outputParams, null, (p, parent) => {
-            shape.page.registerObservable(shape.id, p.id, p.name, p.type, parent ? parent.id : null);
+            shape.page.registerObservable({nodeId: shape.id, observableId: p.id, value: p.name, type: p.type, parentId: parent ? parent.id : null});
         });
     };
 
