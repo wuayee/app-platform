@@ -4,7 +4,7 @@ metadata:
   name: {{name}}
   labels:
     app: {{name}}_pipeline
-    pipeline: {{name}}
+    pipeline: {{pipeline_name}}
     task: {{task}}
   namespace: model-io
 spec:

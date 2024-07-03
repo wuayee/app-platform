@@ -17,7 +17,8 @@ import EditorBtnHome from './components/editor-btn-home';
 import EditorSelect from './components/editor-selet';
 import "@shared/utils/rendos";
 import "../../styles/send-editor.scss";
-import { useAppSelector } from "../../../../store/hook";
+import { useAppSelector, useAppDispatch } from "../../../../store/hook";
+import { setUseMemory } from "../../../../store/common/common";
 
 const SendEditor = (props) => {
   const {
@@ -26,13 +27,13 @@ const SendEditor = (props) => {
     onClear,
     filterRef
   } = props;
+  const dispatch = useAppDispatch();
   const [ selectItem, setSelectItem ] = useState({});
   const [ selectDom, setSelectDom ] = useState();
   const [ showSelect, setShowSelect ] = useState(false);
   const [ showClear, setShowClear ] = useState(false);
   const [ openHistory, setOpenHistory ] = useState(false);
   const [ positionConfig, setPositionConfig ] = useState({});
-  const [ useMulti, setUseMulti ] = useState(true);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const showMulti = useAppSelector((state) => state.commonStore.historySwitch);
   const { WS_AUDIO_URL } = httpUrlMap[process.env.NODE_ENV];
@@ -66,7 +67,7 @@ const SendEditor = (props) => {
       return;
     }
     let chatContent = document.getElementById("ctrl-promet").innerText;
-    onSend(chatContent, useMulti);
+    onSend(chatContent);
     editorRef.current.innerText = "";
     setShowClear(false);
   }
@@ -146,9 +147,9 @@ const SendEditor = (props) => {
   }
   useEffect(() => {
     if (showMulti) {
-      setUseMulti(true);
+      dispatch(setUseMemory(true));
     } else {
-      setUseMulti(false);
+      dispatch(setUseMemory(false));
     }
   }, [showMulti])
   return <>{(
@@ -160,8 +161,6 @@ const SendEditor = (props) => {
           clear={onClear}
           fileCallBack={fileSend}
           editorRef={editorRef}
-          useMulti={useMulti}
-          setUseMulti={setUseMulti}
         />
         { chatRunning && 
           <div className="editor-stop" onClick={onStop}>

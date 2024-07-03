@@ -5,12 +5,14 @@ import type { RootState } from '../index';
 interface CommonI {
   historySwitch: boolean;
   dimension: string;
+  useMemory: boolean;
 }
 
 // 使用该类型定义初始 state
 const initialState: CommonI = {
   historySwitch: false,
   dimension: null,
+  useMemory: true,
 } as CommonI;
 
 export const commonStore = createSlice({
@@ -26,10 +28,14 @@ export const commonStore = createSlice({
     setDimension: (state, action: any) => {
       state.dimension = action.payload;
     },
+    // 设置当轮对话是否使用历史会话
+    setUseMemory: (state, action: any) => {
+      state.useMemory = action.payload;
+    },
   },
 });
 
-export const { setHistorySwitch, setDimension } = commonStore.actions;
+export const { setHistorySwitch, setDimension, setUseMemory } = commonStore.actions;
 // 选择器等其他代码可以使用导入的 `RootState` 类型
 
 export default commonStore.reducer;

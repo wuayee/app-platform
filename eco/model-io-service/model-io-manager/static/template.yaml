@@ -1,9 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: infer-svc-{{name}}
+  name: {{name}}
   labels:
     app: {{name}}_inference
+    model_name: {{model_name}}
   namespace: model-io
 spec:
   type: NodePort
@@ -19,6 +20,7 @@ metadata:
   name:  {{name}}-inference             # The value of this parameter must be consistent with the name of ConfigMap.
   labels:
     app: {{name}}-inference
+    model_name: {{model_name}}
   namespace: model-io
 spec:
   replicas: {{replicas}}                        # The value of replicas is 1 in a single-node scenario and N in an N-node scenario. The number of NPUs in the requests field is 8 in an N-node scenario.
@@ -57,7 +59,7 @@ spec:
           - name: Port
             value: "9981"
           - name: MaxTokenSize
-            value: {{max_token_size}}
+            value: "{{max_token_size}}"
           readinessProbe:
             httpGet:
               path: /v2/health/ready

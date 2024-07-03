@@ -25,10 +25,11 @@ import {
 } from '../../../../../store/chatStore/chatStore';
 import { setAtAppInfo, setAtAppId } from "../../../../../store/appInfo/appInfo";
 import { getAppInfo } from "../../../../../shared/http/aipp";
+import { setUseMemory } from "../../../../../store/common/common";
 
 // 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {
-  const { fileCallBack, editorRef, useMulti, setUseMulti } = props;
+  const { fileCallBack, editorRef } = props;
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const appId = useAppSelector((state) => state.appStore.appId);
@@ -41,6 +42,7 @@ const EditorBtnHome = (props) => {
   const atAppId = useAppSelector((state) => state.appStore.atAppId);
   const atAppInfo = useAppSelector((state) => state.appStore.atAppInfo);
   const showMulti = useAppSelector((state) => state.commonStore.historySwitch);
+  const useMemory = useAppSelector((state) => state.commonStore.useMemory);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ showAt, setShowAt ] = useState(false);
   const [ appName, setAppName ] = useState('');
@@ -168,7 +170,7 @@ const EditorBtnHome = (props) => {
   }
   //是否使用多轮对话
   const onMultiConverChange = (checked) => {
-    setUseMulti(checked);
+    dispatch(setUseMemory(checked));
   }
 
   return (
@@ -198,9 +200,9 @@ const EditorBtnHome = (props) => {
             <div className="inner-item">
               <div hidden><ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} /></div>
               { !appInfo.hideHistory && <HistoryIcon  onClick={(e) => {setOpenHistorySignal(e.timeStamp)}}/> }
-              {showMulti && <div>
+              {showMulti && <div className="multi-conversation-title">
                 <span>多轮对话</span>
-                <Switch className='multi-conversation-switch' value={useMulti} onChange={onMultiConverChange}/>
+                <Switch className='multi-conversation-switch' value={useMemory} onChange={onMultiConverChange}/>
               </div>}
               <span className="item-clear" onClick={() => {
                 dispatch(setChatRunning(false));

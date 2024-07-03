@@ -6,6 +6,7 @@ import { useBeforeUnload, useLocation } from "react-router-dom";
 import './index.scss'
 import {getUserCollection} from '../../shared/http/appDev'
 import { setCollectionValue, setCurAppId } from "../../store/collection/collection";
+import { setHistorySwitch } from "../../store/common/common";
 import CommonChat from '../chatPreview/chatComminPage';
 import { getUser } from '../helper';
 import { setAppId, setAppInfo } from '../../store/appInfo/appInfo';
@@ -55,6 +56,8 @@ const ChatRunning = () => {
     if (res.code === 0) {
       res.data.notShowHistory = true;
       dispatch(setAppInfo(res.data));
+      const memory = res.data.config.form.properties.filter(item => item.name === 'memory')[0];
+      dispatch(setHistorySwitch(memory.defaultValue.type !==  'NotUseMemory'));
     }
   }
 

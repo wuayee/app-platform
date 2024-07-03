@@ -54,6 +54,7 @@ const ChatPreview = (props) => {
   const atAppId = useAppSelector((state) => state.appStore.atAppId);
   const atAppInfo = useAppSelector((state) => state.appStore.atAppInfo);
   const formReceived = useAppSelector((state) => state.chatCommonStore.formReceived);
+  const useMemory = useAppSelector((state) => state.commonStore.useMemory);
   const { showElsa } = useContext(AippContext);
   const [checkedList, setCheckedList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -113,16 +114,16 @@ const ChatPreview = (props) => {
   }, [appInfo.id]);
   
   // 发送消息
-  const onSend = (value, memorySwitch, type = undefined) => {
+  const onSend = (value, type = undefined) => {
     const sentItem = beforeSend(chatRunning, value, type);
     if (sentItem) {
       let arr = [...chatList, sentItem];
       listRef.current = arr;
-      sendMessageRequest(value, memorySwitch, type);
+      sendMessageRequest(value, type);
     }
   };
   // 发送消息
-  const sendMessageRequest = async (value, memorySwitch, type) => {
+  const sendMessageRequest = async (value, type) => {
     const reciveInitObj = JSON.parse(JSON.stringify(initChat));
     reciveInitObj.type = "recieve";
     reciveInitObj.loading = true;
@@ -147,7 +148,7 @@ const ChatPreview = (props) => {
           if (res.code !== 0) {
             onStop("更新grpha数据失败");
           } else {
-            getAippAndVersion(value, memorySwitch, type);
+            getAippAndVersion(value, type);
           }
         })
         .catch((err) => {
@@ -155,11 +156,11 @@ const ChatPreview = (props) => {
           onStop("对话失败");
         });
     } else {
-      getAippAndVersion(value, memorySwitch, type);
+      getAippAndVersion(value, type);
     }
   };
   // 获取aipp_id和version
-  async function getAippAndVersion(value, memorySwitch, type) {
+  async function getAippAndVersion(value, type) {
     let chatAppId = appId;
     let chatAppInfo = appInfo;
     if (atAppId) {
@@ -169,7 +170,7 @@ const ChatPreview = (props) => {
     try {
       const debugRes = await aippDebug(tenantId, chatAppId, chatAppInfo);
       if (debugRes.code === 0) {
-        chatMissionStart(debugRes.data, value, memorySwitch, type);
+        chatMissionStart(debugRes.data, value, type);
       } else {
         onStop(debugRes.msg || "获取aippId失败");
       }
@@ -178,10 +179,10 @@ const ChatPreview = (props) => {
     }
   }
   // 启动任务
-  const chatMissionStart = async (res, value, memorySwitch, type) => {
+  const chatMissionStart = async (res, value, type) => {
     let { aipp_id, version } = res;
     let params = type?{ initContext: { "$[FileDescription]$": value } }:{ initContext: { Question: value } };
-    params.initContext.useMemory = memorySwitch;
+    params.initContext.useMemory = useMemory;
     try {
       const requestBody={
         aipp_id:aipp_id,
