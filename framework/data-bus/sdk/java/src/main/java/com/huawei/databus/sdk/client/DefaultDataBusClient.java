@@ -80,7 +80,7 @@ public class DefaultDataBusClient implements DataBusClient {
             InetSocketAddress address = new InetSocketAddress(dataBusAddr, dataBusPort);
             this.socketChannel.connect(address);
             if (!this.sayHello()) {
-                this.cleanUpConnection(null);
+                return this.cleanUpConnection(null);
             }
         } catch (IOException e) {
             return this.cleanUpConnection(e);
