@@ -16,10 +16,6 @@ import com.huawei.fit.jane.meta.multiversion.definition.MetaDeclarationInfo;
 import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jane.meta.property.MetaPropertyDeclarationInfo;
 import com.huawei.fit.jane.task.util.Entities;
-import com.huawei.fit.jober.aipp.common.ConvertUtils;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.MetaUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;
@@ -51,6 +47,7 @@ import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
 import com.huawei.fit.jober.aipp.service.AippFlowService;
 import com.huawei.fit.jober.aipp.service.AppBuilderAppService;
+import com.huawei.fit.jober.aipp.util.VersionUtils;
 import com.huawei.fit.jober.aipp.validation.AppUpdateValidator;
 import com.huawei.fit.jober.aipp.util.ConvertUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
@@ -322,7 +319,7 @@ public class AppBuilderAppServiceImpl
         AippDto aippDto = ConvertUtils.toAppDto(app);
         int retryTimes = RETRY_CREATE_TIMES;
         do {
-            String previewVersion = Utils.buildPreviewVersion(version);
+            String previewVersion = VersionUtils.buildPreviewVersion(version);
             aippDto.setVersion(previewVersion);
             MetaDeclarationInfo declarationInfo = this.buildInitialMetaDeclaration(aippDto,
                     AippCreateDto.builder().aippId(aippDto.getId()).version(previewVersion).build(),
@@ -364,7 +361,7 @@ public class AppBuilderAppServiceImpl
 
     // todo 当前只考虑升级，如果后续需要做基于应用创建新应用，则需要改动下面逻辑。
     private String buildVersion(AppBuilderApp app, boolean isUpgrade) {
-        if (!isUpgrade || !Utils.isValidVersion(app.getVersion())) {
+        if (!isUpgrade || !VersionUtils.isValidVersion(app.getVersion())) {
             return DEFAULT_APP_VERSION;
         }
         String[] parts = app.getVersion().split("\\.");

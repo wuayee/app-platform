@@ -50,6 +50,7 @@ import com.huawei.fit.jober.aipp.util.FormUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.MetaUtils;
 import com.huawei.fit.jober.aipp.util.UUIDUtil;
+import com.huawei.fit.jober.aipp.util.VersionUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.common.exceptions.ConflictException;
@@ -127,12 +128,6 @@ public class AippFlowServiceImpl implements AippFlowService {
         this.brokerClient = brokerClient;
         this.appBuilderAppMapper = appBuilderAppMapper;
         this.factory = factory;
-    }
-
-    private String buildPreviewVersion(String version) {
-        String uuid = UUIDUtil.uuid();
-        String subUuid = (uuid.length() > PREVIEW_UUID_LEN) ? uuid.substring(0, PREVIEW_UUID_LEN) : uuid;
-        return version + "-" + subUuid;
     }
 
     /**
@@ -616,7 +611,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         String previewVersion;
         String errorMsg;
         do {
-            previewVersion = buildPreviewVersion(baselineVersion);
+            previewVersion = VersionUtils.buildPreviewVersion(baselineVersion);
             aippDto.getFlowViewData().put(AippConst.FLOW_CONFIG_VERSION_KEY, previewVersion);
             try {
                 return this.createPreviewAipp(baselineVersion, aippDto, context);
