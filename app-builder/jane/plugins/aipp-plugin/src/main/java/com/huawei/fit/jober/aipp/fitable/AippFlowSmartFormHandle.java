@@ -10,21 +10,17 @@ import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowSmartFormService;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.domain.AppBuilderForm;
-import com.huawei.fit.jober.aipp.domain.AppBuilderFormProperty;
 import com.huawei.fit.jober.aipp.service.AippStreamService;
 import com.huawei.fit.jober.aipp.service.AppBuilderFormService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.FormUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +63,7 @@ public class AippFlowSmartFormHandle implements FlowSmartFormService {
         String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
         String instanceId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
         this.aippStreamService.sendToAncestor(instanceId,
-                Utils.buildFormData(businessData, appBuilderForm, parentInstanceId));
+                FormUtils.buildFormData(businessData, appBuilderForm, parentInstanceId));
     }
 
     private void updateInstance(String sheetId, String nodeId, Map<String, Object> businessData) {

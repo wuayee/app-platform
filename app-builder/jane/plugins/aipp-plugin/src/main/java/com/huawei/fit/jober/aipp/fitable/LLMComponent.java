@@ -178,18 +178,12 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         String instId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
         String parentInstId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
         log.debug("LLMComponent business data {}", businessData);
-
         AippLlmMeta llmMeta = AippLlmMeta.parse(flowData, metaService);
         llmCache.put(llmMeta.getInstId(), llmMeta);
-
-        String systemPrompt = ObjectUtils.cast(businessData.get("systemPrompt"));
-        String msgId = UuidUtils.randomUuidString();
-
         if (businessData.containsKey(AippConst.BS_AIPP_FILE_DESC_KEY)) {
             this.processFile(llmMeta, businessData);
             return flowData;
         }
-
         String path = this.aippLogService.buildPath(instId, parentInstId);
 
         // todo: 待add多模态，期望使用image的url，当前传入的历史记录里面没有image
@@ -198,6 +192,8 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
                 .put(AippConst.CALLBACK_ID, CALLBACK_ID)
                 .put(AippConst.CONTEXT_USER_ID, ObjectUtils.cast(businessData.get(AippConst.CONTEXT_USER_ID)))
                 .build();
+        String systemPrompt = ObjectUtils.cast(businessData.get("systemPrompt"));
+        String msgId = UuidUtils.randomUuidString();
         agentFlow.converse()
                 .bind((acc, chunk) -> this.sendLog(chunk, path, msgId, instId))
                 .bind(new AippMemory(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_MEMORIES_KEY))))

@@ -15,11 +15,11 @@ import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.genericable.AppFlowFinishObserver;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fit.jober.aipp.service.AippStreamService;
+import com.huawei.fit.jober.aipp.service.AppBuilderFormService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.FormUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
-import com.huawei.fit.jober.aipp.service.AippStreamService;
-import com.huawei.fit.jober.aipp.service.AppBuilderFormService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
@@ -90,7 +90,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
             String endFormId = (String) businessData.get(AippConst.BS_END_FORM_ID_KEY);
             String endFormVersion = DEFAULT_END_FORM_VERSION;
             AppBuilderForm appBuilderForm = this.formService.selectWithId(endFormId);
-            Map<String, Object> formDataMap = Utils.buildFormData(businessData, appBuilderForm, parentInstanceId);
+            Map<String, Object> formDataMap = FormUtils.buildFormData(businessData, appBuilderForm, parentInstanceId);
             this.aippStreamService.sendToAncestor(aippInstId, formDataMap);
             if (StringUtils.isNotEmpty(endFormId) && StringUtils.isNotEmpty(endFormVersion)) {
                 this.saveFormToLog(businessData, endFormId, endFormVersion, formDataMap);
@@ -112,10 +112,10 @@ public class AippFlowEndCallback implements FlowCallbackService {
     private void saveFormToLog(Map<String, Object> businessData, String endFormId, String endFormVersion,
             Map<String, Object> formDataMap) {
         AippLogData logData =
-                Utils.buildLogDataWithFormData(this.formRepository, endFormId, endFormVersion, businessData);
+                FormUtils.buildLogDataWithFormData(this.formRepository, endFormId, endFormVersion, businessData);
         logData.setFormAppearance(JsonUtils.toJsonString(formDataMap.get(AippConst.FORM_APPEARANCE_KEY)));
         logData.setFormData(JsonUtils.toJsonString(formDataMap.get(AippConst.FORM_DATA_KEY)));
-        Utils.persistAippLog(aippLogService, AippInstLogType.FORM.name(), logData, businessData);
+        this.aippLogService.insertLog(AippInstLogType.FORM.name(), logData, businessData);
     }
 
     private void logFinalOutput(List<Map<String, Object>> contexts, Map<String, Object> businessData,
