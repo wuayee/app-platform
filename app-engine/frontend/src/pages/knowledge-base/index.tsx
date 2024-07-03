@@ -137,8 +137,8 @@ const KnowledgeBase = () => {
           paddingBottom: '20px',
           display:'Grid',
           justifyContent: 'space-between',
-          gridGap: 17,
-          gridTemplateColumns: 'repeat(auto-fill, 380px)'
+          gridGap: '1%',
+          gridTemplateColumns: 'repeat(auto-fill, 24%)'
         }}>
             {knowledgeData.map(knowledge=> (<>
               <KnowledgeCard key={knowledge.id} knowledge={knowledge} style={{
