@@ -85,8 +85,8 @@ export function clearInstance(tenantId, appId, type) {
   return del(`${AIPP_URL}/${tenantId}/log/app/${appId}?type=${type}`);
 }
 // 终止当前对话
-export function stopInstance(tenantId, instanceId) {
-  return put(`${AIPP_URL}/${tenantId}/instances/${instanceId}/terminate`);
+export function stopInstance(tenantId, instanceId, params) {
+  return put(`${AIPP_URL}/${tenantId}/instances/${instanceId}/terminate`, params);
 }
 
 // 获取灵感大全部门数据
@@ -130,4 +130,8 @@ export function reTestInstance(tenantId, aippId, instanceId, version) {
   return get(
     `${AIPP_URL}/${tenantId}/aipp/${aippId}/instances/${instanceId}/runtime?version=${version}`
   );
+}
+// 继续会话
+export function resumeInstance(tenantId, instanceId, params) {
+  return put(`${AIPP_URL}/${tenantId}/app/instances/${instanceId}`, params);
 }

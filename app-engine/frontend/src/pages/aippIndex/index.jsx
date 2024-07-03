@@ -100,7 +100,6 @@ const AippIndex = () => {
     showElsa,
     updateAippCallBack,
     reloadInspiration,
-    tenantId,
   };
 
   const configFormProvider ={

@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react';
 import InterviewQuestions from '../runtimeForm/InterviewQuestions.jsx';
 import ManageCubeCreateReport from '../runtimeForm/ManageCubeCreateReport.jsx';
 import FileContent from '../runtimeForm/FileContent.jsx';
+import QuestionClar from "../runtimeForm/QuestionClar";
 import { setFormReceived } from "@/store/chatStore/chatStore";
 import { useAppDispatch } from "@/store/hook";
 
 // runtime表单渲染
 const RuntimeForm = (props) => {
-  const { formName, formMap, instanceId } = props.formConfig;
+  const { formName, formMap } = props.formConfig;
   const dispatch = useAppDispatch();
-
   const questions = [
     {
       question: '分享一下你最近在车联网或者深度学习领域有哪些具有突破性的科研成果。',
@@ -36,6 +36,8 @@ const RuntimeForm = (props) => {
       case 'manageCubeCreateReport':
         return <ManageCubeCreateReport data={props.formConfig} mode={props.formConfig.type} saveCallBack={saveCallBack}/>
         break;
+      case 'questionClar':
+        return <QuestionClar data={props.formConfig} mode={props.formConfig.type}/>
       default:
         return <div>未找到对应的表单类型</div>
     }

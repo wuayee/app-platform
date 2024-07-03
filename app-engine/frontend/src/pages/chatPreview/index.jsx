@@ -367,13 +367,14 @@ const ChatPreview = (props) => {
     dispatch(setChatRunning(false));
   }
   // 终止进行中的对话
-  async function chatRunningStop() {
-    const res = await stopInstance(tenantId, runningInstanceId.current);
+  async function chatRunningStop(params) {
+    const res = await stopInstance(tenantId, runningInstanceId.current, params);
     if (res.code === 0) {
       onStop("已终止对话");
       wsCurrent.current?.close();
       wsCurrent.current = null;
       Message({ type: "success", content: "已终止对话" });
+      return res.code;
     } else {
       Message({ type: "error", content: "终止对话失败" });
     }
@@ -394,6 +395,7 @@ const ChatPreview = (props) => {
           <div className={ `chat-inner-left ${ inspirationOpen ? 'chat-left-close' : 'no-border'}` }>
             <ChatMessage
               feedRef={feedRef}
+              chatRunningStop={chatRunningStop}
               setCheckedList={setCheckedList}
               setEditorShow={setEditorShow}
               showCheck={showCheck}/>
