@@ -997,12 +997,13 @@ async def start_up_pipeline(item: PipelineItem, request: Request, background_tas
     model_name = item.name.strip()
     model_name_pre = model_name.split('/')[0]
     model_name_post = model_name.split('/')[1]
-    render_name = model_name_pre + '-' + model_name_post + '-' + item.task
-    render_name = render_name.replace(".", "").lower()
+    pipeline_name = model_name_pre + '-' + model_name_post + '-' + item.task
+    render_name = pipeline_name.replace(".", "dot").lower()
 
     render_data = {
         "name": render_name,
         "model_name": model_name,
+        "pipeline_name": pipeline_name,
         "task": item.task,
         "node_port": item.node_port,
         "image_name": item.image_name.strip(),
@@ -1121,7 +1122,7 @@ async def start_up(item: Item, request: Request, background_tasks: BackgroundTas
         label_selector="name=ascend-device-plugin-ds",
     )
 
-    render_name = model_name.replace(".", "").lower()
+    render_name = model_name.replace(".", "dot").lower()
 
     render_data = {
         "name": render_name,
