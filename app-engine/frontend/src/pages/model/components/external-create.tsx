@@ -1,29 +1,34 @@
 
 import { Button, Form, Input, Space, Drawer, message } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createExternalModel } from '../../../shared/http/model';
+import { OutsideServerTypeE } from '../model';
 
 interface props {
-  visible: boolean;
+  createSignal: boolean;
   createCallback: Function;
+  record: any;
+  type: OutsideServerTypeE;
 }
 
-const CreateModel = ({ visible, createCallback }: props) => {
-
-  const [createOpen, setCreateOpen] = useState(false);
-
+const CreateModel = ({ createSignal, createCallback, record, type }: props) => {
   const [form] = Form.useForm();
-
+  const [open,setOpen]=useState(false);
   const [messageApi, contextHolder] = message.useMessage();
-
-  useEffect(() => {
-    setCreateOpen(visible);
-  })
-
   const cancel = () => {
-    form.resetFields();
+    setOpen(false);
     createCallback('cancel');
   }
+
+  useEffect(()=>{
+    if(createSignal>0){
+      if(type===OutsideServerTypeE.CREATE){
+        form.resetFields();
+      }else{
+      form.setFieldsValue(record);}
+      setOpen(true);
+    }
+  },[createSignal])
 
   const onFinish = (value: any) => {
     createExternalModel(value).then(_ => {
@@ -31,6 +36,7 @@ const CreateModel = ({ visible, createCallback }: props) => {
         type: 'success',
         content: '创建成功',
       });
+      setOpen(false);
       createCallback('submit');
     })
   }
@@ -44,12 +50,11 @@ const CreateModel = ({ visible, createCallback }: props) => {
     <>
       {contextHolder}
       <Drawer
-        title={'新建'}
+        title={type===OutsideServerTypeE.CREATE?'新建':'编辑'}
         width={500}
-        open={createOpen}
+        open={open}
         onClose={cancel}
         maskClosable={false}
-        destroyOnClose={true}
         footer={
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Space>
@@ -59,7 +64,7 @@ const CreateModel = ({ visible, createCallback }: props) => {
           </div>
         }
       >
-        <Form form={form} layout='vertical' onFinish={onFinish}>
+        <Form form={form} layout='vertical' onFinish={onFinish} >
           <Form.Item
             label='名称'
             name='name'
@@ -79,7 +84,7 @@ const CreateModel = ({ visible, createCallback }: props) => {
               }
             ]}
           >
-            <Input />
+            <Input disabled={type===OutsideServerTypeE.EDIT}/>
           </Form.Item>
           <Form.Item
             label='URL'

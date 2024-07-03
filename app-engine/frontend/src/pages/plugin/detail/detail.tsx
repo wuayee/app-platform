@@ -6,7 +6,7 @@ import { Icons } from '../../../components/icons';
 import { useParams } from 'react-router';
 import { getPluginDetail } from '../../../shared/http/plugin';
 import '../style.scoped.scss';
-import { IconMap, paramsColumns } from '../helper';
+import { IconMap, outputColumns, paramsColumns } from '../helper';
 
 const tags = ['fit', 'http'];
 const PlugeDetail: React.FC = () => {
@@ -20,10 +20,7 @@ const [outputParams,setOutputParams]=useState([]);
     let properties=res?.data?.schema?.parameters?.properties || {};
     const resInput = Object.keys(properties).map((key)=> ({...properties[key],key:key}));
     setInputParams(resInput);
-    properties=res?.data?.schema?.return?.items?.properties || {};
-    const resOutput = Object.keys(properties).map((key)=> ({...properties[key],key:key}));
-    setOutputParams(resOutput);
-    
+    setOutputParams([res?.data?.schema?.return || {}]);
   }
   useEffect(()=>{
     if(pluginId){
@@ -72,7 +69,7 @@ const [outputParams,setOutputParams]=useState([]);
       <div className='param-title'>输入参数</div>
       <Table dataSource={inputParams} columns={paramsColumns} pagination={false} />
       <div className='param-title' style={{marginTop:14}}>输出参数</div>
-      <Table dataSource={outputParams} columns={paramsColumns} pagination={false} />
+      <Table dataSource={outputParams} columns={outputColumns} pagination={false} />
     </div>
   </div>
 )};
