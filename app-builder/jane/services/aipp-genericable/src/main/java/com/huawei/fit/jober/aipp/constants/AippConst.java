@@ -96,6 +96,11 @@ public class AippConst {
     public static final String BS_NODE_ID_KEY = "nodeId";
 
     /**
+     * context endFormId
+     */
+    public static final String BS_END_FORM_ID_KEY = "endFormId";
+
+    /**
      * business initContext key
      */
     public static final String BS_INIT_CONTEXT_KEY = "initContext";
