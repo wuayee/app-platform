@@ -144,6 +144,7 @@ public class AppBuilderAppServiceImpl
         String id = appDto.getId();
         AppBuilderApp appBuilderApp = this.appFactory.create(id);
         appBuilderApp.setState(AppState.PUBLISHED.getName());
+        appBuilderApp.setVersion(appDto.getVersion());
         this.appFactory.update(appBuilderApp);
         if (appBuilderApp.getAttributes().containsKey("store_id")) {
             aippDto.setUniqueName(appBuilderApp.getAttributes().get("store_id").toString());
@@ -224,7 +225,8 @@ public class AppBuilderAppServiceImpl
         String description = String.valueOf(attributes.getOrDefault("description", StringUtils.EMPTY));
         String icon = String.valueOf(attributes.getOrDefault("icon", StringUtils.EMPTY));
         String greeting = String.valueOf(attributes.getOrDefault("greeting", StringUtils.EMPTY));
-        String appType = String.valueOf(attributes.getOrDefault("appType", StringUtils.EMPTY));
+        String appType = String.valueOf(attributes.getOrDefault("app_type", StringUtils.EMPTY));
+        String storeId = String.valueOf(attributes.getOrDefault("store_id", StringUtils.EMPTY));
         return AppBuilderAppCreateDto.builder()
                 .name(app.getName())
                 .description(description)
@@ -232,6 +234,7 @@ public class AppBuilderAppServiceImpl
                 .greeting(greeting)
                 .appType(appType)
                 .type(app.getType())
+                .storeId(storeId)
                 .build();
     }
 
@@ -418,6 +421,9 @@ public class AppBuilderAppServiceImpl
         attributes.put("icon", dto.getIcon());
         attributes.put("greeting", dto.getGreeting());
         attributes.put("app_type", dto.getAppType());
+        if (StringUtils.isNotBlank(dto.getStoreId())) {
+            attributes.put("store_id", dto.getStoreId());
+        }
         return attributes;
     }
 
