@@ -85,8 +85,8 @@ export function clearInstance(tenantId, appId, type) {
   return del(`${AIPP_URL}/${tenantId}/log/app/${appId}?type=${type}`);
 }
 // 终止当前对话
-export function stopInstance(tenantId, instanceId, params) {
-  return put(`${AIPP_URL}/${tenantId}/instances/${instanceId}/terminate`, params);
+export function stopInstance(tenantId, instanceId) {
+  return put(`${AIPP_URL}/${tenantId}/instances/${instanceId}/terminate`);
 }
 
 // 获取灵感大全部门数据
@@ -131,7 +131,15 @@ export function reTestInstance(tenantId, aippId, instanceId, version) {
     `${AIPP_URL}/${tenantId}/aipp/${aippId}/instances/${instanceId}/runtime?version=${version}`
   );
 }
+// 获取溯源下拉选项
+export function getOptions(data) {
+  return post(`${AIPP_URL}/api/v1/platform/db/search`, data);
+}
 // 继续会话
-export function resumeInstance(tenantId, instanceId, params) {
-  return put(`${AIPP_URL}/${tenantId}/app/instances/${instanceId}`, params);
+export function resumeInstance(tenantId, aippId, instanceId, params) {
+  return put(`${AIPP_URL}/${tenantId}/aipp/${aippId}/instances/${instanceId}`, params);
+}
+// 溯源表单重新生成对话
+export function reSendChat(tenant_id, current_instance_id, data) {
+  return post(`${AIPP_URL}/${tenant_id}/chat/instances/${current_instance_id}`, data);
 }

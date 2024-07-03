@@ -1,12 +1,13 @@
-import { isJsonString, getUiD } from "@shared/utils/common";
-import { queryInspirationSelect } from "@shared/http/aipp";
-import { Message } from "@shared/utils/message";
+import { isJsonString, getUiD } from '@shared/utils/common';
+import { queryInspirationSelect } from '@shared/http/aipp';
+import { Message } from '@shared/utils/message';
+import { v4 as uuidv4 } from 'uuid';
 
 // 历史会话消息处理
 export const historyChatProcess = (res) => {
   let chatArr = [];
   res.data.forEach((item) => {
-    let questionObj = { type: "send", sendType: "text" };
+    let questionObj = { type: 'send', sendType: 'text' };
     let { msg } = JSON.parse(item.question.logData);
     questionObj.logId = item.question.logId;
     questionObj.content = msg;
@@ -15,7 +16,7 @@ export const historyChatProcess = (res) => {
       item.instanceLogBodies.forEach((aItem) => {
         const regex = /```markdown(.*?)```/g;
         const replacedArr = aItem.logData.match(regex);
-        let markdowned = aItem.logData.indexOf("```");
+        let markdowned = aItem.logData.indexOf('```');
         if (replacedArr && replacedArr.length) {
           replacedArr.forEach((item) => {
             let str = item.substring(11, item.length - 3);
@@ -30,12 +31,12 @@ export const historyChatProcess = (res) => {
           checked: false,
           logId: aItem.logId,
           markdownSyntax: markdowned !== -1,
-          type: "recieve",
+          type: 'recieve',
           instanceId: item.instanceId,
           finished: true,
           feedbackStatus: -1,
           appName: item.appName,
-          appIcon: item.appIcon
+          appIcon: item.appIcon,
         };
         if (item.appName) {
           answerObj.isAt = true;
@@ -51,6 +52,7 @@ export const historyChatProcess = (res) => {
             aippId: '',
             formName: formAppearance[0]?.name || 'normal',
             type: 'history',
+            logId: aItem.logId,
             formAppearance,
             formData,
           }
@@ -69,7 +71,7 @@ export const historyChatProcess = (res) => {
         chatArr.push(answerObj);
       });
     } else {
-      let answerObj = { type: "recieve", content: "未获取回答" };
+      let answerObj = { type: 'recieve', content: '未获取回答' };
       chatArr.push(answerObj);
     }
   });
@@ -77,34 +79,34 @@ export const historyChatProcess = (res) => {
 };
 // 灵感大全设置下拉列表
 export const inspirationProcess = (tenantId, data, prompItem) => {
-let { prompt, promptVarData } = prompItem;
-let promptArr = [];
-data.forEach(async (item) => {
-  let replaceStr = `{{${item}}}`;
-  let selectItem = promptVarData.filter((sItem) => sItem.var === item)[0];
-  let options = [];
-  let selectStr = "";
-  if (selectItem.sourceType === "fitable") {
-    let params = { appId, appType: "PREVIEW" };
-    const res = await queryInspirationSelect( tenantId, "GetQAFromLog", params);
-    if (res.code === 0) {
-      options = res.data || [];
+  let { prompt, promptVarData } = prompItem;
+  let promptArr = [];
+  data.forEach(async (item) => {
+    let replaceStr = `{{${item}}}`;
+    let selectItem = promptVarData.filter((sItem) => sItem.var === item)[0];
+    let options = [];
+    let selectStr = '';
+    if (selectItem.sourceType === 'fitable') {
+      let params = { appId, appType: 'PREVIEW' };
+      const res = await queryInspirationSelect( tenantId, 'GetQAFromLog', params);
+      if (res.code === 0) {
+        options = res.data || [];
+      }
+      selectStr = `<div class='chat-focus' contenteditable='false' data-type='${item}' style='min-width: 40px;'>${
+        selectItem.var || ''
+      }</div>`;
+    } else {
+      options = selectItem ? selectItem.sourceInfo.split(';') : [];
+      options = options.filter((item) => item.length > 0);
+      selectStr = `<div class='chat-focus' contenteditable='false' data-type='${item}' style='min-width: 40px;'>${
+        options[0] || ''
+      }</div>`;
     }
-    selectStr = `<div class="chat-focus" contenteditable="false" data-type="${item}" style="min-width: 40px;">${
-      selectItem.var || ""
-    }</div>`;
-  } else {
-    options = selectItem ? selectItem.sourceInfo.split(";") : [];
-    options = options.filter((item) => item.length > 0);
-    selectStr = `<div class="chat-focus" contenteditable="false" data-type="${item}" style="min-width: 40px;">${
-      options[0] || ""
-    }</div>`;
-  }
-  selectItem.options = options;
-  promptArr.push(selectItem);
-  prompt = prompt.replaceAll(replaceStr, selectStr);
-});
-return { prompt, promptArr }
+    selectItem.options = options;
+    promptArr.push(selectItem);
+    prompt = prompt.replaceAll(replaceStr, selectStr);
+  });
+  return { prompt, promptArr }
 };
 //  发送消息前验证与数据拼装
 export const beforeSend = (chatRunning, value, type) => {
@@ -117,17 +119,17 @@ export const beforeSend = (chatRunning, value, type) => {
     return;
   }
   if (chatRunning) {
-    Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+    Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
     return;
   }
-  chatInitObj.type = "send";
+  chatInitObj.type = 'send';
   chatInitObj.logId = getUiD();
   if (type) {
     value.file_name = decodeURI(value.file_name);
     chatInitObj.sendType = type;
     chatInitObj.content = JSON.stringify(value);
   } else {
-    chatInitObj.sendType = "text";
+    chatInitObj.sendType = 'text';
     chatInitObj.content = value;
   }
   return chatInitObj;
@@ -181,6 +183,7 @@ export const reportProcess = (list, listRef) => {
 };
 // 流式接收消息数据处理
 export const messageProcess = (aipp_id, instanceId, version, messageData, atAppInfo) => {
+  let logId = uuidv4();
   let obj = {
     loading: false,
     openLoading: false,
@@ -188,6 +191,7 @@ export const messageProcess = (aipp_id, instanceId, version, messageData, atAppI
     recieveType: 'form',
     finished: true,
     checked: false,
+    logId,
     formConfig: {
       instanceId,
       version,
@@ -195,6 +199,7 @@ export const messageProcess = (aipp_id, instanceId, version, messageData, atAppI
       parentInstanceId: messageData.parentInstanceId,
       formName: messageData.formAppearance[0].name || 'normal',
       type: 'edit',
+      logId,
       formAppearance: messageData.formAppearance,
       formData: messageData.formData,
     }
@@ -223,7 +228,7 @@ export const messageProcessNormal = (log, instanceId, atAppInfo) => {
     loading: false,
     openLoading: false,
     checked: false,
-    logId: log.msgId || -1,
+    logId: log.msgId || uuidv4(),
     markdownSyntax: markdowned !== -1,
     type: 'recieve',
     instanceId,

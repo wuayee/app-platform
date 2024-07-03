@@ -60,8 +60,8 @@ const Skill = (props) => {
           name: item.name,
           tags: item.tags,
           type: item.tags.includes('WATERFLOW') ? 'workflow' : 'tool',
-          appId: item.appId || '',
-          tenantId: item.tenantId || '',
+          appId: item.runnables?.APP?.appId || '',
+          runnables: item.runnables
         };
         pluginMap.current.push(obj);
       }
@@ -71,7 +71,11 @@ const Skill = (props) => {
   // 工具流详情
   const workflowDetail = (item) => {
     if (item.type === 'workflow') {
-      navigate(`/app-develop/${item.tenantId}/app-detail/flow-detail/${item.appId}`);
+      if (item.appId.length) {
+        navigate(`/app-develop/${tenantId}/app-detail/flow-detail/${item.appId}`);
+      } else {
+        console.log(item.runnables);
+      }
     } else {
       navigate(`/plugin/detail/${item.uniqueName}`);
     }
