@@ -28,18 +28,25 @@ class ResponseManager(threading.Thread):
         super().__init__()
         self._socket = socket
         self._mailbox = mailbox
-        self._is_running = True
 
     def run(self):
         """处理内核返回的消息"""
-        while self._is_running:
+        while True:
             try:
                 data = self._socket.recv(2048)
+                if not data:
+                    raise ConnectionResetError
                 # TD: 处理半包
                 self._split_message(data)
-            except OSError as err:
-                logging.error("Response manager receive error %d from DataBus core", err.errno)
-                self._is_running = False
+            except Exception:
+                self._handle_connection_error()
+                break
+
+    def _handle_connection_error(self):
+        logging.error("Response manager receive from DataBus core error.")
+        for mail in self._mailbox.values():
+            with mail.cv:
+                mail.cv.notify_all()
 
     def _split_message(self, data: bytes):
         """分割处理内核返回的消息, 避免粘包"""
@@ -48,13 +55,17 @@ class ResponseManager(threading.Thread):
             header = MessageHeader.MessageHeader.GetRootAs(data)
             seq = header.Seq()
             ptr += MESSAGE_HEADER_LENGTH
-            raw_body = data[ptr: ptr + header.Size()]
-            logging.debug("DataBus core response (%d-%d of %d): %s.",
-                          ptr - MESSAGE_HEADER_LENGTH, ptr + header.Size() - 1, len(data),
-                          data[ptr - MESSAGE_HEADER_LENGTH:ptr + header.Size()].hex())
             if seq in self._mailbox:
                 self._mailbox[seq].message_type = header.Type()
-                self._mailbox[seq].response = MESSAGE_RESPONSE_MAPPING[header.Type()].GetRootAs(raw_body)
+                if header.Type() == CoreMessageType.Hello:
+                    # hello消息没有body
+                    self._mailbox[seq].response = True
+                else:
+                    raw_body = data[ptr: ptr + header.Size()]
+                    logging.debug("DataBus core response (%d-%d of %d): %s.",
+                                  ptr - MESSAGE_HEADER_LENGTH, ptr + header.Size() - 1, len(data),
+                                  data[ptr - MESSAGE_HEADER_LENGTH:ptr + header.Size()].hex())
+                    self._mailbox[seq].response = MESSAGE_RESPONSE_MAPPING[header.Type()].GetRootAs(raw_body)
                 # 通知线程
                 cv = self._mailbox[seq].cv
                 with cv:
