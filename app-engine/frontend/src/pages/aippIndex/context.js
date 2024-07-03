@@ -12,6 +12,10 @@ export const ChatContext = createContext({
   setShareClass: null,
   setInspiration: null,
   checkCallBack: null,
+  handleRejectClar: null,
+  useMemory: true,
+  dataDimension: null,
+  tenantId: ''
 });
 
 export const ConfigFormContext = createContext({
