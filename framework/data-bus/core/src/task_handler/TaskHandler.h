@@ -43,6 +43,7 @@ private:
                                  Common::ErrorType errorType);
     void SendGetMetaDataResponse(int32_t socketFd, uint32_t seq, Common::ErrorType errorType,
                                  const Resource::MemoryMetadata& metadata);
+    void SendHelloResponse(int32_t socketFd, uint32_t seq);
     void HandleMessageApplyPermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void HandleMessageReleasePermission(const Common::MessageHeader* header, const char* buffer, int socketFd);
     void ReleasePermission(int32_t socketFd, int32_t sharedMemoryId, Common::PermissionType permissionType);
