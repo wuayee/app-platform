@@ -473,8 +473,17 @@
   .inner-item {
     display: flex;
     align-items: center;
+    .multi-conversation-title {
+      margin-left: 16px;
+    }
     .multi-conversation-switch {
       margin-left: 5px;
+    }
+    .ant-switch.ant-switch-checked {
+      background-color: #0478fc;
+    }
+    .ant-switch.ant-switch-checked:hover:not(.ant-switch-disabled) {
+      background-color: #0478fc;
     }
     img {
       width: 40px;
