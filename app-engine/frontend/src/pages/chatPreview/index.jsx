@@ -225,15 +225,14 @@ const ChatPreview = (props) => {
     runningAppid.current = aipp_id;
     if (!wsCurrent.current) {
       const prefix = window.location.protocol === 'http:' ? 'ws' : 'wss';
-      // wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
-      wsCurrent.current = new WebSocket(`${prefix}://80.11.128.86:30010/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
+      wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
       wsCurrent.current.onopen = () => {
         wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));   
       }
     } else {
       wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));
     }
-    wsCurrent.current.onerror = () => {
+    wsCurrent.current.onerror = (err) => {
       onStop('socket对话失败');
       dispatch(setChatRunning(false));
     }
