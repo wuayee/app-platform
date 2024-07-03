@@ -8,7 +8,6 @@ import static com.huawei.fit.jober.aipp.enums.ToolCategoryEnum.HUGGINGFACE;
 import static com.huawei.fit.jober.aipp.init.AippComponentInitiator.COMPONENT_DATA;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.AppBuilderWaterFlowInfoDto;
 import com.huawei.fit.jober.aipp.dto.ModelDto;
