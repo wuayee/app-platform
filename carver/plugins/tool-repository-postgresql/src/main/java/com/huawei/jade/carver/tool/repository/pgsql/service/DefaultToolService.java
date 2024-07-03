@@ -230,9 +230,9 @@ public class DefaultToolService implements ToolService {
         List<Tool.Info> infos = this.toolRepo.getAllVersionsTool(toolQuery);
         ArrayList<ToolData> toolDataList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(infos)) {
+            Set<String> tags = this.toolRepo.getTags(infos.get(0).uniqueName());
             for (Tool.Info info : infos) {
                 ToolData toolData = ToolData.from(info);
-                Set<String> tags = this.toolRepo.getTags(toolData.getUniqueName());
                 toolData.setTags(tags);
                 toolDataList.add(toolData);
             }
