@@ -11,7 +11,6 @@ import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
-import com.huawei.fit.jober.aipp.aop.AippLogInsert;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
@@ -26,6 +25,7 @@ import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.mapper.AippChatMapper;
 import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
 import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fit.jober.aipp.service.AopAippLogService;
 import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
 import com.huawei.fit.jober.aipp.util.AippLogUtils;
 import com.huawei.fit.jober.aipp.util.DataUtils;
@@ -69,16 +69,18 @@ public class AippLogServiceImpl implements AippLogService {
     private final MetaInstanceService metaInstanceService;
     private final UploadedFileManageService uploadedFileManageService;
     private final MetaService metaService;
+    private final AopAippLogService aopAippLogService;
 
     public AippLogServiceImpl(AippLogMapper aippLogMapper, DynamicFormService dynamicFormService,
             MetaInstanceService metaInstanceService, UploadedFileManageService uploadedFileManageService,
-            MetaService metaService, AippChatMapper aippChatMapper) {
+            MetaService metaService, AippChatMapper aippChatMapper, AopAippLogService aopAippLogService) {
         this.aippLogMapper = aippLogMapper;
         this.aippChatMapper = aippChatMapper;
         this.dynamicFormService = dynamicFormService;
         this.metaInstanceService = metaInstanceService;
         this.uploadedFileManageService = uploadedFileManageService;
         this.metaService = metaService;
+        this.aopAippLogService = aopAippLogService;
     }
 
     private AippInstLog completeFormDataJson(AippInstLog instanceLog, OperationContext context) {
@@ -180,8 +182,8 @@ public class AippLogServiceImpl implements AippLogService {
         return this.getAippLogWithAppInfo(logData, aippType, appId, context);
     }
 
-    private List<AippInstLogDataDto> getAippLogWithAppInfo(
-                List<AippInstLogDataDto> logData, String aippType, String appId, OperationContext context) {
+    private List<AippInstLogDataDto> getAippLogWithAppInfo(List<AippInstLogDataDto> logData, String aippType,
+            String appId, OperationContext context) {
         // 获取被@应用的头像、名称
         String type = AippTypeEnum.getType(aippType).type();
         List<String> originAippId = getMetaIds(appId, context, type);
@@ -384,23 +386,6 @@ public class AippLogServiceImpl implements AippLogService {
     /**
      * 插入aipp的历史记录
      *
-     * @param logDto 插入数据
-     */
-    @Override
-    @AippLogInsert
-    public void insertLog(AippLogCreateDto logDto) throws IllegalArgumentException {
-        if (logDto.allFieldsNotNull()) {
-            aippLogMapper.insertOne(logDto);
-            return;
-        }
-        log.error("null field exists in req {}", logDto);
-        // 待各个参数独立校验
-        throw new AippParamException(AippErrCode.UNKNOWN);
-    }
-
-    /**
-     * 插入aipp的历史记录
-     *
      * @param logType 日志类型
      * @param logData 日志数据
      * @param businessData 业务数据
@@ -413,15 +398,12 @@ public class AippLogServiceImpl implements AippLogService {
         String version = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_VERSION_KEY));
         String aippType = ObjectUtils.cast(businessData.get(AippConst.ATTR_AIPP_TYPE_KEY));
         String w3Account = DataUtils.getOpContext(businessData).getW3Account();
-
         if (!AippLogUtils.checkFormMsg(logData, logType)) {
             log.warn("invalid logData {}, logType {}, aippId {}, instId {}", logData, logType, aippId, instId);
             return;
         }
-
         String path = buildPath(instId, parentInstId);
-
-        insertLog(AippLogCreateDto.builder()
+        this.aopAippLogService.insertLog(AippLogCreateDto.builder()
                 .aippId(aippId)
                 .version(version)
                 .aippType(aippType)
