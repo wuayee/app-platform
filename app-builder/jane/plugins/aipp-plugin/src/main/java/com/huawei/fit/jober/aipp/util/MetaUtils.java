@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.fit.jober.aipp.common;
+package com.huawei.fit.jober.aipp.util;
 
 import static com.huawei.fitframework.util.ObjectUtils.nullIf;
 
@@ -30,7 +30,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 /**
  * Meta操作工具类
@@ -151,7 +155,7 @@ public class MetaUtils {
     private static List<Meta> getListMetaHandle(MetaService metaService, MetaFilter metaFilter,
             OperationContext context) throws AippException {
         final int limitPerQuery = 10;
-        return Utils.getAllFromRangedResult(limitPerQuery,
+        return getAllFromRangedResult(limitPerQuery,
                 (offset) -> metaService.list(metaFilter,
                         false,
                         offset,
@@ -253,6 +257,31 @@ public class MetaUtils {
                 "%s(%s)",
                 DirectionEnum.getDirection(nullIf(direction, DirectionEnum.DESCEND.name())).getValue(),
                 AippSortKeyEnum.getSortKey(nullIf(sortKey, AippSortKeyEnum.UPDATE_AT.name())).getKey());
+    }
+
+    /**
+     * 从rangeResult实例中获取查询结果
+     *
+     * @param limitPerQuery 表示查询数量限制的{@link int}
+     * @param resultGetter 表示返回查询的方法的{@link Function}
+     * @return 表示查询结果的流
+     * @param <T> 带查询数据的类型
+     */
+    public static <T> Stream<T> getAllFromRangedResult(int limitPerQuery,
+                                                       Function<Long, RangedResultSet<T>> resultGetter) {
+        RangedResultSet<T> metaRes = resultGetter.apply(0L);
+        if (metaRes.getResults().isEmpty() || metaRes.getRange().getTotal() == 0) {
+            return Stream.empty();
+        }
+        List<T> firstResult = metaRes.getResults();
+        if (metaRes.getRange().getTotal() <= limitPerQuery) {
+            return firstResult.stream();
+        }
+        return Stream.concat(firstResult.stream(),
+                LongStream.rangeClosed(1, (int) (metaRes.getRange().getTotal() / limitPerQuery))
+                        .mapToObj(offsetCount -> CompletableFuture.supplyAsync(() -> resultGetter.apply(
+                                offsetCount * limitPerQuery).getResults().stream()))
+                        .flatMap(CompletableFuture::join));
     }
 
     public enum NormalFilterEnum {

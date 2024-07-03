@@ -94,6 +94,7 @@ class Item(BaseModel):
     node_port: int
     npus: int
     max_link_num: int | None = None
+    max_token_size: int | None = None
 
 
 class GlobalExternalServiceProxy(BaseModel):
@@ -354,11 +355,11 @@ def list_models(chat_model_only=False):
         data: [],
     }
     models_meta = get_models_meta()
-    models_service = get_cached_model_services()
+    model_services = get_cached_model_services()
     deployed_models = set()
-    for service_name in models_service:
+    for model_name in model_services:
         try:
-            model_meta = models_meta["services"][service_name]
+            model_meta = models_meta["services"][model_name]
             model_name = model_meta["name"]
             model_type = model_meta.get("type_id", CHAT_MODEL_TYPE)
 
@@ -402,12 +403,6 @@ async def list_chat_models():
     return list_models(chat_model_only=True)
 
 
-def get_model_name(service_name):
-    name = service_name.split("_")[0]
-    return name.replace("dot", ".")
-
-
-
 def get_services():
     k8s_services = get_model_services()
     services = []
@@ -417,8 +412,7 @@ def get_services():
 
     for k8s_service in k8s_services.items:
         service_name = k8s_service.metadata.name
-        model_name = get_model_name(k8s_service.metadata.labels.get("app"))
-        model_name_origin = get_model_name_by_service_name(model_name)
+        model_name = k8s_service.metadata.labels.get("model_name", "")
         services.append({
             "model_name": model_name,
             "pipeline": k8s_service.metadata.labels.get("pipeline"),
@@ -608,10 +602,14 @@ def get_routes():
     url_key = "url"
     for service in services:
         max_link_num = 1000
-        if not service["pipeline"]:
-            model_name = get_model_name_by_service_name(service["model_name"])
-        else:
+
+        pipeline = "pipeline"
+
+        if not service[pipeline]:
             model_name = service["model_name"]
+        else:
+            model_name = service[pipeline]
+
         url = f"http://{service['cluster_ip']}:{service['port']}"
         if model_name in model_run_info:
             max_link_num = model_run_info[model_name]
@@ -676,9 +674,9 @@ async def delete_model(llm: Llm, request: Request, background_tasks: BackgroundT
     model_name = llm.name.strip()
     model_services = get_cached_model_services()
     logger.info(model_services)
-    if model_name.lower() in model_services:
-        service_name = model_services[model_name.lower()]["service_name"]
-        model_name = get_model_name(model_services[model_name.lower()]["model_name"])
+    if model_name in model_services:
+        service_name = model_services[model_name]["service_name"]
+        model_name = model_services[model_name]["model_name"]
         deployment_name = model_name + "-inference"
         code = "code"
         detail = "detail"
@@ -765,16 +763,6 @@ def get_cached_model_services():
     return MODEL_SERVICES_SINGLETON
 
 
-def get_model_name_by_service_name(service_name):
-    models_meta = get_models_meta()
-    model_name = service_name
-    try:
-        model_name = models_meta["services"][service_name]["name"]
-    except KeyError as e:
-        logger.error("KeyError:%s", e)
-    return model_name
-
-
 def get_models_meta():
     global models_meta_singleton
     models_meta = models_meta_singleton
@@ -786,7 +774,7 @@ def get_models_meta():
 
     for model in models_meta.get("llms", []):
         model_name = model["name"]
-        models_meta["services"][model_name.lower()] = model
+        models_meta["services"][model_name] = model
         if model["type"] == EMBEDDING_MODEL_TYPE:
             model["type_id"] = "embed"
         else:
@@ -843,11 +831,11 @@ def get_supported_models_template(meta=False):
 
         model_services = get_cached_model_services()
         try:
-            if model_services.get(model[name].lower()):
+            if model_services.get(model[name]):
                 model_info = local_model_services.get(model_name, {})
                 status = "status"
-                model[status] = model_services[model[name].lower()][status]
-                model["port"] = model_services[model[name].lower()]["node_port"]
+                model[status] = model_services[model[name]][status]
+                model["port"] = model_services[model[name]]["node_port"]
                 model["image"] = get_supported_images()[0]
                 model["max_link_num"] = model_info.get("max_link_num", 300)
                 model["npu"][current] = model_info.get("npus", 1)
@@ -1009,12 +997,13 @@ async def start_up_pipeline(item: PipelineItem, request: Request, background_tas
     model_name = item.name.strip()
     model_name_pre = model_name.split('/')[0]
     model_name_post = model_name.split('/')[1]
-    render_name = model_name_pre + '-' + model_name_post + '-' + item.task
-    render_name = render_name.replace(".", "dot").lower()
+    pipeline_name = model_name_pre + '-' + model_name_post + '-' + item.task
+    render_name = pipeline_name.replace(".", "dot").lower()
 
     render_data = {
         "name": render_name,
         "model_name": model_name,
+        "pipeline_name": pipeline_name,
         "task": item.task,
         "node_port": item.node_port,
         "image_name": item.image_name.strip(),
@@ -1104,17 +1093,6 @@ def create_yaml_files(item, yaml_objs):
             f.write('---\n')
 
 
-def deploy_service_and_deployment(service_manifest, deployment_manifest):
-    try:
-        api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, service_manifest)
-    except ApiException as e:
-        logger.warning(e)
-    try:
-        k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, deployment_manifest)
-    except ApiException as e:
-        logger.warning(e)
-
-
 def get_max_token_size(item, models_meta, model_name):
     max_token_size = item.max_token_size
     if max_token_size is None:
@@ -1144,8 +1122,11 @@ async def start_up(item: Item, request: Request, background_tasks: BackgroundTas
         label_selector="name=ascend-device-plugin-ds",
     )
 
+    render_name = model_name.replace(".", "dot").lower()
+
     render_data = {
-        "name": model_name.lower(),
+        "name": render_name,
+        "model_name": model_name,
         "replicas": item.replicas,
         "node_port": item.node_port,
         "image_name": item.image_name.strip(),
@@ -1155,7 +1136,14 @@ async def start_up(item: Item, request: Request, background_tasks: BackgroundTas
         "enable_npu_schedule": len(pod_list.items) > 0,
     }
 
-    create_model_svc_and_deploy(item, render_data)
+    success = create_model_svc_and_deploy(item, render_data)
+    if not success:
+        error_code = 521
+        error_args = ["Create deployment [{}/{}] failed: {}.", MODEL_IO_NAMESPACE, model_name]
+        detail = "Failed to create Model: [{}]. Failure cause:{}".format(model_name, error_args)
+        error_info = gen_error_info(521, detail)
+        response = JSONResponse(status_code=error_code, content=jsonable_encoder(error_info))
+        return response
 
     # persist services
     local_model_services[model_name] = item.model_dump()
@@ -1176,16 +1164,37 @@ def create_model_svc_and_deploy(item, render_data):
         for obj in yaml_objs:
             yaml.dump(obj, f)
             f.write('---\n')
+
     try:
         api_instance.create_namespaced_service(MODEL_IO_NAMESPACE, yaml_objs[0])
-        logger.info("Create service [{}/{}] success!", MODEL_IO_NAMESPACE, item.name.strip())
+        logger.info("Create service [%s/%s] success!", MODEL_IO_NAMESPACE, item.name.strip())
     except ApiException as e:
-        logger.warning("Create service [{}/{}] failed: {}", MODEL_IO_NAMESPACE, item.name.strip(), e)
+        logger.warning("Create service [%s/%s] failed: %s", MODEL_IO_NAMESPACE, item.name.strip(), str(e))
+
     try:
         k8s_client.create_namespaced_deployment(MODEL_IO_NAMESPACE, yaml_objs[1])
-        logger.info("Create deployment [{}/{}] success!", MODEL_IO_NAMESPACE, item.name.strip())
+        logger.info("Create deployment [%s/%s] success!", MODEL_IO_NAMESPACE, item.name.strip())
     except ApiException as e:
-        logger.warning("Create deployment [{}/{}] failed: {}.", MODEL_IO_NAMESPACE, item.name.strip(), e)
+        logger.warning("Create deployment [%s/%s] failed: status:%s, %s.",
+                       MODEL_IO_NAMESPACE, item.name.strip(), e.status, str(e))
+        if e.status != 409:
+            handle_deployment_failure(yaml_objs, render_data, item)
+            return False
+    return True
+
+
+def handle_deployment_failure(yaml_objs, render_data, item):
+    meta_data = "metadata"
+    name = "name"
+    try:
+        service_name = yaml_objs[0][meta_data][name]
+        api_instance.read_namespaced_service(service_name, MODEL_IO_NAMESPACE)
+        logger.info("Service [%s/%s] exists, starting to roll back service creation", MODEL_IO_NAMESPACE,
+                    item.name.strip())
+        api_instance.delete_namespaced_service(service_name, MODEL_IO_NAMESPACE)
+        logger.info("Rolled back service creation for [%s]", service_name)
+    except ApiException as e:
+        logger.warning("No existing service [%s/%s]: %s", MODEL_IO_NAMESPACE, item.name.strip(), str(e))
 
 
 if __name__ == "__main__":

@@ -56,16 +56,15 @@ let jadeEvent = (id, x, y, width, height, parent, drawer) => {
          */
         const toRelease = self.toConnector.release;
         self.toConnector.release = position => {
-            const fromShape = self.fromShape;
-            const fromShapeConnector = self.fromShapeConnector;
-
             // 当前的线条连接的两个connector是否已经被占用了
-            function isConnectorPairUsed() {
-                return self.page.shapes.filter(s => s.type === "jadeEvent").count(s => s.fromShape === fromShape
-                    && s.toShape === self.connectingShape.id
-                    && s.fromShapeConnector === fromShapeConnector
-                    && s.toShapeConnector === self.connectingShape.linkingConnector) > 1;
-            }
+            const isConnectorPairUsed = () => {
+                return self.page.shapes.filter(s => s.isTypeof("jadeEvent") && s.id !== self.id).some(s => {
+                    return s.fromShape === self.fromShape
+                            && s.toShape === self.toShape
+                            && s.fromShapeConnector === self.fromShapeConnector
+                            && s.toShapeConnector === self.toShapeConnector;
+                });
+            };
 
             // 正式release之前，先保存release之前的toShape.
             self.isFocused = false;

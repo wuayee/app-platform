@@ -8,8 +8,6 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jober.FlowCallbackService;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.domain.AppBuilderForm;
 import com.huawei.fit.jober.aipp.entity.AippLogData;
@@ -17,6 +15,9 @@ import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.genericable.AppFlowFinishObserver;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.FormUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.service.AippStreamService;
 import com.huawei.fit.jober.aipp.service.AppBuilderFormService;
 import com.huawei.fitframework.annotation.Component;
@@ -74,7 +75,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.AippFlowEndCallback")
     @Override
     public void callback(List<Map<String, Object>> contexts) {
-        Map<String, Object> businessData = Utils.getBusiness(contexts);
+        Map<String, Object> businessData = DataUtils.getBusiness(contexts);
         log.debug("AippFlowEndCallback businessData {}", businessData);
 
         String versionId = (String) businessData.get(AippConst.BS_META_VERSION_ID_KEY);
@@ -138,9 +139,8 @@ public class AippFlowEndCallback implements FlowCallbackService {
         String finalOutputStr =
                 ObjectUtils.cast(finalOutput instanceof String ? finalOutput : JsonUtils.toJsonString(finalOutput));
         String logMsg = finalOutput == null ? "获取到的结果为 null，请检查配置。" : finalOutputStr;
-        Utils.persistAippMsgLog(this.aippLogService, logMsg, contexts);
-        this.beanContainer.all(AppFlowFinishObserver.class)
-                .stream()
+        this.aippLogService.insertMsgLog(logMsg, contexts);
+        this.beanContainer.all(AppFlowFinishObserver.class).stream()
                 .<AppFlowFinishObserver>map(BeanFactory::get)
                 .forEach(finishObserver -> finishObserver.onFinished(logMsg, this.buildAttributes(aippInstId)));
 

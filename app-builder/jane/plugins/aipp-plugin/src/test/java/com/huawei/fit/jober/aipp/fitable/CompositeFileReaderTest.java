@@ -13,13 +13,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.UUIDUtil;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dummy.OperationContextDummy;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.OperatorService;
+import com.huawei.fit.jober.aipp.util.AippFileUtils;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.jober.aipp.util.UUIDUtil;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 
 import org.junit.jupiter.api.Assertions;
@@ -57,7 +58,7 @@ public class CompositeFileReaderTest {
     void shouldCallOperatorServiceWhenCallHandleTaskWithPdf() {
         // given
         final String dummyFile = "some/Random.pdf";
-        final String dummyPath = Paths.get(Utils.NAS_SHARE_DIR, dummyFile).toAbsolutePath().toString();
+        final String dummyPath = Paths.get(AippFileUtils.NAS_SHARE_DIR, dummyFile).toAbsolutePath().toString();
         Map<String, Object> businessData = new HashMap<>();
         businessData.put(AippConst.BS_HTTP_CONTEXT_KEY, JsonUtils.toJsonString(OperationContextDummy.getDummy()));
         businessData.put(AippConst.BS_FILE_PATH_KEY,
@@ -78,14 +79,14 @@ public class CompositeFileReaderTest {
                 eq(dummyId),
                 argThat(info -> info.getInfo().getValue().get(AippConst.INST_FILE2TEXT_KEY).equals(dummyContent)),
                 argThat(OperationContextDummy::operationContextDummyMatcher));
-        Assertions.assertEquals(Utils.getBusiness(flowData).get(AippConst.INST_FILE2TEXT_KEY), dummyContent);
+        Assertions.assertEquals(DataUtils.getBusiness(flowData).get(AippConst.INST_FILE2TEXT_KEY), dummyContent);
     }
 
     @Test
     void shouldCallOperatorServiceWhenCallHandleTaskWithDocx() {
         // given
         final String dummyFile = "some/Random.docx";
-        final String dummyPath = Paths.get(Utils.NAS_SHARE_DIR, dummyFile).toAbsolutePath().toString();
+        final String dummyPath = Paths.get(AippFileUtils.NAS_SHARE_DIR, dummyFile).toAbsolutePath().toString();
         Map<String, Object> businessData = new HashMap<>();
         businessData.put(AippConst.BS_HTTP_CONTEXT_KEY, JsonUtils.toJsonString(OperationContextDummy.getDummy()));
         businessData.put(AippConst.BS_FILE_PATH_KEY,
@@ -106,14 +107,14 @@ public class CompositeFileReaderTest {
                 eq(dummyId),
                 argThat(info -> info.getInfo().getValue().get(AippConst.INST_FILE2TEXT_KEY).equals(dummyContent)),
                 argThat(OperationContextDummy::operationContextDummyMatcher));
-        Assertions.assertEquals(Utils.getBusiness(flowData).get(AippConst.INST_FILE2TEXT_KEY), dummyContent);
+        Assertions.assertEquals(DataUtils.getBusiness(flowData).get(AippConst.INST_FILE2TEXT_KEY), dummyContent);
     }
 
     @Test
     void shouldThrowWhenCallHandleTaskWithOperatorServiceReturnBlank() {
         // given
         final String dummyFile = "some/Random.docx";
-        final String dummyPath = Paths.get(Utils.NAS_SHARE_DIR, dummyFile).toAbsolutePath().toString();
+        final String dummyPath = Paths.get(AippFileUtils.NAS_SHARE_DIR, dummyFile).toAbsolutePath().toString();
         Map<String, Object> businessData = new HashMap<>();
         businessData.put(AippConst.BS_HTTP_CONTEXT_KEY, JsonUtils.toJsonString(OperationContextDummy.getDummy()));
         businessData.put(AippConst.BS_FILE_PATH_KEY,

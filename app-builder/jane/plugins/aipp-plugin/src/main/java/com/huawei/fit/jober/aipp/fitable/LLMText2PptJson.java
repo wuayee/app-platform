@@ -6,14 +6,14 @@ package com.huawei.fit.jober.aipp.fitable;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.LLMUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.PptJsonDto;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.LLMService;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.jober.aipp.util.LLMUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
@@ -55,22 +55,22 @@ public class LLMText2PptJson implements FlowableService {
     @Override
     @Fitable("com.huawei.fit.jober.aipp.fitable.LLMText2PptJson")
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("LLMText2PptJson businessData {}", businessData);
 
         String msg = "首先，我需要根据你提交的信息，选择一个合适的报告模板，并生成报告内容";
-        Utils.persistAippMsgLog(aippLogService, msg, flowData);
+        this.aippLogService.insertMsgLog(msg, flowData);
 
-        OperationContext context = Utils.getOpContext(businessData);
+        OperationContext context = DataUtils.getOpContext(businessData);
         String operator = context.getOperator();
         String text = (String) businessData.get(AippConst.BS_TEXT_GENERATE_PPT_JSON_KEY);
         PptJsonDto pptJsonDto = text2pptJson(text, operator);
-        Utils.persistAippMsgLog(aippLogService, formatPptContentToMsg(pptJsonDto), flowData);
+        this.aippLogService.insertMsgLog(formatPptContentToMsg(pptJsonDto), flowData);
 
         String result = JsonUtils.toJsonString(pptJsonDto);
 
         msg = "基于以上信息，我决定调用ppt生成工具\n正在为您生成述职报告";
-        Utils.persistAippMsgLog(aippLogService, msg, flowData);
+        this.aippLogService.insertMsgLog(msg, flowData);
         businessData.put(AippConst.BS_PPT_JSON_RESULT, result);
         return flowData;
     }

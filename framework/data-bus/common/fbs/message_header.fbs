@@ -11,6 +11,7 @@ enum MessageType:byte {
     ReleaseMemory = 0x31,
     CleanupExpiredMemory = 0x32,
     GetMetaData = 0x41,
+    Hello = 0x42,
 }
 
 // 修改此 table 请务必与 DataBus 开发组人员确认

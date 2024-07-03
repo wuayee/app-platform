@@ -24,11 +24,10 @@ import com.huawei.fit.waterflow.flowsengine.utils.OhScriptExecutor;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
 
-import com.google.common.collect.Lists;
-
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +92,8 @@ public class FlowConditionNode extends FlowNode {
     }
 
     private void conditionalJuster(FlowContext<FlowData> input) {
-        Optional.ofNullable(this.jober).ifPresent(flowJober -> flowJober.execute(Lists.newArrayList(input.getData())));
+        Optional.ofNullable(this.jober)
+                .ifPresent(flowJober -> flowJober.execute(Collections.singletonList(input.getData())));
 
         Map<String, Object> contextData = input.getData().getContextData();
         String nodeMetaId = getMetaId();

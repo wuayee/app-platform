@@ -5,13 +5,13 @@
 package com.huawei.fit.jober.aipp.fitable;
 
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.HttpUtils;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.xiaohai.SearchW3Item;
 import com.huawei.fit.jober.aipp.dto.xiaohai.SearchW3RespDto;
 import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.HttpUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
@@ -51,7 +51,7 @@ public class SearchFileFromW3 implements FlowableService {
             return;
         }
         String msg = "很抱歉！检索内容不能为空，请输入您关注的内容";
-        Utils.persistAippErrorLog(aippLogService, msg, flowData);
+        this.aippLogService.insertErrorLog(msg, flowData);
 
         throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "queryContent is empty.");
     }
@@ -65,7 +65,7 @@ public class SearchFileFromW3 implements FlowableService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.SearchFileFromW3")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("SearchFileFromW3 businessData {}", businessData);
 
         String queryContent = (String) businessData.get(AippConst.BS_SEARCH_W3_QUERY_CONTENT);
@@ -73,7 +73,7 @@ public class SearchFileFromW3 implements FlowableService {
         String queryTopKStr = (String) businessData.getOrDefault(AippConst.BS_SEARCH_W3_QUERY_TOP_K, "3");
 
         String msg = "好的，根据您的需求，我决定先从网络上搜索相关信息";
-        Utils.persistAippMsgLog(aippLogService, msg, flowData);
+        this.aippLogService.insertMsgLog(msg, flowData);
         HttpGet httpGet = null;
         try (CloseableHttpResponse response = HttpUtils.execute(httpGet = createHttpGet(queryContent, queryTopKStr))) {
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
@@ -85,7 +85,7 @@ public class SearchFileFromW3 implements FlowableService {
             String resp = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
             log.info("search w3 resp:{}", resp);
             SearchW3RespDto respDto = JsonUtils.parseObject(resp, SearchW3RespDto.class);
-            Utils.persistAippMsgLog(aippLogService, searchW3ItemListToLog(respDto.getData()), flowData);
+            this.aippLogService.insertMsgLog(searchW3ItemListToLog(respDto.getData()), flowData);
             businessData.put(AippConst.BS_SEARCH_W3_QUERY_RESULT, w3QueryResultToString(respDto.getData()));
         } catch (IOException | ParseException e) {
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR,

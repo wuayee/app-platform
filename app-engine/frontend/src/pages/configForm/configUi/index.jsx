@@ -84,7 +84,7 @@ function ConfigUI(props) {
             多轮对话
             <Switch className="conversation-switch"
                     onChange={(checked, event) => historySwitchChange(checked, event)}
-                    value={memoryValues.memorySwitch}/>
+                    value={memoryValues.memorySwitch ? memoryValues.memorySwitch : false}/>
           </div>
         ),
         children: <MultiConversationContent itemId="memory"

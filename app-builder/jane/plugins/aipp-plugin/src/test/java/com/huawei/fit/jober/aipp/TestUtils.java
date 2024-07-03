@@ -105,7 +105,7 @@ public class TestUtils {
             MetaService metaServiceMock, AippLogService aippLogServiceMock) {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Mockito.when(metaServiceMock.retrieve(any(), any())).thenReturn(buildMeta());
-        Mockito.doAnswer((Answer<Void>) invocation -> null).when(aippLogServiceMock).insertLog(any());
+        Mockito.doAnswer((Answer<Void>) invocation -> null).when(aippLogServiceMock).insertErrorLog(any(), any());
         Mockito.doAnswer((Answer<Void>) invocation -> {
             countDownLatch.countDown();
             return null;

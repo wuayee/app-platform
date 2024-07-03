@@ -7,12 +7,12 @@ package com.huawei.fit.jober.aipp.fitable;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.InstanceService;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.entity.W3Task;
 import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.entity.InstanceInfo;
@@ -66,7 +66,7 @@ public class W3TaskPublish implements FlowableService {
     }
 
     private com.huawei.fit.jober.entity.OperationContext getJoberOpContext(Map<String, Object> businessData) {
-        OperationContext opContext = Utils.getOpContext(businessData);
+        OperationContext opContext = DataUtils.getOpContext(businessData);
 
         com.huawei.fit.jober.entity.OperationContext joberOpContext =
                 new com.huawei.fit.jober.entity.OperationContext();
@@ -86,7 +86,7 @@ public class W3TaskPublish implements FlowableService {
         } catch (AippJsonDecodeException e) {
             log.error("error={}, invalid json string={}", e.getMessage(), w3TaskStr);
             String msg = "很抱歉！解析音频错误，您可以尝试换个音频";
-            Utils.persistAippErrorLog(aippLogService, msg, flowData);
+            this.aippLogService.insertErrorLog(msg, flowData);
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "w3Task is invalid json string.");
         }
         return w3Task;
@@ -113,7 +113,7 @@ public class W3TaskPublish implements FlowableService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.W3TaskPublish")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("W3TaskPublish businessData {}", businessData);
 
         String w3TaskStr = (String) businessData.get(AippConst.BS_W3_TASK_RESULT);
@@ -132,7 +132,7 @@ public class W3TaskPublish implements FlowableService {
             });
         } catch (Exception e) {
             String msg = "很抱歉！创建w3待办失败，请稍后重试";
-            Utils.persistAippErrorLog(aippLogService, msg, flowData);
+            this.aippLogService.insertErrorLog(msg, flowData);
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "create w3Task failed.");
         }
         String displayResult =

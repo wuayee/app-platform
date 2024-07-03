@@ -8,12 +8,12 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowExceptionService;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.entity.AippInstLog;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
@@ -46,7 +46,7 @@ public class AippFlowExceptionHandle implements FlowExceptionService {
         if (StringUtils.isNotEmpty(errorMessage)) {
             msg += "\n提示：" + errorMessage;
         }
-        Utils.persistAippErrorLog(aippLogService, msg, contexts);
+        this.aippLogService.insertErrorLog(msg, contexts);
     }
 
     /**
@@ -59,7 +59,7 @@ public class AippFlowExceptionHandle implements FlowExceptionService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.AippFlowExceptionHandler")
     @Override
     public void handleException(String nodeId, List<Map<String, Object>> contexts, String errorMessage) {
-        Map<String, Object> businessData = Utils.getBusiness(contexts);
+        Map<String, Object> businessData = DataUtils.getBusiness(contexts);
         String versionId = (String) businessData.get(AippConst.BS_META_VERSION_ID_KEY);
         log.error("versionId {} nodeId {} errorMessage {}, handleException businessData {}",
                 versionId,
@@ -72,7 +72,7 @@ public class AippFlowExceptionHandle implements FlowExceptionService {
                 .putInfo(AippConst.INST_FINISH_TIME_KEY, LocalDateTime.now())
                 .putInfo(AippConst.INST_STATUS_KEY, MetaInstStatusEnum.ERROR.name())
                 .build();
-        OperationContext context = Utils.getOpContext(businessData);
+        OperationContext context = DataUtils.getOpContext(businessData);
         metaInstanceService.patchMetaInstance(versionId, aippInstId, declarationInfo, context);
         addErrorLog(aippInstId, contexts, errorMessage);
     }

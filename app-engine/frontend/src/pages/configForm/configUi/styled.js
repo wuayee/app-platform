@@ -163,6 +163,12 @@ export const ConfigWrap = styled.div`
     .conversation-switch {
       margin-left: 10px;
     }
+  .ant-switch.ant-switch-checked {
+    background-color: #0478fc;
+  }
+  .ant-switch.ant-switch-checked:hover:not(.ant-switch-disabled) {
+    background-color: #0478fc;
+  }
 `;
 
 export const InspirationWrap = styled.div`

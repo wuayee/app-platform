@@ -4,15 +4,14 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
-import static com.huawei.fit.jober.aipp.common.HttpUtils.sendHttpRequest;
+import static com.huawei.fit.jober.aipp.util.HttpUtils.sendHttpRequest;
 
-import com.huawei.fit.jober.aipp.common.HttpUtils;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.dto.xiaohai.FileDto;
 import com.huawei.fit.jober.aipp.dto.xiaohai.FileListDto;
 import com.huawei.fit.jober.aipp.dto.xiaohai.RespMsgDto;
 import com.huawei.fit.jober.aipp.service.LLMService;
+import com.huawei.fit.jober.aipp.util.HttpUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Value;
@@ -29,13 +28,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -143,7 +138,7 @@ public class LLMServiceImpl implements LLMService {
 
     private <T> T askXiaoHai(String w3Id, String question, String url, Class<T> respDtoCls) throws IOException {
         HttpPost httpPost = new HttpPost(url);
-        httpPost.setConfig(Utils.requestConfig(this.xiaoHaiReadTimeout));
+        httpPost.setConfig(HttpUtils.requestConfig(this.xiaoHaiReadTimeout));
         httpPost.setEntity(new StringEntity(getAskXiaoHaiReqBody(w3Id, question), ContentType.APPLICATION_JSON));
         String respContent = sendHttpRequest(httpPost);
         return JsonUtils.parseObject(respContent, respDtoCls);

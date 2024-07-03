@@ -57,21 +57,10 @@ class ResponseDispatcher {
      * 启动分发器任务。
      */
     public void start() {
+        this.isRunning = true;
         dispatcherService.submit(() -> {
-            this.isRunning = true;
             this.startEventLoop();
         });
-    }
-
-    /**
-     * 结束分发器运行。通过关闭 socketChannel 来打断阻塞读。
-     *
-     * @throws IOException 当 socketChannel 非正常关闭。
-     */
-    public void stop() throws IOException {
-        this.isRunning = false;
-        this.socketChannel.close();
-        this.dispatcherService.shutdownNow();
     }
 
     /**
@@ -88,11 +77,13 @@ class ResponseDispatcher {
         while (this.isRunning) {
             buffer.clear();
 
-            int bytesRead = 0;
+            int bytesRead;
             try {
                 bytesRead = socketChannel.read(buffer);
                 if (bytesRead == -1) {
-                    break;
+                    logger.error("[startEventLoop] Disconnected, Broken pipe.");
+                    this.shutdownGracefully();
+                    return;
                 }
 
                 buffer.flip();
@@ -122,14 +113,28 @@ class ResponseDispatcher {
             } catch (Exception e) {
                 // 异常意味着连接问题或者编程错误，此时应该退出
                 logger.error("[startEventLoop] message receiving exception.", e);
-                this.isRunning = false;
-                try {
-                    this.socketChannel.close();
-                } catch (IOException ex) {
-                    logger.error("[startEventLoop] closing socket receiving exception.", ex);
-                }
+                this.shutdownGracefully();
                 return;
             }
+        }
+    }
+
+    /**
+     * 结束分发器运行。通过关闭 socketChannel 来打断阻塞读。
+     */
+    void shutdownGracefully() {
+        this.isRunning = false;
+        this.dispatcherService.shutdownNow();
+
+        for (Map.Entry<Long, BlockingQueue<ByteBuffer>> entry : replyQueues.entrySet()) {
+            // 对每一个等待的请求发送空缓冲区，强制其退出。
+            this.replyQueues.get(entry.getKey()).offer(ByteBuffer.allocate(0));
+        }
+
+        try {
+            this.socketChannel.close();
+        } catch (IOException ex) {
+            logger.error("[startEventLoop] closing socket receiving exception.", ex);
         }
     }
 

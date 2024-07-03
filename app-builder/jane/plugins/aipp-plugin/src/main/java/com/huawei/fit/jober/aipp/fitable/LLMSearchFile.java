@@ -8,13 +8,14 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.aipp.common.JsonUtils;
-import com.huawei.fit.jober.aipp.common.Utils;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.xiaohai.FileDto;
 import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.LLMService;
+import com.huawei.fit.jober.aipp.util.DataUtils;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
@@ -50,7 +51,7 @@ public class LLMSearchFile implements FlowableService {
             return;
         }
         String msg = "很抱歉！根据已知信息，无法匹配到相关的数存知识，您可以尝试换个内容";
-        Utils.persistAippErrorLog(aippLogService, msg, flowData);
+        this.aippLogService.insertErrorLog(msg, flowData);
 
         throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "search result is empty.");
     }
@@ -58,12 +59,12 @@ public class LLMSearchFile implements FlowableService {
     @Fitable("com.huawei.fit.jober.aipp.fitable.LLMSearchFile")
     @Override
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        Map<String, Object> businessData = Utils.getBusiness(flowData);
+        Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("LLMSearchFile businessData {}", businessData);
 
         try {
-            OperationContext context = Utils.getOpContext(businessData);
-            String prompt = Utils.getPromptFromFlowContext(flowData);
+            OperationContext context = DataUtils.getOpContext(businessData);
+            String prompt = DataUtils.getPromptFromFlowContext(flowData);
             Validation.notBlank(prompt, "prompt cannot be null");
 
             String modelName = (String) businessData.get(AippConst.BS_MODEL_NAME_KEY);
@@ -80,7 +81,7 @@ public class LLMSearchFile implements FlowableService {
 
             InstanceDeclarationInfo info =
                     InstanceDeclarationInfo.custom().putInfo(AippConst.INST_RECOMMEND_DOC_KEY, result).build();
-            Utils.persistInstance(metaInstanceService, info, businessData, context);
+            MetaInstanceUtils.persistInstance(metaInstanceService, info, businessData, context);
         } catch (IOException e) {
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR,
                     String.format(Locale.ROOT,
