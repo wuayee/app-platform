@@ -11,4 +11,6 @@ class MessageType(object):
     ApplyPermission = 33
     ReleasePermission = 48
     ReleaseMemory = 49
+    CleanupExpiredMemory = 50
     GetMetaData = 65
+    Hello = 66
