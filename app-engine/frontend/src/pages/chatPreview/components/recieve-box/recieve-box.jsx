@@ -1,21 +1,19 @@
 
 import React, { useEffect, useState, useContext } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useLocation } from 'react-router-dom';
-import { Checkbox } from "antd";
+import { Checkbox } from 'antd';
 import { ChatContext } from '@/pages/aippIndex/context';
-import { urlify } from '@shared/utils/common';
+import { useAppSelector } from '../../../../store/hook';
 import Feedbacks from './feedbacks';
 import MessageDetail from './message-detail';
 import RuntimeForm from './runtime-form';
 import SendBtn from '../send-box/send-btn';
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
 import '../../styles/recieve-box.scss';
-import { useAppSelector } from '../../../../store/hook';
 
 const ReciveBox = (props) => {
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
-  const appId = useAppSelector((state) => state.appStore.appId);
-  const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const { checkCallBack, showCheck } = useContext(ChatContext);
   const {
     content,
@@ -31,6 +29,7 @@ const ReciveBox = (props) => {
     feedbackStatus,
     appName,
     appIcon,
+    filters,
     isAt } = props.chatItem;
   const [showIcon, setShowIcon] = useState(true);
   const location = useLocation();
@@ -48,9 +47,17 @@ const ReciveBox = (props) => {
   // 设置显示类型
   function setRecieveDom(type) {
     if (type === 'form') {
-      return <RuntimeForm formConfig={formConfig} />
+      return <ErrorBoundary fallback={<div className='app-error-form'>表单渲染失败</div>}>
+                 <RuntimeForm formConfig={formConfig} />
+              </ErrorBoundary>
     }
-    return <MessageDetail content={content} markdownSyntax={markdownSyntax} finished={finished} chartConfig={chartConfig} />
+    return <MessageDetail 
+              content={content} 
+              markdownSyntax={markdownSyntax} 
+              finished={finished} 
+              chartConfig={chartConfig}
+              filters={filters}
+            />
   }
   return <>{(
     <div className='recieve-box'>
@@ -59,9 +66,9 @@ const ReciveBox = (props) => {
         {isAt ? <Img iconPath={appIcon} /> : <Img iconPath={appInfo.attributes?.icon} />}
         {isAt ? <Name name={appName} /> : <Name name={appInfo.name} />}
       </div>
-      <span className="recieve-info-inner">
+      <span className='recieve-info-inner'>
         {loading ? <Loading /> : setRecieveDom(recieveType)}
-        {showIcon && <SendBtn content={content} sendType="text" />}
+        {showIcon && <SendBtn content={content} sendType='text' />}
         {showIcon && <Feedbacks logId={logId} instanceId={instanceId} feedbackStatus={feedbackStatus} refreshFeedbackStatus={props.refreshFeedbackStatus} />}
       </span>
     </div>
@@ -71,10 +78,10 @@ const ReciveBox = (props) => {
 const Loading = () => {
   return (
     <>
-      <div className="recieve-loading">
-        <div className="bounce1"></div>
-        <div className="bounce2"></div>
-        <div className="bounce3"></div>
+      <div className='recieve-loading'>
+        <div className='bounce1'></div>
+        <div className='bounce2'></div>
+        <div className='bounce3'></div>
       </div>
     </>
   )

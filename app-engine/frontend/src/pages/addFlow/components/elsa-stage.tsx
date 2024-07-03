@@ -54,6 +54,8 @@ const Stage = (props) => {
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/fileContentComponent.jsx`),
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/interviewQuestionsComponent.jsx`),
       () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/manageCubeCreateReportComponent.jsx`),
+      () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/QuestionClar/questionClarComponent`),
+      () => import(/* webpackIgnore: true */`../../chatPreview/components/runtimeForm/conditionForm/conditionFormComponent`),
     ];
     JadeFlow.edit(stageDom, tenantId, data, CONFIGS, importFiles).then(agent => {
       window.agent ? null : window.agent = agent;
