@@ -93,7 +93,7 @@ public class GatewayController {
      */
     private ResponseEntity<String> updateCurrentRoutes(List<RouteInfo> latestRoutes) {
         for (RouteInfo routeInfo : latestRoutes) {
-            if (routeInfo.getId() == null) {
+            if (routeInfo.getId() == null || routeInfo.getId().isEmpty()) {
                 log.error("The route id is null, skip this route: " + routeInfo);
                 continue;
             }
@@ -119,32 +119,43 @@ public class GatewayController {
             }
 
             // 根据模型路由信息设置流控信息
-            if (routeInfo.getModel() != null
-                    && !this.modelStatisticsService.getModelLinkControl().containsKey(routeInfo.getModel())) {
-                // 初次设置，增加到modelLinkControl缓存
-                Integer maxLinkNum = routeInfo.getMaxLinkNum(); // RouteInfo#maxLinkNum已配置缺省值1000
-                log.info("Add new link control for model: " + routeInfo.getModel()
-                        + " for link num to: " + maxLinkNum);
-                this.modelStatisticsService.getModelLinkControl().put(routeInfo.getModel(), maxLinkNum);
-            } else {
-                // 已经设置过最大链接数，更新modelLinkControl
-                Integer currentLinkNum = this.modelStatisticsService.getModelLinkControl().get(routeInfo.getId());
-                Integer oldLinkNum = this.currentRoutes.get(routeInfo.getModel()).getMaxLinkNum();
-                Integer currentUsage = oldLinkNum - currentLinkNum;
-                Integer newLinkNum = routeInfo.getMaxLinkNum();
-                Integer updateLinkNum = 0;
-                if (currentUsage < newLinkNum) {
-                    updateLinkNum = currentLinkNum + newLinkNum - oldLinkNum;
-                }
-                log.info("update exist link control for model: " + routeInfo.getModel()
-                        + "for link num to: " + updateLinkNum);
-                this.modelStatisticsService.getModelLinkControl().put(routeInfo.getModel(), updateLinkNum);
-            }
+            updateMaxLinkNum(routeInfo);
 
             this.currentRoutes.put(routeInfo.getId(), routeInfo);
             log.info(routeInfo.getId() + " is updated");
         }
         return ResponseEntity.ok().build();
+    }
+
+    private void updateMaxLinkNum(RouteInfo routeInfo) {
+        if (routeInfo == null || routeInfo.getModel() == null) {
+            log.warn("Failed to update max link num for route: " + routeInfo);
+            return;
+        }
+
+        if (!this.modelStatisticsService.getModelLinkControl().containsKey(routeInfo.getModel())) {
+            // 初次设置，增加到modelLinkControl缓存
+            Integer maxLinkNum = routeInfo.getMaxLinkNum(); // RouteInfo#maxLinkNum已配置缺省值1000
+            log.info("Add new link control for model: " + routeInfo.getModel()
+                    + " for link num to: " + maxLinkNum);
+            this.modelStatisticsService.getModelLinkControl().put(routeInfo.getModel(), maxLinkNum);
+        } else if (this.currentRoutes.get(routeInfo.getModel()) != null) {
+            // 路由中包含该模型才需要更新
+            // 已经设置过最大链接数，更新modelLinkControl
+            Integer currentLinkNum = this.modelStatisticsService.getModelLinkControl().get(routeInfo.getId());
+            Integer oldLinkNum = this.currentRoutes.get(routeInfo.getModel()).getMaxLinkNum();
+            int currentUsage = oldLinkNum - currentLinkNum;
+            Integer newLinkNum = routeInfo.getMaxLinkNum();
+            int updateLinkNum = 0;
+            if (currentUsage < newLinkNum) {
+                updateLinkNum = currentLinkNum + newLinkNum - oldLinkNum;
+            }
+            log.info("update exist link control for model: " + routeInfo.getModel()
+                    + "for link num to: " + updateLinkNum);
+            this.modelStatisticsService.getModelLinkControl().put(routeInfo.getModel(), updateLinkNum);
+        } else {
+            log.warn("No need to update max link num for route: " + routeInfo.getId());
+        }
     }
 
     /**
@@ -180,6 +191,7 @@ public class GatewayController {
 
         for (String id : routesToDelete) {
             this.currentRoutes.remove(id);
+            this.modelStatisticsService.getModelLinkControl().remove(id);
         }
         return ResponseEntity.ok().build();
     }
