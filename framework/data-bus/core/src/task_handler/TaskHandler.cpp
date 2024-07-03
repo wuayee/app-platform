@@ -97,8 +97,10 @@ void TaskHandler::HandleRead(const Task& task)
 
     // TODO: 需要处理半包
     uint bodySize = header->size();
-    if ((header->type() != Common::MessageType::CleanupExpiredMemory) && (header->type() != Common::MessageType::Hello)
-        && (len < bodySize + MESSAGE_HEADER_LEN)) {
+    const auto messageSize = bodySize + MESSAGE_HEADER_LEN;
+    const bool isNormalMessageType = (header->type() != Common::MessageType::CleanupExpiredMemory)
+            && (header->type() != Common::MessageType::Hello);
+    if (isNormalMessageType && len < messageSize) {
         logger.Error("[HandleRead] Incorrect message body length from client {}, seq={}", socketFd, seq);
         Utils::SendErrorMessage(ErrorType::IllegalMessageBody, seq, GetSender(socketFd));
         return;
@@ -106,9 +108,7 @@ void TaskHandler::HandleRead(const Task& task)
     HandleMessage(header, buffer, socketFd);
 
     // 处理粘包
-    const auto messageSize = bodySize + MESSAGE_HEADER_LEN;
-    if ((header->type() != Common::MessageType::CleanupExpiredMemory) && (header->type() != Common::MessageType::Hello)
-        && (len > messageSize)) {
+    if (isNormalMessageType && len > messageSize) {
         logger.Info("[HandleRead] Sticky TCP packet received from client={}, seq={}, size={}", socketFd, seq, len);
         taskLoopPtr_->AddReadTask(socketFd, buffer + messageSize, len - messageSize);
     }
@@ -440,6 +440,7 @@ void TaskHandler::SendApplyPermissionResponse(const Resource::ApplyPermissionRes
                 response.applicant_, response.seq_, response.granted_, response.sharedMemoryId_, response.memorySize_);
 }
 
+// 客户端握手信息Hello原路返回。
 void TaskHandler::SendHelloResponse(int32_t socketFd, uint32_t seq)
 {
     flatbuffers::FlatBufferBuilder bodyBuilder;
