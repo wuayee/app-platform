@@ -58,9 +58,7 @@ class ResponseDispatcher {
      */
     public void start() {
         this.isRunning = true;
-        dispatcherService.submit(() -> {
-            this.startEventLoop();
-        });
+        dispatcherService.submit(this::startEventLoop);
     }
 
     /**
