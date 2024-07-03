@@ -97,7 +97,8 @@ void TaskHandler::HandleRead(const Task& task)
 
     // TODO: 需要处理半包
     uint bodySize = header->size();
-    if ((header->type() != Common::MessageType::CleanupExpiredMemory) && (len < bodySize + MESSAGE_HEADER_LEN)) {
+    if ((header->type() != Common::MessageType::CleanupExpiredMemory) && (header->type() != Common::MessageType::Hello)
+        && (len < bodySize + MESSAGE_HEADER_LEN)) {
         logger.Error("[HandleRead] Incorrect message body length from client {}, seq={}", socketFd, seq);
         Utils::SendErrorMessage(ErrorType::IllegalMessageBody, seq, GetSender(socketFd));
         return;
@@ -105,8 +106,9 @@ void TaskHandler::HandleRead(const Task& task)
     HandleMessage(header, buffer, socketFd);
 
     // 处理粘包
-    const auto messageSize = header->size() + MESSAGE_HEADER_LEN;
-    if ((header->type() != Common::MessageType::CleanupExpiredMemory) && (len > messageSize)) {
+    const auto messageSize = bodySize + MESSAGE_HEADER_LEN;
+    if ((header->type() != Common::MessageType::CleanupExpiredMemory) && (header->type() != Common::MessageType::Hello)
+        && (len > messageSize)) {
         logger.Info("[HandleRead] Sticky TCP packet received from client={}, seq={}, size={}", socketFd, seq, len);
         taskLoopPtr_->AddReadTask(socketFd, buffer + messageSize, len - messageSize);
     }
@@ -165,6 +167,10 @@ void TaskHandler::HandleMessage(const Common::MessageHeader* header, const char*
         }
         case Common::MessageType::CleanupExpiredMemory: {
             HandleMessageCleanupExpiredMemory();
+            break;
+        }
+        case Common::MessageType::Hello: {
+            SendHelloResponse(socketFd, header->seq());
             break;
         }
         default:
@@ -432,6 +438,13 @@ void TaskHandler::SendApplyPermissionResponse(const Resource::ApplyPermissionRes
                        GetSender(response.applicant_));
     logger.Info("[TaskHandler] Send Permission result to client {}, seq: {}, result: {}, memory key: {}, size: {}",
                 response.applicant_, response.seq_, response.granted_, response.sharedMemoryId_, response.memorySize_);
+}
+
+void TaskHandler::SendHelloResponse(int32_t socketFd, uint32_t seq)
+{
+    flatbuffers::FlatBufferBuilder bodyBuilder;
+    Utils::SendMessage(bodyBuilder, Common::MessageType::Hello, seq, GetSender(socketFd));
+    logger.Info("[TaskHandler] Send hello to client {}, seq: {}", socketFd, seq);
 }
 
 std::function<void(const uint8_t*, size_t)> TaskHandler::GetSender(int32_t socketFd)
