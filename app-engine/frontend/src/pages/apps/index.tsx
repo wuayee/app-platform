@@ -34,7 +34,7 @@ const Apps: React.FC = () => {
   async function queryApps() {
     const params = {
       pageNum: pageNo.current,
-      pageSize: 10,
+      pageSize: 8,
       includeTags: 'APP',
       name: search
     };
@@ -155,8 +155,9 @@ const Apps: React.FC = () => {
         <div className='page_box'>
           <Pagination
             current={current}
-            pageSize={10}
+            pageSize={8}
             onChange={currentPageChange}
+            pageSizeOptions={[8,16,32,60]}
             showSizeChanger={false}
             total={total}
             showTotal={(total) => `总条数 ${total}`}

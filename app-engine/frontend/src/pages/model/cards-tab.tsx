@@ -40,13 +40,14 @@ const CardsTab = ({ modelList, setModels, openModify }: { modelList: ModelItem[]
         className="containerArea"
         style={{
           width: "100%",
+          minWidth:'1400px',
           minHeight: "500px",
           maxHeight: "calc(100% - 200px)",
           boxSizing: "border-box",
           paddingTop: "20px",
           paddingBottom: "20px",
           display: "flex",
-          gap: "17px",
+          gap: "1%",
           flexWrap: "wrap",
         }}
       >

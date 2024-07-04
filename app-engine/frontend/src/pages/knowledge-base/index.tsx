@@ -19,7 +19,7 @@ const KnowledgeBase = () => {
   const [page, setPage] = useState(1);
 
   // 分页数
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(8);
 
   // 搜索名称
   const [searchName, setSearchName] = useState('');
@@ -147,7 +147,9 @@ const KnowledgeBase = () => {
             </>))}
 
         </div>
-        <Pagination total = {total} current={page} onChange={paginationChange} pageSize={pageSize}/>
+        <Pagination total = {total} current={page} onChange={paginationChange}
+         pageSizeOptions={[8,16,32,60]}
+         pageSize={pageSize}/>
     </div>
   </div>
 
