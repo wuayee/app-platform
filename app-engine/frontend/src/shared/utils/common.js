@@ -1,7 +1,6 @@
 import {useLocation} from "react-router-dom";
 import {useCallback, useMemo, useState} from "react";
 import DOMPurify from 'dompurify';
-import { marked } from 'marked';
 import { Message } from '@shared/utils/message';
 
 /**
@@ -52,7 +51,7 @@ export const useMergeState = (initialState) => {
 // 内容格式转换
 export const trans = (text) => {
   if (text?.trim().length) {
-    return DOMPurify.sanitize(marked.parse(text.replaceAll('<br>', '')));
+    return DOMPurify.sanitize(text.replaceAll('<br>', ''));
   }
   return '';
 }
