@@ -35,6 +35,7 @@ import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
 import com.huawei.fit.jober.aipp.service.impl.AippLogServiceImpl;
+import com.huawei.fit.jober.aipp.service.impl.AopAippLogServiceImpl;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.common.RangeResult;
 import com.huawei.fit.jober.common.RangedResultSet;
@@ -76,6 +77,8 @@ public class AippLogServiceTest {
 
     @InjectMocks
     private AippLogServiceImpl aippLogService;
+    @InjectMocks
+    private AopAippLogServiceImpl aopAippLogService;
     @Mock
     private AippLogMapper aippLogMapperMock;
     @Mock
@@ -165,7 +168,7 @@ public class AippLogServiceTest {
                 .logType(AippInstLogType.MSG.name())
                 .createUserAccount(DUMMY_W3ACCOUNT)
                 .build();
-        aippLogService.insertLog(dummyCreateDto);
+        this.aopAippLogService.insertLog(dummyCreateDto);
         verify(aippLogMapperMock, times(1)).insertOne(eq(dummyCreateDto));
     }
 
@@ -259,7 +262,7 @@ public class AippLogServiceTest {
     @ParameterizedTest
     @MethodSource("invalidAippLogCreateDtoCreatorForTest")
     void shouldThrowWhenCallInsertLogWithInvalidDto(AippLogCreateDto invalidDto) {
-        Assertions.assertThrows(AippParamException.class, () -> aippLogService.insertLog(invalidDto));
+        Assertions.assertThrows(AippParamException.class, () -> this.aopAippLogService.insertLog(invalidDto));
     }
 
     @ParameterizedTest

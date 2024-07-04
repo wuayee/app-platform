@@ -6,7 +6,6 @@ package com.huawei.fit.jober.aipp.service;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
-import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.entity.AippInstLog;
 import com.huawei.fit.jober.aipp.entity.AippLogData;
 
@@ -40,7 +39,7 @@ public interface AippLogService {
      * @return log数据
      */
     List<AippInstLogDataDto> queryAippRecentInstLog(String aippId, String aippType, Integer count,
-        OperationContext context);
+            OperationContext context);
 
     /**
      * 查询指定chatId的历史记录,
@@ -53,7 +52,7 @@ public interface AippLogService {
      * @return log数据
      */
     List<AippInstLogDataDto> queryChatRecentInstLog(String aippId, String aippType, Integer count,
-                                                    OperationContext context, String chatId);
+            OperationContext context, String chatId);
 
     /**
      * 查询指定appId的最近一次会话的历史记录
@@ -97,13 +96,6 @@ public interface AippLogService {
      * @param context 登录信息
      */
     void deleteAippPreviewLog(String previewAippId, OperationContext context);
-
-    /**
-     * 插入aipp的历史记录
-     *
-     * @param logDto 插入数据
-     */
-    void insertLog(AippLogCreateDto logDto) throws IllegalArgumentException;
 
     /**
      * 插入aipp的历史记录
@@ -168,5 +160,5 @@ public interface AippLogService {
      * @return log数据
      */
     List<AippInstLogDataDto> queryAippRecentInstLogAfterSplice(String aippId, String aippType, Integer count,
-        OperationContext context);
+            OperationContext context);
 }

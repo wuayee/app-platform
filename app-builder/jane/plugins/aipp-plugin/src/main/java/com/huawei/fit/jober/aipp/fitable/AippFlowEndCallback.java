@@ -5,13 +5,16 @@
 package com.huawei.fit.jober.aipp.fitable;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
+import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowCallbackService;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.domain.AppBuilderForm;
 import com.huawei.fit.jober.aipp.entity.AippLogData;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
+import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.genericable.AppFlowFinishObserver;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogService;
@@ -57,11 +60,13 @@ public class AippFlowEndCallback implements FlowCallbackService {
     private final ConversationRecordService conversationRecordService;
     private final AppBuilderFormService formService;
     private final AippStreamService aippStreamService;
+    private final MetaInstanceService metaInstanceService;
 
     public AippFlowEndCallback(@Fit MetaService metaService, @Fit AippLogService aippLogService,
             @Fit AppBuilderFormRepository formRepository, @Fit BrokerClient brokerClient,
             @Fit BeanContainer beanContainer, @Fit ConversationRecordService conversationRecordService,
-            @Fit AppBuilderFormService formService, @Fit AippStreamService aippStreamService) {
+            @Fit AppBuilderFormService formService, @Fit AippStreamService aippStreamService, @Fit
+            MetaInstanceService metaInstanceService) {
         this.formService = formService;
         this.metaService = metaService;
         this.aippLogService = aippLogService;
@@ -70,6 +75,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
         this.beanContainer = beanContainer;
         this.aippStreamService = aippStreamService;
         this.conversationRecordService = conversationRecordService;
+        this.metaInstanceService = metaInstanceService;
     }
 
     @Fitable("com.huawei.fit.jober.aipp.fitable.AippFlowEndCallback")
@@ -81,9 +87,10 @@ public class AippFlowEndCallback implements FlowCallbackService {
         String versionId = (String) businessData.get(AippConst.BS_META_VERSION_ID_KEY);
         OperationContext context =
                 JsonUtils.parseObject((String) businessData.get(AippConst.BS_HTTP_CONTEXT_KEY), OperationContext.class);
-        Meta meta = metaService.retrieve(versionId, context);
-        Map<String, Object> attr = meta.getAttributes();
+        Meta meta = this.metaService.retrieve(versionId, context);
         String aippInstId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
+        this.saveInstance(businessData, versionId, aippInstId, context, meta);
+        Map<String, Object> attr = meta.getAttributes();
         String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
         businessData.put(AippConst.ATTR_APP_ID_KEY, attr.get(AippConst.ATTR_APP_ID_KEY));
         if (businessData.containsKey(AippConst.BS_END_FORM_ID_KEY)) {
@@ -107,6 +114,20 @@ public class AippFlowEndCallback implements FlowCallbackService {
                     .format(SerializationFormat.CBOR)
                     .invoke(contexts);
         }
+    }
+
+    private void saveInstance(Map<String, Object> businessData, String versionId, String aippInstId,
+            OperationContext context, Meta meta) {
+        InstanceDeclarationInfo declarationInfo = InstanceDeclarationInfo.custom()
+                .putInfo(AippConst.INST_FINISH_TIME_KEY, LocalDateTime.now())
+                .putInfo(AippConst.INST_STATUS_KEY, MetaInstStatusEnum.ARCHIVED.name())
+                .build();
+        businessData.forEach((key, value) -> {
+            if (meta.getProperties().stream().anyMatch(item -> item.getName().equals(key))) {
+                declarationInfo.getInfo().getValue().put(key, value);
+            }
+        });
+        this.metaInstanceService.patchMetaInstance(versionId, aippInstId, declarationInfo, context);
     }
 
     private void saveFormToLog(Map<String, Object> businessData, String endFormId, String endFormVersion,

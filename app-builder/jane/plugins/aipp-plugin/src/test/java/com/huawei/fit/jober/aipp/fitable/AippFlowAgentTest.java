@@ -25,6 +25,7 @@ import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.fitable.agent.AippFlowAgent;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
+import com.huawei.fit.jober.aipp.service.AopAippLogService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.common.exceptions.JobberException;
@@ -68,13 +69,20 @@ public class AippFlowAgentTest {
     @Mock
     private AippLogService aippLogServiceMock;
 
+    @Mock
+    private AopAippLogService aopAippLogServiceMock;
+
     private AppFlowAgentSearch appFlowAgentSearch;
     private AppFlowAgentMind appFlowAgentMind;
     private AippFlowAgent agent;
 
     @BeforeEach
     void setUp() {
-        agent = new AippFlowAgent(aippRunTimeServiceMock, metaInstanceServiceMock, aippLogServiceMock, DUMMY_ENDPOINT);
+        agent = new AippFlowAgent(aippRunTimeServiceMock,
+                metaInstanceServiceMock,
+                aippLogServiceMock,
+                DUMMY_ENDPOINT,
+                this.aopAippLogServiceMock);
         appFlowAgentSearch = new AppFlowAgentSearch(agent, DUMMY_SEARCH_AGENT_AIPP_ID, aippLogServiceMock);
         appFlowAgentMind = new AppFlowAgentMind(agent, DUMMY_MIND_AGENT_AIPP_ID);
     }
@@ -182,7 +190,7 @@ public class AippFlowAgentTest {
                 any())).thenReturn(Collections.singletonList(dummyErrorLog));
 
         Assertions.assertThrows(JobberException.class, () -> appFlowAgentMind.handleTask(flowData));
-        verify(aippLogServiceMock).insertLog(argThat(logDataDto -> logDataDto.getAippId().equals(DUMMY_AIPP_ID)
+        verify(aopAippLogServiceMock).insertLog(argThat(logDataDto -> logDataDto.getAippId().equals(DUMMY_AIPP_ID)
                 && logDataDto.getInstanceId().equals(DUMMY_INST_ID) && logDataDto.getLogType()
                 .equals(AippInstLogType.ERROR.name()) && logDataDto.getCreateUserAccount().equals(DUMMY_W3ACCOUNT)));
     }
