@@ -110,6 +110,21 @@ public class DefaultGenericable implements ConfigurableGenericable {
     }
 
     @Override
+    public Fitable fitable(String fitableId, String fitableVersion) {
+        return this.fitables()
+                .stream()
+                .filter(fitable -> Objects.equals(fitable.id(), fitableId) && Objects.equals(fitable.version(),
+                        fitableVersion))
+                .findFirst()
+                .orElseThrow(() -> new FitableNotFoundException(StringUtils.format("No matched fitables. "
+                                + "[genericableId={0}, genericableVersion={1}, fitableId={2}, fitableVersion={3}]",
+                        this.id(),
+                        this.version(),
+                        fitableId,
+                        fitableVersion)));
+    }
+
+    @Override
     public UniqueGenericableId toUniqueId() {
         return this.uniqueId;
     }

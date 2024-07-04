@@ -10,6 +10,7 @@ import com.huawei.fitframework.broker.ConfigurableFitable;
 import com.huawei.fitframework.broker.Fitable;
 import com.huawei.fitframework.broker.FitableFactory;
 import com.huawei.fitframework.broker.LoadBalancer;
+import com.huawei.fitframework.broker.TargetLocator;
 import com.huawei.fitframework.broker.UniqueFitableId;
 import com.huawei.fitframework.ioc.BeanContainer;
 
@@ -22,15 +23,17 @@ import com.huawei.fitframework.ioc.BeanContainer;
 public class DefaultFitableFactory implements FitableFactory {
     private final BeanContainer container;
     private final LoadBalancer loadBalancer;
+    private final TargetLocator targetLocator;
 
-    public DefaultFitableFactory(BeanContainer container, LoadBalancer loadBalancer) {
+    public DefaultFitableFactory(BeanContainer container, LoadBalancer loadBalancer, TargetLocator targetLocator) {
         this.container = notNull(container, "The bean container cannot be null.");
         this.loadBalancer = notNull(loadBalancer, "The load balancer cannot be null.");
+        this.targetLocator = notNull(targetLocator, "The target locator cannot be null.");
     }
 
     @Override
     public ConfigurableFitable create(String id, String version) {
-        return new DefaultFitable(this.container, this.loadBalancer, id, version);
+        return new DefaultFitable(this.container, this.loadBalancer, this.targetLocator, id, version);
     }
 
     @Override
