@@ -75,10 +75,10 @@ const TreeComponent = (props) => {
             value = value.trim();
             if (value === "") {
                 if (id === "key") {
-                    Message({type: "error", content: "分类名称不能为空"});
-                    handleDelete(id);
+                  Message({type: "warning", content: "分类名称不能为空"});
+                  handleDelete(id);
                 } else {
-                    Message({type: "error", content: "分类名称不能为空"});
+                  Message({type: "warning", content: "分类名称不能为空"});
                 }
             } else {
                 if (id === "key") {
@@ -158,9 +158,10 @@ const TreeComponent = (props) => {
 
     const createTagTree = () => {
         const id = uuid();
+        let length = treeData.length;
         const newTree = {
             id,
-            title: "新建分类",
+            title: `新建分类${length}`,
             children: [],
             parent: "root:" + id,
         }

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'antd';
 import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
 import { getToolsList } from '@shared/http/plugin';
@@ -11,6 +11,7 @@ const Skill = (props) => {
   const [ skillList, setSkillList] = useState([]);
   const [ showModal, setShowModal ] = useState(false);
   const navigate=useNavigate();
+  const { tenantId } = useParams();
   const pluginMap = useRef([]);
 
   useEffect(() => {
@@ -53,6 +54,7 @@ const Skill = (props) => {
   }
   // 回显设置
   const setSkillArr = (data) => {
+    pluginMap.current = [];
     data.forEach(item => {
       if (pluginData.includes(item.uniqueName) ) {
         let obj = {

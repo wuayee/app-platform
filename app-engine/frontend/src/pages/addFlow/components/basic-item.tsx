@@ -8,7 +8,8 @@ import {
   ManualCheckIcon,
   LlmIcon,
   IfIcon,
-  FitIcon
+  FitIcon,
+  CodeIcon
 } from '@assets/icon';
 import { handleClickAddBasicNode, handleDragBasicNode} from '../utils'
 
@@ -25,7 +26,8 @@ const BasicItems = (props:any) => {
       "manualCheckNodeState": <ManualCheckIcon />,
       "fitInvokeNodeState": <FitIcon />,
       "conditionNodeCondition": <IfIcon />,
-      "toolInvokeNodeState": <FitIcon />
+      "toolInvokeNodeState": <FitIcon />,
+      "codeNodeState": <CodeIcon />
     }[type];
   }
   return <>
