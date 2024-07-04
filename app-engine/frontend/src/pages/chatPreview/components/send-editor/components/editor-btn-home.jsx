@@ -47,7 +47,6 @@ const EditorBtnHome = (props) => {
   const [ showAt, setShowAt ] = useState(false);
   const [ appName, setAppName ] = useState('');
   const [ appIcon, setAppIcon ] = useState(knowledgeBase);
-  const [ isAt, setIsAt ] = useState(false);
   const [openHistorySignal,setOpenHistorySignal]=useState(null);
   const [ searchKey, setSearchKey ] = useState(null);
   let openUploadRef = useRef(null);
@@ -119,7 +118,6 @@ const EditorBtnHome = (props) => {
   // 取消@应用功能
   const cancelAt = () => {
     setAppName(appInfo.name);
-    setIsAt(false);
     dispatch(setAtAppId(null));
     dispatch(setAtAppInfo(null));
     dispatch(setAtChatId(null));
@@ -133,7 +131,6 @@ const EditorBtnHome = (props) => {
     dispatch(setAtAppId(item.id));
     setAppName(item.name);
     setShowAt(false);
-    setIsAt(true);
     dispatch(setOpenStar(false));
     if (item.id !== atAppId) {
       dispatch(setAtChatId(null));
@@ -178,19 +175,19 @@ const EditorBtnHome = (props) => {
       <div className="inner-left">
         <div className="inner-item">
           {appIcon ? <img src={appIcon} alt="" /> : <img src={knowledgeBase} alt="" />}
-          <div className={['switch-app', isAt ? 'switch-active' : null ].join(' ')} onClick={()=>{if(chatType==='home'){showMoreClick();}}}>
-            { isAt && <span style={{ marginLeft: '6px' }}>正在跟</span> }
+          <div className={['switch-app', atAppId ? 'switch-active' : null ].join(' ')} onClick={()=>{if(chatType==='home'){showMoreClick();}}}>
+            { atAppId && <span style={{ marginLeft: '6px' }}>正在跟</span> }
             <span className="item-name" title={appName}>{appName}</span>
             { !appInfo.hideHistory && <ArrowDownIcon className="arrow-icon" /> }
-            { isAt && <span style={{ marginLeft: '6px' }}>对话</span> }
+            { atAppId && <span style={{ marginLeft: '6px' }}>对话</span> }
           </div>
            <LinkIcon onClick={uploadClick} />
-           { (!isAt) && <AtIcon onClick={atClick} /> }
+           { (!atAppId) && <AtIcon onClick={atClick} /> }
         </div>
       </div>
       <div className="inner-right">
         { 
-          isAt ? 
+          atAppId ?
           (
             <div className="inner-item">
               <CloseOutlined className="item-close" onClick={cancelAt}/>
