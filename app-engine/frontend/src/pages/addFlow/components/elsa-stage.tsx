@@ -113,16 +113,14 @@ const Stage = (props) => {
   // 拖拽完成回调
   function handleDragEnter(e) {
     const nodeTab = e.dataTransfer.getData('itemTab');
-    let nodeType;
+    let nodeType = e.dataTransfer.getData('itemType');
+    let nodeMetaData = JSON.parse(e.dataTransfer.getData('itemMetaData'));
     switch (nodeTab) {
       case 'basic':
-        nodeType = e.dataTransfer.getData('itemType');
-        window.agent.createNode(nodeType, e);
+        window.agent.createNode(nodeType, e, { uniqueName: nodeMetaData?.uniqueName });
         break;
       case 'tool':
-        nodeType = e.dataTransfer.getData('itemType');
-        let nodeMetaData = e.dataTransfer.getData('itemMetaData');
-        window.agent.createNode(nodeType, e, JSON.parse(nodeMetaData));
+        window.agent.createNode(nodeType, e, nodeMetaData);
         break;
       default:
         break;

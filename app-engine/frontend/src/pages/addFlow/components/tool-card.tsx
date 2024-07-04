@@ -5,12 +5,15 @@ import { StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import '../styles/tool-card.scss';
 
-const ToolCard = ({ pluginData }: any) => {
+const ToolCard = ({ pluginData, tenantId }: any) => {
   const navigate = useNavigate();
   // 类型处理
   const detailClick = () => {
    if (pluginData.tags.includes('WATERFLOW')) {
-    // navigate(`/app-develop/${item.tenantId}/app-detail/flow-detail/${item.appId}`);
+    if (pluginData.runnables.APP) {
+      let { appId } =  pluginData.runnables.APP
+      navigate(`/app-develop/${tenantId}/app-detail/flow-detail/${appId}`);
+    }
    } else {
     navigate(`/plugin/detail/${pluginData.uniqueName}`)
    }

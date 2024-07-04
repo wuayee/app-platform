@@ -5,7 +5,7 @@
   }
 }
 .inspiration-container {
-  height: 78px;
+  height: 90px;
   border-top: 1px solid rgb(242, 242, 242);
   display: flex;
   flex-direction: column;
@@ -42,6 +42,8 @@
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    padding-bottom: 8px;
+    line-height: 24px;
   }
   &:last-child {
     border-bottom: 1px solid rgb(242, 242, 242);

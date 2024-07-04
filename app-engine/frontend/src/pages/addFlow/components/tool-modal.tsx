@@ -36,7 +36,7 @@ const ToolDrawer = (props) => {
   
   useEffect(() => {
     showModal && getPluginList();
-  }, [props.showModal, name, pageNum, pageSize, activeKey]);
+  }, [props.showModal, activeKey]);
   useEffect(() => {
     type === 'addSkill' && (checkedList.current = JSON.parse(JSON.stringify(checkData)));
   }, [props.checkData])
@@ -205,7 +205,7 @@ const ToolDrawer = (props) => {
             <div className="mashup-add-inner" style={{ height: 'calc(100vh - 500px)' }}>
               {pluginData.slice((pageNum - 1)*pageSize, pageNum*pageSize).map((card: any) => 
                 <div className="mashup-add-item" key={card.uniqueName}>
-                  <ToolCard  pluginData={card} />
+                  <ToolCard  pluginData={card} tenantId={tenantId} />
                   <span className="opration-item">
                     <Checkbox defaultChecked={card.checked} onChange={(e) => onChange(e, card)}></Checkbox>
                   </span>

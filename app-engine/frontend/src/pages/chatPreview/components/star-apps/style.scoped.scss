@@ -40,7 +40,7 @@
     }
 
     &-text {
-      flex: 1
+      flex: 1;
     }
 
     &-text-header {
@@ -53,6 +53,10 @@
     &-title {
       font-size: 16px;
       font-weight: 600;
+      width: 130px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     &-title-actions {

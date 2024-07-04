@@ -66,11 +66,6 @@
           font-weight: 700;
         }
       }
-
-      .drop-tree-menu {
-        font-weight: normal;
-        font-size: 12px;
-      }
     }
 
     .has-drop {
@@ -237,6 +232,23 @@
     &::-webkit-scrollbar {
       width: 0 !important;
     }
+  }
+}
+.drop-tree-menu {
+  font-weight: normal;
+  font-size: 12px;
+  width: 180px;
+  .ant-tree-node-content-wrapper {
+    height: 28px;
+    line-height: 28px;
+  }
+  .ant-tree-title {
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+    width: 150px;
+    text-overflow: ellipsis;
+    font-size: 12px;
   }
 }
 
