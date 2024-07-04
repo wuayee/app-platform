@@ -33,6 +33,7 @@ const Recommends = (props) => {
   }, [chatList]);
   // 设置推荐列表
   function setRecommend() {
+    setRecommendList([]);
     let arr = appInfo.config?.form?.properties || [];
     let recommendItem = arr.filter(item => item.name === 'recommend')[0];
     if (recommendItem) {
@@ -84,7 +85,7 @@ const Recommends = (props) => {
         (recommendList?.length > 0) && (
           <div className="recommends-top">
             <span className="title">猜你想问</span>
-            <RebotIcon />
+            <RebotIcon onClick={refreshClick}/>
             <span className="refresh" onClick={refreshClick}>换一批</span>
           </div>
         )

@@ -71,7 +71,7 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/aippApi': {
-        target: 'http://80.11.128.86:30030',
+        target: 'http://80.11.128.86:30010',
         pathRewrite: { '^/aippApi': '/api/jober/v1/api' },
         // pathRewrite: { '^/aippApi': '/v1/api' },
         secure: false,
