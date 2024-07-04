@@ -4,24 +4,16 @@ import InterviewQuestions from '../runtimeForm/InterviewQuestions.jsx';
 import ManageCubeCreateReport from '../runtimeForm/ManageCubeCreateReport.jsx';
 import FileContent from '../runtimeForm/FileContent.jsx';
 import QuestionClar from "../runtimeForm/QuestionClar";
+import ConditionForm from '../runtimeForm/conditionForm/conditionForm';
 import { setFormReceived } from "@/store/chatStore/chatStore";
-import { useAppDispatch } from "@/store/hook";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
 
 // runtime表单渲染
 const RuntimeForm = (props) => {
   const { formName, formMap } = props.formConfig;
   const dispatch = useAppDispatch();
-  const questions = [
-    {
-      question: '分享一下你最近在车联网或者深度学习领域有哪些具有突破性的科研成果。',
-    },
-    {
-      question: '在你的研究生涯中,有没有哪位导师或者家人给予了重大影响?请具体阐述。',
-    },
-    {
-      question: '如 Leonard Cimini Jr.教授,对你的科研方法或思维方式产生了重大影响?',
-    },
-  ]
+  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
+  const questions = []
   const saveCallBack = () => {
     dispatch(setFormReceived(true));
   }
@@ -34,7 +26,21 @@ const RuntimeForm = (props) => {
         return <InterviewQuestions questions={questions}/>
         break;
       case 'manageCubeCreateReport':
-        return <ManageCubeCreateReport data={props.formConfig} mode={props.formConfig.type} saveCallBack={saveCallBack}/>
+        return  <ManageCubeCreateReport 
+                  data={props.formConfig} 
+                  mode={props.formConfig.type}
+                  tenantId={tenantId} 
+                  saveCallBack={saveCallBack}
+                />
+        break;
+      case 'questionClar':
+        return <QuestionClar data={props.formConfig} mode={props.formConfig.type}/>
+        break;
+      case 'conditionForm':
+        return  <ConditionForm 
+                  data={props.formConfig}
+                  chatRunning={chatRunning}
+                />
         break;
       case 'questionClar':
         return <QuestionClar data={props.formConfig} mode={props.formConfig.type}/>
@@ -43,7 +49,7 @@ const RuntimeForm = (props) => {
     }
   }
   return <>{(
-    <div className="recieve-form-item">
+    <div className='recieve-form-item'>
       { setFormDom(formName) }
     </div>
   )}</>
