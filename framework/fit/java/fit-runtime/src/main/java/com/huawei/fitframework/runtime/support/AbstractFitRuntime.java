@@ -274,7 +274,10 @@ public abstract class AbstractFitRuntime extends AbstractDisposable implements F
             this.root.initialize();
             this.publisherOfEvents()
                     .publishEvent(Events.prepared(this, Duration.ofMillis(System.currentTimeMillis() - milliseconds)));
+            long startTime = System.nanoTime();
             this.root.start();
+            long endTime = System.nanoTime();
+            System.out.println("completed time: " + (endTime - startTime)/1_000_000.0 + " 毫秒");
             this.root.container()
                     .all(FitRuntimeStartedObserver.class)
                     .stream()
