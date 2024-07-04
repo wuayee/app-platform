@@ -958,7 +958,7 @@ public class AippFlowServiceImpl implements AippFlowService {
 
     private String publishToStore(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
         AppData itemData = this.buildItemData(aippDto, context, flowInfo);
-        String uniqueName = this.brokerClient.getRouter(AppService.class, "com.huawei.jade.store.app.addApp")
+        String uniqueName = this.brokerClient.getRouter(AppService.class, "com.huawei.jade.store.app.publishApp")
                 .route(new FitableIdFilter("store-repository-pgsql"))
                 .invoke(itemData);
         appBuilderAppMapper.updateAppWithStoreId(uniqueName, aippDto.getAppId(), aippDto.getVersion());
