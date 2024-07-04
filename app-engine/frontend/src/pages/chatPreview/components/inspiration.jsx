@@ -18,7 +18,8 @@ import {
   getDeepNode,
 } from "../utils/inspiration-utils";
 import "../styles/inspiration.scss";
-import { useAppSelector } from "../../../store/hook";
+import { setDimension } from '@/store/common/common';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
 
 const Inspiration = (props) => {
   const { inspirationClick, setEditorSelect } = props;
@@ -42,6 +43,7 @@ const Inspiration = (props) => {
   const [currentPromptName, setCurrentPromptName] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const { tenantId, appId } = useParams();
+  const dispatch = useAppDispatch();
   const treeNormalData = useRef();
   const tenantIdVal = useRef('');
   const appIdVal = useRef('');
@@ -166,6 +168,7 @@ const Inspiration = (props) => {
   }
   // 分类点击回调
   function nodeClick(id, name, parentId) {
+    dispatch(setDimension(name));
     setCurrentPromptName(name);
     deepGetChild(treeNormalData.current, id);
     let arr = [{ title: "全部", id: parentId }];
