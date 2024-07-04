@@ -161,7 +161,7 @@ const ModelCard = ({ modelItem, setModelItems, openModify }: { modelItem: ModelI
         style={{
           display: '-webkit-box',
           textOverflow: 'ellipsis',
-          overflow: 'hidden',
+          overflowY:'auto',
           WebkitLineClamp: 3,
           WebkitBoxOrient: 'vertical',
           fontSize: '14px',
