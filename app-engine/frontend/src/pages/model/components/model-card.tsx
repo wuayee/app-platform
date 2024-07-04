@@ -61,8 +61,10 @@ const ModelCard = ({ modelItem, setModelItems, openModify }: { modelItem: ModelI
   return (
     <Card
       style={{
-        width: 376,
+        width: '24%',
         background: 'url(/src/assets/images/knowledge/knowledge-background.png)',
+        backgroundRepeat:'no-repeat',
+        backgroundSize:'cover',
         height: 240,
       }}
     >
