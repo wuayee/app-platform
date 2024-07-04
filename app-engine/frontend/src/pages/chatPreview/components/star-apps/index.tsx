@@ -13,7 +13,8 @@ import { setCollectionValue, setCurAppId } from '@/store/collection/collection';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { AnyAction } from 'redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { setOpenStar } from '@/store/chatStore/chatStore';
+import { setAtChatId, setOpenStar } from '@/store/chatStore/chatStore';
+import { setAtAppId, setAtAppInfo } from "@/store/appInfo/appInfo";
 import { Message } from '@shared/utils/message';
 import avatarNormal from '@/assets/images/knowledge/knowledge-base.png';
 
@@ -129,6 +130,9 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
     }
     dispatch(setCurAppId(item?.appId))
     dispatch(setOpenStar(false));
+    dispatch(setAtAppId(null));
+    dispatch(setAtAppInfo(null));
+    dispatch(setAtChatId(null));
   }
 
   // @应用
