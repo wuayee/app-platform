@@ -11,7 +11,6 @@ import com.huawei.fitframework.aop.interceptor.aspect.parser.PointcutParameter;
 import com.huawei.fitframework.aop.interceptor.aspect.parser.model.PointcutSupportedType;
 import com.huawei.fitframework.aop.interceptor.aspect.util.ExpressionUtils;
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import java.lang.annotation.Annotation;
@@ -75,21 +74,21 @@ public class AtParamsParser extends BaseParser {
                 Optional<PointcutParameter> parameter = Arrays.stream(AtParamsParser.this.parameters)
                         .filter(param -> Objects.equals(param.getName(), this.content()))
                         .findFirst();
-                Validation.isTrue(parameter.isPresent(), "Pointcut params name can not be found.[name={0}]",
+                Validation.isTrue(parameter.isPresent(),
+                        "Pointcut params name can not be found.[name={0}]",
                         this.content);
                 clazz = parameter.get().getType();
             } else {
                 clazz = ExpressionUtils.getContentClass(this.content, AtParamsParser.this.classLoader);
             }
-            return annotations.stream().parallel()
-                    .anyMatch(annotation -> {
-                        Class<? extends Annotation> type = annotation.annotationType();
-                        if (type == clazz) {
-                            return true;
-                        }
-                        return AspectParameterInjectionHelper.getAnnotationMetadata(type)
-                                .isAnnotationPresent(ObjectUtils.cast(clazz));
-                    });
+            return annotations.stream().parallel().anyMatch(annotation -> {
+                Class<? extends Annotation> type = annotation.annotationType();
+                if (type == clazz) {
+                    return true;
+                }
+                return AspectParameterInjectionHelper.getAnnotationMetadata(type)
+                        .isAnnotationPresent(ObjectUtils.cast(clazz));
+            });
         }
     }
 }
