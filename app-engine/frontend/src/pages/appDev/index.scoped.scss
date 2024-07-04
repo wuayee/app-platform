@@ -31,9 +31,7 @@
             align-items: center;
         }
         .card_list {
-            flex: 1;
             overflow-y: auto;
-            box-sizing: border-box;
             display: flex;
             flex-wrap: wrap;
             margin: 20px 0;
