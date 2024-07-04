@@ -16,16 +16,16 @@ export const conditionFormComponent = (jadeConfig) => {
             id: uuidv4(), name: 'instanceId', type: 'String', from: 'Reference', value: ['instanceId']
           },
           {
-            id: uuidv4(), name: 'correctSql', type: 'String', from: 'Reference', value: ['output']
+            id: uuidv4(), name: 'chartsData', type: 'String', from: 'Reference', value: ['output', 'chartsData']
           },
           {
-            id: uuidv4(), name: 'dsl', type: 'String', from: 'Reference', value: ['dsl']
+            id: uuidv4(), name: 'dsl', type: 'String', from: 'Reference', value: ['output', 'dsl']
           },
           {
             id: uuidv4(), name: 'dimension', type: 'String', from: 'Reference', value: ['dimension']
           },
           {
-            id: uuidv4(), name: 'useMemory', type: 'Boolean', from: 'Reference', value: [false]
+            id: uuidv4(), name: 'rewriteQuery', type: 'String', from: 'Reference', value: ['query']
           }
         ], 
         'outputParams': [
