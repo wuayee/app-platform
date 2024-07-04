@@ -78,23 +78,23 @@ void TaskHandler::HandleRead(const Task& task)
     const size_t len = task.Size();
     const char* buffer = task.DataRaw();
     const int socketFd = task.ClientFd();
-    auto header = Common::GetMessageHeader(buffer);
-    const uint32_t seq = header->seq();
 
     if (len < MESSAGE_HEADER_LEN) {
-        logger.Error("[HandleRead] Incorrect message header length from client {}, seq={}", socketFd, seq);
-        Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, seq, GetSender(socketFd));
+        logger.Error("[HandleRead] Incorrect message header length from client {}", socketFd);
+        Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, 0, GetSender(socketFd));
         return;
     }
 
     // 验证buf是否包含有效的消息头
     flatbuffers::Verifier verifier(reinterpret_cast<const uint8_t*>(buffer), MESSAGE_HEADER_LEN);
     if (!Common::VerifyMessageHeaderBuffer(verifier)) {
-        logger.Error("[HandleRead] Incorrect message header format from client {}, seq={}", socketFd, seq);
-        Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, seq, GetSender(socketFd));
+        logger.Error("[HandleRead] Incorrect message header format from client {}", socketFd);
+        Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, 0, GetSender(socketFd));
         return;
     }
 
+    auto header = Common::GetMessageHeader(buffer);
+    const uint32_t seq = header->seq();
     // TODO: 需要处理半包
     uint bodySize = header->size();
     const auto messageSize = bodySize + MESSAGE_HEADER_LEN;
