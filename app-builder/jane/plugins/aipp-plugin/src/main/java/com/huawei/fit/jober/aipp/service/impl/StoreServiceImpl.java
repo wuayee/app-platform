@@ -57,15 +57,15 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreNodeConfigResDto getBasicNodesAndTools(String tag, int pageNum, int pageSize) {
+    public StoreNodeConfigResDto getBasicNodesAndTools(String tag, int pageNum, int pageSize, String version) {
         return StoreNodeConfigResDto.builder()
-                .toolList(this.getToolModelList(tag, pageNum, pageSize))
+                .toolList(this.getToolModelList(tag, pageNum, pageSize, version))
                 .basicList(this.buildBasicNodesConfig())
                 .build();
     }
 
-    private List<ToolModelDto> getToolModelList(String tag, int pageNum, int pageSize) {
-        return this.buildToolNodesConfig(tag, pageNum, pageSize)
+    private List<ToolModelDto> getToolModelList(String tag, int pageNum, int pageSize, String version) {
+        return this.buildToolNodesConfig(tag, pageNum, pageSize, version)
                 .stream()
                 .map(toolData -> ToolModelDto.combine2ToolModelDto(toolData,
                         tag.equalsIgnoreCase(HUGGINGFACE.getName())
@@ -74,12 +74,13 @@ public class StoreServiceImpl implements StoreService {
                 .collect(Collectors.toList());
     }
 
-    private List<ToolData> buildToolNodesConfig(String tag, int pageNum, int pageSize) {
+    private List<ToolData> buildToolNodesConfig(String tag, int pageNum, int pageSize, String version) {
         ToolQuery query = new ToolQuery(null,
                 Collections.singletonList(tag),
                 Collections.singletonList(StringUtils.EMPTY),
                 pageNum,
-                pageSize);
+                pageSize,
+                version);
         return this.toolService.searchTools(query).getData();
     }
 
@@ -104,8 +105,12 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(int pageNum, int pageSize) {
-        List<ToolData> waterFlows = this.buildToolNodesConfig(AppCategory.WATER_FLOW.getTag(), pageNum, pageSize);
+    public List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(int pageNum, int pageSize, String version) {
+        List<ToolData> waterFlows = this.buildToolNodesConfig(
+                AppCategory.WATER_FLOW.getTag(),
+                pageNum,
+                pageSize,
+                version);
         List<String> storeIds = waterFlows.stream().map(ToolData::getUniqueName).collect(Collectors.toList());
         if (storeIds.isEmpty()) {
             return Collections.emptyList();

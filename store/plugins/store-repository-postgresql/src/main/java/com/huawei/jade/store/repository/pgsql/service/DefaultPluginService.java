@@ -58,7 +58,7 @@ public class DefaultPluginService implements PluginService {
         String uniqueName = this.toolService.addTool(pluginData);
         pluginDo.setToolUniqueName(uniqueName);
         this.pluginMapper.addPlugin(pluginDo);
-        Set<String> tagNames = pluginData.getTags();
+        Set<String> tagNames = pluginData.getTags().stream().map(StringUtils::toUpperCase).collect(Collectors.toSet());
         if (CollectionUtils.isNotEmpty(tagNames)) {
             tagNames.forEach(tagName -> this.tagMapper.addTag(new TagDo(uniqueName, tagName)));
         }

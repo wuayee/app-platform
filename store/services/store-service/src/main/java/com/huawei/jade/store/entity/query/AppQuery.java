@@ -23,10 +23,11 @@ public class AppQuery extends ToolQuery {
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
+     * @param version 表示工具的版本的 {@link String}。
      */
     public AppQuery(String toolName, List<String> includeTags,
-            List<String> excludeTags, Integer pageNum, Integer limit) {
-        super(toolName, includeTags, excludeTags, pageNum, limit);
+            List<String> excludeTags, Integer pageNum, Integer limit, String version) {
+        super(toolName, includeTags, excludeTags, pageNum, limit, version);
     }
 
     /**

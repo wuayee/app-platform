@@ -59,7 +59,7 @@ public class AppController {
         if ((name instanceof String) && StringUtils.isBlank((String) name)) {
             throw new IllegalArgumentException("The app name cannot be blank.");
         }
-        return Result.ok(this.appService.addApp(appData), 1);
+        return Result.ok(this.appService.publishApp(appData), 1);
     }
 
     /**
@@ -82,6 +82,7 @@ public class AppController {
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
+     * @param version 表示工具的版本的 {@link String}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link AppData}{@code >}{@code >}。
      */
     @GetMapping("/search")
@@ -90,14 +91,15 @@ public class AppController {
             @RequestQuery(value = "includeTags", required = false) List<String> includeTags,
             @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
             @RequestQuery(value = "pageNum", required = false) Integer pageNum,
-            @RequestQuery(value = "pageSize", required = false) Integer limit) {
+            @RequestQuery(value = "pageSize", required = false) Integer limit,
+            @RequestQuery(value = "version", required = false) String version) {
         if (pageNum != null) {
             notNegative(pageNum, "The page num cannot be negative.");
         }
         if (limit != null) {
             notNegative(limit, "The limit cannot be negative.");
         }
-        AppQuery appQuery = new AppQuery(name, includeTags, excludeTags, pageNum, limit);
+        AppQuery appQuery = new AppQuery(name, includeTags, excludeTags, pageNum, limit, version);
         ListResult<AppData> res = this.appService.getApps(appQuery);
         return Result.ok(res.getData(), res.getCount());
     }

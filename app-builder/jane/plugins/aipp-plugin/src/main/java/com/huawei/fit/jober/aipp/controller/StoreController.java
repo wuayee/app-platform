@@ -39,8 +39,9 @@ public class StoreController extends AbstractController {
     public Rsp<StoreNodeConfigResDto> getBasicNodesAndTools(HttpClassicServerRequest httpRequest,
             @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-            @RequestParam(value = "tag") String tag) {
-        return Rsp.ok(this.storeService.getBasicNodesAndTools(tag, pageNum, pageSize));
+            @RequestParam(value = "tag") String tag,
+            @RequestParam(value = "version", required = false) String version) {
+        return Rsp.ok(this.storeService.getBasicNodesAndTools(tag, pageNum, pageSize, version));
     }
 
     /**
@@ -50,7 +51,7 @@ public class StoreController extends AbstractController {
      * @param pageNum 表示页码的 {@code int}。
      * @param pageSize 表示限制的 {@code int}。
      * @param taskName 表示任务名的 {@link String}。
-     * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link ModelDto}{@code >}。
+     * @return 表示格式化之后的返回消息的 {@link Rsp}{@code <}{@link ModelDto}{@code >}。
      */
     @GetMapping(path = "/models", description = "获取任务的模型列表")
     public Rsp<ModelDto> getModels(HttpClassicServerRequest httpRequest,
@@ -63,7 +64,8 @@ public class StoreController extends AbstractController {
     @GetMapping(path = "/waterflow", description = "获取所有工具流")
     public Rsp<List<AppBuilderWaterFlowInfoDto>> getWaterFlowInfos(HttpClassicServerRequest httpRequest,
             @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
-            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        return Rsp.ok(this.storeService.getWaterFlowInfos(pageNum, pageSize));
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "version", required = false) String version) {
+        return Rsp.ok(this.storeService.getWaterFlowInfos(pageNum, pageSize, version));
     }
 }

@@ -14,6 +14,8 @@
         <result column="runnables" property="runnables"/>
         <result column="source" property="source"/>
         <result column="icon" property="icon"/>
+        <result column="version" property="version"/>
+        <result column="is_latest" property="isLatest"/>
     </resultMap>
     <insert id="addTool" parameterType="com.huawei.jade.carver.tool.repository.pgsql.model.entity.ToolDo">
         insert into store_tool
@@ -21,6 +23,7 @@
             <if test="creator != null">"creator",</if> <if test="modifier != null">"modifier",</if> "name",
             <if test="description != null">"description",</if> "unique_name", "schema", "runnables",
             <if test="source != null">"source",</if> <if test="icon != null">"icon",</if>
+            <if test="version != null">"version",</if>
         </trim>
         values
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -29,6 +32,7 @@
             cast(#{runnables} as
             json),
             <if test="source != null">#{source},</if> <if test="icon != null">#{icon},</if>
+            <if test="version != null">#{version},</if>
         </trim>
     </insert>
     <delete id="deleteTool" parameterType="String">
@@ -36,14 +40,38 @@
         from "store_tool"
         where unique_name = #{uniqueName};
     </delete>
-    <select id="getToolByUniqueName" resultMap="Tool">
-        select "creator", "modifier", "name", "description", "unique_name", "schema", "runnables", "source", "icon"
+    <delete id="deleteToolByVersion">
+        delete
         from "store_tool"
         where unique_name = #{uniqueName}
+        and version = #{version};
+    </delete>
+    <sql id="selectToolColumns">
+        select i."creator", i."modifier", i."name", i."description", i."unique_name", i."schema", i."runnables", i."source", i."icon", i."version"
+        from "store_tool" i
+    </sql>
+    <select id="getToolByUniqueName" resultMap="Tool">
+        <include refid="selectToolColumns"/>
+        where unique_name = #{uniqueName}
+        and is_latest = true
+    </select>
+    <select id="getToolByVersion" resultMap="Tool">
+        <include refid="selectToolColumns"/>
+        where unique_name = #{toolUniqueName}
+          and version = #{version}
+    </select>
+    <select id="getAllToolVersions" parameterType="com.huawei.jade.carver.tool.model.query.ToolQuery" resultMap="Tool">
+        <include refid="selectToolColumns"/>
+        where unique_name = #{toolName}
+        <include refid="sortAndLimit"/>
+    </select>
+    <select id="getAllToolVersionsCount" parameterType="com.huawei.jade.carver.tool.model.query.ToolQuery">
+        select count(i."creator")
+        from "store_tool" i
+        where i."unique_name" = #{toolName}
     </select>
     <sql id="getOrSearchSelect">
-        select i."creator", i."modifier", i."name", i."unique_name", i."description", i."schema", i."runnables", i."source", i."icon"
-        from "store_tool" i
+        <include refid="selectToolColumns"/>
                  left join (select t."tool_unique_name", string_agg(t."name", ',' order by t."name") as tags
                             from "store_tag" t
                             group by t."tool_unique_name") tg on i."unique_name" = tg."tool_unique_name"
@@ -56,6 +84,7 @@
                             group by t."tool_unique_name") tg on i."unique_name" = tg."tool_unique_name"
     </sql>
     <sql id="getOrSearchConditions">
+        and i."is_latest" = true
         <if test="includeTags != null and includeTags.size() > 0">
             and tg.tags is not null
             and (
@@ -121,4 +150,10 @@
             </if>
         </where>
     </select>
+    <update id="setNotLatest">
+        update "store_tool"
+        set "is_latest" = false
+        where "unique_name" = #{toolUniqueName}
+        and "is_latest" = true
+    </update>
 </mapper>

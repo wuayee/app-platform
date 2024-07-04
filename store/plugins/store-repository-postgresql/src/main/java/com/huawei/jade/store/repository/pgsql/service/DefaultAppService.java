@@ -4,6 +4,8 @@
 
 package com.huawei.jade.store.repository.pgsql.service;
 
+import static com.huawei.fitframework.inspection.Validation.notNull;
+
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.transaction.Transactional;
@@ -23,6 +25,7 @@ import com.huawei.jade.store.service.AppService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -53,16 +56,17 @@ public class DefaultAppService implements AppService {
     @Override
     @Fitable(id = "store-repository-pgsql")
     @Transactional
-    public String addApp(AppData appData) {
-        AppDo appDo = AppDo.from(appData);
-        String uniqueName = this.toolService.addTool(appData);
-        appDo.setToolUniqueName(uniqueName);
-        this.appMapper.addApp(appDo);
-        Set<String> tagNames = appData.getTags();
-        if (CollectionUtils.isNotEmpty(tagNames)) {
-            tagNames.forEach(tagName -> this.tagMapper.addTag(new TagDo(uniqueName, tagName)));
+    public String publishApp(AppData appData) {
+        notNull(appData, "The app data cannot be null.");
+        if (StringUtils.isBlank(appData.getUniqueName())) {
+            appData.setUniqueName(UUID.randomUUID().toString());
+            return this.addApp(appData);
         }
-        return uniqueName;
+        if (this.toolService.getToolByVersion(appData.getUniqueName(), appData.getVersion()) != null) {
+            this.toolService.deleteToolByVersion(appData.getUniqueName(), appData.getVersion());
+        }
+        this.toolService.setNotLatest(appData.getUniqueName());
+        return this.addApp(appData);
     }
 
     @Override
@@ -124,5 +128,19 @@ public class DefaultAppService implements AppService {
             data.add(appData);
         }
         return data;
+    }
+
+    private String addApp(AppData appData) {
+        AppDo appDo = AppDo.from(appData);
+        String uniqueName = this.toolService.addTool(appData);
+        if (this.appMapper.getAppByUniqueName(appDo.getToolUniqueName()) != null) {
+            return uniqueName;
+        }
+        this.appMapper.addApp(appDo);
+        Set<String> tagNames = appData.getTags().stream().map(StringUtils::toUpperCase).collect(Collectors.toSet());
+        if (CollectionUtils.isNotEmpty(tagNames)) {
+            tagNames.forEach(tagName -> this.tagMapper.addTag(new TagDo(uniqueName, tagName)));
+        }
+        return uniqueName;
     }
 }

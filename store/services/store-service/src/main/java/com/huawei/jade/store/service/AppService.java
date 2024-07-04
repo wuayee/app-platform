@@ -18,13 +18,13 @@ import com.huawei.jade.store.entity.transfer.AppData;
  */
 public interface AppService {
     /**
-     * 添加应用。
+     * 发布应用。
      *
      * @param appData 表示待增加的工具信息的 {@link AppData}。
      * @return 表示添加后应用的唯一标识的 {@link String}。
      */
-    @Genericable(id = "com.huawei.jade.store.app.addApp")
-    String addApp(AppData appData);
+    @Genericable(id = "com.huawei.jade.store.app.publishApp")
+    String publishApp(AppData appData);
 
     /**
      * 查询插件。
