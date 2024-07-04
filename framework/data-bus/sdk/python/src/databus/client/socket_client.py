@@ -64,9 +64,11 @@ class SocketClient:
             self._executor.shutdown()
             self._executor = None
         if self._socket:
-            self._socket.shutdown(socket.SHUT_RDWR)
-            self._socket.close()
-            self._socket = None
+            try:
+                self._socket.shutdown(socket.SHUT_RDWR)
+                self._socket.close()
+            finally:
+                self._socket = None
         if self._response_manager:
             self._response_manager.join()
             self._response_manager = None
@@ -106,6 +108,22 @@ class SocketClient:
         ReleasePermissionMessage.AddPermission(release_builder, permission_type)
         release_builder.Finish(ReleasePermissionMessage.ReleasePermissionMessageEnd(release_builder))
         return release_builder
+
+    def send_hello_message(self) -> bool:
+        """向DataBus内核发送健康检测消息
+
+        :return: 内核返回的健康检测结果
+        """
+        message_builder = flatbuffers.Builder(MAX_MESSAGE_LENGTH)
+        message_builder.ForceDefaults(True)
+        message_seq, message_type = self._seq_manager.get_seq(), CoreMessageType.Hello
+        MessageHeader.Start(message_builder)
+        MessageHeader.AddType(message_builder, message_type)
+        MessageHeader.AddSize(message_builder, 0)
+        MessageHeader.AddSeq(message_builder, message_seq)
+        message_builder.Finish(MessageHeader.End(message_builder))
+        message = message_builder.Output()
+        return self._executor.submit(self._handle_message, message_seq, message, message_type).result()
 
     def send_shared_malloc_message(self, user_key: str, size: int) -> ApplyMemoryMessageResponse:
         """向DataBus内核发送申请内存块消息
@@ -201,7 +219,11 @@ class SocketClient:
         message = message_builder.Output()
         return self._executor.submit(self._handle_message, message_seq, message, message_type).result()
 
-    def _handle_message(self, message_seq: int, message: bytes, message_type: CoreMessageType) -> Optional[bytes]:
+    def _handle_message(
+            self,
+            message_seq: int,
+            message: bytes,
+            message_type: CoreMessageType) -> Optional[Union[bytes, bool]]:
         """发送消息, 并且如果等待response则返回response
 
         :param message_seq: 消息的序列号
@@ -213,10 +235,13 @@ class SocketClient:
         logging.debug("DataBus message to core: %s.", message.hex())
         cv = threading.Condition()
         self._mailbox[message_seq] = ResponseItem(cv)
-        self._socket.send(message)
+        try:
+            self._socket.send(message)
+        except Exception as e:
+            raise CoreError("Error when sending message to core, code {}.", DataBusErrorCode.UnknownError) from e
         if message_type in MESSAGE_RESPONSE_MAPPING:
             with cv:
-                cv.wait_for(lambda: self._mailbox[message_seq].message_type is not None, self.MAX_MESSAGE_WAITING_TIME)
+                cv.wait(timeout=self.MAX_MESSAGE_WAITING_TIME)
             mail = self._mailbox[message_seq]
             del self._mailbox[message_seq]
             if not mail.message_type:

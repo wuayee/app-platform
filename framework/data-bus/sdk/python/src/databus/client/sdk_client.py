@@ -28,8 +28,10 @@ class SdkClient:
             raise ValueError(f"Invalid input parameter: core_port is {core_port}")
         if platform.system().lower() not in self.SUPPORTED_PLATFORMS:
             return DataBusErrorCode.PlatformNotSupported
-
-        self._impl.open(core_host=core_host, core_port=core_port)
+        try:
+            self._impl.open(core_host=core_host, core_port=core_port)
+        except ConnectionRefusedError:
+            return DataBusErrorCode.NotConnectedToDataBus
         return DataBusErrorCode.None_
 
     def close(self):
