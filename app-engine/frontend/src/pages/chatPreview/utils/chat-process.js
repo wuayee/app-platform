@@ -253,6 +253,7 @@ export const fileTypeSet = (type) => {
   const audioType = ['mp3', 'wav', 'wmv'];
   const videoType = ['mp4', 'm2v', 'mkv', 'rmvb', 'wmv', 'avi', 'flv', 'mov', 'm4v'];
   const imgType = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
+  const extrasType = ['rar', 'zip', 'exe', 'msi'];
   let fileType = '';
   if (audioType.includes(type)) {
     fileType = 'audio';
@@ -260,6 +261,8 @@ export const fileTypeSet = (type) => {
     fileType = 'video';
   } else if (imgType.includes(type)) {
     fileType = 'image';
+  } else if (extrasType.includes(type)) {
+    fileType = 'extras';
   } else {
     fileType = 'file';
   }
