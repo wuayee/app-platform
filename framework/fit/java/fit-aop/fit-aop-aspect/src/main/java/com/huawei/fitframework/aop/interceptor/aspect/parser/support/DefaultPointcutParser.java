@@ -42,7 +42,7 @@ public class DefaultPointcutParser implements PointcutParser {
         List<ExpressionParser.Result> results = new ArrayList<>();
         for (String expression : this.expressions) {
             isFalse(expression.startsWith("(") && expression.endsWith(")"),
-                    StringUtils.format("UnSupported '(' ')' operators.[expression={0}]", expression));
+                    "UnSupported '(' ')' operators.[expression={0}]", expression);
             ExpressionParser expressionParser = this.expressionParsers.stream()
                     .filter(parser -> parser.couldParse(expression))
                     .findFirst()
