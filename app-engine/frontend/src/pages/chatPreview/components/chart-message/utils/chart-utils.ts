@@ -121,14 +121,12 @@ export const initChartData = (chartData, chartAnswer, chartType, chartTitle) => 
         {
           type: 'value',
           position: 'left',
-          splitNumber: 5,
-          show: true,
+          show: false,
         },
         {
           type: 'value',
           position: 'right',
-          splitNumber: 5,
-          show: true,
+          show: false,
           axisLabel: {
             formatter: '{value}%',
           },

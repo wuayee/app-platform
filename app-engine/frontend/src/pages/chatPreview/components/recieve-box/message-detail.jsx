@@ -4,7 +4,7 @@ import Markdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { trans } from '@shared/utils/common';
-import ChartMessage from '../chart-message.jsx';
+import ChartMessage from '../chart-message/chart-message';
 
 // 消息详情
 const MessageBox = (props) => {

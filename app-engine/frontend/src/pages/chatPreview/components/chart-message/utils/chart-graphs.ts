@@ -50,11 +50,6 @@ export const getOptions = (props, seriesData, type, chartRef) => {
         alignWithLabel: true,
         show: false
       },
-      axisLine: {
-        lineStyle: {
-          color: '#DFE1E6'
-        }
-      },
       axisLabel: {
         formatter: function (params) {
           let newParamsName = ''
@@ -102,25 +97,7 @@ export const getOptions = (props, seriesData, type, chartRef) => {
       trigger: itemTooltip ? 'item' : 'axis',
       axisPointer: {
         type: 'shadow',
-      },
-      formatter: function (params) {
-        let str = '';
-        if (itemTooltip) {
-          if (type.includes('pie')) {
-            str = `${params.name}: ${params.data.value} (${params.percent}%)`;
-          } else {
-            str = `${params.seriesName}: ${params.data}`;
-          }
-        } else if (type === 'bar' || type === 'line') {
-          str = `${params[0].name}: ${params[0].value}`;
-        } else {
-          str = params[0].name + '<br/>';
-          params.forEach((tar) => {
-            str += tar.seriesName + ' : ' + tar.value + '<br/>';
-          });
-        }
-        return str;
-      },
+      }
     },
     toolbox: {
       feature: {
