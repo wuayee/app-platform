@@ -312,16 +312,11 @@ public final class DefaultBeanContainer extends AbstractDisposable implements Be
     }
 
     private void start0() {
-        System.out.println("+++++++++++++++ " + this.name() + " start0  +++++++++++++++");
-        long startTime1 = System.nanoTime();
         for (BeanFactory factory : this.factories) {
             if (factory.metadata().singleton() && !factory.metadata().lazy()) {
                 factory.get();
             }
         }
-        long endTime1 = System.nanoTime();
-        System.out.println("all time: " + (endTime1 - startTime1)/1_000_000.0 + " 毫秒");
-        System.out.println("--------------- " + this.name() + " end    --------------- ");
     }
 
     @Override
