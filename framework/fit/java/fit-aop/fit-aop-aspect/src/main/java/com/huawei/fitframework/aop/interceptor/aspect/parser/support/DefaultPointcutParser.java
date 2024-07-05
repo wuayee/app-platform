@@ -42,12 +42,14 @@ public class DefaultPointcutParser implements PointcutParser {
         List<ExpressionParser.Result> results = new ArrayList<>();
         for (String expression : this.expressions) {
             isFalse(expression.startsWith("(") && expression.endsWith(")"),
-                    "UnSupported '(' ')' operators. [expression={0}]", expression);
+                    "UnSupported '(' ')' operators. [expression={0}]",
+                    expression);
             ExpressionParser expressionParser = this.expressionParsers.stream()
                     .filter(parser -> parser.couldParse(expression))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException(StringUtils.format("The expression value "
-                            + "format error. [expression={0}]", expression)));
+                    .orElseThrow(() -> new IllegalArgumentException(StringUtils.format(
+                            "The expression value format error. [expression={0}]",
+                            expression)));
             ExpressionParser.Result result = expressionParser.parse(expression);
             if (result.type() == PointcutSupportedType.REFERENCE) {
                 results.add(LeftBracketParser.getResult());
