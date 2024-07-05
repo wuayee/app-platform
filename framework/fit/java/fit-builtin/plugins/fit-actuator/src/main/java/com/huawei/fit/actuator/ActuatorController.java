@@ -20,11 +20,14 @@ import com.huawei.fitframework.broker.Target;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
 import com.huawei.fitframework.conf.Config;
+import com.huawei.fitframework.conf.ConfigValueSupplier;
 import com.huawei.fitframework.plugin.Plugin;
+import com.huawei.fitframework.plugin.PluginComparators;
 import com.huawei.fitframework.runtime.FitRuntime;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.StringUtils;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -56,11 +59,16 @@ public class ActuatorController {
     public Map<String, Object> getPlugins() {
         return this.fitRuntime.plugins()
                 .stream()
-                .collect(Collectors.toMap(plugin -> plugin.metadata().name(), this::toMap));
+                .sorted(PluginComparators.STARTUP)
+                .collect(Collectors.toMap(plugin -> plugin.metadata().name(),
+                        this::toMap,
+                        (v1, v2) -> v2,
+                        LinkedHashMap::new));
     }
 
     /**
      * 获取指定插件的指定配置键的值。
+     * <p>当指定键为空白字符串时，返回所有的键。</p>
      *
      * @param pluginName 表示指定插件名的 {@link String}，当插件名为空白字符串时，则返回整个运行时的配置值。
      * @param key 表示指定配置键的 {@link String}。
@@ -68,12 +76,18 @@ public class ActuatorController {
      */
     @GetMapping(path = "/configs")
     public Object getConfigs(@RequestQuery(name = "plugin", required = false) String pluginName,
-            @RequestQuery(name = "key") String key) {
+            @RequestQuery(name = "key", required = false) String key) {
         Config config;
         if (StringUtils.isBlank(pluginName)) {
             config = this.fitRuntime.config();
         } else {
             config = this.fitRuntime.plugin(pluginName).orElse(this.fitRuntime.root()).config();
+        }
+        if (StringUtils.isBlank(key)) {
+            return config.keys();
+        }
+        if (config instanceof ConfigValueSupplier) {
+            return ((ConfigValueSupplier) config).get(key);
         }
         return config.get(key, Object.class);
     }
