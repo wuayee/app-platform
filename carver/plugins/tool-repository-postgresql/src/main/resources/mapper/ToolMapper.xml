@@ -127,7 +127,7 @@
         <where>
             <include refid="getOrSearchConditions"/>
             <if test="toolName != null and toolName != ''">
-                and i."name" like '%' || #{toolName} || '%'
+                and i."name" ilike '%' || #{toolName} || '%'
             </if>
         </where>
         <include refid="sortAndLimit"/>
@@ -146,7 +146,7 @@
         <where>
             <include refid="getOrSearchConditions"/>
             <if test="toolName != null and toolName != ''">
-                and i."name" like '%' || #{toolName} || '%'
+                and i."name" ilike '%' || #{toolName} || '%'
             </if>
         </where>
     </select>
