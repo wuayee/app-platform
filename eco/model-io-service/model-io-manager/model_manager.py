@@ -677,7 +677,7 @@ async def delete_model(llm: Llm, request: Request, background_tasks: BackgroundT
     if model_name in model_services:
         service_name = model_services[model_name]["service_name"]
         model_name = model_services[model_name]["model_name"]
-        deployment_name = model_name + "-inference"
+        deployment_name = model_name.lower() + "-inference"
         code = "code"
         detail = "detail"
         try:
