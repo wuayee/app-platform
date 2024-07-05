@@ -9,7 +9,6 @@ import com.huawei.databus.sdk.message.MessageHeader;
 import com.huawei.databus.sdk.message.MessageType;
 import com.huawei.databus.sdk.tools.Constant;
 import com.huawei.databus.sdk.tools.DataBusUtils;
-import com.huawei.fitframework.inspection.Validation;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -85,35 +84,47 @@ class ResponseDispatcher {
                 }
 
                 buffer.flip();
-                ByteBuffer messageBytes = buffer;
-                // 使用循环处理粘包。
-                while (messageBytes.hasRemaining()) {
-                    // TODO：处理半包。
-                    MessageHeader header = MessageHeader.getRootAsMessageHeader(messageBytes);
-                    byte type = header.type();
-                    long seq = header.seq();
-                    int curPacketSize = (int) header.size() + Constant.DATABUS_SERVICE_HEADER_SIZE;
-
-                    // 只在剩余字节过少时抛出异常。
-                    Validation.greaterThanOrEquals(messageBytes.remaining(), curPacketSize, "Too few bytes.");
-                    logger.info(
-                            "[startEventLoop] DataBus message received, [total size={}, body size={}, type={}, seq={}]",
-                            messageBytes.remaining(), header.size(), type, seq);
-
-                    messageBytes.position(Constant.DATABUS_SERVICE_HEADER_SIZE);
-
-                    // 将消息体拷贝到新的ByteBuffer里。
-                    ByteBuffer messageBody = DataBusUtils.copyFromByteBuffer(messageBytes, (int) header.size());
-                    messageBytes = DataBusUtils.copyFromByteBuffer(messageBytes, messageBytes.remaining());
-
-                    this.deliverMessage(seq, type, messageBody);
-                }
+                this.processMessage(buffer);
             } catch (Exception e) {
                 // 异常意味着连接问题或者编程错误，此时应该退出
                 logger.error("[startEventLoop] message receiving exception.", e);
                 this.shutdownGracefully();
                 return;
             }
+        }
+    }
+
+    private void processMessage(ByteBuffer buffer) {
+        ByteBuffer messageBytes = buffer;
+        // 使用循环处理粘包。
+        while (messageBytes.hasRemaining()) {
+            int byteSize = messageBytes.remaining();
+            // 收到的字节数不足以解析消息头，直接忽略。
+            if (byteSize < Constant.DATABUS_SERVICE_HEADER_SIZE) {
+                logger.error("[startEventLoop] Short header received. [size={}]", byteSize);
+                return;
+            }
+            // TODO：处理半包。
+            MessageHeader header = MessageHeader.getRootAsMessageHeader(messageBytes);
+            byte type = header.type();
+            long seq = header.seq();
+            logger.info(
+                    "[startEventLoop] DataBus message received, [total size={}, body size={}, type={}, seq={}]",
+                    messageBytes.remaining(), header.size(), type, seq);
+
+            // 收到的字节数不足以解析消息体，打印错误信息并返回空缓冲区。
+            if (byteSize < Constant.DATABUS_SERVICE_HEADER_SIZE + header.size()) {
+                logger.error("[startEventLoop] Short body received. [size={}, seq={}]", byteSize, seq);
+                this.replyQueues.get(seq).offer(ByteBuffer.allocate(0));
+                return;
+            }
+            messageBytes.position(Constant.DATABUS_SERVICE_HEADER_SIZE);
+
+            // 将消息体拷贝到新的ByteBuffer里。
+            ByteBuffer messageBody = DataBusUtils.copyFromByteBuffer(messageBytes, (int) header.size());
+            messageBytes = DataBusUtils.copyFromByteBuffer(messageBytes, messageBytes.remaining());
+
+            this.deliverMessage(seq, type, messageBody);
         }
     }
 
