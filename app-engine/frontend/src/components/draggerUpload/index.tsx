@@ -7,11 +7,11 @@ const DraggerUpload = (props) => {
   const { accept,setResult } = props;
   const customRequest=(val)=>{
     getPluginPackageInfo(val?.file).then((res)=>{
-    val.onSuccess(res, val?.file);
-    setResult(res);
-    }).catch((e)=>{
-      val.onError(e);
-    });
+      val.onSuccess(res, val?.file);
+        setResult(res);
+      }).catch((e)=>{
+        val.onError(e);
+      });
   }
   const uploadProps: UploadProps = {
     name: 'file',
