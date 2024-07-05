@@ -33,7 +33,8 @@ return (
     background: 'url(/src/assets/images/knowledge/knowledge-background.png)',
     height: 230,
     backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover'
+    backgroundSize: 'cover',
+    marginBottom:10
    }} >
     {/* 头部区域 */}
     <div  style={{
