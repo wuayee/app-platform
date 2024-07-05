@@ -37,7 +37,6 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.Processors;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Retryable;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
-import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
@@ -254,9 +253,7 @@ public abstract class FlowNode {
                         .orElseGet(UUIDUtil::uuid);
                 flowContexts.forEach(context -> context.setStatus(FlowNodeStatus.RETRYABLE).toBatch(toBatch));
             } else {
-                if (exception instanceof FitException) {
-                    notifyException(exception, flowContexts);
-                }
+                notifyException(exception, flowContexts);
                 String errorMessage = MessageFormat.format(FLOW_ENGINE_EXECUTOR_ERROR.getMessage(), streamId,
                         this.metaId, this.name, exception.getClass().getSimpleName(),
                         Optional.ofNullable(exception.getMessage()).orElse("internal error"));
