@@ -7,6 +7,11 @@ package com.huawei.fit.actuator;
 import static com.huawei.fitframework.inspection.Validation.notBlank;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
+import com.huawei.fit.actuator.entity.AddressVo;
+import com.huawei.fit.actuator.entity.EndpointVo;
+import com.huawei.fit.actuator.entity.FitableVo;
+import com.huawei.fit.actuator.entity.FormatVo;
+import com.huawei.fit.actuator.entity.PluginVo;
 import com.huawei.fit.http.annotation.DocumentIgnored;
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.RequestMapping;
@@ -24,12 +29,9 @@ import com.huawei.fitframework.conf.ConfigValueSupplier;
 import com.huawei.fitframework.plugin.Plugin;
 import com.huawei.fitframework.plugin.PluginComparators;
 import com.huawei.fitframework.runtime.FitRuntime;
-import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.StringUtils;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -53,17 +55,15 @@ public class ActuatorController {
     /**
      * 获取当前进程的所有的插件列表。
      *
-     * @return 表示当前进程的所有插件列表的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     * @return 表示当前进程的所有插件列表的 {@link List}{@code <}{@link PluginVo}{@code >}。
      */
     @GetMapping(path = "/plugins")
-    public Map<String, Object> getPlugins() {
+    public List<PluginVo> getPlugins() {
         return this.fitRuntime.plugins()
                 .stream()
                 .sorted(PluginComparators.STARTUP)
-                .collect(Collectors.toMap(plugin -> plugin.metadata().name(),
-                        this::toMap,
-                        (v1, v2) -> v2,
-                        LinkedHashMap::new));
+                .map(this::convert)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -96,14 +96,13 @@ public class ActuatorController {
      * 获取指定服务的所有服务实现列表。
      *
      * @param genericableId 表示指定服务的唯一标识的 {@link String}。
-     * @return 表示指定服务的所有服务实现列表的 {@link List}{@code <}{@link Map}{@code <}{@link String}{@code ,
-     * }{@link Object}{@code >>}。
+     * @return 表示指定服务的所有服务实现列表的 {@link List}{@code <}{@link FitableVo}{@code >}。
      */
     @GetMapping(path = "/fitables")
-    public List<Map<String, Object>> getFitables(@RequestQuery(name = "genericableId") String genericableId) {
+    public List<FitableVo> getFitables(@RequestQuery(name = "genericableId") String genericableId) {
         notBlank(genericableId, "The genericable id cannot be blank.");
         Genericable genericable = this.brokerClient.getGenericable(genericableId);
-        return genericable.fitables().stream().map(this::toMap).collect(Collectors.toList());
+        return genericable.fitables().stream().map(this::convert).collect(Collectors.toList());
     }
 
     /**
@@ -111,11 +110,10 @@ public class ActuatorController {
      *
      * @param genericableId 表示指定服务的唯一标识的 {@link String}。
      * @param fitableId 表示指定服务实现的唯一标识的 {@link String}。
-     * @return 表示指定服务实现的地址列表的 {@link List}{@code <}{@link Map}{@code <}{@link String}{@code ,
-     * }{@link Object}{@code >>}。
+     * @return 表示指定服务实现的地址列表的 {@link List}{@code <}{@link AddressVo}{@code >}。
      */
     @GetMapping(path = "/addresses")
-    public List<Map<String, Object>> getAddresses(@RequestQuery(name = "genericableId") String genericableId,
+    public List<AddressVo> getAddresses(@RequestQuery(name = "genericableId") String genericableId,
             @RequestQuery(name = "fitableId") String fitableId) {
         notBlank(genericableId, "The genericable id cannot be blank.");
         notBlank(fitableId, "The fitable id cannot be blank.");
@@ -124,50 +122,53 @@ public class ActuatorController {
         return genericable.fitable(fitableId, Fitable.DEFAULT_VERSION)
                 .targets()
                 .stream()
-                .map(this::toMap)
+                .map(this::convert)
                 .collect(Collectors.toList());
     }
 
-    private Map<String, Object> toMap(Plugin plugin) {
-        return MapBuilder.<String, Object>get()
-                .put("group", plugin.metadata().group())
-                .put("name", plugin.metadata().name())
-                .put("version", plugin.metadata().version())
-                .put("category", plugin.metadata().category().getCode())
-                .put("level", plugin.metadata().level())
-                .build();
+    private PluginVo convert(Plugin plugin) {
+        PluginVo vo = new PluginVo();
+        vo.setGroup(plugin.metadata().group());
+        vo.setName(plugin.metadata().name());
+        vo.setVersion(plugin.metadata().version());
+        vo.setCategory(plugin.metadata().category().getCode());
+        vo.setLevel(plugin.metadata().level());
+        return vo;
     }
 
-    private Map<String, Object> toMap(Fitable fitable) {
-        return MapBuilder.<String, Object>get()
-                .put("id", fitable.id())
-                .put("version", fitable.version())
-                .put("aliases", fitable.aliases().all())
-                .put("tags", fitable.tags().all())
-                .put("degradation", fitable.degradationFitableId())
-                .build();
+    private FitableVo convert(Fitable fitable) {
+        FitableVo vo = new FitableVo();
+        vo.setId(fitable.id());
+        vo.setVersion(fitable.version());
+        vo.setAliases(fitable.aliases().all());
+        vo.setTags(fitable.tags().all());
+        vo.setDegradation(fitable.degradationFitableId());
+        return vo;
     }
 
-    private Map<String, Object> toMap(Target target) {
-        return MapBuilder.<String, Object>get()
-                .put("workerId", target.workerId())
-                .put("host", target.host())
-                .put("environment", target.environment())
-                .put("formats", target.formats().stream().map(this::toMap).collect(Collectors.toList()))
-                .put("endpoints", target.endpoints().stream().map(this::toMap).collect(Collectors.toList()))
-                .put("extensions", target.extensions())
-                .build();
+    private AddressVo convert(Target target) {
+        AddressVo vo = new AddressVo();
+        vo.setWorkerId(target.workerId());
+        vo.setHost(target.host());
+        vo.setEnvironment(target.environment());
+        vo.setFormats(target.formats().stream().map(this::convert).collect(Collectors.toList()));
+        vo.setEndpoints(target.endpoints().stream().map(this::convert).collect(Collectors.toList()));
+        vo.setExtensions(target.extensions());
+        return vo;
     }
 
-    private Map<String, Object> toMap(Format format) {
-        return MapBuilder.<String, Object>get().put("name", format.name()).put("code", format.code()).build();
+    private FormatVo convert(Format format) {
+        FormatVo vo = new FormatVo();
+        vo.setName(format.name());
+        vo.setCode(format.code());
+        return vo;
     }
 
-    private Map<String, Object> toMap(Endpoint endpoint) {
-        return MapBuilder.<String, Object>get()
-                .put("protocol", endpoint.protocol())
-                .put("code", endpoint.protocolCode())
-                .put("port", endpoint.port())
-                .build();
+    private EndpointVo convert(Endpoint endpoint) {
+        EndpointVo vo = new EndpointVo();
+        vo.setProtocol(endpoint.protocol());
+        vo.setCode(endpoint.protocolCode());
+        vo.setPort(endpoint.port());
+        return vo;
     }
 }

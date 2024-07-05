@@ -8,18 +8,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.huawei.fit.actuator.entity.FitableVo;
+import com.huawei.fit.actuator.entity.PluginVo;
+import com.huawei.fitframework.broker.Aliases;
+import com.huawei.fitframework.broker.Fitable;
+import com.huawei.fitframework.broker.Genericable;
+import com.huawei.fitframework.broker.Tags;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.plugin.Plugin;
 import com.huawei.fitframework.plugin.PluginCategory;
 import com.huawei.fitframework.plugin.PluginMetadata;
 import com.huawei.fitframework.runtime.FitRuntime;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 表示 {@link ActuatorController} 的单元测试。
@@ -33,13 +42,23 @@ public class ActuatorControllerTest {
     private FitRuntime fitRuntime;
     private BrokerClient brokerClient;
 
-    @Test
-    @DisplayName("返回正确的插件列表")
-    void shouldReturnPlugins() {
+    @BeforeEach
+    void setup() {
         this.fitRuntime = mock(FitRuntime.class);
         this.brokerClient = mock(BrokerClient.class);
         this.actuatorController = new ActuatorController(this.fitRuntime, this.brokerClient);
+    }
 
+    @AfterEach
+    void teardown() {
+        this.actuatorController = null;
+        this.fitRuntime = null;
+        this.brokerClient = null;
+    }
+
+    @Test
+    @DisplayName("返回正确的插件列表")
+    void shouldReturnPlugins() {
         Plugin p1 = mock(Plugin.class);
         PluginMetadata m1 = mock(PluginMetadata.class);
         when(p1.metadata()).thenReturn(m1);
@@ -58,17 +77,45 @@ public class ActuatorControllerTest {
         when(m2.level()).thenReturn(2);
         Mockito.when(this.fitRuntime.plugins()).thenReturn(Arrays.asList(p1, p2));
 
-        Map<String, Object> plugins = this.actuatorController.getPlugins();
+        List<PluginVo> plugins = this.actuatorController.getPlugins();
         assertThat(plugins).isNotEmpty().hasSize(2);
-        assertThat(plugins.get("n1")).hasFieldOrPropertyWithValue("group", "g1")
-                .hasFieldOrPropertyWithValue("name", "n1")
-                .hasFieldOrPropertyWithValue("version", "1.0.1")
-                .hasFieldOrPropertyWithValue("category", "user")
-                .hasFieldOrPropertyWithValue("level", 1);
-        assertThat(plugins.get("n2")).hasFieldOrPropertyWithValue("group", "g2")
-                .hasFieldOrPropertyWithValue("name", "n2")
-                .hasFieldOrPropertyWithValue("version", "1.0.2")
-                .hasFieldOrPropertyWithValue("category", "system")
-                .hasFieldOrPropertyWithValue("level", 2);
+        assertThat(plugins.get(1)).returns("g1", PluginVo::getGroup)
+                .returns("n1", PluginVo::getName)
+                .returns("1.0.1", PluginVo::getVersion)
+                .returns("user", PluginVo::getCategory)
+                .returns(1, PluginVo::getLevel);
+        assertThat(plugins.get(0)).returns("g2", PluginVo::getGroup)
+                .returns("n2", PluginVo::getName)
+                .returns("1.0.2", PluginVo::getVersion)
+                .returns("system", PluginVo::getCategory)
+                .returns(2, PluginVo::getLevel);
+    }
+
+    @Test
+    @DisplayName("返回正确的服务实现列表")
+    void shouldReturnFitables() {
+        Genericable genericable = mock(Genericable.class);
+        when(this.brokerClient.getGenericable("g1")).thenReturn(genericable);
+
+        Fitable f1 = mock(Fitable.class);
+        when(genericable.fitables()).thenReturn(Collections.singletonList(f1));
+        when(f1.id()).thenReturn("f1");
+        when(f1.version()).thenReturn("1.0.0");
+        Aliases aliases = mock(Aliases.class);
+        when(aliases.all()).thenReturn(Collections.singleton("a1"));
+        when(f1.aliases()).thenReturn(aliases);
+        Tags tags = mock(Tags.class);
+        when(tags.all()).thenReturn(Collections.singleton("t1"));
+        when(f1.tags()).thenReturn(tags);
+        when(f1.degradationFitableId()).thenReturn("d1");
+
+        List<FitableVo> fitables = this.actuatorController.getFitables("g1");
+        assertThat(fitables).hasSize(1)
+                .element(0)
+                .returns("f1", FitableVo::getId)
+                .returns("1.0.0", FitableVo::getVersion)
+                .returns(Collections.singleton("a1"), FitableVo::getAliases)
+                .returns(Collections.singleton("t1"), FitableVo::getTags)
+                .returns("d1", FitableVo::getDegradation);
     }
 }
