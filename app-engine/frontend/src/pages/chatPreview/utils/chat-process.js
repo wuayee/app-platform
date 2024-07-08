@@ -250,6 +250,7 @@ export const deepClone = (obj) => {
 }
 // 文件类型设置
 export const fileTypeSet = (type) => {
+  type = type.toLowerCase();
   const audioType = ['mp3', 'wav', 'wmv'];
   const videoType = ['mp4', 'm2v', 'mkv', 'rmvb', 'wmv', 'avi', 'flv', 'mov', 'm4v'];
   const imgType = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
