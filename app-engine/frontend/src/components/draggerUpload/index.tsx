@@ -1,17 +1,33 @@
+import React, { useEffect, useState, useRef } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import { Upload } from 'antd';
-import React, { useEffect, useState } from 'react';
+import JSZip from 'jszip';
 import { getPluginPackageInfo } from '../../shared/http/plugin';
+const zip = new JSZip();
 
 const DraggerUpload = (props) => {
   const { accept,setResult } = props;
+  const jsonMap = useRef();
   const customRequest=(val)=>{
-    getPluginPackageInfo(val?.file).then((res)=>{
-      val.onSuccess(res, val?.file);
-        setResult(res);
-      }).catch((e)=>{
-        val.onError(e);
-      });
+    let fileObj:any = {};
+    zip.loadAsync(val?.file).then((res) => {
+      fileObj[val.file.uid] = [];
+      Object.keys(res.files).forEach(item => {
+        if (!res.files[item].dir && item.indexOf('json') !== -1) {
+          res.file(item)?.async('blob').then((data) => {
+            fileObj[val.file.uid].push(new File([data], item, { type: 'application/json' }));
+          });
+        }
+      })
+      console.log(res.files);
+      console.log(fileObj);
+    })
+    // getPluginPackageInfo(val?.file).then((res)=>{
+    //   val.onSuccess(res, val?.file);
+    //     setResult(res);
+    //   }).catch((e)=>{
+    //     val.onError(e);
+    //   });
   }
   const uploadProps: UploadProps = {
     name: 'file',

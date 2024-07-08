@@ -64,9 +64,7 @@ const onCheckChange: GetProp<typeof Checkbox.Group, 'onChange'> = async(checkedV
       title='上传工具'
       placement='right'
       closeIcon={false}
-      onClose={false}
       width={500}
-      maxCount={3}
       open={open}
       extra={
         <CloseOutlined
@@ -106,7 +104,7 @@ const onCheckChange: GetProp<typeof Checkbox.Group, 'onChange'> = async(checkedV
           onChange={onChangeSpace}
           options={uploadSpaceOptions}
         />
-        <DraggerUpload accept='.zip,.tar,.jar' maxCount={1} setResult={setResult}/>
+        <DraggerUpload accept='.zip' multiple setResult={setResult}/>
         <Checkbox.Group style={{ width: '100%' }} onChange={onCheckChange}>
         {result?.map((item) => (
           <div className='param-card' key={item?.methodName}>
