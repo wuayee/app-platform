@@ -25,6 +25,9 @@ const Skill = (props) => {
   }
   // 选择数据后回调
   const confirmCallBack = (workFlowId, fitId) => {
+    if (workFlowId.length === 0 && fitId.length === 0) {
+      setSkillList([]);
+    }
     updateData(fitId, 'tools');
     updateData(workFlowId, 'workflows');
   }
@@ -75,8 +78,6 @@ const Skill = (props) => {
     if (item.type === 'workflow') {
       if (item.appId.length) {
         navigate(`/app-develop/${tenantId}/app-detail/flow-detail/${item.appId}`);
-      } else {
-        console.log(item.runnables);
       }
     } else {
       navigate(`/plugin/detail/${item.uniqueName}`);

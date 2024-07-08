@@ -10,6 +10,7 @@ import { handleClickAddToolNode } from '../utils';
 import ToolCard from './tool-card';
 import '../styles/tool-modal.scss';
 import { Message } from '@shared/utils/message';
+import { deepClone } from '../../chatPreview/utils/chat-process';
 const { Search } = Input;
 const { Option } = Select;
 
@@ -39,7 +40,7 @@ const ToolDrawer = (props) => {
   }, [props.showModal, activeKey]);
   useEffect(() => {
     type === 'addSkill' && (checkedList.current = JSON.parse(JSON.stringify(checkData)));
-  }, [props.checkData])
+  }, [checkData])
   const items = categoryItems;
   const btnItems = [
     { key: 'tool', label: '插件' },
@@ -121,12 +122,15 @@ const ToolDrawer = (props) => {
   }
   // 选中
   const onChange = (e, item) => {
-    item.checked = e.target.checked;
+    let list = deepClone(pluginData);
+    let cItem = list.filter(pItem => pItem.uniqueName === item.uniqueName)[0];
+    cItem.checked = e.target.checked;
     if (e.target.checked) {
       checkedList.current.push(item);
     } else {
       checkedList.current = checkedList.current.filter(cItem => cItem.uniqueName !== item.uniqueName);
     }
+    setPluginData(list);
   }
   // 确定提交
   const confirm = () => {
@@ -153,7 +157,7 @@ const ToolDrawer = (props) => {
     let nameList = checkedList.current.map(item => item.uniqueName);
     data.forEach(item => {
       item.checked = nameList.includes(item.uniqueName);
-    })
+    });
   }
   return <>
     <Modal 
@@ -207,7 +211,7 @@ const ToolDrawer = (props) => {
                 <div className="mashup-add-item" key={card.uniqueName}>
                   <ToolCard  pluginData={card} tenantId={tenantId} />
                   <span className="opration-item">
-                    <Checkbox defaultChecked={card.checked} onChange={(e) => onChange(e, card)}></Checkbox>
+                    <Checkbox checked={card.checked} onChange={(e) => onChange(e, card)}></Checkbox>
                   </span>
                 </div>
               )}
