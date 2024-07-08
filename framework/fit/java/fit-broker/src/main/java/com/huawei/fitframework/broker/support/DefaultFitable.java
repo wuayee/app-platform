@@ -19,6 +19,7 @@ import com.huawei.fitframework.broker.LocalExecutor;
 import com.huawei.fitframework.broker.LocalExecutorFactory;
 import com.huawei.fitframework.broker.Tags;
 import com.huawei.fitframework.broker.Target;
+import com.huawei.fitframework.broker.TargetLocator;
 import com.huawei.fitframework.broker.UniqueFitableId;
 import com.huawei.fitframework.broker.client.ClientLocalExecutorNotFoundException;
 import com.huawei.fitframework.broker.client.Invoker;
@@ -44,6 +45,7 @@ import java.util.Set;
 public class DefaultFitable implements ConfigurableFitable {
     private final BeanContainer container;
     private final LoadBalancer loadBalancer;
+    private final TargetLocator targetLocator;
     private final LazyLoader<LocalExecutorFactory> localExecutorFactoryLoader;
     private final FitableExecutor remoteExecutor;
     private final FitableExecutor multicastExecutor;
@@ -57,9 +59,11 @@ public class DefaultFitable implements ConfigurableFitable {
     private Genericable genericable;
     private final LazyLoader<UniqueFitableId> uniqueIdLoader;
 
-    DefaultFitable(BeanContainer container, LoadBalancer loadBalancer, String id, String version) {
+    DefaultFitable(BeanContainer container, LoadBalancer loadBalancer, TargetLocator targetLocator, String id,
+            String version) {
         this.container = container;
         this.loadBalancer = loadBalancer;
+        this.targetLocator = targetLocator;
         this.localExecutorFactoryLoader = new LazyLoader<>(() -> this.container.factory(LocalExecutorFactory.class)
                 .map(BeanFactory::<LocalExecutorFactory>get)
                 .orElseThrow(() -> new IllegalStateException("No LocalExecutorFactory.")));
@@ -103,6 +107,11 @@ public class DefaultFitable implements ConfigurableFitable {
     @Override
     public Genericable genericable() {
         return this.genericable;
+    }
+
+    @Override
+    public List<Target> targets() {
+        return this.targetLocator.lookup(this.toUniqueId());
     }
 
     @Override
