@@ -52,8 +52,9 @@ const ModelBaseDetail: React.FC = () => {
     if (name) {
       queryModelDetail(name).then(res => {
         if (res) {
-          setData(res?.modelInfo);
-          setConfig(JSON.stringify(JSON.parse(res?.config),null,2));  // 格式化返回值
+          setData(res?.modelInfo);          
+          let obj =  ( Function( "return " + res?.config ) )()
+          setConfig(JSON.stringify((obj),null,2));  // 格式化返回值
           setVersionData(res?.versionInfo);
         }
       });
