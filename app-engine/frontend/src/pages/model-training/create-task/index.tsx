@@ -129,15 +129,16 @@ const ModelTrainingCreate = () => {
 
   // 选择数据集后
   const selectDataset=async(value,option)=>{
+    form.resetFields(['datasetVersionId']);
+    setDastasetVersion(null);
     // 数据集详情
     setDastaset(option);
     // 获取数据集版本
-  const res= await getDatasetVersions(value,{typeFilter:1,sourceType:['local'],pagination: {
+    const res= await getDatasetVersions(value,{typeFilter:1,sourceType:['local'],pagination: {
     page: 0,
     limit: 100
   }})
-  form.resetFields('datasetVersionId');
-  setDatasetVersionList(res);
+    setDatasetVersionList(res);
   }
 
   const culculateGBSize = () => {
@@ -285,6 +286,7 @@ const ModelTrainingCreate = () => {
                 }
               ]}>
               <Select options={datasetVersionList} style={{ width: inputWidth }} onSelect={(val,option)=>{setDastasetVersion(option)}}
+               labelRender={(option)=>{return `V${option?.label}`}}
                fieldNames={{label:'version',value:'versionId'}} optionRender={(option)=>{ return `V${option?.label}`}}
                 disabled={datasetVerified !== 1}></Select> 
             </Form.Item>
@@ -295,8 +297,8 @@ const ModelTrainingCreate = () => {
               <div className='input-value'>{dataset?.name||'--'}</div>
             </Col>
             <Col span={6}>
-              <div className='input-label'>数据集大小</div>
-              <div className='input-value'>{bytesToSize(dataset?.totalSize)}</div>
+              <div className='input-label'>数据集版本大小</div>
+              <div className='input-value'>{bytesToSize(datasetVersion?.totalSize)}</div>
             </Col>
             <Col span={6}>
               <div className='input-label'>数据集版本规格</div>
