@@ -120,7 +120,7 @@ public abstract class AbstractRootPlugin extends AbstractPlugin implements RootP
         this.container().registry().register(targetLocator, TARGET_LOCATOR_BEAN_NAME);
         LoadBalancer loadBalancer = new DefaultLoadBalancer(this.container(), serializationService, targetLocator);
         this.container().registry().register(loadBalancer, LOAD_BALANCER_BEAN_BANE);
-        FitableFactory fitableFactory = new DefaultFitableFactory(this.container(), loadBalancer);
+        FitableFactory fitableFactory = new DefaultFitableFactory(this.container(), loadBalancer, targetLocator);
         this.container().registry().register(fitableFactory, FITABLE_FACTORY_BEAN_NAME);
         DefaultInvokerFactory invokerFactory = new DefaultInvokerFactory(this.container(),
                 genericableFactory,
