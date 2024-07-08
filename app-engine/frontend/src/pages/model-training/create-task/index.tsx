@@ -297,16 +297,16 @@ const ModelTrainingCreate = () => {
               <div className='input-value'>{dataset?.name||'--'}</div>
             </Col>
             <Col span={6}>
-              <div className='input-label'>数据集版本大小</div>
+              <div className='input-label'>版本大小</div>
               <div className='input-value'>{bytesToSize(datasetVersion?.totalSize)}</div>
             </Col>
             <Col span={6}>
-              <div className='input-label'>数据集版本规格</div>
+              <div className='input-label'>版本规格</div>
               <div className='input-value'>{FormatQaNumber(datasetVersion?.prompts)}</div>
             </Col>
             <Col span={6}>
-              <div className='input-label'>数据集描述</div>
-              <div className='input-value'>{dataset?.description|| '--'}</div>
+              <div className='input-label'>版本描述</div>
+              <div className='input-value'>{datasetVersion?.description|| '--'}</div>
             </Col>
           </Row>
           <h3 style={{ fontSize: 18, margin: '16px 0' }}>训练参数</h3>
