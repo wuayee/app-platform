@@ -121,7 +121,8 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
       style={{
         background: 'url(/src/assets/images/knowledge/knowledge-background.png)',
         backgroundRepeat:'no-repeat',
-        backgroundSize:'cover'
+        backgroundSize:'cover',
+        marginBottom:10,
       }}
     >
       {/* 头部区域 */}

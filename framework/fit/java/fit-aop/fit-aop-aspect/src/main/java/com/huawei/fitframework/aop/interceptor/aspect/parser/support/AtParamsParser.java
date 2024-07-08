@@ -11,7 +11,6 @@ import com.huawei.fitframework.aop.interceptor.aspect.parser.PointcutParameter;
 import com.huawei.fitframework.aop.interceptor.aspect.parser.model.PointcutSupportedType;
 import com.huawei.fitframework.aop.interceptor.aspect.util.ExpressionUtils;
 import com.huawei.fitframework.inspection.Validation;
-import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import java.lang.annotation.Annotation;
@@ -65,32 +64,31 @@ public class AtParamsParser extends BaseParser {
 
         @Override
         public boolean match(Method method) {
+            List<Annotation> annotations =
+                    Arrays.stream(method.getParameterAnnotations()).flatMap(Stream::of).collect(Collectors.toList());
+            if (annotations.isEmpty()) {
+                return false;
+            }
             Class<?> clazz;
             if (this.isBinding()) {
                 Optional<PointcutParameter> parameter = Arrays.stream(AtParamsParser.this.parameters)
                         .filter(param -> Objects.equals(param.getName(), this.content()))
                         .findFirst();
-                Validation.isTrue(parameter.isPresent(), "Pointcut params name can not be found.[name={0}]",
+                Validation.isTrue(parameter.isPresent(),
+                        "Pointcut params name can not be found.[name={0}]",
                         this.content);
                 clazz = parameter.get().getType();
             } else {
                 clazz = ExpressionUtils.getContentClass(this.content, AtParamsParser.this.classLoader);
             }
-            List<Annotation> annotationList =
-                    Arrays.stream(method.getParameterAnnotations()).flatMap(Stream::of).collect(Collectors.toList());
-            for (Annotation annotation : annotationList) {
-                // 当前参数注解与期望相同
+            return annotations.stream().parallel().anyMatch(annotation -> {
                 Class<? extends Annotation> type = annotation.annotationType();
                 if (type == clazz) {
                     return true;
                 }
-                // 当前参数注解内部嵌套注解与期望相同
-                AnnotationMetadata annotationMetadata = AspectParameterInjectionHelper.getAnnotationMetadata(type);
-                if (annotationMetadata.isAnnotationPresent(ObjectUtils.cast(clazz))) {
-                    return true;
-                }
-            }
-            return false;
+                return AspectParameterInjectionHelper.getAnnotationMetadata(type)
+                        .isAnnotationPresent(ObjectUtils.cast(clazz));
+            });
         }
     }
 }

@@ -677,7 +677,7 @@ async def delete_model(llm: Llm, request: Request, background_tasks: BackgroundT
     if model_name in model_services:
         service_name = model_services[model_name]["service_name"]
         model_name = model_services[model_name]["model_name"]
-        deployment_name = model_name + "-inference"
+        deployment_name = model_name.lower() + "-inference"
         code = "code"
         detail = "detail"
         try:
@@ -970,6 +970,19 @@ async def add_external_model_services(external_service: ExternalService, request
 
     ex_service["http_proxy"] = external_service.http_proxy
     ex_service["https_proxy"] = external_service.https_proxy
+
+    # Check if the model data can be fetched before adding the service
+    try:
+        model_data = get_model_data_from_external_service(ex_service)
+        if not model_data:
+            raise ValueError("Failed to fetch model data")
+    except Exception as e:
+        logging.error("Failed to add external model service: %s", e)
+        response = JSONResponse(status_code=400, content=jsonable_encoder({"error": "Failed to fetch model data"}))
+        set_cross_header(response, request)
+        return response
+
+    # Add the service only if fetching model data is successful
     external_model_services[ex_name] = ex_service
     persist_external_services()
     notify_model_io_gateways_in_bg(background_tasks)

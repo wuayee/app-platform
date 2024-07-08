@@ -66,6 +66,7 @@ const ModelCard = ({ modelItem, setModelItems, openModify }: { modelItem: ModelI
         backgroundRepeat:'no-repeat',
         backgroundSize:'cover',
         height: 240,
+        marginBottom:16,
       }}
     >
       {/* 头部区域 */}

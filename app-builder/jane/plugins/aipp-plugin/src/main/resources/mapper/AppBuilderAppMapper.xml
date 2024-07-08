@@ -48,7 +48,7 @@
             and type = #{typeFilter}
         </if>
         <if test="cond != null and cond.name != null and cond.name != ''">
-            and name like '%' || #{cond.name} || '%'
+            and name ilike '%' || #{cond.name} || '%'
         </if>
         <include refid="order"/>
         offset #{offset} limit #{limit}

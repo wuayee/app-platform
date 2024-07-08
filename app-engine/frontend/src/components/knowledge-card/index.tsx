@@ -63,6 +63,7 @@ const App = ({
         backgroundRepeat:'no-repeat',
         backgroundSize:'cover',
         height: 280,
+        marginBottom:14,
       }}
       onClick={() => {
         jumpDetail(knowledge.id);

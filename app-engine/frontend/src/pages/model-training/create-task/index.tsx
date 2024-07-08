@@ -1,4 +1,4 @@
-import { Button, Col, Flex, Form, Input, InputNumber, Modal, Radio, Row, Select } from 'antd';
+import { Button, Col, Flex, Form, Input, InputNumber, Modal, Radio, Row, Select, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import GoBack from '../../../components/go-back/GoBack';
@@ -24,6 +24,7 @@ const ModelTrainingCreate = () => {
   const [datasetVersion,setDastasetVersion] = useState(undefined);
   const [form] = Form.useForm();
   const [verifyForm] = Form.useForm();
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     getModelOptions();
@@ -52,6 +53,7 @@ const ModelTrainingCreate = () => {
   const getModelVersions =async(val,option) => {
     //TODO:调用获取模型详情接口获取版本列表
     setModel(option);
+    form.resetFields(['modelVersionNo']);
     const res= await queryModelVersionList(option?.model_name)
     setVersionOptions(res?.versionInfo)
   }
@@ -62,10 +64,11 @@ const ModelTrainingCreate = () => {
     if(res===true){
     //认证成功...
     setDatasetVerified(1); 
-    getDatasetList();
-    }else{
+    getDatasetList();}
+    else{
     //认证失败...
-    setDatasetVerified(2);}
+    setDatasetVerified(2);
+    }
   }
 
   const inputWidth = 380;
@@ -102,9 +105,17 @@ const ModelTrainingCreate = () => {
   const verifySubmit =async (value: any) => {
     const res = await login_eDataMate(value);
     //认证成功...
+    if(res===true)
+    {
     setDatasetVerified(1);
     getDatasetList();
-    setOpenVerify(false);
+    setOpenVerify(false);}
+    else{
+    messageApi.open({
+      type: 'error',
+      content: '登录失败，请检查用户名或密码，或者联系管理员',
+    });
+    }
   }
 
   // 获取数据集接口
@@ -125,6 +136,7 @@ const ModelTrainingCreate = () => {
     page: 0,
     limit: 100
   }})
+  form.resetFields('datasetVersionId');
   setDatasetVersionList(res);
   }
 
@@ -141,6 +153,7 @@ const ModelTrainingCreate = () => {
 
   return (
     <div className='aui-fullpage'>
+      {contextHolder}
       <div className='aui-header-1'>
         <div className='aui-title-1' style={{ alignItems: 'center' }}>
           <GoBack path={'/model-training'} title='创建训练任务' />
