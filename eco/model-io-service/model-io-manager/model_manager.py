@@ -71,6 +71,8 @@ logger = logging.getLogger('uvicorn.error')
 
 model_weight_dir = "/mnt/models"
 
+MODEL_WEIGHT_REMOTE = "/mnt/remote/model-lite/models"
+
 app = FastAPI()
 
 app.model_io_gateways = []
@@ -1116,14 +1118,30 @@ def get_max_token_size(item, models_meta, model_name):
     return max_token_size
 
 
+def get_model_weight_path(model_name):
+    url = 'http://model-manage:9011/v1/models/' + model_name
+    data = requests.get(url, timeout=10)
+    data = json.loads(data.content)
+    model_version_path = data.get("versionInfo", [])[0].get("version_path")
+    return model_version_path
+
+
 @app.post("/v1/start_up")
 async def start_up(item: Item, request: Request, background_tasks: BackgroundTasks):
     model_run_info[item.name] = item.max_link_num
     model_name = item.name.strip()
     max_token_size = get_max_token_size(item, get_models_meta(), model_name)
-    model_weight_path = os.path.join(model_weight_dir, model_weight_model_dir.get(model_name, model_name))
+
+    get_model_weight_flag = os.environ.get("GET_MODEL_WEIGHT") == "true"
+    if get_model_weight_flag:
+        model_weight_path = get_model_weight_path(model_name)
+        if not model_weight_path:
+            model_weight_path = os.path.join(model_weight_dir, model_weight_model_dir.get(model_name, model_name))
+            logger.warning("Version Path not exist, check the model manager")
+    else:
+        model_weight_path = os.path.join(model_weight_dir, model_weight_model_dir.get(model_name, model_name))
+
     weight_path_validation = os.environ.get("WEIGHT_PATH_VALIDATION") == "true"
-    logger.error("weight_path_validation=%s", weight_path_validation)
 
     if weight_path_validation and not os.path.exists(model_weight_path):
         error_msg = "模型权重不存在，需要上传至" + model_weight_path
