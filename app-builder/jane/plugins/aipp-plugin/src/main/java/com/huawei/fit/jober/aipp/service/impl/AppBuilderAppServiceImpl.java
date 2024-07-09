@@ -144,12 +144,40 @@ public class AppBuilderAppServiceImpl
         String id = appDto.getId();
         AppBuilderApp appBuilderApp = this.appFactory.create(id);
         appBuilderApp.setState(AppState.PUBLISHED.getName());
+        // 添加校验，禁止更低版本手动输入
+        this.validateVersionIsLatest(appBuilderApp.getVersion(), appDto.getVersion());
         appBuilderApp.setVersion(appDto.getVersion());
         this.appFactory.update(appBuilderApp);
         if (appBuilderApp.getAttributes().containsKey("store_id")) {
             aippDto.setUniqueName(appBuilderApp.getAttributes().get("store_id").toString());
         }
         return this.aippFlowService.publish(aippDto, contextOf);
+    }
+
+    /**
+     * 校验版本号是否比现有号更新
+     *
+     * @param oldVersion 旧版本号
+     * @param newVersion 新版本号
+     */
+    private void validateVersionIsLatest(String oldVersion, String newVersion) {
+        if (StringUtils.equals(oldVersion, newVersion)) {
+            // 在这里，与旧版本号相同的版本号被认为是最新的
+            return;
+        }
+        String[] oldPart = oldVersion.split("\\.");
+        String[] newPart = newVersion.split("\\.");
+        for (int i = 0; i < oldPart.length; i++ ) {
+            int oldV = Integer.parseInt(oldPart[i]);
+            int newV = Integer.parseInt(newPart[i]);
+            if (oldV > newV) {
+                // 如果某个号比当前号小，则认为新版本比旧版本小，抛出错误
+                throw new AippParamException(AippErrCode.NEW_VERSION_IS_LOWER);
+            } else if (newV > oldV) {
+                // 如果某个号比当前号大，则认为新版本比旧版本大，例如2.0.0比1.9.9大
+                break;
+            }
+        }
     }
 
     private void validateVersion(AippDto aippDto, OperationContext contextOf) {
@@ -383,7 +411,21 @@ public class AppBuilderAppServiceImpl
     }
 
     private void validateUpdateApp(String appId, String name, OperationContext context) {
+        // 这个静态校验名称不能为空、不能超长
         this.validateAppName(name, context);
+
+        // 如果该app已经发布过了，那么将不再允许修改名称
+        List<Meta> metaList = this.getPublishedMetaList(appId, context);
+        if (CollectionUtils.isNotEmpty(metaList) && !StringUtils.equals(metaList.get(0).getName(), name)) {
+            throw new AippException(AippErrCode.APP_NAME_HAS_PUBLISHED);
+        }
+
+        // 到这里，要么是metaList是空的，要么就是没有改名
+        // 如果metaList不是空的，证明没有改名，不管
+        if (CollectionUtils.isNotEmpty(metaList)) {
+            return;
+        }
+        // 如果mataList是空的，即没有发布过，那么名称可以修改为不和其它名称重复的名称
         AppQueryCondition queryCondition =
                 AppQueryCondition.builder().tenantId(context.getTenantId()).name(name).build();
         List<AppBuilderApp> appBuilderApps = this.appRepository.selectWithCondition(queryCondition);
@@ -393,14 +435,6 @@ public class AppBuilderAppServiceImpl
         if (appBuilderApps.size() > 1 || !Objects.equals(appBuilderApps.get(0).getId(), appId)) {
             log.error("update aipp failed, [name={}, tenantId={}]", name, context.getTenantId());
             throw new AippException(context, AippErrCode.AIPP_NAME_IS_DUPLICATE);
-        }
-
-        List<Meta> metaList = this.getPublishedMetaList(appId, context);
-        if (metaList.isEmpty()) {
-            return;
-        }
-        if (!StringUtils.equals(metaList.get(0).getName(), name)) {
-            throw new AippException(AippErrCode.APP_NAME_HAS_PUBLISHED);
         }
     }
 
@@ -441,7 +475,8 @@ public class AppBuilderAppServiceImpl
         update.setUpdateAt(LocalDateTime.now());
         update.setName(appDto.getName());
         update.setType(appDto.getType());
-        update.setAttributes(appDto.getAttributes());
+        // 避免前端更新将app表的attributes覆盖了
+        this.updateAttributes(update, appDto.getAttributes());
         update.setVersion(appDto.getVersion());
         if (StringUtils.isEmpty(update.getId())) {
             // 此时通过mapper没有查询到对应的app，需要创建新的app
@@ -457,6 +492,11 @@ public class AppBuilderAppServiceImpl
         }
         this.appFactory.update(update);
         return Rsp.ok(this.buildFullAppDto(update));
+    }
+
+    private void updateAttributes(AppBuilderApp update, Map<String, Object> attributes) {
+        Map<String, Object> attributesOld = update.getAttributes();
+        attributesOld.putAll(attributes);
     }
 
     private void addGraphIntoApp(AppBuilderFlowGraphDto graphDto, AppBuilderApp app) {
