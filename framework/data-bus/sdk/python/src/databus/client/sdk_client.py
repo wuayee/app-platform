@@ -1,6 +1,7 @@
 # coding: utf-8
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
 import platform
+import logging
 from typing import Optional, Tuple
 
 from databus.message import DataBusErrorCode
@@ -84,7 +85,8 @@ class SdkClient:
             return e.error_code, ReadResponse(None, None)
         except NotConnectedError:
             return DataBusErrorCode.NotConnectedToDataBus, ReadResponse(None, None)
-        except IOError:
+        except IOError as e:
+            logging.error("IOError in read_once.", e)
             return DataBusErrorCode.MemoryReadError, ReadResponse(None, None)
 
     def write_once(self, request: WriteRequest) -> DataBusErrorCode:
@@ -104,7 +106,8 @@ class SdkClient:
             return e.error_code
         except NotConnectedError:
             return DataBusErrorCode.NotConnectedToDataBus
-        except IOError:
+        except IOError as e:
+            logging.error("IOError in write_once.", e)
             return DataBusErrorCode.MemoryWriteError
 
     def get_meta_data(self, user_key: str) -> Tuple[DataBusErrorCode, Optional[Tuple[int, bytes]]]:
