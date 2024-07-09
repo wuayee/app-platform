@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Table, message, Space } from 'antd';
+import { Button, Table, message, Space, Tooltip } from 'antd';
 import type { TableProps } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
@@ -60,6 +60,7 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels,openM
       title: '模型',
       dataIndex: 'name',
       key: 'name',
+      width: 150,
       render: (value, record) => (
         <a
           onClick={() => {
@@ -75,18 +76,32 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels,openM
       dataIndex: 'description',
       key: 'description',
       width: 500,
+      onCell: () => {
+        return {
+          style: {
+            maxWidth: 120,
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            cursor: 'pointer'
+          }
+        }
+      },
       sorter: (a: any, b: any) => a.description.length - b.description.length,
+      render: (text) => <Tooltip placement='topLeft' title={text} overlayStyle={{ maxWidth: '600px' }}>{text}</Tooltip>
     },
     {
       title: '机构',
       dataIndex: 'orgnization',
       key: 'orgnization',
+      width: 150,
       sorter: (a: any, b: any) => a.orgnization.length - b.orgnization.length,
     },
     {
       title: '类型',
       dataIndex: 'type',
       key: 'type',
+      width: 150,
       sorter: (a: any, b: any) => a.type.length - b.type.length,
       filters: typeFilters,
       onFilter: (value, record) => record.type.indexOf(value as string) === 0,
@@ -110,7 +125,8 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels,openM
           </div>
           <div
             style={{
-              marginTop: -2,
+              marginTop: -4,
+              marginLeft: 6
             }}
           >
             {value}
@@ -122,42 +138,49 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels,openM
       title: '请求数',
       dataIndex: 'requests',
       key: 'requests',
+      width: 150,
       sorter: (a: any, b: any) => a.requests - b.requests,
     },
     {
       title: '回答数',
       dataIndex: 'responses',
       key: 'responses',
+      width: 150,
       sorter: (a: any, b: any) => a.responses - b.responses,
     },
     {
       title: '异常数',
       dataIndex: 'exceptions',
       key: 'exceptions',
+      width: 150,
       sorter: (a: any, b: any) => a.exceptions - b.exceptions,
     },
     {
       title: '吞吐量',
       dataIndex: 'throughput',
       key: 'throughput',
+      width: 150,
       sorter: (a: any, b: any) => a.throughput - b.throughput,
     },
     {
       title: '输入token',
       dataIndex: 'total_input_tokens',
       key: 'total_input_tokens',
+      width: 150,
       sorter: (a: any, b: any) => a.total_input_tokens - b.total_input_tokens,
     },
     {
       title: '输出token',
       dataIndex: 'total_output_tokens',
       key: 'total_output_tokens',
+      width: 150,
       sorter: (a: any, b: any) => a.total_output_tokens - b.total_output_tokens,
     },
     {
       title: '时延',
       dataIndex: 'latency',
       key: 'latency',
+      width: 150,
       sorter: (a: any, b: any) => a.latency - b.latency,
       render: (value) => <div>{value}s</div>,
     },
@@ -165,6 +188,7 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels,openM
       title: '速度',
       dataIndex: 'speed',
       key: 'speed',
+      width: 250,
       sorter: (a: any, b: any) => a.speed - b.speed,
       render: (value) => <div>{value} token/s</div>,
     },
@@ -172,6 +196,8 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels,openM
       title: '操作',
       dataIndex: 'operator',
       key: 'operator',
+      width: 150,
+      fixed: 'right',
       render(value, record) {
         return (
           <Space>
@@ -200,10 +226,10 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels,openM
   ];
   return (
     <div
-      className='aui-block'
       style={{
         display: 'flex',
         flexDirection: 'column',
+        paddingTop: '12px',
         gap: 8,
       }}
     >
@@ -213,7 +239,7 @@ const TableTab: React.FC<TableTabProps> = ({ modelList, setOpen, setModels,openM
           dataSource={modelList}
           size='small'
           pagination={false}
-          scroll={{ y: 800 }}
+          scroll={{ y: 600 }}
         />
       </div>
       <div />

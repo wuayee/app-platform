@@ -1,8 +1,7 @@
 import type { ReactElement } from 'react';
 import React from 'react';
-import { Card, Button, Dropdown, Space } from 'antd';
+import { Card, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
-import { url } from 'inspector';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../icons/index';
 
@@ -72,18 +71,34 @@ const App = ({
       {/* 头部区域 */}
         <div>
           <div style={{display:'flex'}}>
-            <span style={{width:48}}>
-            <knowledge.icon/>
+            <span style={{ width:48 , display: 'block'}}>
+              <knowledge.icon/>
             </span>
-            <span style={{fontSize:'20px',marginLeft:8}}>{knowledge.name}</span>
-          </div>
-          <div
-            style={{
-              fontSize: 14,
-              color: 'rgba(105, 105, 105, .9)',
-            }}
-          >
-            {`${knowledge.ownerName}创建于${formateTime(knowledge.createdAt as any as Date)}`}
+            <div style={{
+                display: 'flex', 
+                alignItems: 'center', 
+                flexWrap: 'wrap', 
+                marginLeft:8,
+                width: 0,
+                flexGrow: 1
+              }}
+            >
+              <div style={{
+                fontSize:'20px', 
+                width: '100%', 
+                overflow: 'hidden', 
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}>{knowledge.name}</div> 
+              <div
+                style={{
+                  fontSize: 14,
+                  color: 'rgba(105, 105, 105, .9)',
+                }}
+              >
+                {`${knowledge.ownerName} 创建于${formateTime(knowledge.createdAt as any as Date)}`}
+              </div>
+            </div>
           </div>
         </div>
 
