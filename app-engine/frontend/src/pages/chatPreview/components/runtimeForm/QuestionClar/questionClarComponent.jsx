@@ -12,15 +12,15 @@ export const questionClarComponent = (jadeConfig) => {
     return jadeConfig ? jadeConfig : {
       "inputParams": [
         {
-        id: uuidv4(), name: "instanceId", type: "String", from: "Reference", value: ["instanceId"]
+          id: uuidv4(), name: "instanceId", type: "String", from: "Reference", value: ["instanceId"]
         },
         {
-          id: uuidv4(), name: "questionClarResult", type: "String", from: "Reference", value: ["supplement"]
+          id: uuidv4(), name: "questionClarResult", type: "String", from: "Reference", value: ["output", "supplement"]
         },
       ],
       "outputParams": [
         {
-        id: uuidv4(), name: "questionClarResult", type: "String", from: "Input", value: ""
+          id: uuidv4(), name: "questionClarResult", type: "String", from: "Input", value: ""
         }
       ]
     }
