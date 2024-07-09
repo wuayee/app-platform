@@ -41,7 +41,7 @@ class SocketClient:
         :param core_socket: 连接DataBus core的socket(可选)
         """
         super().__init__()
-        self._executor, self._socket = None, None
+        self._executor, self._socket, self._response_manager = None, None, None
         if core_socket is not None:
             self._socket = core_socket
         elif core_address is not None:
@@ -67,6 +67,9 @@ class SocketClient:
             try:
                 self._socket.shutdown(socket.SHUT_RDWR)
                 self._socket.close()
+            except Exception:
+                # 忽略因为关闭步骤中对一个已破损socket做操作等异常，此处只期待socket关闭过程执行
+                logging.debug("SocketClient close socket error, this can be ignored.")
             finally:
                 self._socket = None
         if self._response_manager:
