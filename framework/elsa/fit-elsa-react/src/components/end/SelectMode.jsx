@@ -68,8 +68,8 @@ export default function SelectMode({mode}) {
                     defaultValue='mode-variables'
                     value={mode}
                     options={[
-                        {value: 'variables', label: "通过机器人生成的变量"},
-                        {value: 'manualCheck', label: "智能表单展示"},
+                        {value: 'variables', label: "直接输出结果"},
+                        {value: 'manualCheck', label: "智能表单展示结果"},
                     ]}
                     style={{width: '70%', marginLeft: 'auto'}}
             >
