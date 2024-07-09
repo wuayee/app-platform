@@ -94,7 +94,7 @@ export default function ManualCheckForm({formName, taskId, handleFormChange}) {
 
     useEffect(() => {
         // 组件挂载时，注册已存在的Observable
-        entityRef.current = shape.flowMeta.task.converter.entity;
+        entityRef.current = shape.flowMeta.task?.converter?.entity ?? null;
         if (entityRef.current) {
             registerObservables(entityRef.current);
         }
