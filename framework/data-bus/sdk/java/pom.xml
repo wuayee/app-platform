@@ -7,7 +7,7 @@
 
     <groupId>com.huawei.fit.databus</groupId>
     <artifactId>java-sdk</artifactId>
-    <version>0.2.14</version>
+    <version>0.2.16</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
