@@ -55,6 +55,10 @@ public class QueryChatRsp {
     @JsonProperty("origin_chat_id")
     private String originChatId;
 
+    @Property(description = "attributes")
+    @JsonProperty("attributes")
+    private String attributes;
+
     @Property(description = "message list")
     @JsonProperty("msg_list")
     private List<MessageInfo> massageList;

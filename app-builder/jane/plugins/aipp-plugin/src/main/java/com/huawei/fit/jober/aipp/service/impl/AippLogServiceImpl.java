@@ -245,7 +245,7 @@ public class AippLogServiceImpl implements AippLogService {
         if (instanceIds == null || instanceIds.isEmpty()) {
             return new HashMap<>();
         }
-        List<AippInstLog> aippInstLogs = aippLogMapper.getLogsByInstanceId(instanceIds);
+        List<AippInstLog> aippInstLogs = aippLogMapper.getLogsByInstanceIds(instanceIds);
         Map<String, List<AippInstLog>> result =
                 instanceIds.stream().collect(Collectors.toMap(key -> key, key -> new ArrayList<>()));
         for (AippInstLog instLog : aippInstLogs) {

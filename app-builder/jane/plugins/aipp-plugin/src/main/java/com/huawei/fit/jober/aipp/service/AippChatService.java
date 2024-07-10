@@ -10,6 +10,7 @@ import com.huawei.fit.jober.aipp.dto.chat.QueryChatRequest;
 import com.huawei.fit.jober.aipp.dto.chat.QueryChatRsp;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 历史会话服务接口.
@@ -70,9 +71,9 @@ public interface AippChatService {
      * 重新发起会话。
      *
      * @param currentInstanceId 需要重新发起会话的实例 ID。
-     * @param body 请求体。
+     * @param additionalContext 重新会话需要的信息，如是否使用多轮对话等等。
      * @param context 上下文。
      * @return 表示会话相应体的 {@link QueryChatRsp}。
      */
-    QueryChatRsp restartChat(String currentInstanceId, CreateChatRequest body, OperationContext context);
+    QueryChatRsp restartChat(String currentInstanceId, Map<String, Object> additionalContext, OperationContext context);
 }

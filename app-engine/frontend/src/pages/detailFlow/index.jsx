@@ -32,7 +32,14 @@ const FlowDetail = () => {
     let configIndex = CONFIGS.findIndex(item => item.node === 'llmNodeState');
     CONFIGS[configIndex].params.tenantId = tenantId;
     CONFIGS[configIndex].params.appId = appId;
-    JadeFlow.edit(stageDom, tenantId, data, CONFIGS).then(agent => {
+    const importFiles = [
+      () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/fileContentComponent.jsx`),
+      () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/interviewQuestionsComponent.jsx`),
+      () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/manageCubeCreateReportComponent.jsx`),
+      () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/QuestionClar/questionClarComponent`),
+      () => import(/* webpackIgnore: true */`../chatPreview/components/runtimeForm/conditionForm/conditionFormComponent`),
+    ];
+    JadeFlow.edit(stageDom, tenantId, data, CONFIGS, importFiles).then(agent => {
       window.agent ? null : window.agent = agent;
     })
   }

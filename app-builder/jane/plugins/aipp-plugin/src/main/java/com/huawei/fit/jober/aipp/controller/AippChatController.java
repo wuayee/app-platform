@@ -21,6 +21,7 @@ import com.huawei.fit.jober.aipp.service.AippChatService;
 import com.huawei.fitframework.annotation.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 历史对话接口
@@ -138,14 +139,16 @@ public class AippChatController extends AbstractController {
      * @param httpRequest Http 请求体。
      * @param currentInstanceId 需要重新发起会话的实例 ID。
      * @param tenantId 租户 ID。
-     * @param body 创建会话请求体。
+     * @param additionalContext 重新会话需要的信息，如是否使用多轮对话等等。
      * @return 表示会话相应体的 {@link Rsp}{@code <}{@link QueryChatRsp}{@code >}。
      */
     @PostMapping(path = "/instances/{current_instance_id}", description = "重新发起会话接口")
     public Rsp<QueryChatRsp> restartChat(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId,
             @PathVariable("current_instance_id") String currentInstanceId,
-            @RequestBody CreateChatRequest body) {
-        return Rsp.ok(this.aippChatService.restartChat(currentInstanceId, body, this.contextOf(httpRequest, tenantId)));
+            @RequestBody Map<String, Object> additionalContext) {
+        return Rsp.ok(this.aippChatService.restartChat(currentInstanceId,
+                additionalContext,
+                this.contextOf(httpRequest, tenantId)));
     }
 }
