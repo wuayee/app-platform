@@ -1,15 +1,18 @@
-.cards {
+  .cards {
     display: flex;
     gap: 10px;
   }
-  
+  .app-analyzed {
+    height: calc(100vh - 170px);
+    overflow-y: auto;
+  }
   .card {
     width: 33%;
     height: 140px;
     background-repeat: no-repeat;
     background-position-y: 100%;
     background-size: cover;
-    background-image: url(/src/assets/images/knowledge/knowledge-background.png);
+    background-image: url('/src/assets/images/knowledge/knowledge-background.png');
     .title {
       margin-bottom: 12px;
       font-size: 18px;
