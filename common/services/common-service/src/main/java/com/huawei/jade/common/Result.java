@@ -178,6 +178,6 @@ public class Result<T> {
      * @return 表示计算出来的偏移量的 {@code int}。
      */
     public static int calculateOffset(int pageNum, int pageSize) {
-        return pageNum < 0 || pageSize < 0 ? 0 : (pageNum - 1) * pageSize;
+        return pageNum <= 0 || pageSize < 0 ? 0 : (pageNum - 1) * pageSize;
     }
 }

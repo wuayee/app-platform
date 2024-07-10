@@ -86,6 +86,14 @@ public interface ToolMapper {
     void setNotLatest(String toolUniqueName);
 
     /**
+     * 将工具的某一个版本设置为最新。
+     *
+     * @param toolUniqueName 表示待更新工具的唯一标识的 {@link String}。
+     * @param version 表示待更新工具的版本的 {@link String}。
+     */
+    void setLatest(String toolUniqueName, String version);
+
+    /**
      * 查询工具的某一个版本。
      *
      * @param toolUniqueName 表示工具的唯一标识的 {@link String}。

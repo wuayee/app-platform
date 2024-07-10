@@ -12,6 +12,15 @@
     <insert id="addTag">
         insert into "store_tag" ("name", "tool_unique_name")
         values (#{name}, #{toolUniqueName})
+        on conflict ("tool_unique_name", "name") do nothing
+    </insert>
+    <insert id="addTags" parameterType="java.util.List">
+        insert into "store_tag" ("name", "tool_unique_name")
+        values
+        <foreach item="tag" collection="list" separator=",">
+            (#{tag.name}, #{tag.toolUniqueName})
+        </foreach>
+        on conflict ("tool_unique_name", "name") do nothing
     </insert>
     <delete id="deleteTag">
         delete

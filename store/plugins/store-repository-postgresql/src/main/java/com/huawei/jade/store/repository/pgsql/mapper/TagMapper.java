@@ -12,15 +12,22 @@ import java.util.List;
  * 表示用于 MyBatis 持久层引用的 Tag 接口。
  *
  * @author 李金绪 l00878072
- * @since 2024/5/11
+ * @since 2024-05-11
  */
 public interface TagMapper {
     /**
-     * 给工具增加标签。
+     * 给工具增加一个标签。
      *
-     * @param tag 表示标签名的 {@link String}。
+     * @param tag 表示标签名的 {@link TagDo}。
      */
     void addTag(TagDo tag);
+
+    /**
+     * 给工具增加一系列标签。
+     *
+     * @param tags 表示标签名的 {@link List}{@code <}{@link TagDo}{@code >}。
+     */
+    void addTags(List<TagDo> tags);
 
     /**
      * 删除工具的一条标签。
@@ -33,7 +40,7 @@ public interface TagMapper {
     /**
      * 获取工具的所有标签。
      *
-     * @param uniqueName 表示工具的数据库自增主键的 {@link String}。
+     * @param uniqueName 表示工具的唯一标识的 {@link String}。
      * @return 标签的列表的 {@link List}{@code <}{@link TagDo}{@code >}。
      */
     List<TagDo> getTags(String uniqueName);
