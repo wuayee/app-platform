@@ -597,34 +597,52 @@ def get_effective_proxies(external_service):
     return proxies
 
 
-def get_routes():
-    routes = []
-    services = get_services()
-    routed_models = {}
-    url_key = "url"
+def get_max_token_from_builtin_models(model_name):
+    models_meta = get_models_meta()
+    token_size = "tokenSize"
+
+    for model in models_meta.get("llms", []):
+        if model["name"] == model_name:
+            return model[token_size]["default"]
+
+    return None
+
+
+def process_services(services, routed_models, routes, url_key, max_link_num_key):
+    max_token_size_key = "max_token_size"
+    pipeline_key = "pipeline"
+    model_name_key = "model_name"
+    cluster_ip_key = "cluster_ip"
+    port_key = "port"
+
     for service in services:
         max_link_num = 1000
+        max_token_size = None
+        model_name = service[pipeline_key] if service[pipeline_key] else service[model_name_key]
+        url = f"http://{service[cluster_ip_key]}:{service[port_key]}"
 
-        pipeline = "pipeline"
-
-        if not service[pipeline]:
-            model_name = service["model_name"]
-        else:
-            model_name = service[pipeline]
-
-        url = f"http://{service['cluster_ip']}:{service['port']}"
         if model_name in model_run_info:
-            max_link_num = model_run_info[model_name]
+            max_link_num = model_run_info[model_name][max_link_num_key]
+            max_token_size = model_run_info[model_name][max_token_size_key]
+
         logging.info("max_link_num for %s is %s", model_name, str(max_link_num))
+
         if model_name not in routed_models:
+            if max_token_size is None:
+                max_token_size = get_max_token_from_builtin_models(model_name)
+
             routes.append({
                 "id": model_name,
                 "model": model_name,
                 url_key: url,
-                "max_link_num": max_link_num
+                max_link_num_key: max_link_num,
+                max_token_size_key: max_token_size,
             })
+
             routed_models[model_name] = url
 
+
+def process_external_services(routed_models, routes, url_key, max_link_num_key):
     for name in external_model_services:
         max_link_num = 1000
         external_model_service = external_model_services[name]
@@ -634,9 +652,12 @@ def get_routes():
         api_key_value = external_model_service[api_key]
         external_models = get_models_from_external_service(external_model_service)
         for model_name in external_models:
+
             if model_name in model_run_info:
-                max_link_num = model_run_info[model_name]
+                max_link_num = model_run_info[model_name][max_link_num_key]
+
             logging.info("max_link_num for %s is %s", model_name, str(max_link_num))
+
             if model_name not in routed_models:
                 routes.append({
                     "id": model_name,
@@ -645,10 +666,24 @@ def get_routes():
                     api_key: api_key_value,
                     "http_proxy": proxies.get("http_proxy", ""),
                     "https_proxy": proxies.get("https_proxy", ""),
-                    "max_link_num": max_link_num,
+                    max_link_num_key: max_link_num,
                 })
+
                 routed_models[model_name] = url
+
     logger.info("routes is: %s", str(routes))
+
+
+def get_routes():
+    routes = []
+    routed_models = {}
+    url_key = "url"
+    max_link_num_key = "max_link_num"
+    services = get_services()
+
+    process_services(services, routed_models, routes, url_key, max_link_num_key)
+
+    process_external_services(routed_models, routes, url_key, max_link_num_key)
     return routes
 
 
@@ -1128,7 +1163,10 @@ def get_model_weight_path(model_name):
 
 @app.post("/v1/start_up")
 async def start_up(item: Item, request: Request, background_tasks: BackgroundTasks):
-    model_run_info[item.name] = item.max_link_num
+    model_run_info[item.name] = {
+        'max_link_num': item.max_link_num,
+        'max_token_size': item.max_token_size
+    }
     model_name = item.name.strip()
     max_token_size = get_max_token_size(item, get_models_meta(), model_name)
 
