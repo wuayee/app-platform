@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Divider, Input, Pagination, Tabs } from 'antd';
+import { Button, Divider, Input, Tabs } from 'antd';
 import { Icons } from '../../components/icons';
 import { deleteAppApi, getUserCollection, getUserCollectionNoDesc, queryAppDevApi } from '../../shared/http/appDev.js';
 import AppCard from '../../components/appCard';
 import './index.scoped.scss';
 import { debounce } from '../../shared/utils/common';
 import EditModal from '../components/edit-modal';
+import Pagination from '@/components/pagination';
 import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
 import { setCollectionValue } from '../../store/collection/collection';

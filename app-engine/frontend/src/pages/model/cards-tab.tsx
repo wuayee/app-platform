@@ -1,8 +1,7 @@
-import React, { useState, useEffect, ReactElement } from "react";
-import { Button, Input } from "antd";
+import React from "react";
 import ModelCard from "./components/model-card";
-
-import "../../index.scss";
+import './styles/cards-tab.scoped.scss';
+import '../../index.scss';
 export interface ModelItem {
   id: string;
   name: string;
@@ -35,35 +34,19 @@ export interface ModelItem {
 const CardsTab = ({ modelList, setModels, openModify }: { modelList: ModelItem[], setModels: (val: Array<any>) => void, openModify: Function }) => {
   // 路由
   return (
-    <div className="aui-block">
-      <div
-        className="containerArea"
-        style={{
-          width: "100%",
-          minWidth:'1400px',
-          minHeight: "500px",
-          maxHeight: "calc(100% - 200px)",
-          boxSizing: "border-box",
-          paddingTop: "20px",
-          paddingBottom: "20px",
-          display: "flex",
-          gap: "1%",
-          flexWrap: "wrap",
-        }}
-      >
-        {modelList.map((modelItem) => (
-          <>
-            <ModelCard
-              modelItem={modelItem}
-              style={{
-                flex: "0",
-              }}
-              setModelItems={setModels}
-              openModify={openModify}
-            />
-          </>
-        ))}
-      </div>
+    <div className="containerArea">
+      {modelList.map((modelItem) => (
+        <>
+          <ModelCard
+            modelItem={modelItem}
+            style={{
+              flex: "0",
+            }}
+            setModelItems={setModels}
+            openModify={openModify}
+          />
+        </>
+      ))}
     </div>
   );
 };
