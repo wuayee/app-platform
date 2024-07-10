@@ -604,7 +604,7 @@ public class AippConst {
     /**
      * 用于获取终止信息
      */
-    public static final String TERMINATE_MESSAGE_KEY = "message";
+    public static final String TERMINATE_MESSAGE_KEY = "content";
 
     // *** aipp initial static meta items ***
     /**

@@ -167,7 +167,7 @@
         order by t.create_at desc
     </sql>
 
-    <select id="getLogsByInstanceId" resultMap="BaseResultMap">
+    <select id="getLogsByInstanceIds" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from aipp_instance_log
@@ -197,4 +197,15 @@
         from aipp_instance_log
         where path Like '/'||#{instanceId}||'%'
     </delete>
+
+    <select id="getLogsByInstanceId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from aipp_instance_log
+        <where>
+            log_type != 'HIDDEN_MSG'
+            AND
+            instance_id= #{instanceId}
+        </where>
+    </select>
 </mapper>
