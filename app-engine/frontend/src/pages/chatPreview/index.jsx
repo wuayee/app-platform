@@ -392,9 +392,10 @@ const ChatPreview = (props) => {
   }
   // 终止进行中的对话
   async function chatRunningStop(params) {
-    const res = await stopInstance(tenantId, runningInstanceId.current, params);
+    let str = params.content ? params.content : "已终止对话";
+    const res = await stopInstance(tenantId, runningInstanceId.current, {content: str});
     if (res.code === 0) {
-      onStop('已终止对话');
+      onStop(str);
       wsCurrent.current?.close();
       wsCurrent.current = null;
       Message({ type: 'success', content: '已终止对话' });

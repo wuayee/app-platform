@@ -112,12 +112,13 @@ const ModelCreate: React.FC<StarAppsProps> = ({ open, setOpen, createItems, setM
   return (
     <Drawer
       destroyOnClose
+      width='500'
       title={
         <div
           className='app-title'
           style={{
             display: 'flex',
-            gap: 200,
+            justifyContent: 'space-between'
           }}
         >
           <div className='app-title-left'>

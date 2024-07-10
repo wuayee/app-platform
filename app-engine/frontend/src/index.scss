@@ -1,35 +1,28 @@
 /****************************************** 通用样式 ******************************************/
 
 .aui-fullpage {
-  padding: 32px 16px 0;
   background: #f0f2f5;
+  height: calc(100vh - 50px);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: calc(100% - 14px);
-  min-width: 1400px;
-
-  .aui-block {
-    flex-grow: 1;
-  }
-
-  .aui-header-1,
-  h1 {
-    margin-top: -24px;
-    margin-bottom: 8px;
-  }
 }
 
 .aui-header-1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 30px;
+  margin-bottom: 8px;
 }
 
 .aui-block {
+  height: calc(100% - 50px);
+  min-width: 1000px;
   padding: 24px;
   background: #fff;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
 }
 
 .aui-title-1,

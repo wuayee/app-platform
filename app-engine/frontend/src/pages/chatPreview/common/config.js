@@ -12,7 +12,7 @@ export const formMock = {
 	}],
   formData: {
     instanceId: "bdbd632606394db6810868d7f3b5dc8a",
-    correctSql: JSON.stringify({
+    chartsData: JSON.stringify({
       "chartType": ["TABLE"],
       "chartData": ["{\"columns\":[\"2022年1月\",\"2023年1月\",\"同比增长(%)\"],\"rows\":[[\"13.7\",\"36.6\",\"166.3%\"]]}"],
       "chartTitle": ["口径：经营双算，单位：M￥，指标：净销售收入"],
@@ -35,7 +35,7 @@ export const formMock = {
       }
     }),
     dimension: "DSPL",
-    useMemory: true
+    rewriteQuery: "2023年1月存储企业国内金融行业收入是多少？"
   }
 }
 export const chatMock2 = {}

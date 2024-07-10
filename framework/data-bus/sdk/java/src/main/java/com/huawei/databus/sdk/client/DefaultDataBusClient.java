@@ -78,7 +78,7 @@ public class DefaultDataBusClient implements DataBusClient {
             // 设置TCP_NODELAY，禁用Nagle算法，以防止粘包问题。
             this.socketChannel.socket().setTcpNoDelay(true);
             InetSocketAddress address = new InetSocketAddress(dataBusAddr, dataBusPort);
-            this.socketChannel.connect(address);
+            this.socketChannel.socket().connect(address, Constant.DEFAULT_WAITING_TIME_CONNECT_MILLIS);
             if (!this.sayHello()) {
                 return this.cleanUpConnection(null);
             }

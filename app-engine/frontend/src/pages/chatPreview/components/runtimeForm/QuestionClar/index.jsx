@@ -253,7 +253,7 @@ const QuestionClar = (props) => {
   }
 
   // 拒绝
-  const rejectClar = throttle(() => handleRejectClar(questionInfo.instanceId), 500, { trailing: false });
+  const rejectClar = throttle(() => handleRejectClar(), 500, { trailing: false });
   // 出参使用，处理数据格式
   const processData = (indicator) => {
     let data = {};
@@ -321,10 +321,10 @@ const QuestionClar = (props) => {
       formData: JSON.stringify({[id]: info}),
       businessData: {
         parentInstanceId: data.parentInstanceId,
-        [id]: info
+        [id]: JSON.stringify(info),
       }
     }
-    const res = await resumeInstance(tenantId, questionInfo.instanceId, params);
+    const res = await resumeInstance(tenantId, data?.formData?.instanceId, params);
   }
 
   return (

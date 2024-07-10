@@ -15,7 +15,7 @@ const ConditionForm = (props) => {
     if (!data?.formData) return;
     if (data.formData) {
       try {
-        let chartConfig2 = JSON.parse(data.formData.correctSql);
+        let chartConfig2 = JSON.parse(data.formData.chartsData);
         setFilters(data.formData.dsl);
         setChartConfig(chartConfig2);
       } catch {
@@ -31,9 +31,9 @@ const ConditionForm = (props) => {
       return
     }
     let params = {
-      dimension: '',
-      useMemory: true,
-      sourceTrace: filter
+        dimension: data.formData.dimension,
+        rewriteQuery: data.formData.rewriteQuery,
+        sourceTrace: JSON.stringify(filter)
     };
     reSendChat(tenantId, data.formData.instanceId, params).then((res) => {
       if (res.code !== 0) {

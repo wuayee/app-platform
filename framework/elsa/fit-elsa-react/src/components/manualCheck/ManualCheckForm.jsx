@@ -92,8 +92,14 @@ export default function ManualCheckForm({formName, taskId, handleFormChange}) {
         });
     };
 
-    // 组件销毁时，删除注册的observables.
     useEffect(() => {
+        // 组件挂载时，注册已存在的Observable
+        entityRef.current = shape.flowMeta.task?.converter?.entity ?? null;
+        if (entityRef.current) {
+            registerObservables(entityRef.current);
+        }
+
+        // 组件销毁时，删除注册的observables.
         return () => {
             if (entityRef.current) {
                 deregisterObservables(entityRef.current);
