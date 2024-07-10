@@ -93,7 +93,7 @@ const AppOverview: React.FC = () => {
           </Flex>
         </Flex>
         <div>
-          {detail?.attributes?.description || 'Test Desc'}
+          {detail?.attributes?.description}
         </div>
         <Button type='primary' onClick={gotoArrange} style={{
           width: '96px',
