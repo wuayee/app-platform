@@ -4,6 +4,7 @@
 
 package com.huawei.jade.fel.engine.operators;
 
+import static com.huawei.jade.fel.engine.operators.patterns.SyncTipper.fewShot;
 import static com.huawei.jade.fel.engine.operators.patterns.SyncTipper.history;
 import static com.huawei.jade.fel.engine.operators.patterns.SyncTipper.passThrough;
 import static com.huawei.jade.fel.engine.operators.patterns.SyncTipper.question;
@@ -18,6 +19,9 @@ import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.fel.chat.ChatMessage;
 import com.huawei.jade.fel.chat.ChatMessages;
 import com.huawei.jade.fel.chat.Prompt;
+import com.huawei.jade.fel.core.examples.Example;
+import com.huawei.jade.fel.core.examples.ExampleSelector;
+import com.huawei.jade.fel.core.examples.support.DefaultExample;
 import com.huawei.jade.fel.core.memory.CacheMemory;
 import com.huawei.jade.fel.core.memory.Memory;
 import com.huawei.jade.fel.core.retriever.Retriever;
@@ -63,6 +67,22 @@ public class PatternTest {
         StringBuilder answer1 = new StringBuilder();
         converse.doOnSuccess(r -> answer1.append(r.text())).offer("question1").await();
         assertThat(answer1.toString()).isEqualTo("answer question1 from context with my history");
+    }
+
+    @Test
+    void shouldOkWhenAiFlowWithExampleSelector() {
+        Example[] examples = {new DefaultExample("2+2", "4"), new DefaultExample("2+3", "5")};
+        Conversation<String, Prompt> converse = AiFlows.<String>create()
+                .runnableParallel(question(),
+                        fewShot(ExampleSelector.builder()
+                                .template("{{q}}={{a}}", "q", "a")
+                                .delimiter("\n")
+                                .example(examples)
+                                .build()))
+                .prompt(Prompts.human("{{examples}}\n{{question}}="))
+                .close()
+                .converse();
+        assertThat(converse.offer("1+2").await().text()).isEqualTo("2+2=4\n2+3=5\n1+2=");
     }
 
     @Test
