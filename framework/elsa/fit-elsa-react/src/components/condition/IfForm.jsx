@@ -39,7 +39,15 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
     };
 
     const handleReferenceValueChange = (conditionId, itemId, v, t) => {
-        changeConditionConfig(branch.id, conditionId, [{key: itemId, value: [{key: "referenceKey", value: v}, {key: "type", value: t}]}]);
+        let valueArray = [{key: "referenceKey", value: v}];
+        if (t !== null) {
+            // 这里需要判断t是否为空，避免选择从Reference切换至Input时会重置输入的type为null
+            valueArray.push({key: "type", value: t});
+        }
+        changeConditionConfig(branch.id, conditionId, [{
+            key: itemId,
+            value: valueArray
+        }]);
     };
 
     const handleReferenceKeyChange = (conditionId, itemId, e) => {
