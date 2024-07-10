@@ -5,7 +5,8 @@ import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
 import Pagination from '../../components/pagination/index';
 import { Icons } from '../../components/icons';
 import KnowledgeCard, { knowledgeBase } from '../../components/knowledge-card';
-import '../../index.scss'
+import '../../index.scss';
+import './styles/index.scoped.scss';
 import { deleteKnowledgeBase, queryKnowledgeBase } from '../../shared/http/knowledge';
 const KnowledgeBase = () => {
 
@@ -104,44 +105,17 @@ const KnowledgeBase = () => {
         <div className='aui-title-1'>知识库概览</div>
       </div>
       <div className='aui-block'>
-          <div className='operatorArea' style={{
-            display: 'flex',
-            gap: '16px'
-          }}>
-            <Button type="primary" style={{
-              background: '#2673E5',
-              width: '96px',
-              height: '32px',
-              fontSize: '14px',
-              borderRadius: '4px',
-              letterSpacing: '0',
-            }} onClick={createKnowledge}>创建</Button>
+          <div className='operatorArea'>
+            <Button type="primary" onClick={createKnowledge}>创建</Button>
             <Input 
               showCount
               maxLength={20}
-              placeholder="搜索"  
-              style={{
-              width: '200px',
-              borderRadius: '4px',
-              border: '1px solid rgb(230, 230, 230)',
-              }} 
+              placeholder="搜索"
               onChange={(e)=>onSearchValueChange(e.target.value)}
               prefix={<Icons.search color = {'rgb(230, 230, 230)'}/>}/>
 
           </div>
-          <div className='containerArea' style={{
-            width: '100%',
-            boxSizing: 'border-box',
-            maxHeight: '100%',
-            paddingTop: '20px',
-            paddingBottom: '10px',
-            marginBottom: '10px',
-            overflow: 'auto',
-            paddingRight: '8px',
-            display:'Grid',
-            justifyContent: 'space-between',
-            gridTemplateColumns: 'repeat(auto-fill, 24%)'
-          }}>
+          <div className='containerArea'>
               {knowledgeData.map(knowledge=> (<>
                 <KnowledgeCard key={knowledge.id} knowledge={knowledge} style={{
                   flex: '0'

@@ -1,8 +1,7 @@
-import React, { useState, useEffect, ReactElement } from "react";
-import { Button, Input } from "antd";
+import React from "react";
 import ModelCard from "./components/model-card";
-
-import "../../index.scss";
+import './styles/cards-tab.scoped.scss';
+import '../../index.scss';
 export interface ModelItem {
   id: string;
   name: string;
@@ -35,18 +34,7 @@ export interface ModelItem {
 const CardsTab = ({ modelList, setModels, openModify }: { modelList: ModelItem[], setModels: (val: Array<any>) => void, openModify: Function }) => {
   // 路由
   return (
-    <div
-      className="containerArea"
-      style={{
-        boxSizing: "border-box",
-        paddingTop: "20px",
-        paddingBottom: "20px",
-        display: "flex",
-        gap: "1%",
-        overflow: 'auto',
-        flexWrap: "wrap",
-      }}
-    >
+    <div className="containerArea">
       {modelList.map((modelItem) => (
         <>
           <ModelCard
