@@ -48,6 +48,9 @@ public class RouteInfo {
     @JsonProperty("max_link_num")
     private Integer maxLinkNum = 1000; // 默认配置最大请求并发数为1000
 
+    @JsonProperty("max_token_size")
+    private Integer maxTokenSize;
+
     /**
      * 构造网关路由定义。
      *
