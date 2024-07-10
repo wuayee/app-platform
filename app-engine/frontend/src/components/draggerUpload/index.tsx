@@ -15,11 +15,14 @@ const DraggerUpload = (props) => {
       Object.keys(res.files).forEach(item => {
         if (!res.files[item].dir && item.indexOf('json') !== -1) {
           res.file(item)?.async('blob').then((data) => {
-            fileObj[val.file.uid].push(new File([data], item, { type: 'application/json' }));
+            let fileStr = new File([data], item, { type: 'application/json' });
+            fileStr.text().then(res => {
+              const json = JSON.parse(res);
+              fileObj[val.file.uid].push(json);
+            });
           });
         }
       })
-      console.log(res.files);
       console.log(fileObj);
     })
     // getPluginPackageInfo(val?.file).then((res)=>{
