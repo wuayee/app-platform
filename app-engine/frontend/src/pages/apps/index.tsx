@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Divider, Input, Pagination, Tabs } from 'antd';
+import { Button, Divider, Input, Tabs } from 'antd';
 import { Icons } from '../../components/icons';
 import { queryAppsApi } from '../../shared/http/apps.js';
 import AppCard from '../../components/appCard';
@@ -9,6 +9,7 @@ import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
 import { deleteAppApi, getUserCollection, getUserCollectionNoDesc } from '../../shared/http/appDev';
 import { setCollectionValue } from '../../store/collection/collection';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
+import Pagination from '@/components/pagination';
 
 const Apps: React.FC = () => {
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';

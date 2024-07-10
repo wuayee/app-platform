@@ -100,59 +100,60 @@ const KnowledgeBase = () => {
   }, [page, pageSize, searchName]);
   return (
     <div className='aui-fullpage'>
-    <div className='aui-header-1'>
-      <div className='aui-title-1'>知识库概览</div>
+      <div className='aui-header-1'>
+        <div className='aui-title-1'>知识库概览</div>
+      </div>
+      <div className='aui-block'>
+          <div className='operatorArea' style={{
+            display: 'flex',
+            gap: '16px'
+          }}>
+            <Button type="primary" style={{
+              background: '#2673E5',
+              width: '96px',
+              height: '32px',
+              fontSize: '14px',
+              borderRadius: '4px',
+              letterSpacing: '0',
+            }} onClick={createKnowledge}>创建</Button>
+            <Input 
+              showCount
+              maxLength={20}
+              placeholder="搜索"  
+              style={{
+              width: '200px',
+              borderRadius: '4px',
+              border: '1px solid rgb(230, 230, 230)',
+              }} 
+              onChange={(e)=>onSearchValueChange(e.target.value)}
+              prefix={<Icons.search color = {'rgb(230, 230, 230)'}/>}/>
+
+          </div>
+          <div className='containerArea' style={{
+            width: '100%',
+            boxSizing: 'border-box',
+            maxHeight: '100%',
+            paddingTop: '20px',
+            paddingBottom: '10px',
+            marginBottom: '10px',
+            overflow: 'auto',
+            paddingRight: '8px',
+            display:'Grid',
+            justifyContent: 'space-between',
+            gridTemplateColumns: 'repeat(auto-fill, 24%)'
+          }}>
+              {knowledgeData.map(knowledge=> (<>
+                <KnowledgeCard key={knowledge.id} knowledge={knowledge} style={{
+                  flex: '0'
+                }} clickMore={(e)=> clickOpera(e, knowledge.id)}/>
+              </>))}
+
+          </div>
+          <Pagination total = {total} current={page} onChange={paginationChange}
+          pageSizeOptions={[8,16,32,60]}
+          pageSize={pageSize}/>
+      </div>
     </div>
-    <div className='aui-block'>
-        <div className='operatorArea' style={{
-          display: 'flex',
-          gap: '16px'
-        }}>
-          <Button type="primary" style={{
-            background: '#2673E5',
-            width: '96px',
-            height: '32px',
-            fontSize: '14px',
-            borderRadius: '4px',
-            letterSpacing: '0',
-          }} onClick={createKnowledge}>创建</Button>
-          <Input 
-            showCount
-            maxLength={20}
-            placeholder="搜索"  
-            style={{
-            width: '200px',
-            borderRadius: '4px',
-            border: '1px solid rgb(230, 230, 230)',
-            }} 
-            onChange={(e)=>onSearchValueChange(e.target.value)}
-            prefix={<Icons.search color = {'rgb(230, 230, 230)'}/>}/>
-
-        </div>
-        <div className='containerArea' style={{
-          width: '100%',
-          maxHeight: 'calc(100% - 200px)',
-          boxSizing: 'border-box',
-          paddingTop: '20px',
-          paddingBottom: '20px',
-          display:'Grid',
-          justifyContent: 'space-between',
-          gridGap: '1%',
-          gridTemplateColumns: 'repeat(auto-fill, 24%)'
-        }}>
-            {knowledgeData.map(knowledge=> (<>
-              <KnowledgeCard key={knowledge.id} knowledge={knowledge} style={{
-                flex: '0'
-              }} clickMore={(e)=> clickOpera(e, knowledge.id)}/>
-            </>))}
-
-        </div>
-        <Pagination total = {total} current={page} onChange={paginationChange}
-         pageSizeOptions={[8,16,32,60]}
-         pageSize={pageSize}/>
-    </div>
-  </div>
-
   )
 }
 export default KnowledgeBase;

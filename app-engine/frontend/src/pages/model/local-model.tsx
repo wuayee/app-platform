@@ -20,7 +20,7 @@ const LocalModelList = () => {
   const [page, setPage] = useState(1);
 
   // 分页数
-  const [pageSize, setPageSize] = useState(8);
+  const [pageSize, setPageSize] = useState(10);
 
   const [modelList, setModelList] = useState([]);
 
@@ -123,17 +123,13 @@ const LocalModelList = () => {
           </Radio.Group>
         </div>
       </div>
-      <div
-        style={{
-          marginLeft: -20,
-        }}
-      >
+      <div style={{ overflow: 'auto', maxHeight: 'calc(100vh - 270px)', marginBottom: '8px' }}>
         {type === 'card' && <CardsTab modelList={modelList} setModels={setModelList} openModify={openModify} />}
         {type === 'table' && (
           <TableTab modelList={modelList} setOpen={setOpenStar} setModels={setModelList} openModify={openModify} />
         )}
       </div>
-      <Pagination total={total} current={page} onChange={paginationChange} pageSize={pageSize} pageSizeOptions={[8,16,32,60]}/>
+      <Pagination total={total} current={page} onChange={paginationChange} pageSize={pageSize} pageSizeOptions={[10,20,30,40]}/>
       <ModelCreate
         open={openStar}
         setOpen={setOpenStar}

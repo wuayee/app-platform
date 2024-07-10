@@ -140,7 +140,8 @@ const KnowledgeBaseDetail = () => {
           display: 'flex', 
           gap: 30,
           alignItems: 'center',
-          paddingBottom: 30,
+          paddingBottom: 20,
+          marginBottom: 10,
           borderBottom: '1px solid #CDD7E6'
         }}>
             <div className='detail-header-return' style={{
@@ -174,7 +175,9 @@ const KnowledgeBaseDetail = () => {
             </div>
         </div>
         <div className='knowledge-detail-table' >
-          <Table columns={columns} dataSource={data} size='small' pagination={false}/>
+          <div style={{ marginBottom: 10 }}>
+            <Table columns={columns} dataSource={data} size='small' pagination={false}/>
+          </div>
           <Pagination total = {total} current={page} onChange={paginationChange} pageSize={pageSize}/>
         </div>
       <div />

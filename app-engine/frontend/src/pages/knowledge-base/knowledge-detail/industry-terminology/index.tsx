@@ -140,9 +140,8 @@ const IndustryTerminology = () => {
               }} disabled={rowInfo ? false: true}>{<KnowledgeIcons.import/>} 导入</Button>
             </div>
         </div>
-        <div className='knowledge-table'>
+        <div className='knowledge-table' style={{ height: '100%' }}>
             {rowInfo && <KnowLedgeTable ref={tableRef} type={(rowInfo?.format || '').toLowerCase()} reposId={rowInfo.repositoryId} id={rowInfo.id}/>}
-            
         </div>
       <div />
     </div>
