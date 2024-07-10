@@ -39,7 +39,7 @@ const ConditionForm = (props) => {
       if (res.code !== 0) {
         Message({ type: 'warning', content: res.msg || '保存失败' });
       } else {
-        conditionConfirm(data.logId, data.formData.instanceId);
+        conditionConfirm(data.logId, res.data.current_instance_id);
       }
     })
   }

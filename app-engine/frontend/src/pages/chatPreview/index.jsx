@@ -136,9 +136,7 @@ const ChatPreview = (props) => {
     listRef.current = deepClone(arr);
     dispatch(setChatList(deepClone(arr)));
     dispatch(setChatRunning(true));
-    setTimeout(() => {
-      scrollBottom();
-    }, 50);
+    scrollToBottom();
     if (showElsa) {
       let params = appInfo.flowGraph;
       window.agent
@@ -388,7 +386,7 @@ const ChatPreview = (props) => {
   }
   // 溯源表单重新对话
   function conditionConfirm(logId, instanceId) {
-    let index = listRef.current.findIndex((item) => item.logId === logId)[0];
+    let index = listRef.current.findIndex((item) => item.logId === logId);
     let content = listRef.current[index - 1].content;
     const sentItem = beforeSend(false, content);
     const reciveInitObj = deepClone(initChat);
@@ -396,9 +394,14 @@ const ChatPreview = (props) => {
     listRef.current = arr;
     dispatch(setChatList(deepClone(arr)));
     dispatch(setChatRunning(true));
+    scrollToBottom();
     queryInstance(runningAppid.current, runningVersion.current, instanceId);
   }
-
+  function scrollToBottom() {
+    setTimeout(() => {
+      scrollBottom();
+    }, 50);
+  }
   return (
     <div className={`
         chat-preview 
