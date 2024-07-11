@@ -5,6 +5,7 @@ import { Input, Modal, Button, Select, Form, Upload } from 'antd';
 import { Message } from '@shared/utils/message';
 import { httpUrlMap } from '@shared/http/httpConfig';
 import { appPublish, updateFlowInfo } from '@shared/http/aipp';
+import { versionStringCompare } from '@shared/utils/common';
 import './styles/publish-modal.scss';
 const { TextArea } = Input;
 
@@ -41,6 +42,10 @@ const PublishModal = (props) => {
   // 发布应用
   async function publishApp() {
     const formParams = await form.validateFields();
+    if (versionStringCompare(formParams.version, appInfo.version) !== 1) {
+      Message({ type: 'warning', content: `当前版本为${appInfo.version} 发布版本不能低于当前版本` });
+      return
+    }
     setLoading(true);
     try {
       let params = JSON.parse(JSON.stringify(appInfo));
