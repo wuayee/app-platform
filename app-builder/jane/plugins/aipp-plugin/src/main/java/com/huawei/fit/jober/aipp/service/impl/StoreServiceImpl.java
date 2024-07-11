@@ -61,7 +61,8 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreNodeConfigResDto getBasicNodesAndTools(String tag, boolean orTags, int pageNum, int pageSize, String version) {
+    public StoreNodeConfigResDto getBasicNodesAndTools(String tag, boolean orTags, int pageNum, int pageSize,
+            String version) {
         return StoreNodeConfigResDto.builder()
                 .toolList(this.getToolModelList(tag, orTags, pageNum, pageSize, version))
                 .basicList(this.buildBasicNodesConfig())
@@ -98,12 +99,11 @@ public class StoreServiceImpl implements StoreService {
         } else {
             includeTag.add("WATERFLOW");
             includeTag.add("FIT");
-            orTags = true;
         }
         ToolQuery query = new ToolQuery(null,
                 includeTag,
                 Collections.singletonList(StringUtils.EMPTY),
-                orTags,
+                !StringUtils.isNotBlank(tag) || orTags,
                 pageNum,
                 pageSize,
                 version);
@@ -131,10 +131,11 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(boolean orTags, int pageNum, int pageSize, String version) {
+    public List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(boolean orTags, int pageNum, int pageSize,
+            String version) {
         List<ToolData> waterFlows =
-                this.buildToolNodesConfig(AppCategory.WATER_FLOW.getTag(), orTags, pageNum, pageSize,
-                        version).getData();
+                this.buildToolNodesConfig(AppCategory.WATER_FLOW.getTag(), orTags, pageNum, pageSize, version)
+                        .getData();
         List<String> storeIds = waterFlows.stream().map(ToolData::getUniqueName).collect(Collectors.toList());
         if (storeIds.isEmpty()) {
             return Collections.emptyList();

@@ -11,5 +11,10 @@ package com.huawei.fit.jober.aipp.validation;
  * @since 2024-06-20
  */
 public interface AppUpdateValidator {
+    /**
+     * 校验一个app是否可以更新
+     *
+     * @param id
+     */
     void validate(String id);
 }

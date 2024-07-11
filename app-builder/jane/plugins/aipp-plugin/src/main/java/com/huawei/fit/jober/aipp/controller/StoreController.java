@@ -38,6 +38,18 @@ public class StoreController extends AbstractController {
         this.storeService = storeService;
     }
 
+    /**
+     * 获取所有工具和基础节点配置
+     * @deprecated
+     *
+     * @param httpRequest
+     * @param isUseOrTags
+     * @param pageNum
+     * @param pageSize
+     * @param tag
+     * @param version
+     * @return
+     */
     @Deprecated
     @GetMapping(path = "/nodes", description = "获取所有工具和基础节点配置")
     public Rsp<StoreNodeConfigResDto> getBasicNodesAndTools(HttpClassicServerRequest httpRequest,
@@ -66,6 +78,17 @@ public class StoreController extends AbstractController {
         return Rsp.ok(this.storeService.getModels(taskName, pageNum, pageSize));
     }
 
+    /**
+     * 获取已发布的所有指定类型的插件配置
+     *
+     * @param httpRequest
+     * @param tag
+     * @param tenantId
+     * @param orTags
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     @GetMapping(path = "/plugins", description = "获取已发布的所有指定类型的插件配置")
     public Rsp<ToolDto> getPlugins(HttpClassicServerRequest httpRequest,
             @RequestParam(value = "tag", defaultValue = "", required = false) String tag,
@@ -77,11 +100,27 @@ public class StoreController extends AbstractController {
                 this.contextOf(httpRequest, tenantId)));
     }
 
+    /**
+     * 获取基础节点配置
+     *
+     * @param httpRequest
+     * @return
+     */
     @GetMapping(path = "/nodes/basic", description = "获取基础节点配置")
     public Rsp<List<StoreBasicNodeInfoDto>> getBasic(HttpClassicServerRequest httpRequest) {
         return Rsp.ok(this.storeService.getBasic());
     }
 
+    /**
+     * 获取所有工具流
+     *
+     * @param httpRequest
+     * @param orTags
+     * @param pageNum
+     * @param pageSize
+     * @param version
+     * @return
+     */
     @GetMapping(path = "/waterflow", description = "获取所有工具流")
     public Rsp<List<AppBuilderWaterFlowInfoDto>> getWaterFlowInfos(HttpClassicServerRequest httpRequest,
             @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean orTags,

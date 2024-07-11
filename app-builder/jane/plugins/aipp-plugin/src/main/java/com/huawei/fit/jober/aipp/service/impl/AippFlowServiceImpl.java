@@ -27,7 +27,6 @@ import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.convertor.FormMetaConvertor;
 import com.huawei.fit.jober.aipp.convertor.MetaConvertor;
 import com.huawei.fit.jober.aipp.convertor.TaskPropertyConvertor;
-import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.dto.AippCreateDto;
 import com.huawei.fit.jober.aipp.dto.AippDetailDto;
 import com.huawei.fit.jober.aipp.dto.AippDto;
@@ -38,7 +37,6 @@ import com.huawei.fit.jober.aipp.dto.AippVersionDto;
 import com.huawei.fit.jober.aipp.enums.AippMetaStatusEnum;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.AppCategory;
-import com.huawei.fit.jober.aipp.enums.AppState;
 import com.huawei.fit.jober.aipp.enums.JaneCategory;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
@@ -49,7 +47,6 @@ import com.huawei.fit.jober.aipp.util.AippStringUtils;
 import com.huawei.fit.jober.aipp.util.FormUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.MetaUtils;
-import com.huawei.fit.jober.aipp.util.UUIDUtil;
 import com.huawei.fit.jober.aipp.util.VersionUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.RangedResultSet;
@@ -955,8 +952,12 @@ public class AippFlowServiceImpl implements AippFlowService {
             String uniqueName = this.publishToStore(aippDto, context, flowInfo);
 
             // 发布aipp
-            MetaDeclarationInfo declaration =
-                    buildPublishMetaDeclaration(aippId, aippNodeForms, flowInfo.getFlowDefinitionId(), meta, aippDto, uniqueName);
+            MetaDeclarationInfo declaration = buildPublishMetaDeclaration(aippId,
+                    aippNodeForms,
+                    flowInfo.getFlowDefinitionId(),
+                    meta,
+                    aippDto,
+                    uniqueName);
             this.metaService.patch(meta.getVersionId(), declaration, context);
             return Rsp.ok(new AippCreateDto(aippId, meta.getVersion(), uniqueName));
         } catch (Exception e) {

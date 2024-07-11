@@ -108,7 +108,7 @@ public class PluginController {
             notNegative(limit, "The limit cannot be negative.");
         }
         PluginQuery pluginQuery = new PluginQuery(isPublished, owner, collector,
-                name, includeTags, excludeTags,orTags, pageNum, limit, version);
+                name, includeTags, excludeTags, orTags, pageNum, limit, version);
         ListResult<PluginData> res = this.pluginService.getPlugins(pluginQuery);
         return Result.ok(res.getData(), res.getCount());
     }

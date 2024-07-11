@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
+ * 表示ToolData列表和总数的Dto
+ *
  * @author 姚江 yWX1299574
  * @since 2024-06-28
  */

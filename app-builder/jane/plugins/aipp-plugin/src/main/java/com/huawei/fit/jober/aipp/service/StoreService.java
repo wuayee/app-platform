@@ -62,6 +62,7 @@ public interface StoreService {
      * @return 表示基础列表的 {@link List}{@code <}{@link StoreBasicNodeInfoDto}{@code >}。
      */
     List<StoreBasicNodeInfoDto> getBasic();
+
     /**
      * 获取模型列表。
      *
