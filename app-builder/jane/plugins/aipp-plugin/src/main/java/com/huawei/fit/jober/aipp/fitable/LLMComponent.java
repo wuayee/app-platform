@@ -151,7 +151,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
             doOnAgentComplete(llmMeta);
             return;
         }
-        // todo: 暂时原地修改，之后再看是否需要创建新的
+        // todo: 暂时原地修改，之后再看是否需要创建新的；子流结束再经过模型的情况还未验证过
         ChatMessages chatMessages = ChatMessages.from(llmMeta.getTrace().messages());
         ChatMessage lastMessage = chatMessages.messages().remove(chatMessages.messages().size() - 1);
         chatMessages.add(new ToolMessage(lastMessage.id().orElse(null), toolOutput));

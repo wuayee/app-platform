@@ -81,7 +81,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
           rules={[
             {
               required: true,
-              message: `Please Input ${title}!`,
+              message: `请输入 ${title}!`,
             },
           ]}
         >

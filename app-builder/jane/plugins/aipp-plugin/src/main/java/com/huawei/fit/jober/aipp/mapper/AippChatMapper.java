@@ -112,7 +112,7 @@ public interface AippChatMapper {
      * @param instanceId 指定实例 ID。
      * @return 表示会话 ID 的 {@link String}。
      */
-    String selectChatIdByInstanceId(String instanceId);
+    List<String> selectChatIdByInstanceId(String instanceId);
 
     /**
      * 根据指定实例 ID 删除关系宽表。
@@ -120,4 +120,12 @@ public interface AippChatMapper {
      * @param instanceId 指定实例 ID。
      */
     void deleteWideRelationshipByInstanceId(String instanceId);
+
+    /**
+     * 根据chatId列表 查询会话
+     *
+     * @param chatIds 会话ID列表
+     * @return List<QueryChatRsp> 会话记录列表
+     */
+    List<QueryChatRsp> selectChatListByChatIds(@Param("chatIds") List<String> chatIds);
 }

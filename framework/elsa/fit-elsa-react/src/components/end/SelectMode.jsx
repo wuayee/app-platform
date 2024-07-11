@@ -36,12 +36,6 @@ export default function SelectMode({mode}) {
                 type: "String",
                 from: "Input",
                 value: ''
-            }, {
-                id: uuidv4(),
-                name: "reportResult",
-                type: "String",
-                from: "Reference",
-                value: []
             }]
         } else {
             config = [{
