@@ -41,6 +41,10 @@ const LocalUpload: React.FC<{ form: any, respId?: any, tableId?: any, type: stri
       Message({ type: 'warning', content: '只能上传.xlsx类型的文件' });
       return false
     }
+    if (filesKeys.current.size != 0) {
+      Message({ type: 'warning', content: '单次只能上传一个文件'});
+      return false
+    }
     if (isFilesUnique(file)) {
       filesKeys.current.set(makeFileKey(file), file);
       setFiles();
@@ -59,9 +63,6 @@ const LocalUpload: React.FC<{ form: any, respId?: any, tableId?: any, type: stri
 
   const handleRemoveFile = async (file: UploadFile) => {
     const key = makeFileKey(file);
-    if (!filesKeys.current.has(key)) {
-      return;
-    }
     await deleteLocalFile(id, tableid, [`${file.uid}_${file.name}`]);
     filesKeys.current.delete(key);
     setFiles();
