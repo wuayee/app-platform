@@ -25,36 +25,36 @@ public interface StoreService {
      * 获取基础节点和工具。
      *
      * @param tag 表示标签的 {@link String}。
-     * @param orTags 表示选择标签的与和或逻辑的 {@code boolean}。
+     * @param canOrTags 表示选择标签的与和或逻辑的 {@code boolean}。
      * @param pageNum 表示分页查询的页数的 {@code int}。
      * @param pageSize 表示分页查询的大小的 {@code int}。
      * @param version 表示工具的版本的 {@link String}。
      * @return 表示基础节点和工具的响应的 {@link StoreNodeConfigResDto}。
      */
-    StoreNodeConfigResDto getBasicNodesAndTools(String tag, boolean orTags, int pageNum, int pageSize, String version);
+    StoreNodeConfigResDto getBasicNodesAndTools(String tag, boolean canOrTags, int pageNum, int pageSize, String version);
 
     /**
      * 获取工具流配置对象列表。
      *
-     * @param orTags 表示选择标签的与和或逻辑的 {@code boolean}。
+     * @param canOrTags 表示选择标签的与和或逻辑的 {@code boolean}。
      * @param pageNum 表示分页的页数的 {@link int}。
      * @param pageSize 表示分页的每页个数的 {@link int}。
      * @param version 表示工具的版本的 {@link String}。
      * @return 表示获取到的工具流配置对象列表的 {@link List}{@code <}{@link AppBuilderWaterFlowInfoDto}{@code >}。
      */
-    List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(boolean orTags, int pageNum, int pageSize, String version);
+    List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(boolean canOrTags, int pageNum, int pageSize, String version);
 
     /**
      * 获取指定插件列表。
      *
      * @param tag 表示插件的类型。
-     * @param orTags 表示选择标签的与和或逻辑的 {@code boolean}。
+     * @param canOrTags 表示选择标签的与和或逻辑的 {@code boolean}。
      * @param pageNum 表示分页的页数的 {@link int}。
      * @param pageSize 表示分页的每页个数的 {@link int}。
      * @param operationContext 表示操作上下文的 {@link OperationContext}。
      * @return 表示插件列表的 {@link List}{@code <}{@link ToolData}{@code >}。
      */
-    ToolDto getPlugins(String tag, boolean orTags, int pageNum, int pageSize, OperationContext operationContext);
+    ToolDto getPlugins(String tag, boolean canOrTags, int pageNum, int pageSize, OperationContext operationContext);
 
     /**
      * 获取基础节点列表。

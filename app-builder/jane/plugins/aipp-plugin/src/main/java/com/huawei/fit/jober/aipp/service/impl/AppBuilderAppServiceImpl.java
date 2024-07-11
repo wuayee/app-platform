@@ -56,6 +56,7 @@ import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.transaction.Transactional;
@@ -361,7 +362,7 @@ public class AppBuilderAppServiceImpl
             try {
                 this.metaService.create(declarationInfo, context);
                 break;
-            } catch (Exception e) {
+            } catch (FitException e) {
                 log.warn("create meta failed, times {} aippId {} version {}, error {}",
                         RETRY_CREATE_TIMES - retryTimes,
                         aippDto.getId(),

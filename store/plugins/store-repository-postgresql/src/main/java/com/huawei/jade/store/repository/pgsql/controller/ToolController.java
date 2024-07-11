@@ -80,7 +80,7 @@ public class ToolController {
      * @param name 表示工具名的 {@link String}。
      * @param includeTags 表示包含标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
-     * @param orTags 表示查询工具的标签选择与和或的方式的 {@link Boolean}。
+     * @param canOrTags 表示查询工具的标签选择与和或的方式的 {@link Boolean}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
      * @param version 表示工具版本的 {@link String}。
@@ -90,7 +90,7 @@ public class ToolController {
     public Result<List<ToolData>> getTools(@RequestQuery(value = "name", required = false) String name,
             @RequestQuery(value = "includeTags", required = false) List<String> includeTags,
             @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
-            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean canOrTags,
             @RequestQuery(value = "pageNum", required = false) Integer pageNum,
             @RequestQuery(value = "pageSize", required = false) Integer limit,
             @RequestQuery(value = "version", required = false) String version) {
@@ -100,7 +100,7 @@ public class ToolController {
         if (limit != null) {
             notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
         }
-        ToolQuery toolQuery = new ToolQuery(name, includeTags, excludeTags, orTags, pageNum, limit, version);
+        ToolQuery toolQuery = new ToolQuery(name, includeTags, excludeTags, canOrTags, pageNum, limit, version);
         ListResult<ToolData> res = this.toolService.getTools(toolQuery);
         List<ToolData> data = res.getData();
         return Result.ok(data, res.getCount());
@@ -125,7 +125,7 @@ public class ToolController {
      * 获取工具的所有版本。
      *
      * @param toolUniqueName 表示工具唯一标识的 {@link String}。
-     * @param orTags 表示工具标签查询的方式的 {@link Boolean}。
+     * @param canOrTags 表示工具标签查询的方式的 {@link Boolean}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link ToolData}{@code >}{@code >}。
@@ -133,12 +133,12 @@ public class ToolController {
     @GetMapping("/{toolUniqueName}/versions")
     public Result<List<ToolData>> getAllToolVersions(
             @PathVariable(value = "toolUniqueName") String toolUniqueName,
-            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean canOrTags,
             @RequestQuery(value = "pageNum", required = false) Integer pageNum,
             @RequestQuery(value = "pageSize", required = false) Integer limit) {
         notBlank(toolUniqueName, "The unique name cannot be blank.");
         ToolQuery toolQuery = new ToolQuery(
-                toolUniqueName, null, null, orTags, pageNum, limit, null);
+                toolUniqueName, null, null, canOrTags, pageNum, limit, null);
         ListResult<ToolData> res = this.toolService.getAllToolVersions(toolQuery);
         return Result.ok(res.getData(), res.getCount());
     }
@@ -149,7 +149,7 @@ public class ToolController {
      * @param name 表示工具名的 {@link String}。
      * @param includeTags 表示包含标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
-     * @param orTags 表示查询工具的标签与和或的方式的 {@link Boolean}。
+     * @param canOrTags 表示查询工具的标签与和或的方式的 {@link Boolean}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
      * @param version 表示工具版本的 {@link String}。
@@ -159,7 +159,7 @@ public class ToolController {
     public Result<List<ToolData>> searchTools(@RequestQuery(value = "name", required = false) String name,
             @RequestQuery(value = "includeTags", required = false) List<String> includeTags,
             @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
-            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean canOrTags,
             @RequestQuery(value = "pageNum", required = false) Integer pageNum,
             @RequestQuery(value = "pageSize", required = false) Integer limit,
             @RequestQuery(value = "version", required = false) String version) {
@@ -169,7 +169,7 @@ public class ToolController {
         if (limit != null) {
             notNegative(limit, "The limit cannot be negative.");
         }
-        ToolQuery toolQuery = new ToolQuery(name, includeTags, excludeTags, orTags, pageNum, limit, version);
+        ToolQuery toolQuery = new ToolQuery(name, includeTags, excludeTags, canOrTags, pageNum, limit, version);
         ListResult<ToolData> res = this.toolService.searchTools(toolQuery);
         return Result.ok(res.getData(), res.getCount());
     }

@@ -157,11 +157,11 @@ public class MetaUtils {
     /**
      * 获取MetaList
      *
-     * @param metaService
-     * @param metaFilter
-     * @param context
-     * @return
-     * @throws AippException
+     * @param metaService 处理Meta请求的service
+     * @param metaFilter 过滤器
+     * @param context 上下文
+     * @return 结果
+     * @throws AippException 抛出aipp的异常
      */
     public static List<Meta> getListMetaHandle(MetaService metaService, MetaFilter metaFilter,
             OperationContext context) throws AippException {
