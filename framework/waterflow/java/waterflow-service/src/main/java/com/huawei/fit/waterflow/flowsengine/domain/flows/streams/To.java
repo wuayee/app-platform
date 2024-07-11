@@ -700,9 +700,9 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             this.getRepo().save(after);
         }
         // 合并一次操作，并不需要处理data部分（这部分用户控制，尽量减少性能影响），只更新toBatch, 状态和位置
-        LOG.warn("afterProcess before updateProcessStatus");
+        LOG.debug("afterProcess before updateProcessStatus");
         this.getRepo().updateProcessStatus(preContexts);
-        LOG.warn("afterProcess after updateProcessStatus");
+        LOG.debug("afterProcess after updateProcessStatus");
 
         if (CollectionUtils.isNotEmpty(after)) {
             feedback(after); // 查找一个transaction里的所有数据的都完成了，运行callback给stream外反馈数据
