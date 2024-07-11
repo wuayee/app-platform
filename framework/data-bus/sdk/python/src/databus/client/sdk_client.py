@@ -1,6 +1,7 @@
 # coding: utf-8
 # Copyright (c) Huawei Technologies Co., Ltd. 2024. All rights reserved.
 import platform
+import logging
 from typing import Optional, Tuple
 
 from databus.message import DataBusErrorCode
@@ -28,8 +29,10 @@ class SdkClient:
             raise ValueError(f"Invalid input parameter: core_port is {core_port}")
         if platform.system().lower() not in self.SUPPORTED_PLATFORMS:
             return DataBusErrorCode.PlatformNotSupported
-
-        self._impl.open(core_host=core_host, core_port=core_port)
+        try:
+            self._impl.open(core_host=core_host, core_port=core_port)
+        except ConnectionRefusedError:
+            return DataBusErrorCode.NotConnectedToDataBus
         return DataBusErrorCode.None_
 
     def close(self):
@@ -82,7 +85,8 @@ class SdkClient:
             return e.error_code, ReadResponse(None, None)
         except NotConnectedError:
             return DataBusErrorCode.NotConnectedToDataBus, ReadResponse(None, None)
-        except IOError:
+        except IOError as e:
+            logging.error("IOError in read_once.", e)
             return DataBusErrorCode.MemoryReadError, ReadResponse(None, None)
 
     def write_once(self, request: WriteRequest) -> DataBusErrorCode:
@@ -102,7 +106,8 @@ class SdkClient:
             return e.error_code
         except NotConnectedError:
             return DataBusErrorCode.NotConnectedToDataBus
-        except IOError:
+        except IOError as e:
+            logging.error("IOError in write_once.", e)
             return DataBusErrorCode.MemoryWriteError
 
     def get_meta_data(self, user_key: str) -> Tuple[DataBusErrorCode, Optional[Tuple[int, bytes]]]:

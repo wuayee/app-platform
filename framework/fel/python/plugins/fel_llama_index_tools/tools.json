@@ -1,7 +1,11 @@
 {
 	"tools": [
 		{
-			"runnables": {
+			"tags": [
+                "LlamaIndex",
+                "Config"
+            ],
+            "runnables": {
 				"LlamaIndex": {
 					"genericableId": "llama_index.rag.toolkit",
 					"fitableId": "similarity_filter"
@@ -119,7 +123,11 @@
 			}
 		},
 		{
-			"runnables": {
+			"tags": [
+                "LlamaIndex",
+                "Config"
+            ],
+            "runnables": {
 				"LlamaIndex": {
 					"genericableId": "llama_index.rag.toolkit",
 					"fitableId": "sentence_embedding_optimizer"
@@ -257,7 +265,11 @@
 			}
 		},
 		{
-			"runnables": {
+			"tags": [
+                "LlamaIndex",
+                "Config"
+            ],
+            "runnables": {
 				"LlamaIndex": {
 					"genericableId": "llama_index.rag.toolkit",
 					"fitableId": "llm_rerank"
@@ -509,7 +521,11 @@
 			}
 		},
 		{
-			"runnables": {
+			"tags": [
+                "LlamaIndex",
+                "Config"
+            ],
+            "runnables": {
 				"LlamaIndex": {
 					"genericableId": "llama_index.rag.toolkit",
 					"fitableId": "llm_choice_selector"

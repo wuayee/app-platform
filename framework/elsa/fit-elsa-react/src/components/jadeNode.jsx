@@ -470,26 +470,6 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     };
 
     /**
-     * 节点的高度变化不需要触发dirties.
-     *
-     * @param property 属性名称.
-     * @param value 属性值.
-     * @param preValue 属性之前的值.
-     * @return {boolean|*} true/false.
-     */
-    const load = self.load;
-    self.load = () => {
-        load.apply(self);
-        const propertyChanged = self.propertyChanged;
-        self.propertyChanged = (property, value, preValue) => {
-            if (property === "height") {
-                return false;
-            }
-            return propertyChanged.apply(self, [property, value, preValue]);
-        };
-    };
-
-    /**
      * 设置节点状态.
      *
      * @param status 状态.

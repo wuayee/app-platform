@@ -9,10 +9,11 @@ import { setInspirationOpen } from '../../../../../store/chatStore/chatStore';
 
 // 猜你想问
 const Recommends = (props) => {
-  const { onSend, chatList } = props;
+  const { onSend } = props;
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const inspirationOpen = useAppSelector((state) => state.chatCommonStore.inspirationOpen);
+  const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const [ visible, setVisible ] = useState(false);
   const [ recommendList, setRecommendList ] = useState([]);
@@ -24,14 +25,15 @@ const Recommends = (props) => {
   // 实时刷新推荐列表
   useEffect(() => {
     if(chatList?.length>0){
-    let chatItem = chatList[chatList?.length - 1];
-    if (chatItem && chatItem.finished && chatItem.logId === -1) {
-      getRecommendList();
+      let chatItem = chatList[chatList?.length - 1];
+      if (chatItem && chatItem.finished && chatItem.logId === -1) {
+        getRecommendList();
+      }
     }
-  }
   }, [chatList]);
   // 设置推荐列表
   function setRecommend() {
+    setRecommendList([]);
     let arr = appInfo.config?.form?.properties || [];
     let recommendItem = arr.filter(item => item.name === 'recommend')[0];
     if (recommendItem) {
@@ -52,7 +54,7 @@ const Recommends = (props) => {
       Message({ type: "warning", content: "对话进行中, 请稍后再试" });
       return;
     }
-    if (chatList.length) {
+    if (chatList && chatList.length) {
       getRecommendList();
     }
   }
@@ -83,7 +85,7 @@ const Recommends = (props) => {
         (recommendList?.length > 0) && (
           <div className="recommends-top">
             <span className="title">猜你想问</span>
-            <RebotIcon />
+            <RebotIcon onClick={refreshClick}/>
             <span className="refresh" onClick={refreshClick}>换一批</span>
           </div>
         )

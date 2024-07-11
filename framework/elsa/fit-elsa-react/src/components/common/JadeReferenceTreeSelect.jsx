@@ -69,6 +69,8 @@ export const JadeReferenceTreeSelect = (props) => {
             <p>2.appId：所属应用的唯一标识</p>
             <p>3.memories：所属应用的历史记录QA对列表</p>
             <p>4.useMemory：表示本次对话是否使用历史记录</p>
+            <p>5.userId：用户的唯一标识</p>
+            <p>6.fileUrl：表示本次对话开始传入的图片、文档、音频等等的下载地址</p>
         </div>
     </>);
 

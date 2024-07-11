@@ -25,13 +25,13 @@ import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.fitable.agent.AippFlowAgent;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
+import com.huawei.fit.jober.aipp.service.AopAippLogService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -58,6 +58,7 @@ public class AippFlowAgentTest {
     private static final String DUMMY_MIND_AGENT_AIPP_ID = "mind_agent";
     private static final String DUMMY_SEARCH_AGENT_AIPP_ID = "search_agent";
     private static final String DUMMY_PROMPT = "prompt";
+    private static final String DUMMY_META_VERSION_ID = "meta_version";
 
     @Mock
     private AippRunTimeService aippRunTimeServiceMock;
@@ -68,13 +69,20 @@ public class AippFlowAgentTest {
     @Mock
     private AippLogService aippLogServiceMock;
 
+    @Mock
+    private AopAippLogService aopAippLogServiceMock;
+
     private AppFlowAgentSearch appFlowAgentSearch;
     private AppFlowAgentMind appFlowAgentMind;
     private AippFlowAgent agent;
 
     @BeforeEach
     void setUp() {
-        agent = new AippFlowAgent(aippRunTimeServiceMock, metaInstanceServiceMock, aippLogServiceMock, DUMMY_ENDPOINT);
+        agent = new AippFlowAgent(aippRunTimeServiceMock,
+                metaInstanceServiceMock,
+                aippLogServiceMock,
+                DUMMY_ENDPOINT,
+                this.aopAippLogServiceMock);
         appFlowAgentSearch = new AppFlowAgentSearch(agent, DUMMY_SEARCH_AGENT_AIPP_ID, aippLogServiceMock);
         appFlowAgentMind = new AppFlowAgentMind(agent, DUMMY_MIND_AGENT_AIPP_ID);
     }
@@ -88,6 +96,7 @@ public class AippFlowAgentTest {
         businessData.put(AippConst.BS_AIPP_ID_KEY, DUMMY_AIPP_ID);
         businessData.put(AippConst.BS_AIPP_INST_ID_KEY, DUMMY_INST_ID);
         businessData.put(AippConst.BS_MODEL_PROMPT_KEY, DUMMY_PROMPT);
+        businessData.put(AippConst.BS_META_VERSION_ID_KEY, DUMMY_META_VERSION_ID);
         return businessData;
     }
 
@@ -132,7 +141,6 @@ public class AippFlowAgentTest {
     }
 
     @Test
-    @Disabled
     void shouldOkWhenStartMindAgent() {
         AippInstanceCreateDto dto = AippInstanceCreateDto.builder().instanceId(DUMMY_AGENT_INST_ID).build();
         doReturn(dto).when(aippRunTimeServiceMock).createAippInstanceLatest(any(), any(), any());
@@ -182,7 +190,7 @@ public class AippFlowAgentTest {
                 any())).thenReturn(Collections.singletonList(dummyErrorLog));
 
         Assertions.assertThrows(JobberException.class, () -> appFlowAgentMind.handleTask(flowData));
-        verify(aippLogServiceMock).insertLog(argThat(logDataDto -> logDataDto.getAippId().equals(DUMMY_AIPP_ID)
+        verify(aopAippLogServiceMock).insertLog(argThat(logDataDto -> logDataDto.getAippId().equals(DUMMY_AIPP_ID)
                 && logDataDto.getInstanceId().equals(DUMMY_INST_ID) && logDataDto.getLogType()
                 .equals(AippInstLogType.ERROR.name()) && logDataDto.getCreateUserAccount().equals(DUMMY_W3ACCOUNT)));
     }

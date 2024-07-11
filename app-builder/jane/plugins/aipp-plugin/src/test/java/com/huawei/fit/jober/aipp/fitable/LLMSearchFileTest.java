@@ -54,11 +54,11 @@ public class LLMSearchFileTest {
         businessData.put(AippConst.BS_MODEL_NAME_KEY, LlmModelNameEnum.XIAOHAI.getValue());
         businessData.put(AippConst.BS_AGENT_RESULT_LINK_KEY, AippConst.INST_RECOMMEND_DOC_KEY);
         businessData.put(AippConst.BS_MODEL_PROMPT_KEY, "dorado");
+        businessData.put(AippConst.BS_META_VERSION_ID_KEY, DUMMY_ID);
         return businessData;
     }
 
     @Test
-    @Disabled
     void shouldOkWhenSearchFile() throws IOException {
         Map<String, Object> businessData = genBusinessData();
 

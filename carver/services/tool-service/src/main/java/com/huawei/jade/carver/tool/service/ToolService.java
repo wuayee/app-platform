@@ -90,7 +90,7 @@ public interface ToolService {
     void deleteTag(String toolUniqueName, String tagName);
 
     /**
-     * 将工具的可见版本设置为不可见。
+     * 将工具的最新版本设置为不是最新。
      *
      * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
      */
@@ -113,6 +113,6 @@ public interface ToolService {
      * @param toolQuery 表示查询条件的 {@link ToolQuery}。
      * @return 表示工具版本列表的 {@link ListResult}{@code <}{@link ToolData}{@code >}。
      */
-    @Genericable(id = "com.huawei.jade.carver.tool.getAllVersionsTool")
-    ListResult<ToolData> getAllVersionsTool(ToolQuery toolQuery);
+    @Genericable(id = "com.huawei.jade.carver.tool.getAllToolVersions")
+    ListResult<ToolData> getAllToolVersions(ToolQuery toolQuery);
 }

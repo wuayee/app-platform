@@ -159,6 +159,14 @@ public class UploadFileController {
     }
 
     private void storeTemporaryFile(String fileName, FileEntity file, File targetFile) {
+        File targetDirectory = targetFile.getParentFile();
+        try {
+            FileUtils.ensureDirectory(targetDirectory);
+        } catch (IOException e) {
+            throw new IllegalStateException(
+                    StringUtils.format("Failed to create directories for the file. [fileName={0}]", fileName), e);
+        }
+
         try (InputStream inStream = file.getInputStream();
              OutputStream outStream = Files.newOutputStream(targetFile.toPath())) {
             byte[] buffer = new byte[4096];

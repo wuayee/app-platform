@@ -34,4 +34,5 @@ MESSAGE_RESPONSE_MAPPING = {
     CoreMessageType.ApplyPermission: ApplyPermissionMessageResponse.ApplyPermissionMessageResponse,
     CoreMessageType.Error: ErrorMessageResponse.ErrorMessageResponse,
     CoreMessageType.GetMetaData: GetMetaDataMessageResponse.GetMetaDataMessageResponse,
+    CoreMessageType.Hello: bool,
 }

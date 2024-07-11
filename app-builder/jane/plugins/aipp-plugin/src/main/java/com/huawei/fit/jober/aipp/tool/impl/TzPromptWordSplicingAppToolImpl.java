@@ -12,6 +12,7 @@ import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.entity.AippInstLog;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fit.jober.aipp.service.AopAippLogService;
 import com.huawei.fit.jober.aipp.service.AppBuilderPromptService;
 import com.huawei.fit.jober.aipp.tool.TzPromptWordSplicingAppTool;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
@@ -54,11 +55,13 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
 
     private final AppBuilderPromptService appBuilderPromptService;
     private final AippLogService aippLogService;
+    private final AopAippLogService aopAippLogService;
 
     public TzPromptWordSplicingAppToolImpl(AppBuilderPromptService appBuilderPromptService,
-        AippLogService aippLogService) {
+        AippLogService aippLogService, AopAippLogService aopAippLogService) {
         this.appBuilderPromptService = appBuilderPromptService;
         this.aippLogService = aippLogService;
+        this.aopAippLogService = aopAippLogService;
     }
 
     @Override
@@ -97,7 +100,7 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
         List<AippInstLog> aippInstLogs = this.aippLogService.queryInstanceLogSince(instanceId, null);
         AippInstLog aippInstLog = aippInstLogs.get(0);
         AippLogCreateDto aippLogCreateDto = convertAippInstToDto(aippInstLog, promptTemplate);
-        this.aippLogService.insertLog(aippLogCreateDto);
+        this.aopAippLogService.insertLog(aippLogCreateDto);
     }
 
     private String overridePromptTemplate(Map<String, String> toBeReplacedVariables, String promptTemplate) {

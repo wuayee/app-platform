@@ -32,7 +32,7 @@ comment on column store_tool.source is '工具的来源';
 comment on column store_tool.icon is '工具的图标';
 comment on column store_tool.unique_name is '工具的唯一标识';
 comment on column store_tool.version is '工具的版本';
-comment on column store_tool.is_latest is '工具的可见性';
+comment on column store_tool.is_latest is '表示当前版本工具是否最新';
 
 create table if not exists store_tag
 (

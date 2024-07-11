@@ -1,7 +1,6 @@
 import {useLocation} from "react-router-dom";
 import {useCallback, useMemo, useState} from "react";
 import DOMPurify from 'dompurify';
-import { marked } from 'marked';
 import { Message } from '@shared/utils/message';
 
 /**
@@ -58,8 +57,9 @@ export const useMergeState = (initialState) => {
 * @return {string} 返回处理后的文本，如果文本为空或者为空字符串，则返回空字符串
 */
 export const trans = (text) => {
+  text = urlify(text);
   if (text?.trim().length) {
-    return DOMPurify.sanitize(marked.parse(text.replaceAll('<br>', '')));
+    return DOMPurify.sanitize(text.replaceAll('<br>', ''));
   }
   return '';
 }
@@ -167,9 +167,9 @@ export const isJsonString = (str) => {
 * @return {string} 返回转换后的HTML格式文本
 */
 export const urlify = (text) => { 
-  const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
+  const urlRegex = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
   return text.replace(urlRegex, (url) => { 
-    return `<a href="${url}">${url}</a>`; 
+    return `<a href="${url}" target="_blank">${url}</a>`; 
   }) 
 } 
 

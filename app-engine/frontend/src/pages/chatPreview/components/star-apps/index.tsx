@@ -1,19 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Avatar, Button, Drawer, Input, Dropdown } from "antd";
-import type { MenuProps } from "antd";
+import React, { useContext, useEffect, useState } from 'react';
+import { Avatar, Button, Drawer, Input, Dropdown } from 'antd';
+import type { MenuProps } from 'antd';
 import {
   SearchOutlined,
   EllipsisOutlined,
   CloseOutlined,
-} from "@ant-design/icons";
-import "./style.scoped.scss";
-import { httpUrlMap } from "../../../../shared/http/httpConfig";
-import { cancleUserCollection, collectionApp, getUserCollection, updateCollectionApp } from "../../../../shared/http/appDev";
-import { setCollectionValue, setCurAppId } from "../../../../store/collection/collection";
-import { useAppSelector, useAppDispatch } from "../../../../store/hook";
-import { AnyAction } from "redux";
-import { useNavigate, useLocation } from "react-router-dom";
-import { setOpenStar } from "../../../../store/chatStore/chatStore";
+} from '@ant-design/icons';
+import './style.scoped.scss';
+import { httpUrlMap } from '@/shared/http/httpConfig';
+import { cancleUserCollection, collectionApp, getUserCollection, updateCollectionApp } from '@/shared/http/appDev';
+import { setCollectionValue, setCurAppId } from '@/store/collection/collection';
+import { useAppSelector, useAppDispatch } from '@/store/hook';
+import { AnyAction } from 'redux';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { setAtChatId, setOpenStar } from '@/store/chatStore/chatStore';
+import { setAtAppId, setAtAppInfo } from "@/store/appInfo/appInfo";
+import { Message } from '@shared/utils/message';
+import avatarNormal from '@/assets/images/knowledge/knowledge-base.png';
 
 const { ICON_URL } = process.env.NODE_ENV === 'development' ? { ICON_URL: `${window.location.origin}/api`} : httpUrlMap[process.env.NODE_ENV];
 
@@ -26,6 +29,7 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const openStar = useAppSelector((state) => state.chatCommonStore.openStar);
+  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const [apps, setApps] = useState<any[]>([]);
   const clickMap: any = {
 
@@ -62,12 +66,12 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
   }
   const items: any[] = [
     {
-      key: "2",
-      label: "设为默认",
+      key: '2',
+      label: '设为默认',
     },
     {
-      key: "3",
-      label: "取消默认",
+      key: '3',
+      label: '取消默认',
     },
   ];
 
@@ -97,7 +101,7 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
         author: item.createBy,
         desc: attr.description,
         appAvatar: attr.icon,
-        authorAvatar: "https://api.dicebear.com/7.x/miniavs/svg?seed=1",
+        authorAvatar: 'https://api.dicebear.com/7.x/miniavs/svg?seed=1',
       })
     })
     return res.filter(item=> item);
@@ -120,8 +124,15 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
 
   // 开始聊天
   const startChat = (item: any) => {
+    if (chatRunning) {
+      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
+      return
+    }
     dispatch(setCurAppId(item?.appId))
     dispatch(setOpenStar(false));
+    dispatch(setAtAppId(null));
+    dispatch(setAtAppInfo(null));
+    dispatch(setAtChatId(null));
   }
 
   // @应用
@@ -139,8 +150,8 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
       destroyOnClose
       mask={false}
       title={
-        <div className="app-title">
-          <div className="app-title-left">
+        <div className='app-title'>
+          <div className='app-title-left'>
             <span>选择收藏的应用</span>
           </div>
           <CloseOutlined
@@ -153,48 +164,48 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
       onClose={() => dispatch(setOpenStar(false))}
       open={openStar}
     >
-      <Input placeholder="搜索应用" prefix={<SearchOutlined />} />
-      <div className="app-wrapper">
+      <Input placeholder='搜索应用' prefix={<SearchOutlined />} />
+      <div className='app-wrapper'>
         {apps.map((app, index) => (
-          <div className="app-item" key={app.name}>
-            {index=== 0 ? <div className="app-item-default">默认应用</div> : ''}
+          <div className='app-item' key={app.id}>
+            {index=== 0 ? <div className='app-item-default'>默认应用</div> : ''}
             
-            <div className="app-item-content">
-              <Avatar size={48} src={app.appAvatar} />
-              <div className="app-item-text">
-                <div className="app-item-text-header">
-                  <div className="app-item-title">{app.name}</div>
-                  <div className="app-item-title-actions">
-                    {<span style={{ cursor: "pointer" }} onClick={() => atApp(app)}>
+            <div className='app-item-content'>
+              { app.appAvatar ? <Avatar size={48} src={app.appAvatar} /> : <Avatar size={48} src={avatarNormal} />}
+              <div className='app-item-text'>
+                <div className='app-item-text-header'>
+                  <div className='app-item-title' title={app.name}>{app.name}</div>
+                  <div className='app-item-title-actions'>
+                    {<span style={{ cursor: 'pointer' }} onClick={() => atApp(app)}>
                       @Ta
                     </span>}
                     <span
-                      style={{ color: "#1677ff", cursor: "pointer" }}
+                      style={{ color: '#1677ff', cursor: 'pointer' }}
                       onClick={() => startChat(app)}
                     >
                       开始聊天
                     </span>
                   </div>
                 </div>
-                <div className="app-item-text-desc">{app.desc}</div>
+                <div className='app-item-text-desc'>{app.desc}</div>
               </div>
             </div>
-            <div className="app-item-footer">
+            <div className='app-item-footer'>
               <div>
-                <Avatar size={32} src={app.authorAvatar} />
-                <span className="text">由{app.author}创建</span>
+                <Avatar size={32} src={<img src={`https://w3.huawei.com/w3lab/rest/yellowpage/face/${app.author}/120`}/>} />
+                <span className='text'>由{app.author}创建</span>
               </div>
               <Dropdown menu={{ items: [items[index>0?0:1]], onClick: (info)=> {
                 clickOpera(info, app)
-              } }} trigger={["click"]} >
-                <EllipsisOutlined className="app-item-footer-more" />
+              } }} trigger={['click']} >
+                <EllipsisOutlined className='app-item-footer-more' />
               </Dropdown>
             </div>
           </div>
         ))}
       </div>
       <div style={{float:'right', marginTop: 12 }}>
-        <Button onClick={() => dispatch(setOpenStar(false))} className="close-button">
+        <Button onClick={() => dispatch(setOpenStar(false))} className='close-button'>
           关闭
         </Button>
       </div>

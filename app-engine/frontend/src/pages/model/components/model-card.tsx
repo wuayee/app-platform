@@ -61,9 +61,12 @@ const ModelCard = ({ modelItem, setModelItems, openModify }: { modelItem: ModelI
   return (
     <Card
       style={{
-        width: 376,
+        width: '24%',
         background: 'url(/src/assets/images/knowledge/knowledge-background.png)',
+        backgroundRepeat:'no-repeat',
+        backgroundSize:'cover',
         height: 240,
+        marginBottom:16,
       }}
     >
       {/* 头部区域 */}
@@ -159,7 +162,7 @@ const ModelCard = ({ modelItem, setModelItems, openModify }: { modelItem: ModelI
         style={{
           display: '-webkit-box',
           textOverflow: 'ellipsis',
-          overflow: 'hidden',
+          overflowY:'auto',
           WebkitLineClamp: 3,
           WebkitBoxOrient: 'vertical',
           fontSize: '14px',

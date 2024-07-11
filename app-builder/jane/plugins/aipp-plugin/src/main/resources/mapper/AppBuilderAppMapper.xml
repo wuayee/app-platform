@@ -51,7 +51,7 @@
                 and state = #{cond.state}
             </if>
             <if test="cond != null and cond.name != null and cond.name != ''">
-                and name like '%' || #{cond.name} || '%'
+                and name ilike '%' || #{cond.name} || '%'
             </if>
             ORDER BY
                 "name", create_at DESC

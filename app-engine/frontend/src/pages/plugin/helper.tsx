@@ -37,13 +37,25 @@ export const paramsColumns = [
     title: '参数名',
     dataIndex: 'key',
     key: 'key',
-    width: 300,
   },
   {
     title: '参数类型',
     dataIndex: 'type',
     key: 'type',
-    width: 300,
+  },
+  {
+    title: '参数说明',
+    dataIndex: 'description',
+    key: 'description',
+    ellipsis: true,
+  },
+];
+
+export const outputColumns = [
+  {
+    title: '参数类型',
+    dataIndex: 'type',
+    key: 'type',
   },
   {
     title: '参数说明',

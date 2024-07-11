@@ -37,6 +37,17 @@ public class ExpressionUtils {
     private static final String ARRAY_REGEX = "(?<classType>[^\\[]*)(?<dimension>(\\[\\])+)";
     private static final Pattern ARRAY_PATTERN = Pattern.compile(ARRAY_REGEX);
     private static final String BOOL_REGEX = "!?(true|false)((\\|\\||&&)!?(true|false))*";
+    private static final Map<String, Class<?>> BASE_TYPE = MapBuilder.<String, Class<?>>get()
+            .put("byte", byte.class)
+            .put("char", char.class)
+            .put("boolean", boolean.class)
+            .put("short", short.class)
+            .put("int", int.class)
+            .put("long", long.class)
+            .put("double", double.class)
+            .put("float", float.class)
+            .put("void", void.class)
+            .build();
 
     /**
      * 使用特定逻辑运算符分隔切入点表达式。
@@ -103,23 +114,11 @@ public class ExpressionUtils {
      */
     @Nonnull
     public static Class<?> getContentClass(String content, ClassLoader classLoader) {
-        Class<?> contentClass;
-        Map<String, Class<?>> baseType = MapBuilder.<String, Class<?>>get()
-                .put("byte", byte.class)
-                .put("char", char.class)
-                .put("boolean", boolean.class)
-                .put("short", short.class)
-                .put("int", int.class)
-                .put("long", long.class)
-                .put("double", double.class)
-                .put("float", float.class)
-                .put("void", void.class)
-                .build();
-        if (baseType.containsKey(content)) {
-            return baseType.get(content);
+        if (BASE_TYPE.containsKey(content)) {
+            return BASE_TYPE.get(content);
         }
         ClassLoader currentClassLoader =
-                ObjectUtils.nullIf(classLoader, Thread.currentThread().getContextClassLoader());
+                ObjectUtils.getIfNull(classLoader, () -> Thread.currentThread().getContextClassLoader());
         if (content.contains("[")) {
             return getArrayClass(content, currentClassLoader);
         }
@@ -128,11 +127,10 @@ public class ExpressionUtils {
             fullName = "java.lang." + content;
         }
         try {
-            contentClass = currentClassLoader.loadClass(fullName);
+            return currentClassLoader.loadClass(fullName);
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException(StringUtils.format("Class not exist. [class={0}]", content));
         }
-        return contentClass;
     }
 
     private static Class<?> getArrayClass(String content, ClassLoader classLoader) {

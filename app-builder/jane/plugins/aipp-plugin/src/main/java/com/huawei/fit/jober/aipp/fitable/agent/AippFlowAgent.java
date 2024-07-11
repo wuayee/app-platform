@@ -18,6 +18,7 @@ import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
+import com.huawei.fit.jober.aipp.service.AopAippLogService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
@@ -50,12 +51,15 @@ public class AippFlowAgent implements FlowableService {
     private final MetaInstanceService metaInstanceService;
     private final AippLogService aippLogService;
     private final String endpoint;
+    private final AopAippLogService aopAippLogService;
 
     public AippFlowAgent(AippRunTimeService aippRunTimeService, MetaInstanceService metaInstanceService,
-            AippLogService aippLogService, @Value("${jane.endpoint}") String endpoint) {
+            AippLogService aippLogService, @Value("${jane.endpoint}") String endpoint,
+            AopAippLogService aopAippLogService) {
         this.aippRunTimeService = aippRunTimeService;
         this.metaInstanceService = metaInstanceService;
         this.aippLogService = aippLogService;
+        this.aopAippLogService = aopAippLogService;
         this.endpoint = endpoint;
     }
 
@@ -163,7 +167,7 @@ public class AippFlowAgent implements FlowableService {
             String version = (String) businessData.get(AippConst.BS_AIPP_VERSION_KEY);
             String aippType = (String) businessData.get(AippConst.ATTR_AIPP_TYPE_KEY);
             String instId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
-            aippLogService.insertLog(AippLogCreateDto.builder()
+            this.aopAippLogService.insertLog(AippLogCreateDto.builder()
                     .aippId(aippId)
                     .version(version)
                     .aippType(aippType)

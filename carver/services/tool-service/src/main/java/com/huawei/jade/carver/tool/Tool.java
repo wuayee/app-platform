@@ -147,9 +147,9 @@ public interface Tool {
         String version();
 
         /**
-         * 获取工具的可见性。
+         * 获取当前版本工具是否最新的状态。
          *
-         * @return 表示工具的可见性的 {@link Boolean}。
+         * @return 表示当前版本工具是否最新的状态的 {@link Boolean}。
          */
         Boolean isLatest();
 
@@ -246,9 +246,9 @@ public interface Tool {
             Builder version(String version);
 
             /**
-             * 向当前构建器中设置工具的可见性。
+             * 向当前构建器中设置当前工具版本是否最新。
              *
-             * @param isLatest 表示待设置的工具可见性的 {@link Boolean}。
+             * @param isLatest 表示待设置的当前工具版本是否最新的 {@link Boolean}。
              * @return 表示当前构建器的 {@link Builder}。
              */
             Builder isLatest(Boolean isLatest);

@@ -744,7 +744,7 @@ CREATE INDEX IF NOT EXISTS "IDX_CATEGORY_USAGE_OBJECT_ID" ON "category_usage"("o
 CREATE TABLE IF NOT EXISTS task_template
 (
     id          CHAR(32) PRIMARY KEY,
-    name        VARCHAR(64)  NOT NULL,
+    name        VARCHAR(255)  NOT NULL,
     description VARCHAR(512) NOT NULL,
     "tenant_id" char(32) NOT NULL DEFAULT '00000000000000000000000000000000'
     );

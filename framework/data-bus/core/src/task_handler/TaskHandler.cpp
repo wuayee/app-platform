@@ -78,26 +78,29 @@ void TaskHandler::HandleRead(const Task& task)
     const size_t len = task.Size();
     const char* buffer = task.DataRaw();
     const int socketFd = task.ClientFd();
-    auto header = Common::GetMessageHeader(buffer);
-    const uint32_t seq = header->seq();
 
     if (len < MESSAGE_HEADER_LEN) {
-        logger.Error("[HandleRead] Incorrect message header length from client {}, seq={}", socketFd, seq);
-        Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, seq, GetSender(socketFd));
+        logger.Error("[HandleRead] Incorrect message header length from client {}", socketFd);
+        Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, 0, GetSender(socketFd));
         return;
     }
 
     // 验证buf是否包含有效的消息头
     flatbuffers::Verifier verifier(reinterpret_cast<const uint8_t*>(buffer), MESSAGE_HEADER_LEN);
     if (!Common::VerifyMessageHeaderBuffer(verifier)) {
-        logger.Error("[HandleRead] Incorrect message header format from client {}, seq={}", socketFd, seq);
-        Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, seq, GetSender(socketFd));
+        logger.Error("[HandleRead] Incorrect message header format from client {}", socketFd);
+        Utils::SendErrorMessage(ErrorType::IllegalMessageHeader, 0, GetSender(socketFd));
         return;
     }
 
+    auto header = Common::GetMessageHeader(buffer);
+    const uint32_t seq = header->seq();
     // TODO: 需要处理半包
     uint bodySize = header->size();
-    if ((header->type() != Common::MessageType::CleanupExpiredMemory) && (len < bodySize + MESSAGE_HEADER_LEN)) {
+    const auto messageSize = bodySize + MESSAGE_HEADER_LEN;
+    const bool isNormalMessageType = (header->type() != Common::MessageType::CleanupExpiredMemory)
+            && (header->type() != Common::MessageType::Hello);
+    if (isNormalMessageType && len < messageSize) {
         logger.Error("[HandleRead] Incorrect message body length from client {}, seq={}", socketFd, seq);
         Utils::SendErrorMessage(ErrorType::IllegalMessageBody, seq, GetSender(socketFd));
         return;
@@ -105,8 +108,7 @@ void TaskHandler::HandleRead(const Task& task)
     HandleMessage(header, buffer, socketFd);
 
     // 处理粘包
-    const auto messageSize = header->size() + MESSAGE_HEADER_LEN;
-    if ((header->type() != Common::MessageType::CleanupExpiredMemory) && (len > messageSize)) {
+    if (isNormalMessageType && len > messageSize) {
         logger.Info("[HandleRead] Sticky TCP packet received from client={}, seq={}, size={}", socketFd, seq, len);
         taskLoopPtr_->AddReadTask(socketFd, buffer + messageSize, len - messageSize);
     }
@@ -165,6 +167,10 @@ void TaskHandler::HandleMessage(const Common::MessageHeader* header, const char*
         }
         case Common::MessageType::CleanupExpiredMemory: {
             HandleMessageCleanupExpiredMemory();
+            break;
+        }
+        case Common::MessageType::Hello: {
+            SendHelloResponse(socketFd, header->seq());
             break;
         }
         default:
@@ -432,6 +438,14 @@ void TaskHandler::SendApplyPermissionResponse(const Resource::ApplyPermissionRes
                        GetSender(response.applicant_));
     logger.Info("[TaskHandler] Send Permission result to client {}, seq: {}, result: {}, memory key: {}, size: {}",
                 response.applicant_, response.seq_, response.granted_, response.sharedMemoryId_, response.memorySize_);
+}
+
+// 客户端握手信息Hello原路返回。
+void TaskHandler::SendHelloResponse(int32_t socketFd, uint32_t seq)
+{
+    flatbuffers::FlatBufferBuilder bodyBuilder;
+    Utils::SendMessage(bodyBuilder, Common::MessageType::Hello, seq, GetSender(socketFd));
+    logger.Info("[TaskHandler] Send hello to client {}, seq: {}", socketFd, seq);
 }
 
 std::function<void(const uint8_t*, size_t)> TaskHandler::GetSender(int32_t socketFd)

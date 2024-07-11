@@ -226,8 +226,8 @@ public class DefaultToolService implements ToolService {
 
     @Override
     @Fitable(id = "tool-repository-pgsql")
-    public ListResult<ToolData> getAllVersionsTool(ToolQuery toolQuery) {
-        List<Tool.Info> infos = this.toolRepo.getAllVersionsTool(toolQuery);
+    public ListResult<ToolData> getAllToolVersions(ToolQuery toolQuery) {
+        List<Tool.Info> infos = this.toolRepo.getAllToolVersions(toolQuery);
         ArrayList<ToolData> toolDataList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(infos)) {
             Set<String> tags = this.toolRepo.getTags(infos.get(0).uniqueName());
@@ -240,7 +240,7 @@ public class DefaultToolService implements ToolService {
 
         toolQuery.setLimit(null);
         toolQuery.setOffset(null);
-        int count = this.toolRepo.getAllVersionsToolCount(toolQuery);
+        int count = this.toolRepo.getAllToolVersionsCount(toolQuery);
         return ListResult.create(toolDataList, count);
     }
 }

@@ -113,7 +113,7 @@ public interface ToolRepository {
     Set<String> getTags(String uniqueName);
 
     /**
-     * 将工具的所有版本可见性置否。
+     * 将工具的最新版本设置为不是最新。
      *
      * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
      */
@@ -134,7 +134,7 @@ public interface ToolRepository {
      * @param toolQuery 表示查询条件的 {@link ToolQuery}。
      * @return 表示工具版本列表的 {@link List}{@code <}{@link Tool.Info}{@code >}。
      */
-    List<Tool.Info> getAllVersionsTool(ToolQuery toolQuery);
+    List<Tool.Info> getAllToolVersions(ToolQuery toolQuery);
 
     /**
      * 查询一个工具的所有版本的总数。
@@ -142,5 +142,5 @@ public interface ToolRepository {
      * @param toolQuery toolQuery 表示查询条件的 {@link ToolQuery}。
      * @return 表示工具版本总数的 {@code int}。
      */
-    int getAllVersionsToolCount(ToolQuery toolQuery);
+    int getAllToolVersionsCount(ToolQuery toolQuery);
 }

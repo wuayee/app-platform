@@ -1,0 +1,31 @@
+.operatorArea {
+  display: flex;
+  gap: 16px;
+  .ant-btn {
+    background-color: #2673e5;
+    width: 96px;
+    height: 32px;
+    font-size: 14px;
+    border-radius: 4px;
+    letter-spacing: 0;
+  }
+  .ant-input-affix-wrappe {
+    width: 200px;
+    border-radius: 4px;
+    border: 1px solid rgb(230, 230, 230);
+  }
+}
+.containerArea {
+  width: 100%;
+  box-sizing: border-box;
+  max-height: 100%;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  overflow: auto;
+  padding-right: 8px;
+  display: grid;
+  justify-content: space-between;
+  grid-template-columns: repeat(auto-fill, 24%);
+  
+}

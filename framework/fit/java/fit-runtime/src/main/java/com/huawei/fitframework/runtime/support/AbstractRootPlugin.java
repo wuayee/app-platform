@@ -125,7 +125,7 @@ public abstract class AbstractRootPlugin extends AbstractPlugin implements RootP
         this.container().registry().register(loadBalancer, LOAD_BALANCER_BEAN_BANE);
         FitExceptionCreator exceptionCreator = new DefaultFitExceptionCreator(this.container());
         this.container().registry().register(exceptionCreator, FIT_EXCEPTION_CREATOR_BEAN_NAME);
-        FitableFactory fitableFactory = new DefaultFitableFactory(this.container(), loadBalancer);
+        FitableFactory fitableFactory = new DefaultFitableFactory(this.container(), loadBalancer, targetLocator);
         this.container().registry().register(fitableFactory, FITABLE_FACTORY_BEAN_NAME);
         DefaultInvokerFactory invokerFactory = new DefaultInvokerFactory(this.container(),
                 genericableFactory,

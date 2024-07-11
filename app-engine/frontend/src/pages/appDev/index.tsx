@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Divider, Input, Pagination, Tabs } from 'antd';
+import { Button, Divider, Input, Tabs } from 'antd';
 import { Icons } from '../../components/icons';
 import { deleteAppApi, getUserCollection, getUserCollectionNoDesc, queryAppDevApi } from '../../shared/http/appDev.js';
 import AppCard from '../../components/appCard';
 import './index.scoped.scss';
 import { debounce } from '../../shared/utils/common';
 import EditModal from '../components/edit-modal';
+import Pagination from '@/components/pagination';
 import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
 import { setCollectionValue } from '../../store/collection/collection';
@@ -13,13 +14,14 @@ import { setCollectionValue } from '../../store/collection/collection';
 const AppDev: React.FC = () => {
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   const navigate = useNavigate();
+  const [pageSize,setPageSize]=useState(8);
 
   // 数据初始化
   const [appData, setAppData] = useState([]);
   async function queryApps() {
     const params = {
-      offset: (pageNo.current - 1) * 10,
-      limit: 10,
+      offset: (pageNo.current - 1) * pageSize,
+      limit: pageSize,
       name:search || undefined,
     };
     const res: any = await queryAppDevApi(tenantId, params);
@@ -50,6 +52,7 @@ const AppDev: React.FC = () => {
   const [current, setCurrent] = useState(1);
   const [search, setSearch] = useState('')
   function currentPageChange(page: number, pageSize: number) {
+     setPageSize(pageSize);
      setCurrent(() => {
        pageNo.current = page;
        return page;
@@ -189,9 +192,10 @@ const AppDev: React.FC = () => {
         <div className='page_box'>
           <Pagination
             current={current}
-            pageSize={10}
+            pageSize={8}
             onChange={currentPageChange}
             showSizeChanger={false}
+            pageSizeOptions={[8,16,32,60]}
             total={total}
             showTotal={(total) => `总条数 ${total}`}
           />

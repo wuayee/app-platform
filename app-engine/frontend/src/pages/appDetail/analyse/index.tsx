@@ -247,7 +247,7 @@ const AppAnalyse: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className='app-analyzed'>
       <div className='select'>
         <Select
           className='select-time'

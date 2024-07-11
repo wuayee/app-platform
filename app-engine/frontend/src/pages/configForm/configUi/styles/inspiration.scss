@@ -5,7 +5,7 @@
   }
 }
 .inspiration-container {
-  height: 78px;
+  height: 90px;
   border-top: 1px solid rgb(242, 242, 242);
   display: flex;
   flex-direction: column;
@@ -14,7 +14,16 @@
     color: #1A1A1A;
     display: flex;
     justify-content: space-between;
+    padding-top: 6px;
+    .left {
+      flex-grow: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
     .right {
+      width: 100px;
+      flex-shrink: 0;
       span {
         cursor: pointer;
         margin-left: 16px;
@@ -30,7 +39,11 @@
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    padding-bottom: 8px;
+    line-height: 24px;
   }
   &:last-child {
     border-bottom: 1px solid rgb(242, 242, 242);

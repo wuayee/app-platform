@@ -12,7 +12,7 @@ from databus.memory_io import read as shared_mem_read, write as shared_mem_write
 
 from databus.exceptions import CoreError, NotConnectedError
 from databus.manager import MemoryManager
-from databus.message import CorePermissionType
+from databus.message import CorePermissionType, DataBusErrorCode
 from databus.dto import ReadRequest, WriteRequest, ReadResponse
 from .socket_client import SocketClient
 
@@ -37,6 +37,10 @@ class SdkClientImpl:
             self.close()
         self._socket = SocketClient((core_host, core_port))
         self._mem_manager.reset()
+        if not self._socket.send_hello_message():
+            if self.is_connected():
+                self.close()
+            raise ConnectionRefusedError("Cannot connect to DataBus.")
 
     def open_with_socket(self, core_socket: SocketClient = None):
         """关闭现有连接, 并使用core_socket作为连接, 注意会**重置共享内存信息**
@@ -144,6 +148,8 @@ class SdkClientImpl:
         """
         self._pre_access_check(user_key)
         response = self._socket.send_get_meta_message(user_key)
+        if response.ErrorType() != DataBusErrorCode.None_:
+            raise CoreError("Error on getting meta data, reason: {}", response.ErrorType())
         memory_id, memory_size = response.MemoryKey(), response.MemorySize()
         if memory_size != 0:
             self._mem_manager.add_memory_block(user_key, memory_id, memory_size)

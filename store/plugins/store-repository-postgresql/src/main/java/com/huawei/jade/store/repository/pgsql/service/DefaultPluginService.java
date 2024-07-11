@@ -4,6 +4,8 @@
 
 package com.huawei.jade.store.repository.pgsql.service;
 
+import static com.huawei.fitframework.inspection.Validation.notNull;
+
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.transaction.Transactional;
@@ -23,6 +25,7 @@ import com.huawei.jade.store.service.PluginService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -54,6 +57,8 @@ public class DefaultPluginService implements PluginService {
     @Fitable(id = "store-repository-pgsql")
     @Transactional
     public String addPlugin(PluginData pluginData) {
+        notNull(pluginData, "The plugin data cannot be null.");
+        pluginData.setUniqueName(UUID.randomUUID().toString());
         PluginDo pluginDo = PluginDo.from(pluginData);
         String uniqueName = this.toolService.addTool(pluginData);
         pluginDo.setToolUniqueName(uniqueName);

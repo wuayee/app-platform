@@ -90,10 +90,10 @@ const ToolItem = () => {
   return <>
     <Search 
       disabled
-      size="large" 
+      size="large"
       addonBefore={selectBefore} 
       onSearch={filterByName}
-      size="small"
+      // size="small"
       placeholder="请输入" />
     <div className="tool-tab">
       { listType.current === PluginTypeE.MARKET&&tab?.map(item => {

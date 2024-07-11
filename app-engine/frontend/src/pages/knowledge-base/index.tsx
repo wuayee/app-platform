@@ -5,7 +5,8 @@ import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
 import Pagination from '../../components/pagination/index';
 import { Icons } from '../../components/icons';
 import KnowledgeCard, { knowledgeBase } from '../../components/knowledge-card';
-import '../../index.scss'
+import '../../index.scss';
+import './styles/index.scoped.scss';
 import { deleteKnowledgeBase, queryKnowledgeBase } from '../../shared/http/knowledge';
 const KnowledgeBase = () => {
 
@@ -19,7 +20,7 @@ const KnowledgeBase = () => {
   const [page, setPage] = useState(1);
 
   // 分页数
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(8);
 
   // 搜索名称
   const [searchName, setSearchName] = useState('');
@@ -100,57 +101,33 @@ const KnowledgeBase = () => {
   }, [page, pageSize, searchName]);
   return (
     <div className='aui-fullpage'>
-    <div className='aui-header-1'>
-      <div className='aui-title-1'>知识库概览</div>
+      <div className='aui-header-1'>
+        <div className='aui-title-1'>知识库概览</div>
+      </div>
+      <div className='aui-block'>
+          <div className='operatorArea'>
+            <Button type="primary" onClick={createKnowledge}>创建</Button>
+            <Input 
+              showCount
+              maxLength={20}
+              placeholder="搜索"
+              onChange={(e)=>onSearchValueChange(e.target.value)}
+              prefix={<Icons.search color = {'rgb(230, 230, 230)'}/>}/>
+
+          </div>
+          <div className='containerArea'>
+              {knowledgeData.map(knowledge=> (<>
+                <KnowledgeCard key={knowledge.id} knowledge={knowledge} style={{
+                  flex: '0'
+                }} clickMore={(e)=> clickOpera(e, knowledge.id)}/>
+              </>))}
+
+          </div>
+          <Pagination total = {total} current={page} onChange={paginationChange}
+          pageSizeOptions={[8,16,32,60]}
+          pageSize={pageSize}/>
+      </div>
     </div>
-    <div className='aui-block'>
-        <div className='operatorArea' style={{
-          display: 'flex',
-          gap: '16px'
-        }}>
-          <Button type="primary" style={{
-            background: '#2673E5',
-            width: '96px',
-            height: '32px',
-            fontSize: '14px',
-            borderRadius: '4px',
-            letterSpacing: '0',
-          }} onClick={createKnowledge}>创建</Button>
-          <Input 
-            showCount
-            maxLength={20}
-            placeholder="搜索"  
-            style={{
-            width: '200px',
-            borderRadius: '4px',
-            border: '1px solid rgb(230, 230, 230)',
-            }} 
-            onChange={(e)=>onSearchValueChange(e.target.value)}
-            prefix={<Icons.search color = {'rgb(230, 230, 230)'}/>}/>
-
-        </div>
-        <div className='containerArea' style={{
-          width: '100%',
-          maxHeight: 'calc(100% - 200px)',
-          boxSizing: 'border-box',
-          paddingTop: '20px',
-          paddingBottom: '20px',
-          display:'Grid',
-          justifyContent: 'space-between',
-          gridGap: 17,
-          gridTemplateColumns: 'repeat(auto-fill, 380px)'
-        }}>
-            {knowledgeData.map(knowledge=> (<>
-              <KnowledgeCard key={knowledge.id} knowledge={knowledge} style={{
-                flex: '0'
-              }} clickMore={(e)=> clickOpera(e, knowledge.id)}/>
-            </>))}
-
-        </div>
-        <Pagination total = {total} current={page} onChange={paginationChange} pageSize={pageSize}/>
-    </div>
-  </div>
-
   )
 }
 export default KnowledgeBase;

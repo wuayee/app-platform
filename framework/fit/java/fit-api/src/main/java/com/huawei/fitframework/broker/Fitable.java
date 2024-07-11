@@ -4,6 +4,8 @@
 
 package com.huawei.fitframework.broker;
 
+import java.util.List;
+
 /**
  * 表示可执行的泛服务实现对象。
  *
@@ -18,6 +20,13 @@ public interface Fitable extends FitableMetadata {
      */
     @Override
     Genericable genericable();
+
+    /**
+     * 获取服务实现所有的地址列表。
+     *
+     * @return 表示服务实现所有的地址列表的 {@link List}{@code <}{@link Target}{@code >}。
+     */
+    List<Target> targets();
 
     /**
      * 执行服务实现。

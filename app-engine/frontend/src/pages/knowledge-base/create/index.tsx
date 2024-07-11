@@ -93,28 +93,7 @@ const KnowledgeBaseCreate = () => {
   const onCancle = () => {
     navigate('/knowledge-base')
   }
-  // 字符限制长度不能超过255
-  const changeName = () => {
-    const name = form.getFieldValue('knowledgeName');
-    if (name.length) {
-      let n = 0;
-      for (let i = 0; i < name.length; i++) {
-        let code = name.charCodeAt(i);
-        if (code > 255) {
-          n +=2;
-        } else {
-          n += 1
-        }
-      }
-      if (n > 255) {
-        return Promise.reject('字符串长度不能大于255');
-      } else {
-        return Promise.resolve();
-      }
-    } else {
-      return Promise.reject('');
-    }
-  }
+
   useEffect(() => {
     if (id) {
       getKnowledgeBase(id);
@@ -143,7 +122,7 @@ const KnowledgeBaseCreate = () => {
             borderRadius: '8px 8px 0px 0px',
             padding: '24px 24px 0 25px',
           }}>
-            <Form<FieldType>
+            <Form
               {...formItemLayout}
               layout={formLayout}
               form={form}
@@ -183,14 +162,14 @@ const KnowledgeBaseCreate = () => {
                 label="知识库名称"
                 rules={[
                   { required: true },
-                  { validator: changeName}
+                  {type:'string',max:20}
                 ]}
                 name='knowledgeName'
               >
-                <Input placeholder='请输入' />
+                <Input placeholder='请输入' maxLength={20} showCount/>
               </Form.Item>
-              <Form.Item label="知识库描述" rules={[{ required: true, message: '输入不能为空' }]} name='knowledgeDesc'>
-                <Input.TextArea size='large' autoSize={{ minRows: 2, maxRows: 6 }} placeholder='请输入' />
+              <Form.Item label="知识库描述" rules={[{ required: true},{type:'string',max:256}]} name='knowledgeDesc'>
+                <Input.TextArea size='large' autoSize={{ minRows: 2, maxRows: 6 }} maxLength={256} showCount placeholder='请输入' />
               </Form.Item>
             </Form>
           </div>

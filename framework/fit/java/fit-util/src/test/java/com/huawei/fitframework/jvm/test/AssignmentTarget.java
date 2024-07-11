@@ -25,15 +25,15 @@ public @interface AssignmentTarget {
 
     float floatValue() default 0;
 
-    int integerValue () default 0;
+    int integerValue() default 0;
 
-    long longValue () default 0;
+    long longValue() default 0;
 
-    short shortValue () default 0;
+    short shortValue() default 0;
 
-    boolean booleanValue () default false;
+    boolean booleanValue() default false;
 
-    String stringValue () default "";
+    String stringValue() default "";
 
     enum EnumValue {BLUE, RED, GREEN}
 

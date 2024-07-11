@@ -6,8 +6,7 @@ import { getModelList } from '../../shared/http/model';
 import CardsTab, { ModelItem } from './cards-tab';
 import TableTab from './table-tab';
 import ModelCreate from './model-create';
-import { Tabs } from 'antd';
-
+import './styles/local-modal.scoped.scss';
 import '../../index.scss';
 import { AppstoreOutlined, BarsOutlined, ReloadOutlined } from '@ant-design/icons';
 
@@ -85,24 +84,10 @@ const LocalModelList = () => {
 
   return (
     <>
-      <div
-        className='operatorArea'
-        style={{
-          display: 'flex',
-          gap: '16px',
-          justifyContent: 'space-between'
-        }}
-      >
+      <div className='operatorArea'>
         <Button
           type='primary'
-          style={{
-            background: '#2673E5',
-            width: '96px',
-            height: '32px',
-            fontSize: '14px',
-            borderRadius: '4px',
-            letterSpacing: '0',
-          }}
+          className='create-btn'
           onClick={() => {
             setOpenStar(true);
             setCreateItems(createItems);
@@ -111,7 +96,7 @@ const LocalModelList = () => {
         >
           创建
         </Button>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div className='opration-btn'>
           <Button style={{ marginRight: 16 }} icon={<ReloadOutlined />} onClick={() => queryModelList(true)}></Button>
           <Radio.Group value={type} onChange={changeShowType}>
             <Radio.Button value='card' style={{ padding: '3px 4px' }}>
@@ -123,17 +108,13 @@ const LocalModelList = () => {
           </Radio.Group>
         </div>
       </div>
-      <div
-        style={{
-          marginLeft: -20,
-        }}
-      >
+      <div className='model-content'>
         {type === 'card' && <CardsTab modelList={modelList} setModels={setModelList} openModify={openModify} />}
         {type === 'table' && (
           <TableTab modelList={modelList} setOpen={setOpenStar} setModels={setModelList} openModify={openModify} />
         )}
       </div>
-      <Pagination total={total} current={page} onChange={paginationChange} pageSize={pageSize} />
+      <Pagination total={total} current={page} onChange={paginationChange} pageSize={pageSize} pageSizeOptions={[10,20,30,40]}/>
       <ModelCreate
         open={openStar}
         setOpen={setOpenStar}

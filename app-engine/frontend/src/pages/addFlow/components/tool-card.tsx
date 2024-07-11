@@ -7,7 +7,7 @@ import '../styles/tool-card.scss';
 import { useAppSelector } from '../../../store/hook';
 import { getAppInfoByVersion } from '../../../shared/http/aipp';
 
-const ToolCard = ({ pluginData }: any) => {
+const ToolCard = ({ pluginData, tenantId }: any) => {
   const navigate = useNavigate();
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const appId = useAppSelector((state) => state.appStore.appId);

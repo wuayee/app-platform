@@ -4,7 +4,6 @@ import {EditOutlined} from '@ant-design/icons';
 import styled from 'styled-components';
 import ReportChart from "./ReportChart.jsx";
 import {saveContent} from "@shared/http/appBuilder";
-import {AippContext} from "../../../aippIndex/context";
 import chartImg from "@/assets/images/chart.png";
 import tableImg from "@/assets/images/table.png";
 import {Message} from "@shared/utils/message";
@@ -60,13 +59,12 @@ const FormWrap = styled.div`
 
 const ManageCubeCreateReport = (props) => {
   const id = "reportResult";
-  const {data, mode, saveCallBack} = props;
+  const {data, mode, saveCallBack, tenantId} = props;
   const [chartData, setChartData] = useState(null);
   const [title, setTitle] = useState("经营分析报告");
   const [editable, setEditable] = useState(false);
   const [editTime, setEditTime] = useState(0);
   const [canSave, setCanSave] = useState(false);
-  const {showElsa, agent, tenantId} = useContext(AippContext);
   
   const handleEdit = () => {
     setEditable(true);

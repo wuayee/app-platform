@@ -7,7 +7,6 @@
   transition: width .2s;
   //font-family: '苹方-简';
   border-radius: 8px;
-
   .inspiratio-tag {
     width: 16px;
     height: 42px;
@@ -33,10 +32,8 @@
       transform: rotate(0deg);
     }
   }
-
   .right-content {
     height: 100%;
-
     .title {
       font-weight: 600;
       color: #252B3A;
@@ -46,40 +43,30 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-
       .title-icon {
         display: flex;
         align-items: center;
         justify-content: space-between;
         flex: 1;
-
         img {
           width: 16px;
           height: 16px;
           margin-left: 8px;
           cursor: pointer;
         }
-
         .inspiration-text {
           width: 100px;
           font-size: 16px;
           font-weight: 700;
         }
       }
-
-      .drop-tree-menu {
-        font-weight: normal;
-        font-size: 12px;
-      }
     }
-
     .has-drop {
       button {
         border-radius: 4px;
         border: none;
       }
     }
-
     .prompt-empty {
       text-align: center;
       color: #71757F;
@@ -89,13 +76,11 @@
       flex-wrap: wrap;
       height: 80%;
       margin-top: 0;
-
       .empty-text {
         width: 100%;
         margin-top: 20px;
       }
     }
-
     .btn-text {
       font-size: 12px;
       max-width: 60px;
@@ -105,11 +90,6 @@
       vertical-align: middle;
     }
   }
-
-  .prompt-container {
-    height: calc(100% - 30px);
-  }
-
   .prompt-type {
     display: flex;
     flex-wrap: wrap;
@@ -153,12 +133,11 @@
       }
     }
   }
-
   .prompt-list {
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    height: calc(100% - 100px);
+    flex-grow: 1;
     overflow: auto;
     margin-top: 4px;
 
@@ -237,6 +216,27 @@
     &::-webkit-scrollbar {
       width: 0 !important;
     }
+  }
+  .prompt-container {
+    display: flex;
+    flex-direction: column;
+  }
+}
+.drop-tree-menu {
+  font-weight: normal;
+  font-size: 12px;
+  width: 180px;
+  .ant-tree-node-content-wrapper {
+    height: 28px;
+    line-height: 28px;
+  }
+  .ant-tree-title {
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+    width: 150px;
+    text-overflow: ellipsis;
+    font-size: 12px;
   }
 }
 
@@ -507,4 +507,14 @@
 .modal-btn {
   display: flex;
   justify-content: center;
+}
+.chat-preview {
+  .prompt-container {
+    height: calc(100% - 70px);
+  }
+}
+.chat-preview-inner {
+  .prompt-container {
+    height: calc(100% - 130px);
+  }
 }

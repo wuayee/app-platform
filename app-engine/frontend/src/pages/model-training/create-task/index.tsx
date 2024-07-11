@@ -1,4 +1,4 @@
-import { Button, Col, Flex, Form, Input, InputNumber, Modal, Radio, Row, Select } from 'antd';
+import { Button, Col, Flex, Form, Input, InputNumber, Modal, Radio, Row, Select, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import GoBack from '../../../components/go-back/GoBack';
@@ -24,6 +24,7 @@ const ModelTrainingCreate = () => {
   const [datasetVersion,setDastasetVersion] = useState(undefined);
   const [form] = Form.useForm();
   const [verifyForm] = Form.useForm();
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     getModelOptions();
@@ -52,6 +53,7 @@ const ModelTrainingCreate = () => {
   const getModelVersions =async(val,option) => {
     //TODO:调用获取模型详情接口获取版本列表
     setModel(option);
+    form.resetFields(['modelVersionNo']);
     const res= await queryModelVersionList(option?.model_name)
     setVersionOptions(res?.versionInfo)
   }
@@ -62,10 +64,11 @@ const ModelTrainingCreate = () => {
     if(res===true){
     //认证成功...
     setDatasetVerified(1); 
-    getDatasetList();
-    }else{
+    getDatasetList();}
+    else{
     //认证失败...
-    setDatasetVerified(2);}
+    setDatasetVerified(2);
+    }
   }
 
   const inputWidth = 380;
@@ -102,9 +105,17 @@ const ModelTrainingCreate = () => {
   const verifySubmit =async (value: any) => {
     const res = await login_eDataMate(value);
     //认证成功...
+    if(res===true)
+    {
     setDatasetVerified(1);
     getDatasetList();
-    setOpenVerify(false);
+    setOpenVerify(false);}
+    else{
+    messageApi.open({
+      type: 'error',
+      content: '登录失败，请检查用户名或密码，或者联系管理员',
+    });
+    }
   }
 
   // 获取数据集接口
@@ -118,14 +129,16 @@ const ModelTrainingCreate = () => {
 
   // 选择数据集后
   const selectDataset=async(value,option)=>{
+    form.resetFields(['datasetVersionId']);
+    setDastasetVersion(null);
     // 数据集详情
     setDastaset(option);
     // 获取数据集版本
-  const res= await getDatasetVersions(value,{typeFilter:1,sourceType:['local'],pagination: {
+    const res= await getDatasetVersions(value,{typeFilter:1,sourceType:['local'],pagination: {
     page: 0,
     limit: 100
   }})
-  setDatasetVersionList(res);
+    setDatasetVersionList(res);
   }
 
   const culculateGBSize = () => {
@@ -141,6 +154,7 @@ const ModelTrainingCreate = () => {
 
   return (
     <div className='aui-fullpage'>
+      {contextHolder}
       <div className='aui-header-1'>
         <div className='aui-title-1' style={{ alignItems: 'center' }}>
           <GoBack path={'/model-training'} title='创建训练任务' />
@@ -272,6 +286,7 @@ const ModelTrainingCreate = () => {
                 }
               ]}>
               <Select options={datasetVersionList} style={{ width: inputWidth }} onSelect={(val,option)=>{setDastasetVersion(option)}}
+               labelRender={(option)=>{return `V${option?.label}`}}
                fieldNames={{label:'version',value:'versionId'}} optionRender={(option)=>{ return `V${option?.label}`}}
                 disabled={datasetVerified !== 1}></Select> 
             </Form.Item>
@@ -282,16 +297,16 @@ const ModelTrainingCreate = () => {
               <div className='input-value'>{dataset?.name||'--'}</div>
             </Col>
             <Col span={6}>
-              <div className='input-label'>数据集大小</div>
-              <div className='input-value'>{bytesToSize(dataset?.totalSize)}</div>
+              <div className='input-label'>版本大小</div>
+              <div className='input-value'>{bytesToSize(datasetVersion?.totalSize)}</div>
             </Col>
             <Col span={6}>
-              <div className='input-label'>数据集版本规格</div>
+              <div className='input-label'>版本规格</div>
               <div className='input-value'>{FormatQaNumber(datasetVersion?.prompts)}</div>
             </Col>
             <Col span={6}>
-              <div className='input-label'>数据集描述</div>
-              <div className='input-value'>{dataset?.description|| '--'}</div>
+              <div className='input-label'>版本描述</div>
+              <div className='input-value'>{datasetVersion?.description|| '--'}</div>
             </Col>
           </Row>
           <h3 style={{ fontSize: 18, margin: '16px 0' }}>训练参数</h3>

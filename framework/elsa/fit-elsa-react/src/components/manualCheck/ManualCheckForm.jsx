@@ -14,11 +14,9 @@ import JadePanelCollapse from "@/components/manualCheck/JadePanelCollapse.jsx";
  * @return {JSX.Element}
  * @constructor
  */
-export default function ManualCheckForm({data, handleFormChange}) {
+export default function ManualCheckForm({formName, taskId, handleFormChange}) {
     const shape = useShapeContext();
     const config = shape.graph.configs.find(node => node.node === "manualCheckNodeState");
-    const formName = data.formName;
-    const taskId = data.taskId;
     const [formOptions, setFormOptions] = useState([]);
     const selectedFormDefaultValue = (formName === null || formName === undefined) ? undefined : `${formName.replace(/Component$/, '')}|${taskId}`;
     const entityRef = useRef();
@@ -74,7 +72,7 @@ export default function ManualCheckForm({data, handleFormChange}) {
 
     const registerObservables = (entity) => {
         recursive(entity.outputParams, null, (p, parent) => {
-            shape.page.registerObservable(shape.id, p.id, p.name, p.type, parent ? parent.id : null);
+            shape.page.registerObservable({nodeId: shape.id, observableId: p.id, value: p.name, type: p.type, parentId: parent ? parent.id : null});
         });
     };
 
@@ -94,8 +92,14 @@ export default function ManualCheckForm({data, handleFormChange}) {
         });
     };
 
-    // 组件销毁时，删除注册的observables.
     useEffect(() => {
+        // 组件挂载时，注册已存在的Observable
+        entityRef.current = shape.flowMeta.task?.converter?.entity ?? null;
+        if (entityRef.current) {
+            registerObservables(entityRef.current);
+        }
+
+        // 组件销毁时，删除注册的observables.
         return () => {
             if (entityRef.current) {
                 deregisterObservables(entityRef.current);
@@ -113,12 +117,12 @@ export default function ManualCheckForm({data, handleFormChange}) {
             <div className={"jade-custom-panel-content"}>
                 <Form.Item>
                     <JadeStopPropagationSelect
-                        allowClear
-                        className="jade-select"
-                        defaultValue={selectedFormDefaultValue}
-                        style={{width: "100%", marginBottom: "8px"}}
-                        onChange={e => onChange(e)}
-                        options={formOptions}
+                            allowClear
+                            className="jade-select"
+                            defaultValue={selectedFormDefaultValue}
+                            style={{width: "100%", marginBottom: "8px"}}
+                            onChange={e => onChange(e)}
+                            options={formOptions}
                     />
                     {renderComponent()} {/* 渲染对应的组件 */}
                 </Form.Item>

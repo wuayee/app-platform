@@ -12,14 +12,14 @@ import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
 export default function EndNodeWrapper({disabled}) {
     const data = useDataContext();
     const dispatch = useDispatch();
-    const mode = data.inputParams ? "variables" : "manualCheck";
+    const mode = data.inputParams.find(item => item.name === "finalOutput") ? "variables" : "manualCheck";
 
     /**
      * 表单更改后的回调
      *
-     * @param changeFormName
-     * @param changeFormId
-     * @param formOutput
+     * @param changeFormName 表单名
+     * @param changeFormId 表单id
+     * @param formOutput 表单输出
      */
     const handleFormChange = (changeFormName, changeFormId, formOutput) => {
         dispatch({
@@ -40,7 +40,9 @@ export default function EndNodeWrapper({disabled}) {
         if (mode === "variables") {
             return (<OutputVariable disabled={disabled}/>);
         } else {
-            return (<ManualCheckForm data={data} handleFormChange={handleFormChange}/>);
+            return (<ManualCheckForm formName={data.inputParams.find(item => item.name === "endFormName").value}
+                                     taskId={data.inputParams.find(item => item.name === "endFormId").value}
+                                     handleFormChange={handleFormChange}/>);
         }
     };
 

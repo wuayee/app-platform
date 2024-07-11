@@ -75,8 +75,9 @@ public class WaterFlowToolProvider implements ToolProvider {
         }
         Map<String, Object> inputParams = cast(parameters.get(WaterFlowToolConst.INPUT_PARAMS_KEY));
         if (!toolContext.containsKey(WaterFlowToolConst.TRACE_ID)
-                || !toolContext.containsKey(WaterFlowToolConst.CALLBACK_ID)) {
-            throw new IllegalStateException("toolContext does not contain traceId or callbackId.");
+                || !toolContext.containsKey(WaterFlowToolConst.CALLBACK_ID) || !toolContext.containsKey(
+                WaterFlowToolConst.USER_ID)) {
+            throw new IllegalStateException("toolContext does not contain traceId or callbackId or userId.");
         }
         inputParams.putAll(toolContext);
         toolCall.setParameters(this.objectSerializer.serialize(parameters));
