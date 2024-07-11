@@ -24,6 +24,18 @@ const TreeComponent = (props) => {
         setExpandedKeys(value);
     }
 
+    /**
+     * 校验是否有编辑中的节点
+     * @returns {boolean} 返回是否
+     */
+    const hasNodeEditing = () => {
+      if (editingId)  {
+        Message({type: 'warning', content: '存在编辑中的节点，请先处理'});
+        return true;
+      }
+      return false;
+    }
+
     useEffect(() => {
         setTreeData(props.tree);
     }, [props.tree])
@@ -32,6 +44,7 @@ const TreeComponent = (props) => {
         const {id, title, children, parent} = node;
 
         const editTag = (e, id) => {
+            if (hasNodeEditing()) return;
             setEditingId(id);
         }
 
@@ -66,6 +79,7 @@ const TreeComponent = (props) => {
         }
 
         const addTag = () => {
+            if (hasNodeEditing()) return;
             if (hasInspiration(id)) {
                 Message({type: "error", content: "分类下已有灵感大全，请先删除灵感大全"});
                 return;
@@ -79,7 +93,7 @@ const TreeComponent = (props) => {
 
       /**
        * 递归查询一颗树，查询应删除的节点并删除
-        * @param treeData 递归查询的树的数据
+       * @param treeData 递归查询的树的数据
        * @param parentNode 删除节点的父节点id
        * @param id 删除节点的id
        * @returns treeData 经过递归查询后的树的数据
@@ -132,6 +146,7 @@ const TreeComponent = (props) => {
        * @returns void
        */
         const deleteNode = (parent) => {
+            if (hasNodeEditing()) return;
             const [parentNode, id] = parent.split(':');
             if (children.length) {
                 Message({type: 'warning', content: '删除不可逆，请先删除子元素'});
@@ -214,6 +229,7 @@ const TreeComponent = (props) => {
     };
 
     const createTagTree = () => {
+        if (hasNodeEditing()) return;
         const id = uuid();
         let length = treeData.length;
         const newTree = {
