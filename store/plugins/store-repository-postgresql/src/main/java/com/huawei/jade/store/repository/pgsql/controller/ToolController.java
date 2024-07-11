@@ -59,7 +59,7 @@ public class ToolController {
         if ((name instanceof String) && StringUtils.isBlank((String) name)) {
             throw new IllegalArgumentException("The tool name cannot be blank.");
         }
-        return Result.ok(this.toolService.addTool(tool), 1);
+        return Result.ok(this.toolService.addTool(tool));
     }
 
     /**
@@ -71,7 +71,7 @@ public class ToolController {
     @GetMapping("/{uniqueName}")
     public Result<ToolData> getToolByUniqueName(@PathVariable("uniqueName") String uniqueName) {
         notBlank(uniqueName, "The tool unique name cannot be blank.");
-        return Result.ok(this.toolService.getTool(uniqueName), 1);
+        return Result.ok(this.toolService.getTool(uniqueName));
     }
 
     /**
@@ -104,6 +104,43 @@ public class ToolController {
         ListResult<ToolData> res = this.toolService.getTools(toolQuery);
         List<ToolData> data = res.getData();
         return Result.ok(data, res.getCount());
+    }
+
+    /**
+     * 获取某个版本的工具。
+     *
+     * @param toolUniqueName 表示工具唯一标识的 {@link String}。
+     * @param version 表示工具版本的 {@link String}。
+     * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link ToolData}{@code >}。
+     */
+    @GetMapping("/{toolUniqueName}/{version}")
+    public Result<ToolData> getToolVersion(
+            @PathVariable(value = "toolUniqueName") String toolUniqueName,
+            @PathVariable(value = "version") String version) {
+        notBlank(toolUniqueName, "The unique name cannot be blank.");
+        return Result.ok(this.toolService.getToolByVersion(toolUniqueName, version));
+    }
+
+    /**
+     * 获取工具的所有版本。
+     *
+     * @param toolUniqueName 表示工具唯一标识的 {@link String}。
+     * @param orTags 表示工具标签查询的方式的 {@link Boolean}。
+     * @param pageNum 表示页码的 {@link Integer}。
+     * @param limit 表示限制的 {@link Integer}。
+     * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link ToolData}{@code >}{@code >}。
+     */
+    @GetMapping("/{toolUniqueName}/versions")
+    public Result<List<ToolData>> getAllToolVersions(
+            @PathVariable(value = "toolUniqueName") String toolUniqueName,
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean orTags,
+            @RequestQuery(value = "pageNum", required = false) Integer pageNum,
+            @RequestQuery(value = "pageSize", required = false) Integer limit) {
+        notBlank(toolUniqueName, "The unique name cannot be blank.");
+        ToolQuery toolQuery = new ToolQuery(
+                toolUniqueName, null, null, orTags, pageNum, limit, null);
+        ListResult<ToolData> res = this.toolService.getAllToolVersions(toolQuery);
+        return Result.ok(res.getData(), res.getCount());
     }
 
     /**
@@ -146,7 +183,7 @@ public class ToolController {
     @DeleteMapping("/{uniqueName}")
     public Result<String> deleteTool(@PathVariable("uniqueName") String uniqueName) {
         notBlank(uniqueName, "The unique name cannot be blank.");
-        return Result.ok(this.toolService.deleteTool(uniqueName), 1);
+        return Result.ok(this.toolService.deleteTool(uniqueName));
     }
 
     /**
@@ -157,10 +194,10 @@ public class ToolController {
      * @return 格式化之后的返回消息的 {@link Result}{@code <}{@link String}{@code >}。
      */
     @DeleteMapping("/{uniqueName}/{version}")
-    public Result<String> deleteToolVersion(
+    public Result<String> deleteToolByVersion(
             @PathVariable("uniqueName") String uniqueName,
             @PathVariable("version") String version) {
         notBlank(uniqueName, "The unique name cannot be blank.");
-        return Result.ok(this.toolService.deleteToolByVersion(uniqueName, version), 1);
+        return Result.ok(this.toolService.deleteToolByVersion(uniqueName, version));
     }
 }

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState, useRef } from 'react';
-import ChartItem from '../chart-item.jsx';
+import ChartItem from '../chart-message/chart-message';
 import {Input} from "antd";
 const {TextArea} = Input;
 const ReportChart = (props) => {

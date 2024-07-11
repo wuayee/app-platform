@@ -2,6 +2,7 @@
 import { Button, Form, Input, Radio, Space, Drawer, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { updateExternalProxy, getExternalProxy } from '../../../shared/http/model';
+import { items } from '../../chatPreview/components/chart-message/utils/chart-graphs';
 
 interface props {
   visible: boolean;
@@ -33,6 +34,10 @@ const GlobalConfig = ({ visible, configCallback }: props) => {
   }
 
   const onFinish = (value: any) => {
+    if(Object.values(form.getFieldsValue()).filter(item=>item).length===0)
+    {
+      return;
+    }
     updateExternalProxy(value).then(_ => {
       messageApi.open({
         type: 'success',
@@ -106,12 +111,19 @@ const GlobalConfig = ({ visible, configCallback }: props) => {
             name='no_proxy'
             rules={[
               {
-                validator: (_, value) => {
-                  if (!value || /^(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/.test(value)) {
-                    return Promise.resolve();
-                  } else {
-                    return Promise.reject('请输入正确的IP');
+                validator: (_, value) => {    
+                  const items =value.split(',').filter(item=>item!=='');
+                  for(let i=0;i<items.length;i++){
+                    const item=items[i];
+                    if (!value || /^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)(\/(\d|[1-2]\d|3[0-2]))?$/.test(item)
+                    || /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62}){1,5}$/.test(item)
+                    || /^(\.([a-z]+)){1,5}$/.test(item)
+                    || /^localhost$/.test(item)) {
+                    } else {
+                      return Promise.reject('请输入正确的No Proxy，示例：127.0.0.1,127.0.0.1/16,in.huawei.com,.huawei.com,localhost');
+                    }
                   }
+                  return Promise.resolve();        
                 }
               }
             ]}

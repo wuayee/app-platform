@@ -2,17 +2,22 @@
    padding: 24px 24px 0;
    width: 380px;
    height: 260px;
-   background: url(/src/assets/images/knowledge/knowledge-background.png);
+   background: url('/src/assets/images/knowledge/knowledge-background.png');
    background-position: center;
    display: flex;
    flex-direction: column;
    gap:16px;
    border: 1px solid #ebebeb;
    border-radius: 8px;
+   margin-bottom: 10px;
    .plugin-card-header{
     display: flex;
     gap:16px;
-    align-items: flex-start;
+    align-items: center;
+    img {
+      width: 52px;
+      height: 52px;
+    }
    }
    .plugin-card-user{
     display: flex;

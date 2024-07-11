@@ -90,7 +90,7 @@ public class AippRunTimeServiceTest {
     private AippRunTimeServiceImpl runTimeService;
 
     @Mock
-    private AippLogService aippLogServiceMock;
+    private AopAippLogService aopAippLogServiceMock;
     @Mock
     private DynamicFormMetaService dynamicFormMetaServiceMock;
     @Mock
@@ -324,7 +324,7 @@ public class AippRunTimeServiceTest {
                 .resumeFlow(eq(DUMMY_FLOW_DEF_ID), eq(DUMMY_FLOW_INST_ID), any(), any());
 
         Mockito.doNothing()
-                .when(aippLogServiceMock)
+                .when(aopAippLogServiceMock)
                 .insertLog(argThat(dto -> AippInstLogType.FORM.name().equals(dto.getLogType())));
         Mockito.doReturn(Collections.emptyList()).when(dynamicFormMetaServiceMock).query(any());
 
@@ -353,7 +353,7 @@ public class AippRunTimeServiceTest {
         Mockito.doReturn(res).when(metaInstanceServiceMock).list(any(), any(), eq(0L), eq(1), any());
 
         Mockito.doNothing()
-                .when(aippLogServiceMock)
+                .when(aopAippLogServiceMock)
                 .insertLog(argThat(dto -> AippInstLogType.MSG.name().equals(dto.getLogType())));
 
         Map<String, Object> msgArgs = new HashMap<>();

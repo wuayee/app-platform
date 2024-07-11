@@ -55,7 +55,7 @@ export default function LlmFormWrapper({disabled}) {
                 console.error('Cannot get config.urls.llmModelEndpoint.');
             } else {
                 // 发起网络请求获取 options 数据
-                httpUtil.get(config.urls.llmModelEndpoint + '/gateway/v1/models', {}, (jsonData) => setModelOptions(jsonData.data.map(item => {
+                httpUtil.get(config.urls.llmModelEndpoint + '/models', {}, (jsonData) => setModelOptions(jsonData.data.map(item => {
                     return {
                         value: item.id,
                         label: item.id
@@ -65,7 +65,7 @@ export default function LlmFormWrapper({disabled}) {
             if(!config.urls.toolListEndpoint) {
                 console.error('Cannot get config.urls.toolListEndpoint.');
             } else {
-                httpUtil.get(config.urls.toolListEndpoint + '/api/jober/store/platform/jade/categories/TOOL?pageNum=0&pageSize=10&includeTags=FIT&excludeTags=Config', {}, (jsonData) => setToolOptions(jsonData.data.map(item => {
+                httpUtil.get(config.urls.toolListEndpoint + '/tools?pageNum=1&pageSize=10&includeTags=FIT&excludeTags=Config', {}, (jsonData) => setToolOptions(jsonData.data.map(item => {
                     return {
                         value: item.uniqueName,
                         label: item.name
@@ -75,7 +75,7 @@ export default function LlmFormWrapper({disabled}) {
             if (!config.urls.workflowListEndpoint) {
                 console.error('Cannot get config.urls.workflowListEndpoint.');
             } else {
-                httpUtil.get(config.urls.workflowListEndpoint + '/api/jober/store/platform/jade/categories/TOOL?pageNum=0&pageSize=10&includeTags=WATERFLOW', {}, (jsonData) => setWorkflowOptions(jsonData.data.map(item => {
+                httpUtil.get(config.urls.workflowListEndpoint + '/tools?pageNum=1&pageSize=10&includeTags=WATERFLOW', {}, (jsonData) => setWorkflowOptions(jsonData.data.map(item => {
                     return {
                         value: item.uniqueName,
                         label: item.name

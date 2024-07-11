@@ -50,6 +50,7 @@ import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
 import com.huawei.fit.jober.aipp.service.AippStreamService;
+import com.huawei.fit.jober.aipp.service.AopAippLogService;
 import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
 import com.huawei.fit.jober.aipp.util.AippFileUtils;
 import com.huawei.fit.jober.aipp.util.AippStringUtils;
@@ -127,6 +128,7 @@ public class AippRunTimeServiceImpl
     private final FlowsService flowsService;
     private final String sharedUrl;
     private final AippStreamService aippStreamService;
+    private final AopAippLogService aopAippLogService;
 
     public AippRunTimeServiceImpl(@Fit MetaService metaService, @Fit DynamicFormService dynamicFormService,
             @Fit MetaInstanceService metaInstanceService, @Fit FlowInstanceService flowInstanceService,
@@ -134,7 +136,7 @@ public class AippRunTimeServiceImpl
             @Value("${xiaohai.upload_chat_history_url}") String uploadChatHistoryUrl, BrokerClient client,
             @Fit AppBuilderFormRepository formRepository, @Fit AppBuilderFormPropertyRepository formPropertyRepository,
             @Fit FlowsService flowsService, @Value("${xiaohai.share_url}") String sharedUrl,
-            @Fit AippStreamService aippStreamService) {
+            @Fit AippStreamService aippStreamService, @Fit AopAippLogService aopAippLogService) {
         this.metaService = metaService;
         this.dynamicFormService = dynamicFormService;
         this.metaInstanceService = metaInstanceService;
@@ -148,6 +150,7 @@ public class AippRunTimeServiceImpl
         this.flowsService = flowsService;
         this.sharedUrl = sharedUrl;
         this.aippStreamService = aippStreamService;
+        this.aopAippLogService = aopAippLogService;
     }
 
     private static void setExtraBusinessData(OperationContext context, Map<String, Object> businessData, Meta meta,
@@ -290,6 +293,7 @@ public class AippRunTimeServiceImpl
         businessData.put(AippConst.CONTEXT_INSTANCE_ID, metaInst.getId());
         businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, true);
         businessData.put(AippConst.BS_AIPP_MEMORIES_KEY, new ArrayList<>());
+        businessData.put(AippConst.CONTEXT_USER_ID, context.getOperator());
 
         // 添加memory
         String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
@@ -902,7 +906,7 @@ public class AippRunTimeServiceImpl
         String message = msgArgs.get(AippConst.TERMINATE_MESSAGE_KEY) != null ? msgArgs.get(
                 AippConst.TERMINATE_MESSAGE_KEY).toString() : "已终止对话";
 
-        this.aippLogService.insertLog(AippLogCreateDto.builder()
+        this.aopAippLogService.insertLog(AippLogCreateDto.builder()
                 .aippId(aippId)
                 .version(version)
                 .aippType((String) meta.getAttributes().get(AippConst.ATTR_AIPP_TYPE_KEY))

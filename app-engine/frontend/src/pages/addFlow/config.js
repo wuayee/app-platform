@@ -12,9 +12,9 @@ export const configMap = {
           {
               node: "llmNodeState",
               urls: {
-                  llmModelEndpoint: "https://tzaip-beta.paas.huawei.com/api",
-                  toolListEndpoint: "https://jane-beta.huawei.com",
-                  workflowListEndpoint: "https://jane-beta.huawei.com"
+                  llmModelEndpoint: "https://tzaip-beta.paas.huawei.com/api/gateway/v1",
+                  toolListEndpoint: "https://jane-beta.huawei.com/api/jober",
+                  workflowListEndpoint: "https://jane-beta.huawei.com/api/jober"
               },
               params: {
                 tenantId: '',
@@ -57,9 +57,9 @@ export const configMap = {
           {
               node: "llmNodeState",
               urls: {
-                  llmModelEndpoint: `${origin}/api`,
-                  toolListEndpoint: origin,
-                  workflowListEndpoint: origin,
+                  llmModelEndpoint: `${origin}/api/gateway/v1`,
+                  toolListEndpoint: `${origin}/api/jober`,
+                  workflowListEndpoint: `${origin}/api/jober`,
                   aippUrl:`${origin}/api/jober/v1/api`
               },
               params: {
@@ -101,9 +101,9 @@ export const configMap = {
           {
               node: "llmNodeState",
               urls: {
-                  llmModelEndpoint: "https://tzaip-beta.paas.huawei.com",
-                  toolListEndpoint: "http://10.91.144.110:8080",
-                  workflowListEndpoint: "http://10.91.144.110:8080"
+                  llmModelEndpoint: "https://tzaip-beta.paas.huawei.com/gateway/v1",
+                  toolListEndpoint: "http://10.91.144.110:8080/api/jober",
+                  workflowListEndpoint: "http://10.91.144.110:8080/api/jober"
               },
               params: {
                 tenantId: '',
@@ -146,9 +146,9 @@ export const configMap = {
           {
               node: "llmNodeState",
               urls: {
-                  llmModelEndpoint: "https://tzaip-beta.paas.huawei.com",
-                  toolListEndpoint: "http://10.91.144.110:8080",
-                  workflowListEndpoint: "http://10.91.144.110:8080"
+                  llmModelEndpoint: "https://tzaip-beta.paas.huawei.com/gateway/v1",
+                  toolListEndpoint: "http://10.91.144.110:8080/api/jober",
+                  workflowListEndpoint: "http://10.91.144.110:8080/api/jober"
               },
               params: {
                 tenantId: '',

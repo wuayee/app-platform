@@ -7,6 +7,7 @@ export const handleClickAddBasicNode = (type, e) => {
 export const handleDragBasicNode = (item, e) => {
   e.dataTransfer.setData('itemTab', 'basic');
   e.dataTransfer.setData('itemType', item.type);
+  e.dataTransfer.setData('itemMetaData', JSON.stringify(item));
 }
 // 添加插件
 export const handleClickAddToolNode = (type, e, metaData) => {

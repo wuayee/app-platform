@@ -8,6 +8,8 @@ import com.huawei.databus.sdk.api.DataBusClient;
 import com.huawei.databus.sdk.client.jni.SharedMemoryReaderWriter;
 import com.huawei.databus.sdk.memory.SharedMemoryInternal;
 import com.huawei.databus.sdk.message.ErrorType;
+import com.huawei.databus.sdk.message.MessageHeader;
+import com.huawei.databus.sdk.message.MessageType;
 import com.huawei.databus.sdk.message.PermissionType;
 import com.huawei.databus.sdk.support.GetMetaDataRequest;
 import com.huawei.databus.sdk.support.GetMetaDataResult;
@@ -18,7 +20,9 @@ import com.huawei.databus.sdk.support.OpenConnectionResult;
 import com.huawei.databus.sdk.support.ReleaseMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryRequest;
 import com.huawei.databus.sdk.support.SharedMemoryResult;
+import com.huawei.databus.sdk.tools.Constant;
 import com.huawei.databus.sdk.tools.DataBusUtils;
+import com.huawei.databus.sdk.tools.SeqGenerator;
 import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.inspection.Validation;
 
@@ -74,14 +78,16 @@ public class DefaultDataBusClient implements DataBusClient {
             // 设置TCP_NODELAY，禁用Nagle算法，以防止粘包问题。
             this.socketChannel.socket().setTcpNoDelay(true);
             InetSocketAddress address = new InetSocketAddress(dataBusAddr, dataBusPort);
-            socketChannel.connect(address);
+            this.socketChannel.socket().connect(address, Constant.DEFAULT_WAITING_TIME_CONNECT_MILLIS);
+            if (!this.sayHello()) {
+                return this.cleanUpConnection(null);
+            }
         } catch (IOException e) {
-            logger.error("[open] Open connection failed.", e);
-            return OpenConnectionResult.failure(ErrorType.NotConnectedToDataBus, e);
+            return this.cleanUpConnection(e);
         }
-
-        this.responseDispatcher = new ResponseDispatcher(this.replyQueues, socketChannel);
-        this.sharedMemoryPool = new SharedMemoryPool(this.replyQueues, socketChannel);
+        logger.info("[open] Connection established and hello phase passed.");
+        this.responseDispatcher = new ResponseDispatcher(this.replyQueues, this.socketChannel);
+        this.sharedMemoryPool = new SharedMemoryPool(this.replyQueues, this.socketChannel);
         this.responseDispatcher.start();
 
         return OpenConnectionResult.success();
@@ -206,5 +212,35 @@ public class DefaultDataBusClient implements DataBusClient {
      */
     public boolean isConnected() {
         return this.responseDispatcher != null && this.responseDispatcher.isRunning();
+    }
+
+    private OpenConnectionResult cleanUpConnection(IOException e) {
+        if (this.socketChannel != null) {
+            try {
+                this.socketChannel.close();
+            } catch (IOException ex) {
+                logger.error("[cleanUp] close connection failed with exception.", ex);
+            }
+        }
+
+        if (e != null) {
+            logger.error("[cleanUp] Open connection failed with exception.", e);
+            return OpenConnectionResult.failure(ErrorType.NotConnectedToDataBus, e);
+        }
+        return OpenConnectionResult.failure(ErrorType.NotConnectedToDataBus);
+    }
+
+    private boolean sayHello() throws IOException {
+        // 建造消息头。 Hello 消息只有消息头，为了保持消息头长度恒定，需要将其消息体长度域设置为 -1 定值。
+        long seq = SeqGenerator.getInstance().getNextNumber();
+        ByteBuffer messageHeaderBuffer = DataBusUtils.buildMessageHeader(MessageType.Hello, -1, seq);
+        this.socketChannel.write(messageHeaderBuffer);
+        ByteBuffer buffer = ByteBuffer.allocate(Constant.DATABUS_SERVICE_HEADER_SIZE);
+        int bytesRead = this.socketChannel.read(buffer);
+        if (bytesRead != Constant.DATABUS_SERVICE_HEADER_SIZE) {
+            return false;
+        }
+        buffer.flip();
+        return MessageHeader.getRootAsMessageHeader(buffer).type() == MessageType.Hello;
     }
 }

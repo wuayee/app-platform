@@ -28,11 +28,12 @@ const Recommend = (props) => {
     setList(listCrrent.current);
   }
   const handleChange = (val, index) => {
-    listCrrent.current[index] = val.trim();
+    listCrrent.current[index] = val;
     setList([ ...listCrrent.current ]);
   }
   const saveRecommend = () => {
-    let arr = listCrrent.current.filter(item => item.length);
+    let list = listCrrent.current.map(item => item.trim());
+    let arr = list.filter(item => item.length);
     updateData(arr, "recommend");
   }
   return <>{(

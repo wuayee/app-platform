@@ -4,6 +4,8 @@
 
 package com.huawei.jade.store.repository.pgsql.service;
 
+import static com.huawei.fitframework.inspection.Validation.notNull;
+
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.transaction.Transactional;
@@ -55,15 +57,16 @@ public class DefaultAppService implements AppService {
     @Fitable(id = "store-repository-pgsql")
     @Transactional
     public String publishApp(AppData appData) {
+        notNull(appData, "The app data cannot be null.");
         if (StringUtils.isBlank(appData.getUniqueName())) {
             appData.setUniqueName(UUID.randomUUID().toString());
-            return addApp(appData);
+            return this.addApp(appData);
         }
         if (this.toolService.getToolByVersion(appData.getUniqueName(), appData.getVersion()) != null) {
             this.toolService.deleteToolByVersion(appData.getUniqueName(), appData.getVersion());
         }
         this.toolService.setNotLatest(appData.getUniqueName());
-        return addApp(appData);
+        return this.addApp(appData);
     }
 
     @Override

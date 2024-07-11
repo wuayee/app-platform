@@ -8,6 +8,7 @@ import { sourceTypes } from "../../common/common";
 import { InspirationWrap } from '../styled';
 import { uuid } from "../../../../common/utils";
 import '../styles/inspiration.scss';
+import {Message} from "../../../../shared/utils/message";
 
 const Inspiration = (props) => {
   const { updateData } = props;
@@ -25,6 +26,7 @@ const Inspiration = (props) => {
   const [ fitables, setFitables ] = useState(null);
   const [ category, setCategory ] = useState(null);
   const [ id, setId ] = useState("");
+  const [ disabled, setDisabled ] = useState(false);
   const [ modalForm ] = Form.useForm();
   const { TextArea } = Input;
   let regex = /{{(.*?)}}/g;
@@ -190,7 +192,21 @@ const Inspiration = (props) => {
     setShowModal(false);
   }
 
+  /**
+   * 检验是否有不合理类目
+   */
+  const validateCate = () => {
+    if (disabled) {
+      Message({type: 'warning', content: '存在不合法的类目，请先修改'});
+      return true;
+    }
+    return false;
+  }
+  /**
+   * 点击树形类目弹框确认按钮的回调
+   */
   const handleCateModalOK = () => {
+    if (validateCate()) return;
     setTreeData(cacheTreeData);
     setShowCateModal(false);
     const newInspirationValues = {...inspirationValues, category: [
@@ -201,8 +217,11 @@ const Inspiration = (props) => {
     updateData(newInspirationValues, "inspiration");
     setInspirationValues(newInspirationValues);
   }
-
+  /**
+   * 点击树形类目弹框取消按钮的回调
+   */
   const handleCateModalCancel = () => {
+    if (validateCate()) return;
     setShowCateModal(false);
   }
 
@@ -441,7 +460,11 @@ const Inspiration = (props) => {
               </InspirationWrap>
             </Modal>
             <Modal title="类目配置" open={showCateModal} onOk={handleCateModalOK} onCancel={handleCateModalCancel} width="50vw">
-              <TreeComponent tree={treeData} nodeList={nodeList} updateTreeData={updateTreeData}/>
+              <TreeComponent tree={treeData}
+                             nodeList={nodeList}
+                             updateTreeData={updateTreeData}
+                             setDisabled={setDisabled}
+              />
             </Modal>
         </div>
       </>

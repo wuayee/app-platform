@@ -52,8 +52,9 @@ const ModelBaseDetail: React.FC = () => {
     if (name) {
       queryModelDetail(name).then(res => {
         if (res) {
-          setData(res?.modelInfo);
-          setConfig(res?.config);
+          setData(res?.modelInfo);          
+          let obj =  ( Function( "return " + res?.config ) )()
+          setConfig(JSON.stringify((obj),null,2));  // 格式化返回值
           setVersionData(res?.versionInfo);
         }
       });
@@ -102,37 +103,37 @@ const ModelBaseDetail: React.FC = () => {
       key: 'update_time',
       dataIndex: 'update_time',
       title: '更新时间',
-      sorter: (a, b) => a.updateTime.localeCompare(b.updateTime)
+      sorter: (a, b) => a?.['update_time'].localeCompare(b?.['update_time'])
     },
     {
       key: 'train_frame',
       dataIndex: 'train_frame',
       title: '训练框架',
-      sorter: (a, b) => a.trainFrame.localeCompare(b.trainFrame)
+      sorter: (a, b) => a?.['train_frame'].localeCompare(b?.['train_frame'])
     },
     {
       key: 'train_type',
       dataIndex: 'train_type',
       title: '训练类型',
-      sorter: (a, b) => a.trainType.localeCompare(b.trainType)
+      sorter: (a, b) => a?.['train_type'].localeCompare(b?.['train_type'])
     },
     {
       key: 'train_strategy',
       dataIndex: 'train_strategy',
       title: '训练策略',
-      sorter: (a, b) => a.trainStrategy.localeCompare(b.trainStrategy)
+      sorter: (a, b) => a?.['train_strategy'].localeCompare(b?.['train_strategy'])
     },
     {
       key: 'train_time',
       dataIndex: 'train_time',
       title: '训练时长',
-      sorter: (a, b) => a.trainTime.localeCompare(b.trainTime)
+      sorter: (a, b) => a?.['train_time'].localeCompare(b?.['train_time'])
     },
     {
       key: 'final_loss',
       dataIndex: 'final_loss',
       title: '最终loss',
-      sorter: (a, b) => a.finalLoss.toString().localeCompare(b.finalLoss)
+      sorter: (a, b) => a?.['final_loss'].localeCompare(b?.['final_loss'])
     },
     {
       key: 'action',

@@ -2,13 +2,17 @@
   display: flex;
   gap: 16px;
   flex-grow: 1;
+  .aui-block {
+    flex-grow: 1;
+    height: calc(100% - 12px);
+  }
 }
 
 .import-data-content {
   display: flex;
   flex-direction: column;
   gap: 8px;
-
+  padding-top: 38px;
   &-form {
     width: 100%;
     flex: 1;

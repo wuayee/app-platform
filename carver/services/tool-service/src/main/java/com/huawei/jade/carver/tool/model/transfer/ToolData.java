@@ -140,10 +140,10 @@ public class ToolData {
     private String version;
 
     /**
-     * 表示工具版本的可见性。
+     * 表示当前版本工具是否最新。
      * <p>
      *     <ul>
-     *         <li>添加工具时需传入。</li>
+     *         <li>添加工具时可选。</li>
      *         <li>查询工具时会返回。</li>
      *     </ul>
      * </p>

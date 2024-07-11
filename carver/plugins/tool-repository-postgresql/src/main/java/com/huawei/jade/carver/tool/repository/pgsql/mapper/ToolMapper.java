@@ -100,7 +100,7 @@ public interface ToolMapper {
      * @param toolQuery toolQuery 表示工具的唯一标识的 {@link ToolQuery}。
      * @return 表示工具版本列表的 {@link List}{@code <}{@link ToolDo}{@code >}。
      */
-    List<ToolDo> getAllVersionsTool(ToolQuery toolQuery);
+    List<ToolDo> getAllToolVersions(ToolQuery toolQuery);
 
     /**
      * 查询工具的所有版本的总数。
@@ -108,5 +108,5 @@ public interface ToolMapper {
      * @param toolQuery toolQuery 表示查询条件的 {@link ToolQuery}。
      * @return 表示工具版本总数的 {@code int}。
      */
-    int getAllVersionsToolCount(ToolQuery toolQuery);
+    int getAllToolVersionsCount(ToolQuery toolQuery);
 }

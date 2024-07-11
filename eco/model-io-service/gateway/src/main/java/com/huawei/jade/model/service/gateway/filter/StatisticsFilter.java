@@ -185,15 +185,6 @@ public class StatisticsFilter implements GlobalFilter, Ordered {
                 dataBuffer.read(content);
                 DataBufferUtils.release(dataBuffer);
                 String responseBody = new String(content, StandardCharsets.UTF_8);
-                // 释放currentRoutes的请求连接数
-                String modelName = String.valueOf(exchange.getAttributes().get(REQUEST_MODEL_NAME));
-                Integer currentLinkNum = modelRouteService.getModelLinkControl().get(modelName);
-                if (currentLinkNum != null) {
-                    currentLinkNum += 1;
-                    log.info("Update modelLinkControl for " + modelName
-                            + " in response process, link num to: " + currentLinkNum);
-                    modelRouteService.getModelLinkControl().put(modelName, currentLinkNum);
-                }
                 if (this.isStreaming) {
                     processStreamingResponse(responseBody);
                 } else {

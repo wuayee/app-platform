@@ -84,7 +84,7 @@ public interface BrokerClient {
      * <p>该服务类上必定需要存在 {@link com.huawei.fitframework.annotation.Genericable} 注解。</p>
      *
      * @param genericableClass 表示服务的类型的 {@link Class}{@code <?>}。
-     * @return 表示服务的自定义动态路由器的 {@link Router}。
+     * @return 表示服务的 {@link Genericable}。
      * @throws RouterRetrievalFailureException 当 {@code genericableClass} 不满足单接口单方法的服务定义规范时。
      * @throws GenericableNotFoundException 当从服务仓库中找不到合适的服务时。
      */
@@ -97,10 +97,21 @@ public interface BrokerClient {
      *
      * @param genericableClass 表示服务的类型的 {@link Class}{@code <?>}。
      * @param genericableId 表示指定的服务的唯一标识的 {@link String}。
-     * @return 表示服务的自定义动态路由器的 {@link Router}。
+     * @return 表示服务的 {@link Genericable}。
      * @throws RouterRetrievalFailureException 当 {@code genericableClass} 不满足单接口多方法的服务定义规范时，或当 {@code
      * genericableId} 为 {@code null} 或空白字符串时。
      * @throws GenericableNotFoundException 当从服务仓库中找不到合适的服务时。
      */
     Genericable getGenericable(Class<?> genericableClass, String genericableId);
+
+    /**
+     * 获取一个服务。
+     *
+     * @param genericableId 表示服务的唯一标识的 {@link String}。
+     * @return 表示服务的 {@link Genericable}。
+     * @throws GenericableNotFoundException 当从服务仓库中找不到合适的服务时。
+     */
+    default Genericable getGenericable(String genericableId) {
+        return this.getRouter(genericableId).route().getGenericable();
+    }
 }

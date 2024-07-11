@@ -12,10 +12,11 @@
     flex-direction: column;
     .app_card_header {
         display: flex;
+        align-items: center;
         .img_box{
-          width: 50px;
+          width: 52px;
           flex-shrink: 0;
-          height: 50px;
+          height: 52px;
           img {
             width: 100%;
             height: 100%;
@@ -51,7 +52,7 @@
         text-align: justify;
         flex: 1;
         margin: 16px 0;
-        overflow: hidden;
+        overflow-y: auto;
     }
 
     .app_card_footer {

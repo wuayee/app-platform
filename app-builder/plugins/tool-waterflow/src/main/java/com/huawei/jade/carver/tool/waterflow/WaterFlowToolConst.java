@@ -25,4 +25,9 @@ public class WaterFlowToolConst {
      * 工具流上下文中需要包含的回调函数 id
      */
     public static final String CALLBACK_ID = "callbackId";
+
+    /**
+     * 工具流上下文中需要包含的用户 id
+     */
+    public static final String USER_ID = "userId";
 }

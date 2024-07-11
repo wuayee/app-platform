@@ -75,19 +75,27 @@ public class ModelStatisticsService {
             return;
         }
 
+        String modelName = modelStats.getModel();
         log.info("Update response for model=" + modelStats);
-        if (!this.models.containsKey(modelStats.getModel())) {
+        if (!this.models.containsKey(modelName)) {
             // 走到这个分支说明存在一些问题，现在暂时先不处理。
-            log.error("Update stats failed, something's wrong with this model: " + modelStats.getModel());
+            log.error("Update stats failed, something's wrong with this model: " + modelName);
             return;
         }
 
-        ModelInfo modelInfo = this.models.get(modelStats.getModel());
+        ModelInfo modelInfo = this.models.get(modelName);
         modelInfo.setResponses(modelInfo.getResponses() + 1);
+
+        // 释放currentRoutes的请求连接数
+        Integer oldValue = modelLinkControl.replace(modelName, modelLinkControl.getOrDefault(modelName, 0) + 1);
+        if (oldValue != null) {
+            log.info("Update modelLinkControl for " + modelName
+                    + " in response process, link num to: " + (oldValue + 1));
+        }
 
         ModelStatistics.Usage usage = modelStats.getUsage();
         if (usage == null) {
-            log.error("Update stats failed, usage is null for model: " + modelStats.getModel());
+            log.error("Update stats failed, usage is null for model: " + modelName);
             return;
         }
         modelInfo.setTotalInputTokens(modelInfo.getTotalInputTokens() + usage.getPromptTokens());

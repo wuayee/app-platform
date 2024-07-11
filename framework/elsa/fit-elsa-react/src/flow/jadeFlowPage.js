@@ -34,33 +34,23 @@ export const jadeFlowPage = (div, graph, name, id) => {
         self.shapes.forEach(s => s.onPageLoaded && s.onPageLoaded());
 
         const registerVirtualNodeInfo = () => {
-            self.registerObservable({
-                nodeId: VIRTUAL_CONTEXT_NODE.id,
-                observableId: "instanceId",
-                value: "instanceId",
-                type: "String",
-                parentId: undefined
-            });
-            self.registerObservable({
-                nodeId: VIRTUAL_CONTEXT_NODE.id,
-                observableId: "appId",
-                value: "appId",
-                type: "String",
-                parentId: undefined
-            });
-            self.registerObservable({
-                nodeId: VIRTUAL_CONTEXT_NODE.id,
-                observableId: "memories",
-                value: "memories",
-                type: "Array",
-                parentId: undefined
-            });
-            self.registerObservable({
-                nodeId: VIRTUAL_CONTEXT_NODE.id,
-                observableId: "useMemory",
-                value: "useMemory",
-                type: "Boolean",
-                parentId: undefined
+            const virtualNodeInfoList = [
+                {observableId: "instanceId", value: "instanceId", type: "String"},
+                {observableId: "appId", value: "appId", type: "String"},
+                {observableId: "memories", value: "memories", type: "Array"},
+                {observableId: "useMemory", value: "useMemory", type: "Boolean"},
+                {observableId: "userId", value: "userId", type: "String"},
+                {observableId: "fileUrl", value: "fileUrl", type: "String"},
+            ];
+
+            virtualNodeInfoList.forEach(({observableId, value, type}) => {
+                self.registerObservable({
+                    nodeId: VIRTUAL_CONTEXT_NODE.id,
+                    observableId,
+                    value,
+                    type,
+                    parentId: undefined,
+                });
             });
         };
         // 上下文虚拟节点信息注册

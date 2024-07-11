@@ -60,12 +60,12 @@
         where unique_name = #{toolUniqueName}
           and version = #{version}
     </select>
-    <select id="getAllVersionsTool" parameterType="com.huawei.jade.carver.tool.model.query.ToolQuery" resultMap="Tool">
+    <select id="getAllToolVersions" parameterType="com.huawei.jade.carver.tool.model.query.ToolQuery" resultMap="Tool">
         <include refid="selectToolColumns"/>
         where unique_name = #{toolName}
         <include refid="sortAndLimit"/>
     </select>
-    <select id="getAllVersionsToolCount" parameterType="com.huawei.jade.carver.tool.model.query.ToolQuery">
+    <select id="getAllToolVersionsCount" parameterType="com.huawei.jade.carver.tool.model.query.ToolQuery">
         select count(i."creator")
         from "store_tool" i
         where i."unique_name" = #{toolName}
@@ -135,7 +135,7 @@
         <where>
             <include refid="getOrSearchConditions"/>
             <if test="toolName != null and toolName != ''">
-                and i."name" like '%' || #{toolName} || '%'
+                and i."name" ilike '%' || #{toolName} || '%'
             </if>
         </where>
         <include refid="sortAndLimit"/>
@@ -154,7 +154,7 @@
         <where>
             <include refid="getOrSearchConditions"/>
             <if test="toolName != null and toolName != ''">
-                and i."name" like '%' || #{toolName} || '%'
+                and i."name" ilike '%' || #{toolName} || '%'
             </if>
         </where>
     </select>

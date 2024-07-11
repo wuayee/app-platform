@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, message, Modal, Table } from 'antd';
 import { deleteExternalModel, getExternalModelList } from '../../shared/http/model';
 import CreateModel from './components/external-create';
 import GlobalConfig from './components/global-config';
+import { OutsideServerTypeE } from './model';
 
 const ExternalModel = () => {
-
   const [total, setTotal] = useState(0);
   const [modelList, setModelList] = useState([]);
-  const [openCreate, setOpenCreate] = useState(false);
+  const [createSignal, setCreateSignal] = useState(0);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteName, setDeleteName] = useState('');
   const [openConfig, setOpenConfig] = useState(false);
-
+  let recordData=useRef(null);
+  let editType=useRef(OutsideServerTypeE.CREATE);
   const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
@@ -27,7 +28,6 @@ const ExternalModel = () => {
   }
 
   const createCallback = (type: string) => {
-    setOpenCreate(false);
     if (type === 'submit') {
       getList();
     }
@@ -37,6 +37,15 @@ const ExternalModel = () => {
     setOpenConfig(false);
     if (type === 'submit') {
       getList();
+    }
+  }
+
+  const deleteData = async (record) => {
+    try {
+      setDeleteOpen(true);
+      setDeleteName(record?.name);
+    } catch (error) {
+
     }
   }
 
@@ -91,16 +100,15 @@ const ExternalModel = () => {
       key: 'action',
       title: '操作',
       render(_: any, record: any) {
-        const deleteData = async () => {
-          try {
-            setDeleteOpen(true);
-            setDeleteName(record?.name);
-          } catch (error) {
-
-          }
-        }
         return (
-          <a onClick={deleteData}>删除</a>
+          <>
+          <a onClick={()=>{deleteData(record)}}>删除</a>
+          <a style={{marginLeft:'8px'}} onClick={(e)=>{
+            recordData.current=record;
+            editType.current=OutsideServerTypeE.EDIT;
+            setCreateSignal(e.timeStamp);
+             }}>编辑</a>
+          </>
         )
       },
     }
@@ -120,8 +128,9 @@ const ExternalModel = () => {
           letterSpacing: '0',
           marginBottom: '16px',
         }}
-        onClick={() => {
-          setOpenCreate(true);
+        onClick={(e) => {
+          editType.current=OutsideServerTypeE.CREATE;
+          setCreateSignal(e.timeStamp);
         }}
       >
         创建
@@ -151,9 +160,9 @@ const ExternalModel = () => {
           size: 'small'
         }}
       />
-      <CreateModel visible={openCreate} createCallback={createCallback} />
-      <Modal title='删除' open={deleteOpen} onOk={handleOk} onCancel={handleCancel}>
-        <p>确定要删除该条记录？</p>
+      <CreateModel createSignal={createSignal} createCallback={createCallback} record={recordData?.current} type={editType.current}/>
+      <Modal title='警告' open={deleteOpen} onOk={handleOk} onCancel={handleCancel}>
+        <p>确定删除？删除后此数据无法恢复。</p>
       </Modal>
       <GlobalConfig visible={openConfig} configCallback={configCallback} />
     </>

@@ -85,7 +85,7 @@ public class ToolDo {
     private String version;
 
     /**
-     * 表示工具的可见性。
+     * 表示当前版本工具是否最新。
      */
     private Boolean isLatest;
 

@@ -40,6 +40,10 @@ const UploadFile = ({ openUploadRef, fileSend }) => {
       return
     }
     let fileType = fileTypeSet(suffix);
+    if (['video', 'extras'].includes(fileType)) {
+      Message({ type: 'warning', content: '暂不支持该文件类型' });
+      return
+    }
     let headers = {
       "attachment-filename": encodeURI(file.name || ""),
     };
@@ -73,7 +77,7 @@ const UploadFile = ({ openUploadRef, fileSend }) => {
           </p>
           <p className="ant-upload-text">将文件拖到此处 或 点击上传文件</p>
           <p className="ant-upload-hint">
-            文件最大不超过500MB. 持文件类型 .jpg, .png, .pdf, .mp4, .mov…
+            支持文档，图片，音频类型的文件
           </p>
         </Dragger>
         </div>

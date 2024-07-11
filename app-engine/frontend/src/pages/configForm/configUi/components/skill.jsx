@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'antd';
 import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
 import { getToolsList } from '@shared/http/plugin';
@@ -11,6 +11,7 @@ const Skill = (props) => {
   const [ skillList, setSkillList] = useState([]);
   const [ showModal, setShowModal ] = useState(false);
   const navigate=useNavigate();
+  const { tenantId } = useParams();
   const pluginMap = useRef([]);
 
   useEffect(() => {
@@ -24,6 +25,9 @@ const Skill = (props) => {
   }
   // 选择数据后回调
   const confirmCallBack = (workFlowId, fitId) => {
+    if (workFlowId.length === 0 && fitId.length === 0) {
+      setSkillList([]);
+    }
     updateData(fitId, 'tools');
     updateData(workFlowId, 'workflows');
   }
@@ -53,6 +57,7 @@ const Skill = (props) => {
   }
   // 回显设置
   const setSkillArr = (data) => {
+    pluginMap.current = [];
     data.forEach(item => {
       if (pluginData.includes(item.uniqueName) ) {
         let obj = {
@@ -60,8 +65,8 @@ const Skill = (props) => {
           name: item.name,
           tags: item.tags,
           type: item.tags.includes('WATERFLOW') ? 'workflow' : 'tool',
-          appId: item.appId || '',
-          tenantId: item.tenantId || '',
+          appId: item.runnables?.APP?.appId || '',
+          runnables: item.runnables
         };
         pluginMap.current.push(obj);
       }
@@ -71,7 +76,9 @@ const Skill = (props) => {
   // 工具流详情
   const workflowDetail = (item) => {
     if (item.type === 'workflow') {
-      navigate(`/app-develop/${item.tenantId}/app-detail/add-flow/${item.appId}`);
+      if (item.appId.length) {
+        navigate(`/app-develop/${tenantId}/app-detail/flow-detail/${item.appId}`);
+      }
     } else {
       navigate(`/plugin/detail/${item.uniqueName}`);
     }

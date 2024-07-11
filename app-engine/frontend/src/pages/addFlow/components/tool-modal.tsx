@@ -13,6 +13,7 @@ import { getMyPlugin, getPlugins } from '../../../shared/http/plugin';
 import { useAppSelector } from '../../../store/hook';
 import { PluginTypeE } from './model';
 
+import { deepClone } from '../../chatPreview/utils/chat-process';
 const { Search } = Input;
 const { Option } = Select;
 
@@ -138,7 +139,9 @@ const ToolDrawer = (props) => {
   }
   // 选中
   const onChange = (e, item) => {
-    item.checked = e.target.checked;
+    let list = deepClone(pluginData);
+    let cItem = list.filter(pItem => pItem.uniqueName === item.uniqueName)[0];
+    cItem.checked = e.target.checked;
     if (e.target.checked) {
       checkedList.current.push(item);
     } else {
@@ -146,6 +149,7 @@ const ToolDrawer = (props) => {
         (cItem) => cItem.uniqueName !== item.uniqueName
       );
     }
+    setPluginData(list);
   };
   // 确定提交
   const confirm = () => {
@@ -219,7 +223,7 @@ const ToolDrawer = (props) => {
                   <div className='mashup-add-item' key={card.uniqueName}>
                     <ToolCard pluginData={card} />
                     <span className='opration-item'>
-                      <Checkbox defaultChecked={card.checked} onChange={(e) => onChange(e, card)} />
+                      <Checkbox checked={card.checked} onChange={(e) => onChange(e, card)} />
                     </span>
                   </div>
                 ))}

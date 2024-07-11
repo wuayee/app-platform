@@ -1,19 +1,18 @@
-import React, { useEffect, useState, useContext, useRef } from "react";
-import { useLocation } from "react-router";
-import { Spin } from "antd";
-import { LeftArrowIcon } from "@assets/icon";
-import { Message } from "@shared/utils/message";
-import { isJsonString } from "@shared/utils/common";
-import ChatMessage from "./components/chat-message";
-import SendEditor from "./components/send-editor/send-editor.jsx";
-import CheckGroup from "./components/check-group.jsx";
-import Inspiration from "./components/inspiration.jsx";
-import { initChat} from "./common/config";
-import { AippContext } from "../aippIndex/context";
+import React, { useEffect, useState, useContext, useRef } from 'react';
+import { useLocation } from 'react-router';
+import { Spin } from 'antd';
+import { LeftArrowIcon } from '@assets/icon';
+import { Message } from '@shared/utils/message';
+import { isJsonString } from '@shared/utils/common';
+import ChatMessage from './components/chat-message';
+import SendEditor from './components/send-editor/send-editor.jsx';
+import CheckGroup from './components/check-group.jsx';
+import Inspiration from './components/inspiration.jsx';
+import { initChat} from './common/config';
+import { AippContext } from '../aippIndex/context';
 import {
   aippDebug,
   updateFlowInfo,
-  getRecentInstances,
   getAppRecentlog,
   stopInstance,
   getReportInstance
@@ -28,7 +27,8 @@ import {
   deepClone,
   scrollBottom } from './utils/chat-process';
 import "./styles/chat-preview.scss";
-import { creatChat, tenantId, updateChat } from "@shared/http/chat.js";
+import { pduMap } from './common/config';
+import { creatChat, updateChat } from "@shared/http/chat.js";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import {
   setAtChatId,
@@ -38,6 +38,7 @@ import {
   setInspirationOpen,
   setFormReceived
 } from "@/store/chatStore/chatStore";
+import { v4 as uuidv4 } from 'uuid';
 
 const ChatPreview = (props) => {
   const { previewBack } = props;
@@ -53,19 +54,22 @@ const ChatPreview = (props) => {
   const atChatId = useAppSelector((state) => state.chatCommonStore.atChatId);
   const atAppId = useAppSelector((state) => state.appStore.atAppId);
   const atAppInfo = useAppSelector((state) => state.appStore.atAppInfo);
+  const dimension = useAppSelector((state) => state.commonStore.dimension);
   const formReceived = useAppSelector((state) => state.chatCommonStore.formReceived);
   const useMemory = useAppSelector((state) => state.commonStore.useMemory);
   const { showElsa } = useContext(AippContext);
   const [checkedList, setCheckedList] = useState([]);
+  const [isScroll, setIsScroll] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [groupType, setGroupType] = useState("share");
+  const [groupType, setGroupType] = useState('share');
   const [showCheck, setShowCheck] = useState(false);
   const location = useLocation();
   let editorRef = React.createRef();
-  let runningInstanceId = useRef("");
+  let runningInstanceId = useRef('');
   let currentInfo = useRef();
   let feedRef = useRef();
   let testRef = useRef(false);
+  let conditionChatRef = useRef();
   let runningVersion = useRef("");
   let runningAppid = useRef("");
   let childInstanceStop = useRef(false);
@@ -73,7 +77,7 @@ const ChatPreview = (props) => {
   let reportInstance = useRef('');
   let reportIContext = useRef(null);
   const listRef = useRef([]);
-  const chatPage =  location.pathname.indexOf('chat') !== -1;
+  const detailPage =  location.pathname.indexOf('app-detail') !== -1;
   useEffect(() => {
     !chatType && dispatch(setInspirationOpen(true));
     currentInfo.current = appInfo;
@@ -124,8 +128,8 @@ const ChatPreview = (props) => {
   };
   // 发送消息
   const sendMessageRequest = async (value, type) => {
-    const reciveInitObj = JSON.parse(JSON.stringify(initChat));
-    reciveInitObj.type = "recieve";
+    const reciveInitObj = deepClone(initChat);
+    reciveInitObj.type = 'recieve';
     reciveInitObj.loading = true;
     if (atAppInfo) {
       reciveInitObj.appName = atAppInfo.name;
@@ -133,7 +137,7 @@ const ChatPreview = (props) => {
       reciveInitObj.isAt = true;
     }
     let arr = [...listRef.current, reciveInitObj];
-    listRef.current = arr;
+    listRef.current = deepClone(arr);
     dispatch(setChatList(deepClone(arr)));
     dispatch(setChatRunning(true));
     setTimeout(() => {
@@ -146,14 +150,14 @@ const ChatPreview = (props) => {
         .then(async () => {
           const res = await updateFlowInfo(tenantId, appId, params);
           if (res.code !== 0) {
-            onStop("更新grpha数据失败");
+            onStop('更新grpha数据失败');
           } else {
             getAippAndVersion(value, type);
           }
         })
         .catch((err) => {
-          Message({ type: "warning", content: "请输入必填项" });
-          onStop("对话失败");
+          Message({ type: 'warning', content: '请输入必填项' });
+          onStop('对话失败');
         });
     } else {
       getAippAndVersion(value, type);
@@ -172,16 +176,18 @@ const ChatPreview = (props) => {
       if (debugRes.code === 0) {
         chatMissionStart(debugRes.data, value, type);
       } else {
-        onStop(debugRes.msg || "获取aippId失败");
+        onStop(debugRes.msg || '获取aippId失败');
       }
     } catch {
-      onStop("获取aippId失败");
+      onStop('获取aippId失败');
     }
   }
   // 启动任务
   const chatMissionStart = async (res, value, type) => {
     let { aipp_id, version } = res;
-    let params = type?{ initContext: { "$[FileDescription]$": value } }:{ initContext: { Question: value } };
+    let dimensionVal = pduMap[dimension] || dimension;
+    let params = type ? 
+      { initContext: { '$[FileDescription]$': value, dimension: dimensionVal}} : { initContext: { Question: value, dimension: dimensionVal } };
     params.initContext.useMemory = useMemory;
     try {
       const requestBody={
@@ -212,10 +218,10 @@ const ChatPreview = (props) => {
         childInstanceStop.current = false;
         queryInstance(aipp_id, version, instanceId);
       } else {
-        onStop("对话失败");
+        onStop('对话失败');
       }
     } catch {
-      onStop("对话失败");
+      onStop('对话失败');
     }
   };
   // 开始对话
@@ -264,6 +270,8 @@ const ChatPreview = (props) => {
         })
         if (['ARCHIVED', 'ERROR'].includes(messageData.status)) {
           dispatch(setChatRunning(false));
+          setIsScroll(true);
+          
         }
       } catch (err){
         onStop('数据解析异常');
@@ -283,7 +291,7 @@ const ChatPreview = (props) => {
     reportInstance.current = instanceId;
     reportIContext.current = initContext;
     dispatch(setChatList(deepClone(listRef.current)));
-    onStop("请勾选对话");
+    onStop('请勾选对话');
     setCheckedList([]);
     feedRef.current.setCheckStatus();
     setEditorShow(true, 'report');
@@ -306,16 +314,17 @@ const ChatPreview = (props) => {
         dispatch(setChatList(deepClone(listRef.current)));
         queryInstance(runningAppid.current, runningVersion.current, instanceId);
       } else {
-        onStop("启动任务失败");
+        onStop('启动任务失败');
       }
     } catch {
-      onStop("启动任务失败");
+      onStop('启动任务失败');
     } finally {
       setEditorShow(false);
     }
   }
   // 流式输出
   function chatStrInit(msg, initObj, status) {
+    let idx = 0;
     if (isJsonString(msg)) {
       let msgObj = JSON.parse(msg);
       if (msgObj.chartData && msgObj.chartType) {
@@ -324,8 +333,12 @@ const ChatPreview = (props) => {
     }
     initObj.loading = false;
     initObj.finished = (status === 'ARCHIVED');
-    const idx = listRef.current.length - 1;
-    console.log(testRef.current);
+    if (conditionChatRef.current) {
+      idx = listRef.current.findIndex((item) => item.logId === conditionChatRef.current);
+      conditionChatRef.current = undefined;
+    } else {
+      idx = listRef.current.length - 1
+    }
     if (testRef.current) {
       listRef.current.push(initObj);
       dispatch(setFormReceived(false));
@@ -336,17 +349,21 @@ const ChatPreview = (props) => {
   }
   // 流式输出拼接
   function chatSplicing(log, msg, initObj, status) {
+    let msgId = conditionChatRef.current ? conditionChatRef.current  : log.msgId;
     let currentChatItem = listRef.current.filter(
-      (item) => item.logId === log.msgId
+      (item) => item.logId === msgId
     )[0];
     if (currentChatItem) {
       let index = listRef.current.findIndex((item) => item.logId === log.msgId);
       let item = listRef.current[index];
-      let str = "";
+      let str = '';
       let { content } = currentChatItem;
       str = content + msg;
       item.content = str;
-      item.finished = (status === 'ARCHIVED');
+      if (status === 'ARCHIVED') {
+        item.finished = true;
+        conditionChatRef.current = undefined;
+      }
       dispatch(setChatList(deepClone(listRef.current)));
     } else {
       chatStrInit(msg, initObj, status);
@@ -360,42 +377,64 @@ const ChatPreview = (props) => {
   }
   // 终止对话成功回调
   function onStop(str) {
-    let item = listRef.current[listRef.current.length - 1];
+    let item = null;
+    if (conditionChatRef.current) {
+      let index = listRef.current.findIndex((item) => item.logId === conditionChatRef.current);
+      item = listRef.current[index];
+      conditionChatRef.current = undefined;
+    } else {
+      item = listRef.current[listRef.current.length - 1];
+    }
     item.content = str;
     item.loading = false;
     dispatch(setChatList(deepClone(listRef.current)));
     dispatch(setChatRunning(false));
   }
   // 终止进行中的对话
-  async function chatRunningStop() {
-    const res = await stopInstance(tenantId, runningInstanceId.current);
+  async function chatRunningStop(params) {
+    let str = params.content ? params.content : "已终止对话";
+    const res = await stopInstance(tenantId, runningInstanceId.current, {content: str});
     if (res.code === 0) {
-      onStop("已终止对话");
+      onStop(str);
       wsCurrent.current?.close();
       wsCurrent.current = null;
-      Message({ type: "success", content: "已终止对话" });
+      Message({ type: 'success', content: '已终止对话' });
+      return res.code;
     } else {
-      Message({ type: "error", content: "终止对话失败" });
+      Message({ type: 'error', content: '终止对话失败' });
     }
+  }
+  // 溯源表单重新对话
+  function conditionConfirm(logId, instanceId) {
+    let item = listRef.current.filter((item) => item.logId === logId)[0];
+    item.loading = true;
+    dispatch(setChatList(deepClone(listRef.current)));
+    dispatch(setChatRunning(true));
+    runningInstanceId.current = instanceId;
+    conditionChatRef.current = logId;
+    setIsScroll(false);
   }
 
   return (
     <div className={`
         chat-preview 
         ${ showElsa ? 'chat-preview-elsa': ''} 
-        ${ !chatPage ? 'chat-preview-inner' : '' } 
+        ${ detailPage ? 'chat-preview-inner' : '' } 
         ${(showElsa && inspirationOpen) ? 'chat-preview-mr' : ''}`}
     >
       <Spin spinning={loading}>
-        <span className="icon-back" onClick={previewBack}>
+        <span className='icon-back' onClick={previewBack}>
           { showElsa && <LeftArrowIcon /> }
         </span>
-        <div className={ `chat-inner ${ chatPage ? 'chat-page-inner' : ''}`}>
+        <div className={ `chat-inner ${ !detailPage ? 'chat-page-inner' : ''}`}>
           <div className={ `chat-inner-left ${ inspirationOpen ? 'chat-left-close' : 'no-border'}` }>
             <ChatMessage
               feedRef={feedRef}
+              scroll={isScroll}
+              chatRunningStop={chatRunningStop}
               setCheckedList={setCheckedList}
               setEditorShow={setEditorShow}
+              conditionConfirm={conditionConfirm}
               showCheck={showCheck}/>
             { showCheck ?
               <CheckGroup
