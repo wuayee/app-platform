@@ -517,6 +517,11 @@ public class AippConst {
     public static final String BS_AIPP_FILE_DESC_KEY = "$[FileDescription]$";
 
     /**
+     * business中的file download key
+     */
+    public static final String BS_AIPP_FILE_DOWNLOAD_KEY = "fileUrl";
+
+    /**
      * business中的用户选择的历史记录的key
      */
     public static final String BS_AIPP_SELECTED_LOGS = "selected_logs";

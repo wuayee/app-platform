@@ -51,10 +51,42 @@ export const useMergeState = (initialState) => {
 // 内容格式转换
 export const trans = (text) => {
   text = urlify(text);
-  if (text?.trim().length) {
+  try {
+    let textItem = JSON.parse(text);
+    let textHtml = setFileType(textItem);
+    if (textHtml.length) {
+      return textHtml;
+    }
     return DOMPurify.sanitize(text.replaceAll('<br>', ''));
+  } catch {
+    if (text?.trim().length) {
+      return DOMPurify.sanitize(text.replaceAll('<br>', ''));
+    }
   }
   return '';
+}
+
+// 消息类型判断
+const setFileType = (textItem) => {
+  let isObject = Object.prototype.toString.call(textItem) === '[object Object]';
+  let isArray = Object.prototype.toString.call(textItem) === '[object Array]';
+  let htmlStr = ''
+  if (isObject) {
+    if (textItem.mime.indexOf('image') !== -1) {
+      htmlStr = `<img src=data:${textItem.mime};base64,${textItem.data} />`
+    } else if (textItem.mime.indexOf('audio') !== -1) {
+      htmlStr = `<audio src=data:${textItem.mime};base64,${textItem.data} controls></audio>`
+    }
+  } else if (isArray){
+    textItem.forEach(item => {
+      if (item.mime.indexOf('image') !== -1) {
+        htmlStr += `<img src=data:${item.mime};base64,${item.data} /><br />`
+      } else if (item.mime.indexOf('audio') !== -1) {
+        htmlStr += `<audio src=data:${item.mime};base64,${item.data} controls></audio><br />`
+      }
+    })
+  }
+  return htmlStr;
 }
 
 // 日期方法
@@ -128,8 +160,8 @@ export const isJsonString = (str) => {
 }
 
 export const urlify = (text) => { 
-  const urlRegex = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; 
+  const urlRegex = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
   return text.replace(urlRegex, (url) => { 
-    return `<a href="${url}" target="_blank">${url}</a>`; 
+    return `<a href="${url}" target="_blank">${url}</a>`;
   }) 
 } 
