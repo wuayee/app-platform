@@ -59,6 +59,7 @@ public class AppBuilderAppController extends AbstractController {
      * @param offset 偏移量
      * @param limit 每页查询条数
      * @param cond 查询条件
+     * @param type 查询类型
      * @return 查询结果列表
      */
     @GetMapping(description = "查询 app 列表")

@@ -81,8 +81,10 @@ public class StoreServiceImpl implements StoreService {
         return this.buildBasicNodesConfig();
     }
 
-    private List<ToolModelDto> getToolModelList(String tag, boolean canOrTags, int pageNum, int pageSize, String version) {
-        return this.buildToolNodesConfig(tag, canOrTags, pageNum, pageSize, version).getData()
+    private List<ToolModelDto> getToolModelList(String tag, boolean canOrTags, int pageNum, int pageSize,
+            String version) {
+        return this.buildToolNodesConfig(tag, canOrTags, pageNum, pageSize, version)
+                .getData()
                 .stream()
                 .map(toolData -> ToolModelDto.combine2ToolModelDto(toolData,
                         tag.equalsIgnoreCase(HUGGINGFACE.getName())

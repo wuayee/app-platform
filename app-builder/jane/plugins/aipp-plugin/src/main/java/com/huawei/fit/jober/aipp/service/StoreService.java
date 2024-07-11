@@ -31,7 +31,8 @@ public interface StoreService {
      * @param version 表示工具的版本的 {@link String}。
      * @return 表示基础节点和工具的响应的 {@link StoreNodeConfigResDto}。
      */
-    StoreNodeConfigResDto getBasicNodesAndTools(String tag, boolean canOrTags, int pageNum, int pageSize, String version);
+    StoreNodeConfigResDto getBasicNodesAndTools(String tag, boolean canOrTags, int pageNum, int pageSize,
+            String version);
 
     /**
      * 获取工具流配置对象列表。
