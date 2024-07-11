@@ -52,7 +52,7 @@ public class AppBuilderAppController extends AbstractController {
     }
 
     /**
-     *  查询 app 列表
+     * 查询 app 列表
      *
      * @param httpRequest 请求
      * @param tenantId 租户Id
@@ -227,10 +227,10 @@ public class AppBuilderAppController extends AbstractController {
     /**
      * 获取 app 最新发布版本信息
      *
-     * @param httpRequest
-     * @param tenantId
-     * @param appId
-     * @return
+     * @param httpRequest 请求
+     * @param tenantId 租户Id
+     * @param appId 待请求的appId
+     * @return 返回结果
      */
     @GetMapping(path = "/{app_id}/latest_published", description = "获取 app 最新发布版本信息")
     public Rsp<AippCreateDto> latestPublished(HttpClassicServerRequest httpRequest,
@@ -242,10 +242,10 @@ public class AppBuilderAppController extends AbstractController {
     /**
      * 获取灵感大全的部门信息
      *
-     * @param httpRequest
-     * @param tenantId
-     * @param appDto
-     * @return
+     * @param httpRequest 请求
+     * @param tenantId 租户Id
+     * @param appDto app的DTO
+     * @return 结果
      */
     @PostMapping(path = "/{app_id}/inspiration/department", description = "获取灵感大全的部门信息")
     public Rsp<AippCreateDto> inspirations(HttpClassicServerRequest httpRequest,
@@ -256,10 +256,10 @@ public class AppBuilderAppController extends AbstractController {
     /**
      * 删除 app
      *
-     * @param httpRequest
-     * @param tenantId
-     * @param appId
-     * @return
+     * @param httpRequest 请求
+     * @param tenantId 租户Id
+     * @param appId 待删除的appId
+     * @return 空结果
      */
     @DeleteMapping(path = "/{app_id}", description = "删除 app")
     public Rsp<Void> delete(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,

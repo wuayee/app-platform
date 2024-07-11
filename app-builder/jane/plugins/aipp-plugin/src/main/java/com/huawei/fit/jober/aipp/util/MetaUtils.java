@@ -238,8 +238,8 @@ public class MetaUtils {
     /**
      * 判断一个Meta是否被发布
      *
-     * @param meta
-     * @return
+     * @param meta 待验证的Meta
+     * @return 该meta是否发布
      */
     public static boolean isPublished(Meta meta) {
         Map<String, Object> attributes = meta.getAttributes();
@@ -256,12 +256,12 @@ public class MetaUtils {
     /**
      * 通过appID获取所有的Meta
      *
-     * @param metaService
-     * @param appId
-     * @param aippType
-     * @param context
-     * @return
-     * @throws AippException
+     * @param metaService 处理Meta请求的service
+     * @param appId app的Id
+     * @param aippType aipp的类型
+     * @param context 上下文
+     * @return 结果
+     * @throws AippException 抛出aipp的异常
      */
     public static List<Meta> getAllMetasByAppId(MetaService metaService, String appId, String aippType,
             OperationContext context) throws AippException {

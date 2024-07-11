@@ -41,8 +41,8 @@ public class ConvertUtils {
     /**
      * 将app转换为aippDto
      *
-     * @param app
-     * @return
+     * @param app 待转换的app
+     * @return aippDTO
      */
     public static AippDto toAppDto(AppBuilderApp app) {
         String description = String.valueOf(app.getAttributes().getOrDefault("description", StringUtils.EMPTY));

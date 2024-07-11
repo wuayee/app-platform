@@ -14,7 +14,7 @@ public interface AppUpdateValidator {
     /**
      * 校验一个app是否可以更新
      *
-     * @param id
+     * @param id 待验证的appId
      */
     void validate(String id);
 }

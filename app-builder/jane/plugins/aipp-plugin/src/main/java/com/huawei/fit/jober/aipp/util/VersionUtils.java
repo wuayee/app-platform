@@ -24,8 +24,8 @@ public class VersionUtils {
     /**
      * 校验一个版本号是否为正确的版本号格式
      *
-     * @param version
-     * @return
+     * @param version 版本号
+     * @return 版本号是否合法
      */
     public static boolean isValidVersion(String version) {
         String[] parts = version.split("\\.");
@@ -55,8 +55,8 @@ public class VersionUtils {
     /**
      * 创建一个预览版本号
      *
-     * @param version
-     * @return
+     * @param version 版本号
+     * @return 预览版本号
      */
     public static String buildPreviewVersion(String version) {
         String uuid = UUIDUtil.uuid();

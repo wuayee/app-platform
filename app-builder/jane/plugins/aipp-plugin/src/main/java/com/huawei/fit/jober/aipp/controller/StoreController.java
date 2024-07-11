@@ -40,15 +40,16 @@ public class StoreController extends AbstractController {
 
     /**
      * 获取所有工具和基础节点配置
-     * @deprecated
      *
-     * @param httpRequest
-     * @param isUseOrTags
-     * @param pageNum
-     * @param pageSize
-     * @param tag
-     * @param version
-     * @return
+     * @param httpRequest 请求
+     * @param orTags tags的拼接方式
+     * @param pageNum 页数
+     * @param pageSize 分页大小
+     * @param tag 标签
+     * @param version 版本
+     * @return 查询结果
+     *
+     * @deprecated
      */
     @Deprecated
     @GetMapping(path = "/nodes", description = "获取所有工具和基础节点配置")
@@ -81,13 +82,13 @@ public class StoreController extends AbstractController {
     /**
      * 获取已发布的所有指定类型的插件配置
      *
-     * @param httpRequest
-     * @param tag
-     * @param tenantId
-     * @param orTags
-     * @param pageNum
-     * @param pageSize
-     * @return
+     * @param httpRequest 请求
+     * @param tag 标签
+     * @param tenantId 租户Id
+     * @param orTags tag拼接方式
+     * @param pageNum 页数
+     * @param pageSize 分页大小
+     * @return 结果
      */
     @GetMapping(path = "/plugins", description = "获取已发布的所有指定类型的插件配置")
     public Rsp<ToolDto> getPlugins(HttpClassicServerRequest httpRequest,
@@ -103,8 +104,8 @@ public class StoreController extends AbstractController {
     /**
      * 获取基础节点配置
      *
-     * @param httpRequest
-     * @return
+     * @param httpRequest 请求
+     * @return 结果
      */
     @GetMapping(path = "/nodes/basic", description = "获取基础节点配置")
     public Rsp<List<StoreBasicNodeInfoDto>> getBasic(HttpClassicServerRequest httpRequest) {
@@ -114,12 +115,12 @@ public class StoreController extends AbstractController {
     /**
      * 获取所有工具流
      *
-     * @param httpRequest
-     * @param orTags
-     * @param pageNum
-     * @param pageSize
-     * @param version
-     * @return
+     * @param httpRequest 请求
+     * @param orTags tags的拼接方式
+     * @param pageNum 页数
+     * @param pageSize 分页大小
+     * @param version 版本
+     * @return 查询结果
      */
     @GetMapping(path = "/waterflow", description = "获取所有工具流")
     public Rsp<List<AppBuilderWaterFlowInfoDto>> getWaterFlowInfos(HttpClassicServerRequest httpRequest,
