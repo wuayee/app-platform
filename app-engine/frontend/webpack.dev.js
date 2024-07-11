@@ -58,12 +58,12 @@ module.exports = merge(common, {
     https: false,
     proxy: {
       '/api': {
-        target: 'http://80.11.128.86:30020',
+        target: 'http://80.11.128.86:30040',
         secure: false,
         changeOrigin: true,
       },
       '/aiApi': {
-        target: 'http://80.11.128.86:30020',
+        target: 'http://80.11.128.86:30040',
         pathRewrite: {
           '^/aiApi': '/tzaip/api/hisp', // 后端环境即为此路径
         },
@@ -71,14 +71,14 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/aippApi': {
-        target: 'http://80.11.128.86:30020',
+        target: 'http://80.11.128.86:30040',
         pathRewrite: { '^/aippApi': '/api/jober/v1/api' },
         // pathRewrite: { '^/aippApi': '/v1/api' },
         secure: false,
         changeOrigin: true,
       },
       '/modelApi': {
-        target: 'http://80.11.128.86:30020',
+        target: 'http://80.11.128.86:30040',
         pathRewrite: {
           '^/modelApi': '/api',
         },
@@ -86,7 +86,7 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/knowledge': {
-        target: 'http://80.11.128.86:30020',
+        target: 'http://80.11.128.86:30040',
         pathRewrite: {
           '^/knowledge': '',
         },
@@ -94,19 +94,19 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/app': {
-        target: 'http://80.11.128.86:30020',
+        target: 'http://80.11.128.86:30040',
         pathRewrite: { '^/app': '' },
         secure: false,
         changeOrigin: true,
       },
       '/v1': {
-        target: 'http://80.11.128.86:30020',
+        target: 'http://80.11.128.86:30040',
         pathRewrite: { '^/v1': '/v1' }, //不能替换V1
         secure: false,
         changeOrigin: true,
       },
       '/elsaApi': {
-        target: 'http://80.11.128.86:30020',
+        target: 'http://80.11.128.86:30040',
         pathRewrite: {
           '^/elsaApi': '',
         },
@@ -114,7 +114,7 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/modelbase': {
-        target: 'http://80.11.128.86:30020',
+        target: 'http://80.11.128.86:30040',
         pathRewrite: {
           '^/modelbase': '/api/model_manage', // 后端环境即为此路径
         },
@@ -122,7 +122,7 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/modeltrain': {
-        target: 'http://80.11.128.86:30020',
+        target: 'http://80.11.128.86:30040',
         pathRewrite: {
           '^/modeltrain': '/api/model_finetune', // 后端环境即为此路径
         },
