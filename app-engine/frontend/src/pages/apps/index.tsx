@@ -42,7 +42,7 @@ const Apps: React.FC = () => {
     const res: any = await queryAppsApi(tenantId, params);
     if (res.code === 0) {
       const { data, total } = res;
-      setAppData([...dataTrans(data)]);
+      setAppData([...data]);
       setTotal(total);
     }
   }

@@ -58,9 +58,7 @@ const CreateWorkflow = (props) => {
       }}
       onOk={async () => {
         await form.validateFields();
-        const icon =
-          filePath &&
-          `${AIPP_URL}/api/jober/v1/api/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`;
+        const icon = filePath && `/api/jober/v1/api/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`;
         const res = await createAipp(tenantId, 'df87073b9bc85a48a9b01eccc9afccc3', {
           type: 'waterFlow',
           name: form.getFieldValue('name'),

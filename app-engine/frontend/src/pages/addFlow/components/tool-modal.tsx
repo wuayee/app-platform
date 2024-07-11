@@ -218,7 +218,7 @@ const ToolDrawer = (props) => {
         <div className='mashup-add-content'>
           <Spin spinning={loading}>
             {pluginData.length > 0 && (
-              <div className='mashup-add-inner' style={{ height: 'calc(100vh - 500px)' }}>
+              <div className='mashup-add-inner'>
                 {pluginData.map((card: any) => (
                   <div className='mashup-add-item' key={card.uniqueName}>
                     <ToolCard pluginData={card} />
