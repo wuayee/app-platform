@@ -27,7 +27,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.huawei.fit.waterflow</groupId>
+            <groupId>com.huawei.fit.jade.waterflow</groupId>
             <artifactId>waterflow-genericable</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
