@@ -14,8 +14,10 @@ const ToolCard = ({ pluginData, tenantId }: any) => {
   // 类型处理
   const detailClick = async() => {
    if (pluginData.tags.includes('WATERFLOW')) {
-    const res = await getAppInfoByVersion(tenantId,pluginData?.runnables?.APP?.appId);
-    navigate(`/app-develop/${tenantId}/app-detail/add-flow/${res?.data?.id}`);
+    const res = await getAppInfoByVersion(tenantId, pluginData?.runnables?.APP?.appId);
+    if (res.data.id) {
+      navigate(`/app-develop/${tenantId}/app-detail/add-flow/${res?.data?.id}`);
+    }
    } else {
     navigate(`/plugin/detail/${pluginData.uniqueName}`)
    }

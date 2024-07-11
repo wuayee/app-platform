@@ -68,7 +68,7 @@ const AddHeader = (props) => {
       <div className='app-header'>
         <div className="logo">
           <LeftArrowIcon className="back-icon" onClick={handleBackClick}/>
-          { appInfo?.attributes?.icon ?
+          { appInfo?.attributes?.icon !== 'null' ?
             <img src={appInfo.attributes?.icon} /> :
             <img src='/src/assets/images/knowledge/knowledge-base.png' />
           }

@@ -157,7 +157,7 @@
 }
 .mashup-add-inner {
   overflow-y: auto;
-  height: calc(100vh - 340px);
+  max-height: calc(100vh - 600px);
   display: flex;
   gap: 16px;
   flex-wrap: wrap;

@@ -24,7 +24,7 @@ const TimeLine = (props) => {
         color: '#000000',
         children: <div className="time-line-inner" style={{ color: 'rgb(77, 77, 77)' }}>
           <div style={{ fontWeight: '700' }}>{item.appVersion}</div>
-          <div style={{ margin: '8px 0' }}>{item.publishedDescription}</div>
+          <div style={{ margin: '8px 0' }}>{item.publishedDescription || '-'}</div>
           <div>{item.publishedBy}</div>
           <div>{item.publishedAt}</div>
         </div>

@@ -5,9 +5,29 @@
 .font-size-24 {
     font-size: 24px;
 }
+.details-content {
+  flex-grow: 1;
+  width: 0;
+}
 .detail-name {
   width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  .text {
+    max-width: 80%;
+    font-weight: 700;
+    font-size: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .status-tag {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-left: 12px;
+    img {
+      margin-right: 8px;
+    }
+  }
 }

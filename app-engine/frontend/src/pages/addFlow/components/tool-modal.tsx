@@ -19,7 +19,7 @@ const { Option } = Select;
 
 const ToolDrawer = (props) => {
   const { showModal, setShowModal, checkData, confirmCallBack, type } = props;
-  const [activeKey, setActiveKey] = useState('Builtin');
+  const [activeKey, setActiveKey] = useState('');
   const [loading, setLoading] = useState(false);
   const [pageNum, setPageNum] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -35,6 +35,7 @@ const ToolDrawer = (props) => {
   const navigate = useNavigate();
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const tab = [
+    { name: '全部', key: '' },
     { name: 'Builtin', key: 'Builtin' },
     { name: 'HuggingFace', key: 'HUGGINGFACE' },
     { name: 'LangChain', key: 'LANGCHAIN' },
@@ -78,16 +79,17 @@ const ToolDrawer = (props) => {
   // 获取插件列表
   const getPluginList = async () => {
     setLoading(true);
-
     let res;
+    let params:any = {
+      pageNum,
+      pageSize,
+      includeTags: activeKey,
+      isPublished: true,
+      name: searchName.current,
+    }
     if (listType.current === PluginTypeE.MARKET) {
-      res = await getPlugins({
-        pageNum,
-        pageSize,
-        includeTags: activeKey,
-        isPublished: true,
-        name: searchName.current,
-      });
+      activeKey.length ? null : delete params.includeTags;
+      res = await getPlugins(params);
     } else {
       res = await getMyPlugin(tenantId, {
         pageNum,
@@ -221,7 +223,7 @@ const ToolDrawer = (props) => {
               <div className='mashup-add-inner'>
                 {pluginData.map((card: any) => (
                   <div className='mashup-add-item' key={card.uniqueName}>
-                    <ToolCard pluginData={card} />
+                    <ToolCard pluginData={card} tenantId={tenantId}/>
                     <span className='opration-item'>
                       <Checkbox checked={card.checked} onChange={(e) => onChange(e, card)} />
                     </span>

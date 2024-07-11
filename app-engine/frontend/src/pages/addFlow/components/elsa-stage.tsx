@@ -89,7 +89,11 @@ const Stage = (props) => {
   async function updateAppRunningFlow() {
     const res = await updateFlowInfo(tenantId, appId, currentApp.current.flowGraph);
     if (res.code === 0) {
-      type && dispatch(setAppInfo(JSON.parse(JSON.stringify(appInfo))));
+      if (type) {
+        dispatch(setAppInfo(JSON.parse(JSON.stringify(appInfo))));
+      } else {
+        setFlowInfo(currentApp.current);
+      }
       setShowTime(true);
       Message({ type: 'success', content: type ? '高级配置更新成功': '工具流更新成功' })
     }
