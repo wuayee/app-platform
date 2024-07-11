@@ -7,6 +7,7 @@ import './index.scoped.scss';
 import { debounce } from '../../shared/utils/common';
 import EditModal from '../components/edit-modal';
 import Pagination from '@/components/pagination';
+import Empty from '@/components/empty/empty-item';
 import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
 import { setCollectionValue } from '../../store/collection/collection';
@@ -182,13 +183,19 @@ const AppDev: React.FC = () => {
             onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
-        <div className='card_list'>
-          {appData.map((item: any) => (
-            <div className='card_box' key={item.id} onClick={(e) => clickCard(item, e)}>
-              <AppCard cardInfo={item} clickMore={clickMore} showOptions={false}/>
-            </div>
-          ))}
-        </div>
+        { appData.length > 0 ? 
+          <div className='card_list'>
+            {appData.map((item: any) => (
+              <div className='card_box' key={item.id} onClick={(e) => clickCard(item, e)}>
+                <AppCard cardInfo={item} clickMore={clickMore} showOptions={false}/>
+              </div>
+            ))}
+          </div> :
+          <div className='empty-box'>
+            <Empty />
+          </div>
+        }
+        
         <div className='page_box'>
           <Pagination
             current={current}

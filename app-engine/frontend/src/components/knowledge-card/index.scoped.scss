@@ -1,0 +1,47 @@
+.knowledge-card {
+  background-image: url('/src/assets/images/knowledge/knowledge-background.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 280px;
+  margin-bottom: 14px;
+  .card-head {
+    display: flex;
+    .card-icon {
+      width: 48px;
+      display: block;
+    }
+    .card-title {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-left: 8px;
+      width: 0;
+      flex-grow: 1;
+      .card-name {
+        font-size: 20px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .card-create {
+        font-size: 14px;
+        color: rgba(105, 105, 105, .9);
+      }
+    }
+  }
+  .card-desc {
+    word-break: break-all;
+    margin-top: 16px;
+    font-size: 14px;
+    line-height: 22px;
+    text-align: justify;
+    height: 120px;
+    overflow-y: auto;
+  }
+  .card-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+}
