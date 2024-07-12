@@ -5,16 +5,10 @@ const {
   merge
 } = require("webpack-merge");
 const common = require("./webpack.common.js");
-const gammaConfig = require("./src/config/gamma-config.json")
 module.exports = merge(common, {
   plugins: [
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify("gamma"),
-    }),
-    new webpack.DefinePlugin({
-      __APP_CONFIG__: JSON.stringify({
-        ...gammaConfig
-      })
     }),
     // 此插件允许添加生成的文件顶部生成一段注释或者代码
     new webpack.BannerPlugin({

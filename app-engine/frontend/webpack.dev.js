@@ -2,8 +2,6 @@ const path = require('path');
 const { merge } = require('webpack-merge');
 const webpack = require('webpack');
 const common = require('./webpack.common.js');
-const alphaConfig = require('./src/config/alpha-config.json');
-
 module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
@@ -15,11 +13,6 @@ module.exports = merge(common, {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'),
-    }),
-    new webpack.DefinePlugin({
-      __APP_CONFIG__: JSON.stringify({
-        ...alphaConfig,
-      }),
     }),
   ],
   module: {
