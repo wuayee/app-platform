@@ -27,7 +27,7 @@ const PublishModal = (props) => {
     form.setFieldsValue({
       name: appInfo.name,
       description: appInfo.publishedDescription,
-      version: incrementVersion(appInfo.version),
+      version: appInfo.version,
       app_type: publishType !== 'app' ? 'waterflow' : appInfo.attributes?.app_type
     });
     setIsPublished(appInfo.state === 'active');
@@ -42,7 +42,7 @@ const PublishModal = (props) => {
   // 发布应用
   async function publishApp() {
     const formParams = await form.validateFields();
-    if (versionStringCompare(formParams.version, appInfo.version) !== 1) {
+    if (versionStringCompare(formParams.version, appInfo.version) === -1) {
       Message({ type: 'warning', content: `当前版本为${appInfo.version} 发布版本不能低于当前版本` });
       return
     }
@@ -70,6 +70,7 @@ const PublishModal = (props) => {
       setLoading(false);
       return
     }
+    appInfo.version = formParams.version;
     try {
       const res = await appPublish(tenantId, appId, appInfo);
       if (res.code === 0) {
