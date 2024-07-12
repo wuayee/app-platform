@@ -9,12 +9,6 @@ module.exports = merge(common, {
   plugins: [
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify("gamma"),
-    }),
-    // 此插件允许添加生成的文件顶部生成一段注释或者代码
-    new webpack.BannerPlugin({
-      banner: `console.log(${JSON.stringify({...gammaConfig})});`,
-      raw: true,
-      entryOnly: true,
     })
   ],
   module: {
