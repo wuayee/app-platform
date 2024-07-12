@@ -38,15 +38,28 @@ public class StoreController extends AbstractController {
         this.storeService = storeService;
     }
 
+    /**
+     * 获取所有工具和基础节点配置
+     *
+     * @param httpRequest 请求
+     * @param canOrTags tags的拼接方式
+     * @param pageNum 页数
+     * @param pageSize 分页大小
+     * @param tag 标签
+     * @param version 版本
+     * @return 查询结果
+     *
+     * @deprecated
+     */
     @Deprecated
     @GetMapping(path = "/nodes", description = "获取所有工具和基础节点配置")
     public Rsp<StoreNodeConfigResDto> getBasicNodesAndTools(HttpClassicServerRequest httpRequest,
-            @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean orTags,
+            @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean canOrTags,
             @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(value = "tag") String tag,
             @RequestParam(value = "version") String version) {
-        return Rsp.ok(this.storeService.getBasicNodesAndTools(tag, orTags, pageNum, pageSize, version));
+        return Rsp.ok(this.storeService.getBasicNodesAndTools(tag, canOrTags, pageNum, pageSize, version));
     }
 
     /**
@@ -66,28 +79,55 @@ public class StoreController extends AbstractController {
         return Rsp.ok(this.storeService.getModels(taskName, pageNum, pageSize));
     }
 
+    /**
+     * 获取已发布的所有指定类型的插件配置
+     *
+     * @param httpRequest 请求
+     * @param tag 标签
+     * @param tenantId 租户Id
+     * @param canOrTags tag拼接方式
+     * @param pageNum 页数
+     * @param pageSize 分页大小
+     * @return 结果
+     */
     @GetMapping(path = "/plugins", description = "获取已发布的所有指定类型的插件配置")
     public Rsp<ToolDto> getPlugins(HttpClassicServerRequest httpRequest,
             @RequestParam(value = "tag", defaultValue = "", required = false) String tag,
             @PathVariable("tenant_id") String tenantId,
-            @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean orTags,
+            @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean canOrTags,
             @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        return Rsp.ok(this.storeService.getPlugins(tag, orTags, pageNum, pageSize,
+        return Rsp.ok(this.storeService.getPlugins(tag, canOrTags, pageNum, pageSize,
                 this.contextOf(httpRequest, tenantId)));
     }
 
+    /**
+     * 获取基础节点配置
+     *
+     * @param httpRequest 请求
+     * @return 结果
+     */
     @GetMapping(path = "/nodes/basic", description = "获取基础节点配置")
     public Rsp<List<StoreBasicNodeInfoDto>> getBasic(HttpClassicServerRequest httpRequest) {
         return Rsp.ok(this.storeService.getBasic());
     }
 
+    /**
+     * 获取所有工具流
+     *
+     * @param httpRequest 请求
+     * @param canOrTags tags的拼接方式
+     * @param pageNum 页数
+     * @param pageSize 分页大小
+     * @param version 版本
+     * @return 查询结果
+     */
     @GetMapping(path = "/waterflow", description = "获取所有工具流")
     public Rsp<List<AppBuilderWaterFlowInfoDto>> getWaterFlowInfos(HttpClassicServerRequest httpRequest,
-            @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean orTags,
+            @RequestParam(value = "orTags", defaultValue = "false", required = false) boolean canOrTags,
             @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestParam(value = "version") String version) {
-        return Rsp.ok(this.storeService.getWaterFlowInfos(orTags, pageNum, pageSize, version));
+        return Rsp.ok(this.storeService.getWaterFlowInfos(canOrTags, pageNum, pageSize, version));
     }
 }

@@ -36,6 +36,12 @@ public enum AppState {
         return name;
     }
 
+    /**
+     * 获取状态
+     *
+     * @param name 名称
+     * @return 发布状态
+     */
     public static AppState getAppState(String name) {
         return Arrays.stream(values())
                 .filter(value -> StringUtils.equalsIgnoreCase(name, value.getName()))

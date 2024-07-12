@@ -47,15 +47,16 @@ import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
 import com.huawei.fit.jober.aipp.service.AippFlowService;
 import com.huawei.fit.jober.aipp.service.AppBuilderAppService;
-import com.huawei.fit.jober.aipp.util.VersionUtils;
-import com.huawei.fit.jober.aipp.validation.AppUpdateValidator;
 import com.huawei.fit.jober.aipp.util.ConvertUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.MetaUtils;
+import com.huawei.fit.jober.aipp.util.VersionUtils;
+import com.huawei.fit.jober.aipp.validation.AppUpdateValidator;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.transaction.Transactional;
@@ -167,13 +168,14 @@ public class AppBuilderAppServiceImpl
         }
         String[] oldPart = oldVersion.split("\\.");
         String[] newPart = newVersion.split("\\.");
-        for (int i = 0; i < oldPart.length; i++ ) {
+        for (int i = 0; i < oldPart.length; i++) {
             int oldV = Integer.parseInt(oldPart[i]);
             int newV = Integer.parseInt(newPart[i]);
             if (oldV > newV) {
                 // 如果某个号比当前号小，则认为新版本比旧版本小，抛出错误
                 throw new AippParamException(AippErrCode.NEW_VERSION_IS_LOWER);
-            } else if (newV > oldV) {
+            }
+            if (newV > oldV) {
                 // 如果某个号比当前号大，则认为新版本比旧版本大，例如2.0.0比1.9.9大
                 break;
             }
@@ -288,6 +290,8 @@ public class AppBuilderAppServiceImpl
     }
 
     private AppBuilderAppMetadataDto buildAppMetaData(AppBuilderApp app) {
+        List<String> tags = new ArrayList<>() ;
+        tags.add(app.getType().toUpperCase(Locale.ROOT));
         return AppBuilderAppMetadataDto.builder()
                 .id(app.getId())
                 .name(app.getName())
@@ -299,7 +303,7 @@ public class AppBuilderAppServiceImpl
                 .updateBy(app.getUpdateBy())
                 .createAt(app.getCreateAt())
                 .updateAt(app.getUpdateAt())
-                .tags(new ArrayList<String>()  {{add(app.getType().toUpperCase(Locale.ROOT));}})
+                .tags(tags)
                 .build();
     }
 
@@ -358,7 +362,7 @@ public class AppBuilderAppServiceImpl
             try {
                 this.metaService.create(declarationInfo, context);
                 break;
-            } catch (Exception e) {
+            } catch (FitException e) {
                 log.warn("create meta failed, times {} aippId {} version {}, error {}",
                         RETRY_CREATE_TIMES - retryTimes,
                         aippDto.getId(),
@@ -390,8 +394,8 @@ public class AppBuilderAppServiceImpl
         return declaration;
     }
 
-    // todo 当前只考虑升级，如果后续需要做基于应用创建新应用，则需要改动下面逻辑。
     private String buildVersion(AppBuilderApp app, boolean isUpgrade) {
+        // 当前只考虑升级，如果后续需要做基于应用创建新应用，则需要改动下面逻辑。
         if (!isUpgrade || !VersionUtils.isValidVersion(app.getVersion())) {
             return DEFAULT_APP_VERSION;
         }

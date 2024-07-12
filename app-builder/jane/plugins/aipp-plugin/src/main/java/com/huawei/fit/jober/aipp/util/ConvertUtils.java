@@ -38,6 +38,12 @@ public class ConvertUtils {
                 .build();
     }
 
+    /**
+     * 将app转换为aippDto
+     *
+     * @param app 待转换的app
+     * @return aippDTO
+     */
     public static AippDto toAppDto(AppBuilderApp app) {
         String description = String.valueOf(app.getAttributes().getOrDefault("description", StringUtils.EMPTY));
         String icon = String.valueOf(app.getAttributes().getOrDefault("icon", StringUtils.EMPTY));

@@ -46,3 +46,10 @@ fit:
     packages:
     - 'com.huawei.fitframework'
     - 'com.huawei.fit'
+
+druid:
+  url: jdbc:postgresql://10.91.144.226:5432/app_builder_wzc2?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true&options=-c%20statement_timeout=600000
+  username: postgres
+  password: postgres
+
+openai-url: 'http://tzaip-beta.paas.huawei.com/model-gateway/'
