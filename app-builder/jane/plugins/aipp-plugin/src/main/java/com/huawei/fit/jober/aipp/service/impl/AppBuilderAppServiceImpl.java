@@ -9,6 +9,7 @@ import static com.huawei.fit.jober.aipp.common.exception.AippErrCode.TASK_NOT_FO
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.Undefinable;
 import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fit.jane.common.enums.DirectionEnum;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
@@ -39,6 +40,7 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormPropertyDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
 import com.huawei.fit.jober.aipp.dto.PublishedAppResDto;
 import com.huawei.fit.jober.aipp.enums.AippMetaStatusEnum;
+import com.huawei.fit.jober.aipp.enums.AippSortKeyEnum;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.AppState;
 import com.huawei.fit.jober.aipp.enums.JaneCategory;
@@ -210,7 +212,7 @@ public class AppBuilderAppServiceImpl
         String aippId = this.getAippIdByAppId(appId, context);
         MetaFilter filter = new MetaFilter();
         filter.setMetaIds(Collections.singletonList(aippId));
-        String sortEncode = MetaUtils.formatSorter("create_at", "descend");
+        String sortEncode = MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.name(), DirectionEnum.DESCEND.name());
         filter.setOrderBys(Collections.singletonList(sortEncode));
         List<Meta> metas = MetaUtils.getListMetaHandle(this.metaService, filter, context);
         if (metas.isEmpty()) {
@@ -238,10 +240,10 @@ public class AppBuilderAppServiceImpl
     }
 
     private List<Meta> getPublishedMetaList(String appId, OperationContext context) {
-        String aippId = this.getAippIdByAppId(appId, context);
         MetaFilter filter = new MetaFilter();
+        String aippId = this.getAippIdByAppId(appId, context);
         filter.setMetaIds(Collections.singletonList(aippId));
-        String sortEncode = MetaUtils.formatSorter("create_at", "descend");
+        String sortEncode = MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.name(), DirectionEnum.DESCEND.name());
         filter.setOrderBys(Collections.singletonList(sortEncode));
         Map<String, List<String>> attributes = new HashMap<>();
         attributes.put(AippConst.ATTR_AIPP_TYPE_KEY, Collections.singletonList(AippTypeEnum.NORMAL.name()));

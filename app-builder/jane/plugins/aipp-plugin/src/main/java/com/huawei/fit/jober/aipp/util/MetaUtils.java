@@ -228,7 +228,7 @@ public class MetaUtils {
                     Collections.singletonList(AippMetaStatusEnum.INACTIVE.getCode()));
         }
         String sortEncode =
-                MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.getKey(), DirectionEnum.DESCEND.getValue());
+                MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.name(), DirectionEnum.DESCEND.name());
         MetaFilter metaFilter = getAnyMetaFilter(metaId, null);
         metaFilter.setOrderBys(Collections.singletonList(sortEncode));
         metaFilter.setAttributes(attributes);
@@ -281,7 +281,7 @@ public class MetaUtils {
         attributes.put(AippConst.ATTR_APP_ID_KEY, Collections.singletonList(appId));
         metaFilter.setAttributes(attributes);
         String sortEncode =
-                MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.getKey(), DirectionEnum.DESCEND.getValue());
+                MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.name(), DirectionEnum.DESCEND.name());
         metaFilter.setOrderBys(Collections.singletonList(sortEncode));
         return metaFilter;
     }
