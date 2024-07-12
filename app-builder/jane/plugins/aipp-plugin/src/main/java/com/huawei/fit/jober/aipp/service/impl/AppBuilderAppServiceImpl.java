@@ -146,6 +146,9 @@ public class AppBuilderAppServiceImpl
         aippDto.setId(aippCreateDto.getAippId());
         String id = appDto.getId();
         AppBuilderApp appBuilderApp = this.appFactory.create(id);
+        if (AppState.getAppState(appBuilderApp.getState()) == AppState.PUBLISHED) {
+            throw new AippException(AippErrCode.APP_HAS_PUBLISHED);
+        }
         appBuilderApp.setState(AppState.PUBLISHED.getName());
         // 添加校验，禁止更低版本手动输入
         this.validateVersionIsLatest(appBuilderApp.getVersion(), appDto.getVersion());
