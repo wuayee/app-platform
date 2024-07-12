@@ -1,8 +1,8 @@
-import React, {useState, useRef, useEffect, useMemo, useContext} from "react";
-import styled from "styled-components";
-import { throttle } from "lodash";
+import React, {useState, useEffect, useMemo, useContext} from 'react';
+import styled from 'styled-components';
+import { throttle } from 'lodash';
 import { Message } from '@shared/utils/message';
-import {Button, Cascader, DatePicker, Select, TreeSelect} from "antd";
+import {Button, DatePicker, Select, TreeSelect} from 'antd';
 import {
   products,
   aidProducts,
@@ -15,8 +15,8 @@ import {
 import { formatYYYYMM } from './question-util.js';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { resumeInstance } from "../../../../../shared/http/aipp";
-import { AippContext, ChatContext } from "../../../../aippIndex/context";
+import { resumeInstance } from '@shared/http/aipp';
+import { ChatContext } from '../../../../aippIndex/context';
 dayjs.extend(customParseFormat);
 const QuestionClarWrap = styled.div`
   .question_clar_root {
@@ -80,7 +80,7 @@ const QuestionClarWrap = styled.div`
   }
 `;
 const QuestionClar = (props) => {
-  const id = "questionClarResult";
+  const id = 'questionClarResult';
   const { data, mode } = props;
   const [ questionInfo, setQuestionInfo ] = useState(null);
   const { RangePicker } = DatePicker;
@@ -94,7 +94,22 @@ const QuestionClar = (props) => {
   // 产品
   const [ proType, setProType ] = useState('主产品');
   const proTypeOptions = [{value: '主产品', label: '主产品'}, {value: '辅产品', label: '辅产品'}];
-  // 获取级联数据前两层
+
+  /**
+   * 判断是否需要展示选项的前两层
+   * @returns {boolean} 是否
+   */
+  const whetherShowTheFirstTwoFloors = () => {
+    if (!questionInfo) return false;
+    return questionInfo.isBudget || questionInfo.type === 'OPEN_QUERY';
+  }
+
+  /**
+   * 获取级联数据前两层
+   * @param data 级联数据
+   * @param level 层数
+   * @returns {*} 返回级联数据的前两层
+   */
   const getFirstTwoLevels = (data, level) => {
     const dataList = data.map((item) => {
       if (item.children) {
@@ -110,8 +125,6 @@ const QuestionClar = (props) => {
     return dataList;
   }
   const productOptions = useMemo(() => {
-    if (!questionInfo) return;
-    const { isBudget } = questionInfo;
     if (proType === '辅产品') {
       return aidProducts;
     }
@@ -120,7 +133,7 @@ const QuestionClar = (props) => {
       return calcProducts;
     }
     // 如果是“预算预测”则只取前两层
-    if (isBudget) {
+    if (whetherShowTheFirstTwoFloors()) {
       return getFirstTwoLevels(options, 0);
     }
     return options;
@@ -129,15 +142,15 @@ const QuestionClar = (props) => {
   const [ groupProType, setGroupProType ] = useState('主产品');
   const getTypeOptions = useMemo(() => {
     if (!questionInfo) return;
-    const { groupBy, isBudget } = questionInfo;
-    let type = groupBy.type;
+    const { groupBy } = questionInfo;
+    let groupByType = groupBy.type;
     // 辅产品 前端自己定义枚举
-    if (type === 'PRODUCT' && groupProType === '辅产品') {
-      type = 'AID_PRODUCT';
+    if (groupByType === 'PRODUCT' && groupProType === '辅产品') {
+      groupByType = 'AID_PRODUCT';
     }
-    let options = groupTypeOption[type] || [];
+    let options = groupTypeOption[groupByType] || [];
     // 如果是“预算预测”则只取前两项
-    if (isBudget && groupProType !== '辅产品') {
+    if (whetherShowTheFirstTwoFloors() && groupProType !== '辅产品') {
       options = options.slice(0, 2);
     }
     return options;
@@ -198,11 +211,15 @@ const QuestionClar = (props) => {
 
   //指标
   const indicatorOptions = useMemo(() => {
+    let options = indicators;
     if (dataDimension === 'CPL') {
-      return cascIndicators;
+      options =  cascIndicators;
     }
-    return indicators;
-  }, [dataDimension]);
+    if (whetherShowTheFirstTwoFloors()) {
+      return getFirstTwoLevels(options, 0);
+    }
+    return options;
+  }, [dataDimension, questionInfo]);
 
   //指标修改回调
   const onIndicatorChange = (value) => {
@@ -276,7 +293,6 @@ const QuestionClar = (props) => {
   // 确定
   const confirmClar = throttle(handleConfirm, 500, { trailing: false });
   async function handleConfirm() {
-    console.log('formData', formData);
     const { product, timeInterval, indicator, groupBy } = formData;
     // 校验展示的表单中，是否有空值
     if (
@@ -315,7 +331,6 @@ const QuestionClar = (props) => {
       type: questionInfo.type,
       explicitInfo: questionInfo.explicitInfo,
     };
-    console.log('info', info);
     const params = {
       formAppearance: JSON.stringify(data.formAppearance),
       formData: JSON.stringify({[id]: info}),
@@ -329,19 +344,19 @@ const QuestionClar = (props) => {
 
   return (
     <QuestionClarWrap>
-      <div className="question_clar_root">
-        <div className="title">
+      <div className='question_clar_root'>
+        <div className='title'>
           为了更精确回答这个问题，小魔方希望向您确认几个细节：</div>
         {/*会计期*/}
-        { isShow('needTime') && <div className="question_item">
+        { isShow('needTime') && <div className='question_item'>
           <div>
             需要按什么
-            <span className="text">会计期</span>
+            <span className='text'>会计期</span>
             进行统计：
           </div>
-          <RangePicker picker="month"
+          <RangePicker picker='month'
                        value={formData.timeInterval}
-                       format="YYYY-MM"
+                       format='YYYY-MM'
                        minDate={dayjs('2023-01-01', 'YYYY-MM-DD')}
                        maxDate={dayjs('2024-12-31', 'YYYY-MM-DD')}
                        className='data_picker'
@@ -351,35 +366,26 @@ const QuestionClar = (props) => {
         </div>
         }
         {/*产品*/}
-        { isShow('needProduct') && <div className="question_item">
+        { isShow('needProduct') && <div className='question_item'>
           <div>
             需要按什么
-            <span className="text">产品</span>
+            <span className='text'>产品</span>
             进行计算：
           </div>
           <div>
             <Select
-              className="select_box mr10"
+              className='select_box mr10'
               value={proType}
-              options={questionInfo?.isBudget ? [proTypeOptions[0]]: proTypeOptions}
+              options={whetherShowTheFirstTwoFloors() ? [proTypeOptions[0]]: proTypeOptions}
               onChange={onProTypeChange}
               disabled={mode === 'history'}
             />
           </div>
-          <div className="cascader_box">
-            {/*<Cascader options={productOptions}*/}
-            {/*          placeholder="请选择"*/}
-            {/*          className="cascader mr10"*/}
-            {/*          value={formData.product}*/}
-            {/*          multiple*/}
-            {/*          changeOnSelect*/}
-            {/*          // checkStrictly={true}*/}
-            {/*          onChange={onProductChange}*/}
-            {/*/>*/}
+          <div className='cascader_box'>
             <TreeSelect
               value={formData.product}
-              placeholder="请选择"
-              className="cascader mr10"
+              placeholder='请选择'
+              className='cascader mr10'
               multiple
               fieldNames={{label: 'label', value: 'value', children: 'children'}}
               onChange={onProductChange}
@@ -393,26 +399,17 @@ const QuestionClar = (props) => {
         </div>
         }
         {/*财务指标*/}
-        { isShow('needIndicator') && <div className="question_item">
+        { isShow('needIndicator') && <div className='question_item'>
           <div>
             需要按什么
-            <span className="text">财务指标</span>
+            <span className='text'>财务指标</span>
             进行计算：
           </div>
-          <div className="cascader_box">
-            {/*<Cascader options={indicatorOptions}*/}
-            {/*          placeholder="指标"*/}
-            {/*          className="cascader"*/}
-            {/*          value={formData.indicator}*/}
-            {/*          multiple*/}
-            {/*          changeOnSelect*/}
-            {/*          // checkStrictly={true}*/}
-            {/*          onChange={onIndicatorChange}*/}
-            {/*/>*/}
+          <div className='cascader_box'>
             <TreeSelect
               value={formData.indicator}
-              placeholder="指标"
-              className="cascader"
+              placeholder='指标'
+              className='cascader'
               multiple
               fieldNames={{label: 'label', value: 'value', children: 'children'}}
               onChange={onIndicatorChange}
@@ -426,25 +423,25 @@ const QuestionClar = (props) => {
         </div>
         }
         {/*类别*/}
-        { isShow('groupBy') && <div className="question_item">
+        { isShow('groupBy') && <div className='question_item'>
           <div>
             需要按什么
-            <span className="text">{
+            <span className='text'>{
               FinanceGroupType[questionInfo.groupBy.type]
             }</span>
             进行划分：
           </div>
           { questionInfo.groupBy.type === 'PRODUCT' &&
             <Select
-              className="select_box mr10"
+              className='select_box mr10'
               value={groupProType}
-              options={questionInfo?.isBudget ? [proTypeOptions[0]] : proTypeOptions}
+              options={whetherShowTheFirstTwoFloors() ? [proTypeOptions[0]] : proTypeOptions}
               onChange={onGroupProTypeChange}
               disabled={mode === 'history'}
           />
           }
           <Select
-            className="select_box mr10"
+            className='select_box mr10'
             value={formData.groupBy.value}
             options={getTypeOptions}
             onChange={onGroupByValueChange}
@@ -453,14 +450,14 @@ const QuestionClar = (props) => {
           </div>
         }
         {/*歧义词选择*/}
-        <div className="ambiguous_box">
-          <div className="amb_title">歧义字段处理：</div>
+        <div className='ambiguous_box'>
+          <div className='amb_title'>歧义字段处理：</div>
           {ambiguousList.map((item, index) => {
             return (
-              <div className="ambiguous" key={item.label}>
-                <span className="label">{ item.label }：</span>
+              <div className='ambiguous' key={item.label}>
+                <span className='label'>{ item.label }：</span>
                 <Select
-                  className="select_box mr10"
+                  className='select_box mr10'
                   value={item.value}
                   options={item.options}
                   onChange={(value) => onAmbiguousChange(value, item)}
@@ -470,9 +467,9 @@ const QuestionClar = (props) => {
             )
           })}
       </div>
-      { mode !== "history" &&
-        <div className="footer">
-          <Button className="mr10" type="primary" onClick={confirmClar}>确定</Button>
+      { mode !== 'history' &&
+        <div className='footer'>
+          <Button className='mr10' type='primary' onClick={confirmClar}>确定</Button>
           <Button onClick={rejectClar}>拒绝澄清</Button>
         </div> }
 </div>
