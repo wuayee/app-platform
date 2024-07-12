@@ -1,5 +1,5 @@
 
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Drawer, Form } from 'antd';
 import { StartIcon, CloseIcon, RunIcon } from '@assets/icon';
@@ -35,7 +35,7 @@ const Index = (props) => {
       handleCloseDebug();
     })
       .catch((errorInfo) => {
-        Message({type: 'warning', content: "请输入必填项"});
+        Message({type: 'warning', content: '请输入必填项'});
       });
   }
   // 点击运行
@@ -102,8 +102,8 @@ const Index = (props) => {
       <Drawer title={<h5>测试运行</h5>} open={showDebug} onClose={handleCloseDebug} width={600}
           footer={
             <div style={{ textAlign: 'right' }}>
-              <span onClick={handleRunTest} className="run-btn">
-                <RunIcon className="run-icon"/>运行
+              <span onClick={handleRunTest} className='run-btn'>
+                <RunIcon className='run-icon'/>运行
               </span>
             </div>
           }
@@ -118,8 +118,8 @@ const Index = (props) => {
           </div>
           <Form
             form={form}
-            layout="vertical"
-            className="debug-form"
+            layout='vertical'
+            className='debug-form'
           >
             {debugTypes.map((debugType, index) => {
               return (

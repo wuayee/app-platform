@@ -1,5 +1,5 @@
 
-import React, { useEffect, useCallback, useState, useRef, useContext,  } from 'react';
+import React, { useEffect, useCallback, useState, useRef, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { debounce } from '@shared/utils/common';
@@ -94,7 +94,7 @@ const Stage = (props) => {
         updateAppRunningFlow();
       }).catch((err) => {
         let str = typeof(err) === 'string' ? err : '请输入流程必填项';
-        Message({ type: "warning", content: str});
+        Message({ type: 'warning', content: str});
       });
     } else {
       change.current = true;

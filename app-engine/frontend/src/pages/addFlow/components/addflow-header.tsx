@@ -6,8 +6,8 @@ import { updateAppInfo } from '@shared/http/aipp';
 import { FlowContext } from '../../aippIndex/context';
 import EditTitleModal from '../../components/edit-title-modal';
 import PublishModal from '../../components/publish-modal';
-import TestModal from "../../components/test-modal";
-import TestStatus from "../../components/test-status";
+import TestModal from '../../components/test-modal';
+import TestStatus from '../../components/test-status';
 import FlowTest from './flow-test';
 
 const AddHeader = (props) => {
@@ -63,7 +63,7 @@ const AddHeader = (props) => {
     <div>
       <div className='app-header'>
         <div className='logo'>
-          <LeftArrowIcon className="icon-back" onClick={ handleBackClick } />
+          <LeftArrowIcon className='icon-back' onClick={ handleBackClick } />
           <span className='header-text' title={waterFlowName}>{ waterFlowName }</span>
           <span className='header-edit'>
             <EditIcon onClick={ handleEditClick } />
@@ -71,8 +71,8 @@ const AddHeader = (props) => {
           <TestStatus testTime={testTime} testStatus={testStatus}/>
         </div>
         <div className='header-grid'>
-          <span className="header-btn test-btn" onClick={handleDebugClick}>测试</span>
-          <span className="header-btn" onClick={handleUploadFlow}><UploadIcon />发布</span>
+          <span className='header-btn test-btn' onClick={handleDebugClick}>测试</span>
+          <span className='header-btn' onClick={handleUploadFlow}><UploadIcon />发布</span>
         </div>
       </div>
       <PublishModal
@@ -81,7 +81,7 @@ const AddHeader = (props) => {
         waterFlowName={waterFlowName}
         modalInfo={modalInfo}
         addId={addId}
-        publishType="waterflow"
+        publishType='waterflow'
       />
       <TestModal
         testRef={testRef}

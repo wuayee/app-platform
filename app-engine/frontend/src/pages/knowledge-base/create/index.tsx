@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Form } from 'antd';
 import { Button, Input, Radio, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from 'react-router-dom';
 
 import BreadcrumbSelf from '../../../components/breadcrumb';
 import { Icons } from '../../../components/icons';
-import { createKnowledgeBase, getKnowledgeBaseById, modifyKnowledgeBase } from '../../../shared/http/knowledge';
+import { createKnowledgeBase, getKnowledgeBaseById, modifyKnowledgeBase } from '@/shared/http/knowledge';
+import '../styles/create.scoped.scss'
 
 type LayoutType = Parameters<typeof Form>[0]['layout'];
 
@@ -22,7 +23,7 @@ type FieldType = {
 const KnowledgeBaseCreate = () => {
 
   const [searchParams] = useSearchParams();
-  const id = searchParams.get("id");
+  const id = searchParams.get('id');
 
   const [form] = Form.useForm();
 
@@ -102,26 +103,15 @@ const KnowledgeBaseCreate = () => {
 
   return (
     <>
-      <div className='aui-fullpage' style={{
-        height: 'calc(100vh - 100px)'
-      }}>
+      <div className='aui-fullpage'>
         <div className='aui-header-1'>
           <div className='aui-title-1'>
+            <img src='/src/assets/images/left.png' onClick={() => navigate(-1)} />
             <BreadcrumbSelf currentLabel={id ? '修改知识库' : '创建知识库'}></BreadcrumbSelf>
           </div>
         </div>
-        <div className='aui-block' style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between'
-        }}>
-          <div style={{
-            width: '100%',
-            flex: 1,
-            background: '#fff',
-            borderRadius: '8px 8px 0px 0px',
-            padding: '24px 24px 0 25px',
-          }}>
+        <div className='aui-block'>
+          <div className='form-content'>
             <Form
               {...formItemLayout}
               layout={formLayout}
@@ -130,8 +120,8 @@ const KnowledgeBaseCreate = () => {
               onFinish={onFinish}
               style={{ maxWidth: formLayout === 'inline' ? 'none' : 800 }}
             >
-              <Form.Item label="个人/团队" name='knowledgeType'>
-                <Radio.Group size="large" style={{
+              <Form.Item label='个人/团队' name='knowledgeType'>
+                <Radio.Group size='large' style={{
                   display: 'flex',
                   justifyContent: 'space-between'
                 }}>
@@ -139,27 +129,26 @@ const KnowledgeBaseCreate = () => {
                     width: 391,
                     height: 40,
                     borderRadius: 4,
-                  }} value="user"> {<Icons.user></Icons.user>}  个人</Radio.Button>
-                  <Radio.Button className='userGroup' value="userGroup" style={{
+                  }} value='user'> {<Icons.user></Icons.user>}  个人</Radio.Button>
+                  <Radio.Button className='userGroup' value='userGroup' style={{
                     width: 391,
                     height: 40,
                     borderRadius: 4,
                   }}
-                    // 禁用团队选择
                     disabled={true}
                   >{<Icons.userGroup></Icons.userGroup>}  团队</Radio.Button>
                 </Radio.Group>
               </Form.Item>
               {knowledgeType === 'userGroup' ? (
                 <>
-                  <Form.Item label="知识库团队" rules={[{ required: true, message: '选择不能为空' }]} name='knowledgeGroup'>
+                  <Form.Item label='知识库团队' rules={[{ required: true, message: '选择不能为空' }]} name='knowledgeGroup'>
                     <Select options={groupList} allowClear />
                   </Form.Item>
                 </>
               ) : ''}
 
               <Form.Item
-                label="知识库名称"
+                label='知识库名称'
                 rules={[
                   { required: true },
                   {type:'string',max:20}
@@ -168,22 +157,14 @@ const KnowledgeBaseCreate = () => {
               >
                 <Input placeholder='请输入' maxLength={20} showCount/>
               </Form.Item>
-              <Form.Item label="知识库描述" rules={[{ required: true},{type:'string',max:256}]} name='knowledgeDesc'>
+              <Form.Item label='知识库描述' rules={[{ required: true},{type:'string',max:256}]} name='knowledgeDesc'>
                 <Input.TextArea size='large' autoSize={{ minRows: 2, maxRows: 6 }} maxLength={256} showCount placeholder='请输入' />
               </Form.Item>
             </Form>
           </div>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'end',
-            gap: 16,
-          }}>
-            <Button onClick={onCancle} style={{
-              borderRadius: 4,
-            }}>取消</Button>
-            <Button type="primary" loading={loading} onClick={submit} style={{
-              borderRadius: 4,
-            }}>确定</Button>
+          <div className='form-btn'>
+            <Button onClick={onCancle}>取消</Button>
+            <Button type='primary' loading={loading} onClick={submit}>确定</Button>
           </div>
           <div />
         </div>
