@@ -170,6 +170,7 @@ let interactDrawer = (graph, page, div) => {
                 button.style.height = "22px"
                 button.style.background = "white";
                 button.style.alignContent = "center";
+                button.style.userSelect = "none";
                 button.style.margin = "3px";
                 return button;
             }

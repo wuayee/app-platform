@@ -248,9 +248,9 @@ export const jadeFlowPage = (div, graph, name, id) => {
      *
      * @override
      */
-    const mouseDown = self.mouseDown;
-    self.mouseDown = (position) => {
-        mouseDown.apply(self, [position]);
+    const onMouseDown = self.onMouseDown;
+    self.onMouseDown = position => {
+        onMouseDown.apply(self, [position]);
         position.e.preventDefault();
     };
 
