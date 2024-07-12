@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { ClearFileIcon } from '@assets/icon';
-import robot from "@assets/images/ai/robot1.png";
 import '../styles/file-preview.scss';
 import UploadFile from './upload-file';
 
@@ -16,10 +15,10 @@ const LinkFile = ({openUploadRef}) => {
     <>
       {/* 预览文件内容 */}
       {showPreview&&
-      <div className="file-preview">
-        <div className="preview-inner">
+      <div className='file-preview'>
+        <div className='preview-inner'>
           <div>文件内容</div>
-          <span className="delete-icon">
+          <span className='delete-icon'>
             <ClearFileIcon onClick={() => cancleFile()}/>
           </span>
         </div>

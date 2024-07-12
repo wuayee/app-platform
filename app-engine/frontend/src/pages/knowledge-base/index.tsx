@@ -1,15 +1,15 @@
-import React, { useState, useEffect, ReactElement } from 'react';
-import { Button, Input }from 'antd';
+import React, { useState, useEffect, useRef } from 'react';
+import { Button, Input, Modal }from 'antd';
 import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
-
 import Pagination from '../../components/pagination/index';
 import { Icons } from '../../components/icons';
 import KnowledgeCard, { knowledgeBase } from '../../components/knowledge-card';
+import { Message } from '@/shared/utils/message';
 import '../../index.scss';
 import './styles/index.scoped.scss';
 import { deleteKnowledgeBase, queryKnowledgeBase } from '../../shared/http/knowledge';
-const KnowledgeBase = () => {
 
+const KnowledgeBase = () => {
   // 路由
   const navigate = useNavigate();
 
@@ -27,6 +27,7 @@ const KnowledgeBase = () => {
 
   // 数据
   const [knowledgeData, setKnowledgeData] = useState<knowledgeBase[]>([]);
+  const modalRef = useRef()
 
   // 获取数据列表
   const getKnowledgeList = ()=> {
@@ -53,9 +54,29 @@ const KnowledgeBase = () => {
 
   // 删除知识库
   const deleteKnowBase = (id: string) => {
+    modalRef.current = Modal.warning({
+      title: '删除知识库',
+      centered: true,
+      okText: '确定',
+      footer: (
+        <div className='drawer-footer'>
+          <Button onClick={() => modalRef.current.destroy()}>取消</Button>
+          <Button type="primary" onClick={() => confirm(id)}>确定</Button>
+        </div>
+      ),
+      content: (
+        <div style={{ margin: '8px 0' }}>
+          <span>删除后无法恢复，是否确定删除</span>
+        </div>
+      )
+    })
+  }
+  const confirm = (id) => {
     deleteKnowledgeBase(id).then((res: any) => {
+      Message({ type: 'success', content: '删除成功' });
       setPage(1);
       getKnowledgeList();
+      modalRef.current.destroy()
     })
   }
 
@@ -106,9 +127,11 @@ const KnowledgeBase = () => {
       </div>
       <div className='aui-block'>
           <div className='operatorArea'>
-            <Button type="primary" onClick={createKnowledge}>创建</Button>
+            <Button type='primary' onClick={createKnowledge}>创建</Button>
             <Input 
+              className='knowledge-search'
               showCount
+              style={{ width: '200px' }}
               maxLength={20}
               placeholder="搜索"
               onChange={(e)=>onSearchValueChange(e.target.value)}
@@ -123,9 +146,14 @@ const KnowledgeBase = () => {
               </>))}
 
           </div>
-          <Pagination total = {total} current={page} onChange={paginationChange}
-          pageSizeOptions={[8,16,32,60]}
-          pageSize={pageSize}/>
+          <Pagination 
+            total = {total} 
+            current={page} 
+            onChange={paginationChange}
+            pageSizeOptions={[8,16,32,60]}
+            showQuickJumper
+            pageSize={pageSize}
+          />
       </div>
     </div>
   )

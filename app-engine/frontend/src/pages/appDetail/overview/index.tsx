@@ -92,8 +92,8 @@ const AppOverview: React.FC = () => {
             </Flex>
           </Flex>
         </Flex>
-        <div>
-          {detail?.attributes?.description || 'Test Desc'}
+        <div className='app-desc' title={detail?.attributes?.description}>
+          {detail?.attributes?.description}
         </div>
         <Button type='primary' onClick={gotoArrange} style={{
           width: '96px',
@@ -102,12 +102,10 @@ const AppOverview: React.FC = () => {
         <Divider style={{ margin: 0, backgroundColor: '#D7D8DA' }} />
         <div>
           <Flex gap='large'>
-            <Flex vertical gap={20}>
-              <span>对话开场白</span>
-            </Flex>
-            <Flex vertical gap={20}>
-              <span>{detail?.attributes?.greeting || 'Test Greeting'}</span>
-            </Flex>
+            <div className='remarks'>
+              <span className='left'>对话开场白：</span>
+              <span className='right'>{detail?.attributes?.greeting || '-'}</span>
+            </div>
           </Flex>
         </div>
         <div>

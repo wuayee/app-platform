@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { Tree, Input, Button, Modal, Form, Menu, Dropdown } from 'antd';
 import { PlusOutlined, BulbOutlined, PlusCircleOutlined, EditOutlined, DeleteOutlined, EllipsisOutlined} from '@ant-design/icons';
-import {uuid} from "../../../common/utils";
-import {Message} from "@shared/utils/message";
+import {uuid} from '../../../common/utils';
+import {Message} from '@shared/utils/message';
 
 const TreeComponent = (props) => {
     const { setDisabled } = props;
@@ -51,24 +51,24 @@ const TreeComponent = (props) => {
         const handleTagBlur = (e) => {
             let {value} = e.target;
             value = value.trim();
-            if (value === "") {
-              Message({type: "warning", content: "分类名称不能为空"});
+            if (value === '') {
+              Message({type: 'warning', content: '分类名称不能为空'});
               setDisabled(true);
               return;
-            } else if (value === "其他") {
-              Message({type: "warning", content: "分类名称不能为'其他'"});
+            } else if (value === '其他') {
+              Message({type: 'warning', content: `分类名称不能为'其他'`});
               setDisabled(true);
               return;
             } else {
                 if (!validateTitle(value, node.parent.split(':')[0], id)) {
-                  Message({type: "warning", content: "同层级的分类名称不能重复"});
+                  Message({type: 'warning', content: '同层级的分类名称不能重复'});
                   setDisabled(true);
                   return;
                 }
-                if (id === "key") {
+                if (id === 'key') {
                     const nodeId = uuid();
                     node.id = nodeId;
-                    node.parent = node.parent + ":" + nodeId;
+                    node.parent = node.parent + ':' + nodeId;
                 }
                 node.title = value;
                 setEditingId(null);
@@ -81,10 +81,10 @@ const TreeComponent = (props) => {
         const addTag = () => {
             if (hasNodeEditing()) return;
             if (hasInspiration(id)) {
-                Message({type: "error", content: "分类下已有灵感大全，请先删除灵感大全"});
+                Message({type: 'error', content: '分类下已有灵感大全，请先删除灵感大全'});
                 return;
             }
-            let newNode = {id: "key", title: "", children: [], parent: id};
+            let newNode = {id: 'key', title: '', children: [], parent: id};
             setEditingId(newNode.id);
             setExpandedKeys([...expandedKeys, id])
             node.children.push(newNode);
@@ -198,9 +198,9 @@ const TreeComponent = (props) => {
         }
 
         const dropItems = [
-            {key:"add", icon: <PlusCircleOutlined />, onClick: (e) => addTag(), label: "添加分类"},
-            {key:"edit", icon: <EditOutlined />, onClick: (e) => editTag(e, id), label:"编辑分类"},
-            {key: "delete", icon: <DeleteOutlined />, onClick: (e) => deleteNode(parent), label: "删除"},
+            {key:'add', icon: <PlusCircleOutlined />, onClick: (e) => addTag(), label: '添加分类'},
+            {key:'edit', icon: <EditOutlined />, onClick: (e) => editTag(e, id), label:'编辑分类'},
+            {key: 'delete', icon: <DeleteOutlined />, onClick: (e) => deleteNode(parent), label: '删除'},
         ];
 
         const dropMenu = (
@@ -219,8 +219,8 @@ const TreeComponent = (props) => {
                 ) : (
                     <>
                         <span onDoubleClick={handleDoubleClick}>{node.title}</span>
-                        <Dropdown overlay={dropMenu} trigger={['click']} placement="bottomRight">
-                            <Button type="text" icon={<EllipsisOutlined />}/>
+                        <Dropdown overlay={dropMenu} trigger={['click']} placement='bottomRight'>
+                            <Button type='text' icon={<EllipsisOutlined />}/>
                         </Dropdown>
                     </>
                 )}
@@ -236,7 +236,7 @@ const TreeComponent = (props) => {
             id,
             title: `新建分类${length}`,
             children: [],
-            parent: "root:" + id,
+            parent: 'root:' + id,
         }
         setEditingId(id);
         setTreeData([...treeData, newTree]);
@@ -245,9 +245,9 @@ const TreeComponent = (props) => {
 
     return (
         <>
-            <div style={{overflow: "auto", height: "50vh"}}>
+            <div style={{overflow: 'auto', height: '50vh'}}>
                 <div>
-                    <Button type="link" onClick={createTagTree}>
+                    <Button type='link' onClick={createTagTree}>
                         <PlusOutlined />
                         创建分类
                     </Button>
@@ -256,8 +256,8 @@ const TreeComponent = (props) => {
                     treeData={treeData}
                     titleRender={titleRender}
                     fieldNames={{
-                        title:"title",
-                        key:"id"
+                        title:'title',
+                        key:'id'
                     }}
                     defaultExpandAll={true}
                     expandedKeys={expandedKeys}
