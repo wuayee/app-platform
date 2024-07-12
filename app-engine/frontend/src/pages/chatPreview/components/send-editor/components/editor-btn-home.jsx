@@ -1,8 +1,8 @@
 
 import React, { useEffect, useState, useContext, useRef } from 'react';
-import {Modal, Switch} from "antd";
-import { Message } from "@shared/utils/message";
-import { CloseOutlined } from "@ant-design/icons";
+import {Modal, Switch} from 'antd';
+import { Message } from '@shared/utils/message';
+import { CloseOutlined } from '@ant-design/icons';
 import { 
   LinkIcon, 
   AtIcon, 
@@ -12,20 +12,20 @@ import {
 import { clearInstance } from '@shared/http/aipp';
 import ReferencingApp from './referencing-app';
 import UploadFile from './upload-file';
-import StarApps from "../../star-apps";
+import StarApps from '../../star-apps';
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
 import HistoryChatDrawer from '../../history-chat';
-import { useAppDispatch, useAppSelector } from '../../../../../store/hook';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
 import {
   setAtChatId,
   setChatId,
   setChatList,
   setChatRunning,
   setOpenStar
-} from '../../../../../store/chatStore/chatStore';
-import { setAtAppInfo, setAtAppId } from "../../../../../store/appInfo/appInfo";
-import { getAppInfo } from "../../../../../shared/http/aipp";
-import { setUseMemory } from "../../../../../store/common/common";
+} from '@/store/chatStore/chatStore';
+import { setAtAppInfo, setAtAppId } from '@/store/appInfo/appInfo';
+import { getAppInfo } from '@/shared/http/aipp';
+import { setUseMemory } from '@/store/common/common';
 
 // 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {
@@ -74,7 +74,7 @@ const EditorBtnHome = (props) => {
       const value = editorRef.current.innerText;
       if (value.startsWith('@')) {
         const contentAfterAt = value.slice(1);
-        setSearchKey(contentAfterAt ? contentAfterAt : "");
+        setSearchKey(contentAfterAt ? contentAfterAt : '');
         setShowAt(true);
       } else {
         setShowAt(false);
@@ -93,7 +93,7 @@ const EditorBtnHome = (props) => {
   // 清空历史记录
   const handleOk = async () => {
     if (chatRunning) {
-      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
       return;
     }
     if (!chatList.length) {
@@ -110,7 +110,7 @@ const EditorBtnHome = (props) => {
   const atClick = (e) => {
     e.stopPropagation();
     if (chatRunning) {
-      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
       return;
     }
     setShowAt(!showAt);
@@ -139,7 +139,7 @@ const EditorBtnHome = (props) => {
   // 更多应用
   const showMoreClick = () => {
     if (chatRunning) {
-      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
       return;
     }
     setShowAt(false);
@@ -148,7 +148,7 @@ const EditorBtnHome = (props) => {
   // 多模态上传文件
   const uploadClick = () => {
     if (chatRunning) {
-      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
       return;
     }
     openUploadRef.current.showModal();
@@ -160,7 +160,7 @@ const EditorBtnHome = (props) => {
   // 清空聊天记录
   const clearAllModal = () => {
     if (chatRunning) {
-      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
       return;
     };
     setIsModalOpen(true);
@@ -171,37 +171,37 @@ const EditorBtnHome = (props) => {
   }
 
   return (
-    <div className="btn-inner">
-      <div className="inner-left">
-        <div className="inner-item">
-          {appIcon ? <img src={appIcon} alt="" /> : <img src={knowledgeBase} alt="" />}
+    <div className='btn-inner'>
+      <div className='inner-left'>
+        <div className='inner-item'>
+          {appIcon ? <img src={appIcon} alt='' /> : <img src={knowledgeBase} alt='' />}
           <div className={['switch-app', atAppId ? 'switch-active' : null ].join(' ')} onClick={()=>{if(chatType==='home'){showMoreClick();}}}>
             { atAppId && <span style={{ marginLeft: '6px' }}>正在跟</span> }
-            <span className="item-name" title={appName}>{appName}</span>
-            { !appInfo.hideHistory && <ArrowDownIcon className="arrow-icon" /> }
+            <span className='item-name' title={appName}>{appName}</span>
+            { !appInfo.hideHistory && <ArrowDownIcon className='arrow-icon' /> }
             { atAppId && <span style={{ marginLeft: '6px' }}>对话</span> }
           </div>
            <LinkIcon onClick={uploadClick} />
            { (!atAppId) && <AtIcon onClick={atClick} /> }
         </div>
       </div>
-      <div className="inner-right">
+      <div className='inner-right'>
         { 
           atAppId ?
           (
-            <div className="inner-item">
-              <CloseOutlined className="item-close" onClick={cancelAt}/>
+            <div className='inner-item'>
+              <CloseOutlined className='item-close' onClick={cancelAt}/>
             </div>
           ) : 
           (
-            <div className="inner-item">
+            <div className='inner-item'>
               <div hidden><ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} /></div>
               { !appInfo.hideHistory && <HistoryIcon  onClick={(e) => {setOpenHistorySignal(e.timeStamp)}}/> }
-              {showMulti && <div className="multi-conversation-title">
+              {showMulti && <div className='multi-conversation-title'>
                 <span>多轮对话</span>
                 <Switch className='multi-conversation-switch' value={useMemory} onChange={onMultiConverChange}/>
               </div>}
-              <span className="item-clear" onClick={() => {
+              <span className='item-clear' onClick={() => {
                 dispatch(setChatRunning(false));
                 dispatch(setChatId(null));
                 dispatch(setChatList([]));
@@ -218,7 +218,7 @@ const EditorBtnHome = (props) => {
                                   searchKey={searchKey}
                                   setSearchKey={setSearchKey}/> }
       <Modal 
-        title="确认清空当前聊天" 
+        title='确认清空当前聊天' 
         open={isModalOpen} 
         onOk={(e)=>handleOk(e.timeStamp)} 
         onCancel={() => setIsModalOpen(false)} 

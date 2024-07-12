@@ -31,3 +31,28 @@
     }
   }
 }
+.app-desc {
+  display: -webkit-box;
+  overflow: hidden;
+  white-space: normal !important;
+  text-overflow: ellipsis;
+  word-wrap:break-word;
+  -webkit-line-clamp:3;
+  -webkit-box-orient: vertical
+}
+.remarks {
+  display: flex;
+  .left {
+    width: 90px;
+  }
+  .right {
+    flex: 1;
+    display: -webkit-box;
+    overflow: hidden;
+    white-space: normal !important;
+    text-overflow: ellipsis;
+    word-wrap:break-word;
+    -webkit-line-clamp:3;
+    -webkit-box-orient: vertical;
+  }
+}
