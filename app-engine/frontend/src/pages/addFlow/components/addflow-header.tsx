@@ -13,7 +13,7 @@ import TimeLineDrawer from '../../../components/timeLine';
 
 const AddHeader = (props) => {
   const { handleDebugClick, testTime, testStatus } = props;
-  const { appInfo, showTime } = useContext(FlowContext);
+  const { appInfo, showTime, setFlowInfo } = useContext(FlowContext);
   const [ open, setOpen ] = useState(false);
   const { tenantId, appId } = useParams();
   let editRef:any = useRef(null);
@@ -51,8 +51,9 @@ const AddHeader = (props) => {
    async function updateAppWorkFlow(optionType = '') {
     const res = await updateAppInfo(tenantId, appId, appInfo);
     if (res.code === 0) {
-      Message({ type: 'success', content: '操作成功' })
+      Message({ type: 'success', content: '编辑成功' })
       optionType && editRef.current.handleCancel();
+      setFlowInfo(JSON.parse(JSON.stringify(appInfo)));
     } else {
       optionType && editRef.current.handleLoading();
     }
@@ -65,7 +66,7 @@ const AddHeader = (props) => {
       <div className='app-header'>
         <div className="logo">
           <LeftArrowIcon className="back-icon" onClick={handleBackClick}/>
-          { appInfo?.attributes?.icon !== 'null' ?
+          { appInfo?.attributes?.icon  ?
             <img src={appInfo.attributes?.icon} /> :
             <img src='/src/assets/images/knowledge/knowledge-base.png' />
           }
