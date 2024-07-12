@@ -35,12 +35,12 @@ const LocalUpload: React.FC<{ form: any, respId?: any, tableId?: any, type: stri
   const handleBeforeUpload = (file: UploadFile): boolean => {
     if (type === 'text' && file.type !== 'text/plain') {
       Message({ type: 'warning', content: '只能上传.txt类型的文件' });
-      setFileList([]);
+      setFileList(fileList || []);
       return false
     }
     if (type === 'table' && file.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       Message({ type: 'warning', content: '只能上传.xlsx类型的文件' });
-      setFileList([]);
+      setFileList(fileList || []);
       return false
     }
     if (filesKeys.current.size != 0) {
@@ -77,7 +77,8 @@ const LocalUpload: React.FC<{ form: any, respId?: any, tableId?: any, type: stri
       accept={ type === 'text' ? '.txt' : '.xlsx' }
       fileList={fileList}
       onChange={handleFileChange}
-      listType="picture"
+      listType='picture'
+      maxCount={1}
       beforeUpload={handleBeforeUpload}
       customRequest={handleUpload}
       onRemove={handleRemoveFile}
