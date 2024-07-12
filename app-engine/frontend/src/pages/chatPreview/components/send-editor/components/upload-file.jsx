@@ -1,10 +1,9 @@
 
-import React, { useImperativeHandle, useState, useContext, useEffect } from 'react';
+import React, { useImperativeHandle, useState } from 'react';
 import { Modal, Upload  } from 'antd';
-import { uploadChatFile } from "@shared/http/aipp";
+import { uploadChatFile } from '@shared/http/aipp';
 import { Message } from '@shared/utils/message';
 import { fileTypeSet } from '../../../utils/chat-process';
-import { docArr } from '../common/config';
 import exportImg from '@assets/images/ai/export.png'
 import { useAppSelector } from '../../../../../store/hook';
 
@@ -45,38 +44,38 @@ const UploadFile = ({ openUploadRef, fileSend }) => {
       return
     }
     let headers = {
-      "attachment-filename": encodeURI(file.name || ""),
+      'attachment-filename': encodeURI(file.name || ''),
     };
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append('file', file);
     const result = await uploadChatFile(tenantId, appId, formData, headers);
     if (result.code === 0) {
       fileSend(result.data, fileType);
       setModalOpen(false);
     } else {
-      Message({ type: "error", content: result.msg || "上传文件失败" });
+      Message({ type: 'error', content: result.msg || '上传文件失败' });
     }
   };
   return <>{(
       <Modal 
-        title="上传文件" 
+        title='上传文件' 
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
         footer={null} 
         centered>
         <div style={{ margin: '12px 0' }}>解析文件或通过文件与应用对话</div>
-        <div className="dragger-modal">
+        <div className='dragger-modal'>
         <Dragger
           beforeUpload={beforeUpload}
           onChange={onChange}
           fileList={[]}
           maxCount={1}
         >
-          <p className="ant-upload-drag-icon">
-            <img src={exportImg} alt="" />
+          <p className='ant-upload-drag-icon'>
+            <img src={exportImg} alt='' />
           </p>
-          <p className="ant-upload-text">将文件拖到此处 或 点击上传文件</p>
-          <p className="ant-upload-hint">
+          <p className='ant-upload-text'>将文件拖到此处 或 点击上传文件</p>
+          <p className='ant-upload-hint'>
             支持文档，图片，音频类型的文件
           </p>
         </Dragger>

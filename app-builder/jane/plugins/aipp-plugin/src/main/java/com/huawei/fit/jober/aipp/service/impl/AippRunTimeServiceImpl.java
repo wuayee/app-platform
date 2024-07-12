@@ -115,6 +115,9 @@ public class AippRunTimeServiceImpl
         implements AippRunTimeService, com.huawei.fit.jober.aipp.genericable.AippRunTimeService {
     private static final String DEFAULT_QUESTION = "请解析以下文件。";
     private static final Logger log = Logger.get(AippRunTimeServiceImpl.class);
+
+    private static final String DOWNLOAD_FILE_ORIGIN = "/api/jober/v1/api/31f20efc7e0848deab6a6bc10fc3021e/file?";
+
     private final MetaService metaService;
     private final DynamicFormService dynamicFormService;
     private final MetaInstanceService metaInstanceService;
@@ -127,6 +130,7 @@ public class AippRunTimeServiceImpl
     private final AppBuilderFormPropertyRepository formPropertyRepository;
     private final FlowsService flowsService;
     private final String sharedUrl;
+    private final String appEngineUrl;
     private final AippStreamService aippStreamService;
     private final AopAippLogService aopAippLogService;
 
@@ -136,7 +140,8 @@ public class AippRunTimeServiceImpl
             @Value("${xiaohai.upload_chat_history_url}") String uploadChatHistoryUrl, BrokerClient client,
             @Fit AppBuilderFormRepository formRepository, @Fit AppBuilderFormPropertyRepository formPropertyRepository,
             @Fit FlowsService flowsService, @Value("${xiaohai.share_url}") String sharedUrl,
-            @Fit AippStreamService aippStreamService, @Fit AopAippLogService aopAippLogService) {
+            @Fit AippStreamService aippStreamService, @Value("${app-engine.endpoint}") String appEngineUrl,
+            @Fit AopAippLogService aopAippLogService) {
         this.metaService = metaService;
         this.dynamicFormService = dynamicFormService;
         this.metaInstanceService = metaInstanceService;
@@ -150,6 +155,7 @@ public class AippRunTimeServiceImpl
         this.flowsService = flowsService;
         this.sharedUrl = sharedUrl;
         this.aippStreamService = aippStreamService;
+        this.appEngineUrl = appEngineUrl;
         this.aopAippLogService = aopAippLogService;
     }
 
@@ -246,7 +252,7 @@ public class AippRunTimeServiceImpl
      */
     @Override
     public AippInstanceCreateDto createAippInstanceLatest(String aippId, Map<String, Object> initContext,
-                                                          OperationContext context) {
+            OperationContext context) {
         Meta meta = MetaUtils.getLastPublishedMeta(metaService, aippId, context);
         String instId = createInstanceHandle(initContext, context, meta);
         return AippInstanceCreateDto.builder()
@@ -294,6 +300,13 @@ public class AippRunTimeServiceImpl
         businessData.put(AippConst.BS_AIPP_USE_MEMORY_KEY, true);
         businessData.put(AippConst.BS_AIPP_MEMORIES_KEY, new ArrayList<>());
         businessData.put(AippConst.CONTEXT_USER_ID, context.getOperator());
+        if (businessData.containsKey(AippConst.BS_AIPP_FILE_DESC_KEY)) {
+            Map<String, String> fileDescription = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_FILE_DESC_KEY));
+            String filePath = fileDescription.get("file_path");
+            String fileName = fileDescription.get("file_name");
+            String fileUrl = appEngineUrl + DOWNLOAD_FILE_ORIGIN + "filePath=" + filePath + "&fileName=" + fileName;
+            businessData.put(AippConst.BS_AIPP_FILE_DOWNLOAD_KEY, fileUrl);
+        }
 
         // 添加memory
         String flowDefinitionId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY);
@@ -377,25 +390,21 @@ public class AippRunTimeServiceImpl
         if (StringUtils.isEmpty(fileDesc)) {
             if (this.isChildInstance(businessData)) {
                 // 如果是子流程，插入 hidden_question
-                aippLogService.insertLog(
-                        AippInstLogType.HIDDEN_QUESTION.name(),
+                aippLogService.insertLog(AippInstLogType.HIDDEN_QUESTION.name(),
                         AippLogData.builder().msg(question).build(),
                         businessData);
             } else {
                 // 插入question日志
-                aippLogService.insertLog(
-                        AippInstLogType.QUESTION.name(),
+                aippLogService.insertLog(AippInstLogType.QUESTION.name(),
                         AippLogData.builder().msg(question).build(),
                         businessData);
             }
         } else {
             // 插入 hidden_question及file日志
-            aippLogService.insertLog(
-                    AippInstLogType.HIDDEN_QUESTION.name(),
+            aippLogService.insertLog(AippInstLogType.HIDDEN_QUESTION.name(),
                     AippLogData.builder().msg(DEFAULT_QUESTION).build(),
                     businessData);
-            aippLogService.insertLog(
-                    AippInstLogType.FILE.name(),
+            aippLogService.insertLog(AippInstLogType.FILE.name(),
                     AippLogData.builder().msg(fileDesc).build(),
                     businessData);
             businessData.put(AippConst.BS_AIPP_QUESTION_KEY, DEFAULT_QUESTION);
@@ -452,7 +461,7 @@ public class AippRunTimeServiceImpl
     }
 
     private List<Map<String, Object>> getConversationTurns(String aippId, String aippType, Integer count,
-                                                           OperationContext context, String chatId) {
+            OperationContext context, String chatId) {
         List<AippInstLogDataDto> logs;
         if (chatId != null) {
             logs = aippLogService.queryChatRecentInstLog(aippId, aippType, count, context, chatId);
@@ -543,14 +552,14 @@ public class AippRunTimeServiceImpl
     }
 
     private AippInstanceDto InstanceToAippInstanceDto(Instance instance, List<AippInstLog> instanceLogs,
-                                                      OperationContext context) {
+            OperationContext context) {
         Map<String, String> info = instance.getInfo();
-        DynamicFormDetailEntity entity = FormUtils.queryFormDetailByPrimaryKey(
-                info.get(AippConst.INST_CURR_FORM_ID_KEY),
-                info.get(AippConst.INST_CURR_FORM_VERSION_KEY),
-                context,
-                this.formRepository,
-                this.formPropertyRepository);
+        DynamicFormDetailEntity entity =
+                FormUtils.queryFormDetailByPrimaryKey(info.get(AippConst.INST_CURR_FORM_ID_KEY),
+                        info.get(AippConst.INST_CURR_FORM_VERSION_KEY),
+                        context,
+                        this.formRepository,
+                        this.formPropertyRepository);
         return AippInstanceDto.builder()
                 .aippInstanceId(instance.getId())
                 .tenantId(context.getTenantId())
@@ -726,8 +735,8 @@ public class AippRunTimeServiceImpl
         Instance oldInstDetail = MetaInstanceUtils.getInstanceDetail(aippId, instanceId, context, metaInstanceService);
         String formId = oldInstDetail.getInfo().get(AippConst.INST_CURR_FORM_ID_KEY);
         String formVersion = oldInstDetail.getInfo().get(AippConst.INST_CURR_FORM_VERSION_KEY);
-        AippLogData newLogData = FormUtils.buildLogDataWithFormData(
-                this.formRepository, formId, formVersion, businessData);
+        AippLogData newLogData =
+                FormUtils.buildLogDataWithFormData(this.formRepository, formId, formVersion, businessData);
         Long logId = this.getLodId(instanceId, context);
         aippLogService.updateLog(logId, JsonUtils.toJsonString(newLogData));
     }
@@ -850,8 +859,8 @@ public class AippRunTimeServiceImpl
         // 持久化aipp实例表单记录
         String formId = instDetail.getInfo().get(AippConst.INST_CURR_FORM_ID_KEY);
         String formVersion = instDetail.getInfo().get(AippConst.INST_CURR_FORM_VERSION_KEY);
-        AippLogData logData = FormUtils.buildLogDataWithFormData(
-                this.formRepository, formId, formVersion, businessData);
+        AippLogData logData =
+                FormUtils.buildLogDataWithFormData(this.formRepository, formId, formVersion, businessData);
 
         // 设置表单的渲染数据和填充数据
         logData.setFormAppearance(ObjectUtils.cast(formArgs.get(AippConst.FORM_APPEARANCE_KEY)));
@@ -903,8 +912,9 @@ public class AippRunTimeServiceImpl
                 .build();
         this.metaInstanceService.patchMetaInstance(versionId, instanceId, info, context);
 
-        String message = msgArgs.get(AippConst.TERMINATE_MESSAGE_KEY) != null ? msgArgs.get(
-                AippConst.TERMINATE_MESSAGE_KEY).toString() : "已终止对话";
+        String message =
+                msgArgs.get(AippConst.TERMINATE_MESSAGE_KEY) != null ? msgArgs.get(AippConst.TERMINATE_MESSAGE_KEY)
+                        .toString() : "已终止对话";
 
         this.aopAippLogService.insertLog(AippLogCreateDto.builder()
                 .aippId(aippId)
@@ -991,22 +1001,19 @@ public class AippRunTimeServiceImpl
 
     @Override
     public AppBuilderAppStartDto startInstance(AppBuilderAppDto appDto, Map<String, Object> initContext,
-                                               OperationContext context) {
+            OperationContext context) {
         AippCreate aippCreate;
         final String genericableId = "com.huawei.fit.jober.aipp.service.app.debug";
         final String fitableId = "default";
         try {
-            aippCreate = this.client.getRouter(genericableId)
-                    .route(new FitableIdFilter(fitableId))
-                    .invoke(appDto, context);
+            aippCreate =
+                    this.client.getRouter(genericableId).route(new FitableIdFilter(fitableId)).invoke(appDto, context);
         } catch (FitException t) {
             String errorMsg = t.getMessage();
             log.error("Error occurred when create debug aipp, error: {}", errorMsg);
             throw new AippException(AippErrCode.CREATE_DEBUG_AIPP_FAILED, errorMsg);
         }
-        String instanceId = createAippInstance(aippCreate.getAippId(),
-                aippCreate.getVersion(),
-                initContext, context);
+        String instanceId = createAippInstance(aippCreate.getAippId(), aippCreate.getVersion(), initContext, context);
         return AppBuilderAppStartDto.builder().instanceId(instanceId).aippCreate(aippCreate).build();
     }
 }

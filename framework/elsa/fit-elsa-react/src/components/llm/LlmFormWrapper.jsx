@@ -1,5 +1,5 @@
 import ModelForm from "./ModelForm.jsx";
-import JadeInput from '../common/JadeInput.jsx';
+import JadeInputForm from '../common/JadeInputForm.jsx';
 import LlmOutput from './LlmOutput.jsx';
 import SkillForm from "./SkillForm.jsx";
 import "./style.css";
@@ -87,7 +87,7 @@ export default function LlmFormWrapper({disabled}) {
 
     return (
         <div>
-            <JadeInput disabled={disabled} items={initItems()} addItem={addItem} updateItem={updateItem} deleteItem={deleteItem}/>
+            <JadeInputForm disabled={disabled} items={initItems()} addItem={addItem} updateItem={updateItem} deleteItem={deleteItem}/>
             <ModelForm disabled={disabled} shapeId={shape.id} modelOptions={modelOptions}/>
             <SkillForm disabled={disabled} toolOptions={toolOptions} workflowOptions={workflowOptions} config={config}/>
             <LlmOutput/>

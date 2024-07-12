@@ -15,9 +15,12 @@ def convert_image(image: Image):
 
 
 def get_image(url: str):
-    response = requests.get(url, verify=False)
-    img_data = io.BytesIO(response.content)
-    src_image = Image.open(img_data)
+    try:
+        response = requests.get(url, verify=False)
+        img_data = io.BytesIO(response.content)
+        src_image = Image.open(img_data)
+    except Exception:
+        src_image = Image.open(url)
     image = src_image.copy()
     src_image.close()
     return image

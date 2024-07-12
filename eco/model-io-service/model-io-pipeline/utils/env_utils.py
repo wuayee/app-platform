@@ -9,7 +9,7 @@ NPU = 'NPU'
 
 class GpuEnvTools:
     @classmethod
-    def select_device(cls):
+    def select_device(cls, force: bool = False):
         '''
         GPU选择最优运算资源设备
         :return: int 设备号
@@ -27,7 +27,7 @@ class GpuEnvTools:
 
 class NpuEnvTools:
     @classmethod
-    def select_device(cls):
+    def select_device(cls, force: bool = False):
         '''
         NPU选择最优运算资源设备
         :return: int 设备号
@@ -35,11 +35,12 @@ class NpuEnvTools:
         import torch_npu
         device = 0
         max_mem = 0
-        for i in range(torch_npu.npu.device_count()):
-            npu_stat = torch_npu.npu.mem_get_info(i)[0]
-            if npu_stat > max_mem:
-                max_mem = npu_stat
-                device = i
+        if not force:
+            for i in range(torch_npu.npu.device_count()):
+                npu_stat = torch_npu.npu.mem_get_info(i)[0]
+                if npu_stat > max_mem:
+                    max_mem = npu_stat
+                    device = i
         return "npu:{}".format(device)
 
 
@@ -76,12 +77,12 @@ class EnvTools:
 
         return engine_type
 
-    def select_device(self):
+    def select_device(self, force: bool = False):
         '''
         选择最优运算资源设备
         :return: int 设备号
         '''
-        return self.env_tool.select_device()
+        return self.env_tool.select_device(force)
 
 
 ENVTOOLS = EnvTools()

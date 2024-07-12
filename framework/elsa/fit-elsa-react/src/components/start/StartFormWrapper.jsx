@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {Button, Collapse, Popover} from 'antd';
 import {DeleteOutlined, PlusOutlined, QuestionCircleOutlined} from '@ant-design/icons';
 import StartInputForm from "./StartInputForm.jsx";

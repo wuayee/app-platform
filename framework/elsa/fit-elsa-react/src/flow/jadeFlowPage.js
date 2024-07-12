@@ -242,6 +242,18 @@ export const jadeFlowPage = (div, graph, name, id) => {
         }
     });
 
+
+    /**
+     * 当圈选时，如果选中的图形是page，那么需要阻止默认事件，否则会**导致圈选时选中input或textarea中的文本**.
+     *
+     * @override
+     */
+    const mouseDown = self.mouseDown;
+    self.mouseDown = (position) => {
+        mouseDown.apply(self, [position]);
+        position.e.preventDefault();
+    };
+
     return self;
 };
 

@@ -1,8 +1,9 @@
 # Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
-from transformers import pipeline
+from transformers import pipeline, Text2TextGenerationPipeline
 from utils.image_utils import convert_image, get_image
 from utils.audio_utils import numpy_to_base64_wav
 from utils.env_utils import ENVTOOLS
+from utils.param_utils import convert_numpy_data
 
 
 class NormalPipeline:
@@ -10,14 +11,18 @@ class NormalPipeline:
         self._pipeline = pipeline(task=task, model=model, device=ENVTOOLS.select_device())
 
     def call(self, args):
-        return self._pipeline(**args)
+        if isinstance(self._pipeline, Text2TextGenerationPipeline):
+            rsp = self._pipeline(args.pop('inputs'), **args)
+        else:
+            rsp = self._pipeline(**args)
+        return convert_numpy_data(rsp)
 
 
 class ImageToImagePipeline:
     def __init__(self, model, task):
         from diffusers import StableDiffusionImg2ImgPipeline
         self._pipeline = StableDiffusionImg2ImgPipeline.from_pretrained(model)
-        self._pipeline.to(ENVTOOLS.select_device())
+        self._pipeline.to(ENVTOOLS.select_device(force=True))
 
     def call(self, args):
         args["image"] = get_image(args["image"])
@@ -32,7 +37,7 @@ class TextToImagePipeline:
     def __init__(self, model, task):
         from diffusers import DiffusionPipeline
         self._pipeline = DiffusionPipeline.from_pretrained(model)
-        self._pipeline.to(ENVTOOLS.select_device())
+        self._pipeline.to(ENVTOOLS.select_device(force=True))
 
     def call(self, args):
         image_list = self._pipeline(**args)

@@ -8,7 +8,6 @@ import Stage from './components/elsa-stage';
 import FlowHeader from './components/addflow-header';
 import './styles/index.scss';
 import FlowTest from "./components/flow-test";
-import TestModal from "../components/test-modal";
 
 
 const AddFlow = (props) => {
@@ -19,6 +18,8 @@ const AddFlow = (props) => {
   const [ showMenu, setShowMenu ] = useState(false);
   const [ debugTypes, setDebugTypes ] = useState([]);
   const [ showDebug, setShowDebug ] = useState(false);
+  const [ testStatus, setTestStatus ] = useState(null);
+  const [ testTime, setTestTime ] = useState(0);
   const [ modalInfo, setModalInfo ] = useState({
     name: '无标题',
     type: 'waterFlow',
@@ -31,6 +32,7 @@ const AddFlow = (props) => {
   });
   const appRef = useRef(null);
   const flowIdRef = useRef(null);
+  const elsaRunningCtl = useRef(null);
   const flowContext ={
     type,
     appInfo,
@@ -41,8 +43,15 @@ const AddFlow = (props) => {
   }
   
   useEffect(() => {
-    type ? null : setShowMenu(true);
+    if (!type) {
+      return;
+    }
+    setShowMenu(true)
+    setFlowTestTime(null);
+    setFlowTestStatus(null);
+    elsaRunningCtl.current?.reset();
   }, [props.type])
+
   // 显示隐藏左侧菜单
   function menuClick() {
     setShowMenu(!showMenu)
@@ -69,19 +78,18 @@ const AddFlow = (props) => {
         {!type && <FlowHeader addId={addId}
                               appRef={appRef}
                               flowIdRef={flowIdRef}
-                              debugTypes={debugTypes}
                               handleDebugClick={handleDebugClick}
-                              showDebug={showDebug}
-                              setShowDebug={setShowDebug}
+                              testStatus={testStatus}
+                              testTime={testTime}
         />}
-        {type && <FlowTest
-                           setTestStatus={setFlowTestStatus}
-                           setTestTime={setFlowTestTime}
-                           setShowDebug={setShowDebug}
-                           showDebug={showDebug}
-                           debugTypes={debugTypes}
-                           appRef={appRef}
-        />}
+        <FlowTest setTestStatus={type ? setFlowTestStatus : setTestStatus}
+                  setTestTime={type ? setFlowTestTime : setTestTime}
+                  setShowDebug={setShowDebug}
+                  showDebug={showDebug}
+                  debugTypes={debugTypes}
+                  appRef={appRef}
+                  elsaRunningCtl={elsaRunningCtl}
+        />
         <div className={['content', !type ? 'content-add' : null ].join(' ')}>
           {
             showMenu ? (

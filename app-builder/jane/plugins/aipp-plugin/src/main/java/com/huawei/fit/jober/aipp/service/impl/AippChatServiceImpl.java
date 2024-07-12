@@ -16,11 +16,13 @@ import com.huawei.fit.jober.aipp.dto.chat.CreateChatRequest;
 import com.huawei.fit.jober.aipp.dto.chat.MessageInfo;
 import com.huawei.fit.jober.aipp.dto.chat.QueryChatRequest;
 import com.huawei.fit.jober.aipp.dto.chat.QueryChatRsp;
+import com.huawei.fit.jober.aipp.entity.AippInstLog;
 import com.huawei.fit.jober.aipp.entity.AippLogData;
 import com.huawei.fit.jober.aipp.entity.ChatAndInstanceMap;
 import com.huawei.fit.jober.aipp.entity.ChatInfo;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.mapper.AippChatMapper;
+import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import com.huawei.fit.jober.aipp.service.AippChatService;
@@ -28,6 +30,7 @@ import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.MetaUtils;
 import com.huawei.fit.jober.aipp.util.UUIDUtil;
+import com.huawei.fit.jober.aipp.vo.AippLogVO;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
@@ -52,20 +55,26 @@ import java.util.stream.Collectors;
  */
 @Component
 public class AippChatServiceImpl implements AippChatService {
+    private static final String NORMAL_CHAT = "normal";
+    private static final String FROM_OTHER_CHAT = "fromOtherApp";
+
     private final AippChatMapper aippChatMapper;
     private final MetaService metaService;
     private final AppBuilderAppMapper appBuilderAppMapper;
     private final AippLogService aippLogService;
+    private final AippLogMapper aippLogMapper;
 
     @Fit
     private com.huawei.fit.jober.aipp.genericable.AippRunTimeService aippRunTimeService;
 
     public AippChatServiceImpl(AippChatMapper aippChatMapper, MetaService metaService,
-                               AppBuilderAppMapper appBuilderAppMapper, AippLogService aippLogService) {
+                               AppBuilderAppMapper appBuilderAppMapper, AippLogService aippLogService,
+                               AippLogMapper aippLogMapper) {
         this.aippChatMapper = aippChatMapper;
         this.metaService = metaService;
         this.appBuilderAppMapper = appBuilderAppMapper;
         this.aippLogService = aippLogService;
+        this.aippLogMapper = aippLogMapper;
     }
 
     @Override
@@ -102,6 +111,7 @@ public class AippChatServiceImpl implements AippChatService {
         attributesMap.put("instId", instId);
         if (body.getOriginApp() != null) {
             attributesMap.put("originApp", body.getOriginApp());
+            attributesMap.put("originAppVersion", body.getOriginAppVersion());
             this.persistOriginAppChat(body, context, chatId, chatName, instId);
         }
         AppBuilderAppPO appInfo = this.convertAippToApp(body.getAippId(), body.getAippVersion(), context);
@@ -287,7 +297,7 @@ public class AippChatServiceImpl implements AippChatService {
         Map<String, Object> bodyContext = body.getInitContext();
         bodyContext.put("chatId", originChatId);
         body.setInitContext(bodyContext);
-        Map<String, Object> result = (Map<String, Object>) bodyContext.get("initContext");
+        Map<String, Object> result = ObjectUtils.cast(bodyContext.get(AippConst.BS_INIT_CONTEXT_KEY));
         if (body.getOriginApp() != null && body.getChatId() == null) {
             // 首次@应用对话
             String chatId = UUIDUtil.uuid();
@@ -306,16 +316,98 @@ public class AippChatServiceImpl implements AippChatService {
     }
 
     @Override
-    public QueryChatRsp restartChat(String currentInstanceId, CreateChatRequest body,
+    public QueryChatRsp restartChat(String currentInstanceId, Map<String, Object> additionalContext,
             OperationContext context) {
-        String chatId = this.aippChatMapper.selectChatIdByInstanceId(currentInstanceId);
-        if (StringUtils.isEmpty(chatId)) {
-            throw new IllegalArgumentException(StringUtils.format("The instance id {0} does not match any chat id.",
-                    currentInstanceId));
+        String path = this.aippLogService.getParentPath(currentInstanceId);
+        AippLogVO aippLogVO = AippLogVO.builder().path(path).build();
+        String parentInstanceId = aippLogVO.getAncestors().get(0);
+        if (StringUtils.isEmpty(parentInstanceId)) {
+            throw new IllegalArgumentException(StringUtils.format(
+                    "The instance id {0} does not match ant parentInstanceId.", currentInstanceId));
         }
-        this.aippChatMapper.deleteWideRelationshipByInstanceId(currentInstanceId);
-        this.aippLogService.deleteInstanceLog(currentInstanceId);
+        List<String> chatIds = this.aippChatMapper.selectChatIdByInstanceId(parentInstanceId);
+        if (chatIds.isEmpty()) {
+            throw new IllegalArgumentException(StringUtils.format("The instance id {0} does not match any chat id.",
+                    parentInstanceId));
+        }
+        List<QueryChatRsp> chatList = this.aippChatMapper.selectChatListByChatIds(chatIds);
+        String chatId;
+        String chatType = this.getChatType(chatList.size());
+        CreateChatRequest body = this.buildChatBody(parentInstanceId, additionalContext);
+        if (chatType == NORMAL_CHAT) {
+            chatId = chatList.get(0).getChatId();
+        } else if (chatType == FROM_OTHER_CHAT) {
+            chatId = this.buildChatBodyWhenAtApp(chatList, body, chatIds);
+        } else {
+            throw new IllegalArgumentException(StringUtils.format(
+                    "The chat ids {0} match illegal num of chat sessions.", chatIds));
+        }
+        this.aippChatMapper.deleteWideRelationshipByInstanceId(parentInstanceId);
+        this.aippLogService.deleteInstanceLog(parentInstanceId);
         return this.updateChat(chatId, body, context);
+    }
+
+    private String getChatType(int chatNum) {
+        if (chatNum == 1) {
+            return NORMAL_CHAT;
+        } else if (chatNum == 2) {
+            return FROM_OTHER_CHAT;
+        } else {
+            return StringUtils.EMPTY;
+        }
+    }
+
+    private CreateChatRequest buildChatBody(String instanceId, Map<String, Object> additionalContext) {
+        // 构造updateChat需要的body
+        List<AippInstLog> aippInstLogs = this.aippLogMapper.getLogsByInstanceId(instanceId);
+        List<AippInstLog> questionAippInstLogs = aippInstLogs.stream()
+                .filter(item -> StringUtils.equals(item.getLogType(), AippInstLogType.QUESTION.name()))
+                .collect(Collectors.toList());
+        AippInstLog questionAippInstLog = questionAippInstLogs.get(0);
+        Map<String, Object> initContext = new HashMap<>();
+        String question = ObjectUtils.cast(JsonUtils.parseObject(questionAippInstLog.getLogData()).get("msg"));
+        additionalContext.put(AippConst.BS_AIPP_QUESTION_KEY, question);
+        initContext.put(AippConst.BS_INIT_CONTEXT_KEY, additionalContext);
+        return CreateChatRequest.builder()
+                .aippId(questionAippInstLog.getAippId())
+                .aippVersion(questionAippInstLog.getVersion())
+                .initContext(initContext)
+                .build();
+    }
+
+    private String buildChatBodyWhenAtApp(List<QueryChatRsp> chatList, CreateChatRequest body, List<String> chatIds) {
+        String chatId;
+        QueryChatRsp firstChat = chatList.get(0);
+        QueryChatRsp secondChat = chatList.get(1);
+        Map<String, Object> firstChatMap = JsonUtils.parseObject(firstChat.getAttributes());
+        Map<String, Object> secondChatMap = JsonUtils.parseObject(secondChat.getAttributes());
+        String firstOriginApp = ObjectUtils.cast(firstChatMap.get("originApp"));
+        String secondOriginApp = ObjectUtils.cast(secondChatMap.get("originApp"));
+        if (!this.validateChatSessionWhenAtApp(firstOriginApp, secondOriginApp)) {
+            throw new IllegalArgumentException(StringUtils.format("The chat ids {0} chat sessions are illegal.",
+                    chatIds));
+        } else if (firstOriginApp != null) {
+            chatId = this.buildChatBodyWithOriginApp(firstOriginApp, firstChatMap, firstChat, secondChat, body);
+        } else {
+            chatId = this.buildChatBodyWithOriginApp(secondOriginApp, secondChatMap, secondChat, firstChat, body);
+        }
+        return chatId;
+    }
+
+    private boolean validateChatSessionWhenAtApp(String firstOriginApp, String secondOriginApp) {
+        if ((firstOriginApp != null && secondOriginApp != null)
+                || (firstOriginApp == null && secondOriginApp == null)) {
+            return false;
+        }
+        return true;
+    }
+
+    private String buildChatBodyWithOriginApp(String originApp, Map<String, Object> chatMap, QueryChatRsp chat,
+            QueryChatRsp originChat, CreateChatRequest body) {
+        body.setOriginApp(originApp);
+        body.setOriginAppVersion(ObjectUtils.cast(chatMap.get("originAppVersion")));
+        body.setChatId(chat.getChatId());
+        return originChat.getChatId();
     }
 
     private String getChatName(Map<String, Object> initContext) {

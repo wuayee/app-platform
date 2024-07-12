@@ -55,16 +55,9 @@
   }
 }
 .home-app {
-  background-image: url('../assets//images/bg3.png') ;
+  background-image: url('../assets/images/bg3.png') ;
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  .ant-layout-header {
-    //height: 0 !important;
-  }
-  .ant-layout-header,.ant-layout-content {
-    //background-color: transparent !important;
-    //padding: 0 !important;
-  }
 }
 .header-grid {
   display: flex;
@@ -80,22 +73,4 @@
     background-color: #ffffff !important;
     border: 1px solid #ebebeb;
   }
-  // .header-btn{
-  //   display: inline-block;
-  //   height: 32px;
-  //   line-height: 32px;
-  //   text-align: center;
-  //   color: #fff;
-  //   background-color: #047bfc;
-  //   cursor: pointer;
-  //   border-radius: 4px;
-  //   font-size: 14px;
-  //   padding-left: .75rem;
-  //   padding-right: .75rem;
-  //   margin-bottom: 6px;
-  //   min-width: 80px;
-  //     .anticon-upload {
-  //       margin-right: 5px;
-  //     }
-  // }
 }

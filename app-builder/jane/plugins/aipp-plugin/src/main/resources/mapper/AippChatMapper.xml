@@ -6,7 +6,8 @@
         <result column="app_id" property="appId"/>
         <result column="app_version" property="version"/>
         <result column="name" property="chatName"/>
-        <result column="attrbutes" property="msgId"/>
+        <result column="attributes" property="attributes"/>
+        <result column="update_at" property="updateTime"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -120,4 +121,18 @@
         from t_chat_session_task_instance_wide_relationship
         where task_instance_wide_id = #{instanceId}
     </delete>
+
+    <select id="selectChatListByChatIds"
+            resultMap="BaseResultMap"
+            resultType="com.huawei.fit.jober.aipp.dto.chat.QueryChatRsp">
+        select
+        <include refid="Base_Column_List"/>
+        from t_chat_session
+        where chat_id in
+        <foreach collection="chatIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and status != 1
+        order by update_at desc
+    </select>
 </mapper>

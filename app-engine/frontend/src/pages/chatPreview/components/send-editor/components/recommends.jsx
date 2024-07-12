@@ -1,11 +1,11 @@
 
 import React, { useContext, useState, useEffect } from 'react';
-import { Tooltip } from "antd";
-import { Message } from "@shared/utils/message";
+import { Tooltip } from 'antd';
+import { Message } from '@shared/utils/message';
 import { PanleCloseIcon, PanleIcon, RebotIcon } from '@assets/icon';
 import { getRecommends } from '@shared/http/chat';
-import { useAppDispatch, useAppSelector } from '../../../../../store/hook';
-import { setInspirationOpen } from '../../../../../store/chatStore/chatStore';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
+import { setInspirationOpen } from '@/store/chatStore/chatStore';
 
 // 猜你想问
 const Recommends = (props) => {
@@ -43,7 +43,7 @@ const Recommends = (props) => {
   // 猜你想问
   const recommendClick = (item) => {
     if (chatRunning) {
-      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
       return;
     }
     onSend(item);
@@ -51,7 +51,7 @@ const Recommends = (props) => {
   // 换一批
   const refreshClick = () => {
     if (chatRunning) {
-      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
       return;
     }
     if (chatList && chatList.length) {
@@ -80,22 +80,22 @@ const Recommends = (props) => {
     dispatch(setInspirationOpen(!inspirationOpen));
   }
   return <>{(
-    <div className="recommends-inner">
+    <div className='recommends-inner'>
       {
         (recommendList?.length > 0) && (
-          <div className="recommends-top">
-            <span className="title">猜你想问</span>
+          <div className='recommends-top'>
+            <span className='title'>猜你想问</span>
             <RebotIcon onClick={refreshClick}/>
-            <span className="refresh" onClick={refreshClick}>换一批</span>
+            <span className='refresh' onClick={refreshClick}>换一批</span>
           </div>
         )
       }
-      <div className="recommends-list">
-        <div className="list-left">
+      <div className='recommends-list'>
+        <div className='list-left'>
           {
             recommendList?.map((item, index) => {
               return (
-                <div className="recommends-item" onClick={recommendClick.bind(this, item)} key={index}>{item}</div>
+                <div className='recommends-item' onClick={recommendClick.bind(this, item)} key={index}>{item}</div>
               )
             })
           }
@@ -104,9 +104,10 @@ const Recommends = (props) => {
           title={ inspirationOpen ? '收起创意灵感' : '打开创意灵感' } 
           overlayInnerStyle={{color: '#212121' }}
           open={ visible }
-          color="white"
+          zIndex='100'
+          color='white'
         >
-          <div className="list-right" 
+          <div className='list-right' 
             onClick={ iconClick } 
             onMouseEnter={() => setVisible(true)} 
             onMouseLeave={() => setVisible(false)}

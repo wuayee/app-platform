@@ -68,7 +68,7 @@ return (
       fontSize: '12px'
 
     }}>
-      { config.showTotalFunc ? (<span>Total:{props.total}</span>) : <span></span>}
+      { config.showTotalFunc ? (<span>共{props.total}条</span>) : <span></span>}
       
       <Pagination {...config} />
     </div>

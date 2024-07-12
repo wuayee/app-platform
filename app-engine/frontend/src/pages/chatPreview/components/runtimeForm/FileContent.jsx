@@ -3,12 +3,10 @@
  */
 import React, {useContext, useEffect, useState} from 'react';
 import { Input, Button, Typography } from 'antd';
-import { CommentOutlined } from '@ant-design/icons';
 import {saveContent} from "@shared/http/appBuilder";
 import styled from "styled-components";
-import {uuid} from "../../../../common/utils";
 import {Message} from "@shared/utils/message";
-import { useAppSelector } from '../../../../store/hook';
+import { useAppSelector } from '@/store/hook';
 
 const { TextArea } = Input;
 const { Text } = Typography;

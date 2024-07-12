@@ -1,6 +1,6 @@
-import {Input} from "antd";
 import {useEffect} from "react";
 import {useShapeContext} from "@/components/DefaultRoot.jsx";
+import {JadeInput} from "@/components/common/JadeInput.jsx";
 
 /**
  * 可被监听的Input组件.
@@ -64,5 +64,5 @@ export const JadeObservableInput = (props) => {
         shape.emit(rest.id, {type: type});
     }, [type]);
 
-    return <><Input {...rest} onChange={(e) => _onChange(e)} onBlur={_onBlur} /></>
+    return <><JadeInput {...rest} onChange={(e) => _onChange(e)} onBlur={_onBlur} /></>
 };

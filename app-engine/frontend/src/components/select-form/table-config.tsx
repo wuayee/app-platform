@@ -9,7 +9,6 @@ interface Item {
   key: string;
   colName: string;
   dataType: string;
-  vectorService?: string;
   description?: string;
   indexType: string;
 }
@@ -49,22 +48,16 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
 }) => {
   const form = Form.useFormInstance();
   const indexTypeChange = Form.useWatch('indexType', form);
-
-  useEffect(()=> {
-    if(dataIndex === 'indexType') {
-      form.setFieldValue('vectorService', '');
-    }
-  }, [indexTypeChange])
   const inputNode =
     inputType === 'select' ? (
       <Select
-        disabled={dataIndex!=='vectorService'? false : indexTypeChange ==='VECTOR' ? false: true }
+        disabled={false}
         options={options}
       />
     ) : (
       <Input />
     );
-  const reuired = dataIndex === 'vectorService' || dataIndex === 'description'  ? [] : [
+  const reuired = dataIndex === 'description'  ? [] : [
     {
       required: true,
       message: `Please Input ${title}!`,
@@ -99,19 +92,14 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
   const [data, setData] = useState(value);
   const [editingKey, setEditingKey] = useState('');
 
-  const [serviceOptions, setServiceOptions] = useState([]);
 
-  const getOptionsByColId = (id: 'dataType' | 'indexType' | 'vectorService' | string) =>  {
+  const getOptionsByColId = (id: 'dataType' | 'indexType' | string) =>  {
     if(id === 'dataType'){
       return dataOptions;
     }
   
     if(id === 'indexType'){
       return options;
-    }
-  
-    if(id === 'vectorService') {
-      return serviceOptions;
     }
 
     return []
@@ -135,9 +123,9 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
 
   const handleAddColumn = () => {
     const key = (data.length + 1).toString();
-    setData([{ colName: '', dataType: '', indexType: '', key, vectorService: '' }, ...data]);
-    form.setFieldsValue({ colName: '', dataType: '', indexType: '', key, vectorService: '' });
-    triggerChange([{ colName: '', dataType: '', indexType: '', key, vectorService: '' }, ...data])
+    setData([{ colName: '', dataType: '', indexType: '', key}, ...data]);
+    form.setFieldsValue({ colName: '', dataType: '', indexType: '', key});
+    triggerChange([{ colName: '', dataType: '', indexType: '', key}, ...data])
     setEditingKey(key);
   };
 
@@ -201,16 +189,6 @@ const CustomTable: React.FC<PriceInputProps> = (props) => {
       render: (_: any, record: Item) => {
         return (<>
           {options.find(item=> item.value === _)?.label || ''}
-        </>)
-      }
-    },
-    {
-      title: '向量化服务',
-      dataIndex: 'vectorService',
-      editable: true,
-      render: (_: any, record: Item) => {
-        return (<>
-          {serviceOptions.find(item=> item.value === _)?.label || ''}
         </>)
       }
     },
