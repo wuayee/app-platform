@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Form, Select, InputNumber, Input} from 'antd';
-import { getModels } from "@shared/http/appBuilder";
+import { getModels } from '@shared/http/appBuilder';
 
 const LLM = (props) => {
   const { updateData } = props;
@@ -22,23 +22,23 @@ const LLM = (props) => {
 
   return (
     <>
-      <div className="control-container llm-container">
-        <div className="control">
-          <div style={{  display: showControl ? "block":"none"}}>
-            <div style={{ display: "flex" }}>
+      <div className='control-container llm-container'>
+        <div className='control'>
+          <div style={{  display: showControl ? 'block':'none'}}>
+            <div style={{ display: 'flex' }}>
               <Form.Item 
                 style={{ flex: 2 }}  
-                name="model" 
-                label="大模型"
+                name='model'
+                label='大模型'
                 rules={[ { required: true }]}
               >
                 <Select
-                    className={"no-right-radius full-border"}
-                    placeholder="选择一个合适的大模型"
+                    className={'no-right-radius full-border'}
+                    placeholder='选择一个合适的大模型'
                     allowClear
                     options={models}
                     onDropdownVisibleChange={(open) => handleGetModels(open)}
-                    onChange={(value) => {updateData(value, "model")}}
+                    onChange={(value) => {updateData(value, 'model')}}
                     fieldNames={{
                         label: 'id',
                         value: 'id'
@@ -50,22 +50,22 @@ const LLM = (props) => {
                 style={{
                   flex:1
                 }}
-                name="temperature"
-                label="温度"
+                name='temperature'
+                label='温度'
                 rules={[ { required: true }]}
               >
                 <InputNumber
-                  className={"no-left-radius"}
+                  className={'no-left-radius'}
                   style={{
-                      width: "100%",
-                      borderLeft: "none"
+                      width: '100%',
+                      borderLeft: 'none'
                   }}
                   min={0}
                   max={1}
                   controls={true}
                   changeOnWheel={true}
                   keyboard={true}
-                  onChange={(value) => {updateData(value, "temperature")}}
+                  onChange={(value) => {updateData(value, 'temperature')}}
                   step={0.1}
                   formatter={(value) => {
                     if (value === 0.0) {
@@ -76,11 +76,11 @@ const LLM = (props) => {
                 />
               </Form.Item>
             </div>
-            <Form.Item name="systemPrompt" label="提示词">
+            <Form.Item name='systemPrompt' label='提示词'>
               <TextArea
-                placeholder="输入一段提示词，可以给应用预设身份"
+                placeholder='输入一段提示词，可以给应用预设身份'
                 rows={6}
-                onBlur={(e) => {updateData(e.target.value, "systemPrompt")}}
+                onBlur={(e) => {updateData(e.target.value, 'systemPrompt')}}
                 autoSize={{
                   minRows: 6,
                 }}
