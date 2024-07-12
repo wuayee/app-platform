@@ -75,6 +75,30 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
         dispatch({actionType: actionType, id: id, value: e.target.value});
     };
 
+    /**
+     * 数字输入对应失焦时才设置值，对于必填项.若为空，则不设置。并对其中值进行范围内标准化
+     *
+     * @param e
+     * @param actionType
+     * @param id
+     * @param required
+     */
+    const inputNumberChangeOnBlur = (e, actionType, id, required) => {
+        if (required && e.target.value === "") {
+            return;
+        }
+        let originValue = e.target.value;
+        let changeValue;
+        if (originValue <= 0.0) {
+            changeValue = 0;
+        } else if (originValue >= 1.0) {
+            changeValue = 1;
+        } else {
+            changeValue = originValue;
+        }
+        dispatch({actionType: actionType, id: id, value: changeValue});
+    };
+
     return (
         <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["modelPanel"]}>
             {
@@ -128,7 +152,7 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
                                                  min={0}
                                                  max={1}
                                                  step={0.1}
-                                                 onBlur={(e) => changeOnBlur(e, "changeConfig", temperature.id, true)}
+                                                 onBlur={(e) => inputNumberChangeOnBlur(e, "changeConfig", temperature.id, true)}
                                                  stringMode
                                     />
                                 </Form.Item>

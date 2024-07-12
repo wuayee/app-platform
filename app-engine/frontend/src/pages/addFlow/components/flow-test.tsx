@@ -15,11 +15,11 @@ const Index = (props) => {
     setTestStatus,
     setShowDebug,
     showDebug,
-    appRef
+    appRef,
+    elsaRunningCtl
   } = props;
   const { type, appInfo } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
-  const elsaRunningCtl = useRef();
   const [form] = Form.useForm();
   const timerRef = useRef(null);
   // 关闭测试抽屉
