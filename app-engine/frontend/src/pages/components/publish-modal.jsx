@@ -65,8 +65,9 @@ const PublishModal = (props) => {
   // 发布工具流
   async function publishWaterFlow() {
     const formParams = await form.validateFields();
-    if (versionStringCompare(formParams.version, appInfo.version) !== 1) {
+    if (versionStringCompare(formParams.version, appInfo.version) === -1) {
       Message({ type: 'warning', content: `当前版本为${appInfo.version} 发布版本不能低于当前版本` });
+      setLoading(false);
       return
     }
     try {
@@ -74,7 +75,8 @@ const PublishModal = (props) => {
       if (res.code === 0) {
         Message({ type: 'success', content: `发布工具流成功` });
         sessionStorage.setItem('uniqueName', res.data.tool_unique_name);
-        navigate(-1);
+        const appEngineId = sessionStorage.getItem('appId');
+        appEngineId && navigate(`/app-develop/${tenantId}/app-detail/${appEngineId}`);
       }
     } finally {
       setLoading(false)

@@ -18,6 +18,7 @@ const CreateWorkflow = (props) => {
   const [filePath, setFilePath] = useState(undefined);
   const [fileName, setFileName] = useState(undefined);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const appId = useAppSelector((state) => state.appStore.appId);
   const navigate = useNavigate();
 
   // 上传图片
@@ -67,6 +68,7 @@ const CreateWorkflow = (props) => {
         });
         const aippId = res.data.id;
         navigate(`/app-develop/${tenantId}/app-detail/add-flow/${aippId}`);
+        sessionStorage.setItem('appId', appId);
         setOpenWorkFlow(false);
       }}
     >

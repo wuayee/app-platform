@@ -64,7 +64,8 @@ const Apps: React.FC = () => {
 
   // 点击卡片
   function clickCard(item: any, e: any) {
-    navigate(`/app-develop/${tenantId}/chat/${item.id}`);
+    let id = item.runnables?.APP?.appId || '';
+    navigate(`/app-develop/${tenantId}/chat/${id}`);
   }
 
   // 点击更多操作选项

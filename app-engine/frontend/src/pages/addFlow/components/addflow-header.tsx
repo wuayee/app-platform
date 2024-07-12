@@ -12,7 +12,7 @@ import TestStatus from "../../components/test-status";
 import TimeLineDrawer from '../../../components/timeLine';
 
 const AddHeader = (props) => {
-  const { debugTypes, handleDebugClick, showDebug, setShowDebug, testTime, testStatus } = props;
+  const { handleDebugClick, testTime, testStatus } = props;
   const { appInfo, showTime } = useContext(FlowContext);
   const [ open, setOpen ] = useState(false);
   const { tenantId, appId } = useParams();
