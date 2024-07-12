@@ -1,7 +1,8 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Button, Dropdown, Form, Input} from "antd";
+import {Button, Dropdown, Form} from "antd";
 import {HEADER_TOOL_MENU_ICON} from "@/components/asserts/svgIcons.jsx";
 import "./headerStyle.css";
+import {JadeInput} from "@/components/common/JadeInput.jsx";
 
 /**
  * 头部.
@@ -58,11 +59,11 @@ export const Header = ({shape, disabled}) => {
         if (edit) {
             return (<>
                 <Form.Item name="title" rules={[{required: true, message: "请输入名称"}]} initialValue={shape.text}>
-                    <Input onBlur={(e) => onInputBlur(e)}
-                           ref={inputRef}
-                           onMouseDown={(e) => e.stopPropagation()}
-                           placeholder="请输入名称"
-                           style={{height: "24px", borderColor: shape.focusBorderColor}}/>
+                    <JadeInput onBlur={(e) => onInputBlur(e)}
+                               ref={inputRef}
+                               onMouseDown={(e) => e.stopPropagation()}
+                               placeholder="请输入名称"
+                               style={{height: "24px", borderColor: shape.focusBorderColor}}/>
                 </Form.Item>
             </>);
         } else {

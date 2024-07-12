@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
+import {JadeInput} from "@/components/common/JadeInput.jsx";
 
 export default function TaskList() {
     const tasks = useDataContext();
@@ -16,7 +17,7 @@ function Task({task}) {
     let taskContent;
     if (isEditing) {
         taskContent = (<>
-                    <input
+                    <JadeInput
                             value={task.text}
                             onChange={e => {
                                 dispatch({
@@ -38,7 +39,7 @@ function Task({task}) {
                 </>);
     }
     return (<label>
-                <input
+                <JadeInput
                         type="checkbox"
                         checked={task.done}
                         onChange={e => {
