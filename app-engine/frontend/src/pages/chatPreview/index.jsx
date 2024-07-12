@@ -390,6 +390,7 @@ const ChatPreview = (props) => {
     let content = listRef.current[index - 1].content;
     const sentItem = beforeSend(false, content);
     const reciveInitObj = deepClone(initChat);
+    listRef.current.splice(index - 1, 2);
     let arr = [...listRef.current, sentItem, reciveInitObj];
     listRef.current = arr;
     dispatch(setChatList(deepClone(arr)));
