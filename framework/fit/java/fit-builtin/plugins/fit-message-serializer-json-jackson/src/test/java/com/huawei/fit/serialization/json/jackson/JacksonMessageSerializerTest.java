@@ -5,10 +5,9 @@
 package com.huawei.fit.serialization.json.jackson;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-import com.huawei.fit.serialization.MessageSerializer;
 import com.huawei.fit.serialization.test.box.Box;
+import com.huawei.fitframework.conf.runtime.SerializationFormat;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 
@@ -20,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * 为 {@link JacksonMessageSerializer} 提供单元测试。
@@ -27,44 +27,79 @@ import java.util.Arrays;
  * @author 梁济时 l00815032
  * @since 2020-11-23
  */
+@DisplayName("测试 JacksonMessageSerializer")
 public class JacksonMessageSerializerTest {
+    private JacksonMessageSerializer messageSerializer;
+
+    @BeforeEach
+    void setup() {
+        this.messageSerializer = new JacksonMessageSerializer(new JacksonObjectSerializer(null, null, null));
+    }
+
     @Test
-    void should_use_utf8_charset_when_illegal() {
+    @DisplayName("序列化和反序列化字符串需要使用 UTF-8 编码")
+    void shouldUseUtf8Charset() {
         Type[] argumentTypes = new Type[] {String.class};
-        Object[] values = new Object[] {"用以UTF-8编码的中文"};
-        JacksonMessageSerializer jacksonMessageSerializer =
-                new JacksonMessageSerializer(new JacksonObjectSerializer(null, null, null));
-        byte[] bytes = jacksonMessageSerializer.serializeRequest(argumentTypes, values);
-        Object[] arguments = jacksonMessageSerializer.deserializeRequest(argumentTypes, bytes);
-        assertArrayEquals(values, arguments);
+        Object[] expected = new Object[] {"用以UTF-8编码的中文"};
+        byte[] bytes = this.messageSerializer.serializeRequest(argumentTypes, expected);
+        Object[] actual = this.messageSerializer.deserializeRequest(argumentTypes, bytes);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("支持所有方法")
+    void shouldReturnTrue() {
+        boolean actual = this.messageSerializer.isSupported(null);
+        assertThat(actual).isTrue();
+    }
+
+    @Test
+    @DisplayName("返回支持 Json 的格式")
+    void shouldReturnJsonFormat() {
+        int actual = this.messageSerializer.getFormat();
+        assertThat(actual).isEqualTo(SerializationFormat.JSON.code());
     }
 
     @Nested
-    @DisplayName("given params are generic")
+    @DisplayName("当给定的参数为泛型时")
     class GivenParamsAreGeneric {
-        private final MessageSerializer messageSerializer =
-                new JacksonMessageSerializer(new JacksonObjectSerializer(null, null, null));
-
-        private Type simpleGenericType;
-
         /**
          * 测试方法。
          *
-         * @param box 测试参数。
+         * @param b1 简单测试参数。
+         * @param b2 复杂测试参数。
          */
-        private void testFun1(Box<String> box) {}
+        private void testFun1(Box<String> b1, Box<Box<Integer>> b2) {}
 
-        @BeforeEach
-        void setup() throws NoSuchMethodException {
-            Method method = this.getClass().getDeclaredMethod("testFun1", Box.class);
-            this.simpleGenericType = method.getGenericParameterTypes()[0];
+        @Test
+        @DisplayName("当响应为 null 时，序列化和反序列化结果正确")
+        void givenNullWhenSerializeAndDeserializeResponseThenReturnCorrectResult() {
+            byte[] bs = JacksonMessageSerializerTest.this.messageSerializer.serializeResponse(String.class, null);
+            assertThat(bs).isNotEmpty();
+            String actual = JacksonMessageSerializerTest.this.messageSerializer.deserializeResponse(String.class, bs);
+            assertThat(actual).isNull();
+        }
+
+        @Test
+        @DisplayName("当反序列 null 时，结果为 null")
+        void givenNullWhenDeserializeThenReturnNull() {
+            String actual = JacksonMessageSerializerTest.this.messageSerializer.deserializeResponse(String.class, null);
+            assertThat(actual).isNull();
         }
 
         @Nested
-        @DisplayName("given 1 Box<String>")
+        @DisplayName("当给定的参数为简单类型 Box<String> 时")
         class GivenSimpleGenericParam {
+            private Type simpleGenericType;
+
+            @BeforeEach
+            void setup() throws NoSuchMethodException {
+                Method method = GivenParamsAreGeneric.class.getDeclaredMethod("testFun1", Box.class, Box.class);
+                this.simpleGenericType = method.getGenericParameterTypes()[0];
+            }
+
             @Test
-            @DisplayName("given 1 Box<String> when serialize and deserialize request then return correct result")
+            @DisplayName("当请求为 Box<String> 时，序列化和反序列化结果正确")
             void givenSimpleGenericParamWhenSerializeAndDeserializeRequestThenReturnCorrectResult() {
                 Box<String> box = Box.<String>builder()
                         .value("hello")
@@ -72,12 +107,12 @@ public class JacksonMessageSerializerTest {
                         .tMap(MapBuilder.<String, String>get().put("k", "v").build())
                         .build();
 
-                byte[] bs = GivenParamsAreGeneric.this.messageSerializer.serializeRequest(new Type[] {
-                        GivenParamsAreGeneric.this.simpleGenericType
+                byte[] bs = JacksonMessageSerializerTest.this.messageSerializer.serializeRequest(new Type[] {
+                        this.simpleGenericType
                 }, new Object[] {box});
                 assertThat(bs).isNotEmpty();
-                Object[] params = GivenParamsAreGeneric.this.messageSerializer.deserializeRequest(new Type[] {
-                        GivenParamsAreGeneric.this.simpleGenericType
+                Object[] params = JacksonMessageSerializerTest.this.messageSerializer.deserializeRequest(new Type[] {
+                        this.simpleGenericType
                 }, bs);
                 assertThat(params).isNotEmpty().hasSize(1);
                 assertThat(params[0]).isNotNull();
@@ -88,7 +123,7 @@ public class JacksonMessageSerializerTest {
             }
 
             @Test
-            @DisplayName("given 1 Box<String> when serialize and deserialize response then return correct result")
+            @DisplayName("当响应为 Box<String> 时，序列化和反序列化结果正确")
             void givenSimpleGenericParamWhenSerializeAndDeserializeResponseThenReturnCorrectResult() {
                 Box<String> box = Box.<String>builder()
                         .value("hello")
@@ -96,10 +131,11 @@ public class JacksonMessageSerializerTest {
                         .tMap(MapBuilder.<String, String>get().put("k", "v").build())
                         .build();
 
-                Type type = GivenParamsAreGeneric.this.simpleGenericType;
-                byte[] bs = GivenParamsAreGeneric.this.messageSerializer.serializeResponse(type, box);
+                Type type = this.simpleGenericType;
+                byte[] bs = JacksonMessageSerializerTest.this.messageSerializer.serializeResponse(type, box);
                 assertThat(bs).isNotEmpty();
-                Box<String> actualBox = GivenParamsAreGeneric.this.messageSerializer.deserializeResponse(type, bs);
+                Box<String> actualBox =
+                        JacksonMessageSerializerTest.this.messageSerializer.deserializeResponse(type, bs);
                 assertThat(actualBox).isNotNull();
                 assertThat(actualBox.getValue()).isEqualTo("hello");
                 assertThat(actualBox.getTList()).hasSize(2).contains("s1", "s2");
@@ -108,11 +144,69 @@ public class JacksonMessageSerializerTest {
         }
 
         @Nested
-        @DisplayName("given 1 Box<Box<Integer>>")
+        @DisplayName("当给定的参数为复杂类型 Box<Box<Integer>> 时")
         class GivenComplexGenericParam {
+            private Type complexGenericType;
+
+            @BeforeEach
+            void setup() throws NoSuchMethodException {
+                Method method = GivenParamsAreGeneric.class.getDeclaredMethod("testFun1", Box.class, Box.class);
+                this.complexGenericType = method.getGenericParameterTypes()[1];
+            }
+
             @Test
-            @DisplayName("given 1 Box<Box<String>> when serialize and deserialize request then return correct result")
-            void givenComplexGenericParamWhenSerializeAndDeserializeRequestThenReturnCorrectResult() {}
+            @DisplayName("当请求为 Box<Box<Integer>> 时，序列化和反序列化结果正确")
+            void givenComplexGenericParamWhenSerializeAndDeserializeRequestThenReturnCorrectResult() {
+                Box<Integer> inner = Box.<Integer>builder()
+                        .value(1)
+                        .tList(Arrays.asList(1, 2))
+                        .tMap(MapBuilder.<String, Integer>get().put("k", 1).build())
+                        .build();
+                Box<Box<Integer>> box = Box.<Box<Integer>>builder()
+                        .value(inner)
+                        .tList(Collections.singletonList(inner))
+                        .tMap(MapBuilder.<String, Box<Integer>>get().put("k", inner).build())
+                        .build();
+
+                byte[] bs = JacksonMessageSerializerTest.this.messageSerializer.serializeRequest(new Type[] {
+                        this.complexGenericType
+                }, new Object[] {box});
+                assertThat(bs).isNotEmpty();
+                Object[] params = JacksonMessageSerializerTest.this.messageSerializer.deserializeRequest(new Type[] {
+                        this.complexGenericType
+                }, bs);
+                assertThat(params).isNotEmpty().hasSize(1);
+                assertThat(params[0]).isNotNull();
+                Box<Box<Integer>> actualBox = ObjectUtils.cast(params[0]);
+                assertThat(actualBox.getValue().getValue()).isEqualTo(1);
+                assertThat(actualBox.getTList()).hasSize(1);
+                assertThat(actualBox.getTMap()).hasSize(1);
+            }
+
+            @Test
+            @DisplayName("当响应为 Box<Box<Integer>> 时，序列化和反序列化结果正确")
+            void givenComplexGenericParamWhenSerializeAndDeserializeResponseThenReturnCorrectResult() {
+                Box<Integer> inner = Box.<Integer>builder()
+                        .value(1)
+                        .tList(Arrays.asList(1, 2))
+                        .tMap(MapBuilder.<String, Integer>get().put("k", 1).build())
+                        .build();
+                Box<Box<Integer>> box = Box.<Box<Integer>>builder()
+                        .value(inner)
+                        .tList(Collections.singletonList(inner))
+                        .tMap(MapBuilder.<String, Box<Integer>>get().put("k", inner).build())
+                        .build();
+
+                Type type = this.complexGenericType;
+                byte[] bs = JacksonMessageSerializerTest.this.messageSerializer.serializeResponse(type, box);
+                assertThat(bs).isNotEmpty();
+                Box<Box<Integer>> actualBox =
+                        JacksonMessageSerializerTest.this.messageSerializer.deserializeResponse(type, bs);
+                assertThat(actualBox).isNotNull();
+                assertThat(actualBox.getValue().getValue()).isEqualTo(1);
+                assertThat(actualBox.getTList()).hasSize(1);
+                assertThat(actualBox.getTMap()).hasSize(1);
+            }
         }
     }
 }
