@@ -1,6 +1,7 @@
-import {Button, Input} from "antd";
+import {Button} from "antd";
 import {useState} from "react";
 import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
+import {JadeInput} from "@/components/common/JadeInput.jsx";
 
 /**
  * 自定义模型选择组件.
@@ -39,12 +40,12 @@ export const CustomizedModelSelect = ({disabled, defaultValue}) => {
         <div className="model-text-container jade-second-title-text">模型</div>
         <div className="model-select-container"
              style={{display: "flex", border: "1px solid rgb(128, 128, 128, 0.2)", borderRadius: 4}}>
-            <Input readOnly
-                   className="model-select huggingface-light-font"
-                   disabled={disabled}
-                   onMouseDown={(e) => triggerSelect(e)}
-                   value={value}
-                   defaultValue={value}/>
+            <JadeInput readOnly
+                       className="model-select huggingface-light-font"
+                       disabled={disabled}
+                       onMouseDown={(e) => triggerSelect(e)}
+                       value={value}
+                       defaultValue={value}/>
             <Button
                     className="button-select button-select-text"
                     disabled={disabled}

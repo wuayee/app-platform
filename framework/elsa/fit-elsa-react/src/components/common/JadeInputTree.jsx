@@ -1,9 +1,10 @@
-import {Col, Form, Input, Row, Tree, Typography} from 'antd';
+import {Col, Form, Row, Tree, Typography} from 'antd';
 import "./jadeInputTree.css";
 import PropTypes from "prop-types";
 import {JadeStopPropagationSelect} from "./JadeStopPropagationSelect.jsx";
 import {JadeReferenceTreeSelect} from "./JadeReferenceTreeSelect.jsx";
 import {useFormContext} from "@/components/DefaultRoot.jsx";
+import {JadeInput} from "@/components/common/JadeInput.jsx";
 
 const {Text} = Typography;
 
@@ -123,13 +124,13 @@ export default function JadeInputTree({data, updateItem, disabled}) {
                 initialValue={node.value}
                 validateTrigger="onBlur"
             >
-                <Input disabled={disabled}
-                       className="jade-input"
-                       style={{borderRadius: "0px 8px 8px 0px"}}
-                       placeholder={"请输入"}
-                       value={node.value}
-                       onChange={(e) => onInputChange(node.id, "value", e)}
-                       onBlur={() => onInputBlur(node)}
+                <JadeInput disabled={disabled}
+                           className="jade-input"
+                           style={{borderRadius: "0px 8px 8px 0px"}}
+                           placeholder={"请输入"}
+                           value={node.value}
+                           onChange={(e) => onInputChange(node.id, "value", e)}
+                           onBlur={() => onInputBlur(node)}
                 />
             </Form.Item>;
         } else if (node.from === "Reference") {

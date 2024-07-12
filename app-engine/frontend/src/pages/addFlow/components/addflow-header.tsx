@@ -6,17 +6,14 @@ import { updateAppInfo } from '@shared/http/aipp';
 import { FlowContext } from '../../aippIndex/context';
 import EditTitleModal from '../../components/edit-title-modal';
 import PublishModal from '../../components/publish-modal';
-import TestModal from '../../components/test-modal';
-import TestStatus from '../../components/test-status';
-import FlowTest from './flow-test';
+import TestModal from "../../components/test-modal";
+import TestStatus from "../../components/test-status";
 
 const AddHeader = (props) => {
-  const { addId,  appRef, flowIdRef, debugTypes, handleDebugClick, showDebug, setShowDebug } = props;
+  const { addId,  appRef, flowIdRef, handleDebugClick, testTime, testStatus } = props;
   const { type, appInfo, modalInfo, setModalInfo } = useContext(FlowContext);
   const [ waterFlowName, setWaterFlowName ] = useState('无标题');
   const { tenantId, appId } = useParams();
-  const [ testStatus, setTestStatus ] = useState(null);
-  const [ testTime, setTestTime ] = useState(0);
   let editRef:any = useRef(null);
   let modalRef:any = useRef(null);
   let testRef:any = useRef(null);
@@ -92,14 +89,6 @@ const AddHeader = (props) => {
         onFlowNameChange={onFlowNameChange}
         waterFlowName={waterFlowName}
         modalInfo={modalInfo}
-      />
-      <FlowTest
-        setTestStatus={setTestStatus}
-        setTestTime={setTestTime}
-        setShowDebug={setShowDebug}
-        showDebug={showDebug}
-        debugTypes={debugTypes}
-        appRef={appRef}
       />
     </div>
   )}</>

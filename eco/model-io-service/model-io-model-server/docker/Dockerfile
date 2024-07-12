@@ -1,20 +1,25 @@
-FROM ubuntu:22.04 AS base
+FROM euleros:dev AS base
 
 MAINTAINER zhangshijie42@huawei.com
 
 ARG ARCH="aarch64"
 
-# apt 源配置
-RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak && \
-    sed -i "s@http://ports.ubuntu.com@http://mirrors.tools.huawei.com@g" /etc/apt/sources.list && \
-    apt update && \
-    apt install -y vim git wget curl unzip build-essential python3 pip && \
-    mkdir /root/.pip && \
-    echo "[global]\n\
-index-url = https://mirrors.tools.huawei.com/pypi/simple\n\
-trusted-host = mirrors.tools.huawei.com\n\
-timeout = 120" >/root/.pip/pip.conf && \
-    pip install torch==2.1.0 decorator attrs psutil absl-py cloudpickle scipy synr==0.5.0 tornado numpy==1.26.4 pandas sentencepiece accelerate thefuzz loguru tiktoken transformers --quiet 2>/dev/null && \
+COPY Python/3.9.11/Python-3.9.11.tgz /
+COPY pip/24.0/pip-24.0-py3-none-any.whl /
+RUN tar -xzf /Python-3.9.11.tgz && \
+    cd /Python-3.9.11 && \
+    ./configure --enable-shared CFLAGS=-fPIC --enable-loadable-sqlite-extensions --prefix=/usr/local/python3 && \
+    make -j8 --quiet && \
+    make install --quiet
+RUN pip3 install pip-24.0-py3-none-any.whl
+
+ENV PYTHON_HOME=/usr/local/python3
+ENV PATH=$PYTHON_HOME/bin:$PATH
+ENV LD_LIBRARY_PATH=$PYTHON_HOME/lib:$LD_LIBRARY_PATH
+
+RUN pip3 config set global.index-url https://cmc.centralrepo.rnd.huawei.com/artifactory/pypi-central-repo/simple/ && \
+    pip3 config set global.trusted-host cmc.centralrepo.rnd.huawei.com && \
+    pip3 install torch==2.1.0 && \
     mkdir -p /root/install
 
 FROM base AS install
@@ -39,7 +44,16 @@ RUN chmod +x /root/install/Ascend-cann-kernels-910b_8.0.RC1_linux.run && \
     bash /root/install/install_and_enable_cann.sh && \
     rm -rf /root/install
 
-FROM install AS mindie
+FROM euleros:base AS dev
+
+ENV PYTHON_HOME=/usr/local/python3
+ENV PATH=$PYTHON_HOME/bin:$PATH
+ENV LD_LIBRARY_PATH=$PYTHON_HOME/lib:/usr/local/python3/lib/python3.9/site-packages/torch.libs:$LD_LIBRARY_PATH
+
+COPY --from=install /usr/local/python3 /usr/local/python3
+COPY --from=install /usr/local/Ascend /usr/local/Ascend
+
+FROM dev AS mindie
 
 RUN mkdir -p /root/mindie
 
@@ -50,7 +64,7 @@ RUN chmod +x /root/mindie/start_mindie.sh
 ENTRYPOINT ["bash","-c"]
 CMD ["/root/mindie/start_mindie.sh"]
 
-FROM install AS model-io-embedding
+FROM dev AS model-io-embedding
 
 RUN mkdir -p /root/mindie && \
     pip install typing fastapi
