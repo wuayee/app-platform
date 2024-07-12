@@ -45,8 +45,16 @@ export const products = [
             label: 'OceanDisk',
             children: [
               {
-                value: 'lv4_prod_list_cn_name_p-OceanDisk',
-                label: 'OceanDisk',
+                value: 'lv4_prod_list_cn_name_p-池化大盘',
+                label: '池化大盘',
+              },
+              {
+                value: 'lv4_prod_list_cn_name_p-盘',
+                label: '盘',
+              },
+              {
+                value: 'lv4_prod_list_cn_name_p-算力大盘',
+                label: '算力大盘',
               },
             ],
           },
@@ -61,8 +69,8 @@ export const products = [
             label: 'AI存储',
             children: [
               {
-                value: '闪存存储-lv4_prod_list_cn_name_p-固态高端',
-                label: '固态高端',
+                value: 'lv4_prod_list_cn_name_p-AI存储',
+                label: 'AI存储',
               },
             ],
           },
@@ -71,8 +79,18 @@ export const products = [
             label: 'DME',
             children: [
               {
-                value: 'lv4_prod_list_cn_name_p-DME',
-                label: 'DME',
+                value: 'lv4_prod_list_cn_name_p-其他',
+                label: '其他',
+              },
+            ],
+          },
+          {
+            value: 'lv3_prod_list_cn_name_p-公用',
+            label: '公用',
+            children: [
+              {
+                value: '公用-lv4_prod_list_cn_name_p-其他',
+                label: '其他',
               },
             ],
           },
@@ -91,6 +109,10 @@ export const products = [
               {
                 value: '计算型存储-lv4_prod_list_cn_name_p-融合中端',
                 label: '融合中端',
+              },
+              {
+                value: 'lv4_prod_list_cn_name_p-Portable Storage',
+                label: 'Portable Storage',
               },
             ],
           },
@@ -192,6 +214,14 @@ export const products = [
                 label: '数据保护一体机',
               },
               {
+                value: 'lv4_prod_list_cn_name_p-单机版一体机',
+                label: '单机版一体机',
+              },
+              {
+                value: 'lv4_prod_list_cn_name_p-归档',
+                label: '归档',
+              },
+              {
                 value: 'lv4_prod_list_cn_name_p-高端备份',
                 label: '高端备份',
               },
@@ -266,6 +296,14 @@ export const products = [
               {
                 value: '协作终端-lv4_prod_list_cn_name_p-容量保障',
                 label: '容量保障',
+              },
+              {
+                value: 'lv4_prod_list_cn_name_p-IWB',
+                label: 'IWB',
+              },
+              {
+                value: 'lv4_prod_list_cn_name_p-AIO Thin Client',
+                label: 'AIO Thin Client',
               },
             ],
           },
@@ -493,6 +531,34 @@ export const aidProducts = [
         value: 'minor_lv2_prod_list_cn_name-HCS专业服务',
         label: 'HCS专业服务',
       },
+      {
+        value: 'minor_lv2_prod_list_cn_name-IT部署与集成服务',
+        label: 'IT部署与集成服务',
+      },
+      {
+        value: '企业服务与软件-minor_lv2_prod_list_cn_name-培训与认证服务',
+        label: '培训与认证服务',
+      },
+      {
+        value: 'minor_lv2_prod_list_cn_name-企业服务公共',
+        label: '企业服务公共',
+      },
+      {
+        value: 'minor_lv2_prod_list_cn_name-通信能力及商业使能软件业务',
+        label: '通信能力及商业使能软件业务',
+      },
+      {
+        value: '企业服务与软件-minor_lv2_prod_list_cn_name-网络部署与集成服务',
+        label: '网络部署与集成服务',
+      },
+      {
+        value: 'minor_lv2_prod_list_cn_name-行业运维与辅助运营服务',
+        label: '行业运维与辅助运营服务',
+      },
+      {
+        value: 'minor_lv2_prod_list_cn_name-业务与体验管理及数字化运营',
+        label: '业务与体验管理及数字化运营',
+      },
     ],
   },
   {
@@ -500,20 +566,12 @@ export const aidProducts = [
     label: '运营商服务与软件',
     children: [
       {
-        value: 'minor_lv2_prod_list_cn_name-IT部署与集成服务',
-        label: 'IT部署与集成服务',
-      },
-      {
         value: 'minor_lv2_prod_list_cn_name-客户支持服务',
         label: '客户支持服务',
       },
       {
-        value: 'minor_lv2_prod_list_cn_name-培训与认证服务',
+        value: '运营商服务与软件-minor_lv2_prod_list_cn_name-培训与认证服务',
         label: '培训与认证服务',
-      },
-      {
-        value: 'minor_lv2_prod_list_cn_name-企业服务公共',
-        label: '企业服务公共',
       },
       {
         value: 'minor_lv2_prod_list_cn_name-软件业务',
@@ -524,24 +582,12 @@ export const aidProducts = [
         label: '数据中心能源与集成服务',
       },
       {
-        value: 'minor_lv2_prod_list_cn_name-通信能力及商业使能软件业务',
-        label: '通信能力及商业使能软件业务',
-      },
-      {
-        value: 'minor_lv2_prod_list_cn_name-网络部署与集成服务',
+        value: '运营商服务与软件-minor_lv2_prod_list_cn_name-网络部署与集成服务',
         label: '网络部署与集成服务',
-      },
-      {
-        value: 'minor_lv2_prod_list_cn_name-行业运维与辅助运营服务',
-        label: '行业运维与辅助运营服务',
       },
       {
         value: 'minor_lv2_prod_list_cn_name-业务体验与运营运维',
         label: '业务体验与运营运维',
-      },
-      {
-        value: 'minor_lv2_prod_list_cn_name-业务与体验管理及数字化运营',
-        label: '业务与体验管理及数字化运营',
       },
       {
         value: 'minor_lv2_prod_list_cn_name-专业服务公共及其他',
@@ -552,103 +598,103 @@ export const aidProducts = [
 ];
 
 //数存指标级联选项--------
-export const  indicators = [
+export const indicators = [
   {
-    value:"report_item_l1_cn_name-净销售收入",
-    label:"净销售收入",
-    children:[
+    value: 'report_item_l1_cn_name-净销售收入',
+    label: '净销售收入',
+    children: [
       {
-        value:"report_item_l2_cn_name-设备收入",
-        label:"设备收入",
-        children:[
+        value: 'report_item_l2_cn_name-设备收入',
+        label: '设备收入',
+        children: [
           {
-            value:"report_item_l3_cn_name-设备收入",
-            label:"设备收入",
+            value: 'report_item_l3_cn_name-设备收入',
+            label: '设备收入',
           },
-        ]
+          {
+            value: 'report_item_l3_cn_name-软件退税',
+            label: '软件退税',
+          },
+        ],
       },
       {
-        value:"report_item_l2_cn_name-服务收入_GTS视角",
-        label:"服务收入_GTS视角",
-        children:[
+        value: 'report_item_l2_cn_name-服务收入_GTS视角',
+        label: '服务收入_GTS视角',
+        children: [
           {
-            value:"report_item_l3_cn_name-服务结算收入",
-            label:"服务结算收入",
+            value: 'report_item_l3_cn_name-服务结算收入',
+            label: '服务结算收入',
           },
           {
-            value:"report_item_l3_cn_name-服务销售收入",
-            label:"服务销售收入",
+            value: 'report_item_l3_cn_name-服务销售收入',
+            label: '服务销售收入',
           },
-        ]
+        ],
       },
       {
-        value:"report_item_l2_cn_name-其他收入",
-        label:"其他收入",
-        children:[
+        value: 'report_item_l2_cn_name-其他收入',
+        label: '其他收入',
+        children: [
           {
-            value:"report_item_l3_cn_name-其他收入_其他",
-            label:"其他收入_其他",
+            value: 'report_item_l3_cn_name-其他收入_其他',
+            label: '其他收入_其他',
           },
-          {
-            value:"report_item_l3_cn_name-软件退税",
-            label:"软件退税",
-          },
-        ]
+        ],
       },
-    ]
+    ],
   },
-]
+];
 //计算指标级联选项--------
-export const  cascIndicators = [
+export const cascIndicators = [
   {
-    value:"report_item_l1_cn_name-净销售收入",
-    label:"净销售收入",
-    children:[
+    value: 'report_item_l1_cn_name-净销售收入',
+    label: '净销售收入',
+    children: [
       {
-        value:"report_item_l2_cn_name-设备收入",
-        label:"设备收入",
-        children:[
+        value: 'report_item_l2_cn_name-设备收入',
+        label: '设备收入',
+        children: [
           {
-            value:"report_item_l3_cn_name-设备收入",
-            label:"设备收入",
+            value: 'report_item_l3_cn_name-设备收入',
+            label: '设备收入',
           },
-        ]
+          {
+            value: 'report_item_l3_cn_name-软件退税',
+            label: '软件退税',
+          },
+        ],
       },
       {
-        value:"report_item_l2_cn_name-服务收入_GTS视角",
-        label:"服务收入_GTS视角",
-        children:[
+        value: 'report_item_l2_cn_name-服务收入_GTS视角',
+        label: '服务收入_GTS视角',
+        children: [
           {
-            value:"report_item_l3_cn_name-服务结算收入",
-            label:"服务结算收入",
+            value: 'report_item_l3_cn_name-服务结算收入',
+            label: '服务结算收入',
           },
           {
-            value:"report_item_l3_cn_name-服务销售收入",
-            label:"服务销售收入",
+            value: 'report_item_l3_cn_name-服务销售收入',
+            label: '服务销售收入',
           },
-        ]
+        ],
       },
       {
-        value:"report_item_l2_cn_name-其他收入",
-        label:"其他收入",
-        children:[
+        value: 'report_item_l2_cn_name-其他收入',
+        label: '其他收入',
+        children: [
           {
-            value:"report_item_l3_cn_name-其他收入_其他",
-            label:"其他收入_其他",
+            value: 'report_item_l3_cn_name-其他收入_其他',
+            label: '其他收入_其他',
           },
-          {
-            value:"report_item_l3_cn_name-软件退税",
-            label:"软件退税",
-          },
-        ]
+        ],
       },
-    ]
+    ],
   },
   {
-    value:'report_item_l1_cn_name-独立软件收入',
-    label:'独立软件收入',
-  }
-]
+    value: 'report_item_l1_cn_name-独立软件收入',
+    label: '独立软件收入',
+  },
+];
 
 export const FinanceGroupType = {
   NONE: null,
@@ -656,13 +702,13 @@ export const FinanceGroupType = {
   PRODUCT: '产品',
   REGION: '区域',
   DEALER: '经销商',
-  INDICATOR: '指标'
+  INDICATOR: '指标',
 };
 
 export const groupTypeOption = {
   CUSTOMER: [
     {
-      label: 'EBG最终客户',
+      label: '最终客户',
       value: 'end_cust_en_name',
     },
     {
@@ -670,11 +716,11 @@ export const groupTypeOption = {
       value: 'ebg_parent_cust_en_name',
     },
     {
-      label: 'EBG签约客户',
+      label: '签约客户',
       value: 'sign_cust_en_name',
     },
     {
-      label: 'EBG客户群',
+      label: '最终客户企业网客户群',
       value: 'end_ent_cust_class_cn_name',
     },
     {
@@ -690,37 +736,37 @@ export const groupTypeOption = {
       value: 'cust_class_cn_name',
     },
     {
-      label: '客户子网',
+      label: 'ACCOUNT客户子网',
       value: 'acctcust_subsidiary_cn_nam',
     },
   ],
   PRODUCT: [
     {
-      label: '重量级LV1',
+      label: '重量级团队LV1',
       value: 'lv1_prod_rd_team_cn_name',
     },
     {
-      label: '重量级LV2',
+      label: '重量级团队LV2',
       value: 'lv2_prod_rd_team_cn_name',
     },
     {
-      label: '重量级LV3',
+      label: '重量级团队LV3',
       value: 'lv3_prod_rd_team_cn_name',
     },
     {
-      label: '重量级LV4',
+      label: '重量级团队LV4',
       value: 'lv4_prod_rd_team_cn_name',
     },
     {
-      label: '自定义LV3',
+      label: '产品自定义LV3',
       value: 'lv3_prod_list_cn_name_p',
     },
     {
-      label: '自定义LV4',
+      label: '产品自定义LV4',
       value: 'lv4_prod_list_cn_name_p',
     },
     {
-      label: '产品名称',
+      label: '产品',
       value: 'prod_cn_name',
     },
     {
@@ -728,7 +774,7 @@ export const groupTypeOption = {
       value: 'prod_code',
     },
     {
-      label: 'OFFERING名称',
+      label: 'OFFERING',
       value: 'offering_cn_name',
     },
     {
@@ -755,7 +801,7 @@ export const groupTypeOption = {
       value: 'minor_lv4_prod_list_cn_name',
     },
     {
-      label: '辅产品名称',
+      label: '辅产品',
       value: 'minor_prod_cn_name',
     },
     {
@@ -763,7 +809,7 @@ export const groupTypeOption = {
       value: 'minor_prod_code',
     },
     {
-      label: '辅产品OFFERING名称',
+      label: '辅产品OFFERING',
       value: 'minor_offering_cn_name',
     },
     {
@@ -791,7 +837,7 @@ export const groupTypeOption = {
   ],
   DEALER: [
     {
-      label: '签约经销商',
+      label: '经销商',
       value: 'dealer_cust_en_name',
     },
     {
