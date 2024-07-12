@@ -1,7 +1,7 @@
 [
   {
     "type": "retrievalNodeState",
-    "name": "数据检索"
+    "name": "普通检索"
   },
   {
     "type": "llmNodeState",

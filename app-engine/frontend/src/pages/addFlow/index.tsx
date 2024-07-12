@@ -20,7 +20,20 @@ const AddFlow = (props) => {
   const [ debugTypes, setDebugTypes ] = useState([]);
   const [ showDebug, setShowDebug ] = useState(false);
   const { tenantId, appId } = useParams();
-
+  const [ testStatus, setTestStatus ] = useState(null);
+  const [ testTime, setTestTime ] = useState(0);
+  const appRef = useRef(null);
+  const flowIdRef = useRef(null);
+  const elsaRunningCtl = useRef(null);
+  const flowContext ={
+    type,
+    appInfo: type ? appInfo : flowInfo,
+    showMenu,
+    setShowMenu,
+    setFlowInfo,
+    showTime,
+    setShowTime
+  }
   useEffect(() => {
     !type && initElsa();
   }, [type]);
@@ -31,21 +44,16 @@ const AddFlow = (props) => {
       setFlowInfo(res.data);
     }
   }
-  const appRef = useRef(null);
-  const flowIdRef = useRef(null);
-  const flowContext ={
-    type,
-    appInfo: type ? appInfo : flowInfo,
-    showMenu,
-    setShowMenu,
-    setFlowInfo,
-    showTime,
-    setShowTime
-  }
-  
   useEffect(() => {
-    type ? null : setShowMenu(true);
+    if (!type) {
+      return;
+    }
+    setShowMenu(true)
+    setFlowTestTime(null);
+    setFlowTestStatus(null);
+    elsaRunningCtl.current?.reset();
   }, [props.type])
+
   // 显示隐藏左侧菜单
   function menuClick() {
     setShowMenu(!showMenu)
@@ -75,16 +83,17 @@ const AddFlow = (props) => {
             handleDebugClick={handleDebugClick}
             showDebug={showDebug}
             setShowDebug={setShowDebug}
+            testStatus={testStatus}
+            testTime={testTime}
         />}
-        {type && 
-          <FlowTest
-            setTestStatus={setFlowTestStatus}
-            setTestTime={setFlowTestTime}
-            setShowDebug={setShowDebug}
-            showDebug={showDebug}
-            debugTypes={debugTypes}
-            appRef={appRef}
-        />}
+        <FlowTest setTestStatus={type ? setFlowTestStatus : setTestStatus}
+                  setTestTime={type ? setFlowTestTime : setTestTime}
+                  setShowDebug={setShowDebug}
+                  showDebug={showDebug}
+                  debugTypes={debugTypes}
+                  appRef={appRef}
+                  elsaRunningCtl={elsaRunningCtl}
+        />
         <div className={['content', !type ? 'content-add' : null ].join(' ')}>
           {
             showMenu ? (

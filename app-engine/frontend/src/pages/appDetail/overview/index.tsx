@@ -79,7 +79,7 @@ const AppOverview: React.FC = () => {
                   <span>{detail?.createBy || 'Admin'}</span>
                 </Flex>
                 <Flex gap='small'>
-                  <span>发布于</span>
+                  <span>创建于</span>
                   <span>{detail?.createAt}</span>
                 </Flex>
               </Flex>

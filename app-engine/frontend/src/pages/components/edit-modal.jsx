@@ -162,7 +162,7 @@ const EditModal = (props) => {
                 message: '输入字符长度范围：1 - 64'
               }]}
             >
-              <Input />
+              <Input showCount maxLength={64}/>
             </Form.Item>
             <Form.Item
               label="简介"

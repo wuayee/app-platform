@@ -1,5 +1,5 @@
 import {Col, Collapse, Form, Input, InputNumber, Popover, Row} from 'antd';
-import {InfoCircleOutlined} from '@ant-design/icons';
+import {QuestionCircleOutlined} from '@ant-design/icons';
 import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
 import {JadeStopPropagationSelect} from "../common/JadeStopPropagationSelect.jsx";
 import PropTypes from "prop-types";
@@ -75,8 +75,32 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
         dispatch({actionType: actionType, id: id, value: e.target.value});
     };
 
+    /**
+     * 数字输入对应失焦时才设置值，对于必填项.若为空，则不设置。并对其中值进行范围内标准化
+     *
+     * @param e
+     * @param actionType
+     * @param id
+     * @param required
+     */
+    const inputNumberChangeOnBlur = (e, actionType, id, required) => {
+        if (required && e.target.value === "") {
+            return;
+        }
+        let originValue = e.target.value;
+        let changeValue;
+        if (originValue <= 0.0) {
+            changeValue = 0;
+        } else if (originValue >= 1.0) {
+            changeValue = 1;
+        } else {
+            changeValue = originValue;
+        }
+        dispatch({actionType: actionType, id: id, value: changeValue});
+    };
+
     return (
-        <Collapse bordered={false} className="jade-collapse-custom-background-color" defaultActiveKey={["modelPanel"]}>
+        <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["modelPanel"]}>
             {
                 <Panel
                     key={"modelPanel"}
@@ -87,61 +111,62 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
                     }
                     className="jade-panel"
                 >
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
+                    <div className={"jade-custom-panel-content"}>
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item
                                     className="jade-form-item"
                                     name={`model-${shapeId}`}
                                     label="模型"
                                     rules={[{required: true, message: '请选择使用的模型'}]}
                                     initialValue={model.value} // 当组件套在Form.Item中的时候，内部组件的初始值使用Form.Item的initialValue进行赋值
                                     validateTrigger="onBlur"
-                            >
-                                <JadeStopPropagationSelect
+                                >
+                                    <JadeStopPropagationSelect
                                         disabled={disabled}
                                         className="jade-select"
                                         onClick={handleSelectClick} // 点击下拉框时阻止事件冒泡
                                         onChange={(e) => dispatch({actionType: "changeConfig", id: model.id, value: e})}
                                         options={modelOptions}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
                                     className="jade-form-item"
                                     name={`temperature-${shapeId}`}
                                     label={<div style={{display: 'flex', alignItems: 'center'}}>
                                         <span className="jade-second-title">温度</span>
                                         <Popover content={content}>
-                                            <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                                            <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                                         </Popover>
                                     </div>}
                                     rules={[{required: true, message: '请输入0-1之间的参数!'}]}
                                     initialValue={temperature.value}
                                     validateTrigger="onBlur"
-                            >
-                                <InputNumber disabled={disabled}
-                                             formatter={formatter}
-                                             className="jade-input"
-                                             style={{width: "100%"}}
-                                             min={0}
-                                             max={1}
-                                             step={0.1}
-                                             onBlur={(e) => changeOnBlur(e, "changeConfig", temperature.id, true)}
-                                             stringMode
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={24}>
-                            <Form.Item
+                                >
+                                    <InputNumber disabled={disabled}
+                                                 formatter={formatter}
+                                                 className="jade-input"
+                                                 style={{width: "100%"}}
+                                                 min={0}
+                                                 max={1}
+                                                 step={0.1}
+                                                 onBlur={(e) => inputNumberChangeOnBlur(e, "changeConfig", temperature.id, true)}
+                                                 stringMode
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={16}>
+                            <Col span={24}>
+                                <Form.Item
                                     className="jade-form-item"
                                     name={`propmt-${shapeId}`}
                                     label={<div style={{display: 'flex', alignItems: 'center'}}>
                                         <span className="jade-second-title">用户提示词模板</span>
                                         <Popover content={[promptContent]}>
-                                            <InfoCircleOutlined className="jade-panel-header-popover-content"/>
+                                            <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
                                         </Popover>
                                     </div>}
                                     rules={[{required: true, message: '参数不能为空'}]}

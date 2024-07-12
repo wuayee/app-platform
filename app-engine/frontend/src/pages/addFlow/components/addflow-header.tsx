@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { EditIcon, LeftArrowIcon, UploadIcon } from '@assets/icon';
+import { LeftArrowIcon, UploadIcon } from '@assets/icon';
 import { updateAppInfo } from '@shared/http/aipp';
 import { Message } from '@shared/utils/message';
 import { FlowContext } from '../../aippIndex/context';
@@ -10,15 +10,12 @@ import PublishModal from '../../components/publish-modal';
 import TestModal from "../../components/test-modal";
 import TestStatus from "../../components/test-status";
 import TimeLineDrawer from '../../../components/timeLine';
-import FlowTest from './flow-test';
 
 const AddHeader = (props) => {
-  const { debugTypes, handleDebugClick, showDebug, setShowDebug } = props;
+  const { debugTypes, handleDebugClick, showDebug, setShowDebug, testTime, testStatus } = props;
   const { appInfo, showTime } = useContext(FlowContext);
   const [ open, setOpen ] = useState(false);
   const { tenantId, appId } = useParams();
-  const [ testStatus, setTestStatus ] = useState(null);
-  const [ testTime, setTestTime ] = useState(0);
   let editRef:any = useRef(null);
   let modalRef:any = useRef(null);
   let testRef:any = useRef(null);
@@ -114,14 +111,6 @@ const AddHeader = (props) => {
       <EditTitleModal
         modalRef={editRef}
         onFlowNameChange={onFlowNameChange}
-        appInfo={appInfo}
-      />
-      <FlowTest
-        setTestStatus={setTestStatus}
-        setTestTime={setTestTime}
-        setShowDebug={setShowDebug}
-        showDebug={showDebug}
-        debugTypes={debugTypes}
         appInfo={appInfo}
       />
       <TimeLineDrawer open={open} setOpen={setOpen} />
