@@ -1,7 +1,8 @@
-import {Col, Form, Input, Row, Select} from "antd";
+import {Col, Form, Row, Select} from "antd";
 import React from "react";
 import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSelect.jsx";
 import {useFormContext} from "@/components/DefaultRoot.jsx";
+import {JadeInput} from "@/components/common/JadeInput.jsx";
 
 /**
  * 输出变量的每个条目
@@ -75,11 +76,11 @@ export default function OutputVariableRow({item, handleItemChange, disabled}) {
                             validateTrigger="onBlur"
                             initialValue={item.value}
                     >
-                        <Input disabled={disabled}
-                               className="value-custom jade-input"
-                               style={{fontSize: "12px"}}
-                               placeholder="请输入"
-                               onBlur={editOutputVariable}
+                        <JadeInput disabled={disabled}
+                                   className="value-custom jade-input"
+                                   style={{fontSize: "12px"}}
+                                   placeholder="请输入"
+                                   onBlur={editOutputVariable}
                         />
                     </Form.Item>
                 </>);

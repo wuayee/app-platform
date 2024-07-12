@@ -1,9 +1,10 @@
-import {Col, Collapse, Form, Input, Popover, Row} from "antd";
+import {Col, Collapse, Form, Popover, Row} from "antd";
 import {QuestionCircleOutlined} from "@ant-design/icons";
 import React from "react";
 import {useDataContext, useDispatch, useFormContext} from "@/components/DefaultRoot.jsx";
 import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSelect.jsx";
 import {JadeStopPropagationSelect} from "../common/JadeStopPropagationSelect.jsx";
+import {JadeInput} from "@/components/common/JadeInput.jsx";
 
 const {Panel} = Collapse;
 
@@ -105,11 +106,11 @@ export default function InputForm({disabled}) {
                                initialValue={item.value}
                                validateTrigger="onBlur"
                     >
-                        <Input disabled={disabled}
-                               className="value-custom jade-input"
-                               placeholder="清输入"
-                               value={item.value}
-                               onBlur={editInput(item)}
+                        <JadeInput disabled={disabled}
+                                   className="value-custom jade-input"
+                                   placeholder="清输入"
+                                   value={item.value}
+                                   onBlur={editInput(item)}
                         />
                     </Form.Item>
                 </>);
