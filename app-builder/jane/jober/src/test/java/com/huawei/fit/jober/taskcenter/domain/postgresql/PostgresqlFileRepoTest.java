@@ -14,9 +14,9 @@ import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.FileService;
 import com.huawei.fit.jober.entity.File;
 import com.huawei.fit.jober.entity.FileDeclaration;
-import com.huawei.fit.jober.taskcenter.fitable.util.ParamUtils;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
+import com.huawei.fit.waterflow.biz.util.ParamUtils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -8,10 +8,10 @@ import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.FlowDefinitionService;
-import com.huawei.fit.jober.bff.util.FlowDefinitionParseUtils;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.jober.entity.FlowDefinitionResult;
-import com.huawei.fit.jober.taskcenter.fitable.util.ParamUtils;
+import com.huawei.fit.waterflow.biz.util.FlowDefinitionParseUtils;
+import com.huawei.fit.waterflow.biz.util.ParamUtils;
 import com.huawei.fit.waterflow.flowsengine.biz.service.FlowsService;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowDefinitionPO;

@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.jober.flowsengine.controller.FlowContextsController;
-import com.huawei.fit.jober.flowsengine.controller.vo.FlowDataVO;
+import com.huawei.fit.waterflow.biz.common.vo.FlowDataVO;
 import com.huawei.fitframework.plugin.Plugin;
 
 import org.junit.jupiter.api.Assertions;

@@ -12,7 +12,7 @@ import com.huawei.fit.jober.entity.TaskFilter;
 import com.huawei.fit.jober.entity.task.Task;
 import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.TaskConverter;
-import com.huawei.fit.jober.taskcenter.fitable.util.ParamUtils;
+import com.huawei.fit.waterflow.biz.util.ParamUtils;
 import com.huawei.fitframework.annotation.Alias;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;

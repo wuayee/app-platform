@@ -29,7 +29,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jober.FlowsDataBaseTest;
-import com.huawei.fit.jober.bff.util.FlowDefinitionParseUtils;
+import com.huawei.fit.waterflow.biz.util.FlowDefinitionParseUtils;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.waterflow.common.utils.UUIDUtil;

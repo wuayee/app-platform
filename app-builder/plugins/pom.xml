@@ -14,5 +14,8 @@
 
     <modules>
         <module>tool-waterflow</module>
+        <module>waterflow-biz-common</module>
+        <module>waterflow-graph-service</module>
+        <module>waterflow-edatamate</module>
     </modules>
 </project>

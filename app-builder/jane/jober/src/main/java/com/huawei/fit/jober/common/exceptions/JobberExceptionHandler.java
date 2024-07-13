@@ -13,7 +13,7 @@ import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.common.Constant;
 import com.huawei.fit.jober.common.model.JoberResponse;
-import com.huawei.fit.jober.taskcenter.fitable.util.ParamUtils;
+import com.huawei.fit.waterflow.biz.util.ParamUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
