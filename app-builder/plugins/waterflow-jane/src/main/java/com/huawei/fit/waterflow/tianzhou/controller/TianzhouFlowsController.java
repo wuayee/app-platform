@@ -2,7 +2,9 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.jober.flowsengine.controller.tianzhou;
+package com.huawei.fit.waterflow.tianzhou.controller;
+
+import static com.huawei.fit.waterflow.biz.common.Constant.TIANZHOU_URL_PREFIX;
 
 import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.GetMapping;
@@ -15,9 +17,8 @@ import com.huawei.fit.http.annotation.ResponseStatus;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fit.jober.flowsengine.controller.FlowsController;
-import com.huawei.fit.jober.taskcenter.tianzhou.TianzhouAbstractController;
-import com.huawei.fit.jober.taskcenter.tianzhou.View;
+// import com.huawei.fit.jober.taskcenter.tianzhou.TianzhouAbstractController;
+import com.huawei.fit.waterflow.biz.util.Views;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.plugin.Plugin;
 
@@ -32,9 +33,9 @@ import java.util.Map;
  * @since 2023/9/7
  */
 @Component
-@RequestMapping(value = TianzhouAbstractController.URI_PREFIX + "/flows", group = "天舟流程定义管理接口")
+@RequestMapping(value = TIANZHOU_URL_PREFIX + "/flows", group = "天舟流程定义管理接口")
 @RequiredArgsConstructor
-public class TianzhouFlowsController extends TianzhouAbstractController {
+public class TianzhouFlowsController {
     private final FlowsController flowsController;
 
     private final Plugin plugin;
@@ -52,7 +53,7 @@ public class TianzhouFlowsController extends TianzhouAbstractController {
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> createFlows(HttpClassicServerRequest httpRequest, HttpClassicServerResponse httpResponse,
             @PathVariable("tenant_id") String tenantId, @RequestBody Map<String, Object> graphData) {
-        return View.viewOf(() -> flowsController.createFlows(httpRequest, httpResponse, tenantId, graphData), plugin,
+        return Views.viewOf(() -> flowsController.createFlows(httpRequest, httpResponse, tenantId, graphData), plugin,
                 httpRequest);
     }
 
@@ -71,7 +72,7 @@ public class TianzhouFlowsController extends TianzhouAbstractController {
     public Map<String, Object> updateFlows(HttpClassicServerRequest httpRequest, HttpClassicServerResponse httpResponse,
             @PathVariable("tenant_id") String tenantId, @PathVariable("flowId") String flowId,
             @RequestBody Map<String, Object> graphData) {
-        return View.viewOf(() -> flowsController.updateFlows(httpRequest, httpResponse, tenantId, flowId, graphData),
+        return Views.viewOf(() -> flowsController.updateFlows(httpRequest, httpResponse, tenantId, flowId, graphData),
                 plugin, httpRequest);
     }
 
@@ -89,7 +90,7 @@ public class TianzhouFlowsController extends TianzhouAbstractController {
     public Map<String, Object> findFlowsById(HttpClassicServerRequest httpRequest,
             HttpClassicServerResponse httpResponse, @PathVariable("tenant_id") String tenantId,
             @PathVariable("flowId") String flowId) {
-        return View.viewOf(() -> flowsController.findFlowsById(httpRequest, httpResponse, tenantId, flowId), plugin,
+        return Views.viewOf(() -> flowsController.findFlowsById(httpRequest, httpResponse, tenantId, flowId), plugin,
                 httpRequest);
     }
 
@@ -121,7 +122,7 @@ public class TianzhouFlowsController extends TianzhouAbstractController {
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> findFlowsByTenant(HttpClassicServerRequest httpRequest,
             HttpClassicServerResponse httpResponse, @PathVariable("tenant_id") String tenantId) {
-        return View.viewOf(() -> flowsController.findFlowsByTenant(httpRequest, httpResponse, tenantId), plugin,
+        return Views.viewOf(() -> flowsController.findFlowsByTenant(httpRequest, httpResponse, tenantId), plugin,
                 httpRequest);
     }
 
@@ -141,7 +142,7 @@ public class TianzhouFlowsController extends TianzhouAbstractController {
     public Map<String, Object> findFlowsByName(HttpClassicServerRequest httpRequest,
             HttpClassicServerResponse httpResponse, @PathVariable("tenant_id") String tenantId,
             @PathVariable("name") String name, @PathVariable("version") String version) {
-        return View.viewOf(() -> flowsController.findFlowsByName(httpRequest, httpResponse, tenantId, name, version),
+        return Views.viewOf(() -> flowsController.findFlowsByName(httpRequest, httpResponse, tenantId, name, version),
                 plugin, httpRequest);
     }
 
@@ -160,7 +161,7 @@ public class TianzhouFlowsController extends TianzhouAbstractController {
     public Map<String, Object> findFlowsByMetaIdAndVersion(HttpClassicServerRequest httpRequest,
             HttpClassicServerResponse httpResponse, @PathVariable("tenant_id") String tenantId,
             @PathVariable("metaId") String metaId, @PathVariable("version") String version) {
-        return View.viewOf(
+        return Views.viewOf(
                 () -> flowsController.findFlowsByMetaIdAndVersion(httpRequest, httpResponse, tenantId, metaId, version),
                 plugin, httpRequest);
     }

@@ -2,7 +2,9 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.jober.bff.controller.tianzhou;
+package com.huawei.fit.waterflow.tianzhou.controller;
+
+import static com.huawei.fit.waterflow.biz.common.Constant.TIANZHOU_URL_PREFIX;
 
 import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.PostMapping;
@@ -12,9 +14,7 @@ import com.huawei.fit.http.annotation.ResponseStatus;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fit.jober.bff.controller.FlowsEngineController;
-import com.huawei.fit.jober.taskcenter.tianzhou.TianzhouAbstractController;
-import com.huawei.fit.jober.taskcenter.tianzhou.View;
+import com.huawei.fit.waterflow.biz.util.Views;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.plugin.Plugin;
 
@@ -29,9 +29,9 @@ import java.util.Map;
  * @since 2024/1/3
  */
 @Component
-@RequestMapping(value = TianzhouAbstractController.URI_PREFIX + "/flows-bff", group = "天舟流程定义封装接口")
+@RequestMapping(value = TIANZHOU_URL_PREFIX + "/flows-bff", group = "天舟流程定义封装接口")
 @RequiredArgsConstructor
-public class TianzhouFlowsEngineController extends TianzhouAbstractController {
+public class TianzhouFlowsEngineController {
     private final FlowsEngineController flowsEngineController;
 
     private final Plugin plugin;
@@ -50,7 +50,7 @@ public class TianzhouFlowsEngineController extends TianzhouAbstractController {
     public Map<String, Object> findFlowDefinitionsPage(HttpClassicServerRequest httpRequest,
             HttpClassicServerResponse httpResponse, @PathVariable("tenant_id") String tenantId,
             @RequestBody Map<String, Object> data) {
-        return View.viewOf(
+        return Views.viewOf(
                 () -> flowsEngineController.findFlowDefinitionsPage(httpRequest, httpResponse, tenantId, data), plugin,
                 httpRequest);
     }
@@ -68,7 +68,7 @@ public class TianzhouFlowsEngineController extends TianzhouAbstractController {
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> createFlows(HttpClassicServerRequest httpRequest, HttpClassicServerResponse httpResponse,
             @PathVariable("tenant_id") String tenantId, @RequestBody Map<String, Object> data) {
-        return View.viewOf(() -> flowsEngineController.createFlows(httpRequest, httpResponse, tenantId, data), plugin,
+        return Views.viewOf(() -> flowsEngineController.createFlows(httpRequest, httpResponse, tenantId, data), plugin,
                 httpRequest);
     }
 }

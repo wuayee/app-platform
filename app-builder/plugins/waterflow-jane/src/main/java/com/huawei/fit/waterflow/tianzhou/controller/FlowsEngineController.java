@@ -2,11 +2,12 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.jober.bff.controller;
+package com.huawei.fit.waterflow.tianzhou.controller;
 
-import static com.huawei.fit.jober.common.Constant.OPERATOR_KEY;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
+import static com.huawei.fit.waterflow.biz.common.Constant.BASE_URI_PREFIX;
+import static com.huawei.fit.waterflow.common.Constant.OPERATOR_KEY;
 
 import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.GetMapping;
@@ -26,8 +27,8 @@ import com.huawei.fit.jane.flow.graph.entity.elsa.response.GetPageResponse;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.jober.entity.FlowInfo;
-import com.huawei.fit.jober.taskcenter.controller.AbstractController;
-import com.huawei.fit.jober.taskcenter.controller.Views;
+import com.huawei.fit.waterflow.biz.util.ControllerUtil;
+import com.huawei.fit.waterflow.biz.util.Views;
 import com.huawei.fit.waterflow.graph.FlowsEngineWebService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.inspection.Validation;
@@ -47,12 +48,14 @@ import java.util.regex.Pattern;
  * @since 2023/10/11
  */
 @Component
-@RequestMapping(value = AbstractController.URI_PREFIX + "/flows-bff", group = "流程封装接口")
-public class FlowsEngineController extends AbstractController {
+@RequestMapping(value = BASE_URI_PREFIX + "/flows-bff", group = "流程封装接口")
+public class FlowsEngineController {
     private final FlowsEngineWebService flowsEngineService;
 
+    private final Authenticator authenticator;
+
     public FlowsEngineController(Authenticator authenticator, FlowsEngineWebService flowsEngineService) {
-        super(authenticator);
+        this.authenticator = authenticator;
         this.flowsEngineService = flowsEngineService;
     }
 
@@ -70,7 +73,7 @@ public class FlowsEngineController extends AbstractController {
     public Map<String, Object> findFlowDefinitionsPage(HttpClassicServerRequest httpRequest,
             HttpClassicServerResponse httpResponse, @PathVariable("tenant_id") String tenantId,
             @RequestBody Map<String, Object> data) {
-        OperationContext operationContext = buildOperationContext(tenantId, super.getOperator(httpRequest));
+        OperationContext operationContext = buildOperationContext(tenantId, this.getOperator(httpRequest));
         GetPageResponse flowDefinitionsPage = flowsEngineService.findFlowDefinitionsPage(JSON.toJSONString(data),
                 httpRequest, tenantId, operationContext);
         return Views.viewOf(flowDefinitionsPage);
@@ -89,7 +92,7 @@ public class FlowsEngineController extends AbstractController {
     @ResponseStatus(HttpResponseStatus.CREATED)
     public Map<String, Object> createFlows(HttpClassicServerRequest httpRequest, HttpClassicServerResponse httpResponse,
             @PathVariable("tenant_id") String tenantId, @RequestBody Map<String, Object> data) {
-        OperationContext operationContext = buildOperationContext(tenantId, super.getOperator(httpRequest));
+        OperationContext operationContext = buildOperationContext(tenantId, this.getOperator(httpRequest));
         return flowsEngineService.createFlows(data, httpRequest, tenantId, operationContext);
     }
 
@@ -256,5 +259,13 @@ public class FlowsEngineController extends AbstractController {
         Validation.notBlank(tenantId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "tenant"));
         Validation.notBlank(version, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "version"));
         flowsEngineService.deleteFlows(flowId, version, new OperationContext());
+    }
+
+    private com.huawei.fit.jane.task.util.OperationContext contextOf(HttpClassicServerRequest request, String tenantId) {
+        return ControllerUtil.contextOf(request, tenantId, this.authenticator);
+    }
+
+    private String getOperator(HttpClassicServerRequest request) {
+        return ControllerUtil.getOperator(request, this.authenticator);
     }
 }

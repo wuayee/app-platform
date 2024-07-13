@@ -2,10 +2,11 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.jober.flowsengine.controller;
+package com.huawei.fit.waterflow.tianzhou.controller;
 
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
+import static com.huawei.fit.waterflow.biz.common.Constant.BASE_URI_PREFIX;
 
 import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.GetMapping;
@@ -20,10 +21,9 @@ import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.jober.common.model.JoberResponse;
-import com.huawei.fit.jober.taskcenter.controller.AbstractController;
-import com.huawei.fit.jober.taskcenter.controller.Views;
 import com.huawei.fit.waterflow.biz.common.vo.FlowCallbackVO;
 import com.huawei.fit.waterflow.biz.common.vo.FlowDefinitionVO;
 import com.huawei.fit.waterflow.biz.common.vo.FlowEventVO;
@@ -31,6 +31,8 @@ import com.huawei.fit.waterflow.biz.common.vo.FlowFilterVO;
 import com.huawei.fit.waterflow.biz.common.vo.FlowJoberVO;
 import com.huawei.fit.waterflow.biz.common.vo.FlowNodeVO;
 import com.huawei.fit.waterflow.biz.common.vo.FlowTaskVO;
+import com.huawei.fit.waterflow.biz.util.ControllerUtil;
+import com.huawei.fit.waterflow.biz.util.Views;
 import com.huawei.fit.waterflow.flowsengine.biz.service.FlowsService;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowNode;
@@ -61,14 +63,16 @@ import java.util.stream.Collectors;
  * @since 2023/8/1
  */
 @Component
-@RequestMapping(value = AbstractController.URI_PREFIX + "/flows", group = "流程定义管理接口")
-public class FlowsController extends AbstractController {
+@RequestMapping(value = BASE_URI_PREFIX + "/flows", group = "流程定义管理接口")
+public class FlowsController {
     private static final Logger log = Logger.get(FlowsController.class);
 
     private final FlowsService flowsService;
 
+    private final Authenticator authenticator;
+
     public FlowsController(Authenticator authenticator, FlowsService flowsService) {
-        super(authenticator);
+        this.authenticator = authenticator;
         this.flowsService = flowsService;
     }
 
@@ -392,5 +396,9 @@ public class FlowsController extends AbstractController {
                 .to(flowEvent.getTo())
                 .conditionRule(flowEvent.getConditionRule())
                 .build();
+    }
+
+    private OperationContext contextOf(HttpClassicServerRequest request, String tenantId) {
+        return ControllerUtil.contextOf(request, tenantId, this.authenticator);
     }
 }

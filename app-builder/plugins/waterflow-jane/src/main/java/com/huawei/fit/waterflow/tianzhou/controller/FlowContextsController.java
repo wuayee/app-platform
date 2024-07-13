@@ -2,9 +2,10 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.jober.flowsengine.controller;
+package com.huawei.fit.waterflow.tianzhou.controller;
 
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
+import static com.huawei.fit.waterflow.biz.common.Constant.BASE_URI_PREFIX;
 
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PathVariable;
@@ -16,10 +17,11 @@ import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.jane.task.gateway.Authenticator;
+import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import com.huawei.fit.jober.taskcenter.controller.AbstractController;
-import com.huawei.fit.jober.taskcenter.controller.Views;
 import com.huawei.fit.waterflow.biz.common.vo.FlowDataVO;
+import com.huawei.fit.waterflow.biz.util.ControllerUtil;
+import com.huawei.fit.waterflow.biz.util.Views;
 import com.huawei.fit.waterflow.flowsengine.biz.service.FlowContextsService;
 import com.huawei.fit.waterflow.flowsengine.biz.service.entity.FlowsErrorInfo;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
@@ -41,12 +43,14 @@ import java.util.Map;
  * @since 2023/9/1
  */
 @Component
-@RequestMapping(value = AbstractController.URI_PREFIX + "/flow-contexts", group = "流程实例管理接口")
-public class FlowContextsController extends AbstractController {
+@RequestMapping(value = BASE_URI_PREFIX + "/flow-contexts", group = "流程实例管理接口")
+public class FlowContextsController {
     private final FlowContextsService flowContextsService;
 
+    private final Authenticator authenticator;
+
     public FlowContextsController(Authenticator authenticator, FlowContextsService flowContextsService) {
-        super(authenticator);
+        this.authenticator = authenticator;
         this.flowContextsService = flowContextsService;
     }
 
@@ -288,5 +292,9 @@ public class FlowContextsController extends AbstractController {
         Validation.notBlank(tenantId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "tenant"));
         Validation.notBlank(traceId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "traceId"));
         flowContextsService.terminateFlows(traceId, filter, this.contextOf(httpRequest, tenantId));
+    }
+
+    private OperationContext contextOf(HttpClassicServerRequest request, String tenantId) {
+        return ControllerUtil.contextOf(request, tenantId, this.authenticator);
     }
 }

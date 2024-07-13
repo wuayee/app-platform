@@ -2,7 +2,9 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.jober.flowsengine.controller.tianzhou;
+package com.huawei.fit.waterflow.tianzhou.controller;
+
+import static com.huawei.fit.waterflow.biz.common.Constant.TIANZHOU_URL_PREFIX;
 
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PathVariable;
@@ -13,10 +15,9 @@ import com.huawei.fit.http.annotation.ResponseStatus;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
-import com.huawei.fit.jober.flowsengine.controller.FlowContextsController;
-import com.huawei.fit.jober.taskcenter.tianzhou.TianzhouAbstractController;
-import com.huawei.fit.jober.taskcenter.tianzhou.View;
+// import com.huawei.fit.jober.taskcenter.tianzhou.TianzhouAbstractController;
 import com.huawei.fit.waterflow.biz.common.vo.FlowDataVO;
+import com.huawei.fit.waterflow.biz.util.Views;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.plugin.Plugin;
 
@@ -31,9 +32,9 @@ import java.util.Map;
  * @since 2023/9/7
  */
 @Component
-@RequestMapping(value = TianzhouAbstractController.URI_PREFIX + "/flow-contexts", group = "天舟流程实例管理接口")
+@RequestMapping(value = TIANZHOU_URL_PREFIX + "/flow-contexts", group = "天舟流程实例管理接口")
 @RequiredArgsConstructor
-public class TianzhouFlowContextsController extends TianzhouAbstractController {
+public class TianzhouFlowContextsController {
     private final FlowContextsController flowContextsController;
 
     private final Plugin plugin;
@@ -54,7 +55,7 @@ public class TianzhouFlowContextsController extends TianzhouAbstractController {
             @PathVariable("tenant_id") String tenantId, @PathVariable("flowId") String flowId,
             @RequestBody FlowDataVO flowData) {
         // Todo 弄个结构体吃掉这块flowData
-        return View.viewOf(
+        return Views.viewOf(
                 () -> flowContextsController.startFlows(httpRequest, httpResponse, tenantId, flowId, flowData), plugin,
                 httpRequest);
     }
@@ -76,7 +77,7 @@ public class TianzhouFlowContextsController extends TianzhouAbstractController {
     public Map<String, Object> findStartNodeContexts(HttpClassicServerRequest httpRequest,
             HttpClassicServerResponse httpResponse, @PathVariable("tenant_id") String tenantId,
             @PathVariable("metaId") String metaId, @PathVariable("version") String version) {
-        return View.viewOf(
+        return Views.viewOf(
                 () -> flowContextsController.findStartNodeContexts(httpRequest, httpResponse, tenantId, metaId,
                         version), plugin, httpRequest);
     }
@@ -99,7 +100,7 @@ public class TianzhouFlowContextsController extends TianzhouAbstractController {
             HttpClassicServerResponse httpResponse, @PathVariable("tenant_id") String tenantId,
             @PathVariable("metaId") String metaId, @PathVariable("version") String version,
             @PathVariable("nodeId") String nodeId) {
-        return View.viewOf(
+        return Views.viewOf(
                 () -> flowContextsController.findNodeContexts(httpRequest, httpResponse, tenantId, metaId, version,
                         nodeId), plugin, httpRequest);
     }
@@ -120,7 +121,7 @@ public class TianzhouFlowContextsController extends TianzhouAbstractController {
     public Map<String, Object> findContextStatusViewCount(HttpClassicServerRequest httpRequest,
             HttpClassicServerResponse httpResponse, @PathVariable("tenant_id") String tenantId,
             @PathVariable("metaId") String metaId, @PathVariable("version") String version) {
-        return View.viewOf(
+        return Views.viewOf(
                 () -> flowContextsController.findContextStatusViewCount(httpRequest, httpResponse, tenantId, metaId,
                         version), plugin, httpRequest);
     }

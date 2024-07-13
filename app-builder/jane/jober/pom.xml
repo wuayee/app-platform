@@ -95,6 +95,12 @@
             <artifactId>waterflow-service</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jane</groupId>
+            <artifactId>jane-common</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
 
         <!-- DB -->
         <dependency>

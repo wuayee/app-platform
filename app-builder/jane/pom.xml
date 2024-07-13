@@ -25,6 +25,7 @@
         <module>task</module>
         <module>dynamic-form-genericable</module>
         <module>jane-common-component</module>
+        <module>jane-common</module>
     </modules>
 
 </project>
