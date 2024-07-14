@@ -144,15 +144,30 @@ public class DynamicRoutingInterceptorTest {
         assertThat(actual).isEqualTo("OK");
     }
 
+    /**
+     * 表示第一个测试接口。
+     */
     private interface TestInterface1 {
+        /**
+         * 表示第一个测试方法。
+         */
         void testMethod1();
 
+        /**
+         * 表示第二个测试方法。
+         */
         @Genericable(id = "g")
         void testMethod2();
     }
 
+    /**
+     * 表示第二个测试接口。
+     */
     @Genericable(id = "g")
     private interface TestInterface2 {
+        /**
+         * 表示第一个测试方法。
+         */
         void testMethod1();
     }
 }
