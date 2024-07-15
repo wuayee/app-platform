@@ -1,4 +1,4 @@
-.jade-custom-collapse {
+.jade-collapse-custom-background-color {
     background-color: transparent; /* 设置背景透明 */
 }
 
@@ -29,33 +29,31 @@
 }
 
 .jade-panel-header-font {
-    color: rgb(37, 43, 58);
     justify-content: flex-start;
     margin-right: 4px;
-    font-family: HarmonyOS Sans, 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
     font-size: 12px;
-    font-weight: 400;
-    line-height: 14px;
-    letter-spacing: 0;
-    text-align: left;
+    font-weight: 600;
 }
 
 .jade-panel-header-popover-content {
-    margin-left: 4px;
-    color: rgba(28, 31, 35, .35);
-    height: 14px;
-    width: 14px;
+    margin-left: 2px;
+    color: rgba(28,31,35,.35);
+    align-self: flex-start;
+    height: 12px;
+    width: 12px;
 }
 
 .jade-panel, .jade-multi-conversation .ant-collapse .ant-collapse-item {
-    background-color: rgba(250, 250, 250); /* 设置背景颜色 */
+    background-color: rgba(247,248,249); /* 设置背景颜色 */
     margin-bottom: 8px !important;
     border-radius: 8px !important;
     width: 100%;
+    padding: 12px;
 }
 
 .jade-panel .ant-collapse-header {
-    padding: 8px !important;
+    padding: 0 !important;
     align-items: center !important;
 }
 
@@ -71,25 +69,19 @@
     width: 24px !important;
     height: 24px !important;
     border: none !important;
-    pointer-events: none;
 }
 
-.jade-form-item .ant-form-item-label > label {
-    color: rgb(77, 77, 77);
-    font-family: Huawei Sans;
+.jade-form-item .ant-form-item-label >label {
     font-size: 12px;
-    font-weight: 400;
-    line-height: 18px;
-    letter-spacing: 0px;
-    text-align: left;
+    color: rgba(28,31,35,.35);
 }
 
-.jade-font-size, .jade-select .ant-select-selector .ant-select-selection-item, .jade-select .ant-select-item-option, .ant-select-selection-placeholder, .jade-input::placeholder, .ant-select-dropdown .ant-select-item, .ant-tree-select-dropdown .ant-select-tree {
+.jade-font-size, .jade-select .ant-select-selector .ant-select-selection-item, .jade-select .ant-select-item-option,.ant-select-selection-placeholder, .jade-input::placeholder, .ant-select-dropdown .ant-select-item, .ant-tree-select-dropdown .ant-select-tree{
     font-size: 12px;
 }
 
 .jade-font-color {
-    color: rgb(77, 77, 77);
+    color: rgba(28,31,35,.35);
 }
 
 .jade-select .ant-select-selector {
@@ -122,7 +114,7 @@
 }
 
 .jade-popover-icon {
-    color: rgba(28, 31, 35, .35);
+    color: rgba(28,31,35,.35);
 }
 
 .jade-second-title {
@@ -135,6 +127,15 @@
 
 .ant-slider .ant-slider-mark {
     font-size: 12px;
+}
+
+.jade-top-header-popover-content {
+    margin-left: 2px;
+    margin-top: 6px;
+    color: rgba(28,31,35,.35);
+    align-self: flex-start;
+    height: 12px;
+    width: 12px;
 }
 
 .jade-column {
@@ -153,7 +154,7 @@
 }
 
 .title {
-    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-family: SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
     font-size: 14px;
     font-weight: 600;
     margin-right: 4px;

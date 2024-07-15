@@ -202,9 +202,44 @@ public enum AippErrCode implements ErrorCode {
     DATA_TYPE_IS_NOT_SUPPORTED(90002908, "Not supported data type to get. [type={0}]"),
 
     /**
-     * 应用已经发布过
+     * task 不存在
      */
-    APP_HAS_PUBLISHED(90002909, "该应用已经成功发布过，请不要重复发布。"),
+    TASK_NOT_FOUND(90002909, "Task not found."),
+
+    /**
+     * 应用已发布
+     */
+    APP_HAS_ALREADY(90002910, "应用已经发布，无法修改。"),
+
+    /**
+     * 应用已发布
+     */
+    APP_VERSION_HAS_ALREADY(90002911, "该版本名称已发布，请使用其他版本名称。"),
+
+    /**
+     * 该版本名称已发布，请使用其他版本名称
+     */
+    APP_HAS_PUBLISHED(90002912, "该应用已经成功发布过，请不要重复发布。"),
+
+    /**
+     * 不合法的操作
+     */
+    INVALID_OPERATION(90002913, "不合法的操作。"),
+
+    /**
+     * 该应用已经成功发布过，无法修改应用名称
+     */
+    APP_NAME_HAS_PUBLISHED(90002914, "该应用已经成功发布过，无法修改应用名称。"),
+
+    /**
+     * 禁止使用更低的版本号
+     */
+    NEW_VERSION_IS_LOWER(90002915, "禁止使用更低的版本号。"),
+
+    /**
+     * 不合法的版本号
+     */
+    INVALID_VERSION_NAME(90002916, "不合法的版本名称。"),
 
     /**
      * 错误码截止值

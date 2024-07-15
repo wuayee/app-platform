@@ -27,4 +27,6 @@ public class AppBuilderAppCreateDto {
     @JsonProperty("app_type")
     private String appType;
     private String type;
+    @JsonProperty("store_id")
+    private String storeId;
 }

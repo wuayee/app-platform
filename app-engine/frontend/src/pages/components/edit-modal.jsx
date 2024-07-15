@@ -79,6 +79,7 @@ const EditModal = (props) => {
     try {
       setLoading(true);
       const formParams = await form.validateFields();
+      formParams.store_id = appInfo.attributes.store_id;
       const params = {
         name: formParams.name,
         attributes: formParams,

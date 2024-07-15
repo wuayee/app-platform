@@ -45,6 +45,7 @@ const InfoModal = () => {
         icon: <FixIcon/>,
       },
     }
+    console.log(data);
     for(const key of Object.keys(data)){
       const item = {
         icon: mapper[key].icon,

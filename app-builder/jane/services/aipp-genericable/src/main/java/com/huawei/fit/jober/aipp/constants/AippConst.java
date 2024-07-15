@@ -335,6 +335,16 @@ public class AippConst {
     public static final String ATTR_PUBLISH_TIME_KEY = "publish_at";
 
     /**
+     * aipp publish description
+     */
+    public static final String ATTR_PUBLISH_DESCRIPTION = "publish_description";
+
+    /**
+     * aipp unique name
+     */
+    public static final String ATTR_UNIQUE_NAME = "unique_name";
+
+    /**
      * aipp start_form_id attribute key
      */
     public static final String ATTR_START_FORM_ID_KEY = "start_form_id";

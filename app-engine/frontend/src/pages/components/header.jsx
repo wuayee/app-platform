@@ -20,7 +20,6 @@ const ChoreographyHead = (props) => {
   } = props;
   const [ currentTime, setCurrentTime ] = useState('');
   const [ open, setOpen ] = useState(false);
-  const [ versionList, setVersionList ] = useState([]);
   let modalRef = React.createRef();
   let editRef = React.createRef();
   let testRef = React.createRef();
@@ -53,6 +52,9 @@ const ChoreographyHead = (props) => {
   const chatClick = () => {
     navigate(`/app-develop/${tenantId}/chat/${appId}`);
   }
+  const versionDetail = () => {
+    setOpen(true);
+  }
   return <>{(
     <div className="app-header">
       <div className="logo">
@@ -76,6 +78,7 @@ const ChoreographyHead = (props) => {
             <div className="status-tag">
               <img src='/src/assets/images/ai/publish.png' />
               <span>未发布</span>
+              <span className="version">V{appInfo.version}</span>
             </div>
           )
         }
@@ -83,16 +86,16 @@ const ChoreographyHead = (props) => {
         {showElsa && <TestStatus testTime={testTime} testStatus={testStatus}/>}
       </div>
       <div className="header-grid">
-        {/* <span className="history" onClick={versionDetail}>
+        <span className="history" onClick={versionDetail}>
           <img src='/src/assets/images/ai/time.png' />
-        </span> */}
+        </span>
         <span className="history robot" onClick={chatClick}><img src='/src/assets/images/ai/robot.png' />去聊天</span>
         { showElsa && <span className="header-btn test-btn" onClick={handleOpenDebug}>调试</span> }
         { !status && <span className="header-btn" onClick={modalClick}><UploadIcon />发布</span>  }
       </div>
       <PublishModal modalRef={modalRef} appInfo={appInfo} publishType="app" />
       <EditModal modalRef={editRef} appInfo={appInfo} updateAippCallBack={updateAippCallBack}/>
-      <TimeLineDrawer open={open} setOpen={setOpen} list={versionList} />
+      <TimeLineDrawer open={open} setOpen={setOpen} />
       <TestModal testRef={testRef} handleDebugClick={openDebug} type="edit"/>
     </div>
   )} </>;

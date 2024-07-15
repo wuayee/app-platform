@@ -79,7 +79,7 @@ public class AppBuilderAppServiceImplTest {
                 formPropertyRepository,
                 appRepository);
         appBuilderAppService = new AppBuilderAppServiceImpl(factory, aippFlowService, appRepository,
-                64, metaService, usrAppCollectionService);
+                64, metaService, usrAppCollectionService, null);
     }
 
     private AppBuilderApp mockApp() {

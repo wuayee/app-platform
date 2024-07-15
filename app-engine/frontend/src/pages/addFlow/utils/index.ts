@@ -16,8 +16,6 @@ export const handleClickAddToolNode = (type, e, metaData) => {
 }
 // 拖动插件添加
 export const handleDragToolNode = (item, e) => {
-  console.log(item);
-  
   e.dataTransfer.setData('itemTab', 'tool');
   e.dataTransfer.setData('itemType', item.type || 'toolInvokeNodeState');
   e.dataTransfer.setData('itemMetaData', JSON.stringify(item));

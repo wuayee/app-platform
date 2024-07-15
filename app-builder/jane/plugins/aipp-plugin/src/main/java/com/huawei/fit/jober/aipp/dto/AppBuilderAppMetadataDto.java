@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,4 +32,5 @@ public class AppBuilderAppMetadataDto {
     private String id;
     private Map<String, Object> attributes;
     private String state;
+    private List<String> tags;
 }

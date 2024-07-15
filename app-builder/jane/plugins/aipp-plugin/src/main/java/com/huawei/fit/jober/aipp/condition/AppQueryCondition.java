@@ -4,13 +4,14 @@
 
 package com.huawei.fit.jober.aipp.condition;
 
-import com.huawei.fit.http.annotation.RequestQuery;
-import com.huawei.fitframework.annotation.Property;
+import com.huawei.fit.http.annotation.RequestParam;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * @author 邬涨财 w00575064
@@ -22,16 +23,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AppQueryCondition {
     private String tenantId;
+
+    @RequestParam(name = "type", required = false, defaultValue = "app")
     private String type;
 
-    @RequestQuery(name = "name", required = false)
+    private List<String> ids;
+
+    @RequestParam(name = "name", required = false)
     private String name;
 
-    @Property(description = "排序条件,支持字段:create_at/update_at", example = "create_at")
-    @RequestQuery(name = "sort", required = false, defaultValue = "update_at")
-    private String sort;
-
-    @Property(description = "排序方向,descend表示降序，ascend表示升序", example = "descend")
-    @RequestQuery(name = "order", required = false, defaultValue = "descend")
-    private String order;
+    @RequestParam(name = "state", required = false)
+    private String state;
 }

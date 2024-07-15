@@ -39,6 +39,10 @@ export function createAipp(tenantId, appId, params) {
 export function getAppInfo(tenantId, appId) {
   return get(`${AIPP_URL}/${tenantId}/app/${appId}`);
 }
+// 点击去编排
+export function getAppInfoByVersion(tenantId, appId) {
+  return get(`${AIPP_URL}/${tenantId}/app/${appId}/latest_orchestration`);
+}
 // 更新应用全部详情
 export function updateAppInfo(tenantId, appId, params) {
   return put(`${AIPP_URL}/${tenantId}/app/${appId}`, params);
@@ -105,6 +109,11 @@ export function queryInspirationSelect(tenantId, fitableid, params) {
 export function uploadChatFile(tenantId, appId, data, headers) {
   return post(`${AIPP_URL}/${tenantId}/file?aipp_id=${appId}`, data, { headers });
 }
+
+// 文件上传
+export function uploadImage(tenantId, data, headers) {
+  return post(`${AIPP_URL}/${tenantId}/file`, data, { headers });
+}
 // 图片预览
 export function picturePreview(tenantId, params) {
   return get(`${AIPP_URL}/${tenantId}/file`, params);
@@ -131,6 +140,15 @@ export function reTestInstance(tenantId, aippId, instanceId, version) {
     `${AIPP_URL}/${tenantId}/aipp/${aippId}/instances/${instanceId}/runtime?version=${version}`
   );
 }
+// 获取版本历史记录
+export function getVersion(tenantId, appId) {
+  return get(`${AIPP_URL}/${tenantId}/app/${appId}/recentPublished`);
+}
+// 获取插件接口
+export function getToolList(params) {
+  return get(`${AIPP_URL}/store/plugins/search`, params);
+}
+
 // 获取溯源下拉选项
 export function getOptions(data) {
   return post(`${AIPP_URL}/api/v1/platform/db/search`, data);

@@ -6,68 +6,67 @@ import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router';
 import './style.scoped.scss';
 import { IconMap, PluginCardTypeE } from '../../pages/plugin/helper';
+import { useAppSelector } from '../../store/hook';
+import { getAppInfoByVersion } from '../../shared/http/aipp';
 
-const PluginCard = ({ pluginData,cardType }: any) => {
-  const navigate = useNavigate()
+const WorkflowCard = ({ pluginData,cardType }: any) => {
+  const navigate = useNavigate();
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const operatItems: MenuProps['items'] = [
-    {
-      label: <div>发布</div>,
-      key: 'piblish',
-    },
     {
       label: <div>编排</div>,
       key: 'choreography',
     },
-    {
-      label: <div>删除</div>,
-      key: 'delete',
-    },
   ];
   return(
   <div className='plugin-card'
-   onClick={()=>{navigate(`/plugin/detail/${pluginData?.uniqueName}`)}}>
+   onClick={async()=>{
+    let id=pluginData?.id;
+    if(pluginData?.state==='active')
+    {
+      const res= await getAppInfoByVersion(tenantId,id);
+      id=res?.data?.id;
+    }
+    navigate(`/app-develop/${tenantId}/app-detail/add-flow/${id}`);
+  }}
+    >
     <div className='plugin-card-header'>
       <img src='/src/assets/images/knowledge/knowledge-base.png' />
       <div>
         <div style={{ display: 'flex' }}>
           <div style={{ fontSize: 20, marginBottom: 8 }}>
             {pluginData?.name}
+            <Tag className='version'>V{pluginData?.version}</Tag>
           </div>
         </div>
         <div className='plugin-card-user'>
           <Icons.user />
-          <span style={{ marginRight: 8 }}>{pluginData?.creator}</span>
+          <span style={{ marginRight: 8 }}>{pluginData?.createBy}</span>
           {pluginData?.tags?.map((tag: string, index: number) => <Tag style={{ margin: 0 }} key={index}>{tag}</Tag>)}
         </div>
       </div>
     </div>
     <div className='card-content'>
-      {pluginData?.description}
+      {pluginData?.attributes?.description}
     </div>
     {/* 卡片底部 */}
     <div className='card-footer'>
-      <div hidden>
+      <div>
       <Flex gap={14}>
-        <span hidden={cardType===PluginCardTypeE.MARKET}>
-          <Tag className='footer-type'>Tag 1</Tag>
-        </span>
         <span>
+          {pluginData?.state==='active'?<Tag bordered={false} color="processing" className='footer-type'>已发布</Tag>:<Tag bordered={false} className='footer-type'>草稿</Tag>}
+        </span>
+        <span hidden>
           <UserOutlined style={{ marginRight: 8 }} />
           {pluginData?.downloadCount}
         </span>
-        <span>
+        <span hidden>
           <StarOutlined style={{ marginRight: 8 }} />
           {pluginData?.likeCount}
         </span>
       </Flex>
       </div>
-      <div hidden={cardType!==PluginCardTypeE.MARKET}>
-      <Flex style={{ display: 'flex', alignItems: 'center' }} gap={4} >
-        {IconMap[pluginData?.source?.toUpperCase()]?.icon}
-        <span style={{ fontSize: 12, fontWeight: 700 }}>{IconMap[pluginData?.source?.toUpperCase()]?.name}</span>
-      </Flex>
-      </div>
-      <div hidden onClick={(e)=>{e.stopPropagation();}}>
+      <div onClick={(e)=>{e.stopPropagation();}}>
         <Dropdown menu={{items:operatItems}} trigger={['click']}>
            <EllipsisOutlined className='footer-more'/>
         </Dropdown>
@@ -76,4 +75,4 @@ const PluginCard = ({ pluginData,cardType }: any) => {
   </div >
 )}
 
-export default PluginCard;
+export default WorkflowCard;

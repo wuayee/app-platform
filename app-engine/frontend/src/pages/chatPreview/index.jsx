@@ -240,7 +240,7 @@ const ChatPreview = (props) => {
     } else {
       wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));
     }
-    wsCurrent.current.onerror = () => {
+    wsCurrent.current.onerror = (err) => {
       onStop('socket对话失败');
       dispatch(setChatRunning(false));
     }

@@ -23,6 +23,7 @@ import com.huawei.fit.jober.aipp.enums.JaneCategory;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -152,7 +154,16 @@ public class MetaUtils {
         return metaRes.getResults().get(0);
     }
 
-    private static List<Meta> getListMetaHandle(MetaService metaService, MetaFilter metaFilter,
+    /**
+     * 获取MetaList
+     *
+     * @param metaService 处理Meta请求的service
+     * @param metaFilter 过滤器
+     * @param context 上下文
+     * @return 结果
+     * @throws AippException 抛出aipp的异常
+     */
+    public static List<Meta> getListMetaHandle(MetaService metaService, MetaFilter metaFilter,
             OperationContext context) throws AippException {
         final int limitPerQuery = 10;
         return getAllFromRangedResult(limitPerQuery,
@@ -205,7 +216,6 @@ public class MetaUtils {
     }
 
     private static MetaFilter getNormalMetaFilter(String metaId, NormalFilterEnum normalFilter) {
-        MetaFilter metaFilter = getAnyMetaFilter(metaId, null);
         Map<String, List<String>> attributes = new HashMap<String, List<String>>() {{
             // 仅查找普通aipp，不包含预览aipp
             put(AippConst.ATTR_AIPP_TYPE_KEY, Collections.singletonList(AippTypeEnum.NORMAL.name()));
@@ -217,14 +227,63 @@ public class MetaUtils {
             attributes.put(AippConst.ATTR_META_STATUS_KEY,
                     Collections.singletonList(AippMetaStatusEnum.INACTIVE.getCode()));
         }
+        String sortEncode =
+                MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.name(), DirectionEnum.DESCEND.name());
+        MetaFilter metaFilter = getAnyMetaFilter(metaId, null);
+        metaFilter.setOrderBys(Collections.singletonList(sortEncode));
         metaFilter.setAttributes(attributes);
         return metaFilter;
     }
 
+    /**
+     * 判断一个Meta是否被发布
+     *
+     * @param meta 待验证的Meta
+     * @return 该meta是否发布
+     */
+    public static boolean isPublished(Meta meta) {
+        Map<String, Object> attributes = meta.getAttributes();
+        if (!attributes.containsKey(AippConst.ATTR_AIPP_TYPE_KEY)
+                || !attributes.containsKey(AippConst.ATTR_META_STATUS_KEY)) {
+            return false;
+        }
+        String aippType = String.valueOf(attributes.get(AippConst.ATTR_AIPP_TYPE_KEY));
+        String metaStatus = String.valueOf(attributes.get(AippConst.ATTR_META_STATUS_KEY));
+        return StringUtils.equals(aippType, AippTypeEnum.NORMAL.name()) && Objects.equals(metaStatus,
+                AippMetaStatusEnum.ACTIVE.getCode());
+    }
+
+    /**
+     * 通过appID获取所有的Meta
+     *
+     * @param metaService 处理Meta请求的service
+     * @param appId app的Id
+     * @param aippType aipp的类型
+     * @param context 上下文
+     * @return 结果
+     * @throws AippException 抛出aipp的异常
+     */
     public static List<Meta> getAllMetasByAppId(MetaService metaService, String appId, String aippType,
             OperationContext context) throws AippException {
         MetaFilter metaFilter = getMetaFilter(appId, aippType);
         return getListMetaHandle(metaService, metaFilter, context);
+    }
+
+    public static List<Meta> getAllMetasByAppId(MetaService metaService, String appId,
+            OperationContext context) throws AippException {
+        MetaFilter metaFilter = getMetaFilter(appId);
+        return getListMetaHandle(metaService, metaFilter, context);
+    }
+
+    private static MetaFilter getMetaFilter(String appId) {
+        MetaFilter metaFilter = new MetaFilter();
+        Map<String, List<String>> attributes = new HashMap<>();
+        attributes.put(AippConst.ATTR_APP_ID_KEY, Collections.singletonList(appId));
+        metaFilter.setAttributes(attributes);
+        String sortEncode =
+                MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.name(), DirectionEnum.DESCEND.name());
+        metaFilter.setOrderBys(Collections.singletonList(sortEncode));
+        return metaFilter;
     }
 
     private static MetaFilter getMetaFilter(String appId, String aippType) {
