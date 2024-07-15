@@ -55,6 +55,7 @@ import NewFeat from './svg/new-feat.svg';
 import Rocket from './svg/rocket.svg';
 import Fix from './svg/fix.svg';
 import Code from './svg/code.svg';
+import ChatUser from './svg/chat-user.svg';
 
 // 编辑按钮
 const EditIcon = (props) => <Icon component={() => (<Edit/>)} {...props} />;
@@ -112,6 +113,7 @@ const NewFeatIcon = (props) => <Icon component={() => (<NewFeat />)} {...props} 
 const RocketIcon = (props) => <Icon component={() => (<Rocket />)} {...props} />;
 const FixIcon = (props) => <Icon component={() => (<Fix />)} {...props} />;
 const CodeIcon = (props) => <Icon component={() => (<Code />)} {...props} />;
+const ChatUserIcon = (props) => <Icon component={() => (<ChatUser />)} {...props} />;
 
 export {
   EditIcon,
@@ -168,6 +170,7 @@ export {
   NewFeatIcon,
   RocketIcon,
   FixIcon,
-  CodeIcon
+  CodeIcon,
+  ChatUserIcon
 }
 
