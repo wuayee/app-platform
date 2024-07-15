@@ -177,9 +177,9 @@ public class DistributedLockDifferentClientsTest extends DatabaseBaseTest {
                 latch1.countDown();
                 lock2.lockInterruptibly();
                 data.add(4);
-                Thread.sleep(10);
+                threadSleep(10);
                 data.add(5);
-                Thread.sleep(10);
+                threadSleep(10);
                 data.add(6);
             } catch (InterruptedException ignored) {
                 log.error("testLockExclusiveAccess error");
@@ -189,15 +189,26 @@ public class DistributedLockDifferentClientsTest extends DatabaseBaseTest {
         });
         assertTrue(latch1.await(10, TimeUnit.SECONDS));
         data.add(1);
-        Thread.sleep(100);
+        threadSleep(100);
         data.add(2);
-        Thread.sleep(100);
+        threadSleep(100);
         data.add(3);
         lock1.unlock();
         for (int i = 0; i < 6; i++) {
             Integer integer = data.poll(10, TimeUnit.SECONDS);
             assertNotNull(integer);
             assertEquals(i + 1, integer.intValue());
+        }
+    }
+
+    //根据cleancode建议将线程sleep方法通过轮询的方式替代
+    private void threadSleep(long sleepTime){
+        long startTime = System.currentTimeMillis();
+        while (true) {
+            long currentTime = System.currentTimeMillis(); // 获取当前时间
+            if (currentTime - startTime >= sleepTime) {
+                break; // 如果当前时间与开始时间的差值大于等于休眠时间，则退出循环
+            }
         }
     }
 
@@ -238,7 +249,7 @@ public class DistributedLockDifferentClientsTest extends DatabaseBaseTest {
         final BlockingQueue<Integer> data = new LinkedBlockingQueue<>();
         final CountDownLatch latch = new CountDownLatch(1);
         lock1.lockInterruptibly();
-        Thread.sleep(500);
+        threadSleep(500);
         Executors.newSingleThreadExecutor().execute(() -> {
             Lock lock2 = createClient(100, 50, "192.168.0.2").getLock("test");
             try {

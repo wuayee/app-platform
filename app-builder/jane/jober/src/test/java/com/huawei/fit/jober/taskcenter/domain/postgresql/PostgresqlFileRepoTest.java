@@ -18,6 +18,7 @@ import com.huawei.fit.jober.taskcenter.fitable.util.ParamUtils;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -67,7 +68,8 @@ public class PostgresqlFileRepoTest {
         doReturn(file).when(fileService).upload(anyString(), any(), any());
         InsertSql sql = InsertSql.custom().into("file");
         sql.value("type", "S3");
-        repo.upload(ParamUtils.convertDeclaration(declaration), context);
+        com.huawei.fit.jane.task.domain.File file = repo.upload(ParamUtils.convertDeclaration(declaration), context);
+        Assertions.assertNotNull(file);
     }
 
     @Test
@@ -79,7 +81,8 @@ public class PostgresqlFileRepoTest {
         rows.add(row);
         when(executor.executeQuery(anyString(), anyList())).thenReturn(rows);
         when(fileService.download(anyString(), any())).thenReturn(file);
-        repo.download(fileId, context);
+        com.huawei.fit.jane.task.domain.File file = repo.download(fileId, context);
+        Assertions.assertNotNull(file);
     }
 
     @Test
@@ -91,6 +94,7 @@ public class PostgresqlFileRepoTest {
         List<Map<String, Object>> rows = new ArrayList<>();
         rows.add(row);
         when(executor.executeQuery(anyString(), anyList())).thenReturn(rows);
-        repo.fileInfo(Collections.singletonList("12345678123456781234567812345678"), context);
+        Map<String, String> map = repo.fileInfo(Collections.singletonList("12345678123456781234567812345678"), context);
+        Assertions.assertNotNull(map);
     }
 }

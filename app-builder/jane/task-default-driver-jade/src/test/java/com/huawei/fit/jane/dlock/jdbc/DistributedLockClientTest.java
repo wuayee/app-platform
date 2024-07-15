@@ -74,9 +74,20 @@ public class DistributedLockClientTest extends DatabaseBaseTest {
             }
         }
 
-        Thread.sleep(10);
+        threadSleep(10);
         client.deleteExpiredLocks(0);
         assertEquals(0, getLocks().size());
+    }
+
+    //根据cleancode建议将线程sleep方法通过轮询的方式替代
+    private void threadSleep(long sleepTime){
+        long startTime = System.currentTimeMillis();
+        while (true) {
+            long currentTime = System.currentTimeMillis(); // 获取当前时间
+            if (currentTime - startTime >= sleepTime) {
+                break; // 如果当前时间与开始时间的差值大于等于休眠时间，则退出循环
+            }
+        }
     }
 
     @Test

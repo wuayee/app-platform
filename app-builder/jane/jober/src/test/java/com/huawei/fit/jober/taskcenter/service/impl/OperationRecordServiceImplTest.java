@@ -106,27 +106,27 @@ public class OperationRecordServiceImplTest {
             Assertions.assertDoesNotThrow(() -> service.create(declaration, context));
         }
 
-        @DisplayName("测试验证不通过1")
+        @DisplayName("测试declaration为空的情况")
         @Test
-        void testValidateOperationRecordDeclaration1() {
+        void throwExceptionWhenDeclarationIsNull() {
             BadRequestException exception = Assertions.assertThrows(BadRequestException.class,
                     () -> service.create(null, context));
 
             Assertions.assertEquals("Operation record declaration is null.", exception.getMessage());
         }
 
-        @DisplayName("测试验证不通过2")
+        @DisplayName("测试declaration field message为空的情况")
         @Test
-        void testValidateOperationRecordDeclaration2() {
+        void throwExceptionWhenDeclarationFieldMessageIsNull() {
             BadRequestException exception = Assertions.assertThrows(BadRequestException.class,
                     () -> service.create(new OperationRecordDeclaration(), context));
 
             Assertions.assertEquals("Operation record declaration field message is null.", exception.getMessage());
         }
 
-        @DisplayName("测试验证不通过3")
+        @DisplayName("测试declaration objectId 为空的情况")
         @Test
-        void testValidateOperationRecordDeclaration3() {
+        void throwExceptionWhenDeclarationFieldObjectIdIsNull() {
             OperationRecordDeclaration d = new OperationRecordDeclaration();
             d.setMessage(UndefinableValue.defined("message"));
             BadRequestException exception = Assertions.assertThrows(BadRequestException.class,
@@ -135,9 +135,9 @@ public class OperationRecordServiceImplTest {
             Assertions.assertEquals("Operation record declaration field objectId is null.", exception.getMessage());
         }
 
-        @DisplayName("测试验证不通过4")
+        @DisplayName("测试 declaration objectType 为空的情况")
         @Test
-        void testValidateOperationRecordDeclaration4() {
+        void throwExceptionWhenDeclarationFieldObjectTypeIsNull() {
             OperationRecordDeclaration d = new OperationRecordDeclaration();
             d.setMessage(UndefinableValue.defined("message"));
             d.setObjectId(UndefinableValue.defined("objectId"));
@@ -147,9 +147,9 @@ public class OperationRecordServiceImplTest {
             Assertions.assertEquals("Operation record declaration field objectType is null.", exception.getMessage());
         }
 
-        @DisplayName("测试验证不通过5")
+        @DisplayName("测试 declaration field operate 为空的情况")
         @Test
-        void testValidateOperationRecordDeclaration5() {
+        void throwExceptionWhenDeclarationFieldOperateIsNull() {
             OperationRecordDeclaration d = new OperationRecordDeclaration();
             d.setMessage(UndefinableValue.defined("message"));
             d.setObjectId(UndefinableValue.defined("objectId"));
