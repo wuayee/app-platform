@@ -27,7 +27,6 @@ import {
   deepClone,
   scrollBottom } from './utils/chat-process';
 import "./styles/chat-preview.scss";
-import { pduMap } from './common/config';
 import { creatChat, updateChat } from "@shared/http/chat.js";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import {
@@ -185,9 +184,8 @@ const ChatPreview = (props) => {
   // 启动任务
   const chatMissionStart = async (res, value, type) => {
     let { aipp_id, version } = res;
-    let dimensionVal = pduMap[dimension] || dimension;
     let params = type ? 
-      { initContext: { '$[FileDescription]$': value, dimension: dimensionVal}} : { initContext: { Question: value, dimension: dimensionVal } };
+      { initContext: { '$[FileDescription]$': value, dimension}} : { initContext: { Question: value, dimension } };
     params.initContext.useMemory = useMemory;
     try {
       const requestBody={

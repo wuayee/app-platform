@@ -34,7 +34,7 @@ const ToolCard = ({ pluginData, tenantId }: any) => {
       
       <div>
         <div style={{ display: 'flex' }}>
-          <div className="tool-name">
+          <div className='tool-name'>
             <span>{pluginData.name}</span> 
             {  pluginData.tags.includes('WATERFLOW') || pluginData.tags.includes('HUGGINGFACE') ? 
               <img src='/src/assets/images/ai/workflow.png' alt='' /> : 
@@ -65,7 +65,7 @@ const ToolCard = ({ pluginData, tenantId }: any) => {
         </span>
       </Flex>
     </div>
-    <div className="card-detail" onClick={detailClick}>
+    <div className='card-detail' onClick={detailClick}>
       查看详情
     </div>
   </div >

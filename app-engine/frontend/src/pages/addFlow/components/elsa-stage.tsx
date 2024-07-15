@@ -1,5 +1,5 @@
 
-import React, { useEffect, useCallback, useState, useRef, useContext,  } from 'react';
+import React, { useEffect, useCallback, useState, useRef, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { debounce } from '@shared/utils/common';
@@ -25,6 +25,7 @@ const Stage = (props) => {
   const modelCallback = useRef<any>();
   const currentApp = useRef<any>();
   const render = useRef(false);
+  const change = useRef(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -76,14 +77,21 @@ const Stage = (props) => {
   // 数据实时保存
   const handleChange = useCallback(debounce(() => elsaChange(), 2000), []);
   function elsaChange() {
-    let graphChangeData = window.agent.serialize();
-    currentApp.current.flowGraph.appearance = graphChangeData;
-    window.agent.validate().then(() => {
-      updateAppRunningFlow();
-    }).catch((err) => {
-      let str = typeof(err) === 'string' ? err : '请输入流程必填项';
-      Message({ type: "warning", content: str});
-    });
+    if (change.current) {
+      let graphChangeData = window.agent.serialize();
+      type ? appInfo.flowGraph.appearance = graphChangeData : setModalInfo(() => {
+        appRef.current.flowGraph.appearance = graphChangeData;
+        return appRef.current;
+      })
+      window.agent.validate().then(() => {
+        updateAppRunningFlow();
+      }).catch((err) => {
+        let str = typeof(err) === 'string' ? err : '请输入流程必填项';
+        Message({ type: 'warning', content: str});
+      });
+    } else {
+      change.current = true;
+    }
   }
   // 编辑更新应用
   async function updateAppRunningFlow() {

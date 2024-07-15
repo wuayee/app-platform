@@ -1,12 +1,12 @@
 
-import React, { useEffect, useState, useRef } from 'react';
-import { getCurUser, getAppInfo, clearInstance } from '../../shared/http/aipp';
+import React, { useEffect } from 'react';
+import { getAppInfo } from '../../shared/http/aipp';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
-import { useBeforeUnload, useLocation } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 import './index.scss'
 import {getUserCollection} from '../../shared/http/appDev'
-import { setCollectionValue, setCurAppId } from "../../store/collection/collection";
-import { setHistorySwitch } from "../../store/common/common";
+import { setCurAppId } from '../../store/collection/collection';
+import { setHistorySwitch } from '../../store/common/common';
 import CommonChat from '../chatPreview/chatComminPage';
 import { getUser } from '../helper';
 import { setAppId, setAppInfo } from '../../store/appInfo/appInfo';
@@ -18,13 +18,12 @@ const ChatRunning = () => {
   const dispatch = useAppDispatch();
   const curAppId = useAppSelector((state) => state.collectionStore.AppId);
   const appId = useAppSelector((state) => state.appStore.AppId);
-  const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   
   useEffect(()=>{
     if(curAppId){
-    getAppDetails();
-    dispatch(setAppId(curAppId));
+      getAppDetails();
+      dispatch(setAppId(curAppId));
     }
   },[curAppId]);
   
@@ -67,7 +66,7 @@ const ChatRunning = () => {
   }, [location]);
 
   return (
-    <div className="chat-engine-container">
+    <div className='chat-engine-container'>
       <CommonChat chatType='home'/> 
       <InfoModal/>
     </div>

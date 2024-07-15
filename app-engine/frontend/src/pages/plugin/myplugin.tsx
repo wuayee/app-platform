@@ -26,7 +26,7 @@ const tabItems: TabsProps['items'] = [
   },
   {
     key: tabItemE.TOOLFLOW,
-    label: '工作流',
+    label: '工具流',
   },
 ];
 

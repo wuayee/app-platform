@@ -27,5 +27,8 @@ export const FlowContext = createContext({
   appInfo: {},
   type: '',
   modalInfo: {},
+  showTime: false,
   setModalInfo: undefined,
+  setFlowInfo: undefined,
+  setShowTime: undefined
 });
