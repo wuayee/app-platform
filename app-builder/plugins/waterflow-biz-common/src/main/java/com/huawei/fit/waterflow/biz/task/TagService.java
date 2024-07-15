@@ -2,9 +2,10 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.waterflow.biz.stub;
+package com.huawei.fit.waterflow.biz.task;
 
 import com.huawei.fit.jane.task.util.OperationContext;
+import com.huawei.fitframework.annotation.Genericable;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ public interface TagService {
      * @param tag 表示待添加的标签的 {@link String}。
      * @param context 表示操作上下文的 {@link OperationContext}。
      */
+    @Genericable(id = "270f4613b57d41eda45c13a08b143222")
     void add(String objectType, String objectId, String tag, OperationContext context);
 
     /**
@@ -34,6 +36,7 @@ public interface TagService {
      * @param tags 表示对象唯一标识与目标标签列表的映射的 {@link List}{@code <}{@link String}{@code >}。
      * @param context 表示操作上下文的 {@link OperationContext}。
      */
+    @Genericable(id = "4481319f18ca421388ccc3e087a3e8e5")
     void save(String objectType, String objectId, List<String> tags, OperationContext context);
 
     /**
@@ -44,6 +47,7 @@ public interface TagService {
      * {@link Map}{@code <}{@link String}{@code , }{@link List}{@code <}{@link String}{@code >>}。
      * @param context 表示操作上下文的 {@link OperationContext}。
      */
+    @Genericable(id = "37dc047e5f6545bc8936cf7a8d124e66")
     void save(String objectType, Map<String, List<String>> tags, OperationContext context);
 
     /**
@@ -54,6 +58,7 @@ public interface TagService {
      * @param tag 表示待移除的标签的 {@link String}。
      * @param context 表示操作上下文的 {@link OperationContext}。
      */
+    @Genericable(id = "925ea5c76ded4e22ae7fd7316c62bb2a")
     void remove(String objectType, String objectId, String tag, OperationContext context);
 
     /**
@@ -64,6 +69,7 @@ public interface TagService {
      * @param context 表示操作上下文的 {@link OperationContext}。
      * @return 表示对象上定义的标签的列表的 {@link List}{@code <}{@link String}{@code >}。
      */
+    @Genericable(id = "e52238e98b4e46c1a0f7ffb3819ed7a5")
     List<String> list(String objectType, String objectId, OperationContext context);
 
     /**
@@ -75,6 +81,7 @@ public interface TagService {
      * @return 表示对象上定义的标签的列表的
      * {@link Map}{@code <}{@link String}{@code , }{@link List}{@code <}{@link String}{@code >>}。
      */
+    @Genericable(id = "57479f590c1949699cfa878ad844a669")
     Map<String, List<String>> list(String objectType, List<String> objectIds, OperationContext context);
 
     /**
@@ -84,23 +91,6 @@ public interface TagService {
      * @param tags 标签
      * @return 使用了标签的flowGraph对应的id
      */
+    @Genericable(id = "f33856c586c74c07b3e88fbc32dbc78c")
     List<String> list(String objectType, List<String> tags);
-
-    /**
-     * 识别指定标签。
-     *
-     * @param tag 表示待识别的标签的 {@link String}。
-     * @param context
-     * @return
-     */
-    String identify(String tag, OperationContext context);
-
-    /**
-     * 识别指定标签。
-     *
-     * @param tags 表示待识别的标签的列表的 {@link List}{@code <}{@link String}{@code >}。
-     * @param context 表示操作上下文的 {@link OperationContext}。
-     * @return 表示标签的名称至唯一标识的映射的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
-     */
-    Map<String, String> identify(List<String> tags, OperationContext context);
 }

@@ -27,7 +27,7 @@ import com.huawei.fit.jober.entity.FlowInfo;
 import com.huawei.fit.jober.entity.FlowNodeFormInfo;
 import com.huawei.fit.jober.entity.FlowNodeInfo;
 import com.huawei.fit.jober.entity.consts.NodeTypes;
-import com.huawei.fit.waterflow.biz.stub.TagService;
+import com.huawei.fit.waterflow.biz.task.TagService;
 import com.huawei.fit.waterflow.biz.util.FlowDefinitionParseUtils;
 import com.huawei.fit.waterflow.biz.util.ParamUtils;
 import com.huawei.fit.waterflow.flowsengine.biz.service.FlowContextsService;

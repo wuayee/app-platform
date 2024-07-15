@@ -14,7 +14,7 @@ import com.huawei.fit.jane.flow.graph.entity.FlowSaveEntity;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import com.huawei.fit.waterflow.biz.stub.TagService;
+import com.huawei.fit.waterflow.biz.task.TagService;
 import com.huawei.fit.waterflow.edatamate.client.FlowConfiguration;
 import com.huawei.fit.waterflow.edatamate.client.QueryCriteria;
 import com.huawei.fit.waterflow.edatamate.client.flowsengine.request.CleanDataListQuery;
