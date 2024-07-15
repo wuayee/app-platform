@@ -41,7 +41,7 @@ public class CleanExpiredLocksScheduleService {
      */
     @Scheduled(strategy = Scheduled.Strategy.FIXED_RATE, value = "30000")
     public void clean() {
-        log.info("Start cleaning up expired distributed locks");
+        log.debug("Start cleaning up expired distributed locks");
         this.distributedLockClient.deleteExpiredLocks(this.timeout);
     }
 }

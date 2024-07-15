@@ -106,7 +106,7 @@ public final class DistributedLock implements Lock {
      */
     @Override
     public boolean tryLock(long waitingTime, TimeUnit unit) throws InterruptedException {
-        log.warn("tryLock before: {}", this.lockKey);
+        log.debug("tryLock before: {}", this.lockKey);
         long now = System.currentTimeMillis();
         if (!this.threadLock.tryLock(waitingTime, unit)) {
             return false;
@@ -117,7 +117,7 @@ public final class DistributedLock implements Lock {
                 if (!isHeld) {
                     this.threadLock.unlock();
                 }
-                log.warn("tryLock after: {}", this.lockKey);
+                log.debug("tryLock after: {}", this.lockKey);
                 return isHeld;
             } catch (DataAccessException | TransactionException e) {
                 // 重试
@@ -136,12 +136,12 @@ public final class DistributedLock implements Lock {
      */
     @Override
     public void lock() {
-        log.warn("lock before: {}", this.lockKey);
+        log.debug("lock before: {}", this.lockKey);
         this.threadLock.lock();
         while (true) {
             try {
                 while (!acquireLock()) {
-                    log.warn("acquireLock waiting: {}", this.lockKey);
+                    log.debug("acquireLock waiting: {}", this.lockKey);
                     Thread.sleep(this.idleTime);
                 }
                 break;
@@ -170,7 +170,7 @@ public final class DistributedLock implements Lock {
      */
     @Override
     public void unlock() {
-        log.warn("unlock before: {}", this.lockKey);
+        log.debug("unlock before: {}", this.lockKey);
         if (!this.threadLock.isHeldByCurrentThread()) {
             log.error("The current thread {} doesn't own the lock at lock key:{}, lock info: {}.",
                     Thread.currentThread().getName(), this.lockKey, this.threadLock.toString());
@@ -201,7 +201,7 @@ public final class DistributedLock implements Lock {
         } finally {
             Optional.ofNullable(renewLockFuture).ifPresent(f -> f.cancel(true));
             this.threadLock.unlock();
-            log.warn("unlock after: {}", this.lockKey);
+            log.debug("unlock after: {}", this.lockKey);
         }
     }
 
@@ -269,7 +269,7 @@ public final class DistributedLock implements Lock {
     }
 
     private boolean acquireLock() {
-        log.warn("acquireLock enter");
+        log.debug("acquireLock enter");
         DistributedLockStatus lockStatus = this.repo.getStatus(this.lockKey);
         if (lockStatus == DistributedLockStatus.LOCK_BY_ME_EXPIRED) {
             log.warn("This lock by me is expired, lockKey = {}.", this.lockKey);
@@ -291,7 +291,7 @@ public final class DistributedLock implements Lock {
             }
             this.isValid = true;
         }
-        log.warn("acquireLock end");
+        log.debug("acquireLock end");
         return isAcquired;
     }
 
