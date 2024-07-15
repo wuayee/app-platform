@@ -122,10 +122,8 @@ public class AiFlowBasicExpressionTest {
         @DisplayName("无window的reduce数据聚合")
         void shouldOkWhenReduceWithoutWindow() {
             AiProcessFlow<Integer, Integer> flow = AiFlows.<Integer>create()
-                    .reduce(() -> 0, ((acc, input) -> {
-                        acc += input;
-                        return acc;
-                    })).close();
+                    .reduce(() -> 0, Integer::sum)
+                    .close();
 
             List<Integer> counters = new ArrayList<>();
             // 逐个注入，reduce不起作用
@@ -147,10 +145,8 @@ public class AiFlowBasicExpressionTest {
         void shouldOkWhenReduceWithWindow() {
             AiProcessFlow<Integer, Integer> flow = AiFlows.<Integer>create()
                     .window(inputs -> inputs.size() == 2)
-                    .reduce(() -> 0, ((acc, input) -> {
-                        acc += input;
-                        return acc;
-                    })).close();
+                    .reduce(() -> 0, Integer::sum)
+                    .close();
 
             checkInjectDataOneByOne(flow);
         }
@@ -198,10 +194,7 @@ public class AiFlowBasicExpressionTest {
                                 collector.collect(data + 1);
                             })
                             .window(inputs -> inputs.size() == 2)
-                            .reduce(StringBuilder::new, (acc, input) -> {
-                                acc.append(input);
-                                return acc;
-                            })
+                            .reduce(StringBuilder::new, (acc, input) -> acc.append(input))
                             .map(StringBuilder::toString)
                             .close()
                             .converse();
