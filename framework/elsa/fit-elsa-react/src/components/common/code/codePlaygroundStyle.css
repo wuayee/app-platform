@@ -135,6 +135,7 @@
 }
 
 .jade-code-test-output-content {
+    width: 560px;
     display: flex;
     border-radius: 4px;
     flex: 1 1;
@@ -162,4 +163,15 @@
     height: 32px;
     font-family: Huawei Sans;
     font-size: 14px;
+}
+
+.code-run-style {
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-family: Huawei Sans;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0;
+    background: rgb(247, 247, 247);
 }

@@ -47,6 +47,12 @@ export default function LlmFormWrapper({disabled}) {
         dispatch({actionType: "deleteInputParam", id: id});
     };
 
+    const content = (<>
+        <div>
+            <p>输入需要添加到提示词模板中的信息，可被提示词模板引用</p>
+        </div>
+    </>);
+
     useEffect(() => {
         if (!config || !config.urls) {
             console.error('Cannot get config.urls.');
@@ -62,7 +68,7 @@ export default function LlmFormWrapper({disabled}) {
                     };
                 })));
             }
-            if(!config.urls.toolListEndpoint) {
+            if (!config.urls.toolListEndpoint) {
                 console.error('Cannot get config.urls.toolListEndpoint.');
             } else {
                 httpUtil.get(config.urls.toolListEndpoint + '/tools?pageNum=1&pageSize=10&includeTags=FIT&excludeTags=Config', {}, (jsonData) => setToolOptions(jsonData.data.map(item => {
@@ -87,7 +93,12 @@ export default function LlmFormWrapper({disabled}) {
 
     return (
         <div>
-            <JadeInputForm disabled={disabled} items={initItems()} addItem={addItem} updateItem={updateItem} deleteItem={deleteItem}/>
+            <JadeInputForm disabled={disabled}
+                           items={initItems()}
+                           addItem={addItem}
+                           updateItem={updateItem}
+                           deleteItem={deleteItem}
+                           content={content}/>
             <ModelForm disabled={disabled} shapeId={shape.id} modelOptions={modelOptions}/>
             <SkillForm disabled={disabled} toolOptions={toolOptions} workflowOptions={workflowOptions} config={config}/>
             <LlmOutput/>

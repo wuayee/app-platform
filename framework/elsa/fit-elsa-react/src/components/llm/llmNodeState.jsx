@@ -26,7 +26,7 @@ export const llmNodeState = (id, x, y, width, height, parent, drawer) => {
             no: "1",
             name: "输入",
             type: SECTION_TYPE.DEFAULT,
-            data: self.input ? self.input.prompt.variables : {}
+            data: self.input.prompt ? self.input.prompt.variables : {}
         }, {
             no: "2",
             name: "输出",
