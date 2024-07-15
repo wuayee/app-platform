@@ -18,6 +18,7 @@ import {
 import '../styles/inspiration.scss';
 import { setDimension } from '@/store/common/common';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
+import {pduMap} from "../common/config";
 
 const Inspiration = (props) => {
   const { inspirationClick, setEditorSelect } = props;
@@ -167,7 +168,7 @@ const Inspiration = (props) => {
   }
   // 分类点击回调
   function nodeClick(id, name, parentId) {
-    dispatch(setDimension(name));
+    dispatch(setDimension(pduMap[name] || name));
     setCurrentPromptName(name);
     deepGetChild(treeNormalData.current, id);
     let arr = [{ title: '全部', id: parentId }];
@@ -218,7 +219,7 @@ const Inspiration = (props) => {
                   open={popoverOpen} 
                   onOpenChange={handleOpenChange}
                   arrow={false} 
-                  trigger='click' 
+                  trigger='click'
                   placement='bottomRight'
                 >
                   <Button size='small' icon={<SwapOutlined />} >
