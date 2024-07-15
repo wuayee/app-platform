@@ -45,7 +45,7 @@ export const CodeEditor = ({
                         return {
                             label: s.label,
                             kind: monaco.languages.CompletionItemKind.Field,
-                            insertText: s.label,
+                            insertText: _getInsertText(language, s),
                             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
                         };
                     })
@@ -54,13 +54,28 @@ export const CodeEditor = ({
         })
     };
 
+    /**
+     * 构造对应语言的代码补全提示
+     *
+     * @param language 语言
+     * @param suggestion 注册的提示对象
+     * @return {*|string} 代码补全提示
+     * @private
+     */
+    const _getInsertText = (language, suggestion) => {
+        if (language === 'json') {
+            return `"${suggestion.insertText}": ""`;
+        }
+        return suggestion.insertText;
+    };
+
     return (<>
         <Editor className={"jade-code-editor"}
                 defaultLanguage={language}
                 language={language}
                 width={"100%"}
                 height={_height}
-                defaultValue={code}
+                value={code}
                 theme={theme}
                 options={{...options}}
                 onMount={onMount}

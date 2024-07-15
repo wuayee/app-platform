@@ -1,0 +1,59 @@
+.code-add-output {
+    box-sizing: border-box;
+    /* live ui线框 */
+    border: 1px solid rgb(230, 230, 230);
+    border-radius: 4px;
+
+    background: rgb(255, 255, 255);
+}
+
+.button-edit {
+    /* 画板 1754 */
+    width: 87px;
+    height: 16px;
+    /* 自动布局 */
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin-left: auto !important; /* 将 button 放置在最右侧 */
+    margin-right: 16px;
+}
+
+.button-wrapper {
+    /* 画板 1754 */
+    position: static;
+    width: 87px;
+    height: 16px;
+    /* 自动布局 */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0;
+
+    /* Inside Auto Layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    margin: 0 10px;
+}
+
+.edit-button-text {
+    /* 在IDE中编辑 */
+    position: static;
+    width: 67px;
+    height: 14px;
+    /* 自动布局 */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0px;
+
+
+    /* Inside Auto Layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    margin: 0px 4px;
+}

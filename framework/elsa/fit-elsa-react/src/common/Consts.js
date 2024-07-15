@@ -37,3 +37,12 @@ export const SOURCE_PLATFORM = {
     LLAMA_INDEX: "llamaindex",
     LANG_CHAIN: "langchain",
 };
+
+export const DATA_TYPES = {
+    STRING: 'String',
+    INTEGER: 'Integer',
+    BOOLEAN: 'Boolean',
+    NUMBER: 'Number',
+    OBJECT: 'Object',
+    ARRAY: 'Array'
+};

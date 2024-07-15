@@ -31,9 +31,10 @@ JadeInputForm.propTypes = {
  * @param updateItem 当修改一个已有item时会调用此方法，此方法需要有id，修改的key和修改的value组成的对象列表两个入参
  * @param deleteItem 当删除一个已有item时会调用此方法，此方法需要有id入参
  * @param disabled 是否禁用.
+ * @param content 输入提示
  * @returns {JSX.Element} Jade标准输入表单的DOM
  */
-export default function JadeInputForm({items, addItem, updateItem, deleteItem, disabled}) {
+export default function JadeInputForm({items, addItem, updateItem, deleteItem, disabled, content}) {
     /**
      * 示例items,其中id，name，from，value必须，涉及reference时，referenceNode, referenceId, referenceKey必须, value会变为列表
      *
@@ -92,12 +93,6 @@ export default function JadeInputForm({items, addItem, updateItem, deleteItem, d
     const handleDelete = (itemId) => {
         deleteItem(itemId);
     };
-
-    const content = (
-        <div>
-            <p>输入需要添加到提示词模板中的信息，可被提示词模板引用</p>
-        </div>
-    );
 
     const handleSelectClick = (event) => {
         event.stopPropagation(); // 阻止事件冒泡

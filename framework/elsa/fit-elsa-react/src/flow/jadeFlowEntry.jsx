@@ -241,7 +241,8 @@ export const JadeFlow = (() => {
      * @param configs 传入的其他参数列表.
      */
     self.new = async (div, tenant, configs) => {
-        const g = jadeFlowGraph(div, "jadeFlow");
+        const graphDom = getGraphDom(div);
+        const g = jadeFlowGraph(graphDom, "jadeFlow");
         g.configs = configs;
         g.collaboration.mute = true;
         g.tenant = tenant;
@@ -271,7 +272,8 @@ export const JadeFlow = (() => {
      * @param importStatements 传入的需要加载的语句.
      */
     self.edit = async (div, tenant, flowConfigData, configs, importStatements = []) => {
-        const g = jadeFlowGraph(div, "jadeFlow");
+        const graphDom = getGraphDom(div);
+        const g = jadeFlowGraph(graphDom, "jadeFlow");
         g.configs = configs;
         g.tenant = tenant;
         g.collaboration.mute = true;
@@ -281,8 +283,28 @@ export const JadeFlow = (() => {
         await g.initialize();
         g.deSerialize(flowConfigData);
         const pageData = g.getPageData(0);
-        await g.edit(0, div, pageData.id);
+        await g.edit(0, graphDom, pageData.id);
         return jadeFlowAgent(g);
+    };
+
+    /**
+     * 创建一个新的用于承载elsa graph内容的dom元素
+     *
+     * @param parentDom 父dom
+     * @return {HTMLElement|HTMLDivElement}
+     */
+    const getGraphDom = (parentDom) => {
+        const graphDom = document.getElementById("elsa-graph");
+        if (graphDom) {
+            return graphDom;
+        } else {
+            const newGraphDom = document.createElement("div");
+            newGraphDom.style.width = parentDom.clientWidth + "px";
+            newGraphDom.style.height = parentDom.clientHeight + "px";
+            newGraphDom.id = 'elsa-graph';
+            parentDom.appendChild(newGraphDom);
+            return newGraphDom;
+        }
     };
 
     return self;

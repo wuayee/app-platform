@@ -78,8 +78,12 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.setRunReportSections = (data) => {
         // 把节点推送来的的data处理成Section
         // 开始节点只有输入，结束节点只有输出，普通节点输入输出，条件节点有条件1...n和输出
-        self.output = JSON.parse(data.parameters[0].output);
-        self.input = JSON.parse(data.parameters[0].input);
+        self.output = {};
+        self.input = {};
+        if (data.parameters[0]) {
+            self.output = JSON.parse(data.parameters[0].output);
+            self.input = JSON.parse(data.parameters[0].input);
+        }
         self.errorMsg = data.errorMsg;
         self.cost = data.runCost;
     };

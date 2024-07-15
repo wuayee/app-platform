@@ -20,9 +20,11 @@ import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
+import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.service.ToolService;
@@ -43,6 +45,9 @@ import java.util.stream.Collectors;
  */
 @Component
 public class StoreServiceImpl implements StoreService {
+    private static final Logger log = Logger.get(StoreServiceImpl.class);
+    private static final String CODENODESTATE = "CODENODESTATE";
+
     private final ToolService toolService;
     private final EcoTaskService ecoTaskService;
     private final HuggingFaceModelService huggingFaceModelService;
@@ -101,7 +106,28 @@ public class StoreServiceImpl implements StoreService {
     }
 
     private List<StoreBasicNodeInfoDto> buildBasicNodesConfig() {
-        return JsonUtils.parseObject(COMPONENT_DATA.get(AippConst.BASIC_NODE_COMPONENT_DATA_KEY), List.class);
+        List<StoreBasicNodeInfoDto> basicNodeList = JsonUtils.parseArray(
+                COMPONENT_DATA.get(AippConst.BASIC_NODE_COMPONENT_DATA_KEY), StoreBasicNodeInfoDto[].class);
+        setUniqueName(basicNodeList);
+        return basicNodeList;
+    }
+
+    private void setUniqueName(List<StoreBasicNodeInfoDto> basicNodeList) {
+        ToolQuery query = new ToolQuery(null, Collections.singletonList(CODENODESTATE),
+                null, null, null, null);
+        ListResult<ToolData> tools = toolService.getTools(query);
+        final String uniqueName;
+        if (tools.getCount() != 1) {
+            log.warn("Get {} tools with tag CODENODESTATE", tools.getCount());
+            uniqueName = StringUtils.EMPTY;
+        } else {
+            uniqueName = tools.getData().get(0).getUniqueName();
+        }
+        basicNodeList.stream()
+                .filter(nodeInfoDto -> "codeNodeState".equals(nodeInfoDto.getType()))
+                .forEach(nodeInfoDto -> {
+                    nodeInfoDto.setUniqueName(uniqueName);
+                });
     }
 
     @Override
