@@ -80,6 +80,10 @@ const ChatPreview = (props) => {
   useEffect(() => {
     !chatType && dispatch(setInspirationOpen(true));
     currentInfo.current = appInfo;
+    return () => {
+      wsCurrent.current?.close();
+      wsCurrent.current = null;
+    }
   }, []);
 
   useEffect(() => {
