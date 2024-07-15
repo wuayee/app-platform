@@ -140,7 +140,7 @@ public class AppBuilderAppServiceImpl
     @Transactional
     public Rsp<AippCreateDto> publish(AppBuilderAppDto appDto, OperationContext contextOf) {
         // todo 要加个save appDto到数据的逻辑
-        AippDto aippDto = ConvertUtils.toAppDto(appDto);
+        AippDto aippDto = ConvertUtils.convertToAippDtoFromAppBuilderAppDto(appDto);
         this.validateVersion(aippDto, contextOf);
         AippCreateDto aippCreateDto = this.aippFlowService.create(aippDto, contextOf);
         aippDto.setId(aippCreateDto.getAippId());
@@ -167,6 +167,9 @@ public class AppBuilderAppServiceImpl
      * @param newVersion 新版本号
      */
     private void validateVersionIsLatest(String oldVersion, String newVersion) {
+        if (!VersionUtils.isValidVersion(oldVersion) || !VersionUtils.isValidVersion(newVersion)) {
+            throw new AippException(AippErrCode.INVALID_VERSION_NAME);
+        }
         if (StringUtils.equals(oldVersion, newVersion)) {
             // 在这里，与旧版本号相同的版本号被认为是最新的
             return;
@@ -205,7 +208,7 @@ public class AppBuilderAppServiceImpl
     @Override
     @Fitable(id = "default")
     public AippCreate debug(AppBuilderAppDto appDto, OperationContext contextOf) {
-        AippDto aippDto = ConvertUtils.toAppDto(appDto);
+        AippDto aippDto = ConvertUtils.convertToAippDtoFromAppBuilderAppDto(appDto);
         // todo Rsp 得统一整改下
         return ConvertUtils.toAippCreate(this.aippFlowService.previewAipp(appDto.getVersion(), aippDto, contextOf));
     }
@@ -356,7 +359,7 @@ public class AppBuilderAppServiceImpl
     }
 
     private void saveMeta(AppBuilderApp app, String version, OperationContext context) {
-        AippDto aippDto = ConvertUtils.toAppDto(app);
+        AippDto aippDto = ConvertUtils.convertToAippDtoFromAppBuilderApp(app);
         int retryTimes = RETRY_CREATE_TIMES;
         do {
             String previewVersion = VersionUtils.buildPreviewVersion(version);

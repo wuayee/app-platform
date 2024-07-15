@@ -237,6 +237,11 @@ public enum AippErrCode implements ErrorCode {
     NEW_VERSION_IS_LOWER(90002915, "禁止使用更低的版本号。"),
 
     /**
+     * 不合法的版本号
+     */
+    INVALID_VERSION_NAME(90002916, "不合法的版本名称。"),
+
+    /**
      * 错误码截止值
      */
     ERROR_CODE_BUTT(99999999, "Error code butt.");
