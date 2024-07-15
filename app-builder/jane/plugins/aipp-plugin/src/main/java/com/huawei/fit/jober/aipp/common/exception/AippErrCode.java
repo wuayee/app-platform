@@ -194,7 +194,7 @@ public enum AippErrCode implements ErrorCode {
     /**
      * 创建调试aipp失败
      */
-    CREATE_DEBUG_AIPP_FAILED(90002907, "调试失败，请检查流程配置是否正确: {0}。"),
+    CREATE_DEBUG_AIPP_FAILED(90002907, "调试失败，请检查流程配置是否正确: {0}"),
 
     /**
      * 不支持的数据格式
