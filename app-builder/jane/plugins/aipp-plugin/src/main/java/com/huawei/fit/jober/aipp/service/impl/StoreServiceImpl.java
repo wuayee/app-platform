@@ -141,7 +141,7 @@ public class StoreServiceImpl implements StoreService {
 
     private void setUniqueName(List<StoreBasicNodeInfoDto> basicNodeList) {
         ToolQuery query = new ToolQuery(null, Collections.singletonList(CODENODESTATE),
-                null, null, null, null);
+                null, false, null, null, null);
         ListResult<ToolData> tools = toolService.getTools(query);
         final String uniqueName;
         if (tools.getCount() != 1) {
