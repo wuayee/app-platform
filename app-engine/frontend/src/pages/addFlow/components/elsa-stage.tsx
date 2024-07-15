@@ -79,10 +79,7 @@ const Stage = (props) => {
   function elsaChange() {
     if (change.current) {
       let graphChangeData = window.agent.serialize();
-      type ? appInfo.flowGraph.appearance = graphChangeData : setModalInfo(() => {
-        appRef.current.flowGraph.appearance = graphChangeData;
-        return appRef.current;
-      })
+      currentApp.current.flowGraph.appearance = graphChangeData;
       window.agent.validate().then(() => {
         updateAppRunningFlow();
       }).catch((err) => {
