@@ -65,7 +65,7 @@ const ChoreographyHead = (props) => {
         }
         <span className="header-text" title={appInfo?.name}>{ appInfo?.name }</span>
         <img className="edit-icon" src='/src/assets/images/ai/edit.png' onClick={ handleEditClick } />
-        {
+        {/* {
           appInfo.state === 'active' ?
           (
             <div className="status-tag">
@@ -81,7 +81,7 @@ const ChoreographyHead = (props) => {
               <span className="version">V{appInfo.version}</span>
             </div>
           )
-        }
+        } */}
         { showTime && <span>自动保存：{currentTime}</span> }
         {showElsa && <TestStatus testTime={testTime} testStatus={testStatus}/>}
       </div>
