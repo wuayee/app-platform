@@ -23,7 +23,7 @@ import com.huawei.fit.jober.entity.OperationContext;
 import com.huawei.fit.jober.entity.instance.Instance;
 import com.huawei.fit.jober.entity.task.Task;
 import com.huawei.fit.jober.entity.task.TaskType;
-import com.huawei.fit.waterflow.biz.common.entity.CleanTaskPageResult;
+import com.huawei.fit.waterflow.edatamate.entity.CleanTaskPageResult;
 import com.huawei.fit.waterflow.biz.util.ParamUtils;
 import com.huawei.fit.waterflow.biz.util.TimeUtil;
 import com.huawei.fit.waterflow.edatamate.client.flowsengine.request.CleanDataListQuery;

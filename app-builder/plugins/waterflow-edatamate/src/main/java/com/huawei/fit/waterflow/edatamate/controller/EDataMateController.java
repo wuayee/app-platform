@@ -16,7 +16,7 @@ import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import com.huawei.fit.waterflow.biz.common.entity.CleanTaskPageResult;
+import com.huawei.fit.waterflow.edatamate.entity.CleanTaskPageResult;
 import com.huawei.fit.waterflow.edatamate.client.FlowConfiguration;
 import com.huawei.fit.waterflow.edatamate.client.QueryCriteria;
 import com.huawei.fit.waterflow.edatamate.client.flowsengine.request.CleanDataListQuery;

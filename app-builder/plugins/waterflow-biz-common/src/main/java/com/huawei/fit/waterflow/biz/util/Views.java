@@ -26,12 +26,8 @@ import com.huawei.fit.jane.task.util.PaginationResult;
 import com.huawei.fit.jane.task.util.UndefinableValue;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.entity.FlowInfo;
-import com.huawei.fit.jober.entity.TaskEntity;
-import com.huawei.fit.jober.entity.TaskFilter;
 import com.huawei.fit.jober.entity.task.TaskProperty;
-import com.huawei.fit.jober.entity.task.TaskType;
 import com.huawei.fit.waterflow.biz.common.Constant;
-import com.huawei.fit.waterflow.biz.common.entity.CleanTaskPageResult;
 import com.huawei.fit.waterflow.biz.common.vo.FlowDefinitionVO;
 import com.huawei.fit.waterflow.common.utils.UUIDUtil;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
@@ -57,12 +53,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -745,19 +739,6 @@ public final class Views {
 
     private static JSONObject convertToJson(FlowGraphDefinition flowGraphDefinition) {
         return (JSONObject) JSONObject.toJSON(flowGraphDefinition);
-    }
-
-    /**
-     * viewOf
-     *
-     * @param cleanTaskPageResult 分页清洗结果
-     * @return Map<String, Object>
-     */
-    public static Map<String, Object> viewOf(CleanTaskPageResult cleanTaskPageResult) {
-        Map<String, Object> view = new LinkedHashMap<>(2);
-        view.put("totalPage", cleanTaskPageResult.getTotalNum());
-        view.put("result", cleanTaskPageResult.getResult());
-        return view;
     }
 
     public static Map<String, Object> viewOf(Authorization authorization) {

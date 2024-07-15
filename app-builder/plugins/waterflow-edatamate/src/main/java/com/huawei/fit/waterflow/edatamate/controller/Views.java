@@ -6,7 +6,7 @@ package com.huawei.fit.waterflow.edatamate.controller;
 
 import com.huawei.fit.jane.flow.graph.entity.FlowGraphDefinition;
 import com.huawei.fit.jober.entity.FlowInfo;
-import com.huawei.fit.waterflow.biz.common.entity.CleanTaskPageResult;
+import com.huawei.fit.waterflow.edatamate.entity.CleanTaskPageResult;
 import com.huawei.fitframework.model.RangeResult;
 import com.huawei.fitframework.model.RangedResultSet;
 import com.huawei.fitframework.util.StringUtils;
