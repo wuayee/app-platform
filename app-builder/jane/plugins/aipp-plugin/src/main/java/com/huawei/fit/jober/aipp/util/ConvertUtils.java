@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class ConvertUtils {
     // todo 后续是否可以把 aipp 和 app结合在一起
-    public static AippDto toAppDto(AppBuilderAppDto appDto) {
+    public static AippDto convertToAippDtoFromAppBuilderAppDto(AppBuilderAppDto appDto) {
         Map<String, Object> attributes = appDto.getAttributes();
         String description = String.valueOf(attributes.getOrDefault("description", StringUtils.EMPTY));
         String icon = String.valueOf(attributes.getOrDefault("icon", StringUtils.EMPTY));
@@ -44,7 +44,7 @@ public class ConvertUtils {
      * @param app 待转换的app
      * @return aippDTO
      */
-    public static AippDto toAppDto(AppBuilderApp app) {
+    public static AippDto convertToAippDtoFromAppBuilderApp(AppBuilderApp app) {
         String description = String.valueOf(app.getAttributes().getOrDefault("description", StringUtils.EMPTY));
         String icon = String.valueOf(app.getAttributes().getOrDefault("icon", StringUtils.EMPTY));
         String classification = String.valueOf(app.getAttributes().getOrDefault("app_type", StringUtils.EMPTY));
