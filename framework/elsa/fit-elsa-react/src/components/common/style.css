@@ -1,367 +1,367 @@
 .jade-custom-collapse {
-  background-color: transparent; /* 设置背景透明 */
+    background-color: transparent; /* 设置背景透明 */
 }
 
 .jade-custom-collapse .ant-collapse-item .ant-collapse-header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .jade-custom-collapse .ant-collapse-header, .jade-multi-conversation .ant-collapse .ant-collapse-header {
-  padding: 8px !important;
+    padding: 8px !important;
 }
 
 .value-custom, .value-custom .ant-select-selector {
-  width: 100%;
-  border-radius: 0 8px 8px 0;
-  border-left: 0 !important;
+    width: 100%;
+    border-radius: 0 8px 8px 0;
+    border-left: 0 !important;
 }
 
 .value-source-custom, .value-source-custom .ant-select-selector {
-  width: 100%;
-  border-radius: 8px 0 0 8px;
+    width: 100%;
+    border-radius: 8px 0 0 8px;
 }
 
 .icon-button {
-  padding: 0;
-  margin: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .jade-panel-header-font {
-  color: rgb(37, 43, 58);
-  justify-content: flex-start;
-  margin-right: 4px;
-  font-family: HarmonyOS Sans, 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 14px;
-  letter-spacing: 0;
-  text-align: left;
+    color: rgb(37, 43, 58);
+    justify-content: flex-start;
+    margin-right: 4px;
+    font-family: HarmonyOS Sans, 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14px;
+    letter-spacing: 0;
+    text-align: left;
 }
 
 .jade-panel-header-popover-content {
-  margin-left: 4px;
-  color: rgba(28, 31, 35, .35);
-  height: 14px;
-  width: 14px;
+    margin-left: 4px;
+    color: rgba(28, 31, 35, .35);
+    height: 14px;
+    width: 14px;
 }
 
 .jade-panel, .jade-multi-conversation .ant-collapse .ant-collapse-item {
-  background-color: rgba(250, 250, 250); /* 设置背景颜色 */
-  margin-bottom: 8px !important;
-  border-radius: 8px !important;
-  width: 100%;
+    background-color: rgba(250, 250, 250); /* 设置背景颜色 */
+    margin-bottom: 8px !important;
+    border-radius: 8px !important;
+    width: 100%;
 }
 
 .jade-panel .ant-collapse-header {
-  padding: 8px !important;
-  align-items: center !important;
+    padding: 8px !important;
+    align-items: center !important;
 }
 
 .ant-collapse-borderless .ant-collapse-item .ant-collapse-content .ant-collapse-content-box {
-  padding: 0;
+    padding: 0;
 }
 
 .jade-node-custom-header-icon {
-  background-size: cover !important;
-  background-position: center !important;
-  padding: 0 !important;
-  margin: 0 8px 0 0 !important;
-  width: 24px !important;
-  height: 24px !important;
-  border: none !important;
-  pointer-events: none;
+    background-size: cover !important;
+    background-position: center !important;
+    padding: 0 !important;
+    margin: 0 8px 0 0 !important;
+    width: 24px !important;
+    height: 24px !important;
+    border: none !important;
+    pointer-events: none;
 }
 
 .jade-form-item .ant-form-item-label > label {
-  color: rgb(77, 77, 77);
-  font-family: Huawei Sans;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0px;
-  text-align: left;
+    color: rgb(77, 77, 77);
+    font-family: Huawei Sans;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0px;
+    text-align: left;
 }
 
 .jade-font-size, .jade-select .ant-select-selector .ant-select-selection-item, .jade-select .ant-select-item-option, .ant-select-selection-placeholder, .jade-input::placeholder, .ant-select-dropdown .ant-select-item, .ant-tree-select-dropdown .ant-select-tree {
-  font-size: 12px;
+    font-size: 12px;
 }
 
 .jade-font-color {
-  color: rgb(77, 77, 77);
+    color: rgb(77, 77, 77);
 }
 
 .jade-select .ant-select-selector {
-  border-color: #edeeef !important;
+    border-color: #edeeef !important;
 }
 
 .jade-input {
-  border-color: #edeeef !important;
-  font-size: 12px;
-  height: 32px;
+    border-color: #edeeef !important;
+    font-size: 12px;
+    height: 32px;
 }
 
 .jade-textarea-input {
-  border-color: #edeeef !important;
-  font-size: 12px;
-  min-height: 86.5px !important;
+    border-color: #edeeef !important;
+    font-size: 12px;
+    min-height: 86.5px !important;
 }
 
 .ant-form-item-label {
-  padding-left: 4px !important;
-  padding-bottom: 4px !important;
+    padding-left: 4px !important;
+    padding-bottom: 4px !important;
 }
 
 .jade-form {
-  margin-top: 8px
+    margin-top: 8px
 }
 
 .jade-slider {
-  margin-bottom: 24px !important;
+    margin-bottom: 24px !important;
 }
 
 .jade-popover-icon {
-  color: rgba(28, 31, 35, .35);
+    color: rgba(28, 31, 35, .35);
 }
 
 .jade-second-title {
-  margin-right: 4px;
+    margin-right: 4px;
 }
 
 .ant-slider-track {
-  background-color: #047BFC !important;
+    background-color: #047BFC !important;
 }
 
 .ant-slider .ant-slider-mark {
-  font-size: 12px;
+    font-size: 12px;
 }
 
 .jade-column {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .jade-row {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .ant-form-item {
-  margin-top: 1px;
-  margin-bottom: 1px;
+    margin-top: 1px;
+    margin-bottom: 1px;
 }
 
 .title {
-  font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  margin-right: 4px;
-  justify-content: flex-start;
+    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 4px;
+    justify-content: flex-start;
 }
 
 .jade-panel-header-icon-position {
-  margin-left: auto !important; /* 将 button 放置在最右侧 */
-  margin-right: 1% !important;
-  height: 22px;
+    margin-left: auto !important; /* 将 button 放置在最右侧 */
+    margin-right: 1% !important;
+    height: 22px;
 }
 
 .jade-tree-select {
-  font-size: 12px;
-  width: 100%;
+    font-size: 12px;
+    width: 100%;
 }
 
 .jade-node-footer-button {
-  margin-left: auto;
-  background-color: transparent !important;
-  height: 20px !important;
-  padding: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-  margin-right: 0 !important;
-  border: 0 !important;
+    margin-left: auto;
+    background-color: transparent !important;
+    height: 20px !important;
+    padding: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    margin-right: 0 !important;
+    border: 0 !important;
 }
 
 .jade-node-footer-icon {
-  height: 20px !important;
+    height: 20px !important;
 }
 
 .react-node-footer {
-  margin-top: 8px;
-  user-select: none;
+    margin-top: 8px;
+    user-select: none;
 }
 
 .jade-code-editor .monaco-editor, .jade-code-editor .monaco-editor .overflow-guard {
-  border-radius: 4px
+    border-radius: 4px
 }
 
 .jade-drop-down-popover {
-  margin-left: 8px;
+    margin-left: 8px;
 }
 
 .jade-drop-down-popover-overlay {
-  z-index: 1200 !important;
+    z-index: 1200 !important;
 }
 
 .jade-node-custom-header-type-icon {
-  background-size: cover !important;
-  background-position: center !important;
-  padding: 0 !important;
-  width: 14px !important;
-  height: 14px !important;
-  border: none !important;
-  pointer-events: none;
+    background-size: cover !important;
+    background-position: center !important;
+    padding: 0 !important;
+    width: 14px !important;
+    height: 14px !important;
+    border: none !important;
+    pointer-events: none;
 }
 
 .jade-node-custom-header-type-icon-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 0 0 8px !important;
-  width: 24px;
-  height: 24px;
-  background: rgb(230, 242, 255);
-  border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 0 8px !important;
+    width: 24px;
+    height: 24px;
+    background: rgb(230, 242, 255);
+    border-radius: 4px;
 }
 
 .jade-node-custom-header-type-tooltip .ant-tooltip-inner {
-  background-color: white !important;
-  color: rgb(33, 33, 33) !important;
-  font-family: HarmonyOS Sans;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0px;
-  text-align: center;
+    background-color: white !important;
+    color: rgb(33, 33, 33) !important;
+    font-family: HarmonyOS Sans;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0px;
+    text-align: center;
 }
 
 .jade-node-custom-header-type-tooltip .ant-tooltip-arrow {
-  background: none !important;
+    background: none !important;
 }
 
 .jade-node-custom-header-type-tooltip .ant-tooltip-arrow::before {
-  background-color: white !important; /* 设置箭头的颜色 */
+    background-color: white !important; /* 设置箭头的颜色 */
 }
 
 .jade-component-title {
-  color: rgb(37, 43, 58);
-  font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 19px;
-  letter-spacing: 0;
-  text-align: left;
+    color: rgb(37, 43, 58);
+    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 19px;
+    letter-spacing: 0;
+    text-align: left;
 }
 
 .jade-second-title-text {
-  color: rgb(77, 77, 77);
-  font-family: Huawei Sans;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 18px;
-  letter-spacing: 0;
-  text-align: left;
+    color: rgb(77, 77, 77);
+    font-family: Huawei Sans;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: 0;
+    text-align: left;
 }
 
 .model-text-container {
-  /* 通用/Label必填-非必填 */
-  position: static;
-  width: 96px;
-  height: 18px;
-  /* 自动布局 */
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 0;
-  /* Inside Auto Layout */
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-  margin: 2px 0;
+    /* 通用/Label必填-非必填 */
+    position: static;
+    width: 96px;
+    height: 18px;
+    /* 自动布局 */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+    /* Inside Auto Layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    margin: 2px 0;
 }
 
 .model-select-container {
-  position: static;
-  width: 320px;
-  height: 32px;
-  /* 自动布局 */
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 0 10px 0 10px;
+    position: static;
+    width: 320px;
+    height: 32px;
+    /* 自动布局 */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 10px 0 10px;
 
-  /* Inside Auto Layout */
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
-  margin: 2px 0;
+    /* Inside Auto Layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+    margin: 2px 0;
 }
 
 .model-select {
-  /* google-bert/bert-base-uncased */
-  position: static;
-  width: 280px;
-  height: 32px;
-  /* 自动布局 */
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 0;
-  border-width: 0;
-  flex: none;
-  order: 0;
-  flex-grow: 1;
+    /* google-bert/bert-base-uncased */
+    position: static;
+    width: 280px;
+    height: 32px;
+    /* 自动布局 */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0;
+    border-width: 0;
+    flex: none;
+    order: 0;
+    flex-grow: 1;
 }
 
 .huggingface-light-font {
-  color: rgb(128, 128, 128);
-  font-family: Huawei Sans;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 32px;
-  letter-spacing: 0px;
-  text-align: left;
+    color: rgb(128, 128, 128);
+    font-family: Huawei Sans;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: 0px;
+    text-align: left;
 }
 
 .button-select {
-  width: 32px;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
-  border-width: 0;
-  border-radius: 0;
-  margin-left: 8px;
+    width: 32px;
+    display: flex;
+    padding: 0;
+    align-items: center;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    border-width: 0;
+    border-radius: 0;
+    margin-left: 8px;
 }
 
 .button-select-text {
-  color: rgb(38, 115, 229);
-  font-family: Huawei Sans;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 32px;
-  letter-spacing: -1px;
-  text-align: left;
+    color: rgb(38, 115, 229);
+    font-family: Huawei Sans;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: -1px;
+    text-align: left;
 }
 
 .jade-required-indicator {
-  color: rgb(198, 57, 57);
-  font-family: Huawei Sans;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 18px;
-  letter-spacing: 0px;
-  text-align: left;
-  padding-right: 2px;
+    color: rgb(198, 57, 57);
+    font-family: Huawei Sans;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 18px;
+    letter-spacing: 0px;
+    text-align: left;
+    padding-right: 2px;
 }
 
 .jade-custom-panel-content {
-  border-radius: 8px;
-  padding: 12px;
+    border-radius: 8px;
+    padding: 12px;
 }
