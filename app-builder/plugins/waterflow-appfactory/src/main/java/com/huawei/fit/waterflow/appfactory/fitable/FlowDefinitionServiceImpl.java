@@ -2,7 +2,7 @@
  *  Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
  */
 
-package com.huawei.fit.jober.flowsengine.fitable;
+package com.huawei.fit.waterflow.appfactory.fitable;
 
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
 

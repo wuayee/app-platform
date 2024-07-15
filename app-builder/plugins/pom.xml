@@ -18,5 +18,6 @@
         <module>waterflow-graph-service</module>
         <module>waterflow-edatamate</module>
         <module>waterflow-jane</module>
+        <module>waterflow-appfactory</module>
     </modules>
 </project>
