@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jober.bff.controller.a3000;
 
+import com.huawei.fit.jober.bff.controller.a3000.entity.QueryCriteria;
 import com.huawei.fitframework.annotation.Genericable;
-import com.huawei.hisp.clean.client.QueryCriteria;
 
 import java.util.Map;
 

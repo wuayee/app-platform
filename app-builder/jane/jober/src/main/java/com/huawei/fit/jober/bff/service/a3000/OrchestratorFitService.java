@@ -12,6 +12,8 @@ import static com.huawei.fit.jober.common.ErrorCodes.SERVER_INTERNAL_ERROR;
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.flow.graph.entity.FlowSaveEntity;
 import com.huawei.fit.jober.bff.client.flowsengine.request.CleanDataListQuery;
+import com.huawei.fit.jober.bff.controller.a3000.entity.FlowConfiguration;
+import com.huawei.fit.jober.bff.controller.a3000.entity.QueryCriteria;
 import com.huawei.fit.jober.bff.service.FlowsEngineWebService;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.common.exceptions.JobberException;
@@ -30,8 +32,6 @@ import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.hisp.clean.client.FlowConfiguration;
-import com.huawei.hisp.clean.client.QueryCriteria;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -179,7 +179,7 @@ public class OrchestratorFitService {
      * @param limit limit
      */
     public void createFlow(String flowId, String version, FlowConfiguration flowConfiguration, String dataCleanTaskId,
-            Integer limit) {
+                           Integer limit) {
         Lock lock = this.locks.getDistributedLock(StringUtils.join(STREAM_ID_SEPARATOR, "createFlow", flowId, version));
         lock.lock();
         try {
