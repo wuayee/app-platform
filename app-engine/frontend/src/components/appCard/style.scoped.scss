@@ -1,4 +1,8 @@
 .app_card_root{
+    background-image: url('/src/assets/images/knowledge/knowledge-background.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-bottom: 10px;
     *{
         box-sizing: border-box;
     }
@@ -34,8 +38,8 @@
               margin-bottom: 8px;
             }
             .title_info{
-                display: "flex";
-                align-items: "center";
+                display: flex;
+                align-items: center;
                 .createBy {
                     font-size: 14px;
                     color: rgba(105, 105, 105, .9);
