@@ -2,14 +2,16 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.waterflow.flowsengine.utils;
+package com.huawei.fit.jober.common.util;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fit.jane.task.domain.File;
+import com.huawei.fit.jober.entity.FileDeclaration;
 
 import java.util.Objects;
 
 /**
- * ParamUtils
+ * 工具类，用于处理参数转换。该工具类提供了一些静态方法，用于处理操作上下文信息。
  *
  * @author 陈镕希 c00572808
  * @since 2023-09-25
@@ -79,5 +81,35 @@ public class ParamUtils {
             operationContext.setLanguage(context.language());
         }
         return operationContext;
+    }
+
+    public static OperationContext convertToInternalOperationContext(
+            com.huawei.fit.jane.task.util.OperationContext context) {
+        OperationContext operationContext = new OperationContext();
+        if (Objects.nonNull(context)) {
+            operationContext.setOperator(context.operator());
+            operationContext.setOperatorIp(context.operatorIp());
+            operationContext.setSourcePlatform(context.sourcePlatform());
+            operationContext.setTenantId(context.tenantId());
+            operationContext.setLanguage(context.language());
+        }
+        return operationContext;
+    }
+
+    public static com.huawei.fit.jane.task.domain.File convertFile(com.huawei.fit.jober.entity.File file) {
+        return com.huawei.fit.jane.task.domain.File.custom().name(file.getName()).content(file.getContent()).build();
+    }
+
+    public static FileDeclaration convertDeclaration(File.Declaration fileDeclaration) {
+        FileDeclaration declaration = new FileDeclaration();
+        if (Objects.nonNull(fileDeclaration)) {
+            declaration.setName(fileDeclaration.name().get());
+            declaration.setContent(fileDeclaration.content().get());
+        }
+        return declaration;
+    }
+
+    public static File.Declaration convertDeclaration(FileDeclaration fileDeclaration) {
+        return File.Declaration.custom().name(fileDeclaration.getName()).content(fileDeclaration.getContent()).build();
     }
 }

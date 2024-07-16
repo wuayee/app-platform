@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.waterflow.biz.util;
+package com.huawei.fit.jober.common.util;
 
 import com.huawei.fit.jober.entity.File;
 import com.huawei.fit.jober.entity.FileDeclaration;

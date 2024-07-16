@@ -48,6 +48,12 @@
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jane</groupId>
+            <artifactId>flow-graph</artifactId>
+            <version>0.2.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
@@ -66,12 +72,6 @@
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>4.0.0</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.jane</groupId>
-            <artifactId>flow-graph</artifactId>
-            <version>0.2.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

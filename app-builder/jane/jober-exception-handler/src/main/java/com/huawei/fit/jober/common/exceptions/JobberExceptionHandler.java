@@ -11,9 +11,8 @@ import com.huawei.fit.http.annotation.ExceptionHandler;
 import com.huawei.fit.http.annotation.ResponseStatus;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.jane.task.util.OperationContext;
-import com.huawei.fit.jober.common.Constant;
 import com.huawei.fit.jober.common.model.JoberResponse;
-import com.huawei.fit.waterflow.biz.util.ParamUtils;
+import com.huawei.fit.jober.common.util.ParamUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
@@ -24,6 +23,7 @@ import com.huawei.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,6 +36,12 @@ import java.util.Locale;
 @Component
 @RequiredArgsConstructor
 public class JobberExceptionHandler {
+    /**
+     * 默认支持语言
+     */
+    public static final List<Locale> LOCALES = Arrays.asList(new Locale("en"), new Locale("zh"), new Locale("en", "US"),
+            new Locale("zh", "CN"));
+
     private static final Logger log = Logger.get(JobberExceptionHandler.class);
 
     private final Plugin plugin;
@@ -182,7 +188,7 @@ public class JobberExceptionHandler {
         }
         String language = context.language();
         List<Locale.LanguageRange> list = Locale.LanguageRange.parse(language);
-        Locale locale = StringUtils.isNotEmpty(language) ? Locale.lookup(list, Constant.LOCALES) : Locale.getDefault();
+        Locale locale = StringUtils.isNotEmpty(language) ? Locale.lookup(list, LOCALES) : Locale.getDefault();
         try {
             return plugin.sr().getMessage(locale, code, params);
         } catch (FitException e) {

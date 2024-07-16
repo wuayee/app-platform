@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.waterflow.biz.util;
+package com.huawei.fit.waterflow.graph.util;
 
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 

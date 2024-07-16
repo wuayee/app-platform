@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.taskcenter.eventhandler;
 
 import com.huawei.fit.jober.InstanceChangedService;
+import com.huawei.fit.jober.common.util.ParamUtils;
 import com.huawei.fit.jober.entity.instance.Instance;
 import com.huawei.fit.jober.entity.task.Task;
 import com.huawei.fit.jober.taskcenter.domain.InstanceEvent;
@@ -19,7 +20,6 @@ import com.huawei.fit.jober.taskcenter.event.TaskInstanceEvent;
 import com.huawei.fit.jober.taskcenter.event.TaskInstanceModifiedEvent;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.InstanceConverter;
 import com.huawei.fit.jober.taskcenter.eventhandler.converter.TaskConverter;
-import com.huawei.fit.waterflow.biz.util.ParamUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;

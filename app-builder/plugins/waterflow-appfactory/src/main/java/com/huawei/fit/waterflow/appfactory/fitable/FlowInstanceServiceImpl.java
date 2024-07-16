@@ -12,6 +12,7 @@ import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.FlowInstanceService;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
+import com.huawei.fit.jober.common.util.ParamUtils;
 import com.huawei.fit.jober.entity.FlowInstanceResult;
 import com.huawei.fit.jober.entity.FlowStartParameter;
 import com.huawei.fit.jober.entity.JoberErrorInfo;
@@ -24,7 +25,6 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontex
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowtrace.FlowTraceRepo;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus;
 import com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO;
-import com.huawei.fit.waterflow.flowsengine.utils.ParamUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.inspection.Validation;
