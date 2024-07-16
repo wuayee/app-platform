@@ -37,7 +37,7 @@ public class HuggingFacePipelineServiceTest {
     public void setUp() throws IOException {
         this.server = new MockWebServer();
         this.service =
-                new HuggingFacePipelineServiceImpl("http://localhost:" + this.server.getPort() + "/");
+                new HuggingFacePipelineServiceImpl("http://localhost:" + this.server.getPort());
     }
 
     @AfterEach
