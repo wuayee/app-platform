@@ -15,6 +15,7 @@ const InfoModal = () => {
   useEffect(() => {
     const fetchData = async () => {
       const res = await getAnnouncement();
+      if(!res.announcementsByType) return
       setLastAnnounceTime(res.latestCreateTime)
       handleData(res.announcementsByType)
       const timeNow = Date.parse(res.latestCreateTime)

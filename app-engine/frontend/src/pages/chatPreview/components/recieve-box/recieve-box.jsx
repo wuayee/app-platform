@@ -68,7 +68,7 @@ const ReciveBox = (props) => {
       </div>
       <span className='recieve-info-inner'>
         {loading ? <Loading /> : setRecieveDom(recieveType)}
-        {showIcon && <SendBtn content={content} sendType='text' />}
+        {showIcon && <SendBtn content={content} sendType='text' isRecieve={true} />}
         {showIcon && <Feedbacks logId={logId} instanceId={instanceId} feedbackStatus={feedbackStatus} refreshFeedbackStatus={props.refreshFeedbackStatus} />}
       </span>
     </div>
