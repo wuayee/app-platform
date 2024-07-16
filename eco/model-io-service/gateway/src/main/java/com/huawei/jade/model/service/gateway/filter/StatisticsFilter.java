@@ -46,6 +46,11 @@ import java.nio.charset.StandardCharsets;
 @Configuration
 @Slf4j
 public class StatisticsFilter implements GlobalFilter, Ordered {
+    /**
+     * 统计过滤器的执行顺序。
+     */
+    public static final int STATISTICS_FILTER_ORDER = NettyWriteResponseFilter.WRITE_RESPONSE_FILTER_ORDER - 1;
+
     private static final String REQUEST_MODEL_NAME = "requestModelName";
 
     private static final String REQUEST_START_TIME = "requestStartTime";
@@ -240,6 +245,6 @@ public class StatisticsFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return NettyWriteResponseFilter.WRITE_RESPONSE_FILTER_ORDER - 1;
+        return STATISTICS_FILTER_ORDER;
     }
 }

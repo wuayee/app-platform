@@ -9,10 +9,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.huawei.jade.model.service.gateway.entity.ModelInfo;
 import com.huawei.jade.model.service.gateway.entity.RouteInfo;
 import com.huawei.jade.model.service.gateway.entity.RouteInfoList;
+import com.huawei.jade.model.service.gateway.service.ModifyModelRequestService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -31,6 +33,9 @@ public class ModelGatewayRouteTest {
 
     @Autowired
     private Environment env;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Test
     public void testHealthRoute() {
@@ -161,5 +166,29 @@ public class ModelGatewayRouteTest {
                 .expectStatus().isOk()
                 .expectBody(String.class)
                 .value(responseBody -> assertThat(responseBody).contains("UP"));
+    }
+
+    @Test
+    void testUpdateRouteWithMaxTokens() {
+        Integer maxTokens = 100;
+        RouteInfo routeInfo = new RouteInfo();
+        routeInfo.setId("test_id");
+        routeInfo.setModel("test_model");
+        routeInfo.setPath("/test");
+        routeInfo.setUrl("http://localhost/test_url");
+        routeInfo.setMaxTokenSize(maxTokens);
+
+        RouteInfoList requestBody = new RouteInfoList();
+        requestBody.setRoutes(Collections.singletonList(routeInfo));
+        webTestClient.post()
+                .uri("/v1/routes")
+                .bodyValue(requestBody)
+                .exchange().expectStatus().isOk();
+
+        if (applicationContext.getBean("modifyModelRequestService") instanceof ModifyModelRequestService) {
+            ModifyModelRequestService modifyModelRequestService =
+                    (ModifyModelRequestService) applicationContext.getBean("modifyModelRequestService");
+            assertThat(modifyModelRequestService.getMaxTokens().get(routeInfo.getModel())).isEqualTo(maxTokens / 2);
+        }
     }
 }

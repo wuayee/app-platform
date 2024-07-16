@@ -8,6 +8,7 @@ import com.huawei.jade.model.service.gateway.entity.ModelInfo;
 import com.huawei.jade.model.service.gateway.entity.RouteInfo;
 import com.huawei.jade.model.service.gateway.entity.RouteInfoList;
 import com.huawei.jade.model.service.gateway.service.ModelStatisticsService;
+import com.huawei.jade.model.service.gateway.service.ModifyModelRequestService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,9 +44,14 @@ public class GatewayController {
 
     private ModelStatisticsService modelStatisticsService;
 
-    public GatewayController(ModelStatisticsService service, GatewayControllerEndpoint endpoint) {
-        this.modelStatisticsService = service;
+    private ModifyModelRequestService modifyModelRequestService;
+
+    public GatewayController(ModelStatisticsService modelStatisticsService,
+                             GatewayControllerEndpoint endpoint,
+                             ModifyModelRequestService modifyModelRequestService) {
+        this.modelStatisticsService = modelStatisticsService;
         this.gatewayControllerEndpoint = endpoint;
+        this.modifyModelRequestService = modifyModelRequestService;
     }
 
     /**
@@ -120,6 +126,8 @@ public class GatewayController {
 
             // 根据模型路由信息设置流控信息
             updateMaxLinkNum(routeInfo);
+
+            updateMaxTokens(routeInfo);
 
             this.currentRoutes.put(routeInfo.getId(), routeInfo);
             log.info(routeInfo.getId() + " is updated");
@@ -208,5 +216,13 @@ public class GatewayController {
             }
             time += step;
         }
+    }
+
+    private void updateMaxTokens(RouteInfo routeInfo) {
+        if (routeInfo == null || routeInfo.getModel() == null || routeInfo.getMaxTokenSize() == null) {
+            log.warn("Failed to update max tokens for route: " + routeInfo);
+            return;
+        }
+        this.modifyModelRequestService.getMaxTokens().put(routeInfo.getModel(), routeInfo.getMaxTokenSize() / 2);
     }
 }
