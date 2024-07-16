@@ -6,8 +6,6 @@ package com.huawei.jade.voice.to.text.service;
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.annotation.Value;
-import com.huawei.jade.fel.pipeline.huggingface.service.HuggingFacePipelineServiceImpl;
 import com.huawei.jade.fel.service.pipeline.HuggingFacePipelineService;
 import com.huawei.jade.voice.service.VoiceService;
 
@@ -28,8 +26,8 @@ public class DefaultVoiceService implements VoiceService {
 
     private final HuggingFacePipelineService pipelineService;
 
-    public DefaultVoiceService(@Value("${gateway.url}") String gatewayUrl) {
-        pipelineService = new HuggingFacePipelineServiceImpl(gatewayUrl);
+    public DefaultVoiceService(HuggingFacePipelineService pipelineService) {
+        this.pipelineService = pipelineService;
     }
 
     /**
