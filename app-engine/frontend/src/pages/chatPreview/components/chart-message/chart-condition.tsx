@@ -20,11 +20,11 @@ const ChartCondition = (props) => {
   const hasLv1 = useRef<any>();
 
   useEffect(() => {
-    formData.current = JSON.parse(data);
+    formData.current = JSON.parse(data.dsl);
     filters.current = conditionList();
-    hasLv1.current = data.includes('lv1_prod_rd_team_cn_name');
+    hasLv1.current = data.dsl.includes('lv1_prod_rd_team_cn_name');
     formSetValue();
-  }, []);
+  }, [data]);
   useEffect(() => {
     setIsDisabled(showCheck);
   }, [showCheck]);
@@ -132,7 +132,7 @@ const ChartCondition = (props) => {
     confirm(formData.current);
   }
   const handleReset = () => {
-    formData.current = JSON.parse(data);
+    formData.current = JSON.parse(data.dsl);
     formSetValue();
   }
   const handleCancel = () => {
@@ -158,7 +158,7 @@ const ChartCondition = (props) => {
               { !item.hide && 
                 <ConditionItems 
                   filterItem={item} 
-                  formData={data} 
+                  formData={data.dsl} 
                   disabled={isDisabled} 
                   save={handleSave}
                   remove={handleRemove}
@@ -174,7 +174,7 @@ const ChartCondition = (props) => {
               { !item.hide && 
                 <ConditionItems 
                   filterItem={item} 
-                  formData={data} 
+                  formData={data.dsl} 
                   disabled={isDisabled} 
                   save={handleSave}
                   remove={handleRemove}
