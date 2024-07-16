@@ -75,7 +75,7 @@ public class DefaultAppService implements AppService {
         if (appQuery == null) {
             return ListResult.empty();
         }
-        if ((appQuery.getPageNum() != null && appQuery.getPageNum() < 0) || (appQuery.getLimit() != null
+        if ((appQuery.getOffset() != null && appQuery.getOffset() < 0) || (appQuery.getLimit() != null
                 && appQuery.getLimit() < 0)) {
             return ListResult.empty();
         }
