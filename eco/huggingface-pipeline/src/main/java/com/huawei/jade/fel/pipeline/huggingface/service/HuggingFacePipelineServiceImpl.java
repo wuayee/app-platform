@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 public class HuggingFacePipelineServiceImpl implements HuggingFacePipelineService {
     private static final Logger LOGGER = Logger.get(HuggingFacePipelineServiceImpl.class);
 
-    private static final String CALL_PIPELINE_ENDPOINT = "/v1/huggingface/pipeline";
+    private static final String CALL_PIPELINE_ENDPOINT = "v1/huggingface/pipeline";
 
     private static final String START_UP_PIPELINE_ENDPOINT = "/v1/start_up_pipeline";
 
