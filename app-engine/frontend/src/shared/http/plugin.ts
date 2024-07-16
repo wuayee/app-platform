@@ -39,6 +39,11 @@ export function getPluginWaterFlow(
   return get(url, data);
 }
 
+// 我的-已发布（工具+工具流)
+export function getMyPlugin(tenantId, data: { pageNum: number; pageSize: number }) {
+  const url = `${PLUGIN_URL}/v1/api/${tenantId}/store/plugins`;
+  return get(url, data);
+}
 // 解析工具插件包内容
 export function getPluginPackageInfo(file) {
   const formData = new FormData();

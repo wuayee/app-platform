@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react';
-import { Card, Tooltip } from 'antd';
+import { Card, Tooltip, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
-import { Button, Dropdown, Space } from 'antd';
 import { url } from 'inspector';
 import { Icons, KnowledgeIcons } from '../icons/index';
 import { useNavigate } from 'react-router-dom';
@@ -64,7 +63,7 @@ return (
       textAlign: 'justify',
       minHeight: 100
     }}>
-      <Tooltip placement="top" title={knowledge} >
+      <Tooltip placement="top" title={knowledge} overlayStyle={{ minWidth: '25%' }}>
           {knowledge?.substring(0, 100)}{knowledge?.length>=100 ? '...': ''}
       </Tooltip>
     </div>

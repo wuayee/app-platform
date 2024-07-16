@@ -1,7 +1,7 @@
 import { Button, Divider, Flex, Input, Switch, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import './style.scoped.scss';
-import { getAppInfo } from '../../../shared/http/aipp';
+import { getAppInfo, getAppInfoByVersion } from '@shared/http/aipp';
 import { Message } from '../../../shared/utils/message';
 import { useNavigate, useParams } from 'react-router';
 import { AppIcons } from '../../../components/icons/app';
@@ -32,30 +32,54 @@ const AppOverview: React.FC = () => {
   }, [])
 
   const gotoArrange = () => {
-    dispatch(setAppInfo({}));
-    navigate(`/app-develop/${tenantId}/app-detail/${appId}`);
+    getAppInfoByVersion(tenantId, appId).then(res => {
+      if (res.code === 0) {
+        dispatch(setAppInfo({}));
+        const newAppId = res.data.id;
+        navigate(`/app-develop/${tenantId}/app-detail/${newAppId}`);
+      }
+    })
   }
 
   return (
     <div className='tab-content'>
       <Flex vertical gap={20}>
         <Flex justify={'space-between'}>
-          <Flex gap='middle'>
+          <Flex className='details-content'  gap='middle'>
             {appIcon ?
               <img width={100} height={100} src={appIcon} />
               :
               <AppDefaultIcon />
           }
 
-            <Flex vertical gap='middle'>
-              <h3>{detail?.name || 'Test AppName'}</h3>
+            <Flex className='details-content' vertical gap='middle'>
+              <div className='detail-name'>
+                <span className='text'>{detail?.name || 'Test AppName'}</span>
+                {
+                  detail.state === 'active' ?
+                  (
+                    <div className="status-tag">
+                      <img src='/src/assets/images/ai/complate.png' />
+                      <span>已发布</span>
+                      <span className="version">V{detail.version}</span>
+                    </div>
+                  ) :
+                  (
+                    <div className="status-tag">
+                      <img src='/src/assets/images/ai/publish.png' />
+                      <span>未发布</span>
+                      <span className="version">V{detail.version}</span>
+                    </div>
+                  )
+                }
+              </div>
               <Flex gap={20}>
                 <Flex gap='small' align='center'>
                   <AvatarIcon />
                   <span>{detail?.createBy || 'Admin'}</span>
                 </Flex>
                 <Flex gap='small'>
-                  <span>发布于</span>
+                  <span>创建于</span>
                   <span>{detail?.createAt}</span>
                 </Flex>
               </Flex>
@@ -92,7 +116,7 @@ const AppOverview: React.FC = () => {
             </Flex>
           </Flex>
         </Flex>
-        <div>
+        <div className='app-desc' title={detail?.attributes?.description}>
           {detail?.attributes?.description}
         </div>
         <Button type='primary' onClick={gotoArrange} style={{
@@ -102,12 +126,10 @@ const AppOverview: React.FC = () => {
         <Divider style={{ margin: 0, backgroundColor: '#D7D8DA' }} />
         <div>
           <Flex gap='large'>
-            <Flex vertical gap={20}>
-              <span>对话开场白</span>
-            </Flex>
-            <Flex vertical gap={20}>
-              <span>{detail?.attributes?.greeting || 'Test Greeting'}</span>
-            </Flex>
+            <div className='remarks'>
+              <span className='left'>对话开场白：</span>
+              <span className='right'>{detail?.attributes?.greeting || '-'}</span>
+            </div>
           </Flex>
         </div>
         <div>

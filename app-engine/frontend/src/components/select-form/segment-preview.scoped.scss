@@ -3,7 +3,8 @@
   padding: 24px;
   background-color: #fff;
   width: 400px;
- 
+  height: calc(100vh - 100px);
+  overflow: auto;
   &-header {
     font-size: 16px;
     margin-bottom: 16px;
@@ -17,7 +18,7 @@
   flex-direction: column;
   align-items: start;
   gap: 8px;
-  background-image: url(/src/assets/images/knowledge/knowledge-background.png);
+  background-image: url('/src/assets/images/knowledge/knowledge-background.png');
   background-size: cover;
   margin-bottom: 16px;
   border-radius: 8px;

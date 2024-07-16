@@ -20,8 +20,8 @@ setuptools.setup(
         "License :: Huawei license",
         "Operating System :: OS Independent",
     ],
-    install_requires=["langchain==0.2.5",
+    install_requires=["langchain==0.2.6",
                       "llama_index==0.10.47",
-                      "fit==1.2.0.dev"],
+                      "requests==2.31"],
     python_requires='==3.9.11'
 )

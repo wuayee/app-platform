@@ -181,7 +181,7 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
       <div className='filter-area' >
         <Button type="primary"  onClick={onAdd} style={{
             borderRadius: 4,
-            backgroundColor: '#2673E5',
+            backgroundColor: false ? '#2673E5' : '#00000040',
             display: 'flex',
             alignItems: 'center'
           }} disabled={true}>
@@ -206,7 +206,10 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
           width: '100%',
           boxSizing: 'border-box',
           paddingTop: '20px',
-          paddingBottom: '20px',
+          paddingBottom: '10px',
+          marginBottom: '10px',
+          height: 'calc(100% - 210px)',
+          overflow: 'auto',
           display:'Grid',
           justifyContent: 'space-between',
           gridGap: 17,

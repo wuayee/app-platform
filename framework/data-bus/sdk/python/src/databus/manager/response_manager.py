@@ -9,7 +9,7 @@ import logging
 import threading
 from typing import Dict, Optional
 from dataclasses import dataclass
-from socket import socket as socket_type
+import socket as socket_lib
 from databus.message import (
     MessageHeader, MESSAGE_HEADER_LENGTH, MESSAGE_RESPONSE_MAPPING,
     CoreMessageType, CoreMessageResponseTypeHint
@@ -24,7 +24,7 @@ class ResponseItem:
 
 
 class ResponseManager(threading.Thread):
-    def __init__(self, socket: socket_type, mailbox: Dict[int, ResponseItem]):
+    def __init__(self, socket: socket_lib.socket, mailbox: Dict[int, ResponseItem]):
         super().__init__()
         self._socket = socket
         self._mailbox = mailbox
@@ -47,6 +47,15 @@ class ResponseManager(threading.Thread):
         for mail in self._mailbox.values():
             with mail.cv:
                 mail.cv.notify_all()
+        if self._socket:
+            try:
+                self._socket.shutdown(socket_lib.SHUT_RDWR)
+                self._socket.close()
+            except Exception:
+                # 忽略因为关闭步骤中对一个已破损socket做操作等异常，此处只期待socket关闭过程执行
+                logging.debug("Response manager close socket error, this can be ignored.")
+            finally:
+                self._socket = None
 
     def _split_message(self, data: bytes):
         """分割处理内核返回的消息, 避免粘包"""

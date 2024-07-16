@@ -13,7 +13,7 @@
   .plugin-card-header{
    display: flex;
    gap:16px;
-   align-items: flex-start;
+   align-items: center;
    .tool-name {
     display: flex;
     align-items: center;
@@ -69,4 +69,9 @@
   font-size: 12px;
   color: #2673E5;
   display: none;
+}
+
+.version{
+  border-radius: 10px;
+  margin-left: 8px;
 }

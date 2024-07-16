@@ -23,7 +23,6 @@
         <kmssdk.version>3.0.1.0</kmssdk.version>
         <huawei-security.version>2.6.10-RELEASE</huawei-security.version>
         <fit.version>3.5.0-SNAPSHOT</fit.version>
-        <hisp.jane.api.version>1.0-SNAPSHOT</hisp.jane.api.version>
     </properties>
 
     <!--Hdt 增量覆盖率使用-->
@@ -205,13 +204,6 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.huawei.fit.service</groupId>
-                    <artifactId>hisp-jane-api</artifactId>
-                    <version>${hisp.jane.api.version}</version>
-                </dependency>
-            </dependencies>
         </profile>
     </profiles>
 

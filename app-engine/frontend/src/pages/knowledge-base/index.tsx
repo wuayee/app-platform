@@ -1,14 +1,15 @@
-import React, { useState, useEffect, ReactElement } from 'react';
-import { Button, Input }from 'antd';
+import React, { useState, useEffect, useRef } from 'react';
+import { Button, Input, Modal }from 'antd';
 import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
-
 import Pagination from '../../components/pagination/index';
 import { Icons } from '../../components/icons';
 import KnowledgeCard, { knowledgeBase } from '../../components/knowledge-card';
-import '../../index.scss'
+import { Message } from '@/shared/utils/message';
+import '../../index.scss';
+import './styles/index.scoped.scss';
 import { deleteKnowledgeBase, queryKnowledgeBase } from '../../shared/http/knowledge';
-const KnowledgeBase = () => {
 
+const KnowledgeBase = () => {
   // 路由
   const navigate = useNavigate();
 
@@ -26,6 +27,7 @@ const KnowledgeBase = () => {
 
   // 数据
   const [knowledgeData, setKnowledgeData] = useState<knowledgeBase[]>([]);
+  const modalRef = useRef()
 
   // 获取数据列表
   const getKnowledgeList = ()=> {
@@ -52,9 +54,29 @@ const KnowledgeBase = () => {
 
   // 删除知识库
   const deleteKnowBase = (id: string) => {
+    modalRef.current = Modal.warning({
+      title: '删除知识库',
+      centered: true,
+      okText: '确定',
+      footer: (
+        <div className='drawer-footer'>
+          <Button onClick={() => modalRef.current.destroy()}>取消</Button>
+          <Button type="primary" onClick={() => confirm(id)}>确定</Button>
+        </div>
+      ),
+      content: (
+        <div style={{ margin: '8px 0' }}>
+          <span>删除后无法恢复，是否确定删除</span>
+        </div>
+      )
+    })
+  }
+  const confirm = (id) => {
     deleteKnowledgeBase(id).then((res: any) => {
+      Message({ type: 'success', content: '删除成功' });
       setPage(1);
       getKnowledgeList();
+      modalRef.current.destroy()
     })
   }
 
@@ -100,59 +122,40 @@ const KnowledgeBase = () => {
   }, [page, pageSize, searchName]);
   return (
     <div className='aui-fullpage'>
-    <div className='aui-header-1'>
-      <div className='aui-title-1'>知识库概览</div>
+      <div className='aui-header-1'>
+        <div className='aui-title-1'>知识库概览</div>
+      </div>
+      <div className='aui-block'>
+          <div className='operatorArea'>
+            <Button type='primary' onClick={createKnowledge}>创建</Button>
+            <Input 
+              className='knowledge-search'
+              showCount
+              style={{ width: '200px' }}
+              maxLength={20}
+              placeholder="搜索"
+              onChange={(e)=>onSearchValueChange(e.target.value)}
+              prefix={<Icons.search color = {'rgb(230, 230, 230)'}/>}/>
+
+          </div>
+          <div className='containerArea'>
+              {knowledgeData.map(knowledge=> (<>
+                <KnowledgeCard key={knowledge.id} knowledge={knowledge} style={{
+                  flex: '0'
+                }} clickMore={(e)=> clickOpera(e, knowledge.id)}/>
+              </>))}
+
+          </div>
+          <Pagination 
+            total = {total} 
+            current={page} 
+            onChange={paginationChange}
+            pageSizeOptions={[8,16,32,60]}
+            showQuickJumper
+            pageSize={pageSize}
+          />
+      </div>
     </div>
-    <div className='aui-block'>
-        <div className='operatorArea' style={{
-          display: 'flex',
-          gap: '16px'
-        }}>
-          <Button type="primary" style={{
-            background: '#2673E5',
-            width: '96px',
-            height: '32px',
-            fontSize: '14px',
-            borderRadius: '4px',
-            letterSpacing: '0',
-          }} onClick={createKnowledge}>创建</Button>
-          <Input 
-            showCount
-            maxLength={20}
-            placeholder="搜索"  
-            style={{
-            width: '200px',
-            borderRadius: '4px',
-            border: '1px solid rgb(230, 230, 230)',
-            }} 
-            onChange={(e)=>onSearchValueChange(e.target.value)}
-            prefix={<Icons.search color = {'rgb(230, 230, 230)'}/>}/>
-
-        </div>
-        <div className='containerArea' style={{
-          width: '100%',
-          maxHeight: 'calc(100% - 200px)',
-          boxSizing: 'border-box',
-          paddingTop: '20px',
-          paddingBottom: '20px',
-          display:'Grid',
-          justifyContent: 'space-between',
-          gridGap: '1%',
-          gridTemplateColumns: 'repeat(auto-fill, 24%)'
-        }}>
-            {knowledgeData.map(knowledge=> (<>
-              <KnowledgeCard key={knowledge.id} knowledge={knowledge} style={{
-                flex: '0'
-              }} clickMore={(e)=> clickOpera(e, knowledge.id)}/>
-            </>))}
-
-        </div>
-        <Pagination total = {total} current={page} onChange={paginationChange}
-         pageSizeOptions={[8,16,32,60]}
-         pageSize={pageSize}/>
-    </div>
-  </div>
-
   )
 }
 export default KnowledgeBase;

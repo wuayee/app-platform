@@ -1,10 +1,10 @@
 import type { ReactElement } from 'react';
 import React from 'react';
-import { Card, Button, Dropdown, Space } from 'antd';
+import { Card, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
-import { url } from 'inspector';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../icons/index';
+import './index.scoped.scss'
 
 export interface knowledgeBase {
   name: string;
@@ -57,59 +57,22 @@ const App = ({
     return `${y}.${m}.${d}`;
   };
   return (
-    <Card
-      style={{
-        background: 'url(/src/assets/images/knowledge/knowledge-background.png)',
-        backgroundRepeat:'no-repeat',
-        backgroundSize:'cover',
-        height: 280,
-        marginBottom:14,
-      }}
-      onClick={() => {
-        jumpDetail(knowledge.id);
-      }}
-    >
-      {/* 头部区域 */}
-        <div>
-          <div style={{display:'flex'}}>
-            <span style={{width:48}}>
-            <knowledge.icon/>
-            </span>
-            <span style={{fontSize:'20px',marginLeft:8}}>{knowledge.name}</span>
-          </div>
-          <div
-            style={{
-              fontSize: 14,
-              color: 'rgba(105, 105, 105, .9)',
-            }}
-          >
-            {`${knowledge.ownerName}创建于${formateTime(knowledge.createdAt as any as Date)}`}
+    <Card className='knowledge-card' onClick={() => {jumpDetail(knowledge.id)}}>
+      <div className='card-head'>
+        <span className='card-icon'>
+          <knowledge.icon/>
+        </span>
+        <div className='card-title'>
+          <div className='card-name'>{knowledge.name}</div> 
+          <div className='card-create'>
+            {`${knowledge.ownerName} 创建于${formateTime(knowledge.createdAt as any as Date)}`}
           </div>
         </div>
-
-      {/* 描述 */}
-      <div
-        style={{
-          wordBreak: 'break-all',
-          marginTop: 16,
-          fontSize: '14px',
-          lineHeight: '22px',
-          textAlign: 'justify',
-          height: 120,
-          overflowY: 'auto',
-        }}
-      >
+      </div>
+      <div className='card-desc'>
         {knowledge.description}
       </div>
-
-      {/* 底部 */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          marginTop:8,
-        }}
-      >
+      <div className='card-footer'>
         <div>
           <Dropdown
             menu={{

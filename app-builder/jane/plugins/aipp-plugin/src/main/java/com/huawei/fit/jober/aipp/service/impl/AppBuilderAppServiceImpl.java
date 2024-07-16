@@ -4,18 +4,25 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
+import static com.huawei.fit.jober.aipp.common.exception.AippErrCode.TASK_NOT_FOUND;
+
 import com.huawei.fit.http.server.HttpClassicServerRequest;
+import com.huawei.fit.jane.Undefinable;
 import com.huawei.fit.jane.common.entity.OperationContext;
+import com.huawei.fit.jane.common.enums.DirectionEnum;
 import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
+import com.huawei.fit.jane.meta.multiversion.definition.MetaDeclarationInfo;
 import com.huawei.fit.jane.meta.multiversion.definition.MetaFilter;
+import com.huawei.fit.jane.meta.property.MetaPropertyDeclarationInfo;
 import com.huawei.fit.jane.task.util.Entities;
 import com.huawei.fit.jober.aipp.common.exception.AippErrCode;
 import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
 import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.convertor.FormMetaConvertor;
 import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfig;
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfigProperty;
@@ -31,9 +38,12 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderConfigDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderConfigFormPropertyDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderFlowGraphDto;
+import com.huawei.fit.jober.aipp.dto.PublishedAppResDto;
 import com.huawei.fit.jober.aipp.enums.AippMetaStatusEnum;
+import com.huawei.fit.jober.aipp.enums.AippSortKeyEnum;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
-import com.huawei.fit.jober.aipp.enums.AppTypeEnum;
+import com.huawei.fit.jober.aipp.enums.AppState;
+import com.huawei.fit.jober.aipp.enums.JaneCategory;
 import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.genericable.entity.AippCreate;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
@@ -42,13 +52,17 @@ import com.huawei.fit.jober.aipp.service.AppBuilderAppService;
 import com.huawei.fit.jober.aipp.util.ConvertUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.MetaUtils;
+import com.huawei.fit.jober.aipp.util.VersionUtils;
+import com.huawei.fit.jober.aipp.validation.AppUpdateValidator;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.transaction.Transactional;
+import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -73,6 +87,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -89,24 +104,28 @@ import java.util.stream.Collectors;
 public class AppBuilderAppServiceImpl
         implements AppBuilderAppService, com.huawei.fit.jober.aipp.genericable.AppBuilderAppService {
     private static final Logger log = Logger.get(AppBuilderAppServiceImpl.class);
+    private static final int RETRY_CREATE_TIMES = 5;
+    private static final String DEFAULT_APP_VERSION = "1.0.0";
+    private static final String VERSION_FORMAT = "{0}.{1}.{2}";
     private final AppBuilderAppFactory appFactory;
     private final AippFlowService aippFlowService;
     private final AppBuilderAppRepository appRepository;
     private final int nameLengthMaximum;
     private final MetaService metaService;
-
     private final UsrAppCollectionService usrAppCollectionService;
+    private final AppUpdateValidator appUpdateValidator;
 
     public AppBuilderAppServiceImpl(AppBuilderAppFactory appFactory, AippFlowService aippFlowService,
-                                    AppBuilderAppRepository appRepository,
-                                    @Value("${validation.task.name.length.maximum:64}") int nameLengthMaximum,
-                                    MetaService metaService, UsrAppCollectionService usrAppCollectionService) {
+            AppBuilderAppRepository appRepository,
+            @Value("${validation.task.name.length.maximum:64}") int nameLengthMaximum, MetaService metaService,
+            UsrAppCollectionService usrAppCollectionService, AppUpdateValidator appUpdateValidator) {
         this.nameLengthMaximum = nameLengthMaximum;
         this.appFactory = appFactory;
         this.aippFlowService = aippFlowService;
         this.appRepository = appRepository;
         this.metaService = metaService;
         this.usrAppCollectionService = usrAppCollectionService;
+        this.appUpdateValidator = appUpdateValidator;
     }
 
     @Override
@@ -121,37 +140,140 @@ public class AppBuilderAppServiceImpl
     @Transactional
     public Rsp<AippCreateDto> publish(AppBuilderAppDto appDto, OperationContext contextOf) {
         // todo 要加个save appDto到数据的逻辑
-        AippDto aippDto = ConvertUtils.toAppDto(appDto);
-        this.validatePublished(aippDto, contextOf);
+        AippDto aippDto = ConvertUtils.convertToAippDtoFromAppBuilderAppDto(appDto);
+        this.validateVersion(aippDto, contextOf);
         AippCreateDto aippCreateDto = this.aippFlowService.create(aippDto, contextOf);
         aippDto.setId(aippCreateDto.getAippId());
         String id = appDto.getId();
         AppBuilderApp appBuilderApp = this.appFactory.create(id);
-        appBuilderApp.setState("RUNNING");
+        if (AppState.getAppState(appBuilderApp.getState()) == AppState.PUBLISHED) {
+            throw new AippException(AippErrCode.APP_HAS_PUBLISHED);
+        }
+        appBuilderApp.setState(AppState.PUBLISHED.getName());
+        // 添加校验，禁止更低版本手动输入
+        this.validateVersionIsLatest(appBuilderApp.getVersion(), appDto.getVersion());
+        appBuilderApp.setVersion(appDto.getVersion());
         this.appFactory.update(appBuilderApp);
+        if (appBuilderApp.getAttributes().containsKey("store_id")) {
+            aippDto.setUniqueName(appBuilderApp.getAttributes().get("store_id").toString());
+        }
         return this.aippFlowService.publish(aippDto, contextOf);
     }
 
-    private void validatePublished(AippDto aippDto, OperationContext contextOf) {
+    /**
+     * 校验版本号是否比现有号更新
+     *
+     * @param oldVersion 旧版本号
+     * @param newVersion 新版本号
+     */
+    private void validateVersionIsLatest(String oldVersion, String newVersion) {
+        if (!VersionUtils.isValidVersion(oldVersion) || !VersionUtils.isValidVersion(newVersion)) {
+            throw new AippException(AippErrCode.INVALID_VERSION_NAME);
+        }
+        if (StringUtils.equals(oldVersion, newVersion)) {
+            // 在这里，与旧版本号相同的版本号被认为是最新的
+            return;
+        }
+        String[] oldPart = oldVersion.split("\\.");
+        String[] newPart = newVersion.split("\\.");
+        for (int i = 0; i < oldPart.length; i++) {
+            int oldV = Integer.parseInt(oldPart[i]);
+            int newV = Integer.parseInt(newPart[i]);
+            if (oldV > newV) {
+                // 如果某个号比当前号小，则认为新版本比旧版本小，抛出错误
+                throw new AippParamException(AippErrCode.NEW_VERSION_IS_LOWER);
+            }
+            if (newV > oldV) {
+                // 如果某个号比当前号大，则认为新版本比旧版本大，例如2.0.0比1.9.9大
+                break;
+            }
+        }
+    }
+
+    private void validateVersion(AippDto aippDto, OperationContext contextOf) {
+        String aippId = this.getAippIdByAppId(aippDto.getAppId(), contextOf);
         MetaFilter metaFilter = new MetaFilter();
         metaFilter.setVersions(Collections.singletonList(aippDto.getVersion()));
+        metaFilter.setMetaIds(Collections.singletonList(aippId));
         Map<String, List<String>> attributes = new HashMap<>();
         attributes.put(AippConst.ATTR_AIPP_TYPE_KEY, Collections.singletonList(AippTypeEnum.NORMAL.type()));
         attributes.put(AippConst.ATTR_META_STATUS_KEY, Collections.singletonList(AippMetaStatusEnum.ACTIVE.getCode()));
-        attributes.put(AippConst.ATTR_APP_ID_KEY, Collections.singletonList(aippDto.getAppId()));
         metaFilter.setAttributes(attributes);
         RangedResultSet<Meta> metas = this.metaService.list(metaFilter, true, 0, 1, contextOf);
         if (!metas.getResults().isEmpty()) {
-            throw new AippException(AippErrCode.APP_HAS_PUBLISHED);
+            throw new AippException(AippErrCode.APP_VERSION_HAS_ALREADY);
         }
     }
 
     @Override
     @Fitable(id = "default")
     public AippCreate debug(AppBuilderAppDto appDto, OperationContext contextOf) {
-        AippDto aippDto = ConvertUtils.toAppDto(appDto);
+        AippDto aippDto = ConvertUtils.convertToAippDtoFromAppBuilderAppDto(appDto);
         // todo Rsp 得统一整改下
         return ConvertUtils.toAippCreate(this.aippFlowService.previewAipp(appDto.getVersion(), aippDto, contextOf));
+    }
+
+    @Override
+    public AppBuilderAppDto queryLatestOrchestration(String appId, OperationContext context) {
+        String aippId = this.getAippIdByAppId(appId, context);
+        MetaFilter filter = new MetaFilter();
+        filter.setMetaIds(Collections.singletonList(aippId));
+        String sortEncode = MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.name(), DirectionEnum.DESCEND.name());
+        filter.setOrderBys(Collections.singletonList(sortEncode));
+        List<Meta> metas = MetaUtils.getListMetaHandle(this.metaService, filter, context);
+        if (metas.isEmpty()) {
+            log.error("Meta list can not be empty.");
+            throw new AippParamException(TASK_NOT_FOUND);
+        }
+        Meta latestMeta = metas.get(0);
+        String copiedAppId = String.valueOf(latestMeta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
+        AppBuilderApp copiedApp = this.appFactory.create(copiedAppId);
+        if (MetaUtils.isPublished(latestMeta)) {
+            return this.create(copiedAppId, this.buildAppBuilderAppCreateDto(copiedApp), context, true);
+        }
+        return this.query(copiedAppId);
+    }
+
+    @Override
+    public AippCreate queryLatestPublished(String appId, OperationContext context) {
+        List<Meta> metas = this.getPublishedMetaList(appId, context);
+        if (metas.isEmpty()) {
+            log.error("Meta list can not be empty.");
+            throw new AippParamException(TASK_NOT_FOUND);
+        }
+        Meta latestMeta = metas.get(0);
+        return AippCreate.builder().version(latestMeta.getVersion()).aippId(latestMeta.getId()).build();
+    }
+
+    private List<Meta> getPublishedMetaList(String appId, OperationContext context) {
+        MetaFilter filter = new MetaFilter();
+        String aippId = this.getAippIdByAppId(appId, context);
+        filter.setMetaIds(Collections.singletonList(aippId));
+        String sortEncode = MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.name(), DirectionEnum.DESCEND.name());
+        filter.setOrderBys(Collections.singletonList(sortEncode));
+        Map<String, List<String>> attributes = new HashMap<>();
+        attributes.put(AippConst.ATTR_AIPP_TYPE_KEY, Collections.singletonList(AippTypeEnum.NORMAL.name()));
+        attributes.put(AippConst.ATTR_META_STATUS_KEY, Collections.singletonList(AippMetaStatusEnum.ACTIVE.getCode()));
+        filter.setAttributes(attributes);
+        return MetaUtils.getListMetaHandle(this.metaService, filter, context);
+    }
+
+    private AppBuilderAppCreateDto buildAppBuilderAppCreateDto(AppBuilderApp app) {
+        Map<String, Object> attributes = app.getAttributes();
+        String description = String.valueOf(attributes.getOrDefault("description", StringUtils.EMPTY));
+        String icon = String.valueOf(attributes.getOrDefault("icon", StringUtils.EMPTY));
+        String greeting = String.valueOf(attributes.getOrDefault("greeting", StringUtils.EMPTY));
+        String appType = String.valueOf(attributes.getOrDefault("app_type", StringUtils.EMPTY));
+        String storeId = String.valueOf(attributes.getOrDefault("store_id", StringUtils.EMPTY));
+        return AppBuilderAppCreateDto.builder()
+                .name(app.getName())
+                .description(description)
+                .icon(icon)
+                .greeting(greeting)
+                .appType(appType)
+                .type(app.getType())
+                .storeId(storeId)
+                .build();
     }
 
     @Override
@@ -167,16 +289,17 @@ public class AppBuilderAppServiceImpl
     @Fitable(id = "default")
     public Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(AppQueryCondition cond,
             HttpClassicServerRequest httpRequest, String tenantId, long offset, int limit) {
-        List<AppBuilderAppMetadataDto> result =
-                this.appRepository.selectByTenantIdWithPage(cond, tenantId, AppTypeEnum.APP.code(), offset, limit)
+        List<AppBuilderAppMetadataDto> result = this.appRepository.selectWithLatestApp(cond, tenantId, offset, limit)
                         .stream()
                         .map(this::buildAppMetaData)
                         .collect(Collectors.toList());
-        long total = this.appRepository.countByTenantId(tenantId, AppTypeEnum.APP.code());
+        long total = this.appRepository.countWithLatestApp(tenantId, cond);
         return Rsp.ok(RangedResultSet.create(result, offset, limit, total));
     }
 
     private AppBuilderAppMetadataDto buildAppMetaData(AppBuilderApp app) {
+        List<String> tags = new ArrayList<>() ;
+        tags.add(app.getType().toUpperCase(Locale.ROOT));
         return AppBuilderAppMetadataDto.builder()
                 .id(app.getId())
                 .name(app.getName())
@@ -188,14 +311,16 @@ public class AppBuilderAppServiceImpl
                 .updateBy(app.getUpdateBy())
                 .createAt(app.getCreateAt())
                 .updateAt(app.getUpdateAt())
+                .tags(tags)
                 .build();
     }
 
     @Override
     @Transactional
     @Fitable(id = "default")
-    public AppBuilderAppDto create(String appId, AppBuilderAppCreateDto dto, OperationContext context) {
-        if (dto != null) {
+    public AppBuilderAppDto create(String appId, AppBuilderAppCreateDto dto, OperationContext context,
+            boolean isUpgrade) {
+        if (dto != null && !isUpgrade) {
             this.validateCreateApp(dto.getName(), context);
         }
         AppBuilderApp templateApp = this.appFactory.create(appId);
@@ -210,12 +335,16 @@ public class AppBuilderAppServiceImpl
         // 这里在创建应用时需要保证graph中的title+version唯一，否则在发布flow时会报错
         appearance.put("title", flowGraph.getId());
         flowGraph.setAppearance(JSONObject.toJSONString(appearance));
-
+        String version = this.buildVersion(templateApp, isUpgrade);
+        templateApp.setVersion(version);
         templateApp.setId(Entities.generateId());
         templateApp.setConfigId(config.getId());
         templateApp.setFlowGraphId(flowGraph.getId());
         templateApp.setType("app");
         templateApp.setTenantId(context.getTenantId());
+        if (isUpgrade) {
+            templateApp.setState(AppState.INACTIVE.getName());
+        }
         config.setAppId(templateApp.getId());
         if (Objects.nonNull(dto)) {
             templateApp.setAttributes(this.createAppAttributes(dto));
@@ -225,7 +354,62 @@ public class AppBuilderAppServiceImpl
 
         resetOperatorAndTime(templateApp, LocalDateTime.now(), context.getOperator());
         this.saveNewAppBuilderApp(templateApp);
+        this.saveMeta(templateApp, version, context);
         return this.buildFullAppDto(templateApp);
+    }
+
+    private void saveMeta(AppBuilderApp app, String version, OperationContext context) {
+        AippDto aippDto = ConvertUtils.convertToAippDtoFromAppBuilderApp(app);
+        int retryTimes = RETRY_CREATE_TIMES;
+        do {
+            String previewVersion = VersionUtils.buildPreviewVersion(version);
+            aippDto.setVersion(previewVersion);
+            MetaDeclarationInfo declarationInfo = this.buildInitialMetaDeclaration(aippDto,
+                    AippCreateDto.builder().aippId(aippDto.getId()).version(previewVersion).build(),
+                    AippTypeEnum.NORMAL.name());
+            try {
+                this.metaService.create(declarationInfo, context);
+                break;
+            } catch (FitException e) {
+                log.warn("create meta failed, times {} aippId {} version {}, error {}",
+                        RETRY_CREATE_TIMES - retryTimes,
+                        aippDto.getId(),
+                        version,
+                        e.getMessage());
+            }
+        } while (retryTimes-- > 0);
+    }
+
+    private MetaDeclarationInfo buildInitialMetaDeclaration(AippDto aippDto, AippCreateDto baselineInfo,
+            String aippType) {
+        MetaDeclarationInfo declaration = new MetaDeclarationInfo();
+        declaration.setCategory(Undefinable.defined(JaneCategory.AIPP.name()));
+        declaration.setName(Undefinable.defined(aippDto.getName()));
+        declaration.setVersion(Undefinable.defined(aippDto.getVersion()));
+        declaration.putAttribute(AippConst.ATTR_META_STATUS_KEY, AippMetaStatusEnum.INACTIVE.getCode());
+        declaration.putAttribute(AippConst.ATTR_PUBLISH_TIME_KEY, LocalDateTime.now().toString());
+        declaration.putAttribute(AippConst.ATTR_DESCRIPTION_KEY, aippDto.getDescription());
+        declaration.putAttribute(AippConst.ATTR_META_ICON_KEY, aippDto.getIcon());
+        declaration.putAttribute(AippConst.ATTR_AIPP_TYPE_KEY, aippType);
+        declaration.putAttribute(AippConst.ATTR_APP_ID_KEY, aippDto.getAppId());
+        if (baselineInfo != null) {
+            declaration.putAttribute(AippConst.ATTR_BASELINE_VERSION_KEY, baselineInfo.getVersion());
+        }
+        List<MetaPropertyDeclarationInfo> props = AippConst.STATIC_META_ITEMS.stream()
+                .map(FormMetaConvertor.INSTANCE::toMetaPropertyDeclarationInfo)
+                .collect(Collectors.toList());
+        declaration.setProperties(Undefinable.defined(props));
+        return declaration;
+    }
+
+    private String buildVersion(AppBuilderApp app, boolean isUpgrade) {
+        // 当前只考虑升级，如果后续需要做基于应用创建新应用，则需要改动下面逻辑。
+        if (!isUpgrade || !VersionUtils.isValidVersion(app.getVersion())) {
+            return DEFAULT_APP_VERSION;
+        }
+        String[] parts = app.getVersion().split("\\.");
+        parts[2] = String.valueOf(Integer.parseInt(parts[2]) + 1);
+        return StringUtils.format(VERSION_FORMAT, parts[0], parts[1], parts[2]);
     }
 
     private void validateCreateApp(String name, OperationContext context) {
@@ -239,7 +423,21 @@ public class AppBuilderAppServiceImpl
     }
 
     private void validateUpdateApp(String appId, String name, OperationContext context) {
+        // 这个静态校验名称不能为空、不能超长
         this.validateAppName(name, context);
+
+        // 如果该app已经发布过了，那么将不再允许修改名称
+        List<Meta> metaList = this.getPublishedMetaList(appId, context);
+        if (CollectionUtils.isNotEmpty(metaList) && !StringUtils.equals(metaList.get(0).getName(), name)) {
+            throw new AippException(AippErrCode.APP_NAME_HAS_PUBLISHED);
+        }
+
+        // 到这里，要么是metaList是空的，要么就是没有改名
+        // 如果metaList不是空的，证明没有改名，不管
+        if (CollectionUtils.isNotEmpty(metaList)) {
+            return;
+        }
+        // 如果mataList是空的，即没有发布过，那么名称可以修改为不和其它名称重复的名称
         AppQueryCondition queryCondition =
                 AppQueryCondition.builder().tenantId(context.getTenantId()).name(name).build();
         List<AppBuilderApp> appBuilderApps = this.appRepository.selectWithCondition(queryCondition);
@@ -269,6 +467,9 @@ public class AppBuilderAppServiceImpl
         attributes.put("icon", dto.getIcon());
         attributes.put("greeting", dto.getGreeting());
         attributes.put("app_type", dto.getAppType());
+        if (StringUtils.isNotBlank(dto.getStoreId())) {
+            attributes.put("store_id", dto.getStoreId());
+        }
         return attributes;
     }
 
@@ -276,15 +477,18 @@ public class AppBuilderAppServiceImpl
     @Transactional
     @Fitable(id = "default")
     public Rsp<AppBuilderAppDto> updateApp(String appId, AppBuilderAppDto appDto, OperationContext context) {
-        if (appDto != null) {
-            this.validateUpdateApp(appId, appDto.getName(), context);
+        if (appDto == null) {
+            throw new AippException(AippErrCode.INVALID_OPERATION);
         }
+        this.validateUpdateApp(appId, appDto.getName(), context);
+        this.appUpdateValidator.validate(appId);
         AppBuilderApp update = this.appFactory.create(appId);
         update.setUpdateBy(context.getOperator());
         update.setUpdateAt(LocalDateTime.now());
         update.setName(appDto.getName());
         update.setType(appDto.getType());
-        update.setAttributes(appDto.getAttributes());
+        // 避免前端更新将app表的attributes覆盖了
+        this.updateAttributes(update, appDto.getAttributes());
         update.setVersion(appDto.getVersion());
         if (StringUtils.isEmpty(update.getId())) {
             // 此时通过mapper没有查询到对应的app，需要创建新的app
@@ -300,6 +504,11 @@ public class AppBuilderAppServiceImpl
         }
         this.appFactory.update(update);
         return Rsp.ok(this.buildFullAppDto(update));
+    }
+
+    private void updateAttributes(AppBuilderApp update, Map<String, Object> attributes) {
+        Map<String, Object> attributesOld = update.getAttributes();
+        attributesOld.putAll(attributes);
     }
 
     private void addGraphIntoApp(AppBuilderFlowGraphDto graphDto, AppBuilderApp app) {
@@ -369,6 +578,7 @@ public class AppBuilderAppServiceImpl
     @Transactional
     @Fitable(id = "default")
     public Rsp<AppBuilderAppDto> updateConfig(String appId, AppBuilderConfigDto configDto, OperationContext context) {
+        this.appUpdateValidator.validate(appId);
         LocalDateTime operateTime = LocalDateTime.now();
         AppBuilderApp oldApp = this.appFactory.create(appId);
         AppBuilderConfig oldConfig = oldApp.getConfig();
@@ -406,6 +616,7 @@ public class AppBuilderAppServiceImpl
     @Fitable(id = "default")
     public Rsp<AppBuilderAppDto> updateFlowGraph(String appId, AppBuilderFlowGraphDto graphDto,
             OperationContext context) {
+        this.appUpdateValidator.validate(appId);
         LocalDateTime operateTime = LocalDateTime.now();
 
         AppBuilderApp oldApp = this.appFactory.create(appId);
@@ -454,6 +665,82 @@ public class AppBuilderAppServiceImpl
         // step6 删除应用收藏记录相关
         usrAppCollectionService.deleteByAppId(appId);
 
+    }
+
+    @Override
+    public PublishedAppResDto published(String uniqueName, OperationContext context) {
+        MetaFilter filter = new MetaFilter();
+        Map<String, List<String>> attributes = new HashMap<>();
+        attributes.put(AippConst.ATTR_UNIQUE_NAME, Collections.singletonList(uniqueName));
+        filter.setAttributes(attributes);
+        RangedResultSet<Meta> metas =
+                this.metaService.list(filter, true, 0, 1, context);
+        if (metas.getResults().isEmpty()) {
+            log.error("Meta can not be null.");
+            throw new AippParamException(TASK_NOT_FOUND);
+        }
+        Meta meta = metas.getResults().get(0);
+        String appId = String.valueOf(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
+        String publishedDescription = String.valueOf(meta.getAttributes().get(AippConst.ATTR_PUBLISH_DESCRIPTION));
+        return PublishedAppResDto.builder()
+                .appId(appId)
+                .appVersion(meta.getVersion())
+                .publishedAt(meta.getCreationTime())
+                .publishedBy(meta.getCreator())
+                .publishedDescription(publishedDescription)
+                .build();
+    }
+
+    @Override
+    public List<PublishedAppResDto> recentPublished(AppQueryCondition cond, long offset, int limit, String appId,
+            OperationContext context) {
+        String aippId = this.getAippIdByAppId(appId, context);
+        List<Meta> allPublishedMeta = MetaUtils.getAllPublishedMeta(this.metaService, aippId, context)
+                .stream()
+                .filter(meta -> !this.isAppBelong(appId, meta))
+                .collect(Collectors.toList());
+        List<String> appIds = allPublishedMeta.stream()
+                .map(meta -> String.valueOf(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY)))
+                .collect(Collectors.toList());
+        cond.setIds(appIds);
+        cond.setTenantId(context.getTenantId());
+        List<AppBuilderApp> allPublishedApp = this.appRepository.selectWithCondition(cond);
+        Map<String, AppBuilderApp> appIdKeyAppValueMap =
+                allPublishedApp.stream().collect(Collectors.toMap(AppBuilderApp::getId, Function.identity()));
+        return this.buildPublishedAppResDtos(allPublishedMeta, appIdKeyAppValueMap);
+    }
+
+    private String getAippIdByAppId(String appId, OperationContext context) {
+        List<Meta> metas = MetaUtils.getAllMetasByAppId(this.metaService, appId, context);
+        if (CollectionUtils.isEmpty(metas)) {
+            log.error("Meta can not be null.");
+            throw new AippParamException(TASK_NOT_FOUND);
+        }
+        return metas.get(0).getId();
+    }
+
+    private boolean isAppBelong(String appId, Meta meta) {
+        return Objects.equals(String.valueOf(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY)), appId);
+    }
+
+    private List<PublishedAppResDto> buildPublishedAppResDtos(List<Meta> metas,
+            Map<String, AppBuilderApp> appIdKeyAppValueMap) {
+        return metas.stream()
+                .map(meta -> this.buildPublishedAppResDto(meta, appIdKeyAppValueMap))
+                .collect(Collectors.toList());
+    }
+
+    private PublishedAppResDto buildPublishedAppResDto(Meta meta, Map<String, AppBuilderApp> appIdKeyAppValueMap) {
+        String appId = String.valueOf(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
+        String publishedDescription = String.valueOf(meta.getAttributes().get(AippConst.ATTR_PUBLISH_DESCRIPTION));
+        AppBuilderApp app = appIdKeyAppValueMap.get(appId);
+        return PublishedAppResDto.builder()
+                .appId(appId)
+                .appVersion(app.getVersion())
+                .publishedAt(meta.getCreationTime())
+                .publishedBy(meta.getCreator())
+                .publishedDescription(publishedDescription)
+                .build();
     }
 
     @NotNull

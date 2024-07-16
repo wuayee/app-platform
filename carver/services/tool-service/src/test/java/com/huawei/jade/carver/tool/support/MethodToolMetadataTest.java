@@ -46,6 +46,7 @@ public class MethodToolMetadataTest {
     private final String name;
     private final String index;
 
+    private Map<String, Object> toolSchema;
     private Tool tool;
 
     private Tool.Metadata toolMetadata;
@@ -73,19 +74,41 @@ public class MethodToolMetadataTest {
         });
         this.toolMetadata = Tool.Metadata.fromMethod(this.testMethod);
         FitToolFactory fitToolFactory = new FitToolFactory(client, serializer);
-        this.tool = fitToolFactory.create(buildInfo(), this.toolMetadata);
+        this.tool = fitToolFactory.create(this.buildInfo(), this.toolMetadata);
+        this.toolSchema = this.buildSchema();
     }
 
-    Tool.Info buildInfo() {
+    private Tool.Info buildInfo() {
         return Tool.Info.custom()
                 .name("test_schema_default_implementation_name")
                 .uniqueName("schema-uuid")
                 .tags(Collections.singleton("FIT"))
                 .description("This is a demo FIT function.")
-                .schema(null)
+                .schema(this.buildSchema())
                 .runnables(MapBuilder.<String, Object>get()
                         .put("FIT", MapBuilder.<String, Object>get().put("genericableId", "t1").build())
                         .build())
+                .build();
+    }
+
+    private Map<String, Object> buildSchema() {
+        return MapBuilder.<String, Object>get()
+                .put("name", "test_method_default_implementation_name")
+                .put("index", "test_method_index")
+                .put("description", "This is a demo FIT function.")
+                .put(SchemaKey.PARAMETERS,
+                        MapBuilder.<String, Object>get()
+                                .put("type", "object")
+                                .put(SchemaKey.PARAMETERS_PROPERTIES,
+                                        MapBuilder.<String, Object>get()
+                                                .put("p1", MapBuilder.<String, Object>get()
+                                                        .put("type", "string")
+                                                        .put("default", "This is the first parameter.")
+                                                        .build())
+                                                .build())
+                                .put(SchemaKey.PARAMETERS_ORDER, Collections.singletonList("p1"))
+                                .build())
+                .put(SchemaKey.RETURN_SCHEMA, MapBuilder.<String, Object>get().put("type", "string").build())
                 .build();
     }
 
@@ -142,7 +165,7 @@ public class MethodToolMetadataTest {
     @DisplayName("返回正确的格式规范描述")
     void shouldReturnSchema() {
         Map<String, Object> schema = this.tool.info().schema();
-        // TODO: 生成自定义方法的校验和逻辑
+        assertThat(schema).isEqualTo(this.toolSchema);
     }
 
     interface TestInterface {

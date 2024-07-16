@@ -1,10 +1,11 @@
-import {Button, Col, Collapse, Form, Input, InputNumber, Row, Switch} from 'antd';
+import {Button, Col, Collapse, Form, InputNumber, Row, Switch} from 'antd';
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import {JadeStopPropagationSelect} from "@/components/common/JadeStopPropagationSelect.jsx";
 import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSelect.jsx";
 import "./style.css";
 import {useFormContext} from "@/components/DefaultRoot.jsx";
 import {UNARY_OPERATOR} from "@/common/Consts.js";
+import {JadeInput} from "@/components/common/JadeInput.jsx";
 
 const {Panel} = Collapse;
 
@@ -13,13 +14,17 @@ const {Panel} = Collapse;
  *
  * @returns {JSX.Element} 判断条件表单的DOM。
  */
-export default function IfForm({branch, name, index, totalItemNum, deleteBranch, changeConditionRelation,
-                                   addCondition, deleteCondition, changeConditionConfig}) {
+export default function IfForm({branch,
+                                name,
+                                index,
+                                totalItemNum,
+                                deleteBranch,
+                                changeConditionRelation,
+                                addCondition,
+                                deleteCondition,
+                                changeConditionConfig}) {
     const form = useFormContext();
-
     const unaryOperators = Object.values(UNARY_OPERATOR);
-
-    const binaryOperators = ['equal', 'not equal', 'longer than', 'longer than or equal', 'shorter than', 'shorter than or equal', 'contain', 'not contain', 'greater than', 'greater than or equal', 'less than', 'less than or equal'];
 
     const handleDeleteBranch = () => {
         deleteBranch(branch.id);
@@ -39,7 +44,15 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
     };
 
     const handleReferenceValueChange = (conditionId, itemId, v, t) => {
-        changeConditionConfig(branch.id, conditionId, [{key: itemId, value: [{key: "referenceKey", value: v}, {key: "type", value: t}]}]);
+        let valueArray = [{key: "referenceKey", value: v}];
+        if (t !== null) {
+            // 这里需要判断t是否为空，避免选择从Reference切换至Input时会重置输入的type为null
+            valueArray.push({key: "type", value: t});
+        }
+        changeConditionConfig(branch.id, conditionId, [{
+            key: itemId,
+            value: valueArray
+        }]);
     };
 
     const handleReferenceKeyChange = (conditionId, itemId, e) => {
@@ -205,7 +218,7 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
                             rules={selectedRightSideValueRules(condition)}
                             initialValue={item.value}
                         >
-                            <Input
+                            <JadeInput
                                 className="value-custom jade-input"
                                 disabled={unaryOperators.includes(condition)}
                                 value={item.value}
@@ -251,7 +264,7 @@ export default function IfForm({branch, name, index, totalItemNum, deleteBranch,
                             },])}
                             initialValue={item.value}
                         >
-                            <Input
+                            <JadeInput
                                 className="value-custom jade-input"
                                 disabled={unaryOperators.includes(condition)}
                                 value={item.value}

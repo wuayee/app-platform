@@ -1,6 +1,6 @@
 
-import React, { useEffect, useState } from 'react';
-import { Input, Form, InputNumber, Switch } from "antd";
+import React, { useEffect } from 'react';
+import { Input, Form, InputNumber, Switch } from 'antd';
 
 const RenderFormItem = (props) => {
   const {type, name, isRequired} = props;

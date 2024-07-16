@@ -109,7 +109,7 @@ export default function LlmOutput() {
                         {/*        rules={[{required: true, message: '输出参数名称不能为空!'}]}*/}
                         {/*        initialValue={item.name}*/}
                         {/*    >*/}
-                        {/*        <Input*/}
+                        {/*        <JInput*/}
                         {/*            style={{paddingRight: "12px"}}*/}
                         {/*            value={item.name}*/}
                         {/*            onChange={(e) => handleItemChange('name', e.target.value, item.id)}*/}
@@ -145,7 +145,7 @@ export default function LlmOutput() {
                         {/*    <Form.Item*/}
                         {/*        id={`description-${item.id}`}*/}
                         {/*    >*/}
-                        {/*        <Input*/}
+                        {/*        <JInput*/}
                         {/*            style={{paddingRight: "12px"}}*/}
                         {/*            value={item.description}*/}
                         {/*            onChange={(e) => handleItemChange('description', e.target.value, item.id)}*/}

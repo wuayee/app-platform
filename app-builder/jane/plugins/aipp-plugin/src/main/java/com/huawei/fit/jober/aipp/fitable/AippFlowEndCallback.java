@@ -93,6 +93,11 @@ public class AippFlowEndCallback implements FlowCallbackService {
         Map<String, Object> attr = meta.getAttributes();
         String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
         businessData.put(AippConst.ATTR_APP_ID_KEY, attr.get(AippConst.ATTR_APP_ID_KEY));
+        // todo: 表明流程结果是否需要再经过模型加工，当前场景全为false。
+        //  正常情况下应该是在结束节点配上该key并放入businessData中，此处模拟该过程。
+        //  如果子流程结束后需要再经过模型加工，子流程结束节点不打印日志；否则子流程结束节点需要打印日志。
+        //  如果前一个节点是人工检查节点，并在结束节点reference到了表单，那么这里一定会打印消息。
+        businessData.put(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM, false);
         if (businessData.containsKey(AippConst.BS_END_FORM_ID_KEY)) {
             String endFormId = (String) businessData.get(AippConst.BS_END_FORM_ID_KEY);
             String endFormVersion = DEFAULT_END_FORM_VERSION;
@@ -141,11 +146,6 @@ public class AippFlowEndCallback implements FlowCallbackService {
 
     private void logFinalOutput(List<Map<String, Object>> contexts, Map<String, Object> businessData,
             String aippInstId) {
-        // todo: 表明流程结果是否需要再经过模型加工，当前场景全为false。
-        //  正常情况下应该是在结束节点配上该key并放入businessData中，此处模拟该过程。
-        //  如果子流程结束后需要再经过模型加工，子流程结束节点不打印日志；否则子流程结束节点需要打印日志。
-        //  如果前一个节点是人工检查节点，并在结束节点reference到了表单，那么这里一定会打印消息。
-        businessData.put(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM, false);
         if (ObjectUtils.<Boolean>cast(businessData.get(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM))) {
             return;
         }

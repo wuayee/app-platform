@@ -1,6 +1,6 @@
-import {Input} from "antd";
 import {useRef} from "react";
 import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
+import {JadeInput} from "@/components/common/JadeInput.jsx";
 
 export const replaceComponent = (jadeConfig) => {
     const self = {};
@@ -42,7 +42,10 @@ const ReplaceComponent = () => {
 
     return (<>
         <div>
-            <Input ref={inputRef} value={data[0].value} placeholder="Basic usage" onChange={() => onInputChange()}/>
+            <JadeInput ref={inputRef}
+                       value={data[0].value}
+                       placeholder="Basic usage"
+                       onChange={() => onInputChange()} />
         </div>
     </>);
 };

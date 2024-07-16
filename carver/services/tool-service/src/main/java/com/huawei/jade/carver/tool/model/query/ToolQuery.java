@@ -43,6 +43,13 @@ public class ToolQuery {
     private Set<String> excludeTags;
 
     /**
+     * 表示选择标签的与和或逻辑。
+     * <p>构造条件时可不传，默认与。</p>
+     * <p>构造条件时可传 true，选择或。</p>
+     */
+    private Boolean canOrTags;
+
+    /**
      * 表示第几页。
      * <p>构造条件时按需传入。</p>
      */
@@ -72,15 +79,17 @@ public class ToolQuery {
      * @param toolName 表示工具名的 {@link String}。
      * @param includeTags 表示包含标签的 {@link Set}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示排除标签的 {@link Set}{@code <}{@link String}{@code >}。
+     * @param canOrTags 表示标签查询方式选择或的方式的 {@link Boolean}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
-     * @param version 表示版本的 {@link String}
+     * @param version 表示版本的 {@link String}。
      */
-    public ToolQuery(String toolName, List<String> includeTags, List<String> excludeTags, Integer pageNum,
-            Integer limit, String version) {
+    public ToolQuery(String toolName, List<String> includeTags, List<String> excludeTags, Boolean canOrTags,
+            Integer pageNum, Integer limit, String version) {
         this.toolName = toolName;
         this.includeTags = CollectionUtils.isNotEmpty(includeTags) ? new HashSet<>(includeTags) : new HashSet<>();
         this.excludeTags = CollectionUtils.isNotEmpty(excludeTags) ? new HashSet<>(excludeTags) : new HashSet<>();
+        this.canOrTags = canOrTags;
         this.pageNum = pageNum;
         this.limit = limit;
         this.version = version;

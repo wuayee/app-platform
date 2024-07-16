@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef, useImperativeHandle } from 'react';
+import { useParams } from 'react-router-dom'
 import { Tooltip } from "antd";
+import { getAppInfo } from '@shared/http/aipp';
 import { ConfigFlowIcon } from '@assets/icon';
 import { Message } from '@shared/utils/message';
 import { FlowContext } from '../aippIndex/context';
@@ -8,41 +10,50 @@ import Stage from './components/elsa-stage';
 import FlowHeader from './components/addflow-header';
 import './styles/index.scss';
 import FlowTest from "./components/flow-test";
-import TestModal from "../components/test-modal";
-
 
 const AddFlow = (props) => {
   const { type, appInfo, addFlowRef, setFlowTestTime, setFlowTestStatus } = props;
   const [ dragData, setDragData ] = useState([]);
-  const [ addId, setAddId ] = useState(false);
-  const [ loading, setLoading ] = useState(false);
+  const [ flowInfo, setFlowInfo ] = useState({});
+  const [ showTime, setShowTime ] = useState(false);
   const [ showMenu, setShowMenu ] = useState(false);
   const [ debugTypes, setDebugTypes ] = useState([]);
   const [ showDebug, setShowDebug ] = useState(false);
-  const [ modalInfo, setModalInfo ] = useState({
-    name: '无标题',
-    type: 'waterFlow',
-    attributes: {
-      description: ''
-    },
-    flowGraph: {
-      appearance: null
-    }
-  });
+  const { tenantId, appId } = useParams();
+  const [ testStatus, setTestStatus ] = useState(null);
+  const [ testTime, setTestTime ] = useState(0);
   const appRef = useRef(null);
   const flowIdRef = useRef(null);
+  const elsaRunningCtl = useRef(null);
   const flowContext ={
     type,
-    appInfo,
-    modalInfo,
-    setModalInfo,
+    appInfo: type ? appInfo : flowInfo,
     showMenu,
-    setShowMenu
+    setShowMenu,
+    setFlowInfo,
+    showTime,
+    setShowTime
   }
-  
   useEffect(() => {
-    type ? null : setShowMenu(true);
+    !type && initElsa();
+  }, [type]);
+  // 新建工作流时获取详情
+  async function initElsa() {
+    const res = await getAppInfo(tenantId, appId);
+    if (res.code === 0) {
+      setFlowInfo(res.data);
+    }
+  }
+  useEffect(() => {
+    if (!type) {
+      return;
+    }
+    setShowMenu(true)
+    setFlowTestTime(null);
+    setFlowTestStatus(null);
+    elsaRunningCtl.current?.reset();
   }, [props.type])
+
   // 显示隐藏左侧菜单
   function menuClick() {
     setShowMenu(!showMenu)
@@ -66,31 +77,29 @@ const AddFlow = (props) => {
   return <>{(
     <div className='add-flow-container'>
       <FlowContext.Provider value={flowContext}>
-        {!type && <FlowHeader addId={addId}
-                              appRef={appRef}
-                              flowIdRef={flowIdRef}
-                              debugTypes={debugTypes}
-                              handleDebugClick={handleDebugClick}
-                              showDebug={showDebug}
-                              setShowDebug={setShowDebug}
+        {!type && 
+          <FlowHeader 
+            debugTypes={debugTypes}
+            handleDebugClick={handleDebugClick}
+            showDebug={showDebug}
+            setShowDebug={setShowDebug}
+            testStatus={testStatus}
+            testTime={testTime}
         />}
-        {type && <FlowTest
-                           setTestStatus={setFlowTestStatus}
-                           setTestTime={setFlowTestTime}
-                           setShowDebug={setShowDebug}
-                           showDebug={showDebug}
-                           debugTypes={debugTypes}
-                           appRef={appRef}
-        />}
+        <FlowTest setTestStatus={type ? setFlowTestStatus : setTestStatus}
+                  setTestTime={type ? setFlowTestTime : setTestTime}
+                  setShowDebug={setShowDebug}
+                  showDebug={showDebug}
+                  debugTypes={debugTypes}
+                  appRef={appRef}
+                  elsaRunningCtl={elsaRunningCtl}
+        />
         <div className={['content', !type ? 'content-add' : null ].join(' ')}>
           {
             showMenu ? (
               <LeftMenu 
-                menuClick={menuClick} 
-                addId={addId} 
+                menuClick={menuClick}
                 dragData={dragData} 
-                loading={loading}
-                setLoading={setLoading}
                 setDragData={setDragData}
               />
             ) : (
@@ -101,10 +110,8 @@ const AddFlow = (props) => {
               </Tooltip>
             )
           }
-          <Stage 
-            setAddId={setAddId} 
+          <Stage
             setDragData={setDragData} 
-            setLoading={setLoading}
             appRef={appRef} 
             flowIdRef={flowIdRef} 
           />

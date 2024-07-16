@@ -905,7 +905,7 @@ public class FlowContextsService {
         flowRetry.setNextRetryTime(retryTime.plus(RETRY_WAITING_INTERVAL, ChronoUnit.MILLIS));
         if (retryRepo.updateRetryRecord(Collections.singletonList(flowRetry)) == 0) {
             String toBatch = flowRetry.getEntityId();
-            LOG.info("[updateDbForRetry] Updating flow_retry database failed for the toBatch {},"
+            LOG.error("[updateDbForRetry] Updating flow_retry database failed for the toBatch {},"
                     + " firstContextId={}, retryContextSize={}.", toBatch, contexts.get(0).getId(), contexts.size());
             throw new JobberException(FLOW_RETRY_JOBER_UPDATE_DATABASE_FAILED, toBatch);
         }
@@ -917,17 +917,17 @@ public class FlowContextsService {
         Lock lock = locks.getDistributedLock(lockKey);
         boolean isLockAcquired = lock.tryLock();
         if (!isLockAcquired) {
-            LOG.info("[retryByToBatch] Acquire distributed lock {} failed", lockKey);
+            LOG.warn("[retryByToBatch] Acquire distributed lock {} failed", lockKey);
             return;
         }
-        LOG.info("[retryByToBatch] Acquire distributed lock {} succeeded", lockKey);
+        LOG.debug("[retryByToBatch] Acquire distributed lock {} succeeded", lockKey);
         try {
             executeRetry(flowRetry);
         } catch (Throwable ex) {
             LOG.error("[retryByToBatch] Caught a throwable during the retry. Caused by {}", ex.getMessage());
         } finally {
             lock.unlock();
-            LOG.info("[retryByToBatch] Release distributed lock {} succeeded", lockKey);
+            LOG.debug("[retryByToBatch] Release distributed lock {} succeeded", lockKey);
         }
     }
 
@@ -991,12 +991,12 @@ public class FlowContextsService {
 
     private boolean unNeedRetry(String toBatch, List<FlowContext<FlowData>> finalContexts) {
         if (finalContexts.stream().anyMatch(context -> FlowNodeStatus.isEndStatus(context.getStatus()))) {
-            LOG.info("[executeRetry] the batch is no need retry, toBatch={}.", toBatch);
+            LOG.warn("[executeRetry] the batch is no need retry, toBatch={}.", toBatch);
             retryRepo.delete(Collections.singletonList(toBatch));
             return true;
         }
         if (finalContexts.stream().anyMatch(c -> !c.getStatus().equals(RETRYABLE))) {
-            LOG.info("[executeRetry] Retry failed: the toBatch {} is currently unretryable", toBatch);
+            LOG.warn("[executeRetry] Retry failed: the toBatch {} is currently unretryable", toBatch);
             return true;
         }
         return false;
@@ -1084,7 +1084,7 @@ public class FlowContextsService {
         } finally {
             transIdLock.unlock();
         }
-        LOG.info("Start release trace lock, traceId={}.", trace.getId());
+        LOG.debug("Start release trace lock, traceId={}.", trace.getId());
         this.traceOwnerService.release(trace.getId());
         LOG.info("Finish processing the trace, transId={}, traceId={}, status={}.", transId, trace.getId(), status);
     }

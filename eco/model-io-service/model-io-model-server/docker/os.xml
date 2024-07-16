@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+  ~ Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+  -->
+
+<project>
+    <dependencies>
+        <dependency>
+            <artifactType>opensource</artifactType>
+            <artifactId>Python</artifactId>
+            <version>3.9.11</version>
+            <package>Python-3.9.11.tgz</package>
+        </dependency>
+        <dependency>
+            <artifactType>opensource</artifactType>
+            <artifactId>pip</artifactId>
+            <version>24.0</version>
+            <package>pip-24.0.zip</package>
+        </dependency>
+    </dependencies>
+</project>

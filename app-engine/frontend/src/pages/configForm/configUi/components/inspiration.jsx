@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { PlusOutlined, DeleteOutlined, QuestionCircleOutlined, PlusCircleOutlined  } from '@ant-design/icons';
 import { Form, Select, Col, Row, Input, Modal, Switch, Table, Button, TreeSelect, Card, Popover } from 'antd';
-import TreeComponent from "../tree.jsx";
-import { getFitables } from "@shared/http/appBuilder";
-import { sourceTypes } from "../../common/common";
+import TreeComponent from '../tree.jsx';
+import { getFitables } from '@shared/http/appBuilder';
+import { sourceTypes } from '../../common/common';
 import { InspirationWrap } from '../styled';
-import { uuid } from "../../../../common/utils";
+import { uuid } from '../../../../common/utils';
 import '../styles/inspiration.scss';
+import {Message} from '@/shared/utils/message';
 
 const Inspiration = (props) => {
   const { updateData } = props;
@@ -24,7 +25,8 @@ const Inspiration = (props) => {
   const [ nodeList, setNodeList ] = useState(null);
   const [ fitables, setFitables ] = useState(null);
   const [ category, setCategory ] = useState(null);
-  const [ id, setId ] = useState("");
+  const [ id, setId ] = useState('');
+  const [ disabled, setDisabled ] = useState(false);
   const [ modalForm ] = Form.useForm();
   const { TextArea } = Input;
   let regex = /{{(.*?)}}/g;
@@ -62,12 +64,12 @@ const Inspiration = (props) => {
       render: (sourceInfo, record) => (
         <>
           {
-            record.sourceType === "fitable" ? 
+            record.sourceType === 'fitable' ? 
               <Select options={fitables}
                 onFocus={handleGetFitable}
                 fieldNames={{
-                  label: "name",
-                  value: "fitableId"
+                  label: 'name',
+                  value: 'fitableId'
                 }}
                 defaultValue={sourceInfo}
                 onChange={(sourceInfo) => handleTableChange(sourceInfo, record, 'sourceInfo')}/> :
@@ -92,9 +94,9 @@ const Inspiration = (props) => {
       render: (text, record) => {
         return (
           <div style={{display: 'flex'}}>
-            <Button type="text" onClick={(event) => handleDeleteClick(record, event)}>
+            <Button type='text' onClick={(event) => handleDeleteClick(record, event)}>
               <DeleteOutlined />
-              <span style={{fontSize: "12px"}}>删除</span>
+              <span style={{fontSize: '12px'}}>删除</span>
             </Button>
           </div>
         );
@@ -120,7 +122,7 @@ const Inspiration = (props) => {
   }
 
   const onAddClick = () => {
-    modalForm.setFieldsValue({category: null, auto: false, name: "", description: "", prompt: "", promptVarData: [], promptTemplate: ''});
+    modalForm.setFieldsValue({category: null, auto: false, name: '', description: '', prompt: '', promptVarData: [], promptTemplate: ''});
     setPromptVar([]);
     setShowModal(true);
     setId(null);
@@ -140,7 +142,7 @@ const Inspiration = (props) => {
   const handleTableChange = (checked, record, key) => {
     const newData = promptVarData.map(item => {
       if (item.var === record.var) {
-        if (key === "sourceType") {
+        if (key === 'sourceType') {
           return {
             ...item,
             [key]: checked,
@@ -159,7 +161,7 @@ const Inspiration = (props) => {
   }
 
   const handleChangeCategory = (value) => {
-    modalForm.setFieldValue("category", value);
+    modalForm.setFieldValue('category', value);
     setCategory(value);
   }
 
@@ -180,7 +182,7 @@ const Inspiration = (props) => {
             return item;
         }) : [...inspirationValues.inspirations, {...values, id: uuid()}];
         const newInspirationValues = {...inspirationValues, inspirations: newvalues};
-        updateData(newInspirationValues, "inspiration");
+        updateData(newInspirationValues, 'inspiration');
         setInspirationValues(newInspirationValues);
       })
       .catch((errorInfo) => {});
@@ -190,19 +192,36 @@ const Inspiration = (props) => {
     setShowModal(false);
   }
 
+  /**
+   * 检验是否有不合理类目
+   */
+  const validateCate = () => {
+    if (disabled) {
+      Message({type: 'warning', content: '存在不合法的类目，请先修改'});
+      return true;
+    }
+    return false;
+  }
+  /**
+   * 点击树形类目弹框确认按钮的回调
+   */
   const handleCateModalOK = () => {
+    if (validateCate()) return;
     setTreeData(cacheTreeData);
     setShowCateModal(false);
     const newInspirationValues = {...inspirationValues, category: [
-      { title: "root",
-        id: "root",
+      { title: 'root',
+        id: 'root',
         children: cacheTreeData
       }]};
-    updateData(newInspirationValues, "inspiration");
+    updateData(newInspirationValues, 'inspiration');
     setInspirationValues(newInspirationValues);
   }
-
+  /**
+   * 点击树形类目弹框取消按钮的回调
+   */
   const handleCateModalCancel = () => {
+    if (validateCate()) return;
     setShowCateModal(false);
   }
 
@@ -233,9 +252,9 @@ const Inspiration = (props) => {
       return {
         key: uuid(),
         var: item,
-        varType: "选择框",
-        sourceType: "fitable",
-        sourceInfo: "",
+        varType: '选择框',
+        sourceType: 'fitable',
+        sourceInfo: '',
         multiple: false
       }
     });
@@ -243,7 +262,7 @@ const Inspiration = (props) => {
   }, [promptVar]);
 
   useEffect(() => {
-    modalForm.setFieldValue("promptVarData", promptVarData);
+    modalForm.setFieldValue('promptVarData', promptVarData);
   }, [promptVarData]);
 
   useEffect(() => {
@@ -258,7 +277,7 @@ const Inspiration = (props) => {
 
   useEffect(() => {
     if (!inspirationValues) return;
-    const data = inspirationValues.inspirations.map(item => item.category?.split(":")[1]);
+    const data = inspirationValues.inspirations.map(item => item.category?.split(':')[1]);
     setNodeList(data);
   }, [inspirationValues]);
 
@@ -270,7 +289,7 @@ const Inspiration = (props) => {
   const handleDeleteIns = (id) => {
     const newvalues = inspirationValues.inspirations.filter(item => item.id !== id);
     const newInspirationValues = {...inspirationValues, inspirations: newvalues};
-    updateData(newInspirationValues, "inspiration");
+    updateData(newInspirationValues, 'inspiration');
     setInspirationValues(newInspirationValues);
   }
 
@@ -288,37 +307,37 @@ const Inspiration = (props) => {
 
   return (
       <>
-        <div className="control-container">
-          <div className="control">
-            <div className="control-header ">
-              <div className="control-title">
+        <div className='control-container'>
+          <div className='control'>
+            <div className='control-header '>
+              <div className='control-title'>
                 <span>开启后可在界面中作为预置指令库允许快捷操作。建议创建一级分类即可。</span>
               </div>
             </div>
             <Form.Item
-              name={["inspiration", "inspirations"]}
-              label=""
+              name={['inspiration', 'inspirations']}
+              label=''
               style={{
-                marginTop: "10px",
-                display: showInspControl ? "block":"none",
+                marginTop: '10px',
+                display: showInspControl ? 'block':'none',
               }}
             >
-              <div className="inspiration-add">
-                <Button type="link" onClick={onAddClick} icon={<PlusCircleOutlined />} >创建新灵感</Button>
+              <div className='inspiration-add'>
+                <Button type='link' onClick={onAddClick} icon={<PlusCircleOutlined />} >创建新灵感</Button>
               </div>
               {
                 inspirationValues && inspirationValues.inspirations.map((item, index) => (
-                  <div className="inspiration-container">
-                    <div className="card-title">
-                      <span className="left">
+                  <div className='inspiration-container'>
+                    <div className='card-title'>
+                      <span className='left'>
                         {item.name}
                       </span>
-                      <span className="right">
+                      <span className='right'>
                         <span onClick={() => clickInspiration(item)}>修改</span>
                         <span onClick={() => handleDeleteIns(item.id)}>删除</span>
                       </span>
                     </div>
-                    <div className="card-prompt">
+                    <div className='card-prompt'>
                       { item.prompt }
                     </div>
                   </div>
@@ -326,15 +345,15 @@ const Inspiration = (props) => {
               }
             </Form.Item>
           </div>
-            <Modal title="添加新的灵感" open={showModal} onOk={handleModalOK} onCancel={handleModalCancel} forceRender width="50vw">
+            <Modal title='添加新的灵感' open={showModal} onOk={handleModalOK} onCancel={handleModalCancel} forceRender width='50vw'>
               <InspirationWrap>
                 <Form
                   form={modalForm}
                   {...formItemLayout}
                 >
                   <Form.Item
-                    name="name"
-                    label="名称"
+                    name='name'
+                    label='名称'
                     rules={[
                       {
                         required: true,
@@ -342,13 +361,13 @@ const Inspiration = (props) => {
                     ]}
                     style={{ marginBottom: '6px' }}
                   >
-                    <Input placeholder="请输入灵感大全名称"
+                    <Input placeholder='请输入灵感大全名称'
                            maxLength={20}
                            showCount/>
                   </Form.Item>
                   <Form.Item
-                    name="description"
-                    label="描述"
+                    name='description'
+                    label='描述'
                     rules={[
                       {
                         required: true,
@@ -356,11 +375,11 @@ const Inspiration = (props) => {
                     ]}
                     style={{ marginBottom: '16px' }}
                   >
-                    <TextArea placeholder="请输入灵感大全描述" rows={3} />
+                    <TextArea placeholder='请输入灵感大全描述' rows={3} />
                   </Form.Item>
                   <Form.Item
-                    name="prompt"
-                    label="提示词"
+                    name='prompt'
+                    label='提示词'
                     rules={[
                       {
                         required: true,
@@ -369,14 +388,14 @@ const Inspiration = (props) => {
                     style={{ marginBottom: '16px' }}
                   >
                     <TextArea
-                      placeholder="你可以使用{{变量名}}添加变量"
+                      placeholder='你可以使用{{变量名}}添加变量'
                       rows={6}
                       onBlur={onPromptChange}
                     />
                   </Form.Item>
                   <Form.Item
-                    name="promptTemplate"
-                    label="提示词模板"
+                    name='promptTemplate'
+                    label='提示词模板'
                     rules={[
                       {
                         required: false,
@@ -385,45 +404,45 @@ const Inspiration = (props) => {
                     style={{ marginBottom: '16px' }}
                   >
                     <TextArea
-                      placeholder="请输入"
+                      placeholder='请输入'
                       rows={6}
                       onBlur={onPromptChange}
                     />
                   </Form.Item>
                   <Form.Item
-                    name="promptVarData"
-                    label="提示词变量"
-                    style={{display: promptVar.length ? "block" : "none", marginTop: "10px"}}
+                    name='promptVarData'
+                    label='提示词变量'
+                    style={{display: promptVar.length ? 'block' : 'none', marginTop: '10px'}}
                   >
                     <Table columns={columns} dataSource={promptVarData}/>
                   </Form.Item>
                   <Form.Item
-                    name="category"
-                    label="分类"
+                    name='category'
+                    label='分类'
                     style={{
                       flex: 5
                     }}
                   >
                     <div style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center"
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center'
                     }}>
                       <TreeSelect
                         treeData={selectTreeData}
                         treeDefaultExpandAll
                         fieldNames={{
-                            label: "title",
-                            value: "parent"
+                            label: 'title',
+                            value: 'parent'
                         }}
                         value={category}
                         onSelect={handleChangeCategory}
                       />
-                      <PlusOutlined className="plus-icon" style={{flex: 1, fontSize: "14px"}} onClick={openCategoryModal}/>
+                      <PlusOutlined className='plus-icon' style={{flex: 1, fontSize: '14px'}} onClick={openCategoryModal}/>
                     </div>
                   </Form.Item>
                   <Form.Item
-                    name="auto"
+                    name='auto'
                     label={
                     <div>
                       <span> 是否自动执行</span>
@@ -433,15 +452,19 @@ const Inspiration = (props) => {
                       </Popover>
                     </div>
                     }
-                    checked={modalForm.getFieldValue("auto")}
+                    checked={modalForm.getFieldValue('auto')}
                   >
                     <Switch />
                   </Form.Item>
                 </Form>
               </InspirationWrap>
             </Modal>
-            <Modal title="类目配置" open={showCateModal} onOk={handleCateModalOK} onCancel={handleCateModalCancel} width="50vw">
-              <TreeComponent tree={treeData} nodeList={nodeList} updateTreeData={updateTreeData}/>
+            <Modal title='类目配置' open={showCateModal} onOk={handleCateModalOK} onCancel={handleCateModalCancel} width='50vw'>
+              <TreeComponent tree={treeData}
+                             nodeList={nodeList}
+                             updateTreeData={updateTreeData}
+                             setDisabled={setDisabled}
+              />
             </Modal>
         </div>
       </>

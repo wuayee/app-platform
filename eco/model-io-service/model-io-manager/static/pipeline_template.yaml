@@ -47,6 +47,8 @@ spec:
             value: "9991"
           - name: Task
             value: {{task}}
+          - name: TRANSFORMERS_OFFLINE
+            value: "YES"
           readinessProbe:
             httpGet:
               path: /v2/health/ready

@@ -1,7 +1,6 @@
 
 import React from 'react';
 import {
-  AddFlowIcon,
   StartIcon,
   DataRetrievalIcon,
   EndIcon,
@@ -19,19 +18,19 @@ const BasicItems = (props:any) => {
   // 根据类型设置图标
   const getIconByType = (type) => {
     return {
-      "startNodeStart": <StartIcon />,
-      "retrievalNodeState": <DataRetrievalIcon />,
-      "llmNodeState": <LlmIcon />,
-      "endNodeEnd": <EndIcon />,
-      "manualCheckNodeState": <ManualCheckIcon />,
-      "fitInvokeNodeState": <FitIcon />,
-      "conditionNodeCondition": <IfIcon />,
-      "toolInvokeNodeState": <FitIcon />,
-      "codeNodeState": <CodeIcon />
+      'startNodeStart': <StartIcon />,
+      'retrievalNodeState': <DataRetrievalIcon />,
+      'llmNodeState': <LlmIcon />,
+      'endNodeEnd': <EndIcon />,
+      'manualCheckNodeState': <ManualCheckIcon />,
+      'fitInvokeNodeState': <FitIcon />,
+      'conditionNodeCondition': <IfIcon />,
+      'toolInvokeNodeState': <FitIcon />,
+      'codeNodeState': <CodeIcon />
     }[type];
   }
   return <>
-    <div className="basic-drag-list">
+    <div className='basic-drag-list'>
       { dragData.map((item, index) => {
         return (
           <div

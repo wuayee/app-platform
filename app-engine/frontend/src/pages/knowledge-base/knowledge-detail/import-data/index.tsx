@@ -143,7 +143,6 @@ const KnowledgeBaseDetailImportData = () => {
           if(result && result?.length) {
             formStepSecond.setFieldValue('tableCustom', result.map((item, index)=> ({
               description: item.desc,
-              vectorService: item.embedServiceId,
               dataType: item.dataType,
               colName: item.name,
               indexType: item.indexType,
@@ -177,7 +176,6 @@ const KnowledgeBaseDetailImportData = () => {
             name: item.colName,
             dataType: item.dataType,
             indexType: item.indexType,
-            embedServiceId: item.vectorService ?? null,
             desc: item.description ?? null,
           }));
           createTableColumns({

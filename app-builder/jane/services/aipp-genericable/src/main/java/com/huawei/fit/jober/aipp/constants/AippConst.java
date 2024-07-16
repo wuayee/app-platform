@@ -335,6 +335,16 @@ public class AippConst {
     public static final String ATTR_PUBLISH_TIME_KEY = "publish_at";
 
     /**
+     * aipp publish description
+     */
+    public static final String ATTR_PUBLISH_DESCRIPTION = "publish_description";
+
+    /**
+     * aipp unique name
+     */
+    public static final String ATTR_UNIQUE_NAME = "unique_name";
+
+    /**
      * aipp start_form_id attribute key
      */
     public static final String ATTR_START_FORM_ID_KEY = "start_form_id";
@@ -517,6 +527,11 @@ public class AippConst {
     public static final String BS_AIPP_FILE_DESC_KEY = "$[FileDescription]$";
 
     /**
+     * business中的file download key
+     */
+    public static final String BS_AIPP_FILE_DOWNLOAD_KEY = "fileUrl";
+
+    /**
      * business中的用户选择的历史记录的key
      */
     public static final String BS_AIPP_SELECTED_LOGS = "selected_logs";
@@ -604,7 +619,7 @@ public class AippConst {
     /**
      * 用于获取终止信息
      */
-    public static final String TERMINATE_MESSAGE_KEY = "message";
+    public static final String TERMINATE_MESSAGE_KEY = "content";
 
     // *** aipp initial static meta items ***
     /**

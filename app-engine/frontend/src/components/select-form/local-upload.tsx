@@ -35,10 +35,16 @@ const LocalUpload: React.FC<{ form: any, respId?: any, tableId?: any, type: stri
   const handleBeforeUpload = (file: UploadFile): boolean => {
     if (type === 'text' && file.type !== 'text/plain') {
       Message({ type: 'warning', content: '只能上传.txt类型的文件' });
+      setFileList(fileList || []);
       return false
     }
     if (type === 'table' && file.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       Message({ type: 'warning', content: '只能上传.xlsx类型的文件' });
+      setFileList(fileList || []);
+      return false
+    }
+    if (filesKeys.current.size != 0) {
+      Message({ type: 'warning', content: '单次只能上传一个文件'});
       return false
     }
     if (isFilesUnique(file)) {
@@ -59,9 +65,6 @@ const LocalUpload: React.FC<{ form: any, respId?: any, tableId?: any, type: stri
 
   const handleRemoveFile = async (file: UploadFile) => {
     const key = makeFileKey(file);
-    if (!filesKeys.current.has(key)) {
-      return;
-    }
     await deleteLocalFile(id, tableid, [`${file.uid}_${file.name}`]);
     filesKeys.current.delete(key);
     setFiles();
@@ -74,6 +77,8 @@ const LocalUpload: React.FC<{ form: any, respId?: any, tableId?: any, type: stri
       accept={ type === 'text' ? '.txt' : '.xlsx' }
       fileList={fileList}
       onChange={handleFileChange}
+      listType='picture'
+      maxCount={1}
       beforeUpload={handleBeforeUpload}
       customRequest={handleUpload}
       onRemove={handleRemoveFile}

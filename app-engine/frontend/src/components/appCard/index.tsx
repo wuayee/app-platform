@@ -68,7 +68,6 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
       isDefault: false,
     });
     // 刷新收藏数
-    await getAppCollectionCount();
     dispatch(addCollectionApp(cardInfo.id));
     setLoading(false);
   }
@@ -80,8 +79,6 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
       usrInfo: getLoaclUser(),
       aippId: cardInfo.id,
     })
-    // 刷新收藏数
-    await getAppCollectionCount();
     dispatch(removeCollectionApp(cardInfo.id));
     setLoading(false);
   }
@@ -100,20 +97,9 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
     e.stopPropagation();
   }
 
-
-  // 查询当前应用的收藏数量
-  const getAppCollectionCount = async () => {
-    try {
-      if (cardInfo?.id) {
-        const res = await getCollectionCountApp(cardInfo?.id);
-        setCount(res?.data ?? 0)
-      }
-    } catch (error) {
-
-    }
-  }
   useEffect(() => {
-    getAppCollectionCount();
+    let { likeCount } = cardInfo;
+    setCount(likeCount || 0);
   }, [cardInfo])
   return (
     <div

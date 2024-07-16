@@ -27,7 +27,6 @@ import {
   deepClone,
   scrollBottom } from './utils/chat-process';
 import "./styles/chat-preview.scss";
-import { pduMap } from './common/config';
 import { creatChat, updateChat } from "@shared/http/chat.js";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import {
@@ -79,6 +78,10 @@ const ChatPreview = (props) => {
   useEffect(() => {
     !chatType && dispatch(setInspirationOpen(true));
     currentInfo.current = appInfo;
+    return () => {
+      wsCurrent.current?.close();
+      wsCurrent.current = null;
+    }
   }, []);
 
   useEffect(() => {
@@ -179,9 +182,8 @@ const ChatPreview = (props) => {
   // 启动任务
   const chatMissionStart = async (res, value, type) => {
     let { aipp_id, version } = res;
-    let dimensionVal = pduMap[dimension] || dimension;
     let params = type ? 
-      { initContext: { '$[FileDescription]$': value, dimension: dimensionVal}} : { initContext: { Question: value, dimension: dimensionVal } };
+      { initContext: { '$[FileDescription]$': value, dimension}} : { initContext: { Question: value, dimension } };
     params.initContext.useMemory = useMemory;
     try {
       const requestBody={
@@ -232,7 +234,7 @@ const ChatPreview = (props) => {
     } else {
       wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));
     }
-    wsCurrent.current.onerror = () => {
+    wsCurrent.current.onerror = (err) => {
       onStop('socket对话失败');
       dispatch(setChatRunning(false));
     }

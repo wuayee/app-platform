@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {Button, Collapse, Popover} from 'antd';
 import {DeleteOutlined, PlusOutlined, QuestionCircleOutlined} from '@ant-design/icons';
 import StartInputForm from "./StartInputForm.jsx";
@@ -26,7 +26,7 @@ export default function StartFormWrapper({disabled}) {
     const multiConversationSwitch = memory.value.find(item => item.name === "memorySwitch");
     const multiConversationSwitchValue = multiConversationSwitch?.value ?? true;
     const multiConversationTypeValue = memory.value.find(item => item.name === "type").value;
-    const multiConversationValueValue = memory.value.find(item => item.name === "value").value;
+    const multiConversationValueValue = memory.value.find(item => item.name === "value")?.value ?? null;
 
     // items中所有初始都为打开状态
     const [openItems, setOpenItems] = useState(() => {

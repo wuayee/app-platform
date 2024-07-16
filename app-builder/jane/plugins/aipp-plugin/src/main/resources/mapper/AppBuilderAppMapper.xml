@@ -42,39 +42,22 @@
             resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
         select
         <include refid="Base_Column_List"/>
-        from app_builder_app
-        where tenant_id = #{tenantId}
-        <if test="typeFilter != null">
-            and type = #{typeFilter}
-        </if>
-        <if test="cond != null and cond.name != null and cond.name != ''">
-            and name ilike '%' || #{cond.name} || '%'
-        </if>
-        <include refid="order"/>
-        offset #{offset} limit #{limit}
+        from (
+            SELECT DISTINCT ON ( "name" ) * FROM app_builder_app where tenant_id = #{tenantId}
+            <if test="cond.type != null">
+                and type = #{cond.type}
+            </if>
+            <if test="cond.state != null">
+                and state = #{cond.state}
+            </if>
+            <if test="cond != null and cond.name != null and cond.name != ''">
+                and name ilike '%' || #{cond.name} || '%'
+            </if>
+            ORDER BY
+                "name", create_at DESC
+        ) as sub
+        ORDER BY create_at DESC offset #{offset} limit #{limit}
     </select>
-
-    <sql id="order">
-        <choose>
-            <when test="cond != null and cond.sort != null and cond.order != null">
-                order by ${cond.sort}
-                <choose>
-                    <when test="cond.order == 'descend'">
-                        desc
-                    </when>
-                    <when test="cond.order == 'ascend'">
-                        asc
-                    </when>
-                    <otherwise>
-                        desc
-                    </otherwise>
-                </choose>
-            </when>
-            <otherwise>
-                order by create_at desc
-            </otherwise>
-        </choose>
-    </sql>
 
     <select id="selectWithCondition" resultMap="BaseResultMap"
             resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
@@ -92,17 +75,28 @@
             <if test="type!=null">
                 and type = #{type}
             </if>
+            <if test="ids != null and ids.size() > 0">
+                and id in
+                <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
         </where>
     </select>
 
     <select id="countByTenantId" resultType="long">
+        select count(*) from (
         select
-        count(*)
+        DISTINCT ON (name) *
         from app_builder_app
         where tenant_id = #{tenantId}
-        <if test="typeFilter != null">
-            and type = #{typeFilter}
+        <if test="cond.type != null">
+            and type = #{cond.type}
         </if>
+        <if test="cond.state != null">
+            and state = #{cond.state}
+        </if>
+        ) as latest_records;
     </select>
 
     <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">

@@ -79,6 +79,7 @@ const EditModal = (props) => {
     try {
       setLoading(true);
       const formParams = await form.validateFields();
+      formParams.store_id = appInfo.attributes.store_id;
       const params = {
         name: formParams.name,
         attributes: formParams,
@@ -161,7 +162,7 @@ const EditModal = (props) => {
                 message: '输入字符长度范围：1 - 64'
               }]}
             >
-              <Input />
+              <Input showCount maxLength={64}/>
             </Form.Item>
             <Form.Item
               label="简介"

@@ -1,22 +1,32 @@
 [
   {
     "type": "retrievalNodeState",
-    "name": "数据检索"
+    "name": "普通检索",
+    "uniqueName": ""
   },
   {
     "type": "llmNodeState",
-    "name": "大模型"
+    "name": "大模型",
+    "uniqueName": ""
   },
   {
     "type": "manualCheckNodeState",
-    "name": "人工检查"
+    "name": "人工检查",
+    "uniqueName": ""
   },
   {
     "type": "conditionNodeCondition",
-    "name": "条件"
+    "name": "条件",
+    "uniqueName": ""
   },
   {
     "type": "endNodeEnd",
-    "name": "结束"
+    "name": "结束",
+    "uniqueName": ""
+  },
+  {
+    "type": "codeNodeState",
+    "name": "代码",
+    "uniqueName": ""
   }
 ]

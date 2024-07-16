@@ -62,45 +62,45 @@ const HuggingFaceModal = (props) => {
       onCancel={() => setShowModal(false)} 
       width='1100px'
       footer={
-        <div className="drawer-footer">
+        <div className='drawer-footer'>
           <Button onClick={() => setShowModal(false)}>取消</Button>
-          <Button type="primary" onClick={confirm}>确定</Button>
+          <Button type='primary' onClick={confirm}>确定</Button>
         </div>
       }
     >
-      <div className="tool-modal-search">
-        <Search size="large" onSearch={filterByName} placeholder="请输入" allowClear/>
+      <div className='tool-modal-search'>
+        <Search size='large' onSearch={filterByName} placeholder='请输入' allowClear/>
       </div>
-      <div className="tool-modal-content">
-        <div className="content-left">
-          <div className="left-list">
+      <div className='tool-modal-content'>
+        <div className='content-left'>
+          <div className='left-list'>
             { list.length > 0 && list.map((card:any) => 
               <div className={ `left-item ${activeKey === card.name ? 'active' : ''}` } 
                 key={card.taskName} 
                 onClick={() => itemClick(card)}>
-                  <div className="card-detail" onClick={() => window.open(`https://${card.url}`)}>查看详情</div>
-                  <div className="item-top">
-                    <div className="top-left">
-                      <img src="/src/assets/images/ai/hugging-face.png" alt="" />
+                  <div className='card-detail' onClick={() => window.open(`https://${card.url}`)}>查看详情</div>
+                  <div className='item-top'>
+                    <div className='top-left'>
+                      <img src='/src/assets/images/ai/hugging-face.png' alt='' />
                     </div>
-                    <div className="top-right">
-                      <div className="item-title" title={card.name}>{card.name} </div>
-                      <div className="item-tag">
+                    <div className='top-right'>
+                      <div className='item-title' title={card.name}>{card.name} </div>
+                      <div className='item-tag'>
                         <span>
-                          <img src="/src/assets/images/ai/download.png" alt="" />
+                          <img src='/src/assets/images/ai/download.png' alt='' />
                           {card.context.downloads}
                         </span>
                         <span>
-                          <img src="/src/assets/images/ai/like.png" alt="" />
+                          <img src='/src/assets/images/ai/like.png' alt='' />
                           {card.context.likes}
                         </span>
                     </div>
                   </div>
                  </div>
-                <div className="item-bottom" title={card.context.description}>{card.context.description }</div>
+                <div className='item-bottom' title={card.context.description}>{card.context.description }</div>
               </div>
             )}
-            { list.length === 0 && <div className="tool-empty"><EmptyItem text="暂无数据" /></div> }
+            { list.length === 0 && <div className='tool-empty'><EmptyItem text='暂无数据' /></div> }
           </div>
         </div>
       </div>

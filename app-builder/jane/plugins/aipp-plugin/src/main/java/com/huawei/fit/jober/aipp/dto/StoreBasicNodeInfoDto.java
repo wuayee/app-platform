@@ -20,4 +20,5 @@ import lombok.NoArgsConstructor;
 public class StoreBasicNodeInfoDto {
     private String name;
     private String type;
+    private String uniqueName;
 }

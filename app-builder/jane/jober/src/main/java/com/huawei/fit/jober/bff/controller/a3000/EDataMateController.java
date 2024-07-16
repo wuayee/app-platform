@@ -17,6 +17,8 @@ import com.huawei.fit.http.annotation.ResponseStatus;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.jober.bff.client.flowsengine.request.CleanDataListQuery;
 import com.huawei.fit.jober.bff.controller.a3000.entity.CleanTaskPageResult;
+import com.huawei.fit.jober.bff.controller.a3000.entity.FlowConfiguration;
+import com.huawei.fit.jober.bff.controller.a3000.entity.QueryCriteria;
 import com.huawei.fit.jober.bff.service.a3000.OrchestratorFitService;
 import com.huawei.fit.jober.bff.service.a3000.OrchestratorService;
 import com.huawei.fit.jober.common.RangedResultSet;
@@ -26,8 +28,6 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
-import com.huawei.hisp.clean.client.FlowConfiguration;
-import com.huawei.hisp.clean.client.QueryCriteria;
 
 import java.util.HashMap;
 import java.util.List;
