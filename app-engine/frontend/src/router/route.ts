@@ -57,7 +57,15 @@ export const routeList: MenuItem[] = [
     icon: Icons.app({}),
     label: '应用市场',
     component: Apps,
-    children: [],
+    children: [
+      {
+        key: '/app/:tenantId/chat/:appId',
+        icon: Icons.app({}),
+        label: '',
+        component: ChatRunning,
+        hidden: true,
+      },
+    ],
   },
   {
     key: '/app-develop',
@@ -92,14 +100,7 @@ export const routeList: MenuItem[] = [
         label: '',
         component: AppDetail,
         hidden: true,
-      },
-      {
-        key: '/app-develop/:tenantId/chat/:appId',
-        icon: Icons.app({}),
-        label: '',
-        component: ChatRunning,
-        hidden: true,
-      },
+      }
     ],
   },
   {

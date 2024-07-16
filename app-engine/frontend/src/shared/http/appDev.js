@@ -75,7 +75,7 @@ export function getUserCollectionNoDesc(id) {
  * @property {string} usrInfo - 用户id.
  * @property {string} aippId - 用户appId.
  * */ 
-export function cancleUserCollection(data) {
+export function cancelUserCollection(data) {
   data.appId = data.aippId;
   const url = `${COLLECT_URL}/usr/collection`;
   return del(url, data);

@@ -39,9 +39,10 @@ const Index = (props) => {
   }
   // 点击运行
   const handleRun = async (values) => {
-    let appDto = appInfo ;
+    let graphChangeData = window.agent.serialize();
+    appInfo.flowGraph.appearance = graphChangeData;
     const params = {
-      appDto,
+      appDto: appInfo,
       context: {
         initContext: values
       }

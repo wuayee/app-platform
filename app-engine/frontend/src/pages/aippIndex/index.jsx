@@ -141,14 +141,14 @@ const AippIndex = () => {
               )}
             </ConfigFormContext.Provider>
             <CommonChat chatType="preview" contextProvider={contextProvider} previewBack={changeChat} />
-            {
+            {/* {
               (!showChat && showElsa) &&
               <Tooltip placement="leftTop" title="展开预览与调试区">
                 <div className="chat-icon" onClick={changeChat}>
                   <TalkFlowIcon />
                 </div>
               </Tooltip>
-            }
+            } */}
           </div>
         </div>
       }
