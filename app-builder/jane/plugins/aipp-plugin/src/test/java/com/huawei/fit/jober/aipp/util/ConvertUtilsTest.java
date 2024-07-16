@@ -31,7 +31,7 @@ import java.util.Map;
 public class ConvertUtilsTest {
     @Test
     @DisplayName("convertToAippDtoFromAppBuilderAppDto")
-    void test01() {
+    void testConvertToAippDtoFromAppBuilderAppDto() {
         Map<String, Object> attributes = MapBuilder.get(() -> new HashMap<String, Object>())
                 .put("description", "h")
                 .put("icon", "i")
@@ -55,7 +55,7 @@ public class ConvertUtilsTest {
 
     @Test
     @DisplayName("convertToAippDtoFromAppBuilderApp")
-    void test02() {
+    void testConvertToAippDtoFromAppBuilderApp() {
         AppBuilderApp app = AppBuilderApp.builder()
                 .attributes(MapBuilder.get(() -> new HashMap<String, Object>())
                         .put("description", "h")
@@ -76,7 +76,7 @@ public class ConvertUtilsTest {
 
     @Test
     @DisplayName("toAippCreate")
-    void test03() {
+    void testToAippCreate() {
         AippCreateDto dto =
                 AippCreateDto.builder().aippId("aippId").toolUniqueName("uniqueName").version("1.0.0").build();
 
@@ -89,7 +89,7 @@ public class ConvertUtilsTest {
 
     @Test
     @DisplayName("toAippCreateDto")
-    void test04() {
+    void testToAippCreateDto() {
         AippCreate create = AippCreate.builder().aippId("aippId").toolUniqueName("uniqueName").version("1.0.0").build();
 
         AippCreateDto dto = Assertions.assertDoesNotThrow(() -> ConvertUtils.toAippCreateDto(create));

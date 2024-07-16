@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class AippStringUtilsTest {
     @Test
     @DisplayName("AippStringUtils.isPreview()测试")
-    void test01() {
+    void testIsPreview() {
         String version = "1.0.0";
         String versionPreview = "1.1.1-abcdab";
         Assertions.assertTrue(AippStringUtils.isPreview(versionPreview));
@@ -29,7 +29,7 @@ public class AippStringUtilsTest {
 
     @Test
     @DisplayName("AippStringUtils.textLenLimit()测试")
-    void test02() {
+    void testTextLenLimit() {
         String text1 = "123456";
         String text2 = "123456789";
         String r1 = AippStringUtils.textLenLimit(text1, 7);
@@ -40,7 +40,7 @@ public class AippStringUtilsTest {
 
     @Test
     @DisplayName("AippStringUtils.outlineLenLimit()测试")
-    void test03() {
+    void testOutlineLenLimit() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < AippStringUtils.MAX_OUTLINE_LINE; i++) {
             sb.append("12\n");
@@ -57,7 +57,7 @@ public class AippStringUtilsTest {
 
     @Test
     @DisplayName("AippStringUtils.getIntegerFromStr()测试")
-    void test04() {
+    void testGetIntegerFromStr() {
         Integer i = Assertions.assertDoesNotThrow(() -> AippStringUtils.getIntegerFromStr("12"));
         Assertions.assertEquals(12, i);
 
@@ -67,7 +67,7 @@ public class AippStringUtilsTest {
 
     @Test
     @DisplayName("AippStringUtils.trimLine()测试")
-    void test05() {
+    void testTrimLine() {
         String excepted = "123456\\\"\\\\";
         String line = " 1\n2\t3\r4\b5\f6\"\\";
         String result = Assertions.assertDoesNotThrow(() -> AippStringUtils.trimLine(line));
