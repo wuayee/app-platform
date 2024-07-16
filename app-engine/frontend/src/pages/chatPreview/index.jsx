@@ -386,12 +386,8 @@ const ChatPreview = (props) => {
   }
   // 溯源表单重新对话
   function conditionConfirm(logId, instanceId) {
-    let index = listRef.current.findIndex((item) => item.logId === logId);
-    let content = listRef.current[index - 1].content;
-    const sentItem = beforeSend(false, content);
     const reciveInitObj = deepClone(initChat);
-    listRef.current.splice(index - 1, 2);
-    let arr = [...listRef.current, sentItem, reciveInitObj];
+    let arr = [...listRef.current, reciveInitObj];
     listRef.current = arr;
     dispatch(setChatList(deepClone(arr)));
     dispatch(setChatRunning(true));

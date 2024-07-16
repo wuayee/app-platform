@@ -33,6 +33,7 @@ const ConditionForm = (props) => {
     let params = {
         dimension: data.formData.dimension,
         rewriteQuery: data.formData.rewriteQuery,
+        restartMode: 'increment',
         sourceTrace: JSON.stringify(filter)
     };
     reSendChat(tenantId, data.formData.instanceId, params).then((res) => {
