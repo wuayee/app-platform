@@ -3,7 +3,7 @@ import { Dropdown, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import { StarFilled, UserOutlined, StarOutlined } from '@ant-design/icons';
 import { Icons } from '../icons';
-import { cancleUserCollection, collectionApp } from '@/shared/http/appDev';
+import { cancelUserCollection, collectionApp } from '@/shared/http/appDev';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { addCollectionApp, removeCollectionApp } from '@/store/collection/collection';
 import './style.scoped.scss';
@@ -57,7 +57,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
   // 取消收藏
   const cancleCollection = async () => {
     setLoading(true);
-    await cancleUserCollection({
+    await cancelUserCollection({
       usrInfo: getLoaclUser(),
       aippId: cardInfo.id,
     })
