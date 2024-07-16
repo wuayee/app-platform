@@ -7,13 +7,14 @@ import {useRef, useState} from "react";
 /**
  * 测试组件.
  *
+ * @param codeRef code编辑区代码引用
  * @param executeFunc 执行方法.
  * @param language 语言.
  * @param suggestions 建议，用于在输入中进行联想.
  * @return {JSX.Element}
  * @constructor
  */
-export const Tester = ({executeFunc, language, suggestions = []}) => {
+export const Tester = ({codeRef, executeFunc, language, suggestions = []}) => {
     const [messageApi, contextHolder] = message.useMessage();
     const [outputJson, setOutputJson] = useState({});
     const [isRunning, setIsRunning] = useState(false);
@@ -63,7 +64,7 @@ export const Tester = ({executeFunc, language, suggestions = []}) => {
 
     const runTest = () => {
         setIsRunning(true);
-        executeFunc(inputRef.current, language, (output) => {
+        executeFunc(codeRef.current, inputRef.current, language, (output) => {
             setOutputJson(output);
             setIsRunning(false);
         });

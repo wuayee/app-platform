@@ -131,7 +131,10 @@ export const CodePlayground = ({width, languages, editorConfig, onClose, onConfi
                     </div>
                 </div>
                 <div className={"jade-code-test-content jade-code-parent"}>
-                    <Tester executeFunc={executeFunc} suggestions={editorConfig.suggestions} language={language} />
+                    <Tester codeRef={codeRef}
+                            executeFunc={executeFunc}
+                            suggestions={editorConfig.suggestions}
+                            language={language}/>
                 </div>
             </div>
         </div>

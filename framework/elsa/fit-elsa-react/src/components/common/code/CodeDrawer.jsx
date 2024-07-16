@@ -1,12 +1,15 @@
 import {Drawer} from "antd";
 import {CodePlayground} from "@/components/common/code/CodePlayground.jsx";
 import "../custom-antd.css";
+import {useEffect} from "react";
 
 const drawerStyles = {
     body: {
         paddingTop: 0, paddingLeft: 0, paddingRight: 0, paddingBottom: 0, display: "flex"
     }
 };
+
+const TOP_ALIGN = '60px';
 
 /**
  * 代码抽屉组件.
@@ -45,8 +48,20 @@ export const CodeDrawer = ({
         onConfirm && onConfirm(v);
     };
 
+    useEffect(() => {
+        // 设置ant-drawer-content-wrapper的下移60px
+        const jadeCodeDrawer = document.querySelector('.jade-code-drawer');
+        if (jadeCodeDrawer) {
+            const parentElement = jadeCodeDrawer.closest('.ant-drawer-content-wrapper');
+            if (parentElement) {
+                parentElement.style.top = TOP_ALIGN;
+            }
+        }
+    }, []);
+
     return (<>
-        <Drawer rootStyle={{...rootStyle}}
+        <Drawer className={"jade-code-drawer"}
+                rootStyle={{...rootStyle}}
                 width={width}
                 mask={false}
                 title={null}
