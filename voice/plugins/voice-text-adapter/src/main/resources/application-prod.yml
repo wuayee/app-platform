@@ -2,5 +2,3 @@ fit:
   beans:
     packages:
     - 'com.huawei.jade.voice.to.text'
-gateway:
-  url: http://model-io-gateway:8009/
