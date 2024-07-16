@@ -8,12 +8,17 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.entity.AippLogData;
+import com.huawei.fitframework.util.MapBuilder;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * AippLogUtils测试类
@@ -120,5 +125,17 @@ class AippLogUtilsTest {
         } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
             fail("Failed to get checkFormMsg method: " + e.getMessage());
         }
+    }
+
+    @Test
+    @DisplayName("testIsLogEnabled")
+    void testIsLogEnabled() {
+        Map<String, Object> contextData = MapBuilder.get(() -> new HashMap<String, Object>()).build();
+        assertTrue(AippLogUtils.isLogEnabled(contextData));
+        Map<String, Object> configKeyObj = MapBuilder.get(() -> new HashMap<String, Object>()).build();
+        contextData.put(AippConst.BS_EXTRA_CONFIG_KEY, configKeyObj);
+        assertTrue(AippLogUtils.isLogEnabled(contextData));
+        configKeyObj.put(AippConst.BS_LOG_ENABLE_KEY, "false");
+        assertFalse(AippLogUtils.isLogEnabled(contextData));
     }
 }
