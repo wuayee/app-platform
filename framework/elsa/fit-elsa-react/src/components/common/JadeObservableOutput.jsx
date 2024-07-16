@@ -20,15 +20,13 @@ const {Panel} = Collapse;
 
 export default function JadeObservableOutput({disabled}) {
     const jadeConfig = useDataContext();
-    const [outputTreeData, setOutputTreeData] = useState(null);
     const output = jadeConfig.outputParams.find(item => item.name === "output");
     const shape = useShapeContext();
     const dispatch = useDispatch();
+    const [outputTreeData, setOutputTreeData] = useState(() => [convertToTreeData(output, 1, null)]);
 
     // 组件初始化时注册observable.
     useEffect(() => {
-        const outputData = [convertToTreeData(output, 1, null)];
-        setOutputTreeData(outputData);
         // 组件unmount时，删除observable.
         return () => {
             shape.page.removeObservable(shape.id);
@@ -36,8 +34,7 @@ export default function JadeObservableOutput({disabled}) {
     }, []);
 
     useEffect(() => {
-        const outputData = [convertToTreeData(output, 1, null)];
-        setOutputTreeData(outputData);
+        setOutputTreeData([convertToTreeData(output, 1, null)]);
     }, [jadeConfig]);
 
     /**
@@ -48,7 +45,7 @@ export default function JadeObservableOutput({disabled}) {
      * @param parent 父id
      * @return {{}}
      */
-    const convertToTreeData = (data, level, parent) => {
+    function convertToTreeData(data, level, parent) {
         if (!data) {
             return {};
         }

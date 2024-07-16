@@ -11,7 +11,7 @@ const {Panel} = Collapse;
 const {Text} = Typography;
 const defaultEditorHeight = 272;
 const defaultDrawerWidth = 1232;
-const responseCode = 0;
+const successCode = 0;
 
 /**
  * code编辑器面板
@@ -24,10 +24,8 @@ const responseCode = 0;
  */
 export default function CodePanel({disabled, data, dispatch}) {
     const [open, setOpen] = useState(false);
-    const [currentCode, setCurrentCode] = useState(data.inputParams.find(item => item.name === "code").value);
     const shape = useShapeContext();
     const url = shape.graph.configs.find(config => config.node === "codeNodeState") && shape.graph.configs.find(config => config.node === "codeNodeState").urls.testCodeUrl;
-    const disableCodeDrawer = true;
     const suggestions = data.inputParams.find(item => item.name === "args").value.map(arg => {
         return {label: arg.name, insertText: arg.name}
     });
@@ -41,7 +39,6 @@ export default function CodePanel({disabled, data, dispatch}) {
      * @param value 新的code代码
      */
     const editCode = (value) => {
-        setCurrentCode(value);
         dispatch({type: "editCode", value: value});
         form.setFieldsValue({[`codeEditor-${shape.id}`]: value});
     };
@@ -59,21 +56,22 @@ export default function CodePanel({disabled, data, dispatch}) {
     /**
      * 代码执行结果展示的回调方法
      *
+     * @param currentCode 调试区代码
      * @param args 入参
      * @param language 编程语言
      * @param callback 回调方法
      */
-    const executeFunc = (args, language, callback) => {
+    const executeFunc = (currentCode, args, language, callback) => {
         console.log("execute: ", args)
         const input = {};
-        input.args = args;
+        input.args = JSON.parse(args);
         input.code = currentCode;
         input.language = language;
         httpUtil.post(url, input, undefined, (response) => {
-            if (response.code === responseCode) {
+            if (response.code === successCode) {
                 callback(response.data);
             } else {
-                callback(response.message);
+                callback(response.msg);
             }
         }, (err) => {
             console.error('Error test code:', err);
@@ -85,8 +83,8 @@ export default function CodePanel({disabled, data, dispatch}) {
         <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["codeOutputPanel"]}>
             {<Panel onMouseDown={(e) => e.stopPropagation()}
                     key={"codeOutputPanel"}
-                    header={<Header disableCodeDrawer={disableCodeDrawer}
-                                    handleEditClick={handleEditClick}/>}
+                    header={<Header handleEditClick={handleEditClick}
+                                    disabled={disabled}/>}
                     className="jade-panel"
             >
                 <Form.Item name={`codeEditor-${shape.id}`}
@@ -97,8 +95,9 @@ export default function CodePanel({disabled, data, dispatch}) {
                                    message: '代码不能为空！',
                                },
                            ]}>
-                    <CodeEditor code={currentCode} height={defaultEditorHeight} language={selectedLanguage}
-                                options={{readOnly: !disableCodeDrawer || disabled}}
+                    <CodeEditor code={code}
+                                height={defaultEditorHeight}
+                                language={selectedLanguage}
                                 onChange={editCode}/>
                 </Form.Item>
                 <CodeDrawer container={shape.page.graph.div.parentElement}
@@ -106,7 +105,7 @@ export default function CodePanel({disabled, data, dispatch}) {
                             open={open}
                             languages={["python"]}
                             editorConfig={{
-                                language: selectedLanguage, code: currentCode, suggestions: suggestions
+                                language: selectedLanguage, code: code, suggestions: suggestions
                             }}
                             onClose={() => setOpen(false)}
                             onConfirm={(v) => editCode(v)}
@@ -119,12 +118,12 @@ export default function CodePanel({disabled, data, dispatch}) {
 /**
  * 代码折叠区域头部组件
  *
- * @param disableCodeDrawer 是否展示弹出编辑弹框按钮
  * @param handleEditClick 弹出编辑弹框按钮的回调
+ * @param disabled 是否禁用
  * @return {JSX.Element} Header组件
  * @constructor
  */
-const Header = ({disableCodeDrawer, handleEditClick}) => {
+const Header = ({handleEditClick, disabled}) => {
     const content = (<div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
         <p>参考代码示例编写一个函数的结构，你可以直接使用输入参</p>
         <p>数中的变量，并通过return一个对象、数组或者其他基本</p>
@@ -143,7 +142,7 @@ const Header = ({disableCodeDrawer, handleEditClick}) => {
             <Button type="link"
                     className={"button-edit"}
                     onClick={handleEditClick}
-                    style={{visibility: disableCodeDrawer ? "hidden" : "visible"}}
+                    disabled={disabled}
             >
                 <div className={"button-wrapper"}><EditCode/>
                     <div className={"edit-button-text"}>在IDE中编辑</div>
