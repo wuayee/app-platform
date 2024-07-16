@@ -87,6 +87,7 @@ const RunningStatusPanel = forwardRef(function ({shape, onReportShow}, ref) {
                             onMouseDown={(e) => {
                                 // 防止每次点击触发elsa的鼠标事件，导致图形取消选中.
                                 e.stopPropagation();
+                                shape.page.getFocusedShapes().forEach(s => s.unSelect());
                                 shape.select();
                             }}
                             onClick={handleExpandResult}
