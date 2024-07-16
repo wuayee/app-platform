@@ -100,7 +100,6 @@ export default function SkillForm({toolOptions, workflowOptions, config, disable
                                     filterOption={filterOption}
                                     optionFilterProp="label"
                                     value={tool.value}
-                                    onMouseDown={(e) => e.stopPropagation()}
                                     onChange={(e) => handleSkillChange(tool.id, e)}
                                     options={toolOptions}
                                 />

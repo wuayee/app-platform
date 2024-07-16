@@ -161,7 +161,6 @@ export const JadeReferenceTreeSelect = (props) => {
                     onDropdownVisibleChange={onDropdownVisibleChange}
                     treeDefaultExpandAll={false}
                     style={{minWidth: `${minWidth}`}}
-                    onMouseDown={(e) => e.stopPropagation()}
             />
         </Form.Item>
     </>);

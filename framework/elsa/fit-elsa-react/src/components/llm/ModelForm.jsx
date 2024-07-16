@@ -174,7 +174,6 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
                                     validateTrigger="onBlur"
                                 >
                                     <TextArea disabled={disabled}
-                                              onMouseDown={(e) => e.stopPropagation()}
                                               className="jade-textarea-input jade-font-size"
                                               onBlur={(e) => changeOnBlur(e, "changePrompt", prompt.id, true)}
                                               placeholder="你可以用{{variable name}}来关联输入中的变量名"
@@ -194,7 +193,6 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
                                     validateTrigger="onBlur"
                                 >
                                     <TextArea disabled={disabled}
-                                              onMouseDown={(e) => e.stopPropagation()}
                                               className="jade-textarea-input jade-font-size"
                                               onBlur={(e) => changeOnBlur(e, "changeConfig", systemPrompt.id, false)}
                                               placeholder="输入一段提示词，可以给应用预设身份"

@@ -18,9 +18,6 @@ export const JadeStopPropagationSelect = (props) => {
      */
     const _onMouseDown = (e) => {
         onMouseDown && onMouseDown(e);
-
-        // 取消onMouseDown事件的冒泡.
-        e.stopPropagation();
     };
 
     return <><Select onMouseDown={(e) => _onMouseDown(e)} {...rest}/></>

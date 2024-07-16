@@ -11,7 +11,6 @@ export const JadeInput = (props) => {
     const {onMouseDown, ...rest} = props;
 
     const _onMouseDown = (e) => {
-        e.stopPropagation();
         onMouseDown && onMouseDown(e);
     };
 
