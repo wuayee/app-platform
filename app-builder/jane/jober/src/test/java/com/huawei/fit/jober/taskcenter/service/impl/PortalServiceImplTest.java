@@ -137,8 +137,8 @@ class PortalServiceImplTest {
         List<Map<String, Object>> groupRows = Arrays.asList(groupRow("c6d87018aafb4d9a8f659f1584992ea7", "t1", 10),
                 groupRow("845400833479490da4e06c6d7c5d0a71", "t2", 20));
         when(this.executor.executeQuery(any(), any())).thenReturn(groupRows);
-        List<PortalService.TagCountEntity> list =
-                this.portalService.count(Arrays.asList("owner1", "owner2"), null, Collections.emptyList(), taskIds, null);
+        List<PortalService.TagCountEntity> list = this.portalService
+                .count(Arrays.asList("owner1", "owner2"), null, Collections.emptyList(), taskIds, null);
         Assertions.assertEquals(list.size(), 3);
     }
 
@@ -158,10 +158,10 @@ class PortalServiceImplTest {
         List<Map<String, Object>> groupRows = Arrays.asList(groupRow("c6d87018aafb4d9a8f659f1584992ea7", "t1", 10),
                 groupRow("845400833479490da4e06c6d7c5d0a71", "t2", 20));
         when(this.executor.executeQuery(any(), any())).thenReturn(groupRows);
-        List<PortalService.TagCountEntity> list1 =
-                this.portalService.count(Arrays.asList("owner1", "owner2"), null, Collections.emptyList(), taskIds, null);
-        List<PortalService.TagCountEntity> list2 =
-                this.portalService.count(Collections.singletonList("owner1"), null, Collections.emptyList(), taskIds, null);
+        List<PortalService.TagCountEntity> list1 = this.portalService
+                .count(Arrays.asList("owner1", "owner2"), null, Collections.emptyList(), taskIds, null);
+        List<PortalService.TagCountEntity> list2 = this.portalService
+                .count(Collections.singletonList("owner1"), null, Collections.emptyList(), taskIds, null);
         Assertions.assertEquals(list1.size(), 3);
         Assertions.assertEquals(list2.size(), 3);
     }

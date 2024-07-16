@@ -68,7 +68,8 @@ public class PostgresqlFileRepoTest {
         doReturn(file).when(fileService).upload(anyString(), any(), any());
         InsertSql sql = InsertSql.custom().into("file");
         sql.value("type", "S3");
-        com.huawei.fit.jane.task.domain.File uploadedFile = repo.upload(ParamUtils.convertDeclaration(declaration), context);
+        com.huawei.fit.jane.task.domain.File uploadedFile =
+                repo.upload(ParamUtils.convertDeclaration(declaration), context);
         Assertions.assertNotNull(uploadedFile);
     }
 
