@@ -39,7 +39,7 @@ const SendBox = (props) => {
         <span className="send-info-inner">
           { sendType === 'text' ? 
             (<div dangerouslySetInnerHTML={{ __html: trans(content) }}></div>) : 
-            (<ImgSendBox sendType={sendType} content={content} />) 
+            (<ImgSendBox sendType={sendType} content={content} isRecieve={false} />) 
           }
           {
             showIcon && <SendBtn content={content} sendType={sendType} />

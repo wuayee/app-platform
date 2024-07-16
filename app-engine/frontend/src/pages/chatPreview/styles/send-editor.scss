@@ -153,7 +153,7 @@
         word-wrap: break-word;
         border-radius: 16px;
         padding-right: 120px;
-        padding-left: 35px;
+        padding-left: 75px;
         line-height: 36px;
         &:focus {
           border-color: #0478fc;
@@ -552,6 +552,33 @@
         width: 18px;
         height: 18px;
       }
+    }
+  }
+}
+
+
+.active-audio-btn {
+  circle {
+    animation: active-audio-btn-circle-blink 1s infinite alternate forwards;
+  }
+  @keyframes active-audio-btn-circle-blink {
+    0% { 
+        fill: #2673E5;    
+    }
+    100% {
+        fill: #F2F6FC;
+    }
+  }
+
+  path {
+    animation: active-audio-btn-path-blink 1s infinite alternate forwards;
+  }
+  @keyframes active-audio-btn-path-blink {
+    0% { 
+        fill: #fff;    
+    }
+    100% {
+        fill: #333;
     }
   }
 }
