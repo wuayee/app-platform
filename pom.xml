@@ -16,6 +16,7 @@
         <module>eco</module>
         <module>framework</module>
         <module>store</module>
+        <module>voice</module>
     </modules>
 
     <properties>
