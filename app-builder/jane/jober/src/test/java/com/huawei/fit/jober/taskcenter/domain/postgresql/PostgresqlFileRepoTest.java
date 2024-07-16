@@ -68,8 +68,8 @@ public class PostgresqlFileRepoTest {
         doReturn(file).when(fileService).upload(anyString(), any(), any());
         InsertSql sql = InsertSql.custom().into("file");
         sql.value("type", "S3");
-        com.huawei.fit.jane.task.domain.File file = repo.upload(ParamUtils.convertDeclaration(declaration), context);
-        Assertions.assertNotNull(file);
+        com.huawei.fit.jane.task.domain.File uploadedFile = repo.upload(ParamUtils.convertDeclaration(declaration), context);
+        Assertions.assertNotNull(uploadedFile);
     }
 
     @Test
@@ -81,8 +81,8 @@ public class PostgresqlFileRepoTest {
         rows.add(row);
         when(executor.executeQuery(anyString(), anyList())).thenReturn(rows);
         when(fileService.download(anyString(), any())).thenReturn(file);
-        com.huawei.fit.jane.task.domain.File file = repo.download(fileId, context);
-        Assertions.assertNotNull(file);
+        com.huawei.fit.jane.task.domain.File downloadedFile = repo.download(fileId, context);
+        Assertions.assertNotNull(downloadedFile);
     }
 
     @Test
