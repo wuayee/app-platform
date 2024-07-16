@@ -81,7 +81,7 @@ public class OperationRecordServiceImplTest {
     }
 
     @Nested
-    @DisplayName("测试create方法")
+    @DisplayName("测试 create 方法")
     class TestCreate {
         @DisplayName("测试数据库插入失败")
         @Test
@@ -106,7 +106,7 @@ public class OperationRecordServiceImplTest {
             Assertions.assertDoesNotThrow(() -> service.create(declaration, context));
         }
 
-        @DisplayName("测试declaration为空的情况")
+        @DisplayName("测试 declaration 为空的情况")
         @Test
         void throwExceptionWhenDeclarationIsNull() {
             BadRequestException exception = Assertions.assertThrows(BadRequestException.class,
@@ -115,7 +115,7 @@ public class OperationRecordServiceImplTest {
             Assertions.assertEquals("Operation record declaration is null.", exception.getMessage());
         }
 
-        @DisplayName("测试declaration field message为空的情况")
+        @DisplayName("测试 declaration field message 为空的情况")
         @Test
         void throwExceptionWhenDeclarationFieldMessageIsNull() {
             BadRequestException exception = Assertions.assertThrows(BadRequestException.class,
@@ -124,7 +124,7 @@ public class OperationRecordServiceImplTest {
             Assertions.assertEquals("Operation record declaration field message is null.", exception.getMessage());
         }
 
-        @DisplayName("测试declaration objectId 为空的情况")
+        @DisplayName("测试 declaration objectId 为空的情况")
         @Test
         void throwExceptionWhenDeclarationFieldObjectIdIsNull() {
             OperationRecordDeclaration d = new OperationRecordDeclaration();
@@ -163,10 +163,10 @@ public class OperationRecordServiceImplTest {
     }
 
     @Nested
-    @DisplayName("测试list方法")
+    @DisplayName("测试 list 方法")
     class TestList {
         @Test
-        @DisplayName("测试filter为空的情况")
+        @DisplayName("测试 filter 为空的情况")
         void testFilterIsNull() {
             BadRequestException exception = Assertions.assertThrows(BadRequestException.class,
                     () -> service.list(null, 0L, 0, context));
@@ -174,7 +174,7 @@ public class OperationRecordServiceImplTest {
         }
 
         @Test
-        @DisplayName("测试filter中types为空的情况")
+        @DisplayName("测试 filter 中 types 为空的情况")
         void testFilterTypesIsEmpty() {
             OperationRecordFilter filter = new OperationRecordFilter();
             BadRequestException exception = Assertions.assertThrows(BadRequestException.class,
@@ -183,7 +183,7 @@ public class OperationRecordServiceImplTest {
         }
 
         @Test
-        @DisplayName("测试filter中ids为空的情况")
+        @DisplayName("测试 filter 中 ids 为空的情况")
         void testFilterIdsIsEmpty() {
             OperationRecordFilter filter = new OperationRecordFilter();
             List<String> types = new ArrayList<>();
