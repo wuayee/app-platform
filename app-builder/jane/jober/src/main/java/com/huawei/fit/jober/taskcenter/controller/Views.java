@@ -58,7 +58,6 @@ import com.huawei.fit.jober.taskcenter.filter.TaskTemplateFilter;
 import com.huawei.fit.jober.taskcenter.filter.TriggerFilter;
 import com.huawei.fit.jober.taskcenter.service.PortalService;
 import com.huawei.fit.jober.taskcenter.util.Enums;
-import com.huawei.fit.waterflow.biz.common.entity.CleanTaskPageResult;
 import com.huawei.fit.waterflow.biz.common.vo.FlowDefinitionVO;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
@@ -1251,19 +1250,6 @@ public final class Views {
 
     private static JSONObject convertToJson(FlowGraphDefinition flowGraphDefinition) {
         return (JSONObject) JSONObject.toJSON(flowGraphDefinition);
-    }
-
-    /**
-     * viewOf
-     *
-     * @param cleanTaskPageResult 分页清洗结果
-     * @return Map<String, Object>
-     */
-    public static Map<String, Object> viewOf(CleanTaskPageResult cleanTaskPageResult) {
-        Map<String, Object> view = new LinkedHashMap<>(2);
-        view.put("totalPage", cleanTaskPageResult.getTotalNum());
-        view.put("result", cleanTaskPageResult.getResult());
-        return view;
     }
 
     public static Map<String, Object> viewOf(Authorization authorization) {
