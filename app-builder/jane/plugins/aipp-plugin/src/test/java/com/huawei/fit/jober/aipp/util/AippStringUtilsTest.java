@@ -18,16 +18,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @ExtendWith(MockitoExtension.class)
 public class AippStringUtilsTest {
-
     @Test
     @DisplayName("AippStringUtils.isPreview()测试")
     void test01() {
         String version = "1.0.0";
         String versionPreview = "1.1.1-abcdab";
-        boolean first = AippStringUtils.isPreview(version);
-        boolean preview = AippStringUtils.isPreview(versionPreview);
-        Assertions.assertTrue(preview);
-        Assertions.assertFalse(first);
+        Assertions.assertTrue(AippStringUtils.isPreview(versionPreview));
+        Assertions.assertFalse(AippStringUtils.isPreview(version));
     }
 
     @Test

@@ -29,7 +29,6 @@ import java.util.Map;
  */
 @ExtendWith(MockitoExtension.class)
 public class ConvertUtilsTest {
-
     @Test
     @DisplayName("convertToAippDtoFromAppBuilderAppDto")
     void test01() {
