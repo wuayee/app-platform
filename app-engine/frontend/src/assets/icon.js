@@ -58,6 +58,7 @@ import Fix from './svg/fix.svg';
 import Code from './svg/code.svg';
 import Play from './svg/play-sound.svg';
 import Stop from './svg/stop-sound.svg';
+import ChatUser from './svg/chat-user.svg';
 
 // 编辑按钮
 const EditIcon = (props) => <Icon component={() => (<Edit/>)} {...props} />;
@@ -116,6 +117,7 @@ const NewFeatIcon = (props) => <Icon component={() => (<NewFeat />)} {...props} 
 const RocketIcon = (props) => <Icon component={() => (<Rocket />)} {...props} />;
 const FixIcon = (props) => <Icon component={() => (<Fix />)} {...props} />;
 const CodeIcon = (props) => <Icon component={() => (<Code />)} {...props} />;
+const ChatUserIcon = (props) => <Icon component={() => (<ChatUser />)} {...props} />;
 const PlayIcon = (props) => <Icon component={() => (<Play />)} {...props} />;
 const StopIcon = (props) => <Icon component={() => (<Stop />)} {...props} />;
 
@@ -176,6 +178,7 @@ export {
   RocketIcon,
   FixIcon,
   CodeIcon,
+  ChatUserIcon,
   PlayIcon,
   StopIcon,
 }
