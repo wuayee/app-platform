@@ -4,11 +4,15 @@
 
 package com.huawei.fit.http.server.support;
 
+import static com.huawei.fit.http.protocol.MessageHeaderNames.CACHE_CONTROL;
+import static com.huawei.fit.http.protocol.MessageHeaderNames.CONNECTION;
 import static com.huawei.fit.http.protocol.MessageHeaderNames.CONTENT_DISPOSITION;
 import static com.huawei.fit.http.protocol.MessageHeaderNames.CONTENT_LENGTH;
 import static com.huawei.fit.http.protocol.MessageHeaderNames.COOKIE;
 import static com.huawei.fit.http.protocol.MessageHeaderNames.TRANSFER_ENCODING;
 import static com.huawei.fit.http.protocol.MessageHeaderValues.CHUNKED;
+import static com.huawei.fit.http.protocol.MessageHeaderValues.KEEP_ALIVE;
+import static com.huawei.fit.http.protocol.MessageHeaderValues.NO_CACHE;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 
@@ -16,6 +20,7 @@ import com.huawei.fit.http.HttpResource;
 import com.huawei.fit.http.entity.Entity;
 import com.huawei.fit.http.entity.FileEntity;
 import com.huawei.fit.http.entity.ReadableBinaryEntity;
+import com.huawei.fit.http.entity.TextEventStreamEntity;
 import com.huawei.fit.http.entity.WritableBinaryEntity;
 import com.huawei.fit.http.entity.support.DefaultWritableBinaryEntity;
 import com.huawei.fit.http.header.ContentDisposition;
@@ -29,6 +34,7 @@ import com.huawei.fit.http.server.HttpClassicServerResponse;
 import com.huawei.fit.http.server.InternalServerErrorException;
 import com.huawei.fit.http.support.AbstractHttpClassicResponse;
 import com.huawei.fitframework.resource.UrlUtils;
+import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
@@ -36,6 +42,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 表示 {@link HttpClassicServerResponse} 的默认实现。
@@ -156,6 +163,11 @@ public class DefaultHttpClassicServerResponse extends AbstractHttpClassicRespons
                 }
             } else if (this.entity instanceof WritableBinaryEntity) {
                 // WritableBinaryEntity 已经在用户代码层面进行了输出，因此此处什么都不需要处理。
+            } else if (this.entity instanceof TextEventStreamEntity) {
+                this.headers().set(CACHE_CONTROL, NO_CACHE);
+                this.headers().set(CONNECTION, KEEP_ALIVE);
+                this.serverResponse.writeStartLineAndHeaders();
+                this.sendTextEventStream(cast(this.entity));
             } else {
                 byte[] entityBytes = this.entitySerializer().serializeEntity(ObjectUtils.cast(this.entity), charset);
                 this.headers().set(CONTENT_LENGTH, String.valueOf(entityBytes.length));
@@ -166,6 +178,31 @@ public class DefaultHttpClassicServerResponse extends AbstractHttpClassicRespons
         } catch (IOException e) {
             throw new InternalServerErrorException("Failed to write response.", e);
         }
+    }
+
+    private void sendTextEventStream(TextEventStreamEntity eventStreamEntity) throws IOException {
+        ObjectSerializer objectSerializer = eventStreamEntity.belongTo()
+                .jsonSerializer()
+                .orElseThrow(() -> new IllegalStateException("The serializer cannot be null."));
+        AtomicReference<Exception> exception = new AtomicReference<>();
+        eventStreamEntity.stream()
+                .map(sse -> sse.serialize(objectSerializer).getBytes(StandardCharsets.UTF_8))
+                .subscribe(null, (subscription, bytes) -> {
+                    try {
+                        this.serverResponse.writeBody(bytes);
+                    } catch (IOException e) {
+                        subscription.cancel();
+                        exception.set(e);
+                    }
+                }, null, ((ignore, e) -> exception.set(e)));
+        Exception e = exception.get();
+        if (e == null) {
+            return;
+        }
+        if (e instanceof IOException) {
+            throw (IOException) e;
+        }
+        throw new InternalServerErrorException("Failed to execute handler.", e);
     }
 
     @Override

@@ -25,4 +25,10 @@ public class MessageHeaderValues {
 
     /** 用于 {@link MessageHeaderNames#UPGRADE}，表示后续 Http 协议需要使用 WebSocket 协议。 */
     public static final String WEBSOCKET = "websocket";
+
+    /** 用于 {@link MessageHeaderNames#CACHE_CONTROL}，表示后续 Http 协议不需要使用缓存。 */
+    public static final String NO_CACHE = "no-cache";
+
+    /** 用于 {@link MessageHeaderNames#CONNECTION}，表示后续 Http 协议需要保持连接。 */
+    public static final String KEEP_ALIVE = "keep-alive";
 }
