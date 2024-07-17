@@ -59,7 +59,6 @@ const SendBtn = (props) => {
   // 一段音频数据播放结束时调用
   function audioEnded(){
     console.log('结束了');
-    // console.log(base64Arr,'base64Arr');
     if(audioIndex<base64Arr.current.length){
       audioElement.src = `data:audio/wav;base64,${base64Arr.current[audioIndex]}`
       audioElement.play()
@@ -78,14 +77,13 @@ const SendBtn = (props) => {
   let base64Arr=useRef([])
   // 是否正在播放
   let isPlaying=useRef(false)
-  // 是否全部播放完毕
-  let isPlaycompleted=useRef(false)
   // 小段文字容器
   let fragmentArr=[]
-  // 合并所有音频后的base64字符串
-  let allAudioBase64 = useRef('')
-  // 文字转语音函数（数据回来了就调用）
+  // 文字转语音函数
   function getVioce(){
+    fragmentArr=[]
+    base64Arr.current=[]
+    if(!content) return
     let index=0
 
     // 按语句分成小段文字
@@ -101,7 +99,7 @@ const SendBtn = (props) => {
     let id
     console.log(fragmentArr,'fragmentArr');
     // 异步请求
-    async function fn(){
+    async function ContinuousRequests(){
       console.log(index);
 
       // 如果数据走完了就停止
@@ -112,14 +110,11 @@ const SendBtn = (props) => {
         // 如果没有返回数据，就停止
         if(!res.data)  return
         
-        base64Arr.current=[...base64Arr.current,res.data]
-        // 如果当前没有音频播放，就重新开始播放
-        if(!isPlaying.value){
+        base64Arr.current.push(res.data)
+        console.log(base64Arr.current.length,'base64Arr.current');
+        if (!audioElement&&soundBtnRef.current.active){
+          // 如果是首次拿到音频数据，且当前按钮处于播放中
           audioIndex++
-          if(audioElement){
-            audioElement.removeEventListener('ended',audioEnded)
-            audioElement=null
-          }
           audioElement = document.createElement('audio')
           audioElement.controls=true
           audioElement.src = `data:audio/wav;base64,${res.data}`
@@ -128,15 +123,34 @@ const SendBtn = (props) => {
           audioElement.play()
           isPlaying.value = true
           soundBtnRef.current.setActive(true);
+        }else if(!audioElement&&!soundBtnRef.current.active){
+          // 如果是首次拿到音频数据，且用户点击了暂停，保存数据，不用播放
+          audioElement = document.createElement('audio')
+          audioElement.controls=true
+          audioElement.src = `data:audio/wav;base64,${res.data}`
+          audioElement.style.display='none'
+          audioElement.addEventListener('ended',audioEnded)
+        }else if(audioIndex<fragmentArr.length&&!soundBtnRef.current.active){
+          // 如果用户之前数据已经播放完毕，但还有数据没回来，等数据回来时就自动播放
+          audioIndex++
+          audioElement.src = `data:audio/wav;base64,${res.data}`
+          audioElement.play()
+          isPlaying.value = true
+          soundBtnRef.current.setActive(true);
         }
+        // else if(soundBtnRef.current.active&&audioElement){
+        //   // 如果当前没有处于播放中，直接追加数据即可不用操作
+        // }
+
+        // 连续请求所有数据
         if(index<fragmentArr.length) {
           id = setTimeout(()=>{
-            fn()
+            ContinuousRequests()
           })
         }
       }
-    // 定时请求语音转文字接口
-    fn()
+    // 请求语音转文字接口
+    ContinuousRequests()
   }
   // 点击播放/暂停
   function handlePlayQuestion() {
