@@ -1,6 +1,7 @@
 export const initChat = {
   content: '',
-  type: 'send',
+  type: 'recieve',
+  loading: true,
   checked: false
 }
 export const chatMock = {}

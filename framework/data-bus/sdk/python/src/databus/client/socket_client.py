@@ -6,24 +6,24 @@
 `SocketClient`类提供连接到DataBus内核的socket通道.
 """
 import concurrent.futures
-import threading
-from contextlib import contextmanager
 import logging
+import queue
 import socket
+from contextlib import contextmanager
 from typing import Optional, Tuple, Union, Dict
 
 import flatbuffers
+from databus.dto import WriteRequest, ReadRequest
+from databus.exceptions import CoreError
+from databus.manager import MessageSeqManager, ResponseItem, ResponseManager
 from databus.message import (
     MessageHeader, MAX_MESSAGE_LENGTH, MESSAGE_RESPONSE_MAPPING,
     ApplyMemoryMessage, ApplyMemoryMessageResponse,
     ApplyPermissionMessage,
     ReleaseMemoryMessage, ReleasePermissionMessage,
-    GetMetaDataMessage, GetMetaDataMessageResponse
+    GetMetaDataMessage, GetMetaDataMessageResponse,
+    CoreMessageType, CorePermissionType, CoreMessageResponseTypeHint, DataBusErrorCode
 )
-from databus.message import CoreMessageType, CorePermissionType, CoreMessageResponseTypeHint, DataBusErrorCode
-from databus.exceptions import CoreError
-from databus.dto import WriteRequest, ReadRequest
-from databus.manager import MessageSeqManager, ResponseItem, ResponseManager
 
 
 class SocketClient:
@@ -54,7 +54,7 @@ class SocketClient:
             raise ValueError("SocketClient init without input parameters")
 
         self._executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
-        self._mailbox: Dict[int, ResponseItem] = dict()
+        self._mailbox: Dict[int, queue.Queue[ResponseItem]] = dict()
         self._seq_manager = MessageSeqManager()
         self._response_manager = ResponseManager(self._socket, self._mailbox)
         self._response_manager.start()
@@ -235,19 +235,22 @@ class SocketClient:
         :raise CoreError: 内核返回错误
         :return: 如果消息有response则返回response, 否则返回None
         """
-        logging.debug("DataBus message to core: %s.", message.hex())
-        cv = threading.Condition()
-        self._mailbox[message_seq] = ResponseItem(cv)
+        logging.debug("DataBus message [seq=%d] to core: %s.", message_seq, message.hex())
+        self._mailbox[message_seq] = queue.Queue(maxsize=1)
         try:
             self._socket.send(message)
         except Exception as e:
             raise CoreError("Error when sending message to core, code {}.", DataBusErrorCode.UnknownError) from e
         if message_type in MESSAGE_RESPONSE_MAPPING:
-            with cv:
-                cv.wait(timeout=self.MAX_MESSAGE_WAITING_TIME)
-            mail = self._mailbox[message_seq]
-            del self._mailbox[message_seq]
-            if not mail.message_type:
+            logging.info("Sent message [seq=%d] to core", message_seq)
+            mail = None
+            try:
+                mail = self._mailbox[message_seq].get(timeout=self.MAX_MESSAGE_WAITING_TIME)
+            except queue.Empty:
+                logging.info("Waiting message [seq=%d] reaches timeout.", message_seq)
+            finally:
+                del self._mailbox[message_seq]
+            if not mail or not mail.message_type:
                 raise CoreError("Received nothing from core, code {}.", DataBusErrorCode.UnknownError)
             if mail.message_type == CoreMessageType.Error:
                 raise CoreError("Received error {} from core.", mail.response.ErrorType())
