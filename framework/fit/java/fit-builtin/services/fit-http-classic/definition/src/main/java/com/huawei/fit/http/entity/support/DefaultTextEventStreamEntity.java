@@ -28,8 +28,8 @@ public class DefaultTextEventStreamEntity extends AbstractEntity implements Text
      */
     public DefaultTextEventStreamEntity(HttpMessage httpMessage, Choir<?> stream) {
         super(httpMessage);
-        this.stream = stream.map(data -> data instanceof TextEvent ? ObjectUtils.cast(data)
-                : TextEvent.builder(data).build());
+        this.stream = stream == null ? Choir.empty() :
+            stream.map(data -> data instanceof TextEvent ? ObjectUtils.cast(data) : TextEvent.builder(data).build());
     }
 
     @Override

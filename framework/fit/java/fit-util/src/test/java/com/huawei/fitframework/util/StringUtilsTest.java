@@ -1033,6 +1033,48 @@ public class StringUtilsTest {
         }
     }
 
+    @Nested
+    @DisplayName("Test method: replace(String source, String oldStr, String newStr)")
+    class TestReplaceString {
+        @Test
+        @DisplayName("Source is null, output is null")
+        void givenNullSourceThenReturnNull() {
+            String actual = StringUtils.replace(null, "a", "b");
+            assertThat(actual).isNull();
+        }
+
+        @Test
+        @DisplayName("Target is null, output is Source")
+        void givenNullTargetThenReturnOrigin() {
+            String source = "a";
+            String actual = StringUtils.replace(source, null, "b");
+            assertThat(actual).isEqualTo(source);
+        }
+
+        @Test
+        @DisplayName("Replace is null, output is Source")
+        void givenNullReplaceThenReturnOrigin() {
+            String source = "a";
+            String actual = StringUtils.replace(source, "b", null);
+            assertThat(actual).isEqualTo(source);
+        }
+
+        @Test
+        @DisplayName("Target is miss, output is Source")
+        void givenMissTargetThenReturnOrigin() {
+            String source = "Hello World";
+            String actual = StringUtils.replace(source, "foo", "bar");
+            assertThat(actual).isEqualTo(source);
+        }
+
+        @Test
+        @DisplayName("Input is 'Hello World', output is 'Hel!l!o Worl!d' (oldStr: 'l', newStr: 'l!')")
+        void givenNormalStringThenReturnReplacedString() {
+            String actual = StringUtils.replace("Hello World", "l", "l!");
+            assertThat(actual).isEqualTo("Hel!l!o Worl!d");
+        }
+    }
+
     /**
      * 目标方法：{@link StringUtils#split(String, char)}。
      */
