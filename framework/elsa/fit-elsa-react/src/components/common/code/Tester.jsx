@@ -1,6 +1,6 @@
 import {Button, Card, message} from "antd";
 import {CaretRightOutlined} from "@ant-design/icons";
-import {CodeEditor} from "@/components/common/code/CodeEditor.jsx";
+import CodeEditor from "@/components/common/code/CodeEditor.jsx";
 import {JsonViewer} from "@/components/common/JsonViewer.jsx";
 import {useRef, useState} from "react";
 

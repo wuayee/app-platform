@@ -1,6 +1,6 @@
 import {Button, Collapse, Form, Popover, Typography} from "antd";
 import {QuestionCircleOutlined} from "@ant-design/icons";
-import {CodeEditor} from "@/components/common/code/CodeEditor.jsx";
+import CodeEditor from "@/components/common/code/CodeEditor.jsx";
 import React, {useState} from "react";
 import EditCode from '../asserts/icon-edit.svg?react';
 import {useFormContext, useShapeContext} from "@/components/DefaultRoot.jsx";
