@@ -19,26 +19,6 @@ const ChartCondition = (props) => {
   const formData = useRef<any>();
   const hasLv1 = useRef<any>();
 
-  // 初始化溯源表单
-  useEffect(() => {
-    formData.current = JSON.parse(data.dsl);
-    filters.current = conditionList();
-    hasLv1.current = data.dsl.includes('lv1_prod_rd_team_cn_name');
-    formSetValue();
-  }, [data]);
-
-  useEffect(() => {
-    setIsDisabled(showCheck);
-  }, [showCheck]);
-
-  // 根据产品线设置下拉
-  useEffect(() => {
-    if (dimension && dimension !== '其他') {
-      !hasLv1.current && (formData.current.lv1_prod_rd_team_cn_name = [dimension]);
-      formSetValue();
-    }
-  }, [dimension]);
-  
   // 设置filter值
   const setFiltersVal = () => {
     const filterCopy = JSON.parse(JSON.stringify(filters.current));
@@ -154,6 +134,25 @@ const ChartCondition = (props) => {
   const getFormData = () => {
     return formData.current;
   }
+  // 初始化溯源表单
+  useEffect(() => {
+    formData.current = JSON.parse(data.dsl);
+    filters.current = conditionList();
+    hasLv1.current = data.dsl.includes('lv1_prod_rd_team_cn_name');
+    formSetValue();
+  }, [data]);
+
+  useEffect(() => {
+    setIsDisabled(showCheck);
+  }, [showCheck]);
+
+  // 根据产品线设置下拉
+  useEffect(() => {
+    if (dimension && dimension !== '其他') {
+      !hasLv1.current && (formData.current.lv1_prod_rd_team_cn_name = [dimension]);
+      formSetValue();
+    }
+  }, [dimension]);
   return <>
     <div className='condition-ctn'>
       <div className='cdt-title'>条件和维度</div>
