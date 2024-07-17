@@ -1,40 +1,38 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import { Upload } from 'antd';
+import type { UploadProps } from 'antd';
 import JSZip from 'jszip';
-import { getPluginPackageInfo } from '../../shared/http/plugin';
-const zip = new JSZip();
 
 const DraggerUpload = (props) => {
-  const { accept,setResult } = props;
-  const jsonMap = useRef();
-  const customRequest=(val)=>{
+  const customRequest= async (val)=>{
+    val.onSuccess();
     let fileObj:any = {};
-    zip.loadAsync(val?.file).then((res) => {
-      fileObj[val.file.uid] = [];
-      Object.keys(res.files).forEach(item => {
-        if (!res.files[item].dir && item.indexOf('json') !== -1) {
-          res.file(item)?.async('blob').then((data) => {
-            let fileStr = new File([data], item, { type: 'application/json' });
-            fileStr.text().then(res => {
-              const json = JSON.parse(res);
-              fileObj[val.file.uid].push(json);
-            });
+    const zip = new JSZip();
+    const res = await zip.loadAsync(val?.file);
+    fileObj[val.file.uid] = [];
+    Object.keys(res.files).forEach(item => {
+      if (!res.files[item].dir && item.indexOf('tools.json') !== -1) {
+        res.file(item)?.async('blob').then((data) => {
+          let fileStr = new File([data], item, { type: 'application/json' });
+          fileStr.text().then(res => {
+            const json = JSON.parse(res);
+            fileObj[val.file.uid].push(json);
+            props.addFileData(fileObj, val.file);
           });
-        }
-      })
-      console.log(fileObj);
-    })
-    // getPluginPackageInfo(val?.file).then((res)=>{
-    //   val.onSuccess(res, val?.file);
-    //     setResult(res);
-    //   }).catch((e)=>{
-    //     val.onError(e);
-    //   });
+        });
+      }
+    });
+   
+  }
+  const onRemove = (file) => {
+    props.removeFileData(file);
   }
   const uploadProps: UploadProps = {
     name: 'file',
     customRequest:customRequest,
+    listType: 'picture',
+    onRemove,
     ...props
   };
   return (

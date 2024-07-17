@@ -1,25 +1,11 @@
+import React, { useEffect, useRef, useState } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Drawer, Select, Table, Tag } from 'antd';
-import React, { useEffect, useState } from 'react';
-import '../style.scoped.scss';
-import DraggerUpload from '../../../components/draggerUpload';
 import { GetProp } from 'antd/lib';
-import { uploadPlugin } from '../../../shared/http/plugin';
-
-const data = [
-  {
-    name: '笔记',
-    tags: ['FIT', 'HTTP'],
-    data: [
-      {
-        name: 1,
-        type: 2,
-        des: 3,
-      },
-    ],
-    des: 'aaaaaaaaaaaaaaaaaaa',
-  },
-];
+import DraggerUpload from '@/components/draggerUpload';
+import { uploadPlugin } from '@shared/http/plugin';
+import { Message } from '@shared/utils/message';
+import '../style.scoped.scss';
 
 const uploadSpaceOptions = [
   { value: 'user', label: '个人空间' },
@@ -44,27 +30,112 @@ const columns = [
   },
 ];
 
-const UploadToolDrawer = ({ openSignal }) => {
+const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
   const [open, setOpen] = useState(false);
   const [result,setResult] =useState([]);
   const [checkedList,setCheckedList]=useState([]);
-const onCheckChange: GetProp<typeof Checkbox.Group, 'onChange'> = async(checkedValues) => {
-  setCheckedList(checkedValues);
-};
+  const [fileList,setFileList]=useState([]);
+  const [loading,setLoading]=useState(false);
+  const pluginList = useRef([]);
+  const fileData = useRef([]);
+  const onCheckChange: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues) => {
+    setCheckedList(checkedValues);
+  };
+  
+  const onChangeSpace = (value) => {};
+  // 添加数据
+  const addFileData = (data, file) => {
+    fileData.current = [ file, ...fileData.current];
+    setFileList(fileData.current);
+    Object.keys(data).forEach(key => {
+      data[key].forEach(item => {
+        if (item.tools && Array.isArray(item.tools)) {
+          let list = item.tools.map(tItem => {
+            return {
+              ...tItem,
+              uid: key,
+              parameterEntities: setTableData(tItem.schema?.parameters)
+            }
+          });
+          pluginList.current = [ ...list, ...pluginList.current];
+          setResult(pluginList.current);
+        }
+      })
+    })
+  }
+  // 设置表格数据
+  const setTableData = (data) => {
+    let list = [];
+    if (data.properties) {
+      Object.keys(data.properties).forEach(item => {
+        let aItem = { ...data.properties[item], name: item };
+        list.push(aItem);
+      })
+    }
+    return list
+  }
+  // 删除数据
+  const removeFileData = ({ uid }) => {
+    pluginList.current = pluginList.current.filter(item => item.uid !== uid);
+    let checkList = checkedList.filter(item => item.uid !== uid);
+    fileData.current = fileData.current.filter(item => item.uid !== uid);
+    setResult(pluginList.current);
+    setCheckedList(checkList);
+    setFileList(fileData.current);
+  }
+  // 确定
+  const confirm = () => {
+    if (!checkedList.length) {
+      Message({ type: 'warning', content: '未选择插件' })
+      return
+    }
+    let nameArr = [];
+    let uidArr = [];
+    checkedList.forEach(item => {
+      nameArr.push(item.schema.name);
+      !uidArr.includes(item.uid) && uidArr.push(item.uid);
+    })
+    let fileConfirmList = fileData.current.filter(item => uidArr.includes(item.uid));
+    customRequest(fileConfirmList, nameArr);
+  }
+  // 上传文件
+  const customRequest = (fileArr, nameArr) => {
+    let formData = new FormData();
+    fileArr.forEach(item => {
+      formData.append('file', item);
+    });
+    setLoading(true);
+    try {
+      uploadPlugin(formData, nameArr.join(',')).then(res => {
+        setOpen(false);
+        Message({ type: 'success', content: '添加插件成功' });
+        refreshPluginList();
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+  const dataReset = () => {
+    pluginList.current = [];
+    fileData.current = [];
+    setOpen(true);
+    setResult([]);
+    setCheckedList([]);
+    setFileList([]);
+    setLoading(false);
+  }
   useEffect(() => {
     if (openSignal > 0) {
-      setOpen(true);
+      dataReset();
     }
   }, [openSignal]);
-
-  const onChangeSpace = (value) => {};
-
+  
   return (
     <Drawer
       title='上传工具'
       placement='right'
       closeIcon={false}
-      width={500}
+      width={600}
       open={open}
       extra={
         <CloseOutlined
@@ -85,10 +156,8 @@ const onCheckChange: GetProp<typeof Checkbox.Group, 'onChange'> = async(checkedV
           </Button>
           <Button
             style={{ width: 90, backgroundColor: '#2673e5', color: '#ffffff' }}
-            onClick={async() => {
-              await uploadPlugin(checkedList);
-              setOpen(false);
-            }}
+            onClick={confirm}
+            loading={loading}
           >
             确定
           </Button>
@@ -104,36 +173,43 @@ const onCheckChange: GetProp<typeof Checkbox.Group, 'onChange'> = async(checkedV
           onChange={onChangeSpace}
           options={uploadSpaceOptions}
         />
-        <DraggerUpload accept='.zip' multiple setResult={setResult}/>
+        <DraggerUpload 
+          accept='.zip' 
+          multiple 
+          addFileData={addFileData} 
+          fileList={fileList}
+          removeFileData={removeFileData}
+        />
         <Checkbox.Group style={{ width: '100%' }} onChange={onCheckChange}>
-        {result?.map((item) => (
-          <div className='param-card' key={item?.methodName}>
-            <div style={{ float: 'right' }}>
-              <Checkbox value={item}/>
-            </div>
-            <div className='card-header-left'>
-              <img src='/src/assets/images/knowledge/knowledge-base.png' />
-              <div>
-                <div style={{ fontSize: 20, marginBottom: 8 }}>{item?.methodName}</div>
-                <div className='card-user'>
-                  {item?.tags?.map((tag: string, index: number) => (
-                    <Tag style={{ margin: 0 }} key={index}>
-                      {tag}
-                    </Tag>
-                  ))}
+          {result?.map((item) => (
+            <div className='param-card' key={item.schema?.name}>
+              <div style={{ float: 'right' }}>
+                <Checkbox value={item}/>
+              </div>
+              <div className='card-header-left'>
+                <img src='/src/assets/images/knowledge/knowledge-base.png' />
+                <div>
+                  <div style={{ fontSize: 20, marginBottom: 8 }}>{item.schema?.name}</div>
+                  <div className='card-user'>
+                    {item?.tags?.map((tag: string, index: number) => (
+                      <Tag style={{ margin: 0 }} key={index}>
+                        {tag}
+                      </Tag>
+                    ))}
+                  </div>
                 </div>
               </div>
+              <div className='card-des'>{item?.schema?.description}</div>
+              <Table
+                scroll={{ y: 120 }}
+                dataSource={item?.parameterEntities}
+                columns={columns}
+                virtual
+                rowKey='name'
+                pagination={false}
+              />
             </div>
-            <div className='card-des'>{item?.methodDescription}</div>
-            <Table
-              scroll={{ y: 120 }}
-              dataSource={item?.parameterEntities}
-              columns={columns}
-              virtual
-              pagination={false}
-            />
-          </div>
-        ))}
+          ))}
         </Checkbox.Group>
       </div>
     </Drawer>
