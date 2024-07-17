@@ -58,7 +58,6 @@ const ChatPreview = (props) => {
   const useMemory = useAppSelector((state) => state.commonStore.useMemory);
   const { showElsa } = useContext(AippContext);
   const [checkedList, setCheckedList] = useState([]);
-  const [isScroll, setIsScroll] = useState(true);
   const [loading, setLoading] = useState(false);
   const [groupType, setGroupType] = useState('share');
   const [showCheck, setShowCheck] = useState(false);
@@ -68,7 +67,6 @@ const ChatPreview = (props) => {
   let currentInfo = useRef();
   let feedRef = useRef();
   let testRef = useRef(false);
-  let conditionChatRef = useRef();
   let runningVersion = useRef("");
   let runningAppid = useRef("");
   let childInstanceStop = useRef(false);
@@ -132,8 +130,6 @@ const ChatPreview = (props) => {
   // 发送消息
   const sendMessageRequest = async (value, type) => {
     const reciveInitObj = deepClone(initChat);
-    reciveInitObj.type = 'recieve';
-    reciveInitObj.loading = true;
     if (atAppInfo) {
       reciveInitObj.appName = atAppInfo.name;
       reciveInitObj.appIcon = atAppInfo.attributes.icon;
@@ -143,9 +139,7 @@ const ChatPreview = (props) => {
     listRef.current = deepClone(arr);
     dispatch(setChatList(deepClone(arr)));
     dispatch(setChatRunning(true));
-    setTimeout(() => {
-      scrollBottom();
-    }, 50);
+    scrollToBottom();
     if (showElsa) {
       let params = appInfo.flowGraph;
       window.agent
@@ -272,7 +266,6 @@ const ChatPreview = (props) => {
         })
         if (['ARCHIVED', 'ERROR'].includes(messageData.status)) {
           dispatch(setChatRunning(false));
-          setIsScroll(true);
           
         }
       } catch (err){
@@ -335,12 +328,7 @@ const ChatPreview = (props) => {
     }
     initObj.loading = false;
     initObj.finished = (status === 'ARCHIVED');
-    if (conditionChatRef.current) {
-      idx = listRef.current.findIndex((item) => item.logId === conditionChatRef.current);
-      conditionChatRef.current = undefined;
-    } else {
-      idx = listRef.current.length - 1
-    }
+    idx = listRef.current.length - 1
     if (testRef.current) {
       listRef.current.push(initObj);
       dispatch(setFormReceived(false));
@@ -351,7 +339,7 @@ const ChatPreview = (props) => {
   }
   // 流式输出拼接
   function chatSplicing(log, msg, initObj, status) {
-    let msgId = conditionChatRef.current ? conditionChatRef.current  : log.msgId;
+    let msgId = log.msgId;
     let currentChatItem = listRef.current.filter(
       (item) => item.logId === msgId
     )[0];
@@ -364,7 +352,6 @@ const ChatPreview = (props) => {
       item.content = str;
       if (status === 'ARCHIVED') {
         item.finished = true;
-        conditionChatRef.current = undefined;
       }
       dispatch(setChatList(deepClone(listRef.current)));
     } else {
@@ -379,14 +366,7 @@ const ChatPreview = (props) => {
   }
   // 终止对话成功回调
   function onStop(str) {
-    let item = null;
-    if (conditionChatRef.current) {
-      let index = listRef.current.findIndex((item) => item.logId === conditionChatRef.current);
-      item = listRef.current[index];
-      conditionChatRef.current = undefined;
-    } else {
-      item = listRef.current[listRef.current.length - 1];
-    }
+    let item = listRef.current[listRef.current.length - 1];
     item.content = str;
     item.loading = false;
     dispatch(setChatList(deepClone(listRef.current)));
@@ -408,15 +388,19 @@ const ChatPreview = (props) => {
   }
   // 溯源表单重新对话
   function conditionConfirm(logId, instanceId) {
-    let item = listRef.current.filter((item) => item.logId === logId)[0];
-    item.loading = true;
-    dispatch(setChatList(deepClone(listRef.current)));
+    const reciveInitObj = deepClone(initChat);
+    let arr = [...listRef.current, reciveInitObj];
+    listRef.current = arr;
+    dispatch(setChatList(deepClone(arr)));
     dispatch(setChatRunning(true));
-    runningInstanceId.current = instanceId;
-    conditionChatRef.current = logId;
-    setIsScroll(false);
+    scrollToBottom();
+    queryInstance(runningAppid.current, runningVersion.current, instanceId);
   }
-
+  function scrollToBottom() {
+    setTimeout(() => {
+      scrollBottom();
+    }, 50);
+  }
   return (
     <div className={`
         chat-preview 
@@ -432,7 +416,6 @@ const ChatPreview = (props) => {
           <div className={ `chat-inner-left ${ inspirationOpen ? 'chat-left-close' : 'no-border'}` }>
             <ChatMessage
               feedRef={feedRef}
-              scroll={isScroll}
               chatRunningStop={chatRunningStop}
               setCheckedList={setCheckedList}
               setEditorShow={setEditorShow}

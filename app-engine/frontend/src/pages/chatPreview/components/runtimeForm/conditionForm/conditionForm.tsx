@@ -16,7 +16,7 @@ const ConditionForm = (props) => {
     if (data.formData) {
       try {
         let chartConfig2 = JSON.parse(data.formData.chartsData);
-        setFilters(data.formData.dsl);
+        setFilters(data.formData);
         setChartConfig(chartConfig2);
       } catch {
 
@@ -31,15 +31,16 @@ const ConditionForm = (props) => {
       return
     }
     let params = {
-        dimension: data.formData.dimension,
-        rewriteQuery: data.formData.rewriteQuery,
-        sourceTrace: JSON.stringify(filter)
+      dimension: data.formData.dimension,
+      rewriteQuery: data.formData.rewriteQuery,
+      restartMode: 'increment',
+      sourceTrace: JSON.stringify(filter)
     };
     reSendChat(tenantId, data.formData.instanceId, params).then((res) => {
       if (res.code !== 0) {
         Message({ type: 'warning', content: res.msg || '保存失败' });
       } else {
-        conditionConfirm(data.logId, data.formData.instanceId);
+        conditionConfirm(data.logId, res.data.current_instance_id);
       }
     })
   }
