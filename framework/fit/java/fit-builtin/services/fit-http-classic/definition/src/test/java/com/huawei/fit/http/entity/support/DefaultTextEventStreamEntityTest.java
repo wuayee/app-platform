@@ -41,8 +41,11 @@ public class DefaultTextEventStreamEntityTest {
     }
 
     private String serialize(TextEventStreamEntity eventStreamEntity) {
-        return eventStreamEntity.stream().map(textEvent -> textEvent.serialize(this.objectSerializer))
-            .reduce(String::concat).block().orElse(StringUtils.EMPTY);
+        return eventStreamEntity.stream()
+                .map(textEvent -> textEvent.serialize(this.objectSerializer))
+                .reduce(String::concat)
+                .block()
+                .orElse(StringUtils.EMPTY);
     }
 
     @Test
@@ -64,12 +67,8 @@ public class DefaultTextEventStreamEntityTest {
     @Test
     @DisplayName("测试流式返回 TextEvent 数据")
     void shouldReturnTextEventOk() {
-        TextEvent textEvent = TextEvent.builder()
-            .id("1")
-            .event("foo")
-            .retry(Duration.ofSeconds(1))
-            .comment("this is test")
-            .build();
+        TextEvent textEvent =
+                TextEvent.custom().id("1").event("foo").retry(Duration.ofSeconds(1)).comment("this is test").build();
         Choir<TextEvent> stream = Choir.just(textEvent);
         TextEventStreamEntity eventStreamEntity = new DefaultTextEventStreamEntity(this.httpMessage, stream);
         assertThat(this.serialize(eventStreamEntity)).isEqualTo("id:1\nevent:foo\nretry:1000\n:this is test\n\n");

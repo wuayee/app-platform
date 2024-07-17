@@ -9,6 +9,7 @@ import com.huawei.fit.http.entity.TextEvent;
 import com.huawei.fit.http.entity.TextEventStreamEntity;
 import com.huawei.fit.http.protocol.MimeType;
 import com.huawei.fitframework.flowable.Choir;
+import com.huawei.fitframework.inspection.Nonnull;
 import com.huawei.fitframework.util.ObjectUtils;
 
 /**
@@ -29,10 +30,13 @@ public class DefaultTextEventStreamEntity extends AbstractEntity implements Text
     public DefaultTextEventStreamEntity(HttpMessage httpMessage, Choir<?> stream) {
         super(httpMessage);
         this.stream = stream == null
-            ? Choir.empty()
-            : stream.map(data -> data instanceof TextEvent ? ObjectUtils.cast(data) : TextEvent.builder(data).build());
+                ? Choir.empty()
+                : stream.map(data -> data instanceof TextEvent
+                        ? ObjectUtils.cast(data)
+                        : TextEvent.custom(data).build());
     }
 
+    @Nonnull
     @Override
     public MimeType resolvedMimeType() {
         return MimeType.TEXT_EVENT_STREAM;

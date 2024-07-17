@@ -4,10 +4,8 @@
 
 package com.huawei.fit.http.entity;
 
-import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fit.http.entity.support.DefaultTextEvent;
 import com.huawei.fitframework.serialization.ObjectSerializer;
-import com.huawei.fitframework.util.ObjectUtils;
-import com.huawei.fitframework.util.StringUtils;
 
 import java.time.Duration;
 
@@ -17,120 +15,80 @@ import java.time.Duration;
  * @author 易文渊
  * @since 2024-07-16
  */
-public final class TextEvent {
-    private final String id;
-    private final String event;
-    private final Duration retry;
-    private final String comment;
-    private final Object data;
-
-    private TextEvent(String id, String event, Duration retry, String comment, Object data) {
-        this.id = id;
-        this.event = event;
-        this.retry = retry;
-        this.comment = comment;
-        this.data = data;
-    }
+public interface TextEvent {
+    /**
+     * 获取文本事件的唯一标识。
+     *
+     * @return 表示文本事件的唯一标识的 {@link String}。
+     */
+    String id();
 
     /**
-     * 获取 SSE 消息序列化后的文本。
+     * 获取文本事件。
+     *
+     * @return 表示文本事件的 {@link String}。
+     */
+    String event();
+
+    /**
+     * 获取需要接收文本事件的超时时间。
+     *
+     * @return 表示需要接收文本事件的超时时间的 {@link Duration}。
+     */
+    Duration retry();
+
+    /**
+     * 获取文本事件的注释。
+     *
+     * @return 表示文本事件的注释的 {@link String}。
+     */
+    String comment();
+
+    /**
+     * 获取文本事件的数据。
+     *
+     * @return 表示文本事件的数据的 {@link Object}。
+     */
+    Object data();
+
+    /**
+     * 获取当前对象序列化后的文本。
      *
      * @param objectSerializer 表示对象序列化器的 {@link ObjectSerializer}。
-     * @return 表示序列化后的 {@link String}。
+     * @return 表示序列化后的文本的 {@link String}。
      */
-    public String serialize(ObjectSerializer objectSerializer) {
-        Validation.notNull(objectSerializer, "The serializer cannot be null.");
-        StringBuilder sb = new StringBuilder();
-        serializeField("id", this.id, sb);
-        serializeField("event", this.event, sb);
-        serializeField("retry", this.retry == null ? null : this.retry.toMillis(), sb);
-        serializeComment(this.comment, sb);
-        serializeData(objectSerializer, this.data, sb);
-        return sb.toString();
-    }
-
-    private static void serializeField(String fieldName, Object fieldValue, StringBuilder sb) {
-        if (fieldValue == null) {
-            return;
-        }
-        sb.append(fieldName).append(':').append(fieldValue).append('\n');
-    }
-
-    private static void serializeComment(String comment, StringBuilder sb) {
-        if (comment == null) {
-            return;
-        }
-        sb.append(':').append(StringUtils.replace(comment, "\n", "\n:")).append('\n');
-    }
-
-    private static void serializeData(ObjectSerializer objectSerializer, Object data, StringBuilder sb) {
-        if (data == null) {
-            sb.append("\n");
-            return;
-        }
-        sb.append("data:");
-        if (data instanceof String) {
-            sb.append(StringUtils.replace(ObjectUtils.cast(data), "\n", "\ndata:"));
-        } else {
-            sb.append(objectSerializer.serialize(data));
-        }
-        sb.append("\n\n");
-    }
+    String serialize(ObjectSerializer objectSerializer);
 
     /**
-     * 创建 {@link TextEvent} 的创建器。
+     * 创建 {@link TextEvent} 的构建器。
      *
-     * @return 表示 {@link TextEvent} 创建器的 {@link Builder}。
+     * @return 表示 {@link TextEvent} 构建器的 {@link Builder}。
      */
-    public static Builder builder() {
-        return new Builder();
+    static Builder custom() {
+        return new DefaultTextEvent.Builder();
     }
 
     /**
      * 创建 {@link TextEvent} 的构建器。
      *
-     * @param data 表示事件内容的 {@link Object}。
+     * @param data 表示事件数据的 {@link Object}。
      * @return 表示 {@link TextEvent} 构建器的 {@link Builder}。
      */
-    public static Builder builder(Object data) {
-        return new Builder(data);
+    static Builder custom(Object data) {
+        return new DefaultTextEvent.Builder(data);
     }
 
     /**
-     * {@link TextEvent} 的构建器。
+     * 表示 {@link TextEvent} 的构建器。
      */
-    public static class Builder {
-        private String id;
-        private String event;
-        private Duration retry;
-        private String comment;
-        private Object data;
-
-        /**
-         * 默认创建 {@link Builder}。
-         */
-        public Builder() {
-        }
-
-        /**
-         * 根据事件内容创建 {@link Builder}。
-         *
-         * @param data 表示事件内容的 {@link Object}。
-         */
-        public Builder(Object data) {
-            this.data = data;
-        }
-
+    interface Builder {
         /**
          * 向当前构建器中设置事件编号。
          *
          * @param id 表示事件编号的 {@link String}.
          * @return 表示当前构建器的 {@link Builder}。
          */
-        public Builder id(String id) {
-            this.id = id;
-            return this;
-        }
+        Builder id(String id);
 
         /**
          * 向当前构建器中设置事件名称。
@@ -138,10 +96,7 @@ public final class TextEvent {
          * @param event 表示事件名称的 {@link String}.
          * @return 表示当前构建器的 {@link Builder}。
          */
-        public Builder event(String event) {
-            this.event = event;
-            return this;
-        }
+        Builder event(String event);
 
         /**
          * 向当前构建器中设置客户端重试时间。
@@ -149,10 +104,7 @@ public final class TextEvent {
          * @param retry 表示客户端重试时间的 {@link Duration}.
          * @return 表示当前构建器的 {@link Builder}。
          */
-        public Builder retry(Duration retry) {
-            this.retry = retry;
-            return this;
-        }
+        Builder retry(Duration retry);
 
         /**
          * 向当前构建器中设置事件注释。
@@ -160,10 +112,7 @@ public final class TextEvent {
          * @param comment 表示事件注释的 {@link String}.
          * @return 表示当前构建器的 {@link Builder}。
          */
-        public Builder comment(String comment) {
-            this.comment = comment;
-            return this;
-        }
+        Builder comment(String comment);
 
         /**
          * 向当前构建器中设置事件内容。
@@ -171,18 +120,13 @@ public final class TextEvent {
          * @param data 表示事件内容的 {@link Object}.
          * @return 表示当前构建器的 {@link Builder}。
          */
-        public Builder data(Object data) {
-            this.data = data;
-            return this;
-        }
+        Builder data(Object data);
 
         /**
          * 构建对象。
          *
          * @return 表示构建出来对象的 {@link TextEvent}。
          */
-        public TextEvent build() {
-            return new TextEvent(this.id, this.event, this.retry, this.comment, this.data);
-        }
+        TextEvent build();
     }
 }
