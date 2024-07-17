@@ -270,6 +270,11 @@ public class AippConst {
      */
     public static final String BS_DOWNLOAD_DOC_FILE_URL = "downloadDocFileUrl";
 
+    /**
+     * 表示重新对话模式的 key。
+     */
+    public static final String RESTART_MODE = "restartMode";
+
     // *** flow config key ***
 
     /**
