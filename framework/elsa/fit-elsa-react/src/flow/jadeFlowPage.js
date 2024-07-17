@@ -1,4 +1,4 @@
-import {page, uuid} from "@fit-elsa/elsa-core";
+import {page, uuid, sleep} from "@fit-elsa/elsa-core";
 import {VIRTUAL_CONTEXT_NODE} from "@/common/Consts.js";
 
 /**
@@ -242,7 +242,6 @@ export const jadeFlowPage = (div, graph, name, id) => {
         }
     });
 
-
     /**
      * 当圈选时，如果选中的图形是page，那么需要阻止默认事件，否则会**导致圈选时选中input或textarea中的文本**.
      *
@@ -252,6 +251,26 @@ export const jadeFlowPage = (div, graph, name, id) => {
     self.onMouseDown = position => {
         onMouseDown.apply(self, [position]);
         position.e.preventDefault();
+    };
+
+    /**
+     * 等待所有图形绘制完成.
+     *
+     * @return {Promise<void>} promise.
+     */
+    self.awaitShapesRendered = async () => {
+        const shapeRenderedArray = self.shapes.filter(s => s.isTypeof("jadeNode")).map(s => {
+            return {
+                id: s.id,
+                rendered: false
+            };
+        });
+        const listener = (e) => shapeRenderedArray.find(s => s.id === e.id).rendered = true;
+        self.addEventListener("shape_rendered", listener);
+        while (!shapeRenderedArray.every(s => s.rendered)) {
+            await sleep(50);
+        }
+        self.removeEventListener("shape_rendered", listener);
     };
 
     return self;

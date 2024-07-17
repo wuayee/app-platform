@@ -1,6 +1,7 @@
 import React, {createContext, useContext, useEffect, useReducer} from "react";
 import "./contentStyle.css";
 import {ConfigProvider, Form} from "antd";
+import {useUpdateEffect} from "@/components/common/UseUpdateEffect.jsx";
 
 const DataContext = createContext(null);
 const ShapeContext = createContext(null);
@@ -42,11 +43,12 @@ export const DefaultRoot = ({shape, component, disabled}) => {
     // 相当于 componentDidMount
     useEffect(() => {
         shape.observe();
+        shape.page.triggerEvent({type: "shape_rendered", value: {id: shape.id}});
     }, []);
 
-    // 当state变化是调用.
-    useEffect(() => {
-        shape.graph.onChangeCallback && shape.graph.onChangeCallback();
+    // 第一次进来不会触发，第一次发生变化时才触发.
+    useUpdateEffect(() => {
+        shape.graph.dirtied();
     }, [data]);
 
     return (<>
@@ -68,7 +70,7 @@ export const DefaultRoot = ({shape, component, disabled}) => {
                                 <DispatchContext.Provider value={dispatch}>
                                     <div className="react-node-content"
                                          style={{borderRadius: shape.borderRadius + "px"}}>
-                                        {component.getReactComponents(disabled)}
+                                        {component.getReactComponents(disabled, data)}
                                     </div>
                                 </DispatchContext.Provider>
                             </DataContext.Provider>

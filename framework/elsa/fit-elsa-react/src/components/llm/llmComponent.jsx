@@ -60,9 +60,10 @@ export const llmComponent = (jadeConfig) => {
      * 必须.
      *
      * @param disabled 是否禁用.
+     * @param data 数据.
      */
-    self.getReactComponents = (disabled) => {
-        return (<><LlmComponent disabled={disabled}/></>);
+    self.getReactComponents = (disabled, data) => {
+        return (<><LlmFormWrapper disabled={disabled} data={data}/></>);
     };
 
     /**
@@ -329,10 +330,4 @@ export const llmComponent = (jadeConfig) => {
     };
 
     return self;
-};
-
-const LlmComponent = ({disabled}) => {
-    return (<>
-        <LlmFormWrapper disabled={disabled}/>
-    </>)
 };

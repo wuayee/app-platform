@@ -96,9 +96,9 @@ export const codeComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled) => {
+    self.getReactComponents = (disabled, data) => {
         return (<>
-            <CodeWrapper disabled={disabled}/>
+            <CodeWrapper disabled={disabled} data={data}/>
         </>);
     };
 

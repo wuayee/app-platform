@@ -1,11 +1,15 @@
-import {Collapse, Popover, Form} from "antd";
+import {Collapse, Popover} from "antd";
 import {QuestionCircleOutlined} from "@ant-design/icons";
 import React from "react";
 import "./style.css";
 import {JadeObservableTree} from "@/components/common/JadeObservableTree.jsx";
-import {useDataContext, useShapeContext} from "@/components/DefaultRoot.jsx";
+import PropTypes from "prop-types";
 
 const {Panel} = Collapse;
+
+_OutputForm.propTypes = {
+    outputParams: PropTypes.array.isRequired
+};
 
 /**
  * 内容输出组件
@@ -13,11 +17,7 @@ const {Panel} = Collapse;
  * @returns {JSX.Element}
  * @constructor
  */
-export default function OutputForm() {
-    const data = useDataContext();
-    const shape = useShapeContext();
-    const outputData = data && data.outputParams;
-
+function _OutputForm({outputParams}) {
     const tips = <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
         <p>输出列表是与输入参数最匹配的信息，从所有选定的知识库中调用</p>
     </div>;
@@ -41,9 +41,15 @@ export default function OutputForm() {
                 key='Output'
             >
                 <div className={"jade-custom-panel-content"}>
-                    <JadeObservableTree data={outputData}/>
+                    <JadeObservableTree data={outputParams}/>
                 </div>
             </Panel>
         </Collapse>
     )
 }
+
+const areEqual = (prevProps, nextProps) => {
+    return prevProps.outputParams === nextProps.outputParams && prevProps.disabled === prevProps.disabled;
+};
+
+export const OutputForm =  React.memo(_OutputForm, areEqual);

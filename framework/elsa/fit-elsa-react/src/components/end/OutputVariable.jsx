@@ -3,29 +3,27 @@ import React from "react";
 import {QuestionCircleOutlined} from '@ant-design/icons';
 import "./style.css";
 import OutputVariableRow from "@/components/end/OutputVariableRow.jsx";
-import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
+import {useDispatch} from "@/components/DefaultRoot.jsx";
+import PropTypes from "prop-types";
+import ArrayUtil from "@/components/util/ArrayUtil.js";
 
 const {Panel} = Collapse;
+
+_OutputVariable.propTypes = {
+    inputParams: PropTypes.array.isRequired,
+    disabled: PropTypes.bool
+};
 
 /**
  * 输出变量的组件，包含多条输出变量的条目
  *
+ * @param inputParams 入参.
  * @param disabled 是否禁用.
  * @returns {JSX.Element}
  * @constructor
  */
-export default function OutputVariable({disabled}) {
+function _OutputVariable({inputParams, disabled}) {
     const dispatch = useDispatch();
-    const data = useDataContext();
-
-    /**
-     * 初始化数据
-     *
-     * @return {*}
-     */
-    const initData = () => {
-        return data && data.inputParams;
-    };
 
     /**
      * 处理输入发生变化的动作
@@ -75,7 +73,8 @@ export default function OutputVariable({disabled}) {
                                 </Form.Item>
                             </Col>
                         </Row>
-                        <OutputVariableRow disabled={disabled} item={initData()[0]}
+                        <OutputVariableRow disabled={disabled}
+                                           item={inputParams[0]}
                                            handleItemChange={handleItemChange}/>
                     </div>
                 </Panel>
@@ -83,3 +82,9 @@ export default function OutputVariable({disabled}) {
         </div>
     );
 }
+
+const areEqual = (prevProps, nextProps) => {
+    return prevProps.disabled === nextProps.disabled && ArrayUtil.isEqual(prevProps.inputParams, nextProps.inputParams);
+};
+
+export const OutputVariable =  React.memo(_OutputVariable, areEqual);

@@ -1,8 +1,14 @@
-import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
+import {useDispatch} from "@/components/DefaultRoot.jsx";
 import React from "react";
 import CodePanel from "@/components/code/CodePanel.jsx";
 import JadeObservableOutput from "@/components/common/JadeObservableOutput.jsx";
-import JadeInputForm from "@/components/common/JadeInputForm.jsx";
+import {JadeInputForm} from "@/components/common/JadeInputForm.jsx";
+import PropTypes from "prop-types";
+
+CodeWrapper.propTypes = {
+    data: PropTypes.object.isRequired,
+    disabled: PropTypes.bool
+};
 
 /**
  * code节点组件
@@ -10,8 +16,7 @@ import JadeInputForm from "@/components/common/JadeInputForm.jsx";
  * @return {*}
  * @constructor
  */
-export default function CodeWrapper({disabled}) {
-    const data = useDataContext();
+export default function CodeWrapper({data, disabled}) {
     const dispatch = useDispatch();
 
     /**
@@ -58,8 +63,12 @@ export default function CodeWrapper({disabled}) {
     </>);
 
     return (<>
-        <JadeInputForm disabled={disabled} items={initItems()} addItem={addItem} updateItem={updateItem}
-                       deleteItem={deleteItem} content={content}/>
+        <JadeInputForm disabled={disabled}
+                       items={initItems()}
+                       addItem={addItem}
+                       updateItem={updateItem}
+                       deleteItem={deleteItem}
+                       content={content}/>
         <CodePanel disabled={disabled} data={data} dispatch={dispatch}/>
         <JadeObservableOutput disabled={disabled}/>
     </>);
