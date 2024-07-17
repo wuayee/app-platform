@@ -15,7 +15,7 @@ import com.huawei.fit.jober.entity.InstanceInfo;
 import com.huawei.fit.jober.entity.InstanceQueryFilter;
 import com.huawei.fit.jober.entity.OperationContext;
 import com.huawei.fit.jober.entity.instance.Instance;
-import com.huawei.fit.waterflow.biz.util.TimeUtil;
+import com.huawei.fit.waterflow.common.utils.TimeUtil;
 import com.huawei.fit.waterflow.edatamate.enums.ScanStatus;
 import com.huawei.fit.waterflow.flowsengine.biz.service.entity.FlowTransCompletionInfo;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;

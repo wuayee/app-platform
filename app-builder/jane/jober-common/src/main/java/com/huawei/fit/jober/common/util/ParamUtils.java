@@ -69,6 +69,12 @@ public class ParamUtils {
         return operationContext;
     }
 
+    /**
+     * 将任务模块的操作人信息转换为jober模块的操作人信息。
+     *
+     * @param context 表示待转换的操作人信息的 {@link com.huawei.fit.jane.task.util.OperationContext}。
+     * @return jober模块的操作人信息
+     */
     public static com.huawei.fit.jober.entity.OperationContext convertOperationContext(
             com.huawei.fit.jane.task.util.OperationContext context) {
         com.huawei.fit.jober.entity.OperationContext operationContext;
@@ -83,6 +89,12 @@ public class ParamUtils {
         return operationContext;
     }
 
+    /**
+     * 将任务模块的操作人信息转换为jober模块的操作人信息。
+     *
+     * @param context 表示待转换的操作人信息的 {@link com.huawei.fit.jane.task.util.OperationContext}。
+     * @return jober模块的操作人信息
+     */
     public static OperationContext convertToInternalOperationContext(
             com.huawei.fit.jane.task.util.OperationContext context) {
         OperationContext operationContext = new OperationContext();
@@ -96,10 +108,22 @@ public class ParamUtils {
         return operationContext;
     }
 
+    /**
+     * 将jober模块的文件信息转换为任务模块的文件信息。
+     *
+     * @param file 表示待转换的文件信息的 {@link com.huawei.fit.jober.entity.File}。
+     * @return 表示转换后文件信息的 {@link com.huawei.fit.jane.task.domain.File}。
+     */
     public static com.huawei.fit.jane.task.domain.File convertFile(com.huawei.fit.jober.entity.File file) {
         return com.huawei.fit.jane.task.domain.File.custom().name(file.getName()).content(file.getContent()).build();
     }
 
+    /**
+     * 将任务模块的文件声明信息转换为jober模块的文件声明信息。
+     *
+     * @param fileDeclaration 表示待转换的文件声明信息的 {@link File.Declaration}。
+     * @return 表示转换后文件声明信息的 {@link FileDeclaration}。
+     */
     public static FileDeclaration convertDeclaration(File.Declaration fileDeclaration) {
         FileDeclaration declaration = new FileDeclaration();
         if (Objects.nonNull(fileDeclaration)) {
@@ -109,6 +133,12 @@ public class ParamUtils {
         return declaration;
     }
 
+    /**
+     * 将jober模块的文件声明信息转换为任务模块的文件声明信息。
+     *
+     * @param fileDeclaration 表示待转换的文件声明信息的 {@link FileDeclaration}。
+     * @return 表示转换后文件声明信息的 {@link File.Declaration}。
+     */
     public static File.Declaration convertDeclaration(FileDeclaration fileDeclaration) {
         return File.Declaration.custom().name(fileDeclaration.getName()).content(fileDeclaration.getContent()).build();
     }

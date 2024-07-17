@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.tianzhou.controller;
 
-import static com.huawei.fit.waterflow.biz.common.Constant.TIANZHOU_URL_PREFIX;
+import static com.huawei.fit.waterflow.tianzhou.Constant.TIANZHOU_URL_PREFIX;
 
 import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.GetMapping;
@@ -17,7 +17,6 @@ import com.huawei.fit.http.annotation.ResponseStatus;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.http.server.HttpClassicServerResponse;
-// import com.huawei.fit.jober.taskcenter.tianzhou.TianzhouAbstractController;
 import com.huawei.fit.waterflow.biz.util.Views;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.plugin.Plugin;

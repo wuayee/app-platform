@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 为标签提供管理。
+ * 为标签提供管理。这里目前先增加对外服务接口，后续拆分task service包后可转为内部依赖
  *
  * @author 梁济时 l00815032
  * @since 2023-08-14

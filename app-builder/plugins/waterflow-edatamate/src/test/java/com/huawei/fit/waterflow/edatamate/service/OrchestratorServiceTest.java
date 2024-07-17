@@ -29,6 +29,8 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowtrace.
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.repo.DefaultFlowDefinitionRepo;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowContextMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowTraceMapper;
+import com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO;
+import com.huawei.fit.waterflow.flowsengine.persist.po.FlowTracePO;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -125,7 +127,7 @@ public class OrchestratorServiceTest {
         // mock
         Mockito.when(
                 instanceService.list(anyString(), any(InstanceQueryFilter.class), anyLong(), anyInt(), anyBoolean(),
-                any(OperationContext.class))).thenReturn(resultSet);
+                        any(OperationContext.class))).thenReturn(resultSet);
         Mockito.when(flowContextsService.startFlows(anyString(), anyString(), anyString()))
                 .thenReturn(new FlowOfferId(new FlowTrans("a8f6b478"), "b8f6b478"));
 
@@ -136,38 +138,36 @@ public class OrchestratorServiceTest {
         Assertions.assertEquals("a8f6b478", flowTransId);
     }
 
-    // @Test
-    // @Disabled
-    // @DisplayName("测试终止任务成功")
-    // public void testTerminateTask() {
-    //     // arrange
-    //     String taskId = "123";
-    //     String instanceId = "f9dad40c16e5478da944e162301c20c0";
-    //     Instance instance = new Instance();
-    //     Map<String, String> map = new HashMap<>();
-    //     map.put("flow_id", "a8f6b478e2f04efca2bcdb8d5923c7a9");
-    //     map.put("flow_version", "1.0.0");
-    //     map.put("flow_config", "{\"id\": 1}");
-    //     map.put("flow_context_id", "944e162301c20c0");
-    //     instance.setInfo(map);
-    //     RangedResultSet<Instance> resultSet = new RangedResultSet<>(Collections.singletonList(instance),
-    //         new RangeResult(0, 1, 1));
-    //
-    //     FlowContextPO flowContextPO = FlowContextPO.builder().build();
-    //     flowContextPO.setTraceId("traceId");
-    //     flowContextPO.setPositionId("curNodes");
-    //     List<FlowContextPO> flowContexts = Collections.singletonList(flowContextPO);
-    //
-    //     // mock
-    //     Mockito.when(instanceService.list(anyString(), any(InstanceQueryFilter.class), anyLong(), anyInt(),
-    //         any(OperationContext.class))).thenReturn(resultSet);
-    //     Mockito.when(flowContextMapper.findByTransaction(anyString())).thenReturn(flowContexts);
-    //     Mockito.when(flowTraceMapper.find(anyString())).thenReturn(FlowTracePO.builder().build());
-    //
-    //     // act & assert
-    //     boolean result = orchestratorService.terminateTask(taskId, instanceId);
-    //     Assertions.assertTrue(result);
-    // }
+    @Test
+    @Disabled
+    @DisplayName("测试终止任务成功")
+    public void testTerminateTask() {
+        // arrange
+        Instance instance = new Instance();
+        Map<String, String> map = new HashMap<>();
+        map.put("flow_id", "a8f6b478e2f04efca2bcdb8d5923c7a9");
+        map.put("flow_version", "1.0.0");
+        map.put("flow_config", "{\"id\": 1}");
+        map.put("flow_context_id", "944e162301c20c0");
+        instance.setInfo(map);
+        RangedResultSet<Instance> resultSet =
+                new RangedResultSet<>(Collections.singletonList(instance), new RangeResult(0, 1, 1));
+
+        FlowContextPO flowContextPO = FlowContextPO.builder().build();
+        flowContextPO.setTraceId("traceId");
+        flowContextPO.setPositionId("curNodes");
+        List<FlowContextPO> flowContexts = Collections.singletonList(flowContextPO);
+
+        // mock
+        Mockito.when(
+                instanceService.list(anyString(), any(InstanceQueryFilter.class), anyLong(), anyInt(), anyBoolean(),
+                        any(OperationContext.class))).thenReturn(resultSet);
+        Mockito.when(flowContextMapper.findWithoutFlowDataByTransIdList(any())).thenReturn(flowContexts);
+        Mockito.when(flowTraceMapper.find(anyString())).thenReturn(FlowTracePO.builder().build());
+
+        // act & assert
+        Assertions.assertTrue(orchestratorService.terminateTask("123", "f9dad40c16e5478da944e162301c20c0"));
+    }
 
     @Test
     @Disabled

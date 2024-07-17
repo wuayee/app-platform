@@ -24,7 +24,7 @@ import com.huawei.fit.jober.entity.OperationContext;
 import com.huawei.fit.jober.entity.instance.Instance;
 import com.huawei.fit.jober.entity.task.Task;
 import com.huawei.fit.jober.entity.task.TaskType;
-import com.huawei.fit.waterflow.biz.util.TimeUtil;
+import com.huawei.fit.waterflow.common.utils.TimeUtil;
 import com.huawei.fit.waterflow.edatamate.client.flowsengine.request.CleanDataListQuery;
 import com.huawei.fit.waterflow.edatamate.entity.CleanTaskPageResult;
 import com.huawei.fit.waterflow.edatamate.enums.ScanStatus;
@@ -525,17 +525,7 @@ public class OrchestratorService {
             Optional<List<Map<String, String>>> optionalList = Optional.ofNullable(res.getResults());
             if (optionalList.isPresent()) {
                 List<Map<String, String>> list = optionalList.get();
-                for (Map<String, String> map : list) {
-                    // 为兼容老版本带单位的结果，如果值带单位如10G，直接返回，如果不带单位如100，先转换再返回
-                    String cleaningData = map.get("cleaning_data");
-                    try {
-                        map.put("cleaning_data", convertFromByte(Long.parseLong(cleaningData)));
-                    } catch (NumberFormatException e) {
-                        log.error("Get cleaning_data fail, clean data: {}, task id: {}.", cleaningData,
-                                dataCleanTaskId);
-                    }
-                    adaptRc1(map);
-                }
+                compatibleRc1(dataCleanTaskId, list);
             }
             log.info("Get A3000 task list success by task id {}.", dataCleanTaskId);
         } catch (NullPointerException | NumberFormatException | FitException e) {
@@ -544,6 +534,19 @@ public class OrchestratorService {
         }
         log.debug("Get A3000 task list result: {}", res);
         return res;
+    }
+
+    private void compatibleRc1(String dataCleanTaskId, List<Map<String, String>> list) {
+        for (Map<String, String> map : list) {
+            // 为兼容老版本带单位的结果，如果值带单位如10G，直接返回，如果不带单位如100，先转换再返回
+            String cleaningData = map.get("cleaning_data");
+            try {
+                map.put("cleaning_data", convertFromByte(Long.parseLong(cleaningData)));
+            } catch (NumberFormatException e) {
+                log.error("Get cleaning_data fail, clean data: {}, task id: {}.", cleaningData, dataCleanTaskId);
+            }
+            adaptRc1(map);
+        }
     }
 
     private static void adaptRc1(Map<String, String> map) {
@@ -579,13 +582,13 @@ public class OrchestratorService {
      * 根据flowTransId查询流程实例状态和百分比
      *
      * @param flowTransId 流程定义transId标识列表
-     * @param newStatus 是否计算新状态的标识
+     * @param isNewStatus 是否计算新状态的标识
      * @return 状态 对应状态计算Map结果
      */
-    public Map<String, Object> findFlowStatusByTransId(String flowTransId, boolean newStatus) {
-        log.info("Start find flow status, transId={}, newStatus={}.", flowTransId, newStatus);
-        Map<String, Object> result = flowContextsService.getFlowCompletenessByTransId(flowTransId, newStatus);
-        log.info("Find flow status successfully, transId={}, newStatus={}.", flowTransId, newStatus);
+    public Map<String, Object> findFlowStatusByTransId(String flowTransId, boolean isNewStatus) {
+        log.info("Start find flow status, transId={}, newStatus={}.", flowTransId, isNewStatus);
+        Map<String, Object> result = flowContextsService.getFlowCompletenessByTransId(flowTransId, isNewStatus);
+        log.info("Find flow status successfully, transId={}, newStatus={}.", flowTransId, isNewStatus);
 
         return result;
     }

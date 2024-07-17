@@ -10,6 +10,7 @@ import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
 import static com.huawei.fit.jober.common.ErrorCodes.NOT_SUPPORT;
 import static com.huawei.fit.jober.common.ErrorCodes.UN_EXCEPTED_ERROR;
 import static com.huawei.fit.waterflow.biz.common.Constant.STREAM_ID_SEPARATOR;
+import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.entity.OperationContext;
@@ -29,6 +30,8 @@ import com.huawei.fit.jober.entity.FlowNodeFormInfo;
 import com.huawei.fit.jober.entity.FlowNodeInfo;
 import com.huawei.fit.jober.entity.consts.NodeTypes;
 import com.huawei.fit.waterflow.biz.task.TagService;
+import com.huawei.fit.waterflow.biz.util.ControllerUtil;
+import com.huawei.fit.waterflow.biz.util.Views;
 import com.huawei.fit.waterflow.flowsengine.biz.service.FlowContextsService;
 import com.huawei.fit.waterflow.flowsengine.biz.service.FlowsService;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.context.repo.flowcontext.QueryFlowContextPersistRepo;
@@ -37,14 +40,12 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.FlowN
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.tasks.FlowTask;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowTaskType;
 import com.huawei.fit.waterflow.graph.util.FlowDefinitionParseUtils;
-import com.huawei.fit.waterflow.graph.util.Views;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.model.RangedResultSet;
 import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -54,15 +55,11 @@ import com.alibaba.fastjson.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 流程查询bff封装
@@ -73,8 +70,6 @@ import java.util.stream.Stream;
 @Component
 public class FlowsEngineWebService implements FlowsEngineService {
     private static final Logger log = Logger.get(FlowsEngineWebService.class);
-
-    private static final String UNKNOWN_IP = "unknown";
 
     private static final String UNPUBLISHED_STATUS = "unpublished";
 
@@ -146,21 +141,7 @@ public class FlowsEngineWebService implements FlowsEngineService {
                 .limit(pageSize)
                 .build();
         RangedResultSet<FlowGraphDefinition> flowList = flowsGraphRepo.getFlowList(queryParam, operationContext);
-        GetPageResponse getPageResponse = GetPageResponse.builder()
-                .code(0)
-                .msg("")
-                .count(flowList.getRange().getTotal())
-                .cursor(flowList.getRange().getOffset())
-                .data(flowList.getResults().stream().map(graph -> GetPageResponse.FlowInfo.builder()
-                        .documentId(graph.getFlowId())
-                        .text(graph.getName())
-                        .version(graph.getStatus())
-                        .createTime(graph.getCreatedAt().toString())
-                        .createUser(graph.getCreatedBy())
-                        .updateTime(graph.getUpdatedAt().toString())
-                        .updateUser(graph.getUpdatedBy())
-                        .build()).collect(Collectors.toList()))
-                .build();
+        GetPageResponse getPageResponse = buildPageResponse(flowList);
 
         log.info("FlowDefinition size: {}", getPageResponse.getData().size());
         Map<String, GetPageResponse.FlowInfo> flowInfoMap = getPageResponse.getData()
@@ -188,91 +169,29 @@ public class FlowsEngineWebService implements FlowsEngineService {
 
         flowContexts.forEach(c -> {
             GetPageResponse.FlowInfo flowInfo = flowInfoMap.get(c.get("streamId"));
-            flowInfo.setRunningInstance(ObjectUtils.cast(c.get("runningContexts")));
-            flowInfo.setAllInstance(ObjectUtils.cast(c.get("allContexts")));
-            flowInfo.setErrorInstance(ObjectUtils.cast(c.get("errorContexts")));
+            flowInfo.setRunningInstance(cast(c.get("runningContexts")));
+            flowInfo.setAllInstance(cast(c.get("allContexts")));
+            flowInfo.setErrorInstance(cast(c.get("errorContexts")));
         });
         return getPageResponse;
     }
 
-    public com.huawei.fit.jane.task.util.OperationContext contextOf(HttpClassicServerRequest request, String tenantId) {
-        String ip = compute(
-                Arrays.asList(FlowsEngineWebService::getForwardedIp, FlowsEngineWebService::getProxyClientIp,
-                        FlowsEngineWebService::getWlProxyClientIp, FlowsEngineWebService::getHttpClientIp,
-                        FlowsEngineWebService::getHttpForwardedFor), request);
-        String operator = getOperator(request);
-        return com.huawei.fit.jane.task.util.OperationContext.custom()
-                .operator(operator)
-                .operatorIp(ip)
-                .tenantId(tenantId)
-                .langage(getAcceptLangaes(request))
-                .sourcePlatform(getSourcePlatform(request))
+    private static GetPageResponse buildPageResponse(RangedResultSet<FlowGraphDefinition> flowList) {
+        return GetPageResponse.builder()
+                .code(0)
+                .msg("")
+                .count(flowList.getRange().getTotal())
+                .cursor(flowList.getRange().getOffset())
+                .data(flowList.getResults().stream().map(graph -> GetPageResponse.FlowInfo.builder()
+                        .documentId(graph.getFlowId())
+                        .text(graph.getName())
+                        .version(graph.getStatus())
+                        .createTime(graph.getCreatedAt().toString())
+                        .createUser(graph.getCreatedBy())
+                        .updateTime(graph.getUpdatedAt().toString())
+                        .updateUser(graph.getUpdatedBy())
+                        .build()).collect(Collectors.toList()))
                 .build();
-    }
-
-    private static String compute(List<Function<HttpClassicServerRequest, Optional<String>>> mappers,
-            HttpClassicServerRequest request) {
-        Optional<String> optional = Optional.empty();
-        for (Function<HttpClassicServerRequest, Optional<String>> mapper : mappers) {
-            optional = mapper.apply(request);
-            if (optional.isPresent()) {
-                break;
-            }
-        }
-        return optional.orElse(request.remoteAddress().hostAddress());
-    }
-
-    private static Optional<String> getForwardedIp(HttpClassicServerRequest request) {
-        return header(request, "X-Forwarded-For").map(value -> StringUtils.split(value, ','))
-                .map(Stream::of)
-                .orElse(Stream.empty())
-                .map(StringUtils::trim)
-                .filter(StringUtils::isNotEmpty)
-                .filter(FlowsEngineWebService::knownIp)
-                .findFirst();
-    }
-
-    private static Optional<String> getProxyClientIp(HttpClassicServerRequest request) {
-        return header(request, "Proxy-Client-IP").filter(FlowsEngineWebService::knownIp);
-    }
-
-    private static Optional<String> getWlProxyClientIp(HttpClassicServerRequest request) {
-        return header(request, "WL-Proxy-Client-IP").filter(FlowsEngineWebService::knownIp);
-    }
-
-    private static Optional<String> getHttpClientIp(HttpClassicServerRequest request) {
-        return header(request, "HTTP_CLIENT_IP").filter(FlowsEngineWebService::knownIp);
-    }
-
-    private static Optional<String> getHttpForwardedFor(HttpClassicServerRequest request) {
-        return header(request, "HTTP_X_FORWARDED_FOR").filter(FlowsEngineWebService::knownIp);
-    }
-
-    protected String getOperator(HttpClassicServerRequest request) {
-        return this.authenticator.authenticate(request).fqn();
-    }
-
-    private static String getAcceptLangaes(HttpClassicServerRequest request) {
-        return request.headers()
-                .first("Accept-Language")
-                .orElse(request.headers().first("accept-language").orElse(StringUtils.EMPTY));
-    }
-
-    private static String getSourcePlatform(HttpClassicServerRequest request) {
-        return request.headers().first("SourcePlatform").orElse(StringUtils.EMPTY);
-    }
-
-    private static Optional<String> header(HttpClassicServerRequest request, String name) {
-        return request.headers()
-                .names()
-                .stream()
-                .filter(value -> StringUtils.equalsIgnoreCase(value, name))
-                .findFirst()
-                .flatMap(request.headers()::first);
-    }
-
-    private static boolean knownIp(String ip) {
-        return !StringUtils.equalsIgnoreCase(ip, UNKNOWN_IP);
     }
 
     /**
@@ -296,8 +215,8 @@ public class FlowsEngineWebService implements FlowsEngineService {
         Map<String, Object> flowsView = Views.viewOfFlows(flowDefinition, definitionGraph);
 
         FlowSaveEntity flowSaveEntity = FlowSaveEntity.builder()
-                .id((String) flowsView.get("metaId"))
-                .version((String) flowsView.get("version"))
+                .id(cast(flowsView.get("metaId")))
+                .version(cast(flowsView.get("version")))
                 .status(UNPUBLISHED_STATUS)
                 .graphData(JSON.toJSONString(data.get("graphData")))
                 .previous(null)
@@ -392,7 +311,9 @@ public class FlowsEngineWebService implements FlowsEngineService {
         graphParam.setJson(flowSaveEntity.getGraphData());
         int ans = flowsGraphRepo.upgradeFlows(graphParam);
         if (ans != 0) {
-            String errMsg = String.format(Locale.ROOT, "upgrade flows failed. ans=%s graphParam=%s", ans,
+            String errMsg = String.format(Locale.ROOT,
+                    "upgrade flows failed. ans=%s graphParam=%s",
+                    ans,
                     JSON.toJSONString(graphParam));
             log.error(errMsg);
             throw new JobberException(UN_EXCEPTED_ERROR, errMsg);
@@ -536,10 +457,15 @@ public class FlowsEngineWebService implements FlowsEngineService {
         return request.headers().first("cookie").orElse(StringUtils.EMPTY);
     }
 
+    private com.huawei.fit.jane.task.util.OperationContext contextOf(HttpClassicServerRequest request,
+            String tenantId) {
+        return ControllerUtil.contextOf(request, tenantId, this.authenticator);
+    }
+
     @Override
     public FlowInfo getFlowDefinitionById(String definitionId, OperationContext context) {
-        FlowDefinition flowDefinition = flowsService.findFlowsById(definitionId,
-                ParamUtils.convertToInternalOperationContext(context));
+        FlowDefinition flowDefinition =
+                flowsService.findFlowsById(definitionId, ParamUtils.convertToInternalOperationContext(context));
         FlowInfo flowInfo = new FlowInfo();
         flowInfo.setFlowDefinitionId(definitionId);
         flowInfo.setFlowId(flowDefinition.getMetaId());

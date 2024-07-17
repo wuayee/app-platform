@@ -67,12 +67,12 @@ public class ParamUtilsTest {
         @DisplayName("测试null的context转换")
         void testSourceNull() {
             // given
-            com.huawei.fit.jane.task.util.OperationContext expected
-                    = com.huawei.fit.jane.task.util.OperationContext.custom().build();
+            com.huawei.fit.jane.task.util.OperationContext expected =
+                    com.huawei.fit.jane.task.util.OperationContext.custom().build();
 
             // when
-            com.huawei.fit.jane.task.util.OperationContext actual = ParamUtils.convertOperationContext(
-                    (OperationContext) null);
+            OperationContext context = null;
+            com.huawei.fit.jane.task.util.OperationContext actual = ParamUtils.convertOperationContext(context);
 
             // then
             Assertions.assertEquals(expected, actual);
@@ -115,8 +115,8 @@ public class ParamUtilsTest {
         void testSourceNull() {
 
             // when
-            OperationContext actual = ParamUtils.convertOperationContext(
-                    (com.huawei.fit.jane.task.util.OperationContext) null);
+            com.huawei.fit.jane.task.util.OperationContext context = null;
+            OperationContext actual = ParamUtils.convertOperationContext(context);
 
             // then
             Assertions.assertNull(actual.getTenantId());
@@ -170,8 +170,8 @@ public class ParamUtilsTest {
     @DisplayName("测试declaration从domain包转换为entity包")
     void testDomainDeclarationConvertEntityDeclaration() {
         // given
-        com.huawei.fit.jane.task.domain.File.Declaration declaration
-                = com.huawei.fit.jane.task.domain.File.Declaration.custom().name(name).content(content).build();
+        com.huawei.fit.jane.task.domain.File.Declaration declaration =
+                com.huawei.fit.jane.task.domain.File.Declaration.custom().name(name).content(content).build();
 
         FileDeclaration expected = new FileDeclaration();
         expected.setName(name);
@@ -180,7 +180,7 @@ public class ParamUtilsTest {
         // when
         FileDeclaration actual = ParamUtils.convertDeclaration(declaration);
 
-        //then
+        // then
         Assertions.assertEquals(expected.getName(), actual.getName());
         Assertions.assertEquals(expected.getContent(), actual.getContent());
     }

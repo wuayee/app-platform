@@ -4,8 +4,8 @@
 
 package com.huawei.fit.waterflow.edatamate.controller;
 
-import com.huawei.fitframework.annotation.Genericable;
 import com.huawei.fit.waterflow.edatamate.client.QueryCriteria;
+import com.huawei.fitframework.annotation.Genericable;
 
 import java.util.Map;
 

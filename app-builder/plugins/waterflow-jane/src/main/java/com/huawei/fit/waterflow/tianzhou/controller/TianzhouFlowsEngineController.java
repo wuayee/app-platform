@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.tianzhou.controller;
 
-import static com.huawei.fit.waterflow.biz.common.Constant.TIANZHOU_URL_PREFIX;
+import static com.huawei.fit.waterflow.tianzhou.Constant.TIANZHOU_URL_PREFIX;
 
 import com.huawei.fit.http.annotation.PathVariable;
 import com.huawei.fit.http.annotation.PostMapping;

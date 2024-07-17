@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
 package com.huawei.fit.waterflow.edatamate.client.elsa.reponse;
 
 import lombok.AllArgsConstructor;

@@ -5,7 +5,7 @@
 package com.huawei.fit.waterflow.tianzhou.controller;
 
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
-import static com.huawei.fit.waterflow.biz.common.Constant.BASE_URI_PREFIX;
+import static com.huawei.fit.waterflow.tianzhou.Constant.BASE_URI_PREFIX;
 
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PathVariable;

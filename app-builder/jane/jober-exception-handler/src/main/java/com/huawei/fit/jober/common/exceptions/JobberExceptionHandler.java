@@ -24,6 +24,7 @@ import com.huawei.fitframework.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -39,8 +40,8 @@ public class JobberExceptionHandler {
     /**
      * 默认支持语言
      */
-    public static final List<Locale> LOCALES = Arrays.asList(new Locale("en"), new Locale("zh"), new Locale("en", "US"),
-            new Locale("zh", "CN"));
+    public static final List<Locale> LOCALES = Collections.unmodifiableList(
+            Arrays.asList(new Locale("en"), new Locale("zh"), new Locale("en", "US"), new Locale("zh", "CN")));
 
     private static final Logger log = Logger.get(JobberExceptionHandler.class);
 

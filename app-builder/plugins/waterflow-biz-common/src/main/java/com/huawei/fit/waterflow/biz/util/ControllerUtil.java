@@ -81,7 +81,8 @@ public class ControllerUtil {
     }
 
     private static String getAcceptLangaes(HttpClassicServerRequest request) {
-        return request.headers().first("Accept-Language")
+        return request.headers()
+                .first("Accept-Language")
                 .orElse(request.headers().first("accept-language").orElse(StringUtils.EMPTY));
     }
 
@@ -97,7 +98,8 @@ public class ControllerUtil {
      * @param authenticator 认证器
      * @return 表示操作上下文的 {@link OperationContext}。
      */
-    public static OperationContext contextOf(HttpClassicServerRequest request, String tenantId, Authenticator authenticator) {
+    public static OperationContext contextOf(HttpClassicServerRequest request, String tenantId,
+            Authenticator authenticator) {
         String ip = compute(Arrays.asList(ControllerUtil::getForwardedIp, ControllerUtil::getProxyClientIp,
                 ControllerUtil::getWlProxyClientIp, ControllerUtil::getHttpClientIp,
                 ControllerUtil::getHttpForwardedFor), request);
@@ -122,8 +124,12 @@ public class ControllerUtil {
         return authenticator.authenticate(request).fqn();
     }
 
+    /**
+     * 向任务属性中添加类型属性。
+     *
+     * @param task 表示任务的信息 {@link Map}。
+     */
     public static void appendTypeProperty(Map<String, Object> task) {
-        List<Map<String, Object>> properties = cast(task.get("properties"));
         Map<String, Object> appearance = MapBuilder.<String, Object>get()
                 .put("config", Collections.emptyMap())
                 .put("displayOrder", -1)
@@ -137,6 +143,7 @@ public class ControllerUtil {
                 .put("name", "type")
                 .put("appearance", appearance)
                 .build();
+        List<Map<String, Object>> properties = cast(task.get("properties"));
         properties.add(property);
     }
 }

@@ -4,6 +4,8 @@
 
 package com.huawei.fit.waterflow.edatamate.controller;
 
+import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
+
 import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PathVariable;
@@ -13,13 +15,12 @@ import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.annotation.RequestParam;
 import com.huawei.fit.http.annotation.ResponseStatus;
 import com.huawei.fit.http.protocol.HttpResponseStatus;
-import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
-import com.huawei.fit.waterflow.edatamate.entity.CleanTaskPageResult;
 import com.huawei.fit.waterflow.edatamate.client.FlowConfiguration;
 import com.huawei.fit.waterflow.edatamate.client.QueryCriteria;
 import com.huawei.fit.waterflow.edatamate.client.flowsengine.request.CleanDataListQuery;
+import com.huawei.fit.waterflow.edatamate.entity.CleanTaskPageResult;
 import com.huawei.fit.waterflow.edatamate.service.OrchestratorFitService;
 import com.huawei.fit.waterflow.edatamate.service.OrchestratorService;
 import com.huawei.fitframework.annotation.Component;
@@ -77,9 +78,9 @@ public class EDataMateController implements DataCleanClientV2 {
     public void deleteFlow(@PathVariable("flow_id") String flowId, @PathVariable("version") String version,
             @PathVariable("task_id") String taskId) {
         runWithTime("deleteFlow", () -> {
-            Validation.notBlank(flowId, () -> new JobberParamException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "flowId"));
-            Validation.notBlank(version, () -> new JobberParamException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "version"));
-            Validation.notBlank(taskId, () -> new JobberParamException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "taskId"));
+            Validation.notBlank(flowId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "flowId"));
+            Validation.notBlank(version, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "version"));
+            Validation.notBlank(taskId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "taskId"));
             orchestratorFitService.deleteFlow(flowId, version, taskId);
         });
     }
@@ -224,10 +225,10 @@ public class EDataMateController implements DataCleanClientV2 {
             @PathVariable("instance_id") String instanceId, @RequestParam("pageNum") Integer pageNum,
             @RequestParam("limit") Integer limit, @RequestParam("status") String status) {
         return runWithTime("findCleanTaskPageResult", () -> {
-            Validation.notBlank(taskId, () -> new JobberParamException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "task_id"));
-            Validation.notBlank(instanceId, () -> new JobberParamException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "instanceId"));
-            Validation.notNull(pageNum, () -> new JobberParamException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "pageNum"));
-            Validation.notNull(limit, () -> new JobberParamException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "limit"));
+            Validation.notBlank(taskId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "task_id"));
+            Validation.notBlank(instanceId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "instanceId"));
+            Validation.notNull(pageNum, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "pageNum"));
+            Validation.notNull(limit, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "limit"));
             CleanTaskPageResult cleanTaskPageResult = orchestratorService.findCleanTaskPageResult(taskId, instanceId,
                     pageNum, limit, status);
             return Views.viewOf(cleanTaskPageResult);
@@ -251,11 +252,11 @@ public class EDataMateController implements DataCleanClientV2 {
             @PathVariable("instanceId") String instanceId, @PathVariable("traceId") String traceId,
             @RequestParam("pageNum") Integer pageNum, @RequestParam("limit") Integer limit,
             @RequestParam("status") String status) {
-        Validation.notBlank(taskId, () -> new JobberParamException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "task_id"));
-        Validation.notBlank(instanceId, () -> new JobberParamException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "instanceId"));
-        Validation.notBlank(traceId, () -> new JobberParamException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "traceId"));
-        Validation.notNull(pageNum, () -> new JobberParamException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "pageNum"));
-        Validation.notNull(limit, () -> new JobberParamException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "limit"));
+        Validation.notBlank(taskId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "task_id"));
+        Validation.notBlank(instanceId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "instanceId"));
+        Validation.notBlank(traceId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "traceId"));
+        Validation.notNull(pageNum, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "pageNum"));
+        Validation.notNull(limit, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "limit"));
         CleanTaskPageResult cleanTaskPageResult = orchestratorService.findCleanTaskPageResultByTraceId(taskId,
                 instanceId, traceId, pageNum, limit, status);
         return Views.viewOf(cleanTaskPageResult);

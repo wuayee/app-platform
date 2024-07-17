@@ -6,8 +6,9 @@ package com.huawei.fit.waterflow.tianzhou.controller;
 
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_EMPTY;
 import static com.huawei.fit.jober.common.ErrorCodes.INPUT_PARAM_IS_INVALID;
-import static com.huawei.fit.waterflow.biz.common.Constant.BASE_URI_PREFIX;
 import static com.huawei.fit.waterflow.common.Constant.OPERATOR_KEY;
+import static com.huawei.fit.waterflow.tianzhou.Constant.BASE_URI_PREFIX;
+import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.GetMapping;
@@ -111,7 +112,7 @@ public class FlowsEngineController {
     public void publishFlow(HttpClassicServerRequest httpRequest, HttpClassicServerResponse httpResponse,
             @PathVariable("tenant_id") String tenantId, @PathVariable("flowId") String flowId,
             @PathVariable("version") String version, @RequestBody Map<String, Object> body) {
-        Validation.notBlank((String) body.get("definitionData"),
+        Validation.notBlank(cast(body.get("definitionData")),
                 () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "definitionData"));
         checkFlowId(flowId);
         checkVersion(version);
@@ -259,10 +260,6 @@ public class FlowsEngineController {
         Validation.notBlank(tenantId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "tenant"));
         Validation.notBlank(version, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "version"));
         flowsEngineService.deleteFlows(flowId, version, new OperationContext());
-    }
-
-    private com.huawei.fit.jane.task.util.OperationContext contextOf(HttpClassicServerRequest request, String tenantId) {
-        return ControllerUtil.contextOf(request, tenantId, this.authenticator);
     }
 
     private String getOperator(HttpClassicServerRequest request) {
