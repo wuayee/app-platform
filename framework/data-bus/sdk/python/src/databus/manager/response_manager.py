@@ -6,10 +6,12 @@
 `ResponseManager`类管理从DataBus内核接收消息,确保线程安全.
 """
 import logging
-import threading
-from typing import Dict, Optional
-from dataclasses import dataclass
 import socket as socket_lib
+import threading
+import queue
+from dataclasses import dataclass
+from typing import Dict, Optional
+
 from databus.message import (
     MessageHeader, MESSAGE_HEADER_LENGTH, MESSAGE_RESPONSE_MAPPING,
     CoreMessageType, CoreMessageResponseTypeHint
@@ -18,13 +20,12 @@ from databus.message import (
 
 @dataclass
 class ResponseItem:
-    cv: threading.Condition
     message_type: Optional[CoreMessageType] = None
     response: Optional[CoreMessageResponseTypeHint] = None
 
 
 class ResponseManager(threading.Thread):
-    def __init__(self, socket: socket_lib.socket, mailbox: Dict[int, ResponseItem]):
+    def __init__(self, socket: socket_lib.socket, mailbox: Dict[int, queue.Queue[ResponseItem]]):
         super().__init__()
         self._socket = socket
         self._mailbox = mailbox
@@ -45,8 +46,7 @@ class ResponseManager(threading.Thread):
     def _handle_connection_error(self):
         logging.error("Response manager receive from DataBus core error.")
         for mail in self._mailbox.values():
-            with mail.cv:
-                mail.cv.notify_all()
+            mail.put(ResponseItem())
         if self._socket:
             try:
                 self._socket.shutdown(socket_lib.SHUT_RDWR)
@@ -65,18 +65,16 @@ class ResponseManager(threading.Thread):
             seq = header.Seq()
             ptr += MESSAGE_HEADER_LENGTH
             if seq in self._mailbox:
-                self._mailbox[seq].message_type = header.Type()
                 if header.Type() == CoreMessageType.Hello:
-                    # hello消息没有body
-                    self._mailbox[seq].response = True
+                    # hello消息没有body，用True替代确认消息为Hello
+                    self._mailbox[seq].put(ResponseItem(message_type=header.Type(), response=True))
                 else:
                     raw_body = data[ptr: ptr + header.Size()]
                     logging.debug("DataBus core response (%d-%d of %d): %s.",
                                   ptr - MESSAGE_HEADER_LENGTH, ptr + header.Size() - 1, len(data),
                                   data[ptr - MESSAGE_HEADER_LENGTH:ptr + header.Size()].hex())
-                    self._mailbox[seq].response = MESSAGE_RESPONSE_MAPPING[header.Type()].GetRootAs(raw_body)
-                # 通知线程
-                cv = self._mailbox[seq].cv
-                with cv:
-                    cv.notify()
+                    self._mailbox[seq].put(ResponseItem(
+                        message_type=header.Type(),
+                        response=MESSAGE_RESPONSE_MAPPING[header.Type()].GetRootAs(raw_body)
+                    ))
             ptr += header.Size()
