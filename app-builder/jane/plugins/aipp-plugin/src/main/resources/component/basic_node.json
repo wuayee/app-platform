@@ -15,6 +15,11 @@
     "uniqueName": ""
   },
   {
+    "type": "codeNodeState",
+    "name": "代码",
+    "uniqueName": ""
+  },
+  {
     "type": "conditionNodeCondition",
     "name": "条件",
     "uniqueName": ""
@@ -22,11 +27,6 @@
   {
     "type": "endNodeEnd",
     "name": "结束",
-    "uniqueName": ""
-  },
-  {
-    "type": "codeNodeState",
-    "name": "代码",
     "uniqueName": ""
   }
 ]
