@@ -33,8 +33,8 @@ export const endComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled) => {
-        return (<EndNodeWrapper disabled={disabled}/>);
+    self.getReactComponents = (disabled, data) => {
+        return (<EndNodeWrapper disabled={disabled} data={data}/>);
     };
 
     /**

@@ -179,6 +179,26 @@ let jadeEvent = (id, x, y, width, height, parent, drawer) => {
         return self.getToShape();
     };
 
+    /**
+     * @override
+     */
+    const load = self.load;
+    self.load = (ignoreFilter) => {
+        load.apply(self, [ignoreFilter]);
+        /**
+         * jadeEvent的坐标以及宽高变化不触发dirties.
+         *
+         * @override
+         */
+        const propertyChanged = self.propertyChanged;
+        self.propertyChanged = (property, value, preValue) => {
+            if (property === "x" || property === "y" || property === "width" || property === "height") {
+                return;
+            }
+            propertyChanged.apply(self, [property, value, preValue]);
+        };
+    };
+
     return self;
 };
 

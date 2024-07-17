@@ -47,6 +47,7 @@ function App() {
                 onModelSelectedCallback.onSelect({name: "zy-model"});
             });
             agent.onChange(() => {
+                console.log("111111");
             });
         });
     });

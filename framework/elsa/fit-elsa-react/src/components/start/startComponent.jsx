@@ -47,9 +47,9 @@ export const startComponent = (jadeConfig) => {
     /**
      * 必须.
      */
-    self.getReactComponents = (disabled) => {
+    self.getReactComponents = (disabled, data) => {
         return (<>
-            <StartComponent disabled={disabled}/>
+            <StartFormWrapper data={data} disabled={disabled}/>
         </>);
     };
 
@@ -175,10 +175,4 @@ export const startComponent = (jadeConfig) => {
     };
 
     return self;
-};
-
-const StartComponent = ({disabled}) => {
-    return (<>
-        <StartFormWrapper disabled={disabled}/>
-    </>)
 };

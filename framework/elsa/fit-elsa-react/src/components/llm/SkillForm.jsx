@@ -12,6 +12,7 @@ SkillForm.propTypes = {
     toolOptions: PropTypes.array.isRequired, // 确保 toolOptions 是一个必需的array类型
     workflowOptions: PropTypes.array.isRequired, // 确保 workflowOptions 是一个必需的array类型
     config: PropTypes.object.isRequired, // 确保 config 是一个必需的object类型
+    disable: PropTypes.bool
 };
 
 /**

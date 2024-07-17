@@ -284,6 +284,7 @@ export const JadeFlow = (() => {
         g.deSerialize(flowConfigData);
         const pageData = g.getPageData(0);
         await g.edit(0, graphDom, pageData.id);
+        await g.activePage.awaitShapesRendered();
         return jadeFlowAgent(g);
     };
 

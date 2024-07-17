@@ -1,23 +1,29 @@
 import {useState} from 'react';
 import {Button, Collapse, Popover} from 'antd';
 import {DeleteOutlined, PlusOutlined, QuestionCircleOutlined} from '@ant-design/icons';
-import StartInputForm from "./StartInputForm.jsx";
+import {StartInputForm} from "./StartInputForm.jsx";
 import "./style.css";
-import {useDataContext, useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
+import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {v4 as uuidv4} from "uuid";
 import MultiConversation from "@/components/start/MultiConversation.jsx";
+import PropTypes from "prop-types";
 
 const {Panel} = Collapse;
+
+StartFormWrapper.propTypes = {
+    data: PropTypes.object.isRequired,
+    disabled: PropTypes.bool
+};
 
 /**
  * 开始表单Wrapper
  *
+ * @param data 数据.
  * @param disabled 是否禁用.
  * @returns {JSX.Element} 开始表单Wrapper的DOM
  */
-export default function StartFormWrapper({disabled}) {
+export default function StartFormWrapper({data, disabled}) {
     const dispatch = useDispatch();
-    const data = useDataContext();
     const shape = useShapeContext();
     const config = shape.graph.configs.find(node => node.node === "startNodeStart");
     const items = data.find(item => item.name === "input").value // 找出 name 为 "input" 的项，获取value值

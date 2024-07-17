@@ -42,6 +42,7 @@ export const JadeReferenceTreeSelect = (props) => {
         const treeNode = treeMap.get(selected);
         const value = buildValue(treeMap, treeNode);
         stopObserve.current = shape.observeTo(treeNode.nId, treeNode.value, (args) => _onReferenceValueChange(args.value, args.type));
+        form.setFieldsValue({[name]: treeNode.title});
         onReferencedKeyChange({referenceNode: treeNode.nId, referenceId: treeNode.value, value});
     };
 

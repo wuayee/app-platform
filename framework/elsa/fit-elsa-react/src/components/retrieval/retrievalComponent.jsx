@@ -1,5 +1,5 @@
 import {v4 as uuidv4} from "uuid";
-import {RetrievalWrapper} from "@/components/retrieval/RetrievalWrapper.jsx";
+import RetrievalWrapper from "@/components/retrieval/RetrievalWrapper.jsx";
 
 /**
  * retrieval节点组件
@@ -62,9 +62,9 @@ export const retrievalComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled) => {
+    self.getReactComponents = (disabled, data) => {
         return (<>
-            <RetrievalWrapper disabled={disabled}/>
+            <RetrievalWrapper disabled={disabled} data={data} />
         </>);
     };
 
@@ -73,11 +73,13 @@ export const retrievalComponent = (jadeConfig) => {
      */
     self.reducers = (config, action) => {
         const _editInput = () => {
-            const newQuery = newConfig.inputParams.find(item => item.name === "query");
+            const query = newConfig.inputParams.find(item => item.name === "query");
+            const newQuery = {...query};
+            newConfig.inputParams = [...newConfig.inputParams.filter(item => item.name !== "query"), newQuery];
             action.changes.map(change => {
                 newQuery[change.key] = change.value;
-            })
-        }
+            });
+        };
 
         const _addKnowledge = () => {
             getKnowledgeValue().push({

@@ -1,18 +1,26 @@
 import SelectMode from "@/components/end/SelectMode.jsx";
-import OutputVariable from "@/components/end/OutputVariable.jsx";
+import {OutputVariable} from "@/components/end/OutputVariable.jsx";
 import ManualCheckForm from "@/components/manualCheck/ManualCheckForm.jsx";
-import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
+import {useDispatch} from "@/components/DefaultRoot.jsx";
+import PropTypes from "prop-types";
+
+EndNodeWrapper.propTypes = {
+    data: PropTypes.object.isRequired,
+    disabled: PropTypes.bool
+};
 
 /**
  * 用来封装结束节点子组件的最顶层组件
  *
+ * @param data 数据
+ * @param disabled 是否禁用.
  * @returns {JSX.Element}
  * @constructor
  */
-export default function EndNodeWrapper({disabled}) {
-    const data = useDataContext();
+export default function EndNodeWrapper({data, disabled}) {
     const dispatch = useDispatch();
     const mode = data.inputParams.find(item => item.name === "finalOutput") ? "variables" : "manualCheck";
+    const inputParams = data && data.inputParams;
 
     /**
      * 表单更改后的回调
@@ -38,10 +46,10 @@ export default function EndNodeWrapper({disabled}) {
      */
     const renderByMode = (mode) => {
         if (mode === "variables") {
-            return (<OutputVariable disabled={disabled}/>);
+            return (<OutputVariable inputParams={inputParams} disabled={disabled}/>);
         } else {
-            return (<ManualCheckForm formName={data.inputParams.find(item => item.name === "endFormName").value}
-                                     taskId={data.inputParams.find(item => item.name === "endFormId").value}
+            return (<ManualCheckForm formName={inputParams.find(item => item.name === "endFormName").value}
+                                     taskId={inputParams.find(item => item.name === "endFormId").value}
                                      handleFormChange={handleFormChange}/>);
         }
     };
