@@ -21,6 +21,7 @@ import com.huawei.fit.jober.aipp.entity.AippLogData;
 import com.huawei.fit.jober.aipp.entity.ChatAndInstanceMap;
 import com.huawei.fit.jober.aipp.entity.ChatInfo;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
+import com.huawei.fit.jober.aipp.enums.RestartModeEnum;
 import com.huawei.fit.jober.aipp.mapper.AippChatMapper;
 import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
@@ -333,6 +334,9 @@ public class AippChatServiceImpl implements AippChatService {
         List<QueryChatRsp> chatList = this.aippChatMapper.selectChatListByChatIds(chatIds);
         String chatId;
         String chatType = this.getChatType(chatList.size());
+        String restartMode = ObjectUtils.cast(additionalContext.getOrDefault(AippConst.RESTART_MODE,
+                RestartModeEnum.OVERWRITE.getMode()));
+        additionalContext.put(AippConst.RESTART_MODE, restartMode);
         CreateChatRequest body = this.buildChatBody(parentInstanceId, additionalContext);
         if (chatType == NORMAL_CHAT) {
             chatId = chatList.get(0).getChatId();
@@ -342,8 +346,10 @@ public class AippChatServiceImpl implements AippChatService {
             throw new IllegalArgumentException(StringUtils.format(
                     "The chat ids {0} match illegal num of chat sessions.", chatIds));
         }
-        this.aippChatMapper.deleteWideRelationshipByInstanceId(parentInstanceId);
-        this.aippLogService.deleteInstanceLog(parentInstanceId);
+        if (StringUtils.equals(RestartModeEnum.OVERWRITE.getMode(), restartMode)) {
+            this.aippChatMapper.deleteWideRelationshipByInstanceId(parentInstanceId);
+            this.aippLogService.deleteInstanceLog(parentInstanceId);
+        }
         return this.updateChat(chatId, body, context);
     }
 
@@ -361,7 +367,8 @@ public class AippChatServiceImpl implements AippChatService {
         // 构造updateChat需要的body
         List<AippInstLog> aippInstLogs = this.aippLogMapper.getLogsByInstanceId(instanceId);
         List<AippInstLog> questionAippInstLogs = aippInstLogs.stream()
-                .filter(item -> StringUtils.equals(item.getLogType(), AippInstLogType.QUESTION.name()))
+                .filter(item -> StringUtils.equals(item.getLogType(), AippInstLogType.QUESTION.name())
+                        || StringUtils.equals(item.getLogType(), AippInstLogType.HIDDEN_QUESTION.name()))
                 .collect(Collectors.toList());
         AippInstLog questionAippInstLog = questionAippInstLogs.get(0);
         Map<String, Object> initContext = new HashMap<>();
