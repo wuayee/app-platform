@@ -3,6 +3,7 @@ package com.huawei.fit.jober.aipp.fitable;
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.xiaohai.FileDto;
+import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.LLMService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
@@ -11,7 +12,6 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.log.Logger;
-import com.huawei.hllm.model.LlmModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class LLMTenderAnalyse implements FlowableService {
         prompt = prompt.replace("{text}", content).replace("★", "");
         String result = "";
         try {
-            result = llmService.askModelWithText(prompt, 20000, 0.0, LlmModel.QWEN_72B);
+            result = llmService.askModelWithText(prompt, 20000, 0.0, LlmModelNameEnum.QWEN_72B);
         } catch (IOException e) {
             log.error("ask model failed.", e);
         }

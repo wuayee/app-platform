@@ -28,8 +28,7 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
-
-import org.apache.commons.lang3.StringUtils;
+import com.huawei.fitframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;

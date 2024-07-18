@@ -7,6 +7,7 @@ package com.huawei.fit.jober.aipp.fitable;
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.xiaohai.FileDto;
+import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.LLMService;
 import com.huawei.fit.jober.aipp.service.OperatorService;
@@ -17,7 +18,6 @@ import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.hllm.model.LlmModel;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -96,7 +96,7 @@ public class GenerateWordDoc implements FlowableService {
         String prompt =
                 "请根据如下内容生成一个不超过20个字的标题，这个标题必须满足Linux文件名要求。\n" + AippStringUtils.textLenLimit(text,
                         AippStringUtils.MAX_TEXT_LEN);
-        String fileName = llmService.askModelWithText(prompt, LlmModel.QWEN_72B);
+        String fileName = llmService.askModelWithText(prompt, LlmModelNameEnum.QWEN_72B);
         log.info("generateFileName={}", fileName);
         // 去除双引号 单引号 空格
         return fileName.replace("\"", "").replace("'", "").replace(" ", "");

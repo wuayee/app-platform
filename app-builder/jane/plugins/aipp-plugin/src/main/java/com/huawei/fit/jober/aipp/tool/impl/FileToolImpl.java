@@ -33,7 +33,8 @@ public class FileToolImpl implements FileTool {
     public String extractFile(String filePath) {
         Integer defaultToken = 20000;
         File file = Paths.get(filePath).toFile();
-        String fileContent = this.operatorService.fileExtractor(file, FileExtensionEnum.findType(file.getName()));
+        String fileContent = this.operatorService.fileExtractor(
+                file, FileExtensionEnum.findType(file.getName()));
         return AippStringUtils.textLenLimit(fileContent, defaultToken);
     }
 }

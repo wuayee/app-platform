@@ -5,12 +5,20 @@
 package com.huawei.fit.jober.aipp.util;
 
 import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
+import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.service.LLMService;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
-import com.huawei.hllm.model.LlmModel;
+import com.huawei.jade.fel.model.openai.client.OpenAiClient;
+import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
+import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
+import com.huawei.jade.fel.model.openai.entity.chat.message.OpenAiChatMessage;
+import com.huawei.jade.fel.model.openai.entity.chat.message.Role;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Stack;
 
 /**
@@ -22,7 +30,17 @@ import java.util.Stack;
 public class LLMUtils {
     private static final Logger log = Logger.get(LLMUtils.class);
 
-    public static String askModelForJson(LLMService llmService, String prompt, int maxToken, LlmModel model)
+    /**
+     * 向LLM生成json
+     *
+     * @param llmService 表示提供LLM服务的{@link LLMService}
+     * @param prompt 表示LLM提示词的{@link String}
+     * @param maxToken 表示LLM的最大token数量
+     * @param model 表示使用的模型类型的{@link LlmModelNameEnum}
+     * @return Json结果
+     * @throws AippJsonDecodeException 从LLM获得json结果异常
+     */
+    public static String askModelForJson(LLMService llmService, String prompt, int maxToken, LlmModelNameEnum model)
             throws AippJsonDecodeException {
         try {
             String answer = llmService.askModelWithText(prompt, maxToken, 0.2d, model);
@@ -123,5 +141,36 @@ public class LLMUtils {
             }
         }
         return StringUtils.EMPTY;
+    }
+
+    /**
+     * 使用大模型来获得总结
+     *
+     * @param openAiClient 表示modelio客户端接口{@link OpenAiClient}
+     * @param prompt 表示待大模型进行总结的内容的{@link String}
+     * @param model 表示大模型类型的{@link LlmModelNameEnum}
+     * @param maxTokens 表示大模型的最大tokens的参数的{@link int}
+     * @return 大模型的返回结果
+     * @throws IOException 大模型处理异常
+     */
+    public static String askModelForSummary(
+            OpenAiClient openAiClient, String prompt, LlmModelNameEnum model, int maxTokens) throws IOException {
+        log.info("askModelForSummary with prompt: {}", prompt);
+        OpenAiChatMessage msg = OpenAiChatMessage.builder()
+                .role(Role.USER)
+                .content(prompt)
+                .build();
+        OpenAiChatCompletionRequest request = OpenAiChatCompletionRequest.builder()
+                .model(model.getValue())
+                .messages(Collections.singletonList(msg))
+                .maxTokens(maxTokens)
+                .build();
+        OpenAiChatCompletionResponse chatCompletion = openAiClient.createChatCompletion(request);
+        if (CollectionUtils.isEmpty(chatCompletion.getChoices())) {
+            log.error("openAiClient response has empty choices.");
+            return StringUtils.EMPTY;
+        }
+        return ObjectUtils.cast(chatCompletion.getChoices()
+                .get(0).getMessage().getContent());
     }
 }

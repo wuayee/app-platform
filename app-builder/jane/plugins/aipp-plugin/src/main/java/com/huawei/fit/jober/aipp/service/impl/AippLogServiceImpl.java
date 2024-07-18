@@ -38,8 +38,6 @@ import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -137,7 +135,7 @@ public class AippLogServiceImpl implements AippLogService {
         return recentLogData;
     }
 
-    @NotNull
+
     private List<String> getMetaIds(String appId, OperationContext context, String aippType) {
         return MetaUtils.getAllMetasByAppId(this.metaService, appId, aippType, context)
                 .stream()
@@ -219,7 +217,7 @@ public class AippLogServiceImpl implements AippLogService {
         return filter;
     }
 
-    @NotNull
+
     private List<AippInstLogDataDto> queryAndSortLogs(List<String> instanceIds, OperationContext context) {
         return queryRecentLogByInstanceIds(instanceIds, context).values()
                 .stream()
@@ -470,7 +468,6 @@ public class AippLogServiceImpl implements AippLogService {
      * @return 表示当前instId的路径的 {@link String}。
      */
     @Override
-    @NotNull
     public String buildPath(String instId, String parentInstId) {
         String path;
         if (parentInstId == null) {

@@ -20,9 +20,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.CollectionUtils;
-
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
+import com.huawei.fitframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -125,7 +123,7 @@ public class TzPromptWordSplicingAppToolImpl implements TzPromptWordSplicingAppT
         return inspirationsResponse.getData().getInspirations().get(0).getPromptTemplate();
     }
 
-    @Nullable
+
     private String getCategoryIdByTemplateName(String appId, String templateName) {
         Rsp<List<AppBuilderPromptCategoryDto>> promptCategoriesResponse =
             this.appBuilderPromptService.listPromptCategories(appId, this.buildOperationContext());
