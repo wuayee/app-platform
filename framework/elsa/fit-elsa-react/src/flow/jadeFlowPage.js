@@ -24,6 +24,13 @@ export const jadeFlowPage = (div, graph, name, id) => {
     self.disableContextMenu = true;
     self.moveAble = true;
     self.observableStore = ObservableStore();
+    self.mouseEvents = {
+        mouseDown: {
+            preventDefault: {
+                exclude: ["INPUT", "TEXTAREA"]
+            }
+        }
+    };
 
     /**
      * @override
@@ -247,10 +254,12 @@ export const jadeFlowPage = (div, graph, name, id) => {
      *
      * @override
      */
-    const onMouseDown = self.onMouseDown;
-    self.onMouseDown = position => {
-        onMouseDown.apply(self, [position]);
-        position.e.preventDefault();
+    const mouseDown = self.mouseDown;
+    self.mouseDown = position => {
+        mouseDown.apply(self, [position]);
+        if (!self.mouseEvents.mouseDown.preventDefault.exclude.contains(e => e === position.e.srcElement.tagName)) {
+            position.e.preventDefault();
+        }
     };
 
     /**
