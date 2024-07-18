@@ -1,7 +1,7 @@
 import {useRef, useState} from "react";
 import "./codePlaygroundStyle.css";
 import {Tester} from "@/components/common/code/Tester.jsx";
-import {CodeEditor} from "@/components/common/code/CodeEditor.jsx";
+import CodeEditor from "@/components/common/code/CodeEditor.jsx";
 import {Button, Dropdown, Space} from "antd";
 import {CloseOutlined, DownOutlined, RightOutlined} from "@ant-design/icons";
 
