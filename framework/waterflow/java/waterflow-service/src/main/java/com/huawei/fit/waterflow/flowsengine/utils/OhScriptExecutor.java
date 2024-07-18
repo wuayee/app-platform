@@ -10,6 +10,8 @@ import static com.huawei.fit.waterflow.common.Constant.PASS_DATA;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.ohscript.script.errors.GrammarSyntaxException;
+import com.huawei.fit.ohscript.script.errors.OhPanic;
+import com.huawei.fit.ohscript.script.errors.ScriptExecutionException;
 import com.huawei.fit.ohscript.script.interpreter.ASTEnv;
 import com.huawei.fit.ohscript.script.lexer.Lexer;
 import com.huawei.fit.ohscript.script.parser.AST;
@@ -24,6 +26,7 @@ import com.alibaba.fastjson.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * OhScript执行类
@@ -64,6 +67,8 @@ public final class OhScriptExecutor {
         userData.put(PASS_DATA, passDataJson);
         parserBuilder.addExternalOh(EXTERNAL_PARAMETER_KEY, userData);
         String ohScript = CODE_SEGMENT_PREFIX + FlowUtil.formatConditionRule(conditionRule);
+        String uuid = UUID.randomUUID().toString();
+        log.warn("uuid:{0}, evaluateConditionRule:{1}", uuid, ohScript);
         Object execResult = "";
         try {
             AST ast = parserBuilder.parseString("", ohScript);
@@ -74,13 +79,14 @@ public final class OhScriptExecutor {
             log.error("The FlowConditionNode failed to judge the flow condition, error message: {}, error cause: {}",
                     exceptionMsg, e.getMessage());
             throw new JobberException(ErrorCodes.FLOW_ENGINE_OHSCRIPT_GRAMMAR_ERROR, ohScript);
-        } catch (NullPointerException e) {
+        } catch (OhPanic | ScriptExecutionException | NullPointerException e) {
             String exceptionMsg = StringUtils.format("Condition rule cannot be evaluated. Condition Rule: \"{0}\"",
                     conditionRule);
             log.error("The FlowConditionNode failed to judge the flow condition, error message: {}, error cause: {}",
                     exceptionMsg, e.getMessage());
             throw new JobberException(ErrorCodes.FLOW_ENGINE_CONDITION_RULE_PARSE_ERROR, conditionRule);
         }
+        log.warn("uuid:{0}, execResult:{1}", uuid, execResult);
         if (!(execResult instanceof Boolean)) {
             String exceptionMsg = String.format("Unexpected FlowConditionNode OhScript return value. "
                     + "OhScript Content: \"%s\"; Return Value: %s", ohScript, execResult);
