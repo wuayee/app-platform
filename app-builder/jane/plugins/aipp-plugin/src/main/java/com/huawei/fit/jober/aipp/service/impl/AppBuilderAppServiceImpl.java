@@ -1071,7 +1071,7 @@ public class AppBuilderAppServiceImpl
 
     private void parseOtherMemoryType(Map<String, Object> res, ArrayNode valueArrayNode) {
         for (Map.Entry<String, Object> resEntry : res.entrySet()) {
-            if (Objects.equals(resEntry.getKey(), "memorySwitch")) {
+            if (Objects.equals(resEntry.getKey(), AippConst.MEMORY_SWITCH_KEY)) {
                 this.checkEntryType(resEntry, Boolean.class);
                 valueArrayNode.add(this.convertMemorySwitch(resEntry.getKey(),
                         ObjectUtils.cast(resEntry.getValue())));
@@ -1084,7 +1084,7 @@ public class AppBuilderAppServiceImpl
 
     private void parseUserSelect(Map<String, Object> res, ArrayNode valueArrayNode) {
         for (Map.Entry<String, Object> resEntry : res.entrySet()) {
-            if (Objects.equals(resEntry.getKey(), "memorySwitch")) {
+            if (Objects.equals(resEntry.getKey(), AippConst.MEMORY_SWITCH_KEY)) {
                 this.checkEntryType(resEntry, Boolean.class);
                 valueArrayNode.add(this.convertMemorySwitch(resEntry.getKey(),
                         ObjectUtils.cast(resEntry.getValue())));
