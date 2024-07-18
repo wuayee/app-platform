@@ -69,8 +69,6 @@ import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.store.entity.transfer.AppData;
 import com.huawei.jade.store.service.AppService;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -976,7 +974,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         return uniqueName;
     }
 
-    @NotNull
+
     private AppData buildItemData(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
         AppCategory appCategory = AppCategory.findByType(aippDto.getType())
                 .orElseThrow(() -> new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID));

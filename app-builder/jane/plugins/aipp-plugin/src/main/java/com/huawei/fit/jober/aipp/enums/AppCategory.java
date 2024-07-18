@@ -4,9 +4,9 @@
 
 package com.huawei.fit.jober.aipp.enums;
 
-import lombok.Getter;
+import com.huawei.fitframework.util.StringUtils;
 
-import org.apache.commons.lang3.StringUtils;
+import lombok.Getter;
 
 import java.util.Optional;
 

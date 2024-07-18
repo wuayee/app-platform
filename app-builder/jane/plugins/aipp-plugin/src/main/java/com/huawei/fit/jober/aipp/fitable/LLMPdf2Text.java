@@ -21,6 +21,7 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
@@ -53,8 +54,10 @@ public class LLMPdf2Text implements FlowableService {
         this.aippLogService.insertMsgLog(msg, flowData);
 
         String fileName = DataUtils.getFilePath(businessData, AippConst.BS_PDF_PATH_KEY);
-        File file = Paths.get(AippFileUtils.NAS_SHARE_DIR, fileName).toFile();
-        String result = operatorService.fileExtractor(file, Optional.of(OperatorService.FileType.PDF));
+        Path path = Paths.get(AippFileUtils.NAS_SHARE_DIR, fileName);
+        File file = path.toFile();
+        String result = operatorService.fileExtractor(
+                file, Optional.of(OperatorService.FileType.PDF));
         if (result.isEmpty()) {
             msg = "很抱歉！无法识别文件中的内容，您可以尝试换个文件";
             this.aippLogService.insertErrorLog(msg, flowData);

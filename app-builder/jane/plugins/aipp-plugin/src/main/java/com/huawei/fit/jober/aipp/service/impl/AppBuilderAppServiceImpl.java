@@ -78,8 +78,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -743,7 +741,6 @@ public class AppBuilderAppServiceImpl
                 .build();
     }
 
-    @NotNull
     private static AppBuilderConfig resetConfig(AppBuilderConfig config) {
         AppBuilderForm form = config.getForm();
         // 这里先根据旧的formId查询得到formProperties，然后设置新的formId
@@ -1246,7 +1243,7 @@ public class AppBuilderAppServiceImpl
         // TODO: 2024/4/20 0020 理应有新增的，暂时不管
     }
 
-    @NotNull
+
     private Map<String, Map<String, Object>> getJadeConfigsFromAppearance(String appearance) {
         JSONArray pages = JSONObject.parseObject(appearance).getJSONArray("pages");
         // 这个map {nodeId:{name:value}}

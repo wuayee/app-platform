@@ -8,6 +8,7 @@ import com.huawei.fit.jober.aipp.dto.audio.AudioSplitInfo;
 import com.huawei.fit.jober.aipp.dto.audio.SummaryDto;
 import com.huawei.fit.jober.aipp.dto.audio.SummarySection;
 import com.huawei.fit.jober.aipp.entity.ffmpeg.FfmpegMeta;
+import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.service.FfmpegService;
 import com.huawei.fit.jober.aipp.tool.FileExtractor;
 import com.huawei.fit.jober.aipp.util.AippFileUtils;
@@ -17,15 +18,14 @@ import com.huawei.fit.jober.aipp.util.UUIDUtil;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
+import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.log.Logger;
-import com.huawei.hllm.HllmClient;
-import com.huawei.hllm.entity.HllmChatEntity;
-import com.huawei.hllm.entity.HllmTranscriptionEntity;
-import com.huawei.hllm.model.LlmModel;
+import com.huawei.jade.fel.model.openai.client.OpenAiClient;
+import com.huawei.jade.voice.service.VoiceService;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.time.StopWatch;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,32 +66,35 @@ public class AudioExtractor implements FileExtractor {
     private static final ExecutorService SUMMARY_EXECUTOR =
             new ThreadPoolExecutor(8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
 
-    private final HllmClient hllmClient;
-
+    private final OpenAiClient openAiClient;
+    private final VoiceService voiceService;
+    private final String endpoint;
     private final FfmpegService ffmpegService;
 
-    public AudioExtractor(HllmClient hllmClient, FfmpegService ffmpegService) {
-        this.hllmClient = hllmClient;
+    public AudioExtractor(FfmpegService ffmpegService, @Fit OpenAiClient openAiClient,
+                          @Fit VoiceService voiceService, @Value("${app-engine.endpoint}") String endpoint) {
         this.ffmpegService = ffmpegService;
+        this.openAiClient = openAiClient;
+        this.voiceService = voiceService;
+        this.endpoint = endpoint;
     }
 
     private SummaryDto batchSummary(List<File> audioList, int segmentSize) throws InterruptedException, IOException {
         int taskCnt = audioList.size();
         List<String> output = new ArrayList<>(Collections.nCopies(taskCnt, null));
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
+        long startTime = System.currentTimeMillis();
         CountDownLatch countDownLatch = new CountDownLatch(taskCnt);
         for (int i = 0; i < taskCnt; ++i) {
             int id = i;
             SUMMARY_EXECUTOR.execute(() -> {
                 try {
-                    String text =
-                            hllmClient.transcribe(HllmTranscriptionEntity.builder().file(audioList.get(id)).build())
-                                    .trim();
-                    String summary = hllmClient.generate(HllmChatEntity.builder()
-                            .prompt(String.format(PROMPT, text))
-                            .tokens(16000)
-                            .build(), LlmModel.QWEN_72B);
+                    File audio = audioList.get(id);
+                    String audioPath = AippFileUtils.getFileDownloadFilePath(endpoint, audio.getPath());
+                    log.info("audio filePath: {}, audio fileName: {}", audioPath, audio.getName());
+                    String text = voiceService.getText(audioPath, audio.getName());
+                    log.info("get audio translate text: {}", text);
+                    String summary = LLMUtils.askModelForSummary(openAiClient, String.format(PROMPT, text),
+                            LlmModelNameEnum.QWEN_72B, 16000);
                     output.set(id, summary);
                 } catch (IOException e) {
                     output.set(id, "");
@@ -102,10 +105,10 @@ public class AudioExtractor implements FileExtractor {
         }
         countDownLatch.await();
         SummaryDto summaryDto = generateSummary(output, segmentSize);
-        stopWatch.stop();
+        long endTime = System.currentTimeMillis();
         log.info("Summarize {} task use time {} seconds, segment size: {} seconds.",
                 taskCnt,
-                stopWatch.getTime(TimeUnit.SECONDS),
+                (endTime - startTime) / 1000,
                 segmentSize);
         return summaryDto;
     }
@@ -115,10 +118,8 @@ public class AudioExtractor implements FileExtractor {
         StringBuilder sb = new StringBuilder();
         summaryDto.getSectionList().forEach(sec -> sb.append(sec.getText()));
         try {
-            String llmOutput = hllmClient.generate(HllmChatEntity.builder()
-                    .prompt(String.format(PROMPT, sb))
-                    .tokens(16000)
-                    .build(), LlmModel.QWEN_72B);
+            String llmOutput = LLMUtils.askModelForSummary(openAiClient, String.format(PROMPT, sb),
+                    LlmModelNameEnum.QWEN_72B, 16000);
             SummarySection section =
                     JsonUtils.parseObject(LLMUtils.tryFixLlmJsonString(llmOutput), SummarySection.class);
             summaryDto.setSummary(section.getText());

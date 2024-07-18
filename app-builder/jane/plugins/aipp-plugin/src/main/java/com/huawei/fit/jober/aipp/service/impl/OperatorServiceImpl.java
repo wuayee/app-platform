@@ -16,8 +16,8 @@ import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
 import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.StringUtils;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -317,7 +317,7 @@ public class OperatorServiceImpl implements OperatorService {
 
     private String getImageContent(File file) {
         try {
-            return this.llmService.askModelWithImage(file, null);
+            return this.llmService.askModelWithImage(file, "请描述一下图像内容");
         } catch (IOException e) {
             log.error("read image fail.", e);
             throw new AippException(AippErrCode.EXTRACT_FILE_FAILED);

@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.aipp.service;
 
 import com.huawei.fit.jober.aipp.dto.xiaohai.FileDto;
-import com.huawei.hllm.model.LlmModel;
+import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +16,10 @@ public interface LLMService {
 
     String askModelWithAudio(File audio) throws IOException;
 
-    String askModelWithText(String prompt, LlmModel model) throws IOException;
+    String askModelWithText(String prompt, LlmModelNameEnum model) throws IOException;
 
-    String askModelWithText(String prompt, int maxTokens, double temperature, LlmModel model) throws IOException;
+    String askModelWithText(String prompt, int maxTokens, double temperature, LlmModelNameEnum model)
+            throws IOException;
 
     String askXiaoHaiKnowledge(String w3Id, String question) throws IOException;
 

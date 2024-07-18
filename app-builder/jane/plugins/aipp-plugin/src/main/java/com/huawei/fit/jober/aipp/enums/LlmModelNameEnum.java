@@ -4,8 +4,6 @@
 
 package com.huawei.fit.jober.aipp.enums;
 
-import com.huawei.hllm.model.LlmModel;
-
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -18,12 +16,12 @@ import java.util.Arrays;
  */
 @Getter
 public enum LlmModelNameEnum {
-    QWEN_14B(LlmModel.QWEN_14B.name()),
-    QWEN_72B(LlmModel.QWEN_72B.name()),
-    QWEN_VL(LlmModel.QWEN_VL.name()),
-    BAICHUAN_13B(LlmModel.BAICHUAN_13B.name()),
+    QWEN_14B("Qwen-14B"),
+    QWEN_72B("Qwen-72B"),
+    QWEN_VL("qwen-vl"),
+    BAICHUAN_13B("BAICHUAN_13B"),
     XIAOHAI("XIAOHAI"),
-    UNKNOWN(LlmModel.UNKNOWN.name());
+    UNKNOWN("UNKNOWN");
 
     private final String value;
 
