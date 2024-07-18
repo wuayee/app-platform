@@ -102,9 +102,6 @@ public final class DistributedLockClient implements ExpirableDistributedLockHand
      */
     @Override
     public void deleteExpiredLocks(long timeout) {
-        if (timeout < 0) {
-            throw new IllegalArgumentException("the value of timeout  cannot be less than 0.");
-        }
         long expiredTime = repo.now() - timeout;
         synchronized (this.locks) {
             for (Iterator<DistributedLock> iterator = this.locks.values().iterator(); iterator.hasNext(); ) {
