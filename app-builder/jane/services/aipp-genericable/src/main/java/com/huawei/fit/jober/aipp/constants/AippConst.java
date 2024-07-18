@@ -517,6 +517,11 @@ public class AippConst {
     public static final String BS_AIPP_USE_MEMORY_KEY = "useMemory";
 
     /**
+     * 多轮对话开关在 config 中的 key。
+     */
+    public static final String MEMORY_SWITCH_KEY = "memorySwitch";
+
+    /**
      * aipp app attribute key
      */
     public static final String ATTR_APP_ID_KEY = "app_id";
