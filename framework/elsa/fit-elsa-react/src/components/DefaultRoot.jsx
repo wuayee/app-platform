@@ -1,7 +1,8 @@
-import React, {createContext, useContext, useEffect, useReducer} from "react";
+import React, {createContext, useContext, useEffect, useReducer, useRef} from "react";
 import "./contentStyle.css";
 import {ConfigProvider, Form} from "antd";
 import {useUpdateEffect} from "@/components/common/UseUpdateEffect.jsx";
+import {EVENT_TYPE} from "@fit-elsa/elsa-core";
 
 const DataContext = createContext(null);
 const ShapeContext = createContext(null);
@@ -21,6 +22,7 @@ export const DefaultRoot = ({shape, component, disabled}) => {
     const [data, dispatch] = useReducer(component.reducers, component.getJadeConfig());
     const id = "react-root-" + shape.id;
     const [form] = Form.useForm();
+    const domRef = useRef();
 
     /**
      * 用于图形可获取组件中的数据.
@@ -43,8 +45,24 @@ export const DefaultRoot = ({shape, component, disabled}) => {
     // 相当于 componentDidMount
     useEffect(() => {
         shape.observe();
+        shape.page.addEventListener(EVENT_TYPE.FOCUSED_SHAPES_CHANGE, onFocusedShapeChange);
         shape.page.triggerEvent({type: "shape_rendered", value: {id: shape.id}});
+        return () => {
+            shape.page.removeEventListener(EVENT_TYPE.FOCUSED_SHAPES_CHANGE, onFocusedShapeChange);
+        };
     }, []);
+
+    const onFocusedShapeChange = () => {
+        if (!domRef.current) {
+            return;
+        }
+        const focusedShapes = shape.page.getFocusedShapes();
+        if (focusedShapes.includes(shape)) {
+            domRef.current.style.pointerEvents = focusedShapes.length > 1 ? "none" : "auto";
+        } else {
+            domRef.current.style.pointerEvents = "auto";
+        }
+    };
 
     // 第一次进来不会触发，第一次发生变化时才触发.
     useUpdateEffect(() => {
@@ -57,7 +75,7 @@ export const DefaultRoot = ({shape, component, disabled}) => {
                 Tree: {nodeSelectedBg: "transparent", nodeHoverBg: "transparent"}
             }
         }}>
-            <div id={id} style={{display: "block"}}>
+            <div id={id} style={{display: "block"}} ref={domRef}>
                 <Form form={form}
                       name={`form-${shape.id}`}
                       layout="vertical" // 设置全局的垂直布局
