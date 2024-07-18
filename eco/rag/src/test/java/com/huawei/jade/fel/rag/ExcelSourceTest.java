@@ -1,24 +1,11 @@
 package com.huawei.jade.fel.rag;
 
-import com.huawei.jade.fel.engine.flows.AiFlows;
-import com.huawei.jade.fel.engine.flows.AiProcessFlow;
-import com.huawei.jade.fel.engine.flows.ConverseLatch;
-import com.huawei.jade.fel.rag.index.TableIndex;
 import com.huawei.jade.fel.rag.source.ExcelSource;
-import com.huawei.jade.fel.rag.split.TableSplitter;
-import com.huawei.jade.fel.rag.store.connector.ConnectorProperties;
-import com.huawei.jade.fel.rag.store.connector.JdbcSqlConnector;
-import com.huawei.jade.fel.rag.store.connector.JdbcType;
-import com.huawei.jade.fel.rag.store.connector.schema.DbFieldType;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class ExcelSourceTest {
     @Test
@@ -79,29 +66,5 @@ public class ExcelSourceTest {
         List<List<String>> contents = source.getContents();
         assertEquals(contents.size(), 1);
         assertEquals(contents.get(0).size(), 3);
-    }
-
-    @Disabled
-    @Test
-    void test_extract_and_store() {
-        ConnectorProperties prop = new ConnectorProperties("51.36.139.24", 5433, "postgres", "postgres");
-        JdbcSqlConnector conn = new JdbcSqlConnector(JdbcType.POSTGRESQL, prop, "wqtest");
-        ExcelSource source = new ExcelSource();
-        List<DbFieldType> type = Arrays.asList(DbFieldType.NUMBER, DbFieldType.VARCHAR, DbFieldType.VARCHAR);
-        TableIndex idx = new TableIndex(conn, type, "test");
-        TableSplitter splitter = new TableSplitter();
-
-        AiProcessFlow<List<Document>, List<Chunk>> flow = AiFlows.<List<Document>>create()
-                .split(splitter)
-                .index(idx)
-                .close();
-        ConverseLatch<List<Chunk>> converseLatch = flow.converse().offer(source);
-        source.load("src/test/testfiles/test.xlsx", 0, 1, 0);
-
-        try {
-            converseLatch.await(1000, TimeUnit.MILLISECONDS);
-        } catch (IllegalStateException e) {
-            fail();
-        }
     }
 }
