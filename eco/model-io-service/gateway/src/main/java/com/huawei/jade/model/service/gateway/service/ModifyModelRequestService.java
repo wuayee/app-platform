@@ -36,11 +36,6 @@ public class ModifyModelRequestService implements RewriteFunction<String, String
     @Override
     public Publisher<String> apply(ServerWebExchange exchange, String body) {
         try {
-            if ("disabled".equals(System.getenv("FILL_MAX_TOKENS"))) {
-                log.warn("Skip model request modification");
-                return Mono.justOrEmpty(body);
-            }
-
             String path = exchange.getRequest().getPath().toString();
             if (!path.contains("/v1/chat/completions")) {
                 log.warn("Skip endpoint: " + path);
@@ -48,20 +43,41 @@ public class ModifyModelRequestService implements RewriteFunction<String, String
             }
 
             Map<String, Object> requestBody = OBJECT_MAPPER.readValue(body, Map.class);
-            String modelName = null;
-            if (requestBody.get("model") instanceof String) {
-                modelName = (String) requestBody.get("model");
-            }
+            modifyMaxTokens(requestBody);
+            modifyTemperature(requestBody);
 
-            if (!requestBody.containsKey("max_tokens") && modelName != null
-                    && this.maxTokens.containsKey(modelName) && this.maxTokens.get(modelName) != null) {
-                Integer m = this.maxTokens.get(modelName);
-                requestBody.put("max_tokens", m);
-                log.info("Set max_tokens={} for model {}", m, modelName);
-            }
             return Mono.justOrEmpty(OBJECT_MAPPER.writeValueAsString(requestBody));
         } catch (IOException e) {
             throw new IllegalStateException("Failed to modify model request:" + e);
+        }
+    }
+
+    private void modifyMaxTokens(Map<String, Object> requestBody) {
+        if ("disabled".equals(System.getenv("FILL_MAX_TOKENS"))) {
+            log.warn("Skip model request modification");
+            return;
+        }
+
+        String modelName = null;
+        if (requestBody.get("model") instanceof String) {
+            modelName = (String) requestBody.get("model");
+        }
+
+        if (!requestBody.containsKey("max_tokens") && modelName != null
+                && this.maxTokens.containsKey(modelName) && this.maxTokens.get(modelName) != null) {
+            Integer defaultMaxTokens = this.maxTokens.get(modelName);
+            requestBody.put("max_tokens", defaultMaxTokens);
+            log.info("Set max_tokens={} for model {}", defaultMaxTokens, modelName);
+        }
+    }
+
+    private void modifyTemperature(Map<String, Object> requestBody) {
+        final double minTemperature = 0.01d;
+        if (requestBody.get("temperature") instanceof Number) {
+            if (((Number) requestBody.get("temperature")).doubleValue() < minTemperature) {
+                requestBody.put("temperature", minTemperature);
+                log.info("Set temperature to 0.01");
+            }
         }
     }
 }
