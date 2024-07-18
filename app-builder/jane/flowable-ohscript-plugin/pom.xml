@@ -49,7 +49,7 @@
         <dependency>
             <groupId>com.huawei.fit.ohscript</groupId>
             <artifactId>ohscript</artifactId>
-            <version>0.0.3.5-SNAPSHOT</version>
+            <version>0.0.3.6-SNAPSHOT</version>
         </dependency>
 
         <!-- Test -->

@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
+package com.huawei.fit.ohscript.script.parser.nodes;
+
+import com.huawei.fit.ohscript.script.lexer.Terminal;
+import com.huawei.fit.ohscript.script.parser.NonTerminal;
+
+/**
+ * 管道节点
+ *
+ * @since 1.0
+ */
+public class PipeForwardNode extends NonTerminalNode {
+    public PipeForwardNode() {
+        super(NonTerminal.PIPE_FORWARD);
+    }
+
+    @Override
+    public void optimizeDelta() {
+        SyntaxNode funcCall = null;
+        SyntaxNode arg = this.removeAt(0);
+        while (this.childCount() > 0) {
+            this.removeAt(0);
+            SyntaxNode func = this.removeAt(0);
+            funcCall = new FunctionCallNode();
+            funcCall.addChild(func);
+            func.optimizeDelta();
+            funcCall.addChild(new TerminalNode(Terminal.LEFT_PAREN));
+            funcCall.addChild(arg);
+            funcCall.addChild(new TerminalNode(Terminal.RIGHT_PAREN));
+            funcCall.optimizeGama();
+            arg = funcCall;
+        }
+        this.parent().replaceChild(this, funcCall);
+    }
+}
