@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'antd';
 import { CloseOutlined, EyeOutlined } from '@ant-design/icons';
@@ -14,12 +14,6 @@ const Skill = (props) => {
   const { tenantId } = useParams();
   const pluginMap = useRef([]);
 
-  useEffect(() => {
-    if (pluginData.length) {
-      pluginMap.current = [];
-      getPluginList();
-    }
-  }, [props.pluginData])
   const addPlugin = () => {
     setShowModal(true);
   }
@@ -83,21 +77,27 @@ const Skill = (props) => {
       navigate(`/plugin/detail/${item.uniqueName}`);
     }
   }
+  useEffect(() => {
+    if (pluginData.length) {
+      pluginMap.current = [];
+      getPluginList();
+    }
+  }, [props.pluginData])
   return (
     <>
-      <div className="control-container">
-        <div className="control">
-          <div className="control-header">
-            <div className="control-title">
+      <div className='control-container'>
+        <div className='control'>
+          <div className='control-header'>
+            <div className='control-title'>
               <Button onClick={addPlugin}>添加</Button>
             </div>
           </div>
-          <div className="control-inner">
+          <div className='control-inner'>
             {
               skillList.map((item, index) => {
                 return (
-                  <div className="item" key={index} >
-                    <span className="item-left">
+                  <div className='item' key={index} >
+                    <span className='item-left'>
                       { item.type === 'tool' ? 
                        <img src='/src/assets/images/ai/tool.png' alt='' />: 
                        <img src='/src/assets/images/ai/workflow.png' alt='' />
