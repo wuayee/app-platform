@@ -7,7 +7,9 @@ package com.huawei.jade.app.engine.announcement.mapper;
 import com.huawei.jade.app.engine.announcement.po.AnnouncementInfoPo;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,7 +30,8 @@ public interface AnnouncementInfoMapper {
     /**
      * 获取公告信息列表
      *
+     * @param currentTime 表示当前时间 {@link Date}。
      * @return 表示公告信息列表的 {@link List}{@code <}{@link AnnouncementInfoPo}{@code >}
      */
-    List<AnnouncementInfoPo> getAnnouncementInfo();
+    List<AnnouncementInfoPo> getAnnouncementInfo(@Param("currentTime") Date currentTime);
 }
