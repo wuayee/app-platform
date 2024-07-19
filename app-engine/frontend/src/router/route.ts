@@ -100,7 +100,7 @@ export const routeList: MenuItem[] = [
         label: '',
         component: AppDetail,
         hidden: true,
-      }
+      },
     ],
   },
   {
@@ -114,6 +114,7 @@ export const routeList: MenuItem[] = [
     key: '/model',
     icon: Icons.app({}),
     label: '模型服务',
+    hidden: true,
     component: Model,
     children: [
       {
@@ -153,9 +154,9 @@ export const routeList: MenuItem[] = [
         icon: Icons.app({}),
         label: '创建训练任务',
         component: ModelTrainingCreate,
-        hidden: true
-      }
-    ]
+        hidden: true,
+      },
+    ],
   },
   {
     key: '/knowledge-base',
