@@ -62,9 +62,9 @@ const MyPlugins = () => {
 
   const getPluginList = () => {
     getPluginTool(tenantId,{ pageNum, pageSize, tag:selectedCategory})
-      .then(({ data, total }) => {
-        setTotal(total);
-        setPluginData(data);
+      .then(({ data }) => {
+        setTotal(data.total);
+        setPluginData(data.toolData);
       })
   }
 
@@ -81,6 +81,12 @@ const MyPlugins = () => {
     if (value) {
       setName(value);
     }
+  }
+
+  const refreshPluginList = () => {
+    setPageNum(1);
+    setName('');
+    getPluginList();
   }
 
   return <div className='aui-block myplugin'>
@@ -117,7 +123,7 @@ const MyPlugins = () => {
       </div>
       </div>
     <div className='plugin-cards'>
-      {pluginData.map((card: any) => <PluginCard key={card.uniqueName} pluginData={card}/>)}
+      {pluginData?.map((card: any) => <PluginCard key={card.uniqueName} pluginData={card}/>)}
     </div>
     <div style={{ paddingTop: 16 }}>
       <Pagination
@@ -127,7 +133,7 @@ const MyPlugins = () => {
         pageSize={pageSize}
       />
     </div>
-    <UploadToolDrawer openSignal={openUploadDrawer}/>
+    <UploadToolDrawer openSignal={openUploadDrawer} refreshPluginList={refreshPluginList} />
   </div >
 }
 

@@ -28,27 +28,27 @@
 }
 
 .card-content{
-    word-break: break-all;
-    line-height: 22px;
-    text-align: justify;
-    height: 100%;
-    overflow-y: auto;
+  word-break: break-all;
+  line-height: 22px;
+  text-align: justify;
+  height: 100%;
+  overflow-y: auto;
 }
 .card-footer{
-    padding: 16px 0;
-    display: flex;
-    justify-content: space-between;
-    gap:32px;
-    border-top: 1px solid #ebebeb;
-    color: #808080;
-    align-items: center;
+  padding: 16px 0;
+  display: flex;
+  justify-content: space-between;
+  gap:32px;
+  border-top: 1px solid #ebebeb;
+  color: #808080;
+  align-items: center;
 }
 
 .footer-type{
-    border-radius: 10px;
+  border-radius: 10px;
 }
 
 .footer-more{
-    font-size: 24px;
-    color: #000000;
+  font-size: 24px;
+  color: #000000;
 }
