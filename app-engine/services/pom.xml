@@ -15,7 +15,6 @@
     <modules>
         <module>knowledge-base</module>
         <module>app-base</module>
-        <module>app-eval</module>
         <module>metrics</module>
     </modules>
 
