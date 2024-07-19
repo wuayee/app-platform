@@ -106,7 +106,8 @@ export default function JadeInputTree({data, updateItem, disabled}) {
     const onReferenceKeyChange = (id, e) => {
         updateItem(id, [{key: "referenceNode", value: e.referenceNode},
             {key: "referenceId", value: e.referenceId},
-            {key: "value", value: e.value}]);
+            {key: "value", value: e.value},
+            {key: "type", value: e.type}]);
     };
 
     /**

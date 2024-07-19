@@ -56,9 +56,15 @@ export default function IfForm({branch,
     };
 
     const handleReferenceKeyChange = (conditionId, itemId, e) => {
-        changeConditionConfig(branch.id, conditionId, [{key: itemId, value: [{key: "referenceNode", value: e.referenceNode},
+        changeConditionConfig(branch.id, conditionId, [{
+            key: itemId,
+            value: [
+                {key: "referenceNode", value: e.referenceNode},
                 {key: "referenceId", value: e.referenceId},
-                {key: "value", value: e.value}]}]);
+                {key: "value", value: e.value},
+                {key: "type", value: e.type}
+            ]
+        }]);
     };
 
     const handleItemChange = (conditionId, itemId, changeParams) => {
