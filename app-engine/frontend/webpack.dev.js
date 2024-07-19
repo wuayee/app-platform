@@ -51,13 +51,13 @@ module.exports = merge(common, {
     https: false,
     proxy: {
       '/api': {
-        target: 'http://80.11.128.86:30020',
+        target: 'http://80.11.128.86:30040',
         secure: false,
         changeOrigin: true,
       },
 
       '/aiApi': {
-        target: 'http://80.11.128.86:30020',
+        target: 'http://80.11.128.86:30040',
         pathRewrite: {
           '^/aiApi': '/tzaip/api/hisp', // 后端环境即为此路径
         },
@@ -65,7 +65,7 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
       '/aippApi': {
-        target: 'http://80.11.128.86:30020',
+        target: 'http://80.11.128.86:30040',
         pathRewrite: { '^/aippApi': '/api/jober/v1/api' },
         // pathRewrite: { '^/aippApi': '/v1/api' },
         secure: false,

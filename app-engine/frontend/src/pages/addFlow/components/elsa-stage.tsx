@@ -3,9 +3,7 @@ import React, { useEffect, useCallback, useState, useRef, useContext } from 'rea
 import { useParams } from 'react-router-dom';
 import { JadeFlow } from '@fit-elsa/elsa-react';
 import { debounce } from '@shared/utils/common';
-import {
-  getAppInfo,
-  updateFlowInfo, } from '@shared/http/aipp';
+import { updateFlowInfo } from '@shared/http/aipp';
 import { getAddFlowConfig } from '@shared/http/appBuilder';
 import { Message } from '@shared/utils/message';
 import { useAppDispatch } from '../../../store/hook';
@@ -77,18 +75,14 @@ const Stage = (props) => {
   // 数据实时保存
   const handleChange = useCallback(debounce(() => elsaChange(), 2000), []);
   function elsaChange() {
-    if (change.current) {
-      let graphChangeData = window.agent.serialize();
-      currentApp.current.flowGraph.appearance = graphChangeData;
-      window.agent.validate().then(() => {
-        updateAppRunningFlow();
-      }).catch((err) => {
-        let str = typeof(err) === 'string' ? err : '请输入流程必填项';
-        Message({ type: 'warning', content: str});
-      });
-    } else {
-      change.current = true;
-    }
+    let graphChangeData = window.agent.serialize();
+    currentApp.current.flowGraph.appearance = graphChangeData;
+    window.agent.validate().then(() => {
+      updateAppRunningFlow();
+    }).catch((err) => {
+      let str = typeof(err) === 'string' ? err : '请输入流程必填项';
+      Message({ type: 'warning', content: str});
+    });
   }
   // 编辑更新应用
   async function updateAppRunningFlow() {
@@ -100,7 +94,7 @@ const Stage = (props) => {
         setFlowInfo(currentApp.current);
       }
       setShowTime(true);
-      Message({ type: 'success', content: type ? '高级配置更新成功': '工具流更新成功' })
+      Message({ type: 'success', content: type ? '高级配置更新成功': '工具流更新成功' });
     }
   }
   // 拖拽完成回调
@@ -118,7 +112,6 @@ const Stage = (props) => {
       default:
         break;
     }
-
   }
   return <>
     <div

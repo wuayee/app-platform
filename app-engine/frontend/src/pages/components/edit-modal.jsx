@@ -168,13 +168,13 @@ const EditModal = (props) => {
               label="简介"
               name="description"
             >
-              <Input />
+              <TextArea rows={3} showCount maxLength={300} />
             </Form.Item>
             <Form.Item
               label="开场白"
               name="greeting"
             >
-              <TextArea rows={3} />
+              <TextArea rows={3} showCount maxLength={300}/>
             </Form.Item>
             <Form.Item
               label="分类"
