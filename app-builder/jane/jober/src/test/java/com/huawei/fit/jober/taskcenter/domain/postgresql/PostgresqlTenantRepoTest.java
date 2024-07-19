@@ -174,11 +174,6 @@ class PostgresqlTenantRepoTest {
         when(dynamicSqlExecutor.executeQuery(any(), any())).thenReturn(Collections.singletonList(dbQueryResult));
     }
 
-    @Test
-    void listTenantIdsByUserId() {
-
-    }
-
     @Nested
     @DisplayName("测试查找租户")
     class TestRetrieveTenant {

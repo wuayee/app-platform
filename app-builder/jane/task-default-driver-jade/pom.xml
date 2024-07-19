@@ -126,6 +126,12 @@
             <version>2.1.214</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jane</groupId>
+            <artifactId>jane-common-component</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
