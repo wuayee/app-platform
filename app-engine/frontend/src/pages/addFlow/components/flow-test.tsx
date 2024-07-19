@@ -15,10 +15,9 @@ const Index = (props) => {
     setTestStatus,
     setShowDebug,
     showDebug,
-    appRef,
     elsaRunningCtl
   } = props;
-  const { type, appInfo } = useContext(FlowContext);
+  const { appInfo } = useContext(FlowContext);
   const { tenantId, appId } = useParams();
   const [form] = Form.useForm();
   const timerRef = useRef(null);
@@ -40,9 +39,10 @@ const Index = (props) => {
   }
   // 点击运行
   const handleRun = async (values) => {
-    let appDto = type ? appInfo : appRef.current;
+    let graphChangeData = window.agent.serialize();
+    appInfo.flowGraph.appearance = graphChangeData;
     const params = {
-      appDto,
+      appDto: appInfo,
       context: {
         initContext: values
       }

@@ -22,6 +22,7 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
@@ -49,8 +50,10 @@ public class CompositeFileReader implements FlowableService {
         Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("CompositeFileReader business data {}", businessData);
         String fileName = DataUtils.getFilePath(businessData, AippConst.BS_FILE_PATH_KEY);
-        File file = Paths.get(AippFileUtils.NAS_SHARE_DIR, fileName).toFile();
-        String extractResult = operatorService.fileExtractor(file, FileExtensionEnum.findType(fileName));
+        Path path = Paths.get(AippFileUtils.NAS_SHARE_DIR, fileName);
+        File file = path.toFile();
+        String extractResult = operatorService.fileExtractor(
+                file, FileExtensionEnum.findType(fileName));
         if (extractResult.isEmpty()) {
             String msg = "很抱歉！无法识别文件中的内容，您可以尝试换个文件";
             this.aippLogService.insertErrorLog(msg, flowData);

@@ -585,6 +585,37 @@ public final class StringUtils {
     }
 
     /**
+     * 在指定的字符串范围中，用一个字符串替换所有的另一个字符串。
+     * <p>当 {@code newStr} 为 {@code null} 时，返回源字符串。</p>
+     *
+     * @param source 表示指定字符串的 {@link String}。
+     * @param oldStr 表示需要被替换的字符串的 {@link String}。
+     * @param newStr 表示指定的替换字符串的 {@code String}。
+     * @return 表示被替换后的字符串的 {@link String}。
+     * @see String#replace(CharSequence, CharSequence)
+     */
+    public static String replace(String source, String oldStr, String newStr) {
+        if (isEmpty(source) || isEmpty(oldStr) || newStr == null) {
+            return source;
+        }
+        int index = source.indexOf(oldStr);
+        if (index == -1) {
+            return source;
+        }
+        StringBuilder sb = new StringBuilder(source.length());
+        int pos = 0;
+        int patLen = oldStr.length();
+        while (index >= 0) {
+            sb.append(source, pos, index);
+            sb.append(newStr);
+            pos = index + patLen;
+            index = source.indexOf(oldStr, pos);
+        }
+        sb.append(source, pos, source.length());
+        return sb.toString();
+    }
+
+    /**
      * 分隔字符串。
      *
      * @param source 表示待分隔的原始字符串的 {@link String}。

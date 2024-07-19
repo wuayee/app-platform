@@ -270,6 +270,11 @@ public class AippConst {
      */
     public static final String BS_DOWNLOAD_DOC_FILE_URL = "downloadDocFileUrl";
 
+    /**
+     * 表示重新对话模式的 key。
+     */
+    public static final String RESTART_MODE = "restartMode";
+
     // *** flow config key ***
 
     /**
@@ -333,6 +338,16 @@ public class AippConst {
      * aipp publish_at attribute key
      */
     public static final String ATTR_PUBLISH_TIME_KEY = "publish_at";
+
+    /**
+     * aipp publish description
+     */
+    public static final String ATTR_PUBLISH_DESCRIPTION = "publish_description";
+
+    /**
+     * aipp unique name
+     */
+    public static final String ATTR_UNIQUE_NAME = "unique_name";
 
     /**
      * aipp start_form_id attribute key
@@ -500,6 +515,11 @@ public class AippConst {
      * use memory
      */
     public static final String BS_AIPP_USE_MEMORY_KEY = "useMemory";
+
+    /**
+     * 多轮对话开关在 config 中的 key。
+     */
+    public static final String MEMORY_SWITCH_KEY = "memorySwitch";
 
     /**
      * aipp app attribute key

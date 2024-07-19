@@ -19,8 +19,6 @@ import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -76,7 +74,7 @@ public class FormUtils {
      * @param parentInstanceId 表示父实例 Id 的 {@link String}。
      * @return 表示构建后的表单数据的 {@link Map}{@code <}{@link String}{@code , }{@link Object}。
      */
-    @NotNull
+
     public static Map<String, Object> buildFormData(Map<String, Object> businessData, AppBuilderForm appBuilderForm,
             String parentInstanceId) {
         Map<String, Object> form = new HashMap<>();

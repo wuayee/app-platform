@@ -25,8 +25,6 @@ import com.alibaba.fastjson.JSONObject;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,14 +106,14 @@ public class ReleaseElsaPpt implements FlowableService {
         return flowData;
     }
 
-    @NotNull
+
     private JSONObject buildElsaPptGraph(Map<String, Object> businessData) {
         String data = (String) businessData.get(AippConst.BS_PPT_JSON_RESULT);
         JSONObject pptJson = JSONObject.parseObject(data);
         return build(pptJson);
     }
 
-    @NotNull
+
     private String buildResult(OperationContext context, JSONObject graph) {
         Map<String, String> result = new HashMap<>();
         result.put("title", graph.getString("title") + ".elsa");
@@ -141,7 +139,7 @@ public class ReleaseElsaPpt implements FlowableService {
         log.info("saveElsaPpt result:{}", saveResult);
     }
 
-    @NotNull
+
     private String buildUrl(String endpoint, String tenantId, String graphId) {
         return endpoint + "/elsa/" + tenantId + "/presentation/detail/" + graphId + "?templateId=blank";
     }

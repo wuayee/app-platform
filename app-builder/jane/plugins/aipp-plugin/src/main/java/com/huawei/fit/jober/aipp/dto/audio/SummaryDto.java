@@ -9,13 +9,12 @@ import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.LLMUtils;
 import com.huawei.fitframework.annotation.Property;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class SummaryDto {
 
     public SummaryDto(List<String> summaryList, int segmentSize) {
         this.sectionList = new ArrayList<>();
-        if (ObjectUtils.isNotEmpty(summaryList)) {
+        if (CollectionUtils.isNotEmpty(summaryList)) {
             for (int i = 0; i < summaryList.size(); ++i) {
                 String item = summaryList.get(i);
                 if (StringUtils.isBlank(item)) {

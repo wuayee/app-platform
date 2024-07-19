@@ -116,10 +116,7 @@ public class ModelTest {
         private final AiProcessFlow<Tip, String> flow = AiFlows.<Tip>create()
             .prompt(Prompts.human("answer: {{0}}"))
             .generate(this.model)
-            .reduce(() -> "", (acc, input) -> {
-                acc += input.text();
-                return acc;
-            })
+            .reduce(() -> "", (acc, input) -> acc + input.text())
             .close();
 
         @Test
@@ -146,10 +143,8 @@ public class ModelTest {
             result.set(null);
             AiFlows.<Tip>create().prompt(Prompts.human("answer: {{0}}").memory("0"))
                 .generate(this.model)
-                .reduce(() -> "", (acc, input) -> {
-                    acc += input.text();
-                    return acc;
-                }).close()
+                .reduce(() -> "", (acc, input) -> acc + input.text())
+                .close()
                 .converse().doOnSuccess(result::set).bind(memory)
                 .offer(Tip.fromArray("test streaming model")).await();
 
@@ -184,10 +179,7 @@ public class ModelTest {
                 AiFlows.<Tip>create()
                     .prompt(Prompts.human("{{0}}"))
                     .generate(this.model)
-                    .reduce(() -> "", (acc, input) -> {
-                        acc += input.text();
-                        return acc;
-                    })
+                    .reduce(() -> "", (acc, input) -> acc + input.text())
                     .map((m, ctx) -> {
                         result.updateAndGet(list -> {
                             list.add(m);
@@ -214,10 +206,7 @@ public class ModelTest {
             Conversation<Tip, String> exceptionConverse = AiFlows.<Tip>create()
                 .prompt(Prompts.human("{{0}}"))
                 .generate(exceptionModel)
-                .reduce(() -> "", (acc, input) -> {
-                    acc += input.text();
-                    return acc;
-                })
+                .reduce(() -> "", (acc, input) -> acc + input.text())
                 .close().converse().bind(memory);
 
             assertThatThrownBy(() -> exceptionConverse.offer(Tip.fromArray("test streaming exception")).await())

@@ -16,5 +16,6 @@
         <module>fel/java</module>
         <module>fit/java</module>
         <module>waterflow/java</module>
+        <module>ohscript</module>
     </modules>
 </project>

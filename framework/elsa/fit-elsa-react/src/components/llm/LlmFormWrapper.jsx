@@ -1,21 +1,27 @@
-import ModelForm from "./ModelForm.jsx";
-import JadeInputForm from '../common/JadeInputForm.jsx';
-import LlmOutput from './LlmOutput.jsx';
+import {ModelForm} from "./ModelForm.jsx";
+import {JadeInputForm} from '../common/JadeInputForm.jsx';
+import {LlmOutput} from './LlmOutput.jsx';
 import SkillForm from "./SkillForm.jsx";
 import "./style.css";
-import {useDataContext, useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
-import {useState, useEffect} from "react";
+import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
+import {useEffect, useState} from "react";
 import httpUtil from "../util/httpUtil.jsx";
+import PropTypes from "prop-types";
+
+LlmFormWrapper.propTypes = {
+    data: PropTypes.object.isRequired,
+    disabled: PropTypes.bool
+};
 
 /**
  * 大模型表单Wrapper
  *
+ * @param data 数据.
  * @param disabled 是否禁用.
  * @returns {JSX.Element} 大模型表单Wrapper的DOM
  */
-export default function LlmFormWrapper({disabled}) {
+export default function LlmFormWrapper({data, disabled}) {
     const dispatch = useDispatch();
-    const data = useDataContext();
     const shape = useShapeContext();
     let config;
     if (!shape || !shape.graph || !shape.graph.configs) {
@@ -26,6 +32,14 @@ export default function LlmFormWrapper({disabled}) {
     const [modelOptions, setModelOptions] = useState([]);
     const [toolOptions, setToolOptions] = useState([]);
     const [workflowOptions, setWorkflowOptions] = useState([]);
+    const modelData = {
+        model: data.inputParams.find(item => item.name === "model"),
+        temperature: data.inputParams.find(item => item.name === "temperature"),
+        systemPrompt: data.inputParams.find(item => item.name === "systemPrompt"),
+        prompt: data.inputParams.filter(item => item.name === "prompt")
+                .flatMap(item => item.value)
+                .find(item => item.name === "template")
+    };
 
     const initItems = () => {
         return data.inputParams
@@ -33,7 +47,7 @@ export default function LlmFormWrapper({disabled}) {
             .flatMap(item => item.value) // 将每个符合条件的项的 value 属性展开成一个数组
             .filter(item => item.name === "variables") // 找出 name 为 "variable" 的项
             .flatMap(item => item.value) // 将每个符合条件的项的 value 属性展开成一个数组
-    }
+    };
 
     const addItem = (id) => {
         dispatch({actionType: "addInputParam", id: id});
@@ -46,6 +60,12 @@ export default function LlmFormWrapper({disabled}) {
     const deleteItem = (id) => {
         dispatch({actionType: "deleteInputParam", id: id});
     };
+
+    const content = (<>
+        <div>
+            <p>输入需要添加到提示词模板中的信息，可被提示词模板引用</p>
+        </div>
+    </>);
 
     useEffect(() => {
         if (!config || !config.urls) {
@@ -62,7 +82,7 @@ export default function LlmFormWrapper({disabled}) {
                     };
                 })));
             }
-            if(!config.urls.toolListEndpoint) {
+            if (!config.urls.toolListEndpoint) {
                 console.error('Cannot get config.urls.toolListEndpoint.');
             } else {
                 httpUtil.get(config.urls.toolListEndpoint + '/tools?pageNum=1&pageSize=10&includeTags=FIT&excludeTags=Config', {}, (jsonData) => setToolOptions(jsonData.data.map(item => {
@@ -87,10 +107,15 @@ export default function LlmFormWrapper({disabled}) {
 
     return (
         <div>
-            <JadeInputForm disabled={disabled} items={initItems()} addItem={addItem} updateItem={updateItem} deleteItem={deleteItem}/>
-            <ModelForm disabled={disabled} shapeId={shape.id} modelOptions={modelOptions}/>
+            <JadeInputForm disabled={disabled}
+                           items={initItems()}
+                           addItem={addItem}
+                           updateItem={updateItem}
+                           deleteItem={deleteItem}
+                           content={content}/>
+            <ModelForm disabled={disabled} modelData={modelData} shapeId={shape.id} modelOptions={modelOptions}/>
             <SkillForm disabled={disabled} toolOptions={toolOptions} workflowOptions={workflowOptions} config={config}/>
-            <LlmOutput/>
+            <LlmOutput outputItems={data.outputParams}/>
         </div>
     );
 }

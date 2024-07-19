@@ -1,26 +1,23 @@
+import React from "react";
 import {Collapse, Popover} from 'antd';
 import {QuestionCircleOutlined} from '@ant-design/icons';
-import {useDataContext, useShapeContext} from "@/components/DefaultRoot.jsx";
 import "../common/style.css";
 import {JadeObservableTree} from "@/components/common/JadeObservableTree.jsx";
+import PropTypes from "prop-types";
 
 const {Panel} = Collapse;
+
+_LlmOutput.propTypes = {
+    outputItems: PropTypes.array.isRequired
+};
 
 /**
  * 大模型节点输出表单。
  *
+ * @param outputItems 出参.
  * @returns {JSX.Element} 大模型节点输出表单的DOM。
  */
-export default function LlmOutput() {
-    const shape = useShapeContext();
-    const data = useDataContext();
-
-    const initItems = () => {
-        return data.outputParams;
-    };
-
-    const outputItems = initItems();
-
+function _LlmOutput({outputItems}) {
     // 430演示大模型输出不需要新增和删除，暂时屏蔽
     // 添加新元素到 items 数组中，并将其 key 添加到当前展开的面板数组中
     // const addItem = () => {
@@ -172,3 +169,10 @@ export default function LlmOutput() {
         </Collapse>
     );
 }
+
+// 对象不变，不刷新组件.
+const areEqual = (prevProps, nextProps) => {
+    return prevProps.outputItems === nextProps.outputItems;
+};
+
+export const LlmOutput =  React.memo(_LlmOutput, areEqual);

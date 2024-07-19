@@ -4,15 +4,20 @@ import { Icons } from '../../../components/icons';
 import { StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import '../styles/tool-card.scss';
+import { useAppSelector } from '../../../store/hook';
+import { getAppInfoByVersion } from '../../../shared/http/aipp';
 
 const ToolCard = ({ pluginData, tenantId }: any) => {
   const navigate = useNavigate();
+  const appId = useAppSelector((state) => state.appStore.appId);
+
   // 类型处理
-  const detailClick = () => {
+  const detailClick = async() => {
    if (pluginData.tags.includes('WATERFLOW')) {
-    if (pluginData.runnables.APP) {
-      let { appId } =  pluginData.runnables.APP
-      navigate(`/app-develop/${tenantId}/app-detail/flow-detail/${appId}`);
+    const res = await getAppInfoByVersion(tenantId, pluginData?.runnables?.APP?.appId);
+    if (res.data.id) {
+      sessionStorage.setItem('appId', appId);
+      navigate(`/app-develop/${tenantId}/app-detail/add-flow/${res?.data?.id}`);
     }
    } else {
     navigate(`/plugin/detail/${pluginData.uniqueName}`)
@@ -34,6 +39,7 @@ const ToolCard = ({ pluginData, tenantId }: any) => {
             {  pluginData.tags.includes('WATERFLOW') || pluginData.tags.includes('HUGGINGFACE') ? 
               <img src='/src/assets/images/ai/workflow.png' alt='' /> : 
               <img src='/src/assets/images/ai/application.png' alt='' />}
+              <span hidden={!pluginData?.version}><Tag className='version' bordered={false} >V{pluginData?.version}</Tag></span>
           </div>
         </div>
         <div className='plugin-card-user'>
@@ -51,11 +57,11 @@ const ToolCard = ({ pluginData, tenantId }: any) => {
       <Flex gap={16}>
         <span>
           <UserOutlined style={{ marginRight: 8 }} />
-          2.36k
+          {pluginData.downloadCount}
         </span>
         <span>
           <StarOutlined style={{ marginRight: 8 }} />
-          126
+          {pluginData.likeCount}
         </span>
       </Flex>
     </div>

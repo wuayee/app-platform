@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Checkbox } from 'antd';
+import { ChatUserIcon } from '@assets/icon';
 import { trans } from '@shared/utils/common';
 import { ChatContext } from '../../../aippIndex/context';
 import SendBtn from './send-btn.jsx';
@@ -31,16 +32,14 @@ const SendBox = (props) => {
     <div className='send-box'>
       { showCheck && <Checkbox className='check-box' checked={checked} onChange={onChange}></Checkbox>}
       <div className='user-image'>
-        { employeeNumber ? <img src={`https://w3.huawei.com/w3lab/rest/yellowpage/face/${employeeNumber}/120`}/> : 
-          <img src={`https://w3.huawei.com/w3lab/rest/yellowpage/face/default/120`}/>
-        } 
+        <ChatUserIcon /> 
         <span title={currentUser}>{currentUser}</span>
       </div>
       <div className='send-info'>
         <span className="send-info-inner">
           { sendType === 'text' ? 
             (<div dangerouslySetInnerHTML={{ __html: trans(content) }}></div>) : 
-            (<ImgSendBox sendType={sendType} content={content} />) 
+            (<ImgSendBox sendType={sendType} content={content} isRecieve={false} />) 
           }
           {
             showIcon && <SendBtn content={content} sendType={sendType} />

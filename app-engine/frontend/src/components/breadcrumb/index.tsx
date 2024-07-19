@@ -37,7 +37,12 @@ const BreadcrumbSelf = ({currentLabel, searchFlag = false}: {currentLabel?: stri
   return (
     <Breadcrumb style={{ margin: '4px 0' }}>
     {breadcrumb.map((route, index)=> (<>
-      <Breadcrumb.Item key={route.key} href={'#'+route.key + searchData}>{index === breadcrumb.length -1 ? currentLabel || route.title || route.label : route.title || route.label}</Breadcrumb.Item>
+      <Breadcrumb.Item 
+        key={route.key} 
+        href={'#'+route.key + searchData}
+      >
+        {index === breadcrumb.length -1 ? currentLabel || route.title || route.label : route.title || route.label}
+      </Breadcrumb.Item>
     </>))}
   </Breadcrumb>
   );

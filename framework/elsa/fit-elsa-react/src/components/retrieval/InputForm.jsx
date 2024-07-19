@@ -1,25 +1,30 @@
 import {Col, Collapse, Form, Popover, Row} from "antd";
 import {QuestionCircleOutlined} from "@ant-design/icons";
 import React from "react";
-import {useDataContext, useDispatch, useFormContext} from "@/components/DefaultRoot.jsx";
+import {useDispatch, useFormContext} from "@/components/DefaultRoot.jsx";
 import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSelect.jsx";
 import {JadeStopPropagationSelect} from "../common/JadeStopPropagationSelect.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
+import PropTypes from "prop-types";
 
 const {Panel} = Collapse;
+
+_InputForm.propTypes = {
+    queryData: PropTypes.object.isRequired,
+    disabled: PropTypes.bool
+};
 
 /**
  * 输入节点组件
  *
+ * @param queryData 数据.
  * @param disabled 禁用.
  * @returns {JSX.Element}
  */
-export default function InputForm({disabled}) {
+function _InputForm({queryData, disabled}) {
     const dispatch = useDispatch();
-    const data = useDataContext();
-    const currentData = data && data.inputParams.find(item => item.name === "query");
     const form = useFormContext();
-    const name = `input-${currentData.id}`;
+    const name = `input-${queryData.id}`;
 
     /**
      * 处理输入发生变化的动作
@@ -118,13 +123,12 @@ export default function InputForm({disabled}) {
                 return null;
         }
     };
+
     const tips = <div className={"jade-font-size"}><p>输入需要从知识库中匹配的关键信息</p></div>;
 
     return (<div>
-        <Collapse bordered={false} className="jade-custom-collapse"
-                  defaultActiveKey={['Input']}>
-            <Panel
-                    header={
+        <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={['Input']}>
+            <Panel header={
                         <div className="panel-header">
                             <span className="jade-panel-header-font">输入</span>
                             <Popover content={tips}>
@@ -148,17 +152,15 @@ export default function InputForm({disabled}) {
                             </Form.Item>
                         </Col>
                     </Row>
-
                     <Row>
                         <Col span={8} style={{display: "flex", paddingTop: "5px"}}>
                             <span className="retrieval-starred-text jade-font-size">query</span>
                         </Col>
-
                         <Col span={8} style={{paddingRight: 0}}>
                             <Form.Item id={`valueSource`} initialValue="Reference">
                                 <JadeStopPropagationSelect
                                     disabled={disabled}
-                                    id={`valueSource-select-${currentData.id}`}
+                                    id={`valueSource-select-${queryData.id}`}
                                     className={"value-source-custom jade-select"}
                                     style={{width: "100%"}}
                                     onChange={(value) => {
@@ -170,16 +172,16 @@ export default function InputForm({disabled}) {
                                                 {key: "referenceId", value: ""},
                                                 {key: "referenceKey", value: ""}]
                                         }
-                                        handleItemChange(currentData.id, changes);
-                                        form.resetFields([`reference-${currentData.id}`, name]);
+                                        handleItemChange(queryData.id, changes);
+                                        form.resetFields([`reference-${queryData.id}`, name]);
                                     }}
                                     options={[{value: 'Reference', label: '引用'}, {value: 'Input', label: '输入'}]}
-                                    value={currentData.from}
+                                    value={queryData.from}
                                 />
                             </Form.Item>
                         </Col>
                         <Col span={8} style={{paddingLeft: 0}}>
-                            {renderComponent(currentData)} {/* 渲染对应的组件 */}
+                            {renderComponent(queryData)} {/* 渲染对应的组件 */}
                         </Col>
                     </Row>
                 </div>
@@ -187,3 +189,9 @@ export default function InputForm({disabled}) {
         </Collapse>
     </div>)
 }
+
+const areEqual = (prevProps, nextProps) => {
+    return prevProps.queryData === nextProps.queryData && prevProps.disabled === prevProps.disabled;
+};
+
+export const InputForm =  React.memo(_InputForm, areEqual);

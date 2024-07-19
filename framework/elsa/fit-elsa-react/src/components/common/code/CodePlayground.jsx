@@ -1,7 +1,7 @@
 import {useRef, useState} from "react";
 import "./codePlaygroundStyle.css";
 import {Tester} from "@/components/common/code/Tester.jsx";
-import {CodeEditor} from "@/components/common/code/CodeEditor.jsx";
+import CodeEditor from "@/components/common/code/CodeEditor.jsx";
 import {Button, Dropdown, Space} from "antd";
 import {CloseOutlined, DownOutlined, RightOutlined} from "@ant-design/icons";
 
@@ -131,7 +131,10 @@ export const CodePlayground = ({width, languages, editorConfig, onClose, onConfi
                     </div>
                 </div>
                 <div className={"jade-code-test-content jade-code-parent"}>
-                    <Tester executeFunc={executeFunc} suggestions={editorConfig.suggestions} language={language} />
+                    <Tester codeRef={codeRef}
+                            executeFunc={executeFunc}
+                            suggestions={editorConfig.suggestions}
+                            language={language}/>
                 </div>
             </div>
         </div>

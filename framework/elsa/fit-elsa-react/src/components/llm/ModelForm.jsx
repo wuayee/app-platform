@@ -1,32 +1,35 @@
 import {Col, Collapse, Form, Input, InputNumber, Popover, Row} from 'antd';
 import {QuestionCircleOutlined} from '@ant-design/icons';
-import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
+import {useDispatch} from "@/components/DefaultRoot.jsx";
 import {JadeStopPropagationSelect} from "../common/JadeStopPropagationSelect.jsx";
 import PropTypes from "prop-types";
+import React from "react";
 
 const {TextArea} = Input;
 const {Panel} = Collapse;
 
-ModelForm.propTypes = {
+_ModelForm.propTypes = {
     shapeId: PropTypes.string.isRequired, // 确保 shapeId 是一个必需的string类型
+    modelData: PropTypes.object.isRequired, // 确保 modelData 是一个必需的object类型
     modelOptions: PropTypes.array.isRequired, // 确保 modelOptions 是一个必需的array类型
+    disabled: PropTypes.bool, // 确保 modelOptions 是一个必需的array类型
 };
 
 /**
  * 大模型节点模型表单。
  *
  * @param shapeId 所属图形唯一标识。
+ * @param modelData 数据.
  * @param modelOptions 模型选项。
  * @param disabled 是否禁用.
  * @returns {JSX.Element} 大模型节点模型表单的DOM。
  */
-export default function ModelForm({shapeId, modelOptions, disabled}) {
-    const data = useDataContext();
+function _ModelForm({shapeId, modelData, modelOptions, disabled}) {
     const dispatch = useDispatch();
-    const model = data.inputParams.find(item => item.name === "model");
-    const temperature = data.inputParams.find(item => item.name === "temperature");
-    const systemPrompt = data.inputParams.find(item => item.name === "systemPrompt");
-    const prompt = data.inputParams.filter(item => item.name === "prompt").flatMap(item => item.value).find(item => item.name === "template");
+    const model = modelData.model;
+    const temperature = modelData.temperature;
+    const systemPrompt = modelData.systemPrompt;
+    const prompt = modelData.prompt;
 
     const handleSelectClick = (event) => {
         event.stopPropagation(); // 阻止事件冒泡
@@ -174,7 +177,6 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
                                     validateTrigger="onBlur"
                                 >
                                     <TextArea disabled={disabled}
-                                              onMouseDown={(e) => e.stopPropagation()}
                                               className="jade-textarea-input jade-font-size"
                                               onBlur={(e) => changeOnBlur(e, "changePrompt", prompt.id, true)}
                                               placeholder="你可以用{{variable name}}来关联输入中的变量名"
@@ -194,7 +196,6 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
                                     validateTrigger="onBlur"
                                 >
                                     <TextArea disabled={disabled}
-                                              onMouseDown={(e) => e.stopPropagation()}
                                               className="jade-textarea-input jade-font-size"
                                               onBlur={(e) => changeOnBlur(e, "changeConfig", systemPrompt.id, false)}
                                               placeholder="输入一段提示词，可以给应用预设身份"
@@ -208,3 +209,12 @@ export default function ModelForm({shapeId, modelOptions, disabled}) {
         </Collapse>
     );
 }
+
+const areEqual = (prevProps, nextProps) => {
+    return prevProps.modelData.model === nextProps.modelData.model
+            && prevProps.modelData.temperature === nextProps.modelData.temperature
+            && prevProps.modelData.systemPrompt === nextProps.modelData.systemPrompt
+            && prevProps.modelData.prompt === nextProps.modelData.prompt
+};
+
+export const ModelForm =  React.memo(_ModelForm, areEqual);

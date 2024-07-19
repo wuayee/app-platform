@@ -56,7 +56,6 @@ export default function OutputVariableRow({item, handleItemChange, disabled}) {
                             onReferencedKeyChange={_onReferencedKeyChange}
                             style={{fontSize: "12px"}}
                             placeholder="请选择"
-                            onMouseDown={(e) => e.stopPropagation()}
                             showSearch
                             className="value-custom jade-select"
                             dropdownStyle={{
@@ -104,7 +103,6 @@ export default function OutputVariableRow({item, handleItemChange, disabled}) {
                             initialValue='Reference'
                     >
                         <Select disabled={disabled}
-                                onMouseDown={(e) => e.stopPropagation()}
                                 id={`valueSource-select-${item.id}`}
                                 className={"value-source-custom jade-select"}
                                 style={{width: "100%"}}

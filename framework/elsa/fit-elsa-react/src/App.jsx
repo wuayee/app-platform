@@ -35,6 +35,11 @@ function App() {
             node: "manualCheckNodeState",
             urls: {runtimeFormUrl: "https://jane-beta.huawei.com/api/jober/v1/api/8cc048c225a04bfa8b9ab159ba09bb38/form/type/runtime"}
         });
+        configs.push({
+            node: "codeNodeState", urls: {
+                testCodeUrl: "https://localhost:8080/fit/CodeNode.tool/Python_REPL_TEST",
+            }
+        });
 
         JadeFlow.edit(stage, "1111", graphData, configs).then(agent => {
             window.agent = agent;
@@ -42,6 +47,7 @@ function App() {
                 onModelSelectedCallback.onSelect({name: "zy-model"});
             });
             agent.onChange(() => {
+                console.log("111111");
             });
         });
     });
@@ -61,10 +67,10 @@ function App() {
                     setOpen(true);
                 }}>打开drawer</Button>
             </div>
-            <div id={"stageContainer"} style={{position: "relative"}}>
+            {/*<div id={"stageContainer"} style={{position: "relative"}}>*/}
                 <div id="stage" style={{position: "relative", width: 1600, height: 800}}></div>
-            </div>
-            <CodeDrawer container={document.getElementById("stageContainer")}
+            {/*</div>*/}
+            <CodeDrawer container={document.getElementById("stage")}
                         width={1232}
                         open={open}
                         languages={["python"]}

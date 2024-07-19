@@ -78,8 +78,12 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.setRunReportSections = (data) => {
         // 把节点推送来的的data处理成Section
         // 开始节点只有输入，结束节点只有输出，普通节点输入输出，条件节点有条件1...n和输出
-        self.output = JSON.parse(data.parameters[0].output);
-        self.input = JSON.parse(data.parameters[0].input);
+        self.output = {};
+        self.input = {};
+        if (data.parameters[0]) {
+            self.output = JSON.parse(data.parameters[0].output);
+            self.input = JSON.parse(data.parameters[0].input);
+        }
         self.errorMsg = data.errorMsg;
         self.cost = data.runCost;
     };
@@ -341,11 +345,11 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         self.observed.push(observerProxy);
         self.page.observeTo(nodeId, observableId, observerProxy);
 
-        // 监听时，主动推送一次数据.
-        const observable = self.page.getObservable(nodeId, observableId);
-        if (observable.value || observable.type) {
-            observerProxy.observe({value: observable.value, type: observable.type});
-        }
+        // 监听时，主动推送一次数据.todo@zhangyue 暂不确定是否对其他功能有影响，先暂时留着，确认没问题之后再删除
+        // const observable = self.page.getObservable(nodeId, observableId);
+        // if (observable.value || observable.type) {
+        //     observerProxy.observe({value: observable.value, type: observable.type});
+        // }
 
         // 返回取消监听的方法.
         return () => {
@@ -482,6 +486,26 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
             self.isFocused = status === NODE_STATUS.RUNNING;
         }
         self.drawer.setRunStatus(status);
+    };
+
+    /**
+     * @override
+     */
+    const load = self.load;
+    self.load = (ignoreFilter) => {
+        load.apply(self, [ignoreFilter]);
+        /**
+         * jadeNode高度变化不触发dirties.
+         *
+         * @override
+         */
+        const propertyChanged = self.propertyChanged;
+        self.propertyChanged = (property, value, preValue) => {
+            if (property === "height") {
+                return;
+            }
+            propertyChanged.apply(self, [property, value, preValue]);
+        };
     };
 
     return self;

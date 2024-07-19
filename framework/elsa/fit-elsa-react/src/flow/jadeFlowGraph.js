@@ -31,6 +31,8 @@ import {conditionNodeCondition} from "@/components/condition/conditionNodeCondit
 import {conditionComponent} from "@/components/condition/conditionComponent.jsx";
 import {huggingFaceNodeState} from "@/components/huggingFace/huggingFaceNodeState.jsx";
 import {huggingFaceComponent} from "@/components/huggingFace/huggingFaceComponent.jsx";
+import {codeComponent} from "@/components/code/codeComponent.jsx";
+import {codeNodeState} from "@/components/code/codeNodeState.jsx";
 
 /**
  * jadeFlow的专用画布.
@@ -102,6 +104,8 @@ export const jadeFlowGraph = (div, title) => {
         self.registerPlugin("conditionComponent", conditionComponent);
         self.registerPlugin("huggingFaceNodeState", huggingFaceNodeState);
         self.registerPlugin("huggingFaceComponent", huggingFaceComponent);
+        self.registerPlugin("codeComponent", codeComponent);
+        self.registerPlugin("codeNodeState", codeNodeState);
         return initialize.apply(self);
     };
 

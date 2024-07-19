@@ -38,6 +38,7 @@ import com.huawei.fit.jober.aipp.enums.AippMetaStatusEnum;
 import com.huawei.fit.jober.aipp.enums.AippTypeEnum;
 import com.huawei.fit.jober.aipp.enums.AppCategory;
 import com.huawei.fit.jober.aipp.enums.JaneCategory;
+import com.huawei.fit.jober.aipp.factory.AppBuilderAppFactory;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippFlowService;
@@ -46,7 +47,7 @@ import com.huawei.fit.jober.aipp.util.AippStringUtils;
 import com.huawei.fit.jober.aipp.util.FormUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.MetaUtils;
-import com.huawei.fit.jober.aipp.util.UUIDUtil;
+import com.huawei.fit.jober.aipp.util.VersionUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fit.jober.common.exceptions.ConflictException;
@@ -67,8 +68,6 @@ import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.store.entity.transfer.AppData;
 import com.huawei.jade.store.service.AppService;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -107,7 +106,7 @@ public class AippFlowServiceImpl implements AippFlowService {
     private final MetaService metaService;
     private final FlowDefinitionService flowDefinitionService;
     private final AippRunTimeService aippRunTimeService;
-
+    private final AppBuilderAppFactory factory;
     private final BrokerClient brokerClient;
 
     private final AppBuilderAppMapper appBuilderAppMapper;
@@ -115,7 +114,7 @@ public class AippFlowServiceImpl implements AippFlowService {
     public AippFlowServiceImpl(@Fit FlowsService flowsService, @Fit MetaService metaService,
             @Fit FlowDefinitionService flowDefinitionService, @Fit AippRunTimeService aippRunTimeService,
             @Fit AppBuilderFormRepository formRepository, @Fit BrokerClient brokerClient,
-            AppBuilderAppMapper appBuilderAppMapper) {
+            AppBuilderAppMapper appBuilderAppMapper, AppBuilderAppFactory factory) {
         this.flowsService = flowsService;
         this.metaService = metaService;
         this.flowDefinitionService = flowDefinitionService;
@@ -123,12 +122,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         this.formRepository = formRepository;
         this.brokerClient = brokerClient;
         this.appBuilderAppMapper = appBuilderAppMapper;
-    }
-
-    private String buildPreviewVersion(String version) {
-        String uuid = UUIDUtil.uuid();
-        String subUuid = (uuid.length() > PREVIEW_UUID_LEN) ? uuid.substring(0, PREVIEW_UUID_LEN) : uuid;
-        return version + "-" + subUuid;
+        this.factory = factory;
     }
 
     /**
@@ -326,9 +320,6 @@ public class AippFlowServiceImpl implements AippFlowService {
      */
     @Override
     public AippCreateDto create(AippDto aippDto, OperationContext context) throws AippException {
-        String version =
-                aippDto.getFlowViewData().getOrDefault(AippConst.FLOW_CONFIG_VERSION_KEY, DEFAULT_VERSION).toString();
-        aippDto.setVersion(version);
         return this.createAippHandle(aippDto, context);
     }
 
@@ -590,6 +581,13 @@ public class AippFlowServiceImpl implements AippFlowService {
     @Override
     public AippCreateDto previewAipp(String baselineVersion, AippDto aippDto, OperationContext context)
             throws AippException {
+        List<Meta> metaList = MetaUtils.getAllMetasByAppId(this.metaService, aippDto.getAppId(), context);
+        if (!metaList.isEmpty()) {
+            Meta meta = metaList.get(0);
+            if (MetaUtils.isPublished(meta)) {
+                return AippCreateDto.builder().aippId(meta.getId()).version(meta.getVersion()).build();
+            }
+        }
         FlowDefinitionResult definitionResult = this.getSameFlowDefinition(aippDto);
         if (definitionResult != null) {
             RangedResultSet<Meta> metas =
@@ -608,7 +606,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         String previewVersion;
         String errorMsg;
         do {
-            previewVersion = buildPreviewVersion(baselineVersion);
+            previewVersion = VersionUtils.buildPreviewVersion(baselineVersion);
             aippDto.getFlowViewData().put(AippConst.FLOW_CONFIG_VERSION_KEY, previewVersion);
             try {
                 return this.createPreviewAipp(baselineVersion, aippDto, context);
@@ -842,7 +840,10 @@ public class AippFlowServiceImpl implements AippFlowService {
     }
 
     private MetaDeclarationInfo buildPublishMetaDeclaration(String aippId, List<AippNodeForms> aippNodeForms,
-            String flowDefinitionId, Meta meta, AippDto aippDto) {
+            String flowDefinitionId, Meta meta, AippDto aippDto, String uniqueName) {
+        // 解析表单属性字段
+        List<MetaPropertyDeclarationInfo> props = getMetaPropertyDeclarationInfos(aippNodeForms);
+
         // 追加aipp meta属性字段
         MetaDeclarationInfo declaration = new MetaDeclarationInfo();
 
@@ -850,6 +851,8 @@ public class AippFlowServiceImpl implements AippFlowService {
         Map<String, Object> attrPatch = meta.getAttributes();
         appendAttribute(attrPatch, aippNodeForms, flowDefinitionId);
         updateAttribute(attrPatch, aippDto);
+        attrPatch.put(AippConst.ATTR_PUBLISH_DESCRIPTION, aippDto.getPublishedDescription());
+        attrPatch.put(AippConst.ATTR_UNIQUE_NAME, uniqueName);
         declaration.setAttributes(Undefinable.defined(attrPatch));
         declaration.setName(Undefinable.defined(meta.getName()));
         declaration.setVersion(Undefinable.defined(meta.getVersion()));
@@ -942,12 +945,18 @@ public class AippFlowServiceImpl implements AippFlowService {
             flowInfo = publishFlow(aippDto, attr, context);
             // 查询表单 元数据
             List<AippNodeForms> aippNodeForms = buildAippNodeForms(flowInfo);
-            // 发布aipp
-            MetaDeclarationInfo declaration =
-                    buildPublishMetaDeclaration(aippId, aippNodeForms, flowInfo.getFlowDefinitionId(), meta, aippDto);
-            metaService.patch(meta.getVersionId(), declaration, context);
 
+            // 往 store 发布
             String uniqueName = this.publishToStore(aippDto, context, flowInfo);
+
+            // 发布aipp
+            MetaDeclarationInfo declaration = buildPublishMetaDeclaration(aippId,
+                    aippNodeForms,
+                    flowInfo.getFlowDefinitionId(),
+                    meta,
+                    aippDto,
+                    uniqueName);
+            this.metaService.patch(meta.getVersionId(), declaration, context);
             return Rsp.ok(new AippCreateDto(aippId, meta.getVersion(), uniqueName));
         } catch (Exception e) {
             log.error("publish aipp {} failed.", aippId, e);
@@ -961,11 +970,11 @@ public class AippFlowServiceImpl implements AippFlowService {
         String uniqueName = this.brokerClient.getRouter(AppService.class, "com.huawei.jade.store.app.publishApp")
                 .route(new FitableIdFilter("store-repository-pgsql"))
                 .invoke(itemData);
-        appBuilderAppMapper.updateAppWithStoreId(uniqueName, aippDto.getAppId(), aippDto.getVersion());
+        this.appBuilderAppMapper.updateAppWithStoreId(uniqueName, aippDto.getAppId(), aippDto.getVersion());
         return uniqueName;
     }
 
-    @NotNull
+
     private AppData buildItemData(AippDto aippDto, OperationContext context, FlowInfo flowInfo) {
         AppCategory appCategory = AppCategory.findByType(aippDto.getType())
                 .orElseThrow(() -> new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID));
@@ -975,6 +984,8 @@ public class AippFlowServiceImpl implements AippFlowService {
         itemData.setIcon(aippDto.getIcon());
         itemData.setName(aippDto.getName());
         itemData.setDescription(aippDto.getDescription());
+        itemData.setVersion(aippDto.getVersion());
+        itemData.setUniqueName(aippDto.getUniqueName());
         if (this.isToolCategory(appCategory)) {
             itemData.setSchema(this.buildToolSchema(appCategory, context, aippDto, flowInfo));
         } else if (this.isAppCategory(appCategory)) {
@@ -987,7 +998,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         itemData.setTags(new HashSet<String>() {{
             add(appCategory.getTag());
         }});
-        itemData.setRunnables(this.buildRunnables(appCategory, aippDto));
+        itemData.setRunnables(this.buildRunnables(aippDto));
         return itemData;
     }
 
@@ -1021,12 +1032,10 @@ public class AippFlowServiceImpl implements AippFlowService {
         return parameterMap;
     }
 
-    private Map<String, Object> buildRunnables(AppCategory appCategory, AippDto aippDto) {
+    private Map<String, Object> buildRunnables(AippDto aippDto) {
         Map<String, Object> runnablesMap = new HashMap<>();
         runnablesMap.put("FIT", MapBuilder.get().put("genericableId", "07b51bd246594c159d403164369ce1db").build());
-        if (isAppCategory(appCategory)) {
-            runnablesMap.put("APP", MapBuilder.get().put("appId", aippDto.getAppId()).build());
-        }
+        runnablesMap.put("APP", MapBuilder.get().put("appId", aippDto.getAppId()).build());
         return runnablesMap;
     }
 

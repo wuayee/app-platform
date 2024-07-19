@@ -2,7 +2,7 @@ import { del, get, post, put } from './http';
 import { httpUrlMap } from './httpConfig';
 
 const { JANE_URL, AIPP_URL, PLUGIN_URL } = httpUrlMap[process.env.NODE_ENV];
-
+console.log(process.env.NODE_ENV,'process.env.NODE_ENV');
 const sso_url = '/v1/user/sso_login_info';
 
 // 获取当前用户信息
@@ -23,6 +23,18 @@ export function uploadFile(data, headers) {
   return post(`${JANE_URL}/jober/v1/jane/files`, data, { headers });
 }
 
+// 根据返回的地址获取语音转换的文字信息
+export function voiceToText (tenantId,voicePath,fileName) {
+  let url = process.env.NODE_ENV === 'development' ? 'http://80.11.128.86:30020/api/jober/v1/api' :
+  process.env.NODE_ENV === 'production' ? window.location.origin + AIPP_URL :AIPP_URL
+  return get(`${PLUGIN_URL || '/api/jober'}/voice/toText`,{voicePath:`${url}/${tenantId}/file?filePath=${voicePath}`,fileName});
+}
+// 文字转语音
+export function textToVoice(text, tone) {
+  return get(`${PLUGIN_URL || '/api/jober'}/voice/toVoice`,{text,tone});
+}
+
+
 // 查询应用列表
 export function getAippList(tenant_id, params, limit, offset, name) {
   let url = `${AIPP_URL}/${tenant_id}/app?offset=${offset}&limit=${limit}`;
@@ -38,6 +50,10 @@ export function createAipp(tenantId, appId, params) {
 // 获取应用详情
 export function getAppInfo(tenantId, appId) {
   return get(`${AIPP_URL}/${tenantId}/app/${appId}`);
+}
+// 点击去编排
+export function getAppInfoByVersion(tenantId, appId) {
+  return get(`${AIPP_URL}/${tenantId}/app/${appId}/latest_orchestration`);
 }
 // 更新应用全部详情
 export function updateAppInfo(tenantId, appId, params) {
@@ -105,6 +121,11 @@ export function queryInspirationSelect(tenantId, fitableid, params) {
 export function uploadChatFile(tenantId, appId, data, headers) {
   return post(`${AIPP_URL}/${tenantId}/file?aipp_id=${appId}`, data, { headers });
 }
+
+// 文件上传
+export function uploadImage(tenantId, data, headers) {
+  return post(`${AIPP_URL}/${tenantId}/file`, data, { headers });
+}
 // 图片预览
 export function picturePreview(tenantId, params) {
   return get(`${AIPP_URL}/${tenantId}/file`, params);
@@ -131,6 +152,15 @@ export function reTestInstance(tenantId, aippId, instanceId, version) {
     `${AIPP_URL}/${tenantId}/aipp/${aippId}/instances/${instanceId}/runtime?version=${version}`
   );
 }
+// 获取版本历史记录
+export function getVersion(tenantId, appId) {
+  return get(`${AIPP_URL}/${tenantId}/app/${appId}/recentPublished`);
+}
+// 获取插件接口
+export function getToolList(params) {
+  return get(`${AIPP_URL}/store/plugins/search`, params);
+}
+
 // 获取溯源下拉选项
 export function getOptions(data) {
   return post(`${AIPP_URL}/api/v1/platform/db/search`, data);

@@ -4,8 +4,9 @@ import React, {
   useRef,
   useContext,
   useImperativeHandle,
+  forwardRef,
 } from "react";
-import { AudioIcon, SendIcon, DeleteContentIcon } from '@/assets/icon';
+import { AudioIcon, AudioActiveIcon , SendIcon, DeleteContentIcon } from '@/assets/icon';
 import $ from "jquery";
 import { Message } from "@shared/utils/message";
 import { httpUrlMap } from "@shared/http/httpConfig";
@@ -19,6 +20,21 @@ import "@shared/utils/rendos";
 import "../../styles/send-editor.scss";
 import { useAppSelector, useAppDispatch } from "../../../../store/hook";
 import { setUseMemory } from "../../../../store/common/common";
+import {uploadChatFile,voiceToText} from '@shared/http/aipp.js'
+
+const AudioBtn = forwardRef((props, ref) => {
+  const [active, setActive] = useState(props.active || false);
+  useImperativeHandle(ref, () => {
+    return {
+      active,
+      setActive,
+    }
+  })
+
+  return <>
+    {active ? <AudioActiveIcon className='active-audio-btn' />: <AudioIcon />}
+  </>
+})
 
 const SendEditor = (props) => {
   const {
@@ -39,6 +55,10 @@ const SendEditor = (props) => {
   const { WS_AUDIO_URL } = httpUrlMap[process.env.NODE_ENV];
   const editorRef = useRef(null);
   const recording = useRef(false);
+  const audioBtnRef = useRef(null);
+  const audioDomRef = useRef(null);
+  const appId = useAppSelector((state) => state.appStore.appId);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
   // 编辑器change事件
   function messageChange() {
     setShowClear(() => {
@@ -109,7 +129,8 @@ const SendEditor = (props) => {
   // 语音实时转文字
   let recorderHome = null;
   let intervalData = null;
-  const onRecord = () => {
+  // 点击语音按钮
+  const onRecord = async() => {
     if (chatRunning) {
       Message({ type: "warning", content: "对话进行中, 请稍后再试" });
       return;
@@ -118,31 +139,54 @@ const SendEditor = (props) => {
       window.HZRecorder.get((rec) => {
         recorderHome = rec;
         recorderHome.start();
-      });
+      })
+      if(!recorderHome) return
       recording.current = true;
-      let conn = new WebSocket(WS_AUDIO_URL);
-      conn.onopen = (evt) => {
-        if (conn.readyState === 1) {
-          intervalData = setInterval(() => {
-            let res = recorderHome.getBlob();
-            conn.send(res);
-          }, 1000);
-        }
-      };
-      conn.onmessage = (evt) => {
-        if (evt.data.trim().length) {
-          const editorDom = document.getElementById("ctrl-promet");
-          editorDom.innerHTML = evt.data.trim();
-        }
-      };
-      conn.onerror = (err) => {
-        Message({ type: "error", content: "语音转文字失败" });
-      };
-      conn.onclose = (err) => {
+      // 麦克风变为active样式
+      audioBtnRef.current.setActive(true);
+        // 开启定时器，每2秒发一次请求
+        intervalData = setInterval(async() => {
+          let newBlob = recorderHome?.getBlob()
+          const fileOfBlob = new File([newBlob], new Date().getTime() + '.wav', {
+            type:"audio/wav",
+          })
+          const formData = new FormData();
+          formData.append("file", fileOfBlob);
+          let headers = {
+            "attachment-filename": encodeURI(fileOfBlob.name || ""),
+          };
+          if(fileOfBlob.size){
+            const result = await uploadChatFile(tenantId, appId, formData, headers);
+            if(result.data){
+              let res = await voiceToText(tenantId,result.data.file_path,fileOfBlob.name)
+              // 将data数据放入输入框中
+              let inputedDate = document.getElementById("ctrl-promet").innerHTML;
+              if (res.data.trim().length) {
+                const editorDom = document.getElementById("ctrl-promet");
+                editorDom.innerHTML = inputedDate + res.data.trim();
+              }
+            }
+          }
+        }, 2000);
+    } else {
+      recording.current=false
+      recorderHome.stop();
+      audioBtnRef.current.setActive(false);
+      clearInterval(intervalData);
+    }
+  }
+  // 停止录音
+  function cancelRecord(e){
+      if(recording.current&&recorderHome){
+        recording.current=false
         recorderHome.stop();
-        recording.current = false;
+        audioBtnRef.current.setActive(false);
         clearInterval(intervalData);
-      };
+      }
+  }
+  function handleEditorClick(e) {
+    if (!audioDomRef.current?.contains(e.target)) {
+      recording.current
     }
   }
   useEffect(() => {
@@ -152,8 +196,16 @@ const SendEditor = (props) => {
       dispatch(setUseMemory(false));
     }
   }, [showMulti])
+  function plays(){
+    let audio =document.querySelector('#audio')
+    audio.play()
+  }
+  function pause(){
+    let audio =document.querySelector('#audio')
+    audio.pause()
+  }
   return <>{(
-    <div className='send-editor-container'>
+    <div className='send-editor-container' onClick={handleEditorClick}>
       <Recommends onSend={onSend}/>
       <div className='editor-inner'>
         <EditorBtnHome 
@@ -181,7 +233,7 @@ const SendEditor = (props) => {
           <div className='send-icon' onClick={ sendMessage }>
             <SendIcon />
           </div>
-          {/* <div className='audio-icon' onClick={onRecord}><AudioIcon /></div> */}
+          <div className='audio-icon' ref={audioDomRef} tabIndex='1' onBlur={cancelRecord} onClick={onRecord}><AudioBtn ref={audioBtnRef} /></div>
           { showClear && <div className='send-icon clear-icon' onClick={clearContent}><DeleteContentIcon /></div> }
         </div>
       </div>

@@ -1,19 +1,24 @@
 import {Col, Form, Popover, Row, Slider} from "antd";
 import {QuestionCircleOutlined} from "@ant-design/icons";
 import React from "react";
-import {useDataContext, useDispatch} from "@/components/DefaultRoot.jsx";
+import {useDispatch} from "@/components/DefaultRoot.jsx";
+import PropTypes from "prop-types";
+
+_KnowledgeConfig.propTypes = {
+    maximum: PropTypes.number.isRequired,
+    disabled: PropTypes.bool
+};
 
 /**
  * 知识配置组件
  *
+ * @param maximum 最大值.
  * @param disabled 禁用状态.
  * @returns {JSX.Element}
  * @constructor
  */
-export default function KnowledgeConfig({disabled}) {
+function _KnowledgeConfig({maximum, disabled}) {
     const dispatch = useDispatch();
-    const data = useDataContext();
-    const config = data && data.inputParams.find(item => item.name === "maximum").value;
 
     const maxRecallsTip = <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
         <p>从知识返回到模型的最大段落数。数字越大，返回的内容越多。</p>
@@ -58,11 +63,17 @@ export default function KnowledgeConfig({disabled}) {
                         step={1}
                         marks={defaultRecalls}
                         defaultValue={3}
-                        value={config}
+                        value={maximum}
                         onChange={(value) => dispatch({type: "changeMaximum", key: "maximum", value: value})}
                     />
                 </Form.Item>
             </Col>
         </Row>
     );
+}
+
+const areEqual = (prevProps, nextProps) => {
+    return prevProps.maximum === nextProps.maximum && prevProps.disabled === prevProps.disabled;
 };
+
+export const KnowledgeConfig =  React.memo(_KnowledgeConfig, areEqual);

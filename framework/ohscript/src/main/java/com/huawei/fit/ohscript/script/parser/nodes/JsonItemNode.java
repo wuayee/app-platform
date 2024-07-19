@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.ohscript.script.parser.nodes;
+
+import com.huawei.fit.ohscript.script.lexer.Terminal;
+import com.huawei.fit.ohscript.script.lexer.Token;
+import com.huawei.fit.ohscript.script.parser.NonTerminal;
+import com.huawei.fitframework.util.ObjectUtils;
+
+/**
+ * json条目的节点
+ *
+ * @since 1.0
+ */
+public class JsonItemNode extends NonTerminalNode {
+    /**
+     * 构造函数
+     * 构造一个新的JsonItemNode对象
+     */
+    public JsonItemNode() {
+        super(NonTerminal.JSON_ITEM);
+    }
+
+    /**
+     * 获取表达式
+     * 获取表达式语法节点
+     *
+     * @return 表达式语法节点
+     */
+    public SyntaxNode expression() {
+        return this.child(1);
+    }
+
+    /**
+     * 获取字段
+     * 获取字段语法节点
+     *
+     * @return 字段语法节点
+     */
+    public TerminalNode field() {
+        String name = ObjectUtils.<TerminalNode>cast(this.child(0)).token().lexeme();
+        name = name.replace(":", "");
+        TerminalNode field = new TerminalNode(Terminal.ID);
+        field.setToken(new Token(Terminal.ID, name, 0, 0, 0));
+        return field;
+    }
+}

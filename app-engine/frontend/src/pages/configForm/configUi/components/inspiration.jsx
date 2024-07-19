@@ -459,7 +459,7 @@ const Inspiration = (props) => {
                 </Form>
               </InspirationWrap>
             </Modal>
-            <Modal title='类目配置' open={showCateModal} onOk={handleCateModalOK} onCancel={handleCateModalCancel} width='50vw'>
+            <Modal title='类目配置' destroyOnClose open={showCateModal} onOk={handleCateModalOK} onCancel={handleCateModalCancel} width='50vw'>
               <TreeComponent tree={treeData}
                              nodeList={nodeList}
                              updateTreeData={updateTreeData}

@@ -19,8 +19,7 @@ const ChatMessaga = (props) => {
   const [ list, setList ] = useState([]);
   const { 
     showCheck, 
-    setCheckedList, 
-    scroll,
+    setCheckedList,
     setEditorShow, 
     feedRef, 
     chatRunningStop, 
@@ -50,7 +49,7 @@ const ChatMessaga = (props) => {
   })
   useEffect(() => {
     setList(deepClone(chatList));
-    scroll && scrollBottom();
+    scrollBottom();
   }, [chatList]);
 
   // 重置选中状态

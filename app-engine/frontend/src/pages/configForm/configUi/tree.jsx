@@ -154,7 +154,7 @@ const TreeComponent = (props) => {
                 Message({type: 'warning', content: '分类下已有灵感大全，请先删除灵感大全'});
             } else {
                 handleDelete(parentNode, id);
-                Message({type: 'info', content: '删除成功'});
+                Message({type: 'success', content: '删除成功'});
             }
         }
 

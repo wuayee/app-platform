@@ -5,6 +5,39 @@ import "./jadeObservableTree.css";
 import TreeSwitcherIcon from "@/components/common/TreeSwitcherIcon.jsx";
 
 /**
+ * 构建节点，只有Object节点有子孙节点.
+ * 构建过程中，逐级注册observable，使后续节点可以进行reference操作.
+ *
+ * @param nodeData 节点数据.
+ * @param parent 父节点数据.
+ * @param level 层级.
+ * @param shape 图形.
+ * @return {{title, isLeaf: boolean, key}|{children: *, title, key}} 树节点.
+ */
+const buildNode = (nodeData, parent, level, shape) => {
+    shape.page.registerObservable({
+        nodeId: shape.id,
+        observableId: nodeData.id,
+        value: nodeData.name,
+        type: nodeData.type,
+        parentId: parent ? parent.id : null
+    });
+    if (nodeData.type === "Object") {
+        return {
+            title: nodeData.name,
+            type: nodeData.type,
+            key: nodeData.id,
+            level: level,
+            children: nodeData.value.map(v => buildNode(v, nodeData, level + 1, shape))
+        };
+    } else {
+        return {
+            title: nodeData.name, type: nodeData.type, key: nodeData.id, level: level, isLeaf: true
+        };
+    }
+};
+
+/**
  * 可被观察的树装结构.
  *
  * @param data 数据.
@@ -16,13 +49,10 @@ export const JadeObservableTree = ({data}) => {
         throw new Error("data must be array.");
     }
 
-    const [treeData, setTreeData] = useState([]);
     const shape = useShapeContext();
+    const [treeData, ] = useState(data.map(d => buildNode(d, null, 0, shape)));
 
     useEffect(() => {
-        const treeData = data.map(d => buildNode(d, null, 0));
-        setTreeData(treeData);
-
         // unmount时取消监听.
         return () => {
             if (treeData) {
@@ -38,32 +68,6 @@ export const JadeObservableTree = ({data}) => {
             n.children && traverseTree(n.children, action);
             action(n);
         });
-    };
-
-    /**
-     * 构建节点，只有Object节点有子孙节点.
-     * 构建过程中，逐级注册observable，使后续节点可以进行reference操作.
-     *
-     * @param nodeData 节点数据.
-     * @param parent 父节点数据.
-     * @param level 层级.
-     * @return {{title, isLeaf: boolean, key}|{children: *, title, key}} 树节点.
-     */
-    const buildNode = (nodeData, parent, level) => {
-        shape.page.registerObservable({nodeId: shape.id, observableId: nodeData.id, value: nodeData.name, type: nodeData.type, parentId: parent ? parent.id : null});
-        if (nodeData.type === "Object") {
-            return {
-                title: nodeData.name,
-                type: nodeData.type,
-                key: nodeData.id,
-                level: level,
-                children: nodeData.value.map(v => buildNode(v, nodeData, level + 1))
-            };
-        } else {
-            return {
-                title: nodeData.name, type: nodeData.type, key: nodeData.id, level: level, isLeaf: true
-            };
-        }
     };
 
     /**

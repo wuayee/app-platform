@@ -8,21 +8,21 @@ import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.audio.SummaryDto;
 import com.huawei.fit.jober.aipp.dto.audio.SummarySection;
+import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.service.AippLogService;
+import com.huawei.fit.jober.aipp.util.AippFileUtils;
 import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.aipp.util.LLMUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
+import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.log.Logger;
-import com.huawei.hllm.HllmClient;
-import com.huawei.hllm.entity.HllmChatEntity;
-import com.huawei.hllm.entity.HllmTranscriptionEntity;
-import com.huawei.hllm.model.LlmModel;
-
-import org.apache.commons.lang3.time.StopWatch;
+import com.huawei.jade.fel.model.openai.client.OpenAiClient;
+import com.huawei.jade.voice.service.VoiceService;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +38,6 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -59,32 +58,34 @@ public class LlmAudio2Summary implements FlowableService {
             + "{\"title\": \"文本摘要简介\", \"text\": \"文本摘要...\"}\n\n" + "--------\n" + "Video: <%s>\n"
             + "Output JSON:\n";
     private final static ExecutorService SUMMARY_EXECUTOR = Executors.newFixedThreadPool(8);
-    private final HllmClient hllmClient;
+    private final OpenAiClient openAiClient;
 
     private final AippLogService aippLogService;
+    private final VoiceService voiceService;
+    private final String endpoint;
 
-    public LlmAudio2Summary(HllmClient hllmClient, AippLogService aippLogService) {
-        this.hllmClient = hllmClient;
+    public LlmAudio2Summary(AippLogService aippLogService, @Value("${app-engine.endpoint}") String endpoint,
+                            @Fit OpenAiClient openAiClient, @Fit VoiceService voiceService) {
         this.aippLogService = aippLogService;
+        this.openAiClient = openAiClient;
+        this.voiceService = voiceService;
+        this.endpoint = endpoint;
     }
 
     private SummaryDto batchSummary(List<File> audioList, int segmentSize) throws InterruptedException, IOException {
         int taskCnt = audioList.size();
         List<String> output = new ArrayList<>(Collections.nCopies(taskCnt, null));
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
+        long startTime = System.currentTimeMillis();
         CountDownLatch countDownLatch = new CountDownLatch(taskCnt);
         for (int i = 0; i < taskCnt; ++i) {
             int id = i;
             SUMMARY_EXECUTOR.execute(() -> {
                 try {
-                    String text =
-                            hllmClient.transcribe(HllmTranscriptionEntity.builder().file(audioList.get(id)).build())
-                                    .trim();
-                    String summary = hllmClient.generate(HllmChatEntity.builder()
-                            .prompt(String.format(PROMPT, text))
-                            .tokens(16000)
-                            .build(), LlmModel.QWEN_72B);
+                    File audio = audioList.get(id);
+                    String audioFilePath = AippFileUtils.getFileDownloadFilePath(endpoint, audio.getPath());
+                    String text = this.voiceService.getText(audioFilePath, audio.getName());
+                    String summary = LLMUtils.askModelForSummary(openAiClient, String.format(PROMPT, text),
+                            LlmModelNameEnum.QWEN_72B, 16000);
                     output.set(id, summary);
                 } catch (IOException e) {
                     output.set(id, "");
@@ -95,10 +96,10 @@ public class LlmAudio2Summary implements FlowableService {
         }
         countDownLatch.await();
         SummaryDto summaryDto = generateSummary(output, segmentSize);
-        stopWatch.stop();
+        long endTime = System.currentTimeMillis();
         log.info("Summarize {} task use time {} seconds, segment size: {} seconds.",
                 taskCnt,
-                stopWatch.getTime(TimeUnit.SECONDS),
+                (endTime - startTime) / 1000,
                 segmentSize);
         return summaryDto;
     }
@@ -108,10 +109,9 @@ public class LlmAudio2Summary implements FlowableService {
         StringBuilder sb = new StringBuilder();
         summaryDto.getSectionList().forEach(sec -> sb.append(sec.getText()));
         try {
-            String llmOutput = hllmClient.generate(HllmChatEntity.builder()
-                    .prompt(String.format(PROMPT, sb))
-                    .tokens(16000)
-                    .build(), LlmModel.QWEN_72B);
+            String llmOutput =
+                    LLMUtils.askModelForSummary(openAiClient, String.format(PROMPT, sb),
+                            LlmModelNameEnum.QWEN_72B, 16000);
             SummarySection section =
                     JsonUtils.parseObject(LLMUtils.tryFixLlmJsonString(llmOutput), SummarySection.class);
             summaryDto.setSummary(section.getText());

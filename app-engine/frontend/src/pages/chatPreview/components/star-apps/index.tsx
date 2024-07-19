@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import './style.scoped.scss';
 import { httpUrlMap } from '@/shared/http/httpConfig';
-import { cancleUserCollection, collectionApp, getUserCollection, updateCollectionApp } from '@/shared/http/appDev';
+import { cancelUserCollection, collectionApp, getUserCollection, updateCollectionApp } from '@/shared/http/appDev';
 import { setCollectionValue, setCurAppId } from '@/store/collection/collection';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
 import { AnyAction } from 'redux';
@@ -53,7 +53,7 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
     1: async (item: AnyAction) => {
       try {
         if(item?.id) {
-          await cancleUserCollection({
+          await cancelUserCollection({
             usrInfo: getLocalUser(),
             aippId: item.aippId,
           })

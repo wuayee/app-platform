@@ -1,45 +1,79 @@
 
 import React, { useEffect, useState, useRef } from 'react';
-import { Input, Pagination, Empty, Spin } from "antd";
-import { AddFlowIcon } from '@assets/icon';
+import { Input, Pagination, Empty, Spin, Select } from "antd";
 import { handleClickAddToolNode, handleDragToolNode } from '../utils';
+import { getToolList } from "@shared/http/aipp";
 import ToolModal from './tool-modal';
 import '../styles/tool-item.scss';
-
+import { PluginTypeE } from './model';
+import { getMyPlugin, getPlugins } from '../../../shared/http/plugin';
+import { useAppSelector } from '../../../store/hook';
 const { Search } = Input;
+const { Option } = Select;
 
-const ToolItem = (props) => {
-  const { dragData, tabClick, loading, toolKey } = props;
-  const [ name, setName ] = useState('');
+const ToolItem = () => {
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
+  const [ toolKey, setToolKey ] = useState('Builtin');
+  const [ loading, setLoading ] = useState(false);
   const [ pageNum, setPageNum ] = useState(1);
-  const [ list, setList ] = useState([]);
+  const [ pluginData, setPluginData ] = useState([]);
   const [ showModal, setShowModal ] = useState(false);
-  const listRef = useRef([]);
+  const currentUser = localStorage.getItem('currentUser') || '';
+  const searchName = useRef(undefined);
+  const listType = useRef('market');
   useEffect(() => {
-    listRef.current = JSON.parse(JSON.stringify(dragData));
-    setList(listRef.current);
-  }, [dragData])
+    getPluginList()
+  }, [toolKey])
   const tab = [
-    { name: '官方', key: 'Builtin' },
+    { name: 'Builtin', key: 'Builtin' },
     { name: 'HuggingFace', key: 'HUGGINGFACE' },
     { name: 'LangChain', key: 'LANGCHAIN' },
-  ]
-  // 搜索文本变化，更新工具列表
-  const handleSearch = (value, event, source) => {
+  ];
+  const handleChange = (value: string) => {
     setPageNum(1);
-    if (!value.trim().length) {
-      setList(listRef.current);
+    listType.current = value;
+    getPluginList();
+  };
+  const selectBefore = (
+    <Select defaultValue="市场" onChange={handleChange}>
+      <Option value="owner">个人</Option>
+      <Option value="market">市场</Option>
+    </Select>
+  );
+  // 获取插件列表
+  const getPluginList =async (key = undefined)=> {
+    setLoading(true);
+    let res;
+    if (listType.current === PluginTypeE.MARKET) {
+      res = await getPlugins({
+        pageNum,
+        pageSize:100,
+        includeTags: toolKey,
+        isPublished: true,
+        name: searchName.current,
+      });
     } else {
-      let arr = listRef.current.filter(item => item.name.indexOf(value.trim()) !== -1);
-      console.log(arr);
-      
-      setList(arr);
+      res = await getMyPlugin(tenantId, {
+        pageNum,
+        pageSize:100,
+      });
     }
+    const data=listType.current === PluginTypeE.MARKET? res?.data : res?.data?.toolData;
+      setLoading(false);
+      if (toolKey === 'HUGGINGFACE') {
+        data.forEach(item => {
+          item.type = 'huggingFaceNodeState',
+          item.context = {
+            default_model: item.defaultModel
+          }
+        })
+      };
+        setPluginData(data);
   }
   const handleClick = (key) => {
     setPageNum(1);
-    tabClick(key);
-    setName('');
+    setToolKey(key);
+    getPluginList(key);
   }
   // 分页
   const selectPage = (curPage: number, curPageSize: number) => {
@@ -47,16 +81,22 @@ const ToolItem = (props) => {
       setPageNum(curPage);
     }
   }
+  // 名称搜索
+  const filterByName = (value: string) => {
+    searchName.current = value.trim();
+    setPageNum(1);
+    getPluginList();
+  }
   return <>
-    <Search
-      placeholder="请输入搜索关键词"
-      allowClear
-      value={name}
-      onChange={ e => { setName(e.target.value) }}
-      onSearch={handleSearch}
-    />
+    <Search 
+      disabled
+      size="large"
+      addonBefore={selectBefore} 
+      onSearch={filterByName}
+      // size="small"
+      placeholder="请输入" />
     <div className="tool-tab">
-      { tab.map(item => {
+      { listType.current === PluginTypeE.MARKET&&tab?.map(item => {
           return (
             <span className={ toolKey === item.key ? 'active' : null } 
               key={item.key} 
@@ -70,8 +110,8 @@ const ToolItem = (props) => {
     </div>
     <Spin spinning={loading}>
       {
-        list.length > 0 && <div className="drag-list">
-          { list.map((item, index) => {
+        pluginData.length > 0 && <div className="drag-list">
+          { pluginData.map((item, index) => {
               return (
                 <div
                   className='drag-item'
@@ -86,7 +126,7 @@ const ToolItem = (props) => {
                         { item.name }
                       </span>
                     </div>
-                    <span className='drag-item-icon' 
+                    <span className='drag-item-icon'
                       onClick={(event) => handleClickAddToolNode(item.type || 'toolInvokeNodeState', event, item)}>
                       <img src='/src/assets/images/ai/flow.png'  />
                     </span>
@@ -97,7 +137,7 @@ const ToolItem = (props) => {
           }
         </div>
       }
-      { list.length === 0 && <div className="tool-empty"><Empty description="暂无数据" /></div> }
+      { pluginData.length === 0 && <div className="tool-empty"><Empty description="暂无数据" /></div> }
     </Spin>
     <ToolModal showModal={showModal} setShowModal={setShowModal} />
   </>

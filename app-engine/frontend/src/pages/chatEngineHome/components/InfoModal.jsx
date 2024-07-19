@@ -15,6 +15,7 @@ const InfoModal = () => {
   useEffect(() => {
     const fetchData = async () => {
       const res = await getAnnouncement();
+      if(!res.announcementsByType) return
       setLastAnnounceTime(res.latestCreateTime)
       handleData(res.announcementsByType)
       const timeNow = Date.parse(res.latestCreateTime)
@@ -45,6 +46,7 @@ const InfoModal = () => {
         icon: <FixIcon/>,
       },
     }
+    console.log(data);
     for(const key of Object.keys(data)){
       const item = {
         icon: mapper[key].icon,

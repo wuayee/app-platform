@@ -25,30 +25,28 @@ const PluginCard = ({ pluginData,cardType }: any) => {
   ];
   return(
   <div className='plugin-card'
-   onClick={()=>{navigate(`/plugin/detail/${pluginData.uniqueName}`)}}>
+   onClick={()=>{navigate(`/plugin/detail/${pluginData?.uniqueName}`)}}>
     <div className='plugin-card-header'>
       <img src='/src/assets/images/knowledge/knowledge-base.png' />
       <div>
         <div style={{ display: 'flex' }}>
           <div style={{ fontSize: 20, marginBottom: 8 }}>
-            {pluginData.name}
-          </div>
-          <div hidden={!pluginData.tags.includes('workflow')} style={{ alignContent: 'center', marginLeft: '12px' }}>
-            <PluginIcons.ButterFlydate />
+            {pluginData?.name}
           </div>
         </div>
         <div className='plugin-card-user'>
           <Icons.user />
-          <span style={{ marginRight: 8 }}>{pluginData.creator}</span>
-          {pluginData.tags.map((tag: string, index: number) => <Tag style={{ margin: 0 }} key={index}>{tag}</Tag>)}
+          <span style={{ marginRight: 8 }}>{pluginData?.creator}</span>
+          {pluginData?.tags?.map((tag: string, index: number) => <Tag style={{ margin: 0 }} key={index}>{tag}</Tag>)}
         </div>
       </div>
     </div>
     <div className='card-content'>
-      {pluginData.description}
+      {pluginData?.description}
     </div>
     {/* 卡片底部 */}
     <div className='card-footer'>
+      <div hidden>
       <Flex gap={14}>
         <span hidden={cardType===PluginCardTypeE.MARKET}>
           <Tag className='footer-type'>Tag 1</Tag>
@@ -62,13 +60,14 @@ const PluginCard = ({ pluginData,cardType }: any) => {
           {pluginData?.likeCount}
         </span>
       </Flex>
+      </div>
       <div hidden={cardType!==PluginCardTypeE.MARKET}>
       <Flex style={{ display: 'flex', alignItems: 'center' }} gap={4} >
         {IconMap[pluginData?.source?.toUpperCase()]?.icon}
         <span style={{ fontSize: 12, fontWeight: 700 }}>{IconMap[pluginData?.source?.toUpperCase()]?.name}</span>
       </Flex>
       </div>
-      <div hidden={cardType===PluginCardTypeE.MARKET} onClick={(e)=>{e.stopPropagation();}}>
+      <div hidden onClick={(e)=>{e.stopPropagation();}}>
         <Dropdown menu={{items:operatItems}} trigger={['click']}>
            <EllipsisOutlined className='footer-more'/>
         </Dropdown>

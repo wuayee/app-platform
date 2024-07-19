@@ -32,6 +32,7 @@ import CreateApp from './svg/create-app.svg';
 import TabLeft from './images/ai/icon1.svg';
 import TabRight from './images/ai/icon2.svg';
 import Audio from './images/ai/audio.svg';
+import AudioActive from './images/ai/audio-active.svg';
 import Avatar from './images/avatar-default.svg';
 import AppDefault from './svg/app-default.svg';
 import History from './svg/history.svg';
@@ -55,6 +56,9 @@ import NewFeat from './svg/new-feat.svg';
 import Rocket from './svg/rocket.svg';
 import Fix from './svg/fix.svg';
 import Code from './svg/code.svg';
+import Play from './svg/play-sound.svg';
+import Stop from './svg/stop-sound.svg';
+import ChatUser from './svg/chat-user.svg';
 
 // 编辑按钮
 const EditIcon = (props) => <Icon component={() => (<Edit/>)} {...props} />;
@@ -89,6 +93,7 @@ const CreateAppIcon = (props) => <Icon component={() => (<CreateApp/>)} {...prop
 const TabLeftIcon = (props) => <Icon component={() => (<TabLeft/>)} {...props} />;
 const TabRightIcon = (props) => <Icon component={() => (<TabRight/>)} {...props} />;
 const AudioIcon = (props) => <Icon component={() => (<Audio/>)} {...props} />;
+const AudioActiveIcon = (props) => <Icon component={() => (<AudioActive/>)} {...props} />;
 const AvatarIcon = (props) => <Icon component={() => (<Avatar />)} {...props} />;
 const AppDefaultIcon = (props) => <Icon component={() => (<AppDefault />)} {...props} />;
 const CloseIcon = (props) => <Icon component={() => (<Close />)} {...props} />;
@@ -112,6 +117,9 @@ const NewFeatIcon = (props) => <Icon component={() => (<NewFeat />)} {...props} 
 const RocketIcon = (props) => <Icon component={() => (<Rocket />)} {...props} />;
 const FixIcon = (props) => <Icon component={() => (<Fix />)} {...props} />;
 const CodeIcon = (props) => <Icon component={() => (<Code />)} {...props} />;
+const ChatUserIcon = (props) => <Icon component={() => (<ChatUser />)} {...props} />;
+const PlayIcon = (props) => <Icon component={() => (<Play />)} {...props} />;
+const StopIcon = (props) => <Icon component={() => (<Stop />)} {...props} />;
 
 export {
   EditIcon,
@@ -146,6 +154,7 @@ export {
   TabLeftIcon,
   TabRightIcon,
   AudioIcon,
+  AudioActiveIcon,
   AvatarIcon,
   AppDefaultIcon,
   HistoryIcon,
@@ -168,6 +177,9 @@ export {
   NewFeatIcon,
   RocketIcon,
   FixIcon,
-  CodeIcon
+  CodeIcon,
+  ChatUserIcon,
+  PlayIcon,
+  StopIcon,
 }
 

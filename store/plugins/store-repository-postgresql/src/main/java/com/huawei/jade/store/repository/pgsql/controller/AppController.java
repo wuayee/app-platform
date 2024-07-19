@@ -80,6 +80,7 @@ public class AppController {
      * @param name 表示应用名的 {@link String}。
      * @param includeTags 表示包含标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
+     * @param canOrTags 表示查询工具选择标签与和或的方式的 {@link Boolean}。
      * @param pageNum 表示页码的 {@link Integer}。
      * @param limit 表示限制的 {@link Integer}。
      * @param version 表示工具的版本的 {@link String}。
@@ -90,6 +91,7 @@ public class AppController {
             @RequestQuery(value = "name", required = false) String name,
             @RequestQuery(value = "includeTags", required = false) List<String> includeTags,
             @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
+            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean canOrTags,
             @RequestQuery(value = "pageNum", required = false) Integer pageNum,
             @RequestQuery(value = "pageSize", required = false) Integer limit,
             @RequestQuery(value = "version", required = false) String version) {
@@ -99,7 +101,7 @@ public class AppController {
         if (limit != null) {
             notNegative(limit, "The limit cannot be negative.");
         }
-        AppQuery appQuery = new AppQuery(name, includeTags, excludeTags, pageNum, limit, version);
+        AppQuery appQuery = new AppQuery(name, includeTags, excludeTags, canOrTags, pageNum, limit, version);
         ListResult<AppData> res = this.appService.getApps(appQuery);
         return Result.ok(res.getData(), res.getCount());
     }

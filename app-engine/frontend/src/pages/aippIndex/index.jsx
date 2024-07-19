@@ -21,7 +21,6 @@ const AippIndex = () => {
   const [ spinning, setSpinning] = useState(false);
   const [ reloadInspiration, setReloadInspiration ] = useState('');
   const [ showChat, setShowChat ] = useState(false);
-  const [ showTime, setShowTime ] = useState(false);
   const [ messageChecked, setMessageCheck ] = useState(false);
   const [ testStatus, setTestStatus ] = useState(null);
   const [ testTime, setTestTime ] = useState(null);
@@ -66,7 +65,6 @@ const AippIndex = () => {
       if (res.code === 0) {
         Message({type: "success", content: "保存配置成功"});
         getAippDetails();
-        setShowTime(true);
         if (inspirationRefresh.current) {
           inspirationRefresh.current = false;
           let key = getUiD();
@@ -115,7 +113,6 @@ const AippIndex = () => {
             appInfo={appInfo}
             showElsa={showElsa}
             updateAippCallBack={updateAippCallBack}
-            showTime={showTime}
             mashupClick={elsaChange}
             openDebug={openDebug}
             testTime={testTime}
@@ -144,14 +141,14 @@ const AippIndex = () => {
               )}
             </ConfigFormContext.Provider>
             <CommonChat chatType="preview" contextProvider={contextProvider} previewBack={changeChat} />
-            {
+            {/* {
               (!showChat && showElsa) &&
               <Tooltip placement="leftTop" title="展开预览与调试区">
                 <div className="chat-icon" onClick={changeChat}>
                   <TalkFlowIcon />
                 </div>
               </Tooltip>
-            }
+            } */}
           </div>
         </div>
       }

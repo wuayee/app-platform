@@ -9,6 +9,7 @@ import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.PptJsonDto;
+import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.LLMService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
@@ -19,7 +20,6 @@ import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
-import com.huawei.hllm.model.LlmModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -79,7 +79,7 @@ public class LLMText2PptJson implements FlowableService {
         final int maxToken = 20000;
         String question = String.format(Locale.ROOT, TEXT2PPT_PROMPT, text);
         try {
-            String answer = LLMUtils.askModelForJson(llmService, question, maxToken, LlmModel.QWEN_72B);
+            String answer = LLMUtils.askModelForJson(llmService, question, maxToken, LlmModelNameEnum.QWEN_72B);
             PptJsonDto dto = JsonUtils.parseObject(answer, PptJsonDto.class);
             dto.setAuthor(operator);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

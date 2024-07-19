@@ -9,6 +9,7 @@ import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowableService;
 import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.LLMService;
 import com.huawei.fit.jober.aipp.service.OperatorService;
@@ -23,7 +24,6 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
-import com.huawei.hllm.model.LlmModel;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -105,7 +105,7 @@ public class LLMWord2Mind implements FlowableService {
         String prompt = String.format(Locale.ROOT, getMindPrompt(), input);
         log.warn("debug generate mind {}", prompt);
         try {
-            return LLMUtils.askModelForJson(llmService, prompt, maxTokens, LlmModel.QWEN_72B);
+            return LLMUtils.askModelForJson(llmService, prompt, maxTokens, LlmModelNameEnum.QWEN_72B);
         } catch (AippJsonDecodeException e) {
             log.error("generate mind json fail.", e);
         }

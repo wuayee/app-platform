@@ -107,7 +107,7 @@ const KnowledgeBaseCreate = () => {
         <div className='aui-header-1'>
           <div className='aui-title-1'>
             <img src='/src/assets/images/left.png' onClick={() => navigate(-1)} />
-            <BreadcrumbSelf currentLabel={id ? '修改知识库' : '创建知识库'}></BreadcrumbSelf>
+            <BreadcrumbSelf searchFlag currentLabel={id ? '修改知识库' : '创建知识库'}></BreadcrumbSelf>
           </div>
         </div>
         <div className='aui-block'>

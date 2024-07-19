@@ -32,9 +32,9 @@ import com.huawei.fit.jober.aipp.util.HttpUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.StringUtils;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -166,7 +166,8 @@ public class FileController extends AbstractController {
     public String extractFileContent(@RequestParam(value = "filePath") String filePath,
             @RequestParam(value = "token", defaultValue = "20000") Integer token) {
         File file = Paths.get(filePath).toFile();
-        String fileContent = this.operatorService.fileExtractor(file, FileExtensionEnum.findType(file.getName()));
+        String fileContent = this.operatorService.fileExtractor(
+                file, FileExtensionEnum.findType(file.getName()));
         return AippStringUtils.textLenLimit(fileContent, token);
     }
 }

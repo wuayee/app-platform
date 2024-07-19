@@ -1,30 +1,12 @@
-import React, { ReactElement, useEffect, useState } from 'react';
-import { Card, Tooltip } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Dropdown, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
-import { Button, Dropdown, Space } from 'antd';
 import { StarFilled, UserOutlined, StarOutlined } from '@ant-design/icons';
-import { url } from 'inspector';
 import { Icons } from '../icons';
+import { cancelUserCollection, collectionApp } from '@/shared/http/appDev';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
+import { addCollectionApp, removeCollectionApp } from '@/store/collection/collection';
 import './style.scoped.scss';
-import { cancleUserCollection, collectionApp, getCollectionCountApp, getUserCollection } from '../../shared/http/appDev';
-import { useAppDispatch, useAppSelector } from '../../store/hook';
-import { addCollectionApp, removeCollectionApp } from '../../store/collection/collection';
-
-function Avatar() {
-  const employeeNumber = '123';
-  return (
-    <div
-      style={{
-        width: '18px',
-        height: '18px',
-        borderRadius: '50%',
-        overflow: 'hidden',
-        background: `url(https://w3.huawei.com/w3lab/rest/yellowpage/face/${employeeNumber}/120)`,
-        backgroundSize: 'contain',
-      }}
-    ></div>
-  );
-}
 
 export interface CardInfoType {
   name: string;
@@ -68,7 +50,6 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
       isDefault: false,
     });
     // 刷新收藏数
-    await getAppCollectionCount();
     dispatch(addCollectionApp(cardInfo.id));
     setLoading(false);
   }
@@ -76,12 +57,10 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
   // 取消收藏
   const cancleCollection = async () => {
     setLoading(true);
-    await cancleUserCollection({
+    await cancelUserCollection({
       usrInfo: getLoaclUser(),
       aippId: cardInfo.id,
     })
-    // 刷新收藏数
-    await getAppCollectionCount();
     dispatch(removeCollectionApp(cardInfo.id));
     setLoading(false);
   }
@@ -100,31 +79,12 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
     e.stopPropagation();
   }
 
-
-  // 查询当前应用的收藏数量
-  const getAppCollectionCount = async () => {
-    try {
-      if (cardInfo?.id) {
-        const res = await getCollectionCountApp(cardInfo?.id);
-        setCount(res?.data ?? 0)
-      }
-    } catch (error) {
-
-    }
-  }
   useEffect(() => {
-    getAppCollectionCount();
+    let { likeCount } = cardInfo;
+    setCount(likeCount || 0);
   }, [cardInfo])
   return (
-    <div
-      className='app_card_root'
-      style={{
-        background: 'url(/src/assets/images/knowledge/knowledge-background.png)',
-        backgroundRepeat:'no-repeat',
-        backgroundSize:'cover',
-        marginBottom:10,
-      }}
-    >
+    <div className='app_card_root'>
       {/* 头部区域 */}
       <div className='app_card_header'>
         <div className='img_box'>
@@ -137,8 +97,8 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
           <Tooltip title={cardInfo?.name}>
             <div className='headerTitle'>{cardInfo?.name}</div>
           </Tooltip>
-          <div className='title_info' style={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar />
+          <div className='title_info'>
+            <img width={18} height={18}  src='/src/assets/images/ai/user.jpg' alt='' />
             <div className='createBy'>{cardInfo.createBy}</div>
           </div>
         </div>

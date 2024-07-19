@@ -11,6 +11,7 @@ import com.huawei.fit.jober.aipp.common.AudioTextFunction;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.audio.AudioSplitInfo;
 import com.huawei.fit.jober.aipp.entity.ffmpeg.FfmpegMeta;
+import com.huawei.fit.jober.aipp.enums.LlmModelNameEnum;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.FfmpegService;
 import com.huawei.fit.jober.aipp.util.AippFileUtils;
@@ -24,12 +25,17 @@ import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
+import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
-import com.huawei.hllm.HllmClient;
-import com.huawei.hllm.entity.HllmChatEntity;
-import com.huawei.hllm.entity.HllmTranscriptionEntity;
-import com.huawei.hllm.model.LlmModel;
+import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.jade.fel.model.openai.client.OpenAiClient;
+import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
+import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionResponse;
+import com.huawei.jade.fel.model.openai.entity.chat.message.OpenAiChatMessage;
+import com.huawei.jade.fel.model.openai.entity.chat.message.Role;
+import com.huawei.jade.fel.model.openai.entity.chat.message.content.UserContent;
+import com.huawei.jade.voice.service.VoiceService;
 
 import org.apache.commons.io.FileUtils;
 
@@ -39,6 +45,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -63,17 +70,22 @@ public class LlmAudio2Task implements FlowableService {
                     + "Finally Output a json list, every entity contains the following keys: owner, title, "
                     + "task_detail.\n" + "\n" + "Output json:\n";
     private static final ExecutorService AUDIO_EXECUTOR = Executors.newFixedThreadPool(8);
-    private final HllmClient hllmClient;
     private final FfmpegService ffmpegService;
     private final AippLogService aippLogService;
     private final MetaInstanceService metaInstanceService;
+    private final OpenAiClient openAiClient;
+    private final VoiceService voiceService;
+    private final String endpoint;
 
-    public LlmAudio2Task(@Fit HllmClient hllmClient, @Fit FfmpegService ffmpegService,
-            @Fit AippLogService aippLogService, @Fit MetaInstanceService metaInstanceService) {
-        this.hllmClient = hllmClient;
+    public LlmAudio2Task(@Fit FfmpegService ffmpegService, @Fit AippLogService aippLogService,
+                         @Fit MetaInstanceService metaInstanceService, @Fit OpenAiClient openAiClient,
+                         @Fit VoiceService voiceService, @Value("${app-engine.endpoint}") String endpoint) {
         this.ffmpegService = ffmpegService;
         this.aippLogService = aippLogService;
         this.metaInstanceService = metaInstanceService;
+        this.openAiClient = openAiClient;
+        this.voiceService = voiceService;
+        this.endpoint = endpoint;
     }
 
     private AudioSplitInfo splitAudio(String instId, String audioUrl) throws JobberException {
@@ -106,7 +118,10 @@ public class LlmAudio2Task implements FlowableService {
     private String generateTask(List<File> audioList, List<Map<String, Object>> flowData)
             throws InterruptedException, IOException {
         AudioTextFunction<File, String> extractor =
-                file -> hllmClient.transcribe(HllmTranscriptionEntity.builder().file(file).build()).trim();
+                file -> {
+                    String filePath = AippFileUtils.getFileDownloadFilePath(this.endpoint, file.getPath());
+                    return voiceService.getText(filePath, file.getName());
+                };
         List<String> output = AudioUtils.extractAudioTextParallel(AUDIO_EXECUTOR, audioList, extractor);
         StringBuilder stringBuilder = new StringBuilder();
         output.forEach(stringBuilder::append);
@@ -114,11 +129,17 @@ public class LlmAudio2Task implements FlowableService {
         String msg = "以下是音频中提取到的关键内容：\n" + stringBuilder.toString();
         this.aippLogService.insertMsgLog(msg, flowData);
 
-        String llmOutput = hllmClient.generate(HllmChatEntity.builder()
-                .prompt(String.format(Locale.ROOT, PROMPT, stringBuilder))
-                .tokens(16000)
-                .build(), LlmModel.QWEN_72B);
-        return LLMUtils.tryFixLlmJsonString(llmOutput);
+        OpenAiChatMessage generateTaskMsg = OpenAiChatMessage.builder()
+                .role(Role.USER)
+                .content(Collections.singletonList(UserContent.text(String.format(Locale.ROOT, PROMPT, stringBuilder))))
+                .build();
+        OpenAiChatCompletionRequest request = OpenAiChatCompletionRequest.builder()
+                .model(LlmModelNameEnum.QWEN_72B.getValue())
+                .messages(Collections.singletonList(generateTaskMsg))
+                .maxTokens(16000)
+                .build();
+        OpenAiChatCompletionResponse llmOutput = openAiClient.createChatCompletion(request);
+        return LLMUtils.tryFixLlmJsonString(ObjectUtils.cast(llmOutput.getChoices().get(0).getMessage().getContent()));
     }
 
     /**

@@ -43,6 +43,12 @@ export const configMap = {
               urls: {
                   versionInfo: "/elsaApi/v1/api/{tenant}/app/published/unique_name/{uniqueName}"
               }
+          },
+          {
+            node: "codeNodeState",
+            urls: {
+              testCodeUrl: `${origin}/api/jober/v1/api/code/run`
+            }
           }
       ]
   },
@@ -84,6 +90,12 @@ export const configMap = {
               urls: {
                   versionInfo: `${origin}/api/jober/v1/api/{tenant}/app/published/unique_name/{uniqueName}`
               }
+          },
+          {
+            node: "codeNodeState",
+            urls: {
+              testCodeUrl: `${origin}/api/jober/v1/api/code/run`
+            }
           }
       ]
   },
@@ -132,6 +144,12 @@ export const configMap = {
               urls: {
                   versionInfo: `${origin}/api/jober/v1/api/{tenant}/app/published/unique_name/{uniqueName}`
               }
+          },
+          {
+            node: "codeNodeState",
+            urls: {
+              testCodeUrl: `${origin}/api/jober/v1/api/code/run`
+            }
           }
       ]
   },
@@ -179,6 +197,12 @@ export const configMap = {
               urls: {
                   versionInfo: `${origin}/api/jober/v1/api/{tenant}/app/published/unique_name/{uniqueName}`
               }
+          },
+          {
+            node: "codeNodeState",
+            urls: {
+              testCodeUrl: `${origin}/api/jober/v1/api/code/run`
+            }
           }
       ]
   },
