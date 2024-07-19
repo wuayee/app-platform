@@ -18,11 +18,6 @@ export const ChatContext = createContext({
   tenantId: ''
 });
 
-export const ConfigFormContext = createContext({
-  appId: '',
-  tenantId: '',
-});
-
 export const FlowContext = createContext({
   appInfo: {},
   type: '',

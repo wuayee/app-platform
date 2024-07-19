@@ -10,7 +10,6 @@ import AddFlow from '../addFlow';
 import ConfigForm from '../configForm';
 import CommonChat from '../chatPreview/chatComminPage';
 import ChoreographyHead from '../components/header';
-import { ConfigFormContext } from './context';
 import { getUser } from '../helper';
 import { useAppDispatch, useAppSelector } from '../../store/hook';
 import { setAppId, setAppInfo } from '../../store/appInfo/appInfo';
@@ -101,14 +100,11 @@ const AippIndex = () => {
     tenantId,
   };
 
-  const configFormProvider ={
-    appId,
-    tenantId
-  }
   return (
     <>
       {
-        <div className={`container ${showElsa ? 'layout-elsa-content' : ''} ${showChat ? 'layout-show-preview' : ''}`}>
+        <div 
+          className={`container ${showElsa ? 'layout-elsa-content' : ''} ${showChat ? 'layout-show-preview' : ''}`}>
           <ChoreographyHead
             appInfo={appInfo}
             showElsa={showElsa}
@@ -120,14 +116,14 @@ const AippIndex = () => {
             addFlowRef={addFlowRef}
           />
           <div className="layout-content">
-            <ConfigFormContext.Provider value={configFormProvider}> 
-              {showElsa ?
+            {showElsa ?
               (
-                <AddFlow type="edit"
-                         addFlowRef={addFlowRef}
-                         setFlowTestStatus={handleTestStatus}
-                         setFlowTestTime={handleTestTime}
-                         appInfo={appInfo}
+                <AddFlow 
+                  type="edit"
+                  addFlowRef={addFlowRef}
+                  setFlowTestStatus={handleTestStatus}
+                  setFlowTestTime={handleTestTime}
+                  appInfo={appInfo}
                 />
               ) :
               (
@@ -139,16 +135,11 @@ const AippIndex = () => {
                   showElsa={showElsa}
                 />
               )}
-            </ConfigFormContext.Provider>
-            <CommonChat chatType="preview" contextProvider={contextProvider} previewBack={changeChat} />
-            {/* {
-              (!showChat && showElsa) &&
-              <Tooltip placement="leftTop" title="展开预览与调试区">
-                <div className="chat-icon" onClick={changeChat}>
-                  <TalkFlowIcon />
-                </div>
-              </Tooltip>
-            } */}
+            <CommonChat 
+              chatType="preview" 
+              contextProvider={contextProvider} 
+              previewBack={changeChat} 
+            />
           </div>
         </div>
       }

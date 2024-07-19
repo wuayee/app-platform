@@ -3,7 +3,7 @@ import React, { useImperativeHandle, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Drawer, Pagination, Table, Button, Input, Dropdown, Select, Tag } from 'antd';
 import { CloseOutlined, SearchOutlined, DownOutlined } from '@ant-design/icons';
-import { getKnowledges, getKnowledgesList } from "@shared/http/appBuilder";
+import { getKnowledges, getKnowledgesList } from '@shared/http/appBuilder';
 import { formatDateTime } from '@/shared/utils/common';
 import '../styles/add-knowledge.scss';
 const { Search } = Input;
@@ -44,9 +44,9 @@ const AddKnowledge = (props) => {
     },
   ]
   const selectBefore = (
-    <Select defaultValue="市场">
-      <Option value="个人" disabled>个人</Option>
-      <Option value="市场" disabled>市场</Option>
+    <Select defaultValue='市场'>
+      <Option value='个人' disabled>个人</Option>
+      <Option value='市场' disabled>市场</Option>
     </Select>
   );
   const btnItems = [
@@ -66,7 +66,7 @@ const AddKnowledge = (props) => {
     handleGetKnowledgeOptions();
   }
   // 获取左侧知识库列表
-  const handleGetKnowledgeOptions = (page) => {
+  const handleGetKnowledgeOptions = (page = null) => {
     const params = {
       tenantId,
       pageNum: page || 0,
@@ -215,9 +215,9 @@ const AddKnowledge = (props) => {
       onClose={cancle}
       open={open}
       footer={
-        <div className="drawer-footer">
+        <div className='drawer-footer'>
           <Button onClick={cancle}>取消</Button>
-          <Button type="primary" onClick={confirm}>
+          <Button type='primary' onClick={confirm}>
             确定
           </Button>
         </div>
@@ -225,25 +225,25 @@ const AddKnowledge = (props) => {
       extra={
         <CloseOutlined onClick={cancle}/>
       }>
-        <div className="mashup-add-drawer">
-          <div className="knowledge-search">
+        <div className='mashup-add-drawer'>
+          <div className='knowledge-search'>
             <Search
               prefix={<SearchOutlined />}
               addonBefore={selectBefore} 
               allowClear
-              placeholder="搜索"
+              placeholder='搜索'
               onSearch={onSearch}
             />
             <Dropdown menu={{ items: btnItems, onClick: createClick }} trigger={['click']}>
-              <Button type="primary" icon={<DownOutlined />}>创建</Button>
+              <Button type='primary' icon={<DownOutlined />}>创建</Button>
             </Dropdown>
           </div>
-          <div className="knowledge-check-info">
+          <div className='knowledge-check-info'>
             { knowledgeList.map(item => {
                 return (
-                  <div className="info" key={item.name}>
-                    <div className="info-left">{item.name}</div>
-                    <div className="info-right">
+                  <div className='info' key={item.name}>
+                    <div className='info-left'>{item.name}</div>
+                    <div className='info-right'>
                       { item.child?.map(tItem => {
                         return <Tag closeIcon key={tItem.name} onClose={(e) => tagClose(e, tItem)}>{tItem.name}</Tag>
                       })}
@@ -253,33 +253,35 @@ const AddKnowledge = (props) => {
               }) 
             }
           </div>
-          <div className="knowledge-check-list">
-            <div className="knowledge-left">
-              <div className="item-title">知识库</div>
-              <div className="item-inner">
+          <div className='knowledge-check-list'>
+            <div className='knowledge-left'>
+              <div className='item-title'>知识库</div>
+              <div className='item-inner'>
                 {
                   knowledgeOptions?.map((item, index) => {
                     return (
-                      <div className="item" key={index} onClick={() => leftMenuClick(item)}>
+                      <div className='item' key={index} onClick={() => leftMenuClick(item)}>
                         <span className={knowledgeItem?.id === item.id ? 'active' : null}>{item.name}</span>
                       </div>
                     )
                   })
                 }
               </div>
-              <div className="item-page">
+              <div className='item-page'>
                 <Pagination total={total} pageSize={100} onChange={pageChange}/>
               </div>
             </div>
-            <div className="knowledge-right">
-              <div className="knowledge-details">
-                <div className="left">
+            <div className='knowledge-right'>
+              <div className='knowledge-details'>
+                <div className='left'>
                   <img src='/src/assets/images/knowledge/knowledge-base.png' alt='' />
                 </div>
-                <div className="right">
-                  <div className="knowledge-title">{knowledgeItem?.name}</div>
-                  <div className="knowledge-user">{knowledgeItem?.ownerName}创建于：{formatDateTime(knowledgeItem?.createdAt)}</div>
-                  <div className="knowledge-desc">{knowledgeItem?.description}</div>
+                <div className='right'>
+                  <div className='knowledge-title'>{knowledgeItem?.name}</div>
+                  <div className='knowledge-user'>{knowledgeItem?.ownerName}
+                    创建于：{formatDateTime(knowledgeItem?.createdAt)}
+                  </div>
+                  <div className='knowledge-desc'>{knowledgeItem?.description}</div>
                 </div>
               </div>
               <Table 
