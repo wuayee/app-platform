@@ -48,6 +48,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * 表示 {@link HttpClassicServerResponse} 的默认实现。
  *
  * @author 季聿阶 j00559309
+ * @author 易文渊 y00612997
  * @since 2022-11-25
  */
 public class DefaultHttpClassicServerResponse extends AbstractHttpClassicResponse implements HttpClassicServerResponse {
@@ -102,13 +103,6 @@ public class DefaultHttpClassicServerResponse extends AbstractHttpClassicRespons
             return;
         }
         this.entity = entity;
-        if (this.entity == null) {
-            return;
-        }
-        this.setContentTypeByEntity(this.headers(), this.entity);
-        if (this.entity instanceof FileEntity) {
-            this.setFileEntityHeaders(this.headers(), ObjectUtils.cast(this.entity));
-        }
     }
 
     private void setFileEntityHeaders(ConfigurableMessageHeaders headers, FileEntity fileEntity) {
@@ -134,7 +128,6 @@ public class DefaultHttpClassicServerResponse extends AbstractHttpClassicRespons
             throw new InternalServerErrorException("The http classic server response has already committed.");
         }
         this.entity = new DefaultWritableBinaryEntity(this, this.serverResponse);
-        this.setContentTypeByEntity(this.headers(), this.entity);
         this.commit();
         this.serverResponse.writeStartLineAndHeaders();
         return ObjectUtils.cast(this.entity);
@@ -211,6 +204,12 @@ public class DefaultHttpClassicServerResponse extends AbstractHttpClassicRespons
             return;
         }
         this.headers().set(COOKIE, this.cookies().toString());
+        if (this.entity != null) {
+            this.setContentTypeByEntity(this.headers(), this.entity);
+            if (this.entity instanceof FileEntity) {
+                this.setFileEntityHeaders(this.headers(), ObjectUtils.cast(this.entity));
+            }
+        }
         super.commit();
     }
 

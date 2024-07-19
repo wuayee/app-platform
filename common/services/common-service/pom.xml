@@ -11,6 +11,14 @@
 
     <artifactId>jade-common-service</artifactId>
 
+    <dependencies>
+        <!-- FIT core -->
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-api</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
