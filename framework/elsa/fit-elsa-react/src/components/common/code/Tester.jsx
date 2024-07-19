@@ -16,7 +16,7 @@ import {useRef, useState} from "react";
  */
 export const Tester = ({codeRef, executeFunc, language, suggestions = []}) => {
     const [messageApi, contextHolder] = message.useMessage();
-    const [outputJson, setOutputJson] = useState({});
+    const [output, setOutput] = useState({});
     const [isRunning, setIsRunning] = useState(false);
     const inputRef = useRef("{}");
 
@@ -24,7 +24,7 @@ export const Tester = ({codeRef, executeFunc, language, suggestions = []}) => {
      * 使用老版本的API进行代码复制操作
      */
     const fallbackCopy = () => {
-        const textToCopy = JSON.stringify(outputJson);
+        const textToCopy = JSON.stringify(output);
 
         // 创建一个临时的textarea元素
         const textArea = document.createElement("textarea");
@@ -46,7 +46,7 @@ export const Tester = ({codeRef, executeFunc, language, suggestions = []}) => {
 
     const onCopyClick = () => {
         if (navigator.clipboard) {
-            navigator.clipboard.writeText(JSON.stringify(outputJson)).then(() => {
+            navigator.clipboard.writeText(JSON.stringify(output)).then(() => {
             });
             messageApi.open({type: "success", content: "拷贝成功"}).then(() => {
             }).catch(err => {
@@ -65,9 +65,19 @@ export const Tester = ({codeRef, executeFunc, language, suggestions = []}) => {
     const runTest = () => {
         setIsRunning(true);
         executeFunc(codeRef.current, inputRef.current, language, (output) => {
-            setOutputJson(output);
+            setOutput(output);
+            setIsRunning(false);
+        }, (error) => {
+            setOutput(error);
             setIsRunning(false);
         });
+    };
+
+    const formatOutput = (output) => {
+        if (typeof output === 'boolean') {
+            return output.toString();
+        }
+        return output;
     };
 
     return (<>
@@ -79,7 +89,7 @@ export const Tester = ({codeRef, executeFunc, language, suggestions = []}) => {
             <div className={"jade-code-test-input-content"}>
                 <CodeEditor language={"json"}
                             code={"{}"}
-                            options={{readOnly: false, lineNumbers: "off"}}
+                            options={{readOnly: false, lineNumbers: "on"}}
                             suggestions={suggestions}
                             onChange={onTestInputChange}/>
             </div>
@@ -99,13 +109,13 @@ export const Tester = ({codeRef, executeFunc, language, suggestions = []}) => {
                 <span>输出</span>
             </div>
             <div className={"jade-code-test-output-content"}>
-                {typeof outputJson === "object" ?
+                {typeof output === "object" ?
                         <div className={"jade-code-test-output-content-wrapper"}>
-                            <JsonViewer jsonData={outputJson}/>
+                            <JsonViewer jsonData={output}/>
                         </div>
                         :
                         <Card className={"code-run-style"}>
-                            {outputJson}
+                            {formatOutput(output)}
                         </Card>}
             </div>
             <div className={"jade-code-test-output-footer"}>

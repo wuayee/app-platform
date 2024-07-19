@@ -60,22 +60,30 @@ export default function CodePanel({disabled, data, dispatch}) {
      * @param args 入参
      * @param language 编程语言
      * @param callback 回调方法
+     * @param errorCallback 错误发生时的回调
      */
-    const executeFunc = (currentCode, args, language, callback) => {
+    const executeFunc = (currentCode, args, language, callback, errorCallback) => {
         console.log("execute: ", args)
         const input = {};
-        input.args = JSON.parse(args);
+        try {
+            input.args = JSON.parse(args);
+        } catch (e) {
+            console.error('Error process params:', e.message);
+            errorCallback("输入格式错误：" + e.message);
+            return;
+        }
         input.code = currentCode;
         input.language = language;
         httpUtil.post(url, input, undefined, (response) => {
             if (response.code === successCode) {
                 callback(response.data);
             } else {
-                callback(response.msg);
+                console.error('Test code error:', response.msg);
+                errorCallback(response.msg);
             }
         }, (err) => {
-            console.error('Error test code:', err);
-            callback("系统运行异常，请联系系统管理员");
+            console.error('Error invoke test code api:', err);
+            errorCallback("系统运行异常，请联系系统管理员");
         });
     };
 
