@@ -567,8 +567,6 @@ const ObserverProxy = (nodeId, observableId, observer, shape) => {
      * 删除shape中的observed，删除page中的监听.
      */
     self.stopObserve = () => {
-        // stopObserve时，先恢复到空值，再停止监听。防止直接调用stopObserve时，监听方虽然已不再监听，但值并没有变化的问题。
-        self.observe({value: null, type: null});
         const index = shape.observed.findIndex(o => o === self);
         shape.observed.splice(index, 1);
         shape.page.stopObserving(nodeId, observableId, self);
