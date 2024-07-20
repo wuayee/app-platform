@@ -85,9 +85,7 @@ const SelectDataSource = ({ type, form }: props) => {
     if (value.length) {
       for (let index = 0; index < value.length; index++) {
         const item = value[index];
-
         const keys = Object.keys(item);
-
         for (let j = 0; j < keys.length; j++) {
           const key = keys[index];
           if(!item[key]) {

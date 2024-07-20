@@ -1,10 +1,10 @@
-import { InboxOutlined } from '@ant-design/icons';
+import React from 'react';
 import { Upload } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { getPluginPackageInfo } from '../../shared/http/plugin';
+import { InboxOutlined } from '@ant-design/icons';
+import { getPluginPackageInfo } from '@/shared/http/plugin';
 
 const DraggerUpload = (props) => {
-  const { accept,setResult } = props;
+  const { setResult } = props;
   const customRequest=(val)=>{
     getPluginPackageInfo(val?.file).then((res)=>{
     val.onSuccess(res, val?.file);

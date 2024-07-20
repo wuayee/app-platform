@@ -2,7 +2,6 @@ import { del, get, post, put } from './http';
 import { httpUrlMap } from './httpConfig';
 
 const { JANE_URL, AIPP_URL, PLUGIN_URL } = httpUrlMap[process.env.NODE_ENV];
-console.log(process.env.NODE_ENV,'process.env.NODE_ENV');
 const sso_url = '/v1/user/sso_login_info';
 
 // 获取当前用户信息
@@ -76,8 +75,10 @@ export function getInspirationB(tenantId, appId) {
   return get(`${AIPP_URL}/${tenantId}/app/${appId}/inspiration/department`);
 }
 // 调试应用
-export function aippDebug(tenantId, appId, params) {
-  return post(`${AIPP_URL}/${tenantId}/app/${appId}/debug`, params);
+export function aippDebug(tenantId, appId, params, chatType = '') {
+  let url = `${AIPP_URL}/${tenantId}/app/${appId}/debug`;
+  chatType !== 'preview' ? url = `${AIPP_URL}/${tenantId}/app/${appId}/latest_published ` : null;
+  return post(url, params);
 }
 
 // 发布应用
