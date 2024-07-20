@@ -35,7 +35,7 @@
   }
 }
 .app-desc {
-  
+  word-break: break-all;
 }
 .remarks {
   display: flex;
@@ -44,5 +44,6 @@
   }
   .right {
     flex: 1;
+    word-break: break-all;
   }
 }
