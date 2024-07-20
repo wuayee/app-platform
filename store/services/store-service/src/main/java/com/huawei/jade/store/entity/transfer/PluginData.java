@@ -53,6 +53,7 @@ public class PluginData extends ToolData {
         this.setSource(toolData.getSource());
         this.setIcon(toolData.getIcon());
         this.setTags(toolData.getTags());
+        this.setVersion(toolData.getVersion());
         this.isPublished = isPublished;
         this.owner = owner;
         this.likeCount = likeCount;

@@ -84,7 +84,7 @@ public class DefaultPluginService implements PluginService {
             int count = this.pluginMapper.getMyCollection(pluginQuery).size();
             return ListResult.create(data, count);
         }
-        if ((pluginQuery.getPageNum() != null && pluginQuery.getPageNum() < 0) || (pluginQuery.getLimit() != null
+        if ((pluginQuery.getOffset() != null && pluginQuery.getOffset() < 0) || (pluginQuery.getLimit() != null
                 && pluginQuery.getLimit() < 0)) {
             return ListResult.empty();
         }

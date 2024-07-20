@@ -4,6 +4,8 @@
 
 package com.huawei.jade.carver.tool.repository.pgsql.service;
 
+import static com.huawei.jade.carver.validation.ValidateTagMode.validateTagMode;
+
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.transaction.Transactional;
@@ -115,10 +117,11 @@ public class DefaultToolService implements ToolService {
         if (toolQuery == null) {
             return ListResult.empty();
         }
-        if ((toolQuery.getPageNum() != null && toolQuery.getPageNum() < 0) || (toolQuery.getLimit() != null
+        if ((toolQuery.getOffset() != null && toolQuery.getOffset() < 0) || (toolQuery.getLimit() != null
                 && toolQuery.getLimit() < 0)) {
             return ListResult.empty();
         }
+        toolQuery.setMode(validateTagMode(toolQuery.getMode()));
         Set<String> includeTags = toolQuery.getIncludeTags();
         toolQuery.setIncludeTags(includeTags.stream().map(StringUtils::toUpperCase).collect(Collectors.toSet()));
         Set<String> excludeTags = toolQuery.getExcludeTags();
@@ -153,10 +156,11 @@ public class DefaultToolService implements ToolService {
         if (toolQuery == null) {
             return ListResult.empty();
         }
-        if ((toolQuery.getPageNum() != null && toolQuery.getPageNum() < 0) || (toolQuery.getLimit() != null
+        if ((toolQuery.getOffset() != null && toolQuery.getOffset() < 0) || (toolQuery.getLimit() != null
                 && toolQuery.getLimit() < 0)) {
             return ListResult.empty();
         }
+        toolQuery.setMode(validateTagMode(toolQuery.getMode()));
         Set<String> includeTags = toolQuery.getIncludeTags();
         toolQuery.setIncludeTags(includeTags.stream().map(StringUtils::toUpperCase).collect(Collectors.toSet()));
         Set<String> excludeTags = toolQuery.getExcludeTags();

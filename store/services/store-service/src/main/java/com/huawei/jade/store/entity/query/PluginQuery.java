@@ -6,7 +6,7 @@ package com.huawei.jade.store.entity.query;
 
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * 动态条件查询插件的类。
@@ -34,31 +34,155 @@ public class PluginQuery extends ToolQuery {
     private String collector;
 
     /**
-     * 用所有参数构造 {@link PluginQuery}。
-     *
-     * @param isPublished 表示插件是否已发布的 {@link Boolean}。
-     * @param owner 表示插件拥有者的 {@link String}。
-     * @param collector 表示收藏者的名字的 {@link String}。
-     * @param toolName 表示工具名的 {@link String}。
-     * @param includeTags 表示包含标签的 {@link List}{@code <}{@link String}{@code >}。
-     * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
-     * @param canOrTags 表示查询工具选择标签方式的或的 {@link Boolean}。
-     * @param pageNum 表示页码的 {@link Integer}。
-     * @param limit 表示限制的 {@link Integer}。
-     * @param version 表示工具版本的 {@link String}。
-     */
-    public PluginQuery(Boolean isPublished, String owner, String collector, String toolName, List<String> includeTags,
-            List<String> excludeTags, Boolean canOrTags, Integer pageNum, Integer limit, String version) {
-        super(toolName, includeTags, excludeTags, canOrTags, pageNum, limit, version);
-        this.collector = collector;
-        this.isPublished = isPublished;
-        this.owner = owner;
-    }
-
-    /**
      * 空参构造 {@link PluginQuery}。
      */
     public PluginQuery() {}
+
+    /**
+     * {@link PluginQuery} 的构建器。
+     */
+    public static class Builder {
+        private String toolName;
+        private Set<String> includeTags;
+        private Set<String> excludeTags;
+        private String mode;
+        private Integer offset;
+        private Integer limit;
+        private String version;
+        private Boolean isPublished;
+        private String owner;
+        private String collector;
+
+        /**
+         * 向当前构建器中设置工具名。
+         *
+         * @param toolName 表示工具名的 {@link String}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        public Builder toolName(String toolName) {
+            this.toolName = toolName;
+            return this;
+        }
+
+        /**
+         * 向当前构建器中设置包含标签。
+         *
+         * @param includeTags 表示包含标签的 {@link Set}{@code <}{@link String}{@code >}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        public Builder includeTags(Set<String> includeTags) {
+            this.includeTags = includeTags;
+            return this;
+        }
+
+        /**
+         * 向当前构建器中设置排除标签。
+         *
+         * @param excludeTags 表示排除标签的 {@link Set}{@code <}{@link String}{@code >}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        public Builder excludeTags(Set<String> excludeTags) {
+            this.excludeTags = excludeTags;
+            return this;
+        }
+
+        /**
+         * 向当前构建器中设置模式。
+         *
+         * @param mode 表示标签与和或模式的 {@link String}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        public Builder mode(String mode) {
+            this.mode = mode;
+            return this;
+        }
+
+        /**
+         * 向当前构建器中设置偏移量。
+         *
+         * @param offset 表示偏移量的 {@link Integer}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        public Builder offset(Integer offset) {
+            this.offset = offset;
+            return this;
+        }
+
+        /**
+         * 向当前构建器中设置页面大小。
+         *
+         * @param limit 表示页码的 {@link Integer}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        public Builder limit(Integer limit) {
+            this.limit = limit;
+            return this;
+        }
+
+        /**
+         * 向当前构建器中设置版本。
+         *
+         * @param version 表示页码的 {@link String}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        public Builder version(String version) {
+            this.version = version;
+            return this;
+        }
+
+        /**
+         * 向当前构建器中设置发布状态。
+         *
+         * @param isPublished 表示发布状态的 {@link Boolean}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        public Builder isPublished(Boolean isPublished) {
+            this.isPublished = isPublished;
+            return this;
+        }
+
+        /**
+         * 向当前构建器中设置拥有者。
+         *
+         * @param owner 表示拥有者的 {@link String}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        public Builder owner(String owner) {
+            this.owner = owner;
+            return this;
+        }
+
+        /**
+         * 向当前构建器中设置收藏者。
+         *
+         * @param collector 表示收藏者的 {@link String}。
+         * @return 表示当前构建器的 {@link Builder}。
+         */
+        public Builder collector(String collector) {
+            this.collector = collector;
+            return this;
+        }
+
+        /**
+         * 构建对象。
+         *
+         * @return 表示构建出来的对象的 {@link PluginQuery}。
+         */
+        public PluginQuery build() {
+            PluginQuery pluginQuery = new PluginQuery();
+            pluginQuery.setToolName(this.toolName);
+            pluginQuery.setIncludeTags(this.includeTags);
+            pluginQuery.setExcludeTags(this.excludeTags);
+            pluginQuery.setMode(this.mode);
+            pluginQuery.setOffset(this.offset);
+            pluginQuery.setLimit(this.limit);
+            pluginQuery.setVersion(this.version);
+            pluginQuery.setPublished(this.isPublished);
+            pluginQuery.setOwner(this.owner);
+            pluginQuery.setCollector(this.collector);
+            return pluginQuery;
+        }
+    }
 
     /**
      * 获取发布状态。

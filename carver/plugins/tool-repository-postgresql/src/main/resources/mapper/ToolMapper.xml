@@ -85,7 +85,7 @@
     </sql>
     <sql id="getOrSearchConditions">
         and i."is_latest" = true
-        <if test="canOrTags == false and includeTags != null and includeTags.size() > 0">
+        <if test="mode == 'AND' and includeTags != null and includeTags.size() > 0">
             and tg.tags is not null
             and (
             <foreach collection="includeTags" item="tag" open="" close="" separator=" and ">
@@ -93,7 +93,7 @@
             </foreach>
             )
         </if>
-        <if test="canOrTags == true and includeTags != null and includeTags.size() > 0">
+        <if test="mode == 'OR' and includeTags != null and includeTags.size() > 0">
             and tg.tags is not null
             and (
             <foreach collection="includeTags" item="tag" open="" close="" separator=" or ">
