@@ -13,6 +13,7 @@ import { getDaysAndHours } from '@/common/dataUtil';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setChatList, setChatRunning,setChatId,setOpenStar } from '@/store/chatStore/chatStore';
 import './style.scoped.scss';
+import { updateChatId } from "@/shared/utils/common";
 
 interface HistoryChatProps {
   openHistorySignal: number;
@@ -26,6 +27,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const chatId = useAppSelector((state) => state.chatCommonStore.chatId);
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
+  const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const openStar = useAppSelector((state) => state.chatCommonStore.openStar);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
@@ -60,6 +62,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
         await deleteChat(tenantId, currentChat?.current?.chat_id);
         if (chatId === currentChat?.current?.chat_id) {
           dispatch(setChatId(null));
+          updateChatId(null, appId);
           dispatch(setChatList([]));
         }
         refreshList();
@@ -86,6 +89,8 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     }
     dispatch(setChatList(list));
     setOpen(false);
+    dispatch(setChatId(chat_id));
+    updateChatId(chat_id, appId);
   }
 
   const getLastRes = async () => {
@@ -105,6 +110,20 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     }
   }
 
+  useEffect(() => {
+    if (lastResSignal > 0) {
+      setTimeout(() => {
+        getLastRes();
+      }, 3000);
+    }
+  }, [lastResSignal])
+
+  useEffect(() => {
+    if (appInfo?.id) {
+      getAippId();
+    }
+  }, [appInfo.id])
+
   const getLastContext = async () => {
     const chatListRes = await getChatDetail(tenantId, chatId, requestInfo);
     const length = chatListRes?.data?.msg_list?.length;
@@ -121,6 +140,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     refreshList();
     dispatch(setChatList([]));
     dispatch(setChatId(null));
+    updateChatId(null, appId);
     setClearOpen(false);
     setOpen(false);
   }
@@ -189,8 +209,8 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
               <div className='history-item-title'>{item?.chat_name?.length>10?item?.chat_name?.substring(0,10)+'...':item?.chat_name}</div>
               </Tooltip>
                 <span
-                  style={{ cursor: 'pointer', color: '#1677ff' }}
-                  onClick={() => { continueChat(item?.chat_id, item?.current_instance_id); dispatch(setChatId(item?.chat_id)); }}
+                  style={{ cursor: "pointer", color: "#1677ff" }}
+                  onClick={() => { continueChat(item?.chat_id, item?.current_instance_id);}}
                 >
                   继续聊天
                 </span>

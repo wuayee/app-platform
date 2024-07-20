@@ -12,6 +12,7 @@ import '__styles/global.scss';
 localStorage.getItem('currentUser') || localStorage.setItem('currentUser', '');
 localStorage.getItem('currentUserId') || localStorage.setItem('currentUserId', '');
 localStorage.getItem('currentUserIdComplete') || localStorage.setItem('currentUserIdComplete', '');
+localStorage.getItem('appChatMap') || localStorage.setItem('appChatMap', JSON.stringify({}));
 
 export default function App() {
   return (

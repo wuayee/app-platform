@@ -227,3 +227,15 @@ export const versionStringCompare = (preVersion='', lastVersion='') => {
   }
   return result;
 }
+
+/**
+ * 更新浏览器缓存里的应用会话Id
+ * @param {String} chatId 会话Id
+ * @param {String} appId 应用Id
+ * @Return void
+ */
+export const updateChatId = function (chatId, appId) {
+  let appChatMap = JSON.parse(localStorage.getItem('appChatMap'));
+  appChatMap[appId] = {chatId: chatId};
+  localStorage.setItem('appChatMap', JSON.stringify(appChatMap));
+}
