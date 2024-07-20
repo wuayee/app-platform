@@ -1,7 +1,7 @@
 
 import React, {  useState, useImperativeHandle } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Input, Modal, Button, Select, Form, Upload } from 'antd';
+import { Input, Modal, Button, Select, Form } from 'antd';
 import { Message } from '@shared/utils/message';
 import { httpUrlMap } from '@shared/http/httpConfig';
 import { appPublish, updateFlowInfo } from '@shared/http/aipp';
@@ -71,6 +71,7 @@ const PublishModal = (props) => {
       return
     }
     appInfo.version = formParams.version;
+    appInfo.publishedDescription = formParams.description;
     try {
       const res = await appPublish(tenantId, appId, appInfo);
       if (res.code === 0) {
