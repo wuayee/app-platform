@@ -167,18 +167,14 @@
         order by t.create_at desc
     </sql>
 
-    <select id="getLogsByInstanceIds" resultMap="BaseResultMap">
+    <select id="getFullLogsByInstanceIds" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from aipp_instance_log
         <where>
-            log_type != 'HIDDEN_MSG'
-            <if test="instanceIds != null and instanceIds.size() != 0">
-                AND
-                <foreach collection="instanceIds" item="item" separator="or" close=")" open="(">
-                    path LIKE '%/'||#{item}||'%'
-                </foreach>
-            </if>
+            <foreach collection="instanceIds" item="item" separator="or" close=")" open="(">
+                path LIKE '%/'||#{item}||'%'
+            </foreach>
         </where>
     </select>
 
@@ -202,10 +198,6 @@
         select
         <include refid="Base_Column_List"/>
         from aipp_instance_log
-        <where>
-            log_type != 'HIDDEN_MSG'
-            AND
-            instance_id= #{instanceId}
-        </where>
+        where instance_id= #{instanceId}
     </select>
 </mapper>

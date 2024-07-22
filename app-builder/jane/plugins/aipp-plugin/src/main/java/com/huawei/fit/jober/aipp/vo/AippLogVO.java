@@ -3,6 +3,7 @@ package com.huawei.fit.jober.aipp.vo;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.util.AippLogUtils;
+import com.huawei.fitframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -64,8 +65,10 @@ public class AippLogVO {
      * @return true/false.true,代表需要在前端展示;false,表示不需要在前端展示.
      */
     public boolean displayable() {
-        return !(AippInstLogType.FORM.name().equals(this.logType) || AippInstLogType.HIDDEN_MSG.name()
-                .equals(this.logType) || AippInstLogType.HIDDEN_QUESTION.name().equals(this.logType));
+        return !(StringUtils.equals(AippInstLogType.FORM.name(), this.logType)
+                || StringUtils.equals(AippInstLogType.HIDDEN_MSG.name(), this.logType) || StringUtils.equals(
+                AippInstLogType.HIDDEN_QUESTION.name(),
+                this.logType) || StringUtils.equals(AippInstLogType.HIDDEN_FORM.name(), this.logType));
     }
 
     /**

@@ -31,14 +31,14 @@ public class AippLogUtils {
      * @param logType 表示待检查日志的日志类型的 {@link String}
      * @return 返回logData的有效性。
      **/
-    public static boolean checkFormMsg(AippLogData logData, String logType) {
-        if (!StringUtils.equals(AippInstLogType.FORM.name(), logType)) {
+    public static boolean validFormMsg(AippLogData logData, String logType) {
+        if (!StringUtils.equals(AippInstLogType.FORM.name(), logType)
+                && !StringUtils.equals(AippInstLogType.HIDDEN_FORM.name(), logType)) {
             return true;
         }
         if (!isFormIdValid(logData.getFormId())) {
             return false;
         }
-
         return isFormVersionValid(logData.getFormVersion());
     }
 
