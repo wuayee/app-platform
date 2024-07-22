@@ -5,7 +5,7 @@ import { Checkbox } from 'antd';
 import { ChatUserIcon } from '@assets/icon';
 import { trans } from '@shared/utils/common';
 import { ChatContext } from '../../../aippIndex/context';
-import SendBtn from './send-btn.jsx';
+import SendBtn from './send-btn';
 import ImgSendBox from './img-send-box';
 import '../../styles/send-box.scss';
 
@@ -13,21 +13,20 @@ const SendBox = (props) => {
   const { content, checked, sendType} = props.chatItem;
   const { checkCallBack, showCheck }  = useContext(ChatContext);
   const [ showIcon, setShowIcon ] = useState(true);
-  const employeeNumber = localStorage.getItem('currentUserId') || null;
   const currentUser = localStorage.getItem('currentUser') || '';
   const location = useLocation();
 
+  // 选中回调
+  function onChange(e) {
+    props.chatItem.checked = e.target.checked;
+    checkCallBack();
+  }
   useEffect(() => {
     const { pathname } = location;
     if (pathname.includes('/chatShare/')) {
       setShowIcon(false);
     } 
   }, [location]);
-  // 选中回调
-  function onChange(e) {
-    props.chatItem.checked = e.target.checked;
-    checkCallBack();
-  }
   return <>{(
     <div className='send-box'>
       { showCheck && <Checkbox className='check-box' checked={checked} onChange={onChange}></Checkbox>}
@@ -36,7 +35,7 @@ const SendBox = (props) => {
         <span title={currentUser}>{currentUser}</span>
       </div>
       <div className='send-info'>
-        <span className="send-info-inner">
+        <span className='send-info-inner'>
           { sendType === 'text' ? 
             (<div dangerouslySetInnerHTML={{ __html: trans(content) }}></div>) : 
             (<ImgSendBox sendType={sendType} content={content} isRecieve={false} />) 

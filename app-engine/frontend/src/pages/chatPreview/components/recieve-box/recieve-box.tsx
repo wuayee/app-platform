@@ -1,10 +1,10 @@
 
 import React, { useEffect, useState, useContext } from 'react';
+import { Checkbox } from 'antd';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useLocation } from 'react-router-dom';
-import { Checkbox } from 'antd';
 import { ChatContext } from '@/pages/aippIndex/context';
-import { useAppSelector } from '../../../../store/hook';
+import { useAppSelector } from '@/store/hook';
 import Feedbacks from './feedbacks';
 import MessageDetail from './message-detail';
 import RuntimeForm from './runtime-form';
@@ -64,7 +64,7 @@ const ReciveBox = (props) => {
       {showCheck && <Checkbox className='check-box' checked={checked} onChange={onChange}></Checkbox>}
       <div className='user-image'>
         {isAt ? <Img iconPath={appIcon} /> : <Img iconPath={appInfo.attributes?.icon} />}
-        {isAt ? <Name name={appName} /> : <Name name={appInfo.name} />}
+        {isAt ? <span>{appName}</span> : <span>{appInfo.name}</span>}
       </div>
       <span className='recieve-info-inner'>
         {loading ? <Loading /> : setRecieveDom(recieveType)}
@@ -95,11 +95,5 @@ const Img = (props) => {
   )}</>
 }
 
-const Name = (props) => {
-  const {name} = props;
-  return <>{(
-    <span>{name}</span>
-  )}</>
-}
 
 export default ReciveBox;
