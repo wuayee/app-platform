@@ -16,7 +16,7 @@
         <!-- Maven plugin versions -->
         <maven.version>3.8.8</maven.version>
         <maven.plugin.version>3.13.1</maven.plugin.version>
-        <maven.dependency.tree.version>3.3.0</maven.dependency.tree.version>
+        <maven.dependency.tree.version>3.2.1</maven.dependency.tree.version>
     </properties>
 
     <dependencyManagement>
