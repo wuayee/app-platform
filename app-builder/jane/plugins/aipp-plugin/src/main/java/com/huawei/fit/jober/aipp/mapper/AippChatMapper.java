@@ -101,10 +101,11 @@ public interface AippChatMapper {
      * 根据指定应用ID, 查询最近count个会话ID
      *
      * @param appId 应用Id
+     * @param appType 应用是否发布
      * @param count count
      * @return List<String> 会话ID列表
      */
-    List<String> selectChatByAppId(String appId, int count);
+    List<String> selectChatByAppId(String appId, String appType, int count);
 
     /**
      * 根据指定实例 ID 查询会话 ID。
