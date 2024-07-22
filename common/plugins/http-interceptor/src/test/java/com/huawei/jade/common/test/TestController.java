@@ -7,8 +7,8 @@ package com.huawei.jade.common.test;
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.exception.FitException;
+import com.huawei.jade.common.code.CommonRetCodeEnum;
 import com.huawei.jade.common.filter.HttpResult;
-import com.huawei.jade.common.http.code.CommonRetCodeEnum;
 
 /**
  * 表示测试用控制器。

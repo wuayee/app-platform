@@ -6,7 +6,6 @@ package com.huawei.fitframework.test.domain;
 
 import com.huawei.fitframework.plugin.RootPlugin;
 import com.huawei.fitframework.runtime.support.AbstractFitRuntime;
-import com.huawei.fitframework.test.domain.resolver.TestClassResolver;
 import com.huawei.fitframework.test.domain.resolver.TestContextConfiguration;
 import com.huawei.fitframework.util.ObjectUtils;
 
@@ -19,6 +18,7 @@ import java.net.URLClassLoader;
  * 为测试框架提供运行时环境。
  *
  * @author 邬涨财 w00575064
+ * @author 易文渊
  * @since 2023-01-17
  */
 public class TestFitRuntime extends AbstractFitRuntime {
@@ -26,9 +26,9 @@ public class TestFitRuntime extends AbstractFitRuntime {
 
     private final TestContextConfiguration configuration;
 
-    public TestFitRuntime(Class<?> clazz, TestClassResolver resolver, int port) {
+    public TestFitRuntime(Class<?> clazz, TestContextConfiguration configuration, int port) {
         super(clazz, new String[] {"server.http.port=" + port});
-        this.configuration = resolver.resolve(clazz);
+        this.configuration = configuration;
     }
 
     @Override

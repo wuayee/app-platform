@@ -28,10 +28,8 @@ import java.util.stream.Collectors;
  * @since 2023-01-17
  */
 public class DefaultTestClassResolver implements TestClassResolver {
-    private final Set<String> defaultScanPackages = new HashSet<>(Arrays.asList("com.huawei.fitframework.test",
+    private static final Set<String> DEFAULT_SCAN_PACKAGES = new HashSet<>(Arrays.asList(
             "com.huawei.fit.integration.mockito",
-            "com.huawei.fit.server",
-            "com.huawei.fit.http",
             "com.huawei.fit.value",
             "com.huawei.fit.serialization"));
 
@@ -81,7 +79,7 @@ public class DefaultTestClassResolver implements TestClassResolver {
         Set<String> basePackages = Arrays.stream(classes)
                 .flatMap(resolvedClass -> this.getBasePackages(resolvedClass).stream())
                 .collect(Collectors.toSet());
-        basePackages.addAll(this.defaultScanPackages);
+        basePackages.addAll(DEFAULT_SCAN_PACKAGES);
         return basePackages;
     }
 

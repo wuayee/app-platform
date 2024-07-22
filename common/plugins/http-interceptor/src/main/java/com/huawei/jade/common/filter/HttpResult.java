@@ -5,7 +5,7 @@
 package com.huawei.jade.common.filter;
 
 import com.huawei.fitframework.annotation.Property;
-import com.huawei.jade.common.http.code.CommonRetCodeEnum;
+import com.huawei.jade.common.code.CommonRetCodeEnum;
 
 /**
  * 表示统一 http 返回结果的实体类。
@@ -109,7 +109,6 @@ public class HttpResult<T> {
     public String getMsg() {
         return this.msg;
     }
-
 
     /**
      * 设置状态消息。

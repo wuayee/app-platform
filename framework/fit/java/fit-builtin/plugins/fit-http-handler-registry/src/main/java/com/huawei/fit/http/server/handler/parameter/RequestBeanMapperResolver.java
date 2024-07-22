@@ -28,6 +28,7 @@ import com.huawei.fit.http.server.handler.support.SourceFetcherInfo;
 import com.huawei.fit.http.server.handler.support.TypeTransformationPropertyValueMapper;
 import com.huawei.fitframework.ioc.annotation.AnnotationMetadata;
 import com.huawei.fitframework.ioc.annotation.AnnotationMetadataResolver;
+import com.huawei.fitframework.json.schema.util.SchemaTypeUtils;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ReflectionUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -110,18 +111,23 @@ public class RequestBeanMapperResolver extends AbstractPropertyValueMapperResolv
                 continue;
             }
             AnnotationMetadata annotationMetadata = this.annotationResolver.resolve(element.get());
-            if (annotationMetadata.isAnnotationPresent(this.getAnnotation())) {
+            if (SchemaTypeUtils.isObjectType(field.getType())) {
                 sourceFetcherInfos.addAll(this.getSourceFetcherInfos(fieldPropertyValue, fieldPath));
                 continue;
             }
+            SourceFetcher sourceFetcher;
+            boolean isArrayType;
             if (annotationMetadata.isAnnotationNotPresent(RequestParam.class)) {
-                continue;
+                sourceFetcher = SOURCE_FETCHER_MAPPING.get(Source.QUERY).apply(field.getName());
+                isArrayType = SchemaTypeUtils.isArrayType(field.getType());
+            } else {
+                RequestParam annotation = annotationMetadata.getAnnotation(RequestParam.class);
+                sourceFetcher = this.getSourceFetcher(annotation);
+                isArrayType = this.isArray(fieldPropertyValue, annotationMetadata);
             }
-            RequestParam annotation = annotationMetadata.getAnnotation(RequestParam.class);
-            SourceFetcher sourceFetcher = this.getSourceFetcher(annotation);
             sourceFetcherInfos.add(new SourceFetcherInfo(sourceFetcher,
                     fieldPath.substring(DESTINATION_NAME_SEPARATOR.length()),
-                    this.isArray(fieldPropertyValue, annotationMetadata)));
+                    isArrayType));
         }
         return sourceFetcherInfos;
     }

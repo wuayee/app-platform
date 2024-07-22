@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fitframework.test.annotation;
+
+import com.huawei.fitframework.annotation.Forward;
+import com.huawei.fitframework.test.domain.db.DataBaseModelEnum;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * 用于 Mybatis 测试。
+ *
+ * @author 易文渊
+ * @since 2024-07-21
+ */
+@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@FitTestWithJunit
+@EnableMybatis
+@EnableDataSource
+public @interface MybatisTest {
+    /**
+     * 需要注入到容器的组件类型数组。
+     *
+     * @return 表示需要注入到容器的组件类型数组的 {@link Class}{@code <?>[]}。
+     */
+    @Forward(annotation = FitTestWithJunit.class, property = "classes") Class<?>[] classes() default {};
+
+    /**
+     * 获取测试数据源兼容模式。
+     *
+     * @return 表示数据源兼容模式的 {@link DataBaseModelEnum}。
+     * @see EnableDataSource#model()
+     */
+    @Forward(annotation = EnableDataSource.class, property = "model")
+    DataBaseModelEnum model() default DataBaseModelEnum.NONE;
+}
