@@ -35,6 +35,7 @@ import com.huawei.fit.jober.aipp.util.MetaUtils;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
@@ -42,6 +43,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -243,7 +245,9 @@ public class AippLogServiceImpl implements AippLogService {
         if (instanceIds == null || instanceIds.isEmpty()) {
             return new HashMap<>();
         }
-        List<AippInstLog> aippInstLogs = aippLogMapper.getLogsByInstanceIds(instanceIds);
+        List<String> filterLogTypes =
+                new ArrayList<>(Arrays.asList(AippInstLogType.HIDDEN_MSG.name(), AippInstLogType.HIDDEN_FORM.name()));
+        List<AippInstLog> aippInstLogs = this.queryBatchAndFilterFullLogsByLogType(instanceIds, filterLogTypes);
         Map<String, List<AippInstLog>> result =
                 instanceIds.stream().collect(Collectors.toMap(key -> key, key -> new ArrayList<>()));
         for (AippInstLog instLog : aippInstLogs) {
@@ -396,7 +400,7 @@ public class AippLogServiceImpl implements AippLogService {
         String version = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_VERSION_KEY));
         String aippType = ObjectUtils.cast(businessData.get(AippConst.ATTR_AIPP_TYPE_KEY));
         String w3Account = DataUtils.getOpContext(businessData).getW3Account();
-        if (!AippLogUtils.checkFormMsg(logData, logType)) {
+        if (!AippLogUtils.validFormMsg(logData, logType)) {
             log.warn("invalid logData {}, logType {}, aippId {}, instId {}", logData, logType, aippId, instId);
             return;
         }
@@ -501,5 +505,30 @@ public class AippLogServiceImpl implements AippLogService {
             .filter(dto -> dto.getQuestion() != null)
             .sorted((d1, d2) -> Math.toIntExact(d1.getQuestion().getLogId() - d2.getQuestion().getLogId()))
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AippInstLog> queryBatchAndFilterFullLogsByLogType(List<String> instanceIds,
+            List<String> filterLogTypes) {
+        if (CollectionUtils.isEmpty(instanceIds)) {
+            log.error("Instance id list is null or empty.");
+            throw new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID);
+        }
+        return this.aippLogMapper.getFullLogsByInstanceIds(instanceIds)
+                .stream()
+                .filter(log -> !filterLogTypes.contains(log.getLogType()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AippInstLog> queryAndFilterLogsByLogType(String instanceId, List<String> filterLogTypes) {
+        if (StringUtils.isEmpty(instanceId)) {
+            log.error("Instance id is null or empty.");
+            throw new AippParamException(AippErrCode.INPUT_PARAM_IS_INVALID);
+        }
+        return this.aippLogMapper.getLogsByInstanceId(instanceId)
+                .stream()
+                .filter(log -> !filterLogTypes.contains(log.getLogType()))
+                .collect(Collectors.toList());
     }
 }
