@@ -182,7 +182,8 @@ public class AippLogServiceImpl implements AippLogService {
         return this.getAippLogWithAppInfo(logData, appId, context);
     }
 
-    private List<AippInstLogDataDto> getAippLogWithAppInfo(List<AippInstLogDataDto> logData, String appId, OperationContext context) {
+    private List<AippInstLogDataDto> getAippLogWithAppInfo(List<AippInstLogDataDto> logData, String appId,
+            OperationContext context) {
         // 获取被@应用的头像、名称
         List<String> originAippId = MetaUtils.getAllMetasByAppId(this.metaService, appId, context)
                 .stream()
@@ -195,7 +196,7 @@ public class AippLogServiceImpl implements AippLogService {
                 .filter(aippId -> !originAippId.contains(aippId))
                 .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(atAippIds)) {
-            return  logData;
+            return logData;
         }
         RangedResultSet<Meta> metas =
                 metaService.list(this.buildAippIdFilter(atAippIds), true, 0, atAippIds.size(), context);
