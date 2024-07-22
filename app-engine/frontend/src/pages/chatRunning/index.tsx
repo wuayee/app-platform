@@ -5,7 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import CommonChat from '../chatPreview/chatComminPage';
 import { getAppInfo } from '@/shared/http/aipp';
 import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
-import { useAppDispatch, useAppSelector } from '../chatPreview/components/receive-box/node_modules/@/store/hook';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { storage } from '@/shared/storage';
 import './index.scoped..scss';
 
