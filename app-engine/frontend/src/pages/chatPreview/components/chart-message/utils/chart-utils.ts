@@ -1,5 +1,5 @@
 // 图表数据拼装
-export const initChartData = (chartData, chartAnswer, chartType, chartTitle) => {
+export const initChartData = (chartData, chartAnswer, chartType, chartTitle = '') => {
   const chartItem = {
     chartData,
     chartType,
