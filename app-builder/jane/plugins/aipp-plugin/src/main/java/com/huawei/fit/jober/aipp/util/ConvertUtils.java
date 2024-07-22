@@ -35,6 +35,7 @@ public class ConvertUtils {
                 .type(appDto.getType())
                 .xiaohaiClassification(classification)
                 .publishedDescription(appDto.getPublishedDescription())
+                .publishedUpdateLog(appDto.getPublishedUpdateLog())
                 .build();
     }
 
