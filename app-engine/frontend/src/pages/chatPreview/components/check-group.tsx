@@ -1,10 +1,10 @@
 
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
-import '../styles/check-group.scss'
-import { shareDialog } from "@shared/http/aipp";;
-import { toClipboard } from "@shared/utils/common";
-import { useAppSelector } from '../../../store/hook';
+import { shareDialog } from '@shared/http/aipp';;
+import { toClipboard } from '@shared/utils/common';
+import { useAppSelector } from '@/store/hook';
+import '../styles/check-group.scss';
 
 const CheckGroup = (props) => {
   const {
@@ -47,12 +47,11 @@ const CheckGroup = (props) => {
   }
   return <>{(
     <div className='message-check-toolbox-wrap'>
-      <div className="message-check-toolbox">
-        <div className="message-check-toolbox-left">
-          <div className="message-check-toolbox__num">已选择：{ checkedList.length } </div>
+      <div className='message-check-toolbox'>
+        <div className='message-check-toolbox-left'>
+          <div className='message-check-toolbox__num'>已选择：{ checkedList.length } </div>
         </div>
-        <div className="message-check-toolbox-right">
-          {/* <Button style={btnStyle} type="primary" onClick={checkAllClick}>{ checkAll ? '取消全选' : '全选' }</Button> */}
+        <div className='message-check-toolbox-right'>
           <Button onClick={cancle}>取消</Button>
           <Button 
             type={ checkedList.length === 0 ? 'default' : 'primary' } 
@@ -60,21 +59,20 @@ const CheckGroup = (props) => {
             onClick={(e) => handleShare(e)}>
               确认{ type === 'share' ? '分享' : ''}
             </Button>
-          {/*{ <Button  type={ checkedList.length === 0 ? 'default' : 'primary' } disabled={checkedList.length === 0}>分享到weLink</Button> }*/}
         </div>
       </div>
       <Modal 
-        title="分享链接已复制，快发给朋友们吧～" 
+        title='分享链接已复制，快发给朋友们吧～' 
         open={isModalOpen} 
         onCancel={handleCancel}
         footer={[
-          <Button key="back" onClick={handleCancel}>
+          <Button key='back' onClick={handleCancel}>
             关闭
           </Button>,
         ]}>
-        <div className="modal-share">
-          <span className="share-text">{shareUrl}</span>
-          <span className="link" onClick={copyLink}>复制链接</span>
+        <div className='modal-share'>
+          <span className='share-text'>{shareUrl}</span>
+          <span className='link' onClick={copyLink}>复制链接</span>
         </div>
       </Modal>
     </div>

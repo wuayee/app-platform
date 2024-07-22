@@ -1,5 +1,5 @@
 
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tooltip } from 'antd';
 import { Message } from '@shared/utils/message';
 import { PanleCloseIcon, PanleIcon, RebotIcon } from '@assets/icon';
@@ -10,27 +10,14 @@ import { setInspirationOpen } from '@/store/chatStore/chatStore';
 // 猜你想问
 const Recommends = (props) => {
   const { onSend } = props;
+  const [visible, setVisible] = useState(false);
+  const [recommendList, setRecommendList] = useState([]);
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const inspirationOpen = useAppSelector((state) => state.chatCommonStore.inspirationOpen);
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
-  const [ visible, setVisible ] = useState(false);
-  const [ recommendList, setRecommendList ] = useState([]);
-
-  useEffect(() => {
-    setRecommend();
-  }, [appInfo]);
-
-  // 实时刷新推荐列表
-  useEffect(() => {
-    if(chatList?.length>0){
-      let chatItem = chatList[chatList?.length - 1];
-      if (chatItem && chatItem.finished && chatItem.logId === -1) {
-        getRecommendList();
-      }
-    }
-  }, [chatList]);
+ 
   // 设置推荐列表
   function setRecommend() {
     setRecommendList([]);
@@ -79,6 +66,21 @@ const Recommends = (props) => {
     setVisible(false);
     dispatch(setInspirationOpen(!inspirationOpen));
   }
+
+  useEffect(() => {
+    setRecommend();
+  }, [appInfo]);
+
+  // 实时刷新推荐列表
+  useEffect(() => {
+    if(chatList?.length>0){
+      let chatItem = chatList[chatList?.length - 1];
+      if (chatItem && chatItem.finished && chatItem.logId === -1) {
+        getRecommendList();
+      }
+    }
+  }, [chatList]);
+  
   return <>{(
     <div className='recommends-inner'>
       {
@@ -95,7 +97,13 @@ const Recommends = (props) => {
           {
             recommendList?.map((item, index) => {
               return (
-                <div className='recommends-item' onClick={recommendClick.bind(this, item)} key={index}>{item}</div>
+                <div 
+                  className='recommends-item' 
+                  onClick={() => recommendClick(item)} 
+                  key={index}
+                >
+                  {item}
+                </div>
               )
             })
           }

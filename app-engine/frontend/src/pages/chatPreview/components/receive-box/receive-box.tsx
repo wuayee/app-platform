@@ -10,7 +10,7 @@ import MessageDetail from './message-detail';
 import RuntimeForm from './runtime-form';
 import SendBtn from '../send-box/send-btn';
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
-import '../../styles/recieve-box.scss';
+import '../../styles/receive-box.scss';
 
 const ReciveBox = (props) => {
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
@@ -60,7 +60,7 @@ const ReciveBox = (props) => {
             />
   }
   return <>{(
-    <div className='recieve-box'>
+    <div className='receive-box'>
       {showCheck && <Checkbox className='check-box' checked={checked} onChange={onChange}></Checkbox>}
       <div className='user-image'>
         {isAt ? <Img iconPath={appIcon} /> : <Img iconPath={appInfo.attributes?.icon} />}
@@ -78,7 +78,7 @@ const ReciveBox = (props) => {
 const Loading = () => {
   return (
     <>
-      <div className='recieve-loading'>
+      <div className='receive-loading'>
         <div className='bounce1'></div>
         <div className='bounce2'></div>
         <div className='bounce3'></div>

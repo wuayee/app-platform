@@ -1,5 +1,5 @@
-import React from "react";
-import {CheckCircleFilled, CloseCircleFilled, LoadingOutlined} from "@ant-design/icons";
+import React from 'react';
+import {CheckCircleFilled, CloseCircleFilled, LoadingOutlined} from '@ant-design/icons';
 import './styles/test-status.scss';
 const TestStatus = (props) => {
   const { testStatus, testTime} = props;

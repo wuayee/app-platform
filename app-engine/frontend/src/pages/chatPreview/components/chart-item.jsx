@@ -32,7 +32,7 @@ const ChartTable = (props) => {
 
   // 设置表格细节
   function getChartWidth() {
-    const messageDiv = document.querySelector('.recieve-box');
+    const messageDiv = document.querySelector('.receive-box');
     if (messageDiv) {
       const width = messageDiv?.clientWidth - 80;
       let tableWidth = 0;

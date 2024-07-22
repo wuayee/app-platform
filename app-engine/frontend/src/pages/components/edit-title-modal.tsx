@@ -49,23 +49,23 @@ const EditTitleModal = (props) => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[
-          <Button key="back" onClick={handleCancel}>
+          <Button key='back' onClick={handleCancel}>
             取消
           </Button>,
-          <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
+          <Button key='submit' type='primary' loading={loading} onClick={handleOk}>
             确定
           </Button>
         ]}>
         <div className='edit-form-list'>
           <Form
             form={form}
-            layout="vertical"
-            autoComplete="off"
+            layout='vertical'
+            autoComplete='off'
             className='edit-form-content'
           >
             <Form.Item
-              label="名称"
-              name="name"
+              label='名称'
+              name='name'
               rules={[{ required: true, message: '请输入名称' },  {
                 type: 'string',
                 max: 64,
@@ -75,8 +75,8 @@ const EditTitleModal = (props) => {
               <Input />
             </Form.Item>
             <Form.Item
-              label="简介"
-              name="description"
+              label='简介'
+              name='description'
             >
               <Input />
             </Form.Item>
