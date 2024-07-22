@@ -1,14 +1,14 @@
 
 import React, { useEffect, useState, useImperativeHandle } from 'react';
-import SendBox from './send-box/send-box.jsx';
-import ReciveBox from './recieve-box/recieve-box.jsx';
-import ChatDetail from './chat-details.jsx';
-import { ChatContext } from '../../aippIndex/context.js';
+import SendBox from './send-box/send-box';
+import ReciveBox from './recieve-box/recieve-box';
+import ChatDetail from './chat-details';
+import { ChatContext } from '../../aippIndex/context';
 import { queryFeedback } from '@shared/http/chat';
 import { deepClone, scrollBottom } from '../utils/chat-process';
-import '../styles/chat-message-style.scss';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
-import { setChatList } from '../../../store/chatStore/chatStore';
+import { setChatList } from '@/store/chatStore/chatStore';
+import '../styles/chat-message-style.scss';
 
 const ChatMessaga = (props) => {
   const dispatch = useAppDispatch();
@@ -71,7 +71,7 @@ const ChatMessaga = (props) => {
   // 澄清表单拒绝澄清回调
   async function handleRejectClar() {
     const params = {content: '不好意思，请明确条件后重新提问'};
-    const res = await chatRunningStop(params);
+    chatRunningStop(params);
   }
   return (
     <div className={['chat-message-container', showCheck ? 'group-active' : null].join(' ')} id='chat-list-dom'>

@@ -2,25 +2,22 @@ import React, {
   useEffect,
   useState,
   useRef,
-  useContext,
   useImperativeHandle,
   forwardRef,
-} from "react";
+} from 'react';
 import { AudioIcon, AudioActiveIcon , SendIcon, DeleteContentIcon } from '@/assets/icon';
-import $ from "jquery";
-import { Message } from "@shared/utils/message";
-import { httpUrlMap } from "@shared/http/httpConfig";
+import $ from 'jquery';
+import { Message } from '@shared/utils/message';
+import { httpUrlMap } from '@shared/http/httpConfig';
 import { messagePaste } from './utils';
-import HistoryChat from "../history-chat";
-import HistoryChatDrawer from "../history-chat";
 import Recommends from './components/recommends';
 import EditorBtnHome from './components/editor-btn-home';
 import EditorSelect from './components/editor-selet';
-import "@shared/utils/rendos";
-import "../../styles/send-editor.scss";
-import { useAppSelector, useAppDispatch } from "../../../../store/hook";
-import { setUseMemory } from "../../../../store/common/common";
-import {uploadChatFile,voiceToText} from '@shared/http/aipp.js'
+import '@shared/utils/rendos';
+import '../../styles/send-editor.scss';
+import { useAppSelector, useAppDispatch } from '@/store/hook';
+import { setUseMemory } from '@/store/common/common';
+import {uploadChatFile,voiceToText} from '@shared/http/aipp'
 
 const AudioBtn = forwardRef((props, ref) => {
   const [active, setActive] = useState(props.active || false);
@@ -52,7 +49,6 @@ const SendEditor = (props) => {
   const [ positionConfig, setPositionConfig ] = useState({});
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const showMulti = useAppSelector((state) => state.commonStore.historySwitch);
-  const { WS_AUDIO_URL } = httpUrlMap[process.env.NODE_ENV];
   const editorRef = useRef(null);
   const recording = useRef(false);
   const audioBtnRef = useRef(null);
@@ -67,14 +63,14 @@ const SendEditor = (props) => {
   }
   // 清除内容
   function clearContent() {
-    editorRef.current.innerText = "";
+    editorRef.current.innerText = '';
     setShowClear(false);
   }
   // 快捷发送
   function messageKeyDown(e) {
     if (e.ctrlKey && e.keyCode === 13) {
       e.preventDefault();
-      document.execCommand("insertLineBreak");
+      document.execCommand('insertLineBreak');
     } else if (e.keyCode === 13) {
       e.preventDefault();
       sendMessage();
@@ -83,17 +79,17 @@ const SendEditor = (props) => {
   // 发送消息
   function sendMessage() {
     if (chatRunning) {
-      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
       return;
     }
-    let chatContent = document.getElementById("ctrl-promet").innerText;
+    let chatContent = document.getElementById('ctrl-promet').innerText;
     onSend(chatContent);
-    editorRef.current.innerText = "";
+    editorRef.current.innerText = '';
     setShowClear(false);
   }
   // 设置灵感大全下拉
   function setFilterHtml(prompt, promptMap) {
-    const editorDom = document.getElementById("ctrl-promet");
+    const editorDom = document.getElementById('ctrl-promet');
     editorDom.innerHTML = prompt;
     bindEvents(promptMap);
   }
@@ -107,7 +103,7 @@ const SendEditor = (props) => {
       setSelectDom($event.target);
       setShowSelect(true);
     });
-    $("body").on("click", (event) => {
+    $('body').on('click', (event) => {
       let clickTarget = $(event.target);
       let chatPopup = $('.chat-focus');
       if (
@@ -132,7 +128,7 @@ const SendEditor = (props) => {
   // 点击语音按钮
   const onRecord = async() => {
     if (chatRunning) {
-      Message({ type: "warning", content: "对话进行中, 请稍后再试" });
+      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
       return;
     }
     if (!recording.current) {
@@ -148,21 +144,21 @@ const SendEditor = (props) => {
         intervalData = setInterval(async() => {
           let newBlob = recorderHome?.getBlob()
           const fileOfBlob = new File([newBlob], new Date().getTime() + '.wav', {
-            type:"audio/wav",
+            type:'audio/wav',
           })
           const formData = new FormData();
-          formData.append("file", fileOfBlob);
+          formData.append('file', fileOfBlob);
           let headers = {
-            "attachment-filename": encodeURI(fileOfBlob.name || ""),
+            'attachment-filename': encodeURI(fileOfBlob.name || ''),
           };
           if(fileOfBlob.size){
             const result = await uploadChatFile(tenantId, appId, formData, headers);
             if(result.data){
               let res = await voiceToText(tenantId,result.data.file_path,fileOfBlob.name)
               // 将data数据放入输入框中
-              let inputedDate = document.getElementById("ctrl-promet").innerHTML;
+              let inputedDate = document.getElementById('ctrl-promet').innerHTML;
               if (res.data.trim().length) {
-                const editorDom = document.getElementById("ctrl-promet");
+                const editorDom = document.getElementById('ctrl-promet');
                 editorDom.innerHTML = inputedDate + res.data.trim();
               }
             }
@@ -215,15 +211,15 @@ const SendEditor = (props) => {
           editorRef={editorRef}
         />
         { chatRunning && 
-          <div className="editor-stop" onClick={onStop}>
-            <img src="/src/assets/images/ai/stop.png" alt="" />
+          <div className='editor-stop' onClick={onStop}>
+            <img src='/src/assets/images/ai/stop.png' alt='' />
             <span>停止响应</span>
           </div>
         }
-        <div className='editor-input' id="drop">
+        <div className='editor-input' id='drop'>
           <div
-            className="chat-promet-editor"
-            id="ctrl-promet"
+            className='chat-promet-editor'
+            id='ctrl-promet'
             ref={ editorRef }
             contentEditable={ true }
             onInput={messageChange}

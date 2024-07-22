@@ -1,10 +1,10 @@
 import React, { forwardRef, useContext, useImperativeHandle, useState, useRef, useCallback, useEffect } from 'react';
-import { Tooltip } from "antd";
+import { Tooltip } from 'antd';
 import { toClipboard } from '@shared/utils/common';
 import { ChatContext } from '../../../aippIndex/context';
-import { ShareIcon, CopyIcon, DeleteIcon, PlayIcon, StopIcon } from '@/assets/icon';
+import { CopyIcon, PlayIcon, StopIcon } from '@/assets/icon';
 import './styles/send-btn.scss'
-import {textToVoice} from '@shared/http/aipp.js'
+import {textToVoice} from '@shared/http/aipp'
 
 const SoundBtn = forwardRef((props, ref) => {
   const [active, setActive] = useState(props.active || false);
@@ -17,21 +17,16 @@ const SoundBtn = forwardRef((props, ref) => {
       setUrl,
     }
   })
-
   function defaultHandleClick() {
     setActive(!active)
   }
-
   return <>
-    <Tooltip title={ active? '停止' : '播放' } color="white" overlayInnerStyle={{color: '#212121' }}>
+    <Tooltip title={ active? '停止' : '播放' } color='white' overlayInnerStyle={{color: '#212121' }}>
       <div onClick={props.handleClick || defaultHandleClick}>
         {active? <StopIcon /> : <PlayIcon className='hover-blue-icon'/>} 
       </div>
     </Tooltip>
-
-    {url && <audio>
-
-    </audio>}
+    {url && <audio></audio>}
   </>
 })
 
@@ -93,25 +88,14 @@ const SendBtn = (props) => {
         if(arr[i]){fragmentArr.push(arr[i])}
         
       }
-      console.log(fragmentArr);
-    
-    
-    let id
-    console.log(fragmentArr,'fragmentArr');
     // 异步请求
     async function ContinuousRequests(){
-      console.log(index);
-
       // 如果数据走完了就停止
-        
-        console.log(fragmentArr[index]);
         // 发起请求
         let res = await textToVoice(fragmentArr[index++],0)
         // 如果没有返回数据，就停止
         if(!res.data)  return
-        
         base64Arr.current.push(res.data)
-        console.log(base64Arr.current.length,'base64Arr.current');
         if (!audioElement&&soundBtnRef.current.active){
           // 如果是首次拿到音频数据，且当前按钮处于播放中
           audioIndex++
@@ -157,7 +141,7 @@ const SendBtn = (props) => {
     if(!soundBtnRef.current.active&&!audioElement){
       getVioce()
     }else if(!soundBtnRef.current.active&&audioElement){
-        audioElement.play()
+      audioElement.play()
     }else if(soundBtnRef.current.active&&audioElement){
       audioElement.pause()
     }
@@ -177,13 +161,13 @@ const SendBtn = (props) => {
   return <>{(
     <div className='message-tip-box-send'>
       <div className='inner'>
-        {/* <Tooltip title="分享" color="white" overlayInnerStyle={{color: '#212121' }} destroyTooltipOnHide>
+        {/* <Tooltip title='分享' color='white' overlayInnerStyle={{color: '#212121' }} destroyTooltipOnHide>
           <div onClick={ hideTooltip }>
             <ShareIcon />
           </div>
         </Tooltip> */}
         {  sendType === 'text' && 
-        <Tooltip title="复制" color="white" overlayInnerStyle={{color: '#212121' }}>
+        <Tooltip title='复制' color='white' overlayInnerStyle={{color: '#212121' }}>
           <div onClick={ handleCopyQuestion }>
             <CopyIcon className='hover-blue-icon'/>
           </div> 
