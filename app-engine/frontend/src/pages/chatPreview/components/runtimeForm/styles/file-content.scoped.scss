@@ -1,0 +1,33 @@
+.form-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: rgb(37, 43, 58);
+  .save-button {
+    background-color: rgb(4, 123, 252);
+    border-radius: 4px;
+    font-size: 14px;
+    color: white;
+    border-color: white;
+    width: 60px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .thumb {
+    width: 100%;
+    min-height: 200px;
+    background-color: #f5f5f5;
+    border: 1px dashed #d9d9d9;
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 14px;
+    color: #bfbfbf;
+    cursor: text;
+    box-sizing: border-box;
+    margin: 0 0 10px 0;
+  }
+}

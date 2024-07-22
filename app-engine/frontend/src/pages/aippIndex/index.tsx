@@ -1,18 +1,17 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { Spin, Tooltip } from 'antd';
-import { TalkFlowIcon  } from '@assets/icon';
-import { getCurUser, getAppInfo } from '@shared/http/aipp';
-import { updateFormInfo } from '@shared/http/aipp';
-import { debounce, getUiD } from "@shared/utils/common";
-import { Message } from "@shared/utils/message";
+import { Spin } from 'antd';
 import AddFlow from '../addFlow';
 import ConfigForm from '../configForm';
 import CommonChat from '../chatPreview/chatComminPage';
 import ChoreographyHead from '../components/header';
+import { getAppInfo } from '@shared/http/aipp';
+import { updateFormInfo } from '@shared/http/aipp';
+import { debounce, getUiD } from '@shared/utils/common';
+import { Message } from '@shared/utils/message';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
+import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
 import { getUser } from '../helper';
-import { useAppDispatch, useAppSelector } from '../../store/hook';
-import { setAppId, setAppInfo } from '../../store/appInfo/appInfo';
 
 const AippIndex = () => {
   const { appId, tenantId } = useParams();
@@ -62,7 +61,7 @@ const AippIndex = () => {
   const saveConfig = (data) => {
     updateFormInfo(tenantId, appId, data).then((res) => {
       if (res.code === 0) {
-        Message({type: "success", content: "保存配置成功"});
+        Message({type: 'success', content: '保存配置成功'});
         getAippDetails();
         if (inspirationRefresh.current) {
           inspirationRefresh.current = false;
@@ -115,11 +114,11 @@ const AippIndex = () => {
             testStatus={testStatus}
             addFlowRef={addFlowRef}
           />
-          <div className="layout-content">
+          <div className='layout-content'>
             {showElsa ?
               (
                 <AddFlow 
-                  type="edit"
+                  type='edit'
                   addFlowRef={addFlowRef}
                   setFlowTestStatus={handleTestStatus}
                   setFlowTestTime={handleTestTime}
@@ -136,7 +135,7 @@ const AippIndex = () => {
                 />
               )}
             <CommonChat 
-              chatType="preview" 
+              chatType='preview' 
               contextProvider={contextProvider} 
               previewBack={changeChat} 
             />

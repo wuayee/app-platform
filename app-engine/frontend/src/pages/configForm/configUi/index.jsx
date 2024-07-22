@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef, useCallback } from 'react';
-import { useAppSelector, useAppDispatch } from '../../../store/hook';
+import { useAppSelector, useAppDispatch } from '@/store/hook';
 import {Form, Collapse, theme, Switch} from 'antd';
 import { ConfigWrap } from './styled';
 import { CaretRightOutlined } from '@ant-design/icons';
@@ -9,7 +9,7 @@ import Skill from './components/skill';
 import Knowledge from './components/knowledge';
 import Inspiration from './components/inspiration';
 import Recommend from './components/recommend';
-import { setHistorySwitch } from '../../../store/common/common';
+import { setHistorySwitch } from '@/store/common/common';
 import { MultiConversationContent } from '@fit-elsa/elsa-react';
 
 function ConfigUI(props) {

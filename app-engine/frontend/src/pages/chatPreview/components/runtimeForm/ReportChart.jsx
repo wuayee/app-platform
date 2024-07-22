@@ -246,7 +246,7 @@ const ReportChart = (props) => {
         return result > 80 ? result : 80
     }
     return (
-      <div className='recieve-info'>
+      <div className='receive-info'>
         {
           chartList.map((item, index) => {
             return(

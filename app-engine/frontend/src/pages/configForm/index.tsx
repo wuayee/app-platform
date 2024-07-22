@@ -1,6 +1,5 @@
 
-import React, { useEffect, useState} from 'react';
-import { WorkFlowIcon } from '@assets/icon';
+import React, { useState } from 'react';
 import { ConfigFormWrap } from './styled';
 import ConfigUI from './configUi/index.jsx';
 
@@ -12,13 +11,13 @@ const ConfigForm = (props) => {
     inspirationChange,
     showElsa 
   } = props;
-  const [ activeKey, setActiveKey ] = useState('application');
+  const [activeKey, setActiveKey] = useState('application');
   const tab = [
     { name: '应用能力配置', key: 'application' },
-    { name: '界面配置', key: 'interface' },
+    { name: '界面配置', key: 'interface' }
   ]
   const handlePropDataChange = (data) => {
-    const newData = {...configData, form : data}
+    const newData = {...configData, form : data};
     handleConfigDataChange(newData);
   }
   const handleClick = (key) => {
@@ -28,18 +27,18 @@ const ConfigForm = (props) => {
     <ConfigFormWrap>
       <div className={['config-form', showElsa ? 'config-form-elsa' : null].join(' ')}>
         <div className='config-title'>
-          <span className="config-left">
+          <span className='config-left'>
             { tab.map(item => {
               return (
                 <span className={ activeKey === item.key ? 'active' : null } key={item.key} onClick={() => handleClick(item.key)}>
-                  <span className="text">{ item.name }</span> 
-                  <span className="line"></span>
+                  <span className='text'>{ item.name }</span> 
+                  <span className='line'></span>
                 </span>
               )
             })}
           </span>
           <span className='config-btn' onClick={mashupClick}>
-            <img src="/src/assets/images/ai/mashup.png" width="16" height="16" />
+            <img src='/src/assets/images/ai/mashup.png' width='16' height='16' />
             工作流编排  
           </span>
         </div>

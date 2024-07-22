@@ -66,7 +66,7 @@ const ReciveBox = (props) => {
         {isAt ? <Img iconPath={appIcon} /> : <Img iconPath={appInfo.attributes?.icon} />}
         {isAt ? <span>{appName}</span> : <span>{appInfo.name}</span>}
       </div>
-      <span className='recieve-info-inner'>
+      <span className='receive-info-inner'>
         {loading ? <Loading /> : setRecieveDom(recieveType)}
         {showIcon && <SendBtn content={content} sendType='text' isRecieve={true} />}
         {showIcon && <Feedbacks logId={logId} instanceId={instanceId} feedbackStatus={feedbackStatus} refreshFeedbackStatus={props.refreshFeedbackStatus} />}

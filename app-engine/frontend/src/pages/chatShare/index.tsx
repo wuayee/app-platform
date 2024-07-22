@@ -1,11 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { Spin } from 'antd';
-import { Message } from '../../shared/utils/message';
-import {getAppInfo, getSharedDialog} from '../../shared/http/aipp';
+import { useParams } from 'react-router-dom';
+import {getAppInfo, getSharedDialog} from '@/shared/http/aipp';
 import ChatMessage from '../chatPreview/components/chat-message.tsx';
-import robot from '../../assets/images/ai/robot1.png';
+import robot from '@/assets/images/ai/robot1.png';
 import './index.scss';
 
 
@@ -49,15 +48,15 @@ const ChatShare = () => {
     }
   }
   return <>{(
-    <div className="share-content">
-      <div className="shart-inner">
+    <div className='share-content'>
+      <div className='shart-inner'>
         <div className='chat-share-content'>
           <div className='top'>
-            <div className="head">
+            <div className='head'>
               <Img icon={appInfo.attributes?.icon}/>
             </div>
-            <div className="title">{ appInfo.name }</div>
-            <div className="text">{appInfo.attributes?.description }</div>
+            <div className='title'>{ appInfo.name }</div>
+            <div className='text'>{appInfo.attributes?.description }</div>
           </div>
         </div>
           <ChatMessage

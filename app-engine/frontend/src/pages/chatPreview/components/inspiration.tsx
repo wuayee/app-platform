@@ -5,8 +5,6 @@ import {
   SwapOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
-import { Message } from '@shared/utils/message';
-import { queryDepartMent, queryInspiration } from '@/shared/http/aipp';
 import { AippContext } from '../../aippIndex/context';
 import {
   getDepth,
@@ -15,10 +13,13 @@ import {
   arrayToTree,
   getDeepNode,
 } from '../utils/inspiration-utils';
-import '../styles/inspiration.scss';
 import { setDimension } from '@/store/common/common';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
-import {pduMap} from "../common/config";
+import { Message } from '@shared/utils/message';
+import { queryDepartMent, queryInspiration } from '@/shared/http/aipp';
+import { storage } from '@/shared/storage';
+import {pduMap} from '../common/config';
+import '../styles/inspiration.scss';
 
 const Inspiration = (props) => {
   const { inspirationClick, setEditorSelect } = props;
@@ -28,6 +29,7 @@ const Inspiration = (props) => {
   } = useContext(AippContext);
   const defaultTenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   const defaultAppId = '3a617d8aeb1d41a9ad7453f2f0f70d61';
+  const demissionAppId = '8ac7a00620bc4840b7e3aa908b313614';
   const chatType = useAppSelector((state) => state.chatCommonStore.chatType);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const { Search } = Input;
@@ -82,31 +84,40 @@ const Inspiration = (props) => {
         getPromptList('root');
       } else {
         setShowDrop(true);
-        let arr = JSON.parse(JSON.stringify(childNodes));
-        let list = delNodeChild(arr);
-        list.forEach((item) => {
-          delete item.childrenEmpty;
-        });
-        let setArr = filterArr(list);
-        setArr.forEach((item) => delete item.children);
-        setArr = setArr.filter((item) => item.childrenEmpty === undefined);
-        setArr = arrayToTree(setArr);
-        setArr.push({
-          children: [],
-          title: '其他',
-          id: 'others',
-          parent: 'root:others',
-        });
-        setDropList(setArr);
-        let obj = getDeepNode(setArr, (node) => {
-          return !node.children.length;
-        });
-        let parentId = obj.parent.split(':')[1];
-        nodeClick(obj.id, obj.title, parentId);
+        multiInspirationProcess(childNodes);
       }
     } else {
       getPromptList('root');
     }
+  }
+  // 灵感大全多层处理逻辑
+  const multiInspirationProcess = (childNodes) => {
+    let arr = JSON.parse(JSON.stringify(childNodes));
+    let list = delNodeChild(arr);
+    list.forEach((item) => {
+      delete item.childrenEmpty;
+    });
+    let setArr = filterArr(list);
+    setArr.forEach((item) => delete item.children);
+    setArr = setArr.filter((item) => item.childrenEmpty === undefined);
+    setArr = arrayToTree(setArr);
+    setArr.push({
+      children: [],
+      title: '其他',
+      id: 'others',
+      parent: 'root:others',
+    });
+    setDropList(setArr);
+    setDefaultSelect(setArr);
+  }
+  // 设置默认选中
+  const setDefaultSelect = (setArr) => {
+    let defaultDimension = storage.get('dimension');
+    let obj = getDeepNode(setArr, (node) => {
+      return !node.children.length;
+    });
+    let parentId = obj.parent.split(':')[1];
+    nodeClick(obj.id, obj.title, parentId);
   }
   // 根据节点获取灵感大全数据
   async function getPromptList(nodeId) {
@@ -168,6 +179,9 @@ const Inspiration = (props) => {
   }
   // 分类点击回调
   function nodeClick(id, name, parentId) {
+    if (demissionAppId === appId && pduMap[name]) {
+      storage.set('dimension', { id, value: pduMap[name]});
+    }
     dispatch(setDimension(pduMap[name] || name));
     setCurrentPromptName(name);
     deepGetChild(treeNormalData.current, id);

@@ -6,7 +6,7 @@ import KnowledgeBaseCreate from '../pages/knowledge-base/create';
 import KnowledgeBaseDetail from '../pages/knowledge-base/knowledge-detail';
 import Plugin from '../pages/plugin';
 import Demo from '../pages/demo';
-import ChatHome from '../pages/chatEngineHome/index.jsx';
+import ChatHome from '../pages/chatEngineHome/index';
 import ChatRunning from '../pages/chatRunning/index';
 import AppDetail from '../pages/appDetail';
 import AippIndex from '../pages/aippIndex';

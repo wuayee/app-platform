@@ -9,7 +9,7 @@ const ChatItem = (props) => {
   const { chartType } = chatItem;
   return <>{(
     <div>
-      <div className='recieve-mark'>{ chartAnswer || '' }</div>
+      <div className='receive-mark'>{ chartAnswer || '' }</div>
       {  chartType === 'TABLE' ? <ChartTable chatItem={chatItem} /> : <ChartGraphs chatItem={chatItem}/> }
     </div>
   )}</>
