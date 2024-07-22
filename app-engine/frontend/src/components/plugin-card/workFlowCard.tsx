@@ -7,7 +7,7 @@ import { useAppSelector } from '@/store/hook';
 import { getAppInfoByVersion } from '@/shared/http/aipp';
 import './style.scoped.scss';
 
-const WorkflowCard = ({ pluginData,carype }: any) => {
+const WorkflowCard = ({ pluginData }: any) => {
   const navigate = useNavigate();
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const operatItems: MenuProps['items'] = [
