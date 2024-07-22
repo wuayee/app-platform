@@ -9,7 +9,6 @@ const { Search } = Input;
 const FlowModal = (props) => {
   const { modalRef } = props;
   const [ isModalOpen, setIsModalOpen] = useState(false);
-  const [ searchValue, setSearchValue] = useState('');
   const [ searchList, setSearchList] = useState([]);
   const [ selectedNodes, setSelectedNodes] = useState([]);
   const listRef = useRef(null);
@@ -35,9 +34,6 @@ const FlowModal = (props) => {
   const onSearch = (value) => {
     let list = listData.filter(item => item.name.indexOf(value) !== -1);
     setSearchList(list)
-  }
-  const setSearchListFn = () => {
-    setSearchList(listData)
   }
   // 工作流点击
   useEffect(() => {
@@ -68,13 +64,13 @@ const FlowModal = (props) => {
       onCancel={handleCancel}>
       <div className='search-box'>
         <Search 
-          placeholder="输入名称搜索" 
+          placeholder='输入名称搜索' 
           allowClear={false} 
           onSearch={onSearch} 
           onChange={ e => { onSearch(e.target.value) }}/>
-          <Button type="primary" shape="circle" size="small" icon={ <UndoOutlined />} onClick={refreshList} className="add-btn"/>
-          <Button type="primary" size="small" icon={ <PlusOutlined /> } onClick={addFlow} className="add-btn">
-            <span className="add-text">新建</span>
+          <Button type='primary' shape='circle' size='small' icon={ <UndoOutlined />} onClick={refreshList} className='add-btn'/>
+          <Button type='primary' size='small' icon={ <PlusOutlined /> } onClick={addFlow} className='add-btn'>
+            <span className='add-text'>新建</span>
           </Button>
       </div>
       <div className='search-list'>
@@ -86,13 +82,13 @@ const FlowModal = (props) => {
                 key={index}
                 onClick={() => changeSelect(item)}
                 >
-                <p className="node-name">{ item.name }</p>
+                <p className='node-name'>{ item.name }</p>
                 <Tooltip title={item.description} destroyTooltipOnHide={ true }>
-                  <p className="node-description">{ item.description }</p>
+                  <p className='node-description'>{ item.description }</p>
                 </Tooltip>
               </div>
             )
-          }) : <Empty description="暂无数据" />
+          }) : <Empty description='暂无数据' />
         }
       </div>
     </Modal>

@@ -1,6 +1,6 @@
 export const initChat = {
   content: '',
-  type: 'recieve',
+  type: 'receive',
   loading: true,
   checked: false
 }

@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useImperativeHandle } from 'react';
 import SendBox from './send-box/send-box';
-import ReciveBox from './recieve-box/recieve-box';
+import ReciveBox from './receive-box/receive-box';
 import ChatDetail from './chat-details';
 import { ChatContext } from '../../aippIndex/context';
 import { queryFeedback } from '@shared/http/chat';

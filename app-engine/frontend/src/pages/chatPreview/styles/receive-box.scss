@@ -1,8 +1,8 @@
-.recieve-box {
+.receive-box {
   margin: 20px 0;
   margin-bottom: 0;
   position: relative;
-  .recieve-info-inner {
+  .receive-info-inner {
     display: inline-block;
     max-width: 100%;
     border-radius: 10px;
@@ -25,7 +25,7 @@
       min-height: 28px;
     }
   }
-  .recieve-info {
+  .receive-info {
     color: #333333;
     max-width: 100%;
     background-color: #ffffff;
@@ -47,19 +47,19 @@
       margin: 0;
       white-space: pre-wrap;
     }
-    .recieve-tips {
+    .receive-tips {
       font-size: 12px;
       margin-top: 6px;
       color: #71757f;
     }
   }
-  .recieve-form-item {
+  .receive-form-item {
     background-color: #ffffff;
     width: 100%;
     box-sizing: border-box;
     padding: 20px;
   }
-  .recieve-loading {
+  .receive-loading {
     display: flex;
     align-items: center;
     background-color: #ffffff;
@@ -145,7 +145,7 @@
     opacity: 0;
   }
 }
-.recieve-loading {
+.receive-loading {
   position: relative;
   text-align: center;
   display: flex;
@@ -153,7 +153,7 @@
   justify-content: center;
   padding: 6px 12px;
 }
-.recieve-loading > div {
+.receive-loading > div {
   width: 8px;
   height: 8px;
   background-color: #2673E5;
@@ -166,11 +166,11 @@
     margin-right: 0;
   }
 }
-.recieve-loading .bounce1 {
+.receive-loading .bounce1 {
   -webkit-animation-delay: -0.32s;
   animation-delay: -0.32s;
 }
-.recieve-loading .bounce2 {
+.receive-loading .bounce2 {
   -webkit-animation-delay: -0.16s;
   animation-delay: -0.16s;
 }

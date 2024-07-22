@@ -12,7 +12,7 @@ const ChatItem = (props) => {
   const { chartType } = chatItem;
   return <>{(
     <div>
-      <div className='recieve-mark'>{ chartAnswer || '' }</div>
+      <div className='receive-mark'>{ chartAnswer || '' }</div>
       {  chartType === 'TABLE' ? <ChartTable chatItem={chatItem} /> : <ChartGraphs chatItem={chatItem}/> }
     </div>
   )}</>
@@ -32,7 +32,7 @@ const ChartTable = (props) => {
 
   // 设置表格细节
   function getChartWidth() {
-    const messageDiv = document.querySelector('.recieve-box');
+    const messageDiv = document.querySelector('.receive-box');
     if (messageDiv) {
       const width = messageDiv?.clientWidth - 80;
       let tableWidth = 0;

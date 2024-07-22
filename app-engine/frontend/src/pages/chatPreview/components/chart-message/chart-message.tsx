@@ -41,7 +41,7 @@ const ChartMessage = (props) => {
     }
   }
   return <>{(
-    <div className='recieve-info'>
+    <div className='receive-info'>
       {
         chartList.map((item, index) => {
           return(

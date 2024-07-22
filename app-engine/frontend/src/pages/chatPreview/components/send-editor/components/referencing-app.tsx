@@ -1,22 +1,18 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Input, Spin } from 'antd';
 import knowledgeBase from '@assets/images/knowledge/knowledge-base.png';
-import '../styles/referencing-app.scss'
 import { getAippList } from '@/shared/http/aipp';
 import { useAppSelector } from '@/store/hook';
 import { SearchOutlined } from '@ant-design/icons';
+import '../styles/referencing-app.scss'
 
 const ReferencingApp = (props) => {
-  const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const { atItemClick, atClick, searchKey, setSearchKey } = props;
-  const [ appArr, setAppArr ] = useState([]);
-  const [ tableLoading, setTableLoading ] = useState(false);
-  const [ total, setTotal ] = useState(1);
+  const [appArr, setAppArr] = useState([]);
+  const [tableLoading, setTableLoading] = useState(false);
+  const [total, setTotal] = useState(1);
+  const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const pageNo = useRef(1);
-
-  useEffect(() => {
-    getAppList();
-  }, [searchKey])
 
   // 应用点击回调
   const itemClick = (item) => {
@@ -41,6 +37,9 @@ const ReferencingApp = (props) => {
       setTableLoading(false);
     }
   }
+  useEffect(() => {
+    getAppList();
+  }, [searchKey]);
   return <>{(
     <div className='at-content' onClick={(e) => e.stopPropagation()}>
       <div className='at-head'>

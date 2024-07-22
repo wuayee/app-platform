@@ -1,12 +1,12 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ClearFileIcon } from '@assets/icon';
-import '../styles/file-preview.scss';
 import UploadFile from './upload-file';
+import '../styles/file-preview.scss';
 
 const LinkFile = ({openUploadRef}) => {
-  const [ showPreview, setShowPreview ] = useState(false);
-  const [ file, setFile ] = useState({data:null, type:null});
+  const [showPreview, setShowPreview] = useState(false);
+  const [file, setFile] = useState({data:null, type:null});
   // 取消文件
   const cancleFile = () => {
     setShowPreview(false);

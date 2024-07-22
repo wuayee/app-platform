@@ -1,0 +1,54 @@
+import React, { useEffect, useState } from 'react';
+import { Input, Button, Typography } from 'antd';
+import {saveContent} from '@shared/http/appBuilder';
+import styled from 'styled-components';
+import { Message } from '@shared/utils/message';
+import { useAppSelector } from '@/store/hook';
+import './styles/file-content.scoped.scss';
+const { TextArea } = Input;
+
+const FileContent = (props) => {
+    const { data, instanceId, mode } = props;
+    const id = 'FileContent';
+    const appId = useAppSelector((state) => state.appStore.appId);
+    const tenantId = useAppSelector((state) => state.appStore.tenantId);
+    const [result, setResult] = useState('');
+
+    const handleSave = () => {
+      saveContent(tenantId, appId, instanceId, {'businessData': {[id]: result}}).then((res) => {
+        if (res.code !== 0) {
+          Message({ type: 'warning', content: res.msg || '保存失败' });
+        }
+      })
+    }
+    const handleChange = (value) => {
+      setResult(value);
+    };
+
+    useEffect(() => {
+      if (!data) return;
+      setResult(data[id]);
+    }, [data]);
+
+    return (
+      <div className='form-warp'>
+        <div style={{pointerEvents: mode === 'history' ? 'none' : 'auto', width: '100%'}}>
+          {(result) ? (
+            <TextArea
+              rows={8}
+              value={result}
+              onChange={(e) => handleChange(e.target.value)}
+              style={{ margin: '0 0 10px 0' }}
+            />
+          ) : (
+            <div className='thumb'>
+              这里展示大模型处理的文件总结内容
+            </div>
+          )}
+          <Button onClick={handleSave} className='save-button'>保存</Button>
+        </div>
+      </div>
+    );
+};
+
+export default FileContent;

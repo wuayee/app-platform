@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React  from 'react';
 import Markdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -28,7 +28,7 @@ const MessageBox = (props) => {
   } 
   return(
     <>{(
-      <div className="recieve-info">
+      <div className='receive-info'>
         { 
           chartConfig ? 
           ( <ChartMessage chartConfig={ chartConfig } /> ) : 
@@ -41,7 +41,7 @@ const MessageBox = (props) => {
         }
         {
           finished &&
-          <div className="recieve-tips">
+          <div className='receive-tips'>
             以上内容为AI生成，不代表开发者立场，请勿删除或修改本标记
           </div>
         }
@@ -49,6 +49,5 @@ const MessageBox = (props) => {
     )}</>
   )
 }
-
 
 export default MessageBox;

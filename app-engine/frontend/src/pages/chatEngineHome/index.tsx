@@ -1,16 +1,16 @@
 
 import React, { useEffect } from 'react';
-import { getAppInfo } from '../../shared/http/aipp';
-import { useAppDispatch, useAppSelector } from '../../store/hook';
 import { useLocation } from 'react-router-dom';
-import './index.scss'
-import {getUserCollection} from '../../shared/http/appDev'
-import { setCurAppId } from '../../store/collection/collection';
-import { setHistorySwitch } from '../../store/common/common';
 import CommonChat from '../chatPreview/chatComminPage';
-import { getUser } from '../helper';
-import { setAppId, setAppInfo } from '../../store/appInfo/appInfo';
 import InfoModal from './components/InfoModal';
+import { getAppInfo } from '@/shared/http/aipp';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
+import {getUserCollection} from '@/shared/http/appDev'
+import { setCurAppId } from '@/store/collection/collection';
+import { setHistorySwitch } from '@/store/common/common';
+import { getUser } from '../helper';
+import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
+import './index.scss'
 
 const xiaohaiAppId='3a617d8aeb1d41a9ad7453f2f0f70d61';
 const ChatRunning = () => {
@@ -20,18 +20,6 @@ const ChatRunning = () => {
   const appId = useAppSelector((state) => state.appStore.AppId);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   
-  useEffect(()=>{
-    if(curAppId){
-      getAppDetails();
-      dispatch(setAppId(curAppId));
-    }
-  },[curAppId]);
-  
-  useEffect(()=>{
-    initialApp();
-  },[]);
-
-
   // 获取当前登录用户名
   const getLoaclUser = () => {
     return localStorage.getItem('currentUserIdComplete') ?? '';
@@ -64,11 +52,21 @@ const ChatRunning = () => {
     // 清除默认应用
     dispatch(setCurAppId(''));
   }, [location]);
-
+  
+  useEffect(()=>{
+    if(curAppId){
+      getAppDetails();
+      dispatch(setAppId(curAppId));
+    }
+  },[curAppId]);
+  
+  useEffect(()=>{
+    initialApp();
+  },[]);
   return (
     <div className='chat-engine-container'>
       <CommonChat chatType='home'/> 
-      <InfoModal/>
+      <InfoModal />
     </div>
 );
   }

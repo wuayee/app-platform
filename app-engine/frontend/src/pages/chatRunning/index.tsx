@@ -1,12 +1,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'antd';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import CommonChat from '../chatPreview/chatComminPage';
 import { getAppInfo } from '@/shared/http/aipp';
 import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
+import { storage } from '@/shared/storage';
 import './index.scoped..scss';
 
 const ChatRunning = () => {
@@ -16,11 +16,7 @@ const ChatRunning = () => {
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const navigate = useNavigate();
-  useEffect(() => {
-    dispatch(setAppId(appId));
-    getAippDetails();
-  }, []);
-
+  
   // 获取aipp详情
   const getAippDetails = async () => {
     const res = await getAppInfo(tenantId, appId);
@@ -34,10 +30,9 @@ const ChatRunning = () => {
 
   // 公告弹层
   const announcements = ({ id, version, attributes }) => {
-    let chatVersionListMap = localStorage.getItem('chatVersionMap');
+    let chatVersionListMap = storage.get('chatVersionMap');
     if (chatVersionListMap) {
       try {
-        chatVersionListMap = JSON.parse(chatVersionListMap);
         let versionItem = chatVersionListMap.filter(item => item.id === id)[0];
         if (!versionItem) {
           chatVersionListMap.push({ id, version });
@@ -60,10 +55,13 @@ const ChatRunning = () => {
     if (remark && remark.length) {
       setNotice(remark);
       setIsModalOpen(true);
-      localStorage.setItem('chatVersionMap', JSON.stringify(arr));
+      storage.set('chatVersionMap', arr);
     }
   }
-
+  useEffect(() => {
+    dispatch(setAppId(appId));
+    getAippDetails();
+  }, []);
   return (
     <div className='chat-running-container'>
       <div className='chat-running-chat'>

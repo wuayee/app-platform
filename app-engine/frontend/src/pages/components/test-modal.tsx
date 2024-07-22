@@ -33,10 +33,10 @@ const TestModal = (props) => {
       onOk={handleOK}
       onCancel={handleCancel}
       footer={[
-        <Button key="back" onClick={handleCancel}>
+        <Button key='back' onClick={handleCancel}>
           取消
         </Button>,
-        <Button key="test" type="primary" onClick={handleOK}>
+        <Button key='test' type='primary' onClick={handleOK}>
           调试
         </Button>
       ]}>

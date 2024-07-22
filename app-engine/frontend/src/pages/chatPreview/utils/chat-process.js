@@ -31,7 +31,7 @@ export const historyChatProcess = (res) => {
           checked: false,
           logId: aItem.logId,
           markdownSyntax: markdowned !== -1,
-          type: 'recieve',
+          type: 'receive',
           instanceId: item.instanceId,
           finished: true,
           feedbackStatus: -1,
@@ -71,7 +71,7 @@ export const historyChatProcess = (res) => {
         chatArr.push(answerObj);
       });
     } else {
-      let answerObj = { type: 'recieve', content: '未获取回答' };
+      let answerObj = { type: 'receive', content: '未获取回答' };
       chatArr.push(answerObj);
     }
   });
@@ -142,7 +142,7 @@ export const reportProcess = (list, listRef) => {
     return reportItem;
   })
   let questionArr = reportArr.filter(item => item.type === 'send');
-  let answerArr = reportArr.filter(item => item.type === 'recieve');
+  let answerArr = reportArr.filter(item => item.type === 'receive');
   questionArr.forEach(item => {
     let obj = {
       question: { query: item.content }
@@ -230,7 +230,7 @@ export const messageProcessNormal = (log, instanceId, atAppInfo) => {
     checked: false,
     logId: log.msgId || uuidv4(),
     markdownSyntax: markdowned !== -1,
-    type: 'recieve',
+    type: 'receive',
     instanceId,
     feedbackStatus: -1,
   };

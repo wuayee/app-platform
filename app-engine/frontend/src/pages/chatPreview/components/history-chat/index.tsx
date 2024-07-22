@@ -12,9 +12,8 @@ import { aippDebug } from '@/shared/http/aipp';
 import { getDaysAndHours } from '@/common/dataUtil';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { setChatList, setChatRunning,setChatId,setOpenStar } from '@/store/chatStore/chatStore';
-import './style.scoped.scss';
 import { updateChatId } from "@/shared/utils/common";
-
+import './style.scoped.scss';
 interface HistoryChatProps {
   openHistorySignal: number;
 }
@@ -78,12 +77,12 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     const list: [] = chatListRes?.data?.msg_list?.reverse()?.map((item, index) => {
       return index % 2 === 0 ?
         { content: item.content?.[0], type: 'send', checked: false, sendType: 'text' } :
-        { content: item.content?.[0], type: 'recieve', checked: false, recieveType: 'text',
+        { content: item.content?.[0], type: 'receive', checked: false, recieveType: 'text',
           instanceId:item?.message_id, appName: item?.app_name, appIcon: item?.app_icon, isAt: !!item?.app_name }
     });
 
     if (role === 'USER') {
-      list.push({ content: null, type: 'recieve', checked: false, sendType: 'text', loading: true });
+      list.push({ content: null, type: 'receive', checked: false, sendType: 'text', loading: true });
       dispatch(setChatRunning(true));
       setLastResSignal(lastResSignal + 1);
     }
@@ -99,7 +98,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     const role = chatListRes?.data?.msg_list?.[0]?.role;
     if (role === 'SYSTEM') {
       const lastRes = chatListRes?.data?.msg_list?.[0]?.content?.[0]; //最近的聊天在最前面
-      const lastItem = { content: lastRes, type: 'recieve', checked: false, sendType: 'text',
+      const lastItem = { content: lastRes, type: 'receive', checked: false, sendType: 'text',
         appName: item?.app_name, appIcon: item?.app_icon, isAt: !!item?.app_name };
       chatList.pop();
       dispatch(setChatList([...chatList, lastItem]));
@@ -130,7 +129,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     if (length % 2 === 0) {
       const lastItem = chatListRes?.data?.msg_list?.[length - 1];
       chatList.pop();
-      chatList.push({ content: lastItem.content?.[0], type: 'recieve', checked: false,
+      chatList.push({ content: lastItem.content?.[0], type: 'receive', checked: false,
         recieveType: 'text', appName: item?.app_name, appIcon: item?.app_icon, isAt: !!item?.app_name });
     }
   }

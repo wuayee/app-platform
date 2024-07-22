@@ -1,14 +1,12 @@
 
-import React, { useEffect, useState, useImperativeHandle, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState, useImperativeHandle } from 'react';
 import { Input, Modal, Button, Select, Form, Upload } from 'antd';
-import {
-  ToTopOutlined
-} from '@ant-design/icons';
-import { Message } from '../../shared/utils/message';
-import { uploadChatFile, updateAppInfo, createAipp } from '../../shared/http/aipp';
-import { httpUrlMap } from '../../shared/http/httpConfig';
-import knowledgeBase from '../../assets/images/knowledge/knowledge-base.png';
+import { useParams } from 'react-router-dom';
+import { ToTopOutlined } from '@ant-design/icons';
+import { Message } from '@/shared/utils/message';
+import { uploadChatFile, updateAppInfo, createAipp } from '@/shared/http/aipp';
+import { httpUrlMap } from '@/shared/http/httpConfig';
+import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
 import './styles/edit-modal.scss';
 
 const { TextArea } = Input;
@@ -18,14 +16,10 @@ const EditModal = (props) => {
   const [ form ] = Form.useForm();
   const { appId } = useParams();
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
-  const [ isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [ avatarId, setAvatarId ] = useState('');
   const [filePath, setFilePath] = useState('');
   const [fileName, setFileName] = useState('');
-  let fileHeaders = {
-    'Content-Type' :'application/octet-stream'
-  };
   const tagOptions = [
     { value: '编程开发', label: '编程开发' },
     { value: '决策分析', label: '决策分析' },
@@ -109,11 +103,11 @@ const EditModal = (props) => {
   // 上传图片
   async function pictureUpload( file ) {
     let headers = {
-      "attachment-filename": encodeURI(file.name || ""),
+      'attachment-filename': encodeURI(file.name || ''),
     };
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append('file', file);
       let res = await uploadChatFile(tenantId, appId, formData, headers);
       if (res.code === 0) {
         setFileName(res.data.file_name);
@@ -139,23 +133,23 @@ const EditModal = (props) => {
         open={isModalOpen}
         onCancel={handleCancel}
         footer={[
-          <Button key="back" onClick={handleCancel}>
+          <Button key='back' onClick={handleCancel}>
             取消
           </Button>,
-          <Button key="submit" type="primary" loading={loading} onClick={confrimClick}>
+          <Button key='submit' type='primary' loading={loading} onClick={confrimClick}>
             确定
           </Button>
         ]}>
         <div className='edit-form-list'>
           <Form
             form={form}
-            layout="vertical"
-            autoComplete="off"
+            layout='vertical'
+            autoComplete='off'
             className='edit-form-content'
           >
             <Form.Item
-              label="名称"
-              name="name"
+              label='名称'
+              name='name'
               rules={[{ required: true, message: '请输入名称' }, {
                 type: 'string',
                 max: 64,
@@ -165,31 +159,31 @@ const EditModal = (props) => {
               <Input showCount maxLength={64}/>
             </Form.Item>
             <Form.Item
-              label="简介"
-              name="description"
+              label='简介'
+              name='description'
             >
               <TextArea rows={3} showCount maxLength={300} />
             </Form.Item>
             <Form.Item
-              label="开场白"
-              name="greeting"
+              label='开场白'
+              name='greeting'
             >
               <TextArea rows={3} showCount maxLength={300}/>
             </Form.Item>
             <Form.Item
-              label="分类"
-              name="app_type"
+              label='分类'
+              name='app_type'
               rules={[{ required: true, message: '不能为空' }]}
             >
               <Select options={tagOptions} />
             </Form.Item>
             <Form.Item
-              label="头像"
-              name="icon"
+              label='头像'
+              name='icon'
             >
               <div className='avatar'>
                 {  filePath ?
-                  (<img className="img-send-item" src={`${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`}/>)
+                  (<img className='img-send-item' src={`${AIPP_URL}/${tenantId}/file?filePath=${filePath}&fileName=${fileName}`}/>)
                   : (<Img icon={appInfo.attributes?.icon}/>)}
                 <Upload
                   beforeUpload={beforeUpload}

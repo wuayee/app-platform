@@ -3,8 +3,9 @@ import { Tooltip } from 'antd';
 import { toClipboard } from '@shared/utils/common';
 import { ChatContext } from '../../../aippIndex/context';
 import { CopyIcon, PlayIcon, StopIcon } from '@/assets/icon';
+import {textToVoice} from '@shared/http/aipp';
 import './styles/send-btn.scss'
-import {textToVoice} from '@shared/http/aipp'
+
 
 const SoundBtn = forwardRef((props, ref) => {
   const [active, setActive] = useState(props.active || false);
