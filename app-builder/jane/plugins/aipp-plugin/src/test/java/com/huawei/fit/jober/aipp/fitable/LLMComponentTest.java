@@ -370,16 +370,7 @@ public class LLMComponentTest {
             InstanceDeclarationInfo info = ObjectUtils.cast(invocation.getArgument(2));
             Map<String, Object> value = info.getInfo().getValue();
             String childInstanceId = ObjectUtils.cast(value.get(AippConst.INST_CHILD_INSTANCE_ID));
-            if (childInstanceId != null) {
-                Assertions.assertEquals("tool_async", childInstanceId);
-                Map<String, Object> businessData = new HashMap<>();
-                businessData.put(AippConst.BS_AIPP_FINAL_OUTPUT, "tool_data");
-                businessData.put(AippConst.PARENT_INSTANCE_ID, TestUtils.DUMMY_FLOW_INSTANCE_ID);
-                businessData.put(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM, true);
-                llmComponent.callback(TestUtils.buildFlowDataWithExtraConfig(businessData, null));
-            } else {
-                Assertions.assertEquals("bad", value.get("llmOutput"));
-            }
+            generateBusinessDataAndCallBack(childInstanceId, value, llmComponent);
             return null;
         }).when(metaInstanceService).patchMetaInstance(any(), any(), any(), any());
         Mockito.when(toolProvider.getTool(any())).thenReturn(Collections.emptyList());
@@ -387,5 +378,18 @@ public class LLMComponentTest {
         // run
         llmComponent.handleTask(TestUtils.buildFlowDataWithExtraConfig(buildLlmTestData(), null));
         countDownLatch.await();
+    }
+
+    private void generateBusinessDataAndCallBack(String childInstanceId, Map<String, Object> value, LLMComponent llmComponent) {
+        if (childInstanceId != null) {
+            Assertions.assertEquals("tool_async", childInstanceId);
+            Map<String, Object> businessData = new HashMap<>();
+            businessData.put(AippConst.BS_AIPP_FINAL_OUTPUT, "tool_data");
+            businessData.put(AippConst.PARENT_INSTANCE_ID, TestUtils.DUMMY_FLOW_INSTANCE_ID);
+            businessData.put(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM, true);
+            llmComponent.callback(TestUtils.buildFlowDataWithExtraConfig(businessData, null));
+        } else {
+            Assertions.assertEquals("bad", value.get("llmOutput"));
+        }
     }
 }
