@@ -26,6 +26,7 @@ import {
 import { setAtAppInfo, setAtAppId } from '@/store/appInfo/appInfo';
 import { getAppInfo } from '@/shared/http/aipp';
 import { setUseMemory } from '@/store/common/common';
+import { updateChatId } from "@/shared/utils/common";
 
 // 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {
@@ -34,9 +35,7 @@ const EditorBtnHome = (props) => {
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const appId = useAppSelector((state) => state.appStore.appId);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
-  const chatId = useAppSelector((state) => state.chatCommonStore.chatId);
   const chatType = useAppSelector((state) => state.chatCommonStore.chatType);
-  const inspirationOpen = useAppSelector((state) => state.chatCommonStore.inspirationOpen);
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const atAppId = useAppSelector((state) => state.appStore.atAppId);
@@ -170,6 +169,17 @@ const EditorBtnHome = (props) => {
     dispatch(setUseMemory(checked));
   }
 
+  //点击“新聊天”按钮回调
+  const onClickNewChat = () => {
+    dispatch(setChatRunning(false));
+    updateChatId(null, appId);
+    dispatch(setChatId(null));
+    dispatch(setChatList([]));
+    dispatch(setAtAppInfo(null));
+    dispatch(setAtChatId(null));
+    dispatch(setAtAppId(null));
+  }
+
   return (
     <div className='btn-inner'>
       <div className='inner-left'>
@@ -201,14 +211,7 @@ const EditorBtnHome = (props) => {
                 <span>多轮对话</span>
                 <Switch className='multi-conversation-switch' value={useMemory} onChange={onMultiConverChange}/>
               </div>}
-              <span className='item-clear' onClick={() => {
-                dispatch(setChatRunning(false));
-                dispatch(setChatId(null));
-                dispatch(setChatList([]));
-                dispatch(setAtAppInfo(null));
-                dispatch(setAtChatId(null));
-                dispatch(setAtAppId(null));
-              }}>+ 新聊天</span>
+              <span className='item-clear' onClick={onClickNewChat}>+ 新聊天</span>
             </div>
           )
         }

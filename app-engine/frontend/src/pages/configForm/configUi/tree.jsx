@@ -40,6 +40,15 @@ const TreeComponent = (props) => {
         setTreeData(props.tree);
     }, [props.tree])
 
+   // 有节点在编辑中不能关闭弹框
+    useEffect(() => {
+      if (editingId) {
+        setDisabled(true);
+        return;
+      }
+      setDisabled(false);
+    }, [editingId])
+
     const titleRender = (node) => {
         const {id, title, children, parent} = node;
 
@@ -48,21 +57,20 @@ const TreeComponent = (props) => {
             setEditingId(id);
         }
 
+      /**
+       * 类目输入框失焦后回调
+       * @param e event事件
+       */
         const handleTagBlur = (e) => {
             let {value} = e.target;
             value = value.trim();
             if (value === '') {
               Message({type: 'warning', content: '分类名称不能为空'});
-              setDisabled(true);
-              return;
             } else if (value === '其他') {
               Message({type: 'warning', content: `分类名称不能为'其他'`});
-              setDisabled(true);
-              return;
             } else {
                 if (!validateTitle(value, node.parent.split(':')[0], id)) {
                   Message({type: 'warning', content: '同层级的分类名称不能重复'});
-                  setDisabled(true);
                   return;
                 }
                 if (id === 'key') {
@@ -72,10 +80,9 @@ const TreeComponent = (props) => {
                 }
                 node.title = value;
                 setEditingId(null);
-                setDisabled(false);
+                setTreeData([...treeData]);
+                props.updateTreeData([...treeData]);
             }
-            setTreeData([...treeData]);
-            props.updateTreeData([...treeData]);
         }
 
         const addTag = () => {

@@ -3,7 +3,7 @@ import { useLocation } from 'react-router';
 import { Spin } from 'antd';
 import { LeftArrowIcon } from '@assets/icon';
 import { Message } from '@shared/utils/message';
-import { isJsonString } from '@shared/utils/common';
+import { isJsonString, updateChatId } from '@shared/utils/common';
 import ChatMessage from './components/chat-message';
 import SendEditor from './components/send-editor/send-editor.jsx';
 import CheckGroup from './components/check-group';
@@ -73,6 +73,7 @@ const ChatPreview = (props) => {
   let reportIContext = useRef(null);
   const listRef = useRef([]);
   const detailPage =  location.pathname.indexOf('app-detail') !== -1;
+
   useEffect(() => {
     !chatType && dispatch(setInspirationOpen(true));
     currentInfo.current = appInfo;
@@ -85,6 +86,11 @@ const ChatPreview = (props) => {
   useEffect(() => {
     testRef.current = formReceived;
   }, [formReceived])
+
+  // 切换App时，chatId为应用上次会话id
+  useEffect(() => {
+    dispatch(setChatId(JSON.parse(localStorage.getItem('appChatMap'))[appId]?.chatId || null));
+  }, [appId])
 
   // 灵感大全设置下拉列表
   function setEditorSelect(data, prompItem) {
@@ -110,7 +116,6 @@ const ChatPreview = (props) => {
   useEffect(() => {
     if (!currentInfo.current || currentInfo.current.id !== appInfo.id) {
       dispatch(setChatRunning(false));
-      dispatch(setChatId(null));
       dispatch(setChatList([]));
       (appInfo.name && !appInfo.notShowHistory) && initChatHistory();
     }
@@ -201,7 +206,9 @@ const ChatPreview = (props) => {
         res= await updateChat(tenantId, chatId, requestBody);
       } else {
         res= await creatChat(tenantId, requestBody);
-        dispatch(setChatId(res?.data?.origin_chat_id));
+        const chatId = res?.data?.origin_chat_id;
+        updateChatId(chatId, appId);
+        dispatch(setChatId(chatId));
       }
       childInstanceStop.current = false;
       const instanceId = res?.data?.current_instance_id;
