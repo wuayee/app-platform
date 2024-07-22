@@ -40,23 +40,25 @@ public class AppBuilderRecommendServiceImpl implements AppBuilderRecommendServic
     }
 
     @Override
-    public List<String> queryRecommends(String ques, String ans) {
-        log.info("query recommends start.\n Last Q: {}\nLast A: {}", ques, ans);
+    public List<String> queryRecommends(String ques, String ans, String model) {
         String historyPrompt = "Here are the chat histories between user and assistant, "
                 + "inside <history></history> XML tags.\n<history>\n{{history}}\n</history>\n\n";
 
         String recommendPrompt = "Please predict the three most likely questions that human would ask, "
                 + "and keeping each question under 20 characters.\n"
-                + "The output must be an array in JSON format following the specified schema:\n"
+                + "Do not include any explanations, "
+                + "only provide output that strictly following the specified JSON format:\n"
                 + "[\"question1\",\"question2\",\"question3\"]\n";
 
         List<String> res;
         try {
             AiProcessFlow<Tip, String> flow = AiFlows.<Tip>create()
                 .prompt(Prompts.human(historyPrompt + recommendPrompt))
-                .generate(new ChatBlockModel(chatModelService).bind(ChatOptions.builder()
-                        .model("Qwen-72B")
-                        .build()))
+                .generate(new ChatBlockModel(chatModelService)
+                        .bind(ChatOptions.builder()
+                                .model(model)
+                                .temperature(0.3)
+                                .build()))
                 .map(ChatMessage::text)
                 .close();
 
@@ -64,8 +66,8 @@ public class AppBuilderRecommendServiceImpl implements AppBuilderRecommendServic
             String response = flow.converse().offer(Tip.from("history", chatHistory)).await();
 
             res = JSONArray.parseArray(response, String.class);
-        } catch (SerializationException | JSONException e) {
-            log.error("{}\nparse model response error", e.getMessage());
+        } catch (SerializationException | JSONException | IllegalStateException e) {
+            log.error("{}\nparse model {} response error", e.getMessage(), model);
             return new ArrayList<>();
         }
 
