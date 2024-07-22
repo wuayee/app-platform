@@ -47,12 +47,17 @@ const Recommends = (props) => {
   }
   // 获取推荐列表
   async function getRecommendList() {
+    let formProp = appInfo.config.form.properties;
+    let modelItem = formProp.filter(item => item.name === 'model')[0];
+    if (modelItem === undefined) return;
+    let model = modelItem.defaultValue || '';
     let chatLength = chatList.length;
     let question = chatList[chatLength - 2].content;
     let answer = chatList[chatLength - 1].content;
     let params = {
       question,
-      answer
+      answer,
+      model
     }
     const res = await getRecommends(params);
     if (res.code === 0) {
