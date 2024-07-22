@@ -15,7 +15,7 @@ import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
-import com.huawei.jade.carver.tool.repository.ToolRepository;
+import com.huawei.jade.carver.tool.repository.pgsql.ToolRepository;
 import com.huawei.jade.carver.tool.service.ToolService;
 
 import java.util.ArrayList;
@@ -79,6 +79,7 @@ public class DefaultToolService implements ToolService {
 
     @Override
     @Fitable(id = "tool-repository-pgsql")
+    @Transactional
     public String deleteToolByVersion(String uniqueName, String version) {
         this.toolRepo.deleteToolByVersion(uniqueName, version);
         return uniqueName;
@@ -182,35 +183,9 @@ public class DefaultToolService implements ToolService {
         return ListResult.create(toolDataList, count);
     }
 
-    /**
-     * 服务层添加标签
-     *
-     * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
-     * @param tag 表示待添加的工具标签的 {@link String}。
-     */
     @Override
     @Fitable(id = "tool-repository-pgsql")
-    public void addTag(String toolUniqueName, String tag) {
-        if (StringUtils.isBlank(tag)) {
-            return;
-        }
-        this.toolRepo.addTag(toolUniqueName, tag);
-    }
-
-    /**
-     * 服务层删除标签
-     *
-     * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
-     * @param tagName 表示待删除的工具标签的 {@link String}。
-     */
-    @Override
-    @Fitable(id = "tool-repository-pgsql")
-    public void deleteTag(String toolUniqueName, String tagName) {
-        this.toolRepo.deleteTag(toolUniqueName, tagName);
-    }
-
-    @Override
-    @Fitable(id = "tool-repository-pgsql")
+    @Transactional
     public void setNotLatest(String toolUniqueName) {
         this.toolRepo.setNotLatest(toolUniqueName);
     }
@@ -226,6 +201,13 @@ public class DefaultToolService implements ToolService {
         Set<String> tagNames = this.toolRepo.getTags(toolUniqueName);
         toolData.setTags(tagNames);
         return toolData;
+    }
+
+    @Override
+    @Fitable(id = "tool-repository-pgsql")
+    @Transactional
+    public void setLatest(String toolUniqueName, String version) {
+        this.toolRepo.setLatest(toolUniqueName, version);
     }
 
     @Override

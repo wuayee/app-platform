@@ -8,8 +8,8 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
-import com.huawei.fitframework.transaction.Transactional;
-import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.exception.FitException;
+import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.ListResult;
 import com.huawei.jade.carver.tool.model.transfer.ToolData;
@@ -18,8 +18,8 @@ import com.huawei.jade.store.entity.query.AppQuery;
 import com.huawei.jade.store.entity.transfer.AppData;
 import com.huawei.jade.store.repository.pgsql.entity.AppDo;
 import com.huawei.jade.store.repository.pgsql.entity.TagDo;
-import com.huawei.jade.store.repository.pgsql.mapper.AppMapper;
-import com.huawei.jade.store.repository.pgsql.mapper.TagMapper;
+import com.huawei.jade.store.repository.pgsql.repository.AppRepository;
+import com.huawei.jade.store.repository.pgsql.repository.TagRepository;
 import com.huawei.jade.store.service.AppService;
 
 import java.util.ArrayList;
@@ -36,37 +36,34 @@ import java.util.stream.Collectors;
  */
 @Component
 public class DefaultAppService implements AppService {
+    private static final Logger logger = Logger.get(DefaultAppService.class);
+
     private final ToolService toolService;
-    private final AppMapper appMapper;
-    private final TagMapper tagMapper;
+    private final AppRepository appRepository;
+    private final TagRepository tagRepository;
 
     /**
      * 通过应用服务接口来初始化 {@link DefaultAppService} 的实例。
      *
      * @param toolService 表示持久层实例的 {@link ToolService}。
-     * @param appMapper 表示持久层实例的 {@link AppMapper}。
-     * @param tagMapper 表示持久层实例的 {@link TagMapper}。
+     * @param appRepository 表示应用的仓库的 {@link AppRepository}。
+     * @param tagRepository 表示标签仓库的 {@link TagRepository}。
      */
-    public DefaultAppService(ToolService toolService, AppMapper appMapper, TagMapper tagMapper) {
+    public DefaultAppService(ToolService toolService, AppRepository appRepository, TagRepository tagRepository) {
         this.toolService = toolService;
-        this.appMapper = appMapper;
-        this.tagMapper = tagMapper;
+        this.appRepository = appRepository;
+        this.tagRepository = tagRepository;
     }
 
     @Override
     @Fitable(id = "store-repository-pgsql")
-    @Transactional
     public String publishApp(AppData appData) {
         notNull(appData, "The app data cannot be null.");
-        if (StringUtils.isBlank(appData.getUniqueName())) {
-            appData.setUniqueName(UUID.randomUUID().toString());
+        String uniqueName = appData.getUniqueName();
+        if (StringUtils.isBlank(uniqueName)) {
             return this.addApp(appData);
         }
-        if (this.toolService.getToolByVersion(appData.getUniqueName(), appData.getVersion()) != null) {
-            this.toolService.deleteToolByVersion(appData.getUniqueName(), appData.getVersion());
-        }
-        this.toolService.setNotLatest(appData.getUniqueName());
-        return this.addApp(appData);
+        return this.upgradeApp(appData, uniqueName);
     }
 
     @Override
@@ -83,23 +80,21 @@ public class DefaultAppService implements AppService {
         appQuery.setIncludeTags(includeTags.stream().map(StringUtils::toUpperCase).collect(Collectors.toSet()));
         Set<String> excludeTags = appQuery.getExcludeTags();
         appQuery.setExcludeTags(excludeTags.stream().map(StringUtils::toUpperCase).collect(Collectors.toSet()));
-        List<AppDo> dos = this.appMapper.getApps(appQuery);
-        List<AppData> data = getAppDataList(dos);
+        List<AppData> data = this.getAppDataList(appRepository.getApps(appQuery));
 
         appQuery.setLimit(null);
         appQuery.setOffset(null);
-        int count = this.appMapper.getAppsCount(appQuery);
-        return ListResult.create(data, count);
+        return ListResult.create(data, this.appRepository.getAppsCount(appQuery));
     }
 
     @Override
     @Fitable(id = "store-repository-pgsql")
     public AppData getApp(String toolUniqueName) {
-        AppDo appDo = this.appMapper.getAppByUniqueName(toolUniqueName);
+        AppDo appDo = this.appRepository.getApp(toolUniqueName);
         ToolData toolData = this.toolService.getTool(toolUniqueName);
         AppData appData = new AppData(toolData,
                 appDo.getLikeCount(), appDo.getDownloadCount());
-        appData.setTags(tagMapper.getTags(appDo.getToolUniqueName())
+        appData.setTags(this.tagRepository.getTags(appDo.getToolUniqueName())
                 .stream()
                 .map(TagDo::getName)
                 .collect(Collectors.toSet()));
@@ -108,12 +103,81 @@ public class DefaultAppService implements AppService {
 
     @Override
     @Fitable(id = "store-repository-pgsql")
-    @Transactional
     public String deleteApp(String toolUniqueName) {
-        this.appMapper.deleteApp(toolUniqueName);
-        this.tagMapper.deleteTagByUniqueName(toolUniqueName);
-        this.toolService.deleteTool(toolUniqueName);
+        AppData oldAppData = this.getApp(toolUniqueName);
+        try {
+            this.appRepository.deleteApp(toolUniqueName);
+            logger.info("Succeeded in deleting app and tags. [toolUniqueName={}]", toolUniqueName);
+        } catch (FitException e) {
+            logger.error("Failed to delete app and tags.");
+            throw e;
+        }
+        try {
+            this.toolService.deleteTool(toolUniqueName);
+            logger.info("Succeeded in deleting existing tool. [toolUniqueName={}]", toolUniqueName);
+        } catch (FitException e) {
+            logger.error("Failed to delete existing tool.");
+            // 回滚之前的数据库插入操作。
+            this.appRepository.addApp(oldAppData);
+            throw e;
+        }
         return toolUniqueName;
+    }
+
+    private String addApp(AppData appData) {
+        String uniqueName = UUID.randomUUID().toString();
+        appData.setUniqueName(uniqueName);
+        try {
+            this.toolService.addTool(appData);
+            logger.info("Succeeded in adding tool. [toolUniqueName={}]", appData.getUniqueName());
+        } catch (FitException e) {
+            logger.error("Failed to add tool.");
+            throw e;
+        }
+        try {
+            this.appRepository.addApp(appData);
+            logger.info("Succeeded in adding app and tags. [toolUniqueName={}]", appData.getUniqueName());
+        } catch (FitException e) {
+            logger.error("Failed to add app and tags.");
+            // 回滚之前的数据库插入操作。
+            this.toolService.deleteToolByVersion(uniqueName, appData.getVersion());
+            throw e;
+        }
+        return uniqueName;
+    }
+
+    private String upgradeApp(AppData appData, String uniqueName) {
+        String oldVersion = this.toolService.getTool(uniqueName).getVersion();
+        try {
+            this.toolService.setNotLatest(uniqueName);
+            logger.info("Succeeded in setting tool versions not latest. [toolUniqueName={}]", uniqueName);
+        } catch (FitException e) {
+            logger.error("Failed to set tool versions not latest.");
+            throw e;
+        }
+        if (this.toolService.getToolByVersion(uniqueName, appData.getVersion()) != null) {
+            try {
+                this.toolService.setLatest(uniqueName, appData.getVersion());
+                logger.info("Succeeded in updating existing tool version as the latest. [toolUniqueName={}]",
+                        uniqueName);
+            } catch (FitException e) {
+                logger.error("Failed to update existing tool version as the latest.");
+                // 回滚之前的数据库插入操作。
+                this.toolService.setLatest(uniqueName, oldVersion);
+                throw e;
+            }
+            return uniqueName;
+        }
+        try {
+            this.toolService.addTool(appData);
+            logger.info("Succeeded in adding tool. [toolUniqueName={}]", appData.getUniqueName());
+        } catch (FitException e) {
+            logger.error("Failed to add tool.");
+            // 回滚之前的数据库插入操作。
+            this.toolService.setLatest(uniqueName, oldVersion);
+            throw e;
+        }
+        return uniqueName;
     }
 
     private List<AppData> getAppDataList(List<AppDo> list) {
@@ -121,26 +185,12 @@ public class DefaultAppService implements AppService {
         for (AppDo appDo : list) {
             AppData appData = new AppData(this.toolService.getTool(appDo.getToolUniqueName()),
                     appDo.getLikeCount(), appDo.getDownloadCount());
-            appData.setTags(tagMapper.getTags(appDo.getToolUniqueName())
+            appData.setTags(this.tagRepository.getTags(appDo.getToolUniqueName())
                     .stream()
                     .map(TagDo::getName)
                     .collect(Collectors.toSet()));
             data.add(appData);
         }
         return data;
-    }
-
-    private String addApp(AppData appData) {
-        AppDo appDo = AppDo.from(appData);
-        String uniqueName = this.toolService.addTool(appData);
-        if (this.appMapper.getAppByUniqueName(appDo.getToolUniqueName()) != null) {
-            return uniqueName;
-        }
-        this.appMapper.addApp(appDo);
-        Set<String> tagNames = appData.getTags().stream().map(StringUtils::toUpperCase).collect(Collectors.toSet());
-        if (CollectionUtils.isNotEmpty(tagNames)) {
-            tagNames.forEach(tagName -> this.tagMapper.addTag(new TagDo(uniqueName, tagName)));
-        }
-        return uniqueName;
     }
 }

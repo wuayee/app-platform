@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.carver.tool.repository;
+package com.huawei.jade.carver.tool.repository.pgsql;
 
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
@@ -40,6 +40,14 @@ public interface ToolRepository {
      * @return 表示删除工具的唯一标识名或失败提示的 {@link String}。
      */
     String deleteToolByVersion(String uniqueName, String version);
+
+    /**
+     * 将工具的某一个版本置为最新。
+     *
+     * @param uniqueName 表示待删除工具的唯一标识的 {@link String}。
+     * @param version 表示待删除工具的版本的 {@link String}。
+     */
+    void setLatest(String uniqueName, String version);
 
     /**
      * 基于工具的唯一标识查询某个工具。
@@ -80,29 +88,6 @@ public interface ToolRepository {
      * @return 表示所有工具详细信息的列表的 {@link List}{@code <}{@link Tool.Info>}{@code >}。
      */
     int searchToolsCount(ToolQuery toolQuery);
-
-    /**
-     * 添加工具标签。
-     *
-     * @param uniqueName 表示工具的唯一标识的 {@link String}。
-     * @param tag 表示工具的标签的 {@link String}。
-     */
-    void addTag(String uniqueName, String tag);
-
-    /**
-     * 删除工具标签。
-     *
-     * @param uniqueName 表示工具的唯一标识的 {@link String}。
-     * @param tagName 表示工具的标签的 {@link String}。
-     */
-    void deleteTag(String uniqueName, String tagName);
-
-    /**
-     * 根据工具唯一标识删除标签。
-     *
-     * @param uniqueName 表示商品的唯一标识的 {@link String}。
-     */
-    void deleteTagByUniqueName(String uniqueName);
 
     /**
      * 通过工具唯一标识名获取工具的标签列表。
