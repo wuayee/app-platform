@@ -1,8 +1,8 @@
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import InterviewQuestions from '../runtimeForm/InterviewQuestions.jsx';
 import ManageCubeCreateReport from '../runtimeForm/ManageCubeCreateReport.jsx';
-import FileContent from '../runtimeForm/FileContent.jsx';
+import FileContent from '../runtimeForm/FileContent';
 import QuestionClar from "../runtimeForm/QuestionClar";
 import ConditionForm from '../runtimeForm/conditionForm/conditionForm';
 import { setFormReceived } from "@/store/chatStore/chatStore";
@@ -49,7 +49,7 @@ const RuntimeForm = (props) => {
     }
   }
   return <>{(
-    <div className='recieve-form-item'>
+    <div className='receive-form-item'>
       { setFormDom(formName) }
     </div>
   )}</>
