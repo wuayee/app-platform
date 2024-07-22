@@ -4,12 +4,10 @@
 
 package com.huawei.fit.jober.taskcenter.controller;
 
-import static com.huawei.fit.jober.common.Constant.STREAM_ID_SEPARATOR;
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 import static com.huawei.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.http.server.HttpClassicServerRequest;
-import com.huawei.fit.jane.flow.graph.entity.FlowGraphDefinition;
 import com.huawei.fit.jane.flow.graph.entity.elsa.response.GetPageResponse;
 import com.huawei.fit.jane.task.domain.Authorization;
 import com.huawei.fit.jane.task.domain.DomainObject;
@@ -24,11 +22,8 @@ import com.huawei.fit.jane.task.util.Dates;
 import com.huawei.fit.jane.task.util.PagedResultSet;
 import com.huawei.fit.jane.task.util.PaginationResult;
 import com.huawei.fit.jane.task.util.UndefinableValue;
-import com.huawei.fit.jober.bff.controller.a3000.entity.CleanTaskPageResult;
 import com.huawei.fit.jober.common.utils.UUIDUtil;
-import com.huawei.fit.jober.entity.FlowInfo;
 import com.huawei.fit.jober.entity.task.TaskProperty;
-import com.huawei.fit.jober.flowsengine.controller.vo.FlowDefinitionVO;
 import com.huawei.fit.jober.taskcenter.declaration.InstanceDeclaration;
 import com.huawei.fit.jober.taskcenter.declaration.InstanceEventDeclaration;
 import com.huawei.fit.jober.taskcenter.declaration.SourceDeclaration;
@@ -60,12 +55,6 @@ import com.huawei.fit.jober.taskcenter.filter.TaskTemplateFilter;
 import com.huawei.fit.jober.taskcenter.filter.TriggerFilter;
 import com.huawei.fit.jober.taskcenter.service.PortalService;
 import com.huawei.fit.jober.taskcenter.util.Enums;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowContext;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowData;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.context.FlowOfferId;
-import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.FlowDefinition;
-import com.huawei.fit.waterflow.flowsengine.persist.po.FlowContextPO;
-import com.huawei.fit.waterflow.flowsengine.persist.po.FlowDefinitionPO;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.model.RangeResult;
 import com.huawei.fitframework.model.RangedResultSet;
@@ -73,18 +62,13 @@ import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.StringUtils;
 
-import com.alibaba.fastjson.JSONObject;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -820,130 +804,6 @@ public final class Views {
         return view;
     }
 
-    public static Map<String, Object> viewOfFlows(FlowDefinitionVO flowDefinition) {
-        Map<String, Object> view = new LinkedHashMap<>(1);
-        put(view, "flowDefinition", flowDefinition);
-        return view;
-    }
-
-    public static Map<String, Object> viewOfFlowStatus(FlowDefinitionPO flowDefinitionPO) {
-        Map<String, Object> view = new LinkedHashMap<>(1);
-        view.put("status", flowDefinitionPO == null ? "unpublished" : flowDefinitionPO.getStatus());
-        return view;
-    }
-
-    /**
-     * viewOfFlows
-     *
-     * @param flowDefinition flowDefinition
-     * @param graphData graphData
-     * @return Map<String, Object>
-     */
-    public static Map<String, Object> viewOfFlows(FlowDefinition flowDefinition, String graphData) {
-        Map<String, Object> view = new LinkedHashMap<>(2);
-        put(view, "flowDefinitionId", flowDefinition.getDefinitionId());
-        put(view, "metaId", flowDefinition.getMetaId());
-        put(view, "version", flowDefinition.getVersion());
-        put(view, "graphData", graphData);
-        return view;
-    }
-
-    /**
-     * viewOfFlows
-     *
-     * @param flows flows
-     * @return List<Map < String, Object>>
-     */
-    public static List<Map<String, Object>> viewOfFlows(List<FlowDefinitionPO> flows) {
-        if (flows.isEmpty()) {
-            return new ArrayList<>();
-        }
-        List<Map<String, Object>> view = new ArrayList<>();
-        flows.forEach(flow -> {
-            Map<String, Object> map = new LinkedHashMap<>(4);
-            put(map, "flowDefinitionId", flow.getDefinitionId());
-            put(map, "name", flow.getName());
-            put(map, "version", flow.getVersion());
-            put(map, "status", flow.getStatus());
-            view.add(map);
-        });
-        return view;
-    }
-
-    /**
-     * viewOfFlows
-     *
-     * @param flows flows
-     * @return Map<String, Object>
-     */
-    public static Map<String, Object> viewOfFlows(FlowDefinitionPO flows) {
-        if (flows == null) {
-            return new LinkedHashMap<>();
-        }
-        Map<String, Object> view = new LinkedHashMap<>(2);
-        put(view, "flowDefinitionId", flows.getDefinitionId());
-        put(view, "metaId", flows.getMetaId());
-        put(view, "versionStatus", flows.getStatus());
-        put(view, "releaseTime", flows.getCreatedAt());
-        return view;
-    }
-
-    /**
-     * viewOfTraceId
-     *
-     * @param traceId traceId
-     * @return Map<String, Object>
-     */
-    public static Map<String, Object> viewOfTraceId(String traceId) {
-        Map<String, Object> view = new LinkedHashMap<>(2);
-        put(view, "traceId", traceId);
-        return view;
-    }
-
-    /**
-     * 流程运行后的标识信息
-     *
-     * @param id 标识信息
-     * @return Map<String, Object>
-     */
-    public static Map<String, Object> viewOfFlowRunResult(FlowOfferId id) {
-        Map<String, Object> view = new LinkedHashMap<>(3);
-        put(view, "traceId", id.getTraceId());
-        put(view, "transId", id.getTrans().getId());
-        return view;
-    }
-
-    /**
-     * viewOfContexts
-     *
-     * @param pos pos
-     * @return List<Map < String, Object>>
-     */
-    public static <T> Map<String, Object> viewOfContexts(List<T> pos) {
-        if (pos.isEmpty()) {
-            return new LinkedHashMap<>();
-        }
-
-        Map<String, Object> view = new LinkedHashMap<>();
-        putList(view, "contexts", pos);
-        return view;
-    }
-
-    /**
-     * viewOfContextStatus
-     *
-     * @param flowContexts flowContexts
-     * @return Map<String, Map < String, Long>>
-     */
-    public static Map<String, Map<String, Long>> viewOfContextStatus(List<FlowContext<FlowData>> flowContexts) {
-        if (flowContexts.isEmpty()) {
-            return new LinkedHashMap<>();
-        }
-        return flowContexts.stream()
-                .collect(Collectors.groupingBy(FlowContext::getPosition,
-                        Collectors.groupingBy(c -> c.getStatus().toString(), Collectors.counting())));
-    }
-
     /**
      * declareTaskType
      *
@@ -1089,45 +949,6 @@ public final class Views {
         return view;
     }
 
-    public static Map<String, Object> viewOf(Map<String, Object> flowsEngine, FlowInfo elsaFlow) {
-        Map<String, Object> view = new LinkedHashMap<>(3);
-        if (flowsEngine.isEmpty() && elsaFlow == null) {
-            return view;
-        }
-        if (!flowsEngine.isEmpty()) {
-            put(view, "metaId", flowsEngine.get("metaId"));
-            put(view, "version", flowsEngine.get("version"));
-        }
-        if (elsaFlow != null) {
-            put(view, "updateTime", new Date());
-        }
-        return view;
-    }
-
-    public static List<Map<String, Object>> viewOfFlows(Map<String, FlowDefinitionPO> flows) {
-        List<Map<String, Object>> view = new ArrayList<>();
-        flows.entrySet().stream().forEach(e -> {
-            Map<String, Object> flowData = new LinkedHashMap<>();
-            put(flowData, "releaseTime", e.getValue().getCreatedAt());
-            put(flowData, "versionStatus", e.getValue().getStatus());
-            put(flowData, "streamId", e.getValue().getMetaId() + STREAM_ID_SEPARATOR + e.getValue().getVersion());
-            view.add(flowData);
-        });
-        return view;
-    }
-
-    public static Map<String, Object> flowContextCountViewOf(Map<String, List<FlowContextPO>> flowContexts) {
-        Map<String, Object> view = new LinkedHashMap<>(4);
-        if (flowContexts.isEmpty() || flowContexts.get("start").isEmpty()) {
-            return view;
-        }
-        put(view, "allContexts", flowContexts.get("start").size());
-        put(view, "runningContexts", flowContexts.get("running").size());
-        put(view, "errorContexts", flowContexts.get("error").size());
-        put(view, "streamId", flowContexts.get("start").get(0).getStreamId());
-        return view;
-    }
-
     /**
      * 获取一个视图，表示指定的文件。
      *
@@ -1143,103 +964,6 @@ public final class Views {
         return view;
     }
 
-    /**
-     * 根据flowGraphDefinition获取一个视图
-     *
-     * @param flowGraphDefinition flowGraphDefinition
-     * @return 视图
-     */
-    public static Map<String, Object> viewOfFlowGraphDefinition(FlowGraphDefinition flowGraphDefinition) {
-        if (flowGraphDefinition == null) {
-            return new LinkedHashMap<>();
-        }
-        return processFlowGraph(flowGraphDefinition, "isDeleted");
-    }
-
-    /**
-     * 根据flowGraphDefinition的list获取一个视图
-     *
-     * @param flowGraphDefinitions flowGraphDefinition的集合
-     * @return 流程版本集合
-     */
-    public static Map<String, Object> viewOfFlowGraphList(List<FlowGraphDefinition> flowGraphDefinitions) {
-        Map<String, Object> view = new LinkedHashMap<>(1);
-        if (flowGraphDefinitions == null) {
-            view.put("flowList", new ArrayList<>());
-            return view;
-        }
-        List<Map<String, Object>> graphDefinitions = new ArrayList<>();
-        flowGraphDefinitions.forEach(
-                from -> graphDefinitions.add(processFlowGraph(from, "isDeleted", "graphData", "tags", "tenant")));
-        view.put("flowList", graphDefinitions);
-        return view;
-    }
-
-    private static Map<String, Object> processFlowGraph(FlowGraphDefinition flowGraphDefinition, String... except) {
-        if (flowGraphDefinition == null) {
-            return new LinkedHashMap<>();
-        }
-        Map<String, Object> view = new LinkedHashMap<>(12);
-        JSONObject from = convertToJson(flowGraphDefinition);
-        from.keySet()
-                .stream()
-                .filter(key -> !flowGraphFilter(key, except))
-                .forEach(key -> view.put(key, from.get(key)));
-        return view;
-    }
-
-    private static boolean flowGraphFilter(String key, String[] except) {
-        if (except == null || except.length == 0) {
-            return false;
-        }
-        Optional<String> first = Arrays.stream(except).filter(key::equals).findFirst();
-        return first.isPresent();
-    }
-
-    /**
-     * 提取包含flowGraph部分字段以及分页参数的视图
-     *
-     * @param flowGraphDefinitions 查询到的flowGraph定义列表
-     * @param count 符合条件的记录总数
-     * @param offset 分页参数：偏移
-     * @param limit 分页参数：条数
-     * @return 包含flowGraph部分字段以及分页参数的视图
-     */
-    public static Map<String, Object> viewOfFlowGraphPage(List<FlowGraphDefinition> flowGraphDefinitions,
-            Map<String, List<String>> flowIdAndTags, int count, int offset, int limit) {
-        Map<String, Object> view = new LinkedHashMap<>(2);
-        Map<String, Object> pagination = new LinkedHashMap<>(3);
-        put(pagination, "limit", limit);
-        put(pagination, "offset", offset);
-        put(pagination, "total", count);
-        List<Map<String, Object>> definitions = new ArrayList<>();
-        flowGraphDefinitions.forEach(definition -> definitions.add(
-                viewOfFlowGraph(definition, flowIdAndTags, "tenant", "graphData", "isDeleted")));
-        view.put("definitions", definitions);
-        put(view, "pagination", pagination);
-        return view;
-    }
-
-    /**
-     * 提取flowGraph中需要的字段的视图
-     *
-     * @param flowGraphDefinition 查询到的flowGraph定义
-     * @param ExcludeParam flowGraph定义中不需要的字段
-     * @return flowGraph的视图，包含需要的字段
-     */
-    public static Map<String, Object> viewOfFlowGraph(FlowGraphDefinition flowGraphDefinition,
-            Map<String, List<String>> flowIdAndTags, String... ExcludeParam) {
-        if (flowGraphDefinition == null) {
-            return new LinkedHashMap<>();
-        }
-        Map<String, Object> view = new LinkedHashMap<>();
-        HashSet<String> exclude = Arrays.stream(ExcludeParam).collect(Collectors.toCollection(HashSet::new));
-        JSONObject from = convertToJson(flowGraphDefinition);
-        from.keySet().stream().filter(key -> !exclude.contains(key)).forEach(key -> put(view, key, from.get(key)));
-        view.put("tags", flowIdAndTags.get(flowGraphDefinition.getFlowId()));
-        return view;
-    }
-
     public static Authorization.Declaration declareAuthorization(Map<String, Object> view) {
         Authorization.Declaration.Builder builder = Authorization.Declaration.custom();
         declare(view, "system", builder::system);
@@ -1247,23 +971,6 @@ public final class Views {
         declare(view, "token", builder::token);
         declare(view, "expiration", (Number value) -> builder.expiration(nullIf(value, 0L).longValue()));
         return builder.build();
-    }
-
-    private static JSONObject convertToJson(FlowGraphDefinition flowGraphDefinition) {
-        return (JSONObject) JSONObject.toJSON(flowGraphDefinition);
-    }
-
-    /**
-     * viewOf
-     *
-     * @param cleanTaskPageResult 分页清洗结果
-     * @return Map<String, Object>
-     */
-    public static Map<String, Object> viewOf(CleanTaskPageResult cleanTaskPageResult) {
-        Map<String, Object> view = new LinkedHashMap<>(2);
-        view.put("totalPage", cleanTaskPageResult.getTotalNum());
-        view.put("result", cleanTaskPageResult.getResult());
-        return view;
     }
 
     public static Map<String, Object> viewOf(Authorization authorization) {
@@ -1301,15 +1008,6 @@ public final class Views {
         builder.systems(httpRequest.queries().all("system"));
         builder.users(httpRequest.queries().all("user"));
         return builder.build();
-    }
-
-    public static Map<String, Object> viewOfFitableUsage(FlowDefinitionPO definition) {
-        Map<String, Object> view = new LinkedHashMap<>(4);
-        put(view, "id", definition.getMetaId());
-        put(view, "version", definition.getVersion());
-        put(view, "name", definition.getName());
-        put(view, "graph", definition.getGraph());
-        return view;
     }
 
     /**
@@ -1537,26 +1235,5 @@ public final class Views {
         put(view, "creationTime", Dates.toString(domain.creationTime()));
         put(view, "lastModifier", domain.lastModifier());
         put(view, "lastModificationTime", Dates.toString(domain.lastModificationTime()));
-    }
-
-    /**
-     * viewOfFlowInfo
-     *
-     * @param flowInfo flowInfo
-     * @return Map<String, Object>
-     */
-    public static Map<String, Object> viewOfFlowInfo(FlowInfo flowInfo) {
-        if (flowInfo == null) {
-            return new LinkedHashMap<>();
-        }
-        Map<String, Object> view = new LinkedHashMap<>();
-        com.alibaba.fastjson.JSONObject parsedData = com.alibaba.fastjson.JSONObject.parseObject(
-                flowInfo.getConfigData());
-        String name = parsedData.getString("title");
-        put(view, "flowId", flowInfo.getFlowId());
-        put(view, "version", flowInfo.getVersion());
-        put(view, "graphData", flowInfo.getConfigData());
-        put(view, "name", name);
-        return view;
     }
 }

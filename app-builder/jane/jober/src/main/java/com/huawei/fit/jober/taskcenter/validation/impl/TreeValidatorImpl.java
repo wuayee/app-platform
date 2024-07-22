@@ -8,7 +8,7 @@ import com.huawei.fit.jane.task.util.Entities;
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
-import com.huawei.fit.jober.taskcenter.fitable.util.ParamUtils;
+import com.huawei.fit.jober.common.util.ParamUtils;
 import com.huawei.fit.jober.taskcenter.validation.TreeValidator;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Value;

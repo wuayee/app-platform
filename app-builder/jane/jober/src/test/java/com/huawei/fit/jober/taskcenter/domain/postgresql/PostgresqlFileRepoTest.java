@@ -12,9 +12,9 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.FileService;
+import com.huawei.fit.jober.common.util.ParamUtils;
 import com.huawei.fit.jober.entity.File;
 import com.huawei.fit.jober.entity.FileDeclaration;
-import com.huawei.fit.jober.taskcenter.fitable.util.ParamUtils;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 
