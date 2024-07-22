@@ -40,6 +40,6 @@ public class AppBuilderRecommendController {
         String question = recommendDto.getQuestion();
         String answer = recommendDto.getAnswer();
 
-        return Rsp.ok(recommendService.queryRecommends(question, answer));
+        return Rsp.ok(recommendService.queryRecommends(question, answer, recommendDto.getModel()));
     }
 }

@@ -18,7 +18,8 @@ public interface AppBuilderRecommendService {
      *
      * @param ques 前次用户提问
      * @param ans 前次模型回答
+     * @param model 大模型名称
      * @return List<String> 3个推荐问题列表
      */
-    List<String> queryRecommends(String ques, String ans);
+    List<String> queryRecommends(String ques, String ans, String model);
 }
