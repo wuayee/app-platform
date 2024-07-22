@@ -1,7 +1,5 @@
 import React from 'react';
-import type { PaginationProps } from 'antd';
 import { Pagination } from 'antd';
-import { number } from 'prop-types';
 
 interface paginationProps {
   // 当前页
@@ -56,20 +54,20 @@ const defaultConfig: paginationProps = {
 
 const App: React.FC = (props: paginationProps = defaultConfig) => {
   const config = {...defaultConfig, ...props }
-return (
-  <>
-    <div style={{
-      width: '100%',
-      display: 'flex',
-      'justifyContent': 'space-between',
-      fontSize: '12px'
+  return (
+    <>
+      <div style={{
+        width: '100%',
+        display: 'flex',
+        'justifyContent': 'space-between',
+        fontSize: '12px'
 
-    }}>
-      { config.showTotalFunc ? (<span>共{props.total}条</span>) : <span></span>}
-      
-      <Pagination {...config} />
-    </div>
-  </>
-)};
+      }}>
+        { config.showTotalFunc ? (<span>共{props.total}条</span>) : <span></span>}
+        <Pagination {...config} />
+      </div>
+    </>
+  )
+};
 
 export default App;

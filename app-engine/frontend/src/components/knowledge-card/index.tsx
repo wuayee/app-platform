@@ -1,10 +1,10 @@
-import type { ReactElement } from 'react';
 import React from 'react';
+import type { ReactElement } from 'react';
 import { Card, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../icons/index';
-import './index.scoped.scss'
+import './index.scoped.scss';
 
 export interface knowledgeBase {
   name: string;

@@ -1,15 +1,13 @@
 import React from 'react';
 import { Dropdown, Flex, MenuProps, Tag } from 'antd';
-import { Icons } from '../icons';
-import { PluginIcons } from '../icons/plugin';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
+import { Icons } from '../icons';
+import { useAppSelector } from '@/store/hook';
+import { getAppInfoByVersion } from '@/shared/http/aipp';
 import './style.scoped.scss';
-import { IconMap, PluginCardTypeE } from '../../pages/plugin/helper';
-import { useAppSelector } from '../../store/hook';
-import { getAppInfoByVersion } from '../../shared/http/aipp';
 
-const WorkflowCard = ({ pluginData,cardType }: any) => {
+const WorkflowCard = ({ pluginData }: any) => {
   const navigate = useNavigate();
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const operatItems: MenuProps['items'] = [
@@ -54,7 +52,11 @@ const WorkflowCard = ({ pluginData,cardType }: any) => {
       <div>
       <Flex gap={14}>
         <span>
-          {pluginData?.state==='active'?<Tag bordered={false} color="processing" className='footer-type'>已发布</Tag>:<Tag bordered={false} className='footer-type'>草稿</Tag>}
+          {
+            pluginData?.state==='active' ? 
+            <Tag bordered={false} color="processing" className='footer-type'>已发布</Tag> :
+            <Tag bordered={false} className='footer-type'>草稿</Tag>
+          }
         </span>
         <span hidden>
           <UserOutlined style={{ marginRight: 8 }} />

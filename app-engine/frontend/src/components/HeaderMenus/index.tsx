@@ -11,13 +11,13 @@ function itemRender(currentRoute, params, items, paths) {
     <span>{currentRoute.title}</span>
   ) : (
     <Link onClick={()=>{
-    navigate(currentRoute.path);}}>{currentRoute.title}</Link>
+      navigate(currentRoute.path);}}>{currentRoute.title}</Link>
   );
 }
 
 const HeaderMenus: React.FC<{items}> = ({items}) => {
   return(
-      <Breadcrumb itemRender={itemRender} items={items} />
+    <Breadcrumb itemRender={itemRender} items={items} />
 )};
 
 export default HeaderMenus;

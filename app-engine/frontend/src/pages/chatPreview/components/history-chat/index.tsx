@@ -1,18 +1,19 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Drawer, Input, Dropdown, Tooltip, Modal } from "antd";
-import type { MenuProps } from "antd";
+import React, { useEffect, useRef, useState } from 'react';
+import { Drawer, Input, Dropdown, Tooltip, Modal } from 'antd';
+import type { MenuProps } from 'antd';
 import {
   SearchOutlined,
   EllipsisOutlined,
   ClearOutlined,
   CloseOutlined,
-} from "@ant-design/icons";
-import "./style.scoped.scss";
-import { clearChatHistory, deleteChat, getChatDetail, getChatList, tenantId } from "../../../../shared/http/chat";
-import { aippDebug } from "../../../../shared/http/aipp";
-import { getDaysAndHours } from "../../../../common/dataUtil";
-import { useAppDispatch, useAppSelector } from "../../../../store/hook";
-import { setChatList, setChatRunning,setChatId,setOpenStar } from "../../../../store/chatStore/chatStore";
+} from '@ant-design/icons';
+import { clearChatHistory, deleteChat, getChatDetail, getChatList } from '@/shared/http/chat';
+import { aippDebug } from '@/shared/http/aipp';
+import { getDaysAndHours } from '@/common/dataUtil';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
+import { setChatList, setChatRunning,setChatId,setOpenStar } from '@/store/chatStore/chatStore';
+import './style.scoped.scss';
+import { updateChatId } from "@/shared/utils/common";
 
 interface HistoryChatProps {
   openHistorySignal: number;
@@ -40,23 +41,10 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     const chatRes = await getChatList(tenantId, requestInfo);
     setData(chatRes?.data);
   }
-  useEffect(() => {
-    if (openHistorySignal > 0) {
-      setOpen(true);
-      dispatch(setOpenStar(false));
-      refreshList();
-    }
-  }, [openHistorySignal]);
-
-  useEffect(() => {
-    if (openStar === true) {
-      setOpen(false);
-    }
-  }, [openStar])
 
   const getAippId = async () => {
     if (!appInfo.id) return;
-    const debugRes = await aippDebug(tenantId, appInfo?.id, appInfo);
+    const debugRes = await aippDebug(tenantId, appInfo?.id, appInfo, 'preview');
     let { aipp_id, version } = debugRes?.data;
     const requestBody = {
       aipp_id: aipp_id,
@@ -67,13 +55,14 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     setRequestInfo(requestBody);
   }
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
-      key: "1",
+      key: '1',
       label: <div onClick={async () => {
         await deleteChat(tenantId, currentChat?.current?.chat_id);
         if (chatId === currentChat?.current?.chat_id) {
           dispatch(setChatId(null));
+          updateChatId(null, appId);
           dispatch(setChatList([]));
         }
         refreshList();
@@ -100,6 +89,8 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
     }
     dispatch(setChatList(list));
     setOpen(false);
+    dispatch(setChatId(chat_id));
+    updateChatId(chat_id, appId);
   }
 
   const getLastRes = async () => {
@@ -145,25 +136,54 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
   }
 
   const onClearList = async()=>{
-   await clearChatHistory(tenantId,appId);
-   refreshList();
-   dispatch(setChatList([]));
-   dispatch(setChatId(null));
-   setClearOpen(false);
-   setOpen(false);
+    await clearChatHistory(tenantId,appId);
+    refreshList();
+    dispatch(setChatList([]));
+    dispatch(setChatId(null));
+    updateChatId(null, appId);
+    setClearOpen(false);
+    setOpen(false);
   }
+
+  useEffect(() => {
+    if (openHistorySignal > 0) {
+      setOpen(true);
+      dispatch(setOpenStar(false));
+      refreshList();
+    }
+  }, [openHistorySignal]);
+
+  useEffect(() => {
+    if (openStar === true) {
+      setOpen(false);
+    }
+  }, [openStar]);
+
+  useEffect(() => {
+    if (lastResSignal > 0) {
+      setTimeout(() => {
+        getLastRes();
+      }, 3000);
+    }
+  }, [lastResSignal])
+
+  useEffect(() => {
+    if (appInfo?.id) {
+      getAippId();
+    }
+  }, [appInfo.id]);
 
   return (
     <Drawer
       destroyOnClose
       mask={false}
       title={
-        <div className="history-title">
-          <div className="history-title-left">
+        <div className='history-title'>
+          <div className='history-title-left'>
             <span>历史聊天</span>
-            <div className="history-clear-btn" onClick={() => setClearOpen(true)}>
+            <div className='history-clear-btn' onClick={() => setClearOpen(true)}>
               <ClearOutlined style={{ fontSize: 14, marginLeft: 8 }} />
-              <span className="history-clear-btn-text" >清空</span>
+              <span className='history-clear-btn-text' >清空</span>
             </div>
           </div>
           <CloseOutlined
@@ -178,35 +198,35 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
       bodyStyle={{ padding: 0 }}
     >
       <div style={{ padding: 24 }}>
-        <Input placeholder="搜索..." prefix={<SearchOutlined />} disabled />
+        <Input placeholder='搜索...' prefix={<SearchOutlined />} disabled />
       </div>
-      <div className="history-wrapper">
+      <div className='history-wrapper'>
         {data?.slice(0, 30).map((item) => (
-          <div className="history-item" key={item?.chat_id} onClick={() => { currentChat.current = item; }}>
-            <div className="history-item-content">
-              <div className="history-item-header">
-              <Tooltip placement="top" title={<span style={{color:'#4d4d4d'}}>{item?.chat_name}</span>} color='#ffffff'>
-              <div className="history-item-title">{item?.chat_name?.length>10?item?.chat_name?.substring(0,10)+'...':item?.chat_name}</div>
+          <div className='history-item' key={item?.chat_id} onClick={() => { currentChat.current = item; }}>
+            <div className='history-item-content'>
+              <div className='history-item-header'>
+              <Tooltip placement='top' title={<span style={{color:'#4d4d4d'}}>{item?.chat_name}</span>} color='#ffffff'>
+              <div className='history-item-title'>{item?.chat_name?.length>10?item?.chat_name?.substring(0,10)+'...':item?.chat_name}</div>
               </Tooltip>
                 <span
                   style={{ cursor: "pointer", color: "#1677ff" }}
-                  onClick={() => { continueChat(item?.chat_id, item?.current_instance_id); dispatch(setChatId(item?.chat_id)); }}
+                  onClick={() => { continueChat(item?.chat_id, item?.current_instance_id);}}
                 >
                   继续聊天
                 </span>
               </div>
-              <div className="history-item-desc">{item?.msg_list?.[0]}</div>
+              <div className='history-item-desc'>{item?.msg_list?.[0]}</div>
             </div>
-            <div className="history-item-footer">
+            <div className='history-item-footer'>
               <span>{getDaysAndHours(item?.update_time_timestamp, item?.current_time_timestamp)}</span>
-              <Dropdown menu={{ items }} trigger={["click"]}>
-                <EllipsisOutlined className="history-item-footer-more" />
+              <Dropdown menu={{ items }} trigger={['click']}>
+                <EllipsisOutlined className='history-item-footer-more' />
               </Dropdown>
             </div>
           </div>
         ))}
       </div>
-      <Modal title="警告" open={isClearOpen} onOk={onClearList} onCancel={()=>setClearOpen(false)}>
+      <Modal title='警告' open={isClearOpen} onOk={onClearList} onCancel={()=>setClearOpen(false)}>
         <p>确认要清空所有聊天记录？删除后该数据无法恢复。</p>
       </Modal>
     </Drawer>

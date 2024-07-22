@@ -1,20 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { LeftArrowIcon, EditIcon, UploadIcon } from '@assets/icon';
-import { Message } from "../../shared/utils/message";
-import PublishModal from './publish-modal.jsx';
-import EditModal from './edit-modal.jsx';
-import knowledgeBase from '../../assets/images/knowledge/knowledge-base.png';
-import TestStatus from "./test-status.jsx";
-import TestModal from "./test-modal";
-import TimeLineDrawer from '../../components/timeLine';
+import { LeftArrowIcon, UploadIcon } from '@assets/icon';
+import TimeLineDrawer from '@/components/timeLine';
+import PublishModal from './publish-modal';
+import EditModal from './edit-modal';
+import TestStatus from './test-status';
+import TestModal from './test-modal';
 import './styles/header.scss'
 
 const ChoreographyHead = (props) => {
   const { 
     showElsa, appInfo,
     updateAippCallBack,
-    mashupClick, status,
+    mashupClick,
     openDebug, testTime,
     testStatus, showTime
   } = props;
@@ -56,47 +54,55 @@ const ChoreographyHead = (props) => {
     setOpen(true);
   }
   return <>{(
-    <div className="app-header">
-      <div className="logo">
-        { showElsa && <LeftArrowIcon className="back-icon" onClick={backClick}/> }
+    <div className='app-header'>
+      <div className='logo'>
+        { showElsa && <LeftArrowIcon className='back-icon' onClick={backClick}/> }
         { appInfo?.attributes?.icon ?
           <img src={appInfo.attributes?.icon} onClick={backClick} /> :
           <img src='/src/assets/images/knowledge/knowledge-base.png' onClick={backClick}/>
         }
-        <span className="header-text" title={appInfo?.name}>{ appInfo?.name }</span>
-        <img className="edit-icon" src='/src/assets/images/ai/edit.png' onClick={ handleEditClick } />
+        <span className='header-text' title={appInfo?.name}>{ appInfo?.name }</span>
+        <img className='edit-icon' src='/src/assets/images/ai/edit.png' onClick={ handleEditClick } />
         {
           appInfo.state === 'active' ?
           (
-            <div className="status-tag">
+            <div className='status-tag'>
               <img src='/src/assets/images/ai/complate.png' />
               <span>已发布</span>
-              <span className="version">V{appInfo.version}</span>
+              <span className='version'>V{appInfo.version}</span>
             </div>
           ) :
           (
-            <div className="status-tag">
+            <div className='status-tag'>
               <img src='/src/assets/images/ai/publish.png' />
               <span>未发布</span>
-              <span className="version">V{appInfo.version}</span>
+              <span className='version'>V{appInfo.version}</span>
             </div>
           )
         }
         { showTime && <span>自动保存：{currentTime}</span> }
         {showElsa && <TestStatus testTime={testTime} testStatus={testStatus}/>}
       </div>
-      <div className="header-grid">
-        <span className="history" onClick={versionDetail}>
-          <img src='/src/assets/images/ai/time.png' />
-        </span>
-        <span className="history robot" onClick={chatClick}><img src='/src/assets/images/ai/robot.png' />去聊天</span>
-        { showElsa && <span className="header-btn test-btn" onClick={handleOpenDebug}>调试</span> }
-        { !status && <span className="header-btn" onClick={modalClick}><UploadIcon />发布</span>  }
+      <div className='header-grid'>
+        {
+          appInfo.state === 'active' && 
+          <div className='header-grid-btn'>
+            <span className='history' onClick={versionDetail}>
+              <img src='/src/assets/images/ai/time.png' />
+            </span>
+            <span className='history robot' onClick={chatClick}>
+              <img src='/src/assets/images/ai/robot.png' />
+              <span>去聊天</span>
+            </span>
+          </div>
+        }
+        { showElsa && <span className='header-btn test-btn' onClick={handleOpenDebug}>调试</span> }
+        { !status && <span className='header-btn' onClick={modalClick}><UploadIcon />发布</span>  }
       </div>
-      <PublishModal modalRef={modalRef} appInfo={appInfo} publishType="app" />
+      <PublishModal modalRef={modalRef} appInfo={appInfo} publishType='app' />
       <EditModal modalRef={editRef} appInfo={appInfo} updateAippCallBack={updateAippCallBack}/>
       <TimeLineDrawer open={open} setOpen={setOpen} />
-      <TestModal testRef={testRef} handleDebugClick={openDebug} type="edit"/>
+      <TestModal testRef={testRef} handleDebugClick={openDebug} type='edit'/>
     </div>
   )} </>;
 };
