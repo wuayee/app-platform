@@ -5,14 +5,28 @@
 package com.huawei.fitframework.test.domain.listener;
 
 import com.huawei.fitframework.test.domain.TestContext;
+import com.huawei.fitframework.test.domain.resolver.TestContextConfiguration;
+
+import java.util.Optional;
 
 /**
  * 测试框架的监听类，用于监听单测类整个生命周期。
  *
  * @author 邬涨财 w00575064
+ * @author 易文渊
  * @since 2023-01-17
  */
 public interface TestListener {
+    /**
+     * 预处理器，在 runtime 运行前，获取监听器配置。
+     *
+     * @param clazz 表示测试类型的 {@link Class}。
+     * @return 表示监听器的 {@link Optional}{@code <}{@link TestContextConfiguration}{@code >}。
+     */
+    default Optional<TestContextConfiguration> config(Class<?> clazz) {
+        return Optional.empty();
+    }
+
     /**
      * 预处理器，在执行当前测试类所有的测试用例前调用。
      *

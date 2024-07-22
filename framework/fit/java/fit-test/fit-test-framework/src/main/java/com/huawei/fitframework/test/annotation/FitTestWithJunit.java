@@ -15,14 +15,7 @@ import java.lang.annotation.Target;
 
 /**
  * 支持 Fit 测试框架的指定注解。
- * <p>当前注解支持 Junit4 和 Junit5 使用。</p>
- * <p> Junit4 案例：</p>
- * <pre>
- *  1:   @RunWith(FitRunner.class)
- *  2:   @FitTestWithJunit(classes = {xxx.class})
- *  3:   public class DemoTest {
- *  4:   }
- * </pre>
+ * <p>当前注解支持 Junit5 使用。</p>
  * <p> Junit5 案例：</p>
  * <pre>
  *  1:   @FitTestWithJunit(classes = {xxx.class})

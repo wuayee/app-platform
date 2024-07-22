@@ -8,8 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fitframework.annotation.Fit;
-import com.huawei.fitframework.test.adapter.north.junit5.FitExtension;
-import com.huawei.fitframework.test.annotation.FitTestWithJunit;
+import com.huawei.fitframework.test.annotation.MvcTest;
 import com.huawei.fitframework.test.domain.mvc.MockMvc;
 import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
 import com.huawei.fitframework.util.TypeUtils;
@@ -18,7 +17,6 @@ import com.huawei.jade.common.test.TestController;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.reflect.Type;
 
@@ -28,12 +26,8 @@ import java.lang.reflect.Type;
  * @author 易文渊
  * @since 2024-07-18
  */
-@ExtendWith(FitExtension.class)
-@FitTestWithJunit(classes = {TestController.class, DefaultHttpExceptionAdvice.class})
+@MvcTest(classes = {TestController.class, DefaultHttpExceptionAdvice.class})
 public class DefaultHttpExceptionAdviceTest {
-    @Fit
-    private TestController testController;
-
     @Fit
     private MockMvc mockMvc;
 
@@ -41,7 +35,7 @@ public class DefaultHttpExceptionAdviceTest {
     @DisplayName("测试拦截 FitException")
     public void shouldOkWhenInterceptException() {
         String url = "/nonsupport/exception";
-        HttpClassicClientResponse<HttpResult<String>> response = mockMvc.perform(MockMvcRequestBuilders.get(url)
+        HttpClassicClientResponse<HttpResult<String>> response = this.mockMvc.perform(MockMvcRequestBuilders.get(url)
                 .responseType(TypeUtils.parameterized(HttpResult.class, new Type[] {Void.class})));
         assertThat(response.objectEntity().get().object()).hasFieldOrPropertyWithValue("code", 404)
                 .hasFieldOrPropertyWithValue("msg", "test error")

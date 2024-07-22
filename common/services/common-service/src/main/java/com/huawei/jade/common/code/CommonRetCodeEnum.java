@@ -2,17 +2,19 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-package com.huawei.jade.common.http.code;
+package com.huawei.jade.common.code;
+
+import com.huawei.jade.common.model.ModelInfo;
 
 /**
- * 表示通用错误码的枚举。
+ * 表示通用返回码的枚举。
  *
  * @author 易文渊
  * @since 2024-07-18
  */
 public enum CommonRetCodeEnum implements RetCode {
     SUCCESS(0, "Success"),
-    INTERNAL_ERROR(500, "Unknown Error");
+    INTERNAL_ERROR(500, "Unknown error");
 
     private final int code;
     private final String msg;
@@ -24,7 +26,7 @@ public enum CommonRetCodeEnum implements RetCode {
 
     @Override
     public int getCode() {
-        return this.code;
+        return this.convertSubSystemCode(ModelInfo.COMMON_ID, this.code);
     }
 
     @Override
