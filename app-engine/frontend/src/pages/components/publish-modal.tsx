@@ -32,7 +32,7 @@ const PublishModal = (props) => {
       version: appInfo.version,
       app_type: publishType !== 'app' ? 'waterflow' : appInfo.attributes?.app_type
     });
-    setIsPublished(appInfo.state === 'active');
+    setIsPublished(appInfo.attributes.last_version === 'active');
     setText('');
     setIsModalOpen(true);
   };
