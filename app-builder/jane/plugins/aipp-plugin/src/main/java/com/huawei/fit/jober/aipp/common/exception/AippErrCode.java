@@ -26,74 +26,74 @@ public enum AippErrCode implements ErrorCode {
     /**
      * 入参不合法
      */
-    INPUT_PARAM_IS_INVALID(90000000, "Invalid param: {0}."),
+    INPUT_PARAM_IS_INVALID(90000000, "不合法的入参: {0}。"),
 
     /**
      * 资源不存在
      */
-    NOT_FOUND(90000001, "Cannot find entity: {0}."),
+    NOT_FOUND(90000001, "资源不存在: {0}。"),
 
     /**
      * 未知服务器内部错误
      */
-    UNKNOWN(90000002, "Server internal error, please contact administrator."),
+    UNKNOWN(90000002, "服务器内部错误，请联系管理员。"),
 
     /**
      * 禁止操作
      */
-    FORBIDDEN(90000003, "Prohibited operation."),
+    FORBIDDEN(90000003, "禁止的操作。"),
 
     /** ------------ Configuration Exception. From 90001000 to 90001999 --------------------- */
 
     /**
      * 创建流程失败
      */
-    CREATE_FLOW_FAILED(90001001, "Create flow config failed."),
+    CREATE_FLOW_FAILED(90001001, "创建流程失败。"),
 
     /**
      * 不允许终止实例
      */
-    TERMINATE_INSTANCE_FORBIDDEN(90001002, "Only allow to terminate a running instance"),
+    TERMINATE_INSTANCE_FORBIDDEN(90001002, "仅允许停止运行中的实例。"),
 
     /**
      * 不允许删除实例
      */
-    DELETE_INSTANCE_FORBIDDEN(90001003, "Not allow to delete a running instance"),
+    DELETE_INSTANCE_FORBIDDEN(90001003, "不允许删除运行中的实例。"),
 
     /**
      * 发布流程失败
      */
-    PUBLISH_FLOW_FAILED(90001004, "Publish flow failed, please check flow definition."),
+    PUBLISH_FLOW_FAILED(90001004, "发布流程失败，请检查流程定义。"),
 
     /**
      * 流程已存在
      */
-    FLOW_ALREADY_EXIST(90001005, "Flow already exist, please check flow name and version."),
+    FLOW_ALREADY_EXIST(90001005, "流程已经存在，请检查流程的名称和版本号。"),
 
     /**
      * 发布到小海平台内部错误
      */
-    XIAOHAI_APP_PUBLISH_INNER_ERROR(90001006, "Publish aipp to xiaohai inner error."),
+    XIAOHAI_APP_PUBLISH_INNER_ERROR(90001006, "发布应用到小海出现内部错误。"),
 
     /**
      * 发布到小海平台http请求失败
      */
-    XIAOHAI_APP_PUBLISH_HTTP_ERROR(90001007, "Publish aipp to xiaohai http error."),
+    XIAOHAI_APP_PUBLISH_HTTP_ERROR(90001007, "发布应用到小海HTTP请求失败。"),
 
     /**
      * 不允许删除已发布的应用或工具流
      */
-    DELETE_AIPP_FORBIDDEN(90001008, "Not allow to delete an active aipp."),
+    DELETE_AIPP_FORBIDDEN(90001008, "不允许删除已发布的应用或工具流。"),
 
     /**
      * 不允许更新已发布的应用或工具流
      */
-    UPDATE_AIPP_FORBIDDEN(90001009, "Not allow to update an active aipp."),
+    UPDATE_AIPP_FORBIDDEN(90001009, "不允许更新已发布的应用或工具流。"),
 
     /**
      * 预览的临时版本已存在
      */
-    PREVIEW_AIPP_FORBIDDEN(90001010, "Preview aipp version already exist."),
+    PREVIEW_AIPP_FORBIDDEN(90001010, "应用预览版本已存在。"),
 
     /**
      * 调试失败
@@ -103,7 +103,7 @@ public enum AippErrCode implements ErrorCode {
     /**
      * 属性key重复
      */
-    AIPP_PROPS_KEY_DUPLICATE(90001012, "Duplicate property key are not allow."),
+    AIPP_PROPS_KEY_DUPLICATE(90001012, "存在相同的应用属性。"),
 
     /**
      * 名称为空
@@ -118,73 +118,73 @@ public enum AippErrCode implements ErrorCode {
     /**
      * 实例历史记录不存在
      */
-    AIPP_INSTANCE_LOG_IS_NULL(90001015, "Aipp instance log is null."),
+    AIPP_INSTANCE_LOG_IS_NULL(90001015, "应用实例日志为空。"),
 
     /**
      * 上传历史记录到小海平台http请求失败
      */
-    XIAOHAI_UPLOAD_CHAT_HISTORY_HTTP_ERROR(90001016, "Upload chat history to xiaohai http error."),
+    XIAOHAI_UPLOAD_CHAT_HISTORY_HTTP_ERROR(90001016, "上传历史记录到小海HTTP请求失败。"),
 
     /**
      * 上传历史记录到小海平台内部错误
      */
-    XIAOHAI_UPLOAD_CHAT_HISTORY_INNER_ERROR(90001017, "Upload chat history to xiaohai inner error."),
+    XIAOHAI_UPLOAD_CHAT_HISTORY_INNER_ERROR(90001017, "上传历史记录到小海出现内部错误。"),
 
     /**
      * APP 长度超过最大值
      */
-    AIPP_NAME_LENGTH_OUT_OF_BOUNDS(90001018, "The length of name is out of bounds."),
+    AIPP_NAME_LENGTH_OUT_OF_BOUNDS(90001018, "名字长度过长。"),
 
     /**
      * 通过小海平台分享对话失败
      */
-    XIAOHAI_SHARED_CHAT_HTTP_ERROR(90001019, "Shared chat history to xiaohai http error."),
+    XIAOHAI_SHARED_CHAT_HTTP_ERROR(90001019, "分享对话到小海HTTP请求失败。"),
 
     /** ------------ aipp runtime Exception. From 90002000 to 90002999 --------------------- */
     /**
      * 上传文件失败
      */
-    UPLOAD_FAILED(90002000, "Upload file failed."),
+    UPLOAD_FAILED(90002000, "文件上传失败。"),
 
     /**
      * 上传文件失败
      */
-    FILE_EXPIRED_OR_BROKEN(90002001, "File expired or broken."),
+    FILE_EXPIRED_OR_BROKEN(90002001, "文件过期或损坏。"),
 
     /**
      * 解析文件内容失败
      */
-    EXTRACT_FILE_FAILED(90002002, "Extract file failed."),
+    EXTRACT_FILE_FAILED(90002002, "文件解析失败。"),
 
     /**
      * json解析失败
      */
-    JSON_DECODE_FAILED(90002900, "json decode failed, reason: {0}."),
+    JSON_DECODE_FAILED(90002900, "Json解析失败，原因：{0}。"),
 
     /**
      * json编码失败
      */
-    JSON_ENCODE_FAILED(90002901, "json encode failed, reason: {0}."),
+    JSON_ENCODE_FAILED(90002901, "Json编码失败，原因：{0}。"),
 
     /**
      * 获取历史记录失败
      */
-    GET_HISTORY_LOG_FAILED(90002902, "Get history log failed."),
+    GET_HISTORY_LOG_FAILED(90002902, "历史记录获取失败。"),
 
     /**
      * 表单配置项类型不合法
      */
-    FORM_PROPERTY_TYPE_IS_INVALID(90002903, "form property type is invalid."),
+    FORM_PROPERTY_TYPE_IS_INVALID(90002903, "非法的表单配置项类型。"),
 
     /**
      * 灵感大全fitable执行失败
      */
-    EXECUTE_INSPIRATION_FITABLE_FAILED(90002904, "Execute inspiration fitable failed."),
+    EXECUTE_INSPIRATION_FITABLE_FAILED(90002904, "灵感大全运行失败。"),
 
     /**
      * 解析历史记录配置失败
      */
-    PARSE_MEMORY_CONFIG_FAILED(90002905, "Parse memory config failed."),
+    PARSE_MEMORY_CONFIG_FAILED(90002905, "解析历史记录配置失败。"),
 
     /**
      * 模型节点模板解析失败
@@ -194,17 +194,17 @@ public enum AippErrCode implements ErrorCode {
     /**
      * 创建调试aipp失败
      */
-    CREATE_DEBUG_AIPP_FAILED(90002907, "调试失败，请检查流程配置是否正确: {0}"),
+    CREATE_DEBUG_AIPP_FAILED(90002907, "调试失败，请检查流程配置是否正确: {0}。"),
 
     /**
      * 不支持的数据格式
      */
-    DATA_TYPE_IS_NOT_SUPPORTED(90002908, "Not supported data type to get. [type={0}]"),
+    DATA_TYPE_IS_NOT_SUPPORTED(90002908, "未支持的数据类型 [类型：{0}]。"),
 
     /**
      * task 不存在
      */
-    TASK_NOT_FOUND(90002909, "Task not found."),
+    TASK_NOT_FOUND(90002909, "任务不存在。"),
 
     /**
      * 应用已发布
