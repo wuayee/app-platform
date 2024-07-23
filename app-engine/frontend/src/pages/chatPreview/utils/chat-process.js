@@ -78,7 +78,7 @@ export const historyChatProcess = (res) => {
   return chatArr;
 };
 // 灵感大全设置下拉列表
-export const inspirationProcess = (tenantId, data, prompItem) => {
+export const inspirationProcess = (tenantId, data, prompItem, appInfo) => {
   let { prompt, promptVarData } = prompItem;
   let promptArr = [];
   data.forEach(async (item) => {
@@ -87,7 +87,7 @@ export const inspirationProcess = (tenantId, data, prompItem) => {
     let options = [];
     let selectStr = '';
     if (selectItem.sourceType === 'fitable') {
-      let params = { appId, appType: 'PREVIEW' };
+      let params = { appId: appInfo.id, appType: appInfo.state === 'active' ? 'NORMAL' : 'PREVIEW' };
       const res = await queryInspirationSelect( tenantId, 'GetQAFromLog', params);
       if (res.code === 0) {
         options = res.data || [];

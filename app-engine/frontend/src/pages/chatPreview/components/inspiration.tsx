@@ -210,12 +210,7 @@ const Inspiration = (props) => {
   return (
     <>
       {
-        <div
-          className={[
-            'inspiration-conyainer',
-            chatType!=='preview' ? 'inspiration-active' : null,
-          ].join(' ')}
-        >
+        <div className='inspiration-conyainer'>
           <div className='right-content'>
             <div className={showDrop ? 'has-drop title' : 'title'}>
               <span className='title-icon'>

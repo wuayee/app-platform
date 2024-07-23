@@ -7,13 +7,14 @@ import {
   ClearOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
-import { clearChatHistory, deleteChat, getChatDetail, getChatList } from '@/shared/http/chat';
-import { aippDebug } from '@/shared/http/aipp';
+import { clearChatHistory, deleteChat, getChatList } from '@/shared/http/chat';
+import { aippDebug, getChatRecentLog } from '@/shared/http/aipp';
 import { getDaysAndHours } from '@/common/dataUtil';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
-import { setChatList, setChatRunning,setChatId,setOpenStar } from '@/store/chatStore/chatStore';
+import { setChatList, setChatRunning, setChatId, setOpenStar } from '@/store/chatStore/chatStore';
 import { updateChatId } from "@/shared/utils/common";
 import './style.scoped.scss';
+import { historyChatProcess } from "../../utils/chat-process";
 interface HistoryChatProps {
   openHistorySignal: number;
 }
@@ -30,7 +31,6 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
   const openStar = useAppSelector((state) => state.chatCommonStore.openStar);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [lastResSignal, setLastResSignal] = useState(0);
   const [isClearOpen,setClearOpen]=useState(false);
   const [requestInfo, setRequestInfo] = useState({
     aipp_id: '', aipp_version: '', offset: 0, limit: 100
@@ -43,7 +43,7 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
 
   const getAippId = async () => {
     if (!appInfo.id) return;
-    const debugRes = await aippDebug(tenantId, appInfo?.id, appInfo, 'preview');
+    const debugRes = await aippDebug(tenantId, appInfo?.id, appInfo, appInfo.state);
     let { aipp_id, version } = debugRes?.data;
     const requestBody = {
       aipp_id: aipp_id,
@@ -72,67 +72,19 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
 
   const continueChat = async (chat_id, current_instance_id) => {
     dispatch(setChatRunning(false));
-    const chatListRes = await getChatDetail(tenantId, chat_id, requestInfo);
-    const role = chatListRes?.data?.msg_list?.[0]?.role;
-    const list: [] = chatListRes?.data?.msg_list?.reverse()?.map((item, index) => {
-      return index % 2 === 0 ?
-        { content: item.content?.[0], type: 'send', checked: false, sendType: 'text' } :
-        { content: item.content?.[0], type: 'receive', checked: false, recieveType: 'text',
-          instanceId:item?.message_id, appName: item?.app_name, appIcon: item?.app_icon, isAt: !!item?.app_name }
-    });
-
-    if (role === 'USER') {
-      list.push({ content: null, type: 'receive', checked: false, sendType: 'text', loading: true });
-      dispatch(setChatRunning(true));
-      setLastResSignal(lastResSignal + 1);
-    }
-    dispatch(setChatList(list));
+    const chatListRes = await getChatRecentLog(tenantId, chat_id, appId);
+    let chatArr = historyChatProcess(chatListRes);
+    await dispatch(setChatList(chatArr));
     setOpen(false);
     dispatch(setChatId(chat_id));
     updateChatId(chat_id, appId);
   }
-
-  const getLastRes = async () => {
-    const chatListRes = await getChatDetail(tenantId, chatId, requestInfo);
-    const length = chatListRes?.data?.msg_list?.length;
-    const role = chatListRes?.data?.msg_list?.[0]?.role;
-    if (role === 'SYSTEM') {
-      const lastRes = chatListRes?.data?.msg_list?.[0]?.content?.[0]; //最近的聊天在最前面
-      const lastItem = { content: lastRes, type: 'receive', checked: false, sendType: 'text',
-        appName: item?.app_name, appIcon: item?.app_icon, isAt: !!item?.app_name };
-      chatList.pop();
-      dispatch(setChatList([...chatList, lastItem]));
-      dispatch(setChatRunning(false));
-      setLastResSignal(0);
-    } else {
-      setLastResSignal(lastResSignal + 1);
-    }
-  }
-
-  useEffect(() => {
-    if (lastResSignal > 0) {
-      setTimeout(() => {
-        getLastRes();
-      }, 3000);
-    }
-  }, [lastResSignal])
 
   useEffect(() => {
     if (appInfo?.id) {
       getAippId();
     }
   }, [appInfo.id])
-
-  const getLastContext = async () => {
-    const chatListRes = await getChatDetail(tenantId, chatId, requestInfo);
-    const length = chatListRes?.data?.msg_list?.length;
-    if (length % 2 === 0) {
-      const lastItem = chatListRes?.data?.msg_list?.[length - 1];
-      chatList.pop();
-      chatList.push({ content: lastItem.content?.[0], type: 'receive', checked: false,
-        recieveType: 'text', appName: item?.app_name, appIcon: item?.app_icon, isAt: !!item?.app_name });
-    }
-  }
 
   const onClearList = async()=>{
     await clearChatHistory(tenantId,appId);
@@ -157,20 +109,6 @@ const HistoryChatDrawer: React.FC<HistoryChatProps> = ({ openHistorySignal }) =>
       setOpen(false);
     }
   }, [openStar]);
-
-  useEffect(() => {
-    if (lastResSignal > 0) {
-      setTimeout(() => {
-        getLastRes();
-      }, 3000);
-    }
-  }, [lastResSignal])
-
-  useEffect(() => {
-    if (appInfo?.id) {
-      getAippId();
-    }
-  }, [appInfo.id]);
 
   return (
     <Drawer

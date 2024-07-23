@@ -173,13 +173,10 @@ public class AippLogServiceImpl implements AippLogService {
     @Override
     public List<AippInstLogDataDto> queryAppRecentChatLog(String appId, String aippType, OperationContext context) {
         List<String> chatIds = aippChatMapper.selectChatByAppId(appId, aippType, 1);
-        List<AippInstLogDataDto> logData = new ArrayList<>();
         if (chatIds.isEmpty()) {
-            return logData;
+            return new ArrayList<>();
         }
-        List<String> instanceIds = aippChatMapper.selectInstanceByChat(chatIds.get(0), 5);
-        logData = queryAndSortLogs(instanceIds, context);
-        return this.getAippLogWithAppInfo(logData, appId, context);
+        return this.queryChatRecentChatLog(chatIds.get(0), appId, context);
     }
 
     private List<AippInstLogDataDto> getAippLogWithAppInfo(List<AippInstLogDataDto> logData, String appId,
@@ -236,6 +233,14 @@ public class AippLogServiceImpl implements AippLogService {
                 .filter(dto -> dto.getQuestion() != null)
                 .sorted((d1, d2) -> Math.toIntExact(d1.getQuestion().getLogId() - d2.getQuestion().getLogId()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AippInstLogDataDto> queryChatRecentChatLog(String chatId, String appId,
+            OperationContext context) {
+        List<String> instanceIds = aippChatMapper.selectInstanceByChat(chatId, 5);
+        List<AippInstLogDataDto> logData = queryAndSortLogs(instanceIds, context);
+        return this.getAippLogWithAppInfo(logData, appId, context);
     }
 
     @Override

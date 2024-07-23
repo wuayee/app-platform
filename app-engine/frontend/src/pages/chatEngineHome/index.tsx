@@ -65,7 +65,7 @@ const ChatRunning = () => {
   },[]);
   return (
     <div className='chat-engine-container'>
-      <CommonChat chatType='home'/> 
+      <CommonChat chatType='active'/>
       <InfoModal />
     </div>
 );

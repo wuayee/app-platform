@@ -32,11 +32,13 @@ const AippIndex = () => {
     setShowElsa(!showElsa);
     showElsa && getAippDetails();
   }
+
   useEffect(() => {
     dispatch(setAppId(appId));
     getUser();
     getAippDetails();
   }, []);
+
   // 获取aipp详情
   const getAippDetails = async () => {
     setSpinning(true);
@@ -135,7 +137,7 @@ const AippIndex = () => {
                 />
               )}
             <CommonChat 
-              chatType='preview' 
+              chatType={appInfo.state}
               contextProvider={contextProvider} 
               previewBack={changeChat} 
             />
