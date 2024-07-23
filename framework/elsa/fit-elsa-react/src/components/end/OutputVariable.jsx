@@ -2,7 +2,7 @@ import {Col, Collapse, Form, Popover, Row} from "antd";
 import React from "react";
 import {QuestionCircleOutlined} from '@ant-design/icons';
 import "./style.css";
-import OutputVariableRow from "@/components/end/OutputVariableRow.jsx";
+import {OutputVariableRow} from "@/components/end/OutputVariableRow.jsx";
 import {useDispatch} from "@/components/DefaultRoot.jsx";
 import PropTypes from "prop-types";
 import ArrayUtil from "@/components/util/ArrayUtil.js";

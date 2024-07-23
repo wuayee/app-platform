@@ -1943,10 +1943,7 @@ let setMouseActions = (shape) => {
     const onSelectMultiply = (position) => {
         console.log("============== welink test: shape#mousedown 3");
         shape.isFocused ? shape.unSelect() : shape.select(position.x, position.y);
-
-        //阻止默认事件.防止触发编辑器事件.
-        position.e.preventDefault();
-    }
+    };
 
     /**
      * 单选处理逻辑.

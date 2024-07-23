@@ -1,5 +1,3 @@
-import {VersionInfo} from "@/components/toolInvokeNode/VersionInfo.jsx";
-import {useEffect, useState} from "react";
 import {jadeNodeDrawer} from "@/components/jadeNodeDrawer.jsx";
 import ApiInvokeIcon from "../asserts/icon-api-invoke.svg?react";
 
@@ -21,32 +19,33 @@ export const toolInvokeNodeDrawer = (shape, div, x, y) => {
         </>);
     };
 
-    /**
-     * @override
-     */
-    const getToolMenus = self.getToolMenus;
-    self.getToolMenus = () => {
-        const menus = getToolMenus.apply(self);
-        const uniqueName = shape.flowMeta.jober.entity.uniqueName;
-        if (uniqueName) {
-            menus.push({
-                key: '4',
-                label: "查看版本信息",
-                action: () => {},
-                // 子菜单被打开时调用.
-                onOpen: () => {
-                    self.refreshVersionInfo && self.refreshVersionInfo();
-                },
-                children: [{
-                    key: "4-1",
-                    label: (<>
-                        <VersionInfoLoader shape={shape} drawer={self}/>
-                    </>)
-                }]
-            });
-        }
-        return menus;
-    };
+    // 暂时屏蔽: 不需要查看版本信息功能.
+    // /**
+    //  * @override
+    //  */
+    // const getToolMenus = self.getToolMenus;
+    // self.getToolMenus = () => {
+    //     const menus = getToolMenus.apply(self);
+    //     const uniqueName = shape.flowMeta.jober.entity.uniqueName;
+    //     if (uniqueName) {
+    //         menus.push({
+    //             key: '4',
+    //             label: "查看版本信息",
+    //             action: () => {},
+    //             // 子菜单被打开时调用.
+    //             onOpen: () => {
+    //                 self.refreshVersionInfo && self.refreshVersionInfo();
+    //             },
+    //             children: [{
+    //                 key: "4-1",
+    //                 label: (<>
+    //                     <VersionInfoLoader shape={shape} drawer={self}/>
+    //                 </>)
+    //             }]
+    //         });
+    //     }
+    //     return menus;
+    // };
 
     return self;
 };
@@ -59,21 +58,21 @@ export const toolInvokeNodeDrawer = (shape, div, x, y) => {
  * @return {JSX.Element} 组件.
  * @constructor
  */
-const VersionInfoLoader = ({shape, drawer}) => {
-    const [data, setData] = useState({});
-
-    /**
-     * 刷新版本信息.
-     */
-    drawer.refreshVersionInfo = () => {
-        shape.fetchVersionInfo((data) => setData(data));
-    };
-
-    useEffect(() => {
-        shape.fetchVersionInfo((data) => setData(data));
-    }, []);
-
-    return (<>
-        <VersionInfo versionInfo={data}/>
-    </>);
-};
+// const VersionInfoLoader = ({shape, drawer}) => {
+//     const [data, setData] = useState({});
+//
+//     /**
+//      * 刷新版本信息.
+//      */
+//     drawer.refreshVersionInfo = () => {
+//         shape.fetchVersionInfo((data) => setData(data));
+//     };
+//
+//     useEffect(() => {
+//         shape.fetchVersionInfo((data) => setData(data));
+//     }, []);
+//
+//     return (<>
+//         <VersionInfo versionInfo={data}/>
+//     </>);
+// };

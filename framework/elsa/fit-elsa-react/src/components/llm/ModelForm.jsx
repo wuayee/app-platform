@@ -12,7 +12,7 @@ _ModelForm.propTypes = {
     shapeId: PropTypes.string.isRequired, // 确保 shapeId 是一个必需的string类型
     modelData: PropTypes.object.isRequired, // 确保 modelData 是一个必需的object类型
     modelOptions: PropTypes.array.isRequired, // 确保 modelOptions 是一个必需的array类型
-    disabled: PropTypes.bool, // 确保 modelOptions 是一个必需的array类型
+    disabled: PropTypes.bool // 确保 modelOptions 是一个必需的array类型
 };
 
 /**
@@ -35,22 +35,18 @@ function _ModelForm({shapeId, modelData, modelOptions, disabled}) {
         event.stopPropagation(); // 阻止事件冒泡
     };
 
-    const content = (
-        <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
-            <p>用于控制生成文本的大型模型的随机性。</p>
-            <p>当设置较高时，模型将生成更多样化的文本，增加不确定性；</p>
-            <p>当设置较低时，模型将生成高概率词，减少不确定性。</p>
-        </div>
-    );
+    const content = (<div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
+                <p>用于控制生成文本的大型模型的随机性。</p>
+                <p>当设置较高时，模型将生成更多样化的文本，增加不确定性；</p>
+                <p>当设置较低时，模型将生成高概率词，减少不确定性。</p>
+            </div>);
 
-    const promptContent = (
-        <div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
-            <p>编辑大模型的提示词，实现相应的功能。</p>
-            <p>可以使用{`{{变量名}}`}从输入参数中引入变量。</p>
-        </div>
-    );
+    const promptContent = (<div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
+                <p>编辑大模型的提示词，实现相应的功能。</p>
+                <p>可以使用{`{{变量名}}`}从输入参数中引入变量。</p>
+            </div>);
 
-    const formatter = (value, { input, userTyping }) => {
+    const formatter = (value, {input, userTyping}) => {
         if (userTyping) {
             return input;
         }
@@ -102,51 +98,51 @@ function _ModelForm({shapeId, modelData, modelOptions, disabled}) {
         dispatch({actionType: actionType, id: id, value: changeValue});
     };
 
-    return (
-        <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["modelPanel"]}>
-            {
-                <Panel
-                    key={"modelPanel"}
-                    header={
-                        <div className="panel-header">
+    return (<Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["modelPanel"]}>
+                {<Panel
+                        key={"modelPanel"}
+                        header={<div className="panel-header">
                             <span className="jade-panel-header-font">大模型</span>
-                        </div>
-                    }
-                    className="jade-panel"
+                        </div>}
+                        className="jade-panel"
                 >
                     <div className={"jade-custom-panel-content"}>
                         <Row gutter={16}>
                             <Col span={12}>
                                 <Form.Item
-                                    className="jade-form-item"
-                                    name={`model-${shapeId}`}
-                                    label="模型"
-                                    rules={[{required: true, message: '请选择使用的模型'}]}
-                                    initialValue={model.value} // 当组件套在Form.Item中的时候，内部组件的初始值使用Form.Item的initialValue进行赋值
-                                    validateTrigger="onBlur"
+                                        className="jade-form-item"
+                                        name={`model-${shapeId}`}
+                                        label="模型"
+                                        rules={[{required: true, message: '请选择使用的模型'}]}
+                                        initialValue={model.value} // 当组件套在Form.Item中的时候，内部组件的初始值使用Form.Item的initialValue进行赋值
+                                        validateTrigger="onBlur"
                                 >
                                     <JadeStopPropagationSelect
-                                        disabled={disabled}
-                                        className="jade-select"
-                                        onClick={handleSelectClick} // 点击下拉框时阻止事件冒泡
-                                        onChange={(e) => dispatch({actionType: "changeConfig", id: model.id, value: e})}
-                                        options={modelOptions}
+                                            disabled={disabled}
+                                            className="jade-select"
+                                            onClick={handleSelectClick} // 点击下拉框时阻止事件冒泡
+                                            onChange={(e) => dispatch({
+                                                actionType: "changeConfig",
+                                                id: model.id,
+                                                value: e
+                                            })}
+                                            options={modelOptions}
                                     />
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
                                 <Form.Item
-                                    className="jade-form-item"
-                                    name={`temperature-${shapeId}`}
-                                    label={<div style={{display: 'flex', alignItems: 'center'}}>
-                                        <span className="jade-second-title">温度</span>
-                                        <Popover content={content}>
-                                            <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
-                                        </Popover>
-                                    </div>}
-                                    rules={[{required: true, message: '请输入0-1之间的参数!'}]}
-                                    initialValue={temperature.value}
-                                    validateTrigger="onBlur"
+                                        className="jade-form-item"
+                                        name={`temperature-${shapeId}`}
+                                        label={<div style={{display: 'flex', alignItems: 'center'}}>
+                                            <span className="jade-second-title">温度</span>
+                                            <Popover content={content}>
+                                                <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
+                                            </Popover>
+                                        </div>}
+                                        rules={[{required: true, message: '请输入0-1之间的参数!'}]}
+                                        initialValue={temperature.value}
+                                        validateTrigger="onBlur"
                                 >
                                     <InputNumber disabled={disabled}
                                                  formatter={formatter}
@@ -164,17 +160,17 @@ function _ModelForm({shapeId, modelData, modelOptions, disabled}) {
                         <Row gutter={16}>
                             <Col span={24}>
                                 <Form.Item
-                                    className="jade-form-item"
-                                    name={`propmt-${shapeId}`}
-                                    label={<div style={{display: 'flex', alignItems: 'center'}}>
-                                        <span className="jade-second-title">用户提示词模板</span>
-                                        <Popover content={[promptContent]}>
-                                            <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
-                                        </Popover>
-                                    </div>}
-                                    rules={[{required: true, message: '参数不能为空'}]}
-                                    initialValue={prompt.value}
-                                    validateTrigger="onBlur"
+                                        className="jade-form-item"
+                                        name={`propmt-${shapeId}`}
+                                        label={<div style={{display: 'flex', alignItems: 'center'}}>
+                                            <span className="jade-second-title">用户提示词模板</span>
+                                            <Popover content={[promptContent]}>
+                                                <QuestionCircleOutlined className="jade-panel-header-popover-content"/>
+                                            </Popover>
+                                        </div>}
+                                        rules={[{required: true, message: '参数不能为空'}]}
+                                        initialValue={prompt.value}
+                                        validateTrigger="onBlur"
                                 >
                                     <TextArea disabled={disabled}
                                               className="jade-textarea-input jade-font-size"
@@ -187,13 +183,13 @@ function _ModelForm({shapeId, modelData, modelOptions, disabled}) {
                         <Row gutter={16}>
                             <Col span={24}>
                                 <Form.Item
-                                    className="jade-form-item"
-                                    name={`system-prompt-${shapeId}`}
-                                    label={<div style={{display: 'flex', alignItems: 'center'}}>
-                                        <span className="jade-second-title">系统提示词</span>
-                                    </div>}
-                                    initialValue={systemPrompt.value}
-                                    validateTrigger="onBlur"
+                                        className="jade-form-item"
+                                        name={`system-prompt-${shapeId}`}
+                                        label={<div style={{display: 'flex', alignItems: 'center'}}>
+                                            <span className="jade-second-title">系统提示词</span>
+                                        </div>}
+                                        initialValue={systemPrompt.value}
+                                        validateTrigger="onBlur"
                                 >
                                     <TextArea disabled={disabled}
                                               className="jade-textarea-input jade-font-size"
@@ -204,10 +200,8 @@ function _ModelForm({shapeId, modelData, modelOptions, disabled}) {
                             </Col>
                         </Row>
                     </div>
-                </Panel>
-            }
-        </Collapse>
-    );
+                </Panel>}
+            </Collapse>);
 }
 
 const areEqual = (prevProps, nextProps) => {
@@ -215,6 +209,7 @@ const areEqual = (prevProps, nextProps) => {
             && prevProps.modelData.temperature === nextProps.modelData.temperature
             && prevProps.modelData.systemPrompt === nextProps.modelData.systemPrompt
             && prevProps.modelData.prompt === nextProps.modelData.prompt
+            && prevProps.modelOptions === nextProps.modelOptions;
 };
 
-export const ModelForm =  React.memo(_ModelForm, areEqual);
+export const ModelForm = React.memo(_ModelForm, areEqual);

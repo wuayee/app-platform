@@ -283,9 +283,6 @@ let bindMouseActions = page => {
     events.mouseContext = {};
     events.onMouseDown(async position => {
         page.graph.getHistory().clearBatchNo();
-        if (document.activeElement !== document.body) {
-            document.activeElement.blur();
-        }
         page.mouseButton = position.e.button;
         page.mousedownx = position.x;
         page.mousedowny = position.y;
@@ -299,6 +296,15 @@ let bindMouseActions = page => {
 
         console.log("============== welink test: mouseActions#onMouseDown");
         page.mouseDown(position);
+
+        // 如果此时存在activeElement，并且activeElement不是body，那么必须触发mousedown的default行为，使activeElement失焦.
+        // 非exclude元素导致的mousedown事件，都需要阻止默认事件，防止拖拽时选中文本.
+        if ((!document.activeElement || document.activeElement === document.body)
+                && !page.mouseEvents.mouseDown.preventDefault.exclude
+                        .contains(e => e === position.e.srcElement.tagName)) {
+            position.e.preventDefault();
+        }
+
         while (page.mousedownShape) {
             page.mouseHold({x: page.mousex, y: page.mousey});
             await sleep(40);
@@ -433,15 +439,8 @@ let bindMouseActions = page => {
 
     events.onMouseMove(position => {
         // 如果存在activeElement，则将事件处理交由activeElement直接处理，elsa的事件机制不进行处理.
-        // @todo@zhangyue 这个是不是最佳判断存疑，后续有新的思路再进行修改.
         if (page.isMouseDown() && document.activeElement !== document.body) {
             return;
-        }
-
-        // 这里阻止默认事件，是因为避免在拖动图形的时候，触发浏览器的默认行为选中所有文本(mousedownShape是page的情况例外)
-        // *重要* 必须放在第一行，放在mouseDrag中，也会触发浏览器默认行为
-        if (page.isMouseDown() && page.mousedownShape !== page) {
-            position.e.preventDefault();
         }
         if (page.readOnly()) {
             return;

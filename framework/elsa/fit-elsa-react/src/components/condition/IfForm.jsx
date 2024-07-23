@@ -79,6 +79,7 @@ function _IfForm({
             value: [
                 {key: "referenceNode", value: e.referenceNode},
                 {key: "referenceId", value: e.referenceId},
+                {key: "referenceKey", value: e.referenceKey},
                 {key: "value", value: e.value},
                 {key: "type", value: e.type}
             ]

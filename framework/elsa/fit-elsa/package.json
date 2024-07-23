@@ -1,6 +1,6 @@
 {
   "name": "@fit-elsa/elsa-core",
-  "version": "0.1.22-alpha.34",
+  "version": "0.1.22-alpha.35",
   "main": "build/elsa.js",
   "files": [
     "build"

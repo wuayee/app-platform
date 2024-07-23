@@ -109,6 +109,13 @@ let page = (div, graph, name, id, iDrawer = interactDrawer, pDrawer = pageDrawer
     self.disableContextMenu = false;
     self.operationMode = PAGE_OPERATION_MODE.SELECTION;
     self.selectionStrategy = SELECTION_STRATEGY.BRING_TO_FRONT;
+    self.mouseEvents = {
+        mouseDown: {
+            preventDefault: {
+                exclude: ["INPUT", "TEXTAREA"]
+            }
+        }
+    };
 
     /**
      * 是否展示上下文菜单.
@@ -133,11 +140,6 @@ let page = (div, graph, name, id, iDrawer = interactDrawer, pDrawer = pageDrawer
      * 辉子 2021
      */
     self.isReady = false;
-
-    /**
-     * 该graph里面的所有shape是否可以移动
-     */
-
     /**
      * page中形状会响应键盘事件
      */
@@ -2410,10 +2412,6 @@ let setMouseActions = (page) => {
                 }
                 page.mousedownShape.invalidateAlone();
                 page.wantedShape.clear();
-
-                // 这里禁用默认事件，防止在新增图形时，触发浏览器默认事件，选中其他图形文本.
-                // 当wantedShape存在时，若不禁用默认事件，会导致选中文档或其他图形中的文本.
-                position.e.preventDefault();
             });
         } else {
             page.getFocusedShapes().forEach(s => s.unSelect());

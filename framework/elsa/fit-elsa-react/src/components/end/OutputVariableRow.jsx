@@ -3,6 +3,13 @@ import React from "react";
 import {JadeReferenceTreeSelect} from "@/components/common/JadeReferenceTreeSelect.jsx";
 import {useFormContext} from "@/components/DefaultRoot.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
+import PropTypes from "prop-types";
+
+_OutputVariableRow.propTypes = {
+    item: PropTypes.object.isRequired,
+    handleItemChange: PropTypes.func.isRequired,
+    disabled: PropTypes.bool
+};
 
 /**
  * 输出变量的每个条目
@@ -13,7 +20,7 @@ import {JadeInput} from "@/components/common/JadeInput.jsx";
  * @returns {JSX.Element}
  * @constructor
  */
-export default function OutputVariableRow({item, handleItemChange, disabled}) {
+function _OutputVariableRow({item, handleItemChange, disabled}) {
     const inputName = `value-${item.id}`;
     const form = useFormContext();
 
@@ -24,6 +31,7 @@ export default function OutputVariableRow({item, handleItemChange, disabled}) {
     const _onReferencedKeyChange = (e) => {
         handleItemChange(item.id, [{key: 'referenceNode', value: e.referenceNode},
             {key: 'referenceId', value: e.referenceId},
+            {key: "referenceKey", value: e.referenceKey},
             {key: 'value', value: e.value},
             {key: "type", value: e.type}]);
     };
@@ -89,49 +97,51 @@ export default function OutputVariableRow({item, handleItemChange, disabled}) {
         }
     };
 
-    return (
-            <Row
-                    key={`output-variable-${item.id}`}
-                    gutter={16}
-            >
-                <Col span={8} style={{display: "flex", paddingTop: "5px"}}>
-                    <span className="end-starred-text">finalOutput</span>
-                </Col>
-                <Col span={6} style={{paddingRight: 0}}>
-                    <Form.Item
-                            style={{marginBottom: '8px'}}
-                            id={`valueSource-${item.id}`}
-                            initialValue='Reference'
-                    >
-                        <Select disabled={disabled}
-                                id={`valueSource-select-${item.id}`}
-                                className={"value-source-custom jade-select"}
-                                style={{width: "100%"}}
-                                onChange={(value) => {
-                                    form.resetFields([`reference-${item.id}`, inputName]);
-                                    let changes = [{key: 'from', value: value}, {key: "value", value: ""}];
-                                    if (value === "Input") {
-                                        changes = [
+    return (<>
+        <Row key={`output-variable-${item.id}`} gutter={16}>
+            <Col span={8} style={{display: "flex", paddingTop: "5px"}}>
+                <span className="end-starred-text">finalOutput</span>
+            </Col>
+            <Col span={6} style={{paddingRight: 0}}>
+                <Form.Item style={{marginBottom: '8px'}} id={`valueSource-${item.id}`} initialValue="Reference">
+                    <Select disabled={disabled}
+                            id={`valueSource-select-${item.id}`}
+                            className={"value-source-custom jade-select"}
+                            style={{width: "100%"}}
+                            onChange={(value) => {
+                                form.resetFields([`reference-${item.id}`, inputName]);
+                                let changes = [
+                                        {key: 'from', value: value},
+                                        {key: "value", value: ""}
+                                ];
+                                if (value === "Input") {
+                                    changes = [
                                             {key: 'from', value: value},
                                             {key: "value", value: ""},
                                             {key: "referenceNode", value: ""},
                                             {key: "referenceId", value: ""},
                                             {key: "referenceKey", value: ""}
-                                        ]
-                                    }
-                                    handleItemChange(item.id, changes);
-                                }}
-                                options={[
-                                    {value: 'Reference', label: '引用'},
-                                    {value: 'Input', label: '输入'}
-                                ]}
-                                value={item.from}
-                        />
-                    </Form.Item>
-                </Col>
-                <Col span={10} style={{paddingLeft: 0}}>
-                    {renderByType(item.from)}
-                </Col>
-            </Row>
-    );
+                                    ];
+                                }
+                                handleItemChange(item.id, changes);
+                            }}
+                            options={[{value: 'Reference', label: '引用'}, {value: 'Input', label: '输入'}]}
+                            value={item.from}
+                    />
+                </Form.Item>
+            </Col>
+            <Col span={10} style={{paddingLeft: 0}}>
+                {renderByType(item.from)}
+            </Col>
+        </Row>
+    </>);
 }
+
+const areEqual = (prevProps, nextProps) => {
+    return prevProps.item.id === nextProps.item.id
+            && prevProps.item.from === nextProps.item.from
+            && prevProps.item.value === nextProps.item.value
+            && prevProps.disabled === nextProps.disabled;
+};
+
+export const OutputVariableRow =  React.memo(_OutputVariableRow, areEqual);
