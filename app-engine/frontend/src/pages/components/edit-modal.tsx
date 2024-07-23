@@ -6,6 +6,7 @@ import { ToTopOutlined } from '@ant-design/icons';
 import { Message } from '@/shared/utils/message';
 import { uploadChatFile, updateAppInfo, createAipp } from '@/shared/http/aipp';
 import { httpUrlMap } from '@/shared/http/httpConfig';
+import { fileValidate } from '@/shared/utils/common';
 import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
 import './styles/edit-modal.scss';
 
@@ -98,7 +99,8 @@ const EditModal = (props) => {
     return false
   }
   const onChange = ({ file }) => {
-    pictureUpload(file);
+    let validateResult = fileValidate(file);
+    validateResult && pictureUpload(file);
   }
   // 上传图片
   async function pictureUpload( file ) {

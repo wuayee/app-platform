@@ -73,7 +73,7 @@ const AddHeader = (props) => {
           <span className='header-text' title={appInfo?.name}>{ appInfo?.name }</span>
           <img className='edit-icon' src='/src/assets/images/ai/edit.png' onClick={ handleEditClick } />
           {
-            appInfo.state === 'active' ?
+            appInfo.attributes?.latest_versio ?
             (
               <div className='status-tag'>
                 <img src='/src/assets/images/ai/complate.png' />

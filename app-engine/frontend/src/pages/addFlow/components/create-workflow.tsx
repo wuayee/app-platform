@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react';
 import TextArea from 'antd/es/input/TextArea';
 import { ToTopOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
-import { createAipp, uploadChatFile, uploadImage } from '../../../shared/http/aipp';
-import { Message } from '../../../shared/utils/message';
-import { useAppSelector } from '../../../store/hook';
-import { httpUrlMap } from '../../../shared/http/httpConfig';
+import { createAipp, uploadImage } from '@/shared/http/aipp';
+import { Message } from '@/shared/utils/message';
+import { useAppSelector } from '@/store/hook';
+import { httpUrlMap } from '@/shared/http/httpConfig';
+import { fileValidate } from '@/shared/utils/common';
 
 const CreateWorkflow = (props) => {
   const [openWorkFlow, setOpenWorkFlow] = useState(false);
@@ -41,7 +42,8 @@ const CreateWorkflow = (props) => {
 
   const beforeUpload = (file) => false;
   const onChange = ({ file }) => {
-    pictureUpload(file);
+    let validateResult = fileValidate(file);
+    validateResult && pictureUpload(file);
   };
   useEffect(() => {
     if (props.createWorkflowSignal > 0) {
