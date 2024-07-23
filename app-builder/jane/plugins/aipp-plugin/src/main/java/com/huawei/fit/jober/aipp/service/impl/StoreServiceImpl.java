@@ -147,7 +147,7 @@ public class StoreServiceImpl implements StoreService {
         ToolQuery query = new ToolQuery.Builder()
                 .toolName(null)
                 .includeTags(new HashSet<>(Collections.singletonList(CODENODESTATE)))
-                .excludeTags(null)
+                .excludeTags(new HashSet<>())
                 .mode("AND")
                 .offset(null)
                 .limit(null)
