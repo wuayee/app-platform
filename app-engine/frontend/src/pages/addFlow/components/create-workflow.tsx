@@ -51,7 +51,7 @@ const CreateWorkflow = (props) => {
   }, [props?.createWorkflowSignal]);
   return (
     <Modal
-      title='创建工作流'
+      title='创建工具流'
       centered
       open={openWorkFlow}
       onCancel={() => {

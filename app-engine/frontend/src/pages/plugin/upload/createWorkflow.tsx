@@ -52,7 +52,7 @@ const CreateWorkfowDrawer = (props) => {
 
   return (
     <Drawer
-      title='创建工作流'
+      title='创建工具流'
       placement='right'
       closeIcon={false}
       onClose={false}

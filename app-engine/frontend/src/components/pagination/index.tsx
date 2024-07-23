@@ -38,6 +38,8 @@ interface paginationProps {
   // 展示total
   showTotalFunc?: boolean;
 
+  size?: string
+
 }
 
 // 默认参数
@@ -50,6 +52,7 @@ const defaultConfig: paginationProps = {
   hideOnSinglePage: false,
   showTotalFunc: true,
   total: 0,
+  size: 'small'
 }
 
 const App: React.FC = (props: paginationProps = defaultConfig) => {
