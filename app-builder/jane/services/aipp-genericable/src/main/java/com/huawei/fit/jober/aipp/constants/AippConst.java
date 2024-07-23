@@ -631,6 +631,11 @@ public class AippConst {
      */
     public static final String TERMINATE_MESSAGE_KEY = "content";
 
+    /**
+     * chat的attributes的key：state
+     */
+    public static final String ATTR_CHAT_STATE_KEY = "state";
+
     // *** aipp initial static meta items ***
     /**
      * aipp initial static meta items
