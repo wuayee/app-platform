@@ -97,7 +97,12 @@ const MyPlugins = () => {
       setRefreshSignal(e.timeStamp);
     }
   };
-
+  const refreshPluginList = () => {
+    const { pageSize } = pagination;
+    setPagination({ pageNum: 1, pageSize });
+    setName('');
+    getPluginList();
+  }
   return (
     <div className='aui-block myplugin'>
       <Tabs defaultActiveKey={tabItemE.TOOL} items={tabItems} onChange={onTabChange} />
@@ -155,7 +160,7 @@ const MyPlugins = () => {
           pageSize={pagination?.pageSize}
         />
       </div>
-      <UploadToolDrawer openSignal={openUploadDrawer} />
+      <UploadToolDrawer openSignal={openUploadDrawer} refreshPluginList={refreshPluginList} />
       <CreateWorkfowDrawer openSignal={openCreateDrawer}/>
     </div>
   );

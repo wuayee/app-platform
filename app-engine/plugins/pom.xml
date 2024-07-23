@@ -13,9 +13,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>knowledge-base</module>
-        <module>app-base</module>
         <module>app-announcement</module>
+        <module>app-base</module>
+        <module>app-eval</module>
+        <module>knowledge-base</module>
     </modules>
 
     <build>
