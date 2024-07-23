@@ -182,7 +182,7 @@ const Inspiration = (props) => {
     if (demissionAppId === appId && pduMap[name]) {
       storage.set('dimension', { id, value: pduMap[name]});
     }
-    dispatch(setDimension({ id, name }));
+    dispatch(setDimension(pduMap[name] || name));
     setCurrentPromptName(name);
     deepGetChild(treeNormalData.current, id);
     let arr = [{ title: '全部', id: parentId }];
