@@ -1,7 +1,13 @@
 import {Button} from "antd";
-import {useState} from "react";
+import React, {useState} from "react";
 import {useDispatch, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
+import PropTypes from "prop-types";
+
+_CustomizedModelSelect.propTypes = {
+    defaultValue: PropTypes.string,
+    disabled: PropTypes.bool
+}
 
 /**
  * 自定义模型选择组件.
@@ -12,7 +18,7 @@ import {JadeInput} from "@/components/common/JadeInput.jsx";
  * @return {JSX.Element} 组件.
  * @constructor
  */
-export const CustomizedModelSelect = ({disabled, defaultValue}) => {
+function _CustomizedModelSelect({disabled, defaultValue}) {
     const [value, setValue] = useState(defaultValue);
     const dispatch = useDispatch();
     const shape = useShapeContext();
@@ -53,3 +59,9 @@ export const CustomizedModelSelect = ({disabled, defaultValue}) => {
         </div>
     </>);
 }
+
+const areEqual = (prevProps, nextProps) => {
+    return prevProps.disabled === nextProps.disabled && prevProps.defaultValue === nextProps.defaultValue;
+};
+
+export const CustomizedModelSelect = React.memo(_CustomizedModelSelect, areEqual);

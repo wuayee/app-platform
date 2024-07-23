@@ -10,11 +10,11 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.serialization.ObjectSerializer;
+import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
-import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.carver.tool.Tool;
 import com.huawei.jade.carver.tool.model.query.ToolQuery;
-import com.huawei.jade.carver.tool.repository.ToolRepository;
+import com.huawei.jade.carver.tool.repository.pgsql.ToolRepository;
 import com.huawei.jade.carver.tool.repository.pgsql.mapper.TagMapper;
 import com.huawei.jade.carver.tool.repository.pgsql.mapper.ToolMapper;
 import com.huawei.jade.carver.tool.repository.pgsql.model.entity.TagDo;
@@ -61,6 +61,7 @@ public class DefaultToolRepository implements ToolRepository {
      * @param info 表示待增加的工具信息的 {@link Tool.Info}。
      */
     @Override
+    @Transactional
     public void addTool(Tool.Info info) {
         ToolDo toolDo = ToolDo.info2Do(info, this.serializer);
         this.toolMapper.addTool(toolDo);
@@ -72,14 +73,22 @@ public class DefaultToolRepository implements ToolRepository {
      * @param uniqueName 表示待删除工具唯一标识的 {@link String}。
      */
     @Override
+    @Transactional
     public void deleteTool(String uniqueName) {
         this.toolMapper.deleteTool(uniqueName);
     }
 
     @Override
+    @Transactional
     public String deleteToolByVersion(String uniqueName, String version) {
         this.toolMapper.deleteToolByVersion(uniqueName, version);
         return uniqueName;
+    }
+
+    @Override
+    @Transactional
+    public void setLatest(String uniqueName, String version) {
+        this.toolMapper.setLatest(uniqueName, version);
     }
 
     /**
@@ -156,44 +165,6 @@ public class DefaultToolRepository implements ToolRepository {
     }
 
     /**
-     * 仓储层添加标签。
-     *
-     * @param uniqueName 表示工具的唯一标识的 {@link String}。
-     * @param tag 表示工具的标签的 {@link String}。
-     */
-    @Override
-    public void addTag(String uniqueName, String tag) {
-        if (StringUtils.isBlank(tag)) {
-            return;
-        }
-        TagDo tagDo = new TagDo();
-        tagDo.setName(StringUtils.toUpperCase(tag));
-        tagDo.setToolUniqueName(uniqueName);
-        this.tagMapper.addTag(tagDo);
-    }
-
-    /**
-     * 仓储层删除标签。
-     *
-     * @param uniqueName 表示工具的唯一标识的 {@link String}。
-     * @param tagName 表示工具的标签的 {@link String}。
-     */
-    @Override
-    public void deleteTag(String uniqueName, String tagName) {
-        this.tagMapper.deleteTag(uniqueName, tagName);
-    }
-
-    /**
-     * 仓储层根据工具唯一标识删除标签。
-     *
-     * @param uniqueName 表示商品的唯一标识的 {@link String}。
-     */
-    @Override
-    public void deleteTagByUniqueName(String uniqueName) {
-        this.tagMapper.deleteTagByUniqueName(uniqueName);
-    }
-
-    /**
      * 仓储层获取标签列表。
      *
      * @param uniqueName 表示待删除商品信息的 {@link String}。
@@ -206,6 +177,7 @@ public class DefaultToolRepository implements ToolRepository {
     }
 
     @Override
+    @Transactional
     public void setNotLatest(String toolUniqueName) {
         this.toolMapper.setNotLatest(toolUniqueName);
     }

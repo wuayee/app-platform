@@ -43,15 +43,15 @@ public interface PluginMapper {
      * 根据动态查询条件分页查询插件的总数。
      *
      * @param pluginQuery 表示查询参数的实体类的 {@link PluginQuery}。
-     * @return 所有任务的实体类的实例的 {@code int}。
+     * @return 插件总数的 {@code int}。
      */
     int getPluginsCount(PluginQuery pluginQuery);
 
     /**
-     * 根据动态查询条件分页查询插件的总数。
+     * 根据动态查询条件分页查询用户收藏的插件列表。
      *
-     * @param pluginQuery 表示收藏者的 {@link String}。
-     * @return 所有插件的唯一标识的 {@link List}{@code <}{@link String}{@code >}。
+     * @param pluginQuery 表示查询参数的 {@link PluginQuery}。
+     * @return 插件信息列表的 {@link List}{@code <}{@link PluginDo}{@code >}。
      */
     List<PluginDo> getMyCollection(PluginQuery pluginQuery);
 

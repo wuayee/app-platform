@@ -43,4 +43,7 @@ public class AppBuilderAppDto {
 
     @Property(description = "aipp 发布描述")
     private String publishedDescription;
+
+    @Property(description = "aipp 发布更新日志")
+    private String publishedUpdateLog;
 }

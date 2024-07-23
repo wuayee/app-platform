@@ -14,6 +14,7 @@ import java.util.List;
  * @author 季聿阶
  * @since 2024-05-10
  */
+@Deprecated
 public class Result<T> {
     /**
      * 表示成功的状态码的 {@code int}。
@@ -177,6 +178,6 @@ public class Result<T> {
      * @return 表示计算出来的偏移量的 {@code int}。
      */
     public static int calculateOffset(int pageNum, int pageSize) {
-        return pageNum < 0 || pageSize < 0 ? 0 : (pageNum - 1) * pageSize;
+        return pageNum <= 0 || pageSize < 0 ? 0 : (pageNum - 1) * pageSize;
     }
 }

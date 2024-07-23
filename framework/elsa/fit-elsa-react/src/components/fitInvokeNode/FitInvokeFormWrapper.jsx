@@ -1,6 +1,6 @@
 import {useDataContext} from "@/components/DefaultRoot.jsx";
-import InvokeInput from "@/components/common/InvokeInput.jsx";
-import InvokeOutput from "@/components/common/InvokeOutput.jsx";
+import {InvokeInput} from "@/components/common/InvokeInput.jsx";
+import {InvokeOutput} from "@/components/common/InvokeOutput.jsx";
 import FitInvokeService from "@/components/fitInvokeNode/FitInvokeService.jsx";
 
 /**

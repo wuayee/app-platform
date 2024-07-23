@@ -41,6 +41,7 @@ public class AppData extends ToolData {
         this.setSource(toolData.getSource());
         this.setIcon(toolData.getIcon());
         this.setTags(toolData.getTags());
+        this.setVersion(toolData.getVersion());
         this.likeCount = likeCount;
         this.downloadCount = downloadCount;
     }

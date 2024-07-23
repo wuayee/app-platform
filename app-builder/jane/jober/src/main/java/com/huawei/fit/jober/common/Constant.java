@@ -7,10 +7,8 @@ package com.huawei.fit.jober.common;
 import static java.util.Collections.unmodifiableList;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 /**
  * 常数类
@@ -122,21 +120,6 @@ public final class Constant {
     public static final String VALUE_CHANGE_URL = "//fit-jane-dev.paas.huawei.com/props-value/";
 
     /**
-     * 流程定义ID分隔符
-     */
-    public static final char STREAM_ID_SEPARATOR = '-';
-
-    /**
-     * 流程节点事件中条件属性的KEY值
-     */
-    public static final String CONDITION_RULE_PROPERTY_KEY = "conditionRule";
-
-    /**
-     * 流程节点事件中条件优先级的KEY值
-     */
-    public static final String PRIORITY_PROPERTY_KEY = "priority";
-
-    /**
      * 任务定义status字段
      */
     public static final String STATUS = "status";
@@ -193,53 +176,7 @@ public final class Constant {
     public static final String OPERATOR_KEY = "operator";
 
     /**
-     * 用于处理流程引擎发布事件的线程池
-     */
-    public static final String FLOWS_EVENT_HANDLER_EXECUTOR = "flowsEventHandlerExecutor";
-
-    /**
-     * 流程运行流程元数据信息
-     */
-    public static final String CONTEXT_DATA = "contextData";
-
-    /**
-     * 流程运行非落盘数据
-     */
-    public static final String PASS_DATA = "passData";
-
-    /**
-     * 流程自动任务重试实体toBatch类型
-     */
-    public static final String TO_BATCH_KEY = "toBatch";
-
-    /**
-     * 流程自动任务重试实体context类型
-     */
-    public static final String CONTEXT_KEY = "context";
-
-    /**
      * 合法跨域访问域名
      */
     public static final String VALID_DOMAIN = ".huawei.com";
-
-    /**
-     * 内置数据key
-     */
-    public static final String BUSINESS_DATA_INTERNAL_KEY = "_internal";
-
-    /**
-     * 不同节点输出数据的缓存区
-     */
-    public static final String INTERNAL_OUTPUT_SCOPE_KEY = "outputScope";
-
-    /**
-     * 不同节点输入输出数据的缓存区
-     */
-    public static final String INTERNAL_EXECUTE_INFO_KEY = "executeInfo";
-
-    /**
-     * 提取用户输出数据需要忽略的key
-     */
-    public static final Set<String> BUSINESS_DATA_IGNORED_KEYS = new HashSet<>(
-            Arrays.asList(BUSINESS_DATA_INTERNAL_KEY));
 }

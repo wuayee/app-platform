@@ -78,7 +78,8 @@ public class LLMSearchFileTest {
         }).when(metaInstanceServiceMock).patchMetaInstance(any(), any(), any(), any());
 
         List<Map<String, Object>> flowData = TestUtils.buildFlowDataWithExtraConfig(businessData, DUMMY_PROMPT);
-        llmSearchFile.handleTask(flowData);
+        List<Map<String, Object>> list = llmSearchFile.handleTask(flowData);
+        Assertions.assertNotNull(list);
     }
 
     @Test

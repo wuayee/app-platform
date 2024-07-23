@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import com.huawei.fit.jane.common.utils.SleepUtil;
 import com.huawei.fit.jane.dlock.DatabaseBaseTest;
 import com.huawei.fit.jane.dlock.jdbc.persist.mapper.FlowLockMapper;
 import com.huawei.fit.jane.task.gateway.InvalidDistributedLockNotify;
@@ -73,8 +74,7 @@ public class DistributedLockClientTest extends DatabaseBaseTest {
                 lock.unlock();
             }
         }
-
-        Thread.sleep(10);
+        SleepUtil.sleep(10);
         client.deleteExpiredLocks(0);
         assertEquals(0, getLocks().size());
     }

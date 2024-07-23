@@ -21,6 +21,7 @@ const TEST_WIDTH = 600;
  */
 export const CodePlayground = ({width, languages, editorConfig, onClose, onConfirm, executeFunc}) => {
     const [ctl, setCtl] = useState({testStatus: "none", codeWidth: width});
+    const [code, setCode] = useState(editorConfig.code);
     const codeRef = useRef(editorConfig.code);
     const [language, setLanguage] = useState(editorConfig.language);
     const defaultKey = languages.indexOf(editorConfig.language);
@@ -30,6 +31,16 @@ export const CodePlayground = ({width, languages, editorConfig, onClose, onConfi
 
     const onLanguageClick = (e) => {
         setLanguage(items.find(i => i.key === e.key)?.label);
+    };
+
+    const handleCancel = () => {
+        codeRef.current = editorConfig.code;
+        setCode(editorConfig.code); // 触发重新渲染并重置代码
+        onClose();
+    };
+
+    const handleConfirm = () => {
+        onConfirm(codeRef.current);
     };
 
     /**
@@ -77,7 +88,7 @@ export const CodePlayground = ({width, languages, editorConfig, onClose, onConfi
             <div style={{width: "15%", display: "flex", justifyContent: "end"}}>
                 <div style={{display: "flex", alignItems: "center"}}>
                     <Button onClick={onTestButtonClick} className={"code-title-test-text"} type="text">测试代码</Button>
-                    <Button onClick={onClose}
+                    <Button onClick={handleCancel}
                             style={{width: 16, height: 16, marginRight: 0}}
                             type="text"
                             icon={<CloseOutlined/>}/>
@@ -105,17 +116,21 @@ export const CodePlayground = ({width, languages, editorConfig, onClose, onConfi
                 </div>
                 <div className={"jade-code-code-content"}>
                     <CodeEditor language={language}
-                                code={editorConfig.code}
+                                code={code}
                                 options={{readOnly: false}}
                                 suggestions={editorConfig.suggestions}
-                                onChange={(v) => codeRef.current = v}/>
+                                onChange={(v) => {
+                                    codeRef.current = v;
+                                    setCode(v); // 更新状态
+                                }}/>
                 </div>
                 <div className={"jade-code-code-footer"}>
-                    <Button className={"jade-code-button"} style={{marginRight: 16}} onClick={onClose}>取消</Button>
+                    <Button className={"jade-code-button"} style={{marginRight: 16}}
+                            onClick={handleCancel}>取消</Button>
                     <Button type="primary"
                             className={"jade-code-button"}
                             style={{marginRight: 0, fontWeight: 700}}
-                            onClick={() => onConfirm(codeRef.current)}>确定</Button>
+                            onClick={() => handleConfirm()}>确定</Button>
                 </div>
             </div>
             <div className={"jade-code-test jade-code-parent"} style={{display: ctl.testStatus}}>

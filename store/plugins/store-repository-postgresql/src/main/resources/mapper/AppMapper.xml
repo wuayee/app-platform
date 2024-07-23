@@ -26,6 +26,7 @@
             <if test="likeCount != null">#{likeCount},</if>
             <if test="downloadCount != null">#{downloadCount},</if> #{toolName}, #{toolUniqueName},
         </trim>
+        on conflict ("tool_unique_name") do nothing
     </insert>
     <sql id="getCount">
         select count(i."tool_unique_name")
@@ -35,7 +36,7 @@
                             group by t."tool_unique_name") tg on i."tool_unique_name" = tg."tool_unique_name"
     </sql>
     <sql id="getOrSearchConditions">
-        <if test="includeTags != null and includeTags.size() > 0">
+        <if test="mode == 'AND' and includeTags != null and includeTags.size() > 0">
             and tg.tags is not null
             and (
             <foreach collection="includeTags" item="tag" open="" close="" separator=" and ">
@@ -43,7 +44,7 @@
             </foreach>
             )
         </if>
-        <if test="excludeTags != null and excludeTags.size() > 0">
+        <if test="mode == 'OR' and excludeTags != null and excludeTags.size() > 0">
             and ( tg.tags is null
             or not (
             <foreach collection="excludeTags" item="tag" open="" close="" separator=" or ">

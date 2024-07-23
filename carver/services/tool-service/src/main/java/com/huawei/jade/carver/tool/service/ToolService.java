@@ -72,30 +72,21 @@ public interface ToolService {
     ListResult<ToolData> searchTools(ToolQuery toolQuery);
 
     /**
-     * 添加工具标签。
-     *
-     * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
-     * @param tag 表示待添加的工具标签的 {@link String}。
-     */
-    @Genericable(id = "com.huawei.jade.carver.tool.addTag")
-    void addTag(String toolUniqueName, String tag);
-
-    /**
-     * 删除工具标签。
-     *
-     * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
-     * @param tagName 表示待删除的工具标签的 {@link String}。
-     */
-    @Genericable(id = "com.huawei.jade.carver.tool.deleteTag")
-    void deleteTag(String toolUniqueName, String tagName);
-
-    /**
      * 将工具的最新版本设置为不是最新。
      *
      * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
      */
     @Genericable(id = "com.huawei.jade.carver.tool.setNotLatest")
     void setNotLatest(String toolUniqueName);
+
+    /**
+     * 将工具的某一个版本置为最新。
+     *
+     * @param toolUniqueName 表示工具的唯一标识的 {@link String}。
+     * @param version 表示工具的版本的 {@link String}。
+     */
+    @Genericable(id = "com.huawei.jade.carver.tool.setLatest")
+    void setLatest(String toolUniqueName, String version);
 
     /**
      * 查询工具的某一个版本。

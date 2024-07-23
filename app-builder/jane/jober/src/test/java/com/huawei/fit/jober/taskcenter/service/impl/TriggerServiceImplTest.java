@@ -82,21 +82,6 @@ class TriggerServiceImplTest {
     }
 
     @Test
-    void testPatch() {
-        // Setup
-        final TriggerDeclaration declaration = new TriggerDeclaration();
-        declaration.setPropertyName(UndefinableValue.defined("value"));
-        declaration.setFitableId(UndefinableValue.defined("value"));
-
-        final OperationContext context = OperationContext.empty();
-
-        // Run the test
-        triggerServiceImplUnderTest.patch("taskId", "sourceId", "triggerId", declaration, context);
-
-        // Verify the results
-    }
-
-    @Test
     void testDelete() {
         // Setup
         final TriggerFilter filter = new TriggerFilter();

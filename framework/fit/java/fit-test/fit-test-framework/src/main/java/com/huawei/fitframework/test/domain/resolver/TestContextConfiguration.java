@@ -11,6 +11,7 @@ import java.util.Set;
  * 测试上下文的配置类。
  *
  * @author 邬涨财 w00575064
+ * @author 易文渊
  * @since 2023-01-20
  */
 public interface TestContextConfiguration {
@@ -41,6 +42,13 @@ public interface TestContextConfiguration {
      * @return 测试类扫描出的模拟的 bean 字段集合 {@link Set}{@code <}{@link Field}{@code >}。
      */
     Set<Field> mockedBeanFields();
+
+    /**
+     * 合并另外一个 {@link TestContextConfiguration}。
+     *
+     * @param configuration 表示另一个上下文配置的 {@link TestContextConfiguration}。
+     */
+    void merge(TestContextConfiguration configuration);
 
     /**
      * {@link TestContextConfiguration} 的构建器。

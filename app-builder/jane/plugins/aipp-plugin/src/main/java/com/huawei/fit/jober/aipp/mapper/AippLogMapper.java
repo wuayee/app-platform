@@ -61,12 +61,12 @@ public interface AippLogMapper {
     List<String> selectRecentAfterResume(String aippId, String aippType, String createUserAccount);
 
     /**
-     * 根据 path 模糊匹配 instanceId 查询历史记录。
+     * 根据 path 模糊匹配 instanceId 批量查询全量（包含父子流程的）历史记录。
      *
-     * @param instanceIds 表示指定实例 id 的 {@link List}{@code <}{@link String}{@code >}。
+     * @param instanceIds 表示指定实例 id 列表的 {@link List}{@code <}{@link String}{@code >}。
      * @return 表示查询到的历史记录的 {@link List}{@code <}{@link AippInstLog}{@code >}。
      */
-    List<AippInstLog> getLogsByInstanceIds(List<String> instanceIds);
+    List<AippInstLog> getFullLogsByInstanceIds(List<String> instanceIds);
 
     /**
      * 根据条件查询历史记录。

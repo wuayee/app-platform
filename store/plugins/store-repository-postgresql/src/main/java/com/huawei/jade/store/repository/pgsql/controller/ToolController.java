@@ -7,6 +7,8 @@ package com.huawei.jade.store.repository.pgsql.controller;
 import static com.huawei.fitframework.inspection.Validation.notBlank;
 import static com.huawei.fitframework.inspection.Validation.notNegative;
 import static com.huawei.fitframework.inspection.Validation.notNull;
+import static com.huawei.jade.carver.validation.ValidateTagMode.validateTagMode;
+import static com.huawei.jade.common.Result.calculateOffset;
 
 import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.GetMapping;
@@ -23,6 +25,7 @@ import com.huawei.jade.carver.tool.model.transfer.ToolData;
 import com.huawei.jade.carver.tool.service.ToolService;
 import com.huawei.jade.common.Result;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -80,9 +83,9 @@ public class ToolController {
      * @param name 表示工具名的 {@link String}。
      * @param includeTags 表示包含标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
-     * @param canOrTags 表示查询工具的标签选择与和或的方式的 {@link Boolean}。
-     * @param pageNum 表示页码的 {@link Integer}。
-     * @param limit 表示限制的 {@link Integer}。
+     * @param mode 表示查询工具的标签选择与和或的方式的 {@link String}。
+     * @param pageNum 表示页码的 {@code int}。
+     * @param pageSize 表示限制的 {@code int}。
      * @param version 表示工具版本的 {@link String}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link ToolData}{@code >}{@code >}。
      */
@@ -90,17 +93,21 @@ public class ToolController {
     public Result<List<ToolData>> getTools(@RequestQuery(value = "name", required = false) String name,
             @RequestQuery(value = "includeTags", required = false) List<String> includeTags,
             @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
-            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean canOrTags,
-            @RequestQuery(value = "pageNum", required = false) Integer pageNum,
-            @RequestQuery(value = "pageSize", required = false) Integer limit,
+            @RequestQuery(value = "mode", defaultValue = "AND", required = false) String mode,
+            @RequestQuery(value = "pageNum", defaultValue = "1") int pageNum,
+            @RequestQuery(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestQuery(value = "version", required = false) String version) {
-        if (pageNum != null) {
-            notNegative(pageNum, "The page num cannot be negative. [pageNum={0}]", pageNum);
-        }
-        if (limit != null) {
-            notNegative(limit, "The page size cannot be negative. [pageSize={0}]", limit);
-        }
-        ToolQuery toolQuery = new ToolQuery(name, includeTags, excludeTags, canOrTags, pageNum, limit, version);
+        notNegative(pageNum, "The page number cannot be negative.");
+        notNegative(pageSize, "The page size cannot be negative.");
+        ToolQuery toolQuery = new ToolQuery.Builder()
+                .toolName(name)
+                .includeTags(new HashSet<>(includeTags))
+                .excludeTags(new HashSet<>(excludeTags))
+                .mode(validateTagMode(mode))
+                .offset(calculateOffset(pageNum, pageSize))
+                .limit(pageSize)
+                .version(version)
+                .build();
         ListResult<ToolData> res = this.toolService.getTools(toolQuery);
         List<ToolData> data = res.getData();
         return Result.ok(data, res.getCount());
@@ -125,20 +132,29 @@ public class ToolController {
      * 获取工具的所有版本。
      *
      * @param toolUniqueName 表示工具唯一标识的 {@link String}。
-     * @param canOrTags 表示工具标签查询的方式的 {@link Boolean}。
-     * @param pageNum 表示页码的 {@link Integer}。
-     * @param limit 表示限制的 {@link Integer}。
+     * @param mode 表示工具标签查询的方式的 {@link String}。
+     * @param pageNum 表示页码的 {@code int}。
+     * @param pageSize 表示限制的 {@code int}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link ToolData}{@code >}{@code >}。
      */
     @GetMapping("/{toolUniqueName}/versions")
     public Result<List<ToolData>> getAllToolVersions(
             @PathVariable(value = "toolUniqueName") String toolUniqueName,
-            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean canOrTags,
-            @RequestQuery(value = "pageNum", required = false) Integer pageNum,
-            @RequestQuery(value = "pageSize", required = false) Integer limit) {
+            @RequestQuery(value = "mode", defaultValue = "AND", required = false) String mode,
+            @RequestQuery(value = "pageNum", defaultValue = "1") int pageNum,
+            @RequestQuery(value = "pageSize", defaultValue = "10") int pageSize) {
         notBlank(toolUniqueName, "The unique name cannot be blank.");
-        ToolQuery toolQuery = new ToolQuery(
-                toolUniqueName, null, null, canOrTags, pageNum, limit, null);
+        notNegative(pageNum, "The page number cannot be negative.");
+        notNegative(pageSize, "The page size cannot be negative.");
+        ToolQuery toolQuery = new ToolQuery.Builder()
+                .toolName(toolUniqueName)
+                .includeTags(null)
+                .excludeTags(null)
+                .mode(validateTagMode(mode))
+                .offset(calculateOffset(pageNum, pageSize))
+                .limit(pageSize)
+                .version(null)
+                .build();
         ListResult<ToolData> res = this.toolService.getAllToolVersions(toolQuery);
         return Result.ok(res.getData(), res.getCount());
     }
@@ -149,9 +165,9 @@ public class ToolController {
      * @param name 表示工具名的 {@link String}。
      * @param includeTags 表示包含标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
-     * @param canOrTags 表示查询工具的标签与和或的方式的 {@link Boolean}。
-     * @param pageNum 表示页码的 {@link Integer}。
-     * @param limit 表示限制的 {@link Integer}。
+     * @param mode 表示查询工具的标签与和或的方式的 {@link String}。
+     * @param pageNum 表示页码的 {@code int}。
+     * @param pageSize 表示限制的 {@code int}。
      * @param version 表示工具版本的 {@link String}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link ToolData}{@code >}{@code >}。
      */
@@ -159,17 +175,21 @@ public class ToolController {
     public Result<List<ToolData>> searchTools(@RequestQuery(value = "name", required = false) String name,
             @RequestQuery(value = "includeTags", required = false) List<String> includeTags,
             @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
-            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean canOrTags,
-            @RequestQuery(value = "pageNum", required = false) Integer pageNum,
-            @RequestQuery(value = "pageSize", required = false) Integer limit,
+            @RequestQuery(value = "mode", defaultValue = "AND", required = false) String mode,
+            @RequestQuery(value = "pageNum", defaultValue = "1") int pageNum,
+            @RequestQuery(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestQuery(value = "version", required = false) String version) {
-        if (pageNum != null) {
-            notNegative(pageNum, "The page num cannot be negative.");
-        }
-        if (limit != null) {
-            notNegative(limit, "The limit cannot be negative.");
-        }
-        ToolQuery toolQuery = new ToolQuery(name, includeTags, excludeTags, canOrTags, pageNum, limit, version);
+        notNegative(pageNum, "The page number cannot be negative.");
+        notNegative(pageSize, "The page size cannot be negative.");
+        ToolQuery toolQuery = new ToolQuery.Builder()
+                .toolName(name)
+                .includeTags(new HashSet<>(includeTags))
+                .excludeTags(new HashSet<>(excludeTags))
+                .mode(validateTagMode(mode))
+                .offset(calculateOffset(pageNum, pageSize))
+                .limit(pageSize)
+                .version(version)
+                .build();
         ListResult<ToolData> res = this.toolService.searchTools(toolQuery);
         return Result.ok(res.getData(), res.getCount());
     }

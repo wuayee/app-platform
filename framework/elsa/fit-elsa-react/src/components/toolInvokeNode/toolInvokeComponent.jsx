@@ -23,9 +23,9 @@ export const toolInvokeComponent = (jadeConfig) => {
     /**
      * @override
      */
-    self.getReactComponents = (disabled) => {
+    self.getReactComponents = (disabled, data) => {
         return (<>
-            <ToolInvokeFormWrapper disabled={disabled}/>
+            <ToolInvokeFormWrapper disabled={disabled} data={data}/>
         </>);
     };
 

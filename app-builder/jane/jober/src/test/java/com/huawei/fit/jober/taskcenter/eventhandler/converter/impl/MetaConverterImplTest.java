@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.taskcenter.eventhandler.converter.impl;
 
 import com.huawei.fit.jane.Undefinable;
+import com.huawei.fit.jane.meta.definition.Meta;
 import com.huawei.fit.jane.meta.definition.MetaDeclarationInfo;
 import com.huawei.fit.jane.meta.definition.MetaFilter;
 import com.huawei.fit.jane.task.util.OperationContext;
@@ -61,17 +62,19 @@ class MetaConverterImplTest {
     }
 
     @Test
-    void testConvert() {
+    void testMetaConvert() {
         TaskEntity entity = new TaskEntity();
         entity.setId("id");
         entity.setName("name");
         entity.setCategory(JaneCategory.META);
         entity.setProperties(Collections.emptyList());
-        metaConverter.convert(entity, OperationContext.custom().build());
+        Meta meta = metaConverter.convert(entity, OperationContext.custom().build());
+        Assertions.assertEquals("id", meta.getId());
+        Assertions.assertEquals("name", meta.getName());
     }
 
     @Test
-    void testConvert1() {
+    void testMetaFilterConvert() {
         MetaFilter metaFilter = new MetaFilter();
         metaFilter.setIds(Collections.singletonList("testId"));
         metaFilter.setNames(Collections.singletonList("testName"));

@@ -106,13 +106,27 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
                 <executions>
+                    <!--生成jacoco.exec-->
                     <execution>
                         <id>jacoco-initialize</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                    </execution>
+                    <!--配置jacoco的插件，用于生成 html报告-->
+                    <execution>
+                        <id>default-report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
                         <configuration>
-                            <propertyName>argLine</propertyName>
+                            <includes>
+                                <include>com/huawei/*</include>
+                            </includes>
+                            <!-- 排除code-gen自动生成的类-->
+                            <excludes>
+                                <exclude>com/huawei/edevops/model/*</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>

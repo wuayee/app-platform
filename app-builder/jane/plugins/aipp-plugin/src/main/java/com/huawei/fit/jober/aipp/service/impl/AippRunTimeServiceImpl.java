@@ -884,7 +884,7 @@ public class AippRunTimeServiceImpl
         // 设置表单的渲染数据和填充数据
         logData.setFormAppearance(ObjectUtils.cast(formArgs.get(AippConst.FORM_APPEARANCE_KEY)));
         logData.setFormData(ObjectUtils.cast(formArgs.get(AippConst.FORM_DATA_KEY)));
-        aippLogService.insertLog(AippInstLogType.FORM.name(), logData, businessData);
+        aippLogService.insertLog(AippInstLogType.HIDDEN_FORM.name(), logData, businessData);
 
         // 更新实例并清空当前表单数据
         this.updateAippInstance(versionId, meta.getProperties(), instanceId, context, businessData, this::clearFormId);

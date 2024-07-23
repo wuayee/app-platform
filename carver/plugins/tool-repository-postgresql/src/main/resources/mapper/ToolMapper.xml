@@ -34,6 +34,7 @@
             <if test="source != null">#{source},</if> <if test="icon != null">#{icon},</if>
             <if test="version != null">#{version},</if>
         </trim>
+        on conflict ("unique_name", "version") do nothing
     </insert>
     <delete id="deleteTool" parameterType="String">
         delete
@@ -85,7 +86,7 @@
     </sql>
     <sql id="getOrSearchConditions">
         and i."is_latest" = true
-        <if test="canOrTags == false and includeTags != null and includeTags.size() > 0">
+        <if test="mode == 'AND' and includeTags != null and includeTags.size() > 0">
             and tg.tags is not null
             and (
             <foreach collection="includeTags" item="tag" open="" close="" separator=" and ">
@@ -93,7 +94,7 @@
             </foreach>
             )
         </if>
-        <if test="canOrTags == true and includeTags != null and includeTags.size() > 0">
+        <if test="mode == 'OR' and includeTags != null and includeTags.size() > 0">
             and tg.tags is not null
             and (
             <foreach collection="includeTags" item="tag" open="" close="" separator=" or ">
@@ -163,5 +164,11 @@
         set "is_latest" = false
         where "unique_name" = #{toolUniqueName}
         and "is_latest" = true
+    </update>
+    <update id="setLatest">
+        update "store_tool"
+        set "is_latest" = true
+        where "unique_name" = #{toolUniqueName}
+        and "version" = #{version}
     </update>
 </mapper>

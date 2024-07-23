@@ -24,7 +24,8 @@ export default function OutputVariableRow({item, handleItemChange, disabled}) {
     const _onReferencedKeyChange = (e) => {
         handleItemChange(item.id, [{key: 'referenceNode', value: e.referenceNode},
             {key: 'referenceId', value: e.referenceId},
-            {key: 'value', value: e.value}]);
+            {key: 'value', value: e.value},
+            {key: "type", value: e.type}]);
     };
 
     /**

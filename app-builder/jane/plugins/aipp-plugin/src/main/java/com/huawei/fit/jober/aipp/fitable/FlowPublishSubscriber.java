@@ -101,16 +101,23 @@ public class FlowPublishSubscriber implements FlowPublishService {
         runtimeData.setAippInstanceId(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY)));
         runtimeData.setNodeInfos(Collections.singletonList(this.convert(flowNodePublishInfo, context)));
 
-        try {
-            this.nodeRuntimeDataPublisher.onPublish(runtimeData);
-        } catch (FitException e) {
-            log.error("Call NodeRuntimeDataPublisher#publish failed: {}.", e.getMessage(), e);
-        }
+        publishRuntimeData(runtimeData);
         this.aippFlowRuntimeInfoService.cache(runtimeData);
 
         // 遇到结束节点或异常时删除缓存.
         if (NodeTypes.END.name().equals(nodeType) || MetaInstStatusEnum.ERROR.name().equals(context.getStatus())) {
             this.cache.remove(traceId);
+        }
+    }
+
+    private void publishRuntimeData(RuntimeData runtimeData) {
+        if (this.nodeRuntimeDataPublisher == null) {
+            return;
+        }
+        try {
+            this.nodeRuntimeDataPublisher.onPublish(runtimeData);
+        } catch (FitException e) {
+            log.error("Call NodeRuntimeDataPublisher#publish failed: {}.", e.getMessage(), e);
         }
     }
 

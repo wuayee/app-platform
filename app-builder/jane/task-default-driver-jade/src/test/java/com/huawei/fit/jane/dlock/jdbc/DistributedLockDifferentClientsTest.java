@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import com.huawei.fit.jane.common.utils.SleepUtil;
 import com.huawei.fit.jane.dlock.DatabaseBaseTest;
 import com.huawei.fit.jane.dlock.jdbc.persist.mapper.FlowLockMapper;
 import com.huawei.fit.jane.task.gateway.InvalidDistributedLockNotify;
@@ -177,9 +178,9 @@ public class DistributedLockDifferentClientsTest extends DatabaseBaseTest {
                 latch1.countDown();
                 lock2.lockInterruptibly();
                 data.add(4);
-                Thread.sleep(10);
+                SleepUtil.sleep(10);
                 data.add(5);
-                Thread.sleep(10);
+                SleepUtil.sleep(10);
                 data.add(6);
             } catch (InterruptedException ignored) {
                 log.error("testLockExclusiveAccess error");
@@ -189,9 +190,9 @@ public class DistributedLockDifferentClientsTest extends DatabaseBaseTest {
         });
         assertTrue(latch1.await(10, TimeUnit.SECONDS));
         data.add(1);
-        Thread.sleep(100);
+        SleepUtil.sleep(100);
         data.add(2);
-        Thread.sleep(100);
+        SleepUtil.sleep(100);
         data.add(3);
         lock1.unlock();
         for (int i = 0; i < 6; i++) {
@@ -201,6 +202,7 @@ public class DistributedLockDifferentClientsTest extends DatabaseBaseTest {
         }
     }
 
+
     @Test
     @DisplayName("测试分布式锁过期失效后可以再次被另一个客户端获得的场景")
     public void testAcquireLockAfterExpiry() throws Exception {
@@ -208,7 +210,7 @@ public class DistributedLockDifferentClientsTest extends DatabaseBaseTest {
         final BlockingQueue<Integer> data = new LinkedBlockingQueue<>();
         final CountDownLatch latch = new CountDownLatch(1);
         lock1.lockInterruptibly();
-        Thread.sleep(500);
+        SleepUtil.sleep(200);
         Executors.newSingleThreadExecutor().execute(() -> {
             Lock lock2 = createClient(100, 1000, "192.168.0.2").getLock("test");
             try {
@@ -238,7 +240,7 @@ public class DistributedLockDifferentClientsTest extends DatabaseBaseTest {
         final BlockingQueue<Integer> data = new LinkedBlockingQueue<>();
         final CountDownLatch latch = new CountDownLatch(1);
         lock1.lockInterruptibly();
-        Thread.sleep(500);
+        SleepUtil.sleep(200);
         Executors.newSingleThreadExecutor().execute(() -> {
             Lock lock2 = createClient(100, 50, "192.168.0.2").getLock("test");
             try {
