@@ -69,14 +69,12 @@ const ChoreographyHead = (props) => {
             <div className='status-tag'>
               <img src='/src/assets/images/ai/complate.png' />
               <span>已发布</span>
-              <span className='version'>V{appInfo.version}</span>
             </div>
           ) :
           (
             <div className='status-tag'>
               <img src='/src/assets/images/ai/publish.png' />
               <span>未发布</span>
-              <span className='version'>V{appInfo.version}</span>
             </div>
           )
         }
@@ -85,7 +83,7 @@ const ChoreographyHead = (props) => {
       </div>
       <div className='header-grid'>
         {
-          appInfo.state === 'active' && 
+          appInfo.attributes?.latest_version && 
           <div className='header-grid-btn'>
             <span className='history' onClick={versionDetail}>
               <img src='/src/assets/images/ai/time.png' />

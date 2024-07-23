@@ -176,10 +176,10 @@ const ChatPreview = (props) => {
       if (debugRes.code === 0) {
         chatMissionStart(debugRes.data, value, type);
       } else {
-        onStop(debugRes.msg || '获取aippId失败');
+        onStop(debugRes.msg || '启动会话失败');
       }
     } catch {
-      onStop('获取aippId失败');
+      onStop('启动会话失败');
     }
   }
   // 启动任务
@@ -219,10 +219,10 @@ const ChatPreview = (props) => {
         childInstanceStop.current = false;
         queryInstance(aipp_id, version, instanceId);
       } else {
-        onStop('对话失败');
+        onStop('启动会话失败');
       }
     } catch {
-      onStop('对话失败');
+      onStop('启动会话失败');
     }
   };
   // 开始对话
@@ -240,7 +240,7 @@ const ChatPreview = (props) => {
       wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));
     }
     wsCurrent.current.onerror = (err) => {
-      onStop('socket对话失败');
+      onStop('对话失败');
       dispatch(setChatRunning(false));
     }
     wsCurrent.current.onmessage = ({ data }) => {

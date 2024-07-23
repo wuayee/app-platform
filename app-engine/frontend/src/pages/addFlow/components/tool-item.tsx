@@ -18,7 +18,6 @@ const ToolItem = () => {
   const [ pageNum, setPageNum ] = useState(1);
   const [ pluginData, setPluginData ] = useState([]);
   const [ showModal, setShowModal ] = useState(false);
-  const currentUser = localStorage.getItem('currentUser') || '';
   const searchName = useRef(undefined);
   const listType = useRef('market');
   useEffect(() => {
@@ -41,7 +40,7 @@ const ToolItem = () => {
     </Select>
   );
   // 获取插件列表
-  const getPluginList =async (key = undefined)=> {
+  const getPluginList = async ()=> {
     setLoading(true);
     let res;
     if (listType.current === PluginTypeE.MARKET) {
@@ -50,12 +49,13 @@ const ToolItem = () => {
         pageSize:100,
         includeTags: toolKey,
         isPublished: true,
-        name: searchName.current,
-      });
+        name: searchName.current
+      }, 'excludeTags=App&excludeTags=WATERFLOW');
     } else {
       res = await getMyPlugin(tenantId, {
         pageNum,
         pageSize:100,
+        tag: 'FIT'
       });
     }
     const data=listType.current === PluginTypeE.MARKET? res?.data : res?.data?.toolData;
@@ -73,7 +73,6 @@ const ToolItem = () => {
   const handleClick = (key) => {
     setPageNum(1);
     setToolKey(key);
-    getPluginList(key);
   }
   // 分页
   const selectPage = (curPage: number, curPageSize: number) => {
@@ -139,7 +138,7 @@ const ToolItem = () => {
       }
       { pluginData.length === 0 && <div className="tool-empty"><Empty description="暂无数据" /></div> }
     </Spin>
-    <ToolModal showModal={showModal} setShowModal={setShowModal} />
+    <ToolModal showModal={showModal} setShowModal={setShowModal} modalType='mashup' />
   </>
 };
 export default ToolItem;
