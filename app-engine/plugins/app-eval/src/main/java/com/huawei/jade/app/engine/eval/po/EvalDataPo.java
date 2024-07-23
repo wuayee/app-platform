@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.jade.app.engine.eval.po;
+
+import com.huawei.jade.common.po.BasePo;
+
+import lombok.Data;
+
+/**
+ * 评估数据 ORM 对象。
+ *
+ * @author 易文渊
+ * @since 2024-07-19
+ */
+@Data
+public class EvalDataPo extends BasePo {
+    /**
+     * 评估内容。
+     */
+    private String content;
+
+    /**
+     * 创建版本。
+     */
+    private Long createdVersion;
+
+    /**
+     * 过期版本。
+     */
+    private Long expiredVersion;
+
+    /**
+     * 外键，关联评估数据集。
+     */
+    private Long datasetId;
+}
