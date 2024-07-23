@@ -852,6 +852,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         appendAttribute(attrPatch, aippNodeForms, flowDefinitionId);
         updateAttribute(attrPatch, aippDto);
         attrPatch.put(AippConst.ATTR_PUBLISH_DESCRIPTION, aippDto.getPublishedDescription());
+        attrPatch.put(AippConst.ATTR_PUBLISH_UPDATE_LOG, aippDto.getPublishedUpdateLog());
         attrPatch.put(AippConst.ATTR_UNIQUE_NAME, uniqueName);
         declaration.setAttributes(Undefinable.defined(attrPatch));
         declaration.setName(Undefinable.defined(meta.getName()));

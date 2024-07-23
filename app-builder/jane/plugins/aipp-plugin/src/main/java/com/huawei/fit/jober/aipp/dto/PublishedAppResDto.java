@@ -45,4 +45,8 @@ public class PublishedAppResDto {
     @Property(description = "发布描述信息")
     @JsonProperty("publishedDescription")
     private String publishedDescription;
+
+    @Property(description = "发布更新日志")
+    @JsonProperty("publishedUpdateLog")
+    private String publishedUpdateLog;
 }
