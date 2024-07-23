@@ -105,6 +105,9 @@ public class AppBuilderAppServiceImpl
     private static final int RETRY_CREATE_TIMES = 5;
     private static final String DEFAULT_APP_VERSION = "1.0.0";
     private static final String VERSION_FORMAT = "{0}.{1}.{2}";
+    private static final String PUBLISH_UPDATE_DESCRIPTION_KEY = "publishedDescription";
+    private static final String PUBLISH_UPDATE_LOG_KEY = "publishedUpdateLog";
+
     private final AppBuilderAppFactory appFactory;
     private final AippFlowService aippFlowService;
     private final AppBuilderAppRepository appRepository;
@@ -151,6 +154,9 @@ public class AppBuilderAppServiceImpl
         // 添加校验，禁止更低版本手动输入
         this.validateVersionIsLatest(appBuilderApp.getVersion(), appDto.getVersion());
         appBuilderApp.setVersion(appDto.getVersion());
+        Map<String, Object> appBuilderAppAttr = appBuilderApp.getAttributes();
+        appBuilderAppAttr.put(PUBLISH_UPDATE_DESCRIPTION_KEY, aippDto.getPublishedDescription());
+        appBuilderAppAttr.put(PUBLISH_UPDATE_LOG_KEY, aippDto.getPublishedUpdateLog());
         this.appFactory.update(appBuilderApp);
         if (appBuilderApp.getAttributes().containsKey("store_id")) {
             aippDto.setUniqueName(appBuilderApp.getAttributes().get("store_id").toString());
