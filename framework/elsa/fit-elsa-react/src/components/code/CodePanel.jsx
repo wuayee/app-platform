@@ -6,6 +6,8 @@ import EditCode from '../asserts/icon-edit.svg?react';
 import {useFormContext, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {CodeDrawer} from "@/components/common/code/CodeDrawer.jsx";
 import httpUtil from "@/components/util/httpUtil.jsx";
+import ArrayUtil from "@/components/util/ArrayUtil.js";
+import PropTypes from "prop-types";
 
 const {Panel} = Collapse;
 const {Text} = Typography;
@@ -13,25 +15,31 @@ const defaultEditorHeight = 272;
 const defaultDrawerWidth = 1232;
 const successCode = 0;
 
+_CodePanel.propTypes = {
+    input: PropTypes.array.isRequired,
+    disabled: PropTypes.bool,
+    dispatch: PropTypes.func
+};
+
 /**
  * code编辑器面板
  *
  * @param disabled 是否禁用
- * @param data 数据
+ * @param input 数据
  * @param dispatch 回调
  * @return {JSX.Element}
  * @constructor
  */
-export default function CodePanel({disabled, data, dispatch}) {
+function _CodePanel({disabled, input, dispatch}) {
     const [open, setOpen] = useState(false);
     const shape = useShapeContext();
     const url = shape.graph.configs.find(config => config.node === "codeNodeState") && shape.graph.configs.find(config => config.node === "codeNodeState").urls.testCodeUrl;
-    const suggestions = data.inputParams.find(item => item.name === "args").value.map(arg => {
+    const form = useFormContext();
+    const suggestions = input.find(item => item.name === "args").value.map(arg => {
         return {label: arg.name, insertText: arg.name}
     });
-    const form = useFormContext();
-    const selectedLanguage = data.inputParams.find(item => item.name === "language").value;
-    const code = data.inputParams.find(item => item.name === "code").value;
+    const selectedLanguage = input.find(item => item.name === "language").value;
+    const code = input.find(item => item.name === "code").value;
 
     /**
      * 更新code代码
@@ -159,3 +167,9 @@ const Header = ({handleEditClick, disabled}) => {
         </div>
     </>);
 };
+
+const areEqual = (prevProps, nextProps) => {
+    return prevProps.disabled === nextProps.disabled && ArrayUtil.isEqual(prevProps.input, nextProps.input);
+};
+
+export const CodePanel = React.memo(_CodePanel, areEqual);

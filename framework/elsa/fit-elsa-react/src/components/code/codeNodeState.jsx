@@ -5,7 +5,7 @@ import {SECTION_TYPE} from "@/common/Consts.js";
 import {codeNodeDrawer} from "@/components/code/CodeNodeDrawer.jsx";
 
 /**
- * 工具调用节点shape
+ * 代码节点shape
  *
  * @override
  */

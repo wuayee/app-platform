@@ -1,7 +1,7 @@
 import {useDispatch} from "@/components/DefaultRoot.jsx";
 import React from "react";
-import CodePanel from "@/components/code/CodePanel.jsx";
-import JadeObservableOutput from "@/components/common/JadeObservableOutput.jsx";
+import {CodePanel} from "@/components/code/CodePanel.jsx";
+import {JadeObservableOutput} from "@/components/common/JadeObservableOutput.jsx";
 import {JadeInputForm} from "@/components/common/JadeInputForm.jsx";
 import PropTypes from "prop-types";
 
@@ -18,7 +18,8 @@ CodeWrapper.propTypes = {
  */
 export default function CodeWrapper({data, disabled}) {
     const dispatch = useDispatch();
-
+    const output = data.outputParams.find(item => item.name === "output");
+    const input = data.inputParams;
     /**
      * 初始化数据
      *
@@ -69,7 +70,7 @@ export default function CodeWrapper({data, disabled}) {
                        updateItem={updateItem}
                        deleteItem={deleteItem}
                        content={content}/>
-        <CodePanel disabled={disabled} data={data} dispatch={dispatch}/>
-        <JadeObservableOutput disabled={disabled}/>
+        <CodePanel disabled={disabled} input={input} dispatch={dispatch}/>
+        <JadeObservableOutput disabled={disabled} output={output}/>
     </>);
 }

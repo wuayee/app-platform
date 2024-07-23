@@ -112,7 +112,10 @@ export const codeComponent = (jadeConfig) => {
          * @private
          */
         const _addSubItem = () => {
-            _recursionAdd(newConfig.outputParams, action.id);
+            const outputParams = newConfig.outputParams;
+            _recursionAdd(outputParams, action.id);
+            const newOutput = {...outputParams.find(item => item.name === "output")};
+            newConfig.outputParams = _buildOutputParams(newOutput);
         };
 
         /**
@@ -147,8 +150,9 @@ export const codeComponent = (jadeConfig) => {
          * @private
          */
         const _deleteRow = () => {
-            const output = newConfig.outputParams.find(item => item.name === "output");
-            output.value = removeItemById(output.value, action.id);
+            const newOutput = {...newConfig.outputParams.find(item => item.name === "output")};
+            newOutput.value = removeItemById(newOutput.value, action.id);
+            newConfig.outputParams = _buildOutputParams(newOutput);
         };
 
         /**
@@ -171,6 +175,16 @@ export const codeComponent = (jadeConfig) => {
             return acc;
         }, []);
 
+        function _buildOutputParams(newOutput) {
+            return newConfig.outputParams.map(outputParam => {
+                if (outputParam.name === "output") {
+                    return newOutput;
+                } else {
+                    return outputParam;
+                }
+            });
+        }
+
         /**
          * 编辑属性名
          *
@@ -179,8 +193,9 @@ export const codeComponent = (jadeConfig) => {
          * @private
          */
         const _editOutputName = (id, value) => {
-            const items = newConfig.outputParams.find(item => item.name === "output").value;
-            _recursionEdit(items, action.id, value);
+            const newOutput = {...newConfig.outputParams.find(item => item.name === "output")};
+            _recursionEdit(newOutput.value, action.id, value);
+            newConfig.outputParams = _buildOutputParams(newOutput);
         };
 
         /**
@@ -213,7 +228,10 @@ export const codeComponent = (jadeConfig) => {
          * @private
          */
         const _editOutputType = (id, value) => {
-            _recursionEdit(newConfig.outputParams, action.id, value);
+            const outputParams = newConfig.outputParams;
+            _recursionEdit(outputParams, action.id, value);
+            const newOutput = {...outputParams.find(item => item.name === "output")};
+            newConfig.outputParams = _buildOutputParams(newOutput);
         };
 
         /**
@@ -222,7 +240,7 @@ export const codeComponent = (jadeConfig) => {
          * @private
          */
         const _addInput = () => {
-            newConfig.inputParams.find(item => item.name === "args").value.push({
+            newConfig.inputParams.find(item => item.name === "args").value = [...newConfig.inputParams.find(item => item.name === "args").value, {
                 id: action.id,
                 name: "",
                 type: "String",
@@ -231,7 +249,7 @@ export const codeComponent = (jadeConfig) => {
                 referenceNode: "",
                 referenceId: "",
                 referenceKey: ""
-            })
+            }];
         };
 
         /**
@@ -240,11 +258,16 @@ export const codeComponent = (jadeConfig) => {
          * @private
          */
         const _editInput = () => {
-            newConfig.inputParams.find(item => item.name === "args").value.forEach(item => {
+            const newArgsValue = [...newConfig.inputParams.find(item => item.name === "args").value];
+            newConfig.inputParams.find(item => item.name === "args").value = newArgsValue.map(item => {
                 if (item.id === action.id) {
+                    let newItem = {...item};
                     action.changes.forEach(change => {
-                        item[change.key] = change.value;
+                        newItem[change.key] = change.value;
                     });
+                    return newItem;
+                } else {
+                    return item;
                 }
             });
         };
@@ -255,8 +278,8 @@ export const codeComponent = (jadeConfig) => {
          * @private
          */
         const _deleteInput = () => {
-            const input = newConfig.inputParams.find(item => item.name === "args");
-            input.value = input.value.filter(item => item.id !== action.id);
+            const newArgsValue = [...newConfig.inputParams.find(item => item.name === "args").value];
+            newConfig.inputParams.find(item => item.name === "args").value = newArgsValue.filter(item => item.id !== action.id);
         };
 
         /**
@@ -265,8 +288,15 @@ export const codeComponent = (jadeConfig) => {
          * @private
          */
         const _editCode = () => {
-            const code = newConfig.inputParams.find(item => item.name === "code");
-            code.value = action.value;
+            newConfig.inputParams = newConfig.inputParams.map(inputParam => {
+                if (inputParam.name === "code") {
+                    return {
+                        ...inputParam, value: action.value
+                    }
+                } else {
+                    return inputParam;
+                }
+            });
         };
 
         let newConfig = {...config};
