@@ -18,7 +18,7 @@ const { Search } = Input;
 const { Option } = Select;
 
 const ToolDrawer = (props) => {
-  const { showModal, setShowModal, checkData, confirmCallBack, type } = props;
+  const { showModal, setShowModal, checkData, confirmCallBack, type, modalType } = props;
   const [activeKey, setActiveKey] = useState('');
   const [loading, setLoading] = useState(false);
   const [pageNum, setPageNum] = useState(1);
@@ -89,12 +89,12 @@ const ToolDrawer = (props) => {
     }
     if (listType.current === PluginTypeE.MARKET) {
       activeKey.length ? null : delete params.includeTags;
-      res = await getPlugins(params);
+      let excludeTagsStr = modalType ? 'excludeTags=App&excludeTags=WATERFLOW' : 'excludeTags=App';
+      res = await getPlugins(params, excludeTagsStr);
     } else {
-      res = await getMyPlugin(tenantId, {
-        pageNum,
-        pageSize,
-      });
+      let params = { pageNum, pageSize };
+      modalType ? params.tag = 'FIT' : '';
+      res = await getMyPlugin(tenantId, params);
     }
 
     setLoading(false);

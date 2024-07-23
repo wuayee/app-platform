@@ -7,11 +7,10 @@ export function getPlugins(data: {
   pageNum: number;
   pageSize: number;
   includeTags: string;
-  excludeTags: string;
   name: string;
-}) {
-  const url = `${PLUGIN_URL}/store/plugins/search`;
-  return get(url, { ...data, excludeTags: 'App' });
+}, excludeTags:string) {
+  const url = `${PLUGIN_URL}/store/plugins/search?${excludeTags}`;
+  return get(url, { ...data });
 }
 
 export function getPluginDetail(pluginId) {
@@ -40,7 +39,7 @@ export function getPluginWaterFlow(
 }
 
 // 我的-已发布（工具+工具流)
-export function getMyPlugin(tenantId, data: { pageNum: number; pageSize: number }) {
+export function getMyPlugin(tenantId, data) {
   const url = `${PLUGIN_URL}/v1/api/${tenantId}/store/plugins`;
   return get(url, data);
 }

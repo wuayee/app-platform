@@ -78,14 +78,12 @@ const AddHeader = (props) => {
               <div className='status-tag'>
                 <img src='/src/assets/images/ai/complate.png' />
                 <span>已发布</span>
-                <span className='version'>V{appInfo.version}</span>
               </div>
             ) :
             (
               <div className='status-tag'>
                 <img src='/src/assets/images/ai/publish.png' />
                 <span>未发布</span>
-                <span className='version'>V{appInfo.version}</span>
               </div>
             )
           }
@@ -93,9 +91,12 @@ const AddHeader = (props) => {
           <TestStatus testTime={testTime} testStatus={testStatus}/>
         </div>
         <div className='header-grid'>
+        {
+          appInfo.attributes?.latest_version && 
           <span className='history' onClick={versionDetail}>
             <img src='/src/assets/images/ai/time.png' />
           </span>
+        }
           <span className='header-btn test-btn' onClick={handleDebugClick}>调试</span>
           <span className='header-btn' onClick={handleUploadFlow}><UploadIcon />发布</span>
         </div>

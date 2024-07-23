@@ -56,7 +56,7 @@ const EditTitleModal = (props) => {
             确定
           </Button>
         ]}>
-        <div className='edit-form-list'>
+        <div className='edit-form-list' style={{ marginBottom: '30px' }}>
           <Form
             form={form}
             layout='vertical'
@@ -72,13 +72,13 @@ const EditTitleModal = (props) => {
                 message: '输入字符长度范围：1 - 64'
               }]}
             >
-              <Input />
+              <Input maxLength={64} showCount />
             </Form.Item>
             <Form.Item
               label='简介'
               name='description'
             >
-              <Input />
+              <Input.TextArea rows={4} maxLength={300} showCount />
             </Form.Item>
           </Form>
         </div>

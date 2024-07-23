@@ -2,6 +2,7 @@
 import React, {  useState, useImperativeHandle } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Input, Modal, Button, Select, Form } from 'antd';
+import TextEditor from './text-editor';
 import { Message } from '@shared/utils/message';
 import { httpUrlMap } from '@shared/http/httpConfig';
 import { appPublish, updateFlowInfo } from '@shared/http/aipp';
@@ -12,10 +13,11 @@ const { TextArea } = Input;
 const PublishModal = (props) => {
   const { modalRef, appInfo, publishType } = props;
   const { appId, tenantId } = useParams();
-  const [ isModalOpen, setIsModalOpen] = useState(false);
-  const [ isPublished, setIsPublished] = useState(false);
-  const [ loading, setLoading ] = useState(false);
-  const [ form ] = Form.useForm();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPublished, setIsPublished] = useState(false);
+  const [loading, setLoading ] = useState(false);
+  const [text, setText] = useState('');
+  const [form] = Form.useForm();
   const navigate = useNavigate();
   
   const tagOptions = [
@@ -31,6 +33,7 @@ const PublishModal = (props) => {
       app_type: publishType !== 'app' ? 'waterflow' : appInfo.attributes?.app_type
     });
     setIsPublished(appInfo.state === 'active');
+    setText('');
     setIsModalOpen(true);
   };
   // 发布点击
@@ -52,6 +55,7 @@ const PublishModal = (props) => {
       params.version = formParams.version;
       params.attributes.app_type = formParams.app_type;
       params.publishedDescription = formParams.description;
+      params.publishedUpdateLog = text;
       const res = await appPublish(tenantId, appId, params);
       if (res.code === 0) {
         Message({ type: 'success', content: `发布应用成功` });
@@ -72,6 +76,7 @@ const PublishModal = (props) => {
     }
     appInfo.version = formParams.version;
     appInfo.publishedDescription = formParams.description;
+    appInfo.publishedUpdateLog = text;
     try {
       const res = await appPublish(tenantId, appId, appInfo);
       if (res.code === 0) {
@@ -98,15 +103,6 @@ const PublishModal = (props) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const incrementVersion = (versionString) => {
-    const regex = /^(\d+)\.(\d+)\.(\d+)$/;
-    const matches = versionString.match(regex);
-    const [, major, minor, patch] = matches;
-    const newMajor = parseInt(major, 10);
-    const newMinor = parseInt(minor, 10);
-    const newPatch = parseInt(patch, 10) + 1;
-    return `${newMajor}.${newMinor}.${newPatch}`;
-  }
   useImperativeHandle(modalRef, () => {
     return {
       'showModal': showModal
@@ -115,7 +111,7 @@ const PublishModal = (props) => {
   return <>{(
     <Modal
       title={ publishType === 'app' ? '发布应用' : '发布工具流' }
-      width='560px'
+      width={700}
       maskClosable={false}
       centered
       open={isModalOpen}
@@ -171,8 +167,16 @@ const PublishModal = (props) => {
             label="版本描述"
             name="description"
           >
-            <TextArea rows={3} placeholder="请输入版本描述" />
+            <TextArea rows={4} placeholder="请输入版本描述" showCount maxLength={300} />
           </Form.Item>
+          {
+            <Form.Item
+              label="版本公告"
+              name="updateLog"
+            >
+              <TextEditor text={text} setText={setText} />
+            </Form.Item>
+          }
         </Form>
       </div>
     </Modal>

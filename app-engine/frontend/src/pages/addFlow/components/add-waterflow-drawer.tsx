@@ -51,30 +51,30 @@ const AddWaterFlow = (props) => {
         <CloseOutlined onClick={() => setOpen(false)}/>
       }>
       <div className='edit-form-list'>
-      <Form
-        form={form}
-        layout="vertical"
-        autoComplete="off"
-        className='edit-form-content'
-        >
-        <Form.Item
-            label="名称"
-            name="name"
-            rules={[{ required: true, message: '请输入名称' }, {
-              type: 'string',
-              max: 64,
-              message: '输入字符长度范围：1 - 64'
-            }]}
+        <Form
+          form={form}
+          layout="vertical"
+          autoComplete="off"
+          className='edit-form-content'
           >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="简介"
-          name="description"
-        >
-          <Input />
-        </Form.Item>
-      </Form>
+          <Form.Item
+              label="名称"
+              name="name"
+              rules={[{ required: true, message: '请输入名称' }, {
+                type: 'string',
+                max: 64,
+                message: '输入字符长度范围：1 - 64'
+              }]}
+            >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="简介"
+            name="description"
+          >
+            <Input />
+          </Form.Item>
+        </Form>
       </div>
     </Drawer>
   </>

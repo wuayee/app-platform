@@ -29,31 +29,32 @@ const ChatRunning = () => {
   }
 
   // 公告弹层
-  const announcements = ({ id, version, attributes }) => {
+  const announcements = (data) => {
+    const { id, version, attributes } = data;
     let chatVersionListMap = storage.get('chatVersionMap');
     if (chatVersionListMap) {
       try {
         let versionItem = chatVersionListMap.filter(item => item.id === id)[0];
         if (!versionItem) {
           chatVersionListMap.push({ id, version });
-          setModalContent(attributes, chatVersionListMap);
+          setModalContent(data, chatVersionListMap);
         } else if (versionItem && versionItem.version !== version){
           let index = chatVersionListMap.findIndex(item => item.id === id);
           chatVersionListMap[index].version = version;
-          setModalContent(attributes, chatVersionListMap);
+          setModalContent(data, chatVersionListMap);
         }
       } catch {
         setIsModalOpen(false);
       }
     } else {
-      setModalContent(attributes, [{ id, version }]);
+      setModalContent(data, [{ id, version }]);
     }
   }
   // 保存并显示弹层
-  const setModalContent = (attributes, arr) => {
-    let { remark } = attributes;
-    if (remark && remark.length) {
-      setNotice(remark);
+  const setModalContent = (data, arr) => {
+    let { publishedUpdateLog } = data;
+    if (publishedUpdateLog && publishedUpdateLog.length) {
+      setNotice(publishedUpdateLog);
       setIsModalOpen(true);
       storage.set('chatVersionMap', arr);
     }
