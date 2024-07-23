@@ -166,16 +166,23 @@ function ConfigUI(props) {
     }
     // 监听数据变化
     const updateConfig = (value, key, map=undefined) => {
-      form.validateFields().then((values) => {
-        const saveData = {...formData};
-        buildSaveData(key, value, saveData, map);
-        handleConfigDataChange(saveData);
-        if (key === 'inspiration') {
-          inspirationChange();
-        }
-      }).catch((errorInfo) => {
-        console.log(errorInfo);
-      })
+      if (['tools', 'workflows'].includes(key)) {
+        saveConfig(value, key, map);
+      } else {
+        form.validateFields().then(() => {
+          saveConfig(value, key, map);
+        }).catch((errorInfo) => {})
+      }
+      
+    }
+    // 触发保存
+    const saveConfig = (value, key, map) => {
+      const saveData = {...formData};
+      buildSaveData(key, value, saveData, map);
+      handleConfigDataChange(saveData);
+      if (key === 'inspiration') {
+        inspirationChange();
+      }
     }
     // 工具流自动选中
     const waterflowChange = () => {

@@ -17,4 +17,5 @@ public class AppBuilderRecommendDto {
     // 上一条问答对
     private String question;
     private String answer;
+    private String model;
 }

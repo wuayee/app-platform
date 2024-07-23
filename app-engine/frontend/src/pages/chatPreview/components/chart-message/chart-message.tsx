@@ -30,7 +30,7 @@ const ChartMessage = (props) => {
           })
         });
       } else {
-        const chartItem = initChartData( chartData, chartAnswer, chartType);
+        const chartItem = initChartData(chartData, chartAnswer, chartType);
         setChartList(() => {
           let current = listRef.current || [];
           let arr = [ ...current, chartItem ];
