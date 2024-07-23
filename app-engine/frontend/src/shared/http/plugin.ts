@@ -59,7 +59,7 @@ export function getPluginPackageInfo(file) {
 
 // 确认上传插件
 export function uploadPlugin(param, toolsName) {
-  const url = `${PLUGIN_URL}/tools/save/tool?toolsName=${toolsName}`;
+  const url = `${PLUGIN_URL}/plugins/save/tools?toolsName=${toolsName}`;
   return post(url, param,  {
     headers: {
       'Content-Type': 'application/form-data'
