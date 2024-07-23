@@ -11,11 +11,13 @@ const DraggerUpload = (props) => {
   const customRequest= async (val)=>{
     val.onSuccess();
     let fileObj:any = {};
+    let hasTool = false;
     const zip = new JSZip();
     const res = await zip.loadAsync(val?.file);
     fileObj[val.file.uid] = [];
     Object.keys(res.files).forEach(item => {
       if (!res.files[item].dir && item.indexOf('tools.json') !== -1) {
+        hasTool = true;
         res.file(item)?.async('blob').then((data) => {
           let fileStr = new File([data], item, { type: 'application/json' });
           fileStr.text().then(res => {
@@ -26,6 +28,9 @@ const DraggerUpload = (props) => {
         });
       }
     });
+    if (!hasTool) {
+      Message({ type: 'warning', content: `${val.file.name}解析错误` })
+    }
   }
   const onRemove = (id) => {
     props.removeFileData(id);
@@ -33,7 +38,7 @@ const DraggerUpload = (props) => {
   const beforeUpload = (file) => {
     let name = fileList.filter(item => item.name === file.name)[0];
     if (name) {
-      Message({ type: 'warning', content: `${file.name} 该文件已上传` })
+      Message({ type: 'warning', content: `${file.name} 该文件已上传` });
       return false
     }
     return true

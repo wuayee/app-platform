@@ -82,10 +82,7 @@ const MyPlugins = () => {
       });
     }
   };
-  useEffect(() => {
-    getPluginList();
-  }, [refreshSignal]);
-
+  
   const selectPage = (curPage: number, curPageSize: number) => {
     setPagination({ pageNum: curPage, pageSize: curPageSize });
     setRefreshSignal(new Date().valueOf());
@@ -103,6 +100,17 @@ const MyPlugins = () => {
     setName('');
     getPluginList();
   }
+  useEffect(() => {
+    getPluginList();
+  }, [refreshSignal]);
+
+  useEffect(() => {
+    let showDrawer = sessionStorage.getItem('pluginType');
+    if (showDrawer) {
+      sessionStorage.removeItem('pluginType');
+      setOpenUploadDrawer(1);
+    }
+  }, [])
   return (
     <div className='aui-block myplugin'>
       <Tabs defaultActiveKey={tabItemE.TOOL} items={tabItems} onChange={onTabChange} />

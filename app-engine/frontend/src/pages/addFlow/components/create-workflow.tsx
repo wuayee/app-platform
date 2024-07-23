@@ -41,6 +41,17 @@ const CreateWorkflow = (props) => {
 
   const beforeUpload = (file) => false;
   const onChange = ({ file }) => {
+    const fileTypes = ['jpg', 'png', 'jpeg', 'PNG', 'gif'];
+    const fileEnd = file.name.split('.')[1];
+    const size = file.size / 1024;
+    if (size > 1024) {
+      Message({ type: 'warning', content: '文件大小不能超过1M' });
+      return
+    }
+    if (!fileTypes.includes(fileEnd)) {
+      Message({ type: 'warning', content: '文件格式错误' });
+      return
+    }
     pictureUpload(file);
   };
   useEffect(() => {

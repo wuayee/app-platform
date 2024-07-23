@@ -70,6 +70,7 @@ const ToolDrawer = (props) => {
   };
   const createClick = async ({ key, domEvent }) => {
     if (key === 'tool') {
+      sessionStorage.setItem('pluginType', 'add');
       navigate(`/plugin`);
     }
     if (key === 'workflow') {

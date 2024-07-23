@@ -157,9 +157,12 @@ const PublishModal = (props) => {
           <Form.Item
             label="版本名称"
             name="version"
-            rules={[{ required: true, message: '请输入版本名称' }, { pattern:/^([0-9]+)\.([0-9]+)\.([0-9]+)$/, message: '版本格式错误' }]}
+            rules={[
+              { required: true, message: '请输入版本名称' }, 
+              { pattern:/^([0-9]+)\.([0-9]+)\.([0-9]+)$/, message: '版本格式错误' }
+            ]}
           >
-            <Input />
+            <Input showCount maxLength={10} />
           </Form.Item>
           <Form.Item
             label="版本描述"

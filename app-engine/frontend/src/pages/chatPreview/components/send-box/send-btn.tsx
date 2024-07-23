@@ -174,9 +174,9 @@ const SendBtn = (props) => {
           </div> 
         </Tooltip>
         }
-        {  sendType === 'text' && isRecieve === true &&
+        {/* {  sendType === 'text' && isRecieve === true &&
           <SoundBtn ref={soundBtnRef} handleClick={ useCallback(handlePlayQuestion) }/>
-        }
+        } */}
       </div>
     </div>
   )}</>
