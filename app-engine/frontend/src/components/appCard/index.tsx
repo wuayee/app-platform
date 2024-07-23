@@ -55,7 +55,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
   }
 
   // 取消收藏
-  const cancleCollection = async () => {
+  const cancelCollection = async () => {
     setLoading(true);
     await cancelUserCollection({
       usrInfo: getLoaclUser(),
@@ -71,7 +71,7 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
       // 处于请求状态不允许点击
     } else {
       if (collectionStore[cardInfo.id]) {
-        cancleCollection()
+        cancelCollection();
       } else {
         collectionClick();
       }

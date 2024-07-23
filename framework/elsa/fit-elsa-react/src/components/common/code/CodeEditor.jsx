@@ -26,7 +26,7 @@ self.MonacoEnvironment = {
     },
 };
 
-loader.config({ monaco });
+loader.config({monaco});
 
 CodeEditor.propTypes = {
     language: PropTypes.string.isRequired,
@@ -52,30 +52,37 @@ CodeEditor.propTypes = {
  * @constructor
  */
 export default function CodeEditor({
-                               language,
-                               height,
-                               code,
-                               onChange,
-                               theme = "vs-dark",
-                               options = {readOnly: true},
-                               suggestions = []
-                           }) {
+                                       language,
+                                       height,
+                                       code,
+                                       onChange,
+                                       theme = "vs-dark",
+                                       options = {readOnly: true},
+                                       suggestions = []
+                                   }) {
     const monacoRef = useRef(null);
     const _height = isNaN(height) ? height : height + "px";
+    const providerRef = useRef(null);
 
     const onMount = (editor, monaco) => {
         monacoRef.current = monaco;
-        registerSuggestions(monaco);
+        !options.readOnly && registerSuggestions(monaco);
     };
 
     useEffect(() => {
-        if (monacoRef.current && suggestions.length > 0) {
-            registerSuggestions(monacoRef.current);
+        if (!monacoRef.current || suggestions.length <= 0) {
+            return;
         }
-    });
+        // 在每次 suggestions 变化时重新注册补全提示
+        !options.readOnly && registerSuggestions(monacoRef.current);
+    }, [suggestions]);
 
     const registerSuggestions = (monaco) => {
-        monaco.languages.registerCompletionItemProvider(language, {
+        // 如果存在，注销之后重新注册
+        if (providerRef.current) {
+            providerRef.current.dispose();
+        }
+        providerRef.current = monaco.languages.registerCompletionItemProvider(language, {
             provideCompletionItems: () => {
                 return {
                     suggestions: suggestions.map(s => {
@@ -88,7 +95,7 @@ export default function CodeEditor({
                     })
                 };
             }
-        })
+        });
     };
 
     /**

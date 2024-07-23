@@ -8,7 +8,7 @@ import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.plugin.RootPlugin;
 import com.huawei.fitframework.test.domain.listener.TestListener;
 
-import java.util.ArrayList;
+import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -21,18 +21,20 @@ public class TestContext {
     private final Class<?> testClass;
     private final RootPlugin plugin;
     private Object testInstance;
-
-    private final List<TestListener> listeners = new ArrayList<>();
+    private Method testMethod;
+    private final List<TestListener> listeners;
 
     /**
      * 通过目标测试类和插件来初始化 {@link TestContext}。
      *
      * @param testClass 表示待测试的目标测试类 {@link Class}{@code <?>}。
      * @param plugin 表示待测试的自定义的测试插件实例 {@link RootPlugin}。
+     * @param listeners 表示监听器集合的 {@link List}{@code <}{@link TestListener}{@code >}。
      */
-    public TestContext(Class<?> testClass, RootPlugin plugin) {
+    public TestContext(Class<?> testClass, RootPlugin plugin, List<TestListener> listeners) {
         this.testClass = Validation.notNull(testClass, "The test class to create test context cannot be null.");
         this.plugin = Validation.notNull(plugin, "The root plugin to create test context cannot be null.");
+        this.listeners = listeners;
     }
 
     /**
@@ -47,13 +49,12 @@ public class TestContext {
     }
 
     /**
-     * 将测试实例中的有 {@link Fit} 注解的字段注入对象。
+     * 获取观察者列表。
      *
-     * @param testInstance 表示依赖的测试实例 {@link Object}。
+     * @return 表示观察者列表的 {@link List}{@code <}{@link TestListener}{@code >}。
      */
-    public void prepareTestInstance(Object testInstance) {
-        this.testInstance(testInstance);
-        this.listeners.forEach(listener -> listener.prepareTestInstance(this));
+    public List<TestListener> listeners() {
+        return this.listeners;
     }
 
     /**
@@ -90,5 +91,23 @@ public class TestContext {
      */
     public void testInstance(Object testInstance) {
         this.testInstance = testInstance;
+    }
+
+    /**
+     * 获取单测类的测试方法。
+     *
+     * @return 表示单测类测试方法的 {@link Method}。
+     */
+    public Method testMethod() {
+        return this.testMethod;
+    }
+
+    /**
+     * 获取单测类的测试方法。
+     *
+     * @param testMethod 表示单测类测试方法的 {@link Method}。
+     */
+    public void testMethod(Method testMethod) {
+        this.testMethod = testMethod;
     }
 }

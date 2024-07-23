@@ -6,6 +6,7 @@ package com.huawei.fit.jober.aipp.service.impl;
 
 import static com.huawei.fit.jober.aipp.enums.ToolCategoryEnum.HUGGINGFACE;
 import static com.huawei.fit.jober.aipp.init.AippComponentInitiator.COMPONENT_DATA;
+import static com.huawei.jade.common.Result.calculateOffset;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.aipp.constants.AippConst;
@@ -37,6 +38,7 @@ import com.huawei.jade.store.service.HuggingFaceModelService;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -65,18 +67,18 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreNodeConfigResDto getBasicNodesAndTools(String tag, boolean canOrTags, int pageNum, int pageSize,
+    public StoreNodeConfigResDto getBasicNodesAndTools(String tag, String mode, int pageNum, int pageSize,
             String version) {
         return StoreNodeConfigResDto.builder()
-                .toolList(this.getToolModelList(tag, canOrTags, pageNum, pageSize, version))
+                .toolList(this.getToolModelList(tag, mode, pageNum, pageSize, version))
                 .basicList(this.buildBasicNodesConfig())
                 .build();
     }
 
     @Override
-    public ToolDto getPlugins(String tag, boolean canOrTags, int pageNum, int pageSize,
+    public ToolDto getPlugins(String tag, String mode, int pageNum, int pageSize,
             OperationContext operationContext) {
-        ListResult<ToolData> toolDataListResult = this.buildToolNodesConfig(tag, canOrTags, pageNum, pageSize, "");
+        ListResult<ToolData> toolDataListResult = this.buildToolNodesConfig(tag, mode, pageNum, pageSize, "");
         return ToolDto.builder().toolData(toolDataListResult.getData()).total(toolDataListResult.getCount()).build();
     }
 
@@ -85,9 +87,9 @@ public class StoreServiceImpl implements StoreService {
         return this.buildBasicNodesConfig();
     }
 
-    private List<ToolModelDto> getToolModelList(String tag, boolean canOrTags, int pageNum, int pageSize,
+    private List<ToolModelDto> getToolModelList(String tag, String mode, int pageNum, int pageSize,
             String version) {
-        return this.buildToolNodesConfig(tag, canOrTags, pageNum, pageSize, version)
+        return this.buildToolNodesConfig(tag, mode, pageNum, pageSize, version)
                 .getData()
                 .stream()
                 .map(toolData -> ToolModelDto.combine2ToolModelDto(toolData,
@@ -97,7 +99,7 @@ public class StoreServiceImpl implements StoreService {
                 .collect(Collectors.toList());
     }
 
-    private ListResult<ToolData> buildToolNodesConfig(String tag, boolean canOrTags, int pageNum, int pageSize,
+    private ListResult<ToolData> buildToolNodesConfig(String tag, String mode, int pageNum, int pageSize,
             String version) {
         List<String> includeTag = new ArrayList<>();
         if (StringUtils.isNotBlank(tag)) {
@@ -106,13 +108,15 @@ public class StoreServiceImpl implements StoreService {
             includeTag.add("WATERFLOW");
             includeTag.add("FIT");
         }
-        ToolQuery query = new ToolQuery(null,
-                includeTag,
-                Collections.singletonList(StringUtils.EMPTY),
-                !StringUtils.isNotBlank(tag) || canOrTags,
-                pageNum,
-                pageSize,
-                version);
+        ToolQuery query = new ToolQuery.Builder()
+                .toolName(null)
+                .includeTags(new HashSet<>(includeTag))
+                .excludeTags(new HashSet<>(Collections.singleton(StringUtils.EMPTY)))
+                .mode(StringUtils.isNotBlank(tag) ? mode : "OR")
+                .offset(calculateOffset(pageNum, pageSize))
+                .limit(pageSize)
+                .version(version)
+                .build();
         return this.toolService.searchTools(query);
     }
 
@@ -140,8 +144,15 @@ public class StoreServiceImpl implements StoreService {
     }
 
     private void setUniqueName(List<StoreBasicNodeInfoDto> basicNodeList) {
-        ToolQuery query = new ToolQuery(null, Collections.singletonList(CODENODESTATE),
-                null, false, null, null, null);
+        ToolQuery query = new ToolQuery.Builder()
+                .toolName(null)
+                .includeTags(new HashSet<>(Collections.singletonList(CODENODESTATE)))
+                .excludeTags(null)
+                .mode("AND")
+                .offset(null)
+                .limit(null)
+                .version(null)
+                .build();
         ListResult<ToolData> tools = toolService.getTools(query);
         final String uniqueName;
         if (tools.getCount() != 1) {
@@ -158,10 +169,10 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(boolean canOrTags, int pageNum, int pageSize,
+    public List<AppBuilderWaterFlowInfoDto> getWaterFlowInfos(String mode, int pageNum, int pageSize,
             String version) {
         List<ToolData> waterFlows =
-                this.buildToolNodesConfig(AppCategory.WATER_FLOW.getTag(), canOrTags, pageNum, pageSize, version)
+                this.buildToolNodesConfig(AppCategory.WATER_FLOW.getTag(), mode, pageNum, pageSize, version)
                         .getData();
         List<String> storeIds = waterFlows.stream().map(ToolData::getUniqueName).collect(Collectors.toList());
         if (storeIds.isEmpty()) {

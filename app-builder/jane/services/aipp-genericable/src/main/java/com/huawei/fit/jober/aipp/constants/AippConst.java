@@ -345,6 +345,11 @@ public class AippConst {
     public static final String ATTR_PUBLISH_DESCRIPTION = "publish_description";
 
     /**
+     * aipp publish update log
+     */
+    public static final String ATTR_PUBLISH_UPDATE_LOG = "publish_update_log";
+
+    /**
      * aipp unique name
      */
     public static final String ATTR_UNIQUE_NAME = "unique_name";

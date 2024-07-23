@@ -33,16 +33,16 @@ const LLM = (props) => {
                 rules={[ { required: true }]}
               >
                 <Select
-                    className={'no-right-radius full-border'}
-                    placeholder='选择一个合适的大模型'
-                    allowClear
-                    options={models}
-                    onDropdownVisibleChange={(open) => handleGetModels(open)}
-                    onChange={(value) => {updateData(value, 'model')}}
-                    fieldNames={{
-                        label: 'id',
-                        value: 'id'
-                    }}
+                  className={'no-right-radius full-border'}
+                  placeholder='选择一个合适的大模型'
+                  allowClear
+                  options={models}
+                  onDropdownVisibleChange={(open) => handleGetModels(open)}
+                  onChange={(value) => {updateData(value, 'model')}}
+                  fieldNames={{
+                    label: 'id',
+                    value: 'id'
+                  }}
                 >
                 </Select>
               </Form.Item>
@@ -57,8 +57,8 @@ const LLM = (props) => {
                 <InputNumber
                   className={'no-left-radius'}
                   style={{
-                      width: '100%',
-                      borderLeft: 'none'
+                    width: '100%',
+                    borderLeft: 'none'
                   }}
                   min={0}
                   max={1}

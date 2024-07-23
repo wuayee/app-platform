@@ -3,8 +3,10 @@
     gap: 10px;
   }
   .app-analyzed {
-    height: calc(100vh - 170px);
-    overflow-y: auto;
+    height: calc(100vh - 160px);
+    padding-right: 15px;
+    padding-bottom: 60px;
+    overflow: auto;
   }
   .card {
     width: 33%;

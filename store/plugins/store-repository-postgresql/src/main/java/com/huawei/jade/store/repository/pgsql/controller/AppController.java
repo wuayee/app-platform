@@ -7,6 +7,8 @@ package com.huawei.jade.store.repository.pgsql.controller;
 import static com.huawei.fitframework.inspection.Validation.notBlank;
 import static com.huawei.fitframework.inspection.Validation.notNegative;
 import static com.huawei.fitframework.inspection.Validation.notNull;
+import static com.huawei.jade.carver.validation.ValidateTagMode.validateTagMode;
+import static com.huawei.jade.common.Result.calculateOffset;
 
 import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.GetMapping;
@@ -23,6 +25,7 @@ import com.huawei.jade.store.entity.query.AppQuery;
 import com.huawei.jade.store.entity.transfer.AppData;
 import com.huawei.jade.store.service.AppService;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -80,9 +83,9 @@ public class AppController {
      * @param name 表示应用名的 {@link String}。
      * @param includeTags 表示包含标签的 {@link List}{@code <}{@link String}{@code >}。
      * @param excludeTags 表示排除标签的 {@link List}{@code <}{@link String}{@code >}。
-     * @param canOrTags 表示查询工具选择标签与和或的方式的 {@link Boolean}。
-     * @param pageNum 表示页码的 {@link Integer}。
-     * @param limit 表示限制的 {@link Integer}。
+     * @param mode 表示查询工具选择标签与和或的方式的 {@link String}。
+     * @param pageNum 表示页码的 {@code int}。
+     * @param pageSize 表示限制的 {@code int}。
      * @param version 表示工具的版本的 {@link String}。
      * @return 表示格式化之后的返回消息的 {@link Result}{@code <}{@link List}{@code <}{@link AppData}{@code >}{@code >}。
      */
@@ -91,17 +94,21 @@ public class AppController {
             @RequestQuery(value = "name", required = false) String name,
             @RequestQuery(value = "includeTags", required = false) List<String> includeTags,
             @RequestQuery(value = "excludeTags", required = false) List<String> excludeTags,
-            @RequestQuery(value = "orTags", defaultValue = "false", required = false) Boolean canOrTags,
-            @RequestQuery(value = "pageNum", required = false) Integer pageNum,
-            @RequestQuery(value = "pageSize", required = false) Integer limit,
+            @RequestQuery(value = "mode", defaultValue = "AND", required = false) String mode,
+            @RequestQuery(value = "pageNum", defaultValue = "1") int pageNum,
+            @RequestQuery(value = "pageSize", defaultValue = "10") int pageSize,
             @RequestQuery(value = "version", required = false) String version) {
-        if (pageNum != null) {
-            notNegative(pageNum, "The page num cannot be negative.");
-        }
-        if (limit != null) {
-            notNegative(limit, "The limit cannot be negative.");
-        }
-        AppQuery appQuery = new AppQuery(name, includeTags, excludeTags, canOrTags, pageNum, limit, version);
+        notNegative(pageNum, "The page number cannot be negative.");
+        notNegative(pageSize, "The page size cannot be negative.");
+        AppQuery appQuery = new AppQuery.Builder()
+                .toolName(name)
+                .includeTags(new HashSet<>(includeTags))
+                .excludeTags(new HashSet<>(excludeTags))
+                .mode(validateTagMode(mode))
+                .offset(calculateOffset(pageNum, pageSize))
+                .limit(pageSize)
+                .version(version)
+                .build();
         ListResult<AppData> res = this.appService.getApps(appQuery);
         return Result.ok(res.getData(), res.getCount());
     }

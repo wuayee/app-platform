@@ -6,6 +6,8 @@ import EditCode from '../asserts/icon-edit.svg?react';
 import {useFormContext, useShapeContext} from "@/components/DefaultRoot.jsx";
 import {CodeDrawer} from "@/components/common/code/CodeDrawer.jsx";
 import httpUtil from "@/components/util/httpUtil.jsx";
+import ArrayUtil from "@/components/util/ArrayUtil.js";
+import PropTypes from "prop-types";
 
 const {Panel} = Collapse;
 const {Text} = Typography;
@@ -13,25 +15,31 @@ const defaultEditorHeight = 272;
 const defaultDrawerWidth = 1232;
 const successCode = 0;
 
+_CodePanel.propTypes = {
+    input: PropTypes.array.isRequired,
+    disabled: PropTypes.bool,
+    dispatch: PropTypes.func
+};
+
 /**
  * code编辑器面板
  *
  * @param disabled 是否禁用
- * @param data 数据
+ * @param input 数据
  * @param dispatch 回调
  * @return {JSX.Element}
  * @constructor
  */
-export default function CodePanel({disabled, data, dispatch}) {
+function _CodePanel({disabled, input, dispatch}) {
     const [open, setOpen] = useState(false);
     const shape = useShapeContext();
     const url = shape.graph.configs.find(config => config.node === "codeNodeState") && shape.graph.configs.find(config => config.node === "codeNodeState").urls.testCodeUrl;
-    const suggestions = data.inputParams.find(item => item.name === "args").value.map(arg => {
+    const form = useFormContext();
+    const suggestions = input.find(item => item.name === "args").value.map(arg => {
         return {label: arg.name, insertText: arg.name}
     });
-    const form = useFormContext();
-    const selectedLanguage = data.inputParams.find(item => item.name === "language").value;
-    const code = data.inputParams.find(item => item.name === "code").value;
+    const selectedLanguage = input.find(item => item.name === "language").value;
+    const code = input.find(item => item.name === "code").value;
 
     /**
      * 更新code代码
@@ -60,22 +68,30 @@ export default function CodePanel({disabled, data, dispatch}) {
      * @param args 入参
      * @param language 编程语言
      * @param callback 回调方法
+     * @param errorCallback 错误发生时的回调
      */
-    const executeFunc = (currentCode, args, language, callback) => {
+    const executeFunc = (currentCode, args, language, callback, errorCallback) => {
         console.log("execute: ", args)
         const input = {};
-        input.args = JSON.parse(args);
+        try {
+            input.args = JSON.parse(args);
+        } catch (e) {
+            console.error('Error process params:', e.message);
+            errorCallback("输入格式错误：" + e.message);
+            return;
+        }
         input.code = currentCode;
         input.language = language;
         httpUtil.post(url, input, undefined, (response) => {
             if (response.code === successCode) {
                 callback(response.data);
             } else {
-                callback(response.msg);
+                console.error('Test code error:', response.msg);
+                errorCallback(response.msg);
             }
         }, (err) => {
-            console.error('Error test code:', err);
-            callback("系统运行异常，请联系系统管理员");
+            console.error('Error invoke test code api:', err);
+            errorCallback("系统运行异常，请联系系统管理员");
         });
     };
 
@@ -151,3 +167,9 @@ const Header = ({handleEditClick, disabled}) => {
         </div>
     </>);
 };
+
+const areEqual = (prevProps, nextProps) => {
+    return prevProps.disabled === nextProps.disabled && ArrayUtil.isEqual(prevProps.input, nextProps.input);
+};
+
+export const CodePanel = React.memo(_CodePanel, areEqual);

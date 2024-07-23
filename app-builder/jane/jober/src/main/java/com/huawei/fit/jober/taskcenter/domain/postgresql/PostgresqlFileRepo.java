@@ -14,7 +14,7 @@ import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.jober.FileService;
 import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.BadRequestException;
-import com.huawei.fit.jober.taskcenter.fitable.util.ParamUtils;
+import com.huawei.fit.jober.common.util.ParamUtils;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.sql.InsertSql;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;

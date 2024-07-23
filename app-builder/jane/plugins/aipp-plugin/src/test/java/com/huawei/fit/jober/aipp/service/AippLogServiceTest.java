@@ -276,6 +276,7 @@ public class AippLogServiceTest {
                 AippInstLogType.QUESTION,
                 AippInstLogType.HIDDEN_QUESTION,
                 AippInstLogType.HIDDEN_MSG,
+                AippInstLogType.HIDDEN_FORM,
                 AippInstLogType.FILE).map(generateAippInstLogFunc).collect(Collectors.toList()));
         String timeString = datetimeString.isEmpty() ? null : datetimeString;
         List<AippInstLog> result = aippLogService.queryInstanceLogSince(DUMMY_ID, timeString);

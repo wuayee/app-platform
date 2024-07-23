@@ -45,4 +45,9 @@ public enum AippInstLogType {
      * 文件消息
      */
     FILE,
+
+    /**
+     * 不显示的表单消息。
+     */
+    HIDDEN_FORM,
 }

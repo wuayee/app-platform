@@ -1,6 +1,6 @@
 // 设置表格宽度
 export const getChartWidth = (headers, tableData) => {
-  const messageDiv = document.querySelector('.recieve-box');
+  const messageDiv = document.querySelector('.receive-box');
     if (messageDiv) {
       const width = messageDiv?.clientWidth - 80;
       let tableWidth = 0;

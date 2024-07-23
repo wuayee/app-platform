@@ -60,21 +60,26 @@
   .header-grid {
     display: flex;
     align-items: center;
-    .history {
+    .header-grid-btn {
       display: flex;
       align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      background-color: #ffffff;
-      padding: 6px;
-      border-radius: 6px;
-      border: 1px solid #ebebeb;
-    }
-    .robot {
-      padding: 6px 12px;
-      font-size: 12px;
-      img {
-        margin-right: 4px;
+      .history {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background-color: #ffffff;
+        padding: 6px;
+        border-radius: 6px;
+        border: 1px solid #ebebeb;
+      }
+      .robot {
+        padding: 6px 12px;
+        font-size: 12px;
+        margin-left: 12px;
+        img {
+          margin-right: 4px;
+        }
       }
     }
   }

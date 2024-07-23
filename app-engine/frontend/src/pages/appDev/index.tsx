@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Divider, Input, Tabs } from 'antd';
-import { Icons } from '../../components/icons';
-import { deleteAppApi, getUserCollection, getUserCollectionNoDesc, queryAppDevApi } from '../../shared/http/appDev.js';
-import AppCard from '../../components/appCard';
-import './index.scoped.scss';
-import { debounce } from '../../shared/utils/common';
+import { Button, Input, Tabs } from 'antd';
+import { useNavigate } from 'react-router-dom';
+
+import { Icons } from '@/components/icons';
+import AppCard from '@/components/appCard';
 import EditModal from '../components/edit-modal';
 import Pagination from '@/components/pagination';
 import Empty from '@/components/empty/empty-item';
-import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../store/hook';
-import { setCollectionValue } from '../../store/collection/collection';
+
+import { deleteAppApi, getUserCollectionNoDesc, queryAppDevApi } from '@/shared/http/appDev.js';
+import { debounce } from '@/shared/utils/common';
+import { useAppDispatch } from '@/store/hook';
+import { setCollectionValue } from '@/store/collection/collection';
+import './index.scoped.scss';
 
 const AppDev: React.FC = () => {
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
@@ -23,7 +25,7 @@ const AppDev: React.FC = () => {
     const params = {
       offset: (pageNo.current - 1) * pageSize,
       limit: pageSize,
-      name:search || undefined,
+      name:search || undefined
     };
     const res: any = await queryAppDevApi(tenantId, params);
     if (res.code === 0) {
@@ -33,7 +35,7 @@ const AppDev: React.FC = () => {
         return {
           ...v,
           description,
-          icon,
+          icon
         };
       });
       setAppData(arr);
@@ -51,7 +53,7 @@ const AppDev: React.FC = () => {
   const pageNo = useRef(1);
   const [total, setTotal] = useState(1);
   const [current, setCurrent] = useState(1);
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState('');
   function currentPageChange(page: number, pageSize: number) {
      setPageSize(pageSize);
      setCurrent(() => {
@@ -118,11 +120,7 @@ const AppDev: React.FC = () => {
     }
   }
 
-
-
-  const count = useAppSelector((state: any) => state.collectionStore.value);
   const dispatch = useAppDispatch();
-
   // 获取当前登录用户名
   const getLoaclUser = () => {
     return localStorage.getItem('currentUserIdComplete') ?? '';
@@ -135,7 +133,7 @@ const AppDev: React.FC = () => {
         prev[next.appId] = true;
       return prev
     }, {})
-    dispatch(setCollectionValue(collectMap))
+    dispatch(setCollectionValue(collectMap));
   }
 
   useEffect(()=> {
@@ -146,7 +144,7 @@ const AppDev: React.FC = () => {
   }, [current, search]);
 
   return (
-    <div className=' apps_root'>
+    <div className='apps_root'>
       <div className='apps_header'>
         <div className='apps_title'>应用开发</div>
       </div>

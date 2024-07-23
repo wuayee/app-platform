@@ -23,7 +23,7 @@
         select
         <include refid="Base_Column_List"/>
         from announcement_info
-        where start_time &lt; now() and end_time &gt; now()
+        where start_time &lt; #{currentTime} and end_time &gt; #{currentTime}
         order by create_time asc
     </select>
 </mapper>

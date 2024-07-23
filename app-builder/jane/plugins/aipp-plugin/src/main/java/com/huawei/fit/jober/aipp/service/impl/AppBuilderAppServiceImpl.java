@@ -680,12 +680,14 @@ public class AppBuilderAppServiceImpl
         Meta meta = metas.getResults().get(0);
         String appId = String.valueOf(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
         String publishedDescription = String.valueOf(meta.getAttributes().get(AippConst.ATTR_PUBLISH_DESCRIPTION));
+        String publishedUpdateLog = String.valueOf(meta.getAttributes().get(AippConst.ATTR_PUBLISH_UPDATE_LOG));
         return PublishedAppResDto.builder()
                 .appId(appId)
                 .appVersion(meta.getVersion())
                 .publishedAt(meta.getCreationTime())
                 .publishedBy(meta.getCreator())
                 .publishedDescription(publishedDescription)
+                .publishedUpdateLog(publishedUpdateLog)
                 .build();
     }
 
@@ -731,6 +733,7 @@ public class AppBuilderAppServiceImpl
     private PublishedAppResDto buildPublishedAppResDto(Meta meta, Map<String, AppBuilderApp> appIdKeyAppValueMap) {
         String appId = String.valueOf(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
         String publishedDescription = String.valueOf(meta.getAttributes().get(AippConst.ATTR_PUBLISH_DESCRIPTION));
+        String publishedUpdateLog = String.valueOf(meta.getAttributes().get(AippConst.ATTR_PUBLISH_UPDATE_LOG));
         AppBuilderApp app = appIdKeyAppValueMap.get(appId);
         return PublishedAppResDto.builder()
                 .appId(appId)
@@ -738,6 +741,7 @@ public class AppBuilderAppServiceImpl
                 .publishedAt(meta.getCreationTime())
                 .publishedBy(meta.getCreator())
                 .publishedDescription(publishedDescription)
+                .publishedUpdateLog(publishedUpdateLog)
                 .build();
     }
 

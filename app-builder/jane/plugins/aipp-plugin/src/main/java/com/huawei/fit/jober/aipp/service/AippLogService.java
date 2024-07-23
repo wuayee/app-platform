@@ -161,4 +161,22 @@ public interface AippLogService {
      */
     List<AippInstLogDataDto> queryAippRecentInstLogAfterSplice(String aippId, String aippType, Integer count,
             OperationContext context);
+
+    /**
+     * 批量查询全量日志（包含父子流程），并过滤掉指定类型的日志。
+     *
+     * @param instanceIds 表示指定实例 id 列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @param filterLogTypes 表示指定日志类型列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @return 表示查询到的日志列表的 {@link List}{@code <}{@link AippInstLog}{@code >}。
+     */
+    List<AippInstLog> queryBatchAndFilterFullLogsByLogType(List<String> instanceIds, List<String> filterLogTypes);
+
+    /**
+     * 查询指定实例的日志，并过滤掉指定类型的日志。
+     *
+     * @param instanceId 表示指定实例 id 的 {@link String}。
+     * @param filterLogTypes 表示指定日志类型列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @return 表示查询到的日志列表的 {@link List}{@code <}{@link AippInstLog}{@code >}。
+     */
+    List<AippInstLog> queryAndFilterLogsByLogType(String instanceId, List<String> filterLogTypes);
 }

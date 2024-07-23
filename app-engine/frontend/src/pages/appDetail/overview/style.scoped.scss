@@ -1,9 +1,12 @@
 .tab-content{
-    padding: 8px 16px;
+  height: calc(100vh - 160px);
+  padding-right: 15px;
+  padding-bottom: 60px;
+  overflow: auto;
 }
 
 .font-size-24 {
-    font-size: 24px;
+  font-size: 24px;
 }
 .details-content {
   flex-grow: 1;
@@ -32,13 +35,7 @@
   }
 }
 .app-desc {
-  display: -webkit-box;
-  overflow: hidden;
-  white-space: normal !important;
-  text-overflow: ellipsis;
-  word-wrap:break-word;
-  -webkit-line-clamp:3;
-  -webkit-box-orient: vertical
+  word-break: break-all;
 }
 .remarks {
   display: flex;
@@ -47,12 +44,6 @@
   }
   .right {
     flex: 1;
-    display: -webkit-box;
-    overflow: hidden;
-    white-space: normal !important;
-    text-overflow: ellipsis;
-    word-wrap:break-word;
-    -webkit-line-clamp:3;
-    -webkit-box-orient: vertical;
+    word-break: break-all;
   }
 }

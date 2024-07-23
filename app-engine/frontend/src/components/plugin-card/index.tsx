@@ -1,11 +1,10 @@
 import React from 'react';
 import { Dropdown, Flex, MenuProps, Tag } from 'antd';
-import { Icons } from '../icons';
-import { PluginIcons } from '../icons/plugin';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import './style.scoped.scss';
-import { IconMap, PluginCardTypeE } from '../../pages/plugin/helper';
+import { Icons } from '../icons';
+import { IconMap, PluginCardTypeE } from '@/pages/plugin/helper';
 
 const PluginCard = ({ pluginData,cardType }: any) => {
   const navigate = useNavigate()
@@ -25,7 +24,7 @@ const PluginCard = ({ pluginData,cardType }: any) => {
   ];
   return(
   <div className='plugin-card'
-   onClick={()=>{navigate(`/plugin/detail/${pluginData?.uniqueName}`)}}>
+      onClick={()=>{navigate(`/plugin/detail/${pluginData?.uniqueName}`)}}>
     <div className='plugin-card-header'>
       <img src='/src/assets/images/knowledge/knowledge-base.png' />
       <div>

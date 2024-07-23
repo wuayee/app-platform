@@ -5,7 +5,7 @@
 package com.huawei.fit.waterflow.flowsengine.biz.service;
 
 import com.huawei.fit.jane.task.gateway.InvalidDistributedLockNotify;
-import com.huawei.fit.jober.entity.OperationContext;
+import com.huawei.fit.jane.task.util.OperationContext;
 import com.huawei.fit.waterflow.DatabaseBaseTest;
 import com.huawei.fit.waterflow.FlowsDataBaseTest;
 import com.huawei.fit.waterflow.common.utils.UUIDUtil;
@@ -34,7 +34,6 @@ import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowContextMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowDefinitionMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowRetryMapper;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FlowTraceMapper;
-import com.huawei.fit.waterflow.flowsengine.utils.ParamUtils;
 
 import com.alibaba.fastjson.JSON;
 
@@ -191,9 +190,15 @@ class FlowContextServiceTest extends DatabaseBaseTest {
             executeSqlInFile(sql);
             String traceId = "11174dc2b03e4e15a7611ad3e66e736e";
             String transId = "1114ead3de8b4dd484c80f77c562b698";
-            OperationContext operationContext = new OperationContext("", "yxy", "", "", "");
+            OperationContext operationContext = OperationContext.custom()
+                    .tenantId("")
+                    .operator("yxy")
+                    .operatorIp("")
+                    .sourcePlatform("")
+                    .langage("")
+                    .build();
 
-            flowContextsService.terminateFlowsByTransId(transId, ParamUtils.convertOperationContext(operationContext));
+            flowContextsService.terminateFlowsByTransId(transId, operationContext);
 
             FlowTrace flowTrace = traceRepo.find(traceId);
             List<FlowContext<FlowData>> contexts = contextPersistRepo.findByTraceId(traceId);

@@ -45,22 +45,22 @@ SET parent_id = tree_id
 WHERE parent_id = '00000000000000000000000000000000';
 
 CREATE TABLE IF NOT EXISTS task_source_refresh_in_time (
-    id CHAR(32) PRIMARY KEY,
-    create_fitable_id CHAR(32) NOT NULL,
-    patch_fitable_id CHAR(32) NOT NULL,
-    delete_fitable_id CHAR(32) NOT NULL,
-    retrieve_fitable_id CHAR(32) NOT NULL,
-    list_fitable_id CHAR(32) NOT NULL
-);
+    id CHAR(32) PRIMARY KEY COMMENT '主键id',
+    create_fitable_id CHAR(32) NOT NULL COMMENT 'create_fitable_id',
+    patch_fitable_id CHAR(32) NOT NULL COMMENT 'patch_fitable_id',
+    delete_fitable_id CHAR(32) NOT NULL COMMENT 'delete_fitable_id',
+    retrieve_fitable_id CHAR(32) NOT NULL COMMENT 'retrieve_fitable_id',
+    list_fitable_id CHAR(32) NOT NULL COMMENT 'list_fitable_id'
+) COMMENT '任务源刷新表';
 
 CREATE TABLE `authorization` (
-    `id` CHAR(32) PRIMARY KEY,
-    `system` VARCHAR(64) NOT NULL,
-    `user` VARCHAR(127) NOT NULL,
-    `token` TEXT NOT NULL,
-    `expiration` INTEGER NOT NULL,
-    `created_by` VARCHAR(127) NOT NULL,
-    `created_at` TIMESTAMP NOT NULL,
-    `updated_by` VARCHAR(127) NOT NULL,
-    `updated_at` TIMESTAMP NOT NULL
-);
+    `id` CHAR(32) PRIMARY KEY COMMENT '主键id',
+    `system` VARCHAR(64) NOT NULL COMMENT '系统',
+    `user` VARCHAR(127) NOT NULL COMMENT '用户',
+    `token` TEXT NOT NULL COMMENT 'token',
+    `expiration` INTEGER NOT NULL COMMENT '过期时间',
+    `created_by` VARCHAR(127) NOT NULL COMMENT '创建人',
+    `created_at` TIMESTAMP NOT NULL COMMENT '创建时间',
+    `updated_by` VARCHAR(127) NOT NULL COMMENT '更新人',
+    `updated_at` TIMESTAMP NOT NULL COMMENT '更新时间'
+) COMMENT '权限表';

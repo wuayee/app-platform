@@ -6,7 +6,7 @@ import KnowledgeBaseCreate from '../pages/knowledge-base/create';
 import KnowledgeBaseDetail from '../pages/knowledge-base/knowledge-detail';
 import Plugin from '../pages/plugin';
 import Demo from '../pages/demo';
-import ChatHome from '../pages/chatEngineHome/index.jsx';
+import ChatHome from '../pages/chatEngineHome/index';
 import ChatRunning from '../pages/chatRunning/index';
 import AppDetail from '../pages/appDetail';
 import AippIndex from '../pages/aippIndex';
@@ -100,7 +100,7 @@ export const routeList: MenuItem[] = [
         label: '',
         component: AppDetail,
         hidden: true,
-      }
+      },
     ],
   },
   {
@@ -114,6 +114,7 @@ export const routeList: MenuItem[] = [
     key: '/model',
     icon: Icons.app({}),
     label: '模型服务',
+    hidden: true,
     component: Model,
     children: [
       {
@@ -153,9 +154,9 @@ export const routeList: MenuItem[] = [
         icon: Icons.app({}),
         label: '创建训练任务',
         component: ModelTrainingCreate,
-        hidden: true
-      }
-    ]
+        hidden: true,
+      },
+    ],
   },
   {
     key: '/knowledge-base',

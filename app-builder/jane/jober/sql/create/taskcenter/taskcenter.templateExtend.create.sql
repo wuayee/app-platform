@@ -1,9 +1,9 @@
 --模板继承表
 CREATE TABLE IF NOT EXISTS extend_table
 (
-    id    VARCHAR(32) PRIMARY KEY,
-    parent_id  VARCHAR(32) NOT NULL
-);
+    id    VARCHAR(32) PRIMARY KEY COMMENT '主键id',
+    parent_id  VARCHAR(32) NOT NULL COMMENT '父任务id'
+) COMMENT '模板继承表';
 
 --根据子任务查询所有父任务的id
 CREATE OR REPLACE FUNCTION find_template_parents(input_id varchar)

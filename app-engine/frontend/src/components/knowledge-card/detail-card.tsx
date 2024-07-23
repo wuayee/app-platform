@@ -1,13 +1,10 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { Card, Tooltip, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
-import { url } from 'inspector';
 import { Icons, KnowledgeIcons } from '../icons/index';
-import { useNavigate } from 'react-router-dom';
 
 const DetailCard = ({knowledge, clickMore, currentIndex}: {knowledge: string, currentIndex: number, clickMore: (type: 'delete') => void }) => {
   // 路由
-  const navigate = useNavigate();
   const operatorItems: MenuProps['items'] = [
   {
     key: 'modify',

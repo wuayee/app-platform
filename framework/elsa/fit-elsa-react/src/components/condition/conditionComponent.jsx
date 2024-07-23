@@ -62,8 +62,8 @@ export const conditionComponent = (jadeConfig) => {
     /**
      * 必须.
      */
-    self.getReactComponents = () => {
-        return (<><ConditionComponent/></>);
+    self.getReactComponents = (disabled, data) => {
+        return (<><ConditionFormWrapper data={data} disabled={disabled}/></>);
     };
 
     /**
@@ -88,8 +88,8 @@ export const conditionComponent = (jadeConfig) => {
                 id: uuidv4(),
                 condition: undefined,
                 value: [
-                    { id: uuidv4(), name: "left", type: "", from: "Reference", value: [], referenceNode: "" },
-                    { id: uuidv4(), name: "right", type: "", from: "Reference", value: [], referenceNode: "" }
+                    {id: uuidv4(), name: "left", type: "", from: "Reference", value: [], referenceNode: ""},
+                    {id: uuidv4(), name: "right", type: "", from: "Reference", value: [], referenceNode: ""}
                 ]
             };
             return new Data(data).updateBranch(action, branchUpdater => branchUpdater.addCondition(newCondition));
@@ -133,7 +133,7 @@ export const conditionComponent = (jadeConfig) => {
 
 class Condition {
     constructor(condition) {
-        this.condition = { ...condition };
+        this.condition = {...condition};
     }
 
     updateValue(item) {
@@ -162,7 +162,7 @@ class Condition {
 
 class Branch {
     constructor(branch) {
-        this.branch = { ...branch };
+        this.branch = {...branch};
     }
 
     static createNewBranch() {
@@ -225,7 +225,7 @@ class Branch {
 
 class Data {
     constructor(data) {
-        this.data = { ...data };
+        this.data = {...data};
     }
 
     updateBranch(action, updateBranchFn) {
@@ -255,9 +255,3 @@ class Data {
         return this.data;
     }
 }
-
-const ConditionComponent = () => {
-    return (<>
-        <ConditionFormWrapper/>
-    </>)
-};

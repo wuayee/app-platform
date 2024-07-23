@@ -15,6 +15,7 @@ import com.huawei.jade.app.engine.announcement.vo.AnnouncementInfoDisplayVo;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,7 +36,8 @@ public class AnnouncementInfoServiceImpl implements AnnouncementInfoService {
 
     @Override
     public AnnouncementInfoDisplayDataVo queryAnnouncements() {
-        List<AnnouncementInfoPo> announcementInfoPoList = announcementInfoMapper.getAnnouncementInfo();
+        Date currentTime = new Date();
+        List<AnnouncementInfoPo> announcementInfoPoList = announcementInfoMapper.getAnnouncementInfo(currentTime);
         if (announcementInfoPoList.isEmpty()) {
             return null;
         }

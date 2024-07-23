@@ -365,7 +365,9 @@ public class AippChatServiceImpl implements AippChatService {
 
     private CreateChatRequest buildChatBody(String instanceId, Map<String, Object> additionalContext) {
         // 构造updateChat需要的body
-        List<AippInstLog> aippInstLogs = this.aippLogMapper.getLogsByInstanceId(instanceId);
+        List<String> filterLogTypes =
+                new ArrayList<>(Arrays.asList(AippInstLogType.HIDDEN_MSG.name(), AippInstLogType.HIDDEN_FORM.name()));
+        List<AippInstLog> aippInstLogs = this.aippLogService.queryAndFilterLogsByLogType(instanceId, filterLogTypes);
         List<AippInstLog> questionAippInstLogs = aippInstLogs.stream()
                 .filter(item -> StringUtils.equals(item.getLogType(), AippInstLogType.QUESTION.name())
                         || StringUtils.equals(item.getLogType(), AippInstLogType.HIDDEN_QUESTION.name()))

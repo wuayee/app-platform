@@ -227,14 +227,19 @@ public class StatisticsFilter implements GlobalFilter, Ordered {
             }
 
             this.responseBodyBuilder.append(responseChunk.replaceAll("\n", ""));
-            String responseBody = responseBodyBuilder.toString();
-            if (!responseBody.endsWith("[DONE]")) {
+            String[] data = responseBodyBuilder.toString().split("data: ");
+            String lastChunk = data[data.length - 1];
+
+            // 大部分模型流式请求都是以[DONE]字段结束，某些模型结尾不包含[DONE]字段，需使用"finish_reason"的值判断。
+            if (!lastChunk.endsWith("[DONE]") && !lastChunk.contains("\"finish_reason\":\"stop\"")) {
                 return;
             }
 
-            String[] data = responseBody.split("data: ");
-            String lastChunk = data[data.length - 2]; // [DONE]标识符前的一个chunk携带usage字段
             try {
+                // 如果最后一个响应是[DONE]，则需要从倒数第二个chunk中读取usage字段。
+                if (lastChunk.endsWith("[DONE]")) {
+                    lastChunk = data[data.length - 2];
+                }
                 modelRouteService.updateModelWithResponseBody(
                         OBJECT_MAPPER.readValue(lastChunk, ModelStatistics.class));
             } catch (JsonProcessingException e) {

@@ -16,6 +16,7 @@
         <!-- Third-party versions -->
         <junit5.version>5.10.0</junit5.version>
         <junit4.version>4.13.2</junit4.version>
+        <h2.version>2.1.214</h2.version>
     </properties>
 
     <dependencies>
@@ -49,6 +50,13 @@
             <groupId>com.huawei.fit.service</groupId>
             <artifactId>fit-http-protocol</artifactId>
             <version>${fit.version}</version>
+        </dependency>
+
+        <!-- DB -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
         </dependency>
 
         <!-- Plugin -->

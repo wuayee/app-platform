@@ -1,43 +1,29 @@
-import React, { useState, useEffect } from "react";
-import type { MenuProps } from "antd";
-import { Layout, Menu } from "antd";
-import { MenuFoldOutlined } from "@ant-design/icons";
+import React, { useState, useEffect } from 'react';
+import type { MenuProps } from 'antd';
+import { Layout, Menu } from 'antd';
+import { MenuFoldOutlined } from '@ant-design/icons';
 import {
   Route,
   useNavigate,
   Routes,
   useLocation,
   Navigate,
-} from "react-router-dom";
+} from 'react-router-dom';
 import {
   routeList,
   flattenRoute,
   getRouteByKey,
   getMenus,
-} from "../../router/route";
-import { Icons, KnowledgeIcons } from "../icons/index";
-import { HeaderUser } from "../header-user";
-import "./style.scoped.scss";
-import { Provider } from "react-redux";
-import { store } from "../../store";
+} from '../../router/route';
+import { Provider } from 'react-redux';
+import { Icons, KnowledgeIcons } from '../icons/index';
+import { HeaderUser } from '../header-user';
+import { store } from '@/store';
+import './style.scoped.scss';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 
-type MenuItem = Required<MenuProps>["items"][number];
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[]
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
-}
-
+type MenuItem = Required<MenuProps>['items'][number];
 const items: MenuItem[] = getMenus(routeList);
 const flattenRouteList = flattenRoute(routeList);
 
@@ -60,18 +46,12 @@ const AppLayout: React.FC = () => {
 
     // 拆开路由
     const pathGroup = pathname.split('/').filter(item=> item!=='');
-
     if(pathGroup?.length) {
-
       let len = pathGroup?.length - 1;
-
       while(len >= 0) {
-
         const key = '/' + pathGroup.slice(0, len + 1).join('/');
         let route = getRouteByKey(flattenRouteList, key);
-
         if(route && !route?.hidden) {
-      
           setDefaultActive([key]);
           break;
         }
@@ -83,6 +63,19 @@ const AppLayout: React.FC = () => {
     }
   }
 
+  const menuClick = (e: any) => {
+    navigate(e.key);
+  };
+
+  const colorBgContainer = '#F0F2F4';
+  const setClassName = () => {
+    if ( location.pathname.includes('home')) {
+      return 'home-chat'
+    } else if (location.pathname.includes('app')) {
+      return 'home-app'
+    }
+    return ''
+  }
   useEffect(() => {
     const { pathname } = location;
     const route = getRouteByKey(flattenRouteList, pathname);
@@ -96,65 +89,49 @@ const AppLayout: React.FC = () => {
     getCurrentRoute(pathname);
 
   }, [location]);
-
-  const menuClick = (e: any) => {
-    const route = getRouteByKey(flattenRouteList, e.key);
-    navigate(e.key);
-  };
-
-  const colorBgContainer = '#F0F2F4';
-  const setClassName = () => {
-    if ( location.pathname.includes('home')) {
-      return 'home-chat'
-    } else if (location.pathname.includes('app')) {
-      return 'home-app'
-    }
-    return ''
-  }
-
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: '100vh' }}>
       <Sider
         collapsible
         collapsed={false}
         onCollapse={() => setShowMenu(false)}
         trigger={null}
         width={showMenu ? 220 : 0}
-        className="layout-sider"
+        className='layout-sider'
       >
-        <div className="layout-sider-header">
-          <div className="layout-sider-content">
+        <div className='layout-sider-header'>
+          <div className='layout-sider-content'>
             <Icons.logo />
-            <span className="layout-sider-title">Model Engine</span>
+            <span className='layout-sider-title'>Model Engine</span>
           </div>
           <MenuFoldOutlined
-            style={{ color: "#6d6e72" }}
+            style={{ color: '#6d6e72' }}
             onClick={() => setShowMenu(false)}
           />
         </div>
         <Menu
-          className="menu"
-          theme="dark"
+          className='menu'
+          theme='dark'
           selectedKeys={defaultActive}
-          mode="inline"
+          mode='inline'
           items={items}
           onClick={menuClick}
         />
       </Sider>
-      <div className="layout-sider-folder">
+      <div className='layout-sider-folder'>
         <KnowledgeIcons.menuFolder onClick={() => setShowMenu(true)} />
       </div>
 
       <Layout className={setClassName()}>
         <Header
-          style={{ padding: 0, background: colorBgContainer, height: "48px" }}
+          style={{ padding: 0, background: colorBgContainer, height: '48px' }}
         >
           <HeaderUser />
         </Header>
         <Provider store={store}>
-        <Content style={{ padding: "0 16px", background: colorBgContainer }}>
+        <Content style={{ padding: '0 16px', background: colorBgContainer }}>
           <Routes>
-            <Route path="/" element={<Navigate to="/home" replace />} />
+            <Route path='/' element={<Navigate to='/home' replace />} />
             {flattenRouteList.map((route) => (
               <Route
                 path={route.key}
@@ -165,7 +142,6 @@ const AppLayout: React.FC = () => {
           </Routes>
         </Content>
         </Provider>
-
       </Layout>
     </Layout>
   );

@@ -96,6 +96,9 @@
         <if test="cond.state != null">
             and state = #{cond.state}
         </if>
+        <if test="cond.name != null">
+            and name like '%'||#{cond.name}||'%'
+        </if>
         ) as latest_records;
     </select>
 

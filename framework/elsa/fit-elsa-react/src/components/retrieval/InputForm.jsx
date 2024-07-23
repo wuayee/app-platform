@@ -57,7 +57,8 @@ function _InputForm({queryData, disabled}) {
     const _onReferencedKeyChange = (item, e) => {
         handleItemChange(item.id, [{key: 'referenceNode', value: e.referenceNode},
             {key: 'referenceId', value: e.referenceId},
-            {key: 'value', value: e.value}]);
+            {key: 'value', value: e.value},
+            {key: 'type', value: e.type}]);
     };
 
     /**

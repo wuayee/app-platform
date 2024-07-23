@@ -1,25 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Form }from 'antd';
 import { Button, Table, Input } from 'antd';
-import type { TableProps } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useSearchParams } from "react-router-dom";
- 
-import Pagination from '../../components/pagination/index';
- 
-import './index.scoped.scss';
 import { Icons, KnowledgeIcons } from '../icons';
 import DetailCard from '../knowledge-card/detail-card';
-import { getTableColumns, getTableList, getTextList } from '../../shared/http/knowledge';
- 
+import Pagination from '@/components/pagination/index';
+import { getTableColumns, getTableList, getTextList } from '@/shared/http/knowledge';
+import './index.scoped.scss';
+
 interface props {
- 
   // 知识表类型
   type: 'text' | 'table',
- 
   // 知识库id
   reposId: string,
- 
   // 知识表id
   id: string,
 }
@@ -28,7 +20,7 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
   const navigate = useNavigate();
  
   // 展示的数据
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<any[]>([]);
  
     // 总条数
   const [total, setTotal] = useState(0);
@@ -58,7 +50,6 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
   // 获取文本列表
   const getText = async () => {
     try {
-
       const res = await getTextList({
         knowledgeId: reposId,
         tableId: id,
@@ -76,39 +67,37 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
   // 获取表格列
   const getTableCol = async () => {
     try {
-    if(type !== 'table') {
-      return;
-    }
-    let res: any[] = await getTableColumns(reposId, id);
-
-    const newCol: any[] = res.filter(item=> !item.hidden).map(item=> ({
-      title: item.name,
-      dataIndex: item.name,
-      key: item.name,
-    }));
-
-    if(newCol.length) {
-      newCol.push({
-        title: '操作',
-        width: 200,
-        render(_, record: any, index: any) {
-              const deleteFunc =async () => {
-              };
-       
-              const modifyFunc = async ()=> {
-              }
-              return (
-              <>
-                <div>
-                  <Button type="link" size="small" onClick={modifyFunc} disabled={true}>修改</Button>
-                  <Button type="link" size="small" onClick={deleteFunc} disabled={true}>删除</Button>
-                </div>
-              </>)
-        }
-      });
-    }
-
-    setColumns([...newCol]);
+      if(type !== 'table') {
+        return;
+      }
+      let res: any[] = await getTableColumns(reposId, id);
+      const newCol: any[] = res.filter(item=> !item.hidden).map(item=> ({
+        title: item.name,
+        dataIndex: item.name,
+        key: item.name,
+      }));
+      if(newCol.length) {
+        newCol.push({
+          title: '操作',
+          width: 200,
+          render(_, record: any, index: any) {
+                const deleteFunc =async () => {
+                };
+        
+                const modifyFunc = async ()=> {
+                }
+                return (
+                  <>
+                    <div>
+                      <Button type="link" size="small" onClick={modifyFunc} disabled={true}>修改</Button>
+                      <Button type="link" size="small" onClick={deleteFunc} disabled={true}>删除</Button>
+                    </div>
+                  </>
+                )
+          }
+        });
+      }
+      setColumns([...newCol]);
     } catch (error) {
       
     }
@@ -126,10 +115,7 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
         pageNum: page,
         pageSize: pageSize,
       });
-      // setData(res?.result || [])
-      
       setTotal(count || 0);
-      
       setData([...result]);
     } catch (error) {
       
@@ -139,11 +125,10 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
   // 获取列表
   const refresh = async () => {
     if(type ==='text') {
-      getText()
+      getText();
     }
-
     if(type === 'table' ) {
-      getTable()
+      getTable();
     }
   }
  
@@ -163,7 +148,6 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
 
   useEffect(()=> {
     if(id) {
-      // getKnowledgeBase(id);
       refresh();
     }
   }, [page, pageSize, search]);
@@ -226,7 +210,14 @@ const KnowLedgeTable = React.forwardRef(({ type, reposId, id }: props, ref) => {
       <div style={{
         height: 20
       }}></div>
-      <Pagination showTotalFunc = {false} total = {total} current={page} onChange={paginationChange} pageSizeOptions={pageSizeOptions} pageSize={pageSize}/>
+      <Pagination 
+        showTotalFunc = {false} 
+        total = {total} 
+        current={page} 
+        onChange={paginationChange} 
+        pageSizeOptions={pageSizeOptions} 
+        pageSize={pageSize}
+      />
     </>
   )
 })

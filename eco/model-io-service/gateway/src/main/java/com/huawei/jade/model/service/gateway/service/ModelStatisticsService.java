@@ -123,6 +123,11 @@ public class ModelStatisticsService {
         modelInfo.setLatency(totalLatency / modelInfo.getRequests());
 
         totalTokens += modelInfo.getTotalOutputTokens();
-        modelInfo.setSpeed((double) totalTokens / totalLatency);
+        if (totalTokens != 0) {
+            modelInfo.setSpeed((double) totalTokens / totalLatency);
+        } else {
+            // 防止由于浮点数精度问题导致结果非0
+            modelInfo.setSpeed(0D);
+        }
     }
 }

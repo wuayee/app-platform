@@ -1,18 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Modal, Input } from 'antd';
-import { Form }from 'antd';
-// import { updateKnowledgeTable } from '../../../../shared/http/knowledge';
+import React, { useState } from 'react';
+import { Form, Modal } from 'antd';
 import LocalUpload from '../select-form/local-upload';
 import { createTableColumns } from '../../shared/http/knowledge';
 
 interface props {
   open: boolean;
-
   setOpen: any;
-
   // 知识库id
   repositoryId: string | null;
-
   // 知识表id
   knowledgeTableId: string | null;
 }
@@ -51,7 +46,7 @@ const ImportTable = ({ open, setOpen, repositoryId, knowledgeTableId }: props) =
   }
   return (<>
     <Modal
-        title="导入数据"
+        title='导入数据'
         centered
         open={open}
         onOk={handleOk}
@@ -68,7 +63,7 @@ const ImportTable = ({ open, setOpen, repositoryId, knowledgeTableId }: props) =
             initialValues={initialValues}
             style={{ maxWidth: formLayout === 'inline' ? 'none' : 800 }}
           >
-            <Form.Item label="请选择一个文件"  name = 'selectedFile' validateStatus={'error'}
+            <Form.Item label='请选择一个文件'  name = 'selectedFile' validateStatus={'error'}
               rules={[
                 {
                   required: true,

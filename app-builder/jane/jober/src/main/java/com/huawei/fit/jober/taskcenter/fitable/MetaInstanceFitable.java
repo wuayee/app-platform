@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.taskcenter.fitable;
 
-import static com.huawei.fit.jober.taskcenter.fitable.util.ParamUtils.convertToInternalOperationContext;
+import static com.huawei.fit.jober.common.util.ParamUtils.convertToInternalOperationContext;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jane.meta.multiversion.MetaInstanceService;

@@ -1,24 +1,21 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Button, Drawer, Input, Dropdown } from 'antd';
-import type { MenuProps } from 'antd';
+import { AnyAction } from 'redux';
+import { useNavigate } from 'react-router-dom';
 import {
   SearchOutlined,
   EllipsisOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
-import './style.scoped.scss';
 import { httpUrlMap } from '@/shared/http/httpConfig';
-import { cancelUserCollection, collectionApp, getUserCollection, updateCollectionApp } from '@/shared/http/appDev';
-import { setCollectionValue, setCurAppId } from '@/store/collection/collection';
+import { cancelUserCollection, getUserCollection, updateCollectionApp } from '@/shared/http/appDev';
+import { setCurAppId } from '@/store/collection/collection';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
-import { AnyAction } from 'redux';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { setAtChatId, setOpenStar } from '@/store/chatStore/chatStore';
 import { setAtAppId, setAtAppInfo } from "@/store/appInfo/appInfo";
 import { Message } from '@shared/utils/message';
 import avatarNormal from '@/assets/images/knowledge/knowledge-base.png';
-
-const { ICON_URL } = process.env.NODE_ENV === 'development' ? { ICON_URL: `${window.location.origin}/api`} : httpUrlMap[process.env.NODE_ENV];
+import './style.scoped.scss';
 
 interface StarAppsProps {
   handleAt: (val: any) => void;

@@ -29,7 +29,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jober.FlowsDataBaseTest;
-import com.huawei.fit.jober.bff.util.FlowDefinitionParseUtils;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.common.exceptions.JobberParamException;
 import com.huawei.fit.waterflow.common.utils.UUIDUtil;
@@ -54,6 +53,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.From;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Blocks;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.streams.nodes.Node;
 import com.huawei.fit.waterflow.flowsengine.utils.FlowUtil;
+import com.huawei.fit.waterflow.graph.util.FlowDefinitionParseUtils;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.Invoker;
 import com.huawei.fitframework.broker.client.Router;

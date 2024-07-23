@@ -1,0 +1,6 @@
+a3000:
+  tenantId:
+  ownTrace: false
+  useLimit: true
+  limit: 2
+  operator:
