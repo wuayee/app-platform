@@ -24,13 +24,6 @@ export const jadeFlowPage = (div, graph, name, id) => {
     self.disableContextMenu = true;
     self.moveAble = true;
     self.observableStore = ObservableStore();
-    self.mouseEvents = {
-        mouseDown: {
-            preventDefault: {
-                exclude: ["INPUT", "TEXTAREA"]
-            }
-        }
-    };
 
     /**
      * @override
@@ -248,19 +241,6 @@ export const jadeFlowPage = (div, graph, name, id) => {
             }
         }
     });
-
-    /**
-     * 当圈选时，如果选中的图形是page，那么需要阻止默认事件，否则会**导致圈选时选中input或textarea中的文本**.
-     *
-     * @override
-     */
-    const mouseDown = self.mouseDown;
-    self.mouseDown = position => {
-        mouseDown.apply(self, [position]);
-        if (!self.mouseEvents.mouseDown.preventDefault.exclude.contains(e => e === position.e.srcElement.tagName)) {
-            position.e.preventDefault();
-        }
-    };
 
     /**
      * 等待所有图形绘制完成.

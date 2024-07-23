@@ -97,10 +97,8 @@ function _CodePanel({disabled, input, dispatch}) {
 
     return (<>
         <Collapse bordered={false} className="jade-custom-collapse" defaultActiveKey={["codeOutputPanel"]}>
-            {<Panel onMouseDown={(e) => e.stopPropagation()}
-                    key={"codeOutputPanel"}
-                    header={<Header handleEditClick={handleEditClick}
-                                    disabled={disabled}/>}
+            {<Panel key={"codeOutputPanel"}
+                    header={<Header handleEditClick={handleEditClick} disabled={disabled}/>}
                     className="jade-panel"
             >
                 <Form.Item name={`codeEditor-${shape.id}`}

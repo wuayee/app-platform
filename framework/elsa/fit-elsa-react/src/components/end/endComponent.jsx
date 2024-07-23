@@ -42,10 +42,18 @@ export const endComponent = (jadeConfig) => {
      */
     self.reducers = (config, action) => {
         const _editOutputVariable = () => {
-            const inputParams = newConfig.inputParams.find(item => item.name === "finalOutput");
-            inputParams && action.changes.forEach(change => {
-                inputParams[change.key] = change.value;
-            })
+            const finalOutput = newConfig.inputParams.find(item => item.name === "finalOutput");
+            if (!finalOutput) {
+                return;
+            }
+            const newFinalOutput = {...finalOutput};
+            newConfig.inputParams = [
+                    ...newConfig.inputParams.filter(item => item.name !== "finalOutput"),
+                    newFinalOutput
+            ];
+            action.changes.forEach(change => {
+                newFinalOutput[change.key] = change.value;
+            });
         };
 
         /**

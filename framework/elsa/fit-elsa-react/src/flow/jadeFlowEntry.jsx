@@ -275,13 +275,13 @@ export const JadeFlow = (() => {
         const graphDom = getGraphDom(div);
         const g = jadeFlowGraph(graphDom, "jadeFlow");
         g.configs = configs;
-        g.tenant = tenant;
         g.collaboration.mute = true;
         for (let i = 0; i < importStatements.length; i++) {
             await g.dynamicImportStatement(importStatements[i]);
         }
         await g.initialize();
         g.deSerialize(flowConfigData);
+        g.tenant = tenant;
         const pageData = g.getPageData(0);
         await g.edit(0, graphDom, pageData.id);
         await g.activePage.awaitShapesRendered();
