@@ -71,4 +71,20 @@ public class AippLogController extends AbstractController {
             @RequestParam("type") String type) {
         return Rsp.ok(this.aippLogService.queryAppRecentChatLog(appId, type, this.contextOf(httpRequest, tenantId)));
     }
+
+    /**
+     * 根据chatId查询历史记录
+     *
+     * @param httpRequest Http请求体
+     * @param tenantId 租户id
+     * @param chatId 会话id
+     * @param appId 应用Id
+     * @return Rsp<List<AippInstLogDataDto>> 会话历史记录
+     */
+    @GetMapping(path = "/app/{app_id}/chat/{chat_id}", description = "指定chatId查询实例历史记录（查询最近5个实例）")
+    public Rsp<List<AippInstLogDataDto>> queryChatRecentChatLog(HttpClassicServerRequest httpRequest,
+            @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId,
+            @PathVariable("chat_id") String chatId) {
+        return Rsp.ok(this.aippLogService.queryChatRecentChatLog(chatId, appId, this.contextOf(httpRequest, tenantId)));
+    }
 }

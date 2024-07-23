@@ -46,7 +46,7 @@ const EditorBtnHome = (props) => {
   const [ showAt, setShowAt ] = useState(false);
   const [ appName, setAppName ] = useState('');
   const [ appIcon, setAppIcon ] = useState(knowledgeBase);
-  const [openHistorySignal,setOpenHistorySignal]=useState(null);
+  const [ openHistorySignal, setOpenHistorySignal ]=useState(null);
   const [ searchKey, setSearchKey ] = useState(null);
   let openUploadRef = useRef(null);
   useEffect(() => {
@@ -91,15 +91,13 @@ const EditorBtnHome = (props) => {
 
   // 清空历史记录
   const handleOk = async () => {
-    if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
-      return;
-    }
+    if (isChatRunning()) { return; }
     if (!chatList.length) {
       setIsModalOpen(false);
       return;
     }
-    const res = await clearInstance(tenantId, appId, 'preview');
+    const type = appInfo.state === 'active' ? 'normal' : 'preview';
+    const res = await clearInstance(tenantId, appId, type);
     if (res.code === 0) {
       dispatch(setChatList([]));
     }
@@ -108,10 +106,7 @@ const EditorBtnHome = (props) => {
   // @ 应用点击
   const atClick = (e) => {
     e.stopPropagation();
-    if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
-      return;
-    }
+    if (isChatRunning()) { return; }
     setShowAt(!showAt);
   }
   // 取消@应用功能
@@ -137,19 +132,13 @@ const EditorBtnHome = (props) => {
   }
   // 更多应用
   const showMoreClick = () => {
-    if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
-      return;
-    }
+    if (isChatRunning()) { return; }
     setShowAt(false);
     dispatch(setOpenStar(true));
   }
   // 多模态上传文件
   const uploadClick = () => {
-    if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
-      return;
-    }
+    if (isChatRunning()) { return; }
     openUploadRef.current.showModal();
   }
   // 上传文件回调
@@ -158,10 +147,7 @@ const EditorBtnHome = (props) => {
   }
   // 清空聊天记录
   const clearAllModal = () => {
-    if (chatRunning) {
-      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
-      return;
-    };
+    if (isChatRunning()) { return; }
     setIsModalOpen(true);
   }
   //是否使用多轮对话
@@ -178,6 +164,21 @@ const EditorBtnHome = (props) => {
     dispatch(setAtAppInfo(null));
     dispatch(setAtChatId(null));
     dispatch(setAtAppId(null));
+  }
+
+  // 点击历史对话图标回调
+  const historyChatClick = (e) => {
+    if (isChatRunning()) { return; }
+    setOpenHistorySignal(e.timeStamp);
+  }
+
+  // 检验是否正在对话中
+  const isChatRunning = () => {
+    if (chatRunning) {
+      Message({ type: 'warning', content: '对话进行中, 请稍后再试' });
+      return true;
+    }
+    return false;
   }
 
   return (
@@ -206,7 +207,7 @@ const EditorBtnHome = (props) => {
           (
             <div className='inner-item'>
               <div hidden><ClearChatIcon style={{ marginTop: '6px' }} onClick={() => setIsModalOpen(true)} /></div>
-              { !appInfo.hideHistory && <HistoryIcon  onClick={(e) => {setOpenHistorySignal(e.timeStamp)}}/> }
+              { !appInfo.hideHistory && <HistoryIcon  onClick={historyChatClick}/> }
               {showMulti && <div className='multi-conversation-title'>
                 <span>多轮对话</span>
                 <Switch className='multi-conversation-switch' value={useMemory} onChange={onMultiConverChange}/>

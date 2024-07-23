@@ -13,9 +13,9 @@ import { AippContext } from '../aippIndex/context';
 import {
   aippDebug,
   updateFlowInfo,
-  getAppRecentlog,
   stopInstance,
-  getReportInstance
+  getReportInstance,
+  getChatRecentLog
 } from '@shared/http/aipp';
 import { 
   historyChatProcess, 
@@ -94,15 +94,16 @@ const ChatPreview = (props) => {
 
   // 灵感大全设置下拉列表
   function setEditorSelect(data, prompItem) {
-    let { prompt, promptArr } = inspirationProcess(tenantId, data, prompItem);
+    let { prompt, promptArr } = inspirationProcess(tenantId, data, prompItem, appInfo);
     editorRef.current.setFilterHtml(prompt, promptArr);
   }
   // 获取历史会话
   async function initChatHistory() {
     listRef.current = [];
+    if (!chatId) return;
     setLoading(true);
     try {
-      const res = await getAppRecentlog(tenantId, appId, 'preview');
+      const res = await getChatRecentLog(tenantId, chatId, appId);
       if (res.data && res.data.length) {
         let chatArr = historyChatProcess(res);
         listRef.current = deepClone(chatArr);

@@ -77,8 +77,8 @@ export function getInspirationB(tenantId, appId) {
 // 调试应用
 export function aippDebug(tenantId, appId, params, chatType = '') {
   let url = `${AIPP_URL}/${tenantId}/app/${appId}/debug`;
-  if (chatType !== 'preview') {
-    url = `${AIPP_URL}/${tenantId}/app/${appId}/latest_published `
+  if (chatType !== 'inactive') {
+    url = `${AIPP_URL}/${tenantId}/app/${appId}/latest_published `;
     return get(url);
   } else {
     return post(url, params);
@@ -100,6 +100,10 @@ export function getRecentInstances(tenantId, appId, type) {
 // 获取多应用历史对话
 export function getAppRecentlog(tenantId, appId, type) {
   return get(`${AIPP_URL}/${tenantId}/log/app/${appId}/chat/recent?type=${type}`);
+}
+// 获取会话历史对话
+export function getChatRecentLog(tenantId, chatId, appId) {
+  return get(`${AIPP_URL}/${tenantId}/log/app/${appId}/chat/${chatId}`);
 }
 // 删除历史对话记录
 export function clearInstance(tenantId, appId, type) {
