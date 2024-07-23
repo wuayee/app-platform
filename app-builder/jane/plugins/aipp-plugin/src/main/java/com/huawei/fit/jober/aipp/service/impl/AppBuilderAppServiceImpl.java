@@ -288,15 +288,15 @@ public class AppBuilderAppServiceImpl
     public Rsp<RangedResultSet<AppBuilderAppMetadataDto>> list(AppQueryCondition cond,
             HttpClassicServerRequest httpRequest, String tenantId, long offset, int limit) {
         List<AppBuilderAppMetadataDto> result = this.appRepository.selectWithLatestApp(cond, tenantId, offset, limit)
-                        .stream()
-                        .map(this::buildAppMetaData)
-                        .collect(Collectors.toList());
+                .stream()
+                .map(this::buildAppMetaData)
+                .collect(Collectors.toList());
         long total = this.appRepository.countWithLatestApp(tenantId, cond);
         return Rsp.ok(RangedResultSet.create(result, offset, limit, total));
     }
 
     private AppBuilderAppMetadataDto buildAppMetaData(AppBuilderApp app) {
-        List<String> tags = new ArrayList<>() ;
+        List<String> tags = new ArrayList<>();
         tags.add(app.getType().toUpperCase(Locale.ROOT));
         return AppBuilderAppMetadataDto.builder()
                 .id(app.getId())
@@ -324,7 +324,6 @@ public class AppBuilderAppServiceImpl
         AppBuilderApp templateApp = this.appFactory.create(appId);
         // 根据模板app复制app，仅需修改所有id
         // 优先copy下层内容，因为上层改变Id后，会影响下层对象的查询
-        AppBuilderConfig config = resetConfig(templateApp.getConfig());
         AppBuilderFlowGraph flowGraph = templateApp.getFlowGraph();
         flowGraph.setId(Entities.generateId());
         Map<String, Object> appearance =
@@ -334,8 +333,8 @@ public class AppBuilderAppServiceImpl
         appearance.put("title", flowGraph.getId());
         flowGraph.setAppearance(JSONObject.toJSONString(appearance));
         String version = this.buildVersion(templateApp, isUpgrade);
-        templateApp.setVersion(version);
         templateApp.setId(Entities.generateId());
+        AppBuilderConfig config = resetConfig(templateApp.getConfig());
         templateApp.setConfigId(config.getId());
         templateApp.setFlowGraphId(flowGraph.getId());
         templateApp.setType("app");
@@ -343,9 +342,11 @@ public class AppBuilderAppServiceImpl
         if (isUpgrade) {
             templateApp.setState(AppState.INACTIVE.getName());
         }
+        String preVersion = templateApp.getVersion();
+        templateApp.setVersion(version);
         config.setAppId(templateApp.getId());
         if (Objects.nonNull(dto)) {
-            templateApp.setAttributes(this.createAppAttributes(dto));
+            templateApp.setAttributes(this.createAppAttributes(dto, isUpgrade, preVersion));
             templateApp.setName(dto.getName());
             templateApp.setType(dto.getType());
         }
@@ -459,7 +460,7 @@ public class AppBuilderAppServiceImpl
         }
     }
 
-    private Map<String, Object> createAppAttributes(AppBuilderAppCreateDto dto) {
+    private Map<String, Object> createAppAttributes(AppBuilderAppCreateDto dto, boolean isUpgrade, String preVersion) {
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("description", dto.getDescription());
         attributes.put("icon", dto.getIcon());
@@ -467,6 +468,9 @@ public class AppBuilderAppServiceImpl
         attributes.put("app_type", dto.getAppType());
         if (StringUtils.isNotBlank(dto.getStoreId())) {
             attributes.put("store_id", dto.getStoreId());
+        }
+        if (isUpgrade) {
+            attributes.put("latest_version", preVersion);
         }
         return attributes;
     }
@@ -671,8 +675,7 @@ public class AppBuilderAppServiceImpl
         Map<String, List<String>> attributes = new HashMap<>();
         attributes.put(AippConst.ATTR_UNIQUE_NAME, Collections.singletonList(uniqueName));
         filter.setAttributes(attributes);
-        RangedResultSet<Meta> metas =
-                this.metaService.list(filter, true, 0, 1, context);
+        RangedResultSet<Meta> metas = this.metaService.list(filter, true, 0, 1, context);
         if (metas.getResults().isEmpty()) {
             log.error("Meta can not be null.");
             throw new AippParamException(TASK_NOT_FOUND);
@@ -1074,11 +1077,9 @@ public class AppBuilderAppServiceImpl
         for (Map.Entry<String, Object> resEntry : res.entrySet()) {
             if (Objects.equals(resEntry.getKey(), AippConst.MEMORY_SWITCH_KEY)) {
                 this.checkEntryType(resEntry, Boolean.class);
-                valueArrayNode.add(this.convertMemorySwitch(resEntry.getKey(),
-                        ObjectUtils.cast(resEntry.getValue())));
+                valueArrayNode.add(this.convertMemorySwitch(resEntry.getKey(), ObjectUtils.cast(resEntry.getValue())));
             } else {
-                valueArrayNode.add(this.convertObject(resEntry.getKey(),
-                        String.valueOf(resEntry.getValue())));
+                valueArrayNode.add(this.convertObject(resEntry.getKey(), String.valueOf(resEntry.getValue())));
             }
         }
     }
@@ -1087,14 +1088,12 @@ public class AppBuilderAppServiceImpl
         for (Map.Entry<String, Object> resEntry : res.entrySet()) {
             if (Objects.equals(resEntry.getKey(), AippConst.MEMORY_SWITCH_KEY)) {
                 this.checkEntryType(resEntry, Boolean.class);
-                valueArrayNode.add(this.convertMemorySwitch(resEntry.getKey(),
-                        ObjectUtils.cast(resEntry.getValue())));
+                valueArrayNode.add(this.convertMemorySwitch(resEntry.getKey(), ObjectUtils.cast(resEntry.getValue())));
             } else if (Objects.equals(resEntry.getKey(), "value")) {
                 valueArrayNode.add(this.convertValueForUserSelect(resEntry.getKey(),
                         String.valueOf(resEntry.getValue())));
             } else {
-                valueArrayNode.add(this.convertObject(resEntry.getKey(),
-                        String.valueOf(resEntry.getValue())));
+                valueArrayNode.add(this.convertObject(resEntry.getKey(), String.valueOf(resEntry.getValue())));
             }
         }
     }
@@ -1197,8 +1196,7 @@ public class AppBuilderAppServiceImpl
 
     private void checkEntryType(Map.Entry<String, Object> entry, Class<?> clazz) {
         if (!clazz.isInstance(entry.getValue())) {
-            throw new AippException(AippErrCode.DATA_TYPE_IS_NOT_SUPPORTED,
-                    entry.getValue().getClass().getName());
+            throw new AippException(AippErrCode.DATA_TYPE_IS_NOT_SUPPORTED, entry.getValue().getClass().getName());
         }
     }
 
@@ -1246,7 +1244,6 @@ public class AppBuilderAppServiceImpl
 
         // TODO: 2024/4/20 0020 理应有新增的，暂时不管
     }
-
 
     private Map<String, Map<String, Object>> getJadeConfigsFromAppearance(String appearance) {
         JSONArray pages = JSONObject.parseObject(appearance).getJSONArray("pages");
