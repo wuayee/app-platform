@@ -14,7 +14,6 @@ const PublishModal = (props) => {
   const { modalRef, appInfo, publishType } = props;
   const { appId, tenantId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isPublished, setIsPublished] = useState(false);
   const [loading, setLoading ] = useState(false);
   const [text, setText] = useState('');
   const [form] = Form.useForm();
@@ -32,7 +31,6 @@ const PublishModal = (props) => {
       version: appInfo.version,
       app_type: publishType !== 'app' ? 'waterflow' : appInfo.attributes?.app_type
     });
-    setIsPublished(appInfo.attributes.last_version === 'active');
     setText('');
     setIsModalOpen(true);
   };
@@ -126,17 +124,17 @@ const PublishModal = (props) => {
         </Button>
       ]}>
       <div className='search-list'>
-        { !isPublished ? 
-          (
-            <div className="publish-tag" style={{ display: publishType === 'app' ? 'block' : 'none'}}>
-              <img src='/src/assets/images/ai/info.png' />
-              <span>请调试应用，确认无误后发布</span>
-            </div>
-          ) : 
+        { appInfo.attributes?.latest_version ? 
           (
             <div className="publish-tag">
               <img src='/src/assets/images/ai/info.png' />
               <span>新版本将覆盖历史版本，并不可回退</span>
+            </div>
+          ) :
+          (
+            <div className="publish-tag" style={{ display: publishType === 'app' ? 'block' : 'none'}}>
+              <img src='/src/assets/images/ai/info.png' />
+              <span>请调试应用，确认无误后发布</span>
             </div>
           )
         }
