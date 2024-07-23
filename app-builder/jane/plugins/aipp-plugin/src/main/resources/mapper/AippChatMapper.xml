@@ -106,6 +106,9 @@
         from t_chat_session
         where app_id = #{appId}
         and attributes -> 'originApp' IS NULL
+        <if test="appType != null">
+            and attributes ->> 'state' = #{appType}
+        </if>
         order by create_at desc
         offset 0 limit #{count}
     </select>

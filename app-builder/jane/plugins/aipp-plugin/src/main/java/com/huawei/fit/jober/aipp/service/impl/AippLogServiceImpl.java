@@ -172,33 +172,42 @@ public class AippLogServiceImpl implements AippLogService {
 
     @Override
     public List<AippInstLogDataDto> queryAppRecentChatLog(String appId, String aippType, OperationContext context) {
-        List<String> chatIds = aippChatMapper.selectChatByAppId(appId, 1);
+        List<String> chatIds = aippChatMapper.selectChatByAppId(appId, aippType, 1);
         List<AippInstLogDataDto> logData = new ArrayList<>();
         if (chatIds.isEmpty()) {
             return logData;
         }
         List<String> instanceIds = aippChatMapper.selectInstanceByChat(chatIds.get(0), 5);
         logData = queryAndSortLogs(instanceIds, context);
-        return this.getAippLogWithAppInfo(logData, aippType, appId, context);
+        return this.getAippLogWithAppInfo(logData, appId, context);
     }
 
-    private List<AippInstLogDataDto> getAippLogWithAppInfo(List<AippInstLogDataDto> logData, String aippType,
-            String appId, OperationContext context) {
+    private List<AippInstLogDataDto> getAippLogWithAppInfo(List<AippInstLogDataDto> logData, String appId,
+            OperationContext context) {
         // 获取被@应用的头像、名称
-        String type = AippTypeEnum.getType(aippType).type();
-        List<String> originAippId = getMetaIds(appId, context, type);
-        List<String> atAippIds = logData.stream()
-                .filter(data -> !Objects.equals(data.getAippId(), originAippId.get(0)))
-                .map(AippInstLogDataDto::getAippId)
+        List<String> originAippId = MetaUtils.getAllMetasByAppId(this.metaService, appId, context)
+                .stream()
+                .filter(Objects::nonNull)
+                .map(Meta::getId)
+                .distinct()
                 .collect(Collectors.toList());
+        List<String> atAippIds = logData.stream()
+                .map(AippInstLogDataDto::getAippId)
+                .filter(aippId -> !originAippId.contains(aippId))
+                .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(atAippIds)) {
+            return logData;
+        }
         RangedResultSet<Meta> metas =
                 metaService.list(this.buildAippIdFilter(atAippIds), true, 0, atAippIds.size(), context);
-        if (!metas.getResults().isEmpty()) {
-            List<Meta> meta = metas.getResults();
-            Map<String, Meta> metaMap = meta.stream().collect(Collectors.toMap(Meta::getId, Function.identity()));
-            logData.stream().forEach(aippInstLogDataDto -> setLogDataWithIcon(aippInstLogDataDto, metaMap));
+        if (CollectionUtils.isEmpty(metas.getResults())) {
+            return logData;
         }
-        return logData;
+        Map<String, Meta> metaMap =
+                metas.getResults().stream().collect(Collectors.toMap(Meta::getId, Function.identity()));
+        return logData.stream()
+                .peek(aippInstLogDataDto -> setLogDataWithIcon(aippInstLogDataDto, metaMap))
+                .collect(Collectors.toList());
     }
 
     private void setLogDataWithIcon(AippInstLogDataDto aippInstLogDataDto, Map<String, Meta> metaMap) {
@@ -206,11 +215,11 @@ public class AippLogServiceImpl implements AippLogService {
             return;
         }
         Meta metaData = metaMap.get(aippInstLogDataDto.getAippId());
-        aippInstLogDataDto.setAppName(metaData.getName());
         Object metaIcon = metaData.getAttributes().get("meta_icon");
         if (metaIcon instanceof String) {
             aippInstLogDataDto.setAppIcon((String) metaIcon);
         }
+        aippInstLogDataDto.setAppName(metaData.getName());
     }
 
     private MetaFilter buildAippIdFilter(List<String> aippIds) {

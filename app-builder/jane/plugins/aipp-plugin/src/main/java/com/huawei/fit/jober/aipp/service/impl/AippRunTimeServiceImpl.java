@@ -454,7 +454,7 @@ public class AippRunTimeServiceImpl
             List<Map<String, Object>> memoryConfigs, String aippType, Map<String, Object> businessData,
             OperationContext context) {
         if (memoryConfigs == null || memoryConfigs.isEmpty()) {
-            return this.getConversationTurns(aippId, aippType, 5, context, null);
+            return this.getConversationTurns(aippId, aippType, 5, context, chatId);
         }
         Map<String, Object> valueConfig = memoryConfigs.stream()
                 .filter(config -> StringUtils.equals((String) config.get(NAME_KEY), VALUE_KEY))
@@ -486,8 +486,7 @@ public class AippRunTimeServiceImpl
             logs = aippLogService.queryChatRecentInstLog(aippId, aippType, count, context, chatId);
             return getLogMaps(logs);
         }
-        logs = aippLogService.queryAippRecentInstLog(aippId, aippType, count, context);
-        return getLogMaps(logs);
+        return new ArrayList<>();
     }
 
     public static List<Map<String, Object>> getLogMaps(List<AippInstLogDataDto> logs) {

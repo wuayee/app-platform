@@ -116,6 +116,7 @@ public class AippChatServiceImpl implements AippChatService {
             this.persistOriginAppChat(body, context, chatId, chatName, instId);
         }
         AppBuilderAppPO appInfo = this.convertAippToApp(body.getAippId(), body.getAippVersion(), context);
+        attributesMap.putIfAbsent(AippConst.ATTR_CHAT_STATE_KEY, appInfo.getState());
         ChatInfo chatInfo = ChatInfo.builder()
                 .appId(appInfo.getId())
                 .version(appInfo.getVersion())
@@ -145,6 +146,8 @@ public class AippChatServiceImpl implements AippChatService {
         // @应用对话，插入主应用记录
         Map<String, String> attributesMapOrigin = new HashMap<>();
         attributesMapOrigin.put("instId", instId);
+        AppBuilderAppPO appBuilderAppPO = this.appBuilderAppMapper.selectWithId(body.getOriginApp());
+        attributesMapOrigin.put(AippConst.ATTR_CHAT_STATE_KEY, appBuilderAppPO.getState());
         ChatInfo chatInfoOrigin = ChatInfo.builder()
                 .appId(body.getOriginApp())
                 .version(body.getOriginAppVersion())
@@ -299,6 +302,8 @@ public class AippChatServiceImpl implements AippChatService {
         bodyContext.put("chatId", originChatId);
         body.setInitContext(bodyContext);
         Map<String, Object> result = ObjectUtils.cast(bodyContext.get(AippConst.BS_INIT_CONTEXT_KEY));
+        result.put("chatId", originChatId);
+        bodyContext.put(AippConst.BS_INIT_CONTEXT_KEY, result);
         if (body.getOriginApp() != null && body.getChatId() == null) {
             // 首次@应用对话
             String chatId = UUIDUtil.uuid();
