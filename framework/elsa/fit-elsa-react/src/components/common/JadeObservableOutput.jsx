@@ -2,25 +2,30 @@ import {Button, Col, Collapse, Form, Popover, Row, Tree} from "antd";
 import {QuestionCircleOutlined} from "@ant-design/icons";
 import React, {useEffect, useState} from "react";
 import {JadeStopPropagationSelect} from "@/components/common/JadeStopPropagationSelect.jsx";
-import {useDataContext, useDispatch, useFormContext, useShapeContext} from "@/components/DefaultRoot.jsx";
+import {useDispatch, useFormContext, useShapeContext} from "@/components/DefaultRoot.jsx";
 import AddSubItem from '../asserts/icon-add-subitem.svg?react';
 import DeleteItem from '../asserts/icon-delete.svg?react';
 import TreeSwitcherIcon from "@/components/common/TreeSwitcherIcon.jsx";
 import {DATA_TYPES} from "@/common/Consts.js";
 import {JadeInput} from "@/components/common/JadeInput.jsx";
+import PropTypes from "prop-types";
 
 const {Panel} = Collapse;
+
+_JadeObservableOutput.propTypes = {
+    disabled: PropTypes.bool,
+    output: PropTypes.object
+};
 
 /**
  * code节点输出组件
  *
+ * @param disabled 是否禁用
+ * @param output 输出数据
  * @return {JSX.Element}
  * @constructor
  */
-
-export default function JadeObservableOutput({disabled}) {
-    const jadeConfig = useDataContext();
-    const output = jadeConfig.outputParams.find(item => item.name === "output");
+function _JadeObservableOutput({disabled, output}) {
     const shape = useShapeContext();
     const dispatch = useDispatch();
     const [outputTreeData, setOutputTreeData] = useState(() => [convertToTreeData(output, 1, null)]);
@@ -35,7 +40,7 @@ export default function JadeObservableOutput({disabled}) {
 
     useEffect(() => {
         setOutputTreeData([convertToTreeData(output, 1, null)]);
-    }, [jadeConfig]);
+    }, [output]);
 
     /**
      * 将jadeConfig转换成TreeData
@@ -66,7 +71,7 @@ export default function JadeObservableOutput({disabled}) {
             level: level,
             expanded: true
         };
-    };
+    }
 
     const content = (<div className={"jade-font-size"} style={{lineHeight: "1.2"}}>
         <p>代码运行完成后输出的变量，必须保证次数定义的变量名、</p>
@@ -294,3 +299,9 @@ const TreeNode = ({node, disabled, shape, dispatch, output}) => {
         </Row>
     </>);
 };
+
+const areEqual = (prevProps, nextProps) => {
+    return prevProps.disabled === nextProps.disabled && prevProps.output === nextProps.output;
+};
+
+export const JadeObservableOutput = React.memo(_JadeObservableOutput, areEqual);
