@@ -151,6 +151,9 @@ public class AppBuilderAppServiceImpl
         // 添加校验，禁止更低版本手动输入
         this.validateVersionIsLatest(appBuilderApp.getVersion(), appDto.getVersion());
         appBuilderApp.setVersion(appDto.getVersion());
+        Map<String, Object> appBuilderAppAttr = appBuilderApp.getAttributes();
+        appBuilderAppAttr.put("publishedDescription", aippDto.getPublishedDescription());
+        appBuilderAppAttr.put("publishedUpdateLog", aippDto.getPublishedUpdateLog());
         this.appFactory.update(appBuilderApp);
         if (appBuilderApp.getAttributes().containsKey("store_id")) {
             aippDto.setUniqueName(appBuilderApp.getAttributes().get("store_id").toString());
