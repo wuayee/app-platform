@@ -162,13 +162,15 @@ public class MockRequestBuilder implements RequestBuilder {
      */
     @Override
     public RequestParam build() {
-        this.url = BASE_URL + this.port + this.url;
+        StringBuilder urlBuilder = new StringBuilder(BASE_URL + this.port + this.url);
         if (!this.params.isEmpty()) {
-            this.url += "?";
+            urlBuilder.append("?");
+            this.params.forEach((key, value) -> {
+                urlBuilder.append(key).append("=").append(value).append("&");
+            });
+            urlBuilder.setLength(urlBuilder.length() - 1);
         }
-        for (Map.Entry<String, String> entry : this.params.entrySet()) {
-            this.url += entry.getKey() + "=" + entry.getValue();
-        }
+        this.url = urlBuilder.toString();
 
         HttpClassicClientRequest request = this.httpClassicClient.createRequest(this.method, this.url);
         for (Map.Entry<String, String> entry : this.headers.entrySet()) {
