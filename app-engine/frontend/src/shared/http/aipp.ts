@@ -77,8 +77,12 @@ export function getInspirationB(tenantId, appId) {
 // 调试应用
 export function aippDebug(tenantId, appId, params, chatType = '') {
   let url = `${AIPP_URL}/${tenantId}/app/${appId}/debug`;
-  chatType !== 'preview' ? url = `${AIPP_URL}/${tenantId}/app/${appId}/latest_published ` : null;
-  return post(url, params);
+  if (chatType !== 'preview') {
+    url = `${AIPP_URL}/${tenantId}/app/${appId}/latest_published `
+    return get(url);
+  } else {
+    return post(url, params);
+  }
 }
 
 // 发布应用
