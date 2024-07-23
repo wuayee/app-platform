@@ -7,6 +7,7 @@ import EditModal from './edit-modal';
 import TestStatus from './test-status';
 import TestModal from './test-modal';
 import './styles/header.scss'
+import {Message} from "@/shared/utils/message";
 
 const ChoreographyHead = (props) => {
   const { 
@@ -30,8 +31,13 @@ const ChoreographyHead = (props) => {
   const handleEditClick = () => {
     editRef.current.showModal();
   }
-  // 编辑基本信息
-  function modalClick() {
+
+  // 点击应用发布按钮
+  function handleUploadApp() {
+    if (testStatus === 'Running') {
+      Message({type: 'warning', content: '应用正在调试中，请勿发布'});
+      return;
+    }
     modalRef.current.showModal();
   }
   // 返回编排页面
@@ -95,7 +101,7 @@ const ChoreographyHead = (props) => {
           </div>
         }
         { showElsa && <span className='header-btn test-btn' onClick={handleOpenDebug}>调试</span> }
-        { !status && <span className='header-btn' onClick={modalClick}><UploadIcon />发布</span>  }
+        <span className='header-btn' onClick={handleUploadApp}><UploadIcon />发布</span>
       </div>
       <PublishModal modalRef={modalRef} appInfo={appInfo} publishType='app' />
       <EditModal modalRef={editRef} appInfo={appInfo} updateAippCallBack={updateAippCallBack}/>
