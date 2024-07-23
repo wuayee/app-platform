@@ -1,13 +1,14 @@
+import React, { useEffect, useState } from 'react';
 import { CloseOutlined, ToTopOutlined } from '@ant-design/icons';
 import { Button, Drawer, Form, Input, Upload } from 'antd';
-import React, { useEffect, useState } from 'react';
-import '../style.scoped.scss';
 import TextArea from 'antd/es/input/TextArea';
 import { useNavigate } from 'react-router';
-import { useAppSelector } from '../../../store/hook';
-import { httpUrlMap } from '../../../shared/http/httpConfig';
-import { createAipp, uploadImage } from '../../../shared/http/aipp';
-import { Message } from '../../../shared/utils/message';
+import { useAppSelector } from '@/store/hook';
+import { httpUrlMap } from '@/shared/http/httpConfig';
+import { createAipp, uploadImage } from '@/shared/http/aipp';
+import { Message } from '@/shared/utils/message';
+import { fileValidate } from '@/shared/utils/common';
+import '../style.scoped.scss';
 
 const CreateWorkfowDrawer = (props) => {
   const [open, setOpen] = useState(false);
@@ -41,18 +42,8 @@ const CreateWorkfowDrawer = (props) => {
 
   const beforeUpload = (file) => false;
   const onChange = ({ file }) => {
-    const fileTypes = ['jpg', 'png', 'jpeg', 'PNG', 'gif'];
-    const fileEnd = file.name.split('.')[1];
-    const size = file.size / 1024;
-    if (size > 1024) {
-      Message({ type: 'warning', content: '文件大小不能超过1M' });
-      return
-    }
-    if (!fileTypes.includes(fileEnd)) {
-      Message({ type: 'warning', content: '文件格式错误' });
-      return
-    }
-    pictureUpload(file);
+    let validateResult = fileValidate(file);
+    validateResult && pictureUpload(file);
   };
   useEffect(() => {
     if (props.openSignal > 0) {

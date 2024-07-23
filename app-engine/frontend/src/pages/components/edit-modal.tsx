@@ -6,6 +6,7 @@ import { ToTopOutlined } from '@ant-design/icons';
 import { Message } from '@/shared/utils/message';
 import { uploadChatFile, updateAppInfo, createAipp } from '@/shared/http/aipp';
 import { httpUrlMap } from '@/shared/http/httpConfig';
+import { fileValidate } from '@/shared/utils/common';
 import knowledgeBase from '@/assets/images/knowledge/knowledge-base.png';
 import './styles/edit-modal.scss';
 
@@ -98,18 +99,8 @@ const EditModal = (props) => {
     return false
   }
   const onChange = ({ file }) => {
-    const fileTypes = ['jpg', 'png', 'jpeg', 'PNG', 'gif'];
-    const fileEnd = file.name.split('.')[1];
-    const size = file.size / 1024;
-    if (size > 1024) {
-      Message({ type: 'warning', content: '文件大小不能超过1M' });
-      return
-    }
-    if (!fileTypes.includes(fileEnd)) {
-      Message({ type: 'warning', content: '文件格式错误' });
-      return
-    }
-    pictureUpload(file);
+    let validateResult = fileValidate(file);
+    validateResult && pictureUpload(file);
   }
   // 上传图片
   async function pictureUpload( file ) {
