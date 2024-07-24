@@ -23,6 +23,13 @@
       height: 16px;
       margin-left: 8px;
     }
+    .text {
+      display: inline-block;
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
    }
    img {
     width: 36px;

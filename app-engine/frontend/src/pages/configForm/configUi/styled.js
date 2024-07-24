@@ -96,9 +96,25 @@ export const ConfigWrap = styled.div`
         .item-left {
           display: flex;
           align-items: center;
+          flex: 1;
+          width: 0;
+          .text {
+            display: inline-block;
+            width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
           img {
             margin-right: 8px;
           }
+        }
+        .text {
+          flex: 1;
+          width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
       }
     }
