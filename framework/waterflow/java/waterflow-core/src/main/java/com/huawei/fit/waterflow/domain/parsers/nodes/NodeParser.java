@@ -26,7 +26,7 @@ import com.huawei.fit.waterflow.domain.parsers.nodes.jobers.JoberParser;
 import com.huawei.fit.waterflow.domain.parsers.nodes.tasks.TaskParser;
 import com.huawei.fitframework.inspection.Validation;
 
-import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Optional;

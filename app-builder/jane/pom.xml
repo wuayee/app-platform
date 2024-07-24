@@ -25,6 +25,7 @@
         <module>task</module>
         <module>dynamic-form-genericable</module>
         <module>jane-common-component</module>
+        <module>waterflow-edatamate-genericable</module>
         <module>jober-exception-handler</module>
         <module>jober-common</module>
     </modules>

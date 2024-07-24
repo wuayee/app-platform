@@ -92,7 +92,7 @@
     },
     {
       "type": "end",
-      "metaId": "ender1"
+      "metaId": "ender1",
       "name": "结束节点",
       "triggerMode": "auto"
     },
