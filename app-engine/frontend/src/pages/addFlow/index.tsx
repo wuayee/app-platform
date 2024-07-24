@@ -113,7 +113,10 @@ const AddFlow = (props) => {
           <Stage
             setDragData={setDragData} 
             appRef={appRef} 
-            flowIdRef={flowIdRef} 
+            flowIdRef={flowIdRef}
+            setTestStatus={type ? setFlowTestStatus : setTestStatus}
+            setTestTime={type ? setFlowTestTime : setTestTime}
+            elsaRunningCtl={elsaRunningCtl}
           />
         </div>
       </FlowContext.Provider>

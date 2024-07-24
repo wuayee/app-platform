@@ -13,7 +13,7 @@ import { FlowContext } from '../../aippIndex/context';
 import { configMap } from '../config';
 
 const Stage = (props) => {
-  const { setDragData } = props;
+  const { setDragData, setTestStatus, setTestTime, elsaRunningCtl } = props;
   const [ showModal, setShowModal ] = useState(false);
   const [ taskName, setTaskName ] = useState('');
   const [ selectModal, setSelectModal ] = useState('');
@@ -75,6 +75,9 @@ const Stage = (props) => {
   // 数据实时保存
   const handleChange = useCallback(debounce(() => elsaChange(), 2000), []);
   function elsaChange() {
+    elsaRunningCtl.current?.reset();
+    setTestStatus(null);
+    setTestTime(0);
     let graphChangeData = window.agent.serialize();
     currentApp.current.flowGraph.appearance = graphChangeData;
     window.agent.validate().then(() => {
