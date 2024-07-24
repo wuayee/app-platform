@@ -10,7 +10,6 @@ import com.huawei.fit.http.protocol.support.AbstractReadableMessageBody;
 import com.huawei.fit.http.server.netty.support.CompositeByteBufReadableMessageBody;
 import com.huawei.fit.http.server.netty.support.FileChannelReadableMessageBody;
 import com.huawei.fitframework.inspection.Nonnull;
-import com.huawei.fitframework.inspection.Nullable;
 import com.huawei.fitframework.util.LockUtils;
 import com.huawei.fitframework.util.ThreadUtils;
 
@@ -38,16 +37,21 @@ public abstract class NettyReadableMessageBody extends AbstractReadableMessageBo
         this.checkIfClosed();
         while (true) {
             this.lock.lock();
-            Integer read = this.tryRead();
-            if (read != null) {
+            int read = this.tryRead();
+            if (read != Integer.MIN_VALUE) {
                 return read;
             }
             ThreadUtils.sleep(0);
         }
     }
 
-    @Nullable
-    private Integer tryRead() throws IOException {
+    /**
+     * 尝试读取下一个字节。
+     *
+     * @return 当返回 {@code -1 - 255} 表示正常读取范围，当返回 {@link Integer#MIN_VALUE} 表示未读取到。
+     * @throws IOException 当发生 I/O 异常时。
+     */
+    private int tryRead() throws IOException {
         try {
             int read = this.read0();
             if (read != -1) {
@@ -64,7 +68,7 @@ public abstract class NettyReadableMessageBody extends AbstractReadableMessageBo
         } finally {
             this.lock.unlock();
         }
-        return null;
+        return Integer.MIN_VALUE;
     }
 
     /**
