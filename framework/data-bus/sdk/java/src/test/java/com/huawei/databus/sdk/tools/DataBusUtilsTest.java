@@ -34,8 +34,8 @@ class DataBusUtilsTest {
     @Test
     @DisplayName("测试生成消息头与预期值相同")
     void headerShouldEqualToGivenValue() {
-        ByteBuffer expected = ByteBuffer.wrap(new byte[]{12, 0, 0, 0, 8, 0, 12, 0, 11, 0, 4, 0, 8, 0, 0, 0, 100,
-                0, 0, 0, 0, 0, 0, 33});
+        ByteBuffer expected = ByteBuffer.wrap(new byte[]{16, 0, 0, 0, 0, 0, 10, 0, 16, 0, 15, 0, 8, 0, 4, 0, 10,
+                0, 0, 0, 1, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 33});
         ByteBuffer actual = DataBusUtils.buildMessageHeader(MessageType.ApplyPermission, 100, 1);
         assertThat(isEqualByteBuffer(actual, expected)).isTrue();
     }
