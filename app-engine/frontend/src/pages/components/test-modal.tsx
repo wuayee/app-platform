@@ -25,7 +25,7 @@ const TestModal = (props) => {
   })
   return <>{(
     <Modal
-      title={type ? '需要测试成功才能发布应用' : '需要测试成功才能发布工具流'}
+      title={type ? '需要调试成功才能发布应用' : '需要调试成功才能发布工具流'}
       width='380px'
       maskClosable={false}
       centered
