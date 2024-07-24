@@ -79,8 +79,8 @@ const Recommends = (props) => {
   // 实时刷新推荐列表
   useEffect(() => {
     if(chatList?.length>0){
-      let chatItem = chatList[chatList?.length - 1];
-      if (chatItem && chatItem.finished && chatItem.logId === -1) {
+      let chatItem = chatList[chatList.length - 1];
+      if (chatItem && chatItem.finished && !chatItem.messageType) {
         getRecommendList();
       }
     }
