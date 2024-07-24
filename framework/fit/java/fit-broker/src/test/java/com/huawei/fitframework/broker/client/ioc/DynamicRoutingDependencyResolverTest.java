@@ -116,11 +116,23 @@ public class DynamicRoutingDependencyResolverTest {
         assertThat(actual.get()).isNotNull();
     }
 
+    /**
+     * 表示不带 {@link Genericable} 的测试接口。
+     */
     interface TestInterfaceWithoutGenericable {
+        /**
+         * 表示测试方法。
+         */
         void func1();
     }
 
+    /**
+     * 表示带 {@link Genericable} 的测试接口。
+     */
     interface TestInterfaceWithGenericable {
+        /**
+         * 表示测试方法。
+         */
         @Genericable(id = "g1")
         void func1();
     }
