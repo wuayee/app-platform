@@ -242,6 +242,11 @@ public enum AippErrCode implements ErrorCode {
     INVALID_VERSION_NAME(90002916, "不合法的版本名称。"),
 
     /**
+     * 名称格式不对
+     */
+    APP_NAME_IS_INVALID(90002917, "名称只能包含中英文、数字、中划线（-）和下划线(_)，并且不能以中划线、下划线开头。"),
+
+    /**
      * 错误码截止值
      */
     ERROR_CODE_BUTT(99999999, "Error code butt.");

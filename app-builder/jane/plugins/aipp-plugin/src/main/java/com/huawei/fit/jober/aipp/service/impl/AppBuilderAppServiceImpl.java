@@ -115,6 +115,7 @@ public class AppBuilderAppServiceImpl
     private final MetaService metaService;
     private final UsrAppCollectionService usrAppCollectionService;
     private final AppUpdateValidator appUpdateValidator;
+    private final String appNameFormat = "^[^-_][\\u4E00-\\u9FA5A-Za-z0-9-_]*$";
 
     public AppBuilderAppServiceImpl(AppBuilderAppFactory appFactory, AippFlowService aippFlowService,
             AppBuilderAppRepository appRepository,
@@ -456,6 +457,10 @@ public class AppBuilderAppServiceImpl
     }
 
     private void validateAppName(String name, OperationContext context) {
+        if (!name.matches(this.appNameFormat)) {
+            log.error("Create aipp failed: the name format is incorrect. [name={}]", name);
+            throw new AippParamException(context, AippErrCode.APP_NAME_IS_INVALID);
+        }
         String trimName = StringUtils.trim(name);
         if (StringUtils.isEmpty(trimName)) {
             log.error("Create aipp failed: name can not be empty.");
