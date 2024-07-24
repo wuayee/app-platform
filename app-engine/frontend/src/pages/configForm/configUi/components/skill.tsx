@@ -102,7 +102,7 @@ const Skill = (props) => {
                        <img src='/src/assets/images/ai/tool.png' alt='' />: 
                        <img src='/src/assets/images/ai/workflow.png' alt='' />
                       }
-                      {item.name || item }
+                      <span className='text'>{item.name || item }</span>
                     </span>
                     <span>
                       { <EyeOutlined style={{ cursor: 'pointer', fontSize: '14px', color: '#4D4D4D', marginRight: '8px' }} onClick={() => workflowDetail(item)}/> }

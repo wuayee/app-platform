@@ -45,7 +45,7 @@ const Knowledge = (props) => {
               knows.map((item, index) => {
                 return (
                   <div className='item' key={index} >
-                    <span>{item.name}</span>
+                    <span className='text'>{item.name}</span>
                     <span>
                       <CloseOutlined 
                         style={{ cursor: 'pointer', fontSize: '14px', color: '#4D4D4D' }} 

@@ -35,7 +35,7 @@ const ToolCard = ({ pluginData, tenantId }: any) => {
       <div>
         <div style={{ display: 'flex' }}>
           <div className='tool-name'>
-            <span>{pluginData.name}</span> 
+            <span className='text'>{pluginData.name}</span> 
             {  pluginData.tags.includes('WATERFLOW') || pluginData.tags.includes('HUGGINGFACE') ? 
               <img src='/src/assets/images/ai/workflow.png' alt='' /> : 
               <img src='/src/assets/images/ai/application.png' alt='' />}
