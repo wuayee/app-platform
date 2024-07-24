@@ -142,7 +142,7 @@ const EditModal = (props) => {
             确定
           </Button>
         ]}>
-        <div className='edit-form-list'>
+        <div>
           <Form
             form={form}
             layout='vertical'

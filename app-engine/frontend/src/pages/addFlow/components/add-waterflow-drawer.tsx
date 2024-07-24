@@ -50,7 +50,7 @@ const AddWaterFlow = (props) => {
       extra={
         <CloseOutlined onClick={() => setOpen(false)}/>
       }>
-      <div className='edit-form-list' style={{ marginBottom: '30px' }}>
+      <div style={{ marginBottom: '30px' }}>
         <Form
           form={form}
           layout="vertical"
