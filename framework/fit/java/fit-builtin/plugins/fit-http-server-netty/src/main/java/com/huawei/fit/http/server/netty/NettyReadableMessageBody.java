@@ -7,10 +7,10 @@ package com.huawei.fit.http.server.netty;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.protocol.support.AbstractReadableMessageBody;
-import com.huawei.fit.http.server.netty.support.ByteBufReadableMessageBody;
 import com.huawei.fit.http.server.netty.support.CompositeByteBufReadableMessageBody;
 import com.huawei.fit.http.server.netty.support.FileChannelReadableMessageBody;
 import com.huawei.fitframework.inspection.Nonnull;
+import com.huawei.fitframework.inspection.Nullable;
 import com.huawei.fitframework.util.LockUtils;
 import com.huawei.fitframework.util.ThreadUtils;
 
@@ -38,26 +38,33 @@ public abstract class NettyReadableMessageBody extends AbstractReadableMessageBo
         this.checkIfClosed();
         while (true) {
             this.lock.lock();
-            try {
-                int read = this.read0();
-                if (read == -1) {
-                    if (this.writingFinished) {
-                        return -1;
-                    } else {
-                        try {
-                            this.condition.await();
-                        } catch (InterruptedException e) {
-                            throw new IOException(e);
-                        }
-                    }
-                } else {
-                    return read;
-                }
-            } finally {
-                this.lock.unlock();
+            Integer read = this.tryRead();
+            if (read != null) {
+                return read;
             }
             ThreadUtils.sleep(0);
         }
+    }
+
+    @Nullable
+    private Integer tryRead() throws IOException {
+        try {
+            int read = this.read0();
+            if (read != -1) {
+                return read;
+            }
+            if (this.writingFinished) {
+                return -1;
+            }
+            try {
+                this.condition.await();
+            } catch (InterruptedException e) {
+                throw new IOException(e);
+            }
+        } finally {
+            this.lock.unlock();
+        }
+        return null;
     }
 
     /**
