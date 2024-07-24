@@ -12,7 +12,7 @@ const TextEditor = ({ text, setText }) => {
         [{ list: 'ordered'}, { list: 'bullet'}],
         [{ align: []}],
         [{ color: []}, { background: []}],
-        ['link', 'image']
+        ['image']
       ]
     }
   }

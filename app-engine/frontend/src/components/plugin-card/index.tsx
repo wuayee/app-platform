@@ -2,9 +2,9 @@ import React from 'react';
 import { Dropdown, Flex, MenuProps, Tag } from 'antd';
 import { EllipsisOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
-import './style.scoped.scss';
 import { Icons } from '../icons';
 import { IconMap, PluginCardTypeE } from '@/pages/plugin/helper';
+import './style.scoped.scss';
 
 const PluginCard = ({ pluginData,cardType }: any) => {
   const navigate = useNavigate()
@@ -28,9 +28,9 @@ const PluginCard = ({ pluginData,cardType }: any) => {
     <div className='plugin-card-header'>
       <img src='/src/assets/images/knowledge/knowledge-base.png' />
       <div>
-        <div style={{ display: 'flex' }}>
-          <div style={{ fontSize: 20, marginBottom: 8 }}>
-            {pluginData?.name}
+      <div className='plugin-title'>
+          <div className='plugin-head'>
+            <span className='text plugin-text' title={pluginData?.name}>{pluginData?.name}</span>
           </div>
         </div>
         <div className='plugin-card-user'>
