@@ -8,7 +8,7 @@ create table if not exists store_tool
     "updated_time"   timestamp   default current_timestamp not null,
     "creator"        varchar(10) default 'system'          not null,
     "modifier"       varchar(10) default 'system'          not null,
-    "name"           varchar(64)                           not null,
+    "name"           varchar(256)                          not null,
     "description"    text        default 'no desc'         not null,
     "schema"         json        default '{}'::json        not null,
     "runnables"      json        default '{}'::json        not null,
