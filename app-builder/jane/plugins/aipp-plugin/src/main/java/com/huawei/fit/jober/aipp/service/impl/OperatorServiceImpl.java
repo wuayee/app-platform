@@ -18,7 +18,6 @@ import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
 
-import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.poifs.filesystem.FileMagic;
@@ -62,7 +61,7 @@ public class OperatorServiceImpl implements OperatorService {
 
     private static final Function<File, String> PDF_EXTRACTOR = pdfFile -> {
         try {
-            try (PDDocument doc = Loader.loadPDF(pdfFile)) {
+            try (PDDocument doc = PDDocument.load(pdfFile)) {
                 int pages = doc.getNumberOfPages();
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < pages; i++) {
