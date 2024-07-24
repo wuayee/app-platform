@@ -115,7 +115,6 @@ const AddFlow = (props) => {
             appRef={appRef} 
             flowIdRef={flowIdRef}
             setTestStatus={type ? setFlowTestStatus : setTestStatus}
-            setTestTime={type ? setFlowTestTime : setTestTime}
             elsaRunningCtl={elsaRunningCtl}
           />
         </div>

@@ -77,7 +77,6 @@ const Stage = (props) => {
   function elsaChange() {
     elsaRunningCtl.current?.reset();
     setTestStatus(null);
-    setTestTime(0);
     let graphChangeData = window.agent.serialize();
     currentApp.current.flowGraph.appearance = graphChangeData;
     window.agent.validate().then(() => {
