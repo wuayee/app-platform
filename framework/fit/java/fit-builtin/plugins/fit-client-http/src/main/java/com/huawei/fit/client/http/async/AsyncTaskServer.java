@@ -102,36 +102,42 @@ class AsyncTaskServer {
             }
 
             // 开始长轮询
-            try (HttpClassicClientRequest clientRequest = this.buildRequest(client, request, workerConfig)) {
-                try (HttpClassicClientResponse<Object> clientResponse = client.exchange(clientRequest)) {
-                    Response response = HttpClientUtils.getResponse(this.container, request, clientResponse);
-                    if (response.metadata().code() == AsyncTaskNotFoundException.CODE) {
-                        // 如果返回值为任务未找到 (AsyncTaskNotFoundException)，则说明服务器端已无任务，客户端现有的任务已丢失。
-                        // 此时应该停止长轮询、清理任务并退出服务器。
-                        this.cleanUp();
-                        return;
-                    } else if (response.metadata().code() == AsyncTaskNotCompletedException.CODE) {
-                        // 如果返回值为任务未完成，继续长轮询。
-                    } else {
-                        // 如果返回值为 OK 或者其他情况，则将结果传递给客户端请求线程。
-                        AsyncTaskResult result = new AsyncTaskResult(response);
-                        String asyncTaskId = HttpUtils.getAsyncTaskId(response.metadata().tagValues());
-                        SynchronousQueue<AsyncTaskResult> queue = this.pendingTasks.get(asyncTaskId);
-                        if (queue == null || !queue.offer(result)) {
-                            // queue 不存在或者投送失败时，把任务存入暂存区。offer() 方法不阻塞。
-                            this.completedTasks.put(asyncTaskId, result);
-                        }
-                        // 无论是否有线程阻塞在执行结果上，都清除已完成的任务。
-                        this.pendingTasks.remove(asyncTaskId);
-                    }
-                }
-            } catch (Exception e) {
-                // 捕获全部异常。任何异常抛出，都会触发长轮询线程退出并清理所有已有任务。
-                log.warn("Async task server will stop due to exception. [id={}]", this.instanceId, e);
-                this.cleanUp();
+            if (this.startLongPolling(request, client, workerConfig)) {
                 return;
             }
         }
+    }
+
+    private boolean startLongPolling(Request request, HttpClassicClient client, WorkerConfig workerConfig) {
+        try (HttpClassicClientRequest clientRequest = this.buildRequest(client, request, workerConfig);
+             HttpClassicClientResponse<Object> clientResponse = client.exchange(clientRequest)) {
+            Response response = HttpClientUtils.getResponse(this.container, request, clientResponse);
+            if (response.metadata().code() == AsyncTaskNotFoundException.CODE) {
+                // 如果返回值为任务未找到 (AsyncTaskNotFoundException)，则说明服务器端已无任务，客户端现有的任务已丢失。
+                // 此时应该停止长轮询、清理任务并退出服务器。
+                this.cleanUp();
+                return true;
+            } else if (response.metadata().code() == AsyncTaskNotCompletedException.CODE) {
+                // 如果返回值为任务未完成，继续长轮询。
+            } else {
+                // 如果返回值为 OK 或者其他情况，则将结果传递给客户端请求线程。
+                AsyncTaskResult result = new AsyncTaskResult(response);
+                String asyncTaskId = HttpUtils.getAsyncTaskId(response.metadata().tagValues());
+                SynchronousQueue<AsyncTaskResult> queue = this.pendingTasks.get(asyncTaskId);
+                if (queue == null || !queue.offer(result)) {
+                    // queue 不存在或者投送失败时，把任务存入暂存区。offer() 方法不阻塞。
+                    this.completedTasks.put(asyncTaskId, result);
+                }
+                // 无论是否有线程阻塞在执行结果上，都清除已完成的任务。
+                this.pendingTasks.remove(asyncTaskId);
+            }
+        } catch (Exception e) {
+            // 捕获全部异常。任何异常抛出，都会触发长轮询线程退出并清理所有已有任务。
+            log.warn("Async task server will stop due to exception. [id={}]", this.instanceId, e);
+            this.cleanUp();
+            return true;
+        }
+        return false;
     }
 
     /**
