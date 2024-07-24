@@ -34,6 +34,7 @@ export const historyChatProcess = (res) => {
           type: 'receive',
           instanceId: item.instanceId,
           finished: true,
+          messageType: 'history',
           feedbackStatus: -1,
           appName: item.appName,
           appIcon: item.appIcon,
