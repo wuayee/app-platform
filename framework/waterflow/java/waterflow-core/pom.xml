@@ -20,7 +20,6 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <guava.version>32.0.1-jre</guava.version>
-        <ohscript.version>0.0.3-SNAPSHOT</ohscript.version>
         <lombok.version>1.18.26</lombok.version>
         <aviator.version>5.3.3</aviator.version>
     </properties>
@@ -35,25 +34,6 @@
             <groupId>com.huawei.fitframework.extension</groupId>
             <artifactId>fit-schedule</artifactId>
             <version>${fit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.ohscript</groupId>
-            <artifactId>ohscript</artifactId>
-            <version>${ohscript.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.huawei.fitframework</groupId>
-                    <artifactId>fit-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.huawei.fitframework</groupId>
-                    <artifactId>fit-util</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.huawei.fit.service</groupId>
-                    <artifactId>fit-http-classic</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.googlecode.aviator</groupId>
