@@ -8,9 +8,13 @@ import { httpUrlMap } from '@shared/http/httpConfig';
 import { appPublish, updateFlowInfo } from '@shared/http/aipp';
 import { versionStringCompare } from '@shared/utils/common';
 import './styles/publish-modal.scss';
+import { updateChatId } from "../../shared/utils/common";
 const { TextArea } = Input;
+import { useAppDispatch } from "@/store/hook";
+import { setChatId, setChatList } from "@/store/chatStore/chatStore";
 
 const PublishModal = (props) => {
+  const dispatch = useAppDispatch();
   const { modalRef, appInfo, publishType } = props;
   const { appId, tenantId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,6 +62,9 @@ const PublishModal = (props) => {
       if (res.code === 0) {
         Message({ type: 'success', content: `发布应用成功` });
         setIsModalOpen(false);
+        updateChatId(null, appId);
+        dispatch(setChatId(null));
+        dispatch(setChatList([]));
         navigate(`/app`);
       }
     } finally {
@@ -162,7 +169,7 @@ const PublishModal = (props) => {
               { pattern:/^([0-9]+)\.([0-9]+)\.([0-9]+)$/, message: '版本格式错误' }
             ]}
           >
-            <Input showCount maxLength={10} />
+            <Input showCount maxLength={8} />
           </Form.Item>
           <Form.Item
             label="版本描述"

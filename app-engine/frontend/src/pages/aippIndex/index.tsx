@@ -88,6 +88,9 @@ const AippIndex = () => {
   };
   // 打开调试抽屉方法
   const openDebug = () => {
+    if (!showElsa) {
+      setShowElsa(true);
+    }
     addFlowRef.current.handleDebugClick();
   }
   const handleTestStatus = (value) => setTestStatus(value);

@@ -34,8 +34,8 @@ const ChoreographyHead = (props) => {
 
   // 点击应用发布按钮
   function handleUploadApp() {
-    if (testStatus === 'Running') {
-      Message({type: 'warning', content: '应用正在调试中，请勿发布'});
+    if (testStatus !== 'Finished') {
+      testRef.current.showModal();
       return;
     }
     modalRef.current.showModal();
