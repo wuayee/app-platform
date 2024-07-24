@@ -4,17 +4,20 @@
 # 创建动态链接库目标目录
 mkdir -p src/main/resources/jni
 
-if [ "${PLATFORM}" = "x86_64" ]; then
-    databus_compiler="g++"
-else
-    databus_compiler="aarch64-linux-gnu-g++"
-fi
-
-# 编译源文件并生成目标文件
-${databus_compiler} -c -fPIC -I ${JAVA_HOME}/include -I ${JAVA_HOME}/include/linux \
+# 编译源文件并生成x86目标文件
+g++ -c -fPIC -I ${JAVA_HOME}/include -I ${JAVA_HOME}/include/linux \
 src/main/java/com/huawei/databus/sdk/client/jni/SharedMemoryReaderWriter.cpp -o \
 src/main/java/com/huawei/databus/sdk/client/jni/SharedMemoryReaderWriter.o
 
 # 链接目标文件并生成动态链接库
-${databus_compiler} -shared -fPIC -o \
-src/main/resources/jni/libdatabus.so src/main/java/com/huawei/databus/sdk/client/jni/SharedMemoryReaderWriter.o -lc
+g++ -shared -fPIC -o \
+src/main/resources/jni/libdatabus_x86.so src/main/java/com/huawei/databus/sdk/client/jni/SharedMemoryReaderWriter.o -lc
+
+# 编译源文件并生成aarch64目标文件
+aarch64-linux-gnu-g++ -c -fPIC -I ${JAVA_HOME}/include -I ${JAVA_HOME}/include/linux \
+src/main/java/com/huawei/databus/sdk/client/jni/SharedMemoryReaderWriter.cpp -o \
+src/main/java/com/huawei/databus/sdk/client/jni/SharedMemoryReaderWriter.o
+
+# 链接目标文件并生成动态链接库
+aarch64-linux-gnu-g++ -shared -fPIC -o \
+src/main/resources/jni/libdatabus_aarch64.so src/main/java/com/huawei/databus/sdk/client/jni/SharedMemoryReaderWriter.o -lc
