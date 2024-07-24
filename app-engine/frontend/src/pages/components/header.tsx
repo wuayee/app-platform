@@ -8,6 +8,9 @@ import TestStatus from './test-status';
 import TestModal from './test-modal';
 import './styles/header.scss'
 import {Message} from "@/shared/utils/message";
+import { useAppDispatch } from "@/store/hook";
+import { updateChatId } from "../../shared/utils/common";
+import { setChatId, setChatList } from "@/store/chatStore/chatStore";
 
 const ChoreographyHead = (props) => {
   const { 
@@ -24,6 +27,7 @@ const ChoreographyHead = (props) => {
   let testRef = React.createRef();
   const { tenantId, appId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   useEffect(() => {
     showTime && getCurrentTime();
   }, [appInfo])
@@ -54,6 +58,9 @@ const ChoreographyHead = (props) => {
     setCurrentTime(str);
   }
   const chatClick = () => {
+    updateChatId(null, appId);
+    dispatch(setChatId(null));
+    dispatch(setChatList([]));
     navigate(`/app/${tenantId}/chat/${appId}`);
   }
   const versionDetail = () => {
