@@ -19,10 +19,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -73,14 +73,14 @@ public class ExcelSource extends Source<List<Document>> {
     }
 
     private void normalExtract(Integer headRow, Integer dataRow, Integer rowNum, Sheet sheet) {
-        Integer endRow = Math.min(rowNum == -1 ? sheet.getPhysicalNumberOfRows() : (dataRow + rowNum),
+        int endRow = Math.min(rowNum == -1 ? sheet.getPhysicalNumberOfRows() : (dataRow + rowNum),
                 sheet.getPhysicalNumberOfRows());
         int colNum = sheet.getRow(0).getPhysicalNumberOfCells();
 
         sheet.getRow(headRow).forEach((cell) -> {
             titleName.add(cell.getStringCellValue());
         });
-        for (Integer rowNo = dataRow; rowNo < endRow; rowNo++) {
+        for (int rowNo = dataRow; rowNo < endRow; rowNo++) {
             List<String> rowContent = new ArrayList<>();
             Row row = sheet.getRow(rowNo);
             if (row == null) {
@@ -115,7 +115,7 @@ public class ExcelSource extends Source<List<Document>> {
         titleName.add("近义词");
         titleName.add("标准词");
 
-        Integer readNum = rowNum == -1 ? sheet.getPhysicalNumberOfRows() : rowNum;
+        int readNum = rowNum == -1 ? sheet.getPhysicalNumberOfRows() : rowNum;
         for (int i = 0; i < readNum; i++) {
             Row row = sheet.getRow(i);
             for (int j = 1; j < row.getPhysicalNumberOfCells(); j++) {
@@ -140,7 +140,7 @@ public class ExcelSource extends Source<List<Document>> {
             tags.add(cell.getStringCellValue());
         });
 
-        Integer readNum = rowNum == -1 ? sheet.getPhysicalNumberOfRows() : rowNum + 1;
+        int readNum = rowNum == -1 ? sheet.getPhysicalNumberOfRows() : rowNum + 1;
         for (int i = 1; i < readNum; i++) {
             Row row = sheet.getRow(i);
             for (int j = 0; j < tags.size(); j++) {
