@@ -159,7 +159,7 @@ function _InputForm({queryData, disabled}) {
                             <span className="retrieval-starred-text jade-font-size">query</span>
                         </Col>
                         <Col span={8} style={{paddingRight: 0}}>
-                            <Form.Item id={`valueSource`} initialValue="Reference">
+                            <Form.Item id={`valueSource`} initialValue={queryData.from}>
                                 <JadeStopPropagationSelect
                                     disabled={disabled}
                                     id={`valueSource-select-${queryData.id}`}

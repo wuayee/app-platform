@@ -103,7 +103,7 @@ function _OutputVariableRow({item, handleItemChange, disabled}) {
                 <span className="end-starred-text">finalOutput</span>
             </Col>
             <Col span={6} style={{paddingRight: 0}}>
-                <Form.Item style={{marginBottom: '8px'}} id={`valueSource-${item.id}`} initialValue="Reference">
+                <Form.Item style={{marginBottom: '8px'}} id={`valueSource-${item.id}`} initialValue={item.from}>
                     <Select disabled={disabled}
                             id={`valueSource-select-${item.id}`}
                             className={"value-source-custom jade-select"}

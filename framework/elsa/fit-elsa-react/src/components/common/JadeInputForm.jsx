@@ -190,7 +190,7 @@ function _JadeInputForm({items, addItem, updateItem, deleteItem, disabled, conte
                                 </Form.Item>
                             </Col>
                             <Col span={6} style={{paddingRight: 0}}>
-                                <Form.Item id={`from-${item.id}`} name={`from-${item.id}`} initialValue="Reference">
+                                <Form.Item id={`from-${item.id}`} name={`from-${item.id}`} initialValue={item.from}>
                                     <JadeStopPropagationSelect
                                             disabled={disabled}
                                             id={`from-select-${item.id}`}
