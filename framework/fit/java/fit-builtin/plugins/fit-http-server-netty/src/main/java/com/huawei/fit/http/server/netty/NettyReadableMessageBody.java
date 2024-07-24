@@ -7,7 +7,6 @@ package com.huawei.fit.http.server.netty;
 import static com.huawei.fitframework.inspection.Validation.notNull;
 
 import com.huawei.fit.http.protocol.support.AbstractReadableMessageBody;
-import com.huawei.fit.http.server.netty.support.ByteBufReadableMessageBody;
 import com.huawei.fit.http.server.netty.support.CompositeByteBufReadableMessageBody;
 import com.huawei.fit.http.server.netty.support.FileChannelReadableMessageBody;
 import com.huawei.fitframework.inspection.Nonnull;
@@ -38,26 +37,38 @@ public abstract class NettyReadableMessageBody extends AbstractReadableMessageBo
         this.checkIfClosed();
         while (true) {
             this.lock.lock();
-            try {
-                int read = this.read0();
-                if (read == -1) {
-                    if (this.writingFinished) {
-                        return -1;
-                    } else {
-                        try {
-                            this.condition.await();
-                        } catch (InterruptedException e) {
-                            throw new IOException(e);
-                        }
-                    }
-                } else {
-                    return read;
-                }
-            } finally {
-                this.lock.unlock();
+            int read = this.tryRead();
+            if (read != Integer.MIN_VALUE) {
+                return read;
             }
             ThreadUtils.sleep(0);
         }
+    }
+
+    /**
+     * 尝试读取下一个字节。
+     *
+     * @return 当返回 {@code -1 - 255} 表示正常读取范围，当返回 {@link Integer#MIN_VALUE} 表示未读取到。
+     * @throws IOException 当发生 I/O 异常时。
+     */
+    private int tryRead() throws IOException {
+        try {
+            int read = this.read0();
+            if (read != -1) {
+                return read;
+            }
+            if (this.writingFinished) {
+                return -1;
+            }
+            try {
+                this.condition.await();
+            } catch (InterruptedException e) {
+                throw new IOException(e);
+            }
+        } finally {
+            this.lock.unlock();
+        }
+        return Integer.MIN_VALUE;
     }
 
     /**

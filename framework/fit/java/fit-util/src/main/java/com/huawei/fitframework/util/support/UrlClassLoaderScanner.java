@@ -161,10 +161,9 @@ public class UrlClassLoaderScanner implements ClassScanner {
         }
 
         private void scanDirectory(File directory) {
-            try {
-                Path root = directory.toPath();
-                Files.walk(root, Integer.MAX_VALUE)
-                        .filter(path -> path.toFile().getName().endsWith(ClassFile.FILE_EXTENSION))
+            Path root = directory.toPath();
+            try (Stream<Path> walk = Files.walk(root, Integer.MAX_VALUE)) {
+                walk.filter(path -> path.toFile().getName().endsWith(ClassFile.FILE_EXTENSION))
                         .forEach(path -> this.scanner.onClassDetected(root.relativize(path).toFile().getPath()));
             } catch (IOException e) {
                 throw new IllegalStateException(StringUtils.format("Failed to scan class directory. [directory={0}]",

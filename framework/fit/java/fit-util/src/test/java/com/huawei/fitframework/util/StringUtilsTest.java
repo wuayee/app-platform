@@ -1293,7 +1293,7 @@ public class StringUtilsTest {
 
         @Nested
         @DisplayName("Separator is 'oo'")
-        class GivenSeparatorOO {
+        class GivenSeparatorOo {
             private static final String SEPARATOR = "oo";
 
             @Test

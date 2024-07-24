@@ -32,6 +32,7 @@ import com.huawei.fitframework.value.ValueFetcher;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
@@ -182,35 +183,15 @@ public class NettyHttpClassicServer implements HttpClassicServer {
         EventLoopGroup bossGroup = createBossGroup();
         EventLoopGroup workerGroup = this.createWorkerGroup();
         try {
-            HttpClassicRequestAssembler.Config assemblerConfig = this.getAssemblerConfig();
-            ProtocolUpgrader upgrader = new ProtocolUpgrader(this, false, assemblerConfig.largeBodySize());
-            ProtocolUpgrader secureUpgrader = new ProtocolUpgrader(this, true, assemblerConfig.largeBodySize());
-            HttpClassicRequestAssembler assembler = new HttpClassicRequestAssembler(this, false, assemblerConfig);
-            HttpClassicRequestAssembler secureAssembler = new HttpClassicRequestAssembler(this, true, assemblerConfig);
-            SSLContext sslContext = this.httpsPort > 0 ? this.createSslContext() : null;
+            ChannelHandler channelHandler = new ChannelInitializerHandler(this,
+                    this.getAssemblerConfig(),
+                    this.httpsPort,
+                    this.httpsPort > 0 ? this.createSslContext() : null,
+                    this.httpsConfig);
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
-                    .childHandler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        protected void initChannel(SocketChannel ch) {
-                            ChannelPipeline pipeline = ch.pipeline();
-                            if (ch.localAddress().getPort() == NettyHttpClassicServer.this.httpsPort
-                                    && sslContext != null) {
-                                SSLEngine sslEngine = sslContext.createSSLEngine();
-                                sslEngine.setUseClientMode(false);
-                                sslEngine.setNeedClientAuth(httpsConfig.needClientAuth());
-                                pipeline.addLast(new SslHandler(sslEngine));
-                                pipeline.addLast(new HttpServerCodec());
-                                pipeline.addLast(secureUpgrader);
-                                pipeline.addLast(secureAssembler);
-                            } else {
-                                pipeline.addLast(new HttpServerCodec());
-                                pipeline.addLast(upgrader);
-                                pipeline.addLast(assembler);
-                            }
-                        }
-                    });
+                    .childHandler(channelHandler);
             this.logServerStarted();
             if (this.httpPort > 0) {
                 Channel channel = serverBootstrap.bind(this.httpPort).sync().channel();
@@ -311,5 +292,44 @@ public class NettyHttpClassicServer implements HttpClassicServer {
     @Override
     public ValueFetcher valueFetcher() {
         return this.valueFetcher;
+    }
+
+    private static class ChannelInitializerHandler extends ChannelInitializer<SocketChannel> {
+        private final int httpsPort;
+        private final SSLContext sslContext;
+        private final ServerConfig.Secure httpsConfig;
+        private final ProtocolUpgrader upgrader;
+        private final ProtocolUpgrader secureUpgrader;
+        private final HttpClassicRequestAssembler assembler;
+        private final HttpClassicRequestAssembler secureAssembler;
+
+        ChannelInitializerHandler(HttpClassicServer server, HttpClassicRequestAssembler.Config assemblerConfig,
+                int httpsPort, SSLContext sslContext, ServerConfig.Secure httpsConfig) {
+            this.httpsPort = httpsPort;
+            this.sslContext = sslContext;
+            this.httpsConfig = httpsConfig;
+            this.upgrader = new ProtocolUpgrader(server, false, assemblerConfig.largeBodySize());
+            this.secureUpgrader = new ProtocolUpgrader(server, true, assemblerConfig.largeBodySize());
+            this.assembler = new HttpClassicRequestAssembler(server, false, assemblerConfig);
+            this.secureAssembler = new HttpClassicRequestAssembler(server, true, assemblerConfig);
+        }
+
+        @Override
+        protected void initChannel(SocketChannel ch) {
+            ChannelPipeline pipeline = ch.pipeline();
+            if (ch.localAddress().getPort() == this.httpsPort && this.sslContext != null) {
+                SSLEngine sslEngine = this.sslContext.createSSLEngine();
+                sslEngine.setUseClientMode(false);
+                sslEngine.setNeedClientAuth(this.httpsConfig.needClientAuth());
+                pipeline.addLast(new SslHandler(sslEngine));
+                pipeline.addLast(new HttpServerCodec());
+                pipeline.addLast(this.secureUpgrader);
+                pipeline.addLast(this.secureAssembler);
+            } else {
+                pipeline.addLast(new HttpServerCodec());
+                pipeline.addLast(this.upgrader);
+                pipeline.addLast(this.assembler);
+            }
+        }
     }
 }
