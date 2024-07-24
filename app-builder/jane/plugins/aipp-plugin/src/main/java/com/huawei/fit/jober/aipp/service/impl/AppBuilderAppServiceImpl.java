@@ -1342,12 +1342,6 @@ public class AppBuilderAppServiceImpl
                 }
             }
         }
-        if (result.containsKey("knowledge")) {
-            List<Map<String, Object>> knowledge = ObjectUtils.cast(result.get("knowledge"));
-            knowledge.stream()
-                    .filter(k -> Objects.nonNull(k.get("id")))
-                    .forEach(o1 -> o1.put("id", Long.parseLong(o1.get("id").toString())));
-        }
         return result;
     }
 }
