@@ -107,10 +107,10 @@ const CreateWorkflow = (props) => {
             },
           ]}
         >
-          <Input />
+          <Input showCount maxLength={64} />
         </Form.Item>
-        <Form.Item label='描述' name='description'>
-          <TextArea rows={3} />
+        <Form.Item label='描述' name='description' style={{ marginBottom: '30px' }}>
+          <TextArea rows={3} showCount maxLength={300} />
         </Form.Item>
       </Form>
     </Modal>

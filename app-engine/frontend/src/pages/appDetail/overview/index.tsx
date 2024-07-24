@@ -56,19 +56,17 @@ const AppOverview: React.FC = () => {
               <div className='detail-name'>
                 <span className='text'>{detail?.name || 'Test AppName'}</span>
                 {
-                  detail.state === 'active' ?
+                  detail.attributes?.latest_version ?
                   (
                     <div className="status-tag">
                       <img src='/src/assets/images/ai/complate.png' />
                       <span>已发布</span>
-                      <span className="version">V{detail.version}</span>
                     </div>
                   ) :
                   (
                     <div className="status-tag">
                       <img src='/src/assets/images/ai/publish.png' />
                       <span>未发布</span>
-                      <span className="version">V{detail.version}</span>
                     </div>
                   )
                 }

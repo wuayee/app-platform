@@ -50,7 +50,7 @@ const AddWaterFlow = (props) => {
       extra={
         <CloseOutlined onClick={() => setOpen(false)}/>
       }>
-      <div className='edit-form-list'>
+      <div style={{ marginBottom: '30px' }}>
         <Form
           form={form}
           layout="vertical"
@@ -66,13 +66,13 @@ const AddWaterFlow = (props) => {
                 message: '输入字符长度范围：1 - 64'
               }]}
             >
-            <Input />
+            <Input maxLength={64} showCount />
           </Form.Item>
           <Form.Item
             label="简介"
             name="description"
           >
-            <Input />
+            <Input.TextArea rows={3} showCount maxLength={300} />
           </Form.Item>
         </Form>
       </div>

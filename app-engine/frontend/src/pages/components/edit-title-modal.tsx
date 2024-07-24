@@ -56,7 +56,7 @@ const EditTitleModal = (props) => {
             确定
           </Button>
         ]}>
-        <div className='edit-form-list' style={{ marginBottom: '30px' }}>
+        <div style={{ marginBottom: '30px' }}>
           <Form
             form={form}
             layout='vertical'

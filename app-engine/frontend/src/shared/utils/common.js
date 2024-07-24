@@ -254,7 +254,7 @@ export const fileValidate = (file) => {
     return false
   }
   if (!fileTypes.includes(fileEnd)) {
-    Message({ type: 'warning', content: '文件格式错误' });
+    Message({ type: 'warning', content: '只支持jpg，png，jpeg，gif类型的文件' });
     return false
   }
   return true
