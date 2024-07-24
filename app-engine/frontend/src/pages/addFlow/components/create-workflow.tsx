@@ -89,7 +89,7 @@ const CreateWorkflow = (props) => {
               beforeUpload={beforeUpload}
               onChange={onChange}
               showUploadList={false}
-              accept='.jpg,.png'
+              accept='.jpg,.png,.gif,.jpeg'
             >
               <Button icon={<ToTopOutlined />}>手动上传</Button>
             </Upload>
