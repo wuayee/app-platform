@@ -66,14 +66,14 @@ const AddHeader = (props) => {
       <div className='app-header'>
         <div className='logo'>
           <LeftArrowIcon className='back-icon' onClick={handleBackClick}/>
-          { appInfo?.attributes?.icon  ?
+          { (appInfo.attributes?.icon && appInfo.attributes?.icon !== 'null')  ?
             <img src={appInfo.attributes?.icon} /> :
             <img src='/src/assets/images/knowledge/knowledge-base.png' />
           }
           <span className='header-text' title={appInfo?.name}>{ appInfo?.name }</span>
           <img className='edit-icon' src='/src/assets/images/ai/edit.png' onClick={ handleEditClick } />
           {
-            appInfo.attributes?.latest_versio ?
+            appInfo.attributes?.latest_version ?
             (
               <div className='status-tag'>
                 <img src='/src/assets/images/ai/complate.png' />
