@@ -31,4 +31,11 @@ public @interface ToolMethod {
      * @return 表示工具方法的描述信息的 {@link String}。
      */
     String description() default "";
+
+    /**
+     * 获取工具方法的标签。
+     *
+     * @return 表示工具方法的标签的数组的 {@code String[]}。
+     */
+    String[] tags() default {};
 }

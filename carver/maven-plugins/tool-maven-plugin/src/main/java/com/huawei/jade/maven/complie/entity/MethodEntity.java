@@ -8,6 +8,7 @@ import com.huawei.jade.carver.tool.annotation.ToolMethod;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 表示 {@link ToolMethod} 注解下的方法实体。
@@ -23,6 +24,7 @@ public class MethodEntity {
     private List<ParameterEntity> parameterEntities;
     private String returnDescription;
     private String returnType;
+    private Set<String> tags;
 
     /**
      * 方法实体的无参构造方法。
@@ -106,7 +108,7 @@ public class MethodEntity {
     /**
      * 表示获取方法的参数列表信息。
      *
-     * @return 获取方法的参数列表信息的{@link List}{@code <}{@link ParameterEntity}{@code >}。
+     * @return 获取方法的参数列表信息的 {@link List}{@code <}{@link ParameterEntity}{@code >}。
      */
     public List<ParameterEntity> getParameterEntities() {
         return this.parameterEntities;
@@ -155,5 +157,23 @@ public class MethodEntity {
      */
     public void setReturnType(String returnType) {
         this.returnType = returnType;
+    }
+
+    /**
+     * 表示获取方法的标签。
+     *
+     * @return 获取方法的标签的 {@link Set}{@code <}{@link String}{@code >}。
+     */
+    public Set<String> getTags() {
+        return this.tags;
+    }
+
+    /**
+     * 表示设置的方法的标签。
+     *
+     * @param tags 表示给定的方法标签的 {@link Set}{@code <}{@link String}{@code >}。
+     */
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
     }
 }

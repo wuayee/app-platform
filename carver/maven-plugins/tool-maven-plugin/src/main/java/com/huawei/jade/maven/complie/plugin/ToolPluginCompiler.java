@@ -86,7 +86,6 @@ public class ToolPluginCompiler extends AbstractCompiler {
             objectMapper.writeValue(jsonFile, toolJson);
             log.info("Write tool json successfully. [file={}]", fileName);
         } catch (IOException e) {
-            log.info("Failed to write tool manifest. [file={}]", fileName);
             throw new MojoExecutionException(StringUtils.format("Failed to write tool manifest. [file={0}]", fileName),
                     e);
         }

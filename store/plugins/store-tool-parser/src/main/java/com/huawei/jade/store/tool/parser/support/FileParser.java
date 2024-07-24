@@ -28,6 +28,7 @@ public class FileParser {
     private static final String DESCRIPTION = "description";
     private static final String TAGS = "tags";
     private static final String COMMA = ",";
+    private static final String EXTENSIONS = "extensions";
 
     /**
      * 表示基于工具名列表匹配工具数据。
@@ -57,7 +58,8 @@ public class FileParser {
 
         Map<String, Object> runnables = ObjectUtils.cast(toolFile.get(RUNNABLES));
         pluginData.setRunnables(runnables);
-        List<String> tags = ObjectUtils.cast(toolFile.get(TAGS));
+        Map<String, Object> extensions = ObjectUtils.cast(toolFile.get(EXTENSIONS));
+        List<String> tags = ObjectUtils.cast(extensions.get(TAGS));
         pluginData.setTags(new HashSet<>(tags));
         return pluginData;
     }
