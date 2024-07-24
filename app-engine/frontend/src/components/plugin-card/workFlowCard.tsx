@@ -31,9 +31,9 @@ const WorkflowCard = ({ pluginData }: any) => {
     <div className='plugin-card-header'>
       <img src='/src/assets/images/knowledge/knowledge-base.png' />
       <div>
-        <div style={{ display: 'flex' }}>
-          <div style={{ fontSize: 20, marginBottom: 8 }}>
-            {pluginData?.name}
+        <div className='plugin-title'>
+          <div className='plugin-head'>
+            <span className='text' title={pluginData?.name}>{pluginData?.name}</span>
             <Tag className='version'>V{pluginData?.version}</Tag>
           </div>
         </div>
