@@ -12,7 +12,7 @@ create table if not exists store_plugin
     "owner"            varchar(32) default 'system'          not null,
     "like_count"       bigint      default 0                 not null,
     "download_count"   bigint      default 0                 not null,
-    "tool_name"        varchar(64)                           not null,
+    "tool_name"        varchar(256)                          not null,
     "tool_unique_name" char(36)                              not null,
     unique("tool_unique_name")
     );
