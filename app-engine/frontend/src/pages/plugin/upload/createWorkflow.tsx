@@ -128,10 +128,10 @@ const CreateWorkfowDrawer = (props) => {
               },
             ]}
           >
-            <Input />
+            <Input showCount maxLength={64} />
           </Form.Item>
           <Form.Item label='描述' name='description'>
-            <TextArea rows={3} />
+            <TextArea rows={3} showCount maxLength={300} />
           </Form.Item>
         </Form>
       </div>

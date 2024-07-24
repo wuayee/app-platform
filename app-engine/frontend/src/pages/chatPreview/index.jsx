@@ -78,8 +78,7 @@ const ChatPreview = (props) => {
     !chatType && dispatch(setInspirationOpen(true));
     currentInfo.current = appInfo;
     return () => {
-      wsCurrent.current?.close();
-      wsCurrent.current = null;
+      closeWebsocket();
     }
   }, []);
 
@@ -405,6 +404,11 @@ const ChatPreview = (props) => {
     setTimeout(() => {
       scrollBottom();
     }, 50);
+  }
+  // 手动关闭websocket
+  function closeWebsocket () {
+    wsCurrent.current?.close();
+    wsCurrent.current = null;
   }
   return (
     <div className={`

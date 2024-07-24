@@ -7,6 +7,7 @@ import { getAppInfo } from '@/shared/http/aipp';
 import { setAppId, setAppInfo } from '@/store/appInfo/appInfo';
 import { useAppDispatch, useAppSelector } from '@/store/hook';
 import { storage } from '@/shared/storage';
+import { trans } from '@shared/utils/common';
 import './index.scoped..scss';
 
 const ChatRunning = () => {
@@ -52,7 +53,7 @@ const ChatRunning = () => {
   }
   // 保存并显示弹层
   const setModalContent = (data, arr) => {
-    let { publishedUpdateLog } = data;
+    let { publishedUpdateLog } = data.attributes;
     if (publishedUpdateLog && publishedUpdateLog.length) {
       setNotice(publishedUpdateLog);
       setIsModalOpen(true);
@@ -67,7 +68,7 @@ const ChatRunning = () => {
     <div className='chat-running-container'>
       <div className='chat-running-chat'>
         <Button type='text' onClick={()=> { navigate(-1)}}>返回</Button>
-        { appInfo.name }
+        <span className='running-app-name'>{ appInfo.name }</span> 
       </div>
       <CommonChat /> 
       <Modal 
@@ -77,8 +78,8 @@ const ChatRunning = () => {
         onCancel={() => setIsModalOpen(false)}
         centered
         footer={null}>
-        <div style={{ maxHeight: '400px', overflow: 'auto', padding: '12px' }}>
-          公告
+        <div style={{ maxHeight: '400px', overflow: 'auto'}}>
+          <div dangerouslySetInnerHTML={{ __html: trans(notice)}}></div>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Button onClick={() => setIsModalOpen(false)}>我知道了</Button>
