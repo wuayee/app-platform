@@ -89,8 +89,12 @@ const jadeFlowAgent = (graph) => {
             // 结束运行.
             stop: () => {
                 nodes.forEach(n => {
-                    n.moveable = true;
-                    n.emphasized = false;
+                    // 修改属性会导致dirties事件，并且dirties事件是异步的，因此在触发时，isRunning已是false状态.
+                    // 所以这里需要使用ignoreChange使其不触发dirties事件.
+                    n.ignoreChange(() => {
+                        n.moveable = true;
+                        n.emphasized = false;
+                    });
                     n.drawer.setDisabled(false);
                 });
                 graph.activePage.isRunning = false;
