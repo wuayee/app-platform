@@ -4,7 +4,7 @@
 
 package com.huawei.fit.waterflow.domain.parsers.shapehandler;
 
-import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;

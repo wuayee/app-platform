@@ -30,8 +30,8 @@ import com.huawei.fit.waterflow.domain.enums.FlowNodeType;
 import com.huawei.fit.waterflow.domain.parsers.nodes.events.EventParser;
 import com.huawei.fitframework.util.ObjectUtils;
 
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
