@@ -79,6 +79,6 @@ public class EvalDataController {
      */
     @PutMapping(description = "修改评估数据")
     public void updateEvalData(@RequestBody @Validated EvalDataUpdateDto updateDto) {
-        this.evalDataService.update(updateDto.getDataId(), updateDto.getContent());
+        this.evalDataService.update(updateDto.getDatasetId(), updateDto.getDataId(), updateDto.getContent());
     }
 }

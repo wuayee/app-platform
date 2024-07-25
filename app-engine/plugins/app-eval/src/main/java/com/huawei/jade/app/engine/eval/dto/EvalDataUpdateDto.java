@@ -20,6 +20,10 @@ import lombok.Data;
 @Data
 public class EvalDataUpdateDto {
     @Property(description = "数据集编号", required = true, defaultValue = "1")
+    @Range(min = 1, max = Long.MAX_VALUE, message = "The dataset id is invalid.")
+    private Long datasetId;
+
+    @Property(description = "数据编号", required = true, defaultValue = "1")
     @Range(min = 1, max = Long.MAX_VALUE, message = "The data id is invalid.")
     private Long dataId;
 

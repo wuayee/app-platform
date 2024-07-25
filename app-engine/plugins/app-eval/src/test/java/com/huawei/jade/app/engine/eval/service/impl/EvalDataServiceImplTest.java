@@ -92,9 +92,17 @@ public class EvalDataServiceImplTest {
     @Test
     @DisplayName("更新评估数据成功")
     void shouldOkWhenUpdate() {
-        evalDataService.update(1L, "test1");
+        evalDataService.update(1L, 1L, "test1");
         verify(evalDataMapper, times(1)).updateExpiredVersion(anyList(), anyLong());
         verify(evalDataMapper, times(1)).insertAll(anyList());
+    }
+
+    @Test
+    @DisplayName("更新评估数据失败")
+    void shouldFailWhenUpdate() {
+        when(evalDataMapper.updateExpiredVersion(anyList(), anyLong())).thenReturn(0);
+        assertThatThrownBy(() ->
+                evalDataService.update(1L, 2L, "test")).isInstanceOf(AppEvalException.class);
     }
 
     @Test
@@ -102,8 +110,8 @@ public class EvalDataServiceImplTest {
     void shouldFailWhenVerifyError() {
         doThrow(new AppEvalException(AppEvalRetCodeEnum.EVAL_DATA_INVALID_ERROR, "a", "b")).when(this.evalDataValidator)
                 .verify(anyLong(), anyList());
-        assertThatThrownBy(() -> this.evalDataService.insertAll(1L,
-                TEST_CONTENTS)).isInstanceOf(AppEvalException.class);
+        assertThatThrownBy(() ->
+                evalDataService.insertAll(1L, TEST_CONTENTS)).isInstanceOf(AppEvalException.class);
     }
 
     @Test

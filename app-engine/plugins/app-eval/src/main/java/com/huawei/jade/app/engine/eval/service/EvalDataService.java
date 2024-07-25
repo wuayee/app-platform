@@ -44,7 +44,8 @@ public interface EvalDataService {
      * 修改评估数据。
      *
      * @param datasetId 表示评估数据集编号的 {@link Long}。
+     * @param dataId 表示评估数据编号的 {@link Long}。
      * @param contents 表示评估内容的 {@link String}。
      */
-    void update(Long datasetId, String content);
+    void update(Long datasetId, Long dataId, String content);
 }

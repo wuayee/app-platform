@@ -19,4 +19,7 @@ import java.util.List;
 public class EvalDataValidatorImpl implements EvalDataValidator {
     @Override
     public void verify(Long datasetId, List<String> contents) {}
+
+    @Override
+    public void verify(Long datasetId, String contents) {}
 }

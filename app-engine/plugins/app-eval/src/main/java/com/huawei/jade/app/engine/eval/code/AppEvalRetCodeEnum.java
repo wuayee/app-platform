@@ -17,7 +17,12 @@ public enum AppEvalRetCodeEnum implements RetCode, ModelInfo {
     /**
      * 评估数据 schema 校验失败，占位符分别代表评估内容和 schema。
      */
-    EVAL_DATA_INVALID_ERROR(1, "The content `{0}` cannot match schema `{1}`");
+    EVAL_DATA_INVALID_ERROR(1, "The content `{0}` cannot match schema `{1}`"),
+
+    /**
+     * 评估数据已被删除，占位符代表评估数据id。
+     */
+    EVAL_DATA_DELETED_ERROR(2, "The data with id `{0}` is already deleted");
 
     private final int code;
     private final String msg;

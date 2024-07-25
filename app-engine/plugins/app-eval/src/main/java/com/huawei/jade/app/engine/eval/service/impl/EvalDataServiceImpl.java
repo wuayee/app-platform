@@ -7,6 +7,9 @@ package com.huawei.jade.app.engine.eval.service.impl;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
 import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
+import com.huawei.fitframework.transaction.Transactional;
+import com.huawei.jade.app.engine.eval.code.AppEvalRetCodeEnum;
+import com.huawei.jade.app.engine.eval.exception.AppEvalException;
 import com.huawei.jade.app.engine.eval.manager.EvalDataValidator;
 import com.huawei.jade.app.engine.eval.manager.EvalDatasetVersionManager;
 import com.huawei.jade.app.engine.eval.mapper.EvalDataMapper;
@@ -70,17 +73,20 @@ public class EvalDataServiceImpl implements EvalDataService {
     }
 
     @Override
-    public void update(Long datasetId, String content) {
-        dataValidator.verify(datasetId, Collections.singletonList(content));
+    @Transactional
+    public void update(Long datasetId, Long dataId, String content) throws AppEvalException {
+        dataValidator.verify(datasetId, content);
         long version = versionManager.applyVersion();
-        EvalDataPo evalDataPo = new EvalDataPo();
-        evalDataPo.setContent(content);
-        evalDataPo.setCreatedVersion(version);
-        evalDataPo.setExpiredVersion(version);
-        evalDataPo.setDatasetId(datasetId);
-        int effectRows = this.dataMapper.updateExpiredVersion(Collections.singletonList(evalDataPo), version);
-        if (effectRows != 0) {
-            this.dataMapper.insertAll(Collections.singletonList(evalDataPo));
+        EvalDataPo deletePo = new EvalDataPo();
+        deletePo.setId(dataId);
+        int effectRows = this.dataMapper.updateExpiredVersion(Collections.singletonList(deletePo), version);
+        if (effectRows == 0) {
+            throw new AppEvalException(AppEvalRetCodeEnum.EVAL_DATA_DELETED_ERROR, dataId);
         }
+        EvalDataPo insertPo = new EvalDataPo();
+        insertPo.setContent(content);
+        insertPo.setCreatedVersion(version);
+        insertPo.setDatasetId(datasetId);
+        this.dataMapper.insertAll(Collections.singletonList(insertPo));
     }
 }

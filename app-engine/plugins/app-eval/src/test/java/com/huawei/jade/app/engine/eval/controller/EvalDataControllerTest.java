@@ -91,9 +91,10 @@ public class EvalDataControllerTest {
     @Test
     @DisplayName("修改评估数据接口成功")
     public void shouldOkWhenUpdateEvalData() {
-        Mockito.doNothing().when(evalDataService).update(anyLong(), anyString());
+        Mockito.doNothing().when(evalDataService).update(anyLong(), anyLong(), anyString());
 
         EvalDataUpdateDto evalDataUpdateDto = new EvalDataUpdateDto();
+        evalDataUpdateDto.setDatasetId(1L);
         evalDataUpdateDto.setDataId(1L);
         evalDataUpdateDto.setContent("{}");
 
