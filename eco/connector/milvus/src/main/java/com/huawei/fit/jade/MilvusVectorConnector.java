@@ -52,7 +52,6 @@ import io.milvus.response.DescCollResponseWrapper;
 import io.milvus.response.GetCollStatResponseWrapper;
 import io.milvus.response.QueryResultsWrapper;
 import io.milvus.response.SearchResultsWrapper;
-import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,6 +62,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import javafx.util.Pair;
 
 /**
  * MIlvus数据库连接器。

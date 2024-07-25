@@ -10,6 +10,7 @@ import com.huawei.jade.fel.rag.Document;
 import com.huawei.jade.fel.rag.common.IdGenerator;
 
 import lombok.Getter;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -19,18 +20,17 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 /**
  * pdf类型的数据源。
  * <p>将pdf类型的数据包装为Document类型。</p>
  *
- * @since 2024-05-013
+ * @since 2024-05-13
  */
 public class ExcelSource extends Source<List<Document>> {
     private static final Logger logger = Logger.get(ExcelSource.class);
@@ -46,7 +46,7 @@ public class ExcelSource extends Source<List<Document>> {
         RELATIONAL_ENUM_FILE,
     }
 
-    private boolean isExcelXLS(String path) throws IllegalArgumentException{
+    private boolean isExcelXLS(String path) throws IllegalArgumentException {
         int dotIdx = path.indexOf(".");
         if (dotIdx == -1) {
             logger.error("illegal file path: {}", path);
