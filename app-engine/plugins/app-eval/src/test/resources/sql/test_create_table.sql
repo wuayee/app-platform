@@ -1,6 +1,6 @@
-drop table if exists app_engine_eval_data;
+drop table if exists t_app_engine_eval_data;
 
-create table app_engine_eval_data
+create table t_app_engine_eval_data
 (
     "id"              bigserial primary key                   not null,
     "content"         text                                    not null,
@@ -10,5 +10,5 @@ create table app_engine_eval_data
     "updated_at"      timestamp   default current_timestamp   not null,
     "created_by"      varchar(10) default 'system'            not null,
     "updated_by"      varchar(10) default 'system'            not null,
-    "ds_id"           bigint                                  not null
+    "dataset_id"      bigint                                  not null
 );

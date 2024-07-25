@@ -10,7 +10,7 @@
     </resultMap>
 
     <insert id="insertAll" useGeneratedKeys="true" keyProperty="id">
-        insert into app_engine_eval_data (content, created_version, ds_id) values
+        insert into t_app_engine_eval_data (content, created_version, dataset_id) values
         <foreach collection="list" separator="," item="item">
             (#{item.content}, #{item.createdVersion}, #{item.datasetId})
         </foreach>
@@ -40,7 +40,7 @@
     </select>
 
     <update id="updateExpiredVersion">
-        update app_engine_eval_data
+        update t_app_engine_eval_data
         set expired_version = #{version}
         where (expired_version = 9223372036854775807) AND id in
         <foreach collection="list" separator="," item="item" open="(" close=")">
