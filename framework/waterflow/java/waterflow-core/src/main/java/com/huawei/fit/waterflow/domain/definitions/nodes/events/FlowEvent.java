@@ -4,18 +4,11 @@
 
 package com.huawei.fit.waterflow.domain.definitions.nodes.events;
 
-import com.huawei.fit.waterflow.domain.context.FlowData;
-import com.huawei.fit.waterflow.domain.utils.FlowUtil;
-
-import com.googlecode.aviator.AviatorEvaluator;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Optional;
 
 /**
  * 流程定义节点事件关键类
@@ -54,17 +47,4 @@ public class FlowEvent {
      * 节点事件中条件属性
      */
     private String conditionRule;
-
-    /**
-     * 通过输入参数解析condition rule
-     * condition rule解析完后可以通过{@link AviatorEvaluator}执行
-     *
-     * @param flowData {@link FlowData} 流程执行过程中的用户数据
-     * @return 解析完的condition rule
-     */
-    public String getExecutableRule(FlowData flowData) {
-        return Optional.ofNullable(FlowUtil.replace(this.conditionRule, flowData.getBusinessData()))
-                .map(Object::toString)
-                .orElse("");
-    }
 }

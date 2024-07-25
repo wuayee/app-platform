@@ -67,7 +67,7 @@
       "name": "PM审批任务成功",
       "from": "condition1",
       "to": "state2",
-      "conditionRule": "{{status}}"
+      "conditionRule": "businessData.status == \"true\""
     },
     {
       "type": "event",
@@ -75,7 +75,7 @@
       "name": "PM审批任务失败",
       "from": "condition1",
       "to": "ender1",
-      "conditionRule": "!{{status}}"
+      "conditionRule": "!(businessData.status == \"true\")"
     },
     {
       "type": "event",

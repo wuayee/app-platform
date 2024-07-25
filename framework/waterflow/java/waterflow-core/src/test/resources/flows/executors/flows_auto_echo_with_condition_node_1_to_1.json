@@ -26,7 +26,7 @@
         "type": "ECHO_JOBER",
         "name": "自动echo1",
         "echoPrefix": "state1: ",
-        "skipVariables": "cmc.approved,committer.approved,application"
+        "skipVariables": "cmc,committer,application"
       }
     },
     {
@@ -44,7 +44,7 @@
         "type": "ECHO_JOBER",
         "name": "自动echo2",
         "echoPrefix": "state2: ",
-        "skipVariables": "cmc.approved,committer.approved,application"
+        "skipVariables": "cmc,committer,application"
       }
     },
     {

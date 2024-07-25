@@ -30,7 +30,7 @@
         "name": "测试ECHO_JOBER使用自定义属性",
         "type": "ECHO_JOBER",
         "echoPrefix": "hello: ",
-        "skipVariables": "libing.status,libing.id,application"
+        "skipVariables": "libingStatus,libingId,application"
       }
     },
     {

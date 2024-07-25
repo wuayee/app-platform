@@ -46,7 +46,7 @@
       "jober": {
         "type": "ECHO_JOBER",
         "name": "发送审批通知",
-        "skipVariables": "approve.status"
+        "skipVariables": "approve"
       }
     },
     {

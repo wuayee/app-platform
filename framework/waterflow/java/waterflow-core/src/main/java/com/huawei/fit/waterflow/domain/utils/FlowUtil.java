@@ -4,6 +4,9 @@
 
 package com.huawei.fit.waterflow.domain.utils;
 
+import static com.huawei.fit.waterflow.domain.common.Constant.BUSINESS_DATA_KEY;
+import static com.huawei.fit.waterflow.domain.common.Constant.PASS_DATA;
+
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -24,7 +27,9 @@ import java.util.regex.Pattern;
 public final class FlowUtil {
     private static final Logger LOG = Logger.get(FlowUtil.class);
 
-    private static final Pattern PATTERN = Pattern.compile("\\{\\{([^\\}]+)\\}\\}");
+    private static final Pattern LEGACY_RULE_KEY_PATTERN = Pattern.compile("\\{\\{([^\\}]+)\\}\\}");
+
+    private static final Pattern LEGACY_RULE_KEY_PATTERN_WITH_QUOTES = Pattern.compile("'\\{\\{([^\\}]+)\\}\\}'");
 
     /**
      * 获取流程引擎变量原始值
@@ -38,7 +43,7 @@ public final class FlowUtil {
             return new ArrayList<>();
         }
         List<String> result = new ArrayList<>();
-        Matcher matcher = PATTERN.matcher(variable);
+        Matcher matcher = LEGACY_RULE_KEY_PATTERN.matcher(variable);
         while (matcher.find()) {
             result.add(matcher.group(1));
         }
@@ -59,7 +64,7 @@ public final class FlowUtil {
             return variable;
         }
         String replaced = variable;
-        Matcher matcher = PATTERN.matcher(replaced);
+        Matcher matcher = LEGACY_RULE_KEY_PATTERN.matcher(replaced);
         while (matcher.find()) {
             String formatVariable = matcher.group(0);
             String originalVariable = matcher.group(1);
@@ -67,6 +72,39 @@ public final class FlowUtil {
             replaced = replaced.replace(formatVariable, value);
         }
         return replaced;
+    }
+
+    /**
+     * 格式化条件规则： 输入{{var}},返回 businessData.var; 输入'{{var}}' == '1', 返回businessData.var == "1"
+     *
+     * @param conditionRule 条件规则
+     * @return 格式化后的条件规则
+     */
+    public static String formatConditionRule(String conditionRule) {
+        LOG.info("[FlowUtil] format condition rule: [{}]", conditionRule);
+        if (StringUtils.isEmpty(conditionRule)) {
+            return conditionRule;
+        }
+        String replacedConditionRule = conditionRule;
+        Matcher matcherWithQuotes = LEGACY_RULE_KEY_PATTERN_WITH_QUOTES.matcher(replacedConditionRule);
+        while (matcherWithQuotes.find()) {
+            replacedConditionRule = replaceFormattedVariable(replacedConditionRule, matcherWithQuotes);
+        }
+        Matcher matcher = LEGACY_RULE_KEY_PATTERN.matcher(replacedConditionRule);
+        while (matcher.find()) {
+            replacedConditionRule = replaceFormattedVariable(replacedConditionRule, matcher);
+        }
+        replacedConditionRule = replacedConditionRule.replace("'", "\"");
+        return replacedConditionRule;
+    }
+
+    private static String replaceFormattedVariable(String conditionRule, Matcher matcher) {
+        String formatVariable = matcher.group(0);
+        String originalVariable = matcher.group(1);
+        if (!originalVariable.startsWith(BUSINESS_DATA_KEY) || !originalVariable.startsWith(PASS_DATA)) {
+            originalVariable = BUSINESS_DATA_KEY + "." + originalVariable;
+        }
+        return conditionRule.replace(formatVariable, originalVariable);
     }
 
     /**
