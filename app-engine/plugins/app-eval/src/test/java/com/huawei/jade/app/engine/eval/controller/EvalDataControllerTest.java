@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 
 import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fitframework.annotation.Fit;
@@ -19,6 +20,7 @@ import com.huawei.fitframework.test.domain.mvc.request.MockRequestBuilder;
 import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.app.engine.eval.dto.EvalDataCreateDto;
 import com.huawei.jade.app.engine.eval.dto.EvalDataDeleteDto;
+import com.huawei.jade.app.engine.eval.dto.EvalDataUpdateDto;
 import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
 import com.huawei.jade.app.engine.eval.service.EvalDataService;
 import com.huawei.jade.common.vo.PageVo;
@@ -84,6 +86,21 @@ public class EvalDataControllerTest {
         assertThat(response.objectEntity().get().object().getItems()).isNotEmpty()
                 .extracting(EvalDataEntity::getContent)
                 .contains("abcd");
+    }
+
+    @Test
+    @DisplayName("修改评估数据接口成功")
+    public void shouldOkWhenUpdateEvalData() {
+        Mockito.doNothing().when(evalDataService).update(anyLong(), anyString());
+
+        EvalDataUpdateDto evalDataUpdateDto = new EvalDataUpdateDto();
+        evalDataUpdateDto.setDataId(1L);
+        evalDataUpdateDto.setContent("{}");
+
+        MockRequestBuilder requestBuilder =
+                MockMvcRequestBuilders.put("/eval/data").jsonEntity(evalDataUpdateDto).responseType(Void.class);
+        HttpClassicClientResponse<Void> response = mockMvc.perform(requestBuilder);
+        assertThat(response.statusCode()).isEqualTo(200);
     }
 
     @Test

@@ -52,4 +52,11 @@ public interface EvalDataMapper {
      * @return 表示成功修改的行数。
      */
     int updateExpiredVersion(@Param("list") List<EvalDataPo> evalDataList, @Param("version") Long expiredVersion);
+
+    /**
+     * 修改评估数据。
+     *
+     * @param evalData 表示评估数据列表的 {@link EvalDataPo}。
+     */
+    void update(EvalDataPo evalData);
 }

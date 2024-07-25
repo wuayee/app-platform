@@ -14,6 +14,7 @@ import com.huawei.jade.app.engine.eval.po.EvalDataPo;
 import com.huawei.jade.app.engine.eval.service.EvalDataService;
 import com.huawei.jade.common.vo.PageVo;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,5 +67,20 @@ public class EvalDataServiceImpl implements EvalDataService {
             return evalDataPo;
         }).collect(Collectors.toList());
         this.dataMapper.updateExpiredVersion(evalDataPoList, version);
+    }
+
+    @Override
+    public void update(Long datasetId, String content) {
+        dataValidator.verify(datasetId, Collections.singletonList(content));
+        long version = versionManager.applyVersion();
+        EvalDataPo evalDataPo = new EvalDataPo();
+        evalDataPo.setContent(content);
+        evalDataPo.setCreatedVersion(version);
+        evalDataPo.setExpiredVersion(version);
+        evalDataPo.setDatasetId(datasetId);
+        int effectRows = this.dataMapper.updateExpiredVersion(Collections.singletonList(evalDataPo), version);
+        if (effectRows != 0) {
+            this.dataMapper.insertAll(Collections.singletonList(evalDataPo));
+        }
     }
 }
