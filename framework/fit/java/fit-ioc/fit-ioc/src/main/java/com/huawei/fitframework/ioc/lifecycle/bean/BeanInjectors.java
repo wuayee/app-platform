@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2022-2024. All rights reserved.
  */
 
 package com.huawei.fitframework.ioc.lifecycle.bean;
@@ -15,6 +15,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * 表示 Bean 注入器的工具类集合。
+ *
+ * @author 梁济时 l00815032
+ * @since 2022-06-01
+ */
 public class BeanInjectors {
     /**
      * 创建用以注入指定字段的注入程序。

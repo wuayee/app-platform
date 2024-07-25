@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2022-2024. All rights reserved.
  */
 
 package com.huawei.fitframework.ioc.lifecycle.bean;
@@ -13,6 +13,12 @@ import com.huawei.fitframework.ioc.lifecycle.bean.support.DirectBeanCreator;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+/**
+ * 表示 Bean 创建器的工具类集合。
+ *
+ * @author 梁济时 l00815032
+ * @since 2022-06-01
+ */
 public class BeanCreators {
     /**
      * 创建一个用以返回直接对象的Bean创建程序。
