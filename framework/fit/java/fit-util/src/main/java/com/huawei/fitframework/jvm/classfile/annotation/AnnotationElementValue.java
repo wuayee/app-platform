@@ -158,7 +158,8 @@ public abstract class AnnotationElementValue {
             Constructor<?> constructor;
             try {
                 constructor = ReflectionUtils.getDeclaredConstructor(innerClass,
-                        AnnotationElementValuePair.class, InputStream.class);
+                        AnnotationElementValuePair.class,
+                        InputStream.class);
             } catch (MethodNotFoundException ex) {
                 throw new IllegalStateException(StringUtils.format(
                         "No matched constructor found in concrete class of AnnotationElementValue. [class={0}]",
@@ -177,11 +178,13 @@ public abstract class AnnotationElementValue {
                 .collect(Collectors.toList());
         if (!unexpectedCheckedExceptionTypes.isEmpty()) {
             // AnnotationElementValue 的具体实现类的构造方法，不允许抛出除 IOException 之外的其他受检异常。
-            String exceptionTypes = unexpectedCheckedExceptionTypes.stream().map(Class::getName)
+            String exceptionTypes = unexpectedCheckedExceptionTypes.stream()
+                    .map(Class::getName)
                     .collect(Collectors.joining(", ", "[", "]"));
-            throw new IllegalStateException(StringUtils.format("The constructor does not allow throwing checked " +
-                            "exceptions outside of IOException. [class={0}, exceptions={1}]",
-                    constructor.getDeclaringClass().getName(), exceptionTypes));
+            throw new IllegalStateException(StringUtils.format("The constructor does not allow throwing checked "
+                            + "exceptions outside of IOException. [class={0}, exceptions={1}]",
+                    constructor.getDeclaringClass().getName(),
+                    exceptionTypes));
         }
         constructor.setAccessible(true);
         return (pair, in) -> {

@@ -47,7 +47,8 @@ public class NettyHttpServerRequest implements ServerRequest, OnHttpContentRecei
     private boolean isClosed;
     private Thread executeThread;
 
-    public NettyHttpServerRequest(HttpRequest request, ChannelHandlerContext ctx, boolean isSecure, long largeBodySize) {
+    public NettyHttpServerRequest(HttpRequest request, ChannelHandlerContext ctx, boolean isSecure,
+            long largeBodySize) {
         this.request = notNull(request, "The netty http request cannot be null.");
         this.ctx = notNull(ctx, "The channel handler context cannot be null.");
         this.isSecure = isSecure;

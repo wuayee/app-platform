@@ -11,6 +11,7 @@ import com.huawei.fit.http.exception.AsyncTaskNotFoundException;
 import com.huawei.fit.serialization.http.HttpUtils;
 import com.huawei.fitframework.broker.server.Response;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.util.Collection;
@@ -104,8 +105,8 @@ public class AsyncTaskCreator {
                 this.taskSemaphore.tryAcquire(durationMillis, TimeUnit.MILLISECONDS);
                 // 由于数组的协变性，toArray 后会失去类型信息，但强制类型转换是必定成功的。
                 // 使用非阻塞查询 API。
-                Response response =
-                        (Response) CompletableFuture.anyOf(allTasks.toArray(new CompletableFuture[0])).getNow(null);
+                Response response = ObjectUtils.cast(CompletableFuture.anyOf(allTasks.toArray(new CompletableFuture[0]))
+                        .getNow(null));
                 if (response != null) {
                     // 清除已经结束的任务结果。
                     this.store.remove(HttpUtils.getAsyncTaskId(response.metadata().tagValues()));
