@@ -63,13 +63,16 @@ public class LlmAudio2Summary implements FlowableService {
     private final AippLogService aippLogService;
     private final VoiceService voiceService;
     private final String endpoint;
+    private final String pathPrefix;
 
     public LlmAudio2Summary(AippLogService aippLogService, @Value("${app-engine.endpoint}") String endpoint,
-                            @Fit OpenAiClient openAiClient, @Fit VoiceService voiceService) {
+                            @Fit OpenAiClient openAiClient, @Fit VoiceService voiceService,
+                            @Value("${app-engine.pathPrefix}") String pathPrefix) {
         this.aippLogService = aippLogService;
         this.openAiClient = openAiClient;
         this.voiceService = voiceService;
         this.endpoint = endpoint;
+        this.pathPrefix = pathPrefix;
     }
 
     private SummaryDto batchSummary(List<File> audioList, int segmentSize) throws InterruptedException, IOException {
@@ -82,7 +85,8 @@ public class LlmAudio2Summary implements FlowableService {
             SUMMARY_EXECUTOR.execute(() -> {
                 try {
                     File audio = audioList.get(id);
-                    String audioFilePath = AippFileUtils.getFileDownloadFilePath(endpoint, audio.getPath());
+                    String audioFilePath = AippFileUtils.getFileDownloadFilePath(
+                            endpoint, this.pathPrefix, audio.getPath());
                     String text = this.voiceService.getText(audioFilePath, audio.getName());
                     String summary = LLMUtils.askModelForSummary(openAiClient, String.format(PROMPT, text),
                             LlmModelNameEnum.QWEN_72B, 16000);

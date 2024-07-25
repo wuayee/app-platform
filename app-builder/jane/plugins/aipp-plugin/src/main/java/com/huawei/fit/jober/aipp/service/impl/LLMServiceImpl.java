@@ -58,18 +58,21 @@ public class LLMServiceImpl implements LLMService {
     private final int xiaoHaiReadTimeout;
     private final OpenAiClient openAiClient;
     private final String appengineEndPoint;
+    private final String pathPrefix;
     private final VoiceService voiceService;
 
     public LLMServiceImpl(@Value("${model.xiaohai.knowledge}") String xiaoHaiKnowledgeUrl,
             @Value("${model.xiaohai.file}") String xiaoHaiFileUrl,
             @Value("${model.xiaohai.read-timeout}") int xiaoHaiReadTimeout,
-            @Value("${app-engine.endpoint}") String endpoint, @Fit OpenAiClient openAiClient,
+            @Value("${app-engine.endpoint}") String endpoint, @Value("${app-engine.pathPrefix}") String pathPrefix,
+            @Fit OpenAiClient openAiClient,
             @Fit VoiceService voiceService) {
         this.xiaoHaiKnowledgeUrl = xiaoHaiKnowledgeUrl;
         this.xiaoHaiFileUrl = xiaoHaiFileUrl;
         this.xiaoHaiReadTimeout = xiaoHaiReadTimeout;
         this.openAiClient = openAiClient;
         this.appengineEndPoint = endpoint;
+        this.pathPrefix = pathPrefix;
         this.voiceService = voiceService;
     }
 
@@ -81,7 +84,7 @@ public class LLMServiceImpl implements LLMService {
 
     @Override
     public String askModelWithImage(File image, String prompt) {
-        String imageUrl = AippFileUtils.getFileDownloadUrl(appengineEndPoint, image.getPath(),
+        String imageUrl = AippFileUtils.getFileDownloadUrl(appengineEndPoint, this.pathPrefix, image.getPath(),
                 image.getName());
         log.info("get image url: {}", imageUrl);
         UserContent promptContent = UserContent.text(prompt);
@@ -103,7 +106,8 @@ public class LLMServiceImpl implements LLMService {
 
     @Override
     public String askModelWithAudio(File audio) throws IOException {
-        String audioFilePath = AippFileUtils.getFileDownloadFilePath(appengineEndPoint, audio.getPath());
+        String audioFilePath = AippFileUtils.getFileDownloadFilePath(
+                appengineEndPoint, this.pathPrefix, audio.getPath());
         log.info("audioPath: {}, audioName: {}", audioFilePath, audio.getName());
         return voiceService.getText(audioFilePath.replaceAll("\\\\", "/"), audio.getName());
     }
@@ -111,7 +115,7 @@ public class LLMServiceImpl implements LLMService {
     @Override
     public String askModelWithText(String prompt, LlmModelNameEnum model) throws IOException {
         OpenAiChatMessage promptMsg = OpenAiChatMessage.builder().role(Role.USER)
-                .content(Collections.singletonList(UserContent.text(prompt))).build();
+                .content(prompt).build();
         OpenAiChatCompletionRequest requset = OpenAiChatCompletionRequest.builder().model(model.getValue())
                 .messages(Collections.singletonList(promptMsg)).build();
 
@@ -122,7 +126,7 @@ public class LLMServiceImpl implements LLMService {
     public String askModelWithText(String prompt, int maxTokens, double temperature, LlmModelNameEnum model)
             throws IOException {
         OpenAiChatMessage promptMsg = OpenAiChatMessage.builder().role(Role.USER)
-                .content(Collections.singletonList(UserContent.text(prompt))).build();
+                .content(prompt).build();
         OpenAiChatCompletionRequest requset = OpenAiChatCompletionRequest.builder().model(model.getValue())
                 .messages(Collections.singletonList(promptMsg)).temperature(temperature).maxTokens(maxTokens).build();
         return askModel(requset);

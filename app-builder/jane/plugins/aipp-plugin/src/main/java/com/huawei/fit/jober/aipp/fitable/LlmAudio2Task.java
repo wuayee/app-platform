@@ -76,16 +76,19 @@ public class LlmAudio2Task implements FlowableService {
     private final OpenAiClient openAiClient;
     private final VoiceService voiceService;
     private final String endpoint;
+    private final String pathPrefix;
 
     public LlmAudio2Task(@Fit FfmpegService ffmpegService, @Fit AippLogService aippLogService,
                          @Fit MetaInstanceService metaInstanceService, @Fit OpenAiClient openAiClient,
-                         @Fit VoiceService voiceService, @Value("${app-engine.endpoint}") String endpoint) {
+                         @Fit VoiceService voiceService, @Value("${app-engine.endpoint}") String endpoint,
+                         @Value("${app-engine.pathPrefix}") String pathPrefix) {
         this.ffmpegService = ffmpegService;
         this.aippLogService = aippLogService;
         this.metaInstanceService = metaInstanceService;
         this.openAiClient = openAiClient;
         this.voiceService = voiceService;
         this.endpoint = endpoint;
+        this.pathPrefix = pathPrefix;
     }
 
     private AudioSplitInfo splitAudio(String instId, String audioUrl) throws JobberException {
@@ -119,7 +122,8 @@ public class LlmAudio2Task implements FlowableService {
             throws InterruptedException, IOException {
         AudioTextFunction<File, String> extractor =
                 file -> {
-                    String filePath = AippFileUtils.getFileDownloadFilePath(this.endpoint, file.getPath());
+                    String filePath = AippFileUtils.getFileDownloadFilePath(
+                            this.endpoint, this.pathPrefix, file.getPath());
                     return voiceService.getText(filePath, file.getName());
                 };
         List<String> output = AudioUtils.extractAudioTextParallel(AUDIO_EXECUTOR, audioList, extractor);

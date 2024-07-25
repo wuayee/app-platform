@@ -15,6 +15,7 @@ jane:
   endpoint:
 app-engine:
   endpoint: http://80.11.128.66:31111
+  pathPrefix:
 elsa:
   endpoint:
   elsaKey:

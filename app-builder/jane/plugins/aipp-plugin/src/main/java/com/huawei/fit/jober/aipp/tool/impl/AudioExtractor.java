@@ -69,14 +69,17 @@ public class AudioExtractor implements FileExtractor {
     private final OpenAiClient openAiClient;
     private final VoiceService voiceService;
     private final String endpoint;
+    private final String pathPrefix;
     private final FfmpegService ffmpegService;
 
     public AudioExtractor(FfmpegService ffmpegService, @Fit OpenAiClient openAiClient,
-                          @Fit VoiceService voiceService, @Value("${app-engine.endpoint}") String endpoint) {
+                          @Fit VoiceService voiceService, @Value("${app-engine.endpoint}") String endpoint,
+                          @Value("${app-engine.pathPrefix}") String pathPrefix) {
         this.ffmpegService = ffmpegService;
         this.openAiClient = openAiClient;
         this.voiceService = voiceService;
         this.endpoint = endpoint;
+        this.pathPrefix = pathPrefix;
     }
 
     private SummaryDto batchSummary(List<File> audioList, int segmentSize) throws InterruptedException, IOException {
@@ -89,7 +92,8 @@ public class AudioExtractor implements FileExtractor {
             SUMMARY_EXECUTOR.execute(() -> {
                 try {
                     File audio = audioList.get(id);
-                    String audioPath = AippFileUtils.getFileDownloadFilePath(endpoint, audio.getPath());
+                    String audioPath = AippFileUtils.getFileDownloadFilePath(
+                            endpoint, this.pathPrefix, audio.getPath());
                     log.info("audio filePath: {}, audio fileName: {}", audioPath, audio.getName());
                     String text = voiceService.getText(audioPath, audio.getName());
                     log.info("get audio translate text: {}", text);
