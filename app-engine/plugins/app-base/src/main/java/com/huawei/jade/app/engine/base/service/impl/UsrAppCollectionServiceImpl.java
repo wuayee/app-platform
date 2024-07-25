@@ -104,7 +104,6 @@ public class UsrAppCollectionServiceImpl implements UsrAppCollectionService {
     public CollectionAppInfoDto getAppInfoByUsrInfo(String usrInfo) {
         List<UsrAppInfoAndCollectionPo> collectionList = usrAppCollectionMapper.getAppInfoByUsrInfo(usrInfo);
 
-        // TODO: move to login logic
         UserInfoDto userInfoDto = userInfoMapper.get(usrInfo);
         if (userInfoDto == null) {
             userInfoMapper.insert(UserInfoDto.builder().userName(usrInfo).defaultApp(DEFAULT_APP_ID).build());

@@ -11,6 +11,11 @@ import lombok.Getter;
 
 import java.io.InputStream;
 
+/**
+ * 文件上传请求体
+ *
+ * @since 2024-05-21
+ */
 @Getter
 @AllArgsConstructor
 public class FileUploadRequest {
