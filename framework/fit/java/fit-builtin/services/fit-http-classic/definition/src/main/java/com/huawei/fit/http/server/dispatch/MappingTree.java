@@ -5,7 +5,6 @@
 package com.huawei.fit.http.server.dispatch;
 
 import com.huawei.fit.http.protocol.HttpRequestMethod;
-import com.huawei.fit.http.server.HttpHandler;
 import com.huawei.fit.http.server.dispatch.support.DefaultMappingTree;
 import com.huawei.fitframework.util.StringUtils;
 
@@ -16,7 +15,8 @@ import java.util.stream.Collectors;
 
 /**
  * 表示 Http 请求路径的匹配树。
- * <p>当处理器为 {@link HttpHandler} 时，每一棵匹配树都代表一种特定的 Http 请求方法，比如 {@link HttpRequestMethod#GET}</p>
+ * <p>当处理器为 {@link com.huawei.fit.http.server.HttpHandler} 时，每一棵匹配树都代表一种特定的 Http 请求方法，比如
+ * {@link HttpRequestMethod#GET}</p>
  *
  * @param <T> 表示匹配树上的处理器类型的 {@link T}。
  * @author 季聿阶 j00559309

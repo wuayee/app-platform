@@ -44,31 +44,6 @@ public class ModelData {
     private Map<String, Object> context;
 
     /**
-     * 用所有属性的参数构造 {@link ModelData}。
-     *
-     * @param createdTime 表示模型创建时间的 {@link String}。
-     * @param updatedTime 表示模型更新时间的 {@link String}。
-     * @param taskName 表示任务唯一标识的 {@link String}。
-     * @param name 表示模型名字的 {@link String}。
-     * @param url 表示模型跳转链接的 {@link String}。
-     * @param context 表示模型的上下文的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
-     */
-    public ModelData(String createdTime, String updatedTime, String taskName, String name, String url,
-            Map<String, Object> context) {
-        this.createdTime = createdTime;
-        this.updatedTime = updatedTime;
-        this.taskName = taskName;
-        this.name = name;
-        this.url = url;
-        this.context = context;
-    }
-
-    /**
-     * 参数为空的构造函数 {@link ModelData}。
-     */
-    public ModelData() {}
-
-    /**
      * 获取模型的创建时间。
      *
      * @return 表示模型创建时间的 {@link String}。

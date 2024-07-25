@@ -5,12 +5,11 @@
 package com.huawei.fit.client.http.async;
 
 import com.huawei.fit.client.Response;
-import com.huawei.fit.http.client.HttpClassicClientResponse;
 import com.huawei.fit.http.exception.AsyncTaskExecutionException;
 import com.huawei.fitframework.serialization.ResponseMetadata;
 
 /**
- * FIT 异步任务执行结果，封装 {@link HttpClassicClientResponse} 和 {@link ResponseMetadata}。
+ * FIT 异步任务执行结果，封装 {@link com.huawei.fit.http.client.HttpClassicClientResponse} 和 {@link ResponseMetadata}。
  * <p>任务执行完毕后，长轮询线程会读取 HTTP 头部并进行解析，而消息体的读取会在客户端调用线程处完成。</p>
  *
  * @author 王成 w00863339
