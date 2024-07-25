@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2022-2024. All rights reserved.
  */
 
 package com.huawei.fitframework.ioc.lifecycle.bean;
@@ -13,6 +13,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * 表示 Bean 销毁器的工具类集合。
+ *
+ * @author 梁济时 l00815032
+ * @since 2022-06-01
+ */
 public class BeanDestroyers {
     /**
      * 创建使用指定方法进行销毁的Bean销毁程序。

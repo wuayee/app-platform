@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * 表示 {@link ResolvedDependency} 的默认实现。
+ *
  * @author 梁济时 00298979
  * @since 2020-10-09
  */

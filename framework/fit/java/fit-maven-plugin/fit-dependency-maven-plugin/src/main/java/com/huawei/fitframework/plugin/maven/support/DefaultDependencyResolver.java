@@ -31,6 +31,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
+ * 表示 {@link DependencyResolver} 的默认实现。
+ *
  * @author 梁济时 00298979
  * @since 2020-10-09
  */

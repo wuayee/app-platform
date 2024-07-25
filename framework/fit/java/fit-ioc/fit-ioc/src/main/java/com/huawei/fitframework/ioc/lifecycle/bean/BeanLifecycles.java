@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2022-2024. All rights reserved.
  */
 
 package com.huawei.fitframework.ioc.lifecycle.bean;
@@ -14,6 +14,12 @@ import com.huawei.fitframework.type.TypeMatcher;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 表示 Bean 声明周期相关的工具类集合。
+ *
+ * @author 梁济时 l00815032
+ * @since 2022-06-01
+ */
 public class BeanLifecycles {
     /**
      * 返回应用了拦截程序的生命周期。

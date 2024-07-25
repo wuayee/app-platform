@@ -11,6 +11,12 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 表示 {@link ParameterizedTypeResolvingResult} 的成功的解析结果。
+ *
+ * @author 梁济时 l00815032
+ * @since 2020-10-29
+ */
 public class ParameterizedTypeResolvingSuccessResult implements ParameterizedTypeResolvingResult {
     private final List<Type> parameters;
 
