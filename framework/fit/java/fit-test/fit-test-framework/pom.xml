@@ -51,6 +51,14 @@
             <artifactId>fit-http-protocol</artifactId>
             <version>${fit.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-aop-aspect</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-aop-bytebuddy</artifactId>
+        </dependency>
 
         <!-- DB -->
         <dependency>

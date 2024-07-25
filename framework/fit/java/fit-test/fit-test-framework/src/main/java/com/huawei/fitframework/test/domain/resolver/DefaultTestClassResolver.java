@@ -31,7 +31,8 @@ public class DefaultTestClassResolver implements TestClassResolver {
     private static final Set<String> DEFAULT_SCAN_PACKAGES = new HashSet<>(Arrays.asList(
             "com.huawei.fit.integration.mockito",
             "com.huawei.fit.value",
-            "com.huawei.fit.serialization"));
+            "com.huawei.fit.serialization",
+            "com.huawei.fitframework.validation"));
 
     @Override
     public TestContextConfiguration resolve(Class<?> clazz) {

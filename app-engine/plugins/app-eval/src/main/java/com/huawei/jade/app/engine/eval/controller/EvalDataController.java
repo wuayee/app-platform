@@ -4,12 +4,14 @@
 
 package com.huawei.jade.app.engine.eval.controller;
 
+import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.PostMapping;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.validation.Validated;
 import com.huawei.jade.app.engine.eval.dto.EvalDataCreateDto;
+import com.huawei.jade.app.engine.eval.dto.EvalDataDeleteDto;
 import com.huawei.jade.app.engine.eval.service.EvalDataService;
 
 /**
@@ -40,5 +42,15 @@ public class EvalDataController {
     @PostMapping(description = "批量创建评估数据")
     public void createEvalData(@RequestBody @Validated EvalDataCreateDto createDto) {
         this.evalDataService.insertAll(createDto.getDatasetId(), createDto.getContents());
+    }
+
+    /**
+     * 批量软删除评估数据。
+     *
+     * @param deleteDto 表示评估数据集软删除传输对象的 {@link EvalDataDeleteDto}。
+     */
+    @DeleteMapping(description = "批量软删除评估数据")
+    public void deleteEvalData(@RequestBody @Validated EvalDataDeleteDto deleteDto) {
+        this.evalDataService.delete(deleteDto.getDataIds());
     }
 }

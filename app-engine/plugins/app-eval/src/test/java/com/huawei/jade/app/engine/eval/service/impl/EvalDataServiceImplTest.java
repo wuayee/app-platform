@@ -28,6 +28,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -56,6 +57,7 @@ public class EvalDataServiceImplTest {
     void setUp() {
         when(evalDatasetVersionManager.applyVersion()).thenReturn(1L);
         doNothing().when(evalDataMapper).insertAll(anyList());
+        when(evalDataMapper.updateExpiredVersion(anyList(), anyLong())).thenReturn(1);
     }
 
     @Test
@@ -64,6 +66,13 @@ public class EvalDataServiceImplTest {
         doNothing().when(evalDataValidator).verify(anyLong(), anyList());
         evalDataService.insertAll(1L, TEST_CONTENTS);
         verify(evalDataMapper, times(1)).insertAll(anyList());
+    }
+
+    @Test
+    @DisplayName("批量软删除评估数据成功")
+    void shouldOkWhenDelete() {
+        evalDataService.delete(Collections.singletonList(1L));
+        verify(evalDataMapper, times(1)).updateExpiredVersion(anyList(), anyLong());
     }
 
     @Test

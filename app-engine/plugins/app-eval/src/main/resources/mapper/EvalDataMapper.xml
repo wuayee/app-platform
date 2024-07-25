@@ -7,4 +7,13 @@
             (#{item.content}, #{item.createdVersion}, #{item.datasetId})
         </foreach>
     </insert>
+
+    <update id="updateExpiredVersion">
+        update app_engine_eval_data
+        set expired_version = #{version}
+        where (expired_version = 9223372036854775807) AND id in
+        <foreach collection="list" separator="," item="item" open="(" close=")">
+            (#{item.id})
+        </foreach>
+    </update>
 </mapper>

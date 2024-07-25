@@ -16,6 +16,7 @@ import com.huawei.fitframework.test.domain.mvc.MockMvc;
 import com.huawei.fitframework.test.domain.mvc.request.MockMvcRequestBuilders;
 import com.huawei.fitframework.test.domain.mvc.request.MockRequestBuilder;
 import com.huawei.jade.app.engine.eval.dto.EvalDataCreateDto;
+import com.huawei.jade.app.engine.eval.dto.EvalDataDeleteDto;
 import com.huawei.jade.app.engine.eval.service.EvalDataService;
 
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +31,7 @@ import java.util.Collections;
  * @author 易文渊
  * @since 2024-07-22
  */
-@MvcTest(classes = EvalDataController.class)
+@MvcTest(classes = {EvalDataController.class})
 @DisplayName("测试 EvalDataController")
 public class EvalDataControllerTest {
     @Fit
@@ -52,5 +53,48 @@ public class EvalDataControllerTest {
                 MockMvcRequestBuilders.post("/eval/data").jsonEntity(evalDataCreateDto).responseType(Void.class);
         HttpClassicClientResponse<Void> response = mockMvc.perform(requestBuilder);
         assertThat(response.statusCode()).isEqualTo(200);
+    }
+
+    @Test
+    @DisplayName("批量软删除评估数据接口成功")
+    public void shouldOkWhenDeleteEvalData() {
+        Mockito.doNothing().when(evalDataService).delete(anyList());
+
+        EvalDataDeleteDto evalDataDeleteDto = new EvalDataDeleteDto();
+        evalDataDeleteDto.setDataIds(Collections.singletonList(1L));
+
+        MockRequestBuilder requestBuilder =
+                MockMvcRequestBuilders.delete("/eval/data").jsonEntity(evalDataDeleteDto).responseType(Void.class);
+        HttpClassicClientResponse<Void> response = mockMvc.perform(requestBuilder);
+        assertThat(response.statusCode()).isEqualTo(200);
+    }
+
+    @Test
+    @DisplayName("不合格数据创建评估数据接口失败")
+    public void shouldFailWhenCreateEvalDataWithInvalidDataId() {
+        Mockito.doNothing().when(evalDataService).insertAll(anyLong(), anyList());
+
+        EvalDataCreateDto evalDataCreateDto = new EvalDataCreateDto();
+        evalDataCreateDto.setDatasetId(0L);
+        evalDataCreateDto.setContents(Collections.singletonList("{}"));
+
+        MockRequestBuilder requestBuilder =
+                MockMvcRequestBuilders.post("/eval/data").jsonEntity(evalDataCreateDto).responseType(Void.class);
+        HttpClassicClientResponse<Void> response = mockMvc.perform(requestBuilder);
+        assertThat(response.statusCode()).isEqualTo(500);
+    }
+
+    @Test
+    @DisplayName("不合格数据软删除评估数据接口失败")
+    public void shouldFailWhenDeleteEvalDataWithInvalidDataId() {
+        Mockito.doNothing().when(evalDataService).delete(anyList());
+
+        EvalDataDeleteDto evalDataDeleteDto = new EvalDataDeleteDto();
+        evalDataDeleteDto.setDataIds(Collections.singletonList(-1L));
+
+        MockRequestBuilder requestBuilder =
+                MockMvcRequestBuilders.delete("/eval/data").jsonEntity(evalDataDeleteDto).responseType(Void.class);
+        HttpClassicClientResponse<Void> response = mockMvc.perform(requestBuilder);
+        assertThat(response.statusCode()).isEqualTo(500);
     }
 }
