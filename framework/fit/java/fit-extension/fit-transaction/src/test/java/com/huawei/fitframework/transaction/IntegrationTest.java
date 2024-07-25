@@ -28,6 +28,12 @@ import java.util.Optional;
 
 import javax.sql.DataSource;
 
+/**
+ * 提供集成测试。
+ *
+ * @author 梁济时 l00815032
+ * @since 2022-08-27
+ */
 @DisplayName("集成测试（基于H2数据库）")
 class IntegrationTest {
     private static final String URL = "jdbc:h2:mem:test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1";

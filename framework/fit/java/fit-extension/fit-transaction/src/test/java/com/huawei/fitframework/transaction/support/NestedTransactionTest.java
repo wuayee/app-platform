@@ -30,6 +30,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Savepoint;
 
+/**
+ * 为 {@link NestedTransaction} 提供单元测试。
+ *
+ * @author 梁济时 l00815032
+ * @since 2022-08-27
+ */
 @DisplayName("测试 NestedTransaction 实现")
 class NestedTransactionTest {
     private TransactionManager manager;
@@ -110,8 +116,8 @@ class NestedTransactionTest {
         @DisplayName("当释放保存点失败时，提交事务失败")
         void should_throw_when_fail_to_release_savepoint() throws SQLException {
             doThrow(new SQLException("test")).when(connection).releaseSavepoint(any());
-            TransactionCompletionException exception = assertThrows(TransactionCompletionException.class,
-                    () -> this.transaction.commit());
+            TransactionCompletionException exception =
+                    assertThrows(TransactionCompletionException.class, () -> this.transaction.commit());
             assertEquals("Failed to release savepoint for commit.", exception.getMessage());
         }
 
@@ -128,8 +134,8 @@ class NestedTransactionTest {
         @DisplayName("当回滚到保存点失败时，回滚事务失败")
         void should_throw_when_fail_to_rollback_to_savepoint() throws SQLException {
             doThrow(new SQLException("test")).when(connection).rollback(any());
-            TransactionCompletionException exception = assertThrows(TransactionCompletionException.class,
-                    () -> this.transaction.rollback());
+            TransactionCompletionException exception =
+                    assertThrows(TransactionCompletionException.class, () -> this.transaction.rollback());
             assertEquals("Failed to rollback to savepoint.", exception.getMessage());
         }
     }

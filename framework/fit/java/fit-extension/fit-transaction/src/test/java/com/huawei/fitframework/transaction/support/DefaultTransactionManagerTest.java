@@ -35,6 +35,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.sql.DataSource;
 
+/**
+ * 为 {@link DefaultTransactionManager} 提供单元测试。
+ *
+ * @author 梁济时 l00815032
+ * @since 2022-08-27
+ */
 @DisplayName("测试 DefaultTransactionManager 实现")
 class DefaultTransactionManagerTest {
     private DataSource dataSource;
