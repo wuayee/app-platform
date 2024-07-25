@@ -46,4 +46,15 @@ public class EvalDataServiceImpl implements EvalDataService {
         }).collect(Collectors.toList());
         this.dataMapper.insertAll(evalDataPoList);
     }
+
+    @Override
+    public void delete(List<Long> dataIds) {
+        long version = versionManager.applyVersion();
+        List<EvalDataPo> evalDataPoList = dataIds.stream().map(id -> {
+            EvalDataPo evalDataPo = new EvalDataPo();
+            evalDataPo.setId(id);
+            return evalDataPo;
+        }).collect(Collectors.toList());
+        this.dataMapper.updateExpiredVersion(evalDataPoList, version);
+    }
 }

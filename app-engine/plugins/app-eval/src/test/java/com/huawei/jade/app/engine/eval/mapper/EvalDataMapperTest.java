@@ -40,4 +40,23 @@ public class EvalDataMapperTest {
         this.evalDataMapper.insertAll(Collections.singletonList(evalDataPo));
         assertThat(evalDataPo.getId()).isNotEqualTo(null);
     }
+
+    @Test
+    @Sql(scripts = "sql/test_insert_data.sql")
+    @DisplayName("软删除指定数据后，更新过期时间成功")
+    void shouldOkWhenSoftDelete() {
+        EvalDataPo evalDataPo = new EvalDataPo();
+        evalDataPo.setId(1L);
+        int effectRows = this.evalDataMapper.updateExpiredVersion(Collections.singletonList(evalDataPo), 2L);
+        assertThat(effectRows).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("软删除不存在数据时，更新行数为0")
+    void shouldFailWhenSoftDeleteInvalidData() {
+        EvalDataPo evalDataPo = new EvalDataPo();
+        evalDataPo.setId(1L);
+        int effectRows = this.evalDataMapper.updateExpiredVersion(Collections.singletonList(evalDataPo), 2L);
+        assertThat(effectRows).isEqualTo(0);
+    }
 }

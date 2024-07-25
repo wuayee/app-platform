@@ -20,4 +20,11 @@ public interface EvalDataService {
      * @param contents 表示评估内容集合的 {@link List}{@code <}{@link String}{@code >}。
      */
     void insertAll(Long datasetId, List<String> contents);
+
+    /**
+     * 批量软删除评估数据。
+     *
+     * @param dataIds 表示评估数据编号的 {@link List}{@code <}{@link Long}{@code >}。
+     */
+    void delete(List<Long> dataIds);
 }
