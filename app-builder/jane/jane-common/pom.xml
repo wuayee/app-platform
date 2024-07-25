@@ -4,51 +4,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>com.huawei.fit.jade</groupId>
+        <artifactId>app-builder-jane-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
     <groupId>com.huawei.fit.jane</groupId>
     <artifactId>jane-common</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <fit.version>3.5.0-SNAPSHOT</fit.version>
-
-        <!-- Maven plugin versions -->
-        <maven.compiler.version>3.11.0</maven.compiler.version>
-        <maven.jar.version>3.3.0</maven.jar.version>
-        <maven.surefire.version>3.0.0</maven.surefire.version>
-    </properties>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>fit-snapshots</id>
-            <name>Fit Snapshots</name>
-            <!--suppress UnresolvedMavenProperty -->
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </snapshotRepository>
-        <repository>
-            <id>fit-releases</id>
-            <name>Fit Releases</name>
-            <!--suppress UnresolvedMavenProperty -->
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </repository>
-    </distributionManagement>
-
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>com.huawei.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>

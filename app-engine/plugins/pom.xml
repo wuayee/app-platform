@@ -17,6 +17,7 @@
         <module>app-base</module>
         <module>app-eval</module>
         <module>knowledge-base</module>
+        <module>voice-text-adapter</module>
     </modules>
 
     <build>

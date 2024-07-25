@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>dependency</module>
         <module>plugins</module>
         <module>services</module>
     </modules>

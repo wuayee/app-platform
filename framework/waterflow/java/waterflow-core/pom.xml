@@ -12,18 +12,6 @@
 
     <name>waterflow-core</name>
     <artifactId>waterflow-core</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <guava.version>32.0.1-jre</guava.version>
-        <ohscript.version>0.0.3.6-SNAPSHOT</ohscript.version>
-        <lombok.version>1.18.26</lombok.version>
-        <fastjson.version>1.2.83</fastjson.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -34,12 +22,10 @@
         <dependency>
             <groupId>com.huawei.fitframework.extension</groupId>
             <artifactId>fit-schedule</artifactId>
-            <version>${fit.version}</version>
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.ohscript</groupId>
             <artifactId>ohscript</artifactId>
-            <version>${ohscript.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.huawei.fitframework</groupId>
@@ -58,37 +44,29 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.8.2</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
-            <version>4.0.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>4.0.0</version>
-            <scope>test</scope>
             <exclusions>
                 <exclusion>
                     <artifactId>junit-jupiter-api</artifactId>
@@ -97,30 +75,4 @@
             </exclusions>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <parallel>classes</parallel>
-                    <threadCount>8</threadCount>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

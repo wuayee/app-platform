@@ -14,7 +14,6 @@
 
     <properties>
         <bytebuddy.version>1.14.12</bytebuddy.version>
-        <jackson.version>2.15.2</jackson.version>
         <maven.version>3.8.8</maven.version>
         <maven.plugin.version>3.13.1</maven.plugin.version>
     </properties>
@@ -35,38 +34,32 @@
         <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>
             <artifactId>tool-service</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Bytebuddy -->
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>${bytebuddy.version}</version>
         </dependency>
 
         <!-- Jackson -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
 
         <!-- Test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <!-- Maven -->

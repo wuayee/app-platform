@@ -17,10 +17,10 @@
         <maven.compiler.target>8</maven.compiler.target>
 
         <!-- Third party dependencies -->
-        <jackson-databind.version>2.15.2</jackson-databind.version>
+        <jackson-databind.version>2.16.2</jackson-databind.version>
         <lombok.version>1.18.26</lombok.version>
         <okhttp.version>4.12.0</okhttp.version>
-        <retrofit2.version>2.7.2</retrofit2.version>
+        <retrofit2.version>2.10.0</retrofit2.version>
 
         <!-- Test libs -->
         <assertj.version>3.24.2</assertj.version>

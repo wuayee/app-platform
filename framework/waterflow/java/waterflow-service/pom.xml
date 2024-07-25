@@ -12,183 +12,107 @@
 
     <name>waterflow-service</name>
     <artifactId>waterflow-service</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <fit.version>3.5.0-SNAPSHOT</fit.version>
-        <ohscript.version>0.0.3.6-SNAPSHOT</ohscript.version>
-    </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.huawei.fit.jane</groupId>
-            <artifactId>task</artifactId>
-            <version>0.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.jober</groupId>
-            <artifactId>jober-genericable</artifactId>
-            <version>0.6.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.jober</groupId>
-            <artifactId>jober-multiversion-genericable</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.ohscript</groupId>
-            <artifactId>ohscript</artifactId>
-            <version>${ohscript.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.26</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Framework -->
+        <!-- Fit -->
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-api</artifactId>
-            <version>${fit.version}</version>
-        </dependency>
-
-        <!-- Genericables -->
-        <dependency>
-            <groupId>com.huawei.fit.service</groupId>
-            <artifactId>fit-http-classic</artifactId>
-            <version>${fit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fit.service</groupId>
-            <artifactId>fit-service-registry-and-discovery</artifactId>
-            <version>${fit.version}</version>
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.service</groupId>
             <artifactId>fit-data-repository-service</artifactId>
-            <version>${fit.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fit.jade.service</groupId>
-            <artifactId>tool-service</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-http-classic</artifactId>
         </dependency>
-
-        <!-- DB -->
         <dependency>
             <groupId>com.huawei.fit.integration</groupId>
             <artifactId>fit-mybatis</artifactId>
-            <version>${fit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.huawei.fitframework.extension</groupId>
-            <artifactId>fit-transaction</artifactId>
-            <version>${fit.version}</version>
         </dependency>
         <dependency>
             <groupId>com.huawei.fitframework.extension</groupId>
             <artifactId>fit-schedule</artifactId>
-            <version>${fit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.service</groupId>
+            <artifactId>fit-service-registry-and-discovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework.extension</groupId>
+            <artifactId>fit-transaction</artifactId>
+        </dependency>
+
+        <!-- Ohscript -->
+        <dependency>
+            <groupId>com.huawei.fit.ohscript</groupId>
+            <artifactId>ohscript</artifactId>
+        </dependency>
+
+        <!-- Jane -->
+        <dependency>
+            <groupId>com.huawei.fit.jane</groupId>
+            <artifactId>task</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jober</groupId>
+            <artifactId>jober-genericable</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jober</groupId>
+            <artifactId>jober-multiversion-genericable</artifactId>
+        </dependency>
+
+        <!-- Third-party -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.5.13</version>
-        </dependency>
-
-        <!-- Serializer -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.83</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.14.1</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.15.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.15.2</version>
         </dependency>
 
         <!-- Test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.8.2</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
-            <version>4.0.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>4.0.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.1.214</version>
-            <scope>test</scope>
         </dependency>
+
+        <!-- Not necessary -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
-            <version>1.2.20</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!--Hdt 使用离线模式依赖。-->
-        <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.agent</artifactId>
-            <version>0.8.8</version>
-            <classifier>runtime</classifier>
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <parallel>classes</parallel>
-                    <threadCount>8</threadCount>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

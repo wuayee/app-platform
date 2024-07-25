@@ -12,15 +12,6 @@
     <groupId>com.huawei.fit.jade.fel</groupId>
     <artifactId>fel-flow</artifactId>
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <!-- WaterFlow version -->
-        <waterflow.version>1.0.0-SNAPSHOT</waterflow.version>
-    </properties>
-
     <dependencies>
         <!-- FIT -->
         <dependency>
@@ -36,24 +27,20 @@
         <dependency>
             <groupId>com.huawei.fit.jade.fel</groupId>
             <artifactId>fel-core</artifactId>
-            <version>${fel.version}</version>
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.jade.service</groupId>
             <artifactId>fel-service</artifactId>
-            <version>${fel.version}</version>
         </dependency>
 
         <!-- WaterFlow -->
         <dependency>
             <groupId>com.huawei.fit.jade.waterflow</groupId>
             <artifactId>waterflow-core</artifactId>
-            <version>${waterflow.version}</version>
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.jade.waterflow</groupId>
             <artifactId>waterflow-bridge-fit-reactor</artifactId>
-            <version>${waterflow.version}</version>
         </dependency>
 
         <!-- Lombok -->
