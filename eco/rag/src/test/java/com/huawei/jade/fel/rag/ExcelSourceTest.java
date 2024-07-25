@@ -1,12 +1,22 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
 package com.huawei.jade.fel.rag;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.huawei.jade.fel.rag.source.ExcelSource;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+/**
+ * ExcelSource模块测试。
+ *
+ * @since 2024-05-15
+ */
 public class ExcelSourceTest {
     @Test
     void test_excel07_extract() {

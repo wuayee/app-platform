@@ -17,14 +17,14 @@ import com.huawei.jade.fel.rag.store.query.VectorQuery;
 
 import org.junit.jupiter.api.Test;
 
-import javafx.util.Pair;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javafx.util.Pair;
 
 /**
  * VectorIndex模块测试。

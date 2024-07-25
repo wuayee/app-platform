@@ -56,11 +56,6 @@ public class RedisKvConnector implements KvConnector {
         this.jedis = client;
     }
 
-    @Override
-    protected void finalize() {
-        close();
-    }
-
     /**
      * 根据传入的键在指定的namespace进行查询。
      *

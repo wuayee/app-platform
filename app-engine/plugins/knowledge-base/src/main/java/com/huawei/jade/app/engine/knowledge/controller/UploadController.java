@@ -20,6 +20,11 @@ import com.huawei.jade.app.engine.knowledge.utils.DecodeUtil;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * 文件上传与删除接口
+ *
+ * @since 2024-05-13
+ */
 @Component
 @RequestMapping("/knowledge")
 public class UploadController {

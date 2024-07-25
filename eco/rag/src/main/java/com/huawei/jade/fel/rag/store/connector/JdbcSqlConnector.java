@@ -49,21 +49,11 @@ public class JdbcSqlConnector implements SqlConnector {
         try {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(connStr, properties.getUsername(), properties.getPassword());
-        } catch (Exception e) {
-            logger.error(e.getMessage());
+        } catch (SQLException | ClassNotFoundException e) {
+            logger.error(filterSQLSensitiveInfo(e.getMessage()));
             logger.error("Failed to establish connection with {}", dbType.getName());
             throw new IllegalArgumentException("Connection failed");
         }
-    }
-
-    /**
-     * 关闭连接。
-     *
-     * @throws SQLException SQLException
-     */
-    @Override
-    protected void finalize() throws SQLException {
-        connection.close();
     }
 
     /**
@@ -117,12 +107,22 @@ public class JdbcSqlConnector implements SqlConnector {
                 rows = processRows(rs);
             }
         } catch (SQLException e) {
-            logger.error("Failed to execute sql, err msg: {}", e.getMessage());
+            logger.error("Failed to execute sql, err msg: {}", filterSQLSensitiveInfo(e.getMessage()));
         } finally {
             close(rs);
             close(stmt);
         }
         return rows;
+    }
+
+    private static String filterSQLSensitiveInfo(String message) {
+        if (message == null || message.isEmpty()) {
+            return "";
+        }
+        String filtered = message.replaceAll("jdbc:[\\w:]+//[\\w.-]+:[0-9]+/[\\w.-]+", "jdbc:[FILTERED]");
+        filtered = filtered.replaceAll("SELECT .* FROM .*", "SELECT [FILTERED] FROM [FILTERED]");
+        filtered = filtered.replaceAll("INSERT INTO .* VALUES .*", "INSERT INTO [FILTERED] VALUES [FILTERED]");
+        return filtered;
     }
 
     private List<Map<String, Object>> executeSql(Statement stmt, String sql) {
@@ -135,7 +135,7 @@ public class JdbcSqlConnector implements SqlConnector {
                 rows = processRows(rs);
             }
         } catch (SQLException e) {
-            logger.error("Failed to execute sql in execute batch");
+            logger.error("Failed to execute sql in execute batch {}", filterSQLSensitiveInfo(e.getMessage()));
         } finally {
             close(rs);
         }
@@ -175,7 +175,7 @@ public class JdbcSqlConnector implements SqlConnector {
                     connection.setAutoCommit(true);
                     connection.close();
                 } catch (SQLException e) {
-                    logger.error("Failed to close connection");
+                    logger.error("Failed to close connection {}", filterSQLSensitiveInfo(e.getMessage()));
                 }
             }
         }
@@ -206,7 +206,7 @@ public class JdbcSqlConnector implements SqlConnector {
                 stmt.close();
             }
         } catch (SQLException e) {
-            logger.error("Failed to close statement");
+            logger.error("Failed to close statement {}", filterSQLSensitiveInfo(e.getMessage()));
         }
     }
 
@@ -216,7 +216,7 @@ public class JdbcSqlConnector implements SqlConnector {
                 rs.close();
             }
         } catch (SQLException e) {
-            logger.error("Failed to close result set");
+            logger.error("Failed to close result set {}", filterSQLSensitiveInfo(e.getMessage()));
         }
     }
 
