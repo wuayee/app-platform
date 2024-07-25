@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 /**
- * 共享内存JNI接口定义
+ * 共享内存 JNI 接口定义
  *
  * @author l00862071
  * @since 2024-03-19
@@ -21,14 +21,23 @@ public class SharedMemoryReaderWriter {
     private static final Logger logger = LogManager.getLogger(SharedMemoryReaderWriter.class);
 
     /**
-     *  动态链接库名称
+     *  x86 动态链接库名称
      */
-    public static final String DATABUS_JNI_NATIVE_LIBRARY_NAME = "libdatabus";
+    private static final String DATABUS_JNI_NATIVE_LIBRARY_NAME_X86 = "libdatabus_x86";
+
+    /**
+     *  aarch64 动态链接库名称
+     */
+    private static final String DATABUS_JNI_NATIVE_LIBRARY_NAME_AARCH64 = "libdatabus_aarch64";
 
     static {
         if (DataBusUtils.isSupportedPlatform()) {
             try {
-                NativeLibraryLoader.loadLibrary(DATABUS_JNI_NATIVE_LIBRARY_NAME);
+                if (DataBusUtils.isX86Supported()) {
+                    NativeLibraryLoader.loadLibrary(DATABUS_JNI_NATIVE_LIBRARY_NAME_X86);
+                } else {
+                    NativeLibraryLoader.loadLibrary(DATABUS_JNI_NATIVE_LIBRARY_NAME_AARCH64);
+                }
             } catch (IOException e) {
                 logger.error("[init] Loading native library failed.", e);
             }
@@ -36,7 +45,7 @@ public class SharedMemoryReaderWriter {
     }
 
     /**
-     * JNI read接口
+     * JNI read 接口
      *
      * @param sharedMemoryId 表示目标内存块的句柄
      * @param readOffset 表示从目标内存块读入地点的偏移量的 {@code long}。
@@ -47,7 +56,7 @@ public class SharedMemoryReaderWriter {
     public native byte[] read(int sharedMemoryId, long readOffset, long readLength) throws IOException;
 
     /**
-     * JNI write接口
+     * JNI write 接口
      *
      * @param sharedMemoryId 表示目标内存块的句柄
      * @param writeOffset 表示从目标内存块写入地点的偏移量的 {@code long}。

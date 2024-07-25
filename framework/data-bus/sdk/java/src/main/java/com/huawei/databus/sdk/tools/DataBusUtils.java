@@ -114,7 +114,17 @@ public class DataBusUtils {
     }
 
     /**
-     * 验证当前平台是否支持 DataBus
+     * 验证当前平台是否支持 X86 架构
+     *
+     * @return 表示平台是否支持的 {code boolean}
+     */
+    public static boolean isX86Supported() {
+        String arch = System.getProperty("os.arch").toLowerCase();
+        return arch.startsWith("x86") || arch.startsWith("amd");
+    }
+
+    /**
+     * 验证当前平台是否支持
      *
      * @return 表示平台是否支持的 {code boolean}
      */
