@@ -4,9 +4,9 @@
 
 package com.huawei.fit.http.server.netty.support;
 
-import com.huawei.fit.http.protocol.ReadableMessageBody;
 import com.huawei.fit.http.server.netty.NettyReadableMessageBody;
 import com.huawei.fitframework.inspection.Nonnull;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.Unpooled;
@@ -14,7 +14,7 @@ import io.netty.buffer.Unpooled;
 import java.io.IOException;
 
 /**
- * {@link ReadableMessageBody} 的 {@link CompositeByteBuf} 的实现。
+ * {@link com.huawei.fit.http.protocol.ReadableMessageBody} 的 {@link CompositeByteBuf} 的实现。
  *
  * @author 王成 w00863339
  * @since 2024-02-17

@@ -19,7 +19,6 @@ import com.huawei.fitframework.util.StringUtils;
 
 import java.util.Optional;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -59,7 +58,7 @@ public class AsyncTaskExecutor {
      * 提交异步任务。
      *
      * @param metadata 表示待提交的异步任务的 {@link RequestMetadata}。
-     * @param task 表示待提交的异步任务的 {@link Callable}{@code <}{@link Response}{@code >}。
+     * @param task 表示待提交的异步任务的 {@link Supplier}{@code <}{@link Response}{@code >}。
      * @return 表示提交异步任务后的状态码的 {@code int}。
      */
     public int submit(RequestMetadata metadata, Supplier<Response> task) {
