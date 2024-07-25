@@ -217,51 +217,59 @@ public abstract class FlowsDataBaseTest {
     }
 
     /**
-     * 构造测试数据
+     * flowsExecutorWithOnlyStateNode1To1
      *
-     * @return 测试数据
+     * @return businessData
      */
     protected Map<String, Object> flowsExecutorWithOnlyStateNode1To1() {
         Map<String, Object> businessData = new HashMap<>();
-        businessData.put("cudehub.user", "user");
-        businessData.put("cudehub.branch", "branch");
-        businessData.put("libing.status", "status");
-        businessData.put("cudehub.tag", "tag");
-        businessData.put("libing.id", "id");
+        businessData.put("cudehubUser", "user");
+        businessData.put("cudehubBranch", "branch");
+        businessData.put("libingStatus", "status");
+        businessData.put("cudehubTag", "tag");
+        businessData.put("libingId", "id");
         businessData.put("application", "tianzhou");
         return businessData;
     }
 
     /**
-     * 构造测试数据
+     * flowsExecutorWithConditionNodeFirstBranchTrue
      *
-     * @return 测试数据
+     * @return businessData
      */
     protected Map<String, Object> flowsExecutorWithConditionNodeFirstBranchTrue() {
         Map<String, Object> businessData = new HashMap<>();
-        businessData.put("cmc.approved", "true");
-        businessData.put("committer.approved", "true");
-        businessData.put("approved.result", "success");
+        businessData.put("cmc", new HashMap<String, Boolean>() {
+            {
+                put("approved", true);
+            }
+        });
+        businessData.put("committer", new HashMap<String, Boolean>() {
+            {
+                put("approved", true);
+            }
+        });
+        businessData.put("approvedResult", "success");
         businessData.put("application", "tianzhou");
         return businessData;
     }
 
     /**
-     * 构造测试数据
+     * flowsManualExecutorWithConditionNodeFirstBranchTrue
      *
-     * @return 测试数据
+     * @return businessData
      */
     protected Map<String, Object> flowsManualExecutorWithConditionNodeFirstBranchTrue() {
         Map<String, Object> businessData = new HashMap<>();
-        businessData.put("approved.result", "success");
+        businessData.put("approvedResult", "success");
         businessData.put("application", "tianzhou");
         return businessData;
     }
 
     /**
-     * 构造测试数据
+     * flowsManualExecutorWithConditionNodeCircle
      *
-     * @return 测试数据
+     * @return businessData
      */
     protected Map<String, Object> flowsManualExecutorWithConditionNodeCircle() {
         Map<String, Object> businessData = new HashMap<>();
@@ -271,27 +279,27 @@ public abstract class FlowsDataBaseTest {
     }
 
     /**
-     * 构造测试数据
+     * flowsExecuteProduceFromMToNForOfferOneData
      *
      * @param approved approved
-     * @return 测试数据
+     * @return businessData
      */
-    protected Map<String, Object> flowsExecuteProduceFromMToNForOfferOneData(String approved) {
+    protected Map<String, Object> flowsExecuteProduceFromMToNForOfferOneData(boolean approved) {
         Map<String, Object> businessData = new HashMap<>();
-        businessData.put("approved.result", "success");
+        businessData.put("approvedResult", "success");
         businessData.put("approved", approved);
         businessData.put("application", "tianzhou");
         return businessData;
     }
 
     /**
-     * 构造测试数据
+     * flowsExecuteFilterFromMToN
      *
-     * @return 测试数据
+     * @return businessData
      */
     protected Map<String, Object> flowsExecuteFilterFromMToN() {
         Map<String, Object> businessData = new HashMap<>();
-        businessData.put("approved.result", "success");
+        businessData.put("approvedResult", "success");
         businessData.put("application", "tianzhou");
         return businessData;
     }
@@ -322,26 +330,25 @@ public abstract class FlowsDataBaseTest {
     }
 
     /**
-     * 断言是否全部完成
+     * assertFlowsExecutorWithOnlyStateNode1To1
      *
-     * @param flowData 提供businessData的数量判定
-     * @param contexts 当前的contexts
-     * @param allContexts 过程中产生的contexts
+     * @param flowData flowData
+     * @param contexts contexts
+     * @param allContexts allContexts
      */
     protected void assertFlowsExecutorWithOnlyStateNode1To1(FlowData flowData, List<FlowContext<FlowData>> contexts,
             List<FlowContext<FlowData>> allContexts) {
         assertEquals(1, contexts.size());
         assertEquals(ARCHIVED, contexts.get(0).getStatus());
         assertEquals(4, allContexts.size());
-        allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
+        allContexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
 
         Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
-        assertEquals(flowData.getBusinessData().size(), resultBusinessData.size());
-        assertEquals("hello: echo: user", resultBusinessData.get("cudehub.user"));
-        assertEquals("hello: echo: branch", resultBusinessData.get("cudehub.branch"));
-        assertEquals("echo: status", resultBusinessData.get("libing.status"));
-        assertEquals("hello: echo: tag", resultBusinessData.get("cudehub.tag"));
-        assertEquals("echo: id", resultBusinessData.get("libing.id"));
+        assertEquals("hello: echo: user", resultBusinessData.get("cudehubUser"));
+        assertEquals("hello: echo: branch", resultBusinessData.get("cudehubBranch"));
+        assertEquals("echo: status", resultBusinessData.get("libingStatus"));
+        assertEquals("hello: echo: tag", resultBusinessData.get("cudehubTag"));
+        assertEquals("echo: id", resultBusinessData.get("libingId"));
     }
 
     /**
@@ -364,64 +371,61 @@ public abstract class FlowsDataBaseTest {
     }
 
     /**
-     * 断言是否全部完成
+     * assertFlowsExecutorWithConditionNodeFirstBranchTrue
      *
-     * @param flowData 提供businessData的数量判定
-     * @param contexts 当前的contexts
-     * @param allContexts 过程中产生的contexts
+     * @param flowData flowData
+     * @param contexts contexts
+     * @param allContexts allContexts
      */
     protected void assertFlowsExecutorWithConditionNodeFirstBranchTrue(FlowData flowData,
             List<FlowContext<FlowData>> contexts, List<FlowContext<FlowData>> allContexts) {
         assertEquals(1, contexts.size());
         assertEquals(ARCHIVED, contexts.get(0).getStatus());
         assertEquals(6, allContexts.size());
-        allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
+        allContexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
         Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
-        assertEquals(resultBusinessData.size(), flowData.getBusinessData().size());
-        assertTrue(Boolean.parseBoolean(ObjectUtils.cast(resultBusinessData.get("cmc.approved"))));
-        assertTrue(Boolean.parseBoolean(ObjectUtils.cast(resultBusinessData.get("committer.approved"))));
-        assertEquals("state2: state1: success", resultBusinessData.get("approved.result"));
+        assertTrue(ObjectUtils.<Boolean>cast(getBusinessDataFromChainedKey(resultBusinessData, "cmc.approved")));
+        assertTrue(ObjectUtils.<Boolean>cast(getBusinessDataFromChainedKey(resultBusinessData, "committer.approved")));
+        assertEquals("state2: state1: success", resultBusinessData.get("approvedResult"));
     }
 
     /**
-     * 断言是否全部完成
+     * assertFlowsExecutorWithConditionNodeFirstFalseBranch
      *
-     * @param flowData 提供businessData的数量判定
-     * @param contexts 当前的contexts
-     * @param allContexts 过程中产生的contexts
+     * @param flowData flowData
+     * @param contexts contexts
+     * @param allContexts allContexts
      */
     protected void assertFlowsExecutorWithConditionNodeFirstFalseBranch(FlowData flowData,
             List<FlowContext<FlowData>> contexts, List<FlowContext<FlowData>> allContexts) {
         assertEquals(1, contexts.size());
         assertEquals(ARCHIVED, contexts.get(0).getStatus());
         assertEquals(3, allContexts.size());
-        allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
+        allContexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
         Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
-        assertEquals(resultBusinessData.size(), flowData.getBusinessData().size());
-        assertFalse(Boolean.parseBoolean(ObjectUtils.cast(resultBusinessData.get("cmc.approved"))));
-        assertTrue(Boolean.parseBoolean(ObjectUtils.cast(resultBusinessData.get("committer.approved"))));
-        assertEquals("success", resultBusinessData.get("approved.result"));
+        assertFalse(ObjectUtils.<Boolean>cast(getBusinessDataFromChainedKey(resultBusinessData, "cmc.approved")));
+        assertTrue(ObjectUtils.<Boolean>cast(getBusinessDataFromChainedKey(resultBusinessData, "committer.approved")));
+        assertEquals("success", resultBusinessData.get("approvedResult"));
     }
 
     /**
-     * 断言是否全部完成
+     * assertFlowsExecutorWithConditionNodeSecondFalseBranch
      *
-     * @param flowData 提供businessData的数量判定
-     * @param contexts 当前的contexts
-     * @param allContexts 过程中产生的contexts
+     * @param flowData flowData
+     * @param contexts contexts
+     * @param allContexts allContexts
      */
     protected void assertFlowsExecutorWithConditionNodeSecondFalseBranch(FlowData flowData,
             List<FlowContext<FlowData>> contexts, List<FlowContext<FlowData>> allContexts) {
         assertEquals(1, contexts.size());
         assertEquals(ARCHIVED, contexts.get(0).getStatus());
         assertEquals(5, allContexts.size());
-        allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
+        allContexts.forEach(c -> assertEquals(ARCHIVED, c.getStatus()));
 
         Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
-        assertEquals(resultBusinessData.size(), flowData.getBusinessData().size());
-        assertTrue(Boolean.parseBoolean(ObjectUtils.cast(resultBusinessData.get("cmc.approved"))));
-        assertFalse(Boolean.parseBoolean(ObjectUtils.cast(resultBusinessData.get("committer.approved"))));
-        assertEquals("state1: success", resultBusinessData.get("approved.result"));
+        assertTrue(ObjectUtils.<Boolean>cast(getBusinessDataFromChainedKey(resultBusinessData, "cmc.approved")));
+        assertFalse(ObjectUtils.<Boolean>cast(getBusinessDataFromChainedKey(resultBusinessData, "committer.approved")));
+        assertEquals("state1: success", resultBusinessData.get("approvedResult"));
     }
 
     /**
@@ -458,7 +462,7 @@ public abstract class FlowsDataBaseTest {
                 .filter(context -> !context.getPosition().equals(metaId))
                 .forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
         Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
-        assertEquals("success", resultBusinessData.get("approved.result"));
+        assertEquals("success", resultBusinessData.get("approvedResult"));
     }
 
     /**
@@ -495,7 +499,7 @@ public abstract class FlowsDataBaseTest {
         assertEquals(contextSizeExpected, resumeAllContexts.size());
         resumeAllContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
         Map<String, Object> resumeResultBusinessData = resumeContexts.get(0).getData().getBusinessData();
-        assertEquals(approvedExpected, resumeResultBusinessData.get("approved.result"));
+        assertEquals(approvedExpected, resumeResultBusinessData.get("approvedResult"));
     }
 
     /**
@@ -513,7 +517,7 @@ public abstract class FlowsDataBaseTest {
 
         Map<String, Object> resultBusinessData = contexts.get(0).getData().getBusinessData();
         assertEquals(6, resultBusinessData.size());
-        assertEquals("branch", resultBusinessData.get("cudehub.branch"));
+        assertEquals("branch", resultBusinessData.get("cudehubBranch"));
     }
 
     /**
@@ -553,7 +557,7 @@ public abstract class FlowsDataBaseTest {
         assertEquals(5, contexts.size());
         contexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
         contexts.forEach(
-                context -> assertEquals("hello: success", context.getData().getBusinessData().get("approved.result")));
+                context -> assertEquals("hello: success", context.getData().getBusinessData().get("approvedResult")));
         assertEquals(12, allContexts.size());
         allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
     }
@@ -599,5 +603,24 @@ public abstract class FlowsDataBaseTest {
         contexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
         assertEquals(10, allContexts.size());
         allContexts.forEach(context -> assertEquals(ARCHIVED, context.getStatus()));
+    }
+
+    private Object getBusinessDataFromChainedKey(Map<String, Object> businessData, String keyChain) {
+        Map<String, Object> businessDataCopy = businessData;
+        String[] keys = keyChain.split("\\.");
+        Object result = "";
+        for (int i = 0; i < keys.length; i++) {
+            if (i == keys.length - 1) {
+                result = businessDataCopy.get(keys[i]);
+                break;
+            }
+            if (!(businessDataCopy.get(keys[i]) instanceof Map)) {
+                throw new IllegalStateException(
+                        String.format("Failed to get the value of \"%s\" from the businessData %s", keyChain,
+                                businessData));
+            }
+            businessDataCopy = ObjectUtils.cast(businessDataCopy.get(keys[i]));
+        }
+        return result;
     }
 }

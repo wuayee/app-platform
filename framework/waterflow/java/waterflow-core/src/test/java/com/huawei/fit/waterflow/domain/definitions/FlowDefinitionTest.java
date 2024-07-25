@@ -76,7 +76,7 @@ class FlowDefinitionTest {
 
     private static final Router ROUTER = Mockito.mock(Router.class);
 
-    private static final Invoker MOCKED = Mockito.mock(Invoker.class);
+    private static final Invoker INVOKER = Mockito.mock(Invoker.class);
 
     private static final Parser PARSER = new FlowParser(BROKER_CLIENT);
 
@@ -275,7 +275,11 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("flows_auto_echo_with_condition_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
             Map<String, Object> businessData = flowsExecutorWithConditionNodeFirstBranchTrue();
-            businessData.put("cmc.approved", "false");
+            businessData.put("cmc", new HashMap<String, Boolean>() {
+                {
+                    put("approved", false);
+                }
+            });
             FlowData flowData = getFlowData(businessData, "gsy");
             From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
@@ -296,7 +300,11 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("flows_auto_echo_with_condition_node_1_to_1.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
             Map<String, Object> businessData = flowsExecutorWithConditionNodeFirstBranchTrue();
-            businessData.put("committer.approved", "false");
+            businessData.put("committer", new HashMap<String, Boolean>() {
+                {
+                    put("approved", false);
+                }
+            });
             FlowData flowData = getFlowData(businessData, "gsy");
             From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
@@ -490,9 +498,10 @@ class FlowDefinitionTest {
             data.put("businessData", flowData.getBusinessData());
             output.add(data);
             when(BROKER_CLIENT.getRouter(any(), anyString())).thenReturn(ROUTER);
-            when(ROUTER.route(any())).thenReturn(MOCKED);
-            when(MOCKED.timeout(anyLong(), any())).thenReturn(MOCKED);
-            when(MOCKED.invoke(any())).thenReturn(output);
+            when(ROUTER.route(any())).thenReturn(INVOKER);
+            when(INVOKER.timeout(anyLong(), any())).thenReturn(INVOKER);
+            when(INVOKER.communicationType(any())).thenReturn(INVOKER);
+            when(INVOKER.invoke(any())).thenReturn(output);
 
             String traceId = from.offer(flowData);
 
@@ -551,9 +560,9 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("flows_auto_general_jober_with_condition_node_m_to_n.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
             List<FlowData> list = new ArrayList<>();
-            list.add(getFlowData(flowsExecuteProduceFromMToNForOfferOneData("true"), "gsy"));
-            list.add(getFlowData(flowsExecuteProduceFromMToNForOfferOneData("true"), "yyk"));
-            list.add(getFlowData(flowsExecuteProduceFromMToNForOfferOneData("false"), "yxy"));
+            list.add(getFlowData(flowsExecuteProduceFromMToNForOfferOneData(true), "gsy"));
+            list.add(getFlowData(flowsExecuteProduceFromMToNForOfferOneData(true), "yyk"));
+            list.add(getFlowData(flowsExecuteProduceFromMToNForOfferOneData(false), "yxy"));
             From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
             assertSingleInstance(getPublisher(streamId), from);
@@ -565,9 +574,9 @@ class FlowDefinitionTest {
                 return result;
             }).collect(Collectors.toList());
             when(BROKER_CLIENT.getRouter(any(), anyString())).thenReturn(ROUTER);
-            when(ROUTER.route(any())).thenReturn(MOCKED);
-            when(MOCKED.timeout(anyLong(), any())).thenReturn(MOCKED);
-            when(MOCKED.invoke(any())).thenReturn(outputs);
+            when(ROUTER.route(any())).thenReturn(INVOKER);
+            when(INVOKER.timeout(anyLong(), any())).thenReturn(INVOKER);
+            when(INVOKER.invoke(any())).thenReturn(outputs);
 
             String traceId = from.offer(list.get(0));
 
@@ -585,9 +594,9 @@ class FlowDefinitionTest {
             String jsonData = getJsonData(getFilePath("flows_auto_general_jober_with_condition_node_m_to_n.json"));
             FlowDefinition flowDefinition = PARSER.parse(jsonData);
             FlowData[] flowDataList = {
-                    getFlowData(flowsExecuteProduceFromMToNForOfferOneData("true"), "gsy"),
-                    getFlowData(flowsExecuteProduceFromMToNForOfferOneData("true"), "yyk"),
-                    getFlowData(flowsExecuteProduceFromMToNForOfferOneData("false"), "yxy")
+                    getFlowData(flowsExecuteProduceFromMToNForOfferOneData(true), "gsy"),
+                    getFlowData(flowsExecuteProduceFromMToNForOfferOneData(true), "yyk"),
+                    getFlowData(flowsExecuteProduceFromMToNForOfferOneData(false), "yxy")
             };
             From<FlowData> from = ObjectUtils.cast(flowDefinition.convertToFlow(REPO, MESSENGER, LOCKS));
             String streamId = flowDefinition.getStreamId();
@@ -600,9 +609,9 @@ class FlowDefinitionTest {
                 return result;
             }).collect(Collectors.toList());
             when(BROKER_CLIENT.getRouter(any(), anyString())).thenReturn(ROUTER);
-            when(ROUTER.route(any())).thenReturn(MOCKED);
-            when(MOCKED.timeout(anyLong(), any())).thenReturn(MOCKED);
-            when(MOCKED.invoke(any())).thenReturn(outputs);
+            when(ROUTER.route(any())).thenReturn(INVOKER);
+            when(INVOKER.timeout(anyLong(), any())).thenReturn(INVOKER);
+            when(INVOKER.invoke(any())).thenReturn(outputs);
 
             String traceId = from.offer(flowDataList);
 
@@ -651,7 +660,11 @@ class FlowDefinitionTest {
             Blocks.Block<FlowData> block3 = resumeFrom3.getBlock(resumeContext3.getPosition());
             String toBatch3 = UUIDUtil.uuid();
             contexts3.forEach(context -> {
-                context.getData().getBusinessData().put("approve.status", "false");
+                context.getData().getBusinessData().put("approve", new HashMap<String, Boolean>() {
+                    {
+                        put("status", false);
+                    }
+                });
                 context.toBatch(toBatch3);
             });
             REPO.save(contexts3);
@@ -673,7 +686,11 @@ class FlowDefinitionTest {
             Blocks.Block<FlowData> block1 = resumeFrom1.getBlock(resumeContext1.getPosition());
             String toBatch1 = UUIDUtil.uuid();
             contexts1.forEach(context -> {
-                context.getData().getBusinessData().put("approve.status", "true");
+                context.getData().getBusinessData().put("approve", new HashMap<String, Boolean>() {
+                    {
+                        put("status", true);
+                    }
+                });
                 context.toBatch(toBatch1);
             });
             REPO.save(contexts1);
@@ -721,9 +738,9 @@ class FlowDefinitionTest {
                 return result;
             }).collect(Collectors.toList());
             when(BROKER_CLIENT.getRouter(any(), anyString())).thenReturn(ROUTER);
-            when(ROUTER.route(any())).thenReturn(MOCKED);
-            when(MOCKED.timeout(anyLong(), any())).thenReturn(MOCKED);
-            when(MOCKED.invoke(any())).thenReturn(outputs);
+            when(ROUTER.route(any())).thenReturn(INVOKER);
+            when(INVOKER.timeout(anyLong(), any())).thenReturn(INVOKER);
+            when(INVOKER.invoke(any())).thenReturn(outputs);
 
             String traceId = from.offer(list.get(0));
 

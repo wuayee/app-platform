@@ -14,10 +14,8 @@ import com.huawei.fit.waterflow.domain.stream.operators.Operators;
 import com.huawei.fit.waterflow.domain.stream.reactive.Processor;
 import com.huawei.fit.waterflow.domain.stream.reactive.Publisher;
 import com.huawei.fit.waterflow.domain.stream.reactive.Subscriber;
+import com.huawei.fit.waterflow.domain.utils.OhScriptExecutor;
 import com.huawei.fitframework.log.Logger;
-import com.huawei.fitframework.util.ObjectUtils;
-
-import com.googlecode.aviator.AviatorEvaluator;
 
 import lombok.Getter;
 
@@ -64,10 +62,9 @@ public class FlowConditionNode extends FlowNode {
                 event.getConditionRule());
 
         return (input) -> {
-            String executableRule = event.getExecutableRule(input);
-            LOG.info("[flowEngines] stream {} condition node {} with executable rule {}", streamId, this.metaId,
-                    executableRule);
-            return ObjectUtils.cast(AviatorEvaluator.execute(executableRule));
+            String conditionRule = event.getConditionRule();
+            LOG.info("[flowEngines] stream {} condition node {} with rule {}", streamId, this.metaId, conditionRule);
+            return OhScriptExecutor.evaluateConditionRule(input, conditionRule);
         };
     }
 }

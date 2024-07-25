@@ -24,11 +24,15 @@ public enum ErrorCodes {
      * 分页查询时Offset范围不正确。
      */
     PAGINATION_OFFSET_INVALID(10000008, "The range of offset is incorrect."),
-    //
     /**
      * 分页查询时Limit范围不正确。
      */
     PAGINATION_LIMIT_INVALID(10000009, "The range of limit is incorrect."),
+
+    /**
+     * 类型转换失败。
+     */
+    TYPE_CONVERT_FAILED(10000011, "Cannot convert type."),
 
     /** ------------ waterflow Exception 10007000-10007999 --------------------- */
     /**
@@ -71,6 +75,17 @@ public enum ErrorCodes {
      */
     FLOW_EXECUTE_CALLBACK_FITABLES_FAILED(100070023,
             "Failed to execute callback, callback name: {0}, callback type: {1}, fitables: {2}, errors: {3}"),
+
+    /**
+     * 流程引擎OhScript语法错误
+     */
+    FLOW_ENGINE_OHSCRIPT_GRAMMAR_ERROR(100070024, "OhScript grammar error. Source Code: {0}"),
+
+    /**
+     * 流程引擎条件规则变量未找到
+     */
+    FLOW_ENGINE_CONDITION_RULE_PARSE_ERROR(100070025, "Condition rule parse error. Condition Rule: {0}"),
+
     /**
      * 流程执行过程出现异常
      */
