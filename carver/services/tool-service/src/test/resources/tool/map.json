@@ -1,14 +1,14 @@
 {
   "schema": {
     "parameters": {
-      "order": [
-        "name",
-        "age",
-        "address",
-        "education",
-        "phoneNumbers"
-      ]
-    }
+    },
+    "order": [
+      "name",
+      "age",
+      "address",
+      "education",
+      "phoneNumbers"
+    ]
   },
   "runnables": {
     "HTTP": {
