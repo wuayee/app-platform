@@ -6,8 +6,8 @@ create table if not exists store_collection
     "id"               bigserial   primary key               not null,
     "created_time"     timestamp   default current_timestamp not null,
     "updated_time"     timestamp   default current_timestamp not null,
-    "creator"          varchar(10) default 'system'          not null,
-    "modifier"         varchar(10) default 'system'          not null,
+    "creator"          varchar(30) default 'system'          not null,
+    "modifier"         varchar(30) default 'system'          not null,
     "collector"        varchar(32) default 'system'          not null,
     "tool_unique_name" char(36)                              not null
     );
