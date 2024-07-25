@@ -94,6 +94,7 @@ public class AiState<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
      *
      * @return 表示数据发布者的 {@link Publisher}{@code <}{@link O}{@code >}。
      */
+    @Override
     public Publisher<O> publisher() {
         return this.state.publisher();
     }

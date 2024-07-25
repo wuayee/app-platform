@@ -50,6 +50,7 @@ public class AiProcessFlow<D, R> extends AiFlow<D, ProcessFlow<D>> implements Em
      *
      * @return 表示流程开始节点的 {@link Publisher}{@code <}{@link D}{@code >}。
      */
+    @Override
     public Publisher<D> start() {
         return this.origin().start();
     }

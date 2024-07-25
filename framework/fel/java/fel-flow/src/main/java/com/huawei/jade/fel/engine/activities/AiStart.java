@@ -459,7 +459,7 @@ public class AiStart<O, D, I, RF extends Flow<D>, F extends AiFlow<D, RF>> exten
             List<Prompt> prompts =
                     AiFlowSession.applyBatchPattern(Arrays.asList(templates), input.getData(), input.getSession());
             prompts.forEach(prompt -> messages.addAll(prompt.messages()));
-            return (Prompt) messages;
+            return ObjectUtils.<Prompt>cast(messages);
         }, null).displayAs("prompt"), this.getFlow().origin()), this.getFlow());
     }
 
