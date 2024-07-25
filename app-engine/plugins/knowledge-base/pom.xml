@@ -18,17 +18,14 @@
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-api</artifactId>
-            <version>${fit.version}</version>
         </dependency>
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-util</artifactId>
-            <version>${fit.version}</version>
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
-            <version>${fit.version}</version>
         </dependency>
 
         <!-- jade -->
@@ -42,8 +39,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-            <version>1.18.26</version>
         </dependency>
     </dependencies>
     <build>

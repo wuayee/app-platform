@@ -4,101 +4,42 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>com.huawei.fit.jade</groupId>
+        <artifactId>app-builder-jane-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
     <groupId>com.huawei.fit.elsa</groupId>
     <artifactId>dynamic-form-genericable</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-        <fit.version>3.5.0-SNAPSHOT</fit.version>
-
-        <!-- Maven plugin versions -->
-        <maven.compiler.version>3.11.0</maven.compiler.version>
-        <maven.jar.version>3.3.0</maven.jar.version>
-        <maven.surefire.version>3.0.0</maven.surefire.version>
-
-        <!-- other plugin versions -->
-        <lombok.version>1.18.26</lombok.version>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.huawei.fitframework</groupId>
-                <artifactId>fit-dependency</artifactId>
-                <version>${fit.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <!-- FIT core -->
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-api</artifactId>
-            <version>${fit.version}</version>
         </dependency>
         <dependency>
             <groupId>com.huawei.fitframework</groupId>
             <artifactId>fit-util</artifactId>
-            <version>${fit.version}</version>
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.jane</groupId>
             <artifactId>jane-common</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.huawei.fit.service</groupId>
             <artifactId>fit-http-classic</artifactId>
-            <version>${fit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>fit-snapshots</id>
-            <name>Fit Snapshots</name>
-            <!--suppress UnresolvedMavenProperty -->
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </snapshotRepository>
-        <repository>
-            <id>fit-releases</id>
-            <name>Fit Releases</name>
-            <!--suppress UnresolvedMavenProperty -->
-            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
-        </repository>
-    </distributionManagement>
-
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.version}</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <showWarnings>true</showWarnings>
-                    <showDeprecation>true</showDeprecation>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -110,11 +51,6 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven.surefire.version}</version>
             </plugin>
             <plugin>
                 <groupId>com.huawei.fitframework</groupId>

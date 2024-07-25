@@ -16,7 +16,6 @@
         <module>eco</module>
         <module>framework</module>
         <module>store</module>
-        <module>voice</module>
     </modules>
 
     <properties>
@@ -30,7 +29,7 @@
         <fit.version>3.5.0-SNAPSHOT</fit.version>
 
         <!-- Common service version -->
-        <common.service.version>1.0.0-SNAPSHOT</common.service.version>
+        <jade.version>1.0.0-SNAPSHOT</jade.version>
 
         <!-- Jacoco version -->
         <jacoco.version>0.8.10</jacoco.version>
@@ -60,9 +59,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.huawei.fitframework</groupId>
-                <artifactId>fit-dependency</artifactId>
-                <version>${fit.version}</version>
+                <groupId>com.huawei.fit.jade</groupId>
+                <artifactId>jade-dependency</artifactId>
+                <version>${jade.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

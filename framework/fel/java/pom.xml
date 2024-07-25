@@ -3,18 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.huawei.fit.jade</groupId>
-        <artifactId>jade-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-    </parent>
-
+    <groupId>com.huawei.fit.jade</groupId>
     <artifactId>jade-fel-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>fel-core</module>
+        <module>fel-dependency</module>
         <module>fel-flow</module>
         <module>fel-langchain</module>
         <module>fel-pipeline-core</module>
@@ -23,29 +19,104 @@
     </modules>
 
     <properties>
-        <!-- Lombok version -->
-        <lombok.version>1.18.26</lombok.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
 
-        <!-- FEL version -->
+        <!-- Framework version -->
+        <fit.version>3.5.0-SNAPSHOT</fit.version>
         <fel.version>1.0.0-SNAPSHOT</fel.version>
 
-        <!-- Jackson version  -->
-        <jackson.version>2.15.2</jackson.version>
+        <!-- Jacoco version -->
+        <jacoco.version>0.8.10</jacoco.version>
+
+        <!-- Maven plugin versions -->
+        <maven.antrun.version>3.1.0</maven.antrun.version>
+        <maven.compiler.version>3.12.1</maven.compiler.version>
+        <maven.dependency.version>3.6.1</maven.dependency.version>
+        <maven.jar.version>3.3.0</maven.jar.version>
+        <maven.surefire.version>3.2.5</maven.surefire.version>
+        <maven.source.version>3.3.1</maven.source.version>
     </properties>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>fit-snapshots</id>
+            <name>Fit Snapshots</name>
+            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
+        </snapshotRepository>
+        <repository>
+            <id>fit-releases</id>
+            <name>Fit Releases</name>
+            <url>https://cmc.centralrepo.rnd.huawei.com/artifactory/product_maven/</url>
+        </repository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
+                <groupId>com.huawei.fit.jade</groupId>
+                <artifactId>fel-dependency</artifactId>
+                <version>${fel.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven.source.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <propertyName>argLine</propertyName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

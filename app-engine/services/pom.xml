@@ -15,7 +15,7 @@
     <modules>
         <module>knowledge-base</module>
         <module>app-base</module>
-        <module>metrics</module>
+        <module>voice-service</module>
     </modules>
 
     <build>
