@@ -34,7 +34,7 @@ public class AippFileUtils {
      * 上传文件会上传到该共享目录。
      */
     public static final String NAS_SHARE_DIR = "/var/share";
-    private static final String DOWNLOAD_FILE_ORIGIN = "/api/jober/v1/api/31f20efc7e0848deab6a6bc10fc3021e/file?";
+    private static final String DOWNLOAD_FILE_ORIGIN = "/v1/api/31f20efc7e0848deab6a6bc10fc3021e/file?";
     private static final Logger log = Logger.get(AippFileUtils.class);
 
     /**
@@ -119,8 +119,8 @@ public class AippFileUtils {
      * @param fileName 表示下载后保存的文件名的{@link String}
      * @return 表示文件的可下载的url
      */
-    public static String getFileDownloadUrl(String endpoint, String filePath, String fileName) {
-        return endpoint + DOWNLOAD_FILE_ORIGIN + "filePath=" + filePath + "&fileName=" + fileName;
+    public static String getFileDownloadUrl(String endpoint, String pathPrefix, String filePath, String fileName) {
+        return endpoint + pathPrefix + DOWNLOAD_FILE_ORIGIN + "filePath=" + filePath + "&fileName=" + fileName;
     }
 
     /**
@@ -130,7 +130,7 @@ public class AippFileUtils {
      * @param filePath 表示文件路径的{@link String}
      * @return 表示音频文件路径的url
      */
-    public static String getFileDownloadFilePath(String endpoint, String filePath) {
-        return endpoint + DOWNLOAD_FILE_ORIGIN + "filePath=" + filePath;
+    public static String getFileDownloadFilePath(String endpoint, String pathPrefix, String filePath) {
+        return endpoint + pathPrefix + DOWNLOAD_FILE_ORIGIN + "filePath=" + filePath;
     }
 }
