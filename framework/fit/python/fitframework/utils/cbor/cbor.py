@@ -196,7 +196,7 @@ class InvalidCborError(Exception):
 
 class _Break(InvalidCborError):
     def __init__(self):
-        super().__init__(self, "Invalid BREAK code occurred")
+        super().__init__("Invalid BREAK code occurred")
 
 
 class Decoder(object):
