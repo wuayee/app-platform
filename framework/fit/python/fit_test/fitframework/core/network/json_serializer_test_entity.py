@@ -113,7 +113,3 @@ class _TestH(Generic[P, Q]):
     def __eq__(self, other):
         return isinstance(other, _TestH) and self.__dict__ == other.__dict__
 
-
-if __name__ == '__main__':
-    t = _TestD[_TestE[int]]
-    print(t)
