@@ -29,24 +29,6 @@ public class TaskData {
     private String toolUniqueName;
 
     /**
-     * 用所有属性的参数构造 {@link TaskData}。
-     *
-     * @param taskName 表示任务唯一标识的 {@link String}。
-     * @param context 表示任务的上下文的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
-     * @param toolUniqueName 表示工具唯一标识的 {@link String}。
-     */
-    public TaskData(String taskName, Map<String, Object> context, String toolUniqueName) {
-        this.taskName = taskName;
-        this.context = context;
-        this.toolUniqueName = toolUniqueName;
-    }
-
-    /**
-     * 参数为空的构造函数 {@link TaskData}。
-     */
-    public TaskData() {}
-
-    /**
      * 获取任务的唯一标识。
      *
      * @return 表示任务的唯一标识的 {@link String}。

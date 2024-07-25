@@ -18,11 +18,6 @@ public class ParameterEntity {
     private String type;
 
     /**
-     * 参数实体的无参构造方法。
-     */
-    public ParameterEntity() {}
-
-    /**
      * 表示获取参数的描述信息。
      *
      * @return 参数的描述信息的 {@link String}。
