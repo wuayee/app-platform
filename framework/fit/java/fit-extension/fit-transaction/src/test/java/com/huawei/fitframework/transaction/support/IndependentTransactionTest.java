@@ -29,6 +29,12 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+/**
+ * 为 {@link IndependentTransaction} 提供单元测试。
+ *
+ * @author 梁济时 l00815032
+ * @since 2022-08-27
+ */
 @DisplayName("测试 IndependentTransaction 实现")
 class IndependentTransactionTest {
     private TransactionManager manager;
@@ -170,8 +176,7 @@ class IndependentTransactionTest {
                 doThrow(new SQLException("test")).when(connection).close();
                 TransactionCompletionException exception =
                         assertThrows(TransactionCompletionException.class, () -> this.transaction.commit());
-                assertEquals("Failed to close connection when complete transaction.",
-                        exception.getMessage());
+                assertEquals("Failed to close connection when complete transaction.", exception.getMessage());
             }
 
             @Test
@@ -207,8 +212,7 @@ class IndependentTransactionTest {
                 doThrow(new SQLException("test")).when(connection).close();
                 TransactionCompletionException exception =
                         assertThrows(TransactionCompletionException.class, () -> this.transaction.rollback());
-                assertEquals("Failed to close connection when complete transaction.",
-                        exception.getMessage());
+                assertEquals("Failed to close connection when complete transaction.", exception.getMessage());
             }
         }
     }

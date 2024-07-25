@@ -68,10 +68,10 @@ class ThreadSafeCounterTest {
     }
 
     private static class ObserverForTest implements CounterValueChangedObserver {
-        public Counter counter;
-        public long before;
-        public long after;
-        public long calledCount;
+        private Counter counter;
+        private long before;
+        private long after;
+        private long calledCount;
 
         @Override
         public void onValueChanged(Counter counter, long pre, long next) {

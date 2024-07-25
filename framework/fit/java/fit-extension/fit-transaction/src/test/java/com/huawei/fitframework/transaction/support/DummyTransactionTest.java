@@ -29,6 +29,12 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+/**
+ * 为 {@link DummyTransaction} 提供单元测试。
+ *
+ * @author 梁济时 l00815032
+ * @since 2022-08-27
+ */
 @DisplayName("测试 DummyTransaction 实现")
 class DummyTransactionTest {
     private TransactionManager manager;

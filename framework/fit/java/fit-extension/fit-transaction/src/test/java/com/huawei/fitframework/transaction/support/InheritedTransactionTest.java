@@ -26,6 +26,12 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * 为 {@link InheritedTransaction} 提供单元测试。
+ *
+ * @author 梁济时 l00815032
+ * @since 2022-08-27
+ */
 @DisplayName("测试 InheritedTransaction 实现")
 class InheritedTransactionTest {
     private TransactionManager manager;

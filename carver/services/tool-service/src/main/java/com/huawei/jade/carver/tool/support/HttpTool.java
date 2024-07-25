@@ -24,6 +24,7 @@ import com.huawei.fit.http.client.proxy.support.setter.HeaderDestinationSetter;
 import com.huawei.fit.http.client.proxy.support.setter.ObjectEntitySetter;
 import com.huawei.fit.http.client.proxy.support.setter.PathVariableDestinationSetter;
 import com.huawei.fit.http.client.proxy.support.setter.QueryDestinationSetter;
+import com.huawei.fit.http.entity.Entity;
 import com.huawei.fit.http.entity.ObjectEntity;
 import com.huawei.fit.http.entity.TextEntity;
 import com.huawei.fit.http.protocol.HttpRequestMethod;
@@ -34,10 +35,12 @@ import com.huawei.fitframework.util.StringUtils;
 import com.huawei.fitframework.value.ValueFetcher;
 import com.huawei.jade.carver.tool.Tool;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -95,40 +98,64 @@ public class HttpTool extends AbstractTool {
 
     @Override
     public Object execute(Object... args) throws HttpClientException {
-        HttpClassicClientResponse<Object> response = this.emitter.emit(args);
-        if (response.statusCode() == HttpResponseStatus.NO_CONTENT.statusCode()) {
-            return null;
-        }
-        isTrue(response.entity().isPresent(), () -> new HttpClientException("Cannot get response entity."));
-        if (response.entity().get() instanceof ObjectEntity) {
-            return response.objectEntity().get().object();
-        } else if (response.entity().get() instanceof TextEntity) {
-            return response.textEntity().get().content();
-        } else {
-            return null;
+        try (HttpClassicClientResponse<Object> response = this.emitter.emit(args)) {
+            if (response.statusCode() == HttpResponseStatus.NO_CONTENT.statusCode()) {
+                return null;
+            }
+            Optional<Entity> opEntity = response.entity();
+            isTrue(opEntity.isPresent(), () -> new HttpClientException("Cannot get response entity."));
+            Entity entity = opEntity.get();
+            if (entity instanceof ObjectEntity) {
+                return ((ObjectEntity<?>) entity).object();
+            } else if (entity instanceof TextEntity) {
+                return ((TextEntity) entity).content();
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            throw new HttpClientException("Failed to execute http tool.", e);
         }
     }
 
     private HttpEmitter createHttpEmitter() {
-        Map<String, Object> schema = this.info().schema();
-        Map<String, Object> httpRunnables = getElementFromMap(this.info().runnables(), TYPE, Map.class);
-        String methodAsString = getElementFromMap(httpRunnables, KEY_OF_METHOD, String.class);
-        HttpRequestMethod method = notNull(HttpRequestMethod.from(methodAsString),
-                StringUtils.format("Cannot create HttpRequestMethod by field \"{0}\". [methodAsString={1}]",
-                        KEY_OF_METHOD,
-                        methodAsString));
-        String protocol = getElementFromMap(httpRunnables, KEY_OF_PROTOCOL, String.class);
-        String domain = getElementFromMap(httpRunnables, KEY_OF_DOMAIN, String.class);
-        String pathPattern = getElementFromMap(httpRunnables, KEY_OF_PATH_PATTERN, String.class);
+        Map<String, Object> httpRunnables = cast(getElementFromMap(this.info().runnables(), TYPE, Map.class));
+        return new DefaultHttpEmitter(getPropertyValueAppliers(httpRunnables),
+                this.factory.create(),
+                getHttpRequestMethod(httpRunnables),
+                getProtocol(httpRunnables),
+                getDomain(httpRunnables),
+                getPathPattern(httpRunnables));
+    }
+
+    private List<PropertyValueApplier> getPropertyValueAppliers(Map<String, Object> httpRunnables) {
         Map<String, Map<String, Map<String, String>>> mappings =
-                getElementFromMap(httpRunnables, KEY_OF_MAPPINGS, Map.class);
-        Map<String, Object> parameters = getElementFromMap(schema, KEY_OF_PARAMETERS, Map.class);
-        List<String> order = getElementFromMap(parameters, KEY_OF_ORDER, List.class);
+                cast(getElementFromMap(httpRunnables, KEY_OF_MAPPINGS, Map.class));
+        Map<String, Object> parameters = cast(getElementFromMap(this.info().schema(), KEY_OF_PARAMETERS, Map.class));
+        List<String> order = cast(getElementFromMap(parameters, KEY_OF_ORDER, List.class));
         if (order.size() != mappings.size() || !isSameSet(new HashSet<>(order), mappings.keySet())) {
             throw new IllegalArgumentException("Arguments in order is not same to key in mappings.");
         }
-        List<PropertyValueApplier> appliers = this.createAppliers(order, mappings);
-        return new DefaultHttpEmitter(appliers, this.factory.create(), method, protocol, domain, pathPattern);
+        return this.createAppliers(order, mappings);
+    }
+
+    private static HttpRequestMethod getHttpRequestMethod(Map<String, Object> httpRunnables) {
+        String methodAsString = getElementFromMap(httpRunnables, KEY_OF_METHOD, String.class);
+        return notNull(HttpRequestMethod.from(methodAsString),
+                StringUtils.format("Cannot create HttpRequestMethod by field \"{0}\". [methodAsString={1}]",
+                        KEY_OF_METHOD,
+                        methodAsString));
+    }
+
+    private static String getProtocol(Map<String, Object> httpRunnables) {
+        return getElementFromMap(httpRunnables, KEY_OF_PROTOCOL, String.class);
+    }
+
+    private static String getDomain(Map<String, Object> httpRunnables) {
+        return getElementFromMap(httpRunnables, KEY_OF_DOMAIN, String.class);
+    }
+
+    private static String getPathPattern(Map<String, Object> httpRunnables) {
+        return getElementFromMap(httpRunnables, KEY_OF_PATH_PATTERN, String.class);
     }
 
     private List<PropertyValueApplier> createAppliers(List<String> order,
@@ -194,12 +221,9 @@ public class HttpTool extends AbstractTool {
 
     private static <T> T getElementFromMap(Map<String, Object> map, String fieldName, Class<T> clazz) {
         isTrue(map.containsKey(fieldName), StringUtils.format("The map not contains field \"{0}\"", fieldName));
-        isInstanceOf(map.get(fieldName),
-                clazz,
-                "The value of the field \"{0}\" is not an instance of {1}.",
-                fieldName,
-                clazz);
-        return cast(map.get(fieldName));
+        Object ele = map.get(fieldName);
+        isInstanceOf(ele, clazz, "The value of the field \"{0}\" is not an instance of {1}.", fieldName, clazz);
+        return cast(ele);
     }
 
     private static <T> boolean isSameSet(Set<T> first, Set<T> second) {

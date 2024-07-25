@@ -56,7 +56,7 @@ public final class IndependentTransaction extends AbstractTransaction {
     }
 
     @Override
-    public final Connection connection() {
+    public Connection connection() {
         if (this.connection == null) {
             return this.parent().connection();
         } else {

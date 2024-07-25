@@ -677,22 +677,62 @@ public class IoUtils {
         notNull(out, "The output stream to copy data cannot be null.");
     }
 
+    /**
+     * 从指定的随机访问文件中的指定位置读取内容。
+     *
+     * @param file 表示指定随机访问文件的 {@link RandomAccessFile}。
+     * @param position 表示文件指定位置的 {@code long}。
+     * @param length 表示需要读取的内容长度的 {@code long}。
+     * @return 表示读取到的文件内容的 {@code byte[]}。
+     * @throws IOException 当发生 I/O 异常时。
+     * @throws IllegalArgumentException 当 {@code file} 为 {@code null} 时。
+     */
     public static byte[] read(RandomAccessFile file, long position, int length) throws IOException {
+        notNull(file, "The file cannot be null.");
         file.seek(position);
         return read(file, length);
     }
 
+    /**
+     * 从指定的随机访问文件中的开头读取内容。
+     *
+     * @param file 表示指定随机访问文件的 {@link RandomAccessFile}。
+     * @param length 表示需要读取的内容长度的 {@code long}。
+     * @return 表示读取到的文件内容的 {@code byte[]}。
+     * @throws IOException 当发生 I/O 异常时。
+     * @throws IllegalArgumentException 当 {@code file} 为 {@code null} 时。
+     */
     public static byte[] read(RandomAccessFile file, int length) throws IOException {
+        notNull(file, "The file cannot be null.");
         byte[] bytes = new byte[length];
         fill(file, bytes, 0, length);
         return bytes;
     }
 
+    /**
+     * 从指定的随机访问文件中的开始位置，读取内容，填充到指定字节数组中。
+     *
+     * @param file 表示指定随机访问文件的 {@link RandomAccessFile}。
+     * @param bytes 表示待填充的字节数组的 {@code byte[]}。
+     * @throws IOException 当发生 I/O 异常时。
+     * @throws IllegalArgumentException 当 {@code file} 为 {@code null} 时。
+     */
     public static void fill(RandomAccessFile file, byte[] bytes) throws IOException {
         fill(file, bytes, 0, bytes.length);
     }
 
+    /**
+     * 从指定的随机访问文件中的指定位置，读取指定长度的内容，填充到指定字节数组中。
+     *
+     * @param file 表示指定随机访问文件的 {@link RandomAccessFile}。
+     * @param bytes 表示待填充的字节数组的 {@code byte[]}。
+     * @param offset 表示随机访问文件读取内容开始的位置的 {@code int}。
+     * @param length 表示待读取内容的长度的 {@code int}。
+     * @throws IOException 当发生 I/O 异常时。
+     * @throws IllegalArgumentException 当 {@code file} 为 {@code null} 时。
+     */
     public static void fill(RandomAccessFile file, byte[] bytes, int offset, int length) throws IOException {
+        notNull(file, "The file cannot be null.");
         int read = 0;
         while (read < length) {
             int part = file.read(bytes, offset + read, length - read);
