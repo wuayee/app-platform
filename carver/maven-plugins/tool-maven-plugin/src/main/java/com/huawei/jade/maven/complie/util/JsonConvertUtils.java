@@ -4,7 +4,6 @@
 
 package com.huawei.jade.maven.complie.util;
 
-import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.jade.maven.complie.entity.MethodEntity;
 import com.huawei.jade.maven.complie.entity.ParameterEntity;
@@ -26,7 +25,6 @@ import java.util.Set;
  * @since 2024-06-19
  */
 public class JsonConvertUtils {
-    private static final Logger log = Logger.get(JsonConvertUtils.class);
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
@@ -37,7 +35,10 @@ public class JsonConvertUtils {
      */
     public static Map<String, Object> convertMethodEntityObjectMap(MethodEntity methodEntity) {
         MapBuilder<String, Object> mapBuilder = new MapBuilder<>();
-        return mapBuilder.put("schema", getSchema(methodEntity)).put("runnables", getRunnables(methodEntity)).build();
+        return mapBuilder.put("schema", getSchema(methodEntity))
+                .put("runnables", getRunnables(methodEntity))
+                .put("extensions", getTags(methodEntity))
+                .build();
     }
 
     private static Map<String, Object> getSchema(MethodEntity methodEntity) {
@@ -68,6 +69,12 @@ public class JsonConvertUtils {
         fitInfo.put("genericableId", methodEntity.getGenericableId());
         runnables.put("FIT", fitInfo);
         return runnables;
+    }
+
+    private static Map<String, Object> getTags(MethodEntity methodEntity) {
+        Map<String, Object> tags = new HashMap<>();
+        tags.put("tags", methodEntity.getTags());
+        return tags;
     }
 
     private static Map<String, Object> getParameters(MethodEntity methodEntity) {

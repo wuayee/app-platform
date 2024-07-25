@@ -26,6 +26,8 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Type;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -83,23 +85,21 @@ public class SchemaToolMetadataTest {
                 .put("name", "test_schema_default_implementation_name")
                 .put("index", "test_schema_index")
                 .put("description", "This is a demo FIT function.")
-                .put(SchemaKey.PARAMETERS,
-                        MapBuilder.<String, Object>get()
-                                .put("type", "object")
-                                .put(SchemaKey.PARAMETERS_PROPERTIES,
-                                        MapBuilder.<String, Object>get()
-                                                .put("p1", MapBuilder.<String, Object>get()
-                                                                .put("type", "string")
-                                                                .put("description", "This is the first parameter.")
-                                                                .build())
-                                                .put("extraP1", MapBuilder.<String, Object>get()
-                                                        .put("type", "string")
-                                                        .put("description", "This is the first extra parameter.")
-                                                        .build())
-                                                .build())
-                                .put(SchemaKey.PARAMETERS_ORDER, Collections.singletonList("p1"))
-                                .put(SchemaKey.PARAMETERS_REQUIRED, Collections.singletonList("p1"))
+                .put(SchemaKey.PARAMETERS, MapBuilder.<String, Object>get()
+                        .put("type", "object")
+                        .put(SchemaKey.PARAMETERS_PROPERTIES, MapBuilder.<String, Object>get()
+                                .put("p1", MapBuilder.<String, Object>get()
+                                        .put("type", "string")
+                                        .put("description", "This is the first parameter.")
+                                        .build())
+                                .put("extraP1", MapBuilder.<String, Object>get()
+                                        .put("type", "string")
+                                        .put("description", "This is the first extra parameter.")
+                                        .build())
                                 .build())
+                        .put(SchemaKey.PARAMETERS_REQUIRED, Collections.singletonList("p1"))
+                        .build())
+                .put(SchemaKey.PARAMETERS_ORDER, Collections.singletonList("p1"))
                 .put(SchemaKey.PARAMETERS_EXTENSIONS, MapBuilder.<String, Object>get()
                         .put(SchemaKey.CONFIG_PARAMETERS, Collections.singletonList("extraP1"))
                         .build())
@@ -164,5 +164,24 @@ public class SchemaToolMetadataTest {
     void shouldReturnSchema() {
         Map<String, Object> schema = this.tool.info().schema();
         assertThat(schema).isEqualTo(this.toolSchema);
+    }
+
+    @Test
+    @DisplayName("给定的order值为空，默认使用properties中参数的顺序")
+    void givenEmptyOrderThenReturnPropertiesKeysInOrder() {
+        Map<String, Object> map = new HashMap<>();
+        LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+        parameters.put("b", MapBuilder.<String, Object>get().put("type", "string").build());
+        parameters.put("c", MapBuilder.<String, Object>get().put("type", "string").build());
+        parameters.put("d", MapBuilder.<String, Object>get().put("type", "string").build());
+        parameters.put("a", MapBuilder.<String, Object>get().put("type", "string").build());
+        map.put(SchemaKey.PARAMETERS, MapBuilder.<String, Object>get()
+                .put("type", "object")
+                .put(SchemaKey.PARAMETERS_PROPERTIES, parameters)
+                .put(SchemaKey.PARAMETERS_REQUIRED, Collections.singletonList("p1"))
+                .build());
+        this.toolMetadata = Tool.Metadata.fromSchema(map);
+        List<String> parameterNames = this.toolMetadata.parameterNames();
+        assertThat(parameterNames).containsExactly("b", "c", "d", "a");
     }
 }

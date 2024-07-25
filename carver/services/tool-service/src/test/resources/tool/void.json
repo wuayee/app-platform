@@ -1,9 +1,9 @@
 {
   "schema": {
     "parameters": {
-      "order": [
-      ]
-    }
+    },
+    "order": [
+    ]
   },
   "runnables": {
     "HTTP": {

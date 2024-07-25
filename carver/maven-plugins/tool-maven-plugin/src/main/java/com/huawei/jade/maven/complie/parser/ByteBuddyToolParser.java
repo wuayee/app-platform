@@ -25,8 +25,11 @@ import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * 基于 {@link net.bytebuddy.ByteBuddy} 对于 {@link ToolMethod} 注解的工具解析器。
@@ -87,6 +90,8 @@ public class ByteBuddyToolParser implements ToolParser {
             MethodEntity method = new MethodEntity();
             method.setMethodName(toolAnnotation.load().name());
             method.setMethodDescription(toolAnnotation.load().description());
+            Set<String> tags = new HashSet<>(Arrays.asList(toolAnnotation.load().tags()));
+            method.setTags(tags);
             method.setReturnType(
                     Objects.requireNonNull(JacksonTypeParser.getParameterSchema(methodDescription.getReturnType()))
                             .toString());

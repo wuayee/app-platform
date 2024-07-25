@@ -43,8 +43,6 @@ import java.util.Objects;
 public class MethodToolMetadataTest {
     private final ObjectSerializer serializer;
     private final Method testMethod;
-    private final String name;
-    private final String index;
 
     private Map<String, Object> toolSchema;
     private Tool tool;
@@ -54,8 +52,6 @@ public class MethodToolMetadataTest {
     MethodToolMetadataTest() throws NoSuchMethodException {
         this.testMethod = TestInterface.class.getDeclaredMethod("testMethod", String.class);
         this.serializer = new JacksonObjectSerializer(null, null, null);
-        this.name = "test_method_default_implementation_name";
-        this.index = "test_method_index";
     }
 
     @BeforeEach
@@ -96,18 +92,16 @@ public class MethodToolMetadataTest {
                 .put("name", "test_method_default_implementation_name")
                 .put("index", "test_method_index")
                 .put("description", "This is a demo FIT function.")
-                .put(SchemaKey.PARAMETERS,
-                        MapBuilder.<String, Object>get()
-                                .put("type", "object")
-                                .put(SchemaKey.PARAMETERS_PROPERTIES,
-                                        MapBuilder.<String, Object>get()
-                                                .put("p1", MapBuilder.<String, Object>get()
-                                                        .put("type", "string")
-                                                        .put("default", "This is the first parameter.")
-                                                        .build())
-                                                .build())
-                                .put(SchemaKey.PARAMETERS_ORDER, Collections.singletonList("p1"))
+                .put(SchemaKey.PARAMETERS, MapBuilder.<String, Object>get()
+                        .put("type", "object")
+                        .put(SchemaKey.PARAMETERS_PROPERTIES, MapBuilder.<String, Object>get()
+                                .put("p1", MapBuilder.<String, Object>get()
+                                        .put("type", "string")
+                                        .put("default", "This is the first parameter.")
+                                        .build())
                                 .build())
+                        .build())
+                .put(SchemaKey.PARAMETERS_ORDER, Collections.singletonList("p1"))
                 .put(SchemaKey.RETURN_SCHEMA, MapBuilder.<String, Object>get().put("type", "string").build())
                 .build();
     }

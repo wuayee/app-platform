@@ -47,6 +47,7 @@ public class SchemaToolMetadata implements Tool.Metadata {
     private final Map<String, Object> properties;
     private final Map<String, Object> returnSchema;
     private final Map<String, Object> defaultParameterValues;
+    private final List<String> orderNames;
 
     /**
      * 通过工具的格式规范初始化 {@link SchemaToolMetadata} 的新实例。
@@ -61,6 +62,8 @@ public class SchemaToolMetadata implements Tool.Metadata {
         this.properties = cast(this.parametersSchema.get(SchemaKey.PARAMETERS_PROPERTIES));
         this.returnSchema = getIfNull(cast(toolSchema.get(SchemaKey.RETURN_SCHEMA)), Collections::emptyMap);
         this.defaultParameterValues = this.defaultParamValue(this.properties);
+        this.orderNames = getIfNull(cast(toolSchema.get(SchemaKey.PARAMETERS_ORDER)),
+                () -> new ArrayList<>(this.properties.keySet()));
     }
 
     private static Type convertJsonSchemaTypeToJavaType(String schemaType) {
@@ -91,26 +94,13 @@ public class SchemaToolMetadata implements Tool.Metadata {
 
     @Override
     public List<String> parameterNames() {
-        List<String> orderNames = this.getOrderNames();
-        if (CollectionUtils.isNotEmpty(orderNames)) {
+        if (CollectionUtils.isNotEmpty(this.orderNames)) {
             // order 从 parametersSchema 上移到 schema 层级后，需要显式在order指定动态参数的顺序，这里不再需要合并 configParameters;
             List<String> configParameters =
                     cast(this.parameterExtensions.getOrDefault(SchemaKey.CONFIG_PARAMETERS, Collections.emptyList()));
             return CollectionUtils.merge(orderNames, configParameters);
         }
         return new ArrayList<>(this.properties.keySet());
-    }
-
-    private List<String> getOrderNames() {
-        if (MapUtils.isEmpty(this.parametersSchema)) {
-            return Collections.emptyList();
-        }
-        // 待从 parametersSchema 上移到 schema 层级;
-        List<String> order = cast(this.parametersSchema.get(SchemaKey.PARAMETERS_ORDER));
-        if (CollectionUtils.isEmpty(order)) {
-            return Collections.emptyList();
-        }
-        return order;
     }
 
     @Override

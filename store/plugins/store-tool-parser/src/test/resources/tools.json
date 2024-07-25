@@ -42,10 +42,12 @@
           "genericableId": "com.huawei.fit.test_demo"
         }
       },
-      "tags": [
-        "FIT",
-        "BUILTIN"
-      ]
+      "extensions": {
+        "tags": [
+          "FIT",
+          "BUILTIN"
+        ]
+      }
     },
     {
       "schema": {
@@ -80,10 +82,12 @@
           "genericableId": "com.huawei.fit.test_demo"
         }
       },
-      "tags": [
-        "FIT",
-        "BUILTIN"
-      ]
+      "extensions": {
+        "tags": [
+          "FIT",
+          "BUILTIN"
+        ]
+      }
     },
     {
       "schema": {
@@ -124,10 +128,12 @@
           "genericableId": "com.huawei.fit.test_demo"
         }
       },
-      "tags": [
-        "FIT",
-        "BUILTIN"
-      ]
+      "extensions": {
+        "tags": [
+          "FIT",
+          "BUILTIN"
+        ]
+      }
     }
   ]
 }

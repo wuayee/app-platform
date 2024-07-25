@@ -130,8 +130,7 @@ public class HttpTool extends AbstractTool {
     private List<PropertyValueApplier> getPropertyValueAppliers(Map<String, Object> httpRunnables) {
         Map<String, Map<String, Map<String, String>>> mappings =
                 cast(getElementFromMap(httpRunnables, KEY_OF_MAPPINGS, Map.class));
-        Map<String, Object> parameters = cast(getElementFromMap(this.info().schema(), KEY_OF_PARAMETERS, Map.class));
-        List<String> order = cast(getElementFromMap(parameters, KEY_OF_ORDER, List.class));
+        List<String> order = cast(getElementFromMap(this.info().schema(), KEY_OF_ORDER, List.class));
         if (order.size() != mappings.size() || !isSameSet(new HashSet<>(order), mappings.keySet())) {
             throw new IllegalArgumentException("Arguments in order is not same to key in mappings.");
         }

@@ -1,10 +1,10 @@
 {
   "schema": {
     "parameters": {
-      "order": [
-        "values"
-      ]
-    }
+    },
+    "order": [
+      "values"
+    ]
   },
   "runnables": {
     "HTTP": {
