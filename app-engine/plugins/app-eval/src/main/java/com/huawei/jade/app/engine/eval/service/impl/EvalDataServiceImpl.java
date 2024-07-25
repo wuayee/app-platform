@@ -5,11 +5,14 @@
 package com.huawei.jade.app.engine.eval.service.impl;
 
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
+import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
 import com.huawei.jade.app.engine.eval.manager.EvalDataValidator;
 import com.huawei.jade.app.engine.eval.manager.EvalDatasetVersionManager;
 import com.huawei.jade.app.engine.eval.mapper.EvalDataMapper;
 import com.huawei.jade.app.engine.eval.po.EvalDataPo;
 import com.huawei.jade.app.engine.eval.service.EvalDataService;
+import com.huawei.jade.common.vo.PageVo;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +48,13 @@ public class EvalDataServiceImpl implements EvalDataService {
             return evalDataPo;
         }).collect(Collectors.toList());
         this.dataMapper.insertAll(evalDataPoList);
+    }
+
+    @Override
+    public PageVo<EvalDataEntity> listEvalData(EvalDataQueryParam queryParam) {
+        List<EvalDataEntity> evalData = this.dataMapper.listEvalData(queryParam);
+        int evalDataCount = this.dataMapper.countEvalData(queryParam);
+        return PageVo.of(evalDataCount, evalData);
     }
 
     @Override

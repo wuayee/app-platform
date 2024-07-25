@@ -1,12 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.huawei.jade.app.engine.eval.mapper.EvalDataMapper" >
+<mapper namespace="com.huawei.jade.app.engine.eval.mapper.EvalDataMapper">
+
+    <resultMap id="EvalDataEntityResultMap" type="com.huawei.jade.app.engine.eval.entity.EvalDataEntity">
+        <id property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
     <insert id="insertAll" useGeneratedKeys="true" keyProperty="id">
         insert into app_engine_eval_data (content, created_version, ds_id) values
         <foreach collection="list" separator="," item="item">
             (#{item.content}, #{item.createdVersion}, #{item.datasetId})
         </foreach>
     </insert>
+
+    <sql id="select_by_version">
+        ds_id = #{datasetId}
+        AND expired_version > #{version}
+        AND created_version &lt;= #{version}
+    </sql>
+
+    <select id="listEvalData" resultType="com.huawei.jade.app.engine.eval.entity.EvalDataEntity"
+            resultMap="EvalDataEntityResultMap">
+        SELECT id, content, created_at, updated_at
+        FROM app_engine_eval_data
+        WHERE
+        <include refid="select_by_version"/>
+        ORDER BY id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countEvalData" resultType="int">
+        SELECT COUNT(*)
+        FROM app_engine_eval_data
+        WHERE
+        <include refid="select_by_version"/>
+    </select>
 
     <update id="updateExpiredVersion">
         update app_engine_eval_data
@@ -16,4 +47,5 @@
             (#{item.id})
         </foreach>
     </update>
+
 </mapper>

@@ -15,10 +15,7 @@ import lombok.Data;
 @Data
 public class PipelineTestCase {
     private String task;
-
     private String model;
-
     private Object input;
-
     private Object output;
 }
