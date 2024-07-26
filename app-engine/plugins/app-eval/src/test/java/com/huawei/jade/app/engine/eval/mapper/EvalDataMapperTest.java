@@ -12,7 +12,7 @@ import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.test.annotation.MybatisTest;
 import com.huawei.fitframework.test.annotation.Sql;
-import com.huawei.fitframework.test.domain.db.DataBaseModelEnum;
+import com.huawei.fitframework.test.domain.db.DatabaseModel;
 import com.huawei.fitframework.util.TypeUtils;
 import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
 import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
@@ -38,7 +38,7 @@ import java.util.stream.Stream;
  * @author 易文渊
  * @since 2024-07-22
  */
-@MybatisTest(classes = {EvalDataMapper.class}, model = DataBaseModelEnum.POSTGRESQL)
+@MybatisTest(classes = {EvalDataMapper.class}, model = DatabaseModel.POSTGRESQL)
 @Sql(scripts = "sql/test_create_table.sql")
 @DisplayName("测试 EvalDataMapper")
 public class EvalDataMapperTest {

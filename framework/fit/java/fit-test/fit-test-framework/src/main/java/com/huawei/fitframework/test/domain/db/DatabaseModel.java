@@ -12,14 +12,14 @@ import com.huawei.fitframework.util.StringUtils;
  * @author 易文渊
  * @since 2024-07-21
  */
-public enum DataBaseModelEnum {
+public enum DatabaseModel {
     NONE(""),
     MYSQL("MySQL"),
     POSTGRESQL("PostgreSQL");
 
     private final String model;
 
-    DataBaseModelEnum(String model) {
+    DatabaseModel(String model) {
         this.model = model;
     }
 

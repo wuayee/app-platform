@@ -13,6 +13,7 @@ import com.huawei.fitframework.test.domain.listener.InjectFieldTestListener;
 import com.huawei.fitframework.test.domain.listener.MockMvcListener;
 import com.huawei.fitframework.test.domain.listener.MybatisTestListener;
 import com.huawei.fitframework.test.domain.listener.ResolverListener;
+import com.huawei.fitframework.test.domain.listener.ScanPackageListener;
 import com.huawei.fitframework.test.domain.listener.SqlExecuteListener;
 import com.huawei.fitframework.test.domain.listener.TestListener;
 import com.huawei.fitframework.test.domain.resolver.TestContextConfiguration;
@@ -51,6 +52,7 @@ public class DefaultFitTestService implements FitTestService {
         Validation.notNull(clazz, "The test class to create fit test manager cannot be null.");
         int port = TestUtil.getLocalAvailablePort();
         List<TestListener> listeners = Arrays.asList(new ResolverListener(),
+                new ScanPackageListener(),
                 new InjectFieldTestListener(),
                 new MockMvcListener(port),
                 new DataSourceListener(),
