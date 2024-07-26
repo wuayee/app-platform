@@ -36,6 +36,12 @@ public class GetPageResponse {
 
     private String msg;
 
+    /**
+     * FlowInfo内部结构体
+     *
+     * @author y00679285
+     * @since 2023/10/13
+     */
     @Getter
     @Setter
     @Builder

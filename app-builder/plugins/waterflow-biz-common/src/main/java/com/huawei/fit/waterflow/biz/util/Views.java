@@ -33,6 +33,7 @@ import com.huawei.fitframework.model.RangedResultSet;
 import com.huawei.fitframework.plugin.Plugin;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
@@ -89,6 +90,14 @@ public final class Views {
         }
     }
 
+    /**
+     * 将指定的键值对放入视图中，如果值为null则不放入。
+     *
+     * @param view 表示待放入键值对的视图的 {@link Map}。
+     * @param key 表示键值对的键的 {@link String}。
+     * @param value 表示键值对的值的 {@link Object}。
+     * @param mapper 表示将值转换为另一种类型的 {@link Function}。
+     */
     public static <T, R> void put(Map<String, Object> view, String key, T value, Function<T, R> mapper) {
         if (value == null) {
             return;
@@ -381,6 +390,13 @@ public final class Views {
         return view;
     }
 
+    /**
+     * 获取一个视图，表示指定的页面响应。
+     *
+     * @param getPageResponse 表示待获取视图的页面响应的 {@link GetPageResponse}。
+     * @return 表示页面响应的视图的
+     *         {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     */
     public static Map<String, Object> viewOf(GetPageResponse getPageResponse) {
         Map<String, Object> view = new LinkedHashMap<>();
         if (getPageResponse == null) {
@@ -395,6 +411,14 @@ public final class Views {
         return view;
     }
 
+    /**
+     * 获取一个视图，表示指定的流程引擎和Elsa流程。
+     *
+     * @param flowsEngine 表示待获取视图的流程引擎的 {@link Map}。
+     * @param elsaFlow 表示待获取视图的Elsa流程的 {@link FlowInfo}。
+     * @return 表示流程引擎和Elsa流程的视图的
+     *         {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     */
     public static Map<String, Object> viewOf(Map<String, Object> flowsEngine, FlowInfo elsaFlow) {
         Map<String, Object> view = new LinkedHashMap<>(3);
         if (flowsEngine.isEmpty() && elsaFlow == null) {
@@ -410,6 +434,12 @@ public final class Views {
         return view;
     }
 
+    /**
+     * 获取指定的流程定义信息。
+     *
+     * @param flows 表示待获取视图的流程定义的 {@link Map}。
+     * @return 表示流程定义的对外数据。
+     */
     public static List<Map<String, Object>> viewOfFlows(Map<String, FlowDefinitionPO> flows) {
         List<Map<String, Object>> view = new ArrayList<>();
         flows.entrySet().stream().forEach(e -> {
@@ -491,9 +521,16 @@ public final class Views {
     }
 
     private static JSONObject convertToJson(FlowGraphDefinition flowGraphDefinition) {
-        return (JSONObject) JSONObject.toJSON(flowGraphDefinition);
+        return ObjectUtils.cast(JSONObject.toJSON(flowGraphDefinition));
     }
 
+    /**
+     * 获取一个视图，表示指定的授权信息。
+     *
+     * @param authorization 表示待获取视图的授权信息的 {@link Authorization}。
+     * @return 表示授权信息的视图的
+     *         {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     */
     public static Map<String, Object> viewOf(Authorization authorization) {
         Map<String, Object> view = new LinkedHashMap<>(8);
         put(view, "id", authorization.id());

@@ -48,11 +48,10 @@ class TianzhouFlowContextsControllerTest {
     @Test
     void testStartFlows() {
         // Setup
-        when(mockFlowContextsController.startFlows(any(HttpClassicServerRequest.class),
-                any(HttpClassicServerResponse.class), eq("tenantId"), eq("flowId"), any())).thenReturn(
-                new HashMap<>());
+        when(mockFlowContextsController.startFlows(any(HttpClassicServerRequest.class), eq("tenantId"), eq("flowId"),
+                any())).thenReturn(new HashMap<>());
         // Run the test
-        final Map<String, Object> result = tianzhouFlowContextsControllerUnderTest.startFlows(null, null, "tenantId",
+        final Map<String, Object> result = tianzhouFlowContextsControllerUnderTest.startFlows(null, "tenantId",
                 "flowId", new FlowDataVO());
         Assertions.assertEquals(-1, result.get("code"));
     }
@@ -86,26 +85,24 @@ class TianzhouFlowContextsControllerTest {
     @Test
     void testFindNodeFlowContexts() {
         // Setup
-        when(mockFlowContextsController.findNodeContexts(any(HttpClassicServerRequest.class),
-                any(HttpClassicServerResponse.class), eq("tenantId"), eq("metaId"), eq("version"),
-                eq("nodeId"))).thenReturn(new HashMap<>());
+        when(mockFlowContextsController.findNodeContexts(any(HttpClassicServerRequest.class), eq("tenantId"),
+                eq("metaId"), eq("version"), eq("nodeId"))).thenReturn(new HashMap<>());
 
         // Run the test
-        final Map<String, Object> result = tianzhouFlowContextsControllerUnderTest.findNodeContexts(null, null,
-                "tenantId", "metaId", "version", "nodeId");
+        final Map<String, Object> result = tianzhouFlowContextsControllerUnderTest.findNodeContexts(null, "tenantId",
+                "metaId", "version", "nodeId");
         Assertions.assertEquals(-1, result.get("code"));
     }
 
     @Test
     void testFindNodeFlowContexts_FlowContextsControllerReturnsNoItems() {
         // Setup
-        when(mockFlowContextsController.findNodeContexts(any(HttpClassicServerRequest.class),
-                any(HttpClassicServerResponse.class), eq("tenantId"), eq("metaId"), eq("version"),
-                eq("nodeId"))).thenReturn(new HashMap<>());
+        when(mockFlowContextsController.findNodeContexts(any(HttpClassicServerRequest.class), eq("tenantId"),
+                eq("metaId"), eq("version"), eq("nodeId"))).thenReturn(new HashMap<>());
 
         // Run the test
-        final Map<String, Object> result = tianzhouFlowContextsControllerUnderTest.findNodeContexts(null, null,
-                "tenantId", "metaId", "version", "nodeId");
+        final Map<String, Object> result = tianzhouFlowContextsControllerUnderTest.findNodeContexts(null, "tenantId",
+                "metaId", "version", "nodeId");
         Assertions.assertEquals(-1, result.get("code"));
     }
 

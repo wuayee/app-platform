@@ -33,6 +33,7 @@ import com.huawei.fit.waterflow.biz.util.Views;
 import com.huawei.fit.waterflow.graph.FlowsEngineWebService;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.inspection.Validation;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSON;
 
@@ -100,8 +101,6 @@ public class FlowsEngineController {
     /**
      * 发布流程定义
      *
-     * @param httpRequest httpRequest
-     * @param httpResponse httpRequest
      * @param tenantId 租户id标识
      * @param flowId 流程id
      * @param version 流程版本
@@ -109,8 +108,7 @@ public class FlowsEngineController {
      */
     @PostMapping(value = "/flows/{flowId}/versions/{version}/publish", summary = "Orchestrator发布流程定义")
     @ResponseStatus(HttpResponseStatus.CREATED)
-    public void publishFlow(HttpClassicServerRequest httpRequest, HttpClassicServerResponse httpResponse,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("flowId") String flowId,
+    public void publishFlow(@PathVariable("tenant_id") String tenantId, @PathVariable("flowId") String flowId,
             @PathVariable("version") String version, @RequestBody Map<String, Object> body) {
         Validation.notBlank(cast(body.get("definitionData")),
                 () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "definitionData"));
@@ -123,7 +121,7 @@ public class FlowsEngineController {
     }
 
     private static OperationContext buildOperationContext(String tenantId, Map<String, Object> body) {
-        return buildOperationContext(tenantId, (String) body.get(OPERATOR_KEY));
+        return buildOperationContext(tenantId, ObjectUtils.<String>cast(body.get(OPERATOR_KEY)));
     }
 
     private static OperationContext buildOperationContext(String tenantId, String operator) {
@@ -136,8 +134,6 @@ public class FlowsEngineController {
     /**
      * 保存流程定义
      *
-     * @param httpRequest httpRequest
-     * @param httpResponse httpRequest
      * @param tenantId 租户id标识
      * @param flowId 流程id
      * @param version 流程版本
@@ -145,10 +141,9 @@ public class FlowsEngineController {
      */
     @PostMapping(value = "/flows/{flowId}/versions/{version}/save", summary = "Orchestrator保存流程定义")
     @ResponseStatus(HttpResponseStatus.CREATED)
-    public void saveFlow(HttpClassicServerRequest httpRequest, HttpClassicServerResponse httpResponse,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("flowId") String flowId,
+    public void saveFlow(@PathVariable("tenant_id") String tenantId, @PathVariable("flowId") String flowId,
             @PathVariable("version") String version, @RequestBody Map<String, Object> body) {
-        Validation.notBlank((String) body.get("definitionData"),
+        Validation.notBlank(ObjectUtils.cast(body.get("definitionData")),
                 () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "definitionData"));
         checkFlowId(flowId);
         checkVersion(version);

@@ -28,6 +28,12 @@ public class SaveFlowsResponse {
 
     private String msg;
 
+    /**
+     * flowData内部结构体
+     *
+     * @author y00679285
+     * @since 2023/10/13
+     */
     @Getter
     @Setter
     @Builder

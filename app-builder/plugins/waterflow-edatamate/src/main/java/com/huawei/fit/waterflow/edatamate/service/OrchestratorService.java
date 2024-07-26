@@ -494,26 +494,8 @@ public class OrchestratorService {
             log.debug("query params are: title {}, version {}, sortMap {}", request.getTitle(), request.getVersion(),
                     request.getSortMap());
 
-            List<String> orderByList = request.getSortMap()
-                    .entrySet()
-                    .stream()
-                    .filter(entry -> !StringUtils.isBlank(ObjectUtils.cast(entry.getValue().get("type"))))
-                    .sorted(Comparator.comparingInt(entry -> ObjectUtils.cast(entry.getValue().get("order"))))
-                    .map(entry -> entry.getValue().get("type") + "(info." + entry.getKey() + ")")
-                    .collect(Collectors.toList());
-
-            Map<String, List<String>> infosMap = new HashMap<>();
-            Optional.ofNullable(request.getTitle())
-                    .filter(name -> !name.isEmpty())
-                    .ifPresent(id -> infosMap.put("title", Collections.singletonList(request.getTitle())));
-
-            Optional.ofNullable(request.getVersion())
-                    .filter(version -> !version.isEmpty())
-                    .ifPresent(id -> infosMap.put("version", Collections.singletonList(request.getVersion())));
-
-            Optional.ofNullable(request.getTaskId())
-                    .filter(id -> !id.isEmpty())
-                    .ifPresent(id -> infosMap.put("id", Collections.singletonList(request.getTaskId())));
+            List<String> orderByList = this.buildOrderByList(request);
+            Map<String, List<String>> infosMap = this.buildInfosMap(request);
 
             InstanceQueryFilter filter = new InstanceQueryFilter();
             filter.setOrderBy(orderByList);
@@ -534,6 +516,32 @@ public class OrchestratorService {
         }
         log.debug("Get A3000 task list result: {}", res);
         return res;
+    }
+
+    private List<String> buildOrderByList(CleanDataListQuery request) {
+        return request.getSortMap()
+                .entrySet()
+                .stream()
+                .filter(entry -> !StringUtils.isBlank(ObjectUtils.cast(entry.getValue().get("type"))))
+                .sorted(Comparator.comparingInt(entry -> ObjectUtils.cast(entry.getValue().get("order"))))
+                .map(entry -> entry.getValue().get("type") + "(info." + entry.getKey() + ")")
+                .collect(Collectors.toList());
+    }
+
+    private Map<String, List<String>> buildInfosMap(CleanDataListQuery request) {
+        Map<String, List<String>> infosMap = new HashMap<>();
+        Optional.ofNullable(request.getTitle())
+                .filter(name -> !name.isEmpty())
+                .ifPresent(id -> infosMap.put("title", Collections.singletonList(request.getTitle())));
+
+        Optional.ofNullable(request.getVersion())
+                .filter(version -> !version.isEmpty())
+                .ifPresent(id -> infosMap.put("version", Collections.singletonList(request.getVersion())));
+
+        Optional.ofNullable(request.getTaskId())
+                .filter(id -> !id.isEmpty())
+                .ifPresent(id -> infosMap.put("id", Collections.singletonList(request.getTaskId())));
+        return infosMap;
     }
 
     private void compatibleRc1(String dataCleanTaskId, List<Map<String, String>> list) {
