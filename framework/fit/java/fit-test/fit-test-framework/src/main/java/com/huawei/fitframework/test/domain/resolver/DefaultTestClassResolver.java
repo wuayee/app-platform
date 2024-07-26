@@ -11,7 +11,6 @@ import com.huawei.fitframework.test.domain.util.AnnotationUtils;
 import com.huawei.fitframework.util.ReflectionUtils;
 
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -60,16 +59,12 @@ public class DefaultTestClassResolver implements TestClassResolver {
     private Class<?> getTestConfigurationClass(Class<?> clazz) {
         Class<?> superclass = clazz;
         while (superclass != null) {
-            if (this.isJunit4TestClass(superclass) || this.isJunit5TestClass(superclass)) {
+            if (this.isJunit5TestClass(superclass)) {
                 return superclass;
             }
             superclass = superclass.getSuperclass();
         }
         return clazz;
-    }
-
-    private boolean isJunit4TestClass(Class<?> clazz) {
-        return AnnotationUtils.getAnnotation(clazz, RunWith.class).isPresent();
     }
 
     private boolean isJunit5TestClass(Class<?> clazz) {
