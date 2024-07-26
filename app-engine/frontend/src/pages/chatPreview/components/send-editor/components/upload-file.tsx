@@ -39,7 +39,7 @@ const UploadFile = ({ openUploadRef, fileSend }) => {
       return
     }
     let fileType = fileTypeSet(suffix);
-    if (['video', 'extras', 'audio'].includes(fileType)) {
+    if (['video', 'extras'].includes(fileType)) {
       Message({ type: 'warning', content: '暂不支持该文件类型' });
       return
     }
@@ -76,7 +76,7 @@ const UploadFile = ({ openUploadRef, fileSend }) => {
         </p>
         <p className='ant-upload-text'>将文件拖到此处 或 点击上传文件</p>
         <p className='ant-upload-hint'>
-          支持文档，图片类型的文件
+          支持文档，图片，音频类型的文件
         </p>
       </Dragger>
       </div>
