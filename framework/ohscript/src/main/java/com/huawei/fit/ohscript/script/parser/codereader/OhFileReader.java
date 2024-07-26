@@ -4,6 +4,7 @@
 
 package com.huawei.fit.ohscript.script.parser.codereader;
 
+import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
 
 import lombok.SneakyThrows;
@@ -18,6 +19,8 @@ import java.io.IOException;
  * @since 1.0
  */
 public class OhFileReader implements CodeReader {
+    private static final Logger LOG = Logger.get(OhFileReader.class);
+
     private final BufferedReader bufferedReader;
 
     private boolean closed = false;
@@ -63,7 +66,7 @@ public class OhFileReader implements CodeReader {
         try {
             this.bufferedReader.close();
         } catch (IOException e) {
-            System.out.println("close file error." + e.getMessage());
+            LOG.error("close file error.", e);
         }
         this.closed = true;
     }

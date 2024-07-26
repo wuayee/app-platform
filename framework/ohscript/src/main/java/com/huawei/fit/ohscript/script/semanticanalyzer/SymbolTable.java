@@ -71,24 +71,30 @@ public class SymbolTable implements Serializable {
         }
         SymbolEntry symbol = scope.getSymbol(lexeme);
         // it lexeme is an entity member, try to find if the symbol is in base scope
-        if (symbol == null && lexeme.startsWith(Constants.DOT)) {
-            SymbolEntry base = scope.getSymbol(Constants.DOT + Constants.BASE);
-            if (base != null && !(base.typeExpr() instanceof UnknownTypeExpr)) {
-                while (base != null) {
-                    scope = this.getScope(base.typeExpr().node().scope());
-                    symbol = scope.getSymbol(lexeme);
-                    if (symbol != null) {
-                        return symbol;
-                    } else {
-                        base = scope.getSymbol(Constants.DOT + Constants.BASE);
-                    }
-                }
+        if (symbol != null || !lexeme.startsWith(Constants.DOT)) {
+            return tryLookUpInParent(lexeme, scopeId, symbol, scope);
+        }
+        SymbolEntry base = scope.getSymbol(Constants.DOT + Constants.BASE);
+        if (base == null || base.typeExpr() instanceof UnknownTypeExpr) {
+            return tryLookUpInParent(lexeme, scopeId, symbol, scope);
+        }
+        while (base != null) {
+            scope = this.getScope(base.typeExpr().node().scope());
+            symbol = scope.getSymbol(lexeme);
+            if (symbol != null) {
+                return symbol;
+            } else {
+                base = scope.getSymbol(Constants.DOT + Constants.BASE);
             }
         }
+        return tryLookUpInParent(lexeme, scopeId, symbol, scope);
+    }
+
+    private SymbolEntry tryLookUpInParent(String lexeme, long scopeId, SymbolEntry symbol, SymbolScope scope) {
         // if symbol is not found, try to look up it in parent scope
-        if (symbol == null && scopeId >= 0) {
-            symbol = this.getSymbol(lexeme, scope.getParent());
+        if (symbol != null || scopeId < 0) {
+            return symbol;
         }
-        return symbol;
+        return this.getSymbol(lexeme, scope.getParent());
     }
 }

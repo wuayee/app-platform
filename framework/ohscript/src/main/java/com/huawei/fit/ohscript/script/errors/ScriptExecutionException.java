@@ -52,6 +52,26 @@ public class ScriptExecutionException extends RuntimeException {
     }
 
     /**
+     * 使用异常信息和异常原因来初始化 {@link ScriptExecutionException} 类的新实例。
+     *
+     * @param e 表示异常原因的 {@link OhPanic}。
+     */
+    public ScriptExecutionException(OhPanic e) {
+        super(e.getMessage(), e);
+        this.node = e.node();
+    }
+
+    /**
+     * 使用异常信息和异常原因来初始化 {@link ScriptExecutionException} 类的新实例。
+     *
+     * @param e 表示异常原因的 {@link Exception}。
+     */
+    public ScriptExecutionException(Exception e) {
+        super(e.getMessage(), e);
+        this.node = null;
+    }
+
+    /**
      * 获取引发异常的非终端节点。
      *
      * @return 表示非终端节点的 {@link SyntaxNode}。

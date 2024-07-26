@@ -573,8 +573,7 @@ public enum SemanticAnalyzer implements SemanticAble {
                 return expr;
             }
             if (!(hostExpr.node() instanceof EntityDeclareNode)) {
-                call.member()
-                        .panic(SyntaxError.SYSTEM_MEMBER_NOT_FOUND, call.member().lexeme() + " is not found ");
+                call.member().panic(SyntaxError.SYSTEM_MEMBER_NOT_FOUND, call.member().lexeme() + " is not found ");
             } else {
                 EntityDeclareNode entity = (EntityDeclareNode) hostExpr.node();
                 Optional<SyntaxNode> member = entity.members()
