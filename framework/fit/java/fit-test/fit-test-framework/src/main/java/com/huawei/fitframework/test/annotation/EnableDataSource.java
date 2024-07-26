@@ -4,7 +4,7 @@
 
 package com.huawei.fitframework.test.annotation;
 
-import com.huawei.fitframework.test.domain.db.DataBaseModelEnum;
+import com.huawei.fitframework.test.domain.db.DatabaseModel;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -24,7 +24,7 @@ public @interface EnableDataSource {
     /**
      * 获取测试数据源兼容模式。
      *
-     * @return 表示数据源兼容模式的 {@link DataBaseModelEnum}。
+     * @return 表示数据源兼容模式的 {@link DatabaseModel}。
      */
-    DataBaseModelEnum model() default DataBaseModelEnum.NONE;
+    DatabaseModel model() default DatabaseModel.NONE;
 }

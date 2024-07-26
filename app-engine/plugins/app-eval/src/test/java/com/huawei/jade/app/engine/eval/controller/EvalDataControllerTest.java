@@ -48,7 +48,7 @@ public class EvalDataControllerTest {
 
     @Test
     @DisplayName("批量创建评估数据接口成功")
-    public void shouldOkWhenCreateEvalData() {
+    void shouldOkWhenCreateEvalData() {
         Mockito.doNothing().when(evalDataService).insertAll(anyLong(), anyList());
 
         EvalDataCreateDto evalDataCreateDto = new EvalDataCreateDto();
@@ -63,7 +63,7 @@ public class EvalDataControllerTest {
 
     @Test
     @DisplayName("分页查询评估数据接口成功")
-    public void shouldOkWhenQueryEvalData() {
+    void shouldOkWhenQueryEvalData() {
         EvalDataEntity entity = new EvalDataEntity();
         entity.setId(1L);
         entity.setContent("abcd");
@@ -88,7 +88,7 @@ public class EvalDataControllerTest {
 
     @Test
     @DisplayName("不合格数据创建评估数据接口失败")
-    public void shouldFailWhenCreateEvalDataWithInvalidDataId() {
+    void shouldFailWhenCreateEvalDataWithInvalidDataId() {
         Mockito.doNothing().when(this.evalDataService).insertAll(anyLong(), anyList());
 
         EvalDataCreateDto evalDataCreateDto = new EvalDataCreateDto();
@@ -103,7 +103,7 @@ public class EvalDataControllerTest {
 
     @Test
     @DisplayName("不合格数据软删除评估数据接口失败")
-    public void shouldFailWhenDeleteEvalDataWithInvalidDataId() {
+    void shouldFailWhenDeleteEvalDataWithInvalidDataId() {
         Mockito.doNothing().when(this.evalDataService).delete(anyList());
 
         EvalDataDeleteDto evalDataDeleteDto = new EvalDataDeleteDto();
@@ -117,7 +117,7 @@ public class EvalDataControllerTest {
 
     @Test
     @DisplayName("批量软删除评估数据接口成功")
-    public void shouldOkWhenDeleteEvalData() {
+    void shouldOkWhenDeleteEvalData() {
         Mockito.doNothing().when(this.evalDataService).delete(anyList());
 
         EvalDataDeleteDto evalDataDeleteDto = new EvalDataDeleteDto();
