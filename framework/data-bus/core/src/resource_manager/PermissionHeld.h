@@ -18,11 +18,11 @@ namespace Resource {
  * @since 2024-05-28
  */
 struct PermissionHeld {
-    PermissionHeld(int32_t sharedMemoryId, Common::PermissionType permissionType) : sharedMemoryId_(sharedMemoryId),
-                                                                                    permissionType_(permissionType) {};
+    PermissionHeld(int32_t sharedMemoryId, Common::PermissionType permissionType) : sharedMemoryId(sharedMemoryId),
+                                                                                    permissionType(permissionType) {};
 
-    int32_t sharedMemoryId_;
-    Common::PermissionType permissionType_;
+    int32_t sharedMemoryId;
+    Common::PermissionType permissionType;
 };
 } // namespace Resource
 } // namespace DataBus

@@ -123,36 +123,36 @@ tuple <int32_t, ErrorType> ResourceManager::HandleApplyMemory(int32_t socketFd, 
 
 ApplyPermissionResponse ResourceManager::HandleApplyPermission(const ApplyPermissionRequest& request)
 {
-    const int32_t socketFd = request.socketFd_;
-    const uint32_t seq = request.seq_;
-    const PermissionType& permissionType = request.permissionType_;
-    const int32_t sharedMemoryId = request.sharedMemoryId_;
+    const int32_t socketFd = request.socketFd;
+    const uint32_t seq = request.seq;
+    const PermissionType& permissionType = request.permissionType;
+    const int32_t sharedMemoryId = request.sharedMemoryId;
 
     ErrorType preCheckRes = CheckApplyPermission(socketFd, permissionType, sharedMemoryId);
     if (preCheckRes != ErrorType::None) {
         logger.Error("[ResourceManager] Checking for applying the permission failed");
         std::shared_ptr<UserData> userDataPtr = std::make_shared<UserData>();
-        return {false, socketFd, seq, -1, 0, userDataPtr, preCheckRes};
+        return {false, seq, {socketFd, -1, 0, userDataPtr}, preCheckRes};
     }
     bool shouldGrant = permissionType == PermissionType::Read ? permissionStatus_[sharedMemoryId] >= 0 :
                        permissionStatus_[sharedMemoryId] == 0;
     uint64_t memorySize = GetMemorySize(sharedMemoryId);
     // 当且仅当读请求且设定操作用户自定义数据时，返回用户自定义元数据
     const shared_ptr<UserData>& userDataPtr =
-            permissionType == PermissionType::Read && request.isOperatingUserData_ ?
+            permissionType == PermissionType::Read && request.isOperatingUserData ?
             GetUserData(sharedMemoryId) : make_shared<UserData>();
     if (shouldGrant) {
         // 当前内存块没有任何阻塞读写操作, 无需等待，直接授权
         GrantPermission(request);
-        return {true, socketFd, seq, sharedMemoryId, memorySize, userDataPtr, ErrorType::None};
+        return {true, seq, {socketFd, sharedMemoryId, memorySize, userDataPtr}, ErrorType::None};
     }
     // 否则，将权限请求加入等待队列
     logger.Info("[ResourceManager] Client {}'s ApplyPermission request is being queued for "
                 "the shared memory block {}", socketFd, sharedMemoryId);
     waitingPermitRequestQueues_[sharedMemoryId].emplace_back(socketFd, seq, permissionType,
-                                                             request.isOperatingUserData_, request.userData_);
+                                                             request.isOperatingUserData, request.userData);
     waitingPermitMemoryBlocks_[socketFd].insert(sharedMemoryId);
-    return {false, socketFd, seq, sharedMemoryId, memorySize, userDataPtr, ErrorType::None};
+    return {false, seq, {socketFd, sharedMemoryId, memorySize, userDataPtr}, ErrorType::None};
 }
 
 bool ResourceManager::HandleReleasePermission(int32_t socketFd, PermissionType permissionType, int32_t sharedMemoryId)
@@ -186,26 +186,26 @@ vector <ApplyPermissionResponse> ResourceManager::ProcessWaitingPermitRequests(i
     // 依次为等待队列中的多个读权限或位于队头的单个写权限申请颁发许可,并加入通知队列
     while (!waitingPermitRequestQueues_[sharedMemoryId].empty()) {
         const WaitingPermitRequest& request = waitingPermitRequestQueues_[sharedMemoryId].front();
-        const int32_t applicant = request.applicant_;
-        const uint32_t seq = request.seq_;
-        const PermissionType& permissionType = request.permissionType_;
+        const int32_t applicant = request.applicant;
+        const uint32_t seq = request.seq;
+        const PermissionType& permissionType = request.permissionType;
         // 当前内存块已经有互斥读写操作存在，停止颁发新的许可。
         if ((permissionType == PermissionType::Read && permissionStatus_[sharedMemoryId] == -1) ||
             (permissionType == PermissionType::Write && permissionStatus_[sharedMemoryId] != 0)) {
             break;
         }
         logger.Info("[ResourceManager] Granting a permission for the waiting Client {} for "
-                    "the shared memory block {}", request.applicant_, sharedMemoryId);
+                    "the shared memory block {}", request.applicant, sharedMemoryId);
         GrantPermission({applicant, seq, permissionType, sharedMemoryId,
-                        request.isOperatingUserData_, request.userData_});
+                         {request.isOperatingUserData, request.userData}});
         // 当且仅当读请求且设定操作用户自定义数据时，返回用户自定义元数据
         const shared_ptr<UserData>& userDataPtr =
-                permissionType == PermissionType::Read && request.isOperatingUserData_ ?
+                permissionType == PermissionType::Read && request.isOperatingUserData ?
                 GetUserData(sharedMemoryId) : make_shared<UserData>();
-        notificationQueue.emplace_back(true, applicant, seq, sharedMemoryId, memorySize,
-                                       userDataPtr, ErrorType::None);
+        ApplyPermissionMemoryInfo memoryInfo(applicant, sharedMemoryId, memorySize, userDataPtr);
+        notificationQueue.emplace_back(true, seq, memoryInfo, ErrorType::None);
         waitingPermitRequestQueues_[sharedMemoryId].pop_front();
-        waitingPermitMemoryBlocks_[request.applicant_].erase(sharedMemoryId);
+        waitingPermitMemoryBlocks_[request.applicant].erase(sharedMemoryId);
     }
     return notificationQueue;
 }
@@ -264,7 +264,7 @@ void ResourceManager::RemoveClientFromWaitingQueue(int32_t socketFd)
         auto& requestQueue = waitingPermitRequestQueues_[sharedMemoryId];
         // 将指定客户端的权限申请请求从等待队列中移除
         auto matchFn = [socketFd](const WaitingPermitRequest& request) {
-            return request.applicant_ == socketFd;
+            return request.applicant == socketFd;
         };
         requestQueue.erase(std::remove_if(requestQueue.begin(), requestQueue.end(), matchFn), requestQueue.end());
     }
@@ -276,7 +276,7 @@ void ResourceManager::CleanupExpiredMemory()
     const auto& now = std::chrono::system_clock::now();
     vector<int32_t> memoryBlocksToRelease;
     for (const auto& pair : sharedMemoryIdToInfo_) {
-        if (pair.second->expiryTime_ < now) {
+        if (pair.second->expiryTime < now) {
             memoryBlocksToRelease.push_back(pair.first);
         }
     }
@@ -287,7 +287,7 @@ void ResourceManager::CleanupExpiredMemory()
 
 void ResourceManager::MarkPendingRelease(int32_t sharedMemoryId)
 {
-    sharedMemoryIdToInfo_[sharedMemoryId]->pendingRelease_ = true;
+    sharedMemoryIdToInfo_[sharedMemoryId]->pendingRelease = true;
 }
 
 bool ResourceManager::ReleaseMemory(int32_t sharedMemoryId)
@@ -313,7 +313,7 @@ bool ResourceManager::ReleaseMemory(int32_t sharedMemoryId)
 void ResourceManager::CleanupWaitingPermitRequests(int32_t sharedMemoryId)
 {
     for (const auto& request : waitingPermitRequestQueues_[sharedMemoryId]) {
-        waitingPermitMemoryBlocks_[request.applicant_].erase(sharedMemoryId);
+        waitingPermitMemoryBlocks_[request.applicant].erase(sharedMemoryId);
     }
     waitingPermitRequestQueues_.erase(sharedMemoryId);
 }
@@ -392,9 +392,9 @@ ErrorType ResourceManager::CheckApplyPermission(int32_t socketFd, DataBus::Commo
 
 void ResourceManager::GrantPermission(const ApplyPermissionRequest& request)
 {
-    int32_t socketFd = request.socketFd_;
-    PermissionType permissionType = request.permissionType_;
-    int32_t sharedMemoryId = request.sharedMemoryId_;
+    int32_t socketFd = request.socketFd;
+    PermissionType permissionType = request.permissionType;
+    int32_t sharedMemoryId = request.sharedMemoryId;
     UpdateLastUsedTime(sharedMemoryId);
     if (permissionType == PermissionType::Read) {
         permissionStatus_[sharedMemoryId]++;
@@ -406,8 +406,8 @@ void ResourceManager::GrantPermission(const ApplyPermissionRequest& request)
         writingMemoryBlocks_[socketFd].insert(sharedMemoryId);
     }
     // 当且仅当用户申请写权限且指定操作自定义元数据时，保存用户自定义元数据
-    if (permissionType == PermissionType::Write && request.isOperatingUserData_) {
-        sharedMemoryIdToInfo_[sharedMemoryId]->userData_ = request.userData_;
+    if (permissionType == PermissionType::Write && request.isOperatingUserData) {
+        sharedMemoryIdToInfo_[sharedMemoryId]->userData = request.userData;
     }
     // 更新内存块过期时间
     UpdateExpiryTime(sharedMemoryId);
@@ -555,44 +555,44 @@ void ResourceManager::RemoveZeroMemoryUserData(const std::string& objectKey)
     zeroMemoryUserData_.erase(objectKey);
 }
 
-int32_t ResourceManager::GetMemoryApplicant(int sharedMemoryId)
+int32_t ResourceManager::GetMemoryApplicant(int32_t sharedMemoryId)
 {
-    return sharedMemoryIdToInfo_[sharedMemoryId]->applicant_;
+    return sharedMemoryIdToInfo_[sharedMemoryId]->applicant;
 }
 
-uint64_t ResourceManager::GetMemorySize(int sharedMemoryId)
+uint64_t ResourceManager::GetMemorySize(int32_t sharedMemoryId)
 {
-    return sharedMemoryIdToInfo_[sharedMemoryId]->memorySize_;
+    return sharedMemoryIdToInfo_[sharedMemoryId]->memorySize;
 }
 
-int32_t ResourceManager::GetReadingRefCnt(int sharedMemoryId)
+int32_t ResourceManager::GetReadingRefCnt(int32_t sharedMemoryId)
 {
-    return sharedMemoryIdToInfo_[sharedMemoryId]->readingRefCnt_;
+    return sharedMemoryIdToInfo_[sharedMemoryId]->readingRefCnt;
 }
 
-int32_t ResourceManager::GetWritingRefCnt(int sharedMemoryId)
+int32_t ResourceManager::GetWritingRefCnt(int32_t sharedMemoryId)
 {
-    return sharedMemoryIdToInfo_[sharedMemoryId]->writingRefCnt_;
+    return sharedMemoryIdToInfo_[sharedMemoryId]->writingRefCnt;
 }
 
-chrono::system_clock::time_point ResourceManager::GetLastUsedTime(int sharedMemoryId)
+chrono::system_clock::time_point ResourceManager::GetLastUsedTime(int32_t sharedMemoryId)
 {
-    return sharedMemoryIdToInfo_[sharedMemoryId]->lastUsedTime_;
+    return sharedMemoryIdToInfo_[sharedMemoryId]->lastUsedTime;
 }
 
 const shared_ptr<UserData>& ResourceManager::GetUserData(int32_t sharedMemoryId)
 {
-    return sharedMemoryIdToInfo_[sharedMemoryId]->userData_;
+    return sharedMemoryIdToInfo_[sharedMemoryId]->userData;
 }
 
 bool ResourceManager::IsPendingRelease(int32_t sharedMemoryId)
 {
-    return sharedMemoryIdToInfo_[sharedMemoryId]->pendingRelease_;
+    return sharedMemoryIdToInfo_[sharedMemoryId]->pendingRelease;
 }
 
 chrono::system_clock::time_point ResourceManager::GetExpiryTime(int32_t sharedMemoryId)
 {
-    return sharedMemoryIdToInfo_[sharedMemoryId]->expiryTime_;
+    return sharedMemoryIdToInfo_[sharedMemoryId]->expiryTime;
 }
 
 const std::unordered_set<int32_t>& ResourceManager::GetReadingMemoryBlocks(int32_t socketFd)
@@ -625,29 +625,29 @@ MemoryMetadata ResourceManager::GetMemoryMetadata(int32_t sharedMemoryId)
     return {sharedMemoryId, GetMemorySize(sharedMemoryId), GetUserData(sharedMemoryId)};
 }
 
-int32_t ResourceManager::IncrementReadingRefCnt(int sharedMemoryId)
+int32_t ResourceManager::IncrementReadingRefCnt(int32_t sharedMemoryId)
 {
-    return ++sharedMemoryIdToInfo_[sharedMemoryId]->readingRefCnt_;
+    return ++sharedMemoryIdToInfo_[sharedMemoryId]->readingRefCnt;
 }
 
-int32_t ResourceManager::DecrementReadingRefCnt(int sharedMemoryId)
+int32_t ResourceManager::DecrementReadingRefCnt(int32_t sharedMemoryId)
 {
-    return --sharedMemoryIdToInfo_[sharedMemoryId]->readingRefCnt_;
+    return --sharedMemoryIdToInfo_[sharedMemoryId]->readingRefCnt;
 }
 
-int32_t ResourceManager::IncrementWritingRefCnt(int sharedMemoryId)
+int32_t ResourceManager::IncrementWritingRefCnt(int32_t sharedMemoryId)
 {
-    return ++sharedMemoryIdToInfo_[sharedMemoryId]->writingRefCnt_;
+    return ++sharedMemoryIdToInfo_[sharedMemoryId]->writingRefCnt;
 }
 
-int32_t ResourceManager::DecrementWritingRefCnt(int sharedMemoryId)
+int32_t ResourceManager::DecrementWritingRefCnt(int32_t sharedMemoryId)
 {
-    return --sharedMemoryIdToInfo_[sharedMemoryId]->writingRefCnt_;
+    return --sharedMemoryIdToInfo_[sharedMemoryId]->writingRefCnt;
 }
 
-void ResourceManager::UpdateLastUsedTime(int sharedMemoryId)
+void ResourceManager::UpdateLastUsedTime(int32_t sharedMemoryId)
 {
-    sharedMemoryIdToInfo_[sharedMemoryId]->lastUsedTime_ = std::chrono::system_clock::now();
+    sharedMemoryIdToInfo_[sharedMemoryId]->lastUsedTime = std::chrono::system_clock::now();
 }
 
 void ResourceManager::UpdateExpiryTime(int32_t sharedMemoryId)
@@ -655,11 +655,11 @@ void ResourceManager::UpdateExpiryTime(int32_t sharedMemoryId)
     if (permissionStatus_[sharedMemoryId] == 0) {
         // 内存块引用计数归零，生命周期进入倒计时
         const auto& now = std::chrono::system_clock::now();
-        sharedMemoryIdToInfo_[sharedMemoryId]->expiryTime_ =
+        sharedMemoryIdToInfo_[sharedMemoryId]->expiryTime =
                 now + chrono::milliseconds(config_.GetMemoryTtlDuration());
     } else {
         // 内存块被引用，永不过期
-        sharedMemoryIdToInfo_[sharedMemoryId]->expiryTime_ = chrono::system_clock::time_point::max();
+        sharedMemoryIdToInfo_[sharedMemoryId]->expiryTime = chrono::system_clock::time_point::max();
     }
 }
 
@@ -676,13 +676,13 @@ void ResourceManager::GenerateReport(stringstream& reportStream) const
         const auto& memoryInfo = memoryIter->second;
         reportStream << "{" <<
                      "\"MemoryId\":" << memoryId << "," <<
-                     "\"Applicant\":" << memoryInfo->applicant_ << "," <<
-                     "\"Size\":" << memoryInfo->memorySize_ << "," <<
-                     "\"ReadingRefCnt\":" << memoryInfo->readingRefCnt_ << "," <<
-                     "\"WritingRefCnt\":" << memoryInfo->writingRefCnt_ << "," <<
-                     "\"LastUsedTime\":" << chrono::system_clock::to_time_t(memoryInfo->lastUsedTime_) << "," <<
-                     "\"PendingRelease\":" << memoryInfo->pendingRelease_ << "," <<
-                     "\"ExpiryTime\":" << chrono::system_clock::to_time_t(memoryInfo->expiryTime_);
+                     "\"Applicant\":" << memoryInfo->applicant << "," <<
+                     "\"Size\":" << memoryInfo->memorySize << "," <<
+                     "\"ReadingRefCnt\":" << memoryInfo->readingRefCnt << "," <<
+                     "\"WritingRefCnt\":" << memoryInfo->writingRefCnt << "," <<
+                     "\"LastUsedTime\":" << chrono::system_clock::to_time_t(memoryInfo->lastUsedTime) << "," <<
+                     "\"PendingRelease\":" << memoryInfo->pendingRelease << "," <<
+                     "\"ExpiryTime\":" << chrono::system_clock::to_time_t(memoryInfo->expiryTime);
         // 内存块当前读写状态
         if (permissionStatus_.find(memoryId) != permissionStatus_.cend()) {
             reportStream << ",\"PermissionStatus\":" << permissionStatus_.at(memoryId);
@@ -693,8 +693,8 @@ void ResourceManager::GenerateReport(stringstream& reportStream) const
             const auto& thisQueue = waitingPermitRequestQueues_.at(memoryId);
             for (auto queueIter = thisQueue.cbegin(); queueIter != thisQueue.cend(); ++queueIter) {
                 (queueIter != thisQueue.cbegin() ? reportStream << "," : reportStream) <<
-                    "{\"Applicant\":" << queueIter->applicant_ << "," <<
-                    "\"PermissionType\":" << static_cast<int>(queueIter->permissionType_) << "}";
+                    "{\"Applicant\":" << queueIter->applicant << "," <<
+                    "\"PermissionType\":" << static_cast<int>(queueIter->permissionType) << "}";
             }
             reportStream << "]";
         }

@@ -21,11 +21,11 @@ namespace Resource {
  */
 struct MemoryMetadata {
     MemoryMetadata(int32_t sharedMemoryId, uint64_t memorySize, const std::shared_ptr<UserData>& userData)
-        : sharedMemoryId_(sharedMemoryId), memorySize_(memorySize), userData_(userData) {};
+        : sharedMemoryId(sharedMemoryId), memorySize(memorySize), userData(userData) {};
 
-    int32_t sharedMemoryId_; // 共享内存块ID。
-    uint64_t memorySize_; // 内存块大小。
-    std::shared_ptr<UserData> userData_; // 用户自定义元数据。
+    int32_t sharedMemoryId; // 共享内存块ID。
+    uint64_t memorySize; // 内存块大小。
+    std::shared_ptr<UserData> userData; // 用户自定义元数据。
 };
 } // namespace Resource
 } // namespace DataBus

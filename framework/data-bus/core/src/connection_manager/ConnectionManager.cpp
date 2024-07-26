@@ -20,7 +20,7 @@ void ConnectionManager::AddNewConnection(int socketFd)
     if (setsockopt(socketFd, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(int)) == -1) {
         DataBus::logger.Error("Failed to disable TCP Nagle Algorithm, reason: {}", strerror(errno));
     }
-    unique_ptr<Connection> connection(new Connection(socketFd));
+    std::unique_ptr<Connection> connection = std::make_unique<Connection>(socketFd);
     connections_[socketFd] = std::move(connection);
     DataBus::logger.Info("Connection {} has been created.", socketFd);
 }

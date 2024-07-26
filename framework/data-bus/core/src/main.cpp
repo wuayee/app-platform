@@ -22,8 +22,9 @@ using namespace std;
 
 namespace DataBus {
 
-const int MAX_EVENTS = 10;
-const int MAX_BUFFER_SIZE = 2048;
+constexpr int MAX_EVENTS = 10;
+constexpr int MAX_BUFFER_SIZE = 2048;
+constexpr int MAX_CONNECTIONS_QUEUED = 3;
 
 // 配置文件路径
 const std::string CONFIG_FILE_PATH = DataBus::Common::FileUtils::GetDataBusDirectory() + "configs/config.json";
@@ -67,7 +68,7 @@ void HandleEvent(struct epoll_event event, int epollFd, int serverFd,
 
 void StartDataBusService(int serverFd, const Runtime::Config& databusConfig)
 {
-    struct epoll_event event{}, events[MAX_EVENTS];
+    struct epoll_event event{};
     event.data.fd = serverFd;
     event.events = EPOLLIN | EPOLLET;
     int epollFd;
@@ -124,7 +125,7 @@ int main()
         return 0;
     }
 
-    if (listen(serverFd, 3) < 0) {
+    if (listen(serverFd, DataBus::MAX_CONNECTIONS_QUEUED) < 0) {
         perror("listen");
         return 0;
     }

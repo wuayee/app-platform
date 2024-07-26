@@ -6,27 +6,27 @@
 #ifndef DATABUS_USER_DATA_H
 #define DATABUS_USER_DATA_H
 
-#include "fbs/common_generated.h"
+#include <cstdint>
 
 namespace DataBus {
 namespace Resource {
 
 // 用户自定义元数据
 struct UserData {
-    UserData() : userDataPtr_(nullptr), dataSize_(0) {};
-    UserData(const int8_t* dataPtr, size_t size) : userDataPtr_(nullptr), dataSize_(0)
+    UserData() : userDataPtr(nullptr), dataSize(0) {};
+    UserData(const int8_t* dataPtr, size_t size) : userDataPtr(nullptr), dataSize(0)
     {
         if (dataPtr != nullptr && size > 0) {
-            userDataPtr_ = std::make_unique<int8_t[]>(size);
-            dataSize_ = size;
-            std::copy(dataPtr, dataPtr + size, userDataPtr_.get());
+            userDataPtr = std::make_unique<int8_t[]>(size);
+            dataSize = size;
+            std::copy(dataPtr, dataPtr + size, userDataPtr.get());
         }
     }
     UserData(const UserData&) = delete;
     UserData& operator=(const UserData&) = delete;
 
-    std::unique_ptr<int8_t[]> userDataPtr_; // 元数据指针
-    size_t dataSize_; // 元数据长度
+    std::unique_ptr<int8_t[]> userDataPtr; // 元数据指针
+    size_t dataSize; // 元数据长度
 };
 } // namespace Resource
 } // namespace DataBus
