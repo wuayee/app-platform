@@ -229,6 +229,7 @@ public class AippLogServiceImpl implements AippLogService {
     private List<AippInstLogDataDto> queryAndSortLogs(List<String> instanceIds, OperationContext context) {
         return queryRecentLogByInstanceIds(instanceIds, context).values()
                 .stream()
+                .filter(CollectionUtils::isNotEmpty)
                 .map(AippInstLogDataDto::fromAippInstLogList)
                 .filter(dto -> dto.getQuestion() != null)
                 .sorted((d1, d2) -> Math.toIntExact(d1.getQuestion().getLogId() - d2.getQuestion().getLogId()))
