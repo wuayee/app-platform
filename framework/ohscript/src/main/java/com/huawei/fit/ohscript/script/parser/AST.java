@@ -9,6 +9,7 @@ import static com.huawei.fit.ohscript.util.Tool.createInstance;
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.ohscript.script.errors.OhPanic;
+import com.huawei.fit.ohscript.script.errors.ScriptExecutionException;
 import com.huawei.fit.ohscript.script.errors.SyntaxError;
 import com.huawei.fit.ohscript.script.interpreter.ASTEnv;
 import com.huawei.fit.ohscript.script.interpreter.ActivationContext;
@@ -36,6 +37,7 @@ import com.huawei.fit.ohscript.util.OhFrom;
 import com.huawei.fit.ohscript.util.OhFunction;
 import com.huawei.fit.ohscript.util.Pair;
 import com.huawei.fit.ohscript.util.Tool;
+import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import lombok.SneakyThrows;
@@ -68,6 +70,8 @@ import java.util.stream.Collectors;
  * @since 1.0
  */
 public class AST implements Serializable {
+    private static final Logger LOG = Logger.get(AST.class);
+
     private static final long serialVersionUID = 6716195982974341437L;
 
     private static final Set<String> blackList = new HashSet<>();
@@ -218,7 +222,7 @@ public class AST implements Serializable {
             }
         } catch (Exception e) {
             args[i] = map;
-            throw new RuntimeException(e);
+            throw new ScriptExecutionException(e);
         }
     }
 
@@ -244,6 +248,7 @@ public class AST implements Serializable {
                 field.setAccessible(true);
                 field.set(entity, matchFieldValue(field, value.value()));
             } catch (Exception e) {
+                LOG.debug("matchEntityFields error", e);
             }
         }
     }

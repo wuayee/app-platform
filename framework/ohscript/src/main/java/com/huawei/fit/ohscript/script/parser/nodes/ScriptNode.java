@@ -5,6 +5,7 @@
 package com.huawei.fit.ohscript.script.parser.nodes;
 
 import com.huawei.fit.ohscript.script.errors.OhPanic;
+import com.huawei.fit.ohscript.script.errors.ScriptExecutionException;
 import com.huawei.fit.ohscript.script.interpreter.ASTEnv;
 import com.huawei.fit.ohscript.script.interpreter.ActivationContext;
 import com.huawei.fit.ohscript.script.interpreter.ReturnValue;
@@ -54,7 +55,7 @@ public class ScriptNode extends NonTerminalNode {
             try {
                 call.interpret(env, context);
             } catch (OhPanic e) {
-                throw new RuntimeException(e);
+                throw new ScriptExecutionException(e);
             }
         });
         return null;

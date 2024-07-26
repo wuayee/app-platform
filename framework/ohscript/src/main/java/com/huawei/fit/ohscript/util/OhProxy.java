@@ -5,6 +5,7 @@
 package com.huawei.fit.ohscript.util;
 
 import com.huawei.fit.ohscript.script.errors.OhPanic;
+import com.huawei.fit.ohscript.script.errors.ScriptExecutionException;
 import com.huawei.fit.ohscript.script.interpreter.ASTEnv;
 import com.huawei.fit.ohscript.script.interpreter.ActivationContext;
 import com.huawei.fit.ohscript.script.interpreter.ReturnValue;
@@ -15,6 +16,7 @@ import com.huawei.fit.ohscript.script.parser.nodes.SyntaxNode;
 import com.huawei.fit.ohscript.script.parser.nodes.TerminalNode;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.base.TypeExpr;
+import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import java.lang.reflect.Method;
@@ -28,6 +30,8 @@ import java.util.concurrent.Callable;
  * @since 1.0
  */
 public class OhProxy {
+    private static final Logger LOG = Logger.get(OhProxy.class);
+
     private final Map<String, ReturnValue> value;
 
     private final Object base;
@@ -115,7 +119,8 @@ public class OhProxy {
                 return method.invoke(base, args);
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            LOG.error("noMethodInvoke error. method:{0}", method.getName(), e);
+            throw new ScriptExecutionException(e.getMessage());
         }
     }
 }

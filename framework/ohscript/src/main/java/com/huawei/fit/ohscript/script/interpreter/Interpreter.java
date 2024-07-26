@@ -17,6 +17,7 @@ import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fit.ohscript.script.errors.OhPanic;
 import com.huawei.fit.ohscript.script.errors.RuntimeError;
+import com.huawei.fit.ohscript.script.errors.ScriptExecutionException;
 import com.huawei.fit.ohscript.script.lexer.Terminal;
 import com.huawei.fit.ohscript.script.lexer.Token;
 import com.huawei.fit.ohscript.script.parser.NonTerminal;
@@ -775,7 +776,7 @@ public enum Interpreter {
                 try {
                     return block.interpret(env, current);
                 } catch (OhPanic e) {
-                    throw new RuntimeException(e);
+                    throw new ScriptExecutionException(e);
                 }
             });
             HashMap<String, ReturnValue> value = new HashMap<>();
@@ -809,7 +810,7 @@ public enum Interpreter {
                             .thenAccept(this.interpretAction(current, lambda));
                     return null;
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    throw new ScriptExecutionException(e);
                 }
             };
             DoubleFunctionDeclareNode then = new DoubleFunctionDeclareNode(ASYNC + "_then", 1, ohFunction,
@@ -826,7 +827,7 @@ public enum Interpreter {
                 try {
                     interpretFunction(lambda, callbackArgs, current);
                 } catch (OhPanic e) {
-                    throw new RuntimeException(e);
+                    throw new ScriptExecutionException(e);
                 }
             };
         }

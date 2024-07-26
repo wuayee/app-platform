@@ -11,6 +11,7 @@ import com.huawei.fit.ohscript.script.interpreter.ReturnValue;
 import com.huawei.fit.ohscript.script.parser.AST;
 import com.huawei.fit.ohscript.script.parser.nodes.ScriptNode;
 import com.huawei.fit.ohscript.script.semanticanalyzer.type.expressions.TypeExprFactory;
+import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -35,6 +36,8 @@ public class OhUtil implements Serializable {
     public static final ThreadLocal<ASTEnv> AST_ENV_THREAD_LOCAL = new ThreadLocal<>();
 
     private static final long serialVersionUID = 7995775932631312854L;
+
+    private static final Logger LOG = Logger.get(OhUtil.class);
 
     private static final String RESET = "\033[0m";  // 重置
 
@@ -104,14 +107,14 @@ public class OhUtil implements Serializable {
      */
     public void logPanic(String type, String message) {
         if ("log".equals(type)) {
-            System.out.println(message);
+            LOG.info(message);
             return;
         }
         if ("warning".equals(type)) {
-            System.out.println(YELLOW + message + RESET);
+            LOG.warn(message);
             return;
         }
-        System.out.println(RED + message + RESET);
+        LOG.error(message);
     }
 
     /**
