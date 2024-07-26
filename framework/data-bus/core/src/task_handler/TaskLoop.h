@@ -24,8 +24,8 @@ public:
 
     virtual void AddOpenTask(int socketFd);
     virtual void AddCloseTask(int socketFd);
-    virtual void AddReadTask(int socketFd, const char*, size_t len);
-    virtual void AddWriteTask(int socketFd, const char*, size_t len);
+    virtual void AddReadTask(int socketFd, const char* buffer, size_t len);
+    virtual void AddWriteTask(int socketFd, const char* buffer, size_t len);
     virtual std::unique_ptr<Task> GetNextTask();
 private:
     DataBus::Stl::BlockingQueue<std::unique_ptr<Task>> taskQueue_;

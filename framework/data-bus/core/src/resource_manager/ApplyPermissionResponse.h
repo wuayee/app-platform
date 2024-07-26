@@ -7,6 +7,7 @@
 #define DATABUS_APPLY_PERMISSION_RESPONSE_H
 
 #include "fbs/common_generated.h"
+#include "ApplyPermissionMemoryInfo.h"
 #include "UserData.h"
 
 namespace DataBus {
@@ -19,18 +20,18 @@ struct ApplyPermissionResponse {
     ApplyPermissionResponse(const ApplyPermissionResponse&) = default;
     ApplyPermissionResponse& operator=(const ApplyPermissionResponse&) = delete;
 
-    ApplyPermissionResponse(bool granted, int32_t applicant, uint32_t seq, int32_t sharedMemoryId, uint64_t memorySize,
-                            const std::shared_ptr<UserData>& userData, Common::ErrorType errorType)
-                            : granted_(granted), applicant_(applicant), seq_(seq), sharedMemoryId_(sharedMemoryId),
-                            memorySize_(memorySize), userData_(userData), errorType_(errorType) {}
+    ApplyPermissionResponse(bool granted, uint32_t seq, const ApplyPermissionMemoryInfo& memoryInfo,
+                            Common::ErrorType errorType)
+        : granted(granted), seq(seq), applicant(memoryInfo.applicant), sharedMemoryId(memoryInfo.sharedMemoryId),
+        memorySize(memoryInfo.memorySize), userData(memoryInfo.userData), errorType(errorType) {}
 
-    bool granted_; // 授权结果
-    int32_t applicant_; // 申请权限的客户端
-    uint32_t seq_; // 申请权限的请求序列号
-    int32_t sharedMemoryId_; // 共享内存ID
-    uint64_t memorySize_; // 共享内存大小
-    std::shared_ptr<UserData> userData_; // 用户自定义元数据
-    Common::ErrorType errorType_; // 错误码
+    bool granted; // 授权结果
+    uint32_t seq; // 申请权限的请求序列号
+    int32_t applicant; // 申请权限的客户端
+    int32_t sharedMemoryId; // 共享内存ID
+    uint64_t memorySize; // 共享内存大小
+    std::shared_ptr<UserData> userData; // 用户自定义元数据
+    Common::ErrorType errorType; // 错误码
 };
 
 } // namespace Resource

@@ -79,8 +79,8 @@ protected:
     {
         for (int32_t permitApplicant = startId; permitApplicant < startId + count; permitApplicant++) {
             const uint32_t seq = permitApplicant;
-            resourceManager->HandleApplyPermission({permitApplicant, seq, permissionType, memoryId, false,
-                                                    make_shared<UserData>()});
+            resourceManager->HandleApplyPermission({permitApplicant, seq, permissionType, memoryId, {false,
+                                                    make_shared<UserData>()}});
         }
     }
 
@@ -186,10 +186,10 @@ TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_wh
                                                                                            seq,
                                                                                            PermissionType::None,
                                                                                            0,
-                                                                                           false,
-                                                                                           make_shared<UserData>()});
-    EXPECT_EQ(false, applyPermitRes.granted_);
-    EXPECT_EQ(ErrorType::UnknownPermissionType, applyPermitRes.errorType_);
+                                                                                           {false,
+                                                                                           make_shared<UserData>()}});
+    EXPECT_EQ(false, applyPermitRes.granted);
+    EXPECT_EQ(ErrorType::UnknownPermissionType, applyPermitRes.errorType);
 }
 
 TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_when_memory_not_found)
@@ -200,10 +200,10 @@ TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_wh
                                                                                            seq,
                                                                                            PermissionType::Write,
                                                                                            0,
-                                                                                           false,
-                                                                                           make_shared<UserData>()});
-    EXPECT_EQ(false, applyPermitRes.granted_);
-    EXPECT_EQ(ErrorType::MemoryNotFound, applyPermitRes.errorType_);
+                                                                                           {false,
+                                                                                           make_shared<UserData>()}});
+    EXPECT_EQ(false, applyPermitRes.granted);
+    EXPECT_EQ(ErrorType::MemoryNotFound, applyPermitRes.errorType);
 }
 
 TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_when_memory_is_pending_release)
@@ -215,7 +215,7 @@ TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_wh
     int32_t permissionApplicantId1 = 2;
     uint32_t seq = 2;
     resourceManager->HandleApplyPermission({permissionApplicantId1, seq, PermissionType::Write,
-                                            memoryId, false, make_shared<UserData>()});
+                                            memoryId, {false, make_shared<UserData>()}});
 
     // 释放内存，请求进入队列
     resourceManager->HandleReleaseMemory(memoryId);
@@ -227,10 +227,10 @@ TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_wh
                                                                                            seq + 1,
                                                                                            PermissionType::Write,
                                                                                            memoryId,
-                                                                                           false,
-                                                                                           make_shared<UserData>()});
-    EXPECT_EQ(false, applyPermitRes.granted_);
-    EXPECT_EQ(ErrorType::IllegalStateForPermitApplication, applyPermitRes.errorType_);
+                                                                                           {false,
+                                                                                           make_shared<UserData>()}});
+    EXPECT_EQ(false, applyPermitRes.granted);
+    EXPECT_EQ(ErrorType::IllegalStateForPermitApplication, applyPermitRes.errorType);
 }
 
 TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_when_duplicate_applying_permission)
@@ -245,22 +245,22 @@ TEST_F(ResourceManagerTest, should_send_error_reponse_for_applying_permission_wh
                                                                                             seq,
                                                                                             PermissionType::Write,
                                                                                             memoryId,
-                                                                                            false,
-                                                                                            make_shared<UserData>()});
+                                                                                            {false,
+                                                                                            make_shared<UserData>()}});
     // 断言首次申请成功
-    EXPECT_EQ(true, applyPermitRes1.granted_);
-    EXPECT_EQ(ErrorType::None, applyPermitRes1.errorType_);
+    EXPECT_EQ(true, applyPermitRes1.granted);
+    EXPECT_EQ(ErrorType::None, applyPermitRes1.errorType);
 
     // 二次申请权限
     const ApplyPermissionResponse applyPermitRes2 = resourceManager->HandleApplyPermission({permissionApplicantId,
                                                                                             seq + 1,
                                                                                             PermissionType::Write,
                                                                                             memoryId,
-                                                                                            false,
-                                                                                            make_shared<UserData>()});
+                                                                                            {false,
+                                                                                            make_shared<UserData>()}});
     // 断言二次申请失败
-    EXPECT_EQ(false, applyPermitRes2.granted_);
-    EXPECT_EQ(ErrorType::DuplicatePermitApplication, applyPermitRes2.errorType_);
+    EXPECT_EQ(false, applyPermitRes2.granted);
+    EXPECT_EQ(ErrorType::DuplicatePermitApplication, applyPermitRes2.errorType);
 }
 
 TEST_F(ResourceManagerTest, should_not_release_permission_when_permission_type_unknown)
@@ -284,8 +284,8 @@ TEST_F(ResourceManagerTest, should_not_release_permission_when_client_not_holdin
     // Client 2 申请权限
     int32_t permissionApplicantId = 2;
     uint32_t seq = 2;
-    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write, memoryId, false,
-                                            make_shared<UserData>()});
+    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write, memoryId, {false,
+                                            make_shared<UserData>()}});
     // Client 3 释放权限
     int32_t permissionReleaserId = 3;
     resourceManager->HandleReleasePermission(permissionReleaserId, PermissionType::Write, memoryId);
@@ -304,8 +304,8 @@ TEST_F(ResourceManagerTest, should_release_permission_when_permission_type_misma
     // 申请写权限
     int32_t permissionApplicantId = 2;
     uint32_t seq = 2;
-    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write, memoryId, false,
-                                            make_shared<UserData>()});
+    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write, memoryId, {false,
+                                            make_shared<UserData>()}});
     // 释放读权限
     resourceManager->HandleReleasePermission(permissionApplicantId, PermissionType::Read, memoryId);
     // 断言释放写权限成功
@@ -324,11 +324,11 @@ TEST_F(ResourceManagerTest, should_update_memory_status_when_handle_apply_and_re
                                                                                            seq,
                                                                                            PermissionType::Write,
                                                                                            memoryId,
-                                                                                           false,
-                                                                                           make_shared<UserData>()});
+                                                                                           {false,
+                                                                                           make_shared<UserData>()}});
     // 断言权限申请成功
-    EXPECT_EQ(true, applyPermitRes.granted_);
-    EXPECT_EQ(ErrorType::None, applyPermitRes.errorType_);
+    EXPECT_EQ(true, applyPermitRes.granted);
+    EXPECT_EQ(ErrorType::None, applyPermitRes.errorType);
     // 断言内存管理状态修改成功
     EXPECT_TRUE(resourceManager->GetExpiryTime(memoryId) == chrono::system_clock::time_point::max());
     EXPECT_EQ(1, resourceManager->GetWritingRefCnt(memoryId));
@@ -354,8 +354,8 @@ TEST_F(ResourceManagerTest, should_grant_read_permissions_after_release_write_pe
     // 抢先申请写权限
     int32_t firstApplicant = 2;
     uint32_t seq = 2;
-    resourceManager->HandleApplyPermission({firstApplicant, seq, PermissionType::Write, memoryId, false,
-                                            make_shared<UserData>()});
+    resourceManager->HandleApplyPermission({firstApplicant, seq, PermissionType::Write, memoryId, {false,
+                                            make_shared<UserData>()}});
     // 批量申请读权限
     int32_t readStartId = 3;
     int32_t readCount = 10;
@@ -363,8 +363,8 @@ TEST_F(ResourceManagerTest, should_grant_read_permissions_after_release_write_pe
     // 最后再申请写权限
     int32_t lastApplicant = readStartId + readCount;
     seq = lastApplicant;
-    resourceManager->HandleApplyPermission({lastApplicant, seq, PermissionType::Write, memoryId, false,
-                                            make_shared<UserData>()});
+    resourceManager->HandleApplyPermission({lastApplicant, seq, PermissionType::Write, memoryId, {false,
+                                            make_shared<UserData>()}});
     // 释放写权限
     resourceManager->HandleReleasePermission(firstApplicant, PermissionType::Write, memoryId);
     vector<ApplyPermissionResponse> notificationQueue = resourceManager->ProcessWaitingPermitRequests(memoryId);
@@ -372,7 +372,7 @@ TEST_F(ResourceManagerTest, should_grant_read_permissions_after_release_write_pe
     EXPECT_EQ(readCount, notificationQueue.size());
     uint32_t expectedSeq = readStartId;
     for (auto& notification : notificationQueue) {
-        EXPECT_EQ(expectedSeq, notification.seq_);
+        EXPECT_EQ(expectedSeq, notification.seq);
         ++expectedSeq;
     }
     EXPECT_EQ(readCount, resourceManager->GetReadingRefCnt(memoryId));
@@ -395,8 +395,8 @@ TEST_F(ResourceManagerTest, should_grant_write_permission_after_release_read_per
     // 抢先申请读权限
     int32_t firstApplicant = 2;
     uint32_t seq = 2;
-    resourceManager->HandleApplyPermission({firstApplicant, seq, PermissionType::Read, memoryId, false,
-                                            make_shared<UserData>()});
+    resourceManager->HandleApplyPermission({firstApplicant, seq, PermissionType::Read, memoryId, {false,
+                                            make_shared<UserData>()}});
     // 批量申请写权限
     int32_t writeStartId = 3;
     int32_t writeCount = 10;
@@ -406,7 +406,7 @@ TEST_F(ResourceManagerTest, should_grant_write_permission_after_release_read_per
     vector<ApplyPermissionResponse> notificationQueue = resourceManager->ProcessWaitingPermitRequests(memoryId);
     // 只有第一个等待的写权限请求会被处理，获取许可；其他写权限继续在队列中等待
     EXPECT_EQ(1, notificationQueue.size());
-    EXPECT_EQ(writeStartId, notificationQueue[0].seq_);
+    EXPECT_EQ(writeStartId, notificationQueue[0].seq);
     EXPECT_EQ(1, resourceManager->GetWritingRefCnt(memoryId));
     EXPECT_EQ(0, resourceManager->GetReadingRefCnt(memoryId));
     EXPECT_TRUE(resourceManager->GetReadingMemoryBlocks(firstApplicant).empty());
@@ -432,23 +432,23 @@ TEST_F(ResourceManagerTest, should_get_user_data_when_apply_read_permission_afte
     int8_t staticData[10] = {0};
     const int8_t* userData = staticData;
     resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write,
-                                            memoryId, true, make_shared<UserData>(userData, dataSize)});
+                                            memoryId, {true, make_shared<UserData>(userData, dataSize)}});
     resourceManager->HandleReleasePermission(permissionApplicantId, PermissionType::Write, memoryId);
 
-    EXPECT_TRUE(resourceManager->GetUserData(memoryId)->userDataPtr_);
-    EXPECT_EQ(0, memcmp(userData,  resourceManager->GetUserData(memoryId)->userDataPtr_.get(), dataSize));
-    EXPECT_EQ(dataSize, resourceManager->GetUserData(memoryId)->dataSize_);
+    EXPECT_TRUE(resourceManager->GetUserData(memoryId)->userDataPtr);
+    EXPECT_EQ(0, memcmp(userData,  resourceManager->GetUserData(memoryId)->userDataPtr.get(), dataSize));
+    EXPECT_EQ(dataSize, resourceManager->GetUserData(memoryId)->dataSize);
 
     // 申请读权限,附带读取用户自定义元数据
     const ApplyPermissionResponse applyPermitRes = resourceManager->HandleApplyPermission({permissionApplicantId,
                                                                                            seq + 1,
                                                                                            PermissionType::Read,
                                                                                            memoryId,
-                                                                                           true,
-                                                                                           make_shared<UserData>()});
-    EXPECT_TRUE(applyPermitRes.userData_->userDataPtr_);
-    EXPECT_EQ(0, memcmp(userData,  applyPermitRes.userData_->userDataPtr_.get(), dataSize));
-    EXPECT_EQ(dataSize, applyPermitRes.userData_->dataSize_);
+                                                                                           {true,
+                                                                                           make_shared<UserData>()}});
+    EXPECT_TRUE(applyPermitRes.userData->userDataPtr);
+    EXPECT_EQ(0, memcmp(userData,  applyPermitRes.userData->userDataPtr.get(), dataSize));
+    EXPECT_EQ(dataSize, applyPermitRes.userData->dataSize);
     resourceManager->HandleReleasePermission(permissionApplicantId, PermissionType::Read, memoryId);
 }
 
@@ -465,8 +465,8 @@ TEST_F(ResourceManagerTest, should_keep_pending_when_memory_pending_release)
     // 申请权限
     int32_t permissionApplicantId = 2;
     uint32_t seq = 2;
-    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write, memoryId, false,
-                                            make_shared<UserData>()});
+    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write, memoryId, {false,
+                                            make_shared<UserData>()}});
     // 释放内存，请求进入等待状态
     EXPECT_TRUE(resourceManager->HandleReleaseMemory(memoryId));
     EXPECT_EQ(memoryId, resourceManager->GetMemoryId(TEST_OBJECT_KEY));
@@ -482,8 +482,8 @@ TEST_F(ResourceManagerTest, should_release_memory_when_memory_idles)
     // 申请权限
     int32_t permissionApplicantId = 2;
     uint32_t seq = 2;
-    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write, memoryId, false,
-                                            make_shared<UserData>()});
+    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write, memoryId, {false,
+                                            make_shared<UserData>()}});
     // 释放权限
     resourceManager->HandleReleasePermission(permissionApplicantId, PermissionType::Write, memoryId);
     // 释放内存成功
@@ -517,8 +517,8 @@ TEST_F(ResourceManagerTest, should_not_process_pending_release_memory_when_memor
     // 申请权限
     int32_t permissionApplicantId = 2;
     uint32_t seq = 2;
-    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write, memoryId, false,
-                                            make_shared<UserData>()});
+    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write, memoryId, {false,
+                                            make_shared<UserData>()}});
     // 释放内存，请求进入等待状态
     EXPECT_TRUE(resourceManager->HandleReleaseMemory(memoryId));
     EXPECT_TRUE(resourceManager->IsPendingRelease(memoryId));
@@ -534,8 +534,8 @@ TEST_F(ResourceManagerTest, should_process_pending_release_memory_when_memory_pe
     // 申请权限
     int32_t permissionApplicantId = 2;
     uint32_t seq = 2;
-    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write, memoryId, false,
-                                            make_shared<UserData>()});
+    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write, memoryId, {false,
+                                            make_shared<UserData>()}});
     // 释放内存，请求进入等待状态
     EXPECT_TRUE(resourceManager->HandleReleaseMemory(memoryId));
     EXPECT_TRUE(resourceManager->IsPendingRelease(memoryId));
@@ -554,22 +554,22 @@ TEST_F(ResourceManagerTest, should_return_permissions_held_before_client_release
     // 申请读权限
     int32_t permissionApplicantId = 2;
     uint32_t seq = 2;
-    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Read, memoryId1, false,
-                                            make_shared<UserData>()});
+    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Read, memoryId1, {false,
+                                            make_shared<UserData>()}});
     // 分配新内存
     std::string objectKey2 = "key2";
     int32_t memoryId2 = AllocateMemory(objectKey2);
     // 对新内存申请写权限
-    resourceManager->HandleApplyPermission({permissionApplicantId, seq + 2, PermissionType::Write, memoryId2, false,
-                                            make_shared<UserData>()});
+    resourceManager->HandleApplyPermission({permissionApplicantId, seq + 2, PermissionType::Write, memoryId2, {false,
+                                            make_shared<UserData>()}});
 
     vector<PermissionHeld> permissionsHeld = resourceManager->GetPermissionsHeld(permissionApplicantId);
     int32_t expectedCount = 2;
     EXPECT_EQ(expectedCount, permissionsHeld.size());
-    EXPECT_EQ(memoryId1, permissionsHeld[0].sharedMemoryId_);
-    EXPECT_EQ(PermissionType::Read, permissionsHeld[0].permissionType_);
-    EXPECT_EQ(memoryId2, permissionsHeld[1].sharedMemoryId_);
-    EXPECT_EQ(PermissionType::Write, permissionsHeld[1].permissionType_);
+    EXPECT_EQ(memoryId1, permissionsHeld[0].sharedMemoryId);
+    EXPECT_EQ(PermissionType::Read, permissionsHeld[0].permissionType);
+    EXPECT_EQ(memoryId2, permissionsHeld[1].sharedMemoryId);
+    EXPECT_EQ(PermissionType::Write, permissionsHeld[1].permissionType);
 }
 
 TEST_F(ResourceManagerTest, should_remove_client_from_waiting_permit_request_queue_when_connection_closed)
@@ -579,8 +579,8 @@ TEST_F(ResourceManagerTest, should_remove_client_from_waiting_permit_request_que
     // 抢先申请写权限
     int32_t firstApplicant = 2;
     uint32_t seq = 3;
-    resourceManager->HandleApplyPermission({firstApplicant, seq, PermissionType::Write, memoryId, false,
-                                            make_shared<UserData>()});
+    resourceManager->HandleApplyPermission({firstApplicant, seq, PermissionType::Write, memoryId, {false,
+                                            make_shared<UserData>()}});
     // 批量申请读权限
     int32_t readStartId = 3;
     int32_t readCount = 10;
@@ -618,8 +618,8 @@ TEST_F(ResourceManagerTest, should_auto_recycle_memory_when_memory_expires)
     // 申请权限
     int32_t permissionApplicantId = 2;
     uint32_t seq = 2;
-    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write, memoryId, false,
-                                            make_shared<UserData>()});
+    resourceManager->HandleApplyPermission({permissionApplicantId, seq, PermissionType::Write, memoryId, {false,
+                                            make_shared<UserData>()}});
     // 释放权限
     resourceManager->HandleReleasePermission(permissionApplicantId, PermissionType::Write, memoryId);
     // 等待自动回收
@@ -679,7 +679,7 @@ TEST_P(ApplyPermissionParamTest, should_handle_apply_permission_correctly_before
     int32_t firstApplicant = 2;
     uint32_t seq = 2;
     resourceManager->HandleApplyPermission({firstApplicant, seq, firstPermission,
-                                            memoryId, false, make_shared<UserData>()});
+                                            memoryId, {false, make_shared<UserData>()}});
     // 批量申请权限
     int32_t startId = 3;
     int32_t count = 10;

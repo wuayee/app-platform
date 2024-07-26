@@ -95,7 +95,7 @@ void TaskHandler::HandleRead(const Task& task)
 
     auto header = Common::GetMessageHeader(buffer);
     const uint32_t seq = header->seq();
-    // TODO: 需要处理半包
+    // TD: 需要处理半包
     uint bodySize = header->size();
     const auto messageSize = bodySize + MESSAGE_HEADER_LEN;
     const bool isNormalMessageType = (header->type() != Common::MessageType::CleanupExpiredMemory)
@@ -124,7 +124,7 @@ void TaskHandler::HandleClose(int socketFd)
     if (!permissionsHeld.empty()) {
         logger.Info("[TaskHandler] Releasing permissions currently held by client {}", socketFd);
         for (auto& permissionHeld : permissionsHeld) {
-            ReleasePermission(socketFd, permissionHeld.sharedMemoryId_, permissionHeld.permissionType_);
+            ReleasePermission(socketFd, permissionHeld.sharedMemoryId, permissionHeld.permissionType);
         }
     }
     // 把客户端从授权等待队列中移除
@@ -220,8 +220,8 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
     if (!Common::VerifyApplyPermissionMessageBuffer(bodyVerifier)) {
         logger.Error("[TaskHandler] Received incorrect apply permission body format from client {}, seq={}",
                      socketFd, seq);
-        SendApplyPermissionResponse({false, socketFd, seq, -1, 0,
-                                     make_shared<Resource::UserData>(), ErrorType::IllegalMessageBody});
+        SendApplyPermissionResponse({false, seq, {socketFd, -1, 0,
+                                     make_shared<Resource::UserData>()}, ErrorType::IllegalMessageBody});
         return;
     }
     auto applyPermissionMessage = Common::GetApplyPermissionMessage(startPtr);
@@ -241,8 +241,8 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
     if (sharedMemoryId == -1) {
         logger.Error("[TaskHandler] The object key {} is not found from client {}, seq={}",
                      applyPermissionMessage->object_key()->str(), socketFd, seq);
-        SendApplyPermissionResponse({false, socketFd, seq, -1, 0,
-                                     make_shared<Resource::UserData>(), ErrorType::KeyNotFound});
+        SendApplyPermissionResponse({false, seq, {socketFd, -1, 0,
+                                     make_shared<Resource::UserData>()}, ErrorType::KeyNotFound});
         return;
     }
 
@@ -255,10 +255,10 @@ void TaskHandler::HandleMessageApplyPermission(const Common::MessageHeader* head
     auto userDataPtr = make_shared<Resource::UserData>(userData, dataSize);
     auto applyPermitResp =
             resourceMgrPtr_->HandleApplyPermission({socketFd, seq, applyPermissionMessage->permission(),
-                                                    sharedMemoryId, applyPermissionMessage->is_operating_user_data(),
-                                                    userDataPtr});
+                                                    sharedMemoryId, {applyPermissionMessage->is_operating_user_data(),
+                                                    userDataPtr}});
     // 权限申请请求进入等待队列，阻塞客户端通知
-    if (!applyPermitResp.granted_ && applyPermitResp.errorType_ == ErrorType::None) {
+    if (!applyPermitResp.granted && applyPermitResp.errorType == ErrorType::None) {
         return;
     }
     SendApplyPermissionResponse(applyPermitResp);
@@ -409,35 +409,35 @@ void TaskHandler::SendGetMetaDataResponse(int32_t socketFd, uint32_t seq, ErrorT
 {
     flatbuffers::FlatBufferBuilder bodyBuilder;
     flatbuffers::Offset<::flatbuffers::Vector<int8_t>> userDataOffset = 0;
-    if (metadata.userData_ && metadata.userData_->userDataPtr_) {
-        userDataOffset = bodyBuilder.CreateVector(metadata.userData_->userDataPtr_.get(),
-                                                  metadata.userData_->dataSize_);
+    if (metadata.userData && metadata.userData->userDataPtr) {
+        userDataOffset = bodyBuilder.CreateVector(metadata.userData->userDataPtr.get(),
+                                                  metadata.userData->dataSize);
     }
     auto respBody = Common::CreateGetMetaDataMessageResponse(
-        bodyBuilder, errorType, userDataOffset, metadata.sharedMemoryId_, metadata.memorySize_);
+        bodyBuilder, errorType, userDataOffset, metadata.sharedMemoryId, metadata.memorySize);
     bodyBuilder.Finish(respBody);
     Utils::SendMessage(bodyBuilder, Common::MessageType::GetMetaData, seq, GetSender(socketFd));
     logger.Info("[TaskHandler] Send metadata to client {}, seq: {}, result: {}, memory key: {}",
-        socketFd, seq, static_cast<int32_t>(errorType), metadata.sharedMemoryId_);
+        socketFd, seq, static_cast<int32_t>(errorType), metadata.sharedMemoryId);
 }
 
 void TaskHandler::SendApplyPermissionResponse(const Resource::ApplyPermissionResponse& response)
 {
     flatbuffers::FlatBufferBuilder bodyBuilder;
     flatbuffers::Offset<::flatbuffers::Vector<int8_t>> userDataOffset = 0;
-    if (response.userData_ && response.userData_->userDataPtr_) {
+    if (response.userData && response.userData->userDataPtr) {
         userDataOffset =
-                bodyBuilder.CreateVector(response.userData_->userDataPtr_.get(), response.userData_->dataSize_);
+                bodyBuilder.CreateVector(response.userData->userDataPtr.get(), response.userData->dataSize);
     }
     auto respBody =
-        Common::CreateApplyPermissionMessageResponse(bodyBuilder, response.errorType_, response.granted_,
-                                                     response.sharedMemoryId_, response.memorySize_, userDataOffset);
+        Common::CreateApplyPermissionMessageResponse(bodyBuilder, response.errorType, response.granted,
+                                                     response.sharedMemoryId, response.memorySize, userDataOffset);
 
     bodyBuilder.Finish(respBody);
-    Utils::SendMessage(bodyBuilder, Common::MessageType::ApplyPermission, response.seq_,
-                       GetSender(response.applicant_));
+    Utils::SendMessage(bodyBuilder, Common::MessageType::ApplyPermission, response.seq,
+                       GetSender(response.applicant));
     logger.Info("[TaskHandler] Send Permission result to client {}, seq: {}, result: {}, memory key: {}, size: {}",
-                response.applicant_, response.seq_, response.granted_, response.sharedMemoryId_, response.memorySize_);
+                response.applicant, response.seq, response.granted, response.sharedMemoryId, response.memorySize);
 }
 
 // 客户端握手信息Hello原路返回。
@@ -486,7 +486,7 @@ void TaskHandler::HandleApplyZeroMemoryPermission(int32_t socketFd, uint32_t seq
     // 当且仅当读请求且设定操作用户自定义数据时，返回用户自定义元数据
     auto userDataPtr = permissionType == PermissionType::Read && isOperatingUserData ?
                        resourceMgrPtr_->GetZeroMemoryUserData(objectKey) : make_shared<Resource::UserData>();
-    SendApplyPermissionResponse({true, socketFd, seq, -1, 0, userDataPtr, ErrorType::None});
+    SendApplyPermissionResponse({true, seq, {socketFd, -1, 0, userDataPtr}, ErrorType::None});
 }
 }  // Task
 }  // DataBus

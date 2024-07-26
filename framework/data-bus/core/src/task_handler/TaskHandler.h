@@ -33,9 +33,9 @@ public:
     void Init();
 private:
     [[noreturn]] void Loop();
-    void HandleRead(const Task&);
+    void HandleRead(const Task& task);
     void HandleMessage(const Common::MessageHeader* header, const char* buffer, int socketFd);
-    void HandleWrite(const Task&);
+    void HandleWrite(const Task& task);
     void HandleClose(int socketFd);
     std::function<void(const uint8_t*, size_t)> GetSender(int32_t socketFd);
     void SendApplyPermissionResponse(const Resource::ApplyPermissionResponse& applyPermissionResponse);
