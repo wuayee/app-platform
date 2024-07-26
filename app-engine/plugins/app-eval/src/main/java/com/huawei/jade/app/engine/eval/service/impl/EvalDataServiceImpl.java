@@ -5,10 +5,10 @@
 package com.huawei.jade.app.engine.eval.service.impl;
 
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
-import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.jade.app.engine.eval.code.AppEvalRetCodeEnum;
+import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
+import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
 import com.huawei.jade.app.engine.eval.exception.AppEvalException;
 import com.huawei.jade.app.engine.eval.manager.EvalDataValidator;
 import com.huawei.jade.app.engine.eval.manager.EvalDatasetVersionManager;
@@ -44,14 +44,25 @@ public class EvalDataServiceImpl implements EvalDataService {
     public void insertAll(Long datasetId, List<String> contents) {
         dataValidator.verify(datasetId, contents);
         long version = versionManager.applyVersion();
-        List<EvalDataPo> evalDataPoList = contents.stream().map(content -> {
-            EvalDataPo evalDataPo = new EvalDataPo();
-            evalDataPo.setContent(content);
-            evalDataPo.setCreatedVersion(version);
-            evalDataPo.setDatasetId(datasetId);
-            return evalDataPo;
-        }).collect(Collectors.toList());
-        this.dataMapper.insertAll(evalDataPoList);
+        insert(datasetId, contents, version);
+    }
+
+    @Override
+    public void delete(List<Long> dataIds) {
+        long version = versionManager.applyVersion();
+        softDelete(dataIds, version);
+    }
+
+    @Override
+    @Transactional
+    public void update(Long datasetId, Long dataId, String content) throws AppEvalException {
+        dataValidator.verify(datasetId, content);
+        long version = versionManager.applyVersion();
+        int effectRows = softDelete(Collections.singletonList(dataId), version);
+        if (effectRows == 0) {
+            throw new AppEvalException(AppEvalRetCodeEnum.EVAL_DATA_DELETED_ERROR, dataId);
+        }
+        insert(datasetId, Collections.singletonList(content), version);
     }
 
     @Override
@@ -61,32 +72,23 @@ public class EvalDataServiceImpl implements EvalDataService {
         return PageVo.of(evalDataCount, evalData);
     }
 
-    @Override
-    public void delete(List<Long> dataIds) {
-        long version = versionManager.applyVersion();
+    private void insert(Long datasetId, List<String> contents, long createdVersion) {
+        List<EvalDataPo> evalDataPoList = contents.stream().map(content -> {
+            EvalDataPo evalDataPo = new EvalDataPo();
+            evalDataPo.setContent(content);
+            evalDataPo.setCreatedVersion(createdVersion);
+            evalDataPo.setDatasetId(datasetId);
+            return evalDataPo;
+        }).collect(Collectors.toList());
+        this.dataMapper.insertAll(evalDataPoList);
+    }
+
+    private int softDelete(List<Long> dataIds, long expiredVersion) {
         List<EvalDataPo> evalDataPoList = dataIds.stream().map(id -> {
             EvalDataPo evalDataPo = new EvalDataPo();
             evalDataPo.setId(id);
             return evalDataPo;
         }).collect(Collectors.toList());
-        this.dataMapper.updateExpiredVersion(evalDataPoList, version);
-    }
-
-    @Override
-    @Transactional
-    public void update(Long datasetId, Long dataId, String content) throws AppEvalException {
-        dataValidator.verify(datasetId, content);
-        long version = versionManager.applyVersion();
-        EvalDataPo deletePo = new EvalDataPo();
-        deletePo.setId(dataId);
-        int effectRows = this.dataMapper.updateExpiredVersion(Collections.singletonList(deletePo), version);
-        if (effectRows == 0) {
-            throw new AppEvalException(AppEvalRetCodeEnum.EVAL_DATA_DELETED_ERROR, dataId);
-        }
-        EvalDataPo insertPo = new EvalDataPo();
-        insertPo.setContent(content);
-        insertPo.setCreatedVersion(version);
-        insertPo.setDatasetId(datasetId);
-        this.dataMapper.insertAll(Collections.singletonList(insertPo));
+        return this.dataMapper.updateExpiredVersion(evalDataPoList, expiredVersion);
     }
 }

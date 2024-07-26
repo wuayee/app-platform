@@ -17,7 +17,7 @@
     </insert>
 
     <sql id="select_by_version">
-        ds_id = #{datasetId}
+        dataset_id = #{datasetId}
         AND expired_version > #{version}
         AND created_version &lt;= #{version}
     </sql>
@@ -25,7 +25,7 @@
     <select id="listEvalData" resultType="com.huawei.jade.app.engine.eval.entity.EvalDataEntity"
             resultMap="EvalDataEntityResultMap">
         SELECT id, content, created_at, updated_at
-        FROM app_engine_eval_data
+        FROM t_app_engine_eval_data
         WHERE
         <include refid="select_by_version"/>
         ORDER BY id
@@ -34,7 +34,7 @@
 
     <select id="countEvalData" resultType="int">
         SELECT COUNT(*)
-        FROM app_engine_eval_data
+        FROM t_app_engine_eval_data
         WHERE
         <include refid="select_by_version"/>
     </select>

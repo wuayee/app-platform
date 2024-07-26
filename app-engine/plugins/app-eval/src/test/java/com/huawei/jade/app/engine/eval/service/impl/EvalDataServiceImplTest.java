@@ -69,9 +69,7 @@ public class EvalDataServiceImplTest {
 
     @AfterEach
     void teardown() {
-        clearInvocations(evalDataMapper);
-        clearInvocations(evalDataValidator);
-        clearInvocations(evalDatasetVersionManager);
+        clearInvocations(evalDataMapper, evalDataValidator, evalDatasetVersionManager);
     }
 
     @Test
