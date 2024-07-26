@@ -27,6 +27,9 @@ import java.util.Objects;
  * @since 2022-06-10
  */
 public final class CodeAttribute extends AbstractAttribute {
+    /**
+     * 表示属性名称。
+     */
     public static final String NAME = "Code";
 
     private final U2 maxStack;

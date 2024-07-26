@@ -601,6 +601,14 @@ public final class CollectionUtils {
         return set;
     }
 
+    /**
+     * 将迭代器转换为枚举。
+     *
+     * @param iterator 表示迭代器的 {@link Iterator}{@code <}{@link E}{@code >}。
+     * @param <E> 表示迭代器中元素类型的 {@link E}。
+     * @param <T> 表示迭代器中元素类型的上界类型的 {@link T}。
+     * @return 表示枚举的 {@link Enumeration}{@code <}{@link E}{@code >}。
+     */
     public static <E, T extends E> Enumeration<E> enumeration(Iterator<T> iterator) {
         return new IteratorEnumerationAdapter<>(iterator);
     }

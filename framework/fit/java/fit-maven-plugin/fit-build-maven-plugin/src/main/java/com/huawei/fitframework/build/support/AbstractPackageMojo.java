@@ -27,6 +27,11 @@ public abstract class AbstractPackageMojo extends AbstractMojo {
     @Component
     private ArtifactHandlerManager artifactHandlerManager;
 
+    /**
+     * 创建一个用于下载依赖项的工具。
+     *
+     * @return 表示依赖下载工具的 {@link ArtifactDownloader}。
+     */
     protected ArtifactDownloader createDownloader() {
         return ArtifactDownloader.custom()
                 .artifactResolver(this.artifactResolver)

@@ -39,6 +39,12 @@ public enum CompressionMethod {
         return this.code;
     }
 
+    /**
+     * 根据唯一标识获取对应的压缩方法。
+     *
+     * @param id 表示唯一标识的 {@code int}。
+     * @return 表示压缩方法的 {@link CompressionMethod}。
+     */
     public static CompressionMethod fromId(int id) {
         for (CompressionMethod method : values()) {
             if (method.id() == id) {

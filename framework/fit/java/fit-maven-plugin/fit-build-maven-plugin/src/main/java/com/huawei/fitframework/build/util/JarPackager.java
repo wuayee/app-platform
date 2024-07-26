@@ -43,6 +43,12 @@ public final class JarPackager {
         return this.out;
     }
 
+    /**
+     * 确保创建指定的目录。
+     *
+     * @param fileEntry 表示文件目录的 {@link String}。
+     * @throws MojoExecutionException 当创建目录过程发生执行异常时。
+     */
     public void ensureDirectory(String fileEntry) throws MojoExecutionException {
         String[] path = StringUtils.split(fileEntry, JarEntryLocation.ENTRY_PATH_SEPARATOR);
         StringBuilder builder = new StringBuilder();
@@ -63,10 +69,23 @@ public final class JarPackager {
         }
     }
 
+    /**
+     * 将指定的 {@link Jar.Entry} 打包到当前的文件中。
+     *
+     * @param entry 表示待打包文件的 {@link Jar.Entry}。
+     * @throws MojoExecutionException 当打包过程中发生执行异常时。
+     */
     public void packageJarEntry(Jar.Entry entry) throws MojoExecutionException {
         this.packageJarEntry(entry, entry.name());
     }
 
+    /**
+     * 按照指定名称将 {@link Jar.Entry} 打包到当前的文件中。
+     *
+     * @param entry 表示待打包文件的 {@link Jar.Entry}。
+     * @param newEntryName 表示文件名的 {@link String}。
+     * @throws MojoExecutionException 当打包过程中发生执行异常时。
+     */
     public void packageJarEntry(Jar.Entry entry, String newEntryName) throws MojoExecutionException {
         if (entry.directory()) {
             return;
@@ -94,6 +113,13 @@ public final class JarPackager {
         }
     }
 
+    /**
+     * 将目录添加到当前的 ZIP 文件中。
+     *
+     * @param entryName 表示目录名称的 {@link String}。
+     * @param bytes 表示目录内容的 {@code byte}{@code [}{@code ]}。
+     * @throws MojoExecutionException 当添加目录过程中发生执行异常时。
+     */
     public void addEntry(String entryName, byte[] bytes) throws MojoExecutionException {
         this.ensureDirectory(entryName);
         ZipEntry entry = new ZipEntry(entryName);
@@ -111,6 +137,13 @@ public final class JarPackager {
         }
     }
 
+    /**
+     * 将文件添加到当前的文件的指定的目录中。
+     *
+     * @param file 表示文件的 {@link File}。
+     * @param directory 表示目录的 {@link String}。
+     * @throws MojoExecutionException 当添加文件过程中发生执行异常时。
+     */
     public void store(File file, String directory) throws MojoExecutionException {
         ZipEntry entry = new ZipEntry(directory + file.getName());
         entry.setCrc(crc32(file));
@@ -152,6 +185,12 @@ public final class JarPackager {
         return crc32.getValue();
     }
 
+    /**
+     * 根据数据流创建新实例。
+     *
+     * @param out 表示数据流的 {@link ZipOutputStream}。
+     * @return 表示创建的新实例的 {@link JarPackager}。
+     */
     public static JarPackager of(ZipOutputStream out) {
         return new JarPackager(out);
     }

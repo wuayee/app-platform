@@ -118,6 +118,12 @@ public abstract class ClassDescriptor {
             return this.type;
         }
 
+        /**
+         * 获取基本数据类型。
+         *
+         * @param term 表示输入字符的 {@code char}。
+         * @return 表示基本数据类型的 {@link Primitive}。
+         */
         public static Primitive of(char term) {
             switch (term) {
                 case 'B':
@@ -465,6 +471,12 @@ public abstract class ClassDescriptor {
         }
     }
 
+    /**
+     * 解析字符串为类型描述符。
+     *
+     * @param text 表示待解析的字符串的 {@link String}。
+     * @return 表示类型描述符的 {@link ClassDescriptor}。
+     */
     public static ClassDescriptor parse(String text) {
         Parser parser = new Parser(text);
         List<ClassDescriptor> descriptors = parser.parseAll();

@@ -43,10 +43,20 @@ final class DirectSharedClassLoader extends URLClassLoader {
         this.redirectedClassNames = new HashSet<>();
     }
 
+    /**
+     * 将指定的 URL 添加到类路径中。
+     *
+     * @param url 表示路径的 {@link URL}。
+     */
     public void add(URL url) {
         super.addURL(url);
     }
 
+    /**
+     * 将类名添加到重定向的类名集合中。
+     *
+     * @param className 表示类名的 {@link String}。
+     */
     public void redirect(String className) {
         this.redirectedClassNames.add(className);
     }

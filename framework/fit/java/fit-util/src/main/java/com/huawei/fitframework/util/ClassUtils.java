@@ -73,6 +73,13 @@ public class ClassUtils {
         return source.getLocation();
     }
 
+    /**
+     * 尝试使用指定的类加载器加载指定的类。
+     *
+     * @param loader 表示类加载器的 {@link ClassLoader}。
+     * @param className 表示类的全限定名的 {@link String}。
+     * @return 表示加载结果的 {@link Class}{@code <}{@link Object}{@code >}。
+     */
     public static Class<?> tryLoadClass(ClassLoader loader, String className) {
         notNull(loader, "The class loader to load class cannot be null.");
         notNull(className, "The name of class to load cannot be null.");

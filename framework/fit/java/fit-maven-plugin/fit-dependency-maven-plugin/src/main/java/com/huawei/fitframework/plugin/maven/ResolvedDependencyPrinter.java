@@ -11,5 +11,10 @@ package com.huawei.fitframework.plugin.maven;
  * @since 2020-10-09
  */
 public interface ResolvedDependencyPrinter {
+    /**
+     * 打印解析后的依赖信息。
+     *
+     * @param dependency 表示依赖信息的 {@link ResolvedDependencyPrinter}。
+     */
     void print(ResolvedDependency dependency);
 }

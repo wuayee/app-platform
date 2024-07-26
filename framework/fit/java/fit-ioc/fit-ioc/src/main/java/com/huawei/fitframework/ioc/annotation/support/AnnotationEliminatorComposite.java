@@ -26,12 +26,22 @@ public class AnnotationEliminatorComposite implements AnnotationEliminator {
         this.eliminators = new LinkedList<>();
     }
 
+    /**
+     * 添加一个 {@link AnnotationEliminator} 到组合中。
+     *
+     * @param eliminator 表示要添加的 {@link AnnotationEliminator}。
+     */
     public void add(AnnotationEliminator eliminator) {
         if (eliminator != null) {
             this.eliminators.add(eliminator);
         }
     }
 
+    /**
+     * 从组合中移除一个 {@link AnnotationEliminator}。
+     *
+     * @param eliminator 表示要移除的 {@link AnnotationEliminator}。
+     */
     public void remove(AnnotationEliminator eliminator) {
         if (eliminator != null) {
             this.eliminators.remove(eliminator);
