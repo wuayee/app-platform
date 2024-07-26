@@ -115,7 +115,6 @@ public interface FlowsEngineService {
      * @param flowId 流程定义id
      * @return 版本列表
      */
-    // todo 暂时不实现
     List<FlowGraphDefinition> findFlowsByFlowId(String flowId);
 
     /**
@@ -125,8 +124,14 @@ public interface FlowsEngineService {
      * @param tenantId 租户id
      * @return 流程定义列表
      */
-    // todo data结构调整
     GetPageResponse findFlowDefinitionsPage(String data, String tenantId);
 
+    /**
+     * 根据流程定义id获取流程定义
+     *
+     * @param definitionId 流程定义id
+     * @param context 操作人上下文信息
+     * @return 流程定义信息
+     */
     FlowInfo getFlowDefinitionById(String definitionId, OperationContext context);
 }

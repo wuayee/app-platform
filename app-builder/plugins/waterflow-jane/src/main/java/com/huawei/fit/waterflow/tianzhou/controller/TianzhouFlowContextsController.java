@@ -42,7 +42,6 @@ public class TianzhouFlowContextsController {
      * 启动最新版本的流程实例
      *
      * @param httpRequest httpRequest
-     * @param httpResponse httpResponse
      * @param tenantId 租户ID
      * @param flowId 流程定义ID
      * @param flowData 流程执行的数据
@@ -50,12 +49,10 @@ public class TianzhouFlowContextsController {
      */
     @PostMapping(value = "/{flowId}/start", summary = "根据流程定义ID启动流程实例")
     @ResponseStatus(HttpResponseStatus.OK)
-    public Map<String, Object> startFlows(HttpClassicServerRequest httpRequest, HttpClassicServerResponse httpResponse,
+    public Map<String, Object> startFlows(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("flowId") String flowId,
             @RequestBody FlowDataVO flowData) {
-        // Todo 弄个结构体吃掉这块flowData
-        return Views.viewOf(
-                () -> flowContextsController.startFlows(httpRequest, httpResponse, tenantId, flowId, flowData), plugin,
+        return Views.viewOf(() -> flowContextsController.startFlows(httpRequest, tenantId, flowId, flowData), plugin,
                 httpRequest);
     }
 
@@ -85,7 +82,6 @@ public class TianzhouFlowContextsController {
      * 查询当前节点所有context列表
      *
      * @param httpRequest httpRequest
-     * @param httpResponse httpResponse
      * @param tenantId 租户ID
      * @param metaId 流程定义metaId
      * @param version 流程定义版本号
@@ -96,12 +92,11 @@ public class TianzhouFlowContextsController {
             summary = "根据流程定义的metaId和version，以及所在节点的nodeId查询当前所有的流程实例列表")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> findNodeContexts(HttpClassicServerRequest httpRequest,
-            HttpClassicServerResponse httpResponse, @PathVariable("tenant_id") String tenantId,
-            @PathVariable("metaId") String metaId, @PathVariable("version") String version,
-            @PathVariable("nodeId") String nodeId) {
+            @PathVariable("tenant_id") String tenantId, @PathVariable("metaId") String metaId,
+            @PathVariable("version") String version, @PathVariable("nodeId") String nodeId) {
         return Views.viewOf(
-                () -> flowContextsController.findNodeContexts(httpRequest, httpResponse, tenantId, metaId, version,
-                        nodeId), plugin, httpRequest);
+                () -> flowContextsController.findNodeContexts(httpRequest, tenantId, metaId, version, nodeId), plugin,
+                httpRequest);
     }
 
     /**

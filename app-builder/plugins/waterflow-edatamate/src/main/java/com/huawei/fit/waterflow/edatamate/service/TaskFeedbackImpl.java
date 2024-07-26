@@ -72,9 +72,8 @@ public class TaskFeedbackImpl implements FlowableService {
                 log.warn("Not same Flow_context_id, update task instance failed.");
                 return null;
             }
-            int totalFileNum = Integer.parseInt(info.get("file_num"));
-            int processedNum = Integer.parseInt(info.get("processed_num")) + 1;
 
+            int processedNum = Integer.parseInt(info.get("processed_num")) + 1;
             Map<String, Object> updateFields = new HashMap<>();
             updateFields.put("processed_num", String.valueOf(processedNum));
             updateFields.put("cleaning_data",
@@ -90,6 +89,7 @@ public class TaskFeedbackImpl implements FlowableService {
                 return updateFields;
             }
 
+            int totalFileNum = Integer.parseInt(info.get("file_num"));
             double curPercentage = (double) (processedNum * 100) / (double) totalFileNum;
             if (processedNum > totalFileNum) {
                 log.warn("The progress num is larger than total num, processedNum={}, totalFileNum={}.", processedNum,

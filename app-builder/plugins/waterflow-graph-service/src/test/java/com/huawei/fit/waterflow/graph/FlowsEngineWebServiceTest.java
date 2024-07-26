@@ -196,7 +196,6 @@ class FlowsEngineWebServiceTest {
     @DisplayName("测试查询单条流程成功")
     void testGetFlowsSuccess() {
         String id = "test";
-        String version = "1.0.0";
         String graph = "{\n" + "\t\"pages\":[\n" + "\t{\n" + "\t\t\"shapes\":[]\n" + "\t}\n" + "\t]\n" + "}";
         OperationContext context = new OperationContext();
         when(flowsGraphRepo.getFlow(any(), any())).thenReturn(graph);
@@ -210,8 +209,8 @@ class FlowsEngineWebServiceTest {
         FlowDefinition flowDefinition = FlowDefinition.builder().definitionId("123").nodeMap(nodeMap).build();
         when(flowsService.getFlowDefinitionByGraphData(any())).thenReturn(flowDefinition);
 
+        String version = "1.0.0";
         FlowInfo flows = flowsEngineWebService.getFlows(id, version, context);
-
         Assertions.assertEquals(id, flows.getFlowId());
         Assertions.assertEquals(version, flows.getVersion());
         Assertions.assertEquals(graph, flows.getConfigData());

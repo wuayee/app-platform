@@ -1,6 +1,7 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
+
 package com.huawei.fit.jober.aipp.dto;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +20,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StoreWaterFlowDto {
-
     /**
      * id appId
      */

@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AppBuilderWaterFlowInfoDto {
-
     /**
      * itemData store里waterFlow的元数据
      */

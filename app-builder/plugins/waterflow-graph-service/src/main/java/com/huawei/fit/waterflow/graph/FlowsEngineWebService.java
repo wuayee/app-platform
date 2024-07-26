@@ -46,6 +46,7 @@ import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.model.RangedResultSet;
 import com.huawei.fitframework.transaction.Transactional;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -77,6 +78,8 @@ public class FlowsEngineWebService implements FlowsEngineService {
 
     private static final String FLOW_GRAPH = "FLOW GRAPH";
 
+    private static final String TEMP_VERSION = "1.0.0";
+
     private final FlowsService flowsService;
 
     private final FlowContextsService flowContextsService;
@@ -90,8 +93,7 @@ public class FlowsEngineWebService implements FlowsEngineService {
     private final QueryFlowContextPersistRepo queryFlowContextPersistRepo;
 
     public FlowsEngineWebService(FlowContextsService flowContextsService, FlowsService flowsService,
-            FlowsGraphRepo flowsGraphRepo, Authenticator authenticator,
-            TagService tagService,
+            FlowsGraphRepo flowsGraphRepo, Authenticator authenticator, TagService tagService,
             QueryFlowContextPersistRepo queryFlowContextPersistRepo) {
         this.flowContextsService = flowContextsService;
         this.flowsService = flowsService;
@@ -113,10 +115,9 @@ public class FlowsEngineWebService implements FlowsEngineService {
         FlowSaveEntity flowSaveEntity = new FlowSaveEntity();
         flowSaveEntity.setId(flowId);
         flowSaveEntity.setVersion(version);
-        flowSaveEntity.setTags((List<String>) body.get("tags"));
-        // todo 此处definitionData含义？
-        flowSaveEntity.setGraphData((String) body.get("definitionData"));
-        flowSaveEntity.setPrevious((String) body.get("previous"));
+        flowSaveEntity.setTags(ObjectUtils.cast(body.get("tags")));
+        flowSaveEntity.setGraphData(ObjectUtils.cast(body.get("definitionData")));
+        flowSaveEntity.setPrevious(ObjectUtils.cast(body.get("previous")));
         return flowSaveEntity;
     }
 
@@ -147,7 +148,7 @@ public class FlowsEngineWebService implements FlowsEngineService {
         Map<String, GetPageResponse.FlowInfo> flowInfoMap = getPageResponse.getData()
                 .stream()
                 .peek(f -> f.setVersionStatus("unpublished"))
-                .collect(Collectors.toMap(d -> d.getDocumentId() + STREAM_ID_SEPARATOR + "1.0.0", d -> d));
+                .collect(Collectors.toMap(d -> d.getDocumentId() + STREAM_ID_SEPARATOR + TEMP_VERSION, d -> d));
         if (flowInfoMap.isEmpty()) {
             return getPageResponse;
         }
@@ -182,15 +183,18 @@ public class FlowsEngineWebService implements FlowsEngineService {
                 .msg("")
                 .count(flowList.getRange().getTotal())
                 .cursor(flowList.getRange().getOffset())
-                .data(flowList.getResults().stream().map(graph -> GetPageResponse.FlowInfo.builder()
-                        .documentId(graph.getFlowId())
-                        .text(graph.getName())
-                        .version(graph.getStatus())
-                        .createTime(graph.getCreatedAt().toString())
-                        .createUser(graph.getCreatedBy())
-                        .updateTime(graph.getUpdatedAt().toString())
-                        .updateUser(graph.getUpdatedBy())
-                        .build()).collect(Collectors.toList()))
+                .data(flowList.getResults()
+                        .stream()
+                        .map(graph -> GetPageResponse.FlowInfo.builder()
+                                .documentId(graph.getFlowId())
+                                .text(graph.getName())
+                                .version(graph.getStatus())
+                                .createTime(graph.getCreatedAt().toString())
+                                .createUser(graph.getCreatedBy())
+                                .updateTime(graph.getUpdatedAt().toString())
+                                .updateUser(graph.getUpdatedBy())
+                                .build())
+                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -286,8 +290,7 @@ public class FlowsEngineWebService implements FlowsEngineService {
                 if (task.getTaskType() == FlowTaskType.AIPP_SMART_FORM) {
                     flowNodeForm = new FlowNodeFormInfo();
                     flowNodeForm.setFormId(task.getTaskId());
-                    // todo暂时写死
-                    flowNodeForm.setVersion("1.0.0");
+                    flowNodeForm.setVersion(TEMP_VERSION);
                 }
             }
             flowNodeInfo.setFlowNodeForm(flowNodeForm);
@@ -304,6 +307,13 @@ public class FlowsEngineWebService implements FlowsEngineService {
         return createFlows(flowSaveEntity, context);
     }
 
+    /**
+     * 升级流程
+     *
+     * @param flowSaveEntity 流程保存实体
+     * @param context 操作上下文
+     * @return 流程信息
+     */
     public FlowInfo upgradeFlows(FlowSaveEntity flowSaveEntity, OperationContext context) {
         GraphParam graphParam = new GraphParam();
         graphParam.setGraphId(flowSaveEntity.getId());
@@ -311,9 +321,7 @@ public class FlowsEngineWebService implements FlowsEngineService {
         graphParam.setJson(flowSaveEntity.getGraphData());
         int ans = flowsGraphRepo.upgradeFlows(graphParam);
         if (ans != 0) {
-            String errMsg = String.format(Locale.ROOT,
-                    "upgrade flows failed. ans=%s graphParam=%s",
-                    ans,
+            String errMsg = String.format(Locale.ROOT, "upgrade flows failed. ans=%s graphParam=%s", ans,
                     JSON.toJSONString(graphParam));
             log.error(errMsg);
             throw new JobberException(UN_EXCEPTED_ERROR, errMsg);
@@ -464,8 +472,8 @@ public class FlowsEngineWebService implements FlowsEngineService {
 
     @Override
     public FlowInfo getFlowDefinitionById(String definitionId, OperationContext context) {
-        FlowDefinition flowDefinition =
-                flowsService.findFlowsById(definitionId, ParamUtils.convertToInternalOperationContext(context));
+        FlowDefinition flowDefinition = flowsService.findFlowsById(definitionId,
+                ParamUtils.convertToInternalOperationContext(context));
         FlowInfo flowInfo = new FlowInfo();
         flowInfo.setFlowDefinitionId(definitionId);
         flowInfo.setFlowId(flowDefinition.getMetaId());
