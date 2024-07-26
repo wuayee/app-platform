@@ -55,6 +55,7 @@ public class SharedMemoryInternal implements SharedMemory {
      *
      * @return 表示内存锁的 {@link ReentrantLock}
      */
+    @Override
     public Lock lock() {
         return lock;
     }

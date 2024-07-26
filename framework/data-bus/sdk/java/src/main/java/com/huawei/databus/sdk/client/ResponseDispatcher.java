@@ -104,7 +104,7 @@ class ResponseDispatcher {
                 logger.error("[startEventLoop] Short header received. [size={}]", byteSize);
                 return;
             }
-            // TODO：处理半包。
+            // TD：处理半包。
             MessageHeader header = MessageHeader.getRootAsMessageHeader(messageBytes);
             byte type = header.type();
             long seq = header.seq();

@@ -210,6 +210,7 @@ public class DefaultDataBusClient implements DataBusClient {
      *
      * @return 表示客户端当前是否在连接的 {@code boolean}。
      */
+    @Override
     public boolean isConnected() {
         return this.responseDispatcher != null && this.responseDispatcher.isRunning();
     }
