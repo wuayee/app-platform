@@ -4,6 +4,7 @@
 
 package com.huawei.jade.fel.pipeline.huggingface;
 
+import static com.huawei.fitframework.util.IoUtils.content;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.huawei.fit.serialization.json.jackson.JacksonObjectSerializer;
@@ -21,7 +22,6 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.stream.Stream;
@@ -38,11 +38,13 @@ public class PipelineTest {
         @Override
         public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) throws IOException {
             ObjectSerializer serializer = new JacksonObjectSerializer(null, null, null);
-            List<PipelineTestCase> testCase;
-            try (InputStream in = TestCaseProvider.class.getResourceAsStream("/test_case.json")) {
-                testCase = serializer.deserialize(in,
-                        TypeUtils.parameterized(List.class, new Type[] {PipelineTestCase.class}));
-            }
+
+            String resourceName = "/test_case.json";
+            String jsonContent = content(TestCaseProvider.class, resourceName);
+
+            List<PipelineTestCase> testCase = serializer.deserialize(jsonContent,
+                    TypeUtils.parameterized(List.class, new Type[] {PipelineTestCase.class}));
+
             return testCase.stream().map(test -> {
                 PipelineTask task = PipelineTask.get(test.getTask());
                 return Arguments.of(task.getId(),

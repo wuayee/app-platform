@@ -4,6 +4,8 @@
 
 package com.huawei.jade.app.engine.eval.mapper;
 
+import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
+import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
 import com.huawei.jade.app.engine.eval.po.EvalDataPo;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -25,6 +27,22 @@ public interface EvalDataMapper {
      * @param evalDataList 表示评估数据列表的 {@link List}{@code <}{@link EvalDataPo}{@code >}。
      */
     void insertAll(List<EvalDataPo> evalDataList);
+
+    /**
+     * 查询评估数据。
+     *
+     * @param queryParam 表示评估数据查询参数的 {@code EvalDataQueryParam}。
+     * @return 表示评估数据查询结果的 {@link List}{@code <}{@link EvalDataEntity}{@code >}。
+     */
+    List<EvalDataEntity> listEvalData(EvalDataQueryParam queryParam);
+
+    /**
+     * 统计评估数据数量。
+     *
+     * @param queryParam 表示评估数据查询参数的 {@code EvalDataQueryParam}。
+     * @return 表示评估数据查询结果的 {@code long}。
+     */
+    int countEvalData(EvalDataQueryParam queryParam);
 
     /**
      * 批量软删除评估数据。

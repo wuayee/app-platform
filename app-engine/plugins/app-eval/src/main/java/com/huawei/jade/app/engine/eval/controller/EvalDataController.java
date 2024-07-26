@@ -5,14 +5,19 @@
 package com.huawei.jade.app.engine.eval.controller;
 
 import com.huawei.fit.http.annotation.DeleteMapping;
+import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PostMapping;
+import com.huawei.fit.http.annotation.RequestBean;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.validation.Validated;
 import com.huawei.jade.app.engine.eval.dto.EvalDataCreateDto;
 import com.huawei.jade.app.engine.eval.dto.EvalDataDeleteDto;
+import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
+import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
 import com.huawei.jade.app.engine.eval.service.EvalDataService;
+import com.huawei.jade.common.vo.PageVo;
 
 /**
  * 表示评估数据管理接口集。
@@ -42,6 +47,17 @@ public class EvalDataController {
     @PostMapping(description = "批量创建评估数据")
     public void createEvalData(@RequestBody @Validated EvalDataCreateDto createDto) {
         this.evalDataService.insertAll(createDto.getDatasetId(), createDto.getContents());
+    }
+
+    /**
+     * 查询评估数据。
+     *
+     * @param queryParam 表示查询参数的 {@link EvalDataQueryParam}。
+     * @return 表示评估数据查询结果的 {@link PageVo}{@code <}{@link EvalDataEntity}{@code >}。
+     */
+    @GetMapping(description = "查询评估数据")
+    public PageVo<EvalDataEntity> queryEvalData(@RequestBean EvalDataQueryParam queryParam) {
+        return evalDataService.listEvalData(queryParam);
     }
 
     /**

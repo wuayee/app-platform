@@ -24,4 +24,22 @@ public class PageQueryParam {
     @Property(description = "页面大小", example = "10")
     @Range(min = 1, max = 100, message = "每页尺寸范围[1, 100]")
     private Integer pageSize;
+
+    /**
+     * 获取查询偏移量。
+     *
+     * @return 表示查询偏移量的 {@code int}。
+     */
+    public int getOffset() {
+        return (this.pageIndex - 1) * this.pageSize;
+    }
+
+    /**
+     * 获取查询限定数量大小。
+     *
+     * @return 表示查询限定数量大小的 {@code int}。
+     */
+    public int getLimit() {
+        return this.pageSize;
+    }
 }
