@@ -24,6 +24,13 @@ public interface AippStreamService {
     void addSession(String instanceId, Session session);
 
     /**
+     * 添加session.
+     *
+     * @param session websocket会话对象.
+     */
+    void addSession(Session session);
+
+    /**
      * 删除session.
      *
      * @param session {@link Session} 对象.
@@ -37,6 +44,14 @@ public interface AippStreamService {
      * @return {@link Optional}{@code <}{@link Session}{@code >}对象.
      */
     Optional<Session> getSession(String instanceId);
+
+    /**
+     * 通过会话id获取session.
+     *
+     * @param sessionId 会话id.
+     * @return {@link Optional}{@code <}{@link Session}{@code >}对象.
+     */
+    Optional<Session> getSessionById(String sessionId);
 
     /**
      * 推送数据到前端.

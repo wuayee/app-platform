@@ -641,6 +641,17 @@ public class AippConst {
      */
     public static final String ATTR_CHAT_STATE_KEY = "state";
 
+    /**
+     * chat的attributes的key：instId
+     */
+    public static final String ATTR_CHAT_INST_ID_KEY = "instId";
+
+    /**
+     * business中的会话的sessionId的key
+     */
+    public static final String BS_CHAT_SESSION_ID_KEY = "chat_session_id";
+
+
     // *** aipp initial static meta items ***
     /**
      * aipp initial static meta items

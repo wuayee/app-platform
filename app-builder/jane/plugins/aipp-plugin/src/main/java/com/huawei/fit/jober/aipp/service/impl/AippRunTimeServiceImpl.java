@@ -4,6 +4,7 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
+import static com.huawei.fitframework.util.ObjectUtils.cast;
 import static com.huawei.fitframework.util.ObjectUtils.nullIf;
 
 import com.huawei.fit.dynamicform.DynamicFormService;
@@ -234,6 +235,30 @@ public class AippRunTimeServiceImpl
         return createInstanceHandle(initContext, context, meta);
     }
 
+    /**
+     * 启动一个运行Aipp
+     *
+     * @param appId appId
+     * @param question 会话问题
+     * @param businessData 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
+     * @param context 操作上下文
+     * @return 实例id
+     */
+    @Override
+    public String createInstanceByApp(String appId, String question, Map<String, Object> businessData,
+            OperationContext context) {
+        List<Meta> meta = MetaUtils.getAllMetasByAppId(metaService, appId, context);
+        if (CollectionUtils.isEmpty(meta)) {
+            throw new AippException(AippErrCode.APP_CHAT_PUBLISHED_META_NOT_FOUND);
+        }
+        String aippId = meta.get(0).getId();
+        List<Meta> allPublishedMeta = MetaUtils.getAllPublishedMeta(metaService, aippId, context);
+        if (CollectionUtils.isEmpty(allPublishedMeta)) {
+            throw new AippException(AippErrCode.APP_CHAT_PUBLISHED_META_NOT_FOUND);
+        }
+        return createInstanceHandle(question, businessData, allPublishedMeta.get(0), context);
+    }
+
     @Override
     public String startFlowWithUserSelectMemory(String metaInstId, Map<String, Object> initContext,
             OperationContext context) {
@@ -318,6 +343,63 @@ public class AippRunTimeServiceImpl
                     this.buildMemoryConfigDto(initContext, metaInstId, "UserSelect"));
         }
         return metaInstId;
+    }
+
+    private String createInstanceHandle(String question, Map<String, Object> businessData, Meta meta,
+            OperationContext context) {
+        businessData.put("startNodeInputParams", JSONObject.parse(JSONObject.toJSONString(businessData)));
+        businessData.put(AippConst.RESTART_MODE,
+                businessData.getOrDefault(AippConst.RESTART_MODE, RestartModeEnum.OVERWRITE.getMode()));
+        // 记录启动时间
+        businessData.put(AippConst.INSTANCE_START_TIME, LocalDateTime.now());
+
+        // 创建meta实例
+        Instance metaInst = this.metaInstanceService.createMetaInstance(meta.getVersionId(),
+                genMetaInstInitialInfo(businessData, context.getOperator()),
+                context);
+        AippRunTimeServiceImpl.setExtraBusinessData(context, businessData, meta, metaInst.getId());
+
+        // 添加instance对应的websocket session
+        this.aippStreamService.getSessionById(cast(businessData.get(AippConst.BS_CHAT_SESSION_ID_KEY)))
+                .ifPresent(session -> this.aippStreamService.addSession(metaInst.getId(), session));
+
+        // 持久化日志
+        businessData.put(AippConst.BS_AIPP_QUESTION_KEY, question);
+        this.persistAippLog(businessData);
+
+        // 添加文件记录标记, 使用aippId
+        uploadedFileManageService.addFileRecord(meta.getId(),
+                context.getW3Account(),
+                Paths.get(AippFileUtils.NAS_SHARE_DIR, metaInst.getId()).toAbsolutePath().toString());
+
+        // 持久化aipp实例表单记录
+        this.persistAippFormLog(meta, businessData);
+
+        // 记录上下文
+        this.recordContext(context, meta, businessData, metaInst);
+
+        // 添加memory
+        String flowDefinitionId = cast(meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY));
+        List<Map<String, Object>> memoryConfigs = this.getMemoryConfigs(flowDefinitionId, context);
+        String memoryType = this.getMemoryType(memoryConfigs);
+        // 是否使用memory
+        boolean isMemorySwitch = this.getMemorySwitch(memoryConfigs, businessData);
+        if (!isMemorySwitch) {
+            this.startFlow(meta.getVersionId(), flowDefinitionId, metaInst.getId(), businessData, context);
+            return metaInst.getId();
+        }
+        if (!StringUtils.equalsIgnoreCase("UserSelect", memoryType)) {
+            String chatId = ObjectUtils.cast(businessData.get("chatId"));
+            String aippType = ObjectUtils.cast(meta.getAttributes()
+                    .getOrDefault(AippConst.ATTR_AIPP_TYPE_KEY, AippTypeEnum.NORMAL.name()));
+            businessData.put(AippConst.BS_AIPP_MEMORIES_KEY,
+                    this.getMemories(meta.getId(), memoryType, chatId, memoryConfigs, aippType, businessData, context));
+            this.startFlow(meta.getVersionId(), flowDefinitionId, metaInst.getId(), businessData, context);
+        } else {
+            this.aippStreamService.sendToAncestor(metaInst.getId(),
+                    this.buildMemoryConfigDto(businessData, metaInst.getId(), "UserSelect"));
+        }
+        return metaInst.getId();
     }
 
     private void recordContext(OperationContext context, Meta meta, Map<String, Object> businessData,
