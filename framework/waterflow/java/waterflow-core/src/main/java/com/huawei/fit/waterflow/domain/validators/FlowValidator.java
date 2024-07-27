@@ -35,6 +35,7 @@ public class FlowValidator implements Validator {
      *
      * @param flowDefinition 流程定义实体
      */
+    @Override
     public void validate(FlowDefinition flowDefinition) {
         this.rules.forEach(rule -> rule.apply(flowDefinition));
     }
@@ -45,6 +46,7 @@ public class FlowValidator implements Validator {
      * @param offset 分页参数：偏移
      * @param limit 分页参数：条数
      */
+    @Override
     public void validatePagination(int offset, int limit) {
         if (offset < 0) {
             LOG.error("The offset of pagination out of range. Input offset is {}", offset);

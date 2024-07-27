@@ -21,6 +21,7 @@ public class StateNodeRule implements NodeRule {
      *
      * @param flowNode 流程节点
      */
+    @Override
     public void apply(FlowNode flowNode) {
         Validation.same(flowNode.getEvents().size(), EXPECT_EVENT_SIZE, exception("state node event size"));
         if (!flowNode.getTriggerMode().isAuto()) {

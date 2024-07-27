@@ -20,6 +20,7 @@ public class EndNodeRule implements NodeRule {
      *
      * @param flowNode 流程节点
      */
+    @Override
     public void apply(FlowNode flowNode) {
         validateEmpty(flowNode.getEvents(), "end node event size");
         validateNull(flowNode.getJober(), "end node jober can not be null");

@@ -29,6 +29,7 @@ public class ThresholdFilterRule implements FilterRule {
      *
      * @param flowFilter 流程过滤器
      */
+    @Override
     public void apply(FlowFilter flowFilter) {
         Validation.notNull(flowFilter.getFilterType(), exception("flow filter type"));
         String thresholdValue = flowFilter.getProperties().get(THRESHOLD);

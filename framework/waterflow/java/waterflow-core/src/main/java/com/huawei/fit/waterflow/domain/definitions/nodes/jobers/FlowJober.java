@@ -135,6 +135,15 @@ public abstract class FlowJober {
         Set<String> oldFitables = new HashSet<>(this.fitables);
         String oldEntity = this.getProperties().get(FlowJoberProperties.ENTITY.getValue());
 
+        doModifyJoberConfig(flowData);
+
+        Map<String, Object> oldJober = new HashMap<>();
+        oldJober.put(FlowGraphData.FITABLES, oldFitables);
+        oldJober.put(FlowJoberProperties.ENTITY.getValue(), oldEntity);
+        return oldJober;
+    }
+
+    private void doModifyJoberConfig(FlowData flowData) {
         Optional<JSONObject> jober = Optional.ofNullable(
                         ObjectUtils.<JSONObject>cast(flowData.getBusinessData().get(nodeMetaId)))
                 .map(json -> ObjectUtils.cast(json.get(FlowGraphData.JOBER)));
@@ -147,11 +156,6 @@ public abstract class FlowJober {
             jober.map(joberObject -> joberObject.getString(FlowJoberProperties.ENTITY.getValue()))
                     .ifPresent(entity -> this.properties.put(FlowJoberProperties.ENTITY.getValue(), entity));
         }
-
-        Map<String, Object> oldJober = new HashMap<>();
-        oldJober.put(FlowGraphData.FITABLES, oldFitables);
-        oldJober.put(FlowJoberProperties.ENTITY.getValue(), oldEntity);
-        return oldJober;
     }
 
     /**

@@ -21,6 +21,12 @@ public class ConvertConditionToRuleUtils {
 
     private static final String CONDITION_RELATION_KEY = "conditionRelation";
 
+    /**
+     * 将条件转换为规则
+     *
+     * @param jsonData 条件的json数据
+     * @return 转换后的规则表达式
+     */
     public static String convert(String jsonData) {
         JSONObject jsonObject = JSON.parseObject(jsonData);
         JSONArray conditions = jsonObject.getJSONArray(CONDITIONS_KEY);

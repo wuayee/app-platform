@@ -68,6 +68,11 @@ public abstract class ShapeHandler {
      */
     public abstract Map<String, Object> handleShape();
 
+    /**
+     * 获取元数据
+     *
+     * @return JSONObject 元数据
+     */
     protected JSONObject getMeta() {
         JSONObject flowMeta = this.shape.getJSONObject("flowMeta");
         if (Objects.isNull(flowMeta)) {

@@ -23,6 +23,7 @@ public class GeneralCallbackRule implements CallbackRule {
      *
      * @param flowCallback 流程节点回调函数
      */
+    @Override
     public void apply(FlowCallback flowCallback) {
         Validation.notNull(flowCallback.getType(), exception("flow callback type"));
         Validation.equals(GENERAL_CALLBACK, flowCallback.getType(), exception("flow callback type"));

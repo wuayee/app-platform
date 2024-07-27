@@ -31,14 +31,21 @@ public enum MappingNodeType {
     OBJECT("OBJECT"),
     ;
 
-    private String code;
-
     private static final Set<MappingNodeType> nestedTypes = new HashSet<>(Arrays.asList(ARRAY, OBJECT));
+
+    private String code;
 
     MappingNodeType(String code) {
         this.code = code;
     }
 
+    /**
+     * 根据code获取枚举值
+     *
+     * @param code 枚举值对应的code
+     * @return 枚举值
+     * @throws JobberParamException 当找不到对应的枚举值时抛出
+     */
     public static MappingNodeType get(String code) {
         return Arrays.stream(values())
                 .filter(value -> value.getCode().equals(code.toUpperCase(Locale.ROOT)))

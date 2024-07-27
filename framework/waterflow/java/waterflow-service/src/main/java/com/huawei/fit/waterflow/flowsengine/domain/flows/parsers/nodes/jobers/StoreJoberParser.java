@@ -12,6 +12,7 @@ import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jober
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowJoberProperties;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowJoberType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowGraphData;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -27,10 +28,19 @@ import java.util.stream.Collectors;
  * @since 2024/5/8
  */
 public class StoreJoberParser implements JoberParser {
+    /**
+     * 唯一名称的key
+     */
     public static final String UNIQUE_NAME = "uniqueName";
 
+    /**
+     * 参数的key
+     */
     public static final String PARAMS = "params";
 
+    /**
+     * 参数名称的key
+     */
     public static final String NAME = "name";
 
     @Override
@@ -46,7 +56,7 @@ public class StoreJoberParser implements JoberParser {
     private ServiceMeta getServiceMeta(Map<String, Object> config) {
         return ServiceMeta.builder()
                 .uniqueName(cast(config.get(UNIQUE_NAME)))
-                .params(((List<Map<String, Object>>) config.get(PARAMS)).stream()
+                .params((ObjectUtils.<List<Map<String, Object>>>cast(config.get(PARAMS))).stream()
                         .map(param -> (String) param.get(NAME))
                         .collect(Collectors.toList()))
                 .build();

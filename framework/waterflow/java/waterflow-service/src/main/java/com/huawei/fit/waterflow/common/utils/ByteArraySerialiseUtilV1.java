@@ -30,11 +30,11 @@ import java.util.Map;
 public class ByteArraySerialiseUtilV1 {
     private static final SerializeConfig SERIALIZE_CONFIG = new SerializeConfig();
 
+    private static final String PREFIX = "BYTE_BASE64:";
+
     static {
         SERIALIZE_CONFIG.put(byte[].class, new ByteArrayToHexStringSerializer());
     }
-
-    private static final String PREFIX = "BYTE_BASE64:";
 
     /**
      * getSerializeConfig

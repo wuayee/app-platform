@@ -32,14 +32,6 @@ import java.util.stream.Collectors;
 public class FlowGenericableJober extends FlowJober {
     private static final Logger LOG = Logger.get(FlowGenericableJober.class);
 
-    @Builder
-    @Getter
-    public static class GenericableConfig {
-        private String id;
-
-        private List<String> params;
-    }
-
     @Setter
     @Getter
     private GenericableConfig genericableConfig;
@@ -78,5 +70,19 @@ public class FlowGenericableJober extends FlowJober {
     private List<Object> getArgs(Map<String, Object> input) {
         Map<String, Object> businessData = cast(input.get(Constant.BUSINESS_DATA_KEY));
         return genericableConfig.params.stream().map(businessData::get).collect(Collectors.toList());
+    }
+
+    /**
+     * genericable的配置信息
+     *
+     * @author s00558940
+     * @since 2024/4/22
+     */
+    @Builder
+    @Getter
+    public static class GenericableConfig {
+        private String id;
+
+        private List<String> params;
     }
 }

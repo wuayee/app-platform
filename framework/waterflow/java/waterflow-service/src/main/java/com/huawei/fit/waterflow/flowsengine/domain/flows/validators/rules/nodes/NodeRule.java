@@ -22,6 +22,7 @@ public interface NodeRule extends Rules {
      * MINIMUM_EVENT_SIZE
      */
     int MINIMUM_EVENT_SIZE = 2;
+
     /**
      * EXPECT_EVENT_SIZE
      */

@@ -193,6 +193,31 @@ public class FlowGraphData {
                 .collect(Collectors.toList()), initEvents);
     }
 
+    private static String getCallbackName(JSONObject flowCallback) {
+        return flowCallback.getString(NAME);
+    }
+
+    private static Optional<String> getCallbackType(JSONObject flowCallback) {
+        return Optional.ofNullable(flowCallback)
+                .flatMap(callbackJson -> Optional.ofNullable(callbackJson.getString(TYPE)))
+                .map(callbackType -> callbackType.toUpperCase(ROOT));
+    }
+
+    private static Map<String, String> getCallbackProperties(JSONObject flowCallback) {
+        Map<String, String> properties = new HashMap<>();
+        flowCallback.entrySet()
+                .stream()
+                .filter(entity -> !Objects.equals(entity.getKey(), NAME))
+                .filter(entity -> !Objects.equals(entity.getKey(), TYPE))
+                .filter(entity -> !Objects.equals(entity.getKey(), FITABLES))
+                .forEach(entity -> properties.put(entity.getKey(), entity.getValue().toString()));
+        return properties;
+    }
+
+    private static JSONObject getJsonObjectConverter(JSONObject flowCallback) {
+        return flowCallback.getJSONObject(CONVERTER);
+    }
+
     /**
      * 获取流程定义的名称
      *
@@ -261,7 +286,6 @@ public class FlowGraphData {
         return properties;
     }
 
-    /** 流程定义中流程节点json数据获取方式 */
     /**
      * 获取流程定义的节点数量
      *
@@ -532,10 +556,6 @@ public class FlowGraphData {
         return getCallbackName(getFlowCallback());
     }
 
-    private static String getCallbackName(JSONObject flowCallback) {
-        return flowCallback.getString(NAME);
-    }
-
     /**
      * 获取流程定义节点回调函数类型
      *
@@ -553,12 +573,6 @@ public class FlowGraphData {
      */
     public Optional<String> getFlowCallbackType() {
         return getCallbackType(getFlowCallback());
-    }
-
-    private static Optional<String> getCallbackType(JSONObject flowCallback) {
-        return Optional.ofNullable(flowCallback)
-                .flatMap(callbackJson -> Optional.ofNullable(callbackJson.getString(TYPE)))
-                .map(callbackType -> callbackType.toUpperCase(ROOT));
     }
 
     /**
@@ -627,17 +641,6 @@ public class FlowGraphData {
         return getCallbackProperties(getFlowCallback());
     }
 
-    private static Map<String, String> getCallbackProperties(JSONObject flowCallback) {
-        Map<String, String> properties = new HashMap<>();
-        flowCallback.entrySet()
-                .stream()
-                .filter(entity -> !Objects.equals(entity.getKey(), NAME))
-                .filter(entity -> !Objects.equals(entity.getKey(), TYPE))
-                .filter(entity -> !Objects.equals(entity.getKey(), FITABLES))
-                .forEach(entity -> properties.put(entity.getKey(), entity.getValue().toString()));
-        return properties;
-    }
-
     /**
      * 获取流程节点callback上的converter配置
      *
@@ -657,11 +660,6 @@ public class FlowGraphData {
         return getJsonObjectConverter(getFlowCallback());
     }
 
-    private static JSONObject getJsonObjectConverter(JSONObject flowCallback) {
-        return flowCallback.getJSONObject(CONVERTER);
-    }
-
-    /** 流程定义中流程事件json数据获取方式 */
     /**
      * 获取流程定义的事件数量
      *
@@ -811,12 +809,8 @@ public class FlowGraphData {
     }
 
     private int sortByFromConnector(JSONObject event1, JSONObject event2) {
-        String fromConnector1 = Optional.ofNullable(event1.get("fromConnector"))
-                .orElse("-1")
-                .toString();
-        String fromConnector2 = Optional.ofNullable(event2.get("fromConnector"))
-                .orElse("-1")
-                .toString();
+        String fromConnector1 = Optional.ofNullable(event1.get("fromConnector")).orElse("-1").toString();
+        String fromConnector2 = Optional.ofNullable(event2.get("fromConnector")).orElse("-1").toString();
         return Integer.compare(extractNumberFromFromConnector(fromConnector1),
                 extractNumberFromFromConnector(fromConnector2));
     }

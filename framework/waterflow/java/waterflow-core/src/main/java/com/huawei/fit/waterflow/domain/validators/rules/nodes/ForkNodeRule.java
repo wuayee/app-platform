@@ -20,6 +20,7 @@ public class ForkNodeRule implements NodeRule {
      *
      * @param flowNode 流程节点
      */
+    @Override
     public void apply(FlowNode flowNode) {
         validateEmpty(flowNode.getEvents(), "fork node event size");
     }
