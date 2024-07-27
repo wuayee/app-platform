@@ -442,6 +442,7 @@ const ChatPreview = (props) => {
                 onSend={onSend}
                 onStop={chatRunningStop}
                 filterRef={editorRef}
+                chatType={chatType}
                 inspirationOpen={inspirationOpen} />
             }
           </div>
