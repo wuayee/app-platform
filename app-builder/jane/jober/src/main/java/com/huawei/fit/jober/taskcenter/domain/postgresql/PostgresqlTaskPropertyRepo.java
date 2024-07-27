@@ -43,6 +43,7 @@ import com.huawei.fitframework.plugin.Plugin;
 import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.LazyLoader;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.fitframework.util.TypeUtils;
 
@@ -192,11 +193,11 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
     private boolean hasInstances(String taskId) {
         String sql = "SELECT COUNT(1) FROM \"task_instance_wide\" WHERE \"task_id\" = ?";
         List<Object> args = Collections.singletonList(taskId);
-        System.out.println("===== has instances =====");
-        System.out.println("sql: " + sql);
-        System.out.println("args: " + args);
+        log.info("===== has instances =====");
+        log.info("sql: {}", sql);
+        log.info("args: {}", args);
         Object count = this.executor.executeScalar(sql, args);
-        return ((Number) count).longValue() > 0;
+        return (ObjectUtils.<Number>cast(count)).longValue() > 0;
     }
 
     private String serializeAppearance(Map<String, Object> appearance) {
@@ -228,6 +229,12 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
                 .build();
     }
 
+    /**
+     * 获取属性类目
+     *
+     * @param propertyId 表示属性id的{@link String}
+     * @return 属性类目匹配器
+     */
     protected List<PropertyCategory> getCategories(String propertyId) {
         Map<String, List<PropertyCategory>> categories = this.getCategories(Collections.singletonList(propertyId));
         return nullIf(categories.get(propertyId), Collections.emptyList());
@@ -237,6 +244,13 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
         return categoryService.matchers(propertyIds);
     }
 
+    /**
+     * 保存类目
+     *
+     * @param propertyId propertyId 表示属性id的{@link String}
+     * @param categories 表示属性类目声明的{@link List}{@code <}{@link PropertyCategoryDeclaration}{@code >}
+     * @return 属性类目匹配器
+     */
     protected List<PropertyCategory> saveCategories(String propertyId,
             List<PropertyCategoryDeclaration> categories) {
         Map<String, List<PropertyCategoryDeclaration>> values = Collections.singletonMap(propertyId, categories);
@@ -291,10 +305,21 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
             return this.taskId;
         }
 
+        /**
+         * 获得行
+         *
+         * @return 返回行数据
+         */
         protected final List<Row> rows() {
             return this.rows.get();
         }
 
+        /**
+         * 获得指定属性id的行
+         *
+         * @param propertyId 表示属性ID的{@link String}
+         * @return 返回对应id的行
+         */
         protected final Row row(String propertyId) {
             return this.rows().stream()
                     .filter(row -> StringUtils.equalsIgnoreCase(row.id(), propertyId))
@@ -302,18 +327,40 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
                     .orElse(null);
         }
 
+        /**
+         * 获取任务模板属性
+         *
+         * @return 返回任务模板属性列表
+         */
         protected final List<TaskTemplateProperty> templates() {
             return this.templates.get();
         }
 
+        /**
+         * 是否存在实例
+         *
+         * @return 返回是否存在instance
+         */
         protected final boolean hasInstances() {
             return this.hasInstances.get();
         }
 
+        /**
+         * 获得给定数据类型的序列的长度
+         *
+         * @param dataType 表示数据类型的{@link PropertyDataType}
+         * @return 返回序列长度
+         */
         protected int nextSequence(PropertyDataType dataType) {
             return this.nextSequence(Enums.toString(dataType));
         }
 
+        /**
+         * 获得给定数据类型的序列的长度
+         *
+         * @param dataType 表示数据类型的{@link String}
+         * @return 返回序列长度
+         */
         protected int nextSequence(String dataType) {
             List<Integer> rowSequences = this.rows()
                     .stream()
@@ -334,17 +381,20 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
             return SequenceUtils.getSequenceFromList(sequences);
         }
 
+        /**
+         * 发布事件
+         *
+         * @param event 表示待发布的事件的{@link Event}
+         */
         protected void publishEvent(Event event) {
             plugin.publisherOfEvents().publishEvent(event);
         }
     }
 
     private class Creator extends AbstractOperation {
-        private final TaskProperty.Declaration declaration;
-
-        private String templateId = Entities.emptyId();
-
         TaskTemplateProperty templateProperty = null;
+        private final TaskProperty.Declaration declaration;
+        private String templateId = Entities.emptyId();
 
         Creator(String taskId, TaskProperty.Declaration declaration, OperationContext context) {
             super(taskId, context);
@@ -435,7 +485,8 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
             boolean value = this.declaration.required().withDefault(false);
             if (value && this.hasInstances()) {
                 log.error(
-                        "Cannot add a property which is required when the owning task has instances. [taskId={}, propertyName={}]",
+                        "Cannot add a property which is required when the owning task has instances. "
+                                + "[taskId={}, propertyName={}]",
                         this.taskId(), row.name());
                 throw new ConflictException(ErrorCodes.NEW_PROPERTY_REQUIRED_WITH_INSTANCES);
             }
@@ -462,15 +513,11 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
     }
 
     private class Patcher extends AbstractOperation {
-        private final String propertyId;
-
-        private final TaskProperty.Declaration declaration;
-
-        private Row property;
-
-        private String templateId = Entities.emptyId();
-
         TaskTemplateProperty templateProperty = null;
+        private final String propertyId;
+        private final TaskProperty.Declaration declaration;
+        private Row property;
+        private String templateId = Entities.emptyId();
 
         private Patcher(String taskId, String propertyId, TaskProperty.Declaration declaration,
                 OperationContext context) {
@@ -568,7 +615,8 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
                 test = test.and(property -> !StringUtils.equalsIgnoreCase(property.id(), this.property.id()));
                 if (this.rows().stream().anyMatch(test)) {
                     log.error(
-                            "A property with the same name already exists in the same task. [taskId={}, propertyId={}, propertyName={}]",
+                            "A property with the same name already exists in the same task. "
+                                    + "[taskId={}, propertyId={}, propertyName={}]",
                             this.property.taskId(), this.property.id(), actual);
                     throw new ConflictException(ErrorCodes.TASK_PROPERTY_NAME_EXIST);
                 }
@@ -587,7 +635,8 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
                 PropertyDataType currentDataType = Enums.parse(PropertyDataType.class, this.property.dataType());
                 if (actualDataType != currentDataType && this.hasInstances()) {
                     log.error(
-                            "Cannot modify data type of property when owning task has instances. [taskId={}, propertyName={}]",
+                            "Cannot modify data type of property when owning task has instances. "
+                                    + "[taskId={}, propertyName={}]",
                             this.property.taskId(), this.property.name());
                     throw new ConflictException(ErrorCodes.PROPERTY_CANNOT_BE_MODIFIED_WITH_INSTANCES);
                 }
@@ -625,31 +674,33 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
 
         private void acceptRequired(Row row, UpdateSql sql) {
             this.declaration.required().ifDefined(required -> {
-                boolean actual = nullIf(required, false);
-                boolean current = nullIf(this.property.required(), false);
-                if (!current && actual && this.hasInstances()) {
+                boolean isActualTrue = nullIf(required, false);
+                boolean isCurrentTrue = nullIf(this.property.required(), false);
+                if (!isCurrentTrue && isActualTrue && this.hasInstances()) {
                     log.error(
-                            "Cannot modify property to required when owning task has instances. [taskId={}, propertyName={}]",
+                            "Cannot modify property to required when owning task has instances. "
+                                    + "[taskId={}, propertyName={}]",
                             this.property.taskId(), this.property.name());
                     throw new ConflictException(ErrorCodes.PROPERTY_CANNOT_BE_MODIFIED_WITH_INSTANCES);
                 }
-                sql.set(Row.COLUMN_REQUIRED, actual);
-                row.required(actual);
+                sql.set(Row.COLUMN_REQUIRED, isActualTrue);
+                row.required(isActualTrue);
             });
         }
 
         private void acceptIdentifiable(Row row, UpdateSql sql) {
             this.declaration.identifiable().ifDefined(identifiable -> {
-                boolean actual = nullIf(identifiable, false);
-                boolean current = nullIf(this.property.identifiable(), false);
-                if (!current && actual && this.hasInstances()) {
+                boolean isActualTrue = nullIf(identifiable, false);
+                boolean isCurrentTrue = nullIf(this.property.identifiable(), false);
+                if (!isCurrentTrue && isActualTrue && this.hasInstances()) {
                     log.error(
-                            "Cannot modify identifiable of property when owning task has instances. [taskId={}, propertyName={}]",
+                            "Cannot modify identifiable of property when owning task has instances. "
+                                    + "[taskId={}, propertyName={}]",
                             this.property.taskId(), this.property.name());
                     throw new ConflictException(ErrorCodes.PROPERTY_CANNOT_BE_MODIFIED_WITH_INSTANCES);
                 }
-                sql.set(Row.COLUMN_IDENTIFIABLE, actual);
-                row.identifiable(actual);
+                sql.set(Row.COLUMN_IDENTIFIABLE, isActualTrue);
+                row.identifiable(isActualTrue);
             });
         }
 
@@ -758,8 +809,8 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
             return cast(this.values.get(COLUMN_REQUIRED));
         }
 
-        void required(Boolean required) {
-            this.values.put(COLUMN_REQUIRED, required);
+        void required(Boolean isRequired) {
+            this.values.put(COLUMN_REQUIRED, isRequired);
         }
 
         String description() {
@@ -815,8 +866,8 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
             return cast(this.values.get(COLUMN_IDENTIFIABLE));
         }
 
-        void identifiable(Boolean identifiable) {
-            this.values.put(COLUMN_IDENTIFIABLE, identifiable);
+        void identifiable(Boolean isIdentifiable) {
+            this.values.put(COLUMN_IDENTIFIABLE, isIdentifiable);
         }
 
         List<PropertyCategory> categories() {
@@ -848,11 +899,11 @@ public class PostgresqlTaskPropertyRepo implements TaskProperty.Repo {
             List<Map<String, Object>> rows = executor.executeQuery(sql, args);
 
             return rows.stream().map(row -> TaskTemplateProperty.custom()
-                    .taskTemplateId((String) row.get("task_template_id"))
-                    .name((String) row.get("name"))
-                    .sequence((int) row.get("sequence"))
-                    .id((String) row.get("id"))
-                    .dataType(Enums.parse(PropertyDataType.class, (String) row.get("data_type")))
+                    .taskTemplateId(ObjectUtils.cast(row.get("task_template_id")))
+                    .name(ObjectUtils.cast(row.get("name")))
+                    .sequence(ObjectUtils.cast(row.get("sequence")))
+                    .id(ObjectUtils.cast(row.get("id")))
+                    .dataType(Enums.parse(PropertyDataType.class, ObjectUtils.cast(row.get("data_type"))))
                     .build()).collect(Collectors.toList());
         }
 

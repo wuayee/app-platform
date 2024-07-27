@@ -48,6 +48,7 @@ import com.huawei.fitframework.plugin.Plugin;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.FunctionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -528,8 +529,8 @@ public class PostgresqlIndexRepo implements Index.Repo {
                     .append(" WHERE ").appendIdentifier(COLUMN_INDEX_ID).append(" IN (")
                     .appendRepeatedly("?, ", indexIds.size()).backspace(2).append(')');
             List<Map<String, Object>> raws = executor.executeQuery(sql.toString(), new ArrayList<>(indexIds));
-            return raws.stream().collect(groupingBy(row -> (String) row.get(COLUMN_INDEX_ID),
-                    mapping(row -> (String) row.get(COLUMN_PROPERTY_ID), toList())));
+            return raws.stream().collect(groupingBy(row -> ObjectUtils.<String>cast(row.get(COLUMN_INDEX_ID)),
+                    mapping(row -> ObjectUtils.<String>cast(row.get(COLUMN_PROPERTY_ID)), toList())));
         }
 
         static Row create(String taskId, String name, String operator, LocalDateTime operationTime) {
@@ -680,9 +681,20 @@ public class PostgresqlIndexRepo implements Index.Repo {
         return indexes;
     }
 
-    public static abstract class AbstractPropertyEventHandler {
+    /**
+     * 属性事件处理抽象类
+     */
+    public abstract static class AbstractPropertyEventHandler {
+        /**
+         * 表示动态SQL语句执行器的{@link DynamicSqlExecutor}
+         */
         protected final DynamicSqlExecutor executor;
 
+        /**
+         * 属性事件处理抽象类
+         *
+         * @param executor 表示动态SQL语句执行器的{@link DynamicSqlExecutor}
+         */
         public AbstractPropertyEventHandler(DynamicSqlExecutor executor) {
             this.executor = executor;
         }
@@ -757,6 +769,7 @@ public class PostgresqlIndexRepo implements Index.Repo {
          * 从所有索引定义中删除指定属性，如果删除该属性后的索引中不再包含其他属性，则同时删除索引。
          *
          * @param property 表示待删除索引数据的属性的 {@link TaskProperty}。
+         * @return boolean
          */
         protected boolean unindexProperty(TaskProperty property) {
             SqlBuilder sql = SqlBuilder.custom().append("SELECT ").appendIdentifier(PropertyRow.COLUMN_INDEX_ID)
@@ -787,6 +800,9 @@ public class PostgresqlIndexRepo implements Index.Repo {
         }
     }
 
+    /**
+     * 索引事件处理器
+     */
     @Component
     public static class IndexedEventHandler extends AbstractPropertyEventHandler
             implements EventHandler<TaskPropertyIndexedEvent> {
@@ -801,6 +817,9 @@ public class PostgresqlIndexRepo implements Index.Repo {
         }
     }
 
+    /**
+     * 未索引事件处理器
+     */
     @Component
     public static class UnindexedEventHandler extends AbstractPropertyEventHandler
             implements EventHandler<TaskPropertyUnindexedEvent> {
@@ -817,7 +836,8 @@ public class PostgresqlIndexRepo implements Index.Repo {
 
     /**
      * 处理 {@link TaskPropertyModifyingEvent} 事件。
-     * <p>如果修改前属性已被用作索引，但是修改后的数据类型将不再支持索引，则将从索引中删除该属性。如果删除属性后，索引中不再包含其他属性，则同时删除索引。</p>
+     * <p>如果修改前属性已被用作索引，但是修改后的数据类型将不再支持索引，则将从索引中删除该属性。
+     * 如果删除属性后，索引中不再包含其他属性，则同时删除索引。</p>
      *
      * @author 梁济时 l00815032
      * @since 2024-01-31
@@ -829,6 +849,13 @@ public class PostgresqlIndexRepo implements Index.Repo {
 
         private final TaskService taskService;
 
+        /**
+         * 属性修改事件处理器
+         *
+         * @param executor 表示动态SQL语句执行器的{@link DynamicSqlExecutor}
+         * @param plugin 表示插件定义的{@link Plugin}
+         * @param taskService 表示任务管理服务的{@link TaskService}
+         */
         public PropertyModifyingEventHandler(DynamicSqlExecutor executor, Plugin plugin, TaskService taskService) {
             super(executor);
             this.plugin = plugin;
@@ -906,6 +933,13 @@ public class PostgresqlIndexRepo implements Index.Repo {
 
         private final TaskService taskService;
 
+        /**
+         * 属性删除事件处理器
+         *
+         * @param executor 表示动态SQL语句执行器的{@link DynamicSqlExecutor}
+         * @param plugin 表示插件定义的{@link Plugin}
+         * @param taskService 表示任务管理服务的{@link TaskService}
+         */
         public PropertyDeletingEventHandler(DynamicSqlExecutor executor, Plugin plugin,
                 TaskService taskService) {
             super(executor);

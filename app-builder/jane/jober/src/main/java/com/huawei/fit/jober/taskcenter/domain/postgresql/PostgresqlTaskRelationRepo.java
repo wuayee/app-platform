@@ -31,6 +31,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.model.RangedResultSet;
 import com.huawei.fitframework.transaction.Transactional;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.sql.Timestamp;
@@ -158,7 +159,7 @@ public class PostgresqlTaskRelationRepo implements TaskRelation.Repo {
         List<TaskRelation> taskRelations = rows.stream()
                 .map(values -> convert(new Row(values), Dates::fromUtc))
                 .collect(Collectors.toList());
-        long total = ((Number) this.executor.executeScalar(countSql.toString(), args)).longValue();
+        long total = (ObjectUtils.<Number>cast(this.executor.executeScalar(countSql.toString(), args))).longValue();
         return RangedResultSet.create(taskRelations, (int) offset, limit, (int) total);
     }
 
