@@ -141,7 +141,7 @@ public abstract class AbstractInvokeClient implements InvokeClient {
         ConnectionBuilder builder = ConnectionBuilderFactory.getConnectionBuilder(Protocol.from(request.protocol()));
         String url = builder.buildUrl(request);
         HttpClassicClientRequest clientRequest = client.createRequest(HttpRequestMethod.POST, url);
-        HttpClientUtils.FillBaseHeaders(clientRequest, request, this.workerConfig);
+        HttpClientUtils.fillBaseHeaders(clientRequest, request, this.workerConfig);
         return clientRequest;
     }
 

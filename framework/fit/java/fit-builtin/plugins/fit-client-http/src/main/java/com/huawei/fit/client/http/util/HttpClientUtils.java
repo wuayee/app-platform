@@ -77,7 +77,7 @@ public class HttpClientUtils {
      * @param request 表示 Http 请求信息的 {@link Request}。
      * @param workerConfig 表示当前进程配置信息的 {@link WorkerConfig}。
      */
-    public static void FillBaseHeaders(HttpClassicClientRequest clientRequest, Request request,
+    public static void fillBaseHeaders(HttpClassicClientRequest clientRequest, Request request,
             WorkerConfig workerConfig) {
         TagLengthValues tagLengthValues = request.metadata().tagValues();
         TlvUtils.setWorkerId(tagLengthValues, workerConfig.id());

@@ -13,6 +13,7 @@ import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.MapUtils;
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.ReflectionUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -26,9 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalInt;
-import java.util.Stack;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 表示 {@link JsonSchema} 的对象实现。
@@ -119,7 +118,7 @@ public class ObjectSchema extends AbstractJsonSchema {
     private void generateProperties(Class<?> clazz, Type[] actualTypeArguments, String referencedPrefix,
             Map<Type, ObjectSchema> referencedSchemas) {
         TypeVariable<?>[] typeVariables = clazz.getTypeParameters();
-        for (Field field : getDeclaredFields(clazz)) {
+        for (Field field : ReflectionUtils.getDeclaredFields(clazz, true)) {
             Type actualFieldType;
             Type fieldType = field.getGenericType();
             if (fieldType instanceof TypeVariable && actualTypeArguments != null) {
@@ -151,22 +150,6 @@ public class ObjectSchema extends AbstractJsonSchema {
             this.addSchema(new DecoratedSchema(field.getName(), propertyDescription, defaultValue, fieldSchema),
                     isRequired);
         }
-    }
-
-    private static List<Field> getDeclaredFields(Class<?> clazz) {
-        List<Field> fields = new ArrayList<>();
-        Stack<Class<?>> classes = new Stack<>();
-        classes.push(clazz);
-        Class<?> actualClass = clazz;
-        while (actualClass.getSuperclass() != null) {
-            actualClass = actualClass.getSuperclass();
-            classes.push(actualClass);
-        }
-        while (!classes.isEmpty()) {
-            Class<?> current = classes.pop();
-            Stream.of(current.getDeclaredFields()).filter(Objects::nonNull).forEach(fields::add);
-        }
-        return fields;
     }
 
     private static OptionalInt findTypeVariableIndex(TypeVariable<?> typeVariable, TypeVariable<?>[] typeVariables) {

@@ -209,10 +209,11 @@ public final class ReflectionUtils {
             return clazz.getDeclaredFields();
         }
         List<Field> fields = new ArrayList<>();
-        while (clazz != null) {
-            Field[] currentFields = clazz.getDeclaredFields();
+        Class<?> actualClass = clazz;
+        while (actualClass != null) {
+            Field[] currentFields = actualClass.getDeclaredFields();
             fields.addAll(Arrays.asList(currentFields));
-            clazz = clazz.getSuperclass();
+            actualClass = actualClass.getSuperclass();
         }
         return fields.toArray(new Field[0]);
     }
