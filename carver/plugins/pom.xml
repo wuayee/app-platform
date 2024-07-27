@@ -19,5 +19,6 @@
         <module>tool-eco-llamaindex</module>
         <module>tool-execution</module>
         <module>tool-repository-postgresql</module>
+        <module>telemetry-span-exporter-container</module>
     </modules>
 </project>

@@ -14,7 +14,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>tool-service</module>
         <module>common-service</module>
+        <module>telemetry-service</module>
+        <module>tool-service</module>
     </modules>
 </project>
