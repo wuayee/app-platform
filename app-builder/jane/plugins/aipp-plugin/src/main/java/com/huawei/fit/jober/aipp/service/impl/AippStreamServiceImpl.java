@@ -12,6 +12,8 @@ import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -26,6 +28,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class AippStreamServiceImpl implements AippStreamService {
     private final Map<String, Session> sessions = new ConcurrentHashMap<>();
+
+    private final Map<String, Session> idToSessions = new ConcurrentHashMap<>();
+
+    private final Map<String, List<String>> sessionIdToInstId = new ConcurrentHashMap<>();
+
     private final AippLogService logService;
 
     public AippStreamServiceImpl(AippLogService logService) {
@@ -35,22 +42,30 @@ public class AippStreamServiceImpl implements AippStreamService {
     @Override
     public void addSession(String instanceId, Session session) {
         this.sessions.put(instanceId, session);
+        this.sessionIdToInstId.computeIfAbsent(session.getId(), k -> new ArrayList<>()).add(instanceId);
+    }
+
+    @Override
+    public void addSession(Session session) {
+        this.idToSessions.put(session.getId(), session);
     }
 
     @Override
     public void removeSession(Session session) {
         // 保证原子性.
-        this.sessions.replaceAll((s, ss) -> {
-            if (ss.getId().equals(session.getId())) {
-                return null;
-            }
-            return ss;
-        });
+        this.sessionIdToInstId.getOrDefault(session.getId(), new ArrayList<>()).forEach(this.sessions::remove);
+        this.sessionIdToInstId.remove(session.getId());
+        this.idToSessions.remove(session.getId(), session);
     }
 
     @Override
     public Optional<Session> getSession(String instanceId) {
         return Optional.ofNullable(this.sessions.get(instanceId));
+    }
+
+    @Override
+    public Optional<Session> getSessionById(String sessionId) {
+        return Optional.ofNullable(this.idToSessions.get(sessionId));
     }
 
     @Override

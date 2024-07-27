@@ -47,6 +47,18 @@ public interface AippRunTimeService {
     String createAippInstance(String aippId, String version, Map<String, Object> initContext, OperationContext context);
 
     /**
+     * 指定版本启动一个App
+     *
+     * @param appId appId
+     * @param question 对话提问
+     * @param businessData 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
+     * @param context 操作上下文
+     * @return 实例id
+     */
+    String createInstanceByApp(String appId, String question, Map<String, Object> businessData,
+            OperationContext context);
+
+    /**
      * 指定版本，启动一个流程
      *
      * @param metaInstId 实例id

@@ -242,6 +242,16 @@ public enum AippErrCode implements ErrorCode {
     INVALID_VERSION_NAME(90002916, "不合法的版本名称。"),
 
     /**
+     * 会话请求结构有误
+     */
+    APP_CHAT_REQUEST_IS_NULL(90002918, "会话请求结构有误。"),
+
+    /**
+     * 无法使用未发布的应用对话
+     */
+    APP_CHAT_PUBLISHED_META_NOT_FOUND(90002919, "该应用未发布，无法进行对话。"),
+
+    /**
      * 名称格式不对
      */
     APP_NAME_IS_INVALID(90002917, "名称只能包含中英文、数字、中划线（-）和下划线(_)，并且不能以中划线、下划线开头。"),
