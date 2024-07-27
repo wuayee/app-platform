@@ -43,7 +43,7 @@ public class DefaultHttpConfig implements HttpConfig {
     /**
      * 配置项：{@code 'large-body-size'}，默认值为 8192。
      */
-    private long largeBodySize = 8192;
+    private long largeBodySize = 8192L;
 
     /**
      * 设置端口是否打开的标志。

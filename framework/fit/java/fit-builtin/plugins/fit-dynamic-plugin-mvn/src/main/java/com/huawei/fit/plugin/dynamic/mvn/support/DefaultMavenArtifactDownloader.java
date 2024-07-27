@@ -31,6 +31,7 @@ import java.nio.file.Files;
 @Component
 public class DefaultMavenArtifactDownloader implements MavenArtifactDownloader {
     private static final char SEPARATOR_URL = '/';
+
     private final HttpClassicClientFactory factory;
     private final String url;
     private final File root;

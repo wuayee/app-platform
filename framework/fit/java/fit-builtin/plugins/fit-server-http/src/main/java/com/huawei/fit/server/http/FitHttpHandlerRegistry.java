@@ -39,6 +39,7 @@ public class FitHttpHandlerRegistry {
      * @param container 表示 Bean 容器的 {@link BeanContainer}。
      * @param repository 表示本地服务仓的 {@link LocalGenericableRepository}。
      * @param contextPath 表示 Http 请求前缀的 {@link String}。
+     * @param worker 表示本地进程配置的 {@link WorkerConfig}。
      */
     public FitHttpHandlerRegistry(HttpClassicServer httpServer, Dispatcher dispatcher, BeanContainer container,
             LocalGenericableRepository repository, @Value("${server.http.context-path}") String contextPath,
