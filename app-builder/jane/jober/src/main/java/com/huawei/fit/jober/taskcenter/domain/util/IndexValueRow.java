@@ -32,15 +32,26 @@ import java.util.stream.Collectors;
  * @since 2024-02-07
  */
 public class IndexValueRow {
-    private static final Logger log = Logger.get(IndexValueRow.class);
-
+    /**
+     * id列
+     */
     public static final String COLUMN_ID = "id";
 
+    /**
+     * instance_id列
+     */
     public static final String COLUMN_INSTANCE_ID = "instance_id";
 
+    /**
+     * property_id列
+     */
     public static final String COLUMN_PROPERTY_ID = "property_id";
 
+    /**
+     * value列
+     */
     public static final String COLUMN_VALUE = "value";
+    private static final Logger log = Logger.get(IndexValueRow.class);
 
     private final Map<String, Object> values;
 
@@ -48,6 +59,11 @@ public class IndexValueRow {
         this(null);
     }
 
+    /**
+     * IndexValueRow构造函数
+     *
+     * @param values 索引数据行
+     */
     public IndexValueRow(Map<String, Object> values) {
         if (values == null) {
             this.values = new HashMap<>(4);
@@ -56,38 +72,86 @@ public class IndexValueRow {
         }
     }
 
+    /**
+     * 获得id列的值
+     *
+     * @return 返回id列的值
+     */
     public String id() {
         return cast(this.values.get(COLUMN_ID));
     }
 
+    /**
+     * 设置id列的值
+     *
+     * @param id 表示id的{@link String}
+     */
     public void id(String id) {
         this.values.put(COLUMN_ID, id);
     }
 
+    /**
+     * 获得instance_id列的值
+     *
+     * @return instance_id列的值
+     */
     public String instanceId() {
         return cast(this.values.get(COLUMN_INSTANCE_ID));
     }
 
+    /**
+     * 设置instance_id列的值
+     *
+     * @param instanceId 表示实例id的{@link String}
+     */
     public void instanceId(String instanceId) {
         this.values.put(COLUMN_INSTANCE_ID, instanceId);
     }
 
+    /**
+     * 获得property_id列的值
+     *
+     * @return property_id列的值
+     */
     public String propertyId() {
         return cast(this.values.get(COLUMN_PROPERTY_ID));
     }
 
+    /**
+     * 设置property_id列的值
+     *
+     * @param propertyId 表示属性id的{@link String}
+     */
     public void propertyId(String propertyId) {
         this.values.put(COLUMN_PROPERTY_ID, propertyId);
     }
 
+    /**
+     * 获得value列的值
+     *
+     * @return value列的值
+     */
     public Object value() {
         return this.values.get(COLUMN_VALUE);
     }
 
+    /**
+     * 设置value列的值
+     *
+     * @param value 表示值的{@link Object}
+     */
     public void value(Object value) {
         this.values.put(COLUMN_VALUE, value);
     }
 
+    /**
+     * 创建索引数据行
+     *
+     * @param instanceId 表示实例id的{@link String}
+     * @param propertyId 表示属性id的{@link String}
+     * @param value 表示值的{@link Object}
+     * @return 索引数据行
+     */
     public static IndexValueRow create(String instanceId, String propertyId, Object value) {
         IndexValueRow row = new IndexValueRow();
         row.id(Entities.generateId());
@@ -97,6 +161,13 @@ public class IndexValueRow {
         return row;
     }
 
+    /**
+     * 向表中插入索引数据行
+     *
+     * @param executor 表示SQL执行器的{@link DynamicSqlExecutor}
+     * @param table 表示待插入数据表的{@link String}
+     * @param rows 表示待插入的索引数据行的集合的{@link Collection}{@code <}{@link IndexValueRow}{@code >}
+     */
     public static void insert(DynamicSqlExecutor executor, String table, Collection<IndexValueRow> rows) {
         if (CollectionUtils.isEmpty(rows)) {
             return;
@@ -115,6 +186,13 @@ public class IndexValueRow {
         }
     }
 
+    /**
+     * 向表中更新索引数据行
+     *
+     * @param executor 表示SQL执行器的{@link DynamicSqlExecutor}
+     * @param table 表示待更新数据表的{@link String}
+     * @param rows 表示待更新的索引数据行的集合的{@link Collection}{@code <}{@link IndexValueRow}{@code >}
+     */
     public static void update(DynamicSqlExecutor executor, String table, Collection<IndexValueRow> rows) {
         if (CollectionUtils.isEmpty(rows)) {
             return;
@@ -138,6 +216,15 @@ public class IndexValueRow {
         }
     }
 
+    /**
+     * 向表中选择索引数据行
+     *
+     * @param executor 表示SQL执行器的{@link DynamicSqlExecutor}
+     * @param table 表示待插入数据表的{@link String}
+     * @param instanceId 表示实例id的{@link String}
+     * @param propertyIds 表示属性id的集合的{@link Collection}{@code <}{@link String}{@code >}
+     * @return 索引数据行列表
+     */
     public static List<IndexValueRow> select(DynamicSqlExecutor executor, String table, String instanceId,
             Collection<String> propertyIds) {
         SqlBuilder sql = SqlBuilder.custom().append("SELECT ").appendIdentifier(COLUMN_ID).append(", ")
@@ -151,6 +238,13 @@ public class IndexValueRow {
         return rows.stream().map(IndexValueRow::new).collect(Collectors.toList());
     }
 
+    /**
+     * 向表中更新索引数据行
+     *
+     * @param executor 表示SQL执行器的{@link DynamicSqlExecutor}
+     * @param table 表示待删除数据表的{@link String}
+     * @param ids 表示待删除的索引数据行的id的集合的{@link Collection}{@code <}{@link String}{@code >}
+     */
     public static void delete(DynamicSqlExecutor executor, String table, Collection<String> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return;

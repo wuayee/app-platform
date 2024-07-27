@@ -62,6 +62,9 @@ public class NotEqualsFilter implements Filter {
         return Arrays.hashCode(new Object[] {this.getClass(), this.value});
     }
 
+    /**
+     * NotEqualsFilter解析器
+     */
     @FilterParser.Declare(KEY)
     public static class Parser implements FilterParser {
         @Override

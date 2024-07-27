@@ -29,6 +29,19 @@ public class DefaultTaskTemplate extends AbstractDomainObject implements TaskTem
 
     private final List<TaskTemplateProperty> properties;
 
+    /**
+     * 默认的任务模板
+     *
+     * @param name 表示任务名称的{@link String}
+     * @param description 表示任务描述的{@link String}
+     * @param tenantId 表示租户id的{@link String}
+     * @param properties 表示任务模板属性的{@link List}{@code <}{@link TaskTemplateProperty}{@code >}
+     * @param id 表示id的{@link String}
+     * @param creator 表示创建者的{@link String}
+     * @param creationTime 表示创建时间的{@link LocalDateTime}
+     * @param lastModifier 表示最后的修改者的{@link String}
+     * @param lastModificationTime 表示最后修改时间的{@link LocalDateTime}
+     */
     public DefaultTaskTemplate(String name, String description, String tenantId, List<TaskTemplateProperty> properties,
             String id, String creator, LocalDateTime creationTime, String lastModifier,
             LocalDateTime lastModificationTime) {
@@ -85,8 +98,11 @@ public class DefaultTaskTemplate extends AbstractDomainObject implements TaskTem
         return this.properties.stream().filter(p -> StringUtils.equals(name, p.name())).findFirst().orElse(null);
     }
 
-    public static class Builder extends AbstractDomainObjectBuilder<TaskTemplate, TaskTemplate.Builder>
-            implements TaskTemplate.Builder {
+    /**
+     * 任务模板构造器
+     */
+    public static class Builder
+            extends AbstractDomainObjectBuilder<TaskTemplate, TaskTemplate.Builder> implements TaskTemplate.Builder {
         private String name;
 
         private String description;
@@ -149,6 +165,9 @@ public class DefaultTaskTemplate extends AbstractDomainObject implements TaskTem
         }
     }
 
+    /**
+     * 任务模板声明
+     */
     public static class Declaration implements TaskTemplate.Declaration {
         private final UndefinableValue<String> name;
 
@@ -208,6 +227,9 @@ public class DefaultTaskTemplate extends AbstractDomainObject implements TaskTem
             return this.parentTemplateId;
         }
 
+        /**
+         * 任务模板声明构造器
+         */
         public static class Builder implements TaskTemplate.Declaration.Builder {
             private UndefinableValue<String> name = UndefinableValue.undefined();
 

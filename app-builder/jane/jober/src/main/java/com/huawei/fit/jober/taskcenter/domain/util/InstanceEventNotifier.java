@@ -37,6 +37,7 @@ public interface InstanceEventNotifier extends Runnable {
      * custom
      *
      * @param task task
+     * @param plugin plugin
      * @param context context
      * @return InstanceEventNotifier
      */

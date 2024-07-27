@@ -66,6 +66,9 @@ public class BetweenFilter implements Filter {
         return KEY + '(' + this.minimum + ", " + this.maximum + ')';
     }
 
+    /**
+     * BetweenFilter解析器
+     */
     @FilterParser.Declare(KEY)
     public static class Parser implements FilterParser {
         @Override

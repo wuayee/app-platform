@@ -182,7 +182,8 @@ public interface TaskInstance {
         /**
          * 获取任务实例的数据。
          *
-         * @return 表示任务实例的数据的 {@link UndefinableValue}{@code <}{@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >>}。
+         * @return 表示任务实例的数据的
+         * {@link UndefinableValue}{@code <}{@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >>}。
          */
         UndefinableValue<Map<String, Object>> info();
 
@@ -290,7 +291,8 @@ public interface TaskInstance {
         /**
          * 获取待查询的任务实例的数据。
          *
-         * @return 表示待查询的任务实例的值的 {@link Map}{@code <}{@link String}{@code , }{@link List}{@code <}{@link String}{@code >>}。
+         * @return 表示待查询的任务实例的值的
+         * {@link Map}{@code <}{@link String}{@code , }{@link List}{@code <}{@link String}{@code >>}。
          */
         Map<String, List<String>> infos();
 
@@ -349,7 +351,8 @@ public interface TaskInstance {
             /**
              * 获取待查询的任务实例的数据。
              *
-             * @param infos 表示待查询的任务实例的值的 {@link Map}{@code <}{@link String}{@code , }{@link List}{@code <}{@link String}{@code >>}。
+             * @param infos 表示待查询的任务实例的值的
+             * {@link Map}{@code <}{@link String}{@code , }{@link List}{@code <}{@link String}{@code >>}。
              * @return 表示当前构建器的 {@link Builder}。
              */
             Builder infos(Map<String, List<String>> infos);
@@ -373,10 +376,10 @@ public interface TaskInstance {
             /**
              * 设置一个值，该值指示是否查询已删除的任务。
              *
-             * @param deleted 若查询已删除的任务，则为 {@code true}，否则为 {@code false}。
+             * @param isDeleted 若查询已删除的任务，则为 {@code true}，否则为 {@code false}。
              * @return 表示当前构建器的 {@link Builder}。
              */
-            Builder deleted(boolean deleted);
+            Builder deleted(boolean isDeleted);
 
             /**
              * 构建新的任务实例的查询条件。
@@ -435,9 +438,9 @@ public interface TaskInstance {
         /**
          * 删除指定数据源的任务实例。
          *
-         * @param task
-         * @param sourceId
-         * @param context
+         * @param task 表示任务实体的{@link TaskEntity}
+         * @param sourceId 表示数据源id的{@link String}
+         * @param context 表示操作上下文的{@link OperationContext}
          */
         void deleteBySource(TaskEntity task, String sourceId, OperationContext context);
 
@@ -446,11 +449,11 @@ public interface TaskInstance {
          *
          * @param task 表示任务实例所属的任务定义的 {@link TaskEntity}。
          * @param id 表示任务实例的唯一标识的 {@link String}。
-         * @param deleted 若为 {@code true}，则查询已删除的实例，否则不查询已删除的实例。
+         * @param isDeleted 若为 {@code true}，则查询已删除的实例，否则不查询已删除的实例。
          * @param context 表示操作上下文的 {@link OperationContext}。
          * @return 表示检索到的任务实例的 {@link TaskInstance}。
          */
-        TaskInstance retrieve(TaskEntity task, String id, boolean deleted, OperationContext context);
+        TaskInstance retrieve(TaskEntity task, String id, boolean isDeleted, OperationContext context);
 
         /**
          * 查询任务实例。
@@ -489,6 +492,7 @@ public interface TaskInstance {
         /**
          * 获取 meta 唯一标识。
          *
+         * @param id 表示id的{@link String}
          * @return 表示 meta 唯一标识的 {@link String}。
          */
         String getMetaId(String id);

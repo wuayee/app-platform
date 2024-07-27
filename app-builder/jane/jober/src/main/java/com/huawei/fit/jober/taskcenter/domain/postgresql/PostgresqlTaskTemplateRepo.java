@@ -28,6 +28,7 @@ import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.model.RangedResultSet;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -53,24 +54,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostgresqlTaskTemplateRepo implements TaskTemplate.Repo {
     private static final Logger log = Logger.get(PostgresqlTaskTemplateRepo.class);
+    private static final String TABLE_NAME = "task_template";
+    private static final String TABLE_NAME_EXTEND = "extend_table";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_PARENT_ID = "parent_id";
+    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_DESCRIPTION = "description";
+    private static final String COLUMN_TENANT_ID = "tenant_id";
 
     private final TaskTemplateProperty.Repo propertyRepo;
-
     private final DynamicSqlExecutor executor;
-
-    private final static String TABLE_NAME = "task_template";
-
-    private final static String TABLE_NAME_EXTEND = "extend_table";
-
-    private final static String COLUMN_ID = "id";
-
-    private final static String COLUMN_PARENT_ID = "parent_id";
-
-    private final static String COLUMN_NAME = "name";
-
-    private final static String COLUMN_DESCRIPTION = "description";
-
-    private final static String COLUMN_TENANT_ID = "tenant_id";
 
     @Override
     @Transactional
@@ -150,10 +143,9 @@ public class PostgresqlTaskTemplateRepo implements TaskTemplate.Repo {
                 .map(TaskTemplateProperty::name)
                 .distinct()
                 .collect(Collectors.toList());
-        properties = properties.stream()
+        return properties.stream()
                 .filter(property -> !parentNames.contains(property.name().get()))
                 .collect(Collectors.toList());
-        return properties;
     }
 
     @Override
@@ -314,18 +306,19 @@ public class PostgresqlTaskTemplateRepo implements TaskTemplate.Repo {
         args.add(tenantId);
         this.addIdCondition(filter.getIds(), sql, args);
         this.addNameConditions(filter, sql, args);
-        long total = ((Number) executor.executeScalar("SELECT COUNT(1) " + sql, args)).longValue();
+        long total = ObjectUtils.<Number>cast(executor.executeScalar("SELECT COUNT(1) " + sql, args)).longValue();
 
         sql.append(" ORDER BY ").append(COLUMN_NAME).append(" OFFSET ? LIMIT ?");
         args.add(offset);
         args.add(limit);
 
         List<Map<String, Object>> rows = executor.executeQuery(this.generateSelectBaseSql() + sql, args);
-        List<String> ids = rows.stream().map(row -> (String) row.get(COLUMN_ID)).collect(Collectors.toList());
+        List<String> ids = rows.stream().map(
+                row -> ObjectUtils.<String>cast(row.get(COLUMN_ID))).collect(Collectors.toList());
         Map<String, List<TaskTemplateProperty>> properties = propertyRepo.list(ids, context);
 
         List<TaskTemplate> result = rows.stream()
-                .map(row -> convertFromRowMap(row, properties.get((String) row.get(COLUMN_ID))))
+                .map(row -> convertFromRowMap(row, properties.get(ObjectUtils.<String>cast(row.get(COLUMN_ID)))))
                 .collect(Collectors.toList());
 
         return RangedResultSet.create(result, (int) offset, limit, (int) total);
@@ -361,7 +354,7 @@ public class PostgresqlTaskTemplateRepo implements TaskTemplate.Repo {
             throw new ServerInternalException(
                     "The default template is not found. Please add the default template to the database.");
         }
-        return (String) rows.get(0).get(COLUMN_ID);
+        return ObjectUtils.cast(rows.get(0).get(COLUMN_ID));
     }
 
     private void addNameConditions(TaskTemplateFilter filter, SqlBuilder sql, List<Object> args) {
@@ -394,10 +387,10 @@ public class PostgresqlTaskTemplateRepo implements TaskTemplate.Repo {
 
     private TaskTemplate convertFromRowMap(Map<String, Object> row, List<TaskTemplateProperty> properties) {
         return TaskTemplate.custom()
-                .name((String) row.get(COLUMN_NAME))
-                .description((String) row.get(COLUMN_DESCRIPTION))
-                .id((String) row.get(COLUMN_ID))
-                .tenantId((String) row.get(COLUMN_TENANT_ID))
+                .name(ObjectUtils.cast(row.get(COLUMN_NAME)))
+                .description(ObjectUtils.cast(row.get(COLUMN_DESCRIPTION)))
+                .id(ObjectUtils.cast(row.get(COLUMN_ID)))
+                .tenantId(ObjectUtils.cast(row.get(COLUMN_TENANT_ID)))
                 .properties(properties)
                 .build();
     }

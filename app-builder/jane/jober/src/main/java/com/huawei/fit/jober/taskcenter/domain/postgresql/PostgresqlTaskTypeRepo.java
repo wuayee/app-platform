@@ -30,6 +30,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -93,11 +94,11 @@ public class PostgresqlTaskTypeRepo implements TaskType.Repo {
         if (value == null) {
             return null;
         }
-        return ((Timestamp) value).toLocalDateTime();
+        return ObjectUtils.<Timestamp>cast(value).toLocalDateTime();
     }
 
     private static String toString(Object value) {
-        return (String) value;
+        return ObjectUtils.cast(value);
     }
 
     /**
@@ -111,7 +112,7 @@ public class PostgresqlTaskTypeRepo implements TaskType.Repo {
     private String obtainTreeId(String taskId) {
         String sql = "SELECT tree_id FROM task_tree_task WHERE task_id = ?";
         List<Object> args = Collections.singletonList(taskId);
-        String treeId = (String) this.executor.executeScalar(sql, args);
+        String treeId = ObjectUtils.cast(this.executor.executeScalar(sql, args));
         return nullIf(treeId, taskId);
     }
 
@@ -164,7 +165,7 @@ public class PostgresqlTaskTypeRepo implements TaskType.Repo {
         sql.value("tree_id", this.obtainTreeId(actualTaskId));
 
         List<Map<String, Object>> rows = sql.executeAndReturn(this.executor, "id");
-        String actualId = (String) rows.get(0).get("id");
+        String actualId = ObjectUtils.cast(rows.get(0).get("id"));
         if (!StringUtils.equals(type.id(), actualId)) {
             log.error("A type with the same name already exists in the task. [taskId={}, name={}, typeId={}]", taskId,
                     type.name(), actualId);
@@ -297,7 +298,8 @@ public class PostgresqlTaskTypeRepo implements TaskType.Repo {
         String sql = "DELETE FROM \"task_type\" WHERE \"task_id\" = ? RETURNING \"id\"";
         List<Object> args = Collections.singletonList(actualTaskId);
         List<Map<String, Object>> rows = this.executor.executeQuery(sql, args);
-        List<String> deletedTypeIds = rows.stream().map(row -> (String) row.get("id")).collect(Collectors.toList());
+        List<String> deletedTypeIds = rows.stream().map(
+                row -> ObjectUtils.<String>cast(row.get("id"))).collect(Collectors.toList());
         if (deletedTypeIds.isEmpty()) {
             return;
         }
@@ -309,8 +311,8 @@ public class PostgresqlTaskTypeRepo implements TaskType.Repo {
         args = new ArrayList<>(deletedTypeIds);
         rows = this.executor.executeQuery(sql, args);
         for (Map<String, Object> row : rows) {
-            String sourceId = (String) row.get("source_id");
-            String typeId = (String) row.get("node_id");
+            String sourceId = ObjectUtils.cast(row.get("source_id"));
+            String typeId = ObjectUtils.cast(row.get("node_id"));
             this.sourceService.delete(taskId, typeId, sourceId, context);
         }
     }
@@ -461,8 +463,8 @@ public class PostgresqlTaskTypeRepo implements TaskType.Repo {
         List<Object> args = types.stream().map(TaskTypeRow::id).collect(Collectors.toList());
         List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
         Map<String, List<String>> typeSourceIds = rows.stream()
-                .collect(Collectors.groupingBy(row -> (String) row.get("node_id"),
-                        Collectors.mapping(row -> (String) row.get("source_id"), Collectors.toList())));
+                .collect(Collectors.groupingBy(row -> ObjectUtils.cast(row.get("node_id")),
+                        Collectors.mapping(row -> ObjectUtils.cast(row.get("source_id")), Collectors.toList())));
         List<String> taskIds = types.stream().map(TaskTypeRow::taskId).distinct().collect(Collectors.toList());
         Map<String, SourceEntity> sources = this.sourceService.list(taskIds, context)
                 .values()

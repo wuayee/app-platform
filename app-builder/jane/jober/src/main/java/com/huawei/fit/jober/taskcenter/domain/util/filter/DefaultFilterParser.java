@@ -71,13 +71,13 @@ public class DefaultFilterParser implements FilterParser {
         FilterParser parser;
         try {
             parser = cast(constructor.newInstance());
-        } catch (Exception ex) {
-            Throwable cause = ex;
-            if (cause instanceof InvocationTargetException) {
-                cause = ((InvocationTargetException) ex).getTargetException();
-            }
+        } catch (InvocationTargetException ex) {
+            Throwable cause = ex.getTargetException();
             throw new IllegalStateException(StringUtils.format(
                     "Failed to instantiate filter parser. [class={0}]", clazz.getName()), cause);
+        } catch (Exception ex) {
+            throw new IllegalStateException(StringUtils.format(
+                    "Failed to instantiate filter parser. [class={0}]", clazz.getName()), ex);
         }
         this.parsers.put(key, parser);
     }

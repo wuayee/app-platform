@@ -232,6 +232,12 @@ public class TaskEntity {
         return this.primaryProperties;
     }
 
+    /**
+     * 计算主键
+     *
+     * @param info 表示信息的{@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}
+     * @return 主键的值
+     */
     public PrimaryValue computePrimaryValue(Map<String, Object> info) {
         notNull(info, "The info to compute primary value cannot be null.");
         List<TaskProperty> primaries = this.getPrimaryProperties();
@@ -246,6 +252,12 @@ public class TaskEntity {
         return new DefaultPrimaryValue(values);
     }
 
+    /**
+     * 根据名称获得任务属性
+     *
+     * @param propertyName 表示属性名称的{@link String}
+     * @return 任务属性
+     */
     public TaskProperty getPropertyByName(String propertyName) {
         if (this.nameIndexedProperties == null) {
             this.nameIndexedProperties = this.getProperties()
@@ -255,6 +267,12 @@ public class TaskEntity {
         return this.nameIndexedProperties.get(propertyName);
     }
 
+    /**
+     * 根据id获得任务属性
+     *
+     * @param propertyId 表示属性id的{@link String}
+     * @return 任务属性
+     */
     public TaskProperty getPropertyById(String propertyId) {
         if (this.idIndexedProperties == null) {
             this.idIndexedProperties = this.getProperties()
@@ -300,7 +318,8 @@ public class TaskEntity {
     @Override
     public String toString() {
         return StringUtils.format("id={0}, name={1}, category={2}, properties={3}, types={4}, indexes={5}, "
-                        + "categoryTriggers={6}, creator={7}, creationTime={8}, lastModifier={9}, lastModificationTime={10}, "
+                        + "categoryTriggers={6}, creator={7}, creationTime={8}, "
+                        + "lastModifier={9}, lastModificationTime={10}, "
                         + "attributes={11}, tenantId={12}", this.getId(), this.getName(), this.getCategory(),
                 this.getProperties(),
                 this.getTypes(), this.getIndexes(), this.getCategoryTriggers(), this.getCreator(),

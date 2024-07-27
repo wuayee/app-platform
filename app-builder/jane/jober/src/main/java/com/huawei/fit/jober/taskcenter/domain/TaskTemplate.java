@@ -247,6 +247,7 @@ public interface TaskTemplate extends DomainObject {
          * @param offset 表示查询到的任务定义的结果集在全量结果集中的偏移量的 64 位整数。
          * @param limit 表示查询到的任务定义的结果集中的最大数量的 32 位整数。
          * @param context 操作上下文 {@link OperationContext}
+         * @return 任务模板列表
          */
         RangedResultSet<TaskTemplate> list(TaskTemplateFilter filter, long offset, int limit,
                 OperationContext context);
