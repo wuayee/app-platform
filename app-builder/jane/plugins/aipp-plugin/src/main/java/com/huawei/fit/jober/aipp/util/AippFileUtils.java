@@ -43,6 +43,7 @@ public class AippFileUtils {
      * @param dirName 表示子目录名称的 {@link String}。
      * @param fileName 表示文件名字的 {@link String}。
      * @return 表示创建的临时文件的 {@link File}。
+     * @throws IOException 创建文件出现问题时抛出该异常
      */
     public static File createFile(String dirName, String fileName) throws IOException {
         Validation.notBlank(dirName, "dirName cant be blank.");
@@ -50,7 +51,7 @@ public class AippFileUtils {
 
         File dir = Paths.get(NAS_SHARE_DIR, dirName).toFile();
         if (!dir.exists()) {
-            if(!dir.mkdir()) {
+            if (!dir.mkdir()) {
                 throw new IOException(dir.getCanonicalPath() + " created failed.");
             }
         }
@@ -84,6 +85,7 @@ public class AippFileUtils {
      * @param s3Url 表示s3的访问地址的 {@link String}。
      * @param fileType 表示文件类型的 {@link String}。
      * @return 表示下载下来的临时文件的 {@link File}。
+     * @throws JobberException 下载文件异常时抛出
      */
     public static File getFileFromS3(String instId, String s3Url, String fileType) throws JobberException {
         HttpGet httpGetImage = new HttpGet(s3Url);
@@ -115,22 +117,28 @@ public class AippFileUtils {
      * 获得文件的可下载地址
      *
      * @param endpoint 表示app-engine启动环境地址的{@link String}
+     * @param pathPrefix 表示文件url根的{@link String}
      * @param filePath 表示文件路径的{@link String}
      * @param fileName 表示下载后保存的文件名的{@link String}
      * @return 表示文件的可下载的url
      */
     public static String getFileDownloadUrl(String endpoint, String pathPrefix, String filePath, String fileName) {
-        return endpoint + pathPrefix + DOWNLOAD_FILE_ORIGIN + "filePath=" + filePath + "&fileName=" + fileName;
+        return endpoint
+                + (StringUtils.isBlank(pathPrefix) ? StringUtils.EMPTY : pathPrefix)
+                + DOWNLOAD_FILE_ORIGIN + "filePath=" + filePath + "&fileName=" + fileName;
     }
 
     /**
      * 获得音频文件的文件路径的url
      *
      * @param endpoint 表示app-engine启动环境地址的{@link String}
+     * @param pathPrefix 表示文件url根的{@link String}
      * @param filePath 表示文件路径的{@link String}
      * @return 表示音频文件路径的url
      */
     public static String getFileDownloadFilePath(String endpoint, String pathPrefix, String filePath) {
-        return endpoint + pathPrefix + DOWNLOAD_FILE_ORIGIN + "filePath=" + filePath;
+        return endpoint
+                + (StringUtils.isBlank(pathPrefix) ? StringUtils.EMPTY : pathPrefix)
+                + DOWNLOAD_FILE_ORIGIN + "filePath=" + filePath;
     }
 }
