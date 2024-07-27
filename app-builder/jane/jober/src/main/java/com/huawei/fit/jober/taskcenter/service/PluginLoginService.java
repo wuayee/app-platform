@@ -4,6 +4,12 @@
 
 package com.huawei.fit.jober.taskcenter.service;
 
+/**
+ * 插件获取cookie
+ *
+ * @author yWX1299574
+ * @since 2024/7/27
+ */
 public interface PluginLoginService {
     /**
      * 清除原有cookie及首次使用时添加clientId

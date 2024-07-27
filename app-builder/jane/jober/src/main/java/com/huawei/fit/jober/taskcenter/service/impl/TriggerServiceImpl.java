@@ -45,8 +45,8 @@ public class TriggerServiceImpl implements TriggerService {
     public TriggerEntity create(String taskId, String sourceId, TriggerDeclaration declaration,
             OperationContext context) {
         String propertyName = triggerValidator.validatePropertyName(declaration.getPropertyName().get(), context);
-        taskId = triggerValidator.validateTaskId(taskId, context);
-        TriggerObject triggerObject = triggerMapper.selectTriggerByTaskId(taskId, sourceId, propertyName);
+        String actualTaskId = triggerValidator.validateTaskId(taskId, context);
+        TriggerObject triggerObject = triggerMapper.selectTriggerByTaskId(actualTaskId, sourceId, propertyName);
         if (triggerObject == null) {
             return null;
         }
@@ -65,8 +65,7 @@ public class TriggerServiceImpl implements TriggerService {
     @Override
     @Transactional
     public void delete(String taskId, TriggerFilter filter, OperationContext context) {
-        if (filter == null || !filter.getIds().defined() && !filter.getFitableIds().defined()
-                && !filter.getPropertyIds().defined() && !filter.getSourceIds().defined()) {
+        if (filter == null || isDefinedAnyFilter(filter)) {
             return;
         }
         triggerMapper.delete(filter.getIds().withDefault(Collections.emptyList()),
@@ -75,10 +74,15 @@ public class TriggerServiceImpl implements TriggerService {
                 filter.getFitableIds().withDefault(Collections.emptyList()));
     }
 
+    private static boolean isDefinedAnyFilter(TriggerFilter filter) {
+        return !filter.getIds().defined() && !filter.getFitableIds().defined() && !filter.getPropertyIds().defined()
+                && !filter.getSourceIds().defined();
+    }
+
     @Override
     public TriggerEntity retrieve(String taskId, String sourceId, String triggerId, OperationContext context) {
-        triggerId = triggerValidator.validateTriggerId(triggerId, context);
-        return triggerMapper.retrieve(triggerId);
+        String actualTriggerId = triggerValidator.validateTriggerId(triggerId, context);
+        return triggerMapper.retrieve(actualTriggerId);
     }
 
     @Override
@@ -98,7 +102,7 @@ public class TriggerServiceImpl implements TriggerService {
     @Override
     @Transactional
     public void batchSave(String taskId, List<SourceTriggersDeclaration> declarations, OperationContext context) {
-        taskId = triggerValidator.validateTaskId(taskId, context);
+        String actualTaskId = triggerValidator.validateTaskId(taskId, context);
         if (CollectionUtils.isEmpty(declarations)) {
             return;
         }
@@ -108,7 +112,7 @@ public class TriggerServiceImpl implements TriggerService {
                 continue;
             }
             for (TriggerDeclaration triggerDeclaration : declaration.getTriggers()) {
-                String taskPropertyId = triggerMapper.selectTaskPropertyIdByTaskIdAndName(taskId,
+                String taskPropertyId = triggerMapper.selectTaskPropertyIdByTaskIdAndName(actualTaskId,
                         triggerDeclaration.getPropertyName().get());
                 if (StringUtils.isEmpty(taskPropertyId)) {
                     continue;

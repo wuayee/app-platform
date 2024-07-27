@@ -68,7 +68,6 @@ public interface TaskService {
 
     /**
      * 查询任务定义。
-     * FIXME：为下游应用租户切换期间特制的方法，所有应用完成租户切换后，需要移除本方法，改用{@link TaskService#list(TaskFilter, long, int, OperationContext)}方法
      *
      * @param filter 表示任务过滤器的 {@link TaskFilter}。
      * @param offset 表示查询到的任务定义的结果集在全量结果集中的偏移量的 64 位整数。
@@ -82,13 +81,13 @@ public interface TaskService {
      * 查询任务定义为多版本Meta
      *
      * @param filter 查询条件过滤器 {@link MetaFilter}。
-     * @param latestOnly 是否仅查询最新版本的boolean。
+     * @param isLatestOnly 是否仅查询最新版本的boolean。
      * @param offset 表示查询到的任务定义的结果集在全量结果集中的偏移量的 64 位整数。
      * @param limit 表示查询到的任务定义的结果集中的最大数量的 32 位整数。
      * @param context 表示操作上下文的 {@link OperationContext}。
      * @return 表示查询到的结果集的 {@link RangedResultSet}{@code <}{@link TaskEntity}{@code >}。
      */
-    RangedResultSet<TaskEntity> listMeta(MetaFilter filter, boolean latestOnly, long offset, int limit,
+    RangedResultSet<TaskEntity> listMeta(MetaFilter filter, boolean isLatestOnly, long offset, int limit,
             OperationContext context);
 
     /**

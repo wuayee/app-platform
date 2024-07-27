@@ -100,7 +100,7 @@ class TaskAgendaServiceImplTest {
         when(mockExecutor.executeQuery(sql, args)).thenReturn(rows);
         when(mockExecutor.executeScalar(any(), any())).thenReturn(1L);
         // Run the test
-        final PagedResultSet<TaskInstance> result = taskAgendaServiceImplUnderTest.ListAllAgenda(mockResult.filter,
+        final PagedResultSet<TaskInstance> result = taskAgendaServiceImplUnderTest.listAllAgenda(mockResult.filter,
                 mockResult.pagination, "templateId", mockResult.context, mockResult.taskEntityList,
                 mockResult.orderBys);
         // Verify the results

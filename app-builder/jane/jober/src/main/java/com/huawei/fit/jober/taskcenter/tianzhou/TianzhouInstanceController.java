@@ -141,6 +141,7 @@ public class TianzhouInstanceController extends TianzhouAbstractController {
      * @param tenantId tenantId
      * @param taskId taskId
      * @param instanceId instanceId
+     * @return Map<String, Object>
      */
     @PostMapping(value = "/{instance_id}", summary = "根据任务实例ID恢复被删除的任务实例")
     @ResponseStatus(HttpResponseStatus.OK)

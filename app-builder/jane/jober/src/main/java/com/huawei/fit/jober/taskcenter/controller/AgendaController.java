@@ -79,7 +79,7 @@ public class AgendaController extends AbstractController {
                     Collections.emptyList());
         }
         List<TaskEntity> taskEntityList = taskService.listTaskEntities(taskIds, context);
-        PagedResultSet<TaskInstance> results = taskagendaService.ListAllAgenda(filter, Pagination.create(offset, limit),
+        PagedResultSet<TaskInstance> results = taskagendaService.listAllAgenda(filter, Pagination.create(offset, limit),
                 templateId, context, taskEntityList, orderBys);
         return buildMultiTaskInstanceView(results, taskEntityList);
     }

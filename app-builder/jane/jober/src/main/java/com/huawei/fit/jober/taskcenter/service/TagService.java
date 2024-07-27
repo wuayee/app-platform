@@ -90,8 +90,8 @@ public interface TagService {
      * 识别指定标签。
      *
      * @param tag 表示待识别的标签的 {@link String}。
-     * @param context
-     * @return
+     * @param context 上下文
+     * @return 识别后的标签
      */
     String identify(String tag, OperationContext context);
 

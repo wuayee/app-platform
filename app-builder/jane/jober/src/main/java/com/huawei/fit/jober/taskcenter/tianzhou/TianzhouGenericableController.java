@@ -37,7 +37,8 @@ public class TianzhouGenericableController extends TianzhouAbstractController {
      *
      * @param genericableId 需要查询的Genericable唯一标识的 {@link String}。
      * @param httpRequest 请求体
-     * @return Genericable唯一标识对应Genericable实现列表的 {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
+     * @return Genericable唯一标识对应Genericable实现列表的
+     * {@link Map}{@code <}{@link String}{@code ,}{@link Object}{@code >}。
      */
     @GetMapping(path = "/{genericableId}", summary = "根据GenericableID获取对应的fitable实现列表")
     @ResponseStatus(HttpResponseStatus.OK)

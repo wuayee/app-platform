@@ -49,6 +49,7 @@ import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.model.RangedResultSet;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -107,17 +108,17 @@ public class PortalServiceImpl implements PortalService {
 
     private final Index.Repo indexRepo;
 
-    private TaskTemplate loadTaskTemplate(OperationContext context) {
+    private Optional<TaskTemplate> loadTaskTemplate(OperationContext context) {
         TaskTemplateFilter filter = new TaskTemplateFilter();
         filter.setIds(UndefinableValue.undefined());
         filter.setNames(UndefinableValue.defined(Collections.singletonList(TASK_TEMPLATE_NAME)));
         RangedResultSet<TaskTemplate> results = this.taskTemplateRepo.list(filter, 0, 10, context);
         for (TaskTemplate current : results.getResults()) {
             if (StringUtils.equals(current.name(), TASK_TEMPLATE_NAME)) {
-                return current;
+                return Optional.ofNullable(current);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -190,7 +191,8 @@ public class PortalServiceImpl implements PortalService {
             throw new JobberException(FAILED_TO_GET_THREAD_RESULT);
         }
         return Arrays.asList(new TagCountEntity("未开始", nonStarted.get()),
-                new TagCountEntity("处理中", processing.get()), new TagCountEntity("风险", risk.get()));
+                new TagCountEntity("处理中", processing.get()),
+                new TagCountEntity("风险", risk.get()));
     }
 
     private int count(List<String> owners, List<String> creators, List<String> tags, List<String> categories,
@@ -207,15 +209,15 @@ public class PortalServiceImpl implements PortalService {
         if (actualOwners.isEmpty() && actualCreators.isEmpty()) {
             throw new IllegalArgumentException("The owner and creator of task cannot be both empty.");
         }
-        TaskTemplate defaultTemplate = loadTaskTemplate(context);
+        TaskTemplate defaultTemplate = this.loadTaskTemplate(context).orElse(null);
         if (defaultTemplate == null) {
             throw new BadRequestException(ErrorCodes.TEMPLATE_PROPERTY_NOT_FOUND);
         }
         List<String> actualTags = canonicalize(tags);
         List<String> actualCategories = canonicalize(categories);
         SqlBuilder selectSql = SqlBuilder.custom();
-        selectSql.append(
-                "SELECT t.id AS task_id, t.name AS task_name, COUNT(ins.id) AS task_count FROM task_instance_wide AS ins INNER JOIN task AS t ON t.id = ins.task_id");
+        selectSql.append("SELECT t.id AS task_id, t.name AS task_name, COUNT(ins.id) AS task_count"
+                + " FROM task_instance_wide AS ins INNER JOIN task AS t ON t.id = ins.task_id");
         SqlBuilder whereSql = SqlBuilder.custom().append(" WHERE t.template_id = ?");
         List<Object> args = new LinkedList<>();
         args.add(defaultTemplate.id());
@@ -223,8 +225,8 @@ public class PortalServiceImpl implements PortalService {
         appendLikeAny(whereSql, args, defaultTemplate.property("owner").column(), actualOwners);
         appendLikeAny(whereSql, args, defaultTemplate.property("created_by").column(), actualCreators);
         if (!actualTags.isEmpty()) {
-            whereSql.append(
-                    " AND ins.id IN (SELECT tu.object_id FROM tag_usage AS tu INNER JOIN tag AS t ON t.id = tu.tag_id WHERE t.name IN (");
+            whereSql.append(" AND ins.id IN (SELECT tu.object_id FROM tag_usage AS tu "
+                    + "INNER JOIN tag AS t ON t.id = tu.tag_id WHERE t.name IN (");
             whereSql.appendRepeatedly("?, ", actualTags.size()).backspace(2);
             whereSql.append(") AND tu.object_type = 'INSTANCE')");
             args.addAll(actualTags);
@@ -245,7 +247,7 @@ public class PortalServiceImpl implements PortalService {
             group.setTaskId(cast(row.get("task_id")));
             group.setTreeId(group.getTaskId());
             group.setTreeName(cast(row.get("task_name")));
-            group.setNumberOfTasks(((Number) row.get("task_count")).intValue());
+            group.setNumberOfTasks((ObjectUtils.<Number>cast(row.get("task_count")).intValue()));
             return group;
         }).collect(Collectors.toCollection(ArrayList::new));
         groups.addAll(this.countRefreshInTime(owners, creators, tags, categories, taskIds, context));
@@ -262,7 +264,8 @@ public class PortalServiceImpl implements PortalService {
         for (List<String> categoryIds : groupedCategoryIds.values()) {
             categoryIndex++;
             selectSql.append(StringUtils.format(
-                    " INNER JOIN category_usage AS cu{0} ON cu{0}.object_id = ins.id AND cu{0}.object_type = 'INSTANCE'",
+                    " INNER JOIN category_usage AS cu{0} ON cu{0}.object_id = ins.id AND cu{0}.object_type = "
+                            + "'INSTANCE'",
                     categoryIndex));
             whereSql.append(StringUtils.format(" AND cu{0}.category_id IN (", categoryIndex));
             whereSql.appendRepeatedly("?, ", categoryIds.size()).backspace(2).append(')');
@@ -276,8 +279,8 @@ public class PortalServiceImpl implements PortalService {
         }
         if (column.contains("list_text")) {
             if (values.size() == 1) {
-                sql.append(
-                        " AND ins.id IN (SELECT DISTINCT instance_id FROM list_text WHERE value LIKE ? ESCAPE '\\') ");
+                sql.append(" AND ins.id IN (SELECT DISTINCT instance_id FROM list_text WHERE value LIKE ? ESCAPE "
+                        + "'\\') ");
                 args.add("%" + values.get(0).replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%");
                 return;
             }
@@ -332,12 +335,17 @@ public class PortalServiceImpl implements PortalService {
             TaskEntity task = tasks.computeIfAbsent(taskId, key -> this.taskService.retrieve(taskId, context));
             long count;
             try {
-                count = this.taskInstanceRepo.list(task, filter,
-                        com.huawei.fit.jane.task.util.Pagination.create(0, 1), Collections.emptyList(),
-                        ViewMode.LIST, context).pagination().total();
-            } catch (Throwable t) {
-                log.warn("Failed to count task instances. [taskId={}, taskName={}, errorMsg={}]", taskId, taskName,
-                        t.getMessage());
+                count = this.taskInstanceRepo.list(task,
+                        filter,
+                        com.huawei.fit.jane.task.util.Pagination.create(0, 1),
+                        Collections.emptyList(),
+                        ViewMode.LIST,
+                        context).pagination().total();
+            } catch (JobberException exception) {
+                log.warn("Failed to count task instances. [taskId={}, taskName={}, errorMsg={}]",
+                        taskId,
+                        taskName,
+                        exception.getMessage());
                 count = 0L;
             }
             if (count != 0) {
@@ -412,7 +420,7 @@ public class PortalServiceImpl implements PortalService {
 
     @Override
     public List<TaskNode> getTree(OperationContext context) {
-        long offset = 0;
+        long offset = 0L;
         List<TaskNode> nodes = new LinkedList<>();
         RangedResultSet<TaskEntity> results;
         do {
@@ -449,10 +457,8 @@ public class PortalServiceImpl implements PortalService {
         if (!properties.isEmpty() && indexes.isEmpty()) {
             List<String> propertyNames = indexablePropertyNames(properties);
             if (!propertyNames.isEmpty()) {
-                Index.Declaration indexDeclaration = Index.Declaration.custom()
-                        .name(INDEX_NAME)
-                        .propertyNames(propertyNames)
-                        .build();
+                Index.Declaration indexDeclaration =
+                        Index.Declaration.custom().name(INDEX_NAME).propertyNames(propertyNames).build();
                 declaration.setIndexes(UndefinableValue.defined(Collections.singletonList(indexDeclaration)));
             }
         }
@@ -484,8 +490,10 @@ public class PortalServiceImpl implements PortalService {
         }
         PropertyDataType dataType;
         try {
-            dataType = Enums.parse(PropertyDataType.class, withDefault(declaration.dataType(), StringUtils.EMPTY),
-                    PropertyDataType.TEXT, ErrorCodes.TASK_PROPERTY_DATA_TYPE_INVALID);
+            dataType = Enums.parse(PropertyDataType.class,
+                    withDefault(declaration.dataType(), StringUtils.EMPTY),
+                    PropertyDataType.TEXT,
+                    ErrorCodes.TASK_PROPERTY_DATA_TYPE_INVALID);
         } catch (BadRequestException ignored) {
             return false;
         }
@@ -525,7 +533,7 @@ public class PortalServiceImpl implements PortalService {
         this.taskService.delete(taskId, context);
         String sql = "DELETE FROM task_tree_task WHERE task_id = ? RETURNING tree_id";
         List<Object> args = Collections.singletonList(taskId);
-        String treeId = (String) this.executor.executeScalar(sql, args);
+        String treeId = ObjectUtils.cast(this.executor.executeScalar(sql, args));
         if (treeId != null) {
             sql = "DELETE FROM task_tree_v2 WHERE id = ?";
             args = Collections.singletonList(treeId);
@@ -544,7 +552,7 @@ public class PortalServiceImpl implements PortalService {
     private String obtainTreeId(String taskId) {
         String sql = "SELECT tree_id FROM task_tree_task WHERE task_id = ?";
         List<Object> args = Collections.singletonList(taskId);
-        return (String) this.executor.executeScalar(sql, args);
+        return ObjectUtils.cast(this.executor.executeScalar(sql, args));
     }
 
     @Override
@@ -562,8 +570,7 @@ public class PortalServiceImpl implements PortalService {
             TaskEntity task = this.taskService.retrieve(taskId, context);
             Index index = lookupIndex(task);
             if (index == null) {
-                Index.Declaration indexDeclaration = Index.Declaration.custom()
-                        .name(INDEX_NAME).propertyNames(Collections.singletonList(property.name())).build();
+                Index.Declaration indexDeclaration = this.buildIndexDeclaration(property);
                 this.indexRepo.create(task, indexDeclaration, context);
             } else {
                 List<String> propertyNames = new ArrayList<>(index.properties().size() + 1);
@@ -577,9 +584,12 @@ public class PortalServiceImpl implements PortalService {
     }
 
     private static Index lookupIndex(TaskEntity task) {
-        return Optional.ofNullable(task.getIndexes()).map(Collection::stream).orElseGet(Stream::empty)
+        return Optional.ofNullable(task.getIndexes())
+                .map(Collection::stream)
+                .orElseGet(Stream::empty)
                 .filter(index -> StringUtils.equalsIgnoreCase(index.name(), INDEX_NAME))
-                .findAny().orElse(null);
+                .findAny()
+                .orElse(null);
     }
 
     @Override
@@ -588,33 +598,34 @@ public class PortalServiceImpl implements PortalService {
             OperationContext context) {
         TaskEntity task = null;
         TaskProperty property = null;
-        boolean indexed = false;
-        boolean indexable = false;
+        boolean isIndexed = false;
+        boolean isIndexable = false;
         if (declaration.appearance() != null && declaration.appearance().defined()) {
             task = this.taskService.retrieve(taskId, context);
             property = task.getPropertyById(Entities.canonicalizeId(propertyId));
             if (property != null) {
-                indexed = indexable(property.appearance());
-                indexable = indexable(declaration.appearance().withDefault(null));
+                isIndexed = indexable(property.appearance());
+                isIndexable = indexable(declaration.appearance().withDefault(null));
             }
         }
         this.taskPropertyRepo.patch(taskId, propertyId, declaration, context);
-        if (indexed == indexable) {
+        if (isIndexed == isIndexable) {
             return;
         }
         Index index = lookupIndex(task);
-        if (indexable) {
+        if (isIndexable) {
             if (index == null) {
-                Index.Declaration indexDeclaration = Index.Declaration.custom().name(INDEX_NAME)
-                        .propertyNames(Collections.singletonList(property.name())).build();
+                Index.Declaration indexDeclaration = this.buildIndexDeclaration(property);
                 this.indexRepo.create(task, indexDeclaration, context);
                 return;
             }
-            Set<String> propertyNames = index.properties().stream().map(TaskProperty::name)
+            Set<String> propertyNames = index.properties()
+                    .stream()
+                    .map(TaskProperty::name)
                     .collect(Collectors.toCollection(LinkedHashSet::new));
             if (propertyNames.add(property.name())) {
-                Index.Declaration indexDeclaration = Index.Declaration.custom()
-                        .propertyNames(new ArrayList<>(propertyNames)).build();
+                Index.Declaration indexDeclaration =
+                        Index.Declaration.custom().propertyNames(new ArrayList<>(propertyNames)).build();
                 this.indexRepo.patch(task, index.id(), indexDeclaration, context);
             }
         } else {
@@ -622,7 +633,9 @@ public class PortalServiceImpl implements PortalService {
                 return;
             }
             String exceptedPropertyName = property.name();
-            List<String> propertyNames = index.properties().stream().map(TaskProperty::name)
+            List<String> propertyNames = index.properties()
+                    .stream()
+                    .map(TaskProperty::name)
                     .filter(propertyName -> !StringUtils.equalsIgnoreCase(propertyName, exceptedPropertyName))
                     .collect(Collectors.toList());
             if (propertyNames.isEmpty()) {
@@ -632,6 +645,13 @@ public class PortalServiceImpl implements PortalService {
                 this.indexRepo.patch(task, index.id(), indexDeclaration, context);
             }
         }
+    }
+
+    private Index.Declaration buildIndexDeclaration(TaskProperty property) {
+        return Index.Declaration.custom()
+                .name(INDEX_NAME)
+                .propertyNames(Collections.singletonList(property.name()))
+                .build();
     }
 
     @Override

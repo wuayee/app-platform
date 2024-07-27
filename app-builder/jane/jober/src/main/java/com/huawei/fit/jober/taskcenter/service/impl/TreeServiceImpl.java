@@ -26,6 +26,7 @@ import com.huawei.fit.jober.taskcenter.validation.TreeValidator;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.model.RangedResultSet;
 import com.huawei.fitframework.transaction.Transactional;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,6 +37,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -55,10 +57,10 @@ public class TreeServiceImpl implements TreeService {
 
     private static TreeEntity toEntity(Map<String, Object> row) {
         TreeEntity entity = new TreeEntity();
-        entity.setId((String) row.get("id"));
-        entity.setName((String) row.get("name"));
+        entity.setId(ObjectUtils.cast(row.get("id")));
+        entity.setName(ObjectUtils.cast(row.get("name")));
         entity.setChildCount(0);
-        entity.setTaskId(Entities.ignoreEmpty((String) row.get("task_id")));
+        entity.setTaskId(Entities.ignoreEmpty(ObjectUtils.cast(row.get("task_id"))));
         Entities.fillTraceInfo(entity, row);
         return entity;
     }
@@ -142,7 +144,7 @@ public class TreeServiceImpl implements TreeService {
         if (actualName != null) {
             String compatibleSql = "SELECT task_id FROM task_tree_task WHERE tree_id = ?";
             List<Object> compatibleArgs = Collections.singletonList(actualTreeId);
-            String relatedTaskId = (String) this.executor.executeScalar(compatibleSql, compatibleArgs);
+            String relatedTaskId = ObjectUtils.cast(this.executor.executeScalar(compatibleSql, compatibleArgs));
             if (relatedTaskId != null) {
                 compatibleSql = "UPDATE task SET name = ? WHERE id = ?";
                 compatibleArgs = Arrays.asList(actualName, relatedTaskId);
@@ -154,8 +156,6 @@ public class TreeServiceImpl implements TreeService {
     @Override
     @Transactional
     public void delete(String treeId, OperationContext context) {
-        List<Object> args = Collections.singletonList(
-                Entities.validateId(treeId, () -> new NotFoundException(ErrorCodes.TREE_NOT_FOUND)));
         if (this.countNodes(treeId) > 0) {
             throw new ConflictException(ErrorCodes.TREE_DELETING_HAS_NODES);
         }
@@ -165,11 +165,13 @@ public class TreeServiceImpl implements TreeService {
         String sql;
         if (!rows.isEmpty()) {
             List<String> taskIdList = rows.stream()
-                    .map(columnMap -> (String) columnMap.get("task_id"))
+                    .map(columnMap -> ObjectUtils.<String>cast(columnMap.get("task_id")))
                     .collect(Collectors.toList());
             sql = Sqls.script(SQL_MODULE, "delete-tasks-by-ids");
             ExecutableSql.resolve(sql, Collections.singletonMap("taskIds", taskIdList)).executeUpdate(this.executor);
         }
+        List<Object> args = Collections.singletonList(
+                Entities.validateId(treeId, () -> new NotFoundException(ErrorCodes.TREE_NOT_FOUND)));
         sql = Sqls.script(SQL_MODULE, "delete-by-id");
         if (this.executor.executeUpdate(sql, args) < 1) {
             throw new NotFoundException(ErrorCodes.TREE_NOT_FOUND);
@@ -205,14 +207,14 @@ public class TreeServiceImpl implements TreeService {
         whereSql.append(" WHERE 1 = 1 AND \"t\".\"tenant_id\" = ?");
         List<Object> whereArgs = new LinkedList<>();
         whereArgs.add(context.tenantId());
-        RangedResultSet<TreeEntity> treeEntityRanged = getTreeEntityRangedResultSet(filter, offset, limit, whereSql,
-                whereArgs);
-        if (treeEntityRanged != null) {
-            return treeEntityRanged;
+        Optional<RangedResultSet<TreeEntity>> treeEntityRanged =
+                getTreeEntityRangedResultSet(filter, offset, limit, whereSql, whereArgs);
+        if (treeEntityRanged.isPresent()) {
+            return treeEntityRanged.get();
         }
 
-        long total = ((Number) this.executor.executeScalar(Sqls.script(SQL_MODULE, "count") + whereSql,
-                whereArgs)).longValue();
+        long total = (ObjectUtils.<Number>cast(this.executor.executeScalar(Sqls.script(SQL_MODULE, "count") + whereSql,
+                whereArgs))).longValue();
 
         String sql = Sqls.script(SQL_MODULE, "select") + whereSql + " ORDER BY created_at OFFSET ? LIMIT ?";
         List<Object> args = new ArrayList<>(whereArgs.size() + 2);
@@ -231,7 +233,7 @@ public class TreeServiceImpl implements TreeService {
         for (TreeEntity entity : entities) {
             for (Map<String, Object> row : childCountRows) {
                 if (row.get("parent_id").toString().equals(entity.getId())) {
-                    entity.setChildCount((Long) row.get("num"));
+                    entity.setChildCount(ObjectUtils.<Number>cast(row.get("num")).longValue());
                     break;
                 }
             }
@@ -239,13 +241,13 @@ public class TreeServiceImpl implements TreeService {
         return RangedResultSet.create(entities, (int) offset, limit, (int) total);
     }
 
-    private static RangedResultSet<TreeEntity> getTreeEntityRangedResultSet(TreeFilter filter, long offset, int limit,
-            StringBuilder whereSql, List<Object> whereArgs) {
+    private static Optional<RangedResultSet<TreeEntity>> getTreeEntityRangedResultSet(TreeFilter filter, long offset,
+            int limit, StringBuilder whereSql, List<Object> whereArgs) {
         if (filter.getIds().defined()) {
             List<String> ids = nullIf(filter.getIds().get(), Collections.emptyList());
             ids = ids.stream().filter(Entities::isId).collect(Collectors.toList());
             if (ids.isEmpty()) {
-                return Entities.emptyRangedResultSet(offset, limit);
+                return Optional.of(Entities.emptyRangedResultSet(offset, limit));
             }
             Sqls.andIn(whereSql, "tr.id", ids.size());
             whereArgs.addAll(ids);
@@ -254,7 +256,7 @@ public class TreeServiceImpl implements TreeService {
             List<String> taskIds = nullIf(filter.getTaskIds().get(), Collections.emptyList());
             taskIds = taskIds.stream().filter(Entities::isId).collect(Collectors.toList());
             if (taskIds.isEmpty()) {
-                return Entities.emptyRangedResultSet(offset, limit);
+                return Optional.of(Entities.emptyRangedResultSet(offset, limit));
             }
             Sqls.andIn(whereSql, "trt.task_id", taskIds.size());
             whereArgs.addAll(taskIds);
@@ -262,11 +264,11 @@ public class TreeServiceImpl implements TreeService {
         if (filter.getNames().defined()) {
             List<String> names = filter.getNames().get();
             if (names.isEmpty()) {
-                return Entities.emptyRangedResultSet(offset, limit);
+                return Optional.of(Entities.emptyRangedResultSet(offset, limit));
             }
             Sqls.andLikeAny(whereSql, "tr.name", names.size());
             whereArgs.addAll(names.stream().map(Sqls::escapeLikeValue).collect(Collectors.toList()));
         }
-        return null;
+        return Optional.empty();
     }
 }

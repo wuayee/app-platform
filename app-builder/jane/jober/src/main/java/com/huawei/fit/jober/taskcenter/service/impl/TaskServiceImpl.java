@@ -55,6 +55,7 @@ import com.huawei.fitframework.model.RangedResultSet;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -139,7 +140,7 @@ public class TaskServiceImpl implements TaskService {
             throw new ConflictException(ErrorCodes.TASK_EXIST_IN_CURRENT_TENANT);
         }
         taskMapper.insert(taskObject);
-        TaskTemplate template = this.retrieveTemplate(taskObject.getTemplateId(), context);
+        TaskTemplate template = this.retrieveTemplate(taskObject.getTemplateId(), context).orElse(null);
         this.saveDeclarations(taskId, declaration, template, actualContext);
         this.saveCategoryTriggers(taskId, declaration.getCategoryTriggers());
         TaskEntity task = toTaskEntity(taskObject, actualContext);
@@ -149,11 +150,11 @@ public class TaskServiceImpl implements TaskService {
         return task;
     }
 
-    private TaskTemplate retrieveTemplate(String templateId, OperationContext context) {
+    private Optional<TaskTemplate> retrieveTemplate(String templateId, OperationContext context) {
         if (Entities.emptyId().equals(templateId)) {
-            return null;
+            return Optional.empty();
         }
-        return taskTemplateRepo.retrieve(templateId, context);
+        return Optional.ofNullable(taskTemplateRepo.retrieve(templateId, context));
     }
 
     private Long obtainTenantOfTask(String taskName, String tenantId) {
@@ -179,13 +180,13 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
-    private TaskTemplate getTemplateIdWhenPatch(String taskId, String templateId, OperationContext context) {
+    private Optional<TaskTemplate> getTemplateIdWhenPatch(String taskId, String templateId, OperationContext context) {
         String sqlForSelectTemplateId = "SELECT template_id FROM task WHERE id = ?";
         List<String> args = Collections.singletonList(taskId);
-        String currentTemplateId = (String) this.executor.executeScalar(sqlForSelectTemplateId, args);
+        String currentTemplateId = ObjectUtils.cast(this.executor.executeScalar(sqlForSelectTemplateId, args));
         if (Objects.equals(Entities.emptyId(), currentTemplateId)) {
             // 当前使用的ID为 00000000000000000000000000000000
-            return null;
+            return Optional.empty();
         }
         if (Objects.nonNull(templateId)) {
             // 未输入templateId， 则认为不修改templateId
@@ -216,10 +217,6 @@ public class TaskServiceImpl implements TaskService {
         relationshipValidator.validateTaskExistInTenant(taskId, actualContext.tenantId());
         StringBuilder sqlSb = new StringBuilder();
         List<Object> args = new ArrayList<>();
-        String templateId = Objects.nonNull(declaration.getTemplateId()) && declaration.getTemplateId().defined()
-                ? declaration.getTemplateId().get()
-                : null;
-        TaskTemplate templateIdWhenPatch = this.getTemplateIdWhenPatch(taskId, templateId, context);
         if (declaration.getName().defined()) {
             String name = declaration.getName().get();
             this.validateNameWhenPatch(taskId, actualContext.tenantId(), name);
@@ -243,7 +240,11 @@ public class TaskServiceImpl implements TaskService {
         sqlSb.deleteCharAt(sqlSb.length() - 1);
         args.add(taskId);
         executor.executeUpdate("update task set" + sqlSb + " where id = ?", args);
-
+        String templateId = Optional.of(declaration)
+                .map(TaskDeclaration::getTemplateId)
+                .map(UndefinableValue::get)
+                .orElse(null);
+        TaskTemplate templateIdWhenPatch = this.getTemplateIdWhenPatch(taskId, templateId, context).orElse(null);
         this.saveDeclarations(taskId, declaration, templateIdWhenPatch, actualContext);
         this.saveCategoryTriggers(taskId, declaration.getCategoryTriggers());
     }
@@ -331,7 +332,8 @@ public class TaskServiceImpl implements TaskService {
         OperationContext actualContext = this.validateOperationContext(context);
         taskValidator.validatePagination(offset, limit);
         SqlBuilder sql = SqlBuilder.custom()
-                .append("WITH \"task_ins\" AS (SELECT \"id\", \"name\", \"template_id\", \"category\", \"tenant_id\", \"attributes\", \"created_by\", \"created_at\", \"updated_by\", \"updated_at\"  FROM ")
+                .append("WITH \"task_ins\" AS (SELECT \"id\", \"name\", \"template_id\", \"category\", \"tenant_id\", ")
+                .append("\"attributes\", \"created_by\", \"created_at\", \"updated_by\", \"updated_at\"  FROM ")
                 .appendIdentifier("task")
                 .append(" WHERE ")
                 .appendIdentifier("tenant_id")
@@ -344,7 +346,6 @@ public class TaskServiceImpl implements TaskService {
 
     /**
      * 查询任务定义。
-     * FIXME：为下游应用租户切换期间特制的方法，所有应用完成租户切换后，需要移除本方法，改用{@link TaskService#list(TaskFilter, long, int, OperationContext)}方法
      *
      * @param filter 表示任务过滤器的 {@link TaskFilter}。
      * @param offset 表示查询到的任务定义的结果集在全量结果集中的偏移量的 64 位整数。
@@ -358,14 +359,15 @@ public class TaskServiceImpl implements TaskService {
         OperationContext actualContext = this.validateOperationContext(context);
         taskValidator.validatePagination(offset, limit);
         SqlBuilder sql = SqlBuilder.custom()
-                .append("WITH \"task_ins\" AS (SELECT \"id\", \"name\", \"template_id\", \"category\", \"tenant_id\", \"attributes\", \"created_by\", \"created_at\", \"updated_by\", \"updated_at\" FROM ")
+                .append("WITH \"task_ins\" AS (SELECT \"id\", \"name\", \"template_id\", \"category\", \"tenant_id\", ")
+                .append("\"attributes\", \"created_by\", \"created_at\", \"updated_by\", \"updated_at\" FROM ")
                 .appendIdentifier("task")
                 .append(" WHERE 1 = 1 ");
         return listTaskEntities(filter, offset, limit, sql, new LinkedList<>(), actualContext);
     }
 
     @Override
-    public RangedResultSet<TaskEntity> listMeta(MetaFilter filter, boolean latestOnly, long offset, int limit,
+    public RangedResultSet<TaskEntity> listMeta(MetaFilter filter, boolean isLatestOnly, long offset, int limit,
             OperationContext context) {
         OperationContext actualContext = this.validateOperationContext(context);
         taskValidator.validatePagination(offset, limit);
@@ -385,9 +387,9 @@ public class TaskServiceImpl implements TaskService {
             return Entities.emptyRangedResultSet(offset, limit);
         }
         String offsetSql = " OFFSET ? LIMIT ?";
-        String countSql = createCountSql(latestOnly, whereSql, orderBySql);
-        long total = ((Number) executor.executeScalar(countSql, args)).longValue();
-        String selectSql = createSelectSql(latestOnly, whereSql, orderBySql, offsetSql);
+        String countSql = createCountSql(isLatestOnly, whereSql, orderBySql);
+        long total = (ObjectUtils.<Number>cast(executor.executeScalar(countSql, args))).longValue();
+        String selectSql = createSelectSql(isLatestOnly, whereSql, orderBySql, offsetSql);
         args.add(offset);
         args.add(limit);
         List<Map<String, Object>> rows = executor.executeQuery(selectSql, args);
@@ -405,8 +407,8 @@ public class TaskServiceImpl implements TaskService {
                 .append(" = ?");
     }
 
-    private static String createCountSql(boolean lastOnly, SqlBuilder whereSql, SqlBuilder orderBySql) {
-        if (lastOnly) {
+    private static String createCountSql(boolean isLastOnly, SqlBuilder whereSql, SqlBuilder orderBySql) {
+        if (isLastOnly) {
             return "SELECT count(1) " + " FROM ( SELECT *, row_number() over (PARTITION by \"template_id\" "
                     + orderBySql + ") AS group_idx " + whereSql + ") s WHERE s.group_idx = 1";
         } else {
@@ -414,8 +416,8 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
-    private static String createSelectSql(boolean lastOnly, SqlBuilder where, SqlBuilder order, String offset) {
-        if (lastOnly) {
+    private static String createSelectSql(boolean isLastOnly, SqlBuilder where, SqlBuilder order, String offset) {
+        if (isLastOnly) {
             return "SELECT s.\"id\", s.\"name\", s.\"template_id\", s.\"category\", s.\"tenant_id\", "
                     + "s.\"attributes\", s.\"created_by\", s.\"created_at\", s.\"updated_by\", s.\"updated_at\""
                     + " FROM ( SELECT *, row_number() over (PARTITION by \"template_id\"" + order + " ) AS group_idx "
@@ -427,35 +429,35 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private static boolean buildMetaWhereSql(MetaFilter filter, SqlBuilder sql, List<Object> args) {
-        boolean result = true;
+        boolean isBuildSuccess = true;
         if (CollectionUtils.isNotEmpty(filter.getVersionIds())) {
-            result = whereIn(UndefinableValue.defined(filter.getVersionIds()),
+            isBuildSuccess = whereIn(UndefinableValue.defined(filter.getVersionIds()),
                     stream -> stream.filter(Entities::isId).map(Entities::canonicalizeId), sql, args, "id");
         }
         if (CollectionUtils.isNotEmpty(filter.getMetaIds())) {
-            result = result && whereIn(UndefinableValue.defined(filter.getMetaIds()),
+            isBuildSuccess = isBuildSuccess && whereIn(UndefinableValue.defined(filter.getMetaIds()),
                     stream -> stream.filter(Entities::isId).map(Entities::canonicalizeId), sql, args, "template_id");
         }
         if (CollectionUtils.isNotEmpty(filter.getCategories())) {
-            result = result && whereIn(UndefinableValue.defined(filter.getCategories()),
+            isBuildSuccess = isBuildSuccess && whereIn(UndefinableValue.defined(filter.getCategories()),
                     stream -> stream.filter(StringUtils::isNotEmpty), sql, args, "category");
         }
         if (MapUtils.isNotEmpty(filter.getAttributes())) {
-            result = result && whereAttributesIn(filter.getAttributes(), sql, args);
+            isBuildSuccess = isBuildSuccess && whereAttributesIn(filter.getAttributes(), sql, args);
         }
         if (CollectionUtils.isNotEmpty(filter.getCreators())) {
-            result = result && whereIn(UndefinableValue.defined(filter.getCreators()),
+            isBuildSuccess = isBuildSuccess && whereIn(UndefinableValue.defined(filter.getCreators()),
                     stream -> stream.filter(StringUtils::isNotEmpty), sql, args, "created_by");
         }
         if (CollectionUtils.isNotEmpty(filter.getNames())) {
-            result = result && whereNames(UndefinableValue.defined(filter.getNames()), Sqls::escapeLikeValue, sql,
-                    args);
+            isBuildSuccess = isBuildSuccess && whereNames(UndefinableValue.defined(filter.getNames()),
+                    Sqls::escapeLikeValue, sql, args);
         }
         if (CollectionUtils.isNotEmpty(filter.getVersions())) {
-            result = result && whereNames(UndefinableValue.defined(filter.getVersions()),
+            isBuildSuccess = isBuildSuccess && whereNames(UndefinableValue.defined(filter.getVersions()),
                     (s) -> Sqls.escapeLeftLikeValue("|" + s), sql, args);
         }
-        return result;
+        return isBuildSuccess;
     }
 
     private static boolean whereAttributesIn(Map<String, List<String>> attributes, SqlBuilder sql, List<Object> args) {
@@ -492,19 +494,12 @@ public class TaskServiceImpl implements TaskService {
         }
         sql.append(") ");
         String suffix = sql.toString();
-
         long total = countTaskEntityNumber(suffix, args);
-
-        sql = createTaskQuerySql(suffix);
-
-        args = new ArrayList<>(args);
-        args.addAll(Arrays.asList(offset, limit));
-        List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
-        List<TaskEntity> entities = new ArrayList<>(rows.size());
-        for (Map<String, Object> row : rows) {
-            TaskEntity entity = this.convertRowToTaskEntity(row);
-            entities.add(entity);
-        }
+        SqlBuilder querySql = createTaskQuerySql(suffix);
+        List<Object> queryArgs = new ArrayList<>(args);
+        queryArgs.addAll(Arrays.asList(offset, limit));
+        List<Map<String, Object>> rows = this.executor.executeQuery(querySql.toString(), queryArgs);
+        List<TaskEntity> entities = rows.stream().map(this::convertRowToTaskEntity).collect(Collectors.toList());
         this.fillProperties(entities, actualContext);
         this.fillTypes(entities, actualContext);
         this.fillIndexes(entities, actualContext);
@@ -513,7 +508,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private long countTaskEntityNumber(String suffix, List<Object> args) {
-        return ((Number) this.executor.executeScalar(suffix + "SELECT COUNT(1) FROM \"task_ins\"", args)).longValue();
+        return (ObjectUtils.<Number>cast(this.executor.executeScalar(suffix + "SELECT COUNT(1) FROM \"task_ins\"",
+                args))).longValue();
     }
 
     private static SqlBuilder createTaskQuerySql(String suffix) {
@@ -522,15 +518,15 @@ public class TaskServiceImpl implements TaskService {
 
     private TaskEntity convertRowToTaskEntity(Map<String, Object> row) {
         TaskEntity entity = new TaskEntity();
-        entity.setId((String) row.get("id"));
-        entity.setName((String) row.get("name"));
-        entity.setTemplateId((String) row.get("template_id"));
-        entity.setCategory(JaneCategory.valueOf((String) row.get("category")));
+        entity.setId(ObjectUtils.cast(row.get("id")));
+        entity.setName(ObjectUtils.cast(row.get("name")));
+        entity.setTemplateId(ObjectUtils.cast(row.get("template_id")));
+        entity.setCategory(JaneCategory.valueOf(ObjectUtils.cast(row.get("category"))));
         entity.setAttributes(this.serializer.deserialize(Objects.toString(row.get("attributes"))));
-        entity.setCreator((String) row.get("created_by"));
-        entity.setCreationTime(((Timestamp) row.get("created_at")).toLocalDateTime());
-        entity.setLastModifier((String) row.get("updated_by"));
-        entity.setLastModificationTime(((Timestamp) row.get("updated_at")).toLocalDateTime());
+        entity.setCreator(ObjectUtils.cast(row.get("created_by")));
+        entity.setCreationTime((ObjectUtils.<Timestamp>cast(row.get("created_at"))).toLocalDateTime());
+        entity.setLastModifier(ObjectUtils.cast(row.get("updated_by")));
+        entity.setLastModificationTime((ObjectUtils.<Timestamp>cast(row.get("updated_at"))).toLocalDateTime());
         return entity;
     }
 
@@ -592,11 +588,10 @@ public class TaskServiceImpl implements TaskService {
         if (columnFilter == null || !columnFilter.defined()) {
             return true;
         }
-        Stream<String> valueStream = Optional.ofNullable(columnFilter.get())
+        List<String> queryValueList = valueFilter.apply(Optional.ofNullable(columnFilter.get())
                 .map(Collection::stream)
                 .orElseGet(Stream::empty)
-                .map(StringUtils::trim);
-        List<String> queryValueList = valueFilter.apply(valueStream).collect(Collectors.toList());
+                .map(StringUtils::trim)).collect(Collectors.toList());
         if (queryValueList.isEmpty()) {
             return false;
         }
@@ -731,7 +726,7 @@ public class TaskServiceImpl implements TaskService {
      * 获取TaskPropertiesDeclarations
      *
      * @param taskId 任务的taskId
-     * @param template
+     * @param template 任务模板
      * @param propertyDeclarations 任务属性的声明集合
      * @return 表示用taskId和任务属性声明集合构建的TaskPropertiesDeclarations
      */
@@ -762,7 +757,8 @@ public class TaskServiceImpl implements TaskService {
             // 如果输入了模板ID，但是根据名称却找到了另外的模板，则认为发生冲突
             if (pd.templateId().defined() && !StringUtils.equalsIgnoreCase(pd.templateId().get(), property.id())) {
                 throw new ConflictException(ErrorCodes.PROPERTY_TEMPLATE_EXCEPT_NOT_EQUALS_ACTUAL);
-            } else if (pd.templateId().defined()) {
+            }
+            if (pd.templateId().defined()) {
                 return pd;
             }
             TaskProperty.Declaration.Builder builder = TaskProperty.Declaration.custom()
@@ -784,7 +780,7 @@ public class TaskServiceImpl implements TaskService {
      *
      * @param taskId 表示任务定义的唯一标识的 {@link String}。
      * @param declaration 表示任务声明的 {@link TaskDeclaration}。
-     * @param template
+     * @param template 任务模板
      * @param context 表示操作上下文的 {@link OperationContext}。
      */
     private void saveDeclarations(String taskId, TaskDeclaration declaration, TaskTemplate template,
@@ -822,7 +818,7 @@ public class TaskServiceImpl implements TaskService {
             sql.append('\n').append(Sqls.script(SQL_MODULE, "insert-trigger-conflict"));
             sql.append(" DO NOTHING RETURNING id");
             List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
-            ids = rows.stream().map(row -> (String) row.get("id")).collect(Collectors.toList());
+            ids = rows.stream().map(row -> ObjectUtils.<String>cast(row.get("id"))).collect(Collectors.toList());
         }
         SqlBuilder sqlBuilder = SqlBuilder.custom().append(Sqls.script(SQL_MODULE, "delete-trigger-by-task"));
         SqlBuilder sql = ids.size() > 0 ? sqlBuilder
@@ -869,19 +865,20 @@ public class TaskServiceImpl implements TaskService {
                 .append(')');
         List<Object> args = new ArrayList<>(taskMap.keySet());
         List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
-        Set<String> categoryIds = rows.stream().map(row -> (String) row.get("category_id")).collect(Collectors.toSet());
+        Set<String> categoryIds =
+                rows.stream().map(row -> ObjectUtils.<String>cast(row.get("category_id"))).collect(Collectors.toSet());
         List<CategoryEntity> categories = this.categoryService.listByIds(categoryIds);
         Map<String, String> categoryNames = categories.stream()
                 .collect(Collectors.toMap(CategoryEntity::getId, CategoryEntity::getName));
         Map<String, Map<String, List<String>>> group = new HashMap<>();
         for (Map<String, Object> row : rows) {
-            String categoryId = (String) row.get("category_id");
+            String categoryId = ObjectUtils.cast(row.get("category_id"));
             String categoryName = categoryNames.get(categoryId);
             if (categoryName == null) {
                 continue;
             }
-            String taskId = (String) row.get("task_id");
-            String fitableId = (String) row.get("fitable_id");
+            String taskId = ObjectUtils.cast(row.get("task_id"));
+            String fitableId = ObjectUtils.cast(row.get("fitable_id"));
             group.computeIfAbsent(taskId, key -> new HashMap<>())
                     .computeIfAbsent(categoryName, key -> new ArrayList<>())
                     .add(fitableId);
