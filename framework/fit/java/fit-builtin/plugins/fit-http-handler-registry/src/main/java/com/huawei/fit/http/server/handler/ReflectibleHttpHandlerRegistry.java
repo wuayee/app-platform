@@ -190,6 +190,12 @@ public class ReflectibleHttpHandlerRegistry extends AbstractHandlerResolver
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 获取全局路径模式的前缀解析器。
+     *
+     * @param container 表示容器的 {@link BeanContainer}。
+     * @return 表示全局路径模式前缀解析器的 {@link GlobalPathPatternPrefixResolver}。
+     */
     public static GlobalPathPatternPrefixResolver getPathPatternPrefixResolver(BeanContainer container) {
         FitGlobalPathPatternPrefixResolver defaultResolver = new FitGlobalPathPatternPrefixResolver(container);
         return container.factory(GlobalPathPatternPrefixResolverSupplier.class)

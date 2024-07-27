@@ -28,6 +28,11 @@ public class CheckController {
         this.server = server;
     }
 
+    /**
+     * 获取所有服务的信息。
+     *
+     * @return 表示所有服务信息的 {@link Map}{@code <}{@link String}{@code , }{@link String}{@code >}。
+     */
     @DocumentIgnored
     @GetMapping("/check")
     public Map<String, Object> getAllServices() {

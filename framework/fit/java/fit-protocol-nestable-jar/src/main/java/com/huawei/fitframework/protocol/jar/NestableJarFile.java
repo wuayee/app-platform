@@ -112,6 +112,11 @@ public final class NestableJarFile extends JarFile {
         return this.jar.entries().size();
     }
 
+    /**
+     * 获取 {@link Jar} 的权限。
+     *
+     * @return 表示权限的 {@link Permission}。
+     */
     public Permission getPermission() {
         return this.jar.permission();
     }
@@ -189,6 +194,12 @@ public final class NestableJarFile extends JarFile {
             return this.entry.extra();
         }
 
+        /**
+         * 获取 {@link JarEntry} 的输入流。
+         *
+         * @return 表示输入流的 {@link JarEntry}。
+         * @throws IOException 当读取过程中发生输入输出异常时。
+         */
         public InputStream getInputStream() throws IOException {
             return this.entry.read();
         }

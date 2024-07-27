@@ -19,10 +19,19 @@ import java.util.Arrays;
  * @since 2022-06-07
  */
 public final class U2 implements Comparable<U2> {
+    /**
+     * 表示数值 0 的 2 字节数据。
+     */
     public static final U2 ZERO = U2.of(0);
 
+    /**
+     * 表示数值 1 的 2 字节数据。
+     */
     public static final U2 ONE = U2.of(1);
 
+    /**
+     * 表示数值 2 的 2 字节数据。
+     */
     public static final U2 TWO = U2.of(2);
 
     private final short value;
@@ -104,10 +113,22 @@ public final class U2 implements Comparable<U2> {
         return Integer.compare(this.intValue(), another.intValue());
     }
 
+    /**
+     * 将当前的数据与另一个数据进行加法运算。
+     *
+     * @param another 表示另一个数据的 {@link U2}。
+     * @return 表示运算结果的 {@link U2}。
+     */
     public U2 add(U2 another) {
         return of(this.intValue() + another.intValue());
     }
 
+    /**
+     * 将当前的数据与另一个数据进行按位与运算。
+     *
+     * @param another 表示另一个数据的 {@link U2}。
+     * @return 表示运算结果的 {@link U2}。
+     */
     public U2 and(U2 another) {
         return of(this.intValue() & another.intValue());
     }

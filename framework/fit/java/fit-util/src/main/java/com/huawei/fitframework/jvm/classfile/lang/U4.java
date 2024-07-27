@@ -16,14 +16,25 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * 为JVM提供4字节的数据。
+ * 为 JVM 提供4字节的数据。
  *
  * @author 梁济时 l00815032
  * @since 2022-06-07
  */
 public final class U4 implements Comparable<U4> {
+    /**
+     * 表示数值 0 的 4 字节数据。
+     */
     public static final U4 ZERO = U4.of(0);
+
+    /**
+     * 表示数值 1 的 4 字节数据。
+     */
     public static final U4 ONE = U4.of(1);
+
+    /**
+     * 表示数值 2 的 4 字节数据。
+     */
     public static final U4 TWO = U4.of(2);
 
     private static List<U4> cache;
@@ -108,6 +119,12 @@ public final class U4 implements Comparable<U4> {
         return Integer.compare(this.value, another.value);
     }
 
+    /**
+     * 将当前的数据与另一个数据进行加法运算。
+     *
+     * @param another 表示另一个数据的 {@link U4}。
+     * @return 表示相加结果的 {@link U4}。
+     */
     public U4 add(U4 another) {
         return of(this.value + another.value);
     }

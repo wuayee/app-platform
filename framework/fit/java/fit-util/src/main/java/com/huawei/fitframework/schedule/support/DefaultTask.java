@@ -53,6 +53,9 @@ public class DefaultTask implements Task {
         return this.policy;
     }
 
+    /**
+     * 表示 {@link DisposableTask} 的默认实现，用于创建一个可以被丢弃的任务。
+     */
     public static class DefaultDisposableTask extends DefaultTask implements DisposableTask {
         private DefaultDisposableTask(Callable<?> callable, Thread.UncaughtExceptionHandler uncaughtExceptionHandler) {
             super(callable, uncaughtExceptionHandler, ExecutePolicy.disposable());
@@ -67,6 +70,11 @@ public class DefaultTask implements Task {
         private Thread.UncaughtExceptionHandler uncaughtExceptionHandler;
         private ExecutePolicy policy;
 
+        /**
+         * 使用任务初始化 {@link Builder} 类的新实例。
+         *
+         * @param task 表示任务对象的 {@link Task}。
+         */
         public Builder(Task task) {
             if (task != null) {
                 this.callable = task;

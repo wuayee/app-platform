@@ -137,6 +137,12 @@ public interface MavenCoordinate {
         return Optional.ofNullable(jarFile).map(JarMavenCoordinateResolver::resolve);
     }
 
+    /**
+     * 从给定的 Maven 归档件构建一个 Maven 坐标。
+     *
+     * @param artifact 表示 Maven 归档件的 {@link Artifact}。
+     * @return 表示 Maven 坐标的 {@link MavenCoordinate}。
+     */
     static MavenCoordinate buildCoordinate(Artifact artifact) {
         return MavenCoordinate.builder()
                 .setGroupId(artifact.getGroupId())

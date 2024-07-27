@@ -64,5 +64,11 @@ public enum TransactionIsolationLevel {
         }
     };
 
+    /**
+     * 设置事务隔离级别。
+     *
+     * @param connection 表示数据库连接的 {@link Connection}。
+     * @throws SQLException 当数据库访问或操作异常时。
+     */
     public abstract void accept(Connection connection) throws SQLException;
 }

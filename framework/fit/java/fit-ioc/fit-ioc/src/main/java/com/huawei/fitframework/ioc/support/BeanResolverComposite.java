@@ -52,12 +52,22 @@ public class BeanResolverComposite implements BeanResolver {
         this.resolvers = new LinkedList<>();
     }
 
+    /**
+     * 将解析程序集合全部添加到组合中。
+     *
+     * @param resolvers 表示解析程序集合的 {@link Iterable}{@code <}{@link BeanResolver}{@code >}。
+     */
     public void addAll(Iterable<BeanResolver> resolvers) {
         if (resolvers != null) {
             resolvers.forEach(this::add);
         }
     }
 
+    /**
+     * 将解析程序添加到组合中。
+     *
+     * @param resolver 表示解析程序的 {@link BeanResolver}。
+     */
     public void add(BeanResolver resolver) {
         if (resolver == null) {
             return;
@@ -69,12 +79,22 @@ public class BeanResolverComposite implements BeanResolver {
         }
     }
 
+    /**
+     * 从组合中移除所有指定的解析程序集合。
+     *
+     * @param resolvers 表示解析程序的 {@link Iterable}{@code <}{@link BeanResolver}{@code >}。
+     */
     public void removeAll(Iterable<BeanResolver> resolvers) {
         if (resolvers != null) {
             resolvers.forEach(this::remove);
         }
     }
 
+    /**
+     * 从组合中移除指定的解析程序。
+     *
+     * @param resolver 表示解析程序的 {@link BeanResolver}。
+     */
     public void remove(BeanResolver resolver) {
         if (resolver == null) {
             return;
@@ -86,14 +106,30 @@ public class BeanResolverComposite implements BeanResolver {
         }
     }
 
+    /**
+     * 获取组合的解析程序的数量。
+     *
+     * @return 表示数量的 {@code int}。
+     */
     public int size() {
         return this.resolvers.size();
     }
 
+    /**
+     * 检查组合的解析程序是否为空。
+     *
+     * @return 表示解析程序是否为空的结果的 {@code boolean}。
+     */
     public boolean empty() {
         return this.size() < 1;
     }
 
+    /**
+     * 获取指定索引处的解析程序。
+     *
+     * @param index 表示索引的 {@code int}。
+     * @return 表示解析程序的 {@link BeanResolver}。
+     */
     public BeanResolver get(int index) {
         return this.resolvers.get(index);
     }
@@ -119,17 +155,12 @@ public class BeanResolverComposite implements BeanResolver {
         }
         List<String> names = definitions.stream().map(BeanDefinition::name).distinct().collect(Collectors.toList());
         if (names.size() > 1) {
-            throw new BeanDefinitionException(StringUtils.format(
-                    "Bean has more than one name defined. [names={0}]",
+            throw new BeanDefinitionException(StringUtils.format("Bean has more than one name defined. [names={0}]",
                     names.stream().collect(Collectors.joining(", ", "[", "]"))));
         }
-        List<Type> types = definitions.stream()
-                .map(BeanDefinition::type)
-                .distinct()
-                .collect(Collectors.toList());
+        List<Type> types = definitions.stream().map(BeanDefinition::type).distinct().collect(Collectors.toList());
         if (types.size() > 1) {
-            throw new BeanDefinitionException(StringUtils.format(
-                    "Bean has more than one type defined. [types={0}]",
+            throw new BeanDefinitionException(StringUtils.format("Bean has more than one type defined. [types={0}]",
                     types.stream().map(Type::getTypeName).collect(Collectors.joining(", ", "[", "]"))));
         }
         return Optional.of(BeanDefinition.custom()
@@ -154,10 +185,8 @@ public class BeanResolverComposite implements BeanResolver {
     }
 
     private static BeanApplicableScope applicable(List<BeanDefinition> definitions) {
-        OptionalInt optional = definitions.stream()
-                .map(BeanDefinition::applicable)
-                .mapToInt(BeanApplicableScope::value)
-                .max();
+        OptionalInt optional =
+                definitions.stream().map(BeanDefinition::applicable).mapToInt(BeanApplicableScope::value).max();
         if (optional.isPresent()) {
             int value = optional.getAsInt();
             EnumSet<BeanApplicableScope> scopes = EnumSet.allOf(BeanApplicableScope.class);

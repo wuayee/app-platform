@@ -17,6 +17,9 @@ import java.util.List;
  * @since 2020-10-29
  */
 public class ParameterizedTypeResolvingFailureResult implements ParameterizedTypeResolvingResult {
+    /**
+     * 提供一个静态的 {@link ParameterizedTypeResolvingResult} 的实例。
+     */
     public static final ParameterizedTypeResolvingResult INSTANCE = new ParameterizedTypeResolvingFailureResult();
 
     private ParameterizedTypeResolvingFailureResult() {}

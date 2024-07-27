@@ -28,18 +28,33 @@ public class AnnotationPropertyForwarderComposite implements AnnotationPropertyF
         this.forwarders = new LinkedList<>();
     }
 
+    /**
+     * 添加一个 {@link AnnotationPropertyForwarder} 到组合中。
+     *
+     * @param forwarder 表示要添加的 {@link AnnotationPropertyForwarder}。
+     */
     public void add(AnnotationPropertyForwarder forwarder) {
         if (forwarder != null) {
             this.forwarders.add(forwarder);
         }
     }
 
+    /**
+     * 从组合中移除一个 {@link AnnotationPropertyForwarder}。
+     *
+     * @param forwarder 表示要移除的 {@link AnnotationPropertyForwarder}。
+     */
     public void remove(AnnotationPropertyForwarder forwarder) {
         if (forwarder != null) {
             this.forwarders.remove(forwarder);
         }
     }
 
+    /**
+     * 获取组合中的 {@link AnnotationPropertyForwarder} 数量。
+     *
+     * @return 表示数量的 {@code int}。
+     */
     public int size() {
         return this.forwarders.size();
     }
