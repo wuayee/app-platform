@@ -342,7 +342,6 @@ public class TaskServiceImplTest extends DatabaseBaseTest {
                     .put("tenant_id", "a3a7df7e45f44451970a6a8e138382c2")
                     .build();
             when(dynamicSqlExecutor.executeQuery(any(), any())).thenReturn(Collections.singletonList(row));
-            this.mockTaskTemplateRepo();
             ConflictException ex = assertThrows(ConflictException.class,
                     () -> taskService.patch(TASK_ID, declaration, context));
             assertEquals(ErrorCodes.TASK_EXIST_IN_CURRENT_TENANT.getErrorCode(), ex.getCode());

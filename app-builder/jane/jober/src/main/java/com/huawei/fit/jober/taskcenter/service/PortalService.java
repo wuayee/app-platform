@@ -77,6 +77,8 @@ public interface PortalService {
      * @param owners owners
      * @param creators creators
      * @param tags tags
+     * @param categories categories
+     * @param taskIds taskIds
      * @param context context
      * @return List<TaskGroup>
      */
@@ -89,6 +91,7 @@ public interface PortalService {
      * @param owners owners
      * @param creators creators
      * @param tags tags
+     * @param taskIds taskIds
      * @param context context
      * @return List<TagCountEntity>
      */
@@ -155,7 +158,8 @@ public interface PortalService {
      * 批量为任务定义的属性打补丁。
      *
      * @param taskId 表示待修补的属性所属任务定义的唯一标识的 {@link String}。
-     * @param declarations 表示待修补的内容以属性唯一标识作为键的映射的 {@link Map}{@code <}{@link String}{@code , }{@link TaskProperty.Declaration}{@code >}。
+     * @param declarations 表示待修补的内容以属性唯一标识作为键的映射的 {@link Map}{@code <}{@link String}{@code ,
+     * }{@link TaskProperty.Declaration}{@code >}。
      * @param context 表示操作上下文的 {@link OperationContext}。
      */
     void patchProperties(String taskId, Map<String, TaskProperty.Declaration> declarations, OperationContext context);

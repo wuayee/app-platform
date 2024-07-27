@@ -40,6 +40,7 @@ import com.huawei.fitframework.serialization.ObjectSerializer;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.LazyLoader;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 import com.huawei.fitframework.util.TypeUtils;
 
@@ -111,11 +112,10 @@ public class PropertyServiceImpl implements PropertyService {
         });
         for (TaskProperty.Declaration propertyDeclaration : declaration.getProperties()) {
             TaskProperty property = oldProperties.get(StringUtils.toLowerCase(propertyDeclaration.name().get()));
-            if (property == null) {
-                continue;
+            if (property != null) {
+                TaskPropertyModifyingEvent event = new TaskPropertyModifyingEvent(this, property, propertyDeclaration);
+                this.plugin.publisherOfEvents().publishEvent(event);
             }
-            TaskPropertyModifyingEvent event = new TaskPropertyModifyingEvent(this, property, propertyDeclaration);
-            this.plugin.publisherOfEvents().publishEvent(event);
         }
         this.save(propertyObjects);
         this.delete(deletingPropertyIds);
@@ -139,8 +139,7 @@ public class PropertyServiceImpl implements PropertyService {
         modifiedPropertyNames.forEach(propertyName -> {
             TaskProperty oldProperty = oldProperties.get(propertyName);
             TaskProperty newProperty = newProperties.get(propertyName);
-            TaskPropertyModifiedEvent event = new TaskPropertyModifiedEvent(this, newProperty, oldProperty);
-            plugin.publisherOfEvents().publishEvent(event);
+            plugin.publisherOfEvents().publishEvent(new TaskPropertyModifiedEvent(this, newProperty, oldProperty));
         });
     }
 
@@ -231,8 +230,6 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     private List<TaskPropertyObject> dealNewTaskProperties(String taskId, TaskPropertiesDeclaration declaration) {
-        List<TaskPropertyObject> propertyObjects = new ArrayList<>(declaration.getProperties().size());
-
         TaskTemplate taskTemplate = declaration.getTemplate();
         if (Objects.isNull(taskTemplate) || CollectionUtils.isEmpty(taskTemplate.properties())) {
             // task未使用模板或者task的模拟中无模板属性，但是在taskProperty中期望使用模板属性
@@ -246,10 +243,10 @@ public class PropertyServiceImpl implements PropertyService {
                     .map(pd -> this.buildPropertyObject(taskId, pd))
                     .collect(Collectors.toList());
         }
-
         Map<String, TaskTemplateProperty> templatePropertyMap = taskTemplate.properties()
                 .stream()
                 .collect(Collectors.toMap(DomainObject::id, Function.identity()));
+        List<TaskPropertyObject> propertyObjects = new ArrayList<>(declaration.getProperties().size());
         for (TaskProperty.Declaration propertyDeclaration : declaration.getProperties()) {
             // 如果声明中不存在templateId，表示不使用模板
             if (!propertyDeclaration.templateId().defined()) {
@@ -261,13 +258,11 @@ public class PropertyServiceImpl implements PropertyService {
             if (!templatePropertyMap.containsKey(propertyDeclaration.templateId().get())) {
                 throw new BadRequestException(ErrorCodes.TEMPLATE_PROPERTY_NOT_FOUND);
             }
-
             // 各种符合，则使用模板创建属性：
             TaskTemplateProperty templateProperty = templatePropertyMap.get(propertyDeclaration.templateId().get());
             TaskPropertyObject object = buildPropertyObjectByTemplate(taskId, propertyDeclaration, templateProperty);
             propertyObjects.add(object);
         }
-
         return propertyObjects;
     }
 
@@ -339,11 +334,11 @@ public class PropertyServiceImpl implements PropertyService {
 
     private void acceptPropertyModify(TaskPropertyObject object, TaskProperty.Declaration declaration,
             Map<String, TaskTemplateProperty> templatePropertyMap, LazyLoader<Boolean> hasInstances) {
-        boolean required = this.required(declaration.required());
-        if (required && !nullIf(object.getRequired(), false) && hasInstances.get()) {
+        boolean isRequired = this.required(declaration.required());
+        if (isRequired && !nullIf(object.getRequired(), false) && hasInstances.get()) {
             throw new ConflictException(ErrorCodes.PROPERTY_CANNOT_BE_MODIFIED_WITH_INSTANCES);
         } else {
-            object.setRequired(required);
+            object.setRequired(isRequired);
         }
         object.setDescription(this.description(declaration.description()));
         object.setScope(this.scope(declaration.scope()));
@@ -351,24 +346,24 @@ public class PropertyServiceImpl implements PropertyService {
         this.acceptDataType(object, declaration, templatePropertyMap, hasInstances);
 
         object.setAppearance(this.appearance(declaration.appearance()));
-        boolean identifiable = this.identifiable(declaration.identifiable());
-        if (identifiable != nullIf(object.getIdentifiable(), false) && hasInstances.get()) {
+        boolean canIdentifiable = this.identifiable(declaration.identifiable());
+        if (canIdentifiable != nullIf(object.getIdentifiable(), false) && hasInstances.get()) {
             throw new ConflictException(ErrorCodes.PROPERTY_CANNOT_BE_MODIFIED_WITH_INSTANCES);
         } else {
-            object.setIdentifiable(identifiable);
+            object.setIdentifiable(canIdentifiable);
         }
     }
 
     private void acceptDataType(TaskPropertyObject originProperty, TaskProperty.Declaration declaration,
             Map<String, TaskTemplateProperty> templatePropertyMap, LazyLoader<Boolean> hasInstances) {
-        boolean usedTemplate = !StringUtils.equals(originProperty.getTemplateId(), Entities.emptyId());
-        boolean modifyTemplate = declaration.templateId().defined();
-        if (usedTemplate && modifyTemplate) {
+        boolean hasUsedTemplate = !StringUtils.equals(originProperty.getTemplateId(), Entities.emptyId());
+        boolean hasModifyTemplate = declaration.templateId().defined();
+        if (hasUsedTemplate && hasModifyTemplate) {
             // 已经使用模板了，不能修改模板
             if (!StringUtils.equalsIgnoreCase(declaration.templateId().get(), originProperty.getTemplateId())) {
                 throw new ConflictException(ErrorCodes.PROPERTY_HAS_USED_TEMPLATE);
             }
-        } else if (!usedTemplate && modifyTemplate) { // 过去未使用模板，新增模板
+        } else if (!hasUsedTemplate && hasModifyTemplate) { // 过去未使用模板，新增模板
             if (hasInstances.get()) {
                 throw new ConflictException(ErrorCodes.PROPERTY_CANNOT_BE_MODIFIED_WITH_INSTANCES);
             }
@@ -384,7 +379,7 @@ public class PropertyServiceImpl implements PropertyService {
                 if (hasInstances.get()) {
                     throw new ConflictException(ErrorCodes.PROPERTY_CANNOT_BE_MODIFIED_WITH_INSTANCES);
                 }
-                if (usedTemplate) {
+                if (hasUsedTemplate) {
                     // 已经使用模板了，不能修改dataType
                     throw new ConflictException(ErrorCodes.PROPERTY_HAS_USED_TEMPLATE);
                 }
@@ -488,17 +483,17 @@ public class PropertyServiceImpl implements PropertyService {
                 .executeQuery(this.dynamicSqlExecutor);
         return rows.stream().map(row -> {
             TaskPropertyObject object = new TaskPropertyObject();
-            object.setId((String) row.get("id"));
-            object.setTaskId((String) row.get("task_id"));
-            object.setTemplateId((String) row.get("template_id"));
-            object.setName((String) row.get("name"));
-            object.setRequired((Boolean) row.get("required"));
-            object.setDescription((String) row.get("description"));
-            object.setScope((String) row.get("scope"));
-            object.setDataType((String) row.get("data_type"));
-            object.setSequence(((Number) row.get("sequence")).intValue());
+            object.setId(ObjectUtils.cast(row.get("id")));
+            object.setTaskId(ObjectUtils.cast(row.get("task_id")));
+            object.setTemplateId(ObjectUtils.cast(row.get("template_id")));
+            object.setName(ObjectUtils.cast(row.get("name")));
+            object.setRequired(Boolean.TRUE.equals(row.get("required")));
+            object.setDescription(ObjectUtils.cast(row.get("description")));
+            object.setScope(ObjectUtils.cast(row.get("scope")));
+            object.setDataType(ObjectUtils.cast(row.get("data_type")));
+            object.setSequence(ObjectUtils.<Number>cast(row.get("sequence")).intValue());
             object.setAppearance(Optional.ofNullable(row.get("appearance")).map(Object::toString).orElse("{}"));
-            object.setIdentifiable((Boolean) row.get("identifiable"));
+            object.setIdentifiable(Boolean.TRUE.equals(row.get("identifiable")));
             return object;
         }).collect(Collectors.toList());
     }

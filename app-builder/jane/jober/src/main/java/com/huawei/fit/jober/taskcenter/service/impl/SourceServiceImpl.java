@@ -52,6 +52,7 @@ import com.huawei.fitframework.model.RangedResultSet;
 import com.huawei.fitframework.plugin.Plugin;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.LazyLoader;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -117,7 +118,7 @@ public class SourceServiceImpl implements SourceService {
         this.taskServiceLazyLoader = new LazyLoader<>(() -> plugin.container().beans().get(TaskService.class));
     }
 
-    // TODO 需要删除对 TaskService 的引用。
+    // 需要删除对 TaskService 的引用。
     //  当前实现引用 TaskService 的原因，是需要在调用 TaskInstance.Repo 接口时需要传入 TaskEntity，需要从 TaskService 中查询。
     //  后续需要对当前实现进行重构，重构后的接口方法中应直接接收一个 TaskEntity 实例而非 taskId，不需要从 TaskService 查询。
     //  对 TaskEntity 的查询交给调用方来进行。
@@ -134,7 +135,7 @@ public class SourceServiceImpl implements SourceService {
         String actualTaskId = sourceValidator.validateTaskId(taskId);
         relationshipValidator.validateTaskExistInTenant(actualTaskId, context.tenantId());
         relationshipValidator.validateTaskTypeExistInTask(typeId, actualTaskId);
-        // TODO 兼容逻辑，暂时可不传入所属任务类型的唯一标识，并根据名称自动获取，后续要求必须传入。
+        // 兼容逻辑，暂时可不传入所属任务类型的唯一标识，并根据名称自动获取，后续要求必须传入。
         String actualTypeId;
         if (typeId == null) {
             String sourceName = UndefinableValue.require(declaration.getName(),
@@ -173,7 +174,7 @@ public class SourceServiceImpl implements SourceService {
     private String getTypeName(String typeId) {
         String sql = "SELECT name FROM task_type WHERE id = ?";
         List<Object> args = Collections.singletonList(typeId);
-        return (String) this.executor.executeScalar(sql, args);
+        return ObjectUtils.cast(this.executor.executeScalar(sql, args));
     }
 
     private SourceAdapter adapterOf(String type) {
@@ -190,13 +191,13 @@ public class SourceServiceImpl implements SourceService {
                 "SELECT id, name FROM task_type WHERE tree_id = (SELECT tree_id FROM task_tree_task WHERE task_id = ?)",
                 Collections.singletonList(taskId));
         Optional<Map<String, Object>> optionalMap = rows.stream()
-                .filter(row -> StringUtils.equals((String) row.get("name"), sourceName))
+                .filter(row -> StringUtils.equals(ObjectUtils.cast(row.get("name")), sourceName))
                 .findAny();
         if (!optionalMap.isPresent()) {
             log.error("Cannot find specify type by task_id {} and node_name {}", taskId, sourceName);
             throw new NotFoundException(ErrorCodes.NODE_NOT_FOUND);
         }
-        return (String) optionalMap.get().get("id");
+        return ObjectUtils.cast(optionalMap.get().get("id"));
     }
 
     private void saveTaskTypeRelation(String typeId, String sourceId, OperationContext context) {
@@ -224,15 +225,9 @@ public class SourceServiceImpl implements SourceService {
             OperationContext context) {
         String actualTaskId = sourceValidator.validateTaskId(taskId);
         String actualSourceId = sourceValidator.validateSourceId(sourceId);
-        relationshipValidator.validateTaskExistInTenant(actualTaskId, context.tenantId());
-        relationshipValidator.validateTaskTypeExistInTask(typeId, actualTaskId);
-        relationshipValidator.validateSourceExistInTaskType(actualSourceId, typeId);
-        SourceObject sourceObject = sourceMapper.select(actualSourceId);
+        this.validateIdRelation(typeId, actualTaskId, actualSourceId, context);
         List<Object> parameterList = new LinkedList<>();
-        StringBuilder builder = new StringBuilder();
-        String prefix = "UPDATE task_source SET ";
-        String suffix = " WHERE task_id = ? AND id = ?";
-        builder.append(prefix);
+        StringBuilder builder = new StringBuilder("UPDATE task_source SET ");
         List<String> patchColumnList = new LinkedList<>();
         declaration.getApp().ifDefined(app -> {
             patchColumnList.add("app = ?");
@@ -243,23 +238,18 @@ public class SourceServiceImpl implements SourceService {
             parameterList.add(type);
         });
         if (!patchColumnList.isEmpty()) {
-            builder.append(String.join(",", patchColumnList));
-            builder.append(suffix);
+            builder.append(String.join(",", patchColumnList)).append(" WHERE task_id = ? AND id = ?");
             parameterList.add(actualTaskId);
             parameterList.add(actualSourceId);
-            int affectedRows = executor.executeUpdate(builder.toString(), parameterList);
-            if (affectedRows != 1) {
+            if (executor.executeUpdate(builder.toString(), parameterList) != 1) {
                 throw new ServerInternalException("Failed to patch source of database.");
             }
         }
-        // TODO 兼容逻辑，暂时可不传入所属任务类型的唯一标识，并根据名称自动获取，后续要求必须传入。
-        String actualTypeId;
-        if (typeId == null) {
-            actualTypeId = this.getTypeId(sourceObject);
-        } else {
-            actualTypeId = Entities.validateId(typeId, () -> new BadRequestException(ErrorCodes.TYPE_ID_INVALID));
-        }
-
+        // 兼容逻辑，暂时可不传入所属任务类型的唯一标识，并根据名称自动获取，后续要求必须传入。
+        SourceObject sourceObject = sourceMapper.select(actualSourceId);
+        String actualTypeId = typeId == null
+                ? this.getTypeId(sourceObject)
+                : Entities.validateId(typeId, () -> new BadRequestException(ErrorCodes.TYPE_ID_INVALID));
         if (declaration.getType().defined()) {
             // 若declaration中有type，说明变化了，此时需要删除旧的，新建新的
             SourceObject sourceObjectAfterPatch = sourceMapper.select(actualSourceId);
@@ -285,6 +275,13 @@ public class SourceServiceImpl implements SourceService {
             List<InstanceEventDeclaration> events = declaration.getEvents().withDefault(Collections.emptyList());
             this.instanceEventService.save(Collections.singletonMap(actualSourceId, events), context);
         }
+    }
+
+    private void validateIdRelation(String typeId, String actualTaskId, String actualSourceId,
+            OperationContext context) {
+        relationshipValidator.validateTaskExistInTenant(actualTaskId, context.tenantId());
+        relationshipValidator.validateTaskTypeExistInTask(typeId, actualTaskId);
+        relationshipValidator.validateSourceExistInTaskType(actualSourceId, typeId);
     }
 
     private void sendScheduleSourceEvent(String typeId, SourceObject sourceObject, String eventType) {
@@ -313,16 +310,14 @@ public class SourceServiceImpl implements SourceService {
         sourceValidator.validateTaskId(taskId);
         String actualSourceId = sourceValidator.validateSourceId(sId);
         Validation.notBlank(actualSourceId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "sourceId"));
-        relationshipValidator.validateTaskExistInTenant(taskId, context.tenantId());
-        relationshipValidator.validateTaskTypeExistInTask(typeId, taskId);
-        relationshipValidator.validateSourceExistInTaskType(actualSourceId, typeId);
+        this.validateIdRelation(typeId, taskId, actualSourceId, context);
         SourceObject sourceObject = sourceMapper.select(actualSourceId);
         // 先删除instance，再去删除source
         TaskEntity task = this.taskService().retrieve(taskId, context);
         instanceServiceLazyLoader.get().deleteBySource(task, sId, context);
         sourceMapper.delete(actualSourceId);
         this.adapterOf(sourceObject.getType()).deleteExtension(actualSourceId, context);
-        // TODO 兼容逻辑，暂时可不传入所属任务类型的唯一标识，并根据名称自动获取，后续要求必须传入。
+        // 兼容逻辑，暂时可不传入所属任务类型的唯一标识，并根据名称自动获取，后续要求必须传入。
         String actualTypeId;
         if (typeId == null) {
             actualTypeId = this.getTypeId(sourceObject);
@@ -344,7 +339,7 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public SourceEntity retrieve(String taskId, String typeId, String sourceId, OperationContext context) {
         sourceValidator.validateTaskId(taskId);
-        // TODO 兼容性逻辑，后续为必传
+        // 兼容性逻辑，后续为必传
         if (typeId != null) {
             sourceValidator.validateTypeId(typeId);
         }
@@ -370,11 +365,11 @@ public class SourceServiceImpl implements SourceService {
         List<SourceObject> sourceObjects = new ArrayList<>(rows.size());
         for (Map<String, Object> row : rows) {
             SourceObject object = new SourceObject();
-            object.setId((String) row.get("id"));
-            object.setTaskId((String) row.get("task_id"));
-            object.setName((String) row.get("name"));
-            object.setApp((String) row.get("app"));
-            object.setType((String) row.get("type"));
+            object.setId(ObjectUtils.cast(row.get("id")));
+            object.setTaskId(ObjectUtils.cast(row.get("task_id")));
+            object.setName(ObjectUtils.cast(row.get("name")));
+            object.setApp(ObjectUtils.cast(row.get("app")));
+            object.setType(ObjectUtils.cast(row.get("type")));
             sourceObjects.add(object);
         }
         Map<String, List<SourceEntity>> sources = getSourceMap(context, sourceObjects);
@@ -397,8 +392,9 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public RangedResultSet<SourceEntity> listBySourceIds(List<String> sourceIds, long offset, int limit,
             OperationContext context) {
-        sourceIds = sourceIds.stream().map(sourceValidator::validateSourceId).collect(Collectors.toList());
-        List<SourceObject> sourceObjects = sourceMapper.selectBySourceIds(sourceIds, offset, limit);
+        List<String> actualSourceIds =
+                sourceIds.stream().map(sourceValidator::validateSourceId).collect(Collectors.toList());
+        List<SourceObject> sourceObjects = sourceMapper.selectBySourceIds(actualSourceIds, offset, limit);
         Map<String, List<SourceObject>> typeObjectMap = sourceObjects.stream()
                 .collect(Collectors.groupingBy(SourceObject::getType));
         List<SourceEntity> sourceEntities = typeObjectMap.entrySet()
@@ -411,8 +407,8 @@ public class SourceServiceImpl implements SourceService {
                 .collect(Collectors.toList());
         StringBuilder whereSql = new StringBuilder();
         whereSql.append(" WHERE 1 = 1");
-        Sqls.andIn(whereSql, "id", sourceIds.size());
-        List<Object> whereArgs = new ArrayList<>(sourceIds);
+        Sqls.andIn(whereSql, "id", actualSourceIds.size());
+        List<Object> whereArgs = new ArrayList<>(actualSourceIds);
         String countSql = "SELECT COUNT(1) FROM task_source" + whereSql;
         long count = longValue(this.executor.executeScalar(countSql, whereArgs));
         this.fillTriggers(sourceEntities, context);
@@ -424,7 +420,7 @@ public class SourceServiceImpl implements SourceService {
             List<SourceObject> sourceObjects) {
         Map<String, List<SourceObject>> typeObjectMap = sourceObjects.stream()
                 .collect(Collectors.groupingBy(SourceObject::getType));
-        Map<String, List<SourceEntity>> sources = typeObjectMap.entrySet()
+        return typeObjectMap.entrySet()
                 .stream()
                 .map(entry -> adapters.get(Enums.parse(SourceType.class, entry.getKey()))
                         .listExtension(entry.getValue(), context))
@@ -434,7 +430,6 @@ public class SourceServiceImpl implements SourceService {
                     mergedList1.addAll(list2);
                     return mergedList1;
                 }));
-        return sources;
     }
 
     private SourceObject convert(String taskId, SourceDeclaration declaration) {

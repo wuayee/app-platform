@@ -16,16 +16,22 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
+/**
+ * 这个类用来请求cookie
+ *
+ * @author 姚江 yWX1299574
+ * @since 2024-7-26
+ */
 @Component
 @RequiredArgsConstructor
 public class PluginLoginServiceImpl implements PluginLoginService {
-    private final DynamicSqlExecutor executor;
-
     private static final String LOGIN_SUCCEEDED = "<pre style='text-align: center;font-size: 26px;' >"
             + "Login succeeded. You can close this page. \n登录成功，您可关闭此页面。</pre>";
 
     private static final String LOGIN_FAILED = "<pre style='text-align: center;font-size: 26px;' >"
             + "Login Failed. Please try again later. \n登录失败，请稍后再试。</pre>";
+
+    private final DynamicSqlExecutor executor;
 
     @Override
     @Transactional

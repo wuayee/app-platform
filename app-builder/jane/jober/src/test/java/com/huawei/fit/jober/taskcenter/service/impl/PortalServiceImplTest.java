@@ -20,6 +20,8 @@ import static org.mockito.Mockito.when;
 
 import com.huawei.fit.jane.task.domain.TaskProperty;
 import com.huawei.fit.jane.task.util.OperationContext;
+import com.huawei.fit.jane.task.util.PagedResultSet;
+import com.huawei.fit.jane.task.util.PaginationResult;
 import com.huawei.fit.jober.taskcenter.domain.CategoryEntity;
 import com.huawei.fit.jober.taskcenter.domain.Index;
 import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
@@ -205,6 +207,12 @@ class PortalServiceImplTest {
                 groupRow("c6d87018aafb4d9a8f659f1584992ea7", "t1", 10),
                 groupRow("845400833479490da4e06c6d7c5d0a71", "t2", 20));
         when(this.executor.executeQuery(any(), any())).thenReturn(groupRows);
+        when(this.taskInstanceRepo.list(any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any())).thenReturn(PagedResultSet.create(new ArrayList<>(), PaginationResult.create(0L, 1, 0)));
         List<PortalService.TagCountEntity> entities = this.portalService.count(Arrays.asList("owner1", "owner2"),
                 Collections.singletonList("creator"), Collections.singletonList("vip"), Collections.emptyList(),
                 this.context);

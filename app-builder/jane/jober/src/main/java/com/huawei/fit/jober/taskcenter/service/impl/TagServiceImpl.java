@@ -19,6 +19,7 @@ import com.huawei.fitframework.transaction.TransactionMetadata;
 import com.huawei.fitframework.transaction.TransactionPropagationPolicy;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -76,8 +77,7 @@ public class TagServiceImpl implements TagService {
 
     private static List<Object> fillDeleteArgs(String objectType, Map<String, List<String>> tags,
             List<String> usageIds) {
-        List<Object> args;
-        args = new ArrayList<>(tags.size() + usageIds.size() + 1);
+        List<Object> args = new ArrayList<>(tags.size() + usageIds.size() + 1);
         args.addAll(tags.keySet());
         args.addAll(usageIds);
         args.add(objectType);
@@ -135,7 +135,7 @@ public class TagServiceImpl implements TagService {
         List<String> usageIds = Collections.emptyList();
         if (CollectionUtils.isNotEmpty(args)) {
             List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
-            usageIds = rows.stream().map(row -> (String) row.get("id")).collect(Collectors.toList());
+            usageIds = rows.stream().map(row -> ObjectUtils.<String>cast(row.get("id"))).collect(Collectors.toList());
         }
         fillDeleteSql(tags, sql, usageIds);
         args = fillDeleteArgs(objectType, tags, usageIds);
@@ -189,7 +189,8 @@ public class TagServiceImpl implements TagService {
             sql.conflict("name").update("updated_by", "updated_at");
             List<Map<String, Object>> rows = sql.executeAndReturn(this.executor, "id", "name");
             ids = rows.stream()
-                    .collect(Collectors.toMap(row -> (String) row.get("name"), row -> (String) row.get("id")));
+                    .collect(Collectors.toMap(row -> ObjectUtils.cast(row.get("name")),
+                            row -> ObjectUtils.cast(row.get("id"))));
             transaction.commit();
         } catch (RuntimeException t) {
             transaction.rollback();
@@ -214,7 +215,7 @@ public class TagServiceImpl implements TagService {
                 + "WHERE tu.object_id = ? AND tu.object_type = ?";
         List<Object> args = Arrays.asList(this.validator.objectId(objectId), this.validator.objectType(objectType));
         List<Map<String, Object>> rows = this.executor.executeQuery(sql, args);
-        return rows.stream().map(row -> (String) row.get("name")).collect(Collectors.toList());
+        return rows.stream().map(row -> ObjectUtils.<String>cast(row.get("name"))).collect(Collectors.toList());
     }
 
     @Override
@@ -234,8 +235,8 @@ public class TagServiceImpl implements TagService {
         sql.append(") AND tu.object_type = ?");
         List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
         return rows.stream()
-                .collect(Collectors.groupingBy(row -> (String) row.get("object_id"),
-                        Collectors.mapping(row -> (String) row.get("name"), Collectors.toList())));
+                .collect(Collectors.groupingBy(row -> ObjectUtils.cast(row.get("object_id")),
+                        Collectors.mapping(row -> ObjectUtils.cast(row.get("name")), Collectors.toList())));
     }
 
     /**
@@ -256,7 +257,7 @@ public class TagServiceImpl implements TagService {
         sql.append(")");
         List<Object> args = new ArrayList<>(tags);
         List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
-        return rows.stream().map(row -> (String) row.get("object_id")).collect(Collectors.toList());
+        return rows.stream().map(row -> ObjectUtils.<String>cast(row.get("object_id"))).collect(Collectors.toList());
     }
 
     @Override

@@ -573,7 +573,7 @@ public class PortalController extends AbstractController {
                 this.defaultTemplateId,
                 context, orderBys);
         List<TaskEntity> taskEntityList = taskService.listTaskEntities(taskIds, context);
-        PagedResultSet<TaskInstance> results = taskagendaService.ListAllAgenda(instanceFilter,
+        PagedResultSet<TaskInstance> results = taskagendaService.listAllAgenda(instanceFilter,
                 Pagination.create(offset, limit),
                 this.defaultTemplateId, context, taskEntityList, orderBys);
         Map<String, Object> resultMap = buildMultiTaskInstanceView(results, taskEntityList);

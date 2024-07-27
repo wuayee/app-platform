@@ -35,6 +35,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.OrderBy;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -58,7 +59,11 @@ import java.util.stream.Stream;
  */
 @Component
 public class TaskAgendaServiceImpl implements TaskAgendaService {
-    private final DynamicSqlExecutor executor;
+    private static final String COLUMN_ID = "id";
+
+    private static final String COLUMN_TASK_ID = "task_id";
+
+    private static final String TASK_PROPERTY = "task_property";
 
     private static final String OBJECT_TYPE = "INSTANCE";
 
@@ -70,15 +75,11 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
 
     private static final String WITH_TABLE = "ins_task";
 
-    public static final String COLUMN_ID = "id";
-
-    public static final String COLUMN_TASK_ID = "task_id";
-
-    public static final String TASK_PROPERTY = "task_property";
-
     private final TagService tagService;
 
     private final CategoryService categoryService;
+
+    private final DynamicSqlExecutor executor;
 
     public TaskAgendaServiceImpl(DynamicSqlExecutor executor, TagService tagService, CategoryService categoryService) {
         this.executor = executor;
@@ -87,7 +88,7 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
     }
 
     @Override
-    public PagedResultSet<TaskInstance> ListAllAgenda(TaskInstance.Filter filter, Pagination pagination,
+    public PagedResultSet<TaskInstance> listAllAgenda(TaskInstance.Filter filter, Pagination pagination,
             String templateId, OperationContext context, List<TaskEntity> taskEntityList, List<OrderBy> orderBys) {
         Map<String, Object> dataTypeSeqMap = new HashMap<>();
         List<String> taskIds = new ArrayList<>(taskEntityList.size());
@@ -111,8 +112,8 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
         List<TaskInstance> domainObjects = toDomainObjects(taskEntityList, instances);
         // 查询总数
         List<Object> argsCount = new LinkedList<>();
-        Long count = (Long) this.executor.executeScalar(
-                selectCountInstances(filter, argsCount, context, templateId).toString(), argsCount);
+        Long count = ObjectUtils.cast(this.executor.executeScalar(
+                selectCountInstances(filter, argsCount, context, templateId).toString(), argsCount));
         return PagedResultSet.create(domainObjects, PaginationResult.create(pagination, count));
     }
 
@@ -123,9 +124,8 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
             throw new BadRequestException(ErrorCodes.TASK_AGENDA_NO_TEMPLATE_ID);
         }
         // 通过templateId查询task表中的taskId, 跟task_instance_wide表连接获取taskId
-        SqlBuilder sql = SqlBuilder.custom();
         List<Object> args = new LinkedList<>();
-        SqlBuilder distinctTaskIdSql = fillWithSql(sql, filter, args, orderBys, context, templateId);
+        SqlBuilder distinctTaskIdSql = fillWithSql(filter, args, orderBys, context, templateId);
         args.add(pagination.offset());
         args.add(pagination.limit());
         List<Map<String, Object>> rows = this.executor.executeQuery(distinctTaskIdSql.toString(), args);
@@ -205,10 +205,10 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
         return instances;
     }
 
-    private SqlBuilder fillWithSql(SqlBuilder sql, TaskInstance.Filter filter, List<Object> whereArgs,
+    private SqlBuilder fillWithSql(TaskInstance.Filter filter, List<Object> whereArgs,
             List<OrderBy> orderBys, OperationContext context, String templateId) {
-        SqlBuilder selectSql = SqlBuilder.custom();
-        fillSelectPrefix(selectSql, filter, whereArgs, orderBys, context, templateId);
+        SqlBuilder selectSql = fillSelectPrefix(filter, whereArgs, orderBys, context, templateId);
+        SqlBuilder sql = SqlBuilder.custom();
         sql.append("WITH ").appendIdentifier(WITH_TABLE).append(" AS (");
         sql.append(selectSql.toString());
         sql.append(" )");
@@ -225,8 +225,9 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
         return sql;
     }
 
-    private void fillSelectPrefix(SqlBuilder sql, TaskInstance.Filter filter, List<Object> whereArgs,
+    private SqlBuilder fillSelectPrefix(TaskInstance.Filter filter, List<Object> whereArgs,
             List<OrderBy> orderBys, OperationContext context, String templateId) {
+        SqlBuilder sql = SqlBuilder.custom();
         sql.append("SELECT ")
                 .appendIdentifier("ins")
                 .append('.')
@@ -235,9 +236,12 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
                 .appendIdentifier(TABLE_WIDE)
                 .append(" AS ")
                 .appendIdentifier("ins");
-        Condition condition = Condition.and(whereInstances(filter),
-                Condition.and(whereCategories(sql, whereArgs, filter), whereTags(filter, context)),
-                whereProperties(filter.infos(), templateId));
+        Condition instancesCondition = whereInstances(filter).orElse(null);
+        Condition categoriesCondition = whereCategories(sql, whereArgs, filter).orElse(null);
+        Condition tagsCondition = whereTags(filter, context).orElse(null);
+        Condition propertiesCondition = whereProperties(filter.infos(), templateId);
+        Condition condition = Condition.and(instancesCondition,
+                Condition.and(categoriesCondition, tagsCondition), propertiesCondition);
         selectTaskIdsSql(sql);
         whereArgs.add(templateId);
         if (condition != null) {
@@ -246,6 +250,7 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
         }
         orderBySql(orderBys, sql, templateId);
         sql.append(" OFFSET ? LIMIT ?");
+        return sql;
     }
 
     private void orderBySql(List<OrderBy> orderBys, SqlBuilder sql, String templateId) {
@@ -267,7 +272,7 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
                 }
                 sql.appendIdentifier("ins")
                         .append('.')
-                        .appendIdentifier((String) info.get())
+                        .appendIdentifier(ObjectUtils.cast(info.get()))
                         .append(' ')
                         .append(orderBy.order())
                         .append(", ");
@@ -277,9 +282,8 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
     }
 
     private List<Map<String, Object>> templatePropertiesInfo(String templateId) {
-        String propertySql =
-                "SELECT name, (LOWER(data_type) || '_' || sequence) AS info FROM task_template_property WHERE task_template_id "
-                        + "IN (SELECT find_template_parents(?) as id)";
+        String propertySql = "SELECT name, (LOWER(data_type) || '_' || sequence) AS info "
+                + "FROM task_template_property WHERE task_template_id IN (SELECT find_template_parents(?) as id)";
         List<Map<String, Object>> rows = this.executor.executeQuery(propertySql, Collections.singletonList(templateId));
         if (rows.isEmpty()) {
             throw new BadRequestException(ErrorCodes.TASK_AGENDA_NOT_EXIST_IN_TEMPLATE_PARAM);
@@ -287,10 +291,11 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
         return rows;
     }
 
-    private Condition whereCategories(SqlBuilder selectSql, List<Object> selectArgs, TaskInstance.Filter filter) {
+    private Optional<Condition> whereCategories(SqlBuilder selectSql, List<Object> selectArgs,
+            TaskInstance.Filter filter) {
         List<CategoryEntity> categories = categoryService.listByNames(filter.categories());
         if (categories.isEmpty()) {
-            return null;
+            return Optional.empty();
         }
         Map<String, List<String>> groupedIds = categories.stream()
                 .collect(groupingBy(CategoryEntity::getGroup, mapping(CategoryEntity::getId, toList())));
@@ -319,13 +324,13 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
             selectArgs.add("INSTANCE");
             condition = Condition.and(condition, Condition.expectIn(ColumnRef.of(alias, "category_id"), categoryIds));
         }
-        return condition;
+        return Optional.ofNullable(condition);
     }
 
-    private Condition whereTags(TaskInstance.Filter filter, OperationContext context) {
+    private Optional<Condition> whereTags(TaskInstance.Filter filter, OperationContext context) {
         Map<String, String> tags = this.tagService.identify(filter.tags(), context);
         if (tags.isEmpty()) {
-            return null;
+            return Optional.empty();
         }
         ColumnRef idColumn = ColumnRef.of("ins", "id");
         Condition condition = Condition.expectIn("tag_id", tags.values());
@@ -339,15 +344,15 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
         List<Object> args = new ArrayList<>(tags.values().size());
         condition.toSql(sql, args);
         sql.append(')');
-        return Condition.of(sql.toString(), args);
+        return Optional.of(Condition.of(sql.toString(), args));
     }
 
-    private Condition whereInstances(TaskInstance.Filter filter) {
+    private Optional<Condition> whereInstances(TaskInstance.Filter filter) {
         List<String> instances = filter.ids();
         if (instances.isEmpty()) {
-            return null;
+            return Optional.empty();
         }
-        return Condition.expectIn(ColumnRef.of("ins", COLUMN_ID), instances);
+        return Optional.of(Condition.expectIn(ColumnRef.of("ins", COLUMN_ID), instances));
     }
 
     private SqlBuilder fillSelectInsPrefix(Map<String, Object> dataTypeSeqMap, TaskInstance.Filter filter,
@@ -366,9 +371,9 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
         }
         sql.append(" FROM ").appendIdentifier(TABLE_WIDE).append(" AS ").appendIdentifier("ins");
         Condition condition = Condition.expectIn(ColumnRef.of("ins", COLUMN_TASK_ID), taskIds);
-        condition = condition.and(whereCategories(sql, whereArgs, filter));
-        condition = condition.and(whereTags(filter, context));
-        condition = condition.and(whereInstances(filter));
+        condition = condition.and(whereCategories(sql, whereArgs, filter).orElse(null));
+        condition = condition.and(whereTags(filter, context).orElse(null));
+        condition = condition.and(whereInstances(filter).orElse(null));
         condition = condition.and(whereProperties(filter.infos(), templateId));
         sql.append(" WHERE ");
         condition.toSql(sql, whereArgs);
@@ -382,8 +387,8 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
         SqlBuilder sql = SqlBuilder.custom();
         sql.append("SELECT count(*)");
         sql.append(" FROM ").appendIdentifier(TABLE_WIDE).append(" AS ").appendIdentifier("ins");
-        Condition condition = Condition.and(whereCategories(sql, whereArgs, filter),
-                Condition.and(whereInstances(filter), whereTags(filter, context)),
+        Condition condition = Condition.and(whereCategories(sql, whereArgs, filter).orElse(null),
+                Condition.and(whereInstances(filter).orElse(null), whereTags(filter, context).orElse(null)),
                 whereProperties(filter.infos(), templateId));
         whereArgs.add(templateId);
         selectTaskIdsSql(sql);
@@ -420,7 +425,7 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
         for (Map.Entry<String, List<String>> entry : infos.entrySet()) {
             String key = entry.getKey();
             List<String> values = entry.getValue();
-            String column = StringUtils.toLowerCase((String) properties.get(key));
+            String column = StringUtils.toLowerCase(ObjectUtils.cast(properties.get(key)));
             if (StringUtils.isEmpty(column)) {
                 throw new BadRequestException(ErrorCodes.TASK_AGENDA_NOT_EXIST_IN_FILTER_PARAM);
             }
@@ -480,17 +485,15 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
 
     private List<TaskInstanceRow> convert(List<TaskEntity> tasks, List<Map<String, Object>> rows) {
         return rows.stream().map(row -> {
-            TaskEntity taskEntity = tasks.stream()
-                    .filter(task -> task.getId().equals(row.get("task_id")))
-                    .findFirst()
-                    .orElse(null);
+            TaskEntity taskEntity =
+                    tasks.stream().filter(task -> task.getId().equals(row.get("task_id"))).findFirst().orElse(null);
             return convert(taskEntity, row);
-        }).collect(Collectors.toList());
+        }).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
     }
 
-    private TaskInstanceRow convert(TaskEntity task, Map<String, Object> row) {
+    private Optional<TaskInstanceRow> convert(TaskEntity task, Map<String, Object> row) {
         if (task == null) {
-            return null;
+            return Optional.empty();
         }
         Map<String, Object> actual = new HashMap<>();
         Map<String, Object> info = new HashMap<>();
@@ -510,6 +513,6 @@ public class TaskAgendaServiceImpl implements TaskAgendaService {
             }
         }
         actual.put("info", info);
-        return new TaskInstanceRow(actual);
+        return Optional.of(new TaskInstanceRow(actual));
     }
 }

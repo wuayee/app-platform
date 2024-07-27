@@ -21,30 +21,37 @@ public interface OperationRecordService {
      * 操作记录表名
      */
     String TABLE_NAME = "operation_record";
+
     /**
      * 操作记录表列名：主键id
      */
     String TABLE_FIELD_ID = "id";
+
     /**
      * 操作记录表列名：被操作对象类型
      */
     String TABLE_FIELD_OBJECT_TYPE = "object_type";
+
     /**
      * 操作记录表列名：被操作对象Id
      */
     String TABLE_FIELD_OBJECT_ID = "object_id";
+
     /**
      * 操作记录表列名：操作人
      */
     String TABLE_FIELD_OPERATOR = "operator";
+
     /**
      * 操作记录表列名：操作时间
      */
     String TABLE_FIELD_OPERATED_TIME = "operated_time";
+
     /**
      * 操作记录表列名：信息
      */
     String TABLE_FIELD_MESSAGE = "message";
+
     /**
      * 操作记录表列名：操作
      */

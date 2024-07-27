@@ -33,6 +33,7 @@ import com.huawei.fit.jober.taskcenter.domain.TaskType;
 import com.huawei.fit.jober.taskcenter.util.Enums;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.ParsingResult;
@@ -48,6 +49,12 @@ import java.util.Queue;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * 实时刷新任务repo
+ *
+ * @author yWX1299574
+ * @since 2024/7/26
+ */
 public class RefreshInTimeTaskInstanceRepo {
     private static final Logger log = Logger.get(RefreshInTimeTaskInstanceRepo.class);
 
@@ -59,13 +66,13 @@ public class RefreshInTimeTaskInstanceRepo {
 
     private String typeId;
 
-    private boolean loaded;
+    private boolean hasLoaded;
 
     public RefreshInTimeTaskInstanceRepo(BrokerClient client, TaskEntity task) {
         this.client = client;
         this.task = task;
         this.sourceEntity = null;
-        this.loaded = false;
+        this.hasLoaded = false;
     }
 
     private void loadRefreshInTimeSourceEntity() {
@@ -94,25 +101,37 @@ public class RefreshInTimeTaskInstanceRepo {
     }
 
     public RefreshInTimeSourceEntity getSourceEntity() {
-        if (!this.loaded) {
+        if (!this.hasLoaded) {
             this.loadRefreshInTimeSourceEntity();
-            this.loaded = true;
+            this.hasLoaded = true;
         }
         return this.sourceEntity;
     }
 
     public String getTypeId() {
-        if (!this.loaded) {
+        if (!this.hasLoaded) {
             this.loadRefreshInTimeSourceEntity();
-            this.loaded = true;
+            this.hasLoaded = true;
         }
         return this.typeId;
     }
 
+    /**
+     * 判断该任务是否是实时刷新任务
+     *
+     * @return 是否为实时刷新
+     */
     public boolean processable() {
         return this.getSourceEntity() != null;
     }
 
+    /**
+     * 创建任务实例
+     *
+     * @param declaration 任务实例定义
+     * @param context 上下文
+     * @return 任务实例
+     */
     public TaskInstance create(TaskInstance.Declaration declaration, OperationContext context) {
         final String genericableId = "ddaa2216ed8a4366af8fa6cf6e8bacf9";
         RefreshInTimeSourceEntity source = this.getSourceEntity();
@@ -129,8 +148,8 @@ public class RefreshInTimeTaskInstanceRepo {
             taskInstanceInfo = this.client.getRouter(SourcedTaskInstanceService.class, genericableId)
                     .route(new FitableIdFilter(fitableId))
                     .invoke(taskSource, convertInfo4Genericable(this.task, info), convert(context));
-        } catch (Throwable t) {
-            log.error(t.getClass().getName(), t);
+        } catch (FitException exception) {
+            log.error(exception.getClass().getName(), exception);
             throw new ServerInternalException(StringUtils.format(
                     "Failed to invoke fitable to create task instance. [genericable={0}, fitable={1}]",
                     genericableId, fitableId));
@@ -138,6 +157,13 @@ public class RefreshInTimeTaskInstanceRepo {
         return convert(this.task, source, taskInstanceInfo);
     }
 
+    /**
+     * 修改任务实例
+     *
+     * @param instanceId 任务实例Id
+     * @param declaration 任务实例定义
+     * @param context 上下文
+     */
     public void patch(String instanceId, TaskInstance.Declaration declaration, OperationContext context) {
         final String genericableId = "314757dfb09e47c4b613f98cd086cb25";
         RefreshInTimeSourceEntity source = this.getSourceEntity();
@@ -153,14 +179,20 @@ public class RefreshInTimeTaskInstanceRepo {
             this.client.getRouter(SourcedTaskInstanceService.class, genericableId)
                     .route(new FitableIdFilter(fitableId))
                     .invoke(taskSource, instanceId, convertInfo4Genericable(this.task, info), convert(context));
-        } catch (Throwable t) {
-            log.error(t.getClass().getName(), t);
+        } catch (FitException exception) {
+            log.error(exception.getClass().getName(), exception);
             throw new ServerInternalException(StringUtils.format(
                     "Failed to invoke fitable to patch task instance. [genericable={}, fitable={}]",
                     genericableId, fitableId));
         }
     }
 
+    /**
+     * 删除任务实例
+     *
+     * @param instanceId 任务实例Id
+     * @param context 上下文
+     */
     public void delete(String instanceId, OperationContext context) {
         final String genericableId = "667bc18d3528473c8510b34829c80ce9";
         RefreshInTimeSourceEntity source = this.getSourceEntity();
@@ -175,14 +207,21 @@ public class RefreshInTimeTaskInstanceRepo {
             this.client.getRouter(SourcedTaskInstanceService.class, genericableId)
                     .route(new FitableIdFilter(fitableId))
                     .invoke(taskSource, instanceId, convert(context));
-        } catch (Throwable t) {
-            log.error(t.getClass().getName(), t);
+        } catch (FitException exception) {
+            log.error(exception.getClass().getName(), exception);
             throw new ServerInternalException(StringUtils.format(
                     "Failed to invoke fitable to delete task instance. [genericable={}, fitable={}]",
                     genericableId, fitableId));
         }
     }
 
+    /**
+     * 检索任务实例
+     *
+     * @param instanceId 任务实例Id
+     * @param context 上下文
+     * @return 任务实例
+     */
     public TaskInstance retrieve(String instanceId, OperationContext context) {
         final String genericableId = "fefe9bc6358642a4ac997832db549920";
         RefreshInTimeSourceEntity source = this.getSourceEntity();
@@ -198,8 +237,8 @@ public class RefreshInTimeTaskInstanceRepo {
             taskInstanceInfo = this.client.getRouter(SourcedTaskInstanceService.class, genericableId)
                     .route(new FitableIdFilter(fitableId))
                     .invoke(taskSource, instanceId, convert(context));
-        } catch (Throwable t) {
-            log.error(t.getClass().getName(), t);
+        } catch (FitException exception) {
+            log.error(exception.getClass().getName(), exception);
             throw new ServerInternalException(StringUtils.format(
                     "Failed to invoke fitable to retrieve task instance. [genericable={}, fitable={}]",
                     genericableId, fitableId));
@@ -207,6 +246,15 @@ public class RefreshInTimeTaskInstanceRepo {
         return convert(task, source, taskInstanceInfo);
     }
 
+    /**
+     * 查询任务实例列表
+     *
+     * @param filter 过滤器
+     * @param offset 偏移量
+     * @param limit 查询条数
+     * @param context 上下文
+     * @return 查询结果集
+     */
     public PagedResultSet<TaskInstance> list(TaskInstance.Filter filter, long offset, int limit,
             OperationContext context) {
         final String genericableId = "805d46f4137e41909d81a7e469e2534a";
@@ -223,8 +271,8 @@ public class RefreshInTimeTaskInstanceRepo {
             results = this.client.getRouter(SourcedTaskInstanceService.class, genericableId)
                     .route(new FitableIdFilter(fitableId))
                     .invoke(taskSource, convert(filter), new RangeInfo(offset, limit), convert(context));
-        } catch (Throwable t) {
-            log.error(t.getClass().getName());
+        } catch (FitException exception) {
+            log.error(exception.getClass().getName());
             throw new ServerInternalException(StringUtils.format(
                     "Failed to invoke fitable to list task instances. [genericable={0}, fitable={1}]",
                     genericableId, fitableId));
