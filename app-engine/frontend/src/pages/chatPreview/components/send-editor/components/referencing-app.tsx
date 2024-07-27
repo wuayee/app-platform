@@ -5,6 +5,7 @@ import { getAippList } from '@/shared/http/aipp';
 import { useAppSelector } from '@/store/hook';
 import { SearchOutlined } from '@ant-design/icons';
 import '../styles/referencing-app.scss'
+import { queryAppsApi } from "../../../../../shared/http/apps";
 
 const ReferencingApp = (props) => {
   const { atItemClick, atClick, searchKey, setSearchKey } = props;
@@ -27,11 +28,17 @@ const ReferencingApp = (props) => {
   const getAppList = async () => {
     setTableLoading(true);
     try {
-      const res = await getAippList(tenantId, {}, 3, (pageNo.current - 1) * 3, searchKey);
+      const params = {
+        pageNum: pageNo.current,
+        pageSize: 3,
+        includeTags: 'App',
+        name: searchKey
+      }
+      const res = await queryAppsApi(tenantId, params);
       if (res.code === 0) {
-        let data = res.data.results;
+        const { data, total } = res;
         setAppArr(data);
-        setTotal(res.data.range.total);
+        setTotal(total);
       }
     } finally {
       setTableLoading(false);
@@ -69,10 +76,10 @@ const ReferencingApp = (props) => {
                 <div className='at-list-item' key={index} onClick={() => itemClick(item)}>
                   <div className='left'>
                     <span>
-                      {item.attributes?.icon ? <img src={item.attributes.icon} /> : <img src={knowledgeBase} />}
+                      {item.icon ? <img src={item.icon} /> : <img src={knowledgeBase} />}
                     </span>
                     <span className='name'>{item.name}</span>
-                    <span className='description'>{item.attributes.description}</span>
+                    <span className='description'>{item.description}</span>
                   </div>
                   {/*<div className='right'>*/}
                   {/*  <HistoryIcon />*/}

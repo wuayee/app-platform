@@ -1,5 +1,5 @@
 
-import React, { useImperativeHandle, useState, useRef } from 'react';
+import React, { useImperativeHandle, useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Drawer, Pagination, Table, Button, Input, Dropdown, Select, Tag } from 'antd';
 import { CloseOutlined, SearchOutlined, DownOutlined } from '@ant-design/icons';
@@ -52,7 +52,7 @@ const AddKnowledge = (props) => {
   const btnItems = [
     { key: 'knowledge', label: '知识库' }
   ];
-  const cancle = () => {
+  const cancel = () => {
     setOpen(false)
   }
   const showModal = () => {
@@ -81,7 +81,6 @@ const AddKnowledge = (props) => {
           initTagList(data);
           setKnowledgeItem(data[0]);
         } else {
-          setKnowledgeTable([]);
           setKnowledgeItem({});
         }
         setTotal(res.data.total);
@@ -104,17 +103,9 @@ const AddKnowledge = (props) => {
       }
     });
     setKnowledgeList(arr);
-    if (arr.length) {
-      arr.forEach(item => {
-        getTableList(item);
-      })
-    } else {
-      getTableList(data[0]);
-    }
   }
   const leftMenuClick = (item) => {
     setKnowledgeItem(item);
-    getTableList(item)
   }
   // 获取右侧列表
   const getTableList = (item) => {
@@ -206,24 +197,29 @@ const AddKnowledge = (props) => {
       'showModal': showModal
     }
   })
+
+  useEffect(() => {
+    knowledgeItem?.id ? getTableList(knowledgeItem) : setKnowledgeTable([]);
+  }, [knowledgeItem])
+
   return <>{(
     <Drawer
       title='选择知识库'
       placement='right'
       width='1000px'
       closeIcon={false}
-      onClose={cancle}
+      onClose={cancel}
       open={open}
       footer={
         <div className='drawer-footer'>
-          <Button onClick={cancle}>取消</Button>
+          <Button onClick={cancel}>取消</Button>
           <Button type='primary' onClick={confirm}>
             确定
           </Button>
         </div>
       }
       extra={
-        <CloseOutlined onClick={cancle}/>
+        <CloseOutlined onClick={cancel}/>
       }>
         <div className='mashup-add-drawer'>
           <div className='knowledge-search'>
