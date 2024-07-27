@@ -56,6 +56,14 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
 
     private final PropertyValidator validator;
 
+    /**
+     * 创建任务模板属性
+     *
+     * @param taskTemplateId 任务模板id {@link String}
+     * @param declarations 任务模板属性声明列表 {@link List}{@code <}{@link TaskTemplateProperty.Declaration}{@code >}
+     * @param context 操作上下文 {@link OperationContext}
+     * @return 任务临时属性列表
+     */
     @Override
     @Transactional
     public List<TaskTemplateProperty> create(String taskTemplateId, List<TaskTemplateProperty.Declaration> declarations,
@@ -72,6 +80,14 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
         return result;
     }
 
+    /**
+     * 更新任务模板属性
+     *
+     * @param taskTemplateId 任务模板id {@link String}
+     * @param id 任务模板属性Id {@link String}
+     * @param declaration 任务模板属性声明 {@link TaskTemplateProperty.Declaration}
+     * @param context 操作上下文 {@link OperationContext}
+     */
     @Override
     @Transactional
     public void patch(String taskTemplateId, String id, TaskTemplateProperty.Declaration declaration,
@@ -141,10 +157,19 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
     }
 
     private abstract class AbstractOperation {
+        /**
+         * 任务临时id
+         */
         public final String taskTemplateId;
 
+        /**
+         * 操作上下文
+         */
         protected final OperationContext context;
 
+        /**
+         * 动态SQL执行器
+         */
         protected final DynamicSqlExecutor executor;
 
         private final LazyLoader<List<Row>> rows;
@@ -164,14 +189,32 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
             return this.executor.executeQuery(sql, args).stream().map(Row::new).collect(Collectors.toList());
         }
 
+        /**
+         * 获得行
+         *
+         * @return 返回行数据
+         */
         protected final List<Row> rows() {
             return this.rows.get();
         }
 
+        /**
+         * 检查名称是否存在
+         *
+         * @param name 表示待检查的名称的{@link String}
+         * @return 是否存在名称
+         */
         protected final boolean checkNameExist(String name) {
             return this.rows.get().stream().anyMatch(row -> StringUtils.equalsIgnoreCase(name, row.name()));
         }
 
+        /**
+         * 检查特定id的名称是否存在
+         *
+         * @param name 表示待检查的名称的{@link String}
+         * @param id 表示名称对应的id的{@link String}
+         * @return 是否存在名称
+         */
         protected final boolean checkNameExist(String name, String id) {
             return this.rows.get()
                     .stream()
@@ -179,10 +222,22 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
                     .anyMatch(row -> StringUtils.equalsIgnoreCase(name, row.name()));
         }
 
+        /**
+         * 获得给定数据类型的序列的长度
+         *
+         * @param dataType 表示数据类型的{@link PropertyDataType}
+         * @return 返回序列长度
+         */
         protected final int nextSequence(PropertyDataType dataType) {
             return this.nextSequence(Enums.toString(dataType));
         }
 
+        /**
+         * 获得给定数据类型的序列的长度
+         *
+         * @param dataType 表示数据类型的{@link String}
+         * @return 返回序列长度
+         */
         protected final int nextSequence(String dataType) {
             List<Integer> sequences = this.rows.get()
                     .stream()
@@ -194,6 +249,12 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
             return SequenceUtils.getSequenceFromList(sequences);
         }
 
+        /**
+         * 检查任务临时属性是否存在
+         *
+         * @param id 表示属性的id的{@link String}
+         * @return 是否已经存在
+         */
         protected boolean checkTaskTemplatePropertyIsUsed(String id) {
             String sql = "SELECT 1 FROM task_property where template_id = ?";
             List<String> args = Collections.singletonList(id);
@@ -336,6 +397,12 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
             super(taskTemplateId, executor, context);
         }
 
+        /**
+         * 根据id查询一个任务临时属性
+         *
+         * @param id 表示id的{@link String}
+         * @return 返回一个id对应的任务临时属性
+         */
         public TaskTemplateProperty selectOneById(String id) {
             String actualId = Entities.validateId(id,
                     () -> new BadRequestException(ErrorCodes.TEMPLATE_PROPERTY_ID_INVALID));
@@ -355,10 +422,21 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
             return new Row(rowMaps.get(0)).toTaskTemplateProperty();
         }
 
+        /**
+         * 从模板中选择所有模板属性
+         *
+         * @return 返回所有的任务模板属性
+         */
         public List<TaskTemplateProperty> selectAllInTemplate() {
             return this.rows().stream().map(Row::toTaskTemplateProperty).collect(Collectors.toList());
         }
 
+        /**
+         * 根据临时ID进行选择
+         *
+         * @param templateIds 表示临时id的列表的{@link List}{@code <}{@link String}{@code >}
+         * @return 返回查询的数据
+         */
         public Map<String, List<TaskTemplateProperty>> selectByTemplateIds(List<String> templateIds) {
             List<String> actualIds = templateIds.stream().filter(Entities::isId).collect(Collectors.toList());
             if (actualIds.isEmpty()) {
@@ -385,6 +463,11 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
             super(taskTemplateId, executor, context);
         }
 
+        /**
+         * 删除一个任务临时属性
+         *
+         * @param id 表示id的{@link String}
+         */
         public void deleteOne(String id) {
             String actualId = Entities.validateId(id,
                     () -> new BadRequestException(ErrorCodes.TEMPLATE_PROPERTY_ID_INVALID));
@@ -397,12 +480,17 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
                     .from(Row.TABLE_NAME)
                     .where(Condition.expectEqual(Row.COLUMN_ID, actualId));
 
-            if (1 != delete.execute(this.executor)) {
+            if (delete.execute(this.executor) != 1) {
                 throw new ServerInternalException(
                         "Failed delete the data in " + Row.TABLE_NAME + ", " + Row.COLUMN_ID + "=" + actualId);
             }
         }
 
+        /**
+         * 删除多个id
+         *
+         * @param ids 表示多个id的列表的{@link List}{@code <}{@link String}{@code >}
+         */
         public void deleteMore(List<String> ids) {
             List<String> actualIds = ids.stream()
                     .map(id -> Entities.validateId(id,
@@ -421,6 +509,9 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
             }
         }
 
+        /**
+         * 删除所有
+         */
         public void deleteAll() {
             String actualTemplateId = Entities.validateId(this.taskTemplateId,
                     () -> new BadRequestException(ErrorCodes.TEMPLATE_ID_INVALID_IN_PROPERTY));
@@ -440,18 +531,39 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
      * @since 2023-12-06
      */
     private static final class Row {
+        /**
+         * 表名
+         */
         public static final String TABLE_NAME = "task_template_property";
 
+        /**
+         * id列
+         */
         public static final String COLUMN_ID = "id";
 
+        /**
+         * task_template_id列
+         */
         public static final String COLUMN_TASK_TEMPLATE_ID = "task_template_id";
 
+        /**
+         * name列
+         */
         public static final String COLUMN_NAME = "name";
 
+        /**
+         * data_type列
+         */
         public static final String COLUMN_DATA_TYPE = "data_type";
 
+        /**
+         * squence列
+         */
         public static final String COLUMN_SEQUENCE = "sequence";
 
+        /**
+         * 列数组
+         */
         public static final List<String> COLUMNS = Arrays.asList(COLUMN_ID, COLUMN_TASK_TEMPLATE_ID, COLUMN_NAME,
                 COLUMN_DATA_TYPE, COLUMN_SEQUENCE);
 

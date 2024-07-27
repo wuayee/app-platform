@@ -22,6 +22,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -54,11 +55,11 @@ public class PostgresqlFileRepo implements File.Repo {
         if (value == null) {
             return null;
         }
-        return Dates.fromUtc(((Timestamp) value).toLocalDateTime());
+        return Dates.fromUtc((ObjectUtils.<Timestamp>cast(value)).toLocalDateTime());
     }
 
     private static String toString(Object value) {
-        return (String) value;
+        return ObjectUtils.cast(value);
     }
 
     private static byte[] toBytes(Object value) {

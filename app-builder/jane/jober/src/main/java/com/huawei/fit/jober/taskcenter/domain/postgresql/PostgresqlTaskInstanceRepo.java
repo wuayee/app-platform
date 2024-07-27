@@ -220,21 +220,21 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
 
     @Override
     @Transactional
-    public TaskInstance retrieve(TaskEntity task, String id, boolean deleted, OperationContext context) {
+    public TaskInstance retrieve(TaskEntity task, String id, boolean isDeleted, OperationContext context) {
         RefreshInTimeTaskInstanceRepo repo = new RefreshInTimeTaskInstanceRepo(this.brokerClient, task);
         if (repo.processable()) {
             return repo.retrieve(id, context);
         }
         String actualId = Entities.validateId(id, () -> new BadRequestException(ErrorCodes.INSTANCE_ID_INVALID));
-        String table = deleted ? TaskInstanceRow.TABLE_DELETED : TaskInstanceRow.TABLE;
+        String table = isDeleted ? TaskInstanceRow.TABLE_DELETED : TaskInstanceRow.TABLE;
         TaskInstanceRow row = TaskInstanceRow.select(this.executor, task, actualId, table);
         if (row == null) {
-            if (!deleted && TaskInstanceRow.exist(this.executor, task, actualId, TaskInstanceRow.TABLE_DELETED)) {
+            if (!isDeleted && TaskInstanceRow.exist(this.executor, task, actualId, TaskInstanceRow.TABLE_DELETED)) {
                 log.error("The task instance has been deleted. [task={}, instance={}]", task.getName(), id);
                 throw new GoneException(ErrorCodes.INSTANCE_DELETED);
             }
             log.error("The task instance does not exist. [task={}, instance={}, deleted={}]",
-                    task.getName(), id, deleted);
+                    task.getName(), id, isDeleted);
             throw new NotFoundException(ErrorCodes.INSTANCE_NOT_FOUND, actualId, task.getId());
         }
         row.tags(this.tagService.list(TaskInstanceRow.OBJECT_TYPE, actualId, context));
@@ -255,7 +255,6 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
         return viewer.view(pagination);
     }
 
-    // todo 临时先直接查询
     @Override
     public String getMetaId(String id) {
         String sql = "select task_id from task_instance_wide where id = ?";
@@ -318,14 +317,14 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
      *
      * @param task 表示任务实例所属任务定义的 {@link TaskEntity}。
      * @param info 表示任务实例的自定义属性内容的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
-     * @param defined 若为 {@code true}，则只包含 {@code info} 中定义了的属性，否则包含任务定义中所有属性的内容。
+     * @param isDefined 若为 {@code true}，则只包含 {@code info} 中定义了的属性，否则包含任务定义中所有属性的内容。
      * @return 表示标准化后的自定义属性内容的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
      */
-    private static Map<String, Object> canonicalizeInfo(TaskEntity task, Map<String, Object> info, boolean defined) {
+    private static Map<String, Object> canonicalizeInfo(TaskEntity task, Map<String, Object> info, boolean isDefined) {
         Map<String, Object> canonical = new LinkedHashMap<>(task.getProperties().size());
         for (TaskProperty property : task.getProperties()) {
             String key = property.name();
-            if (defined && !info.containsKey(key)) {
+            if (isDefined && !info.containsKey(key)) {
                 continue;
             }
             Object value = info.get(key);
@@ -334,8 +333,7 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
                         task.getName(), property.name());
                 throw new BadRequestException(ErrorCodes.INSTANCE_PROPERTY_REQUIRED, property.name());
             }
-            // Todo 临时逻辑 用于处理上游传入非String字段存储Text字段时的报错 2024/2/29后去除
-            if (PropertyDataType.TEXT == property.dataType()) {
+            if (property.dataType() == PropertyDataType.TEXT) {
                 if (Objects.nonNull(value) && !(value instanceof String)) {
                     value = value.toString();
                 }
@@ -380,6 +378,9 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
      * @since 2024-01-11
      */
     private static class Operation {
+        /**
+         * 表示任务实体的{@link TaskEntity}
+         */
         protected final TaskEntity task;
 
         private List<TaskProperty> indexedProperties;
@@ -688,13 +689,21 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
     }
 
     private abstract class Viewer {
+        /**
+         * with table
+         */
         protected static final String WITH_TABLE = "w_ins";
 
+        /**
+         * 表示任务实体的{@link TaskEntity}
+         */
         protected final TaskEntity task;
 
-        private final TaskInstance.Filter filter;
-
+        /**
+         * 操作上下文
+         */
         protected final OperationContext context;
+        private final TaskInstance.Filter filter;
 
         private List<TaskProperty> listableProperties;
 
@@ -704,6 +713,13 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
             this.context = context;
         }
 
+        /**
+         * 填充SQL语句
+         *
+         * @param sql 表示SQL语句构造器的{@link SqlBuilder}
+         * @param args 待填充的参数的{@link List}{@code <}{@link Object}{@code >}
+         * @return SQL语句构造器
+         */
         protected SqlBuilder fillWithSql(SqlBuilder sql, List<Object> args) {
             TaskInstanceView view = new DefaultTaskInstanceView(categoryService, tagService, this.task, this.filter,
                     this.context);
@@ -713,6 +729,11 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
             return sql;
         }
 
+        /**
+         * 返回可列的属性
+         *
+         * @return 返回可列的属性
+         */
         protected List<TaskProperty> listableProperties() {
             if (this.listableProperties == null) {
                 this.listableProperties = this.task.getProperties().stream()
@@ -723,11 +744,20 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
         }
     }
 
+    /**
+     * 数据查看类
+     */
     public class StatisticsViewer extends Viewer {
         StatisticsViewer(TaskEntity task, TaskInstance.Filter filter, OperationContext context) {
             super(task, filter, context);
         }
 
+        /**
+         * 查看groupBy列
+         *
+         * @param groupByColumn 需要groupBy的列
+         * @return 返回sql执行的返回值
+         */
         public Map<String, Long> view(String groupByColumn) {
             SqlBuilder sql = SqlBuilder.custom();
             List<Object> args = new LinkedList<>();
@@ -756,7 +786,8 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
             Map<String, Long> resultMap = new HashMap<>();
             List<Map<String, Object>> result = executor.executeQuery(sql.toString(), args);
             result.forEach(
-                    row -> resultMap.put((String) row.get("info_" + groupByColumn), longValue(row.get("count"))));
+                    row -> resultMap.put(ObjectUtils.cast(row.get("info_" + groupByColumn)),
+                            longValue(row.get("count"))));
             return resultMap;
         }
     }
@@ -769,6 +800,14 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
             this.orderBys = orderBys;
         }
 
+        /**
+         * 查询任务实例
+         *
+         * @param baseSql 表示基本SQL的{@link String}
+         * @param baseArgs 表示基本的SQL参数的{@link List}{@code <}{@link Object}{@code >}
+         * @param pagination 表示分页的{@link Pagination}
+         * @return 查询得到的任务实例列表
+         */
         protected List<TaskInstance> list(String baseSql, List<Object> baseArgs, Pagination pagination) {
             if (pagination.limit() < 1) {
                 return Collections.emptyList();
@@ -804,6 +843,11 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
             return TaskInstanceRow.INFO_PREFIX + property.name();
         }
 
+        /**
+         * 填充可列的属性
+         *
+         * @param instances 表示任务实例数据行列表的{@link List}{@code <}{@link TaskInstanceRow}{@code >}
+         */
         public void fillListableProperties(List<TaskInstanceRow> instances) {
             if (CollectionUtils.isEmpty(this.listableProperties()) || CollectionUtils.isEmpty(instances)) {
                 return;
@@ -833,6 +877,15 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
 
     @FunctionalInterface
     private interface ViewerFactory {
+        /**
+         * 创建一个实例视图
+         *
+         * @param task 表示任务的{@link TaskEntity}
+         * @param filter 表示任务筛选器的{@link TaskInstance.Filter}
+         * @param context 表示操作上下文的{@link OperationContext}
+         * @param orderBys 表示排序条件的{@link List}{@code <}{@link OrderBy}{@code >}
+         * @return 返回实例视图
+         */
         InstanceViewer create(TaskEntity task, TaskInstance.Filter filter, OperationContext context,
                 List<OrderBy> orderBys);
     }
@@ -883,8 +936,8 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
             String baseSql = this.fillWithSql(SqlBuilder.custom(), baseArgs).toString();
             SqlBuilder prefix = SqlBuilder.custom().append(baseSql).append("SELECT ");
             SqlBuilder suffix = SqlBuilder.custom().append(" FROM ").appendIdentifier(WITH_TABLE);
-            boolean treeSupported = this.hasTextProperty(ID_KEY) && this.hasTextProperty(PARENT_KEY);
-            if (treeSupported) {
+            boolean isTreeSupported = this.hasTextProperty(ID_KEY) && this.hasTextProperty(PARENT_KEY);
+            if (isTreeSupported) {
                 ColumnRef parentColumn = ColumnRef.of(WITH_TABLE, TaskInstanceRow.INFO_PREFIX + PARENT_KEY);
                 String idColumnName = TaskInstanceRow.INFO_PREFIX + TaskInstanceRow.COLUMN_ID;
                 suffix.append(" WHERE ").append(parentColumn).append(" IS NULL OR ").append(parentColumn)
@@ -895,7 +948,7 @@ public class PostgresqlTaskInstanceRepo implements TaskInstance.Repo {
             SqlBuilder sql = SqlBuilder.custom().append(prefix.toString()).append("COUNT(1)").append(suffix.toString());
             long count = longValue(executor.executeScalar(sql.toString(), baseArgs));
             List<TaskInstance> instances = this.list(prefix + "*" + suffix, baseArgs, pagination);
-            if (treeSupported) {
+            if (isTreeSupported) {
                 instances = this.buildTree(baseSql, baseArgs, instances).stream()
                         .map(TaskInstance.class::cast).collect(toList());
             }
