@@ -41,7 +41,8 @@ public class AippLlmMeta {
     /**
      * 根据businessData解析大模型节点元数据。
      *
-     * @param flowData 表示携带元数据的 {@link List}{@code <}{@link Map}{@code <}{@link String}{@code ,} {@link Object}{@code >}{@code >}。
+     * @param flowData 表示携带元数据的 {@link List}{@code <}{@link Map}{@code <}{@link String}{@code ,}
+     *                               {@link Object}{@code >}{@code >}。
      * @param metaService 表示元数据服务的 {@link MetaService}。
      * @return 返回表示大模型节点元数据的 {@link AippLlmMeta}。
      */

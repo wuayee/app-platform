@@ -7,13 +7,27 @@ package com.huawei.fit.jober.aipp.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * 用于构建MindJsonElement对象的类
+ *
+ * @author s00664640
+ * @since 2024-05-10
+ */
+
 @Getter
 @AllArgsConstructor
 public class MindJsonElement {
     String name;
     String children;
 
-    static public String packToElementJson(String name, String children) {
+    /**
+     * 将name和children格式化为JSON字符串
+     *
+     * @param name name
+     * @param children children
+     * @return JSON格式字符串
+     */
+    public static String packToElementJson(String name, String children) {
         return String.format("{\"name\":\"%s\",\"children\":[%s]}", name, children);
     }
 }

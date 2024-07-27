@@ -10,6 +10,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 /**
+ * 应用构建器流程图类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-16
  */

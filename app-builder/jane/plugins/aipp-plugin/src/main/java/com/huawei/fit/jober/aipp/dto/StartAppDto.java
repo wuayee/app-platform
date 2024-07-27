@@ -16,7 +16,6 @@ import lombok.Data;
  */
 @Data
 public class StartAppDto {
-
     @Property(description = "实例名称", example = "看图说话")
     private String name;
 

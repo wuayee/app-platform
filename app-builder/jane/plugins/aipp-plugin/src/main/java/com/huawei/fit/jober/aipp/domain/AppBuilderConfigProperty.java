@@ -17,6 +17,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * 应用构建器配置属性类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-16
  */
@@ -35,8 +37,8 @@ public class AppBuilderConfigProperty {
     private AppBuilderFormRepository formRepository;
     private AppBuilderFormPropertyRepository formPropertyRepository;
 
-    public AppBuilderConfigProperty(AppBuilderConfigRepository configRepository, AppBuilderFormRepository formRepository,
-            AppBuilderFormPropertyRepository formPropertyRepository) {
+    public AppBuilderConfigProperty(AppBuilderConfigRepository configRepository,
+            AppBuilderFormRepository formRepository, AppBuilderFormPropertyRepository formPropertyRepository) {
         this.configRepository = configRepository;
         this.formRepository = formRepository;
         this.formPropertyRepository = formPropertyRepository;

@@ -15,6 +15,8 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 应用构建器组件类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-16
  */
@@ -35,7 +37,8 @@ public class AppBuilderComponent extends BaseDomain {
     private AppBuilderFormRepository formRepository;
     private AppBuilderFormPropertyRepository formPropertyRepository;
 
-    public AppBuilderComponent(AppBuilderFormRepository formRepository, AppBuilderFormPropertyRepository formPropertyRepository) {
+    public AppBuilderComponent(AppBuilderFormRepository formRepository,
+                               AppBuilderFormPropertyRepository formPropertyRepository) {
         this.formRepository = formRepository;
         this.formPropertyRepository = formPropertyRepository;
     }

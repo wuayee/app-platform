@@ -11,6 +11,12 @@ import lombok.ToString;
 
 import java.util.List;
 
+/**
+ * 文件列表DTO
+ *
+ * @author 00664640
+ * @since 2024-05-10
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

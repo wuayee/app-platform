@@ -13,6 +13,9 @@ import java.util.Optional;
 
 /**
  * 文件后缀
+ *
+ * @author: 00644640
+ * @since: 2024-05-10
  */
 @Getter
 public enum FileExtensionEnum {

@@ -12,13 +12,16 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
- * TaskPropertyConvertor
+ * 任务属性转换器
  *
  * @author l00611472
  * @since 2023-12-18
  */
 @Mapper
 public interface TaskPropertyConvertor {
+    /**
+     * 获取TaskPropertyConvertor的实例
+     */
     TaskPropertyConvertor INSTANCE = Mappers.getMapper(TaskPropertyConvertor.class);
 
     /**
@@ -46,8 +49,10 @@ public interface TaskPropertyConvertor {
      * @return MetaPropertyDeclarationInfo
      */
     @Mapping(target = "name", expression = "java(com.huawei.fit.jane.Undefinable.defined(taskProperty.getName()))")
-    @Mapping(target = "dataType", expression = "java(com.huawei.fit.jane.Undefinable.defined(taskProperty.getDataType()))")
-    @Mapping(target = "description", expression = "java(com.huawei.fit.jane.Undefinable.defined(taskProperty.getDescription()))")
+    @Mapping(target = "dataType",
+                expression = "java(com.huawei.fit.jane.Undefinable.defined(taskProperty.getDataType()))")
+    @Mapping(target = "description",
+                expression = "java(com.huawei.fit.jane.Undefinable.defined(taskProperty.getDescription()))")
     @Mapping(target = "scope", expression = "java(com.huawei.fit.jane.Undefinable.defined(taskProperty.getScope()))")
     @Mapping(target = "required", ignore = true)
     @Mapping(target = "identifiable", ignore = true)

@@ -14,6 +14,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
+ * 基础领域对象，所有领域对象都应该继承此类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-16
  */

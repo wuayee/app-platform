@@ -22,6 +22,11 @@ import java.util.Map;
 public class AippMemory implements Memory {
     private final List<ChatMessage> messages = new ArrayList<>();
 
+    /**
+     * 构造函数，用于初始化AippMemory对象。
+     *
+     * @param data 包含问题和答案的数据列表
+     */
     public AippMemory(List<Map<String, String>> data) {
         data.forEach(m -> {
             if (m.containsKey("question") && m.containsKey("answer")) {

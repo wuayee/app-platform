@@ -29,6 +29,13 @@ public enum MetaInstSortKeyEnum {
         this.key = key;
     }
 
+    /**
+     * 根据输入的key获取对应的MetaInstSortKeyEnum枚举值
+     *
+     * @param key 输入的key
+     * @return 对应的MetaInstSortKeyEnum枚举值
+     * @throws AippParamException 当输入的key不在枚举值中时，抛出参数异常
+     */
     public static MetaInstSortKeyEnum getInstSortKey(String key) {
         return Arrays.stream(values())
                 .filter(item -> item.name().equalsIgnoreCase(key))

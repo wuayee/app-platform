@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 应用构建器表单数据传输对象
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */
