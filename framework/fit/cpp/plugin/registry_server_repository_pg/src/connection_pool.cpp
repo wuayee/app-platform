@@ -118,7 +118,8 @@ FitCode ConnectionPool::SetUp(const Fit::string& config, uint16_t connectionNum,
         connectionNum_ = connections_.size();
         status_ = ConnectionPoolStatus::READY;
         if (connectionNum_ != connectionNum) {
-            FIT_LOG_ERROR("ConnectionPool only creates %u connection while config is %u", connectionNum_, connectionNum);
+            FIT_LOG_ERROR("ConnectionPool only creates %u connection while config is %u",
+                connectionNum_, connectionNum);
             return FIT_ERR_FAIL;
         }
     }
