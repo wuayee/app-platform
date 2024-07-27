@@ -6,6 +6,7 @@ package com.huawei.fit.waterflow.domain.stream.reactive;
 
 import com.huawei.fit.waterflow.domain.context.FlowContext;
 import com.huawei.fit.waterflow.domain.context.FlowSession;
+import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import com.huawei.fit.waterflow.domain.emitters.Emitter;
 import com.huawei.fit.waterflow.domain.enums.ProcessType;
 import com.huawei.fit.waterflow.domain.stream.nodes.Blocks;
@@ -142,4 +143,11 @@ public interface Subscriber<I, O> extends StreamIdentity, Emitter<O, FlowSession
      * @return 错误处理器列表
      */
     List<Operators.ErrorHandler> getErrorHandlers();
+
+    /**
+     * 获取context repo
+     *
+     * @return repo
+     */
+    FlowContextRepo getFlowContextRepo();
 }

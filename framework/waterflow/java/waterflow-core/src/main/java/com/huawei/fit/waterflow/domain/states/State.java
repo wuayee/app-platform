@@ -6,8 +6,10 @@ package com.huawei.fit.waterflow.domain.states;
 
 import com.huawei.fit.waterflow.domain.context.FlowContext;
 import com.huawei.fit.waterflow.domain.context.FlowSession;
+import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextRepo;
 import com.huawei.fit.waterflow.domain.emitters.Emitter;
 import com.huawei.fit.waterflow.domain.emitters.EmitterListener;
+import com.huawei.fit.waterflow.domain.enums.FlowNodeStatus;
 import com.huawei.fit.waterflow.domain.flow.Flow;
 import com.huawei.fit.waterflow.domain.stream.nodes.BlockToken;
 import com.huawei.fit.waterflow.domain.stream.nodes.Node;
@@ -172,9 +174,22 @@ public class State<O, D, I, F extends Flow<D>> extends Start<O, D, I, F>
         nodes.add(this.getFlow().start());
         nodes.stream().filter(node -> !node.subscribed()).forEach(node -> node.subscribe(getFlow().end()));
         getFlow().end().onComplete(callback);
-        this.getFlow().nodes().forEach(node -> node.onGlobalError(errHandler));
-        getFlow().end().onGlobalError(errHandler);
+        this.getFlow().nodes().forEach(node ->
+                node.onGlobalError(this.buildGlobalHandler(errHandler, node.getFlowContextRepo()))
+        );
+        getFlow().end().onGlobalError(this.buildGlobalHandler(errHandler, getFlow().end().getFlowContextRepo()));
         return this.getFlow();
+    }
+
+    private Operators.ErrorHandler<Object> buildGlobalHandler(Operators.ErrorHandler<Object> errHandler,
+            FlowContextRepo repo) {
+        return (exception, retryable, contexts) -> {
+            contexts.forEach(context -> context.setStatus(FlowNodeStatus.ERROR));
+            repo.save(contexts);
+            if (errHandler != null) {
+                errHandler.handle(exception, retryable, contexts);
+            }
+        };
     }
 
     /**

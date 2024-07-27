@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.huawei.fit.waterflow.FlowTestException;
 import com.huawei.fit.waterflow.domain.context.FlowContext;
 import com.huawei.fit.waterflow.domain.context.FlowSession;
 import com.huawei.fit.waterflow.domain.context.repo.flowcontext.FlowContextMemoMessenger;
@@ -110,7 +111,6 @@ class WaterFlowsTest {
         @DisplayName("流程实例map节点流转逻辑")
         void testFitStreamMapComputation() {
             long[] data = {1, 0};
-            List<String> result = new ArrayList<>();
             ProcessFlow<Integer> flowTest = Flows.<Integer>create(repo, messenger, locks)
                     .id("flow test start node")
                     .map(i -> i + data[0]++)
@@ -119,11 +119,12 @@ class WaterFlowsTest {
             flowTest.setId("flow test");
             flowTest.offer(1);
 
-            waitFortyMillis(() -> result);
+            waitFortyMillis(Collections::emptyList);
             assertEquals("flow test", flowTest.getId());
             assertEquals(3, data[0]);
             assertEquals(4, data[1]);
 
+            List<String> result = new ArrayList<>();
             Flows.<Integer>create(repo, messenger, locks)
                     .map(i -> i + 1)
                     .map(i -> i * 2)
@@ -782,6 +783,29 @@ class WaterFlowsTest {
                         .filter(context -> context.getStatus() == status)
                         .collect(Collectors.toList());
             };
+        }
+
+        @Test
+        @DisplayName("执行异常时，从repo中清除错误的context")
+        void testCleanErrorContext() {
+            long[] data = {1};
+            FlowContextMemoRepo testRepo = new FlowContextMemoRepo(false);
+            ProcessFlow<Integer> flowTest = Flows.<Integer>create(testRepo, messenger, locks)
+                    .id("flow test start node")
+                    .map(i -> {
+                                if (i == 1) {
+                                    throw new FlowTestException();
+                                }
+                                return i;
+                            }
+                    )
+                    .close(r -> data[0] = r.get().getData());
+            flowTest.setId("flow test");
+            String traceId = flowTest.offer(1);
+
+            waitFortyMillis(Collections::emptyList);
+            assertEquals("flow test", flowTest.getId());
+            assertEquals(0, testRepo.getContextsByTrace(traceId).size());
         }
     }
 }
