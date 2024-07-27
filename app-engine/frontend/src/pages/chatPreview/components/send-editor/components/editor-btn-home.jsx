@@ -30,12 +30,11 @@ import { updateChatId } from "@/shared/utils/common";
 
 // 操作按钮,聊天界面下面操作框
 const EditorBtnHome = (props) => {
-  const { fileCallBack, editorRef } = props;
+  const { fileCallBack, editorRef, chatType } = props;
   const dispatch = useAppDispatch();
   const appInfo = useAppSelector((state) => state.appStore.appInfo);
   const appId = useAppSelector((state) => state.appStore.appId);
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
-  const chatType = useAppSelector((state) => state.chatCommonStore.chatType);
   const chatList = useAppSelector((state) => state.chatCommonStore.chatList);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
   const atAppId = useAppSelector((state) => state.appStore.atAppId);
@@ -118,15 +117,16 @@ const EditorBtnHome = (props) => {
   }
   // @应用点击回调
   const atItemClick = async (item) => {
-    const appInfoRes = await getAppInfo(tenantId, item.id);
+    const appId = item.runnables.APP.appId;
+    const appInfoRes = await getAppInfo(tenantId, appId);
     if (appInfoRes.code === 0) {
       dispatch(setAtAppInfo(appInfoRes.data));
     }
-    dispatch(setAtAppId(item.id));
+    dispatch(setAtAppId(appId));
     setAppName(item.name);
     setShowAt(false);
     dispatch(setOpenStar(false));
-    if (item.id !== atAppId) {
+    if (appId !== atAppId) {
       dispatch(setAtChatId(null));
     }
   }
@@ -181,12 +181,18 @@ const EditorBtnHome = (props) => {
     return false;
   }
 
+  // 点击更多应用按钮回调
+  const onClickShowMore = () => {
+    if (chatType !== 'active') return;
+    showMoreClick();
+  }
+
   return (
     <div className='btn-inner'>
       <div className='inner-left'>
         <div className='inner-item'>
           {appIcon ? <img src={appIcon} alt='' /> : <img src={knowledgeBase} alt='' />}
-          <div className={['switch-app', atAppId ? 'switch-active' : null ].join(' ')} onClick={()=>{if(chatType==='home'){showMoreClick();}}}>
+          <div className={['switch-app', atAppId ? 'switch-active' : null ].join(' ')} onClick={onClickShowMore}>
             { atAppId && <span style={{ marginLeft: '6px' }}>正在跟</span> }
             <span className='item-name' title={appName}>{appName}</span>
             { !appInfo.hideHistory && <ArrowDownIcon className='arrow-icon' /> }

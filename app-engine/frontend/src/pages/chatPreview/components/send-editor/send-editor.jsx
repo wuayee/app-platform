@@ -38,6 +38,7 @@ const SendEditor = (props) => {
     onSend,
     onStop,
     onClear,
+    chatType,
     filterRef
   } = props;
   const dispatch = useAppDispatch();
@@ -209,6 +210,7 @@ const SendEditor = (props) => {
           clear={onClear}
           fileCallBack={fileSend}
           editorRef={editorRef}
+          chatType={chatType}
         />
         { chatRunning && 
           <div className='editor-stop' onClick={onStop}>
