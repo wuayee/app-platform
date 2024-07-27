@@ -208,11 +208,6 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
         return this.publisher.getSubscriptions();
     }
 
-    @Override
-    public FlowContextRepo getFlowContextRepo() {
-        return this.getRepo();
-    }
-
     /**
      * 开始处理数据
      * 把该publisher里所有的数据都publish到subscription
@@ -232,8 +227,8 @@ public class Node<T, R> extends To<T, R> implements Processor<T, R>, Identity {
     @Override
     public Subscriber<R, R> close() {
         Operators.Map<FlowContext<R>, R> processor = FlowContext::getData;
-        Subscriber<R, R> end = new To<>(this.getStreamId(), null, processor, getRepo(), getMessenger(), getLocks(),
-                END);
+        Subscriber<R, R> end = new To<>(this.getStreamId(), null, processor, getFlowContextRepo(), getMessenger(),
+                getLocks(), END);
         this.subscribe(end);
         return end;
     }

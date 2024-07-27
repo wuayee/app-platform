@@ -97,7 +97,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     private final FlowContextMessenger messenger;
 
     @Getter
-    private final FlowContextRepo repo;
+    private final FlowContextRepo flowContextRepo;
 
     @Getter
     private final FlowLocks locks;
@@ -218,8 +218,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      * @param locks 流程锁
      * @param nodeType 节点类型
      */
-    public To(String streamId, String nodeId, Operators.Map<FlowContext<I>, O> processor, FlowContextRepo repo,
-            FlowContextMessenger messenger, FlowLocks locks, FlowNodeType nodeType) {
+    public To(String streamId, String nodeId, Operators.Map<FlowContext<I>, O> processor,
+            FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks, FlowNodeType nodeType) {
         this(streamId, processor, repo, messenger, locks);
         Optional.ofNullable(nodeId).ifPresent(id -> To.this.id = id);
         this.nodeType = nodeType;
@@ -236,8 +236,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      * @param locks 流程锁
      * @param nodeType 节点类型
      */
-    public To(String streamId, String nodeId, Operators.Produce<FlowContext<I>, O> processor, FlowContextRepo repo,
-            FlowContextMessenger messenger, FlowLocks locks, FlowNodeType nodeType) {
+    public To(String streamId, String nodeId, Operators.Produce<FlowContext<I>, O> processor,
+            FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks, FlowNodeType nodeType) {
         this(streamId, repo, messenger, locks);
         if (!Optional.ofNullable(processor).isPresent()) {
             throw new WaterflowException(FLOW_NODE_CREATE_ERROR);
@@ -251,7 +251,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
     private To(String streamId, FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
         this.streamId = streamId;
-        this.repo = repo;
+        this.flowContextRepo = repo;
         this.messenger = messenger;
         this.locks = locks;
     }
@@ -345,7 +345,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
     private void handlePreProcessConcurrentConflict() {
         List<FlowContext<I>> concurrentConflictContexts = this.preFilter()
-                .process(repo.getContextsByPosition(this.streamId,
+                .process(flowContextRepo.getContextsByPosition(this.streamId,
                         this.froms.stream().map(Identity::getId).collect(Collectors.toList()), PENDING.toString()));
         if (CollectionUtils.isEmpty(concurrentConflictContexts) || inParallelMode(concurrentConflictContexts)) {
             return;
@@ -369,13 +369,13 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
         lock.lock();
         try {
             List<FlowContext<I>> contexts = this.preFilter()
-                    .process(repo.getContextsByPosition(this.streamId,
+                    .process(flowContextRepo.getContextsByPosition(this.streamId,
                             this.froms.stream().map(Identity::getId).collect(Collectors.toList()), PENDING.toString()));
             contexts = filterTerminate(contexts);
             if (CollectionUtils.isEmpty(contexts)) {
                 return new ArrayList<>();
             }
-            repo.updateToSent(contexts);
+            flowContextRepo.updateToSent(contexts);
             return contexts;
         } finally {
             lock.unlock();
@@ -482,7 +482,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             LOG.error("node process exception stream-id: {}, node-id: {}, position-id: {}, traceId: {}. errors: {}",
                     this.streamId, this.id, preList.get(0).getPosition(), preList.get(0).getTraceId(), ex.getMessage());
             LOG.error("node process exception details: ", ex);
-            Retryable<I> retryable = new Retryable<>(this.getRepo(), this);
+            Retryable<I> retryable = new Retryable<>(this.getFlowContextRepo(), this);
             Optional.ofNullable(this.errorHandler).ifPresent(handler -> handler.handle(ex, retryable, preList));
             Optional.ofNullable(this.globalErrorHandler).ifPresent(handler -> handler.handle(ex, retryable, preList));
             GlobalFileData.remove(preList.stream().map(IdGenerator::getId).collect(Collectors.toList()));
@@ -498,14 +498,14 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
         List<String> traceIds = getTraceIds(contexts);
         if (isTracesTerminate(traceIds)) {
-            getRepo().updateToTerminated(traceIds);
+            getFlowContextRepo().updateToTerminated(traceIds);
             return Collections.emptyList();
         }
         return contexts;
     }
 
     private boolean isTracesTerminate(List<String> traceIds) {
-        return this.repo.isTracesTerminate(traceIds);
+        return this.flowContextRepo.isTracesTerminate(traceIds);
     }
 
     private List<String> getTraceIds(List<FlowContext<I>> contexts) {
@@ -544,11 +544,12 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
         afterList.forEach(context -> context.getTraceId().addAll(traces));
 
         if ((Objects.isNull(this.nodeType) || !this.nodeType.equals(END)) && !afterList.isEmpty()) {
-            this.getRepo().updateContextPool(afterList, traces);
-            this.getRepo().save(afterList);
+            this.getFlowContextRepo().updateContextPool(afterList, traces);
+            this.getFlowContextRepo().save(afterList);
         }
-        this.getRepo().update(preList);
-        this.getRepo().updateStatus(preList, preList.get(0).getStatus().toString(), preList.get(0).getPosition());
+        this.getFlowContextRepo().update(preList);
+        this.getFlowContextRepo()
+                .updateStatus(preList, preList.get(0).getStatus().toString(), preList.get(0).getPosition());
         GlobalFileData.remove(preList.stream().map(IdGenerator::getId).collect(Collectors.toList()));
     }
 
@@ -587,7 +588,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
     @Override
     public List<FlowContext<O>> nextContexts(String batchId) {
-        return ObjectUtils.cast(this.repo.getContextsByPosition(this.streamId, this.getId(), batchId, NEW.toString()));
+        return ObjectUtils.cast(
+                this.flowContextRepo.getContextsByPosition(this.streamId, this.getId(), batchId, NEW.toString()));
     }
 
     @Override
@@ -619,7 +621,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     }
 
     private <T1> boolean isParallelJoined(FlowContext<T1> context) {
-        List<FlowContext<T1>> contextsByParallel = this.getRepo().getContextsByParallel(context.getParallel());
+        List<FlowContext<T1>> contextsByParallel = this.getFlowContextRepo()
+                .getContextsByParallel(context.getParallel());
         return contextsByParallel.stream().anyMatch(FlowContext::isJoined);
     }
 
@@ -655,7 +658,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
             @Override
             protected <T1, R1> List<FlowContext<T1>> requestAll(To<T1, R1> to) {
-                return to.repo.requestProducingContext(to.streamId,
+                return to.flowContextRepo.requestProducingContext(to.streamId,
                         to.froms.stream().map(Identity::getId).collect(Collectors.toList()), to.postFilter());
             }
         },
@@ -682,7 +685,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
             @Override
             protected <T1, R1> List<FlowContext<T1>> requestAll(To<T1, R1> to) {
-                return to.repo.requestMappingContext(to.streamId,
+                return to.flowContextRepo.requestMappingContext(to.streamId,
                         to.froms.stream().map(Identity::getId).collect(Collectors.toList()), to.defaultFilter(),
                         to.validator);
             }
@@ -766,7 +769,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                     throw new WaterflowException(FLOW_NODE_MAX_TASK, to.getId());
                 }
                 to.updateConcurrency(1);
-                to.repo.updateStatus(ready, ready.get(0).getStatus().toString(), ready.get(0).getPosition());
+                to.flowContextRepo.updateStatus(ready, ready.get(0).getStatus().toString(), ready.get(0).getPosition());
                 return ready;
             } finally {
                 lock.unlock();
