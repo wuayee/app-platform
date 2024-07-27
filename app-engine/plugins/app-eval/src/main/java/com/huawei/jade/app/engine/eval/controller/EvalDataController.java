@@ -7,6 +7,7 @@ package com.huawei.jade.app.engine.eval.controller;
 import com.huawei.fit.http.annotation.DeleteMapping;
 import com.huawei.fit.http.annotation.GetMapping;
 import com.huawei.fit.http.annotation.PostMapping;
+import com.huawei.fit.http.annotation.PutMapping;
 import com.huawei.fit.http.annotation.RequestBean;
 import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import com.huawei.fitframework.validation.Validated;
 import com.huawei.jade.app.engine.eval.dto.EvalDataCreateDto;
 import com.huawei.jade.app.engine.eval.dto.EvalDataDeleteDto;
 import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
+import com.huawei.jade.app.engine.eval.dto.EvalDataUpdateDto;
 import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
 import com.huawei.jade.app.engine.eval.service.EvalDataService;
 import com.huawei.jade.common.vo.PageVo;
@@ -68,5 +70,15 @@ public class EvalDataController {
     @DeleteMapping(description = "批量软删除评估数据")
     public void deleteEvalData(@RequestBody @Validated EvalDataDeleteDto deleteDto) {
         this.evalDataService.delete(deleteDto.getDataIds());
+    }
+
+    /**
+     * 修改评估数据。
+     *
+     * @param updateDto 表示评估数据修改传输对象的 {@link EvalDataUpdateDto}。
+     */
+    @PutMapping(description = "修改评估数据")
+    public void updateEvalData(@RequestBody @Validated EvalDataUpdateDto updateDto) {
+        this.evalDataService.update(updateDto.getDatasetId(), updateDto.getDataId(), updateDto.getContent());
     }
 }

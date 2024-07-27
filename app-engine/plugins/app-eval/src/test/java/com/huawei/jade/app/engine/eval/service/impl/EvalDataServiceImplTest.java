@@ -9,6 +9,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -28,6 +29,7 @@ import com.huawei.jade.app.engine.eval.mapper.EvalDataMapper;
 import com.huawei.jade.app.engine.eval.service.EvalDataService;
 import com.huawei.jade.common.vo.PageVo;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -65,6 +67,11 @@ public class EvalDataServiceImplTest {
         when(this.evalDataMapper.updateExpiredVersion(anyList(), anyLong())).thenReturn(1);
     }
 
+    @AfterEach
+    void teardown() {
+        clearInvocations(evalDataMapper, evalDataValidator, evalDatasetVersionManager);
+    }
+
     @Test
     @DisplayName("批量插入评估数据成功")
     void shouldOkWhenInsertAll() {
@@ -81,12 +88,28 @@ public class EvalDataServiceImplTest {
     }
 
     @Test
+    @DisplayName("更新评估数据成功")
+    void shouldOkWhenUpdate() {
+        evalDataService.update(1L, 1L, "test1");
+        verify(evalDataMapper, times(1)).updateExpiredVersion(anyList(), anyLong());
+        verify(evalDataMapper, times(1)).insertAll(anyList());
+    }
+
+    @Test
+    @DisplayName("更新评估数据失败")
+    void shouldFailWhenUpdate() {
+        when(evalDataMapper.updateExpiredVersion(anyList(), anyLong())).thenReturn(0);
+        assertThatThrownBy(() ->
+                evalDataService.update(1L, 2L, "test")).isInstanceOf(AppEvalException.class);
+    }
+
+    @Test
     @DisplayName("批量插入评估数据，校验 schema 失败")
     void shouldFailWhenVerifyError() {
         doThrow(new AppEvalException(AppEvalRetCodeEnum.EVAL_DATA_INVALID_ERROR, "a", "b")).when(this.evalDataValidator)
                 .verify(anyLong(), anyList());
-        assertThatThrownBy(() -> this.evalDataService.insertAll(1L,
-                TEST_CONTENTS)).isInstanceOf(AppEvalException.class);
+        assertThatThrownBy(() ->
+                evalDataService.insertAll(1L, TEST_CONTENTS)).isInstanceOf(AppEvalException.class);
     }
 
     @Test

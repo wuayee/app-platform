@@ -23,4 +23,13 @@ public interface EvalDataValidator {
      * @throws AppEvalException 当校验失败时。
      */
     void verify(Long datasetId, List<String> contents) throws AppEvalException;
+
+    /**
+     * 校验单个评估内容是否合法。
+     *
+     * @param datasetId 表示评估数据集编号的 {@link Long}。
+     * @param contents 表示评估内容的 {@link String}。
+     * @throws AppEvalException 当校验失败时。
+     */
+    void verify(Long datasetId, String contents) throws AppEvalException;
 }

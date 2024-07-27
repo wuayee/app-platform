@@ -1,10 +1,10 @@
 DELETE
-FROM app_engine_eval_data;
+FROM t_app_engine_eval_data;
 
-INSERT INTO app_engine_eval_data (content,
-                                  created_version,
-                                  expired_version,
-                                  ds_id)
+INSERT INTO t_app_engine_eval_data (content,
+                                    created_version,
+                                    expired_version,
+                                    dataset_id)
 VALUES ('{C1: C1}', 3, 4, 1),
        ('{C2: C2}', 3, 4, 1),
        ('{C3: C3}', 3, 4, 1),
