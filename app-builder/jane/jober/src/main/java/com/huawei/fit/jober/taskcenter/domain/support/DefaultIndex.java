@@ -127,6 +127,11 @@ public class DefaultIndex extends AbstractDomainObject implements Index {
 
             private UndefinableValue<List<String>> propertyIds;
 
+            /**
+             * 索引声明构造器
+             *
+             * @param declaration 表示索引声明的{@link Index.Declaration}
+             */
             public Builder(Index.Declaration declaration) {
                 if (declaration == null) {
                     this.name = UndefinableValue.undefined();

@@ -59,6 +59,9 @@ public class DefaultInstanceEvent implements InstanceEvent {
         return StringUtils.format("[type={0}, fitable={1}]", this.type(), this.fitableId());
     }
 
+    /**
+     * 实例事件构造器
+     */
     public static class Builder implements InstanceEvent.Builder {
         private InstanceEventType type;
 

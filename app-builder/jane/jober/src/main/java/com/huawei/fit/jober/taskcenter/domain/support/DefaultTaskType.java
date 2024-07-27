@@ -33,6 +33,19 @@ public class DefaultTaskType extends AbstractDomainObject implements TaskType {
 
     private final List<SourceEntity> sources;
 
+    /**
+     * 默认任务类型
+     *
+     * @param id 表示id的{@link String}
+     * @param name 表示名称的{@link String}
+     * @param parentId 表示父任务id的{@link String}
+     * @param children 表示子任务类型列表的{@link List}{@code <}{@link TaskType}{@code >}
+     * @param sources 表示任务数据源的列表的的{@link List}{@code <}{@link SourceEntity}{@code >}
+     * @param creator 表示创建者的{@link String}
+     * @param creationTime 表示创建时间的{@link LocalDateTime}
+     * @param lastModifier 表示最后一个修改者的{@link String}
+     * @param lastModificationTime 表示最后的修改时间的{@link LocalDateTime}
+     */
     public DefaultTaskType(String id, String name, String parentId, List<TaskType> children, List<SourceEntity> sources,
             String creator, LocalDateTime creationTime, String lastModifier, LocalDateTime lastModificationTime) {
         super(id, creator, creationTime, lastModifier, lastModificationTime);
@@ -62,6 +75,9 @@ public class DefaultTaskType extends AbstractDomainObject implements TaskType {
         return this.sources;
     }
 
+    /**
+     * 任务类型声明
+     */
     public static class Declaration implements TaskType.Declaration {
         private final UndefinableValue<String> name;
 
@@ -119,6 +135,9 @@ public class DefaultTaskType extends AbstractDomainObject implements TaskType {
                     .collect(Collectors.joining(", ", "[", "]"));
         }
 
+        /**
+         * 任务类型声明构造器
+         */
         public static class Builder implements TaskType.Declaration.Builder {
             private UndefinableValue<String> name;
 
@@ -157,8 +176,11 @@ public class DefaultTaskType extends AbstractDomainObject implements TaskType {
         }
     }
 
-    public static class Builder extends AbstractDomainObjectBuilder<TaskType, TaskType.Builder>
-            implements TaskType.Builder {
+    /**
+     * 任务类型构造器
+     */
+    public static class Builder
+            extends AbstractDomainObjectBuilder<TaskType, TaskType.Builder> implements TaskType.Builder {
         private String name;
 
         private String parentId;

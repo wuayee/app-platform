@@ -259,7 +259,8 @@ public interface TaskTemplateProperty extends DomainObject {
          * @param taskTemplateIds 任务模板id {@link List}{@code <}{@link String}{@code >}
          * @param context 操作上下文 {@link OperationContext}
          * @return 任务模板属性列表
-         * {@link Map}{@code <}{@link String}{@code ,}{@link List}{@code <}{@link TaskTemplateProperty}{@code >}{@code >}
+         * {@link Map}{@code <}{@link String}{@code ,}
+         * {@link List}{@code <}{@link TaskTemplateProperty}{@code >}{@code >}
          */
         Map<String, List<TaskTemplateProperty>> list(List<String> taskTemplateIds, OperationContext context);
     }

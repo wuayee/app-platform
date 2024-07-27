@@ -24,7 +24,6 @@ import java.util.Queue;
 public class SourceEntity {
     private String id;
 
-    // TODO 待删除，数据源的名称即为其所属任务类型的名称，需要归至任务类型统一获取。
     private String name;
 
     private String app;
@@ -35,18 +34,27 @@ public class SourceEntity {
 
     private List<InstanceEvent> events;
 
+    /**
+     * 查找任务数据源
+     *
+     * @param types 表示任务类型的集合的{@link Collection}{@code <}{@link TaskType}{@code >}
+     * @param sourceId 表示数据源id的{@link String}
+     * @return 任务数据源
+     */
     public static SourceEntity lookup(Collection<TaskType> types, String sourceId) {
         Queue<TaskType> queue = new LinkedList<>(types);
+        SourceEntity result = null;
         while (!queue.isEmpty()) {
             TaskType current = queue.poll();
             Optional<SourceEntity> optional = current.sources().stream()
                     .filter(source -> Entities.match(source.getId(), sourceId))
                     .findAny();
             if (optional.isPresent()) {
-                return optional.get();
+                result = optional.get();
+                break;
             }
             queue.addAll(current.children());
         }
-        return null;
+        return result;
     }
 }

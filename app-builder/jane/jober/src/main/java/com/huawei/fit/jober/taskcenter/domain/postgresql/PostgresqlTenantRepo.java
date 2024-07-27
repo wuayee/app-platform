@@ -33,6 +33,7 @@ import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.model.RangedResultSet;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -81,11 +82,11 @@ public class PostgresqlTenantRepo implements Tenant.Repo {
         if (value == null) {
             return null;
         }
-        return ((Timestamp) value).toLocalDateTime();
+        return ObjectUtils.<Timestamp>cast(value).toLocalDateTime();
     }
 
     private static String toString(Object value) {
-        return (String) value;
+        return ObjectUtils.cast(value);
     }
 
     private static TenantAccessLevel toTenantAccessLevel(Object value) {
@@ -303,8 +304,8 @@ public class PostgresqlTenantRepo implements Tenant.Repo {
             throw new NotFoundException(ErrorCodes.TENANT_NOT_FOUND);
         }
         if (declaration.members().defined()) {
-            boolean loopFlag = true;
-            Set<String> authorizedUserIdList = this.queryAuthorizedUserIdList(context, actualTenantId, loopFlag);
+            boolean canLoopFlag = true;
+            Set<String> authorizedUserIdList = this.queryAuthorizedUserIdList(context, actualTenantId, canLoopFlag);
             HashSet<String> declarationMemberSet = new HashSet<>(declaration.members().get());
             Set<String> newMembers = CollectionUtils.difference(declarationMemberSet, authorizedUserIdList);
             Set<String> deleteMembers = CollectionUtils.difference(authorizedUserIdList, declarationMemberSet);
@@ -320,15 +321,16 @@ public class PostgresqlTenantRepo implements Tenant.Repo {
         }
     }
 
-    private Set<String> queryAuthorizedUserIdList(OperationContext context, String actualTenantId, boolean loopFlag) {
+    private Set<String> queryAuthorizedUserIdList(OperationContext context, String actualTenantId, boolean canLoop) {
         Set<String> authorizedUserIdList = new HashSet<>();
-        for (int i = 0; loopFlag; i++) {
+        boolean canLoopFlag = canLoop;
+        for (int i = 0; canLoopFlag; i++) {
             RangedResultSet<TenantMember> memberResult = this.listMember(
                     TenantMember.Filter.custom().tenantId(actualTenantId).build(), i * 100L, 100, context);
             authorizedUserIdList.addAll(
                     memberResult.getResults().stream().map(TenantMember::userId).collect(Collectors.toList()));
             if (memberResult.getRange().getTotal() <= i * 100L + 100) {
-                loopFlag = false;
+                canLoopFlag = false;
             }
         }
         return authorizedUserIdList;
@@ -387,19 +389,19 @@ public class PostgresqlTenantRepo implements Tenant.Repo {
         validator.validatePagination(offset, limit);
         SqlBuilder sql = SqlBuilder.custom();
         List<Object> args = new LinkedList<>();
-        boolean withTags = false;
+        boolean shouldWithTags = false;
         if (filter.tags().defined()) {
             List<String> tags = filter.tags().withDefault(Collections.emptyList());
             if (tags.isEmpty()) {
                 return Entities.emptyRangedResultSet(offset, limit);
             }
-            withTags = true;
+            shouldWithTags = true;
             fillWithTagsSql(sql, tags.size());
             args.add(TAG_TYPE);
             args.addAll(tags);
         }
         sql.append("SELECT {0} FROM ").appendIdentifier(TABLE_NAME).append(" AS ").appendIdentifier("t");
-        if (withTags) {
+        if (shouldWithTags) {
             sql.append(" INNER JOIN ")
                     .appendIdentifier("tag_owner")
                     .append(" AS ")
@@ -518,7 +520,7 @@ public class PostgresqlTenantRepo implements Tenant.Repo {
                 .appendIdentifier(MEMBER_TABLE_NAME)
                 .append(" WHERE user_id = ?");
         List<Map<String, Object>> rows = executor.executeQuery(sql.toString(), Collections.singletonList(globalUserId));
-        return rows.stream().map(row -> (String) row.get("tenant_id")).collect(Collectors.toList());
+        return rows.stream().map(row -> ObjectUtils.<String>cast(row.get("tenant_id"))).collect(Collectors.toList());
     }
 
     private void constructSqlBuilderAndExecute(List<String> memberGlobalUserIdList, List<Object> args,

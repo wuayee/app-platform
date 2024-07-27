@@ -288,6 +288,11 @@ public class DefaultTaskInstance implements TaskInstance {
 
             private UndefinableValue<List<String>> tags;
 
+            /**
+             * 任务实例声明构造器
+             *
+             * @param declaration 任务实例声明
+             */
             public Builder(TaskInstance.Declaration declaration) {
                 if (declaration == null) {
                     this.typeId = UndefinableValue.undefined();
@@ -352,17 +357,17 @@ public class DefaultTaskInstance implements TaskInstance {
 
         private final List<String> categories;
 
-        private final boolean deleted;
+        private final boolean isDeleted;
 
         public Filter(List<String> ids, List<String> typeIds, List<String> sourceIds, Map<String, List<String>> infos,
-                List<String> tags, List<String> categories, boolean deleted) {
+                List<String> tags, List<String> categories, boolean isDeleted) {
             this.ids = Entities.canonicalizeStringList(ids);
             this.typeIds = Entities.canonicalizeStringList(typeIds);
             this.sourceIds = Entities.canonicalizeStringList(sourceIds);
             this.infos = canonicalizeInfos(infos);
             this.tags = Entities.canonicalizeStringList(tags);
             this.categories = Entities.canonicalizeStringList(categories);
-            this.deleted = deleted;
+            this.isDeleted = isDeleted;
         }
 
         private static Map<String, List<String>> canonicalizeInfos(Map<String, List<String>> infos) {
@@ -412,7 +417,7 @@ public class DefaultTaskInstance implements TaskInstance {
 
         @Override
         public boolean deleted() {
-            return this.deleted;
+            return this.isDeleted;
         }
 
         /**
@@ -434,7 +439,7 @@ public class DefaultTaskInstance implements TaskInstance {
 
             private List<String> categories = Collections.emptyList();
 
-            private boolean deleted = false;
+            private boolean isDeleted = false;
 
             @Override
             public Builder ids(List<String> ids) {
@@ -473,15 +478,15 @@ public class DefaultTaskInstance implements TaskInstance {
             }
 
             @Override
-            public TaskInstance.Filter.Builder deleted(boolean deleted) {
-                this.deleted = deleted;
+            public TaskInstance.Filter.Builder deleted(boolean isDeleted) {
+                this.isDeleted = isDeleted;
                 return this;
             }
 
             @Override
             public TaskInstance.Filter build() {
                 return new Filter(this.ids, this.typeIds, this.sourceIds, this.infos, this.tags, this.categories,
-                        this.deleted);
+                        this.isDeleted);
             }
         }
     }

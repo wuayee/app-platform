@@ -29,6 +29,19 @@ public class DefaultTaskTemplateProperty extends AbstractDomainObject implements
 
     private final String taskTemplateId;
 
+    /**
+     * 默认参数模板属性
+     *
+     * @param name 表示名称的{@link String}
+     * @param dataType 表示数据类型的{@link PropertyDataType}
+     * @param sequence 表示sequence的整数{@code int}
+     * @param taskTemplateId 表示任务模板id的{@link String}
+     * @param id 表示id的{@link String}
+     * @param creator 表示创建者的{@link String}
+     * @param creationTime 表示创建时间的{@link LocalDateTime}
+     * @param lastModifier 表示最后一个修改者的{@link String}
+     * @param lastModificationTime 表示最后的修改时间的{@link LocalDateTime}
+     */
     public DefaultTaskTemplateProperty(String name, PropertyDataType dataType, int sequence, String taskTemplateId,
             String id, String creator, LocalDateTime creationTime, String lastModifier,
             LocalDateTime lastModificationTime) {
@@ -79,6 +92,9 @@ public class DefaultTaskTemplateProperty extends AbstractDomainObject implements
         return this.taskTemplateId;
     }
 
+    /**
+     * 任务模板属性构造器
+     */
     public static class Builder extends AbstractDomainObjectBuilder<TaskTemplateProperty, TaskTemplateProperty.Builder>
             implements TaskTemplateProperty.Builder {
         private String name;
@@ -143,6 +159,9 @@ public class DefaultTaskTemplateProperty extends AbstractDomainObject implements
         }
     }
 
+    /**
+     * 任务模板属性声明
+     */
     public static class Declaration implements TaskTemplateProperty.Declaration {
         private final UndefinableValue<String> name;
 
@@ -182,6 +201,9 @@ public class DefaultTaskTemplateProperty extends AbstractDomainObject implements
             return this.dataType;
         }
 
+        /**
+         * 任务模板属性构造器
+         */
         public static class Builder implements TaskTemplateProperty.Declaration.Builder {
             private UndefinableValue<String> name = UndefinableValue.undefined();
 

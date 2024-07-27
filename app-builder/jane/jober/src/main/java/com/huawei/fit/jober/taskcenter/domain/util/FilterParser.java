@@ -21,6 +21,7 @@ public interface FilterParser {
     /**
      * 从字符串中解析过滤器。
      *
+     * @param dataType 表示属性数据类型的{@link PropertyDataType}
      * @param text 表示包含过滤器信息的字符串的 {@link String}。
      * @return 表示解析到的过滤器的 {@link Filter}。
      */

@@ -62,6 +62,9 @@ public class EqualsFilter implements Filter {
         return KEY + '(' + this.value + ')';
     }
 
+    /**
+     * EqualsFilter解析器
+     */
     @FilterParser.Declare(KEY)
     public static class Parser implements FilterParser {
         @Override
