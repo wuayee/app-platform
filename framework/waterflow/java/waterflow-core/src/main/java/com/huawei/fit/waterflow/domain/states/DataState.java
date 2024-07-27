@@ -31,14 +31,15 @@ public class DataState<O, D, I> extends DataStart<O, D, I> {
      * @param callback 数据消费方
      */
     public void offer(Consumer<O> callback) {
-        ObjectUtils.<State<O, D, I, ProcessFlow<D>>>cast(this.state).close(
-                dataCallback -> callback.accept(dataCallback.get().getData()));
+        ObjectUtils.<State<O, D, I, ProcessFlow<D>>>cast(this.state)
+                .close(dataCallback -> callback.accept(dataCallback.get().getData()));
         this.start.offer();
     }
 
     /**
      * 完成流程定义，并发射一个数据
      */
+    @Override
     public void offer() {
         ObjectUtils.<State<O, D, I, ProcessFlow<D>>>cast(this.state).close();
         this.start.offer();

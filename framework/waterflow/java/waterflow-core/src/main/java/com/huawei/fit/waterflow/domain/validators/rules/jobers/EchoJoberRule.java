@@ -23,6 +23,7 @@ public class EchoJoberRule implements JoberRule {
      *
      * @param flowJober 流程节点自动任务
      */
+    @Override
     public void apply(FlowJober flowJober) {
         Validation.notNull(flowJober.getType(), exception("flow jober type"));
         Validation.equals(ECHO_JOBER, flowJober.getType(), exception("flow jober type"));

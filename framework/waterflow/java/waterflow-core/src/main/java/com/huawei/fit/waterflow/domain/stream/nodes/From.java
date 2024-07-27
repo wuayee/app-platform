@@ -132,8 +132,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * @return 新的join processor
      */
     @Override
-    public <O> Processor<I, O> join(
-            Operators.Map<FlowContext<I>, O> processor, Operators.Whether<I> whether) {
+    public <O> Processor<I, O> join(Operators.Map<FlowContext<I>, O> processor, Operators.Whether<I> whether) {
         JoinNode<I, O> node = new JoinNode<>(this.getStreamId(), processor, repo, messenger, locks);
         this.subscribe(node, i -> true);
         return node.displayAs(SpecialDisplayNode.JOIN.name());
@@ -165,8 +164,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * @return 返回一个node，这个node是接收者，同时可以继续发送数据
      */
     @Override
-    public <O> Processor<I, O> map(
-            Operators.Map<FlowContext<I>, O> processor, Operators.Whether<I> whether) {
+    public <O> Processor<I, O> map(Operators.Map<FlowContext<I>, O> processor, Operators.Whether<I> whether) {
         Node<I, O> node = new Node<>(this.getStreamId(), processor, repo, messenger, locks);
         this.subscribe(node, whether);
         return node.displayAs("map");
@@ -207,6 +205,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * @param session 指定的session
      * @return traceId
      */
+    @Override
     public String offer(I data, FlowSession session) {
         I[] array = ObjectUtils.cast(new Object[1]);
         array[0] = data;
@@ -220,6 +219,7 @@ public class From<I> extends IdGenerator implements Publisher<I> {
      * @param trans 指定的session
      * @return traceId
      */
+    @Override
     public String offer(I[] data, FlowSession trans) {
         FlowTrace trace = new FlowTrace();
         Set<String> traceId = new HashSet<>();

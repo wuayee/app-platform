@@ -67,12 +67,12 @@ import java.util.stream.Collectors;
  * @since 2023/08/14
  */
 public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
-    private static final Logger LOG = Logger.get(To.class);
-
     /**
      * 最大流量，也就是该节点可以处理的最大数据量
      */
     public static final int MAX_CONCURRENCY = 16;
+
+    private static final Logger LOG = Logger.get(To.class);
 
     private static final String PROCESS_T_NAME_PREFIX = "NodeProcessT";
 
@@ -441,7 +441,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
     }
 
     /**
-     * todo 目前不完善，遇到人工就释放了，如果人工和系统有并行，会有问题
+     * 目前不完善，遇到人工就释放了，如果人工和系统有并行，会有问题
      *
      * @param contexts 待处理的context
      */
@@ -587,7 +587,6 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
                         String.join(",", pre.get(0).getTraceId()));
                 return;
             }
-            // todo 待确认
             if (pre.size() == 1 && pre.get(0).getData() == null) {
                 this.afterProcess(pre, new ArrayList<>());
                 return;
@@ -614,6 +613,15 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
         }
     }
 
+    /**
+     * 设置节点处理失败
+     * 当节点处理过程中抛出异常时，调用此方法
+     * 首先调用节点自定义的错误处理器，如果没有自定义错误处理器，则调用全局的错误处理器
+     * 如果两者都没有，则默认不做任何处理
+     *
+     * @param pre 待处理的contexts
+     * @param ex 抛出的异常
+     */
     public void setFailed(List<FlowContext<I>> pre, Exception ex) {
         Retryable<I> retryable = new Retryable<>(this.getRepo(), (To<I, I>) this);
         Optional.ofNullable(this.errorHandler).ifPresent(handler -> handler.handle(ex, retryable, pre));

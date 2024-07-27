@@ -279,8 +279,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             preProcessRunning = true;
             String threadName = getThreadName(PRE_PROCESS_T_NAME_PREFIX);
             preProcessT = new Thread(this::preProcess, threadName);
-            preProcessT.setUncaughtExceptionHandler((thread, error) ->
-                    LOG.error("run preProcessT error, message:{}", error.getMessage()));
+            preProcessT.setUncaughtExceptionHandler(
+                    (thread, error) -> LOG.error("run preProcessT error, message:{}", error.getMessage()));
             preProcessT.start();
             LOG.debug("[{}] preprocess main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
                     this.id);
@@ -289,8 +289,8 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
             processRunning = true;
             String threadName = getThreadName(PROCESS_T_NAME_PREFIX);
             processT = new Thread(this::process, threadName);
-            processT.setUncaughtExceptionHandler((thread, error) ->
-                    LOG.error("run processT error, message:{}", error.getMessage()));
+            processT.setUncaughtExceptionHandler(
+                    (thread, error) -> LOG.error("run processT error, message:{}", error.getMessage()));
             processT.start();
             LOG.debug("[{}] process main loop starts for stream-id: {}, node-id: {}", threadName, this.streamId,
                     this.id);
@@ -399,6 +399,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      *
      * @param filter filter
      */
+    @Override
     public void preFilter(Operators.Filter<I> filter) {
         this.preFilter = Optional.ofNullable(filter).orElse(defaultAutoFilter);
     }
@@ -408,6 +409,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      *
      * @return preFilter
      */
+    @Override
     public Operators.Filter<I> preFilter() {
         return Optional.ofNullable(this.preFilter).orElse(defaultAutoFilter);
     }
@@ -417,6 +419,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      *
      * @param filter filter
      */
+    @Override
     public void postFilter(Operators.Filter<I> filter) {
         this.postFilter = Optional.ofNullable(filter).orElseGet(this::defaultFilter);
     }
@@ -426,6 +429,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
      *
      * @return postFilter
      */
+    @Override
     public Operators.Filter<I> postFilter() {
         return Optional.ofNullable(this.postFilter).orElseGet(this::defaultFilter);
     }
@@ -583,8 +587,7 @@ public class To<I, O> extends IdGenerator implements Subscriber<I, O> {
 
     @Override
     public List<FlowContext<O>> nextContexts(String batchId) {
-        return ObjectUtils.cast(this.repo.getContextsByPosition(this.streamId, this.getId(), batchId,
-                NEW.toString()));
+        return ObjectUtils.cast(this.repo.getContextsByPosition(this.streamId, this.getId(), batchId, NEW.toString()));
     }
 
     @Override

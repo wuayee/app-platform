@@ -7,6 +7,7 @@ package com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.nodes.jobers;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.definitions.nodes.jobers.FlowJober;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowDataConverterType;
 import com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.FlowGraphData;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -43,6 +44,6 @@ public interface JoberParser {
         flowJober.setFitablesConfig(flowGraphData.getNodeJoberFitableConfig(nodeIndex));
         Optional.ofNullable(flowGraphData.getNodeJoberConverter(nodeIndex))
                 .ifPresent(config -> flowJober.setConverter(
-                        FlowDataConverterType.getType((String) config.get("type")).getParser().parse(config)));
+                        FlowDataConverterType.getType(ObjectUtils.cast(config.get("type"))).getParser().parse(config)));
     }
 }

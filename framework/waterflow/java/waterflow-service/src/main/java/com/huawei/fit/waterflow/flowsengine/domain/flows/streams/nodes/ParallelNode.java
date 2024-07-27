@@ -65,16 +65,19 @@ public class ParallelNode<I> extends Node<I, I> {
     }
 
     /**
-     * either:只publish给一个subscription
-     * all：publish给所有的subscription
+     * 初始化并行节点的from，并行节点的from会对传入的contexts进行处理，
+     * 将每个context的id设置为其并行id，并将并行模式设置为mode
      *
-     * @param repo 持久化
-     * @param messenger 发送器
+     * @param <I> 传入数据类型
+     * @param streamId stream流程ID
+     * @param mode 并行节点的模式
+     * @param repo 上下文持久化repo，默认在内存
+     * @param messenger 上下文事件发送器，默认在内存
      * @param locks 流程锁
-     * @return From
+     * @return 返回一个经过处理的from
      */
-    private static <I> From<I> initFrom(String streamId, ParallelMode mode,
-            FlowContextRepo repo, FlowContextMessenger messenger, FlowLocks locks) {
+    private static <I> From<I> initFrom(String streamId, ParallelMode mode, FlowContextRepo repo,
+            FlowContextMessenger messenger, FlowLocks locks) {
         return new From<I>(streamId, repo, messenger, locks) {
             @Override
             public void offer(List<FlowContext<I>> contexts) {

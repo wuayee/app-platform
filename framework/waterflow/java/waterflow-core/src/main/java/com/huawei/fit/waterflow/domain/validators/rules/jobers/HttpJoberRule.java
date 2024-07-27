@@ -24,6 +24,7 @@ public class HttpJoberRule implements JoberRule {
      *
      * @param flowJober 流程节点自动任务
      */
+    @Override
     public void apply(FlowJober flowJober) {
         Validation.notNull(flowJober.getType(), exception("flow http jober type"));
         Validation.equals(HTTP_JOBER, flowJober.getType(), exception("flow http jober type"));

@@ -30,6 +30,40 @@ import java.util.Optional;
 public abstract class AbstractMappingProcessor implements MappingProcessor {
     private static final Logger LOG = Logger.get(AbstractMappingProcessor.class);
 
+    private static Object getValueByPath(Map<String, Object> businessData, List<String> paths, String nodeMetaId) {
+        if (paths.isEmpty()) {
+            return null;
+        }
+        // 优先从节点scope下查找，找不到后再从businessData平级查找
+        Map<String, Object> internalMap = cast(
+                Optional.ofNullable(businessData.get(BUSINESS_DATA_INTERNAL_KEY)).orElse(new HashMap<>()));
+        Map<String, Object> outputScopeMap = cast(
+                Optional.ofNullable(internalMap.get(INTERNAL_OUTPUT_SCOPE_KEY)).orElse(new HashMap<>()));
+        Map<String, Object> nodeOutputMap = cast(
+                Optional.ofNullable(outputScopeMap.get(nodeMetaId)).orElse(new HashMap<>()));
+
+        ValueResult result = findValueByPath(nodeOutputMap, paths);
+        if (result.isFound()) {
+            return result.getValue();
+        }
+        // 兼容逻辑，如果没有从作用域空间找到，则尝试从businessData查找一次
+        return findValueByPath(businessData, paths).getValue();
+    }
+
+    private static ValueResult findValueByPath(Map<String, Object> values, List<String> paths) {
+        Optional<String> v;
+        Object currentNode = values;
+        for (String path : paths) {
+            Map<String, Object> objectNode = cast(currentNode);
+            if (objectNode != null && objectNode.containsKey(path)) {
+                currentNode = objectNode.get(path);
+            } else {
+                return new ValueResult();
+            }
+        }
+        return new ValueResult(currentNode);
+    }
+
     @Override
     public Object generate(MappingNode mappingConfig, Map<String, Object> businessData) {
         if (MappingFromType.REFERENCE.equals(mappingConfig.getFrom())) {
@@ -71,28 +105,14 @@ public abstract class AbstractMappingProcessor implements MappingProcessor {
         return getValueByPath(businessData, cast(mappingConfig.getValue()), mappingConfig.getReferenceNode());
     }
 
-    private static Object getValueByPath(Map<String, Object> businessData, List<String> paths, String nodeMetaId) {
-        if (paths.isEmpty()) {
-            return null;
-        }
-        // 优先从节点scope下查找，找不到后再从businessData平级查找
-        Map<String, Object> internalMap = cast(
-                Optional.ofNullable(businessData.get(BUSINESS_DATA_INTERNAL_KEY)).orElse(new HashMap<>()));
-        Map<String, Object> outputScopeMap = cast(
-                Optional.ofNullable(internalMap.get(INTERNAL_OUTPUT_SCOPE_KEY)).orElse(new HashMap<>()));
-        Map<String, Object> nodeOutputMap = cast(
-                Optional.ofNullable(outputScopeMap.get(nodeMetaId)).orElse(new HashMap<>()));
-
-        ValueResult result = findValueByPath(nodeOutputMap, paths);
-        if (result.isFound()) {
-            return result.getValue();
-        }
-        // 兼容逻辑，如果没有从作用域空间找到，则尝试从businessData查找一次
-        return findValueByPath(businessData, paths).getValue();
-    }
-
+    /**
+     * value结果
+     *
+     * @author x00576283
+     * @since 1.0
+     */
     @Getter
-    static private class ValueResult {
+    private static class ValueResult {
         private boolean isFound;
 
         private Object value;
@@ -109,19 +129,5 @@ public abstract class AbstractMappingProcessor implements MappingProcessor {
         public ValueResult() {
             this(false, null);
         }
-    }
-
-    private static ValueResult findValueByPath(Map<String, Object> values, List<String> paths) {
-        Optional<String> v;
-        Object currentNode = values;
-        for (String path : paths) {
-            Map<String, Object> objectNode = cast(currentNode);
-            if (objectNode != null && objectNode.containsKey(path)) {
-                currentNode = objectNode.get(path);
-            } else {
-                return new ValueResult();
-            }
-        }
-        return new ValueResult(currentNode);
     }
 }

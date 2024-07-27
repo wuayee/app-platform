@@ -4,6 +4,8 @@
 
 package com.huawei.fit.waterflow.flowsengine.domain.flows.parsers.shapehandler;
 
+import com.huawei.fitframework.util.ObjectUtils;
+
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.Arrays;
@@ -29,7 +31,7 @@ public class DefaultShapeHandler extends ShapeHandler {
         JSONObject shape = getShape();
         JSONObject meta = getMeta();
         Map<String, Object> result = new HashMap<>();
-        String triggerMode = (String) meta.get("triggerMode");
+        String triggerMode = ObjectUtils.cast(meta.get("triggerMode"));
         result.put("triggerMode", triggerMode);
         // 适配auto节点配置task
         if (meta.containsKey("task")) {

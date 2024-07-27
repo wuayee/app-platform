@@ -25,10 +25,12 @@ public interface FlowLocks {
      * 本地锁全局静态对象
      */
     Map<String, Lock> locks = new ConcurrentHashMap<>();
+
     /**
      * 节点分布式锁key前缀
      */
     String NODE_LOCK_KEY_PREFIX = "water-flow-node";
+
     /**
      * trace锁前缀
      */

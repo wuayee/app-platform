@@ -32,6 +32,13 @@ public enum MappingFromType {
         this.code = code;
     }
 
+    /**
+     * 根据code获取枚举值
+     *
+     * @param code 枚举值对应的code
+     * @return 返回对应的枚举值
+     * @throws JobberParamException 当找不到对应的枚举值时，抛出此异常
+     */
     public static MappingFromType get(String code) {
         return Arrays.stream(values())
                 .filter(value -> value.getCode().equals(code.toUpperCase(Locale.ROOT)))

@@ -41,6 +41,25 @@ public class MappingFlowDataConverterParser implements FlowDataConverterParser {
 
     private static final String REFERENCE_NODE = "referenceNode";
 
+    private static MappingNode getMappingNode(Map<String, Object> config) {
+        Object value = config.get(VALUE);
+        MappingNodeType type = MappingNodeType.get(cast(config.get(TYPE)));
+        MappingFromType from = MappingFromType.get(cast(config.get(FROM)));
+        if (MappingNodeType.isNestedType(type) && MappingFromType.EXPAND.equals(from)) {
+            List<Map<String, Object>> nestedValueConfig = cast(value);
+            value = nestedValueConfig.stream()
+                    .map(MappingFlowDataConverterParser::getMappingNode)
+                    .collect(Collectors.toList());
+        }
+        return MappingNode.builder()
+                .name(cast(config.get(NAME)))
+                .type(type)
+                .from(from)
+                .value(value)
+                .referenceNode(cast(config.get(REFERENCE_NODE)))
+                .build();
+    }
+
     @Override
     public FlowDataConverter parse(Map<String, Object> converterConfig) {
         Map<String, Object> entity = cast(converterConfig.get(ENTITY));
@@ -55,25 +74,5 @@ public class MappingFlowDataConverterParser implements FlowDataConverterParser {
         }
 
         return new MappingFlowDataConverter(inputMappingConfig, outputName);
-    }
-
-    private static MappingNode getMappingNode(Map<String, Object> config) {
-        Object value = config.get(VALUE);
-        MappingNodeType type = MappingNodeType.get(cast(config.get(TYPE)));
-        MappingFromType from = MappingFromType.get(cast(config.get(FROM)));
-        if (MappingNodeType.isNestedType(type) && MappingFromType.EXPAND.equals(from)) {
-            List<Map<String, Object>> nestedValueConfig = cast(value);
-            value = nestedValueConfig.stream()
-                    .map(MappingFlowDataConverterParser::getMappingNode)
-                    .collect(Collectors.toList());
-        }
-        MappingNode result = MappingNode.builder()
-                .name(cast(config.get(NAME)))
-                .type(type)
-                .from(from)
-                .value(value)
-                .referenceNode(cast(config.get(REFERENCE_NODE)))
-                .build();
-        return result;
     }
 }

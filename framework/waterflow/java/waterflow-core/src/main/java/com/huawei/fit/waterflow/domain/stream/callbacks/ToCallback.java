@@ -26,6 +26,7 @@ public class ToCallback<O> implements Callback<O> {
      *
      * @return list类型的数据
      */
+    @Override
     public List<O> getAll() {
         return this.products;
     }
@@ -35,6 +36,7 @@ public class ToCallback<O> implements Callback<O> {
      *
      * @return O
      */
+    @Override
     public O get() {
         return this.products.get(0);
     }

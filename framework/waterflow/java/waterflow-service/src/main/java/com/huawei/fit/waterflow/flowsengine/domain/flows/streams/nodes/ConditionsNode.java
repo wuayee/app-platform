@@ -62,15 +62,18 @@ public class ConditionsNode<I> extends Node<I, I> {
     }
 
     /**
+     * 初始化from节点，并根据订阅者的匹配规则，将匹配的上下文缓存到订阅者中
      * 只publish给符合条件的subscription
      *
-     * @param repo 持久化
-     * @param messenger 事件发送器
+     * @param <I> 传入数据类型
+     * @param streamId stream流程ID
+     * @param repo 上下文持久化repo，默认在内存
+     * @param messenger 上下文事件发送器，默认在内存
      * @param locks 流程锁
-     * @return From 数据publisher
+     * @return 返回初始化后的from节点
      */
-    private static <I> From<I> initFrom(String streamId, FlowContextRepo repo,
-            FlowContextMessenger messenger, FlowLocks locks) {
+    private static <I> From<I> initFrom(String streamId, FlowContextRepo repo, FlowContextMessenger messenger,
+            FlowLocks locks) {
         return new From<I>(streamId, repo, messenger, locks) {
             @Override
             public void offer(List<FlowContext<I>> contexts) {

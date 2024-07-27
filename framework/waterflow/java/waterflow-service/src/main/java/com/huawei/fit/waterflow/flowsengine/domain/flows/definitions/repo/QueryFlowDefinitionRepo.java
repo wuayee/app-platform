@@ -111,6 +111,13 @@ public class QueryFlowDefinitionRepo {
         return flowDefinitionMapper.findByTenantId(tenant);
     }
 
+    /**
+     * 根据元数据ID和部分版本号查询流程定义
+     *
+     * @param metaId 元数据ID
+     * @param version 部分版本号
+     * @return 流程定义列表
+     */
     public List<FlowDefinitionPO> findByMetaIdAndPartVersion(String metaId, String version) {
         return flowDefinitionMapper.findByMetaIdAndPartVersion(metaId, version);
     }

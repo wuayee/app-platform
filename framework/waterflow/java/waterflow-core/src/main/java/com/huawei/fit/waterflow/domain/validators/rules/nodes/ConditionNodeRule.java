@@ -21,6 +21,7 @@ public class ConditionNodeRule implements NodeRule {
      *
      * @param flowNode 流程节点
      */
+    @Override
     public void apply(FlowNode flowNode) {
         Validation.greaterThanOrEquals(flowNode.getEvents().size(), MINIMUM_EVENT_SIZE,
                 exception("condition node event size"));

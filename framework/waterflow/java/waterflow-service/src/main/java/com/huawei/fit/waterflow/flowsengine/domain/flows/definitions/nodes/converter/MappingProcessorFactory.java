@@ -28,6 +28,13 @@ public class MappingProcessorFactory {
             .put(MappingNodeType.ARRAY, new ArrayMappingProcessor())
             .build();
 
+    /**
+     * 根据给定的映射节点配置获取对应的映射处理器
+     *
+     * @param mappingConfig 映射节点配置
+     * @return 对应的映射处理器
+     * @throws JobberParamException 如果给定的映射节点配置的类型在映射处理器映射中不存在，则抛出此异常
+     */
     public static MappingProcessor get(MappingNode mappingConfig) {
         return Optional.ofNullable(mappingProcessors.get(mappingConfig.getType()))
                 .orElseThrow(() -> new JobberParamException(ErrorCodes.INPUT_PARAM_IS_INVALID,

@@ -39,6 +39,28 @@ public class FlowStoreJober extends FlowJober {
 
     private static final Logger LOG = Logger.get(FlowStoreJober.class);
 
+    @Setter
+    @Getter
+    private ServiceMeta serviceMeta;
+
+    @Override
+    protected List<FlowData> executeJober(List<FlowData> inputs) {
+        List<Map<String, Object>> inputData = getInputs(inputs);
+        FlowData contextInfo = inputs.get(0);
+        List<FlowData> result = new ArrayList<>(inputs.size());
+        inputData.forEach(input -> {
+            String invokeResult = this.brokerClient.getRouter(TOOL_EXECUTE_GENERICABLE_ID)
+                    .route(DefaultFilter.INSTANCE)
+                    .communicationType(CommunicationType.ASYNC)
+                    .invoke(this.serviceMeta.getArgs(cast(input.get(Constant.BUSINESS_DATA_KEY))).toArray());
+            LOG.info("Call store tool successfully, nodeId={}, tool={}.", this.nodeMetaId, serviceMeta.uniqueName);
+            result.add(addResultToFlowData(JSON.parse(invokeResult), cast(input.get(Constant.BUSINESS_DATA_KEY)),
+                    contextInfo));
+        });
+
+        return result;
+    }
+
     /**
      * 工具服务的元数据信息
      *
@@ -69,27 +91,5 @@ public class FlowStoreJober extends FlowJober {
             this.params.stream().forEach(item -> args.put(item, businessData.get(item)));
             return Arrays.asList(this.uniqueName, JSON.toJSONString(args, WriteMapNullValue));
         }
-    }
-
-    @Setter
-    @Getter
-    private ServiceMeta serviceMeta;
-
-    @Override
-    protected List<FlowData> executeJober(List<FlowData> inputs) {
-        List<Map<String, Object>> inputData = getInputs(inputs);
-        FlowData contextInfo = inputs.get(0);
-        List<FlowData> result = new ArrayList<>(inputs.size());
-        inputData.forEach(input -> {
-            String invokeResult = this.brokerClient.getRouter(TOOL_EXECUTE_GENERICABLE_ID)
-                    .route(DefaultFilter.INSTANCE)
-                    .communicationType(CommunicationType.ASYNC)
-                    .invoke(this.serviceMeta.getArgs(cast(input.get(Constant.BUSINESS_DATA_KEY))).toArray());
-            LOG.info("Call store tool successfully, nodeId={}, tool={}.", this.nodeMetaId, serviceMeta.uniqueName);
-            result.add(addResultToFlowData(JSON.parse(invokeResult), cast(input.get(Constant.BUSINESS_DATA_KEY)),
-                    contextInfo));
-        });
-
-        return result;
     }
 }
