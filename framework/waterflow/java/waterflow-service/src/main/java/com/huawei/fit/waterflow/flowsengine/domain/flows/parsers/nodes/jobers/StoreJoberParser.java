@@ -57,7 +57,7 @@ public class StoreJoberParser implements JoberParser {
         return ServiceMeta.builder()
                 .uniqueName(cast(config.get(UNIQUE_NAME)))
                 .params((ObjectUtils.<List<Map<String, Object>>>cast(config.get(PARAMS))).stream()
-                        .map(param -> (String) param.get(NAME))
+                        .map(param -> ObjectUtils.<String>cast(param.get(NAME)))
                         .collect(Collectors.toList()))
                 .build();
     }
