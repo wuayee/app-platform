@@ -32,6 +32,7 @@ import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.validation.Validated;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,6 +42,8 @@ import java.util.List;
 @Component
 @RequestMapping(path = "/v1/api/{tenant_id}/app")
 public class AppBuilderAppController extends AbstractController {
+    private final static List<String> EXCLUDE_NAMES = Arrays.asList("小海");
+
     private final AppBuilderAppService appService;
     private final com.huawei.fit.jober.aipp.genericable.AppBuilderAppService appGenericable;
 
@@ -68,6 +71,7 @@ public class AppBuilderAppController extends AbstractController {
             @RequestParam(value = "limit", defaultValue = "10") int limit, @RequestBean AppQueryCondition cond,
             @RequestQuery(name = "type", defaultValue = "app") String type) {
         cond.setType(type);
+        cond.getExcludeNames().addAll(EXCLUDE_NAMES);
         return this.appService.list(cond, httpRequest, tenantId, offset, limit);
     }
 

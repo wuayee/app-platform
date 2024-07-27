@@ -53,6 +53,12 @@
             <if test="cond != null and cond.name != null and cond.name != ''">
                 and name ilike '%' || #{cond.name} || '%'
             </if>
+            <if test="cond.excludeNames != null and !cond.excludeNames.isEmpty()">
+                AND name NOT IN
+                <foreach item="excludeName" collection="cond.excludeNames" open="(" separator="," close=")">
+                    #{excludeName}
+                </foreach>
+            </if>
             ORDER BY
                 "name", create_at DESC
         ) as sub
@@ -97,7 +103,13 @@
             and state = #{cond.state}
         </if>
         <if test="cond.name != null">
-            and name like '%'||#{cond.name}||'%'
+            and name ilike '%' || #{cond.name} || '%'
+        </if>
+        <if test="cond.excludeNames != null and !cond.excludeNames.isEmpty()">
+            AND name NOT IN
+            <foreach item="excludeName" collection="cond.excludeNames" open="(" separator="," close=")">
+                #{excludeName}
+            </foreach>
         </if>
         ) as latest_records;
     </select>
