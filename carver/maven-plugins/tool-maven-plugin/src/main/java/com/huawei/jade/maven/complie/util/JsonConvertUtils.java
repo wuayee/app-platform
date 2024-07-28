@@ -56,7 +56,9 @@ public class JsonConvertUtils {
         }
 
         Map<String, Object> returnDetails = new HashMap<>();
-        returnDetails.put("description", methodEntity.getReturnDescription());
+        if (methodEntity.getReturnDescription() != null) {
+            returnDetails.put("description", methodEntity.getReturnDescription());
+        }
         returnDetails.putAll(convertToMap(methodEntity.getReturnType()));
         schema.put("return", returnDetails);
         return schema;

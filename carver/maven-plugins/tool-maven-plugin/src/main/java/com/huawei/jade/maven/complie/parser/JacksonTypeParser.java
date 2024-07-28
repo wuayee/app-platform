@@ -53,6 +53,12 @@ public class JacksonTypeParser {
      * @return 解析后的 Json Schema 的值。
      */
     public static JsonNode getParameterSchema(TypeDescription.Generic generic) {
+        if (generic == null || generic.represents(void.class)) {
+            ObjectNode nullNode = OBJECT_MAPPER.createObjectNode();
+            nullNode.put("type", "null");
+            return nullNode;
+        }
+
         TypeDescription typeDescription = generic.asErasure();
         if (typeDescription.asUnboxed().isPrimitive() || isWrapperType(typeDescription)) {
             return getPrimitiveTypeSchema(typeDescription);
