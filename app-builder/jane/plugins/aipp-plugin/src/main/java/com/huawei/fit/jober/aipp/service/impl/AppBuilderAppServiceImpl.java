@@ -1023,9 +1023,11 @@ public class AppBuilderAppServiceImpl
             if (StringUtils.equals(node.get("name").asText(), param.getKey())) {
                 if (singleLayerParams.contains(param.getKey())) {
                     if (StringUtils.equals(param.getKey(), "temperature")) {
-                        ObjectUtils.<ObjectNode>cast(node).put("value", JsonUtils.parseObject(param.getValue(), Float.class));
+                        ObjectUtils.<ObjectNode>cast(node).put(
+                                "value", JsonUtils.parseObject(param.getValue(), Float.class));
                     } else {
-                        ObjectUtils.<ObjectNode>cast(node).put("value", JsonUtils.parseObject(param.getValue(), String.class));
+                        ObjectUtils.<ObjectNode>cast(node).put(
+                                "value", JsonUtils.parseObject(param.getValue(), String.class));
                     }
                     continue;
                 }
@@ -1037,13 +1039,14 @@ public class AppBuilderAppServiceImpl
                 if (StringUtils.equals("knowledge", param.getKey())) {
                     JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
                     ArrayNode valueArrayNode = nodeFactory.arrayNode();
-                    List<Map<String, Object>> res =
-                            (List<Map<String, Object>>) JsonUtils.parseObject(param.getValue(), List.class);
+                    List<Map<String, Object>> res = ObjectUtils.<List<Map<String, Object>>>cast(
+                            JsonUtils.parseObject(param.getValue(), List.class));
                     res.forEach(r -> {
                         ArrayNode valueArrayNode1 = nodeFactory.arrayNode();
                         for (Map.Entry<String, Object> rr : r.entrySet()) {
                             if (StringUtils.equals(rr.getKey(), "id")) {
-                                valueArrayNode1.add(convertId(rr.getKey(), ObjectUtils.<Integer>cast(rr.getValue()).longValue()));
+                                valueArrayNode1.add(convertId(rr.getKey(),
+                                        ObjectUtils.<Integer>cast(rr.getValue()).longValue()));
                             } else {
                                 valueArrayNode1.add(convertObject(rr.getKey(), String.valueOf(rr.getValue())));
                             }
