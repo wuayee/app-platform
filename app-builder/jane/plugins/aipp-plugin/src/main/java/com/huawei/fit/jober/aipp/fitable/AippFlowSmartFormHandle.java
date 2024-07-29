@@ -33,6 +33,7 @@ import java.util.Map;
 @Component
 public class AippFlowSmartFormHandle implements FlowSmartFormService {
     private static final Logger log = Logger.get(AippFlowSmartFormHandle.class);
+
     private final AppBuilderFormService formService;
     private final AippStreamService aippStreamService;
     private final MetaInstanceService metaInstanceService;
@@ -53,7 +54,7 @@ public class AippFlowSmartFormHandle implements FlowSmartFormService {
     @Override
     @Fitable("qz90ufu144m607hfud1ecbk0dnq3xavd")
     public void handleSmartForm(List<Map<String, Object>> contexts, String sheetId) {
-        String nodeId = (String) contexts.get(0).get(AippConst.BS_NODE_ID_KEY);
+        String nodeId = ObjectUtils.cast(contexts.get(0).get(AippConst.BS_NODE_ID_KEY));
         Map<String, Object> businessData = DataUtils.getBusiness(contexts);
         log.debug("handleSmartForm nodeId {} businessData {}", nodeId, businessData);
 
@@ -73,10 +74,10 @@ public class AippFlowSmartFormHandle implements FlowSmartFormService {
                 .putInfo(AippConst.INST_CURR_NODE_ID_KEY, nodeId)
                 .build();
 
-        this.metaInstanceService.patchMetaInstance((String) businessData.get(AippConst.BS_META_VERSION_ID_KEY),
-                (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY),
+        this.metaInstanceService.patchMetaInstance(ObjectUtils.cast(businessData.get(AippConst.BS_META_VERSION_ID_KEY)),
+                ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY)),
                 declarationInfo,
-                JsonUtils.parseObject((String) businessData.get(AippConst.BS_HTTP_CONTEXT_KEY),
+                JsonUtils.parseObject(ObjectUtils.cast(businessData.get(AippConst.BS_HTTP_CONTEXT_KEY)),
                         OperationContext.class));
     }
 }

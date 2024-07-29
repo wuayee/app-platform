@@ -20,6 +20,7 @@ import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -29,10 +30,14 @@ import java.util.Map;
 
 /**
  * 任意文件读取
+ *
+ * @author s00664640
+ * @since 2024-05-10
  */
 @Component
 public class CompositeFileReader implements FlowableService {
     private static final Logger log = Logger.get(CompositeFileReader.class);
+
     private final OperatorService operatorService;
     private final MetaInstanceService metaInstanceService;
     private final AippLogService aippLogService;
@@ -60,7 +65,7 @@ public class CompositeFileReader implements FlowableService {
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "text result is empty.");
         }
         extractResult = AippStringUtils.textLenLimit(extractResult,
-            AippStringUtils.getIntegerFromStr((String) businessData.get(AippConst.BS_TEXT_LIMIT_KEY)));
+            AippStringUtils.getIntegerFromStr(ObjectUtils.cast(businessData.get(AippConst.BS_TEXT_LIMIT_KEY))));
         businessData.put(AippConst.INST_FILE2TEXT_KEY, extractResult);
 
         InstanceDeclarationInfo info =

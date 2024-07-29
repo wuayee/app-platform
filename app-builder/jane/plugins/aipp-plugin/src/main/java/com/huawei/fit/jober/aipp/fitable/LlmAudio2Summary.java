@@ -5,6 +5,7 @@
 package com.huawei.fit.jober.aipp.fitable;
 
 import com.huawei.fit.jober.FlowableService;
+import com.huawei.fit.jober.aipp.common.exception.AippJsonDecodeException;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.dto.audio.SummaryDto;
 import com.huawei.fit.jober.aipp.dto.audio.SummarySection;
@@ -21,6 +22,7 @@ import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.model.openai.client.OpenAiClient;
 import com.huawei.jade.voice.service.VoiceService;
 
@@ -57,7 +59,8 @@ public class LlmAudio2Summary implements FlowableService {
             + "Video: <文本摘要旨在将文本或文本集合转换为包含关键信息的简短摘要...>\n" + "Output JSON:\n"
             + "{\"title\": \"文本摘要简介\", \"text\": \"文本摘要...\"}\n\n" + "--------\n" + "Video: <%s>\n"
             + "Output JSON:\n";
-    private final static ExecutorService SUMMARY_EXECUTOR = Executors.newFixedThreadPool(8);
+    private static final ExecutorService SUMMARY_EXECUTOR = Executors.newFixedThreadPool(8);
+
     private final OpenAiClient openAiClient;
 
     private final AippLogService aippLogService;
@@ -119,7 +122,7 @@ public class LlmAudio2Summary implements FlowableService {
             SummarySection section =
                     JsonUtils.parseObject(LLMUtils.tryFixLlmJsonString(llmOutput), SummarySection.class);
             summaryDto.setSummary(section.getText());
-        } catch (Exception e) {
+        } catch (IOException | AippJsonDecodeException e) {
             log.error("Llm generate unexpect rsp, msg: {}.", e);
             summaryDto.setSummary("");
         }
@@ -134,7 +137,7 @@ public class LlmAudio2Summary implements FlowableService {
         String msg = "好的，我可以帮你分析这个视频并生成对应的摘要，我决定先调用视频解析工具，再生成视频中的摘要";
         this.aippLogService.insertMsgLog(msg, flowData);
         int segSize = (int) businessData.get(AippConst.BS_VIDEO_TO_AUDIO_SEG_SIZE);
-        String audioDir = (String) businessData.get(AippConst.BS_VIDEO_TO_AUDIO_RESULT_DIR);
+        String audioDir = ObjectUtils.cast(businessData.get(AippConst.BS_VIDEO_TO_AUDIO_RESULT_DIR));
         try (Stream<Path> audioPathStream = Files.list(Paths.get(audioDir))) {
             List<File> audioFiles = audioPathStream.map(Path::toFile).collect(Collectors.toList());
             SummaryDto summaryDto = batchSummary(audioFiles, segSize);

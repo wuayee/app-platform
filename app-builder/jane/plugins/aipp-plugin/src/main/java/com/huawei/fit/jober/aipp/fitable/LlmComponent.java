@@ -71,14 +71,14 @@ import java.util.stream.Collectors;
  * @since 2024/4/15
  */
 @Component
-public class LLMComponent implements FlowableService, FlowCallbackService {
-    private static final Logger log = Logger.get(LLMComponent.class);
+public class LlmComponent implements FlowableService, FlowCallbackService {
+    private static final Logger log = Logger.get(LlmComponent.class);
     private static final String SYSTEM_PROMPT = "# 人设与回复逻辑\n\n{{0}}";
     private static final String PROMPT_TEMPLATE = "{{1}}";
     private static final String CALLBACK_ID = "com.huawei.fit.jober.aipp.fitable.LLMComponentCallback";
     private static final String AGENT_NODE_ID = "agent";
 
-    // todo: 暂时使用ConcurrentHashMap存储父节点的元数据
+    // 暂时使用ConcurrentHashMap存储父节点的元数据
     private final ConcurrentHashMap<String, AippLlmMeta> llmCache = new ConcurrentHashMap<>();
 
     private final FlowInstanceService flowInstanceService;
@@ -100,9 +100,12 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
      * @param toolProvider 表示具提供者功能的 {@link ToolProvider}。
      * @param agent 表示提供智能体功能的 {@link AbstractAgent}{@code <}{@link ChatMessages}{@code ,
      * }{@link ChatMessages}{@code >}。
+     * @param aippLogService 表示提供日志服务的 {@link AippLogService}。
+     * @param aippLogStreamService 表示提供日志流服务的 {@link AippLogStreamService}。
+     * @param client 表示消息代理客户端的 {@link BrokerClient}。
      * @param serializer 表示序列化器的 {@link ObjectSerializer}。
      */
-    public LLMComponent(FlowInstanceService flowInstanceService,
+    public LlmComponent(FlowInstanceService flowInstanceService,
             MetaInstanceService metaInstanceService,
             MetaService metaService,
             ToolProvider toolProvider,
@@ -142,7 +145,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         if (!ObjectUtils.<Boolean>cast(childBusinessData.get(AippConst.BS_AIPP_OUTPUT_IS_NEEDED_LLM))) {
             Map<String, Object> businessData = llmMeta.getBusinessData();
             Map<String, Object> output = new HashMap<>();
-            // todo: 当前如果子流程不需要模型加工，子流程和主流程会重复打印 toolOutput。
+            //  当前如果子流程不需要模型加工，子流程和主流程会重复打印 toolOutput。
             //  为了避免这种情况，临时设置一个 key 来表明结果是否来自子流程。
             //  如果结果来自子流程，主流程的结束节点不打印；否则主流程的结束节点打印。
             output.put("llmOutput", toolOutput);
@@ -151,7 +154,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
             doOnAgentComplete(llmMeta);
             return;
         }
-        // todo: 暂时原地修改，之后再看是否需要创建新的；子流结束再经过模型的情况还未验证过
+        // 暂时原地修改，之后再看是否需要创建新的；子流结束再经过模型的情况还未验证过
         ChatMessages chatMessages = ChatMessages.from(llmMeta.getTrace().messages());
         ChatMessage lastMessage = chatMessages.messages().remove(chatMessages.messages().size() - 1);
         chatMessages.add(new ToolMessage(lastMessage.id().orElse(null), toolOutput));
@@ -186,7 +189,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
         }
         String path = this.aippLogService.buildPath(instId, parentInstId);
 
-        // todo: 待add多模态，期望使用image的url，当前传入的历史记录里面没有image
+        // 待add多模态，期望使用image的url，当前传入的历史记录里面没有image
         Map<String, Object> toolContext = MapBuilder.<String, Object>get()
                 .put(AippConst.TRACE_ID, llmMeta.getInstId())
                 .put(AippConst.CALLBACK_ID, CALLBACK_ID)
@@ -242,6 +245,9 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
      * <li>当模型返回最终结果时，保存数据，同时唤醒流程</li>
      * <li>当模型返回工作流实例id时，通知前端处理工作流，并保存大模型处理元数据</li>
      * </ul>
+     *
+     * @param llmMeta 表示大模型元数据的{@link AippLlmMeta}
+     * @param  trace 表示模型返回的响应的{@link Prompt}
      */
     private void llmOutputConsumer(AippLlmMeta llmMeta, Prompt trace) {
         ChatMessage answer = trace.messages().get(trace.messages().size() - 1);
@@ -249,7 +255,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
             addAnswer(llmMeta, answer.text());
             return;
         }
-        // todo: 还没保存trace数据，子流程就跑完了怎么办？（目前走到这里一定有表单阻塞，所以暂时不会有这个问题）
+        // 还没保存trace数据，子流程就跑完了怎么办？（目前走到这里一定有表单阻塞，所以暂时不会有这个问题）
         llmMeta.setTrace(trace);
         try {
             String childInstanceId = JsonUtils.parseObject(answer.text(), String.class);
@@ -287,6 +293,8 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
      * <li>当模型返回最终结果时触发</li>
      * <li>当工作流触发回调，但没有返回数据时触发</li>
      * </ul>
+     *
+     * @param llmMeta 表示大模型元数据的{@link AippLlmMeta}
      */
     private void doOnAgentComplete(AippLlmMeta llmMeta) {
         // 删除cache
@@ -299,7 +307,7 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
     }
 
     private void doOnAgentError(AippLlmMeta llmMeta, String errorMessage) {
-        // todo: 临时逻辑，如果出错则停止前端轮询并主动终止流程；待流程支持异步调用抛异常后再修改
+        // 临时逻辑，如果出错则停止前端轮询并主动终止流程；待流程支持异步调用抛异常后再修改
         log.error("versionId {} errorMessage {}", llmMeta.getVersionId(), errorMessage);
         String msg = "很抱歉，模型节点遇到了问题，请稍后重试。";
         this.aippLogService.insertErrorLog(msg, llmMeta.getFlowData());
@@ -319,10 +327,14 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
 
     /**
      * 使用{@link StringTemplate}渲染用户模板。
+     *
+     * @param businessData 表示工作流执行上下文数据的{@link Map}。
+     * @return 返回渲染后的字符串。
+     * @throws AippException 当模板渲染失败时抛出。
      */
     private String buildInputText(Map<String, Object> businessData) {
         Map<String, Object> input = ObjectUtils.cast(businessData.get("prompt"));
-        // todo: 如果有文件，将内容拼到template里；为临时方案，历史记录的多模态会有问题
+        // 如果有文件，将内容拼到template里；为临时方案，历史记录的多模态会有问题
         StringTemplate template = new DefaultStringTemplate(ObjectUtils.cast(input.get("template"))
                 + this.getFilePath(businessData));
         Map<String, Object> variables = ObjectUtils.cast(input.get("variables"));
@@ -357,6 +369,10 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
 
     /**
      * 获取文件路径。
+     *
+     * @param businessData 表示工作流执行上下文数据的{@link Map}。
+     * @return 返回文件路径。
+     * @throws AippException 当数据类型不支持时抛出
      */
     private String getFilePath(Map<String, Object> businessData) {
         if (!businessData.containsKey(AippConst.BS_AIPP_FILE_DESC_KEY)) {
@@ -375,6 +391,9 @@ public class LLMComponent implements FlowableService, FlowCallbackService {
 
     /**
      * 解析表示自定义参数的{@link ChatOptions}, 当前支持模型、温度、工具。
+     *
+     * @param businessData 表示工作流执行上下文数据的{@link Map}。
+     * @return 返回表示自定义参数。
      */
     private ChatOptions buildChatOptions(Map<String, Object> businessData) {
         List<String> skillNameList = new ArrayList<>(ObjectUtils.cast(businessData.get("tools")));

@@ -28,6 +28,7 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.util.Collections;
@@ -84,7 +85,7 @@ public class AippFlowAgent implements FlowableService {
                 continue;
             }
             if (status.getValue() == MetaInstStatusEnum.ARCHIVED.getValue()) {
-                String resultKey = (String) agentParams.get(AippConst.BS_AGENT_RESULT_LINK_KEY);
+                String resultKey = ObjectUtils.cast(agentParams.get(AippConst.BS_AGENT_RESULT_LINK_KEY));
                 String result = inst.getFormArgs().get(resultKey);
                 agentParams.put(resultKey, result); // end 节点持久化
                 break;
@@ -125,7 +126,7 @@ public class AippFlowAgent implements FlowableService {
         }
 
         // 获取agent结果到主aipp
-        String resultKey = (String) agentParams.get(AippConst.BS_AGENT_RESULT_LINK_KEY);
+        String resultKey = ObjectUtils.cast(agentParams.get(AippConst.BS_AGENT_RESULT_LINK_KEY));
         businessData.put(resultKey, agentParams.get(resultKey));
 
         // 保存agent实例url到主aipp
@@ -136,7 +137,7 @@ public class AippFlowAgent implements FlowableService {
 
     private void saveAgentResultUrl(Map<String, Object> businessData, Map<String, Object> agentParams,
             String agentAippId, OperationContext context, String agentInstId) {
-        String instUrlKey = (String) agentParams.get(AippConst.BS_AGENT_INST_URL_LINK_KEY);
+        String instUrlKey = ObjectUtils.cast(agentParams.get(AippConst.BS_AGENT_INST_URL_LINK_KEY));
         if (StringUtils.isNotBlank(instUrlKey)) {
             String instUrl = String.format(Locale.ROOT,
                     AGENT_INST_URL_FORMAT,
@@ -152,7 +153,7 @@ public class AippFlowAgent implements FlowableService {
     private String getAgentAippId(List<Map<String, Object>> flowData, Map<String, Object> agentParams) {
         String agentAippId = DataUtils.getAgentId(DataUtils.getContextData(flowData));
         if (agentAippId.isEmpty()) {
-            agentAippId = (String) agentParams.get(AippConst.BS_AGENT_ID_KEY);
+            agentAippId = ObjectUtils.cast(agentParams.get(AippConst.BS_AGENT_ID_KEY));
         }
         Validation.notNull(agentAippId, "agentAippId can not be null");
         return agentAippId;
@@ -162,10 +163,10 @@ public class AippFlowAgent implements FlowableService {
         List<AippInstLog> instLogs = aippLogService.queryInstanceLogSince(agentInstId, null);
         if (!instLogs.isEmpty() && AippInstLogType.ERROR.name()
                 .equals(instLogs.get(instLogs.size() - 1).getLogType())) {
-            String aippId = (String) businessData.get(AippConst.BS_AIPP_ID_KEY);
-            String version = (String) businessData.get(AippConst.BS_AIPP_VERSION_KEY);
-            String aippType = (String) businessData.get(AippConst.ATTR_AIPP_TYPE_KEY);
-            String instId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
+            String aippId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_ID_KEY));
+            String version = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_VERSION_KEY));
+            String aippType = ObjectUtils.cast(businessData.get(AippConst.ATTR_AIPP_TYPE_KEY));
+            String instId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
             this.aopAippLogService.insertLog(AippLogCreateDto.builder()
                     .aippId(aippId)
                     .version(version)

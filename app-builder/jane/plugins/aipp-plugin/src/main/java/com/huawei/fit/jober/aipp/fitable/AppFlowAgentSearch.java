@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
 package com.huawei.fit.jober.aipp.fitable;
 
 import com.huawei.fit.jober.FlowableService;
@@ -11,14 +15,22 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 流程服务接口实现类： 流程服务接口的具体实现类，提供流程服务的具体实现方法
+ *
+ * @author s00664640
+ * @since 2024-05-10
+ */
 @Component
 public class AppFlowAgentSearch implements FlowableService {
     private static final Logger log = Logger.get(AppFlowAgentSearch.class);
+
     private final AippFlowAgent agent;
     private final String agentAippId;
     private final AippLogService aippLogService;
@@ -40,7 +52,7 @@ public class AppFlowAgentSearch implements FlowableService {
      * 启动流程实例： 解析并识别采购信息、检索小海数存知识
      *
      * @param flowData 流程执行上下文数据
-     * @return
+     * @return 流程执行上下文数据
      */
     @Fitable("com.huawei.fit.jober.aipp.fitable.AppFlowAgentSearch")
     @Override
@@ -48,7 +60,7 @@ public class AppFlowAgentSearch implements FlowableService {
         log.info("handle AppFlowAgentSearch");
 
         Map<String, Object> businessData = DataUtils.getBusiness(flowData);
-        String prompt = (String) businessData.get(AippConst.BS_MODEL_PROMPT_KEY);
+        String prompt = ObjectUtils.cast(businessData.get(AippConst.BS_MODEL_PROMPT_KEY));
         Validation.notNull(prompt, "prompt cannot be null");
 
         String msg = "基于以上信息，我决定调用智能推荐产品智能体，为您检索匹配产品";

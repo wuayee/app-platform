@@ -57,7 +57,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * {@link LLMComponent}的测试集
+ * {@link LlmComponent}的测试集
  *
  * @author 易文渊
  * @since 2024-04-23
@@ -173,7 +173,7 @@ public class LLMComponentTest {
     void shouldOkWhenWaterFlowAgentWithoutAsyncTool() throws InterruptedException {
         // stub
         AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel(null), false);
-        LLMComponent llmComponent = new LLMComponent(flowInstanceService,
+        LlmComponent llmComponent = new LlmComponent(flowInstanceService,
                 metaInstanceService,
                 metaService,
                 toolProvider,
@@ -202,7 +202,7 @@ public class LLMComponentTest {
     void shouldFailWhenWaterFlowAgentThrowException() throws InterruptedException {
         // stub
         AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel("exceptionMsg"), false);
-        LLMComponent llmComponent = new LLMComponent(flowInstanceService,
+        LlmComponent llmComponent = new LlmComponent(flowInstanceService,
                 metaInstanceService,
                 metaService,
                 toolProvider,
@@ -230,7 +230,7 @@ public class LLMComponentTest {
     void shouldOkWhenWaterFlowAgentWithAsyncTool() throws InterruptedException {
         // stub
         AbstractAgent<Prompt, Prompt> agent = this.getWaterFlowAgent(this.buildChatStreamModel(null), true);
-        LLMComponent llmComponent = new LLMComponent(flowInstanceService,
+        LlmComponent llmComponent = new LlmComponent(flowInstanceService,
                 metaInstanceService,
                 metaService,
                 toolProvider,
@@ -276,7 +276,7 @@ public class LLMComponentTest {
         AiProcessFlow<Prompt, Prompt> testAgent =
                 AiFlows.<Prompt>create().map(m -> (Prompt) ChatMessages.from(new AiMessage("bad"))).close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
-        LLMComponent llmComponent = new LLMComponent(flowInstanceService,
+        LlmComponent llmComponent = new LlmComponent(flowInstanceService,
                 metaInstanceService,
                 metaService,
                 toolProvider,
@@ -307,7 +307,7 @@ public class LLMComponentTest {
             int err = 1 / 0;
         }).close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
-        LLMComponent llmComponent = new LLMComponent(flowInstanceService,
+        LlmComponent llmComponent = new LlmComponent(flowInstanceService,
                 metaInstanceService,
                 metaService,
                 toolProvider,
@@ -339,7 +339,7 @@ public class LLMComponentTest {
                 .map(m -> (Prompt) ChatMessages.from(new ToolMessage("1", "\"tool_async\"")))
                 .close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
-        LLMComponent llmComponent = new LLMComponent(flowInstanceService,
+        LlmComponent llmComponent = new LlmComponent(flowInstanceService,
                 metaInstanceService,
                 metaService,
                 toolProvider,
@@ -391,7 +391,7 @@ public class LLMComponentTest {
             return (Prompt) chatMessages;
         }).just(m -> flag.set(true)).close();
         AbstractAgent<Prompt, Prompt> agent = this.buildStubAgent(testAgent);
-        LLMComponent llmComponent = new LLMComponent(flowInstanceService,
+        LlmComponent llmComponent = new LlmComponent(flowInstanceService,
                 metaInstanceService,
                 metaService,
                 toolProvider,
@@ -419,7 +419,7 @@ public class LLMComponentTest {
     }
 
     private void generateBusinessDataAndCallBack(String childInstanceId, Map<String, Object> value,
-            LLMComponent llmComponent) {
+            LlmComponent llmComponent) {
         if (childInstanceId != null) {
             Assertions.assertEquals("tool_async", childInstanceId);
             Map<String, Object> businessData = new HashMap<>();

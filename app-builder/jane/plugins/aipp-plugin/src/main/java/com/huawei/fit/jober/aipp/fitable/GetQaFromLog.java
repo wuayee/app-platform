@@ -26,12 +26,12 @@ import java.util.Map;
  * @since 2024-04-25
  */
 @Component
-public class GetQAFromLog implements AppInspirationService {
+public class GetQaFromLog implements AppInspirationService {
+    private static final Logger log = Logger.get(GetQaFromLog.class);
+
     private final AippLogService aippLogService;
 
-    private static final Logger log = Logger.get(GetQAFromLog.class);
-
-    public GetQAFromLog(AippLogService aippLogService) {
+    public GetQaFromLog(AippLogService aippLogService) {
         this.aippLogService = aippLogService;
     }
 
@@ -42,30 +42,30 @@ public class GetQAFromLog implements AppInspirationService {
         List<AippInstLogDataDto> logs = aippLogService.queryRecentLogsSinceResume(aippId, appType, context);
         List<Map<String, Object>> res = new ArrayList<>();
         for (AippInstLogDataDto log : logs) {
-            List<Map<String, Object>> QAList = new ArrayList<>();
+            List<Map<String, Object>> qaList = new ArrayList<>();
             log.getInstanceLogBodies()
                     .stream()
                     .filter(l -> StringUtils.equals(l.getLogType(), AippInstLogType.FORM.name()))
                     .forEach(logBody -> {
-                        extractQA(logBody, QAList);
+                        extractQA(logBody, qaList);
                     });
-            res.addAll(QAList);
+            res.addAll(qaList);
         }
         return res;
     }
 
-    private void extractQA(AippInstLogDataDto.AippInstanceLogBody logBody, List<Map<String, Object>> QAList) {
+    private void extractQA(AippInstLogDataDto.AippInstanceLogBody logBody, List<Map<String, Object>> qaList) {
         Map<String, String> data = JsonUtils.parseObject(logBody.getLogData(), Map.class);
-        String form_args = data.get("form_args");
-        if (StringUtils.isEmpty(form_args)) {
+        String formArgsStr = data.get("form_args");
+        if (StringUtils.isEmpty(formArgsStr)) {
             return;
         }
-        Map<String, Object> formArgs = JsonUtils.parseObject(form_args, Map.class);
+        Map<String, Object> formArgs = JsonUtils.parseObject(formArgsStr, Map.class);
         if (!formArgs.containsKey("interviewResult")) {
             return;
         }
         if (formArgs.get("interviewResult") instanceof List) {
-            QAList.addAll((List<Map<String, Object>>) formArgs.get("interviewResult"));
+            qaList.addAll((List<Map<String, Object>>) formArgs.get("interviewResult"));
         }
     }
 }

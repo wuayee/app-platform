@@ -18,6 +18,7 @@ import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import org.apache.commons.io.FileUtils;
 
@@ -38,6 +39,7 @@ import java.util.Map;
 @Component
 public class FfmpegVideo2Audio implements FlowableService {
     private static final Logger log = Logger.get(FfmpegVideo2Audio.class);
+
     private final FfmpegService ffmpegService;
     private final AippLogService aippLogService;
 
@@ -48,19 +50,19 @@ public class FfmpegVideo2Audio implements FlowableService {
 
     private AudioSplitInfo covertVideo(String dirName, File video) throws IOException {
         File targetDir = Paths.get(AippFileUtils.NAS_SHARE_DIR, dirName).toFile();
-        FfmpegMeta meta = ffmpegService.stat(video.getAbsolutePath());
+        FfmpegMeta meta = ffmpegService.stat(video.getCanonicalPath());
         File audio = Paths.get(targetDir.getPath(), video.getName() + "." + meta.getVideoExt()).toFile();
-        ffmpegService.extractAudio(video.getAbsolutePath(), audio.getAbsolutePath());
+        ffmpegService.extractAudio(video.getCanonicalPath(), audio.getCanonicalPath());
         if (meta.getDuration() >= 6 * 60) {
             int segmentCount = Math.max(1, Math.min(meta.getDuration() / 300, 8));
             int segmentSize = (meta.getDuration() + segmentCount - 1) / segmentCount;
-            ffmpegService.splitAudio(audio.getAbsolutePath(),
-                    targetDir.getAbsolutePath() + "/split_%03d." + meta.getVideoExt(),
+            ffmpegService.splitAudio(audio.getCanonicalPath(),
+                    targetDir.getCanonicalPath() + "/split_%03d." + meta.getVideoExt(),
                     segmentSize);
             FileUtils.delete(audio);
-            return new AudioSplitInfo(targetDir.getAbsolutePath(), segmentSize);
+            return new AudioSplitInfo(targetDir.getCanonicalPath(), segmentSize);
         }
-        return new AudioSplitInfo(targetDir.getAbsolutePath(), meta.getDuration());
+        return new AudioSplitInfo(targetDir.getCanonicalPath(), meta.getDuration());
     }
 
     @Fitable("com.huawei.fit.jober.aipp.fitable.FfmpegVideo2Audio")
@@ -71,10 +73,10 @@ public class FfmpegVideo2Audio implements FlowableService {
 
         File videoFile = null;
         try {
-            String videoPathStr = (String) businessData.get(AippConst.BS_VIDEO_PATH);
+            String videoPathStr = ObjectUtils.cast(businessData.get(AippConst.BS_VIDEO_PATH));
             Map<String, Object> videoFileObject = JsonUtils.parseObject(videoPathStr);
-            String videoUrl = (String) videoFileObject.get("s3_url");
-            String instId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
+            String videoUrl = ObjectUtils.cast(videoFileObject.get("s3_url"));
+            String instId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
             videoFile = AippFileUtils.getFileFromS3(instId, videoUrl, "video");
 
             AudioSplitInfo result = covertVideo(instId, videoFile);
