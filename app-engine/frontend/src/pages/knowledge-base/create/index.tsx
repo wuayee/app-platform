@@ -103,14 +103,14 @@ const KnowledgeBaseCreate = () => {
 
   return (
     <>
-      <div className='aui-fullpage'>
+      <div className='knowledge-base-create-aui-fullpage'>
         <div className='aui-header-1'>
           <div className='aui-title-1'>
             <img src='/src/assets/images/left.png' onClick={() => navigate(-1)} />
             <BreadcrumbSelf searchFlag currentLabel={id ? '修改知识库' : '创建知识库'}></BreadcrumbSelf>
           </div>
         </div>
-        <div className='aui-block'>
+        <div className='aui-block knowledge-base-create-aui-block'>
           <div className='form-content'>
             <Form
               {...formItemLayout}
@@ -158,7 +158,7 @@ const KnowledgeBaseCreate = () => {
                 <Input placeholder='请输入' maxLength={20} showCount/>
               </Form.Item>
               <Form.Item label='知识库描述' rules={[{ required: true},{type:'string',max:256}]} name='knowledgeDesc'>
-                <Input.TextArea size='large' autoSize={{ minRows: 2, maxRows: 6 }} maxLength={256} showCount placeholder='请输入' />
+                <Input.TextArea autoSize={{ minRows: 2, maxRows: 6 }} maxLength={256} showCount placeholder='请输入' />
               </Form.Item>
             </Form>
           </div>
