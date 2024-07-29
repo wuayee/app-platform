@@ -22,7 +22,7 @@ import com.huawei.fitframework.util.StringUtils;
  * @author 姚江 yWX1299574
  * @since 2024-07-23
  */
-@WebSocketEndpoint(path = "/v1/api/wsStream/app/{appId}")
+@WebSocketEndpoint(path = "/v1/api/{tenant_id}/connect/app/{appId}")
 @Component
 public class AppStreamController {
     private static final Logger log = Logger.get(AippStreamController.class);

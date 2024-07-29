@@ -33,6 +33,11 @@ public class AippStreamServiceImpl implements AippStreamService {
 
     private final Map<String, List<String>> sessionIdToInstId = new ConcurrentHashMap<>();
 
+    /**
+     * 这个对象存储的内容是instance对应的对话是否是整改后的chat的内容，作用兼容整改前的前端
+     */
+    private final Map<String, Boolean> instIdIsNewChat = new ConcurrentHashMap<>();
+
     private final AippLogService logService;
 
     public AippStreamServiceImpl(AippLogService logService) {
@@ -53,9 +58,22 @@ public class AippStreamServiceImpl implements AippStreamService {
     @Override
     public void removeSession(Session session) {
         // 保证原子性.
-        this.sessionIdToInstId.getOrDefault(session.getId(), new ArrayList<>()).forEach(this.sessions::remove);
+        this.sessionIdToInstId.getOrDefault(session.getId(), new ArrayList<>()).forEach(instId -> {
+            this.sessions.remove(instId);
+            this.instIdIsNewChat.remove(instId);
+        });
         this.sessionIdToInstId.remove(session.getId());
         this.idToSessions.remove(session.getId(), session);
+    }
+
+    @Override
+    public void addNewChat(String instId) {
+        this.instIdIsNewChat.put(instId, true);
+    }
+
+    @Override
+    public Boolean isNewChat(String instId) {
+        return Boolean.TRUE.equals(this.instIdIsNewChat.get(instId));
     }
 
     @Override

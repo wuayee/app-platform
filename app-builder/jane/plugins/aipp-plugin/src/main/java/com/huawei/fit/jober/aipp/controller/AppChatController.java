@@ -24,7 +24,7 @@ import com.huawei.fitframework.annotation.Component;
  * @since 2024-07-23
  */
 @Component
-@RequestMapping(path = "/v1/api/{tenant_id}/appChat", group = "app对话管理接口")
+@RequestMapping(path = "/v1/api/{tenant_id}/app_chat", group = "app对话管理接口")
 public class AppChatController extends AbstractController {
     private final AppChatService appChatService;
 

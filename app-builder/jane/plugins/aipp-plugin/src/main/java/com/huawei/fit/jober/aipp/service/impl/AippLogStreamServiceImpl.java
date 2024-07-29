@@ -26,10 +26,12 @@ import com.huawei.fit.jober.aipp.util.FormUtils;
 import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.aipp.vo.AippInstanceVO;
 import com.huawei.fit.jober.aipp.vo.AippLogVO;
+import com.huawei.fit.jober.aipp.vo.ChatMessageVo;
 import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
 import com.huawei.fitframework.annotation.Component;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -68,9 +70,25 @@ public class AippLogStreamServiceImpl implements AippLogStreamService {
         List<String> ancestors = log.getAncestors();
         Collections.reverse(ancestors);
         Optional<String> ancestorOpt = ancestors.stream()
-                .filter(anc -> this.aippStreamService.getSession(anc).isPresent())
-                .findFirst();
-        ancestorOpt.ifPresent(id -> this.aippStreamService.send(id, this.buildData(log)));
+                .filter(anc -> this.aippStreamService.getSession(anc).isPresent()).findFirst();
+        ancestorOpt.ifPresent(id -> {
+            AippInstanceVO aippInstanceVO = this.buildData(log);
+            if (this.aippStreamService.isNewChat(id)) {
+                this.aippStreamService.send(id, this.buildMessage(aippInstanceVO, log));
+            } else {
+                this.aippStreamService.send(id, aippInstanceVO);
+            }
+        });
+    }
+
+    private ChatMessageVo buildMessage(AippInstanceVO instance, AippLogVO log) {
+        return ChatMessageVo.builder()
+                .status(instance.getStatus())
+                .messageId(log.getMsgId())
+                .data(log.getLogData())
+                .type(log.getLogType())
+                .extension(new HashMap<>())
+                .build();
     }
 
     private AippInstanceVO buildData(AippLogVO log) {
