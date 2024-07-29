@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
  */
 @Component
 public class AppBuilderPromptServiceImpl implements AppBuilderPromptService {
-
     private final AppBuilderAppFactory appFactory;
 
     public AppBuilderPromptServiceImpl(AppBuilderAppFactory appFactory) {

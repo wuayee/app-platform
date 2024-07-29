@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * 应用表单属性仓库功能实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */
@@ -72,5 +74,4 @@ public class AppBuilderFormPropertyRepositoryImpl implements AppBuilderFormPrope
     public void deleteByFormId(String formId) {
         this.appBuilderFormPropertyMapper.deleteByFormId(formId);
     }
-
 }

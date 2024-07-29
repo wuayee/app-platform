@@ -12,6 +12,8 @@ import com.huawei.fit.jober.aipp.util.JsonUtils;
 import java.util.Objects;
 
 /**
+ * 应用数据序列化与反序列化实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */

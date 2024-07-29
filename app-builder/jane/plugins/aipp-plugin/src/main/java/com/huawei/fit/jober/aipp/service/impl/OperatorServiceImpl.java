@@ -55,6 +55,12 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * 文件处理服务实现
+ *
+ * @author 孙怡菲 s00664640
+ * @since 2024-05-10
+ */
 @Component
 public class OperatorServiceImpl implements OperatorService {
     private static final Logger log = Logger.get(OperatorServiceImpl.class);
@@ -184,7 +190,7 @@ public class OperatorServiceImpl implements OperatorService {
         return "";
     };
 
-    private final EnumMap<FileType, Function<File, String>> OUTLINE_OPERATOR_MAP =
+    private final EnumMap<FileType, Function<File, String>> outlineOperatorMap =
             new EnumMap<FileType, Function<File, String>>(FileType.class) {
                 {
                     put(FileType.WORD, DOC_OUTLINE_EXTRACTOR);
@@ -277,7 +283,7 @@ public class OperatorServiceImpl implements OperatorService {
 
     @Override
     public String outlineExtractor(File file, FileType fileType) {
-        return Optional.ofNullable(OUTLINE_OPERATOR_MAP.get(fileType)).map(f -> f.apply(file)).orElse("");
+        return Optional.ofNullable(outlineOperatorMap.get(fileType)).map(f -> f.apply(file)).orElse("");
     }
 
     @Override

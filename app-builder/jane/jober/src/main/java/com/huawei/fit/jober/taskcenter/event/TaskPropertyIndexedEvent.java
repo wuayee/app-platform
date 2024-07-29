@@ -16,6 +16,13 @@ import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 public class TaskPropertyIndexedEvent extends TaskPropertyEvent {
     private final TaskEntity task;
 
+    /**
+     * 构造一个表示任务属性被索引的事件的新实例。
+     *
+     * @param publisher 发布此事件的对象。
+     * @param task 表示任务定义的 {@link TaskEntity}。
+     * @param property 表示任务属性的 {@link TaskProperty}。
+     */
     public TaskPropertyIndexedEvent(Object publisher, TaskEntity task, TaskProperty property) {
         super(publisher, property);
         this.task = task;

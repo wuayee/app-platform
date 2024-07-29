@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * 应用表单序列化与反序列化实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */

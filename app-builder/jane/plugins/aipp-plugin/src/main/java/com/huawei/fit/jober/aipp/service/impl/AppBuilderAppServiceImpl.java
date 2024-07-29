@@ -95,6 +95,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
+ * 应用开发接口实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */
@@ -141,7 +143,7 @@ public class AppBuilderAppServiceImpl
     @Fitable(id = "default")
     @Transactional
     public Rsp<AippCreateDto> publish(AppBuilderAppDto appDto, OperationContext contextOf) {
-        // todo 要加个save appDto到数据的逻辑
+        // 要加个save appDto到数据的逻辑
         AippDto aippDto = ConvertUtils.convertToAippDtoFromAppBuilderAppDto(appDto);
         this.validateVersion(aippDto, contextOf);
         AippCreateDto aippCreateDto = this.aippFlowService.create(aippDto, contextOf);
@@ -214,7 +216,7 @@ public class AppBuilderAppServiceImpl
     @Fitable(id = "default")
     public AippCreate debug(AppBuilderAppDto appDto, OperationContext contextOf) {
         AippDto aippDto = ConvertUtils.convertToAippDtoFromAppBuilderAppDto(appDto);
-        // todo Rsp 得统一整改下
+        // Rsp 得统一整改下
         return ConvertUtils.toAippCreate(this.aippFlowService.previewAipp(appDto.getVersion(), aippDto, contextOf));
     }
 
@@ -670,11 +672,9 @@ public class AppBuilderAppServiceImpl
         metaList.addAll(MetaUtils.getAllMetasByAppId(metaService, appId, AippTypeEnum.NORMAL.type(), context));
         List<String> ids = metaList.stream().map(Meta::getVersionId).distinct().collect(Collectors.toList());
         MetaUtils.deleteMetasByVersionIds(metaService, ids, context);
-
-        // todo step3 删除日志
-        // todo step4 删除流程定义相关
-        // todo step5 删除store相关
-
+        // step3 删除日志
+        // step4 删除流程定义相关
+        // step5 删除store相关
         // step6 删除应用收藏记录相关
         usrAppCollectionService.deleteByAppId(appId);
 
@@ -979,7 +979,7 @@ public class AppBuilderAppServiceImpl
                                         appBuilderConfigFormPropertyDto -> JsonUtils.toJsonString(
                                                 appBuilderConfigFormPropertyDto.getDefaultValue())))));
         JSONObject oldAppearanceObject = JSONObject.parseObject(oldAppearance);
-        JSONObject page = (JSONObject) oldAppearanceObject.getJSONArray("pages").get(0);
+        JSONObject page = ObjectUtils.<JSONObject>cast(oldAppearanceObject.getJSONArray("pages").get(0));
         JSONArray shapes = page.getJSONArray("shapes");
 
         for (int j = 0; j < shapes.size(); j++) {
@@ -1023,17 +1023,15 @@ public class AppBuilderAppServiceImpl
             if (StringUtils.equals(node.get("name").asText(), param.getKey())) {
                 if (singleLayerParams.contains(param.getKey())) {
                     if (StringUtils.equals(param.getKey(), "temperature")) {
-                        ((ObjectNode) node).put("value", JsonUtils.parseObject(param.getValue(), Float.class));
-
+                        ObjectUtils.<ObjectNode>cast(node).put("value", JsonUtils.parseObject(param.getValue(), Float.class));
                     } else {
-                        ((ObjectNode) node).put("value", JsonUtils.parseObject(param.getValue(), String.class));
-
+                        ObjectUtils.<ObjectNode>cast(node).put("value", JsonUtils.parseObject(param.getValue(), String.class));
                     }
                     continue;
                 }
                 if (doubleLayerParams.contains(param.getKey())) {
                     ArrayNode valueArrayNode = convertList(param.getValue());
-                    ((ObjectNode) node).set("value", valueArrayNode);
+                    ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
                     continue;
                 }
                 if (StringUtils.equals("knowledge", param.getKey())) {
@@ -1045,7 +1043,7 @@ public class AppBuilderAppServiceImpl
                         ArrayNode valueArrayNode1 = nodeFactory.arrayNode();
                         for (Map.Entry<String, Object> rr : r.entrySet()) {
                             if (StringUtils.equals(rr.getKey(), "id")) {
-                                valueArrayNode1.add(convertId(rr.getKey(), ((Integer) rr.getValue()).longValue()));
+                                valueArrayNode1.add(convertId(rr.getKey(), ObjectUtils.<Integer>cast(rr.getValue()).longValue()));
                             } else {
                                 valueArrayNode1.add(convertObject(rr.getKey(), String.valueOf(rr.getValue())));
                             }
@@ -1058,14 +1056,14 @@ public class AppBuilderAppServiceImpl
                         ObjectNode mapNode = nodeFactory.objectNode();
                         for (Map.Entry<String, Object> entry : a.entrySet()) {
                             if (StringUtils.equals(entry.getKey(), "value")) {
-                                mapNode.put(entry.getKey(), (JsonNode) entry.getValue());
+                                mapNode.put(entry.getKey(), ObjectUtils.<JsonNode>cast(entry.getValue()));
                             } else {
-                                mapNode.put(entry.getKey(), (String) entry.getValue());
+                                mapNode.put(entry.getKey(), ObjectUtils.<String>cast(entry.getValue()));
                             }
                         }
                         valueArrayNode.add(mapNode);
                     });
-                    ((ObjectNode) node).set("value", valueArrayNode);
+                    ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
                     continue;
                 }
 
@@ -1078,7 +1076,7 @@ public class AppBuilderAppServiceImpl
                     } else {
                         this.parseOtherMemoryType(res, valueArrayNode);
                     }
-                    ((ObjectNode) node).set("value", valueArrayNode);
+                    ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
                 }
             }
         }
@@ -1099,7 +1097,8 @@ public class AppBuilderAppServiceImpl
         for (Map.Entry<String, Object> resEntry : res.entrySet()) {
             if (Objects.equals(resEntry.getKey(), AippConst.MEMORY_SWITCH_KEY)) {
                 this.checkEntryType(resEntry, Boolean.class);
-                valueArrayNode.add(this.convertMemorySwitch(resEntry.getKey(), ObjectUtils.cast(resEntry.getValue())));
+                valueArrayNode.add(this.convertMemorySwitch(resEntry.getKey(),
+                        ObjectUtils.cast(resEntry.getValue())));
             } else if (Objects.equals(resEntry.getKey(), "value")) {
                 valueArrayNode.add(this.convertValueForUserSelect(resEntry.getKey(),
                         String.valueOf(resEntry.getValue())));
@@ -1161,9 +1160,9 @@ public class AppBuilderAppServiceImpl
         ObjectNode mapNode = nodeFactory.objectNode();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (StringUtils.equals(entry.getKey(), "value")) {
-                mapNode.put(entry.getKey(), (Long) entry.getValue());
+                mapNode.put(entry.getKey(), ObjectUtils.<Long>cast(entry.getValue()));
             } else {
-                mapNode.put(entry.getKey(), (String) entry.getValue());
+                mapNode.put(entry.getKey(), ObjectUtils.<String>cast(entry.getValue()));
             }
         }
         return mapNode;
@@ -1214,7 +1213,6 @@ public class AppBuilderAppServiceImpl
     private void updateConfigByGlowGraphAppearance(String appearance, AppBuilderConfig config) {
         // 这个map {nodeId:{name:value}}
         Map<String, Map<String, Object>> nodeIdToJadeConfigMap = this.getJadeConfigsFromAppearance(appearance);
-
         List<AppBuilderConfigProperty> configProperties = config.getConfigProperties();
         List<AppBuilderFormProperty> formProperties = config.getForm().getFormProperties();
         Map<String, AppBuilderFormProperty> idToFormPropertyMap =
@@ -1222,9 +1220,8 @@ public class AppBuilderAppServiceImpl
         // 这样写避免循环的时候去查询数据库获取configProperty对应的formProperty
         List<AppBuilderConfigProperty> toDelete = new ArrayList<>();
         for (AppBuilderConfigProperty cp : configProperties) {
-
             if (!idToFormPropertyMap.containsKey(cp.getFormPropertyId())) {
-                // TODO: 2024/4/29 0029 这里可能拿到null，这里暂时不知道什么问题，先把拿不到的跳过
+                // 2024/4/29 0029 这里可能拿到null，这里暂时不知道什么问题，先把拿不到的跳过
                 continue;
             }
             cp.setFormProperty(idToFormPropertyMap.get(cp.getFormPropertyId()));
@@ -1236,24 +1233,13 @@ public class AppBuilderAppServiceImpl
             Map<String, Object> nameValue = nodeIdToJadeConfigMap.get(nodeId);
             AppBuilderFormProperty formProperty = cp.getFormProperty();
             if (MapUtils.isEmpty(nameValue) || null == nameValue.get(formProperty.getName())) {
-                // TODO: 2024/4/29 0029 暂时先不删除了，仅修改现存的内容
-                // toDelete.add(cp);
+                // 2024/4/29 0029 暂时先不删除了，仅修改现存的内容
                 continue;
             }
             formProperty.setDefaultValue(nameValue.get(formProperty.getName()));
             // 更新
             config.getFormPropertyRepository().updateOne(formProperty);
         }
-        // TODO: 2024/4/29 0029 删除代码暂时移除
-        // 删除的
-        // config.getFormPropertyRepository()
-        //         .deleteMore(toDelete.stream()
-        //                 .map(AppBuilderConfigProperty::getFormPropertyId)
-        //                 .collect(Collectors.toList()));
-        // config.getConfigPropertyRepository()
-        //         .deleteMore(toDelete.stream().map(AppBuilderConfigProperty::getId).collect(Collectors.toList()));
-
-        // TODO: 2024/4/20 0020 理应有新增的，暂时不管
     }
 
     private Map<String, Map<String, Object>> getJadeConfigsFromAppearance(String appearance) {

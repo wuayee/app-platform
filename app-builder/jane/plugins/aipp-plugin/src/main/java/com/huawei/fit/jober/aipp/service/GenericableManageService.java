@@ -17,7 +17,25 @@ import java.util.Map;
  * @since 2024-04-24
  */
 public interface GenericableManageService {
+    /**
+     * 根据genericableId获取对应的genericable列表
+     *
+     * @param genericableId genericableId
+     * @param pageNum 分页页码
+     * @param pageSize 分页大小
+     * @return 对应的genericable列表
+     */
     List<FitableInfoDto> getFitablesByGenerableId(String genericableId, int pageNum, int pageSize);
 
-    List<Map<String, Object>> executeInspirationFitable(String fitableId, String appId, String appType, OperationContext operationContext);
+    /**
+     * 执行灵感大全服务
+     *
+     * @param fitableId 服务id
+     * @param appId 应用id
+     * @param appType 应用类型
+     * @param operationContext 操作上下文
+     * @return 执行结果
+     */
+    List<Map<String, Object>> executeInspirationFitable(String fitableId,
+            String appId, String appType, OperationContext operationContext);
 }

@@ -9,6 +9,8 @@ import com.huawei.fit.jober.aipp.po.AppBuilderComponentPo;
 import com.huawei.fit.jober.aipp.serializer.BaseSerializer;
 
 /**
+ * 应用属性组件序列化与反序列化实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */
