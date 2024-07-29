@@ -6,7 +6,7 @@ package com.huawei.fit.jober.aipp.repository.impl;
 
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfig;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderConfigMapper;
-import com.huawei.fit.jober.aipp.po.AppBuilderConfigPO;
+import com.huawei.fit.jober.aipp.po.AppBuilderConfigPo;
 import com.huawei.fit.jober.aipp.repository.AppBuilderConfigPropertyRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderConfigRepository;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
@@ -56,7 +56,7 @@ public class AppBuilderConfigRepositoryImpl implements AppBuilderConfigRepositor
 
     @Override
     public void delete(String id) {
-        AppBuilderConfigPO appBuilderConfigPO = this.appBuilderConfigMapper.selectWithId(id);
+        AppBuilderConfigPo appBuilderConfigPO = this.appBuilderConfigMapper.selectWithId(id);
         this.appBuilderConfigMapper.delete(id);
         this.appBuilderConfigPropertyRepository.deleteByConfigId(id);
         this.appBuilderFormRepository.delete(appBuilderConfigPO.getFormId());

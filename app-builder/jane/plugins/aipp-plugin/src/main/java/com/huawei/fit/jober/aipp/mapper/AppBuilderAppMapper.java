@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.aipp.mapper;
 
 import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
-import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
+import com.huawei.fit.jober.aipp.po.AppBuilderAppPo;
 
 import java.util.List;
 
@@ -20,17 +20,17 @@ public interface AppBuilderAppMapper {
      * 根据 id 获取 App 数据对象。
      *
      * @param id 表示 app 的唯一标识的 {@link String}。
-     * @return 表示 App 数据对象的 {@link AppBuilderAppPO}。
+     * @return 表示 App 数据对象的 {@link AppBuilderAppPo}。
      */
-    AppBuilderAppPO selectWithId(String id);
+    AppBuilderAppPo selectWithId(String id);
 
     /**
      * 根据租户 id 获取 App 数据对象。
      *
      * @param tenantId 表示租户 id 的唯一标识的 {@link String}。
-     * @return 表示 App 数据对象列表的 {@link List}{@code <}{@link AppBuilderAppPO}{@code >}。
+     * @return 表示 App 数据对象列表的 {@link List}{@code <}{@link AppBuilderAppPo}{@code >}。
      */
-    List<AppBuilderAppPO> selectWithTenantId(String tenantId);
+    List<AppBuilderAppPo> selectWithTenantId(String tenantId);
 
     /**
      * 根据指定条件获取 App 数据对象列表。
@@ -39,17 +39,17 @@ public interface AppBuilderAppMapper {
      * @param tenantId 表示租户 id 的唯一标识的 {@link String}。
      * @param offset 表示偏移量的 {@code long}。
      * @param limit 表示获取个数的 {@code int}。
-     * @return 表示 App 数据对象列表的 {@link List}{@code <}{@link AppBuilderAppPO}{@code >}。
+     * @return 表示 App 数据对象列表的 {@link List}{@code <}{@link AppBuilderAppPo}{@code >}。
      */
-    List<AppBuilderAppPO> selectByTenantIdWithPage(AppQueryCondition cond, String tenantId, long offset, int limit);
+    List<AppBuilderAppPo> selectByTenantIdWithPage(AppQueryCondition cond, String tenantId, long offset, int limit);
 
     /**
      * 根据指定条件获取 App 数据对象列表。
      *
      * @param cond 表示 App 查询条件的 {@link AppQueryCondition}。
-     * @return 表示 App 数据对象列表的 {@link List}{@code <}{@link AppBuilderAppPO}{@code >}。
+     * @return 表示 App 数据对象列表的 {@link List}{@code <}{@link AppBuilderAppPo}{@code >}。
      */
-    List<AppBuilderAppPO> selectWithCondition(AppQueryCondition cond);
+    List<AppBuilderAppPo> selectWithCondition(AppQueryCondition cond);
 
     /**
      * 根据指定条件计算 App 个数。
@@ -63,24 +63,24 @@ public interface AppBuilderAppMapper {
     /**
      * 插入一条 App 数据对象。
      *
-     * @param insert 表示需要插入的 App 数据对象的 {@link AppBuilderAppPO}。
+     * @param insert 表示需要插入的 App 数据对象的 {@link AppBuilderAppPo}。
      */
-    void insertOne(AppBuilderAppPO insert);
+    void insertOne(AppBuilderAppPo insert);
 
     /**
      * 更新一条 App 数据对象。
      *
-     * @param update 表示需要更新的 App 数据对象的 {@link AppBuilderAppPO}。
+     * @param update 表示需要更新的 App 数据对象的 {@link AppBuilderAppPo}。
      */
-    void updateOne(AppBuilderAppPO update);
+    void updateOne(AppBuilderAppPo update);
 
     /**
      * 根据 Store 标识列表获取 App 数据对象列表。
      *
      * @param storeIds 表示 Store 标识列表的 {@link List}{@code <}{@link String}{@code >}。
-     * @return 表示 App 数据对象列表的 {@link List}{@code <}{@link AppBuilderAppPO}{@code >}。
+     * @return 表示 App 数据对象列表的 {@link List}{@code <}{@link AppBuilderAppPo}{@code >}。
      */
-    List<AppBuilderAppPO> selectWithStoreId(List<String> storeIds);
+    List<AppBuilderAppPo> selectWithStoreId(List<String> storeIds);
 
     /**
      * 根据 Store 标识更新 App 数据对象列表。

@@ -5,20 +5,20 @@
 package com.huawei.fit.jober.aipp.serializer.impl;
 
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfig;
-import com.huawei.fit.jober.aipp.po.AppBuilderConfigPO;
+import com.huawei.fit.jober.aipp.po.AppBuilderConfigPo;
 import com.huawei.fit.jober.aipp.serializer.BaseSerializer;
 
 /**
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */
-public class AppBuilderConfigSerializer implements BaseSerializer<AppBuilderConfig, AppBuilderConfigPO> {
+public class AppBuilderConfigSerializer implements BaseSerializer<AppBuilderConfig, AppBuilderConfigPo> {
     @Override
-    public AppBuilderConfigPO serialize(AppBuilderConfig appBuilderConfig) {
+    public AppBuilderConfigPo serialize(AppBuilderConfig appBuilderConfig) {
         if (appBuilderConfig == null) {
             return null;
         }
-        return AppBuilderConfigPO.builder()
+        return AppBuilderConfigPo.builder()
                 .id(appBuilderConfig.getId())
                 .formId(appBuilderConfig.getFormId())
                 .tenantId(appBuilderConfig.getTenantId())
@@ -31,7 +31,7 @@ public class AppBuilderConfigSerializer implements BaseSerializer<AppBuilderConf
     }
 
     @Override
-    public AppBuilderConfig deserialize(AppBuilderConfigPO appBuilderConfigPO) {
+    public AppBuilderConfig deserialize(AppBuilderConfigPo appBuilderConfigPO) {
         if (appBuilderConfigPO == null) {
             return null;
         }

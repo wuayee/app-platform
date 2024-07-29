@@ -6,7 +6,7 @@ package com.huawei.fit.jober.aipp.repository.impl;
 
 import com.huawei.fit.jober.aipp.domain.AppBuilderFormProperty;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderFormPropertyMapper;
-import com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPO;
+import com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPo;
 import com.huawei.fit.jober.aipp.repository.AppBuilderFormPropertyRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderFormPropertySerializer;
 import com.huawei.fitframework.annotation.Component;
@@ -50,7 +50,7 @@ public class AppBuilderFormPropertyRepositoryImpl implements AppBuilderFormPrope
 
     @Override
     public void insertMore(List<AppBuilderFormProperty> appBuilderFormProperties) {
-        List<AppBuilderFormPropertyPO> pos = appBuilderFormProperties.stream()
+        List<AppBuilderFormPropertyPo> pos = appBuilderFormProperties.stream()
                 .map(this.serializer::serialize)
                 .collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(pos)) {
