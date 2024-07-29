@@ -1,11 +1,13 @@
-'''
+# -- encoding: utf-8 --
+# Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+"""
 Author: your name
 Date: 2022-03-04 10:52:31
 LastEditTime: 2022-03-07 09:43:32
 LastEditors: Please set LastEditors
 Description: In User Settings Edit
 FilePath: \fit\core\cpp\src\script\fit_get_genericable_ids.py
-'''
+"""
 import os
 import sys
 import getopt

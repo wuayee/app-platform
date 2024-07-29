@@ -13,6 +13,7 @@
 #include "registry_server_repository_pg/src/connection_pool.hpp"
 #include "registry_server_repository_pg/src/sql_wrapper/sql_cmd.hpp"
 #include "ut/plugins/registry_server_repository_pg/mock/sql_connection_mock.hpp"
+#include "ut/plugins/registry_server_repository_pg/mock/sql_exec_result_mock.hpp"
 
 using namespace Fit::Repository::Pg;
 
@@ -148,7 +149,7 @@ TEST_F(ConnectionPoolTest,
     auto returnCode = ConnectionPool::Instance().SetUp("", presetConnectionNum, retryTimes, connectionCreator);
 
     // then
-    EXPECT_EQ(returnCode, FIT_ERR_SUCCESS);
+    EXPECT_EQ(returnCode, FIT_ERR_FAIL);
     EXPECT_EQ(ConnectionPool::Instance().GetAvailableConnectionCount(), expectConnectionNum);
     EXPECT_EQ(ConnectionPool::Instance().GetTotalConnectionCount(), expectConnectionNum);
 }
@@ -181,14 +182,17 @@ TEST_F(ConnectionPoolTest, should_success_call_exec_param_when_call_submit_with_
     constexpr const char* sqlCmdStr = "sql cmd";
     Fit::vector<const char*> sqlParams = {"param1", "param2"};
     Fit::Pg::SqlCmd sqlCmd{sqlCmdStr, sqlParams, {}};
+
     auto connectionCreator = [this, sqlCmdStr, sqlParams](const char*) {
         auto connectionMock = Fit::make_unique<SqlConnectionMock>();
+        auto sqlExecResultMock = Fit::make_unique<::testing::StrictMock<SqlExecResultMock>>();
 
         using namespace ::testing;
+        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(1).WillRepeatedly(Return(true));
         EXPECT_CALL(*connectionMock, IsOk()).Times(1).WillOnce(Return(true));
         EXPECT_CALL(*connectionMock, ExecParam(StrCaseEq(sqlCmdStr), ContainerEq(sqlParams)))
             .Times(1)
-            .WillOnce(Return(ByMove(nullptr)));
+            .WillOnce(Return(ByMove(Fit::move(sqlExecResultMock))));
         return connectionMock;
     };
     ConnectionPool::Instance().SetUp("", 1, 1, connectionCreator);
@@ -204,12 +208,14 @@ TEST_F(ConnectionPoolTest, should_success_call_exec_param_when_call_submit_with_
     Fit::Pg::SqlCmd sqlCmd{sqlCmdStr, sqlParams, {}};
     auto connectionCreator = [this, sqlCmdStr, sqlParams](const char*) {
         auto connectionMock = Fit::make_unique<SqlConnectionMock>();
+        auto sqlExecResultMock = Fit::make_unique<::testing::StrictMock<SqlExecResultMock>>();
 
         using namespace ::testing;
+        EXPECT_CALL(*sqlExecResultMock, IsOk()).Times(1).WillRepeatedly(Return(true));
         EXPECT_CALL(*connectionMock, IsOk()).Times(1).WillOnce(Return(true));
         EXPECT_CALL(*connectionMock, ExecParam(StrCaseEq(sqlCmdStr), ContainerEq(sqlParams)))
             .Times(1)
-            .WillOnce(Return(ByMove(nullptr)));
+            .WillOnce(Return(ByMove(Fit::move(sqlExecResultMock))));
         return connectionMock;
     };
     ConnectionPool::Instance().SetUp("", 2, 1, connectionCreator);

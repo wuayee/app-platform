@@ -4,4 +4,4 @@
 
 import os
 import get_static_token_util
-print(get_static_token_util.GetStaticToken(), end='')
+print(get_static_token_util.get_static_token(), end='')
