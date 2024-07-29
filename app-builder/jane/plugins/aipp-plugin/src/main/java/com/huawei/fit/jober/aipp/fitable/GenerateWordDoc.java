@@ -18,6 +18,7 @@ import com.huawei.fit.jober.common.ErrorCodes;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,6 +32,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * 生成word文档的服务类
+ *
+ * @author s00664640
+ * @since 2024-05-10
+ */
 @Component
 @Slf4j
 public class GenerateWordDoc implements FlowableService {
@@ -74,8 +81,8 @@ public class GenerateWordDoc implements FlowableService {
         String msg = "根据上面的信息，我决定调用word生成工具为您生成文档";
         this.aippLogService.insertMsgLog(msg, flowData);
 
-        String instId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
-        String toDocText = (String) businessData.get(AippConst.BS_TO_DOC_TEXT);
+        String instId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
+        String toDocText = ObjectUtils.cast(businessData.get(AippConst.BS_TO_DOC_TEXT));
         try {
             String fileName = generateFileName(toDocText);
             File docFile = operatorService.createDoc(instId, fileName, toDocText);

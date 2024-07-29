@@ -22,12 +22,12 @@ import java.util.Map;
  * @since 2024/3/20
  */
 @Component
-public class LLMGenerateOperationReport implements FlowableService {
-    private static final Logger log = Logger.get(LLMGenerateOperationReport.class);
+public class LlmGenerateOperationReport implements FlowableService {
+    private static final Logger log = Logger.get(LlmGenerateOperationReport.class);
 
     private final ReportGenerationService reportGenerationService;
 
-    public LLMGenerateOperationReport(ReportGenerationService reportGenerationService) {
+    public LlmGenerateOperationReport(ReportGenerationService reportGenerationService) {
         this.reportGenerationService = reportGenerationService;
     }
 

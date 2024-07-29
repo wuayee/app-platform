@@ -70,6 +70,7 @@ public class LlmAudio2Task implements FlowableService {
                     + "Finally Output a json list, every entity contains the following keys: owner, title, "
                     + "task_detail.\n" + "\n" + "Output json:\n";
     private static final ExecutorService AUDIO_EXECUTOR = Executors.newFixedThreadPool(8);
+
     private final FfmpegService ffmpegService;
     private final AippLogService aippLogService;
     private final MetaInstanceService metaInstanceService;
@@ -158,16 +159,16 @@ public class LlmAudio2Task implements FlowableService {
         Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("LlmAudio2Task businessData {}", businessData);
 
-        String audioPathStr = (String) businessData.get(AippConst.BS_AUDIO_PATH);
+        String audioPathStr = ObjectUtils.cast(businessData.get(AippConst.BS_AUDIO_PATH));
         Map<String, Object> audioFileObject = JsonUtils.parseObject(audioPathStr);
 
-        String audioUrl = (String) audioFileObject.get("s3_url");
+        String audioUrl = ObjectUtils.cast(audioFileObject.get("s3_url"));
         Validation.notNull(audioUrl, "audioUrl cant be null.");
 
         String msg = "首先我需要了解音频中的关键信息，我决定调用音频信息提取工具";
         this.aippLogService.insertMsgLog(msg, flowData);
 
-        String instId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
+        String instId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
         AudioSplitInfo audioInfo = splitAudio(instId, audioUrl);
         try (Stream<Path> audioPathStream = Files.list(Paths.get(audioInfo.getDirPath()))) {
             List<File> audioFiles = audioPathStream.map(Path::toFile).collect(Collectors.toList());

@@ -13,6 +13,7 @@ import com.huawei.fit.finance.NLRouter;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.util.MapBuilder;
 import com.huawei.fitframework.util.ObjectUtils;
 
@@ -40,7 +41,7 @@ public class DefaultFinanceService implements FinanceService {
     @Fitable("default")
     @Override
     public NLRouter nlRouter(String query) {
-        // todo: 临时方案，暂时走模型网关转发，待整改
+        // 临时方案，暂时走模型网关转发，待整改
         HttpPost httpPost = new HttpPost("http://tzaip-beta.paas.huawei.com/model-gateway/v1/emodelchain/router");
         String body = JsonUtils.toJsonString(MapBuilder.<String, String>get().put("query", query).build());
         httpPost.setEntity(new StringEntity(body, ContentType.APPLICATION_JSON));
@@ -79,12 +80,15 @@ public class DefaultFinanceService implements FinanceService {
             Object title = map.get("title");
             if (title instanceof String) {
                 autoGraph.setChartTitle(Collections.singletonList((String) title));
-            } else if (title instanceof List) {
-                autoGraph.setChartTitle((List<String>) title);
+            } else {
+                if (title instanceof List) {
+                    autoGraph.setChartTitle((List<String>) title);
+                }
             }
             Object type = ObjectUtils.cast(map.get("type"));
             if (type instanceof List) {
-                autoGraph.setChartType(((List<String>) type).stream().map(ChartType::from).collect(Collectors.toList()));
+                autoGraph.setChartType(((List<String>) type)
+                        .stream().map(ChartType::from).collect(Collectors.toList()));
             }
             List<String> chartAnswer = new ArrayList<>(Arrays.asList(autoGraph.getAnswer().split("-----")));
             this.formatChartAnswer((chartAnswer));
@@ -92,7 +96,7 @@ public class DefaultFinanceService implements FinanceService {
             autoGraph.setChartAnswer(chartAnswer);
             return JsonUtils.toJsonString(autoGraph);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FitException(e);
         }
     }
 

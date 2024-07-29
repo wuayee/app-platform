@@ -18,15 +18,23 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 流程异常处理服务
+ *
+ * @author s00664640
+ * @since 2024-05-10
+ */
 @Component
 public class AippFlowExceptionHandle implements FlowExceptionService {
     private static final Logger log = Logger.get(AippFlowExceptionHandle.class);
+
     private final AippLogService aippLogService;
     private final MetaInstanceService metaInstanceService;
 
@@ -60,14 +68,14 @@ public class AippFlowExceptionHandle implements FlowExceptionService {
     @Override
     public void handleException(String nodeId, List<Map<String, Object>> contexts, String errorMessage) {
         Map<String, Object> businessData = DataUtils.getBusiness(contexts);
-        String versionId = (String) businessData.get(AippConst.BS_META_VERSION_ID_KEY);
+        String versionId = ObjectUtils.cast(businessData.get(AippConst.BS_META_VERSION_ID_KEY));
         log.error("versionId {} nodeId {} errorMessage {}, handleException businessData {}",
                 versionId,
                 nodeId,
                 errorMessage,
                 businessData);
 
-        String aippInstId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
+        String aippInstId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
         InstanceDeclarationInfo declarationInfo = InstanceDeclarationInfo.custom()
                 .putInfo(AippConst.INST_FINISH_TIME_KEY, LocalDateTime.now())
                 .putInfo(AippConst.INST_STATUS_KEY, MetaInstStatusEnum.ERROR.name())
