@@ -5,7 +5,6 @@
 package com.huawei.fit.jober.form.config;
 
 import com.huawei.fit.security.Decryptor;
-import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.conf.ConfigDecryptor;
 import com.huawei.fitframework.inspection.Validation;
 
@@ -18,7 +17,6 @@ import java.util.Optional;
  * @author x00649642
  * @since 2023-12-21
  */
-// @Component("AippFormApplicationConfigPropertyDecrypt")
 public class ApplicationConfigPropertyDecrypt implements ConfigDecryptor {
     private final Decryptor decryptor;
 

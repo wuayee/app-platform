@@ -14,11 +14,18 @@ import com.huawei.fitframework.util.StringUtils;
 import java.util.Map;
 
 /**
+ * 转换工具类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-20
  */
 public class ConvertUtils {
-    // todo 后续是否可以把 aipp 和 app结合在一起
+    /**
+     * 把{@link AppBuilderAppDto}实例转换为{@link AippDto}实例 后续是否可以把 aipp和 app结合在一起
+     *
+     * @param appDto {@link AppBuilderAppDto}对象
+     * @return {@link AippDto}实例
+     */
     public static AippDto convertToAippDtoFromAppBuilderAppDto(AppBuilderAppDto appDto) {
         Map<String, Object> attributes = appDto.getAttributes();
         String description = String.valueOf(attributes.getOrDefault("description", StringUtils.EMPTY));

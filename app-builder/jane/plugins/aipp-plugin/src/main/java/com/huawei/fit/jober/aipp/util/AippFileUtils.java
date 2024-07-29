@@ -108,7 +108,9 @@ public class AippFileUtils {
         } catch (IOException e) {
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR,
                     StringUtils.format("Fail to get file from s3. [fileType={0}, url={1}, error={2}]",
-                            fileType, s3Url, e.getMessage()));
+                            fileType,
+                            s3Url,
+                            e.getMessage()));
         }
         return tmpFile;
     }
@@ -123,9 +125,8 @@ public class AippFileUtils {
      * @return 表示文件的可下载的url
      */
     public static String getFileDownloadUrl(String endpoint, String pathPrefix, String filePath, String fileName) {
-        return endpoint
-                + (StringUtils.isBlank(pathPrefix) ? StringUtils.EMPTY : pathPrefix)
-                + DOWNLOAD_FILE_ORIGIN + "filePath=" + filePath + "&fileName=" + fileName;
+        return endpoint + (StringUtils.isBlank(pathPrefix) ? StringUtils.EMPTY : pathPrefix) + DOWNLOAD_FILE_ORIGIN
+                + "filePath=" + filePath + "&fileName=" + fileName;
     }
 
     /**
@@ -137,8 +138,7 @@ public class AippFileUtils {
      * @return 表示音频文件路径的url
      */
     public static String getFileDownloadFilePath(String endpoint, String pathPrefix, String filePath) {
-        return endpoint
-                + (StringUtils.isBlank(pathPrefix) ? StringUtils.EMPTY : pathPrefix)
-                + DOWNLOAD_FILE_ORIGIN + "filePath=" + filePath;
+        return endpoint + (StringUtils.isBlank(pathPrefix) ? StringUtils.EMPTY : pathPrefix) + DOWNLOAD_FILE_ORIGIN
+                + "filePath=" + filePath;
     }
 }

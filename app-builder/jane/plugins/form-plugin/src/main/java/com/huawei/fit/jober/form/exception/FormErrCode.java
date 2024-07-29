@@ -1,9 +1,19 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
 package com.huawei.fit.jober.form.exception;
 
 import com.huawei.fit.jane.common.response.ErrorCode;
 
 import lombok.AllArgsConstructor;
 
+/**
+ * 表单错误码枚举
+ *
+ * @author s00664640
+ * @since 2024/5/10
+ */
 @AllArgsConstructor
 public enum FormErrCode implements ErrorCode {
     OK(0, "success"),

@@ -47,6 +47,12 @@ public class DefaultInstancesChangedNotifier extends AbstractNotifier implements
 
     private Map<String, TaskProperty> idIndexedProperties;
 
+    /**
+     * 构造函数
+     *
+     * @param brokerClient 调度器
+     * @param task 任务
+     */
     public DefaultInstancesChangedNotifier(BrokerClient brokerClient, TaskEntity task) {
         super(brokerClient, task);
         this.changes = new HashMap<>();

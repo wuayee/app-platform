@@ -23,7 +23,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * json工具类
+ *
+ * @author s00664640
+ * @since 2025/5/10
+ */
 public interface JsonUtils {
+    /**
+     * 将json字符串解析为map
+     *
+     * @param jsonString json字符串
+     * @return map
+     */
     static Map<String, Object> parseObject(String jsonString) {
         try {
             return new ObjectMapper().readValue(jsonString, new TypeReference<Map<String, Object>>() {});
@@ -32,6 +44,14 @@ public interface JsonUtils {
         }
     }
 
+    /**
+     * 将json字符串解析为对象
+     *
+     * @param jsonString json字符串
+     * @param clazz 类型
+     * @param <T> 对象类型
+     * @return 对象
+     */
     static <T> T parseObject(String jsonString, Class<T> clazz) {
         try {
             return new ObjectMapper().readValue(jsonString, clazz);
@@ -40,6 +60,14 @@ public interface JsonUtils {
         }
     }
 
+    /**
+     * 将json字符串解析为list
+     *
+     * @param jsonString json字符串
+     * @param clazz 类型
+     * @param <T> 元素类型
+     * @return list
+     */
     static <T> List<T> parseArray(String jsonString, Class<T[]> clazz) {
         try {
             return Arrays.asList(new ObjectMapper().readValue(jsonString, clazz));
@@ -48,6 +76,12 @@ public interface JsonUtils {
         }
     }
 
+    /**
+     * 把对象转换为json字符串
+     *
+     * @param object 对象
+     * @return json字符串
+     */
     static String toJsonString(Object object) {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -61,15 +95,21 @@ public interface JsonUtils {
         }
     }
 
+    /**
+     * 校验是否为合格的json
+     *
+     * @param jsonLikeString 类json字符串
+     * @return 是否是json格式
+     */
     static boolean isValidJson(String jsonLikeString) {
-        boolean valid;
+        boolean isValid;
         try {
             TreeNode node =
                     new ObjectMapper().enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS).readTree(jsonLikeString);
-            valid = Objects.nonNull(node);
+            isValid = Objects.nonNull(node);
         } catch (JsonProcessingException e) {
-            valid = false;
+            isValid = false;
         }
-        return valid;
+        return isValid;
     }
 }

@@ -48,6 +48,13 @@ public abstract class AbstractTaskInstanceEventNotifier implements Runnable {
         }
     }
 
+    /**
+     * 计算新实例和旧实例的修改
+     *
+     * @param oldInstance 旧实例
+     * @param newInstance 新实例
+     * @return 修改
+     */
     protected static Map<String, Object> modifications(TaskInstance oldInstance, TaskInstance newInstance) {
         Set<String> keys = CollectionUtils.union(oldInstance.info().keySet(), newInstance.info().keySet());
         Map<String, Object> oldValues = new HashMap<>();
@@ -61,23 +68,55 @@ public abstract class AbstractTaskInstanceEventNotifier implements Runnable {
         return oldValues;
     }
 
+    /**
+     * 添加新实例
+     *
+     * @param instances 新的实例数组
+     */
     protected void addNews(TaskInstance[] instances) {
         this.add(this.newInstances, instances);
     }
 
+    /**
+     * 添加旧实例
+     *
+     * @param instances 实例数组
+     */
     protected void addOlds(TaskInstance[] instances) {
         this.add(this.oldInstances, instances);
     }
 
     private void add(Map<String, TaskInstance> cache, TaskInstance[] instances) {
-        Optional.ofNullable(instances).map(Stream::of).orElseGet(Stream::empty).filter(Objects::nonNull)
+        Optional.ofNullable(instances)
+                .map(Stream::of)
+                .orElseGet(Stream::empty)
+                .filter(Objects::nonNull)
                 .forEach(instance -> cache.put(instance.id(), instance));
     }
 
+    /**
+     * 创建的事件
+     *
+     * @param instance 实例
+     * @return 事件
+     */
     protected abstract Event eventOfCreated(TaskInstance instance);
 
+    /**
+     * 修改的事件
+     *
+     * @param oldInstance 旧实例
+     * @param newInstance 新实例
+     * @return 修改事件的Optional
+     */
     protected abstract Optional<? extends Event> eventOfModified(TaskInstance oldInstance, TaskInstance newInstance);
 
+    /**
+     * 删除的事件
+     *
+     * @param instance 实例
+     * @return 删除的事件
+     */
     protected abstract Event eventOfDeleted(TaskInstance instance);
 
     @Override
@@ -86,21 +125,22 @@ public abstract class AbstractTaskInstanceEventNotifier implements Runnable {
         Set<String> modifiedIds = new HashSet<>();
         Set<String> deletedIds = new HashSet<>();
         this.analyse(createdIds, modifiedIds, deletedIds);
-        createdIds.stream()
-                .map(this.newInstances::get)
-                .map(this::eventOfCreated)
-                .forEach(this::publishEvent);
+        createdIds.stream().map(this.newInstances::get).map(this::eventOfCreated).forEach(this::publishEvent);
         modifiedIds.stream()
                 .map(id -> this.eventOfModified(this.oldInstances.get(id), this.newInstances.get(id)))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .forEach(this::publishEvent);
-        deletedIds.stream()
-                .map(this.oldInstances::get)
-                .map(this::eventOfDeleted)
-                .forEach(this::publishEvent);
+        deletedIds.stream().map(this.oldInstances::get).map(this::eventOfDeleted).forEach(this::publishEvent);
     }
 
+    /**
+     * 通过分析新旧实例数据，构造新增、修改和删除的集合
+     *
+     * @param createdIds 新增的id集合
+     * @param modifiedIds 修改的id集合
+     * @param deletedIds 删除的id集合
+     */
     protected void analyse(Set<String> createdIds, Set<String> modifiedIds, Set<String> deletedIds) {
         Set<String> oldIds = new HashSet<>(this.oldInstances.keySet());
         Set<String> newIds = new HashSet<>(this.newInstances.keySet());

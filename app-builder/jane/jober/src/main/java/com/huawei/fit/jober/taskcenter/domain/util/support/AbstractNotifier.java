@@ -39,18 +39,34 @@ public abstract class AbstractNotifier {
 
     private PrimaryKey primaryKey;
 
-    private boolean primaryKeyLoaded;
+    private boolean isPrimaryKeyLoaded;
 
+    /**
+     * 构造函数
+     *
+     * @param brokerClient 调度器
+     * @param task 任务
+     */
     public AbstractNotifier(BrokerClient brokerClient, TaskEntity task) {
         this.brokerClient = brokerClient;
         this.task = task;
-        this.primaryKeyLoaded = false;
+        this.isPrimaryKeyLoaded = false;
     }
 
+    /**
+     * 返回调度器
+     *
+     * @return 调度器
+     */
     protected final BrokerClient broker() {
         return this.brokerClient;
     }
 
+    /**
+     * 返回任务
+     *
+     * @return 任务
+     */
     protected final TaskEntity task() {
         return this.task;
     }
@@ -93,9 +109,9 @@ public abstract class AbstractNotifier {
     }
 
     private PrimaryKey primaryKey() {
-        if (!this.primaryKeyLoaded) {
+        if (!this.isPrimaryKeyLoaded) {
             this.primaryKey = PrimaryKey.of(this.task());
-            this.primaryKeyLoaded = true;
+            this.isPrimaryKeyLoaded = true;
         }
         return this.primaryKey;
     }

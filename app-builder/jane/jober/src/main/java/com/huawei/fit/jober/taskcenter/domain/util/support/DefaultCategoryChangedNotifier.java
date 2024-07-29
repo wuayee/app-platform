@@ -53,6 +53,13 @@ public class DefaultCategoryChangedNotifier extends AbstractNotifier implements 
 
     private final List<InstanceCategoryChanged> changes;
 
+    /**
+     * 构造函数
+     *
+     * @param broker 调度器
+     * @param task 任务
+     * @param categoryService 为任务实例的类目提供管理
+     */
     public DefaultCategoryChangedNotifier(BrokerClient broker, TaskEntity task, CategoryService categoryService) {
         super(broker, task);
         this.categoryService = categoryService;
