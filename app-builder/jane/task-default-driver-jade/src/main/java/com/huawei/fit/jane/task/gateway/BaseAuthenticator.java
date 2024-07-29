@@ -6,7 +6,6 @@ package com.huawei.fit.jane.task.gateway;
 
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fitframework.annotation.Component;
-import com.huawei.fitframework.util.StringUtils;
 
 /**
  * 为 {@link Authenticator} 提供不含sso的a3000默认实现。

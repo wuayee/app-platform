@@ -73,7 +73,6 @@ public class DynamicFormMetaServiceIml implements DynamicFormMetaService {
 
     private FormMetaInfo parseMeta(DynamicFormEntity formEntity) {
         String formData = queryMeta(formEntity);
-        FormMetaInfo metaInfo = new FormMetaInfo(String.valueOf(formEntity.getId()), formEntity.getVersion());
         List<FormMetaItem> formMetaItems;
         try {
             ElsaDataDto elsaData = new ObjectMapper().readValue(formData, ElsaDataDto.class);
@@ -89,12 +88,14 @@ public class DynamicFormMetaServiceIml implements DynamicFormMetaService {
                     return new FormMetaItem(meta.getKey(),
                             meta.getName(),
                             ShapesMetaType.getShapesMetaType(meta.getType()).getValue(),
-                            length, null);
+                            length,
+                            null);
                 });
             }).collect(Collectors.toList());
         } catch (JsonProcessingException e) {
             throw new FormParamException(FormErrCode.INPUT_PARAM_IS_INVALID, "form entity. reason: " + e.getMessage());
         }
+        FormMetaInfo metaInfo = new FormMetaInfo(String.valueOf(formEntity.getId()), formEntity.getVersion());
         metaInfo.setFormMetaItems(nullIf(formMetaItems, new ArrayList<>()));
         return metaInfo;
     }
@@ -102,7 +103,7 @@ public class DynamicFormMetaServiceIml implements DynamicFormMetaService {
     private String queryMeta(DynamicFormEntity formEntity) {
         GraphParam elsaParam = buildGraphParam(formEntity.getId(), formEntity.getVersion());
         OperationContext context = new OperationContext();
-        // todo 暂时用不到，可去掉；后期应该改为调用appBuilder的查询表单的渲染数据json的接口
+        // 暂时用不到，可去掉；后期应该改为调用appBuilder的查询表单的渲染数据json的接口
         return elsaClient.get(elsaParam, context);
     }
 }
