@@ -58,7 +58,7 @@ const ChatDetail = () => {
           </div>
           <div className='head-nav'>
             <div className='nav-left' onClick={addApp}>
-              <div className='tag'>
+              <div className='tag-home-page'>
                 <CreateAppIcon />
               </div>
               <div className='nav-title'>创建应用</div>
@@ -71,7 +71,7 @@ const ChatDetail = () => {
               className={`nav-right ${openStar ? 'nav-item-active' : ''}`}
               onClick={() => dispatch(setOpenStar(true))}
             >
-              <div className='tag'>
+              <div className='tag-home-page'>
                 <AppBoxIcon />
               </div>
               <div className='nav-title'>应用百宝箱</div>
