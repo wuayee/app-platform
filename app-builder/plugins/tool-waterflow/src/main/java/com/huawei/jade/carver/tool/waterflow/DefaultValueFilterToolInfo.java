@@ -30,6 +30,11 @@ import java.util.Set;
 public class DefaultValueFilterToolInfo implements Tool.Info {
     private final Tool.Info toolInfo;
 
+    /**
+     * 构造函数
+     *
+     * @param toolInfo 工具信息
+     */
     public DefaultValueFilterToolInfo(Tool.Info toolInfo) {
         notNull(toolInfo, "the tool info cannot be null");
         this.toolInfo = toolInfo;

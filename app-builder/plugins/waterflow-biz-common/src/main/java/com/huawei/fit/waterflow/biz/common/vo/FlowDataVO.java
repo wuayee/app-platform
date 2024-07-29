@@ -43,6 +43,9 @@ public class FlowDataVO {
      */
     private String errorMessage;
 
+    /**
+     * 构造函数
+     */
     public FlowDataVO() {
     }
 

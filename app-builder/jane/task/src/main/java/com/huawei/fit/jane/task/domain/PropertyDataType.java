@@ -44,6 +44,9 @@ public enum PropertyDataType implements DataConverter {
      */
     LIST_TEXT(ListTextConverter.INSTANCE, "index_text", "list_text", "TEXT");
 
+    /**
+     * 默认文本。
+     */
     public static final PropertyDataType DEFAULT = TEXT;
 
     private final boolean isIndexable;
