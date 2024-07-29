@@ -39,8 +39,8 @@ import java.util.List;
 import java.util.Map;
 
 @ExtendWith(MockitoExtension.class)
-public class LLMJson2MindTest {
-    private LLMJson2Mind llmFitable;
+public class LlmJson2MindTest {
+    private LlmJson2Mind llmFitable;
     @Mock
     private MetaInstanceService metaInstanceServiceMock;
 
@@ -75,7 +75,7 @@ public class LLMJson2MindTest {
 
     @BeforeEach
     void setUp() {
-        this.llmFitable = new LLMJson2Mind(metaInstanceServiceMock);
+        this.llmFitable = new LlmJson2Mind(metaInstanceServiceMock);
     }
 
     @Test

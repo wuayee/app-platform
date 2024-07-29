@@ -44,8 +44,14 @@ import java.util.Map;
 public class AippJacksonObjectSerializer implements ObjectSerializer {
     /** 表示默认的日期时间的格式。 */
     public static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     private final ObjectMapper mapper;
 
+    /**
+     * 为Aipp提供兹定于序列化器
+     *
+     * @param dateTimeFormat 日期时间格式
+     */
     public AippJacksonObjectSerializer(@Value("${jackson.datetime-format}") String dateTimeFormat) {
         SimpleModule customSerialization = new SimpleModule();
 

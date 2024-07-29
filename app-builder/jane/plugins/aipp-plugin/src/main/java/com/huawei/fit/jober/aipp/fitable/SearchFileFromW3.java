@@ -17,6 +17,7 @@ import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * 从W3搜索文件
+ *
+ * @author s00664640
+ * @since 2024/05/10
+ */
 @Component
 @Slf4j
 public class SearchFileFromW3 implements FlowableService {
@@ -68,9 +75,9 @@ public class SearchFileFromW3 implements FlowableService {
         Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("SearchFileFromW3 businessData {}", businessData);
 
-        String queryContent = (String) businessData.get(AippConst.BS_SEARCH_W3_QUERY_CONTENT);
+        String queryContent = ObjectUtils.cast(businessData.get(AippConst.BS_SEARCH_W3_QUERY_CONTENT));
         validationQueryContent(queryContent, flowData);
-        String queryTopKStr = (String) businessData.getOrDefault(AippConst.BS_SEARCH_W3_QUERY_TOP_K, "3");
+        String queryTopKStr = ObjectUtils.cast(businessData.getOrDefault(AippConst.BS_SEARCH_W3_QUERY_TOP_K, "3"));
 
         String msg = "好的，根据您的需求，我决定先从网络上搜索相关信息";
         this.aippLogService.insertMsgLog(msg, flowData);

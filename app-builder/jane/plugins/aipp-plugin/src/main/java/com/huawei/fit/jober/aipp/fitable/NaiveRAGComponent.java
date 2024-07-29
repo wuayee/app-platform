@@ -33,7 +33,9 @@ import java.util.stream.Collectors;
 @Component
 public class NaiveRAGComponent implements FlowableService {
     private static final Logger log = Logger.get(NaiveRAGComponent.class);
+
     private final KnowledgeBaseService knowledgeBaseService;
+
     public NaiveRAGComponent(KnowledgeBaseService knowledgeBaseService) {
         this.knowledgeBaseService = knowledgeBaseService;
     }

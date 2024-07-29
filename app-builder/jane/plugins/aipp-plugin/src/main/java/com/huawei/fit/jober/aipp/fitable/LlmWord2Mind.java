@@ -33,17 +33,23 @@ import java.util.Map;
 
 /**
  * word文档生成脑图json
+ *
+ * @author s00664640
+ * @since 2024/05/10
  */
 @Component
-public class LLMWord2Mind implements FlowableService {
+public class LlmWord2Mind implements FlowableService {
+    private static final Logger log = Logger.get(LlmWord2Mind.class);
 
-    private static final Logger log = Logger.get(LLMWord2Mind.class);
     private final LLMService llmService;
+
     private final MetaInstanceService metaInstanceService;
+
     private final OperatorService operatorService;
+
     private final AippLogService aippLogService;
 
-    public LLMWord2Mind(@Fit LLMService llmService, @Fit MetaInstanceService metaInstanceService,
+    public LlmWord2Mind(@Fit LLMService llmService, @Fit MetaInstanceService metaInstanceService,
             @Fit OperatorService operatorService, AippLogService aippLogService) {
         this.llmService = llmService;
         this.metaInstanceService = metaInstanceService;

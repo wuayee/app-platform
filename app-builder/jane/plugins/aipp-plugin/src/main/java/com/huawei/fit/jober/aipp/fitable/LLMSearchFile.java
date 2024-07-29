@@ -22,6 +22,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -31,10 +32,14 @@ import java.util.Map;
 
 /**
  * 调用小海查询文件接口
+ *
+ * @author s00664640
+ * @since 2024/05/10
  */
 @Component
 public class LLMSearchFile implements FlowableService {
     private static final Logger log = Logger.get(LLMSearchFile.class);
+
     private final LLMService llmService;
     private final MetaInstanceService metaInstanceService;
     private final AippLogService aippLogService;
@@ -67,7 +72,7 @@ public class LLMSearchFile implements FlowableService {
             String prompt = DataUtils.getPromptFromFlowContext(flowData);
             Validation.notBlank(prompt, "prompt cannot be null");
 
-            String modelName = (String) businessData.get(AippConst.BS_MODEL_NAME_KEY);
+            String modelName = ObjectUtils.cast(businessData.get(AippConst.BS_MODEL_NAME_KEY));
             LlmModelNameEnum model = LlmModelNameEnum.getLlmModelName(modelName);
             if (!LlmModelNameEnum.XIAOHAI.getValue().equals(model.getValue())) {
                 log.warn("invalid model({}) for LLMSearchFile; using default model({})",

@@ -38,8 +38,8 @@ import java.util.Map;
 
 @ExtendWith(MockitoExtension.class)
 @Disabled
-public class LLMPdf2TextTest {
-    private LLMPdf2Text llmFitable;
+public class LlmPdf2TextTest {
+    private LlmPdf2Text llmFitable;
 
     @Mock
     private OperatorService operatorServiceMock;
@@ -52,7 +52,7 @@ public class LLMPdf2TextTest {
 
     @BeforeEach
     void setUp() {
-        this.llmFitable = new LLMPdf2Text(operatorServiceMock, metaInstanceServiceMock, aippLogServiceMock);
+        this.llmFitable = new LlmPdf2Text(operatorServiceMock, metaInstanceServiceMock, aippLogServiceMock);
     }
 
     @Test
