@@ -10,7 +10,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.clearInvocations;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,6 +23,9 @@ import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.test.annotation.FitTestWithJunit;
 import com.huawei.fitframework.test.annotation.Mocked;
+import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.jade.carver.telemetry.aop.stub.NestedWithSpanService;
+import com.huawei.jade.carver.telemetry.aop.stub.NestedWithSpanServiceImpl;
 import com.huawei.jade.service.CarverGlobalOpenTelemetry;
 
 import io.opentelemetry.api.OpenTelemetry;
@@ -28,6 +33,8 @@ import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.SpanBuilder;
 import io.opentelemetry.api.trace.StatusCode;
 import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.context.Context;
+import io.opentelemetry.context.ContextKey;
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 
@@ -43,10 +50,12 @@ import org.mockito.MockedStatic;
  * @author 刘信宏
  * @since 2024-07-25
  */
-@FitTestWithJunit(classes = {WithSpanAspect.class, WithSpanAspectTest.WithSpanDemo.class})
+@FitTestWithJunit(
+        classes = {WithSpanAspect.class, WithSpanAspectTest.WithSpanDemo.class, NestedWithSpanServiceImpl.class})
 public class WithSpanAspectTest {
     private static final String EXCEPTION_MESSAGE = " exception message.";
     private static final String SPAN_ATTRIBUTE_KEY = "player";
+    private static final String PARENT_SPAN_NAME = "operation.handle.nested";
 
     @Mocked
     private OpenTelemetry mockOpenTelemetry;
@@ -101,9 +110,31 @@ public class WithSpanAspectTest {
         verify(this.mockSpan).end();
     }
 
+    @Test
+    @DisplayName("触发嵌套切面，成功设置 Span 属性。")
+    void shouldOkWhenHandleNestedSpanThenSetSpanEvent() {
+        doAnswer(arg -> {
+            Context argument = ObjectUtils.cast(arg.getArgument(0));
+            return argument.with(ContextKey.named("opentelemetry-trace-span-key"), this.mockSpan);
+        }).when(this.mockSpan).storeInContext(any(Context.class));
+
+        String playerArg = "playerArg";
+        this.withSpanDemo.handleSuccessNested(playerArg);
+
+        verify(this.mockSpan, times(1)).makeCurrent();
+        verify(this.mockTrace).spanBuilder(eq(PARENT_SPAN_NAME));
+        verify(this.mockTrace).spanBuilder(eq(NestedWithSpanService.NESTED_SPAN_NAME));
+        verify(this.mockSpan).setAttribute(eq(SPAN_ATTRIBUTE_KEY), eq(playerArg));
+        verify(this.mockSpan).setAttribute(eq(NestedWithSpanService.NESTED_ATTR_KEY), eq(playerArg));
+        verify(this.mockSpan, times(2)).end();
+    }
+
     @Component
     static class WithSpanDemo {
         private static final Logger log = Logger.get(WithSpanDemo.class);
+
+        @Fit
+        private NestedWithSpanService nestedService;
 
         /**
          * 成功操作。
@@ -114,6 +145,17 @@ public class WithSpanAspectTest {
         @GetMapping("/span-demo-success")
         public void handleSuccess(@RequestParam("player_req") @SpanAttribute(SPAN_ATTRIBUTE_KEY) String player) {
             log.debug("input param: {}", player);
+        }
+
+        /**
+         * 嵌套操作。
+         *
+         * @param player 表示操作参数的 {@link String}。
+         */
+        @WithSpan(value = PARENT_SPAN_NAME)
+        @GetMapping("/span-demo-nested")
+        public void handleSuccessNested(@RequestParam("player_req") @SpanAttribute(SPAN_ATTRIBUTE_KEY) String player) {
+            this.nestedService.invoke(player);
         }
 
         /**
