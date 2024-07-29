@@ -189,7 +189,7 @@ function _KnowledgeForm({knowledge, maximum, disabled}) {
 const areEqual = (prevProps, nextProps) => {
     return prevProps.knowledge === nextProps.knowledge
             && prevProps.maximum === nextProps.maximum
-            && prevProps.disabled === prevProps.disabled;
+            && prevProps.disabled === nextProps.disabled;
 };
 
 export const KnowledgeForm =  React.memo(_KnowledgeForm, areEqual);

@@ -115,7 +115,7 @@ function _InputForm({queryData, disabled}) {
                     >
                         <JadeInput disabled={disabled}
                                    className="value-custom jade-input"
-                                   placeholder="清输入"
+                                   placeholder="请输入"
                                    value={item.value}
                                    onBlur={editInput(item)}
                         />
@@ -193,7 +193,7 @@ function _InputForm({queryData, disabled}) {
 }
 
 const areEqual = (prevProps, nextProps) => {
-    return prevProps.queryData === nextProps.queryData && prevProps.disabled === prevProps.disabled;
+    return prevProps.queryData === nextProps.queryData && prevProps.disabled === nextProps.disabled;
 };
 
 export const InputForm =  React.memo(_InputForm, areEqual);
