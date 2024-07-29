@@ -16,6 +16,8 @@ jane:
 app-engine:
   endpoint: http://80.11.128.66:31111
   pathPrefix:
+  exclude-names:
+    - '小海'
 elsa:
   endpoint:
   elsaKey:

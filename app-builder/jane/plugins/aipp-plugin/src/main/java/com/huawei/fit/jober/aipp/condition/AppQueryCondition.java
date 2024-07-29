@@ -34,4 +34,6 @@ public class AppQueryCondition {
 
     @RequestParam(name = "state", required = false)
     private String state;
+
+    private List<String> excludeNames;
 }

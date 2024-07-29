@@ -30,6 +30,7 @@ import com.huawei.fit.jober.aipp.service.AppBuilderAppService;
 import com.huawei.fit.jober.aipp.util.ConvertUtils;
 import com.huawei.fit.jober.common.RangedResultSet;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.validation.Validated;
 
 import java.util.List;
@@ -41,12 +42,15 @@ import java.util.List;
 @Component
 @RequestMapping(path = "/v1/api/{tenant_id}/app")
 public class AppBuilderAppController extends AbstractController {
+    private final List<String> excludeNames;
     private final AppBuilderAppService appService;
     private final com.huawei.fit.jober.aipp.genericable.AppBuilderAppService appGenericable;
 
     public AppBuilderAppController(Authenticator authenticator, AppBuilderAppService appService,
-            com.huawei.fit.jober.aipp.genericable.AppBuilderAppService appGenericable) {
+            com.huawei.fit.jober.aipp.genericable.AppBuilderAppService appGenericable,
+            @Value("${app-engine.exclude-names}") List<String> excludeNames) {
         super(authenticator);
+        this.excludeNames = excludeNames;
         this.appService = appService;
         this.appGenericable = appGenericable;
     }
@@ -68,6 +72,7 @@ public class AppBuilderAppController extends AbstractController {
             @RequestParam(value = "limit", defaultValue = "10") int limit, @RequestBean AppQueryCondition cond,
             @RequestQuery(name = "type", defaultValue = "app") String type) {
         cond.setType(type);
+        cond.getExcludeNames().addAll(this.excludeNames);
         return this.appService.list(cond, httpRequest, tenantId, offset, limit);
     }
 
