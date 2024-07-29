@@ -81,7 +81,7 @@ const AppOverview: React.FC = () => {
                   <span>{detail?.createAt}</span>
                 </Flex>
               </Flex>
-              <Flex gap={20}>
+              {/* <Flex gap={20}>
                 <Flex gap={4} align='center'>
                   <AppIcons.UserIcon />
                   <span>2.36k</span>
@@ -94,7 +94,7 @@ const AppOverview: React.FC = () => {
                   <AppIcons.AppLikeIcon />
                   <span>123</span>
                 </Flex>
-              </Flex>
+              </Flex> */}
             </Flex>
           </Flex>
           <Flex gap='middle'>
@@ -155,8 +155,8 @@ const AppOverview: React.FC = () => {
               </Flex>
               <Input placeholder='https://octo-cd.hdesign.huawei.com/app/editor/UcmfDrFl0JHBFRBeGgfj2Q?' />
               <Flex gap='small'>
-                <Button type='primary' size='small'><Flex align={'center'}><AppIcons.PreviewIcon />预览</Flex></Button>
-                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button>
+                {/* <Button type='primary' size='small'><Flex align={'center'}><AppIcons.PreviewIcon />预览</Flex></Button>
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button> */}
               </Flex>
             </Flex>
           </div>
@@ -186,9 +186,9 @@ const AppOverview: React.FC = () => {
               </Flex>
               <Input placeholder='https://octo-cd.hdesign.huawei.com/app/editor/UcmfDrFl0JHBFRBeGgfj2Q?' />
               <Flex gap='small'>
-                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />API秘钥</Flex></Button>
+                {/* <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />API秘钥</Flex></Button>
                 <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />查阅API文档</Flex></Button>
-                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button>
+                <Button size='small'><Flex align={'center'}><AppIcons.FlipIcon />自动生成</Flex></Button> */}
               </Flex>
             </Flex>
           </div>

@@ -54,7 +54,7 @@ const ToolCard = ({ pluginData, tenantId }: any) => {
     </div>
     {/* 卡片底部 */}
     <div className='card-footer'>
-      <Flex gap={16}>
+      {/* <Flex gap={16}>
         <span>
           <UserOutlined style={{ marginRight: 8 }} />
           {pluginData.downloadCount}
@@ -63,7 +63,7 @@ const ToolCard = ({ pluginData, tenantId }: any) => {
           <StarOutlined style={{ marginRight: 8 }} />
           {pluginData.likeCount}
         </span>
-      </Flex>
+      </Flex> */}
     </div>
     <div className='card-detail' onClick={detailClick}>
       查看详情

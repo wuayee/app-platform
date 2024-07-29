@@ -109,9 +109,9 @@ const Apps: React.FC = () => {
     dispatch(setCollectionValue(collectMap))
   }
 
-  useEffect(()=> {
-    getUserCollectionList()
-  }, [])
+  // useEffect(()=> {
+  //   getUserCollectionList()
+  // }, [])
 
   return (
     <div className=' apps_root'>
