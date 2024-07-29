@@ -9,17 +9,11 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.huawei.fit.jade.plugin</groupId>
-    <artifactId>carver-plugin-parent</artifactId>
+    <groupId>com.huawei.fit.jade.components</groupId>
+    <artifactId>carver-component-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>telemetry-span-exporter-operation</module>
-        <module>telemetry-span-exporter-repository</module>
-        <module>tool-eco-huggingface</module>
-        <module>tool-eco-langchain</module>
-        <module>tool-eco-llamaindex</module>
-        <module>tool-execution</module>
-        <module>tool-repository-postgresql</module>
+        <module>telemetry-aop</module>
     </modules>
 </project>
