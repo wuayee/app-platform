@@ -114,7 +114,7 @@ export default function LlmFormWrapper({data, disabled}) {
                            deleteItem={deleteItem}
                            content={content}/>
             <ModelForm disabled={disabled} modelData={modelData} shapeId={shape.id} modelOptions={modelOptions}/>
-            <SkillForm disabled={disabled} toolOptions={toolOptions} workflowOptions={workflowOptions} config={config}/>
+            {/*<SkillForm disabled={disabled} toolOptions={toolOptions} workflowOptions={workflowOptions} config={config}/>*/}
             <LlmOutput outputItems={data.outputParams}/>
         </div>
     );
