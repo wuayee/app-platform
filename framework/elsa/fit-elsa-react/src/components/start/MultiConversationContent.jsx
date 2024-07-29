@@ -160,9 +160,9 @@ export default function MultiConversationContent({
         <div className={`jade-custom-panel-content ${className}`}>
             <Form.Item
                 className="jade-form-item"
-                label="请选择对话方式"
+                label="请选择记忆方式"
                 name={`multiConversationType-${itemId}`}
-                rules={[{required: true, message: "对话方式不能为空"}]}
+                rules={[{required: true, message: "记忆方式不能为空"}]}
                 validateTrigger="onBlur"
                 initialValue={typeValue}
             >
