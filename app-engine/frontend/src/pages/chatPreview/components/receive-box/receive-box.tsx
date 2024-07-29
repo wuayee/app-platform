@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState, useContext } from 'react';
 import { Checkbox } from 'antd';
-import { ErrorBoundary } from 'react-error-boundary';
 import { useLocation } from 'react-router-dom';
 import { ChatContext } from '@/pages/aippIndex/context';
 import { useAppSelector } from '@/store/hook';
@@ -47,9 +46,7 @@ const ReciveBox = (props) => {
   // 设置显示类型
   function setRecieveDom(type) {
     if (type === 'form') {
-      return <ErrorBoundary fallback={<div className='app-error-form'>表单渲染失败</div>}>
-                 <RuntimeForm formConfig={formConfig} />
-              </ErrorBoundary>
+      return <RuntimeForm formConfig={formConfig} />
     }
     return <MessageDetail 
               content={content} 

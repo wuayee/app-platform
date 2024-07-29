@@ -111,54 +111,6 @@ export const routeList: MenuItem[] = [
     hidden: true,
   },
   {
-    key: '/model',
-    icon: Icons.app({}),
-    label: '模型服务',
-    hidden: true,
-    component: Model,
-    children: [
-      {
-        key: 'model/detail',
-        icon: Icons.app({}),
-        label: 'app编排',
-        component: ModelDetail,
-        hidden: true,
-      },
-    ],
-  },
-  {
-    key: '/model-base',
-    icon: Icons.app({}),
-    label: '模型仓库',
-    hidden: true,
-    component: ModelBase,
-    children: [
-      {
-        key: '/model-base/:name/detail',
-        icon: Icons.app({}),
-        label: '模型仓库',
-        component: ModelBaseDetail,
-        hidden: true,
-      },
-    ],
-  },
-  {
-    key: '/model-training',
-    icon: Icons.app({}),
-    label: '模型训练',
-    hidden: true,
-    component: ModelTraining,
-    children: [
-      {
-        key: 'model-training/create',
-        icon: Icons.app({}),
-        label: '创建训练任务',
-        component: ModelTrainingCreate,
-        hidden: true,
-      },
-    ],
-  },
-  {
     key: '/knowledge-base',
     icon: Icons.app({}),
     label: '知识库',
