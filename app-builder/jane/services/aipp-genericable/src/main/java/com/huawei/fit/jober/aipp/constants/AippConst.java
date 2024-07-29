@@ -653,8 +653,7 @@ public class AippConst {
     /**
      * aipp initial static meta items
      */
-    public static final List<FormMetaItem> STATIC_META_ITEMS =
-            Collections.unmodifiableList(Arrays.asList(
+    public static final List<FormMetaItem> STATIC_META_ITEMS = Collections.unmodifiableList(Arrays.asList(
                     new FormMetaItem(INST_NAME_KEY, "meta实例名称", "TEXT", STRING_LEN, null),
                     new FormMetaItem(INST_CREATOR_KEY, "创建人", "TEXT", STRING_LEN, null),
                     new FormMetaItem(INST_CREATE_TIME_KEY, "创建时间", "DATETIME", null, null),
