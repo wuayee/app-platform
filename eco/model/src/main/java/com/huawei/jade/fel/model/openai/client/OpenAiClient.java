@@ -97,8 +97,10 @@ public class OpenAiClient {
         Response<OpenAiChatCompletionResponse> response =
                 api.createChatCompletion(url, getApiKey(request.getApiKey()), request).execute();
         if (!response.isSuccessful()) {
-            LOGGER.error(response.message());
-            throw new IOException(response.message());
+            String errBody = response.errorBody() == null ? "" : ": " + response.errorBody().string();
+            String errMsg = response.message() + errBody;
+            LOGGER.error(errMsg);
+            throw new IOException(errMsg);
         }
         return response.body();
     }
