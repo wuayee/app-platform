@@ -4,15 +4,31 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.huawei.fit.jade.service</groupId>
-        <artifactId>carver-service-parent</artifactId>
+        <groupId>com.huawei.fit.jade.plugin</groupId>
+        <artifactId>carver-plugin-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>telemetry-service</artifactId>
+    <artifactId>telemetry-span-exporter-repository</artifactId>
 
     <dependencies>
-        <!-- OpenTelemetry api  -->
+        <!-- FIT core -->
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huawei.fitframework</groupId>
+            <artifactId>fit-util</artifactId>
+        </dependency>
+
+        <!-- Services -->
+        <dependency>
+            <groupId>com.huawei.fit.jade.service</groupId>
+            <artifactId>telemetry-service</artifactId>
+        </dependency>
+
+        <!-- OpenTelemetry  -->
         <dependency>
             <groupId>io.opentelemetry</groupId>
             <artifactId>opentelemetry-api</artifactId>
@@ -21,8 +37,6 @@
             <groupId>io.opentelemetry.instrumentation</groupId>
             <artifactId>opentelemetry-instrumentation-annotations</artifactId>
         </dependency>
-
-        <!-- OpenTelemetry sdk  -->
         <dependency>
             <groupId>io.opentelemetry</groupId>
             <artifactId>opentelemetry-sdk</artifactId>
@@ -32,14 +46,20 @@
             <artifactId>opentelemetry-sdk-trace</artifactId>
         </dependency>
 
-        <!-- FIT -->
+        <!-- Lombok -->
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
-            <artifactId>fit-api</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>com.huawei.fit.integration</groupId>
+            <artifactId>fit-mockito</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.huawei.fitframework</groupId>
-            <artifactId>fit-util</artifactId>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
         </dependency>
     </dependencies>
 
@@ -49,29 +69,22 @@
                 <groupId>com.huawei.fitframework</groupId>
                 <artifactId>fit-build-maven-plugin</artifactId>
                 <version>${fit.version}</version>
+                <configuration>
+                    <category>system</category>
+                    <level>4</level>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>build-service</id>
+                        <id>build-plugin</id>
                         <goals>
-                            <goal>build-service</goal>
+                            <goal>build-plugin</goal>
                         </goals>
                     </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>${maven.dependency.version}</version>
-                <executions>
                     <execution>
-                        <id>copy-dependencies</id>
+                        <id>package-plugin</id>
                         <goals>
-                            <goal>copy-dependencies</goal>
+                            <goal>package-plugin</goal>
                         </goals>
-                        <configuration>
-                            <outputDirectory>../../../framework/fit/java/target/shared/</outputDirectory>
-                            <includeGroupIds>io.opentelemetry,io.opentelemetry.instrumentation</includeGroupIds>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -100,6 +113,25 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${maven.antrun.version}</version>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <configuration>
+                            <target>
+                                <copy file="${project.build.directory}/${project.build.finalName}.jar"
+                                      todir="../../../framework/fit/java/target/plugins"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

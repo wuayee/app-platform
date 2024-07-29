@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>components</module>
         <module>maven-plugins</module>
         <module>plugins</module>
         <module>services</module>
