@@ -38,6 +38,21 @@ public interface AippStreamService {
     void removeSession(Session session);
 
     /**
+     * 将instance绑定为整改后对话
+     *
+     * @param instId instance的Id
+     */
+    void addNewChat(String instId);
+
+    /**
+     * 判断一个instance是否属于整改后的对话
+     *
+     * @param instId instance的id
+     * @return 该instance是否属于整改后的对话
+     */
+    Boolean isNewChat(String instId);
+
+    /**
      * 获取session.
      *
      * @param instanceId 实例id.

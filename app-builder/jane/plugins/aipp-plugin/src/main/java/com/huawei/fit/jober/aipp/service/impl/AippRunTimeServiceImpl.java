@@ -362,6 +362,7 @@ public class AippRunTimeServiceImpl
         // 添加instance对应的websocket session
         this.aippStreamService.getSessionById(cast(businessData.get(AippConst.BS_CHAT_SESSION_ID_KEY)))
                 .ifPresent(session -> this.aippStreamService.addSession(metaInst.getId(), session));
+        this.aippStreamService.addNewChat(metaInst.getId());
 
         // 持久化日志
         businessData.put(AippConst.BS_AIPP_QUESTION_KEY, question);
