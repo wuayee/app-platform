@@ -11,6 +11,12 @@ import lombok.Getter;
 
 import java.text.MessageFormat;
 
+/**
+ * 表单业务自定义异常
+ *
+ * @author s00664640
+ * @since 2024/5/10
+ */
 @Getter
 public class FormException extends FitException {
     private OperationContext context;
@@ -20,6 +26,7 @@ public class FormException extends FitException {
     /**
      * 抛出Aipp异常。
      *
+     * @param context 上下文
      * @param error 异常枚举的{@link FormErrCode}。
      */
     public FormException(OperationContext context, FormErrCode error) {
@@ -39,6 +46,7 @@ public class FormException extends FitException {
     /**
      * 抛出Aipp异常。
      *
+     * @param context 上下文
      * @param error 异常枚举的{@link FormErrCode}。
      * @param args 额外参数。
      */

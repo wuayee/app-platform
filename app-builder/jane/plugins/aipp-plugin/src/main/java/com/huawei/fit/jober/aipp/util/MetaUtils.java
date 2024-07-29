@@ -45,7 +45,6 @@ import java.util.stream.Stream;
  * @since 2024/02/21
  */
 public class MetaUtils {
-
     private static final Logger log = Logger.get(MetaUtils.class);
 
     /**
@@ -71,7 +70,7 @@ public class MetaUtils {
      * @param metaId 指定aipp的id
      * @param context 操作人上下文
      * @return 最近更新的非预览{@link Meta}
-     * @throws AippNotFoundException 没有找到
+     * @throws AippException 没有找到
      */
     public static Meta getLastNormalMeta(MetaService metaService, String metaId, OperationContext context)
             throws AippException {
@@ -86,7 +85,7 @@ public class MetaUtils {
      * @param metaId 指定aipp的id
      * @param context 操作人上下文
      * @return 最近更新的已发布{@link Meta}
-     * @throws AippNotFoundException 没有找到
+     * @throws AippException 没有找到
      */
     public static Meta getLastPublishedMeta(MetaService metaService, String metaId, OperationContext context)
             throws AippException {
@@ -101,7 +100,7 @@ public class MetaUtils {
      * @param metaId 指定aipp的id
      * @param context 操作人上下文
      * @return 最近更新的未发布草稿{@link Meta}
-     * @throws AippNotFoundException 没有找到
+     * @throws AippException 没有找到
      */
     public static Meta getLastDraftMeta(MetaService metaService, String metaId, OperationContext context)
             throws AippException {
@@ -116,7 +115,7 @@ public class MetaUtils {
      * @param metaId 指定aipp的id
      * @param context 操作人上下文
      * @return 所有非预览{@link Meta}
-     * @throws AippNotFoundException 没有找到
+     * @throws AippException 没有找到
      */
     public static List<Meta> getAllPublishedMeta(MetaService metaService, String metaId, OperationContext context)
             throws AippException {
@@ -131,7 +130,7 @@ public class MetaUtils {
      * @param baselineAippId 指定aipp的id
      * @param context 操作人上下文
      * @return 所有预览{@link Meta}
-     * @throws AippNotFoundException 没有找到
+     * @throws AippException 没有找到
      */
     public static List<Meta> getAllPreviewMeta(MetaService metaService, String baselineAippId, OperationContext context)
             throws AippException {
@@ -163,8 +162,8 @@ public class MetaUtils {
      * @return 结果
      * @throws AippException 抛出aipp的异常
      */
-    public static List<Meta> getListMetaHandle(MetaService metaService, MetaFilter metaFilter,
-            OperationContext context) throws AippException {
+    public static List<Meta> getListMetaHandle(MetaService metaService, MetaFilter metaFilter, OperationContext context)
+            throws AippException {
         final int limitPerQuery = 10;
         return getAllFromRangedResult(limitPerQuery,
                 (offset) -> metaService.list(metaFilter,
@@ -175,6 +174,12 @@ public class MetaUtils {
                         buildOldDataMetaFilter(metaFilter))).collect(Collectors.toList());
     }
 
+    /**
+     * 构建老数据的MetaFilter
+     *
+     * @param metaFilter 老的metaFilter
+     * @return metaFilter
+     */
     public static MetaFilter buildOldDataMetaFilter(MetaFilter metaFilter) {
         MetaFilter oldDataFilter = new MetaFilter(metaFilter.getMetaIds(),
                 metaFilter.getVersionIds(),
@@ -227,8 +232,7 @@ public class MetaUtils {
             attributes.put(AippConst.ATTR_META_STATUS_KEY,
                     Collections.singletonList(AippMetaStatusEnum.INACTIVE.getCode()));
         }
-        String sortEncode =
-                MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.name(), DirectionEnum.DESCEND.name());
+        String sortEncode = MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.name(), DirectionEnum.DESCEND.name());
         MetaFilter metaFilter = getAnyMetaFilter(metaId, null);
         metaFilter.setOrderBys(Collections.singletonList(sortEncode));
         metaFilter.setAttributes(attributes);
@@ -269,8 +273,17 @@ public class MetaUtils {
         return getListMetaHandle(metaService, metaFilter, context);
     }
 
-    public static List<Meta> getAllMetasByAppId(MetaService metaService, String appId,
-            OperationContext context) throws AippException {
+    /**
+     * 通过appId获取所有的元数据
+     *
+     * @param metaService 元数据服务
+     * @param appId appId
+     * @param context 上下文
+     * @return 元数据列表
+     * @throws AippException aipp通用异常
+     */
+    public static List<Meta> getAllMetasByAppId(MetaService metaService, String appId, OperationContext context)
+            throws AippException {
         MetaFilter metaFilter = getMetaFilter(appId);
         return getListMetaHandle(metaService, metaFilter, context);
     }
@@ -280,8 +293,7 @@ public class MetaUtils {
         Map<String, List<String>> attributes = new HashMap<>();
         attributes.put(AippConst.ATTR_APP_ID_KEY, Collections.singletonList(appId));
         metaFilter.setAttributes(attributes);
-        String sortEncode =
-                MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.name(), DirectionEnum.DESCEND.name());
+        String sortEncode = MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.name(), DirectionEnum.DESCEND.name());
         metaFilter.setOrderBys(Collections.singletonList(sortEncode));
         return metaFilter;
     }
@@ -297,10 +309,12 @@ public class MetaUtils {
 
     private static MetaFilter getPreviewMetaFilter(String metaId) {
         MetaFilter metaFilter = getAnyMetaFilter(metaId, null);
-        metaFilter.setAttributes(new HashMap<String, List<String>>() {{
-            // 仅查找预览aipp
-            put(AippConst.ATTR_AIPP_TYPE_KEY, Collections.singletonList(AippTypeEnum.PREVIEW.name()));
-        }});
+        metaFilter.setAttributes(new HashMap<String, List<String>>() {
+            {
+                // 仅查找预览aipp
+                put(AippConst.ATTR_AIPP_TYPE_KEY, Collections.singletonList(AippTypeEnum.PREVIEW.name()));
+            }
+        });
         return metaFilter;
     }
 
@@ -323,11 +337,11 @@ public class MetaUtils {
      *
      * @param limitPerQuery 表示查询数量限制的{@link int}
      * @param resultGetter 表示返回查询的方法的{@link Function}
-     * @return 表示查询结果的流
      * @param <T> 带查询数据的类型
+     * @return 表示查询结果的流
      */
     public static <T> Stream<T> getAllFromRangedResult(int limitPerQuery,
-                                                       Function<Long, RangedResultSet<T>> resultGetter) {
+            Function<Long, RangedResultSet<T>> resultGetter) {
         RangedResultSet<T> metaRes = resultGetter.apply(0L);
         if (metaRes.getResults().isEmpty() || metaRes.getRange().getTotal() == 0) {
             return Stream.empty();
@@ -343,6 +357,9 @@ public class MetaUtils {
                         .flatMap(CompletableFuture::join));
     }
 
+    /**
+     * 状态枚举
+     */
     public enum NormalFilterEnum {
         // 已发布
         PUBLISHED,
@@ -354,11 +371,13 @@ public class MetaUtils {
 
     /**
      * 根据versionId批量删除meta
+     *
      * @param metaService 使用的{@link MetaService}
      * @param versionIds 需要删除的versionId列表
      * @param context 操作人上下文
      */
-    public static void deleteMetasByVersionIds(MetaService metaService, List<String> versionIds, OperationContext context) {
+    public static void deleteMetasByVersionIds(MetaService metaService, List<String> versionIds,
+            OperationContext context) {
         versionIds.forEach(versionId -> metaService.delete(versionId, context));
     }
 }

@@ -16,9 +16,6 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
-
-import javax.net.ssl.SSLContext;
-
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -31,6 +28,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLContext;
 
 /**
  * Http 操作工具类
@@ -55,14 +54,20 @@ public class HttpUtils {
     private static final int RETRY_COUNT = 2; // 重试次数
     private static final int MAX_IDLE_TIME = 180; // 连接空闲时间
 
+    /**
+     * 执行任务
+     *
+     * @param request 请求
+     * @return 响应
+     * @throws IOException IO异常
+     */
     public static CloseableHttpResponse execute(HttpUriRequest request) throws IOException {
         return POOLING_CLIENT.execute(request);
     }
 
     private static CloseableHttpClient createHttpClient() {
         try {
-            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(
-                    null, (chain, authType) -> true).build();
+            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (chain, authType) -> true).build();
             sslContext.getClientSessionContext().setSessionCacheSize(SESSION_CACHE_SIZE);
             sslContext.getClientSessionContext().setSessionTimeout(SESSION_TIMEOUT);
             sslContext.getServerSessionContext().setSessionCacheSize(SESSION_CACHE_SIZE);
@@ -70,9 +75,11 @@ public class HttpUtils {
 
             Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                     .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                    .register("https", new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE)).build();
+                    .register("https", new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE))
+                    .build();
 
-            PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+            PoolingHttpClientConnectionManager poolingHttpClientConnectionManager =
+                    new PoolingHttpClientConnectionManager(socketFactoryRegistry);
             poolingHttpClientConnectionManager.setMaxTotal(MAX_CONNECTION_COUNT);
             poolingHttpClientConnectionManager.setDefaultMaxPerRoute(MAX_PER_ROUTE);
 

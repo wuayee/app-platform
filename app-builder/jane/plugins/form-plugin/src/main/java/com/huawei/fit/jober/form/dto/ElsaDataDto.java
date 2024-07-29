@@ -10,27 +10,41 @@ import lombok.Getter;
 
 import java.util.List;
 
+/**
+ * elsa数据
+ *
+ * @author s00664640
+ * @since 2024/4/10
+ */
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ElsaDataDto {
     List<ElsaPage> pages;
 
-
+    /**
+     * elsa页面数据
+     */
     @JsonIgnoreProperties(ignoreUnknown = true)
     @Getter
-    static public class ElsaPage {
+    public static class ElsaPage {
         List<ElsaShape> shapes;
     }
 
+    /**
+     * elsa shape数据
+     */
     @JsonIgnoreProperties(ignoreUnknown = true)
     @Getter
-    static public class ElsaShape {
+    public static class ElsaShape {
         List<ElsaShapeMeta> meta;
     }
 
+    /**
+     * elsa shape元数据
+     */
     @JsonIgnoreProperties(ignoreUnknown = true)
     @Getter
-    static public class ElsaShapeMeta {
+    public static class ElsaShapeMeta {
         Integer length;
         String key;
         String name;

@@ -28,6 +28,12 @@ public enum ShapesMetaType {
         this.value = value;
     }
 
+    /**
+     * 获取图形元数据类型
+     *
+     * @param value 值
+     * @return 类型
+     */
     public static ShapesMetaType getShapesMetaType(String value) {
         return Arrays.stream(values())
                 .filter(item -> item.name().equalsIgnoreCase(value))

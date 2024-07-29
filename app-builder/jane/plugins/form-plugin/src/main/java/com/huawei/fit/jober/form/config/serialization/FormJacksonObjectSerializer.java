@@ -42,6 +42,9 @@ import java.util.Map;
 public class FormJacksonObjectSerializer implements ObjectSerializer {
     private final ObjectMapper mapper;
 
+    /**
+     * 构造函数
+     */
     public FormJacksonObjectSerializer() {
         SimpleModule customSerialization = new SimpleModule();
 

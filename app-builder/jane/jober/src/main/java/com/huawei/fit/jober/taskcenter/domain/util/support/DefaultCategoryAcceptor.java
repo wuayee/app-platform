@@ -24,6 +24,11 @@ import java.util.stream.Collectors;
 public class DefaultCategoryAcceptor implements CategoryAcceptor {
     private final List<Classifier> classifiers;
 
+    /**
+     * 构造函数
+     *
+     * @param properties 属性列表
+     */
     public DefaultCategoryAcceptor(List<TaskProperty> properties) {
         this.classifiers = new LinkedList<>();
         for (TaskProperty property : properties) {
