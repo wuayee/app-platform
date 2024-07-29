@@ -209,7 +209,8 @@ const areEqual = (prevProps, nextProps) => {
             && prevProps.modelData.temperature === nextProps.modelData.temperature
             && prevProps.modelData.systemPrompt === nextProps.modelData.systemPrompt
             && prevProps.modelData.prompt === nextProps.modelData.prompt
-            && prevProps.modelOptions === nextProps.modelOptions;
+            && prevProps.modelOptions === nextProps.modelOptions
+            && prevProps.disabled === nextProps.disabled;
 };
 
 export const ModelForm = React.memo(_ModelForm, areEqual);

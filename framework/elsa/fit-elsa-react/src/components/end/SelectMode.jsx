@@ -10,7 +10,7 @@ import {v4 as uuidv4} from "uuid";
  * @returns {JSX.Element}
  * @constructor
  */
-export default function SelectMode({mode}) {
+export default function SelectMode({mode, disabled}) {
     const dispatch = useDispatch();
 
     /**
@@ -56,6 +56,7 @@ export default function SelectMode({mode}) {
         <div style={{display: 'flex', alignItems: 'center'}}>
             <div className="mode-select-title jade-panel-header-font">模式选择</div>
             <JadeStopPropagationSelect
+                    disabled={disabled}
                     showSearch
                     optionFilterProp="children"
                     onChange={onChange}

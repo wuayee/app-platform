@@ -49,7 +49,7 @@ function _OutputForm({outputParams}) {
 }
 
 const areEqual = (prevProps, nextProps) => {
-    return prevProps.outputParams === nextProps.outputParams && prevProps.disabled === prevProps.disabled;
+    return prevProps.outputParams === nextProps.outputParams && prevProps.disabled === nextProps.disabled;
 };
 
 export const OutputForm =  React.memo(_OutputForm, areEqual);

@@ -73,7 +73,7 @@ function _KnowledgeConfig({maximum, disabled}) {
 }
 
 const areEqual = (prevProps, nextProps) => {
-    return prevProps.maximum === nextProps.maximum && prevProps.disabled === prevProps.disabled;
+    return prevProps.maximum === nextProps.maximum && prevProps.disabled === nextProps.disabled;
 };
 
 export const KnowledgeConfig =  React.memo(_KnowledgeConfig, areEqual);

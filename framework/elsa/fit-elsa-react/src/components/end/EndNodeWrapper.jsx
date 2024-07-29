@@ -56,7 +56,7 @@ export default function EndNodeWrapper({data, disabled}) {
 
     return (<>
         <div style={{backgroundColor: 'white'}}>
-            <SelectMode mode={mode}/>
+            <SelectMode mode={mode} disabled={disabled}/>
             {renderByMode(mode)}
         </div>
     </>);
