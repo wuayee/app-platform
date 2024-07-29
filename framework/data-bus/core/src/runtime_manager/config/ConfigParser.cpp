@@ -3,8 +3,7 @@
  * Description: config parser for databus core
  */
 
-#include <chrono>
-#include "fstream"
+#include <fstream>
 
 #include "Constants.h"
 #include "log/Logger.h"
@@ -12,25 +11,26 @@
 
 #include "nlohmann/json.hpp"
 #include "spdlog/sinks/stdout_color_sinks.h"
-#include "spdlog/sinks/hourly_file_sink.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
 using namespace DataBus::Common;
 
 void DataBus::Runtime::ConfigParser::Parse()
 {
-    const std::string logFilePath = "/var/log/databus.log";
-    constexpr uint16_t maxLogFiles = 24 * 7;  // 暂时先保存一周的
+    const std::string logFilePath = "/log/app/databus.log";
     const std::initializer_list<spdlog::sink_ptr> sinks = {
         // 按小时分的日志文件
-        std::make_shared<spdlog::sinks::hourly_file_sink_mt>(logFilePath, false, maxLogFiles),
+        // _mt stands for multithread
+        std::make_shared<spdlog::sinks::basic_file_sink_mt>(logFilePath, false),
         // 标准输入输出
         std::make_shared<spdlog::sinks::stdout_color_sink_mt>()
     };
 
-    // _mt stands for multi-threaded
-    DataBus::logger.SetLogHandler(std::make_shared<spdlog::logger>("log", sinks));
-    // 每60秒刷新一次日志
-    spdlog::flush_every(std::chrono::seconds(60));
+    auto logFileHandler = std::make_shared<spdlog::logger>("log", sinks);
+    DataBus::logger.SetLogHandler(logFileHandler);
+
+    // 每次写入刷新一次日志
+    logFileHandler->flush_on(spdlog::level::info);
 }
 
 DataBus::Runtime::Config DataBus::Runtime::ConfigParser::Parse(const std::string& configFilePath)
