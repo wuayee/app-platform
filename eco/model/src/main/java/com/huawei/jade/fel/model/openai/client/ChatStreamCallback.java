@@ -13,7 +13,6 @@ import com.huawei.jade.fel.model.openai.utils.OpenAiMessageUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.HttpException;
 import retrofit2.Response;
 
 import java.io.BufferedReader;
@@ -70,7 +69,13 @@ public class ChatStreamCallback implements Callback<ResponseBody> {
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         if (!response.isSuccessful()) {
-            this.onFailure(call, new HttpException(response));
+            StringBuilder errMsg = new StringBuilder(response.message());
+            try {
+                errMsg.append(response.errorBody() == null ? "" : ": " + response.errorBody().string());
+            } catch (IOException e) {
+                // 此异常与模型响应错误无关，所以暂不处理。
+            }
+            this.onFailure(call, new IllegalStateException(errMsg.toString()));
             return;
         }
         try (ResponseBody body = Validation.notNull(response.body(), "The stream response body is null");

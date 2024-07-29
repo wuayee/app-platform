@@ -46,7 +46,7 @@ public class OpenAiChatModelService implements ChatModelService {
         try {
             return OpenAiMessageUtils.buildFelAiMessage(this.openAiClient.createChatCompletion(request));
         } catch (IOException e) {
-            throw new IllegalArgumentException("Failed to get response, error: " + e);
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 }
