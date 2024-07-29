@@ -15,6 +15,9 @@ import com.huawei.jade.service.CarverGlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
 import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.context.Context;
+import io.opentelemetry.context.ContextKey;
+import io.opentelemetry.context.ContextStorage;
 import io.opentelemetry.context.Scope;
 import io.opentelemetry.instrumentation.annotations.SpanAttribute;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
@@ -35,40 +38,75 @@ import java.util.concurrent.atomic.AtomicReference;
 @Aspect
 @Component
 public class WithSpanAspect {
+    private static final ContextKey<String> TRACE_CONTEXT_KEY = ContextKey.named("carver-trace-scope-name");
+
     @Around("@annotation(io.opentelemetry.instrumentation.annotations.WithSpan)")
     private Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
-        Tracer tracer = CarverGlobalOpenTelemetry.get().getTracer(joinPoint.getSignature().toString());
-        WithSpan withSpanAnnotation = Validation.notNull(joinPoint.getMethod().getAnnotation(WithSpan.class),
-                "The @WithSpan annotation cannot be null.");
-        Span span = tracer.spanBuilder(withSpanAnnotation.value()).startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        AtomicReference<Span> spanRef = new AtomicReference<>();
+        try (Scope scope = this.makeCurrentScope(joinPoint, spanRef)) {
             return joinPoint.proceed();
         } catch (Throwable throwable) {
-            span.setStatus(StatusCode.ERROR, throwable.getMessage());
-            span.recordException(throwable);
+            this.recordException(throwable, spanRef.get());
             throw throwable;
         } finally {
-            setParamSpanAttribute(joinPoint, span);
-            span.end();
+            this.setParamSpanAttribute(joinPoint, spanRef.get());
+            this.finishSpan(spanRef.get());
         }
     }
 
+    private void finishSpan(Span span) {
+        if (span == null) {
+            return;
+        }
+        span.end();
+    }
+
+    private void recordException(Throwable throwable, Span span) {
+        if (span == null) {
+            return;
+        }
+        span.setStatus(StatusCode.ERROR, throwable.getMessage());
+        span.recordException(throwable);
+    }
+
+    private Scope makeCurrentScope(ProceedingJoinPoint joinPoint, AtomicReference<Span> spanRef) {
+        String traceScopeName = Context.current().get(TRACE_CONTEXT_KEY);
+        if (traceScopeName == null) {
+            traceScopeName = joinPoint.getSignature().toString();
+            Span span = this.getSpan(joinPoint, traceScopeName);
+            Context withContext = Context.current().with(TRACE_CONTEXT_KEY, traceScopeName).with(span);
+            spanRef.set(span);
+            return ContextStorage.get().attach(withContext);
+        }
+        Span span = this.getSpan(joinPoint, traceScopeName);
+        spanRef.set(span);
+        return span.makeCurrent();
+    }
+
+    private Span getSpan(ProceedingJoinPoint joinPoint, String traceScopeName) {
+        Tracer tracer = CarverGlobalOpenTelemetry.get().getTracer(traceScopeName);
+        WithSpan withSpanAnnotation = Validation.notNull(joinPoint.getMethod().getAnnotation(WithSpan.class),
+                "The @WithSpan annotation cannot be null.");
+        return tracer.spanBuilder(withSpanAnnotation.value()).startSpan();
+    }
+
     private void setParamSpanAttribute(ProceedingJoinPoint joinPoint, Span span) {
+        if (span == null) {
+            return;
+        }
         Annotation[][] parameterAnnotations = joinPoint.getMethod().getParameterAnnotations();
-        AtomicReference<Integer> indexRef = new AtomicReference<>();
         for (int index = 0; index < parameterAnnotations.length; index++) {
-            indexRef.set(index);
+            int currentIndex = index;
             Arrays.stream(parameterAnnotations[index])
                     .filter(annotation -> annotation.annotationType() == SpanAttribute.class)
                     .map(ObjectUtils::<SpanAttribute>cast)
                     .forEach(annotation -> this.setAttribute(span,
-                            annotation.value(),
-                            joinPoint.getArgs()[indexRef.get()]));
+                            annotation.value(), joinPoint.getArgs()[currentIndex]));
         }
     }
 
     private void setAttribute(Span span, String expression, Object paramValue) {
-        List<SpanAttributeParser> parsers = SpanAttributeParserFactory.create().build();
+        List<SpanAttributeParser> parsers = SpanAttributeParserRepository.get();
         Map<String, String> attributeMap = parsers.stream()
                 .filter(parser -> parser.match(expression))
                 .findFirst()
