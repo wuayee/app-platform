@@ -57,8 +57,9 @@ def get_dynamic_token():
     return json_result["result"]
 
 
-def get_config(dynamicToken):
-    host = os.environ.get(ENV_APP_CONFIG_HOST) # todo add env
+def get_config(dynamic_token):
+    # add env
+    host = os.environ.get(ENV_APP_CONFIG_HOST)
     port = DEFAULT_PORT
     method = METHOD_GET
 
@@ -75,7 +76,7 @@ def get_config(dynamicToken):
 
     # 权限填写动态token
     AUTHORIZATION_KEY = "Authorization"
-    headers = {AUTHORIZATION_KEY : dynamicToken}
+    headers = {AUTHORIZATION_KEY : dynamic_token}
 
     json_result = json.loads(http_request(host, port, method, url, params, headers))
 
@@ -92,15 +93,15 @@ def get_config(dynamicToken):
     return config_dict
 
 
-def decrypt_j2c_config(j2cConfigDict):
+def decrypt_j2c_config(j2c_config_dict):
     config_dict = {}
-    for key, value in j2cConfigDict.items():
+    for key, value in j2c_config_dict.items():
         config_dict[key] = get_static_token_util.decrypt(value[0], value[1], value[2], value[3])
     return config_dict
 
 if __name__ == "__main__":
-    dynamicTokenOut = get_dynamic_token()
-    j2cConfigDictOut = get_config(dynamicTokenOut)
-    j2cConfigsOut = decrypt_j2c_config(j2cConfigDictOut)
-    jsonConfigs = json.dumps(j2cConfigsOut)
-    print(jsonConfigs, end='')
+    dynamic_token_out = get_dynamic_token()
+    j2c_config_dict_out = get_config(dynamic_token_out)
+    j2c_configs_out = decrypt_j2c_config(j2c_config_dict_out)
+    json_configs = json.dumps(j2c_configs_out)
+    print(json_configs, end='')

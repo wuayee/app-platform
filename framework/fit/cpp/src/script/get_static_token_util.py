@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Copyright Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
-from his_decrypt import ADSKeyLoader, EnvironKeyLoader, FileKeyLoader
-from his_decrypt import HisDecrypt, EncryptType
 import os
 import json
+from his_decrypt import ADSKeyLoader, EnvironKeyLoader, FileKeyLoader
+from his_decrypt import HisDecrypt, EncryptType
 
 ADS_PCLOUD_APP_KEY = 'pcloud_app_name'
 ADS_PCLOUD_SUBAPP_KEY = 'pcloud_subapp_name'
@@ -14,6 +14,7 @@ WORK_KEY_CIPHER_KEY = 'work_key_cipher'
 CIPHER_TOKEN_KEY = 'cipher_token'
 CONFIG_PART1_KEY = 'CONFIG_PART1'
 CONFIG_PART2_KEY = 'CONFIG_PART2'
+
 
 def decrypt(cipher_token, work_key_cipher, config_part1, config_part2):
     # 2初始化KeyLoader，并注册到解码器
