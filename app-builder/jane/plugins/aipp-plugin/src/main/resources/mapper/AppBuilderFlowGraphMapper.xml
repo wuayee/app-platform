@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huawei.fit.jober.aipp.mapper.AppBuilderFlowGraphMapper">
-    <resultMap id="BaseResultMap" type="com.huawei.fit.jober.aipp.po.AppBuilderFlowGraphPO">
+    <resultMap id="BaseResultMap" type="com.huawei.fit.jober.aipp.po.AppBuilderFlowGraphPo">
         <result column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="appearance" property="appearance"/>
@@ -16,19 +16,19 @@
     </sql>
 
     <select id="selectWithId" resultMap="BaseResultMap"
-            resultType="com.huawei.fit.jober.aipp.po.AppBuilderFlowGraphPO">
+            resultType="com.huawei.fit.jober.aipp.po.AppBuilderFlowGraphPo">
         select
         <include refid="Base_Column_List"/>
         from app_builder_flow_graph
         where id = #{id}
     </select>
 
-    <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderFlowGraphPO">
+    <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderFlowGraphPo">
         insert into app_builder_flow_graph( <include refid="Base_Column_List"/> )
         values (#{id}, #{name}, #{appearance}::jsonb, #{createBy}, #{createAt}, #{updateBy}, #{updateAt})
     </insert>
 
-    <update id="updateOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderFlowGraphPO">
+    <update id="updateOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderFlowGraphPo">
         update app_builder_flow_graph
         <set>
             <if test="name != null">

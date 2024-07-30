@@ -6,7 +6,7 @@ package com.huawei.fit.jober.aipp.serializer.impl;
 
 import com.huawei.fit.jober.aipp.domain.AppBuilderFormProperty;
 import com.huawei.fit.jober.aipp.enums.FormPropertyTypeEnum;
-import com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPO;
+import com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPo;
 import com.huawei.fit.jober.aipp.serializer.BaseSerializer;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 
@@ -15,13 +15,13 @@ import com.huawei.fit.jober.aipp.util.JsonUtils;
  * @since 2024-04-17
  */
 public class AppBuilderFormPropertySerializer
-        implements BaseSerializer<AppBuilderFormProperty, AppBuilderFormPropertyPO> {
+        implements BaseSerializer<AppBuilderFormProperty, AppBuilderFormPropertyPo> {
     @Override
-    public AppBuilderFormPropertyPO serialize(AppBuilderFormProperty appBuilderFormProperty) {
+    public AppBuilderFormPropertyPo serialize(AppBuilderFormProperty appBuilderFormProperty) {
         if (appBuilderFormProperty == null) {
             return null;
         }
-        return AppBuilderFormPropertyPO.builder()
+        return AppBuilderFormPropertyPo.builder()
                 .id(appBuilderFormProperty.getId())
                 .formId(appBuilderFormProperty.getFormId())
                 .name(appBuilderFormProperty.getName())
@@ -31,7 +31,7 @@ public class AppBuilderFormPropertySerializer
     }
 
     @Override
-    public AppBuilderFormProperty deserialize(AppBuilderFormPropertyPO appBuilderFormPropertyPO) {
+    public AppBuilderFormProperty deserialize(AppBuilderFormPropertyPo appBuilderFormPropertyPO) {
         if (appBuilderFormPropertyPO == null) {
             return null;
         }
@@ -44,7 +44,7 @@ public class AppBuilderFormPropertySerializer
                 .build();
     }
 
-    private Object getDefaultValue(AppBuilderFormPropertyPO po) {
+    private Object getDefaultValue(AppBuilderFormPropertyPo po) {
         return JsonUtils.parseObject(po.getDefaultValue(), FormPropertyTypeEnum.getClazz(po.getDataType()));
     }
 }

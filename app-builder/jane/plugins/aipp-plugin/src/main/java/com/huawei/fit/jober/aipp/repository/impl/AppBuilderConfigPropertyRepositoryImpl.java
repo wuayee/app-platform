@@ -6,7 +6,7 @@ package com.huawei.fit.jober.aipp.repository.impl;
 
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfigProperty;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderConfigPropertyMapper;
-import com.huawei.fit.jober.aipp.po.AppBuilderConfigPropertyPO;
+import com.huawei.fit.jober.aipp.po.AppBuilderConfigPropertyPo;
 import com.huawei.fit.jober.aipp.repository.AppBuilderConfigPropertyRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderConfigPropertySerializer;
 import com.huawei.fitframework.annotation.Component;
@@ -50,7 +50,7 @@ public class AppBuilderConfigPropertyRepositoryImpl implements AppBuilderConfigP
 
     @Override
     public void insertMore(List<AppBuilderConfigProperty> appBuilderConfigProperties) {
-        List<AppBuilderConfigPropertyPO> pos = appBuilderConfigProperties.stream()
+        List<AppBuilderConfigPropertyPo> pos = appBuilderConfigProperties.stream()
                 .map(this.serializer::serialize)
                 .collect(Collectors.toList());
         if (CollectionUtils.isNotEmpty(pos)) {
