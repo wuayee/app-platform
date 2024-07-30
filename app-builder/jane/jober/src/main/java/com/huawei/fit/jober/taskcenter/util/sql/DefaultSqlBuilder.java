@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.taskcenter.util.sql;
 
 /**
- * Todo
+ * 为 {@link SqlBuilder} 提供默认实现
  *
  * @author 陈镕希 c00572808
  * @since 2023-10-30

@@ -32,8 +32,8 @@ public class TaskFilter {
         this(null, null, null, null, null, null);
     }
 
-    public TaskFilter(List<String> ids, List<String> names, List<String> templateIds, List<String> categories, List<String> creators,
-            List<String> orderBys) {
+    public TaskFilter(List<String> ids, List<String> names, List<String> templateIds, List<String> categories,
+            List<String> creators, List<String> orderBys) {
         this.ids = nullIf(ids, Collections.emptyList());
         this.names = nullIf(names, Collections.emptyList());
         this.templateIds = nullIf(templateIds, Collections.emptyList());
@@ -47,7 +47,7 @@ public class TaskFilter {
     }
 
     public void setIds(List<String> ids) {
-        this.ids = nullIf(ids, Collections.emptyList());;
+        this.ids = nullIf(ids, Collections.emptyList());
     }
 
     public List<String> getNames() {

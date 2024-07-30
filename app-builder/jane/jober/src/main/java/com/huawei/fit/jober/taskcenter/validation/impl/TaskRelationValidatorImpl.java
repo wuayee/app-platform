@@ -132,9 +132,9 @@ public class TaskRelationValidatorImpl implements TaskRelationValidator {
             throw new BadRequestException(ErrorCodes.TASK_RELATION_RELATION_TYPE_REQUIRED);
         }
         if (actual.length() > this.relationTypeLengthMaximum) {
-            log.error(
-                    "The relationType of task relation system is out of bounds. [relationType={}, length={}, maximum={}]",
-                    actual, actual.length(), this.relationTypeLengthMaximum);
+            log.error("The relationType of task relation system is out of bounds. "
+                            + "[relationType={}, length={}, maximum={}]", actual, actual.length(),
+                    this.relationTypeLengthMaximum);
             throw new BadRequestException(ErrorCodes.TASK_RELATION_RELATION_TYPE_TOO_LONG);
         }
         return Enums.parse(RelationType.class, actual);

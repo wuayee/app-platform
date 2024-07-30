@@ -15,6 +15,7 @@ public interface OrderBy {
      * 表示升序。
      */
     String ASCENDING = "ASC";
+
     /**
      * 表示降序。
      */

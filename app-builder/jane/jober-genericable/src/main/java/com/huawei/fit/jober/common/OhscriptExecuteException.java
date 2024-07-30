@@ -15,6 +15,14 @@ public class OhscriptExecuteException extends JoberGenericableException {
 
     private final String fitableId;
 
+    /**
+     * ohscript调用fitable接口异常
+     *
+     * @param message message
+     * @param cause cause
+     * @param genericableId genericableId
+     * @param fitableId fitableId
+     */
     public OhscriptExecuteException(String message, Throwable cause, String genericableId, String fitableId) {
         super(message, cause);
         this.genericableId = genericableId;

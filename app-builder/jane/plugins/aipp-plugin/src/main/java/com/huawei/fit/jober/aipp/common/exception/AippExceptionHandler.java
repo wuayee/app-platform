@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
 package com.huawei.fit.jober.aipp.common.exception;
 
 import com.huawei.fit.http.annotation.ExceptionHandler;
@@ -13,6 +17,7 @@ import com.huawei.fitframework.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -25,9 +30,13 @@ import java.util.Locale;
 @Component
 @RequiredArgsConstructor
 public class AippExceptionHandler {
+    /**
+     * 默认支持语言
+     */
+    public static final List<Locale> LOCALES = Collections.unmodifiableList(
+            Arrays.asList(new Locale("en"), new Locale("zh"), new Locale("en", "US"), new Locale("zh", "CN")));
+
     private static final Logger log = Logger.get(AippExceptionHandler.class);
-    public static final List<Locale> LOCALES =
-            Arrays.asList(new Locale("en"), new Locale("zh"), new Locale("en", "US"), new Locale("zh", "CN"));
 
     private final Plugin plugin;
 
@@ -114,6 +123,12 @@ public class AippExceptionHandler {
 
     /**
      * 获取国际化异常信息
+     *
+     * @param code 异常码
+     * @param defaultMsg 默认信息
+     * @param params 参数
+     * @param context 上下文
+     * @return String 本地异常信息
      */
     private String getLocaleMessage(String code, String defaultMsg, Object[] params, OperationContext context) {
         if (context == null || StringUtils.isEmpty(context.getLanguage())) {
@@ -125,7 +140,7 @@ public class AippExceptionHandler {
         try {
             return plugin.sr().getMessage(locale, code, defaultMsg, params);
         } catch (Exception e) {
-            log.warn("本地化异常消息发生异常: {}, {}", code, params);
+            log.warn("Localized exception messageException occurred: {}, {}", code, params);
             return defaultMsg;
         }
     }

@@ -48,6 +48,9 @@ public class TaskEntity {
      */
     private List<TaskProperty> props;
 
+    /**
+     * TaskEntity
+     */
     public TaskEntity() {
     }
 
@@ -137,6 +140,9 @@ public class TaskEntity {
          */
         private String relatedUrl;
 
+        /**
+         * TaskProperty
+         */
         public TaskProperty() {
         }
 

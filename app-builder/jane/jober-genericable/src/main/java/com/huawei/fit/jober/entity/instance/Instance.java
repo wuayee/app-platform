@@ -26,6 +26,9 @@ public class Instance {
 
     private List<String> categories;
 
+    /**
+     * Instance
+     */
     public Instance() {
     }
 

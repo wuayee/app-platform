@@ -24,6 +24,9 @@ public class TaskSource {
 
     private List<TaskTrigger> triggers;
 
+    /**
+     * TaskSource
+     */
     public TaskSource() {
     }
 

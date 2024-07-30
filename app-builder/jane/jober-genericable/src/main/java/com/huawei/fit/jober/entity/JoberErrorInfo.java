@@ -13,6 +13,9 @@ package com.huawei.fit.jober.entity;
 public class JoberErrorInfo {
     private String message;
 
+    /**
+     * JoberErrorInfo
+     */
     public JoberErrorInfo() {
     }
 

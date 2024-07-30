@@ -25,12 +25,24 @@ import com.huawei.fitframework.annotation.Component;
 @Component
 @RequestMapping(path = "/v1/api/{tenant_id}/aipp-component", group = "aipp组件管理接口")
 public class AippComponentController {
+    /**
+     * 查询表单组件
+     *
+     * @param tenantId tenantId
+     * @return Rsp<AippFlowComponentDto>
+     */
     @GetMapping(value = "/form", description = "获取表单的组件列表")
     public Rsp<AippFormComponentDto> queryFormComponent(@PathVariable("tenant_id") String tenantId) {
         return Rsp.ok(JsonUtils.parseObject(COMPONENT_DATA.get(AippConst.FORM_COMPONENT_DATA_KEY),
                 AippFormComponentDto.class));
     }
 
+    /**
+     * 查询流程组件
+     *
+     * @param tenantId tenantId
+     * @return Rsp<AippFlowComponentDto>
+     */
     @GetMapping(value = "/flow", description = "获取flow的组件列表")
     public Rsp<AippFlowComponentDto> queryFlowComponent(@PathVariable("tenant_id") String tenantId) {
         return Rsp.ok(JsonUtils.parseObject(COMPONENT_DATA.get(AippConst.FLOW_COMPONENT_DATA_KEY),

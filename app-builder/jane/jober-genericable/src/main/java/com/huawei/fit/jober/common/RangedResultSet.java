@@ -21,6 +21,9 @@ public class RangedResultSet<T> {
 
     private RangeResult range;
 
+    /**
+     * RangedResultSet
+     */
     public RangedResultSet() {
     }
 

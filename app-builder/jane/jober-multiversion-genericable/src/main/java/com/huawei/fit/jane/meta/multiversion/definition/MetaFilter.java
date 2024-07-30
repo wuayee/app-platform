@@ -37,8 +37,8 @@ public class MetaFilter {
         this(null, null, null, null, null, null, null, null);
     }
 
-    public MetaFilter(List<String> metaIds, List<String> versionIds, List<String> names, List<String> categories, List<String> creators,
-            List<String> orderBys, List<String> versions, Map<String, List<String>> attributes) {
+    public MetaFilter(List<String> metaIds, List<String> versionIds, List<String> names, List<String> categories,
+            List<String> creators, List<String> orderBys, List<String> versions, Map<String, List<String>> attributes) {
         this.metaIds = nullIf(metaIds, Collections.emptyList());
         this.versionIds = nullIf(versionIds, Collections.emptyList());
         this.names = nullIf(names, Collections.emptyList());

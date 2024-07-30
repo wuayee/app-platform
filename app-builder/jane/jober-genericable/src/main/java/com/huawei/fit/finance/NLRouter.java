@@ -12,7 +12,7 @@ package com.huawei.fit.finance;
  */
 public class NLRouter {
     private String result;
-    private boolean matched;
+    private boolean isMatched;
 
     private String completeQuery;
 
@@ -25,11 +25,11 @@ public class NLRouter {
     }
 
     public boolean isMatched() {
-        return matched;
+        return isMatched;
     }
 
-    public void setMatched(boolean matched) {
-        this.matched = matched;
+    public void setMatched(boolean isMatched) {
+        this.isMatched = isMatched;
     }
 
     public String getCompleteQuery() {
