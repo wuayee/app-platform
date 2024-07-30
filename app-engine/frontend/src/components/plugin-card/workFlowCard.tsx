@@ -17,12 +17,11 @@ const WorkflowCard = ({ pluginData }: any) => {
     },
   ];
 
-  async function DropdownItemClick () {
-    let id=pluginData?.id;
-    if(pluginData?.state==='active')
-    {
-      const res= await getAppInfoByVersion(tenantId,id);
-      id=res?.data?.id;
+  async function DropdownItemClick() {
+    let id = pluginData?.id;
+    if (pluginData?.state === 'active') {
+      const res = await getAppInfoByVersion(tenantId, id);
+      id = res?.data?.id;
     }
     navigate(`/app-develop/${tenantId}/app-detail/add-flow/${id}`);
   }
