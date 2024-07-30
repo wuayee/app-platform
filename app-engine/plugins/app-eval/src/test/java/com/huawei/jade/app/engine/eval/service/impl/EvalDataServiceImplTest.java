@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.test.annotation.FitTestWithJunit;
 import com.huawei.fitframework.test.annotation.Mocked;
-import com.huawei.jade.app.engine.eval.code.AppEvalRetCodeEnum;
+import com.huawei.jade.app.engine.eval.code.AppEvalRetCode;
 import com.huawei.jade.app.engine.eval.dto.EvalDataQueryParam;
 import com.huawei.jade.app.engine.eval.entity.EvalDataEntity;
 import com.huawei.jade.app.engine.eval.exception.AppEvalException;
@@ -99,17 +99,18 @@ public class EvalDataServiceImplTest {
     @DisplayName("更新评估数据失败")
     void shouldFailWhenUpdate() {
         when(this.evalDataMapper.updateExpiredVersion(anyList(), anyLong())).thenReturn(0);
-        assertThatThrownBy(() ->
-                this.evalDataService.update(1L, 2L, "test")).isInstanceOf(AppEvalException.class);
+        assertThatThrownBy(() -> this.evalDataService.update(1L, 2L, "test")).isInstanceOf(AppEvalException.class);
     }
 
     @Test
     @DisplayName("批量插入评估数据，校验 schema 失败")
     void shouldFailWhenVerifyError() {
-        doThrow(new AppEvalException(AppEvalRetCodeEnum.EVAL_DATA_INVALID_ERROR, "a", "b")).when(this.evalDataValidator)
-                .verify(anyLong(), anyList());
-        assertThatThrownBy(() ->
-                this.evalDataService.insertAll(1L, TEST_CONTENTS)).isInstanceOf(AppEvalException.class);
+        doThrow(new AppEvalException(AppEvalRetCode.EVAL_DATA_INVALID_ERROR,
+                "a",
+                "b",
+                "c")).when(this.evalDataValidator).verify(anyLong(), anyList());
+        assertThatThrownBy(() -> this.evalDataService.insertAll(1L,
+                TEST_CONTENTS)).isInstanceOf(AppEvalException.class);
     }
 
     @Test

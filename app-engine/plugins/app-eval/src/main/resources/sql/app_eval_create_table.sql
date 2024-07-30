@@ -23,3 +23,27 @@ comment on column t_app_engine_eval_data.updated_at is '更新时间';
 comment on column t_app_engine_eval_data.created_by is '创建者';
 comment on column t_app_engine_eval_data.updated_by is '更新者';
 comment on column t_app_engine_eval_data.dataset_id is '外键，关联评估数据集';
+
+
+create table if not exists t_app_engine_eval_dataset
+(
+    "dataset_id"     bigserial primary key                 not null,
+    "dataset_name"   varchar(30)                           not null,
+    "description"    varchar(100)                          not null,
+    "schema"         text                                  not null,
+    "created_at"     timestamp   default current_timestamp not null,
+    "updated_at"     timestamp   default current_timestamp not null,
+    "created_by"     varchar(10) default 'system'          not null,
+    "updated_by"     varchar(10) default 'system'          not null,
+    "application_id" bigint                                not null
+);
+
+comment on table t_app_engine_eval_dataset is '评估数据表';
+comment on column t_app_engine_eval_dataset.dataset_id is '主键';
+comment on column t_app_engine_eval_dataset.description is '数据集描述';
+comment on column t_app_engine_eval_dataset.schema is '数据集 schema';
+comment on column t_app_engine_eval_dataset.created_at is '数据集创建时间';
+comment on column t_app_engine_eval_dataset.updated_at is '数据集修改时间';
+comment on column t_app_engine_eval_dataset.created_by is '数据集创建者';
+comment on column t_app_engine_eval_dataset.updated_by is '数据集最近更新者';
+comment on column t_app_engine_eval_dataset.application_id is '外键，关联应用 ID';

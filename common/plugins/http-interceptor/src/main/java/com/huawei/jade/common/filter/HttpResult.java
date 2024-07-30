@@ -5,7 +5,7 @@
 package com.huawei.jade.common.filter;
 
 import com.huawei.fitframework.annotation.Property;
-import com.huawei.jade.common.code.CommonRetCodeEnum;
+import com.huawei.jade.common.code.CommonRetCode;
 
 /**
  * 表示统一 http 返回结果的实体类。
@@ -59,16 +59,16 @@ public class HttpResult<T> {
      * @return 表示创建出来的成功数据对象的包装类的 {@link HttpResult}{@code <}{@link T}{@code >}。
      */
     public static <T> HttpResult<T> ok(T data) {
-        return new HttpResult<>(CommonRetCodeEnum.SUCCESS.getCode(), CommonRetCodeEnum.SUCCESS.getMsg(), data);
+        return new HttpResult<>(CommonRetCode.SUCCESS.getCode(), CommonRetCode.SUCCESS.getMsg(), data);
     }
 
     /**
      * 创建一个错误数据对象的包装类。
      *
-     * @param errorCode 表示错误码枚举类型的 {@link CommonRetCodeEnum}。
+     * @param errorCode 表示错误码枚举类型的 {@link CommonRetCode}。
      * @return 表示创建出来的成功数据对象的包装类的 {@link HttpResult}{@code <}{@link Void}{@code >}。
      */
-    public static HttpResult<Void> error(CommonRetCodeEnum errorCode) {
+    public static HttpResult<Void> error(CommonRetCode errorCode) {
         return error(errorCode.getCode(), errorCode.getMsg());
     }
 

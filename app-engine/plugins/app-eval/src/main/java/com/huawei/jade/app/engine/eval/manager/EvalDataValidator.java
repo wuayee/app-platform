@@ -4,8 +4,6 @@
 
 package com.huawei.jade.app.engine.eval.manager;
 
-import com.huawei.jade.app.engine.eval.exception.AppEvalException;
-
 import java.util.List;
 
 /**
@@ -20,16 +18,16 @@ public interface EvalDataValidator {
      *
      * @param datasetId 表示评估数据集编号的 {@link Long}。
      * @param contents 表示评估内容集合的 {@link List}{@code <}{@link String}{@code >}。
-     * @throws AppEvalException 当校验失败时。
+     * @throws com.huawei.jade.app.engine.eval.exception.AppEvalException 当校验失败时。
      */
-    void verify(Long datasetId, List<String> contents) throws AppEvalException;
+    void verify(Long datasetId, List<String> contents);
 
     /**
      * 校验单个评估内容是否合法。
      *
      * @param datasetId 表示评估数据集编号的 {@link Long}。
-     * @param contents 表示评估内容的 {@link String}。
-     * @throws AppEvalException 当校验失败时。
+     * @param content 表示评估内容的 {@link String}。
+     * @throws com.huawei.jade.app.engine.eval.exception.AppEvalException 当校验失败时。
      */
-    void verify(Long datasetId, String contents) throws AppEvalException;
+    void verify(Long datasetId, String content);
 }

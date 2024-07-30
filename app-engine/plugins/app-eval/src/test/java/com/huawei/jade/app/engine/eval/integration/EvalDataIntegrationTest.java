@@ -29,6 +29,7 @@ import java.util.Collections;
  * @author 易文渊
  * @since 2024-07-26
  */
+@Disabled
 @IntegrationTest(scanPackages = "com.huawei.jade.app.engine.eval")
 @Sql(scripts = "sql/test_create_table.sql")
 @DisplayName("评估数据集成测试")

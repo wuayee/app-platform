@@ -4,20 +4,22 @@
 
 package com.huawei.jade.app.engine.eval.code;
 
+import static com.huawei.jade.common.model.ModelId.APP_EVAL_MODEL_ID;
+
 import com.huawei.jade.common.code.RetCode;
 import com.huawei.jade.common.model.ModelInfo;
 
 /**
- * 应用评估模块返回码枚举，返回码最大值为 65535。
+ * 应用评估模块返回码枚举，返回码最大值为 256。
  *
  * @author 易文渊
  * @since 2024-07-20
  */
-public enum AppEvalRetCodeEnum implements RetCode, ModelInfo {
+public enum AppEvalRetCode implements RetCode, ModelInfo {
     /**
      * 评估数据 schema 校验失败，占位符分别代表评估内容和 schema。
      */
-    EVAL_DATA_INVALID_ERROR(1, "The content `{0}` cannot match schema `{1}`"),
+    EVAL_DATA_INVALID_ERROR(1, "The content `{0}` cannot match schema `{1}`, error: {2}"),
 
     /**
      * 评估数据已被删除，占位符代表评估数据id。
@@ -27,14 +29,14 @@ public enum AppEvalRetCodeEnum implements RetCode, ModelInfo {
     private final int code;
     private final String msg;
 
-    AppEvalRetCodeEnum(int code, String msg) {
+    AppEvalRetCode(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
 
     @Override
     public int getCode() {
-        return this.convertModelCode(this.getSubSystemId(), this.getModelId(), this.code);
+        return this.convertSubModelCode(this.getSubSystemId(), this.getModelId(), this.getSubModelId(), this.code);
     }
 
     @Override
@@ -49,11 +51,11 @@ public enum AppEvalRetCodeEnum implements RetCode, ModelInfo {
 
     @Override
     public int getModelId() {
-        return 0x08;
+        return APP_EVAL_MODEL_ID.getModelId();
     }
 
     @Override
     public int getSubModelId() {
-        throw new UnsupportedOperationException("Not define sub model id.");
+        return 0x01;
     }
 }
