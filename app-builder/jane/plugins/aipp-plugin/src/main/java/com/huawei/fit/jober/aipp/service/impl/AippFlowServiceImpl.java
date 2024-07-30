@@ -1002,11 +1002,13 @@ public class AippFlowServiceImpl implements AippFlowService {
         itemData.setUniqueName(aippDto.getUniqueName());
         if (this.isToolCategory(appCategory)) {
             itemData.setSchema(this.buildToolSchema(appCategory, context, aippDto, flowInfo));
-        } else if (this.isAppCategory(appCategory)) {
-            itemData.setSchema(MapBuilder.<String, Object>get()
-                    .put("name", aippDto.getName())
-                    .put("description", aippDto.getDescription())
-                    .build());
+        } else {
+            if (this.isAppCategory(appCategory)) {
+                itemData.setSchema(MapBuilder.<String, Object>get()
+                        .put("name", aippDto.getName())
+                        .put("description", aippDto.getDescription())
+                        .build());
+            }
         }
         itemData.setSource(appCategory.getSource());
         itemData.setTags(new HashSet<String>() { {
