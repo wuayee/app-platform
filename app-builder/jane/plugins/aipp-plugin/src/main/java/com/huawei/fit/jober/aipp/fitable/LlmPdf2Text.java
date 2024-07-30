@@ -19,6 +19,7 @@ import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -29,15 +30,19 @@ import java.util.Optional;
 
 /**
  * pdf文件提取text并经大模型润色文字，提取关键信息
+ *
+ * @author s00664640
+ * @since 2024/05/10
  */
 @Component
-public class LLMPdf2Text implements FlowableService {
-    private static final Logger log = Logger.get(LLMPdf2Text.class);
+public class LlmPdf2Text implements FlowableService {
+    private static final Logger log = Logger.get(LlmPdf2Text.class);
+
     private final OperatorService operatorService;
     private final MetaInstanceService metaInstanceService;
     private final AippLogService aippLogService;
 
-    public LLMPdf2Text(OperatorService operatorService, MetaInstanceService metaInstanceService,
+    public LlmPdf2Text(OperatorService operatorService, MetaInstanceService metaInstanceService,
             AippLogService aippLogService) {
         this.operatorService = operatorService;
         this.metaInstanceService = metaInstanceService;
@@ -64,7 +69,8 @@ public class LLMPdf2Text implements FlowableService {
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "pdf2text result is empty.");
         }
         result = AippStringUtils.textLenLimit(
-                result, AippStringUtils.getIntegerFromStr((String) businessData.get(AippConst.BS_TEXT_LIMIT_KEY)));
+                result, AippStringUtils.getIntegerFromStr(ObjectUtils.cast(businessData.get(AippConst.BS_TEXT_LIMIT_KEY)
+                )));
         businessData.put(AippConst.INST_PDF2TEXT_KEY, result);
 
         msg = "以下是文件中的关键信息：\n" + result;

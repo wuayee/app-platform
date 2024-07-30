@@ -43,8 +43,8 @@ import java.util.List;
 import java.util.Map;
 
 @ExtendWith(MockitoExtension.class)
-public class LLMWord2MindTest {
-    private LLMWord2Mind llmFitable;
+public class LlmWord2MindTest {
+    private LlmWord2Mind llmFitable;
 
     @Mock
     private LLMService llmServiceMock;
@@ -61,7 +61,7 @@ public class LLMWord2MindTest {
     @BeforeEach
     void setUp() {
         this.llmFitable =
-                new LLMWord2Mind(llmServiceMock, metaInstanceServiceMock, operatorServiceMock, aippLogServiceMock);
+                new LlmWord2Mind(llmServiceMock, metaInstanceServiceMock, operatorServiceMock, aippLogServiceMock);
     }
 
     @Test

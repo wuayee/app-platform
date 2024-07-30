@@ -5,7 +5,6 @@
 package com.huawei.fit.jober.aipp.init;
 
 import com.huawei.fit.security.Decryptor;
-import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.conf.ConfigDecryptor;
 import com.huawei.fitframework.inspection.Validation;
 
@@ -18,7 +17,6 @@ import java.util.Optional;
  * @author l00611472
  * @since 2024-01-08
  */
-// @Component("AippLogApplicationConfigPropertyDecrypt")
 public class AippDecrypt implements ConfigDecryptor {
     private final Decryptor decryptor;
 

@@ -20,6 +20,7 @@ import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,9 +28,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * 标书文件由大模型分析并推荐产品，给出详细解释
+ *
+ * @author s00664640
+ * @since 2024/05/10
+ */
 @Component
-public class LLMText2PptJson implements FlowableService {
-    private static final Logger log = Logger.get(LLMText2PptJson.class);
+public class LlmText2PptJson implements FlowableService {
+    private static final Logger log = Logger.get(LlmText2PptJson.class);
     private static final String TEXT2PPT_PROMPT = "\nPerform the following actions:\n"
             + "1. - Use chinese summarize the following text delimited by <> limit in 50 words.\n"
             + "2. - Splits the content of the input into multiple paragraphs based on semantics.\n"
@@ -38,10 +45,11 @@ public class LLMText2PptJson implements FlowableService {
             + "\"content\":\"Dorado双活解决方案旨在提供高可用性和连续的数据访问。\"},{\"title\":\"优势\","
             + "\"content\":\"该方案可以确保在数据中心故障时，业务连续性不会受到影响。\"}]}" + "--------\n"
             + "Reminder to ALWAYS respond with a valid json. Begin!\n" + "input: <%s>\n" + "Output:\n";
+
     private final LLMService llmService;
     private final AippLogService aippLogService;
 
-    public LLMText2PptJson(LLMService llmService, AippLogService aippLogService) {
+    public LlmText2PptJson(LLMService llmService, AippLogService aippLogService) {
         this.llmService = llmService;
         this.aippLogService = aippLogService;
     }
@@ -63,7 +71,7 @@ public class LLMText2PptJson implements FlowableService {
 
         OperationContext context = DataUtils.getOpContext(businessData);
         String operator = context.getOperator();
-        String text = (String) businessData.get(AippConst.BS_TEXT_GENERATE_PPT_JSON_KEY);
+        String text = ObjectUtils.cast(businessData.get(AippConst.BS_TEXT_GENERATE_PPT_JSON_KEY));
         PptJsonDto pptJsonDto = text2pptJson(text, operator);
         this.aippLogService.insertMsgLog(formatPptContentToMsg(pptJsonDto), flowData);
 

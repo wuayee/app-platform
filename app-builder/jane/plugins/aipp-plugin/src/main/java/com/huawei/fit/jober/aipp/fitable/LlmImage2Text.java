@@ -21,6 +21,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,16 +32,20 @@ import java.util.Map;
 
 /**
  * 调用大模型图生文接口
+ *
+ * @author s00664640
+ * @since 2024/05/10
  */
 @Component
-public class LLMImage2Text implements FlowableService {
-    private static final Logger log = Logger.get(LLMImage2Text.class);
+public class LlmImage2Text implements FlowableService {
+    private static final Logger log = Logger.get(LlmImage2Text.class);
     private static final String S3_URL = "s3Url";
+
     private final LLMService llmService;
     private final MetaInstanceService metaInstanceService;
     private final AippLogService aippLogService;
 
-    public LLMImage2Text(LLMService llmService, MetaInstanceService metaInstanceService,
+    public LlmImage2Text(LLMService llmService, MetaInstanceService metaInstanceService,
             AippLogService aippLogService) {
         this.llmService = llmService;
         this.metaInstanceService = metaInstanceService;
@@ -53,16 +58,16 @@ public class LLMImage2Text implements FlowableService {
         Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("LLMImage2Text businessData {}", businessData);
 
-        String imagePathStr = (String) businessData.get(AippConst.BS_IMAGE_PATH_KEY);
+        String imagePathStr = ObjectUtils.cast(businessData.get(AippConst.BS_IMAGE_PATH_KEY)) ;
         Map<String, Object> imagePathJson = JsonUtils.parseObject(imagePathStr);
-        String imageS3Url = (String) imagePathJson.get(S3_URL);
+        String imageS3Url = ObjectUtils.cast(imagePathJson.get(S3_URL));
         Validation.notNull(imageS3Url, "image path cannot be null");
 
         String msg = "首先我需要了解图片中的关键信息，我决定调用图片信息提取工具";
         this.aippLogService.insertMsgLog(msg, flowData);
 
         String prompt = DataUtils.getPromptFromFlowContext(flowData);
-        String instId = (String) businessData.get(AippConst.BS_AIPP_INST_ID_KEY);
+        String instId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
         File tmpImageFile = null;
         try {
             tmpImageFile = AippFileUtils.getFileFromS3(instId, imageS3Url, "img");
