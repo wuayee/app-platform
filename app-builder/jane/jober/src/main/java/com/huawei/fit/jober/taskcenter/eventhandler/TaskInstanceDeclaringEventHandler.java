@@ -30,6 +30,9 @@ import java.util.Objects;
  * @since 2023-10-24
  */
 public abstract class TaskInstanceDeclaringEventHandler<E extends TaskInstanceDeclaringEvent> {
+    /**
+     * 处理任务实例声明事件。
+     */
     @Order(1)
     @Component
     public static class InstanceIdHandler extends TaskInstanceDeclaringEventHandler<TaskInstanceCreatingEvent>
@@ -45,6 +48,9 @@ public abstract class TaskInstanceDeclaringEventHandler<E extends TaskInstanceDe
         }
     }
 
+    /**
+     * 处理任务实例修改事件。
+     */
     @Order(5)
     @Component
     public static class TargetUrlHandler extends TaskInstanceDeclaringEventHandler<TaskInstanceCreatingEvent>
@@ -53,6 +59,12 @@ public abstract class TaskInstanceDeclaringEventHandler<E extends TaskInstanceDe
 
         private final List<String> targetUrlNoSourceList;
 
+        /**
+         * 构造函数。
+         *
+         * @param janeEndpoint Jane后端服务的访问地址。
+         * @param targetUrlNoSourceList 不需要sourceId的任务名列表，多个任务名以逗号分隔。
+         */
         public TargetUrlHandler(@Value("${jane.endpoint}") String janeEndpoint,
                 @Value("${jane.targetUrl.noSource}") String targetUrlNoSourceList) {
             super();
@@ -81,6 +93,9 @@ public abstract class TaskInstanceDeclaringEventHandler<E extends TaskInstanceDe
         }
     }
 
+    /**
+     * 处理任务实例创建事件。
+     */
     @Order(6)
     @Component
     public static class CreatingInfoHandler extends TaskInstanceDeclaringEventHandler<TaskInstanceCreatingEvent>
@@ -110,6 +125,9 @@ public abstract class TaskInstanceDeclaringEventHandler<E extends TaskInstanceDe
         }
     }
 
+    /**
+     * 处理任务实例修改事件。
+     */
     @Order(7)
     @Component
     public static class ModifyingInfoHandler extends TaskInstanceDeclaringEventHandler<TaskInstanceModifyingEvent>

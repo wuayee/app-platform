@@ -54,14 +54,29 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * 文件接口
+ *
+ * @author 孙怡菲 s00664640
+ * @since 2024-05-10
+ */
 @Component
 @RequestMapping(path = "/v1/api/{tenant_id}", group = "文件相关操作")
 public class FileController extends AbstractController {
     private static final Logger log = Logger.get(FileController.class);
+
     private final int xiaoHaiReadTimeout;
     private final UploadedFileManageService uploadedFileManageService;
     private final OperatorService operatorService;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator 认证器
+     * @param uploadedFileManageService 文件管理服务
+     * @param xiaoHaiReadTimeout 小海读取超时时间
+     * @param operatorService 操作服务
+     */
     public FileController(Authenticator authenticator, UploadedFileManageService uploadedFileManageService,
             @Value("${model.xiaohai.read-timeout}") int xiaoHaiReadTimeout, OperatorService operatorService) {
         super(authenticator);
@@ -70,10 +85,23 @@ public class FileController extends AbstractController {
         this.operatorService = operatorService;
     }
 
+    /**
+     * 上传文件
+     *
+     * @param fileName 租户ID
+     * @return 文件响应DTO
+     */
     private static String generateUniqueFileName(String fileName) {
         return UUID.randomUUID() + "." + getFileExtension(fileName);
     }
 
+    /**
+     * 从远程下载文件
+     *
+     * @param base64fileUrl 经过Base64编码的URL
+     * @return 文件字节数组
+     * @throws IOException 下载异常
+     */
     private byte[] downloadFromRemote(String base64fileUrl) throws IOException {
         String baseUrl = new String(Base64.getDecoder().decode(base64fileUrl.getBytes(StandardCharsets.UTF_8)),
                 StandardCharsets.UTF_8);
@@ -94,11 +122,14 @@ public class FileController extends AbstractController {
     /**
      * 从远端下载文件或者从nas下载文件
      *
+     * @param httpRequest Http请求
+     * @param tenantId 租户ID
      * @param base64fileUrl 经过Base64编码的URL
-     * @param fileName 文件名称
-     * @param httpClassicServerResponse fit注入httpResponse
-     * @return 文件
-     * @throws IOException 下载异常
+     * @param fileCanonicalPath 文件的规范路径
+     * @param fileName 文件名
+     * @param httpClassicServerResponse Http响应
+     * @return 文件实体
+     * @throws IOException 文件读取异常
      */
     @GetMapping(path = "/file", description = "下载文件")
     public FileEntity getFile(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
@@ -125,6 +156,17 @@ public class FileController extends AbstractController {
                 byteArrayInputStream.available());
     }
 
+    /**
+     * 上传文件
+     *
+     * @param httpRequest Http请求
+     * @param tenantId 租户ID
+     * @param fileName 文件名
+     * @param aippId AIPP ID
+     * @param receivedFile 接收到的文件
+     * @return 文件响应DTO
+     * @throws IOException 文件读取异常
+     */
     @PostMapping(path = "/file", description = "上传文件")
     public Rsp<FileRspDto> uploadFile(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
             @RequestHeader(value = "attachment-filename", defaultValue = "blank") String fileName,
@@ -162,6 +204,13 @@ public class FileController extends AbstractController {
                 .build());
     }
 
+    /**
+     * 获取文件内容
+     *
+     * @param filePath 文件路径
+     * @param token 文本长度限制
+     * @return 文件内容
+     */
     @GetMapping(path = "/file/content", description = "获取文件内容")
     public String extractFileContent(@RequestParam(value = "filePath") String filePath,
             @RequestParam(value = "token", defaultValue = "20000") Integer token) {

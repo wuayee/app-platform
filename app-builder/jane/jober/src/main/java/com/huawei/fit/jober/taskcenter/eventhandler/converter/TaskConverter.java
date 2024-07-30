@@ -25,5 +25,11 @@ public interface TaskConverter {
      */
     Task convert(TaskEntity entity, OperationContext context);
 
+    /**
+     * 将TaskProperty实体转换为TaskProperty对象。
+     *
+     * @param entity 待转换的TaskProperty实体
+     * @return 转换后的TaskProperty对象
+     */
     TaskProperty convert(com.huawei.fit.jane.task.domain.TaskProperty entity);
 }
