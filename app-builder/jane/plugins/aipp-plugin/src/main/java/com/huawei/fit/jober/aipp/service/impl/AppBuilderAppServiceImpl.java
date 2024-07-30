@@ -1037,36 +1037,7 @@ public class AppBuilderAppServiceImpl
                     continue;
                 }
                 if (StringUtils.equals("knowledge", param.getKey())) {
-                    JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
-                    ArrayNode valueArrayNode = nodeFactory.arrayNode();
-                    List<Map<String, Object>> res = ObjectUtils.<List<Map<String, Object>>>cast(
-                            JsonUtils.parseObject(param.getValue(), List.class));
-                    res.forEach(r -> {
-                        ArrayNode valueArrayNode1 = nodeFactory.arrayNode();
-                        for (Map.Entry<String, Object> rr : r.entrySet()) {
-                            if (StringUtils.equals(rr.getKey(), "id")) {
-                                valueArrayNode1.add(convertId(rr.getKey(),
-                                        ObjectUtils.<Integer>cast(rr.getValue()).longValue()));
-                            } else {
-                                valueArrayNode1.add(convertObject(rr.getKey(), String.valueOf(rr.getValue())));
-                            }
-                        }
-                        Map<String, Object> a = new HashMap<>();
-                        a.put("id", UUID.randomUUID().toString());
-                        a.put("type", "Object");
-                        a.put("from", "Expand");
-                        a.put("value", valueArrayNode1);
-                        ObjectNode mapNode = nodeFactory.objectNode();
-                        for (Map.Entry<String, Object> entry : a.entrySet()) {
-                            if (StringUtils.equals(entry.getKey(), "value")) {
-                                mapNode.put(entry.getKey(), ObjectUtils.<JsonNode>cast(entry.getValue()));
-                            } else {
-                                mapNode.put(entry.getKey(), ObjectUtils.<String>cast(entry.getValue()));
-                            }
-                        }
-                        valueArrayNode.add(mapNode);
-                    });
-                    ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
+                    this.handleParamKnowledge(node, param);
                     continue;
                 }
 
@@ -1083,6 +1054,39 @@ public class AppBuilderAppServiceImpl
                 }
             }
         }
+    }
+
+    private void handleParamKnowledge(JsonNode node, Map.Entry<String, String> param) {
+        JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
+        ArrayNode valueArrayNode = nodeFactory.arrayNode();
+        List<Map<String, Object>> res = ObjectUtils.<List<Map<String, Object>>>cast(
+                JsonUtils.parseObject(param.getValue(), List.class));
+        res.forEach(r -> {
+            ArrayNode valueArrayNode1 = nodeFactory.arrayNode();
+            for (Map.Entry<String, Object> rr : r.entrySet()) {
+                if (StringUtils.equals(rr.getKey(), "id")) {
+                    valueArrayNode1.add(convertId(rr.getKey(),
+                            ObjectUtils.<Integer>cast(rr.getValue()).longValue()));
+                } else {
+                    valueArrayNode1.add(convertObject(rr.getKey(), String.valueOf(rr.getValue())));
+                }
+            }
+            Map<String, Object> a = new HashMap<>();
+            a.put("id", UUID.randomUUID().toString());
+            a.put("type", "Object");
+            a.put("from", "Expand");
+            a.put("value", valueArrayNode1);
+            ObjectNode mapNode = nodeFactory.objectNode();
+            for (Map.Entry<String, Object> entry : a.entrySet()) {
+                if (StringUtils.equals(entry.getKey(), "value")) {
+                    mapNode.put(entry.getKey(), ObjectUtils.<JsonNode>cast(entry.getValue()));
+                } else {
+                    mapNode.put(entry.getKey(), ObjectUtils.<String>cast(entry.getValue()));
+                }
+            }
+            valueArrayNode.add(mapNode);
+        });
+        ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
     }
 
     private void parseOtherMemoryType(Map<String, Object> res, ArrayNode valueArrayNode) {
