@@ -14,6 +14,7 @@ import com.huawei.fit.jober.taskcenter.domain.util.PrimaryValue;
 import com.huawei.fit.jober.taskcenter.domain.util.TaskInstanceRow;
 import com.huawei.fit.jober.taskcenter.util.DynamicSqlExecutor;
 import com.huawei.fit.jober.taskcenter.util.sql.SqlBuilder;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -99,7 +100,7 @@ public class DefaultPrimaryKey implements PrimaryKey {
         }
         sql.backspace(4);
         List<Map<String, Object>> rows = executor.executeQuery(sql.toString(), args);
-        return rows.stream().collect(Collectors.toMap(this::getPrimaryValue, row -> (String) row.get("id")));
+        return rows.stream().collect(Collectors.toMap(this::getPrimaryValue, row -> ObjectUtils.cast(row.get("id"))));
     }
 
     private static void whereValueEquals(SqlBuilder sql, List<Object> args, TaskProperty property,

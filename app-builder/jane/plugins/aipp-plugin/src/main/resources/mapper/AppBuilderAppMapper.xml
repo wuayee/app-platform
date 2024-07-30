@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper">
-    <resultMap id="BaseResultMap" type="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
+    <resultMap id="BaseResultMap" type="com.huawei.fit.jober.aipp.po.AppBuilderAppPo">
         <result column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="config_id" property="configId"/>
@@ -23,7 +23,7 @@
     </sql>
 
     <select id="selectWithId" resultMap="BaseResultMap"
-            resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
+            resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPo">
         select
         <include refid="Base_Column_List"/>
         from app_builder_app
@@ -31,7 +31,7 @@
     </select>
 
     <select id="selectWithTenantId" resultMap="BaseResultMap"
-            resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
+            resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPo">
         select
         <include refid="Base_Column_List"/>
         from app_builder_app
@@ -39,7 +39,7 @@
     </select>
 
     <select id="selectByTenantIdWithPage" resultMap="BaseResultMap"
-            resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
+            resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPo">
         select
         <include refid="Base_Column_List"/>
         from (
@@ -66,7 +66,7 @@
     </select>
 
     <select id="selectWithCondition" resultMap="BaseResultMap"
-            resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
+            resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPo">
         select
         <include refid="Base_Column_List"/>
         from app_builder_app
@@ -114,7 +114,7 @@
         ) as latest_records;
     </select>
 
-    <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
+    <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderAppPo">
         insert into app_builder_app (
         <include refid="Base_Column_List"/>
         )
@@ -122,7 +122,7 @@
         #{state}, #{createBy}, #{createAt}, #{updateBy}, #{updateAt})
     </insert>
 
-    <update id="updateOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
+    <update id="updateOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderAppPo">
         update app_builder_app
         <set>
             <if test="name != null">
@@ -166,7 +166,7 @@
     </update>
 
     <select id="selectWithStoreId" resultMap="BaseResultMap"
-            resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
+            resultType="com.huawei.fit.jober.aipp.po.AppBuilderAppPo">
         select
         <include refid="Base_Column_List"/>
         from app_builder_app
@@ -176,7 +176,7 @@
         </foreach>
     </select>
 
-    <update id="updateAppWithStoreId" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderAppPO">
+    <update id="updateAppWithStoreId" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderAppPo">
         update app_builder_app
         set attributes = jsonb_set(attributes::jsonb, '{store_id}',to_jsonb(#{uniqueName}), true)
         where id = #{id} and version = #{version}

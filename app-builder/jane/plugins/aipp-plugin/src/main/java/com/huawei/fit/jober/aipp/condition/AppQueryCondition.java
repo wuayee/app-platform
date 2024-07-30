@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
+ * 为app提供查询条件
+ *
  * @author 邬涨财 w00575064
  * @since 2024-05-06
  */

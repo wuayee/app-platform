@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @Data
 public class SourceDeclaration {
-    // TODO 兼容逻辑，待删除，直接使用任务类型的名称。
+    // 兼容逻辑，待删除，直接使用任务类型的名称。
     private UndefinableValue<String> name;
 
     private UndefinableValue<String> app;

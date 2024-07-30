@@ -13,13 +13,16 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
- * FormMetaConvertor
+ * 表单元数据转换器
  *
  * @author l00611472
  * @since 2023-12-15
  */
 @Mapper
 public interface FormMetaConvertor {
+    /**
+     * 获取FormMetaConvertor的实例
+     */
     FormMetaConvertor INSTANCE = Mappers.getMapper(FormMetaConvertor.class);
 
     /**

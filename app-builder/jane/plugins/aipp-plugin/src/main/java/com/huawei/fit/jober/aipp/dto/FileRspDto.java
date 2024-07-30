@@ -11,6 +11,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 文件传输响应Dto
+ *
+ * @author: s00664640
+ * @since 2024-09-01
+ */
 @Builder
 @Data
 @NoArgsConstructor

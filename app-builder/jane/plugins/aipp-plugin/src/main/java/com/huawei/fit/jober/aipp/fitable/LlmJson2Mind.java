@@ -30,11 +30,12 @@ import java.util.stream.Collectors;
  * @since 2023/12/27
  */
 @Component
-public class LLMJson2Mind implements FlowableService {
-    private static final Logger log = Logger.get(LLMJson2Mind.class);
+public class LlmJson2Mind implements FlowableService {
+    private static final Logger log = Logger.get(LlmJson2Mind.class);
+
     private final MetaInstanceService metaInstanceService;
 
-    public LLMJson2Mind(@Fit MetaInstanceService metaInstanceService) {
+    public LlmJson2Mind(@Fit MetaInstanceService metaInstanceService) {
         this.metaInstanceService = metaInstanceService;
     }
 
@@ -73,5 +74,4 @@ public class LLMJson2Mind implements FlowableService {
                 metaInstanceService, info, businessData, DataUtils.getOpContext(businessData));
         return flowData;
     }
-
 }

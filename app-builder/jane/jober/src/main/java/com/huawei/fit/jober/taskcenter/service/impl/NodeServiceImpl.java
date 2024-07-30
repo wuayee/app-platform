@@ -29,6 +29,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.model.RangedResultSet;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -58,10 +59,10 @@ public class NodeServiceImpl implements NodeService {
 
     private static NodeEntity toEntity(Map<String, Object> row) {
         NodeEntity entity = new NodeEntity();
-        entity.setId((String) row.get("id"));
+        entity.setId(ObjectUtils.cast(row.get("id")));
         entity.setChildCount(0);
-        entity.setParentId(Entities.ignoreEmpty((String) row.get("parent_id")));
-        entity.setName((String) row.get("name"));
+        entity.setParentId(Entities.ignoreEmpty(ObjectUtils.cast(row.get("parent_id"))));
+        entity.setName(ObjectUtils.cast(row.get("name")));
         Entities.fillTraceInfo(entity, row);
         return entity;
     }
@@ -126,7 +127,7 @@ public class NodeServiceImpl implements NodeService {
         if (CollectionUtils.isEmpty(rows)) {
             return Collections.EMPTY_SET;
         }
-        return rows.stream().map(obj -> (String) obj.get("name")).collect(Collectors.toSet());
+        return rows.stream().map(obj -> ObjectUtils.<String>cast(obj.get("name"))).collect(Collectors.toSet());
     }
 
     @Override
@@ -177,7 +178,8 @@ public class NodeServiceImpl implements NodeService {
         sql.setLength(sql.length() - 2);
         sql.append(" ON CONFLICT (node_id, source_id) DO UPDATE SET node_id = EXCLUDED.node_id RETURNING id");
         List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
-        List<String> ids = rows.stream().map(row -> (String) row.get("id")).collect(Collectors.toList());
+        List<String> ids = rows.stream().map(row ->
+                ObjectUtils.<String>cast(row.get("id"))).collect(Collectors.toList());
 
         StringBuilder deleteSql = new StringBuilder();
         deleteSql.append("DELETE FROM task_node_source WHERE node_id = ? AND id NOT IN (?");
@@ -346,7 +348,7 @@ public class NodeServiceImpl implements NodeService {
         for (NodeEntity entity : entities) {
             for (Map<String, Object> row : childCountRows) {
                 if (row.get("parent_id").toString().equals(entity.getId())) {
-                    entity.setChildCount((Long) row.get("num"));
+                    entity.setChildCount(ObjectUtils.cast(row.get("num")));
                     break;
                 }
             }
@@ -427,7 +429,7 @@ public class NodeServiceImpl implements NodeService {
         args.addAll(nodeIds);
         List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
         return rows.stream()
-                .collect(Collectors.groupingBy(row -> (String) row.get("node_id"),
-                        Collectors.mapping(row -> (String) row.get("source_id"), Collectors.toList())));
+                .collect(Collectors.groupingBy(row -> ObjectUtils.cast(row.get("node_id")),
+                        Collectors.mapping(row -> ObjectUtils.cast(row.get("source_id")), Collectors.toList())));
     }
 }

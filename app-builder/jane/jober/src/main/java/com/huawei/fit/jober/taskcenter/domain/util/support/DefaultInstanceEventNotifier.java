@@ -28,6 +28,13 @@ public class DefaultInstanceEventNotifier extends AbstractTaskInstanceEventNotif
 
     private final OperationContext context;
 
+    /**
+     * 构造函数
+     *
+     * @param task 任务
+     * @param plugin 插件
+     * @param context 上下文
+     */
     public DefaultInstanceEventNotifier(TaskEntity task, Plugin plugin, OperationContext context) {
         super(plugin);
         this.task = task;

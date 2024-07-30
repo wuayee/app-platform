@@ -1,21 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Copyright Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
-from his_decrypt import ADSKeyLoader, EnvironKeyLoader, FileKeyLoader
-from his_decrypt import HisDecrypt, EncryptType
 import os
 import json
+from his_decrypt import ADSKeyLoader, EnvironKeyLoader, FileKeyLoader
+from his_decrypt import HisDecrypt, EncryptType
 
 ADS_PCLOUD_APP_KEY = 'pcloud_app_name'
 ADS_PCLOUD_SUBAPP_KEY = 'pcloud_subapp_name'
 ADS_HWIT_ENV_KEY = 'docker_env'
 
-WORK_KEY_CIPHER_KEY= 'work_key_cipher'
+WORK_KEY_CIPHER_KEY = 'work_key_cipher'
 CIPHER_TOKEN_KEY = 'cipher_token'
 CONFIG_PART1_KEY = 'CONFIG_PART1'
 CONFIG_PART2_KEY = 'CONFIG_PART2'
 
-def Decrypt(cipher_token, work_key_cipher, config_part1, config_part2):
+
+def decrypt(cipher_token, work_key_cipher, config_part1, config_part2):
     # 2初始化KeyLoader，并注册到解码器
     his_decrypt = HisDecrypt()
 
@@ -33,9 +34,11 @@ def Decrypt(cipher_token, work_key_cipher, config_part1, config_part2):
     config_parts = [config_part1, config_part2]
     res = his_decrypt.decrypt(config_parts, work_key_cipher, cipher_token, EncryptType.ADV_2_6)
     return res
-def GetStaticToken():
+
+
+def get_static_token():
     cipher_token = os.environ.get(CIPHER_TOKEN_KEY)
     work_key_cipher = os.environ.get(WORK_KEY_CIPHER_KEY)
     config_part1 = os.environ.get(CONFIG_PART1_KEY)
     config_part2 = os.environ.get(CONFIG_PART2_KEY)
-    return Decrypt(cipher_token, work_key_cipher, config_part1, config_part2)
+    return decrypt(cipher_token, work_key_cipher, config_part1, config_part2)

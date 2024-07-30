@@ -15,6 +15,13 @@ import com.huawei.fit.jane.task.domain.TaskProperty;
 public class TaskPropertyModifyingEvent extends TaskPropertyEvent {
     private final TaskProperty.Declaration declaration;
 
+    /**
+     * 构造一个新的任务属性正在被修改的事件。
+     *
+     * @param publisher 发布这个事件的对象。
+     * @param property 正在被修改的任务属性。
+     * @param declaration 导致变化的属性声明。
+     */
     public TaskPropertyModifyingEvent(Object publisher, TaskProperty property, TaskProperty.Declaration declaration) {
         super(publisher, property);
         this.declaration = declaration;

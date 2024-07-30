@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
+ * 构建器中的提示数据
+ *
  * @author 姚江 yWX1299574
  * @since 2024-04-25
  */
@@ -23,6 +25,9 @@ public class AppBuilderPromptDto {
     private List<AppBuilderPromptCategoryDto> categories;
     private List<AppBuilderInspirationDto> inspirations;
 
+    /**
+     * 构建器中的提示数据
+     */
     @Builder
     @Data
     @AllArgsConstructor
@@ -38,6 +43,9 @@ public class AppBuilderPromptDto {
         private List<AppBuilderPromptVarDataDto> promptVarData;
     }
 
+    /**
+     * 构建器中的提示数据
+     */
     @Builder
     @Data
     @AllArgsConstructor

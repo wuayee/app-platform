@@ -5,7 +5,6 @@
 package com.huawei.fit.jane.task.gateway;
 
 import com.huawei.fit.security.Decryptor;
-import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.conf.ConfigDecryptor;
 
 import java.util.Locale;
@@ -17,7 +16,6 @@ import java.util.Optional;
  * @author 陈镕希 c00572808
  * @since 2023-09-01
  */
-// @Component("JoberApplicationConfigPropertyDecrypt")
 public class SccConfigDecryptor implements ConfigDecryptor {
     private final Decryptor decryptor;
 

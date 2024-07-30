@@ -31,6 +31,12 @@ import com.huawei.jade.app.engine.knowledge.dto.KTableDto;
 public class KnowledgeController extends AbstractController {
     private final KnowledgeService knowledgeService;
 
+    /**
+     * 构造函数，初始化认证器和知识库服务。
+     *
+     * @param authenticator 认证器
+     * @param knowledgeService 知识库服务
+     */
     public KnowledgeController(Authenticator authenticator, KnowledgeService knowledgeService) {
         super(authenticator);
         this.knowledgeService = knowledgeService;

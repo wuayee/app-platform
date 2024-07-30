@@ -38,6 +38,12 @@ public class AippInstLogDataDto {
     private AippInstanceLogBody question;
     private List<AippInstanceLogBody> instanceLogBodies;
 
+    /**
+     * 从原始日志列表中获取实例历史记录
+     *
+     * @param rawLogs 日志列表
+     * @return 实例历史记录
+     */
     public static AippInstLogDataDto fromAippInstLogList(List<AippInstLog> rawLogs) {
         List<AippInstLog> instanceLogs = rawLogs.stream()
                 .sorted((d1, d2) -> Math.toIntExact(d1.getLogId() - d2.getLogId()))
@@ -48,13 +54,16 @@ public class AippInstLogDataDto {
         final String inInstanceId = instanceLogs.get(0).getInstanceId();
 
         List<AippInstLogDataDto.AippInstanceLogBody> logBodies = instanceLogs.stream()
-                .filter(log -> !(log.getLogType().equals(AippInstLogType.QUESTION.name()) || log.getLogType().equals(AippInstLogType.HIDDEN_QUESTION.name())))
+                .filter(log -> !(log.getLogType().equals(AippInstLogType.QUESTION.name())
+                        || log.getLogType().equals(AippInstLogType.HIDDEN_QUESTION.name())))
                 .map(AippInstLogDataDto::convert)
                 .collect(Collectors.toList());
         AippInstLog question = instanceLogs.stream()
-                .filter(log -> (log.getLogType().equals(AippInstLogType.QUESTION.name()) || log.getLogType().equals(AippInstLogType.HIDDEN_QUESTION.name())))
+                .filter(log -> (log.getLogType().equals(AippInstLogType.QUESTION.name())
+                        || log.getLogType().equals(AippInstLogType.HIDDEN_QUESTION.name())))
                 .findFirst().orElse(null);
-        return new AippInstLogDataDto(inAippId,inAippVersion, inInstanceId, MetaInstStatusEnum.ARCHIVED.name(), null, null, convert(question), logBodies);
+        return new AippInstLogDataDto(inAippId, inAippVersion, inInstanceId, MetaInstStatusEnum.ARCHIVED.name(),
+                null, null, convert(question), logBodies);
     }
 
     /**
@@ -75,6 +84,9 @@ public class AippInstLogDataDto {
         return rawLogs.size() == LOG_COUNT_AFTER_TZ_TOOL && AippInstLogType.QUESTION.name().equals(log.getLogType());
     }
 
+    /**
+     * 转换实例日志为实例日志体
+     */
     @AllArgsConstructor
     @Getter
     public static class AippInstanceLogBody {

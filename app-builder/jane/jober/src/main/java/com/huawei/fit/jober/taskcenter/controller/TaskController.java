@@ -36,6 +36,12 @@ import java.util.Map;
 public class TaskController extends AbstractController {
     private final TaskService taskService;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator 认证器
+     * @param taskService 任务服务
+     */
     public TaskController(Authenticator authenticator, TaskService taskService) {
         super(authenticator);
         this.taskService = taskService;
@@ -124,9 +130,11 @@ public class TaskController extends AbstractController {
     public Map<String, Object> list(HttpClassicServerRequest httpRequest, HttpClassicServerResponse httpResponse,
             @PathVariable("tenant_id") String tenantId, @RequestParam("offset") long offset,
             @RequestParam("limit") int limit) {
-        // FIXME: 下游应用切换租户期间需要做特殊处理，暂不加租户相关查询
+        // 下游应用切换租户期间需要做特殊处理，暂不加租户相关查询
         RangedResultSet<TaskEntity> entities = this.taskService.listForApplication(Views.filterOfTasks(httpRequest),
-                offset, limit, this.contextOf(httpRequest, tenantId));
+                offset,
+                limit,
+                this.contextOf(httpRequest, tenantId));
         return Views.viewOf(entities, "tasks", Views::viewOf);
     }
 }

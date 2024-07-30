@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huawei.fit.jober.aipp.mapper.AppBuilderFormPropertyMapper">
-    <resultMap id="BaseResultMap" type="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPO">
+    <resultMap id="BaseResultMap" type="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPo">
         <result column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="form_id" property="formId"/>
@@ -14,7 +14,7 @@
     </sql>
 
     <select id="selectWithFormId" resultMap="BaseResultMap"
-            resultType="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPO">
+            resultType="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPo">
         select
         <include refid="Base_Column_List"/>
         from app_builder_form_property
@@ -22,14 +22,14 @@
     </select>
 
     <select id="selectWithId" resultMap="BaseResultMap"
-            resultType="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPO">
+            resultType="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPo">
         select
         <include refid="Base_Column_List"/>
         from app_builder_form_property
         where id = #{id}
     </select>
 
-    <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPO">
+    <insert id="insertOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPo">
         insert into app_builder_form_property(
         <include refid="Base_Column_List"/>
         )
@@ -46,7 +46,7 @@
         </foreach>
     </insert>
 
-    <update id="updateOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPO">
+    <update id="updateOne" parameterType="com.huawei.fit.jober.aipp.po.AppBuilderFormPropertyPo">
         update app_builder_form_property
         <set>
             <if test="name != null">

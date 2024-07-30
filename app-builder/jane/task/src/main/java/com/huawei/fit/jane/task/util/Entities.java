@@ -92,12 +92,15 @@ public final class Entities {
         }
         for (int i = 0; i < value.length(); i++) {
             char ch = value.charAt(i);
-            boolean isInvalidId = (ch < '0' || ch > '9') && (ch < 'a' || ch > 'f') && (ch < 'A' || ch > 'F');
-            if (isInvalidId) {
+            if (isInvalidId(ch)) {
                 return false;
             }
         }
         return true;
+    }
+
+    private static boolean isInvalidId(char ch) {
+        return (ch < '0' || ch > '9') && (ch < 'a' || ch > 'f') && (ch < 'A' || ch > 'F');
     }
 
     /**

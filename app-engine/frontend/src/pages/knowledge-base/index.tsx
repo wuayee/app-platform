@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Input, Modal }from 'antd';
-import { HashRouter, Route, useNavigate, Routes } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Pagination from '../../components/pagination/index';
 import { Icons } from '../../components/icons';
 import KnowledgeCard, { knowledgeBase } from '../../components/knowledge-card';

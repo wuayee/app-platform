@@ -21,6 +21,15 @@ import java.util.Map;
 public class FfmpegTask {
     private final List<String> command;
 
+    /**
+     * 构造函数
+     *
+     * @param executable ffmpeg可执行文件路径
+     * @param inputs 输入参数
+     * @param outputs 输出参数
+     * @author s00664640
+     * @since 2024-05-10
+     */
     public FfmpegTask(String executable, Map<String, List<String>> inputs, Map<String, List<String>> outputs) {
         List<String> cmd = new ArrayList<>();
         cmd.add(executable);

@@ -33,6 +33,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.transaction.Transactional;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -73,9 +74,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     private static CategoryEntity readCategoryEntity(Map<String, Object> row) {
         CategoryEntity category = new CategoryEntity();
-        category.setId((String) row.get("id"));
-        category.setName((String) row.get("category"));
-        category.setGroup((String) row.get("group"));
+        category.setId(ObjectUtils.cast(row.get("id")));
+        category.setName(ObjectUtils.cast(row.get("category")));
+        category.setGroup(ObjectUtils.cast(row.get("group")));
         return category;
     }
 
@@ -89,8 +90,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     private static PropertyCategory toEntity(Map<String, Object> row) {
         PropertyCategory entity = new PropertyCategory();
-        entity.setValue((String) row.get("property_value"));
-        entity.setCategory((String) row.get("category"));
+        entity.setValue(ObjectUtils.cast(row.get("property_value")));
+        entity.setCategory(ObjectUtils.cast(row.get("category")));
         return entity;
     }
 
@@ -130,7 +131,7 @@ public class CategoryServiceImpl implements CategoryService {
         args.addAll(propertyIds);
         List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
         return rows.stream()
-                .collect(Collectors.groupingBy(row -> (String) row.get("property_id"),
+                .collect(Collectors.groupingBy(row -> ObjectUtils.cast(row.get("property_id")),
                         Collectors.mapping(CategoryServiceImpl::toEntity, Collectors.toList())));
     }
 
@@ -174,7 +175,7 @@ public class CategoryServiceImpl implements CategoryService {
             sql.append(" ON CONFLICT (\"category_id\", \"property_id\", \"value\") "
                     + "DO UPDATE SET \"property_id\" = EXCLUDED.\"property_id\" RETURNING id");
             List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
-            ids = rows.stream().map(row -> (String) row.get("id")).collect(Collectors.toList());
+            ids = rows.stream().map(row -> ObjectUtils.<String>cast(row.get("id"))).collect(Collectors.toList());
             Sqls.andNotIn(deleteSql, "\"id\"", ids.size());
             deleteArgs.addAll(ids);
         }
@@ -331,29 +332,59 @@ public class CategoryServiceImpl implements CategoryService {
         return canonicalize(Optional.ofNullable(values).map(Collection::stream).orElseGet(Stream::empty));
     }
 
-    private static abstract class AbstractRow {
+    private abstract static class AbstractRow {
         private final Map<String, Object> values;
 
         AbstractRow(Map<String, Object> values) {
             this.values = values;
         }
 
+        /**
+         * 获取指定键的值。
+         *
+         * @param key 键
+         * @return 值
+         */
         protected Object get(String key) {
             return this.values.get(key);
         }
 
+        /**
+         * 设置指定键的值。
+         *
+         * @param key 键
+         * @param value 值
+         */
         protected void set(String key, Object value) {
             this.values.put(key, value);
         }
 
+        /**
+         * 获取指定键的字符串值。
+         *
+         * @param key 键
+         * @return 字符串值
+         */
         protected String stringValue(String key) {
             return cast(this.get(key));
         }
 
+        /**
+         * 设置指定键的字符串值。
+         *
+         * @param key 键
+         * @param value 字符串值
+         */
         protected void stringValue(String key, String value) {
             this.set(key, value);
         }
 
+        /**
+         * 获取指定键的日期时间值。
+         *
+         * @param key 键
+         * @return 日期时间值
+         */
         protected LocalDateTime datetimeValue(String key) {
             Object value = this.get(key);
             if (value instanceof Timestamp) {
@@ -363,6 +394,12 @@ public class CategoryServiceImpl implements CategoryService {
             return cast(value);
         }
 
+        /**
+         * 设置指定键的日期时间值。
+         *
+         * @param key 键
+         * @param value 日期时间值
+         */
         protected void datetimeValue(String key, LocalDateTime value) {
             this.set(key, value);
         }

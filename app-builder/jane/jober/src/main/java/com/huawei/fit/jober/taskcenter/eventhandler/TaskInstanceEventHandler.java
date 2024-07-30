@@ -55,6 +55,11 @@ public abstract class TaskInstanceEventHandler<E extends TaskInstanceEvent> {
         this.type = type;
     }
 
+    /**
+     * 处理事件。
+     *
+     * @param event 表示事件数据的 {@link E}。
+     */
     public void handleEvent(E event) {
         List<SourceEntity> sources = this.getSourcesToPublish(event.task(), event.instance());
         for (SourceEntity source : sources) {
@@ -132,6 +137,13 @@ public abstract class TaskInstanceEventHandler<E extends TaskInstanceEvent> {
 
         private final InstanceConverter instanceConverter;
 
+        /**
+         * 生成通知 Genericable 的调用参数。
+         *
+         * @param taskConverter 表示任务转换器的 {@link TaskConverter}。
+         * @param instanceConverter 表示实例转换器的 {@link InstanceConverter}。
+         * @param brokerClient 表示消息代理客户端的 {@link BrokerClient}。
+         */
         public Created(TaskConverter taskConverter, InstanceConverter instanceConverter, BrokerClient brokerClient) {
             super(brokerClient, INSTANCE_CHANGED_CREATE_GENERICABLE_ID, InstanceEventType.CREATED);
             this.taskConverter = taskConverter;
@@ -163,6 +175,13 @@ public abstract class TaskInstanceEventHandler<E extends TaskInstanceEvent> {
 
         private final InstanceConverter instanceConverter;
 
+        /**
+         * 生成通知 Genericable 的调用参数。
+         *
+         * @param taskConverter 表示任务转换器的 {@link TaskConverter}。
+         * @param instanceConverter 表示实例转换器的 {@link InstanceConverter}。
+         * @param brokerClient 表示消息代理客户端的 {@link BrokerClient}。
+         */
         public Modified(TaskConverter taskConverter, InstanceConverter instanceConverter, BrokerClient brokerClient) {
             super(brokerClient, INSTANCE_CHANGED_UPDATE_GENERICABLE_ID, InstanceEventType.MODIFIED);
             this.taskConverter = taskConverter;
@@ -195,6 +214,13 @@ public abstract class TaskInstanceEventHandler<E extends TaskInstanceEvent> {
 
         private final InstanceConverter instanceConverter;
 
+        /**
+         * 生成通知 Genericable 的调用参数。
+         *
+         * @param taskConverter 表示任务转换器的 {@link TaskConverter}。
+         * @param instanceConverter 表示实例转换器的 {@link InstanceConverter}。
+         * @param brokerClient 表示消息代理客户端的 {@link BrokerClient}。
+         */
         public Deleted(TaskConverter taskConverter, InstanceConverter instanceConverter, BrokerClient brokerClient) {
             super(brokerClient, INSTANCE_CHANGED_DELETE_GENERICABLE_ID, InstanceEventType.DELETED);
             this.taskConverter = taskConverter;

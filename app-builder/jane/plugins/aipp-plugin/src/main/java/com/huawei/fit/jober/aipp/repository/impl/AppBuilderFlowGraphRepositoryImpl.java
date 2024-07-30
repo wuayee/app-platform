@@ -11,6 +11,8 @@ import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderFlowGraphSerializer;
 import com.huawei.fitframework.annotation.Component;
 
 /**
+ * 应用流程图仓库功能实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */

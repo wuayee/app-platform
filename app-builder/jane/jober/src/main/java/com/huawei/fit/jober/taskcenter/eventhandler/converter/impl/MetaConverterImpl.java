@@ -103,8 +103,8 @@ public class MetaConverterImpl implements MetaConverter {
     @Override
     public com.huawei.fit.jane.meta.multiversion.definition.Meta convert2MultiVersionMeta(TaskEntity task,
             OperationContext context) {
-        com.huawei.fit.jane.meta.multiversion.definition.Meta meta
-                = new com.huawei.fit.jane.meta.multiversion.definition.Meta();
+        com.huawei.fit.jane.meta.multiversion.definition.Meta meta =
+                new com.huawei.fit.jane.meta.multiversion.definition.Meta();
         meta.setVersionId(task.getId());
         meta.setId(task.getTemplateId());
         meta.setCreationTime(task.getCreationTime());
@@ -118,7 +118,7 @@ public class MetaConverterImpl implements MetaConverter {
         meta.setTenant(task.getTenantId());
         meta.setAttributes(task.getAttributes());
         meta.setName(task.getName());
-        meta.setVersion("1.0.0"); // FIXME: 2024/4/2 0002 兼容逻辑，如果不存在|则认为是旧数据，默认1.0.0版本
+        meta.setVersion("1.0.0"); // 2024/4/2 0002 兼容逻辑，如果不存在|则认为是旧数据，默认1.0.0版本
         if (task.getName().contains("|")) {
             String[] nameAndVersion = task.getName().split("\\|");
             meta.setVersion(nameAndVersion[1]);
@@ -138,6 +138,13 @@ public class MetaConverterImpl implements MetaConverter {
         return taskFilter;
     }
 
+    /**
+     * 将{@link Undefinable}对象转换为{@link UndefinableValue}对象。
+     *
+     * @param attribute 待转换的{@link Undefinable}对象
+     * @param <T> 待转换对象的类型
+     * @return 转换后的{@link UndefinableValue}对象
+     */
     public static <T> UndefinableValue<T> valueOf(Undefinable<T> attribute) {
         if (!attribute.getDefined()) {
             return UndefinableValue.undefined();
@@ -146,6 +153,14 @@ public class MetaConverterImpl implements MetaConverter {
         return UndefinableValue.defined(value);
     }
 
+    /**
+     * 将给定的对象转换为{@link UndefinableValue}对象。
+     *
+     * @param attribute 待转换的对象
+     * @param emptyPredicate 用于判断对象是否为空的断言函数
+     * @param <T> 待转换对象的类型
+     * @return 转换后的{@link UndefinableValue}对象
+     */
     public static <T> UndefinableValue<T> valueOf(T attribute, Predicate<T> emptyPredicate) {
         if (emptyPredicate.test(attribute)) {
             return UndefinableValue.undefined();

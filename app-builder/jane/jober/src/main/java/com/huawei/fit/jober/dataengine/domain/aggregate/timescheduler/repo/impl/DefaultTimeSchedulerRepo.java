@@ -7,7 +7,7 @@ package com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.repo.impl
 import static com.huawei.fit.jober.common.ErrorCodes.ENTITY_NOT_FOUND;
 
 import com.huawei.fit.jober.common.exceptions.JobberException;
-import com.huawei.fit.jober.common.utils.UUIDUtil;
+import com.huawei.fit.jober.common.utils.UuidUtil;
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.TimeScheduler;
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.repo.TimeSchedulerRepo;
 import com.huawei.fit.jober.dataengine.persist.mapper.TimeSchedulerMapper;
@@ -42,7 +42,7 @@ public class DefaultTimeSchedulerRepo implements TimeSchedulerRepo {
     @Override
     public TimeScheduler save(TimeScheduler timeScheduler) {
         if (StringUtils.isBlank(timeScheduler.getSchedulerId())) {
-            timeScheduler.setSchedulerId(UUIDUtil.uuid());
+            timeScheduler.setSchedulerId(UuidUtil.uuid());
             timeSchedulerMapper.create(this.serializer(timeScheduler));
         } else {
             timeSchedulerMapper.update(this.serializer(timeScheduler));

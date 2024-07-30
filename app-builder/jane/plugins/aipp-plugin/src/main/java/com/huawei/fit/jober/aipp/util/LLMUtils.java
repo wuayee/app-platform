@@ -51,6 +51,13 @@ public class LLMUtils {
         }
     }
 
+    /**
+     * 尝试修复大模型json字符串
+     *
+     * @param answer 回答
+     * @return json字符串
+     * @throws IOException IO异常
+     */
     public static String tryFixLlmJsonString(String answer) throws IOException {
         int startIndex = answer.indexOf('{');
         int finalIndex = answer.lastIndexOf('}');
@@ -153,13 +160,10 @@ public class LLMUtils {
      * @return 大模型的返回结果
      * @throws IOException 大模型处理异常
      */
-    public static String askModelForSummary(
-            OpenAiClient openAiClient, String prompt, LlmModelNameEnum model, int maxTokens) throws IOException {
+    public static String askModelForSummary(OpenAiClient openAiClient, String prompt, LlmModelNameEnum model,
+            int maxTokens) throws IOException {
         log.info("askModelForSummary with prompt: {}", prompt);
-        OpenAiChatMessage msg = OpenAiChatMessage.builder()
-                .role(Role.USER)
-                .content(prompt)
-                .build();
+        OpenAiChatMessage msg = OpenAiChatMessage.builder().role(Role.USER).content(prompt).build();
         OpenAiChatCompletionRequest request = OpenAiChatCompletionRequest.builder()
                 .model(model.getValue())
                 .messages(Collections.singletonList(msg))
@@ -170,7 +174,6 @@ public class LLMUtils {
             log.error("openAiClient response has empty choices.");
             return StringUtils.EMPTY;
         }
-        return ObjectUtils.cast(chatCompletion.getChoices()
-                .get(0).getMessage().getContent());
+        return ObjectUtils.cast(chatCompletion.getChoices().get(0).getMessage().getContent());
     }
 }

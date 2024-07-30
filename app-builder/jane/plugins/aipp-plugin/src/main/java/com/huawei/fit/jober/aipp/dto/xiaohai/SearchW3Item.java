@@ -9,12 +9,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * 搜索W3数据项
+ *
+ * @author 00664640
+ * @since 2024-05-10
+ */
 @Data
 @NoArgsConstructor
 @ToString
 @AllArgsConstructor
 public class SearchW3Item {
-
     private String docTitle;
 
     private String docUrl;

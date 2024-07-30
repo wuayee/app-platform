@@ -68,6 +68,11 @@ public class FormDto {
         this.updateUser = entity.getUpdateUser();
     }
 
+    /**
+     * 返回{@link DynamicFormEntity}实例
+     *
+     * @return {@link DynamicFormEntity}实例
+     */
     public DynamicFormEntity toEntity() {
         return new DynamicFormEntity(id, version, tenantId, formName, createTime, createUser, updateTime, updateUser);
     }

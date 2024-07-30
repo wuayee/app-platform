@@ -138,8 +138,12 @@ public abstract class AbstractController {
         return this.authenticator.authenticate(request).fqn();
     }
 
+    /**
+     * 添加类型属性
+     *
+     * @param task 表示任务map
+     */
     protected static void appendTypeProperty(Map<String, Object> task) {
-        List<Map<String, Object>> properties = cast(task.get("properties"));
         Map<String, Object> appearance = MapBuilder.<String, Object>get()
                 .put("config", Collections.emptyMap())
                 .put("displayOrder", -1)
@@ -153,9 +157,17 @@ public abstract class AbstractController {
                 .put("name", "type")
                 .put("appearance", appearance)
                 .build();
+        List<Map<String, Object>> properties = cast(task.get("properties"));
         properties.add(property);
     }
 
+    /**
+     * 构造多任务实例视图
+     *
+     * @param results 表示分页结果集
+     * @param taskEntityList 表示任务实体列表
+     * @return 多任务实例视图
+     */
     protected static Map<String, Object> buildMultiTaskInstanceView(PagedResultSet<TaskInstance> results,
             List<TaskEntity> taskEntityList) {
         List<TaskInstance> instanceList = results.results()

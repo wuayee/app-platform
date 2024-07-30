@@ -48,7 +48,6 @@ public class View {
                 }
             };
         } catch (JobberException exception) {
-
             String language = context;
             return new HashMap<String, Object>() {
                 {

@@ -34,6 +34,12 @@ import java.util.Map;
 public class TaskTemplateController extends AbstractController {
     private final TaskTemplate.Repo repo;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator 认证器
+     * @param repo 任务模板repo
+     */
     public TaskTemplateController(Authenticator authenticator, TaskTemplate.Repo repo) {
         super(authenticator);
         this.repo = repo;
@@ -122,7 +128,9 @@ public class TaskTemplateController extends AbstractController {
             @PathVariable("tenant_id") String tenantId, @RequestParam("offset") long offset,
             @RequestParam("limit") int limit) {
         RangedResultSet<TaskTemplate> entities = this.repo.list(Views.filterOfTaskTemplates(httpRequest),
-                offset, limit, this.contextOf(httpRequest, tenantId));
+                offset,
+                limit,
+                this.contextOf(httpRequest, tenantId));
         return Views.viewOf(entities, "tasks", Views::viewOf);
     }
 }

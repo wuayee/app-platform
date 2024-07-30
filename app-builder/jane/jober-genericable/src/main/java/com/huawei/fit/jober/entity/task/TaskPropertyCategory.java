@@ -17,6 +17,9 @@ public class TaskPropertyCategory {
 
     private String category;
 
+    /**
+     * TaskPropertyCategory
+     */
     public TaskPropertyCategory() {
     }
 

@@ -29,6 +29,11 @@ public class DefaultPropertyMonitor implements PropertyMonitor {
 
     private final Map<String, Map<String, Set<String>>> fitables;
 
+    /**
+     * 构造函数
+     *
+     * @param task 任务
+     */
     public DefaultPropertyMonitor(TaskEntity task) {
         this.task = task;
         this.fitables = new HashMap<>();

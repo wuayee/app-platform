@@ -11,21 +11,23 @@ import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderComponentSerializer;
 import com.huawei.fitframework.annotation.Component;
 
 /**
+ * 应用组件属性仓库实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */
 @Component
 public class AppBuilderComponentRepositoryImpl implements AppBuilderComponentRepository {
-    private final AppBuilderComponentMapper AppBuilderComponentMapper;
+    private final AppBuilderComponentMapper appBuilderComponentMapper;
     private final AppBuilderComponentSerializer serializer;
 
     public AppBuilderComponentRepositoryImpl(AppBuilderComponentMapper AppBuilderComponentMapper) {
-        this.AppBuilderComponentMapper = AppBuilderComponentMapper;
+        this.appBuilderComponentMapper = AppBuilderComponentMapper;
         this.serializer = new AppBuilderComponentSerializer();
     }
 
     @Override
     public AppBuilderComponent selectWithId(String id) {
-        return this.serializer.deserialize(this.AppBuilderComponentMapper.selectWithId(id));
+        return this.serializer.deserialize(this.appBuilderComponentMapper.selectWithId(id));
     }
 }

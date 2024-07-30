@@ -32,6 +32,11 @@ public class FormDetailDto {
         this.data = detailEntity.getData();
     }
 
+    /**
+     * 返回{@link DynamicFormDetailEntity}实例
+     *
+     * @return {@link DynamicFormDetailEntity}实例
+     */
     public DynamicFormDetailEntity toEntity() {
         return new DynamicFormDetailEntity(this.meta.toEntity(), this.data);
     }

@@ -130,6 +130,13 @@ public class DefaultDynamicSqlExecutor implements DynamicSqlExecutor {
 
     @FunctionalInterface
     private interface StatementExecutor<T> {
+        /**
+         * sql语句执行器
+         *
+         * @param statement 要执行的sql语句
+         * @return sql语句执行结果
+         * @throws SQLException sql语句执行异常
+         */
         T execute(PreparedStatement statement) throws SQLException;
     }
 }

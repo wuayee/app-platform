@@ -21,6 +21,15 @@ import java.util.concurrent.ExecutorService;
  * @since 2024/1/19
  */
 public class AudioUtils {
+    /**
+     * 并行提取音频文本
+     *
+     * @param executor 线程执行器
+     * @param audioList 音频文件列表
+     * @param extractor 提取器
+     * @return 文本列表
+     * @throws InterruptedException 线程中断异常
+     */
     public static List<String> extractAudioTextParallel(ExecutorService executor, List<File> audioList,
             AudioTextFunction<File, String> extractor) throws InterruptedException {
         int taskCnt = audioList.size();

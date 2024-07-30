@@ -25,7 +25,7 @@ import com.huawei.fit.jober.aipp.enums.RestartModeEnum;
 import com.huawei.fit.jober.aipp.mapper.AippChatMapper;
 import com.huawei.fit.jober.aipp.mapper.AippLogMapper;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
-import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
+import com.huawei.fit.jober.aipp.po.AppBuilderAppPo;
 import com.huawei.fit.jober.aipp.service.AippChatService;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
@@ -88,7 +88,7 @@ public class AippChatServiceImpl implements AippChatService {
         Map<String, Object> result = (Map<String, Object>) initContext.get("initContext");
         String chatName = getChatName(result);
         String originChatId = UUIDUtil.uuid();
-        AppBuilderAppPO appInfo = this.convertAippToApp(body.getAippId(), body.getAippVersion(), context);
+        AppBuilderAppPo appInfo = this.convertAippToApp(body.getAippId(), body.getAippVersion(), context);
         return QueryChatRsp.builder()
                 .appId(appInfo.getId())
                 .aippVersion(body.getAippVersion())
@@ -115,7 +115,7 @@ public class AippChatServiceImpl implements AippChatService {
             attributesMap.put("originAppVersion", body.getOriginAppVersion());
             this.persistOriginAppChat(body, context, chatId, chatName, instId);
         }
-        AppBuilderAppPO appInfo = this.convertAippToApp(body.getAippId(), body.getAippVersion(), context);
+        AppBuilderAppPo appInfo = this.convertAippToApp(body.getAippId(), body.getAippVersion(), context);
         attributesMap.putIfAbsent(AippConst.ATTR_CHAT_STATE_KEY, appInfo.getState());
         ChatInfo chatInfo = ChatInfo.builder()
                 .appId(appInfo.getId())
@@ -146,7 +146,7 @@ public class AippChatServiceImpl implements AippChatService {
         // @应用对话，插入主应用记录
         Map<String, String> attributesMapOrigin = new HashMap<>();
         attributesMapOrigin.put("instId", instId);
-        AppBuilderAppPO appBuilderAppPO = this.appBuilderAppMapper.selectWithId(body.getOriginApp());
+        AppBuilderAppPo appBuilderAppPO = this.appBuilderAppMapper.selectWithId(body.getOriginApp());
         attributesMapOrigin.put(AippConst.ATTR_CHAT_STATE_KEY, appBuilderAppPO.getState());
         ChatInfo chatInfoOrigin = ChatInfo.builder()
                 .appId(body.getOriginApp())
@@ -171,7 +171,7 @@ public class AippChatServiceImpl implements AippChatService {
         this.aippChatMapper.insertWideRelationship(wideRelationInfoOrigin);
     }
 
-    private AppBuilderAppPO convertAippToApp(String aippId, String appVersion, OperationContext context) {
+    private AppBuilderAppPo convertAippToApp(String aippId, String appVersion, OperationContext context) {
         Meta meta = MetaUtils.getAnyMeta(this.metaService, aippId, appVersion, context);
         String appId = ObjectUtils.cast(meta.getAttributes().get(AippConst.ATTR_APP_ID_KEY));
         return this.appBuilderAppMapper.selectWithId(appId);
@@ -180,7 +180,7 @@ public class AippChatServiceImpl implements AippChatService {
     private QueryChatRequest buildQueryChatRequest(QueryChatRequest body, OperationContext context) {
         QueryChatRequest request = QueryChatRequest.builder().build();
         if (body.getAippId() != null && body.getAippVersion() != null) {
-            AppBuilderAppPO appBuilderAppPO = this.convertAippToApp(body.getAippId(), body.getAippVersion(), context);
+            AppBuilderAppPo appBuilderAppPO = this.convertAippToApp(body.getAippId(), body.getAippVersion(), context);
             request.setAppId(appBuilderAppPO.getId());
             request.setAppVersion(appBuilderAppPO.getVersion());
             return request;

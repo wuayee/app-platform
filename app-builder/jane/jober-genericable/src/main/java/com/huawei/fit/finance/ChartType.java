@@ -69,6 +69,12 @@ public enum ChartType {
                 .build();
     }
 
+    /**
+     * from
+     *
+     * @param type 类型
+     * @return ChartType
+     */
     public static ChartType from(String type) {
         return chartTypeFactory.getOrDefault(type, DEFAULT);
     }

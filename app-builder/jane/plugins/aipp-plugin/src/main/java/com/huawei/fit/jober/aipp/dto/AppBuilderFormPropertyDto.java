@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * 应用构建器表单属性Dto
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-19
  */

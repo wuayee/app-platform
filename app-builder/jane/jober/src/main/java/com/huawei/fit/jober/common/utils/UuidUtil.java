@@ -12,7 +12,7 @@ import java.util.UUID;
  * @author 孙怡菲 s00664640
  * @since 2023-06-15
  */
-public class UUIDUtil {
+public class UuidUtil {
     /**
      * 随机生成uuid。
      *

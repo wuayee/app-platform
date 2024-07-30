@@ -5,23 +5,25 @@
 package com.huawei.fit.jober.aipp.serializer.impl;
 
 import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
-import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
+import com.huawei.fit.jober.aipp.po.AppBuilderAppPo;
 import com.huawei.fit.jober.aipp.serializer.BaseSerializer;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 
 import java.util.Objects;
 
 /**
+ * 应用数据序列化与反序列化实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */
-public class AppBuilderAppSerializer implements BaseSerializer<AppBuilderApp, AppBuilderAppPO> {
+public class AppBuilderAppSerializer implements BaseSerializer<AppBuilderApp, AppBuilderAppPo> {
     @Override
-    public AppBuilderAppPO serialize(AppBuilderApp appBuilderApp) {
+    public AppBuilderAppPo serialize(AppBuilderApp appBuilderApp) {
         if (appBuilderApp == null) {
             return null;
         }
-        return AppBuilderAppPO.builder()
+        return AppBuilderAppPo.builder()
                 .id(appBuilderApp.getId())
                 .name(appBuilderApp.getName())
                 .tenantId(appBuilderApp.getTenantId())
@@ -39,7 +41,7 @@ public class AppBuilderAppSerializer implements BaseSerializer<AppBuilderApp, Ap
     }
 
     @Override
-    public AppBuilderApp deserialize(AppBuilderAppPO appBuilderAppPO) {
+    public AppBuilderApp deserialize(AppBuilderAppPo appBuilderAppPO) {
         return Objects.isNull(appBuilderAppPO)
                 ? AppBuilderApp.builder().build()
                 : AppBuilderApp.builder()

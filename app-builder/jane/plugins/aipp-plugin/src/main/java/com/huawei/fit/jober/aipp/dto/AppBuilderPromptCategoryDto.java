@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
+ * 应用构建器提示类别Dto
+ *
  * @author 姚江 yWX1299574
  * @since 2024-04-26
  */

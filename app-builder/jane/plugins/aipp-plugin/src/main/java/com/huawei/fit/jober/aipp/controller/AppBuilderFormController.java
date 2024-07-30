@@ -24,10 +24,23 @@ import java.util.List;
 public class AppBuilderFormController {
     private final AppBuilderFormService formService;
 
+    /**
+     * 构造函数，初始化表单服务.
+     *
+     * @param formService 表单服务对象
+     */
     public AppBuilderFormController(AppBuilderFormService formService) {
         this.formService = formService;
     }
 
+    /**
+     * 根据 type 查询表单。
+     *
+     * @param httpRequest 请求对象。
+     * @param type 表单类型。
+     * @param tenantId 租户 ID。
+     * @return 返回查询结果。
+     */
     @GetMapping(value = "/type/{type}", description = "查询指定 type 的表单")
     public Rsp<List<AppBuilderFormDto>> queryByType(HttpClassicServerRequest httpRequest,
             @PathVariable("type") String type, @PathVariable("tenant_id") String tenantId) {

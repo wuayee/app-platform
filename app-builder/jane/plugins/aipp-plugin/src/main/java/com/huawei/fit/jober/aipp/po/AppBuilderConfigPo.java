@@ -9,17 +9,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
+ * AppBuilder配置结构体
+ *
  * @author 邬涨财 w00575064
- * @since 2024-04-16
+ * @since 2024-04-17
  */
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppBuilderConfigPropertyPO {
+public class AppBuilderConfigPo {
     private String id;
-    private String nodeId;
-    private String formPropertyId;
-    private String configId;
+    private String formId;
+    private String tenantId;
+    private String appId;
+    private String createBy;
+    private String updateBy;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
 }

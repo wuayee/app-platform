@@ -17,6 +17,9 @@ public class PropertyValue {
 
     private String value;
 
+    /**
+     * PropertyValue
+     */
     public PropertyValue() {
     }
 

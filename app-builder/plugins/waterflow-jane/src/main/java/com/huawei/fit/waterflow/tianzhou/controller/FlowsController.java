@@ -92,8 +92,8 @@ public class FlowsController {
         Validation.notBlank(tenantId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "tenant"));
         Validation.notNull(graphData, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "graphData"));
         String definitionGraph = JSON.toJSONString(graphData);
-        FlowDefinition flowDefinition = flowsService.createFlows(definitionGraph,
-                this.contextOf(httpRequest, tenantId));
+        FlowDefinition flowDefinition =
+                flowsService.createFlows(definitionGraph, this.contextOf(httpRequest, tenantId));
         return Views.viewOfFlows(flowDefinition, definitionGraph);
     }
 
@@ -115,8 +115,8 @@ public class FlowsController {
         Validation.notBlank(tenantId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "tenant"));
         Validation.notBlank(flowId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "flowId"));
         String definitionGraph = JSON.toJSONString(graphData);
-        FlowDefinition flowDefinition = flowsService.updateFlows(flowId, definitionGraph,
-                this.contextOf(httpRequest, tenantId));
+        FlowDefinition flowDefinition =
+                flowsService.updateFlows(flowId, definitionGraph, this.contextOf(httpRequest, tenantId));
         return Views.viewOfFlows(flowDefinition, definitionGraph);
     }
 
@@ -201,8 +201,8 @@ public class FlowsController {
             log.error("Cannot parser name: {}", name);
             throw new JobberParamException(INPUT_PARAM_IS_INVALID, "name");
         }
-        FlowDefinitionPO flows = flowsService.findFlowsByName(originName, version,
-                this.contextOf(httpRequest, tenantId));
+        FlowDefinitionPO flows =
+                flowsService.findFlowsByName(originName, version, this.contextOf(httpRequest, tenantId));
         return Views.viewOfFlows(flows);
     }
 
@@ -224,8 +224,8 @@ public class FlowsController {
         Validation.notBlank(tenantId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "tenant"));
         Validation.notBlank(metaId, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "metaId"));
         Validation.notBlank(version, () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, "version"));
-        FlowDefinitionPO flowDefinitionPO = flowsService.findFlowsByMetaIdAndVersion(metaId, version,
-                this.contextOf(httpRequest, tenantId));
+        FlowDefinitionPO flowDefinitionPO =
+                flowsService.findFlowsByMetaIdAndVersion(metaId, version, this.contextOf(httpRequest, tenantId));
         return Views.viewOfFlowStatus(flowDefinitionPO);
     }
 

@@ -48,10 +48,20 @@ public class InstanceDeclarationInfo {
         this.tags = nullIf(tags, Undefinable.undefined());
     }
 
+    /**
+     * Meta实例声明信息构造
+     */
     public static class Builder {
         private Undefinable<Map<String, Object>> info = Undefinable.undefined();
         private Undefinable<List<String>> tags = Undefinable.undefined();
 
+        /**
+         * putInfo
+         *
+         * @param key key
+         * @param value value
+         * @return Builder
+         */
         public Builder putInfo(String key, Object value) {
             if (!info.getDefined()) {
                 this.info = Undefinable.defined(new HashMap<>());
@@ -60,6 +70,12 @@ public class InstanceDeclarationInfo {
             return this;
         }
 
+        /**
+         * putTags
+         *
+         * @param key key
+         * @return Builder
+         */
         public Builder putTags(String key) {
             if (!tags.getDefined()) {
                 this.tags = Undefinable.defined(new ArrayList<>());
@@ -68,21 +84,43 @@ public class InstanceDeclarationInfo {
             return this;
         }
 
+        /**
+         * info
+         *
+         * @param info info
+         * @return Builder
+         */
         public Builder info(Map<String, Object> info) {
             this.info = Undefinable.defined(info);
             return this;
         }
 
+        /**
+         * tags
+         *
+         * @param tags tags
+         * @return Builder
+         */
         public Builder tags(List<String> tags) {
             this.tags = Undefinable.defined(tags);
             return this;
         }
 
+        /**
+         * 实例声明信息
+         *
+         * @return InstanceDeclarationInfo
+         */
         public InstanceDeclarationInfo build() {
             return new InstanceDeclarationInfo(this.info, this.tags);
         }
     }
 
+    /**
+     * custom
+     *
+     * @return Builder
+     */
     public static Builder custom() {
         return new Builder();
     }

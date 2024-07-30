@@ -39,11 +39,11 @@ public class TianzhouPortalController extends TianzhouAbstractController {
     private final Plugin plugin;
 
     /**
-     * titles
+     * 查询任务group
      *
-     * @param httpRequest httpRequest
-     * @param tenantId tenantId
-     * @return Map<String, Object>
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @return 查询结果
      */
     @GetMapping("/groups")
     @ResponseStatus(HttpResponseStatus.OK)
@@ -53,12 +53,12 @@ public class TianzhouPortalController extends TianzhouAbstractController {
     }
 
     /**
-     * count
+     * 查询任务实例数量
      *
-     * @param httpRequest httpRequest
-     * @param httpResponse httpResponse
-     * @param tenantId tenantId
-     * @return Map<String, Object>
+     * @param httpRequest http请求上下文
+     * @param httpResponse http响应上下文
+     * @param tenantId 租户Id
+     * @return 查询结果
      */
     @GetMapping("/count")
     @ResponseStatus(HttpResponseStatus.OK)
@@ -68,11 +68,11 @@ public class TianzhouPortalController extends TianzhouAbstractController {
     }
 
     /**
-     * trees
+     * 查询任务树形结构
      *
-     * @param httpRequest httpRequest
-     * @param tenantId tenantId
-     * @return Map<String, Object>
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @return 查询结果
      */
     @GetMapping("/trees")
     @ResponseStatus(HttpResponseStatus.OK)
@@ -80,6 +80,14 @@ public class TianzhouPortalController extends TianzhouAbstractController {
         return View.viewOf(() -> this.portalController.trees(httpRequest, tenantId), plugin, httpRequest);
     }
 
+    /**
+     * 创建任务定义
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param request 请求体
+     * @return 创建结果
+     */
     @PostMapping("/tasks")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> createTask(HttpClassicServerRequest httpRequest,
@@ -87,6 +95,15 @@ public class TianzhouPortalController extends TianzhouAbstractController {
         return View.viewOf(() -> this.portalController.createTask(httpRequest, tenantId, request), plugin, httpRequest);
     }
 
+    /**
+     * 修改任务定义
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @param request 请求体
+     * @return 更新结果
+     */
     @PatchMapping("/tasks/{task_id}")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> patchTask(HttpClassicServerRequest httpRequest,
@@ -96,6 +113,14 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 httpRequest);
     }
 
+    /**
+     * 删除任务定义
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @return 删除结果
+     */
     @DeleteMapping("/tasks/{task_id}")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> deleteTask(HttpClassicServerRequest httpRequest,
@@ -103,6 +128,14 @@ public class TianzhouPortalController extends TianzhouAbstractController {
         return View.viewOf(() -> this.portalController.deleteTask(httpRequest, tenantId, taskId), plugin, httpRequest);
     }
 
+    /**
+     * 查询任务定义
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @return 查询结果
+     */
     @GetMapping("/tasks/{task_id}")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> retrieveTask(HttpClassicServerRequest httpRequest,
@@ -111,6 +144,15 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 httpRequest);
     }
 
+    /**
+     * 创建任务属性
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @param request 请求体
+     * @return 创建结果
+     */
     @PostMapping("/tasks/{task_id}/properties")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> createTaskProperty(HttpClassicServerRequest httpRequest,
@@ -120,6 +162,16 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 plugin, httpRequest);
     }
 
+    /**
+     * 修改任务属性
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @param propertyId 任务属性Id
+     * @param request 请求体
+     * @return 修改结果
+     */
     @PatchMapping("/tasks/{task_id}/properties/{property_id}")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> patchTaskProperty(HttpClassicServerRequest httpRequest,
@@ -131,6 +183,15 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 httpRequest);
     }
 
+    /**
+     * 批量修改任务属性
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @param request 请求体
+     * @return 修改结果
+     */
     @PatchMapping("/tasks/{task_id}/properties")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> patchTaskProperties(HttpClassicServerRequest httpRequest,
@@ -140,6 +201,15 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 httpRequest);
     }
 
+    /**
+     * 删除任务属性
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @param propertyId 任务属性Id
+     * @return 删除结果
+     */
     @DeleteMapping("/tasks/{task_id}/properties/{property_id}")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> deleteTaskProperty(HttpClassicServerRequest httpRequest,
@@ -149,6 +219,15 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 plugin, httpRequest);
     }
 
+    /**
+     * 创建任务类型
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @param request 请求体
+     * @return 创建结果
+     */
     @PostMapping("/tasks/{task_id}/types")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> createTaskType(HttpClassicServerRequest httpRequest,
@@ -158,6 +237,16 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 httpRequest);
     }
 
+    /**
+     * 修改任务类型
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @param typeId 任务类型Id
+     * @param request 请求体
+     * @return 修改结果
+     */
     @PatchMapping("/tasks/{task_id}/types/{type_id}")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> patchTaskType(HttpClassicServerRequest httpRequest,
@@ -167,6 +256,15 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 plugin, httpRequest);
     }
 
+    /**
+     * 删除任务类型
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @param typeId 任务类型Id
+     * @return 删除结果
+     */
     @DeleteMapping("/tasks/{task_id}/types/{type_id}")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> deleteTaskType(HttpClassicServerRequest httpRequest,
@@ -176,6 +274,16 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 httpRequest);
     }
 
+    /**
+     * 创建任务数据源
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @param typeId 任务类型Id
+     * @param request 请求体
+     * @return 创建结果
+     */
     @PostMapping("/tasks/{task_id}/types/{type_id}/sources")
     @ResponseStatus(HttpResponseStatus.CREATED)
     public Map<String, Object> createTaskSource(HttpClassicServerRequest httpRequest,
@@ -185,6 +293,17 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 plugin, httpRequest);
     }
 
+    /**
+     * 修改任务数据源
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @param typeId 任务类型Id
+     * @param sourceId 数据源Id
+     * @param request 请求体
+     * @return 修改结果
+     */
     @PatchMapping("/tasks/{task_id}/types/{type_id}/sources/{source_id}")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> patchTaskSource(HttpClassicServerRequest httpRequest,
@@ -196,6 +315,16 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 plugin, httpRequest);
     }
 
+    /**
+     * 删除任务数据源
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @param typeId 任务类型Id
+     * @param sourceId 数据源Id
+     * @return 删除结果
+     */
     @DeleteMapping("/tasks/{task_id}/types/{type_id}/sources/{source_id}")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> deleteTaskSource(HttpClassicServerRequest httpRequest,
@@ -206,6 +335,15 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 httpRequest);
     }
 
+    /**
+     * 查询任务数据源
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @param typeId 任务类型Id
+     * @return Map<String, Object>
+     */
     @GetMapping("/tasks/{task_id}/types/{type_id}/sources")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> listTaskSources(HttpClassicServerRequest httpRequest,
@@ -215,6 +353,14 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 httpRequest);
     }
 
+    /**
+     * 创建三方授权
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param request 请求体
+     * @return 创建结果
+     */
     @PostMapping(path = "/authorizations", summary = "创建三方授权")
     @ResponseStatus(HttpResponseStatus.CREATED)
     public Map<String, Object> createAuthorization(HttpClassicServerRequest httpRequest,
@@ -223,6 +369,15 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 plugin, httpRequest);
     }
 
+    /**
+     * 修改三方授权
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param authorizationId 授权Id
+     * @param request 请求体
+     * @return 修改结果
+     */
     @PatchMapping(path = "/authorizations/{authorization_id}", summary = "修改三方授权")
     @ResponseStatus(HttpResponseStatus.NO_CONTENT)
     public Map<String, Object> patchAuthorization(HttpClassicServerRequest httpRequest,
@@ -232,6 +387,14 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 request), plugin, httpRequest);
     }
 
+    /**
+     * 删除三方授权
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param authorizationId 授权Id
+     * @return 删除结果
+     */
     @DeleteMapping(path = "/authorizations/{authorization_id}", summary = "修改三方授权")
     @ResponseStatus(HttpResponseStatus.NO_CONTENT)
     public Map<String, Object> deleteAuthorization(HttpClassicServerRequest httpRequest,
@@ -240,6 +403,14 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 plugin, httpRequest);
     }
 
+    /**
+     * 查询三方授权
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param authorizationId 授权Id
+     * @return 查询结果
+     */
     @GetMapping(path = "/authorizations/{authorization_id}", summary = "检索三方授权")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> retrieveAuthorization(HttpClassicServerRequest httpRequest,
@@ -248,6 +419,15 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 plugin, httpRequest);
     }
 
+    /**
+     * 批量查询三方授权
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param offset offset
+     * @param limit limit
+     * @return 查询结果
+     */
     @GetMapping(path = "/authorizations", summary = "查询三方授权")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> listAuthorizations(HttpClassicServerRequest httpRequest,
@@ -257,6 +437,18 @@ public class TianzhouPortalController extends TianzhouAbstractController {
                 plugin, httpRequest);
     }
 
+    /**
+     * 分页查询任务实例列表
+     *
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param taskId 任务定义Id
+     * @param viewType 视图类型
+     * @param deleted 是否查询删除表
+     * @param offset offset
+     * @param limit limit
+     * @return 查询结果
+     */
     @GetMapping(path = "/tasks/{task_id}/instances", summary = "分页查询任务实例列表")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> listInstances(HttpClassicServerRequest httpRequest,
@@ -269,14 +461,14 @@ public class TianzhouPortalController extends TianzhouAbstractController {
     }
 
     /**
-     * list
+     * 分页查询关联任务列表
      *
-     * @param httpRequest httpRequest
-     * @param tenantId tenantId
-     * @param instanceId instanceId
+     * @param httpRequest http请求上下文
+     * @param tenantId 租户Id
+     * @param instanceId 任务实例Id
      * @param offset offset
      * @param limit limit
-     * @return Map<String, Object>
+     * @return 查询结果
      */
     @GetMapping(path = "/instances/{instance_id}/relations", summary = "分页查询关联任务列表")
     @ResponseStatus(HttpResponseStatus.OK)

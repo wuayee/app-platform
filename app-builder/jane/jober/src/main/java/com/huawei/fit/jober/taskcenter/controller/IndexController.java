@@ -41,12 +41,28 @@ public class IndexController extends AbstractController {
 
     private final Index.Repo indexRepo;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator 授权校验器
+     * @param taskService 任务服务
+     * @param indexRepo 索引数据层
+     */
     public IndexController(Authenticator authenticator, TaskService taskService, Index.Repo indexRepo) {
         super(authenticator);
         this.taskService = taskService;
         this.indexRepo = indexRepo;
     }
 
+    /**
+     * 创建索引
+     *
+     * @param httpRequest http请求
+     * @param tenantId 租户id
+     * @param taskId 任务id
+     * @param request 请求
+     * @return 索引对象
+     */
     @PostMapping(summary = "创建索引")
     @ResponseStatus(HttpResponseStatus.CREATED)
     public Map<String, Object> create(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
@@ -58,6 +74,15 @@ public class IndexController extends AbstractController {
         return viewOf(index);
     }
 
+    /**
+     * 修改索引
+     *
+     * @param httpRequest http请求
+     * @param tenantId 租户id
+     * @param taskId 任务id
+     * @param indexId 索取id
+     * @param request 请求
+     */
     @PatchMapping(path = "/{index_id}", summary = "修改索引")
     @ResponseStatus(HttpResponseStatus.NO_CONTENT)
     public void patch(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
@@ -69,6 +94,14 @@ public class IndexController extends AbstractController {
         this.indexRepo.patch(task, indexId, declaration, context);
     }
 
+    /**
+     * 删除索引
+     *
+     * @param httpRequest http请求
+     * @param tenantId 租户id
+     * @param taskId 任务id
+     * @param indexId 索取id
+     */
     @DeleteMapping(path = "/{index_id}", summary = "删除索引")
     @ResponseStatus(HttpResponseStatus.NO_CONTENT)
     public void delete(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
@@ -78,6 +111,15 @@ public class IndexController extends AbstractController {
         this.indexRepo.delete(task, indexId, context);
     }
 
+    /**
+     * 查询索引
+     *
+     * @param httpRequest http请求
+     * @param tenantId 租户id
+     * @param taskId 任务id
+     * @param indexId 索取id
+     * @return 索引
+     */
     @GetMapping(path = "/{index_id}", summary = "检索索引")
     @ResponseStatus(HttpResponseStatus.OK)
     @ResponseBody
@@ -90,6 +132,14 @@ public class IndexController extends AbstractController {
         return viewOf(index);
     }
 
+    /**
+     * 批量查询索引
+     *
+     * @param httpRequest http请求
+     * @param tenantId 租户id
+     * @param taskId 任务id
+     * @return 索引列表
+     */
     @GetMapping(summary = "查询索引")
     @ResponseStatus(HttpResponseStatus.OK)
     public List<Map<String, Object>> list(HttpClassicServerRequest httpRequest,

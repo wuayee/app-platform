@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 表单构建器实体类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-16
  */

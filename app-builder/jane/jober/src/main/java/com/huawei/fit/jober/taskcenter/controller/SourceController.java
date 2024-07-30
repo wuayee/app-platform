@@ -42,6 +42,12 @@ import java.util.Map;
 public class SourceController extends AbstractController {
     private final SourceService sourceService;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator {@link Authenticator}认证器实例
+     * @param sourceService {@link SourceService}实例
+     */
     public SourceController(Authenticator authenticator, SourceService sourceService) {
         super(authenticator);
         this.sourceService = sourceService;
@@ -63,8 +69,8 @@ public class SourceController extends AbstractController {
             @PathVariable("tenant_id") String tenantId, @PathVariable("task_id") String taskId,
             @RequestBody Map<String, Object> request) {
         SourceDeclaration declaration = Views.declareSource(request);
-        SourceEntity entity = this.sourceService.create(taskId, null, declaration,
-                this.contextOf(httpRequest, tenantId));
+        SourceEntity entity =
+                this.sourceService.create(taskId, null, declaration, this.contextOf(httpRequest, tenantId));
         return Views.viewOf(entity);
     }
 
@@ -137,8 +143,9 @@ public class SourceController extends AbstractController {
     @ResponseStatus(HttpResponseStatus.OK)
     public List<Map<String, Object>> list(HttpClassicServerRequest httpRequest, HttpClassicServerResponse httpResponse,
             @PathVariable("tenant_id") String tenantId, @PathVariable("task_id") String taskId) {
-        List<SourceEntity> entities = this.sourceService.list(Collections.singletonList(taskId),
-                this.contextOf(httpRequest, tenantId)).getOrDefault(taskId, Collections.emptyList());
+        List<SourceEntity> entities =
+                this.sourceService.list(Collections.singletonList(taskId), this.contextOf(httpRequest, tenantId))
+                        .getOrDefault(taskId, Collections.emptyList());
         return Views.viewOf(entities, Views::viewOf);
     }
 }

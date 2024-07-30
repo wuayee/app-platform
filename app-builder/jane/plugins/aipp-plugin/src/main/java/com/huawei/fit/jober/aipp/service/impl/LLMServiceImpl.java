@@ -49,6 +49,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * 大模型服务实现类
+ *
+ * @author 孙怡菲 s00664640
+ * @since 2024-05-10
+ */
 @Component
 public class LLMServiceImpl implements LLMService {
     private static final Logger log = Logger.get(LLMServiceImpl.class);
@@ -76,7 +82,14 @@ public class LLMServiceImpl implements LLMService {
         this.voiceService = voiceService;
     }
 
-    // 修复question带有\n的情况， 手动拼接导致json无效的问题
+    /**
+     * 构造小海请求体
+     * 修复question带有\n的情况， 手动拼接导致json无效的问题
+     *
+     * @param w3Id 工号
+     * @param question 问题
+     * @return 请求体的json字符串
+     */
     public String getAskXiaoHaiReqBody(String w3Id, String question) {
         XiaohaiReq req = XiaohaiReq.builder().employeeId(w3Id).question(question).build();
         return JsonUtils.toJsonString(req);

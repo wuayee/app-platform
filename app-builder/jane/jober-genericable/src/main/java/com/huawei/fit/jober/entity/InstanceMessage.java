@@ -29,6 +29,9 @@ public class InstanceMessage {
 
     private List<PropertyValue> primaries;
 
+    /**
+     * InstanceMessage
+     */
     public InstanceMessage() {
     }
 

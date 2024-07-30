@@ -22,7 +22,7 @@ import com.huawei.fit.jane.task.util.Dates;
 import com.huawei.fit.jane.task.util.PagedResultSet;
 import com.huawei.fit.jane.task.util.PaginationResult;
 import com.huawei.fit.jane.task.util.UndefinableValue;
-import com.huawei.fit.jober.common.utils.UUIDUtil;
+import com.huawei.fit.jober.common.utils.UuidUtil;
 import com.huawei.fit.jober.entity.task.TaskProperty;
 import com.huawei.fit.jober.taskcenter.declaration.InstanceDeclaration;
 import com.huawei.fit.jober.taskcenter.declaration.InstanceEventDeclaration;
@@ -60,10 +60,12 @@ import com.huawei.fitframework.model.RangeResult;
 import com.huawei.fitframework.model.RangedResultSet;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -108,7 +110,7 @@ public final class Views {
         if (!view.containsKey(key)) {
             return UndefinableValue.undefined();
         }
-        @SuppressWarnings("unchecked") List<Object> list = (List<Object>) view.get(key);
+        List<Object> list = ObjectUtils.<List<Object>>cast(view.get(key));
         if (list == null) {
             return UndefinableValue.defined(null);
         }
@@ -141,6 +143,7 @@ public final class Views {
      * 从视图中解析任务实例的声明信息。
      *
      * @param view 表示包含声明信息的视图的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     * @param task 任务对象
      * @return 表示从视图中解析到的任务实例的 {@link InstanceDeclaration}。
      */
     public static TaskInstance.Declaration declareInstance(Map<String, Object> view, TaskEntity task) {
@@ -211,8 +214,8 @@ public final class Views {
         if (view == null) {
             return null;
         }
-        com.huawei.fit.jane.task.domain.TaskProperty.Declaration.Builder builder
-                = com.huawei.fit.jane.task.domain.TaskProperty.Declaration.custom();
+        com.huawei.fit.jane.task.domain.TaskProperty.Declaration.Builder builder =
+                com.huawei.fit.jane.task.domain.TaskProperty.Declaration.custom();
         declare(view, "name", builder::name);
         declare(view, "templateId", builder::templateId);
         declare(view, "dataType", builder::dataType);
@@ -273,8 +276,8 @@ public final class Views {
         declare(view, "members", builder::members);
         declare(view, "tags", builder::tags);
         if (view.get("accessLevel") != null) {
-            TenantAccessLevel tenantAccessLevel = Enums.parse(TenantAccessLevel.class,
-                    String.valueOf(view.get("accessLevel")));
+            TenantAccessLevel tenantAccessLevel =
+                    Enums.parse(TenantAccessLevel.class, String.valueOf(view.get("accessLevel")));
             builder.accessLevel(tenantAccessLevel);
         }
         return builder.build();
@@ -310,6 +313,16 @@ public final class Views {
         }
     }
 
+    /**
+     * 新增数据
+     *
+     * @param view map数据
+     * @param key 键
+     * @param value 值
+     * @param mapper 转换器
+     * @param <T> 源类型
+     * @param <R> 目的类型
+     */
     public static <T, R> void put(Map<String, Object> view, String key, T value, Function<T, R> mapper) {
         if (value == null) {
             return;
@@ -618,6 +631,13 @@ public final class Views {
         return view;
     }
 
+    /**
+     * 定义list
+     *
+     * @param list 列表数据
+     * @param <T> 泛型类型
+     * @return 列表
+     */
     public static <T> UndefinableValue<List<T>> defineList(List<T> list) {
         if (CollectionUtils.isEmpty(list)) {
             return UndefinableValue.undefined();
@@ -677,9 +697,10 @@ public final class Views {
      * 从 HTTP 请求中解析任务实例的过滤器。
      *
      * @param request 表示 HTTP 请求的 {@link HttpClassicServerRequest}。
+     * @param isDeleted 是否删除了
      * @return 表示解析到的过滤器的 {@link TaskInstance.Filter}。
      */
-    public static TaskInstance.Filter filterOfInstances(HttpClassicServerRequest request, boolean deleted) {
+    public static TaskInstance.Filter filterOfInstances(HttpClassicServerRequest request, boolean isDeleted) {
         final String infoPrefix = "info.";
         Map<String, List<String>> infoFilters = new LinkedHashMap<>();
         for (String key : request.queries().keys()) {
@@ -696,16 +717,15 @@ public final class Views {
                 .infos(infoFilters)
                 .tags(request.queries().all("tag"))
                 .categories(request.queries().all("category"))
-                .deleted(deleted)
+                .deleted(isDeleted)
                 .build();
     }
 
-    @SuppressWarnings("unchecked")
     private static <T> List<T> decodeList(List<T> list) {
         return list.stream().map(param -> {
             if (param instanceof String) {
                 try {
-                    return (T) URLDecoder.decode((String) param, "UTF-8");
+                    return ObjectUtils.<T>cast(URLDecoder.decode((String) param, StandardCharsets.UTF_8.toString()));
                 } catch (UnsupportedEncodingException e) {
                     log.warn("unsupported encoding for string {}", param);
                     return null;
@@ -903,8 +923,11 @@ public final class Views {
         consumeQueryArgumentsIfExists(request, "id", builder::ids);
         consumeQueryArgumentsIfExists(request, "name", builder::names);
         consumeQueryArgumentsIfExists(request, "tag", builder::tags);
-        consumeQueryArgumentsIfExists(request, "accessLevel", (accessLevels) -> builder.accessLevels(
-                accessLevels.stream().map(TenantAccessLevel::valueOf).collect(Collectors.toList())));
+        consumeQueryArgumentsIfExists(request,
+                "accessLevel",
+                (accessLevels) -> builder.accessLevels(accessLevels.stream()
+                        .map(TenantAccessLevel::valueOf)
+                        .collect(Collectors.toList())));
         return builder.build();
     }
 
@@ -912,6 +935,7 @@ public final class Views {
      * 从 HTTP 请求中解析租户成员的过滤器。
      *
      * @param request 表示 HTTP 请求的 {@link HttpClassicServerRequest}。
+     * @param tenantId 租户id
      * @return 表示解析到的过滤器的 {@link TenantMember.Filter}。
      */
     public static TenantMember.Filter filterOfTenantMembers(HttpClassicServerRequest request, String tenantId) {
@@ -935,6 +959,12 @@ public final class Views {
         }
     }
 
+    /**
+     * 通过{@link GetPageResponse}构建视图
+     *
+     * @param getPageResponse 分页查询流程定义列表response
+     * @return 视图
+     */
     public static Map<String, Object> viewOf(GetPageResponse getPageResponse) {
         Map<String, Object> view = new LinkedHashMap<>();
         if (getPageResponse == null) {
@@ -964,6 +994,12 @@ public final class Views {
         return view;
     }
 
+    /**
+     * 通过视图构造认证
+     *
+     * @param view 视图
+     * @return 认证
+     */
     public static Authorization.Declaration declareAuthorization(Map<String, Object> view) {
         Authorization.Declaration.Builder builder = Authorization.Declaration.custom();
         declare(view, "system", builder::system);
@@ -973,6 +1009,12 @@ public final class Views {
         return builder.build();
     }
 
+    /**
+     * 返回视图
+     *
+     * @param authorization 认证信息
+     * @return 视图
+     */
     public static Map<String, Object> viewOf(Authorization authorization) {
         Map<String, Object> view = new LinkedHashMap<>(8);
         put(view, "id", authorization.id());
@@ -1002,6 +1044,12 @@ public final class Views {
         return view;
     }
 
+    /**
+     * 构建认证过滤信息
+     *
+     * @param httpRequest http请求
+     * @return 过滤信息
+     */
     public static Authorization.Filter filterOfAuthorization(HttpClassicServerRequest httpRequest) {
         Authorization.Filter.Builder builder = Authorization.Filter.custom();
         builder.ids(httpRequest.queries().all("id"));
@@ -1155,7 +1203,7 @@ public final class Views {
             return null;
         }
         TaskRelation.Declaration.Builder builder = TaskRelation.Declaration.custom();
-        builder.id(UUIDUtil.uuid());
+        builder.id(UuidUtil.uuid());
         declare(view, "objectId1", builder::objectId1);
         declare(view, "objectType1", builder::objectType1);
         declare(view, "objectId2", builder::objectId2);

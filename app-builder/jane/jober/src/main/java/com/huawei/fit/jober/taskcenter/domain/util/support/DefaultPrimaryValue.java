@@ -20,10 +20,18 @@ import java.util.Objects;
  * @since 2023-10-28
  */
 public class DefaultPrimaryValue implements PrimaryValue {
+    /**
+     * 空值
+     */
     public static final PrimaryValue EMPTY = new DefaultPrimaryValue(Collections.emptyMap());
 
     private final Map<String, Object> values;
 
+    /**
+     * 构造函数
+     *
+     * @param values 值
+     */
     public DefaultPrimaryValue(Map<String, Object> values) {
         this.values = nullIf(values, Collections.emptyMap());
     }

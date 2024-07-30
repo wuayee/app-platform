@@ -13,6 +13,7 @@ import com.huawei.fitframework.aop.annotation.Around;
 import com.huawei.fitframework.aop.annotation.Aspect;
 import com.huawei.fitframework.aop.annotation.Pointcut;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,7 +45,7 @@ public class AippLogInsertAspect {
     @Around("aippLogInsertPointCut()")
     public Object tenantAuthentication(ProceedingJoinPoint pjp) throws Throwable {
         Object result = pjp.proceed();
-        AippLogCreateDto dto = (AippLogCreateDto) pjp.getArgs()[0];
+        AippLogCreateDto dto = ObjectUtils.cast(pjp.getArgs()[0]);
 
         // 判断条件和插入中
         if (dto.allFieldsNotNull()) {

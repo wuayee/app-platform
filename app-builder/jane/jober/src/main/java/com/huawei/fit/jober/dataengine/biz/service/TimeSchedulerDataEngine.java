@@ -128,7 +128,6 @@ public class TimeSchedulerDataEngine implements StaticDataEngine {
                         log.error("The thread pool run failed, error cause: {}, message: {}.", throwable.getCause(),
                                 throwable.getMessage());
                         log.error("The thread pool run failed details: ", throwable);
-                        // TODO:需要抛出异常吗
                     })
                     .build();
             ScheduledFuture<?> schedule = GlobalExecutorUtil.getInstance()

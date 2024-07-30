@@ -19,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 /**
+ * 应用构建器配置类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-16
  */
@@ -40,7 +42,8 @@ public class AppBuilderConfig extends BaseDomain {
     private AppBuilderConfigPropertyRepository configPropertyRepository;
     private AppBuilderAppRepository appRepository;
 
-    public AppBuilderConfig(AppBuilderFormRepository formRepository, AppBuilderFormPropertyRepository formPropertyMapper,
+    public AppBuilderConfig(AppBuilderFormRepository formRepository,
+            AppBuilderFormPropertyRepository formPropertyMapper,
             AppBuilderConfigPropertyRepository configPropertyRepository, AppBuilderAppRepository appRepository) {
         this.formRepository = formRepository;
         this.formPropertyRepository = formPropertyMapper;

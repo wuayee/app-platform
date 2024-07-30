@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * SummaryDto
+ * 总结Dto
  *
  * @author y00612997
  * @since 2024/1/8
@@ -39,6 +39,12 @@ public class SummaryDto {
     @Property(description = "分段总结")
     private List<SummarySection> sectionList;
 
+    /**
+     * 构造函数
+     *
+     * @param summaryList list
+     * @param segmentSize size
+     */
     public SummaryDto(List<String> summaryList, int segmentSize) {
         this.sectionList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(summaryList)) {

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Flow使用的item
+ * 组件流程项DTO
  *
  * @author x00576283
  * @since 2023/12/22
@@ -41,6 +41,17 @@ public class AippComponentFlowItemDto extends AippComponentItemDto {
     @JsonProperty("jober")
     private Map<String, Object> jober;
 
+    /**
+     * 构造函数
+     *
+     * @param type 类型
+     * @param name 名称
+     * @param icon 图标
+     * @param description 描述
+     * @param group 分组
+     * @param triggerMode 触发模式
+     * @param jober Jober对象
+     */
     public AippComponentFlowItemDto(String type, String name, String icon, String description, List<String> group,
             String triggerMode, Map<String, Object> jober) {
         super(type, name, icon, description, group);

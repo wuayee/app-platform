@@ -14,5 +14,12 @@ import java.io.IOException;
  */
 @FunctionalInterface
 public interface AudioTextFunction<T1, R> {
+    /**
+     * apply
+     *
+     * @param t1 t1
+     * @return R
+     * @throws IOException IOException
+     */
     R apply(T1 t1) throws IOException;
 }

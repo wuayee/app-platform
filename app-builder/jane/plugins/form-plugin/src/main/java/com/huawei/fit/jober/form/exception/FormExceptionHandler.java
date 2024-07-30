@@ -17,6 +17,7 @@ import com.huawei.fitframework.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -30,9 +31,15 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class FormExceptionHandler {
-    public static final List<Locale> LOCALES =
-            Arrays.asList(new Locale("en"), new Locale("zh"), new Locale("en", "US"), new Locale("zh", "CN"));
+    /**
+     * 本地化Locale列表
+     */
+    public static final List<Locale> LOCALES = Collections.unmodifiableList(Arrays.asList(new Locale("en"),
+            new Locale("zh"),
+            new Locale("en", "US"),
+            new Locale("zh", "CN")));
     private static final Logger log = Logger.get(FormExceptionHandler.class);
+
     private final Plugin plugin;
 
     /**
@@ -76,6 +83,12 @@ public class FormExceptionHandler {
 
     /**
      * 获取国际化异常信息
+     *
+     * @param code 码
+     * @param defaultMsg 默认信息
+     * @param params 参数数组
+     * @param context 上下文
+     * @return 国际化异常信息
      */
     private String getLocaleMessage(String code, String defaultMsg, Object[] params, OperationContext context) {
         if (Objects.isNull(context) || StringUtils.isEmpty(context.getLanguage())) {
@@ -87,7 +100,7 @@ public class FormExceptionHandler {
         try {
             return plugin.sr().getMessage(locale, code, defaultMsg, params);
         } catch (Exception exception) {
-            log.warn("本地化异常消息发生异常: {}, {}", code, params);
+            log.warn("Localized exception messageException occurred: {}, {}", code, params);
             return defaultMsg;
         }
     }

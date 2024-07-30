@@ -31,8 +31,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public final class DistributedLock implements Lock {
     private static final Logger log = Logger.get(CleanExpiredLocksScheduleService.class);
 
-    private static final ScheduledThreadPoolExecutor RENEW_LOCK_EXECUTOR = new ScheduledThreadPoolExecutor(1,
-            new CustomThreadFactory("DistributedLock-renew"));
+    private static final ScheduledThreadPoolExecutor RENEW_LOCK_EXECUTOR =
+            new ScheduledThreadPoolExecutor(1, new CustomThreadFactory("DistributedLock-renew"));
 
     private static final Integer KEY_MAX_LENGTH = 100;
 
@@ -145,15 +145,8 @@ public final class DistributedLock implements Lock {
                     Thread.sleep(this.idleTime);
                 }
                 break;
-            } catch (DataAccessException | TransactionException e) {
+            } catch (DataAccessException | TransactionException | InterruptedException e) {
                 // 重试
-                log.error("locked error : {}", this.lockKey);
-                log.error("Exception={}.", e);
-            } catch (InterruptedException e) {
-                /*
-                 * 该方法必须是不可中断的，所以抓住并忽略中断异常。只有当获取锁成功时才从跳出while循环。
-                 * interrupts and only break out of the while loop when get the lock.
-                 */
                 log.error("locked error : {}", this.lockKey);
                 log.error("Exception={}.", e);
             } catch (Exception e) {
@@ -286,8 +279,10 @@ public final class DistributedLock implements Lock {
         if (isAcquired) {
             this.lastUsed = System.currentTimeMillis();
             if (renewLockFuture == null || renewLockFuture.isCancelled()) {
-                renewLockFuture = RENEW_LOCK_EXECUTOR.scheduleAtFixedRate(this::renewLock, renewScheduleRate,
-                        renewScheduleRate, TimeUnit.MILLISECONDS);
+                renewLockFuture = RENEW_LOCK_EXECUTOR.scheduleAtFixedRate(this::renewLock,
+                        renewScheduleRate,
+                        renewScheduleRate,
+                        TimeUnit.MILLISECONDS);
             }
             this.isValid = true;
         }

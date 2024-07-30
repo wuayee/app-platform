@@ -22,6 +22,9 @@ public class InstanceInfo {
 
     private List<String> tags;
 
+    /**
+     * InstanceInfo
+     */
     public InstanceInfo() {
     }
 

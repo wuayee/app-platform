@@ -7,7 +7,7 @@ package com.huawei.fit.jober.taskcenter.declaration;
 import com.huawei.fit.jane.task.util.UndefinableValue;
 
 /**
- * Todo
+ * 实例构造器
  *
  * @author 陈镕希 c00572808
  * @since 2023-10-30

@@ -21,6 +21,7 @@ import com.huawei.fit.jober.taskcenter.validation.InstanceEventValidator;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.MapUtils;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -85,8 +86,8 @@ public class InstanceEventServiceImpl implements InstanceEventService {
                 throw new ServerInternalException("Failed to insert task instance events into database.");
             }
             Map<String, List<String>> groupedIds = rows.stream().collect(Collectors.groupingBy(
-                    row -> (String) row.get("source_id"),
-                    Collectors.mapping(row -> (String) row.get("id"), Collectors.toList())));
+                    row -> ObjectUtils.cast(row.get("source_id")),
+                    Collectors.mapping(row -> ObjectUtils.cast(row.get("id")), Collectors.toList())));
             for (Map.Entry<String, List<String>> entry : groupedIds.entrySet()) {
                 SqlBuilder conditionSql = SqlBuilder.custom();
                 conditionSql.appendIdentifier("source_id")
@@ -137,7 +138,7 @@ public class InstanceEventServiceImpl implements InstanceEventService {
                 .appendRepeatedly("?, ", actualSourceIds.size()).backspace(2).append(')');
         List<Object> args = new LinkedList<>(actualSourceIds);
         List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
-        return rows.stream().collect(Collectors.groupingBy(row -> (String) row.get("source_id"),
+        return rows.stream().collect(Collectors.groupingBy(row -> ObjectUtils.cast(row.get("source_id")),
                 Collectors.mapping(InstanceEventServiceImpl::readInstanceEvent, Collectors.toList())));
     }
 
@@ -158,7 +159,7 @@ public class InstanceEventServiceImpl implements InstanceEventService {
                 .append(" WHERE ").appendIdentifier("tns").append('.').appendIdentifier("node_id").append(" = ?");
         List<Object> args = Collections.singletonList(taskTypeId);
         List<Map<String, Object>> rows = this.executor.executeQuery(sql.toString(), args);
-        return rows.stream().collect(Collectors.groupingBy(row -> (String) row.get("source_id"),
+        return rows.stream().collect(Collectors.groupingBy(row -> ObjectUtils.cast(row.get("source_id")),
                 Collectors.mapping(InstanceEventServiceImpl::readInstanceEvent, Collectors.toList())));
     }
 
@@ -196,8 +197,8 @@ public class InstanceEventServiceImpl implements InstanceEventService {
 
     private static InstanceEvent readInstanceEvent(Map<String, Object> row) {
         return InstanceEvent.custom()
-                .type(Enums.parse(InstanceEventType.class, (String) row.get("event_type")))
-                .fitableId((String) row.get("fitable_id"))
+                .type(Enums.parse(InstanceEventType.class, ObjectUtils.cast(row.get("event_type"))))
+                .fitableId(ObjectUtils.cast(row.get("fitable_id")))
                 .build();
     }
 }

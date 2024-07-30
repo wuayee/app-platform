@@ -12,21 +12,19 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
+ * AppBuilder流程图结结构体
+ *
  * @author 邬涨财 w00575064
- * @since 2024-04-16
+ * @since 2024-04-17
  */
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppBuilderComponentPO {
+public class AppBuilderFlowGraphPo {
     private String id;
     private String name;
-    private String type;
-    private String description;
-    private String formId;
-    private String serviceId;
-    private String tenantId;
+    private String appearance;
     private String createBy;
     private String updateBy;
     private LocalDateTime createAt;

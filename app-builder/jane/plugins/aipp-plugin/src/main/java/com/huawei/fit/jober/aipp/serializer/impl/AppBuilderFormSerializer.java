@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.aipp.serializer.impl;
 
 import com.huawei.fit.jober.aipp.domain.AppBuilderForm;
-import com.huawei.fit.jober.aipp.po.AppBuilderFormPO;
+import com.huawei.fit.jober.aipp.po.AppBuilderFormPo;
 import com.huawei.fit.jober.aipp.serializer.BaseSerializer;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.util.ObjectUtils;
@@ -15,16 +15,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * 应用表单序列化与反序列化实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */
-public class AppBuilderFormSerializer implements BaseSerializer<AppBuilderForm, AppBuilderFormPO> {
+public class AppBuilderFormSerializer implements BaseSerializer<AppBuilderForm, AppBuilderFormPo> {
     @Override
-    public AppBuilderFormPO serialize(AppBuilderForm appBuilderForm) {
+    public AppBuilderFormPo serialize(AppBuilderForm appBuilderForm) {
         if (appBuilderForm == null) {
             return null;
         }
-        return AppBuilderFormPO.builder()
+        return AppBuilderFormPo.builder()
                 .id(appBuilderForm.getId())
                 .name(appBuilderForm.getName())
                 .tenantId(appBuilderForm.getTenantId())
@@ -38,7 +40,7 @@ public class AppBuilderFormSerializer implements BaseSerializer<AppBuilderForm, 
     }
 
     @Override
-    public AppBuilderForm deserialize(AppBuilderFormPO appBuilderFormPO) {
+    public AppBuilderForm deserialize(AppBuilderFormPo appBuilderFormPO) {
         if (appBuilderFormPO == null) {
             return null;
         }

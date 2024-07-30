@@ -19,6 +19,9 @@ public class TaskTrigger {
 
     private String fitableId;
 
+    /**
+     * TaskTrigger
+     */
     public TaskTrigger() {
     }
 

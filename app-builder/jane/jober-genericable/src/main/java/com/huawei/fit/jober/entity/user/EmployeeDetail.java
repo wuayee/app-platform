@@ -53,6 +53,9 @@ public class EmployeeDetail {
      */
     private String globalUserId;
 
+    /**
+     * EmployeeDetail
+     */
     public EmployeeDetail() {
     }
 

@@ -14,7 +14,7 @@ import com.huawei.fit.jober.aipp.entity.ChatAndInstanceMap;
 import com.huawei.fit.jober.aipp.entity.ChatInfo;
 import com.huawei.fit.jober.aipp.mapper.AippChatMapper;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
-import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
+import com.huawei.fit.jober.aipp.po.AppBuilderAppPo;
 import com.huawei.fit.jober.aipp.service.AippRunTimeService;
 import com.huawei.fit.jober.aipp.service.AppChatService;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
@@ -54,7 +54,7 @@ public class AppChatServiceImpl implements AppChatService {
             body.getInitContext().put("chatId", body.getChatId());
         }
         // app
-        AppBuilderAppPO app = this.appMapper.selectWithId(body.getAppId());
+        AppBuilderAppPo app = this.appMapper.selectWithId(body.getAppId());
         // chatId
         String chatId = body.getChatId() == null ? UUIDUtil.uuid() : body.getChatId();
         // create instance
@@ -78,7 +78,7 @@ public class AppChatServiceImpl implements AppChatService {
         }
     }
 
-    private void buildAndInsertChatInfo(AppBuilderAppPO app, Map<String, String> attributes, String chatName,
+    private void buildAndInsertChatInfo(AppBuilderAppPo app, Map<String, String> attributes, String chatName,
             String chatId, String operator) {
         String cutChatName = chatName.length() > 64 ? chatName.substring(0, 32) : chatName;
         LocalDateTime operateTime = LocalDateTime.now();

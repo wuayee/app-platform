@@ -28,7 +28,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
     private final KTableService kTableService;
 
     public KnowledgeServiceImpl(KRepoService kRepoService, KTableService kTableService) {
-        // todo: 独立环境的 eDataMate.query_list_url 暂时由外部环境注入，之后统一整改到配置文件中
+        // 独立环境的 eDataMate.query_list_url 暂时由外部环境注入，之后统一整改到配置文件中
         this.kRepoService = kRepoService;
         this.kTableService = kTableService;
     }

@@ -29,6 +29,12 @@ public enum LlmModelNameEnum {
         this.value = value;
     }
 
+    /**
+     * 根据给定的值获取对应的大模型名称枚举
+     *
+     * @param value 大模型名称的字符串表示
+     * @return LlmModelNameEnum
+     */
     public static LlmModelNameEnum getLlmModelName(String value) {
         return Arrays.stream(values()).filter(item -> item.name().equalsIgnoreCase(value)).findFirst().orElse(XIAOHAI);
     }

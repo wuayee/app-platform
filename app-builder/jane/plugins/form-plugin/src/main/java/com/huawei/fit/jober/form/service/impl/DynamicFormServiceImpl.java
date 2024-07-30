@@ -32,13 +32,27 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * 动态表单服务
+ *
+ * @author 00664640
+ * @since 2024/5/10
+ */
 @Component
 public class DynamicFormServiceImpl implements DynamicFormService {
     private static final Logger log = Logger.get(DynamicFormServiceImpl.class);
+
     private final FormMapper formMapper;
     private final GraphExposeService elsaClient;
     private final String accessKey;
 
+    /**
+     * 构造函数
+     *
+     * @param formMapper 表单数据库操作接口
+     * @param elsaClient 调用elsa接口服务
+     * @param accessKey 权限校验key
+     */
     public DynamicFormServiceImpl(@Fit FormMapper formMapper, @Fit GraphExposeService elsaClient,
             @Value("${elsa.accessKey}") String accessKey) {
         this.formMapper = formMapper;
@@ -91,7 +105,7 @@ public class DynamicFormServiceImpl implements DynamicFormService {
         }
         GraphParam elsaParam = buildGraphParam(formId, version, "");
 
-        // todo 暂时用不到，可去掉；后期应该改为调用appBuilder的查询表单的渲染数据json的接口
+        // 暂时用不到，可去掉；后期应该改为调用appBuilder的查询表单的渲染数据json的接口
         String data = elsaClient.get(elsaParam, context);
         return new DynamicFormDetailEntity(entity, data);
     }
@@ -107,10 +121,11 @@ public class DynamicFormServiceImpl implements DynamicFormService {
                 .filter(Objects::nonNull)
                 .map(item -> this.buildGraphParam(item.getId(), item.getVersion(), StringUtils.EMPTY))
                 .collect(Collectors.toList());
-        // todo 暂时用不到，可去掉；后期应该改为调用appBuilder的批量查询表单的渲染数据json的接口
+        // 暂时用不到，可去掉；后期应该改为调用appBuilder的批量查询表单的渲染数据json的接口
         List<Graph> elsaGraphs = this.elsaClient.list(elsaParams, context);
         return parameters.stream()
-                .map(item -> this.buildDynamicFormDetailEntityMap(item, this.getDynamicFormEntityFromList(item, entities),
+                .map(item -> this.buildDynamicFormDetailEntityMap(item,
+                        this.getDynamicFormEntityFromList(item, entities),
                         this.getElsaDataFromList(item, elsaGraphs)))
                 .collect(Collectors.toList());
     }
@@ -119,21 +134,26 @@ public class DynamicFormServiceImpl implements DynamicFormService {
             FormMetaQueryParameter parameter, DynamicFormEntity entity, String data) {
         if (entity == null) {
             log.debug("in detail sql query form id {} version {} returns null",
-                    parameter.getFormId(), parameter.getVersion());
-            return new HashMap<FormMetaQueryParameter, DynamicFormDetailEntity>() {{
-                put(parameter, null);
-            }};
+                    parameter.getFormId(),
+                    parameter.getVersion());
+            return new HashMap<FormMetaQueryParameter, DynamicFormDetailEntity>() {
+                {
+                    put(parameter, null);
+                }
+            };
         }
-        return new HashMap<FormMetaQueryParameter, DynamicFormDetailEntity>() {{
-            put(parameter, new DynamicFormDetailEntity(entity, data));
-        }};
+        return new HashMap<FormMetaQueryParameter, DynamicFormDetailEntity>() {
+            {
+                put(parameter, new DynamicFormDetailEntity(entity, data));
+            }
+        };
     }
 
     private DynamicFormEntity getDynamicFormEntityFromList(FormMetaQueryParameter parameter,
             List<DynamicFormEntity> entities) {
         return entities.stream()
-                .filter(item -> Objects.equals(item.getId(), parameter.getFormId())
-                        && Objects.equals(item.getVersion(), parameter.getVersion()))
+                .filter(item -> Objects.equals(item.getId(), parameter.getFormId()) && Objects.equals(item.getVersion(),
+                        parameter.getVersion()))
                 .findFirst()
                 .orElse(null);
     }
@@ -161,7 +181,7 @@ public class DynamicFormServiceImpl implements DynamicFormService {
             throw new FormParamException(context, FormErrCode.FORM_NAME_IS_EMPTY);
         }
 
-        // todo 要去掉，暂时没有用到
+        // 要去掉，暂时没有用到
         if (elsaClient.save(elsaParam, context) == 0) {
             // only update if elsa successfully saved
             formMapper.insertOrUpdateByPrimaryKey(DynamicFormEntity.builder()
@@ -186,7 +206,7 @@ public class DynamicFormServiceImpl implements DynamicFormService {
                 formDto.getVersion());
 
         GraphParam elsaParam = buildGraphParam(formDto.getId(), formDto.getVersion(), "");
-        // todo 暂时用不到，可去掉；后期应该改为调用appBuilder删除表单的渲染数据json的接口
+        // 暂时用不到，可去掉；后期应该改为调用appBuilder删除表单的渲染数据json的接口
         if (elsaClient.delete(elsaParam, context) == 0) {
             // only delete if elsa successfully deleted
             formMapper.deleteByPrimaryKey(formDto.getId(), formDto.getVersion());

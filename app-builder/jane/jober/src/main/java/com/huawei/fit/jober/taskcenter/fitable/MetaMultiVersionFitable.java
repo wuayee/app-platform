@@ -112,7 +112,7 @@ public class MetaMultiVersionFitable implements MetaService {
             Undefinable<String> basicMetaTemplateId, com.huawei.fit.jane.task.util.OperationContext actualContext) {
         MetaFilter filter = new MetaFilter();
         filter.setNames(new ArrayList<String>() {{
-            add(name + "|");
+                add(name + "|");
         }});
 
         RangedResultSet<Meta> list = list(filter, true, 0, 10, context);
@@ -184,31 +184,32 @@ public class MetaMultiVersionFitable implements MetaService {
 
     @Override
     @Fitable(id = "340f4d3a399240c8bb60b2e3adbf0988")
-    public RangedResultSet<Meta> list(MetaFilter filter, boolean latestOnly, long offset, int limit,
+    public RangedResultSet<Meta> list(MetaFilter filter, boolean isLatestOnly, long offset, int limit,
             OperationContext context) {
-        return this.list(filter, latestOnly, offset, limit, context, null);
+        return this.list(filter, isLatestOnly, offset, limit, context, null);
     }
 
     /**
      * 查询Meta。
      *
      * @param filter 表示meta过滤器的 {@link MetaFilter}。
-     * @param latestOnly 表示每个Meta是否只显示最新版本。
+     * @param isLatestOnly 表示每个Meta是否只显示最新版本。
      * @param offset 表示查询到的meta定义的结果集在全量结果集中的偏移量的 64 位整数。
      * @param limit 表示查询到的meta定义的结果集中的最大数量的 32 位整数。
      * @param context 表示操作上下文的 {@link OperationContext}。
+     * @param oldDataFilter 表示旧数据过滤器的 {@link MetaFilter}。
      * @return 表示查询到的结果集的 {@link RangedResultSet}{@code <}{@link Meta}{@code >}。
      */
     @Override
     @Fitable(id = "340f4d3a399240c8bb60b2e3adbf0989")
-    public RangedResultSet<Meta> list(MetaFilter filter, boolean latestOnly, long offset, int limit,
+    public RangedResultSet<Meta> list(MetaFilter filter, boolean isLatestOnly, long offset, int limit,
             OperationContext context, MetaFilter oldDataFilter) {
         com.huawei.fit.jane.task.util.OperationContext operationContext =
                 ParamUtils.convertToInternalOperationContext(context);
         // 查最新版本 created_time
         // 查询：需要根据attributes进行区分查询 已发布/未发布
         com.huawei.fitframework.model.RangedResultSet<TaskEntity> taskEntityRangedResultSet =
-                taskService.listMeta(filter, latestOnly, offset, limit, operationContext);
+                taskService.listMeta(filter, isLatestOnly, offset, limit, operationContext);
         List<Meta> metaList = taskEntityRangedResultSet.getResults()
                 .stream()
                 .map(task -> metaConverter.convert2MultiVersionMeta(task, operationContext))
@@ -224,7 +225,7 @@ public class MetaMultiVersionFitable implements MetaService {
                 filter = oldDataFilter;
             }
             com.huawei.fitframework.model.RangedResultSet<TaskEntity> taskEntityRangedResultSet1 =
-                    this.taskService.listMeta(filter, latestOnly, offset, limit, operationContext);
+                    this.taskService.listMeta(filter, isLatestOnly, offset, limit, operationContext);
             metaList.addAll(taskEntityRangedResultSet1.getResults()
                     .stream()
                     .map(task -> this.metaConverter.convert2MultiVersionMeta(task, operationContext))

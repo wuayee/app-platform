@@ -15,6 +15,9 @@ public class FileDeclaration {
 
     private byte[] content;
 
+    /**
+     * FileDeclaration
+     */
     public FileDeclaration() {
 
     }

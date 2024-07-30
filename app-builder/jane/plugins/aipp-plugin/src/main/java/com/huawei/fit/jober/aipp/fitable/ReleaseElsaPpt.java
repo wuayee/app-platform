@@ -19,6 +19,7 @@ import com.huawei.fit.jober.aipp.util.UUIDUtil;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -31,6 +32,9 @@ import java.util.Map;
 
 /**
  * 调用elsa，根据businessData中的数据，生成ppt
+ *
+ * @author s00664640
+ * @since 2024/05/10
  */
 @Component
 @Slf4j
@@ -64,9 +68,9 @@ public class ReleaseElsaPpt implements FlowableService {
     }
 
     private static String updateShapeTextData(JSONObject shape, String newText) {
-        JSONObject text = (JSONObject) shape.getJSONArray("text").get(0);
+        JSONObject text = ObjectUtils.cast(shape.getJSONArray("text").get(0));
         text.getJSONObject("attributes").put("id", UUIDUtil.uuid());
-        ((JSONObject) text.getJSONArray("children").get(0)).put("data", newText);
+        (ObjectUtils.<JSONObject>cast(text.getJSONArray("children").get(0))).put("data", newText);
         return text.toString();
     }
 
@@ -77,13 +81,13 @@ public class ReleaseElsaPpt implements FlowableService {
         page.put("graphId", newGraphId);
         page.put("container", pageNewId);
         JSONArray shapes = page.getJSONArray("shapes");
-        shapes.stream().map(shape -> (JSONObject) shape).forEach(shape -> {
+        shapes.stream().map(ObjectUtils::<JSONObject>cast).forEach(shape -> {
             String id = shape.getString("id");
             String newId = UUIDUtil.uuid();
             idMap.put(id, newId);
             shape.put("id", newId);
         });
-        shapes.stream().map(shape -> (JSONObject) shape).forEach(shape -> {
+        shapes.stream().map(ObjectUtils::<JSONObject>cast).forEach(shape -> {
             String container = shape.getString("container");
             shape.put("container", idMap.get(container));
         });
@@ -108,7 +112,7 @@ public class ReleaseElsaPpt implements FlowableService {
 
 
     private JSONObject buildElsaPptGraph(Map<String, Object> businessData) {
-        String data = (String) businessData.get(AippConst.BS_PPT_JSON_RESULT);
+        String data = ObjectUtils.cast(businessData.get(AippConst.BS_PPT_JSON_RESULT));
         JSONObject pptJson = JSONObject.parseObject(data);
         return build(pptJson);
     }
@@ -134,7 +138,6 @@ public class ReleaseElsaPpt implements FlowableService {
                 context.getTenantId(),
                 context.getOperator());
 
-        // todo 这里依赖是业务依赖，可以改为http调用
         int saveResult = elsaClient.save(graphParam, context);
         log.info("saveElsaPpt result:{}", saveResult);
     }
@@ -145,8 +148,6 @@ public class ReleaseElsaPpt implements FlowableService {
     }
 
     private JSONObject build(JSONObject pptData) {
-        Map<String, String> idMap = new HashMap<>();
-
         String title = pptData.getString("title");
 
         JSONObject graph = JSONObject.parseObject(getGraphData());
@@ -161,6 +162,8 @@ public class ReleaseElsaPpt implements FlowableService {
         allPages.add(baseContentPage);
         allPages.add(coverPage);
 
+        Map<String, String> idMap = new HashMap<>();
+
         updateIds(idMap, baseCoverPage, graphId);
         updateIds(idMap, baseContentPage, graphId);
 
@@ -170,7 +173,7 @@ public class ReleaseElsaPpt implements FlowableService {
         JSONArray pages = pptData.getJSONArray("pages");
         for (int i = 0; i < pages.size(); i++) {
             Object page = pages.get(i);
-            JSONObject jsonObject = (JSONObject) page;
+            JSONObject jsonObject = ObjectUtils.cast(page);
             JSONObject contentPage = JSONObject.parseObject(getContentPageData());
             allPages.add(contentPage);
             updateContentData(idMap, contentPage, jsonObject, i + CONTENT_PAGE_BEGIN_INDEX);
@@ -182,7 +185,7 @@ public class ReleaseElsaPpt implements FlowableService {
     private void updateContentData(Map<String, String> idMap, JSONObject contentPage, JSONObject page, int index) {
         contentPage.put("index", index);
         JSONArray shapes = contentPage.getJSONArray("shapes");
-        shapes.stream().map(shape -> (JSONObject) shape).forEach(shape -> {
+        shapes.stream().map(ObjectUtils::<JSONObject>cast).forEach(shape -> {
             switch (shape.getString("id")) {
                 case CONTENT_PAGE_TITLE_ID:
                     updateShapePlacedPropertiesData(
@@ -207,7 +210,7 @@ public class ReleaseElsaPpt implements FlowableService {
 
     private void updateCoverData(JSONObject coverPage, JSONObject pptData) {
         JSONArray shapes = coverPage.getJSONArray("shapes");
-        shapes.stream().map(shape -> (JSONObject) shape).forEach(shape -> {
+        shapes.stream().map(ObjectUtils::<JSONObject>cast).forEach(shape -> {
             switch (shape.getString("id")) {
                 case COVER_PAGE_TITLE_ID:
                     updateShapeTextData(shape, pptData.getString("title"));
@@ -231,7 +234,7 @@ public class ReleaseElsaPpt implements FlowableService {
 
     private void updateReferenceIds(Map<String, String> idMap, JSONObject page) {
         JSONArray shapes = page.getJSONArray("shapes");
-        shapes.stream().map(shape -> (JSONObject) shape).forEach(shape -> {
+        shapes.stream().map(ObjectUtils::<JSONObject>cast).forEach(shape -> {
             String referencePage = shape.getString("referencePage");
             if (referencePage != null) {
                 shape.put("referencePage", idMap.get(referencePage));
@@ -243,10 +246,10 @@ public class ReleaseElsaPpt implements FlowableService {
             JSONObject newReferenceData = new JSONObject();
             referenceData.forEach((k, v) -> {
                 if ("placed".equals(k)) {
-                    JSONArray placed = (JSONArray) v;
+                    JSONArray placed = ObjectUtils.cast(v);
                     JSONArray newPlaced = new JSONArray();
                     placed.stream()
-                            .map(shapeId -> (String) shapeId)
+                            .map(ObjectUtils::<String>cast)
                             .forEach(shapeId -> newPlaced.add(idMap.get(shapeId)));
                     newReferenceData.put("placed", newPlaced);
                 } else {

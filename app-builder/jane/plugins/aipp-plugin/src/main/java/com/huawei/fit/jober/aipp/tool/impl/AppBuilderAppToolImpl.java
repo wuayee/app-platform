@@ -30,6 +30,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
+ * app工具实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-05-20
  */
@@ -37,14 +39,22 @@ import java.util.Optional;
 public class AppBuilderAppToolImpl implements AppBuilderAppTool {
     private static final String DEFAULT_TENANT_ID = "31f20efc7e0848deab6a6bc10fc3021e";
     private static final String SYSTEM_PROMPT_KEY = "systemPrompt";
-    private final AppBuilderAppService appService;
     private static final String DEFAULT_TEMPLATE_ID = "df87073b9bc85a48a9b01eccc9afccc4";
     private static final String INDEX_URL_FORMAT =
             "应用创建成功！ \n访问地址：{0}//#//app-develop//31f20efc7e0848deab6a6bc10fc3021e//app-detail//{1}";
-    private final String appEngineUrl;
-    private final ObjectSerializer objectSerializer;
     private static final Logger log = Logger.get(AppBuilderAppToolImpl.class);
 
+    private final AppBuilderAppService appService;
+    private final String appEngineUrl;
+    private final ObjectSerializer objectSerializer;
+
+    /**
+     * 构造函数
+     *
+     * @param appService app服务
+     * @param objectSerializer 序列化器
+     * @param appEngineUrl app引擎url
+     */
     public AppBuilderAppToolImpl(AppBuilderAppService appService, ObjectSerializer objectSerializer,
             @Value("${app-engine.endpoint}") String appEngineUrl) {
         this.appService = appService;

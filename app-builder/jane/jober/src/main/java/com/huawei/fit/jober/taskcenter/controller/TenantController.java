@@ -43,6 +43,12 @@ import java.util.Map;
 public class TenantController extends AbstractController {
     private final Tenant.Repo repo;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator 认证器
+     * @param repo 租户repo
+     */
     public TenantController(Authenticator authenticator, Tenant.Repo repo) {
         super(authenticator);
         this.repo = repo;
@@ -116,6 +122,8 @@ public class TenantController extends AbstractController {
      *
      * @param httpRequest httpRequest
      * @param httpResponse httpResponse
+     * @param offset 偏移量
+     * @param limit 数量限制
      * @return Map<String, Object>
      */
     @GetMapping(value = "/my", summary = "查询我的租户列表")
@@ -152,8 +160,8 @@ public class TenantController extends AbstractController {
      *
      * @param httpRequest httpRequest
      * @param httpResponse httpResponse
+     * @param tenantId 租户id
      * @param request request
-     * @return Map<String, Object>
      */
     @PostMapping(value = "/{tenant_id}/members", summary = "在租户下添加成员")
     @ResponseStatus(HttpResponseStatus.CREATED)
@@ -189,9 +197,10 @@ public class TenantController extends AbstractController {
      *
      * @param httpRequest httpRequest
      * @param httpResponse httpResponse
+     * @param tenantId 租户id
      * @param offset offset
      * @param limit limit
-     * @return Map<String, Object>
+     * @return Map<String, Object>成员列表
      */
     @GetMapping(value = "/{tenant_id}/members", summary = "分页查询租户下的成员列表")
     @ResponseStatus(HttpResponseStatus.OK)
@@ -199,8 +208,8 @@ public class TenantController extends AbstractController {
             @PathVariable("tenant_id") String tenantId, @RequestParam("offset") long offset,
             @RequestParam("limit") int limit) {
         TenantMember.Filter filter = Views.filterOfTenantMembers(httpRequest, tenantId);
-        RangedResultSet<TenantMember> results = repo.listMember(filter, offset, limit,
-                this.contextOf(httpRequest, null));
+        RangedResultSet<TenantMember> results =
+                repo.listMember(filter, offset, limit, this.contextOf(httpRequest, null));
         return Views.viewOf(results, "members", Views::viewOf);
     }
 
@@ -218,7 +227,8 @@ public class TenantController extends AbstractController {
             @PathVariable("tenant_id") String tenantId) {
         OperationContext context = this.contextOf(httpRequest, tenantId);
         Tenant tenant = repo.retrieve(tenantId, context);
-        return tenant.accessLevel().equals(TenantAccessLevel.PUBLIC) || tenant.isPermitted(repo, context.operator(),
+        return TenantAccessLevel.PUBLIC.equals(tenant.accessLevel()) || tenant.isPermitted(repo,
+                context.operator(),
                 context);
     }
 }

@@ -12,6 +12,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ *
+ * This class is used to create a new application.
+ * 应用创建Dto
+ *
  * @author 姚江 yWX1299574
  * @since 2024-04-24
  */

@@ -23,6 +23,13 @@ public class RangeResultInfo extends RangeInfo {
         this(null, null, null);
     }
 
+    /**
+     * 表示分页查询的范围结果信息。
+     *
+     * @param offset 偏移量
+     * @param limit 限制数量
+     * @param total 总计数量
+     */
     public RangeResultInfo(Long offset, Integer limit, Long total) {
         super(offset, limit);
         this.total = total;

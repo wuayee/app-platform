@@ -27,6 +27,19 @@ class DefaultAuthorization extends AbstractDomainObject implements Authorization
 
     private final Long expiration;
 
+    /**
+     * 构造函数
+     *
+     * @param id id
+     * @param system 系统
+     * @param user 用户
+     * @param token token
+     * @param expiration 失效时间
+     * @param creator 创建者
+     * @param creationTime 创建时间
+     * @param lastModifier 最后更新人
+     * @param lastModificationTime 最后更新时间
+     */
     DefaultAuthorization(String id, String system, String user, String token, Long expiration, String creator,
             LocalDateTime creationTime, String lastModifier, LocalDateTime lastModificationTime) {
         super(id, creator, creationTime, lastModifier, lastModificationTime);

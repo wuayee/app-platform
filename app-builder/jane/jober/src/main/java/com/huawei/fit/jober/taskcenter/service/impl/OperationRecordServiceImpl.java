@@ -120,7 +120,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
                 .toString();
 
         String countSql = SqlBuilder.custom().append("SELECT COUNT(*)").append(sqlSuffix).toString();
-        long total = ((Number) executor.executeScalar(countSql, args)).longValue();
+        long total = (ObjectUtils.<Number>cast(executor.executeScalar(countSql, args))).longValue();
 
         if (total == 0) {
             return RangedResultSet.create(Collections.emptyList(), (int) offset, limit, (int) total);
@@ -138,7 +138,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
 
         // 做一个懒加载，在后续查询instance的taskEntity时使用，如果同一个taskEntity，则不需要被查询多次。
         Map<String, LazyLoader<TaskEntity>> taskRetrieves = rows.stream()
-                .map(row -> (String) row.get(TABLE_FIELD_OBJECT_ID))
+                .map(row -> ObjectUtils.<String>cast(row.get(TABLE_FIELD_OBJECT_ID)))
                 .distinct()
                 .collect(Collectors.toMap(Function.identity(),
                         (id) -> new LazyLoader<>(() -> getTaskEntityByInstanceId(id))));
@@ -152,13 +152,13 @@ public class OperationRecordServiceImpl implements OperationRecordService {
     private OperationRecordEntity convertRowMapToOperationRecordEntity(Map<String, Object> row,
             Map<String, LazyLoader<TaskEntity>> taskRetrieves) {
         OperationRecordEntity entity = new OperationRecordEntity();
-        entity.setId((String) row.get(TABLE_FIELD_ID));
-        entity.setOperate((String) row.get(TABLE_FIELD_OPERATE));
-        entity.setOperator((String) row.get(TABLE_FIELD_OPERATOR));
-        entity.setMessage((String) row.get(TABLE_FIELD_MESSAGE));
-        entity.setOperatedTime(((Timestamp) row.get(TABLE_FIELD_OPERATED_TIME)).toLocalDateTime());
-        entity.setObjectId((String) row.get(TABLE_FIELD_OBJECT_ID));
-        entity.setObjectType((String) row.get(TABLE_FIELD_OBJECT_TYPE));
+        entity.setId(ObjectUtils.cast(row.get(TABLE_FIELD_ID)));
+        entity.setOperate(ObjectUtils.cast(row.get(TABLE_FIELD_OPERATE)));
+        entity.setOperator(ObjectUtils.cast(row.get(TABLE_FIELD_OPERATOR)));
+        entity.setMessage(ObjectUtils.cast(row.get(TABLE_FIELD_MESSAGE)));
+        entity.setOperatedTime(ObjectUtils.<Timestamp>cast(row.get(TABLE_FIELD_OPERATED_TIME)).toLocalDateTime());
+        entity.setObjectId(ObjectUtils.cast(row.get(TABLE_FIELD_OBJECT_ID)));
+        entity.setObjectType(ObjectUtils.cast(row.get(TABLE_FIELD_OBJECT_TYPE)));
 
         if (StringUtils.equalsIgnoreCase("instance", entity.getObjectType())) {
             this.convertInstanceView(entity, taskRetrieves.get(entity.getObjectId()));
@@ -228,11 +228,13 @@ public class OperationRecordServiceImpl implements OperationRecordService {
                 continue;
             }
             Map<String, Object> appearance = keyAppearanceMap.getOrDefault(key, Collections.emptyMap());
-            String propertyName = (String) appearance.getOrDefault("name", key);
+            String propertyName = ObjectUtils.cast(appearance.getOrDefault("name", key));
             Object propertyContext = info.get(key);
-            if (equalsAnyIgnoreCase((String) appearance.get("displayType"), "select", "radio", "selectModal")) {
+            if (equalsAnyIgnoreCase(ObjectUtils.cast(appearance.get("displayType")),
+                    "select", "radio", "selectModal")) {
                 Map<String, String> options = this.parsingTheOptions(appearance.get("options"));
-                propertyContext = options.getOrDefault((String) propertyContext, (String) propertyContext);
+                propertyContext = options.getOrDefault(ObjectUtils.<String>cast(propertyContext),
+                        ObjectUtils.cast(propertyContext));
             }
             String updateContent = "更新 " + propertyName + " 为 【" + propertyContext + "】";
             updates.add(updateContent);

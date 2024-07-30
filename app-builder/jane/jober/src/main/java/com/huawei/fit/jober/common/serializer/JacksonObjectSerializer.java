@@ -34,6 +34,8 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
+ * jackson对象序列化器
+ *
  * @author lwx1301876
  * @since 2024-02-26
  */
@@ -41,6 +43,9 @@ import java.util.Map;
 public class JacksonObjectSerializer implements ObjectSerializer {
     private final ObjectMapper mapper;
 
+    /**
+     * 无参构造函数
+     */
     public JacksonObjectSerializer() {
         SimpleModule customSerialization = new SimpleModule();
         customSerialization.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());

@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Todo
+ * 为{@link ExecutableSql} 提供默认实现
  *
  * @author 陈镕希 c00572808
  * @since 2023-10-30
@@ -104,7 +104,7 @@ class DefaultExecutableSql implements ExecutableSql {
         return new DefaultExecutableSql(jdbcSql, jdbcArgs);
     }
 
-    @SuppressWarnings( {"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private static void fillValues(List<Object> values, Object value) {
         if (value == null) {
             values.add(null);
