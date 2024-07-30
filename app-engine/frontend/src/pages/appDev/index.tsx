@@ -17,13 +17,12 @@ import './index.scoped.scss';
 const AppDev: React.FC = () => {
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   const navigate = useNavigate();
-  const [pageSize,setPageSize]=useState(8);
 
   // 数据初始化
   const [appData, setAppData] = useState([]);
   async function queryApps() {
     const params = {
-      offset: (pageNo.current - 1) * pageSize,
+      offset: (page - 1) * pageSize,
       limit: pageSize,
       name:search || undefined
     };
@@ -52,14 +51,16 @@ const AppDev: React.FC = () => {
   // 分页
   const pageNo = useRef(1);
   const [total, setTotal] = useState(1);
-  const [current, setCurrent] = useState(1);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8);
   const [search, setSearch] = useState('');
-  function currentPageChange(page: number, pageSize: number) {
-     setPageSize(pageSize);
-     setCurrent(() => {
-       pageNo.current = page;
-       return page;
-     });
+  const paginationChange = (curPage: number, curPageSize: number) => {
+    if(page !== curPage) {
+      setPage(curPage);
+    }
+    if(pageSize !== curPageSize) {
+      setPageSize(curPageSize);
+    }
   }
 
   // 创建
@@ -84,12 +85,11 @@ const AppDev: React.FC = () => {
   }
 
   // 搜索
-  function onSearchValueChange(value: string) {
-    setSearch(value);
-    setCurrent(() => {
-      pageNo.current = 1;
-      return 1;
-    });
+  function onSearchValueChange(newSearchVal: string) {
+    if(newSearchVal !== search) {
+      setPage(1);
+      setSearch(newSearchVal);
+    }
   }
   const handleSearch = debounce(onSearchValueChange, 500);
 
@@ -109,11 +109,7 @@ const AppDev: React.FC = () => {
     const res: any = await deleteAppApi(tenantId, appId);
     if (res.code === 0) {
       if (appData.length === 1) {
-        setCurrent(() => {
-          pageNo.current = 1;
-          queryApps();
-          return 1;
-        });
+        setPage(1);
         return;
       }
       queryApps();
@@ -141,7 +137,7 @@ const AppDev: React.FC = () => {
   }, []);
   useEffect(() => {
     queryApps();
-  }, [current, search]);
+  }, [page, pageSize, search]);
 
   return (
     <div className='apps_root'>
@@ -196,13 +192,11 @@ const AppDev: React.FC = () => {
         
         <div className='page_box'>
           <Pagination
-            current={current}
-            pageSize={8}
-            onChange={currentPageChange}
-            showSizeChanger={false}
+            current={page}
+            onChange={paginationChange}
             pageSizeOptions={[8,16,32,60]}
             total={total}
-            showTotal={(total) => `总条数 ${total}`}
+            pageSize={pageSize}
           />
         </div>
       </div>

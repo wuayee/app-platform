@@ -75,7 +75,6 @@ const ChatPreview = (props) => {
   const detailPage =  location.pathname.indexOf('app-detail') !== -1;
 
   useEffect(() => {
-    !chatType && dispatch(setInspirationOpen(true));
     currentInfo.current = appInfo;
     return () => {
       closeWebsocket();
