@@ -33,7 +33,8 @@ public class RelationshipValidatorImpl extends AbstractValidator implements Rela
         String sql = "SELECT 1 " + "FROM task INNER JOIN tenant on tenant.id = task.tenant_id "
                 + "WHERE task.id = ? and (task.tenant_id = ? or tenant.name = ?) " + "LIMIT 1";
 
-        Object result = this.executor.executeScalar(sql, new ArrayList<Object>() {{
+        Object result = this.executor.executeScalar(sql, new ArrayList<Object>() {
+            {
             add(taskId);
             add(tenantId);
             add(tenantId);
@@ -48,7 +49,8 @@ public class RelationshipValidatorImpl extends AbstractValidator implements Rela
     public void validateTaskTypeExistInTask(String typeId, String taskId) {
         String sql = "SELECT 1 FROM task_type WHERE id = ? AND task_id = ? LIMIT 1";
 
-        Object result = this.executor.executeScalar(sql, new ArrayList<Object>() {{
+        Object result = this.executor.executeScalar(sql, new ArrayList<Object>() {
+            {
             add(typeId);
             add(taskId);
         }});
@@ -56,20 +58,26 @@ public class RelationshipValidatorImpl extends AbstractValidator implements Rela
         if (!Objects.equals(1, result)) {
             sql = "SELECT 1 FROM task_type AS tt " + "INNER JOIN task_tree_task AS ttt ON ttt.tree_id = tt.tree_id "
                     + "WHERE tt.id = ? AND ttt.task_id = ? " + "LIMIT 1";
-            result = this.executor.executeScalar(sql, new ArrayList<Object>() {{
+            result = this.executor.executeScalar(sql, new ArrayList<Object>() {
+                {
                 add(typeId);
                 add(taskId);
             }});
-            if (!Objects.equals(1, result)) {
-                throw new NotFoundException(ErrorCodes.TYPE_NOT_IN_TASK, typeId, taskId);
-            }
+            extracted(typeId, taskId, result);
+        }
+    }
+
+    private void extracted(String typeId, String taskId, Object result) {
+        if (!Objects.equals(1, result)) {
+            throw new NotFoundException(ErrorCodes.TYPE_NOT_IN_TASK, typeId, taskId);
         }
     }
 
     @Override
     public void validateSourceExistInTaskType(String sourceId, String typeId) {
         String sql = "SELECT 1 FROM task_node_source WHERE source_id = ? AND node_id = ? LIMIT 1";
-        Object result = this.executor.executeScalar(sql, new ArrayList<Object>() {{
+        Object result = this.executor.executeScalar(sql, new ArrayList<Object>() {
+            {
             add(sourceId);
             add(typeId);
         }});

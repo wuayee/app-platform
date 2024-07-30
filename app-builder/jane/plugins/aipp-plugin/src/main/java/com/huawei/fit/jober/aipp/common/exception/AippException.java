@@ -26,6 +26,7 @@ public class AippException extends FitException {
     /**
      * 抛出Aipp异常。
      *
+     * @param context context
      * @param error 异常枚举的{@link AippErrCode}。
      */
     public AippException(OperationContext context, AippErrCode error) {
@@ -45,6 +46,7 @@ public class AippException extends FitException {
     /**
      * 抛出Aipp异常。
      *
+     * @param context context
      * @param error 异常枚举的{@link AippErrCode}。
      * @param args 额外参数。
      */

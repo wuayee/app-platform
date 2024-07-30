@@ -22,7 +22,6 @@ public enum AippErrCode implements ErrorCode {
     OK(0, "success"),
 
     /** ------------ Generic Exception. From 90000000 to 90000999 --------------------- */
-
     /**
      * 入参不合法
      */
@@ -44,7 +43,6 @@ public enum AippErrCode implements ErrorCode {
     FORBIDDEN(90000003, "禁止的操作。"),
 
     /** ------------ Configuration Exception. From 90001000 to 90001999 --------------------- */
-
     /**
      * 创建流程失败
      */

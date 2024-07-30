@@ -43,6 +43,12 @@ import java.util.List;
 public class AippFlowController extends AbstractController {
     private final AippFlowService aippFlowService;
 
+    /**
+     * AippFlowController
+     *
+     * @param authenticator authenticator
+     * @param aippFlowService aippFlowService
+     */
     public AippFlowController(Authenticator authenticator, @Fit AippFlowService aippFlowService) {
         super(authenticator);
         this.aippFlowService = aippFlowService;
@@ -68,6 +74,8 @@ public class AippFlowController extends AbstractController {
      * 查询aipp详情
      *
      * @param aippId aippId
+     * @param tenantId tenantId
+     * @param version 版本
      * @param httpRequest http操作上下文
      * @return aipp 详情
      */
@@ -96,7 +104,10 @@ public class AippFlowController extends AbstractController {
      * 删除aipp
      *
      * @param aippId aippId
+     * @param tenantId tenantId
+     * @param baselineVersion 基线版本
      * @param httpRequest 操作上下文
+     * @return aipp id信息
      */
     @DeleteMapping(path = "/{aipp_id}", description = "删除aipp")
     public Rsp<Integer> deleteAipp(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
@@ -116,7 +127,8 @@ public class AippFlowController extends AbstractController {
      */
     @PutMapping(path = "/{aipp_id}", description = "更新aipp")
     public Rsp<AippCreateDto> updateAipp(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId, @RequestBody AippDto aippDto) {
+            @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
+            @RequestBody AippDto aippDto) {
         aippDto.setId(aippId);
         return Rsp.ok(this.aippFlowService.update(aippDto, this.contextOf(httpRequest, tenantId)));
     }

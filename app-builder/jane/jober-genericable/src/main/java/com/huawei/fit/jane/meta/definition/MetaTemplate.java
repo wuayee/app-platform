@@ -23,6 +23,9 @@ public class MetaTemplate {
 
     private List<MetaTemplateProperty> properties;
 
+    /**
+     * MetaTemplate
+     */
     public MetaTemplate() {
     }
 

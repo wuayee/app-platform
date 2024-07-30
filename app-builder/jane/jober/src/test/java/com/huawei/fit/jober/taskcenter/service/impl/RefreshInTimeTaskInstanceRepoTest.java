@@ -331,8 +331,8 @@ class RefreshInTimeTaskInstanceRepoTest {
     private static boolean checkProperty(TaskPropertyInfo info, TaskProperty entity) {
         return Objects.equals(info.getId(), entity.id()) && Objects.equals(info.getName(), entity.name())
                 && Objects.equals(info.getDescription(), entity.description()) && Objects.equals(info.getDataType(),
-                Enums.toString(entity.dataType())) && Objects.equals(info.getRequired(), entity.required())
-                && Objects.equals(info.getIdentifiable(), entity.identifiable()) && Objects.equals(info.getScope(),
+                Enums.toString(entity.dataType())) && Objects.equals(info.getIsRequired(), entity.required())
+                && Objects.equals(info.getIsIdentifiable(), entity.identifiable()) && Objects.equals(info.getScope(),
                 Enums.toString(entity.scope()));
     }
 

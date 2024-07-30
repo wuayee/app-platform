@@ -14,6 +14,12 @@ import java.util.Objects;
  * @since 2023-12-18
  */
 public class SequenceUtils {
+    /**
+     * 从列表中获取序列
+     *
+     * @param exist 序列数
+     * @return 序列数
+     */
     public static int getSequenceFromList(Integer... exist) {
         int index = 0;
         int sequence = 1;
@@ -24,8 +30,14 @@ public class SequenceUtils {
         return sequence;
     }
 
+    /**
+     * 从列表中获取序列
+     *
+     * @param exist 序列数集
+     * @return 序列数
+     */
     public static int getSequenceFromList(List<Integer> exist) {
-        Integer[] array = exist.toArray(new Integer[1]);
+        Integer[] array = exist.toArray(new Integer[0]);
         return getSequenceFromList(array);
     }
 }

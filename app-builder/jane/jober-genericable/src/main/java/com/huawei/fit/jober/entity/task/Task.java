@@ -38,6 +38,9 @@ public class Task {
 
     private String tenant;
 
+    /**
+     * Task
+     */
     public Task() {
     }
 

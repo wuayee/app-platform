@@ -14,17 +14,20 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+/**
+ * 为{@link MapSerializer}提供默认实现
+ */
 @Component
 class DefaultMapSerializer implements MapSerializer {
     private static final Charset CHARSET = StandardCharsets.UTF_8;
 
     private static final Type TYPE = TypeUtils.parameterized(Map.class, new Type[] {String.class, Object.class});
 
+    private final ObjectSerializer serializer;
+
     public DefaultMapSerializer(@Fit(alias = "json") ObjectSerializer serializer) {
         this.serializer = serializer;
     }
-
-    private final ObjectSerializer serializer;
 
     @Override
     public String serialize(Map<String, Object> value) {

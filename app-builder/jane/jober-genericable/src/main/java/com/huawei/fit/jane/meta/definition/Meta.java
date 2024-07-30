@@ -37,6 +37,9 @@ public class Meta {
 
     private Map<String, Object> attributes;
 
+    /**
+     * Meta
+     */
     public Meta() {
     }
 

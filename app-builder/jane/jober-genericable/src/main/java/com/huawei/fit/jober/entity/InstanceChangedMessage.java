@@ -48,6 +48,9 @@ public class InstanceChangedMessage {
      */
     private List<ChangedProperty> changedProperties;
 
+    /**
+     * InstanceChangedMessage
+     */
     public InstanceChangedMessage() {
     }
 
@@ -137,6 +140,9 @@ public class InstanceChangedMessage {
          */
         private String newValue;
 
+        /**
+         * ChangedProperty
+         */
         public ChangedProperty() {
         }
 

@@ -47,7 +47,8 @@ public interface FlowDefinitionService {
      * @return 流程定义相关信息
      */
     @Genericable(id = "e4ecfd1fc8f54d378e8837e8a494a070")
-    List<FlowDefinitionResult> getFlowDefinitionByMetaIdAndPartVersion(String metaId, String version, OperationContext context);
+    List<FlowDefinitionResult> getFlowDefinitionByMetaIdAndPartVersion(String metaId, String version,
+            OperationContext context);
 
     /**
      * 解析流程定义的 graph

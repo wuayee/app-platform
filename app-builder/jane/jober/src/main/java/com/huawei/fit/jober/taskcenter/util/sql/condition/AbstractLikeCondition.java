@@ -35,6 +35,12 @@ public abstract class AbstractLikeCondition implements Condition {
         this.value = value;
     }
 
+    /**
+     * 用于包装值的方法
+     *
+     * @param value 被包装的 {@link String}
+     * @return 包装后的  {@link String}
+     */
     protected abstract String wrapValue(String value);
 
     @Override

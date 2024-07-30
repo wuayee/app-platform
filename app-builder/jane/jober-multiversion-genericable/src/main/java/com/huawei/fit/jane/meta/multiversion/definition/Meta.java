@@ -41,6 +41,9 @@ public class Meta {
 
     private String versionId;
 
+    /**
+     * Meta
+     */
     public Meta() {
     }
 

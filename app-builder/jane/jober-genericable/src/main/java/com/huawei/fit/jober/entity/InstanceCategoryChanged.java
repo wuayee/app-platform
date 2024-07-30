@@ -15,6 +15,9 @@ import java.util.Objects;
 public class InstanceCategoryChanged extends InstanceMessage {
     private String newCategory;
 
+    /**
+     * InstanceCategoryChanged
+     */
     public InstanceCategoryChanged() {
     }
 

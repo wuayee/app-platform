@@ -13,7 +13,6 @@ import com.huawei.fit.jane.common.entity.OperationContext;
  * @since 2024-02-23
  */
 public class AippJsonDecodeException extends AippException {
-
     public AippJsonDecodeException(OperationContext context, String message) {
         super(context, AippErrCode.JSON_DECODE_FAILED, message);
     }

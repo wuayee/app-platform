@@ -31,11 +31,26 @@ import java.util.List;
 public class AippLogController extends AbstractController {
     private final AippLogService aippLogService;
 
+    /**
+     * AippLogController
+     *
+     * @param authenticator 验证器
+     * @param aippLogService aippLogService
+     */
     public AippLogController(Authenticator authenticator, AippLogService aippLogService) {
         super(authenticator);
         this.aippLogService = aippLogService;
     }
 
+    /**
+     * 指定appId查询实例历史记录
+     *
+     * @param httpRequest httpRequest
+     * @param tenantId tenantId
+     * @param appId appId
+     * @param type type
+     * @return Rsp<List<AippInstLogDataDto>> 应用历史记录
+     */
     @GetMapping(path = "/app/{app_id}/recent", description = "指定appId查询实例历史记录（查询最新5个实例）")
     public Rsp<List<AippInstLogDataDto>> queryRecentInstanceLog(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId,
@@ -43,6 +58,15 @@ public class AippLogController extends AbstractController {
         return Rsp.ok(this.aippLogService.queryAippRecentInstLog(appId, type, this.contextOf(httpRequest, tenantId)));
     }
 
+    /**
+     * 清除appId查询实例的全部历史记录
+     *
+     * @param httpRequest httpRequest
+     * @param tenantId tenantId
+     * @param appId appId
+     * @param type type
+     * @return Rsp<Void>
+     */
     @DeleteMapping(path = "/app/{app_id}", description = "清除appId查询实例的全部历史记录")
     public Rsp<Void> deleteInstanceLog(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
             @PathVariable("app_id") String appId, @RequestParam("type") String type) {
@@ -50,6 +74,13 @@ public class AippLogController extends AbstractController {
         return Rsp.ok();
     }
 
+    /**
+     * 指定instanceId条件查询实例记录
+     *
+     * @param instanceId instanceId
+     * @param sinceTime sinceTime
+     * @return Rsp<List<AippInstLog>>
+     */
     @GetMapping(path = "/instance/{instance_id}", description = "指定instanceId条件查询实例记录")
     public Rsp<List<AippInstLog>> queryInstanceSince(@PathVariable("instance_id") String instanceId,
             @RequestParam(name = "after_at", required = false) String sinceTime) {

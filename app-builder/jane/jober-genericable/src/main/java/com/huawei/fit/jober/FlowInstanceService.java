@@ -47,12 +47,14 @@ public interface FlowInstanceService {
     /**
      * 根据traceId终止流程
      *
+     * @param flowDefinitionId 流程定义id
      * @param traceId 流程实例id
      * @param filter 与业务相关的过滤条件，停止满足条件的部分context，目前不支持
      * @param operationContext 操作人上下文信息
      */
     @Genericable(id = "lwwza8xmojxhf0l0wiznpfikvok8pvd0")
-    void terminateFlows(String flowDefinitionId, String traceId, Map<String, Object> filter, OperationContext operationContext);
+    void terminateFlows(String flowDefinitionId, String traceId, Map<String, Object> filter,
+            OperationContext operationContext);
 
     /**
      * 恢复异步任务

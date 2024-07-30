@@ -24,9 +24,9 @@ public class TaskProperty {
 
     private String description;
 
-    private boolean required;
+    private boolean isRequired;
 
-    private boolean identifiable;
+    private boolean isIdentifiable;
 
     private String scope;
 
@@ -34,18 +34,22 @@ public class TaskProperty {
 
     private List<TaskPropertyCategory> categories;
 
+    /**
+     * TaskProperty
+     */
     public TaskProperty() {
     }
 
-    public TaskProperty(String id, String name, String dataType, int sequence, String description, boolean required,
-            boolean identifiable, String scope, Map<String, Object> appearance, List<TaskPropertyCategory> categories) {
+    public TaskProperty(String id, String name, String dataType, int sequence, String description, boolean isRequired,
+            boolean isIdentifiable, String scope, Map<String, Object> appearance,
+            List<TaskPropertyCategory> categories) {
         this.id = id;
         this.name = name;
         this.dataType = dataType;
         this.sequence = sequence;
         this.description = description;
-        this.required = required;
-        this.identifiable = identifiable;
+        this.isRequired = isRequired;
+        this.isIdentifiable = isIdentifiable;
         this.scope = scope;
         this.appearance = appearance;
         this.categories = categories;
@@ -92,19 +96,19 @@ public class TaskProperty {
     }
 
     public boolean isRequired() {
-        return required;
+        return isRequired;
     }
 
-    public void setRequired(boolean required) {
-        this.required = required;
+    public void setRequired(boolean isRequired) {
+        this.isRequired = isRequired;
     }
 
     public boolean isIdentifiable() {
-        return identifiable;
+        return isIdentifiable;
     }
 
-    public void setIdentifiable(boolean identifiable) {
-        this.identifiable = identifiable;
+    public void setIdentifiable(boolean isIdentifiable) {
+        this.isIdentifiable = isIdentifiable;
     }
 
     public String getScope() {

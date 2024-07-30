@@ -17,6 +17,9 @@ public class TaskType {
 
     private String parentId;
 
+    /**
+     * TaskType
+     */
     public TaskType() {
     }
 

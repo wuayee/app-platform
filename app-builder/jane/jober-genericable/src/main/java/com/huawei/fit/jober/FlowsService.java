@@ -48,6 +48,7 @@ public interface FlowsService {
      */
     @Genericable(id = "da67602ef44942449da1b1c9b2ee9e70")
     FlowInfo upgradeFlows(String flowId, String newVersion, String configData, OperationContext context);
+
     /**
      * 发布一个流程
      * 流程只有在发布后才能运行，并且返回值包含definitionId和nodes节点信息
@@ -73,6 +74,7 @@ public interface FlowsService {
      */
     @Genericable(id = "ca21166e4a47433693d4be6b0f9c7179")
     FlowInfo publishFlowsWithoutElsa(String flowId, String version, String configData, OperationContext context);
+
     /**
      * 查询一条指定的id和版本的flow
      *
@@ -104,6 +106,7 @@ public interface FlowsService {
      */
     @Genericable(id = "81dc0ee4860149c884e2347d4ef26e23 ")
     int deleteFlows(String flowId, String version, OperationContext context);
+
     /**
      * 删除一条指定的id和版本的flow, 不删除elsa
      *

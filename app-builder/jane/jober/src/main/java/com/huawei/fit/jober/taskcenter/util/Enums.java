@@ -72,6 +72,7 @@ public final class Enums {
      * @param value 表示枚举值的字符串表现形式的 {@link String}。
      * @param defaultValue 当值未提供时使用的默认值的 {@link T}。（当 {@code value} 为空白字符串时使用的值。）
      * @param <T> 表示枚举的实际类型的 {@link T}。
+     * @param errorCode 表示异常码 {@link Enum}。
      * @return 表示解析到的值的 {@link T}。
      * @throws BadRequestException {@code value} 的值不能被解析为枚举类型。
      */
