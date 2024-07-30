@@ -45,6 +45,10 @@ public class AippLogVO {
     // 通过msgId区分哪些日志信息是一个整体的日志;如果为null，代表当前log对象本身即是一个整体的日志.
     private String msgId;
 
+    private String chatId;
+
+    private String atChatId;
+
     /**
      * 通过 {@link AippLogCreateDto} 对象创建 {@link  AippLogVO} 对象.
      *
@@ -60,6 +64,8 @@ public class AippLogVO {
                 .logData(dto.getLogData())
                 .logType(dto.getLogType())
                 .path(dto.getPath())
+                .chatId(dto.getChatId())
+                .atChatId(dto.getAtChatId())
                 .build();
     }
 

@@ -12,6 +12,7 @@ import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowCallbackService;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.domain.AppBuilderForm;
+import com.huawei.fit.jober.aipp.dto.chat.AppChatRsp;
 import com.huawei.fit.jober.aipp.entity.AippLogData;
 import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.enums.MetaInstStatusEnum;
@@ -20,9 +21,11 @@ import com.huawei.fit.jober.aipp.repository.AppBuilderFormRepository;
 import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.service.AippStreamService;
 import com.huawei.fit.jober.aipp.service.AppBuilderFormService;
+import com.huawei.fit.jober.aipp.service.AppChatSseService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.FormUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
@@ -36,6 +39,7 @@ import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,11 +63,13 @@ public class AippFlowEndCallback implements FlowCallbackService {
     private final AppBuilderFormService formService;
     private final AippStreamService aippStreamService;
     private final MetaInstanceService metaInstanceService;
+    private final AppChatSseService appChatSseService;
 
     public AippFlowEndCallback(@Fit MetaService metaService, @Fit AippLogService aippLogService,
             @Fit AppBuilderFormRepository formRepository, @Fit BrokerClient brokerClient,
             @Fit BeanContainer beanContainer, @Fit AppBuilderFormService formService,
-            @Fit AippStreamService aippStreamService, @Fit MetaInstanceService metaInstanceService) {
+            @Fit AippStreamService aippStreamService, @Fit MetaInstanceService metaInstanceService,
+            @Fit AppChatSseService appChatSseService) {
         this.formService = formService;
         this.metaService = metaService;
         this.aippLogService = aippLogService;
@@ -72,6 +78,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
         this.beanContainer = beanContainer;
         this.aippStreamService = aippStreamService;
         this.metaInstanceService = metaInstanceService;
+        this.appChatSseService = appChatSseService;
     }
 
     @Fitable("com.huawei.fit.jober.aipp.fitable.AippFlowEndCallback")
@@ -100,7 +107,15 @@ public class AippFlowEndCallback implements FlowCallbackService {
             String endFormVersion = DEFAULT_END_FORM_VERSION;
             AppBuilderForm appBuilderForm = this.formService.selectWithId(endFormId);
             Map<String, Object> formDataMap = FormUtils.buildFormData(businessData, appBuilderForm, parentInstanceId);
-            this.aippStreamService.sendToAncestor(aippInstId, formDataMap);
+            String chatId = ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID));
+            String atChatId = ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID));
+            AppChatRsp appChatRsp = AppChatRsp.builder().chatId(chatId).atChatId(atChatId)
+                    .status(FlowTraceStatus.ARCHIVED.name())
+                    .answer(Collections.singletonList(AppChatRsp.Answer.builder()
+                            .content(formDataMap).type(AippInstLogType.FORM.name()).build()))
+                    .formInstanceId(aippInstId)
+                    .build();
+            this.appChatSseService.sendToAncestorLastData(aippInstId, appChatRsp);
             if (StringUtils.isNotEmpty(endFormId) && StringUtils.isNotEmpty(endFormVersion)) {
                 this.saveFormToLog(businessData, endFormId, endFormVersion, formDataMap);
             }

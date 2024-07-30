@@ -49,6 +49,12 @@ public class AippLogCreateDto {
     @Property(description = "log path")
     private String path;
 
+    @Property(description = "chat id")
+    private String chatId;
+
+    @Property(description = "at chat id")
+    private String atChatId;
+
     /**
      * 判断所有字段是否为空。
      *

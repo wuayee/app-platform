@@ -10,12 +10,11 @@ import com.huawei.fit.http.annotation.RequestBody;
 import com.huawei.fit.http.annotation.RequestMapping;
 import com.huawei.fit.http.server.HttpClassicServerRequest;
 import com.huawei.fit.jane.common.controller.AbstractController;
-import com.huawei.fit.jane.common.response.Rsp;
 import com.huawei.fit.jane.task.gateway.Authenticator;
 import com.huawei.fit.jober.aipp.dto.chat.CreateAppChatRequest;
-import com.huawei.fit.jober.aipp.dto.chat.CreateAppChatRsp;
 import com.huawei.fit.jober.aipp.service.AppChatService;
 import com.huawei.fitframework.annotation.Component;
+import com.huawei.fitframework.flowable.Choir;
 
 /**
  * app对话管理接口
@@ -24,7 +23,7 @@ import com.huawei.fitframework.annotation.Component;
  * @since 2024-07-23
  */
 @Component
-@RequestMapping(path = "/v1/api/{tenant_id}/app_chat", group = "app对话管理接口")
+@RequestMapping(path = "/v1/api/{tenant_id}", group = "app对话管理接口")
 public class AppChatController extends AbstractController {
     private final AppChatService appChatService;
 
@@ -42,14 +41,28 @@ public class AppChatController extends AbstractController {
     /**
      * 会话接口
      *
-     * @param httpRequest httpRequest
-     * @param tenantId tenantId
-     * @param body body
-     * @return Rsp<CreateAppChatRsp>
+     * @param httpRequest 请求
+     * @param tenantId 租户id
+     * @param body 会话参数
+     * @return SSE流
      */
-    @PostMapping(description = "会话接口，传递会话信息")
-    public Rsp<CreateAppChatRsp> chat(HttpClassicServerRequest httpRequest,
+    @PostMapping(value = "/app_chat", description = "会话接口，传递会话信息")
+    public Choir<Object> chat(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @RequestBody CreateAppChatRequest body) {
-        return Rsp.ok(appChatService.chat(body, this.contextOf(httpRequest, tenantId)));
+        return this.appChatService.chat(body, this.contextOf(httpRequest, tenantId), false);
+    }
+
+    /**
+     * debug会话接口
+     *
+     * @param httpRequest 请求
+     * @param tenantId 租户id
+     * @param body 会话参数
+     * @return SSE流
+     */
+    @PostMapping(value = "/app_chat_debug", description = "会话接口，传递会话信息")
+    public Choir<Object> chatDebug(HttpClassicServerRequest httpRequest,
+            @PathVariable("tenant_id") String tenantId, @RequestBody CreateAppChatRequest body) {
+        return this.appChatService.chat(body, this.contextOf(httpRequest, tenantId), true);
     }
 }

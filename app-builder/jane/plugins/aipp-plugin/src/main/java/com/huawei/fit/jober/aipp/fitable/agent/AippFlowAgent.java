@@ -167,6 +167,8 @@ public class AippFlowAgent implements FlowableService {
             String version = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_VERSION_KEY));
             String aippType = ObjectUtils.cast(businessData.get(AippConst.ATTR_AIPP_TYPE_KEY));
             String instId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
+            String chatId = ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID));
+            String atChatId = ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID));
             this.aopAippLogService.insertLog(AippLogCreateDto.builder()
                     .aippId(aippId)
                     .version(version)
@@ -175,6 +177,8 @@ public class AippFlowAgent implements FlowableService {
                     .logType(AippInstLogType.ERROR.name())
                     .logData(instLogs.get(instLogs.size() - 1).getLogData())
                     .createUserAccount(w3Account)
+                    .chatId(chatId)
+                    .atChatId(atChatId)
                     .build());
         }
     }
