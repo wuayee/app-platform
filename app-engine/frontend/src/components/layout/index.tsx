@@ -19,6 +19,7 @@ import { Provider } from 'react-redux';
 import { Icons, KnowledgeIcons } from '../icons/index';
 import { HeaderUser } from '../header-user';
 import { store } from '@/store';
+import { getUser } from '../../pages/helper';
 import './style.scoped.scss';
 
 const { Header, Content, Sider } = Layout;
@@ -89,6 +90,9 @@ const AppLayout: React.FC = () => {
     getCurrentRoute(pathname);
 
   }, [location]);
+  useEffect(() => {
+    getUser()
+  }, [])
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider

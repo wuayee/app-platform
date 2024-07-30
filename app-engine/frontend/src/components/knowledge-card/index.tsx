@@ -57,7 +57,7 @@ const App = ({
     return `${y}.${m}.${d}`;
   };
   return (
-    <Card className='knowledge-card' onClick={() => {jumpDetail(knowledge.id)}}>
+    <div className='knowledge-card' onClick={() => {jumpDetail(knowledge.id)}}>
       <div className='card-head'>
         <span className='card-icon'>
           <knowledge.icon/>
@@ -98,7 +98,7 @@ const App = ({
           </Dropdown>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
 

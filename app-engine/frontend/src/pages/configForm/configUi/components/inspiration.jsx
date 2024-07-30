@@ -221,7 +221,6 @@ const Inspiration = (props) => {
    * 点击树形类目弹框取消按钮的回调
    */
   const handleCateModalCancel = () => {
-    if (validateCate()) return;
     setShowCateModal(false);
   }
 

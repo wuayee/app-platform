@@ -67,7 +67,8 @@ export function getUserCollection(id) {
  * @property {string} id - 用户id.
  * */ 
 export function getUserCollectionNoDesc(id) {
-  const url = `${COLLECT_URL}/usr/collection/${id}`
+  const userId = id || 'user';
+  const url = `${COLLECT_URL}/usr/collection/${userId}`
   return get(url);
 }
 /**
