@@ -26,18 +26,4 @@ public interface AippFlowRuntimeInfoService {
      * @return {@link RuntimeData} 运行时数据.
      */
     Optional<RuntimeData> getRuntimeData(String aippId, String version, String instanceId, OperationContext context);
-
-    /**
-     * 缓存运行时数据.
-     *
-     * @param runtimeData 运行时数据.
-     */
-    void cache(RuntimeData runtimeData);
-
-    /**
-     * 删除运行时数据.
-     *
-     * @param traceId 流程运行时id.
-     */
-    void delete(String traceId);
 }
