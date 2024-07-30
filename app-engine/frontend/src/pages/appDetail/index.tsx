@@ -17,24 +17,24 @@ const AppDetail: React.FC = () => {
       label: '概览',
       children: <AppOverview />
     },
-    {
-      key: '2',
-      label: '分析',
-      disabled: true,
-      children: <AppAnalyse />,
-    },
-    {
-      key: '3',
-      label: '反馈',
-      disabled: true,
-      children: <FeedBack />,
-    },
-    {
-      key: '4',
-      label: '评估',
-      disabled: true,
-      children: <AppEvaluate />,
-    },
+    // {
+    //   key: '2',
+    //   label: '分析',
+    //   disabled: true,
+    //   children: <AppAnalyse />,
+    // },
+    // {
+    //   key: '3',
+    //   label: '反馈',
+    //   disabled: true,
+    //   children: <FeedBack />,
+    // },
+    // {
+    //   key: '4',
+    //   label: '评估',
+    //   disabled: true,
+    //   children: <AppEvaluate />,
+    // },
   ];
   return (
     <div className='aui-fullpage'>

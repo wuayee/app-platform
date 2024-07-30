@@ -12,10 +12,19 @@ const WorkflowCard = ({ pluginData }: any) => {
   const tenantId = useAppSelector((state) => state.appStore.tenantId);
   const operatItems: MenuProps['items'] = [
     {
-      label: <div>编排</div>,
+      label: <div onClick={DropdownItemClick}>编排</div>,
       key: 'choreography',
     },
   ];
+
+  async function DropdownItemClick() {
+    let id = pluginData?.id;
+    if (pluginData?.state === 'active') {
+      const res = await getAppInfoByVersion(tenantId, id);
+      id = res?.data?.id;
+    }
+    navigate(`/app-develop/${tenantId}/app-detail/add-flow/${id}`);
+  }
   return(
   <div className='plugin-card'
    onClick={async()=>{

@@ -110,14 +110,14 @@ const AppCard = ({ cardInfo, clickMore, showOptions = true }: any) => {
       {/* 底部 */}
       <div className='app_card_footer'>
         <div className='left'>
-          <div className='icon_box'>
+          {/* <div className='icon_box'>
             <UserOutlined /> 2.36k
           </div>
           <div className='icon_box' onClick={(e) => { clickCollection(e) }} style={{
             cursor: loading ? 'not-allowed' : 'pointer'
           }}>
             {collectionStore[cardInfo.id] ? <StarFilled /> : <StarOutlined />} {count}
-          </div>
+          </div> */}
         </div>
         <div style={{ flex: 1 }}></div>
         {showOptions && (

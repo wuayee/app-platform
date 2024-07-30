@@ -132,9 +132,9 @@ const AppDev: React.FC = () => {
     dispatch(setCollectionValue(collectMap));
   }
 
-  useEffect(()=> {
-    getUserCollectionList();
-  }, []);
+  // useEffect(()=> {
+  //   getUserCollectionList();
+  // }, []);
   useEffect(() => {
     queryApps();
   }, [page, pageSize, search]);

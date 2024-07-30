@@ -136,9 +136,9 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
     handleAt(app);
   }
 
-  useEffect(()=> {
-    getUserCollectionList()
-  }, [])
+  // useEffect(()=> {
+  //   getUserCollectionList()
+  // }, [])
   return (
     <Drawer
       destroyOnClose

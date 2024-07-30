@@ -59,10 +59,10 @@ const Feedbacks = ({ instanceId, feedbackStatus, refreshFeedbackStatus }) => {
     <div className='feed-inner'>
       <div className='feed-left'></div>
       <div className='feed-right'>
-        {feedbackStatus !== 0 && <LikeIcon onClick={likeClick} />}
+        {/* {feedbackStatus !== 0 && <LikeIcon onClick={likeClick} />}
         {feedbackStatus === 0 && <LikeSelectIcon onClick={likeClick} />}
         {feedbackStatus !== 1 && <UnlikeIcon onClick={unLikeClick} />}
-        {feedbackStatus === 1 && <UnlikeSelectIcon onClick={unLikeClick} />}
+        {feedbackStatus === 1 && <UnlikeSelectIcon onClick={unLikeClick} />} */}
       </div>
       <Modal title='问题反馈' open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered>
         <TextArea rows={4} placeholder='请输入' value={textValue} onChange={onChange} />

@@ -97,9 +97,9 @@ const Apps: React.FC = () => {
     dispatch(setCollectionValue(collectMap))
   }
 
-  useEffect(()=> {
-    getUserCollectionList()
-  }, []);
+  // useEffect(()=> {
+  //   getUserCollectionList()
+  // }, [])
 
   useEffect(() => {
     queryApps();
