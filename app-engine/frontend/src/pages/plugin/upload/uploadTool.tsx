@@ -55,6 +55,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
   const onChangeSpace = (value) => {};
   // 添加数据
   const addFileData = (data, file) => {
+    if (fileData.current.length > 4) return;
     fileData.current = [...fileData.current, file];
     setFileList(fileData.current);
     Object.keys(data).forEach(key => {
@@ -202,7 +203,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
     >
       <div className='upload-info-head'>
         <img src='/src/assets/images/ai/info-upload.png' />
-        <span>建议用户在本地调试插件，避免部暑失败；相同工具将会覆盖。</span>
+        <span>建议用户在本地调试插件，避免部署失败；相同工具将会覆盖。</span>
       </div>
       <div>
         上传至：
@@ -244,7 +245,7 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
                       <div className='card-header-left'>
                         <img src='/src/assets/images/knowledge/knowledge-base.png' />
                         <div>
-                          <div style={{ fontSize: 20, marginBottom: 8 }}>{lItem.schema?.name}</div>
+                          <div style={{ fontSize: 20, marginBottom: 8, wordBreak: 'break-all' }}>{lItem.schema?.name}</div>
                           <div className='card-user'>
                             {lItem?.tags?.map((tag: string, index: number) => (
                               <Tag style={{ margin: 0 }} key={index}>
@@ -258,7 +259,6 @@ const UploadToolDrawer = ({ openSignal, refreshPluginList }) => {
                       <div className='card-des'>{lItem?.schema?.description}</div>
                       <div className='card-table' style={{ display: lItem.open ? 'block' : 'none' }}>
                         <Table
-                          scroll={{ y: 120 }}
                           dataSource={lItem?.parameterEntities}
                           columns={columns}
                           virtual

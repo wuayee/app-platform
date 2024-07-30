@@ -245,16 +245,15 @@ export const updateChatId = function (chatId, appId) {
  * @param {Object} file - 需要验证的文件对象
  * @return {boolean} 如果文件符合要求，返回true，否则返回false
  */
-export const fileValidate = (file) => {
-  const fileTypes = ['jpg', 'png', 'jpeg', 'PNG', 'gif'];
+export const fileValidate = (file, fileTypes = ['jpg', 'png', 'jpeg', 'PNG', 'gif'], size = 1) => {
   const fileEnd = file.name.split('.')[1];
-  const size = file.size / 1024;
-  if (size > 1024) {
-    Message({ type: 'warning', content: '文件大小不能超过1M' });
+  const fileSize = file.size / (1024 * size);
+  if (fileSize > 1024) {
+    Message({ type: 'warning', content: `文件${file.name}大小不能超过${size}M` });
     return false
   }
   if (!fileTypes.includes(fileEnd)) {
-    Message({ type: 'warning', content: '只支持jpg，png，jpeg，gif类型的文件' });
+    Message({ type: 'warning', content: `只支持 ${fileTypes.join(',')} 类型的文件` });
     return false
   }
   return true
