@@ -6,8 +6,7 @@ package com.huawei.fit.jober.aipp.service;
 
 import com.huawei.fit.jane.common.entity.OperationContext;
 import com.huawei.fit.jober.aipp.dto.chat.CreateAppChatRequest;
-import com.huawei.fit.jober.aipp.dto.chat.CreateAppChatRsp;
-import com.huawei.fit.jober.aipp.dto.chat.QueryChatRsp;
+import com.huawei.fitframework.flowable.Choir;
 
 /**
  * 历史会话服务接口.
@@ -21,7 +20,8 @@ public interface AppChatService {
      *
      * @param body 请求体
      * @param context 上下文
-     * @return 表示会话相应体的 {@link QueryChatRsp}。
+     * @param isDebug 是否是调试对话
+     * @return 表示会话相应体的 {@link Choir}。
      */
-    CreateAppChatRsp chat(CreateAppChatRequest body, OperationContext context);
+    Choir<Object> chat(CreateAppChatRequest body, OperationContext context, boolean isDebug);
 }

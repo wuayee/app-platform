@@ -38,7 +38,7 @@ public class CreateAppChatRequest {
     @JsonProperty("question")
     private String question;
 
-    @Property(description = "init context")
-    @JsonProperty("init_context")
-    private Map<String, Object> initContext;
+    @Property(description = "context")
+    @JsonProperty("context")
+    private Map<String, Object> context;
 }

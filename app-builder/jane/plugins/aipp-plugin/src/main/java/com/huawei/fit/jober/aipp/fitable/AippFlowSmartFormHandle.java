@@ -10,17 +10,21 @@ import com.huawei.fit.jane.meta.multiversion.instance.InstanceDeclarationInfo;
 import com.huawei.fit.jober.FlowSmartFormService;
 import com.huawei.fit.jober.aipp.constants.AippConst;
 import com.huawei.fit.jober.aipp.domain.AppBuilderForm;
-import com.huawei.fit.jober.aipp.service.AippStreamService;
+import com.huawei.fit.jober.aipp.dto.chat.AppChatRsp;
+import com.huawei.fit.jober.aipp.enums.AippInstLogType;
 import com.huawei.fit.jober.aipp.service.AppBuilderFormService;
+import com.huawei.fit.jober.aipp.service.AppChatSseService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.FormUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.ObjectUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -35,14 +39,14 @@ public class AippFlowSmartFormHandle implements FlowSmartFormService {
     private static final Logger log = Logger.get(AippFlowSmartFormHandle.class);
 
     private final AppBuilderFormService formService;
-    private final AippStreamService aippStreamService;
     private final MetaInstanceService metaInstanceService;
+    private final AppChatSseService appChatSseService;
 
-    public AippFlowSmartFormHandle(@Fit AppBuilderFormService formService, @Fit AippStreamService aippStreamService,
-            @Fit MetaInstanceService metaInstanceService) {
+    public AippFlowSmartFormHandle(@Fit AppBuilderFormService formService, @Fit MetaInstanceService metaInstanceService,
+            AppChatSseService appChatSseService) {
         this.formService = formService;
-        this.aippStreamService = aippStreamService;
         this.metaInstanceService = metaInstanceService;
+        this.appChatSseService = appChatSseService;
     }
 
     /**
@@ -63,8 +67,16 @@ public class AippFlowSmartFormHandle implements FlowSmartFormService {
         AppBuilderForm appBuilderForm = this.formService.selectWithId(sheetId);
         String parentInstanceId = ObjectUtils.cast(businessData.get(AippConst.PARENT_INSTANCE_ID));
         String instanceId = ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_INST_ID_KEY));
-        this.aippStreamService.sendToAncestor(instanceId,
-                FormUtils.buildFormData(businessData, appBuilderForm, parentInstanceId));
+        String chatId = ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID));
+        String atChatId = ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID));
+        Map<String, Object> formDataMap = FormUtils.buildFormData(businessData, appBuilderForm, parentInstanceId);
+        AppChatRsp appChatRsp = AppChatRsp.builder().chatId(chatId).atChatId(atChatId)
+                .status(FlowTraceStatus.RUNNING.name())
+                .answer(Collections.singletonList(AppChatRsp.Answer.builder()
+                        .content(formDataMap).type(AippInstLogType.FORM.name()).build()))
+                .formInstanceId(instanceId)
+                .build();
+        this.appChatSseService.sendToAncestorLastData(instanceId, appChatRsp);
     }
 
     private void updateInstance(String sheetId, String nodeId, Map<String, Object> businessData) {

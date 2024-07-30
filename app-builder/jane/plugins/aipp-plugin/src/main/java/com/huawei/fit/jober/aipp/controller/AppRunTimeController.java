@@ -30,6 +30,7 @@ import com.huawei.fit.jober.aipp.service.AippRunTimeService;
 import com.huawei.fit.runtime.entity.RuntimeData;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Property;
+import com.huawei.fitframework.flowable.Choir;
 import com.huawei.fitframework.validation.Validated;
 
 import java.util.List;
@@ -219,14 +220,13 @@ public class AppRunTimeController extends AbstractController {
      * @return 返回空回复的 {@link Rsp}{@code <}{@link Void}{@code >}
      */
     @PutMapping(path = "/app/instances/{instance_id}", description = "更新表单数据，并恢复实例任务执行")
-    public Rsp<Void> resumeAndUpdateAippInstance(HttpClassicServerRequest httpRequest,
+    public Choir<Object> resumeAndUpdateAippInstance(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("instance_id") String instanceId,
-            @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息")
-            @RequestBody Map<String, Object> formArgs) {
-        this.aippRunTimeService.resumeAndUpdateAippInstance(instanceId,
+            @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息") @RequestBody
+            Map<String, Object> formArgs) {
+        return this.aippRunTimeService.resumeAndUpdateAippInstance(instanceId,
                 formArgs,
                 this.contextOf(httpRequest, tenantId));
-        return Rsp.ok();
     }
 
     /**
