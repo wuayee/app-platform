@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * Todo
+ * 默认实例事件声明
  *
  * @author 陈镕希 c00572808
  * @since 2023-10-30

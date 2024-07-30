@@ -55,6 +55,13 @@ public class InstanceController extends AbstractController {
 
     private final TaskService taskService;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator 为系统提供认证器
+     * @param repo {@link TaskInstance.Repo}实例
+     * @param taskService {@link TaskService}为任务定义提供管理
+     */
     public InstanceController(Authenticator authenticator, TaskInstance.Repo repo, TaskService taskService) {
         super(authenticator);
         this.repo = repo;
@@ -190,7 +197,6 @@ public class InstanceController extends AbstractController {
             @RequestParam("offset") long offset, @RequestParam("limit") int limit,
             @RequestParam(name = "deleted", required = false) String deleted) {
         OperationContext context = this.contextOf(httpRequest, tenantId);
-        TaskEntity task = this.taskService.retrieve(taskId, context);
         ViewMode viewMode = Enums.parse(ViewMode.class, nullIf(viewType, ViewMode.LIST.name()));
         TaskInstance.Filter filter = filterOfInstances(httpRequest, Boolean.parseBoolean(deleted));
         if (viewMode == ViewMode.TREE) {
@@ -203,6 +209,7 @@ public class InstanceController extends AbstractController {
                 .stream()
                 .map(OrderBy::parse)
                 .collect(Collectors.toList());
+        TaskEntity task = this.taskService.retrieve(taskId, context);
         PagedResultSet<TaskInstance> results = this.repo.list(task, filter, Pagination.create(offset, limit), orderBys,
                 viewMode, context);
         List<TaskInstance> instanceList = results.results()

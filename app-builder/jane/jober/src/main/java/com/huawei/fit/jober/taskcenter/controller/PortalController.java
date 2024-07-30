@@ -44,6 +44,7 @@ import com.huawei.fit.jober.taskcenter.util.sql.OrderBy;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.model.RangedResultSet;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import lombok.AllArgsConstructor;
@@ -89,6 +90,20 @@ public class PortalController extends AbstractController {
 
     private final String defaultTemplateId;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator {@link Authenticator}认证器实例
+     * @param portalService 门户服务
+     * @param authorizationController 授权控制器
+     * @param instanceController 实例控制器
+     * @param taskRelationRepo 任务关系数据库操作接口
+     * @param taskagendaService 任务调度服务
+     * @param taskService 任务服务
+     * @param fileRepo 文件数据库操作接口
+     * @param janeEndpoint 接口前缀
+     * @param defaultTemplateId 默认模板ID
+     */
     public PortalController(Authenticator authenticator, PortalService portalService,
             AuthorizationController authorizationController, InstanceController instanceController,
             TaskRelation.Repo taskRelationRepo, TaskAgendaService taskagendaService, TaskService taskService,
@@ -126,8 +141,8 @@ public class PortalController extends AbstractController {
         List<String> tags = new ArrayList<>(httpRequest.queries().all("tag"));
         tags.addAll(departments);
         OperationContext context = this.contextOf(httpRequest, tenantId);
-        List<PortalService.TaskGroup> groups = this.portalService.listTaskGroups(owners, creators, tags, categories,
-                Collections.emptyList(), context);
+        List<PortalService.TaskGroup> groups =
+                this.portalService.listTaskGroups(owners, creators, tags, categories, Collections.emptyList(), context);
         return groups.stream().map(group -> {
             Map<String, Object> view = new LinkedHashMap<>();
             view.put("treeId", group.getTreeId());
@@ -286,6 +301,14 @@ public class PortalController extends AbstractController {
         this.portalService.patchTaskProperty(taskId, propertyId, declaration, context);
     }
 
+    /**
+     * 为任务定义的属性打补丁
+     *
+     * @param httpRequest http请求
+     * @param tenantId 租户id
+     * @param taskId 任务id
+     * @param request 请求
+     */
     @PatchMapping("/tasks/{task_id}/properties")
     @ResponseStatus(HttpResponseStatus.NO_CONTENT)
     public void patchProperties(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
@@ -447,6 +470,14 @@ public class PortalController extends AbstractController {
         return viewOf(sources, Views::viewOf);
     }
 
+    /**
+     * 创建三方授权
+     *
+     * @param httpRequest http请求
+     * @param tenantId 租户id
+     * @param request 请求
+     * @return 认证信息
+     */
     @PostMapping(path = "/authorizations", summary = "创建三方授权")
     @ResponseStatus(HttpResponseStatus.CREATED)
     public Map<String, Object> createAuthorization(HttpClassicServerRequest httpRequest,
@@ -454,6 +485,14 @@ public class PortalController extends AbstractController {
         return this.authorizationController.create(httpRequest, tenantId, request);
     }
 
+    /**
+     * 修改三方授权
+     *
+     * @param httpRequest http请求
+     * @param tenantId 租户id
+     * @param authorizationId 认证id
+     * @param request 请求数据
+     */
     @PatchMapping(path = "/authorizations/{authorization_id}", summary = "修改三方授权")
     @ResponseStatus(HttpResponseStatus.NO_CONTENT)
     public void patchAuthorization(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
@@ -461,13 +500,28 @@ public class PortalController extends AbstractController {
         this.authorizationController.patch(httpRequest, tenantId, authorizationId, request);
     }
 
-    @DeleteMapping(path = "/authorizations/{authorization_id}", summary = "修改三方授权")
+    /**
+     * 删除认证信息
+     *
+     * @param httpRequest http请求
+     * @param tenantId 租户id
+     * @param authorizationId 认证id
+     */
+    @DeleteMapping(path = "/authorizations/{authorization_id}", summary = "删除授权")
     @ResponseStatus(HttpResponseStatus.NO_CONTENT)
     public void deleteAuthorization(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
             @PathVariable("authorization_id") String authorizationId) {
         this.authorizationController.delete(httpRequest, tenantId, authorizationId);
     }
 
+    /**
+     * 检索三方授权
+     *
+     * @param httpRequest http请求
+     * @param tenantId 租户id
+     * @param authorizationId 认证id
+     * @return 认证信息
+     */
     @GetMapping(path = "/authorizations/{authorization_id}", summary = "检索三方授权")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> retrieveAuthorization(HttpClassicServerRequest httpRequest,
@@ -475,6 +529,15 @@ public class PortalController extends AbstractController {
         return this.authorizationController.retrieve(httpRequest, tenantId, authorizationId);
     }
 
+    /**
+     * 查询认证信息列表
+     *
+     * @param httpRequest http请求
+     * @param tenantId 租户id
+     * @param offset 偏移量
+     * @param limit 限制条数
+     * @return 认证信息列表
+     */
     @GetMapping(path = "/authorizations", summary = "查询三方授权")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> listAuthorizations(HttpClassicServerRequest httpRequest,
@@ -495,22 +558,20 @@ public class PortalController extends AbstractController {
      * @param deleted 表示是否查询删除表，true则代表要查询的是删除表。
      * @return Map<String, Object>
      */
-    @SuppressWarnings("unchecked")
     @GetMapping(path = "/tasks/{task_id}/instances", summary = "分页查询任务实例列表")
     @ResponseStatus(HttpResponseStatus.OK)
     public Map<String, Object> listInstances(HttpClassicServerRequest httpRequest,
-            @PathVariable("tenant_id") String tenantId,
-            @PathVariable("task_id") String taskId, @RequestParam(name = "viewType", required = false) String viewType,
-            @RequestParam("offset") long offset, @RequestParam("limit") int limit,
-            @RequestParam(name = "deleted", required = false) String deleted) {
-        Map<String, Object> originResult = this.instanceController.list(httpRequest, tenantId, taskId, viewType, offset,
-                limit, deleted);
+            @PathVariable("tenant_id") String tenantId, @PathVariable("task_id") String taskId,
+            @RequestParam(name = "viewType", required = false) String viewType, @RequestParam("offset") long offset,
+            @RequestParam("limit") int limit, @RequestParam(name = "deleted", required = false) String deleted) {
+        Map<String, Object> originResult =
+                this.instanceController.list(httpRequest, tenantId, taskId, viewType, offset, limit, deleted);
         List<Object> properties = Optional.ofNullable(originResult)
-                .map(originRes -> (Map<String, Object>) originRes.get("task"))
-                .map(task -> (List<Object>) task.get("properties"))
+                .map(originRes -> ObjectUtils.<Map<String, Object>>cast(originRes.get("task")))
+                .map(task -> ObjectUtils.<List<Object>>cast(task.get("properties")))
                 .orElse(Collections.emptyList());
         List<Object> instances = Optional.ofNullable(originResult)
-                .map(originRes -> (List<Object>) originRes.get("instances"))
+                .map(originRes -> ObjectUtils.<List<Object>>cast(originRes.get("instances")))
                 .orElse(Collections.emptyList());
         if (properties.isEmpty() || instances.isEmpty()) {
             return originResult;
@@ -534,17 +595,13 @@ public class PortalController extends AbstractController {
     public Map<String, Object> listInstanceRelations(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("instance_id") String instanceId,
             @RequestParam("offset") long offset, @RequestParam("limit") int limit) {
-        TaskRelation.Filter filter = TaskRelation.Filter.custom()
-                .objectId1s(Collections.singletonList(instanceId))
-                .build();
+        TaskRelation.Filter filter =
+                TaskRelation.Filter.custom().objectId1s(Collections.singletonList(instanceId)).build();
         OperationContext context = this.contextOf(httpRequest, null);
         RangedResultSet<TaskRelation> resultSet = taskRelationRepo.list(filter, offset, limit, context);
         if (resultSet.getResults().isEmpty()) {
             return viewOf(resultSet, "relations", Views::viewOf);
         }
-        Map<String, String> instanceRelationMap = resultSet.getResults()
-                .stream()
-                .collect(Collectors.toMap(TaskRelation::objectId2, TaskRelation::id));
         List<String> relationInstanceIds = resultSet.getResults()
                 .stream()
                 .filter(result -> "instance".equals(result.objectType2()))
@@ -554,11 +611,7 @@ public class PortalController extends AbstractController {
             return viewOf(RangedResultSet.create(new ArrayList<TaskRelation>(), (int) offset, limit, 0), "relations",
                     Views::viewOf);
         }
-        List<OrderBy> orderBys = httpRequest.queries()
-                .all("order_by")
-                .stream()
-                .map(OrderBy::parse)
-                .collect(Collectors.toList());
+
         TaskInstance.Filter originInstanceFilter = filterOfInstances(httpRequest, false);
         TaskInstance.Filter instanceFilter = TaskInstance.Filter.custom()
                 .ids(relationInstanceIds)
@@ -569,13 +622,22 @@ public class PortalController extends AbstractController {
                 .categories(originInstanceFilter.categories())
                 .deleted(originInstanceFilter.deleted())
                 .build();
-        List<String> taskIds = this.taskagendaService.listTaskIds(instanceFilter, Pagination.create(offset, limit),
+        List<OrderBy> orderBys =
+                httpRequest.queries().all("order_by").stream().map(OrderBy::parse).collect(Collectors.toList());
+        List<String> taskIds = this.taskagendaService.listTaskIds(instanceFilter,
+                Pagination.create(offset, limit),
                 this.defaultTemplateId,
-                context, orderBys);
+                context,
+                orderBys);
+        Map<String, String> instanceRelationMap =
+                resultSet.getResults().stream().collect(Collectors.toMap(TaskRelation::objectId2, TaskRelation::id));
         List<TaskEntity> taskEntityList = taskService.listTaskEntities(taskIds, context);
         PagedResultSet<TaskInstance> results = taskagendaService.listAllAgenda(instanceFilter,
                 Pagination.create(offset, limit),
-                this.defaultTemplateId, context, taskEntityList, orderBys);
+                this.defaultTemplateId,
+                context,
+                taskEntityList,
+                orderBys);
         Map<String, Object> resultMap = buildMultiTaskInstanceView(results, taskEntityList);
         resultMap.put("instanceRelationMap", instanceRelationMap);
         return resultMap;
@@ -584,18 +646,17 @@ public class PortalController extends AbstractController {
     private void updateFileResponse(HttpClassicServerRequest httpRequest, String tenantId, List<Object> properties,
             List<Object> instances) {
         List<String> filePropertyNames = properties.stream()
-                .filter(property -> "uploadFile".equalsIgnoreCase(
-                        ((Map<String, Object>) (((Map<String, Object>) property).get("appearance"))).get("displayType")
-                                .toString()))
-                .map(property -> ((Map<String, Object>) property).get("name").toString())
+                .filter(property -> "uploadFile".equalsIgnoreCase(ObjectUtils.<Map<String, Object>>cast(ObjectUtils
+                        .<Map<String, Object>>cast(
+                        property).get("appearance")).get("displayType").toString()))
+                .map(property -> ObjectUtils.<Map<String, Object>>cast(property).get("name").toString())
                 .collect(Collectors.toList());
         List<Object> allLayerInstances = fillAllLayer(instances);
         this.replaceFileStructOfInfo(httpRequest, tenantId, filePropertyNames, allLayerInstances);
     }
 
     private void replaceFileStructOfInfo(HttpClassicServerRequest httpRequest, String tenantId,
-            List<String> filePropertyNames,
-            List<Object> allLayerInstances) {
+            List<String> filePropertyNames, List<Object> allLayerInstances) {
         List<Map<String, Object>> infos = allLayerInstances.stream()
                 .map(instance -> (Map<String, Object>) ((Map<String, Object>) instance).get("info"))
                 .collect(Collectors.toList());
@@ -615,11 +676,12 @@ public class PortalController extends AbstractController {
                 Object fileId = info.get(filePropertyName);
                 String fileIdString = String.valueOf(fileId);
                 if (StringUtils.isNotBlank(fileIdString) && !StringUtils.equalsIgnoreCase("null", fileIdString)) {
-                    info.put(filePropertyName, FileInfo.builder()
-                            .id(fileId.toString())
-                            .name(fileIdNameMap.get(fileId.toString()))
-                            .url(janeEndpoint + "/api/jober/v1/jane/files/" + fileId)
-                            .build());
+                    info.put(filePropertyName,
+                            FileInfo.builder()
+                                    .id(fileId.toString())
+                                    .name(fileIdNameMap.get(fileId.toString()))
+                                    .url(janeEndpoint + "/api/jober/v1/jane/files/" + fileId)
+                                    .build());
                 } else {
                     info.put(filePropertyName, null);
                 }

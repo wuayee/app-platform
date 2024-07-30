@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Todo
+ * 默认task节点
  *
  * @author 陈镕希 c00572808
  * @since 2023-10-30
@@ -81,7 +81,10 @@ class DefaultTaskNode implements TaskNode {
 
     @Override
     public String toString() {
-        return StringUtils.format("[id={0}, name={1}, type={2}, children={3}]", this.id, this.name, this.type,
+        return StringUtils.format("[id={0}, name={1}, type={2}, children={3}]",
+                this.id,
+                this.name,
+                this.type,
                 this.children);
     }
 }

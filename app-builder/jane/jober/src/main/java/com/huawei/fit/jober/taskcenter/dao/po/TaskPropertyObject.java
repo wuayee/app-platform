@@ -20,11 +20,11 @@ public class TaskPropertyObject {
 
     private String name;
 
-    private Boolean required;
+    private Boolean isRequired;
 
     private String templateId;
 
-    private Boolean identifiable;
+    private Boolean isIdentifiable;
 
     private String description;
 

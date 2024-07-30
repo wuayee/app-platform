@@ -43,6 +43,7 @@ public class UserController {
     /**
      * 获取登录用户信息。
      *
+     * @param httpRequest http请求
      * @return 登录用户信息的 {@link JoberResponse}。
      */
     @GetMapping(path = "/sso_login_info")
@@ -58,6 +59,7 @@ public class UserController {
      * 模糊搜索对应员工信息列表。
      *
      * @param keyword 搜索的用户关键字的 {@link JoberResponse}。
+     * @param httpRequest http请求
      * @return 员工信息列表的 {@link JoberResponse}{@code <}{@link List}{@code <}{@link EmployeeVO}{@code >}{@code >}。
      */
     @GetMapping

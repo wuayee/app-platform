@@ -113,6 +113,7 @@ public interface Index extends DomainObject {
              * 设置索引的名称。
              *
              * @param name 表示索引名称的 {@link String}。
+             * @return {@link Builder}实例
              */
             Builder name(String name);
 
@@ -120,6 +121,7 @@ public interface Index extends DomainObject {
              * 设置索引包含任务属性名称的列表。
              *
              * @param propertyNames 表示任务属性名称列表的 {@link List}{@code <}{@link String}{@code >}。
+             * @return {@link Builder}实例
              */
             Builder propertyNames(List<String> propertyNames);
 

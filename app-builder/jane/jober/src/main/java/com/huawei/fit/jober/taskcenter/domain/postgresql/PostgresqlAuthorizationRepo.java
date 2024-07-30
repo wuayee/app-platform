@@ -28,6 +28,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.model.RangedResultSet;
 import com.huawei.fitframework.transaction.Transactional;
+import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.StringUtils;
 
 import java.sql.Timestamp;
@@ -138,7 +139,6 @@ public class PostgresqlAuthorizationRepo implements Authorization.Repo {
     public RangedResultSet<Authorization> list(Authorization.Filter filter, long offset, int limit,
             OperationContext context) {
         List<String> ids = values(filter.ids());
-        List<String> systems = values(filter.systems());
         List<String> users = values(filter.users());
         StringBuilder where = new StringBuilder();
         List<Object> args = new LinkedList<>();
@@ -150,6 +150,7 @@ public class PostgresqlAuthorizationRepo implements Authorization.Repo {
             Sqls.andIn(where, Sqls.identifier(Row.COLUMN_USER), users.size());
             args.addAll(users);
         }
+        List<String> systems = values(filter.systems());
         if (!systems.isEmpty()) {
             Sqls.andLikeAny(where, Sqls.identifier(Row.COLUMN_SYSTEM), systems.size());
             args.addAll(systems.stream().map(Sqls::escapeLikeValue).collect(Collectors.toList()));
@@ -157,7 +158,7 @@ public class PostgresqlAuthorizationRepo implements Authorization.Repo {
 
         SqlBuilder countSql = SqlBuilder.custom().append("SELECT COUNT(1) FROM ").appendIdentifier(Row.TABLE);
         appendWhere(countSql, where);
-        long total = ((Number) this.executor.executeScalar(countSql.toString(), args)).longValue();
+        long total = ObjectUtils.<Number>cast(this.executor.executeScalar(countSql.toString(), args)).longValue();
 
         SqlBuilder whereSql = Row.fillSelectPrefix(SqlBuilder.custom());
         appendWhere(whereSql, where);
@@ -166,16 +167,19 @@ public class PostgresqlAuthorizationRepo implements Authorization.Repo {
         whereArgs.addAll(args);
         whereArgs.addAll(Arrays.asList(offset, limit));
         List<Map<String, Object>> rows = this.executor.executeQuery(whereSql.toString(), whereArgs);
-        List<Authorization> authorizations = rows.stream()
-                .map(values -> convert(new Row(values), Dates::fromUtc))
-                .collect(Collectors.toList());
+        List<Authorization> authorizations =
+                rows.stream().map(values -> convert(new Row(values), Dates::fromUtc)).collect(Collectors.toList());
 
         return RangedResultSet.create(authorizations, (int) offset, limit, (int) total);
     }
 
     private static List<String> values(List<String> values) {
-        return Optional.ofNullable(values).map(Collection::stream).orElseGet(Stream::empty)
-                .map(StringUtils::trim).filter(StringUtils::isNotEmpty).collect(Collectors.toList());
+        return Optional.ofNullable(values)
+                .map(Collection::stream)
+                .orElseGet(Stream::empty)
+                .map(StringUtils::trim)
+                .filter(StringUtils::isNotEmpty)
+                .collect(Collectors.toList());
     }
 
     private static void appendWhere(SqlBuilder sql, StringBuilder where) {
@@ -250,7 +254,7 @@ public class PostgresqlAuthorizationRepo implements Authorization.Repo {
         Long expiration() {
             Object expiration = this.values.computeIfAbsent(COLUMN_EXPIRATION, k -> 0L);
             if (!(expiration instanceof Long)) {
-                expiration = ((Number) expiration).longValue();
+                expiration = ObjectUtils.<Number>cast(expiration).longValue();
                 this.values.put(COLUMN_EXPIRATION, expiration);
             }
             return cast(expiration);
@@ -363,8 +367,14 @@ public class PostgresqlAuthorizationRepo implements Authorization.Repo {
     }
 
     private static Authorization convert(Row row, Function<LocalDateTime, LocalDateTime> datetimeMapper) {
-        return Authorization.custom().id(row.id()).system(row.system()).user(row.user()).token(row.token())
-                .expiration(row.expiration()).creator(row.creator()).lastModifier(row.lastModifier())
+        return Authorization.custom()
+                .id(row.id())
+                .system(row.system())
+                .user(row.user())
+                .token(row.token())
+                .expiration(row.expiration())
+                .creator(row.creator())
+                .lastModifier(row.lastModifier())
                 .creationTime(datetimeMapper.apply(row.creationTime()))
                 .lastModificationTime(datetimeMapper.apply(row.lastModificationTime()))
                 .build();
