@@ -113,8 +113,8 @@ public class UserUtil {
     }
 
     private Optional<String> findAppid(List<String> judgeStringList) {
-        // Todo 经询问，appid的格式多种多样，当前appid需要在应用中心创建，都为com.huawei开头，
-        //  但存量appid并没有一个统一格式，这块若后续有特殊的appid调用，需要进行支持。建议后续移至配置文件中，进行appid列表的配置
+        // 当前appid需要在应用中心创建，都为com.huawei开头，
+        // 但存量appid并没有一个统一格式，这块若后续有特殊的appid调用，需要进行支持。建议后续移至配置文件中，进行appid列表的配置
         return judgeStringList.stream()
                 .filter(StringUtils::isNotBlank)
                 .filter(string -> string.contains("com.huawei"))

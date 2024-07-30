@@ -76,6 +76,13 @@ public class OperationRecordAspect {
     private void operationRecordPointCut() {
     }
 
+    /**
+     * 记录操作
+     *
+     * @param pjp 处理点
+     * @return 操作对象
+     * @throws Throwable 当注解id不对时抛出异常
+     */
     @Around("operationRecordPointCut()")
     @Order(200)
     public Object recordOperation(ProceedingJoinPoint pjp) throws Throwable {
@@ -84,7 +91,7 @@ public class OperationRecordAspect {
 
         OperationContext context = this.getOperationContext(annotation.context(), pjp.getArgs());
         TaskRelation taskRelation = annotation.operate().equals(RELDEL) ? this.relationRepo.retrieve(
-                (String) pjp.getArgs()[0], context) : null;
+                ObjectUtils.cast(pjp.getArgs()[0]), context) : null;
 
         Object result = pjp.proceed();
 
@@ -93,7 +100,7 @@ public class OperationRecordAspect {
             assert taskRelation != null;
             objectId = taskRelation.objectId1();
         } else if (annotation.objectId() >= 0 && pjp.getArgs().length > annotation.objectId()) {
-            objectId = (String) pjp.getArgs()[annotation.objectId()];
+            objectId = ObjectUtils.cast(pjp.getArgs()[annotation.objectId()]) ;
         } else if (annotation.objectId() == -1) {
             objectId = this.getObjectIdByMethod(result, annotation.objectIdGetMethodName());
         } else {
@@ -204,7 +211,7 @@ public class OperationRecordAspect {
         }
 
         if (args.length > contextIndex) {
-            return (OperationContext) args[contextIndex];
+            return ObjectUtils.cast(args[contextIndex]) ;
         } else {
             throw new ServerInternalException("Method args length less than id index.");
         }
@@ -214,8 +221,8 @@ public class OperationRecordAspect {
             throws IllegalAccessException, InvocationTargetException {
         Method[] methods = result.getClass().getMethods();
         for (Method method : methods) {
-            if (method.getName().equals(getIdMethodName) || method.getName().equals("getId")) {
-                return (String) method.invoke(result);
+            if (Objects.equals(method.getName(), getIdMethodName) || Objects.equals(method.getName(), "getId")) {
+                return ObjectUtils.cast(method.invoke(result)) ;
             }
         }
         throw new ServerInternalException("Couldn't get object id from result.");
@@ -297,8 +304,7 @@ public class OperationRecordAspect {
             log.warn("The task_id in task_instance_wide is null. Query sql is {}, arg is {}.", sql, objectId);
             return null;
         }
-        TaskEntity taskEntity = taskService.retrieve(taskId.toString(), OperationContext.empty());
-        return taskEntity;
+        return taskService.retrieve(taskId.toString(), OperationContext.empty());
     }
 
     private List<Map<String, Object>> convertCategoryTriggersToMap(List<TaskCategoryTriggerDeclaration> declarations) {

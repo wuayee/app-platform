@@ -22,7 +22,7 @@ import com.huawei.fit.jane.task.util.Dates;
 import com.huawei.fit.jane.task.util.PagedResultSet;
 import com.huawei.fit.jane.task.util.PaginationResult;
 import com.huawei.fit.jane.task.util.UndefinableValue;
-import com.huawei.fit.jober.common.utils.UUIDUtil;
+import com.huawei.fit.jober.common.utils.UuidUtil;
 import com.huawei.fit.jober.entity.task.TaskProperty;
 import com.huawei.fit.jober.taskcenter.declaration.InstanceDeclaration;
 import com.huawei.fit.jober.taskcenter.declaration.InstanceEventDeclaration;
@@ -1203,7 +1203,7 @@ public final class Views {
             return null;
         }
         TaskRelation.Declaration.Builder builder = TaskRelation.Declaration.custom();
-        builder.id(UUIDUtil.uuid());
+        builder.id(UuidUtil.uuid());
         declare(view, "objectId1", builder::objectId1);
         declare(view, "objectType1", builder::objectType1);
         declare(view, "objectId2", builder::objectId2);
