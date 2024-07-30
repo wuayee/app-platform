@@ -138,11 +138,26 @@ public interface AippLogService {
      *
      * @param logId 指定log的id
      * @param newLogData 新的log_data
+     * @throws IllegalArgumentException 如果logId不存在或者newLogData为空，则抛出此异常
      */
     void updateLog(Long logId, String newLogData) throws IllegalArgumentException;
 
+    /**
+     * 查询指定aipp从暂停后的最近历史记录
+     *
+     * @param aippId 指定aipp的id
+     * @param aippType 指定aipp的类型
+     * @param context 登录信息
+     * @return log数据
+     */
     List<AippInstLogDataDto> queryRecentLogsSinceResume(String aippId, String aippType, OperationContext context);
 
+    /**
+     * 根据父Instance的id获取其路径。
+     *
+     * @param parentInstId 表示父instance的id的 {@link String}。
+     * @return 表示父instId的路径的 {@link String}。
+     */
     String getParentPath(String parentInstId);
 
     /**

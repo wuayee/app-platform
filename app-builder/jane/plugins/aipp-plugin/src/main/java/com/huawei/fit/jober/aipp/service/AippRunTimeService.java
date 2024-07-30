@@ -157,10 +157,10 @@ public interface AippRunTimeService {
      *
      * @param aippId aipp id
      * @param versionId versionId
-     * @param deleteLog 是否删除aipp log
+     * @param isDeleteLog 是否删除aipp log
      * @param context 操作上下文
      */
-    void terminateAllPreviewInstances(String aippId, String versionId, boolean deleteLog, OperationContext context);
+    void terminateAllPreviewInstances(String aippId, String versionId, boolean isDeleteLog, OperationContext context);
 
     /**
      * 分享对话

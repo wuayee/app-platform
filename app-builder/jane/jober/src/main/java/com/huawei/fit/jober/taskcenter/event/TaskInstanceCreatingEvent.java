@@ -16,6 +16,14 @@ import com.huawei.fit.jober.taskcenter.domain.TaskEntity;
 public class TaskInstanceCreatingEvent extends TaskInstanceDeclaringEvent {
     private final String instanceId;
 
+    /**
+     * 任务实例创建事件
+     *
+     * @param publisher 事件发布者
+     * @param task 任务实体
+     * @param instanceId 任务实例id
+     * @param context 操作上下文
+     */
     public TaskInstanceCreatingEvent(Object publisher, TaskEntity task, String instanceId, OperationContext context) {
         super(publisher, task, context);
         this.instanceId = instanceId;

@@ -11,6 +11,8 @@ import com.huawei.fit.jober.aipp.serializer.BaseSerializer;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 
 /**
+ * 应用表单属性序列化与反序列化实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */

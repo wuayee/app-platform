@@ -16,6 +16,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
+ * 应用表单仓库功能实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */

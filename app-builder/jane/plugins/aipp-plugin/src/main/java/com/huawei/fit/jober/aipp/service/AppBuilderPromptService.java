@@ -18,7 +18,22 @@ import java.util.List;
  * @since 2024-04-26
  */
 public interface AppBuilderPromptService {
+    /**
+     * 查询灵感大全
+     *
+     * @param appId 应用id
+     * @param categoryId 分类id
+     * @param context 操作上下文
+     * @return 返回查询结果
+     */
     Rsp<AppBuilderPromptDto> queryInspirations(String appId, String categoryId, OperationContext context);
 
+    /**
+     * 查询灵感大全的分类
+     *
+     * @param appId 应用id
+     * @param context 操作上下文
+     * @return 返回查询结果
+     */
     Rsp<List<AppBuilderPromptCategoryDto>> listPromptCategories(String appId, OperationContext context);
 }

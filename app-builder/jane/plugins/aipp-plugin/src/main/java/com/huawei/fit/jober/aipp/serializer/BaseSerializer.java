@@ -5,6 +5,11 @@
 package com.huawei.fit.jober.aipp.serializer;
 
 /**
+ * 基础序列化接口，定义了领域对象与数据对象之间的转换方法
+ *
+ * @param <Domain> 领域对象类型
+ * @param <PO> 数据对象类型
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */

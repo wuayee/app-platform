@@ -24,12 +24,13 @@ import java.util.stream.Stream;
  * 1. 用户主动清理文件
  * 2. 30天超期文件自动清理
  *
- * @author x00649642
- * @since 2024-02-04
+ * @author 孙怡菲 s00664640
+ * @since 2024-05-10
  */
 @Component
 public class UploadedFileMangeServiceImpl implements UploadedFileManageService {
     private static final Logger log = Logger.get(UploadedFileMangeServiceImpl.class);
+
     private final AippUploadedFileMapper aippUploadedFileMapper;
 
     public UploadedFileMangeServiceImpl(AippUploadedFileMapper aippUploadedFileMapper) {

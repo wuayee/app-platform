@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * 应用创建仓库实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */

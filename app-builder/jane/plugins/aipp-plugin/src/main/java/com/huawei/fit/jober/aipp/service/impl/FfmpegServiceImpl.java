@@ -61,15 +61,8 @@ public class FfmpegServiceImpl implements FfmpegService {
         }};
         HashMap<String, List<String>> outputs = new HashMap<String, List<String>>() {{
             put(outputPatten,
-                    Arrays.asList("-f",
-                            "segment",
-                            "-segment_time",
-                            String.valueOf(segmentSize),
-                            "-c",
-                            "copy",
-                            "-hide_banner",
-                            "-loglevel",
-                            "quiet"));
+                    Arrays.asList("-f", "segment", "-segment_time", String.valueOf(segmentSize),
+                            "-c", "copy", "-hide_banner", "-loglevel", "quiet"));
         }};
         new FfmpegTask(inputs, outputs).exec();
         log.info("split {} to {} success.", inputFilePath, outputPatten);

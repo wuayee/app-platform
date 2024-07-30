@@ -15,6 +15,12 @@ import java.util.List;
  * @since 2024-04-17
  */
 public interface AppBuilderFormRepository {
+    /**
+     * 根据id查询表单
+     *
+     * @param id 表单id
+     * @return 表单结构体
+     */
     AppBuilderForm selectWithId(String id);
 
     /**
@@ -26,9 +32,24 @@ public interface AppBuilderFormRepository {
      */
     List<AppBuilderForm> selectWithType(String type, String tenantId);
 
+    /**
+     * 插入一个表单
+     *
+     * @param appBuilderForm 表单结构体
+     */
     void insertOne(AppBuilderForm appBuilderForm);
 
+    /**
+     * 更新表单
+     *
+     * @param appBuilderForm 表单结构体
+     */
     void updateOne(AppBuilderForm appBuilderForm);
 
+    /**
+     * 根据id删除表单
+     *
+     * @param id 表单id
+     */
     void delete(String id);
 }

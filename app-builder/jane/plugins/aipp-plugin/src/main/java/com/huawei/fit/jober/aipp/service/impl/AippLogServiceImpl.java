@@ -63,6 +63,7 @@ import java.util.stream.Collectors;
 @Component
 public class AippLogServiceImpl implements AippLogService {
     private static final Logger log = Logger.get(AippLogServiceImpl.class);
+
     private final AippLogMapper aippLogMapper;
     private final AippChatMapper aippChatMapper;
     private final DynamicFormService dynamicFormService;
@@ -104,6 +105,8 @@ public class AippLogServiceImpl implements AippLogService {
      * 查询指定aipp最近5个的历史记录
      *
      * @param appId 指定aipp的id
+     * @param type 指定aipp的类型
+     * @param context 登录信息
      * @return log数据
      */
     @Override
@@ -356,8 +359,10 @@ public class AippLogServiceImpl implements AippLogService {
      * 删除指定aipp的历史记录
      *
      * @param appId 指定aipp的id
+     * @param type 指定aipp的类型
      * @param context 登录信息
      */
+    @Override
     public void deleteAippInstLog(String appId, String type, OperationContext context) {
         String aippType = AippTypeEnum.getType(type).type();
         List<String> metaIds = getMetaIds(appId, context, aippType);
