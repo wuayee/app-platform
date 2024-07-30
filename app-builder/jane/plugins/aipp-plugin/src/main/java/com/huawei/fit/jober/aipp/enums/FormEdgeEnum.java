@@ -31,6 +31,13 @@ public enum FormEdgeEnum {
         this.versionKey = versionKey;
     }
 
+    /**
+     * 根据输入的字符串获取对应的枚举值
+     *
+     * @param edge 输入的字符串
+     * @return 对应的枚举值
+     * @throws AippParamException 当输入的字符串不能匹配到任何枚举值时，抛出此异常
+     */
     public static FormEdgeEnum getFormEdge(String edge) {
         return Arrays.stream(values())
                 .filter(item -> item.name().equalsIgnoreCase(edge))

@@ -9,6 +9,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * 文本Dto
+ *
+ * @author 00664640
+ * @since 2024-05-10
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -12,6 +12,12 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * PPT文件的数据传输对象
+ *
+ * @author s00664640
+ * @since 2023-05-10
+ */
 @ToString
 @Data
 @NoArgsConstructor

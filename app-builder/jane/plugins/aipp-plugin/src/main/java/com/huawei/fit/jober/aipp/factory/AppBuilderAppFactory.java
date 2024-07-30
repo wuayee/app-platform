@@ -16,6 +16,8 @@ import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.util.StringUtils;
 
 /**
+ * AppBuilderApp 的工厂类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-16
  */
@@ -28,8 +30,9 @@ public class AppBuilderAppFactory {
     private final AppBuilderFormPropertyRepository formPropertyRepository;
     private final AppBuilderAppRepository appRepository;
 
-    public AppBuilderAppFactory(AppBuilderFlowGraphRepository flowGraphRepository, AppBuilderConfigRepository configRepository,
-            AppBuilderFormRepository formRepository, AppBuilderConfigPropertyRepository configPropertyRepository,
+    public AppBuilderAppFactory(AppBuilderFlowGraphRepository flowGraphRepository,
+            AppBuilderConfigRepository configRepository, AppBuilderFormRepository formRepository,
+            AppBuilderConfigPropertyRepository configPropertyRepository,
             AppBuilderFormPropertyRepository formPropertyRepository, AppBuilderAppRepository appRepository) {
         this.flowGraphRepository = flowGraphRepository;
         this.configRepository = configRepository;
@@ -39,6 +42,11 @@ public class AppBuilderAppFactory {
         this.appRepository = appRepository;
     }
 
+    /**
+     * 创建一个新的AppBuilderApp对象。
+     *
+     * @return AppBuilderApp。
+     */
     public AppBuilderApp create() {
         return new AppBuilderApp(this.flowGraphRepository,
                 this.configRepository,
@@ -47,6 +55,12 @@ public class AppBuilderAppFactory {
                 this.formPropertyRepository);
     }
 
+    /**
+     * 根据appId创建一个新的AppBuilderApp对象。
+     *
+     * @param appId app的id。
+     * @return AppBuilderApp。
+     */
     public AppBuilderApp create(String appId) {
         AppBuilderApp appBuilderApp = this.appRepository.selectWithId(appId);
         Validation.notNull(appBuilderApp, "App builder app can not be null.");
@@ -58,16 +72,27 @@ public class AppBuilderAppFactory {
         return appBuilderApp;
     }
 
+    /**
+     * 保存app
+     *
+     * @param appBuilderApp app
+     */
     public void save(AppBuilderApp appBuilderApp) {
         this.appRepository.insertOne(appBuilderApp);
     }
 
+    /**
+     * 更新app
+     *
+     * @param appBuilderApp app
+     */
     public void update(AppBuilderApp appBuilderApp) {
         this.appRepository.updateOne(appBuilderApp);
     }
 
     /**
      * 删除app
+     *
      * @param appBuilderApp app
      */
     public void delete(AppBuilderApp appBuilderApp) {

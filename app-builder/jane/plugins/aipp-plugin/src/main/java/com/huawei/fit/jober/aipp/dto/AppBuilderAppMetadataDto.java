@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 应用元数据Dto
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */

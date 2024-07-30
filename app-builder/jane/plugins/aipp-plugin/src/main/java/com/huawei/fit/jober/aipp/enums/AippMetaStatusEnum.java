@@ -28,6 +28,12 @@ public enum AippMetaStatusEnum {
         this.code = code;
     }
 
+    /**
+     * 根据code获取对应的AippMetaStatusEnum枚举值
+     *
+     * @param code code
+     * @return AippMetaStatusEnum
+     */
     public static AippMetaStatusEnum getAippMetaStatus(String code) {
         return Arrays.stream(values())
                 .filter(value -> value.getCode().equals(code))

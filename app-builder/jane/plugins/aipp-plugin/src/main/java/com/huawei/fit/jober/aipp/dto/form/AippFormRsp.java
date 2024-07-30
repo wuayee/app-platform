@@ -28,6 +28,13 @@ public class AippFormRsp extends DynamicFormDetailEntity {
     @JSONField(name = "aipp_version")
     private String aippVersion;
 
+    /**
+     * 构造方法
+     *
+     * @param meta 表单元数据
+     * @param data 表单数据
+     * @param aippVersion aipp最新版本号
+     */
     public AippFormRsp(DynamicFormEntity meta, String data, String aippVersion) {
         super(meta, data);
         this.aippVersion = aippVersion;

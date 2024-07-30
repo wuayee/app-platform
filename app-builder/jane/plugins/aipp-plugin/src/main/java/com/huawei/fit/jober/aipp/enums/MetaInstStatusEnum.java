@@ -10,7 +10,7 @@ import com.huawei.fit.jober.aipp.common.exception.AippParamException;
 import java.util.Arrays;
 
 /**
- * meta 实例状态
+ * 实例状态枚举
  *
  * @author l00611472
  * @since 2023-12-15
@@ -55,6 +55,13 @@ public enum MetaInstStatusEnum {
         return (short) status;
     }
 
+    /**
+     * 根据状态名获取枚举值
+     *
+     * @param status 状态名
+     * @return 枚举值
+     * @throws AippParamException 当输入的状态名无法匹配到任何枚举值时，抛出此
+     */
     public static MetaInstStatusEnum getMetaInstStatus(String status) {
         return Arrays.stream(values())
                 .filter(value -> value.name().equalsIgnoreCase(status))

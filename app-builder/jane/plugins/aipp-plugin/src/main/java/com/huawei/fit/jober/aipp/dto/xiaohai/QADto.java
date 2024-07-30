@@ -26,6 +26,9 @@ public class QADto {
     private Question question;
     private Answer answer;
 
+    /**
+     * 问题部分
+     */
     @Data
     @Builder
     @AllArgsConstructor
@@ -37,6 +40,9 @@ public class QADto {
         private String query;
     }
 
+    /**
+     * 答案部分
+     */
     @Data
     @Builder
     @AllArgsConstructor

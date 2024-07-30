@@ -11,6 +11,8 @@ import com.huawei.fitframework.util.StringUtils;
 import java.util.Arrays;
 
 /**
+ * 表单属性类型枚举类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-27
  */

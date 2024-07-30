@@ -13,13 +13,16 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
- * MetaConvertor
+ * 定义Meta数据转换器接口
  *
  * @author l00611472
  * @since 2023-12-14
  */
 @Mapper
 public interface MetaConvertor {
+    /**
+     * 获取MetaConvertor的实例
+     */
     MetaConvertor INSTANCE = Mappers.getMapper(MetaConvertor.class);
 
     /**
