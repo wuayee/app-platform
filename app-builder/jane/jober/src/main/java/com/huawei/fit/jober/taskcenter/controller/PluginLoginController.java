@@ -46,8 +46,10 @@ public class PluginLoginController {
     /**
      * 保存新的cookie
      *
+     * @param httpRequest http请求
      * @param clientId 插件客户端Id
      * @param request 存放cookie
+     * @return 登录结果信息 {@link String}
      */
     @PostMapping(summary = "保存新的cookie")
     @ResponseStatus(HttpResponseStatus.CREATED)
@@ -61,6 +63,7 @@ public class PluginLoginController {
      * 获取cookie
      *
      * @param clientId 插件客户端Id
+     * @return cookie信息
      */
     @GetMapping(summary = "获取cookie")
     @ResponseStatus(HttpResponseStatus.OK)

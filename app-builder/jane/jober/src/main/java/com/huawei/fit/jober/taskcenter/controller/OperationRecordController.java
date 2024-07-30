@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
+ */
+
 package com.huawei.fit.jober.taskcenter.controller;
 
 import com.huawei.fit.http.annotation.GetMapping;
@@ -27,6 +31,12 @@ import java.util.Map;
 public class OperationRecordController extends AbstractController {
     private final OperationRecordService service;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator {@link Authenticator}实例
+     * @param service {@link OperationRecordService}实例
+     */
     public OperationRecordController(Authenticator authenticator, OperationRecordService service) {
         super(authenticator);
         this.service = service;
@@ -47,8 +57,10 @@ public class OperationRecordController extends AbstractController {
     public Map<String, Object> list(HttpClassicServerRequest httpRequest, HttpClassicServerResponse httpResponse,
             @PathVariable("tenant_id") String tenantId, @RequestParam("offset") long offset,
             @RequestParam("limit") int limit) {
-        RangedResultSet<OperationRecordEntity> list = service.list(Views.filterOfOperationRecord(httpRequest), offset,
-                limit, this.contextOf(httpRequest, tenantId));
+        RangedResultSet<OperationRecordEntity> list = service.list(Views.filterOfOperationRecord(httpRequest),
+                offset,
+                limit,
+                this.contextOf(httpRequest, tenantId));
 
         return Views.viewOf(list, "operationRecords", Views::viewOf);
     }

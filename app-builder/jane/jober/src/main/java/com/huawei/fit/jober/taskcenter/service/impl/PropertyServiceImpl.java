@@ -171,8 +171,8 @@ public class PropertyServiceImpl implements PropertyService {
                         ErrorCodes.TASK_PROPERTY_DATA_TYPE_INVALID))
                 .sequence(object.getSequence())
                 .description(object.getDescription())
-                .isRequired(object.getRequired())
-                .isIdentifiable(object.getIdentifiable())
+                .isRequired(object.getIsRequired())
+                .isIdentifiable(object.getIsIdentifiable())
                 .scope(Enums.parse(PropertyScope.class, object.getScope(), PropertyScope.PUBLIC,
                         ErrorCodes.TASK_PROPERTY_SCOPE_INVALID))
                 .appearance(appearance)
@@ -283,8 +283,8 @@ public class PropertyServiceImpl implements PropertyService {
                 + "\"identifiable\" = EXCLUDED.\"identifiable\"");
         List<Object> args = objects.stream()
                 .map(object -> Arrays.asList(object.getId(), object.getTaskId(), object.getTemplateId(),
-                        object.getName(), object.getRequired(), object.getDescription(), object.getScope(),
-                        object.getDataType(), object.getSequence(), object.getAppearance(), object.getIdentifiable()))
+                        object.getName(), object.getIsRequired(), object.getDescription(), object.getScope(),
+                        object.getDataType(), object.getSequence(), object.getAppearance(), object.getIsIdentifiable()))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
         this.dynamicSqlExecutor.executeUpdate(sql.toString(), args);
@@ -304,12 +304,12 @@ public class PropertyServiceImpl implements PropertyService {
         object.setId(Entities.generateId());
         object.setTaskId(taskId);
         object.setName(this.name(declaration.name()));
-        object.setRequired(this.required(declaration.required()));
+        object.setIsRequired(this.required(declaration.required()));
         object.setDescription(this.description(declaration.description()));
         object.setScope(this.scope(declaration.scope()));
         object.setDataType(this.dataType(declaration.dataType()));
         object.setAppearance(this.appearance(declaration.appearance()));
-        object.setIdentifiable(this.identifiable(declaration.identifiable()));
+        object.setIsIdentifiable(this.identifiable(declaration.identifiable()));
         object.setTemplateId(Entities.emptyId());
         return object;
     }
@@ -322,12 +322,12 @@ public class PropertyServiceImpl implements PropertyService {
         object.setName(templateProperty.name());
         object.setTaskId(taskId);
         object.setTemplateId(templateProperty.id());
-        object.setRequired(this.required(propertyDeclaration.required()));
+        object.setIsRequired(this.required(propertyDeclaration.required()));
         object.setDescription(this.description(propertyDeclaration.description()));
         object.setDataType(Enums.toString(templateProperty.dataType()));
         object.setScope(this.scope(propertyDeclaration.scope()));
         object.setAppearance(this.appearance(propertyDeclaration.appearance()));
-        object.setIdentifiable(this.identifiable(propertyDeclaration.identifiable()));
+        object.setIsIdentifiable(this.identifiable(propertyDeclaration.identifiable()));
         object.setSequence(templateProperty.sequence());
         return object;
     }
@@ -335,10 +335,10 @@ public class PropertyServiceImpl implements PropertyService {
     private void acceptPropertyModify(TaskPropertyObject object, TaskProperty.Declaration declaration,
             Map<String, TaskTemplateProperty> templatePropertyMap, LazyLoader<Boolean> hasInstances) {
         boolean isRequired = this.required(declaration.required());
-        if (isRequired && !nullIf(object.getRequired(), false) && hasInstances.get()) {
+        if (isRequired && !nullIf(object.getIsRequired(), false) && hasInstances.get()) {
             throw new ConflictException(ErrorCodes.PROPERTY_CANNOT_BE_MODIFIED_WITH_INSTANCES);
         } else {
-            object.setRequired(isRequired);
+            object.setIsRequired(isRequired);
         }
         object.setDescription(this.description(declaration.description()));
         object.setScope(this.scope(declaration.scope()));
@@ -347,10 +347,10 @@ public class PropertyServiceImpl implements PropertyService {
 
         object.setAppearance(this.appearance(declaration.appearance()));
         boolean canIdentifiable = this.identifiable(declaration.identifiable());
-        if (canIdentifiable != nullIf(object.getIdentifiable(), false) && hasInstances.get()) {
+        if (canIdentifiable != nullIf(object.getIsIdentifiable(), false) && hasInstances.get()) {
             throw new ConflictException(ErrorCodes.PROPERTY_CANNOT_BE_MODIFIED_WITH_INSTANCES);
         } else {
-            object.setIdentifiable(canIdentifiable);
+            object.setIsIdentifiable(canIdentifiable);
         }
     }
 
@@ -487,13 +487,13 @@ public class PropertyServiceImpl implements PropertyService {
             object.setTaskId(ObjectUtils.cast(row.get("task_id")));
             object.setTemplateId(ObjectUtils.cast(row.get("template_id")));
             object.setName(ObjectUtils.cast(row.get("name")));
-            object.setRequired(Boolean.TRUE.equals(row.get("required")));
+            object.setIsRequired(Boolean.TRUE.equals(row.get("required")));
             object.setDescription(ObjectUtils.cast(row.get("description")));
             object.setScope(ObjectUtils.cast(row.get("scope")));
             object.setDataType(ObjectUtils.cast(row.get("data_type")));
             object.setSequence(ObjectUtils.<Number>cast(row.get("sequence")).intValue());
             object.setAppearance(Optional.ofNullable(row.get("appearance")).map(Object::toString).orElse("{}"));
-            object.setIdentifiable(Boolean.TRUE.equals(row.get("identifiable")));
+            object.setIsIdentifiable(Boolean.TRUE.equals(row.get("identifiable")));
             return object;
         }).collect(Collectors.toList());
     }

@@ -34,6 +34,12 @@ import java.util.Map;
 public class TriggerController extends AbstractController {
     private final TriggerService triggerService;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator 认证器
+     * @param triggerService 触发器服务
+     */
     public TriggerController(Authenticator authenticator, TriggerService triggerService) {
         super(authenticator);
         this.triggerService = triggerService;

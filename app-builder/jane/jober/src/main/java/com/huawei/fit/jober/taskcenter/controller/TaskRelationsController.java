@@ -35,6 +35,12 @@ import java.util.Map;
 public class TaskRelationsController extends AbstractController {
     private final TaskRelation.Repo repo;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator 构造器
+     * @param repo 提供数据库持久化能力的实例
+     */
     public TaskRelationsController(Authenticator authenticator, TaskRelation.Repo repo) {
         super(authenticator);
         this.repo = repo;
@@ -100,8 +106,8 @@ public class TaskRelationsController extends AbstractController {
     public Map<String, Object> list(HttpClassicServerRequest httpRequest, @RequestParam("offset") long offset,
             @RequestParam("limit") int limit) {
         TaskRelation.Filter filter = Views.filterOfTaskRelation(httpRequest);
-        RangedResultSet<TaskRelation> taskRelations = repo.list(filter, offset, limit,
-                this.contextOf(httpRequest, null));
+        RangedResultSet<TaskRelation> taskRelations =
+                repo.list(filter, offset, limit, this.contextOf(httpRequest, null));
         return viewOf(taskRelations, "relations", Views::viewOf);
     }
 }

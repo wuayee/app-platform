@@ -32,6 +32,12 @@ import java.util.Map;
 public class TaskTypeController extends AbstractController {
     private final TaskType.Repo repo;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator 认证器
+     * @param repo 任务类型repo
+     */
     public TaskTypeController(Authenticator authenticator, TaskType.Repo repo) {
         super(authenticator);
         this.repo = repo;
