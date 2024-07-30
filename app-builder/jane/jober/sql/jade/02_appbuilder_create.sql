@@ -129,6 +129,27 @@ create table if not exists app_builder_form_property
     default_value  text
     );
 
+create table if not exists app_builder_runtime_info
+(
+    id                 BIGSERIAL primary key,
+    trace_id           varchar(64) not null,
+    flow_definition_id varchar(64) not null,
+    instance_id        varchar(64) not null,
+    node_id            varchar(64) not null,
+    node_type          varchar(32) not null,
+    start_time         bigint not null,
+    end_time           bigint not null,
+    status             varchar(32),
+    published          smallint not null,
+    error_msg          text,
+    parameters         json not null DEFAULT '[]',
+    create_by          varchar(64),
+    create_at          timestamp    not null default current_timestamp,
+    update_by          varchar(64),
+    update_at          timestamp    not null default current_timestamp
+);
+create index idx_trace_id on app_builder_runtime_info(trace_id);
+
 CREATE TABLE IF NOT EXISTS "t_chat_session_task_instance_wide_relationship" (
     "msg_id"                VARCHAR(32)  NOT NULL DEFAULT NULL,
     "chat_id"               VARCHAR(32)  NULL     DEFAULT NULL,

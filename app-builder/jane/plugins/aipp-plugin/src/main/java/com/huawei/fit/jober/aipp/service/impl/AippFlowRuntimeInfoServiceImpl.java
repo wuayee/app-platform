@@ -10,18 +10,20 @@ import com.huawei.fit.jane.meta.multiversion.MetaService;
 import com.huawei.fit.jane.meta.multiversion.definition.Meta;
 import com.huawei.fit.jane.meta.multiversion.instance.Instance;
 import com.huawei.fit.jober.aipp.constants.AippConst;
+import com.huawei.fit.jober.aipp.domain.AppBuilderRuntimeInfo;
+import com.huawei.fit.jober.aipp.repository.AppBuilderRuntimeInfoRepository;
 import com.huawei.fit.jober.aipp.service.AippFlowRuntimeInfoService;
 import com.huawei.fit.jober.aipp.util.MetaInstanceUtils;
 import com.huawei.fit.jober.aipp.util.MetaUtils;
+import com.huawei.fit.jober.entity.consts.NodeTypes;
+import com.huawei.fit.runtime.entity.NodeInfo;
 import com.huawei.fit.runtime.entity.RuntimeData;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.util.CollectionUtils;
+import com.huawei.fitframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -32,13 +34,16 @@ import java.util.stream.Collectors;
  */
 @Component
 public class AippFlowRuntimeInfoServiceImpl implements AippFlowRuntimeInfoService {
-    private final Map<String, List<RuntimeData>> cache = new ConcurrentHashMap<>();
     private final MetaService metaService;
     private final MetaInstanceService metaInstanceService;
+    private final AppBuilderRuntimeInfoRepository runtimeInfoRepository;
 
-    public AippFlowRuntimeInfoServiceImpl(MetaService metaService, MetaInstanceService metaInstanceService) {
+    public AippFlowRuntimeInfoServiceImpl(MetaService metaService,
+            MetaInstanceService metaInstanceService,
+            AppBuilderRuntimeInfoRepository runtimeInfoRepository) {
         this.metaService = metaService;
         this.metaInstanceService = metaInstanceService;
+        this.runtimeInfoRepository = runtimeInfoRepository;
     }
 
     @Override
@@ -50,34 +55,39 @@ public class AippFlowRuntimeInfoServiceImpl implements AippFlowRuntimeInfoServic
                 versionId, instanceId, context, this.metaInstanceService);
         String traceId = instDetail.getInfo().get(AippConst.INST_FLOW_INST_ID_KEY);
 
-        List<RuntimeData> dataList = this.cache.get(traceId);
-        if (CollectionUtils.isEmpty(dataList)) {
+        List<AppBuilderRuntimeInfo> runtimeInfoList = this.runtimeInfoRepository.selectByTraceId(traceId);
+        if (CollectionUtils.isEmpty(runtimeInfoList)) {
             return Optional.empty();
         }
-        RuntimeData end = dataList.get(dataList.size() - 1);
+
+        AppBuilderRuntimeInfo start = runtimeInfoList.stream()
+                .filter(r -> r.getNodeType().equals(NodeTypes.START.getType()))
+                .findFirst()
+                .orElseThrow(
+                        () -> new IllegalStateException(StringUtils.format("No START node info in runtime info.")));
+        AppBuilderRuntimeInfo end = runtimeInfoList.get(runtimeInfoList.size() - 1);
         RuntimeData runtimeData = new RuntimeData();
-        runtimeData.setStartTime(end.getStartTime());
+        runtimeData.setStartTime(start.getStartTime());
         runtimeData.setEndTime(end.getEndTime());
         runtimeData.setFlowDefinitionId(end.getFlowDefinitionId());
-        runtimeData.setExtraParams(end.getExtraParams());
         runtimeData.setPublished(end.isPublished());
         runtimeData.setTraceId(traceId);
-        runtimeData.setAippInstanceId(end.getAippInstanceId());
-        runtimeData.setExecuteTime(end.getEndTime() - end.getStartTime());
+        runtimeData.setAippInstanceId(end.getInstanceId());
+        runtimeData.setExecuteTime(end.getEndTime() - start.getStartTime());
         runtimeData.setNodeInfos(
-                dataList.stream().flatMap(d -> d.getNodeInfos().stream()).collect(Collectors.toList()));
+                runtimeInfoList.stream().map(this::toNodeInfo).collect(Collectors.toList()));
         return Optional.of(runtimeData);
     }
 
-    @Override
-    public void cache(RuntimeData runtimeData) {
-        List<RuntimeData> dataList = this.cache.computeIfAbsent(runtimeData.getTraceId(),
-                k -> new CopyOnWriteArrayList<>());
-        dataList.add(runtimeData);
-    }
-
-    @Override
-    public void delete(String traceId) {
-        this.cache.remove(traceId);
+    private NodeInfo toNodeInfo(AppBuilderRuntimeInfo info) {
+        NodeInfo nodeInfo = new NodeInfo();
+        nodeInfo.setNodeId(info.getNodeId());
+        nodeInfo.setNodeType(info.getNodeType());
+        nodeInfo.setStartTime(info.getStartTime());
+        nodeInfo.setRunCost(info.getExecutionCost());
+        nodeInfo.setErrorMsg(info.getErrorMsg());
+        nodeInfo.setParameters(info.getParameters());
+        nodeInfo.setStatus(info.getStatus());
+        return nodeInfo;
     }
 }
