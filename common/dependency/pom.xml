@@ -300,6 +300,11 @@
                 <artifactId>voice-service</artifactId>
                 <version>${app-engine.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.huawei.fit.jade.service</groupId>
+                <artifactId>uid-generator-service</artifactId>
+                <version>${app-engine.version}</version>
+            </dependency>
 
             <!-- Common -->
             <dependency>
