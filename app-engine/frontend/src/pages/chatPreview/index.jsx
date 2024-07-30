@@ -11,7 +11,6 @@ import Inspiration from './components/inspiration';
 import { initChat} from './common/config';
 import { AippContext } from '../aippIndex/context';
 import {
-  aippDebug,
   updateFlowInfo,
   stopInstance,
   getReportInstance,
@@ -26,17 +25,15 @@ import {
   beforeSend,
   deepClone,
   scrollBottom } from './utils/chat-process';
-import "./styles/chat-preview.scss";
-import { creatChat, updateChat } from "@shared/http/chat.js";
-import { useAppDispatch, useAppSelector } from "@/store/hook";
+import './styles/chat-preview.scss';
+import { useAppDispatch, useAppSelector } from '@/store/hook';
 import {
   setAtChatId,
   setChatId,
   setChatList,
   setChatRunning,
-  setInspirationOpen,
   setFormReceived
-} from "@/store/chatStore/chatStore";
+} from '@/store/chatStore/chatStore';
 
 const ChatPreview = (props) => {
   const { previewBack, chatType } = props;
@@ -65,19 +62,17 @@ const ChatPreview = (props) => {
   let currentInfo = useRef();
   let feedRef = useRef();
   let testRef = useRef(false);
-  let runningVersion = useRef("");
-  let runningAppid = useRef("");
-  let childInstanceStop = useRef(false);
-  let wsCurrent = useRef(null);
+  let controller = useRef(null);
   let reportInstance = useRef('');
   let reportIContext = useRef(null);
   const listRef = useRef([]);
   const detailPage =  location.pathname.indexOf('app-detail') !== -1;
+  const chatStatus = ['ARCHIVED', 'ERROR'];
 
   useEffect(() => {
     currentInfo.current = appInfo;
     return () => {
-      closeWebsocket();
+      closeConnected();
     }
   }, []);
 
@@ -151,7 +146,7 @@ const ChatPreview = (props) => {
           if (res.code !== 0) {
             onStop('更新grpha数据失败');
           } else {
-            getAippAndVersion(value, type);
+            chatMissionStart(value, type);
           }
         })
         .catch((err) => {
@@ -159,123 +154,117 @@ const ChatPreview = (props) => {
           onStop('对话失败');
         });
     } else {
-      getAippAndVersion(value, type);
+      chatMissionStart(value, type);
     }
   };
-  // 获取aipp_id和version
-  async function getAippAndVersion(value, type) {
-    let chatAppId = appId;
-    let chatAppInfo = appInfo;
-    if (atAppId) {
-      chatAppInfo = atAppInfo;
-      chatAppId = atAppId;
-    }
-    try {
-      const debugRes = await aippDebug(tenantId, chatAppId, chatAppInfo, chatType);
-      if (debugRes.code === 0) {
-        chatMissionStart(debugRes.data, value, type);
-      } else {
-        onStop(debugRes.msg || '启动会话失败');
-      }
-    } catch {
-      onStop('启动会话失败');
-    }
-  }
   // 启动任务
-  const chatMissionStart = async (res, value, type) => {
-    let { aipp_id, version } = res;
-    let params = type ? 
-      { initContext: { '$[FileDescription]$': value, dimension}} : { initContext: { Question: value, dimension } };
-    params.initContext.useMemory = useMemory;
-    try {
-      const requestBody={
-        aipp_id:aipp_id,
-        aipp_version:version,
-        init_context:params,
+  const chatMissionStart = async (value, type) => {
+    let chatParams = {
+      'app_id': appId,
+      'question': value,
+      'context': {
+        'use_memory': useMemory,
+        dimension
       }
-      if (atAppId) {
-        requestBody.origin_app = appInfo.id;
-        requestBody.origin_app_version = appInfo.version;
-      }
-      if (atChatId) {
-        requestBody.chat_id = atChatId;
-      }
-      let res;
-      if(chatId){
-        res= await updateChat(tenantId, chatId, requestBody);
-      } else {
-        res= await creatChat(tenantId, requestBody);
-        const chatId = res?.data?.origin_chat_id;
-        updateChatId(chatId, appId);
-        dispatch(setChatId(chatId));
-      }
-      childInstanceStop.current = false;
-      const instanceId = res?.data?.current_instance_id;
-      if (atAppId) {
-        dispatch(setAtChatId(res?.data?.chat_id));
-      }
-      if (instanceId) {
-        childInstanceStop.current = false;
-        queryInstance(aipp_id, version, instanceId);
-      } else {
-        onStop('启动会话失败');
-      }
-    } catch {
-      onStop('启动会话失败');
+    };
+    if (chatId) {
+      chatParams['chat_id'] = chatId;
     }
+    if (atAppId) {
+      chatParams.context.at_chat_id = atChatId;
+      chatParams.context.at_app_id = atAppInfo.id;
+    }
+    if (type) {
+      chatParams.context['$[FileDescription]$'] = value;
+    }
+    queryInstance(chatParams);
   };
   // 开始对话
-  const queryInstance = (aipp_id, version, instanceId) => {
-    runningInstanceId.current = instanceId;
-    runningVersion.current = version;
-    runningAppid.current = aipp_id;
-    if (!wsCurrent.current) {
-      const prefix = window.location.protocol === 'http:' ? 'ws' : 'wss';
-      wsCurrent.current = new WebSocket(`${prefix}://${window.location.host}/api/jober/v1/api/aipp/wsStream?aippId=${aipp_id}&version=${version}`);
-      wsCurrent.current.onopen = () => {
-        wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));   
+  const queryInstance = (params) => {
+    controller.current = new AbortController();
+    fetch(`/api/jober/v1/api/${tenantId}/${ chatType !== 'inactive' ? 'app_chat' : 'app_chat_debug'}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+      signal: controller.current.signal
+    }).then(async (res) => {
+      if (res.status !== 200) {
+        onStop('启动会话失败');
+        return;
       }
-    } else {
-      wsCurrent.current.send(JSON.stringify({'aippInstanceId': instanceId}));
-    }
-    wsCurrent.current.onerror = (err) => {
-      onStop('对话失败');
-      dispatch(setChatRunning(false));
-    }
-    wsCurrent.current.onmessage = ({ data }) => {
-      let messageData = {};
-      try {
-        messageData = JSON.parse(data);
-        // 用户自勾选
-        if (messageData.memory === 'UserSelect') {
-          selfSelect(messageData.instanceId, messageData.initContext);
-          return
-        }
-        // 智能表单
-        if (messageData.formAppearance?.length) {
-          let obj = messageProcess(aipp_id, instanceId, version, messageData, atAppInfo);
-          chatForm(obj);
-          return;
-        }
-        // 普通日志
-        messageData.aippInstanceLogs?.forEach(log => {
-          if (log.logData && log.logData.length) {
-            let { msg, recieveChatItem } = messageProcessNormal(log, instanceId, atAppInfo);
-            if (log.msgId !== null) {
-              chatSplicing(log, msg, recieveChatItem, messageData.status);
-            } else {
-              chatStrInit(msg, recieveChatItem, messageData.status);
+      const reader = res?.body?.pipeThrough(new TextDecoderStream()).getReader();
+      while (true) {
+        const sseResData = await reader?.read();
+        if (sseResData) {
+          const { done, value } = sseResData;
+          try {
+            let msgStr = value;
+            if (value.startsWith('data:')) {
+              msgStr = value.slice(5);
             }
+            const val = JSON.parse(msgStr);
+            if (val.code) {
+              closeConnected();
+              onStop(val.msg || '启动会话失败');
+              break;
+            } else {
+              sseReceiveProcess(val);
+            }
+          } catch (e) { 
+            console.info(e);
           }
-        })
-        if (['ARCHIVED', 'ERROR'].includes(messageData.status)) {
-          dispatch(setChatRunning(false));
-          
+          if (done) {
+            break;
+          }
         }
-      } catch (err){
-        onStop('数据解析异常');
+      }
+    })
+  }
+  // sse接收消息回调
+  const sseReceiveProcess = (messageData) => {
+    try {
+      // 用户自勾选
+      if (messageData.memory === 'UserSelect') {
+        selfSelect(messageData.instanceId, messageData.initContext);
+        return;
+      }
+      // 智能表单
+      if (messageData.formAppearance?.length) {
+        let obj = messageProcess(instanceId, messageData, atAppInfo);
+        chatForm(obj);
+        return;
+      }
+      // 普通日志
+      messageData.answer?.forEach(log => {
+        if (log.content && log.content.length) {
+          let { msg, recieveChatItem } = messageProcessNormal(log, atAppInfo);
+          if (log.msgId !== null) {
+            chatSplicing(log, msg, recieveChatItem, messageData.status);
+          } else {
+            chatStrInit(msg, recieveChatItem, messageData.status);
+          }
+        }
+      })
+      if (chatStatus.includes(messageData.status)) {
+        saveLocalChatId(messageData);
         dispatch(setChatRunning(false));
       }
+    } catch (err){
+      onStop('数据解析异常');
+      dispatch(setChatRunning(false));
+    }
+  }
+  // sse回调保存chatId
+  const saveLocalChatId = (data) => {
+    let { chat_id, at_chat_id } = data;
+    if (chat_id) {
+      updateChatId(chat_id, appId);
+      dispatch(setChatId(chatId));
+    }
+    if (at_chat_id) {
+      dispatch(setAtChatId(at_chat_id));
     }
   }
   // 聊天表单
@@ -311,7 +300,6 @@ const ChatPreview = (props) => {
         let instanceId = startes.data;
         listRef.current[listRef.current.length - 1].loading = true;
         dispatch(setChatList(deepClone(listRef.current)));
-        queryInstance(runningAppid.current, runningVersion.current, instanceId);
       } else {
         onStop('启动任务失败');
       }
@@ -378,13 +366,13 @@ const ChatPreview = (props) => {
   }
   // 终止进行中的对话
   async function chatRunningStop(params) {
-    let str = params.content ? params.content : "已终止对话";
+    let str = params.content ? params.content : '已终止对话';
     const res = await stopInstance(tenantId, runningInstanceId.current, {content: str});
     if (res.code === 0) {
       onStop(str);
-      wsCurrent.current?.close();
-      wsCurrent.current = null;
       Message({ type: 'success', content: '已终止对话' });
+      controller.current?.abort();
+      controller.current = null;
       return res.code;
     } else {
       Message({ type: 'error', content: '终止对话失败' });
@@ -398,17 +386,17 @@ const ChatPreview = (props) => {
     dispatch(setChatList(deepClone(arr)));
     dispatch(setChatRunning(true));
     scrollToBottom();
-    queryInstance(runningAppid.current, runningVersion.current, instanceId);
   }
   function scrollToBottom() {
     setTimeout(() => {
       scrollBottom();
     }, 50);
   }
-  // 手动关闭websocket
-  function closeWebsocket () {
-    wsCurrent.current?.close();
-    wsCurrent.current = null;
+  // 关闭链接
+  const closeConnected = () => {
+    dispatch(setChatRunning(false));
+    controller.current?.abort();
+    controller.current = null;
   }
   return (
     <div className={`
