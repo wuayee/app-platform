@@ -78,14 +78,13 @@
   }
 }
 .file-upload-list {
-  height: 24px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
 }
 .collapse-plugin {
   border: 1px solid #EBEBEB;
   width: 100%;
-  margin-top: 12px;
   border-radius: 4px;
   .collapse-plugin-head {
     display: flex;

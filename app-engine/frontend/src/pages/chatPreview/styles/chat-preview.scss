@@ -61,7 +61,7 @@
 
   .chat-inner-right {
     width: 300px;
-    height: calc(100vh - 56px);
+    height: calc(100vh - 50px);
     position: fixed;
     right: -295px;
     z-index: 600;
@@ -190,9 +190,9 @@
 
 .chat-preview-inner {
   .chat-right-close {
+    height: calc(100vh - 130px);
     .prompt-item {
       width: 120px !important;
-
       .title {
         font-weight: 600 !important;
         font-size: 13px;
