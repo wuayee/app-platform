@@ -213,8 +213,6 @@ public class RefreshInTimeSourceAdapter extends AbstractSourceAdapter {
     }
 
     private static class Row {
-        private static final String TABLE = "task_source_refresh_in_time";
-
         static final String COLUMN_ID = "id";
 
         static final String COLUMN_METADATA = "metadata";
@@ -228,6 +226,8 @@ public class RefreshInTimeSourceAdapter extends AbstractSourceAdapter {
         static final String COLUMN_RETRIEVE_FITABLE_ID = "retrieve_fitable_id";
 
         static final String COLUMN_LIST_FITABLE_ID = "list_fitable_id";
+
+        private static final String TABLE = "task_source_refresh_in_time";
 
         private final Map<String, Object> values;
 

@@ -43,8 +43,8 @@ public class TaskFitable implements TaskService {
     @Override
     @Fitable(id = "3cfd2c76e00943b9abc3c2d2cbf7ad49")
     public RangedResultSet<Task> list(TaskFilter filter, long offset, int limit, OperationContext context) {
-        com.huawei.fit.jober.taskcenter.filter.TaskFilter taskFilter
-                = new com.huawei.fit.jober.taskcenter.filter.TaskFilter();
+        com.huawei.fit.jober.taskcenter.filter.TaskFilter taskFilter =
+                new com.huawei.fit.jober.taskcenter.filter.TaskFilter();
         taskFilter.setIds(valueOf(filter.getIds(), CollectionUtils::isEmpty));
         taskFilter.setNames(valueOf(filter.getNames(), CollectionUtils::isEmpty));
         taskFilter.setTemplateIds(valueOf(filter.getTemplateIds(), CollectionUtils::isEmpty));
@@ -85,6 +85,14 @@ public class TaskFitable implements TaskService {
                 .build();
     }
 
+    /**
+     * 将给定的属性值转换为{@link UndefinableValue}对象。
+     *
+     * @param attribute 属性值
+     * @param emptyPredicate 判断属性值是否为空的断言函数
+     * @param <T> 属性值的类型
+     * @return 转换完成的 {@link UndefinableValue}
+     */
     public static <T> UndefinableValue<T> valueOf(T attribute, Predicate<T> emptyPredicate) {
         if (emptyPredicate.test(attribute)) {
             return UndefinableValue.undefined();

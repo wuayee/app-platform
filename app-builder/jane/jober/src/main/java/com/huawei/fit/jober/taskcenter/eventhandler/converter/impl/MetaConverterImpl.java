@@ -103,8 +103,8 @@ public class MetaConverterImpl implements MetaConverter {
     @Override
     public com.huawei.fit.jane.meta.multiversion.definition.Meta convert2MultiVersionMeta(TaskEntity task,
             OperationContext context) {
-        com.huawei.fit.jane.meta.multiversion.definition.Meta meta
-                = new com.huawei.fit.jane.meta.multiversion.definition.Meta();
+        com.huawei.fit.jane.meta.multiversion.definition.Meta meta =
+                new com.huawei.fit.jane.meta.multiversion.definition.Meta();
         meta.setVersionId(task.getId());
         meta.setId(task.getTemplateId());
         meta.setCreationTime(task.getCreationTime());
@@ -138,6 +138,13 @@ public class MetaConverterImpl implements MetaConverter {
         return taskFilter;
     }
 
+    /**
+     * 将{@link Undefinable}对象转换为{@link UndefinableValue}对象。
+     *
+     * @param attribute 待转换的{@link Undefinable}对象
+     * @param <T> 待转换对象的类型
+     * @return 转换后的{@link UndefinableValue}对象
+     */
     public static <T> UndefinableValue<T> valueOf(Undefinable<T> attribute) {
         if (!attribute.getDefined()) {
             return UndefinableValue.undefined();
@@ -146,6 +153,14 @@ public class MetaConverterImpl implements MetaConverter {
         return UndefinableValue.defined(value);
     }
 
+    /**
+     * 将给定的对象转换为{@link UndefinableValue}对象。
+     *
+     * @param attribute 待转换的对象
+     * @param emptyPredicate 用于判断对象是否为空的断言函数
+     * @param <T> 待转换对象的类型
+     * @return 转换后的{@link UndefinableValue}对象
+     */
     public static <T> UndefinableValue<T> valueOf(T attribute, Predicate<T> emptyPredicate) {
         if (emptyPredicate.test(attribute)) {
             return UndefinableValue.undefined();

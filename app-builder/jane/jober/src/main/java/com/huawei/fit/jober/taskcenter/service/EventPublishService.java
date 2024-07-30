@@ -21,5 +21,10 @@ public interface EventPublishService {
      */
     void sendEvent(Event event);
 
+    /**
+     * 获取插件。
+     *
+     * @return 插件
+     */
     Plugin plugin();
 }

@@ -29,17 +29,40 @@ import java.util.List;
 public class AppBuilderPromptController extends AbstractController {
     private final AppBuilderPromptService service;
 
+    /**
+     * 表示构造函数，初始化服务对象。
+     *
+     * @param authenticator 表示权限校验认的证器对象的 {@link Authenticator}。
+     * @param service 表示处理业务逻辑的服务对象的 {@link AppBuilderPromptService}。
+     */
     public AppBuilderPromptController(Authenticator authenticator, AppBuilderPromptService service) {
         super(authenticator);
         this.service = service;
     }
 
+    /**
+     * 查询所有的灵感类别。
+     *
+     * @param httpRequest 表示http请求对象的 {@link HttpClassicServerRequest}。
+     * @param tenantId 表示租户id的 {@link String}。
+     * @param appId 表示应用id的 {@link String}。
+     * @return 返回所有的灵感类别。
+     */
     @GetMapping
     public Rsp<List<AppBuilderPromptCategoryDto>> listCategories(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId) {
         return service.listPromptCategories(appId, this.contextOf(httpRequest, tenantId));
     }
 
+    /**
+     * 查询指定类别的所有灵感。
+     *
+     * @param httpRequest 表示http请求对象的 {@link HttpClassicServerRequest}。
+     * @param tenantId 表示租户id的 {@link String}。
+     * @param appId 表示应用id的 {@link String}。
+     * @param categoryId 表示类别id的 {@link String}。
+     * @return 返回指定类别的所有灵感 {@link Rsp}{@code <}{@link AppBuilderPromptDto}{@code >}。
+     */
     @GetMapping("/{category_id}")
     public Rsp<AppBuilderPromptDto> queryInspirations(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("app_id") String appId,

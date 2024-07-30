@@ -33,6 +33,12 @@ import java.util.List;
 public class StoreController extends AbstractController {
     private final StoreService storeService;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator 认证器
+     * @param storeService 存储服务
+     */
     public StoreController(Authenticator authenticator, StoreService storeService) {
         super(authenticator);
         this.storeService = storeService;

@@ -112,7 +112,7 @@ public class MetaMultiVersionFitable implements MetaService {
             Undefinable<String> basicMetaTemplateId, com.huawei.fit.jane.task.util.OperationContext actualContext) {
         MetaFilter filter = new MetaFilter();
         filter.setNames(new ArrayList<String>() {{
-            add(name + "|");
+                add(name + "|");
         }});
 
         RangedResultSet<Meta> list = list(filter, true, 0, 10, context);
@@ -197,6 +197,7 @@ public class MetaMultiVersionFitable implements MetaService {
      * @param offset 表示查询到的meta定义的结果集在全量结果集中的偏移量的 64 位整数。
      * @param limit 表示查询到的meta定义的结果集中的最大数量的 32 位整数。
      * @param context 表示操作上下文的 {@link OperationContext}。
+     * @param oldDataFilter 表示旧数据过滤器的 {@link MetaFilter}。
      * @return 表示查询到的结果集的 {@link RangedResultSet}{@code <}{@link Meta}{@code >}。
      */
     @Override

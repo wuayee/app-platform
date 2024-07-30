@@ -63,7 +63,8 @@ public interface CategoryService {
      * @param objectType 表示对象的类型的 {@link String}。
      * @param objectIds 表示对象的唯一标识的列表的 {@link List}{@code <}{@link String}{@code >}。
      * @param context 表示操作上下文的 {@link OperationContext}。
-     * @return 表示以对象唯一标识为键的类目的列表的 {@link Map}{@code <}{@link String}{@code , }{@link List}{@code <}{@link String}{@code >>}。
+     * @return 表示以对象唯一标识为键的类目的列表的 {@link Map}{@code <}{@link String}{@code , }
+     * {@link List}{@code <}{@link String}{@code >>}。
      */
     Map<String, List<String>> listUsages(String objectType, List<String> objectIds, OperationContext context);
 

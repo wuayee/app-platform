@@ -48,6 +48,14 @@ public class AppRunTimeController extends AbstractController {
     private final com.huawei.fit.jober.aipp.genericable.AippRunTimeService aippRunTimeGenericable;
     private final AippFlowRuntimeInfoService aippFlowRuntimeInfoService;
 
+    /**
+     * 构造函数。
+     *
+     * @param authenticator 认证器。
+     * @param aippRunTimeService AIPP运行时服务。
+     * @param aippRunTimeGenericable AIPP通用运行时服务。
+     * @param aippFlowRuntimeInfoService AIPP流程运行时信息服务。
+     */
     public AppRunTimeController(Authenticator authenticator, AippRunTimeService aippRunTimeService,
             com.huawei.fit.jober.aipp.genericable.AippRunTimeService aippRunTimeGenericable,
             AippFlowRuntimeInfoService aippFlowRuntimeInfoService) {
@@ -147,7 +155,8 @@ public class AppRunTimeController extends AbstractController {
      * @param tenantId 租户id
      * @param aippId aippId
      * @param instanceId 实例id
-     * @return void
+     * @param version aipp版本
+     * @return 返回空回复的 {@link Rsp}{@code <}{@link Void}{@code >}
      */
     @DeleteMapping(path = "/aipp/{aipp_id}/instances/{instance_id}", description = "删除应用实例")
     public Rsp<Void> deleteInstance(HttpClassicServerRequest httpRequest, @PathVariable("tenant_id") String tenantId,
@@ -164,7 +173,8 @@ public class AppRunTimeController extends AbstractController {
      * @param tenantId 租户id
      * @param aippId aippId
      * @param instanceId 实例id
-     * @return AIPP 实例
+     * @param version aipp版本
+     * @return 返回单个应用实例信息的 {@link Rsp}{@code <}{@link AippInstanceDto}{@code >}
      */
     @GetMapping(path = "/aipp/{aipp_id}/instances/{instance_id}", description = "查询单个应用实例信息，实例运行期间前端定时调用")
     public Rsp<AippInstanceDto> getInstance(HttpClassicServerRequest httpRequest,
@@ -190,7 +200,8 @@ public class AppRunTimeController extends AbstractController {
     public Rsp<Void> updateAndUploadAippInstance(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
             @PathVariable("instance_id") String instanceId,
-            @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息") @RequestBody Map<String, Object> formArgs) {
+            @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息")
+            @RequestBody Map<String, Object> formArgs) {
         aippRunTimeService.updateAndUploadAippInstance(aippId,
                 instanceId,
                 formArgs,
@@ -210,7 +221,8 @@ public class AppRunTimeController extends AbstractController {
     @PutMapping(path = "/app/instances/{instance_id}", description = "更新表单数据，并恢复实例任务执行")
     public Rsp<Void> resumeAndUpdateAippInstance(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("instance_id") String instanceId,
-            @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息") @RequestBody Map<String, Object> formArgs) {
+            @Property(description = "用户填写的表单信息", example = "用户选择的大模型信息")
+            @RequestBody Map<String, Object> formArgs) {
         this.aippRunTimeService.resumeAndUpdateAippInstance(instanceId,
                 formArgs,
                 this.contextOf(httpRequest, tenantId));
@@ -224,7 +236,7 @@ public class AppRunTimeController extends AbstractController {
      * @param tenantId 租户id
      * @param instanceId 实例id
      * @param msgArgs 用于终止时返回的信息
-     * @return
+     * @return 返回空回复的 {@link Rsp}{@code <}{@link Void}{@code >}
      */
     @PutMapping(path = "/instances/{instance_id}/terminate", description = "终止实例任务")
     public Rsp<Void> terminateAippInstance(HttpClassicServerRequest httpRequest,
@@ -238,10 +250,12 @@ public class AppRunTimeController extends AbstractController {
      * 批量查询实例列表
      *
      * @param httpRequest 操作上下文
-     * @param tenantId 租户ID
+     * @param tenantId 租户id
+     * @param aippId aippId
      * @param cond 查询条件
      * @param page 分页条件
-     * @return
+     * @param version aipp版本
+     * @return 返回实例列表的 {@link Rsp}{@code <}{@link PageResponse}{@code <}{@link AippInstanceDto}{@code >}{@code >}
      */
     @GetMapping(path = "/aipp/{aipp_id}/instances", description = "批量查询实例列表")
     public Rsp<PageResponse<AippInstanceDto>> getInstanceList(HttpClassicServerRequest httpRequest,
@@ -279,9 +293,11 @@ public class AppRunTimeController extends AbstractController {
      * 查询流程运行时数据.
      *
      * @param httpRequest 操作上下文
-     * @param aippId 应用id.
-     * @param instanceId 实例id.
-     * @return {@link Rsp}{@code <}{@link List}{@code <}{@link RuntimeData}{@code >}{@code >} 运行时数据.
+     * @param tenantId 租户id
+     * @param aippId aippId
+     * @param instanceId 实例id
+     * @param version aipp版本
+     * @return 返回流程运行时数据的 {@link Rsp}{@code <}{@link RuntimeData}{@code >}
      */
     @GetMapping(value = "/aipp/{aipp_id}/instances/{instance_id}/runtime", description = "查询流程运行时信息")
     public Rsp<RuntimeData> getRuntimeInfo(HttpClassicServerRequest httpRequest,
