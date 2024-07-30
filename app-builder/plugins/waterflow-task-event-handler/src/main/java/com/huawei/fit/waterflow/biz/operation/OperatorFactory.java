@@ -2,14 +2,14 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.jober.flowsengine.manual.operation;
+package com.huawei.fit.waterflow.biz.operation;
 
 import static com.huawei.fit.jober.common.ErrorCodes.FAILED_TO_GET_MANUAL_OPERATOR;
 
 import com.huawei.fit.jober.common.exceptions.JobberException;
-import com.huawei.fit.jober.flowsengine.manual.operation.operator.Operator;
-import com.huawei.fit.jober.flowsengine.manual.operation.operator.SmartFormOperator;
-import com.huawei.fit.jober.flowsengine.manual.operation.operator.TaskCenterOperator;
+import com.huawei.fit.waterflow.biz.operation.operator.Operator;
+import com.huawei.fit.waterflow.biz.operation.operator.SmartFormOperator;
+import com.huawei.fit.waterflow.biz.operation.operator.TaskCenterOperator;
 import com.huawei.fitframework.broker.client.BrokerClient;
 
 /**

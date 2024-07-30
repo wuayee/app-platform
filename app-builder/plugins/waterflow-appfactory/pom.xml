@@ -20,6 +20,10 @@
             <groupId>com.huawei.fit.jade</groupId>
             <artifactId>jober-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jade</groupId>
+            <artifactId>waterflow-task-event-handler</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

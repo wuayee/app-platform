@@ -2,14 +2,14 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.jober.flowsengine.manual.operation.operator;
+package com.huawei.fit.waterflow.biz.operation.operator;
 
-import static com.huawei.fit.jober.common.Constant.CREATED_DATE;
-import static com.huawei.fit.jober.common.Constant.PRIORITY;
-import static com.huawei.fit.jober.common.Constant.REQUIREMENT_ID;
-import static com.huawei.fit.jober.common.Constant.STATUS;
 import static com.huawei.fit.jober.common.ErrorCodes.ENTITY_NOT_FOUND;
 import static com.huawei.fit.jober.common.ErrorCodes.FAILED_TO_SAVE_INSTANCE;
+import static com.huawei.fit.waterflow.common.Constant.CREATED_DATE;
+import static com.huawei.fit.waterflow.common.Constant.PRIORITY;
+import static com.huawei.fit.waterflow.common.Constant.REQUIREMENT_ID;
+import static com.huawei.fit.waterflow.common.Constant.STATUS;
 import static com.huawei.fit.waterflow.flowsengine.utils.FlowUtil.replace;
 
 import com.huawei.fit.jober.InstanceService;

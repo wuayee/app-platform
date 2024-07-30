@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2023-2023. All rights reserved.
  */
 
-package com.huawei.fit.jober.flowsengine.biz.service.handlers;
+package com.huawei.fit.waterflow.biz.handlers;
 
 import static com.huawei.fit.waterflow.flowsengine.domain.flows.enums.FlowNodeStatus.ARCHIVED;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,7 +12,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.huawei.fit.jober.DatabaseBaseTest;
 import com.huawei.fit.jober.FlowSmartFormService;
 import com.huawei.fit.jober.InstanceService;
 import com.huawei.fit.jober.TaskService;
@@ -67,7 +66,7 @@ import java.util.stream.Stream;
  * @author 00693950
  * @since 2023/9/18
  */
-class ManualOperationCreatedEventHandlerTest extends DatabaseBaseTest {
+class ManualOperationCreatedEventHandlerTest {
     private static final String QUERY_TASK_GENERICABLE = "5a7683b3b6ac495198efc492790a3a5f";
 
     private static final String CREATE_TASK_INSTANCE_GENERICABLE = "f1b88d9eb48b48959365a24e27dabb80";
