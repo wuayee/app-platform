@@ -28,7 +28,7 @@ public class EventPublishService {
      * 发送数据
      *
      * @param taskInfo 任务信息
-     * @param context
+     * @param context 表示用户信息上下文
      */
     public void sendData(TaskInstanceMetaData taskInfo, OperationContext context) {
         this.plugin.runtime().publisherOfEvents().publishEvent(new TaskInstanceMetaDataEvent(this, taskInfo, context));

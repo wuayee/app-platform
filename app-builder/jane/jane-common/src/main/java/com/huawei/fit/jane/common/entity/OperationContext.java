@@ -53,6 +53,9 @@ public class OperationContext {
 
     private String language;
 
+    /**
+     * 无参构造函数
+     */
     public OperationContext() {
     }
 

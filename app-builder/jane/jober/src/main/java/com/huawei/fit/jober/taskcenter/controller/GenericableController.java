@@ -32,6 +32,12 @@ import java.util.stream.Collectors;
 public class GenericableController extends AbstractController {
     private final RegistryService registryService;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator 授权校验器
+     * @param registryService 注册服务
+     */
     public GenericableController(Authenticator authenticator, RegistryService registryService) {
         super(authenticator);
         this.registryService = registryService;

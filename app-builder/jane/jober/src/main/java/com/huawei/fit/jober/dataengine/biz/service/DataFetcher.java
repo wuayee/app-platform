@@ -73,7 +73,8 @@ public class DataFetcher {
         }
         if (times > Constant.RETRY_TIMES) {
             log.error(
-                    "[dataEngineSaver]: Get metaData list failed, send message to the application number owner. Time scheduler id is: {}",
+                    "[dataEngineSaver]: Get metaData list failed, send message to the application number owner. "
+                            + "Time scheduler id is: {}",
                     timeScheduler.getSchedulerId());
             occurException.set(true);
         }
@@ -118,7 +119,8 @@ public class DataFetcher {
         }
         if (times > Constant.RETRY_TIMES) {
             log.error(
-                    "[dataEngineSaver]: Get tasks failed, send message to the application number owner. Time scheduler id is: {}, filter is {}",
+                    "[dataEngineSaver]: Get tasks failed, send message to the application number owner. "
+                            + "Time scheduler id is: {}, filter is {}",
                     timeScheduler.getSchedulerId(), JSON.toJSONString(pullDataFilter));
             occurException.set(true);
         }
@@ -126,10 +128,11 @@ public class DataFetcher {
     }
 
     private static int printLogAndSleep(String dataFetchType, int times, Throwable e) {
+        int timeCount = times;
         log.error("Catch throwable when remote invoke, fitableId is {}, retry times: {}, error: {}.", dataFetchType,
-                times, e);
-        times++;
+                timeCount, e);
+        timeCount++;
         SleepUtil.sleep(Constant.RETRY_INTERVAL);
-        return times;
+        return timeCount;
     }
 }

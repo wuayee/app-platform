@@ -51,6 +51,12 @@ public class OhScriptTaskHandler implements FlowableService {
 
     private final BrokerClient brokerClient;
 
+    /**
+     * OhScriptTaskHandler构造函数
+     *
+     * @param container 表示容器
+     * @param brokerClient 表示服务调用的代理客户端
+     */
     public OhScriptTaskHandler(BeanContainer container, BrokerClient brokerClient) {
         this.genericableMethod = ReflectionUtils.getDeclaredMethod(FlowableService.class, "handleTask", List.class);
         log.info("Get genericable method of flowable service. [method={}]",
