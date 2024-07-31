@@ -7,7 +7,7 @@ span-processor:
   maxQueueSize: 100
   maxExportBatchSize: 20
   exporterTimeoutMillis: 30000
-  scheduleDelayMillis: 1000
+  scheduleDelayMillis: 10000
 
 exporter:
   maxSize: 10
