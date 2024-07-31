@@ -35,6 +35,7 @@ import com.huawei.fit.jober.aipp.dto.AppBuilderAppStartDto;
 import com.huawei.fit.jober.aipp.dto.MemoryConfigDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippInstLogDataDto;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippLogCreateDto;
+import com.huawei.fit.jober.aipp.dto.chat.AppChatRsp;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
 import com.huawei.fit.jober.aipp.dto.xiaohai.QADto;
 import com.huawei.fit.jober.aipp.dto.xiaohai.UploadChatHistoryDto;
@@ -68,6 +69,7 @@ import com.huawei.fit.jober.entity.FlowInfo;
 import com.huawei.fit.jober.entity.FlowInstanceResult;
 import com.huawei.fit.jober.entity.FlowStartParameter;
 import com.huawei.fit.jober.entity.task.TaskProperty;
+import com.huawei.fit.waterflow.domain.enums.FlowTraceStatus;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Fit;
 import com.huawei.fitframework.annotation.Fitable;
@@ -400,13 +402,19 @@ public class AippRunTimeServiceImpl
         String flowDefinitionId = cast(meta.getAttributes().get(AippConst.ATTR_FLOW_DEF_ID_KEY));
         List<Map<String, Object>> memoryConfigs = this.getMemoryConfigs(flowDefinitionId, context);
         this.appChatSSEService.addEmitter(metaInst.getId(), emitter, new CountDownLatch(1));
+        this.appChatSSEService.send(metaInst.getId(), AppChatRsp.builder()
+                .instanceId(metaInst.getId())
+                .atChatId(ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID)))
+                .chatId(ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID)))
+                .status(FlowTraceStatus.READY.name())
+                .build());
         boolean isMemorySwitch = this.getMemorySwitch(memoryConfigs, businessData);
-        String memoryType = this.getMemoryType(memoryConfigs);
         if (!isMemorySwitch) {
             this.startFlow(meta.getVersionId(), flowDefinitionId, metaInst.getId(), businessData, context);
             this.appChatSSEService.latchAwait(metaInst.getId());
             return;
         }
+        String memoryType = this.getMemoryType(memoryConfigs);
         if (!StringUtils.equalsIgnoreCase("UserSelect", memoryType)) {
             String memoryChatId = ObjectUtils.cast(businessData.get("chatId"));
             String aippType = ObjectUtils.cast(meta.getAttributes()

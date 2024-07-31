@@ -113,7 +113,7 @@ public class AippFlowEndCallback implements FlowCallbackService {
                     .status(FlowTraceStatus.ARCHIVED.name())
                     .answer(Collections.singletonList(AppChatRsp.Answer.builder()
                             .content(formDataMap).type(AippInstLogType.FORM.name()).build()))
-                    .formInstanceId(aippInstId)
+                    .instanceId(aippInstId)
                     .build();
             this.appChatSseService.sendToAncestorLastData(aippInstId, appChatRsp);
             if (StringUtils.isNotEmpty(endFormId) && StringUtils.isNotEmpty(endFormVersion)) {
