@@ -4,7 +4,11 @@
 
 package com.huawei.jade.store.tool.parser.support;
 
+import static com.huawei.fitframework.inspection.Validation.notBlank;
+import static com.huawei.fitframework.inspection.Validation.notNull;
+
 import com.huawei.fitframework.util.ObjectUtils;
+import com.huawei.fitframework.util.StringUtils;
 import com.huawei.jade.store.entity.transfer.PluginData;
 
 import java.io.File;
@@ -38,29 +42,36 @@ public class FileParser {
      * @return 匹配成功的工具数据。
      */
     public static PluginData getPluginData(Map<String, Object> toolFile, String toolNames) {
+        notNull(toolFile, "Tool metadata cannot be null.");
+        notNull(toolNames, "The input tool names cannot be null.");
+
         Set<String> toolNamesSet = Arrays.stream(toolNames.trim().split(COMMA)).collect(Collectors.toSet());
-        Map<String, Object> schemaNode = ObjectUtils.cast(toolFile.get(SCHEMA));
-        Object name = schemaNode.get(NAME);
+        Map<String, Object> schemaNode = notNull(ObjectUtils.cast(toolFile.get(SCHEMA)), "Tool schema cannot be null.");
         PluginData pluginData = new PluginData();
         pluginData.setSchema(schemaNode);
-        if (name instanceof String) {
-            String methodName = (String) name;
-            if (!toolNamesSet.contains(methodName)) {
-                return new PluginData();
-            }
-            pluginData.setName(methodName);
+        String methodName = validateSchemaStringField(schemaNode, NAME);
+        if (!toolNamesSet.contains(methodName)) {
+            return pluginData;
         }
+        pluginData.setName(methodName);
+        pluginData.setDescription(validateSchemaStringField(schemaNode, DESCRIPTION));
 
-        Object methodDescription = schemaNode.get(DESCRIPTION);
-        if (methodDescription instanceof String) {
-            pluginData.setDescription((String) methodDescription);
-        }
-
-        Map<String, Object> runnables = ObjectUtils.cast(toolFile.get(RUNNABLES));
+        Map<String, Object> runnables =
+                notNull(ObjectUtils.cast(toolFile.get(RUNNABLES)), "Tool runnables cannot be null.");
         pluginData.setRunnables(runnables);
-        Map<String, Object> extensions = ObjectUtils.cast(toolFile.get(EXTENSIONS));
-        List<String> tags = ObjectUtils.cast(extensions.get(TAGS));
+        Map<String, Object> extensions =
+                notNull(ObjectUtils.cast(toolFile.get(EXTENSIONS)), "Tool extensions cannot be null.");
+        List<String> tags = notNull(ObjectUtils.cast(extensions.get(TAGS)), "Tool tags cannot be null.");
         pluginData.setTags(new HashSet<>(tags));
         return pluginData;
+    }
+
+    private static String validateSchemaStringField(Map<String, Object> schemaNode, String filedName) {
+        Object filed =
+                notNull(schemaNode.get(filedName), "Tool schema filed value cannot be null. [filed={0}]", filedName);
+        if (filed instanceof String) {
+            return notBlank((String) filed, "Tool schema filed value cannot be blank. [filed={0}]", filedName);
+        }
+        throw new IllegalArgumentException(StringUtils.format("Failed to obtain the {0} data in schema.", filedName));
     }
 }
