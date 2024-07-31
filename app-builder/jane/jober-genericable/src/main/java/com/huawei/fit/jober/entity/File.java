@@ -17,6 +17,9 @@ public class File {
 
     private String creator;
 
+    /**
+     * File 无参构造函数
+     */
     public File() {
 
     }

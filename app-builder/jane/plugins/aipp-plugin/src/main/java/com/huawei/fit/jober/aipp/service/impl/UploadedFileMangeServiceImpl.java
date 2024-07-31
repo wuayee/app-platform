@@ -4,6 +4,7 @@
 
 package com.huawei.fit.jober.aipp.service.impl;
 
+import com.huawei.fit.jober.aipp.common.exception.AippException;
 import com.huawei.fit.jober.aipp.dto.aipplog.AippUploadedFileInfoDto;
 import com.huawei.fit.jober.aipp.mapper.AippUploadedFileMapper;
 import com.huawei.fit.jober.aipp.service.UploadedFileManageService;
@@ -49,7 +50,7 @@ public class UploadedFileMangeServiceImpl implements UploadedFileManageService {
             if (!filesDeleted.isEmpty()) {
                 aippUploadedFileMapper.deleteFileRecords(null, null, filesDeleted);
             }
-        } catch (Exception e) {
+        } catch (AippException e) {
             log.error("delete files failed on exception. reason: {}", e.getMessage());
         }
     }

@@ -9,6 +9,8 @@ import com.huawei.fit.jober.aipp.po.AppBuilderFlowGraphPo;
 import com.huawei.fit.jober.aipp.serializer.BaseSerializer;
 
 /**
+ * 应用流程图数据序列化器
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */

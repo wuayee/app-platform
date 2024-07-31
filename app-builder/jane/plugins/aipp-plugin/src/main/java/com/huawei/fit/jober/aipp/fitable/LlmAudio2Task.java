@@ -28,6 +28,7 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.thread.DefaultThreadFactory;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.jade.fel.model.openai.client.OpenAiClient;
 import com.huawei.jade.fel.model.openai.entity.chat.OpenAiChatCompletionRequest;
@@ -51,7 +52,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -69,7 +72,13 @@ public class LlmAudio2Task implements FlowableService {
                     + "1. - Identify people in the meeting.\n" + "2. - Assign tasks to everyone.\n"
                     + "Finally Output a json list, every entity contains the following keys: owner, title, "
                     + "task_detail.\n" + "\n" + "Output json:\n";
-    private static final ExecutorService AUDIO_EXECUTOR = Executors.newFixedThreadPool(8);
+    private static final ExecutorService AUDIO_EXECUTOR = new ThreadPoolExecutor(0, 10, 60L,
+            TimeUnit.SECONDS, new LinkedBlockingQueue<>(),
+            new DefaultThreadFactory("flows-event-handler-thread-pool", false, (thread, throwable) -> {
+                log.error("[flows-event-handler-thread-pool]: The pool run failed, error cause: {}, message: {}.",
+                        throwable.getCause(), throwable.getMessage());
+                log.error("The flows event handler pool run failed details: ", throwable);
+            }), new java.util.concurrent.ThreadPoolExecutor.AbortPolicy());
 
     private final FfmpegService ffmpegService;
     private final AippLogService aippLogService;

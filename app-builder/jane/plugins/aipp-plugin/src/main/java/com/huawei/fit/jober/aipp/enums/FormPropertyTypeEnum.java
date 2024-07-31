@@ -17,17 +17,17 @@ import java.util.Arrays;
  * @since 2024-04-27
  */
 public enum FormPropertyTypeEnum {
-    Integer("Integer", Integer.class),
-    String("String", String.class),
-    Boolean("Boolean", Boolean.class),
-    Number("Number", Number.class),
-    Float("Float", Float.class),
-    Byte("Byte", Byte.class),
-    Double("Double", Double.class),
-    Character("Character", Character.class),
-    Object("Object", Object.class),
-    Map("Map", java.util.Map.class),
-    List("List", java.util.List.class);
+    INTEGER("Integer", Integer.class),
+    STRING("String", String.class),
+    BOOLEAN("Boolean", Boolean.class),
+    NUMBER("Number", Number.class),
+    FLOAT("Float", Float.class),
+    BYTE("Byte", Byte.class),
+    DOUBLE("Double", Double.class),
+    CHARACTER("Character", Character.class),
+    OBJECT("Object", Object.class),
+    MAP("Map", java.util.Map.class),
+    LIST("List", java.util.List.class);
 
     private final String code;
     private final Class<?> clazz;

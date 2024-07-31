@@ -1024,20 +1024,16 @@ public class AppBuilderAppServiceImpl
         for (Map.Entry<String, String> param : params.entrySet()) {
             if (StringUtils.equals(node.get("name").asText(), param.getKey())) {
                 if (singleLayerParams.contains(param.getKey())) {
-                    if (StringUtils.equals(param.getKey(), "temperature")) {
-                        ObjectUtils.<ObjectNode>cast(node).put(
-                                "value", JsonUtils.parseObject(param.getValue(), Float.class));
-                    } else {
-                        ObjectUtils.<ObjectNode>cast(node).put(
-                                "value", JsonUtils.parseObject(param.getValue(), String.class));
-                    }
+                    this.handleParamTemperature(node, param);
                     continue;
                 }
+
                 if (doubleLayerParams.contains(param.getKey())) {
                     ArrayNode valueArrayNode = convertList(param.getValue());
                     ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
                     continue;
                 }
+
                 if (StringUtils.equals("knowledge", param.getKey())) {
                     this.handleParamKnowledge(node, param);
                     continue;
@@ -1055,6 +1051,16 @@ public class AppBuilderAppServiceImpl
                     ObjectUtils.<ObjectNode>cast(node).set("value", valueArrayNode);
                 }
             }
+        }
+    }
+
+    private void handleParamTemperature(JsonNode node, Map.Entry<String, String> param) {
+        if (StringUtils.equals(param.getKey(), "temperature")) {
+            ObjectUtils.<ObjectNode>cast(node).put(
+                    "value", JsonUtils.parseObject(param.getValue(), Float.class));
+        } else {
+            ObjectUtils.<ObjectNode>cast(node).put(
+                    "value", JsonUtils.parseObject(param.getValue(), String.class));
         }
     }
 
@@ -1241,9 +1247,13 @@ public class AppBuilderAppServiceImpl
             }
             Map<String, Object> nameValue = nodeIdToJadeConfigMap.get(nodeId);
             AppBuilderFormProperty formProperty = cp.getFormProperty();
-            if (MapUtils.isEmpty(nameValue) || null == nameValue.get(formProperty.getName())) {
+            if (MapUtils.isEmpty(nameValue)) {
                 // 2024/4/29 0029 暂时先不删除了，仅修改现存的内容
                 continue;
+            } else {
+                if (nameValue.get(formProperty.getName()) == null) {
+                    continue;
+                }
             }
             formProperty.setDefaultValue(nameValue.get(formProperty.getName()));
             // 更新
@@ -1303,21 +1313,27 @@ public class AppBuilderAppServiceImpl
             JSONObject jsonObject = value.getJSONObject(index);
             if (StringUtils.equalsIgnoreCase("Input", jsonObject.getString("from"))) {
                 result.add(jsonObject.get("value"));
+                continue;
             }
             if (StringUtils.equalsIgnoreCase("Expand", jsonObject.getString("from"))) {
-                if (StringUtils.equalsIgnoreCase("Array", jsonObject.getString("type"))) {
-                    List<Object> array = this.extractingExpandArray(jsonObject.getJSONArray("value"));
-                    result.add(array);
-                }
-                if (StringUtils.equalsIgnoreCase("Object", jsonObject.getString("type"))) {
-                    Map<String, Object> map = this.extractingExpandObject(jsonObject.getJSONArray("value"));
-                    if (MapUtils.isNotEmpty(map)) {
-                        result.add(map);
-                    }
-                }
+                this.handleExpandType(jsonObject, result);
             }
         }
         return result;
+    }
+
+    private void handleExpandType(JSONObject jsonObject, List<Object> result) {
+        if (StringUtils.equalsIgnoreCase("Array", jsonObject.getString("type"))) {
+            List<Object> array = this.extractingExpandArray(jsonObject.getJSONArray("value"));
+            result.add(array);
+            return;
+        }
+        if (StringUtils.equalsIgnoreCase("Object", jsonObject.getString("type"))) {
+            Map<String, Object> map = this.extractingExpandObject(jsonObject.getJSONArray("value"));
+            if (MapUtils.isNotEmpty(map)) {
+                result.add(map);
+            }
+        }
     }
 
     // 如果type是Object，那么调用这个方法获取一个Map<String, Object>
@@ -1327,18 +1343,26 @@ public class AppBuilderAppServiceImpl
             JSONObject jsonObject = value.getJSONObject(index);
             if (StringUtils.equalsIgnoreCase("Input", jsonObject.getString("from"))) {
                 result.put(jsonObject.getString("name"), jsonObject.get("value"));
-            } else if (StringUtils.equalsIgnoreCase("Expand", jsonObject.getString("from"))) {
-                if (StringUtils.equalsIgnoreCase("Array", jsonObject.getString("type"))) {
-                    List<Object> array = this.extractingExpandArray(jsonObject.getJSONArray("value"));
-                    result.put(jsonObject.getString("name"), array);
-                } else if (StringUtils.equalsIgnoreCase("Object", jsonObject.getString("type"))) {
-                    Map<String, Object> map = this.extractingExpandObject(jsonObject.getJSONArray("value"));
-                    if (MapUtils.isNotEmpty(map)) {
-                        result.put(jsonObject.getString("name"), map);
-                    }
-                }
+                continue;
+            }
+            if (StringUtils.equalsIgnoreCase("Expand", jsonObject.getString("from"))) {
+                this.handleExpandType(jsonObject, result);
             }
         }
         return result;
+    }
+
+    private void handleExpandType(JSONObject jsonObject, Map<String, Object> result) {
+        if (StringUtils.equalsIgnoreCase("Array", jsonObject.getString("type"))) {
+            List<Object> array = this.extractingExpandArray(jsonObject.getJSONArray("value"));
+            result.put(jsonObject.getString("name"), array);
+            return;
+        }
+        if (StringUtils.equalsIgnoreCase("Object", jsonObject.getString("type"))) {
+            Map<String, Object> map = this.extractingExpandObject(jsonObject.getJSONArray("value"));
+            if (MapUtils.isNotEmpty(map)) {
+                result.put(jsonObject.getString("name"), map);
+            }
+        }
     }
 }

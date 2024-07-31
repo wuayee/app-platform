@@ -58,12 +58,12 @@ public class AippInstLogDataDto {
                         || log.getLogType().equals(AippInstLogType.HIDDEN_QUESTION.name())))
                 .map(AippInstLogDataDto::convert)
                 .collect(Collectors.toList());
-        AippInstLog question = instanceLogs.stream()
+        AippInstLog questionInfo = instanceLogs.stream()
                 .filter(log -> (log.getLogType().equals(AippInstLogType.QUESTION.name())
                         || log.getLogType().equals(AippInstLogType.HIDDEN_QUESTION.name())))
                 .findFirst().orElse(null);
         return new AippInstLogDataDto(inAippId, inAippVersion, inInstanceId, MetaInstStatusEnum.ARCHIVED.name(),
-                null, null, convert(question), logBodies);
+                null, null, convert(questionInfo), logBodies);
     }
 
     /**

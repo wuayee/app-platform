@@ -8,6 +8,7 @@ import com.huawei.fit.jane.dlock.jdbc.service.CleanExpiredLocksScheduleService;
 import com.huawei.fit.jane.dlock.jdbc.utils.CustomThreadFactory;
 import com.huawei.fit.jane.dlock.jdbc.utils.DistributedLockStatus;
 import com.huawei.fit.jane.task.gateway.InvalidDistributedLockNotify;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.transaction.DataAccessException;
 import com.huawei.fitframework.transaction.TransactionException;
@@ -297,7 +298,9 @@ public final class DistributedLock implements Lock {
                 hasUpdateError = true;
                 log.warn("Failed to keepalive, lockKey={}.", this.lockKey);
             }
-        } catch (Throwable e) {
+        } catch (FitException e) {
+            hasUpdateError = true;
+        } catch (Exception e) {
             hasUpdateError = true;
             log.warn("Failed to keepalive, lockKey={}, errorMsg={}.", this.lockKey, e.getMessage());
             log.warn("Exception=", e);

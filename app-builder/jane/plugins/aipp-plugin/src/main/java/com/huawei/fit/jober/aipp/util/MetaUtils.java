@@ -228,9 +228,11 @@ public class MetaUtils {
         if (normalFilter == NormalFilterEnum.PUBLISHED) {
             attributes.put(AippConst.ATTR_META_STATUS_KEY,
                     Collections.singletonList(AippMetaStatusEnum.ACTIVE.getCode()));
-        } else if (normalFilter == NormalFilterEnum.DRAFT) {
-            attributes.put(AippConst.ATTR_META_STATUS_KEY,
-                    Collections.singletonList(AippMetaStatusEnum.INACTIVE.getCode()));
+        } else {
+            if (normalFilter == NormalFilterEnum.DRAFT) {
+                attributes.put(AippConst.ATTR_META_STATUS_KEY,
+                        Collections.singletonList(AippMetaStatusEnum.INACTIVE.getCode()));
+            }
         }
         String sortEncode = MetaUtils.formatSorter(AippSortKeyEnum.CREATE_AT.name(), DirectionEnum.DESCEND.name());
         MetaFilter metaFilter = getAnyMetaFilter(metaId, null);
