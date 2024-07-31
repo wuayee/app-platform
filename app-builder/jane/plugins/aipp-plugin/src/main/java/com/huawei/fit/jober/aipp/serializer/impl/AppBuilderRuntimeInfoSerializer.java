@@ -1,0 +1,70 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+package com.huawei.fit.jober.aipp.serializer.impl;
+
+import com.huawei.fit.jober.aipp.domain.AppBuilderRuntimeInfo;
+import com.huawei.fit.jober.aipp.po.AppBuilderRuntimeInfoPo;
+import com.huawei.fit.jober.aipp.serializer.BaseSerializer;
+import com.huawei.fit.jober.aipp.util.JsonUtils;
+import com.huawei.fit.runtime.entity.Parameter;
+
+import java.util.Objects;
+
+/**
+ * {@link AppBuilderRuntimeInfo} 以及 {@link AppBuilderRuntimeInfoPo} 之间互相转换的序列化器.
+ *
+ * @author 张越 z00559346
+ * @since 2024-07-29
+ */
+public class AppBuilderRuntimeInfoSerializer implements BaseSerializer<AppBuilderRuntimeInfo, AppBuilderRuntimeInfoPo> {
+    @Override
+    public AppBuilderRuntimeInfoPo serialize(AppBuilderRuntimeInfo appBuilderRuntimeInfo) {
+        if (Objects.isNull(appBuilderRuntimeInfo)) {
+            return null;
+        }
+        return AppBuilderRuntimeInfoPo.builder()
+                .id(appBuilderRuntimeInfo.getId())
+                .traceId(appBuilderRuntimeInfo.getTraceId())
+                .flowDefinitionId(appBuilderRuntimeInfo.getFlowDefinitionId())
+                .instanceId(appBuilderRuntimeInfo.getInstanceId())
+                .nodeId(appBuilderRuntimeInfo.getNodeId())
+                .nodeType(appBuilderRuntimeInfo.getNodeType())
+                .startTime(appBuilderRuntimeInfo.getStartTime())
+                .endTime(appBuilderRuntimeInfo.getEndTime())
+                .status(appBuilderRuntimeInfo.getStatus())
+                .published(appBuilderRuntimeInfo.isPublished() ? 1 : 0)
+                .errorMsg(appBuilderRuntimeInfo.getErrorMsg())
+                .parameters(JsonUtils.toJsonString(appBuilderRuntimeInfo.getParameters()))
+                .createAt(appBuilderRuntimeInfo.getCreateAt())
+                .updateAt(appBuilderRuntimeInfo.getUpdateAt())
+                .createBy(appBuilderRuntimeInfo.getCreateBy())
+                .updateBy(appBuilderRuntimeInfo.getUpdateBy())
+                .build();
+    }
+
+    @Override
+    public AppBuilderRuntimeInfo deserialize(AppBuilderRuntimeInfoPo dataObject) {
+        return Objects.isNull(dataObject)
+                ? AppBuilderRuntimeInfo.builder().build()
+                : AppBuilderRuntimeInfo.builder()
+                        .id(dataObject.getId())
+                        .traceId(dataObject.getTraceId())
+                        .flowDefinitionId(dataObject.getFlowDefinitionId())
+                        .instanceId(dataObject.getInstanceId())
+                        .nodeId(dataObject.getNodeId())
+                        .nodeType(dataObject.getNodeType())
+                        .startTime(dataObject.getStartTime())
+                        .endTime(dataObject.getEndTime())
+                        .status(dataObject.getStatus())
+                        .published(dataObject.getPublished() == 1)
+                        .errorMsg(dataObject.getErrorMsg())
+                        .parameters(JsonUtils.parseArray(dataObject.getParameters(), Parameter[].class))
+                        .createAt(dataObject.getCreateAt())
+                        .updateAt(dataObject.getUpdateAt())
+                        .createBy(dataObject.getCreateBy())
+                        .updateBy(dataObject.getUpdateBy())
+                        .build();
+    }
+}

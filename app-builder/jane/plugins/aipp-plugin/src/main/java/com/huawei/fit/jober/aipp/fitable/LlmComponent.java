@@ -162,7 +162,7 @@ public class LlmComponent implements FlowableService, FlowCallbackService {
         String msgId = UuidUtils.randomUuidString();
         String path = this.aippLogService.getParentPath(parentInstanceId);
         agentFlow.converse()
-                .bind((acc, chunk) -> this.sendLog(chunk, path, msgId, parentInstanceId))
+                .bind((acc, chunk) -> this.sendLog(chunk, path, msgId, parentInstanceId, childBusinessData))
                 .doOnSuccess(msg -> llmOutputConsumer(llmMeta, ObjectUtils.cast(msg)))
                 .doOnError(throwable -> doOnAgentError(llmMeta, throwable.getMessage()))
                 .offer(AGENT_NODE_ID, Collections.singletonList(chatMessages));
@@ -198,7 +198,7 @@ public class LlmComponent implements FlowableService, FlowCallbackService {
         String systemPrompt = ObjectUtils.cast(businessData.get("systemPrompt"));
         String msgId = UuidUtils.randomUuidString();
         agentFlow.converse()
-                .bind((acc, chunk) -> this.sendLog(chunk, path, msgId, instId))
+                .bind((acc, chunk) -> this.sendLog(chunk, path, msgId, instId, businessData))
                 .bind(new AippMemory(ObjectUtils.cast(businessData.get(AippConst.BS_AIPP_MEMORIES_KEY))))
                 .bind(AippConst.TOOL_CONTEXT_KEY, toolContext)
                 .doOnSuccess(msg -> llmOutputConsumer(llmMeta, msg))
@@ -223,11 +223,14 @@ public class LlmComponent implements FlowableService, FlowCallbackService {
         }
     }
 
-    private void sendLog(ChatMessage chunk, String path, String msgId, String instId) {
+    private void sendLog(ChatMessage chunk, String path, String msgId, String instId,
+            Map<String, Object> businessData) {
         String msg = chunk.text();
         if (StringUtils.isBlank(msg)) {
             return;
         }
+        String chatId = ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID));
+        String atChatId = ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID));
         AippLogData logData = AippLogData.builder().msg(chunk.text()).build();
         AippLogVO logVO = AippLogVO.builder()
                 .logData(JsonUtils.toJsonString(logData))
@@ -235,6 +238,8 @@ public class LlmComponent implements FlowableService, FlowCallbackService {
                 .path(path)
                 .msgId(msgId)
                 .instanceId(instId)
+                .chatId(chatId)
+                .atChatId(atChatId)
                 .build();
         this.aippLogStreamService.send(logVO);
     }

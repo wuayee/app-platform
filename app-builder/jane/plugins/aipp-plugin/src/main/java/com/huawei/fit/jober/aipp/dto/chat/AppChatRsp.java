@@ -13,6 +13,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * 创建app会话的响应结果
  *
@@ -23,8 +25,34 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateAppChatRsp {
+public class AppChatRsp {
     @Property(description = "chat id")
     @JsonProperty("chat_id")
     private String chatId;
+
+    @Property(description = "at chat id")
+    @JsonProperty("at_chat_id")
+    private String atChatId;
+
+    private String status;
+
+    private List<Answer> answer;
+
+    @Property(description = "form instance id")
+    @JsonProperty("form_instance_id")
+    private String formInstanceId;
+
+    /**
+     * Answer
+     *
+     * @author 姚江 yWX1299574
+     * @since 2024-07-29
+     */
+    @Data
+    @Builder
+    public static class Answer {
+        Object content;
+        String type;
+        String msgId;
+    }
 }

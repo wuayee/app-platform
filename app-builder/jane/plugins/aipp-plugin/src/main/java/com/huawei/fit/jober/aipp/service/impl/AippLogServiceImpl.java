@@ -425,6 +425,8 @@ public class AippLogServiceImpl implements AippLogService {
             return;
         }
         String path = buildPath(instId, parentInstId);
+        String chatId = ObjectUtils.cast(businessData.get(AippConst.BS_CHAT_ID));
+        String atChatId = ObjectUtils.cast(businessData.get(AippConst.BS_AT_CHAT_ID));
         this.aopAippLogService.insertLog(AippLogCreateDto.builder()
                 .aippId(aippId)
                 .version(version)
@@ -434,6 +436,8 @@ public class AippLogServiceImpl implements AippLogService {
                 .logData(JsonUtils.toJsonString(logData))
                 .createUserAccount(w3Account)
                 .path(path)
+                .chatId(chatId)
+                .atChatId(atChatId)
                 .build());
     }
 

@@ -13,8 +13,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>knowledge-base</module>
         <module>app-base</module>
+        <module>knowledge-base</module>
+        <module>simple-uid-generator</module>
         <module>voice-service</module>
     </modules>
 
