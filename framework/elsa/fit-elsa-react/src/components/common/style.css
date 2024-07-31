@@ -253,6 +253,22 @@
     text-align: left;
 }
 
+.custom-tooltip .ant-tooltip-inner {
+    font-family: 微软雅黑, SF Pro Display, -apple-system, BlinkMacSystemFont, Segoe Ul, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    background-color: white !important;
+    color: rgb(37, 43, 58); /* 可选：设置文本颜色 */
+    white-space: normal; /* 允许换行 */
+    word-break: break-all; /* 在任何字符间换行 */
+}
+
+.jade-component-title span {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
 .jade-second-title-text {
     color: rgb(77, 77, 77);
     font-family: Huawei Sans;
