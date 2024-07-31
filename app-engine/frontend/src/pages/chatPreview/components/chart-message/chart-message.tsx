@@ -4,11 +4,11 @@ import { initChartData } from './utils/chart-utils';
 import ChartItem from './chart-item';
 
 const ChartMessage = (props) => {
-  const { chartAnswer, chartData, chartTitle, chartType } = props.chartConfig;
+  const { chartAnswer, chartData, chartTitle, chartType } = props.chatConfig;
   const [ chartList, setChartList ] = useState([]);
   const listRef = useRef(null);
 
-  useEffect(() => {
+  useEffect(() => {    
     handleChartData();
   }, [])
   // 图表数据格式化
