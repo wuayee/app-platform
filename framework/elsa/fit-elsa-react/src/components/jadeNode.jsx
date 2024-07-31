@@ -105,15 +105,24 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.initConnectors = () => {
         initConnectors.apply(self);
         self.connectors.remove(c => c.direction.key === DIRECTION.S.key || c.direction.key === DIRECTION.N.key
-                || c.direction.key === "ROTATE");
+            || c.direction.key === "ROTATE");
         self.connectors.forEach(connector => {
             connector.radius = CONNECTOR.RADIUS;
             connector.isSolid = true;
             if (connector.direction.key === DIRECTION.W.key) {
-                connector.allowFromLink = false
+                connector.allowFromLink = false;
             }
             if (connector.direction.key === DIRECTION.E.key) {
-                connector.allowToLink = false
+                connector.allowToLink = false;
+            }
+            const moving = connector.moving;
+            connector.moving = (deltaX, deltaY, x, y) => {
+                // 找到从当前锚点拖出去的线
+                const lines = self.page.shapes.filter(s => s.isTypeof("jadeEvent")).filter(s => s.fromShape === self.id);
+                if (lines && lines.length > 0) {
+                    return;
+                }
+                moving.apply(connector, [deltaX, deltaY, x, y]);
             }
         })
     };
@@ -187,8 +196,8 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
             return [];
         }
         return self.page.shapes.filter(s => s.type === "jadeEvent")
-                .filter(s => s.toShape === self.id)
-                .map(line => self.page.getShapeById(line.fromShape));
+            .filter(s => s.toShape === self.id)
+            .map(line => self.page.getShapeById(line.fromShape));
     };
 
     /**
@@ -245,8 +254,8 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
     self.remove = (source) => {
         // 如果有连线，需要同时删除连线.
         const events = self.page.shapes
-                .filter(s => s.isTypeof("jadeEvent"))
-                .filter(s => s.fromShape === self.id || s.toShape === self.id);
+            .filter(s => s.isTypeof("jadeEvent"))
+            .filter(s => s.fromShape === self.id || s.toShape === self.id);
         const lineRemoved = events.flatMap(e => e.remove());
 
         // 删除图形本身.
@@ -469,7 +478,7 @@ export const jadeNode = (id, x, y, width, height, parent, drawer) => {
         }
         bound.width = reportFrame.x + reportFrame.width - bound.x;
         bound.height = Math.max(reportFrame.y + reportFrame.height, self.x + self.height)
-                - Math.min(self.y, reportFrame.y);
+            - Math.min(self.y, reportFrame.y);
         return bound;
     };
 
