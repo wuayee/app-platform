@@ -25,6 +25,17 @@ public class DefaultTenantMember extends AbstractDomainObject implements TenantM
 
     private final String userId;
 
+    /**
+     * 构造一个新的{@link DefaultTenantMember}实例。
+     *
+     * @param id 租户成员的ID
+     * @param tenantId 租户的ID
+     * @param userId 用户的ID
+     * @param creator 创建者
+     * @param creationTime 创建时间
+     * @param lastModifier 最后修改者
+     * @param lastModificationTime 最后修改时间
+     */
     public DefaultTenantMember(String id, String tenantId, String userId, String creator, LocalDateTime creationTime,
             String lastModifier, LocalDateTime lastModificationTime) {
         super(id, creator, creationTime, lastModifier, lastModificationTime);

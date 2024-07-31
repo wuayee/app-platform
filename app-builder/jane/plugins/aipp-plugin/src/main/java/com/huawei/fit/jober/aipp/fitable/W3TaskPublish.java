@@ -14,6 +14,7 @@ import com.huawei.fit.jober.aipp.service.AippLogService;
 import com.huawei.fit.jober.aipp.util.DataUtils;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fit.jober.common.ErrorCodes;
+import com.huawei.fit.jober.common.JoberGenericableException;
 import com.huawei.fit.jober.common.exceptions.JobberException;
 import com.huawei.fit.jober.entity.InstanceInfo;
 import com.huawei.fitframework.annotation.Component;
@@ -131,7 +132,7 @@ public class W3TaskPublish implements FlowableService {
                 log.info("create w3Task {} info {}", taskId, info);
                 instanceService.createTaskInstance(taskId, info, joberOpContext);
             });
-        } catch (Exception e) {
+        } catch (NullPointerException | JoberGenericableException e) {
             String msg = "很抱歉！创建w3待办失败，请稍后重试";
             this.aippLogService.insertErrorLog(msg, flowData);
             throw new JobberException(ErrorCodes.UN_EXCEPTED_ERROR, "create w3Task failed.");

@@ -72,8 +72,9 @@ public class AppRunTimeController extends AbstractController {
      * @param httpRequest 操作上下文
      * @param tenantId 租户id
      * @param aippId aippId
+     * @param version aipp版本
      * @param startOrEnd 开始或结束节点信息
-     * @return 表单信息
+     * @return 返回表单信息
      */
     @GetMapping(value = "/aipp/{aipp_id}/form-metadata/{edge}", description = "根据AippMetaId和node_index查询datasheet")
     public Rsp<AippFormRsp> queryEdgeSheetData(HttpClassicServerRequest httpRequest,
@@ -122,7 +123,8 @@ public class AppRunTimeController extends AbstractController {
     @PostMapping(path = "/aipp/{aipp_id}", description = "启动一个Aipp")
     public Rsp<String> createAippInstance(HttpClassicServerRequest httpRequest,
             @PathVariable("tenant_id") String tenantId, @PathVariable("aipp_id") String aippId,
-            @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData", example = "图片url, 文本输入, prompt")
+            @Property(description = "initContext表示start表单填充的内容，作为流程初始化的businessData",
+                    example = "图片url, 文本输入, prompt")
             @RequestBody Map<String, Object> initContext, @RequestParam(value = "version") String version) {
         return Rsp.ok(this.aippRunTimeGenericable.createAippInstance(aippId,
                 version,

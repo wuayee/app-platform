@@ -468,8 +468,9 @@ public class AippLogServiceImpl implements AippLogService {
     /**
      * 更新指定log id的记录
      *
-     * @param logId 指定log的id
-     * @param newLogData 新的log data
+     * @param logId 需要更新的记录的id
+     * @param newLogData 新的记录数据
+     * @throws IllegalArgumentException 如果logId为空，则抛出此异常
      */
     @Override
     public void updateLog(Long logId, String newLogData) throws IllegalArgumentException {

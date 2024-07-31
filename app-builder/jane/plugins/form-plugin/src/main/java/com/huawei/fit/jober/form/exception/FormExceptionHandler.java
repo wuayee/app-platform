@@ -99,7 +99,7 @@ public class FormExceptionHandler {
         Locale locale = StringUtils.isEmpty(language) ? Locale.getDefault() : Locale.lookup(list, LOCALES);
         try {
             return plugin.sr().getMessage(locale, code, defaultMsg, params);
-        } catch (Exception exception) {
+        } catch (NullPointerException | UnsupportedOperationException | ClassCastException exception) {
             log.warn("Localized exception messageException occurred: {}, {}", code, params);
             return defaultMsg;
         }

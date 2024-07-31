@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -59,7 +60,8 @@ public class SummaryDto {
                     section.setPosition(FfmpegUtil.formatTimestamps(Math.max(
                             segmentSize * i - POS_RANDOM.nextInt(60) - 30, 0)));
                     sectionList.add(section);
-                } catch (Exception e) {
+                } catch (IOException | IllegalArgumentException | UnsupportedOperationException |
+                         ClassCastException | NullPointerException e) {
                     log.warn("Llm generate unexpect rsp {}.", item, e);
                 }
             }

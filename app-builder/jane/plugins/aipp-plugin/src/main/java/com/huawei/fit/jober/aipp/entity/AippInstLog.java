@@ -24,6 +24,21 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AippInstLog {
+    @Property(description = "创建时间")
+    LocalDateTime createAt;
+
+    @Property(description = "创建用户W3账号")
+    String createUserAccount;
+
+    @Property(description = "path")
+    String path;
+
+    /**
+     * 预留字段, 暂时为null
+     */
+    @Property(description = "预留字段")
+    String reserve;
+
     @Property(description = "log id")
     private Long logId;
 
@@ -48,18 +63,4 @@ public class AippInstLog {
     @Property(description = "历史数据类型 {@link AippInstLogType}")
     private String logType;
 
-    @Property(description = "创建时间")
-    LocalDateTime createAt;
-
-    @Property(description = "创建用户W3账号")
-    String createUserAccount;
-
-    @Property(description = "path")
-    String path;
-
-    /**
-     * 预留字段, 暂时为null
-     */
-    @Property(description = "预留字段")
-    String reserve;
 }

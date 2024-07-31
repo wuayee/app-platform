@@ -19,11 +19,12 @@ import com.huawei.fitframework.annotation.Genericable;
  */
 public interface MetaInstanceService {
     /**
-     * 创建meta实例。
+     * 根据给定的meta版本唯一标识和meta实例信息创建meta实例。
      *
      * @param versionId meta版本唯一标识的 {@link String}。
      * @param instanceDeclarationInfo meta实例信息的 {@link InstanceDeclarationInfo}。
      * @param context 操作人相关上下文的 {@link OperationContext}。
+     * @return 表示创建的meta实例的 {@link Instance}。
      * @throws com.huawei.fit.jober.common.JoberGenericableException 当调用过程发生异常。
      * @throws com.huawei.fit.jober.common.BadRequestException 当调用过程发生错误请求异常。
      * @throws com.huawei.fit.jober.common.TooManyRequestException 当调用过程发生请求超出限制异常。
@@ -78,9 +79,10 @@ public interface MetaInstanceService {
             OperationContext context);
 
     /**
-     * 获取 meta 唯一标识。
+     * 根据给定的实例唯一标识获取对应的 meta 唯一标识。
      *
-     * @return 表示 meta 唯一标识的 {@link String}。
+     * @param id 表示实例唯一标识的 {@link String}。
+     * @return 表示meta唯一标识的 {@link String}。
      */
     @Genericable(id = "fcf1745068eb47559af543a037b89ef3")
     String getMetaVersionId(String id);

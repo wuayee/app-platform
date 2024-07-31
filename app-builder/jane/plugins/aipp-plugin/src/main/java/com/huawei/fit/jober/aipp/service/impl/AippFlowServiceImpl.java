@@ -330,8 +330,7 @@ public class AippFlowServiceImpl implements AippFlowService {
      *
      * @param aippDto aipp定义
      * @param context 操作上下文
-     * @throws AippParamException 入参异常
-     * @throws AippException 创建aipp异常
+     * @return aipp id和版本信息
      */
     private AippCreateDto createAippHandle(AippDto aippDto, OperationContext context) {
         Tuple flowCreateArgs = Tuple.duet(JsonUtils.toJsonString(aippDto.getFlowViewData()), context);
@@ -776,7 +775,7 @@ public class AippFlowServiceImpl implements AippFlowService {
      * @param baselineVersion 基线版本
      * @param aippDto aipp定义
      * @param context 操作上下文
-     * @return aipp id信息
+     * @return 应用升级信息
      * @throws AippParamException 入参异常
      */
     @Override
@@ -813,9 +812,7 @@ public class AippFlowServiceImpl implements AippFlowService {
         return this.update(aippDto, context);
     }
 
-    /**
-     * 如果是第一个草稿版本，或者新的草稿版本与之前版本号不一致，都需要升级版本操作。
-     */
+    // 如果是第一个草稿版本，或者新的草稿版本与之前版本号不一致，都需要升级版本操作。
     private boolean isUpgradeVersion(String newAippVersion, Meta latestMeta, String latestMetaStatus) {
         return latestMetaStatus.equals(AippMetaStatusEnum.ACTIVE.getCode()) || !Objects.equals(newAippVersion,
                 latestMeta.getVersion());
@@ -1011,7 +1008,7 @@ public class AippFlowServiceImpl implements AippFlowService {
             }
         }
         itemData.setSource(appCategory.getSource());
-        itemData.setTags(new HashSet<String>() { {
+        itemData.setTags(new HashSet<String>() {{
             add(appCategory.getTag());
         }});
         itemData.setRunnables(this.buildRunnables(aippDto));

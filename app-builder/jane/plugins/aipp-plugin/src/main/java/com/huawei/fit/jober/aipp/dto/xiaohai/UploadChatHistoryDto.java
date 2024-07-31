@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
 package com.huawei.fit.jober.aipp.dto.xiaohai;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +28,9 @@ public class UploadChatHistoryDto {
     private String createUser;
     private String query;
 
+    /**
+     * 问答结构体
+     */
     @Data
     @Builder
     @AllArgsConstructor
@@ -32,6 +39,9 @@ public class UploadChatHistoryDto {
         private QADto.Question question;
         private Answer answer;
 
+        /**
+         * 回答结构体
+         */
         @Data
         @Builder
         @AllArgsConstructor

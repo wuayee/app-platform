@@ -659,7 +659,7 @@ public class AippRunTimeServiceImpl
             logs = this.client.getRouter(genericableId)
                     .route(new FitableIdFilter(fitableId))
                     .invoke(params, aippId, aippType, context);
-        } catch (Throwable t) {
+        } catch (FitException t) {
             log.error("Error occurred when get history logs, error: {}", t.getMessage());
             throw new AippException(AippErrCode.GET_HISTORY_LOG_FAILED);
         }
@@ -1054,8 +1054,8 @@ public class AippRunTimeServiceImpl
         this.aopAippLogService.insertLog(AippLogCreateDto.builder()
                 .aippId(aippId)
                 .version(version)
-                .aippType((String) meta.getAttributes().get(AippConst.ATTR_AIPP_TYPE_KEY))
-                .aippType(ObjectUtils.<String>cast(meta.getAttributes().get(AippConst.ATTR_AIPP_TYPE_KEY)))
+                .aippType(ObjectUtils.cast(meta.getAttributes().get(AippConst.ATTR_AIPP_TYPE_KEY)))
+                .aippType(ObjectUtils.cast(meta.getAttributes().get(AippConst.ATTR_AIPP_TYPE_KEY)))
                 .instanceId(instanceId)
                 .logType(AippInstLogType.MSG.name())
                 .logData(JsonUtils.toJsonString(AippLogData.builder().msg(message).build()))

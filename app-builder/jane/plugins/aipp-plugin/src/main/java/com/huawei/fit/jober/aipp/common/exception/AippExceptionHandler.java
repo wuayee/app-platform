@@ -139,7 +139,7 @@ public class AippExceptionHandler {
         Locale locale = StringUtils.isNotEmpty(language) ? Locale.lookup(list, LOCALES) : Locale.getDefault();
         try {
             return plugin.sr().getMessage(locale, code, defaultMsg, params);
-        } catch (Exception e) {
+        } catch (NullPointerException | UnsupportedOperationException | ClassCastException e) {
             log.warn("Localized exception messageException occurred: {}, {}", code, params);
             return defaultMsg;
         }

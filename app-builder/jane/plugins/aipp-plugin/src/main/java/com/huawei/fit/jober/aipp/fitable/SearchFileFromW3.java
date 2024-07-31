@@ -29,9 +29,11 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -112,7 +114,7 @@ public class SearchFileFromW3 implements FlowableService {
                     searchW3Url,
                     URLEncoder.encode(queryContent, "utf-8"),
                     queryTopK));
-        } catch (Exception e) {
+        } catch (NumberFormatException | IllegalFormatException | UnsupportedEncodingException e) {
             throw new IOException(e);
         }
     }

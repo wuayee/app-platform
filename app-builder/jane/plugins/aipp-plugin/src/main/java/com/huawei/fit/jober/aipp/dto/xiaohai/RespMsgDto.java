@@ -12,8 +12,8 @@ import lombok.ToString;
 /**
  * 响应消息的数据传输对象
  *
- * @author: s00664640
- * @date: 2024-05-10
+ * @author s00664640
+ * @since 2024-05-10
  */
 @Data
 @AllArgsConstructor
