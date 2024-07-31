@@ -19,7 +19,7 @@ import com.huawei.fit.jober.aipp.dto.ToolDto;
 import com.huawei.fit.jober.aipp.dto.ToolModelDto;
 import com.huawei.fit.jober.aipp.enums.AppCategory;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
-import com.huawei.fit.jober.aipp.po.AppBuilderAppPO;
+import com.huawei.fit.jober.aipp.po.AppBuilderAppPo;
 import com.huawei.fit.jober.aipp.service.StoreService;
 import com.huawei.fit.jober.aipp.util.JsonUtils;
 import com.huawei.fitframework.annotation.Component;
@@ -45,8 +45,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * @author 邬涨财 w00575064
- * @since 2024-05-13
+ * 市场相关接口实现
+ *
+ * @author 孙怡菲 s00664640
+ * @since 2024-05-10
  */
 @Component
 public class StoreServiceImpl implements StoreService {
@@ -178,7 +180,7 @@ public class StoreServiceImpl implements StoreService {
         if (storeIds.isEmpty()) {
             return Collections.emptyList();
         }
-        List<AppBuilderAppPO> appInfos = appBuilderAppMapper.selectWithStoreId(storeIds);
+        List<AppBuilderAppPo> appInfos = appBuilderAppMapper.selectWithStoreId(storeIds);
         Map<String, StoreWaterFlowDto> appInfoMap = appInfos.stream()
                 .collect(Collectors.toMap(info -> JsonUtils.parseObject(info.getAttributes())
                                 .get("store_id")

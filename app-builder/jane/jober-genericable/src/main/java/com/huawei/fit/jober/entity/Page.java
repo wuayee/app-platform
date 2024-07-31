@@ -21,6 +21,9 @@ public class Page {
      */
     private Integer pageSize;
 
+    /**
+     * Page
+     */
     public Page() {
     }
 

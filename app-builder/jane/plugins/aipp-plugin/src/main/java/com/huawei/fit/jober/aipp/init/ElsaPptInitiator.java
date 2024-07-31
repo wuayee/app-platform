@@ -24,16 +24,35 @@ import java.util.Map;
 public class ElsaPptInitiator {
     /**
      * 流程/表单组件数据
+     *
+     * @author s00664640
+     * @since 2024/05/10
      */
     public static final Map<String, String> ELSA_PPT_DATA = new HashMap<>();
+
+    /**
+     * 图表
+     */
     public static final String GRAPH_KEY = "graph";
 
+    /**
+     * 封面
+     */
     public static final String COVER_PAGE_KEY = "cover_page";
 
+    /**
+     * 内容页
+     */
     public static final String CONTENT_PAGE_KEY = "content_page";
 
+    /**
+     * 基本封面页
+     */
     public static final String BASE_COVER_PAGE_KEY = "base_cover_page";
 
+    /**
+     * 基本内容页
+     */
     public static final String BASE_CONTENT_PAGE_KEY = "base_content_page";
 
     private static final Logger log = Logger.get(ElsaPptInitiator.class);

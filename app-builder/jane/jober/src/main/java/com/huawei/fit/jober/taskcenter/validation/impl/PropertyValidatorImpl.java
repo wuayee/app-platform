@@ -106,16 +106,16 @@ public class PropertyValidatorImpl extends AbstractValidator implements Property
     }
 
     @Override
-    public Boolean validateIdentifiable(Boolean identifiable) {
-        return nullIf(identifiable, false);
+    public Boolean validateIdentifiable(Boolean isIdentifiable) {
+        return nullIf(isIdentifiable, false);
     }
 
     @Override
-    public Boolean validateRequired(Boolean required) {
-        if (required == null) {
+    public Boolean validateRequired(Boolean isRequired) {
+        if (isRequired == null) {
             return false;
         } else {
-            return required;
+            return isRequired;
         }
     }
 

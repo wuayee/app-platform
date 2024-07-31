@@ -15,14 +15,17 @@ import java.util.List;
 public class InstanceFetchingResult {
     private List<InstanceInfo> instances;
 
-    private Boolean more;
+    private Boolean isMore;
 
+    /**
+     * InstanceFetchingResult
+     */
     public InstanceFetchingResult() {
     }
 
-    public InstanceFetchingResult(List<InstanceInfo> instances, Boolean more) {
+    public InstanceFetchingResult(List<InstanceInfo> instances, Boolean isMore) {
         this.instances = instances;
-        this.more = more;
+        this.isMore = isMore;
     }
 
     public List<InstanceInfo> getInstances() {
@@ -33,11 +36,11 @@ public class InstanceFetchingResult {
         this.instances = instances;
     }
 
-    public Boolean getMore() {
-        return more;
+    public Boolean getIsMore() {
+        return isMore;
     }
 
-    public void setMore(Boolean more) {
-        this.more = more;
+    public void setIsMore(Boolean isMore) {
+        this.isMore = isMore;
     }
 }

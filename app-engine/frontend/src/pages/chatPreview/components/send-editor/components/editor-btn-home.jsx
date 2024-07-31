@@ -195,7 +195,7 @@ const EditorBtnHome = (props) => {
           <div className={['switch-app', atAppId ? 'switch-active' : null ].join(' ')} onClick={onClickShowMore}>
             { atAppId && <span style={{ marginLeft: '6px' }}>正在跟</span> }
             <span className='item-name' title={appName}>{appName}</span>
-            { !appInfo.hideHistory && <ArrowDownIcon className='arrow-icon' /> }
+            { !appInfo.hideHistory && <img src='/src/assets/images/ai/list.png' className='app-menu' /> }
             { atAppId && <span style={{ marginLeft: '6px' }}>对话</span> }
           </div>
            <LinkIcon onClick={uploadClick} />

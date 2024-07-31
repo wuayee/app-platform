@@ -5,20 +5,23 @@
 package com.huawei.fit.jober.aipp.serializer.impl;
 
 import com.huawei.fit.jober.aipp.domain.AppBuilderConfigProperty;
-import com.huawei.fit.jober.aipp.po.AppBuilderConfigPropertyPO;
+import com.huawei.fit.jober.aipp.po.AppBuilderConfigPropertyPo;
 import com.huawei.fit.jober.aipp.serializer.BaseSerializer;
 
 /**
+ * 应用属性表单序列化与反序列化实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */
-public class AppBuilderConfigPropertySerializer implements BaseSerializer<AppBuilderConfigProperty, AppBuilderConfigPropertyPO> {
+public class AppBuilderConfigPropertySerializer
+        implements BaseSerializer<AppBuilderConfigProperty, AppBuilderConfigPropertyPo> {
     @Override
-    public AppBuilderConfigPropertyPO serialize(AppBuilderConfigProperty appBuilderConfigProperty) {
+    public AppBuilderConfigPropertyPo serialize(AppBuilderConfigProperty appBuilderConfigProperty) {
         if (appBuilderConfigProperty == null) {
             return null;
         }
-        return AppBuilderConfigPropertyPO.builder()
+        return AppBuilderConfigPropertyPo.builder()
                 .id(appBuilderConfigProperty.getId())
                 .nodeId(appBuilderConfigProperty.getNodeId())
                 .formPropertyId(appBuilderConfigProperty.getFormPropertyId())
@@ -27,7 +30,7 @@ public class AppBuilderConfigPropertySerializer implements BaseSerializer<AppBui
     }
 
     @Override
-    public AppBuilderConfigProperty deserialize(AppBuilderConfigPropertyPO appBuilderConfigPropertyPO) {
+    public AppBuilderConfigProperty deserialize(AppBuilderConfigPropertyPo appBuilderConfigPropertyPO) {
         if (appBuilderConfigPropertyPO == null) {
             return null;
         }

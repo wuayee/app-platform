@@ -19,6 +19,12 @@ class DefaultOrderBy implements OrderBy {
 
     private final String order;
 
+    /**
+     * 默认的OrderBy
+     *
+     * @param property 属性
+     * @param order 排序配置
+     */
     public DefaultOrderBy(String property, String order) {
         if (StringUtils.isEmpty(this.property = StringUtils.trim(property))) {
             throw new BadRequestException(ErrorCodes.PROPERTY_REQUIRED_TO_SORT);

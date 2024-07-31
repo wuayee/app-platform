@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.bff.service;
 
 import com.huawei.fit.jober.FlowableService;
-import com.huawei.fit.jober.common.utils.UUIDUtil;
+import com.huawei.fit.jober.common.utils.UuidUtil;
 import com.huawei.fit.waterflow.flowsengine.persist.mapper.FitableUsageMapper;
 import com.huawei.fitframework.annotation.Alias;
 import com.huawei.fitframework.annotation.Component;
@@ -33,7 +33,7 @@ public class SimpleFitable implements FlowableService {
     @Override
     @Fitable(id = "3e460bc100a74f8ca7b94f6dce31a021")
     public List<Map<String, Object>> handleTask(List<Map<String, Object>> flowData) {
-        this.fitableUsageMapper.save(UUIDUtil.uuid(), Collections.singletonList("Saturday_Test"));
+        this.fitableUsageMapper.save(UuidUtil.uuid(), Collections.singletonList("Saturday_Test"));
         return flowData;
     }
 }

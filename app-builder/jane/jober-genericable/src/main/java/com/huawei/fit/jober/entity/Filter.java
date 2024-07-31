@@ -49,6 +49,9 @@ public class Filter {
      */
     private Map<String, String> filterMap;
 
+    /**
+     * Filter
+     */
     public Filter() {
     }
 

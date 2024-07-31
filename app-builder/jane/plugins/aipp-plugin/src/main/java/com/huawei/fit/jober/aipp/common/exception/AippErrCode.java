@@ -22,7 +22,6 @@ public enum AippErrCode implements ErrorCode {
     OK(0, "success"),
 
     /** ------------ Generic Exception. From 90000000 to 90000999 --------------------- */
-
     /**
      * 入参不合法
      */
@@ -44,7 +43,6 @@ public enum AippErrCode implements ErrorCode {
     FORBIDDEN(90000003, "禁止的操作。"),
 
     /** ------------ Configuration Exception. From 90001000 to 90001999 --------------------- */
-
     /**
      * 创建流程失败
      */
@@ -242,6 +240,11 @@ public enum AippErrCode implements ErrorCode {
     INVALID_VERSION_NAME(90002916, "不合法的版本名称。"),
 
     /**
+     * 名称格式不对
+     */
+    APP_NAME_IS_INVALID(90002917, "名称只能包含中英文、数字、中划线（-）和下划线(_)，并且不能以中划线、下划线开头。"),
+
+    /**
      * 会话请求结构有误
      */
     APP_CHAT_REQUEST_IS_NULL(90002918, "会话请求结构有误。"),
@@ -252,9 +255,19 @@ public enum AippErrCode implements ErrorCode {
     APP_CHAT_PUBLISHED_META_NOT_FOUND(90002919, "该应用未发布，无法进行对话。"),
 
     /**
-     * 名称格式不对
+     * 没有找到相关会话。
      */
-    APP_NAME_IS_INVALID(90002917, "名称只能包含中英文、数字、中划线（-）和下划线(_)，并且不能以中划线、下划线开头。"),
+    APP_CHAT_NOT_FOUND_BY_ID(90002920, "没有找到相关会话。"),
+
+    /**
+     * 调试对话失败
+     */
+    APP_CHAT_DEBUG_META_NOT_FOUND(90002921, "调试对话失败。"),
+
+    /**
+     * 会话响应出错
+     */
+    APP_CHAT_WAIT_RESPONSE_ERROR(90002922, "会话响应出错。"),
 
     /**
      * 错误码截止值

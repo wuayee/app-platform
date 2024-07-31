@@ -43,33 +43,66 @@ import java.util.stream.Collectors;
  * @since 2023-08-18
  */
 public class TaskInstanceRow {
+    /**
+     * 表示实例对象的类型。
+     */
     public static final String OBJECT_TYPE = "INSTANCE";
 
-    private static final Logger log = Logger.get(TaskInstanceRow.class);
-
+    /**
+     * 表示任务实例的数据表。
+     */
     public static final String TABLE = "task_instance_wide";
 
+    /**
+     * 表示已删除的任务实例。
+     */
     public static final String TABLE_DELETED = "task_instance_deleted";
 
+    /**
+     * 表示任务实例的别名。
+     */
     public static final String TABLE_ALIAS = "ins";
 
+    /**
+     * 表示任务实例的唯一标识。
+     */
     public static final String COLUMN_ID = "id";
 
+    /**
+     * 表示任务定义的唯一标识。
+     */
     public static final String COLUMN_TASK_ID = "task_id";
 
+    /**
+     * 表示任务类型的唯一标识。
+     */
     public static final String COLUMN_TYPE_ID = "task_type_id";
 
+    /**
+     * 表示任务数据源的唯一标识。
+     */
     public static final String COLUMN_SOURCE_ID = "source_id";
 
+    /**
+     * 表示任务的属性信息
+     */
     public static final String PROPERTY_INFO = "info";
 
+    /**
+     * 表示任务实例的标签。
+     */
     public static final String PROPERTY_TAGS = "tags";
 
+    /**
+     * 表示任务实例的类目。
+     */
     public static final String PROPERTY_CATEGORIES = "categories";
+
+    public static final String INFO_PREFIX = "info_";
 
     private static final int PROPERTY_COUNT = 7;
 
-    public static final String INFO_PREFIX = "info_";
+    private static final Logger log = Logger.get(TaskInstanceRow.class);
 
     private final Map<String, Object> values;
 
@@ -234,6 +267,12 @@ public class TaskInstanceRow {
         return row;
     }
 
+    /**
+     * 将任务实例的数据对象插入到数据库中。
+     *
+     * @param executor 表示数据库执行器的 {@link DynamicSqlExecutor}。
+     * @param task 表示任务定义的 {@link TaskEntity}。
+     */
     public void insert(DynamicSqlExecutor executor, TaskEntity task) {
         InsertSql sql = InsertSql.custom().into(TABLE);
         sql.value(COLUMN_ID, this.id());
@@ -287,6 +326,12 @@ public class TaskInstanceRow {
         return results;
     }
 
+    /**
+     * 填充查询语句的前缀部分
+     *
+     * @param sql 表示查询语句的 {@link SqlBuilder}。
+     * @param task 表示任务定义的 {@link TaskEntity}。
+     */
     public static void fillSelectPrefix(SqlBuilder sql, TaskEntity task) {
         sql.append("SELECT ")
                 .appendIdentifier(TABLE_ALIAS).append('.').appendIdentifier(COLUMN_ID).append(", ")
@@ -304,6 +349,13 @@ public class TaskInstanceRow {
         sql.append(" FROM ");
     }
 
+    /**
+     * 将数据库查询结果转换为任务实例的数据对象。
+     *
+     * @param task 表示任务定义的 {@link TaskEntity}。
+     * @param row 表示数据库查询结果的 {@link Map}{@code <}{@link String}{@code , }{@link Object}{@code >}。
+     * @return 表示转换后的数据对象的 {@link TaskInstanceRow}。
+     */
     public static TaskInstanceRow convert(TaskEntity task, Map<String, Object> row) {
         Map<String, Object> actual = new HashMap<>(PROPERTY_COUNT);
         Map<String, Object> info = new HashMap<>(task.getProperties().size());
@@ -323,12 +375,29 @@ public class TaskInstanceRow {
         return new TaskInstanceRow(actual);
     }
 
+    /**
+     * 将数据库查询结果转换为任务实例的数据对象。
+     *
+     * @param task 表示任务定义的 {@link TaskEntity}。
+     * @param rows 表示数据库查询结果的列表的 {@link List}{@code <}{@link Map}{@code <}{@link String}{@code ,
+     * }{@link Object}{@code >}{@code >}。
+     * @return 表示转换后的数据对象的列表的 {@link List}{@code <}{@link TaskInstanceRow}{@code >}。
+     */
     public static List<TaskInstanceRow> convert(TaskEntity task, List<Map<String, Object>> rows) {
         return rows.stream()
                 .map(row -> convert(task, row))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 从数据库中选择指定的任务实例。
+     *
+     * @param executor 表示数据库执行器的 {@link DynamicSqlExecutor}。
+     * @param task 表示任务定义的 {@link TaskEntity}。
+     * @param instanceId 表示任务实例唯一标识的 {@link String}。
+     * @param table 表示任务实例的数据表的 {@link String}。
+     * @return 表示任务实例的数据对象的 {@link TaskInstanceRow}。
+     */
     public static TaskInstanceRow select(DynamicSqlExecutor executor, TaskEntity task, String instanceId,
             String table) {
         SqlBuilder sql = SqlBuilder.custom();
@@ -367,6 +436,15 @@ public class TaskInstanceRow {
         return row;
     }
 
+    /**
+     * 检查指定的任务实例是否存在于数据库中。
+     *
+     * @param executor 表示数据库执行器的 {@link DynamicSqlExecutor}。
+     * @param task 表示任务定义的 {@link TaskEntity}。
+     * @param instanceId 表示任务实例的唯一标识的 {@link String}。
+     * @param table 表示任务实例的数据表的名称的 {@link String}。
+     * @return 如果任务实例存在，则返回 {@code true}；否则，返回 {@code false}。
+     */
     public static boolean exist(DynamicSqlExecutor executor, TaskEntity task, String instanceId, String table) {
         SqlBuilder sql = SqlBuilder.custom().append("SELECT COUNT(1) FROM ").appendIdentifier(table).append(" WHERE ")
                 .appendIdentifier(COLUMN_ID).append(" = ? AND ").appendIdentifier(COLUMN_TASK_ID).append(" = ?");
@@ -374,6 +452,14 @@ public class TaskInstanceRow {
         return count > 0;
     }
 
+    /**
+     * 从数据库中选择指定的任务实例。
+     *
+     * @param executor 表示数据库执行器的 {@link DynamicSqlExecutor}。
+     * @param task 表示任务定义的 {@link TaskEntity}。
+     * @param primary 表示任务实例的主键值的 {@link PrimaryValue}。
+     * @return 表示任务实例的数据对象的 {@link TaskInstanceRow}。
+     */
     public static TaskInstanceRow select(DynamicSqlExecutor executor, TaskEntity task, PrimaryValue primary) {
         return select(executor, task, primary, TABLE);
     }
@@ -406,6 +492,14 @@ public class TaskInstanceRow {
         return convert(task, rows.get(0));
     }
 
+    /**
+     * 从数据库中删除指定的任务实例。
+     *
+     * @param executor 表示数据库执行器的 {@link DynamicSqlExecutor}。
+     * @param task 表示任务定义的 {@link TaskEntity}。
+     * @param id 表示任务实例的唯一标识的 {@link String}。
+     * @param table 表示任务实例的数据表的名称的 {@link String}。
+     */
     public static void delete(DynamicSqlExecutor executor, TaskEntity task, String id, String table) {
         Condition condition = Condition.expectEqual(COLUMN_ID, id);
         condition = condition.and(Condition.expectEqual(COLUMN_TASK_ID, task.getId()));
@@ -418,6 +512,15 @@ public class TaskInstanceRow {
         }
     }
 
+    /**
+     * 将指定的任务实例从一个数据表移动到另一个数据表。
+     *
+     * @param executor 表示数据库执行器的 {@link DynamicSqlExecutor}。
+     * @param task 表示任务定义的 {@link TaskEntity}。
+     * @param id 表示任务实例的唯一标识的 {@link String}。
+     * @param sourceTable 表示源数据表的名称的 {@link String}。
+     * @param targetTable 表示目标数据表的名称的 {@link String}。
+     */
     public static void move(DynamicSqlExecutor executor, TaskEntity task, String id,
             String sourceTable, String targetTable) {
         SqlBuilder sql = SqlBuilder.custom().append("INSERT INTO ").appendIdentifier(targetTable)
@@ -432,6 +535,13 @@ public class TaskInstanceRow {
         delete(executor, task, id, sourceTable);
     }
 
+    /**
+     * 从数据库中选择与指定数据源关联的所有任务实例。
+     *
+     * @param executor 表示数据库执行器的 {@link DynamicSqlExecutor}。
+     * @param sourceId 表示数据源唯一标识的 {@link String}。
+     * @return 表示任务实例唯一标识的 {@link List}{@code <}{@link String}{@code >}。
+     */
     public static List<String> selectIdsBySource(DynamicSqlExecutor executor, String sourceId) {
         SqlBuilder sql = SqlBuilder.custom().append("SELECT ").appendIdentifier(COLUMN_ID).append(" FROM ")
                 .appendIdentifier(TABLE).append(" WHERE ").appendIdentifier(COLUMN_SOURCE_ID).append(" = ?");
@@ -439,6 +549,12 @@ public class TaskInstanceRow {
         return rows.stream().<String>map(row -> cast(row.get(COLUMN_ID))).collect(Collectors.toList());
     }
 
+    /**
+     * 将与指定数据源关联的所有任务实例移动到历史表中。
+     *
+     * @param executor 表示数据库执行器的 {@link DynamicSqlExecutor}。
+     * @param sourceId 表示数据源唯一标识的 {@link String}。
+     */
     public static void moveBySource(DynamicSqlExecutor executor, String sourceId) {
         SqlBuilder sql = SqlBuilder.custom().append("INSERT INTO ").appendIdentifier(TABLE_DELETED)
                 .append(" SELECT * FROM ").appendIdentifier(TABLE).append(" WHERE ").appendIdentifier(COLUMN_SOURCE_ID)
@@ -448,12 +564,26 @@ public class TaskInstanceRow {
                 affectedRows, sourceId);
     }
 
+    /**
+     * 从数据库中删除与指定数据源关联的所有任务实例。
+     *
+     * @param executor 表示数据库执行器的 {@link DynamicSqlExecutor}。
+     * @param sourceId 表示数据源唯一标识的 {@link String}。
+     */
     public static void deleteBySource(DynamicSqlExecutor executor, String sourceId) {
         DeleteSql sql = DeleteSql.custom().from(TABLE).where(Condition.expectEqual(COLUMN_SOURCE_ID, sourceId));
         int affectedRows = sql.execute(executor);
         log.info("Total {} task instances deleted in source. [sourceId={}]", affectedRows, sourceId);
     }
 
+    /**
+     * 从数据库中选择指定的已删除的任务实例。
+     *
+     * @param executor 表示数据库执行器的 {@link DynamicSqlExecutor}。
+     * @param task 表示任务定义的 {@link TaskEntity}。
+     * @param ids 表示任务实例唯一标识的列表的 {@link List}{@code <}{@link String}{@code >}。
+     * @return 表示任务实例的列表的 {@link List}{@code <}{@link TaskInstanceRow}{@code >}。
+     */
     public static List<TaskInstanceRow> selectDeleted(DynamicSqlExecutor executor, TaskEntity task, List<String> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return Collections.emptyList();

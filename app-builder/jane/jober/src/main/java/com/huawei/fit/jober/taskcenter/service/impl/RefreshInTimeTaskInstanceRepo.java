@@ -315,8 +315,8 @@ public class RefreshInTimeTaskInstanceRepo {
         info.setName(property.name());
         info.setDescription(property.description());
         info.setDataType(Enums.toString(property.dataType()));
-        info.setRequired(property.required());
-        info.setIdentifiable(property.identifiable());
+        info.setIsRequired(property.required());
+        info.setIsIdentifiable(property.identifiable());
         info.setScope(Enums.toString(property.scope()));
         return info;
     }

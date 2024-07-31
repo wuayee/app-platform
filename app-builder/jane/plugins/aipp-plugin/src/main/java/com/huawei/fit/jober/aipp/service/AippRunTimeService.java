@@ -13,6 +13,8 @@ import com.huawei.fit.jober.aipp.dto.AippInstanceDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppDto;
 import com.huawei.fit.jober.aipp.dto.AppBuilderAppStartDto;
 import com.huawei.fit.jober.aipp.dto.form.AippFormRsp;
+import com.huawei.fitframework.flowable.Choir;
+import com.huawei.fitframework.model.Tuple;
 
 import java.util.List;
 import java.util.Map;
@@ -53,10 +55,11 @@ public interface AippRunTimeService {
      * @param question 对话提问
      * @param businessData 表示start表单填充的内容，作为流程初始化的businessData。 例如 图片url, 文本输入, prompt
      * @param context 操作上下文
+     * @param isDebug 是否是调试对话
      * @return 实例id
      */
-    String createInstanceByApp(String appId, String question, Map<String, Object> businessData,
-            OperationContext context);
+    Tuple createInstanceByApp(String appId, String question, Map<String, Object> businessData,
+            OperationContext context, boolean isDebug);
 
     /**
      * 指定版本，启动一个流程
@@ -140,8 +143,10 @@ public interface AippRunTimeService {
      * @param instanceId 实例id
      * @param formArgs 用于填充表单的数据
      * @param context 操作上下文
+     * @return SSE流
      */
-    void resumeAndUpdateAippInstance(String instanceId, Map<String, Object> formArgs, OperationContext context);
+    Choir<Object> resumeAndUpdateAippInstance(String instanceId, Map<String, Object> formArgs,
+            OperationContext context);
 
     /**
      * 终止aipp实例
@@ -157,10 +162,10 @@ public interface AippRunTimeService {
      *
      * @param aippId aipp id
      * @param versionId versionId
-     * @param deleteLog 是否删除aipp log
+     * @param isDeleteLog 是否删除aipp log
      * @param context 操作上下文
      */
-    void terminateAllPreviewInstances(String aippId, String versionId, boolean deleteLog, OperationContext context);
+    void terminateAllPreviewInstances(String aippId, String versionId, boolean isDeleteLog, OperationContext context);
 
     /**
      * 分享对话

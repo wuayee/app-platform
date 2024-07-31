@@ -71,10 +71,10 @@ const Skill = (props) => {
   const workflowDetail = (item) => {
     if (item.type === 'workflow') {
       if (item.appId.length) {
-        navigate(`/app-develop/${tenantId}/app-detail/flow-detail/${item.appId}`);
+        window.open(`${location.origin}/#/app-develop/${tenantId}/app-detail/flow-detail/${item.appId}`);
       }
     } else {
-      navigate(`/plugin/detail/${item.uniqueName}`);
+      window.open(`${location.origin}/#/plugin/detail/${item.uniqueName}`);
     }
   }
   useEffect(() => {

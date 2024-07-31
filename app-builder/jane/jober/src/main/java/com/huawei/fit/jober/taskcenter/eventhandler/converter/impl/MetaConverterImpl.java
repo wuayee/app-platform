@@ -118,7 +118,7 @@ public class MetaConverterImpl implements MetaConverter {
         meta.setTenant(task.getTenantId());
         meta.setAttributes(task.getAttributes());
         meta.setName(task.getName());
-        meta.setVersion("1.0.0"); // FIXME: 2024/4/2 0002 兼容逻辑，如果不存在|则认为是旧数据，默认1.0.0版本
+        meta.setVersion("1.0.0"); // 2024/4/2 0002 兼容逻辑，如果不存在|则认为是旧数据，默认1.0.0版本
         if (task.getName().contains("|")) {
             String[] nameAndVersion = task.getName().split("\\|");
             meta.setVersion(nameAndVersion[1]);

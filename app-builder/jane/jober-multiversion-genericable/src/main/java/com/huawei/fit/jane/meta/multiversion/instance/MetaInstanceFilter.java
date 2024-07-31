@@ -59,6 +59,12 @@ public class MetaInstanceFilter {
         this.infos = nullIf(infos, Collections.emptyMap());
     }
 
+    /**
+     * putInfo
+     *
+     * @param key key
+     * @param value value
+     */
     public void putInfo(String key, List<String> value) {
         if (this.infos == null || this.infos.isEmpty()) {
             this.infos = new HashMap<String, List<String>>() {{

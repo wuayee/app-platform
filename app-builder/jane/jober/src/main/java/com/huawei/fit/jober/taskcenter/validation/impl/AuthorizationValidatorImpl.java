@@ -13,6 +13,12 @@ import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
 
+/**
+ * 为 {@link AuthorizationValidator} 提供实现
+ *
+ * @author 陈镕希 c00572808
+ * @since 2023-10-10
+ */
 @Component
 public class AuthorizationValidatorImpl implements AuthorizationValidator {
     private static final Logger log = Logger.get(AuthorizationValidatorImpl.class);
@@ -45,8 +51,8 @@ public class AuthorizationValidatorImpl implements AuthorizationValidator {
             throw new BadRequestException(ErrorCodes.AUTHORIZATION_SYSTEM_REQUIRED);
         }
         if (actual.length() > this.systemLengthMaximum) {
-            log.error("The length of authorization system is out of bounds. [system={}, length={}, maximum={}]",
-                    actual, actual.length(), this.systemLengthMaximum);
+            log.error("The length of authorization system is out of bounds. [system={}, length={}, maximum={}]", actual,
+                    actual.length(), this.systemLengthMaximum);
             throw new BadRequestException(ErrorCodes.AUTHORIZATION_SYSTEM_TOO_LONG);
         }
         return actual;
@@ -60,8 +66,8 @@ public class AuthorizationValidatorImpl implements AuthorizationValidator {
             throw new BadRequestException(ErrorCodes.AUTHORIZATION_USER_REQUIRED);
         }
         if (actual.length() > this.userLengthMaximum) {
-            log.error("The length of authorization user id is out of bounds. [user={}, length={}, maximum={}]",
-                    actual, actual.length(), this.userLengthMaximum);
+            log.error("The length of authorization user id is out of bounds. [user={}, length={}, maximum={}]", actual,
+                    actual.length(), this.userLengthMaximum);
             throw new BadRequestException(ErrorCodes.AUTHORIZATION_USER_TOO_LONG);
         }
         return actual;

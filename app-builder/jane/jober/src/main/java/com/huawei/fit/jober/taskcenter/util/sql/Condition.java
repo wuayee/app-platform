@@ -243,10 +243,24 @@ public interface Condition {
         return new ContainsCondition(column, value);
     }
 
+    /**
+     * 创建一个指定列的值小于指定值的条件
+     *
+     * @param column 表示待判定的列的 {@link String}。
+     * @param value 表示待检查包含文本的 {@link Object}。
+     * @return 表示新创建的判定条件的 {@link Condition}。
+     */
     static Condition lessThan(String column, Object value) {
         return lessThan(ColumnRef.of(column), value);
     }
 
+    /**
+     * 创建一个指定列的值小于指定值的条件
+     *
+     * @param column 表示待判定的列的 {@link ColumnRef}。
+     * @param value 表示待检查包含文本的 {@link Object}。
+     * @return 表示新创建的判定条件的 {@link Condition}。
+     */
     static Condition lessThan(ColumnRef column, Object value) {
         if (value == null) {
             return alwaysFalse();
@@ -255,10 +269,24 @@ public interface Condition {
         }
     }
 
+    /**
+     * 创建一个指定列的值大于指定值的条件
+     *
+     * @param column 表示待判定的列的 {@link String}。
+     * @param value 表示待检查包含文本的 {@link Object}。
+     * @return 表示新创建的判定条件的 {@link Condition}。
+     */
     static Condition greaterThan(String column, Object value) {
         return greaterThan(ColumnRef.of(column), value);
     }
 
+    /**
+     * 创建一个指定列的值大于指定值的条件
+     *
+     * @param column 表示待判定的列的 {@link ColumnRef}。
+     * @param value 表示待检查包含文本的 {@link Object}。
+     * @return 表示新创建的判定条件的 {@link Condition}。
+     */
     static Condition greaterThan(ColumnRef column, Object value) {
         if (value == null) {
             return alwaysFalse();
@@ -267,10 +295,24 @@ public interface Condition {
         }
     }
 
+    /**
+     * 创建一个指定列的值大于或等于指定值的条件
+     *
+     * @param column 表示待判定的列的 {@link ColumnRef}。
+     * @param value 表示待检查包含文本的 {@link Object}。
+     * @return 表示新创建的判定条件的 {@link Condition}。
+     */
     static Condition greaterThanOrEquals(String column, Object value) {
         return greaterThanOrEquals(ColumnRef.of(column), value);
     }
 
+    /**
+     * 创建一个指定列的值大于或等于指定值的条件
+     *
+     * @param column 表示待判定的列的 {@link ColumnRef}。
+     * @param value 表示待检查包含文本的 {@link Object}。
+     * @return 表示新创建的判定条件的 {@link Condition}。
+     */
     static Condition greaterThanOrEquals(ColumnRef column, Object value) {
         if (value == null) {
             return alwaysFalse();

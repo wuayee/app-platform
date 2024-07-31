@@ -6,8 +6,8 @@ import {
   SearchOutlined,
   EllipsisOutlined,
   CloseOutlined,
+  UserOutlined
 } from '@ant-design/icons';
-import { httpUrlMap } from '@/shared/http/httpConfig';
 import { cancelUserCollection, getUserCollection, updateCollectionApp } from '@/shared/http/appDev';
 import { setCurAppId } from '@/store/collection/collection';
 import { useAppSelector, useAppDispatch } from '@/store/hook';
@@ -22,8 +22,6 @@ interface StarAppsProps {
 }
 
 const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
-  const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const openStar = useAppSelector((state) => state.chatCommonStore.openStar);
   const chatRunning = useAppSelector((state) => state.chatCommonStore.chatRunning);
@@ -85,7 +83,6 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
     const defaultData = remoteData?.data?.defaultApp || null;
 
     // 设置默认应用
-    // dispatch(setCurAppId(defaultData?.appId || ''))
     const collectionList: any[] = remoteData?.data?.collectionPoList || [];
     collectionList.unshift(defaultData);
     const data = collectionList.filter(item=> item);
@@ -139,9 +136,9 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
     handleAt(app);
   }
 
-  useEffect(()=> {
-    getUserCollectionList()
-  }, [])
+  // useEffect(()=> {
+  //   getUserCollectionList()
+  // }, [])
   return (
     <Drawer
       destroyOnClose
@@ -189,7 +186,7 @@ const StarApps: React.FC<StarAppsProps> = ({handleAt}) => {
             </div>
             <div className='app-item-footer'>
               <div>
-                <Avatar size={32} src={<img src={`https://w3.huawei.com/w3lab/rest/yellowpage/face/${app.author}/120`}/>} />
+                <UserOutlined />
                 <span className='text'>由{app.author}创建</span>
               </div>
               <Dropdown menu={{ items: [items[index>0?0:1]], onClick: (info)=> {

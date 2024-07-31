@@ -56,7 +56,7 @@ public class ServicePublicMethodAccessLogAspect {
         } finally {
             // 执行消耗时间
             long endTime = System.currentTimeMillis();
-            double spentSeconds = (endTime - startTime) / 1000.0;
+            double spentSeconds = (endTime - startTime) / 1000.0d;
             if (spentSeconds > 3) {
                 logSubject.setSpentSeconds(spentSeconds);
                 log.info(logSubject.toString());

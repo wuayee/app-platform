@@ -10,6 +10,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 表单详情实体类
+ *
+ * @author l00498867
+ * @since 2024/7/27
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

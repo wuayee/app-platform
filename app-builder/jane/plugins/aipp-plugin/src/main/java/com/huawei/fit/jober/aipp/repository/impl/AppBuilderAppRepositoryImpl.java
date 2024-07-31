@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jober.aipp.repository.impl;
 
-import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
+import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderAppSerializer;
@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * 应用创建仓库实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */

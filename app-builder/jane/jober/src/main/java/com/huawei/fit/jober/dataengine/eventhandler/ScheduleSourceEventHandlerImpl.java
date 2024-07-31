@@ -132,9 +132,8 @@ public class ScheduleSourceEventHandlerImpl implements EventHandler<ScheduleSour
                 });
         ScheduleSourceEntity scheduleSourceEntity = Validation.isInstanceOf(sourceEntity, ScheduleSourceEntity.class,
                 () -> {
-                    log.error(
-                            "Specify sourceEntity is not instance of ScheduleSourceEntity, taskId is {}, sourceId is {}",
-                            taskEntity.getId(), sourceId);
+                    log.error("Specify sourceEntity is not instance of ScheduleSourceEntity, taskId is {}, "
+                            + "sourceId is {}", taskEntity.getId(), sourceId);
                     return new ServerInternalException("Specify sourceEntity is not instance of ScheduleSourceEntity.");
                 });
         List<String> returnField = taskEntity.getProperties()

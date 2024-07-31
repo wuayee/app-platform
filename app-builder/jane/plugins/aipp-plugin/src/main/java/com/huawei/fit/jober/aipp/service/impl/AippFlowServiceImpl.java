@@ -137,20 +137,20 @@ public class AippFlowServiceImpl implements AippFlowService {
     public Rsp<AippDetailDto> queryAippDetail(String aippId, String version, OperationContext context) {
         Meta meta = MetaUtils.getAnyMeta(metaService, aippId, version, context);
         log.info("queryAippDetail aipp {} version {}, meta attr {}", aippId, version, meta.getAttributes());
-        String flowConfigId = (String) meta.getAttributes().get(AippConst.ATTR_FLOW_CONFIG_ID_KEY);
+        String flowConfigId = ObjectUtils.<String>cast(meta.getAttributes().get(AippConst.ATTR_FLOW_CONFIG_ID_KEY));
 
-        FlowInfo rsp = this.flowsService.getFlows(flowConfigId, version, context);  // todo 是否要改？
+        FlowInfo rsp = this.flowsService.getFlows(flowConfigId, version, context);  // 是否要改？
         AippDetailDto detail = MetaConvertor.INSTANCE.toAippDetailDto(meta);
         detail.setFlowViewData(JsonUtils.parseObject(rsp.getConfigData()));
         detail.setVersion(version);
-        detail.setStatus((String) meta.getAttributes().get(AippConst.ATTR_META_STATUS_KEY));
-        detail.setIcon((String) meta.getAttributes().get(AippConst.ATTR_META_ICON_KEY));
+        detail.setStatus(ObjectUtils.<String>cast(meta.getAttributes().get(AippConst.ATTR_META_STATUS_KEY)));
+        detail.setIcon(ObjectUtils.<String>cast(meta.getAttributes().get(AippConst.ATTR_META_ICON_KEY)));
         if (meta.getAttributes().containsKey(AippConst.ATTR_DESCRIPTION_KEY)) {
-            detail.setDescription((String) meta.getAttributes().get(AippConst.ATTR_DESCRIPTION_KEY));
+            detail.setDescription(ObjectUtils.<String>cast(meta.getAttributes().get(AippConst.ATTR_DESCRIPTION_KEY)));
         }
         if (meta.getAttributes().containsKey(AippConst.ATTR_PUBLISH_TIME_KEY)) {
-            detail.setPublishAt(LocalDateTime.parse((String) meta.getAttributes()
-                    .get(AippConst.ATTR_PUBLISH_TIME_KEY)));
+            detail.setPublishAt(LocalDateTime.parse(ObjectUtils.<String>cast(
+                    meta.getAttributes().get(AippConst.ATTR_PUBLISH_TIME_KEY))));
         }
 
         return Rsp.ok(detail);
@@ -180,7 +180,7 @@ public class AippFlowServiceImpl implements AippFlowService {
                 Collections.singletonList(AippTypeEnum.NORMAL.name())));
         String sortEncode = MetaUtils.formatSorter(cond.getSort(), cond.getOrder());
         metaFilter.setOrderBys(Collections.singletonList(sortEncode));
-        // todo 兼容老数据，当前把没有 aipp_type 的数据也进行获取。等数据库刷完数据后，更改逻辑
+        // 容老数据，当前把没有 aipp_type 的数据也进行获取。等数据库刷完数据后，更改逻辑
         RangedResultSet<Meta> metaRes = this.metaService.list(metaFilter,
                 true,
                 page.getOffset(),
@@ -190,18 +190,20 @@ public class AippFlowServiceImpl implements AippFlowService {
         List<AippOverviewRspDto> overviewDtoList = metaRes.getResults().stream().map(item -> {
             this.handleOldData(item);
             AippOverviewRspDto dto = MetaConvertor.INSTANCE.toAippOverviewRspDto(item);
-            String status = (String) item.getAttributes().get(AippConst.ATTR_META_STATUS_KEY);
+            String status = ObjectUtils.<String>cast(item.getAttributes().get(AippConst.ATTR_META_STATUS_KEY));
+
             dto.setStatus(status);
 
             dto.setVersion(item.getVersion());  // 兼容没有基线版本的1.0.0版本草稿
             if (this.isDraft(item, status)) {
-                dto.setVersion((String) item.getAttributes().get(AippConst.ATTR_BASELINE_VERSION_KEY));
+                dto.setVersion(ObjectUtils.<String>cast(item.getAttributes().get(AippConst.ATTR_BASELINE_VERSION_KEY)));
+
                 dto.setDraftVersion(item.getVersion());
             }
 
             if (item.getAttributes().containsKey(AippConst.ATTR_PUBLISH_TIME_KEY)) {
-                dto.setPublishAt(LocalDateTime.parse((String) item.getAttributes()
-                        .get(AippConst.ATTR_PUBLISH_TIME_KEY)));
+                dto.setPublishAt(LocalDateTime.parse(ObjectUtils.<String>cast(
+                        item.getAttributes().get(AippConst.ATTR_PUBLISH_TIME_KEY))));
             }
             return dto;
         }).sorted(Comparator.comparing(AippOverviewDto::getUpdatedAt).reversed()).collect(Collectors.toList());
@@ -273,9 +275,9 @@ public class AippFlowServiceImpl implements AippFlowService {
                     attr.getOrDefault(AippConst.ATTR_META_STATUS_KEY, "null"));
             throw new AippForbiddenException(context, AippErrCode.DELETE_AIPP_FORBIDDEN);
         }
-        int ret = this.flowsService.deleteFlows((String) attr.get(AippConst.ATTR_FLOW_CONFIG_ID_KEY),
-                meta.getVersion(),
-                context);
+
+        int ret = this.flowsService.deleteFlows(ObjectUtils.<String>cast(
+                attr.get(AippConst.ATTR_FLOW_CONFIG_ID_KEY)), meta.getVersion(), context);
         if (ret != 0) {
             log.error("delete aipp {} version {} failed, ret {}", aippId, version, ret);
         }
@@ -376,9 +378,11 @@ public class AippFlowServiceImpl implements AippFlowService {
     /**
      * 保存 aipp 相关信息。
      *
-     * @param aippDto aipp定义
+     * @param aippDto aipp 定义
      * @param baselineInfo aipp基线版本信息, 非升级场景为null
      * @param context 操作上下文
+     * @param flowSaveFunc 流保存函数
+     * @param flowSaveArgs 流保存参数
      * @return aipp id和版本信息
      * @throws AippParamException 入参异常
      * @throws AippException 创建aipp异常
@@ -486,8 +490,8 @@ public class AippFlowServiceImpl implements AippFlowService {
         if (aippDto.getFlowViewData() == null || aippDto.getFlowViewData().isEmpty()) {
             return AippCreateDto.builder().aippId(aippId).version(meta.getVersion()).build();
         }
-        this.flowsService.updateFlows((String) attr.get(AippConst.ATTR_FLOW_CONFIG_ID_KEY),
-                (String) attr.get(AippConst.ATTR_VERSION_KEY),
+        this.flowsService.updateFlows(ObjectUtils.<String>cast(attr.get(AippConst.ATTR_FLOW_CONFIG_ID_KEY)),
+                ObjectUtils.<String>cast(attr.get(AippConst.ATTR_VERSION_KEY)),
                 JsonUtils.toJsonString(aippDto.getFlowViewData()),
                 context);
         return AippCreateDto.builder().aippId(aippId).version(meta.getVersion()).build();
@@ -505,15 +509,14 @@ public class AippFlowServiceImpl implements AippFlowService {
 
     private AippCreateDto createPreviewAipp(String baselineVersion, AippDto aippDto, OperationContext context) {
         Map<String, Object> flowViewData = aippDto.getFlowViewData();
-        String flowId = (String) flowViewData.get(AippConst.FLOW_CONFIG_ID_KEY);
-        String previewVersion = (String) flowViewData.get(AippConst.FLOW_CONFIG_VERSION_KEY);
-
+        String flowId = ObjectUtils.<String>cast(flowViewData.get(AippConst.FLOW_CONFIG_ID_KEY));
+        String previewVersion = ObjectUtils.<String>cast(flowViewData.get(AippConst.FLOW_CONFIG_VERSION_KEY));
         // 创建、发布流程定义
         FlowInfo flowInfo = this.flowsService.publishFlowsWithoutElsa(flowId,
                 previewVersion,
                 JsonUtils.toJsonString(flowViewData),
                 context);
-        // todo 预览时，aipp 的 version 用的是 flowInfo 的 version，是否合理待确认
+        // 预览时，aipp 的 version 用的是 flowInfo 的 version，是否合理待确认
         aippDto.setVersion(flowInfo.getVersion());
         MetaDeclarationInfo declarationInfo = this.buildInitialMetaDeclaration(aippDto,
                 AippCreateDto.builder().aippId(aippDto.getId()).version(baselineVersion).build(),
@@ -662,6 +665,13 @@ public class AippFlowServiceImpl implements AippFlowService {
         return parsedFlowDefinitionMapping;
     }
 
+    /**
+     * 比较两个map是否相等
+     *
+     * @param map1 第一个map
+     * @param map2 第二个map
+     * @return 如果两个map相等，返回true，否则返回false
+     */
     public boolean compareMaps(Map<String, Object> map1, Map<String, Object> map2) {
         if (map1 == map2) {
             return true;
@@ -703,6 +713,7 @@ public class AippFlowServiceImpl implements AippFlowService {
      * @param previewVersion 预览版本号
      * @param context 操作上下文
      */
+    @Override
     public void cleanPreviewAipp(String previewAippId, String previewVersion, OperationContext context) {
         // 过滤非预览版本
         if (!AippStringUtils.isPreview(previewVersion)) {
@@ -749,6 +760,8 @@ public class AippFlowServiceImpl implements AippFlowService {
                     return true;
                 } else if (newVersionInt < oldVersionInt) {
                     return false;
+                } else {
+                    continue;
                 }
             }
         } catch (NumberFormatException e) {
@@ -764,6 +777,7 @@ public class AippFlowServiceImpl implements AippFlowService {
      * @param aippDto aipp定义
      * @param context 操作上下文
      * @return aipp id信息
+     * @throws AippParamException 入参异常
      */
     @Override
     public AippCreateDto upgrade(String baselineVersion, AippDto aippDto, OperationContext context) {
@@ -892,9 +906,8 @@ public class AippFlowServiceImpl implements AippFlowService {
     }
 
     private FlowInfo publishFlow(AippDto aippDto, Map<String, Object> attr, OperationContext context) {
-        String flowConfigId = (String) attr.get(AippConst.ATTR_FLOW_CONFIG_ID_KEY);
-        String version = (String) attr.get(AippConst.ATTR_VERSION_KEY);
-
+        String flowConfigId = ObjectUtils.<String>cast(attr.get(AippConst.ATTR_FLOW_CONFIG_ID_KEY));
+        String version = ObjectUtils.<String>cast(attr.get(AippConst.ATTR_VERSION_KEY));
         FlowInfo flowInfo;
         try {
             flowInfo = this.flowsService.publishFlows(flowConfigId,
@@ -989,14 +1002,16 @@ public class AippFlowServiceImpl implements AippFlowService {
         itemData.setUniqueName(aippDto.getUniqueName());
         if (this.isToolCategory(appCategory)) {
             itemData.setSchema(this.buildToolSchema(appCategory, context, aippDto, flowInfo));
-        } else if (this.isAppCategory(appCategory)) {
-            itemData.setSchema(MapBuilder.<String, Object>get()
-                    .put("name", aippDto.getName())
-                    .put("description", aippDto.getDescription())
-                    .build());
+        } else {
+            if (this.isAppCategory(appCategory)) {
+                itemData.setSchema(MapBuilder.<String, Object>get()
+                        .put("name", aippDto.getName())
+                        .put("description", aippDto.getDescription())
+                        .build());
+            }
         }
         itemData.setSource(appCategory.getSource());
-        itemData.setTags(new HashSet<String>() {{
+        itemData.setTags(new HashSet<String>() { {
             add(appCategory.getTag());
         }});
         itemData.setRunnables(this.buildRunnables(aippDto));

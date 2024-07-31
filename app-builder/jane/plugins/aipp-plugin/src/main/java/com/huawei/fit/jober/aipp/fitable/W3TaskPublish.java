@@ -22,6 +22,7 @@ import com.huawei.fitframework.annotation.Fitable;
 import com.huawei.fitframework.annotation.Value;
 import com.huawei.fitframework.inspection.Validation;
 import com.huawei.fitframework.log.Logger;
+import com.huawei.fitframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -116,7 +117,7 @@ public class W3TaskPublish implements FlowableService {
         Map<String, Object> businessData = DataUtils.getBusiness(flowData);
         log.debug("W3TaskPublish businessData {}", businessData);
 
-        String w3TaskStr = (String) businessData.get(AippConst.BS_W3_TASK_RESULT);
+        String w3TaskStr = ObjectUtils.cast(businessData.get(AippConst.BS_W3_TASK_RESULT));
         Validation.notNull(w3TaskStr, "w3Task cant be null.");
 
         com.huawei.fit.jober.entity.OperationContext joberOpContext = getJoberOpContext(businessData);

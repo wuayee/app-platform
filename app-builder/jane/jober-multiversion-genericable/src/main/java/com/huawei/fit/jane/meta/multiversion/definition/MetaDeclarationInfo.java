@@ -21,14 +21,18 @@ import java.util.Map;
  */
 public class MetaDeclarationInfo {
     private Undefinable<String> name;
+
     private Undefinable<String> category;
+
     private Undefinable<Map<String, Object>> attributes;
 
     /**
      * 基础模板Id，用于继承，创建Meta时使用，若无需继承模板，则可以不传入
      */
     private Undefinable<String> basicMetaTemplateId;
+
     private Undefinable<List<MetaPropertyDeclarationInfo>> properties;
+
     private Undefinable<String> version;
 
     public MetaDeclarationInfo() {
@@ -70,12 +74,19 @@ public class MetaDeclarationInfo {
         this.attributes = nullIf(attributes, Undefinable.undefined());
     }
 
+    /**
+     * 设置属性
+     *
+     * @param key key
+     * @param value value
+     */
     public void putAttribute(String key, Object value) {
         if (this.attributes.getDefined()) {
             this.attributes.getValue().put(key, value);
             return;
         }
-        this.attributes = Undefinable.defined(new HashMap<String, Object>() {{
+        this.attributes = Undefinable.defined(new HashMap<String, Object>() {
+            {
             put(key, value);
         }});
     }

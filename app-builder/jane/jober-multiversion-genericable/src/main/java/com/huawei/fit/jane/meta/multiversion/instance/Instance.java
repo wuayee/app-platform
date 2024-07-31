@@ -20,6 +20,9 @@ public class Instance {
 
     private List<String> tags;
 
+    /**
+     * Instance
+     */
     public Instance() {
     }
 

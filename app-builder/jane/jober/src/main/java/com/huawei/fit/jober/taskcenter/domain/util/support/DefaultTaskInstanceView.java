@@ -75,13 +75,13 @@ public class DefaultTaskInstanceView implements TaskInstanceView {
         sql.appendIdentifier(table).append(" AS ").appendIdentifier(TaskInstanceRow.TABLE_ALIAS);
 
         Condition condition = Condition.expectEqual(ColumnRef.of(TaskInstanceRow.TABLE_ALIAS,
-                TaskInstanceRow.COLUMN_TASK_ID), this.task.getId());
-        condition = condition.and(whereColumnIn(TaskInstanceRow.COLUMN_ID, this.filter.ids()));
-        condition = condition.and(whereColumnIn(TaskInstanceRow.COLUMN_TYPE_ID, this.filter.typeIds()));
-        condition = condition.and(whereColumnIn(TaskInstanceRow.COLUMN_SOURCE_ID, this.filter.sourceIds()));
-        condition = condition.and(this.whereCategories(sql, args));
-        condition = condition.and(this.whereTags());
-        condition = condition.and(this.whereProperties(sql, args));
+                TaskInstanceRow.COLUMN_TASK_ID), this.task.getId())
+                .and(whereColumnIn(TaskInstanceRow.COLUMN_ID, this.filter.ids()))
+                .and(whereColumnIn(TaskInstanceRow.COLUMN_TYPE_ID, this.filter.typeIds()))
+                .and(whereColumnIn(TaskInstanceRow.COLUMN_SOURCE_ID, this.filter.sourceIds()))
+                .and(this.whereCategories(sql, args))
+                .and(this.whereTags())
+                .and(this.whereProperties(sql, args));
 
         sql.append(" WHERE ");
         condition.toSql(sql, args);

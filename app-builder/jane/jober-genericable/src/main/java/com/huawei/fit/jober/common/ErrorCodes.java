@@ -837,7 +837,6 @@ public enum ErrorCodes {
      */
     TASK_TYPE_MOBILE_DETAIL_NOT_SUPPORT(10014000, "The task type not support mobile detail page."),
 
-
     /**
      * ------------ a3000 Exception. From 10015000 to 10015999 ---------------------
      */

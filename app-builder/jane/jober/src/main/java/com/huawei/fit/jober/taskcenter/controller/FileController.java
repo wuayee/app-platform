@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -45,6 +46,13 @@ public class FileController extends AbstractController {
 
     private final FileValidator validator;
 
+    /**
+     * 构造函数
+     *
+     * @param authenticator 授权校验器
+     * @param repo 文件数据层
+     * @param validator 文件校验器
+     */
     public FileController(Authenticator authenticator, File.Repo repo, FileValidator validator) {
         super(authenticator);
         this.repo = repo;
@@ -79,7 +87,7 @@ public class FileController extends AbstractController {
         File.Declaration declaration = null;
         try {
             declaration = File.Declaration.custom()
-                    .name(URLDecoder.decode(fileName, "UTF-8"))
+                    .name(URLDecoder.decode(fileName, StandardCharsets.UTF_8.name()))
                     .content(httpRequest.entityBytes())
                     .build();
         } catch (UnsupportedEncodingException e) {
@@ -105,7 +113,7 @@ public class FileController extends AbstractController {
         File file = repo.download(fileId, this.contextOf(httpRequest, null));
         String fileName;
         try {
-            fileName = URLEncoder.encode(StringUtils.substringAfter(file.name(), "/"), "UTF-8");
+            fileName = URLEncoder.encode(StringUtils.substringAfter(file.name(), "/"), StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             log.error("File name escape error.");
             throw new BadRequestException(ErrorCodes.FILE_NAME_NOT_ESCAPE);

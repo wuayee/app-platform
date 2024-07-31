@@ -18,7 +18,6 @@ import java.util.function.Supplier;
  * @author 梁济时 l00815032
  * @since 2023-12-11
  */
-@SuppressWarnings( {"rawtypes", "unchecked"})
 public class Maps {
     private Maps() {
     }
@@ -42,6 +41,7 @@ public class Maps {
      * @param m2 表示待检查的第二个映射的 {@link Map}。
      * @return 若包含相同的数据，则为 {@code true}，否则为 {@code false}。
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static boolean equals(Map m1, Map m2) {
         if (m1 == null) {
             return m2 == null;

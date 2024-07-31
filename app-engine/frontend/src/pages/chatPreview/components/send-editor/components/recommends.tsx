@@ -60,10 +60,8 @@ const Recommends = (props) => {
       model
     }
     const res = await getRecommends(params);
-    if (res.code === 0) {
+    if (res.code === 0 && res.data.length > 0) {
       setRecommendList(res.data);
-    } else {
-      setRecommendList([]);
     }
   }
   // 打开收起灵感大全

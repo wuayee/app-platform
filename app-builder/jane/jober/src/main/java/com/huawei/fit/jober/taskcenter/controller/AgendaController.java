@@ -43,9 +43,16 @@ public class AgendaController extends AbstractController {
 
     private final TaskService taskService;
 
-    public AgendaController(Authenticator authenticator, TaskAgendaService taskagendaService, TaskService taskService) {
+    /**
+     * 全参构造函数
+     *
+     * @param authenticator 校验器
+     * @param taskAgendaService 任务排列服务
+     * @param taskService 任务服务
+     */
+    public AgendaController(Authenticator authenticator, TaskAgendaService taskAgendaService, TaskService taskService) {
         super(authenticator);
-        this.taskagendaService = taskagendaService;
+        this.taskagendaService = taskAgendaService;
         this.taskService = taskService;
     }
 

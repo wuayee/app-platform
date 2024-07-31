@@ -183,7 +183,7 @@ export const reportProcess = (list, listRef) => {
   return memoriesList;
 };
 // 流式接收消息数据处理
-export const messageProcess = (aipp_id, instanceId, version, messageData, atAppInfo) => {
+export const messageProcess = (instanceId, messageData, atAppInfo) => {
   let logId = uuidv4();
   let obj = {
     loading: false,
@@ -192,11 +192,10 @@ export const messageProcess = (aipp_id, instanceId, version, messageData, atAppI
     recieveType: 'form',
     finished: true,
     checked: false,
+    msgType: 'form',
     logId,
     formConfig: {
       instanceId,
-      version,
-      aippId: aipp_id,
       parentInstanceId: messageData.parentInstanceId,
       formName: messageData.formAppearance[0].name || 'normal',
       type: 'edit',
@@ -213,15 +212,15 @@ export const messageProcess = (aipp_id, instanceId, version, messageData, atAppI
   return obj;
 };
 // 流式接收消息数据处理
-export const messageProcessNormal = (log, instanceId, atAppInfo) => {
-  let { msg } = JSON.parse(log.logData);
+export const messageProcessNormal = (log, atAppInfo) => {
+  let msg  = log.content || '';
   const regex = /```markdown(.*?)```/g;
-  const replacedArr = log.logData.match(regex);
-  let markdowned = log.logData.indexOf('```');
+  const replacedArr = msg.match(regex);
+  let markdowned = msg.indexOf('```');
   if (replacedArr && replacedArr.length) {
     replacedArr.forEach(item => {
       let str = item.substring(11, item.length - 3);
-      log.logData = log.logData.replace(item, str);
+      msg = msg.replace(item, str);
     });
   }
   let recieveChatItem = {
@@ -232,7 +231,7 @@ export const messageProcessNormal = (log, instanceId, atAppInfo) => {
     logId: log.msgId || uuidv4(),
     markdownSyntax: markdowned !== -1,
     type: 'receive',
-    instanceId,
+    msgType: 'msg',
     feedbackStatus: -1,
   };
   if (atAppInfo) {
@@ -248,7 +247,7 @@ export const messageProcessNormal = (log, instanceId, atAppInfo) => {
 // 深拷贝
 export const deepClone = (obj) => {
   return JSON.parse(JSON.stringify(obj));
-}
+};
 // 文件类型设置
 export const fileTypeSet = (type) => {
   type = type.toLowerCase();
@@ -269,7 +268,7 @@ export const fileTypeSet = (type) => {
     fileType = 'file';
   }
   return fileType
-}
+};
 // 滚动底部
 export const scrollBottom = () => {
   const messageBox = document.getElementById('chat-list-dom');
@@ -277,4 +276,4 @@ export const scrollBottom = () => {
     top: messageBox.scrollHeight,
     behavior: 'smooth',
   });
-}
+};

@@ -18,6 +18,9 @@ public class TaskCategoryTrigger {
 
     private List<String> fitableIds;
 
+    /**
+     * TaskCategoryTrigger
+     */
     public TaskCategoryTrigger() {
     }
 

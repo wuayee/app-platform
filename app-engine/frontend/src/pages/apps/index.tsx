@@ -15,13 +15,16 @@ import Empty from '@/components/empty/empty-item';
 const Apps: React.FC = () => {
   const tenantId = '31f20efc7e0848deab6a6bc10fc3021e';
   const navigate = useNavigate();
-
-  // 数据初始化
   const [appData, setAppData] = useState<any[]>([]);
+  const [total, setTotal] = useState(1);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8);
+  const [search, setSearch] = useState('');
+
   async function queryApps() {
     const params = {
-      pageNum: pageNo.current,
-      pageSize: 8,
+      pageNum:page,
+      pageSize,
       includeTags: 'APP',
       name: search
     };
@@ -33,32 +36,21 @@ const Apps: React.FC = () => {
     }
   }
 
-  // tab栏
-  const [activkey, setActiveKey] = useState('1');
-  function tabChange(key: string) {
-    setActiveKey(key);
-  }
-
-  // 分页
-  const pageNo = useRef(1);
-  const [total, setTotal] = useState(1);
-  const [current, setCurrent] = useState(1);
-  const [search, setSearch] = useState('');
-
-  useEffect(() => {
-    queryApps();
-  }, [search]);
-  function currentPageChange(page: number, pageSize: number) {
-    setCurrent(() => {
-      pageNo.current = page;
-      queryApps();
-      return page;
-    });
+  const paginationChange = (curPage: number, curPageSize: number) => {
+    if(page!==curPage) {
+      setPage(curPage);
+    }
+    if(pageSize!=curPageSize) {
+      setPageSize(curPageSize);
+    }
   }
 
   // 搜索
-  function onSearchValueChange(value: string) {
-    setSearch(value);
+  function onSearchValueChange(newSearchVal: string) {
+    if(newSearchVal !== search) {
+      setPage(1);
+      setSearch(newSearchVal);
+    }
   }
   const handleSearch = debounce(onSearchValueChange, 500);
 
@@ -79,11 +71,7 @@ const Apps: React.FC = () => {
     const res: any = await deleteAppApi(tenantId, appId);
     if (res.code === 0) {
       if (appData.length === 1) {
-        setCurrent(() => {
-          pageNo.current = 1;
-          queryApps();
-          return 1;
-        });
+        setPage(1);
         return;
       }
       queryApps();
@@ -109,12 +97,15 @@ const Apps: React.FC = () => {
     dispatch(setCollectionValue(collectMap))
   }
 
-  useEffect(()=> {
-    getUserCollectionList()
-  }, [])
+  // useEffect(()=> {
+  //   getUserCollectionList()
+  // }, [])
 
+  useEffect(() => {
+    queryApps();
+  }, [page, pageSize, search]);
   return (
-    <div className=' apps_root'>
+    <div className='apps_root'>
       <div className='apps_header'>
         <div className='apps_title'>应用市场</div>
       </div>
@@ -148,13 +139,11 @@ const Apps: React.FC = () => {
         
         <div className='page_box'>
           <Pagination
-            current={current}
-            pageSize={8}
-            onChange={currentPageChange}
+            current={page}
+            onChange={paginationChange}
             pageSizeOptions={[8,16,32,60]}
-            showSizeChanger={false}
             total={total}
-            showTotal={(total) => `总条数 ${total}`}
+            pageSize={pageSize}
           />
         </div>
       </div>

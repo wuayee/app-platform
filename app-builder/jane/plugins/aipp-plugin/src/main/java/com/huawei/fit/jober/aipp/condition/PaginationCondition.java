@@ -40,6 +40,6 @@ public class PaginationCondition {
      * @return 偏移量
      */
     public long getOffset() {
-        return ((pageNum - 1) * (long)pageSize);
+        return ((pageNum - 1) * (long) pageSize);
     }
 }

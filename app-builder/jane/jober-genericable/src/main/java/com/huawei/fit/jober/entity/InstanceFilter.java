@@ -18,6 +18,9 @@ public class InstanceFilter {
 
     private Map<String, String> options;
 
+    /**
+     * InstanceFilter
+     */
     public InstanceFilter() {
     }
 

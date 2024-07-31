@@ -24,9 +24,9 @@ public class TaskPropertyInfo {
 
     private String description;
 
-    private Boolean required;
+    private Boolean isRequired;
 
-    private Boolean identifiable;
+    private Boolean isIdentifiable;
 
     private String scope;
 
@@ -34,14 +34,14 @@ public class TaskPropertyInfo {
         this(null, null, null, null, null, null, null);
     }
 
-    public TaskPropertyInfo(String id, String name, String dataType, String description, Boolean required,
-            Boolean identifiable, String scope) {
+    public TaskPropertyInfo(String id, String name, String dataType, String description, Boolean isRequired,
+            Boolean isIdentifiable, String scope) {
         this.id = id;
         this.name = name;
         this.dataType = dataType;
         this.description = description;
-        this.required = required;
-        this.identifiable = identifiable;
+        this.isRequired = isRequired;
+        this.isIdentifiable = isIdentifiable;
         this.scope = scope;
     }
 
@@ -77,20 +77,20 @@ public class TaskPropertyInfo {
         this.description = description;
     }
 
-    public Boolean getRequired() {
-        return required;
+    public Boolean getIsRequired() {
+        return isRequired;
     }
 
-    public void setRequired(Boolean required) {
-        this.required = required;
+    public void setIsRequired(Boolean isRequired) {
+        this.isRequired = isRequired;
     }
 
-    public Boolean getIdentifiable() {
-        return identifiable;
+    public Boolean getIsIdentifiable() {
+        return isIdentifiable;
     }
 
-    public void setIdentifiable(Boolean identifiable) {
-        this.identifiable = identifiable;
+    public void setIsIdentifiable(Boolean isIdentifiable) {
+        this.isIdentifiable = isIdentifiable;
     }
 
     public String getScope() {
@@ -109,8 +109,8 @@ public class TaskPropertyInfo {
             TaskPropertyInfo another = (TaskPropertyInfo) obj;
             return Objects.equals(this.getId(), another.getId()) && Objects.equals(this.getName(), another.getName())
                     && Objects.equals(this.getDataType(), another.getDataType()) && Objects.equals(
-                    this.getDescription(), another.getDescription()) && Objects.equals(this.getRequired(),
-                    another.getRequired()) && Objects.equals(this.getIdentifiable(), another.getIdentifiable())
+                    this.getDescription(), another.getDescription()) && Objects.equals(this.getIsRequired(),
+                    another.getIsRequired()) && Objects.equals(this.getIsIdentifiable(), another.getIsIdentifiable())
                     && Objects.equals(this.getScope(), another.getScope());
         } else {
             return false;
@@ -121,7 +121,7 @@ public class TaskPropertyInfo {
     public int hashCode() {
         return Arrays.hashCode(new Object[] {
                 this.getClass(), this.getId(), this.getName(), this.getDataType(), this.getDescription(),
-                this.getRequired(), this.getIdentifiable(), this.getScope()
+                this.getIsRequired(), this.getIsIdentifiable(), this.getScope()
         });
     }
 
@@ -129,7 +129,7 @@ public class TaskPropertyInfo {
     public String toString() {
         return StringUtils.format(
                 "[id={0}, name={1}, dataType={2}, description={3}, required={4}, identifiable={5}, scope={6}]",
-                this.getId(), this.getName(), this.getDataType(), this.getDescription(), this.getRequired(),
-                this.getIdentifiable(), this.getScope());
+                this.getId(), this.getName(), this.getDataType(), this.getDescription(), this.getIsRequired(),
+                this.getIsIdentifiable(), this.getScope());
     }
 }

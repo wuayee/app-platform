@@ -5,20 +5,22 @@
 package com.huawei.fit.jober.aipp.serializer.impl;
 
 import com.huawei.fit.jober.aipp.domain.AppBuilderComponent;
-import com.huawei.fit.jober.aipp.po.AppBuilderComponentPO;
+import com.huawei.fit.jober.aipp.po.AppBuilderComponentPo;
 import com.huawei.fit.jober.aipp.serializer.BaseSerializer;
 
 /**
+ * 应用属性组件序列化与反序列化实现类
+ *
  * @author 邬涨财 w00575064
  * @since 2024-04-17
  */
-public class AppBuilderComponentSerializer implements BaseSerializer<AppBuilderComponent, AppBuilderComponentPO> {
+public class AppBuilderComponentSerializer implements BaseSerializer<AppBuilderComponent, AppBuilderComponentPo> {
     @Override
-    public AppBuilderComponentPO serialize(AppBuilderComponent appBuilderComponent) {
+    public AppBuilderComponentPo serialize(AppBuilderComponent appBuilderComponent) {
         if (appBuilderComponent == null) {
             return null;
         }
-        return AppBuilderComponentPO.builder()
+        return AppBuilderComponentPo.builder()
                 .id(appBuilderComponent.getId())
                 .name(appBuilderComponent.getName())
                 .type(appBuilderComponent.getType())
@@ -34,7 +36,7 @@ public class AppBuilderComponentSerializer implements BaseSerializer<AppBuilderC
     }
 
     @Override
-    public AppBuilderComponent deserialize(AppBuilderComponentPO appBuilderComponentPO) {
+    public AppBuilderComponent deserialize(AppBuilderComponentPo appBuilderComponentPO) {
         if (appBuilderComponentPO == null) {
             return null;
         }

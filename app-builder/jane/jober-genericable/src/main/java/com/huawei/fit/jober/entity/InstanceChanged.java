@@ -16,6 +16,9 @@ import java.util.Objects;
 public class InstanceChanged extends InstanceMessage {
     private List<ChangedPropertyValue> changes;
 
+    /**
+     * InstanceChanged
+     */
     public InstanceChanged() {
     }
 
@@ -57,6 +60,9 @@ public class InstanceChanged extends InstanceMessage {
     public static class ChangedPropertyValue extends PropertyValue {
         private String originValue;
 
+        /**
+         * ChangedPropertyValue
+         */
         public ChangedPropertyValue() {
         }
 

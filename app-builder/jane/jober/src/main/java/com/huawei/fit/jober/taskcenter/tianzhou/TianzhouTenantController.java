@@ -105,6 +105,8 @@ public class TianzhouTenantController {
      *
      * @param httpRequest httpRequest
      * @param httpResponse httpResponse
+     * @param offset offset
+     * @param limit limit
      * @return Map<String, Object>
      */
     @GetMapping(value = "/my", summary = "查询我的租户列表")

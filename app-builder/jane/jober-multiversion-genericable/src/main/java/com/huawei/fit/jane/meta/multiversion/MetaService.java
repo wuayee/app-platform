@@ -62,20 +62,21 @@ public interface MetaService {
      * 查询Meta。
      *
      * @param filter 表示meta过滤器的 {@link MetaFilter}。
-     * @param latestOnly 表示每个Meta是否只显示最新版本。
+     * @param isLatestOnly 表示每个Meta是否只显示最新版本。
      * @param offset 表示查询到的meta定义的结果集在全量结果集中的偏移量的 64 位整数。
      * @param limit 表示查询到的meta定义的结果集中的最大数量的 32 位整数。
      * @param context 表示操作上下文的 {@link OperationContext}。
      * @return 表示查询到的结果集的 {@link RangedResultSet}{@code <}{@link Meta}{@code >}。
      */
     @Genericable(id = "43a83cc619e04759aa5cf00e4d1c273c")
-    RangedResultSet<Meta> list(MetaFilter filter, boolean latestOnly, long offset, int limit, OperationContext context);
+    RangedResultSet<Meta> list(MetaFilter filter, boolean isLatestOnly, long offset, int limit,
+            OperationContext context);
 
     /**
      * 查询Meta。todo 等数据库数据刷过后,这个方法可以去掉
      *
      * @param filter 表示meta过滤器的 {@link MetaFilter}。
-     * @param latestOnly 表示每个Meta是否只显示最新版本。
+     * @param isLatestOnly 表示每个Meta是否只显示最新版本。
      * @param offset 表示查询到的meta定义的结果集在全量结果集中的偏移量的 64 位整数。
      * @param limit 表示查询到的meta定义的结果集中的最大数量的 32 位整数。
      * @param context 表示操作上下文的 {@link OperationContext}。
@@ -83,8 +84,8 @@ public interface MetaService {
      * @return 表示查询到的结果集的 {@link RangedResultSet}{@code <}{@link Meta}{@code >}。
      */
     @Genericable(id = "43a83cc619e04759aa5cf00e4d1c273d")
-    RangedResultSet<Meta> list(MetaFilter filter, boolean latestOnly, long offset, int limit, OperationContext context,
-            MetaFilter oldDataFilter);
+    RangedResultSet<Meta> list(MetaFilter filter, boolean isLatestOnly, long offset, int limit,
+            OperationContext context, MetaFilter oldDataFilter);
 
     /**
      * 检索Meta。

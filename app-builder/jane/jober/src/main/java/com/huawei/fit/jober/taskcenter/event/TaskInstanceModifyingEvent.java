@@ -17,6 +17,14 @@ import com.huawei.fit.jober.taskcenter.domain.TaskInstance;
 public class TaskInstanceModifyingEvent extends TaskInstanceDeclaringEvent {
     private final TaskInstance old;
 
+    /**
+     * 构造一个任务实例更新事件。
+     *
+     * @param publisher 发布者。
+     * @param task 表示任务的 {@link TaskEntity}。
+     * @param context 表示操作上下文的 {@link OperationContext}。
+     * @param old 表示修改前的任务实例的 {@link TaskInstance}。
+     */
     public TaskInstanceModifyingEvent(Object publisher, TaskEntity task, OperationContext context, TaskInstance old) {
         super(publisher, task, context);
         this.old = old;

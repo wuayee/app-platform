@@ -29,6 +29,13 @@ public class DefaultTaskInstanceEventNotifier extends AbstractTaskInstanceEventN
 
     private final OperationContext context;
 
+    /**
+     * 构造一个默认的任务实例事件通知器。
+     *
+     * @param plugin 插件对象，用于发布事件
+     * @param task 任务实体，事件关联的任务
+     * @param context 操作上下文，事件的上下文信息
+     */
     public DefaultTaskInstanceEventNotifier(Plugin plugin, TaskEntity task, OperationContext context) {
         super(plugin);
         this.task = task;

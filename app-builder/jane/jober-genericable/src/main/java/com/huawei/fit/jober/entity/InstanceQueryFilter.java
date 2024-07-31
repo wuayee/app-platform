@@ -28,6 +28,9 @@ public class InstanceQueryFilter {
 
     private List<String> orderBy;
 
+    /**
+     * InstanceQueryFilter
+     */
     public InstanceQueryFilter() {
     }
 
