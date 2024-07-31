@@ -54,7 +54,11 @@ const Stage = (props) => {
       window.agent ? null : window.agent = agent;
       render.current = true;
       agent.onChange((dirtyAction) => {
-        handleChange(dirtyAction);
+        if (dirtyAction.action === 'jade_node_config_change') {
+          setTestStatus(null);
+          localStorage.getItem('showFlowChangeWarning') !== 'false' && setShowFlowChangeWarning(true);
+        }
+        handleChange();
       });
       agent.onModelSelect(({ taskName, selectedModel, onSelect }) => {
         setSelectModal(selectedModel);
@@ -74,12 +78,8 @@ const Stage = (props) => {
     modelCallback.current(model);
   }
   // 数据实时保存
-  const handleChange = useCallback(debounce((dirtyAction) => elsaChange(dirtyAction), 2000), []);
-  function elsaChange(dirtyAction) {
-    if (dirtyAction.action === 'jade_node_config_change') {
-      setTestStatus(null);
-      localStorage.getItem('showFlowChangeWarning') !== 'false' && setShowFlowChangeWarning(true);
-    }
+  const handleChange = useCallback(debounce(() => elsaChange(), 2000), []);
+  function elsaChange() {
     let graphChangeData = window.agent.serialize();
     currentApp.current.flowGraph.appearance = graphChangeData;
     window.agent.validate().then(() => {
