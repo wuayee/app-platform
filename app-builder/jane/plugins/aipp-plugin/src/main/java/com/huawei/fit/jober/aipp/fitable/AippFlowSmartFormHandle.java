@@ -74,7 +74,7 @@ public class AippFlowSmartFormHandle implements FlowSmartFormService {
                 .status(FlowTraceStatus.RUNNING.name())
                 .answer(Collections.singletonList(AppChatRsp.Answer.builder()
                         .content(formDataMap).type(AippInstLogType.FORM.name()).build()))
-                .formInstanceId(instanceId)
+                .instanceId(instanceId)
                 .build();
         this.appChatSseService.sendToAncestorLastData(instanceId, appChatRsp);
     }

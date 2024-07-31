@@ -39,8 +39,8 @@ public class AppChatRsp {
     private List<Answer> answer;
 
     @Property(description = "form instance id")
-    @JsonProperty("form_instance_id")
-    private String formInstanceId;
+    @JsonProperty("instance_id")
+    private String instanceId;
 
     /**
      * Answer
