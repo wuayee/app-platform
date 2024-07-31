@@ -210,6 +210,7 @@ public class UploadPluginController {
             PluginData pluginData = FileParser.getPluginData(toolFile, toolsName);
             if (pluginData.getName() != null) {
                 this.pluginService.addPlugin(pluginData);
+                log.info("The tool saved successfully. [toolName={}]", pluginData.getName());
             }
         }
     }
