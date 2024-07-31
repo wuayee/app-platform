@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {Button, Dropdown, Form, Input} from "antd";
+import {Button, Dropdown, Form, Input, Tooltip} from "antd";
 import {HEADER_TOOL_MENU_ICON} from "@/components/asserts/svgIcons.jsx";
 import "./headerStyle.css";
 
@@ -66,15 +66,17 @@ export const Header = ({shape, disabled}) => {
                 </Form.Item>
             </>);
         } else {
-            return <p className={"jade-component-title"} style={{margin: 0}}><span>{shape.text}</span></p>;
+            return <Tooltip overlayClassName="custom-tooltip" title={shape.text}><p
+                className={"jade-component-title"} style={{margin: 0}}>
+                <span>{shape.text}</span></p></Tooltip>;
         }
     };
 
     const onOpenChange = (openKeys) => {
         shape.drawer.getToolMenus().forEach(m => {
-           if (openKeys.includes(m.key)) {
-               m.onOpen && m.onOpen();
-           }
+            if (openKeys.includes(m.key)) {
+                m.onOpen && m.onOpen();
+            }
         });
     };
 
