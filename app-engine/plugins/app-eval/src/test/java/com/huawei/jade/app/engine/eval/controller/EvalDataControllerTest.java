@@ -55,7 +55,9 @@ public class EvalDataControllerTest {
 
     @AfterEach
     void teardown() throws IOException {
-        this.response.close();
+        if (this.response != null) {
+            this.response.close();
+        }
     }
 
     @Test

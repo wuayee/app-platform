@@ -22,7 +22,7 @@ public class EvalVersionManagerImpl implements EvalDatasetVersionManager {
     /**
      * 表示评估数据集版本管理器实现的构建器。
      *
-     * @param generator 表示版本生成器持久层接口.
+     * @param generator 表示版本生成器持久层接口。
      */
     public EvalVersionManagerImpl(UidGenerator generator) {
         this.versionGenerator = generator;
@@ -30,6 +30,6 @@ public class EvalVersionManagerImpl implements EvalDatasetVersionManager {
 
     @Override
     public long applyVersion() {
-        return versionGenerator.getUid();
+        return this.versionGenerator.getUid();
     }
 }

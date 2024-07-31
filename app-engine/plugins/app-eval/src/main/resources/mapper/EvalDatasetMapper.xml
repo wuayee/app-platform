@@ -5,7 +5,12 @@
     <select id="getSchema" resultType="String">
         SELECT schema
         FROM t_app_engine_eval_dataset
-        WHERE dataset_id = #{datasetId}
+        WHERE id = #{datasetId}
     </select>
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="id">
+        insert into t_app_engine_eval_dataset (name, description, schema, app_id)
+        values (#{name}, #{description}, #{schema}, #{appId})
+    </insert>
 
 </mapper>
