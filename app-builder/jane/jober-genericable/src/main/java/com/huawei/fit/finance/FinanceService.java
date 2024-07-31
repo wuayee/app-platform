@@ -20,7 +20,7 @@ public interface FinanceService {
      * @return 路由器结构体
      */
     @Genericable(id = "com.huawei.fit.finance.router")
-    NLRouter nlRouter(String query);
+    NlRouter nlRouter(String query);
 
     /**
      * 签名

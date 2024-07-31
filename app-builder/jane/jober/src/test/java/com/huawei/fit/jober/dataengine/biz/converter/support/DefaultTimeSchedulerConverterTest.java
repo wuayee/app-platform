@@ -7,7 +7,7 @@ package com.huawei.fit.jober.dataengine.biz.converter.support;
 import com.huawei.fit.jober.common.Constant;
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.TimeScheduler;
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.repo.TimeSchedulerRepo;
-import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDTO;
+import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDto;
 import com.huawei.fit.jober.entity.Filter;
 
 import com.alibaba.fastjson.JSON;
@@ -57,7 +57,7 @@ class DefaultTimeSchedulerConverterTest {
         @Test
         @DisplayName("将MetaDataTaskDTO转换成TimeScheduler")
         void givenMetaDataTaskDTOThenConverterSuccessfully() {
-            StaticMetaDataTaskDTO metaDataTaskDTO = StaticMetaDataTaskDTO.builder()
+            StaticMetaDataTaskDto metaDataTaskDTO = StaticMetaDataTaskDto.builder()
                     .taskDefinitionId(TASK_DEFINITION_ID)
                     .taskSourceId(TASK_SOURCE_ID)
                     .sourceApp(SOURCE_APP)

@@ -272,6 +272,11 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
             this.declarations = declarations;
         }
 
+        /**
+         * 创建任务模板属性
+         *
+         * @return 返回创建的任务模板属性列表
+         */
         public List<TaskTemplateProperty> create() {
             String actualTemplateId = Entities.validateId(this.taskTemplateId,
                     () -> new BadRequestException(ErrorCodes.TEMPLATE_ID_INVALID_IN_PROPERTY));
@@ -332,6 +337,9 @@ public class PostgresqlTaskTemplatePropertyRepo implements TaskTemplateProperty.
             this.id = Entities.validateId(id, () -> new BadRequestException(ErrorCodes.TEMPLATE_PROPERTY_ID_INVALID));
         }
 
+        /**
+         * 更新任务模板属性
+         */
         public void patch() {
             UpdateSql update = UpdateSql.custom().table(Row.TABLE_NAME);
             Row oldRow = this.getOneById();

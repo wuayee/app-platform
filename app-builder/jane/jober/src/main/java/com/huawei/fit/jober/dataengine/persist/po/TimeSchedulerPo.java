@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TimeSchedulerPO {
+public class TimeSchedulerPo {
     /**
      * 定时任务ID
      */

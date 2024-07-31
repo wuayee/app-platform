@@ -8,7 +8,7 @@ import com.huawei.fit.jober.common.Constant;
 import com.huawei.fit.jober.dataengine.biz.converter.TimeSchedulerConverter;
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.TimeScheduler;
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.repo.TimeSchedulerRepo;
-import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDTO;
+import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDto;
 import com.huawei.fit.jober.entity.Filter;
 import com.huawei.fitframework.annotation.Component;
 
@@ -32,7 +32,7 @@ public class DefaultTimeSchedulerConverter implements TimeSchedulerConverter {
     }
 
     @Override
-    public TimeScheduler converter(StaticMetaDataTaskDTO staticMetaDataTaskDTO) {
+    public TimeScheduler converter(StaticMetaDataTaskDto staticMetaDataTaskDTO) {
         return TimeScheduler.builder()
                 .taskDefinitionId(staticMetaDataTaskDTO.getTaskDefinitionId())
                 .taskSourceId(staticMetaDataTaskDTO.getTaskSourceId())

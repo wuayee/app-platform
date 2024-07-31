@@ -4,7 +4,7 @@
 
 package com.huawei.fit.jober.dataengine.genericable;
 
-import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDTO;
+import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDto;
 import com.huawei.fitframework.annotation.Genericable;
 
 /**
@@ -17,18 +17,18 @@ public interface StaticDataEngine {
     /**
      * 获取第三方平台数据接口
      *
-     * @param staticMetaDataTaskDTO {@link StaticMetaDataTaskDTO}
+     * @param staticMetaDataTaskDTO {@link StaticMetaDataTaskDto}
      */
     @Genericable(id = "d7495cf0160c499db83b9adf6c2cbd9c")
-    void create(StaticMetaDataTaskDTO staticMetaDataTaskDTO);
+    void create(StaticMetaDataTaskDto staticMetaDataTaskDTO);
 
     /**
      * 更新拉取数据接口
      *
-     * @param staticMetaDataTaskDTO {@link StaticMetaDataTaskDTO}
+     * @param staticMetaDataTaskDTO {@link StaticMetaDataTaskDto}
      */
     @Genericable(id = "4c993fa977140159f7dc798abad704a")
-    void update(StaticMetaDataTaskDTO staticMetaDataTaskDTO);
+    void update(StaticMetaDataTaskDto staticMetaDataTaskDTO);
 
     /**
      * 删除拉取数据接口

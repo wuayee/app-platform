@@ -104,7 +104,7 @@ public class View {
                 return defaultMsg;
             }
             return message;
-        } catch (Exception e) {
+        } catch (NullPointerException | UnsupportedOperationException | ClassCastException e) {
             return defaultMsg;
         }
     }

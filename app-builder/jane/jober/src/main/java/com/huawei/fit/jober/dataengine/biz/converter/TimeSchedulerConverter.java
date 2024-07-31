@@ -5,7 +5,7 @@
 package com.huawei.fit.jober.dataengine.biz.converter;
 
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.TimeScheduler;
-import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDTO;
+import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDto;
 
 /**
  * 定时任务Converter
@@ -17,8 +17,8 @@ public interface TimeSchedulerConverter {
     /**
      * {@link TimeScheduler} 转换类
      *
-     * @param staticMetaDataTaskDTO {@link StaticMetaDataTaskDTO}
+     * @param staticMetaDataTaskDTO {@link StaticMetaDataTaskDto}
      * @return {@link TimeScheduler}
      */
-    TimeScheduler converter(StaticMetaDataTaskDTO staticMetaDataTaskDTO);
+    TimeScheduler converter(StaticMetaDataTaskDto staticMetaDataTaskDTO);
 }

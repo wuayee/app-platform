@@ -19,6 +19,7 @@ import com.huawei.fit.jober.taskcenter.domain.util.CategoryChangedNotifier;
 import com.huawei.fit.jober.taskcenter.service.CategoryService;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.CollectionUtils;
 import com.huawei.fitframework.util.ParsingResult;
@@ -136,7 +137,7 @@ public class DefaultCategoryChangedNotifier extends AbstractNotifier implements 
                         .getRouter(OnInstancesCategoryChanged.class, GENERICABLE_ID)
                         .route(new FitableIdFilter(fitableId))
                         .invoke(messages);
-            } catch (Throwable t) {
+            } catch (FitException t) {
                 log.error("Failed to notify fitable that category of instances has been changed. [fitableId={}]",
                         fitableId, t);
                 log.error(t.getClass().getName(), t);

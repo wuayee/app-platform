@@ -83,7 +83,13 @@ public class MetaInstanceConverterImpl implements MetaInstanceConverter {
         return MetaConverterImpl.valueOf(attribute, emptyPredicate);
     }
 
-    // FIXME: 2024/3/29 0029 以下方法暂用，待删除
+    /**
+     * 将 {@link InstanceDeclarationInfo} 对象转换为 {@link TaskInstance.Declaration} 对象, 暂用待删除
+     *
+     * @param instanceDeclarationInfo 待转换的 {@link InstanceDeclarationInfo} 对象
+     * @return 转换后的 {@link TaskInstance.Declaration} 对象
+     */
+    @Override
     public TaskInstance.Declaration convert(
             com.huawei.fit.jane.meta.instance.InstanceDeclarationInfo instanceDeclarationInfo) {
         TaskInstance.Declaration.Builder builder = TaskInstance.Declaration.custom();
@@ -92,7 +98,14 @@ public class MetaInstanceConverterImpl implements MetaInstanceConverter {
         return builder.build();
     }
 
-    // FIXME: 2024/3/29 0029 以下方法暂用，待删除
+    /**
+     * 将 {@link TaskInstance} 对象转换为 {@link Instance} 对象，暂用待删除
+     *
+     * @param task 待转换的 {@link TaskEntity} 对象
+     * @param instance 待转换的 {@link TaskInstance} 对象
+     * @return 转换后的 {@link Instance} 对象
+     */
+    @Override
     public com.huawei.fit.jane.meta.instance.Instance convert1(TaskEntity task, TaskInstance instance) {
         com.huawei.fit.jane.meta.instance.Instance result = new com.huawei.fit.jane.meta.instance.Instance();
         result.setInfo(instance.info().entrySet().stream()
@@ -107,7 +120,13 @@ public class MetaInstanceConverterImpl implements MetaInstanceConverter {
         return result;
     }
 
-    // FIXME: 2024/3/29 0029 以下方法暂用，待删除
+    /**
+     * 将 {@link MetaInstanceFilter} 对象转换为 {@link TaskInstance.Filter} 对象，暂用待删除
+     *
+     * @param metaInstanceFilter 待转换的 {@link MetaInstanceFilter} 对象
+     * @return 转换后的 {@link TaskInstance.Filter} 对象
+     */
+    @Override
     public TaskInstance.Filter convert(com.huawei.fit.jane.meta.instance.MetaInstanceFilter metaInstanceFilter) {
         return TaskInstance.Filter.custom()
                 .ids(nullIf(metaInstanceFilter.getIds(), Collections.emptyList()))

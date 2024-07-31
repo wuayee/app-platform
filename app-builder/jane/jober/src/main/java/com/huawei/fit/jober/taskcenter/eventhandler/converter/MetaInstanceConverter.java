@@ -53,7 +53,7 @@ public interface MetaInstanceConverter {
      */
     List<OrderBy> convertOrderBys(List<String> orderBys);
 
-    // FIXME: 2024/3/29 0029 以下方法暂用，待删除
+    // 以下方法暂用，待删除
     /**
      * 将 {@link com.huawei.fit.jane.meta.instance.InstanceDeclarationInfo} 转换为 {@link TaskInstance.Declaration}
      *

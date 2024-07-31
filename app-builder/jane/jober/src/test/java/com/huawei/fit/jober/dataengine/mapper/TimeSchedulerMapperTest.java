@@ -7,7 +7,7 @@ package com.huawei.fit.jober.dataengine.mapper;
 import com.huawei.fit.jober.DatabaseBaseTest;
 import com.huawei.fit.jober.common.Constant;
 import com.huawei.fit.jober.dataengine.persist.mapper.TimeSchedulerMapper;
-import com.huawei.fit.jober.dataengine.persist.po.TimeSchedulerPO;
+import com.huawei.fit.jober.dataengine.persist.po.TimeSchedulerPo;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +56,7 @@ public class TimeSchedulerMapperTest extends DatabaseBaseTest {
         void givenRightParamsThenSaveAndFindSuccessfully() {
             schedulerMapper.create(getSchedulerPO());
 
-            TimeSchedulerPO actual = schedulerMapper.find(SCHEDULER_ID);
+            TimeSchedulerPo actual = schedulerMapper.find(SCHEDULER_ID);
 
             Assertions.assertEquals(TASK_SOURCE_ID, actual.getTaskSourceId());
             Assertions.assertEquals(TASK_DEFINITION_ID, actual.getTaskDefinitionId());
@@ -69,7 +69,7 @@ public class TimeSchedulerMapperTest extends DatabaseBaseTest {
             executeSqlInFile(DATA_SQL);
 
             schedulerMapper.update(getSchedulerPO());
-            TimeSchedulerPO actual = schedulerMapper.find(SCHEDULER_ID);
+            TimeSchedulerPo actual = schedulerMapper.find(SCHEDULER_ID);
 
             Assertions.assertEquals(TASK_SOURCE_ID, actual.getTaskSourceId());
             Assertions.assertEquals(TASK_DEFINITION_ID, actual.getTaskDefinitionId());
@@ -86,7 +86,7 @@ public class TimeSchedulerMapperTest extends DatabaseBaseTest {
 
             Assertions.assertDoesNotThrow(() -> schedulerMapper.find(SCHEDULER_ID));
             schedulerMapper.delete(SCHEDULER_ID);
-            TimeSchedulerPO actual = schedulerMapper.find(SCHEDULER_ID);
+            TimeSchedulerPo actual = schedulerMapper.find(SCHEDULER_ID);
 
             Assertions.assertNull(actual);
         }
@@ -96,7 +96,7 @@ public class TimeSchedulerMapperTest extends DatabaseBaseTest {
         void givenExistingSchedulerThenQueryAllSuccessfully() {
             executeSqlInFile(DATA_SQL);
 
-            List<TimeSchedulerPO> actual = schedulerMapper.findAll();
+            List<TimeSchedulerPo> actual = schedulerMapper.findAll();
 
             Assertions.assertEquals(2, actual.size());
             Assertions.assertEquals("11", actual.get(0).getTaskDefinitionId());
@@ -109,15 +109,15 @@ public class TimeSchedulerMapperTest extends DatabaseBaseTest {
         void givenExistingSchedulerThenQueryByTaskSourceIdSuccessfully() {
             executeSqlInFile(DATA_SQL);
 
-            TimeSchedulerPO actual = schedulerMapper.queryByTaskSourceId("22");
+            TimeSchedulerPo actual = schedulerMapper.queryByTaskSourceId("22");
 
             Assertions.assertEquals("11", actual.getTaskDefinitionId());
             Assertions.assertEquals("22", actual.getTaskSourceId());
             Assertions.assertEquals("666", actual.getTaskTypeId());
         }
 
-        private TimeSchedulerPO getSchedulerPO() {
-            return TimeSchedulerPO.builder()
+        private TimeSchedulerPo getSchedulerPO() {
+            return TimeSchedulerPo.builder()
                     .schedulerId(SCHEDULER_ID)
                     .taskSourceId(TASK_SOURCE_ID)
                     .taskDefinitionId(TASK_DEFINITION_ID)

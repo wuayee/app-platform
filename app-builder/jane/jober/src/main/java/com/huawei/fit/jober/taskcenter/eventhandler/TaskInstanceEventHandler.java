@@ -24,6 +24,7 @@ import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
 import com.huawei.fitframework.event.EventHandler;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
 
 import java.util.Collections;
@@ -100,7 +101,7 @@ public abstract class TaskInstanceEventHandler<E extends TaskInstanceEvent> {
                         .invoke(args);
                 cost = System.currentTimeMillis() - cost;
                 log.info("Successful to notify fitable. Total {} milliseconds cost.", cost);
-            } catch (Throwable e) {
+            } catch (FitException e) {
                 cost = System.currentTimeMillis() - cost;
                 log.error("Failed to notify fitable. Total {} milliseconds cost.", cost);
                 log.error(e.getClass().getName(), e);

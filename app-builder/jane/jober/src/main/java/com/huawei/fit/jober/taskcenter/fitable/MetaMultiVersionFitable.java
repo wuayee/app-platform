@@ -111,9 +111,11 @@ public class MetaMultiVersionFitable implements MetaService {
     private String queryTemplateIdOrCreateTemplate(OperationContext context, String name,
             Undefinable<String> basicMetaTemplateId, com.huawei.fit.jane.task.util.OperationContext actualContext) {
         MetaFilter filter = new MetaFilter();
-        filter.setNames(new ArrayList<String>() {{
+        filter.setNames(new ArrayList<String>() {
+            {
                 add(name + "|");
-        }});
+            }
+        });
 
         RangedResultSet<Meta> list = list(filter, true, 0, 10, context);
         if (CollectionUtils.isNotEmpty(list.getResults())) {
@@ -135,7 +137,7 @@ public class MetaMultiVersionFitable implements MetaService {
                 () -> new BadRequestException(ErrorCodes.INPUT_PARAM_IS_EMPTY, "metaDeclarationInfo"));
         TaskDeclaration taskDeclaration = metaConverter.convertMultiVersionDeclaration(declaration);
         // 对输入的name和version进行校验，如果需要修改，则必须二者同时传入，否则不能传入
-        // TODO: 2024/3/13 0013 是否添加校验检查name的修改情况？name是不允许修改的
+        // 是否添加校验检查name的修改情况？name是不允许修改的
         if (declaration.getVersion().getDefined() && declaration.getName().getDefined()) {
             String name = declaration.getName().getValue() + "|" + declaration.getVersion().getValue();
             taskDeclaration.setName(UndefinableValue.defined(name));
@@ -214,9 +216,9 @@ public class MetaMultiVersionFitable implements MetaService {
                 .stream()
                 .map(task -> metaConverter.convert2MultiVersionMeta(task, operationContext))
                 .collect(Collectors.toList());
-        // FIXME: 2024/4/2 0002 以下为兼容逻辑：存在部分数据的metaId是指task的Id
+        // 以下为兼容逻辑：存在部分数据的metaId是指task的Id
         if ((CollectionUtils.isEmpty(metaList) && CollectionUtils.isNotEmpty(filter.getMetaIds()))
-                || oldDataFilter != null) { // todo 这边是否只需考虑 oldDataFilter？需要待确认
+                || oldDataFilter != null) { // 这边是否只需考虑 oldDataFilter？需要待确认
             if (oldDataFilter == null) {
                 filter.setVersionIds(filter.getMetaIds());
                 filter.setMetaIds(Collections.emptyList());
@@ -232,7 +234,7 @@ public class MetaMultiVersionFitable implements MetaService {
                     .collect(Collectors.toList()));
         }
 
-        // todo 临时的兼容逻辑，处理 aipp 的 id 为 00000000000000000000000000000000 的场景；等数据库数据刷完后，可以去掉该逻辑
+        // 临时的兼容逻辑，处理 aipp 的 id 为 00000000000000000000000000000000 的场景；等数据库数据刷完后，可以去掉该逻辑
         this.handleOldMetaList(metaList);
         return RangedResultSet.create(metaList,
                 taskEntityRangedResultSet.getRange(),

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huawei.fit.jober.dataengine.persist.mapper.TimeSchedulerMapper">
-    <resultMap id="timeSchedulerResultMap" type="com.huawei.fit.jober.dataengine.persist.po.TimeSchedulerPO">
+    <resultMap id="timeSchedulerResultMap" type="com.huawei.fit.jober.dataengine.persist.po.TimeSchedulerPo">
         <id column="scheduler_id" property="schedulerId"/>
         <result column="task_definition_id" property="taskDefinitionId"/>
         <result column="task_source_id" property="taskSourceId"/>

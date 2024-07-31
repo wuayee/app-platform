@@ -20,7 +20,7 @@ import com.huawei.fit.jober.dataengine.biz.runnable.TimeSchedulerTask;
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.TimeScheduler;
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.repo.TimeSchedulerRepo;
 import com.huawei.fit.jober.dataengine.genericable.StaticDataEngine;
-import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDTO;
+import com.huawei.fit.jober.dataengine.rest.request.StaticMetaDataTaskDto;
 import com.huawei.fitframework.annotation.Alias;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.annotation.Conditional;
@@ -86,7 +86,7 @@ public class TimeSchedulerDataEngine implements StaticDataEngine {
     @Override
     @Transactional
     @Fitable(id = "d7495cf0160c499db83b9adf6c2cbd9c")
-    public void create(StaticMetaDataTaskDTO staticMetaDataTaskDTO) {
+    public void create(StaticMetaDataTaskDto staticMetaDataTaskDTO) {
         log.info("[dataEngine]: Start to create timeScheduler task to get data, the taskSourceId is {}.",
                 staticMetaDataTaskDTO.getTaskSourceId());
         checkCreateParams(staticMetaDataTaskDTO);
@@ -141,7 +141,7 @@ public class TimeSchedulerDataEngine implements StaticDataEngine {
     @Override
     @Transactional
     @Fitable(id = "c45ce1975aa7486c8fce18884999cf9f")
-    public void update(StaticMetaDataTaskDTO staticMetaDataTaskDTO) {
+    public void update(StaticMetaDataTaskDto staticMetaDataTaskDTO) {
         log.info("[dataEngine]: Start to update timeScheduler task, the taskSourceId is {}.",
                 staticMetaDataTaskDTO.getTaskSourceId());
 
@@ -173,7 +173,7 @@ public class TimeSchedulerDataEngine implements StaticDataEngine {
         log.info("[dataEngine]: Finish to recovery all scheduled tasks.");
     }
 
-    private void checkCreateParams(StaticMetaDataTaskDTO staticMetaDataTaskDTO) {
+    private void checkCreateParams(StaticMetaDataTaskDto staticMetaDataTaskDTO) {
         Validation.notBlank(staticMetaDataTaskDTO.getTaskSourceId(),
                 () -> new JobberParamException(INPUT_PARAM_IS_EMPTY, TASK_SOURCE_ID));
         Validation.notBlank(staticMetaDataTaskDTO.getSourceApp(),

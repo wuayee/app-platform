@@ -18,6 +18,7 @@ import com.huawei.fit.jober.taskcenter.domain.util.InstancesChangedNotifier;
 import com.huawei.fit.jober.taskcenter.util.Enums;
 import com.huawei.fitframework.broker.client.BrokerClient;
 import com.huawei.fitframework.broker.client.filter.route.FitableIdFilter;
+import com.huawei.fitframework.exception.FitException;
 import com.huawei.fitframework.log.Logger;
 
 import java.util.ArrayList;
@@ -139,7 +140,7 @@ public class DefaultInstancesChangedNotifier extends AbstractNotifier implements
                         .getRouter(DataService.class, GENERICABLE_ID)
                         .route(new FitableIdFilter(fitableId))
                         .invoke(actualChanges);
-            } catch (Throwable t) {
+            } catch (FitException t) {
                 log.error("Failed to notify fitable that task instances has been changed. [fitableId={}]",
                         entry.getKey(),
                         t);

@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  * @author 孙怡菲 s00664640
  * @since 2023-12-12
  */
-// FIXME: 2024/3/29 0029 本类暂用于aipp未上线前，之后需要删除
+// 本类暂用于aipp未上线前，之后需要删除
 @Alias("Jane-MetaInstance1")
 @Component
 public class MetaInstanceFitable1 implements MetaInstanceService {

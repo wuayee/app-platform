@@ -11,7 +11,7 @@ import com.huawei.fit.jober.common.utils.UuidUtil;
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.TimeScheduler;
 import com.huawei.fit.jober.dataengine.domain.aggregate.timescheduler.repo.TimeSchedulerRepo;
 import com.huawei.fit.jober.dataengine.persist.mapper.TimeSchedulerMapper;
-import com.huawei.fit.jober.dataengine.persist.po.TimeSchedulerPO;
+import com.huawei.fit.jober.dataengine.persist.po.TimeSchedulerPo;
 import com.huawei.fitframework.annotation.Component;
 import com.huawei.fitframework.log.Logger;
 import com.huawei.fitframework.util.StringUtils;
@@ -83,8 +83,8 @@ public class DefaultTimeSchedulerRepo implements TimeSchedulerRepo {
                 });
     }
 
-    private TimeSchedulerPO serializer(TimeScheduler timeScheduler) {
-        return TimeSchedulerPO.builder()
+    private TimeSchedulerPo serializer(TimeScheduler timeScheduler) {
+        return TimeSchedulerPo.builder()
                 .schedulerId(timeScheduler.getSchedulerId())
                 .taskSourceId(timeScheduler.getTaskSourceId())
                 .taskDefinitionId(timeScheduler.getTaskDefinitionId())
@@ -102,7 +102,7 @@ public class DefaultTimeSchedulerRepo implements TimeSchedulerRepo {
                 .build();
     }
 
-    private TimeScheduler serializer(TimeSchedulerPO timeSchedulerPO) {
+    private TimeScheduler serializer(TimeSchedulerPo timeSchedulerPO) {
         return TimeScheduler.builder()
                 .schedulerId(timeSchedulerPO.getSchedulerId())
                 .taskSourceId(timeSchedulerPO.getTaskSourceId())
