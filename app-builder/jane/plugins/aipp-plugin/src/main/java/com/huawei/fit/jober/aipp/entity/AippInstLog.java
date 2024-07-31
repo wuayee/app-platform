@@ -62,5 +62,4 @@ public class AippInstLog {
 
     @Property(description = "历史数据类型 {@link AippInstLogType}")
     private String logType;
-
 }

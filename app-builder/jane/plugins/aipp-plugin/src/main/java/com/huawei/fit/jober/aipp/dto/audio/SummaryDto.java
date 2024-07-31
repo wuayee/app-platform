@@ -60,8 +60,8 @@ public class SummaryDto {
                     section.setPosition(FfmpegUtil.formatTimestamps(Math.max(
                             segmentSize * i - POS_RANDOM.nextInt(60) - 30, 0)));
                     sectionList.add(section);
-                } catch (IOException | IllegalArgumentException | UnsupportedOperationException |
-                         ClassCastException | NullPointerException e) {
+                } catch (IOException | IllegalArgumentException | UnsupportedOperationException | ClassCastException
+                    | NullPointerException e) {
                     log.warn("Llm generate unexpect rsp {}.", item, e);
                 }
             }
