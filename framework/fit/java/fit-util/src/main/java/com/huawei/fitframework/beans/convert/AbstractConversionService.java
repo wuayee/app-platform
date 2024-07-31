@@ -8,6 +8,7 @@ import static com.huawei.fitframework.inspection.Validation.notNull;
 import static com.huawei.fitframework.util.ObjectUtils.cast;
 
 import com.huawei.fitframework.beans.BeanAccessor;
+import com.huawei.fitframework.util.EnumUtils;
 import com.huawei.fitframework.util.ObjectUtils;
 import com.huawei.fitframework.util.ReflectionUtils;
 import com.huawei.fitframework.util.StringUtils;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -281,7 +283,8 @@ public abstract class AbstractConversionService implements ConversionService {
 
     private static Object toEnum(Class<?> enumClass, String value) {
         Class<? extends Enum<?>> actualClass = cast(enumClass);
-        return Enum.valueOf(cast(actualClass), value);
+        Predicate<Enum> predicate = enumConstant -> StringUtils.equalsIgnoreCase(enumConstant.toString(), value);
+        return EnumUtils.firstOrDefault(ObjectUtils.cast(actualClass), predicate);
     }
 
     private List<?> toList(Object source, Type elementType) {

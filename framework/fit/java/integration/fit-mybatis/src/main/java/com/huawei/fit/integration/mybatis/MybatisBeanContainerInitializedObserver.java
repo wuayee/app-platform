@@ -57,7 +57,6 @@ public class MybatisBeanContainerInitializedObserver implements BeanContainerIni
         configuration.setEnvironment(new Environment(PluginKey.identify(plugin.metadata()),
                 new ManagedTransactionFactory(transactionManager),
                 new LazyLoadedDataSource(container)));
-
         SqlSessionFactoryHelper.loadMappers(properties, plugin, configuration);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(configuration);
         container.registry().register(sessionFactory);
