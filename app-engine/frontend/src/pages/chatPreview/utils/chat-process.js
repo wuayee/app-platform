@@ -192,6 +192,7 @@ export const messageProcess = (aipp_id, instanceId, version, messageData, atAppI
     recieveType: 'form',
     finished: true,
     checked: false,
+    msgType: 'form',
     logId,
     formConfig: {
       instanceId,
@@ -232,6 +233,7 @@ export const messageProcessNormal = (log, instanceId, atAppInfo) => {
     logId: log.msgId || uuidv4(),
     markdownSyntax: markdowned !== -1,
     type: 'receive',
+    msgType: 'msg',
     instanceId,
     feedbackStatus: -1,
   };
@@ -248,7 +250,7 @@ export const messageProcessNormal = (log, instanceId, atAppInfo) => {
 // 深拷贝
 export const deepClone = (obj) => {
   return JSON.parse(JSON.stringify(obj));
-}
+};
 // 文件类型设置
 export const fileTypeSet = (type) => {
   type = type.toLowerCase();
@@ -269,7 +271,7 @@ export const fileTypeSet = (type) => {
     fileType = 'file';
   }
   return fileType
-}
+};
 // 滚动底部
 export const scrollBottom = () => {
   const messageBox = document.getElementById('chat-list-dom');
@@ -277,4 +279,4 @@ export const scrollBottom = () => {
     top: messageBox.scrollHeight,
     behavior: 'smooth',
   });
-}
+};
