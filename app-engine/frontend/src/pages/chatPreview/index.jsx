@@ -267,7 +267,7 @@ const ChatPreview = (props) => {
     let { chat_id, at_chat_id } = data;
     if (chat_id) {
       updateChatId(chat_id, appId);
-      dispatch(setChatId(chatId));
+      dispatch(setChatId(chat_id));
     }
     if (at_chat_id) {
       dispatch(setAtChatId(at_chat_id));
