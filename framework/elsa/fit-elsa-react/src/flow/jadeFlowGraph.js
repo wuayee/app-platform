@@ -136,7 +136,7 @@ export const jadeFlowGraph = (div, title) => {
         if (self.activePage.isRunning) {
             return;
         }
-        self.onChangeCallback && self.onChangeCallback();
+        self.onChangeCallback && self.onChangeCallback(dirtyAction);
     };
 
     /**

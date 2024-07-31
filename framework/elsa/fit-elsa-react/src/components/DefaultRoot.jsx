@@ -66,7 +66,7 @@ export const DefaultRoot = ({shape, component, disabled}) => {
 
     // 第一次进来不会触发，第一次发生变化时才触发.
     useUpdateEffect(() => {
-        shape.graph.dirtied();
+        shape.graph.dirtied(null, {action: "jade_node_config_change", shape: shape.id});
     }, [data]);
 
     return (<>
