@@ -36,6 +36,10 @@
             <groupId>com.huawei.fit.jade.service</groupId>
             <artifactId>jade-common-service</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.huawei.fit.jade.service</groupId>
+            <artifactId>uid-generator-service</artifactId>
+        </dependency>
 
         <!-- Orm -->
         <dependency>
