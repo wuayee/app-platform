@@ -4,8 +4,8 @@
 
 package com.huawei.fit.jober.aipp.repository.impl;
 
-import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.condition.AppQueryCondition;
+import com.huawei.fit.jober.aipp.domain.AppBuilderApp;
 import com.huawei.fit.jober.aipp.mapper.AppBuilderAppMapper;
 import com.huawei.fit.jober.aipp.repository.AppBuilderAppRepository;
 import com.huawei.fit.jober.aipp.serializer.impl.AppBuilderAppSerializer;

@@ -467,9 +467,11 @@ public class AppBuilderAppServiceImpl
         if (StringUtils.isEmpty(trimName)) {
             log.error("Create aipp failed: name can not be empty.");
             throw new AippParamException(context, AippErrCode.AIPP_NAME_IS_EMPTY);
-        } else if (name.length() > this.nameLengthMaximum) {
-            log.error("Create aipp failed: the length of task name is out of bounds. [name={}]", name);
-            throw new AippParamException(context, AippErrCode.AIPP_NAME_LENGTH_OUT_OF_BOUNDS);
+        } else {
+            if (name.length() > this.nameLengthMaximum) {
+                log.error("Create aipp failed: the length of task name is out of bounds. [name={}]", name);
+                throw new AippParamException(context, AippErrCode.AIPP_NAME_LENGTH_OUT_OF_BOUNDS);
+            }
         }
     }
 
@@ -1301,11 +1303,13 @@ public class AppBuilderAppServiceImpl
             JSONObject jsonObject = value.getJSONObject(index);
             if (StringUtils.equalsIgnoreCase("Input", jsonObject.getString("from"))) {
                 result.add(jsonObject.get("value"));
-            } else if (StringUtils.equalsIgnoreCase("Expand", jsonObject.getString("from"))) {
+            }
+            if (StringUtils.equalsIgnoreCase("Expand", jsonObject.getString("from"))) {
                 if (StringUtils.equalsIgnoreCase("Array", jsonObject.getString("type"))) {
                     List<Object> array = this.extractingExpandArray(jsonObject.getJSONArray("value"));
                     result.add(array);
-                } else if (StringUtils.equalsIgnoreCase("Object", jsonObject.getString("type"))) {
+                }
+                if (StringUtils.equalsIgnoreCase("Object", jsonObject.getString("type"))) {
                     Map<String, Object> map = this.extractingExpandObject(jsonObject.getJSONArray("value"));
                     if (MapUtils.isNotEmpty(map)) {
                         result.add(map);
