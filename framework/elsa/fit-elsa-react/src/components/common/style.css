@@ -381,3 +381,43 @@
     border-radius: 8px;
     padding: 12px;
 }
+
+.jade-custom-multi-select-with-slider-div {
+    display: flex;
+    height: 30px;
+    width: 100%;
+    align-items: center;
+    padding: 0px 16px;
+    border-radius: 4px;
+    border: 1px solid rgb(230, 230, 230);
+    justify-content: space-between;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+}
+
+.jade-custom-multi-select-item {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.jade-custom-select-button {
+    margin-bottom: 10px;
+}
+
+.jade-plugin-type-icon {
+    background-size: cover !important;
+    background-position: center !important;
+    padding: 0 !important;
+    margin: 0 8px 0 0 !important;
+    width: 14px !important;
+    height: 14px !important;
+    border: none !important;
+    pointer-events: none;
+}
+
+.jade-custom-multi-item-container {
+    max-height: 168px; /* 设置容器的最大高度, 五个item的高度和，每个33.6px 33.6*5 = 168 */
+    overflow-y: auto; /* 当内容超出容器时启用垂直滚动条 */
+}

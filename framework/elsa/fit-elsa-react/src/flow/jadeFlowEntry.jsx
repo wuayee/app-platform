@@ -218,14 +218,42 @@ const jadeFlowAgent = (graph) => {
     };
 
     /**
+     * 添加事件监听并执行回调函数.
+     *
+     * @param eventType 事件类型.
+     * @param callback 回调函数.
+     */
+    const addSelectEventListener = (eventType, callback) => {
+        graph.activePage.addEventListener(eventType, (event) => {
+            callback(event);
+        });
+    };
+
+    /**
      * 当需要触发模型选择时的回调.
      *
      * @param callback 回调函数.
      */
     self.onModelSelect = (callback) => {
-        graph.activePage.addEventListener("SELECT_MODEL", (onModelSelected) => {
-            callback(onModelSelected);
-        });
+        addSelectEventListener("SELECT_MODEL", callback);
+    };
+
+    /**
+     * 当需要触发知识库选择时的回调.
+     *
+     * @param callback 回调函数.
+     */
+    self.onKnowledgeBaseSelect = (callback) => {
+        addSelectEventListener("SELECT_KNOWLEDGE_BASE", callback);
+    };
+
+    /**
+     * 当需要触发插件选择时的回调.
+     *
+     * @param callback 回调函数.
+     */
+    self.onPluginSelect = (callback) => {
+        addSelectEventListener("SELECT_PLUGIN", callback);
     };
 
     return self;

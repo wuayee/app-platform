@@ -3,6 +3,7 @@ import {v4 as uuidv4} from "uuid";
 
 export const llmComponent = (jadeConfig) => {
     const self = {};
+    const PLUGINS = "plugins"
 
     /**
      * 必须.
@@ -40,6 +41,7 @@ export const llmComponent = (jadeConfig) => {
                 },
                 {id: uuidv4(), name: "tools", type: "Array", from: "Expand", value: []},
                 {id: uuidv4(), name: "workflows", type: "Array", from: "Expand", value: []},
+                {id: uuidv4(), name: PLUGINS, type: "Array", from: "Expand", value: []},
                 {id: uuidv4(), name: "systemPrompt", type: "String", from: "Input", value: ""},
             ],
             outputParams: [
@@ -70,7 +72,7 @@ export const llmComponent = (jadeConfig) => {
      * 必须.
      */
     self.reducers = (data, action) => {
-        function addInputParam() {
+        const addInputParam = () => {
             const newData = {};
             Object.entries(data).forEach(([key, value]) => {
                 if (key === "inputParams") {
@@ -102,9 +104,9 @@ export const llmComponent = (jadeConfig) => {
                 }
             });
             return newData;
-        }
+        };
 
-        function addOutputParam() {
+        const addOutputParam = () => {
             const newData = {};
             Object.entries(data).forEach(([key, value]) => {
                 if (key === "outputParams") {
@@ -130,9 +132,9 @@ export const llmComponent = (jadeConfig) => {
                 }
             });
             return newData;
-        }
+        };
 
-        function changeInputParams() {
+        const changeInputParams = () => {
             const newData = {};
             Object.entries(data).forEach(([key, value]) => {
                 if (key === "inputParams") {
@@ -169,9 +171,9 @@ export const llmComponent = (jadeConfig) => {
                 }
             });
             return newData;
-        }
+        };
 
-        function changePrompt() {
+        const changePrompt = () => {
             const newData = {};
             Object.entries(data).forEach(([key, value]) => {
                 if (key === "inputParams") {
@@ -197,9 +199,9 @@ export const llmComponent = (jadeConfig) => {
                 }
             });
             return newData;
-        }
+        };
 
-        function changeOutputParam() {
+        const changeOutputParam = () => {
             const newData = {};
             Object.entries(data).forEach(([key, value]) => {
                 if (key === "outputParams") {
@@ -223,9 +225,9 @@ export const llmComponent = (jadeConfig) => {
                 }
             });
             return newData;
-        }
+        };
 
-        function changeConfig() {
+        const changeConfig = () => {
             const newData = {};
             Object.entries(data).forEach(([key, value]) => {
                 if (key === "inputParams") {
@@ -243,9 +245,9 @@ export const llmComponent = (jadeConfig) => {
                 }
             });
             return newData;
-        }
+        };
 
-        function changeSkillConfig() {
+        const changeSkillConfig = () => {
             const newData = {};
             Object.entries(data).forEach(([key, value]) => {
                 if (key === "inputParams") {
@@ -265,9 +267,9 @@ export const llmComponent = (jadeConfig) => {
                 }
             });
             return newData;
-        }
+        };
 
-        function deleteInputParam() {
+        const deleteInputParam = () => {
             const newData = {};
             Object.entries(data).forEach(([key, value]) => {
                 if (key === "inputParams") {
@@ -293,7 +295,82 @@ export const llmComponent = (jadeConfig) => {
                 }
             });
             return newData;
-        }
+        };
+
+        const getPlugins = () => [...data.inputParams.find(params => params.name === PLUGINS).value];
+
+        const changePluginConfig = () => {
+            const pluginsValue = getPlugins();
+            const pluginMap = pluginsValue.reduce((map, plugin) => {
+                const uniqueName = plugin.value[0].value.find(v => v.name === 'uniqueName').value;
+                map[uniqueName] = plugin;
+                return map;
+            }, {});
+            const actionValue = action.value;
+            // 处理 actionValue 中的每个项
+            actionValue.forEach(actionPlugin => {
+                const key = actionPlugin.uniqueName;
+                if (pluginMap[key]) {
+                    // 更新现有条目
+                    pluginMap[key].value[0].value.forEach(v => {
+                        if (actionPlugin[v.name] !== undefined) {
+                            v.value = actionPlugin[v.name];
+                        }
+                    });
+                } else {
+                    // 添加新条目
+                    pluginsValue.push({
+                        id: uuidv4(),
+                        type: "Object",
+                        from: "Expand",
+                        value: [
+                            {
+                                id: uuidv4(),
+                                from: "Expand",
+                                type: "Object",
+                                value: Object.keys(actionPlugin).map(key => ({
+                                    id: uuidv4(),
+                                    from: "input",
+                                    name: key,
+                                    type: "String",
+                                    value: actionPlugin[key]
+                                }))
+                            }
+                        ]
+                    });
+                }
+            });
+
+            // 删除多余的条目
+            Object.keys(pluginMap).forEach(key => {
+                if (!actionValue.find(item => item.uniqueName === key)) {
+                    pluginsValue.splice(pluginsValue.indexOf(pluginMap[key]), 1);
+                }
+            });
+
+            const newData = { ...data };
+            newData.inputParams.find(param => param.name === PLUGINS).value = pluginsValue;
+        };
+
+        const deletePlugin = () => {
+            const newData = {};
+            Object.entries(data).forEach(([key, value]) => {
+                if (key === "inputParams") {
+                    newData[key] = value.map(item => {
+                        if (item.name === PLUGINS) {
+                            return {
+                                ...item, value: item.value.filter(plugin => (plugin.id !== action.id))
+                            };
+                        } else {
+                            return item;
+                        }
+                    });
+                } else {
+                    newData[key] = value;
+                }
+            });
+            return newData;
+        };
 
         switch (action.actionType) {
             case 'addInputParam': {
@@ -314,6 +391,9 @@ export const llmComponent = (jadeConfig) => {
             case 'changeSkillConfig': {
                 return changeSkillConfig();
             }
+            case 'changePluginConfig': {
+                return changePluginConfig();
+            }
             case 'changePrompt': {
                 return changePrompt();
             }
@@ -322,6 +402,9 @@ export const llmComponent = (jadeConfig) => {
             }
             case 'deleteOutputParam': {
                 return data.filter(item => item.id !== action.id);
+            }
+            case 'deletePlugin': {
+                return deletePlugin();
             }
             default: {
                 throw Error('Unknown action: ' + action.type);
