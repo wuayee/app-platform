@@ -87,7 +87,8 @@ public class AippLogStreamServiceImpl implements AippLogStreamService {
     private AppChatRsp.Answer buildAnswer(AippLogVO log) {
         AppChatRsp.Answer.AnswerBuilder builder =
                 AppChatRsp.Answer.builder().type(log.getLogType()).msgId(log.getMsgId());
-        if (log.getLogType().equals(AippInstLogType.MSG.name())) {
+        if (log.getLogType().equals(AippInstLogType.MSG.name()) || log.getLogType()
+                .equalsIgnoreCase(AippInstLogType.ERROR.name())) {
             builder.content(JsonUtils.parseObject(log.getLogData()).get("msg"));
         } else if (JsonUtils.isValidJson(log.getLogData())) {
             builder.content(JsonUtils.parseObject(log.getLogData()));
