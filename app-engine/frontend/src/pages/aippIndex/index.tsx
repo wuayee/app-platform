@@ -22,6 +22,7 @@ const AippIndex = () => {
   const [ messageChecked, setMessageCheck ] = useState(false);
   const [ testStatus, setTestStatus ] = useState(null);
   const [ testTime, setTestTime ] = useState(null);
+  const [ showFlowChangeWarning, setShowFlowChangeWarning ] = useState(false);
   const aippRef = useRef(null);
   const inspirationRefresh = useRef(false);
   const dispatch = useAppDispatch();
@@ -128,6 +129,8 @@ const AippIndex = () => {
                   setFlowTestStatus={handleTestStatus}
                   setFlowTestTime={handleTestTime}
                   appInfo={appInfo}
+                  showFlowChangeWarning={showFlowChangeWarning}
+                  setShowFlowChangeWarning={setShowFlowChangeWarning}
                 />
               ) :
               (

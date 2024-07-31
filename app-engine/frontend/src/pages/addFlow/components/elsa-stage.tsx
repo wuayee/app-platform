@@ -11,9 +11,10 @@ import { setAppInfo } from '../../../store/appInfo/appInfo';
 import HuggingFaceModal from './hugging-face-modal';
 import { FlowContext } from '../../aippIndex/context';
 import { configMap } from '../config';
+import { Button, Alert } from "antd";
 
 const Stage = (props) => {
-  const { setDragData, setTestStatus, setTestTime, elsaRunningCtl } = props;
+  const { setDragData, setTestStatus, showFlowChangeWarning, setShowFlowChangeWarning } = props;
   const [ showModal, setShowModal ] = useState(false);
   const [ taskName, setTaskName ] = useState('');
   const [ selectModal, setSelectModal ] = useState('');
@@ -52,8 +53,8 @@ const Stage = (props) => {
     JadeFlow.edit(stageDom, tenantId, data, CONFIGS, importFiles).then(agent => {
       window.agent ? null : window.agent = agent;
       render.current = true;
-      agent.onChange(() => {
-        handleChange();
+      agent.onChange((dirtyAction) => {
+        handleChange(dirtyAction);
       });
       agent.onModelSelect(({ taskName, selectedModel, onSelect }) => {
         setSelectModal(selectedModel);
@@ -73,10 +74,12 @@ const Stage = (props) => {
     modelCallback.current(model);
   }
   // 数据实时保存
-  const handleChange = useCallback(debounce(() => elsaChange(), 2000), []);
-  function elsaChange() {
-    elsaRunningCtl.current?.reset();
-    setTestStatus(null);
+  const handleChange = useCallback(debounce((dirtyAction) => elsaChange(dirtyAction), 2000), []);
+  function elsaChange(dirtyAction) {
+    if (dirtyAction.action === 'jade_node_config_change') {
+      setTestStatus(null);
+      localStorage.getItem('showFlowChangeWarning') !== 'false' && setShowFlowChangeWarning(true);
+    }
     let graphChangeData = window.agent.serialize();
     currentApp.current.flowGraph.appearance = graphChangeData;
     window.agent.validate().then(() => {
@@ -115,6 +118,18 @@ const Stage = (props) => {
         break;
     }
   }
+
+  // 点击“不再提示”按钮回调
+  const handleClickNoMoreTips = () => {
+    localStorage.setItem('showFlowChangeWarning', 'false');
+    setShowFlowChangeWarning(false);
+  }
+
+  // 点击关闭流程配置修改后告警回调
+  const handleCloseFlowChangeWarningAlert = () => {
+    setShowFlowChangeWarning(false);
+  }
+
   return <>
     <div
       className='content-right'
@@ -129,8 +144,20 @@ const Stage = (props) => {
       taskName={taskName}
       selectModal={selectModal}
     />
+    {showFlowChangeWarning && <Alert
+      className='flow-change-warning-content'
+      message=""
+      description="你已经修改了工作流，需要重新调试成功才可以发布。"
+      type="info"
+      onClose={handleCloseFlowChangeWarningAlert}
+      action={
+          <Button size="small" type="link" onClick={handleClickNoMoreTips}>
+            不再提示
+          </Button>
+      }
+      closable
+    />}
   </>
 };
-
 
 export default Stage;
